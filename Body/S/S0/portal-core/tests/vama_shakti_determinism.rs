@@ -53,10 +53,20 @@ fn identical_inputs_derive_identical_essential_identity() {
     let revision = hash_revision("psyche-v1");
 
     for class in ALL_CLASSES {
-        let left =
-            derive_vama_shakti_essential_identity(&coord, &digest, "archetypal-sattva", class, revision);
-        let right =
-            derive_vama_shakti_essential_identity(&coord, &digest, "archetypal-sattva", class, revision);
+        let left = derive_vama_shakti_essential_identity(
+            &coord,
+            &digest,
+            "archetypal-sattva",
+            class,
+            revision,
+        );
+        let right = derive_vama_shakti_essential_identity(
+            &coord,
+            &digest,
+            "archetypal-sattva",
+            class,
+            revision,
+        );
 
         assert_eq!(
             left, right,
@@ -66,7 +76,10 @@ fn identical_inputs_derive_identical_essential_identity() {
             left.vama_shakti_quintessence_hash, right.vama_shakti_quintessence_hash,
             "{class}: quintessence hash must be deterministic"
         );
-        assert_eq!(left.vama_shakti_clock_position, right.vama_shakti_clock_position);
+        assert_eq!(
+            left.vama_shakti_clock_position,
+            right.vama_shakti_clock_position
+        );
         assert_eq!(left.vama_shakti_q_identity, right.vama_shakti_q_identity);
     }
 }
@@ -83,18 +96,22 @@ fn distinct_input_tuples_produce_distinct_hashes() {
     let revision = hash_revision("psyche-v1");
     let class = VamaShaktiClass::Daemon;
 
-    let base = derive_vama_shakti_essential_identity(&coord_a, &digest_a, "sattva-a", class, revision)
-        .vama_shakti_quintessence_hash;
+    let base =
+        derive_vama_shakti_essential_identity(&coord_a, &digest_a, "sattva-a", class, revision)
+            .vama_shakti_quintessence_hash;
 
     // Vary coordinate only.
-    let h_coord = derive_vama_shakti_essential_identity(&coord_b, &digest_a, "sattva-a", class, revision)
-        .vama_shakti_quintessence_hash;
+    let h_coord =
+        derive_vama_shakti_essential_identity(&coord_b, &digest_a, "sattva-a", class, revision)
+            .vama_shakti_quintessence_hash;
     // Vary canonical form digest only.
-    let h_digest = derive_vama_shakti_essential_identity(&coord_a, &digest_b, "sattva-a", class, revision)
-        .vama_shakti_quintessence_hash;
+    let h_digest =
+        derive_vama_shakti_essential_identity(&coord_a, &digest_b, "sattva-a", class, revision)
+            .vama_shakti_quintessence_hash;
     // Vary archetypal sattva only.
-    let h_sattva = derive_vama_shakti_essential_identity(&coord_a, &digest_a, "sattva-b", class, revision)
-        .vama_shakti_quintessence_hash;
+    let h_sattva =
+        derive_vama_shakti_essential_identity(&coord_a, &digest_a, "sattva-b", class, revision)
+            .vama_shakti_quintessence_hash;
     // Vary classifier only.
     let h_class = derive_vama_shakti_essential_identity(
         &coord_a,
@@ -155,8 +172,13 @@ fn clock_position_lands_on_circle_and_quaternion_is_unit() {
     for label in ["M0.ground", "M2.symbol", "M4.user", "M5.epii"] {
         let coord = vak(label);
         for class in ALL_CLASSES {
-            let id =
-                derive_vama_shakti_essential_identity(&coord, &digest, "clock-sattva", class, revision);
+            let id = derive_vama_shakti_essential_identity(
+                &coord,
+                &digest,
+                "clock-sattva",
+                class,
+                revision,
+            );
             assert!(
                 (0.0..360.0).contains(&id.vama_shakti_clock_position),
                 "{label}/{class}: clock position {} must lie on the 0..360 circle",
@@ -207,7 +229,10 @@ fn compose_at_now_matches_personal_quaternion_law_and_stays_unit() {
         composed, expected,
         "compose_vama_shakti_q_at_now must reuse the personal-quaternion law verbatim"
     );
-    assert!(quat_is_unit(composed), "composed quaternion must stay on the unit sphere");
+    assert!(
+        quat_is_unit(composed),
+        "composed quaternion must stay on the unit sphere"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -221,8 +246,13 @@ fn rupa_specialization_is_opaque_and_dialogue_only() {
     let psyche_md = "# Psyche Template\n## Frame Contract\n## Sattva\n";
     let entity_md = "## Rupa\nbody\n## Ontology\ndef\n## Sattva\narchetype\n";
 
-    let handle =
-        rupa_specialization_handle(psyche_md, entity_md, &coord, VamaShaktiClass::Daemon, revision);
+    let handle = rupa_specialization_handle(
+        psyche_md,
+        entity_md,
+        &coord,
+        VamaShaktiClass::Daemon,
+        revision,
+    );
 
     // (a) dialogue-only profile enforced: only an opaque, protected handle is
     // exposed — the raw rūpa body never crosses the bus.
@@ -244,9 +274,17 @@ fn rupa_specialization_is_opaque_and_dialogue_only() {
     );
 
     // Determinism: identical inputs → identical handle.
-    let again =
-        rupa_specialization_handle(psyche_md, entity_md, &coord, VamaShaktiClass::Daemon, revision);
-    assert_eq!(handle, again, "rūpa specialization handle must be deterministic");
+    let again = rupa_specialization_handle(
+        psyche_md,
+        entity_md,
+        &coord,
+        VamaShaktiClass::Daemon,
+        revision,
+    );
+    assert_eq!(
+        handle, again,
+        "rūpa specialization handle must be deterministic"
+    );
 }
 
 #[test]
@@ -279,10 +317,20 @@ fn rupa_specialization_carries_classifier_and_sattva_inflection() {
 
     // (c) Sattva carries classifier inflection: same classifier, different
     // archetypal sattva (entity form) → different specialization.
-    let sattva_a =
-        rupa_specialization_handle(psyche_md, entity_md_a, &coord, VamaShaktiClass::Mantra, revision);
-    let sattva_b =
-        rupa_specialization_handle(psyche_md, entity_md_b, &coord, VamaShaktiClass::Mantra, revision);
+    let sattva_a = rupa_specialization_handle(
+        psyche_md,
+        entity_md_a,
+        &coord,
+        VamaShaktiClass::Mantra,
+        revision,
+    );
+    let sattva_b = rupa_specialization_handle(
+        psyche_md,
+        entity_md_b,
+        &coord,
+        VamaShaktiClass::Mantra,
+        revision,
+    );
     assert_ne!(
         sattva_a.specialization_hash, sattva_b.specialization_hash,
         "differing archetypal Sattva must inflect the specialization"
@@ -301,7 +349,10 @@ fn perturbation_is_deterministic_per_class() {
         let left = perturb_q_activity([1.0, 0.0, 0.0, 0.0], &turn, 0.5, &cited, class);
         let right = perturb_q_activity([1.0, 0.0, 0.0, 0.0], &turn, 0.5, &cited, class);
         assert_eq!(left, right, "{class}: perturbation must be deterministic");
-        assert!(quat_is_unit(left), "{class}: perturbed quaternion must stay unit");
+        assert!(
+            quat_is_unit(left),
+            "{class}: perturbed quaternion must stay unit"
+        );
     }
 }
 

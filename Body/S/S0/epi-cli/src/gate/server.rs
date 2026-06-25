@@ -2450,6 +2450,44 @@ async fn maintenance_loop(
                     let _ =
                         tokio::task::spawn_blocking(move || registration.heartbeat_gateway());
                 }
+                let cron_result = {
+                    let state_root = state_root.clone();
+                    tokio::task::spawn_blocking(move || cron::check_due_and_fire(&state_root)).await
+                };
+                match cron_result {
+                    Ok(Ok(fired_jobs)) => {
+                        for payload in fired_jobs {
+                            let cron_seq = runtime.next_seq("__gateway__:cron");
+                            runtime.broadcast(GatewayEvent::new(
+                                "cron.fired",
+                                None,
+                                None,
+                                Some(cron_seq),
+                                payload,
+                            ));
+                        }
+                    }
+                    Ok(Err(message)) => {
+                        let cron_seq = runtime.next_seq("__gateway__:cron");
+                        runtime.broadcast(GatewayEvent::new(
+                            "cron.error",
+                            None,
+                            None,
+                            Some(cron_seq),
+                            json!({ "message": message }),
+                        ));
+                    }
+                    Err(err) => {
+                        let cron_seq = runtime.next_seq("__gateway__:cron");
+                        runtime.broadcast(GatewayEvent::new(
+                            "cron.error",
+                            None,
+                            None,
+                            Some(cron_seq),
+                            json!({ "message": err.to_string() }),
+                        ));
+                    }
+                }
                 runtime.broadcast(GatewayEvent::new(
                     "heartbeat",
                     None,
@@ -3273,4 +3311,104 @@ async fn register_client_with_spacetimedb(
     })
     .await
     .map_err(|err| err.to_string())?
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio_tungstenite::connect_async;
+    use uuid::Uuid;
+
+    #[tokio::test]
+    async fn heartbeat_auto_fires_due_cron_job_without_manual_run() {
+        let state_root = temp_state_root("heartbeat_auto_fires_due_cron_job_without_manual_run");
+        fs::write(
+            state_root.join("cron.json"),
+            serde_json::to_string_pretty(&json!({
+                "jobs": [{
+                    "id": "heartbeat-due",
+                    "name": "heartbeat due",
+                    "description": "fires from heartbeat",
+                    "schedule": {"kind":"every","amount":15,"unit":"minutes"},
+                    "enabled": true,
+                    "payload": {"kind":"systemEvent","text":"heartbeat"},
+                    "sessionTarget": "main",
+                    "wakeMode": "next-heartbeat",
+                    "createdAtMs": 1,
+                    "updatedAtMs": 1,
+                    "state": {"nextRunAtMs": 1}
+                }],
+                "runs": []
+            }))
+            .expect("cron state should serialize"),
+        )
+        .expect("cron state should write");
+
+        let _server = spawn_test_server_with_state_root(state_root.clone(), 18_977)
+            .await
+            .expect("test server should start");
+        tokio::time::sleep(Duration::from_millis(50)).await;
+
+        let (mut socket, _) = connect_async("ws://127.0.0.1:18977")
+            .await
+            .expect("websocket should connect");
+        let _hello = next_json(&mut socket).await;
+        let _challenge = next_json(&mut socket).await;
+        socket
+            .send(Message::Text(
+                json!({"type":"req","id":1,"method":"connect","params":{}}).to_string(),
+            ))
+            .await
+            .expect("connect should send");
+        let _connect = next_json(&mut socket).await;
+
+        let fired = wait_for_event(&mut socket, "cron.fired").await;
+        let runs = cron::runs(&state_root, "heartbeat-due").expect("runs should load");
+
+        assert_eq!(fired["payload"]["jobId"], "heartbeat-due");
+        assert_eq!(fired["payload"]["payload"]["text"], "heartbeat");
+        assert_eq!(runs["runs"].as_array().expect("runs array").len(), 1);
+    }
+
+    async fn wait_for_event(
+        socket: &mut tokio_tungstenite::WebSocketStream<
+            tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>,
+        >,
+        event: &str,
+    ) -> Value {
+        tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                let frame = next_json(socket).await;
+                if frame["type"] == "event" && frame["event"] == event {
+                    return frame;
+                }
+            }
+        })
+        .await
+        .expect("expected event before timeout")
+    }
+
+    async fn next_json(
+        socket: &mut tokio_tungstenite::WebSocketStream<
+            tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>,
+        >,
+    ) -> Value {
+        loop {
+            let message = socket
+                .next()
+                .await
+                .expect("socket should remain open")
+                .expect("frame should decode");
+            if message.is_text() {
+                return serde_json::from_str(message.to_text().expect("message should be text"))
+                    .expect("frame should be json");
+            }
+        }
+    }
+
+    fn temp_state_root(name: &str) -> PathBuf {
+        let path = std::env::temp_dir().join(format!("epi-gate-{name}-{}", Uuid::new_v4()));
+        fs::create_dir_all(&path).expect("temp gateway state root should be created");
+        path
+    }
 }

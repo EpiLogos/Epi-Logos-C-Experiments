@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T08:25:29.560Z",
+  "updatedAt": "2026-06-25T08:32:41.327Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -801,14 +801,23 @@
       "worktree": null
     },
     "05.T5.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:18:33.534Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:32:41.243Z",
       "claimedAt": "2026-06-25T08:18:33.534Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:32:41.243Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:25:00.000Z",
+          "text": "Accepted. Deliverable on disk, committed."
+        },
+        {
+          "at": "2026-06-25T08:32:41.243Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core personal_identity::bioquaternion_decomposition passed 1 test (67 filtered); pnpm --dir Body/M/epi-theia/extensions/m4-nara test passed 76 tests; key files: Body/S/S0/portal-core/src/personal_identity.rs, Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts, Body/M/epi-theia/extensions/test/m4-nara-pratibimba-coordinate.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-4-bioquaternion-decomp",
-      "leaseExpiresAt": "2026-06-25T10:18:33.534Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:18:33.534Z",
       "runId": "20260625T081833Z-05-T5.4",
       "worktree": null
@@ -4505,14 +4514,19 @@
       "worktree": null
     },
     "26.T26.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:05:08.965Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:26:39.667Z",
       "claimedAt": "2026-06-25T08:05:08.965Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:26:39.667Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:26:39.667Z",
+          "text": "40/40 @pratibimba/ide-shell-m0-m5 tests pass via pnpm --dir Body/M/epi-theia/extensions/ide-shell-m0-m5 test; grep DR-WC-M5-3/psyche-facet/psycheFacet hits 4 lines in 13-decision-register.md; key paths Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/psyche-facets.tsx, src/browser/acr/run-tree.tsx, src/browser/acr/tool-stream.tsx, src/browser/agentic-control-room-widget.tsx, Body/S/S4/pi-agent/agents/{nous,logos,eros,mythos,psyche,sophia}.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-26-t26-8",
-      "leaseExpiresAt": "2026-06-25T10:05:08.965Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:05:08.965Z",
       "runId": "20260625T080508Z-26-T26.8",
       "worktree": null
@@ -9269,11 +9283,16 @@
       "worktree": null
     },
     "47.T47.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:18:52.976Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:30:00.000Z",
       "claimedAt": "2026-06-25T08:18:52.976Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:25:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:25:00.000Z",
+          "text": "Accepted. Deliverable on disk, committed."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-47-t47-1-cron-auto-fire",
       "leaseExpiresAt": "2026-06-25T10:18:52.976Z",
@@ -12080,11 +12099,12 @@
     {
       "runId": "20260625T080508Z-26-T26.8",
       "taskId": "26.T26.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:05:08.965Z",
       "owner": "codex-m-dev-26-t26-8",
       "leaseExpiresAt": "2026-06-25T10:05:08.965Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T08:26:39.667Z"
     },
     {
       "runId": "20260625T080534Z-24-T24.19",
@@ -12099,11 +12119,12 @@
     {
       "runId": "20260625T081833Z-05-T5.4",
       "taskId": "05.T5.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:18:33.534Z",
       "owner": "codex-m-dev-05-t5-4-bioquaternion-decomp",
       "leaseExpiresAt": "2026-06-25T10:18:33.534Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T08:32:41.243Z"
     },
     {
       "runId": "20260625T081843Z-46-T46.2",

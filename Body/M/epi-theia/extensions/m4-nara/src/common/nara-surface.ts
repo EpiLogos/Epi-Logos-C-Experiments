@@ -337,11 +337,15 @@ export function buildSpaceTimeRows(day: NaraDayContainer): readonly Readonly<Rec
 }
 
 export function renderProtectedPersonalField(input: ProtectedPersonalFieldInput): Readonly<Record<string, unknown>> {
+    const qBHandle = `${input.qComposedHandle}#q_b`;
+    const qPHandle = `${input.qComposedHandle}#q_p`;
     const handles = [
         input.qIdentityHandle,
         input.qTransitHandle,
         input.qActivityHandle,
         input.qComposedHandle,
+        qBHandle,
+        qPHandle,
         input.audioBusHandle,
         input.planetaryChakralStateHandle
     ];
@@ -359,6 +363,8 @@ export function renderProtectedPersonalField(input: ProtectedPersonalFieldInput)
             qTransitHandle: input.qTransitHandle,
             qActivityHandle: input.qActivityHandle,
             qComposedHandle: input.qComposedHandle,
+            qBHandle,
+            qPHandle,
             audioBusHandle: input.audioBusHandle,
             planetaryChakralStateHandle: input.planetaryChakralStateHandle
         })

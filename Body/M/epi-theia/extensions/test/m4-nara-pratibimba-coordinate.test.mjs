@@ -207,10 +207,22 @@ test('privacy projection keeps raw personal quaternion bodies out of the surface
     const serialized = JSON.stringify(unsafe);
 
     assert.equal(unsafe.bodyRendered, false);
-    assert.doesNotMatch(serialized, /q_b/);
-    assert.doesNotMatch(serialized, /q_p/);
+    assert.equal('q_b' in unsafe, false);
+    assert.equal('q_p' in unsafe, false);
+    assert.doesNotMatch(serialized, /"q_b"\s*:/);
+    assert.doesNotMatch(serialized, /"q_p"\s*:/);
     assert.doesNotMatch(serialized, /q_personal/);
     assert.doesNotMatch(serialized, /q_composed/);
+});
+
+test('protected-local decomposition hook is derived from qComposedHandle', () => {
+    const rendered = safeHandleFieldInput(fieldInput);
+    const handles = rendered.handles;
+
+    assert.equal(rendered.bodyRendered, false);
+    assert.equal(handles.qComposedHandle, fieldInput.qComposedHandle);
+    assert.equal(handles.qBHandle, `${fieldInput.qComposedHandle}#q_b`);
+    assert.equal(handles.qPHandle, `${fieldInput.qComposedHandle}#q_p`);
 });
 
 test('PASU declares atlas-sync consent residency as c_4_atlas_sync_consents array', () => {

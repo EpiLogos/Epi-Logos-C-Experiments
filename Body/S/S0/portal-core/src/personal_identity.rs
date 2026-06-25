@@ -185,6 +185,12 @@ pub fn compose_personal_quaternion(
     ))
 }
 
+pub fn decompose_bioquaternion(q_composed: [f32; 4]) -> ([f32; 4], [f32; 4]) {
+    let q_b = quat_normalize(q_composed);
+    let q_p = [q_b[0], -q_b[1], -q_b[2], -q_b[3]];
+    (q_b, q_p)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PersonalIdentityError {
     EmptyField { field: &'static str },
@@ -399,5 +405,47 @@ fn required_identity_hash(value: String) -> Result<String, PersonalIdentityError
         Ok(value)
     } else {
         Err(PersonalIdentityError::InvalidIdentityHash)
+    }
+}
+
+#[cfg(test)]
+mod bioquaternion_decomposition {
+    use super::*;
+
+    #[test]
+    fn reads_bimba_pratibimba_pair_from_q_composed() {
+        let q_identity = [0.5, 0.5, 0.5, 0.5];
+        let q_transit = [0.0, 1.0, 0.0, 0.0];
+        let q_activity_a = [0.0, 0.0, 1.0, 0.0];
+        let q_activity_b = [0.0, 0.0, 0.0, 1.0];
+
+        let q_composed_a = compose_personal_quaternion(q_identity, q_transit, q_activity_a);
+        let q_composed_b = compose_personal_quaternion(q_identity, q_transit, q_activity_b);
+
+        let (q_b_a, q_p_a) = decompose_bioquaternion(q_composed_a);
+        let (q_b_b, q_p_b) = decompose_bioquaternion(q_composed_b);
+
+        assert_eq!(q_b_a, q_composed_a);
+        assert_eq!(
+            q_p_a,
+            [
+                q_composed_a[0],
+                -q_composed_a[1],
+                -q_composed_a[2],
+                -q_composed_a[3]
+            ]
+        );
+        assert_eq!(q_b_b, q_composed_b);
+        assert_eq!(
+            q_p_b,
+            [
+                q_composed_b[0],
+                -q_composed_b[1],
+                -q_composed_b[2],
+                -q_composed_b[3]
+            ]
+        );
+        assert_ne!(q_b_a, q_b_b);
+        assert_ne!(q_p_a, q_p_b);
     }
 }
