@@ -706,6 +706,135 @@ impl Default for DepositionAnchorProjection {
     }
 }
 
+/// Typed graph residency home for a profile-bus coordinate.
+///
+/// Mirrors the M-branch + kernel-observation slice of
+/// `epi_s2_graph_schema::CoordinateHome` (S2 graph-schema canon, Tranche 17.17).
+/// portal-core (S0) does not link the S2 graph-schema crate — `epi-cli` is the
+/// S0 crate that depends on it directly — so this is the projection mirror
+/// published through the harmonic profile bus. Variants serialise to the
+/// identical canon strings (`"M"`, `"M0'"`, `"S2-5"`, …) so an M' surface reads
+/// the typed home here instead of re-parsing the coordinate string per tick.
+///
+/// The bus only ever produces M-branch psychoid homes; canon defines specific
+/// `Mn'` variants for every pratibimba position but only the generic `M` family
+/// home and the explicit `M5` for the bimba helix, so bimba positions 0..4 land
+/// on the generic family home (the exact position stays in `canonical_form`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum CoordinateHome {
+    #[serde(rename = "M")]
+    M,
+    #[serde(rename = "M0'")]
+    M0Prime,
+    #[serde(rename = "M1'")]
+    M1Prime,
+    #[serde(rename = "M2'")]
+    M2Prime,
+    #[serde(rename = "M3'")]
+    M3Prime,
+    #[serde(rename = "M4'")]
+    M4Prime,
+    #[serde(rename = "M5")]
+    M5,
+    #[serde(rename = "M5'")]
+    M5Prime,
+    #[serde(rename = "S2-5")]
+    S2_5,
+}
+
+impl CoordinateHome {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::M => "M",
+            Self::M0Prime => "M0'",
+            Self::M1Prime => "M1'",
+            Self::M2Prime => "M2'",
+            Self::M3Prime => "M3'",
+            Self::M4Prime => "M4'",
+            Self::M5 => "M5",
+            Self::M5Prime => "M5'",
+            Self::S2_5 => "S2-5",
+        }
+    }
+
+    /// Resolve the canon home for a tick-derived M-branch anchor. Pratibimba
+    /// positions map to their explicit `Mn'` home; the bimba helix carries the
+    /// generic `M` family home except for the explicit `M5` boundary.
+    fn from_anchor(position6: u8, is_prime: bool) -> Self {
+        if is_prime {
+            match position6 % 6 {
+                0 => Self::M0Prime,
+                1 => Self::M1Prime,
+                2 => Self::M2Prime,
+                3 => Self::M3Prime,
+                4 => Self::M4Prime,
+                _ => Self::M5Prime,
+            }
+        } else if position6 % 6 == 5 {
+            Self::M5
+        } else {
+            Self::M
+        }
+    }
+}
+
+/// Option-1 GDS overlay readiness for the active coordinate, surfaced so Theia
+/// can render the cycle gate without a separate `graph doctor` call. Mirrors the
+/// S2 readiness ladder (`Body/S/S2/graph-services/src/gds.rs`): `blocked` is the
+/// production state for the default APOC-only local topology, `projection_ready`
+/// once the `s2_public_bimba_option1_v1` projection exists, `algorithm_active`
+/// once the projection runner is explicitly invoked.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GdsOverlayState {
+    #[default]
+    Blocked,
+    ProjectionReady,
+    AlgorithmActive,
+}
+
+/// Pre-resolved S2 graph anchor for the active coordinate, published on the
+/// profile bus so M' surfaces stop re-parsing `canonical_form` through the S2
+/// `CoordinateArrayParser` on every tick (S2-ARCHITECTURE.md §4.3 / §10.4).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GraphAnchorProjection {
+    pub canonical_form: String,
+    pub depth: i8,
+    pub prefix: String,
+    pub parent: Option<String>,
+    pub axis: String,
+    pub coordinate_home: CoordinateHome,
+    pub gds_overlay_state: GdsOverlayState,
+    pub resolver_provenance: String,
+}
+
+impl GraphAnchorProjection {
+    fn from_anchor(source_coordinate: &str, position6: u8, helix: &str) -> Self {
+        let is_prime = helix == "pratibimba";
+        Self {
+            canonical_form: source_coordinate.to_owned(),
+            // Tick-derived anchors are top-level psychoid positions; S2 raises
+            // `depth` for `-`/`.` sub-coordinates (M0-2 is depth 1, M0-2-4 is 2).
+            depth: 0,
+            prefix: "M".to_owned(),
+            parent: Some("M".to_owned()),
+            axis: helix.to_owned(),
+            coordinate_home: CoordinateHome::from_anchor(position6, is_prime),
+            gds_overlay_state: GdsOverlayState::Blocked,
+            resolver_provenance:
+                "Body/S/S2/graph-services/src/coordinate.rs::CoordinateArrayParser (pre-resolved at the S0 profile bus to avoid per-tick re-parse)"
+                    .to_owned(),
+        }
+    }
+}
+
+impl Default for GraphAnchorProjection {
+    fn default() -> Self {
+        Self::from_anchor("M0", 0, "bimba")
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
@@ -735,6 +864,8 @@ pub struct MathemeHarmonicProfile {
     pub resonance72: MathemeResonance72Projection,
     #[serde(default)]
     pub deposition_anchor: DepositionAnchorProjection,
+    #[serde(default)]
+    pub graph_handle: GraphAnchorProjection,
     pub audio_octet: [f32; 8],
     pub nodal_quartet: [MathemeNodalConstraint; 4],
     pub elements: MathemeElementalProjection,
@@ -808,6 +939,8 @@ impl MathemeHarmonicProfile {
             resonance72.lens_anchor_index,
             binary.mahamaya_address64,
         );
+        let graph_handle =
+            GraphAnchorProjection::from_anchor(&source_coordinate, position, helix);
         Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
@@ -834,6 +967,7 @@ impl MathemeHarmonicProfile {
             diatonic: diatonic.clone(),
             resonance72,
             deposition_anchor,
+            graph_handle,
             audio_octet: vimarsha_reading.audio_octet,
             nodal_quartet: vimarsha_reading.nodal_quartet,
             elements: MathemeElementalProjection::from_position(position),

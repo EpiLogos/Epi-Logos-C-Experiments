@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:29:09.220Z",
+  "updatedAt": "2026-06-25T23:37:58.790Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3128,11 +3128,16 @@
       "worktree": null
     },
     "18.T18.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T23:37:58.742Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T23:37:58.742Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T23:37:58.742Z",
+          "text": "grep kernel.rs: GraphAnchorProjection struct(801)+impl(812)+Default(832), graph_handle field(868) populated in from_tick(942-943,970); coordinate_home: CoordinateHome typed enum (M-branch + S2-5 canon-string mirror of epi_s2_graph_schema::CoordinateHome) + gds_overlay_state: GdsOverlayState (blocked|projection_ready|algorithm_active). cargo check -p portal-core: Finished dev profile in 27.24s, clean."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
