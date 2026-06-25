@@ -75,7 +75,7 @@ That means bootstrap authorities such as `CONTINUATION.md`, `ANIMA.md`, `PARADIG
 
 **T / T' coordinate duality:**
 
-- **T-family** (#4, Lemniscate): the six universal planes of immanence — archetypal thinking modes that any mind participates in. T0=Questions, T1=Traces, T2=Challenges, T3=Patterns, T4=Discoveries, T5=Insights. These are not filing categories — they are living dimensions of thought.
+- **T-family** (#4, Lemniscate): the six universal planes of immanence — archetypal thinking modes that any mind participates in. T0=Questions, T1=Traces, T2=Challenges, T3=Patterns, T4=Discovery, T5=Insight. These are not filing categories — they are living dimensions of thought.
 - **T'-family** (inverted): localized instantiated thoughts. A T3' artifact is a specific pattern-note arising in a session from the universal T3 plane. T' artifacts are coordinate-linked back to their Bimba T-position via `source_coordinates[]`.
 
 **Three-step thought lifecycle:**
@@ -89,13 +89,13 @@ Task completion (Sophia):
   Each thought acquires its T'-position (T0'=question, T5'=insight, etc.)
 
 Session end / Night' (Aletheia):
-  Aletheia reads thoughts/ → archives to /Pratibimba/Self/Thought/T{n}/
+  Aletheia reads thoughts/ → archives to /Pratibimba/Self/Thought/T/T{n}/
   Filename: T{n}-{YYYYMMDD-HHmmss}.md
   Frontmatter: source_coordinates[] multi-form (links T' artifact to Bimba canonical space)
   Gnosis: thought chunk ingested into family notebook for retrieval
 ```
 
-The T' archive folders at `Idea/Pratibimba/Self/Thought/T0/` through `T5/` are the global accumulation surface. They grow over time as crystallised evidence of the living planes.
+The Thought tree lives under `Idea/Pratibimba/Self/Thought/T/`. Each `T/T{n}/T{n}.md` is the **canonical Day-plane Form** of that T-coordinate — a §0–§5 reading (Ground / Definition / Operation / Pattern / Context / Integration) carrying its archetype, defining question, cross-coordinate manifestations, and Day-Night complement — with its Night prime at `T/T{n}/T{n}'/T{n}'.md` (the Klein inversion: T0 Questions ↔ T0' Assumptions, T1 Traces ↔ T1' Lacunae, on through T5 Insight). **These `T{n}.md` Forms are the canonical definition of the T-family coordinates** — the source to read when understanding or enriching T (not a generic description elsewhere). The same `T{n}/` folders are also the global accumulation surface for crystallised T' instances, which grow over time as evidence of the living planes.
 
 **source_coordinates is multi-form:** Any Pratibimba artifact (thought, task-spec, pattern-note) carries `source_coordinates: string[]` — multiple coordinate references linking the instantiated artifact back to the Bimba canonical space it emerged from. A single T3' pattern-note might carry `["M4-3", "T3", "S1"]` — its M-branch origin, its T-plane position, its S-stack layer. This is the general Pratibimba→Bimba linking principle, not a single-coordinate foreign key.
 

@@ -1345,13 +1345,32 @@ Domain-specific edges emitted by dataset importers, e.g. **HAS_INTERNAL_COMPONEN
     }
   );
 
+  // Write tools (upsert/set_property) echo the full node, whose property values
+  // (long q_ prose, c_5_embedding vectors) overflow the MCP result-token limit.
+  // Return a lean summary instead — matched/counters plus each node's coordinate,
+  // labels, and property KEY LIST — so a caller can confirm exactly what the node
+  // now carries without the oversized value echo (no follow-up query needed).
+  // Defensive: returns the raw result unchanged if the shape is unexpected.
+  const summarizeWriteResult = (result: any) => {
+    if (!result || !Array.isArray(result.nodes)) return result;
+    return {
+      ...result,
+      nodes: result.nodes.map((n: any) => ({
+        identity: n.identity,
+        labels: n.labels,
+        coordinate: n.properties?.['coordinate'],
+        property_keys: n.properties ? Object.keys(n.properties).sort() : [],
+      })),
+    };
+  };
+
   server.tool(
     'graph_upsert_node',
     'MERGE a node on an anchor key (coordinate by default, or uuid/match_key) and SET arbitrary properties + labels. ANY property key is allowed, prefixed or not (e.g. {"coordinate":"M2-5","c_1_name":"X","custom_flag":true}). Idempotent.',
     GraphUpsertNodeInputSchema.shape,
     async (args) => {
       const result = await upsertNode(GraphUpsertNodeInputSchema.parse(args));
-      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: 'text', text: JSON.stringify(summarizeWriteResult(result), null, 2) }] };
     }
   );
 
@@ -1361,7 +1380,7 @@ Domain-specific edges emitted by dataset importers, e.g. **HAS_INTERNAL_COMPONEN
     GraphSetPropertyInputSchema.shape,
     async (args) => {
       const result = await setProperty(GraphSetPropertyInputSchema.parse(args));
-      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+      return { content: [{ type: 'text', text: JSON.stringify(summarizeWriteResult(result), null, 2) }] };
     }
   );
 

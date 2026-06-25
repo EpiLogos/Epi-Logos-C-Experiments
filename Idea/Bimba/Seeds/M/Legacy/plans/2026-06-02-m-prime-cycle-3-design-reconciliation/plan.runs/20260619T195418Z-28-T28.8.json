@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T195418Z-28-T28.8",
+  "taskId": "28.T28.8",
+  "startedAt": "2026-06-19T19:54:18.970Z",
+  "owner": "codex-m-dev-28-t28-8",
+  "leaseExpiresAt": "2026-06-19T21:54:18.970Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.8",
+    "trackId": "28",
+    "tranche": "T28.8",
+    "title": "Evidence pane: `MediatedRunEvidencePacket` + dispatch-trace mini-graph + DR-WC-IS-2 deep-vs-abbreviated split",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.7"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/evidence-pane-widget.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

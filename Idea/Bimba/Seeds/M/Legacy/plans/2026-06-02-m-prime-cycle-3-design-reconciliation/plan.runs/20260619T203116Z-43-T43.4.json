@@ -1,0 +1,33 @@
+{
+  "runId": "20260619T203116Z-43-T43.4",
+  "taskId": "43.T43.4",
+  "startedAt": "2026-06-19T20:31:16.717Z",
+  "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
+  "leaseExpiresAt": "2026-06-19T22:31:16.717Z",
+  "worktree": null,
+  "task": {
+    "id": "43.T43.4",
+    "trackId": "43",
+    "tranche": "T43.4",
+    "title": "C-header information-hiding remediation",
+    "effort": null,
+    "file": "43-end-of-cycle-3-audit-protocol.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md",
+    "dependsOn": [
+      "43.T43.3"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

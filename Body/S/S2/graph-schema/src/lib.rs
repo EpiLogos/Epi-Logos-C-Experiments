@@ -108,6 +108,21 @@ pub const REL_INFERRED_BY_PROPERTY: &str = "inferred_by";
 pub const REL_PROMPT_HASH_PROPERTY: &str = "prompt_hash";
 pub const REL_CREATED_BY_SYNC_VERSION_PROPERTY: &str = "created_by_sync_version";
 pub const REL_LAST_VERIFIED_AT_PROPERTY: &str = "last_verified_at";
+pub const RELATION_FAMILY_PROPERTY: &str = "c_1_relation_family";
+pub const RELATION_FAMILY_STRUCTURAL: &str = "structural";
+pub const RELATION_FAMILY_CORRESPONDENTIAL: &str = "correspondential";
+pub const RELATION_FAMILY_KERNEL_CORE: &str = "kernel_core";
+pub const RELATION_FAMILY_INFERRED: &str = "inferred";
+pub const RELATION_FAMILY_SYNC: &str = "sync";
+pub const RELATION_FAMILY_COMPATIBILITY: &str = "compatibility";
+pub const RELATION_FAMILY_VALUES: &[&str] = &[
+    RELATION_FAMILY_STRUCTURAL,
+    RELATION_FAMILY_CORRESPONDENTIAL,
+    RELATION_FAMILY_KERNEL_CORE,
+    RELATION_FAMILY_INFERRED,
+    RELATION_FAMILY_SYNC,
+    RELATION_FAMILY_COMPATIBILITY,
+];
 pub const ARENA_DIALOGUE_OF: &str = "ARENA_DIALOGUE_OF";
 pub const DIALOGICAL_RESONANCE_AT: &str = "DIALOGICAL_RESONANCE_AT";
 pub const WORLD_FORM_OF_RELATION: &str = "WORLD_FORM_OF";
@@ -530,6 +545,7 @@ pub enum GraphPropertyType {
     DateTime,
     JsonString,
     Embedding,
+    Enum(&'static [&'static str]),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -2800,10 +2816,10 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         compatibility: false,
     },
     GraphPropertySpec {
-        key: "c_1_relation_family",
+        key: RELATION_FAMILY_PROPERTY,
         coordinate_home: "S2-3'",
         owner: GraphPropertyOwner::Relationship,
-        value_type: GraphPropertyType::String,
+        value_type: GraphPropertyType::Enum(RELATION_FAMILY_VALUES),
         cardinality: GraphPropertyCardinality::One,
         disclosure: GraphPropertyDisclosure::Public,
         source_family: "relationship",
@@ -3050,6 +3066,27 @@ pub fn relationship_spec(rel_type: &str) -> Result<&'static GraphRelationshipTyp
         .iter()
         .find(|spec| spec.rel_type == rel_type && !spec.compatibility)
         .ok_or_else(|| format!("not a canonical relationship type: {rel_type}"))
+}
+
+pub fn relation_family_for_relationship_type(rel_type: &str) -> &'static str {
+    if rel_type == KERNEL_RESONANCE_RELATION {
+        return RELATION_FAMILY_KERNEL_CORE;
+    }
+    if let Some(spec) = RELATIONSHIP_TYPE_SPECS
+        .iter()
+        .find(|spec| spec.rel_type == rel_type)
+    {
+        if spec.compatibility {
+            return RELATION_FAMILY_COMPATIBILITY;
+        }
+        return match spec.source_family {
+            "llm-inference" => RELATION_FAMILY_INFERRED,
+            "sync" => RELATION_FAMILY_SYNC,
+            "kernel-resonance" => RELATION_FAMILY_KERNEL_CORE,
+            _ => RELATION_FAMILY_STRUCTURAL,
+        };
+    }
+    RELATION_FAMILY_CORRESPONDENTIAL
 }
 
 /// Convention for deep-dataset relationship strings.

@@ -1,0 +1,36 @@
+{
+  "runId": "20260619T131737Z-28-T28.6",
+  "taskId": "28.T28.6",
+  "startedAt": "2026-06-19T13:17:37.869Z",
+  "owner": "codex-m-dev-28-t28-6-coordinate-tree",
+  "leaseExpiresAt": "2026-06-19T15:17:37.869Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.6",
+    "trackId": "28",
+    "tranche": "T28.6",
+    "title": "Coordinate Tree: family colouring + active-coordinate highlight + CRUD-vs-governed-route toggle + per-family expand/collapse",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.5"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/style/coordinate-tree.css"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

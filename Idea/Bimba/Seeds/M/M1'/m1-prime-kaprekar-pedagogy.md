@@ -30,7 +30,7 @@ The archetype-7 binding is substrate-cited at `Body/S/S0/epi-lib/include/m1.h:32
 
 ## Recognition
 
-The point is intentionally small: a user seeing `KaprekarPedagogyHit` should be able to recognise why the M1 instrument lights a 6174 link without being pulled out of the walk. The UI gives the factorisation, the digit names, the substrate citation, and the Canon Studio path back here.
+The landing is pratyabhijñā, not derivation: 6174 contributes no new primitive. A user meeting `KaprekarPedagogyHit` re-cognises that the digits `{1,4,6,7}` are already-present kernel facts — the `DIFF_B` unit axiom, the `DIFF_A` family, the six matrix-ops, the 7-row's `16/9` — folded into one self-returning number. The Kaprekar fixed-point is the recognition that the M1 instrument was always already carrying these. The UI gives the factorisation, the digit names, the substrate citation, and the Canon Studio path back here, then returns the user to the walk.
 
 ## Event Hook
 

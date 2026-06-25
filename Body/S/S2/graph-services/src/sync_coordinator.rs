@@ -5,7 +5,8 @@ use epi_s2_graph_schema::{
     labels_for_coordinate_node, node_property_spec, property_spec, relationship_spec,
     validate_coordinate_prefix_property, GraphPropertyType, COORDINATE_PROPERTY,
     CRYSTALLISATION_STATE_PROPERTY, C_LAYER_PATH_PROPERTY, M_COMPONENT_PROPERTY,
-    M_REPO_PATH_PROPERTY, M_SYMBOL_REFS_PROPERTY, REL_CREATED_BY_SYNC_VERSION_PROPERTY,
+    M_REPO_PATH_PROPERTY, M_SYMBOL_REFS_PROPERTY, RELATION_FAMILY_INFERRED,
+    RELATION_FAMILY_PROPERTY, RELATION_FAMILY_SYNC, REL_CREATED_BY_SYNC_VERSION_PROPERTY,
     REL_EVIDENCE_KIND_PROPERTY, REL_EVIDENCE_TEXT_PROPERTY, SEMANTIC_AUTHORITY_PROPERTY,
     S_COMPONENT_PROPERTY, S_DEPENDS_ON_PATHS_PROPERTY, S_EXECUTION_FLOW_REFS_PROPERTY,
     S_FILE_KIND_PROPERTY, S_OWNED_BY_COORDINATE_PROPERTY, S_REPO_PATH_PROPERTY,
@@ -883,6 +884,10 @@ impl<'a> SyncCoordinator<'a> {
                 .with_property(
                     REL_CREATED_BY_SYNC_VERSION_PROPERTY,
                     Value::String(intent.sync_version.clone()),
+                )?
+                .with_property(
+                    RELATION_FAMILY_PROPERTY,
+                    Value::String(RELATION_FAMILY_SYNC.to_owned()),
                 )?;
             plan.validate()?;
             relationships.push(plan);
@@ -957,6 +962,10 @@ impl<'a> SyncCoordinator<'a> {
             .with_property(
                 REL_CREATED_BY_SYNC_VERSION_PROPERTY,
                 Value::String(intent.sync_version.clone()),
+            )?
+            .with_property(
+                RELATION_FAMILY_PROPERTY,
+                Value::String(RELATION_FAMILY_INFERRED.to_owned()),
             )?;
             if let Some(source_path) = &candidate.source_path {
                 plan = plan.with_property("source_path", Value::String(source_path.clone()))?;
@@ -1326,6 +1335,9 @@ fn validate_property_value_type(
         GraphPropertyType::String | GraphPropertyType::DateTime | GraphPropertyType::JsonString => {
             value.is_string()
         }
+        GraphPropertyType::Enum(values) => {
+            value.as_str().is_some_and(|value| values.contains(&value))
+        }
         GraphPropertyType::StringList => value
             .as_array()
             .map(|items| items.iter().all(Value::is_string))
@@ -1358,6 +1370,7 @@ fn graph_property_type_name(value_type: GraphPropertyType) -> &'static str {
         GraphPropertyType::DateTime => "datetime string",
         GraphPropertyType::JsonString => "json string",
         GraphPropertyType::Embedding => "embedding",
+        GraphPropertyType::Enum(_) => "enum string",
     }
 }
 

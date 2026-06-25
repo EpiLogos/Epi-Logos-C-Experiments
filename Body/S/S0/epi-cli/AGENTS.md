@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `Cargo.toml` / `src/lib.rs` — crate root: re-exports command modules and bridges sibling crates (`hen` <- `epi-s1-hen-compiler-core`, `epii_*` <- `epi-s5-*-core`)
 - `src/main.rs` — `clap` entrypoint for the `epi` binary
 - `build.rs` — compiles `../epi-lib` C sources via `cc` (the C FFI bridge); links BLAKE3 from `../vendor/blake3`
-- `src/` command families — `gate/` (gateway RPC/control, including [[M4]] Nara session protein bridge commands), `nara/` (M4 personal, including [[Vama Shakti]] arena admin commands), `portal/` + `tui/` (ratatui-hypertile), `vault/`, `agent/` + `techne/` (agent/gateway lifecycle), `graph/`, `know.rs` (`epi know` unified coordinate-knowing packet), `slot.rs` (Pi-Agent model-slot + harness-slot config), `skill.rs` ([[Agora]] skill registry / [[Aletheia]] retrain-review CLI), `sync/`, `ffi/`, `core/`, `notebook/`, `profile/`, `book/`, `code/`, `sesh/`, `up.rs`, `vimarsa/`; `src/main.rs` also hosts the thin `pi train-ebm` / `pi export-ebm-state` S0 membrane over S5 resonance-corpus law.
+- `src/` command families — `gate/` (gateway RPC/control, including [[M4]] Nara session protein bridge commands), `canon/` (`epi canon coord/search/diff` depth-ladder distribution surface over [[S5']] gnostic canon and [[Bimba]] coordinate payloads), `nara/` (M4 personal, including [[Vama Shakti]] arena admin commands), `portal/` + `tui/` (ratatui-hypertile), `vault/`, `agent/` + `techne/` (agent/gateway lifecycle), `graph/`, `know.rs` (`epi know` unified coordinate-knowing packet), `slot.rs` (Pi-Agent model-slot + harness-slot config), `skill.rs` ([[Agora]] skill registry / [[Aletheia]] retrain-review CLI), `sync/`, `ffi/`, `core/`, `notebook/`, `profile/`, `book/`, `code/`, `sesh/`, `up.rs`, `vimarsa/`; `src/main.rs` also hosts the thin `pi train-ebm` / `pi export-ebm-state` S0 membrane over S5 resonance-corpus law.
 - `tests/` — extensive contract/integration suites (gate_*, nara_*, vault_*, agent_*, portal_*, kernel_*)
 - `schemas/` (TS dataset validator), `contract-inventory/` (`s0-membrane-inventory.json`), `scripts/`, `assets/`, `vendor/`
 - Does NOT own coordinate semantics it merely invokes — graph law lives in [[S2]], gateway/session law in [[S3]], agent runtime in [[S4]]; domain law stays in its owning module, not pulled into [[S0-SPEC]] by convenience.
@@ -27,6 +27,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml nara_session_dispatch_cli_bridge_returns_protected_handle --lib` for the [[M4]] Nara session dispatch CLI bridge.
 - `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml slot_list_round_trip` for `epi slot` model/harness config round-tripping.
 - `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test pi_ebm_commands` for the `pi train-ebm` / `pi export-ebm-state` S0 mirror.
+- `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test cli_canon_coord_depth_ladder`; `--test cli_canon_search_semantic`; `--test cli_canon_diff_structural` for `epi canon` surfaces.
 
 ## Child DOX Index
 - (leaf)

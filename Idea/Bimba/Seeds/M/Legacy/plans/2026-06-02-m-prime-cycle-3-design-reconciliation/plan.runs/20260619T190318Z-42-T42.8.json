@@ -1,0 +1,41 @@
+{
+  "runId": "20260619T190318Z-42-T42.8",
+  "taskId": "42.T42.8",
+  "startedAt": "2026-06-19T19:03:18.965Z",
+  "owner": "codex-m-dev-42-t42-8-skill-centralisation",
+  "leaseExpiresAt": "2026-06-19T21:03:18.965Z",
+  "worktree": null,
+  "task": {
+    "id": "42.T42.8",
+    "trackId": "42",
+    "tranche": "T42.8",
+    "title": "Skill centralisation + per-harness projection (the skill gap)",
+    "effort": "the skill gap",
+    "file": "42-harness-dynamics-surface.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/42-harness-dynamics-surface.md",
+    "dependsOn": [
+      "42.T42.7"
+    ],
+    "writeScopes": [
+      ".claude/skills/**",
+      ".codex/skills/**",
+      "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/**",
+      "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/pleroma-skill-proxy/SKILL.md",
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/**",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/**",
+      "Body/S/S5/plugins/epi-logos/skills/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

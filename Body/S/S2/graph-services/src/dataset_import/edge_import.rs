@@ -4,6 +4,7 @@ use super::validation::{
     DatasetSkip,
 };
 use crate::coordinate::{convert_hash_to_m_family, wrap_context_frames};
+use epi_s2_graph_schema::{relation_family_for_relationship_type, RELATION_FAMILY_PROPERTY};
 use serde_json::Value;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -92,6 +93,10 @@ impl<'a> DatasetImporter<'a> {
                 "r.c_2_relation_type = COALESCE(r.c_2_relation_type, '{}')",
                 escape_cypher(&rel_type)
             ));
+            set_parts.push(format!(
+                "r.{RELATION_FAMILY_PROPERTY} = COALESCE(r.{RELATION_FAMILY_PROPERTY}, '{}')",
+                relation_family_for_rel_type(&rel_type)
+            ));
             set_parts.push("r.c_3_created_at = COALESCE(r.c_3_created_at, datetime())".to_string());
             if let Some(branch) = branch {
                 set_parts.push(format!(
@@ -172,6 +177,10 @@ pub(super) fn sanitize_rel_type(t: &str) -> String {
             }
         })
         .collect()
+}
+
+pub(super) fn relation_family_for_rel_type(rel_type: &str) -> &'static str {
+    relation_family_for_relationship_type(rel_type)
 }
 
 fn append_deep_prefixed_rel_props(rel: &Value, set_parts: &mut Vec<String>) {
@@ -293,12 +302,27 @@ mod tests {
         assert_eq!(relation_family_for_rel_type("CONTAINS"), "structural");
         assert_eq!(relation_family_for_rel_type("SYNCED_FROM"), "sync");
         assert_eq!(relation_family_for_rel_type("ELABORATES"), "inferred");
-        assert_eq!(relation_family_for_rel_type("POS0_LINKS_TO"), "compatibility");
-        assert_eq!(relation_family_for_rel_type("HAS_KERNEL_RESONANCE"), "kernel_core");
-        assert_eq!(relation_family_for_rel_type("HAS_DECAN"), "correspondential");
-        assert_eq!(relation_family_for_rel_type("HAS_MAQAM_FAMILY"), "correspondential");
+        assert_eq!(
+            relation_family_for_rel_type("POS0_LINKS_TO"),
+            "compatibility"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_KERNEL_RESONANCE"),
+            "kernel_core"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_DECAN"),
+            "correspondential"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_MAQAM_FAMILY"),
+            "correspondential"
+        );
         assert_eq!(relation_family_for_rel_type("RULED_BY"), "correspondential");
-        assert_eq!(relation_family_for_rel_type("VORTEX_SPIRIT_AXIS"), "correspondential");
+        assert_eq!(
+            relation_family_for_rel_type("VORTEX_SPIRIT_AXIS"),
+            "correspondential"
+        );
     }
 
     #[test]

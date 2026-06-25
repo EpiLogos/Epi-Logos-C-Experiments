@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T204845Z-43-T43.5",
+  "taskId": "43.T43.5",
+  "startedAt": "2026-06-19T20:48:45.384Z",
+  "owner": "codex-m-dev-43-t43-5-boundary-guardrails",
+  "leaseExpiresAt": "2026-06-19T22:48:45.384Z",
+  "worktree": null,
+  "task": {
+    "id": "43.T43.5",
+    "trackId": "43",
+    "tranche": "T43.5",
+    "title": "Enforced boundaries + drift guardrails",
+    "effort": null,
+    "file": "43-end-of-cycle-3-audit-protocol.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md",
+    "dependsOn": [
+      "43.T43.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

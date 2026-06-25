@@ -69,7 +69,9 @@ fn relationship_evidence_properties_are_registered() {
         GraphPropertyType::String
     );
     assert_eq!(
-        relationship_property_spec("edge_weight").unwrap().value_type,
+        relationship_property_spec("edge_weight")
+            .unwrap()
+            .value_type,
         GraphPropertyType::Float
     );
 

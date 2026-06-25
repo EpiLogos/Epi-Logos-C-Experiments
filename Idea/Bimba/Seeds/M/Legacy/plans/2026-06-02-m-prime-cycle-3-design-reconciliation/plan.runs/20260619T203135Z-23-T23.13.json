@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T203135Z-23-T23.13",
+  "taskId": "23.T23.13",
+  "startedAt": "2026-06-19T20:31:35.379Z",
+  "owner": "codex-m-dev-23-t23-13-audio-bus-visual",
+  "leaseExpiresAt": "2026-06-19T22:31:35.379Z",
+  "worktree": null,
+  "task": {
+    "id": "23.T23.13",
+    "trackId": "23",
+    "tranche": "T23.13",
+    "title": "Audio-bus visual representation (NO sound output)",
+    "effort": "NO sound output",
+    "file": "23-m2-parashakti-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md",
+    "dependsOn": [
+      "23.T23.12"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/music_tech.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

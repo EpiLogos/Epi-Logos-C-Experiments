@@ -6,8 +6,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S2-SPEC]]
 
 ## Ownership
 - `Cargo.toml` — package `epi-s2-graph-schema`, lib `epi_s2_graph_schema`; deps: `serde`.
-- `src/lib.rs` — crate root / public surface: schema constants (`SCHEMA_VERSION`, `GRAPH_ID`, `EMBEDDING_VERSION`, `Q_SCHEMA_VERSION`), label/property names (`BIMBA_LABEL`, `COORDINATE_PROPERTY`, `c_*` prefixed property constants), and the registries consumed by sibling `graph-services`.
-- `tests/` — schema contract tests: `label_registry.rs`, `property_registry.rs`, `relationship_registry.rs`, `code_provenance_properties.rs`, `coordinate_prefix_properties.rs`, `q_vocabulary_canon_loaded.rs`, `track_02_t1_convergence.rs`.
+- `src/lib.rs` — crate root / public surface: schema constants (`SCHEMA_VERSION`, `GRAPH_ID`, `EMBEDDING_VERSION`, `Q_SCHEMA_VERSION`), label/property names (`BIMBA_LABEL`, `WORLD_LABEL`, `ARCHETYPAL_LABEL`, `GNOSTIC_LABEL`, `COORDINATE_PROPERTY`, `c_*` prefixed property constants), C-first `World/Types` evidence properties (`type_family`, `type_path`, `type_coordinate`, `semantic_authority`, `crystallisation_state`, `c_layer_path`, `c_1_source_artifact_span`), and the registries consumed by sibling `graph-services`.
+- `tests/` — schema contract tests: `label_registry.rs`, `property_registry.rs`, `relationship_registry.rs`, `code_provenance_properties.rs`, `coordinate_prefix_properties.rs`, `q_vocabulary_canon_loaded.rs`, `track_02_t1_convergence.rs`, `world_namespace.rs`, `gnostic_label_promotion.rs`.
 - `contract-inventory/` — `track-02-authority-drift.json`: pinned contract inventory snapshot.
 - Does NOT own: Neo4j/Redis service logic or the Turtle ontology (sibling `graph-services/`, `ontology/`); coordinate semantics route through S2' carriers. Domain law lives in this layer's owning spec, not in [[S0-SPEC]]/[[M0'-SPEC]] by convenience.
 

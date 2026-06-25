@@ -1,0 +1,44 @@
+{
+  "runId": "20260619T202539Z-19-T19.5",
+  "taskId": "19.T19.5",
+  "startedAt": "2026-06-19T20:25:39.751Z",
+  "owner": "codex-m-dev-19-t19-5",
+  "leaseExpiresAt": "2026-06-19T22:25:39.751Z",
+  "worktree": null,
+  "task": {
+    "id": "19.T19.5",
+    "trackId": "19",
+    "tranche": "T19.5",
+    "title": "Expose `m3_major_arcana_from_codon` utility",
+    "effort": null,
+    "file": "19-contemplation-surface-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md",
+    "dependsOn": [
+      "19.T19.4"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      "CODE EXISTS: m3_major_arcana_from_codon() at m3.c:338-355 — written pre-task.",
+      "ARCHITECTURAL ISSUE: Function collapses codon→aa→card via amino_acid_index, skipping transcription entirely.",
+      "BIMBA MAP: Major Arcana = chromosomes (not amino acids). 22 chr pairs at #3-3-5-0-0 through #3-3-5-0-21.",
+      "TRANSCRIPTIONAL BRIDGE: 37 T-containing codons undergo T→U shift; 27 are T-free shared. Current function treats all codons identically.",
+      "NEEDS: struct return with card_index + transcriptional_class (DNA-source/RNA-transcribed/shared) + T→U substitution count (0-3, determines 7 vs 8 rotational states).",
+      "REDESIGN REQUIRED: kernel invariant change — not a no-orphan-fill. Awaiting Frank's direction.",
+      {
+        "at": "2026-06-13T00:00:00.000Z",
+        "text": "Scope reduced per design-pass 2026-06-13 (Phase-H session-as-transcription synthesis): the function m3_major_arcana_from_codon at m3.c:338 is a trivial composition (codon -> M3_CODON_TO_AA -> reverse-lookup M3_MAJOR_ARCANA[].amino_acid_index) and works correctly as-is. The \"kernel invariant change\" originally flagged is the transcript-class + governance helpers — moved to NEW tranche 4.16 (additive to m3.h/m3.c). Closing scope for 19.T19.5: (1) replace the misleading m3.c:330-336 comment with \"Map a codon to its Major Arcana card via amino-acid -> chromosome association. Stable under T<->U substitution: DNA and RNA forms of the same codon resolve to the same archetypal territory. Returns 0xFF for STOP codons and amino acids with no autosomal assignment.\" (2) no kernel-substrate changes — they live in 4.16. Once comment-patched, the function passes the original verification clause (cargo test -p epi-lib m3_major_arcana_from_codon_roundtrip). Ready for claim + close. Cross-link: DR-M3-TRANSCRIPT-1 (PROPOSED) routes the broader kernel work to 4.16 / 4.17 / 5.26 / 5.27."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

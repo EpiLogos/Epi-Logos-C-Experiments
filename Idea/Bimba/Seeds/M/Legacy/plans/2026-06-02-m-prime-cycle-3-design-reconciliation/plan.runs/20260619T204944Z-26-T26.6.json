@@ -1,0 +1,33 @@
+{
+  "runId": "20260619T204944Z-26-T26.6",
+  "taskId": "26.T26.6",
+  "startedAt": "2026-06-19T20:49:44.236Z",
+  "owner": "codex-m-dev-26-t26-6-autoresearch-pane",
+  "leaseExpiresAt": "2026-06-19T22:49:44.236Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.6",
+    "trackId": "26",
+    "tranche": "T26.6",
+    "title": "Autoresearch pane deepening — autoresearch-as-concept + Möbius-pass display + per-capacity filter",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.5"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

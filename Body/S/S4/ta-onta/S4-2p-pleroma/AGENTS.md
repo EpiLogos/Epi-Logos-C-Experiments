@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-2-SPEC]] (carrier law); layer groun
 - `CONTRACT.md` — binding carrier contract: responsibility, 7 bounded primitives, PI hook seams, invariants.
 - `spine-contribution.ts` — spine compositor contribution (`coordinate: "S2/S3"`: injection slot, ledger, compiler pass, query).
 - `S2/` — primitive + tool source: `pleroma-primitives.ts` (PRIMITIVE_REGISTRY), `terminal-tools.ts` (Techne argv builder + capability matrix), `damage-control.ts`, `tilldone.ts`, `themeMap.ts` (per-extension visual identity), `child-extension-propagation.ts`, `prompt-url-widget.ts`.
-- `S2'/skills/` — atomic skill substrate (tmux, cmux, ralph-tui, worktrunk, context7, pleroma-skill-proxy, techne-* relay/spawn/webmcp bridges).
+- `S2'/skills/` — atomic skill substrate (tmux, cmux, ralph-tui, worktrunk, context7, techne-* relay/spawn/webmcp bridges); `pleroma-skill-proxy/` owns the central skill-store symlink projector for `claude-native`, `codex-native`, and `hermes-acp` launch surfaces.
 - `S2'/evals/` — 6 eval suites (atomic-tools, discharge, klein, manifest, ouroboros, topology-routing).
 - `tests/` — `terminal_tools.test.ts` (node:test contract test).
 - Does NOT own: orchestration skills + constitutional agents (→ Anima), evidence-acquisition + Moirai agents (→ Aletheia), vault content/law (→ Hen). Carrier domain law lives here in `CONTRACT.md` + [[S4-2-SPEC]], not in [[S0-SPEC]]/[[M0'-SPEC]] by convenience.
@@ -27,6 +27,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-2-SPEC]] (carrier law); layer groun
 
 ## Verification
 - `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts"` (Techne terminal-tools contract test).
+- `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/pleroma-skill-proxy/skill-projector.test.mjs"` (central skill-store symlink projection and `skill_lookup` parity).
 
 ## Child DOX Index
 - (leaf)

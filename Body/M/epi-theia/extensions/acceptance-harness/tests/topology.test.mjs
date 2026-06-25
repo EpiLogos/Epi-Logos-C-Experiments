@@ -69,6 +69,7 @@ const {
 } = require('../../agentic-control-room/lib/common/run-model.js');
 const {
     M2_BIMBA_PRATIBIMBA_STATE_FIELDS,
+    M2_SIDE_STATE_FIELDS,
     M2_TOGGLE_CLASSES,
     M2_EMPTY_STATE,
     createM2BimbaPratibimbaSelector,
@@ -596,8 +597,14 @@ test('ide-shell state-identity: active-coordinate preserved while toggling daily
     });
 });
 
-test('M2 Bimba-Pratibimba state: all fifteen fields survive both 0/1 toggle AND layout switch', () => {
-    // Verify the M2-side state field contract matches the specification.
+test('M2 Bimba-Pratibimba state: every M2-side field survives both the 0/1 face-switch AND the layout switch', () => {
+    // 23.15 — the M2-side state slice the typed selector publishes into the
+    // shared BimbaPratibimbaUiState. The eleven-field persistence contract is
+    // the six core profile coordinates (profileGeneration, lens_mode, tick12,
+    // position6, address72, kleinFlip.surfaceValence) plus the layer / routing
+    // / view fields, with the 23.6 planetaryViewMode and 23.8 epogdoonProofMode
+    // appended. The full persisted record is the six-field cross-layout spine
+    // plus this M2-side slice.
     assert.deepEqual(
         [...M2_BIMBA_PRATIBIMBA_STATE_FIELDS],
         [
@@ -612,15 +619,30 @@ test('M2 Bimba-Pratibimba state: all fifteen fields survive both 0/1 toggle AND 
         'M2 BimbaPratibimba state fields must match the typed selector contract'
     );
 
+    // The M2-side slice (everything beyond the cross-layout spine) carries the
+    // spec-enumerated fields — the eleven-field contract plus the appended
+    // 23.6 / 23.8 view modes.
+    for (const field of [
+        'lens_mode', 'tick12', 'position6', 'address72', 'kleinFlipSurfaceValence',
+        'layerAActiveCell', 'layerBCardScroll', 'layerCSurfaceVariant', 'layerCZoom',
+        'lastRoutingTrace', 'correspondenceTreeAxisFilter',
+        'correspondenceTreeSonicOverlay', 'planetaryViewMode', 'epogdoonProofMode'
+    ]) {
+        assert.ok(
+            M2_SIDE_STATE_FIELDS.includes(field),
+            `M2-side state slice must declare "${field}"`
+        );
+    }
+
     assert.deepEqual(
         [...M2_TOGGLE_CLASSES],
         ['layout:daily-0-1<->ide-deep', 'face:cosmic<->personal-0/1'],
-        'M2 state must survive both toggle classes'
+        'M2 state must survive both toggle classes (layout switch AND 0/1 face-switch)'
     );
 
     const harness = createM2StatePersistenceHarness();
 
-    // Fixture state with non-default values for every M2-specific field
+    // Fixture state with non-default values for every field, typed per spec.
     const m2State = {
         coordinate: 'M2.5',
         lens: "M2'",
@@ -628,53 +650,109 @@ test('M2 Bimba-Pratibimba state: all fifteen fields survive both 0/1 toggle AND 
         profileGeneration: 528,
         sessionKey: 'acceptance:m2-parashakti',
         dayNow: '2026-06-19',
-        lens_mode: 'M2.5:parashakti',
+        lens_mode: "M2':parashakti",
         tick12: 7,
         position6: 4,
-        address72: 42,
-        kleinFlipSurfaceValence: 'inverted',
-        layerAActiveCell: 42,
-        layerBCardScroll: 3,
-        layerCSurfaceVariant: 'plate',
-        layerCZoom: 2.0,
+        address72: 53,
+        kleinFlipSurfaceValence: 'transitioning',
+        layerAActiveCell: { lens: 3, position: 5 },
+        layerBCardScroll: 12,
+        layerCSurfaceVariant: 'spheres',
+        layerCZoom: 1.75,
         lastRoutingTrace: {
             traceId: 'trace-m2-001',
             route: 'm2.meaning_packet',
+            address72: 53,
             hopCount: 3,
-            lastTimestamp: 1718798400000
+            capturedAtTick12: 7
         },
-        correspondenceTreeAxisFilter: 'planetary',
-        correspondenceTreeSonicOverlay: 'profile-tick',
-        planetaryViewMode: 'sidereal-lahiri',
-        epogdoonProofMode: 'strict'
+        // canonical axis-chip order (subset of AXIS_NAMES)
+        correspondenceTreeAxisFilter: ['tattva-phase', 'asma'],
+        correspondenceTreeSonicOverlay: 'asma',
+        planetaryViewMode: 'psychoid',
+        epogdoonProofMode: true
     };
 
-    harness.writeState(m2State);
+    // The selector normalises on write; that normalised record is the identity
+    // a toggle must preserve.
+    const written = harness.writeState(m2State);
+    for (const field of M2_BIMBA_PRATIBIMBA_STATE_FIELDS) {
+        assert.deepEqual(
+            written[field],
+            m2State[field],
+            `M2 field "${field}" round-trips writeState unchanged`
+        );
+    }
 
+    // Each toggle class independently — state must survive identically.
     for (const toggle of M2_TOGGLE_CLASSES) {
-        const after = harness.toggleAndRead(toggle);
+        const fresh = createM2StatePersistenceHarness();
+        fresh.writeState(m2State);
+        const after = fresh.toggleAndRead(toggle);
+        assert.deepEqual(after, written, `whole M2 state survives toggle "${toggle}"`);
         for (const field of M2_BIMBA_PRATIBIMBA_STATE_FIELDS) {
             assert.deepEqual(
                 after[field],
-                m2State[field],
+                written[field],
                 `M2 field "${field}" must survive toggle "${toggle}"`
             );
         }
     }
 
-    // Verify round-trip through empty-to-set-to-toggle cycle
-    const emptyProfile = null;
-    const emptyHarness = createM2StatePersistenceHarnessWithProfile(emptyProfile);
-    const emptyState = emptyHarness.readState();
-    assert.deepEqual(emptyState, M2_EMPTY_STATE, 'fresh harness with null profile returns empty state');
+    // Both toggles applied in sequence (layout switch then 0/1 face-switch and
+    // back) — the round trip is still an identity on every field.
+    harness.toggleAndRead('layout:daily-0-1<->ide-deep');
+    harness.toggleAndRead('face:cosmic<->personal-0/1');
+    harness.toggleAndRead('layout:daily-0-1<->ide-deep');
+    const afterSequence = harness.toggleAndRead('face:cosmic<->personal-0/1');
+    assert.deepEqual(
+        afterSequence,
+        written,
+        'M2 state survives the combined layout + face toggle sequence'
+    );
 
-    emptyHarness.writeState(m2State);
+    // Round-trip from an empty (null-profile) start: write, then toggle.
+    const emptyHarness = createM2StatePersistenceHarnessWithProfile(null);
+    assert.deepEqual(
+        emptyHarness.readState(),
+        M2_EMPTY_STATE,
+        'fresh harness with null profile returns empty state'
+    );
+    const writtenFromEmpty = emptyHarness.writeState(m2State);
     const afterEmptyToggle = emptyHarness.toggleAndRead('face:cosmic<->personal-0/1');
     for (const field of M2_BIMBA_PRATIBIMBA_STATE_FIELDS) {
         assert.deepEqual(
             afterEmptyToggle[field],
-            m2State[field],
-            `M2 field "${field}" survives toggle from empty start`
+            writtenFromEmpty[field],
+            `M2 field "${field}" survives toggle from an empty start`
+        );
+    }
+});
+
+test('M2 Bimba-Pratibimba state: stable mock profile seeds every M2-side field', () => {
+    // The bridge-derived initial state (no writes) already carries the M2-side
+    // slice from the stable acceptance profile, and that profile-seeded state
+    // also survives both toggles.
+    const harness = createM2StatePersistenceHarness();
+    const seeded = harness.readState();
+
+    assert.equal(seeded.coordinate, 'M2.5');
+    assert.equal(seeded.lens, "M2'");
+    assert.equal(seeded.profileGeneration, 528);
+    assert.equal(seeded.planetaryViewMode, 'psychoid');
+    assert.equal(seeded.epogdoonProofMode, true);
+    assert.equal(seeded.correspondenceTreeSonicOverlay, 'mantra');
+    assert.deepEqual(seeded.layerAActiveCell, { lens: 2, position: 4 });
+    assert.deepEqual(seeded.correspondenceTreeAxisFilter, ['decan-face', 'asma']);
+    assert.equal(seeded.lastRoutingTrace.traceId, 'trace-m2-001');
+
+    for (const toggle of M2_TOGGLE_CLASSES) {
+        const fresh = createM2StatePersistenceHarness();
+        const after = fresh.toggleAndRead(toggle);
+        assert.deepEqual(
+            after,
+            seeded,
+            `profile-seeded M2 state survives toggle "${toggle}"`
         );
     }
 });

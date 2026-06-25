@@ -16,7 +16,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 - Does NOT own coordinate semantics, kernel shapes, or the Epii agent contract — those live in their owning modules/specs and `Body/S/epi-kernel-contract`, not duplicated here.
 
 ## Local Contracts
-- No local `CONTRACT.md` / `README.md`. Coordinate Header = module doc-comments in `src/kbase.rs` and `src/vimarsa.rs`.
+- No local `CONTRACT.md` / `README.md`. Coordinate Header = `src/lib.rs` `//!`; module doc-comments in `src/kbase.rs` and `src/vimarsa.rs` carry the runtime facet details.
 - Owning specs: [[S5-SPEC]], [[S5-ARCHITECTURE]], [[S-SYSTEM-INDEX]].
 - Layer baseline: `Body/S/S5/contract-inventory/track-04-t0-baseline.md` (see parent [[S5]] AGENTS.md).
 

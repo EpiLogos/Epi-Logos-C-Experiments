@@ -10,7 +10,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 - `src/browser/` — frontend widgets: `bimba-graph-viewer-widget.tsx` plus `bimba-graph-viewer/` SVG graph components, `canon-studio`, `coordinate-tree` (M0' chrome); `logos-atelier`, `evidence-pane`, `review-pane`, `autoresearch-pane`, `agentic-control-room` (M5' chrome); `acr/` ACR sub-panes/components (`PiAxiomTranslationInspector`, RunTree, ToolStream, runtime controls, evidence deposit, review decision, Pi runtime banner, Aletheia subagent trace); `activity-bar/` left-sidebar mode contribution; `bridge-gate` (shared readiness); plus `frontend-module.ts` (DI wiring), first-build stubs `backend-studio/`, `smart-connections/`, and services `privacy-drop-feed.ts` / `pi-axiom-translation-service.ts`.
 - `src/common/` — Node-safe barrel (`index.ts`) re-exporting `contract.ts`, `capability-matrix-types.ts`, `graph-types.ts`, `decorations.ts`, `vault-bridge-gate.ts`.
 - `tests/` — package tests (`contract.test.mjs`, `canon-studio-save-routing.test.mjs`, `privacy-drop-feed.test.mjs`, `pi-axiom-translation.test.mjs`).
-- `style/ide-shell.css` — chrome styling.
+- `style/` — chrome styling: `ide-shell.css`, `canon-studio-decorations.css`, and `coordinate-tree.css`.
 - Does NOT own: gateway runtime (delegated via `@pratibimba/kernel-bridge`), graph canon mutation (`mutatesGraphCanon: false` — renderers request governed actions only), or M' domain law (lives in each owning M' coordinate extension, not here by convenience).
 
 ## Local Contracts
@@ -25,7 +25,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 - Every payload must pass `isPrivacySafe()` before any state/render/persist/bridge-emit.
 
 ## Verification
-`pnpm test` (runs `pnpm build` then `node --test tests/contract.test.mjs tests/canon-studio-save-routing.test.mjs tests/privacy-drop-feed.test.mjs`); or `pnpm --dir Body/M/epi-theia test:contracts` for the full cross-extension suite.
+`pnpm test` (runs `pnpm build` then `node --test tests/contract.test.mjs tests/canon-studio-save-routing.test.mjs tests/privacy-drop-feed.test.mjs tests/pi-axiom-translation.test.mjs`); or `pnpm --dir Body/M/epi-theia test:contracts` for the full cross-extension suite.
 
 ## Child DOX Index
 - (leaf)
