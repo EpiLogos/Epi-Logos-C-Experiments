@@ -132,6 +132,7 @@ export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = (
 export const K2PlayedTorusSurface: React.FC<{
     readonly model: CosmicCompositionModel;
 }> = ({ model }) => {
+    const torusKnotPhase = readTorusKnotPhase(model.profile);
     return (
         <section
             className="cosmic-k2-played-torus-surface"
@@ -140,6 +141,8 @@ export const K2PlayedTorusSurface: React.FC<{
             data-slot-occupant="m1-paramasiva-played-torus"
             data-handle-class="k2-surface-handle"
             data-surface-handle={model.k2SurfaceHandle?.handle ?? 'pending-k2-surface'}
+            data-torus-knot-phase-p={torusKnotPhase?.p ?? 'pending-m1-topology'}
+            data-torus-knot-phase-q={torusKnotPhase?.q ?? 'pending-m1-topology'}
         >
             <div className="cosmic-k2-vortex-field" data-test="k2-played-torus-surface">
                 <span data-test="k2-surface-generation">
@@ -297,6 +300,25 @@ function readAnandaVortexReady(profile: MathemeHarmonicProfileBoundary | null): 
     );
 }
 
+function readTorusKnotPhase(
+    profile: MathemeHarmonicProfileBoundary | null
+): { readonly p: number; readonly q: number } | null {
+    const topology = objectValue(
+        profile?.payload['m1_topology'] ??
+        profile?.payload['m1Topology']
+    );
+    const raw = objectValue(
+        topology?.torus_knot_phase ??
+        topology?.torusKnotPhase
+    );
+    const p = numberValue(raw?.p);
+    const q = numberValue(raw?.q);
+    if (p === null || q === null) {
+        return null;
+    }
+    return Object.freeze({ p, q });
+}
+
 function readCymaticTextureContribution(
     profile: MathemeHarmonicProfileBoundary | null,
     context: CoordinateContext
@@ -427,6 +449,10 @@ function objectValue(value: unknown): Readonly<Record<string, unknown>> | null {
     return value && typeof value === 'object' && !Array.isArray(value)
         ? value as Readonly<Record<string, unknown>>
         : null;
+}
+
+function numberValue(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
 function stringValue(value: unknown): string | null {

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T09:32:19.394Z",
+  "updatedAt": "2026-06-25T09:42:10.369Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1288,16 +1288,21 @@
       "worktree": null
     },
     "07.T7.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T09:42:10.289Z",
+      "claimedAt": "2026-06-25T09:35:02.986Z",
+      "completedAt": "2026-06-25T09:42:10.289Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T09:42:10.289Z",
+          "text": "15/15 @pratibimba/plugin-integrated-1-2-3 tests passed; 3/3 plugin-integrated-1-2-3/tests/cosmic-engine-composition.test.mjs passed; grep torus_knot_phase in Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src returns only src/browser/cosmic-engine-composition.tsx read"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-07-t7-8-profile-phase-ssot",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T09:35:02.986Z",
+      "runId": "20260625T093502Z-07-T7.8",
       "worktree": null
     },
     "07.T7.9": {
@@ -12427,26 +12432,36 @@
       "leaseExpiresAt": "2026-06-25T11:21:49.804Z",
       "worktree": null,
       "completedAt": "2026-06-25T09:32:19.277Z"
+    },
+    {
+      "runId": "20260625T093502Z-07-T7.8",
+      "taskId": "07.T7.8",
+      "status": "done",
+      "startedAt": "2026-06-25T09:35:02.986Z",
+      "owner": "codex-m-dev-07-t7-8-profile-phase-ssot",
+      "leaseExpiresAt": "2026-06-25T11:35:02.986Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T09:42:10.289Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T09:21:24.054Z",
-    "updatedAt": "2026-06-25T09:21:24.054Z",
+    "createdAt": "2026-06-25T09:34:40.766Z",
+    "updatedAt": "2026-06-25T09:34:40.766Z",
     "taskIds": [
-      "05.T5.9",
       "07.T7.8",
       "07.T7.9",
-      "08.T8.5"
+      "08.T8.5",
+      "08.T8.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.9": "in-session",
       "07.T7.8": "in-session",
       "07.T7.9": "in-session",
-      "08.T8.5": "in-session"
+      "08.T8.5": "in-session",
+      "08.T8.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

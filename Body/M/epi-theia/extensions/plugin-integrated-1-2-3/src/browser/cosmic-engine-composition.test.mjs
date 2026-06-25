@@ -86,6 +86,15 @@ function profile() {
         pointerAnchor: null,
         capabilities: Object.freeze([]),
         payload: Object.freeze({
+            k2SurfaceHandle: Object.freeze({
+                handle: 'k2://played-torus/live-surface'
+            }),
+            m1Topology: Object.freeze({
+                torusKnotPhase: Object.freeze({
+                    p: 0.25,
+                    q: 0.5
+                })
+            }),
             pasuBeingPattern: projection('mono-being', 'Mono', 10),
             pasuBeingPatternProjections: Object.freeze([
                 projection('poly-being', 'Poly', 137),
@@ -139,5 +148,7 @@ test('cosmic overlay markup contains handles and no protected bodies', () => {
     assert.match(html, /data-entity-id="poly-being"/);
     assert.match(html, /data-monopoly-operator="ActualisingOne"/);
     assert.match(html, /backend-supplied-trine/);
+    assert.match(html, /data-torus-knot-phase-p="0.25"/);
+    assert.match(html, /data-torus-knot-phase-q="0.5"/);
     assert.doesNotMatch(html, /episodeBody|rawQuaternion|protected body/);
 });

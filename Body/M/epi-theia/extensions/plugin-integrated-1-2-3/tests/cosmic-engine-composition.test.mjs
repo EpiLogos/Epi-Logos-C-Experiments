@@ -30,6 +30,12 @@ function completeProfile(overrides = {}) {
             compositionMountPoint: Object.freeze({
                 handle: 'm2://composition/cymatic-mount'
             }),
+            m1_topology: Object.freeze({
+                torus_knot_phase: Object.freeze({
+                    p: 0.25,
+                    q: 0.5
+                })
+            }),
             kleinFlip: Object.freeze({
                 kind: 'm2CymaticValenceInvert'
             }),
@@ -90,8 +96,10 @@ test('renders one primary editor surface instead of the old three-pane editor ju
     assert.equal(count(html, 'data-test="cosmic-engine-editor-surface"'), 1);
     assert.doesNotMatch(html, /cosmic-engine-layout/);
     assert.match(html, /data-editor-surface="cosmic-engine-composition"/);
-    assert.match(html, /data-test="matheme-overlay-137"/);
+    assert.match(html, /data-test="matheme-137-overlay"/);
     assert.match(html, /data-heatmap-cells="72"/);
+    assert.match(html, /data-torus-knot-phase-p="0.25"/);
+    assert.match(html, /data-torus-knot-phase-q="0.5"/);
     assert.match(html, /data-klein-flip-phase="inverted"/);
 });
 
