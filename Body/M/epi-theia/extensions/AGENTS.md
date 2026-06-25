@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 ## Ownership
 - `test/` — cross-extension contract + acceptance test suite driven by `../package.json`'s `test:contracts` script (`node --test`).
 - `scripts/` — workspace tooling: `scaffold-m-extensions.mjs`, `scaffold-integrated-plugins.mjs`, design-token generation/validation, `eslint-rules/`, contract preflight validators.
-- `contracts/` — implementation-control contract artifacts (extension/composition preflight JSON+MD, `ui-design-tokens.{ts,json,md}`, `ui-colour-tokens.{json,ts,md}`, `ui-theme-mapping.ts`, `ui-motion-tokens.{json,ts,md}`, `ui-accessibility.{ts,md}`, `ui-typography.{ts,md}`, `ui-iconography.{ts,md}` + `icons/`, UI foundation/composition rules). No package — pure contract docs.
+- `contracts/` — implementation-control contract artifacts (extension/composition preflight JSON+MD, `block-kit-release-gate.json`, `ui-design-tokens.{ts,json,md}`, `ui-colour-tokens.{json,ts,md}`, `ui-theme-mapping.ts`, `ui-motion-tokens.{json,ts,md}`, `ui-accessibility.{ts,md}`, `ui-typography.{ts,md}`, `ui-iconography.{ts,md}` + `icons/`, UI foundation/composition rules). No package — pure contract docs.
 - `MIGRATION-SOURCES.md` — operational index mapping each extension to its legacy `epi-tauri`/`epi-app` migration sources.
 - Each subdirectory listed below — its own `@pratibimba/*` workspace package with local `package.json`, `src/`, `tests/`.
 - Does NOT own: domain law (lives in each owning M' coordinate extension, not centralised here), gateway runtime (delegated to [[S3-SPEC]] gate at port 18794 via `kernel-bridge`), or Electron/browser app targets (sibling `../electron-app`, `../theia-app`).
@@ -36,6 +36,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 - `m4-nara/AGENTS.md` — [[M4']] Nara extension: protected Nara DayContainer + Graphiti browser with consent/privacy gates.
 - `m5-epii/AGENTS.md` — [[M5']] Epii extension: review queue + spine-state inspector over real S5 review/improve DTOs.
 - `m-extension-runtime/AGENTS.md` — shared runtime adapter for the six M-extensions (single `KernelBridgeAPI` consumer, CoordinateContext, readiness banner).
+- `block-kit/AGENTS.md` — native Pratibimba block registry, block host, no-orphan release-gate catalog, gateway-method contract catalog, Human-Gate verdict helpers, and markdown/MDX block-doc round-trips.
 - `ide-shell-m0-m5/AGENTS.md` — M0/M5 IDE chrome: Bimba graph viewer, Canon Studio host, Agentic Control Room shell host; ide-deep layout only.
 - `agentic-control-room/AGENTS.md` — Agentic Run/Review/Autoresearch E2E shell with human-required gate (IOD-17 parity).
 - `kernel-bridge/AGENTS.md` — first-loaded extension bridging the frontend to the `Body/S/S0/epi-cli` gate (port 18794) via WebSocket/JSON-RPC; publishes `KernelBridgeAPI`.

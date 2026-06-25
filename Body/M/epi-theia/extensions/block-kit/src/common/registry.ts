@@ -167,7 +167,7 @@ export function createCoreBlockSpec(type: CoreBlockType): BlockSpec {
                 data: Object.freeze({ type: 'object' })
             })
         }),
-        Read: ({ block }) => renderBlockReadModel(block),
+        Read: ({ block }: { readonly block: Block }) => renderBlockReadModel(block),
         editSurface: editSurfaceFor(type),
         privacyGate: Object.freeze({
             requiredPrivacyClass: 'protected-local',

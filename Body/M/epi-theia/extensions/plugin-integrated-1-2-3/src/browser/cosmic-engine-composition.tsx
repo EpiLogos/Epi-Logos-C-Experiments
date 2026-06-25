@@ -270,7 +270,10 @@ export function buildCosmicCompositionModel(
 }
 
 function readK2SurfaceHandle(profile: MathemeHarmonicProfileBoundary | null): K2SurfaceHandle | null {
+    const mountPoint = readCosmicMountPoint(profile, 'k2-surface');
+    const mountHandle = objectValue(mountPoint?.handle);
     const raw = objectValue(
+        mountHandle ??
         profile?.payload['k2SurfaceHandle'] ??
         profile?.payload['k2_surface_handle'] ??
         profile?.payload['playedTorusSurfaceHandle']
@@ -292,6 +295,11 @@ function readK2SurfaceHandle(profile: MathemeHarmonicProfileBoundary | null): K2
 function readAnandaVortexReady(profile: MathemeHarmonicProfileBoundary | null): boolean {
     if (!profile) {
         return false;
+    }
+    const state = readCosmicCompositionState(profile);
+    const loadStatus = stringValue(state?.loadStatus ?? state?.load_status);
+    if (loadStatus && loadStatus !== 'pending' && loadStatus !== 'blocked-base-missing') {
+        return true;
     }
     return Boolean(
         profile.payload['anandaVortexMatrix'] ??
@@ -323,7 +331,11 @@ function readCymaticTextureContribution(
     profile: MathemeHarmonicProfileBoundary | null,
     context: CoordinateContext
 ): M2CymaticTextureContribution | null {
-    if (!profile || !objectValue(profile.payload['compositionMountPoint'])) {
+    if (
+        !profile ||
+        (!objectValue(profile.payload['compositionMountPoint']) &&
+            !readCosmicMountPoint(profile, 'cymatic-texture'))
+    ) {
         return null;
     }
     try {
@@ -331,6 +343,29 @@ function readCymaticTextureContribution(
     } catch {
         return null;
     }
+}
+
+function readCosmicCompositionState(
+    profile: MathemeHarmonicProfileBoundary | null
+): Readonly<Record<string, unknown>> | null {
+    return objectValue(
+        profile?.payload['cosmicCompositionState'] ??
+        profile?.payload['cosmic_composition_state']
+    );
+}
+
+function readCosmicMountPoint(
+    profile: MathemeHarmonicProfileBoundary | null,
+    mountPoint: string
+): Readonly<Record<string, unknown>> | null {
+    const state = readCosmicCompositionState(profile);
+    const mountPoints = state?.mountPoints ?? state?.mount_points;
+    if (!Array.isArray(mountPoints)) {
+        return null;
+    }
+    return mountPoints
+        .map(item => objectValue(item))
+        .find(item => item?.mountPoint === mountPoint || item?.mount_point === mountPoint) ?? null;
 }
 
 function readCodonProjection(

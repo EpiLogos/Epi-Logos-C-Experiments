@@ -7,6 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M1
 ## Ownership
 - `07-t0-extension-contract-preflight.{json,md}` — Track 07 six-M-extension boundary contract against the shared `KernelBridgeAPI`; readiness taxonomy + forbidden-import rule + command/route convention.
 - `08-t0-composition-contract-preflight.{json,md}` — Track 08 integrated-plugin composition contract ([[plugin-integrated-1-2-3]] + [[plugin-integrated-4-5-0]]); inherits 07.T0's bridge/taxonomy/imports and declares the shared `M2CymaticTextureContribution` data-shape mount.
+- `block-kit-release-gate.json` — Track 44 no-orphan release-gate contract mapping block-kit gateway methods to owners and routes.
 - `07-t2-track08-contribution-contracts.md` — Track 07→08 contribution boundary (`TRACK_08_CONTRIBUTION` shape, route chain, observability event rule).
 - `ui-design-tokens.{ts,json,md}` — canonical W3C-shape design-token bundle (`epilogos.*` namespace) consumed via consume-not-fork lint.
 - `ui-colour-tokens.{json,ts,md}` — canonical coordinate-derived chromatic token bundle (`epilogos.colour.*` namespace) with W3C-shape JSON, typed exports, and per-token derivation citations.
@@ -23,6 +24,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M1
 
 ## Local Contracts
 - The preflight contract pairs above (JSON = machine-readable authority, MD = human-readable narrative).
+- `block-kit-release-gate.json` — machine-readable authority for Track 44 block-kit gateway method ownership.
 - `readiness-state-grammar.{json,md}` — machine/human authority for readiness-state UX responses and render-time flavours.
 - The UI token/colour-token/theme-mapping/motion-token/accessibility/typography/iconography/composition/foundation rule docs above (binding `epilogos.*` surface).
 - Owning specs: [[M'-SYSTEM-SPEC]] and the per-coordinate M' specs; UI lineage [[THEIA-UI-PATTERNS-ARCHITECTURE]].

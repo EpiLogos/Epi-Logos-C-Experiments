@@ -243,7 +243,7 @@
       "field": "bedrock",
       "state": "authoritative",
       "bedrock_link": "kernel-matheme-bedrock-projection-v1",
-      "provenance_chain": "Body/S/S0/portal-core/src/kernel.rs:640 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"
+      "provenance_chain": "Body/S/S0/portal-core/src/kernel.rs:643 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"
     }
   ],
   "pointerAnchor": {

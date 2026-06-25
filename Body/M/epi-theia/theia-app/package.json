@@ -26,6 +26,7 @@
     "@pratibimba/kernel-bridge-readiness": "workspace:*",
     "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/omnipanel-shell": "workspace:*",
     "@pratibimba/m0-anuttara": "workspace:*",

@@ -10,6 +10,7 @@ T2 deliverable: every `Body/M/epi-tauri` source file is either (a) ported into a
 |---|---|---|---|
 | `kernel-bridge-readiness` | T1 (done) | — | — |
 | `m-extension-runtime` | T1 (done) | `src/services/{types,kernelProjection,kernelProfileObservation}.ts` (partial — only shared contracts) | `shared/{innerStrata,navigationConfig,s4ObservableTypes,types,utils}.ts` (partial — only shared types) |
+| `block-kit` | Track 44 T44.10 | — (new native Pratibimba block registry / host; Builder.io inspiration only, no vendored source) | — (new native Pratibimba block registry / host; consumes existing ACR/evidence/M0-M5 surfaces) |
 | `pratibimba-layouts` | **T2 (new)** | `src/shell/Shell.tsx`, `src/domains/WorkspacePanel.tsx` — superseded by Theia layout system. | `renderer/components/Shell.tsx` + `renderer/components/Sidebar.tsx` — superseded. |
 | `omnipanel-shell` | **T2 scaffold; T5 full port** | `src/components/{OmniPanel,CommandPalette}.tsx` — superseded by source-B's depth. | `renderer/components/OmniPanel.tsx` (~960 LOC) + entire `renderer/components/omni/{chat,contracts,layout,panels,ui}/` sub-tree (26 files) — **wholesale port source.** |
 | `m0-anuttara` | T6 | `src/domains/M0_Anuttara/{BimbaMap2D,BimbaMap3D,index}.tsx` | `renderer/domains/M0_Anuttara/*` (11 files: index, core/useAnuttara, ui/{AnuttaraHub, GraphWorkspace}, components/views/M0-{0..5}View) |
