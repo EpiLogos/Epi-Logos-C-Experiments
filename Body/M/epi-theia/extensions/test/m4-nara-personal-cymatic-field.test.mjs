@@ -220,6 +220,32 @@ test('DR-IG-6 dipyramid scene contains apex poles, interleaved base vertices, an
         'top-base',
         'inverted-base'
     ]);
+    const apexPoles = scene.nodes.filter(node => node.role === 'apex');
+    assert.deepEqual(apexPoles.map(node => node.id), ['P5', "P5'"]);
+    assert.notDeepEqual(
+        [apexPoles[0].x, apexPoles[0].y, apexPoles[0].z],
+        [apexPoles[1].x, apexPoles[1].y, apexPoles[1].z]
+    );
+
+    const baseVertices = scene.nodes.filter(node => node.role === 'top-base' || node.role === 'inverted-base');
+    assert.equal(baseVertices.length, 8);
+    assert.equal(
+        new Set(baseVertices.map(node => `${node.x}:${node.y}:${node.z}`)).size,
+        8,
+        'P1-P4 and P1′-P4′ remain eight distinct base vertices'
+    );
+    assert.deepEqual(
+        baseVertices.map(node => node.id),
+        ['P1', "P1'", 'P2', "P2'", 'P3', "P3'", 'P4', "P4'"]
+    );
+
+    const axisPoints = scene.nodes.filter(node => node.role === 'axis');
+    assert.deepEqual(axisPoints.map(node => node.id), ['P0', "P0'"]);
+    assert.deepEqual(
+        axisPoints.map(node => [node.x, node.y, node.z]),
+        [[0, 0, 0], [0, 0, 0]],
+        'P0/P0′ are one central axis-point projected through the poles'
+    );
 });
 
 test('Hopf-linked toric links wind the apex axis with at least two interlocking tori', () => {
@@ -248,7 +274,14 @@ test('rendered field body is a protected-local handle-only canvas', () => {
     assert.match(markup, /mext-privacy-protected-local-handle-only/);
     assert.match(markup, /<canvas/);
     assert.match(markup, /data-node-count="12"/);
+    assert.match(markup, /data-node-labels="P5 P5&#x27; P1 P1&#x27; P2 P2&#x27; P3 P3&#x27; P4 P4&#x27; P0 P0&#x27;"/);
+    assert.match(markup, /data-apex-pole-labels="P5\/P5&#x27;"/);
+    assert.match(markup, /data-axis-point-labels="P0\/P0&#x27;"/);
+    assert.match(markup, /data-base-vertex-labels="P1 P1&#x27; P2 P2&#x27; P3 P3&#x27; P4 P4&#x27;"/);
     assert.match(markup, /data-toric-link-count="2"/);
+    assert.match(markup, /data-test="dr-ig-6-dipyramid-labels"/);
+    assert.match(markup, /P5/);
+    assert.match(markup, /P0&#x27;/);
     assert.match(markup, /data-cymatic-polarity="1"/);
     assert.match(markup, /data-psychoid-polarity="1"/);
     assert.match(markup, /data-cymatic-polarity-canon="0=cosmic;1=personal"/);

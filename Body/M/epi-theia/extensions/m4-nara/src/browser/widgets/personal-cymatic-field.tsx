@@ -115,8 +115,8 @@ export const DR_IG_6_DIPYRAMID_NODES: readonly DipyramidNode[] = Object.freeze([
     freezeNode("P3'", 'inverted-base', 0, 0.34, -0.78),
     freezeNode('P4', 'top-base', 0, -0.34, -0.78),
     freezeNode("P4'", 'inverted-base', Math.SQRT1_2, 0.34, 0.34),
-    freezeNode('P0', 'axis', 0, 0, 0.08),
-    freezeNode("P0'", 'axis', 0, 0, -0.08)
+    freezeNode('P0', 'axis', 0, 0, 0),
+    freezeNode("P0'", 'axis', 0, 0, 0)
 ]);
 
 export const HOPF_LINKED_TORI: readonly HopfToricLink[] = Object.freeze([
@@ -154,6 +154,10 @@ export const M4PersonalCymaticField: React.FC<M4PersonalCymaticFieldProps> = ({
         data-foregrounded-handle={model.foregroundedHandle}
         data-renderer-status={model.rendererStatus}
         data-node-count={model.scene.nodes.length}
+        data-node-labels={dipyramidNodeLabels(model.scene)}
+        data-axis-point-labels="P0/P0'"
+        data-apex-pole-labels="P5/P5'"
+        data-base-vertex-labels={dipyramidBaseLabels(model.scene)}
         data-toric-link-count={model.scene.toricLinks.length}
         data-cymatic-polarity={model.cymatic_polarity}
         data-psychoid-polarity={model.psychoid_polarity}
@@ -169,6 +173,10 @@ export const M4PersonalCymaticField: React.FC<M4PersonalCymaticFieldProps> = ({
             data-test="m4-personal-cymatic-canvas"
             data-geometry-law={model.scene.law}
             data-node-count={model.scene.nodes.length}
+            data-node-labels={dipyramidNodeLabels(model.scene)}
+            data-axis-point-labels="P0/P0'"
+            data-apex-pole-labels="P5/P5'"
+            data-base-vertex-labels={dipyramidBaseLabels(model.scene)}
             data-toric-link-count={model.scene.toricLinks.length}
             data-cymatic-polarity={model.cymatic_polarity}
             data-psychoid-polarity={model.psychoid_polarity}
@@ -179,6 +187,14 @@ export const M4PersonalCymaticField: React.FC<M4PersonalCymaticFieldProps> = ({
             width={960}
             height={640}
         />
+        <ol className="m4-personal-cymatic-map" data-test="dr-ig-6-dipyramid-labels">
+            {model.scene.nodes.map(node => (
+                <li key={node.id} data-node-id={node.id} data-node-role={node.role}>
+                    <span>{node.id}</span>
+                    <small>{dipyramidNodeTitle(node)}</small>
+                </li>
+            ))}
+        </ol>
         {model.errorMessage ? (
             <span className="m4-personal-cymatic-error" data-test="m4-personal-cymatic-error">
                 {model.errorMessage}
@@ -538,6 +554,10 @@ function drawDipyramidCanvasGuide(canvas: HTMLCanvasElement, scene: PersonalCyma
     const apexTop = projected.find(item => item.node.id === 'P5');
     const apexBottom = projected.find(item => item.node.id === "P5'");
     if (apexTop && apexBottom) {
+        const baseBelt = projected.filter(item => item.node.role === 'top-base' || item.node.role === 'inverted-base');
+        for (let index = 0; index < baseBelt.length; index += 1) {
+            drawLine(context, baseBelt[index].point, baseBelt[(index + 1) % baseBelt.length].point);
+        }
         for (const item of projected) {
             if (item.node.role === 'top-base') {
                 drawLine(context, apexTop.point, item.point);
@@ -560,6 +580,7 @@ function drawDipyramidCanvasGuide(canvas: HTMLCanvasElement, scene: PersonalCyma
         context.beginPath();
         context.arc(item.point.x, item.point.y, item.node.role === 'axis' ? 5 : 7, 0, Math.PI * 2);
         context.fill();
+        drawNodeLabel(context, item.node, item.point);
     }
 }
 
@@ -579,6 +600,56 @@ function drawLine(
     context.moveTo(from.x, from.y);
     context.lineTo(to.x, to.y);
     context.stroke();
+}
+
+function drawNodeLabel(
+    context: CanvasRenderingContext2D,
+    node: DipyramidNode,
+    point: { readonly x: number; readonly y: number }
+): void {
+    const offset = nodeLabelOffset(node);
+    context.save();
+    context.font = '12px sans-serif';
+    context.fillStyle = 'rgba(247, 247, 242, 0.88)';
+    context.fillText(node.id, point.x + offset.x, point.y + offset.y);
+    context.restore();
+}
+
+function nodeLabelOffset(node: DipyramidNode): { readonly x: number; readonly y: number } {
+    if (node.id === 'P0') {
+        return Object.freeze({ x: 8, y: -8 });
+    }
+    if (node.id === "P0'") {
+        return Object.freeze({ x: 8, y: 14 });
+    }
+    if (node.role === 'apex') {
+        return Object.freeze({ x: 10, y: node.id === 'P5' ? -10 : 18 });
+    }
+    return Object.freeze({
+        x: node.role === 'top-base' ? 8 : -28,
+        y: node.role === 'top-base' ? -8 : 14
+    });
+}
+
+function dipyramidNodeLabels(scene: PersonalCymaticScene): string {
+    return scene.nodes.map(node => node.id).join(' ');
+}
+
+function dipyramidBaseLabels(scene: PersonalCymaticScene): string {
+    return scene.nodes
+        .filter(node => node.role === 'top-base' || node.role === 'inverted-base')
+        .map(node => node.id)
+        .join(' ');
+}
+
+function dipyramidNodeTitle(node: DipyramidNode): string {
+    if (node.role === 'apex') {
+        return 'apex pole';
+    }
+    if (node.role === 'axis') {
+        return 'central axis point';
+    }
+    return node.role === 'top-base' ? 'P base vertex' : "P' base vertex";
 }
 
 function freezeNode(

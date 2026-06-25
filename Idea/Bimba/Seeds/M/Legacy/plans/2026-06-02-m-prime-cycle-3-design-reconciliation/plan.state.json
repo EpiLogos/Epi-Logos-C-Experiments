@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T10:07:05.871Z",
+  "updatedAt": "2026-06-25T14:32:25.020Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1452,16 +1452,21 @@
       "worktree": null
     },
     "08.T8.7": {
-      "status": "pending",
-      "updatedAt": "2026-06-25T10:15:00.000Z",
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T14:32:24.944Z",
+      "claimedAt": "2026-06-25T14:24:46.997Z",
+      "completedAt": "2026-06-25T14:32:24.944Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T14:32:24.944Z",
+          "text": "pnpm --dir Body/M/epi-theia/extensions/m4-nara test passed 76/76; DR-IG-6 fixture asserts 12 labels, 2 apex poles, 8 distinct interleaved base vertices, and shared P0/P0' axis point in Body/M/epi-theia/extensions/test/m4-nara-personal-cymatic-field.test.mjs; renderer updated in Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx + style/index.css; grep wrong-count attribution returned no matches across Idea/Bimba/Seeds/M/M4' and INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md"
+        }
+      ],
       "notes": "Codex rate limit 2026-06-25. Reset pending. Resets 2:04 PM.",
-      "owner": null,
+      "owner": "codex-m-dev-08-t8-7-dipyramid-geometry",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T14:24:46.997Z",
+      "runId": "20260625T142446Z-08-T8.7",
       "worktree": null
     },
     "09.T9.1": {
@@ -12515,31 +12520,40 @@
       "leaseExpiresAt": "2026-06-25T12:00:42.344Z",
       "worktree": null,
       "completedAt": "2026-06-25T10:07:05.817Z"
+    },
+    {
+      "runId": "20260625T142446Z-08-T8.7",
+      "taskId": "08.T8.7",
+      "status": "done",
+      "startedAt": "2026-06-25T14:24:46.997Z",
+      "owner": "codex-m-dev-08-t8-7-dipyramid-geometry",
+      "leaseExpiresAt": "2026-06-25T16:24:46.997Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T14:32:24.944Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T10:00:43.139Z",
-    "updatedAt": "2026-06-25T10:00:43.139Z",
+    "createdAt": "2026-06-25T14:24:32.244Z",
+    "updatedAt": "2026-06-25T14:24:32.244Z",
     "taskIds": [
-      "08.T8.6",
       "08.T8.7",
       "08.T8.8",
-      "08.T8.9"
+      "08.T8.9",
+      "09.T9.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "08.T8.6": "in-session",
       "08.T8.7": "in-session",
       "08.T8.8": "in-session",
-      "08.T8.9": "in-session"
+      "08.T8.9": "in-session",
+      "09.T9.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }
