@@ -4,7 +4,8 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    ActivityStateEffect, EventPrivacyClass, NaraActivityEvent, NaraActivityKind, VamaShaktiClass,
+    hopf_fiber, hopf_project, quat_normalize, ActivityStateEffect, EventPrivacyClass,
+    NaraActivityEvent, NaraActivityKind, VamaShaktiClass,
 };
 
 const POSITIVE_VALENCE_KEYWORDS: &[&str] = &[
@@ -157,9 +158,64 @@ pub struct NaraParsedActivity {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct NaraPeriodDayRange {
+    pub start_day_id: String,
+    pub end_day_id: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraPeriodGraphitiEpisode {
+    pub episode_handle: String,
+    pub day_id: String,
+    pub chronos_handle: String,
+    pub kairos_handle: String,
+    pub history_handle: String,
+    #[serde(skip, default = "identity_quaternion")]
+    pub q_composed: [f32; 4],
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraHopfTrajectoryHandle {
+    pub target_kind: String,
+    pub handle: String,
+    pub privacy: String,
+}
+
+impl NaraHopfTrajectoryHandle {
+    fn new(period_id: &str) -> Self {
+        Self {
+            target_kind: "HopfProjectedQComposedTrajectory".to_owned(),
+            handle: format!("protected://nara/period/{period_id}/hopf-trajectory"),
+            privacy: "protected-local-derived".to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraHopfTrajectoryPoint {
+    pub sequence_index: usize,
+    pub episode_handle: String,
+    pub day_id: String,
+    pub chronos_handle: String,
+    pub kairos_handle: String,
+    pub history_handle: String,
+    pub hopf_degree: f64,
+    pub hopf_fiber: u8,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct NaraPeriodReadingInput {
     pub period_id: String,
+    pub day_range: Option<NaraPeriodDayRange>,
     pub observations: Vec<NaraSymbolicObservation>,
+    pub graphiti_episodes: Vec<NaraPeriodGraphitiEpisode>,
+    pub chronos_handles: Vec<String>,
+    pub kairos_handles: Vec<String>,
+    pub history_handles: Vec<String>,
     pub include_vama_classifier: bool,
 }
 
@@ -167,7 +223,17 @@ pub struct NaraPeriodReadingInput {
 #[serde(rename_all = "camelCase")]
 pub struct NaraPeriodReading {
     pub period_id: String,
+    pub day_range: Option<NaraPeriodDayRange>,
     pub observation_count: usize,
+    pub graphiti_episode_count: usize,
+    pub trajectory_observation_count: usize,
+    pub chronos_handles: Vec<String>,
+    pub kairos_handles: Vec<String>,
+    pub history_handles: Vec<String>,
+    pub hopf_trajectory_handle: NaraHopfTrajectoryHandle,
+    pub hopf_projection: Vec<NaraHopfTrajectoryPoint>,
+    pub reconstructed_from_persisted_handles: bool,
+    pub protected_bodies_returned: bool,
     pub vama_classifier_computed: bool,
     pub vama_classifier_available_on_request: bool,
     pub visible_vama_classifier: Option<VamaShaktiClass>,
@@ -184,6 +250,10 @@ impl NaraPeriodReading {
 
 fn default_period_vama_classifier() -> VamaShaktiClass {
     VamaShaktiClass::Sprite
+}
+
+fn identity_quaternion() -> [f32; 4] {
+    [1.0, 0.0, 0.0, 0.0]
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -209,15 +279,46 @@ pub fn period_reading(
     input: NaraPeriodReadingInput,
 ) -> Result<NaraPeriodReading, NaraJournalParseError> {
     let period_id = required(input.period_id, "period_id")?;
+    let day_range = validate_day_range(input.day_range)?;
     if input.observations.is_empty() {
         return Err(NaraJournalParseError::InvalidInvariant(
             "period_reading requires at least one real observation".to_owned(),
         ));
     }
     let (internal_vama_classifier, recognition_basis) = classify_period_vama(&input.observations);
+    let hopf_projection = reconstruct_hopf_projection(&input.graphiti_episodes)?;
+    let chronos_handles = merge_handles(
+        input.chronos_handles,
+        hopf_projection
+            .iter()
+            .map(|point| point.chronos_handle.clone()),
+    );
+    let kairos_handles = merge_handles(
+        input.kairos_handles,
+        hopf_projection
+            .iter()
+            .map(|point| point.kairos_handle.clone()),
+    );
+    let history_handles = merge_handles(
+        input.history_handles,
+        hopf_projection
+            .iter()
+            .map(|point| point.history_handle.clone()),
+    );
+    let hopf_trajectory_handle = NaraHopfTrajectoryHandle::new(&period_id);
     Ok(NaraPeriodReading {
         period_id,
+        day_range,
         observation_count: input.observations.len(),
+        graphiti_episode_count: input.graphiti_episodes.len(),
+        trajectory_observation_count: hopf_projection.len(),
+        chronos_handles,
+        kairos_handles,
+        history_handles,
+        hopf_trajectory_handle,
+        hopf_projection,
+        reconstructed_from_persisted_handles: true,
+        protected_bodies_returned: false,
         vama_classifier_computed: true,
         vama_classifier_available_on_request: true,
         visible_vama_classifier: input
@@ -226,6 +327,88 @@ pub fn period_reading(
         recognition_basis,
         internal_vama_classifier,
     })
+}
+
+fn validate_day_range(
+    day_range: Option<NaraPeriodDayRange>,
+) -> Result<Option<NaraPeriodDayRange>, NaraJournalParseError> {
+    let Some(day_range) = day_range else {
+        return Ok(None);
+    };
+    let start_day_id = required(day_range.start_day_id, "day_range.start_day_id")?;
+    let end_day_id = required(day_range.end_day_id, "day_range.end_day_id")?;
+    if start_day_id > end_day_id {
+        return Err(NaraJournalParseError::InvalidInvariant(
+            "day_range.start_day_id must be <= day_range.end_day_id".to_owned(),
+        ));
+    }
+    Ok(Some(NaraPeriodDayRange {
+        start_day_id,
+        end_day_id,
+    }))
+}
+
+fn reconstruct_hopf_projection(
+    episodes: &[NaraPeriodGraphitiEpisode],
+) -> Result<Vec<NaraHopfTrajectoryPoint>, NaraJournalParseError> {
+    let mut ordered = episodes.to_vec();
+    ordered.sort_by(|left, right| {
+        left.day_id
+            .cmp(&right.day_id)
+            .then_with(|| left.chronos_handle.cmp(&right.chronos_handle))
+            .then_with(|| left.episode_handle.cmp(&right.episode_handle))
+    });
+    ordered
+        .into_iter()
+        .enumerate()
+        .map(|(sequence_index, episode)| {
+            let episode_handle = required(episode.episode_handle, "episode_handle")?;
+            let day_id = required(episode.day_id, "day_id")?;
+            let chronos_handle = required(episode.chronos_handle, "chronos_handle")?;
+            let kairos_handle = required(episode.kairos_handle, "kairos_handle")?;
+            let history_handle = required(episode.history_handle, "history_handle")?;
+            let (hopf_degree, hopf_fiber) = hopf_project_q_composed(episode.q_composed);
+            Ok(NaraHopfTrajectoryPoint {
+                sequence_index,
+                episode_handle,
+                day_id,
+                chronos_handle,
+                kairos_handle,
+                history_handle,
+                hopf_degree,
+                hopf_fiber,
+            })
+        })
+        .collect()
+}
+
+fn hopf_project_q_composed(q_composed: [f32; 4]) -> (f64, u8) {
+    let q = quat_normalize(q_composed);
+    let w = q[0].clamp(-1.0, 1.0) as f64;
+    let vector_norm = ((q[1] * q[1] + q[2] * q[2] + q[3] * q[3]) as f64).sqrt();
+    let base_degree = (2.0 * w.acos()).to_degrees() % 360.0;
+    let exact_degree_720 = if q[0] < -f32::EPSILON
+        || (q[0].abs() <= f32::EPSILON && vector_norm > f64::EPSILON)
+    {
+        base_degree + 360.0
+    } else {
+        base_degree
+    };
+    (hopf_project(exact_degree_720), hopf_fiber(exact_degree_720))
+}
+
+fn merge_handles<I>(base: Vec<String>, extra: I) -> Vec<String>
+where
+    I: IntoIterator<Item = String>,
+{
+    let mut handles = Vec::new();
+    for handle in base.into_iter().chain(extra) {
+        let trimmed = handle.trim();
+        if !trimmed.is_empty() {
+            push_unique(&mut handles, trimmed.to_owned());
+        }
+    }
+    handles
 }
 
 pub struct NaraJournalParser;

@@ -1,7 +1,8 @@
 use portal_core::{
     period_reading, ActivityStateEffect, EventPrivacyClass, NaraActivityKind,
     NaraEmotionalValenceHint, NaraJournalParseError, NaraJournalParseInput, NaraJournalParser,
-    NaraObservationKind, NaraPeriodReadingInput, VamaShaktiClass,
+    NaraObservationKind, NaraPeriodDayRange, NaraPeriodGraphitiEpisode,
+    NaraPeriodReadingInput, VamaShaktiClass,
 };
 
 fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
@@ -136,10 +137,15 @@ fn period_reading_computes_vama_internally_and_surfaces_only_on_request() {
 
     let hidden = period_reading(NaraPeriodReadingInput {
         period_id: "period:2026-W22".to_owned(),
+        day_range: None,
         observations: vec![
             first.symbolic_observation.clone(),
             second.symbolic_observation.clone(),
         ],
+        graphiti_episodes: Vec::new(),
+        chronos_handles: Vec::new(),
+        kairos_handles: Vec::new(),
+        history_handles: Vec::new(),
         include_vama_classifier: false,
     })
     .expect("long-period reading computes from real observations");
@@ -154,7 +160,12 @@ fn period_reading_computes_vama_internally_and_surfaces_only_on_request() {
 
     let visible = period_reading(NaraPeriodReadingInput {
         period_id: "period:2026-W22".to_owned(),
+        day_range: None,
         observations: vec![first.symbolic_observation, second.symbolic_observation],
+        graphiti_episodes: Vec::new(),
+        chronos_handles: Vec::new(),
+        kairos_handles: Vec::new(),
+        history_handles: Vec::new(),
         include_vama_classifier: true,
     })
     .expect("requested long-period reading surfaces classifier");
@@ -164,6 +175,104 @@ fn period_reading_computes_vama_internally_and_surfaces_only_on_request() {
         visible.visible_vama_classifier,
         Some(VamaShaktiClass::Daemon)
     );
+}
+
+#[test]
+fn period_reading_reconstructs_hopf_projected_trajectory_from_handles_without_raw_bodies() {
+    let first = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "M4-4 moved through Lens 3 at position 2 and felt heavy.",
+    ))
+    .expect("journal parse succeeds");
+    let second = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Oracle,
+        "Oracle cast with hexagram 24 and tarot mirror felt clear.",
+    ))
+    .expect("oracle parse succeeds");
+
+    let reading = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        day_range: Some(NaraPeriodDayRange {
+            start_day_id: "01-06-2026".to_owned(),
+            end_day_id: "03-06-2026".to_owned(),
+        }),
+        observations: vec![first.symbolic_observation, second.symbolic_observation],
+        graphiti_episodes: vec![
+            NaraPeriodGraphitiEpisode {
+                episode_handle: "graphiti://episode/002".to_owned(),
+                day_id: "02-06-2026".to_owned(),
+                chronos_handle: "chronos://day/02-06-2026/seq-2".to_owned(),
+                kairos_handle: "kairos://snapshot/002".to_owned(),
+                history_handle: "history://nara/artifact-002".to_owned(),
+                q_composed: [0.0, 1.0, 0.0, 0.0],
+            },
+            NaraPeriodGraphitiEpisode {
+                episode_handle: "graphiti://episode/001".to_owned(),
+                day_id: "01-06-2026".to_owned(),
+                chronos_handle: "chronos://day/01-06-2026/seq-1".to_owned(),
+                kairos_handle: "kairos://snapshot/001".to_owned(),
+                history_handle: "history://nara/artifact-001".to_owned(),
+                q_composed: [1.0, 0.0, 0.0, 0.0],
+            },
+        ],
+        chronos_handles: vec!["chronos://period/2026-W22".to_owned()],
+        kairos_handles: vec!["kairos://period/2026-W22".to_owned()],
+        history_handles: vec!["history://nara/week-22".to_owned()],
+        include_vama_classifier: false,
+    })
+    .expect("period trajectory reconstructs from protected handles");
+
+    assert_eq!(reading.graphiti_episode_count, 2);
+    assert_eq!(reading.trajectory_observation_count, 2);
+    assert_eq!(
+        reading.hopf_trajectory_handle.handle,
+        "protected://nara/period/period:2026-W22/hopf-trajectory"
+    );
+    assert_eq!(reading.hopf_projection.len(), 2);
+    assert_eq!(reading.hopf_projection[0].episode_handle, "graphiti://episode/001");
+    assert_eq!(reading.hopf_projection[0].sequence_index, 0);
+    assert_eq!(reading.hopf_projection[0].hopf_degree, 0.0);
+    assert_eq!(reading.hopf_projection[0].hopf_fiber, 0);
+    assert_eq!(reading.hopf_projection[1].episode_handle, "graphiti://episode/002");
+    assert_eq!(reading.hopf_projection[1].sequence_index, 1);
+    assert_eq!(reading.hopf_projection[1].hopf_degree, 180.0);
+    assert_eq!(reading.hopf_projection[1].hopf_fiber, 1);
+    assert_eq!(
+        reading.chronos_handles,
+        vec![
+            "chronos://period/2026-W22".to_owned(),
+            "chronos://day/01-06-2026/seq-1".to_owned(),
+            "chronos://day/02-06-2026/seq-2".to_owned()
+        ]
+    );
+    assert_eq!(
+        reading.kairos_handles,
+        vec![
+            "kairos://period/2026-W22".to_owned(),
+            "kairos://snapshot/001".to_owned(),
+            "kairos://snapshot/002".to_owned()
+        ]
+    );
+    assert_eq!(
+        reading.history_handles,
+        vec![
+            "history://nara/week-22".to_owned(),
+            "history://nara/artifact-001".to_owned(),
+            "history://nara/artifact-002".to_owned()
+        ]
+    );
+    assert!(reading.reconstructed_from_persisted_handles);
+    assert!(!reading.protected_bodies_returned);
+
+    let reading_json = serde_json::to_value(&reading).expect("reading serializes");
+    let reading_text = serde_json::to_string(&reading).expect("reading stringifies");
+    assert!(reading_json.get("rawBody").is_none());
+    assert!(reading_json.get("body").is_none());
+    assert!(reading_json.get("qComposed").is_none());
+    assert!(reading_json.get("q_composed").is_none());
+    assert!(!reading_text.contains("M4-4 moved"));
+    assert!(!reading_text.contains("Oracle cast"));
+    assert!(!reading_text.contains("[0.0,1.0,0.0,0.0]"));
 }
 
 #[test]
