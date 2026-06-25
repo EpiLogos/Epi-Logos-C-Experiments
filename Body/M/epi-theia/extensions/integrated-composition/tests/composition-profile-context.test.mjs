@@ -16,13 +16,16 @@ const {
     CompositionProfileProvider,
     useCompositionProfile
 } = require('../lib/browser/composition-profile-context.js');
+const {
+    ProfileTickInlineBinding
+} = require('../lib/browser/design-primitives/index.js');
 
-function profile(generation) {
+function profile(generation, tick12 = generation % 12) {
     return Object.freeze({
         generation,
         pointerAnchor: `profile:${generation}`,
         capabilities: Object.freeze([]),
-        payload: Object.freeze({ generation })
+        payload: Object.freeze({ generation, tick12 })
     });
 }
 
@@ -107,6 +110,53 @@ test('shared profile subscription fans out one profile object and disposes upstr
     second.dispose();
     subscription.dispose();
     assert.equal(bridge.disposeCount(), 1);
+});
+
+test('profile-tick-driven inline binding render advances tick while data input stays stable', () => {
+    const bridge = createBridge(profile(12, 0));
+    const subscription = openCompositionProfileSubscription(bridge);
+    const stableDatum = Object.freeze({
+        key: 'm2.audio.primary-frequency',
+        label: 'Primary frequency',
+        value: '432Hz'
+    });
+    const readiness = Object.freeze({
+        fetchedAt: 6006,
+        state: 'ready_public_current',
+        reason: 'bridge current',
+        profileGeneration: 12,
+        bridgeReachable: true,
+        blockerIds: Object.freeze([])
+    });
+    const rendered = [];
+    const disposable = subscription.subscribeToProfileTick(profileTick => {
+        rendered.push(renderToStaticMarkup(
+            React.createElement(
+                ProfileTickInlineBinding,
+                {
+                    bindingKey: stableDatum.key,
+                    label: stableDatum.label,
+                    value: stableDatum.value,
+                    readiness,
+                    profileTick
+                },
+                stableDatum.value
+            )
+        ));
+    });
+
+    bridge.emit(profile(13, 1));
+    disposable.dispose();
+    subscription.dispose();
+
+    assert.equal(rendered.length, 2);
+    assert.match(rendered[0], /data-binding-key="m2\.audio\.primary-frequency"/);
+    assert.match(rendered[0], /data-binding-value="432Hz"/);
+    assert.match(rendered[0], /data-profile-generation="12"/);
+    assert.match(rendered[0], /data-profile-tick12="0"/);
+    assert.match(rendered[1], /data-binding-value="432Hz"/);
+    assert.match(rendered[1], /data-profile-generation="13"/);
+    assert.match(rendered[1], /data-profile-tick12="1"/);
 });
 
 test('integrated plugin browser sources do not open direct profile subscriptions', () => {

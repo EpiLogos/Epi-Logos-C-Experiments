@@ -44,7 +44,8 @@ export {
     isDaily01ToggleKeyEvent,
     nextDaily01Face,
     preserveBimbaPratibimbaUiStateAcrossDaily01Toggle,
-    useCompositionProfile
+    useCompositionProfile,
+    useCompositionProfileTick
 } from '../browser/composition-profile-context';
 export type {
     Daily01Face,
@@ -55,6 +56,7 @@ export type {
 export {
     CoordinateString,
     MathemeToken,
+    ProfileTickInlineBinding,
     resolveCoordinateFamilyTint,
     resolveCoordinateFamilyTintParts
 } from '../browser/design-primitives';
@@ -62,6 +64,7 @@ export type {
     CoordinateFamilyTintParts,
     CoordinateStringProps,
     MathemeTokenProps,
+    ProfileTickInlineBindingProps,
     MathemeTypographyLevel,
     PrimitiveReadinessState,
     TypographyTokenStyle

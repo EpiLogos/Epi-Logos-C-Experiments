@@ -13,6 +13,7 @@ const {
     LoadingPulse,
     PendingBadge,
     BlockedOverlay,
+    ProfileTickInlineBinding,
     ReadinessIndicator,
     blockedOverlayActionFor,
     readinessTooltip,
@@ -100,6 +101,55 @@ test('state-grammar primitives render the nine readiness ids across the five pri
     }
 
     assert.equal(assertionCount, 45);
+});
+
+test('profile tick inline data binding renders provenance inline for every readiness class', () => {
+    const profileTick = Object.freeze({
+        generation: 72,
+        tick12: 6,
+        profile: Object.freeze({
+            generation: 72,
+            pointerAnchor: 'profile:72',
+            capabilities: Object.freeze([]),
+            payload: Object.freeze({ tick12: 6 })
+        })
+    });
+
+    for (const entry of readinessTaxonomy) {
+        const html = renderToStaticMarkup(
+            React.createElement(
+                ProfileTickInlineBinding,
+                {
+                    bindingKey: `fixture.${entry.id}`,
+                    label: `Fixture ${entry.id}`,
+                    value: 'stable datum',
+                    readiness: snapshotFor(entry),
+                    profileTick
+                },
+                React.createElement('span', null, 'stable datum')
+            )
+        );
+        const provenanceState = entry.severity === 'ready'
+            ? 'ready'
+            : entry.severity === 'blocked'
+                ? 'blocked'
+                : 'pending';
+
+        assert.match(html, new RegExp(`data-binding-key="fixture\\.${entry.id}"`));
+        assert.match(html, /data-binding-value="stable datum"/);
+        assert.match(html, /data-profile-generation="72"/);
+        assert.match(html, /data-profile-tick12="6"/);
+        assert.match(html, new RegExp(`data-provenance-state="${provenanceState}"`));
+        assert.match(html, new RegExp(`data-readiness-id="${entry.id}"`));
+        assert.match(html, new RegExp(`epilogos\\.colour\\.readiness\\.id\\.${entry.id}`));
+        if (entry.severity === 'blocked') {
+            assert.match(html, /epilogos-blocked-overlay/);
+        } else if (entry.severity !== 'ready') {
+            assert.match(html, /epilogos-pending-badge/);
+        } else {
+            assert.doesNotMatch(html, /epilogos-blocked-overlay|epilogos-pending-badge/);
+        }
+    }
 });
 
 test('readiness tooltip routes reason text with ownerTrack for every contract id', () => {

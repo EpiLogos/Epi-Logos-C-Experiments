@@ -1,8 +1,8 @@
 use portal_core::{
     period_reading, ActivityStateEffect, EventPrivacyClass, NaraActivityKind,
     NaraEmotionalValenceHint, NaraJournalParseError, NaraJournalParseInput, NaraJournalParser,
-    NaraObservationKind, NaraPeriodDayRange, NaraPeriodGraphitiEpisode,
-    NaraPeriodReadingInput, VamaShaktiClass,
+    NaraObservationKind, NaraPeriodDayRange, NaraPeriodGraphitiEpisode, NaraPeriodReadingInput,
+    VamaShaktiClass,
 };
 
 fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
@@ -229,11 +229,17 @@ fn period_reading_reconstructs_hopf_projected_trajectory_from_handles_without_ra
         "protected://nara/period/period:2026-W22/hopf-trajectory"
     );
     assert_eq!(reading.hopf_projection.len(), 2);
-    assert_eq!(reading.hopf_projection[0].episode_handle, "graphiti://episode/001");
+    assert_eq!(
+        reading.hopf_projection[0].episode_handle,
+        "graphiti://episode/001"
+    );
     assert_eq!(reading.hopf_projection[0].sequence_index, 0);
     assert_eq!(reading.hopf_projection[0].hopf_degree, 0.0);
     assert_eq!(reading.hopf_projection[0].hopf_fiber, 0);
-    assert_eq!(reading.hopf_projection[1].episode_handle, "graphiti://episode/002");
+    assert_eq!(
+        reading.hopf_projection[1].episode_handle,
+        "graphiti://episode/002"
+    );
     assert_eq!(reading.hopf_projection[1].sequence_index, 1);
     assert_eq!(reading.hopf_projection[1].hopf_degree, 180.0);
     assert_eq!(reading.hopf_projection[1].hopf_fiber, 1);

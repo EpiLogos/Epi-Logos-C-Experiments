@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T223105Z-15-T15.6",
+  "taskId": "15.T15.6",
+  "startedAt": "2026-06-25T22:31:05.131Z",
+  "owner": "codex-m-dev-15-t15-6-profile-clock-inline-readiness",
+  "leaseExpiresAt": "2026-06-26T00:31:05.131Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.6",
+    "trackId": "15",
+    "tranche": "T15.6",
+    "title": "Profile-tick clock + readiness inline rendering",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.5"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

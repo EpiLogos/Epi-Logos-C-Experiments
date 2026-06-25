@@ -66,6 +66,10 @@ pub(crate) fn is_coordinate_key(key: &str) -> bool {
 }
 
 pub(crate) fn validate_coordinate_key(key: &str, value: &Value) -> Option<String> {
+    if key == "c_0_source_coordinates" {
+        return validate_source_coordinates_key(value);
+    }
+
     let parts: Vec<&str> = key.splitn(3, '_').collect();
     if parts.len() != 3 {
         return None;
@@ -98,4 +102,15 @@ pub(crate) fn validate_coordinate_key(key: &str, value: &Value) -> Option<String
             "Coordinate key '{key}' must have a string or mapping value"
         )),
     }
+}
+
+fn validate_source_coordinates_key(value: &Value) -> Option<String> {
+    let Some(entries) = value.as_sequence() else {
+        return Some(
+            "Coordinate key 'c_0_source_coordinates' must be a sequence of strings".to_owned(),
+        );
+    };
+    let all_strings = entries.iter().all(Value::is_string);
+    (!all_strings)
+        .then(|| "Coordinate key 'c_0_source_coordinates' must be a sequence of strings".to_owned())
 }

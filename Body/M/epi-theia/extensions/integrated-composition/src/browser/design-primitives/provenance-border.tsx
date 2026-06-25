@@ -7,6 +7,7 @@ export interface ProvenanceBorderProps {
     readonly label: string;
     readonly children: React.ReactNode;
     readonly className?: string;
+    readonly borderColour?: string;
 }
 
 const PROVENANCE_COLOURS: Readonly<Record<ProvenanceBorderState, string>> = Object.freeze({
@@ -16,13 +17,13 @@ const PROVENANCE_COLOURS: Readonly<Record<ProvenanceBorderState, string>> = Obje
     unknown: 'var(--theia-descriptionForeground)'
 });
 
-export const ProvenanceBorder: React.FC<ProvenanceBorderProps> = ({ state, label, children, className }) => (
+export const ProvenanceBorder: React.FC<ProvenanceBorderProps> = ({ state, label, children, className, borderColour }) => (
     <section
         className={className ? `epilogos-provenance-border ${className}` : 'epilogos-provenance-border'}
         data-provenance-state={state}
         aria-label={label}
         style={{
-            borderInlineStart: `3px solid ${PROVENANCE_COLOURS[state]}`,
+            borderInlineStart: `3px solid ${borderColour ?? PROVENANCE_COLOURS[state]}`,
             paddingInlineStart: '0.75rem'
         }}
     >

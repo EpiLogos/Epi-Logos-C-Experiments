@@ -1,6 +1,7 @@
 //! S1 Hen compiler contract.
 
 pub mod artifact_evidence;
+pub mod base_view;
 pub mod compile_plan;
 pub mod coordinate;
 pub mod frontmatter;

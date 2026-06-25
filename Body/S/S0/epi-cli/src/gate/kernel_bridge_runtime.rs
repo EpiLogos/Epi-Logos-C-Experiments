@@ -6,9 +6,10 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
 use portal_core::{
-    KernelPhase, KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext,
-    MathemeHarmonicProfile, MathemeNodalConstraint, MathemePointerAnchorProjection,
-    ProfilePrivacyClass, RelationDescriptor, RelationFamily, VakAddress,
+    DepositionAnchorProjection, KernelPhase, KleinFlipEvent, MPrimePerformanceEvent,
+    MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
+    MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor, RelationFamily,
+    VakAddress,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -115,15 +116,7 @@ pub struct KernelBridgePerformanceHarmonicJsonShape {
     pub nodal_quartet: [MathemeNodalConstraint; 4],
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct KernelBridgeDepositionAnchorJsonShape {
-    pub source_coordinate: String,
-    pub resonance72_index: usize,
-    pub mahamaya_address64: Option<u8>,
-    pub s3_method: String,
-    pub privacy_boundary: String,
-}
+pub type KernelBridgeDepositionAnchorJsonShape = DepositionAnchorProjection;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -874,14 +867,7 @@ pub fn typed_json_performance_event_from_profile(
         },
         pointer_anchor: profile.pointer_anchor.clone(),
         diatonic: profile.diatonic.clone(),
-        deposition_anchor: KernelBridgeDepositionAnchorJsonShape {
-            source_coordinate: profile.pointer_anchor.source_coordinate.clone(),
-            resonance72_index: profile.resonance72.lens_anchor_index,
-            mahamaya_address64: profile.mahamaya.mahamaya_address64,
-            s3_method: "s5.episodic.kernel_profile_observation.deposit".to_owned(),
-            privacy_boundary: "public-current-context-to-protected-local-episodic-memory"
-                .to_owned(),
-        },
+        deposition_anchor: profile.deposition_anchor.clone(),
         lens_mode: KernelBridgeLensModeJsonShape {
             lens: profile.lens_mode.lens,
             mode: profile.lens_mode.mode,

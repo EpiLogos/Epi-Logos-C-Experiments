@@ -5,9 +5,10 @@ Rust contract crate `epi-s1-hen-compiler-core` — "S1 Hen compiler contract for
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 
 ## Ownership
-- `src/lib.rs` — crate root / public surface (`//!` "S1 Hen compiler contract."); re-exports compile_plan, coordinate, frontmatter, graph_sync, ledger, residency, smart_env.
+- `src/lib.rs` — crate root / public surface (`//!` "S1 Hen compiler contract."); re-exports compile_plan, coordinate, frontmatter, graph_sync, ledger, residency, smart_env and exposes public modules including base_view.
+- `src/base_view.rs` — `s1'.base.ensure` contract surface: derives base-view schemas from CT contracts, emits idempotent `{coordinate}.base-view.md` notes, and enforces reflection-only residency for base-view artifacts.
 - `src/residency.rs` — compiler residency resolution (`resolve_compiler_residency`, `HenTimestamp`).
-- `src/frontmatter.rs` — frontmatter validation (`validate_frontmatter`, `validate_compile_artifact_frontmatter`).
+- `src/frontmatter.rs` / `src/coordinate.rs` — frontmatter validation (`validate_frontmatter`, `validate_compile_artifact_frontmatter`) and coordinate-prefixed key law, including `c_0_source_coordinates` sequence and CT `p0_`..`p5_` position fields.
 - `src/compile_plan.rs` — compile-plan + compiler-invocation contract (`plan_compile`, `TargetAgent`, `ExecutorKind`).
 - `src/coordinate.rs` — coordinate validity (`is_valid_coordinate`).
 - `src/wikilinks.rs` — wikilink parsing (`WikilinkTarget`).
@@ -15,7 +16,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 - `src/ledger.rs` — envelope ledger channels.
 - `src/l_alignments.rs`, `src/property_intelligence.rs`, `src/relation_inference.rs`, `src/artifact_evidence.rs` — alignment, property, relation-inference, evidence law; artifact evidence collects C2 entity-candidate, C3 diagram/canvas, C4 type/MOC, and C5 World-graduation evidence from frontmatter plus `World/Types` ancestry.
 - `src/smart_env.rs` (private mod) — link-candidate suggestion (`suggest_link_candidates`).
-- `tests/` — contract tests (module_surface, frontmatter, q_vocabulary_unknown_key_rejection, compile_plan, graph_promotion_intent, c_layer_typology_classification, entity_candidate_lifecycle, wikilink_parser, etc.); `entity_candidate_lifecycle` covers `:World` label/root-link/span-pointer promotion and graduation preservation. `tests/fixtures/` holds test data.
+- `tests/` — contract tests (module_surface, base_view, frontmatter, q_vocabulary_unknown_key_rejection, compile_plan, graph_promotion_intent, c_layer_typology_classification, entity_candidate_lifecycle, wikilink_parser, etc.); `base_view` covers CT4b schema derivation, idempotent emission, and reflection-residency refusal; `entity_candidate_lifecycle` covers `:World` label/root-link/span-pointer promotion and graduation preservation. `tests/fixtures/` holds test data.
 - Does NOT own coordinate semantics or canon-write authority beyond Hen's mandate; domain law for other layers lives in those layers' owning modules/specs. Canon (`Idea/Bimba|Pratibimba|Empty`) is written only through Hen with explicit review — never directly.
 
 ## Local Contracts

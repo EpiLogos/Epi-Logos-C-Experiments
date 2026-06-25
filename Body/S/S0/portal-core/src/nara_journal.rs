@@ -387,13 +387,12 @@ fn hopf_project_q_composed(q_composed: [f32; 4]) -> (f64, u8) {
     let w = q[0].clamp(-1.0, 1.0) as f64;
     let vector_norm = ((q[1] * q[1] + q[2] * q[2] + q[3] * q[3]) as f64).sqrt();
     let base_degree = (2.0 * w.acos()).to_degrees() % 360.0;
-    let exact_degree_720 = if q[0] < -f32::EPSILON
-        || (q[0].abs() <= f32::EPSILON && vector_norm > f64::EPSILON)
-    {
-        base_degree + 360.0
-    } else {
-        base_degree
-    };
+    let exact_degree_720 =
+        if q[0] < -f32::EPSILON || (q[0].abs() <= f32::EPSILON && vector_norm > f64::EPSILON) {
+            base_degree + 360.0
+        } else {
+            base_degree
+        };
     (hopf_project(exact_degree_720), hopf_fiber(exact_degree_720))
 }
 

@@ -7,6 +7,7 @@ export * from './provenance-border';
 export * from './readiness-state-grammar';
 export * from './pending-badge';
 export * from './blocked-overlay';
+export * from './profile-tick-inline-binding';
 export * from './readiness-indicator';
 export * from './empty-state';
 export * from './loading-pulse';

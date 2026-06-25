@@ -14,12 +14,34 @@ coordinate: "C0"
 family: "C"
 artifact_role: "seed"
 c_0_links_to: "[[Bimba/Seeds/C/C0]]"
+c_0_source_coordinates:
+  - "[[C0]]"
+  - "[[World-Ontology]]"
+p0_grounds:
+  - "Grounded in the owning CTx contract"
 "#,
     )
     .unwrap();
 
     let result = validate_frontmatter(&yaml);
     assert!(result.errors.is_empty(), "{:?}", result.errors);
+}
+
+#[test]
+fn c_0_source_coordinates_must_be_string_sequence() {
+    let yaml: Value = serde_yaml::from_str(
+        r#"
+coordinate: "C0"
+c_0_source_coordinates: "[[C0]]"
+"#,
+    )
+    .unwrap();
+
+    let result = validate_frontmatter(&yaml);
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_0_source_coordinates")));
 }
 
 #[test]

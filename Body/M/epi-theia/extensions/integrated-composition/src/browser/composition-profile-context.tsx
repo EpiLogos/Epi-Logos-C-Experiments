@@ -4,6 +4,7 @@ import {
     SharedBridgeAdapter
 } from '@pratibimba/m-extension-runtime';
 import {
+    CompositionProfileTickEvent,
     CompositionProfileTickSubscription,
     openCompositionProfileSubscription
 } from '../common/profile-tick-subscription';
@@ -255,6 +256,24 @@ export function useCompositionProfile(): {
     }, [subscription]);
 
     return snapshot;
+}
+
+export function useCompositionProfileTick(): CompositionProfileTickEvent | null {
+    const subscription = React.useContext(CompositionProfileContext);
+    const [tick, setTick] = React.useState<CompositionProfileTickEvent | null>(() =>
+        subscription?.currentTick ?? null
+    );
+
+    React.useEffect(() => {
+        setTick(subscription?.currentTick ?? null);
+        if (!subscription) {
+            return undefined;
+        }
+        const disposable = subscription.subscribeToProfileTick(setTick);
+        return () => disposable.dispose();
+    }, [subscription]);
+
+    return tick;
 }
 
 function readSnapshot(subscription: CompositionProfileTickSubscription | null): {

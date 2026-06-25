@@ -1,0 +1,44 @@
+{
+  "runId": "20260625T223058Z-48-T48.5",
+  "taskId": "48.T48.5",
+  "startedAt": "2026-06-25T22:30:58.333Z",
+  "owner": "codex-m-dev-48-t48-5-base-ensure",
+  "leaseExpiresAt": "2026-06-26T00:30:58.333Z",
+  "worktree": null,
+  "task": {
+    "id": "48.T48.5",
+    "trackId": "48",
+    "tranche": "T48.5",
+    "title": "`s1'.base.ensure` + base-schema-from-CTx-contract *(L2; owning spec [[S1-SPEC]] / Hen)*",
+    "effort": null,
+    "file": "48-bases-cs-reflection-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+    "dependsOn": [
+      "48.T48.4"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler-core/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-25T09:05:30.485Z",
+        "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+      },
+      {
+        "at": "2026-06-25T09:29:41.628Z",
+        "text": "Contract surface specified in Track 48 §13 (ratify-in-place); ready to implement."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

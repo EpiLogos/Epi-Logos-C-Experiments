@@ -183,6 +183,10 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             continue;
         }
 
+        if is_position_contract_key(key_str) {
+            continue;
+        }
+
         if CANONICAL_METADATA_KEYS.contains(&key_str) {
             continue;
         }
@@ -262,6 +266,29 @@ fn q_vocabulary_suffix(rest: &str) -> Option<&str> {
                     .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
         });
     is_lower_snake_case.then_some(suffix)
+}
+
+fn is_position_contract_key(key: &str) -> bool {
+    let Some(rest) = key.strip_prefix('p') else {
+        return false;
+    };
+    let Some(position) = rest.chars().next() else {
+        return false;
+    };
+    if !matches!(position, '0'..='5') {
+        return false;
+    }
+    let suffix = &rest[position.len_utf8()..];
+    let Some(suffix) = suffix.strip_prefix('_') else {
+        return false;
+    };
+    !suffix.is_empty()
+        && suffix.split('_').all(|segment| {
+            !segment.is_empty()
+                && segment
+                    .chars()
+                    .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
+        })
 }
 
 fn validate_temporal_requirements(map: &Mapping, errors: &mut Vec<String>) {

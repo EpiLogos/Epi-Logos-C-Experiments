@@ -675,6 +675,39 @@ impl MathemeHarmonicProfileReadinessFact {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct DepositionAnchorProjection {
+    pub source_coordinate: String,
+    pub resonance72_index: usize,
+    pub mahamaya_address64: Option<u8>,
+    pub s3_method: String,
+    pub privacy_boundary: String,
+}
+
+impl DepositionAnchorProjection {
+    fn from_profile_parts(
+        source_coordinate: &str,
+        resonance72_index: usize,
+        mahamaya_address64: Option<u8>,
+    ) -> Self {
+        Self {
+            source_coordinate: source_coordinate.to_owned(),
+            resonance72_index,
+            mahamaya_address64,
+            s3_method: "s5.episodic.kernel_profile_observation.deposit".to_owned(),
+            privacy_boundary: "public-current-context-to-protected-local-episodic-memory"
+                .to_owned(),
+        }
+    }
+}
+
+impl Default for DepositionAnchorProjection {
+    fn default() -> Self {
+        Self::from_profile_parts("M0", 0, None)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
     #[serde(default = "default_profile_schema_version")]
     pub profile_schema_version: u16,
@@ -700,6 +733,8 @@ pub struct MathemeHarmonicProfile {
     pub chromatic: MathemeChromaticProfile,
     pub diatonic: Option<MathemeDiatonicContext>,
     pub resonance72: MathemeResonance72Projection,
+    #[serde(default)]
+    pub deposition_anchor: DepositionAnchorProjection,
     pub audio_octet: [f32; 8],
     pub nodal_quartet: [MathemeNodalConstraint; 4],
     pub elements: MathemeElementalProjection,
@@ -768,6 +803,11 @@ impl MathemeHarmonicProfile {
             resonance72.lens_anchor_index,
             tick12 >= 6,
         );
+        let deposition_anchor = DepositionAnchorProjection::from_profile_parts(
+            &source_coordinate,
+            resonance72.lens_anchor_index,
+            binary.mahamaya_address64,
+        );
         Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
@@ -793,6 +833,7 @@ impl MathemeHarmonicProfile {
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
             diatonic: diatonic.clone(),
             resonance72,
+            deposition_anchor,
             audio_octet: vimarsha_reading.audio_octet,
             nodal_quartet: vimarsha_reading.nodal_quartet,
             elements: MathemeElementalProjection::from_position(position),
