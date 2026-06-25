@@ -2012,11 +2012,13 @@
       "worktree": null
     },
     "11.T11.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:35:00.000Z",
+      "claimedAt": "2026-06-25T16:35:00.000Z",
+      "completedAt": "2026-06-25T16:35:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T16:35:00.000Z", "text": "Ledger v2 at surface-extension-contract-ledger.json: 28 widget ids mapped, closureNote added, feeds Tranche 14. JSON valid. Track 11 closure complete."}
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
