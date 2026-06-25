@@ -68,6 +68,7 @@ const M3_BROWSER_SOURCE_DIR =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser';
 const COMPONENT_SOURCE_DIR = join(M3_BROWSER_SOURCE_DIR, 'components');
 const PROFILE_TICK_CONTEXT_SOURCE = join(M3_BROWSER_SOURCE_DIR, 'context/M3ProfileTickContext.tsx');
+const TRANSCRIPTION_ENGINE_SOURCE = join(COMPONENT_SOURCE_DIR, 'M3TranscriptionEngine.tsx');
 
 test('profile tick subscription broadcasts tick and degree720 on profile advance', () => {
     const bridge = inMemoryBridge();
@@ -163,12 +164,213 @@ test('M3 browser source has no internal timer or RAF clock outside the controlle
     assert.deepEqual(violations, []);
 });
 
+test('M3TranscriptionEngine renders lens codon binary degree cells from the bridge projection', () => {
+    const {
+        M3TranscriptionEngine,
+        M3ReadinessProvider
+    } = transcriptionEngineModule();
+    const surface = surfaceFixture();
+    const lensCodonBinary = lensCodonBinaryFixture({ lensId: 4, tick12: 8 });
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(
+            M3ReadinessProvider,
+            { surface, readiness: readinessFixture() },
+            React.createElement(M3TranscriptionEngine, {
+                surface,
+                lensCodonBinary,
+                activeLensId: 4
+            })
+        )
+    );
+
+    assert.match(html, /data-widget-id="pratibimba\.m3-mahamaya:m3-transcription-engine"/);
+    assert.match(html, /data-active-lens-id="4"/);
+    assert.match(html, /data-render-mode="degree-ring"/);
+    assert.match(html, /data-degree360="120"/);
+    assert.match(html, /data-exact-degree720="240"/);
+    assert.match(html, /data-hexagram-address="42"/);
+    assert.match(html, /10\s*01\s*11/);
+    assert.match(html, /data-charge-key="pp"/);
+    assert.match(html, /data-charge-key="nn"/);
+    assert.match(html, /data-charge-key="np"/);
+    assert.match(html, /data-charge-key="pn"/);
+    assert.match(html, /\[1, 2, 3, 4\]/);
+    assert.match(html, /canonical-B:Fire/);
+    assert.match(html, /imperfect-palindromic/);
+    assert.match(html, /line-change-hop/);
+    assert.match(html, /m3_codon_is_rna_capable=true/);
+});
+
+test('M3TranscriptionEngine dev lamps expose X logic identity and operator aperture graph mode', () => {
+    const {
+        M3TranscriptionEngine,
+        M3ProfileTickContext,
+        M3ReadinessProvider
+    } = transcriptionEngineModule();
+    const surface = surfaceFixture();
+    const lensCodonBinary = lensCodonBinaryFixture({ lensId: 17, tick12: 11 });
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(
+            M3ReadinessProvider,
+            { surface, readiness: readinessFixture() },
+            React.createElement(
+                M3ProfileTickContext.Provider,
+                {
+                    value: {
+                        generation: 43,
+                        tick: 11,
+                        degree720: 366,
+                        fibonacciGround: null
+                    }
+                },
+                React.createElement(M3TranscriptionEngine, {
+                    surface,
+                    lensCodonBinary,
+                    activeLensId: 17,
+                    devModeXLogicLamps: true
+                })
+            )
+        )
+    );
+
+    assert.match(html, /data-render-mode="operator-no-frame-graph"/);
+    assert.match(html, /data-profile-tick="11"/);
+    assert.match(html, /pp=X2/);
+    assert.match(html, /nn=X1/);
+    assert.match(html, /np=X4/);
+    assert.match(html, /pn=X3/);
+    assert.match(html, /pp\+nn\+np\+pn == 4.X/);
+});
+
+test('M3TranscriptionEngine renders honest pending badges and contains no local codon math', () => {
+    const {
+        M3TranscriptionEngine,
+        M3ReadinessProvider
+    } = transcriptionEngineModule();
+    const surface = surfaceFixture({
+        pendingFields: Object.freeze(['profile.lensCodonBinary']),
+        readiness: Object.freeze({
+            state: 'authority_payload_missing',
+            surfaceReady: false,
+            blockers: Object.freeze(['profile.lensCodonBinary'])
+        })
+    });
+
+    const pendingHtml = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(
+            M3ReadinessProvider,
+            { surface, readiness: readinessFixture('authority_payload_missing') },
+            React.createElement(M3TranscriptionEngine, {
+                surface,
+                activeLensId: 4
+            })
+        )
+    );
+
+    assert.match(pendingHtml, /pending-profile-field:lensCodonBinary/);
+
+    const noRnaFamilyHtml = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(
+            M3ReadinessProvider,
+            { surface: surfaceFixture(), readiness: readinessFixture() },
+            React.createElement(M3TranscriptionEngine, {
+                surface: surfaceFixture(),
+                lensCodonBinary: lensCodonBinaryFixture({ lensId: 4, tick12: 8, includeRnaFamily: false }),
+                activeLensId: 4
+            })
+        )
+    );
+    assert.match(noRnaFamilyHtml, /pending-rna-codon-family/);
+    assert.match(noRnaFamilyHtml, /pending-chromosome-graph/);
+
+    const source = readFileSync(TRANSCRIPTION_ENGINE_SOURCE, 'utf8');
+    assert.doesNotMatch(source, /NUCLEOTIDE_ICHING_VALUE|m3_compute_charges|epogdoon|X \+ Y \+ Z|>> 4 & 0x03/);
+    assert.doesNotMatch(source, /from ['"][^'"]*m2-parashakti|Body\/S\/S0/);
+});
+
 function profile(generation, tick, degree720) {
     return Object.freeze({
         generation,
         pointerAnchor: `profile:${generation}`,
         capabilities: Object.freeze(['profile.public-current']),
         payload: Object.freeze({ tick, degree720 })
+    });
+}
+
+function transcriptionEngineModule() {
+    const engine = require('../m3-mahamaya/lib/browser/components/M3TranscriptionEngine.js');
+    const readinessContext = require('../m3-mahamaya/lib/browser/context/M3ReadinessContext.js');
+    const profileTickContext = require('../m3-mahamaya/lib/browser/context/M3ProfileTickContext.js');
+    return {
+        ...engine,
+        M3ReadinessProvider: readinessContext.M3ReadinessProvider,
+        M3ProfileTickContext: profileTickContext.M3ProfileTickContext
+    };
+}
+
+function lensCodonBinaryFixture({
+    lensId,
+    tick12,
+    includeRnaFamily = true
+}) {
+    return Object.freeze({
+        lensId,
+        segment: Object.freeze([120, 121]),
+        tick12,
+        perDegree: Object.freeze([
+            Object.freeze({
+                degree360: 120,
+                exactDegree720: 240,
+                codonUpper: 2,
+                codonLower: 1,
+                codonThird: 3,
+                codon6Bit: 0b100111,
+                codonBits: '10 01 11',
+                hexagramId: 42,
+                codonClass: 'imperfect-palindromic',
+                charges: Object.freeze({ pp: 1, nn: 2, np: 3, pn: 4 }),
+                quaternion: Object.freeze([1, 2, 3, 4]),
+                elementCanonical: 'canonical-B:Fire',
+                lineChangeOperator: 'line-change-hop:yang-3',
+                lineChangeHops: Object.freeze([
+                    Object.freeze({ line: 3, degree360: 121, hexagramId: 43 })
+                ]),
+                rnaCapable: true,
+                rnaFamily: includeRnaFamily ? 'bridge-provided-U-family' : undefined,
+                chromosomeGraph: null,
+                xLogicInvariant: 'pp+nn+np+pn == 4·X'
+            })
+        ])
+    });
+}
+
+function surfaceFixture(overrides = {}) {
+    return Object.freeze({
+        profileGeneration: 42,
+        activeProjection: Object.freeze({
+            tick: 8,
+            degree720: 240
+        }),
+        pendingFields: Object.freeze([]),
+        readiness: Object.freeze({
+            state: 'ready_public_current',
+            surfaceReady: true,
+            blockers: Object.freeze([])
+        }),
+        ...overrides
+    });
+}
+
+function readinessFixture(state = 'ready_public_current') {
+    return Object.freeze({
+        fetchedAt: 1,
+        state,
+        reason: state === 'ready_public_current' ? undefined : 'profile_missing_field',
+        profileGeneration: 42,
+        bridgeReachable: true,
+        blockerIds: Object.freeze([])
     });
 }
 

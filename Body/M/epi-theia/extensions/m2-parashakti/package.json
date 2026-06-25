@@ -62,6 +62,7 @@
     "test:shadow-decan": "node --test test/shadow-decan.test.mjs",
     "test:audio-bus-visual": "node --test test/audio-bus-visual.test.mjs",
     "test:provenance-inline": "node --test test/provenance-inline.test.mjs",
+    "test:cymatic-transport": "node --test test/cymatic-transport.test.mjs",
     "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && node --test test/audio-bus-visual.test.mjs && node --test test/provenance-inline.test.mjs && pnpm build"
   }
 }

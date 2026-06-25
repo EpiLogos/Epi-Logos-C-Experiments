@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T16:56:22.375Z",
+  "updatedAt": "2026-06-25T16:58:28.273Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6368,16 +6368,16 @@
       "worktree": null
     },
     "36.T36.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:58:28.193Z",
+      "claimedAt": "2026-06-25T16:58:28.193Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-36-t36-3-m3-inspector",
+      "leaseExpiresAt": "2026-06-25T18:58:28.193Z",
+      "heartbeatAt": "2026-06-25T16:58:28.193Z",
+      "runId": "20260625T165828Z-36-T36.3",
       "worktree": null
     },
     "36.T36.4": {
@@ -9499,14 +9499,19 @@
       "worktree": null
     },
     "47.T47.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T16:40:48.437Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T16:58:02.007Z",
       "claimedAt": "2026-06-25T16:40:48.437Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T16:58:02.007Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:58:02.007Z",
+          "text": "Chronos node tests 20/20; cron lib tests 6/6; cron CLI contract 1/1; heartbeat auto-fire 1/1; key files Body/S/S4/ta-onta/S4-3p-chronos/modules/aeon-scheduling.ts, Body/S/S4/ta-onta/S4-3p-chronos/tests/aeon_scheduling.test.ts, Body/S/S0/epi-cli/src/gate/cron.rs, Idea/Bimba/World/Aeon.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-47-t47-3-aeon-scheduling",
-      "leaseExpiresAt": "2026-06-25T18:40:48.437Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T16:40:48.437Z",
       "runId": "20260625T164048Z-47-T47.3",
       "worktree": null
@@ -12737,11 +12742,12 @@
     {
       "runId": "20260625T164048Z-47-T47.3",
       "taskId": "47.T47.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T16:40:48.437Z",
       "owner": "codex-m-dev-47-t47-3-aeon-scheduling",
       "leaseExpiresAt": "2026-06-25T18:40:48.437Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T16:58:02.007Z"
     },
     {
       "runId": "20260625T164104Z-15-T15.2",
@@ -12779,26 +12785,35 @@
       "owner": "codex-m-dev-26-t26-9-aletheia-subagent-trace",
       "leaseExpiresAt": "2026-06-25T18:56:22.304Z",
       "worktree": null
+    },
+    {
+      "runId": "20260625T165828Z-36-T36.3",
+      "taskId": "36.T36.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:58:28.193Z",
+      "owner": "codex-m-dev-36-t36-3-m3-inspector",
+      "leaseExpiresAt": "2026-06-25T18:58:28.193Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T16:56:07.339Z",
-    "updatedAt": "2026-06-25T16:56:07.339Z",
+    "createdAt": "2026-06-25T16:58:13.387Z",
+    "updatedAt": "2026-06-25T16:58:13.387Z",
     "taskIds": [
-      "47.T47.3",
       "24.T24.20",
-      "15.T15.3",
-      "15.T15.4"
+      "23.T23.16",
+      "26.T26.9",
+      "15.T15.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "47.T47.3": "in-session",
       "24.T24.20": "in-session",
-      "15.T15.3": "in-session",
-      "15.T15.4": "in-session"
+      "23.T23.16": "in-session",
+      "26.T26.9": "in-session",
+      "15.T15.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
