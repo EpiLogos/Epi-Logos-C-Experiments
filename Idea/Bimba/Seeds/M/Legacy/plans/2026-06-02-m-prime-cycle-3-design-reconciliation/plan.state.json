@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:06:45.081Z",
+  "updatedAt": "2026-06-25T23:13:07.654Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6925,11 +6925,20 @@
       "worktree": null
     },
     "24.T24.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T23:13:07.606Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T23:13:07.606Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T23:13:00.978Z",
+          "text": "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DecanChainBreadcrumb.tsx, Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/TarotDecanService.ts"
+        },
+        {
+          "at": "2026-06-25T23:13:07.606Z",
+          "text": "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DecanChainBreadcrumb.tsx, Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/TarotDecanService.ts"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
