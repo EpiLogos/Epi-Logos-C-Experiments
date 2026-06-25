@@ -9,7 +9,10 @@ use crate::events::KleinFlipEvent;
 use crate::mahamaya::MahamayaCodecProjection;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
-use crate::profile_projections::{AnuttaraWitnessProjection, PasuBeingPatternProjection};
+use crate::profile_projections::{
+    AnuttaraWitnessProjection, CanonRecognitionEvent, CosmicCompositionState,
+    PasuBeingPatternProjection, PersonalPoleProjection, PsychoidFieldProjection,
+};
 use crate::vak_address::VakAddress;
 use std::fmt;
 
@@ -625,6 +628,51 @@ impl MathemeFutureAnchor {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum BedrockProvenanceHandle {
+    KernelMathemeBedrockProjectionV1,
+}
+
+impl BedrockProvenanceHandle {
+    pub fn provenance_chain(self) -> String {
+        match self {
+            Self::KernelMathemeBedrockProjectionV1 => format!(
+                "{}:{} -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link",
+                "Body/S/S0/portal-core/src/kernel.rs",
+                line!()
+            ),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum MathemeHarmonicProfileReadinessState {
+    Authoritative,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct MathemeHarmonicProfileReadinessFact {
+    pub field: String,
+    pub state: MathemeHarmonicProfileReadinessState,
+    pub bedrock_link: BedrockProvenanceHandle,
+    pub provenance_chain: String,
+}
+
+impl MathemeHarmonicProfileReadinessFact {
+    fn bedrock() -> Self {
+        let bedrock_link = BedrockProvenanceHandle::KernelMathemeBedrockProjectionV1;
+        Self {
+            field: "bedrock".to_owned(),
+            state: MathemeHarmonicProfileReadinessState::Authoritative,
+            bedrock_link,
+            provenance_chain: bedrock_link.provenance_chain(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
@@ -664,6 +712,8 @@ pub struct MathemeHarmonicProfile {
     pub conjugate_form_character: ConjugateFormCharacter,
     pub privacy_class: ProfilePrivacyClass,
     pub bedrock: MathemeBedrockProjection,
+    #[serde(default)]
+    pub readiness_ledger: Vec<MathemeHarmonicProfileReadinessFact>,
     pub pointer_anchor: MathemePointerAnchorProjection,
     pub context_frames: MathemeContextFrameWebProjection,
     pub harmonic_grammar: MathemeHarmonicGrammarProjection,
@@ -671,6 +721,14 @@ pub struct MathemeHarmonicProfile {
     pub pasu_being_pattern: Option<PasuBeingPatternProjection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub anuttara_witness: Option<AnuttaraWitnessProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cosmic_composition_state: Option<CosmicCompositionState>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub personal_pole: Option<PersonalPoleProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub psychoid_field: Option<PsychoidFieldProjection>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub canon_recognition_stream: Vec<CanonRecognitionEvent>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vak_address: Option<VakAddress>,
     #[serde(default)]
@@ -747,6 +805,7 @@ impl MathemeHarmonicProfile {
             conjugate_form_character: conjugate_form_character_for_mode(lens_mode.mode),
             privacy_class: ProfilePrivacyClass::PublicCurrentContext,
             bedrock: MathemeBedrockProjection::from_position(position),
+            readiness_ledger: vec![MathemeHarmonicProfileReadinessFact::bedrock()],
             pointer_anchor: MathemePointerAnchorProjection::from_tick(
                 tick12,
                 position,
@@ -757,6 +816,10 @@ impl MathemeHarmonicProfile {
             harmonic_grammar: MathemeHarmonicGrammarProjection::from_tick(tick12, position),
             pasu_being_pattern: None,
             anuttara_witness: None,
+            cosmic_composition_state: None,
+            personal_pole: None,
+            psychoid_field: None,
+            canon_recognition_stream: Vec::new(),
             vak_address: None,
             s2_anchor: Some(MathemeFutureAnchor::s2_coordinate_anchor(
                 &source_coordinate,
@@ -796,6 +859,21 @@ impl MathemeHarmonicProfile {
     ) -> Self {
         let mut profile = Self::from_tick(tick);
         profile.anuttara_witness = Some(anuttara_witness);
+        profile
+    }
+
+    pub fn with_composition_projections(
+        tick: KernelTick,
+        cosmic_composition_state: CosmicCompositionState,
+        personal_pole: PersonalPoleProjection,
+        psychoid_field: PsychoidFieldProjection,
+        canon_recognition_stream: Vec<CanonRecognitionEvent>,
+    ) -> Self {
+        let mut profile = Self::from_tick(tick);
+        profile.cosmic_composition_state = Some(cosmic_composition_state);
+        profile.personal_pole = Some(personal_pole);
+        profile.psychoid_field = Some(psychoid_field);
+        profile.canon_recognition_stream = canon_recognition_stream;
         profile
     }
 

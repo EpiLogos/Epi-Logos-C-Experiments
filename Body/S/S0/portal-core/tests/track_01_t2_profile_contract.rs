@@ -1,7 +1,7 @@
 use portal_core::{
     codon_charge_quaternion, codon_rotation_from_lens_mode, codon_rotation_surface,
-    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, MathemeHarmonicProfile,
-    ProfilePrivacyClass,
+    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, BedrockProvenanceHandle,
+    MathemeHarmonicProfile, ProfilePrivacyClass,
 };
 
 #[test]
@@ -144,6 +144,47 @@ fn public_profile_populates_s2_s3_future_anchors_from_cycle2_surfaces() {
             "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
         );
     }
+}
+
+#[test]
+fn public_profile_readiness_ledger_carries_typed_bedrock_link_chain() {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(5, 4));
+    let fact = profile
+        .readiness_ledger
+        .iter()
+        .find(|fact| fact.field == "bedrock")
+        .expect("bedrock readiness fact is present");
+
+    assert_eq!(
+        fact.bedrock_link,
+        BedrockProvenanceHandle::KernelMathemeBedrockProjectionV1
+    );
+    assert!(
+        fact.provenance_chain
+            .contains("Body/S/S0/portal-core/src/kernel.rs:"),
+        "chain names the source file/line: {}",
+        fact.provenance_chain
+    );
+    assert!(
+        fact.provenance_chain
+            .contains(".rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"),
+        "chain carries the rodata-to-readiness path: {}",
+        fact.provenance_chain
+    );
+
+    let json = serde_json::to_value(&profile).expect("profile serializes");
+    let bedrock_fact = json["readinessLedger"]
+        .as_array()
+        .expect("readiness ledger serializes")
+        .iter()
+        .find(|fact| fact["field"] == "bedrock")
+        .expect("bedrock fact serializes");
+
+    assert_eq!(
+        bedrock_fact["bedrock_link"],
+        "kernel-matheme-bedrock-projection-v1"
+    );
+    assert_eq!(bedrock_fact["state"], "authoritative");
 }
 
 #[test]

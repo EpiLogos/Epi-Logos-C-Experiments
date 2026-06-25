@@ -29,6 +29,37 @@ Canon: [[World-Ontology]] -> [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M-SYSTEM-INDEX]]
 - Does NOT own canon meaning — that is each [[M0]]…[[M5]] World Form + its `Seeds/` specs. Domain
   law stays in the owning coordinate module, never relocated here.
 
+## What Belongs Here
+- Authored branch indexes remain the navigation law for `/Map`; the embedded [[Map-Aggregate-Browser.base]]
+  is the computed reflection over current `map-index` frontmatter.
+
+![[Map-Aggregate-Browser.base]]
+
+## Open Gaps
+- This local base block surfaces projected `/Map` files that are missing the minimum reflection
+  frontmatter required to remain navigable. Repair the projection/source, then re-run the projector;
+  do not let the base become the authored index.
+
+```base
+filters:
+  and:
+    - 'file.path.startsWith("Bimba/Map")'
+    - or:
+        - 'coordinate == null'
+        - 'c_4_artifact_role == null'
+        - 'c_4_graph_node == null'
+        - 'c_0_source_coordinates == null'
+views:
+  - type: table
+    name: "Map reflection gaps"
+    order:
+      - file
+      - coordinate
+      - c_4_artifact_role
+      - c_4_graph_node
+      - c_0_source_coordinates
+```
+
 ## Local Contracts
 - Projector: `datasets/scripts/project-map-index.mjs` (Neo4j-shape JSON → pithy index; idempotent).
 - Sync direction (operative, L2): `graph_sync neo4j_to_obsidian` scoped to `map-index`; full

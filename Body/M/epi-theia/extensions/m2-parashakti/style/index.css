@@ -93,6 +93,114 @@
     overflow-wrap: anywhere;
 }
 
+.mext-widget-m2-parashakti .m2-cymatic-transport {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 6px;
+    background-color: var(--theia-sideBar-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__toolbar,
+.mext-widget-m2-parashakti .m2-cymatic-transport__scrubber {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__button {
+    min-height: 28px;
+    padding: 3px 10px;
+    border: 1px solid var(--theia-button-border, transparent);
+    border-radius: 4px;
+    color: var(--theia-button-foreground);
+    background-color: var(--theia-button-background);
+    font: inherit;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__button:hover {
+    background-color: var(--theia-button-hoverBackground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__paused-badge,
+.mext-widget-m2-parashakti .m2-cymatic-transport__pending {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    min-height: 24px;
+    padding: 1px 7px;
+    border: 1px solid var(--theia-focusBorder);
+    border-radius: 4px;
+    color: var(--theia-foreground);
+    font-size: var(--theia-ui-font-size0);
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__pending {
+    border-color: var(--theia-editorWarning-foreground);
+    color: var(--theia-editorWarning-foreground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__label,
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick-readout {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__scrubber input[type='range'] {
+    flex: 1 1 180px;
+    min-width: 120px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__snapshot-bar {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(4px, 1fr);
+    align-items: center;
+    width: 100%;
+    min-height: 18px;
+    gap: 2px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick {
+    display: block;
+    height: 6px;
+    border-radius: 2px;
+    background-color: var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick[data-active='true'] {
+    background-color: var(--theia-focusBorder);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__klein-marker {
+    min-width: 12px;
+    min-height: 12px;
+    padding: 0;
+    border: 2px solid var(--theia-editorWarning-foreground);
+    border-radius: 50%;
+    background: transparent;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__surface {
+    min-height: 58px;
+    padding-top: 8px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__summary {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 10px;
+    row-gap: 3px;
+    margin: 0;
+    font-size: var(--theia-ui-font-size0);
+}
+
 .mext-widget-m2-parashakti .m2-shadow-decan-surface {
     margin-top: 14px;
     padding-top: 12px;

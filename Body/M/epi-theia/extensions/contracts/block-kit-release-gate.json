@@ -1,0 +1,50 @@
+{
+  "coordinate": "M'/M5'",
+  "track": "44.T44.10",
+  "artifactRole": "block-kit-release-gate-contract",
+  "coreBlockOwnerSource": "Body/M/epi-theia/extensions/block-kit/src/common/registry.ts#CORE_BLOCK_OWNER_REGISTRATIONS",
+  "gatewayMethodContractSource": "Body/M/epi-theia/extensions/block-kit/src/common/registry.ts#BLOCK_KIT_GATEWAY_METHOD_CONTRACTS",
+  "requiredGatewayMethods": [
+    {
+      "method": "blocks.catalog",
+      "ownerExtensionId": "m-extension-runtime",
+      "contractEntryId": "BK-GW-001",
+      "routesTo": "blocks.catalog",
+      "humanGateRequired": false
+    },
+    {
+      "method": "blocks.annotate",
+      "ownerExtensionId": "block-kit",
+      "contractEntryId": "BK-GW-002",
+      "routesTo": "s4'.psyche.update",
+      "humanGateRequired": true
+    },
+    {
+      "method": "blocks.verdict",
+      "ownerExtensionId": "block-kit",
+      "contractEntryId": "BK-GW-003",
+      "routesTo": "s4'.psyche.update",
+      "humanGateRequired": true
+    },
+    {
+      "method": "blocks.doc.persist",
+      "ownerExtensionId": "block-kit",
+      "contractEntryId": "BK-GW-004",
+      "routesTo": "s1'.vault.append_block",
+      "humanGateRequired": true
+    },
+    {
+      "method": "blocks.doc.read",
+      "ownerExtensionId": "block-kit",
+      "contractEntryId": "BK-GW-005",
+      "routesTo": "s1'.vault.read_file",
+      "humanGateRequired": false
+    }
+  ],
+  "releaseGates": [
+    "no-orphan core block owner registration",
+    "gateway method contract entry + owner",
+    "Human Gate verdict loop round-trip",
+    "markdown and MDX persisted block-doc round-trip"
+  ]
+}

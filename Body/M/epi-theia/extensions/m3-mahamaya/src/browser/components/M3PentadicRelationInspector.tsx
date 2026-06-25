@@ -25,10 +25,12 @@ export interface M3MahamayaFifteenWitness {
 }
 
 export interface M3PentadicTraceView {
+    readonly tick: number | null;
     readonly sourceBinaryState: string | null;
     readonly wholeNumberEndpoint: number | null;
     readonly naturalNumberEndpoint: number | null;
     readonly substrateHinge: string | null;
+    readonly shemDegreeQuantum: number | null;
     readonly resonance72Index: number | null;
     readonly pairedMahamayaFifteens: readonly [number, number] | null;
     readonly witnesses: readonly M3MahamayaFifteenWitness[];
@@ -220,6 +222,8 @@ export const M3PentadicRelationInspector: React.FC<M3PentadicRelationInspectorPr
                 <BackboneValue label="24-spoke relation" value={model.trace?.backboneIdentity} field="profile.anuttara_pentadic_trace.backboneIdentity" readiness={model.readiness} />
                 <BackboneValue label="Shem pentadic relation" value={model.trace?.shemIdentity} field="profile.anuttara_pentadic_trace.shemIdentity" readiness={model.readiness} />
                 <BackboneValue label="line graph" value={model.trace?.lineGraphIdentity} field="profile.anuttara_pentadic_trace.lineGraphIdentity" readiness={model.readiness} />
+                <BackboneValue label="active tick" value={tickValue(model.trace?.tick)} field="profile.anuttara_pentadic_trace.tick" readiness={model.readiness} />
+                <BackboneValue label="5-degree quantum" value={shemQuantumValue(model.trace?.shemDegreeQuantum)} field="profile.anuttara_pentadic_trace.shemDegreeQuantum" readiness={model.readiness} />
                 <BackboneValue label="active resonance72" value={resonanceValue(model.trace?.resonance72Index)} field="profile.anuttara_pentadic_trace.resonance72Index" readiness={model.readiness} />
                 <BackboneValue label="active 64-address" value={addressValue(model.trace?.mahamayaAddress64)} field="profile.anuttara_pentadic_trace.mahamayaAddress64" readiness={model.readiness} />
                 <BackboneValue label="codon" value={model.trace?.codon ? `codon ${model.trace.codon}` : null} field="profile.anuttara_pentadic_trace.codon" readiness={model.readiness} />
@@ -278,6 +282,7 @@ function pentadicTraceFromPayload(
     const wholeNumberEndpoint = numberValue(raw.wholeNumberEndpoint ?? raw.whole_number_endpoint);
     const naturalNumberEndpoint = numberValue(raw.naturalNumberEndpoint ?? raw.natural_number_endpoint);
     const trace = Object.freeze({
+        tick: numberValue(raw.tick),
         sourceBinaryState,
         wholeNumberEndpoint,
         naturalNumberEndpoint,
@@ -286,6 +291,7 @@ function pentadicTraceFromPayload(
             sourceBinaryState,
             wholeNumberEndpoint
         ),
+        shemDegreeQuantum: numberValue(raw.shemDegreeQuantum ?? raw.shem_degree_quantum),
         resonance72Index: numberValue(raw.resonance72Index ?? raw.resonance72_index),
         pairedMahamayaFifteens: pairedFifteens(raw.pairedMahamayaFifteens ?? raw.paired_mahamaya_fifteens),
         witnesses: fifteenWitnesses(raw.pairedMahamayaFifteenWitnesses ?? raw.paired_mahamaya_fifteen_witnesses),
@@ -298,9 +304,11 @@ function pentadicTraceFromPayload(
         qCosmicRef: stringValue(raw.qCosmicRef ?? raw.q_cosmic_ref)
     });
     const required: readonly [keyof M3PentadicTraceView, string][] = [
+        ['tick', 'profile.anuttara_pentadic_trace.tick'],
         ['sourceBinaryState', 'profile.anuttara_pentadic_trace.sourceBinaryState'],
         ['wholeNumberEndpoint', 'profile.anuttara_pentadic_trace.wholeNumberEndpoint'],
         ['naturalNumberEndpoint', 'profile.anuttara_pentadic_trace.naturalNumberEndpoint'],
+        ['shemDegreeQuantum', 'profile.anuttara_pentadic_trace.shemDegreeQuantum'],
         ['resonance72Index', 'profile.anuttara_pentadic_trace.resonance72Index'],
         ['pairedMahamayaFifteens', 'profile.anuttara_pentadic_trace.pairedMahamayaFifteens'],
         ['backboneIdentity', 'profile.anuttara_pentadic_trace.backboneIdentity'],
@@ -439,6 +447,14 @@ const PendingFieldChip: React.FC<{
 
 function addressValue(value: number | null | undefined): string | null {
     return typeof value === 'number' ? `address64 ${value}` : null;
+}
+
+function tickValue(value: number | null | undefined): string | null {
+    return typeof value === 'number' ? `tick ${value}` : null;
+}
+
+function shemQuantumValue(value: number | null | undefined): string | null {
+    return typeof value === 'number' ? `5-degree quantum ${value}` : null;
 }
 
 function substrateHingeValue(

@@ -1457,7 +1457,7 @@
       "owningExtension": "ide-shell-m0-m5",
       "type": "activity-bar-mode",
       "scope": "daily-0-1",
-      "widgetId": "pratibimba.coordinate-tree",
+      "widgetId": "pratibimba.ide-shell.coordinate-tree",
       "iconRef": "$(list-tree)",
       "orderPriority": 10,
       "declaringTranche": "31.4"
@@ -1467,7 +1467,7 @@
       "owningExtension": "ide-shell-m0-m5",
       "type": "activity-bar-mode",
       "scope": "daily-0-1",
-      "widgetId": "pratibimba.bimba-graph-viewer",
+      "widgetId": "pratibimba.ide-shell.bimba-graph-viewer",
       "iconRef": "$(graph)",
       "orderPriority": 20,
       "declaringTranche": "31.4"
@@ -1477,39 +1477,9 @@
       "owningExtension": "ide-shell-m0-m5",
       "type": "activity-bar-mode",
       "scope": "daily-0-1",
-      "widgetId": "pratibimba.canon-studio",
+      "widgetId": "pratibimba.ide-shell.canon-studio",
       "iconRef": "$(book)",
       "orderPriority": 30,
-      "declaringTranche": "31.4"
-    },
-    {
-      "id": "pratibimba.activity-bar.day-calendar",
-      "owningExtension": "m4-nara",
-      "type": "activity-bar-mode",
-      "scope": "daily-0-1",
-      "widgetId": "m4.nara.dayCalendar",
-      "iconRef": "$(calendar)",
-      "orderPriority": 40,
-      "declaringTranche": "31.4"
-    },
-    {
-      "id": "pratibimba.activity-bar.journal-entries",
-      "owningExtension": "m4-nara",
-      "type": "activity-bar-mode",
-      "scope": "daily-0-1",
-      "widgetId": "m4.nara.journalEntries",
-      "iconRef": "$(notebook)",
-      "orderPriority": 50,
-      "declaringTranche": "31.4"
-    },
-    {
-      "id": "pratibimba.activity-bar.personal-coordinate",
-      "owningExtension": "m4-nara",
-      "type": "activity-bar-mode",
-      "scope": "daily-0-1",
-      "widgetId": "m4.nara.personalCoordinate",
-      "iconRef": "$(person)",
-      "orderPriority": 60,
       "declaringTranche": "31.4"
     },
     {
@@ -1517,9 +1487,9 @@
       "owningExtension": "ide-shell-m0-m5",
       "type": "activity-bar-mode",
       "scope": "ide-deep",
-      "widgetId": "pratibimba.backend-studio",
+      "widgetId": "pratibimba.ide-shell.backend-studio",
       "iconRef": "$(server)",
-      "orderPriority": 70,
+      "orderPriority": 40,
       "declaringTranche": "31.4"
     },
     {
@@ -1529,7 +1499,7 @@
       "scope": "ide-deep",
       "widgetId": "pratibimba.smart-connections-sidebar",
       "iconRef": "$(circuit-board)",
-      "orderPriority": 80,
+      "orderPriority": 50,
       "declaringTranche": "31.4"
     }
   ],

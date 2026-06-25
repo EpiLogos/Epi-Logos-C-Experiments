@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T170259Z-15-T15.3",
+  "taskId": "15.T15.3",
+  "startedAt": "2026-06-25T17:02:59.174Z",
+  "owner": "codex-m-dev-15-t15-3-activity-bar",
+  "leaseExpiresAt": "2026-06-25T19:02:59.174Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.3",
+    "trackId": "15",
+    "tranche": "T15.3",
+    "title": "Left-sidebar activity-bar system",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

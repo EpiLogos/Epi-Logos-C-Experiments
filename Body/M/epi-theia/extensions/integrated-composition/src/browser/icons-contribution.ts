@@ -65,10 +65,10 @@ export const PRATIBIMBA_ICON_THEME_REGISTRATIONS: readonly PratibimbaIconThemeRe
 ]);
 
 export const PRATIBIMBA_ACTIVITY_BAR_ICON_BINDINGS: readonly PratibimbaActivityBarIconBinding[] = Object.freeze([
-    activityBinding('pratibimba.activity-bar.coordinate-tree', 'pratibimba.coordinate-tree', 'coordinate-tree'),
-    activityBinding('pratibimba.activity-bar.bimba-graph-viewer', 'pratibimba.bimba-graph-viewer', 'bimba-graph-viewer'),
-    activityBinding('pratibimba.activity-bar.canon-studio', 'pratibimba.canon-studio', 'canon-studio'),
-    activityBinding('pratibimba.activity-bar.backend-studio', 'pratibimba.backend-studio', 'backend-studio'),
+    activityBinding('pratibimba.activity-bar.coordinate-tree', 'pratibimba.ide-shell.coordinate-tree', 'coordinate-tree'),
+    activityBinding('pratibimba.activity-bar.bimba-graph-viewer', 'pratibimba.ide-shell.bimba-graph-viewer', 'bimba-graph-viewer'),
+    activityBinding('pratibimba.activity-bar.canon-studio', 'pratibimba.ide-shell.canon-studio', 'canon-studio'),
+    activityBinding('pratibimba.activity-bar.backend-studio', 'pratibimba.ide-shell.backend-studio', 'backend-studio'),
     activityBinding('pratibimba.activity-bar.smart-connections', 'pratibimba.smart-connections-sidebar', 'smart-connections')
 ]);
 

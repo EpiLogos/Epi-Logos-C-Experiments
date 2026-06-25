@@ -104,10 +104,10 @@ export const FAMILY_LETTER_ICON_BY_LETTER: Readonly<Record<'p' | 's' | 't' | 'm'
     });
 
 export const ACTIVITY_BAR_ICON_BINDINGS: readonly ActivityBarIconBinding[] = Object.freeze([
-    activityMode('pratibimba.activity-bar.coordinate-tree', 'pratibimba.coordinate-tree', 'coordinate-tree'),
-    activityMode('pratibimba.activity-bar.bimba-graph-viewer', 'pratibimba.bimba-graph-viewer', 'bimba-graph-viewer'),
-    activityMode('pratibimba.activity-bar.canon-studio', 'pratibimba.canon-studio', 'canon-studio'),
-    activityMode('pratibimba.activity-bar.backend-studio', 'pratibimba.backend-studio', 'backend-studio'),
+    activityMode('pratibimba.activity-bar.coordinate-tree', 'pratibimba.ide-shell.coordinate-tree', 'coordinate-tree'),
+    activityMode('pratibimba.activity-bar.bimba-graph-viewer', 'pratibimba.ide-shell.bimba-graph-viewer', 'bimba-graph-viewer'),
+    activityMode('pratibimba.activity-bar.canon-studio', 'pratibimba.ide-shell.canon-studio', 'canon-studio'),
+    activityMode('pratibimba.activity-bar.backend-studio', 'pratibimba.ide-shell.backend-studio', 'backend-studio'),
     activityMode('pratibimba.activity-bar.smart-connections', 'pratibimba.smart-connections-sidebar', 'smart-connections')
 ]);
 

@@ -91,6 +91,7 @@
           "conjugate_form_character": {"type": "ConjugateFormCharacter", "readiness": "authoritative"},
           "privacy_class": {"type": "ProfilePrivacyClass", "readiness": "authoritative", "default": "PublicCurrentContext"},
           "bedrock": {"type": "MathemeBedrockProjection", "readiness": "authoritative"},
+          "readiness_ledger": {"type": "Vec<MathemeHarmonicProfileReadinessFact>", "readiness": "authoritative", "privacy": "public_current_context", "notes": "Includes the bedrock readiness fact with `bedrock_link: BedrockProvenanceHandle`, rendering the file:line -> .rodata -> profile field -> readiness fact chain inline for provenance tooltips."},
           "pointer_anchor": {"type": "MathemePointerAnchorProjection", "readiness": "transitional", "blocker_id": "IOD-05+S2/S3", "notes": "Current shape lives at S0; final certification and downstream `depositionAnchor` depend on S2/S3 owners. Open decision: nullable vs readiness-blocked vs separate sub-objects."},
           "context_frames": {"type": "MathemeContextFrameWebProjection", "readiness": "authoritative"},
           "vak_address": {"type": "Option<VakAddress>", "readiness": "authoritative", "carries_to": ["epi gate dispatch anima-invoke (D3, 419aac5)", "sessions.patch RPC (C1, 19fbc8fc)"]},

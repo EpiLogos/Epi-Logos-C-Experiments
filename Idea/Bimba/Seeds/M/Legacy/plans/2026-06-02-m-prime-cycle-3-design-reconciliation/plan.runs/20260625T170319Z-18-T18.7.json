@@ -1,0 +1,38 @@
+{
+  "runId": "20260625T170319Z-18-T18.7",
+  "taskId": "18.T18.7",
+  "startedAt": "2026-06-25T17:03:19.176Z",
+  "owner": "codex-m-dev-18-t18-7-bedrock-link",
+  "leaseExpiresAt": "2026-06-25T19:03:19.176Z",
+  "worktree": null,
+  "task": {
+    "id": "18.T18.7",
+    "trackId": "18",
+    "tranche": "T18.7",
+    "title": "Land `bedrock_link: BedrockProvenanceHandle`",
+    "effort": null,
+    "file": "18-typed-kernel-bridge-json-edge.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md",
+    "dependsOn": [
+      "18.T18.6"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. no-orphan-fill tranche to 'Land bedrock_link: BedrockProvenanceHandle' (closes CCT-6). A bedrock_link *string* field is plumbed in plugin-integrated-4-5-0/src/browser/jiva-siva-panes.tsx + tests, but the typed BedrockProvenanceHandle itself is absent (grep finds no such type). Requires: land the typed BedrockProvenanceHandle, not just a string field."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

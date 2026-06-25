@@ -34,10 +34,10 @@ The five custom activity-bar mode icons bind to `widget.application-shell-left`:
 
 | Mode id | Widget id | Custom icon |
 | --- | --- | --- |
-| `pratibimba.activity-bar.coordinate-tree` | `pratibimba.coordinate-tree` | `pratibimba.icon.coordinate-tree` |
-| `pratibimba.activity-bar.bimba-graph-viewer` | `pratibimba.bimba-graph-viewer` | `pratibimba.icon.bimba-graph-viewer` |
-| `pratibimba.activity-bar.canon-studio` | `pratibimba.canon-studio` | `pratibimba.icon.canon-studio` |
-| `pratibimba.activity-bar.backend-studio` | `pratibimba.backend-studio` | `pratibimba.icon.backend-studio` |
+| `pratibimba.activity-bar.coordinate-tree` | `pratibimba.ide-shell.coordinate-tree` | `pratibimba.icon.coordinate-tree` |
+| `pratibimba.activity-bar.bimba-graph-viewer` | `pratibimba.ide-shell.bimba-graph-viewer` | `pratibimba.icon.bimba-graph-viewer` |
+| `pratibimba.activity-bar.canon-studio` | `pratibimba.ide-shell.canon-studio` | `pratibimba.icon.canon-studio` |
+| `pratibimba.activity-bar.backend-studio` | `pratibimba.ide-shell.backend-studio` | `pratibimba.icon.backend-studio` |
 | `pratibimba.activity-bar.smart-connections` | `pratibimba.smart-connections-sidebar` | `pratibimba.icon.smart-connections` |
 
 ## Fallback Convention

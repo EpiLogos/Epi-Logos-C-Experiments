@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M3'-SPEC]] (architecture: [[M3-ARCHITE
 - `package.json` — workspace package manifest; `theiaExtensions` -> `lib/browser/frontend-module`; `test` script + dependency surface.
 - `src/common/index.ts` — public contract surface: `EXTENSION_ID`, view/command/route IDs, `PRIVACY_CLASS`, `TRACK_08_CONTRIBUTION` (generated from `contracts/07-t0-extension-contract-preflight.json`).
 - `src/common/codon-wheel.ts` — codon-wheel contract constants (64 codons = 40 non-dual + 24 dual; 472 rotational states) over `@pratibimba/kernel-bridge` types.
-- `src/browser/` — frontend module, `empty-state.tsx`, cosmic-wheel widget, composition projection, components (inspectors, lens aperture, I-Ching cast ribbon, clock-field edge overlay, quintessence indicator, pentadic relation inspector), renderer service/protocol, pentadic trace service, React contexts.
+- `src/browser/` — frontend module, `empty-state.tsx`, cosmic-wheel widget, composition projection, components (inspectors, lens aperture, transcription engine, I-Ching cast ribbon, clock-field edge overlay, quintessence indicator, pentadic relation inspector), renderer service/protocol, pentadic trace service, React contexts.
 - `style/index.css` — extension stylesheet. `lib/`, `tsconfig.tsbuildinfo` — build artifacts (do not hand-edit).
 - Does NOT own: domain law (lives in [[M3'-SPEC]] / [[M3-ARCHITECTURE]], not here); gateway/runtime data (consumed via `@pratibimba/kernel-bridge` `KernelBridgeAPI`); shared M-runtime (`@pratibimba/m-extension-runtime`); cross-extension contract suite (parent `../test/`). `compositionBoundary.forbiddenImports` bars `Body/S/S0`, `S2`, `S3`, `portal-core`, spacetimedb SDK.
 
@@ -24,7 +24,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M3'-SPEC]] (architecture: [[M3-ARCHITE
 - Consume gateway data only through `KernelBridgeAPI` (no direct `fetch`/WebSocket); respect `compositionBoundary.forbiddenImports`.
 
 ## Verification
-`pnpm --filter @pratibimba/m3-mahamaya test` (runs `tsc -b` then `node --test` over the six `m3-mahamaya-*` suites in parent `../test/`), or `pnpm --dir Body/M/epi-theia test:contracts` for the full cross-extension suite.
+`pnpm --filter @pratibimba/m3-mahamaya test` (runs `tsc -b` then the package `node --test` suites in parent `../test/`), or `pnpm --dir Body/M/epi-theia test:contracts` for the full cross-extension suite.
 
 ## Child DOX Index
 - (leaf)

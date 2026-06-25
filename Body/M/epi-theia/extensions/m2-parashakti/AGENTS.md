@@ -9,8 +9,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (arch
 - `src/common/index.ts` — generated public surface (view ids, command ids, route, privacy class, observability event types, Track 08 contribution/exports). Header: "Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit."
 - `src/common/meaning-packet.ts` — `M2_MEANING_PACKET_CONTRACT_VERSION` packet types and selectors.
 - `src/common/composition.ts` — `M2CymaticTextureContribution` data-shape builder for the Track 23.12 Cosmic Engine texture mount; exported as `@pratibimba/m2-parashakti/common/composition`.
-- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets, including the shadow-decan reveal panel, visual-only audio-bus stack, and inline provenance badges. Standalone browser widgets do not consume `M2CymaticTextureContribution` directly.
-- `test/widget-registry.test.mjs`, `test/outer-planet-pending.test.mjs`, `test/shadow-decan.test.mjs`, `test/audio-bus-visual.test.mjs`, and `test/provenance-inline.test.mjs` — node:test suites for widget registration, pending-data honesty, the 108-cell shadow-decan surface, the no-sound audio-bus visual representation, and packet-bound inline provenance badges.
+- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets, including the shadow-decan reveal panel, visual-only audio-bus stack, cymatic pause/scrub transport, and inline provenance badges. Standalone browser widgets do not consume `M2CymaticTextureContribution` directly.
+- `test/widget-registry.test.mjs`, `test/outer-planet-pending.test.mjs`, `test/shadow-decan.test.mjs`, `test/audio-bus-visual.test.mjs`, `test/provenance-inline.test.mjs`, and `test/cymatic-transport.test.mjs` — node:test suites for widget registration, pending-data honesty, the 108-cell shadow-decan surface, the no-sound audio-bus visual representation, packet-bound inline provenance badges, and accessible cymatic pause/scrub replay.
 - `style/index.css`, `tsconfig.json`, `lib/` — styling, TS project config, compiled output.
 - Does NOT own: shared runtime (`@pratibimba/m-extension-runtime`), composition primitives (`@pratibimba/integrated-composition`), gateway runtime (`kernel-bridge` -> [[S3-SPEC]] gate), or M2 domain law (lives in the owning M2' coordinate, not centralised here).
 
@@ -26,7 +26,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (arch
 - Consume gateway data via the shared `KernelBridgeAPI` runtime — no direct `fetch`/WebSocket from the extension.
 
 ## Verification
-`pnpm --filter @pratibimba/m2-parashakti test` (runs focused node:test suites then `tsc -b build`); focused checks: `pnpm --filter @pratibimba/m2-parashakti test:outer-planet-pending`, `pnpm --filter @pratibimba/m2-parashakti test:shadow-decan`, `pnpm --filter @pratibimba/m2-parashakti test:audio-bus-visual`, `pnpm --filter @pratibimba/m2-parashakti test:provenance-inline`; or `pnpm test:contracts` / `pnpm -r test` from `Body/M/epi-theia`.
+`pnpm --filter @pratibimba/m2-parashakti test` (runs focused node:test suites then `tsc -b build`); focused checks: `pnpm --filter @pratibimba/m2-parashakti test:outer-planet-pending`, `pnpm --filter @pratibimba/m2-parashakti test:shadow-decan`, `pnpm --filter @pratibimba/m2-parashakti test:audio-bus-visual`, `pnpm --filter @pratibimba/m2-parashakti test:provenance-inline`, `pnpm --filter @pratibimba/m2-parashakti test:cymatic-transport`; or `pnpm test:contracts` / `pnpm -r test` from `Body/M/epi-theia`.
 
 ## Child DOX Index
 - (leaf)

@@ -10,6 +10,36 @@ Canon: [[M2]] (World Form) -> [[M-SYSTEM-INDEX]]; design: [[45-bimba-map-indexin
 - Context-frame coords (e.g. `M2-(0/1)`) render `/` as `∕` in file/link names; `coordinate:` + the graph pointer keep the true `/`. Nest under their containment parent (e.g. `M0-(4.0/1)` lives under `M0-4`).
 - Does NOT own canon meaning — that is the [[M2]] Form + its [[Seeds]] specs. Full detail lives in Neo4j + `datasets/parashakti-deep/` (legacy `#`-tagged source).
 
+## What Belongs Here
+- This authored branch index states the [[M2]] navigation law; the embedded [[M2-1.base]] is the live [[C5]] / [[CS]] reflection for the worked [[M2-1]] MEF lens set.
+
+![[M2-1.base]]
+
+## Open Gaps
+- This local base block surfaces [[M2]] branch projection files whose required `map-index`
+  frontmatter is missing or orphaned. Fix the graph/source projection rather than hand-editing
+  generated nodes.
+
+```base
+filters:
+  and:
+    - 'file.path.startsWith("Bimba/Map/M2")'
+    - or:
+        - 'coordinate == null'
+        - 'c_4_artifact_role == null'
+        - 'c_4_graph_node == null'
+        - 'c_0_source_coordinates == null'
+views:
+  - type: table
+    name: "M2 reflection gaps"
+    order:
+      - file
+      - coordinate
+      - c_4_artifact_role
+      - c_4_graph_node
+      - c_0_source_coordinates
+```
+
 ## Local Contracts
 - Projector: `Idea/Bimba/Map/datasets/scripts/project-map-index.mjs`. Source: `datasets/parashakti-deep/` (nodes + relations). Graph: `neo4j://Bimba/M2`.
 

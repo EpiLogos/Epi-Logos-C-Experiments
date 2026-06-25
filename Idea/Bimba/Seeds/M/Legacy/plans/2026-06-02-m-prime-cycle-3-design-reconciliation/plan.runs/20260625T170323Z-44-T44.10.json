@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T170323Z-44-T44.10",
+  "taskId": "44.T44.10",
+  "startedAt": "2026-06-25T17:03:23.802Z",
+  "owner": "codex-m-dev-44-t44-10-block-kit-rollout",
+  "leaseExpiresAt": "2026-06-25T19:03:23.802Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.10",
+    "trackId": "44",
+    "tranche": "T44.10",
+    "title": "M0–M5 rollout + no-orphan acceptance harness",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.1"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

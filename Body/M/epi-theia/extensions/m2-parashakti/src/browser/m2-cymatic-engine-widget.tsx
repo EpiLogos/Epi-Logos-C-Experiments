@@ -20,6 +20,10 @@ import {
     buildM2PrimeMeaningPacket,
     M2PrimeMeaningPacket
 } from '../common';
+import {
+    CymaticTransport,
+    M2CymaticTickSnapshot
+} from './components/CymaticTransport';
 
 @injectable()
 export class M2CymaticEngineWidget extends ReactWidget {
@@ -32,6 +36,7 @@ export class M2CymaticEngineWidget extends ReactWidget {
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
+    protected tickSnapshots: readonly M2CymaticTickSnapshot[] | null = null;
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -89,18 +94,25 @@ export class M2CymaticEngineWidget extends ReactWidget {
                 <section className="mext-widget-detail">
                     <h3>M2 Cymatic Engine</h3>
                     {packet ? (
-                        <dl>
-                            <dt>72 address</dt>
-                            <dd>{packet.address72}</dd>
-                            <dt>Audio octet</dt>
-                            <dd>{packet.cymaticSignature.audioOctetHz.map(hz => hz.toFixed(2)).join(' / ')}</dd>
-                            <dt>Nodal quartet</dt>
-                            <dd>{packet.cymaticSignature.nodalQuartet.join(' / ')}</dd>
-                            <dt>Sample count</dt>
-                            <dd>{packet.cymaticSignature.sampleCount}</dd>
-                            <dt>Personal scope</dt>
-                            <dd>{packet.cymaticSignature.blockReason ?? 'cosmic-public'}</dd>
-                        </dl>
+                        <>
+                            <CymaticTransport
+                                livePacket={packet}
+                                liveTick={this.profile ? profileTick(this.profile) : packet.profileGeneration}
+                                tickSnapshots={this.tickSnapshots}
+                            />
+                            <dl>
+                                <dt>72 address</dt>
+                                <dd>{packet.address72}</dd>
+                                <dt>Audio octet</dt>
+                                <dd>{packet.cymaticSignature.audioOctetHz.map(hz => hz.toFixed(2)).join(' / ')}</dd>
+                                <dt>Nodal quartet</dt>
+                                <dd>{packet.cymaticSignature.nodalQuartet.map(node => nodeLabel(node)).join(' / ')}</dd>
+                                <dt>Sample count</dt>
+                                <dd>{packet.cymaticSignature.sampleCount}</dd>
+                                <dt>Personal scope</dt>
+                                <dd>{packet.cymaticSignature.blockReason ?? 'cosmic-public'}</dd>
+                            </dl>
+                        </>
                     ) : (
                         <p className="mext-widget-empty">
                             The cymatic engine is waiting for the shared profile bus and coordinate
@@ -125,4 +137,18 @@ export class M2CymaticEngineWidget extends ReactWidget {
             return null;
         }
     }
+}
+
+function profileTick(profile: MathemeHarmonicProfileBoundary): number {
+    const payload = profile.payload;
+    const tick = typeof payload.tick === 'number' && Number.isFinite(payload.tick)
+        ? payload.tick
+        : profile.generation;
+    return Math.trunc(tick);
+}
+
+function nodeLabel(node: Readonly<Record<string, unknown>>): string {
+    const m = typeof node.m === 'number' ? node.m : '?';
+    const n = typeof node.n === 'number' ? node.n : '?';
+    return `m${m}:n${n}`;
 }

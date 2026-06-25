@@ -524,8 +524,10 @@ test('pentadic relation inspector renders Maxwell 15 beside Mahamaya paired fift
     assert.equal(model.trace?.substrateHinge, '0/1 -> 5');
     assert.equal(model.trace?.wholeNumberEndpoint, 5);
     assert.equal(model.trace?.naturalNumberEndpoint, 6);
+    assert.equal(model.trace?.tick, 8);
+    assert.equal(model.trace?.shemDegreeQuantum, 5);
     assert.equal(model.trace?.resonance72Index, 64);
-    assert.equal(model.trace?.backboneIdentity, '24*15=360');
+    assert.equal(model.trace?.backboneIdentity, '24x15=360');
     assert.equal(model.trace?.shemIdentity, '72*5=360');
     assert.equal(model.trace?.lineGraphIdentity, '360+24=384');
     assert.equal(model.trace?.qCosmicRef, 'profile.qCosmic:codon-42');
@@ -555,9 +557,11 @@ test('pentadic relation inspector renders Maxwell 15 beside Mahamaya paired fift
     assert.match(html, /DNA CCC/);
     assert.match(html, /trigram 7\/7/);
     assert.match(html, /Pauli sigma3/);
-    assert.match(html, /24\*15=360/);
+    assert.match(html, /24x15=360/);
     assert.match(html, /72\*5=360/);
     assert.match(html, /360\+24=384/);
+    assert.match(html, /tick 8/);
+    assert.match(html, /5-degree quantum 5/);
     assert.match(html, /resonance72 64/);
     assert.match(html, /address64 42/);
     assert.match(html, /codon CCC/);
@@ -737,7 +741,7 @@ test('pentadic relation inspector does not reconstruct missing trace or local ar
 
     const source = readFileSync(PENTADIC_RELATION_INSPECTOR_SOURCE, 'utf8');
     assert.doesNotMatch(source, /Math\.floor|Math\.round|parseFloat|parseInt|Number\(/);
-    assert.doesNotMatch(source, /72\s*\*\s*5|24\s*\*\s*15|360\s*\+\s*24/);
+    assert.doesNotMatch(source, /72\s*\*\s*5|24\s*\*\s*15|24x15=360|360\s*\+\s*24|10\+4\+1|15\+15/);
     assert.doesNotMatch(source, /const\s+(?:CODON|TRIGRAM|PAULI|DNA)_/);
 });
 
@@ -840,7 +844,7 @@ function profilePayloadWithPentadicTrace() {
                     ])
                 })
             ]),
-            backboneIdentity: '24*15=360',
+            backboneIdentity: '24x15=360',
             lineGraphIdentity: '360+24=384',
             qCosmicRef: 'profile.qCosmic:codon-42',
             provenance: Object.freeze(['kernel-bridge:buildPentadicTrace'])

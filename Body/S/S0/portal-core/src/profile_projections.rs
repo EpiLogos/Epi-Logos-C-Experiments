@@ -483,6 +483,7 @@ pub struct PersonalPoleProjection {
     pub q_activity_handle: ProtectedHandle,
     pub bioquaternion_handle: ProtectedHandle,
     pub pattern_packet_handle: ProtectedHandle,
+    pub psychoid_field_handle: ProtectedHandle,
     pub oracle_frame_handle: ProtectedHandle,
     pub symbolic_protein_handle: ProtectedHandle,
     pub nara_deck_context_handle: ProtectedHandle,
@@ -524,6 +525,111 @@ pub struct PersonalPoleElementalBalance {
     pub fire: f32,
     pub water: f32,
     pub air: f32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CompositionLoadStatus {
+    ReadyFull,
+    ReadyBaseOnly,
+    ReadyNoCodon,
+    ReadyNoCymatic,
+    BlockedBaseMissing,
+    Pending,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CosmicDegradationLevel {
+    ReadyFull,
+    ReadyBaseOnly,
+    ReadyNoCodon,
+    ReadyNoCymatic,
+    BlockedBaseMissing,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CosmicCompositionMountPoint {
+    pub contributor_id: String,
+    pub coordinate: String,
+    pub mount_point: String,
+    pub load_status: CompositionLoadStatus,
+    pub handle: ProtectedHandle,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CosmicCompositionState {
+    pub load_status: CompositionLoadStatus,
+    pub degradation_level: CosmicDegradationLevel,
+    pub mount_points: Vec<CosmicCompositionMountPoint>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum PsychoidFieldReadiness {
+    DeterministicLowerFidelity,
+    FullPhysicsRunning,
+    Pending,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum PsychoidDipyramidLocusRole {
+    TopApex,
+    BottomApex,
+    BaseSquare,
+    InvertedBase,
+    CentralAxisPoint,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PsychoidDipyramidLocus {
+    pub locus_id: String,
+    pub role: PsychoidDipyramidLocusRole,
+    pub position_refs: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PsychoidDipyramidGeometry {
+    pub topology: String,
+    pub logical_position_count: u8,
+    pub hopf_linked_tori: bool,
+    pub loci: Vec<PsychoidDipyramidLocus>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PsychoidFieldProjection {
+    pub field_handle: ProtectedHandle,
+    pub cymatic_signature: [f32; 64],
+    pub hopf_s2_projection: [f32; 3],
+    pub torus_knot_phase_handle: ProtectedHandle,
+    pub field_readiness: PsychoidFieldReadiness,
+    pub dipyramid_geometry: PsychoidDipyramidGeometry,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CanonWriteBackState {
+    DryRun,
+    PendingReview,
+    Applied,
+    Rejected,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonRecognitionEvent {
+    pub bimba_coordinate: String,
+    pub pattern_packet_handle: String,
+    pub atelier_scent_path: Vec<String>,
+    pub recognition_degree720: u16,
+    pub write_back_state: CanonWriteBackState,
+    pub recognized_at_ms: u64,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
