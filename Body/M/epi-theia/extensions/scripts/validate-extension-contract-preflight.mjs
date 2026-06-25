@@ -270,21 +270,24 @@ function scanExtensionImports(manifest, errors) {
     if (!existsSync(packageRoot)) {
       continue;
     }
-    const scannedFiles = walkFiles(packageRoot).filter((path) =>
-      /\.(?:[cm]?js|tsx?|json)$/.test(path)
+    const sourceRoot = join(packageRoot, "src");
+    if (!existsSync(sourceRoot)) {
+      errors.push(`${extension.id} missing source root: ${relativeRepoPath(sourceRoot)}`);
+      continue;
+    }
+    const scannedFiles = walkFiles(sourceRoot).filter((path) =>
+      /\.tsx?$/.test(path)
     );
     for (const file of scannedFiles) {
       const content = readFileSync(file, "utf8");
-      for (const forbiddenFragment of extension.bridge.forbiddenDirectImports) {
-        // Only flag forbidden fragments that appear inside actual import/require
-        // statements; substring matches inside JSDoc or comments are noise.
-        const escaped = forbiddenFragment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const importPattern = new RegExp(
-          `(?:from\\s+['"\`]|require\\(\\s*['"\`]|import\\s*\\(\\s*['"\`])[^'"\`\\n]*${escaped}`,
-          "m"
+      for (const { specifier, line } of readImportSpecifiers(content)) {
+        const forbiddenFragment = extension.bridge.forbiddenDirectImports.find((fragment) =>
+          importMatchesForbiddenFragment(specifier, fragment)
         );
-        if (importPattern.test(content)) {
-          errors.push(`${extension.id} imports forbidden dependency fragment ${forbiddenFragment} in ${file}`);
+        if (forbiddenFragment) {
+          errors.push(
+            `${extension.id} imports forbidden dependency fragment ${forbiddenFragment} in ${relativeRepoPath(file)}:${line}`
+          );
         }
       }
     }

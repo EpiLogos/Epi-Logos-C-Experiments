@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T16:08:21.757Z",
+  "updatedAt": "2026-06-25T16:16:09.869Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1946,16 +1946,21 @@
       "worktree": null
     },
     "11.T11.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:16:09.793Z",
+      "claimedAt": "2026-06-25T16:10:47.871Z",
+      "completedAt": "2026-06-25T16:16:09.793Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:16:09.793Z",
+          "text": "validate-extension-contract-preflight.mjs ok; validate-extension-contract-preflight.test.mjs 10/10 pass; key paths: Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs, Body/M/epi-theia/extensions/test/validate-extension-contract-preflight.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-11-t11-5-forbidden-direct-import",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T16:10:47.871Z",
+      "runId": "20260625T161047Z-11-T11.5",
       "worktree": null
     },
     "11.T11.6": {
@@ -12635,26 +12640,36 @@
       "leaseExpiresAt": "2026-06-25T17:59:28.752Z",
       "worktree": null,
       "completedAt": "2026-06-25T16:08:21.704Z"
+    },
+    {
+      "runId": "20260625T161047Z-11-T11.5",
+      "taskId": "11.T11.5",
+      "status": "done",
+      "startedAt": "2026-06-25T16:10:47.871Z",
+      "owner": "codex-m-dev-11-t11-5-forbidden-direct-import",
+      "leaseExpiresAt": "2026-06-25T18:10:47.871Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T16:16:09.793Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T15:59:14.228Z",
-    "updatedAt": "2026-06-25T15:59:14.228Z",
+    "createdAt": "2026-06-25T16:10:31.404Z",
+    "updatedAt": "2026-06-25T16:10:31.404Z",
     "taskIds": [
-      "09.T9.9",
       "11.T11.5",
       "11.T11.6",
-      "11.T11.7"
+      "11.T11.7",
+      "11.T11.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.9": "in-session",
       "11.T11.5": "in-session",
       "11.T11.6": "in-session",
-      "11.T11.7": "in-session"
+      "11.T11.7": "in-session",
+      "11.T11.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

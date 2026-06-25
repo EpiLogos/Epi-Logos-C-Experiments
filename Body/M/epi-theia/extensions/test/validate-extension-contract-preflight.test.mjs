@@ -595,6 +595,38 @@ test("Track 27 T27.12 validator rejects forbidden direct OmniPanel imports with 
   }
 });
 
+test("Track 11 T11.5 validator rejects forbidden direct imports in M-extension source trees", () => {
+  assert.ok(existsSync(validatorPath), "missing contract validator");
+
+  const fixtureDir = join(
+    extensionsRoot,
+    "m3-mahamaya/src/browser/__lint_fixture__"
+  );
+  const fixturePath = join(fixtureDir, "ForbiddenDirectImportFixture.ts");
+
+  try {
+    mkdirSync(fixtureDir, { recursive: true });
+    writeFileSync(
+      fixturePath,
+      [
+        "export const before = true;",
+        "import 'portal-core';",
+        "export const after = before;"
+      ].join("\n"),
+      "utf8"
+    );
+
+    const result = runValidator();
+    const output = `${result.stdout}\n${result.stderr}`;
+
+    assert.notEqual(result.status, 0, output);
+    assert.match(output, /m3-mahamaya\/src\/browser\/__lint_fixture__\/ForbiddenDirectImportFixture\.ts:2/);
+    assert.match(output, /portal-core/);
+  } finally {
+    rmSync(fixtureDir, { recursive: true, force: true });
+  }
+});
+
 test("Track 27 T27.12 validator excludes only marked OmniPanel compat files", () => {
   const runtimeStub = readFileSync(omnipanelRuntimeStubPath, "utf8");
   const gatewayClient = readFileSync(omnipanelGatewayClientPath, "utf8");
