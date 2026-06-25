@@ -7,10 +7,7 @@ import {
     CompositionProfileTickSubscription,
     openCompositionProfileSubscription
 } from '../common/profile-tick-subscription';
-import {
-    BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS,
-    BimbaPratibimbaUiState
-} from '../common/workspace-persistence';
+import type { BimbaPratibimbaUiState } from '../common/workspace-persistence';
 import { LemniscateTransition } from './design-primitives/lemniscate-transition';
 
 export type Daily01Face = 'cosmic' | 'personal';
@@ -101,11 +98,14 @@ export function preserveBimbaPratibimbaUiStateAcrossDaily01Toggle(
     _from: Daily01Face,
     _to: Daily01Face
 ): BimbaPratibimbaUiState {
-    const preserved = BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS.reduce(
-        (acc, field) => ({ ...acc, [field]: state[field] }),
-        {} as BimbaPratibimbaUiState
-    );
-    return Object.freeze(preserved);
+    return Object.freeze({
+        coordinate: state.coordinate,
+        lens: state.lens,
+        mode: state.mode,
+        profileGeneration: state.profileGeneration,
+        sessionKey: state.sessionKey,
+        dayNow: state.dayNow
+    });
 }
 
 export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
@@ -255,7 +255,8 @@ function inferDaily01FaceFromChildren(children: React.ReactNode): Daily01Face {
         if (!React.isValidElement(child)) {
             continue;
         }
-        const explicitFace = child.props?.['data-daily-0-1-face'];
+        const props = child.props as Record<string, unknown>;
+        const explicitFace = props['data-daily-0-1-face'];
         if (explicitFace === 'cosmic' || explicitFace === 'personal') {
             return explicitFace;
         }
@@ -270,7 +271,7 @@ function inferDaily01FaceFromChildren(children: React.ReactNode): Daily01Face {
         if (/cosmic|123|1-2-3/i.test(typeName)) {
             return 'cosmic';
         }
-        stack.push(...React.Children.toArray(child.props?.children));
+        stack.push(...React.Children.toArray(props.children));
     }
     return 'cosmic';
 }
