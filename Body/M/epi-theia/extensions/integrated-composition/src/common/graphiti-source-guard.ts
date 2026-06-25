@@ -1,4 +1,5 @@
 import { IntegratedEvidenceEnvelope } from './evidence-envelope';
+import { qPartitionViolationForKey } from './privacy-scrubber';
 
 /**
  * Graphiti source guard — 08.T6 verification 3.
@@ -76,7 +77,7 @@ const LIVE_STATE_FORBIDDEN_KEYS = Object.freeze([
     /^q_p$/i,
     /^qB$/i,
     /^qP$/i,
-    /^q_personal$/i,
+    /^q_(personal|identity|activity|composed)(_|$)/i,
     /^q_nara$/i,
     /^bioquaternion(raw|Body|Payload)?$/i
 ]);
@@ -107,7 +108,10 @@ function findLiveStateForbiddenKey(value: unknown): string | null {
         return null;
     }
     for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-        if (LIVE_STATE_FORBIDDEN_KEYS.some(pattern => pattern.test(key))) {
+        if (
+            qPartitionViolationForKey(key) !== null ||
+            LIVE_STATE_FORBIDDEN_KEYS.some(pattern => pattern.test(key))
+        ) {
             return key;
         }
         const violation = findLiveStateForbiddenKey(item);

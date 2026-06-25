@@ -29,7 +29,7 @@ const FORBIDDEN_FIELD_PATTERNS_BY_RANGE: Record<
 > = {
     '1-2-3': [
         // M4 protected-local fields and Nara private bodies — never in 1-2-3.
-        /^q_personal/i,
+        /^q_(personal|identity|activity|composed)(_|$)/i,
         /^q_nara/i,
         /^bioquaternion(_raw|_body|_personal)?$/i,
         /^nara_(journal|body|raw|private)/i,
@@ -42,7 +42,7 @@ const FORBIDDEN_FIELD_PATTERNS_BY_RANGE: Record<
         // DR-M4-3 forbids the body/quaternion side of ProtectedPersonalFieldInput
         // from crossing into M5 review. M4 Tranche 05.5's renderer-handle
         // invariant is therefore enforced here at the plugin boundary.
-        /^q_personal/i,
+        /^q_(personal|identity|activity|composed)(_|$)/i,
         /^q(identity|transit|activity|composed)$/i,
         /^audio(_octet|Octet)$/i,
         /^bioquaternion_raw$/i,
@@ -61,6 +61,19 @@ const FORBIDDEN_VALUE_PATTERNS: readonly RegExp[] = [
     /<protected:journal>/,
     /<bioquaternion:raw:/
 ];
+
+export const PRIVATE_Q_PARTITION_KEY_PATTERN = /^q_(personal|identity|activity|composed)(_|$)/i;
+export const PUBLIC_Q_PARTITION_KEY_PATTERN = /^q[m]?_[0-5]'?_[a-z_]+$/i;
+
+export function qPartitionViolationForKey(key: string): string | null {
+    if (PRIVATE_Q_PARTITION_KEY_PATTERN.test(key)) {
+        return `matches private DR-M4-4 q partition ${PRIVATE_Q_PARTITION_KEY_PATTERN.source}`;
+    }
+    if (/^q[m]?_/i.test(key) && !PUBLIC_Q_PARTITION_KEY_PATTERN.test(key)) {
+        return `matches unknown q partition key outside ${PUBLIC_Q_PARTITION_KEY_PATTERN.source}`;
+    }
+    return null;
+}
 
 function walkPayload(
     value: unknown,
@@ -90,6 +103,10 @@ function walkPayload(
     }
     for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
         const childPath = path === '' ? key : `${path}.${key}`;
+        const qPartitionViolation = qPartitionViolationForKey(key);
+        if (qPartitionViolation) {
+            violations.push(`${childPath} ${qPartitionViolation}`);
+        }
         for (const re of forbiddenFieldPatterns) {
             if (re.test(key)) {
                 violations.push(`${childPath} matches forbidden field pattern ${re.source}`);

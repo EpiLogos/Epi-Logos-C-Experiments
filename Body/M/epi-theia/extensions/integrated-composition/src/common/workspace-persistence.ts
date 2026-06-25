@@ -4,6 +4,7 @@ import {
     IntegratedDeepLinkPluginId
 } from './integrated-deep-links';
 import { EpiiReviewPanelMode } from './epii-review-state';
+import { qPartitionViolationForKey } from './privacy-scrubber';
 
 /**
  * Workspace persistence — 08.T7 deliverable 3.
@@ -54,7 +55,7 @@ export const EMPTY_WORKSPACE_SNAPSHOT: IntegratedWorkspaceSnapshot = Object.free
  * the persistence boundary into disk-backed storage (Theia user data).
  */
 const WORKSPACE_FORBIDDEN_PATTERNS: readonly RegExp[] = [
-    /^q_personal/i,
+    /^q_(personal|identity|activity|composed)(_|$)/i,
     /^q_nara/i,
     /^bioquaternion/i,
     /^nara_(body|raw|private|journal)/i,
@@ -72,7 +73,8 @@ const WORKSPACE_FORBIDDEN_VALUE_PATTERNS: readonly RegExp[] = [
 ];
 
 function isForbiddenKey(key: string): boolean {
-    return WORKSPACE_FORBIDDEN_PATTERNS.some(re => re.test(key));
+    return qPartitionViolationForKey(key) !== null ||
+        WORKSPACE_FORBIDDEN_PATTERNS.some(re => re.test(key));
 }
 
 function scrubValue(value: unknown): unknown {

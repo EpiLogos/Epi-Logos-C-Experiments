@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T14:32:25.020Z",
+  "updatedAt": "2026-06-25T14:49:29.351Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6544,16 +6544,21 @@
       "worktree": null
     },
     "08.T8.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T14:49:29.294Z",
+      "claimedAt": "2026-06-25T14:36:22.940Z",
+      "completedAt": "2026-06-25T14:49:29.294Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T14:49:29.294Z",
+          "text": "46 integrated-composition tests passed; 32 focused q/privacy Node tests passed; 2 kernel_bridge_runtime q_partition Rust tests passed; cargo check -p portal-core passed. Key paths: Body/M/epi-theia/extensions/integrated-composition/src/common/privacy-scrubber.ts, release-gate.ts, workspace-persistence.ts, graphiti-source-guard.ts; Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-08-t8-8-q-personal-privacy",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T14:36:22.940Z",
+      "runId": "20260625T143622Z-08-T8.8",
       "worktree": null
     },
     "09.T9.13": {
@@ -12530,26 +12535,36 @@
       "leaseExpiresAt": "2026-06-25T16:24:46.997Z",
       "worktree": null,
       "completedAt": "2026-06-25T14:32:24.944Z"
+    },
+    {
+      "runId": "20260625T143622Z-08-T8.8",
+      "taskId": "08.T8.8",
+      "status": "done",
+      "startedAt": "2026-06-25T14:36:22.940Z",
+      "owner": "codex-m-dev-08-t8-8-q-personal-privacy",
+      "leaseExpiresAt": "2026-06-25T16:36:22.940Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T14:49:29.294Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T14:24:32.244Z",
-    "updatedAt": "2026-06-25T14:24:32.244Z",
+    "createdAt": "2026-06-25T14:35:46.240Z",
+    "updatedAt": "2026-06-25T14:35:46.240Z",
     "taskIds": [
-      "08.T8.7",
       "08.T8.8",
       "08.T8.9",
-      "09.T9.3"
+      "09.T9.3",
+      "09.T9.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "08.T8.7": "in-session",
       "08.T8.8": "in-session",
       "08.T8.9": "in-session",
-      "09.T9.3": "in-session"
+      "09.T9.3": "in-session",
+      "09.T9.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

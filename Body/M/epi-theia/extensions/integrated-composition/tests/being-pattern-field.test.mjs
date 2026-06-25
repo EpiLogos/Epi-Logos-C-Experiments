@@ -217,4 +217,16 @@ test('Graphiti live-state provenance accepts handles and rejects bodies or raw q
             }),
         /rawQuaternion/
     );
+
+    assert.throws(
+        () =>
+            assertGraphitiLiveStateProvenanceProtected({
+                ...projection('leaky-q-partition', 45),
+                liveState: {
+                    ...projection('leaky-q-partition', 45).liveState,
+                    q_identity_hash: 'private q partition derivative'
+                }
+            }),
+        /q_identity_hash/
+    );
 });

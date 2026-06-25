@@ -8,11 +8,12 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const {
-    EMPTY_WORKSPACE_SNAPSHOT,
     INTEGRATED_PERFORMANCE_BUDGETS,
-    PENDING_INTEGRATED_VIEW_STATE,
     auditIntegratedReleaseGate
-} = require('../integrated-composition/lib/common/index.js');
+} = require('../integrated-composition/lib/common/release-gate.js');
+const {
+    EMPTY_WORKSPACE_SNAPSHOT
+} = require('../integrated-composition/lib/common/workspace-persistence.js');
 
 const accessible = Object.freeze({
     keyboardActivation: true,
@@ -117,9 +118,31 @@ function gate(overrides = {}) {
     return auditIntegratedReleaseGate({
         pluginId: 'plugin-integrated-4-5-0',
         viewState: Object.freeze({
-            ...PENDING_INTEGRATED_VIEW_STATE,
             profileGeneration: 7,
             worldClockGeneration: 3,
+            selectedCoordinate: Object.freeze({
+                coordinate: 'M4.0',
+                coordinateId: 'M4.0',
+                label: 'M4.0',
+                layer: 'M4',
+                path: Object.freeze([])
+            }),
+            activeRoute: null,
+            connection: Object.freeze({
+                connected: true,
+                mode: 'lite',
+                reason: 'release-gate fixture'
+            }),
+            bridgeReadiness: Object.freeze({
+                extensionId: 'integrated-release-gate',
+                status: 'ready',
+                blockers: Object.freeze([]),
+                lastUpdatedAt: 1
+            }),
+            s2GraphReadiness: 'ready',
+            s3StreamReadiness: 'ready',
+            s5ReviewReadiness: 'ready',
+            privacyScope: 'public_current',
             lastUpdatedAt: 1
         }),
         performance: measurements('plugin-integrated-4-5-0'),
@@ -156,6 +179,30 @@ test('privacy audit spans UI, workspace, evidence, observability, S3 rows, and S
     assert.match(report.privacyViolations.map(v => v.path).join('\n'), /uiState\.q_b/);
     assert.match(report.privacyViolations.map(v => v.path).join('\n'), /workspaceState\.extras\.journal_body/);
     assert.match(report.privacyViolations.map(v => v.path).join('\n'), /s5Dtos\[0\]\.protected_natal_data/);
+});
+
+test('privacy audit enforces q namespace allowlist and DR-M4-4 denylist', () => {
+    const surfaces = safeSurfaces();
+    const report = gate({
+        privacySurfaces: Object.freeze({
+            ...surfaces,
+            uiState: {
+                q_5_integration_template: 'public q carrier',
+                qm_5_disclosure_meta: 'public q meta carrier',
+                q_identity: [1, 0, 0, 0],
+                q_personal_trace: 'private derivative',
+                qm_9_unknown_meta: 'outside q meta carrier range'
+            }
+        })
+    });
+
+    assert.equal(report.releaseLevel, 'blocked');
+    const paths = report.privacyViolations.map(v => v.path).join('\n');
+    assert.match(paths, /uiState\.q_identity/);
+    assert.match(paths, /uiState\.q_personal_trace/);
+    assert.match(paths, /uiState\.qm_9_unknown_meta/);
+    assert.doesNotMatch(paths, /uiState\.q_5_integration_template/);
+    assert.doesNotMatch(paths, /uiState\.qm_5_disclosure_meta/);
 });
 
 test('performance and accessibility violations block release', () => {

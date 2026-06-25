@@ -316,6 +316,90 @@ fn kernel_bridge_runtime_rejects_private_profile_cache_fields() {
 }
 
 #[test]
+fn kernel_bridge_runtime_rejects_private_q_partition_fields() {
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "theia:m4-nara".to_owned(),
+            kind: KernelBridgeConsumerKind::IdeExtension,
+            requested_profile: KernelBridgeSubscriptionProfile::Lite,
+        })
+        .expect("subscriber");
+
+    let err = runtime
+        .observe_projection_update(SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Connected,
+            source: "native-websocket".to_owned(),
+            profile_generation: Some(2),
+            stale_profile_generation: None,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: Some(json!({
+                "kernel": {
+                    "privacy": "safe-public-current-kernel-tick",
+                    "generation": 2,
+                    "q_personal": [0.0, 0.0, 0.0, 0.0],
+                    "nested": {
+                        "q_identity_hash": "private",
+                        "q_activity_trace": "private",
+                        "q_composed": [1.0, 0.0, 0.0, 0.0]
+                    }
+                }
+            })),
+        })
+        .expect_err("DR-M4-4 private q fields must not enter bridge cache");
+
+    assert!(err.contains("private q partition field"), "{err}");
+    assert!(
+        ["q_personal", "q_identity_hash", "q_activity_trace", "q_composed"]
+            .iter()
+            .any(|field| err.contains(field)),
+        "{err}"
+    );
+}
+
+#[test]
+fn kernel_bridge_runtime_allows_public_q_partition_fields() {
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "theia:m5-epii".to_owned(),
+            kind: KernelBridgeConsumerKind::IdeExtension,
+            requested_profile: KernelBridgeSubscriptionProfile::Lite,
+        })
+        .expect("subscriber");
+
+    runtime
+        .observe_projection_update(SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Connected,
+            source: "native-websocket".to_owned(),
+            profile_generation: Some(3),
+            stale_profile_generation: None,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: Some(json!({
+                "kernel": {
+                    "privacy": "safe-public-current-kernel-tick",
+                    "generation": 3,
+                    "q_5_integration_template": "public carrier",
+                    "qm_5_disclosure_meta": "public meta carrier"
+                }
+            })),
+        })
+        .expect("public q partition fields remain bridge-safe");
+
+    let snapshot = runtime.snapshot().expect("snapshot");
+    let profile = &snapshot.cached_profile.expect("cached profile").profile;
+    assert_eq!(profile["q_5_integration_template"], "public carrier");
+    assert_eq!(profile["qm_5_disclosure_meta"], "public meta carrier");
+    let rendered = serde_json::to_string(profile).expect("profile json");
+    assert!(!rendered.contains("q_personal"));
+    assert!(!rendered.contains("q_identity"));
+    assert!(!rendered.contains("q_activity"));
+    assert!(!rendered.contains("q_composed"));
+}
+
+#[test]
 fn kernel_bridge_capability_invocation_requires_vak_lineage_and_gateway_boundary() {
     let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
     runtime

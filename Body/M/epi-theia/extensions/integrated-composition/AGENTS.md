@@ -28,6 +28,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - [[wikilink]] all coordinate/spec/agent/tool references in any authored artifact.
 - Add new public types/functions to `src/common/index.ts` so plugins can import from the package root (matches the `m-extension-runtime` pattern).
 - Profile-tick consumers inside integrated compositions must use `CompositionProfileProvider` / `useCompositionProfile()` rather than direct plugin-local `SharedBridgeAdapter.onProfile()` calls.
+- [[DR-M4-4]] q-partition checks are centralised in `src/common/privacy-scrubber.ts`; release-gate, workspace persistence, and [[Graphiti]] live-state guards must reuse that helper so private `q_personal` / `q_identity` / `q_activity` / `q_composed` snake-case derivatives never enter public envelopes, persisted workspace state, or review/disclosure payloads.
 
 ## Verification
 `pnpm test` here (runs `pnpm build && node --test tests/*.test.mjs`); or `pnpm test:contracts` from `Body/M/epi-theia` for the full cross-extension suite.

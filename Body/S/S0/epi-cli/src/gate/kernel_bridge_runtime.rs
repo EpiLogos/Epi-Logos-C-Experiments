@@ -828,6 +828,7 @@ pub fn m1_performance_event_from_profile(
 pub fn typed_json_profile_event_payload(
     profile: &KernelBridgeCachedProfile,
 ) -> Result<KernelBridgeProfileJsonShape, String> {
+    forbid_private_payload_keys(&profile.profile)?;
     let raw = serde_json::to_value(KernelBridgeProfileJsonShape::from(profile))
         .map_err(|err| err.to_string())?;
     extract_typed_json(&raw, "kernel bridge profile event")
@@ -1010,15 +1011,78 @@ fn forbid_private_payload_keys(value: &Value) -> Result<(), String> {
         "bioquaternion",
         "resonanceSquareEmphasis",
     ];
-    let raw = value.to_string();
-    for key in FORBIDDEN {
-        if raw.contains(&format!("\"{key}\"")) {
-            return Err(format!(
-                "kernel-bridge safe profile cache rejected protected/private field {key}"
-            ));
+    fn walk(value: &Value, forbidden: &[&str]) -> Result<(), String> {
+        match value {
+            Value::Object(items) => {
+                for (key, child) in items {
+                    if is_private_q_partition_key(key) {
+                        return Err(format!(
+                            "kernel-bridge safe profile cache rejected private q partition field {key}"
+                        ));
+                    }
+                    if is_q_partition_key(key) && !is_public_q_partition_key(key) {
+                        return Err(format!(
+                            "kernel-bridge safe profile cache rejected unknown q partition field {key}"
+                        ));
+                    }
+                    if forbidden.iter().any(|forbidden_key| key == forbidden_key) {
+                        return Err(format!(
+                            "kernel-bridge safe profile cache rejected protected/private field {key}"
+                        ));
+                    }
+                    walk(child, forbidden)?;
+                }
+                Ok(())
+            }
+            Value::Array(items) => {
+                for child in items {
+                    walk(child, forbidden)?;
+                }
+                Ok(())
+            }
+            _ => Ok(()),
         }
     }
-    Ok(())
+    walk(value, FORBIDDEN)
+}
+
+fn is_private_q_partition_key(key: &str) -> bool {
+    let key = key.to_ascii_lowercase();
+    ["q_personal", "q_identity", "q_activity", "q_composed"]
+        .iter()
+        .any(|reserved| key == *reserved || key.starts_with(&format!("{reserved}_")))
+}
+
+fn is_q_partition_key(key: &str) -> bool {
+    let key = key.to_ascii_lowercase();
+    key.starts_with("q_") || key.starts_with("qm_")
+}
+
+fn is_public_q_partition_key(key: &str) -> bool {
+    let key = key.to_ascii_lowercase();
+    let rest = if let Some(rest) = key.strip_prefix("qm_") {
+        rest
+    } else if let Some(rest) = key.strip_prefix("q_") {
+        rest
+    } else {
+        return false;
+    };
+    let bytes = rest.as_bytes();
+    if !matches!(bytes.first(), Some(b'0'..=b'5')) {
+        return false;
+    }
+    let mut index = 1;
+    if bytes.get(index) == Some(&b'\'') {
+        index += 1;
+    }
+    if bytes.get(index) != Some(&b'_') {
+        return false;
+    }
+    index += 1;
+    index < bytes.len()
+        && bytes[index..]
+            .iter()
+            .all(|byte| byte.is_ascii_lowercase() || *byte == b'_')
 }
 
 fn require_route_lineage(route_lineage: &[String]) -> Result<(), String> {

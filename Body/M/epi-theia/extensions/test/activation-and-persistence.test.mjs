@@ -21,17 +21,21 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const {
-    EMPTY_WORKSPACE_SNAPSHOT,
     InvalidIntegratedDeepLinkError,
     deepLinkForPlugin,
+    formatIntegratedDeepLink,
+    parseIntegratedDeepLink
+} = require('../integrated-composition/lib/common/integrated-deep-links.js');
+const {
+    EMPTY_WORKSPACE_SNAPSHOT,
     deserializeSnapshot,
     detectProtectedKeysInSnapshot,
-    formatIntegratedDeepLink,
-    omniPanelTargetFor,
-    parseIntegratedDeepLink,
     scrubProtectedFromSnapshot,
     serializeSnapshot
-} = require('../integrated-composition/lib/common/index.js');
+} = require('../integrated-composition/lib/common/workspace-persistence.js');
+const {
+    omniPanelTargetFor
+} = require('../integrated-composition/lib/common/omni-panel.js');
 
 // ---- deep links ----------------------------------------------------------
 
@@ -157,6 +161,9 @@ test('workspace snapshot scrubs known protected body fields from extras', () => 
             nara_journal_text: 'this should be stripped',
             graphiti_body: 'episode body bytes',
             q_personal: { v: 1 },
+            q_identity_hash: 'private identity derivative',
+            q_activity_trace: 'private activity derivative',
+            q_composed_handle: 'private composed derivative',
             identity_quaternion_internals: { x: 1 },
             keep_this: 'safe value',
             kept_layout_hint: { open: true }
@@ -168,6 +175,9 @@ test('workspace snapshot scrubs known protected body fields from extras', () => 
     assert.equal('nara_journal_text' in extras, false);
     assert.equal('graphiti_body' in extras, false);
     assert.equal('q_personal' in extras, false);
+    assert.equal('q_identity_hash' in extras, false);
+    assert.equal('q_activity_trace' in extras, false);
+    assert.equal('q_composed_handle' in extras, false);
     assert.equal('identity_quaternion_internals' in extras, false);
     assert.equal(extras.keep_this, 'safe value');
     assert.deepEqual(extras.kept_layout_hint, { open: true });
@@ -179,13 +189,14 @@ test('detectProtectedKeysInSnapshot lists every forbidden key without mutating',
         extras: Object.freeze({
             bioquaternion_raw: 'x',
             normal: 'safe',
-            nested: { q_nara: 'y' }
+            nested: { q_nara: 'y', q_identity_hash: 'private' }
         })
     });
     const violations = detectProtectedKeysInSnapshot(dirty);
     assert.ok(violations.length >= 2);
     assert.ok(violations.some(v => v.includes('bioquaternion_raw')));
     assert.ok(violations.some(v => v.includes('q_nara')));
+    assert.ok(violations.some(v => v.includes('q_identity_hash')));
 });
 
 test('serialize → deserialize round-trip preserves clean snapshot', () => {

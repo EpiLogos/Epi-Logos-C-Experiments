@@ -21,6 +21,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - Run `gitnexus_impact({target, direction:"upstream"})` before editing any symbol; warn the user on HIGH/CRITICAL risk.
 - C/FFI invariant: `GET_PTR(ptr)` before every dereference; the HC struct stays 128 bytes.
 - Reference all coordinates/specs/crates/agents as `[[wikilink]]`; vault writes use coordinate-prefixed `c_n_*` frontmatter.
+- `src/gate/kernel_bridge_runtime.rs` must enforce [[DR-M4-4]] q-partition checks before caching or serialising safe profile payloads: private `q_personal` / `q_identity` / `q_activity` / `q_composed` snake-case keys and derivatives are refused; public `q_*` / `qm_*` carrier keys must match the 0-5 allowlist.
 
 ## Verification
 - `cargo test -p epi-logos` (Rust). FFI bridge to the C layer: `make rust-test` at the repo root.
