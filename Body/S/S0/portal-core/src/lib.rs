@@ -27,7 +27,10 @@ pub mod types;
 pub mod vak_address;
 pub mod vama_shakti;
 
-pub use aspect::compute_aspects;
+pub use aspect::{
+    compute_aspects, planetary_elemental_weights, PlanetaryAspectHandle,
+    PlanetaryElementContribution, PlanetaryElementalWeights,
+};
 pub use birthdate_identity::*;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
 pub use codon_rotation_projection::*;
