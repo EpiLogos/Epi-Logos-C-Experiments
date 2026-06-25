@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T14:49:29.351Z",
+  "updatedAt": "2026-06-25T15:09:05.411Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9100,16 +9100,21 @@
       "worktree": null
     },
     "08.T8.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T15:09:05.362Z",
+      "claimedAt": "2026-06-25T14:54:27.428Z",
+      "completedAt": "2026-06-25T15:09:05.362Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T15:09:05.362Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core rust_unified_vak_act_evaluates_once_with_six_faces 1/1 passed; cargo test -p epi-lib --features m0_verifier m0_verifier 3/3 passed; grep one-act/tunability/banned-language checks passed; key paths Body/S/S0/portal-core/src/kernel.rs, Body/S/S0/epi-lib/include/m0_verifier.h, Body/S/S5/plugins/epi-logos/resources/canon/ql-musical-derivation-v3.md, Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-08-t8-9-vak-choreography",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T14:54:27.428Z",
+      "runId": "20260625T145427Z-08-T8.9",
       "worktree": null
     },
     "12.T12.37": {
@@ -12545,26 +12550,36 @@
       "leaseExpiresAt": "2026-06-25T16:36:22.940Z",
       "worktree": null,
       "completedAt": "2026-06-25T14:49:29.294Z"
+    },
+    {
+      "runId": "20260625T145427Z-08-T8.9",
+      "taskId": "08.T8.9",
+      "status": "done",
+      "startedAt": "2026-06-25T14:54:27.428Z",
+      "owner": "codex-m-dev-08-t8-9-vak-choreography",
+      "leaseExpiresAt": "2026-06-25T16:54:27.428Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T15:09:05.362Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T14:35:46.240Z",
-    "updatedAt": "2026-06-25T14:35:46.240Z",
+    "createdAt": "2026-06-25T14:54:19.164Z",
+    "updatedAt": "2026-06-25T14:54:19.164Z",
     "taskIds": [
-      "08.T8.8",
       "08.T8.9",
       "09.T9.3",
-      "09.T9.4"
+      "09.T9.4",
+      "09.T9.5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "08.T8.8": "in-session",
       "08.T8.9": "in-session",
       "09.T9.3": "in-session",
-      "09.T9.4": "in-session"
+      "09.T9.4": "in-session",
+      "09.T9.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

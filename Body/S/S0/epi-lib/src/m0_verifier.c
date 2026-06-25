@@ -77,6 +77,10 @@ static void add_literal_constraint(M0VerifierReport* out, const char* coordinate
     out->unsatisfied_count++;
 }
 
+static void copy_coordinate(char dst[M0_VERIFIER_COORDINATE_MAX], const char* src) {
+    (void)snprintf(dst, M0_VERIFIER_COORDINATE_MAX, "%s", src);
+}
+
 static uint8_t count_syntax_witnesses(uint16_t mask) {
     uint8_t count = 0u;
     if (mask & M0_VERIFIER_SYNTAX_SPEECH) count++;
@@ -84,6 +88,28 @@ static uint8_t count_syntax_witnesses(uint16_t mask) {
     if (mask & M0_VERIFIER_SYNTAX_ACTION) count++;
     if (mask & M0_VERIFIER_SYNTAX_COMPLETION) count++;
     return count;
+}
+
+static void populate_unified_act_metadata(
+    const KernelState* state,
+    M0VerifierReport* out
+) {
+    out->act_face = (uint8_t)(state->active_tct_position % 6u);
+    out->witness_face = (uint8_t)(state->active_archetype % 6u);
+
+    const uint16_t query_limit =
+        out->unsatisfied_count < M0_VERIFIER_MAX_TYPED_QUERIES
+            ? out->unsatisfied_count
+            : M0_VERIFIER_MAX_TYPED_QUERIES;
+    out->typed_query_count = query_limit;
+    for (uint16_t i = 0u; i < query_limit; i++) {
+        copy_coordinate(out->typed_queries[i], out->unsatisfied_constraints[i]);
+    }
+
+    out->backing_chain_count = 3u;
+    copy_coordinate(out->backing_chain[0], "M0'-verifier");
+    copy_coordinate(out->backing_chain[1], "R_FACTOR_DISTRIBUTION");
+    copy_coordinate(out->backing_chain[2], "M0_CORE_RELATIONS");
 }
 
 int m0_verifier_check_state(const KernelState* state, M0VerifierReport* out) {
@@ -154,6 +180,7 @@ int m0_verifier_check_state(const KernelState* state, M0VerifierReport* out) {
         out->slot_privacy_boundary_compliance == 1u ? 1.0f : 0.0f;
     out->coherence_score =
         (virtue_score + relation_score + syntax_score + privacy_score) / 4.0f;
+    populate_unified_act_metadata(state, out);
 
     return 0;
 }

@@ -2,7 +2,7 @@
 source_seed: "Idea/Bimba/Seeds/M/M5'/ql-musical-derivation-v3.md"
 status: "s5-canon-excerpt"
 domain: "musical-derivation"
-updated: "2026-06-08"
+updated: "2026-06-25"
 ---
 
 # QL Musical Derivation v3 — Harmonic Relation Correction
@@ -49,6 +49,10 @@ The former B/C labels are remapped:
 - The interval signature formerly attached to B crossing belongs to C.
 
 This is why the graph and code should use semantic relation types rather than one generic harmonic-relation edge.
+
+## Unified VAK Act Register
+
+At the 4/5/0 mental pole, musical transcription is one register of the same VAK-coordinate-designation act that also carries coordinate designation, MEF lensing, QL position-check, harmonics reading, and physical-pole entailment. It is not a separate runtime pass. The engaged tuple `(coord, lens, helix, density, position, cfp_thread, r_factor_slot, ananda_position)` is read through this musical register as codon / hexagram / tarot / harmonic-ratio projection while the kernel descent remains the single weighted act `E_total = (4*E_4 + 5*E_5 + 6*E_6) / 15` with epogdoon step `log(9/8)`.
 
 ## Correction Pass Note (2026-06-11)
 

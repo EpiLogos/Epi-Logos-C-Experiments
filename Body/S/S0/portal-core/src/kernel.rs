@@ -11,6 +11,7 @@ use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
 use crate::profile_projections::{AnuttaraWitnessProjection, PasuBeingPatternProjection};
 use crate::vak_address::VakAddress;
+use std::fmt;
 
 pub const EPOGDOON_NUM: u8 = 9;
 pub const EPOGDOON_DEN: u8 = 8;
@@ -111,6 +112,108 @@ pub struct EnergyDecomposition {
     pub e_5_harmonic_energy: f32,
     pub e_6_verifier_energy: f32,
     pub total_energy: f32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum UnifiedVakActFace {
+    CoordinateDesignation,
+    MefLensApplication,
+    QlPositionCheck,
+    HarmonicsReading,
+    MusicalTranscriptionalProjection,
+    PhysicalPoleEntailment,
+}
+
+pub const UNIFIED_VAK_ACT_FACES: [UnifiedVakActFace; 6] = [
+    UnifiedVakActFace::CoordinateDesignation,
+    UnifiedVakActFace::MefLensApplication,
+    UnifiedVakActFace::QlPositionCheck,
+    UnifiedVakActFace::HarmonicsReading,
+    UnifiedVakActFace::MusicalTranscriptionalProjection,
+    UnifiedVakActFace::PhysicalPoleEntailment,
+];
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UnifiedVakActTuple {
+    pub coord: String,
+    pub lens: String,
+    pub helix: String,
+    pub density: u8,
+    pub position: u8,
+    pub cfp_thread: String,
+    pub r_factor_slot: String,
+    pub ananda_position: u8,
+}
+
+impl UnifiedVakActTuple {
+    pub fn faces(&self) -> [UnifiedVakActFace; 6] {
+        UNIFIED_VAK_ACT_FACES
+    }
+
+    pub fn validate(&self) -> Result<(), UnifiedVakActError> {
+        require_unified_vak_field("coord", &self.coord)?;
+        require_unified_vak_field("lens", &self.lens)?;
+        require_unified_vak_field("helix", &self.helix)?;
+        require_unified_vak_field("cfp_thread", &self.cfp_thread)?;
+        require_unified_vak_field("r_factor_slot", &self.r_factor_slot)?;
+        if !(1..=6).contains(&self.density) {
+            return Err(UnifiedVakActError::OutOfRange {
+                field: "density",
+                value: self.density,
+                max_inclusive: 6,
+            });
+        }
+        if self.position > 5 {
+            return Err(UnifiedVakActError::OutOfRange {
+                field: "position",
+                value: self.position,
+                max_inclusive: 5,
+            });
+        }
+        if self.ananda_position > 5 {
+            return Err(UnifiedVakActError::OutOfRange {
+                field: "ananda_position",
+                value: self.ananda_position,
+                max_inclusive: 5,
+            });
+        }
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum UnifiedVakActError {
+    MissingField(&'static str),
+    OutOfRange {
+        field: &'static str,
+        value: u8,
+        max_inclusive: u8,
+    },
+}
+
+impl fmt::Display for UnifiedVakActError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::MissingField(field) => write!(f, "unified VAK act missing {field}"),
+            Self::OutOfRange {
+                field,
+                value,
+                max_inclusive,
+            } => write!(f, "unified VAK act {field}={value} exceeds {max_inclusive}"),
+        }
+    }
+}
+
+impl std::error::Error for UnifiedVakActError {}
+
+fn require_unified_vak_field(field: &'static str, value: &str) -> Result<(), UnifiedVakActError> {
+    if value.trim().is_empty() {
+        Err(UnifiedVakActError::MissingField(field))
+    } else {
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
@@ -1670,6 +1773,19 @@ pub fn kernel_energy_evaluate(
             e_6_verifier_energy,
         ),
     }
+}
+
+pub fn kernel_energy_evaluate_unified_act(
+    act: &UnifiedVakActTuple,
+    state: &BioQuaternionState,
+    e_4_inputs: &E4PersonalInputs,
+    e_5_inputs: &E5HarmonicInputs,
+    e_6_inputs: &E6VerifierInputs,
+) -> Result<EnergyDecomposition, UnifiedVakActError> {
+    act.validate()?;
+    Ok(kernel_energy_evaluate(
+        state, e_4_inputs, e_5_inputs, e_6_inputs,
+    ))
 }
 
 pub fn compute_e_4_personal_energy(state: &BioQuaternionState, inputs: &E4PersonalInputs) -> f32 {

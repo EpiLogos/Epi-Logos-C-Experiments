@@ -1,11 +1,12 @@
 use portal_core::{
     compute_e_4_personal_energy_gradient, harmonic_ratio_fraction_for_sub_tick,
-    kernel_energy_evaluate, kernel_resonance_index, kernel_resonance_square_emphasis,
-    kernel_tick_from_epogdoon, slash_flip_bimba_prime, try_compute_e_4_personal_energy,
-    BioQuaternionState, E4CorpusDigest, E4KairosState, E4LoraCheckpointRef, E4OracleCharges,
-    E4PasuSnapshot, E4PersonalEnergyError, E4PersonalInputs, E4PrivacyClass, E5HarmonicInputs,
-    E6VerifierInputs, HarmonicPulse, KernelElement, KernelPhase, KernelProjection,
-    KernelResonanceObservation, NaraLoraRuntime, ResonanceVector72, EPOGDOON_DEN, EPOGDOON_NUM,
+    kernel_energy_evaluate, kernel_energy_evaluate_unified_act, kernel_resonance_index,
+    kernel_resonance_square_emphasis, kernel_tick_from_epogdoon, slash_flip_bimba_prime,
+    try_compute_e_4_personal_energy, BioQuaternionState, E4CorpusDigest, E4KairosState,
+    E4LoraCheckpointRef, E4OracleCharges, E4PasuSnapshot, E4PersonalEnergyError, E4PersonalInputs,
+    E4PrivacyClass, E5HarmonicInputs, E6VerifierInputs, HarmonicPulse, KernelElement, KernelPhase,
+    KernelProjection, KernelResonanceObservation, NaraLoraRuntime, ResonanceVector72,
+    UnifiedVakActFace, UnifiedVakActTuple, EPOGDOON_DEN, EPOGDOON_NUM,
 };
 use std::collections::BTreeSet;
 
@@ -223,6 +224,51 @@ fn rust_e4_scalar_feeds_kernel_total_energy_with_4_5_6_weighting() {
     assert!(matches!(
         e4.provenance.runtime,
         NaraLoraRuntime::RustNative | NaraLoraRuntime::MlxLora
+    ));
+}
+
+#[test]
+fn rust_unified_vak_act_evaluates_once_with_six_faces() {
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.25, 0.75, 0.25, 0.5]);
+    let e4_inputs = full_e4_inputs();
+    let e5_inputs = E5HarmonicInputs::default();
+    let e6_inputs = E6VerifierInputs::default();
+    let act = UnifiedVakActTuple {
+        coord: "M4-5-0".to_owned(),
+        lens: "L5'-5".to_owned(),
+        helix: "prime".to_owned(),
+        density: 6,
+        position: 5,
+        cfp_thread: "CFP3".to_owned(),
+        r_factor_slot: "R5".to_owned(),
+        ananda_position: 4,
+    };
+
+    let faces = act.faces();
+    assert_eq!(
+        faces,
+        [
+            UnifiedVakActFace::CoordinateDesignation,
+            UnifiedVakActFace::MefLensApplication,
+            UnifiedVakActFace::QlPositionCheck,
+            UnifiedVakActFace::HarmonicsReading,
+            UnifiedVakActFace::MusicalTranscriptionalProjection,
+            UnifiedVakActFace::PhysicalPoleEntailment,
+        ]
+    );
+
+    let unified =
+        kernel_energy_evaluate_unified_act(&act, &state, &e4_inputs, &e5_inputs, &e6_inputs)
+            .expect("complete unified VAK act tuple evaluates");
+    let direct = kernel_energy_evaluate(&state, &e4_inputs, &e5_inputs, &e6_inputs);
+
+    assert_eq!(unified, direct);
+    assert!(near(
+        unified.total_energy,
+        (4.0 * unified.e_4_personal_energy
+            + 5.0 * unified.e_5_harmonic_energy
+            + 6.0 * unified.e_6_verifier_energy)
+            / 15.0
     ));
 }
 

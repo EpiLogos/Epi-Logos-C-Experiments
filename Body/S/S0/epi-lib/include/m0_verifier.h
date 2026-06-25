@@ -21,6 +21,8 @@ extern "C" {
 #define M0_VERIFIER_MAX_UNSATISFIED 80u
 #define M0_VERIFIER_COORDINATE_MAX 96u
 #define M0_VERIFIER_VIRTUE_THRESHOLD 0.5f
+#define M0_VERIFIER_MAX_TYPED_QUERIES 6u
+#define M0_VERIFIER_MAX_BACKING_CHAIN 6u
 
 #define M0_VERIFIER_SYNTAX_SPEECH       (1u << 0) /* Track 19.9 layer 3 */
 #define M0_VERIFIER_SYNTAX_RELATIONSHIP (1u << 1) /* Track 19.9 layer 5 */
@@ -48,6 +50,14 @@ typedef struct M0VerifierReport {
                                       [M0_VERIFIER_COORDINATE_MAX];
     float    coherence_score;
     uint8_t  slot_privacy_boundary_compliance;
+    uint8_t  act_face;
+    uint8_t  witness_face;
+    uint16_t typed_query_count;
+    char     typed_queries[M0_VERIFIER_MAX_TYPED_QUERIES]
+                           [M0_VERIFIER_COORDINATE_MAX];
+    uint16_t backing_chain_count;
+    char     backing_chain[M0_VERIFIER_MAX_BACKING_CHAIN]
+                           [M0_VERIFIER_COORDINATE_MAX];
 } M0VerifierReport;
 
 int m0_verifier_check_state(const KernelState* state, M0VerifierReport* out);

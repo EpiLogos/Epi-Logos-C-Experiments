@@ -6,6 +6,8 @@ mod m0_verifier {
     const M0_VERIFIER_VIRTUE_COUNT: usize = 9;
     const M0_VERIFIER_MAX_UNSATISFIED: usize = 80;
     const M0_VERIFIER_COORDINATE_MAX: usize = 96;
+    const M0_VERIFIER_MAX_TYPED_QUERIES: usize = 6;
+    const M0_VERIFIER_MAX_BACKING_CHAIN: usize = 6;
     const M0_VERIFIER_SYNTAX_SPEECH: u16 = 1 << 0;
     const M0_VERIFIER_SYNTAX_RELATIONSHIP: u16 = 1 << 1;
     const M0_VERIFIER_SYNTAX_ACTION: u16 = 1 << 2;
@@ -32,6 +34,12 @@ mod m0_verifier {
             [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_UNSATISFIED],
         coherence_score: f32,
         slot_privacy_boundary_compliance: u8,
+        act_face: u8,
+        witness_face: u8,
+        typed_query_count: u16,
+        typed_queries: [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_TYPED_QUERIES],
+        backing_chain_count: u16,
+        backing_chain: [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_BACKING_CHAIN],
     }
 
     impl Default for M0VerifierReport {
@@ -44,6 +52,12 @@ mod m0_verifier {
                     M0_VERIFIER_MAX_UNSATISFIED],
                 coherence_score: 0.0,
                 slot_privacy_boundary_compliance: 0,
+                act_face: 0,
+                witness_face: 0,
+                typed_query_count: 0,
+                typed_queries: [[0; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_TYPED_QUERIES],
+                backing_chain_count: 0,
+                backing_chain: [[0; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_BACKING_CHAIN],
             }
         }
     }
@@ -83,6 +97,10 @@ mod m0_verifier {
         assert_eq!(report.virtue_witness_vector & 0x01ff, 0x01ff);
         assert_eq!(report.unsatisfied_count, 0);
         assert_eq!(report.slot_privacy_boundary_compliance, 1);
+        assert_eq!(report.act_face, 0);
+        assert_eq!(report.witness_face, 1);
+        assert_eq!(report.typed_query_count, 0);
+        assert_eq!(report.backing_chain_count, 3);
         assert!(report.coherence_score > 0.99);
         for score in report.virtue_scores {
             assert!(score > 0.99);
@@ -105,6 +123,15 @@ mod m0_verifier {
                 .to_str()
                 .expect("constraint must be UTF-8 compatible");
         assert_eq!(first_constraint, "#R0-0/1/P-T0-slot-privacy-boundary?");
+        assert_eq!(report.typed_query_count, 1);
+        let first_query = unsafe { CStr::from_ptr(report.typed_queries[0].as_ptr()) }
+            .to_str()
+            .expect("typed query must be UTF-8 compatible");
+        assert_eq!(first_query, first_constraint);
+        let first_backing = unsafe { CStr::from_ptr(report.backing_chain[0].as_ptr()) }
+            .to_str()
+            .expect("backing-chain coordinate must be UTF-8 compatible");
+        assert_eq!(first_backing, "M0'-verifier");
         assert!(report.coherence_score < 0.99);
     }
 
