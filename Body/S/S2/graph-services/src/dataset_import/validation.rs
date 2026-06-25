@@ -99,6 +99,7 @@ impl DatasetImportReport {
 }
 
 const STRING_LIST_TARGETS: &[&str] = &[
+    "c_1_asset_uri",
     "c_4_ql_operator_types",
     "c_5_resonances",
     "l_2_therapeutic_properties",

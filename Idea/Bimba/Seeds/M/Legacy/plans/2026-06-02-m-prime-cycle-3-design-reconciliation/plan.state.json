@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T15:09:05.411Z",
+  "updatedAt": "2026-06-25T15:22:11.615Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1510,16 +1510,21 @@
       "worktree": null
     },
     "09.T9.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T15:22:11.547Z",
+      "claimedAt": "2026-06-25T15:11:27.783Z",
+      "completedAt": "2026-06-25T15:22:11.547Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T15:22:11.547Z",
+          "text": "cargo check -p epi-s2-graph-schema passed; cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml dataset_import::asset_field_mapping passed 1/1 unit (integration binaries 0 filtered); grep found c_1_asset_uri at Body/S/S2/graph-schema/src/lib.rs:1784,3602; importer paths Body/S/S2/graph-services/src/dataset_import/{mod.rs,node_import.rs,validation.rs}"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-3-assets",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T15:11:27.783Z",
+      "runId": "20260625T151127Z-09-T9.3",
       "worktree": null
     },
     "09.T9.4": {
@@ -12560,26 +12565,36 @@
       "leaseExpiresAt": "2026-06-25T16:54:27.428Z",
       "worktree": null,
       "completedAt": "2026-06-25T15:09:05.362Z"
+    },
+    {
+      "runId": "20260625T151127Z-09-T9.3",
+      "taskId": "09.T9.3",
+      "status": "done",
+      "startedAt": "2026-06-25T15:11:27.783Z",
+      "owner": "codex-m-dev-09-t9-3-assets",
+      "leaseExpiresAt": "2026-06-25T17:11:27.783Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T15:22:11.547Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T14:54:19.164Z",
-    "updatedAt": "2026-06-25T14:54:19.164Z",
+    "createdAt": "2026-06-25T15:11:00.766Z",
+    "updatedAt": "2026-06-25T15:11:00.766Z",
     "taskIds": [
-      "08.T8.9",
       "09.T9.3",
       "09.T9.4",
-      "09.T9.5"
+      "09.T9.5",
+      "09.T9.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "08.T8.9": "in-session",
       "09.T9.3": "in-session",
       "09.T9.4": "in-session",
-      "09.T9.5": "in-session"
+      "09.T9.5": "in-session",
+      "09.T9.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

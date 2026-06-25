@@ -487,6 +487,8 @@ fn append_deep_prefixed_filtered_props(
         return;
     };
 
+    append_asset_field_mapping(props, set_parts);
+
     for (source_key, value) in props {
         if is_deep_coordinate_source_key(source_key) {
             continue;
@@ -502,6 +504,136 @@ fn append_deep_prefixed_filtered_props(
         };
         set_parts.push(format!("n.{target_key} = {literal}"));
     }
+}
+
+fn append_asset_field_mapping(props: &serde_json::Map<String, Value>, set_parts: &mut Vec<String>) {
+    if !target_already_set(set_parts, "c_1_asset_uri") {
+        let asset_uris = asset_uri_values(props);
+        if !asset_uris.is_empty() {
+            let literal = asset_uris
+                .iter()
+                .map(|uri| format!("'{}'", escape_cypher(uri)))
+                .collect::<Vec<_>>()
+                .join(", ");
+            set_parts.push(format!("n.c_1_asset_uri = [{literal}]"));
+        }
+    }
+
+    if target_already_set(set_parts, "c_1_asset_kind") {
+        return;
+    }
+    if let Some(kind) = asset_kind_value(props) {
+        set_parts.push(format!("n.c_1_asset_kind = '{}'", escape_cypher(&kind)));
+    }
+}
+
+fn asset_uri_values(props: &serde_json::Map<String, Value>) -> Vec<String> {
+    let mut values = Vec::new();
+    for (key, _) in ASSET_URI_FIELD_KEYS {
+        let Some(raw) = props.get(*key) else {
+            continue;
+        };
+        push_asset_uri_values(raw, &mut values);
+    }
+    values
+}
+
+fn push_asset_uri_values(raw: &Value, values: &mut Vec<String>) {
+    match raw {
+        Value::String(value) => {
+            for item in value
+                .split(',')
+                .map(str::trim)
+                .filter(|item| !item.is_empty())
+            {
+                push_unique_asset_uri(item, values);
+            }
+        }
+        Value::Array(items) => {
+            for item in items {
+                push_asset_uri_values(item, values);
+            }
+        }
+        Value::Null | Value::Bool(_) | Value::Number(_) | Value::Object(_) => {}
+    }
+}
+
+fn push_unique_asset_uri(uri: &str, values: &mut Vec<String>) {
+    if values.iter().any(|value| value == uri) {
+        return;
+    }
+    values.push(uri.to_string());
+}
+
+fn asset_kind_value(props: &serde_json::Map<String, Value>) -> Option<String> {
+    for key in [
+        "c_1_asset_kind",
+        "assetKind",
+        "asset_kind",
+        "assetType",
+        "asset_type",
+    ] {
+        if let Some(kind) = props
+            .get(key)
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|kind| !kind.is_empty())
+        {
+            return Some(kind.to_string());
+        }
+    }
+
+    ASSET_URI_FIELD_KEYS.iter().find_map(|(key, source_kind)| {
+        if props.contains_key(*key) {
+            source_kind.map(str::to_string)
+        } else {
+            None
+        }
+    })
+}
+
+const ASSET_URI_FIELD_KEYS: &[(&str, Option<&str>)] = &[
+    ("c_1_asset_uri", None),
+    ("asset_uri", Some("image")),
+    ("assetUri", Some("image")),
+    ("assetURI", Some("image")),
+    ("assetUris", Some("image")),
+    ("asset_uris", Some("image")),
+    ("asset", Some("image")),
+    ("image", Some("image")),
+    ("imageUri", Some("image")),
+    ("imageURI", Some("image")),
+    ("image_uri", Some("image")),
+    ("imageUrl", Some("image")),
+    ("imageURL", Some("image")),
+    ("seal", Some("seal")),
+    ("sealUri", Some("seal")),
+    ("sealURI", Some("seal")),
+    ("seal_uri", Some("seal")),
+    ("sealUrl", Some("seal")),
+    ("sealURL", Some("seal")),
+    ("sigil", Some("sigil")),
+    ("sigilUri", Some("sigil")),
+    ("sigilURI", Some("sigil")),
+    ("sigil_uri", Some("sigil")),
+    ("sigilUrl", Some("sigil")),
+    ("sigilURL", Some("sigil")),
+    ("glyph", Some("glyph")),
+    ("glyphUri", Some("glyph")),
+    ("glyphURI", Some("glyph")),
+    ("glyph_uri", Some("glyph")),
+    ("glyphUrl", Some("glyph")),
+    ("glyphURL", Some("glyph")),
+];
+
+#[cfg(test)]
+pub(super) fn mapped_filtered_props_for_test(
+    node: &Value,
+    parsed: Option<&crate::coordinate::ParsedCoordinate>,
+) -> Vec<String> {
+    let mut set_parts = Vec::new();
+    append_deep_prefixed_filtered_props(node, parsed, &mut set_parts);
+    set_parts
 }
 
 fn is_deep_coordinate_source_key(source_key: &str) -> bool {
