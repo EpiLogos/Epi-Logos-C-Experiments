@@ -99,7 +99,7 @@ fn psychoid_field() -> PsychoidFieldProjection {
             "PsychoidFieldState",
             "protected://nara/psychoid/field-1",
         ),
-        cymatic_signature: [0.125; 64],
+        cymatic_signature: vec![0.125; 64],
         hopf_s2_projection: [0.0, 0.70710677, 0.70710677],
         torus_knot_phase_handle: ProtectedHandle::new(
             "PersonalPoleProjection.torusKnotPhase",

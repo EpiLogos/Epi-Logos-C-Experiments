@@ -605,7 +605,7 @@ pub struct PsychoidDipyramidGeometry {
 #[serde(rename_all = "camelCase")]
 pub struct PsychoidFieldProjection {
     pub field_handle: ProtectedHandle,
-    pub cymatic_signature: [f32; 64],
+    pub cymatic_signature: Vec<f32>,
     pub hopf_s2_projection: [f32; 3],
     pub torus_knot_phase_handle: ProtectedHandle,
     pub field_readiness: PsychoidFieldReadiness,
