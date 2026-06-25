@@ -889,11 +889,13 @@
       "worktree": null
     },
     "05.T5.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T09:13:40.836Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T09:20:00.000Z",
       "claimedAt": "2026-06-25T09:13:40.836Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T09:20:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T09:20:00.000Z", "text": "Accepted. period_reading API on nara_journal.rs, committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-8-period-reading",
       "leaseExpiresAt": "2026-06-25T11:13:40.836Z",
