@@ -34,6 +34,7 @@ const {
     FORBIDDEN_PRIVACY_CLASSES,
     ALLOWED_PRIVACY_CLASSES,
     asSubgraph,
+    buildBimbaLibrarySurface,
     EMPTY_SUBGRAPH,
     IDE_SHELL_WIDGET_IDS,
     IDE_SHELL_INTENT_TARGETS,
@@ -213,6 +214,37 @@ test('asSubgraph tolerates an enveloped { node, neighbors[] } artifact', () => {
     assert.equal(result.node?.coordinate, 'M5.epii');
     assert.equal(result.neighbors.length, 2);
     assert.equal(result.source, 's2.graph.query');
+});
+
+test('map traversal surfaces the M5 library through bimba_coordinate and bimba_resonances tags', () => {
+    const walked = asSubgraph(
+        {
+            node: {
+                coordinate: 'M5-0',
+                namespace: 'bimba',
+                label: 'Library / Gnostic Namespace',
+                bimba_coordinate: 'M5-0',
+                bimba_resonances: ['M0', 'M5', 'S5/S5\''],
+                sourceAnchor: 'Body/S/S5/epi-gnostic/schema-context.md'
+            },
+            neighbors: [
+                { coordinate: 'M0', label: 'Graph chrome', bimba_resonances: ['M5-0'] },
+                { coordinate: 'S5/S5\'', label: 'Gnostic runtime' }
+            ]
+        },
+        'safe-public-current-kernel-tick',
+        99,
+        's2.graph.traverse'
+    );
+
+    const surface = buildBimbaLibrarySurface(walked, 'M5-0');
+
+    assert.equal(surface.bimba_coordinate, 'M5-0');
+    assert.deepEqual(surface.bimba_resonances, ['M0', 'M5', "S5/S5'"]);
+    assert.equal(surface.gatewayMethod, "s5'.gnostic.library_surface");
+    assert.equal(surface.source, 'map-traversal');
+    assert.equal(surface.mutatesGraphCanon, false);
+    assert.equal(Object.hasOwn(surface, 'viewMode'), false);
 });
 
 test('asSubgraph returns EMPTY_SUBGRAPH-equivalent on a non-object artifact', () => {

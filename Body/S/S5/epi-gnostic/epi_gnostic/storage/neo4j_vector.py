@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
 from lightrag.base import BaseVectorStorage
@@ -20,6 +20,56 @@ logger = logging.getLogger(__name__)
 
 # Default batch size for UNWIND upserts
 _DEFAULT_BATCH_SIZE = 500
+_COORDINATE_TAG_FIELDS = ("bimba_coordinate", "bimba_resonances")
+
+
+def vector_row_for_item(
+    vector_id: str,
+    item: dict[str, Any],
+    meta_fields: Iterable[str],
+) -> dict[str, Any]:
+    """Build the Neo4j property row for one LightRAG vector item."""
+    row: dict[str, Any] = {"vector_id": vector_id, "embedding": item.get("embedding")}
+    for key in ("entity_name", "content", *_COORDINATE_TAG_FIELDS, *meta_fields):
+        if key not in item:
+            continue
+        if key == "bimba_resonances":
+            row[key] = _normalize_resonances(item[key])
+        elif key == "bimba_coordinate":
+            coordinate = _normalize_coordinate(item[key])
+            if coordinate is not None:
+                row[key] = coordinate
+        else:
+            row[key] = item[key]
+    return row
+
+
+def _normalize_coordinate(value: Any) -> str | None:
+    if isinstance(value, str):
+        stripped = value.strip()
+        return stripped or None
+    return None
+
+
+def _normalize_resonances(value: Any) -> list[str]:
+    raw: Iterable[Any]
+    if isinstance(value, str):
+        raw = value.split(",")
+    elif isinstance(value, Iterable):
+        raw = value
+    else:
+        raw = []
+
+    seen: set[str] = set()
+    resonances: list[str] = []
+    for item in raw:
+        if not isinstance(item, str):
+            item = str(item)
+        resonance = item.strip()
+        if resonance and resonance not in seen:
+            seen.add(resonance)
+            resonances.append(resonance)
+    return resonances
 
 
 @dataclass
@@ -197,13 +247,7 @@ class Neo4jVectorStorage(BaseVectorStorage):
         # Build parameter rows
         rows: list[dict[str, Any]] = []
         for vid, item in zip(ids, items):
-            emb = item.get("embedding")
-            row: dict[str, Any] = {"vector_id": vid, "embedding": emb}
-            # Store entity_name and all meta_fields as node properties
-            for key in ("entity_name", "content", *self.meta_fields):
-                if key in item:
-                    row[key] = item[key]
-            rows.append(row)
+            rows.append(vector_row_for_item(vid, item, self.meta_fields))
 
         # Batch via UNWIND
         batch_size = self.global_config.get("upsert_batch_size", _DEFAULT_BATCH_SIZE)

@@ -21,6 +21,7 @@ import {
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import {
     asSubgraph,
+    buildBimbaLibrarySurface,
     EMPTY_SUBGRAPH,
     type BimbaSubgraphPayload
 } from '../common/graph-types';
@@ -219,6 +220,7 @@ export class BimbaGraphViewerWidget extends ReactWidget {
             snapshotReadinessFromBridge(this.bridge as unknown as BridgeReadinessSource),
             's2.graph.node'
         );
+        const librarySurface = buildBimbaLibrarySurface(this.subgraph, this.selectedCoordinate);
         const graphReadinessColour = bridgeReadinessColour(graphReadiness.readinessId);
         return (
             <div
@@ -312,6 +314,31 @@ export class BimbaGraphViewerWidget extends ReactWidget {
                                 : 'None'}
                         </dd>
                     </dl>
+                    <section
+                        className="bimba-library-surface"
+                        data-test="bimba-library-surface"
+                        data-bimba-coordinate={librarySurface.bimba_coordinate ?? ''}
+                    >
+                        <h4>Library surface</h4>
+                        <dl>
+                            <dt>bimba_coordinate</dt>
+                            <dd data-test="bimba-library-bimba-coordinate">
+                                {librarySurface.bimba_coordinate ?? 'Awaiting traversed coordinate'}
+                            </dd>
+                            <dt>bimba_resonances</dt>
+                            <dd data-test="bimba-library-bimba-resonances">
+                                {librarySurface.bimba_resonances.length > 0
+                                    ? librarySurface.bimba_resonances.join(', ')
+                                    : 'Awaiting classified resonances'}
+                            </dd>
+                            <dt>Gateway method</dt>
+                            <dd data-test="bimba-library-gateway-method">{librarySurface.gatewayMethod}</dd>
+                            <dt>Mutates graph canon</dt>
+                            <dd data-test="bimba-library-mutates-graph-canon">
+                                {String(librarySurface.mutatesGraphCanon)}
+                            </dd>
+                        </dl>
+                    </section>
                     {this.lastError !== null && (
                         <p className="ide-shell-error" data-test="bimba-graph-last-error">
                             {this.lastError}

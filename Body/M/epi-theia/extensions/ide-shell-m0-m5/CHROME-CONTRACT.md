@@ -41,7 +41,7 @@ Backend Studio and Smart Connections are allowed first-build stubs only. They do
 | Widget | Gateway obligations |
 | --- | --- |
 | `coordinate-tree` | Read coordinate context and profile tick data through `SharedBridgeAdapter`; no local coordinate authority. |
-| `bimba-graph-viewer` | Read graph nodes/subgraphs through `SharedBridgeAdapter`; no direct S2 graph import. |
+| `bimba-graph-viewer` | Read graph nodes/subgraphs through `SharedBridgeAdapter`; no direct S2 graph import. When map traversal lands on a Bimba coordinate, render the M5-0' library surface inside the same graph chrome from `bimba_coordinate` plus `bimba_resonances` tags; do not add standalone graph-viewer packages or generic graph/file/agent view modes. |
 | `canon-studio` | Open canonical artifacts from bridge-provided intent context; writes route through governed M5/vault bridge paths only. |
 | `logos-atelier` | Request governance write intents through bridge-mediated commands; no local mutation of graph canon. |
 | `evidence-pane` | Consume bridge-delivered evidence envelopes after privacy gating. |
@@ -59,6 +59,11 @@ M0' chrome reads on the left: coordinate tree, Bimba graph viewer, and Canon Stu
 M5' chrome writes through governance: Logos Atelier, Evidence Pane, Review Pane, Autoresearch Pane, and Agentic Control Room own the governance write and agentic evidence surfaces. The invariant is `mutatesGraphCanon: false` for every renderer. Renderers may request governed actions; they must not mutate graph canon locally.
 
 The Möbius write-back grammar is: M0' selects and reads a coordinate; M5' reviews, evidences, and governs write intent; the bridge returns readiness/provenance; M0' re-renders from the next public profile tick.
+
+The Klein library seam is coordinate-tagged, not mode-tagged: map traversal
+selects the coordinate, and the Library/Gnostic namespace surfaces beneath that
+selection through direct `bimba_coordinate` and classified `bimba_resonances`
+fields.
 
 ## 5. ide-shell vs OmniPanel Split
 

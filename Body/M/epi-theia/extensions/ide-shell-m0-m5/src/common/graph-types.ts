@@ -22,6 +22,10 @@ export interface BimbaPointerAnchor {
 
 export interface BimbaGraphNodePayload {
     readonly coordinate?: string;
+    readonly bimba_coordinate?: string;
+    readonly bimbaCoordinate?: string;
+    readonly bimba_resonances?: readonly string[] | string;
+    readonly bimbaResonances?: readonly string[] | string;
     readonly namespace?: string;
     readonly label?: string;
     readonly pointer?: string;
@@ -45,6 +49,17 @@ export interface BimbaSubgraphPayload {
     readonly privacyClass: string;
     readonly profileGeneration: number | null;
     readonly source: 's2.graph.node' | 's2.graph.query' | 's2.graph.traverse' | string;
+}
+
+export interface BimbaLibrarySurface {
+    readonly bimba_coordinate: string | null;
+    readonly bimba_resonances: readonly string[];
+    readonly gatewayMethod: "s5'.gnostic.library_surface";
+    readonly source: 'map-traversal';
+    readonly mutatesGraphCanon: false;
+    readonly privacyClass: string;
+    readonly profileGeneration: number | null;
+    readonly provenanceHandles: readonly string[];
 }
 
 /** Empty / pending subgraph used before the gateway responds. */
@@ -87,4 +102,90 @@ export function asSubgraph(
         profileGeneration,
         source
     };
+}
+
+export function buildBimbaLibrarySurface(
+    subgraph: BimbaSubgraphPayload,
+    traversedCoordinate: string | null
+): BimbaLibrarySurface {
+    const node = subgraph.node;
+    const bimbaCoordinate =
+        stringValue(node?.bimba_coordinate) ??
+        stringValue(node?.bimbaCoordinate) ??
+        stringValue(node?.coordinate) ??
+        traversedCoordinate;
+    const resonances = normalizeResonances(
+        node?.bimba_resonances ??
+        node?.bimbaResonances ??
+        collectNeighborResonances(subgraph.neighbors, bimbaCoordinate)
+    );
+
+    return Object.freeze({
+        bimba_coordinate: bimbaCoordinate,
+        bimba_resonances: resonances,
+        gatewayMethod: "s5'.gnostic.library_surface",
+        source: 'map-traversal',
+        mutatesGraphCanon: false,
+        privacyClass: subgraph.privacyClass,
+        profileGeneration: subgraph.profileGeneration,
+        provenanceHandles: Object.freeze([
+            ...anchorValues(node),
+            ...subgraph.neighbors.flatMap(anchorValues)
+        ])
+    });
+}
+
+function collectNeighborResonances(
+    neighbors: readonly BimbaGraphNodePayload[],
+    bimbaCoordinate: string | null
+): readonly string[] {
+    return neighbors
+        .flatMap(neighbor => [
+            neighbor.bimba_resonances,
+            neighbor.bimbaResonances,
+            neighbor.bimba_coordinate,
+            neighbor.bimbaCoordinate,
+            neighbor.coordinate
+        ])
+        .flatMap(normalizeResonances)
+        .filter(value => value !== bimbaCoordinate);
+}
+
+function normalizeResonances(value: unknown): readonly string[] {
+    const raw = Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[,\n]/u) : [];
+    const seen = new Set<string>();
+    const resonances: string[] = [];
+    for (const item of raw) {
+        const normalized = String(item).trim();
+        if (normalized.length > 0 && !seen.has(normalized)) {
+            seen.add(normalized);
+            resonances.push(normalized);
+        }
+    }
+    return Object.freeze(resonances);
+}
+
+function anchorValues(node: BimbaGraphNodePayload | null | undefined): string[] {
+    if (!node) {
+        return [];
+    }
+    const pointerAnchor =
+        typeof node.pointerAnchor === 'string'
+            ? node.pointerAnchor
+            : node.pointerAnchor?.path;
+    return [
+        node.pointer,
+        pointerAnchor,
+        node.sourceAnchor,
+        node.specAnchor,
+        node.codeAnchor,
+        node.testAnchor
+    ].flatMap(value => {
+        const stringified = stringValue(value);
+        return stringified === null ? [] : [stringified];
+    });
+}
+
+function stringValue(value: unknown): string | null {
+    return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
 }

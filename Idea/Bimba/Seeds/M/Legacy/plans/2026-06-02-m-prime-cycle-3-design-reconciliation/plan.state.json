@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T15:57:10.582Z",
+  "updatedAt": "2026-06-25T16:08:21.757Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1618,16 +1618,21 @@
       "worktree": null
     },
     "09.T9.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:08:21.704Z",
+      "claimedAt": "2026-06-25T15:59:28.752Z",
+      "completedAt": "2026-06-25T16:08:21.704Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:08:21.704Z",
+          "text": "pnpm --dir Body/M/epi-theia/extensions/ide-shell-m0-m5 test: 41/41 pass; python3 -m pytest tests/test_coordinate_tags.py -q: 1/1 pass; grep matched bimba_coordinate/bimba_resonances in Body/M/epi-theia/extensions/ide-shell-m0-m5/src/common/graph-types.ts, src/browser/bimba-graph-viewer-widget.tsx, CHROME-CONTRACT.md and Body/S/S5/epi-gnostic/epi_gnostic/storage/neo4j_vector.py, schema-context.md, cypher/00-bootstrap.cypher; no standalone graph-viewer extension directory."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-9-klein-seam",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T15:59:28.752Z",
+      "runId": "20260625T155928Z-09-T9.9",
       "worktree": null
     },
     "09.T9.10": {
@@ -12620,26 +12625,36 @@
       "leaseExpiresAt": "2026-06-25T17:48:21.041Z",
       "worktree": null,
       "completedAt": "2026-06-25T15:57:10.534Z"
+    },
+    {
+      "runId": "20260625T155928Z-09-T9.9",
+      "taskId": "09.T9.9",
+      "status": "done",
+      "startedAt": "2026-06-25T15:59:28.752Z",
+      "owner": "codex-m-dev-09-t9-9-klein-seam",
+      "leaseExpiresAt": "2026-06-25T17:59:28.752Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T16:08:21.704Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T15:48:09.183Z",
-    "updatedAt": "2026-06-25T15:48:09.183Z",
+    "createdAt": "2026-06-25T15:59:14.228Z",
+    "updatedAt": "2026-06-25T15:59:14.228Z",
     "taskIds": [
-      "09.T9.8",
       "09.T9.9",
       "11.T11.5",
-      "11.T11.6"
+      "11.T11.6",
+      "11.T11.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.8": "in-session",
       "09.T9.9": "in-session",
       "11.T11.5": "in-session",
-      "11.T11.6": "in-session"
+      "11.T11.6": "in-session",
+      "11.T11.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

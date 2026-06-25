@@ -33,6 +33,19 @@ do NOT assign these from content.
 If enrich.py returns null for c_4_ql_position (bare `#` root node), omit it from
 the generated Cypher SET block — do not write `SET n.prop = null`.
 
+## Gnostic Library Coordinate Tags
+
+Gnostic library vectors that surface under Bimba map traversal carry two direct
+join fields:
+
+```
+bimba_coordinate   string       The traversed Bimba coordinate the library item sits under.
+bimba_resonances   list[string] LLM-classified resonance coordinates for cross-surface surfacing.
+```
+
+These are not graph/file/agent view modes. They are coordinate tags joining the
+M0' graph chrome to the M5-0' Library/Gnostic namespace.
+
 ---
 
 ## C-Family Positions (ontological default — universal across all nodes)
