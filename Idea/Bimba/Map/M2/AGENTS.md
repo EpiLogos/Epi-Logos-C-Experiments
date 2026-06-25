@@ -6,6 +6,7 @@ Canon: [[M2]] (World Form) -> [[M-SYSTEM-INDEX]]; design: [[45-bimba-map-indexin
 
 ## Ownership
 - Pithy `map-index` nodes for M2 descendants, tree-depth ≤ 3 (134 nodes). **The folder tree mirrors the children relation** (containment edges, e.g. HAS_INTERNAL_COMPONENT) — a coord with children is a folder + `{coord}.md` folder-note. Each node = content detail + `Contains` + a full `Relations` index + a Neo4j pointer.
+- `M2-1/M2-1.base` — `base-view` card/table reflection for the [[M2-1]] MEF lens set; it reads the generated node frontmatter and is not itself graph canon.
 - Context-frame coords (e.g. `M2-(0/1)`) render `/` as `∕` in file/link names; `coordinate:` + the graph pointer keep the true `/`. Nest under their containment parent (e.g. `M0-(4.0/1)` lives under `M0-4`).
 - Does NOT own canon meaning — that is the [[M2]] Form + its [[Seeds]] specs. Full detail lives in Neo4j + `datasets/parashakti-deep/` (legacy `#`-tagged source).
 

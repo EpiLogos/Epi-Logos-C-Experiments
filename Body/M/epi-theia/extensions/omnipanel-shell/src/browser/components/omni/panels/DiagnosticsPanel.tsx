@@ -13,6 +13,11 @@ import { MathemeProfileGenerationDisplay } from '../diagnostics/MathemeProfileGe
 import { ProfileFieldPendingMarkers } from '../diagnostics/ProfileFieldPendingMarkers';
 import { ProfileTickSubscriptionState } from '../diagnostics/ProfileTickSubscriptionState';
 import { S2GraphReachability } from '../diagnostics/S2GraphReachability';
+import { PiMonitorPane } from './PiMonitorPane';
+import type {
+  GatewayResolvedSessionSurface,
+  PortalTemporalSurfaceContract
+} from '../../../../common/omnipanel-runtime';
 import type {
   ActiveLayoutTelemetry,
   CrossLayoutIntentLogEntry,
@@ -39,6 +44,10 @@ export interface DiagnosticsPanelProps {
   readonly expandedIntentEntryId?: string | null;
   readonly onToggleIntentEntry?: (entryId: string) => void;
   readonly privacyDropAggregate?: PrivacyDropAggregate;
+  readonly piMonitor?: {
+    readonly portalTemporalSurface: PortalTemporalSurfaceContract;
+    readonly resolvedSession: GatewayResolvedSessionSurface;
+  } | null;
 }
 
 const EMPTY_PRIVACY_DROP_AGGREGATE: PrivacyDropAggregate = {
@@ -78,7 +87,8 @@ export function DiagnosticsPanel({
   intentLogEntries = [],
   expandedIntentEntryId = null,
   onToggleIntentEntry,
-  privacyDropAggregate = EMPTY_PRIVACY_DROP_AGGREGATE
+  privacyDropAggregate = EMPTY_PRIVACY_DROP_AGGREGATE,
+  piMonitor = null
 }: DiagnosticsPanelProps) {
   const health = deriveDiagnosticsHealth(readinessLedger, gatewayWebSocket);
   const summary = deriveDiagnosticsSummary(readinessLedger, gatewayWebSocket);
@@ -105,6 +115,18 @@ export function DiagnosticsPanel({
 
       <KernelBridgeReadinessSummary ledger={readinessLedger} />
       <ProfileFieldPendingMarkers markers={pendingProfileFields} />
+
+      {piMonitor ? (
+        <PiMonitorPane
+          portalTemporalSurface={piMonitor.portalTemporalSurface}
+          resolvedSession={piMonitor.resolvedSession}
+        />
+      ) : (
+        <section className="rounded border border-[var(--border-subtle)] bg-black/20 p-3" data-test="pi-monitor-pane-empty">
+          <h4 className="text-xs font-semibold uppercase text-[var(--text-secondary)]">Pi Runtime Monitor</h4>
+          <p className="mt-1 text-[10px] text-[var(--text-tertiary)]">No active Pi session has resolved yet.</p>
+        </section>
+      )}
 
       <div className="grid gap-3 xl:grid-cols-3">
         <S2GraphReachability state={s2Graph} />
@@ -172,4 +194,3 @@ export function deriveDiagnosticsSummary(
   }
   return `Bridge degraded - ${latest.state}`;
 }
-

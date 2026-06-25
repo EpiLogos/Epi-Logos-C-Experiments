@@ -17,7 +17,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]].
 - `Types/` — the ordered ontology mirror: `Coordinates/` (C/P/L/S/T/M families + primes, each with a
   `.canvas` MOC and optional `.base` reflection) and `Psychoids/` (`#`, `#0`–`#5`). Pre-graph-sync
   incubation surface; see `Types/README.md`. The `Coordinates/C/C1/C1'/CT/` branch owns the CT0–CT5
-  plus CT4a template-law MOCs and their CT-ladder `.base` reflections.
+  plus CT4a template-law MOCs and their CT-ladder `.base` reflections. `Types/Crystallisation-Pipeline.base`
+  is the zone tracker for type incubation, graduation, and flat [[World]] crystallisation state.
 - Does NOT own implementation, specs, or the graph projection — specs live in `Seeds/`, the navigable
   graph reflection in `Map/`, behaviour in the `Body/` roots.
 

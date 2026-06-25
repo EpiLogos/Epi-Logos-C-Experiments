@@ -8,6 +8,7 @@
   },
   "references": [
     { "path": "../kernel-bridge" },
+    { "path": "../omnipanel-shell" },
     { "path": "../pratibimba-layouts" },
     { "path": "../m-extension-runtime" },
     { "path": "../ide-shell-m0-m5" }

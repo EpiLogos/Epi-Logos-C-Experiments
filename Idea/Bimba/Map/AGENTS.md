@@ -23,6 +23,9 @@ Canon: [[World-Ontology]] -> [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M-SYSTEM-INDEX]]
 - `datasets/` — raw per-branch dataset JSON (`{anuttara,paramasiva,…,epii}-deep/`, `low-detail/`),
   enrichment docs, and build/fetch/cypher scripts. This is the **import provenance + full-detail
   source**, not a navigation surface; the graph (and `*-deep/`) hold full node detail.
+- `Map-Aggregate-Browser.base` — zone-level `base-view` reflection for coarse aggregate browsing and
+  card/image entry over `map-index` frontmatter; it feeds curated canvas/Theia views and does not
+  replace Neo4j typed-edge traversal.
 - Does NOT own canon meaning — that is each [[M0]]…[[M5]] World Form + its `Seeds/` specs. Domain
   law stays in the owning coordinate module, never relocated here.
 

@@ -6,6 +6,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]]
 
 ## Ownership
 - `Present/` — temporal day/session/now tree: `DD-MM-YYYY/` day folders, each with datetime-prefixed session dirs (`YYYYMMDD-HHmmss-id/` with `tasks/ patterns/ thinking/ thoughts/`) and in-day working artifacts (plans, design notes, canon extracts).
+- `Present/Present-Console.base` — operational `base-view` for open/completed NOW and daily-note reflection state.
+- `Entity-Candidate-Tracker.base` — `base-view` for captured entity-candidate lifecycle items before [[World/Types]] incubation and flat [[World]] graduation.
 - `COORDINATE-MAP.md` — harmonisation bridge from the old `Idea/Empty` coordinate map into current S/S′ canon (defers to [[S-SYSTEM-INDEX]] + level specs); described as "a harmonised bridge from the older `Idea/Empty` coordinate files into current canon".
 - `coordinate-semantics.md` — natural-language glossary bridge for the original coordinate definitions; described as "a harmonised bridge for the original coordinate-language definitions"; defers to [[CLAUDE.md]] for `#`/families/operators.
 - Does NOT own canonical Forms/Types/Pratibimba (those live in `Bimba/`) nor implementation (that lives in the `Body/` code roots). The two bridge files explicitly delegate authority — do not treat them as the live coordinate spec.

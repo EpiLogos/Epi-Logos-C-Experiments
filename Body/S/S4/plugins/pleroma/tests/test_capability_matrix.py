@@ -249,6 +249,8 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
 
         self.assertIn("prepare_agent_run_evidence", pi["permitted_actions"])
         self.assertIn("dispatch_bounded_agent_run", pi["permitted_actions"])
+        self.assertIn("axiom-translate", pi["permitted_actions"])
+        self.assertIn("axiom_translation", pi["required_review_categories"])
         self.assertIn("approve_human_required_review", pi["forbidden_actions"])
         self.assertNotIn("approve_human_required_review", pi["permitted_actions"])
 
@@ -358,6 +360,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
                 self.assertNotIn("s1.vault.append_block", allowlists[actor])
 
         self.assertIn("s1.vault.append_block", allowlists["pi"])
+        self.assertIn("axiom-translate", allowlists["pi"])
         for capability in ["s1.vault.write_file", "s1.vault.move_file", "s1.vault.rename_file"]:
             with self.subTest(capability=capability):
                 self.assertIn(capability, bridge["user_final_validation_required"])

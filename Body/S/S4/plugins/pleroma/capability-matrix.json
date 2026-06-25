@@ -670,6 +670,7 @@
           "prepare_agent_run_evidence",
           "dispatch_bounded_agent_run",
           "run_runtime_smoke",
+          "axiom-translate",
           "prepare_dry_run_promotion_plan"
         ],
         "forbidden_actions": [
@@ -680,6 +681,7 @@
         "required_review_categories": [
           "runtime_evidence",
           "test_evidence",
+          "axiom_translation",
           "promotion_readiness"
         ],
         "recursive_self_review_requires_user_final_validation": true
@@ -875,6 +877,7 @@
           "readGraphContext",
           "subscribeRunEvents",
           "invokeGatewayRpc",
+          "axiom-translate",
           "depositReviewEvidence",
           "requestDryRunPromotion",
           "s1.semantic.suggest_links",

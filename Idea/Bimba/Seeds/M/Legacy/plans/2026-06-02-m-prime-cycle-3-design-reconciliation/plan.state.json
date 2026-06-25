@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T16:37:56.051Z",
+  "updatedAt": "2026-06-25T16:47:26.609Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2346,16 +2346,16 @@
       "worktree": null
     },
     "15.T15.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:41:04.873Z",
+      "claimedAt": "2026-06-25T16:41:04.873Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-15-t15-2-omnipanel-membrane",
+      "leaseExpiresAt": "2026-06-25T18:41:04.873Z",
+      "heartbeatAt": "2026-06-25T16:41:04.873Z",
+      "runId": "20260625T164104Z-15-T15.2",
       "worktree": null
     },
     "15.T15.3": {
@@ -9485,16 +9485,16 @@
       "worktree": null
     },
     "47.T47.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:40:48.437Z",
+      "claimedAt": "2026-06-25T16:40:48.437Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-47-t47-3-aeon-scheduling",
+      "leaseExpiresAt": "2026-06-25T18:40:48.437Z",
+      "heartbeatAt": "2026-06-25T16:40:48.437Z",
+      "runId": "20260625T164048Z-47-T47.3",
       "worktree": null
     },
     "47.T47.4": {
@@ -9547,16 +9547,21 @@
       "worktree": null
     },
     "48.T48.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:47:26.550Z",
+      "claimedAt": "2026-06-25T16:40:43.633Z",
+      "completedAt": "2026-06-25T16:47:26.550Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:47:26.550Z",
+          "text": "13/13 .base YAML shape checks passed; zone source counts World=111 Map=998 Seeds=129 Present=61 entity-candidate-frontmatter=6; M2-1 cards base covers 43 map-index nodes with image field; key paths: Idea/Bimba/World/Types/Crystallisation-Pipeline.base, Idea/Bimba/Map/Map-Aggregate-Browser.base, Idea/Bimba/Map/M2/M2-1/M2-1.base, Idea/Bimba/Seeds/Seeds-Provenance-Ledger.base, Idea/Empty/Present/Present-Console.base, Idea/Empty/Entity-Candidate-Tracker.base"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-48-t48-3-zone-bases",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T16:40:43.633Z",
+      "runId": "20260625T164043Z-48-T48.3",
       "worktree": null
     },
     "48.T48.4": {
@@ -12704,31 +12709,58 @@
       "leaseExpiresAt": "2026-06-25T18:31:29.173Z",
       "worktree": null,
       "completedAt": "2026-06-25T16:37:24.980Z"
+    },
+    {
+      "runId": "20260625T164043Z-48-T48.3",
+      "taskId": "48.T48.3",
+      "status": "done",
+      "startedAt": "2026-06-25T16:40:43.633Z",
+      "owner": "codex-m-dev-48-t48-3-zone-bases",
+      "leaseExpiresAt": "2026-06-25T18:40:43.633Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T16:47:26.550Z"
+    },
+    {
+      "runId": "20260625T164048Z-47-T47.3",
+      "taskId": "47.T47.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:40:48.437Z",
+      "owner": "codex-m-dev-47-t47-3-aeon-scheduling",
+      "leaseExpiresAt": "2026-06-25T18:40:48.437Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T164104Z-15-T15.2",
+      "taskId": "15.T15.2",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:41:04.873Z",
+      "owner": "codex-m-dev-15-t15-2-omnipanel-membrane",
+      "leaseExpiresAt": "2026-06-25T18:41:04.873Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T16:31:59.315Z",
-    "updatedAt": "2026-06-25T16:31:59.315Z",
+    "createdAt": "2026-06-25T16:40:31.339Z",
+    "updatedAt": "2026-06-25T16:40:31.339Z",
     "taskIds": [
-      "12.T12.6",
       "12.T12.7",
       "15.T15.2",
-      "15.T15.3"
+      "15.T15.3",
+      "15.T15.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "12.T12.6": "in-session",
       "12.T12.7": "in-session",
       "15.T15.2": "in-session",
-      "15.T15.3": "in-session"
+      "15.T15.3": "in-session",
+      "15.T15.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

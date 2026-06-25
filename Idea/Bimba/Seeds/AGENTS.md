@@ -17,6 +17,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] (S work) / [[M'-SYSTE
   [[S-SOURCE-TRACEABILITY-INDEX]], `LEGACY-DOCS-MIGRATION-INDEX`.
 - Cycle plan sets: `M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/` (numbered
   tranches `NN-*.md`, registered in `plan.index.json`/`plan.state.json`). New design tranches land here.
+- `Seeds-Provenance-Ledger.base` — zone-level `base-view` reflection for Seed/spec/traceability
+  provenance by coordinate, source links, and artifact role.
 - Does NOT own crystallised Forms (`World/`), the graph reflection (`Map/`), or behaviour (`Body/`).
 
 ## Local Contracts

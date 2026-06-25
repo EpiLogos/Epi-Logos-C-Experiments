@@ -221,98 +221,18 @@ export interface S5EvidenceRefs {
     readonly persistedStoreDtoRef: string;
 }
 
-export type TerminalCaptureMode = 'metadataOnly' | 'stream' | 'transcript' | string;
+export {
+    buildPiRuntimeMonitorProjection
+} from '@pratibimba/omnipanel-shell/lib/common/omnipanel-runtime';
 
-export interface TerminalObservabilityCapturePolicy {
-    readonly mode: TerminalCaptureMode;
-    readonly maxLines?: number | null;
-    readonly redactionPolicy?: string | null;
-}
-
-export interface TerminalObservabilityBinding {
-    readonly provider?: string | null;
-    readonly terminalIdentifier?: string | null;
-    readonly sessionAnchor?: string | null;
-    readonly tmuxPaneId?: string | null;
-    readonly attachedSessionKey?: string | null;
-    readonly terminalStatus?: string | null;
-    readonly leaseExpiresAtMs?: number | string | null;
-    readonly capturePolicy?: TerminalObservabilityCapturePolicy | null;
-    readonly captureHandleRef?: string | null;
-    readonly rawPaneBodyIncluded?: boolean | null;
-    readonly lease?: {
-        readonly leaseOwner?: string | null;
-        readonly leasePurpose?: string | null;
-        readonly leaseExpiresAtMs?: number | string | null;
-    } | null;
-}
-
-export interface GatewayResolvedSessionSurface {
-    readonly canonicalKey?: string | null;
-    readonly sessionKey?: string | null;
-    readonly sessionId?: string | null;
-    readonly activeAgentId?: string | null;
-    readonly provider?: string | null;
-    readonly teamId?: string | null;
-    readonly teamRole?: string | null;
-    readonly orchestrationKind?: string | null;
-    readonly parentSessionKey?: string | null;
-    readonly sourceSessionKey?: string | null;
-    readonly sourceSessionKind?: string | null;
-    readonly subagentLineage?: readonly string[] | null;
-    readonly dayId?: string | null;
-    readonly vaultNowPath?: string | null;
-    readonly cmuxWorkspace?: string | null;
-    readonly cmuxSurface?: string | null;
-    readonly cmuxPaneId?: string | null;
-    readonly terminalBinding?: TerminalObservabilityBinding | null;
-    readonly capturePolicy?: TerminalObservabilityCapturePolicy | null;
-    readonly captureHandleRef?: string | null;
-    readonly lastRunId?: string | null;
-    readonly runState?: {
-        readonly lastRunId?: string | null;
-        readonly captureHandleRef?: string | null;
-        readonly capturePolicy?: TerminalObservabilityCapturePolicy | null;
-    } | null;
-    readonly updatedAtMs?: number | string | null;
-}
-
-export interface PortalTemporalSurfaceContract {
-    readonly canonicalSessionKey?: string | null;
-    readonly activeAgentId?: string | null;
-    readonly dayId?: string | null;
-    readonly nowPath?: string | null;
-    readonly nowWikilink?: string | null;
-    readonly kernelGeneration?: number | string | null;
-    readonly kernelSubTick?: number | string | null;
-    readonly generation?: number | string | null;
-    readonly terminalBacked?: boolean | null;
-    readonly terminalProvider?: string | null;
-    readonly terminalStatus?: string | null;
-    readonly terminalLeaseExpiresAtMs?: number | string | null;
-    readonly terminalCapturePolicyMode?: TerminalCaptureMode | null;
-    readonly terminalCaptureHandleRef?: string | null;
-    readonly terminalMetadataKey?: string | null;
-}
-
-export interface PiRuntimeMonitorProjection {
-    readonly sessionKey: string;
-    readonly activeAgent: string;
-    readonly role: string;
-    readonly teamChainLineage: readonly string[];
-    readonly nowDayLink: string;
-    readonly cmuxProjection: string;
-    readonly terminalProvider: string;
-    readonly terminalStatus: string;
-    readonly terminalBacked: boolean;
-    readonly leaseExpires: string;
-    readonly lastObservedTick: string;
-    readonly captureAvailability: 'metadata-only' | 'bounded-capture-available' | 'captured-non-terminal' | 'unavailable';
-    readonly captureHandleRef: string | null;
-    readonly redactedLastRunHandle: string;
-    readonly diagnosticsDeepLinks: readonly string[];
-    readonly rawTerminalScrollbackRendered: false;
-}
+export type {
+    GatewayResolvedSessionSurface,
+    PiRuntimeMonitorProjection,
+    PortalTemporalSurfaceContract,
+    TerminalCaptureMode,
+    TerminalObservabilityBinding,
+    TerminalObservabilityCapturePolicy
+} from '@pratibimba/omnipanel-shell/lib/common/omnipanel-runtime';
 
 export interface MediatedRunEvidencePacket extends RunEvidenceEnvelope {
     readonly currentProfile: CurrentProfileEvidenceRef;
@@ -521,73 +441,6 @@ export function buildMediatedRunEvidencePacket(input: {
     };
 }
 
-export function buildPiRuntimeMonitorProjection(input: {
-    readonly portalTemporalSurface: PortalTemporalSurfaceContract;
-    readonly resolvedSession: GatewayResolvedSessionSurface;
-}): PiRuntimeMonitorProjection {
-    const temporal = input.portalTemporalSurface;
-    const session = input.resolvedSession;
-    const terminalBinding = session.terminalBinding ?? null;
-    const capturePolicy =
-        terminalBinding?.capturePolicy ??
-        session.runState?.capturePolicy ??
-        session.capturePolicy ??
-        (temporal.terminalCapturePolicyMode ? { mode: temporal.terminalCapturePolicyMode } : null);
-    const sessionKey =
-        firstNonBlank(session.canonicalKey, session.sessionKey, temporal.canonicalSessionKey, session.sessionId) ??
-        'unresolved-session';
-    const terminalBacked = Boolean(
-        temporal.terminalBacked ||
-        terminalBinding?.tmuxPaneId ||
-        terminalBinding?.attachedSessionKey ||
-        terminalBinding?.terminalIdentifier
-    );
-    const terminalProvider =
-        firstNonBlank(terminalBinding?.provider, temporal.terminalProvider) ??
-        (terminalBinding?.tmuxPaneId ? 'tmux' : 'none');
-    const terminalStatus =
-        firstNonBlank(terminalBinding?.terminalStatus, temporal.terminalStatus) ??
-        (terminalBacked ? 'unknown' : 'unbound');
-    const leaseExpires =
-        stringifyMaybe(
-            terminalBinding?.lease?.leaseExpiresAtMs ??
-            terminalBinding?.leaseExpiresAtMs ??
-            temporal.terminalLeaseExpiresAtMs
-        ) ?? 'none';
-    const captureHandleRef =
-        firstNonBlank(
-            terminalBinding?.captureHandleRef,
-            session.runState?.captureHandleRef,
-            session.captureHandleRef,
-            temporal.terminalCaptureHandleRef
-        ) ?? null;
-    const redactedLastRunHandle = redactRunHandle(
-        firstNonBlank(session.runState?.lastRunId, session.lastRunId)
-    );
-
-    return Object.freeze({
-        sessionKey,
-        activeAgent: firstNonBlank(session.activeAgentId, temporal.activeAgentId) ?? 'unknown-agent',
-        role: firstNonBlank(session.teamRole, session.provider) ?? 'unassigned',
-        teamChainLineage: Object.freeze(lineageForSession(session)),
-        nowDayLink: nowDayLink(temporal, session),
-        cmuxProjection: cmuxProjection(session),
-        terminalProvider,
-        terminalStatus,
-        terminalBacked,
-        leaseExpires,
-        lastObservedTick: lastObservedTick(temporal, session),
-        captureAvailability: captureAvailability(terminalBacked, capturePolicy, captureHandleRef),
-        captureHandleRef,
-        redactedLastRunHandle,
-        diagnosticsDeepLinks: Object.freeze([
-            `epi agent tmux inspect --session-key ${sessionKey}`,
-            `techne_terminal_inspect session_key=${sessionKey}`
-        ]),
-        rawTerminalScrollbackRendered: false
-    });
-}
-
 /** Required envelope fields per Track 05 T8 verification spec. */
 export const REQUIRED_EVIDENCE_FIELDS = [
     'candidateId',
@@ -688,82 +541,6 @@ function firstNonBlank(...values: readonly (string | null | undefined)[]): strin
         }
     }
     return null;
-}
-
-function stringifyMaybe(value: number | string | null | undefined): string | null {
-    if (value === null || value === undefined) {
-        return null;
-    }
-    return String(value);
-}
-
-function lineageForSession(session: GatewayResolvedSessionSurface): string[] {
-    const lineage = [
-        session.orchestrationKind ? `kind:${session.orchestrationKind}` : null,
-        session.teamId ? `team:${session.teamId}` : null,
-        session.teamRole ? `role:${session.teamRole}` : null,
-        session.parentSessionKey ? `parent:${session.parentSessionKey}` : null,
-        session.sourceSessionKey ? `source:${session.sourceSessionKey}` : null,
-        session.sourceSessionKind ? `source-kind:${session.sourceSessionKind}` : null,
-        ...(session.subagentLineage ?? []).map(step => `lineage:${step}`)
-    ];
-    return lineage.filter((step): step is string => typeof step === 'string' && step.length > 0);
-}
-
-function nowDayLink(temporal: PortalTemporalSurfaceContract, session: GatewayResolvedSessionSurface): string {
-    const day = firstNonBlank(temporal.dayId, session.dayId) ?? 'unknown-day';
-    const now = firstNonBlank(temporal.nowWikilink, temporal.nowPath, session.vaultNowPath) ?? 'unknown-now';
-    return `${day}::${now}`;
-}
-
-function cmuxProjection(session: GatewayResolvedSessionSurface): string {
-    const workspace = firstNonBlank(session.cmuxWorkspace) ?? 'none';
-    const surface = firstNonBlank(session.cmuxSurface) ?? 'none';
-    const pane = firstNonBlank(session.cmuxPaneId) ?? 'none';
-    return `${workspace}/${surface}/${pane}`;
-}
-
-function lastObservedTick(
-    temporal: PortalTemporalSurfaceContract,
-    session: GatewayResolvedSessionSurface
-): string {
-    const generation = stringifyMaybe(temporal.kernelGeneration ?? temporal.generation);
-    const subTick = stringifyMaybe(temporal.kernelSubTick);
-    if (generation && subTick) {
-        return `kernel:${generation}.${subTick}`;
-    }
-    if (generation) {
-        return `kernel:${generation}`;
-    }
-    return stringifyMaybe(session.updatedAtMs) ?? 'unobserved';
-}
-
-function captureAvailability(
-    terminalBacked: boolean,
-    policy: TerminalObservabilityCapturePolicy | null,
-    captureHandleRef: string | null
-): PiRuntimeMonitorProjection['captureAvailability'] {
-    const mode = policy?.mode ?? 'metadataOnly';
-    if (terminalBacked && mode !== 'metadataOnly' && captureHandleRef !== null) {
-        return 'bounded-capture-available';
-    }
-    if (!terminalBacked && mode !== 'metadataOnly' && captureHandleRef !== null) {
-        return 'captured-non-terminal';
-    }
-    if (terminalBacked) {
-        return 'metadata-only';
-    }
-    return 'unavailable';
-}
-
-function redactRunHandle(value: string | null): string {
-    if (value === null) {
-        return 'none';
-    }
-    if (value.length <= 12) {
-        return `${value.slice(0, 4)}...`;
-    }
-    return `${value.slice(0, 6)}...${value.slice(-4)}`;
 }
 
 function sanitizeProtectedHandle(ref: GraphitiProtectedHandle): GraphitiProtectedHandle {

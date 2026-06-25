@@ -1,0 +1,43 @@
+coordinate: "Seeds"
+c_4_artifact_role: "base-view"
+c_5_reflects: "[[ARCHITECTURE-DIAGRAM-PACK]]"
+c_3_projected_from: "Idea/Bimba/Seeds"
+c_3_projected_at: "2026-06-25"
+c_0_source_coordinates: ["[[ARCHITECTURE-DIAGRAM-PACK]]", "[[M-SYSTEM-INDEX]]", "[[48-bases-cs-reflection-layer]]"]
+filters:
+  or:
+    - 'c_4_artifact_role == "seed"'
+    - 'c_4_artifact_role == "spec"'
+    - 'c_4_artifact_role == "canonical-seed-spec"'
+    - 'c_4_artifact_role == "shard-spec"'
+    - 'c_4_artifact_role == "shard-index"'
+    - 'c_4_artifact_role == "traceability-index"'
+    - 'c_4_artifact_role == "flow"'
+    - 'c_4_artifact_role == "plan"'
+views:
+  - type: table
+    name: "Seed provenance ledger"
+    group_by: c_4_artifact_role
+    order:
+      - coordinate
+      - title
+      - c_4_artifact_role
+      - c_0_source_coordinates
+      - c_3_created_at
+      - c_5_crystallisation_state
+    sort:
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Traceability and source paths"
+    filters:
+      or:
+        - 'c_4_artifact_role == "traceability-index"'
+        - 'c_4_artifact_role == "seed"'
+        - 'c_4_artifact_role == "flow"'
+    group_by: c_0_source_coordinates
+    order:
+      - coordinate
+      - title
+      - c_4_artifact_role
+      - c_0_source_coordinates
+      - c_5_reflects

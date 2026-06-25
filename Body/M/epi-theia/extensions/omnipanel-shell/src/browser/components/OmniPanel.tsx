@@ -42,6 +42,10 @@ import {
 } from '@pratibimba/m-extension-runtime/lib/common/readiness';
 import { CROSS_LAYOUT_INTENT_TELEMETRY_EVENT } from '@pratibimba/pratibimba-layouts/lib/common/cross-layout-intent';
 import { extractSessionKey, MAIN_EPII_SESSION_KEY } from './omni/sessions/sessionManagerModel';
+import type {
+  GatewayResolvedSessionSurface,
+  PortalTemporalSurfaceContract
+} from '../../common/omnipanel-runtime';
 
 const OMNI_UI_FONT_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
@@ -347,6 +351,7 @@ export function OmniPanel({
   ]);
 
   const activeChatSession = sessions.sessionsResult?.sessions.find((session) => session.key === chat.sessionKey) ?? null;
+  const piMonitor = buildPiMonitorInput(activeChatSession, chat.sessionKey, readinessSnapshot, latestProfileGeneration);
   const toolEventsVerboseEnabled = (activeChatSession?.verboseLevel ?? '').toLowerCase() === 'on';
 
   const handleToggleChatToolEventsVerbose = useCallback(async () => {
@@ -1154,6 +1159,7 @@ export function OmniPanel({
               setExpandedIntentEntryId(expandedIntentEntryId === entryId ? null : entryId);
             }}
             privacyDropAggregate={privacyDropAggregate}
+            piMonitor={piMonitor}
           />
         );
       case 'logs':
@@ -1281,4 +1287,106 @@ function s2GraphFromReadiness(snapshot: MExtensionReadinessSnapshot) {
     checkedAt: snapshot.fetchedAt > 0 ? snapshot.fetchedAt : null,
     reason: snapshot.reason,
   };
+}
+
+function buildPiMonitorInput(
+  session: GatewaySessionRow | null,
+  activeSessionKey: string | null,
+  readinessSnapshot: MExtensionReadinessSnapshot,
+  profileGeneration: number | null
+): {
+  portalTemporalSurface: PortalTemporalSurfaceContract;
+  resolvedSession: GatewayResolvedSessionSurface;
+} | null {
+  const raw = (session ?? {}) as GatewaySessionRow & Record<string, unknown>;
+  const sessionKey = firstSessionString(
+    raw.key,
+    raw.sessionKey,
+    raw.canonicalKey,
+    raw.sessionId,
+    activeSessionKey
+  );
+  if (!sessionKey) {
+    return null;
+  }
+
+  const resolvedSession: GatewayResolvedSessionSurface = {
+    canonicalKey: firstSessionString(raw.canonicalKey, raw.key, raw.sessionKey),
+    sessionKey,
+    sessionId: firstSessionString(raw.sessionId, raw.recordSessionId),
+    activeAgentId: firstSessionString(raw.activeAgentId, raw.active_coordinate, raw.activeCoordinate, raw.coordinate),
+    provider: firstSessionString(raw.provider, raw.modelProvider),
+    teamId: firstSessionString(raw.teamId),
+    teamRole: firstSessionString(raw.teamRole),
+    orchestrationKind: firstSessionString(raw.orchestrationKind, raw.kind),
+    parentSessionKey: firstSessionString(raw.parentSessionKey),
+    sourceSessionKey: firstSessionString(raw.sourceSessionKey),
+    sourceSessionKind: firstSessionString(raw.sourceSessionKind),
+    subagentLineage: Array.isArray(raw.subagentLineage)
+      ? raw.subagentLineage.filter((entry): entry is string => typeof entry === 'string')
+      : null,
+    dayId: firstSessionString(raw.dayId),
+    vaultNowPath: firstSessionString(raw.vaultNowPath, raw.nowPath),
+    cmuxWorkspace: firstSessionString(raw.cmuxWorkspace, raw.workspace, raw.runtimeCwd),
+    cmuxSurface: firstSessionString(raw.cmuxSurface, raw.surface),
+    cmuxPaneId: firstSessionString(raw.cmuxPaneId, raw.paneId),
+    terminalBinding: isSessionRecord(raw.terminalBinding) ? raw.terminalBinding : null,
+    capturePolicy: isSessionRecord(raw.capturePolicy) ? raw.capturePolicy : null,
+    captureHandleRef: firstSessionString(raw.captureHandleRef),
+    lastRunId: firstSessionString(raw.lastRunId),
+    runState: isSessionRecord(raw.runState) ? raw.runState : null,
+    updatedAtMs: typeof raw.updatedAt === 'number' || typeof raw.updatedAt === 'string' ? raw.updatedAt : null,
+  };
+
+  return {
+    portalTemporalSurface: {
+      canonicalSessionKey: sessionKey,
+      activeAgentId: firstSessionString(resolvedSession.activeAgentId),
+      dayId: firstSessionString(resolvedSession.dayId),
+      nowPath: firstSessionString(resolvedSession.vaultNowPath),
+      nowWikilink: firstSessionString(raw.nowWikilink),
+      kernelGeneration: profileGeneration,
+      kernelSubTick: null,
+      generation: readinessSnapshot.profileGeneration,
+      terminalBacked: Boolean(
+        isSessionRecord(resolvedSession.terminalBinding) &&
+        (
+          firstSessionString(resolvedSession.terminalBinding.tmuxPaneId) ||
+          firstSessionString(resolvedSession.terminalBinding.attachedSessionKey) ||
+          firstSessionString(resolvedSession.terminalBinding.terminalIdentifier)
+        )
+      ),
+      terminalProvider: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.provider)
+        : null,
+      terminalStatus: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.terminalStatus)
+        : null,
+      terminalLeaseExpiresAtMs: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.leaseExpiresAtMs)
+        : null,
+      terminalCapturePolicyMode: isSessionRecord(resolvedSession.capturePolicy)
+        ? firstSessionString(resolvedSession.capturePolicy.mode)
+        : null,
+      terminalCaptureHandleRef: firstSessionString(resolvedSession.captureHandleRef),
+      terminalMetadataKey: firstSessionString(raw.terminalMetadataKey),
+    },
+    resolvedSession,
+  };
+}
+
+function firstSessionString(...values: readonly unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return String(value);
+    }
+  }
+  return null;
+}
+
+function isSessionRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
