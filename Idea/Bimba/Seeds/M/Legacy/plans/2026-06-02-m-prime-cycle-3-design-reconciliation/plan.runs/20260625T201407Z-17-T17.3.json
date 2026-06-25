@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T201407Z-17-T17.3",
+  "taskId": "17.T17.3",
+  "startedAt": "2026-06-25T20:14:07.410Z",
+  "owner": "codex-m-dev-17-t17-3-graph-schema-split",
+  "leaseExpiresAt": "2026-06-25T22:14:07.410Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.3",
+    "trackId": "17",
+    "tranche": "T17.3",
+    "title": "Split `graph-schema/src/lib.rs` (3,072 LOC)",
+    "effort": "3,072 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.28"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

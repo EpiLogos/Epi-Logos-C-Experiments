@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T17:30:51.069Z",
+  "updatedAt": "2026-06-25T20:14:07.476Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2410,7 +2410,7 @@
     },
     "15.T15.5": {
       "status": "pending",
-      "updatedAt": "2026-06-16T12:00:00.000Z",
+      "updatedAt": null,
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
@@ -2419,8 +2419,8 @@
           "text": "RESET from fraudulent done 2026-06-16. no-orphan-fill new-affordance tranche closed without implementation. The lemniscate-transition.tsx primitive exists, but the '0/1 toggle gesture' affordance + cmd-period binding is absent from integrated-composition/src (grep returns nothing). Requires: implement the 0/1 toggle gesture wired to the lemniscate transition."
         }
       ],
-      "notes": "Reset from fraudulent 'done' during the 2026-06-16 deferral-lie overturn audit (see evidence).",
-      "owner": "hermes-nara",
+      "notes": null,
+      "owner": null,
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -2564,16 +2564,16 @@
       "worktree": null
     },
     "17.T17.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T20:14:07.410Z",
+      "claimedAt": "2026-06-25T20:14:07.410Z",
       "completedAt": null,
       "evidence": [],
       "notes": "Codex rate limit 2026-06-25 ~17:10. Resets 8:24 PM.",
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-17-t17-3-graph-schema-split",
+      "leaseExpiresAt": "2026-06-25T22:14:07.410Z",
+      "heartbeatAt": "2026-06-25T20:14:07.410Z",
+      "runId": "20260625T201407Z-17-T17.3",
       "worktree": null
     },
     "17.T17.4": {
@@ -2779,16 +2779,16 @@
       "worktree": null
     },
     "17.T17.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T20:13:51.434Z",
+      "claimedAt": "2026-06-25T20:13:51.434Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-17-t17-17-coordinate-home",
+      "leaseExpiresAt": "2026-06-25T22:13:51.434Z",
+      "heartbeatAt": "2026-06-25T20:13:51.434Z",
+      "runId": "20260625T201351Z-17-T17.17",
       "worktree": null
     },
     "17.T17.18": {
@@ -12926,30 +12926,67 @@
       "leaseExpiresAt": "2026-06-25T19:03:55.761Z",
       "worktree": null,
       "completedAt": "2026-06-25T17:19:03.141Z"
+    },
+    {
+      "runId": "20260625T201101Z-23-T23.17",
+      "taskId": "23.T23.17",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T20:11:01.971Z",
+      "owner": "codex-m-dev-23-t23-17-cymatic-determinism",
+      "leaseExpiresAt": "2026-06-25T22:11:01.971Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T201244Z-15-T15.5",
+      "taskId": "15.T15.5",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T20:12:44.454Z",
+      "owner": "codex-m-dev-15-t15-5-toggle-gesture",
+      "leaseExpiresAt": "2026-06-25T22:12:44.454Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T201351Z-17-T17.17",
+      "taskId": "17.T17.17",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T20:13:51.434Z",
+      "owner": "codex-m-dev-17-t17-17-coordinate-home",
+      "leaseExpiresAt": "2026-06-25T22:13:51.434Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T201407Z-17-T17.3",
+      "taskId": "17.T17.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T20:14:07.410Z",
+      "owner": "codex-m-dev-17-t17-3-graph-schema-split",
+      "leaseExpiresAt": "2026-06-25T22:14:07.410Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T17:02:22.655Z",
-    "updatedAt": "2026-06-25T17:02:22.655Z",
+    "createdAt": "2026-06-25T20:13:33.554Z",
+    "updatedAt": "2026-06-25T20:13:33.554Z",
     "taskIds": [
-      "15.T15.3",
-      "15.T15.4",
+      "23.T23.17",
       "15.T15.5",
-      "15.T15.6"
+      "15.T15.6",
+      "15.T15.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "15.T15.3": "in-session",
-      "15.T15.4": "in-session",
+      "23.T23.17": "in-session",
       "15.T15.5": "in-session",
-      "15.T15.6": "in-session"
+      "15.T15.6": "in-session",
+      "15.T15.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }
