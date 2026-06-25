@@ -83,7 +83,7 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-test('synthetic KleinFlipEvent dispatches all three composition handles in one microtask', async () => {
+function installDirector() {
     const bridge = new SharedBridgeAdapter();
     const recording = recordingBridge();
     bridge.attachBridge(recording.bridge);
@@ -99,6 +99,12 @@ test('synthetic KleinFlipEvent dispatches all three composition handles in one m
     director.registerCymaticMount(cymatic.handle);
     director.registerCodonRotation(codon.handle);
 
+    return { bridge, recording, k2, cymatic, codon, observed, director };
+}
+
+async function assertVariantDispatches(rawKleinFlip, expectedVariant) {
+    const { recording, k2, cymatic, codon, observed, director } = installDirector();
+
     const busAt = Date.now();
     recording.emitProfile({
         generation: 87,
@@ -107,13 +113,7 @@ test('synthetic KleinFlipEvent dispatches all three composition handles in one m
         payload: {
             tick12: 6,
             position6: 0,
-            kleinFlip: {
-                kind: 'M3CodonRotationCross',
-                fromTick: 5,
-                toTick: 6,
-                codonBefore: 21,
-                codonAfter: 42
-            }
+            kleinFlip: rawKleinFlip
         }
     });
 
@@ -145,7 +145,62 @@ test('synthetic KleinFlipEvent dispatches all three composition handles in one m
         `start event emittedAt ${startEvent.emittedAt} must stay within 1ms of bus event ${busAt}`
     );
     assert.equal(startEvent.payload.profileGeneration, 87);
-    assert.equal(startEvent.payload.kleinFlipVariant, 'M3CodonRotationCross');
+    assert.equal(startEvent.payload.kleinFlipVariant, expectedVariant);
+
+    return { observed, startEvent, director };
+}
+
+test('profile-bus KleinFlipEvent variants dispatch all three composition handles exhaustively', async () => {
+    const variants = [
+        [
+            'M1TritoneCrossing',
+            {
+                kind: 'm1TritoneCrossing',
+                fromTick: 5,
+                toTick: 6,
+                tick12: 6,
+                lensPair: [0, 6]
+            }
+        ],
+        [
+            'M2CymaticValenceInvert',
+            {
+                kind: 'm2CymaticValenceInvert',
+                fromTick: 5,
+                toTick: 6,
+                valenceBefore: 'primary',
+                valenceAfter: 'inverted'
+            }
+        ],
+        [
+            'M3CodonRotationCross',
+            {
+                kind: 'm3CodonRotationCross',
+                fromTick: 5,
+                toTick: 6,
+                codonBefore: 21,
+                codonAfter: 42
+            }
+        ]
+    ];
+
+    for (const [expectedVariant, rawKleinFlip] of variants) {
+        const { director } = await assertVariantDispatches(rawKleinFlip, expectedVariant);
+        director.dispose();
+    }
+});
+
+test('synthetic M3 codon-rotation KleinFlipEvent emits the 200ms choreography end event', async () => {
+    const { observed, startEvent, director } = await assertVariantDispatches(
+        {
+            kind: 'M3CodonRotationCross',
+            fromTick: 5,
+            toTick: 6,
+            codonBefore: 21,
+            codonAfter: 42
+        },
+        'M3CodonRotationCross'
+    );
 
     assert.equal(
         observed.some(event => event.type === 'composition.kleinflip.choreography.end'),
@@ -167,4 +222,3 @@ test('synthetic KleinFlipEvent dispatches all three composition handles in one m
 
     director.dispose();
 });
-

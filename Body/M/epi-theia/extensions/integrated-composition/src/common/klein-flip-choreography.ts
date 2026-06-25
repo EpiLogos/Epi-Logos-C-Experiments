@@ -16,7 +16,7 @@ export const KLEIN_FLIP_EVENT_VARIANTS = [
 
 export type KleinFlipEventVariant = typeof KLEIN_FLIP_EVENT_VARIANTS[number];
 
-export interface KleinFlipEvent {
+interface KleinFlipEventBase {
     readonly variant: KleinFlipEventVariant;
     readonly tick12: number | null;
     readonly fromTick: number | null;
@@ -25,6 +25,28 @@ export interface KleinFlipEvent {
     readonly emittedAtMs: number;
     readonly payload: Readonly<Record<string, unknown>>;
 }
+
+export interface M1TritoneCrossingKleinFlipEvent extends KleinFlipEventBase {
+    readonly variant: 'M1TritoneCrossing';
+    readonly lensPair: readonly [number, number] | null;
+}
+
+export interface M2CymaticValenceInvertKleinFlipEvent extends KleinFlipEventBase {
+    readonly variant: 'M2CymaticValenceInvert';
+    readonly valenceBefore: string | null;
+    readonly valenceAfter: string | null;
+}
+
+export interface M3CodonRotationCrossKleinFlipEvent extends KleinFlipEventBase {
+    readonly variant: 'M3CodonRotationCross';
+    readonly codonBefore: number | null;
+    readonly codonAfter: number | null;
+}
+
+export type KleinFlipEvent =
+    | M1TritoneCrossingKleinFlipEvent
+    | M2CymaticValenceInvertKleinFlipEvent
+    | M3CodonRotationCrossKleinFlipEvent;
 
 export interface KleinFlipChoreographyRequest {
     readonly durationMs: number;
@@ -104,15 +126,12 @@ class SharedBridgeCompositionChoreographyDirector implements CompositionChoreogr
                 durationMs: KLEIN_FLIP_CHOREOGRAPHY_DURATION_MS
             });
 
-            for (const handle of this.k2Handles) {
-                handle.requestFold(request);
-            }
-            for (const mount of this.cymaticMounts) {
-                mount.requestValenceInvert(request);
-            }
-            for (const rotation of this.codonRotations) {
-                rotation.requestAxisFlip(request);
-            }
+            dispatchKleinFlipVariant(event, {
+                request,
+                k2Handles: this.k2Handles,
+                cymaticMounts: this.cymaticMounts,
+                codonRotations: this.codonRotations
+            });
 
             const timer = setTimeout(() => {
                 this.removeCompletionTimer(timer);
@@ -251,8 +270,7 @@ function normalizeKleinFlipEvent(
         return null;
     }
 
-    return Object.freeze({
-        variant,
+    const base = {
         tick12: fallback.tick12,
         fromTick: numberValue(raw.fromTick ?? raw.from_tick ?? raw.tickFrom ?? raw.tick_from),
         toTick: numberValue(raw.toTick ?? raw.to_tick ?? raw.tickTo ?? raw.tick_to),
@@ -262,7 +280,32 @@ function normalizeKleinFlipEvent(
             ...fallback.fallbackPayload,
             kleinFlip: Object.freeze({ ...raw })
         })
-    });
+    };
+
+    switch (variant) {
+        case 'M1TritoneCrossing':
+            return Object.freeze({
+                ...base,
+                variant,
+                lensPair: pairValue(raw.lensPair ?? raw.lens_pair)
+            });
+        case 'M2CymaticValenceInvert':
+            return Object.freeze({
+                ...base,
+                variant,
+                valenceBefore: stringValue(raw.valenceBefore ?? raw.valence_before),
+                valenceAfter: stringValue(raw.valenceAfter ?? raw.valence_after)
+            });
+        case 'M3CodonRotationCross':
+            return Object.freeze({
+                ...base,
+                variant,
+                codonBefore: numberValue(raw.codonBefore ?? raw.codon_before),
+                codonAfter: numberValue(raw.codonAfter ?? raw.codon_after)
+            });
+        default:
+            return assertNever(variant);
+    }
 }
 
 function normalizeVariant(value: unknown): KleinFlipEventVariant | null {
@@ -311,6 +354,52 @@ function choreographyEventKey(event: KleinFlipEvent): string {
     ].join(':');
 }
 
+function dispatchKleinFlipVariant(
+    event: KleinFlipEvent,
+    handles: {
+        readonly request: KleinFlipChoreographyRequest;
+        readonly k2Handles: ReadonlySet<K2SurfaceHandle>;
+        readonly cymaticMounts: ReadonlySet<CymaticMountPoint>;
+        readonly codonRotations: ReadonlySet<CodonRotationExport>;
+    }
+): void {
+    switch (event.variant) {
+        case 'M1TritoneCrossing':
+        case 'M2CymaticValenceInvert':
+        case 'M3CodonRotationCross':
+            dispatchAllHandles(handles);
+            return;
+        default:
+            assertNever(event);
+    }
+}
+
+function dispatchAllHandles(handles: {
+    readonly request: KleinFlipChoreographyRequest;
+    readonly k2Handles: ReadonlySet<K2SurfaceHandle>;
+    readonly cymaticMounts: ReadonlySet<CymaticMountPoint>;
+    readonly codonRotations: ReadonlySet<CodonRotationExport>;
+}): void {
+    for (const handle of handles.k2Handles) {
+        handle.requestFold(handles.request);
+    }
+    for (const mount of handles.cymaticMounts) {
+        mount.requestValenceInvert(handles.request);
+    }
+    for (const rotation of handles.codonRotations) {
+        rotation.requestAxisFlip(handles.request);
+    }
+}
+
+function pairValue(value: unknown): readonly [number, number] | null {
+    if (!Array.isArray(value) || value.length !== 2) {
+        return null;
+    }
+    const first = numberValue(value[0]);
+    const second = numberValue(value[1]);
+    return first === null || second === null ? null : Object.freeze([first, second] as const);
+}
+
 function recordValue(value: unknown): Readonly<Record<string, unknown>> | undefined {
     return value && typeof value === 'object' && !Array.isArray(value)
         ? (value as Readonly<Record<string, unknown>>)
@@ -325,3 +414,6 @@ function numberValue(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function assertNever(value: never): never {
+    throw new Error(`Unhandled KleinFlipEvent variant: ${String(value)}`);
+}

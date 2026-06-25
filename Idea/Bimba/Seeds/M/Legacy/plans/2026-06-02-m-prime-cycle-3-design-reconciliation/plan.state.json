@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T09:46:28.366Z",
+  "updatedAt": "2026-06-25T09:56:35.787Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2092,7 +2092,10 @@
       "claimedAt": "2026-06-25T09:42:00.000Z",
       "completedAt": "2026-06-25T09:42:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T09:42:00.000Z", "text": "Audit: dispatch_moirai_night_pass found extensively in S4/ta-onta (13 hits: entitlement.ts, capabilities.ts, tools.ts, dispatch-validate.ts, moirai-dispatch.ts, CONTRACT.md, anima.md). NOT YET in S3/gateway/src/ — gap documented. Anima dispatch chain is wired; gateway route not yet plumbed per spec-ahead status."}
+        {
+          "at": "2026-06-25T09:42:00.000Z",
+          "text": "Audit: dispatch_moirai_night_pass found extensively in S4/ta-onta (13 hits: entitlement.ts, capabilities.ts, tools.ts, dispatch-validate.ts, moirai-dispatch.ts, CONTRACT.md, anima.md). NOT YET in S3/gateway/src/ — gap documented. Anima dispatch chain is wired; gateway route not yet plumbed per spec-ahead status."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -9424,14 +9427,19 @@
       "worktree": null
     },
     "48.T48.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T09:46:28.253Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T09:56:35.654Z",
       "claimedAt": "2026-06-25T09:46:28.253Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T09:56:35.654Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T09:56:35.654Z",
+          "text": "7 .base files parse and expose filters/views; live rows CT0=7 CT1=164 CT2=6 CT3=74 CT4a=59 CT4b=14 CT5=78; CT4b NOW open=1 complete=1 legacy=1 across 2 days; CT5 Night P0' rows=4; paths Idea/Bimba/World/Types/Coordinates/C/C1/C1'/CT/CT{0,1,2,3,4a,4b,5}/*.base + Idea/Bimba/World/AGENTS.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-48-t48-2-ct-ladder-bases",
-      "leaseExpiresAt": "2026-06-25T11:46:28.253Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T09:46:28.253Z",
       "runId": "20260625T094628Z-48-T48.2",
       "worktree": null
@@ -12466,11 +12474,12 @@
     {
       "runId": "20260625T094628Z-48-T48.2",
       "taskId": "48.T48.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T09:46:28.253Z",
       "owner": "codex-m-dev-48-t48-2-ct-ladder-bases",
       "leaseExpiresAt": "2026-06-25T11:46:28.253Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T09:56:35.654Z"
     }
   ],
   "activeRoute": {

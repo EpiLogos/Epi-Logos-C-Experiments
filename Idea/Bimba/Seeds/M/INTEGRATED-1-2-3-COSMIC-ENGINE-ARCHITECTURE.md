@@ -266,40 +266,22 @@ Already declared as a pending tranche by [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §4
 
 Corrected composition requirement: `ananda_vortex` must carry an `active_cell_value: AnandaVortexCell` with both raw/no-digi-root and digit-root faces. This is what lets the integrated surface show the raw vortex skeleton (`7X+1` hits `36/64`, `8X+0` hits `64/72`, and the parent marker gives `64+72+1=137`) while the operational heatmap remains driven by the digit-root face. The integrated plugin must not compute those values locally; it only renders profile-provided skeleton events and values.
 
-#### 4.2.2 `klein_flip` — boundary-quantised flip event (Tranche 02.2 / Tranche 10.X)
+#### 4.2.2 `klein_flip` — boundary-quantised flip event (Tranche 18.2 / DR-IG-2)
 
-Per Wave A M1 matrix Row 7 (CODE-PENDING). The integrated plugin's tick choreography (§6) needs this event to fire **synchronously across all three poles**: M1 visually folds K² through itself, M2 inverts the cymatic valence (helix-stripe colour reflection), M3 may or may not re-rotate the codon ring (decision below). Without a typed `klein_flip` field the composition has to detect the boundary from `tick12 == 5 || tick12 == 11` locally — which forks logic across renderers.
+Per [[13-decision-register]] DR-IG-2 and Tranche 18.2, the composition does not define a local flip carrier. The SSOT is the kernel `KleinFlipEvent` enum at `Body/S/S0/portal-core/src/events/flip_events.rs`, carried on `MathemeHarmonicProfile.klein_flip` and serialized across the bridge with a `kind` discriminator.
 
-Proposed field, mirroring the Ananda-vortex projection's `klein_flip_at_this_tick` boolean:
+The integrated plugin's tick choreography (§6) consumes all three variants exhaustively:
 
 ```rust
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CosmicKleinFlip {
-    /// True on the exact tick where the flip fires.
-    pub at_this_tick: bool,
-    /// The from-lens index (Lens N).
-    pub from_lens: u8,
-    /// The to-lens index (Lens N+3 mod 12).
-    pub to_lens: u8,
-    /// Discriminator for the kind of crossing.
-    pub kind: KleinFlipKind,
+#[serde(tag = "kind", rename_all = "camelCase")]
+pub enum KleinFlipEvent {
+    M1TritoneCrossing { tick12: u8, lens_pair: (u8, u8) },
+    M2CymaticValenceInvert { valence_before: Valence, valence_after: Valence },
+    M3CodonRotationCross { codon_before: u8, codon_after: u8 },
 }
-
-#[repr(u8)]
-pub enum KleinFlipKind {
-    /// tick 5 → 6, helix 0 → 1 (bimba → pratibimba)
-    BimbaToPratibimba = 0,
-    /// tick 11 → 0, helix 1 → 0 (möbius return)
-    MobiusReturn = 1,
-}
-
-// Added to MathemeHarmonicProfile:
-//   #[serde(default)]
-//   pub klein_flip: Option<CosmicKleinFlip>,
 ```
 
-The composition reads `klein_flip` once per tick and dispatches the boundary-quantised render path to all three poles atomically.
+The composition reads the bridged `klein_flip` event once per tick and dispatches the boundary-quantised render path to all three poles atomically: M1 folds K² through itself, M2 inverts cymatic valence, and M3 performs the codon-ring axis flip.
 
 #### 4.2.3 `cosmic_composition_state` — the composition's own readiness projection
 
@@ -804,7 +786,7 @@ If any compositionMount fails to instantiate, the composition renders the blocke
 ### 9.2 Pending (cycle-3 deliverables, named contract, no rebuild)
 
 - **Tranche 02.6** — Build out `m1-paramasiva-played-torus/` with the Bevy/wgpu renderer; expose `K2SurfaceHandle` and `CosmicEngineCompositionMount` for L0.
-- **Tranche 02.2 / 10.X** — Land `klein_flip: Option<CosmicKleinFlip>` field on `MathemeHarmonicProfile` + emitter in `vimarsha_reading.rs`.
+- **Tranche 18.2 / DR-IG-2** — Consume `klein_flip: Option<KleinFlipEvent>` on `MathemeHarmonicProfile`; the kernel enum at `Body/S/S0/portal-core/src/events/flip_events.rs` is the SSOT and the integrated plugin exhaustively handles M1 tritone crossing, M2 cymatic valence invert, and M3 codon rotation cross.
 - **Tranche 10.10** — `ananda_vortex: AnandaVortexProjection` field on `MathemeHarmonicProfile` (per [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §4.3).
 - **Tranche 10.X (proposed)** — `cosmic_composition_state: Option<CosmicCompositionState>` field on `MathemeHarmonicProfile` for inline composition readiness inspection.
 - **Tranche 07.X (this architecture)** — Replace `<CosmicEnginePanes>` with `<CosmicEngineSurface>` implementing composition-over-juxtaposition; add `CosmicEngineCompositionMount` exports to m1-paramasiva-played-torus, m2-parashakti, m3-mahamaya.

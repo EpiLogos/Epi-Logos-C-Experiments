@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 
 ## Ownership
 - `src/common/index.ts` — package public surface (re-exports all `common/` modules + browser helpers); compiled to `lib/common/index.js` (`main`).
-- `src/common/layout-claim.ts` — `IntegratedLayoutSlot` types + LayoutClaim contract; `composition-coordinator.ts` — claim arbitration (singleton/multi slots, geometric protection).
+- `src/common/layout-claim.ts` — `IntegratedLayoutSlot` types + LayoutClaim contract, including DR-TS-1 host shell placement for integrated compositions; `composition-coordinator.ts` — claim arbitration (singleton/multi slots, geometric protection).
 - `src/common/integrated-state.ts` + `state-coordinator.ts` — immutable `IntegratedViewState` snapshot + coordinator both plugins consume.
 - `src/common/integrated-readiness.ts` — typed `IntegratedReadiness` envelope, geometric-slot readiness folding, and composition blocker ledger consumed by the integrated plugins; `composition-load.ts` — mount-time composition loader that hard-rejects juxtaposition/raw-body violations and returns graceful readiness degradation for runtime blockers.
 - `src/common/empty-state.ts` + `src/browser/integrated-empty-state.tsx` — degraded empty-state contract/component (08.T1 step 3).

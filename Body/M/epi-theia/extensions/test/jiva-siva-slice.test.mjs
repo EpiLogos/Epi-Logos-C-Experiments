@@ -38,6 +38,14 @@ const {
     JIVA_SIVA_LAYOUT,
 } = require('../integrated-composition/lib/common/layout-claim.js');
 const {
+    dailyWidgetsForSide,
+    PRATIBIMBA_LAYOUT_DAILY_0_1,
+    PRATIBIMBA_LAYOUT_IDE_DEEP,
+} = require('../pratibimba-layouts/lib/common/layout-types.js');
+const {
+    OMNIPANEL_TABS,
+} = require('../omnipanel-shell/lib/common/omnipanel-types.js');
+const {
     PrivacyViolationError,
     validateEvidenceEnvelopeForRange
 } = require('../integrated-composition/lib/common/privacy-scrubber.js');
@@ -199,6 +207,33 @@ test('jiva-siva layout names M4 center, M5 side, M0 mini-inspector', () => {
         [...JIVA_SIVA_LAYOUT.miniInspectorOwners].sort(),
         ['m0-anuttara', 'm5-epii']
     );
+});
+
+test('jiva-siva layout claim is shell-1 personal flow-writing inside daily-0-1', () => {
+    assert.equal(JIVA_SIVA_LAYOUT.id, 'jiva-siva.integrated');
+    assert.equal(JIVA_SIVA_LAYOUT.hostLayoutId, PRATIBIMBA_LAYOUT_DAILY_0_1);
+    assert.equal(JIVA_SIVA_LAYOUT.shellId, 'shell-1');
+    assert.equal(JIVA_SIVA_LAYOUT.dailyShellFace, '1-personal');
+    assert.equal(JIVA_SIVA_LAYOUT.surfaceRole, 'personal-flow-writing');
+    assert.notEqual(
+        JIVA_SIVA_LAYOUT.hostLayoutId,
+        JIVA_SIVA_LAYOUT.id,
+        'jiva-siva.integrated is a composition claim, not a third workspace layout'
+    );
+
+    const personalSide = dailyWidgetsForSide('1-personal');
+    const cosmicSide = dailyWidgetsForSide('0-cosmic');
+    assert.ok(personalSide.includes('pratibimba.body.agent-checkin'));
+    assert.ok(personalSide.includes('pratibimba.omnipanel.shell'));
+    assert.ok(!cosmicSide.includes('pratibimba.body.agent-checkin'));
+
+    for (const tab of OMNIPANEL_TABS) {
+        assert.deepEqual(
+            tab.availableInLayouts,
+            [PRATIBIMBA_LAYOUT_DAILY_0_1, PRATIBIMBA_LAYOUT_IDE_DEEP],
+            `${tab.id} must remain available across the daily and deep layouts`
+        );
+    }
 });
 
 // ---- ConsentGate ---------------------------------------------------------

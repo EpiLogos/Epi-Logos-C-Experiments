@@ -53,10 +53,23 @@ export interface ResolvedLayoutClaim {
     readonly conflictReason: string | null;
 }
 
+export type IntegratedHostLayoutId = 'daily-0-1' | 'ide-deep';
+export type IntegratedShellId = 'shell-0' | 'shell-1' | 'ide-deep';
+export type IntegratedDailyShellFace = '0-cosmic' | '1-personal' | null;
+export type IntegratedSurfaceRole = 'cosmic-composition' | 'personal-flow-writing';
+
 export interface IntegratedNamedLayout {
     readonly id: 'cosmic-engine.integrated' | 'jiva-siva.integrated';
     readonly pluginId: 'plugin-integrated-1-2-3' | 'plugin-integrated-4-5-0';
     readonly rangeId: '1-2-3' | '4-5-0';
+    /** Workspace layout that hosts this integrated composition. DR-TS-1 keeps both compositions inside daily-0-1. */
+    readonly hostLayoutId: IntegratedHostLayoutId;
+    /** Shell side inside the host layout, not a third workspace layout. */
+    readonly shellId: IntegratedShellId;
+    /** Daily 0/1 face claimed by this composition; null for non-daily hosts. */
+    readonly dailyShellFace: IntegratedDailyShellFace;
+    /** Product-surface role for routing and tests that need the personal flow-writing distinction. */
+    readonly surfaceRole: IntegratedSurfaceRole;
     readonly centerStageOwner: MExtensionId;
     readonly sidePanelOwner: MExtensionId;
     readonly evidencePanelOwner: MExtensionId;
@@ -94,6 +107,10 @@ export const COSMIC_ENGINE_LAYOUT: IntegratedNamedLayout = Object.freeze({
     id: 'cosmic-engine.integrated',
     pluginId: 'plugin-integrated-1-2-3',
     rangeId: '1-2-3',
+    hostLayoutId: 'daily-0-1',
+    shellId: 'shell-0',
+    dailyShellFace: '0-cosmic',
+    surfaceRole: 'cosmic-composition',
     // Per 08.T3 plan body: "M3 cosmic wheel center, M2 lens/cymatic/
     // planetary-chakral backdrop or left stage, M1 torus/path/audio-walk
     // inspector as side or lower stage."
@@ -122,6 +139,10 @@ export const JIVA_SIVA_LAYOUT: IntegratedNamedLayout = Object.freeze({
     id: 'jiva-siva.integrated',
     pluginId: 'plugin-integrated-4-5-0',
     rangeId: '4-5-0',
+    hostLayoutId: 'daily-0-1',
+    shellId: 'shell-1',
+    dailyShellFace: '1-personal',
+    surfaceRole: 'personal-flow-writing',
     centerStageOwner: 'm4-nara',
     sidePanelOwner: 'm5-epii',
     evidencePanelOwner: 'm5-epii',
