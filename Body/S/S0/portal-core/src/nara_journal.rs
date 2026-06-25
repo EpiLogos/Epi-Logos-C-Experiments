@@ -807,3 +807,59 @@ fn normalize_highlight_category(
         )))
     }
 }
+
+#[cfg(test)]
+mod period_reading {
+    use super::*;
+
+    fn observation() -> NaraSymbolicObservation {
+        NaraSymbolicObservation {
+            observation_kind: NaraObservationKind::HeuristicDerived,
+            detected_activity_kind: NaraActivityKind::Journal,
+            word_count: 12,
+            line_count: 1,
+            mentioned_coordinates: vec!["M4-4".to_owned()],
+            mentioned_lenses: vec![3],
+            mentioned_positions: vec![2],
+            mentioned_oracle_markers: Vec::new(),
+            emotional_valence_hint: Some(NaraEmotionalValenceHint::Negative),
+            privacy_class: EventPrivacyClass::ProtectedLocalDerived,
+            state_effect: ActivityStateEffect::EphemeralContextOnly,
+            confidence: 0.75,
+            heuristic_basis: vec!["coordinate-mentions".to_owned()],
+        }
+    }
+
+    #[test]
+    fn reconstructs_hopf_projected_trajectory_without_raw_bodies() {
+        let reading = super::period_reading(NaraPeriodReadingInput {
+            period_id: "period:unit".to_owned(),
+            day_range: Some(NaraPeriodDayRange {
+                start_day_id: "01-06-2026".to_owned(),
+                end_day_id: "02-06-2026".to_owned(),
+            }),
+            observations: vec![observation()],
+            graphiti_episodes: vec![NaraPeriodGraphitiEpisode {
+                episode_handle: "graphiti://episode/unit".to_owned(),
+                day_id: "01-06-2026".to_owned(),
+                chronos_handle: "chronos://unit".to_owned(),
+                kairos_handle: "kairos://unit".to_owned(),
+                history_handle: "history://unit".to_owned(),
+                q_composed: [0.0, 1.0, 0.0, 0.0],
+            }],
+            chronos_handles: Vec::new(),
+            kairos_handles: Vec::new(),
+            history_handles: Vec::new(),
+            include_vama_classifier: false,
+        })
+        .expect("period reading reconstructs");
+
+        assert_eq!(reading.trajectory_observation_count, 1);
+        assert_eq!(reading.hopf_projection[0].hopf_degree, 180.0);
+        assert_eq!(reading.hopf_projection[0].hopf_fiber, 1);
+        assert!(!reading.protected_bodies_returned);
+        let json = serde_json::to_string(&reading).expect("reading serializes");
+        assert!(!json.contains("qComposed"));
+        assert!(!json.contains("rawBody"));
+    }
+}

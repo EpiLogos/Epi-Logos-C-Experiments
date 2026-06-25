@@ -270,7 +270,7 @@ already maintains.
 ## 9. Tranches
 
 The **L1 vertical slice is 48.1 → 48.4** (pure `.base` + validator, zero core-code risk); **48.5 →
-48.7 are the L2 / code-reality follow-ons**, named and flagged to their owning specs.
+48.7 are the L2 / code-reality follow-ons**, each implementing a contract surface specified concretely in §13 (proposed for ratify-in-place), flagged to its owning spec.
 
 ### Tranche 48.1 — `.base` artifact class + the CS/Pratibimba framing law *(L1; canon/contract + bimba-vault-validate)*
 
@@ -331,7 +331,7 @@ Land `s1'.base.ensure` in `Body/S/S1/hen-compiler-core/` as a sibling of the spe
 `s1'.moc.ensure` / `s1'.canvas.create_or_update`: idempotently emit/refresh a `{Name}.base` whose
 columns/filters are **derived from the owning CTx frontmatter contract** Hen already validates.
 Reflection-residency guard (reuses the DR-PSS-4 canon-write boundary). Requires `gitnexus_impact`
-before editing the Hen residency/promotion surface; flag the contract surface to [[S1-SPEC]].
+before editing the Hen residency/promotion surface; implement the surface specified in §13.B–C, then flag the ratified surface to [[S1-SPEC]] for canon.
 
 **Implementation scope:** one new Hen tool + a CTx-contract→base-schema deriver + residency guard +
 tests; no new package.
@@ -342,7 +342,7 @@ canon residency is refused; `cargo test -p` Hen passes.
 
 ### Tranche 48.6 — M-stack BasesView: render service + static/dynamic adapters *(L2; epi-theia; depends 48.2–48.3)*
 
-A new M-stack bases-view capability modelled on `CosmicClockRenderService.tsx`: a `ReactWidget` +
+A new M-stack bases-view capability implementing the API in §13.D, modelled on `CosmicClockRenderService.tsx`: a `ReactWidget` +
 `AbstractViewContribution` (the `personal-cymatic-field.tsx` pattern) injecting `SHARED_BRIDGE_ADAPTER`;
 a pure `basesModelFromRecords(records, config) → BasesRenderModel` render service with `table` /
 `cards` / `list` / `image` view modes (group/sort client-side per `relations-layer-panel.tsx`); and a
@@ -361,7 +361,7 @@ import).
 
 ### Tranche 48.7 — Data-layer completion: `.base` snapshot emission + `s2.graph.list_by_filter` *(L2; owning specs S2/S3; depends 48.6)*
 
-Complete the coordinate-keyed data layer the BasesView reads: (a) extend the projection pipeline
+Complete the coordinate-keyed data layer the BasesView reads, implementing the surface in §13.E: (a) extend the projection pipeline
 (`Idea/Bimba/Map/datasets/fetch_bimba.py` + the `bimba-vault-map` skill) to emit a compact `.base`
 snapshot artifact beside the 1018 Map node files (the static source — a C5 reflection at a
 `c_3_projected_at` instant); (b) add the additive gateway method `s2.graph.list_by_filter(coordinateScope,
@@ -422,3 +422,135 @@ vs base are two renderers of it), [[45-bimba-map-indexing-and-dox-okf-unificatio
 downward-reflection tree + DOX/OKF this extends; the `/Map` projection it views),
 [[40-bimba-canon-update-ledger]] (the CU-* ledger is a base-shaped review surface),
 [[14-no-orphan-audit-and-release-gates]] ("Open Gaps" bases are a standing no-orphan instrument).
+
+---
+
+## 13. Contract surfaces (proposed — ratify in place)
+
+The L2 tranches (48.5–48.7) implement bodies against these. They are shaped here from the system as
+already built — the specced Hen `s1'.moc.ensure` / `s1'.canvas.create_or_update` siblings, the CTx
+frontmatter contracts, the gateway `s2.*` dispatch surface, and the `CosmicClockRenderService`
+render-model pattern. Adjust a signature here in the doc, not in code.
+
+### 13.A — The base-view artifact (`base-view` role)
+
+A standalone `.base` is pure Obsidian YAML with no frontmatter slot, so it cannot satisfy the
+coordinate-frontmatter law. **Decision:** the canonical, Hen-emitted, Hen-validatable artifact is a
+**markdown note** carrying C-family frontmatter with an embedded ` ```base ` block; a pure `.base`
+file and a JSON snapshot are *export forms* (§13.E / 48.7) for the standalone-Obsidian and
+Theia-static paths.
+
+````md
+---
+coordinate: "M2-1"                 # coordinate / zone this base reflects
+c_4_artifact_role: "base-view"     # NEW role; joins map-index, now, template, …
+c_1_ct_type: "CT1"                 # the CTx it is the read-side of (omit for zone / MOC bases)
+c_5_reflects: "[[M2-1]]"           # the MOC / coordinate whose belonging-law it extends
+c_3_projected_from: "neo4j://Bimba/M2-1"   # reflection provenance (as map-index)
+c_3_projected_at: "<ISO>"
+c_0_source_coordinates: ["[[M2-1]]"]
+---
+```base
+filters: { and: ['coordinate.startsWith("M2-1")', 'c_4_artifact_role == "map-index"'] }
+views:
+  - { type: cards, name: "M2-1 MEF Lenses", image: c_1_symbol_image, order: [coordinate, title] }
+```
+````
+
+Residency law (bimba-vault-validate, 48.1): `base-view` ∈ reflection residency only — beside its MOC
+under `World/Types/Coordinates/**`, or under `Map/**` / `Seeds/**` / `Empty/Present/**`. **Never**
+flat `World/*.md` or `Bimba/**` canon. A `base-view` resolving into canon residency is a validation
+ERROR (reuses the DR-PSS-4 boundary).
+
+### 13.B — `s1'.base.ensure` (Hen / S1', sibling of `s1'.moc.ensure`)
+
+```
+s1'.base.ensure(params) -> result
+
+params:
+  coordinate     : string                  # type-authority / coordinate / CTx the base reflects
+  ct_type?       : "CT0".."CT5"            # if deriving from a CTx contract
+  scope          : "ctx" | "zone" | "moc"  # which base shape (§4 ctx / §5 zone / §3 moc-triad)
+  residency      : string                  # vault path; validated reflection-only (§13.A)
+  views?         : BaseViewSpec[]          # explicit override; else derived (§13.C)
+result:
+  path            : string                 # emitted {coord}.base-view.md
+  derived_columns : string[]               # frontmatter keys surfaced
+  ok              : bool
+
+behaviour:
+  1. resolve the owning CTx frontmatter contract (or the coordinate's frontmatter shape)
+  2. derive columns / filters / views from that contract (§13.C) unless `views` overrides
+  3. emit / refresh the base-view note idempotently (stable ordering → no-op when unchanged)
+  4. residency guard: refuse if `residency` resolves into canon (reuse DR-PSS-4)
+```
+
+Lives beside `s1'.moc.ensure` / `s1'.canvas.create_or_update` in the README §Operational-Gaps
+surface, emitted together so the MOC triad (`.md` + `.canvas` + `.base`) is one Hen act. Rust home:
+`Body/S/S1/hen-compiler-core/`; gateway method `s1'.base.ensure` on the S1' dispatch surface.
+
+### 13.C — CTx-contract → base-schema derivation (deterministic)
+
+The base schema is a pure function of the CTx frontmatter contract Hen already validates:
+
+| Element | Derivation rule |
+|---|---|
+| `filter` | `c_1_ct_type == "<CTx>"` (+ `coordinate.startsWith(scope)` for zone bases) |
+| `columns` | the CTx's declared frontmatter keys in position order (CT4b → the `p0…p5` keys; others → their `## N` section keys), plus `coordinate`, and `c_5_reflection_complete` where the contract carries it |
+| `group_by` | the contract's dominant context key — `c_3_day_id` (CT4b), `t_0_thought_type` (CT5), coordinate-family (map-index) |
+| `sort` | `c_3_created_at DESC` default, else `coordinate ASC` |
+| `view` | `table` default; `cards` + `image:` (first asset/symbol key) for `/Map` + MEF sets |
+| Day / Night′ | Day view filters the forward fields; Night′ view filters the `P0'` / inversion + `c_5_reflection_complete == false` set |
+
+So `s1'.base.ensure(ct_type:"CT4b")` deterministically yields the period-console columns — no schema
+is invented; the read-shape is computed from the write-shape.
+
+### 13.D — Theia BasesView API (M-stack, `m-extension-runtime`)
+
+```ts
+// bases-view.ts — contract types (no S-stack import)
+export interface PropPredicate {
+  property: string; op: 'eq' | 'neq' | 'startsWith' | 'lt' | 'gt' | 'exists' | 'missing'; value?: unknown;
+}
+export interface BaseViewConfig {
+  source: 'static' | 'dynamic';
+  coordinateScope: string;                 // "M2-1" prefix | "" all
+  filter: PropPredicate[];
+  groupBy?: string;
+  sort?: { property: string; direction: 'ASC' | 'DESC' }[];
+  view: 'table' | 'cards' | 'list' | 'image';
+  columns: string[];
+  image?: string;                          // frontmatter key for card cover
+}
+export interface BasesRecord { coordinate: string; [key: string]: unknown }   // coordinate = the join
+export interface BasesRenderModel {
+  groups: { key: string; rows: BasesRecord[] }[];
+  columns: string[]; view: BaseViewConfig['view']; pendingFields: string[];
+}
+export interface BasesDataSource { fetch(config: BaseViewConfig): Promise<BasesRecord[]>; }
+
+// pure render-model fn — mirrors cosmicClockModelFromProps(); group / sort applied client-side
+export function basesModelFromRecords(records: BasesRecord[], config: BaseViewConfig): BasesRenderModel;
+```
+
+- `StaticBasesSource.fetch` → `invokeGatewayRpc('s1'.vault.read_file', { path })` over a `.base` snapshot.
+- `DynamicBasesSource.fetch` → `invokeGatewayRpc('s2.graph.list_by_filter' | 's2.graph.query' | 's2'.retrieve', { coordinateScope, propertyFilters, limit })`; re-fired on `onCoordinateContext` / `onObservabilityEvent`.
+- `BasesViewWidget extends ReactWidget` + `BasesViewContribution extends AbstractViewContribution`
+  (the `personal-cymatic-field.tsx` pattern), `@inject(SHARED_BRIDGE_ADAPTER)`; rows click-dispatch
+  `updateCoordinateContext({ selectedCoordinate })` so panels cross-filter via shared
+  `CoordinateContext`. All data over `invokeGatewayRpc` — no `Body/S/**` import (43.5).
+
+### 13.E — `s2.graph.list_by_filter` (gateway, additive)
+
+```
+method : "s2.graph.list_by_filter"
+params : { coordinateScope: string, propertyFilters: PropPredicate[], limit?: number }
+returns: { rows: BasesRecord[] }   # each row: { coordinate, c_4_*, c_5_*, title, … }
+dispatch: Body/S/S3/gateway-contract/src/dispatch_plan.rs        # additive entry
+impl    : Body/S/S2/graph-services/src/retrieval/coordinate.rs   # over query_by_coordinate / query_by_family + predicate filter
+```
+
+Additive only (the `HybridRetriever` Cypher already `RETURN`s the `c_4_*` columns); until it lands,
+the dynamic adapter falls back to `s2.graph.query` + `s2'.coordinate.cypher`. The `.base` snapshot
+emitter (static source) extends `Idea/Bimba/Map/datasets/fetch_bimba.py` + the `bimba-vault-map`
+skill — same projection pipeline, new artifact.

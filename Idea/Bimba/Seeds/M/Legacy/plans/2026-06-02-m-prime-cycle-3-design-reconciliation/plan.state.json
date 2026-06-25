@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T09:18:15.137Z",
+  "updatedAt": "2026-06-25T09:32:19.394Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -890,30 +890,42 @@
     },
     "05.T5.8": {
       "status": "done",
-      "updatedAt": "2026-06-25T09:20:00.000Z",
+      "updatedAt": "2026-06-25T09:28:41.604Z",
       "claimedAt": "2026-06-25T09:13:40.836Z",
-      "completedAt": "2026-06-25T09:20:00.000Z",
+      "completedAt": "2026-06-25T09:28:41.604Z",
       "evidence": [
-        {"at": "2026-06-25T09:20:00.000Z", "text": "Accepted. period_reading API on nara_journal.rs, committed."}
+        {
+          "at": "2026-06-25T09:20:00.000Z",
+          "text": "Accepted. period_reading API on nara_journal.rs, committed."
+        },
+        {
+          "at": "2026-06-25T09:28:41.604Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core nara_journal::period_reading passed 1/1; protected-local invariant cargo test -p portal-core period_reading_reconstructs_hopf_projected_trajectory_from_handles_without_raw_bodies passed 1/1; key files Body/S/S0/portal-core/src/nara_journal.rs, Body/S/S0/portal-core/tests/nara_journal_parser.rs, Body/S/S0/portal-core/AGENTS.md"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-8-period-reading",
-      "leaseExpiresAt": "2026-06-25T11:13:40.836Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T09:13:40.836Z",
       "runId": "20260625T091340Z-05-T5.8",
       "worktree": null
     },
     "05.T5.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T09:32:19.277Z",
+      "claimedAt": "2026-06-25T09:21:49.804Z",
+      "completedAt": "2026-06-25T09:32:19.277Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T09:32:19.277Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core personal_identity::proposal_lifecycle passed 3/3; pnpm --dir Body/M/epi-theia/extensions/m4-nara test passed 76/76; node --test Body/M/epi-theia/extensions/test/m4-nara-pratibimba-coordinate.test.mjs passed 6/6; key files: Body/S/S0/portal-core/src/personal_identity.rs, Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/pratibimba-coordinate.tsx, Body/M/epi-theia/extensions/test/m4-nara-pratibimba-coordinate.test.mjs, Body/S/S0/portal-core/AGENTS.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-05-t5-9-identity-proposals",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T09:21:49.804Z",
+      "runId": "20260625T092149Z-05-T5.9",
       "worktree": null
     },
     "05.T5.10": {
@@ -9444,14 +9456,18 @@
       "worktree": null
     },
     "48.T48.5": {
-      "status": "blocked",
-      "updatedAt": "2026-06-25T09:05:30.485Z",
+      "status": "pending",
+      "updatedAt": "2026-06-25T09:29:41.628Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-25T09:05:30.485Z",
           "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        },
+        {
+          "at": "2026-06-25T09:29:41.628Z",
+          "text": "Contract surface specified in Track 48 §13 (ratify-in-place); ready to implement."
         }
       ],
       "notes": null,
@@ -9462,14 +9478,18 @@
       "worktree": null
     },
     "48.T48.6": {
-      "status": "blocked",
-      "updatedAt": "2026-06-25T09:05:31.383Z",
+      "status": "pending",
+      "updatedAt": "2026-06-25T09:29:42.628Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-25T09:05:31.383Z",
           "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        },
+        {
+          "at": "2026-06-25T09:29:42.628Z",
+          "text": "Contract surface specified in Track 48 §13 (ratify-in-place); ready to implement."
         }
       ],
       "notes": null,
@@ -9480,14 +9500,18 @@
       "worktree": null
     },
     "48.T48.7": {
-      "status": "blocked",
-      "updatedAt": "2026-06-25T09:05:32.209Z",
+      "status": "pending",
+      "updatedAt": "2026-06-25T09:29:43.512Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-25T09:05:32.209Z",
           "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        },
+        {
+          "at": "2026-06-25T09:29:43.512Z",
+          "text": "Contract surface specified in Track 48 §13 (ratify-in-place); ready to implement."
         }
       ],
       "notes": null,
@@ -12377,11 +12401,12 @@
     {
       "runId": "20260625T091340Z-05-T5.8",
       "taskId": "05.T5.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T09:13:40.836Z",
       "owner": "codex-m-dev-05-t5-8-period-reading",
       "leaseExpiresAt": "2026-06-25T11:13:40.836Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T09:28:41.604Z"
     },
     {
       "runId": "20260625T091351Z-48-T48.1",
@@ -12392,26 +12417,36 @@
       "leaseExpiresAt": "2026-06-25T11:13:51.087Z",
       "worktree": null,
       "completedAt": "2026-06-25T09:18:15.061Z"
+    },
+    {
+      "runId": "20260625T092149Z-05-T5.9",
+      "taskId": "05.T5.9",
+      "status": "done",
+      "startedAt": "2026-06-25T09:21:49.804Z",
+      "owner": "codex-m-dev-05-t5-9-identity-proposals",
+      "leaseExpiresAt": "2026-06-25T11:21:49.804Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T09:32:19.277Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T09:13:30.553Z",
-    "updatedAt": "2026-06-25T09:13:30.553Z",
+    "createdAt": "2026-06-25T09:21:24.054Z",
+    "updatedAt": "2026-06-25T09:21:24.054Z",
     "taskIds": [
-      "05.T5.8",
       "05.T5.9",
       "07.T7.8",
-      "07.T7.9"
+      "07.T7.9",
+      "08.T8.5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.8": "in-session",
       "05.T5.9": "in-session",
       "07.T7.8": "in-session",
-      "07.T7.9": "in-session"
+      "07.T7.9": "in-session",
+      "08.T8.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

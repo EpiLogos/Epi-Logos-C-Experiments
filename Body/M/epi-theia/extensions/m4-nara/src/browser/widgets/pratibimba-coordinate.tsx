@@ -405,7 +405,7 @@ export class PratibimbaCoordinateWidget extends ReactWidget {
         try {
             const raw = await this.bridge.invokeGatewayRpc(PROPOSALS_LIST_METHOD, {
                 coordinate: '#4.4.4.4',
-                includeStates: ['proposed', 'reviewed', 'applied']
+                includeStates: ['proposed', 'reviewed']
             });
             this.proposals = normalizeIdentityProposals(raw);
             this.status = 'ready';

@@ -259,6 +259,217 @@ impl PersonalIdentityProfile {
     pub fn composed_quaternion(&self, q_transit: [f32; 4], q_activity: [f32; 4]) -> [f32; 4] {
         compose_personal_quaternion(self.q_personal, q_transit, q_activity)
     }
+
+    pub fn apply_identity_augment(&mut self, q_identity: [f32; 4]) {
+        let q_identity = quat_normalize(q_identity);
+        self.q_identity = q_identity;
+        self.q_personal = integrate_nara_quintessence(q_identity, &[]);
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IdentityAugmentProposalState {
+    Proposed,
+    Reviewed,
+    Accepted,
+    Rejected,
+    Applied,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IdentityAugmentReviewVerdict {
+    Accept,
+    Reject,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct IdentityAugmentProposal {
+    pub proposal_handle: String,
+    pub state: IdentityAugmentProposalState,
+    pub summary: String,
+    pub source_adapter_handle: String,
+    pub created_at: String,
+    pub reviewed_at: Option<String>,
+    pub decided_at: Option<String>,
+    pub applied_at: Option<String>,
+    q_identity_candidate: [f32; 4],
+}
+
+impl IdentityAugmentProposal {
+    pub fn proposed(
+        proposal_handle: impl Into<String>,
+        summary: impl Into<String>,
+        source_adapter_handle: impl Into<String>,
+        created_at: impl Into<String>,
+        q_identity_candidate: [f32; 4],
+    ) -> Result<Self, PersonalIdentityError> {
+        Ok(Self {
+            proposal_handle: required(proposal_handle.into(), "proposal_handle")?,
+            state: IdentityAugmentProposalState::Proposed,
+            summary: required(summary.into(), "summary")?,
+            source_adapter_handle: required(source_adapter_handle.into(), "source_adapter_handle")?,
+            created_at: required(created_at.into(), "created_at")?,
+            reviewed_at: None,
+            decided_at: None,
+            applied_at: None,
+            q_identity_candidate: quat_normalize(q_identity_candidate),
+        })
+    }
+
+    pub fn view(&self) -> IdentityAugmentProposalView {
+        IdentityAugmentProposalView {
+            proposal_handle: self.proposal_handle.clone(),
+            state: self.state,
+            summary: self.summary.clone(),
+            source_adapter_handle: self.source_adapter_handle.clone(),
+            created_at: self.created_at.clone(),
+            reviewed_at: self.reviewed_at.clone(),
+        }
+    }
+
+    pub fn q_identity_candidate(&self) -> [f32; 4] {
+        self.q_identity_candidate
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityAugmentProposalView {
+    pub proposal_handle: String,
+    pub state: IdentityAugmentProposalState,
+    pub summary: String,
+    pub source_adapter_handle: String,
+    pub created_at: String,
+    pub reviewed_at: Option<String>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct IdentityAugmentProposalAdapter {
+    proposals: Vec<IdentityAugmentProposal>,
+}
+
+impl IdentityAugmentProposalAdapter {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn submit(
+        &mut self,
+        proposal: IdentityAugmentProposal,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        if self
+            .proposals
+            .iter()
+            .any(|existing| existing.proposal_handle == proposal.proposal_handle)
+        {
+            return Err(PersonalIdentityError::DuplicateIdentityAugmentProposal {
+                proposal_handle: proposal.proposal_handle,
+            });
+        }
+        let view = proposal.view();
+        self.proposals.push(proposal);
+        Ok(view)
+    }
+
+    pub fn pending_proposal_views(&self) -> Vec<IdentityAugmentProposalView> {
+        self.proposals
+            .iter()
+            .filter(|proposal| {
+                matches!(
+                    proposal.state,
+                    IdentityAugmentProposalState::Proposed | IdentityAugmentProposalState::Reviewed
+                )
+            })
+            .map(IdentityAugmentProposal::view)
+            .collect()
+    }
+
+    pub fn review(
+        &mut self,
+        proposal_handle: &str,
+        reviewed_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let reviewed_at = required(reviewed_at.into(), "reviewed_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        transition_identity_proposal(proposal, IdentityAugmentProposalState::Reviewed)?;
+        proposal.reviewed_at = Some(reviewed_at);
+        Ok(proposal.view())
+    }
+
+    pub fn decide(
+        &mut self,
+        proposal_handle: &str,
+        verdict: IdentityAugmentReviewVerdict,
+        decided_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let decided_at = required(decided_at.into(), "decided_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        let next = match verdict {
+            IdentityAugmentReviewVerdict::Accept => IdentityAugmentProposalState::Accepted,
+            IdentityAugmentReviewVerdict::Reject => IdentityAugmentProposalState::Rejected,
+        };
+        transition_identity_proposal(proposal, next)?;
+        proposal.decided_at = Some(decided_at);
+        Ok(proposal.view())
+    }
+
+    pub fn apply(
+        &mut self,
+        proposal_handle: &str,
+        profile: &mut PersonalIdentityProfile,
+        applied_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let applied_at = required(applied_at.into(), "applied_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        transition_identity_proposal(proposal, IdentityAugmentProposalState::Applied)?;
+        profile.apply_identity_augment(proposal.q_identity_candidate);
+        proposal.applied_at = Some(applied_at);
+        Ok(proposal.view())
+    }
+
+    fn find_mut(
+        &mut self,
+        proposal_handle: &str,
+    ) -> Result<&mut IdentityAugmentProposal, PersonalIdentityError> {
+        self.proposals
+            .iter_mut()
+            .find(|proposal| proposal.proposal_handle == proposal_handle)
+            .ok_or_else(|| PersonalIdentityError::UnknownIdentityAugmentProposal {
+                proposal_handle: proposal_handle.to_owned(),
+            })
+    }
+}
+
+fn transition_identity_proposal(
+    proposal: &mut IdentityAugmentProposal,
+    next: IdentityAugmentProposalState,
+) -> Result<(), PersonalIdentityError> {
+    let allowed = matches!(
+        (proposal.state, next),
+        (
+            IdentityAugmentProposalState::Proposed,
+            IdentityAugmentProposalState::Reviewed
+        ) | (
+            IdentityAugmentProposalState::Reviewed,
+            IdentityAugmentProposalState::Accepted
+        ) | (
+            IdentityAugmentProposalState::Reviewed,
+            IdentityAugmentProposalState::Rejected
+        ) | (
+            IdentityAugmentProposalState::Accepted,
+            IdentityAugmentProposalState::Applied
+        )
+    );
+    if !allowed {
+        return Err(PersonalIdentityError::InvalidIdentityAugmentTransition {
+            from: proposal.state,
+            to: next,
+        });
+    }
+    proposal.state = next;
+    Ok(())
 }
 
 pub fn integrate_nara_quintessence(
@@ -325,16 +536,35 @@ pub fn decompose_bioquaternion(q_composed: [f32; 4]) -> ([f32; 4], [f32; 4]) {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PersonalIdentityError {
-    EmptyField { field: &'static str },
+    EmptyField {
+        field: &'static str,
+    },
     InvalidKerykeionNatalJson(String),
     InvalidIdentityHash,
     MissingPlanetsArray,
-    MissingNatalPlanet { planet: String },
-    DuplicateNatalPlanet { planet: String },
+    MissingNatalPlanet {
+        planet: String,
+    },
+    DuplicateNatalPlanet {
+        planet: String,
+    },
     UnknownNatalPlanet,
     InvalidPlanetId(u64),
-    InvalidPlanetDegree { planet: String, degree: String },
+    InvalidPlanetDegree {
+        planet: String,
+        degree: String,
+    },
     ZeroElementalWeight,
+    DuplicateIdentityAugmentProposal {
+        proposal_handle: String,
+    },
+    UnknownIdentityAugmentProposal {
+        proposal_handle: String,
+    },
+    InvalidIdentityAugmentTransition {
+        from: IdentityAugmentProposalState,
+        to: IdentityAugmentProposalState,
+    },
 }
 
 impl fmt::Display for PersonalIdentityError {
@@ -359,6 +589,21 @@ impl fmt::Display for PersonalIdentityError {
                 write!(f, "invalid natal degree for {planet}: {degree}")
             }
             Self::ZeroElementalWeight => write!(f, "natal elemental weights sum to zero"),
+            Self::DuplicateIdentityAugmentProposal { proposal_handle } => {
+                write!(
+                    f,
+                    "identity augment proposal already exists: {proposal_handle}"
+                )
+            }
+            Self::UnknownIdentityAugmentProposal { proposal_handle } => {
+                write!(f, "unknown identity augment proposal: {proposal_handle}")
+            }
+            Self::InvalidIdentityAugmentTransition { from, to } => {
+                write!(
+                    f,
+                    "invalid identity augment proposal transition: {from:?} -> {to:?}"
+                )
+            }
         }
     }
 }
@@ -551,6 +796,162 @@ pub fn identity_hash_kinds_during_cutover(value: &str) -> Option<[IdentityHashKi
         ])
     } else {
         None
+    }
+}
+
+#[cfg(test)]
+mod proposal_lifecycle {
+    use super::*;
+
+    const COMPLETE_NATAL: &str = include_str!("../tests/fixtures/kerykeion_natal_complete.json");
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    const NATAL_HANDLE: &str = "protected://nara/kairos/natal/proposal-lifecycle";
+
+    #[test]
+    fn proposed_reviewed_and_accepted_do_not_mutate_q_identity_until_applied() {
+        let mut profile = PersonalIdentityProfile::from_kerykeion_json(
+            NATAL_HANDLE,
+            IDENTITY_HASH,
+            COMPLETE_NATAL,
+        )
+        .expect("fixture should derive protected identity");
+        let original_q_identity = profile.q_identity;
+        let original_q_personal = profile.q_personal;
+        let candidate_q_identity = [0.0, 1.0, 1.0, 0.0];
+
+        let mut adapter = IdentityAugmentProposalAdapter::new();
+        let submitted = adapter
+            .submit(
+                IdentityAugmentProposal::proposed(
+                    "identity-proposal://birthdate-layer",
+                    "Birthdate encoding layer ready for M5 review.",
+                    "adapter://m4/identity-augment",
+                    "2026-06-25T09:00:00.000Z",
+                    candidate_q_identity,
+                )
+                .expect("proposal is valid"),
+            )
+            .expect("proposal submits");
+        assert_eq!(submitted.state, IdentityAugmentProposalState::Proposed);
+        assert_eq!(profile.q_identity, original_q_identity);
+
+        let reviewed = adapter
+            .review(
+                "identity-proposal://birthdate-layer",
+                "2026-06-25T09:01:00.000Z",
+            )
+            .expect("proposal reviews");
+        assert_eq!(reviewed.state, IdentityAugmentProposalState::Reviewed);
+        assert_eq!(profile.q_identity, original_q_identity);
+
+        let accepted = adapter
+            .decide(
+                "identity-proposal://birthdate-layer",
+                IdentityAugmentReviewVerdict::Accept,
+                "2026-06-25T09:02:00.000Z",
+            )
+            .expect("proposal accepts");
+        assert_eq!(accepted.state, IdentityAugmentProposalState::Accepted);
+        assert_eq!(profile.q_identity, original_q_identity);
+        assert_eq!(profile.q_personal, original_q_personal);
+
+        let applied = adapter
+            .apply(
+                "identity-proposal://birthdate-layer",
+                &mut profile,
+                "2026-06-25T09:03:00.000Z",
+            )
+            .expect("accepted proposal applies");
+        assert_eq!(applied.state, IdentityAugmentProposalState::Applied);
+        assert_ne!(profile.q_identity, original_q_identity);
+        assert_approx_quat(profile.q_identity, quat_normalize(candidate_q_identity));
+        assert_eq!(
+            profile.q_personal,
+            integrate_nara_quintessence(profile.q_identity, &[])
+        );
+        assert!(adapter.pending_proposal_views().is_empty());
+    }
+
+    #[test]
+    fn rejected_proposal_cannot_apply_or_mutate_q_identity() {
+        let mut profile = PersonalIdentityProfile::from_kerykeion_json(
+            NATAL_HANDLE,
+            IDENTITY_HASH,
+            COMPLETE_NATAL,
+        )
+        .expect("fixture should derive protected identity");
+        let original_q_identity = profile.q_identity;
+
+        let mut adapter = IdentityAugmentProposalAdapter::new();
+        adapter
+            .submit(
+                IdentityAugmentProposal::proposed(
+                    "identity-proposal://rejected",
+                    "Reviewer should reject this candidate.",
+                    "adapter://m4/identity-augment",
+                    "2026-06-25T10:00:00.000Z",
+                    [0.0, 0.0, 1.0, 1.0],
+                )
+                .expect("proposal is valid"),
+            )
+            .expect("proposal submits");
+        adapter
+            .review("identity-proposal://rejected", "2026-06-25T10:01:00.000Z")
+            .expect("proposal reviews");
+        adapter
+            .decide(
+                "identity-proposal://rejected",
+                IdentityAugmentReviewVerdict::Reject,
+                "2026-06-25T10:02:00.000Z",
+            )
+            .expect("proposal rejects");
+
+        let err = adapter
+            .apply(
+                "identity-proposal://rejected",
+                &mut profile,
+                "2026-06-25T10:03:00.000Z",
+            )
+            .expect_err("rejected proposal is terminal");
+
+        assert_eq!(profile.q_identity, original_q_identity);
+        assert!(matches!(
+            err,
+            PersonalIdentityError::InvalidIdentityAugmentTransition {
+                from: IdentityAugmentProposalState::Rejected,
+                to: IdentityAugmentProposalState::Applied
+            }
+        ));
+    }
+
+    #[test]
+    fn surface_view_is_read_only_and_does_not_serialize_candidate_quaternion() {
+        let proposal = IdentityAugmentProposal::proposed(
+            "identity-proposal://view",
+            "Handle-only proposal view.",
+            "adapter://m4/identity-augment",
+            "2026-06-25T11:00:00.000Z",
+            [0.0, 1.0, 0.0, 1.0],
+        )
+        .expect("proposal is valid");
+
+        let view = proposal.view();
+        let json = serde_json::to_string(&view).expect("view serializes");
+
+        assert!(json.contains("identity-proposal://view"));
+        assert!(!json.contains("qIdentity"));
+        assert!(!json.contains("q_identity"));
+        assert!(!json.contains("candidate"));
+        assert_approx_quat(
+            proposal.q_identity_candidate(),
+            quat_normalize([0.0, 1.0, 0.0, 1.0]),
+        );
+    }
+
+    fn assert_approx_quat(actual: [f32; 4], expected: [f32; 4]) {
+        for (actual, expected) in actual.iter().zip(expected.iter()) {
+            assert!((actual - expected).abs() < 1e-6, "{actual} != {expected}");
+        }
     }
 }
 

@@ -127,6 +127,8 @@ test('badge renders handle panel, consent editor, and read-only pending proposal
     assert.match(markup, /Atlas-sync Consent/);
     assert.match(markup, /nara\.voice-corpus\.include/);
     assert.match(markup, /identity-proposal:\/\/one/);
+    assert.match(markup, /identity-proposal:\/\/two/);
+    assert.doesNotMatch(markup, /identity-proposal:\/\/three/);
     assert.match(markup, /aria-readonly="true"/);
 });
 
