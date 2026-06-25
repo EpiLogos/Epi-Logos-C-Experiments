@@ -22,6 +22,7 @@ import {
 import { IdeShellBridgeGate } from './bridge-gate';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
 import { AletheiaSubagentTrace } from './acr/aletheia-subagent-trace';
+import { isPsycheFacet } from './acr/psyche-facets';
 import type { AletheiaSubagent, DispatchTraceNode } from './acr/types';
 
 const CROSS_LAYOUT_INTENT_DISPATCH_COMMAND = 'pratibimba.intent.dispatch' as const;
@@ -580,6 +581,7 @@ function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
     const id = stringField(record, 'id') ?? stringField(record, 'nodeId') ?? `trace-${String(record.label ?? 'node')}`;
     const label = stringField(record, 'label') ?? stringField(record, 'name') ?? id;
     const maybeSubagent = stringField(record, 'aletheiaSubagent') ?? stringField(record, 'subagent');
+    const maybePsycheFacet = stringField(record, 'psycheFacet');
     return {
         id,
         label,
@@ -588,7 +590,7 @@ function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
         sourceAnchor: stringField(record, 'sourceAnchor'),
         methodOrSkill: stringField(record, 'methodOrSkill') ?? stringField(record, 'method') ?? stringField(record, 'skill'),
         tickAtInvoke: typeof record.tickAtInvoke === 'number' ? record.tickAtInvoke : null,
-        psycheFacet: stringField(record, 'psycheFacet'),
+        psycheFacet: isPsycheFacet(maybePsycheFacet) ? maybePsycheFacet : null,
         aletheiaSubagent: isAletheiaSubagent(maybeSubagent) ? maybeSubagent : null,
         mediatedRunEvidencePacketId: stringField(record, 'mediatedRunEvidencePacketId'),
         children: Array.isArray(record.children)

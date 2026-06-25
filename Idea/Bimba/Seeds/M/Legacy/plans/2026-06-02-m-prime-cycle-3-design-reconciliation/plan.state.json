@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T08:15:28.565Z",
+  "updatedAt": "2026-06-25T08:25:29.560Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -801,16 +801,16 @@
       "worktree": null
     },
     "05.T5.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:18:33.534Z",
+      "claimedAt": "2026-06-25T08:18:33.534Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-05-t5-4-bioquaternion-decomp",
+      "leaseExpiresAt": "2026-06-25T10:18:33.534Z",
+      "heartbeatAt": "2026-06-25T08:18:33.534Z",
+      "runId": "20260625T081833Z-05-T5.4",
       "worktree": null
     },
     "05.T5.5": {
@@ -6536,16 +6536,21 @@
       "worktree": null
     },
     "24.T24.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:24:44.616Z",
+      "claimedAt": "2026-06-25T08:19:06.496Z",
+      "completedAt": "2026-06-25T08:24:44.616Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:24:44.616Z",
+          "text": "49/49 @pratibimba/m3-mahamaya tests passed; inline CosmicClockRenderService render assertions 8/8; key file Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/CosmicClockRenderService.tsx; required grep tokens present; forbidden browser imports absent."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-24-t24-2-cosmic-clock",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:19:06.496Z",
+      "runId": "20260625T081906Z-24-T24.2",
       "worktree": null
     },
     "24.T24.3": {
@@ -9194,16 +9199,21 @@
       "worktree": null
     },
     "46.T46.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:25:29.485Z",
+      "claimedAt": "2026-06-25T08:18:43.542Z",
+      "completedAt": "2026-06-25T08:25:29.485Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:25:29.485Z",
+          "text": "1 frontmatter validation passed; 12 Aeon structure checks passed; 30 template bindings resolved; 15 wikilinks resolved; key paths: Idea/Bimba/World/Aeon.md, Idea/Bimba/World/Types/TYPE-REGISTRY.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-46-t46-2-aeon-template",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:18:43.542Z",
+      "runId": "20260625T081843Z-46-T46.2",
       "worktree": null
     },
     "46.T46.3": {
@@ -9259,16 +9269,16 @@
       "worktree": null
     },
     "47.T47.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:18:52.976Z",
+      "claimedAt": "2026-06-25T08:18:52.976Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-47-t47-1-cron-auto-fire",
+      "leaseExpiresAt": "2026-06-25T10:18:52.976Z",
+      "heartbeatAt": "2026-06-25T08:18:52.976Z",
+      "runId": "20260625T081852Z-47-T47.1",
       "worktree": null
     },
     "47.T47.2": {
@@ -12085,26 +12095,64 @@
       "leaseExpiresAt": "2026-06-25T10:05:34.067Z",
       "worktree": null,
       "completedAt": "2026-06-25T08:14:11.684Z"
+    },
+    {
+      "runId": "20260625T081833Z-05-T5.4",
+      "taskId": "05.T5.4",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:18:33.534Z",
+      "owner": "codex-m-dev-05-t5-4-bioquaternion-decomp",
+      "leaseExpiresAt": "2026-06-25T10:18:33.534Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T081843Z-46-T46.2",
+      "taskId": "46.T46.2",
+      "status": "done",
+      "startedAt": "2026-06-25T08:18:43.542Z",
+      "owner": "codex-m-dev-46-t46-2-aeon-template",
+      "leaseExpiresAt": "2026-06-25T10:18:43.542Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:25:29.485Z"
+    },
+    {
+      "runId": "20260625T081852Z-47-T47.1",
+      "taskId": "47.T47.1",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:18:52.976Z",
+      "owner": "codex-m-dev-47-t47-1-cron-auto-fire",
+      "leaseExpiresAt": "2026-06-25T10:18:52.976Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T081906Z-24-T24.2",
+      "taskId": "24.T24.2",
+      "status": "done",
+      "startedAt": "2026-06-25T08:19:06.496Z",
+      "owner": "codex-m-dev-24-t24-2-cosmic-clock",
+      "leaseExpiresAt": "2026-06-25T10:19:06.496Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:24:44.616Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T08:05:17.167Z",
-    "updatedAt": "2026-06-25T08:05:17.167Z",
+    "createdAt": "2026-06-25T08:18:30.311Z",
+    "updatedAt": "2026-06-25T08:18:30.311Z",
     "taskIds": [
-      "05.T5.3",
-      "46.T46.1",
       "26.T26.8",
-      "05.T5.4"
+      "05.T5.4",
+      "05.T5.5",
+      "05.T5.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.3": "in-session",
-      "46.T46.1": "in-session",
       "26.T26.8": "in-session",
-      "05.T5.4": "in-session"
+      "05.T5.4": "in-session",
+      "05.T5.5": "in-session",
+      "05.T5.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

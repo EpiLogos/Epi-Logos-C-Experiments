@@ -458,7 +458,7 @@ test('Sophia surfaces as a psyche facet only, never as an ACR actor row', () => 
     const widgetSource = readFileSync(resolve(SOURCE_ROOT, 'agentic-control-room-widget.tsx'), 'utf8');
     assert.doesNotMatch(widgetSource, /actor:\s*['"]sophia['"]/);
     assert.doesNotMatch(widgetSource, /psycheFacet:\s*['"]dispatcher['"]/);
-    assert.match(widgetSource, /psycheFacet:\s*'sophia'/);
+    assert.match(widgetSource, /zeithoven:\s*'sophia'/);
 });
 
 test('IdeShellBridgeGate uses the shared readiness primitive and only wraps bridge_unavailable', () => {

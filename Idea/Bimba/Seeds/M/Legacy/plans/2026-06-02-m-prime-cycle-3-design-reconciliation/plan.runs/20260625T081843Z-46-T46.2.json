@@ -1,0 +1,39 @@
+{
+  "runId": "20260625T081843Z-46-T46.2",
+  "taskId": "46.T46.2",
+  "startedAt": "2026-06-25T08:18:43.542Z",
+  "owner": "codex-m-dev-46-t46-2-aeon-template",
+  "leaseExpiresAt": "2026-06-25T10:18:43.542Z",
+  "worktree": null,
+  "task": {
+    "id": "46.T46.2",
+    "trackId": "46",
+    "tranche": "T46.2",
+    "title": "Aeon content-type and /World template",
+    "effort": null,
+    "file": "46-aeon-loop-unit-paradigm.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md",
+    "dependsOn": [
+      "46.T46.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/World/Aeon.md",
+      "Idea/Bimba/World/CT4b-MASTER-TEMPLATE.md",
+      "Idea/Bimba/World/NOW.md",
+      "Idea/Bimba/World/Seed.md",
+      "Idea/Bimba/World/Types/TYPE-REGISTRY.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
