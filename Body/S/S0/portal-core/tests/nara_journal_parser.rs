@@ -1,6 +1,7 @@
 use portal_core::{
-    ActivityStateEffect, EventPrivacyClass, NaraActivityKind, NaraEmotionalValenceHint,
-    NaraJournalParseError, NaraJournalParseInput, NaraJournalParser, NaraObservationKind,
+    period_reading, ActivityStateEffect, EventPrivacyClass, NaraActivityKind,
+    NaraEmotionalValenceHint, NaraJournalParseError, NaraJournalParseInput, NaraJournalParser,
+    NaraObservationKind, NaraPeriodReadingInput, VamaShaktiClass,
 };
 
 fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
@@ -118,6 +119,51 @@ fn serialized_activity_never_leaks_raw_body_or_private_identity_fields() {
     assert!(observation_json.get("qPersonal").is_none());
     assert!(observation_json.get("natalChartHandle").is_none());
     assert!(observation_json.get("identityHash").is_none());
+}
+
+#[test]
+fn period_reading_computes_vama_internally_and_surfaces_only_on_request() {
+    let first = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "M4-4 moved through Lens 3 at position 2 and felt heavy.",
+    ))
+    .expect("journal parse succeeds");
+    let second = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "Lens 5 at position 3 felt tense and heavy before it became clear.",
+    ))
+    .expect("second journal parse succeeds");
+
+    let hidden = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        observations: vec![
+            first.symbolic_observation.clone(),
+            second.symbolic_observation.clone(),
+        ],
+        include_vama_classifier: false,
+    })
+    .expect("long-period reading computes from real observations");
+
+    assert!(hidden.vama_classifier_computed);
+    assert!(hidden.vama_classifier_available_on_request);
+    assert_eq!(hidden.internal_vama_classifier(), VamaShaktiClass::Daemon);
+    assert_eq!(hidden.visible_vama_classifier, None);
+    let hidden_json = serde_json::to_string(&hidden).expect("period reading serializes");
+    assert!(!hidden_json.contains("Daemon"));
+    assert!(!hidden_json.contains("daemon"));
+
+    let visible = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        observations: vec![first.symbolic_observation, second.symbolic_observation],
+        include_vama_classifier: true,
+    })
+    .expect("requested long-period reading surfaces classifier");
+
+    assert_eq!(visible.internal_vama_classifier(), VamaShaktiClass::Daemon);
+    assert_eq!(
+        visible.visible_vama_classifier,
+        Some(VamaShaktiClass::Daemon)
+    );
 }
 
 #[test]

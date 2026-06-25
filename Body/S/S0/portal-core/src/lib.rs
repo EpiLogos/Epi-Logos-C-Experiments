@@ -1,4 +1,5 @@
 pub mod aspect;
+pub mod birthdate_identity;
 pub mod codon;
 pub mod codon_rotation_projection;
 pub mod coordinate_phase;
@@ -27,6 +28,7 @@ pub mod vak_address;
 pub mod vama_shakti;
 
 pub use aspect::compute_aspects;
+pub use birthdate_identity::*;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
 pub use codon_rotation_projection::*;
 pub use coordinate_phase::*;

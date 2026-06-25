@@ -236,10 +236,10 @@ Aggregate quaternion components (per Cl(4,2) elemental mapping):
     q.y (Water)  = Σ (weight_P × indicator(element_P == Water)) over all natal P
     q.z (Air)    = Σ (weight_P × indicator(element_P == Air))   over all natal P
 
-Normalise to unit quaternion: q_personal = q / ||q||
+Normalise to unit quaternion: Q_identity = q / ||q||
 ```
 
-The result is a unit quaternion in [[S3|S³]] — the user's **astrologically-derived elemental-temperament-quaternion**, computed once from natal data and stored as the user's identity-quintessence at [[M4-4-4-4]].
+The result is a unit quaternion in [[S3|S³]] — the user's **astrologically-derived elemental-temperament-quaternion**, computed once from natal data and stored as the Kerykeion natal baseline component `Q_identity`. Per [[DR-M4-2]], `q_personal` is the integrated [[Nara]] quintessence output that incorporates `Q_identity` and any present [[M4-0]] identity-layer contributions.
 
 ### §7.3 The Resonance Computation
 
@@ -279,7 +279,7 @@ The **bioquaternion** `(q_b, q_p) ∈ S³ × S³` is not a new input quaternion.
 
 Persistence/rendering distinction:
 
-- `q_personal` / `Q_identity` is the protected persisted identity-quintessence.
+- `q_personal` is the protected persisted integrated [[Nara]] identity-quintessence; `Q_identity` is the Kerykeion natal baseline component it integrates.
 - [[Q_composed]] is the live runtime state that drives the psychoid cymatic field.
 - `(q_b, q_p)` is a diagnostic/render decomposition of [[Q_composed]], not an independent source of truth.
 - the full psychoid cymatic field is itself protected-local by default; [[S3]] / [[SpaceTimeDB]] sees only opaque handles or canonical quaternionic signatures, never the raw field body.
@@ -304,7 +304,8 @@ This is what makes Nara not analogically-connected to the cosmos but **structura
 
 For [[M4-4-4-4]] / personal-quaternion to be operative, the backend must expose:
 
-- **`PersonalIdentityProfile.q_personal`** — unit quaternion (4 × f32) from natal data, persisted at [[M4-4-4-4]] via [[Body/S/S0/portal-core/src/personal_identity.rs]]
+- **`PersonalIdentityProfile.q_personal`** — integrated [[Nara]] quintessence output (4 × f32), persisted at [[M4-4-4-4]] via [[Body/S/S0/portal-core/src/personal_identity.rs]]
+- **`PersonalIdentityProfile.q_identity`** — Kerykeion natal baseline component (4 × f32) integrated by `q_personal`
 - **`PersonalIdentityProfile.natal_chart_handle`** — reference to the [[KerykeionResult]] that produced q_personal
 - **`PersonalIdentityProfile.elemental_balance`** — explicit (Earth/Fire/Water/Air) weights summing to 1.0 for human-readable display
 - **`MathemeHarmonicProfile.q_cosmic`** — current cosmic codon-quaternion at this tick (computed in the kernel via [[Body/S/S0/portal-core/src/mahamaya.rs]] / [[Body/S/S0/portal-core/src/codon.rs]])
@@ -369,13 +370,15 @@ M4' has two inference paths that must not collapse. The parser path is [[Pi]]-ag
 
 [[m5-prime-epii-on-nara-qlora-dialogic-voice]] belongs to [[M5']] governance, not to M4' substrate mutation. [[Anima]] leads corpus admission, refresh triggers, deployment, rollback, and optional DPO gates; [[Sophia]] and [[Epii]] advise and coordinate. M4' supplies consent-gated exchanges and state handles, but QLoRA/DPO never touches `Q_identity`, `Q_composed`, Graphiti bodies without consent, [[Vāma Śaktis|Vāma]] canon, or the six branch laws. Consent for corpus inclusion is granular, revocable where technically possible, pressure-free, inspectable, and separated from ordinary Nara dialogue.
 
-### §7.13 Open Canon Questions / Contradiction Register
+### §7.13 Closed Canon Clauses / DR-M4-2
 
-- **Kerykeion-only `q_personal` vs integrated `q_Nara`:** §7.2 currently describes `q_personal` as astrologically derived from Kerykeion natal data, while [[nara-m4-0-identity-branch-integration-map]] and [[alpha_quaternionic_integration_across_M_stack]] §6.6 make M4-0-5 the integrated identity-quintessence from multiple layers. Implementation must decide whether `q_personal` remains the natal baseline and `Q_identity` names the integrated `q_Nara`, or whether the older wording is replaced by the integrated form.
-- **Quaternion axis ordering:** §7.2 uses `[w=Earth, x=Fire, y=Water, z=Air]`, while [[nara-m4-0-identity-branch-integration-map]] phrases `q_Nara = Earth + Water·i + Fire·j + Air·k`; [[m4-prime-nara-activity-graphiti-instrument]] locks `[F,W,E,A] -> [w=E,x=F,y=W,z=A]`. The activity-graph remap is treated as current operative law here, but the Water/Fire i/j discrepancy needs an explicit kernel-level decision before implementation.
-- **Identity hash source:** [[2026-04-04-graphiti-unified-temporal-context-service]] still carries older PASU/BLAKE3-of-birth-data language, while [[alpha_quaternionic_integration_across_M_stack]] reframes BLAKE3 as a column-fit hash of canonical quaternion bytes plus caps. The migration path from old profile hashes to quaternionic signatures remains open.
-- **Vāma classifier vs contemplative offering:** [[alpha_quaternionic_integration_across_M_stack]] §6.8.4.B speaks strongly of locating every event on the Vāma wheel, while [[m4-prime-psychoid-cymatic-field-engine]] and this spec restrict user-facing output to optional contemplative offerings. The unresolved implementation question is whether internal classifier output may be mandatory while user-visible presentation remains opt-in.
-- **0/1 surface polarity:** [[m4-prime-psychoid-cymatic-field-engine]] assigns the 0 side to cosmic facing and the 1 side to personal psychoid field, while [[m5-prime-system-shape-and-tauri-ide-canon]] §3.2 describes the lightweight 0 side as carrying the personal cymatic field. Until M'-TAURI-PORT-SPEC resolves this, M4' treats "0/1 surface" as a daily-use composite and preserves the deeper law that the full personal field is not cosmic-facing.
+DR-M4-2 closes the former contradiction register for this section. The five ratified clauses are binding:
+
+- **`q_personal` / `Q_identity` binding closed:** `q_personal` is the integrated [[Nara]] quintessence output; `Q_identity` is the Kerykeion natal baseline component that `q_personal` integrates. The code binding is `PersonalIdentityProfile.q_personal` plus `PersonalIdentityProfile.q_identity` in [[Body/S/S0/portal-core/src/personal_identity.rs]].
+- **Cl(4,2) `axis_order` closed:** the base order is `[w=Earth, x=Fire, y=Water, z=Air]`. Per-mode rotation/remap is a derived view, never a base-canon change.
+- **Identity-hash migration closed:** cutover may be phased, with legacy birth-data BLAKE3 hashes and final quaternionic-signature BLAKE3 hashes both accepted during migration. The final state is quaternionic.
+- **Vāma classifier policy closed:** [[Vāma Śaktis|Vāma]] classification is computed-mandatory internally during long-period review and user-visible on request only; it is not auto-raised as judgement or diagnosis.
+- **0/1 personal cymatic `polarity` closed:** `0 = cosmic`, `1 = personal` across the personal cymatic polarity. [[m4-prime-psychoid-cymatic-field-engine]] is canonical on this point; any conflicting [[m5-prime-system-shape-and-tauri-ide-canon]] §3.2 wording is drift to patch under the owning sweep.
 
 ## §8 — Readiness / Test Criteria
 

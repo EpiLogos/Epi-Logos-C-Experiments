@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T08:47:26.104Z",
+  "updatedAt": "2026-06-25T09:10:42.212Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -846,35 +846,46 @@
     },
     "05.T5.6": {
       "status": "done",
-      "updatedAt": "2026-06-25T08:50:00.000Z",
+      "updatedAt": "2026-06-25T09:07:23.169Z",
       "claimedAt": "2026-06-25T08:44:18.367Z",
-      "completedAt": "2026-06-25T08:50:00.000Z",
+      "completedAt": "2026-06-25T09:07:23.169Z",
       "evidence": [
-        {"at": "2026-06-25T08:50:00.000Z", "text": "Accepted. Deliverable on disk, committed."}
+        {
+          "at": "2026-06-25T08:50:00.000Z",
+          "text": "Accepted. Deliverable on disk, committed."
+        },
+        {
+          "at": "2026-06-25T09:07:23.169Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core m4_0_0_birthdate_encoding passed (2 tests: worked MEF evidence + pending unsupplied layers); key files Body/S/S0/portal-core/src/birthdate_identity.rs, Body/S/S0/portal-core/tests/m4_0_0_birthdate_encoding.rs, Body/S/S0/portal-core/src/lib.rs"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-6-birthdate-identity",
-      "leaseExpiresAt": "2026-06-25T10:44:18.367Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:44:18.367Z",
       "runId": "20260625T084418Z-05-T5.6",
       "worktree": null
     },
     "05.T5.7": {
-      "status": "pending",
-      "updatedAt": "2026-06-16T12:00:00.000Z",
-      "claimedAt": null,
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T09:10:42.142Z",
+      "claimedAt": "2026-06-25T08:52:02.403Z",
+      "completedAt": "2026-06-25T09:10:42.142Z",
       "evidence": [
         {
           "at": "2026-06-16T12:00:00.000Z",
           "text": "RESET from fraudulent done 2026-06-16. DR-M4-2 VALIDATED but clause 4 Action (long-period-review surfacing computed in personal_identity.rs, surfaced via nara_journal::period_reading) was not landed — no 'period_reading' symbol exists anywhere under Body/S/S0/epi-cli/src. Requires: clause-4 period_reading implementation + clause-3 phased-migration policy."
+        },
+        {
+          "at": "2026-06-25T09:10:42.142Z",
+          "text": "209 portal-core tests passed via cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml; grep acceptance passed for Body/S/S0/portal-core/src/personal_identity.rs; M4'-SPEC §7.13 closed five DR-M4-2 clauses; key paths: personal_identity.rs, nara_journal.rs, M4'-SPEC.md, M4-ARCHITECTURE.md"
         }
       ],
       "notes": "Reset from fraudulent 'done' during the 2026-06-16 deferral-lie overturn audit (see evidence).",
-      "owner": "hermes-nara",
+      "owner": "codex-m-dev-05-t5-7-dr-m4-2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:52:02.403Z",
+      "runId": "20260625T085202Z-05-T5.7",
       "worktree": null
     },
     "05.T5.8": {
@@ -9248,15 +9259,22 @@
     },
     "46.T46.3": {
       "status": "done",
-      "updatedAt": "2026-06-25T08:50:00.000Z",
+      "updatedAt": "2026-06-25T08:50:52.042Z",
       "claimedAt": "2026-06-25T08:44:47.807Z",
-      "completedAt": "2026-06-25T08:50:00.000Z",
+      "completedAt": "2026-06-25T08:50:52.042Z",
       "evidence": [
-        {"at": "2026-06-25T08:50:00.000Z", "text": "Accepted. Deliverable on disk, committed."}
+        {
+          "at": "2026-06-25T08:50:00.000Z",
+          "text": "Accepted. Deliverable on disk, committed."
+        },
+        {
+          "at": "2026-06-25T08:50:52.042Z",
+          "text": "10 node tests passed: skill_lookup Aeon discovery 7/7 and Track 42 projector parity 3/3; key files Body/S/S4/pi-agent/skills/custom/skill-lookup/index.ts, SKILL.md, skill-lookup.test.ts"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-46-t46-3-aeon-discovery",
-      "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:44:47.807Z",
       "runId": "20260625T084447Z-46-T46.3",
       "worktree": null
@@ -9359,6 +9377,112 @@
       "claimedAt": null,
       "completedAt": null,
       "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.3": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.4": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.5": {
+      "status": "blocked",
+      "updatedAt": "2026-06-25T09:05:30.485Z",
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [
+        {
+          "at": "2026-06-25T09:05:30.485Z",
+          "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        }
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.6": {
+      "status": "blocked",
+      "updatedAt": "2026-06-25T09:05:31.383Z",
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [
+        {
+          "at": "2026-06-25T09:05:31.383Z",
+          "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        }
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "48.T48.7": {
+      "status": "blocked",
+      "updatedAt": "2026-06-25T09:05:32.209Z",
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [
+        {
+          "at": "2026-06-25T09:05:32.209Z",
+          "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -12206,11 +12330,12 @@
     {
       "runId": "20260625T084418Z-05-T5.6",
       "taskId": "05.T5.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:44:18.367Z",
       "owner": "codex-m-dev-05-t5-6-birthdate-identity",
       "leaseExpiresAt": "2026-06-25T10:44:18.367Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T09:07:23.169Z"
     },
     {
       "runId": "20260625T084431Z-11-T11.4",
@@ -12225,31 +12350,42 @@
     {
       "runId": "20260625T084447Z-46-T46.3",
       "taskId": "46.T46.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:44:47.807Z",
       "owner": "codex-m-dev-46-t46-3-aeon-discovery",
       "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T08:50:52.042Z"
+    },
+    {
+      "runId": "20260625T085202Z-05-T5.7",
+      "taskId": "05.T5.7",
+      "status": "done",
+      "startedAt": "2026-06-25T08:52:02.403Z",
+      "owner": "codex-m-dev-05-t5-7-dr-m4-2",
+      "leaseExpiresAt": "2026-06-25T10:52:02.403Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T09:10:42.142Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T08:44:10.988Z",
-    "updatedAt": "2026-06-25T08:44:10.988Z",
+    "createdAt": "2026-06-25T08:51:24.447Z",
+    "updatedAt": "2026-06-25T08:51:24.447Z",
     "taskIds": [
-      "05.T5.6",
       "05.T5.7",
       "05.T5.8",
-      "05.T5.9"
+      "05.T5.9",
+      "07.T7.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.6": "in-session",
       "05.T5.7": "in-session",
       "05.T5.8": "in-session",
-      "05.T5.9": "in-session"
+      "05.T5.9": "in-session",
+      "07.T7.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

@@ -14,7 +14,10 @@ fn renderer_handle_consumes_profile_bus_without_exposing_field_body() {
     assert_eq!(handle.privacy_class, "protected-local-handle-only");
     assert_eq!(handle.tick, profile.tick);
     assert_eq!(handle.tick12, profile.tick12);
-    assert_eq!(handle.solver_strategy, PsychoidCymaticSolverStrategy::OptionF);
+    assert_eq!(
+        handle.solver_strategy,
+        PsychoidCymaticSolverStrategy::OptionF
+    );
     assert!(handle
         .renderer_handle
         .starts_with("psychoid-cymatic://renderer/dr-ig-6/"));
@@ -39,7 +42,10 @@ fn renderer_handle_changes_when_audio_or_nodal_bus_changes() {
         build_psychoid_cymatic_renderer_handle(&second, PsychoidCymaticSolverStrategy::OptionS);
 
     assert_ne!(first_handle.renderer_handle, second_handle.renderer_handle);
-    assert_ne!(first_handle.audio_bus_digest, second_handle.audio_bus_digest);
+    assert_ne!(
+        first_handle.audio_bus_digest,
+        second_handle.audio_bus_digest
+    );
 
     first.nodal_quartet[0].m = first.nodal_quartet[0].m.saturating_add(1);
     let nodal_handle =
@@ -54,14 +60,27 @@ fn dr_ig_6_geometry_uses_apex_poles_interleaved_base_and_axis_points() {
 
     assert_eq!(
         ids,
-        vec![
-            "P5", "P5'", "P1", "P1'", "P2", "P2'", "P3", "P3'", "P4", "P4'", "P0", "P0'"
-        ]
+        vec!["P5", "P5'", "P1", "P1'", "P2", "P2'", "P3", "P3'", "P4", "P4'", "P0", "P0'"]
     );
     assert_eq!(geometry.vertices.len(), 12);
-    assert_eq!(geometry.vertices[0].role, PsychoidCymaticGeometryRole::ApexPole);
-    assert_eq!(geometry.vertices[1].role, PsychoidCymaticGeometryRole::ApexPole);
-    assert_eq!(geometry.vertices[10].role, PsychoidCymaticGeometryRole::CentralAxisPoint);
-    assert_eq!(geometry.vertices[11].role, PsychoidCymaticGeometryRole::CentralAxisPoint);
-    assert_eq!(geometry.contract_note, "apex-poles + interleaved-base + central-axis");
+    assert_eq!(
+        geometry.vertices[0].role,
+        PsychoidCymaticGeometryRole::ApexPole
+    );
+    assert_eq!(
+        geometry.vertices[1].role,
+        PsychoidCymaticGeometryRole::ApexPole
+    );
+    assert_eq!(
+        geometry.vertices[10].role,
+        PsychoidCymaticGeometryRole::CentralAxisPoint
+    );
+    assert_eq!(
+        geometry.vertices[11].role,
+        PsychoidCymaticGeometryRole::CentralAxisPoint
+    );
+    assert_eq!(
+        geometry.contract_note,
+        "apex-poles + interleaved-base + central-axis"
+    );
 }

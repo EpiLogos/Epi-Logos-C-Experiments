@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-25T08:47:26.100Z",
+  "generatedAt": "2026-06-25T09:10:42.209Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation",
   "tracks": [
     {
@@ -337,7 +337,7 @@
       "file": "45-bimba-map-indexing-and-dox-okf-unification.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/45-bimba-map-indexing-and-dox-okf-unification.md",
       "title": "Track 45 — Bimba Map Repo-Level Indexing + DOX/OKF Unification",
-      "checksum": "76a1aacb28c8f064ce655e2fd743305e5dbfa83564b9f87915ca8a3dd964d6e4"
+      "checksum": "92bb1c79fb35147969c5c556142aa7bbe6bcd902dd702faa4ac0ff724867bfd4"
     },
     {
       "id": "46",
@@ -352,6 +352,13 @@
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/47-autonomous-loop-scheduling.md",
       "title": "Track 47 — Autonomous Loop Scheduling (Aeon Invocation: Cron Auto-Fire + Event + Consent)",
       "checksum": "c10d8a3c50c75a650a68cc22c4a64e26421ff05a72ec97355d3f374b5867a388"
+    },
+    {
+      "id": "48",
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "title": "Track 48 — Obsidian Bases as the C5/CS Reflection Layer (Hen-Emitted `.base` Triad over CTx + MOC)",
+      "checksum": "89d0144a09e9d8fb260458be64486b4453c791668df4c5265294edfc885da9e7"
     }
   ],
   "tasks": [
@@ -9145,6 +9152,109 @@
         "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/ralph-tui"
       ],
       "body": "4. **47.4 — Aeon task-source binding** *(future-dev; depends on 46.1; cross-link `Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/ralph-tui`)*\n\n   An Aeon may reference a structured task-source as its iteration work-list — a Ralph PRD (`Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/ralph-tui`, markdown PRD under `./plans/`) or a beads set — so a scheduled Aeon advances a concrete, checkpointed task list rather than an open objective. This binds the existing task-definition formats (yaml/markdown) to the Aeon loop.\n\n   **Verification:** an Aeon bound to a Ralph PRD advances its tranches per fire; checkpoints persist across fires.\n\n## What this UNBLOCKS\n\n- **Genuinely autonomous Aeons.** A proven Aeon runs on a cron / event / consent trigger without a human kicking it — the \"ship while you sleep\" Z-thread telos, governed.\n- **Scheduling as VAK dispatch.** A fired job is a normal Anima dispatch carrying a VAK address — no parallel execution path.\n\n## What this is NOT\n\n- **Not a new scheduler process.** One due-check inside the existing gateway heartbeat; `cron.rs` already stores jobs.\n- **Not ungoverned autonomy.** Autonomous fire is CPF (00/00)-consent-gated (12.15).\n- **Not a reopening of landed work.** It completes the cron surface and binds Aeon invocation; it reopens no landed tranche."
+    },
+    {
+      "id": "48.T48.1",
+      "trackId": "48",
+      "tranche": "T48.1",
+      "title": "`.base` artifact class + the CS/Pratibimba framing law *(L1; canon/contract + bimba-vault-validate)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Idea/Bimba/Bimba/**"
+      ],
+      "body": "### Tranche 48.1 — `.base` artifact class + the CS/Pratibimba framing law *(L1; canon/contract + bimba-vault-validate)*\n\nDefine the `.base` as a **C5/CS reflection artifact class**, `c_4_artifact_role: \"base-view\"`:\nreflection-only residency (beside the MOC it reflects, or a zone root), generated from the MOC's\nbelonging-law, **never canon-write**. Record the `Template (C1·CT) → MOC (C4) → Base (C5·CS)`\nladder and the pair→triad MOC rule (§2–3) in the C5 type authority + a one-paragraph note in\n`World/Types/README.md` §MOC Index Rule. Teach `bimba-vault-validate` the `base-view` role +\n`.base` residency (mirrors how Track 45 taught it the `map-index` role).\n\n**Implementation scope:** markdown/skill only — a C5 type-authority note + README addendum +\nvalidator role registration. No core-code.\n\n**Verification:** `bimba-vault-validate` accepts a `.base` carrying `c_4_artifact_role: \"base-view\"`\nin reflection residency and rejects one attempting canon (`World/*.md`, `Idea/Bimba/Bimba/**`)\nresidency; the README MOC Index Rule names the triad."
+    },
+    {
+      "id": "48.T48.2",
+      "trackId": "48",
+      "tranche": "T48.2",
+      "title": "The CT-ladder base set (one CS-reflection per content type) *(L1; depends 48.1)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.1"
+      ],
+      "writeScopes": [],
+      "body": "### Tranche 48.2 — The CT-ladder base set (one CS-reflection per content type) *(L1; depends 48.1)*\n\nAuthor the canonical `.base` for each content class CT0–CT5 (+ CT4a) per §4, each deriving its\ncolumns/filters from the CTx frontmatter contract, with Day/Night′ directional views where they\napply. CT4b's base is the period console whose columns are the CT0–CT5 sub-states.\n\n**Implementation scope:** seven `.base` files authored against the live CTx contracts; no core-code.\n\n**Verification:** each CTx has a working base that renders its instances; the CT4b base surfaces\nopen vs reflection-complete NOWs grouped by day; a Night′ view renders `P0'` questions for CT5."
+    },
+    {
+      "id": "48.T48.3",
+      "trackId": "48",
+      "tranche": "T48.3",
+      "title": "Per-zone bases *(L1; depends 48.1)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.2"
+      ],
+      "writeScopes": [],
+      "body": "### Tranche 48.3 — Per-zone bases *(L1; depends 48.1)*\n\nAuthor the canonical base(s) for each zone per §5: `/World`+`/Types` crystallisation-pipeline\ntracker; `/Map` aggregate browser + **card/image entry** (incl. the [[M2-1]] MEF-lens cards as the\nworked example); `/Seeds` provenance ledger; `Empty/Present` operational present-console. Each\n`/Map` base is positioned as a **clean data-entry surface that propagates to curated canvas/Theia\nviews**, not a replacement for them.\n\n**Implementation scope:** zone-level `.base` files + the M2-1 worked example; no core-code.\n\n**Verification:** each zone has ≥1 working base in its functional role; the M2-1 cards base renders\nevery MEF-lens node with a cover image; the `/World` base groups types by `c_5_crystallisation_state`."
+    },
+    {
+      "id": "48.T48.4",
+      "trackId": "48",
+      "tranche": "T48.4",
+      "title": "MOC↔Base collaboration (embed + feed living sections) *(L1; depends 48.1–48.3)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.3"
+      ],
+      "writeScopes": [],
+      "body": "### Tranche 48.4 — MOC↔Base collaboration (embed + feed living sections) *(L1; depends 48.1–48.3)*\n\nWire the base into the MOC as its computed reflection: embed a base block into a MOC's \"What Belongs\nHere\" (live membership) and \"Open Gaps\" (missing/orphan frontmatter) sections, and place a `.base`\nnode inside a representative `.canvas` MOC. Demonstrate on one `Coordinates/S/**` MOC and the `/Map`\nbranch MOCs.\n\n**Implementation scope:** edits to existing MOC `.md` + one `.canvas` to host base blocks/nodes;\nno core-code.\n\n**Verification:** a MOC's \"What Belongs Here\" / \"Open Gaps\" sections render live from embedded\nbases; a canvas hosts a base node; the MOC remains the authored index (no base supersedes it)."
+    },
+    {
+      "id": "48.T48.5",
+      "trackId": "48",
+      "tranche": "T48.5",
+      "title": "`s1'.base.ensure` + base-schema-from-CTx-contract *(L2; owning spec [[S1-SPEC]] / Hen)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.4"
+      ],
+      "writeScopes": [
+        "Body/S/S1/hen-compiler-core/**"
+      ],
+      "body": "### Tranche 48.5 — `s1'.base.ensure` + base-schema-from-CTx-contract *(L2; owning spec [[S1-SPEC]] / Hen)*\n\nLand `s1'.base.ensure` in `Body/S/S1/hen-compiler-core/` as a sibling of the specced\n`s1'.moc.ensure` / `s1'.canvas.create_or_update`: idempotently emit/refresh a `{Name}.base` whose\ncolumns/filters are **derived from the owning CTx frontmatter contract** Hen already validates.\nReflection-residency guard (reuses the DR-PSS-4 canon-write boundary). Requires `gitnexus_impact`\nbefore editing the Hen residency/promotion surface; flag the contract surface to [[S1-SPEC]].\n\n**Implementation scope:** one new Hen tool + a CTx-contract→base-schema deriver + residency guard +\ntests; no new package.\n\n**Verification:** `s1'.base.ensure` over a CT4b authority emits a `.base` with the contract's p0–p5\n+ `c_3_*` columns filtered on `c_1_ct_type == \"CT4b\"`; re-running is idempotent; a base targeting\ncanon residency is refused; `cargo test -p` Hen passes."
+    },
+    {
+      "id": "48.T48.6",
+      "trackId": "48",
+      "tranche": "T48.6",
+      "title": "M-stack BasesView: render service + static/dynamic adapters *(L2; epi-theia; depends 48.2–48.3)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.5"
+      ],
+      "writeScopes": [],
+      "body": "### Tranche 48.6 — M-stack BasesView: render service + static/dynamic adapters *(L2; epi-theia; depends 48.2–48.3)*\n\nA new M-stack bases-view capability modelled on `CosmicClockRenderService.tsx`: a `ReactWidget` +\n`AbstractViewContribution` (the `personal-cymatic-field.tsx` pattern) injecting `SHARED_BRIDGE_ADAPTER`;\na pure `basesModelFromRecords(records, config) → BasesRenderModel` render service with `table` /\n`cards` / `list` / `image` view modes (group/sort client-side per `relations-layer-panel.tsx`); and a\n`BasesDataSource` with two adapters — *static* (`s1'.vault.read_file` over a `.base` snapshot) and\n*dynamic* (`s2.graph.query` / `s2'.retrieve` re-fired on `onCoordinateContext` / `onObservabilityEvent`).\nRows click-dispatch `updateCoordinateContext` so base panels cross-filter via the shared\n`CoordinateContext`. All data over `invokeGatewayRpc` — no S-stack import.\n\n**Implementation scope:** one M-stack extension (widget + view-contribution + render service + two\ndata adapters); reuses existing bridge/RPC seams; no new package beyond the extension.\n\n**Verification:** a coordinate-scoped view renders in Theia both statically (snapshot) and dynamically\n(live, updating on a vault/graph change); selecting a row updates `CoordinateContext` and cross-filters\na second panel; the extension passes `07-t0-extension-contract-preflight.json` (no forbidden S-stack\nimport)."
+    },
+    {
+      "id": "48.T48.7",
+      "trackId": "48",
+      "tranche": "T48.7",
+      "title": "Data-layer completion: `.base` snapshot emission + `s2.graph.list_by_filter` *(L2; owning specs S2/S3; depends 48.6)*",
+      "effort": null,
+      "file": "48-bases-cs-reflection-layer.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+      "dependsOn": [
+        "48.T48.6"
+      ],
+      "writeScopes": [
+        "Body/S/S2/graph-services/src/retrieval/**",
+        "Idea/Bimba/Map/datasets/fetch_bimba.py"
+      ],
+      "body": "### Tranche 48.7 — Data-layer completion: `.base` snapshot emission + `s2.graph.list_by_filter` *(L2; owning specs S2/S3; depends 48.6)*\n\nComplete the coordinate-keyed data layer the BasesView reads: (a) extend the projection pipeline\n(`Idea/Bimba/Map/datasets/fetch_bimba.py` + the `bimba-vault-map` skill) to emit a compact `.base`\nsnapshot artifact beside the 1018 Map node files (the static source — a C5 reflection at a\n`c_3_projected_at` instant); (b) add the additive gateway method `s2.graph.list_by_filter(coordinateScope,\npropertyFilters, limit)` over `CoordinateRetrieval` (`Body/S/S2/graph-services/src/retrieval/`) so the\ndynamic adapter has a clean list-by-filter call rather than leaning on `s2'.coordinate.cypher`. Both are\nadditive; flag the RPC contract surface to the S2/S3 specs; `gitnexus_impact` before editing the\nretrieval/dispatch surface.\n\n**Implementation scope:** a projection-pipeline `.base`-snapshot emitter + one additive gateway method\nover existing `CoordinateRetrieval` queries; no schema change.\n\n**Verification:** the projection emits a `.base` snapshot the static adapter reads; `s2.graph.list_by_filter`\nreturns coordinate-keyed rows matching a `c_N_*` filter; `cargo test -p` graph-services passes; the\ndynamic adapter renders identical rows whether via `list_by_filter` or the `cypher` fallback.\n\n---\n\n## 10. What this UNBLOCKS\n\n- **The query-view layer the canon names but never had.** `World/Types/README.md`'s \"should be a\n  query/derived view\" finally has a technology, without minting parallel folder authorities.\n- **CTx becomes template + base** — every content type gains its read-side reflection, derived from\n  the write-shape Hen already owns. The forward form and its return-traversal close the torus.\n- **The MOC becomes a triad** — textual + spatial + computed — so an index's \"what belongs\" and\n  \"open gaps\" are live and self-maintaining (a standing no-orphan instrument, Track 14).\n- **`/Map` becomes navigable data-representation** — clean, complete, image-capable coordinate\n  entry points that propagate into curated canvas/Theia views (e.g. the M2-1 MEF lenses).\n- **One coordinate-keyed data layer for two surfaces** — the Bimba Map extension backs both the map\n  and the base views; Obsidian and Theia render the same C5 reflections of one coordinate index.\n\n## 11. What this is NOT\n\n- **Not a write authority.** A base is a C5 reflection — pure read; it cannot and must not write\n  canon. Hen stays the sole canon-write authority (DR-PSS-4 boundary reused).\n- **Not a replacement for the MOC.** The MOC (C4) is the authored index; the base (C5) is its\n  computed reflection. The base feeds the MOC's living sections; it never supersedes the\n  master-of-contents.\n- **Not a graph engine.** Bases slice frontmatter; typed-edge traversal stays in Neo4j. `/Map`\n  bases are coarse navigation + image cards, not relation-walks.\n- **Not a parallel typing system.** A base's computed/formula columns are view-time ephemera, not\n  canon; the frontmatter law + Hen validation remain the only source of truth.\n- **Not a reopening of landed work.** It extends Track 45 (reflection tree) and consumes Track 44's\n  CTX contract; it reopens no landed tranche and introduces no DR gate.\n\n---\n\n## 12. Verification (track-level)\n\n- **L1:** `bimba-vault-validate` over all authored `.base` files + the touched MOCs returns clean;\n  the CT-ladder set + per-zone set each render their intended slice in Obsidian Bases; the M2-1\n  MEF-lens cards base renders with cover images; no `.base` resides in or writes canon.\n- **L2:** `cargo test -p` the Hen crate for `s1'.base.ensure` + the CTx-contract deriver (idempotent,\n  residency-guarded); the Theia bases-view panel renders a coordinate-scoped view static + dynamic\n  and passes the extension contract-preflight (no forbidden import).\n\n**Cycle-3 touch points:** [[44-pratibimba-surface-standard]] (the CTX contract this consumes; block\nvs base are two renderers of it), [[45-bimba-map-indexing-and-dox-okf-unification]] (the\ndownward-reflection tree + DOX/OKF this extends; the `/Map` projection it views),\n[[40-bimba-canon-update-ledger]] (the CU-* ledger is a base-shaped review surface),\n[[14-no-orphan-audit-and-release-gates]] (\"Open Gaps\" bases are a standing no-orphan instrument)."
     }
   ]
 }

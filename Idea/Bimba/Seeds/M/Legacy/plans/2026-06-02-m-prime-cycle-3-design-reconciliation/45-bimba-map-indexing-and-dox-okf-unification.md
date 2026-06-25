@@ -287,7 +287,7 @@ parser, sync all depend on them). OKF's plain `[text](path)` links are produced 
 
 **Cycle-3 touch points:** [[40-bimba-canon-update-ledger]] (the map index is a read surface for
 canon-change review), [[43-end-of-cycle-3-audit-protocol]] (DOX coverage of `Idea/Bimba/*` is an
-audit item this closes), and the S1'/S2 sync tracks.
+audit item this closes), and the S1'/S2 sync tracks. **Extended by [[48-bases-cs-reflection-layer]]** — the `.base` query-view / C5·CS reflection layer over this projection (the MOC `.md` + `.canvas` + `.base` triad; one coordinate-keyed Bases data layer behind both the `/map` and the views).
 
 ---
 

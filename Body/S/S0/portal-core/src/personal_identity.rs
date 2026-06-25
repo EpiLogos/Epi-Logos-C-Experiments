@@ -14,6 +14,122 @@ const PLANET_KEPLERIAN_VELOCITY: [f32; PLANET_COUNT] = [
     35_999.0, 47_270.0, 14_739.0, 3_600.0, 1_886.0, 299.0, 120.0, 42.0, 21.0, 14.0,
 ];
 
+/// DR-M4-2 axis_order = [w=Earth, x=Fire, y=Water, z=Air].
+pub const CL42_PERSONAL_AXIS_ORDER: [Cl42AxisBinding; 4] = [
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::W,
+        element: ElementalAxis::Earth,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::X,
+        element: ElementalAxis::Fire,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::Y,
+        element: ElementalAxis::Water,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::Z,
+        element: ElementalAxis::Air,
+    },
+];
+
+/// DR-M4-2 polarity: 0 = cosmic, 1 = personal.
+pub const PERSONAL_CYMATIC_POLARITY: [PersonalCymaticPolarityBinding; 2] = [
+    PersonalCymaticPolarityBinding {
+        pole: 0,
+        register: PersonalCymaticRegister::Cosmic,
+    },
+    PersonalCymaticPolarityBinding {
+        pole: 1,
+        register: PersonalCymaticRegister::Personal,
+    },
+];
+
+pub const IDENTITY_HASH_MIGRATION_POLICY: IdentityHashMigrationPolicy =
+    IdentityHashMigrationPolicy {
+        phase: IdentityHashMigrationPhase::Cutover,
+        accepts_legacy_birth_data_hash: true,
+        accepts_quaternionic_signature_hash: true,
+        final_state: IdentityHashKind::QuaternionicSignatureBlake3,
+    };
+
+pub const VAMA_LONG_PERIOD_REVIEW_POLICY: VamaClassifierPolicy = VamaClassifierPolicy {
+    computed_mandatory_internal_long_period_review: true,
+    user_visible_on_request: true,
+    auto_raise_to_user: false,
+};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Cl42QuaternionAxis {
+    W,
+    X,
+    Y,
+    Z,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ElementalAxis {
+    Earth,
+    Fire,
+    Water,
+    Air,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Cl42AxisBinding {
+    pub axis: Cl42QuaternionAxis,
+    pub element: ElementalAxis,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PersonalCymaticRegister {
+    Cosmic,
+    Personal,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalCymaticPolarityBinding {
+    pub pole: u8,
+    pub register: PersonalCymaticRegister,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum IdentityHashMigrationPhase {
+    Cutover,
+    FinalQuaternionic,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum IdentityHashKind {
+    LegacyBirthDataBlake3,
+    QuaternionicSignatureBlake3,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityHashMigrationPolicy {
+    pub phase: IdentityHashMigrationPhase,
+    pub accepts_legacy_birth_data_hash: bool,
+    pub accepts_quaternionic_signature_hash: bool,
+    pub final_state: IdentityHashKind,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VamaClassifierPolicy {
+    pub computed_mandatory_internal_long_period_review: bool,
+    pub user_visible_on_request: bool,
+    pub auto_raise_to_user: bool,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NatalPlanetPosition {
@@ -101,7 +217,10 @@ impl ElementalBalance {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PersonalIdentityProfile {
+    /// q_personal is the integrated Nara quintessence output.
     pub q_personal: [f32; 4],
+    /// Q_identity is the Kerykeion natal baseline component integrated by q_personal.
+    pub q_identity: [f32; 4],
     pub natal_chart_handle: String,
     pub elemental_balance: ElementalBalance,
     pub identity_hash: String,
@@ -126,8 +245,10 @@ impl PersonalIdentityProfile {
         let natal_chart_handle = required(natal_chart_handle.into(), "natal_chart_handle")?;
         let identity_hash = required_identity_hash(identity_hash.into())?;
         let raw = elemental_weights_from_chart(chart);
+        let q_identity = quat_normalize(raw);
         Ok(Self {
-            q_personal: quat_normalize(raw),
+            q_personal: integrate_nara_quintessence(q_identity, &[]),
+            q_identity,
             natal_chart_handle,
             elemental_balance: ElementalBalance::from_raw_weights(raw)?,
             identity_hash,
@@ -138,6 +259,17 @@ impl PersonalIdentityProfile {
     pub fn composed_quaternion(&self, q_transit: [f32; 4], q_activity: [f32; 4]) -> [f32; 4] {
         compose_personal_quaternion(self.q_personal, q_transit, q_activity)
     }
+}
+
+pub fn integrate_nara_quintessence(
+    q_identity: [f32; 4],
+    layer_quaternions: &[[f32; 4]],
+) -> [f32; 4] {
+    let mut q_personal = quat_normalize(q_identity);
+    for layer in layer_quaternions {
+        q_personal = quat_normalize(quat_mul(q_personal, quat_normalize(*layer)));
+    }
+    q_personal
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -401,16 +533,99 @@ fn required(value: String, field: &'static str) -> Result<String, PersonalIdenti
 
 fn required_identity_hash(value: String) -> Result<String, PersonalIdentityError> {
     let value = required(value, "identity_hash")?;
-    if value.len() == 64 && value.chars().all(|character| character.is_ascii_hexdigit()) {
+    if identity_hash_kinds_during_cutover(&value).is_some() {
         Ok(value)
     } else {
         Err(PersonalIdentityError::InvalidIdentityHash)
     }
 }
 
+pub fn identity_hash_kinds_during_cutover(value: &str) -> Option<[IdentityHashKind; 2]> {
+    if IDENTITY_HASH_MIGRATION_POLICY.phase != IdentityHashMigrationPhase::Cutover {
+        return None;
+    }
+    if value.len() == 64 && value.chars().all(|character| character.is_ascii_hexdigit()) {
+        Some([
+            IdentityHashKind::LegacyBirthDataBlake3,
+            IdentityHashKind::QuaternionicSignatureBlake3,
+        ])
+    } else {
+        None
+    }
+}
+
 #[cfg(test)]
 mod bioquaternion_decomposition {
     use super::*;
+
+    #[test]
+    fn dr_m4_2_ratified_bindings_are_executable() {
+        assert_eq!(
+            CL42_PERSONAL_AXIS_ORDER,
+            [
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::W,
+                    element: ElementalAxis::Earth
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::X,
+                    element: ElementalAxis::Fire
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::Y,
+                    element: ElementalAxis::Water
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::Z,
+                    element: ElementalAxis::Air
+                },
+            ]
+        );
+        assert_eq!(
+            PERSONAL_CYMATIC_POLARITY,
+            [
+                PersonalCymaticPolarityBinding {
+                    pole: 0,
+                    register: PersonalCymaticRegister::Cosmic
+                },
+                PersonalCymaticPolarityBinding {
+                    pole: 1,
+                    register: PersonalCymaticRegister::Personal
+                },
+            ]
+        );
+        assert!(IDENTITY_HASH_MIGRATION_POLICY.accepts_legacy_birth_data_hash);
+        assert!(IDENTITY_HASH_MIGRATION_POLICY.accepts_quaternionic_signature_hash);
+        assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.computed_mandatory_internal_long_period_review);
+        assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.user_visible_on_request);
+        assert!(!VAMA_LONG_PERIOD_REVIEW_POLICY.auto_raise_to_user);
+    }
+
+    #[test]
+    fn q_personal_integrates_q_identity_baseline_and_extra_layers() {
+        let q_identity = [1.0, 0.0, 0.0, 0.0];
+        let q_birthdate = [0.0, 1.0, 0.0, 0.0];
+        let q_activity_history = [0.0, 0.0, 1.0, 0.0];
+
+        let q_personal =
+            integrate_nara_quintessence(q_identity, &[q_birthdate, q_activity_history]);
+        let expected = compose_personal_quaternion(q_identity, q_birthdate, q_activity_history);
+
+        assert_eq!(q_personal, expected);
+    }
+
+    #[test]
+    fn identity_hash_cutover_accepts_one_digest_as_both_kinds() {
+        let digest = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+        assert_eq!(
+            identity_hash_kinds_during_cutover(digest),
+            Some([
+                IdentityHashKind::LegacyBirthDataBlake3,
+                IdentityHashKind::QuaternionicSignatureBlake3
+            ])
+        );
+        assert_eq!(identity_hash_kinds_during_cutover("not-a-hash"), None);
+    }
 
     #[test]
     fn reads_bimba_pratibimba_pair_from_q_composed() {

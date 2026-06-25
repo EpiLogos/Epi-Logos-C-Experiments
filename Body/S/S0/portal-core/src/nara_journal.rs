@@ -3,7 +3,9 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{ActivityStateEffect, EventPrivacyClass, NaraActivityEvent, NaraActivityKind};
+use crate::{
+    ActivityStateEffect, EventPrivacyClass, NaraActivityEvent, NaraActivityKind, VamaShaktiClass,
+};
 
 const POSITIVE_VALENCE_KEYWORDS: &[&str] = &[
     "aligned",
@@ -153,6 +155,37 @@ pub struct NaraParsedActivity {
     pub symbolic_observation: NaraSymbolicObservation,
 }
 
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraPeriodReadingInput {
+    pub period_id: String,
+    pub observations: Vec<NaraSymbolicObservation>,
+    pub include_vama_classifier: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraPeriodReading {
+    pub period_id: String,
+    pub observation_count: usize,
+    pub vama_classifier_computed: bool,
+    pub vama_classifier_available_on_request: bool,
+    pub visible_vama_classifier: Option<VamaShaktiClass>,
+    pub recognition_basis: Vec<String>,
+    #[serde(skip, default = "default_period_vama_classifier")]
+    internal_vama_classifier: VamaShaktiClass,
+}
+
+impl NaraPeriodReading {
+    pub fn internal_vama_classifier(&self) -> VamaShaktiClass {
+        self.internal_vama_classifier
+    }
+}
+
+fn default_period_vama_classifier() -> VamaShaktiClass {
+    VamaShaktiClass::Sprite
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum NaraJournalParseError {
     MissingField { field: &'static str },
@@ -171,6 +204,29 @@ impl fmt::Display for NaraJournalParseError {
 }
 
 impl Error for NaraJournalParseError {}
+
+pub fn period_reading(
+    input: NaraPeriodReadingInput,
+) -> Result<NaraPeriodReading, NaraJournalParseError> {
+    let period_id = required(input.period_id, "period_id")?;
+    if input.observations.is_empty() {
+        return Err(NaraJournalParseError::InvalidInvariant(
+            "period_reading requires at least one real observation".to_owned(),
+        ));
+    }
+    let (internal_vama_classifier, recognition_basis) = classify_period_vama(&input.observations);
+    Ok(NaraPeriodReading {
+        period_id,
+        observation_count: input.observations.len(),
+        vama_classifier_computed: true,
+        vama_classifier_available_on_request: true,
+        visible_vama_classifier: input
+            .include_vama_classifier
+            .then_some(internal_vama_classifier),
+        recognition_basis,
+        internal_vama_classifier,
+    })
+}
 
 pub struct NaraJournalParser;
 
@@ -215,6 +271,70 @@ impl NaraJournalParser {
             symbolic_observation,
         })
     }
+}
+
+fn classify_period_vama(
+    observations: &[NaraSymbolicObservation],
+) -> (VamaShaktiClass, Vec<String>) {
+    let mut coordinate_mentions = 0usize;
+    let mut oracle_markers = 0usize;
+    let mut lens_or_position_mentions = 0usize;
+    let mut negative_or_mixed_valence = 0usize;
+    let mut positive_valence = 0usize;
+    let mut total_words = 0usize;
+
+    for observation in observations {
+        coordinate_mentions += observation.mentioned_coordinates.len();
+        oracle_markers += observation.mentioned_oracle_markers.len();
+        lens_or_position_mentions +=
+            observation.mentioned_lenses.len() + observation.mentioned_positions.len();
+        total_words += observation.word_count;
+        match observation.emotional_valence_hint {
+            Some(NaraEmotionalValenceHint::Negative | NaraEmotionalValenceHint::Mixed) => {
+                negative_or_mixed_valence += 1;
+            }
+            Some(NaraEmotionalValenceHint::Positive) => {
+                positive_valence += 1;
+            }
+            None => {}
+        }
+    }
+
+    let mut basis = Vec::new();
+    if coordinate_mentions > 0 {
+        basis.push(format!("coordinate-mentions:{coordinate_mentions}"));
+    }
+    if oracle_markers > 0 {
+        basis.push(format!("oracle-markers:{oracle_markers}"));
+    }
+    if lens_or_position_mentions > 0 {
+        basis.push(format!(
+            "lens-or-position-mentions:{lens_or_position_mentions}"
+        ));
+    }
+    if negative_or_mixed_valence > 0 {
+        basis.push(format!(
+            "negative-or-mixed-valence:{negative_or_mixed_valence}"
+        ));
+    }
+    if positive_valence > 0 {
+        basis.push(format!("positive-valence:{positive_valence}"));
+    }
+    if total_words > 0 {
+        basis.push(format!("word-count:{total_words}"));
+    }
+
+    let classifier = if oracle_markers >= 2 && oracle_markers >= coordinate_mentions {
+        VamaShaktiClass::Mantra
+    } else if negative_or_mixed_valence > 0 && lens_or_position_mentions > 0 {
+        VamaShaktiClass::Daemon
+    } else if coordinate_mentions >= 2 || observations.len() >= 3 {
+        VamaShaktiClass::Egregore
+    } else {
+        VamaShaktiClass::Sprite
+    };
+
+    (classifier, basis)
 }
 
 fn derive_symbolic_observation(document: &NaraJournalDocument) -> NaraSymbolicObservation {

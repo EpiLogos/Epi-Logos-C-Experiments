@@ -19,7 +19,7 @@ companion_research:
   - "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-a-m4-reconciliation-matrix.md"
 decisions_consumed:
   - "DR-M4-1 (vault path: `Idea/Empty/Present/{day_id}/`) — ratified; code already conforms (nara-surface.ts:415-417)"
-  - "DR-M4-2 (q_personal baseline + Cl(4,2) axis order + Vāma classifier policy + 0/1 cymatic polarity) — five clauses; consumed throughout"
+  - "DR-M4-2 (q_personal integrated output + Q_identity natal baseline + Cl(4,2) axis order + Vāma classifier policy + 0/1 cymatic polarity) — five clauses; consumed throughout"
 related_tranches:
   - "06.* — M4-Nara extension (cycle-2 inheritance, T0-T3 substrate)"
   - "10.* — kernel-bridge profile-spine (depositionAnchor, klein_flip, resonance ledger)"
@@ -54,11 +54,11 @@ Per M4'-SPEC §6.6, `m4-prime-nara-activity-graphiti-instrument`, and `nara-ux-f
 
 | Bimba | Name | What it owns | Techne (substrate authority) | Render aspect |
 |---|---|---|---|---|
-| **M4-0'** | Personal identity / identity-system evidence | Six-layer identity branch (M4-0-0 birthdate · M4-0-1 decanic · M4-0-2 Jungian · M4-0-3 Gene Keys · M4-0-4 Human Design · M4-0-5 Quintessence). Source of `Q_identity` contributions. **Stable, not mutable from daily activity.** | `Body/S/S0/epi-lib/include/m4.h:90-228` (six layer structs + Identity Matrix); `Body/S/S0/portal-core/src/personal_identity.rs:101-141` (PersonalIdentityProfile, q_personal); `Body/S/S0/epi-cli/src/nara/wind.rs:117-148` (Kerykeion natal path) | Lean identity sidebar: name + elemental balance percentages (Earth/Fire/Water/Air); layer-presence indicators; no quaternion-dump |
-| **M4-1'** | Q_personal baseline / somatic-medicinal field | Personal-quaternion at rest (the Kerykeion-natal-derived `q_personal`); body/transit/somatic current; elemental triage; chakra-state read; medicine triage | `Body/S/S0/epi-lib/include/m4.h:419-470` (`M4_Sympathetic_Medicine`, `M4_Elemental_Balance`, `M4_Chakra_State`); `personal_identity.rs:77-99, 230-265` (ElementalBalance + dignity weights); `Body/S/S0/portal-core/src/kernel.rs:374` (q_cosmic counterparty) | Resonance indicator (numeric + ConjugateFormCharacter Major/Minor/Shadow); elemental-balance bars; chakra glow density on psychoid axis |
+| **M4-0'** | Personal identity / identity-system evidence | Six-layer identity branch (M4-0-0 birthdate · M4-0-1 decanic · M4-0-2 Jungian · M4-0-3 Gene Keys · M4-0-4 Human Design · M4-0-5 Quintessence). Source of `Q_identity` contributions. **Stable, not mutable from daily activity.** | `Body/S/S0/epi-lib/include/m4.h:90-228` (six layer structs + Identity Matrix); `Body/S/S0/portal-core/src/personal_identity.rs:217-260` (PersonalIdentityProfile, q_personal, q_identity); `Body/S/S0/epi-cli/src/nara/wind.rs:117-148` (Kerykeion natal path) | Lean identity sidebar: name + elemental balance percentages (Earth/Fire/Water/Air); layer-presence indicators; no quaternion-dump |
+| **M4-1'** | Q_identity baseline / somatic-medicinal field | Personal-quaternion at rest (the Kerykeion-natal-derived `Q_identity` component that `q_personal` integrates); body/transit/somatic current; elemental triage; chakra-state read; medicine triage | `Body/S/S0/epi-lib/include/m4.h:419-470` (`M4_Sympathetic_Medicine`, `M4_Elemental_Balance`, `M4_Chakra_State`); `personal_identity.rs:193-214, 368-403` (ElementalBalance + dignity weights); `Body/S/S0/portal-core/src/kernel.rs:374` (q_cosmic counterparty) | Resonance indicator (numeric + ConjugateFormCharacter Major/Minor/Shadow); elemental-balance bars; chakra glow density on psychoid axis |
 | **M4-2'** | Q_transit / Kerykeion oracle service | Current transit quaternion (live); oracle artifact service (Quaternal Tarot · Quaternal I-Ching · dream-omen · Mahāmāyā transcriptional clock packets); planetary-hour/decan/lunar state | `Body/S/S0/epi-lib/include/m4.h:258-340` (`M4_Temporal_Now`, `M4_Sacred_Random`, `M4_IChing_Cast`, `M4_Tarot_Draw`, `M4_Oracle_Draw`, `M4_Canonical_Tag`); `epi-cli/src/nara/wind.rs:110-156, 178-228` (Kairos current; degree/element/decan extraction); `Body/S/S3/graphiti-runtime/src/lib.rs` (episode payload) | Oracle inspector panel; transit ring on psychoid backdrop; Mahāmāyā clock-walk inspector |
 | **M4-3'** | Q_activity / transformation processor / logical-intelligence engine | The **central** Nara intelligence per UX doc §2.5: cross-dialect pattern integration; lens-routing through MEF squares (L2/L2'/L3/L3' primary; adjacent squares); `PatternPacket` production; teaching-threshold detection; Mahāmāyā transcription-packet ingestor | `Body/S/S0/portal-core/src/nara_journal.rs:48-185` (`NaraJournalParseInput`, `NaraSymbolicObservation`, `NaraParsedActivity`, `NaraJournalParser`); `ActivityStateEffect`, `NaraActivityEvent`, `NaraActivityKind` (re-export surface); no `PatternPacket` substrate yet (DOC-AHEAD per Wave-A row 8/15) | "Explain my resonance" panel: source artifact → M4 domain → MEF lens-position → active square → evidence spans → Q_activity effect → uncertainty (per UX §6.2) |
-| **M4-4'** | Q_composed / bioquaternion / journal-graphiti-life field | The live composed state `Q_composed = Q_identity · Q_transit · Q_activity`; the bioquaternion **decomposition** `(q_b, q_p)` — bimba/pratibimba reading of `Q_composed`, NOT independent input; day-as-episode container; journal/dream/highlight/agent-chat artifacts; Graphiti episodic memory at PersonalNexus | `personal_identity.rs:177-186` (`compose_personal_quaternion`); `kernel.rs:46-59` (`BioQuaternionState { q_b, q_p }` — landed, lines 48-49); `nara_journal.rs` (journal parser); `Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts:62-74, 137-237` (`NaraDayContainer`, `createNaraArtifact`, `readNaraDayContainer`); `graphiti-runtime/src/lib.rs:132` (protected-local-episodic-memory privacy boundary) | Journal/flow editor (primary); DAY/NOW header; artifact tree; Graphiti browser; trajectory panel (PatternPacket aggregations) |
+| **M4-4'** | Q_composed / bioquaternion / journal-graphiti-life field | The live composed state `Q_composed = Q_identity · Q_transit · Q_activity`; the bioquaternion **decomposition** `(q_b, q_p)` — bimba/pratibimba reading of `Q_composed`, NOT independent input; day-as-episode container; journal/dream/highlight/agent-chat artifacts; Graphiti episodic memory at PersonalNexus | `personal_identity.rs:309-318` (`compose_personal_quaternion`); `kernel.rs:46-59` (`BioQuaternionState { q_b, q_p }` — landed, lines 48-49); `nara_journal.rs` (journal parser); `Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts:62-74, 137-237` (`NaraDayContainer`, `createNaraArtifact`, `readNaraDayContainer`); `graphiti-runtime/src/lib.rs:132` (protected-local-episodic-memory privacy boundary) | Journal/flow editor (primary); DAY/NOW header; artifact tree; Graphiti browser; trajectory panel (PatternPacket aggregations) |
 | **M4-5'** | Psychoid cymatic field at personal scale / Epii relay gate | The Diamond-QL Vitruvian psychoid field renderer (the M' product surface owned here, first-build allowed); the review/promotion gate (`proposed → reviewed → accepted|rejected → applied`); the seam to M5-4' (Epii review) and M5-5' (Sophia teaching); the Möbius return point for #4.4.4.4 updates | M2' cymatic engine + M1-5 Hopf bundle + M3-5 lens-stack consumed as substrate; `kernel.rs:46-59` BioQuaternionState; `kernel.rs:374-376, 486-488` (q_cosmic, resonance, conjugate_form_character on profile); `audio_octet[8]`, `nodal_quartet[4]` from kernel.rs (Vimarśa-window); **renderer first-build at `Body/M/epi-theia/extensions/m4-nara/src/browser/psychoid_cymatic/`** (DOES NOT YET EXIST — proposed tranche) | Diamond/bipyramid + Hopf-linked tori + cymatic standing-wave field + lens-ring backdrop + Vāma śakti contemplative glyph layer + sushumna axis with chakra assemblage points |
 
 **The six-fold structure is the QL Mod-6 cycle read at personal scale**, exactly parallel to (and an instance of) the same cycle at M1 ring positions, M3 codon positions, and the bimba map. M4-0' is the ground (P0 / "what is given"); M4-1' is definition / baseline (P1); M4-2' is operation / event (P2); M4-3' is pattern (P3 — the central transformation engine); M4-4' is the lived context / fractal-doubling lemniscate (P4); M4-5' is integration / Möbius return (P5 — where reviewed activity may, with consent, perturb the personal field, and where the 4-5-0 seam opens to Epii).
@@ -90,14 +90,14 @@ C declarations in `Body/S/S0/epi-lib/include/m4.h`:
 
 Rust runtime surface — `Body/S/S0/portal-core/src/personal_identity.rs`:
 
-- `PersonalIdentityProfile` (`personal_identity.rs:101-109`) — carries `q_personal: [f32; 4]`, `natal_chart_handle: String`, `elemental_balance: ElementalBalance`, `identity_hash: String`, `privacy_class: ProfilePrivacyClass` (defaults to `ProtectedLocalDerived`)
-- `from_kerykeion_json` (`personal_identity.rs:112-119`) and `from_natal_chart` (`personal_identity.rs:121-136`) — constructors
-- `elemental_weights_from_chart` (`personal_identity.rs:230-240`) — runs all 10 planets through `component_for_sign` + `planet_dignity_multiplier` against the keplerian-velocity LUT (mirrors `M2_PLANET_LUT.keplerian_vel`, see `personal_identity.rs:11-15`)
-- `composed_quaternion` (`personal_identity.rs:138-140`) — exposes `compose_personal_quaternion`
+- `PersonalIdentityProfile` (`personal_identity.rs:217-228`) — carries `q_personal: [f32; 4]`, `q_identity: [f32; 4]`, `natal_chart_handle: String`, `elemental_balance: ElementalBalance`, `identity_hash: String`, `privacy_class: ProfilePrivacyClass` (defaults to `ProtectedLocalDerived`)
+- `from_kerykeion_json` (`personal_identity.rs:231-237`) and `from_natal_chart` (`personal_identity.rs:240-257`) — constructors
+- `elemental_weights_from_chart` (`personal_identity.rs:368-377`) — runs all 10 planets through `component_for_sign` + `planet_dignity_multiplier` against the keplerian-velocity LUT (mirrors `M2_PLANET_LUT.keplerian_vel`, see `personal_identity.rs:11-15`)
+- `composed_quaternion` (`personal_identity.rs:259-260`) — exposes `compose_personal_quaternion`
 
-**Substrate state per Wave-A row 10:** today M4-0 carries **Kerykeion-only `q_personal`**. Birthdate/Jungian/Gene Keys/Human Design layers are declared in `m4.h` but the Rust portal surface only implements layer-1 (Astrological / Kerykeion). DR-M4-2 clause 1 ratifies: `q_personal` is the natal baseline contribution; `Q_identity` names the integrated quintessence as more layers land.
+**Substrate state per Wave-A row 10 + DR-M4-2:** today M4-0 carries `Q_identity` as the Kerykeion natal baseline component and `q_personal` as the integrated [[Nara]] quintessence output. With only the Kerykeion layer present, `q_personal = integrate(Q_identity, [])`; as Birthdate/Jungian/Gene Keys/Human Design layers land, `q_personal` integrates those real layer contributions without renaming the natal baseline.
 
-### §2.2 M4-1' Q_personal baseline / somatic field
+### §2.2 M4-1' Q_identity baseline / somatic field
 
 C declarations in `m4.h`:
 
@@ -107,7 +107,7 @@ C declarations in `m4.h`:
 - `M4_Medicine_Triage` (`m4.h:346-358`, 16 bytes) — fire/water/earth/air intensities; dominant + deficient element; primary chakra; triage vector; planetary hour; safety mask
 - `M4_Transform_State` (`m4.h:368-379`, 16 bytes) — alchemical operation index; stroke phase; cycle count; container active; decan recipe index; arousal level; safety threshold
 
-Rust elemental-balance surface — `personal_identity.rs:77-99, 230-265` — runs the same dignity ladder (domicile/exaltation/detriment/fall multipliers at 1.20/1.10/0.90/0.85) over the 10-planet weights.
+Rust elemental-balance surface — `personal_identity.rs:193-214, 368-403` — runs the same dignity ladder (domicile/exaltation/detriment/fall multipliers at 1.20/1.10/0.90/0.85) over the 10-planet weights.
 
 ### §2.3 M4-2' Q_transit / oracle service
 
@@ -133,7 +133,7 @@ Rust journal parser — `Body/S/S0/portal-core/src/nara_journal.rs`:
 
 ### §2.5 M4-4' Q_composed / bioquaternion / day-episodes / Graphiti
 
-**Q_composed** — `Body/S/S0/portal-core/src/personal_identity.rs:177-186`:
+**Q_composed** — `Body/S/S0/portal-core/src/personal_identity.rs:309-318`:
 
 ```rust
 pub fn compose_personal_quaternion(
@@ -183,7 +183,7 @@ impl BioQuaternionState {
 - `kernel.rs:374` — `pub q_cosmic: [f32; 4]` on `MathemeHarmonicProfile`; computed via `codon_charge_quaternion(codon_id)` at `kernel.rs:410`
 - `kernel.rs:375-376` — `resonance: Option<f32>`, `conjugate_form_character: ConjugateFormCharacter`
 - `kernel.rs:486-488` — at profile-build with identity supplied: `PersonalResonance::from_quaternions(identity.q_personal, profile.q_cosmic)` → `profile.resonance = Some(score)`, `profile.conjugate_form_character = resonance.conjugate_form_character`
-- `personal_identity.rs:151-175` — `PersonalResonance { signed_dot, score, conjugate_form_character }`; `from_quaternions` computes `signed_dot = q_personal · q_cosmic` (clamped), `score = |signed_dot|`, and classifies: `< -EPSILON → ShadowInversion`; `≥ 2/3 → Major`; else `Minor`
+- `personal_identity.rs:275-307` — `PersonalResonance { signed_dot, score, conjugate_form_character }`; `from_quaternions` computes `signed_dot = q_personal · q_cosmic` (clamped), `score = |signed_dot|`, and classifies: `< -EPSILON → ShadowInversion`; `≥ 2/3 → Major`; else `Minor`
 - `personal_identity.rs:9` — `PERSONAL_RESONANCE_MAJOR_THRESHOLD = 2.0/3.0` (the explicit threshold)
 - `kernel.rs:46-59` — `BioQuaternionState { q_b, q_p }` (the bimba/pratibimba decomposition substrate)
 - `kernel.rs:1095` — `bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p)`
@@ -251,7 +251,7 @@ Per M4'-SPEC "Canonical Source Lock" closing paragraph: M4' consumes shared Worl
 Four load-bearing gaps for the M4' surface:
 
 1. **No `bioquaternion: BioQuaternionState` field on the public profile.** The substrate has it (`kernel.rs:46-59`, consumed inside `KernelEvalState`) but it is not surfaced through `MathemeHarmonicProfile`. The psychoid-field renderer at M4-5' needs `(q_b, q_p)` to render the bimba/pratibimba counter-rotating tori at the heart-chakra position (psychoid-cymatic-field-engine §7.2 "white/black 0/1 ground tori").
-2. **No `q_personal: Option<[f32; 4]>` field surfaced under the protected-local class.** Today `q_personal` lives on `PersonalIdentityProfile` (`personal_identity.rs:104`) and is fed into the resonance computation at profile-build (line 486) but is not retrievable from the profile — the renderer at M4-1'/M4-5' needs it to compute its own elemental-quaternion projection (psychoid §4 colour-quaternion) without re-deriving from the natal chart.
+2. **No `q_personal: Option<[f32; 4]>` field surfaced under the protected-local class.** Today `q_personal` lives on `PersonalIdentityProfile` (`personal_identity.rs:221`) and is fed into the resonance computation at profile-build but is not retrievable from the public profile — the renderer at M4-1'/M4-5' needs it to compute its own elemental-quaternion projection (psychoid §4 colour-quaternion) without re-deriving from the natal chart.
 3. **No `q_composed: Option<[f32; 4]>` field surfaced under protected-local class.** `compose_personal_quaternion` exists; the result is what drives the live cymatic field (psychoid §5.1 "the medium tuning is driven by `q_Nara`"). Without this on the profile, the renderer would either re-compose locally (unauthorised duplication) or read three handles separately and re-multiply (correctness risk).
 4. **No `pattern_packet_handle: Option<String>` field surfaced under protected-local class.** When M4-3' produces a `PatternPacket`, the explain-my-resonance panel and the trajectory render need a handle to look it up. Today there is no return-channel.
 
@@ -279,12 +279,12 @@ Add `pub personal_pole: Option<PersonalPoleProjection>` to `MathemeHarmonicProfi
 /// ══════════════════════════════════════════════════════════════════════════
 pub struct PersonalPoleProjection {
     /// The natal-baseline personal quaternion (Kerykeion-derived per DR-M4-2 clause 1).
-    /// Lifted from `PersonalIdentityProfile.q_personal` (personal_identity.rs:104).
+    /// Lifted from `PersonalIdentityProfile.q_personal` (personal_identity.rs:221).
     /// Opaque handle — the raw quaternion body never crosses the bus.
     pub q_personal: OpaqueProtectedHandle<[f32; 4]>,
 
     /// The live composed quaternion `Q_identity · Q_transit · Q_activity`
-    /// (personal_identity.rs:177-186). Drives the psychoid field's medium-tuning.
+    /// (personal_identity.rs:309-318). Drives the psychoid field's medium-tuning.
     /// Opaque handle — the raw quaternion body never crosses the bus.
     pub q_composed: OpaqueProtectedHandle<[f32; 4]>,
 
@@ -307,13 +307,13 @@ pub struct PersonalPoleProjection {
 
     /// The personal resonance with the current cosmic state.
     /// signed_dot, score, conjugate_form_character per PersonalResonance
-    /// (personal_identity.rs:143-175). Already computed at kernel.rs:486
+    /// (personal_identity.rs:275-307). Already computed by the kernel profile builder.
     /// — this surfaces it as a typed sub-record instead of three loose fields.
     /// PUBLIC-SAFE: scalar metric, non-sensitive. Surfaced directly.
     pub resonance: PersonalResonance,
 
     /// The elemental balance (Earth/Fire/Water/Air weights summing to 1.0)
-    /// from PersonalIdentityProfile.elemental_balance (personal_identity.rs:79-99).
+    /// from PersonalIdentityProfile.elemental_balance (personal_identity.rs:193-214).
     /// Surfaced for the lean identity sidebar's percentage bars.
     /// PUBLIC-SAFE: aggregate percentages, non-sensitive. Surfaced directly.
     pub elemental_balance: ElementalBalance,
@@ -350,14 +350,14 @@ pub struct VamaRecognition {
 }
 ```
 
-**Anti-greenfield:** every component already exists in the substrate — `q_personal` at `personal_identity.rs:104`, `q_composed` via `compose_personal_quaternion` at `personal_identity.rs:177-186`, `BioQuaternionState` at `kernel.rs:46-59`, `PersonalResonance` at `personal_identity.rs:143-175`, `ElementalBalance` at `personal_identity.rs:77-99`. The projection is a **surfacing**, not a fabrication. The four new pieces (`q_transit` channel, `pattern_packet_handle`, `TorusKnotPhase`, `VamaRecognition`) are each a named code-pending closure with a single owner.
+**Anti-greenfield:** every component already exists in the substrate — `q_personal` at `personal_identity.rs:221`, `q_identity` at `personal_identity.rs:223`, `q_composed` via `compose_personal_quaternion` at `personal_identity.rs:309-318`, `BioQuaternionState` at `kernel.rs:46-59`, `PersonalResonance` at `personal_identity.rs:275-307`, `ElementalBalance` at `personal_identity.rs:193-214`. The projection is a **surfacing**, not a fabrication. The four new pieces (`q_transit` channel, `pattern_packet_handle`, `TorusKnotPhase`, `VamaRecognition`) are each a named code-pending closure with a single owner.
 
 ### §4.4 Strict-invariant: protected-local enforcement
 
 The proposed projection MUST be guarded by:
 
 1. Profile-build path discrimination: `MathemeHarmonicProfile::from_tick(tick)` produces `personal_pole: None`; `MathemeHarmonicProfile::from_tick_with_identity(tick, identity)` produces `personal_pole: Some(...)`.
-2. Privacy-class invariant: `from_tick_with_identity` sets `privacy_class = ProtectedLocalDerived` (matches `personal_identity.rs:134` default).
+2. Privacy-class invariant: `from_tick_with_identity` sets `privacy_class = ProtectedLocalDerived` (matches `personal_identity.rs:255` default).
 3. Public-projection sanitisation: `MathemeHarmonicProfilePublicCurrent::from(profile)` (kernel.rs:276) strips `personal_pole` to `None`. The public current profile MUST NEVER carry it.
 4. Gateway-contract enforcement: `Body/S/S3/gateway-contract/src/lib.rs` (see `classify_vault_path_marks_nara_protected_under_any_day` referenced via GitNexus) already classifies Nara paths as protected; the same classification gate refuses to forward any profile with `personal_pole.is_some()` across the public boundary.
 
@@ -576,7 +576,7 @@ Per M4'-SPEC §7.4 and CYCLE-3 invariant ("Cl(4,2) runs at four scales (M1 ring 
 Per M4'-SPEC §7.3 and UX §13.3:
 
 - `q_cosmic` (`kernel.rs:374, 410`) is the codon-charge quaternion at this tick — the M3 codon evaluates to a quaternion in the same Cl(4,2) algebra via `codon_charge_quaternion(codon_id)`. M3-ARCHITECTURE owns its derivation.
-- The resonance metric `score = |q_personal · q_cosmic|` (`personal_identity.rs:155-161`) makes the personal-cosmic alignment a real number at every tick.
+- The resonance metric `score = |q_personal · q_cosmic|` (`personal_identity.rs:287-293`) makes the personal-cosmic alignment a real number at every tick.
 - The M3 lens-stack (M3_LENS_STACK 16+1 apertures) is consumed as the holographic backdrop of the psychoid field (§5.3.5) — never re-derived. M3-ARCHITECTURE / M3-5 owns the stack; M4-5' consumes a `profile.m3_lens_stack` projection.
 
 **Mahāmāya namespace split (UX §3.5):** M2_MEF_LENS (12-lens chromatic addressing in 72-fold field) is read by M4-3' for cross-dialect routing; M3_LENS_STACK (16+1 static + growth apertures) is consumed by M4-5' for the lens-backdrop; M4 PatternPacket lens-position is the QL/MEF route by which Nara integrates the packet. These three lens vocabularies do NOT collapse — each names a different reading aperture.
@@ -661,7 +661,7 @@ When `profile.personal_pole` is missing or pending (pre-Tranche-10.M4):
 - The resonance indicator displays "pending-resonance" badge instead of a score
 - NO silent degradation; NO fabricated resonance values
 
-When `profile.audio_octet` is pending (M2-1' Vimarśa write not yet wired): the cymatic patterns are blocked-overlay; the rest of the field renders with the medium-tuning frozen at `q_personal` baseline.
+When `profile.audio_octet` is pending (M2-1' Vimarśa write not yet wired): the cymatic patterns are blocked-overlay; the rest of the field renders with the medium-tuning frozen at `Q_identity` baseline.
 
 ### §8.5 Bimba/Pratibimba state persistence (Tranche 15.7)
 
@@ -708,9 +708,9 @@ These five guards together enforce the §10.7 UX rule and M4'-SPEC §7.6 privacy
 | Oracle primitives (Sacred_Random, IChing_Cast, Tarot_Draw, Oracle_Draw, Canonical_Tag) | `m4.h:285-339` |
 | Medicine triage + transform state + elemental balance + chakra state + sympathetic medicine + alchemical ops | `m4.h:346-440+` |
 | Divination vtable + magic-number type safety | `m4.h:389-412` |
-| `PersonalIdentityProfile` + `q_personal` + `elemental_balance` + Kerykeion path | `Body/S/S0/portal-core/src/personal_identity.rs:101-141` |
-| `PersonalResonance::from_quaternions` + Major/Minor/ShadowInversion classifier | `personal_identity.rs:143-175` |
-| `compose_personal_quaternion` (Q_identity · Q_transit · Q_activity) | `personal_identity.rs:177-186` |
+| `PersonalIdentityProfile` + `q_personal` + `q_identity` + `elemental_balance` + Kerykeion path | `Body/S/S0/portal-core/src/personal_identity.rs:217-260` |
+| `PersonalResonance::from_quaternions` + Major/Minor/ShadowInversion classifier | `personal_identity.rs:275-307` |
+| `compose_personal_quaternion` (Q_identity · Q_transit · Q_activity) | `personal_identity.rs:309-318` |
 | `BioQuaternionState { q_b, q_p }` + KernelEvalState consumption | `Body/S/S0/portal-core/src/kernel.rs:46-59, 155, 164-170, 1095` |
 | `MathemeHarmonicProfile.q_cosmic / .resonance / .conjugate_form_character / .privacy_class` | `kernel.rs:374-377, 486-488` |
 | `codon_charge_quaternion(codon_id)` | `kernel.rs:410` |
@@ -752,7 +752,7 @@ These three are first-build allowed because they ARE the M' product surface owne
 
 - **Local pitch synthesis** — M4-5' MUST consume `profile.audio_octet[8]` (Vimarśa-written); never invoke a synthesiser; never index `m2.h` LUTs for chakra-frequency derivation.
 - **Local clock** — M4-5' MUST consume the kernel-tick profile-advance event; never animation-frame-count; never Date.now() polling.
-- **Local LUT forks** — `M2_PLANET_LUT` constants, `PERSONAL_RESONANCE_MAJOR_THRESHOLD = 2.0/3.0`, ConjugateFormCharacter classification rules: all consumed from `personal_identity.rs:9, 11-15, 162-168`. NEVER duplicated frontend-side.
+- **Local LUT forks** — `M2_PLANET_LUT` constants, `PERSONAL_RESONANCE_MAJOR_THRESHOLD = 2.0/3.0`, ConjugateFormCharacter classification rules: all consumed from `personal_identity.rs:9, 11-15, 294-300`. NEVER duplicated frontend-side.
 - **Local graph relation inference** — Graphiti `:HAS_DAY`/`:NEXT_IN_ARC` edges MUST come through S3 graphiti-runtime; the Theia extension's envelope is for handle bookkeeping, not graph authority.
 - **Composition by juxtaposition** — the 4-5-0 surface composes three poles geometrically (psychoid field + canon city-scape + journal/recognition layer); NOT three side-by-side widgets.
 - **Cosmic-scale K² rendering** — M1 owns K² at the cosmic scale. M4-5' renders Hopf-linked tori at the PERSONAL scale (heart-bounded, dipyramid-contained), not cosmic K².

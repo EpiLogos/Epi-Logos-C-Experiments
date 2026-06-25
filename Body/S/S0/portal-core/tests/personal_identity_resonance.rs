@@ -1,7 +1,8 @@
 use portal_core::{
-    codon_charge_quaternion, kernel_tick_from_epogdoon, ConjugateFormCharacter,
-    KerykeionNatalChart, MathemeHarmonicProfile, PersonalIdentityProfile, PersonalResonance,
-    ProfilePrivacyClass,
+    codon_charge_quaternion, identity_hash_kinds_during_cutover, integrate_nara_quintessence,
+    kernel_tick_from_epogdoon, ConjugateFormCharacter, IdentityHashKind, KerykeionNatalChart,
+    MathemeHarmonicProfile, PersonalIdentityProfile, PersonalResonance, ProfilePrivacyClass,
+    CL42_PERSONAL_AXIS_ORDER, PERSONAL_CYMATIC_POLARITY, VAMA_LONG_PERIOD_REVIEW_POLICY,
 };
 
 const COMPLETE_NATAL: &str = include_str!("fixtures/kerykeion_natal_complete.json");
@@ -25,7 +26,12 @@ fn identity_profile_is_deterministic_and_normalized_from_kerykeion_fixture() {
     );
     assert_eq!(first.natal_chart_handle, NATAL_HANDLE);
     assert_eq!(first.identity_hash, IDENTITY_HASH);
+    assert_eq!(
+        first.q_personal,
+        integrate_nara_quintessence(first.q_identity, &[])
+    );
     assert_unit(first.q_personal);
+    assert_unit(first.q_identity);
 
     let elemental_sum = first.elemental_balance.earth
         + first.elemental_balance.fire
@@ -36,6 +42,23 @@ fn identity_profile_is_deterministic_and_normalized_from_kerykeion_fixture() {
         .q_personal
         .iter()
         .all(|component| component.is_finite()));
+}
+
+#[test]
+fn dr_m4_2_policy_bindings_are_ratified_in_personal_identity_surface() {
+    assert_eq!(CL42_PERSONAL_AXIS_ORDER.len(), 4);
+    assert_eq!(PERSONAL_CYMATIC_POLARITY[0].pole, 0);
+    assert_eq!(PERSONAL_CYMATIC_POLARITY[1].pole, 1);
+    assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.computed_mandatory_internal_long_period_review);
+    assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.user_visible_on_request);
+    assert!(!VAMA_LONG_PERIOD_REVIEW_POLICY.auto_raise_to_user);
+    assert_eq!(
+        identity_hash_kinds_during_cutover(IDENTITY_HASH),
+        Some([
+            IdentityHashKind::LegacyBirthDataBlake3,
+            IdentityHashKind::QuaternionicSignatureBlake3,
+        ])
+    );
 }
 
 #[test]
@@ -114,6 +137,8 @@ fn resonance_uses_codon_charge_quaternion_and_public_profile_does_not_leak_ident
     assert!(public_json.contains("resonance"));
     assert!(!public_json.contains("qPersonal"));
     assert!(!public_json.contains("q_personal"));
+    assert!(!public_json.contains("qIdentity"));
+    assert!(!public_json.contains("q_identity"));
     assert!(!public_json.contains("natalChartHandle"));
     assert!(!public_json.contains("identityHash"));
     assert!(!public_json.contains("birth"));

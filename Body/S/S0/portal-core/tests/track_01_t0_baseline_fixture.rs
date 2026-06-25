@@ -65,6 +65,8 @@ fn baseline_profile_does_not_leak_protected_local_fields() {
         "natal_chart_handle",
         "qPersonal",
         "q_personal",
+        "qIdentity",
+        "q_identity",
         "identityHash",
         "identity_hash",
         "elementalBalance",
