@@ -143,3 +143,55 @@ pub async fn import_epi_ontology_with_n10s(client: &Neo4jClient) -> Result<(), S
         .map_err(|err| format!("n10s epi ontology import failed: {err}"))?;
     record_ontology_bridge_facts(client).await
 }
+
+#[cfg(test)]
+#[test]
+fn anuttara_property_mappings_round_trip() {
+    use std::collections::BTreeMap;
+
+    let mappings = anuttara_property_mappings();
+    let encoded = serde_json::to_string(&mappings).expect("serialize property mappings");
+    let decoded: Vec<OntologyPropertyMapping> =
+        serde_json::from_str(&encoded).expect("deserialize property mappings");
+
+    assert_eq!(decoded, mappings);
+    assert_eq!(decoded.len(), 3);
+
+    let by_alias = decoded
+        .iter()
+        .map(|mapping| (mapping.alias.as_str(), mapping))
+        .collect::<BTreeMap<_, _>>();
+
+    assert_eq!(
+        by_alias.get("symbol").expect("symbol alias").neo4j_property,
+        "c_1_symbol"
+    );
+    assert_eq!(
+        by_alias
+            .get("formulation_type")
+            .expect("formulation_type alias")
+            .neo4j_property,
+        "c_1_formulation_type"
+    );
+    assert_eq!(
+        by_alias
+            .get("complete_formulation")
+            .expect("complete_formulation alias")
+            .neo4j_property,
+        "c_1_complete_formulation"
+    );
+
+    for mapping in by_alias.values() {
+        assert!(
+            mapping.neo4j_property.starts_with("c_1_"),
+            "{} must map to a coordinate-prefixed canonical source property",
+            mapping.alias
+        );
+        assert_ne!(
+            mapping.alias, mapping.neo4j_property,
+            "{} must remain an alias, not the stored source property",
+            mapping.alias
+        );
+        assert_eq!(mapping.disclosure, "public-s2-supplied");
+    }
+}

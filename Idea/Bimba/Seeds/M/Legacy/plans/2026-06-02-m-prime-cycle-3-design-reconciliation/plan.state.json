@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T15:43:22.410Z",
+  "updatedAt": "2026-06-25T15:57:10.582Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1587,7 +1587,10 @@
       "claimedAt": "2026-06-25T15:40:00.000Z",
       "completedAt": "2026-06-25T15:40:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T15:40:00.000Z", "text": "B-8 no-fork invariant codified in M0'-SPEC:63 (one substrate, three renderings, no-fork), M2'-SPEC:420 (no-fork invariant enumerated), M3'-SPEC:50 (three app placements over one substrate), and plugin-integrated-1-2-3 composition-contract.ts (B-8 NON-FORK INVARIANT block with cross-links). All three specs + plugin contract now grep-match. Resolves 2026-06-16 RESET."}
+        {
+          "at": "2026-06-25T15:40:00.000Z",
+          "text": "B-8 no-fork invariant codified in M0'-SPEC:63 (one substrate, three renderings, no-fork), M2'-SPEC:420 (no-fork invariant enumerated), M3'-SPEC:50 (three app placements over one substrate), and plugin-integrated-1-2-3 composition-contract.ts (B-8 NON-FORK INVARIANT block with cross-links). All three specs + plugin contract now grep-match. Resolves 2026-06-16 RESET."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -1597,16 +1600,21 @@
       "worktree": null
     },
     "09.T9.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T15:57:10.534Z",
+      "claimedAt": "2026-06-25T15:48:21.041Z",
+      "completedAt": "2026-06-25T15:57:10.534Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T15:57:10.534Z",
+          "text": "cargo test -p epi-s2-graph-services ontology::anuttara_property_mappings_round_trip from Body/S/S2/graph-services: 1 passed; node --test Body/M/epi-theia/extensions/test/m0-anuttara-inspector.test.mjs: 30 passed; grep c_1_(symbol|complete_formulation|form) in Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts returned 6 anchors; key files Body/S/S2/graph-services/src/ontology.rs, Body/S/S2/graph-services/src/graph_api.rs, Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-8-anuttara-props",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T15:48:21.041Z",
+      "runId": "20260625T154821Z-09-T9.8",
       "worktree": null
     },
     "09.T9.9": {
@@ -12602,26 +12610,36 @@
       "leaseExpiresAt": "2026-06-25T17:30:49.931Z",
       "worktree": null,
       "completedAt": "2026-06-25T15:43:22.357Z"
+    },
+    {
+      "runId": "20260625T154821Z-09-T9.8",
+      "taskId": "09.T9.8",
+      "status": "done",
+      "startedAt": "2026-06-25T15:48:21.041Z",
+      "owner": "codex-m-dev-09-t9-8-anuttara-props",
+      "leaseExpiresAt": "2026-06-25T17:48:21.041Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T15:57:10.534Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T15:30:40.673Z",
-    "updatedAt": "2026-06-25T15:30:40.673Z",
+    "createdAt": "2026-06-25T15:48:09.183Z",
+    "updatedAt": "2026-06-25T15:48:09.183Z",
     "taskIds": [
-      "09.T9.6",
-      "09.T9.7",
       "09.T9.8",
-      "09.T9.9"
+      "09.T9.9",
+      "11.T11.5",
+      "11.T11.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.6": "in-session",
-      "09.T9.7": "in-session",
       "09.T9.8": "in-session",
-      "09.T9.9": "in-session"
+      "09.T9.9": "in-session",
+      "11.T11.5": "in-session",
+      "11.T11.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

@@ -312,6 +312,10 @@ test('layer readiness treats aliases and missing payloads as canonical absence o
     });
 
     assert.equal(aliasOnly.languageFields.find(field => field.key === 'c_1_symbol')?.state, 'derived');
+    assert.match(
+        aliasOnly.languageFields.find(field => field.key === 'c_1_symbol')?.provenance ?? '',
+        /Alias-only symbol value mapped by S2 OntologyPropertyMapping/
+    );
     assert.equal(
         aliasOnly.languageFields.find(field => field.key === 'c_1_formulation_type')?.state,
         'derived'

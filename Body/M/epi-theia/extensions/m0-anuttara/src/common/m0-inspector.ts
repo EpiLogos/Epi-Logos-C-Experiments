@@ -1010,7 +1010,7 @@ function canonicalLanguageField(
                 label,
                 value: derived,
                 state: 'derived' as const,
-                provenance: `Derived from legacy alias ${alias}; canonical ${key} absent from S2 graph payload`
+                provenance: `Alias-only ${alias} value mapped by S2 OntologyPropertyMapping; canonical source property ${key} absent from inspector payload`
             });
         }
     }

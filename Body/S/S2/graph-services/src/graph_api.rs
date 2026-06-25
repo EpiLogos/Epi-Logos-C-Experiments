@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use crate::core65_audit::{core_65_audit_payload, core_65_audit_plan, Core65AuditSummary};
+use crate::ontology::anuttara_property_mappings;
 use crate::{
     canonical_harmonic_bimba_relations, kernel_coordinate_anchor_from_parts, CoordinateArrayParser,
     CoordinateReferenceProjection, HarmonicBimbaRelation, KernelCoordinateAnchor, Neo4jClient,
@@ -983,27 +984,16 @@ fn coordinate_type_canvas_path(coordinate: &str) -> Option<String> {
 }
 
 fn anuttara_fields_json(row: &neo4rs::Row) -> Value {
-    let fields = [
-        ("symbol", "c_1_symbol", row.get::<String>("symbol").ok()),
-        (
-            "formulation_type",
-            "c_1_formulation_type",
-            row.get::<String>("formulation_type").ok(),
-        ),
-        (
-            "complete_formulation",
-            "c_1_complete_formulation",
-            row.get::<String>("complete_formulation").ok(),
-        ),
-    ];
-    let present = fields
+    let mappings = anuttara_property_mappings();
+    let present = mappings
         .iter()
-        .filter_map(|(alias, property, value)| {
-            let value = value.as_ref()?.trim();
+        .filter_map(|mapping| {
+            let value = row.get::<String>(mapping.alias.as_str()).ok()?;
+            let value = value.trim();
             if value.is_empty() {
                 return None;
             }
-            Some((*alias, *property, value.to_owned()))
+            Some((mapping, value.to_owned()))
         })
         .collect::<Vec<_>>();
     if present.is_empty() {
@@ -1012,20 +1002,15 @@ fn anuttara_fields_json(row: &neo4rs::Row) -> Value {
 
     let mut values = serde_json::Map::new();
     let mut provenance = serde_json::Map::new();
-    for (alias, property, value) in present {
-        values.insert(alias.to_owned(), json!(value));
+    for (mapping, value) in present {
+        values.insert(mapping.alias.clone(), json!(value));
         provenance.insert(
-            alias.to_owned(),
+            mapping.alias.clone(),
             json!({
                 "source": "s2.neo4j",
                 "status": "s2_supplied",
-                "property": property,
-                "ontologyProperty": match alias {
-                    "symbol" => "epi:hasSymbol",
-                    "formulation_type" => "epi:hasFormulationType",
-                    "complete_formulation" => "epi:hasCompleteFormulation",
-                    _ => "epi:unknown",
-                },
+                "property": mapping.neo4j_property,
+                "ontologyProperty": mapping.ontology_property,
             }),
         );
     }
