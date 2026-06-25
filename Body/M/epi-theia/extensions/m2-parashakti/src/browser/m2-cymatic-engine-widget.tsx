@@ -24,6 +24,7 @@ import {
     CymaticTransport,
     M2CymaticTickSnapshot
 } from './components/CymaticTransport';
+import { CymaticChladniSurface } from './components/CymaticChladniSurface';
 
 @injectable()
 export class M2CymaticEngineWidget extends ReactWidget {
@@ -99,7 +100,14 @@ export class M2CymaticEngineWidget extends ReactWidget {
                                 livePacket={packet}
                                 liveTick={this.profile ? profileTick(this.profile) : packet.profileGeneration}
                                 tickSnapshots={this.tickSnapshots}
-                            />
+                            >
+                                {snapshot => (
+                                    <CymaticChladniSurface
+                                        frame={snapshot.packet.cymaticSignature}
+                                        tick={snapshot.tick}
+                                    />
+                                )}
+                            </CymaticTransport>
                             <dl>
                                 <dt>72 address</dt>
                                 <dd>{packet.address72}</dd>

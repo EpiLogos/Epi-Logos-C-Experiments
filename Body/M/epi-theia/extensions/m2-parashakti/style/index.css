@@ -201,6 +201,27 @@
     font-size: var(--theia-ui-font-size0);
 }
 
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface canvas {
+    inline-size: min(100%, 280px);
+    aspect-ratio: 1;
+    border: 1px solid var(--theia-contrastBorder);
+    background: var(--theia-editor-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    color: var(--theia-descriptionForeground);
+    font-size: 11px;
+}
+
 .mext-widget-m2-parashakti .m2-shadow-decan-surface {
     margin-top: 14px;
     padding-top: 12px;

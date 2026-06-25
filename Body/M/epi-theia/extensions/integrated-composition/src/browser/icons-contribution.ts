@@ -48,7 +48,7 @@ export const PRATIBIMBA_ICON_THEME_REGISTRATIONS: readonly PratibimbaIconThemeRe
     registration('canon-studio', 'book'),
     registration('backend-studio', 'server-process'),
     registration('smart-connections', 'circuit-board'),
-    registration('coin-flip', 'sync'),
+    registration('coin-flip', 'symbol-number'),
     registration('lemniscate', 'symbol-operator'),
     registration('family-m0-anuttara', 'circle-large-outline'),
     registration('family-m1-paramasiva', 'pulse'),

@@ -38,7 +38,19 @@ export { IntegratedBridgeGate } from '../browser/bridge-gate';
 export {
     CompositionProfileContext,
     CompositionProfileProvider,
+    DAILY_0_1_TOGGLE_KEYSTROKE,
+    Daily01ToggleChrome,
+    createDaily01ToggleController,
+    isDaily01ToggleKeyEvent,
+    nextDaily01Face,
+    preserveBimbaPratibimbaUiStateAcrossDaily01Toggle,
     useCompositionProfile
+} from '../browser/composition-profile-context';
+export type {
+    Daily01Face,
+    Daily01ToggleChromeProps,
+    Daily01ToggleController,
+    Daily01ToggleKeyEventLike
 } from '../browser/composition-profile-context';
 export {
     CoordinateString,

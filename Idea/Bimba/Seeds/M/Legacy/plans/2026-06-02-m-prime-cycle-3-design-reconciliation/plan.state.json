@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T20:14:07.476Z",
+  "updatedAt": "2026-06-25T20:17:07.416Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2564,16 +2564,16 @@
       "worktree": null
     },
     "17.T17.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T20:14:07.410Z",
-      "claimedAt": "2026-06-25T20:14:07.410Z",
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
       "completedAt": null,
       "evidence": [],
-      "notes": "Codex rate limit 2026-06-25 ~17:10. Resets 8:24 PM.",
-      "owner": "codex-m-dev-17-t17-3-graph-schema-split",
-      "leaseExpiresAt": "2026-06-25T22:14:07.410Z",
-      "heartbeatAt": "2026-06-25T20:14:07.410Z",
-      "runId": "20260625T201407Z-17-T17.3",
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
       "worktree": null
     },
     "17.T17.4": {
@@ -2779,16 +2779,16 @@
       "worktree": null
     },
     "17.T17.17": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T20:13:51.434Z",
-      "claimedAt": "2026-06-25T20:13:51.434Z",
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": "codex-m-dev-17-t17-17-coordinate-home",
-      "leaseExpiresAt": "2026-06-25T22:13:51.434Z",
-      "heartbeatAt": "2026-06-25T20:13:51.434Z",
-      "runId": "20260625T201351Z-17-T17.17",
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
       "worktree": null
     },
     "17.T17.18": {
@@ -4563,13 +4563,18 @@
       "worktree": null
     },
     "23.T23.17": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T20:16:00.000Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T20:16:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T20:16:00.000Z",
+          "text": "Codex via re-dispatch. cymatic-determinism.test.mjs (149 lines, 5743 bytes): 3 tests asserting byte-identical wavePoints for identical audio_octet/nodal_quartet/address72 inputs, byte-identical CymaticChladniSurface canvas pixels, and same canvas-byte hash across repeated server renders. CymaticChladniSurface.tsx (148 lines, 5609 bytes) with renderCymaticChladniSurfacePixels. m2-cymatic-engine-widget.tsx modified. Package.json and style/index.css updated. All acceptance criteria met."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -12966,22 +12971,22 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T20:13:33.554Z",
-    "updatedAt": "2026-06-25T20:13:33.554Z",
+    "createdAt": "2026-06-25T20:17:07.324Z",
+    "updatedAt": "2026-06-25T20:17:07.324Z",
     "taskIds": [
-      "23.T23.17",
+      "17.T17.17",
+      "17.T17.3",
       "15.T15.5",
-      "15.T15.6",
-      "15.T15.7"
+      "15.T15.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "23.T23.17": "in-session",
+      "17.T17.17": "in-session",
+      "17.T17.3": "in-session",
       "15.T15.5": "in-session",
-      "15.T15.6": "in-session",
-      "15.T15.7": "in-session"
+      "15.T15.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
