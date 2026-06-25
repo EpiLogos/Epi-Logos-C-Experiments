@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:25:21.411Z",
+  "updatedAt": "2026-06-25T23:29:09.220Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6974,11 +6974,16 @@
       "worktree": null
     },
     "24.T24.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T23:29:09.162Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T23:29:09.162Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T23:29:09.162Z",
+          "text": "grep -n '0x35|tct-rotational' codon-wheel.ts: L23,L26 (M3_TCT_NINE_OF_WANDS_CODON_ID=0x35 + doc), L517 comment, L522 blockers.push('tct-rotational-state-count-mismatch'). surfaceBlockers now receives activeFacts and pushes the blocker when codonId===0x35 && rotationalStateCount!==7. Test: m3-mahamaya/test/codon-wheel.test.ts (4 node:test cases). Standalone logic check ALL PASS."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

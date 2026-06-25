@@ -19,6 +19,13 @@ export const M3_EXPECTED_NON_DUAL_CODONS = 40;
 export const M3_EXPECTED_DUAL_CODONS = 24;
 export const M3_EXPECTED_ROTATIONAL_STATES = 472;
 
+// TCT / Nine-of-Wands renderer-side surfacing rule: the Nine-of-Wands codon
+// (codonId 0x35) is a non-dual codon, so its surfaced projection MUST carry the
+// non-dual rotational-state count of 7. When the active projection names this
+// codon but reports any other count, the surface is blocked rather than rendered.
+export const M3_TCT_NINE_OF_WANDS_CODON_ID = 0x35;
+export const M3_TCT_NINE_OF_WANDS_ROTATIONAL_STATE_COUNT = 7;
+
 export interface M3ProvenanceHandle {
     readonly source: 'profile' | 's2' | 's3' | 'm4' | 'pending';
     readonly handle: string;
@@ -98,7 +105,7 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
     const worldClockBinding = buildWorldClockBinding(activeFacts, input.worldClock);
     const pendingFields = surfacePendingFields(input, mahamaya, projection);
     const provenance = provenanceHandles(input);
-    const blockers = surfaceBlockers(input, pendingFields);
+    const blockers = surfaceBlockers(input, pendingFields, activeFacts);
     const eventPayload = Object.freeze({
         contractVersion: M3_CODON_WHEEL_CONTRACT_VERSION,
         profileGeneration: input.profile.generation,
@@ -483,7 +490,11 @@ function surfacePendingFields(
     return pending;
 }
 
-function surfaceBlockers(input: M3ProjectionSurfaceInput, pendingFields: readonly string[]): string[] {
+function surfaceBlockers(
+    input: M3ProjectionSurfaceInput,
+    pendingFields: readonly string[],
+    activeFacts: Readonly<Record<string, unknown>>
+): string[] {
     const blockers = [];
     if (!input.library) blockers.push('Track 02 canonical M3 library graph summary missing');
     if (input.library && validateM3LibrarySummary(input.library).matchesM3Spec !== true) {
@@ -501,6 +512,14 @@ function surfaceBlockers(input: M3ProjectionSurfaceInput, pendingFields: readonl
     }
     if (pendingFields.includes('profile.rotationalStateCount')) {
         blockers.push('Track 01 profile rotational state fields missing');
+    }
+    // TCT / Nine-of-Wands rule: when the surfaced projection is the Nine-of-Wands
+    // codon (0x35), its rotationalStateCount must be the non-dual count of 7.
+    if (
+        numberValue(activeFacts.codonId) === M3_TCT_NINE_OF_WANDS_CODON_ID &&
+        numberValue(activeFacts.rotationalStateCount) !== M3_TCT_NINE_OF_WANDS_ROTATIONAL_STATE_COUNT
+    ) {
+        blockers.push('tct-rotational-state-count-mismatch');
     }
     return blockers;
 }
