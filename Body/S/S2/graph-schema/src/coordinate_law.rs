@@ -280,9 +280,7 @@ mod tests {
         assert_eq!(CoordinateHome::S2_3Prime.to_string(), "S2-3'");
 
         assert_eq!(
-            label_spec("Bimba")
-                .expect("Bimba label missing")
-                .coordinate_home,
+            label_spec("Bimba").expect("Bimba label missing").coordinate_home,
             CoordinateHome::C0
         );
         assert_eq!(

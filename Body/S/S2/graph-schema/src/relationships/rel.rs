@@ -1,9 +1,6 @@
-use crate::{
-    relationships::{
-        GraphRelationshipTypeSpec, ARENA_DIALOGUE_OF, DIALOGICAL_RESONANCE_AT,
-        WORLD_FORM_OF_RELATION, WORLD_ONTOLOGY_OF_RELATION,
-    },
-    CoordinateHome,
+use crate::relationships::{
+    GraphRelationshipTypeSpec, ARENA_DIALOGUE_OF, DIALOGICAL_RESONANCE_AT, WORLD_FORM_OF_RELATION,
+    WORLD_ONTOLOGY_OF_RELATION,
 };
 
 pub const RELATION_FAMILY_PROPERTY: &str = "c_1_relation_family";

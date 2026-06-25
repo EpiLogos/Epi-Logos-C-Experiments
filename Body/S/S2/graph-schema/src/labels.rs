@@ -1,5 +1,3 @@
-use crate::CoordinateHome;
-
 pub const BIMBA_LABEL: &str = "Bimba";
 pub const WORLD_LABEL: &str = "World";
 pub const ARCHETYPAL_LABEL: &str = "Archetypal";
@@ -20,7 +18,7 @@ pub const COMPAT_LABELS: &[&str] = &[
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GraphLabelSpec {
     pub label: &'static str,
-    pub coordinate_home: CoordinateHome,
+    pub coordinate_home: &'static str,
     pub source_family: &'static str,
     pub compatibility: bool,
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T20:27:26.484Z",
+  "updatedAt": "2026-06-25T20:32:15.423Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2410,7 +2410,7 @@
     },
     "15.T15.5": {
       "status": "review",
-      "updatedAt": "2026-06-25T20:27:26.321Z",
+      "updatedAt": "2026-06-25T20:32:15.314Z",
       "claimedAt": null,
       "completedAt": "2026-06-25T20:18:00.000Z",
       "evidence": [
@@ -2421,12 +2421,16 @@
         {
           "at": "2026-06-25T20:27:26.321Z",
           "text": "Source wired in Body/M/epi-theia/extensions/integrated-composition/src/browser/composition-profile-context.tsx and design-primitives/lemniscate-transition.tsx; toggle assertions added in tests/toggle-gesture.test.mjs; verification blocked before assertions because pnpm test cannot find rimraf and node --test cannot resolve react."
+        },
+        {
+          "at": "2026-06-25T20:32:15.314Z",
+          "text": "Implementation present in integrated-composition toggle host; git diff --check clean for composition-profile-context.tsx. Verification blocked: pnpm test fails at missing rimraf/react because node_modules are empty; filtered install fails due stale tuning-surface lockfile."
         }
       ],
       "notes": null,
       "owner": "hermes-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-25T20:27:26.321Z",
+      "heartbeatAt": "2026-06-25T20:32:15.314Z",
       "runId": null,
       "worktree": null
     },

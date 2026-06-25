@@ -86,7 +86,7 @@ export function createDaily01ToggleController(
     return Object.freeze({
         currentFace: () => face,
         toggle,
-        handleKeyDown: event => {
+        handleKeyDown: (event: Daily01ToggleKeyEventLike) => {
             if (!isDaily01ToggleKeyEvent(event)) {
                 return null;
             }
