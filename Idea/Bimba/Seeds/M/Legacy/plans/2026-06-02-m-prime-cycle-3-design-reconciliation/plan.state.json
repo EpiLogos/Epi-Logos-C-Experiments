@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:13:07.654Z",
+  "updatedAt": "2026-06-25T23:18:42.801Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6947,11 +6947,20 @@
       "worktree": null
     },
     "24.T24.8": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T23:18:42.748Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T23:18:42.748Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T23:18:36.197Z",
+          "text": "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBodyDynamicsViewer.tsx, Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/HexagramBodyDynamicsService.ts"
+        },
+        {
+          "at": "2026-06-25T23:18:42.748Z",
+          "text": "x"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
