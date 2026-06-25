@@ -1453,11 +1453,11 @@
     },
     "08.T8.7": {
       "status": "pending",
-      "updatedAt": null,
+      "updatedAt": "2026-06-25T10:15:00.000Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [],
-      "notes": null,
+      "notes": "Codex rate limit 2026-06-25. Reset pending. Resets 2:04 PM.",
       "owner": null,
       "leaseExpiresAt": null,
       "heartbeatAt": null,
