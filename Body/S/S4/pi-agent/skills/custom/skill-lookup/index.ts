@@ -13,7 +13,10 @@ export type EntitlementClass =
 	| "requires-elevation"
 	| "forbidden";
 
+export type SkillManifestEntryKind = "skill" | "aeon";
+
 export interface SkillManifestEntry {
+	kind: SkillManifestEntryKind;
 	name: string;
 	description: string;
 	when_to_use: string;
@@ -179,6 +182,7 @@ export async function enumerateSkillManifestEntries(input: {
 		const entitlement_class = classifyEntitlement(name, input.effective);
 		if (entitlement_class !== "allowed-for-current-agent") continue;
 		out.push({
+			kind: parsed.kind,
 			name: parsed.name || name,
 			description: parsed.description,
 			when_to_use: parsed.when_to_use,
@@ -221,6 +225,7 @@ function classifyEntitlement(
 }
 
 function parseSkillMarkdown(raw: string): {
+	kind: SkillManifestEntryKind;
 	name: string;
 	description: string;
 	when_to_use: string;
@@ -246,6 +251,7 @@ function parseSkillMarkdown(raw: string): {
 		].filter(Boolean).join(";");
 	const vak_coordinate = frontmatter.vak_coordinate ?? inferredVakCoordinate;
 	return {
+		kind: parseManifestEntryKind(frontmatter.kind ?? frontmatter.entry_kind ?? frontmatter.manifest_kind),
 		name: frontmatter.name ?? title,
 		description,
 		when_to_use,
@@ -253,6 +259,10 @@ function parseSkillMarkdown(raw: string): {
 		quintessential_form: frontmatter.quintessential_form ?? "",
 		bimba_coordinate: frontmatter.bimba_coordinate ?? "",
 	};
+}
+
+function parseManifestEntryKind(value: string | undefined): SkillManifestEntryKind {
+	return value?.trim().toLowerCase() === "aeon" ? "aeon" : "skill";
 }
 
 function splitFrontmatter(raw: string): { frontmatter: Record<string, string>; body: string } {
@@ -299,6 +309,7 @@ function indexManifest(
 ): IndexedSkillEntry[] {
 	return manifest.map((entry) => {
 		const search_text = [
+			entry.kind,
 			entry.name,
 			entry.description,
 			entry.when_to_use,

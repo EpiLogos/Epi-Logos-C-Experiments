@@ -845,11 +845,13 @@
       "worktree": null
     },
     "05.T5.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:44:18.367Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:50:00.000Z",
       "claimedAt": "2026-06-25T08:44:18.367Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:50:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T08:50:00.000Z", "text": "Accepted. Deliverable on disk, committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-6-birthdate-identity",
       "leaseExpiresAt": "2026-06-25T10:44:18.367Z",
@@ -9245,11 +9247,13 @@
       "worktree": null
     },
     "46.T46.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:44:47.807Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:50:00.000Z",
       "claimedAt": "2026-06-25T08:44:47.807Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:50:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T08:50:00.000Z", "text": "Accepted. Deliverable on disk, committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-46-t46-3-aeon-discovery",
       "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
