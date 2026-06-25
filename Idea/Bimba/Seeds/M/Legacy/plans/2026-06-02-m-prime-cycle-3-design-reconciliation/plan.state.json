@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T08:32:41.327Z",
+  "updatedAt": "2026-06-25T08:40:11.657Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -823,16 +823,16 @@
       "worktree": null
     },
     "05.T5.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:33:23.154Z",
+      "claimedAt": "2026-06-25T08:33:23.154Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-05-t5-5-psychoid-cymatic",
+      "leaseExpiresAt": "2026-06-25T10:33:23.154Z",
+      "heartbeatAt": "2026-06-25T08:33:23.154Z",
+      "runId": "20260625T083323Z-05-T5.5",
       "worktree": null
     },
     "05.T5.6": {
@@ -9301,16 +9301,21 @@
       "worktree": null
     },
     "47.T47.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:40:11.587Z",
+      "claimedAt": "2026-06-25T08:34:14.335Z",
+      "completedAt": "2026-06-25T08:40:11.587Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:40:11.587Z",
+          "text": "Chronos node tests 16/16; Anima node tests 144/144; focused chronos_cron_fire loader check dispatched 2/2 wake modes (now,next-heartbeat); node --check clean for Body/S/S4/ta-onta/S4-3p-chronos/extension.ts + Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts; paths: Body/S/S4/ta-onta/S4-3p-chronos/extension.ts, Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts, Body/S/S4/ta-onta/S4-3p-chronos/CONTRACT.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-47-t47-2-chronos-anima",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:34:14.335Z",
+      "runId": "20260625T083414Z-47-T47.2",
       "worktree": null
     },
     "47.T47.3": {
@@ -12154,31 +12159,49 @@
       "leaseExpiresAt": "2026-06-25T10:19:06.496Z",
       "worktree": null,
       "completedAt": "2026-06-25T08:24:44.616Z"
+    },
+    {
+      "runId": "20260625T083323Z-05-T5.5",
+      "taskId": "05.T5.5",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:33:23.154Z",
+      "owner": "codex-m-dev-05-t5-5-psychoid-cymatic",
+      "leaseExpiresAt": "2026-06-25T10:33:23.154Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T083414Z-47-T47.2",
+      "taskId": "47.T47.2",
+      "status": "done",
+      "startedAt": "2026-06-25T08:34:14.335Z",
+      "owner": "codex-m-dev-47-t47-2-chronos-anima",
+      "leaseExpiresAt": "2026-06-25T10:34:14.335Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:40:11.587Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T08:18:30.311Z",
-    "updatedAt": "2026-06-25T08:18:30.311Z",
+    "createdAt": "2026-06-25T08:33:04.862Z",
+    "updatedAt": "2026-06-25T08:33:04.862Z",
     "taskIds": [
-      "26.T26.8",
-      "05.T5.4",
       "05.T5.5",
-      "05.T5.6"
+      "05.T5.6",
+      "05.T5.7",
+      "05.T5.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "26.T26.8": "in-session",
-      "05.T5.4": "in-session",
       "05.T5.5": "in-session",
-      "05.T5.6": "in-session"
+      "05.T5.6": "in-session",
+      "05.T5.7": "in-session",
+      "05.T5.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

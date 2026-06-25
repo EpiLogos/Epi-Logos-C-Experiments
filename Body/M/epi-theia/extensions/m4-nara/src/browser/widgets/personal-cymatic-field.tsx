@@ -100,17 +100,17 @@ type RendererUpdateMethod = (paramsOrHandle: PersonalCymaticFieldRpcParams | str
 
 export const DR_IG_6_DIPYRAMID_NODES: readonly DipyramidNode[] = Object.freeze([
     freezeNode('P5', 'apex', 0, -1, 1),
+    freezeNode("P5'", 'apex', 0, 1, -1),
     freezeNode('P1', 'top-base', Math.SQRT1_2, -0.34, 0.34),
-    freezeNode('P2', 'top-base', 0, -0.34, 0.78),
-    freezeNode('P3', 'top-base', -Math.SQRT1_2, -0.34, 0.34),
-    freezeNode('P4', 'top-base', 0, -0.34, -0.78),
-    freezeNode('P0', 'axis', 0, 0, 0.08),
-    freezeNode("P0'", 'axis', 0, 0, -0.08),
     freezeNode("P1'", 'inverted-base', 0, 0.34, 0.78),
+    freezeNode('P2', 'top-base', 0, -0.34, 0.78),
     freezeNode("P2'", 'inverted-base', -Math.SQRT1_2, 0.34, 0.34),
+    freezeNode('P3', 'top-base', -Math.SQRT1_2, -0.34, 0.34),
     freezeNode("P3'", 'inverted-base', 0, 0.34, -0.78),
+    freezeNode('P4', 'top-base', 0, -0.34, -0.78),
     freezeNode("P4'", 'inverted-base', Math.SQRT1_2, 0.34, 0.34),
-    freezeNode("P5'", 'apex', 0, 1, -1)
+    freezeNode('P0', 'axis', 0, 0, 0.08),
+    freezeNode("P0'", 'axis', 0, 0, -0.08)
 ]);
 
 export const HOPF_LINKED_TORI: readonly HopfToricLink[] = Object.freeze([

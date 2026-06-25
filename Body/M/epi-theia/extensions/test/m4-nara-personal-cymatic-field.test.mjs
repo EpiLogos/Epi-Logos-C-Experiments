@@ -203,13 +203,23 @@ test('view id, TRACK_08 export, and gateway RPC method match the declared contra
     assert.ok(common.TRACK_08_EXPORTS.includes(M4_PERSONAL_CYMATIC_FIELD_EXPORT));
 });
 
-test('DR-IG-6 dipyramid scene contains exactly twelve P/P-prime positions', () => {
+test('DR-IG-6 dipyramid scene contains apex poles, interleaved base vertices, and axis points', () => {
     const scene = buildPersonalCymaticScene();
     assert.equal(scene.nodes.length, 12);
     assert.deepEqual(
         scene.nodes.map(node => node.id),
-        ['P5', 'P1', 'P2', 'P3', 'P4', 'P0', "P0'", "P1'", "P2'", "P3'", "P4'", "P5'"]
+        ['P5', "P5'", 'P1', "P1'", 'P2', "P2'", 'P3', "P3'", 'P4', "P4'", 'P0', "P0'"]
     );
+    assert.deepEqual(scene.nodes.slice(2, 10).map(node => node.role), [
+        'top-base',
+        'inverted-base',
+        'top-base',
+        'inverted-base',
+        'top-base',
+        'inverted-base',
+        'top-base',
+        'inverted-base'
+    ]);
 });
 
 test('Hopf-linked toric links wind the apex axis with at least two interlocking tori', () => {

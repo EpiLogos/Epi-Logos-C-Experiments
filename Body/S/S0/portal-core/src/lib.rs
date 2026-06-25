@@ -14,6 +14,7 @@ pub mod oracle_lut;
 pub mod parashakti;
 pub mod personal_identity;
 pub mod profile_projections;
+pub mod psychoid_cymatic;
 pub mod quaternion;
 pub mod rfactor;
 pub mod rotational;
@@ -38,6 +39,7 @@ pub use nara_journal::*;
 pub use parashakti::*;
 pub use personal_identity::*;
 pub use profile_projections::*;
+pub use psychoid_cymatic::*;
 pub use quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
 pub use rfactor::{
     parse_namespace, Band, Base, Chirality, RFactorPathStep, RParseError, RToken, Triad,

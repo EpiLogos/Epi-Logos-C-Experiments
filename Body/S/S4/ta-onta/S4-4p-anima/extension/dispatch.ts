@@ -1,12 +1,21 @@
 import { spawn, spawnSync } from "node:child_process";
+import { isValidVakAddress } from "../../shared/vak_address.ts";
 import type {
+  CfLiteral,
+  CfpLiteral,
+  CpLiteral,
+  CsDirection,
+  CsLiteral,
+  CtLiteral,
   CfpMoveLiteral,
+  CpfPolarity,
   VakAddress,
   ZThreadMove,
   ZThreadShape,
   ZThreadSnapshot,
   ZThreadState,
 } from "../../shared/vak_address.ts";
+import { AGENT_CF } from "../modules/dispatch-validate.ts";
 import {
   MAX_VERIFY_CYCLES,
   evaluateVerifyGate,
@@ -223,6 +232,43 @@ export function runEpi(args: string[], timeout = 120_000) {
     timeout,
     cwd: process.env.EPI_REPO_ROOT || process.cwd(),
   });
+}
+
+export interface TeamDispatchVakAddressDefaults {
+  readonly agentName: string;
+  readonly vakAddress?: unknown;
+  readonly cpf?: CpfPolarity;
+  readonly ct?: CtLiteral[];
+  readonly cp?: CpLiteral;
+  readonly cf?: CfLiteral;
+  readonly cfp?: CfpLiteral;
+  readonly cs?: {
+    readonly code?: CsLiteral;
+    readonly direction?: CsDirection;
+  };
+}
+
+export function vakAddressForTeamDispatch(input: TeamDispatchVakAddressDefaults): VakAddress {
+  if (input.vakAddress !== undefined) {
+    if (!isValidVakAddress(input.vakAddress)) {
+      throw new Error("vak_address failed canonical validation");
+    }
+    return input.vakAddress;
+  }
+
+  const normalizedAgent = input.agentName.trim().toLowerCase();
+  const cf = input.cf ?? AGENT_CF[normalizedAgent] ?? "(4.0/1-4.4/5)";
+  return {
+    cpf: input.cpf ?? "(4.0/1-4.4/5)",
+    ct: input.ct ?? ["CT4b"],
+    cp: input.cp ?? "CP4.2",
+    cf,
+    cfp: input.cfp ?? "CFP0",
+    cs: {
+      code: input.cs?.code ?? "CS4",
+      direction: input.cs?.direction ?? "Day",
+    },
+  };
 }
 
 // Dispatch a single agent task via the native team runtime (epi agent team dispatch).

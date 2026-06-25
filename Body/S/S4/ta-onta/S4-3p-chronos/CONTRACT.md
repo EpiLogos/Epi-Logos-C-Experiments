@@ -33,6 +33,7 @@ Chronos is the **temporal authority** of the agent system. It owns the Day/NOW l
 | `chronos_now_init` | Trigger Hen to create NOW folder within today |
 | `chronos_archive_day` | Rotate Day folder to Pratibimba History archive |
 | `chronos_cron_register` | Register a cron job via gateway `cron.add` |
+| `chronos_cron_fire` | Route a fired gateway cron payload through [[Anima]] with a [[VakAddress]] |
 | `chronos_temporal_status` | Current Day, active NOWs, archive backlog |
 
 ---
