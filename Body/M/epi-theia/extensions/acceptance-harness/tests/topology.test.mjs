@@ -495,6 +495,71 @@ test('OmniPanel intent promotes daily-0-1 to ide-deep with M3 codon preserved', 
     );
 });
 
+test('cross-layout state identity preserves M3 codon session tuple across daily-0-1 and ide-deep', () => {
+    const harness = createOmniPanelTraversalHarness();
+    const expectedIdentity = {
+        coordinate: 'M3-1-0-13',
+        lens: 'm3-codon-wheel',
+        mode: 'codon-rotation',
+        profileGeneration: 472,
+        sessionKey: 'agent:epii:main',
+        dayNow: '2026-06-17'
+    };
+    const identityFromRoute = route => ({
+        coordinate: route.session.selectedCoordinate,
+        lens: route.session.lens,
+        mode: route.session.mode,
+        profileGeneration: route.session.profileGeneration,
+        sessionKey: route.session.sessionKey,
+        dayNow: route.session.dayNow
+    });
+
+    const dailyRoute = harness.routeCrossLayoutIntent(buildM3CodonCrossLayoutIntent({
+        id: 'intent-m3-state-daily-anchor',
+        requestedLayout: 'daily-0-1',
+        lens: expectedIdentity.lens,
+        mode: expectedIdentity.mode,
+        reason: 'seed M3 codon session identity on daily layout'
+    }));
+    const deepRoute = harness.routeCrossLayoutIntent(buildM3CodonCrossLayoutIntent({
+        id: 'intent-m3-state-deep-codon',
+        requestedLayout: 'ide-deep',
+        lens: expectedIdentity.lens,
+        mode: expectedIdentity.mode,
+        reason: 'toggle to ide-deep without replacing kernel-bridge singleton state'
+    }));
+    const returnRoute = harness.routeCrossLayoutIntent(buildM3CodonCrossLayoutIntent({
+        id: 'intent-m3-state-return-daily',
+        requestedLayout: 'daily-0-1',
+        lens: expectedIdentity.lens,
+        mode: expectedIdentity.mode,
+        reason: 'toggle back to daily without replacing kernel-bridge singleton state'
+    }));
+
+    assert.equal(dailyRoute.activeLayout, 'daily-0-1');
+    assert.equal(deepRoute.activeLayout, 'ide-deep');
+    assert.equal(returnRoute.activeLayout, 'daily-0-1');
+    assert.deepEqual(identityFromRoute(dailyRoute), expectedIdentity);
+    assert.deepEqual(identityFromRoute(deepRoute), expectedIdentity);
+    assert.deepEqual(identityFromRoute(returnRoute), expectedIdentity);
+    assert.deepEqual(deepRoute.consumedIntent, {
+        requestedExtensionId: 'm3-mahamaya',
+        requestedContributionId: 'codon',
+        coordinate: expectedIdentity.coordinate,
+        profileGeneration: expectedIdentity.profileGeneration,
+        lens: expectedIdentity.lens,
+        mode: expectedIdentity.mode
+    });
+    assert.deepEqual(
+        harness.renderCrossLayoutIntentLog().entries.map(entry => entry.id),
+        [
+            'intent-m3-state-daily-anchor',
+            'intent-m3-state-deep-codon',
+            'intent-m3-state-return-daily'
+        ]
+    );
+});
+
 test('M0 active-layer state survives daily-0-1 and ide-deep layout toggles', () => {
     const harness = createOmniPanelTraversalHarness();
     const dailyIntent = buildM0SurfaceCrossLayoutIntent({
