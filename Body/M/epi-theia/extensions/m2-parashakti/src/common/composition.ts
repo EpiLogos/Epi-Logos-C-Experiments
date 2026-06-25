@@ -143,6 +143,79 @@ function activeElementFromIndex(index: number): string {
     return elements[index % elements.length];
 }
 
+// ── Planetary elemental-weight feed (23.19) ──────────────────────────────────
+
+/** The four elements the planetary bar stacks, in render order. */
+export type M2BarElement = 'fire' | 'water' | 'air' | 'earth';
+
+/** The full four-element weight vector — fractions summing to ~1.0 when live. */
+export interface M2ElementalWeightVector {
+    readonly earth: number;
+    readonly fire: number;
+    readonly water: number;
+    readonly air: number;
+}
+
+/**
+ * One planetary orbiter's contribution to the elemental-weight feed, mirroring
+ * the kernel-side `PlanetaryElementContribution` surfaced through
+ * `kernelBridge.m2.planetaryElementalWeights()`. Folds into the PASU
+ * bioquaternion `elemental_weights` vector (#4.4.4.4). `element` may be `aether`
+ * (AKASHA / quintessence) — that energy informs balance but never stacks into the
+ * four-element bar. The Sun (planet 0) is the excluded identity root and never
+ * appears here (the 9:8 epogdoon asymmetry).
+ */
+export interface M2ElementalWeightContribution {
+    /** Planet_Id (1..9 — Moon..Pluto; Sun excluded). */
+    readonly planetId: number;
+    /** Lowercase Mahabhuta element name (`fire`/`water`/`air`/`earth`/`aether`). */
+    readonly element: string;
+    /** Cousto octave energy (Hz) this orbiter projects. */
+    readonly couEnergy: number;
+}
+
+/** The four bar elements in stack order — fire, water, air, earth. */
+export const M2_BAR_ELEMENTS: readonly M2BarElement[] = Object.freeze([
+    'fire',
+    'water',
+    'air',
+    'earth'
+]);
+
+/** True when a contribution lands in the four-element bar (i.e. is not aether). */
+export function m2ContributionIsBarElement(
+    contribution: M2ElementalWeightContribution
+): contribution is M2ElementalWeightContribution & { element: M2BarElement } {
+    return (M2_BAR_ELEMENTS as readonly string[]).includes(contribution.element);
+}
+
+/**
+ * Fold per-planet contributions into the normalised four-element vector. Pure
+ * mirror of the kernel fold (`planetary_elemental_weights`) used to derive each
+ * planet's stacked-segment fraction widget-side — aether contributions are
+ * reported but excluded from the bar total.
+ */
+export function foldM2ElementalWeightContributions(
+    contributions: readonly M2ElementalWeightContribution[]
+): M2ElementalWeightVector {
+    const buckets: Record<M2BarElement, number> = { fire: 0, water: 0, air: 0, earth: 0 };
+    for (const contribution of contributions) {
+        if (m2ContributionIsBarElement(contribution)) {
+            buckets[contribution.element] += Math.max(0, contribution.couEnergy);
+        }
+    }
+    const total = buckets.fire + buckets.water + buckets.air + buckets.earth;
+    if (total <= 0) {
+        return Object.freeze({ earth: 0, fire: 0, water: 0, air: 0 });
+    }
+    return Object.freeze({
+        earth: buckets.earth / total,
+        fire: buckets.fire / total,
+        water: buckets.water / total,
+        air: buckets.air / total
+    });
+}
+
 function contextIndex(value: string | null): number | null {
     const match = value?.match(/\d+/);
     return match ? Number.parseInt(match[0], 10) : null;
