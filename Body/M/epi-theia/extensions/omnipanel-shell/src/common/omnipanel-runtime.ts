@@ -344,6 +344,15 @@ function runtimeString(value: unknown): string | null {
     return typeof value === 'string' && value.trim().length > 0 ? value : null;
 }
 
+function firstNonBlank(...values: readonly (string | null | undefined)[]): string | null {
+    for (const value of values) {
+        if (typeof value === 'string' && value.trim().length > 0) {
+            return value;
+        }
+    }
+    return null;
+}
+
 function stringifyMaybe(value: number | string | null | undefined): string | null {
     if (value === null || value === undefined) {
         return null;

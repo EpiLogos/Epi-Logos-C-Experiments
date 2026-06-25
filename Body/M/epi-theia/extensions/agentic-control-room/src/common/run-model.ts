@@ -223,7 +223,7 @@ export interface S5EvidenceRefs {
 
 export {
     buildPiRuntimeMonitorProjection
-} from '@pratibimba/omnipanel-shell/lib/common/omnipanel-runtime';
+} from '../../../omnipanel-shell/lib/common';
 
 export type {
     GatewayResolvedSessionSurface,
@@ -232,7 +232,7 @@ export type {
     TerminalCaptureMode,
     TerminalObservabilityBinding,
     TerminalObservabilityCapturePolicy
-} from '@pratibimba/omnipanel-shell/lib/common/omnipanel-runtime';
+} from '../../../omnipanel-shell/lib/common';
 
 export interface MediatedRunEvidencePacket extends RunEvidenceEnvelope {
     readonly currentProfile: CurrentProfileEvidenceRef;
@@ -532,15 +532,6 @@ function validateS5Refs(ref: S5EvidenceRefs): void {
     }
     requireNonBlank(ref.candidateRef, 's5Refs.candidateRef');
     requireNonBlank(ref.persistedStoreDtoRef, 's5Refs.persistedStoreDtoRef');
-}
-
-function firstNonBlank(...values: readonly (string | null | undefined)[]): string | null {
-    for (const value of values) {
-        if (typeof value === 'string' && value.trim().length > 0) {
-            return value;
-        }
-    }
-    return null;
 }
 
 function sanitizeProtectedHandle(ref: GraphitiProtectedHandle): GraphitiProtectedHandle {

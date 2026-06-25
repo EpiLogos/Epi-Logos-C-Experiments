@@ -9,9 +9,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-3'-SPEC]] (carrier law) -> [[S3-3'-
 - `CONTRACT.md` — binding responsibility/tool/lifecycle contract (the local interface of record)
 - `spine-contribution.ts` — `S3'/Temporal` spine injection slot, ledger channel, compiler pass, query handler
 - `modules/temporal-frame.ts` — temporal-frame law: `computeDayId`, `nowPath`, `directionForRun`
+- `modules/aeon-scheduling.ts` — [[Aeon]] CT4b scheduling binding: cron registration payloads, result-drop `on_event` matching, CPF consent enforcement
 - `modules/graphiti-day-arc.ts` — seam to the Graphiti day-arc runtime (non-fatal when sidecar absent)
 - `S3'/kairos-python-adapter.ts` — kerykeion natal-chart provider (invoked by Janus within Chronos)
-- `tests/` — `node:test` suites: `temporal_frame`, `graphiti_day_arc`, `kairos_additive`
+- `tests/` — `node:test` suites: `temporal_frame`, `graphiti_day_arc`, `kairos_additive`, `aeon_scheduling`
 - Does NOT own: NOW/Day structure definition + template instantiation (Hen), thought classification (Aletheia), agent dispatch (Anima), session identity + write primitive (Khora). Chronos TRIGGERS; siblings CREATE/EXECUTE.
 
 ## Local Contracts

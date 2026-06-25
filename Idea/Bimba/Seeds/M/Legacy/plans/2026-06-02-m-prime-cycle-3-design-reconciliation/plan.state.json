@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T16:47:26.609Z",
+  "updatedAt": "2026-06-25T16:56:22.375Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2149,15 +2149,22 @@
     },
     "12.T12.7": {
       "status": "done",
-      "updatedAt": "2026-06-25T16:42:00.000Z",
+      "updatedAt": "2026-06-25T16:51:45.804Z",
       "claimedAt": "2026-06-25T16:40:00.000Z",
-      "completedAt": "2026-06-25T16:42:00.000Z",
+      "completedAt": "2026-06-25T16:51:45.804Z",
       "evidence": [
-        {"at": "2026-06-25T16:42:00.000Z", "text": "Body/S/S4/pi-agent/lib/axiom-translate.ts exists on disk. Builder run recorded."}
+        {
+          "at": "2026-06-25T16:42:00.000Z",
+          "text": "Body/S/S4/pi-agent/lib/axiom-translate.ts exists on disk. Builder run recorded."
+        },
+        {
+          "at": "2026-06-25T16:51:45.804Z",
+          "text": "TS 77/77 (Pi suite incl Body/S/S4/pi-agent/tests/axiom-translate.test.ts); pytest 18/18 Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py; test -f Body/S/S4/pi-agent/lib/axiom-translate.ts; capability-matrix Pi gate-set includes axiom-translate in Body/S/S4/plugins/pleroma/capability-matrix.json"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-7",
-      "leaseExpiresAt": "2026-06-25T18:40:00.000Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T16:40:00.000Z",
       "runId": "20260625T164000Z-12-T12.7",
       "worktree": null
@@ -2348,14 +2355,19 @@
       "worktree": null
     },
     "15.T15.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T16:41:04.873Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T16:55:54.775Z",
       "claimedAt": "2026-06-25T16:41:04.873Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T16:55:54.775Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:55:54.775Z",
+          "text": "@pratibimba/omnipanel-shell: 58 tests pass; @pratibimba/agentic-control-room compatibility: 23 tests pass; key paths Body/M/epi-theia/extensions/omnipanel-shell/src/common/omnipanel-runtime.ts, src/browser/components/omni/panels/PiMonitorPane.tsx, tests/pi-monitor-pane.test.mjs, tests/omnipanel-session-state.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-15-t15-2-omnipanel-membrane",
-      "leaseExpiresAt": "2026-06-25T18:41:04.873Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T16:41:04.873Z",
       "runId": "20260625T164104Z-15-T15.2",
       "worktree": null
@@ -4506,16 +4518,16 @@
       "worktree": null
     },
     "23.T23.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:56:15.466Z",
+      "claimedAt": "2026-06-25T16:56:15.466Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-23-t23-16-cymatic-transport",
+      "leaseExpiresAt": "2026-06-25T18:56:15.466Z",
+      "heartbeatAt": "2026-06-25T16:56:15.466Z",
+      "runId": "20260625T165615Z-23-T23.16",
       "worktree": null
     },
     "23.T23.17": {
@@ -4677,16 +4689,16 @@
       "worktree": null
     },
     "26.T26.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:56:22.304Z",
+      "claimedAt": "2026-06-25T16:56:22.304Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-26-t26-9-aletheia-subagent-trace",
+      "leaseExpiresAt": "2026-06-25T18:56:22.304Z",
+      "heartbeatAt": "2026-06-25T16:56:22.304Z",
+      "runId": "20260625T165622Z-26-T26.9",
       "worktree": null
     },
     "26.T26.10": {
@@ -7973,16 +7985,16 @@
       "worktree": null
     },
     "24.T24.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T16:56:03.903Z",
+      "claimedAt": "2026-06-25T16:56:03.903Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-24-t24-20-transcription-engine",
+      "leaseExpiresAt": "2026-06-25T18:56:03.903Z",
+      "heartbeatAt": "2026-06-25T16:56:03.903Z",
+      "runId": "20260625T165603Z-24-T24.20",
       "worktree": null
     },
     "25.T25.23": {
@@ -12734,20 +12746,48 @@
     {
       "runId": "20260625T164104Z-15-T15.2",
       "taskId": "15.T15.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T16:41:04.873Z",
       "owner": "codex-m-dev-15-t15-2-omnipanel-membrane",
       "leaseExpiresAt": "2026-06-25T18:41:04.873Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T16:55:54.775Z"
+    },
+    {
+      "runId": "20260625T165603Z-24-T24.20",
+      "taskId": "24.T24.20",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:56:03.903Z",
+      "owner": "codex-m-dev-24-t24-20-transcription-engine",
+      "leaseExpiresAt": "2026-06-25T18:56:03.903Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T165615Z-23-T23.16",
+      "taskId": "23.T23.16",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:56:15.466Z",
+      "owner": "codex-m-dev-23-t23-16-cymatic-transport",
+      "leaseExpiresAt": "2026-06-25T18:56:15.466Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T165622Z-26-T26.9",
+      "taskId": "26.T26.9",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T16:56:22.304Z",
+      "owner": "codex-m-dev-26-t26-9-aletheia-subagent-trace",
+      "leaseExpiresAt": "2026-06-25T18:56:22.304Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T16:40:31.339Z",
-    "updatedAt": "2026-06-25T16:40:31.339Z",
+    "createdAt": "2026-06-25T16:56:07.339Z",
+    "updatedAt": "2026-06-25T16:56:07.339Z",
     "taskIds": [
-      "12.T12.7",
-      "15.T15.2",
+      "47.T47.3",
+      "24.T24.20",
       "15.T15.3",
       "15.T15.4"
     ],
@@ -12755,14 +12795,15 @@
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "12.T12.7": "in-session",
-      "15.T15.2": "in-session",
+      "47.T47.3": "in-session",
+      "24.T24.20": "in-session",
       "15.T15.3": "in-session",
       "15.T15.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

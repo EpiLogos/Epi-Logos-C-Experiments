@@ -351,9 +351,14 @@ fn kernel_bridge_runtime_rejects_private_q_partition_fields() {
 
     assert!(err.contains("private q partition field"), "{err}");
     assert!(
-        ["q_personal", "q_identity_hash", "q_activity_trace", "q_composed"]
-            .iter()
-            .any(|field| err.contains(field)),
+        [
+            "q_personal",
+            "q_identity_hash",
+            "q_activity_trace",
+            "q_composed"
+        ]
+        .iter()
+        .any(|field| err.contains(field)),
         "{err}"
     );
 }

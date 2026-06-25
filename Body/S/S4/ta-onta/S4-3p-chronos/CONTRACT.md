@@ -34,6 +34,9 @@ Chronos is the **temporal authority** of the agent system. It owns the Day/NOW l
 | `chronos_archive_day` | Rotate Day folder to Pratibimba History archive |
 | `chronos_cron_register` | Register a cron job via gateway `cron.add` |
 | `chronos_cron_fire` | Route a fired gateway cron payload through [[Anima]] with a [[VakAddress]] |
+| `chronos_aeon_register` | Bind an [[Aeon]] CT4b `schedule` to gateway `cron.add` after CPF consent grant |
+| `chronos_aeon_fire` | Invoke a scheduled [[Aeon]] with bound [[VakAddress]] args and CPF consent enforcement |
+| `chronos_aeon_on_event_fire` | Invoke an [[Aeon]] when a matching Khora result-drop `on_event` wake lands |
 | `chronos_temporal_status` | Current Day, active NOWs, archive backlog |
 
 ---
@@ -145,6 +148,7 @@ Z-Thread = Chronos's view of the heartbeat runner. Not a separate mechanism — 
 5. Z-Thread = heartbeat runner — do not implement as a separate threading mechanism
 6. Tranche A (filesystem) is always available; Tranche B requires S3 gateway
 7. TOMORROW.md content seeds next day's #0 then is archived — not a permanent file
+8. [[Aeon]] autonomous fire requires granted CPF `(4.0/1-4.4/5)` consent; dialogical `(00/00)` forms must re-enter user dialogue instead of auto-dispatch.
 
 ---
 

@@ -594,7 +594,9 @@ mod tests {
 
         assert_eq!(fired.len(), 1);
         assert!(state.jobs[0].enabled);
-        assert!(state.jobs[0].state.next_run_at_ms > fired[0]["firedAtMs"].as_u64().unwrap() as u128);
+        assert!(
+            state.jobs[0].state.next_run_at_ms > fired[0]["firedAtMs"].as_u64().unwrap() as u128
+        );
     }
 
     #[test]

@@ -5,7 +5,19 @@ c_1_ct_type: "CT4b"
 c_3_ctx_frame: "4.0/1-4.4/5"
 c_4_vak_coordinate: "{{vak_coordinate}}"
 c_5_crystallisation_state: "crystallised_world_form"
-c_0_source_coordinates: "[[CT1]], [[CT4b]], [[CT5]], [[NOW]], [[Seed]], [[CT4b-MASTER-TEMPLATE]], [[TYPE-REGISTRY]], [[S1']], [[S4']], [[S5']], [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]], [[46-aeon-loop-unit-paradigm]]"
+c_0_source_coordinates:
+  - "[[CT1]]"
+  - "[[CT4b]]"
+  - "[[CT5]]"
+  - "[[NOW]]"
+  - "[[Seed]]"
+  - "[[CT4b-MASTER-TEMPLATE]]"
+  - "[[TYPE-REGISTRY]]"
+  - "[[S1']]"
+  - "[[S4']]"
+  - "[[S5']]"
+  - "[[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]]"
+  - "[[46-aeon-loop-unit-paradigm]]"
 c_4_parameterisation:
   aeon_id: "{{aeon_id}}"
   aeon_name: "{{aeon_name}}"
@@ -19,6 +31,14 @@ c_4_parameterisation:
   cs: "{{cs}}"
   consent_gate: "{{consent_gate}}"
   invocation_profile: "{{invocation_profile}}"
+  schedule: "{{cron_expression}}"
+  on_event:
+    kind: "result-drop"
+    purpose: "{{result_drop_purpose}}"
+  consent_posture:
+    cpf: "{{cpf}}"
+    granted: "{{consent_granted}}"
+    consent_gate: "{{consent_gate}}"
   rubric_ref: "{{rubric_ref}}"
   eval_ledger_ref: "{{eval_ledger_ref}}"
   transcript_ref: "{{transcript_ref}}"
@@ -53,9 +73,14 @@ cs: "{{cs}}"
 
 The definition binds the difference between runs. The VAK address under [[S4']] is the Aeon's invocation argument, while this template remains the stable CT4b form.
 
+Autonomous invocation is valid only when the consent posture grants CPF `(4.0/1-4.4/5)`. CPF `(00/00)` remains dialogical: it can prepare or propose an Aeon run, but it must not fire without renewed user dialogue.
+
 ## #2 Operation - Dispatch Composition
 
 - Invocation profile: `{{invocation_profile}}`
+- Schedule: `{{cron_expression}}`
+- On-event trigger: `result-drop:{{result_drop_purpose}}`
+- Consent posture: `{{consent_posture}}`
 - CFP composition: `{{cfp_composition}}`
 - Required tools / skills: `{{required_capabilities}}`
 - Inputs: `{{inputs}}`

@@ -129,6 +129,60 @@ test('persistOmniPanelState writes and readOmniPanelState restores ~/.epi-logos/
     }
 });
 
+test('session id and capability list survive daily-0-1 to ide-deep continuity state', async () => {
+    const previousHome = process.env.EPI_LOGOS_HOME;
+    const tempHome = await mkdtemp(join(tmpdir(), 'omnipanel-continuity-'));
+    process.env.EPI_LOGOS_HOME = tempHome;
+
+    try {
+        const persisted = {
+            ...createOmniPanelDefaultState(),
+            activeTab: 'gateway',
+            perTabState: {
+                ...createOmniPanelDefaultState().perTabState,
+                'pi-chat': {
+                    sessionKey: 'agent:main:main',
+                    lastLayoutTransition: 'daily-0-1->ide-deep'
+                },
+                gateway: {
+                    activeSubView: 'capabilities',
+                    selectedCapabilityName: "s4'.mediation.route",
+                    capabilityList: [
+                        "s4'.mediation.route",
+                        "s5'.review.submit",
+                        "s5'.epii.deposit.list"
+                    ]
+                }
+            }
+        };
+
+        await persistOmniPanelState(persisted);
+        const restored = await readOmniPanelState();
+
+        assert.equal(restored.activeTab, 'gateway');
+        assert.deepEqual(restored.perTabState['pi-chat'], {
+            sessionKey: 'agent:main:main',
+            lastLayoutTransition: 'daily-0-1->ide-deep'
+        });
+        assert.deepEqual(restored.perTabState.gateway, {
+            activeSubView: 'capabilities',
+            selectedCapabilityName: "s4'.mediation.route",
+            capabilityList: [
+                "s4'.mediation.route",
+                "s5'.review.submit",
+                "s5'.epii.deposit.list"
+            ]
+        });
+    } finally {
+        if (previousHome === undefined) {
+            delete process.env.EPI_LOGOS_HOME;
+        } else {
+            process.env.EPI_LOGOS_HOME = previousHome;
+        }
+        await rm(tempHome, { recursive: true, force: true });
+    }
+});
+
 test('readOmniPanelState returns defaults when no durable file exists', async () => {
     const previousHome = process.env.EPI_LOGOS_HOME;
     const tempHome = await mkdtemp(join(tmpdir(), 'omnipanel-empty-'));
@@ -211,6 +265,7 @@ test('gateway tab state normalization drops non-object try-it drafts', () => {
             gateway: {
                 activeSubView: 'cron',
                 selectedCapabilityName: "s4'.mediation.capabilities.list",
+                capabilityList: ["s4'.mediation.capabilities.list", 42, '', "s5'.review.submit"],
                 tryItDraft: 'not-an-object'
             }
         }
@@ -218,6 +273,7 @@ test('gateway tab state normalization drops non-object try-it drafts', () => {
 
     assert.deepEqual(normalized.perTabState.gateway, {
         activeSubView: 'cron',
-        selectedCapabilityName: "s4'.mediation.capabilities.list"
+        selectedCapabilityName: "s4'.mediation.capabilities.list",
+        capabilityList: ["s4'.mediation.capabilities.list", "s5'.review.submit"]
     });
 });

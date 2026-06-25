@@ -4,6 +4,13 @@ import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { computeDayId } from "./modules/temporal-frame.ts";
 import { dayArc, formatDayArcResult } from "./modules/graphiti-day-arc.ts";
+import {
+  chronos_aeon_fire,
+  chronos_aeon_on_event_fire,
+  registerAeonCronWithGateway,
+  type AeonFireInput,
+  type AeonInvocationForm,
+} from "./modules/aeon-scheduling.ts";
 import { khora_write_highlighted_inscription } from "../S4-0p-khora/extension.ts";
 import {
   dispatchTeamMember,
@@ -478,6 +485,66 @@ export async function chronosExtension(api: ExtensionAPI) {
         content: [{ type: "text", text: result.stdout || result.stderr }],
         isError: result.status !== 0,
       };
+    },
+  });
+
+  // ── Tool: chronos_aeon_register ─────────────────────────────────
+  api.registerTool({
+    name: "chronos_aeon_register",
+    label: "Chronos Aeon Register",
+    description: "Bind an Aeon's CT4b schedule declaration to the gateway cron rail after CPF consent has been granted.",
+    parameters: Type.Object({
+      aeon: Type.Any({ description: "AeonInvocationForm from Idea/Bimba/World/Aeon.md" }),
+    }),
+    async execute(_id: string, params: { aeon: AeonInvocationForm }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const result = registerAeonCronWithGateway(params.aeon);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: `chronos_aeon_register error: ${e}` }], isError: true };
+      }
+    },
+  });
+
+  // ── Tool: chronos_aeon_fire ─────────────────────────────────────
+  api.registerTool({
+    name: "chronos_aeon_fire",
+    label: "Chronos Aeon Fire",
+    description: "Invoke a scheduled Aeon with its bound VAK args, refusing autonomous fire unless CPF consent is granted.",
+    parameters: Type.Object({
+      aeon: Type.Any({ description: "AeonInvocationForm from Idea/Bimba/World/Aeon.md" }),
+      trigger: Type.Union([Type.Literal("schedule"), Type.Literal("on_event")]),
+      event: Type.Optional(Type.Any()),
+      job_id: Type.Optional(Type.String()),
+      job_name: Type.Optional(Type.String()),
+      fired_at_ms: Type.Optional(Type.Number()),
+    }),
+    async execute(_id: string, params: AeonFireInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const result = await chronos_aeon_fire(params);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: `chronos_aeon_fire error: ${e}` }], isError: true };
+      }
+    },
+  });
+
+  // ── Tool: chronos_aeon_on_event_fire ────────────────────────────
+  api.registerTool({
+    name: "chronos_aeon_on_event_fire",
+    label: "Chronos Aeon Event Fire",
+    description: "Fire an Aeon's result-drop on_event trigger when Khora reports a matching result artifact purpose.",
+    parameters: Type.Object({
+      aeon: Type.Any({ description: "AeonInvocationForm from Idea/Bimba/World/Aeon.md" }),
+      event: Type.Any({ description: "Khora result-drop wake event" }),
+    }),
+    async execute(_id: string, params: { aeon: AeonInvocationForm; event: any }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const result = await chronos_aeon_on_event_fire(params.aeon, params.event);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: `chronos_aeon_on_event_fire error: ${e}` }], isError: true };
+      }
     },
   });
 
