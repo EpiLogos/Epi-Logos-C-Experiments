@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { DispatchTraceNode } from './types';
+import type { AletheiaSubagent, DispatchTraceNode } from './types';
+import { AletheiaSubagentTrace } from './aletheia-subagent-trace';
 import { PsycheFacetBadge } from './psyche-facets';
 
 export interface RunTreeProps {
@@ -41,11 +42,13 @@ function RunTreeNodeView({
     readonly onEvidenceClick?: (packetId: string, node: DispatchTraceNode) => void;
 }): React.ReactElement {
     const hasSource = Boolean(node.coordinate && node.sourceAnchor);
+    const mediatedSubagent = aletheiaSubagentForNode(node);
     return (
         <li
             data-test={`acr-run-tree-node-${node.id}`}
             data-actor={node.actor}
-            data-aletheia-subagent={node.aletheiaSubagent ?? ''}
+            data-aletheia-subagent={mediatedSubagent ?? ''}
+            data-mediated-by-aletheia-subagent={node.mediatedBy?.aletheiaSubagent ?? ''}
             data-mediated-run-evidence-packet-id={node.mediatedRunEvidencePacketId ?? ''}
         >
             <div>
@@ -81,6 +84,13 @@ function RunTreeNodeView({
                     </button>
                 )}
             </div>
+            {mediatedSubagent && (
+                <AletheiaSubagentTrace
+                    subagent={mediatedSubagent}
+                    subtrace={node}
+                    vetoRecord={node.veto}
+                />
+            )}
             {node.children && node.children.length > 0 && (
                 <ol>
                     {node.children.map(child => (
@@ -95,4 +105,8 @@ function RunTreeNodeView({
             )}
         </li>
     );
+}
+
+function aletheiaSubagentForNode(node: DispatchTraceNode): AletheiaSubagent | null {
+    return node.mediatedBy?.aletheiaSubagent ?? node.aletheiaSubagent ?? null;
 }

@@ -104,6 +104,45 @@
     color: var(--theia-errorForeground, #f48771);
 }
 
+.ide-shell-aletheia-subagent-trace {
+    margin: 0.35rem 0;
+    padding: 0.45rem 0.55rem;
+    border-left: 3px solid var(--theia-focusBorder, #007acc);
+    background: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
+}
+
+.ide-shell-aletheia-veto-banner {
+    margin: 0.45rem 0;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--theia-errorForeground, #f48771);
+    border-left-width: 4px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--theia-errorForeground, #f48771) 12%, transparent);
+    font-weight: 700;
+}
+
+.ide-shell-aletheia-lineage-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0.45rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ide-shell-aletheia-lineage-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.38rem;
+    border: 1px solid var(--theia-badge-background, #4d4d4d);
+    border-radius: 3px;
+    background: var(--theia-badge-background, rgba(255, 255, 255, 0.08));
+    color: var(--theia-badge-foreground, inherit);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
 .ide-shell-bridge-pending {
     padding: 1rem;
     border: 1px dashed var(--theia-editorWidget-border, #444);

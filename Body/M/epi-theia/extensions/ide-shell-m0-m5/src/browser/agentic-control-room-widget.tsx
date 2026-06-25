@@ -511,12 +511,7 @@ export class AgenticControlRoomWidget extends ReactWidget {
                                 key={node.id}
                                 subagent={node.aletheiaSubagent as AletheiaSubagent}
                                 subtrace={node}
-                                vetoRecord={index === 1
-                                    ? {
-                                        reason: 'Boundary review requested; final decision remains with the human gate.',
-                                        raisedAt: node.tickAtInvoke ?? Date.now()
-                                    }
-                                    : undefined}
+                                vetoRecord={node.veto}
                             />
                         ))}
                     </div>
@@ -590,6 +585,28 @@ export class AgenticControlRoomWidget extends ReactWidget {
                         tickAtInvoke: (this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? 0) + index,
                         psycheFacet: ALETHEIA_PSYCHE_FACETS[subagent],
                         aletheiaSubagent: subagent,
+                        mediatedBy: { aletheiaSubagent: subagent },
+                        veto: subagent === 'janus'
+                            ? {
+                                reason: 'Boundary review requested; final decision remains with the human gate.',
+                                raisedAt: (this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? 0) + index,
+                                nonBlockingHumanGate: true
+                            }
+                            : null,
+                        lineageBadges: [
+                            {
+                                label: `${subagent} lineage`,
+                                handle: `etymology://aletheia/${subagent}/${coordinate}`
+                            }
+                        ],
+                        janusFrame: subagent === 'janus'
+                            ? {
+                                prospective: 0.5,
+                                retrospective: 0.5,
+                                oracleSpreadAliveness: 'balanced',
+                                kairosWeighting: 'computed from §4'
+                            }
+                            : null,
                         mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null
                     }))
                 }

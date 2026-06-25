@@ -448,9 +448,20 @@ export class LogosAtelierWidget extends ReactWidget {
                             {this.stages[stage.id].provenanceHandles.map(h => (
                                 <li key={h}>
                                     <code>{h}</code>
+                                    {stage.id === 'mobius-write-back' && this.lineageBadgesForHandle(h).map(badge => (
+                                        <span
+                                            key={`${badge.label}:${badge.handle ?? badge.source ?? h}`}
+                                            className="ide-shell-aletheia-lineage-badge"
+                                            data-test="logos-atelier-lineage-badge"
+                                            data-lineage-handle={badge.handle ?? h}
+                                        >
+                                            {badge.label}
+                                        </span>
+                                    ))}
                                 </li>
                             ))}
                         </ul>
+                        {stage.id === 'mobius-write-back' && this.renderMobiusSubagentVetoes()}
                         {stage.id === 'psychoid' && this.renderSubagentTrace()}
                     </section>
                 ))}
@@ -532,13 +543,33 @@ export class LogosAtelierWidget extends ReactWidget {
                         {subagentNodes.map(node => (
                             <AletheiaSubagentTrace
                                 key={node.id}
-                                subagent={node.aletheiaSubagent as AletheiaSubagent}
+                                subagent={this.aletheiaSubagentForNode(node)}
                                 subtrace={node}
+                                vetoRecord={node.veto}
                             />
                         ))}
                     </>
                 )}
             </details>
+        );
+    }
+
+    protected renderMobiusSubagentVetoes(): React.ReactNode {
+        const vetoNodes = this.aletheiaVetoNodes();
+        if (vetoNodes.length === 0) {
+            return null;
+        }
+        return (
+            <div data-test="logos-atelier-mobius-subagent-vetoes">
+                {vetoNodes.map(node => (
+                    <AletheiaSubagentTrace
+                        key={`mobius-veto-${node.id}`}
+                        subagent={this.aletheiaSubagentForNode(node)}
+                        subtrace={node}
+                        vetoRecord={node.veto}
+                    />
+                ))}
+            </div>
         );
     }
 
@@ -548,6 +579,26 @@ export class LogosAtelierWidget extends ReactWidget {
             ...(isAletheiaSubagentNode(node) ? [node] : []),
             ...children.flatMap(child => [...this.aletheiaTraceNodes(child)])
         ];
+    }
+
+    protected aletheiaVetoNodes(): readonly DispatchTraceNode[] {
+        const root = this.latestThreadTrace?.root;
+        return root ? this.aletheiaTraceNodes(root).filter(node => node.veto !== null && node.veto !== undefined) : [];
+    }
+
+    protected lineageBadgesForHandle(handle: string): readonly NonNullable<DispatchTraceNode['lineageBadges']>[number][] {
+        const root = this.latestThreadTrace?.root;
+        if (!root) {
+            return [];
+        }
+        return this.aletheiaTraceNodes(root)
+            .flatMap(node => [...(node.lineageBadges ?? [])])
+            .filter(badge => badge.handle === handle);
+    }
+
+    protected aletheiaSubagentForNode(node: DispatchTraceNode): AletheiaSubagent {
+        const subagent = node.mediatedBy?.aletheiaSubagent ?? node.aletheiaSubagent;
+        return subagent as AletheiaSubagent;
     }
 }
 
@@ -565,6 +616,11 @@ function stringArrayField(record: Record<string, unknown> | null, key: string): 
     return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : [];
 }
 
+function numberField(record: Record<string, unknown> | null, key: string): number | null {
+    const value = record?.[key];
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
 function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
     if (Array.isArray(value)) {
         return {
@@ -580,7 +636,10 @@ function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
     }
     const id = stringField(record, 'id') ?? stringField(record, 'nodeId') ?? `trace-${String(record.label ?? 'node')}`;
     const label = stringField(record, 'label') ?? stringField(record, 'name') ?? id;
-    const maybeSubagent = stringField(record, 'aletheiaSubagent') ?? stringField(record, 'subagent');
+    const mediatedBy = asRecord(record.mediatedBy);
+    const maybeSubagent = stringField(mediatedBy, 'aletheiaSubagent')
+        ?? stringField(record, 'aletheiaSubagent')
+        ?? stringField(record, 'subagent');
     const maybePsycheFacet = stringField(record, 'psycheFacet');
     return {
         id,
@@ -592,6 +651,12 @@ function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
         tickAtInvoke: typeof record.tickAtInvoke === 'number' ? record.tickAtInvoke : null,
         psycheFacet: isPsycheFacet(maybePsycheFacet) ? maybePsycheFacet : null,
         aletheiaSubagent: isAletheiaSubagent(maybeSubagent) ? maybeSubagent : null,
+        mediatedBy: isAletheiaSubagent(maybeSubagent) ? { aletheiaSubagent: maybeSubagent } : null,
+        veto: asAletheiaVetoRecord(record.veto) ?? asAletheiaVetoRecord(record.vetoRecord),
+        lineageBadges: Array.isArray(record.lineageBadges)
+            ? record.lineageBadges.map(asAletheiaLineageBadge).filter((badge): badge is NonNullable<DispatchTraceNode['lineageBadges']>[number] => badge !== null)
+            : [],
+        janusFrame: asJanusFrame(record.janusFrame),
         mediatedRunEvidencePacketId: stringField(record, 'mediatedRunEvidencePacketId'),
         children: Array.isArray(record.children)
             ? record.children.map(asDispatchTraceNode).filter((node): node is DispatchTraceNode => node !== null)
@@ -604,5 +669,47 @@ function isAletheiaSubagent(value: string | null): value is AletheiaSubagent {
 }
 
 function isAletheiaSubagentNode(node: DispatchTraceNode): boolean {
-    return isAletheiaSubagent(node.aletheiaSubagent ?? null);
+    return isAletheiaSubagent(node.mediatedBy?.aletheiaSubagent ?? node.aletheiaSubagent ?? null);
+}
+
+function asAletheiaVetoRecord(value: unknown): DispatchTraceNode['veto'] {
+    const record = asRecord(value);
+    const reason = stringField(record, 'reason');
+    if (!reason) {
+        return null;
+    }
+    return {
+        reason,
+        raisedAt: numberField(record, 'raisedAt'),
+        candidateCanonicalWriteId: stringField(record, 'candidateCanonicalWriteId'),
+        nonBlockingHumanGate: record?.nonBlockingHumanGate === false ? false : true
+    };
+}
+
+function asAletheiaLineageBadge(value: unknown): NonNullable<DispatchTraceNode['lineageBadges']>[number] | null {
+    const record = asRecord(value);
+    const label = stringField(record, 'label');
+    if (!label) {
+        return null;
+    }
+    return {
+        label,
+        handle: stringField(record, 'handle'),
+        source: stringField(record, 'source')
+    };
+}
+
+function asJanusFrame(value: unknown): DispatchTraceNode['janusFrame'] {
+    const record = asRecord(value);
+    const prospective = numberField(record, 'prospective');
+    const retrospective = numberField(record, 'retrospective');
+    if (prospective === null || retrospective === null) {
+        return null;
+    }
+    return {
+        prospective,
+        retrospective,
+        oracleSpreadAliveness: stringField(record, 'oracleSpreadAliveness'),
+        kairosWeighting: stringField(record, 'kairosWeighting')
+    };
 }

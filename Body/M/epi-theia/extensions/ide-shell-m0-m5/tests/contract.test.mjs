@@ -50,6 +50,10 @@ const {
 const {
     ToolStream
 } = require('../lib/browser/acr/tool-stream.js');
+const {
+    AletheiaSubagentTrace,
+    JANUS_PROSPECTIVE_RETROSPECTIVE_CANVAS_SPEC
+} = require('../lib/browser/acr/aletheia-subagent-trace.js');
 
 // __dirname here is .../Body/M/epi-theia/extensions/ide-shell-m0-m5/tests
 // — six levels up to reach the repo root (where Body/ lives).
@@ -71,6 +75,21 @@ const CAPABILITY_MATRIX_PATH = resolve(
 
 const SOURCE_ROOT = resolve(__dirname, '..', 'src', 'browser');
 const STYLE_ROOT = resolve(__dirname, '..', 'style');
+const JANUS_CANVAS_SPEC_PATH = resolve(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    '..',
+    '..',
+    'Idea',
+    'Bimba',
+    'Seeds',
+    'M',
+    "M4'",
+    '2026-06-04-prospective-retrospective-canvas-spec.md'
+);
 
 const INLINE_READINESS_BINDINGS = Object.freeze({
     'bimba-graph-viewer-widget.tsx': ['s2.graph.node'],
@@ -454,6 +473,140 @@ test('ToolStream renders psyche-facet badge next to dispatch actor', () => {
     assert.match(html, /data-psyche-facet="sophia"/);
     assert.match(html, /title="[^"]*P5&#x27; and P0&#x27; at the fold/);
     assert.match(html, /— anima<\/span><span[^>]+data-test="acr-tool-psyche-facet-tool-1"/);
+});
+
+test('AletheiaSubagentTrace renders every subagent as a crystallisation dispatch sub-trace', () => {
+    const subagents = ['anansi', 'janus', 'moirai', 'mercurius', 'agora', 'zeithoven'];
+    const labels = ['Anansi', 'Janus', 'Moirai', 'Mercurius', 'Agora', 'Zeithoven'];
+    for (const [index, subagent] of subagents.entries()) {
+        const html = ReactDOMServer.renderToStaticMarkup(
+            React.createElement(AletheiaSubagentTrace, {
+                subagent,
+                subtrace: {
+                    id: `node-${subagent}`,
+                    label: `${labels[index]} node`,
+                    actor: 'aletheia',
+                    methodOrSkill: `crystallisation-mode:${subagent}`,
+                    mediatedBy: { aletheiaSubagent: subagent },
+                    lineageBadges: [{ label: `${labels[index]} lineage`, handle: `etymology://trace/${subagent}` }],
+                    janusFrame: subagent === 'janus'
+                        ? {
+                            prospective: 0.4,
+                            retrospective: 0.6,
+                            oracleSpreadAliveness: 'generating',
+                            kairosWeighting: 'Mercury direct station'
+                        }
+                        : null
+                }
+            })
+        );
+        assert.match(html, new RegExp(`data-test="acr-aletheia-subagent-trace-${subagent}"`));
+        assert.match(html, new RegExp(labels[index]));
+        assert.match(html, /data-trace-mode="crystallisation-mode"/);
+        assert.match(html, /data-peer-review-actor="false"/);
+        assert.match(html, /dispatch sub-trace in crystallisation-mode; not a peer review actor/);
+        assert.match(html, /data-test="acr-aletheia-lineage-badge-/);
+    }
+});
+
+test('Janus trace cites the prospective-retrospective canvas §4 and renders live weighting', () => {
+    const spec = readFileSync(JANUS_CANVAS_SPEC_PATH, 'utf8');
+    assert.match(spec, /## 4\. Janus Operating the Klein/);
+    assert.match(spec, /OracleSpread aliveness tracking/);
+    assert.match(spec, /Klein weighting computation/);
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(AletheiaSubagentTrace, {
+            subagent: 'janus',
+            subtrace: {
+                id: 'janus',
+                label: 'Janus threshold',
+                actor: 'aletheia',
+                mediatedBy: { aletheiaSubagent: 'janus' },
+                janusFrame: {
+                    prospective: 0.38,
+                    retrospective: 0.62,
+                    oracleSpreadAliveness: 'generating',
+                    kairosWeighting: 'Saturn station'
+                }
+            }
+        })
+    );
+
+    assert.equal(
+        JANUS_PROSPECTIVE_RETROSPECTIVE_CANVAS_SPEC,
+        "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md#4"
+    );
+    assert.match(html, /data-test="acr-aletheia-janus-source"/);
+    assert.match(html, /prospective-retrospective-canvas-spec\.md#4/);
+    assert.match(html, /38% prospective/);
+    assert.match(html, /62% retrospective/);
+    assert.match(html, /OracleSpread generating/);
+    assert.match(html, /kairos Saturn station/);
+});
+
+test('Aletheia veto renders as red non-blocking evidence while the human gate remains authoritative', () => {
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(AletheiaSubagentTrace, {
+            subagent: 'janus',
+            subtrace: {
+                id: 'janus-veto',
+                label: 'Janus veto',
+                actor: 'aletheia',
+                mediatedBy: { aletheiaSubagent: 'janus' }
+            },
+            vetoRecord: {
+                reason: 'candidate canonical write lacks retrospective evidence',
+                raisedAt: Date.UTC(2026, 5, 25, 16, 0, 0),
+                nonBlockingHumanGate: true
+            }
+        })
+    );
+    const css = readFileSync(resolve(STYLE_ROOT, 'ide-shell.css'), 'utf8');
+
+    assert.match(html, /data-test="acr-aletheia-veto-janus"/);
+    assert.match(html, /class="ide-shell-aletheia-veto-banner ide-shell-error"/);
+    assert.match(html, /data-veto-non-blocking="true"/);
+    assert.match(html, /data-human-gate-blocking="false"/);
+    assert.match(html, /Aletheia subagent Janus veto — candidate canonical write lacks retrospective evidence/);
+    assert.match(html, /Human gate remains override authority/);
+    assert.match(css, /\.ide-shell-aletheia-veto-banner/);
+    assert.match(css, /var\(--theia-errorForeground, #f48771\)/);
+});
+
+test('RunTree expands mediatedBy Aletheia subagent nodes inline', () => {
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(RunTree, {
+            dispatchTrace: {
+                id: 'root',
+                label: 'Pi dispatch',
+                actor: 'pi',
+                children: [
+                    {
+                        id: 'anansi-mediated',
+                        label: 'Citation provenance',
+                        actor: 'aletheia',
+                        methodOrSkill: 'crystallisation-mode:anansi',
+                        mediatedBy: { aletheiaSubagent: 'anansi' }
+                    }
+                ]
+            }
+        })
+    );
+
+    assert.match(html, /data-test="acr-run-tree-node-anansi-mediated"/);
+    assert.match(html, /data-mediated-by-aletheia-subagent="anansi"/);
+    assert.match(html, /data-test="acr-aletheia-subagent-trace-anansi"/);
+    assert.match(html, /source-to-source provenance graph/);
+});
+
+test('Logos Atelier Möbius write-back stage surfaces subagent vetoes and lineage badges', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'logos-atelier-widget.tsx'), 'utf8');
+    assert.match(source, /stage\.id === 'mobius-write-back' && this\.renderMobiusSubagentVetoes\(\)/);
+    assert.match(source, /data-test="logos-atelier-mobius-subagent-vetoes"/);
+    assert.match(source, /data-test="logos-atelier-lineage-badge"/);
+    assert.match(source, /lineageBadgesForHandle/);
+    assert.match(source, /vetoRecord=\{node\.veto\}/);
 });
 
 test('ACR psyche-facet legend uses Sattva-source tooltips in the canonical order', () => {

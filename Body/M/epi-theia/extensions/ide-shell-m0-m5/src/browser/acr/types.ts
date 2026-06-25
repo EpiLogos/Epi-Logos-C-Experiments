@@ -9,6 +9,31 @@ export type AletheiaSubagent =
 export type DispatchActor = 'pi' | 'anima' | 'aletheia' | string;
 export type PsycheFacet = 'anima' | 'eros' | 'logos' | 'mythos' | 'nous' | 'psyche' | 'sophia';
 
+export interface AletheiaVetoRecord {
+    readonly reason: string;
+    readonly raisedAt?: number | null;
+    readonly candidateCanonicalWriteId?: string | null;
+    readonly nonBlockingHumanGate?: boolean | null;
+}
+
+export interface AletheiaLineageBadge {
+    readonly label: string;
+    readonly handle?: string | null;
+    readonly source?: string | null;
+}
+
+export interface AletheiaMediationRef {
+    readonly aletheiaSubagent?: AletheiaSubagent | null;
+    readonly kind?: string | null;
+}
+
+export interface JanusProspectiveRetrospectiveFrame {
+    readonly prospective: number;
+    readonly retrospective: number;
+    readonly oracleSpreadAliveness?: string | null;
+    readonly kairosWeighting?: string | null;
+}
+
 export interface DispatchTraceNode {
     readonly id: string;
     readonly label: string;
@@ -19,6 +44,10 @@ export interface DispatchTraceNode {
     readonly tickAtInvoke?: number | null;
     readonly psycheFacet?: PsycheFacet | null;
     readonly aletheiaSubagent?: AletheiaSubagent | null;
+    readonly mediatedBy?: AletheiaMediationRef | null;
+    readonly veto?: AletheiaVetoRecord | null;
+    readonly lineageBadges?: readonly AletheiaLineageBadge[];
+    readonly janusFrame?: JanusProspectiveRetrospectiveFrame | null;
     readonly mediatedRunEvidencePacketId?: string | null;
     readonly children?: readonly DispatchTraceNode[];
 }
