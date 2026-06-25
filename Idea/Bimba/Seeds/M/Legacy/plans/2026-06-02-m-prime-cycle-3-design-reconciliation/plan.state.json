@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:02:10.598Z",
+  "updatedAt": "2026-06-25T23:06:45.081Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6903,11 +6903,20 @@
       "worktree": null
     },
     "24.T24.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T23:06:45.032Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T23:06:45.032Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T23:06:30.296Z",
+          "text": "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TarotWheel.tsx"
+        },
+        {
+          "at": "2026-06-25T23:06:45.032Z",
+          "text": "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TarotWheel.tsx"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
