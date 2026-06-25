@@ -170,13 +170,13 @@ This means:
 
 The same single [[Inversion_Operator]] that lives at `Coordinate->invert` in the C code's [[pointer web]] is what the Shell 0 ↔ Shell 1 toggle invokes at the user-surface level. Toggling between the cosmic and personal shells IS `#` applied to the user's current context. Opening a subsystem page from a shell IS the `.` nesting operator (the [[lemniscate]] at [[M4|#4]]) firing the deeper context-frame into execution.
 
-This is load-bearing for the Tauri implementation:
+This is load-bearing for the Theia shell (formerly the Tauri implementation — downgraded per Tranche 11.7 audit):
 
 1. The Shell 0 / Shell 1 split must be a true matheme-toggle — same coordinate state held from two conjugate faces — not two unrelated home screens. State carried across the toggle: same active coordinate, same tick, same [[MathemeHarmonicProfile]]; what changes is which face of that state is foregrounded.
 2. The subsystem pages must be reachable from either shell with full state-continuity — the user's current `(lens, mode)`, selected coordinate, and tick context follow them into the deep workspace.
 3. The [[OmniPanel]] must always be able to show the current (0/1) state — which shell-face is active, which subsystem (if any) is open, which agent invocations are in flight — because it is the [[S0']] command surface over the entire (0/1) inversionary field.
 
-If the Tauri app does not feel like Shell 0 and Shell 1 are *the same state seen from opposite faces*, the (0/1) wiring is broken and the UI has reverted to two-screens-side-by-side. The toggle is the spanda-pulse at the user-experience scale; it must carry the matheme's structural identity.
+If the Theia app does not feel like Shell 0 and Shell 1 are *the same state seen from opposite faces*, the (0/1) wiring is broken and the UI has reverted to two-screens-side-by-side. The toggle is the spanda-pulse at the user-experience scale; it must carry the matheme's structural identity.
 
 ## Domain Spec Set
 

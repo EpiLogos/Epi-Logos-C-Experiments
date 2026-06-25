@@ -44,7 +44,7 @@ Web access was available. External research was limited to official or primary p
 
 M5' is not a generic code editor with an AI chat bolted on. The local M5' spec defines it as the Epii/Anuttara return: an AI-agent-led developer and pedagogical IDE spanning canon, graph, code, agents, review, and Logos-cycle archaeology. The six required surfaces are Library/Bimba pedagogy, Philosophy/Canon Studio, Backend Studio, Frontend Studio, Agentic Control Room, and Logos Atelier.
 
-The current Tauri implementation is an early three-tab shell:
+The current Theia-based agentic IDE (formerly a Tauri implementation, superseded per Tranche 11.7 — the Theia shell at `Body/M/epi-theia` is the canonical carrier):
 
 - `EpiiDashboard.tsx` exposes `Library`, `Atelier`, and `Epii Agent` tabs.
 - `LibraryFolio.tsx` calls `epiiClient.library.search` with namespaces `all`, `bimba`, `gnostic`, and `atelier`.

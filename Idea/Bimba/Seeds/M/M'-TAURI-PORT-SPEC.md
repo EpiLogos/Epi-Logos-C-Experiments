@@ -27,7 +27,9 @@ depends_on:
   - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
 ---
 
-# [[M']] Tauri Port Spec
+# [[M']] Tauri Port Spec — SUPERSEDED
+
+> **Deprecated per Tranche 11.7 (2026-06-25).** The M' shell is now Theia at `Body/M/epi-theia/`, not Tauri. The architectural discipline described below — 0/1/4+2 layout, profile-bus consumption, S-layer contract wiring — still applies, but the carrier is Theia, not Tauri. See [[m5-prime-system-shape-and-tauri-ide-canon]] for the active Theia-based architecture. This file is retained as historical reference for the 0/1/4+2 discipline and S-layer contract bindings that survived the migration.
 
 The [[Tauri]] v2 port of `Body/S/S3/epi-app` should preserve the useful renderer/domain work from the current Electron app while replacing Electron main-process authority with Rust-backed Tauri commands, gateway RPC, and [[SpaceTimeDB]] subscriptions.
 
