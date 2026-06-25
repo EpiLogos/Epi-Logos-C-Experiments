@@ -40,6 +40,7 @@ export type GatewaySessionSubView =
 export interface GatewaySessionTabState {
     readonly activeSubView: GatewaySessionSubView;
     readonly selectedCapabilityName: string | null;
+    readonly capabilityList?: readonly string[];
     readonly tryItDraft?: Record<string, unknown>;
 }
 
@@ -203,9 +204,13 @@ function normalizeGatewayTabState(value: unknown): GatewaySessionTabState {
         return defaults;
     }
     const draft = isRecord(value.tryItDraft) ? { ...value.tryItDraft } : undefined;
+    const capabilityList = Array.isArray(value.capabilityList)
+        ? value.capabilityList.filter((entry): entry is string => typeof entry === 'string' && entry.trim().length > 0)
+        : undefined;
     return {
         activeSubView: normalizeGatewaySubView(value.activeSubView),
         selectedCapabilityName: typeof value.selectedCapabilityName === 'string' ? value.selectedCapabilityName : null,
+        ...(capabilityList ? { capabilityList } : {}),
         ...(draft ? { tryItDraft: draft } : {})
     };
 }

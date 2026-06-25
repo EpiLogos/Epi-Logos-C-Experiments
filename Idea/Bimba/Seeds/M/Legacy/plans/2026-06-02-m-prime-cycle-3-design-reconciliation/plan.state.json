@@ -2148,16 +2148,18 @@
       "worktree": null
     },
     "12.T12.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:42:00.000Z",
+      "claimedAt": "2026-06-25T16:40:00.000Z",
+      "completedAt": "2026-06-25T16:42:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T16:42:00.000Z", "text": "Body/S/S4/pi-agent/lib/axiom-translate.ts exists on disk. Builder run recorded."}
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-12-t12-7",
+      "leaseExpiresAt": "2026-06-25T18:40:00.000Z",
+      "heartbeatAt": "2026-06-25T16:40:00.000Z",
+      "runId": "20260625T164000Z-12-T12.7",
       "worktree": null
     },
     "12.T12.8": {

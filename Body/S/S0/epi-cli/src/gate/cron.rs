@@ -80,6 +80,7 @@ pub fn add(
 ) -> Result<Value, String> {
     let mut state = load_state(&state_root)?;
     let now = now_ms()?;
+    let next_run_at_ms = initial_next_run_at_ms(&schedule, now)?;
     let job = CronJob {
         id: Uuid::new_v4().to_string(),
         agent_id: agent_id.map(str::to_owned),
@@ -93,9 +94,7 @@ pub fn add(
         isolation,
         created_at_ms: now,
         updated_at_ms: now,
-        state: CronJobState {
-            next_run_at_ms: now + 60_000,
-        },
+        state: CronJobState { next_run_at_ms },
     };
     state.jobs.push(job.clone());
     save_state(state_root, &state)?;
@@ -268,12 +267,42 @@ fn next_run_after_ms(
     Ok(None)
 }
 
+fn initial_next_run_at_ms(schedule: &Value, now_ms: u128) -> Result<u128, String> {
+    if let Some(at_ms) = at_ms(schedule)? {
+        return Ok(at_ms);
+    }
+
+    if let Some(interval_ms) = interval_ms(schedule)? {
+        return Ok(now_ms + interval_ms);
+    }
+
+    if let Some(expression) = schedule.as_str() {
+        if expression.trim().is_empty() {
+            return Ok(now_ms + 60_000);
+        }
+        return next_cron_expression_ms(expression, now_ms);
+    }
+
+    Ok(now_ms + 60_000)
+}
+
 fn interval_ms(schedule: &Value) -> Result<Option<u128>, String> {
     let Some(kind) = schedule.get("kind").and_then(Value::as_str) else {
         return Ok(None);
     };
     if kind != "every" {
         return Ok(None);
+    }
+
+    if let Some(every_ms) = schedule
+        .get("everyMs")
+        .or_else(|| schedule.get("every_ms"))
+        .and_then(Value::as_u64)
+    {
+        if every_ms == 0 {
+            return Err("cron everyMs schedule requires a positive value".to_owned());
+        }
+        return Ok(Some(every_ms as u128));
     }
 
     let amount = schedule
@@ -295,6 +324,22 @@ fn interval_ms(schedule: &Value) -> Result<Option<u128>, String> {
         other => return Err(format!("unsupported cron every unit: {other}")),
     };
     Ok(Some(amount * multiplier))
+}
+
+fn at_ms(schedule: &Value) -> Result<Option<u128>, String> {
+    let Some(kind) = schedule.get("kind").and_then(Value::as_str) else {
+        return Ok(None);
+    };
+    if kind != "at" {
+        return Ok(None);
+    }
+
+    schedule
+        .get("atMs")
+        .or_else(|| schedule.get("at_ms"))
+        .and_then(Value::as_u64)
+        .map(|value| Some(value as u128))
+        .ok_or_else(|| "cron at schedule requires atMs".to_owned())
 }
 
 fn next_cron_expression_ms(expression: &str, now_ms: u128) -> Result<u128, String> {
@@ -487,6 +532,69 @@ mod tests {
             state.jobs[0].state.next_run_at_ms > fired[0]["firedAtMs"].as_u64().unwrap() as u128
         );
         assert_eq!(state.runs.len(), 1);
+    }
+
+    #[test]
+    fn add_derives_initial_next_run_from_cron_expression() {
+        let state_root = temp_state_root("add_derives_initial_next_run_from_cron_expression");
+        let added = add(
+            &state_root,
+            "morning",
+            "morning description",
+            None,
+            true,
+            json!("0 6 * * *"),
+            "main",
+            "next-heartbeat",
+            json!({"kind":"systemEvent","text":"morning"}),
+            None,
+        )
+        .expect("cron add should succeed");
+
+        let next_run = added["job"]["state"]["nextRunAtMs"]
+            .as_u64()
+            .expect("next run should be numeric") as u128;
+        assert!(next_run > now_ms().expect("now should resolve"));
+        assert_eq!(next_run % 60_000, 0);
+    }
+
+    #[test]
+    fn due_at_schedule_fires_once_and_disables() {
+        let state_root = temp_state_root("due_at_schedule_fires_once_and_disables");
+        write_state(
+            &state_root,
+            json!({
+                "jobs": [job("aeon-at", true, 1_000, json!({"kind":"at","atMs":1_000}))],
+                "runs": []
+            }),
+        );
+
+        let fired = check_due_and_fire(&state_root).expect("due check should succeed");
+        let state = load_state(&state_root).expect("state should reload");
+
+        assert_eq!(fired.len(), 1);
+        assert_eq!(fired[0]["jobId"], "aeon-at");
+        assert_eq!(state.runs.len(), 1);
+        assert!(!state.jobs[0].enabled);
+    }
+
+    #[test]
+    fn every_ms_schedule_rearms_after_fire() {
+        let state_root = temp_state_root("every_ms_schedule_rearms_after_fire");
+        write_state(
+            &state_root,
+            json!({
+                "jobs": [job("every-ms", true, 1_000, json!({"kind":"every","everyMs":60_000}))],
+                "runs": []
+            }),
+        );
+
+        let fired = check_due_and_fire(&state_root).expect("due check should succeed");
+        let state = load_state(&state_root).expect("state should reload");
+
+        assert_eq!(fired.len(), 1);
+        assert!(state.jobs[0].enabled);
+        assert!(state.jobs[0].state.next_run_at_ms > fired[0]["firedAtMs"].as_u64().unwrap() as u128);
     }
 
     #[test]
