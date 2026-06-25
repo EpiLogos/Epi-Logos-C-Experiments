@@ -48,6 +48,7 @@ import {
 } from '../../../m4-nara/lib/browser/widgets/time-axis-switcher';
 import {
     M4PersonalCymaticField,
+    PERSONAL_CYMATIC_POLARITY,
     buildPersonalCymaticScene
 } from '../../../m4-nara/lib/browser/widgets/personal-cymatic-field';
 import {
@@ -393,7 +394,10 @@ const PersonalCymaticCenterSlot: React.FC<{ readonly model: PersonalCompositionM
                         sessionKey: timeAxisState.sessionKey,
                         foregroundedHandle: timeAxisState.foregroundedHandle,
                         rendererStatus: 'attached',
-                        scene: buildPersonalCymaticScene()
+                        scene: buildPersonalCymaticScene(),
+                        audio_octet: readAudioOctet(profile),
+                        cymatic_polarity: PERSONAL_CYMATIC_POLARITY,
+                        psychoid_polarity: PERSONAL_CYMATIC_POLARITY
                     }}
                 />
             )}
@@ -653,6 +657,17 @@ function readStringField(
 ): string | null {
     const value = readNested(profile, names);
     return typeof value === 'string' && value.trim() !== '' ? value : null;
+}
+
+function readAudioOctet(profile: MathemeHarmonicProfileBoundary | null): readonly number[] {
+    const raw = readNested(profile, ['audio_octet', 'audioOctet']);
+    const rawRecord = objectValue(raw);
+    const array = Array.isArray(raw)
+        ? raw
+        : Array.isArray(rawRecord?.bins)
+            ? rawRecord.bins
+            : [];
+    return Object.freeze(array.filter((value): value is number => typeof value === 'number' && Number.isFinite(value)));
 }
 
 function readNested(

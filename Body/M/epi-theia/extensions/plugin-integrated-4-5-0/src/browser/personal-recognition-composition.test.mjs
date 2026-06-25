@@ -148,6 +148,7 @@ function profile(pasuProjection = projection()) {
                 }),
                 kairotic_active: false
             }),
+            audio_octet: Object.freeze([110, 123.47, 130.81, 146.83, 164.81, 174.61, 196, 220]),
             m3CodonRotationProjectionForLensRing: Object.freeze({
                 cells: Object.freeze([]),
                 activeRingIndex: 0,
@@ -248,6 +249,17 @@ test('personal composition mounts the M4 personal cymatic field in the center sl
     assert.doesNotMatch(html, /pending-psychoid-cymatic-solver/);
     assert.match(html, /pending-recognition-surface/);
     assert.doesNotMatch(html, /pending-virtue-witness/);
+});
+
+test('personal cymatic center consumes DR-M4-2 polarity without rendering raw audio octet values', () => {
+    const html = renderComposition(profile());
+
+    assert.match(html, /data-cymatic-polarity="1"/);
+    assert.match(html, /data-psychoid-polarity="1"/);
+    assert.match(html, /data-cymatic-polarity-canon="0=cosmic;1=personal"/);
+    assert.match(html, /data-audio-octet-source="MathemeHarmonicProfile\.audio_octet"/);
+    assert.match(html, /data-audio-octet-count="8"/);
+    assert.doesNotMatch(html, /123\.47|130\.81|146\.83|164\.81|174\.61/);
 });
 
 test('plugin widget mounts PersonalRecognitionComposition as editor area instead of three-pane juxtaposition', () => {

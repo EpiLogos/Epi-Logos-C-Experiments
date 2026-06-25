@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T09:56:35.787Z",
+  "updatedAt": "2026-06-25T10:07:05.871Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1307,15 +1307,22 @@
     },
     "07.T7.9": {
       "status": "done",
-      "updatedAt": "2026-06-25T09:58:00.000Z",
+      "updatedAt": "2026-06-25T09:59:37.754Z",
       "claimedAt": "2026-06-25T09:44:58.703Z",
-      "completedAt": "2026-06-25T09:58:00.000Z",
+      "completedAt": "2026-06-25T09:59:37.754Z",
       "evidence": [
-        {"at": "2026-06-25T09:58:00.000Z", "text": "Accepted. KleinFlipEvent three-variant SSOT consumed, CosmicKleinFlip removed. Committed."}
+        {
+          "at": "2026-06-25T09:58:00.000Z",
+          "text": "Accepted. KleinFlipEvent three-variant SSOT consumed, CosmicKleinFlip removed. Committed."
+        },
+        {
+          "at": "2026-06-25T09:59:37.754Z",
+          "text": "43/43 @pratibimba/integrated-composition tests incl M1/M2/M3 KleinFlipEvent variants; 15/15 @pratibimba/plugin-integrated-1-2-3 tests; rg CosmicKleinFlip no matches in INTEGRATED-1-2-3 arch doc/extensions; key paths Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts, Body/M/epi-theia/extensions/integrated-composition/tests/klein-flip-choreography.test.mjs, Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ENGINE-ARCHITECTURE.md"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-07-t7-9-kleinflip-event",
-      "leaseExpiresAt": "2026-06-25T11:44:58.703Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T09:44:58.703Z",
       "runId": "20260625T094458Z-07-T7.9",
       "worktree": null
@@ -1406,30 +1413,42 @@
     },
     "08.T8.5": {
       "status": "done",
-      "updatedAt": "2026-06-25T09:58:00.000Z",
+      "updatedAt": "2026-06-25T10:01:07.369Z",
       "claimedAt": "2026-06-25T09:46:12.018Z",
-      "completedAt": "2026-06-25T09:58:00.000Z",
+      "completedAt": "2026-06-25T10:01:07.369Z",
       "evidence": [
-        {"at": "2026-06-25T09:58:00.000Z", "text": "Accepted. Layout claim against shell-1 personal, DR-TS-1 honored. Committed."}
+        {
+          "at": "2026-06-25T09:58:00.000Z",
+          "text": "Accepted. Layout claim against shell-1 personal, DR-TS-1 honored. Committed."
+        },
+        {
+          "at": "2026-06-25T10:01:07.369Z",
+          "text": "pnpm --filter @pratibimba/plugin-integrated-4-5-0 test passed 36/36; pnpm --filter @pratibimba/integrated-composition test passed 43/43; key paths Body/M/epi-theia/extensions/integrated-composition/src/common/layout-claim.ts, Body/M/epi-theia/extensions/test/jiva-siva-slice.test.mjs, Body/M/epi-theia/extensions/integrated-composition/AGENTS.md"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-08-t8-5-layout-claim",
-      "leaseExpiresAt": "2026-06-25T11:46:12.018Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T09:46:12.018Z",
       "runId": "20260625T094612Z-08-T8.5",
       "worktree": null
     },
     "08.T8.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T10:07:05.817Z",
+      "claimedAt": "2026-06-25T10:00:42.344Z",
+      "completedAt": "2026-06-25T10:07:05.817Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T10:07:05.817Z",
+          "text": "m4-nara build passed; @pratibimba/plugin-integrated-4-5-0 test passed 37/37; m4-nara personal-cymatic render test passed 7/7; grep found cymatic_polarity/psychoid_polarity in plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-08-t8-6-cymatic-polarity",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T10:00:42.344Z",
+      "runId": "20260625T100042Z-08-T8.6",
       "worktree": null
     },
     "08.T8.7": {
@@ -12460,20 +12479,22 @@
     {
       "runId": "20260625T094458Z-07-T7.9",
       "taskId": "07.T7.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T09:44:58.703Z",
       "owner": "codex-m-dev-07-t7-9-kleinflip-event",
       "leaseExpiresAt": "2026-06-25T11:44:58.703Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T09:59:37.754Z"
     },
     {
       "runId": "20260625T094612Z-08-T8.5",
       "taskId": "08.T8.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T09:46:12.018Z",
       "owner": "codex-m-dev-08-t8-5-layout-claim",
       "leaseExpiresAt": "2026-06-25T11:46:12.018Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T10:01:07.369Z"
     },
     {
       "runId": "20260625T094628Z-48-T48.2",
@@ -12484,26 +12505,36 @@
       "leaseExpiresAt": "2026-06-25T11:46:28.253Z",
       "worktree": null,
       "completedAt": "2026-06-25T09:56:35.654Z"
+    },
+    {
+      "runId": "20260625T100042Z-08-T8.6",
+      "taskId": "08.T8.6",
+      "status": "done",
+      "startedAt": "2026-06-25T10:00:42.344Z",
+      "owner": "codex-m-dev-08-t8-6-cymatic-polarity",
+      "leaseExpiresAt": "2026-06-25T12:00:42.344Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T10:07:05.817Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T09:45:54.226Z",
-    "updatedAt": "2026-06-25T09:45:54.226Z",
+    "createdAt": "2026-06-25T10:00:43.139Z",
+    "updatedAt": "2026-06-25T10:00:43.139Z",
     "taskIds": [
-      "07.T7.9",
-      "08.T8.5",
       "08.T8.6",
-      "08.T8.7"
+      "08.T8.7",
+      "08.T8.8",
+      "08.T8.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "07.T7.9": "in-session",
-      "08.T8.5": "in-session",
       "08.T8.6": "in-session",
-      "08.T8.7": "in-session"
+      "08.T8.7": "in-session",
+      "08.T8.8": "in-session",
+      "08.T8.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

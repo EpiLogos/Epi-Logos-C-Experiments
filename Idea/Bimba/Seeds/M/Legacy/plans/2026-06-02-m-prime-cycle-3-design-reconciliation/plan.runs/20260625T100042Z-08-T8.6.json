@@ -1,0 +1,35 @@
+{
+  "runId": "20260625T100042Z-08-T8.6",
+  "taskId": "08.T8.6",
+  "startedAt": "2026-06-25T10:00:42.344Z",
+  "owner": "codex-m-dev-08-t8-6-cymatic-polarity",
+  "leaseExpiresAt": "2026-06-25T12:00:42.344Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T8.6",
+    "trackId": "08",
+    "tranche": "T8.6",
+    "title": "0/1 cymatic polarity consumer",
+    "effort": null,
+    "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+    "dependsOn": [
+      "08.T8.5"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

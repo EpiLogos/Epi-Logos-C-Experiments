@@ -31,8 +31,11 @@ export const M4_PERSONAL_CYMATIC_FIELD_EXPORT = 'M4PersonalCymaticField' as cons
 export const PERSONAL_CYMATIC_FIELD_RPC_METHOD = 'nara.field.handle';
 export const PERSONAL_CYMATIC_FIELD_OPEN_COMMAND_ID = `${EXTENSION_ID}.openPersonalCymaticField`;
 export const PERSONAL_CYMATIC_FIELD_PRIVACY_CHROME = 'mext-privacy-protected-local-handle-only';
+export const CYMATIC_POLARITY_CANON = '0=cosmic;1=personal' as const;
+export const PERSONAL_CYMATIC_POLARITY = 1 as const;
 
 export type PersonalCymaticRendererStatus = 'pending' | 'requesting' | 'attached' | 'fallback' | 'error';
+export type CymaticPolarity = 0 | 1;
 export type DipyramidNodeId =
     | 'P5'
     | 'P1'
@@ -75,6 +78,9 @@ export interface PersonalCymaticFieldModel {
     readonly foregroundedHandle: string;
     readonly rendererStatus: PersonalCymaticRendererStatus;
     readonly scene: PersonalCymaticScene;
+    readonly audio_octet: readonly number[];
+    readonly cymatic_polarity: CymaticPolarity;
+    readonly psychoid_polarity: CymaticPolarity;
     readonly errorMessage?: string | null;
 }
 
@@ -149,6 +155,11 @@ export const M4PersonalCymaticField: React.FC<M4PersonalCymaticFieldProps> = ({
         data-renderer-status={model.rendererStatus}
         data-node-count={model.scene.nodes.length}
         data-toric-link-count={model.scene.toricLinks.length}
+        data-cymatic-polarity={model.cymatic_polarity}
+        data-psychoid-polarity={model.psychoid_polarity}
+        data-cymatic-polarity-canon={CYMATIC_POLARITY_CANON}
+        data-audio-octet-source="MathemeHarmonicProfile.audio_octet"
+        data-audio-octet-count={model.audio_octet.length}
         data-privacy-class="protected_local_handle_only"
         aria-label="Personal cymatic field"
     >
@@ -159,6 +170,11 @@ export const M4PersonalCymaticField: React.FC<M4PersonalCymaticFieldProps> = ({
             data-geometry-law={model.scene.law}
             data-node-count={model.scene.nodes.length}
             data-toric-link-count={model.scene.toricLinks.length}
+            data-cymatic-polarity={model.cymatic_polarity}
+            data-psychoid-polarity={model.psychoid_polarity}
+            data-cymatic-polarity-canon={CYMATIC_POLARITY_CANON}
+            data-audio-octet-source="MathemeHarmonicProfile.audio_octet"
+            data-audio-octet-count={model.audio_octet.length}
             aria-label="DR-IG-6 dipyramid and Hopf-linked personal cymatic field"
             width={960}
             height={640}
@@ -263,6 +279,9 @@ export class PersonalCymaticFieldWidget extends ReactWidget {
             foregroundedHandle: this.foregroundedHandle ?? this.currentForegroundedHandle(),
             rendererStatus: this.rendererStatus,
             scene: buildPersonalCymaticScene(),
+            audio_octet: readAudioOctet(this.profile),
+            cymatic_polarity: PERSONAL_CYMATIC_POLARITY,
+            psychoid_polarity: PERSONAL_CYMATIC_POLARITY,
             errorMessage: this.errorMessage
         });
     }
@@ -467,6 +486,18 @@ function updateOpaqueRendererForeground(
     if (update) {
         update.call(handle, params);
     }
+}
+
+function readAudioOctet(profile: MathemeHarmonicProfileBoundary | null): readonly number[] {
+    const payload = objectRecord(profile?.payload);
+    const raw = payload?.audio_octet ?? payload?.audioOctet;
+    const rawRecord = objectRecord(raw);
+    const array = Array.isArray(raw)
+        ? raw
+        : Array.isArray(rawRecord?.bins)
+            ? rawRecord.bins
+            : [];
+    return Object.freeze(array.filter((value): value is number => typeof value === 'number' && Number.isFinite(value)));
 }
 
 function drawDipyramidCanvasGuide(canvas: HTMLCanvasElement, scene: PersonalCymaticScene): void {

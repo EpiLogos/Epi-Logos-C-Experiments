@@ -234,7 +234,10 @@ test('rendered field body is a protected-local handle-only canvas', () => {
         sessionKey: 'session:test',
         foregroundedHandle: 'm4://protected/q/transit',
         rendererStatus: 'attached',
-        scene: buildPersonalCymaticScene()
+        scene: buildPersonalCymaticScene(),
+        audio_octet: [110, 123.47, 130.81, 146.83, 164.81, 174.61, 196, 220],
+        cymatic_polarity: 1,
+        psychoid_polarity: 1
     };
     const markup = ReactDOMServer.renderToStaticMarkup(
         React.createElement(M4PersonalCymaticField, { model, mode: 'compact-card' })
@@ -246,6 +249,12 @@ test('rendered field body is a protected-local handle-only canvas', () => {
     assert.match(markup, /<canvas/);
     assert.match(markup, /data-node-count="12"/);
     assert.match(markup, /data-toric-link-count="2"/);
+    assert.match(markup, /data-cymatic-polarity="1"/);
+    assert.match(markup, /data-psychoid-polarity="1"/);
+    assert.match(markup, /data-cymatic-polarity-canon="0=cosmic;1=personal"/);
+    assert.match(markup, /data-audio-octet-source="MathemeHarmonicProfile\.audio_octet"/);
+    assert.match(markup, /data-audio-octet-count="8"/);
+    assert.doesNotMatch(markup, /123\.47|130\.81|146\.83|164\.81|174\.61/);
 });
 
 test('widget mount requests the opaque renderer handle and forwards time-axis foreground changes', async () => {
