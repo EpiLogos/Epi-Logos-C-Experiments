@@ -1,0 +1,35 @@
+{
+  "runId": "20260625T084447Z-46-T46.3",
+  "taskId": "46.T46.3",
+  "startedAt": "2026-06-25T08:44:47.807Z",
+  "owner": "codex-m-dev-46-t46-3-aeon-discovery",
+  "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
+  "worktree": null,
+  "task": {
+    "id": "46.T46.3",
+    "trackId": "46",
+    "tranche": "T46.3",
+    "title": "Aeon registration and semantic discovery",
+    "effort": null,
+    "file": "46-aeon-loop-unit-paradigm.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md",
+    "dependsOn": [
+      "46.T46.2"
+    ],
+    "writeScopes": [
+      "Body/S/S4/pi-agent/skills/custom/skill-lookup/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

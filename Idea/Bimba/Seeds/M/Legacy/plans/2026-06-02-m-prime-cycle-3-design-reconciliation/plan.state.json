@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T08:40:11.657Z",
+  "updatedAt": "2026-06-25T08:47:26.104Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -824,30 +824,37 @@
     },
     "05.T5.5": {
       "status": "done",
-      "updatedAt": "2026-06-25T08:38:00.000Z",
+      "updatedAt": "2026-06-25T08:44:53.296Z",
       "claimedAt": "2026-06-25T08:33:23.154Z",
-      "completedAt": "2026-06-25T08:38:00.000Z",
+      "completedAt": "2026-06-25T08:44:53.296Z",
       "evidence": [
-        {"at": "2026-06-25T08:38:00.000Z", "text": "Accepted. psychoid_cymatic module, personal-cymatic-field widget and test on disk, committed."}
+        {
+          "at": "2026-06-25T08:38:00.000Z",
+          "text": "Accepted. psychoid_cymatic module, personal-cymatic-field widget and test on disk, committed."
+        },
+        {
+          "at": "2026-06-25T08:44:53.296Z",
+          "text": "cargo check -p portal-core passed; cargo test -p portal-core 186 passed; m4-nara package test 76 passed; key paths Body/S/S0/portal-core/src/psychoid_cymatic/mod.rs, Body/S/S0/portal-core/tests/psychoid_cymatic_handle.rs, Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx"
+        }
       ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-5-psychoid-cymatic",
-      "leaseExpiresAt": "2026-06-25T10:33:23.154Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:33:23.154Z",
       "runId": "20260625T083323Z-05-T5.5",
       "worktree": null
     },
     "05.T5.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:44:18.367Z",
+      "claimedAt": "2026-06-25T08:44:18.367Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-05-t5-6-birthdate-identity",
+      "leaseExpiresAt": "2026-06-25T10:44:18.367Z",
+      "heartbeatAt": "2026-06-25T08:44:18.367Z",
+      "runId": "20260625T084418Z-05-T5.6",
       "worktree": null
     },
     "05.T5.7": {
@@ -1836,16 +1843,21 @@
       "worktree": null
     },
     "11.T11.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:47:26.018Z",
+      "claimedAt": "2026-06-25T08:44:31.996Z",
+      "completedAt": "2026-06-25T08:47:26.018Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:47:26.018Z",
+          "text": "pnpm --filter @pratibimba/pratibimba-layouts test: 11/11 tests passed; key paths: Body/M/epi-theia/extensions/pratibimba-layouts/src/common/layout-types.ts (IDE_DEEP_DESCRIPTOR expectedWidgets), Body/M/epi-theia/extensions/contracts/surface-extension-contract-ledger.json (pratibimba.smart-connections-sidebar status code-pending), Body/M/epi-theia/extensions/MIGRATION-SOURCES.md (Track 03 T6.5 gate)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-11-t11-4-smart-connections-pending",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:44:31.996Z",
+      "runId": "20260625T084431Z-11-T11.4",
       "worktree": null
     },
     "11.T11.5": {
@@ -9233,16 +9245,16 @@
       "worktree": null
     },
     "46.T46.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:44:47.807Z",
+      "claimedAt": "2026-06-25T08:44:47.807Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-46-t46-3-aeon-discovery",
+      "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
+      "heartbeatAt": "2026-06-25T08:44:47.807Z",
+      "runId": "20260625T084447Z-46-T46.3",
       "worktree": null
     },
     "46.T46.4": {
@@ -9286,18 +9298,22 @@
     },
     "47.T47.1": {
       "status": "done",
-      "updatedAt": "2026-06-25T08:30:00.000Z",
+      "updatedAt": "2026-06-25T08:47:21.057Z",
       "claimedAt": "2026-06-25T08:18:52.976Z",
-      "completedAt": "2026-06-25T08:25:00.000Z",
+      "completedAt": "2026-06-25T08:47:21.057Z",
       "evidence": [
         {
           "at": "2026-06-25T08:25:00.000Z",
           "text": "Accepted. Deliverable on disk, committed."
+        },
+        {
+          "at": "2026-06-25T08:47:21.057Z",
+          "text": "4 source tests passed: cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib gate::cron::tests (3 passed) + gate::server::tests::heartbeat_auto_fires_due_cron_job_without_manual_run (1 passed); regression cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_channels_cron_voice channel_and_cron_surfaces_persist_real_state (1 passed); key files Body/S/S0/epi-cli/src/gate/cron.rs, Body/S/S0/epi-cli/src/gate/server.rs"
         }
       ],
       "notes": null,
       "owner": "codex-m-dev-47-t47-1-cron-auto-fire",
-      "leaseExpiresAt": "2026-06-25T10:18:52.976Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-25T08:18:52.976Z",
       "runId": "20260625T081852Z-47-T47.1",
       "worktree": null
@@ -12146,11 +12162,12 @@
     {
       "runId": "20260625T081852Z-47-T47.1",
       "taskId": "47.T47.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:18:52.976Z",
       "owner": "codex-m-dev-47-t47-1-cron-auto-fire",
       "leaseExpiresAt": "2026-06-25T10:18:52.976Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T08:47:21.057Z"
     },
     {
       "runId": "20260625T081906Z-24-T24.2",
@@ -12165,11 +12182,12 @@
     {
       "runId": "20260625T083323Z-05-T5.5",
       "taskId": "05.T5.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T08:33:23.154Z",
       "owner": "codex-m-dev-05-t5-5-psychoid-cymatic",
       "leaseExpiresAt": "2026-06-25T10:33:23.154Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T08:44:53.296Z"
     },
     {
       "runId": "20260625T083414Z-47-T47.2",
@@ -12180,26 +12198,54 @@
       "leaseExpiresAt": "2026-06-25T10:34:14.335Z",
       "worktree": null,
       "completedAt": "2026-06-25T08:40:11.587Z"
+    },
+    {
+      "runId": "20260625T084418Z-05-T5.6",
+      "taskId": "05.T5.6",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:44:18.367Z",
+      "owner": "codex-m-dev-05-t5-6-birthdate-identity",
+      "leaseExpiresAt": "2026-06-25T10:44:18.367Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T084431Z-11-T11.4",
+      "taskId": "11.T11.4",
+      "status": "done",
+      "startedAt": "2026-06-25T08:44:31.996Z",
+      "owner": "codex-m-dev-11-t11-4-smart-connections-pending",
+      "leaseExpiresAt": "2026-06-25T10:44:31.996Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:47:26.018Z"
+    },
+    {
+      "runId": "20260625T084447Z-46-T46.3",
+      "taskId": "46.T46.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:44:47.807Z",
+      "owner": "codex-m-dev-46-t46-3-aeon-discovery",
+      "leaseExpiresAt": "2026-06-25T10:44:47.807Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T08:33:04.862Z",
-    "updatedAt": "2026-06-25T08:33:04.862Z",
+    "createdAt": "2026-06-25T08:44:10.988Z",
+    "updatedAt": "2026-06-25T08:44:10.988Z",
     "taskIds": [
-      "05.T5.5",
       "05.T5.6",
       "05.T5.7",
-      "05.T5.8"
+      "05.T5.8",
+      "05.T5.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.5": "in-session",
       "05.T5.6": "in-session",
       "05.T5.7": "in-session",
-      "05.T5.8": "in-session"
+      "05.T5.8": "in-session",
+      "05.T5.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

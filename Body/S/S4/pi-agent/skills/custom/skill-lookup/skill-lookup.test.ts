@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import { mkdtempSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { mkdtempSync, writeFileSync, existsSync, mkdirSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -48,6 +48,32 @@ function writeSkill(root: string, name: string, description: string, body: strin
 		].join("\n"),
 		"utf8",
 	);
+}
+
+function writeAeon(root: string, name: string, description: string, body: string) {
+	const dir = join(root, name);
+	mkdirp(dir);
+	writeFileSync(
+		join(dir, "SKILL.md"),
+		[
+			"---",
+			`name: ${name}`,
+			"kind: aeon",
+			`description: "${description}"`,
+			"vak_coordinate: \"CPF:(4.0/1-4.4/5);CT:CT4;CP:4.4;CF:(4.5/0);CFP:Z;CS:Day+Night'\"",
+			`quintessential_form: "q_${name}"`,
+			"bimba_coordinate: \"M5-1\"",
+			"entitlement_class: allowed-for-current-agent",
+			"---",
+			"",
+			`# ${name}`,
+			"",
+			body,
+			"",
+		].join("\n"),
+		"utf8",
+	);
+	return dir;
 }
 
 function mkdirp(path: string) {
@@ -123,6 +149,78 @@ describe("skill_lookup respects entitlement filter", () => {
 			false,
 		);
 		assert.ok(results.every((entry) => entry.entitlement_class === "allowed-for-current-agent"));
+	});
+});
+
+describe("skill_lookup discovers Aeons through the skill manifest", () => {
+	it("returns matching Aeons ranked and entitlement-filtered with an aeon kind", async () => {
+		const f = fixture();
+		writeAeon(
+			f.skillsRoot,
+			"night_rehear_loop",
+			"Reusable Aeon loop for Night rehear and Sophia recompose.",
+			"Use this Aeon when a task needs to rehear a Z-thread, inspect the transcript, and recompose the loop rubric.",
+		);
+		const universe = enumerateSkillUniverse([f.skillsRoot]);
+		const effective = computeAgentEntitlement(
+			{ skills: universe, tools: [] },
+			undefined,
+			{
+				skills: { allow: ["night_rehear_loop", "style_editor"] },
+				tools: { allow: [] },
+			},
+		);
+		const config = parseSkillLookupConfigToml(CONFIG_TOML);
+		const service = await createSkillLookupService({
+			skillUniverseRoots: [f.skillsRoot],
+			effective,
+			config,
+			homeDir: f.homeDir,
+		});
+
+		const results = await service.lookup("rehear z thread transcript recompose rubric", 5);
+
+		assert.equal(results[0]?.name, "night_rehear_loop");
+		assert.equal(results[0]?.kind, "aeon");
+		assert.equal(results[0]?.quintessential_form, "q_night_rehear_loop");
+		assert.equal(results[0]?.entitlement_class, "allowed-for-current-agent");
+		assert.ok(!results.some((entry) => entry.name === "gnosis_ingest"));
+	});
+
+	it("discovers an Aeon from a projected harness skill root like any skill", async () => {
+		const f = fixture();
+		const aeonPath = writeAeon(
+			f.skillsRoot,
+			"subsession_loop",
+			"Reusable Aeon loop projected into a sub-session.",
+			"Use this Aeon when any harness sub-session needs a reusable loop unit for implementation verification.",
+		);
+		const harnessRoot = join(f.root, "harness-skills");
+		mkdirp(harnessRoot);
+		symlinkSync(aeonPath, join(harnessRoot, "subsession_loop"), "dir");
+		symlinkSync(join(f.skillsRoot, "style_editor"), join(harnessRoot, "style_editor"), "dir");
+		const universe = enumerateSkillUniverse([harnessRoot]);
+		const effective = computeAgentEntitlement(
+			{ skills: universe, tools: [] },
+			undefined,
+			{
+				skills: { allow: ["subsession_loop", "style_editor"] },
+				tools: { allow: [] },
+			},
+		);
+		const config = parseSkillLookupConfigToml(CONFIG_TOML);
+		const service = await createSkillLookupService({
+			skillUniverseRoots: [harnessRoot],
+			effective,
+			config,
+			homeDir: f.homeDir,
+		});
+
+		const results = await service.lookup("sub-session reusable loop implementation verification", 5);
+
+		assert.equal(results[0]?.name, "subsession_loop");
+		assert.equal(results[0]?.kind, "aeon");
+		assert.match(results[0]?.path ?? "", /harness-skills/);
 	});
 });
 
