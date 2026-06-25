@@ -1982,11 +1982,13 @@
       "worktree": null
     },
     "11.T11.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:27:00.000Z",
+      "claimedAt": "2026-06-25T16:27:00.000Z",
+      "completedAt": "2026-06-25T16:27:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T16:27:00.000Z", "text": "Audit: M'-SYSTEM-SPEC:173 downgraded 'Tauri implementation' to 'Theia shell (formerly the Tauri implementation)'. M'-TAURI-PORT-SPEC: added SUPERSEDED header with deprecation note. M5'/m5-prime-agentic-ide-research:47 downgraded 'Tauri implementation' to 'Theia-based agentic IDE (formerly a Tauri implementation)'. All active spec hits now annotated. M4'/Legacy hit is archival. grep for undeprecated Tauri wording returns zero live hits in active specs."}
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
