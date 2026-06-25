@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T15:28:52.850Z",
+  "updatedAt": "2026-06-25T15:43:22.410Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1564,16 +1564,21 @@
       "worktree": null
     },
     "09.T9.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T15:43:22.357Z",
+      "claimedAt": "2026-06-25T15:30:49.931Z",
+      "completedAt": "2026-06-25T15:43:22.357Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T15:43:22.357Z",
+          "text": "pnpm m0-anuttara test 55/55; cargo check --manifest-path Body/S/S2/graph-services/Cargo.toml -p epi-s2-graph-services passed; GDS option1 test 1/1 passed; grep M0-3 line 380; key files Body/M/epi-theia/extensions/m0-anuttara/src/browser/{m0-anuttara-widget.tsx,panels/community-clock-panel.tsx} + extensions/test/m0-anuttara-inspector.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-6-community-clock",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T15:30:49.931Z",
+      "runId": "20260625T153049Z-09-T9.6",
       "worktree": null
     },
     "09.T9.7": {
@@ -12590,26 +12595,36 @@
       "leaseExpiresAt": "2026-06-25T17:25:35.013Z",
       "worktree": null,
       "completedAt": "2026-06-25T15:28:52.798Z"
+    },
+    {
+      "runId": "20260625T153049Z-09-T9.6",
+      "taskId": "09.T9.6",
+      "status": "done",
+      "startedAt": "2026-06-25T15:30:49.931Z",
+      "owner": "codex-m-dev-09-t9-6-community-clock",
+      "leaseExpiresAt": "2026-06-25T17:30:49.931Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T15:43:22.357Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T15:25:17.833Z",
-    "updatedAt": "2026-06-25T15:25:17.833Z",
+    "createdAt": "2026-06-25T15:30:40.673Z",
+    "updatedAt": "2026-06-25T15:30:40.673Z",
     "taskIds": [
-      "09.T9.5",
       "09.T9.6",
       "09.T9.7",
-      "09.T9.8"
+      "09.T9.8",
+      "09.T9.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.5": "in-session",
       "09.T9.6": "in-session",
       "09.T9.7": "in-session",
-      "09.T9.8": "in-session"
+      "09.T9.8": "in-session",
+      "09.T9.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

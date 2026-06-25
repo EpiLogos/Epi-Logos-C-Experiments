@@ -10,6 +10,7 @@ import {
     MathemeHarmonicProfileBoundary,
     CoordinateContext,
     EMPTY_COORDINATE_CONTEXT,
+    MObservabilityEvent,
     Disposable,
     ReadinessBanner,
     SHARED_BRIDGE_ADAPTER
@@ -32,6 +33,12 @@ import {
 } from './panels/archetype-routing-panel';
 import { LazyNodeBrowserPanel } from './panels/lazy-node-browser-panel';
 import { LanguageLayerPanel } from './panels/language-layer-panel';
+import {
+    CommunityClockPanel,
+    buildM0CommunityClockProjection,
+    loadM0GdsTangentOverlay,
+    worldClockRowsFromObservabilityPayload
+} from './panels/community-clock-panel';
 import {
     DEFAULT_M0_SURFACE_STATE,
     M0_SURFACE_STATE_SELECTOR_ID,
@@ -60,6 +67,10 @@ export class M0AnuttaraWidget extends ReactWidget {
     protected phase: M0Phase = DEFAULT_M0_SURFACE_STATE.implicateExplicate;
     protected mode: M0SurfaceMode = DEFAULT_M0_SURFACE_STATE.mode;
     protected contemplationResponseDraft = '';
+    protected gdsTangentOverlay: unknown = null;
+    protected gdsTangentOverlayError: string | null = null;
+    protected gdsTangentOverlayRequestKey: string | null = null;
+    protected worldClockRows: readonly unknown[] = [];
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -83,14 +94,19 @@ export class M0AnuttaraWidget extends ReactWidget {
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
                 this.profile = profile;
+                void this.refreshGdsTangentOverlay();
                 this.update();
             })
         );
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
                 this.context = context;
+                void this.refreshGdsTangentOverlay();
                 this.update();
             })
+        );
+        this.subscriptions.push(
+            this.bridge.onObservabilityEvent(event => this.handleObservabilityEvent(event))
         );
     }
 
@@ -121,6 +137,7 @@ export class M0AnuttaraWidget extends ReactWidget {
             this.bridge.updateCoordinateContext(state.coordinateContext);
         }
         this.persistSurfaceState();
+        void this.refreshGdsTangentOverlay();
         this.update();
     }
 
@@ -173,6 +190,49 @@ export class M0AnuttaraWidget extends ReactWidget {
         );
     }
 
+    protected async refreshGdsTangentOverlay(): Promise<void> {
+        const coordinate = this.currentM0Coordinate();
+        if (!coordinate) {
+            return;
+        }
+        const generation = this.profile?.generation ?? this.context.profileGeneration ?? 'pending';
+        const requestKey = `${coordinate}:${generation}`;
+        if (this.gdsTangentOverlayRequestKey === requestKey) {
+            return;
+        }
+        this.gdsTangentOverlayRequestKey = requestKey;
+        this.gdsTangentOverlay = null;
+        this.gdsTangentOverlayError = null;
+        try {
+            this.gdsTangentOverlay = await loadM0GdsTangentOverlay(this.bridge, coordinate);
+        } catch (error) {
+            this.gdsTangentOverlayError =
+                error instanceof Error ? error.message : String(error);
+        }
+        this.update();
+    }
+
+    protected currentM0Coordinate(): string | null {
+        const model = buildM0InspectorModel({
+            selectedInput: this.context.hashInput ?? this.context.selectedCoordinate,
+            graphNode: readGraphNode(this.profile),
+            profile: this.profile,
+            readiness: this.readiness,
+            context: this.context,
+            mode: this.mode
+        });
+        return model.node.coordinate ?? model.query.canonicalMCoordinate;
+    }
+
+    protected handleObservabilityEvent(event: MObservabilityEvent): void {
+        const worldRows = worldClockRowsFromObservabilityPayload(event.payload);
+        if (!worldRows.length) {
+            return;
+        }
+        this.worldClockRows = worldRows;
+        this.update();
+    }
+
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
         const model = buildM0InspectorModel({
@@ -187,6 +247,12 @@ export class M0AnuttaraWidget extends ReactWidget {
             ...model.contemplation,
             responseDraft: this.contemplationResponseDraft
         };
+        const communityClockProjection = buildM0CommunityClockProjection({
+            profile: this.profile,
+            gdsOverlay: this.gdsTangentOverlay,
+            worldClockRows: this.worldClockRows,
+            gdsError: this.gdsTangentOverlayError
+        });
         const activeRoute =
             model.layerRoutes.find(route => route.layerKey === this.activeLayer) ?? model.layerRoutes[0];
         return (
@@ -311,7 +377,7 @@ export class M0AnuttaraWidget extends ReactWidget {
                     data-read-only={model.communityClockOverlay.readOnly}
                     data-local-clock={model.communityClockOverlay.usesLocalClock}
                 >
-                    <h3>Community clock overlay</h3>
+                    <h3>Community clock overlay (M0-3')</h3>
                     <dl>
                         <dt>View</dt>
                         <dd>{model.communityClockOverlay.viewId}</dd>
@@ -340,6 +406,10 @@ export class M0AnuttaraWidget extends ReactWidget {
                     </dl>
                     <p className="mext-widget-empty">{model.communityClockOverlay.provenance}</p>
                 </section>
+                <CommunityClockPanel
+                    projection={communityClockProjection}
+                    readinessFacts={model.readinessFacts}
+                />
                 <M0ModeToggle
                     mode={model.mode}
                     coordinate={model.node.coordinate ?? model.query.canonicalMCoordinate}

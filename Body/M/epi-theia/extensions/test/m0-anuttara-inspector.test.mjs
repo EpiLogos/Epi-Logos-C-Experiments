@@ -88,6 +88,13 @@ const {
     shouldRenderM0ArchetypeRoutingTopSection
 } = require('../m0-anuttara/lib/browser/panels/archetype-routing-panel.js');
 const {
+    CommunityClockPanel,
+    M0_GDS_TANGENT_OVERLAY_METHOD,
+    buildM0CommunityClockProjection,
+    loadM0GdsTangentOverlay,
+    worldClockRowsFromObservabilityPayload
+} = require('../m0-anuttara/lib/browser/panels/community-clock-panel.js');
+const {
     selectLanguageFieldsForPhase,
     relationEmphasisForPhase,
     pedagogyFramingForPhase
@@ -707,9 +714,131 @@ test('widget renders the community clock overlay without a renderer-local clock'
     );
 
     assert.match(source, /m0-community-clock-overlay/);
+    assert.match(source, /loadM0GdsTangentOverlay/);
+    assert.match(source, /worldClockRowsFromObservabilityPayload/);
+    assert.match(source, /<CommunityClockPanel/);
     assert.match(source, /model\.communityClockOverlay\.viewId/);
     assert.match(source, /data-provenance-state=\{model\.communityClockOverlay\.state\}/);
     assert.doesNotMatch(source, /new Date|Date\.now|performance\.now/);
+});
+
+test('M0-3 community clock projection separates synchronic GDS from diachronic world_clock handles', () => {
+    const rows = worldClockRowsFromObservabilityPayload({
+        tableName: 'world_clock',
+        inserts: [
+            {
+                world_clock_id: 'spacetimedb://session/now/world_clock/144',
+                tick12: 9,
+                degree_node_360: 270
+            }
+        ]
+    });
+    const projection = buildM0CommunityClockProjection({
+        profile: {
+            ...profile,
+            payload: {
+                ...profile.payload,
+                graphiti_episode_refs: ['graphiti://protected/episode/m0-3-active-now']
+            }
+        },
+        worldClockRows: rows,
+        gdsOverlay: {
+            coordinate: 'M0',
+            projectionName: 's2_public_bimba_option1_v1',
+            projectionVersion: '2026-06-01-option1-public-coordinate-overlay',
+            status: 'projection-ready-algorithm-gated',
+            privacyBoundaryStatus: 'public-coordinate-topology-only-excludes-protected-local-labels',
+            gdsReady: true,
+            canonicalWritePerformed: false,
+            derivedNodes: [
+                {
+                    coordinate: '#0-3-12',
+                    score: 0.875,
+                    sourceAlgorithm: 'louvain'
+                }
+            ]
+        }
+    });
+
+    assert.equal(projection.method, M0_GDS_TANGENT_OVERLAY_METHOD);
+    assert.equal(projection.state, 'derived');
+    assert.deepEqual(projection.gdsTangentNodes, [
+        {
+            coordinate: '#0-3-12',
+            score: 0.875,
+            sourceAlgorithm: 'louvain'
+        }
+    ]);
+    assert.equal(projection.worldClockRows[0].tick12, 9);
+    assert.equal(projection.worldClockRows[0].degreeNode360, 270);
+    assert.deepEqual(projection.graphitiEpisodeRefs, [
+        'graphiti://protected/episode/m0-3-active-now'
+    ]);
+});
+
+test('M0-3 GDS overlay loader invokes the bridge gateway method with public-current privacy', async () => {
+    const calls = [];
+    const bridge = {
+        async invokeGatewayRpc(method, params) {
+            calls.push({ method, params });
+            return { ok: true };
+        }
+    };
+
+    const result = await loadM0GdsTangentOverlay(bridge, 'M0', 5);
+
+    assert.deepEqual(result, { ok: true });
+    assert.equal(calls[0].method, M0_GDS_TANGENT_OVERLAY_METHOD);
+    assert.equal(calls[0].params.coordinate, 'M0');
+    assert.equal(calls[0].params.topK, 5);
+    assert.equal(calls[0].params.sourceExtensionId, 'm0-anuttara');
+    assert.equal(calls[0].params.privacyClass, 'public_current_with_graph_provenance');
+});
+
+test('CommunityClockPanel renders synchronic and diachronic lanes with handle-only Graphiti refs', () => {
+    const projection = buildM0CommunityClockProjection({
+        profile: {
+            ...profile,
+            payload: {
+                ...profile.payload,
+                graphitiEpisodeRefs: ['graphiti://protected/episode/clock-handle']
+            }
+        },
+        worldClockRows: [
+            {
+                world_clock_id: 'world-clock-row',
+                tick12: 4,
+                degreeNode360: 120
+            }
+        ],
+        gdsOverlay: {
+            projectionName: 's2_public_bimba_option1_v1',
+            projectionVersion: '2026-06-01-option1-public-coordinate-overlay',
+            privacyBoundaryStatus: 'public-coordinate-topology-only-excludes-protected-local-labels',
+            derivedNodes: [
+                {
+                    coordinate: '#0-3-21',
+                    score: 0.5,
+                    source_algorithm: 'node_similarity'
+                }
+            ]
+        }
+    });
+
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(CommunityClockPanel, {
+            projection,
+            readinessFacts: []
+        })
+    );
+
+    assert.match(markup, /Synchronic community/);
+    assert.match(markup, /Diachronic clock/);
+    assert.match(markup, /data-method="s2\.graph\.gds\.tangent_overlay"/);
+    assert.match(markup, /data-gds-tangent-coordinate="#0-3-21"/);
+    assert.match(markup, /data-world-clock-ref="world-clock-row"/);
+    assert.match(markup, /data-graphiti-episode-ref="graphiti:\/\/protected\/episode\/clock-handle"/);
+    assert.doesNotMatch(markup, /episodeBody|protected body|journalBody/);
 });
 
 test('Virtue Witness LUT mirrors the nine epi-lib VIRTUE_LUT names', async () => {
