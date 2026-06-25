@@ -11,6 +11,7 @@
     { "path": "../omnipanel-shell" },
     { "path": "../pratibimba-layouts" },
     { "path": "../m-extension-runtime" },
+    { "path": "../block-kit" },
     { "path": "../ide-shell-m0-m5" }
   ],
   "include": ["src"]

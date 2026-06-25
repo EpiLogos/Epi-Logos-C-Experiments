@@ -17,6 +17,7 @@
     "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/ide-shell-m0-m5": "workspace:*",
     "@pratibimba/agentic-control-room": "workspace:*",
     "react": "^18.3.1",

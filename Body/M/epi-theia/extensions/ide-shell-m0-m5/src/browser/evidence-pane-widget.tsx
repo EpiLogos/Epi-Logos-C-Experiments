@@ -2,10 +2,12 @@ import * as React from 'react';
 import { CommandService } from '@theia/core';
 import { injectable, inject, optional, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
+import { BlockHost } from '@pratibimba/block-kit/lib/browser/block-host';
 import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import type { Block, BlockPrivacyClass } from '@pratibimba/m-extension-runtime';
 import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import type { CrossLayoutIntent, IntentPrivacyClass } from '@pratibimba/pratibimba-layouts';
 import type {
@@ -238,6 +240,7 @@ export class EvidencePaneWidget extends ReactWidget {
                                 >
                                     {this.renderMediatorBadge(r)}
                                     <strong>{this.recordTitle(r)}</strong>
+                                    <BlockHost blocks={this.evidenceBlocks(r, recordId)} />
                                     <dl className="ide-shell-evidence-fields">
                                         <dt>Packet</dt>
                                         <dd>
@@ -479,6 +482,88 @@ export class EvidencePaneWidget extends ReactWidget {
                 )}
             </nav>
         );
+    }
+
+    protected evidenceBlocks(record: MediatedRunEvidencePacket, recordId: string): readonly Block[] {
+        const blocks: Block[] = [
+            {
+                id: `block:evidence:${recordId}`,
+                type: 'evidence',
+                ctx: this.blockCtx('evidence-inspector'),
+                coordinate: record.coordinate ?? 'M5-4',
+                privacyClass: this.blockPrivacyClass(record.privacyClass),
+                provenance: {
+                    kind: 'evidence-envelope',
+                    handle: recordId,
+                    source: 'ide-shell.evidence-pane'
+                },
+                data: {
+                    id: recordId,
+                    title: this.recordTitle(record),
+                    sourceAnchor: record.sourceAnchor ?? null,
+                    graphAnchor: record.graphAnchor ?? null,
+                    testAnchor: record.testAnchor ?? null,
+                    reviewId: record.reviewId ?? null,
+                    sessionKey: record.sessionKey ?? null,
+                    dayNowContext: record.dayNowContext ?? null,
+                    profileGeneration: record.profileGeneration ?? null
+                },
+                affordances: ['navigate']
+            }
+        ];
+        if (record.dispatchTrace) {
+            blocks.push({
+                id: `block:evidence:${recordId}:dispatch`,
+                type: 'dispatch-genealogy',
+                ctx: this.blockCtx('evidence-dispatch-trace'),
+                coordinate: record.coordinate ?? 'M5-4',
+                privacyClass: this.blockPrivacyClass(record.privacyClass),
+                provenance: {
+                    kind: 'evidence-envelope',
+                    handle: recordId,
+                    source: 'ide-shell.evidence-pane.dispatchTrace'
+                },
+                data: record.dispatchTrace,
+                affordances: ['navigate']
+            });
+        }
+        for (const tool of record.toolStream ?? []) {
+            blocks.push({
+                id: `block:evidence:${recordId}:tool:${tool.id}`,
+                type: 'tool-stream-event',
+                ctx: this.blockCtx('evidence-tool-stream'),
+                coordinate: record.coordinate ?? 'M5-4',
+                privacyClass: this.blockPrivacyClass(record.privacyClass),
+                provenance: {
+                    kind: 'evidence-envelope',
+                    handle: recordId,
+                    source: 'ide-shell.evidence-pane.toolStream'
+                },
+                data: tool,
+                affordances: ['navigate']
+            });
+        }
+        return Object.freeze(blocks);
+    }
+
+    protected blockCtx(cpf: string): Block['ctx'] {
+        return {
+            cf: '(0/1/2)',
+            ct: 'CT2',
+            cp: '4.2',
+            cpf,
+            cs: 'day'
+        };
+    }
+
+    protected blockPrivacyClass(privacyClass: string | null | undefined): BlockPrivacyClass {
+        if (privacyClass === 'protected-local') {
+            return 'protected-local';
+        }
+        if (privacyClass?.startsWith('protected')) {
+            return 'protected';
+        }
+        return 'public';
     }
 
     protected emitCrossLayoutIntent(intent: EvidenceCrossLayoutIntent): void {

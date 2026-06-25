@@ -9,7 +9,8 @@
   "references": [
     { "path": "../kernel-bridge" },
     { "path": "../pratibimba-layouts" },
-    { "path": "../m-extension-runtime" }
+    { "path": "../m-extension-runtime" },
+    { "path": "../block-kit" }
   ],
   "include": ["src"]
 }

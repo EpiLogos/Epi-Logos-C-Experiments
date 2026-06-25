@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
+import { BlockHost } from '@pratibimba/block-kit/lib/browser/block-host';
+import type { Block } from '@pratibimba/m-extension-runtime';
 import { ACR_RUNTIME_SERVICE, type AgenticControlRoomRuntimeService, type RunState } from './acr-runtime-service';
 import { ACR_WIDGET_IDS } from '../common';
 import { missingEvidenceFields, type ReviewDecision } from '../common/run-model';
@@ -77,26 +79,30 @@ export class RunFlowWidget extends ReactWidget {
                             No run yet. Pick a candidate, route, and actor, then start.
                         </p>
                     ) : (
-                        <dl>
-                            <dt>Run id</dt>
-                            <dd data-test="acr-run-id">{tree.id}</dd>
-                            <dt>Label</dt>
-                            <dd data-test="acr-run-label">{tree.label}</dd>
-                            <dt>Status</dt>
-                            <dd data-test="acr-run-status">{tree.status}</dd>
-                            <dt>Started</dt>
-                            <dd data-test="acr-run-started">{tree.startedAtMs}</dd>
-                            {tree.endedAtMs !== undefined && (
-                                <>
-                                    <dt>Ended</dt>
-                                    <dd data-test="acr-run-ended">{tree.endedAtMs}</dd>
-                                </>
-                            )}
-                        </dl>
+                        <>
+                            <BlockHost blocks={this.dispatchTraceBlocks(s)} />
+                            <dl>
+                                <dt>Run id</dt>
+                                <dd data-test="acr-run-id">{tree.id}</dd>
+                                <dt>Label</dt>
+                                <dd data-test="acr-run-label">{tree.label}</dd>
+                                <dt>Status</dt>
+                                <dd data-test="acr-run-status">{tree.status}</dd>
+                                <dt>Started</dt>
+                                <dd data-test="acr-run-started">{tree.startedAtMs}</dd>
+                                {tree.endedAtMs !== undefined && (
+                                    <>
+                                        <dt>Ended</dt>
+                                        <dd data-test="acr-run-ended">{tree.endedAtMs}</dd>
+                                    </>
+                                )}
+                            </dl>
+                        </>
                     )}
                 </section>
                 <section className="acr-widget-detail" data-test="acr-tool-stream">
                     <h4>Tool stream ({s.toolStream.length} events)</h4>
+                    <BlockHost blocks={this.toolStreamBlocks(s)} />
                     <ul data-test="acr-tool-stream-list">
                         {s.toolStream.map(ev => (
                             <li
@@ -243,5 +249,60 @@ export class RunFlowWidget extends ReactWidget {
                 )}
             </div>
         );
+    }
+
+    protected dispatchTraceBlocks(s: RunState): readonly Block[] {
+        if (s.runTree === null) {
+            return [];
+        }
+        return Object.freeze([
+            {
+                id: `block:acr:dispatch:${s.runTree.id}`,
+                type: 'dispatch-genealogy',
+                ctx: this.blockCtx('dispatch-trace'),
+                coordinate: 'M5-4',
+                privacyClass: 'protected',
+                provenance: {
+                    kind: 'evidence-envelope',
+                    handle: s.evidence?.candidateId ?? s.runTree.id,
+                    source: 'agentic-control-room.runTree'
+                },
+                data: {
+                    runTree: s.runTree,
+                    route: s.route,
+                    actor: s.actor,
+                    techneClass: s.techneClass,
+                    candidateId: s.candidate?.id ?? null
+                },
+                affordances: ['navigate']
+            }
+        ]);
+    }
+
+    protected toolStreamBlocks(s: RunState): readonly Block[] {
+        return Object.freeze(s.toolStream.map(ev => ({
+            id: `block:acr:tool:${ev.id}`,
+            type: 'tool-stream-event',
+            ctx: this.blockCtx('tool-stream'),
+            coordinate: 'M5-4',
+            privacyClass: ev.privacyClass === 'protected-local' ? 'protected-local' : 'protected',
+            provenance: {
+                kind: 'evidence-envelope',
+                handle: ev.id,
+                source: 'agentic-control-room.toolStream'
+            },
+            data: ev,
+            affordances: ['navigate']
+        })));
+    }
+
+    protected blockCtx(cpf: string): Block['ctx'] {
+        return {
+            cf: '(0/1/2)',
+            ct: 'CT2',
+            cp: '4.2',
+            cpf,
+            cs: 'day'
+        };
     }
 }

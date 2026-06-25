@@ -18,6 +18,7 @@
     "@pratibimba/omnipanel-shell": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/ide-shell-m0-m5": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
