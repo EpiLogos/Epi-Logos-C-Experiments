@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { ToolInvocationRef } from './types';
+import { PsycheFacetBadge } from './psyche-facets';
 
 export interface ToolStreamProps {
     readonly tools: readonly ToolInvocationRef[];
@@ -26,6 +27,12 @@ export function ToolStream({ tools }: ToolStreamProps): React.ReactElement {
                     <strong>{tool.toolName}</strong>
                     <span> @ {new Date(tool.invokedAt).toISOString()}</span>
                     {tool.actor && <span> — {tool.actor}</span>}
+                    {tool.psycheFacet && (
+                        <PsycheFacetBadge
+                            facet={tool.psycheFacet}
+                            testId={`acr-tool-psyche-facet-${tool.id}`}
+                        />
+                    )}
                     <dl>
                         {tool.inputDigest && (
                             <>

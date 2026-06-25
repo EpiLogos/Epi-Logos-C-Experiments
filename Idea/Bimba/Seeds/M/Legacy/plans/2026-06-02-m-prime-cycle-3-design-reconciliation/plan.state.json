@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-21T11:33:52.258Z",
+  "updatedAt": "2026-06-25T08:15:28.565Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -779,16 +779,25 @@
       "worktree": null
     },
     "05.T5.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:15:28.379Z",
+      "claimedAt": "2026-06-25T08:04:41.090Z",
+      "completedAt": "2026-06-25T08:15:28.379Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:13:41.057Z",
+          "text": "cargo check --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml passed; cargo test --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml --test nara_relations passed 4 tests; grep HAS_DAY|NEXT_IN_ARC found Body/S/S3/graphiti-runtime/src/lib.rs; key files Body/S/S3/graphiti-runtime/src/lib.rs, Body/S/S3/graphiti-runtime/tests/nara_relations.rs, Body/S/S3/graphiti-runtime/AGENTS.md"
+        },
+        {
+          "at": "2026-06-25T08:15:28.379Z",
+          "text": "cargo check clean. cargo test --test nara_relations: 4/4 passed (nara_relation_payload_rejects_missing_handles_and_body_leaks, nara_relation_payload_exposes_all_allowed_relation_labels, nara_relation_payload_materialises_day_and_arc_edge_labels, nara_insert_relation_returns_privacy_envelope_when_runtime_cannot_write). grep confirms HAS_DAY/NEXT_IN_ARC in src/lib.rs."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-05-t5-3-graphiti-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:04:41.090Z",
+      "runId": "20260625T080441Z-05-T5.3",
       "worktree": null
     },
     "05.T5.4": {
@@ -4496,16 +4505,16 @@
       "worktree": null
     },
     "26.T26.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-25T08:05:08.965Z",
+      "claimedAt": "2026-06-25T08:05:08.965Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-26-t26-8",
+      "leaseExpiresAt": "2026-06-25T10:05:08.965Z",
+      "heartbeatAt": "2026-06-25T08:05:08.965Z",
+      "runId": "20260625T080508Z-26-T26.8",
       "worktree": null
     },
     "26.T26.9": {
@@ -7548,16 +7557,21 @@
       "worktree": null
     },
     "24.T24.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:14:11.684Z",
+      "claimedAt": "2026-06-25T08:05:34.067Z",
+      "completedAt": "2026-06-25T08:14:11.684Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:14:11.684Z",
+          "text": "pnpm --filter @pratibimba/m3-mahamaya test: 49/49 node tests passed; Fibonacci Ground render asserts 60 wedges, 4 cardinal anchors, 8 zodiacal anchors, 24 backbone ticks, natal gold ring + live silver marker; key files Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3CosmicWheelRenderService.tsx and src/browser/context/M3ProfileTickContext.tsx; rg no-local-derivation shows only production payload read ground.pisano_digit_lut and no 60*6/local LUT."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-24-t24-19-fibonacci-ground",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:05:34.067Z",
+      "runId": "20260625T080534Z-24-T24.19",
       "worktree": null
     },
     "24.T60": {
@@ -9162,16 +9176,21 @@
       "worktree": null
     },
     "46.T46.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T08:15:06.464Z",
+      "claimedAt": "2026-06-25T08:04:59.792Z",
+      "completedAt": "2026-06-25T08:15:06.464Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T08:15:06.464Z",
+          "text": "3/3 Z-thread runtime regression checks; 26/26 shared ta-onta tests; 144/144 S4-4p-anima tests; git diff --check clean; key paths Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts and Body/S/S4/ta-onta/shared/vak_address.ts"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-46-t46-1-z-thread",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T08:04:59.792Z",
+      "runId": "20260625T080459Z-46-T46.1",
       "worktree": null
     },
     "46.T46.2": {
@@ -12027,25 +12046,64 @@
       "leaseExpiresAt": "2026-06-19T22:49:44.236Z",
       "worktree": null,
       "completedAt": "2026-06-19T20:56:26.486Z"
+    },
+    {
+      "runId": "20260625T080441Z-05-T5.3",
+      "taskId": "05.T5.3",
+      "status": "done",
+      "startedAt": "2026-06-25T08:04:41.090Z",
+      "owner": "codex-m-dev-05-t5-3-graphiti-nara",
+      "leaseExpiresAt": "2026-06-25T10:04:41.090Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:13:41.057Z"
+    },
+    {
+      "runId": "20260625T080459Z-46-T46.1",
+      "taskId": "46.T46.1",
+      "status": "done",
+      "startedAt": "2026-06-25T08:04:59.792Z",
+      "owner": "codex-m-dev-46-t46-1-z-thread",
+      "leaseExpiresAt": "2026-06-25T10:04:59.792Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:15:06.464Z"
+    },
+    {
+      "runId": "20260625T080508Z-26-T26.8",
+      "taskId": "26.T26.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-25T08:05:08.965Z",
+      "owner": "codex-m-dev-26-t26-8",
+      "leaseExpiresAt": "2026-06-25T10:05:08.965Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260625T080534Z-24-T24.19",
+      "taskId": "24.T24.19",
+      "status": "done",
+      "startedAt": "2026-06-25T08:05:34.067Z",
+      "owner": "codex-m-dev-24-t24-19-fibonacci-ground",
+      "leaseExpiresAt": "2026-06-25T10:05:34.067Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T08:14:11.684Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T20:48:59.292Z",
-    "updatedAt": "2026-06-19T20:48:59.292Z",
+    "createdAt": "2026-06-25T08:05:17.167Z",
+    "updatedAt": "2026-06-25T08:05:17.167Z",
     "taskIds": [
-      "43.T43.5",
-      "23.T23.14",
       "05.T5.3",
+      "46.T46.1",
+      "26.T26.8",
       "05.T5.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "43.T43.5": "in-session",
-      "23.T23.14": "in-session",
       "05.T5.3": "in-session",
+      "46.T46.1": "in-session",
+      "26.T26.8": "in-session",
       "05.T5.4": "in-session"
     },
     "rationale": [

@@ -41,6 +41,14 @@ if (!globalThis.window) {
 
 const require = createRequire(import.meta.url);
 require.extensions['.css'] = () => undefined;
+try {
+    const { FrontendApplicationConfigProvider } = require('@theia/core/lib/browser/frontend-application-config-provider');
+    FrontendApplicationConfigProvider.set({ applicationName: 'M3 Mahamaya profile tick node test' });
+} catch (err) {
+    if (!String(err?.message ?? err).includes('already set')) {
+        throw err;
+    }
+}
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
@@ -74,13 +82,15 @@ test('profile tick subscription broadcasts tick and degree720 on profile advance
     assert.deepEqual(snapshots.at(-1), {
         generation: 9,
         tick: 6,
-        degree720: 360
+        degree720: 360,
+        fibonacciGround: null
     });
     assert.equal(snapshots.length, 3);
     assert.deepEqual(profileTickFromProfile(profile(3, 2, 120)), {
         generation: 3,
         tick: 2,
-        degree720: 120
+        degree720: 120,
+        fibonacciGround: null
     });
 });
 

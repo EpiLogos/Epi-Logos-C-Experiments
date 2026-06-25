@@ -67,6 +67,58 @@ export interface VakAddress {
   cs: CsField;
 }
 
+export type CfpMoveLiteral = Exclude<CfpLiteral, "Z">;
+
+export const Z_THREAD_STATES = [
+  "queued",
+  "composing",
+  "performing",
+  "verifying",
+  "rehearing",
+  "recomposing",
+  "done",
+  "failed",
+] as const;
+export type ZThreadState = (typeof Z_THREAD_STATES)[number];
+
+export interface ZThreadMove {
+  id: string;
+  cfp: CfpMoveLiteral;
+  task: string;
+  agent?: string;
+  agents?: string[];
+  chain?: string;
+}
+
+export interface ZThreadShape {
+  id: string;
+  task?: string;
+  vak_address: VakAddress & { cfp: "Z" };
+  moves: ZThreadMove[];
+  composes: CfpMoveLiteral[];
+}
+
+export interface ZThreadSnapshot {
+  id: string;
+  task?: string;
+  state: ZThreadState;
+  vak_address: VakAddress & { cfp: "Z" };
+  composes: CfpMoveLiteral[];
+  cycle: number;
+  history: ZThreadState[];
+  outputs: Array<{
+    move_id: string;
+    cfp: CfpMoveLiteral;
+    tool: string;
+    output: string;
+  }>;
+  verify_gate?: {
+    transition: string;
+    reason: string;
+  };
+  failure_reason?: string;
+}
+
 export const CANONICAL_CF_POSITIONS = {
   "(00/00)": "inner_0",
   "(0/1)": "inner_1",

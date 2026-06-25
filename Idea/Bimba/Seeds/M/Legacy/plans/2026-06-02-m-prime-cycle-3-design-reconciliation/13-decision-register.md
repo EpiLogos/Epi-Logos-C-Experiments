@@ -253,6 +253,18 @@ The **"Agentic Control Room" (ACR)** development in `Body/M/epi-theia/extensions
 
 ---
 
+## DR-WC-M5-3 — Constitutional roster renders as psyche-facet badges
+
+**Status:** VALIDATED  ·  **Validated:** 2026-06-25  ·  **By:** m-dev 26.T26.8 implementation  ·  **Resolution:** The seven-name constitutional roster renders as **psyche-facet badges** on [[Pi]] dispatch traces, not as peer agent rows or runtime actors. Each dispatch trace node or tool invocation may carry optional `psycheFacet?: 'anima'|'eros'|'logos'|'mythos'|'nous'|'psyche'|'sophia'`; when present, the [[Agentic Control Room]] RunTree and ToolStream render a small coloured psyche-facet badge next to the actor name. [[Sophia]] is the long-arc coordinator per [[M5-ARCHITECTURE]] / Wave-A claim 16 and surfaces only as `psycheFacet: 'sophia'`, never as an actor row.
+
+**Action:** `Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/psyche-facets.tsx` owns badge/legend rendering, source anchors into `Body/S/S4/pi-agent/agents/{name}.md#6-sattva`, and the canonical legend order `Sophia · Anima · Logos · Eros · Mythos · Psyche · Nous`. `DispatchTraceNode` and `ToolInvocationRef` carry typed `psycheFacet` metadata. The fallback if future user final-validation deprecates the array is no constitutional-agent rendering; the array remains governance metadata only.
+
+**Verification:** `grep -n "DR-WC-M5-3\|psyche-facet\|psycheFacet" Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md`; `pnpm --dir Body/M/epi-theia/extensions/ide-shell-m0-m5 test` covers the RunTree badge, ToolStream badge, legend tooltip source, and Sophia-as-facet-only assertions.
+
+**Depends:** Tranche **26.8**; resolves the DR-M5-1 widget-layer fork for Tranche **26.7** rendering.
+
+---
+
 ## DR-M5-2 — Enforce +1 = M1-5 corpus-wide
 
 **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Sibling of DR-M1-1. Sweep corpus-wide.

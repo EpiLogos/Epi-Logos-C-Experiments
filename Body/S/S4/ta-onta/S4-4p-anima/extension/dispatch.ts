@@ -1,5 +1,17 @@
 import { spawn, spawnSync } from "node:child_process";
-import type { VakAddress } from "../../shared/vak_address.ts";
+import type {
+  CfpMoveLiteral,
+  VakAddress,
+  ZThreadMove,
+  ZThreadShape,
+  ZThreadSnapshot,
+  ZThreadState,
+} from "../../shared/vak_address.ts";
+import {
+  MAX_VERIFY_CYCLES,
+  evaluateVerifyGate,
+  type VerifyEvidence,
+} from "../modules/judge-role.ts";
 
 export type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 export type CSDirectionality = "day" | "night_prime";
@@ -11,6 +23,8 @@ export type CSState = {
 };
 
 const sessionCSState = new Map<string, CSState>();
+const zThreadShapes = new Map<string, ZThreadShape>();
+const zThreadSnapshots = new Map<string, ZThreadSnapshot>();
 
 export function setCSState(sessionId: string | undefined, nextState: CSState) {
   if (sessionId) {
@@ -24,6 +38,182 @@ export function getCSState(sessionId?: string): CSState {
     value: "CS0",
     directionality: "day",
     cpPosition: "4.0",
+  };
+}
+
+export type ZThreadToolName =
+  | "dispatch_agent"
+  | "dispatch_parallel_agents"
+  | "run_chain"
+  | "dispatch_fusion_agents"
+  | "tilldone"
+  | "subagent_create";
+
+export interface ZThreadMoveResult {
+  move_id: string;
+  cfp: CfpMoveLiteral;
+  tool: ZThreadToolName;
+  output: string;
+}
+
+export interface ZThreadRuntimeAdapter {
+  perform(move: ZThreadMove, thread: ZThreadSnapshot): Promise<ZThreadMoveResult | string>;
+  verify(thread: ZThreadSnapshot): Promise<VerifyEvidence>;
+  rehear?(thread: ZThreadSnapshot): Promise<string | void>;
+  recompose?(thread: ZThreadSnapshot): Promise<string | void>;
+}
+
+export interface RegisterZThreadShapeInput {
+  id: string;
+  task?: string;
+  vak_address: VakAddress;
+  moves: ZThreadMove[];
+}
+
+export interface DispatchZThreadInput extends RegisterZThreadShapeInput {
+  adapter: ZThreadRuntimeAdapter;
+  max_verify_cycles?: number;
+}
+
+export function zThreadToolForMove(cfp: CfpMoveLiteral): ZThreadToolName {
+  switch (cfp) {
+    case "CFP0":
+      return "dispatch_agent";
+    case "CFP1":
+      return "dispatch_parallel_agents";
+    case "CFP2":
+      return "run_chain";
+    case "CFP3":
+      return "dispatch_fusion_agents";
+    case "CFP4":
+      return "tilldone";
+    case "CFP5":
+      return "subagent_create";
+  }
+  const exhaustive: never = cfp;
+  throw new Error(`No Z-thread tool mapping for CFP move '${exhaustive}'`);
+}
+
+export function registerZThreadShape(input: RegisterZThreadShapeInput): ZThreadShape {
+  if (input.vak_address.cfp !== "Z") {
+    throw new Error(`Z-thread '${input.id}' requires vak_address.cfp === "Z"`);
+  }
+  if (input.moves.length === 0) {
+    throw new Error(`Z-thread '${input.id}' requires at least one CFP move`);
+  }
+  const composes = [...new Set(input.moves.map((move) => move.cfp))];
+  if (composes.length < 2) {
+    throw new Error(`Z-thread '${input.id}' must compose at least two distinct CFP moves`);
+  }
+  const shape: ZThreadShape = {
+    id: input.id,
+    task: input.task,
+    vak_address: input.vak_address as VakAddress & { cfp: "Z" },
+    moves: input.moves,
+    composes,
+  };
+  zThreadShapes.set(shape.id, shape);
+  zThreadSnapshots.set(shape.id, initialZThreadSnapshot(shape));
+  return shape;
+}
+
+export function getZThreadShape(id: string): ZThreadShape | undefined {
+  return zThreadShapes.get(id);
+}
+
+export function getZThreadSnapshot(id: string): ZThreadSnapshot | undefined {
+  return zThreadSnapshots.get(id);
+}
+
+export function listZThreadSnapshots(): ZThreadSnapshot[] {
+  return [...zThreadSnapshots.values()];
+}
+
+export async function dispatchZThread(input: DispatchZThreadInput): Promise<ZThreadSnapshot> {
+  const shape = registerZThreadShape(input);
+  const snapshot = initialZThreadSnapshot(shape);
+  zThreadSnapshots.set(shape.id, snapshot);
+
+  const maxVerifyCycles = input.max_verify_cycles ?? MAX_VERIFY_CYCLES;
+  try {
+    while (snapshot.cycle < maxVerifyCycles) {
+      snapshot.cycle += 1;
+      transitionZThread(snapshot, "composing");
+      transitionZThread(snapshot, "performing");
+      for (const move of shape.moves) {
+        snapshot.outputs.push(normalizeZThreadMoveResult(move, await input.adapter.perform(move, snapshot)));
+      }
+
+      transitionZThread(snapshot, "verifying");
+      const evidence = await input.adapter.verify(snapshot);
+      const verifyGate = evaluateVerifyGate({
+        verify_cycles: snapshot.cycle,
+        evidence: [evidence],
+      });
+      snapshot.verify_gate = verifyGate;
+
+      if (verifyGate.transition === "rehear") {
+        await rehearAndRecompose(input.adapter, snapshot);
+        transitionZThread(snapshot, "done");
+        return snapshot;
+      }
+
+      if (verifyGate.transition === "human_escalation") {
+        snapshot.failure_reason = verifyGate.reason;
+        transitionZThread(snapshot, "failed");
+        return snapshot;
+      }
+
+      await rehearAndRecompose(input.adapter, snapshot);
+    }
+
+    snapshot.failure_reason =
+      `Verify gate did not clear after ${maxVerifyCycles} cycle${maxVerifyCycles === 1 ? "" : "s"}`;
+    transitionZThread(snapshot, "failed");
+    return snapshot;
+  } catch (error) {
+    snapshot.failure_reason = error instanceof Error ? error.message : String(error);
+    transitionZThread(snapshot, "failed");
+    return snapshot;
+  }
+}
+
+function initialZThreadSnapshot(shape: ZThreadShape): ZThreadSnapshot {
+  return {
+    id: shape.id,
+    task: shape.task,
+    state: "queued",
+    vak_address: shape.vak_address,
+    composes: shape.composes,
+    cycle: 0,
+    history: ["queued"],
+    outputs: [],
+  };
+}
+
+function transitionZThread(snapshot: ZThreadSnapshot, state: ZThreadState) {
+  snapshot.state = state;
+  snapshot.history.push(state);
+  zThreadSnapshots.set(snapshot.id, snapshot);
+}
+
+async function rehearAndRecompose(adapter: ZThreadRuntimeAdapter, snapshot: ZThreadSnapshot) {
+  transitionZThread(snapshot, "rehearing");
+  await adapter.rehear?.(snapshot);
+  transitionZThread(snapshot, "recomposing");
+  await adapter.recompose?.(snapshot);
+}
+
+function normalizeZThreadMoveResult(
+  move: ZThreadMove,
+  result: ZThreadMoveResult | string,
+): ZThreadMoveResult {
+  if (typeof result !== "string") return result;
+  return {
+    move_id: move.id,
+    cfp: move.cfp,
+    tool: zThreadToolForMove(move.cfp),
+    output: result,
   };
 }
 

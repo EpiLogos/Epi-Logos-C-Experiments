@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { DispatchTraceNode } from './types';
+import { PsycheFacetBadge } from './psyche-facets';
 
 export interface RunTreeProps {
     readonly dispatchTrace: DispatchTraceNode | null;
@@ -59,14 +60,15 @@ function RunTreeNodeView({
                     {node.label}
                 </button>
                 <span> — {node.actor}</span>
+                {node.psycheFacet && (
+                    <PsycheFacetBadge
+                        facet={node.psycheFacet}
+                        testId={`acr-run-tree-node-psyche-facet-${node.id}`}
+                    />
+                )}
                 {node.methodOrSkill && <code> {node.methodOrSkill}</code>}
                 {typeof node.tickAtInvoke === 'number' && (
                     <span data-test={`acr-run-tree-node-tick-${node.id}`}> tick {node.tickAtInvoke}</span>
-                )}
-                {node.psycheFacet && (
-                    <span data-test={`acr-run-tree-node-psyche-facet-${node.id}`}>
-                        {' '}facet: {node.psycheFacet}
-                    </span>
                 )}
                 {node.mediatedRunEvidencePacketId && (
                     <button

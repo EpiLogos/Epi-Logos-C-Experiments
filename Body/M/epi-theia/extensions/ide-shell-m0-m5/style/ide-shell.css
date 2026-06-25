@@ -27,6 +27,62 @@
     font-size: 1rem;
 }
 
+.ide-shell-psyche-facet-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+}
+
+.ide-shell-psyche-facet-badge {
+    --psyche-facet-colour: var(--theia-focusBorder, #007acc);
+    display: inline-flex;
+    align-items: center;
+    min-height: 1rem;
+    margin-left: 0.35rem;
+    padding: 0.04rem 0.38rem;
+    border: 1px solid var(--psyche-facet-colour);
+    border-radius: 3px;
+    color: var(--psyche-facet-colour);
+    background: color-mix(in srgb, var(--psyche-facet-colour) 12%, transparent);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.ide-shell-psyche-facet-legend .ide-shell-psyche-facet-badge {
+    margin-left: 0;
+}
+
+.ide-shell-psyche-facet-anima {
+    --psyche-facet-colour: #a89c8e;
+}
+
+.ide-shell-psyche-facet-eros {
+    --psyche-facet-colour: #e8a3a3;
+}
+
+.ide-shell-psyche-facet-logos {
+    --psyche-facet-colour: #6b7588;
+}
+
+.ide-shell-psyche-facet-mythos {
+    --psyche-facet-colour: #d4a14a;
+}
+
+.ide-shell-psyche-facet-nous {
+    --psyche-facet-colour: #5a73a8;
+}
+
+.ide-shell-psyche-facet-psyche {
+    --psyche-facet-colour: #8a7355;
+}
+
+.ide-shell-psyche-facet-sophia {
+    --psyche-facet-colour: #d4a574;
+}
+
 .ide-shell-widget-detail dl {
     display: grid;
     grid-template-columns: max-content 1fr;

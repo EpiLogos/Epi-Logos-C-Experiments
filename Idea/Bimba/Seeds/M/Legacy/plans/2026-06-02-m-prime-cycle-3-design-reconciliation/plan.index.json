@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-21T11:33:52.234Z",
+  "generatedAt": "2026-06-25T08:15:28.558Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation",
   "tracks": [
     {
@@ -106,7 +106,7 @@
       "file": "13-decision-register.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
       "title": "Track 13 — Decision Register",
-      "checksum": "abb538a3348ff8ba49d4cc2030bf11df671d09a5aee929b601752aa5e7fcc845"
+      "checksum": "1c59435eea8ab0e556e9b8e25d48a2d7fe99ae4ab26e25ee90ede63e8040603a"
     },
     {
       "id": "14",

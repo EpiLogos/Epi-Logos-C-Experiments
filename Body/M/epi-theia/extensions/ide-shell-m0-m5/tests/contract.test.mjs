@@ -43,6 +43,12 @@ const {
 const {
     GraphCanvas
 } = require('../lib/browser/bimba-graph-viewer/graph-canvas.js');
+const {
+    RunTree
+} = require('../lib/browser/acr/run-tree.js');
+const {
+    ToolStream
+} = require('../lib/browser/acr/tool-stream.js');
 
 // __dirname here is .../Body/M/epi-theia/extensions/ide-shell-m0-m5/tests
 // — six levels up to reach the repo root (where Body/ lives).
@@ -366,6 +372,93 @@ test('every IDE shell bridge-bound widget renders an inline BridgeReadinessBadge
             );
         }
     }
+});
+
+test('RunTree renders psyche-facet badge next to dispatch actor', () => {
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(RunTree, {
+            dispatchTrace: {
+                id: 'root',
+                label: 'Pi dispatch',
+                actor: 'pi',
+                children: [
+                    {
+                        id: 'logos-scope',
+                        label: 'Scope the route',
+                        actor: 'anima',
+                        methodOrSkill: 'dispatch_agent',
+                        psycheFacet: 'logos'
+                    }
+                ]
+            }
+        })
+    );
+
+    assert.match(html, /data-test="acr-run-tree-node-psyche-facet-logos-scope"/);
+    assert.match(html, /class="ide-shell-psyche-facet-badge ide-shell-psyche-facet-logos"/);
+    assert.match(html, /data-psyche-facet="logos"/);
+    assert.match(html, /data-colour-token="epilogos\.colour\.psyche-facet\.logos"/);
+    assert.match(html, /title="[^"]*Law in service of the household/);
+    assert.match(html, /— anima<\/span><span[^>]+data-test="acr-run-tree-node-psyche-facet-logos-scope"/);
+});
+
+test('ToolStream renders psyche-facet badge next to dispatch actor', () => {
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(ToolStream, {
+            tools: [
+                {
+                    id: 'tool-1',
+                    invokedAt: Date.UTC(2026, 5, 25, 8, 0, 0),
+                    toolName: 'dispatch_agent',
+                    actor: 'anima',
+                    psycheFacet: 'sophia'
+                }
+            ]
+        })
+    );
+
+    assert.match(html, /data-test="acr-tool-psyche-facet-tool-1"/);
+    assert.match(html, /class="ide-shell-psyche-facet-badge ide-shell-psyche-facet-sophia"/);
+    assert.match(html, /data-psyche-facet="sophia"/);
+    assert.match(html, /title="[^"]*P5&#x27; and P0&#x27; at the fold/);
+    assert.match(html, /— anima<\/span><span[^>]+data-test="acr-tool-psyche-facet-tool-1"/);
+});
+
+test('ACR psyche-facet legend uses Sattva-source tooltips in the canonical order', () => {
+    const {
+        PSYCHE_FACET_LEGEND_ORDER,
+        PsycheFacetLegend,
+        PSYCHE_FACET_PROFILES
+    } = require('../lib/browser/acr/psyche-facets.js');
+    assert.deepEqual(
+        PSYCHE_FACET_LEGEND_ORDER,
+        ['sophia', 'anima', 'logos', 'eros', 'mythos', 'psyche', 'nous']
+    );
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(PsycheFacetLegend)
+    );
+    const labels = [...html.matchAll(/data-test="acr-psyche-facet-legend-([a-z]+)"/g)].map(match => match[1]);
+    assert.deepEqual(labels, PSYCHE_FACET_LEGEND_ORDER);
+    assert.match(html, /data-test="acr-psyche-facet-legend"/);
+    assert.match(html, /data-sattva-source="Body\/S\/S4\/pi-agent\/agents\/sophia\.md#6-sattva"/);
+    assert.match(html, /title="[^"]*P5&#x27; and P0&#x27; at the fold/);
+
+    for (const facet of PSYCHE_FACET_LEGEND_ORDER) {
+        const profile = PSYCHE_FACET_PROFILES[facet];
+        assert.ok(profile.tooltip.length > 20, `${facet} has tooltip text`);
+        assert.equal(
+            profile.sattvaSource,
+            `Body/S/S4/pi-agent/agents/${facet}.md#6-sattva`
+        );
+    }
+});
+
+test('Sophia surfaces as a psyche facet only, never as an ACR actor row', () => {
+    const widgetSource = readFileSync(resolve(SOURCE_ROOT, 'agentic-control-room-widget.tsx'), 'utf8');
+    assert.doesNotMatch(widgetSource, /actor:\s*['"]sophia['"]/);
+    assert.doesNotMatch(widgetSource, /psycheFacet:\s*['"]dispatcher['"]/);
+    assert.match(widgetSource, /psycheFacet:\s*'sophia'/);
 });
 
 test('IdeShellBridgeGate uses the shared readiness primitive and only wraps bridge_unavailable', () => {

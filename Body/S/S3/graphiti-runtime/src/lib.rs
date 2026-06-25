@@ -62,6 +62,51 @@ pub struct EpisodeInsert {
     pub attrs: EpisodeAttrs,
 }
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum NaraRelationKind {
+    HasDay,
+    ContainsDailyNote,
+    PartOfDay,
+    NextInArc,
+}
+
+impl NaraRelationKind {
+    pub fn edge_label(self) -> &'static str {
+        match self {
+            Self::HasDay => "HAS_DAY",
+            Self::ContainsDailyNote => "CONTAINS_DAILY_NOTE",
+            Self::PartOfDay => "PART_OF_DAY",
+            Self::NextInArc => "NEXT_IN_ARC",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum NaraRelationPrivacyClass {
+    ProtectedLocalBody,
+    ProtectedLocalDerived,
+    ProtectedLocalHandleOnly,
+}
+
+impl NaraRelationPrivacyClass {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ProtectedLocalBody => "protected-local-body",
+            Self::ProtectedLocalDerived => "protected-local-derived",
+            Self::ProtectedLocalHandleOnly => "protected_local_handle_only",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct NaraRelation {
+    pub kind: NaraRelationKind,
+    pub target_handle: String,
+    pub privacy_class: NaraRelationPrivacyClass,
+    #[serde(default)]
+    pub metadata: Value,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GraphitiRuntimeConfig {
     pub base_url: &'static str,
@@ -170,6 +215,42 @@ pub fn being_pattern_provenance_refs_payload(
         "entityId": entity_id,
         "privacyBoundary": "public-safe-provenance-refs-only",
         "episodeRefs": episode_refs,
+    }))
+}
+
+pub fn nara_relation_payload(
+    day_id: &str,
+    episode_handle: &str,
+    relation: &NaraRelation,
+) -> Result<Value, String> {
+    if day_id.trim().is_empty() {
+        return Err("day_id is required".to_owned());
+    }
+    if episode_handle.trim().is_empty() {
+        return Err("episode_handle is required".to_owned());
+    }
+    if relation.target_handle.trim().is_empty() {
+        return Err("relation.target_handle is required".to_owned());
+    }
+    if let Some(key) = protected_nara_relation_metadata_key(&relation.metadata) {
+        return Err(format!(
+            "Nara relation metadata cannot include protected episode body field `{key}`"
+        ));
+    }
+
+    Ok(json!({
+        "coordinate": "S5/S5'",
+        "runtimeOwner": "S3'",
+        "invocationOwner": "S5/S5'",
+        "graphOwner": "S2",
+        "privacyBoundary": "protected-local-episodic-memory",
+        "dayId": day_id,
+        "episodeHandle": episode_handle,
+        "sourceHandle": episode_handle,
+        "targetHandle": relation.target_handle,
+        "edgeLabel": relation.kind.edge_label(),
+        "privacyClass": relation.privacy_class.as_str(),
+        "metadata": relation.metadata,
     }))
 }
 
@@ -769,6 +850,56 @@ pub async fn kernel_profile_observation_deposit(params: &Value) -> Result<Value,
     Ok(envelope)
 }
 
+pub async fn nara_insert_relation(
+    day_id: &str,
+    episode_handle: &str,
+    relation: NaraRelation,
+) -> Result<Value, String> {
+    let payload = nara_relation_payload(day_id, episode_handle, &relation)?;
+    let mut envelope = session_memory_envelope(json!({
+        "mayInsertRelation": true,
+        "mayMutateIdentity": false,
+        "requiresEpiiReviewForPromotion": true,
+        "privacyClass": relation.privacy_class.as_str(),
+        "edgeLabel": relation.kind.edge_label(),
+    }));
+    envelope["method"] = Value::String("s5.episodic.nara.relation.insert".to_owned());
+    envelope["dayId"] = Value::String(day_id.to_owned());
+    envelope["episodeHandle"] = Value::String(episode_handle.to_owned());
+    envelope["relation"] = payload.clone();
+
+    match reqwest::Client::new()
+        .post(format!("{GRAPHITI_BASE_URL}/relation"))
+        .json(&payload)
+        .timeout(graphiti_runtime_timeout())
+        .send()
+        .await
+    {
+        Ok(response) if response.status().is_success() => {
+            let body = response.json::<Value>().await.unwrap_or_else(|_| json!({}));
+            envelope["runtimeAvailable"] = Value::Bool(true);
+            envelope["write"] = body;
+        }
+        Ok(response) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-http-error",
+                "status": response.status().as_u16(),
+            });
+        }
+        Err(error) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-unavailable",
+                "message": error.to_string(),
+                "next": "Start the compatibility runtime with `epi gate graphiti start`, or replace it with the native S3 Graphiti runtime adapter."
+            });
+        }
+    }
+
+    Ok(envelope)
+}
+
 fn iso8601_now() -> String {
     Utc::now().to_rfc3339()
 }
@@ -823,4 +954,35 @@ fn required_score(params: &Value, key: &str) -> Result<f64, String> {
         return Err(format!("{key} must be normalized between 0 and 1"));
     }
     Ok(value)
+}
+
+fn protected_nara_relation_metadata_key(value: &Value) -> Option<&'static str> {
+    const PROTECTED_KEYS: &[&str] = &[
+        "body",
+        "episode",
+        "episodeBody",
+        "episode_body",
+        "journal_text",
+        "dream_body",
+        "memory_body",
+        "protected_payload",
+        "raw_episode",
+    ];
+
+    match value {
+        Value::Object(map) => {
+            for (key, child) in map {
+                if let Some(protected) = PROTECTED_KEYS.iter().find(|candidate| **candidate == key)
+                {
+                    return Some(*protected);
+                }
+                if let Some(protected) = protected_nara_relation_metadata_key(child) {
+                    return Some(protected);
+                }
+            }
+            None
+        }
+        Value::Array(values) => values.iter().find_map(protected_nara_relation_metadata_key),
+        _ => None,
+    }
 }

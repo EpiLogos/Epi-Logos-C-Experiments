@@ -7,6 +7,7 @@ export type AletheiaSubagent =
     | 'zeithoven';
 
 export type DispatchActor = 'pi' | 'anima' | 'aletheia' | string;
+export type PsycheFacet = 'anima' | 'eros' | 'logos' | 'mythos' | 'nous' | 'psyche' | 'sophia';
 
 export interface DispatchTraceNode {
     readonly id: string;
@@ -16,7 +17,7 @@ export interface DispatchTraceNode {
     readonly sourceAnchor?: string | null;
     readonly methodOrSkill?: string | null;
     readonly tickAtInvoke?: number | null;
-    readonly psycheFacet?: string | null;
+    readonly psycheFacet?: PsycheFacet | null;
     readonly aletheiaSubagent?: AletheiaSubagent | null;
     readonly mediatedRunEvidencePacketId?: string | null;
     readonly children?: readonly DispatchTraceNode[];
@@ -27,6 +28,7 @@ export interface ToolInvocationRef {
     readonly invokedAt: number;
     readonly toolName: string;
     readonly actor?: string | null;
+    readonly psycheFacet?: PsycheFacet | null;
     readonly dispatchNodeId?: string | null;
     readonly inputDigest?: string | null;
     readonly outputDigest?: string | null;

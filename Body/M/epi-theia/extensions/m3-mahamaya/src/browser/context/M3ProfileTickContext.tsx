@@ -10,6 +10,12 @@ export interface M3ProfileTickSnapshot {
     readonly generation: number | null;
     readonly tick: number | null;
     readonly degree720: number | null;
+    readonly fibonacciGround: M3ProfileTickFibonacciGroundSnapshot | null;
+}
+
+export interface M3ProfileTickFibonacciGroundSnapshot {
+    readonly natalSunPosition: number | null;
+    readonly liveSunPosition: number | null;
 }
 
 export interface M3ProfileTickProviderProps {
@@ -21,7 +27,8 @@ export interface M3ProfileTickProviderProps {
 export const EMPTY_M3_PROFILE_TICK: M3ProfileTickSnapshot = Object.freeze({
     generation: null,
     tick: null,
-    degree720: null
+    degree720: null,
+    fibonacciGround: null
 });
 
 export const M3ProfileTickContext = React.createContext<M3ProfileTickSnapshot>(
@@ -37,7 +44,8 @@ export function profileTickFromM3Surface(
     return Object.freeze({
         generation: surface.profileGeneration,
         tick: numberValue(surface.activeProjection.tick),
-        degree720: numberValue(surface.activeProjection.degree720)
+        degree720: numberValue(surface.activeProjection.degree720),
+        fibonacciGround: null
     });
 }
 
@@ -50,7 +58,8 @@ export function profileTickFromProfile(
     return Object.freeze({
         generation: profile.generation ?? null,
         tick: numberValue(profile.payload.tick),
-        degree720: numberValue(profile.payload.degree720)
+        degree720: numberValue(profile.payload.degree720),
+        fibonacciGround: fibonacciGroundTickFromPayload(profile.payload)
     });
 }
 
@@ -95,4 +104,50 @@ export function useM3ProfileTick(): M3ProfileTickSnapshot {
 
 function numberValue(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function fibonacciGroundTickFromPayload(
+    payload: Readonly<Record<string, unknown>>
+): M3ProfileTickFibonacciGroundSnapshot | null {
+    const ground = objectValue(
+        payload.fibonacciGround ??
+        payload.fibonacci_ground ??
+        payload.level0FibonacciGround ??
+        payload.level0_fibonacci_ground
+    );
+    if (!ground) {
+        return null;
+    }
+    const natalSun = objectValue(ground.natalSun ?? ground.natal_sun);
+    const liveSun = objectValue(ground.liveSun ?? ground.live_sun);
+    const natalSunPosition = boundedGroundPosition(
+        ground.natalSunFibonacciPosition ??
+        ground.natal_sun_fibonacci_position ??
+        natalSun?.fibonacciPosition ??
+        natalSun?.fibonacci_position
+    );
+    const liveSunPosition = boundedGroundPosition(
+        ground.liveSunFibonacciPosition ??
+        ground.live_sun_fibonacci_position ??
+        liveSun?.fibonacciPosition ??
+        liveSun?.fibonacci_position
+    );
+    if (natalSunPosition === null && liveSunPosition === null) {
+        return null;
+    }
+    return Object.freeze({
+        natalSunPosition,
+        liveSunPosition
+    });
+}
+
+function boundedGroundPosition(value: unknown): number | null {
+    const number = numberValue(value);
+    return number !== null && number >= 0 && number < 60 ? number : null;
+}
+
+function objectValue(value: unknown): Readonly<Record<string, unknown>> | null {
+    return value && typeof value === 'object' && !Array.isArray(value)
+        ? value as Readonly<Record<string, unknown>>
+        : null;
 }

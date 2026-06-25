@@ -71,8 +71,12 @@ const {
     pentadicRelationModelFromProfilePayload
 } = require('../m3-mahamaya/lib/browser/components/M3PentadicRelationInspector.js');
 const {
-    M3CosmicWheelRenderService
+    M3CosmicWheelRenderService,
+    fibonacciGroundModelFromProfilePayload
 } = require('../m3-mahamaya/lib/browser/components/M3CosmicWheelRenderService.js');
+const {
+    profileTickFromProfile
+} = require('../m3-mahamaya/lib/browser/context/M3ProfileTickContext.js');
 const {
     M3PentadicTraceService
 } = require('../m3-mahamaya/lib/browser/services/m3-pentadic-trace-service.js');
@@ -86,6 +90,8 @@ const THIRD_SPANDA_PANEL_SOURCE =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/ThirdSpandaMathemeProofPanel.tsx';
 const PENTADIC_RELATION_INSPECTOR_SOURCE =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx';
+const COSMIC_WHEEL_SOURCE =
+    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3CosmicWheelRenderService.tsx';
 
 function boundary(generation, payload = baselineProfile) {
     return Object.freeze({
@@ -647,6 +653,82 @@ test('cosmic wheel full mode embeds the pentadic inspector and mini-view renders
     assert.doesNotMatch(miniHtml, /data-widget-id="pratibimba\.m3-mahamaya:pentadic-relation-inspector"/);
 });
 
+test('cosmic wheel renders Level 0 Fibonacci Ground from backend payload without fallback ring', () => {
+    const payload = profilePayloadWithFibonacciGround();
+    const model = surface({ profile: boundary(23, payload) });
+    const ground = fibonacciGroundModelFromProfilePayload(payload);
+    assert.equal(ground.ready, true);
+    assert.equal(ground.wedges.length, 60);
+    assert.equal(ground.cardinalAnchors.length, 4);
+    assert.equal(ground.zodiacalAnchors.length, 8);
+    assert.equal(ground.backboneTicks.length, 24);
+    assert.equal(ground.natalSunPosition, 15);
+    assert.equal(ground.liveSunPosition, 23);
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M3CosmicWheelRenderService, {
+            mode: 'mini-view',
+            surface: model,
+            profilePayload: payload,
+            readiness: readiness()
+        })
+    );
+
+    assert.match(html, /data-fibonacci-ground-readiness="ready"/);
+    assert.equal((html.match(/data-fibonacci-wedge="/g) ?? []).length, 60);
+    assert.equal((html.match(/data-cardinal-anchor="/g) ?? []).length, 4);
+    assert.equal((html.match(/data-zodiacal-anchor="/g) ?? []).length, 8);
+    assert.equal((html.match(/data-backbone-tick="/g) ?? []).length, 24);
+    assert.match(html, /data-sun-marker="natal"/);
+    assert.match(html, /data-fibonacci-position="15"/);
+    assert.match(html, /data-sun-marker="live"/);
+    assert.match(html, /data-fibonacci-position="23"/);
+    assert.match(html, /data-layer-order="fibonacci-ground,backbone-ticks,sixteen-lens-annular-sectors,nine-walk-overlay,torus-core"/);
+});
+
+test('Fibonacci Ground remains honestly pending when backend ground payload is absent', () => {
+    const model = surface();
+    const ground = fibonacciGroundModelFromProfilePayload(baselineProfile);
+    assert.equal(ground.ready, false);
+    assert.deepEqual(ground.pendingFields, ['profile.fibonacciGround']);
+
+    const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M3CosmicWheelRenderService, {
+            mode: 'mini-view',
+            surface: model,
+            profilePayload: baselineProfile,
+            readiness: readiness()
+        })
+    );
+
+    assert.match(html, /data-fibonacci-ground-readiness="pending"/);
+    assert.match(html, /ground pending/);
+    assert.equal((html.match(/data-fibonacci-wedge="/g) ?? []).length, 0);
+    assert.equal((html.match(/data-backbone-tick="/g) ?? []).length, 0);
+    assert.doesNotMatch(html, /data-sun-marker="natal"/);
+    assert.doesNotMatch(html, /data-sun-marker="live"/);
+});
+
+test('profile tick subscription carries backend-projected Fibonacci Sun markers', () => {
+    const snapshot = profileTickFromProfile(boundary(24, profilePayloadWithFibonacciGround({
+        natalSunFibonacciPosition: 2,
+        liveSunFibonacciPosition: 47
+    })));
+    assert.deepEqual(snapshot.fibonacciGround, {
+        natalSunPosition: 2,
+        liveSunPosition: 47
+    });
+});
+
+test('Fibonacci Ground renderer reads backend fields and embeds no local derivation table', () => {
+    const source = readFileSync(COSMIC_WHEEL_SOURCE, 'utf8');
+    assert.doesNotMatch(source, /60\s*\*\s*6/);
+    assert.doesNotMatch(source, /(?:PISANO|FIBONACCI)_DIGITS\s*=/);
+    assert.doesNotMatch(source, /pisano_digit_lut\s*:\s*\[/);
+    assert.match(source, /ground\.pisano_digit_lut/);
+    assert.match(source, /profile\.fibonacciGround/);
+});
+
 test('pentadic relation inspector does not reconstruct missing trace or local arithmetic identities', () => {
     const model = pentadicRelationModelFromProfilePayload(baselineProfile, readiness('profile_missing_field'));
     assert.equal(model.ready, false);
@@ -762,6 +844,36 @@ function profilePayloadWithPentadicTrace() {
             lineGraphIdentity: '360+24=384',
             qCosmicRef: 'profile.qCosmic:codon-42',
             provenance: Object.freeze(['kernel-bridge:buildPentadicTrace'])
+        })
+    });
+}
+
+function profilePayloadWithFibonacciGround(markerOverrides = {}) {
+    const markers = Object.freeze({
+        natalSunFibonacciPosition: 15,
+        liveSunFibonacciPosition: 23,
+        ...markerOverrides
+    });
+    return Object.freeze({
+        ...baselineProfile,
+        fibonacciGround: Object.freeze({
+            pisano_digit_lut: Object.freeze([
+                0, 1, 1, 2, 3, 5, 8, 3, 1, 4,
+                5, 9, 4, 3, 7, 0, 7, 7, 4, 1,
+                5, 6, 1, 7, 8, 5, 3, 8, 1, 9,
+                0, 9, 9, 8, 7, 5, 2, 7, 9, 6,
+                5, 1, 6, 7, 3, 0, 3, 3, 6, 9,
+                5, 4, 9, 3, 2, 5, 7, 2, 9, 1
+            ]),
+            clockBackbone: Object.freeze(
+                Array.from({ length: 24 }, (_, index) =>
+                    Object.freeze({
+                        backboneIndex: index,
+                        degree: index * 15
+                    })
+                )
+            ),
+            ...markers
         })
     });
 }

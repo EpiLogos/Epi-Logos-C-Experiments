@@ -19,6 +19,11 @@ import {
     PiAxiomTranslationInspector
 } from './acr/pi-axiom-translation-inspector';
 import { PiRuntimeMonitorBanner } from './acr/pi-runtime-monitor-banner';
+import {
+    PSYCHE_FACET_LEGEND_ORDER,
+    PsycheFacetLegend,
+    isPsycheFacet
+} from './acr/psyche-facets';
 import { RunTree } from './acr/run-tree';
 import { ToolStream } from './acr/tool-stream';
 import { AbortRetryContinueControls } from './acr/abort-retry-continue-controls';
@@ -30,6 +35,7 @@ import type {
     DispatchTraceNode,
     IOD17Parity,
     MediatedRunEvidencePacket,
+    PsycheFacet,
     ReviewDecisionAction,
     Run,
     RuntimeControlAction,
@@ -118,6 +124,14 @@ const ALETHEIA_SUBAGENTS: readonly AletheiaSubagent[] = [
     'agora',
     'zeithoven'
 ];
+const ALETHEIA_PSYCHE_FACETS: Record<AletheiaSubagent, PsycheFacet> = {
+    anansi: 'nous',
+    janus: 'logos',
+    moirai: 'eros',
+    mercurius: 'mythos',
+    agora: 'psyche',
+    zeithoven: 'sophia'
+};
 
 @injectable()
 export class AgenticControlRoomWidget extends ReactWidget {
@@ -344,6 +358,7 @@ export class AgenticControlRoomWidget extends ReactWidget {
             >
                 <header className="ide-shell-widget-header">
                     <h3>{AgenticControlRoomWidget.LABEL}</h3>
+                    <PsycheFacetLegend />
                     <span data-test="agentic-control-room-shell-version">T8 governance surface</span>
                 </header>
                 <PiRuntimeMonitorBanner />
@@ -534,12 +549,11 @@ export class AgenticControlRoomWidget extends ReactWidget {
         return typeof kind === 'string' && kind.trim().length > 0 ? kind : 'single-agent-harness';
     }
 
-    protected psycheFacets(matrix: CapabilityMatrix): readonly string[] {
+    protected psycheFacets(matrix: CapabilityMatrix): readonly PsycheFacet[] {
         const deprecated = matrix.anima_authorial_registers_deprecated;
-        if (Array.isArray(deprecated)) {
-            return deprecated.filter((value): value is string => typeof value === 'string');
-        }
-        return matrix.constitutional_agents;
+        const source = Array.isArray(deprecated) ? deprecated : matrix.constitutional_agents;
+        const facets = source.filter(isPsycheFacet);
+        return PSYCHE_FACET_LEGEND_ORDER.filter(facet => facets.includes(facet));
     }
 
     protected createDispatchTrace(matrix: CapabilityMatrix | null): DispatchTraceNode {
@@ -553,6 +567,7 @@ export class AgenticControlRoomWidget extends ReactWidget {
             sourceAnchor: 'Body/S/S4/pi-agent/agents/anima.md',
             methodOrSkill: 'single-agent-harness',
             tickAtInvoke: this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? null,
+            psycheFacet: 'psyche',
             mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null,
             children: [
                 {
@@ -563,7 +578,7 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     sourceAnchor: 'Body/S/S4/plugins/pleroma/capability-matrix.json',
                     methodOrSkill: owner,
                     tickAtInvoke: this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? null,
-                    psycheFacet: 'dispatcher',
+                    psycheFacet: 'anima',
                     mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null,
                     children: ALETHEIA_SUBAGENTS.map((subagent, index) => ({
                         id: `aletheia-${subagent}`,
@@ -573,6 +588,7 @@ export class AgenticControlRoomWidget extends ReactWidget {
                         sourceAnchor: 'Body/S/S4/plugins/pleroma/capability-matrix.json',
                         methodOrSkill: `crystallisation-mode:${subagent}`,
                         tickAtInvoke: (this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? 0) + index,
+                        psycheFacet: ALETHEIA_PSYCHE_FACETS[subagent],
                         aletheiaSubagent: subagent,
                         mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null
                     }))
