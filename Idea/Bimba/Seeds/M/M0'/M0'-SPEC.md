@@ -60,7 +60,7 @@ M0' must preserve compatibility with legacy `#` notation at search, selection, a
 
 ## The Six M0-X' Data Layers
 
-The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate — one substrate, three renderings (M0'/M1'/M2'/M3' via [[plugin-integrated-1-2-3]]), no-fork per B-8 invariant. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
 
 | Layer | Key | Surface role | Bridge |
 |---|---|---|---|

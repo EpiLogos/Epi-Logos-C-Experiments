@@ -352,3 +352,16 @@ export function assertSolarAnchorCompositionContract(
     }
     return contract;
 }
+
+/**
+ * B-8 NON-FORK INVARIANT
+ *
+ * Single `:Bimba` label + single `coordinate` property + single `graph-schema` crate
+ * + single rendering composition seam (this plugin). No per-module graph fork, no
+ * per-extension schema fork, no per-plugin rendering fork. The bimba map is the
+ * system made walkable — three renderings (M1'/M2'/M3') over one substrate.
+ *
+ * @cross-link 09.T9.7 one-substrate / no-fork invariant codification
+ * @cross-link M0'-SPEC / M2'-SPEC / M3'-SPEC — all share this invariant
+ * @cross-link Body/S/S2/graph-schema — single authoritative schema crate
+ */

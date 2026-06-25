@@ -417,8 +417,9 @@ The canon-update pass of 2026-05-31 adds four explicit M2' deltas:
 2. **Routing trace law**: [[Ficinian-Kerykeion routing|Ficinian-Kerykeion]] traversals may feed [[Epii]]'s graph-relational ML only as provenance-safe derived evidence; [[Embeddings]] and [[Lens-LoRAs]] remain rebuildable, governed, and non-canonical.
 3. **IDE placement law**: the [[m2-parashakti]] extension and integrated [[1-2-3]] plugin expose M2' through the [[kernel-bridge]]; duplicate direct [[S-stack]] wiring inside M2' panels is non-canonical.
 4. **Open-question discipline**: unresolved tensions in audio ownership, active mantra/maqam synthesis, and M3 final classification remain explicit §9.8 open questions until their owning specs close them.
+5. **One-substrate / no-fork invariant (B-8)**: M2' shares the single `:Bimba` label, single `coordinate` property, single `graph-schema` crate, and single `plugin-integrated-1-2-3` rendering composition seam with M0' and M3' — no per-module graph fork, no per-extension schema fork, no per-plugin rendering fork. The bimba map is the system made walkable, not a duplication surface.
 
-## Canonical Source Lock - 2026-06-02
+These corrections are now domain authority for M2'.
 
 M2' is the harmonic-correspondential meaning engine. It preserves the 72 invariant and hands governed meaning packets to M3', M4', M5', and S5 review surfaces.
 
