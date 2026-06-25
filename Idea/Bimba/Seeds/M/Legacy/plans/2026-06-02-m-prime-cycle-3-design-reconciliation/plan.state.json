@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T16:23:35.068Z",
+  "updatedAt": "2026-06-25T16:37:56.051Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1987,7 +1987,10 @@
       "claimedAt": "2026-06-25T16:27:00.000Z",
       "completedAt": "2026-06-25T16:27:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T16:27:00.000Z", "text": "Audit: M'-SYSTEM-SPEC:173 downgraded 'Tauri implementation' to 'Theia shell (formerly the Tauri implementation)'. M'-TAURI-PORT-SPEC: added SUPERSEDED header with deprecation note. M5'/m5-prime-agentic-ide-research:47 downgraded 'Tauri implementation' to 'Theia-based agentic IDE (formerly a Tauri implementation)'. All active spec hits now annotated. M4'/Legacy hit is archival. grep for undeprecated Tauri wording returns zero live hits in active specs."}
+        {
+          "at": "2026-06-25T16:27:00.000Z",
+          "text": "Audit: M'-SYSTEM-SPEC:173 downgraded 'Tauri implementation' to 'Theia shell (formerly the Tauri implementation)'. M'-TAURI-PORT-SPEC: added SUPERSEDED header with deprecation note. M5'/m5-prime-agentic-ide-research:47 downgraded 'Tauri implementation' to 'Theia-based agentic IDE (formerly a Tauri implementation)'. All active spec hits now annotated. M4'/Legacy hit is archival. grep for undeprecated Tauri wording returns zero live hits in active specs."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -2002,7 +2005,10 @@
       "claimedAt": "2026-06-25T16:32:00.000Z",
       "completedAt": "2026-06-25T16:32:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T16:32:00.000Z", "text": "All three packages pass: integrated-composition 46/46, plugin-integrated-1-2-3 all pass, plugin-integrated-4-5-0 all pass. No rebuild needed per spec. IntegratedReadiness already consumes Wave-A pending markers."}
+        {
+          "at": "2026-06-25T16:32:00.000Z",
+          "text": "All three packages pass: integrated-composition 46/46, plugin-integrated-1-2-3 all pass, plugin-integrated-4-5-0 all pass. No rebuild needed per spec. IntegratedReadiness already consumes Wave-A pending markers."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -2017,7 +2023,10 @@
       "claimedAt": "2026-06-25T16:35:00.000Z",
       "completedAt": "2026-06-25T16:35:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T16:35:00.000Z", "text": "Ledger v2 at surface-extension-contract-ledger.json: 28 widget ids mapped, closureNote added, feeds Tranche 14. JSON valid. Track 11 closure complete."}
+        {
+          "at": "2026-06-25T16:35:00.000Z",
+          "text": "Ledger v2 at surface-extension-contract-ledger.json: 28 widget ids mapped, closureNote added, feeds Tranche 14. JSON valid. Track 11 closure complete."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -2104,7 +2113,10 @@
       "claimedAt": "2026-06-25T16:38:00.000Z",
       "completedAt": "2026-06-25T16:38:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T16:38:00.000Z", "text": "Audit: capacity_workflows module exists at epii-autoresearch-core/src/lib.rs:17. Six per-capacity panes valid as Pi-monitor views per DR-TS-4. Not OmniPanel tabs. Substrate kept as canonical."}
+        {
+          "at": "2026-06-25T16:38:00.000Z",
+          "text": "Audit: capacity_workflows module exists at epii-autoresearch-core/src/lib.rs:17. Six per-capacity panes valid as Pi-monitor views per DR-TS-4. Not OmniPanel tabs. Substrate kept as canonical."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -2114,16 +2126,25 @@
       "worktree": null
     },
     "12.T12.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:37:55.976Z",
+      "claimedAt": "2026-06-25T16:31:29.173Z",
+      "completedAt": "2026-06-25T16:37:55.976Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T16:37:24.980Z",
+          "text": "pnpm --dir Body/M/epi-theia/extensions/agentic-control-room test: 23/23 pass; python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py: 18/18 pass; key files Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts, Body/M/epi-theia/extensions/agentic-control-room/tests/evidence-envelope.test.mjs, Body/S/S4/plugins/pleroma/capability-matrix.json"
+        },
+        {
+          "at": "2026-06-25T16:37:55.976Z",
+          "text": "ACR package test 23/23; Pleroma capability matrix pytest 18/18; git diff --check clean; files: Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts, Body/M/epi-theia/extensions/agentic-control-room/tests/evidence-envelope.test.mjs, Body/S/S4/plugins/pleroma/capability-matrix.json"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-12-t12-6-field-parity",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T16:31:29.173Z",
+      "runId": "20260625T163129Z-12-T12.6",
       "worktree": null
     },
     "12.T12.7": {
@@ -12673,30 +12694,41 @@
       "leaseExpiresAt": "2026-06-25T18:19:26.761Z",
       "worktree": null,
       "completedAt": "2026-06-25T16:23:35.020Z"
+    },
+    {
+      "runId": "20260625T163129Z-12-T12.6",
+      "taskId": "12.T12.6",
+      "status": "done",
+      "startedAt": "2026-06-25T16:31:29.173Z",
+      "owner": "codex-m-dev-12-t12-6-field-parity",
+      "leaseExpiresAt": "2026-06-25T18:31:29.173Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T16:37:24.980Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T16:19:12.582Z",
-    "updatedAt": "2026-06-25T16:19:12.582Z",
+    "createdAt": "2026-06-25T16:31:59.315Z",
+    "updatedAt": "2026-06-25T16:31:59.315Z",
     "taskIds": [
-      "11.T11.6",
-      "11.T11.7",
-      "11.T11.8",
-      "11.T11.9"
+      "12.T12.6",
+      "12.T12.7",
+      "15.T15.2",
+      "15.T15.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "11.T11.6": "in-session",
-      "11.T11.7": "in-session",
-      "11.T11.8": "in-session",
-      "11.T11.9": "in-session"
+      "12.T12.6": "in-session",
+      "12.T12.7": "in-session",
+      "15.T15.2": "in-session",
+      "15.T15.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

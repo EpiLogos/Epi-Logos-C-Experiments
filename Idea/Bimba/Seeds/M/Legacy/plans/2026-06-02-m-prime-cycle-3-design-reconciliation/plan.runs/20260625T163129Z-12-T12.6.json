@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T163129Z-12-T12.6",
+  "taskId": "12.T12.6",
+  "startedAt": "2026-06-25T16:31:29.173Z",
+  "owner": "codex-m-dev-12-t12-6-field-parity",
+  "leaseExpiresAt": "2026-06-25T18:31:29.173Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.6",
+    "trackId": "12",
+    "tranche": "T12.6",
+    "title": "`MediatedRunEvidencePacket` field-parity closure",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.5"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

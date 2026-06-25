@@ -115,17 +115,22 @@ export interface ReviewTransition {
 export interface RunEvidenceEnvelope {
     readonly candidateId: string;
     readonly coordinate: string | null;
-    readonly artifactUri: string | null;
     readonly sourceAnchor: string | null;
-    readonly specAnchor: string | null;
-    readonly codeAnchor: string | null;
-    readonly testAnchor: string | null;
     readonly graphAnchor: string | null;
     readonly reviewId: string | null;
+    readonly testAnchor: string | null;
     readonly profileGeneration: number | null;
     readonly bridgeReadinessHandle: string | null;
     readonly sessionKey: string | null;
     readonly dayNowContext: string | null;
+    readonly currentProfile: CurrentProfileEvidenceRef | null;
+    readonly graphContext: GraphContextEvidenceRef | null;
+    readonly sessionRuntime: SessionRuntimeEvidenceRef | null;
+    readonly semanticCandidates: SemanticCandidateEvidenceRef | null;
+    readonly s5Refs: S5EvidenceRefs | null;
+    readonly artifactUri: string | null;
+    readonly specAnchor: string | null;
+    readonly codeAnchor: string | null;
     readonly privacyClass: string;
 }
 
@@ -356,33 +361,43 @@ export function enforceHumanGate(transition: {
 export function buildEvidenceEnvelope(input: {
     candidateId: string;
     coordinate?: string | null;
-    artifactUri?: string | null;
     sourceAnchor?: string | null;
-    specAnchor?: string | null;
-    codeAnchor?: string | null;
-    testAnchor?: string | null;
     graphAnchor?: string | null;
     reviewId?: string | null;
+    testAnchor?: string | null;
     profileGeneration?: number | null;
     bridgeReadinessHandle?: string | null;
     sessionKey?: string | null;
     dayNowContext?: string | null;
+    currentProfile?: CurrentProfileEvidenceRef | null;
+    graphContext?: GraphContextEvidenceRef | null;
+    sessionRuntime?: SessionRuntimeEvidenceRef | null;
+    semanticCandidates?: SemanticCandidateEvidenceRef | null;
+    s5Refs?: S5EvidenceRefs | null;
+    artifactUri?: string | null;
+    specAnchor?: string | null;
+    codeAnchor?: string | null;
     privacyClass?: string;
 }): RunEvidenceEnvelope {
     return {
         candidateId: input.candidateId,
         coordinate: input.coordinate ?? null,
-        artifactUri: input.artifactUri ?? null,
         sourceAnchor: input.sourceAnchor ?? null,
-        specAnchor: input.specAnchor ?? null,
-        codeAnchor: input.codeAnchor ?? null,
-        testAnchor: input.testAnchor ?? null,
         graphAnchor: input.graphAnchor ?? null,
         reviewId: input.reviewId ?? null,
+        testAnchor: input.testAnchor ?? null,
         profileGeneration: input.profileGeneration ?? null,
         bridgeReadinessHandle: input.bridgeReadinessHandle ?? null,
         sessionKey: input.sessionKey ?? null,
         dayNowContext: input.dayNowContext ?? null,
+        currentProfile: input.currentProfile ?? null,
+        graphContext: input.graphContext ?? null,
+        sessionRuntime: input.sessionRuntime ?? null,
+        semanticCandidates: input.semanticCandidates ?? null,
+        s5Refs: input.s5Refs ?? null,
+        artifactUri: input.artifactUri ?? null,
+        specAnchor: input.specAnchor ?? null,
+        codeAnchor: input.codeAnchor ?? null,
         privacyClass: input.privacyClass ?? 'safe-public-current-kernel-tick'
     };
 }
@@ -584,17 +599,16 @@ export const REQUIRED_EVIDENCE_FIELDS = [
     'profileGeneration',
     'bridgeReadinessHandle',
     'sessionKey',
-    'dayNowContext'
-] as const;
-
-export const REQUIRED_MEDIATED_EVIDENCE_FIELDS = [
-    ...REQUIRED_EVIDENCE_FIELDS,
+    'dayNowContext',
     'currentProfile',
     'graphContext',
     'sessionRuntime',
     'semanticCandidates',
-    's5Refs'
+    's5Refs',
+    'privacyClass'
 ] as const;
+
+export const REQUIRED_MEDIATED_EVIDENCE_FIELDS = REQUIRED_EVIDENCE_FIELDS;
 
 /**
  * Verify an envelope has the load-bearing fields populated. Used by tests +

@@ -837,7 +837,8 @@
         "graphContext",
         "sessionRuntime",
         "semanticCandidates",
-        "s5Refs"
+        "s5Refs",
+        "privacyClass"
       ],
       "capability_allowlists": {
         "sophia": [

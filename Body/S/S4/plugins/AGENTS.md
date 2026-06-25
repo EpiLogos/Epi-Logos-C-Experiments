@@ -11,7 +11,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 
 ## Local Contracts
 - Plugin manifest: `pleroma/.claude-plugin/plugin.json`; plugin index: `registry.jsonl`.
-- Capability membrane: `pleroma/capability-matrix.json` (coordinate `S4/S4'`, owner_agent `anima`).
+- Capability membrane: `pleroma/capability-matrix.json` (coordinate `S4/S4'`, owner_agent `anima`, including `m5_4_governance.mediated_run_evidence_bridge.packet_required_fields`).
 - Source carrier contract (delegated): `Body/S/S4/ta-onta/S4-2p-pleroma/CONTRACT.md`.
 - Owning specs: [[S4-SPEC]], [[S4-ARCHITECTURE]]; stack index [[S-SYSTEM-INDEX]].
 

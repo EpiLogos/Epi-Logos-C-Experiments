@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M5'-SPEC]] / [[M5-ARCHITECTURE]] (see 
 
 ## Ownership
 - `src/common/index.ts` — common barrel; `EXTENSION_ID`, `ACR_WIDGET_IDS` (run-tree / tool-stream / diagnostics / pi-runtime-monitor).
-- `src/common/run-model.ts` — run model: canonical actor/route types (`pi` / `anima` / `aletheia`, with guardian specificity carried by `AletheiaTechneClass` / `techneClass`), human-gate (`enforceHumanGate`), evidence envelope (`buildEvidenceEnvelope`, `missingEvidenceFields`), review transitions; routes via `KERNEL_BRIDGE_API.invokeCapability`.
+- `src/common/run-model.ts` — run model: canonical actor/route types (`pi` / `anima` / `aletheia`, with guardian specificity carried by `AletheiaTechneClass` / `techneClass`), human-gate (`enforceHumanGate`), evidence envelope (`buildEvidenceEnvelope`, `missingEvidenceFields`) whose required keys mirror `Body/S/S4/plugins/pleroma/capability-matrix.json:m5_4_governance.mediated_run_evidence_bridge.packet_required_fields`, review transitions; routes via `KERNEL_BRIDGE_API.invokeCapability`.
 - `src/common/parity.ts` — IOD-17 three-way `assertCapabilityParity` (UI vs gateway capability set).
 - `src/browser/frontend-module.ts` — Theia frontend module: widget factory, view contribution, intent-target registration.
 - `src/browser/run-flow-widget.tsx` — run-tree/tool-stream/diagnostics + abort/retry/continue + evidence + review controls.
