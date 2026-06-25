@@ -823,11 +823,13 @@
       "worktree": null
     },
     "05.T5.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T08:33:23.154Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T08:38:00.000Z",
       "claimedAt": "2026-06-25T08:33:23.154Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T08:38:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T08:38:00.000Z", "text": "Accepted. psychoid_cymatic module, personal-cymatic-field widget and test on disk, committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-05-t5-5-psychoid-cymatic",
       "leaseExpiresAt": "2026-06-25T10:33:23.154Z",
