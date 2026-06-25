@@ -238,10 +238,7 @@ fn integrated_plugin_projections_round_trip_and_keep_private_bodies_opaque() {
         json["canonRecognitionStream"][0]["writeBackState"],
         "applied"
     );
-    assert_eq!(
-        json["canonRecognitionStream"][0]["bimbaCoordinate"],
-        "M0-5"
-    );
+    assert_eq!(json["canonRecognitionStream"][0]["bimbaCoordinate"], "M0-5");
     assert!(json["personalPole"].get("qPersonal").is_none());
     assert!(json["personalPole"].get("vamaRecognition").is_none());
     assert!(json["psychoidField"].get("fieldBody").is_none());
@@ -253,8 +250,7 @@ fn central_axis_locus(json: &Value) -> Vec<Value> {
         .expect("loci array")
         .iter()
         .find(|locus| locus["role"] == "central-axis-point")
-        .expect("central-axis locus")
-        ["positionRefs"]
+        .expect("central-axis locus")["positionRefs"]
         .as_array()
         .expect("position refs")
         .clone()

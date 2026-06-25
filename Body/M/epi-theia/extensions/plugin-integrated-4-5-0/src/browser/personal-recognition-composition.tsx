@@ -116,6 +116,7 @@ export interface ProtectedPersonalHandleSet {
     readonly qTransitHandle: string | null;
     readonly qActivityHandle: string | null;
     readonly qComposedHandle: string | null;
+    readonly psychoidFieldHandle: string | null;
 }
 
 export interface PersonalCompositionSlotModel {
@@ -135,6 +136,8 @@ export interface PersonalCompositionModel {
     readonly selectedEntityId: string | null;
     readonly handles: ProtectedPersonalHandleSet;
     readonly personalRecognition: PersonalRecognitionModel;
+    readonly canonRecognitionEventCount: number;
+    readonly latestCanonRecognitionCoordinate: string | null;
     readonly slots: readonly PersonalCompositionSlotModel[];
     readonly blockers: readonly PersonalCompositionBlockerId[];
 }
@@ -206,6 +209,9 @@ export function buildPersonalCompositionModel(
     if (!handles.qComposedHandle) {
         blockers.add('pending-q-composed');
     }
+    if (!handles.psychoidFieldHandle) {
+        blockers.add('pending-psychoid-cymatic-solver');
+    }
     if (!MAHAMAYA_RECOGNITION_SURFACE_AVAILABLE) {
         blockers.add('pending-recognition-surface');
     }
@@ -250,6 +256,8 @@ export function buildPersonalCompositionModel(
         selectedEntityId: selectedEntityId ?? null,
         handles,
         personalRecognition,
+        canonRecognitionEventCount: readCanonRecognitionStream(profile).length,
+        latestCanonRecognitionCoordinate: readLatestCanonRecognitionCoordinate(profile),
         slots,
         blockers: Object.freeze([...blockers])
     });
@@ -381,6 +389,7 @@ const PersonalCymaticCenterSlot: React.FC<{ readonly model: PersonalCompositionM
             data-slot-owner="m4-nara"
             data-privacy-class="protected_local_handle_only"
             data-q-composed-handle={model.handles.qComposedHandle ?? 'pending-q-composed'}
+            data-psychoid-field-handle={model.handles.psychoidFieldHandle ?? 'pending-psychoid-cymatic-solver'}
         >
             {slot.blocker ? (
                 <IntegratedEmptyState
@@ -416,6 +425,8 @@ const MahamayaRecognitionRightSlot: React.FC<{ readonly model: PersonalCompositi
             data-slot-owner="m5-epii"
             data-privacy-class="governed_review_metadata_only"
             data-q-composed-handle={model.handles.qComposedHandle ?? 'pending-q-composed'}
+            data-canon-recognition-events={model.canonRecognitionEventCount}
+            data-latest-canon-coordinate={model.latestCanonRecognitionCoordinate ?? 'pending-canon-recognition-stream'}
         >
             {slot.blocker ? (
                 <IntegratedEmptyState
@@ -487,6 +498,8 @@ const RecognitionHandleSummary: React.FC<{ readonly model: PersonalCompositionMo
     <dl className="personal-recognition-handle-summary" data-test="personal-recognition-handle-summary">
         <dt>q_composed_handle</dt>
         <dd>{model.handles.qComposedHandle ?? 'pending-q-composed'}</dd>
+        <dt>canon_recognition_stream</dt>
+        <dd>{model.latestCanonRecognitionCoordinate ?? 'pending-canon-recognition-stream'}</dd>
         <dt>m3_export</dt>
         <dd>{readStringField(model.profile, ['m3CodonRotationExportHandle', 'm3.codonRotationExportHandle']) ?? 'read-only'}</dd>
     </dl>
@@ -595,6 +608,10 @@ function readProtectedPersonalHandles(
     profile: MathemeHarmonicProfileBoundary | null
 ): ProtectedPersonalHandleSet {
     const candidates = [
+        objectValue(profile?.payload.personalPole),
+        objectValue(profile?.payload.personal_pole),
+        objectValue(profile?.payload.psychoidField),
+        objectValue(profile?.payload.psychoid_field),
         objectValue(profile?.payload.protectedPersonalFieldHandles),
         objectValue(profile?.payload.protected_personal_field_handles),
         objectValue(profile?.payload.ProtectedPersonalFieldInput),
@@ -605,7 +622,13 @@ function readProtectedPersonalHandles(
         qIdentityHandle: firstString(profile, candidates, ['qIdentityHandle', 'q_identity_handle']),
         qTransitHandle: firstString(profile, candidates, ['qTransitHandle', 'q_transit_handle']),
         qActivityHandle: firstString(profile, candidates, ['qActivityHandle', 'q_activity_handle']),
-        qComposedHandle: firstString(profile, candidates, ['qComposedHandle', 'q_composed_handle'])
+        qComposedHandle: firstString(profile, candidates, ['qComposedHandle', 'q_composed_handle']),
+        psychoidFieldHandle: firstString(profile, candidates, [
+            'psychoidFieldHandle',
+            'psychoid_field_handle',
+            'fieldHandle',
+            'field_handle'
+        ])
     });
 }
 
@@ -626,9 +649,30 @@ function firstString(
             if (typeof value === 'string' && value.trim() !== '') {
                 return value;
             }
+            const handle = objectValue(value)?.handle;
+            if (typeof handle === 'string' && handle.trim() !== '') {
+                return handle;
+            }
         }
     }
     return null;
+}
+
+function readCanonRecognitionStream(
+    profile: MathemeHarmonicProfileBoundary | null
+): readonly Readonly<Record<string, unknown>>[] {
+    const raw = readNested(profile, ['canonRecognitionStream', 'canon_recognition_stream']);
+    return Array.isArray(raw)
+        ? Object.freeze(raw.map(item => objectValue(item)).filter(isRecord))
+        : Object.freeze([]);
+}
+
+function readLatestCanonRecognitionCoordinate(
+    profile: MathemeHarmonicProfileBoundary | null
+): string | null {
+    const stream = readCanonRecognitionStream(profile);
+    const latest = stream[stream.length - 1];
+    return readStringFromRecord(latest ?? null, ['bimbaCoordinate', 'bimba_coordinate']);
 }
 
 function hasKairosPopulator(profile: MathemeHarmonicProfileBoundary | null): boolean {
