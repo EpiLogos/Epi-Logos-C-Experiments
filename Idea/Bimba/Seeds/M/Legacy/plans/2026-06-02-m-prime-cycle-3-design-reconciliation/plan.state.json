@@ -2568,13 +2568,18 @@
       "worktree": null
     },
     "17.T17.3": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T20:22:00.000Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T20:22:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T20:22:00.000Z",
+          "text": "Codex combined dispatch. lib.rs split into 9 files: constants.rs, labels.rs, relationships/{mod,node,rel,deep_bimba}.rs, properties.rs, coordinate_law.rs, validation.rs, constraints.rs. lib.rs is 15-line barrel. cargo check -p epi-s2-graph-schema passes with 0 errors."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -2783,13 +2788,18 @@
       "worktree": null
     },
     "17.T17.17": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-25T20:22:00.000Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T20:22:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T20:22:00.000Z",
+          "text": "Codex combined dispatch. CoordinateHome enum at coordinate_home.rs (197 lines, 81 variants). Implements as_str(), Serialize, Display, Deref to str, PartialEq with &str. Replaces ~150 &'static str usages. cargo check -p epi-s2-graph-schema passes with 0 errors."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,

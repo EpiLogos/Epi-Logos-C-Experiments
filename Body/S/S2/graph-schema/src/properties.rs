@@ -1,4 +1,4 @@
-use crate::{RELATION_FAMILY_PROPERTY, RELATION_FAMILY_VALUES};
+use crate::{CoordinateHome, RELATION_FAMILY_PROPERTY, RELATION_FAMILY_VALUES};
 
 pub const COORDINATE_PROPERTY: &str = "coordinate";
 pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
@@ -163,7 +163,7 @@ pub enum GraphPropertyDisclosure {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GraphPropertySpec {
     pub key: &'static str,
-    pub coordinate_home: &'static str,
+    pub coordinate_home: CoordinateHome,
     pub owner: GraphPropertyOwner,
     pub value_type: GraphPropertyType,
     pub cardinality: GraphPropertyCardinality,
@@ -175,7 +175,7 @@ pub struct GraphPropertySpec {
 
 const fn node_spec(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
@@ -196,7 +196,7 @@ const fn node_spec(
 
 const fn indexed_node_spec(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
@@ -217,7 +217,7 @@ const fn indexed_node_spec(
 
 const fn relationship_property_spec_const(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
