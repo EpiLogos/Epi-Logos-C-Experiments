@@ -1,7 +1,8 @@
 {
-    "version": 1,
-    "taskId": "28.T28.20",
-    "title": "Surface to extension to contract ledger",
+    "version": 2,
+    "taskId": "11.T11.9",
+    "title": "Surface → extension → contract closure ledger (final)",
+    "closureNote": "Track 11 closure — 2026-06-25. All 28 widget ids mapped to extension packages with contract entries. No orphan widget claims remain. Feeds Tranche 14 no-orphan release gate.",
     "sourceAnchors": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md#11.9",
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md",
