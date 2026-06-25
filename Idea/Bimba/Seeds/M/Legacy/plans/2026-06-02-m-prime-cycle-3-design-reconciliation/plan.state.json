@@ -1997,11 +1997,13 @@
       "worktree": null
     },
     "11.T11.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:32:00.000Z",
+      "claimedAt": "2026-06-25T16:32:00.000Z",
+      "completedAt": "2026-06-25T16:32:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T16:32:00.000Z", "text": "All three packages pass: integrated-composition 46/46, plugin-integrated-1-2-3 all pass, plugin-integrated-4-5-0 all pass. No rebuild needed per spec. IntegratedReadiness already consumes Wave-A pending markers."}
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
