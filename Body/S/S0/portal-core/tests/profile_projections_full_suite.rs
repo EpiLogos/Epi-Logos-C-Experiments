@@ -476,6 +476,10 @@ fn m4_personal_pole_projection_surfaces_only_protected_handles() {
             "PatternPacket",
             "protected://nara/pattern/pkt-1",
         ),
+        psychoid_field_handle: ProtectedHandle::new(
+            "PsychoidFieldProjection",
+            "protected://nara/psychoid/field-1",
+        ),
         oracle_frame_handle: ProtectedHandle::new("OracleFrame", "protected://nara/oracle/frame-1"),
         symbolic_protein_handle: ProtectedHandle::new(
             "SymbolicProtein",
@@ -507,6 +511,10 @@ fn m4_personal_pole_projection_surfaces_only_protected_handles() {
     assert_eq!(
         json["patternPacketHandle"]["privacy"],
         "protected-local-body"
+    );
+    assert_eq!(
+        json["psychoidFieldHandle"]["targetKind"],
+        "PsychoidFieldProjection"
     );
     assert_eq!(json["oracleFrameHandle"]["targetKind"], "OracleFrame");
     assert_eq!(
