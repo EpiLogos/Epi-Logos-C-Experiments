@@ -301,3 +301,77 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ── 23.9 Layer C variant switcher + deferred 'spheres' carrier ─────────────── */
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button {
+    min-height: 26px;
+    padding: 2px 9px;
+    border: 1px solid var(--theia-button-border, transparent);
+    border-radius: 4px;
+    color: var(--theia-button-foreground);
+    background-color: var(--theia-button-secondaryBackground, var(--theia-button-background));
+    font: inherit;
+    text-transform: capitalize;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button[aria-checked="true"] {
+    border-color: var(--theia-focusBorder);
+    background-color: var(--theia-button-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button[data-variant-deferred="true"] {
+    border-style: dashed;
+    border-color: var(--theia-editorWarning-foreground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__pending {
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 14px;
+    border: 1px dashed var(--theia-editorWarning-foreground);
+    border-radius: 6px;
+    background-color: var(--theia-sideBar-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__pending-tile {
+    display: grid;
+    gap: 6px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__badge {
+    justify-self: start;
+    padding: 1px 8px;
+    border: 1px solid var(--theia-editorWarning-foreground);
+    border-radius: 4px;
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__note {
+    margin: 0;
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-26T12:35:36.658Z",
+  "updatedAt": "2026-06-26T12:47:44.811Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4541,13 +4541,22 @@
       "worktree": null
     },
     "23.T23.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T12:47:44.755Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T13:40:00Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T13:40:00Z",
+          "text": "Claude opus (250s). surfaceVariantRegistry on M2CymaticEngineWidget with spheres\u2192deferred-23.9; CymaticSpheresSurface.tsx deferred carrier (166 LOC); variant switcher routes deferred\u2192CymaticSpheresSurface; 4 new tests pass; 31/31 full suite (no regressions)."
+        },
+        {
+          "at": "2026-06-26T13:40:00Z",
+          "text": "Verify: ls -la CymaticSpheresSurface.tsx (166 lines), test (133 lines, 4 tests), composition.ts M2_SURFACE_VARIANT_REGISTRY"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,

@@ -18,18 +18,36 @@ import {
     DECLARED_BLOCKERS,
     PRIVACY_CLASS,
     buildM2PrimeMeaningPacket,
-    M2PrimeMeaningPacket
+    M2PrimeMeaningPacket,
+    M2SurfaceVariant,
+    M2SurfaceVariantStatus,
+    M2_SURFACE_VARIANT_REGISTRY,
+    m2SurfaceVariantIsDeferred
 } from '../common';
 import {
     CymaticTransport,
     M2CymaticTickSnapshot
 } from './components/CymaticTransport';
 import { CymaticChladniSurface } from './components/CymaticChladniSurface';
+import { CymaticSpheresSurface } from './components/CymaticSpheresSurface';
+
+/** Layer C variant switcher order — plate (default) → torus (composition) → spheres (deferred 23.9). */
+const SURFACE_VARIANT_ORDER: readonly M2SurfaceVariant[] = Object.freeze(['plate', 'torus', 'spheres']);
 
 @injectable()
 export class M2CymaticEngineWidget extends ReactWidget {
     static readonly ID = 'm2.parashakti.cymaticEngine';
     static readonly LABEL = 'M2 - Cymatic Engine';
+
+    /**
+     * Layer C surface-variant registry — the variant switcher reads this to decide
+     * whether a variant renders a built surface or a deferred pending tile.
+     * `'spheres' → 'deferred-23.9'` is the named-but-unbuilt solar-anchor carrier
+     * (23.9); selecting it mounts `CymaticSpheresSurface` (a "pending — solar anchor
+     * variant" tile) instead of the live Chladni plate, without crashing.
+     */
+    static readonly surfaceVariantRegistry: Readonly<Record<M2SurfaceVariant, M2SurfaceVariantStatus>> =
+        M2_SURFACE_VARIANT_REGISTRY;
 
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -38,6 +56,7 @@ export class M2CymaticEngineWidget extends ReactWidget {
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
     protected tickSnapshots: readonly M2CymaticTickSnapshot[] | null = null;
+    protected surfaceVariant: M2SurfaceVariant = 'plate';
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -96,18 +115,26 @@ export class M2CymaticEngineWidget extends ReactWidget {
                     <h3>M2 Cymatic Engine</h3>
                     {packet ? (
                         <>
-                            <CymaticTransport
-                                livePacket={packet}
-                                liveTick={this.profile ? profileTick(this.profile) : packet.profileGeneration}
-                                tickSnapshots={this.tickSnapshots}
-                            >
-                                {snapshot => (
-                                    <CymaticChladniSurface
-                                        frame={snapshot.packet.cymaticSignature}
-                                        tick={snapshot.tick}
-                                    />
-                                )}
-                            </CymaticTransport>
+                            {this.renderSurfaceVariantSwitcher()}
+                            {m2SurfaceVariantIsDeferred(this.surfaceVariant) ? (
+                                <CymaticSpheresSurface
+                                    address72={packet.address72}
+                                    tick={this.profile ? profileTick(this.profile) : packet.profileGeneration}
+                                />
+                            ) : (
+                                <CymaticTransport
+                                    livePacket={packet}
+                                    liveTick={this.profile ? profileTick(this.profile) : packet.profileGeneration}
+                                    tickSnapshots={this.tickSnapshots}
+                                >
+                                    {snapshot => (
+                                        <CymaticChladniSurface
+                                            frame={snapshot.packet.cymaticSignature}
+                                            tick={snapshot.tick}
+                                        />
+                                    )}
+                                </CymaticTransport>
+                            )}
                             <dl>
                                 <dt>72 address</dt>
                                 <dd>{packet.address72}</dd>
@@ -130,6 +157,46 @@ export class M2CymaticEngineWidget extends ReactWidget {
                 </section>
             </div>
         );
+    }
+
+    protected renderSurfaceVariantSwitcher(): React.ReactNode {
+        return (
+            <div
+                className="m2-cymatic-surface-switcher"
+                role="radiogroup"
+                aria-label="Cymatic Layer C surface variant"
+                data-active-surface-variant={this.surfaceVariant}
+            >
+                {SURFACE_VARIANT_ORDER.map(variant => {
+                    const status = M2CymaticEngineWidget.surfaceVariantRegistry[variant];
+                    const deferred = m2SurfaceVariantIsDeferred(variant);
+                    return (
+                        <button
+                            key={variant}
+                            type="button"
+                            className="m2-cymatic-surface-switcher__button"
+                            role="radio"
+                            aria-checked={this.surfaceVariant === variant}
+                            data-surface-variant={variant}
+                            data-variant-status={status}
+                            data-variant-deferred={deferred ? 'true' : 'false'}
+                            onClick={() => this.selectSurfaceVariant(variant)}
+                        >
+                            {variant}
+                            {deferred && <span className="m2-cymatic-surface-switcher__pending"> (pending)</span>}
+                        </button>
+                    );
+                })}
+            </div>
+        );
+    }
+
+    protected selectSurfaceVariant(variant: M2SurfaceVariant): void {
+        if (this.surfaceVariant === variant) {
+            return;
+        }
+        this.surfaceVariant = variant;
+        this.update();
     }
 
     protected safePacket(profile: MathemeHarmonicProfileBoundary): M2PrimeMeaningPacket | null {

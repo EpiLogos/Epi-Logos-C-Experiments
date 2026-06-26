@@ -8,6 +8,36 @@ import { renderM2CymaticFrame } from './meaning-packet';
 export type M2SurfaceVariant = 'torus' | 'plate' | 'spheres';
 export type M2KleinFlipPhase = 'primary' | 'inverted' | 'transitioning';
 
+/**
+ * Layer C surface-variant build status. `'built'` variants render a live surface;
+ * `'deferred-23.9'` is the named-but-unbuilt 'spheres' carrier (the daily-0-1
+ * cosmic-side solar-system anchor view), reserved for a follow-on tranche so the
+ * variant switcher can mount a "pending — solar anchor variant" tile without
+ * crashing. See `CymaticSpheresSurface` and 23.9.
+ */
+export type M2SurfaceVariantStatus = 'built' | 'deferred-23.9';
+
+/** The deferral token registered against the deferred 'spheres' variant. */
+export const M2_SPHERES_DEFERRAL: M2SurfaceVariantStatus = 'deferred-23.9';
+
+/**
+ * The Layer C variant registry — the single source of truth the variant switcher
+ * reads to decide whether a variant renders a built surface or a deferred pending
+ * tile. `'plate'` is the deep-widget default; `'torus'` is the composition variant
+ * (rendered inside plugin-integrated-1-2-3); `'spheres'` is deferred (23.9).
+ */
+export const M2_SURFACE_VARIANT_REGISTRY: Readonly<Record<M2SurfaceVariant, M2SurfaceVariantStatus>> =
+    Object.freeze({
+        plate: 'built',
+        torus: 'built',
+        spheres: M2_SPHERES_DEFERRAL
+    });
+
+/** True when a variant is named but its renderer is deferred (currently only 'spheres'). */
+export function m2SurfaceVariantIsDeferred(variant: M2SurfaceVariant): boolean {
+    return M2_SURFACE_VARIANT_REGISTRY[variant] !== 'built';
+}
+
 export interface ColourBinaryPalette {
     readonly elementColours: Readonly<Record<string, string>>;
     readonly nodalWhite: string;
