@@ -112,6 +112,15 @@ typedef enum {
 extern const uint8_t DR_RING_MAHAMAYA[6];    /* {1,2,4,8,7,5} — doubling,  64-bit */
 extern const uint8_t DR_RING_PARASHAKTI[6];  /* {3,6,9,3,6,9} — tripling,  72-bit */
 
+/* Per-family implicate/explicate signature, indexed by Ananda_Matrix_Op (0-5).
+ * {-1,+1,+1,+1,+1,-1}: Bimba (#X+0) and Quintessence (#X+0/1) are the two
+ * implicate boundaries (-1); Pratibimba/Sum/DiffA/DiffB are explicate (+1).
+ * Substrate source for the M1-2 ananda-vortex perspex cross-fade tint
+ * (M1-2-ANANDA-VORTEX-ARCHITECTURE.md §5.2/§5.4) — the renderer reads this,
+ * it never invents the six-family character. Mirrors CL42_BASIS signature
+ * shape on the family axis (cf. the position axis at CL42_BASIS). */
+extern const int8_t ANANDA_FAMILY_SIGNATURE[6];
+
 
 /* ===================================================================
  * ANANDA RUNTIME API — #1-2 dataset, mod10 operational space

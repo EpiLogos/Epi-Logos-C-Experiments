@@ -62,6 +62,19 @@ const Cl42_Basis_Entry CL42_BASIS[6] = {
 
 const uint8_t QL_INVERT[6] = { 5u, 4u, 3u, 2u, 1u, 0u };
 
+/* Per-family implicate/explicate signature for the M1-2 ananda-vortex perspex
+ * cross-fade (M1-2-ANANDA-VORTEX-ARCHITECTURE.md §5.2/§5.4). Indexed by
+ * Ananda_Matrix_Op: Bimba(0) and Quintessence(5) are implicate boundaries (-1,
+ * cool indigo glass); Pratibimba(1)/Sum(2)/DiffA(3)/DiffB(4) are explicate (+1,
+ * warm glass). The signature is forced by canon (m1.h enum boundaries), not a
+ * visual choice — the played-torus renderer reads it to tint the six glass
+ * layers rather than forking the value. */
+const int8_t ANANDA_FAMILY_SIGNATURE[6] = { -1, +1, +1, +1, +1, -1 };
+/* The +2 net Cl(4,2) signature is preserved across the family axis exactly as
+ * on the position axis: four (+1) explicate families minus two (-1) implicate
+ * boundaries = +2. (Verified at runtime by m1_verify, not _Static_assert,
+ * since const-array element access is not a C constant expression.) */
+
 
 /* Public helper bodies relocated from the coordinate header. */
 uint8_t get_ananda_harmonic(
@@ -471,6 +484,12 @@ bool m1_verify(void) {
     if (get_quint_sum(1, 2) != get_ananda_harmonic(&ANANDA_SUM, 1, 2)) return false;
     if (DR_RING_MAHAMAYA[0] != 1u || DR_RING_MAHAMAYA[3] != 8u) return false;
     if (DR_RING_PARASHAKTI[0] != 3u || DR_RING_PARASHAKTI[2] != 9u) return false;
+    /* Ananda family signature: implicate boundaries at Bimba(0)/Quintessence(5);
+     * +2 net Cl(4,2) signature across the family axis (cf. perspex tint §5.4). */
+    if (ANANDA_FAMILY_SIGNATURE[0] != -1 || ANANDA_FAMILY_SIGNATURE[5] != -1) return false;
+    int8_t family_sig_net = 0;
+    for (int i = 0; i < 6; i++) family_sig_net = (int8_t)(family_sig_net + ANANDA_FAMILY_SIGNATURE[i]);
+    if (family_sig_net != 2) return false;
     return verify_m1_m0_crosslink();
 }
 

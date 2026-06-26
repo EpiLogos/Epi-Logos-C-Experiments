@@ -22,6 +22,7 @@ pub struct PlayedTorusRenderFrame {
     pub topology: K2Topology,
     pub mesh: k2_mesh::K2MeshSummary,
     pub ananda_heatmap: ananda_heatmap::AnandaHeatmapCell,
+    pub ananda_perspex_stack: ananda_heatmap::AnandaPerspexStack,
     pub streamlines: dr_streamlines::StreamlineFrame,
     pub colour: cl42_colour::Cl42ColourFrame,
     pub hopf_shadow: hopf_shadow::HopfShadowFrame,
@@ -34,6 +35,9 @@ pub fn frame_from_profile(profile: &MathemeHarmonicProfile) -> PlayedTorusRender
     PlayedTorusRenderFrame {
         mesh: k2_mesh::build_k2_mesh(&topology, profile),
         ananda_heatmap: ananda_heatmap::active_cell_from_projection(&profile.ananda_vortex),
+        ananda_perspex_stack: ananda_heatmap::perspex_stack_from_projection(
+            &profile.ananda_vortex,
+        ),
         streamlines: dr_streamlines::frame_from_projection(&profile.ananda_vortex),
         colour: cl42_colour::frame_from_projection(&profile.ananda_vortex),
         hopf_shadow: hopf_shadow::frame_from_profile(profile),
