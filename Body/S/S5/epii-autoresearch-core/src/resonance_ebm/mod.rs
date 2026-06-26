@@ -5,6 +5,7 @@
 //! tritone-symmetric 72-vector inference, zero-checkpoint fallback, and the
 //! gradient surface consumed by the later Riemannian projection wrapper.
 
+pub mod anuttara_pentadic_feature;
 pub mod attention;
 pub mod channels;
 pub mod checkpoint;
@@ -15,6 +16,7 @@ pub mod mirror_loss;
 pub mod model;
 pub mod training;
 
+pub use anuttara_pentadic_feature::*;
 pub use attention::*;
 pub use channels::*;
 pub use checkpoint::*;
