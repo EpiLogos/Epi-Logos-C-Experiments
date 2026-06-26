@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T23:59:39.818Z",
+  "updatedAt": "2026-06-26T00:09:49.328Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4432,11 +4432,20 @@
       "worktree": null
     },
     "23.T23.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T00:09:49.263Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T00:09:49.263Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T00:09:42.082Z",
+          "text": "Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/CorrespondenceTreeWidget.tsx"
+        },
+        {
+          "at": "2026-06-26T00:09:49.263Z",
+          "text": "Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/CorrespondenceTreeWidget.tsx"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
