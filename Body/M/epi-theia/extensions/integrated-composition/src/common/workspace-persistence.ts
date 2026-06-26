@@ -172,10 +172,63 @@ export function detectProtectedKeysInSnapshot(
 // ============================================================================
 
 /**
+ * The canonical OmniPanel tab ids. Mirrors the authoritative declaration in
+ * `@pratibimba/omnipanel-shell` (`OmniPanelTabId` / `OMNIPANEL_TABS`). This
+ * extension does not depend on that package, so the union is restated here as
+ * the persisted spine's notion of "which tab is active". Keep in sync with the
+ * eight-tab DR-WC-OP-1 collapse map.
+ */
+export type OmniPanelTabId =
+    | 'pi-chat'
+    | 'sessions'
+    | 'dispatch-trace'
+    | 'tool-stream'
+    | 'evidence'
+    | 'review'
+    | 'gateway'
+    | 'diagnostics';
+
+export const OMNI_PANEL_TAB_IDS: readonly OmniPanelTabId[] = Object.freeze([
+    'pi-chat',
+    'sessions',
+    'dispatch-trace',
+    'tool-stream',
+    'evidence',
+    'review',
+    'gateway',
+    'diagnostics'
+]);
+
+/**
+ * The canonical activity-bar modes. Mirrors the `modeId` set declared by
+ * `PRATIBIMBA_ACTIVITY_BAR_ICON_BINDINGS` in `icons-contribution.ts` (the
+ * `pratibimba.activity-bar.*` view bindings), reduced to the bare mode slug so
+ * the persisted spine can record which sidebar view is active across toggles.
+ */
+export type ActivityBarMode =
+    | 'coordinate-tree'
+    | 'bimba-graph-viewer'
+    | 'canon-studio'
+    | 'backend-studio'
+    | 'smart-connections';
+
+export const ACTIVITY_BAR_MODES: readonly ActivityBarMode[] = Object.freeze([
+    'coordinate-tree',
+    'bimba-graph-viewer',
+    'canon-studio',
+    'backend-studio',
+    'smart-connections'
+]);
+
+/**
  * The cross-layout CORE spine per 15.7. Owned by the kernel-bridge DI
  * singleton, NOT by this extension — declared here as the typed contract the
  * composition state attaches to. It is deliberately layout-agnostic: a layout
- * or face toggle is an intra-process view change that never mutates this spine.
+ * (daily-0-1 ↔ ide-deep) or face (0/1) toggle is an intra-process view change
+ * that never mutates this spine — every named field survives the toggle.
+ *
+ * 15.T15.7 extends the spine with the two chrome globals that must also survive
+ * the toggle: the active OmniPanel tab and the active activity-bar mode.
  */
 export interface BimbaPratibimbaUiState {
     readonly coordinate: string | null;
@@ -184,6 +237,10 @@ export interface BimbaPratibimbaUiState {
     readonly profileGeneration: number;
     readonly sessionKey: string | null;
     readonly dayNow: string | null;
+    /** Active OmniPanel tab — survives both the 0/1 face and layout toggles. */
+    readonly activeOmniPanelTab: OmniPanelTabId | null;
+    /** Active activity-bar (left sidebar) mode — survives the layout switch. */
+    readonly activityBarMode: ActivityBarMode | null;
 }
 
 /** The field names of the cross-layout core spine — single source of truth. */
@@ -194,8 +251,83 @@ export const BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS: readonly (keyof BimbaPratib
         'mode',
         'profileGeneration',
         'sessionKey',
-        'dayNow'
+        'dayNow',
+        'activeOmniPanelTab',
+        'activityBarMode'
     ]);
+
+/** The zero-value spine — every field empty, generation 0. */
+export const EMPTY_BIMBA_PRATIBIMBA_UI_STATE: BimbaPratibimbaUiState = Object.freeze({
+    coordinate: null,
+    lens: null,
+    mode: null,
+    profileGeneration: 0,
+    sessionKey: null,
+    dayNow: null,
+    activeOmniPanelTab: null,
+    activityBarMode: null
+});
+
+export function isOmniPanelTabId(value: unknown): value is OmniPanelTabId {
+    return typeof value === 'string' && OMNI_PANEL_TAB_IDS.includes(value as OmniPanelTabId);
+}
+
+export function isActivityBarMode(value: unknown): value is ActivityBarMode {
+    return typeof value === 'string' && ACTIVITY_BAR_MODES.includes(value as ActivityBarMode);
+}
+
+/**
+ * Normalise an unknown parsed object into a fully-typed spine. Out-of-vocabulary
+ * tab ids / activity-bar modes collapse to `null` so disk or wire drift cannot
+ * widen the contract beyond the canonical sets above.
+ */
+export function normalizeBimbaPratibimbaUiState(
+    parsed: Partial<BimbaPratibimbaUiState> | null | undefined
+): BimbaPratibimbaUiState {
+    if (!parsed) {
+        return EMPTY_BIMBA_PRATIBIMBA_UI_STATE;
+    }
+    return Object.freeze({
+        coordinate: typeof parsed.coordinate === 'string' ? parsed.coordinate : null,
+        lens: typeof parsed.lens === 'string' ? parsed.lens : null,
+        mode: typeof parsed.mode === 'string' ? parsed.mode : null,
+        profileGeneration:
+            typeof parsed.profileGeneration === 'number' && Number.isFinite(parsed.profileGeneration)
+                ? parsed.profileGeneration
+                : 0,
+        sessionKey: typeof parsed.sessionKey === 'string' ? parsed.sessionKey : null,
+        dayNow: typeof parsed.dayNow === 'string' ? parsed.dayNow : null,
+        activeOmniPanelTab: isOmniPanelTabId(parsed.activeOmniPanelTab)
+            ? parsed.activeOmniPanelTab
+            : null,
+        activityBarMode: isActivityBarMode(parsed.activityBarMode) ? parsed.activityBarMode : null
+    });
+}
+
+/** Pure serialise — normalises every spine field before stringifying. */
+export function serializeBimbaPratibimbaUiState(state: BimbaPratibimbaUiState): string {
+    return JSON.stringify(normalizeBimbaPratibimbaUiState(state));
+}
+
+/** Pure deserialise — re-applies normalisation so drift cannot widen types. */
+export function deserializeBimbaPratibimbaUiState(raw: string): BimbaPratibimbaUiState {
+    const parsed = JSON.parse(raw) as Partial<BimbaPratibimbaUiState>;
+    return normalizeBimbaPratibimbaUiState(parsed);
+}
+
+/**
+ * Identity transform modelling the 0/1 face toggle AND the daily-0-1 ↔ ide-deep
+ * layout switch over the spine. A toggle is an intra-process view change; every
+ * named spine field — including `activeOmniPanelTab` and `activityBarMode` — must
+ * survive intact. Round-trips through the real serialise/deserialise codec so
+ * the invariant is exercised against persistence, not a bare object reference.
+ */
+export function preserveBimbaPratibimbaUiStateAcrossToggle(
+    state: BimbaPratibimbaUiState,
+    _toggle: CompositionToggleClass
+): BimbaPratibimbaUiState {
+    return deserializeBimbaPratibimbaUiState(serializeBimbaPratibimbaUiState(state));
+}
 
 export interface IntegratedCompositionPersistedState {
     readonly compositionId: 'cosmic-engine.integrated' | 'jiva-siva.integrated';

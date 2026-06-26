@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-26T00:27:22.693Z",
+  "updatedAt": "2026-06-26T00:32:00.175Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2449,11 +2449,24 @@
       "worktree": null
     },
     "15.T15.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T00:32:00.118Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T00:32:00.118Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T00:31:38.238Z",
+          "text": "grep -n 'BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS' workspace-persistence.ts -> 247:export const BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS: readonly (keyof BimbaPratibimbaUiState)[] =  ; spine extended with activeOmniPanelTab (OmniPanelTabId) + activityBarMode (ActivityBarMode); normalize/serialize/deserialize + preserveBimbaPratibimbaUiStateAcrossToggle codec added; tsc type-check clean for new symbols"
+        },
+        {
+          "at": "2026-06-26T00:31:45.987Z",
+          "text": "marked"
+        },
+        {
+          "at": "2026-06-26T00:32:00.118Z",
+          "text": "15.T15.7 done: spine extended (activeOmniPanelTab+activityBarMode), codec+preserve added"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
