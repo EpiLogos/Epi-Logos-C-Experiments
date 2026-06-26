@@ -1697,6 +1697,26 @@ Quintessence/Akasha: emerges from BALANCE — low variance in {A,T,C,G} counts
   (nucleotide_balance_variance < threshold → Akasha activation)
 ```
 
+<!-- STALE_SPEC_FLAG (DR-37-3 / DR-37-5, Track 37.10) — IN-PLACE DEPRECATION:
+  The nucleotide→element table above (scheme C: A=Water/T=Fire/C=Earth/G=Air) is
+  no longer the source of truth for cross-layer code. As of Track 37.10 this
+  binding is a FIRST-CLASS converter, `canonical_from_nucleotide` (scheme C →
+  L2' canonical-B), in `Body/S/S0/epi-cli/src/nara/medicine_frame.rs`, alongside
+  `canonical_from_m3_decan_element` (scheme D → B) and `canonical_from_m2_tattva`
+  (scheme A → B). The earlier A=Fire/T=Earth/C=Air/G=Water table (scheme E) was
+  stale and is superseded by the Golden-Dawn/Thoth code binding (`m3.h:70-73`);
+  it was corrected in place per DR-37-5 (user-ratified 2026-06-12). Treat the
+  code converters as canonical; this prose mirrors them and must be re-synced
+  here (or replaced by a `superseded-by-code` note) if the binding ever moves. -->
+
+> **STALE_SPEC_FLAG (DR-37-3 / DR-37-5, Track 37.10):** the nucleotide→element
+> binding above is now codified as the first-class converter
+> `canonical_from_nucleotide` in [`medicine_frame.rs`](../../../../../Body/S/S0/epi-cli/src/nara/medicine_frame.rs)
+> (scheme C → L2' canonical-B), joined by `canonical_from_m3_decan_element`
+> (scheme D → B) and `canonical_from_m2_tattva` (scheme A → B). **The code is
+> canonical**; this table is descriptive prose that mirrors it. The stale scheme
+> E table (A=Fire/T=Earth/C=Air/G=Water) was corrected in place per DR-37-5.
+
 These elemental assignments carry through:
 ```
 Nucleotide → Elemental family → Chakra (via ELEMENT_CHAKRA[5])

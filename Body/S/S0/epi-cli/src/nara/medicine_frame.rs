@@ -758,17 +758,38 @@ pub static SIGN_ELEMENT: [u8; 12] = [
 ];
 
 // ─── L2' Canonical Element-ID conversion (Rust mirror of m_canonical.h) ──────
+//
+// THE bridge canonical is the L2' ordering ("canonical-B"):
+//   0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt.
+//
+// Five distinct element-ID schemes are live across the M-stack (DR-37-3):
+//   (A) m2.h tattva `Element_Id`        — AKASHA=0, VAYU/Air=1, AGNI/Fire=2,
+//                                         APAS/Water=3, PRITHVI/Earth=4
+//   (B) L2' canonical                   — Aether=0, Earth=1, Water=2, Air=3,
+//                                         Fire=4, Salt=5  ← THE bridge target
+//   (C) m3.h nucleotide name-binding    — A=Water, T=Fire, C=Earth, G=Air
+//                                         (nucleotide 2-bit: A=0,T=1,C=2,G=3)
+//   (D) m3.h `Clock_Degree_Entry.decan_element`
+//                                       — Fire=0, Earth=1, Air=2, Water=3,
+//                                         Akasha=4
+//   (E) **stale** clock-spec §15.3 A=Fire/T=Earth/C=Air/G=Water — superseded
+//       by the Golden-Dawn/Thoth code binding (scheme C); see DR-37-5.
+//
+// Every element crossing the M2↔M3 boundary MUST be normalized to canonical-B
+// through one of the converters below — no raw element integer crosses the
+// boundary. (DR-37-3 / DR-37-5, Track 37.6 / 37.10.)
 
-/// Convert a `dominant_element` produced by the kairos python adapter
-/// (medicine.rs legacy ordering: AKASHA=0, AIR=1, FIRE=2, WATER=3, EARTH=4)
-/// into the L2' canonical ID (Aether=0, Earth=1, Water=2, Air=3, Fire=4, Salt=5).
+/// Convert an m2.h `Element_Id` tattva enum (scheme A — AKASHA=0, VAYU/Air=1,
+/// AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4) into the L2' canonical-B ID
+/// (Aether=0, Earth=1, Water=2, Air=3, Fire=4, Salt=5).
 ///
+/// This is the scheme the kairos python adapter emits as `dominant_element`.
 /// Mirrors `m_canonical_from_medicine_rs_legacy` in
 /// `epi-lib/include/m_canonical.h`. All medicine LUTs below are canonically
-/// keyed, so any legacy element entering the medicine pipeline MUST pass
-/// through here first.
-pub const fn canonical_from_medicine_rs_legacy(legacy: u8) -> u8 {
-    match legacy {
+/// keyed, so any tattva element entering the medicine pipeline MUST pass
+/// through here first. (DR-37-3, Track 37.10.)
+pub const fn canonical_from_m2_tattva(tattva: u8) -> u8 {
+    match tattva {
         0 => 0, // AKASHA → Aether
         1 => 3, // VAYU   → Air
         2 => 4, // AGNI   → Fire
@@ -778,8 +799,16 @@ pub const fn canonical_from_medicine_rs_legacy(legacy: u8) -> u8 {
     }
 }
 
-/// Inverse of [`canonical_from_medicine_rs_legacy`] — canonical → medicine legacy.
-/// Mirrors `m_canonical_to_medicine_rs_legacy`. Salt has no legacy counterpart.
+/// Honest-name alias retained for back-compat: scheme A was historically — and
+/// inaccurately — called the "medicine.rs legacy" ordering, but it IS the m2.h
+/// tattva `Element_Id` enum. Prefer [`canonical_from_m2_tattva`]. (DR-37-10.)
+#[inline]
+pub const fn canonical_from_medicine_rs_legacy(legacy: u8) -> u8 {
+    canonical_from_m2_tattva(legacy)
+}
+
+/// Inverse of [`canonical_from_m2_tattva`] — canonical-B → m2.h tattva (scheme A).
+/// Mirrors `m_canonical_to_medicine_rs_legacy`. Salt has no tattva counterpart.
 pub const fn canonical_to_medicine_rs_legacy(canonical: u8) -> u8 {
     match canonical {
         0 => 0,    // Aether → AKASHA
@@ -788,6 +817,37 @@ pub const fn canonical_to_medicine_rs_legacy(canonical: u8) -> u8 {
         2 => 3,    // Water  → APAS
         1 => 4,    // Earth  → PRITHVI
         _ => 0xFF, // Salt
+    }
+}
+
+/// Convert an m3 `Clock_Degree_Entry.decan_element` (scheme D — Fire=0,
+/// Earth=1, Air=2, Water=3, Akasha=4; see `m3.h:841`) into the L2' canonical-B
+/// ID. Akasha (the pre-elemental ground) maps to Aether. Any out-of-range
+/// value returns `0xFF` (`M_CANONICAL_ELEMENT_INVALID`). (DR-37-3, Track 37.10.)
+pub const fn canonical_from_m3_decan_element(decan_element: u8) -> u8 {
+    match decan_element {
+        0 => 4, // Fire   → Fire
+        1 => 1, // Earth  → Earth
+        2 => 3, // Air    → Air
+        3 => 2, // Water  → Water
+        4 => 0, // Akasha → Aether
+        _ => 0xFF,
+    }
+}
+
+/// Convert an m3 nucleotide (2-bit: A=0, T=1, C=2, G=3) into the L2' canonical-B
+/// element ID **by name-binding** (scheme C — A=Water, T=Fire, C=Earth, G=Air;
+/// the Golden-Dawn/Thoth suit-element correspondence, `m3.h:70-73`). This is the
+/// code-canonical binding (yin→Water, yang→Fire) that supersedes the stale
+/// clock-spec §15.3 A=Fire/T=Earth/C=Air/G=Water table (DR-37-5). Mirrors the
+/// `m4_nuc_to_elem` macro in `m_canonical.h`. (DR-37-3 / DR-37-5, Track 37.10.)
+pub const fn canonical_from_nucleotide(nucleotide: u8) -> u8 {
+    match nucleotide {
+        0 => 2, // A → Water
+        1 => 4, // T → Fire
+        2 => 1, // C → Earth
+        3 => 3, // G → Air
+        _ => 0xFF,
     }
 }
 
@@ -1032,6 +1092,90 @@ mod canonical_tests {
         // Operative quartet membership.
         assert!(canonical_is_operative(1) && canonical_is_operative(4));
         assert!(!canonical_is_operative(0) && !canonical_is_operative(5));
+    }
+
+    #[test]
+    fn m2_tattva_alias_is_identical() {
+        // The honest name and the back-compat alias must agree on the whole
+        // domain (and the invalid sentinel).
+        for tattva in 0u8..=8 {
+            assert_eq!(
+                canonical_from_m2_tattva(tattva),
+                canonical_from_medicine_rs_legacy(tattva),
+                "tattva {tattva}: alias diverged from canonical_from_m2_tattva"
+            );
+        }
+    }
+
+    #[test]
+    fn m2_tattva_maps_every_element_to_canonical_b() {
+        // Scheme A (AKASHA=0, VAYU=1, AGNI=2, APAS=3, PRITHVI=4) → canonical-B.
+        assert_eq!(canonical_from_m2_tattva(0), 0, "AKASHA → Aether");
+        assert_eq!(canonical_from_m2_tattva(1), 3, "VAYU → Air");
+        assert_eq!(canonical_from_m2_tattva(2), 4, "AGNI → Fire");
+        assert_eq!(canonical_from_m2_tattva(3), 2, "APAS → Water");
+        assert_eq!(canonical_from_m2_tattva(4), 1, "PRITHVI → Earth");
+        // Out of range → invalid sentinel.
+        assert_eq!(canonical_from_m2_tattva(5), 0xFF);
+        assert_eq!(canonical_from_m2_tattva(255), 0xFF);
+    }
+
+    #[test]
+    fn m3_decan_element_maps_every_element_to_canonical_b() {
+        // Scheme D (Fire=0, Earth=1, Air=2, Water=3, Akasha=4) → canonical-B.
+        assert_eq!(canonical_from_m3_decan_element(0), 4, "Fire → Fire");
+        assert_eq!(canonical_from_m3_decan_element(1), 1, "Earth → Earth");
+        assert_eq!(canonical_from_m3_decan_element(2), 3, "Air → Air");
+        assert_eq!(canonical_from_m3_decan_element(3), 2, "Water → Water");
+        assert_eq!(canonical_from_m3_decan_element(4), 0, "Akasha → Aether");
+        // Out of range → invalid sentinel.
+        assert_eq!(canonical_from_m3_decan_element(5), 0xFF);
+        assert_eq!(canonical_from_m3_decan_element(255), 0xFF);
+        // The operative quartet (Fire/Earth/Air/Water) lands in canonical 1-4;
+        // Akasha lands on Aether (0), which is NOT operative.
+        for decan_element in 0u8..4 {
+            assert!(canonical_is_operative(canonical_from_m3_decan_element(decan_element)));
+        }
+        assert!(!canonical_is_operative(canonical_from_m3_decan_element(4)));
+    }
+
+    #[test]
+    fn nucleotide_maps_every_base_to_canonical_b() {
+        // Scheme C — Golden-Dawn/Thoth: A=Water, T=Fire, C=Earth, G=Air
+        // (2-bit nucleotide A=0, T=1, C=2, G=3). DR-37-5: code-canonical.
+        assert_eq!(canonical_from_nucleotide(0), 2, "A → Water (Cups)");
+        assert_eq!(canonical_from_nucleotide(1), 4, "T → Fire (Wands)");
+        assert_eq!(canonical_from_nucleotide(2), 1, "C → Earth (Pentacles)");
+        assert_eq!(canonical_from_nucleotide(3), 3, "G → Air (Swords)");
+        // Out of range → invalid sentinel.
+        assert_eq!(canonical_from_nucleotide(4), 0xFF);
+        assert_eq!(canonical_from_nucleotide(255), 0xFF);
+        // Every nucleotide is one of the four operative classical elements —
+        // Akasha never arises from a nucleotide (it emerges from balance).
+        for nuc in 0u8..4 {
+            assert!(
+                canonical_is_operative(canonical_from_nucleotide(nuc)),
+                "nucleotide {nuc} did not map into the operative quartet"
+            );
+        }
+        // The stale clock-spec §15.3 table (scheme E: A=Fire/T=Earth/C=Air/
+        // G=Water) is explicitly NOT what we implement — guard against drift.
+        assert_ne!(canonical_from_nucleotide(0), 4, "A must be Water, not Fire (DR-37-5)");
+        assert_ne!(canonical_from_nucleotide(1), 1, "T must be Fire, not Earth (DR-37-5)");
+    }
+
+    #[test]
+    fn all_converters_land_in_the_single_canonical_b_enum() {
+        // Track 18 invariant: every converter's output is a member of the ONE
+        // canonical-B element enum (0..=5) or the invalid sentinel — never a
+        // raw foreign-scheme integer. This is what lets a single canonical
+        // element-ID enum be asserted at the M2↔M3 bridge.
+        let is_canonical_b = |e: u8| e <= 5 || e == 0xFF;
+        for v in 0u8..=255 {
+            assert!(is_canonical_b(canonical_from_m2_tattva(v)));
+            assert!(is_canonical_b(canonical_from_m3_decan_element(v)));
+            assert!(is_canonical_b(canonical_from_nucleotide(v)));
+        }
     }
 
     #[test]
