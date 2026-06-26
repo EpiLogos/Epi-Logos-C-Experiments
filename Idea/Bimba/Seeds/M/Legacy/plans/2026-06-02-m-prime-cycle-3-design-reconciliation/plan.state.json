@@ -9571,13 +9571,18 @@
       "worktree": null
     },
     "44.T44.2": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T13:52:00Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T13:52:00Z",
+          "text": "Claude opus (interrupted but files landed). block-kit extension: BlockRegistry (247 LOC, type\u2192BlockSpec, owner registrations, assertAccepted, gateway method contracts), BlockHostWidget (70 LOC, ReactWidget enforcing privacyGate), tests (3989 bytes, block-kit.test.mjs). Compiled \u2014 lib/ tree with .d.ts/.js/.js.map. No Builder.io runtime (DR-PSS-2 compliance). Visual-regression baseline scaffolding present."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
