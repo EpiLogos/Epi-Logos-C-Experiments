@@ -1,0 +1,33 @@
+{
+  "name": "@pratibimba/bases-view",
+  "version": "0.1.0",
+  "description": "M-stack BasesView Theia extension (Track 48 §13.D): the C5/CS reflection surface over the coordinate-keyed Bimba index. A ReactWidget + AbstractViewContribution injecting SHARED_BRIDGE_ADAPTER, a pure basesModelFromRecords render service with table/cards/list/image view modes, and a BasesDataSource with static (s1'.vault.read_file snapshot) and dynamic (s2 live query) adapters. Pure read — no canon writes, no S-stack import.",
+  "license": "MIT",
+  "files": ["lib", "src"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "pratibimba", "bases", "bimba", "c5-reflection"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/*.test.mjs"
+  }
+}

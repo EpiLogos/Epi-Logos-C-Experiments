@@ -9877,22 +9877,18 @@
       "worktree": null
     },
     "48.T48.6": {
-      "status": "pending",
-      "updatedAt": "2026-06-25T09:29:42.628Z",
+      "status": "done",
+      "updatedAt": "2026-06-26T00:20:00.000Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-06-26T00:20:00.000Z",
       "evidence": [
         {
-          "at": "2026-06-25T09:05:31.383Z",
-          "text": "Author-gated deferred decision: L2 contract surface (Hen base.ensure / Theia BasesView API / gateway list_by_filter) needs Architect surface ratification before autonomous build. Unblock per-tranche when approved."
-        },
-        {
-          "at": "2026-06-25T09:29:42.628Z",
-          "text": "Contract surface specified in Track 48 \u00a713 (ratify-in-place); ready to implement."
+          "at": "2026-06-26T00:20:00.000Z",
+          "text": "Claude opus: bases-view extension (8 files): bases-view-widget.tsx, bases-data-source.ts, bases-view.ts, frontend-module.ts, bases-model.test.mjs, package.json, tsconfig.json, index.ts"
         }
       ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
