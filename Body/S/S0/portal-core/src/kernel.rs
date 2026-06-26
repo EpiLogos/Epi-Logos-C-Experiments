@@ -29,6 +29,143 @@ pub fn epogdoon_log() -> f32 {
     epogdoon_ratio().ln()
 }
 
+// ── Epogdoon 72→64 bridge projection (37.T37.1) ─────────────────────────────
+//
+// The 9:8 compression as the M2 vibrational address (0..71) descends into the
+// M3 codon space (0..63). The compression law lives in C — m3.h
+// `apply_epogdoon_compression` / `is_evolutionary_gap` and m2.h
+// `m3_epogdoon_expand` — and is surfaced here verbatim through FFI so the
+// kernel-bridge and the Theia EpogdoonBridgeEngine read ONE authority and never
+// recompute the fold locally. (epi-lib is linked crate-wide via `use epi_lib as
+// _;` in transcription.rs.)
+
+/// The Parashakti 72-Invariant — every M2 vibrational structure resolves here.
+pub const EPOGDOON_M2_ADDRESS_COUNT: u8 = 72;
+/// The Mahamaya 64-Invariant — the codon space (0..63).
+pub const EPOGDOON_M3_CODON_COUNT: u8 = 64;
+/// TSX-mirrored *expected* fold-point count (`EpogdoonBridgeEngine`
+/// `EPOGDOON_FOLD_POINT_COUNT`). Documentation-only parity constant — the live
+/// fold count is whatever the C `is_evolutionary_gap` law actually reports, not
+/// this value. The canonical structure is 8 9:8 collisions (the M3 "8 missing
+/// states"); this 9 is an off-by-one flagged for the owning M3 / Track-37 spec.
+pub const EPOGDOON_FOLD_POINT_COUNT: u8 = 9;
+
+extern "C" {
+    fn apply_epogdoon_compression(m2_idx_0_to_71: u8) -> u8;
+    fn is_evolutionary_gap(m2_vibration_index: u8) -> bool;
+    fn m3_epogdoon_expand(val_64: u8) -> u8;
+}
+
+/// The typed projection returned by `kernelBridge.m2.epogdoonProjection(address72)`.
+///
+/// Mirrors the Theia `EpogdoonBridgeProjection` contract (camelCase fields):
+/// `apply_epogdoon_compression` (descending M2→M3), `is_evolutionary_gap` (the
+/// 9:8 fold detector), and the `m3_epogdoon_expand` round-trip back into the
+/// 72-space — all run from the C epogdoon law, never recomputed in Rust.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EpogdoonBridgeProjection {
+    /// Compressed M3 codon index (0..63) — C `apply_epogdoon_compression(address72)`.
+    pub compressed_codon: u8,
+    /// True at the nine fold-points — C `is_evolutionary_gap(address72)`.
+    pub is_evolutionary_gap: bool,
+    /// Round-trip back into the 72-space — C `m3_epogdoon_expand(compressedCodon)`.
+    pub expanded_back: u8,
+}
+
+impl EpogdoonBridgeProjection {
+    /// Project one M2 vibrational address (0..71) into the codon lattice by
+    /// running the C compression law. The address is taken modulo 72 so the
+    /// projection is total over any caller-supplied index.
+    pub fn from_address72(address72: u8) -> Self {
+        let address72 = address72 % EPOGDOON_M2_ADDRESS_COUNT;
+        // SAFETY: the three epogdoon functions (epi-lib m2.c/m3.c) are pure
+        // integer transforms with no global state; every u8 is a valid input.
+        let compressed_codon = unsafe { apply_epogdoon_compression(address72) };
+        let folds = unsafe { is_evolutionary_gap(address72) };
+        let expanded_back = unsafe { m3_epogdoon_expand(compressed_codon) };
+        Self {
+            compressed_codon,
+            is_evolutionary_gap: folds,
+            expanded_back,
+        }
+    }
+}
+
+/// The full 72-entry epogdoon descent lattice, address-ordered.
+pub fn epogdoon_bridge_lattice() -> [EpogdoonBridgeProjection; EPOGDOON_M2_ADDRESS_COUNT as usize] {
+    std::array::from_fn(|address72| EpogdoonBridgeProjection::from_address72(address72 as u8))
+}
+
+#[cfg(test)]
+mod epogdoon_bridge_tests {
+    use super::{
+        epogdoon_bridge_lattice, EpogdoonBridgeProjection, EPOGDOON_M2_ADDRESS_COUNT,
+        EPOGDOON_M3_CODON_COUNT,
+    };
+    use std::collections::HashSet;
+
+    /// The projection faithfully surfaces the C epogdoon law for every M2
+    /// address (0..71): compression, the `is_evolutionary_gap` flag, and the
+    /// round-trip expansion all equal what the C functions compute. This is the
+    /// "round-trips against C functions for all 72 indices" verification — the
+    /// kernel never recomputes the fold in Rust.
+    #[test]
+    fn projection_round_trips_against_c_for_all_72_indices() {
+        let lattice = epogdoon_bridge_lattice();
+        for address72 in 0..EPOGDOON_M2_ADDRESS_COUNT {
+            let cell = lattice[address72 as usize];
+            assert_eq!(cell, EpogdoonBridgeProjection::from_address72(address72));
+            // C apply_epogdoon_compression(i) = (i*8)/9, always inside 0..63.
+            assert_eq!(cell.compressed_codon, (address72 as u16 * 8 / 9) as u8);
+            assert!(cell.compressed_codon < EPOGDOON_M3_CODON_COUNT);
+            // C m3_epogdoon_expand(c) = (c*9)/8.
+            assert_eq!(
+                cell.expanded_back,
+                (cell.compressed_codon as u16 * 9 / 8) as u8
+            );
+            // C is_evolutionary_gap(i) ⇔ the round-trip does not return to i.
+            assert_eq!(cell.is_evolutionary_gap, cell.expanded_back != address72);
+        }
+    }
+
+    /// Documents the canonical C numbers the bridge surfaces. The literal C
+    /// `is_evolutionary_gap` (round-trip failure) flags 64 of the 72 addresses;
+    /// only the eight multiples of nine round-trip cleanly. The eight 9:8
+    /// collisions are the "8 missing states" the M3 header (FR 2.3.6) names as
+    /// driving the evolutionary spiral, and excluding them leaves exactly 64
+    /// distinct codons — the count the Theia EpogdoonBridgeEngine expects.
+    ///
+    /// NOTE: this differs from the plan's "exactly 9" and the TSX
+    /// `EPOGDOON_FOLD_POINT_COUNT = 9`; that 9 is an off-by-one of the canonical
+    /// 8 collisions and is flagged for the owning M3 / Track-37 spec rather than
+    /// re-derived in Rust (the C law is the single authority).
+    #[test]
+    fn epogdoon_fold_structure_matches_canonical_c() {
+        let lattice = epogdoon_bridge_lattice();
+        let c_gap_count = lattice.iter().filter(|cell| cell.is_evolutionary_gap).count();
+        assert_eq!(c_gap_count, 64, "literal C is_evolutionary_gap flags 64/72");
+
+        let mut collisions = 0usize;
+        let mut distinct_non_collision = HashSet::new();
+        let mut prev: Option<u8> = None;
+        for cell in lattice.iter() {
+            if Some(cell.compressed_codon) == prev {
+                collisions += 1;
+            } else {
+                distinct_non_collision.insert(cell.compressed_codon);
+            }
+            prev = Some(cell.compressed_codon);
+        }
+        assert_eq!(collisions, 8, "eight 9:8 collisions (the 'missing states')");
+        assert_eq!(
+            distinct_non_collision.len(),
+            64,
+            "non-collision descents reach all 64 codons"
+        );
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum KernelPhase {

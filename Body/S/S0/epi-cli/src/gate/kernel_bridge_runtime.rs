@@ -6,10 +6,10 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
 use portal_core::{
-    DepositionAnchorProjection, KernelPhase, KleinFlipEvent, MPrimePerformanceEvent,
-    MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
-    MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor, RelationFamily,
-    VakAddress,
+    epogdoon_bridge_lattice, DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase,
+    KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
+    MathemeNodalConstraint, MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor,
+    RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -24,6 +24,12 @@ pub const KERNEL_BRIDGE_TAURI_ADAPTER: &str = "Tauri 0/1 surface adapter";
 pub const KERNEL_BRIDGE_SAFE_PROFILE_PRIVACY: &str = "safe-public-current-kernel-tick";
 pub const KERNEL_BRIDGE_AGENT_PRIVACY: &str = "public_current_with_graph_provenance";
 pub const M1_PROFILE_TO_PERFORMANCE_STREAM: &str = "S0.kernel-bridge.m1-profile-to-performance";
+
+/// Bridge-contract identifier for the epogdoon 72→64 descent projection
+/// (37.T37.1). The Theia EpogdoonBridgeEngine reads this single authority and
+/// never recomputes the 9:8 fold locally.
+pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION: &str =
+    "kernelBridge.m2.epogdoonProjection(address72)";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -804,6 +810,39 @@ pub fn end_to_end_acceptance_report(
             "Lite `/body` and full Theia clients compare profileGeneration and privacyClass from bridge events.",
             "M5-4 capabilities deposit evidence through governed gateway methods, carrying VAK route lineage and profile generation."
         ]
+    })
+}
+
+/// `kernelBridge.m2.epogdoonProjection(address72)` — project one M2 vibrational
+/// address (0..71) into the M3 codon lattice. Runs the C epogdoon law through
+/// portal-core (`apply_epogdoon_compression` / `is_evolutionary_gap` /
+/// `m3_epogdoon_expand`); the address is taken modulo 72 so the projector is
+/// total. Mirrors the Theia `M2EpogdoonProjector` contract exactly.
+pub fn m2_epogdoon_projection(address72: u8) -> EpogdoonBridgeProjection {
+    EpogdoonBridgeProjection::from_address72(address72)
+}
+
+/// The full 72-entry descent lattice surfaced by the bridge, address-ordered.
+pub fn m2_epogdoon_projection_lattice() -> Vec<EpogdoonBridgeProjection> {
+    epogdoon_bridge_lattice().to_vec()
+}
+
+/// Typed-JSON form of `kernelBridge.m2.epogdoonProjection(address72)` —
+/// `{ compressedCodon, isEvolutionaryGap, expandedBack }` for the Theia adapter.
+pub fn typed_json_m2_epogdoon_projection(address72: u8) -> Value {
+    serde_json::to_value(m2_epogdoon_projection(address72))
+        .expect("EpogdoonBridgeProjection serializes")
+}
+
+/// Typed-JSON form of the full 72→64 descent lattice for the Theia adapter,
+/// carrying the bridge-contract identifier and the address-ordered cells.
+pub fn typed_json_m2_epogdoon_lattice() -> Value {
+    json!({
+        "contract": KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION,
+        "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+        "source": KERNEL_BRIDGE_SOURCE,
+        "addressCount": EPOGDOON_M2_ADDRESS_COUNT,
+        "cells": m2_epogdoon_projection_lattice(),
     })
 }
 
