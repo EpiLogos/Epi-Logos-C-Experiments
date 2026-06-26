@@ -67,6 +67,12 @@ import {
     assertGraphitiLiveStateProvenanceProtected
 } from '@pratibimba/integrated-composition/graphiti-source-guard';
 import { ContemplationFlowDirector } from './contemplation-flow-director';
+import {
+    AnuttaraUnifiedRecognitionView,
+    M5EbmFeatureContextView,
+    buildRecognitionHandoffModel,
+    type RecognitionHandoffModel
+} from './recognition-handoff';
 
 export type PersonalPerspectiveRole = PerspectiveRoleDisplayLabel;
 
@@ -138,6 +144,9 @@ export interface PersonalCompositionModel {
     readonly personalRecognition: PersonalRecognitionModel;
     readonly canonRecognitionEventCount: number;
     readonly latestCanonRecognitionCoordinate: string | null;
+    /** 36.T36.5 — the trace→recognition handoff: M4 composed handle → M5 EBM
+     *  feature context → M0 unified recognition. */
+    readonly recognitionHandoff: RecognitionHandoffModel;
     readonly slots: readonly PersonalCompositionSlotModel[];
     readonly blockers: readonly PersonalCompositionBlockerId[];
 }
@@ -258,6 +267,7 @@ export function buildPersonalCompositionModel(
         personalRecognition,
         canonRecognitionEventCount: readCanonRecognitionStream(profile).length,
         latestCanonRecognitionCoordinate: readLatestCanonRecognitionCoordinate(profile),
+        recognitionHandoff: buildRecognitionHandoffModel(profile, handles.qComposedHandle),
         slots,
         blockers: Object.freeze([...blockers])
     });
@@ -390,6 +400,7 @@ const PersonalCymaticCenterSlot: React.FC<{ readonly model: PersonalCompositionM
             data-privacy-class="protected_local_handle_only"
             data-q-composed-handle={model.handles.qComposedHandle ?? 'pending-q-composed'}
             data-psychoid-field-handle={model.handles.psychoidFieldHandle ?? 'pending-psychoid-cymatic-solver'}
+            data-recognition-handoff-source={model.recognitionHandoff.m4ComposedHandle ?? 'pending-q-composed'}
         >
             {slot.blocker ? (
                 <IntegratedEmptyState
@@ -436,6 +447,10 @@ const MahamayaRecognitionRightSlot: React.FC<{ readonly model: PersonalCompositi
             ) : (
                 <RecognitionHandleSummary model={model} />
             )}
+            <M5EbmFeatureContextView
+                context={model.recognitionHandoff.m5EbmFeatureContext}
+                stale={model.recognitionHandoff.stale}
+            />
             <SlotStatus slot={slot} />
         </section>
     );
@@ -454,6 +469,7 @@ const AnuttaraGroundingPanel: React.FC<{ readonly model: PersonalCompositionMode
             style={{ minHeight: 64 }}
         >
             <VirtueWitnessPanel profile={profile} />
+            <AnuttaraUnifiedRecognitionView recognition={model.recognitionHandoff.m0UnifiedRecognition} />
             <SlotStatus slot={slot} />
         </footer>
     );

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-26T01:28:08.891Z",
+  "updatedAt": "2026-06-26T01:35:18.083Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6578,11 +6578,16 @@
       "worktree": null
     },
     "36.T36.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T01:35:18.033Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T01:35:18.033Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T01:35:18.033Z",
+          "text": "recognition-handoff.tsx created: buildRecognitionHandoffModel reads AnuttaraPentadicRuntimeTrace from profile; M4 hands qComposedHandle forward; M5EbmFeatureContextView consumes trace as epii-ebm-position-5 feature context (right slot); AnuttaraUnifiedRecognitionView displays unified recognition (M0 under slot). recognitionHandoff wired into PersonalCompositionModel. grep -rn 'recognitionHandoff|qComposedHandle|AnuttaraPentadicRuntimeTrace' src/ -> all three present across recognition-handoff.tsx + personal-recognition-composition.tsx."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
