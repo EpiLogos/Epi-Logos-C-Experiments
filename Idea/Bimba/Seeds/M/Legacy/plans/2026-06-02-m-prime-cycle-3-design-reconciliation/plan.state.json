@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-26T00:32:00.175Z",
+  "updatedAt": "2026-06-26T00:35:41.852Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2844,11 +2844,16 @@
       "worktree": null
     },
     "17.T17.18": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T00:35:41.802Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T00:35:41.802Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T00:35:41.802Z",
+          "text": "reconcile_rename added to hen-compiler-core/src/wikilinks.rs:233 (+ ReconciledDoc/RenameRefusal/RenameRefusalReason types, rewrite_wikilink_titles, wikilink_title_from_path, collect_markdown_files); re-exported from lib.rs:34. Literal-text rewrite moved out of gate/s1_hen.rs per S1-ARCHITECTURE §5.3 — Hen is now both integrity & mutation authority. Verify: 'cargo check -p epi-s1-hen-compiler-core' Finished dev profile OK; 'grep -rn reconcile_rename Body/S/S1/hen-compiler-core/src/' -> wikilinks.rs:233 + lib.rs:34."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

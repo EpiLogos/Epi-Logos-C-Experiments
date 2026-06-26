@@ -30,3 +30,7 @@ pub use smart_env::{
     suggest_link_candidates, LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
     LinkCandidateResponse,
 };
+pub use wikilinks::{
+    parse_wikilinks, reconcile_rename, rewrite_wikilink_titles, wikilink_title_from_path,
+    ReconciledDoc, RenameRefusal, RenameRefusalReason, Wikilink, WikilinkTarget,
+};
