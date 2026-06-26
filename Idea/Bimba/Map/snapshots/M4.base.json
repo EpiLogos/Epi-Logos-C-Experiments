@@ -1,0 +1,1110 @@
+{
+  "coordinate": "M4",
+  "c_4_artifact_role": "base-view",
+  "c_3_projected_from": "Idea/Bimba/Map",
+  "c_3_projected_at": "2026-06-17",
+  "row_count": 63,
+  "rows": [
+    {
+      "coordinate": "M4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Mahamaya Identity Matrix",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0-0]]",
+        "[[M4.0-1]]",
+        "[[M4.0-2]]",
+        "[[M4.0-3]]",
+        "[[M4.0-4]]",
+        "[[M4.0-5]]",
+        "[[M4.1]]",
+        "[[M4.2]]",
+        "[[M4.3]]",
+        "[[M4.4]]",
+        "[[M4.4.4.4]]",
+        "[[M4]]",
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0"
+    },
+    {
+      "coordinate": "M4.0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Birthdate Encoding",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-0"
+    },
+    {
+      "coordinate": "M4.0-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Astrological Chart",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-1"
+    },
+    {
+      "coordinate": "M4.0-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Jungian Assessment",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-2"
+    },
+    {
+      "coordinate": "M4.0-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Gene Keys Profile",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-3"
+    },
+    {
+      "coordinate": "M4.0-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Human Design Profile",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-4"
+    },
+    {
+      "coordinate": "M4.0-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetypal Quintessence",
+      "c_0_source_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.0-5"
+    },
+    {
+      "coordinate": "M4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Sympathetic Medicine",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1-0]]",
+        "[[M4.1-1]]",
+        "[[M4.1-2]]",
+        "[[M4.1-3]]",
+        "[[M4.1-4]]",
+        "[[M4.1-5]]",
+        "[[M4.2]]",
+        "[[M4.3]]",
+        "[[M4.5]]",
+        "[[M4]]",
+        "[[M4.0]]",
+        "[[M4.2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1"
+    },
+    {
+      "coordinate": "M4.1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Elemental Ground",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-0"
+    },
+    {
+      "coordinate": "M4.1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Energy-Body Architecture",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-1"
+    },
+    {
+      "coordinate": "M4.1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Materia & Reagents",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-2"
+    },
+    {
+      "coordinate": "M4.1-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Operations & Techne",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-3"
+    },
+    {
+      "coordinate": "M4.1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Temporal Astrological Intelligence",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]",
+        "[[M4.2]]",
+        "[[M4.3]]",
+        "[[M4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-4"
+    },
+    {
+      "coordinate": "M4.1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Integration, Safety & Feedback",
+      "c_0_source_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.1-5"
+    },
+    {
+      "coordinate": "M4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Divinatory Frameworks",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2-0]]",
+        "[[M4.2-1]]",
+        "[[M4.2-2]]",
+        "[[M4.2-3]]",
+        "[[M4.2-4]]",
+        "[[M4.2-5]]",
+        "[[M4.3]]",
+        "[[M4.5]]",
+        "[[M4]]",
+        "[[M4.0]]",
+        "[[M4.1]]",
+        "[[M4.1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2"
+    },
+    {
+      "coordinate": "M4.2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Common Substrate",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.1]]",
+        "[[M4.3]]",
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-0"
+    },
+    {
+      "coordinate": "M4.2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Tarot Engines",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-1"
+    },
+    {
+      "coordinate": "M4.2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "I-Ching Integration",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-2"
+    },
+    {
+      "coordinate": "M4.2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Casting & Randomness Layer",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-3"
+    },
+    {
+      "coordinate": "M4.2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Interpretation Layer",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-4"
+    },
+    {
+      "coordinate": "M4.2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Divinatory Hygiene & Pedagogy",
+      "c_0_source_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.2-5"
+    },
+    {
+      "coordinate": "M4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "Mediating Transformation",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3-0]]",
+        "[[M4.3-1]]",
+        "[[M4.3-2]]",
+        "[[M4.3-3]]",
+        "[[M4.3-4]]",
+        "[[M4.3-5]]",
+        "[[M4.4]]",
+        "[[M4.1]]",
+        "[[M4.5]]",
+        "[[M4]]",
+        "[[M4.0]]",
+        "[[M4.1-4]]",
+        "[[M4.2]]",
+        "[[M4.2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3"
+    },
+    {
+      "coordinate": "M4.3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Cycle Engine",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-0"
+    },
+    {
+      "coordinate": "M4.3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Operational Grammar (Alchemy)",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-1"
+    },
+    {
+      "coordinate": "M4.3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Dialogical & Inquiry Containers",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3-2.0]]",
+        "[[M4.3-2.1]]",
+        "[[M4.3-2.2]]",
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-2"
+    },
+    {
+      "coordinate": "M4.3-2.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Bohmian Dialogue",
+      "c_0_source_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-2.0"
+    },
+    {
+      "coordinate": "M4.3-2.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Native Talking Circle",
+      "c_0_source_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-2.1"
+    },
+    {
+      "coordinate": "M4.3-2.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Diamond Approach Inquiry",
+      "c_0_source_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-2.2"
+    },
+    {
+      "coordinate": "M4.3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Control/Chaos & Safety",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-3"
+    },
+    {
+      "coordinate": "M4.3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Protocol Library (Storey Packets)",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-4"
+    },
+    {
+      "coordinate": "M4.3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Telemetry & Phase History",
+      "c_0_source_coordinates": [
+        "[[M4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.4.4]]",
+        "[[M4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.3-5"
+    },
+    {
+      "coordinate": "M4.4",
+      "c_4_artifact_role": "map-index",
+      "title": "Context & Lenses",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.0]]",
+        "[[M4.4.1]]",
+        "[[M4.4.2]]",
+        "[[M4.4.3]]",
+        "[[M4.4.4]]",
+        "[[M4.4.5]]",
+        "[[M4.5]]",
+        "[[M4.3]]",
+        "[[M4]]",
+        "[[M4.0]]",
+        "[[M4.1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4"
+    },
+    {
+      "coordinate": "M4.4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Gebser Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.0"
+    },
+    {
+      "coordinate": "M4.4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Ontological Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.1"
+    },
+    {
+      "coordinate": "M4.4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Epistemological Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.2"
+    },
+    {
+      "coordinate": "M4.4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "Jungian Depth Psychology Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-0]]",
+        "[[M4.4.3-1]]",
+        "[[M4.4.3-2]]",
+        "[[M4.4.3-3]]",
+        "[[M4.4.3-4]]",
+        "[[M4.4.3-5]]",
+        "[[M2-1]]",
+        "[[M4.4.4.4]]",
+        "[[M]]",
+        "[[M4.4]]",
+        "[[M4.4.3-0-5]]",
+        "[[M4.4.4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3"
+    },
+    {
+      "coordinate": "M4.4.3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetypal Foundation",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-0-0]]",
+        "[[M4.4.3-0-1]]",
+        "[[M4.4.3-0-2]]",
+        "[[M4.4.3-0-3]]",
+        "[[M4.4.3-0-4]]",
+        "[[M4.4.3-0-5]]",
+        "[[M4.4.3-1]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.4]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-5]]",
+        "[[M4.4.3-5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-0"
+    },
+    {
+      "coordinate": "M4.4.3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Psychological Typology",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-1-0]]",
+        "[[M4.4.3-1-1]]",
+        "[[M4.4.3-1-2]]",
+        "[[M4.4.3-1-3]]",
+        "[[M4.4.3-1-4]]",
+        "[[M4.4.3-1-5]]",
+        "[[M4.4.3-2]]",
+        "[[M4.4.4]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-1"
+    },
+    {
+      "coordinate": "M4.4.3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Psychodynamics & Synchronicity",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-2-0]]",
+        "[[M4.4.3-2-1]]",
+        "[[M4.4.3-2-2]]",
+        "[[M4.4.3-2-3]]",
+        "[[M4.4.3-2-4]]",
+        "[[M4.4.3-2-5]]",
+        "[[M4.4.3-3]]",
+        "[[M1-3]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-2"
+    },
+    {
+      "coordinate": "M4.4.3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Alchemical Transformation",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-3-0]]",
+        "[[M4.4.3-3-1]]",
+        "[[M4.4.3-3-2]]",
+        "[[M4.4.3-3-3]]",
+        "[[M4.4.3-3-4]]",
+        "[[M4.4.3-3-5]]",
+        "[[M4.4.3-4]]",
+        "[[M4.4.4.4]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-3"
+    },
+    {
+      "coordinate": "M4.4.3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Self-Expression",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-4.0]]",
+        "[[M4.4.3-4.1]]",
+        "[[M4.4.3-4.2]]",
+        "[[M4.4.3-4.3]]",
+        "[[M4.4.3-4.4]]",
+        "[[M4.4.3-4.5]]",
+        "[[M4.4.3-5]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-4"
+    },
+    {
+      "coordinate": "M4.4.3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Transcendent Integration",
+      "c_0_source_coordinates": [
+        "[[M4.4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.3-5-0]]",
+        "[[M4.4.3-5-1]]",
+        "[[M4.4.3-5-2]]",
+        "[[M4.4.3-5-3]]",
+        "[[M4.4.3-5-4]]",
+        "[[M4.4.3-5-5]]",
+        "[[M4.4.3-0]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.3-5"
+    },
+    {
+      "coordinate": "M4.4.4",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenological Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4.4.0]]",
+        "[[M4.4.4.1]]",
+        "[[M4.4.4.2]]",
+        "[[M4.4.4.3]]",
+        "[[M4.4.4.4]]",
+        "[[M4.4.4.5]]",
+        "[[M4.4]]",
+        "[[M4.4.3-0]]",
+        "[[M4.4.3-0-1]]",
+        "[[M4.4.3-1]]",
+        "[[M4.4.3-1-1]]",
+        "[[M4.4.3-1-2]]",
+        "[[M4.4.3-1-3]]",
+        "[[M4.4.3-1-4]]",
+        "[[M4.4.3-3-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4"
+    },
+    {
+      "coordinate": "M4.4.4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenology of the Pre-Categorical",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0]]",
+        "[[M4.4.4.1]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-1-7]]",
+        "[[M2-2-2-0]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-2-1]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.0"
+    },
+    {
+      "coordinate": "M4.4.4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenology of Primordial Differentiation",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1]]",
+        "[[M4.4.4.2]]",
+        "[[M2-2-0-3]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-2-1]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.1"
+    },
+    {
+      "coordinate": "M4.4.4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenology of Temporal Sedimentation",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2]]",
+        "[[M4.4.4.3]]",
+        "[[M2-2-1-5]]",
+        "[[M2-2-1-6]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-2-0]]",
+        "[[M1-3]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.2"
+    },
+    {
+      "coordinate": "M4.4.4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenology of the Symbolic Body",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M3]]",
+        "[[M4.4.4.4]]",
+        "[[M2-2-2-4]]",
+        "[[M2-2-2-4-(0∕1)]]",
+        "[[M2-2-2-2]]",
+        "[[M2-2-2-3]]",
+        "[[M2-2-2-1]]",
+        "[[M2-2-2-5]]",
+        "[[M4.4.3]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.3"
+    },
+    {
+      "coordinate": "M4.4.4.4",
+      "c_4_artifact_role": "map-index",
+      "title": "Personal Pratibimba",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0]]",
+        "[[M4]]",
+        "[[M4.4.4.5]]",
+        "[[M4.5]]",
+        "[[M2-2-2-5]]",
+        "[[M2-2]]",
+        "[[M2-2-2-1]]",
+        "[[M2-2-2-2]]",
+        "[[M2-2-2-3]]",
+        "[[M2-2-1-7]]",
+        "[[M4.0]]",
+        "[[M4.3-5]]",
+        "[[M4.4.3]]",
+        "[[M4.4.3-0]]",
+        "[[M4.4.3-0-1]]",
+        "[[M4.4.3-0-3]]",
+        "[[M4.4.3-0-5]]",
+        "[[M4.4.3-3]]",
+        "[[M4.4.3-3-5]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.4"
+    },
+    {
+      "coordinate": "M4.4.4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "Phenomenology of Pratyabhijna",
+      "c_0_source_coordinates": [
+        "[[M4.4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5]]",
+        "[[M4.4.4.0]]",
+        "[[M5-5]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-0-3]]",
+        "[[M2-2-0-4]]",
+        "[[M2-2-0-5]]",
+        "[[M2-2-0]]",
+        "[[M1-3]]",
+        "[[M0]]",
+        "[[M3-1]]",
+        "[[M4.4.4]]",
+        "[[M4.4.4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.4.5"
+    },
+    {
+      "coordinate": "M4.4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "Trika/Kashmir Śaivism Lens",
+      "c_0_source_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.4.5"
+    },
+    {
+      "coordinate": "M4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "Epii Integration",
+      "c_0_source_coordinates": [
+        "[[M4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5-0]]",
+        "[[M4.5-1]]",
+        "[[M4.5-2]]",
+        "[[M4.5-3]]",
+        "[[M4.5-4]]",
+        "[[M4.5-5]]",
+        "[[M4.5.0]]",
+        "[[M4.5.1]]",
+        "[[M4.5.2]]",
+        "[[M4.5.3]]",
+        "[[M4.5.4]]",
+        "[[M4.5.5]]",
+        "[[M4.0]]",
+        "[[M4]]",
+        "[[M4.1]]",
+        "[[M4.2]]",
+        "[[M4.3]]",
+        "[[M4.4]]",
+        "[[M4.4.4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5"
+    },
+    {
+      "coordinate": "M4.5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Curriculum Map",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-0"
+    },
+    {
+      "coordinate": "M4.5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Core Epi-Logos Voice",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-1"
+    },
+    {
+      "coordinate": "M4.5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Method Transparency Lab",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-2"
+    },
+    {
+      "coordinate": "M4.5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Integration Lab",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-3"
+    },
+    {
+      "coordinate": "M4.5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Pedagogy Lab",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-4"
+    },
+    {
+      "coordinate": "M4.5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Logos Cycle Engine",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5-5"
+    },
+    {
+      "coordinate": "M4.5.0",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.0",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.0"
+    },
+    {
+      "coordinate": "M4.5.1",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.1",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.1"
+    },
+    {
+      "coordinate": "M4.5.2",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.2",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.2"
+    },
+    {
+      "coordinate": "M4.5.3",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.3",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.3"
+    },
+    {
+      "coordinate": "M4.5.4",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.4",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.4"
+    },
+    {
+      "coordinate": "M4.5.5",
+      "c_4_artifact_role": "map-index",
+      "title": "M4.5.5",
+      "c_0_source_coordinates": [
+        "[[M4.5]]"
+      ],
+      "c_0_related_coordinates": [],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/nara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M4.5.5"
+    }
+  ]
+}

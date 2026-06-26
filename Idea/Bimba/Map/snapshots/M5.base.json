@@ -1,0 +1,492 @@
+{
+  "coordinate": "M5",
+  "c_4_artifact_role": "base-view",
+  "c_3_projected_from": "Idea/Bimba/Map",
+  "c_3_projected_at": "2026-06-17",
+  "row_count": 30,
+  "rows": [
+    {
+      "coordinate": "M5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Transcendent Identity",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M5-0-1]]",
+        "[[M5-0-2]]",
+        "[[M5-0-3]]",
+        "[[M5-0-4]]",
+        "[[M5-0-5]]",
+        "[[M5-1]]",
+        "[[M5]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0"
+    },
+    {
+      "coordinate": "M5-0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "#0 Transcendent Foundation",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0]]",
+        "[[M1]]",
+        "[[M2]]",
+        "[[M3]]",
+        "[[M4]]",
+        "[[M5]]",
+        "[[M]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-0"
+    },
+    {
+      "coordinate": "M5-0-1",
+      "c_4_artifact_role": "map-index",
+      "title": "#1 Egoic Identity",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-1"
+    },
+    {
+      "coordinate": "M5-0-2",
+      "c_4_artifact_role": "map-index",
+      "title": "#2 Collective Identity",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-2]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-2"
+    },
+    {
+      "coordinate": "M5-0-3",
+      "c_4_artifact_role": "map-index",
+      "title": "#3 Soul Identity",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-3]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-3"
+    },
+    {
+      "coordinate": "M5-0-4",
+      "c_4_artifact_role": "map-index",
+      "title": "#4 Self Identity",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-4"
+    },
+    {
+      "coordinate": "M5-0-5",
+      "c_4_artifact_role": "map-index",
+      "title": "#5 Integral Identity",
+      "c_0_source_coordinates": [
+        "[[M5-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-5]]",
+        "[[M5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-0-5"
+    },
+    {
+      "coordinate": "M5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Epi-Logos",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1-0]]",
+        "[[M5-1-1]]",
+        "[[M5-1-2]]",
+        "[[M5-1-3]]",
+        "[[M5-1-4]]",
+        "[[M5-1-5]]",
+        "[[M5-2]]",
+        "[[M5]]",
+        "[[M5-0]]",
+        "[[M5-0-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1"
+    },
+    {
+      "coordinate": "M5-1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #0: The Vision and Crisis of Consciousness",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-0"
+    },
+    {
+      "coordinate": "M5-1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #1: The Dual Approach to Intelligence",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-1"
+    },
+    {
+      "coordinate": "M5-1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #2: TechnoScience, Power and Praxis",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-2"
+    },
+    {
+      "coordinate": "M5-1-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #3: The Coming Leap and Symbolic Integration",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-3"
+    },
+    {
+      "coordinate": "M5-1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #4: Historical Embodiment and Cultural Integration",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-4"
+    },
+    {
+      "coordinate": "M5-1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Position #5: Epi-logos as Future Technology and Culture",
+      "c_0_source_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-1-5"
+    },
+    {
+      "coordinate": "M5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva-",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-3]]",
+        "[[M5]]",
+        "[[M5-0-2]]",
+        "[[M5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-2"
+    },
+    {
+      "coordinate": "M5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "-Shakti",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]",
+        "[[M5]]",
+        "[[M5-0-3]]",
+        "[[M5-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-3"
+    },
+    {
+      "coordinate": "M5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva-Shakti",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4.0]]",
+        "[[M5-4.1]]",
+        "[[M5-4.2]]",
+        "[[M5-4.3]]",
+        "[[M5-4.4]]",
+        "[[M5-4.5]]",
+        "[[M5-5]]",
+        "[[M5]]",
+        "[[M5-0-4]]",
+        "[[M5-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4"
+    },
+    {
+      "coordinate": "M5-4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Anuttara Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.0"
+    },
+    {
+      "coordinate": "M5-4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Paramasiva Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.1"
+    },
+    {
+      "coordinate": "M5-4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Parashakti Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.2"
+    },
+    {
+      "coordinate": "M5-4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "Mahamaya Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.3"
+    },
+    {
+      "coordinate": "M5-4.4",
+      "c_4_artifact_role": "map-index",
+      "title": "Nara Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.4"
+    },
+    {
+      "coordinate": "M5-4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "Epii Agent",
+      "c_0_source_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-4.5"
+    },
+    {
+      "coordinate": "M5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Integral Identity",
+      "c_0_source_coordinates": [
+        "[[M5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-5-0]]",
+        "[[M5-5-1]]",
+        "[[M5-5-2]]",
+        "[[M5-5-3]]",
+        "[[M5-5-4]]",
+        "[[M5-5-5]]",
+        "[[M5-0]]",
+        "[[M4.4.4]]",
+        "[[M0]]",
+        "[[M1]]",
+        "[[M4]]",
+        "[[M5]]",
+        "[[M5-0-5]]",
+        "[[M5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5"
+    },
+    {
+      "coordinate": "M5-5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "#0 A-logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-0]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-0"
+    },
+    {
+      "coordinate": "M5-5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "#1 Pro-logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-1]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-1"
+    },
+    {
+      "coordinate": "M5-5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "#2 Dia-logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-2]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-2"
+    },
+    {
+      "coordinate": "M5-5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "#3 Logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-3]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-3"
+    },
+    {
+      "coordinate": "M5-5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "#4 Epi-logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-4]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-4"
+    },
+    {
+      "coordinate": "M5-5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "#5 An-a-logos",
+      "c_0_source_coordinates": [
+        "[[M5-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-5]]",
+        "[[M5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/epii-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M5-5-5"
+    }
+  ]
+}

@@ -1,0 +1,3588 @@
+{
+  "coordinate": "M2",
+  "c_4_artifact_role": "base-view",
+  "c_3_projected_from": "Idea/Bimba/Map",
+  "c_3_projected_at": "2026-06-17",
+  "row_count": 134,
+  "rows": [
+    {
+      "coordinate": "M2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetypal Numerical Ground",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1]]",
+        "[[M0]]",
+        "[[M1-0]]",
+        "[[M1-2]]",
+        "[[M1-3]]",
+        "[[M1-4]]",
+        "[[M0-3-10]]",
+        "[[M1-2-0]]",
+        "[[M1-2-1]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M2]]",
+        "[[M2-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-0"
+    },
+    {
+      "coordinate": "M2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "MEF - Meta-Logikon",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-0]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-3]]",
+        "[[M2-1-4]]",
+        "[[M2-1-5]]",
+        "[[M2-2]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M0-5]]",
+        "[[M5]]",
+        "[[M1-2]]",
+        "[[M0-3-6]]",
+        "[[M1-4.5]]",
+        "[[M1-5-2]]",
+        "[[M2-0]]",
+        "[[M2]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-0-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1"
+    },
+    {
+      "coordinate": "M2-1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetypal-Numerical Foundation",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-0-5]]",
+        "[[M1]]",
+        "[[M2-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M0-3]]",
+        "[[M0-3-6]]",
+        "[[M1-4]]",
+        "[[M1-0]]",
+        "[[M2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0"
+    },
+    {
+      "coordinate": "M2-1-0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Originating potential",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M0]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-3]]",
+        "[[M2-1-4]]",
+        "[[M2-1]]",
+        "[[M2-1-0-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-0"
+    },
+    {
+      "coordinate": "M2-1-0-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Material grounding (what)",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-3]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-1"
+    },
+    {
+      "coordinate": "M2-1-0-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Active process (how)",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M2]]",
+        "[[M2-1-1]]",
+        "[[M2-1-3]]",
+        "[[M2-1-4]]",
+        "[[M2-1]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-2"
+    },
+    {
+      "coordinate": "M2-1-0-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Mediating identity (who)",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M3]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-4]]",
+        "[[M2-1]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-3"
+    },
+    {
+      "coordinate": "M2-1-0-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Contextual field (when/where)",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-4]]",
+        "[[M4]]",
+        "[[M1-4.4]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-3]]",
+        "[[M2-1]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-4"
+    },
+    {
+      "coordinate": "M2-1-0-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Purpose (why)",
+      "c_0_source_coordinates": [
+        "[[M2-1-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M5]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-3]]",
+        "[[M2-1-4]]",
+        "[[M2-1]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-0-5"
+    },
+    {
+      "coordinate": "M2-1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Causal Lens",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-1-0]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1"
+    },
+    {
+      "coordinate": "M2-1-1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Primordial cause",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M2-1-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-0"
+    },
+    {
+      "coordinate": "M2-1-1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Material cause (what)",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M2-2-2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-1"
+    },
+    {
+      "coordinate": "M2-1-1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Efficient cause (how)",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M2-1-1]]",
+        "[[M2-2-0-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-2"
+    },
+    {
+      "coordinate": "M2-1-1-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Formal cause (who/mediating structure)",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M2-1-1]]",
+        "[[M2-2-2-1-0]]",
+        "[[M2-2-2-1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-3"
+    },
+    {
+      "coordinate": "M2-1-1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Final cause (when/where)",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-4]]",
+        "[[M1-4.4]]",
+        "[[M2-1-1]]",
+        "[[M2-2-0-5]]",
+        "[[M2-2-1-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-4"
+    },
+    {
+      "coordinate": "M2-1-1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Will as quintessence (why)",
+      "c_0_source_coordinates": [
+        "[[M2-1-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M2-1-1]]",
+        "[[M2-2-0-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-1-5"
+    },
+    {
+      "coordinate": "M2-1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Logical Lens (Tetralemma)",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-2-0]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-2-5]]",
+        "[[M2-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M2-1]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2"
+    },
+    {
+      "coordinate": "M2-1-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Query/Question (potential)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M0-0-0]]",
+        "[[M2-1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-0"
+    },
+    {
+      "coordinate": "M2-1-2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Affirmation (is)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M0-2]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M0-4.(0∕1)-2]]",
+        "[[M2-1-2]]",
+        "[[M2-2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-1"
+    },
+    {
+      "coordinate": "M2-1-2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Negation (is not)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M0-4.(0∕1)-1]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-2"
+    },
+    {
+      "coordinate": "M2-1-2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Integration (both is and is not)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M0-2]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M1-3-3]]",
+        "[[M0-4.(0∕1)-3]]",
+        "[[M2-1-2]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-3"
+    },
+    {
+      "coordinate": "M2-1-2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Transcendence (neither is nor is not)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M0-2]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-4]]",
+        "[[M1-4.4]]",
+        "[[M0-4.(0∕1)-4]]",
+        "[[M2-1-2]]",
+        "[[M2-2-0-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-4"
+    },
+    {
+      "coordinate": "M2-1-2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Synthesized response (why)",
+      "c_0_source_coordinates": [
+        "[[M2-1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M0-4.(0∕1)-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M2-1-2]]",
+        "[[M2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-2-5"
+    },
+    {
+      "coordinate": "M2-1-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Processual Lens",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-3-0]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-3-5]]",
+        "[[M2-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M1-3]]",
+        "[[M2-1]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3"
+    },
+    {
+      "coordinate": "M2-1-3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Soil (foundation/potential)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M0-1]]",
+        "[[M0-2-9-2]]",
+        "[[M2-1-3]]",
+        "[[M2-2-2-0]]",
+        "[[M2-2-2-5-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-0"
+    },
+    {
+      "coordinate": "M2-1-3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Seeding (initiation)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-1]]",
+        "[[M0-3-10-2]]",
+        "[[M2-1-3]]",
+        "[[M2-2-2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-1"
+    },
+    {
+      "coordinate": "M2-1-3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Sprouting (active emergence)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M0-3-10-3]]",
+        "[[M2-1-3]]",
+        "[[M2-2-2-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-2"
+    },
+    {
+      "coordinate": "M2-1-3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Blooming (structural unfolding)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M0-3-10-4]]",
+        "[[M2-2-2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-3"
+    },
+    {
+      "coordinate": "M2-1-3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Flowering (contextual expression)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-4]]",
+        "[[M0-3-10-5]]",
+        "[[M1-4.4]]",
+        "[[M2-1-3]]",
+        "[[M2-2-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-4"
+    },
+    {
+      "coordinate": "M2-1-3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Maturity (synthesis/renewal)",
+      "c_0_source_coordinates": [
+        "[[M2-1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M0-3-10-6]]",
+        "[[M2-1-3]]",
+        "[[M2-2-2-5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-3-5"
+    },
+    {
+      "coordinate": "M2-1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Meta-Epistemic Lens",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-4-0]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-4-5]]",
+        "[[M2-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-5-4]]",
+        "[[M2-1]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4"
+    },
+    {
+      "coordinate": "M2-1-4-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Ajnana (implicit unknowing)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-5-0]]",
+        "[[M0-0]]",
+        "[[M2-1-4]]",
+        "[[M2-2-0-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-0"
+    },
+    {
+      "coordinate": "M2-1-4-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Ontology (what/being)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-5-1]]",
+        "[[M2-1-4]]",
+        "[[M2-2-2-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-1"
+    },
+    {
+      "coordinate": "M2-1-4-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Epistemology (how/knowing)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-5-2]]",
+        "[[M2-1-4]]",
+        "[[M2-2-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-2"
+    },
+    {
+      "coordinate": "M2-1-4-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Psychology (mediating structure)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-5-3]]",
+        "[[M2-1-4]]",
+        "[[M2-2-2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-3"
+    },
+    {
+      "coordinate": "M2-1-4-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Contextual domain (when/where)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-5-4]]",
+        "[[M1-3-4]]",
+        "[[M1-4.4]]",
+        "[[M2-2-1-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-4"
+    },
+    {
+      "coordinate": "M2-1-4-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Jnana (wholistic Knowing/why)",
+      "c_0_source_coordinates": [
+        "[[M2-1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-5-5]]",
+        "[[M2-1-4]]",
+        "[[M2-2-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-4-5"
+    },
+    {
+      "coordinate": "M2-1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Divine-Scalar Lens - Vak Cosmology",
+      "c_0_source_coordinates": [
+        "[[M2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-1-5-0]]",
+        "[[M2-1-5-1]]",
+        "[[M2-1-5-2]]",
+        "[[M2-1-5-3]]",
+        "[[M2-1-5-4]]",
+        "[[M2-1-5-5]]",
+        "[[M2-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M1-5]]",
+        "[[M2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5"
+    },
+    {
+      "coordinate": "M2-1-5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Anuttara",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-0]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-1-0-0]]",
+        "[[M2-1-1-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-3-0]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-1]]",
+        "[[M0]]",
+        "[[M2-1-1]]",
+        "[[M2-1-5]]",
+        "[[M2-1-5-5]]",
+        "[[M2-2-0-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-0"
+    },
+    {
+      "coordinate": "M2-1-5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Para Vak",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-1]]",
+        "[[M2-1]]",
+        "[[M2-1-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-1-1-1]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-3-1]]",
+        "[[M2-1-4-1]]",
+        "[[M2-1-5-2]]",
+        "[[M0-2-9]]",
+        "[[M2-1-5]]",
+        "[[M2-1-5-0]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-0-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-1"
+    },
+    {
+      "coordinate": "M2-1-5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Pasyanti",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-2]]",
+        "[[M2-2]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-3]]",
+        "[[M0-3-6]]",
+        "[[M2-1-5]]",
+        "[[M2-1-5-1]]",
+        "[[M2-2-0-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-2"
+    },
+    {
+      "coordinate": "M2-1-5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Madhyama",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-3]]",
+        "[[M2-3]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-4]]",
+        "[[M2-1-5]]",
+        "[[M2-1-5-2]]",
+        "[[M2-2-0-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-3"
+    },
+    {
+      "coordinate": "M2-1-5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Vaikhari",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-4]]",
+        "[[M2-4]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-5]]",
+        "[[M1-1]]",
+        "[[M1-4.4]]",
+        "[[M2-1-5]]",
+        "[[M2-1-5-3]]",
+        "[[M2-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-4"
+    },
+    {
+      "coordinate": "M2-1-5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva-Sakti",
+      "c_0_source_coordinates": [
+        "[[M2-1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M5-0-5]]",
+        "[[M2-5]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-0]]",
+        "[[M2-1]]",
+        "[[M2-1-5-4]]",
+        "[[M2-2-0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-1-5-5"
+    },
+    {
+      "coordinate": "M2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "36 Tattvas System",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0]]",
+        "[[M2-2-1]]",
+        "[[M2-2-2]]",
+        "[[M2-3]]",
+        "[[M2-1-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-1-1-2]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-1-4-2]]",
+        "[[M2-1-5-2]]",
+        "[[M0-0]]",
+        "[[M1-5-2]]",
+        "[[M0-3]]",
+        "[[M0-5]]",
+        "[[M1-3]]",
+        "[[M2-1-2-5]]",
+        "[[M2]]",
+        "[[M2-1]]",
+        "[[M2-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2"
+    },
+    {
+      "coordinate": "M2-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Shuddha Tattvas",
+      "c_0_source_coordinates": [
+        "[[M2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-0-3]]",
+        "[[M2-2-0-4]]",
+        "[[M2-2-0-5]]",
+        "[[M2-2-1]]",
+        "[[M2-1-2-1]]",
+        "[[M1-0]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-5-(5∕0)-1]]",
+        "[[M2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0"
+    },
+    {
+      "coordinate": "M2-2-0-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Shiva Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0-2]]",
+        "[[M0-0-0]]",
+        "[[M2-1-5-1]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-3-10-6]]",
+        "[[M0-2-9-0]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-5-(5∕0)-0]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-4-0]]",
+        "[[M2-1-5-0]]",
+        "[[M2-2-0]]",
+        "[[M2-3-4-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0-(0/1)"
+    },
+    {
+      "coordinate": "M2-2-0-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0-3]]",
+        "[[M2-1-5-1]]",
+        "[[M0-0-1]]",
+        "[[M2-1-1-2]]",
+        "[[M0-2-9-0]]",
+        "[[M0-2-9-2]]",
+        "[[M0-4.(0∕1∕2∕3)-1]]",
+        "[[M0-4.(0∕1∕2∕3)-2]]",
+        "[[M2-2-0]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-3-1-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0-2"
+    },
+    {
+      "coordinate": "M2-2-0-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Sadashiva Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0-4]]",
+        "[[M0-3-6]]",
+        "[[M1-3-1]]",
+        "[[M0-3-6-4]]",
+        "[[M0-3-10-2]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-5-2]]",
+        "[[M2-2-0]]",
+        "[[M2-2-0-2]]",
+        "[[M2-3-1-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0-3"
+    },
+    {
+      "coordinate": "M2-2-0-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Ishvara Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-0-5]]",
+        "[[M1-3-2]]",
+        "[[M2-2-0-3]]",
+        "[[M0-3-6-7]]",
+        "[[M0-3-10-3]]",
+        "[[M0-3-10-5]]",
+        "[[M2-1-5-3]]",
+        "[[M2-2-0]]",
+        "[[M2-3-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0-4"
+    },
+    {
+      "coordinate": "M2-2-0-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Shuddha Vidya Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-1-2-3]]",
+        "[[M0-3-8-7]]",
+        "[[M0-3-10-4]]",
+        "[[M0-2-9-1]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M2-2-0]]",
+        "[[M2-2-0-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-0-5"
+    },
+    {
+      "coordinate": "M2-2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Shuddhashuddha Tattvas",
+      "c_0_source_coordinates": [
+        "[[M2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-1-2]]",
+        "[[M2-2-1-4]]",
+        "[[M2-2-1-5]]",
+        "[[M2-2-1-6]]",
+        "[[M2-2-1-7]]",
+        "[[M2-2-2]]",
+        "[[M0-3-10]]",
+        "[[M1-4.2]]",
+        "[[M0-5-(5∕0)-2]]",
+        "[[M0-5-(5∕0)-3]]",
+        "[[M2-2]]",
+        "[[M2-2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1"
+    },
+    {
+      "coordinate": "M2-2-1-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Maya Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-2]]",
+        "[[M0-1]]",
+        "[[M2-2-1-4]]",
+        "[[M2-2-1-5]]",
+        "[[M2-2-1-6]]",
+        "[[M0-3-8-5]]",
+        "[[M0-3-10-5]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M2-1-2-2]]",
+        "[[M2-2-0-5]]",
+        "[[M2-2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-(0/1)"
+    },
+    {
+      "coordinate": "M2-2-1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Kala Tattva (Limitation)",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-7]]",
+        "[[M2-1-2-2]]",
+        "[[M2-2-1]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-3-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-2"
+    },
+    {
+      "coordinate": "M2-2-1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Raga Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-5]]",
+        "[[M2-2-1-7]]",
+        "[[M0-2-9-3]]",
+        "[[M2-2-1]]",
+        "[[M2-2-1-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-4"
+    },
+    {
+      "coordinate": "M2-2-1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Kala Tattva (Time)",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-6]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M2-2-1-7]]",
+        "[[M0-4.(0∕1∕2∕3)-3]]",
+        "[[M2-2-1]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-5"
+    },
+    {
+      "coordinate": "M2-2-1-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Niyati Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-1-7]]",
+        "[[M2-2-1]]",
+        "[[M2-2-1-(0∕1)]]",
+        "[[M2-2-1-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-6"
+    },
+    {
+      "coordinate": "M2-2-1-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Purusha Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-0]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-3-6-8]]",
+        "[[M0-3-10-6]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-2-1]]",
+        "[[M2-2-1-2]]",
+        "[[M2-2-1-4]]",
+        "[[M2-2-1-5]]",
+        "[[M2-2-1-6]]",
+        "[[M2-3-4-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-1-7"
+    },
+    {
+      "coordinate": "M2-2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Ashuddha Tattvas",
+      "c_0_source_coordinates": [
+        "[[M2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-0]]",
+        "[[M2-2-2-1]]",
+        "[[M2-2-2-2]]",
+        "[[M2-2-2-3]]",
+        "[[M2-2-2-4]]",
+        "[[M2-2-2-5]]",
+        "[[M0-3-7]]",
+        "[[M1-1]]",
+        "[[M0-3-8-2]]",
+        "[[M0-5-(5∕0)-4]]",
+        "[[M2-1-5-4]]",
+        "[[M2-2]]",
+        "[[M2-2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2"
+    },
+    {
+      "coordinate": "M2-2-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Prakriti Tattva",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-1-0]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M2-1-1-1]]",
+        "[[M0-3-6-9]]",
+        "[[M0-2-9-6]]",
+        "[[M2-1-3-0]]",
+        "[[M2-2-1-7]]",
+        "[[M2-2-2]]",
+        "[[M2-3-1-0]]",
+        "[[M2-3-1-1]]",
+        "[[M2-3-1-2]]",
+        "[[M2-3-2-0]]",
+        "[[M2-3-2-1]]",
+        "[[M2-3-2-2]]",
+        "[[M2-3-3-0]]",
+        "[[M2-3-3-1]]",
+        "[[M2-3-3-2]]",
+        "[[M2-3-4-0]]",
+        "[[M2-3-4-1]]",
+        "[[M2-3-4-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-0"
+    },
+    {
+      "coordinate": "M2-2-2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Antahkarana",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-1-0]]",
+        "[[M2-2-2-1-1]]",
+        "[[M2-2-2-1-2]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-2-2]]",
+        "[[M2-3-2-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-1"
+    },
+    {
+      "coordinate": "M2-2-2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Jnanendriyas",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-2-2]]",
+        "[[M2-2-2-2-3]]",
+        "[[M2-2-2-2-4]]",
+        "[[M2-2-2-2-5]]",
+        "[[M2-1-4-2]]",
+        "[[M2-2-2-3]]",
+        "[[M2-1-3-4]]",
+        "[[M2-2-2]]",
+        "[[M2-2-2-1-1]]",
+        "[[M2-3-3-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-2"
+    },
+    {
+      "coordinate": "M2-2-2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Karmendriyas",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-3-(0∕1)]]",
+        "[[M2-2-2-3-2]]",
+        "[[M2-2-2-3-3]]",
+        "[[M2-2-2-3-4]]",
+        "[[M2-2-2-3-5]]",
+        "[[M2-2-2-2]]",
+        "[[M2-1-3-2]]",
+        "[[M2-2-2]]",
+        "[[M2-2-2-1-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-3"
+    },
+    {
+      "coordinate": "M2-2-2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Tanmatras",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-4-(0∕1)]]",
+        "[[M2-2-2-4-2]]",
+        "[[M2-2-2-4-3]]",
+        "[[M2-2-2-4-4]]",
+        "[[M2-2-2-4-5]]",
+        "[[M2-1-3-1]]",
+        "[[M2-2-2]]",
+        "[[M2-2-2-1-1]]",
+        "[[M2-3-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-4"
+    },
+    {
+      "coordinate": "M2-2-2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Mahabhutas",
+      "c_0_source_coordinates": [
+        "[[M2-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-2-2-5-(0∕1)]]",
+        "[[M2-2-2-5-2]]",
+        "[[M2-2-2-5-3]]",
+        "[[M2-2-2-5-4]]",
+        "[[M2-2-2-5-5]]",
+        "[[M2-1-4-1]]",
+        "[[M2-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-2-2-5"
+    },
+    {
+      "coordinate": "M2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Decans System",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-1]]",
+        "[[M2-3-2]]",
+        "[[M2-3-3]]",
+        "[[M2-3-4]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-4]]",
+        "[[M2-1-3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-1-1-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-3-3]]",
+        "[[M2-1-4-3]]",
+        "[[M2-1-5-3]]",
+        "[[M2-5]]",
+        "[[M2]]",
+        "[[M2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3"
+    },
+    {
+      "coordinate": "M2-3-(5/0)",
+      "c_4_artifact_role": "map-index",
+      "title": "Quintessence Element",
+      "c_0_source_coordinates": [
+        "[[M2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9]]",
+        "[[M0-3-8]]",
+        "[[M2-2-2-5-(0∕1)]]",
+        "[[M0-3-7]]",
+        "[[M2-3-1]]",
+        "[[M2-3-2]]",
+        "[[M2-3-3]]",
+        "[[M2-3-4]]",
+        "[[M2-4.5-0]]",
+        "[[M2-4.5-1]]",
+        "[[M2-4.5-2]]",
+        "[[M2-4.5-3]]",
+        "[[M2-3]]",
+        "[[M2-5]]",
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-(5/0)"
+    },
+    {
+      "coordinate": "M2-3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Fire Element Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-1-0]]",
+        "[[M2-3-1-1]]",
+        "[[M2-3-1-2]]",
+        "[[M2-3-1-0-0-0]]",
+        "[[M2-3-1-0-0-1]]",
+        "[[M2-3-1-0-1-0]]",
+        "[[M2-3-1-0-1-1]]",
+        "[[M2-3-1-0-2-0]]",
+        "[[M2-3-1-0-2-1]]",
+        "[[M2-3-1-1-0-0]]",
+        "[[M2-3-1-1-0-1]]",
+        "[[M2-3-1-1-1-0]]",
+        "[[M2-3-1-1-1-1]]",
+        "[[M2-3-1-1-2-0]]",
+        "[[M2-3-1-1-2-1]]",
+        "[[M2-3-1-2-0-0]]",
+        "[[M2-3-1-2-0-1]]",
+        "[[M2-3-1-2-1-0]]",
+        "[[M2-3-1-2-1-1]]",
+        "[[M2-3-1-2-2-0]]",
+        "[[M2-3-1-2-2-1]]",
+        "[[M2-3-2]]",
+        "[[M2-3-4]]",
+        "[[M2-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-1"
+    },
+    {
+      "coordinate": "M2-3-1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Aries Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-1-0-0]]",
+        "[[M2-3-1-0-0-0]]",
+        "[[M2-3-1-0-0-1]]",
+        "[[M2-3-1-0-1]]",
+        "[[M2-3-1-0-1-0]]",
+        "[[M2-3-1-0-1-1]]",
+        "[[M2-3-1-0-2]]",
+        "[[M2-3-1-0-2-0]]",
+        "[[M2-3-1-0-2-1]]",
+        "[[M2-5-7]]",
+        "[[M0-3-10-2]]",
+        "[[M0-3-8-3]]",
+        "[[M0-3-6]]",
+        "[[M2-2-0-2]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-1-0"
+    },
+    {
+      "coordinate": "M2-3-1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Leo Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-1-1-0]]",
+        "[[M2-3-1-1-0-0]]",
+        "[[M2-3-1-1-0-1]]",
+        "[[M2-3-1-1-1]]",
+        "[[M2-3-1-1-1-0]]",
+        "[[M2-3-1-1-1-1]]",
+        "[[M2-3-1-1-2]]",
+        "[[M2-3-1-1-2-0]]",
+        "[[M2-3-1-1-2-1]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M0-3-10-3]]",
+        "[[M0-3-8-7]]",
+        "[[M0-3-6]]",
+        "[[M2-2-0-3]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-1-1"
+    },
+    {
+      "coordinate": "M2-3-1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Sagittarius Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-1-2-0]]",
+        "[[M2-3-1-2-0-0]]",
+        "[[M2-3-1-2-0-1]]",
+        "[[M2-3-1-2-1]]",
+        "[[M2-3-1-2-1-0]]",
+        "[[M2-3-1-2-1-1]]",
+        "[[M2-3-1-2-2]]",
+        "[[M2-3-1-2-2-0]]",
+        "[[M2-3-1-2-2-1]]",
+        "[[M2-5-6]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-3-8-4]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-1-2"
+    },
+    {
+      "coordinate": "M2-3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Earth Element Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-2-0]]",
+        "[[M2-3-2-1]]",
+        "[[M2-3-2-2]]",
+        "[[M2-3-2-0-0-0]]",
+        "[[M2-3-2-0-0-1]]",
+        "[[M2-3-2-0-1-0]]",
+        "[[M2-3-2-0-1-1]]",
+        "[[M2-3-2-0-2-0]]",
+        "[[M2-3-2-0-2-1]]",
+        "[[M2-3-2-1-0-0]]",
+        "[[M2-3-2-1-0-1]]",
+        "[[M2-3-2-1-1-0]]",
+        "[[M2-3-2-1-1-1]]",
+        "[[M2-3-2-1-2-0]]",
+        "[[M2-3-2-1-2-1]]",
+        "[[M2-3-2-2-0-0]]",
+        "[[M2-3-2-2-0-1]]",
+        "[[M2-3-2-2-1-0]]",
+        "[[M2-3-2-2-1-1]]",
+        "[[M2-3-2-2-2-0]]",
+        "[[M2-3-2-2-2-1]]",
+        "[[M2-3-3]]",
+        "[[M2-3-4]]",
+        "[[M2-3-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-2"
+    },
+    {
+      "coordinate": "M2-3-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Taurus Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-2-0-0]]",
+        "[[M2-3-2-0-0-0]]",
+        "[[M2-3-2-0-0-1]]",
+        "[[M2-3-2-0-1]]",
+        "[[M2-3-2-0-1-0]]",
+        "[[M2-3-2-0-1-1]]",
+        "[[M2-3-2-0-2]]",
+        "[[M2-3-2-0-2-0]]",
+        "[[M2-3-2-0-2-1]]",
+        "[[M2-5-2]]",
+        "[[M0-3-10-6]]",
+        "[[M0-3-8-5]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-3-2]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-2-0"
+    },
+    {
+      "coordinate": "M2-3-2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Virgo Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-2-1-0]]",
+        "[[M2-3-2-1-0-0]]",
+        "[[M2-3-2-1-0-1]]",
+        "[[M2-3-2-1-1]]",
+        "[[M2-3-2-1-1-0]]",
+        "[[M2-3-2-1-1-1]]",
+        "[[M2-3-2-1-2]]",
+        "[[M2-3-2-1-2-0]]",
+        "[[M2-3-2-1-2-1]]",
+        "[[M2-5-3]]",
+        "[[M0-3-10-5]]",
+        "[[M0-3-8-2]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-1]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-2-1"
+    },
+    {
+      "coordinate": "M2-3-2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Capricorn Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-2-2-0]]",
+        "[[M2-3-2-2-0-0]]",
+        "[[M2-3-2-2-0-1]]",
+        "[[M2-3-2-2-1]]",
+        "[[M2-3-2-2-1-0]]",
+        "[[M2-3-2-2-1-1]]",
+        "[[M2-3-2-2-2]]",
+        "[[M2-3-2-2-2-0]]",
+        "[[M2-3-2-2-2-1]]",
+        "[[M2-5-5]]",
+        "[[M0-3-10-4]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-3-6]]",
+        "[[M2-2-1-2]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-2-2"
+    },
+    {
+      "coordinate": "M2-3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Air Element Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-3-0]]",
+        "[[M2-3-3-1]]",
+        "[[M2-3-3-2]]",
+        "[[M2-3-3-0-0-0]]",
+        "[[M2-3-3-0-0-1]]",
+        "[[M2-3-3-0-1-0]]",
+        "[[M2-3-3-0-1-1]]",
+        "[[M2-3-3-0-2-0]]",
+        "[[M2-3-3-0-2-1]]",
+        "[[M2-3-3-1-0-0]]",
+        "[[M2-3-3-1-0-1]]",
+        "[[M2-3-3-1-1-0]]",
+        "[[M2-3-3-1-1-1]]",
+        "[[M2-3-3-1-2-0]]",
+        "[[M2-3-3-1-2-1]]",
+        "[[M2-3-3-2-0-0]]",
+        "[[M2-3-3-2-0-1]]",
+        "[[M2-3-3-2-1-0]]",
+        "[[M2-3-3-2-1-1]]",
+        "[[M2-3-3-2-2-0]]",
+        "[[M2-3-3-2-2-1]]",
+        "[[M2-3-4]]",
+        "[[M2-3-1]]",
+        "[[M2-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-3"
+    },
+    {
+      "coordinate": "M2-3-3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Gemini Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-3-0-0]]",
+        "[[M2-3-3-0-0-0]]",
+        "[[M2-3-3-0-0-1]]",
+        "[[M2-3-3-0-1]]",
+        "[[M2-3-3-0-1-0]]",
+        "[[M2-3-3-0-1-1]]",
+        "[[M2-3-3-0-2]]",
+        "[[M2-3-3-0-2-0]]",
+        "[[M2-3-3-0-2-1]]",
+        "[[M2-5-3]]",
+        "[[M0-3-10-5]]",
+        "[[M0-3-8-2]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-2]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-3-0"
+    },
+    {
+      "coordinate": "M2-3-3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Libra Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-3-1-0]]",
+        "[[M2-3-3-1-0-0]]",
+        "[[M2-3-3-1-0-1]]",
+        "[[M2-3-3-1-1]]",
+        "[[M2-3-3-1-1-0]]",
+        "[[M2-3-3-1-1-1]]",
+        "[[M2-3-3-1-2]]",
+        "[[M2-3-3-1-2-0]]",
+        "[[M2-3-3-1-2-1]]",
+        "[[M2-5-2]]",
+        "[[M0-3-10-6]]",
+        "[[M0-3-8-5]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-4]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-3-1"
+    },
+    {
+      "coordinate": "M2-3-3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Aquarius Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-3-2-0]]",
+        "[[M2-3-3-2-0-0]]",
+        "[[M2-3-3-2-0-1]]",
+        "[[M2-3-3-2-1]]",
+        "[[M2-3-3-2-1-0]]",
+        "[[M2-3-3-2-1-1]]",
+        "[[M2-3-3-2-2]]",
+        "[[M2-3-3-2-2-0]]",
+        "[[M2-3-3-2-2-1]]",
+        "[[M2-5-5]]",
+        "[[M0-3-10-4]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-3-6]]",
+        "[[M2-2-0-4]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-3-2"
+    },
+    {
+      "coordinate": "M2-3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Water Element Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-4-0]]",
+        "[[M2-3-4-1]]",
+        "[[M2-3-4-2]]",
+        "[[M2-3-4-0-0-0]]",
+        "[[M2-3-4-0-0-1]]",
+        "[[M2-3-4-0-1-0]]",
+        "[[M2-3-4-0-1-1]]",
+        "[[M2-3-4-0-2-0]]",
+        "[[M2-3-4-0-2-1]]",
+        "[[M2-3-4-1-0-0]]",
+        "[[M2-3-4-1-0-1]]",
+        "[[M2-3-4-1-1-0]]",
+        "[[M2-3-4-1-1-1]]",
+        "[[M2-3-4-1-2-0]]",
+        "[[M2-3-4-1-2-1]]",
+        "[[M2-3-4-2-0-0]]",
+        "[[M2-3-4-2-0-1]]",
+        "[[M2-3-4-2-1-0]]",
+        "[[M2-3-4-2-1-1]]",
+        "[[M2-3-4-2-2-0]]",
+        "[[M2-3-4-2-2-1]]",
+        "[[M2-3-3]]",
+        "[[M2-3-2]]",
+        "[[M2-3-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-4"
+    },
+    {
+      "coordinate": "M2-3-4-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Cancer Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-4-0-0]]",
+        "[[M2-3-4-0-0-0]]",
+        "[[M2-3-4-0-0-1]]",
+        "[[M2-3-4-0-1]]",
+        "[[M2-3-4-0-1-0]]",
+        "[[M2-3-4-0-1-1]]",
+        "[[M2-3-4-0-2]]",
+        "[[M2-3-4-0-2-0]]",
+        "[[M2-3-4-0-2-1]]",
+        "[[M2-5-4]]",
+        "[[M0-3-10-7]]",
+        "[[M0-3-8-6]]",
+        "[[M0-3-6]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-4-0"
+    },
+    {
+      "coordinate": "M2-3-4-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Scorpio Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-4-1-0]]",
+        "[[M2-3-4-1-0-0]]",
+        "[[M2-3-4-1-0-1]]",
+        "[[M2-3-4-1-1]]",
+        "[[M2-3-4-1-1-0]]",
+        "[[M2-3-4-1-1-1]]",
+        "[[M2-3-4-1-2]]",
+        "[[M2-3-4-1-2-0]]",
+        "[[M2-3-4-1-2-1]]",
+        "[[M2-5-7]]",
+        "[[M0-3-10-2]]",
+        "[[M0-3-8-3]]",
+        "[[M0-3-6]]",
+        "[[M2-2-1-7]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-4-1"
+    },
+    {
+      "coordinate": "M2-3-4-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Pisces Decans",
+      "c_0_source_coordinates": [
+        "[[M2-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-3-4-2-0]]",
+        "[[M2-3-4-2-0-0]]",
+        "[[M2-3-4-2-0-1]]",
+        "[[M2-3-4-2-1]]",
+        "[[M2-3-4-2-1-0]]",
+        "[[M2-3-4-2-1-1]]",
+        "[[M2-3-4-2-2]]",
+        "[[M2-3-4-2-2-0]]",
+        "[[M2-3-4-2-2-1]]",
+        "[[M2-5-6]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-3-8-4]]",
+        "[[M0-3-6]]",
+        "[[M2-2-0-(0∕1)]]",
+        "[[M2-2-2-0]]",
+        "[[M2-3-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-3-4-2"
+    },
+    {
+      "coordinate": "M2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Parashakti: Vibrational Arena of Archetypal Powers",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.0]]",
+        "[[M2-4.1]]",
+        "[[M2-4.2]]",
+        "[[M2-4.3]]",
+        "[[M2-4.5]]",
+        "[[M2-5]]",
+        "[[M2-1-4]]",
+        "[[M2-1-0-4]]",
+        "[[M2-1-1-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-3-4]]",
+        "[[M2-1-4-4]]",
+        "[[M2-1-5-4]]",
+        "[[M2]]",
+        "[[M2-3]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4"
+    },
+    {
+      "coordinate": "M2-4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Asma ul-Husna",
+      "c_0_source_coordinates": [
+        "[[M2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.0-(0∕1)]]",
+        "[[M2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.0"
+    },
+    {
+      "coordinate": "M2-4.0-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Al-Ism al-A'zham",
+      "c_0_source_coordinates": [
+        "[[M2-4.0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.0-(0∕1)-2]]",
+        "[[M2-4.0-(0∕1)-0]]",
+        "[[M2-4.0-(0∕1)-1]]",
+        "[[M0]]",
+        "[[M0-0]]",
+        "[[M0-3]]",
+        "[[M0-5]]",
+        "[[M2-4.0]]",
+        "[[M2-4.0-(0∕1)-0-0]]",
+        "[[M2-4.0-(0∕1)-0-1]]",
+        "[[M2-4.0-(0∕1)-0-10]]",
+        "[[M2-4.0-(0∕1)-0-11]]",
+        "[[M2-4.0-(0∕1)-0-12]]",
+        "[[M2-4.0-(0∕1)-0-13]]",
+        "[[M2-4.0-(0∕1)-0-14]]",
+        "[[M2-4.0-(0∕1)-0-15]]",
+        "[[M2-4.0-(0∕1)-0-16]]",
+        "[[M2-4.0-(0∕1)-0-17]]",
+        "[[M2-4.0-(0∕1)-0-18]]",
+        "[[M2-4.0-(0∕1)-0-19]]",
+        "[[M2-4.0-(0∕1)-0-2]]",
+        "[[M2-4.0-(0∕1)-0-20]]",
+        "[[M2-4.0-(0∕1)-0-21]]",
+        "[[M2-4.0-(0∕1)-0-22]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.0-(0/1)"
+    },
+    {
+      "coordinate": "M2-4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "100 Shaivite Mantras",
+      "c_0_source_coordinates": [
+        "[[M2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.1-0]]",
+        "[[M2-4.1-1]]",
+        "[[M2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.1"
+    },
+    {
+      "coordinate": "M2-4.1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Mātṛkā System",
+      "c_0_source_coordinates": [
+        "[[M2-4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.1-0-0]]",
+        "[[M2-4.1-0-1]]",
+        "[[M2-4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.1-0"
+    },
+    {
+      "coordinate": "M2-4.1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Mālinīvijayottara System",
+      "c_0_source_coordinates": [
+        "[[M2-4.1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.1-1"
+    },
+    {
+      "coordinate": "M2-4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "24 Spiritual Maqamat",
+      "c_0_source_coordinates": [
+        "[[M2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3]]",
+        "[[M2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2"
+    },
+    {
+      "coordinate": "M2-4.2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "La Maqam",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-0-0]]",
+        "[[M2-4.2-0-1]]",
+        "[[M2-4.2-0-2]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-9]]",
+        "[[M2-4.3-3]]",
+        "[[M2-4.3-6]]",
+        "[[M2-4.3-2]]",
+        "[[M2-4.3-4]]",
+        "[[M2-4.3-7]]",
+        "[[M2-4.3-5]]",
+        "[[M2-4.3-1]]",
+        "[[M2-4.3-8]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-0"
+    },
+    {
+      "coordinate": "M2-4.2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Tawba",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-1-0]]",
+        "[[M2-4.2-1-1]]",
+        "[[M2-4.2-1-2]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.3-1]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-2]]",
+        "[[M2-5-5]]",
+        "[[M2-5-4]]",
+        "[[M2-4.2]]",
+        "[[M2-4.3-1-0]]",
+        "[[M2-4.3-1-1]]",
+        "[[M2-4.3-1-2]]",
+        "[[M2-4.3-1-3]]",
+        "[[M2-4.3-1-4]]",
+        "[[M2-4.3-1-5]]",
+        "[[M2-4.3-1-6]]",
+        "[[M2-4.3-1-7]]",
+        "[[M2-4.3-2-4]]",
+        "[[M2-4.3-3-(0∕1)]]",
+        "[[M2-4.3-9-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-1"
+    },
+    {
+      "coordinate": "M2-4.2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Wara'",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-2-0]]",
+        "[[M2-4.2-2-1]]",
+        "[[M2-4.2-2-2]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.3-2]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-4]]",
+        "[[M2-5-5]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.3-2-0]]",
+        "[[M2-4.3-2-1]]",
+        "[[M2-4.3-2-2]]",
+        "[[M2-4.3-2-3]]",
+        "[[M2-4.3-2-4]]",
+        "[[M2-4.3-2-5]]",
+        "[[M2-4.3-2-6]]",
+        "[[M2-4.3-2-7]]",
+        "[[M2-4.3-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-2"
+    },
+    {
+      "coordinate": "M2-4.2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Zuhd",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-3-0]]",
+        "[[M2-4.2-3-1]]",
+        "[[M2-4.2-3-2]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.3-7]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-4]]",
+        "[[M2-5-5]]",
+        "[[M2-5-7]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.3-2-3]]",
+        "[[M2-4.3-4-6]]",
+        "[[M2-4.3-7-(0∕1)]]",
+        "[[M2-4.3-7-2]]",
+        "[[M2-4.3-7-3]]",
+        "[[M2-4.3-7-4]]",
+        "[[M2-4.3-7-5]]",
+        "[[M2-4.3-7-6]]",
+        "[[M2-4.3-7-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-3"
+    },
+    {
+      "coordinate": "M2-4.2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Faqr",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-4-0]]",
+        "[[M2-4.2-4-1]]",
+        "[[M2-4.2-4-2]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.3-8]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-5]]",
+        "[[M2-5-6]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.3-8-(0∕1)]]",
+        "[[M2-4.3-8-2]]",
+        "[[M2-4.3-8-3]]",
+        "[[M2-4.3-8-4]]",
+        "[[M2-4.3-8-5]]",
+        "[[M2-4.3-8-6]]",
+        "[[M2-4.3-8-7]]",
+        "[[M2-4.3-8-8]]",
+        "[[M2-4.3-8-9]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-4"
+    },
+    {
+      "coordinate": "M2-4.2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Sabr",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-5-0]]",
+        "[[M2-4.2-5-1]]",
+        "[[M2-4.2-5-2]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.3-5]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-2]]",
+        "[[M2-5-5]]",
+        "[[M2-5-4]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.3-1-5]]",
+        "[[M2-4.3-2-0]]",
+        "[[M2-4.3-3-4]]",
+        "[[M2-4.3-4-(0∕1)]]",
+        "[[M2-4.3-5-0]]",
+        "[[M2-4.3-5-1]]",
+        "[[M2-4.3-5-2]]",
+        "[[M2-4.3-5-3]]",
+        "[[M2-4.3-5-4]]",
+        "[[M2-4.3-5-5]]",
+        "[[M2-4.3-5-6]]",
+        "[[M2-4.3-6-2]]",
+        "[[M2-4.3-6-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-5"
+    },
+    {
+      "coordinate": "M2-4.2-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Tawakkul",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-6-0]]",
+        "[[M2-4.2-6-1]]",
+        "[[M2-4.2-6-2]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3-4]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-2]]",
+        "[[M2-5-5]]",
+        "[[M2-5-4]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.3-1-2]]",
+        "[[M2-4.3-1-6]]",
+        "[[M2-4.3-2-1]]",
+        "[[M2-4.3-3-2]]",
+        "[[M2-4.3-4-(0∕1)]]",
+        "[[M2-4.3-4-2]]",
+        "[[M2-4.3-4-3]]",
+        "[[M2-4.3-4-4]]",
+        "[[M2-4.3-4-5]]",
+        "[[M2-4.3-4-6]]",
+        "[[M2-4.3-4-7]]",
+        "[[M2-4.3-5-0]]",
+        "[[M2-4.3-8-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-6"
+    },
+    {
+      "coordinate": "M2-4.2-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Rida",
+      "c_0_source_coordinates": [
+        "[[M2-4.2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.2-7-0]]",
+        "[[M2-4.2-7-1]]",
+        "[[M2-4.2-7-2]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.3-6]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-2]]",
+        "[[M2-5-5]]",
+        "[[M2-5-6]]",
+        "[[M2-5-4]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.3-1-1]]",
+        "[[M2-4.3-2-7]]",
+        "[[M2-4.3-5-2]]",
+        "[[M2-4.3-6-0]]",
+        "[[M2-4.3-6-1]]",
+        "[[M2-4.3-6-2]]",
+        "[[M2-4.3-6-3]]",
+        "[[M2-4.3-6-4]]",
+        "[[M2-4.3-6-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.2-7"
+    },
+    {
+      "coordinate": "M2-4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "72 Musical Maqamat",
+      "c_0_source_coordinates": [
+        "[[M2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-0]]",
+        "[[M2-4.3-1]]",
+        "[[M2-4.3-2]]",
+        "[[M2-4.3-3]]",
+        "[[M2-4.3-4]]",
+        "[[M2-4.3-5]]",
+        "[[M2-4.3-6]]",
+        "[[M2-4.3-7]]",
+        "[[M2-4.3-8]]",
+        "[[M2-4.3-9]]",
+        "[[M2-4]]",
+        "[[M2-4.2]]",
+        "[[M2-4.2-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3"
+    },
+    {
+      "coordinate": "M2-4.3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Independent Maqams",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-0-(0∕1)]]",
+        "[[M2-4.3-0-2]]",
+        "[[M2-4.3-0-3]]",
+        "[[M2-4.3-0-4]]",
+        "[[M2-4.3-0-5]]",
+        "[[M2-4.3-0-6]]",
+        "[[M2-4.3-0-7]]",
+        "[[M2-4.3-0-8]]",
+        "[[M2-4.3-0-9]]",
+        "[[M2-4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-0"
+    },
+    {
+      "coordinate": "M2-4.3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Rast Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-1-0]]",
+        "[[M2-4.3-1-1]]",
+        "[[M2-4.3-1-2]]",
+        "[[M2-4.3-1-3]]",
+        "[[M2-4.3-1-4]]",
+        "[[M2-4.3-1-5]]",
+        "[[M2-4.3-1-6]]",
+        "[[M2-4.3-1-7]]",
+        "[[M2-4.3-2]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-2-4]]",
+        "[[M2-4.3-3-(0∕1)]]",
+        "[[M2-4.3-9-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-1"
+    },
+    {
+      "coordinate": "M2-4.3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Bayati Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-2-0]]",
+        "[[M2-4.3-2-1]]",
+        "[[M2-4.3-2-2]]",
+        "[[M2-4.3-2-3]]",
+        "[[M2-4.3-2-4]]",
+        "[[M2-4.3-2-5]]",
+        "[[M2-4.3-2-6]]",
+        "[[M2-4.3-2-7]]",
+        "[[M2-4.3-3]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-1]]",
+        "[[M2-4.3-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-2"
+    },
+    {
+      "coordinate": "M2-4.3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Sikah Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-3-(0∕1)]]",
+        "[[M2-4.3-3-2]]",
+        "[[M2-4.3-3-3]]",
+        "[[M2-4.3-3-4]]",
+        "[[M2-4.3-3-5]]",
+        "[[M2-4.3-7]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-3"
+    },
+    {
+      "coordinate": "M2-4.3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Hijaz Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-4-(0∕1)]]",
+        "[[M2-4.3-4-2]]",
+        "[[M2-4.3-4-3]]",
+        "[[M2-4.3-4-4]]",
+        "[[M2-4.3-4-5]]",
+        "[[M2-4.3-4-6]]",
+        "[[M2-4.3-4-7]]",
+        "[[M2-4.3-6]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-1-2]]",
+        "[[M2-4.3-1-6]]",
+        "[[M2-4.3-2-1]]",
+        "[[M2-4.3-3-2]]",
+        "[[M2-4.3-5]]",
+        "[[M2-4.3-5-0]]",
+        "[[M2-4.3-8-7]]",
+        "[[M2-4.3-9-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-4"
+    },
+    {
+      "coordinate": "M2-4.3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Nahawand Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-5-7]]",
+        "[[M2-4.3-5-0]]",
+        "[[M2-4.3-5-1]]",
+        "[[M2-4.3-5-2]]",
+        "[[M2-4.3-5-3]]",
+        "[[M2-4.3-5-4]]",
+        "[[M2-4.3-5-5]]",
+        "[[M2-4.3-5-6]]",
+        "[[M2-4.3-4]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-1-5]]",
+        "[[M2-4.3-2-0]]",
+        "[[M2-4.3-3-4]]",
+        "[[M2-4.3-4-(0∕1)]]",
+        "[[M2-4.3-6-2]]",
+        "[[M2-4.3-6-5]]",
+        "[[M2-4.3-7-(0∕1)]]",
+        "[[M2-4.3-7-5]]",
+        "[[M2-4.3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-5"
+    },
+    {
+      "coordinate": "M2-4.3-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Ajam Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-6-0]]",
+        "[[M2-4.3-6-1]]",
+        "[[M2-4.3-6-2]]",
+        "[[M2-4.3-6-3]]",
+        "[[M2-4.3-6-4]]",
+        "[[M2-4.3-6-5]]",
+        "[[M2-4.3-9]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-1-1]]",
+        "[[M2-4.3-2-7]]",
+        "[[M2-4.3-4]]",
+        "[[M2-4.3-5-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-6"
+    },
+    {
+      "coordinate": "M2-4.3-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Kurd Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-7-(0∕1)]]",
+        "[[M2-4.3-7-2]]",
+        "[[M2-4.3-7-3]]",
+        "[[M2-4.3-7-4]]",
+        "[[M2-4.3-7-5]]",
+        "[[M2-4.3-7-6]]",
+        "[[M2-4.3-7-7]]",
+        "[[M2-4.3-8]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-2-3]]",
+        "[[M2-4.3-3]]",
+        "[[M2-4.3-4-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-7"
+    },
+    {
+      "coordinate": "M2-4.3-8",
+      "c_4_artifact_role": "map-index",
+      "title": "Saba Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-8-3]]",
+        "[[M2-4.3-8-4]]",
+        "[[M2-4.3-8-5]]",
+        "[[M2-4.3-8-6]]",
+        "[[M2-4.3-8-7]]",
+        "[[M2-4.3-8-8]]",
+        "[[M2-4.3-8-9]]",
+        "[[M2-4.3-8-(0∕1)]]",
+        "[[M2-4.3-8-2]]",
+        "[[M2-4.3-5]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-8"
+    },
+    {
+      "coordinate": "M2-4.3-9",
+      "c_4_artifact_role": "map-index",
+      "title": "Nawa Athar Family",
+      "c_0_source_coordinates": [
+        "[[M2-4.3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.3-9-(0∕1)]]",
+        "[[M2-4.3-9-2]]",
+        "[[M2-4.3-9-3]]",
+        "[[M2-4.3-9-4]]",
+        "[[M2-4.3-9-5]]",
+        "[[M2-4.2-0]]",
+        "[[M2-4.3]]",
+        "[[M2-4.3-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.3-9"
+    },
+    {
+      "coordinate": "M2-4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "72 Names of God System",
+      "c_0_source_coordinates": [
+        "[[M2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-0]]",
+        "[[M2-4.5-1]]",
+        "[[M2-4.5-2]]",
+        "[[M2-4.5-3]]",
+        "[[M2-4.5-4]]",
+        "[[M2-4.5-5]]",
+        "[[M2-4.5-6]]",
+        "[[M2-4.5-7]]",
+        "[[M2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5"
+    },
+    {
+      "coordinate": "M2-4.5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Seraphim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-0-(0∕1)]]",
+        "[[M2-4.5-0-2]]",
+        "[[M2-4.5-0-3]]",
+        "[[M2-4.5-0-4]]",
+        "[[M2-4.5-0-5]]",
+        "[[M2-4.5-0-6]]",
+        "[[M2-4.5-0-7]]",
+        "[[M2-4.5-0-8]]",
+        "[[M2-4.5-0-9]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-3-2]]",
+        "[[M2-3-1]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-0"
+    },
+    {
+      "coordinate": "M2-4.5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Cherubim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-1-(0∕1)]]",
+        "[[M2-4.5-1-2]]",
+        "[[M2-4.5-1-3]]",
+        "[[M2-4.5-1-4]]",
+        "[[M2-4.5-1-5]]",
+        "[[M2-4.5-1-6]]",
+        "[[M2-4.5-1-7]]",
+        "[[M2-4.5-1-8]]",
+        "[[M2-4.5-1-9]]",
+        "[[M2-5-5]]",
+        "[[M2-3-3]]",
+        "[[M0-3-5]]",
+        "[[M2-3-2]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-1"
+    },
+    {
+      "coordinate": "M2-4.5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Ophanim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-2-(0∕1)]]",
+        "[[M2-4.5-2-2]]",
+        "[[M2-4.5-2-3]]",
+        "[[M2-4.5-2-4]]",
+        "[[M2-4.5-2-5]]",
+        "[[M2-4.5-2-6]]",
+        "[[M2-4.5-2-7]]",
+        "[[M2-4.5-2-8]]",
+        "[[M2-4.5-2-9]]",
+        "[[M2-5-3]]",
+        "[[M0-3-10]]",
+        "[[M2-3-4]]",
+        "[[M2-3-1]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-2"
+    },
+    {
+      "coordinate": "M2-4.5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Hashmalim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-3-(0∕1)]]",
+        "[[M2-4.5-3-2]]",
+        "[[M2-4.5-3-3]]",
+        "[[M2-4.5-3-4]]",
+        "[[M2-4.5-3-5]]",
+        "[[M2-4.5-3-6]]",
+        "[[M2-4.5-3-7]]",
+        "[[M2-4.5-3-8]]",
+        "[[M2-4.5-3-9]]",
+        "[[M0-3-7]]",
+        "[[M2-3-1]]",
+        "[[M2-3-2]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-3"
+    },
+    {
+      "coordinate": "M2-4.5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Bene Elohim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-4-(0∕1)]]",
+        "[[M2-4.5-4-2]]",
+        "[[M2-4.5-4-3]]",
+        "[[M2-4.5-4-4]]",
+        "[[M2-4.5-4-5]]",
+        "[[M2-4.5-4-6]]",
+        "[[M2-4.5-4-7]]",
+        "[[M2-4.5-4-8]]",
+        "[[M2-4.5-4-9]]",
+        "[[M2-5-2]]",
+        "[[M2-5-4]]",
+        "[[M2-3-4]]",
+        "[[M0-3-10]]",
+        "[[M2-3-3]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-4"
+    },
+    {
+      "coordinate": "M2-4.5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Kerubim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-5-(0∕1)]]",
+        "[[M2-4.5-5-2]]",
+        "[[M2-4.5-5-3]]",
+        "[[M2-4.5-5-4]]",
+        "[[M2-4.5-5-5]]",
+        "[[M2-4.5-5-6]]",
+        "[[M2-4.5-5-7]]",
+        "[[M2-4.5-5-8]]",
+        "[[M2-4.5-5-9]]",
+        "[[M2-5-6]]",
+        "[[M2-3-1]]",
+        "[[M0-3-3]]",
+        "[[M2-3-4]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-5"
+    },
+    {
+      "coordinate": "M2-4.5-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Ishim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-6-(0∕1)]]",
+        "[[M2-4.5-6-2]]",
+        "[[M2-4.5-6-3]]",
+        "[[M2-4.5-6-4]]",
+        "[[M2-4.5-6-5]]",
+        "[[M2-4.5-6-6]]",
+        "[[M2-4.5-6-7]]",
+        "[[M2-4.5-6-8]]",
+        "[[M2-4.5-6-9]]",
+        "[[M2-5-7]]",
+        "[[M2-3-3]]",
+        "[[M0-3-9]]",
+        "[[M2-3-2]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-6"
+    },
+    {
+      "coordinate": "M2-4.5-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Highest Seraphim",
+      "c_0_source_coordinates": [
+        "[[M2-4.5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-4.5-7-(0∕1)]]",
+        "[[M2-4.5-7-2]]",
+        "[[M2-4.5-7-3]]",
+        "[[M2-4.5-7-4]]",
+        "[[M2-4.5-7-5]]",
+        "[[M2-4.5-7-6]]",
+        "[[M2-4.5-7-7]]",
+        "[[M2-4.5-7-8]]",
+        "[[M2-4.5-7-9]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-3-4]]",
+        "[[M0-2-9]]",
+        "[[M2-3-3]]",
+        "[[M2-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-4.5-7"
+    },
+    {
+      "coordinate": "M2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Planetary Harmonic Integration",
+      "c_0_source_coordinates": [
+        "[[M2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-2]]",
+        "[[M2-5-3]]",
+        "[[M2-5-4]]",
+        "[[M2-5-5]]",
+        "[[M2-5-6]]",
+        "[[M2-5-7]]",
+        "[[M2-0]]",
+        "[[M2-1-5]]",
+        "[[M2-1-0-5]]",
+        "[[M2-1-1-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-3-5]]",
+        "[[M2-1-4-5]]",
+        "[[M2-1-5-5]]",
+        "[[M3]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M2-2]]",
+        "[[M2]]",
+        "[[M2-3]]",
+        "[[M2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5"
+    },
+    {
+      "coordinate": "M2-5-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Sun",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-0]]",
+        "[[M2-5-(0∕1)-1]]",
+        "[[M2-5-(0∕1)-2]]",
+        "[[M2-5-(0∕1)-3]]",
+        "[[M2-5-(0∕1)-4]]",
+        "[[M2-5-(0∕1)-5]]",
+        "[[M2-5-(0∕1)-6]]",
+        "[[M2-5-(0∕1)-7]]",
+        "[[M2-5-2]]",
+        "[[M2-3-1]]",
+        "[[M2-3-(5∕0)]]",
+        "[[M0-2-9-7]]",
+        "[[M0-2-9-0]]",
+        "[[M2-4]]",
+        "[[M2-4.0-(0∕1)-0]]",
+        "[[M2-4.0-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-2]]",
+        "[[M2-4.0-(0∕1)-1]]",
+        "[[M0-0]]",
+        "[[M0-1]]",
+        "[[M0-0-0]]",
+        "[[M0-0-1]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M2-3-1-0-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Planet Earth",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-1]]",
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-0"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Mūlādhāra",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-2]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-0]]",
+        "[[M2-5-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-1"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Svādhiṣṭhāna",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-3]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-1]]",
+        "[[M2-5-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-2"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Maṇipūra",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-4]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-2]]",
+        "[[M2-5-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-3"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Anāhata",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-5]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-3]]",
+        "[[M2-5-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-4"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Viśuddha",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-6]]",
+        "[[M2-4]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-4]]",
+        "[[M2-5-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-5"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Ājñā",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-(0∕1)-7]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-5]]",
+        "[[M2-5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-6"
+    },
+    {
+      "coordinate": "M2-5-(0/1)-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Sahasrāra",
+      "c_0_source_coordinates": [
+        "[[M2-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-(0∕1)-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-(0/1)-7"
+    },
+    {
+      "coordinate": "M2-5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Venus",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-3]]",
+        "[[M2-3-2]]",
+        "[[M0-3-8-5]]",
+        "[[M2-3-1-0-2]]",
+        "[[M2-3-4-0-0]]",
+        "[[M2-3-2-1-1]]",
+        "[[M2-3-4-1-2]]",
+        "[[M2-3-3-2-0]]",
+        "[[M2-5-(0∕1)-4]]",
+        "[[M2-3-2-0]]",
+        "[[M2-3-3-1]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3-0-8]]",
+        "[[M2-4.3-0-9]]",
+        "[[M2-4.3-1-0]]",
+        "[[M2-4.3-1-1]]",
+        "[[M2-4.3-1-2]]",
+        "[[M2-4.3-1-4]]",
+        "[[M2-4.3-1-5]]",
+        "[[M2-4.3-1-6]]",
+        "[[M2-4.3-5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-2"
+    },
+    {
+      "coordinate": "M2-5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Mercury",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-6]]",
+        "[[M2-5-5]]",
+        "[[M2-3-3]]",
+        "[[M0-3-8-2]]",
+        "[[M2-3-2-0-0]]",
+        "[[M2-3-4-0-1]]",
+        "[[M2-3-2-1-2]]",
+        "[[M2-3-1-2-0]]",
+        "[[M2-3-3-2-1]]",
+        "[[M2-5-(0∕1)-5]]",
+        "[[M2-3-2-1]]",
+        "[[M2-3-3-0]]",
+        "[[M2-4.3-0-2]]",
+        "[[M2-4.3-0-3]]",
+        "[[M2-4.3-0-5]]",
+        "[[M2-4.3-0-6]]",
+        "[[M2-4.3-8-9]]",
+        "[[M2-4.3-9-4]]",
+        "[[M2-4.5-1-4]]",
+        "[[M2-4.5-1-5]]",
+        "[[M2-4.5-1-6]]",
+        "[[M2-4.5-1-7]]",
+        "[[M2-4.5-1-8]]",
+        "[[M2-4.5-1-9]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-3"
+    },
+    {
+      "coordinate": "M2-5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Moon",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-5]]",
+        "[[M2-3-4]]",
+        "[[M0-3-8-6]]",
+        "[[M2-3-2-0-1]]",
+        "[[M2-3-4-0-2]]",
+        "[[M2-3-3-1-0]]",
+        "[[M2-3-1-2-1]]",
+        "[[M2-3-3-2-2]]",
+        "[[M2-5-(0∕1)-6]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-3-4-0]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3-0-(0∕1)]]",
+        "[[M2-4.3-0-2]]",
+        "[[M2-4.3-0-5]]",
+        "[[M2-4.3-1-7]]",
+        "[[M2-4.3-2-0]]",
+        "[[M2-4.3-2-1]]",
+        "[[M2-4.3-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-4"
+    },
+    {
+      "coordinate": "M2-5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Saturn",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-7]]",
+        "[[M2-3-2]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M2-3-2-0-2]]",
+        "[[M2-3-1-1-0]]",
+        "[[M2-3-3-1-1]]",
+        "[[M2-3-1-2-2]]",
+        "[[M2-3-4-2-0]]",
+        "[[M2-5-6]]",
+        "[[M2-5-(0∕1)-1]]",
+        "[[M2-3-2-2]]",
+        "[[M2-3-3-2]]",
+        "[[M2-3-4-0-2]]",
+        "[[M2-4.2-1]]",
+        "[[M2-4.2-2]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.2-5]]",
+        "[[M2-4.2-6]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3-0-4]]",
+        "[[M2-4.3-0-7]]",
+        "[[M2-4.3-0-9]]",
+        "[[M2-4.3-1-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-5"
+    },
+    {
+      "coordinate": "M2-5-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Jupiter",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-7]]",
+        "[[M2-3-3]]",
+        "[[M2-3-4]]",
+        "[[M0-3-8-4]]",
+        "[[M2-3-3-0-0]]",
+        "[[M2-3-1-1-1]]",
+        "[[M2-3-3-1-2]]",
+        "[[M2-3-2-2-0]]",
+        "[[M2-3-4-2-1]]",
+        "[[M2-5-5]]",
+        "[[M2-5-(0∕1)-2]]",
+        "[[M2-3-1-2]]",
+        "[[M2-3-4-2]]",
+        "[[M2-4.2-4]]",
+        "[[M2-4.2-7]]",
+        "[[M2-4.3-0-2]]",
+        "[[M2-4.3-0-8]]",
+        "[[M2-4.3-6-3]]",
+        "[[M2-4.3-7-6]]",
+        "[[M2-4.3-8-(0∕1)]]",
+        "[[M2-4.3-8-2]]",
+        "[[M2-4.3-8-5]]",
+        "[[M2-4.3-8-6]]",
+        "[[M2-4.3-8-9]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-6"
+    },
+    {
+      "coordinate": "M2-5-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Mars",
+      "c_0_source_coordinates": [
+        "[[M2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M2-5-3]]",
+        "[[M2-3-1]]",
+        "[[M0-3-8-3]]",
+        "[[M2-3-1-0-0]]",
+        "[[M2-3-3-0-1]]",
+        "[[M2-3-1-1-2]]",
+        "[[M2-3-4-1-0]]",
+        "[[M2-3-2-2-1]]",
+        "[[M2-3-4-2-2]]",
+        "[[M2-5-(0∕1)-3]]",
+        "[[M2-3-1-0]]",
+        "[[M2-3-4-1]]",
+        "[[M2-4.2-3]]",
+        "[[M2-4.3-0-3]]",
+        "[[M2-4.3-0-6]]",
+        "[[M2-4.3-7-4]]",
+        "[[M2-4.3-8-7]]",
+        "[[M2-4.3-9-4]]",
+        "[[M2-4.5-0-(0∕1)]]",
+        "[[M2-4.5-0-2]]",
+        "[[M2-4.5-0-3]]",
+        "[[M2-4.5-0-4]]",
+        "[[M2-4.5-0-5]]",
+        "[[M2-4.5-0-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/parashakti-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M2-5-7"
+    }
+  ]
+}
