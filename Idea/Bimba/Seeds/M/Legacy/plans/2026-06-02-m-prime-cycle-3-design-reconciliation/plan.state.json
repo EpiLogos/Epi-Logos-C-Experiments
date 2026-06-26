@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-26T01:13:30.478Z",
+  "updatedAt": "2026-06-26T01:22:50.966Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6555,11 +6555,16 @@
       "worktree": null
     },
     "36.T36.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-26T01:22:50.914Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-26T01:22:50.914Z",
+      "evidence": [
+        {
+          "at": "2026-06-26T01:22:50.914Z",
+          "text": "Created plugin-integrated-1-2-3/src/browser/pentadic-trace-overlay.tsx (PentadicTraceOverlay): M1 surface slot=tick/position6+0/1 substrate marker, M2 texture slot=resonance72+5deg Shem quantum, M3 lens-ring slot=address64+codon cell; PENTADIC_TRANSLATION_RULE '9_M2 = 8_M3 + 1_M1' joined to 0/1->5 hinge via PentadicTranslationBridge; read-only, single useCompositionProfile subscription, rejects stale trace-generation mismatches. Wired into cosmic-engine-composition.tsx beside Matheme137Overlay. grep -rn '9_M2 = 8_M3|pentadic' matches pentadic-trace-overlay.tsx + cosmic-engine-composition.tsx import."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

@@ -29,6 +29,7 @@ import {
     useCompositionProfile
 } from '@pratibimba/integrated-composition/composition-profile-context';
 import { Matheme137Overlay } from './matheme-137-overlay';
+import { PentadicTraceOverlay } from './pentadic-trace-overlay';
 
 export type CosmicCompositionBlockerId =
     | 'pending-k2-surface'
@@ -117,6 +118,7 @@ export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = (
                     projection={model.codonProjection}
                 />
                 <Matheme137Overlay surfaceHandle={model.k2SurfaceHandle} profile={compositionProfile} />
+                <PentadicTraceOverlay surfaceHandle={model.k2SurfaceHandle} profile={compositionProfile} />
                 <LegacyBeingPatternOverlay profile={compositionProfile} />
                 {model.blockers.length > 0 ? (
                     <IntegratedEmptyState
