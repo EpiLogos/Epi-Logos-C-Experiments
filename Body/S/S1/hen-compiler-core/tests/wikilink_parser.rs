@@ -52,6 +52,42 @@ fn parses_path_heading_targets_and_preserves_raw_target() {
 }
 
 #[test]
+fn parses_path_block_targets_without_collapsing_to_path() {
+    let markdown = "See [[C0/Seeds/T5^block-id|seed block]].";
+
+    let links = parse_wikilinks(markdown);
+
+    assert_eq!(links.len(), 1);
+    assert_eq!(
+        links[0].target,
+        WikilinkTarget::PathBlock {
+            path: "C0/Seeds/T5".into(),
+            block_id: "block-id".into(),
+        }
+    );
+    assert_eq!(links[0].raw_target, "C0/Seeds/T5^block-id");
+    assert_eq!(links[0].alias.as_deref(), Some("seed block"));
+}
+
+#[test]
+fn parses_path_heading_block_targets_without_losing_block_anchor() {
+    let markdown = "See [[C0/Seeds/T5#Local Heading^block-id]].";
+
+    let links = parse_wikilinks(markdown);
+
+    assert_eq!(links.len(), 1);
+    assert_eq!(
+        links[0].target,
+        WikilinkTarget::PathHeadingBlock {
+            path: "C0/Seeds/T5".into(),
+            heading: "Local Heading".into(),
+            block_id: "block-id".into(),
+        }
+    );
+    assert_eq!(links[0].raw_target, "C0/Seeds/T5#Local Heading^block-id");
+}
+
+#[test]
 fn ignores_unclosed_links_and_fenced_code_variants() {
     let markdown = r#"
 Before [[Visible]]

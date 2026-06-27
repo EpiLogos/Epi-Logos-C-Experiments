@@ -181,6 +181,8 @@ typedef struct {
     uint8_t    codon_id;
 } M3_Codon_Quaternion;
 
+/* Ring-position shortcut: embeds the codon id as a 64-step angular position.
+ * Use for torus/ring placement only; it is NOT the elemental bioquaternion. */
 Quaternion m3_quat_from_codon(uint8_t codon_id);
 
 Quaternion m3_quat_codon_state(uint8_t codon_id, uint8_t state);
@@ -441,6 +443,11 @@ typedef struct {
 /* Evaluate codon from the dataset-native inner charge identities. */
 M3_CodonEvaluation evaluate_codon(uint8_t codon6bit);
 
+/* Canonical elemental bioquaternion path:
+ *   m3_compute_charges/evaluate_codon -> m3_eval_to_quat
+ *   { w=pp->Earth, x=nn/mm->Fire, y=np/mp->Water, z=pn/pm->Air }.
+ * Renderers must use this path for elemental quaternion reads; do not use
+ * m3_quat_from_codon except for the ring-position shortcut declared above. */
 Quaternion m3_eval_to_quat(M3_CodonEvaluation eval);
 
 M3_CodonEvaluation m3_quat_to_eval(Quaternion q);

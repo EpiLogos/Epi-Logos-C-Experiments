@@ -5,7 +5,19 @@ use std::path::{Path, PathBuf};
 pub enum WikilinkTarget {
     Path(String),
     Heading(String),
-    PathHeading { path: String, heading: String },
+    PathHeading {
+        path: String,
+        heading: String,
+    },
+    PathBlock {
+        path: String,
+        block_id: String,
+    },
+    PathHeadingBlock {
+        path: String,
+        heading: String,
+        block_id: String,
+    },
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -103,13 +115,41 @@ fn parse_target(raw_target: &str) -> WikilinkTarget {
         return WikilinkTarget::Heading(heading.trim().to_owned());
     }
 
-    match raw_target.split_once('#') {
-        Some((path, heading)) if !heading.trim().is_empty() => WikilinkTarget::PathHeading {
-            path: path.trim().to_owned(),
-            heading: heading.trim().to_owned(),
-        },
-        _ => WikilinkTarget::Path(raw_target.to_owned()),
+    if let Some((path, heading_anchor)) = raw_target.split_once('#') {
+        let path = path.trim();
+        let (heading, block) = match heading_anchor.split_once('^') {
+            Some((heading, block)) => (heading.trim(), non_empty(block.trim())),
+            None => (heading_anchor.trim(), None),
+        };
+
+        if !path.is_empty() && !heading.is_empty() {
+            if let Some(block) = block {
+                return WikilinkTarget::PathHeadingBlock {
+                    path: path.to_owned(),
+                    heading: heading.to_owned(),
+                    block_id: block.to_owned(),
+                };
+            }
+
+            return WikilinkTarget::PathHeading {
+                path: path.to_owned(),
+                heading: heading.to_owned(),
+            };
+        }
     }
+
+    if let Some((path, block)) = raw_target.split_once('^') {
+        let path = path.trim();
+        let block = block.trim();
+        if !path.is_empty() && !block.is_empty() {
+            return WikilinkTarget::PathBlock {
+                path: path.to_owned(),
+                block_id: block.to_owned(),
+            };
+        }
+    }
+
+    WikilinkTarget::Path(raw_target.to_owned())
 }
 
 fn non_empty(value: &str) -> Option<&str> {

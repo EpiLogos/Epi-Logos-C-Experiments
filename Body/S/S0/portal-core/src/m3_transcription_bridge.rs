@@ -2,9 +2,9 @@ use std::os::raw::c_schar;
 
 use serde::{Deserialize, Serialize};
 
-use crate::codon::codon_to_amino_acid;
+use crate::codon::{codon_sequence, codon_to_amino_acid};
 use crate::kernel::KernelTick;
-use crate::transcription::transcribe_degree_from_lut;
+use crate::transcription::{transcribe_degree_from_lut, AMINO_ACID_NAMES};
 use crate::vak_address::{canonical_cf_position, CfPosition, VakAddress};
 
 use epi_lib as _;
@@ -17,6 +17,11 @@ pub type AnandaPosition = u8;
 
 const DR_RING_MAHAMAYA: [u8; 6] = [1, 2, 4, 8, 7, 5];
 const DR_RING_PARASHAKTI: [u8; 6] = [3, 6, 9, 3, 6, 9];
+const BASE_PAIR_POLARITY_MASK: u8 = 0x15;
+
+pub const M3_ELEMENTAL_QUATERNION_PATH: &str =
+    "m3_compute_charges/evaluate_codon -> m3_eval_to_quat";
+pub const M3_RING_POSITION_QUATERNION_SHORTCUT: &str = "m3_quat_from_codon";
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
@@ -50,6 +55,10 @@ pub struct ClockDegreeEntry {
 }
 
 extern "C" {
+    fn evaluate_codon(codon6bit: u8) -> CcodonEvaluation;
+    fn m3_eval_to_quat(eval: CcodonEvaluation) -> CQuaternion;
+    fn m3_quat_to_eval(q: CQuaternion) -> CcodonEvaluation;
+    fn m3_tarot_translate(card_id: u8, source_pos: u8, codon_to_hexagram: i32) -> u8;
     fn m3_compute_charges_ffi(
         codon6bit: u8,
         pp_out: *mut c_schar,
@@ -57,6 +66,24 @@ extern "C" {
         np_out: *mut c_schar,
         pn_out: *mut c_schar,
     );
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct CQuaternion {
+    w: f32,
+    x: f32,
+    y: f32,
+    z: f32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct CcodonEvaluation {
+    pp: i8,
+    mm: i8,
+    mp: i8,
+    pm: i8,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -111,6 +138,22 @@ pub enum Element {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum BioquaternionElement {
+    Earth,
+    Fire,
+    Water,
+    Air,
+}
+
+pub const BIOQUATERNION_ELEMENTS_CANONICAL: [BioquaternionElement; 4] = [
+    BioquaternionElement::Earth,
+    BioquaternionElement::Fire,
+    BioquaternionElement::Water,
+    BioquaternionElement::Air,
+];
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[repr(u8)]
 pub enum AnandaFamily {
@@ -129,6 +172,84 @@ pub struct QuaternionCharges {
     pub nn: i8,
     pub np: i8,
     pub pn: i8,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum BioquaternionCharge {
+    Pp,
+    Nn,
+    Np,
+    Pn,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum QuaternionComponent {
+    W,
+    X,
+    Y,
+    Z,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum XPermutation {
+    X1,
+    X2,
+    X3,
+    X4,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChargeIdentity {
+    pub charge: BioquaternionCharge,
+    pub x_permutation: XPermutation,
+    pub element: BioquaternionElement,
+    pub quaternion_component: QuaternionComponent,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AminoAcidProjection {
+    pub index: AminoAcidIndex,
+    pub name: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TarotTranscription {
+    pub card_id: Option<u8>,
+    pub minor_arcana: Option<MinorArcanaCard>,
+    pub codon_to_hexagram: u8,
+    pub hexagram_to_codon: u8,
+    pub round_trip: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CodonComplement {
+    pub base_pair_codon: Codon6Bit,
+    pub base_pair_sequence: String,
+    pub polarity_xor_mask: u8,
+    pub r_flip: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BioquaternionTranscription {
+    pub codon: Codon6Bit,
+    pub charges: QuaternionCharges,
+    pub quaternion: [f32; 4],
+    pub elements_canonical: [BioquaternionElement; 4],
+    pub charge_identity: [ChargeIdentity; 4],
+    pub amino_acid: AminoAcidProjection,
+    pub hexagram_id: u8,
+    pub tarot: TarotTranscription,
+    pub complement: CodonComplement,
+    pub canonical_quaternion_path: String,
+    pub ring_position_quaternion_shortcut: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -224,6 +345,51 @@ pub fn m3_transcription_projection(
     })
 }
 
+pub fn bioquaternion_transcription(codon: Codon6Bit) -> BioquaternionTranscription {
+    let codon = codon & 0x3F;
+    let charges = compute_charges(codon);
+    let eval = unsafe { evaluate_codon(codon) };
+    let quat = unsafe { m3_eval_to_quat(eval) };
+    let amino_acid_index = codon_to_amino_acid(codon);
+    let minor = minor_arcana(codon);
+    let card_id = minor.as_ref().map(|card| card.card_id);
+    let codon_to_hexagram = card_id
+        .map(|id| unsafe { m3_tarot_translate(id, codon, 1) })
+        .unwrap_or(codon);
+    let hexagram_to_codon = card_id
+        .map(|id| unsafe { m3_tarot_translate(id, codon_to_hexagram, 0) })
+        .unwrap_or(codon);
+    let base_pair_codon = codon ^ BASE_PAIR_POLARITY_MASK;
+
+    BioquaternionTranscription {
+        codon,
+        charges,
+        quaternion: [quat.w, quat.x, quat.y, quat.z],
+        elements_canonical: BIOQUATERNION_ELEMENTS_CANONICAL,
+        charge_identity: charge_identity(),
+        amino_acid: AminoAcidProjection {
+            index: amino_acid_index,
+            name: amino_acid_name(amino_acid_index).to_owned(),
+        },
+        hexagram_id: codon,
+        tarot: TarotTranscription {
+            card_id,
+            minor_arcana: minor,
+            codon_to_hexagram,
+            hexagram_to_codon,
+            round_trip: hexagram_to_codon == codon,
+        },
+        complement: CodonComplement {
+            base_pair_codon,
+            base_pair_sequence: codon_sequence_string(base_pair_codon),
+            polarity_xor_mask: BASE_PAIR_POLARITY_MASK,
+            r_flip: "R#<->## via per-base XOR 0x01".to_owned(),
+        },
+        canonical_quaternion_path: M3_ELEMENTAL_QUATERNION_PATH.to_owned(),
+        ring_position_quaternion_shortcut: M3_RING_POSITION_QUATERNION_SHORTCUT.to_owned(),
+    }
+}
+
 pub fn ananda_projection(vak_coord: &VakAddress) -> Result<AnandaProjection, M3Error> {
     let position = cf_position6(vak_coord)?;
     Ok(ananda_projection_from_position_and_stage(
@@ -275,6 +441,46 @@ fn compute_charges(codon: Codon6Bit) -> QuaternionCharges {
         m3_compute_charges_ffi(codon, &mut pp, &mut nn, &mut np, &mut pn);
     }
     QuaternionCharges { pp, nn, np, pn }
+}
+
+fn charge_identity() -> [ChargeIdentity; 4] {
+    [
+        ChargeIdentity {
+            charge: BioquaternionCharge::Pp,
+            x_permutation: XPermutation::X2,
+            element: BioquaternionElement::Earth,
+            quaternion_component: QuaternionComponent::W,
+        },
+        ChargeIdentity {
+            charge: BioquaternionCharge::Nn,
+            x_permutation: XPermutation::X1,
+            element: BioquaternionElement::Fire,
+            quaternion_component: QuaternionComponent::X,
+        },
+        ChargeIdentity {
+            charge: BioquaternionCharge::Np,
+            x_permutation: XPermutation::X4,
+            element: BioquaternionElement::Water,
+            quaternion_component: QuaternionComponent::Y,
+        },
+        ChargeIdentity {
+            charge: BioquaternionCharge::Pn,
+            x_permutation: XPermutation::X3,
+            element: BioquaternionElement::Air,
+            quaternion_component: QuaternionComponent::Z,
+        },
+    ]
+}
+
+fn amino_acid_name(index: AminoAcidIndex) -> &'static str {
+    AMINO_ACID_NAMES
+        .get(index as usize)
+        .copied()
+        .unwrap_or("?")
+}
+
+fn codon_sequence_string(codon: Codon6Bit) -> String {
+    codon_sequence(codon).iter().map(|b| *b as char).collect()
 }
 
 fn musical_cf_projection(vak_coord: &VakAddress) -> Result<(DiatonicPosition, CFMapping), M3Error> {
@@ -527,6 +733,87 @@ mod tests {
             packet.tao_evaluation.four_x_invariant,
             4 * nucleotide_iching_value((packet.codon >> 4) & 0x03) as i16
         );
+    }
+
+    #[test]
+    fn bioquaternion_transcription_declares_one_totality_for_all_codons() {
+        for codon in 0u8..64 {
+            let packet = bioquaternion_transcription(codon);
+
+            assert_eq!(packet.codon, codon);
+            assert_eq!(
+                packet.elements_canonical,
+                [
+                    BioquaternionElement::Earth,
+                    BioquaternionElement::Fire,
+                    BioquaternionElement::Water,
+                    BioquaternionElement::Air,
+                ]
+            );
+            assert_eq!(
+                packet.charge_identity,
+                [
+                    ChargeIdentity {
+                        charge: BioquaternionCharge::Pp,
+                        x_permutation: XPermutation::X2,
+                        element: BioquaternionElement::Earth,
+                        quaternion_component: QuaternionComponent::W,
+                    },
+                    ChargeIdentity {
+                        charge: BioquaternionCharge::Nn,
+                        x_permutation: XPermutation::X1,
+                        element: BioquaternionElement::Fire,
+                        quaternion_component: QuaternionComponent::X,
+                    },
+                    ChargeIdentity {
+                        charge: BioquaternionCharge::Np,
+                        x_permutation: XPermutation::X4,
+                        element: BioquaternionElement::Water,
+                        quaternion_component: QuaternionComponent::Y,
+                    },
+                    ChargeIdentity {
+                        charge: BioquaternionCharge::Pn,
+                        x_permutation: XPermutation::X3,
+                        element: BioquaternionElement::Air,
+                        quaternion_component: QuaternionComponent::Z,
+                    },
+                ]
+            );
+            assert_eq!(
+                packet.quaternion,
+                [
+                    packet.charges.pp as f32,
+                    packet.charges.nn as f32,
+                    packet.charges.np as f32,
+                    packet.charges.pn as f32,
+                ]
+            );
+            assert_eq!(packet.complement.polarity_xor_mask, 0x15);
+            assert_eq!(packet.complement.base_pair_codon, codon ^ 0x15);
+            assert_eq!(packet.complement.base_pair_codon ^ 0x15, codon);
+            assert_eq!(packet.canonical_quaternion_path, M3_ELEMENTAL_QUATERNION_PATH);
+            assert_eq!(
+                packet.ring_position_quaternion_shortcut,
+                M3_RING_POSITION_QUATERNION_SHORTCUT
+            );
+        }
+    }
+
+    #[test]
+    fn c_eval_quaternion_and_tarot_transcriptions_round_trip() {
+        for codon in 0u8..64 {
+            let eval = unsafe { evaluate_codon(codon) };
+            let quat = unsafe { m3_eval_to_quat(eval) };
+            let roundtrip = unsafe { m3_quat_to_eval(quat) };
+            assert_eq!(roundtrip, eval, "eval/quaternion round-trip failed for {codon}");
+
+            let packet = bioquaternion_transcription(codon);
+            assert!(
+                packet.tarot.round_trip,
+                "tarot codon/hexagram round-trip failed for codon {codon}: {:?}",
+                packet.tarot
+            );
+        }
     }
 
     #[test]

@@ -85,7 +85,7 @@ This is the load-bearing cross-stack consumption pattern: S1 is a **library**, n
 |---|---:|---|---|
 | `lib.rs` | **881** | residency planning, compile-plan facade, coordinate validation, frontmatter validation, ledger-channel registry, compiler invocation, graph-sync intent | `HenTimestamp` (l.19-48), `ExecutorKind` (l.50-55), `TargetAgent` (l.57-61), `LedgerChannel` (l.63-69), `CompilerResidencyPlan` (l.71-80), `CompilerInvocation` (l.82-92), `CompilePlanRequest` (l.94-106), `CompilePlanResponse` (l.108-116), `GraphSyncMode` (l.118-122), `GraphSyncIntent` (l.124-134), `ValidationResult` (l.136-140), `ENVELOPE_LEDGER_CHANNELS` (l.177-250), `ql_first_channels` (l.252-267), `resolve_compiler_residency` (l.269-316), `plan_compile` (l.318-397), `is_valid_coordinate` (l.399-428), `validate_frontmatter` (l.430-448), `validate_compile_artifact_frontmatter` (l.450-493), `graph_sync_intent` (l.495-525), `compiler_invocation` (l.841-873) |
 | `artifact_evidence.rs` | 252 | parse markdown into `ArtifactEvidence`: frontmatter Value, body wikilinks, headings, content/body hashes | `ArtifactKind` (l.8-13), `MarkdownHeading` (l.15-20), `ArtifactEvidence` (l.22-35), `collect_artifact_evidence` (l.37-62), `split_frontmatter` (l.64-93), `unknown_frontmatter` (l.144-168), `parse_headings` (l.170-206), fence-aware scanning (l.221-247) |
-| `wikilinks.rs` | 163 | parse `[[X]]`, `[[X#H]]`, `[[X\|alias]]`; fence-aware (code blocks skipped); preserves line/column/context | `WikilinkTarget` (l.1-6), `Wikilink` (l.8-17), `parse_wikilinks` (l.19-36), `parse_target` (l.98-110), `update_fence_state` (l.136-152) |
+| `wikilinks.rs` | 163 | parse `[[X]]`, `[[X#H]]`, `[[X^block]]`, `[[X#H^block]]`, `[[X\|alias]]`; fence-aware (code blocks skipped); preserves line/column/context | `WikilinkTarget`, `Wikilink`, `parse_wikilinks`, `parse_target`, `update_fence_state` |
 | `smart_env.rs` | **614** | semantic link suggestion from `.smart-env/multi/*.ajson` (Obsidian Smart Connections vault index): explicit-outlink, semantic-source, semantic-block ranking; cosine similarity over BGE-micro embeddings | `LinkCandidateRequest/Response` (l.10-43), `LinkCandidateKind` (l.19-25), `LinkCandidate` (l.27-36), `SmartEnvIndex` (l.67-73, l.355-490), `suggest_link_candidates` (l.109-222), `cosine_similarity` (l.332-353), `resolve_wikilink_target` (l.435-489), `load_ajson_file` (l.492-564) |
 | `relation_inference.rs` | 380 | typed contract for PI-agent relation inference + JSON validation + PI process spawn | `ALLOWED_RELATION_TYPES` (l.11-27, 15 types), `RelationLinkEvidence` (l.29-38), `RelationInferenceRequest` (l.40-50), `RelationInferenceCandidate` (l.52-65), `RelationInferenceProvider` trait (l.67-72), `PiAgentRelationInferenceProvider` (l.74-167), `build_relation_inference_request` (l.204-251), `validate_relation_candidates` (l.253-270), `extract_first_json_value` (l.341-380) |
 | `property_intelligence.rs` | 131 | property-proposal contract: which graph properties a node should carry given coordinate-family hints | `PropertyIntelligenceRequest` (l.6-20), `PropertyFrontmatterEvidence` (l.22-27), `PropertyHeadingEvidence` (l.29-34), `build_property_intelligence_request` (l.36-79), `property_intelligence_system_instructions` (l.114-125) |
@@ -196,7 +196,7 @@ CompilePlanRequest/Response   -- the dry-run plan facade
 GraphSyncMode                 -- CanonicalWrite | MigrateLegacyCoordinate
 GraphSyncIntent               -- pure intent; touches_live_graph: false
 ValidationResult              -- {errors[], warnings[]}
-WikilinkTarget                -- Path | Heading | PathHeading
+WikilinkTarget                -- Path | Heading | PathHeading | PathBlock | PathHeadingBlock
 Wikilink                      -- raw, raw_target, target, alias, line, column, context
 ArtifactEvidence              -- title, coordinate, body_wikilinks[], headings[], content_hash, body_hash, frontmatter
 LinkCandidate                 -- target_path, wikilink_title, score, kind, evidence_source_path, evidence_lines, stale
@@ -324,7 +324,7 @@ The current code declares Hen the "integrity authority" but the textual rewrite 
 2. Use the structured `parse_wikilinks` output as the single source of truth for both "what to rewrite" and "what to flag" — derive the rewritten text from `Wikilink.raw + .target + .alias` reassembly, NOT from textual regex.
 3. Surface integrity warnings as `S1VaultRenameRefusal` entries (e.g., orphan heading anchors, ambiguous title matches across multiple files).
 
-**Benefit**: (a) the rename law becomes testable in `hen-compiler-core/tests/` without an `epi-cli` round-trip, (b) future `WikilinkTarget` variants (e.g., block anchors `^block-id` which the current code does NOT model as a distinct `WikilinkTarget` variant, only treats textually) gain automatic coverage, (c) the integrity authority becomes the mutation authority — single seam.
+**Benefit**: (a) the rename law becomes testable in `hen-compiler-core/tests/` without an `epi-cli` round-trip, (b) future `WikilinkTarget` variants gain automatic coverage, (c) the integrity authority becomes the mutation authority — single seam.
 
 **Blast radius**: MEDIUM. The S0 gateway consumer changes one function call; the rename receipt schema (`S1VaultRenameReceipt` in `epi-s3-gateway-contract`) stays identical. Tests in `epi-cli/tests/gate_s1_vault_surface.rs` must move or duplicate to `hen-compiler-core/tests/rename_reconciliation.rs`.
 
@@ -332,13 +332,13 @@ The current code declares Hen the "integrity authority" but the textual rewrite 
 
 **Location**: [`Body/S/S1/hen-compiler-core/src/wikilinks.rs:1-6`](Body/S/S1/hen-compiler-core/src/wikilinks.rs), [`Body/S/S1/hen-compiler-core/src/wikilinks.rs:98-110`](Body/S/S1/hen-compiler-core/src/wikilinks.rs)
 
-**Current shape**: `WikilinkTarget` has three variants: `Path`, `Heading`, `PathHeading`. Obsidian also supports `[[Note^block-id]]` (block anchor) and `[[Note#^block-id]]` syntax. The current parser at `parse_target` only splits on `#`; `^` anchors fall into `WikilinkTarget::Path` with `Note^block-id` as the raw path — wrong.
+**Landed shape**: `WikilinkTarget` has five variants: `Path`, `Heading`, `PathHeading`, `PathBlock { path, block_id }`, and `PathHeadingBlock { path, heading, block_id }`. Obsidian `[[Note^block-id]]` and `[[Note#Heading^block-id]]` syntax no longer collapses into `WikilinkTarget::Path` with the anchor embedded in the raw path.
 
-**Proposed refactor**: add `WikilinkTarget::PathBlock { path, block_id }` and `WikilinkTarget::PathHeadingBlock { path, heading, block_id }`. Extend `parse_target` to split on `^` after `#`. Update `rewrite_wikilink_titles` in `gate/s1_hen.rs` (or after §5.3, in the new `reconcile_rename`) to handle these forms.
+**Landed refactor**: `parse_target` splits `^` block anchors after optional `#` heading anchors, `relation_inference::target_text` reassembles the structured forms, and the S0 gate exhaustive match accepts the new variants. `wikilink_parser.rs` covers both block forms.
 
 **Benefit**: closes the silent-corruption hole where a renamed note breaks block-anchor wikilinks. This is a real Obsidian usage pattern in the seed material — see references like `Quaternal_Logic_Lived_Topology.md` in `Idea/Bimba/Map/datasets/paramasiva-deep/`.
 
-**Blast radius**: LOW. The enum addition is non-breaking via `#[non_exhaustive]` or by exhaustive-match audit. Tests in `wikilink_parser.rs` need new cases.
+**Blast radius**: LOW. The enum addition was handled by exhaustive-match audit. `wikilink_parser.rs` has block-anchor regression cases.
 
 ### 5.5 `validate_l_alignments` is 109 LOC of imperative validation — extract validator type
 
@@ -541,7 +541,7 @@ Per Tranche 15.2 + [`M5-ARCHITECTURE.md:449-454`](Idea/Bimba/Seeds/M/M5'/M5-ARCH
 | `s1'.ledger.{append, query, inject}` gateway dispatch | NOT LANDED | **First-build with named scope** — ledger-channel registry exists; need write entry-point. BLOCKED by non-dry-run review/promotion law |
 | DR-M1-4 Hen carrier contract markdown | NOT LANDED | **First-build named integration blocker** — `Body/S/S4/ta-onta/hen/CONTRACT.md` per [`13-decision-register.md:347`](Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md) |
 | Coordinate-residency-on-move check | NOT LANDED — landed-gap | **Extend** `rename_or_move_file` per §5.6; named cycle-3 closure |
-| `WikilinkTarget` block-anchor variant | NOT LANDED — landed-gap | **Extend** enum per §5.4 |
+| `WikilinkTarget` block-anchor variant | LANDED | `PathBlock` + `PathHeadingBlock` per §5.4; covered in `wikilink_parser.rs` |
 | Canon Studio Theia extension | NOT LANDED — Tranche 06.4 | **First-build M' product surface** — extension layer, not S1 substrate |
 | Backend Studio Theia extension | NOT LANDED — Tranche 06.4 | **First-build M' product surface** |
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-27T10:17:29.208Z",
+  "updatedAt": "2026-06-27T10:22:19.489Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2640,14 +2640,19 @@
       "worktree": null
     },
     "17.T17.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-27T10:15:19.809Z",
+      "status": "blocked",
+      "updatedAt": "2026-06-27T10:22:19.414Z",
       "claimedAt": "2026-06-27T10:15:19.809Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-27T10:22:19.414Z",
+          "text": "Deliverables already present in HEAD: Body/S/S0/epi-cli/src/core/{mod,pointer_web,walk,quintessential_view,help}.rs; cargo check -p portal-core passed; cargo test -p portal-core passed 80 unit tests plus integration suites until failing existing baseline_profile_fixture_is_real_code_generated_and_byte_stable with dirty out-of-scope Body/S/S0/portal-core/src/m3_transcription_bridge.rs."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-17-t17-5-core-split",
-      "leaseExpiresAt": "2026-06-27T12:15:19.809Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-27T10:15:19.809Z",
       "runId": "20260627T101519Z-17-T17.5",
       "worktree": null
@@ -13279,11 +13284,12 @@
     {
       "runId": "20260627T101519Z-17-T17.5",
       "taskId": "17.T17.5",
-      "status": "in_progress",
+      "status": "blocked",
       "startedAt": "2026-06-27T10:15:19.809Z",
       "owner": "codex-m-dev-17-t17-5-core-split",
       "leaseExpiresAt": "2026-06-27T12:15:19.809Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-27T10:22:19.414Z"
     },
     {
       "runId": "20260627T101520Z-37-T37.11",

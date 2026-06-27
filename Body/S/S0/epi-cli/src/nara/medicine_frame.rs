@@ -1134,7 +1134,9 @@ mod canonical_tests {
         // The operative quartet (Fire/Earth/Air/Water) lands in canonical 1-4;
         // Akasha lands on Aether (0), which is NOT operative.
         for decan_element in 0u8..4 {
-            assert!(canonical_is_operative(canonical_from_m3_decan_element(decan_element)));
+            assert!(canonical_is_operative(canonical_from_m3_decan_element(
+                decan_element
+            )));
         }
         assert!(!canonical_is_operative(canonical_from_m3_decan_element(4)));
     }
@@ -1160,8 +1162,16 @@ mod canonical_tests {
         }
         // The stale clock-spec §15.3 table (scheme E: A=Fire/T=Earth/C=Air/
         // G=Water) is explicitly NOT what we implement — guard against drift.
-        assert_ne!(canonical_from_nucleotide(0), 4, "A must be Water, not Fire (DR-37-5)");
-        assert_ne!(canonical_from_nucleotide(1), 1, "T must be Fire, not Earth (DR-37-5)");
+        assert_ne!(
+            canonical_from_nucleotide(0),
+            4,
+            "A must be Water, not Fire (DR-37-5)"
+        );
+        assert_ne!(
+            canonical_from_nucleotide(1),
+            1,
+            "T must be Fire, not Earth (DR-37-5)"
+        );
     }
 
     #[test]

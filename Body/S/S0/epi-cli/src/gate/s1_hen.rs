@@ -205,7 +205,9 @@ pub fn rename_or_move_file(params: &Value) -> Result<Value, String> {
     let _suppress_unused = |t: &WikilinkTarget| match t {
         WikilinkTarget::Path(_)
         | WikilinkTarget::Heading(_)
-        | WikilinkTarget::PathHeading { .. } => {}
+        | WikilinkTarget::PathHeading { .. }
+        | WikilinkTarget::PathBlock { .. }
+        | WikilinkTarget::PathHeadingBlock { .. } => {}
     };
     let _ = _suppress_unused;
 

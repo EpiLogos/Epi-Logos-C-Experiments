@@ -8,8 +8,8 @@ use epi_s3_gateway_contract::{
 use portal_core::{
     epogdoon_bridge_lattice, DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase,
     KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
-    MathemeNodalConstraint, MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor,
-    RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
+    MathemeNodalConstraint, MathemePointerAnchorProjection, ProfilePrivacyClass,
+    RelationDescriptor, RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
