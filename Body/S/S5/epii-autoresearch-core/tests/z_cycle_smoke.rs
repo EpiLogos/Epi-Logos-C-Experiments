@@ -34,7 +34,7 @@ fn rehear_phase_vak() -> VakAddress {
         cs: CsField {
             code: "CS0".into(),
             direction: CsDirection::Night,
-        recognized: false,
+            recognized: false,
         },
     }
 }

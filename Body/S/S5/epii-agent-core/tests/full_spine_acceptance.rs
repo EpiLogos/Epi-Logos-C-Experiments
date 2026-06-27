@@ -436,7 +436,7 @@ fn aletheia_entry(session_id: &str) -> InboxEntry {
             cs: CsField {
                 code: "CS-full-spine".to_owned(),
                 direction: CsDirection::Day,
-            recognized: false,
+                recognized: false,
             },
         },
         improvement_vectors: vec![

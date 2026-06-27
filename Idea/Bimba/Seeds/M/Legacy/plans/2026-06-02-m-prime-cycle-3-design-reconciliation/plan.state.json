@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-27T10:51:59.419Z",
+  "updatedAt": "2026-06-27T10:55:20.525Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8374,14 +8374,19 @@
       "worktree": null
     },
     "37.T37.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-27T10:42:19.025Z",
+      "status": "done",
+      "updatedAt": "2026-06-27T10:55:20.459Z",
       "claimedAt": "2026-06-27T10:42:19.025Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-27T10:55:20.459Z",
+      "evidence": [
+        {
+          "at": "2026-06-27T10:55:20.459Z",
+          "text": "portal-core lib tests 84/84 passed; m2-parashakti planetary-elemental-feed node tests 3/3 passed; epi-cli schemas vitest 90/90 passed; key paths: Body/S/S0/portal-core/src/aspect.rs, Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs, Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/PlanetaryElementalFeed.tsx, Body/M/epi-theia/extensions/m2-parashakti/test/planetary-elemental-feed.test.mjs, Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-37-t37-2-planetary-elemental",
-      "leaseExpiresAt": "2026-06-27T12:42:19.025Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-27T10:42:19.025Z",
       "runId": "20260627T104219Z-37-T37.2",
       "worktree": null
@@ -13348,11 +13353,12 @@
     {
       "runId": "20260627T104219Z-37-T37.2",
       "taskId": "37.T37.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-27T10:42:19.025Z",
       "owner": "codex-m-dev-37-t37-2-planetary-elemental",
       "leaseExpiresAt": "2026-06-27T12:42:19.025Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-27T10:55:20.459Z"
     },
     {
       "runId": "20260627T104219Z-36-T36.8",

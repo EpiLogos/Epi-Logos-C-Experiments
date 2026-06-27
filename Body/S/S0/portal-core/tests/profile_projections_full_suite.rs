@@ -19,6 +19,7 @@ fn sample_vak(cp: &str, direction: CsDirection) -> VakAddress {
         cs: CsField {
             code: "CS0".to_owned(),
             direction,
+            recognized: false,
         },
     }
 }

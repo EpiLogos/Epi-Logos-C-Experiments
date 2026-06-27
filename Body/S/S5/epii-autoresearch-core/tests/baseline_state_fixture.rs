@@ -59,7 +59,7 @@ fn tranche_04_t0_aletheia_jsonl_fixture_path_recomposes_with_human_gate() {
             cs: CsField {
                 code: "CS0".to_owned(),
                 direction: CsDirection::Night,
-            recognized: false,
+                recognized: false,
             },
         },
         improvement_vectors: vec!["revisit S5 review-state fixture".to_owned()],

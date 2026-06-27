@@ -9,8 +9,8 @@
 
 use epi_s5_epii_autoresearch_core::resonance_ebm::{
     evaluate_anuttara_pentadic_runtime_trace, score_pentadic_hinges,
-    AnuttaraPentadicRuntimeTraceInput, CheckpointLoadPolicy, EbmCheckpoint, PentadicHingeWisdomDelta,
-    PentadicRuntimeTracePayload, ResonanceEbmConfig, ResonanceEbmRuntime,
+    AnuttaraPentadicRuntimeTraceInput, CheckpointLoadPolicy, EbmCheckpoint,
+    PentadicHingeWisdomDelta, PentadicRuntimeTracePayload, ResonanceEbmConfig, ResonanceEbmRuntime,
     ANUTTARA_PENTADIC_RUNTIME_TRACE_FEATURE_FAMILY, PENTADIC_HINGE_LABELS,
 };
 use portal_core::{kernel_tick_from_epogdoon, MathemeHarmonicProfile};
@@ -82,11 +82,8 @@ fn zero_gradient_path_records_feature_family_without_a_trained_checkpoint() {
 fn real_fixtures_preserve_the_hinge_coherently_across_the_substrate() {
     let runtime = zero_fallback_runtime();
     for tick12 in 0..12u8 {
-        let input = AnuttaraPentadicRuntimeTraceInput::from_profile(
-            real_profile(0, tick12),
-            None,
-            None,
-        );
+        let input =
+            AnuttaraPentadicRuntimeTraceInput::from_profile(real_profile(0, tick12), None, None);
         let delta = evaluate_anuttara_pentadic_runtime_trace(&input, &runtime)
             .expect("evaluation succeeds");
 
@@ -141,7 +138,9 @@ fn trained_checkpoint_path_emits_a_real_energy_delta() {
         ANUTTARA_PENTADIC_RUNTIME_TRACE_FEATURE_FAMILY
     );
     assert!(delta.checkpoint_loaded);
-    let trained = delta.trained_energy_delta.expect("trained energy delta present");
+    let trained = delta
+        .trained_energy_delta
+        .expect("trained energy delta present");
     assert!(trained.is_finite() && trained >= 0.0);
     assert_eq!(trained, delta.energy_scalar);
     assert_eq!(
@@ -188,6 +187,8 @@ fn broken_hinge_is_flagged_for_review_not_rewritten() {
     assert!(delta.incoherent_hinges().contains(&"64"));
     assert!(delta.incoherent_hinges().contains(&"384"));
     assert!(!delta.rewrites_canon);
-    assert!(delta.annotation.contains("Flagged for wisdom-curation review"));
+    assert!(delta
+        .annotation
+        .contains("Flagged for wisdom-curation review"));
     assert!(delta.annotation.contains("canon is not rewritten"));
 }
