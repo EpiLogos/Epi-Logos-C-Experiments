@@ -2,12 +2,14 @@ use epi_logos::gate::{
     graph::dispatch_graph_method,
     kernel_bridge_runtime::{
         end_to_end_acceptance_report, extract_typed_json, m1_performance_event_from_profile,
-        runtime_for_spacetimedb_plan, typed_json_performance_event_from_profile,
-        typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        runtime_for_spacetimedb_plan, typed_json_m3_bioquaternion_transcription,
+        typed_json_performance_event_from_profile, typed_json_profile_event_payload,
+        KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
         KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
         KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
         KernelBridgeVakContext, OracleFrame, OracleSpreadScale, OracleTraversalDirection,
-        ReadingPosition, TranscriptionalClockPacket, M1_PROFILE_TO_PERFORMANCE_STREAM,
+        ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
+        M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
@@ -481,6 +483,70 @@ fn kernel_bridge_names_s2_parashakti_correspondence_capability() {
         vec!["profile:72".to_owned()],
         "bridge receipt preserves inbound provenance until the S2 adapter returns its own handle"
     );
+}
+
+#[test]
+fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
+    let direct = typed_json_m3_bioquaternion_transcription(1);
+
+    assert_eq!(direct["contract"], KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION);
+    assert_eq!(direct["codon"], 1);
+    assert_eq!(direct["charges"]["pp"], 21);
+    assert_eq!(direct["charges"]["nn"], -9);
+    assert_eq!(direct["charges"]["np"], 9);
+    assert_eq!(direct["charges"]["pn"], 3);
+    assert_eq!(direct["quaternion"], json!([21.0, -9.0, 9.0, 3.0]));
+    assert_eq!(direct["elementsCanonical"], json!(["earth", "fire", "water", "air"]));
+    assert_eq!(direct["chargeIdentity"][0]["charge"], "pp");
+    assert_eq!(direct["chargeIdentity"][0]["xPermutation"], "X2");
+    assert_eq!(direct["chargeIdentity"][0]["element"], "earth");
+    assert_eq!(direct["chargeIdentity"][0]["quaternionComponent"], "w");
+    assert_eq!(direct["chargeIdentity"][1]["charge"], "nn");
+    assert_eq!(direct["chargeIdentity"][1]["xPermutation"], "X1");
+    assert_eq!(direct["chargeIdentity"][2]["charge"], "np");
+    assert_eq!(direct["chargeIdentity"][2]["xPermutation"], "X4");
+    assert_eq!(direct["chargeIdentity"][3]["charge"], "pn");
+    assert_eq!(direct["chargeIdentity"][3]["xPermutation"], "X3");
+    assert_eq!(direct["aminoAcid"]["index"], 13);
+    assert_eq!(direct["hexagramId"], 1);
+    assert_eq!(direct["tarot"]["roundTrip"], true);
+    assert_eq!(direct["complement"]["polarityXorMask"], 0x15);
+    assert_eq!(direct["complement"]["basePairCodon"], 20);
+    assert_eq!(
+        direct["canonicalQuaternionPath"],
+        "m3_compute_charges/evaluate_codon -> m3_eval_to_quat"
+    );
+    assert_eq!(direct["ringPositionQuaternionShortcut"], "m3_quat_from_codon");
+
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
+            session_key: "theia:m3-mahamaya".to_owned(),
+            params: json!({ "codon": 1 }),
+            profile_generation: Some(64),
+            provenance_handles: vec!["profile:64".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("m3 bioquaternion transcription capability should return one object");
+
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some(KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION)
+    );
+    assert_eq!(receipt.artifact, direct);
+
+    let err = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
+            session_key: "theia:m3-mahamaya".to_owned(),
+            params: json!({ "codon": 64 }),
+            profile_generation: Some(64),
+            provenance_handles: vec!["profile:64".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect_err("codon outside 0..63 must be rejected by the bridge");
+    assert!(err.contains("codon space 0..63"), "{err}");
 }
 
 #[tokio::test]

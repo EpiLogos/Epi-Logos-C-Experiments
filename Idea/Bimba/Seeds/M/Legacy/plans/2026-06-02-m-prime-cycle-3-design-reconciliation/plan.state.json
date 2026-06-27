@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-27T10:22:19.489Z",
+  "updatedAt": "2026-06-27T10:24:24.025Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2882,14 +2882,19 @@
       "worktree": null
     },
     "17.T17.19": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-27T10:15:30.223Z",
+      "status": "done",
+      "updatedAt": "2026-06-27T10:24:23.927Z",
       "claimedAt": "2026-06-27T10:15:30.223Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-27T10:24:23.927Z",
+      "evidence": [
+        {
+          "at": "2026-06-27T10:24:23.927Z",
+          "text": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml: 64 passed, 1 ignored; delivered WikilinkTarget::PathBlock + PathHeadingBlock in Body/S/S1/hen-compiler-core/src/wikilinks.rs with relation/S0 exhaustive consumers and parser regressions in tests/wikilink_parser.rs; S1-ARCHITECTURE §5.4 updated."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-17-t17-19-wikilink-blocks",
-      "leaseExpiresAt": "2026-06-27T12:15:30.223Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-27T10:15:30.223Z",
       "runId": "20260627T101530Z-17-T17.19",
       "worktree": null
@@ -13303,11 +13308,12 @@
     {
       "runId": "20260627T101530Z-17-T17.19",
       "taskId": "17.T17.19",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-27T10:15:30.223Z",
       "owner": "codex-m-dev-17-t17-19-wikilink-blocks",
       "leaseExpiresAt": "2026-06-27T12:15:30.223Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-27T10:24:23.927Z"
     },
     {
       "runId": "20260627T101545Z-36-T36.7",

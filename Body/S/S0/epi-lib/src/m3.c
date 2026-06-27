@@ -362,17 +362,12 @@ uint8_t m3_tarot_translate(
     uint8_t source_pos,
     int codon_to_hexagram)
 {
-    Quaternion q = quat_normalize(m3_tarot_rotation(card_id));
-    if (!codon_to_hexagram) {
-        q = quat_conj(q);
+    uint8_t source = (uint8_t)(source_pos & 0x3Fu);
+    uint8_t offset = (uint8_t)(card_id & 0x3Fu);
+    if (codon_to_hexagram) {
+        return (uint8_t)((source + offset) & 0x3Fu);
     }
-    Quaternion pos_q = quat_normalize(m3_quat_from_codon(source_pos));
-    Quaternion result = quat_mul(q, quat_mul(pos_q, quat_conj(q)));
-    float angle = atan2f(result.x, result.w);
-    if (angle < 0.0f) {
-        angle += 6.2831853071795865f;
-    }
-    return (uint8_t)(((angle / 6.2831853071795865f) * 64.0f)) % 64u;
+    return (uint8_t)((source + 64u - offset) & 0x3Fu);
 }
 
 M3_CodonEvaluation m3_evaluate_with_nondual_guard(

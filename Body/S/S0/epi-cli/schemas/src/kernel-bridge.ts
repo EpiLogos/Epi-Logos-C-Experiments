@@ -69,6 +69,7 @@ export const KernelBridgeCapabilityName = z.enum([
   "depositKernelObservation",
   "requestReviewEvidence",
   "s2.parashaktiCorrespondences",
+  "kernelBridge.m3.bioquaternionTranscription(codon)",
 ]);
 export type KernelBridgeCapabilityName = z.infer<
   typeof KernelBridgeCapabilityName

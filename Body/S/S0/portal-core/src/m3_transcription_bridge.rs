@@ -55,9 +55,10 @@ pub struct ClockDegreeEntry {
 }
 
 extern "C" {
-    fn evaluate_codon(codon6bit: u8) -> CcodonEvaluation;
-    fn m3_eval_to_quat(eval: CcodonEvaluation) -> CQuaternion;
-    fn m3_quat_to_eval(q: CQuaternion) -> CcodonEvaluation;
+    fn evaluate_codon(codon6bit: u8) -> CCodonEvaluation;
+    fn m3_eval_to_quat(eval: CCodonEvaluation) -> CQuaternion;
+    #[cfg(test)]
+    fn m3_quat_to_eval(q: CQuaternion) -> CCodonEvaluation;
     fn m3_tarot_translate(card_id: u8, source_pos: u8, codon_to_hexagram: i32) -> u8;
     fn m3_compute_charges_ffi(
         codon6bit: u8,
@@ -79,7 +80,7 @@ struct CQuaternion {
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct CcodonEvaluation {
+struct CCodonEvaluation {
     pp: i8,
     mm: i8,
     mp: i8,

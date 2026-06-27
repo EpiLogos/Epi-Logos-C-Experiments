@@ -773,6 +773,13 @@ static void test_tarot(void) {
     TEST("major 21 maps to amino acid 21", M3_MAJOR_ARCANA[21].amino_acid_index == 21u);
     TEST("tarot translation stays in codon space", m3_tarot_translate(0u, encode_codon(0,0,0), 1) < 64u);
     TEST("tarot major translation stays in codon space", m3_tarot_translate(56u, encode_codon(0,1,3), 1) < 64u);
+    for (uint8_t card = 0; card < M3_TAROT_QUATERNION_COUNT; card++) {
+        for (uint8_t codon = 0; codon < 64u; codon++) {
+            uint8_t hexagram = m3_tarot_translate(card, codon, 1);
+            uint8_t roundtrip = m3_tarot_translate(card, hexagram, 0);
+            TEST("tarot codon<->hexagram translation is invertible", roundtrip == codon);
+        }
+    }
 #undef COD
 }
 

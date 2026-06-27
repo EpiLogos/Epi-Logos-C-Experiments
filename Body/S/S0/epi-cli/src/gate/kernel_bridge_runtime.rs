@@ -6,10 +6,11 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
 use portal_core::{
-    epogdoon_bridge_lattice, DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase,
-    KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
-    MathemeNodalConstraint, MathemePointerAnchorProjection, ProfilePrivacyClass,
-    RelationDescriptor, RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
+    bioquaternion_transcription, epogdoon_bridge_lattice, DepositionAnchorProjection,
+    EpogdoonBridgeProjection, KernelPhase, KleinFlipEvent, MPrimePerformanceEvent,
+    MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
+    MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor, RelationFamily,
+    VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -30,6 +31,8 @@ pub const M1_PROFILE_TO_PERFORMANCE_STREAM: &str = "S0.kernel-bridge.m1-profile-
 /// never recomputes the 9:8 fold locally.
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
+pub const KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION: &str =
+    "kernelBridge.m3.bioquaternionTranscription(codon)";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -499,16 +502,20 @@ impl KernelBridgeRuntime {
         require_route_lineage(&vak.route_lineage)?;
 
         let gateway_method = gateway_method_for_capability(&request.method, &request.params)?;
-        let artifact = json!({
-            "capability": request.method,
-            "gatewayMethod": gateway_method,
-            "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
-            "source": KERNEL_BRIDGE_SOURCE,
-            "profileGeneration": request.profile_generation,
-            "vakAddress": canonical_vak_json(&vak.vak_address),
-            "routeLineage": vak.route_lineage.clone(),
-            "params": request.params,
-        });
+        let artifact = if request.method == KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION {
+            typed_json_m3_bioquaternion_transcription(codon_param(&request.params, "codon")?)
+        } else {
+            json!({
+                "capability": request.method,
+                "gatewayMethod": gateway_method,
+                "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+                "source": KERNEL_BRIDGE_SOURCE,
+                "profileGeneration": request.profile_generation,
+                "vakAddress": canonical_vak_json(&vak.vak_address),
+                "routeLineage": vak.route_lineage.clone(),
+                "params": request.params,
+            })
+        };
 
         let receipt = KernelBridgeCapabilityReceipt {
             method: request.method.clone(),
@@ -691,6 +698,7 @@ pub fn capability_names() -> &'static [&'static str] {
         "depositKernelObservation",
         "requestReviewEvidence",
         "s2.parashaktiCorrespondences",
+        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
     ]
 }
 
@@ -844,6 +852,29 @@ pub fn typed_json_m2_epogdoon_lattice() -> Value {
         "addressCount": EPOGDOON_M2_ADDRESS_COUNT,
         "cells": m2_epogdoon_projection_lattice(),
     })
+}
+
+/// Typed-JSON form of `kernelBridge.m3.bioquaternionTranscription(codon)` —
+/// one public codon transcription object, so renderers consume charges,
+/// quaternion, elements, amino acid, tarot, and complement from the bridge.
+pub fn typed_json_m3_bioquaternion_transcription(codon: u8) -> Value {
+    let mut value = serde_json::to_value(bioquaternion_transcription(codon))
+        .expect("BioquaternionTranscription serializes");
+    if let Value::Object(ref mut object) = value {
+        object.insert(
+            "contract".to_owned(),
+            Value::String(KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned()),
+        );
+        object.insert(
+            "runtimeOwner".to_owned(),
+            Value::String(KERNEL_BRIDGE_RUNTIME_OWNER.to_owned()),
+        );
+        object.insert(
+            "source".to_owned(),
+            Value::String(KERNEL_BRIDGE_SOURCE.to_owned()),
+        );
+    }
+    value
 }
 
 pub fn m1_performance_event_from_profile(
@@ -1161,10 +1192,24 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         )),
         "requestReviewEvidence" => Ok(Some("s5'.review.submit".to_owned())),
         "s2.parashaktiCorrespondences" => Ok(Some("s2.parashaktiCorrespondences".to_owned())),
+        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => Ok(Some(
+            KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
+        )),
         _ => Err(format!(
             "kernel-bridge rejected unsupported capability {method}"
         )),
     }
+}
+
+fn codon_param(params: &Value, key: &str) -> Result<u8, String> {
+    let value = params
+        .get(key)
+        .and_then(Value::as_u64)
+        .ok_or_else(|| format!("{key} must be an unsigned integer"))?;
+    if value > 63 {
+        return Err(format!("{key} must be in codon space 0..63, got {value}"));
+    }
+    Ok(value as u8)
 }
 
 fn canonical_vak_json(vak: &VakAddress) -> Value {

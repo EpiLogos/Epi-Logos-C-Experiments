@@ -423,7 +423,8 @@ export const KERNEL_BRIDGE_CAPABILITIES = [
     'invokeGatewayRpc',
     'depositKernelObservation',
     'requestReviewEvidence',
-    's2.parashaktiCorrespondences'
+    's2.parashaktiCorrespondences',
+    'kernelBridge.m3.bioquaternionTranscription(codon)'
 ] as const;
 
 export type KernelBridgeCapabilityName = (typeof KERNEL_BRIDGE_CAPABILITIES)[number];
