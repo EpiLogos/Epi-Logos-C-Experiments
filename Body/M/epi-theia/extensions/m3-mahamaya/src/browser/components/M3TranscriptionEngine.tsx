@@ -36,6 +36,7 @@ export interface LensCodonBinaryDegree {
     readonly rnaFamily?: string | null;
     readonly chromosomeGraph?: string | null;
     readonly xLogicInvariant?: string;
+    readonly chargeIdentity?: readonly LensCodonChargeIdentity[];
 }
 
 export interface LensCodonBinaryCharges {
@@ -43,6 +44,13 @@ export interface LensCodonBinaryCharges {
     readonly nn: number;
     readonly np: number;
     readonly pn: number;
+}
+
+export interface LensCodonChargeIdentity {
+    readonly charge: keyof LensCodonBinaryCharges;
+    readonly xPermutation: string;
+    readonly element: string;
+    readonly quaternionComponent: string;
 }
 
 export interface LensCodonBinaryLineHop {
@@ -59,12 +67,6 @@ export interface M3TranscriptionEngineProps {
 }
 
 const CHARGE_ORDER = Object.freeze(['pp', 'nn', 'np', 'pn'] as const);
-const X_LOGIC_LAMPS: Readonly<Record<(typeof CHARGE_ORDER)[number], string>> = Object.freeze({
-    pp: 'X2',
-    nn: 'X1',
-    np: 'X4',
-    pn: 'X3'
-});
 
 export const M3TranscriptionEngine: React.FC<M3TranscriptionEngineProps> = ({
     surface,
@@ -215,7 +217,7 @@ const DegreeCodonCell: React.FC<{
             {CHARGE_ORDER.map(key => (
                 <span key={key} data-charge-key={key} style={chargeStyle}>
                     {key}={degree.charges[key]}
-                    {devModeXLogicLamps ? ` ${key}=${X_LOGIC_LAMPS[key]}` : ''}
+                    {devModeXLogicLamps ? chargeIdentityLabel(degree, key) : ''}
                 </span>
             ))}
         </div>
@@ -305,6 +307,14 @@ function binaryReadout(degree: LensCodonBinaryDegree): string {
 
 function quaternionLabel(quaternion: readonly number[]): string {
     return `[${quaternion.join(', ')}]`;
+}
+
+function chargeIdentityLabel(
+    degree: LensCodonBinaryDegree,
+    key: keyof LensCodonBinaryCharges
+): string {
+    const identity = degree.chargeIdentity?.find(entry => entry.charge === key);
+    return identity ? ` ${key}=${identity.xPermutation}` : '';
 }
 
 function elementLabel(element: string | number): string {

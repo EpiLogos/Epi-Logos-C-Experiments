@@ -287,6 +287,7 @@ test('M3TranscriptionEngine renders honest pending badges and contains no local 
 
     const source = readFileSync(TRANSCRIPTION_ENGINE_SOURCE, 'utf8');
     assert.doesNotMatch(source, /NUCLEOTIDE_ICHING_VALUE|m3_compute_charges|epogdoon|X \+ Y \+ Z|>> 4 & 0x03/);
+    assert.doesNotMatch(source, /X_LOGIC_LAMPS|pp:\s*'X2'|nn:\s*'X1'|np:\s*'X4'|pn:\s*'X3'/);
     assert.doesNotMatch(source, /from ['"][^'"]*m2-parashakti|Body\/S\/S0/);
 });
 
@@ -331,6 +332,12 @@ function lensCodonBinaryFixture({
                 hexagramId: 42,
                 codonClass: 'imperfect-palindromic',
                 charges: Object.freeze({ pp: 1, nn: 2, np: 3, pn: 4 }),
+                chargeIdentity: Object.freeze([
+                    Object.freeze({ charge: 'pp', xPermutation: 'X2', element: 'earth', quaternionComponent: 'w' }),
+                    Object.freeze({ charge: 'nn', xPermutation: 'X1', element: 'fire', quaternionComponent: 'x' }),
+                    Object.freeze({ charge: 'np', xPermutation: 'X4', element: 'water', quaternionComponent: 'y' }),
+                    Object.freeze({ charge: 'pn', xPermutation: 'X3', element: 'air', quaternionComponent: 'z' })
+                ]),
                 quaternion: Object.freeze([1, 2, 3, 4]),
                 elementCanonical: 'canonical-B:Fire',
                 lineChangeOperator: 'line-change-hop:yang-3',

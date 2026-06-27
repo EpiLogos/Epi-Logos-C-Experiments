@@ -230,6 +230,7 @@ describe("Kernel bridge contract package", () => {
       "depositKernelObservation",
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
+      "kernelBridge.m3.bioquaternionTranscription(codon)",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([
       ...KERNEL_BRIDGE_REQUIRED_CAPABILITIES,

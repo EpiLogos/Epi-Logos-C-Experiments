@@ -35,7 +35,9 @@
       "subscribeObservability",
       "invokeGatewayRpc",
       "depositKernelObservation",
-      "requestReviewEvidence"
+      "requestReviewEvidence",
+      "s2.parashaktiCorrespondences",
+      "kernelBridge.m3.bioquaternionTranscription(codon)"
     ],
     "requiredSubscriptions": [
       "onMathemeHarmonicProfile",

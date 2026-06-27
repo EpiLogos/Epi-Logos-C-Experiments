@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-27T10:24:24.025Z",
+  "updatedAt": "2026-06-27T10:38:23.410Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8487,14 +8487,19 @@
       "worktree": null
     },
     "37.T37.11": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-27T10:15:20.379Z",
+      "status": "done",
+      "updatedAt": "2026-06-27T10:38:23.333Z",
       "claimedAt": "2026-06-27T10:15:20.379Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-27T10:38:23.333Z",
+      "evidence": [
+        {
+          "at": "2026-06-27T10:38:23.333Z",
+          "text": "make -C Body/S/S0/epi-lib test_m3: 7252/7252; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml m3_transcription_bridge::tests --lib: 4/4; validate-extension-contract-preflight: ok + node --test validate-extension-contract-preflight.test.mjs: 10/10; key paths Body/S/S0/portal-core/src/m3_transcription_bridge.rs, Body/M/epi-theia/extensions/m-extension-runtime/src/common/bridge-api.ts, Body/M/epi-theia/extensions/kernel-bridge/src/browser/m-extension-runtime-bridge.ts, Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TranscriptionEngine.tsx"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-37-t37-11-bioquaternion-transcription",
-      "leaseExpiresAt": "2026-06-27T12:15:20.379Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-27T10:15:20.379Z",
       "runId": "20260627T101520Z-37-T37.11",
       "worktree": null
@@ -13299,11 +13304,12 @@
     {
       "runId": "20260627T101520Z-37-T37.11",
       "taskId": "37.T37.11",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-27T10:15:20.379Z",
       "owner": "codex-m-dev-37-t37-11-bioquaternion-transcription",
       "leaseExpiresAt": "2026-06-27T12:15:20.379Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-27T10:38:23.333Z"
     },
     {
       "runId": "20260627T101530Z-17-T17.19",

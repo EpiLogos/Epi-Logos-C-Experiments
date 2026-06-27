@@ -40,6 +40,9 @@ export interface KernelBridgeAPI {
     /** capability: s2.parashaktiCorrespondences */
     parashaktiCorrespondences(address72: number): Promise<unknown>;
 
+    /** capability: kernelBridge.m3.bioquaternionTranscription(codon) */
+    bioquaternionTranscription(codon: number): Promise<unknown>;
+
     /** subscription: onMathemeHarmonicProfile */
     onMathemeHarmonicProfile(listener: (profile: MathemeHarmonicProfileBoundary) => void): Disposable;
 
@@ -64,7 +67,8 @@ export const KERNEL_BRIDGE_REQUIRED_CAPABILITIES = Object.freeze([
     'invokeGatewayRpc',
     'depositKernelObservation',
     'requestReviewEvidence',
-    's2.parashaktiCorrespondences'
+    's2.parashaktiCorrespondences',
+    'kernelBridge.m3.bioquaternionTranscription(codon)'
 ] as const);
 
 export const KERNEL_BRIDGE_REQUIRED_SUBSCRIPTIONS = Object.freeze([

@@ -127,6 +127,13 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
         return this.bridge.parashaktiCorrespondences(address72);
     }
 
+    async bioquaternionTranscription(codon: number): Promise<unknown> {
+        if (!this.bridge) {
+            throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');
+        }
+        return this.bridge.bioquaternionTranscription(codon);
+    }
+
     async invokeGatewayRpc(method: string, params: Record<string, unknown>): Promise<unknown> {
         if (!this.bridge) {
             throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');

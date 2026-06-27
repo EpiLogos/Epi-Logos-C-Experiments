@@ -112,6 +112,18 @@ export class T3ToMExtBridgeAdapter implements MExtKernelBridgeAPI {
         return receipt.artifact;
     }
 
+    async bioquaternionTranscription(codon: number): Promise<unknown> {
+        const receipt = await this.source.invokeCapability({
+            method: 'kernelBridge.m3.bioquaternionTranscription(codon)',
+            sessionKey: '',
+            params: { codon },
+            profileGeneration: this.source.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+        return receipt.artifact;
+    }
+
     // ---- Subscriptions (translated from T3 events) ----
 
     onMathemeHarmonicProfile(
