@@ -8,8 +8,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `Cargo.toml` — crate manifest (`portal-core`); deps `epi-lib`, `serde`, `serde_json`, `toml`; feature `resonance_ebm_runtime`
 - `src/lib.rs` — crate root / public surface (re-exports the modules below)
 - `src/kernel.rs` — largest module; clock kernel math (tick/epogdoon/projection), `E4PersonalInputs`, and [[E_4]] personal-energy scalar/gradient provenance.
-- `src/state.rs`, `src/quaternion.rs`, `src/hopf.rs`, `src/spanda.rs`, `src/rotational.rs` — clock state + quaternion/Hopf/spanda/rotational math
-- `src/codon.rs`, `src/codon_rotation_projection.rs`, `src/transcription.rs`, `src/m3_transcription_bridge.rs`, `src/mahamaya.rs`, `src/oracle_lut.rs` — codon / transcription / [[M3]] bridge projection / mahamaya / oracle LUT math
+- `src/state.rs`, `src/quaternion.rs`, `src/hopf.rs`, `src/spanda.rs` — clock state + quaternion/Hopf/spanda math
+- `src/luts/` — consolidated codon, transcription, [[M3]] mahamaya, oracle, rotational, and planet-Keplerian LUT surfaces; `src/lib.rs` keeps legacy module-path re-exports for compatibility
+- `src/codon_rotation_projection.rs`, `src/m3_transcription_bridge.rs` — [[M3]] bridge projection and transcription bridge logic
 - `src/personal_identity.rs`, `src/birthdate_identity.rs`, `src/vama_shakti.rs`, `src/nara_journal.rs`, `src/harmonic_profile.rs`, `src/profile_projections.rs`, `src/psychoid_cymatic/`, `src/aspect.rs`, `src/music_tech.rs` — identity + identity-augment proposal lifecycle, [[M4-0-0]] birthdate/name MEF encoding, [[Vama Shakti]] warm-state / Q-activity math, journal parser + protected [[Nara]] period-reading trajectory reconstruction, harmonic profile, [[M0]]-[[M5]] typed profile projections, handle-only psychoid-cymatic renderer derivation, aspects, music-tech
 - `src/rfactor.rs`, `src/vak_address.rs`, `src/coordinate_phase.rs`, `src/types.rs` — R-factor namespace parsing, VAK addressing, phase-qualified coordinate handles, shared types
 - `src/tunable/` — schema-backed tunable metadata, registry loader, scope resolver, and audit writer for `*.tunable.toml` config surfaces

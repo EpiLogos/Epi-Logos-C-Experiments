@@ -154,6 +154,36 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     let (env, day_id, session_id) = env_with_now_file();
     let mut client = TestGatewayClient::connect(env, 18794).await;
     client.request("connect", json!({})).await.unwrap();
+    client
+        .request(
+            "s4'.psyche.update",
+            json!({
+                "sessionKey": "agent:main:main",
+                "patch": {
+                    "renderer": {
+                        "activeBlockIds": ["block:review-item:44"],
+                        "currentSelection": "block:review-item:44",
+                        "pendingVerdict": Value::Null,
+                        "appliedOperations": [],
+                        "blocks": [{
+                            "id": "block:review-item:44",
+                            "type": "review-item",
+                            "ctx": {"cf": "(0/1/2)", "ct": "CT2", "cp": "4.2"},
+                            "coordinate": "M5'",
+                            "privacyClass": "protected",
+                            "provenance": {
+                                "kind": "evidence-envelope",
+                                "handle": "review-44"
+                            },
+                            "data": {"title": "Live transport"},
+                            "affordances": ["verdict", "annotate"]
+                        }]
+                    }
+                }
+            }),
+        )
+        .await
+        .unwrap();
 
     let value = client
         .request(
@@ -178,6 +208,15 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["pratibimba"]["stewardshipOwner"], "S5'");
     assert_safe_kernel_projection(&value);
+    assert_eq!(value["blocks"]["transport"], "day-now-runtime");
+    assert_eq!(value["blocks"]["source"], "s4'.psyche.state.renderer");
+    assert_eq!(value["blocks"]["activeBlockIds"][0], "block:review-item:44");
+    assert_eq!(value["blocks"]["items"][0]["type"], "review-item");
+    assert_eq!(value["blocks"]["items"][0]["data"]["title"], "Live transport");
+    assert_eq!(
+        value["redis"]["blocksKey"],
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:blocks"
+    );
 }
 
 #[test]

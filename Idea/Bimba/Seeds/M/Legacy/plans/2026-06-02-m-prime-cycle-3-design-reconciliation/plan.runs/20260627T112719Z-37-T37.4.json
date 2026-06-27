@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T112719Z-37-T37.4",
+  "taskId": "37.T37.4",
+  "startedAt": "2026-06-27T11:27:19.364Z",
+  "owner": "codex-m-dev-37-t37-4-m2-contributions",
+  "leaseExpiresAt": "2026-06-27T13:27:19.364Z",
+  "worktree": null,
+  "task": {
+    "id": "37.T37.4",
+    "trackId": "37",
+    "tranche": "T37.4",
+    "title": "Export the M2 elemental + cymatic contributions",
+    "effort": null,
+    "file": "37-biological-quaternionic-cross-layer-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md",
+    "dependsOn": [
+      "37.T37.3"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

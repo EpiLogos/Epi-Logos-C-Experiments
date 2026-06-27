@@ -4,15 +4,10 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::kernel::{ConjugateFormCharacter, ProfilePrivacyClass};
+use crate::luts::planet_keplerian::{PLANET_COUNT, PLANET_KEPLERIAN_VELOCITY};
 use crate::quaternion::{quat_mul, quat_normalize};
 
 pub const PERSONAL_RESONANCE_MAJOR_THRESHOLD: f32 = 2.0 / 3.0;
-
-const PLANET_COUNT: usize = 10;
-// Mirrors M2_PLANET_LUT.keplerian_vel in epi-lib/include/m2.h (arcsec/day x 10).
-const PLANET_KEPLERIAN_VELOCITY: [f32; PLANET_COUNT] = [
-    35_999.0, 47_270.0, 14_739.0, 3_600.0, 1_886.0, 299.0, 120.0, 42.0, 21.0, 14.0,
-];
 
 /// DR-M4-2 axis_order = [w=Earth, x=Fire, y=Water, z=Air].
 pub const CL42_PERSONAL_AXIS_ORDER: [Cl42AxisBinding; 4] = [

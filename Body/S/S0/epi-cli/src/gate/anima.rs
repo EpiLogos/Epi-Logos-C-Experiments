@@ -880,7 +880,37 @@ fn validate_renderer_patch(renderer: &Value) -> Result<(), String> {
             return Err("renderer.appliedOperations must contain only objects".to_owned());
         }
     }
+    if let Some(blocks) = renderer.get("blocks") {
+        let blocks = blocks
+            .as_array()
+            .ok_or_else(|| "renderer.blocks must be an array".to_owned())?;
+        if !blocks.iter().all(is_valid_renderer_block) {
+            return Err("renderer.blocks must contain valid Block wire objects".to_owned());
+        }
+    }
     Ok(())
+}
+
+fn is_valid_renderer_block(value: &Value) -> bool {
+    let Some(block) = value.as_object() else {
+        return false;
+    };
+    let has_required_strings = block.get("id").and_then(Value::as_str).is_some()
+        && block.get("type").and_then(Value::as_str).is_some();
+    let privacy_ok = matches!(
+        block.get("privacyClass").and_then(Value::as_str),
+        Some("public" | "protected" | "protected-local")
+    );
+    let ctx_ok = block
+        .get("ctx")
+        .and_then(Value::as_object)
+        .map(|ctx| {
+            ctx.get("cf").and_then(Value::as_str).is_some()
+                && ctx.get("ct").and_then(Value::as_str).is_some()
+                && ctx.get("cp").and_then(Value::as_str).is_some()
+        })
+        .unwrap_or(false);
+    has_required_strings && privacy_ok && ctx_ok && block.contains_key("data")
 }
 
 /// Read and parse the S4 capability matrix

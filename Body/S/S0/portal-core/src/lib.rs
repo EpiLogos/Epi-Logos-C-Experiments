@@ -1,31 +1,47 @@
 pub mod aspect;
 pub mod birthdate_identity;
-pub mod codon;
 pub mod codon_rotation_projection;
 pub mod coordinate_phase;
 pub mod events;
 pub mod harmonic_profile;
 pub mod hopf;
 pub mod kernel;
+pub mod luts;
 pub mod m3_transcription_bridge;
-pub mod mahamaya;
 pub mod music_tech;
 pub mod nara_journal;
-pub mod oracle_lut;
 pub mod parashakti;
 pub mod personal_identity;
 pub mod profile_projections;
 pub mod psychoid_cymatic;
 pub mod quaternion;
 pub mod rfactor;
-pub mod rotational;
 pub mod spanda;
 pub mod state;
-pub mod transcription;
 pub mod tunable;
 pub mod types;
 pub mod vak_address;
 pub mod vama_shakti;
+
+pub mod codon {
+    pub use crate::luts::codon::*;
+}
+
+pub mod mahamaya {
+    pub use crate::luts::mahamaya::*;
+}
+
+pub mod oracle_lut {
+    pub use crate::luts::oracle::*;
+}
+
+pub mod rotational {
+    pub use crate::luts::rotational::*;
+}
+
+pub mod transcription {
+    pub use crate::luts::transcription::*;
+}
 
 pub use aspect::{
     compute_aspects, planetary_elemental_weights, PlanetaryAspectHandle,

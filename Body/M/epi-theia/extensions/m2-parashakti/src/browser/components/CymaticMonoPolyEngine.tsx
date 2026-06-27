@@ -42,7 +42,7 @@
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
 import type { M2CymaticFrame, M2PrimeMeaningPacket } from '../../common/meaning-packet';
-import type { M2KleinFlipPhase } from '../../common/composition';
+import type { M2KleinFlipPhase as M2MonoPolyKleinFlipPhase } from './klein-phase';
 import { CymaticChladniSurface } from './CymaticChladniSurface';
 import { ProvenanceBadge, type ProvenanceReadinessVariant } from './ProvenanceBadge';
 
@@ -233,7 +233,7 @@ export interface CymaticMonoPolyModel {
     /** The active wave-behaviour state index, or null when bridge-down. */
     readonly activeStateIndex: number | null;
     /** The effective Klein-flip phase driving the mono↔poly inversion. */
-    readonly kleinFlipPhase: M2KleinFlipPhase;
+    readonly kleinFlipPhase: M2MonoPolyKleinFlipPhase;
     /** True once the bridge surfaced a well-formed resonance projection. */
     readonly bridgeReady: boolean;
     /** The profile-tick that produced this classification, if known. */
@@ -253,7 +253,7 @@ export interface CymaticMonoPolyEngineProps {
     /** Live `audio_octet[0]` magnitude driving the coherence reading. */
     readonly audioOctet0?: number | null;
     /** The Klein-flip phase reflecting the mono↔poly dialectic. */
-    readonly kleinFlipPhase?: M2KleinFlipPhase | null;
+    readonly kleinFlipPhase?: M2MonoPolyKleinFlipPhase | null;
     /** Live profile-tick driving the classification (falls back to the address). */
     readonly tick?: number | null;
     /** Readiness for provenance badge tone. */
@@ -270,7 +270,7 @@ export function buildCymaticMonoPolyModel(input: {
     readonly kernelBridge?: M2MonoPolyBridge | null;
     readonly activeAddress72?: number | null;
     readonly audioOctet0?: number | null;
-    readonly kleinFlipPhase?: M2KleinFlipPhase | null;
+    readonly kleinFlipPhase?: M2MonoPolyKleinFlipPhase | null;
     readonly tick?: number | null;
 }): CymaticMonoPolyModel {
     const tick = normalizeTick(input.tick);
@@ -613,7 +613,7 @@ function coherenceFromAudio(audioOctet0: number | null | undefined): number {
     return clampUnit(magnitude / (magnitude + MONOPOLY_COHERENCE_SATURATION_HZ));
 }
 
-function normalizeKleinPhase(phase: M2KleinFlipPhase | null | undefined): M2KleinFlipPhase {
+function normalizeKleinPhase(phase: M2MonoPolyKleinFlipPhase | null | undefined): M2MonoPolyKleinFlipPhase {
     return phase === 'inverted' || phase === 'transitioning' ? phase : 'primary';
 }
 

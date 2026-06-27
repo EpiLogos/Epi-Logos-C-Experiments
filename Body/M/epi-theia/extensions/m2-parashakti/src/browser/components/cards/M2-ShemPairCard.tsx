@@ -26,7 +26,7 @@
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
 import type { M2PrimeMeaningPacket } from '../../../common/meaning-packet';
-import type { M2KleinFlipPhase } from '../../../common/composition';
+import type { M2KleinFlipPhase } from '../klein-phase';
 import { ProvenanceBadge, type ProvenanceReadinessVariant } from '../ProvenanceBadge';
 
 // ── Invariants (declared; never recomputed) ─────────────────────────────────

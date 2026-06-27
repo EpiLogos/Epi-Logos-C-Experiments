@@ -18,6 +18,7 @@ export interface BlockSessionOperation {
 
 export interface BlockRendererSessionState {
     readonly activeBlockIds: readonly string[];
+    readonly blocks: readonly Block[];
     readonly pendingVerdict: BlockSessionOperation | null;
     readonly currentSelection: string | null;
     readonly appliedOperations: readonly BlockSessionOperation[];
@@ -41,6 +42,7 @@ export interface BlockPsycheUpdateRequest {
 export function createRendererSessionState(blocks: readonly Block[] = []): BlockRendererSessionState {
     return Object.freeze({
         activeBlockIds: Object.freeze(blocks.map(block => block.id)),
+        blocks: Object.freeze([...blocks]),
         pendingVerdict: null,
         currentSelection: blocks[0]?.id ?? null,
         appliedOperations: Object.freeze([])
@@ -99,6 +101,7 @@ export function applyBlockSessionOperation(
 ): BlockRendererSessionState {
     return Object.freeze({
         activeBlockIds: state.activeBlockIds,
+        blocks: state.blocks,
         pendingVerdict: operation.method === 'blocks.verdict' ? operation : state.pendingVerdict,
         currentSelection: operation.blockId,
         appliedOperations: Object.freeze([...state.appliedOperations, operation])
@@ -136,6 +139,7 @@ function assertReviewItemAffordance(block: Block, affordance: 'annotate' | 'verd
 function freezeRendererSessionState(state: BlockRendererSessionState): BlockRendererSessionState {
     return Object.freeze({
         activeBlockIds: Object.freeze([...state.activeBlockIds]),
+        blocks: Object.freeze([...state.blocks]),
         pendingVerdict: state.pendingVerdict ? Object.freeze({ ...state.pendingVerdict }) : null,
         currentSelection: state.currentSelection,
         appliedOperations: Object.freeze(state.appliedOperations.map(operation => Object.freeze({ ...operation })))

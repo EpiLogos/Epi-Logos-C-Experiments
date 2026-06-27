@@ -28,14 +28,6 @@
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
 import type { M2PrimeMeaningPacket } from '../../common/meaning-packet';
-import {
-    foldM2ElementalWeightContributions,
-    m2ContributionIsBarElement,
-    M2_BAR_ELEMENTS,
-    type M2BarElement,
-    type M2ElementalWeightContribution,
-    type M2ElementalWeightVector
-} from '../../common/composition';
 import { ProvenanceBadge, type ProvenanceReadinessVariant } from './ProvenanceBadge';
 
 // ── Invariants (declared; never recomputed) ─────────────────────────────────
@@ -71,6 +63,32 @@ export const M2_PLANETARY_FEED_PROVENANCE_FIELD = 'pasu.elementalWeights';
 
 /** The single authority this engine reads through — never a local computation. */
 export const PLANETARY_FEED_SOURCE = 'kernelBridge.m2.planetaryElementalWeights()' as const;
+
+/** The four elements the planetary bar stacks, in render order. */
+export type M2BarElement = 'fire' | 'water' | 'air' | 'earth';
+
+/** The full four-element weight vector — fractions summing to ~1.0 when live. */
+export interface M2ElementalWeightVector {
+    readonly earth: number;
+    readonly fire: number;
+    readonly water: number;
+    readonly air: number;
+}
+
+/** One planetary orbiter's bridge-published contribution to the elemental feed. */
+export interface M2ElementalWeightContribution {
+    readonly planetId: number;
+    readonly element: string;
+    readonly couEnergy: number;
+}
+
+/** The four bar elements in stack order — fire, water, air, earth. */
+export const M2_BAR_ELEMENTS: readonly M2BarElement[] = Object.freeze([
+    'fire',
+    'water',
+    'air',
+    'earth'
+]);
 
 // ── Bridge contract (the ONLY typed projection this engine consumes) ─────────
 
@@ -392,6 +410,34 @@ function AetherNote({
 }
 
 // ── Normalisers (bounds + parity only; no weight arithmetic) ─────────────────
+
+/** True when a contribution lands in the four-element bar (i.e. is not aether). */
+function m2ContributionIsBarElement(
+    contribution: M2ElementalWeightContribution
+): contribution is M2ElementalWeightContribution & { element: M2BarElement } {
+    return (M2_BAR_ELEMENTS as readonly string[]).includes(contribution.element);
+}
+
+function foldM2ElementalWeightContributions(
+    contributions: readonly M2ElementalWeightContribution[]
+): M2ElementalWeightVector {
+    const buckets: Record<M2BarElement, number> = { fire: 0, water: 0, air: 0, earth: 0 };
+    for (const contribution of contributions) {
+        if (m2ContributionIsBarElement(contribution)) {
+            buckets[contribution.element] += Math.max(0, contribution.couEnergy);
+        }
+    }
+    const total = buckets.fire + buckets.water + buckets.air + buckets.earth;
+    if (total <= 0) {
+        return Object.freeze({ earth: 0, fire: 0, water: 0, air: 0 });
+    }
+    return Object.freeze({
+        earth: buckets.earth / total,
+        fire: buckets.fire / total,
+        water: buckets.water / total,
+        air: buckets.air / total
+    });
+}
 
 function safeProject(
     projector: M2PlanetaryWeightsProjector | null

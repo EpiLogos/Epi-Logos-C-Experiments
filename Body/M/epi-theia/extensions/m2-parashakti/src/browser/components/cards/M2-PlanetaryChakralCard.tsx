@@ -28,7 +28,7 @@
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
 import type { M2PrimeMeaningPacket } from '../../../common/meaning-packet';
-import type { M2KleinFlipPhase } from '../../../common/composition';
+import type { M2KleinFlipPhase } from '../klein-phase';
 import type { PlanetaryViewMode } from '../../../common/planetary-lut';
 import { ProvenanceBadge, type ProvenanceReadinessVariant } from '../ProvenanceBadge';
 

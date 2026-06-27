@@ -81,6 +81,16 @@ pub fn context_for_record(
     let personal_orientation_key = (personal_anchor_id != "unbound")
         .then(|| RedisKey::personal_orientation(personal_anchor_id));
     let agent_orientation_key = RedisKey::agent_orientation(agent_id, &temporal_session_id);
+    let blocks_key = RedisKey::from_logical(
+        CacheTier::Hot,
+        format!("s3:gateway:temporal:session:{temporal_session_id}:blocks"),
+    );
+    let blocks_projection = blocks_projection_for_record(
+        state_root,
+        &record.canonical_key,
+        &temporal_session_id,
+        blocks_key.as_str(),
+    );
 
     json!({
         "coordinateOwner": "S3'",
@@ -120,6 +130,7 @@ pub fn context_for_record(
             "content": now_content,
         },
         "pratibimba": inputs.pratibimba,
+        "blocks": blocks_projection,
         "history": {
             "archivePath": history_archive_path,
             "archiveRoot": vault_root
@@ -134,6 +145,7 @@ pub fn context_for_record(
             "sessionKairosKey": session_kairos_key.as_str(),
             "personalOrientationKey": personal_orientation_key.as_ref().map(|key| key.as_str()),
             "agentOrientationKey": agent_orientation_key.as_str(),
+            "blocksKey": blocks_key.as_str(),
             "ttlSeconds": CacheTier::Hot.ttl_seconds(),
             "tiers": {
                 "live": CacheTier::Live.ttl_seconds(),
@@ -216,6 +228,13 @@ pub async fn hydrate_redis_from_context_with_cache(
         &context["pratibimba"].to_string(),
     )
     .await?;
+    write_context_value(
+        cache,
+        context,
+        "/redis/blocksKey",
+        &context["blocks"].to_string(),
+    )
+    .await?;
     context["redis"]["hydrated"] = json!(true);
     Ok(())
 }
@@ -257,6 +276,122 @@ fn ttl_for_key(key: &str) -> u64 {
     } else {
         CacheTier::Hot.ttl_seconds()
     }
+}
+
+fn blocks_projection_for_record(
+    state_root: &Path,
+    session_key: &str,
+    temporal_session_id: &str,
+    redis_key: &str,
+) -> Value {
+    let renderer = read_psyche_renderer_state(state_root, session_key);
+    let active_block_ids = renderer
+        .as_ref()
+        .and_then(|value| value.get("activeBlockIds"))
+        .and_then(Value::as_array)
+        .map(|ids| {
+            ids.iter()
+                .filter_map(Value::as_str)
+                .map(|id| json!(id))
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let items = renderer
+        .as_ref()
+        .and_then(|value| value.get("blocks"))
+        .and_then(Value::as_array)
+        .map(|blocks| {
+            blocks
+                .iter()
+                .filter(|block| is_valid_block_projection_item(block))
+                .cloned()
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let pending_verdict = renderer
+        .as_ref()
+        .and_then(|value| value.get("pendingVerdict"))
+        .cloned()
+        .unwrap_or(Value::Null);
+    let current_selection = renderer
+        .as_ref()
+        .and_then(|value| value.get("currentSelection"))
+        .cloned()
+        .unwrap_or(Value::Null);
+    let applied_operations = renderer
+        .as_ref()
+        .and_then(|value| value.get("appliedOperations"))
+        .and_then(Value::as_array)
+        .map(|operations| {
+            operations
+                .iter()
+                .filter(|operation| operation.as_object().is_some())
+                .cloned()
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+
+    json!({
+        "projectionOwner": "S3'",
+        "agentAccessOwner": "S4/S5",
+        "source": "s4'.psyche.state.renderer",
+        "transport": "day-now-runtime",
+        "privacy": "public/protected block wire payloads only; protected-local bodies remain handles",
+        "sessionKey": session_key,
+        "sessionId": temporal_session_id,
+        "redisKey": redis_key,
+        "ttlSeconds": CacheTier::Hot.ttl_seconds(),
+        "activeBlockIds": active_block_ids,
+        "currentSelection": current_selection,
+        "pendingVerdict": pending_verdict,
+        "appliedOperations": applied_operations,
+        "items": items,
+    })
+}
+
+fn read_psyche_renderer_state(state_root: &Path, session_key: &str) -> Option<Value> {
+    let path = state_root
+        .join("s4")
+        .join("psyche")
+        .join(format!("{}.json", slug_session_key(session_key)));
+    let body = std::fs::read_to_string(path).ok()?;
+    let state: Value = serde_json::from_str(&body).ok()?;
+    state.get("renderer").cloned()
+}
+
+fn is_valid_block_projection_item(value: &Value) -> bool {
+    let Some(block) = value.as_object() else {
+        return false;
+    };
+    let has_required_strings = block.get("id").and_then(Value::as_str).is_some()
+        && block.get("type").and_then(Value::as_str).is_some();
+    let privacy_ok = matches!(
+        block.get("privacyClass").and_then(Value::as_str),
+        Some("public" | "protected" | "protected-local")
+    );
+    let ctx_ok = block
+        .get("ctx")
+        .and_then(Value::as_object)
+        .map(|ctx| {
+            ctx.get("cf").and_then(Value::as_str).is_some()
+                && ctx.get("ct").and_then(Value::as_str).is_some()
+                && ctx.get("cp").and_then(Value::as_str).is_some()
+        })
+        .unwrap_or(false);
+    has_required_strings && privacy_ok && ctx_ok && block.contains_key("data")
+}
+
+fn slug_session_key(value: &str) -> String {
+    value
+        .chars()
+        .map(|ch| {
+            if ch.is_ascii_alphanumeric() || ch == '-' || ch == '_' {
+                ch
+            } else {
+                '_'
+            }
+        })
+        .collect()
 }
 
 fn current_timestamp_ms() -> u64 {
