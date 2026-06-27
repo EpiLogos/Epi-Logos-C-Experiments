@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.applyBlockSessionOperation = exports.createBlockPsycheUpdateRequest = exports.createAnnotationOperation = exports.createVerdictOperation = exports.createRendererSessionState = void 0;
+exports.createBlockPsycheUpdateRequest = exports.applyBlockSessionOperation = exports.createAnnotationOperation = exports.createVerdictOperation = exports.createRendererSessionState = void 0;
 function createRendererSessionState(blocks = []) {
     return Object.freeze({
         activeBlockIds: Object.freeze(blocks.map(block => block.id)),

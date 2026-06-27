@@ -1,4 +1,4 @@
-import { type Block, type BlockContextFrame, type BlockPrivacyClass } from '@pratibimba/m-extension-runtime';
+import { type Block, type BlockContextFrame, type BlockPrivacyClass } from '@pratibimba/m-extension-runtime/lib/common/block-contract';
 export type BlockDocFormat = 'markdown' | 'mdx';
 export interface PersistedBlockDoc {
     readonly coordinate: string;

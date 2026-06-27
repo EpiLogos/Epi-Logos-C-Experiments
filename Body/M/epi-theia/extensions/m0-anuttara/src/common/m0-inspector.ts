@@ -3,6 +3,7 @@ import {
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot
 } from '@pratibimba/m-extension-runtime';
+import type { MonoPolyState } from '../../../../shared/mono-poly-state';
 import { M0_LAYER_VIEWS } from './m0-layers';
 import type { M0LayerKey, M0LayerView } from './m0-layers';
 
@@ -156,11 +157,13 @@ export interface M0ParityBridgeProjection {
 
 export type M0SubTableId = 'ZODIACAL' | 'MONOPOLY' | 'DIVINE_ACT' | 'VIRTUE' | 'NONE';
 export type M0SyntaxLayer = 'speech' | 'relationship' | 'action' | 'completion' | null;
+export type M0MonoPolyState = MonoPolyState;
 
 export interface M0SubTableRow {
     readonly id: number;
     readonly label: string;
     readonly symbol: string | null;
+    readonly monoPolyState: M0MonoPolyState | null;
     readonly provenance: string;
 }
 
@@ -555,11 +558,31 @@ function m0SubTableRowsForArchetype(
                     id,
                     label,
                     symbol,
+                    monoPolyState:
+                        archetypeIndex === 5
+                            ? monoPolyStateValue(
+                                  row?.monoPolyState ??
+                                      row?.mono_poly_state ??
+                                      row?.behaviourState ??
+                                      row?.behaviour_state ??
+                                      row?.state
+                              )
+                            : null,
                     provenance
                 })
             ];
         })
     );
+}
+
+function monoPolyStateValue(raw: unknown): M0MonoPolyState | null {
+    const value = stringValue(raw);
+    return value === 'mono' ||
+        value === 'actually-many' ||
+        value === 'actualising-one' ||
+        value === 'monopoly'
+        ? value
+        : null;
 }
 
 function communityClockOverlay(

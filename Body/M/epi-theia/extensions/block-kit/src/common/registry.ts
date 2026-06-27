@@ -10,7 +10,7 @@ import {
     type BlocksCatalog,
     type BlockEditSurface,
     type CoreBlockType
-} from '@pratibimba/m-extension-runtime';
+} from '@pratibimba/m-extension-runtime/lib/common/block-contract';
 
 /**
  * Coordinate: [[M']] / [[M5']] / Track 44 block-kit

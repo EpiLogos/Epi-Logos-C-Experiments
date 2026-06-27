@@ -78,6 +78,7 @@ export function M0ArchetypeRoutingPanel(
                         <li
                             key={row.id}
                             data-routing-row-id={row.id}
+                            data-mono-poly-state={row.monoPolyState ?? undefined}
                             data-provenance={row.provenance}
                             style={rowStyle}
                         >

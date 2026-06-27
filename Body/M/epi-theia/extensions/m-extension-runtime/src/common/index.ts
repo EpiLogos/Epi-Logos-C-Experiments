@@ -11,6 +11,7 @@ export * from './preferences-schema';
 export * from './readiness';
 export * from './recursive-self-review-gate';
 export * from './route';
+export * from './selection-context';
 export * from './shared-bridge';
 
 // Browser-runtime helpers — re-exported here so any consumer (M-extensions,

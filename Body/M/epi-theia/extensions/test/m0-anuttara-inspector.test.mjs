@@ -943,6 +943,22 @@ test('Arch 9 completion syntax panel renders VIRTUE rows in canonical order and 
 
 function routingSnapshot() {
     const archetypeLut = Array.from({ length: 10 }, () => Object.freeze([]));
+    archetypeLut[5] = Object.freeze([
+        Object.freeze({
+            id: 0,
+            label: 'Poly- - Actually Many',
+            symbol: 'many',
+            mono_poly_state: 'actually-many',
+            provenance: 'MONOPOLY_LUT projected through m0_routing_lut_snapshot'
+        }),
+        Object.freeze({
+            id: 1,
+            label: 'Mono- - Actualising The One',
+            symbol: 'one',
+            behaviour_state: 'actualising-one',
+            provenance: 'MONOPOLY_LUT projected through m0_routing_lut_snapshot'
+        })
+    ]);
     archetypeLut[7] = Object.freeze([
         Object.freeze({
             id: 0,
@@ -1022,6 +1038,28 @@ test("Archetype Routing Reader renders Arch 7 DIVINE_ACT rows with syntax-layer 
     assert.match(markup, /Creation/);
     assert.match(markup, /Maintenance/);
     assert.match(markup, /Dissolution/);
+});
+
+test('Archetype Routing Reader renders Arch 5 MONOPOLY rows with shared MonoPoly state vocabulary', () => {
+    const model = routingModel(5);
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M0ArchetypeRoutingPanel, {
+            projection: model.archetypeRouting,
+            placement: 'language-subtab'
+        })
+    );
+
+    assert.equal(model.archetypeRouting.archetypeIndex, 5);
+    assert.equal(model.archetypeRouting.archetypeLabel, 'Mono-Poly');
+    assert.equal(model.archetypeRouting.routedSubTable, 'MONOPOLY');
+    assert.equal(model.archetypeRouting.syntaxLayer, 'relationship');
+    assert.equal(model.archetypeRouting.subTableRows.length, 2);
+    assert.equal(model.archetypeRouting.subTableRows[0].monoPolyState, 'actually-many');
+    assert.equal(model.archetypeRouting.subTableRows[1].monoPolyState, 'actualising-one');
+    assert.match(markup, /data-routed-sub-table="MONOPOLY"/);
+    assert.match(markup, /MONOPOLY_LUT\[5\]/);
+    assert.match(markup, /data-mono-poly-state="actually-many"/);
+    assert.match(markup, /data-mono-poly-state="actualising-one"/);
 });
 
 test("Archetype Routing Reader renders Arch 9 VIRTUE rows with syntax-layer 'completion'", () => {

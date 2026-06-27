@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBlockDoc = exports.parseBlockDoc = exports.serializeBlockDoc = void 0;
-const m_extension_runtime_1 = require("@pratibimba/m-extension-runtime");
+const block_contract_1 = require("@pratibimba/m-extension-runtime/lib/common/block-contract");
 const registry_1 = require("./registry");
 const MARKDOWN_BLOCK_START = '<!-- pratibimba:block-doc:start -->';
 const MARKDOWN_BLOCK_END = '<!-- pratibimba:block-doc:end -->';
@@ -52,7 +52,7 @@ exports.createBlockDoc = createBlockDoc;
 function assertDocBlocks(doc) {
     const registry = (0, registry_1.createDefaultBlockRegistry)();
     for (const block of doc.blocks) {
-        const errors = (0, m_extension_runtime_1.validateBlockContract)(block);
+        const errors = (0, block_contract_1.validateBlockContract)(block);
         if (errors.length > 0) {
             throw new Error(`Invalid block-doc block ${block.id}: ${errors.join('; ')}`);
         }

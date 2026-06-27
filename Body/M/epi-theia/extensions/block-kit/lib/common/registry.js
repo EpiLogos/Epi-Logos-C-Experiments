@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createDefaultBlockRegistry = exports.renderBlockReadModel = exports.createCoreBlockSpec = exports.createCoreBlockSpecs = exports.BlockRegistry = exports.BLOCK_KIT_SURFACE_REGISTRATIONS = exports.BLOCK_KIT_GATEWAY_METHOD_CONTRACTS = exports.CORE_BLOCK_OWNER_REGISTRATIONS = void 0;
-const m_extension_runtime_1 = require("@pratibimba/m-extension-runtime");
+const block_contract_1 = require("@pratibimba/m-extension-runtime/lib/common/block-contract");
 exports.CORE_BLOCK_OWNER_REGISTRATIONS = Object.freeze([
     owner('rich-text', 'm5-epii', 'pratibimba.m5-epii:review-narrative', "M5'", 'm-extension', 'm5-epii/src/browser/m5-epii-widget.tsx'),
     owner('callout', 'm-extension-runtime', 'pratibimba.runtime:readiness-banner', "M'", 'runtime', 'm-extension-runtime/src/browser/readiness-banner.tsx'),
@@ -24,7 +24,7 @@ exports.CORE_BLOCK_OWNER_REGISTRATIONS = Object.freeze([
     owner('diagram', 'm1-paramasiva', 'pratibimba.m1-paramasiva:relation-diagram', "M1'", 'm-extension', 'm1-paramasiva/src/browser/m1-paramasiva-widget.tsx')
 ]);
 exports.BLOCK_KIT_GATEWAY_METHOD_CONTRACTS = Object.freeze([
-    gateway(m_extension_runtime_1.BLOCKS_CATALOG_GATEWAY_METHOD, 'm-extension-runtime', "M'", 'BK-GW-001', 'm-extension-runtime/src/common/block-contract.ts', false, 'blocks.catalog'),
+    gateway(block_contract_1.BLOCKS_CATALOG_GATEWAY_METHOD, 'm-extension-runtime', "M'", 'BK-GW-001', 'm-extension-runtime/src/common/block-contract.ts', false, 'blocks.catalog'),
     gateway('blocks.annotate', 'block-kit', "M5'", 'BK-GW-002', 'block-kit/src/common/verdict-loop.ts', true, "s4'.psyche.update"),
     gateway('blocks.verdict', 'block-kit', "M5'", 'BK-GW-003', 'block-kit/src/common/verdict-loop.ts', true, "s4'.psyche.update"),
     gateway('blocks.doc.persist', 'block-kit', "M5'", 'BK-GW-004', 'block-kit/src/common/block-doc.ts', true, "s1'.vault.append_block"),
@@ -66,14 +66,14 @@ class BlockRegistry {
     }
     catalog(generatedAt = 'static:track-44.10') {
         const entries = [...this.specs.values()].map(specToCatalogEntry);
-        return (0, m_extension_runtime_1.createBlocksCatalog)(entries, generatedAt);
+        return (0, block_contract_1.createBlocksCatalog)(entries, generatedAt);
     }
     assertAccepted(block) {
-        return (0, m_extension_runtime_1.assertBlockAcceptedByCatalog)(block, this.catalog());
+        return (0, block_contract_1.assertBlockAcceptedByCatalog)(block, this.catalog());
     }
     noOrphanErrors() {
         const errors = [];
-        for (const type of m_extension_runtime_1.CORE_BLOCK_TYPES) {
+        for (const type of block_contract_1.CORE_BLOCK_TYPES) {
             if (!this.specs.has(type)) {
                 errors.push(`Core block type "${type}" has no BlockSpec`);
             }
@@ -82,7 +82,7 @@ class BlockRegistry {
             }
         }
         for (const registration of this.owners.values()) {
-            if (!m_extension_runtime_1.CORE_BLOCK_TYPES.includes(registration.type)) {
+            if (!block_contract_1.CORE_BLOCK_TYPES.includes(registration.type)) {
                 errors.push(`Owner registration ${registration.ownerContributionId} names non-core type "${registration.type}"`);
             }
         }
@@ -91,7 +91,7 @@ class BlockRegistry {
 }
 exports.BlockRegistry = BlockRegistry;
 function createCoreBlockSpecs() {
-    return m_extension_runtime_1.CORE_BLOCK_TYPES.map(type => createCoreBlockSpec(type));
+    return block_contract_1.CORE_BLOCK_TYPES.map(type => createCoreBlockSpec(type));
 }
 exports.createCoreBlockSpecs = createCoreBlockSpecs;
 function createCoreBlockSpec(type) {
@@ -150,7 +150,7 @@ function editSurfaceFor(type) {
     return 'panel';
 }
 function specToCatalogEntry(spec) {
-    return (0, m_extension_runtime_1.createCoreBlockCatalogEntry)(spec.type, {
+    return (0, block_contract_1.createCoreBlockCatalogEntry)(spec.type, {
         schema: spec.schema,
         editSurface: spec.editSurface,
         privacyGate: Object.freeze({

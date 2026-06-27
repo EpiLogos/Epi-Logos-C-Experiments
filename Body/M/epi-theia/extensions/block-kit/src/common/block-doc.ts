@@ -3,7 +3,7 @@ import {
     type Block,
     type BlockContextFrame,
     type BlockPrivacyClass
-} from '@pratibimba/m-extension-runtime';
+} from '@pratibimba/m-extension-runtime/lib/common/block-contract';
 import { createDefaultBlockRegistry } from './registry';
 
 export type BlockDocFormat = 'markdown' | 'mdx';

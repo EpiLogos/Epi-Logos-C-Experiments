@@ -5,13 +5,14 @@ The `@pratibimba/block-kit` Theia extension: native Pratibimba block registry, b
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
 
 ## Ownership
-- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (markdown/MDX persisted block-doc serializer/parser), `verdict-loop.ts` (Human-Gate `blocks.annotate` / `blocks.verdict` session-op helpers and `s4'.psyche.update` renderer patch request), and `index.ts` public surface.
+- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (markdown/MDX persisted block-doc serializer/parser), `verdict-loop.ts` (Human-Gate `blocks.annotate` / `blocks.verdict` session-op helpers and `s4'.psyche.update` renderer patch request), `selection-context.ts` (selection → `s2'.coordinate.context_xray` / `s4'.context.assemble` bridge helper, Psyche context-handle injection, M4-Nara highlight-back port), and `index.ts` public surface.
 - `src/browser/` — `BlockHost` React renderer and `BlockHostWidget` Theia widget.
 - `tests/` — `node --test` suites for no-orphan ownership, gateway contract ownership, verdict-loop round-trip, and block-doc round-trips.
 - Does NOT own: block wire types (owned by `@pratibimba/m-extension-runtime`), gateway runtime ([[S3-SPEC]]), review law ([[M5'-SPEC]] / `agentic-control-room` Human Gate), or domain widgets in the six M' extensions.
 
 ## Local Contracts
 - `src/common/registry.ts` — Coordinate Header for the block-kit public registry and release-gate catalogs.
+- `src/common/selection-context.ts` — Coordinate Header for the Track 44.6 selection-to-context seam.
 - Parent contract artifact: `../contracts/block-kit-release-gate.json`.
 - Owning specs: [[M'-SYSTEM-SPEC]], [[M5'-SPEC]], and Track 44 (`[[44-pratibimba-surface-standard]]`).
 

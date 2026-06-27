@@ -1,4 +1,4 @@
-import { type Block, type BlockCatalogEntry, type BlockSpec, type BlocksCatalog, type CoreBlockType } from '@pratibimba/m-extension-runtime';
+import { type Block, type BlockCatalogEntry, type BlockSpec, type BlocksCatalog, type CoreBlockType } from '@pratibimba/m-extension-runtime/lib/common/block-contract';
 /**
  * Coordinate: [[M']] / [[M5']] / Track 44 block-kit
  * Residency: Body/M/epi-theia/extensions/block-kit/src/common

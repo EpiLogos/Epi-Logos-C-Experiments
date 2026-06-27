@@ -41,6 +41,7 @@
 
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
+import type { MonoPolyState } from '../../../../../shared/mono-poly-state';
 import type { M2CymaticFrame, M2PrimeMeaningPacket } from '../../common/meaning-packet';
 import type { M2KleinFlipPhase as M2MonoPolyKleinFlipPhase } from './klein-phase';
 import { CymaticChladniSurface } from './CymaticChladniSurface';
@@ -87,7 +88,7 @@ export const MONOPOLY_COHERENCE_SATURATION_HZ = 128;
  * behaviour vocabulary, active tone count, normalised mutual resonance, and DET
  * codon projection.
  */
-export type CymaticMonoPolyBehaviourState = 'mono' | 'actually-many' | 'actualising-one' | 'monopoly';
+export type CymaticMonoPolyBehaviourState = MonoPolyState;
 
 export interface CymaticMonoPolyStateProjection {
     readonly behaviourState: CymaticMonoPolyBehaviourState;
