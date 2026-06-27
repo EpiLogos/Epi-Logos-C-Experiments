@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use crate::artifact_evidence::collect_artifact_evidence;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum WikilinkTarget {
     Path(String),
@@ -234,12 +236,19 @@ pub struct RenameRefusal {
     /// Vault-relative path, forward-slash normalised.
     pub relative_path: String,
     pub reason: RenameRefusalReason,
+    pub detail: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RenameRefusalReason {
     /// The rewritten body could not be written back to disk.
     WriteFailed(String),
+    /// The destination path implies a coordinate residency that disagrees with
+    /// the moved file's `coordinate:` frontmatter.
+    CoordinateResidencyMismatch {
+        expected_coordinate: String,
+        actual_coordinate: String,
+    },
 }
 
 /// Derive a wikilink title from a vault-relative path: the file stem.
@@ -305,12 +314,153 @@ pub fn reconcile_rename(
             }),
             Err(err) => refusals.push(RenameRefusal {
                 relative_path: rel_str,
+                detail: format!("failed to write rewritten wikilinks: {err}"),
                 reason: RenameRefusalReason::WriteFailed(err.to_string()),
             }),
         }
     }
 
     (reconciled, refusals)
+}
+
+/// Return a typed refusal when `rel_path` implies a coordinate residency and
+/// the markdown's `coordinate:` frontmatter disagrees with that residency.
+///
+/// This is intentionally refusal-only: Hen does not silently repair
+/// coordinates on move. Auto-update belongs behind a future explicit
+/// capability, not the default vault mutation path.
+pub fn coordinate_residency_refusal(rel_path: &str, markdown: &str) -> Option<RenameRefusal> {
+    let expected_coordinate = coordinate_for_residency(rel_path)?;
+    let evidence = collect_artifact_evidence(rel_path, markdown).ok()?;
+    let actual_coordinate = evidence.coordinate?;
+    if actual_coordinate == expected_coordinate {
+        return None;
+    }
+
+    Some(RenameRefusal {
+        relative_path: rel_path.replace('\\', "/").trim_start_matches('/').to_owned(),
+        detail: format!(
+            "coordinate `{actual_coordinate}` does not match destination residency `{expected_coordinate}`"
+        ),
+        reason: RenameRefusalReason::CoordinateResidencyMismatch {
+            expected_coordinate,
+            actual_coordinate,
+        },
+    })
+}
+
+/// Infer the coordinate implied by a vault-relative residency path.
+///
+/// The mapping is deliberately conservative: it returns `None` when a path
+/// does not carry a stable coordinate implication, so ordinary files are not
+/// accidentally refused.
+pub fn coordinate_for_residency(rel_path: &str) -> Option<String> {
+    let normalised = rel_path.replace('\\', "/");
+    let trimmed = normalised.trim_start_matches('/');
+    let segments: Vec<&str> = trimmed
+        .split('/')
+        .filter(|segment| !segment.is_empty())
+        .collect();
+
+    coordinate_from_seed_path(&segments)
+        .or_else(|| coordinate_from_world_types_path(&segments))
+        .or_else(|| coordinate_from_thought_path(&segments))
+}
+
+fn coordinate_from_seed_path(segments: &[&str]) -> Option<String> {
+    let seeds = segments
+        .windows(3)
+        .position(|window| window == ["Idea", "Bimba", "Seeds"])
+        .map(|idx| idx + 3)
+        .or_else(|| {
+            segments
+                .iter()
+                .position(|segment| *segment == "Seeds")
+                .map(|idx| idx + 1)
+        })?;
+    let family = *segments.get(seeds)?;
+    let layer = *segments.get(seeds + 1)?;
+    let filename = *segments.last()?;
+    let stem = filename.strip_suffix(".md").unwrap_or(filename);
+
+    if stem == format!("{layer}-SPEC") || stem == format!("{layer}-ARCHITECTURE") {
+        return Some(layer.to_owned());
+    }
+
+    if !layer.starts_with(family) {
+        return None;
+    }
+    coordinate_from_shard_stem(stem)
+}
+
+fn coordinate_from_shard_stem(stem: &str) -> Option<String> {
+    let (head, rest) = stem.split_once('-')?;
+    let position = rest
+        .strip_suffix("-SPEC")
+        .or_else(|| rest.strip_suffix("-ARCHITECTURE"))
+        .unwrap_or(rest);
+    if head.is_empty() || position.is_empty() {
+        return None;
+    }
+    let base_position = position.strip_suffix('\'').unwrap_or(position);
+    if !base_position.parse::<u8>().is_ok_and(|n| n <= 5) {
+        return None;
+    }
+    Some(format!("{head}.{position}"))
+}
+
+fn coordinate_from_world_types_path(segments: &[&str]) -> Option<String> {
+    let coordinates = segments
+        .windows(3)
+        .position(|window| window == ["World", "Types", "Coordinates"])
+        .map(|idx| idx + 3)
+        .or_else(|| {
+            segments
+                .windows(2)
+                .position(|window| window == ["Types", "Coordinates"])
+                .map(|idx| idx + 2)
+        })?;
+    let family = *segments.get(coordinates)?;
+    let stem = segments
+        .last()?
+        .strip_suffix(".md")
+        .unwrap_or(segments.last()?);
+    if stem.starts_with(family) && looks_like_coordinate(stem) {
+        Some(stem.to_owned())
+    } else {
+        None
+    }
+}
+
+fn coordinate_from_thought_path(segments: &[&str]) -> Option<String> {
+    let thought_t = segments
+        .windows(4)
+        .position(|window| window == ["Pratibimba", "Self", "Thought", "T"])
+        .map(|idx| idx + 4)
+        .or_else(|| {
+            segments
+                .windows(2)
+                .position(|window| window == ["Thought", "T"])
+                .map(|idx| idx + 2)
+        })?;
+    let lane = *segments.get(thought_t)?;
+    if matches!(lane, "T0" | "T1" | "T2" | "T3" | "T4" | "T5") {
+        Some(lane.to_owned())
+    } else {
+        None
+    }
+}
+
+fn looks_like_coordinate(value: &str) -> bool {
+    let base = value.strip_suffix('\'').unwrap_or(value);
+    let mut chars = base.chars();
+    let Some(family) = chars.next() else {
+        return false;
+    };
+    if !matches!(family, 'C' | 'P' | 'L' | 'S' | 'T' | 'M') {
+        return false;
+    }
+    chars.any(|ch| ch.is_ascii_digit())
 }
 
 /// Rewrite every `[[from_title]]` occurrence to `[[to_title]]`, returning the

@@ -5,7 +5,7 @@ The `@pratibimba/block-kit` Theia extension: native Pratibimba block registry, b
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
 
 ## Ownership
-- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (markdown/MDX persisted block-doc serializer/parser), `verdict-loop.ts` (Human-Gate session-op helpers), and `index.ts` public surface.
+- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (markdown/MDX persisted block-doc serializer/parser), `verdict-loop.ts` (Human-Gate `blocks.annotate` / `blocks.verdict` session-op helpers and `s4'.psyche.update` renderer patch request), and `index.ts` public surface.
 - `src/browser/` — `BlockHost` React renderer and `BlockHostWidget` Theia widget.
 - `tests/` — `node --test` suites for no-orphan ownership, gateway contract ownership, verdict-loop round-trip, and block-doc round-trips.
 - Does NOT own: block wire types (owned by `@pratibimba/m-extension-runtime`), gateway runtime ([[S3-SPEC]]), review law ([[M5'-SPEC]] / `agentic-control-room` Human Gate), or domain widgets in the six M' extensions.

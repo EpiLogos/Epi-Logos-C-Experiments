@@ -1,0 +1,38 @@
+{
+  "runId": "20260627T110127Z-17-T17.20",
+  "taskId": "17.T17.20",
+  "startedAt": "2026-06-27T11:01:27.221Z",
+  "owner": "codex-m-dev-17-t17-20-coordinate-residency",
+  "leaseExpiresAt": "2026-06-27T13:01:27.221Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.20",
+    "trackId": "17",
+    "tranche": "T17.20",
+    "title": "S1 coordinate-residency-on-move enforcement",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. no-orphan-fill tranche whose DR (DR-S1-3) is only PROPOSED, closed claiming no code needed — but residency enforcement is code. No coordinate-residency-on-move enforcement is found under Body/S/S1/. Requires: implement S1 residency-on-move enforcement per CCT-12."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

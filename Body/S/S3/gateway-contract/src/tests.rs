@@ -1219,14 +1219,17 @@ fn s1_vault_rename_receipt_round_trips_through_serde() {
         reconciled_link_count: 5,
         refusals: vec![S1VaultRenameRefusal {
             source_path: "Idea/Refused.md".to_owned(),
-            reason: S1VaultRenameRefusalReason::OrphanHeading,
-            detail: "heading `#Foo` no longer exists in B.md".to_owned(),
+            reason: S1VaultRenameRefusalReason::CoordinateResidencyMismatch,
+            detail: "coordinate `S1.0` does not match destination residency `S2.0`".to_owned(),
         }],
     };
     let json = serde_json::to_value(&receipt).unwrap();
     assert_eq!(json["fromPath"], "Idea/A.md");
     assert_eq!(json["reconciledLinkCount"], 5);
-    assert_eq!(json["refusals"][0]["reason"], "orphan-heading");
+    assert_eq!(
+        json["refusals"][0]["reason"],
+        "coordinate-residency-mismatch"
+    );
     let decoded: S1VaultRenameReceipt = serde_json::from_value(json).unwrap();
     assert_eq!(decoded, receipt);
 }

@@ -797,6 +797,12 @@ fn default_psyche_state() -> Result<Value, String> {
         "currentSubtasks": [],
         "activeArtifactSet": [],
         "carryForward": [],
+        "renderer": {
+            "activeBlockIds": [],
+            "pendingVerdict": Value::Null,
+            "currentSelection": Value::Null,
+            "appliedOperations": [],
+        },
         "visibilityStance": "observable",
         "runLocalContinuity": {},
         "updatedAtMs": current_time_ms()?,
@@ -819,6 +825,9 @@ fn validate_psyche_patch(patch: &Map<String, Value>) -> Result<(), String> {
             ));
         }
     }
+    if let Some(renderer) = patch.get("renderer") {
+        validate_renderer_patch(renderer)?;
+    }
     Ok(())
 }
 
@@ -830,6 +839,7 @@ fn merge_psyche_patch(state: &mut Value, patch: &Map<String, Value>) {
             "currentSubtasks",
             "activeArtifactSet",
             "carryForward",
+            "renderer",
             "visibilityStance",
             "runLocalContinuity",
         ] {
@@ -838,6 +848,39 @@ fn merge_psyche_patch(state: &mut Value, patch: &Map<String, Value>) {
             }
         }
     }
+}
+
+fn validate_renderer_patch(renderer: &Value) -> Result<(), String> {
+    let renderer = renderer
+        .as_object()
+        .ok_or_else(|| "renderer must be an object".to_owned())?;
+    if let Some(active_block_ids) = renderer.get("activeBlockIds") {
+        let ids = active_block_ids
+            .as_array()
+            .ok_or_else(|| "renderer.activeBlockIds must be an array".to_owned())?;
+        if !ids.iter().all(|value| value.as_str().is_some()) {
+            return Err("renderer.activeBlockIds must contain only strings".to_owned());
+        }
+    }
+    if let Some(current_selection) = renderer.get("currentSelection") {
+        if !(current_selection.is_null() || current_selection.as_str().is_some()) {
+            return Err("renderer.currentSelection must be a string or null".to_owned());
+        }
+    }
+    if let Some(pending_verdict) = renderer.get("pendingVerdict") {
+        if !(pending_verdict.is_null() || pending_verdict.as_object().is_some()) {
+            return Err("renderer.pendingVerdict must be an object or null".to_owned());
+        }
+    }
+    if let Some(applied_operations) = renderer.get("appliedOperations") {
+        let operations = applied_operations
+            .as_array()
+            .ok_or_else(|| "renderer.appliedOperations must be an array".to_owned())?;
+        if !operations.iter().all(|value| value.as_object().is_some()) {
+            return Err("renderer.appliedOperations must contain only objects".to_owned());
+        }
+    }
+    Ok(())
 }
 
 /// Read and parse the S4 capability matrix

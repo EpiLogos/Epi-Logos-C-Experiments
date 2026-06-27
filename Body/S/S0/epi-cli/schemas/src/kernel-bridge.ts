@@ -70,6 +70,7 @@ export const KernelBridgeCapabilityName = z.enum([
   "requestReviewEvidence",
   "s2.parashaktiCorrespondences",
   "kernelBridge.m2.planetaryElementalWeights()",
+  "kernelBridge.m2.cymaticMonoPolyState(address72)",
   "kernelBridge.m3.bioquaternionTranscription(codon)",
 ]);
 export type KernelBridgeCapabilityName = z.infer<

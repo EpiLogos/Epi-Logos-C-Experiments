@@ -1,4 +1,7 @@
-use epi_s1_hen_compiler_core::wikilinks::{parse_wikilinks, WikilinkTarget};
+use epi_s1_hen_compiler_core::wikilinks::{
+    coordinate_for_residency, coordinate_residency_refusal, parse_wikilinks, RenameRefusalReason,
+    WikilinkTarget,
+};
 
 #[test]
 fn parses_body_wikilinks_with_aliases_lines_and_context() {
@@ -146,4 +149,49 @@ fn records_columns_for_multiple_links_on_one_line() {
     assert_eq!(links[1].raw_target, "Second");
     assert_eq!(links[1].column, 17);
     assert_eq!(links[1].alias.as_deref(), Some("alias"));
+}
+
+#[test]
+fn infers_coordinate_from_seed_residency_paths() {
+    assert_eq!(
+        coordinate_for_residency("Idea/Bimba/Seeds/S/S2/S2-0-SPEC.md").as_deref(),
+        Some("S2.0")
+    );
+    assert_eq!(
+        coordinate_for_residency("Idea/Bimba/Seeds/S/S1/S1'/S1-0'-SPEC.md").as_deref(),
+        Some("S1.0'")
+    );
+    assert_eq!(
+        coordinate_for_residency("Idea/Bimba/World/Types/Coordinates/S/S4/S4'/S4.4'.md").as_deref(),
+        Some("S4.4'")
+    );
+    assert_eq!(
+        coordinate_for_residency("Idea/Pratibimba/Self/Thought/T/T4/spine-smoke.md").as_deref(),
+        Some("T4")
+    );
+}
+
+#[test]
+fn coordinate_residency_refusal_reports_mismatched_frontmatter() {
+    let markdown = r#"---
+coordinate: S1.0
+title: S1 shard
+---
+
+# S1 shard
+"#;
+
+    let refusal = coordinate_residency_refusal("Idea/Bimba/Seeds/S/S2/S2-0-SPEC.md", markdown)
+        .expect("S1 coordinate under S2 residency must refuse");
+
+    assert_eq!(refusal.relative_path, "Idea/Bimba/Seeds/S/S2/S2-0-SPEC.md");
+    assert!(refusal.detail.contains("S1.0"));
+    assert!(refusal.detail.contains("S2.0"));
+    assert_eq!(
+        refusal.reason,
+        RenameRefusalReason::CoordinateResidencyMismatch {
+            expected_coordinate: "S2.0".to_owned(),
+            actual_coordinate: "S1.0".to_owned(),
+        }
+    );
 }

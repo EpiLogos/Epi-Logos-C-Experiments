@@ -101,7 +101,21 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
                     "currentTask": "stabilise S4 coordinate runtime",
                     "currentSubtasks": ["agent status", "psyche state", "permission boundary"],
                     "activeArtifactSet": ["Body/S/S0/epi-cli/src/gate/anima.rs"],
-                    "runLocalContinuity": { "phase": "s4-tranche" }
+                    "runLocalContinuity": { "phase": "s4-tranche" },
+                    "renderer": {
+                        "activeBlockIds": ["block:review:44"],
+                        "pendingVerdict": {
+                            "method": "blocks.verdict",
+                            "blockId": "block:review:44",
+                            "decision": "approve",
+                            "actor": "human",
+                            "actorIsHuman": true,
+                            "resolutionTarget": "human",
+                            "reason": "approved under Human Gate",
+                            "routesTo": "s4'.psyche.update"
+                        },
+                        "currentSelection": "block:review:44"
+                    }
                 },
             }),
         )
@@ -115,6 +129,14 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
     assert_eq!(
         updated["state"]["runLocalContinuity"]["phase"],
         "s4-tranche"
+    );
+    assert_eq!(
+        updated["state"]["renderer"]["pendingVerdict"]["method"],
+        "blocks.verdict"
+    );
+    assert_eq!(
+        updated["state"]["renderer"]["currentSelection"],
+        "block:review:44"
     );
     assert_eq!(
         updated["handles"]["protectedBodyPolicy"],
@@ -132,6 +154,10 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
         .expect("Psyche update should persist through the gateway state store");
 
     assert_eq!(reread["state"]["currentSubtasks"][2], "permission boundary");
+    assert_eq!(
+        reread["state"]["renderer"]["pendingVerdict"]["resolutionTarget"],
+        "human"
+    );
 
     let oversized = client
         .request(

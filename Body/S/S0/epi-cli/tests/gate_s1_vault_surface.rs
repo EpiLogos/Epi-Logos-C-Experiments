@@ -10,7 +10,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use epi_logos::gate::s1_hen;
-use epi_s3_gateway_contract::S1VaultRenameReceipt;
+use epi_s3_gateway_contract::{S1VaultRenameReceipt, S1VaultRenameRefusalReason};
 use serde_json::json;
 
 fn fixture_vault() -> PathBuf {
@@ -249,6 +249,52 @@ fn rename_file_refuses_when_moving_into_protected_destination_without_capability
     );
     // Source remains in place since the rename was refused before fs::rename.
     assert!(vault.join("PublicNote.md").exists());
+}
+
+#[test]
+fn move_file_refuses_coordinate_residency_mismatch_before_rename() {
+    let vault = fixture_vault();
+    let _guard = scopeguard_remove(&vault);
+    let source = vault.join("Idea/Bimba/Seeds/S/S1/S1-0-SPEC.md");
+    fs::create_dir_all(source.parent().unwrap()).unwrap();
+    fs::write(
+        &source,
+        r#"---
+coordinate: S1.0
+title: S1 shard
+---
+
+# S1 shard
+"#,
+    )
+    .unwrap();
+
+    let params = json!({
+        "vaultRoot": vault.to_string_lossy(),
+        "fromPath": "Idea/Bimba/Seeds/S/S1/S1-0-SPEC.md",
+        "toPath": "Idea/Bimba/Seeds/S/S2/S2-0-SPEC.md",
+    });
+    let receipt_json =
+        s1_hen::rename_or_move_file(&params).expect("mismatch should return typed receipt");
+    let receipt: S1VaultRenameReceipt =
+        serde_json::from_value(receipt_json).expect("receipt should deserialise");
+
+    assert_eq!(receipt.reconciled_link_count, 0);
+    assert_eq!(receipt.refusals.len(), 1);
+    assert_eq!(
+        receipt.refusals[0].reason,
+        S1VaultRenameRefusalReason::CoordinateResidencyMismatch
+    );
+    assert!(receipt.refusals[0].detail.contains("S1.0"));
+    assert!(receipt.refusals[0].detail.contains("S2.0"));
+    assert!(
+        vault.join("Idea/Bimba/Seeds/S/S1/S1-0-SPEC.md").exists(),
+        "source must remain in place when residency mismatch refuses"
+    );
+    assert!(
+        !vault.join("Idea/Bimba/Seeds/S/S2/S2-0-SPEC.md").exists(),
+        "destination must not be created when residency mismatch refuses"
+    );
 }
 
 // Simple drop-guard to clean up the temp vault even on test failure.

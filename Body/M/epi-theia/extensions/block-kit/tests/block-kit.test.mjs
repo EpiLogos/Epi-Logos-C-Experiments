@@ -10,6 +10,8 @@ const {
     CORE_BLOCK_OWNER_REGISTRATIONS,
     applyBlockSessionOperation,
     createBlockDoc,
+    createAnnotationOperation,
+    createBlockPsycheUpdateRequest,
     createDefaultBlockRegistry,
     createRendererSessionState,
     createVerdictOperation,
@@ -86,13 +88,55 @@ test('verdict operation round-trips through renderer session state after Human G
         decision: 'approve',
         actor: 'human',
         actorIsHuman: true,
+        resolutionTarget: 'human',
         reason: 'accepted in M5 review surface',
         humanGate: { ok: true }
     });
     const next = applyBlockSessionOperation(state, op);
     assert.equal(next.currentSelection, b.id);
     assert.equal(next.pendingVerdict?.decision, 'approve');
+    assert.equal(next.pendingVerdict?.resolutionTarget, 'human');
     assert.equal(next.appliedOperations.length, 1);
+});
+
+test('block verdict and annotation ops route renderer state to s4 psyche update by resolution target', () => {
+    const b = block();
+    const state = createRendererSessionState([b]);
+    assert.throws(
+        () => createVerdictOperation({
+            block: b,
+            decision: 'reject',
+            actor: 'anima',
+            actorIsHuman: false,
+            resolutionTarget: 'agent',
+            reason: 'agent attempted committal verdict',
+            humanGate: { ok: false, reason: 'human-gate enforced' }
+        }),
+        /human-gate/i
+    );
+
+    const annotation = createAnnotationOperation({
+        block: b,
+        annotation: 'needs a human-side note',
+        actor: 'anima',
+        actorIsHuman: false,
+        resolutionTarget: 'agent'
+    });
+    assert.equal(annotation.method, 'blocks.annotate');
+    assert.equal(annotation.resolutionTarget, 'agent');
+    assert.equal(annotation.routesTo, "s4'.psyche.update");
+
+    const next = applyBlockSessionOperation(state, annotation);
+    const request = createBlockPsycheUpdateRequest({
+        sessionKey: 'session:44.4',
+        state: next
+    });
+    assert.equal(request.method, "s4'.psyche.update");
+    assert.equal(request.params.sessionKey, 'session:44.4');
+    assert.deepEqual(request.params.patch.renderer.activeBlockIds, [b.id]);
+    assert.equal(request.params.patch.renderer.currentSelection, b.id);
+    assert.equal(request.params.patch.renderer.appliedOperations[0].method, 'blocks.annotate');
+    assert.equal(request.params.patch.renderer.appliedOperations[0].resolutionTarget, 'agent');
 });
 
 test('block docs round-trip in markdown and MDX with the same validated block payload', () => {

@@ -6,11 +6,11 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
 use portal_core::{
-    bioquaternion_transcription, epogdoon_bridge_lattice, planetary_elemental_weights,
-    DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase, KleinFlipEvent,
-    MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
-    MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass, RelationDescriptor,
-    RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
+    bioquaternion_transcription, cymatic_monopoly_state, epogdoon_bridge_lattice,
+    planetary_elemental_weights, DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase,
+    KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
+    MathemeNodalConstraint, MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass,
+    RelationDescriptor, RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -33,6 +33,8 @@ pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
 pub const KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS: &str =
     "kernelBridge.m2.planetaryElementalWeights()";
+pub const KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE: &str =
+    "kernelBridge.m2.cymaticMonoPolyState(address72)";
 pub const KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION: &str =
     "kernelBridge.m3.bioquaternionTranscription(codon)";
 
@@ -504,19 +506,25 @@ impl KernelBridgeRuntime {
         require_route_lineage(&vak.route_lineage)?;
 
         let gateway_method = gateway_method_for_capability(&request.method, &request.params)?;
-        let artifact = if request.method == KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION {
-            typed_json_m3_bioquaternion_transcription(codon_param(&request.params, "codon")?)
-        } else {
-            json!({
-                "capability": request.method,
-                "gatewayMethod": gateway_method,
-                "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
-                "source": KERNEL_BRIDGE_SOURCE,
-                "profileGeneration": request.profile_generation,
-                "vakAddress": canonical_vak_json(&vak.vak_address),
-                "routeLineage": vak.route_lineage.clone(),
-                "params": request.params,
-            })
+        let artifact = match request.method.as_str() {
+            KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE => {
+                typed_json_m2_cymatic_monopoly_state(address72_param(&request.params, "address72")?)
+            }
+            KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => {
+                typed_json_m3_bioquaternion_transcription(codon_param(&request.params, "codon")?)
+            }
+            _ => {
+                json!({
+                    "capability": request.method,
+                    "gatewayMethod": gateway_method,
+                    "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+                    "source": KERNEL_BRIDGE_SOURCE,
+                    "profileGeneration": request.profile_generation,
+                    "vakAddress": canonical_vak_json(&vak.vak_address),
+                    "routeLineage": vak.route_lineage.clone(),
+                    "params": request.params,
+                })
+            }
         };
 
         let receipt = KernelBridgeCapabilityReceipt {
@@ -701,6 +709,7 @@ pub fn capability_names() -> &'static [&'static str] {
         "requestReviewEvidence",
         "s2.parashaktiCorrespondences",
         KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
+        KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
     ]
 }
@@ -866,6 +875,28 @@ pub fn typed_json_m2_planetary_elemental_weights(state: &PortalClockState) -> Va
         object.insert(
             "contract".to_owned(),
             Value::String(KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS.to_owned()),
+        );
+        object.insert(
+            "runtimeOwner".to_owned(),
+            Value::String(KERNEL_BRIDGE_RUNTIME_OWNER.to_owned()),
+        );
+        object.insert(
+            "source".to_owned(),
+            Value::String(KERNEL_BRIDGE_SOURCE.to_owned()),
+        );
+    }
+    value
+}
+
+/// Typed-JSON form of `kernelBridge.m2.cymaticMonoPolyState(address72)` —
+/// `{ behaviourState, activeToneCount, mutualResonance, projection64 }`.
+pub fn typed_json_m2_cymatic_monopoly_state(address72: u8) -> Value {
+    let mut value = serde_json::to_value(cymatic_monopoly_state(address72))
+        .expect("CymaticMonoPolyState serializes");
+    if let Value::Object(ref mut object) = value {
+        object.insert(
+            "contract".to_owned(),
+            Value::String(KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE.to_owned()),
         );
         object.insert(
             "runtimeOwner".to_owned(),
@@ -1220,6 +1251,9 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS => Ok(Some(
             KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS.to_owned(),
         )),
+        KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE => {
+            Ok(Some(KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE.to_owned()))
+        }
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => Ok(Some(
             KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
         )),
@@ -1227,6 +1261,19 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
             "kernel-bridge rejected unsupported capability {method}"
         )),
     }
+}
+
+fn address72_param(params: &Value, key: &str) -> Result<u8, String> {
+    let value = params
+        .get(key)
+        .and_then(Value::as_u64)
+        .ok_or_else(|| format!("{key} must be an unsigned integer"))?;
+    if value > 71 {
+        return Err(format!(
+            "{key} must be in M2 address space 0..71, got {value}"
+        ));
+    }
+    Ok(value as u8)
 }
 
 fn codon_param(params: &Value, key: &str) -> Result<u8, String> {

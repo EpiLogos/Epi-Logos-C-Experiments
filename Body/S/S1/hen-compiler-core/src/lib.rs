@@ -31,6 +31,7 @@ pub use smart_env::{
     LinkCandidateResponse,
 };
 pub use wikilinks::{
-    parse_wikilinks, reconcile_rename, rewrite_wikilink_titles, wikilink_title_from_path,
-    ReconciledDoc, RenameRefusal, RenameRefusalReason, Wikilink, WikilinkTarget,
+    coordinate_for_residency, coordinate_residency_refusal, parse_wikilinks, reconcile_rename,
+    rewrite_wikilink_titles, wikilink_title_from_path, ReconciledDoc, RenameRefusal,
+    RenameRefusalReason, Wikilink, WikilinkTarget,
 };

@@ -43,6 +43,9 @@ export interface KernelBridgeAPI {
     /** capability: kernelBridge.m2.planetaryElementalWeights() */
     planetaryElementalWeights(): Promise<unknown>;
 
+    /** capability: kernelBridge.m2.cymaticMonoPolyState(address72) */
+    cymaticMonoPolyState(address72: number): Promise<unknown>;
+
     /** capability: kernelBridge.m3.bioquaternionTranscription(codon) */
     bioquaternionTranscription(codon: number): Promise<unknown>;
 
@@ -72,6 +75,7 @@ export const KERNEL_BRIDGE_REQUIRED_CAPABILITIES = Object.freeze([
     'requestReviewEvidence',
     's2.parashaktiCorrespondences',
     'kernelBridge.m2.planetaryElementalWeights()',
+    'kernelBridge.m2.cymaticMonoPolyState(address72)',
     'kernelBridge.m3.bioquaternionTranscription(codon)'
 ] as const);
 

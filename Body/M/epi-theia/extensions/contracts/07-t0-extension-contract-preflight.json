@@ -38,6 +38,7 @@
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
       "kernelBridge.m2.planetaryElementalWeights()",
+      "kernelBridge.m2.cymaticMonoPolyState(address72)",
       "kernelBridge.m3.bioquaternionTranscription(codon)"
     ],
     "requiredSubscriptions": [
@@ -655,7 +656,8 @@
           "invokeGatewayRpc",
           "depositKernelObservation",
           "requestReviewEvidence",
-          "kernelBridge.m2.planetaryElementalWeights()"
+          "kernelBridge.m2.planetaryElementalWeights()",
+          "kernelBridge.m2.cymaticMonoPolyState(address72)"
         ],
         "requiredSubscriptions": [
           "profile",

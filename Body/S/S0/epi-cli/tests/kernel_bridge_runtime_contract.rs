@@ -2,14 +2,14 @@ use epi_logos::gate::{
     graph::dispatch_graph_method,
     kernel_bridge_runtime::{
         end_to_end_acceptance_report, extract_typed_json, m1_performance_event_from_profile,
-        runtime_for_spacetimedb_plan, typed_json_m3_bioquaternion_transcription,
-        typed_json_performance_event_from_profile, typed_json_profile_event_payload,
-        KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        runtime_for_spacetimedb_plan, typed_json_m2_cymatic_monopoly_state,
+        typed_json_m3_bioquaternion_transcription, typed_json_performance_event_from_profile,
+        typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
         KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
         KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
         KernelBridgeVakContext, OracleFrame, OracleSpreadScale, OracleTraversalDirection,
-        ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
-        M1_PROFILE_TO_PERFORMANCE_STREAM,
+        ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
+        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
@@ -483,6 +483,60 @@ fn kernel_bridge_names_s2_parashakti_correspondence_capability() {
         vec!["profile:72".to_owned()],
         "bridge receipt preserves inbound provenance until the S2 adapter returns its own handle"
     );
+}
+
+#[test]
+fn kernel_bridge_surfaces_m2_cymatic_monopoly_state() {
+    let fixtures = [
+        (1, "mono", 1, 1),
+        (7, "actually-many", 2, 7),
+        (19, "actualising-one", 4, 19),
+        (31, "monopoly", 6, 31),
+    ];
+
+    for (address72, expected_state, active_tone_count, projection64) in fixtures {
+        let direct = typed_json_m2_cymatic_monopoly_state(address72);
+        assert_eq!(direct["contract"], KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE);
+        assert_eq!(direct["behaviourState"], expected_state);
+        assert_eq!(direct["activeToneCount"], active_tone_count);
+        assert_eq!(direct["projection64"], projection64);
+        assert!(
+            direct["mutualResonance"].as_f64().unwrap() >= 0.0
+                && direct["mutualResonance"].as_f64().unwrap() <= 1.0
+        );
+    }
+
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE.to_owned(),
+            session_key: "theia:m2-parashakti".to_owned(),
+            params: json!({ "address72": 31 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("m2 cymatic MonoPoly state capability should return one bridge object");
+
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some(KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE)
+    );
+    assert_eq!(receipt.artifact["behaviourState"], "monopoly");
+    assert_eq!(receipt.artifact["activeToneCount"], 6);
+    assert_eq!(receipt.artifact["projection64"], 31);
+
+    let err = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE.to_owned(),
+            session_key: "theia:m2-parashakti".to_owned(),
+            params: json!({ "address72": 72 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect_err("address outside 0..71 must be rejected by the bridge");
+    assert!(err.contains("M2 address space 0..71"), "{err}");
 }
 
 #[test]

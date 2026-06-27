@@ -26,6 +26,38 @@ export const PSYCHE_CF = AGENT_CF.psyche; // "(4.5/0)"
 /** Default bound on carried-forward threads — continuity without regulatory bloat. */
 export const DEFAULT_MAX_CARRY = 12;
 
+export type RendererResolutionTarget = "agent" | "human";
+
+export interface RendererPendingVerdict {
+  method: "blocks.verdict";
+  blockId: string;
+  decision: "approve" | "reject" | "revise" | "defer";
+  actor: string;
+  actorIsHuman: boolean;
+  resolutionTarget: RendererResolutionTarget;
+  reason: string;
+  routesTo: "s4'.psyche.update";
+}
+
+export interface RendererSessionOperation {
+  method: "blocks.annotate" | "blocks.verdict";
+  blockId: string;
+  actor: string;
+  actorIsHuman: boolean;
+  resolutionTarget: RendererResolutionTarget;
+  decision?: "approve" | "reject" | "revise" | "defer";
+  annotation?: string;
+  reason: string;
+  routesTo: "s4'.psyche.update";
+}
+
+export interface RendererState {
+  activeBlockIds: string[];
+  pendingVerdict: RendererPendingVerdict | null;
+  currentSelection: string | null;
+  appliedOperations?: RendererSessionOperation[];
+}
+
 export interface SessionState {
   agent: "psyche";
   cf: string;
@@ -35,6 +67,8 @@ export interface SessionState {
   nowPath: string;
   /** Curated threads carried into this session. */
   carryForward: string[];
+  /** M' block renderer continuity carried through handoff. */
+  renderer: RendererState;
   /** Continuity link to the prior session, if this opened from a handoff. */
   priorSessionId?: string;
 }
@@ -49,6 +83,7 @@ export function openSession(input: {
   sessionId: string;
   dayId: string;
   carryForward?: string[];
+  renderer?: RendererState;
   priorSessionId?: string;
 }): SessionState {
   return {
@@ -58,6 +93,7 @@ export function openSession(input: {
     dayId: input.dayId,
     nowPath: nowPath(input.dayId, input.sessionId),
     carryForward: input.carryForward ?? [],
+    renderer: cloneRendererState(input.renderer),
     priorSessionId: input.priorSessionId,
   };
 }
@@ -69,7 +105,7 @@ export function openSession(input: {
  */
 export function handoff(
   prev: SessionState,
-  next: { sessionId: string; dayId: string; carryForward: string[] },
+  next: { sessionId: string; dayId: string; carryForward: string[]; renderer?: RendererState },
 ): SessionState {
   if (next.sessionId === prev.sessionId) {
     throw new Error("handoff must advance to a new session id — re-opening the same NOW is stagnation.");
@@ -78,8 +114,18 @@ export function handoff(
     sessionId: next.sessionId,
     dayId: next.dayId,
     carryForward: next.carryForward,
+    renderer: next.renderer ?? prev.renderer,
     priorSessionId: prev.sessionId,
   });
+}
+
+function cloneRendererState(renderer: RendererState | undefined): RendererState {
+  return {
+    activeBlockIds: [...(renderer?.activeBlockIds ?? [])],
+    pendingVerdict: renderer?.pendingVerdict ? { ...renderer.pendingVerdict } : null,
+    currentSelection: renderer?.currentSelection ?? null,
+    appliedOperations: renderer?.appliedOperations?.map((operation) => ({ ...operation })) ?? [],
+  };
 }
 
 /**

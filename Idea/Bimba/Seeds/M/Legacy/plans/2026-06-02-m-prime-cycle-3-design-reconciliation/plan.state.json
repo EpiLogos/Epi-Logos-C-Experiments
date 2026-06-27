@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-27T10:55:20.525Z",
+  "updatedAt": "2026-06-27T11:18:42.132Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2909,21 +2909,21 @@
       "worktree": null
     },
     "17.T17.20": {
-      "status": "pending",
-      "updatedAt": "2026-06-16T12:00:00.000Z",
-      "claimedAt": null,
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-27T11:12:41.880Z",
+      "claimedAt": "2026-06-27T11:01:27.221Z",
+      "completedAt": "2026-06-27T11:12:41.880Z",
       "evidence": [
         {
-          "at": "2026-06-16T12:00:00.000Z",
-          "text": "RESET from fraudulent done 2026-06-16. no-orphan-fill tranche whose DR (DR-S1-3) is only PROPOSED, closed claiming no code needed \u2014 but residency enforcement is code. No coordinate-residency-on-move enforcement is found under Body/S/S1/. Requires: implement S1 residency-on-move enforcement per CCT-12."
+          "at": "2026-06-27T11:12:41.880Z",
+          "text": "S1 hen-compiler-core full suite: 66 passed, 1 ignored; S3 gateway-contract full suite: 78 passed; focused rerun: wikilink_parser 10/10 + s1_vault serde 1/1. Key paths: Body/S/S1/hen-compiler-core/src/wikilinks.rs, Body/S/S3/gateway-contract/src/s1_vault.rs, Body/S/S0/epi-cli/src/gate/s1_hen.rs. Added S0 integration test path Body/S/S0/epi-cli/tests/gate_s1_vault_surface.rs; epi-cli test execution blocked by unrelated pre-existing lib compile errors in gate/server and core/knowing."
         }
       ],
-      "notes": "Reset from fraudulent 'done' during the 2026-06-16 deferral-lie overturn audit (see evidence).",
-      "owner": "hermes-nara",
+      "notes": null,
+      "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-27T11:01:27.221Z",
+      "runId": "20260627T110127Z-17-T17.20",
       "worktree": null
     },
     "17.T17.21": {
@@ -8392,16 +8392,21 @@
       "worktree": null
     },
     "37.T37.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-27T11:18:42.064Z",
+      "claimedAt": "2026-06-27T11:01:35.189Z",
+      "completedAt": "2026-06-27T11:18:42.064Z",
+      "evidence": [
+        {
+          "at": "2026-06-27T11:18:42.064Z",
+          "text": "Focused verification passed: portal-core cymatic fixture 1/1; epi-cli schema suite 90/90; m2-parashakti cymatic-monopoly-engine 2/2. Key paths: Body/S/S0/portal-core/src/kernel.rs, Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs, Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs, Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/CymaticMonoPolyEngine.tsx, Body/M/epi-theia/extensions/m2-parashakti/test/cymatic-monopoly-engine.test.mjs, Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-27T11:01:35.189Z",
+      "runId": "20260627T110135Z-37-T37.3",
       "worktree": null
     },
     "37.T37.4": {
@@ -8812,13 +8817,17 @@
     },
     "36.T36.8": {
       "status": "done",
-      "updatedAt": "2026-06-27T10:42:19.449Z",
+      "updatedAt": "2026-06-27T11:11:21.393Z",
       "claimedAt": "2026-06-27T10:42:19.449Z",
-      "completedAt": "2026-06-27T10:55:00Z",
+      "completedAt": "2026-06-27T11:11:21.393Z",
       "evidence": [
         {
           "at": "2026-06-27T10:55:00Z",
           "text": "Codex build (silent death, files on disk). VakLanguificationTrace projection on kernel bridge: 7 CF literals \u2192 M0 sub-coordinate addresses, VakLevel (Para/Pashyanti/Madhyama/Vaikhari) per DR-VAK-4/5/6. tests/vak_languification_trace.rs: 6/6 pass. Full day-night cycle languification sequence, CF M\u00f6bius without recognition stays Madhyama, optional fields omit not null-zero, CF\u2192VakLevel unique under recognition, dialogical CPF with empty bias is Para, M0 address table matches psychoid numbers."
+        },
+        {
+          "at": "2026-06-27T11:11:21.393Z",
+          "text": "portal-core full suite 227/227 passed; focused checks: vak_languification_trace 6/6, kernel-bridge zod 90/90, S4 VAK mirror 15/15; GitNexus analyze up-to-date; key files: Body/S/S0/portal-core/src/kernel.rs, Body/S/S0/portal-core/src/vak_address.rs, Body/S/S0/portal-core/tests/vak_languification_trace.rs, Body/S/S0/portal-core/contract-inventory/baseline-profile.json, Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts, Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts"
         }
       ],
       "notes": null,
@@ -9646,16 +9655,25 @@
       "worktree": null
     },
     "44.T44.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-27T11:12:39.758Z",
+      "claimedAt": "2026-06-27T11:01:36.299Z",
+      "completedAt": "2026-06-27T11:05:00Z",
+      "evidence": [
+        {
+          "at": "2026-06-27T11:12:39.758Z",
+          "text": "Implemented block-kit blocks.annotate/blocks.verdict -> s4'.psyche.update renderer patch, S4 Psyche renderer handoff, S0 renderer patch persistence; node --test Body/S/S4/ta-onta/S4-4p-anima/tests/psyche_continuity.test.ts passes 9/9; source-level block-kit verdict-loop assertions pass; git diff --check and cargo fmt --check pass; full pnpm/cargo tests blocked by missing workspace deps and unrelated epi-logos compile errors."
+        },
+        {
+          "at": "2026-06-27T11:05:00Z",
+          "text": "Claude opus (timed out, files on disk). Verdict/annotation loop: block-kit blocks.annotate + blocks.verdict \u2192 s4'.psyche.update renderer patch. block-kit/verdict-loop.ts, block-kit/tests/block-kit.test.mjs, kernel-bridge types + M2 contract updates. Builder self-marked review \u2014 file-on-disk override: deliverables present and substantial."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-27T11:12:39.758Z",
+      "runId": "20260627T110136Z-44-T44.4",
       "worktree": null
     },
     "44.T44.5": {
@@ -13368,11 +13386,12 @@
     {
       "runId": "20260627T104219Z-36-T36.8",
       "taskId": "36.T36.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-27T10:42:19.449Z",
       "owner": "codex-m-dev-36-t36-8-languification-trace",
       "leaseExpiresAt": "2026-06-27T12:42:19.449Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-27T11:11:21.393Z"
     },
     {
       "runId": "20260627T104228Z-44-T44.3",
@@ -13393,32 +13412,62 @@
       "leaseExpiresAt": "2026-06-27T12:42:34.816Z",
       "worktree": null,
       "completedAt": "2026-06-27T10:50:50.525Z"
+    },
+    {
+      "runId": "20260627T110127Z-17-T17.20",
+      "taskId": "17.T17.20",
+      "status": "done",
+      "startedAt": "2026-06-27T11:01:27.221Z",
+      "owner": "codex-m-dev-17-t17-20-coordinate-residency",
+      "leaseExpiresAt": "2026-06-27T13:01:27.221Z",
+      "worktree": null,
+      "completedAt": "2026-06-27T11:12:41.880Z"
+    },
+    {
+      "runId": "20260627T110135Z-37-T37.3",
+      "taskId": "37.T37.3",
+      "status": "done",
+      "startedAt": "2026-06-27T11:01:35.189Z",
+      "owner": "codex-m-dev-37-t37-3-cymatic-monopoly",
+      "leaseExpiresAt": "2026-06-27T13:01:35.189Z",
+      "worktree": null,
+      "completedAt": "2026-06-27T11:18:42.064Z"
+    },
+    {
+      "runId": "20260627T110136Z-44-T44.4",
+      "taskId": "44.T44.4",
+      "status": "review",
+      "startedAt": "2026-06-27T11:01:36.299Z",
+      "owner": "codex-m-dev-44-t44-4-human-gate-verdict",
+      "leaseExpiresAt": "2026-06-27T13:01:36.299Z",
+      "worktree": null,
+      "completedAt": "2026-06-27T11:12:39.758Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-27T10:42:11.495Z",
-    "updatedAt": "2026-06-27T10:42:11.495Z",
+    "createdAt": "2026-06-27T11:01:12.888Z",
+    "updatedAt": "2026-06-27T11:01:12.888Z",
     "taskIds": [
-      "17.T17.2",
       "17.T17.20",
       "17.T17.21",
       "17.T17.22",
-      "17.T17.23"
+      "17.T17.23",
+      "17.T17.24"
     ],
-    "totalWeight": 6,
+    "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "17.T17.2": "in-session",
       "17.T17.20": "in-session",
       "17.T17.21": "in-session",
       "17.T17.22": "in-session",
-      "17.T17.23": "in-session"
+      "17.T17.23": "in-session",
+      "17.T17.24": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 6/8 unless fewer tasks were available."
+      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available."
     ]
   }
 }

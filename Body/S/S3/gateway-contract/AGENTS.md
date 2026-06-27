@@ -14,7 +14,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/spacetime.rs` — SpacetimeDB presence-layer contract.
 - `src/being_pattern.rs` — CCT-21 BeingPattern live-state method names, stream event/projection carriers, replay fixture, and public-safe guard.
 - `src/kernel_bridge.rs` — S0 kernel bridge contract.
-- `src/s1_vault.rs` — S1 vault method contract, including vault/semantic receipts plus C-first type lifecycle receipts for `s1'.type.classify_c_layer`, `s1'.entity.promote_to_type`, and `s1'.world.graduate`.
+- `src/s1_vault.rs` — S1 vault method contract, including vault/semantic receipts, `S1VaultRenameRefusalReason::CoordinateResidencyMismatch`, plus C-first type lifecycle receipts for `s1'.type.classify_c_layer`, `s1'.entity.promote_to_type`, and `s1'.world.graduate`.
 - `src/graphiti.rs`, `src/temporal.rs`, `src/privacy.rs`, `src/portal_events.rs`, `src/release.rs` — Graphiti, temporal, privacy, portal-event, and release-gate contracts.
 - `src/verifier.rs` — `s0'.verifier.{check_state,emit_query,validate_membership,owl_query}` method contract plus typed-query / membership / OWL request DTOs.
 - `src/tests.rs` (cfg-test) + `tests/hermes_inspired_contracts.rs` + `tests/harness_envelope_roundtrip.rs` + `tests/vak_phase_resolve_contract.rs` — contract tests.

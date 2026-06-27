@@ -95,6 +95,7 @@ pub enum S1VaultRenameRefusalReason {
     OrphanHeading,
     OrphanBlockAnchor,
     BimbaCoordinateBreak,
+    CoordinateResidencyMismatch,
     ProtectedPath,
 }
 

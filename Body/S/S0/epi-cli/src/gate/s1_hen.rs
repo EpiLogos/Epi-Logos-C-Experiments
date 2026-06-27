@@ -31,7 +31,10 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use epi_s1_hen_compiler_core::wikilinks::{parse_wikilinks, WikilinkTarget};
+use epi_s1_hen_compiler_core::wikilinks::{
+    coordinate_residency_refusal, parse_wikilinks, reconcile_rename, wikilink_title_from_path,
+    RenameRefusal, RenameRefusalReason,
+};
 use epi_s1_hen_compiler_core::{
     suggest_link_candidates, LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
 };
@@ -150,75 +153,52 @@ pub fn rename_or_move_file(params: &Value) -> Result<Value, String> {
     if let Some(parent) = to_abs.parent() {
         fs::create_dir_all(parent).map_err(|err| format!("mkdir for destination failed: {err}"))?;
     }
+
+    let source_body = fs::read_to_string(&from_abs)
+        .map_err(|err| format!("read source `{from}` before residency check failed: {err}"))?;
+    if let Some(refusal) = coordinate_residency_refusal(&to, &source_body) {
+        let receipt = S1VaultRenameReceipt {
+            from_path: from,
+            to_path: to,
+            reconciled_documents: Vec::new(),
+            reconciled_link_count: 0,
+            refusals: vec![map_rename_refusal(refusal)],
+        };
+        return serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"));
+    }
+
     fs::rename(&from_abs, &to_abs)
         .map_err(|err| format!("rename `{from}` -> `{to}` failed: {err}"))?;
 
     let from_title = wikilink_title_from_path(&from);
     let to_title = wikilink_title_from_path(&to);
-    let mut reconciled_documents: Vec<String> = Vec::new();
-    let mut reconciled_link_count: usize = 0;
-    let refusals: Vec<S1VaultRenameRefusal> = Vec::new();
-
-    let mut markdown_files: Vec<PathBuf> = Vec::new();
-    collect_markdown_files(&vault_root, &vault_root, &mut markdown_files);
-
-    for absolute in markdown_files {
-        // Skip the destination itself — its own outlinks were just rewritten.
-        if absolute == to_abs {
-            continue;
-        }
-        let rel = match absolute.strip_prefix(&vault_root) {
-            Ok(rel) => rel,
-            Err(_) => continue,
-        };
-        let rel_str = rel.to_string_lossy().replace('\\', "/");
-        let body = match fs::read_to_string(&absolute) {
-            Ok(b) => b,
-            Err(_) => continue,
-        };
-        // Source-of-truth for rename reconciliation is the literal-textual
-        // rewrite of `[[from_title]]` / `[[from_title|...]]` /
-        // `[[from_title#...]]` / `[[from_title^...]]` — covers all the
-        // anchor forms Obsidian supports, including block anchors which
-        // Hen's parse_wikilinks does not surface as a distinct variant.
-        // Hen is the *integrity* authority (it validates the wider link
-        // graph); the rewrite is the *mutation* authority.
-        let (rewritten, link_count) =
-            rewrite_wikilink_titles_with_count(&body, &from_title, &to_title);
-        if link_count == 0 {
-            continue;
-        }
-        fs::write(&absolute, rewritten)
-            .map_err(|err| format!("rewrite `{rel_str}` failed: {err}"))?;
-        reconciled_documents.push(rel_str);
-        reconciled_link_count += link_count;
-        // We still consult Hen's parser to surface integrity warnings the
-        // textual rewrite could miss (e.g., orphan heading anchors); a
-        // future refinement of this method would populate `refusals` from
-        // those warnings rather than logging them silently.
-        let _ = parse_wikilinks(&body);
-    }
-    // Cross-form: also consult Hen's parser explicitly to catch any
-    // wikilinks the textual rewrite missed, so the integrity authority
-    // remains Hen — keep this here even when empty so future Hen-side
-    // additions of WikilinkTarget variants automatically improve coverage.
-    let _suppress_unused = |t: &WikilinkTarget| match t {
-        WikilinkTarget::Path(_)
-        | WikilinkTarget::Heading(_)
-        | WikilinkTarget::PathHeading { .. }
-        | WikilinkTarget::PathBlock { .. }
-        | WikilinkTarget::PathHeadingBlock { .. } => {}
-    };
-    let _ = _suppress_unused;
+    let (reconciled, refusals) = reconcile_rename(&vault_root, &from_title, &to_title, &[to_abs]);
 
     let receipt = S1VaultRenameReceipt {
         from_path: from,
         to_path: to,
-        reconciled_documents,
-        reconciled_link_count,
-        refusals,
+        reconciled_documents: reconciled
+            .iter()
+            .map(|doc| doc.relative_path.clone())
+            .collect(),
+        reconciled_link_count: reconciled.iter().map(|doc| doc.link_count).sum(),
+        refusals: refusals.into_iter().map(map_rename_refusal).collect(),
     };
     serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))
+}
+
+fn map_rename_refusal(refusal: RenameRefusal) -> S1VaultRenameRefusal {
+    let reason = match refusal.reason {
+        RenameRefusalReason::WriteFailed(_) => S1VaultRenameRefusalReason::BimbaCoordinateBreak,
+        RenameRefusalReason::CoordinateResidencyMismatch { .. } => {
+            S1VaultRenameRefusalReason::CoordinateResidencyMismatch
+        }
+    };
+    S1VaultRenameRefusal {
+        source_path: refusal.relative_path,
+        reason,
+        detail: refusal.detail,
+    }
 }
 
 /// `s1'.semantic.suggest_links` — wraps Hen's `suggest_link_candidates`,
@@ -334,147 +314,6 @@ fn path_relative_to(path: &Path, root: &Path) -> String {
         .unwrap_or(path)
         .to_string_lossy()
         .replace('\\', "/")
-}
-
-fn collect_markdown_files(vault_root: &Path, dir: &Path, out: &mut Vec<PathBuf>) {
-    let entries = match fs::read_dir(dir) {
-        Ok(e) => e,
-        Err(_) => return,
-    };
-    for entry in entries.flatten() {
-        let path = entry.path();
-        // Skip .smart-env, .obsidian, .git directories — they are not vault content.
-        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-            if name.starts_with('.') {
-                continue;
-            }
-        }
-        if path.is_dir() {
-            collect_markdown_files(vault_root, &path, out);
-            continue;
-        }
-        if path.extension().and_then(|e| e.to_str()) == Some("md") {
-            out.push(path);
-        }
-    }
-}
-
-fn wikilink_title_from_path(rel_path: &str) -> String {
-    let stem = Path::new(rel_path)
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or(rel_path);
-    stem.to_owned()
-}
-
-/// A Hen-parsed `WikilinkTarget::Path` may contain a bare title (`Notes`),
-/// a relative path (`folder/Notes`), or a path with `.md` extension. Match
-/// any form whose final stem equals `from_title`.
-fn path_matches_title(path: &str, from_title: &str) -> bool {
-    let stem = Path::new(path)
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or(path);
-    stem == from_title
-}
-
-/// Variant of `rewrite_wikilink_titles` that also returns the count of
-/// occurrences rewritten (handles plain, alias, heading-anchor, and
-/// block-anchor forms uniformly).
-fn rewrite_wikilink_titles_with_count(
-    body: &str,
-    from_title: &str,
-    to_title: &str,
-) -> (String, usize) {
-    let mut out = String::with_capacity(body.len());
-    let mut count = 0usize;
-    let mut cursor = 0usize;
-    let bytes = body.as_bytes();
-    while cursor < bytes.len() {
-        if cursor + 1 < bytes.len() && bytes[cursor] == b'[' && bytes[cursor + 1] == b'[' {
-            let inner_start = cursor + 2;
-            let mut inner_end = inner_start;
-            while inner_end + 1 < bytes.len()
-                && !(bytes[inner_end] == b']' && bytes[inner_end + 1] == b']')
-            {
-                inner_end += 1;
-            }
-            if inner_end + 1 < bytes.len()
-                && bytes[inner_end] == b']'
-                && bytes[inner_end + 1] == b']'
-            {
-                let inner = &body[inner_start..inner_end];
-                let (title_part, rest) = match inner.find(|c| c == '#' || c == '^' || c == '|') {
-                    Some(idx) => (&inner[..idx], &inner[idx..]),
-                    None => (inner, ""),
-                };
-                if title_part == from_title {
-                    out.push_str("[[");
-                    out.push_str(to_title);
-                    out.push_str(rest);
-                    out.push_str("]]");
-                    count += 1;
-                } else {
-                    out.push_str("[[");
-                    out.push_str(inner);
-                    out.push_str("]]");
-                }
-                cursor = inner_end + 2;
-                continue;
-            }
-        }
-        out.push(body.as_bytes()[cursor] as char);
-        cursor += 1;
-    }
-    (out, count)
-}
-
-/// Rewrite every `[[from_title]]` and `[[from_title|alias]]` occurrence to
-/// the new title. Heading anchors `[[from_title#heading]]` and block
-/// anchors `[[from_title^block]]` are preserved verbatim — they reference
-/// internal structure that the rename doesn't touch.
-#[allow(dead_code)]
-fn rewrite_wikilink_titles(body: &str, from_title: &str, to_title: &str) -> String {
-    let mut out = String::with_capacity(body.len());
-    let mut cursor = 0usize;
-    let bytes = body.as_bytes();
-    while cursor < bytes.len() {
-        if cursor + 1 < bytes.len() && bytes[cursor] == b'[' && bytes[cursor + 1] == b'[' {
-            // Find closing `]]`.
-            let inner_start = cursor + 2;
-            let mut inner_end = inner_start;
-            while inner_end + 1 < bytes.len()
-                && !(bytes[inner_end] == b']' && bytes[inner_end + 1] == b']')
-            {
-                inner_end += 1;
-            }
-            if inner_end + 1 < bytes.len()
-                && bytes[inner_end] == b']'
-                && bytes[inner_end + 1] == b']'
-            {
-                let inner = &body[inner_start..inner_end];
-                let (title_part, rest) = match inner.find(|c| c == '#' || c == '^' || c == '|') {
-                    Some(idx) => (&inner[..idx], &inner[idx..]),
-                    None => (inner, ""),
-                };
-                if title_part == from_title {
-                    out.push_str("[[");
-                    out.push_str(to_title);
-                    out.push_str(rest);
-                    out.push_str("]]");
-                } else {
-                    out.push_str("[[");
-                    out.push_str(inner);
-                    out.push_str("]]");
-                }
-                cursor = inner_end + 2;
-                continue;
-            }
-        }
-        out.push(body.as_bytes()[cursor] as char);
-        cursor += 1;
-    }
-    out
 }
 
 fn locate_smart_env_index(vault_root: &Path) -> Option<PathBuf> {

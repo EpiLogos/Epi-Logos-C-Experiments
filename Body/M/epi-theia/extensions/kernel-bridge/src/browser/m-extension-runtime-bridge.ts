@@ -124,6 +124,18 @@ export class T3ToMExtBridgeAdapter implements MExtKernelBridgeAPI {
         return receipt.artifact;
     }
 
+    async cymaticMonoPolyState(address72: number): Promise<unknown> {
+        const receipt = await this.source.invokeCapability({
+            method: 'kernelBridge.m2.cymaticMonoPolyState(address72)',
+            sessionKey: '',
+            params: { address72 },
+            profileGeneration: this.source.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+        return receipt.artifact;
+    }
+
     async bioquaternionTranscription(codon: number): Promise<unknown> {
         const receipt = await this.source.invokeCapability({
             method: 'kernelBridge.m3.bioquaternionTranscription(codon)',

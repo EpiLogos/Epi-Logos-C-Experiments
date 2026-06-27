@@ -349,6 +349,19 @@ export interface AnuttaraWitnessProjection {
     readonly coherenceScore: number;
 }
 
+export type CymaticMonoPolyBehaviourState =
+    | 'mono'
+    | 'actually-many'
+    | 'actualising-one'
+    | 'monopoly';
+
+export interface CymaticMonoPolyState {
+    readonly behaviourState: CymaticMonoPolyBehaviourState;
+    readonly activeToneCount: number;
+    readonly mutualResonance: number;
+    readonly projection64: number;
+}
+
 // ---- Frontend-safe S3 stream rows (03.T5 consumer contract) ----
 
 export type KernelBridgeStreamTable =
@@ -448,6 +461,7 @@ export const KERNEL_BRIDGE_CAPABILITIES = [
     'requestReviewEvidence',
     's2.parashaktiCorrespondences',
     'kernelBridge.m2.planetaryElementalWeights()',
+    'kernelBridge.m2.cymaticMonoPolyState(address72)',
     'kernelBridge.m3.bioquaternionTranscription(codon)'
 ] as const;
 

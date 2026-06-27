@@ -54,6 +54,8 @@ extern "C" {
     fn apply_epogdoon_compression(m2_idx_0_to_71: u8) -> u8;
     fn is_evolutionary_gap(m2_vibration_index: u8) -> bool;
     fn m3_epogdoon_expand(val_64: u8) -> u8;
+    static M2_TO_M3_CYMATIC_PROJECTION: [u64; 72];
+    static M2_CAUSAL_RESONANCE_MASKS: [u64; 36];
 }
 
 /// The typed projection returned by `kernelBridge.m2.epogdoonProjection(address72)`.
@@ -97,11 +99,87 @@ pub fn epogdoon_bridge_lattice() -> [EpogdoonBridgeProjection; EPOGDOON_M2_ADDRE
     std::array::from_fn(|address72| EpogdoonBridgeProjection::from_address72(address72 as u8))
 }
 
+/// The four-state vocabulary consumed by Track 23.20 and coordinated with the
+/// Track 21 MonoPoly dialectic render.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CymaticMonoPolyBehaviourState {
+    Mono,
+    ActuallyMany,
+    ActualisingOne,
+    Monopoly,
+}
+
+/// Typed projection returned by `kernelBridge.m2.cymaticMonoPolyState(address72)`.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CymaticMonoPolyState {
+    pub behaviour_state: CymaticMonoPolyBehaviourState,
+    pub active_tone_count: u8,
+    pub mutual_resonance: f32,
+    pub projection64: u8,
+}
+
+/// Project one M2 vibrational address into the cymatic MonoPoly behaviour state.
+///
+/// The DET bit and causal resonance fan-out are read from the C LUTs
+/// `M2_TO_M3_CYMATIC_PROJECTION[72]` and `M2_CAUSAL_RESONANCE_MASKS[36]`.
+/// The address is total over caller input by modulo-normalising into 0..71.
+pub fn cymatic_monopoly_state(address72: u8) -> CymaticMonoPolyState {
+    let address72 = address72 % EPOGDOON_M2_ADDRESS_COUNT;
+    let projection64 = cymatic_projection64(address72);
+    let condition = (address72 as usize) % 36;
+    let resonance_mask = unsafe { M2_CAUSAL_RESONANCE_MASKS[condition] };
+    let active_tone_count = causal_active_tone_count(resonance_mask, projection64);
+    let mutual_resonance = if active_tone_count <= 1 {
+        0.0
+    } else {
+        (active_tone_count - 1) as f32 / 5.0
+    };
+    let behaviour_state = match active_tone_count {
+        0 | 1 => CymaticMonoPolyBehaviourState::Mono,
+        2 | 3 => CymaticMonoPolyBehaviourState::ActuallyMany,
+        4 | 5 => CymaticMonoPolyBehaviourState::ActualisingOne,
+        _ => CymaticMonoPolyBehaviourState::Monopoly,
+    };
+    CymaticMonoPolyState {
+        behaviour_state,
+        active_tone_count,
+        mutual_resonance,
+        projection64,
+    }
+}
+
+fn cymatic_projection64(address72: u8) -> u8 {
+    let mask =
+        unsafe { M2_TO_M3_CYMATIC_PROJECTION[(address72 % EPOGDOON_M2_ADDRESS_COUNT) as usize] };
+    if mask == 0 {
+        return 0;
+    }
+    let bit = mask.trailing_zeros() as u8;
+    bit.min(EPOGDOON_M3_CODON_COUNT - 1)
+}
+
+fn causal_active_tone_count(resonance_mask: u64, projection64: u8) -> u8 {
+    let mut active = [false; EPOGDOON_M3_CODON_COUNT as usize];
+    active[projection64 as usize] = true;
+    for condition in 0..36u8 {
+        if resonance_mask & (1u64 << condition) == 0 {
+            continue;
+        }
+        let projected = cymatic_projection64(condition);
+        if projected <= projection64 {
+            active[projected as usize] = true;
+        }
+    }
+    active.iter().filter(|seen| **seen).count() as u8
+}
+
 #[cfg(test)]
 mod epogdoon_bridge_tests {
     use super::{
-        epogdoon_bridge_lattice, EpogdoonBridgeProjection, EPOGDOON_M2_ADDRESS_COUNT,
-        EPOGDOON_M3_CODON_COUNT,
+        cymatic_monopoly_state, epogdoon_bridge_lattice, CymaticMonoPolyBehaviourState,
+        EpogdoonBridgeProjection, EPOGDOON_M2_ADDRESS_COUNT, EPOGDOON_M3_CODON_COUNT,
     };
     use std::collections::HashSet;
 
@@ -166,6 +244,24 @@ mod epogdoon_bridge_tests {
             64,
             "non-collision descents reach all 64 codons"
         );
+    }
+
+    #[test]
+    fn cymatic_monopoly_state_classifies_fixture_resonance_into_four_states() {
+        let fixtures = [
+            (1, CymaticMonoPolyBehaviourState::Mono, 1, 1),
+            (7, CymaticMonoPolyBehaviourState::ActuallyMany, 2, 7),
+            (19, CymaticMonoPolyBehaviourState::ActualisingOne, 4, 19),
+            (31, CymaticMonoPolyBehaviourState::Monopoly, 6, 31),
+        ];
+
+        for (address72, expected, active_tone_count, projection64) in fixtures {
+            let state = cymatic_monopoly_state(address72);
+            assert_eq!(state.behaviour_state, expected);
+            assert_eq!(state.active_tone_count, active_tone_count);
+            assert_eq!(state.projection64, projection64);
+            assert!((0.0..=1.0).contains(&state.mutual_resonance));
+        }
     }
 }
 

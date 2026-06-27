@@ -259,6 +259,7 @@ describe("Kernel bridge contract package", () => {
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
       "kernelBridge.m2.planetaryElementalWeights()",
+      "kernelBridge.m2.cymaticMonoPolyState(address72)",
       "kernelBridge.m3.bioquaternionTranscription(codon)",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([

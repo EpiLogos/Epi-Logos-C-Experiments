@@ -12,20 +12,21 @@
 //                   `address72` (from the profile bus) is projected through the
 //                   kernel-bridge into the DET codon (M2_TO_M3_CYMATIC_PROJECTION)
 //                   and its causal resonance fan-out (M2_CAUSAL_RESONANCE_MASKS);
-//                   the breadth of distinct superposed codons classifies the plate
-//                   into one of six Archetype-5 wave-behaviour states (#0..#5),
+//                   the published behaviour state classifies the plate into one
+//                   of four Track-37 MonoPoly states, mapped onto the six-cell
+//                   Archetype-5 visual ribbon (#0..#5),
 //                   which is then stamped onto CymaticChladniSurface as its
 //                   behaviour-state.
 //   Public surface: CymaticMonoPolyEngine, buildCymaticMonoPolyModel, the
-//                   WAVE_BEHAVIOUR_STATES table, the CymaticResonanceProjection /
-//                   M2CymaticResonanceProjector / M2MonoPolyBridge typed contract,
+//                   WAVE_BEHAVIOUR_STATES table, the CymaticMonoPolyStateProjection /
+//                   M2CymaticMonoPolyStateProjector / M2MonoPolyBridge typed contract,
 //                   the WaveBehaviourState / MonoPolyClassification / Cymatic
 //                   MonoPolyModel view model, and the layout invariants.
 //   Does NOT own:   the projection law. M2_TO_M3_CYMATIC_PROJECTION[72] (the 72→64
 //                   DET) and M2_CAUSAL_RESONANCE_MASKS[36] (the O(1) cross-weave)
 //                   live in C (m2.h / m2.c) and are surfaced ONLY through
-//                   `kernelBridge.m2.cymaticResonanceAt(address72)`. This engine
-//                   NEVER recomputes the projection or the resonance fan-out; it
+//                   `kernelBridge.m2.cymaticMonoPolyState(address72)`. This engine
+//                   NEVER recomputes the projection or the resonance state; it
 //                   reads the published projection and folds breadth into a state.
 //                   It also does NOT own the plate render itself — that is
 //                   CymaticChladniSurface (23.4); this engine only drives its
@@ -33,9 +34,9 @@
 //   Cross-links:    CymaticChladniSurface (23.4), CymaticTransport (tick cache),
 //                   EpogdoonBridgeEngine (the 72→64 descent), MefGrid72Component
 //                   (the 84-state MEF landscape), m2.h DET + causal-resonance.
-//   Contract:       kernelBridge.m2.cymaticResonanceAt(address72) →
-//                   { address72, projectionCodon, resonanceCondition,
-//                     resonantConditions, superposedCodons }
+//   Contract:       kernelBridge.m2.cymaticMonoPolyState(address72) →
+//                   { behaviourState, activeToneCount, mutualResonance,
+//                     projection64 }
 // ─────────────────────────────────────────────────────────────────────────────
 
 import * as React from 'react';
@@ -73,7 +74,7 @@ export const MONOPOLY_DIALECTIC_COORDINATE = '#0-3-8' as const;
 export const M2_MONOPOLY_PROVENANCE_FIELD = 'detEvidence.cymaticMonoPoly';
 
 /** The single authority this engine reads through — never a local computation. */
-export const MONOPOLY_RESONANCE_SOURCE = 'kernelBridge.m2.cymaticResonanceAt(address72)' as const;
+export const MONOPOLY_RESONANCE_SOURCE = 'kernelBridge.m2.cymaticMonoPolyState(address72)' as const;
 
 /** Saturating reference (Hz) mapping `audio_octet[0]` magnitude → bounded coherence. */
 export const MONOPOLY_COHERENCE_SATURATION_HZ = 128;
@@ -81,34 +82,27 @@ export const MONOPOLY_COHERENCE_SATURATION_HZ = 128;
 // ── Bridge contract (the ONLY typed projection this engine consumes) ─────────
 
 /**
- * The typed projection returned by `kernelBridge.m2.cymaticResonanceAt(address72)`.
- * Mirrors the C surface: the single DET codon for the address
- * (`M2_TO_M3_CYMATIC_PROJECTION[address72]`, popcount 1), the base MEF condition,
- * the causal-resonance fan-out (`M2_CAUSAL_RESONANCE_MASKS[condition]`), and the
- * distinct M3 codons that the whole resonant set superposes onto. The breadth of
- * `superposedCodons` is the mono↔poly axis: 1 = pure monopole, up to
- * `MONOPOLY_RESONANCE_FANOUT` = full poly-modal lattice.
+ * The typed projection returned by `kernelBridge.m2.cymaticMonoPolyState(address72)`.
+ * Mirrors the kernel bridge's C-LUT-backed surface: the four-state MonoPoly
+ * behaviour vocabulary, active tone count, normalised mutual resonance, and DET
+ * codon projection.
  */
-export interface CymaticResonanceProjection {
-    /** Source M2 vibrational address (0..71). */
-    readonly address72: number;
-    /** Single DET codon (0..63) for this address — `M2_TO_M3_CYMATIC_PROJECTION`. */
-    readonly projectionCodon: number;
-    /** Base MEF condition (0..35) keying the causal-resonance mask. */
-    readonly resonanceCondition: number;
-    /** The conditions the causal mask resonates with (expected six). */
-    readonly resonantConditions: readonly number[];
-    /** Distinct M3 codons the resonant set superposes onto (1..fan-out). */
-    readonly superposedCodons: readonly number[];
+export type CymaticMonoPolyBehaviourState = 'mono' | 'actually-many' | 'actualising-one' | 'monopoly';
+
+export interface CymaticMonoPolyStateProjection {
+    readonly behaviourState: CymaticMonoPolyBehaviourState;
+    readonly activeToneCount: number;
+    readonly mutualResonance: number;
+    readonly projection64: number;
 }
 
 /** A function projecting a 72-address into the typed resonance projection. */
-export type M2CymaticResonanceProjector = (address72: number) => CymaticResonanceProjection;
+export type M2CymaticMonoPolyStateProjector = (address72: number) => CymaticMonoPolyStateProjection;
 
 /** The slice of the kernel-bridge this engine depends on. */
 export interface M2MonoPolyBridge {
     readonly m2: {
-        readonly cymaticResonanceAt: M2CymaticResonanceProjector;
+        readonly cymaticMonoPolyState: M2CymaticMonoPolyStateProjector;
     };
 }
 
@@ -209,14 +203,14 @@ export const WAVE_BEHAVIOUR_STATES: readonly WaveBehaviourState[] = Object.freez
 export interface MonoPolyClassification {
     /** Source M2 vibrational address (0..71). */
     readonly address72: number;
+    /** Track-37 four-state vocabulary. */
+    readonly behaviourState: CymaticMonoPolyBehaviourState;
     /** DET codon (0..63) for the address. */
-    readonly projectionCodon: number;
-    /** Base MEF condition (0..35). */
-    readonly resonanceCondition: number;
-    /** Number of resonant conditions reported (expected six). */
-    readonly resonantConditionCount: number;
-    /** Distinct superposed codons — the mono↔poly breadth (1..fan-out). */
-    readonly superposedCodonCount: number;
+    readonly projection64: number;
+    /** Active tones reported by the kernel bridge (1..fan-out). */
+    readonly activeToneCount: number;
+    /** Kernel-reported mutual resonance (0..1). */
+    readonly mutualResonance: number;
     /** Effective wave-behaviour state index after any Klein inversion (0..5). */
     readonly stateIndex: number;
     /** The wave-behaviour state descriptor. */
@@ -284,7 +278,7 @@ export function buildCymaticMonoPolyModel(input: {
     const kleinFlipPhase = normalizeKleinPhase(input.kleinFlipPhase);
     const inverted = kleinFlipPhase === 'inverted';
     const coherence = coherenceFromAudio(input.audioOctet0);
-    const projector = input.kernelBridge?.m2?.cymaticResonanceAt ?? null;
+    const projector = input.kernelBridge?.m2?.cymaticMonoPolyState ?? null;
 
     const projection = projector ? safeProject(projector, activeAddress72) : null;
     if (!projection) {
@@ -299,7 +293,7 @@ export function buildCymaticMonoPolyModel(input: {
         });
     }
 
-    const classification = classifyResonance(projection, {
+    const classification = classifyResonance(projection, activeAddress72, {
         coherence,
         inverted
     });
@@ -322,26 +316,26 @@ export function buildCymaticMonoPolyModel(input: {
  * happens here — only counting of what the bridge already published.
  */
 export function classifyResonance(
-    projection: CymaticResonanceProjection,
+    projection: CymaticMonoPolyStateProjection,
+    address72: number,
     options: { readonly coherence: number; readonly inverted: boolean }
 ): MonoPolyClassification {
-    const projectionCodon = clampCodon(projection.projectionCodon);
-    const resonanceCondition = clampCondition(projection.resonanceCondition);
-    const resonantConditionCount = distinctConditionCount(projection.resonantConditions);
-    const superposedCodonCount = distinctCodonCount(projection.superposedCodons);
+    const projection64 = clampCodon(projection.projection64);
+    const activeToneCount = clampToneCount(projection.activeToneCount);
+    const mutualResonance = clampUnit(projection.mutualResonance);
 
     // Breadth 1..fan-out → raw state index 0..5; a Klein-flip reflects it.
-    const rawIndex = clampStateIndex(superposedCodonCount - 1);
+    const rawIndex = clampStateIndex(activeToneCount - 1);
     const stateIndex = options.inverted ? WAVE_BEHAVIOUR_STATE_COUNT - 1 - rawIndex : rawIndex;
     const state = WAVE_BEHAVIOUR_STATES[stateIndex];
-    const polyRatio = clampUnit((superposedCodonCount - 1) / (MONOPOLY_RESONANCE_FANOUT - 1));
+    const polyRatio = mutualResonance;
 
     return Object.freeze({
-        address72: clampAddress72(projection.address72),
-        projectionCodon,
-        resonanceCondition,
-        resonantConditionCount,
-        superposedCodonCount,
+        address72: clampAddress72(address72),
+        behaviourState: normalizeBehaviourState(projection.behaviourState),
+        projection64,
+        activeToneCount,
+        mutualResonance,
         stateIndex,
         state,
         polyRatio: options.inverted ? 1 - polyRatio : polyRatio,
@@ -546,11 +540,11 @@ function MonoPolyInspector({
             <dt>M2 vibrational address</dt>
             <dd>#2·{classification.address72}</dd>
             <dt>DET codon</dt>
-            <dd>#3·{classification.projectionCodon}</dd>
+            <dd>#3·{classification.projection64}</dd>
             <dt>Causal resonance</dt>
             <dd>
-                condition {classification.resonanceCondition} · {classification.resonantConditionCount} resonant ·{' '}
-                {classification.superposedCodonCount} superposed codons
+                {classification.behaviourState} · {classification.activeToneCount} active tones ·{' '}
+                {(classification.mutualResonance * 100).toFixed(0)}% mutual
             </dd>
             <dt>Mono ↔ poly</dt>
             <dd>
@@ -580,18 +574,17 @@ function MonoPolyInspector({
 // ── Normalisers (bounds + counting only; no projection arithmetic) ───────────
 
 function safeProject(
-    projector: M2CymaticResonanceProjector,
+    projector: M2CymaticMonoPolyStateProjector,
     address72: number
-): CymaticResonanceProjection | null {
+): CymaticMonoPolyStateProjection | null {
     try {
         const projection = projector(address72);
         if (
             !projection ||
-            typeof projection.address72 !== 'number' ||
-            typeof projection.projectionCodon !== 'number' ||
-            typeof projection.resonanceCondition !== 'number' ||
-            !Array.isArray(projection.resonantConditions) ||
-            !Array.isArray(projection.superposedCodons)
+            typeof projection.behaviourState !== 'string' ||
+            typeof projection.activeToneCount !== 'number' ||
+            typeof projection.mutualResonance !== 'number' ||
+            typeof projection.projection64 !== 'number'
         ) {
             return null;
         }
@@ -599,27 +592,6 @@ function safeProject(
     } catch {
         return null;
     }
-}
-
-function distinctCodonCount(codons: readonly number[]): number {
-    const distinct = new Set<number>();
-    for (const codon of codons) {
-        if (typeof codon === 'number' && Number.isFinite(codon)) {
-            distinct.add(clampCodon(codon));
-        }
-    }
-    // The live address always superposes onto at least its own codon.
-    return Math.max(1, distinct.size);
-}
-
-function distinctConditionCount(conditions: readonly number[]): number {
-    const distinct = new Set<number>();
-    for (const condition of conditions) {
-        if (typeof condition === 'number' && Number.isFinite(condition)) {
-            distinct.add(clampCondition(condition));
-        }
-    }
-    return distinct.size;
 }
 
 function resolveActiveAddress(activeAddress72: number | null | undefined, tick: number | null): number {
@@ -659,12 +631,11 @@ function clampCodon(value: number): number {
     return ((rounded % MONOPOLY_M3_CODON_COUNT) + MONOPOLY_M3_CODON_COUNT) % MONOPOLY_M3_CODON_COUNT;
 }
 
-function clampCondition(value: number): number {
-    const rounded = Math.trunc(value);
-    return (
-        ((rounded % MONOPOLY_RESONANCE_CONDITION_COUNT) + MONOPOLY_RESONANCE_CONDITION_COUNT) %
-        MONOPOLY_RESONANCE_CONDITION_COUNT
-    );
+function clampToneCount(value: number): number {
+    if (!Number.isFinite(value)) {
+        return 1;
+    }
+    return Math.min(MONOPOLY_RESONANCE_FANOUT, Math.max(1, Math.trunc(value)));
 }
 
 function clampStateIndex(value: number): number {
@@ -677,6 +648,15 @@ function clampUnit(value: number): number {
         return 0;
     }
     return Math.min(1, Math.max(0, value));
+}
+
+function normalizeBehaviourState(value: string): CymaticMonoPolyBehaviourState {
+    return value === 'mono' ||
+        value === 'actually-many' ||
+        value === 'actualising-one' ||
+        value === 'monopoly'
+        ? value
+        : 'mono';
 }
 
 export default CymaticMonoPolyEngine;
