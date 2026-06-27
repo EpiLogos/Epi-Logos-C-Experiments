@@ -141,6 +141,7 @@ fn lineage_entry(session_id: &str, lineage: DisclosureLineage) -> InboxEntry {
             cs: CsField {
                 code: "CS-disclosure".to_owned(),
                 direction: CsDirection::Day,
+            recognized: false,
             },
         },
         improvement_vectors: vec![

@@ -290,8 +290,7 @@ impl<'a> CoordinateRetrieval<'a> {
             .run_query(q)
             .await
             .map_err(|e| format!("list_by_filter error: {}", e))?;
-        let rows: Vec<serde_json::Value> =
-            rows.iter().map(Self::base_view_row_to_json).collect();
+        let rows: Vec<serde_json::Value> = rows.iter().map(Self::base_view_row_to_json).collect();
         Ok(serde_json::json!({ "rows": rows }))
     }
 
@@ -379,14 +378,21 @@ mod tests {
     fn scope_prefix_binds_scope_param() {
         let (cypher, params) = build_list_by_filter_query("M2-1", &[]).unwrap();
         assert!(cypher.contains("WHERE n.coordinate STARTS WITH $scope"));
-        assert_eq!(params, vec![("scope".to_string(), FilterParam::Str("M2-1".to_string()))]);
+        assert_eq!(
+            params,
+            vec![("scope".to_string(), FilterParam::Str("M2-1".to_string()))]
+        );
     }
 
     #[test]
     fn eq_predicate_on_c_n_property_binds_value() {
         let (cypher, params) = build_list_by_filter_query(
             "",
-            &[pred("c_4_artifact_role", "eq", serde_json::json!("map-index"))],
+            &[pred(
+                "c_4_artifact_role",
+                "eq",
+                serde_json::json!("map-index"),
+            )],
         )
         .unwrap();
         assert!(cypher.contains("WHERE n.c_4_artifact_role = $p0 "));
@@ -398,11 +404,9 @@ mod tests {
 
     #[test]
     fn scope_and_predicate_compose_with_and() {
-        let (cypher, params) = build_list_by_filter_query(
-            "M2",
-            &[pred("c_4_family", "eq", serde_json::json!("M"))],
-        )
-        .unwrap();
+        let (cypher, params) =
+            build_list_by_filter_query("M2", &[pred("c_4_family", "eq", serde_json::json!("M"))])
+                .unwrap();
         assert!(cypher.contains("n.coordinate STARTS WITH $scope AND n.c_4_family = $p0"));
         assert_eq!(params.len(), 2);
         assert_eq!(params[0].0, "scope");
@@ -444,11 +448,9 @@ mod tests {
 
     #[test]
     fn numeric_value_binds_as_int() {
-        let (_, params) = build_list_by_filter_query(
-            "",
-            &[pred("c_4_ql_position", "eq", serde_json::json!(2))],
-        )
-        .unwrap();
+        let (_, params) =
+            build_list_by_filter_query("", &[pred("c_4_ql_position", "eq", serde_json::json!(2))])
+                .unwrap();
         assert_eq!(params, vec![("p0".to_string(), FilterParam::Int(2))]);
     }
 
@@ -456,7 +458,11 @@ mod tests {
     fn non_identifier_property_is_rejected() {
         let err = build_list_by_filter_query(
             "",
-            &[pred("c_4_family; MATCH (x) DETACH DELETE x", "eq", serde_json::json!("M"))],
+            &[pred(
+                "c_4_family; MATCH (x) DETACH DELETE x",
+                "eq",
+                serde_json::json!("M"),
+            )],
         )
         .unwrap_err();
         assert!(err.contains("invalid property name"));
@@ -486,7 +492,11 @@ mod tests {
     fn array_value_is_rejected_as_non_scalar() {
         let err = build_list_by_filter_query(
             "",
-            &[pred("c_0_source_coordinates", "eq", serde_json::json!(["M2"]))],
+            &[pred(
+                "c_0_source_coordinates",
+                "eq",
+                serde_json::json!(["M2"]),
+            )],
         )
         .unwrap_err();
         assert!(err.contains("scalar"));

@@ -137,6 +137,7 @@ fn session_store_round_trips_vak_address() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let patch = SessionPatch {

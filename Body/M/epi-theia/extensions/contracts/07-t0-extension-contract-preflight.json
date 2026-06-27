@@ -37,6 +37,7 @@
       "depositKernelObservation",
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
+      "kernelBridge.m2.planetaryElementalWeights()",
       "kernelBridge.m3.bioquaternionTranscription(codon)"
     ],
     "requiredSubscriptions": [
@@ -653,7 +654,8 @@
           "readReadiness",
           "invokeGatewayRpc",
           "depositKernelObservation",
-          "requestReviewEvidence"
+          "requestReviewEvidence",
+          "kernelBridge.m2.planetaryElementalWeights()"
         ],
         "requiredSubscriptions": [
           "profile",

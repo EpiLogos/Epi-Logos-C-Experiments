@@ -20,6 +20,7 @@
   },
   "references": [
     { "path": "../ide-shell-m0-m5" },
+    { "path": "../block-kit" },
     { "path": "../m-extension-runtime" },
     { "path": "../pratibimba-layouts" }
   ],

@@ -554,6 +554,7 @@ mod tests {
             cs: CsField {
                 code: format!("vama:{coordinate}"),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         }
     }

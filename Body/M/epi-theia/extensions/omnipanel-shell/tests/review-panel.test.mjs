@@ -30,6 +30,11 @@ const {
     normalizeReviewSessionTabState,
     normalizeReviewItem
 } = require('../lib/common/omnipanel-runtime.js');
+const {
+    patternPacketToBlock,
+    reviewItemDeepToBlocks,
+    toolStreamEventToBlock
+} = require('../lib/common/review-block-projection.js');
 // The pure routing gate the ide-shell ReviewPaneWidget consumes — same module,
 // proving the two layouts compute an identical human-required gate.
 const {
@@ -254,6 +259,10 @@ test('ReviewPanel renders the inbox, outstanding count, parity status, and the s
     assert.match(html, /data-test="review-item-view"/);
     assert.match(html, /data-test="review-evidence-embed"[^>]*data-evidence-packet-view="true"/);
     assert.match(html, /data-test="review-dispatch-genealogy-embed"[^>]*data-dispatch-trace-mini-graph="true"/);
+    assert.match(html, /data-test="block-host"/);
+    assert.match(html, /data-block-type="review-item"/);
+    assert.match(html, /data-block-type="evidence"/);
+    assert.match(html, /data-block-type="dispatch-genealogy"/);
     assert.match(html, /data-test="review-action-controls"/);
     assert.match(html, /data-test="review-history-list"/);
     assert.match(html, /data-test="review-history-entry-h1"/);
@@ -263,6 +272,56 @@ test('ReviewPanel renders the inbox, outstanding count, parity status, and the s
     assert.match(html, /data-test="review-row-reviewer-required-rev-human-1"/);
     assert.match(html, /data-test="review-row-parity-rev-human-1"/);
     assert.match(html, /data-test="review-row-privacy-rev-human-1"/);
+});
+
+test('ReviewItemDeep, PatternPacket, and tool events project into accepted block-kit blocks', () => {
+    const item = humanRequiredItem();
+    const reviewBlocks = reviewItemDeepToBlocks(item);
+    assert.deepEqual(reviewBlocks.map(block => block.type), [
+        'review-item',
+        'evidence',
+        'dispatch-genealogy'
+    ]);
+    assert.deepEqual(reviewBlocks.map(block => block.privacyClass), [
+        'public',
+        'public',
+        'public'
+    ]);
+    assert.equal(reviewBlocks[0].data.id, item.id);
+    assert.equal(reviewBlocks[1].data.packetRef, item.evidence.packetRef);
+    assert.equal(reviewBlocks[2].data.originatingNodeId, item.genealogy.originatingNodeId);
+    assert.deepEqual(reviewBlocks[0].affordances, ['verdict', 'annotate', 'select']);
+    assert.deepEqual(reviewBlocks[1].affordances, ['navigate']);
+    assert.deepEqual(reviewBlocks[2].affordances, ['navigate']);
+
+    const patternBlock = patternPacketToBlock({
+        id: 'pattern-44-3',
+        coordinate: "M4'",
+        privacyClass: 'protected-local',
+        summary: 'packet summary',
+        evidenceRefs: ['ev-1'],
+        packet: { kind: 'PatternPacket', qActivityDelta: 0.2 }
+    });
+    assert.equal(patternBlock.type, 'pattern-packet');
+    assert.equal(patternBlock.id, 'block:pattern-packet:pattern-44-3');
+    assert.equal(patternBlock.data.summary, 'packet summary');
+    assert.deepEqual(patternBlock.affordances, ['select', 'navigate']);
+
+    const toolBlock = toolStreamEventToBlock({
+        id: 'tool-44-3',
+        emittedAtMs: 4403,
+        tool: 'gitnexus_impact',
+        kind: 'tool.end',
+        privacyClass: 'protected',
+        actor: 'codex',
+        dispatchNodeId: 'node-codex',
+        sessionKey: 'sess-44-3',
+        tickAtEmit: 10,
+        evidencePacketRef: 'evidence-44-3'
+    });
+    assert.equal(toolBlock.type, 'tool-stream-event');
+    assert.equal(toolBlock.data.tool, 'gitnexus_impact');
+    assert.equal(toolBlock.provenance.handle, 'tool-44-3');
 });
 
 test('aggregateParity reports drift when any item is out of parity', () => {

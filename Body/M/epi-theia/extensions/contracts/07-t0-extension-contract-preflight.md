@@ -18,7 +18,7 @@ Live `epi agent vak evaluate --json "Extension Contract Preflight"` result:
 ## Shared Rules
 
 - All six extensions depend on one shared bridge adapter over `KernelBridgeAPI`.
-- Shared bridge capabilities are the JSON contract's `sharedBridgeAdapter.requiredCapabilities`, including `s2.parashaktiCorrespondences` and `kernelBridge.m3.bioquaternionTranscription(codon)` for bridge-owned projection objects.
+- Shared bridge capabilities are the JSON contract's `sharedBridgeAdapter.requiredCapabilities`, including `s2.parashaktiCorrespondences`, `kernelBridge.m2.planetaryElementalWeights()`, and `kernelBridge.m3.bioquaternionTranscription(codon)` for bridge-owned projection objects.
 - No individual extension may import raw S0/S2/S3/S5 clients, raw SpaceTimeDB SDKs, or direct graph/review stores.
 - All blocked or degraded states must render typed readiness instead of guessed defaults.
 - Track 07 exports individual capabilities only; Track 08 owns integrated composition and multi-surface choreography.

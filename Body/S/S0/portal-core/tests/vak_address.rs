@@ -8,7 +8,6 @@ fn canonical_positions_match_grammar() {
     assert_eq!(canonical_cf_position("(0/1)"), Some(CfPosition::Inner1));
     assert_eq!(canonical_cf_position("(0/1/2)"), Some(CfPosition::Inner2));
     assert_eq!(canonical_cf_position("(0/1/2/3)"), Some(CfPosition::Inner3));
-    assert_eq!(canonical_cf_position("(4/5/0)"), Some(CfPosition::Inner4));
     assert_eq!(canonical_cf_position("(5/0)"), Some(CfPosition::Inner5));
     assert_eq!(
         canonical_cf_position("(4.0/1-4.4/5)"),
@@ -18,6 +17,7 @@ fn canonical_positions_match_grammar() {
         canonical_cf_position("(4.5/0)"),
         Some(CfPosition::LemniscateStage5)
     );
+    assert_eq!(canonical_cf_position("(4/5/0)"), None);
     assert_eq!(canonical_cf_position("(unknown)"), None);
 }
 
@@ -32,6 +32,7 @@ fn vak_address_roundtrips_through_serde() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let json = serde_json::to_string(&addr).unwrap();
@@ -50,6 +51,7 @@ fn cs_direction_night_serialises_with_prime() {
         cs: CsField {
             code: "CS5".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     };
     let json = serde_json::to_string(&addr).unwrap();
@@ -72,6 +74,7 @@ fn cpf_polarity_serialises_as_canonical_literal() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let json = serde_json::to_string(&addr).unwrap();
@@ -97,6 +100,7 @@ fn vak_address_json_shape_matches_typescript_contract() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     };
     let value: serde_json::Value = serde_json::to_value(&addr).unwrap();
@@ -136,6 +140,7 @@ fn vak_address_can_be_hash_map_key() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let addr_b = VakAddress {
@@ -147,6 +152,7 @@ fn vak_address_can_be_hash_map_key() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
 

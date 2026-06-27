@@ -617,6 +617,7 @@ fn vak_address_from_coordinate(coordinate: &str, class: VamaShaktiClass) -> VakA
         cs: CsField {
             code: format!("vama:{class}:{coordinate}"),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }
@@ -638,6 +639,7 @@ fn arena_turn_vak_address(
         cs: CsField {
             code: format!("arena-dialogue-{turn_index}:{class_tag}"),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

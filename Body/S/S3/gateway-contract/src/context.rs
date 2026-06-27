@@ -300,6 +300,7 @@ mod tests {
             cs: CsField {
                 code: "M3".to_string(),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         }
     }

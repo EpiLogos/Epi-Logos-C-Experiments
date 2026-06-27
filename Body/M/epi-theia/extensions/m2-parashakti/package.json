@@ -65,6 +65,7 @@
     "test:cymatic-transport": "node --test test/cymatic-transport.test.mjs",
     "test:cymatic-determinism": "node --test test/cymatic-determinism.test.mjs",
     "test:cymatic-spheres-deferred": "node --test test/cymatic-spheres-deferred.test.mjs",
-    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && node --test test/audio-bus-visual.test.mjs && node --test test/provenance-inline.test.mjs && node --test test/cymatic-transport.test.mjs && node --test test/cymatic-determinism.test.mjs && node --test test/cymatic-spheres-deferred.test.mjs && pnpm build"
+    "test:planetary-elemental-feed": "node --test test/planetary-elemental-feed.test.mjs",
+    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && node --test test/audio-bus-visual.test.mjs && node --test test/provenance-inline.test.mjs && node --test test/cymatic-transport.test.mjs && node --test test/cymatic-determinism.test.mjs && node --test test/cymatic-spheres-deferred.test.mjs && node --test test/planetary-elemental-feed.test.mjs && pnpm build"
   }
 }

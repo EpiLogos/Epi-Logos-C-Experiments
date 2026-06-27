@@ -190,17 +190,19 @@ export interface M2ElementalWeightVector {
  * One planetary orbiter's contribution to the elemental-weight feed, mirroring
  * the kernel-side `PlanetaryElementContribution` surfaced through
  * `kernelBridge.m2.planetaryElementalWeights()`. Folds into the PASU
- * bioquaternion `elemental_weights` vector (#4.4.4.4). `element` may be `aether`
- * (AKASHA / quintessence) — that energy informs balance but never stacks into the
- * four-element bar. The Sun (planet 0) is the excluded identity root and never
- * appears here (the 9:8 epogdoon asymmetry).
+ * bioquaternion `elemental_weights` vector (#4.4.4.4). `couEnergy` carries the
+ * kernel's Keplerian velocity weight (`M2_PLANET_LUT[id].keplerian_vel`) for
+ * bridge compatibility with the 23.19 frontend contract. `element` may be
+ * `aether` (AKASHA / quintessence) — that energy informs balance but never
+ * stacks into the four-element bar. The Sun (planet 0) is the excluded identity
+ * root and never appears here (the 9:8 epogdoon asymmetry).
  */
 export interface M2ElementalWeightContribution {
     /** Planet_Id (1..9 — Moon..Pluto; Sun excluded). */
     readonly planetId: number;
     /** Lowercase Mahabhuta element name (`fire`/`water`/`air`/`earth`/`aether`). */
     readonly element: string;
-    /** Cousto octave energy (Hz) this orbiter projects. */
+    /** Keplerian velocity weight this orbiter projects (arcsec/day x 10). */
     readonly couEnergy: number;
 }
 

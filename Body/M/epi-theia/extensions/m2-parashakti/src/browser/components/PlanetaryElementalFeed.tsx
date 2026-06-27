@@ -206,7 +206,7 @@ export function buildPlanetaryElementalFeedModel(input: {
         return Object.freeze({
             element,
             colour: M2_ELEMENT_COLOURS[element],
-            weight: clampUnit(weightForElement(projection.weights, element)),
+                    weight: clampUnit(weightForElement(projection.weights, element)),
             segments: Object.freeze(segments)
         });
     });
@@ -327,7 +327,7 @@ function ElementalBarView({ bar }: { readonly bar: M2ElementalBar }): React.Reac
                             width: `${(segment.fraction * 100).toFixed(4)}%`,
                             backgroundColor: bar.colour
                         }}
-                        title={`${segment.planetName} → ${bar.element} (Cousto ${segment.couEnergy} Hz)`}
+                        title={`${segment.planetName} → ${bar.element} (Keplerian ${segment.couEnergy})`}
                     />
                 ))}
             </div>

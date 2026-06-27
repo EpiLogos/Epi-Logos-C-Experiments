@@ -25,7 +25,7 @@
 // `Partial<VakAddress>`) because real callers at cross-extension boundaries always
 // have arbitrary input.
 
-const CT_LITERALS = ["CT0", "CT1", "CT2", "CT3", "CT4a", "CT4b", "CT5"] as const;
+const CT_LITERALS = ["CT0", "CT1", "CT2", "CT3", "CT4", "CT4a", "CT4b", "CT5"] as const;
 export type CtLiteral = (typeof CT_LITERALS)[number];
 
 const CFP_LITERALS = ["CFP0", "CFP1", "CFP2", "CFP3", "CFP4", "CFP5", "Z"] as const;
@@ -48,7 +48,6 @@ export type CfLiteral =
   | "(0/1)"
   | "(0/1/2)"
   | "(0/1/2/3)"
-  | "(4/5/0)"
   | "(5/0)"
   | "(4.0/1-4.4/5)"
   | "(4.5/0)";
@@ -56,6 +55,7 @@ export type CfLiteral =
 export interface CsField {
   code: CsLiteral;
   direction: CsDirection;
+  recognized?: boolean;
 }
 
 export interface VakAddress {
@@ -124,7 +124,6 @@ export const CANONICAL_CF_POSITIONS = {
   "(0/1)": "inner_1",
   "(0/1/2)": "inner_2",
   "(0/1/2/3)": "inner_3",
-  "(4/5/0)": "inner_4",
   "(5/0)": "inner_5",
   "(4.0/1-4.4/5)": "outer_4_parent",
   "(4.5/0)": "lemniscate_stage_5",
@@ -153,6 +152,7 @@ export function isValidVakAddress(value: unknown): value is VakAddress {
   const cs = v.cs as Record<string, unknown>;
   if (typeof cs.code !== "string" || !CS_SET.has(cs.code as CsLiteral)) return false;
   if (typeof cs.direction !== "string" || !CS_DIR_SET.has(cs.direction as CsDirection)) return false;
+  if (cs.recognized !== undefined && typeof cs.recognized !== "boolean") return false;
   return true;
 }
 

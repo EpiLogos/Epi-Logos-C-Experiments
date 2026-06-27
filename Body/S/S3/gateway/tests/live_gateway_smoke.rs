@@ -248,6 +248,7 @@ fn phase_vak_address() -> VakAddress {
         cs: CsField {
             code: "CS3".to_owned(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

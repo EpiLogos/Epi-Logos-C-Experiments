@@ -22,6 +22,7 @@ fn vak() -> VakAddress {
         cs: CsField {
             code: "CS-disclosure".to_owned(),
             direction: CsDirection::Day,
+        recognized: false,
         },
     }
 }

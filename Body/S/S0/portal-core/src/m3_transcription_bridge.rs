@@ -474,10 +474,7 @@ fn charge_identity() -> [ChargeIdentity; 4] {
 }
 
 fn amino_acid_name(index: AminoAcidIndex) -> &'static str {
-    AMINO_ACID_NAMES
-        .get(index as usize)
-        .copied()
-        .unwrap_or("?")
+    AMINO_ACID_NAMES.get(index as usize).copied().unwrap_or("?")
 }
 
 fn codon_sequence_string(codon: Codon6Bit) -> String {
@@ -493,7 +490,6 @@ fn musical_cf_projection(vak_coord: &VakAddress) -> Result<(DiatonicPosition, CF
         CfPosition::Inner1 => (DiatonicPosition::D, CFMapping::Mind),
         CfPosition::Inner2 => (DiatonicPosition::E, CFMapping::Word),
         CfPosition::Inner3 => (DiatonicPosition::F, CFMapping::Logos),
-        CfPosition::Inner4 => (DiatonicPosition::G, CFMapping::Decision),
         CfPosition::Inner5 => (DiatonicPosition::A, CFMapping::Love),
         CfPosition::LemniscateStage5 => (DiatonicPosition::B, CFMapping::Work),
         CfPosition::Outer4Parent => (DiatonicPosition::CPrime, CFMapping::TruthReturn),
@@ -509,7 +505,7 @@ fn cf_position6(vak_coord: &VakAddress) -> Result<u8, M3Error> {
         CfPosition::Inner1 => 1,
         CfPosition::Inner2 => 2,
         CfPosition::Inner3 => 3,
-        CfPosition::Inner4 | CfPosition::Outer4Parent => 4,
+        CfPosition::Outer4Parent => 4,
         CfPosition::Inner5 | CfPosition::LemniscateStage5 => 5,
     })
 }
@@ -706,6 +702,7 @@ mod tests {
             cs: CsField {
                 code: "CS0".to_owned(),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         }
     }
@@ -792,7 +789,10 @@ mod tests {
             assert_eq!(packet.complement.polarity_xor_mask, 0x15);
             assert_eq!(packet.complement.base_pair_codon, codon ^ 0x15);
             assert_eq!(packet.complement.base_pair_codon ^ 0x15, codon);
-            assert_eq!(packet.canonical_quaternion_path, M3_ELEMENTAL_QUATERNION_PATH);
+            assert_eq!(
+                packet.canonical_quaternion_path,
+                M3_ELEMENTAL_QUATERNION_PATH
+            );
             assert_eq!(
                 packet.ring_position_quaternion_shortcut,
                 M3_RING_POSITION_QUATERNION_SHORTCUT
@@ -806,7 +806,10 @@ mod tests {
             let eval = unsafe { evaluate_codon(codon) };
             let quat = unsafe { m3_eval_to_quat(eval) };
             let roundtrip = unsafe { m3_quat_to_eval(quat) };
-            assert_eq!(roundtrip, eval, "eval/quaternion round-trip failed for {codon}");
+            assert_eq!(
+                roundtrip, eval,
+                "eval/quaternion round-trip failed for {codon}"
+            );
 
             let packet = bioquaternion_transcription(codon);
             assert!(
@@ -819,7 +822,7 @@ mod tests {
 
     #[test]
     fn ananda_projection_uses_coordinate_position_without_tick_descent() {
-        let projection = ananda_projection(&vak("(4/5/0)")).unwrap();
+        let projection = ananda_projection(&vak("(4.0/1-4.4/5)")).unwrap();
 
         assert_eq!(projection.route, "s2.graph.ananda_position");
         assert_eq!(projection.position, 4);

@@ -723,6 +723,9 @@ importers:
 
   extensions/omnipanel-shell:
     dependencies:
+      '@pratibimba/block-kit':
+        specifier: workspace:*
+        version: link:../block-kit
       '@pratibimba/ide-shell-m0-m5':
         specifier: workspace:*
         version: link:../ide-shell-m0-m5

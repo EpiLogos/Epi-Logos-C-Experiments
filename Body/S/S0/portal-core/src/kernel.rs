@@ -13,7 +13,7 @@ use crate::profile_projections::{
     AnuttaraWitnessProjection, CanonRecognitionEvent, CosmicCompositionState,
     PasuBeingPatternProjection, PersonalPoleProjection, PsychoidFieldProjection,
 };
-use crate::vak_address::VakAddress;
+use crate::vak_address::{CpfState, VakAddress};
 use std::fmt;
 
 pub const EPOGDOON_NUM: u8 = 9;
@@ -143,7 +143,10 @@ mod epogdoon_bridge_tests {
     #[test]
     fn epogdoon_fold_structure_matches_canonical_c() {
         let lattice = epogdoon_bridge_lattice();
-        let c_gap_count = lattice.iter().filter(|cell| cell.is_evolutionary_gap).count();
+        let c_gap_count = lattice
+            .iter()
+            .filter(|cell| cell.is_evolutionary_gap)
+            .count();
         assert_eq!(c_gap_count, 64, "literal C is_evolutionary_gap flags 64/72");
 
         let mut collisions = 0usize;
@@ -972,6 +975,109 @@ impl Default for GraphAnchorProjection {
     }
 }
 
+pub const M0_CF_ADDRESS: [(&str, &str); 7] = [
+    ("(00/00)", "M0-2:00/00"),
+    ("(0/1)", "M0-1/M0-3/M0-4/M0-5:(0/1)"),
+    ("(0/1/2)", "M0-4.0/1/2"),
+    ("(0/1/2/3)", "M0-4.0/1/2/3"),
+    ("(4.0/1-4.4/5)", "M0-4"),
+    ("(4.5/0)", "M0-4.5/0"),
+    ("(5/0)", "M0-5"),
+];
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum VakLevel {
+    Para,
+    Pashyanti,
+    Madhyama,
+    Vaikhari,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VakLanguificationTrace {
+    pub cpf_notation: String,
+    pub cf_notation: String,
+    pub m0_address: String,
+    pub vak_level: VakLevel,
+    pub diatonic_degree: u8,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mode_tonic_cf: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resonance72_index: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub half_decan_index: Option<usize>,
+    pub bias_weights_empty: bool,
+    pub recognition_closed: bool,
+    pub provenance: Vec<String>,
+}
+
+impl VakLanguificationTrace {
+    pub fn from_profile(
+        profile: &MathemeHarmonicProfile,
+        bias_weights_empty: bool,
+    ) -> Option<Self> {
+        let vak = profile.vak_address.as_ref()?;
+        let cf_notation = vak.cf.clone();
+        let m0_address = m0_address_for_cf(&cf_notation)?.to_owned();
+        let recognition_closed = vak.cs.recognized;
+        let vak_level = vak_level_for(vak, bias_weights_empty, recognition_closed);
+        let resonance72_index = Some(profile.resonance72.lens_anchor_index);
+        let half_decan_index = resonance72_index.map(|index| index / 2);
+        Some(Self {
+            cpf_notation: cpf_notation(vak.cpf).to_owned(),
+            cf_notation,
+            m0_address,
+            vak_level,
+            diatonic_degree: if recognition_closed && vak.cf == "(5/0)" {
+                0
+            } else {
+                profile
+                    .diatonic
+                    .as_ref()
+                    .map(|context| context.degree)
+                    .unwrap_or(0)
+            },
+            mode_tonic_cf: None,
+            resonance72_index,
+            half_decan_index,
+            bias_weights_empty,
+            recognition_closed,
+            provenance: vec![
+                "s4.vak.evaluate".to_owned(),
+                "m0.vak_cf".to_owned(),
+                "kernel.diatonic_context".to_owned(),
+                "kernel.resonance72_projection".to_owned(),
+            ],
+        })
+    }
+}
+
+fn cpf_notation(cpf: CpfState) -> &'static str {
+    match cpf {
+        CpfState::Dialogical => "(00/00)",
+        CpfState::Mechanistic => "(4.0/1-4.4/5)",
+    }
+}
+
+fn m0_address_for_cf(cf: &str) -> Option<&'static str> {
+    M0_CF_ADDRESS
+        .iter()
+        .find_map(|(literal, address)| (*literal == cf).then_some(*address))
+}
+
+fn vak_level_for(vak: &VakAddress, bias_weights_empty: bool, recognition_closed: bool) -> VakLevel {
+    if matches!(vak.cpf, CpfState::Dialogical) && bias_weights_empty {
+        return VakLevel::Para;
+    }
+    match vak.cf.as_str() {
+        "(0/1)" | "(0/1/2)" | "(0/1/2/3)" => VakLevel::Pashyanti,
+        "(5/0)" if recognition_closed => VakLevel::Vaikhari,
+        _ => VakLevel::Madhyama,
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
@@ -1034,6 +1140,8 @@ pub struct MathemeHarmonicProfile {
     pub canon_recognition_stream: Vec<CanonRecognitionEvent>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vak_address: Option<VakAddress>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vak_languification_trace: Option<VakLanguificationTrace>,
     #[serde(default)]
     pub s2_anchor: Option<MathemeFutureAnchor>,
     #[serde(default)]
@@ -1076,8 +1184,7 @@ impl MathemeHarmonicProfile {
             resonance72.lens_anchor_index,
             binary.mahamaya_address64,
         );
-        let graph_handle =
-            GraphAnchorProjection::from_anchor(&source_coordinate, position, helix);
+        let graph_handle = GraphAnchorProjection::from_anchor(&source_coordinate, position, helix);
         Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
@@ -1133,6 +1240,7 @@ impl MathemeHarmonicProfile {
             psychoid_field: None,
             canon_recognition_stream: Vec::new(),
             vak_address: None,
+            vak_languification_trace: None,
             s2_anchor: Some(MathemeFutureAnchor::s2_coordinate_anchor(
                 &source_coordinate,
             )),
@@ -1153,6 +1261,13 @@ impl MathemeHarmonicProfile {
     pub fn with_vak(tick: KernelTick, vak: VakAddress) -> Self {
         let mut profile = Self::from_tick(tick);
         profile.vak_address = Some(vak);
+        let bias_weights_empty = profile
+            .vak_address
+            .as_ref()
+            .map(|vak| matches!(vak.cpf, CpfState::Dialogical))
+            .unwrap_or(false);
+        profile.vak_languification_trace =
+            VakLanguificationTrace::from_profile(&profile, bias_weights_empty);
         profile
     }
 

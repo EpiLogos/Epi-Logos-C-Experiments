@@ -127,6 +127,13 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
         return this.bridge.parashaktiCorrespondences(address72);
     }
 
+    async planetaryElementalWeights(): Promise<unknown> {
+        if (!this.bridge) {
+            throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');
+        }
+        return this.bridge.planetaryElementalWeights();
+    }
+
     async bioquaternionTranscription(codon: number): Promise<unknown> {
         if (!this.bridge) {
             throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');

@@ -6,11 +6,11 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
 use portal_core::{
-    bioquaternion_transcription, epogdoon_bridge_lattice, DepositionAnchorProjection,
-    EpogdoonBridgeProjection, KernelPhase, KleinFlipEvent, MPrimePerformanceEvent,
-    MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
-    MathemePointerAnchorProjection, ProfilePrivacyClass, RelationDescriptor, RelationFamily,
-    VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
+    bioquaternion_transcription, epogdoon_bridge_lattice, planetary_elemental_weights,
+    DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase, KleinFlipEvent,
+    MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
+    MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass, RelationDescriptor,
+    RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -31,6 +31,8 @@ pub const M1_PROFILE_TO_PERFORMANCE_STREAM: &str = "S0.kernel-bridge.m1-profile-
 /// never recomputes the 9:8 fold locally.
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
+pub const KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS: &str =
+    "kernelBridge.m2.planetaryElementalWeights()";
 pub const KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION: &str =
     "kernelBridge.m3.bioquaternionTranscription(codon)";
 
@@ -698,6 +700,7 @@ pub fn capability_names() -> &'static [&'static str] {
         "depositKernelObservation",
         "requestReviewEvidence",
         "s2.parashaktiCorrespondences",
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
     ]
 }
@@ -852,6 +855,28 @@ pub fn typed_json_m2_epogdoon_lattice() -> Value {
         "addressCount": EPOGDOON_M2_ADDRESS_COUNT,
         "cells": m2_epogdoon_projection_lattice(),
     })
+}
+
+/// Typed-JSON form of `kernelBridge.m2.planetaryElementalWeights()` —
+/// `{ weights, perPlanet, aspectGain }` projected from the current kernel clock.
+pub fn typed_json_m2_planetary_elemental_weights(state: &PortalClockState) -> Value {
+    let mut value = serde_json::to_value(planetary_elemental_weights(state))
+        .expect("PlanetaryElementalWeights serializes");
+    if let Value::Object(ref mut object) = value {
+        object.insert(
+            "contract".to_owned(),
+            Value::String(KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS.to_owned()),
+        );
+        object.insert(
+            "runtimeOwner".to_owned(),
+            Value::String(KERNEL_BRIDGE_RUNTIME_OWNER.to_owned()),
+        );
+        object.insert(
+            "source".to_owned(),
+            Value::String(KERNEL_BRIDGE_SOURCE.to_owned()),
+        );
+    }
+    value
 }
 
 /// Typed-JSON form of `kernelBridge.m3.bioquaternionTranscription(codon)` —
@@ -1192,6 +1217,9 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         )),
         "requestReviewEvidence" => Ok(Some("s5'.review.submit".to_owned())),
         "s2.parashaktiCorrespondences" => Ok(Some("s2.parashaktiCorrespondences".to_owned())),
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS => Ok(Some(
+            KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS.to_owned(),
+        )),
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => Ok(Some(
             KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
         )),

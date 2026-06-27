@@ -14,6 +14,7 @@ fn vak(label: &str) -> VakAddress {
         cs: CsField {
             code: format!("test:{label}"),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

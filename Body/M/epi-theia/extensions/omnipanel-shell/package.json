@@ -14,6 +14,7 @@
   "keywords": ["theia-extension", "epi-logos", "pratibimba", "omnipanel", "command-membrane"],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/ide-shell-m0-m5": "workspace:*",
     "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",

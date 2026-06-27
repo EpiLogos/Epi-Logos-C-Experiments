@@ -43,6 +43,34 @@ describe("Kernel bridge contract package", () => {
     expect(parsed.binary).toEqual(parsed.mahamaya);
   });
 
+  it("round-trips VakLanguificationTrace and omits absent optional fields", () => {
+    const trace = {
+      cpfNotation: "(4.0/1-4.4/5)",
+      cfNotation: "(5/0)",
+      m0Address: "M0-5",
+      vakLevel: "vaikhari",
+      diatonicDegree: 0,
+      biasWeightsEmpty: false,
+      recognitionClosed: true,
+      provenance: [
+        "s4.vak.evaluate",
+        "m0.vak_cf",
+        "kernel.diatonic_context",
+      ],
+    } as const;
+
+    const parsed = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      vakLanguificationTrace: trace,
+    });
+    expect(parsed.vakLanguificationTrace?.vakLevel).toBe("vaikhari");
+
+    const encoded = JSON.stringify(parsed.vakLanguificationTrace);
+    expect(encoded).not.toContain("resonance72Index");
+    expect(encoded).not.toContain("halfDecanIndex");
+    expect(encoded).not.toContain("modeTonicCf");
+  });
+
   it("rejects renderer-local profile fields that are absent from the S0 profile contract", () => {
     expect(() =>
       MathemeHarmonicProfile.parse({
@@ -230,6 +258,7 @@ describe("Kernel bridge contract package", () => {
       "depositKernelObservation",
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
+      "kernelBridge.m2.planetaryElementalWeights()",
       "kernelBridge.m3.bioquaternionTranscription(codon)",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([

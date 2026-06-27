@@ -420,6 +420,7 @@ fn acceptance_dialogue_lines() -> Vec<DialogueLine> {
                     cs: CsField {
                         code: format!("arena-dialogue-{idx}"),
                         direction: CsDirection::Day,
+                        recognized: false,
                     },
                 },
                 route_branch,
@@ -460,6 +461,7 @@ fn vak_address(cp: &str, class: VamaShaktiClass) -> VakAddress {
         cs: CsField {
             code: format!("vama:{}:{cp}", class.as_str()),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

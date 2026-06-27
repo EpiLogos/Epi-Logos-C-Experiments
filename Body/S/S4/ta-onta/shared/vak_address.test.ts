@@ -8,12 +8,11 @@ import {
 } from "./vak_address.ts";
 
 describe("ta-onta shared VakAddress mirror", () => {
-  it("CF position table covers all 8 canonical literals", () => {
+  it("CF position table covers all 7 canonical literals", () => {
     assert.equal(CANONICAL_CF_POSITIONS["(00/00)"], "inner_0");
     assert.equal(CANONICAL_CF_POSITIONS["(0/1)"], "inner_1");
     assert.equal(CANONICAL_CF_POSITIONS["(0/1/2)"], "inner_2");
     assert.equal(CANONICAL_CF_POSITIONS["(0/1/2/3)"], "inner_3");
-    assert.equal(CANONICAL_CF_POSITIONS["(4/5/0)"], "inner_4");
     assert.equal(CANONICAL_CF_POSITIONS["(5/0)"], "inner_5");
     assert.equal(CANONICAL_CF_POSITIONS["(4.0/1-4.4/5)"], "outer_4_parent");
     assert.equal(CANONICAL_CF_POSITIONS["(4.5/0)"], "lemniscate_stage_5");
@@ -106,15 +105,15 @@ describe("ta-onta shared VakAddress mirror", () => {
     }
   });
 
-  it("rejects bare CT4 (canonical excludes it — CT4b is the Psyche fractal, NOT CT4 variant b)", () => {
+  it("accepts CT4 parent", () => {
     assert.equal(isValidVakAddress({
       cpf: "(4.0/1-4.4/5)",
-      ct: ["CT4"], // canonical does NOT include bare CT4
+      ct: ["CT4"],
       cp: "CP4.4",
       cf: "(4.0/1-4.4/5)",
       cfp: "CFP0",
       cs: { code: "CS0", direction: "Day" },
-    }), false);
+    }), true);
   });
 
   it("accepts CT4a", () => {
@@ -137,6 +136,28 @@ describe("ta-onta shared VakAddress mirror", () => {
       cfp: "CFP0",
       cs: { code: "CS0", direction: "Day" },
     }), true);
+  });
+
+  it("accepts CT4 parent, canonical synthesis spelling, and optional recognition closure", () => {
+    assert.equal(isValidVakAddress({
+      cpf: "(4.0/1-4.4/5)",
+      ct: ["CT4"],
+      cp: "CP4.5",
+      cf: "(4.5/0)",
+      cfp: "CFP5",
+      cs: { code: "CS5", direction: "Night'", recognized: true },
+    }), true);
+  });
+
+  it("rejects the legacy no-dot synthesis spelling", () => {
+    assert.equal(isValidVakAddress({
+      cpf: "(4.0/1-4.4/5)",
+      ct: ["CT4"],
+      cp: "CP4.5",
+      cf: "(4/5/0)",
+      cfp: "CFP5",
+      cs: { code: "CS5", direction: "Night'" },
+    }), false);
   });
 
   it("JSON.stringify output matches the canonical frozen fixture (catches key-order drift)", () => {

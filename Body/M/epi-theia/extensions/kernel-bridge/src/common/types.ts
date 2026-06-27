@@ -375,6 +375,29 @@ export interface KernelBridgeStreamDelta {
 
 // ---- Cross-cutting pentadic profile projection (Track 36 — T36.1) ----
 
+export type CfNotation =
+    | '(00/00)'
+    | '(0/1)'
+    | '(0/1/2)'
+    | '(0/1/2/3)'
+    | '(4.0/1-4.4/5)'
+    | '(4.5/0)'
+    | '(5/0)';
+
+export interface VakLanguificationTrace {
+    readonly cpfNotation: '(00/00)' | '(4.0/1-4.4/5)';
+    readonly cfNotation: CfNotation;
+    readonly m0Address: string;
+    readonly vakLevel: 'para' | 'pashyanti' | 'madhyama' | 'vaikhari';
+    readonly diatonicDegree: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    readonly modeTonicCf?: CfNotation;
+    readonly resonance72Index?: number;
+    readonly halfDecanIndex?: number;
+    readonly biasWeightsEmpty: boolean;
+    readonly recognitionClosed: boolean;
+    readonly provenance: readonly string[];
+}
+
 /** Cross-cutting profile projection — pentadic trace from M0 Anuttara through
  *  the M2/M3 resonance bridge. Every field derives from existing
  *  MathemeHarmonicProfile fields and Mahamaya/M2/M3 helpers.
@@ -424,6 +447,7 @@ export const KERNEL_BRIDGE_CAPABILITIES = [
     'depositKernelObservation',
     'requestReviewEvidence',
     's2.parashaktiCorrespondences',
+    'kernelBridge.m2.planetaryElementalWeights()',
     'kernelBridge.m3.bioquaternionTranscription(codon)'
 ] as const;
 

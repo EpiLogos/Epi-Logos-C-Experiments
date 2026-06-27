@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T104219Z-37-T37.2",
+  "taskId": "37.T37.2",
+  "startedAt": "2026-06-27T10:42:19.025Z",
+  "owner": "codex-m-dev-37-t37-2-planetary-elemental",
+  "leaseExpiresAt": "2026-06-27T12:42:19.025Z",
+  "worktree": null,
+  "task": {
+    "id": "37.T37.2",
+    "trackId": "37",
+    "tranche": "T37.2",
+    "title": "Ratify the planetary-elemental projection",
+    "effort": null,
+    "file": "37-biological-quaternionic-cross-layer-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md",
+    "dependsOn": [
+      "37.T37.11"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

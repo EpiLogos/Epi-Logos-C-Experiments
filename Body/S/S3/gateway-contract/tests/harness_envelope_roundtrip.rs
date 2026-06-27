@@ -229,6 +229,7 @@ fn vak_address() -> VakAddress {
         cs: CsField {
             code: "S3".to_string(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

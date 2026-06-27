@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
+import { BlockHost } from '@pratibimba/block-kit/lib/browser/block-host';
 import {
   type IOD17Parity,
   type ReviewDecision,
@@ -8,6 +9,7 @@ import {
   type ReviewItemDeep,
   type ReviewSessionTabState
 } from '../../../../common/omnipanel-runtime';
+import { reviewItemDeepToBlocks } from '../../../../common/review-block-projection';
 import {
   IOD17ParityReadout,
   IOD17ParityStatusBadge
@@ -399,10 +401,12 @@ function ReviewItemView({
   onOpenEvidence?: (evidencePacketRef: string) => void;
 }) {
   const itemHistory = history.filter((entry) => entry.reviewId === item.id);
+  const itemBlocks = reviewItemDeepToBlocks(item);
   return (
     <article className="min-w-0 space-y-4" data-test="review-item-view" data-review-id={item.id}>
       <ReviewItemHeader item={item} />
       <IOD17ParityReadout parity={item.iod17Parity} />
+      <BlockHost blocks={itemBlocks} />
       <ReviewItemEvidenceEmbed item={item} onOpenEvidence={onOpenEvidence} />
       <DispatchGenealogyEmbed item={item} onOpenDispatchTrace={onOpenDispatchTrace} />
       <ReviewActionControls

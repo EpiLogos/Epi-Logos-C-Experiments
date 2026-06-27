@@ -69,6 +69,7 @@ export const KernelBridgeCapabilityName = z.enum([
   "depositKernelObservation",
   "requestReviewEvidence",
   "s2.parashaktiCorrespondences",
+  "kernelBridge.m2.planetaryElementalWeights()",
   "kernelBridge.m3.bioquaternionTranscription(codon)",
 ]);
 export type KernelBridgeCapabilityName = z.infer<
@@ -433,6 +434,36 @@ export type AnuttaraWitnessProjection = z.infer<
   typeof AnuttaraWitnessProjection
 >;
 
+export const CfNotation = z.enum([
+  "(00/00)",
+  "(0/1)",
+  "(0/1/2)",
+  "(0/1/2/3)",
+  "(4.0/1-4.4/5)",
+  "(4.5/0)",
+  "(5/0)",
+]);
+export type CfNotation = z.infer<typeof CfNotation>;
+
+export const VakLanguificationTrace = z
+  .object({
+    cpfNotation: z.enum(["(00/00)", "(4.0/1-4.4/5)"]),
+    cfNotation: CfNotation,
+    m0Address: z.string().min(1),
+    vakLevel: z.enum(["para", "pashyanti", "madhyama", "vaikhari"]),
+    diatonicDegree: z.number().int().min(0).max(7),
+    modeTonicCf: CfNotation.optional(),
+    resonance72Index: z.number().int().min(0).max(71).optional(),
+    halfDecanIndex: z.number().int().min(0).max(35).optional(),
+    biasWeightsEmpty: z.boolean(),
+    recognitionClosed: z.boolean(),
+    provenance: z.array(z.string().min(1)),
+  })
+  .strict();
+export type VakLanguificationTrace = z.infer<
+  typeof VakLanguificationTrace
+>;
+
 export const MathemeHarmonicProfile = z
   .object({
     profileSchemaVersion: z.literal(1),
@@ -461,6 +492,8 @@ export const MathemeHarmonicProfile = z
     chromatic: z.record(z.unknown()),
     diatonic: z.record(z.unknown()),
     resonance72: z.record(z.unknown()),
+    depositionAnchor: z.record(z.unknown()),
+    graphHandle: z.record(z.unknown()),
     audioOctet: z.array(z.number()).length(8),
     nodalQuartet: z.array(z.record(z.unknown())).length(4),
     elements: z.record(z.unknown()),
@@ -473,6 +506,7 @@ export const MathemeHarmonicProfile = z
     conjugateFormCharacter: z.string(),
     privacyClass: z.literal("public-current-context"),
     bedrock: z.record(z.unknown()),
+    readinessLedger: z.array(z.record(z.unknown())),
     pointerAnchor: z.record(z.unknown()),
     contextFrames: z.union([
       z.array(z.record(z.unknown())),
@@ -483,6 +517,7 @@ export const MathemeHarmonicProfile = z
     harmonicGrammar: z.unknown().optional(),
     pasuBeingPattern: PasuBeingPatternProjection.optional(),
     anuttaraWitness: AnuttaraWitnessProjection.optional(),
+    vakLanguificationTrace: VakLanguificationTrace.optional(),
     s2Anchor: z.unknown().nullable(),
     s3Anchor: z.unknown().nullable(),
     vakAddress: z.unknown().nullable().optional(),

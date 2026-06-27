@@ -12,6 +12,7 @@ fn episode_attrs_with_vak_carries_canonical_fields() {
         cs: CsField {
             code: "CS3".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let attrs = EpisodeAttrs::with_vak(vak.clone());
@@ -37,6 +38,7 @@ fn episode_attrs_with_vak_uses_primed_night_for_pratibimba_direction() {
         cs: CsField {
             code: "CS5".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     };
     let attrs = EpisodeAttrs::with_vak(vak);
@@ -68,6 +70,7 @@ fn episode_insert_carries_vak_attrs_through_serialisation() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let insert = EpisodeInsert {

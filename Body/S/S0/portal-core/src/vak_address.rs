@@ -52,7 +52,6 @@ pub enum CfPosition {
     Inner1,
     Inner2,
     Inner3,
-    Inner4,
     Inner5,
     Outer4Parent,
     LemniscateStage5,
@@ -77,6 +76,8 @@ pub enum CsDirection {
 pub struct CsField {
     pub code: String,
     pub direction: CsDirection,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub recognized: bool,
 }
 
 /// The canonical VAK C'-branch coordinate-language envelope.
@@ -140,6 +141,7 @@ mod tests {
             cs: CsField {
                 code: "CS3".to_owned(),
                 direction: CsDirection::Night,
+                recognized: false,
             },
         }
     }
@@ -172,10 +174,13 @@ pub fn canonical_cf_position(cf_literal: &str) -> Option<CfPosition> {
         "(0/1)" => Some(CfPosition::Inner1),
         "(0/1/2)" => Some(CfPosition::Inner2),
         "(0/1/2/3)" => Some(CfPosition::Inner3),
-        "(4/5/0)" => Some(CfPosition::Inner4),
         "(5/0)" => Some(CfPosition::Inner5),
         "(4.0/1-4.4/5)" => Some(CfPosition::Outer4Parent),
         "(4.5/0)" => Some(CfPosition::LemniscateStage5),
         _ => None,
     }
+}
+
+pub(crate) fn is_false(value: &bool) -> bool {
+    !*value
 }

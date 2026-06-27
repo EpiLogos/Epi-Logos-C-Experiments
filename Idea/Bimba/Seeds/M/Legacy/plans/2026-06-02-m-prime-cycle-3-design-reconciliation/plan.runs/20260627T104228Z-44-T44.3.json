@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T104228Z-44-T44.3",
+  "taskId": "44.T44.3",
+  "startedAt": "2026-06-27T10:42:28.474Z",
+  "owner": "codex-m-dev-44-t44-3-review-projection",
+  "leaseExpiresAt": "2026-06-27T12:42:28.474Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.3",
+    "trackId": "44",
+    "tranche": "T44.3",
+    "title": "Projection: ReviewItemDeep → blocks (OmniPanel Review)",
+    "effort": "OmniPanel Review",
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

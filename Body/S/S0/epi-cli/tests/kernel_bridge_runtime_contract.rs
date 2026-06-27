@@ -489,14 +489,20 @@ fn kernel_bridge_names_s2_parashakti_correspondence_capability() {
 fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
     let direct = typed_json_m3_bioquaternion_transcription(1);
 
-    assert_eq!(direct["contract"], KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION);
+    assert_eq!(
+        direct["contract"],
+        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION
+    );
     assert_eq!(direct["codon"], 1);
     assert_eq!(direct["charges"]["pp"], 21);
     assert_eq!(direct["charges"]["nn"], -9);
     assert_eq!(direct["charges"]["np"], 9);
     assert_eq!(direct["charges"]["pn"], 3);
     assert_eq!(direct["quaternion"], json!([21.0, -9.0, 9.0, 3.0]));
-    assert_eq!(direct["elementsCanonical"], json!(["earth", "fire", "water", "air"]));
+    assert_eq!(
+        direct["elementsCanonical"],
+        json!(["earth", "fire", "water", "air"])
+    );
     assert_eq!(direct["chargeIdentity"][0]["charge"], "pp");
     assert_eq!(direct["chargeIdentity"][0]["xPermutation"], "X2");
     assert_eq!(direct["chargeIdentity"][0]["element"], "earth");
@@ -516,7 +522,10 @@ fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
         direct["canonicalQuaternionPath"],
         "m3_compute_charges/evaluate_codon -> m3_eval_to_quat"
     );
-    assert_eq!(direct["ringPositionQuaternionShortcut"], "m3_quat_from_codon");
+    assert_eq!(
+        direct["ringPositionQuaternionShortcut"],
+        "m3_quat_from_codon"
+    );
 
     let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
     let receipt = runtime
@@ -1090,6 +1099,7 @@ fn vak_context() -> KernelBridgeVakContext {
             cs: CsField {
                 code: "CS0".to_owned(),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         },
         route_lineage: vec![
