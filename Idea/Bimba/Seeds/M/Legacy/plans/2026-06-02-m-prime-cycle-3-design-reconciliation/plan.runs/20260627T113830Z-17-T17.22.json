@@ -1,0 +1,35 @@
+{
+  "runId": "20260627T113830Z-17-T17.22",
+  "taskId": "17.T17.22",
+  "startedAt": "2026-06-27T11:38:30.335Z",
+  "owner": "codex-m-dev-17-t17-22-hen-status",
+  "leaseExpiresAt": "2026-06-27T13:38:30.335Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.22",
+    "trackId": "17",
+    "tranche": "T17.22",
+    "title": "Declare `Body/S/S1/hen-compiler/` compatibility-only via `STATUS.md`",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.21"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

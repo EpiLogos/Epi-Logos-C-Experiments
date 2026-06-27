@@ -7,7 +7,7 @@ use epi_s3_gateway_contract::{
     TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease, TerminalStatus,
 };
 use redis::AsyncCommands;
-use serde_json::json;
+use serde_json::{json, Value};
 use support::{spawn_epi, temp_env, TestEnv, TestGatewayClient};
 
 fn env_with_now_file() -> (TestEnv, String, String) {
@@ -212,7 +212,10 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["blocks"]["source"], "s4'.psyche.state.renderer");
     assert_eq!(value["blocks"]["activeBlockIds"][0], "block:review-item:44");
     assert_eq!(value["blocks"]["items"][0]["type"], "review-item");
-    assert_eq!(value["blocks"]["items"][0]["data"]["title"], "Live transport");
+    assert_eq!(
+        value["blocks"]["items"][0]["data"]["title"],
+        "Live transport"
+    );
     assert_eq!(
         value["redis"]["blocksKey"],
         "cache:hot:s3:gateway:temporal:session:session-temporal-main:blocks"

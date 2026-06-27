@@ -169,9 +169,15 @@ fn temporal_context_projects_blocks_from_existing_psyche_renderer_state() {
         context["redis"]["blocksKey"],
         "cache:hot:s3:gateway:temporal:session:20260608-120000-main:blocks"
     );
-    assert_eq!(context["blocks"]["activeBlockIds"][0], "block:review-item:44");
+    assert_eq!(
+        context["blocks"]["activeBlockIds"][0],
+        "block:review-item:44"
+    );
     assert_eq!(context["blocks"]["items"][0]["type"], "review-item");
-    assert_eq!(context["blocks"]["items"][0]["data"]["title"], "Live transport");
+    assert_eq!(
+        context["blocks"]["items"][0]["data"]["title"],
+        "Live transport"
+    );
     assert_eq!(
         context["blocks"]["pendingVerdict"]["routesTo"],
         "s4'.psyche.update"

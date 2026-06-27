@@ -142,6 +142,42 @@ async fn subscription_lifecycle_flows_over_single_multiplexed_websocket() {
         "connect must return a result, got: {connect_response}"
     );
 
+    send_request(
+        &mut socket,
+        20,
+        "s4'.psyche.update",
+        json!({
+            "sessionKey": "agent:test:multiplex",
+            "patch": {
+                "renderer": {
+                    "activeBlockIds": ["block:review-item:44"],
+                    "currentSelection": "block:review-item:44",
+                    "pendingVerdict": Value::Null,
+                    "appliedOperations": [],
+                    "blocks": [{
+                        "id": "block:review-item:44",
+                        "type": "review-item",
+                        "ctx": {"cf": "(0/1/2)", "ct": "CT2", "cp": "4.2"},
+                        "coordinate": "M5'",
+                        "privacyClass": "protected",
+                        "provenance": {
+                            "kind": "evidence-envelope",
+                            "handle": "review-44"
+                        },
+                        "data": {"title": "Live transport"},
+                        "affordances": ["verdict", "annotate"]
+                    }]
+                }
+            }
+        }),
+    )
+    .await;
+    let psyche_update_response = read_response(&mut socket, 20).await;
+    assert!(
+        psyche_update_response["result"].is_object(),
+        "psyche update must seed renderer block state, got: {psyche_update_response}"
+    );
+
     // 4. s3'.temporal.subscribe — must return subscriptionId and emit
     //    `requested` then `applied` lifecycle events on the SAME socket.
     send_request(
@@ -220,6 +256,15 @@ async fn subscription_lifecycle_flows_over_single_multiplexed_websocket() {
                         ),
                         "productionFallbackPolicy must be one of the typed enum values, got {fallback_policy:?}"
                     );
+                    assert_eq!(payload["context"]["blocks"]["transport"], "day-now-runtime");
+                    assert_eq!(
+                        payload["context"]["blocks"]["items"][0]["type"],
+                        "review-item"
+                    );
+                    assert_eq!(
+                        payload["context"]["blocks"]["items"][0]["data"]["title"],
+                        "Live transport"
+                    );
                 }
             }
             _ => continue,
@@ -236,6 +281,10 @@ async fn subscription_lifecycle_flows_over_single_multiplexed_websocket() {
     );
     assert_eq!(temporal_result["fallbackActive"], false);
     assert_eq!(temporal_result["source"], "websocket-multiplex");
+    assert_eq!(
+        temporal_result["context"]["blocks"]["items"][0]["type"],
+        "review-item"
+    );
 
     // 5. s3'.spacetime.subscribe — without SPACETIMEDB_URL the gateway must
     //    enter the explicit HTTP-SQL fallback mode and emit `fallback-active`

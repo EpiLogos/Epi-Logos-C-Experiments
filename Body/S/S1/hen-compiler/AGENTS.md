@@ -5,7 +5,8 @@ Python personal-knowledge-base compiler `llm-personal-kb` — "Personal knowledg
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 
 ## Ownership
-- `scripts/` — CLI tools: `compile.py`, `query.py`, `lint.py`, `flush.py`, `config.py`, `utils.py`, plus Hen-specific `hen_compile_plan.py`, `hen_residency.py`, `migrate_m2_3_element_canonical.py`; runtime `state.json`/`last-flush.json`.
+- `STATUS.md` — compatibility-only declaration: this directory is probe/vendor material; canonical [[S1]] / [[Hen]] compiler law lives in sibling `hen-compiler-core/`.
+- `scripts/` — compatibility/probe CLI tools: `compile.py`, `query.py`, `lint.py`, `flush.py`, `config.py`, `utils.py`, plus Hen-specific `hen_compile_plan.py`, `hen_residency.py`, `migrate_m2_3_element_canonical.py`; runtime `state.json`/`last-flush.json`.
 - `hooks/` — Claude Code hooks: `session-start.py`, `session-end.py`, `pre-compact.py`.
 - `daily/` — immutable source conversation logs (compiler input).
 - `knowledge/` — LLM-owned compiled output: `index.md`, `log.md`, `concepts/`, `connections/`, `qa/`.
@@ -15,6 +16,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 - Does NOT own coordinate semantics, canon-write authority, or the Rust contract — those live in sibling `hen-compiler-core/` and the owning S1 specs; this is a dev sidecar, it never writes `Idea/` directly.
 
 ## Local Contracts
+- Compatibility status: `STATUS.md`.
 - Schema reference (compiler analogy, article formats, hook/script details) is documented in this file's history and in the parent layer; binding interface is the owning spec.
 - Owning specs: [[S1-SPEC]] and [[S1-ARCHITECTURE]]; stack index [[S-SYSTEM-INDEX]].
 - No CONTRACT.md and no `src/lib.rs` Coordinate Header here — see parent `Body/S/S1/AGENTS.md` + Canon.
