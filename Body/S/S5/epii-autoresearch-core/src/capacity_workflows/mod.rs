@@ -11,7 +11,6 @@ mod aletheia_lineage;
 mod nara_voice;
 mod recursive_review;
 mod registry;
-mod runner;
 mod spine_inspector;
 
 pub use crate::adapters::MahamayaRuntimeTier;
@@ -20,7 +19,6 @@ pub use aletheia_lineage::*;
 pub use nara_voice::*;
 pub use recursive_review::*;
 pub use registry::*;
-pub use runner::*;
 pub use spine_inspector::*;
 
 use epi_s5_epii_review_core::{GateKind, GovernanceLevel, ReviewInboxItem};
