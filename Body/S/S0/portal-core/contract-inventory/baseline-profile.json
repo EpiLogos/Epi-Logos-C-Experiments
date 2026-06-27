@@ -97,6 +97,23 @@
     "lensAnchor": 0,
     "position": 0
   },
+  "depositionAnchor": {
+    "sourceCoordinate": "M0",
+    "resonance72Index": 0,
+    "mahamayaAddress64": 0,
+    "s3Method": "s5.episodic.kernel_profile_observation.deposit",
+    "privacyBoundary": "public-current-context-to-protected-local-episodic-memory"
+  },
+  "graphHandle": {
+    "canonicalForm": "M0",
+    "depth": 0,
+    "prefix": "M",
+    "parent": "M",
+    "axis": "bimba",
+    "coordinateHome": "M",
+    "gdsOverlayState": "blocked",
+    "resolverProvenance": "Body/S/S2/graph-services/src/coordinate.rs::CoordinateArrayParser (pre-resolved at the S0 profile bus to avoid per-tick re-parse)"
+  },
   "audioOctet": [
     146.8324,
     167.55635,
@@ -243,7 +260,7 @@
       "field": "bedrock",
       "state": "authoritative",
       "bedrock_link": "kernel-matheme-bedrock-projection-v1",
-      "provenance_chain": "Body/S/S0/portal-core/src/kernel.rs:643 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"
+      "provenance_chain": "Body/S/S0/portal-core/src/kernel.rs:780 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"
     }
   ],
   "pointerAnchor": {
