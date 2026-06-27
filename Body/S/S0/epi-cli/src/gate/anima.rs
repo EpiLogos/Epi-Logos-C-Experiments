@@ -681,6 +681,15 @@ fn vak_address_from_evaluated(evaluated: &Value) -> Result<VakAddress, String> {
         .and_then(|value| value.get("code"))
         .and_then(Value::as_str)
         .unwrap_or("CS0");
+    let recognized = evaluated
+        .get("recognized")
+        .or_else(|| {
+            evaluated
+                .get("cs")
+                .and_then(|value| value.get("recognized"))
+        })
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
 
     Ok(VakAddress {
         cpf,
@@ -695,6 +704,7 @@ fn vak_address_from_evaluated(evaluated: &Value) -> Result<VakAddress, String> {
             } else {
                 CsDirection::Day
             },
+            recognized,
         },
     })
 }
