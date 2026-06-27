@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T101545Z-36-T36.7",
+  "taskId": "36.T36.7",
+  "startedAt": "2026-06-27T10:15:45.314Z",
+  "owner": "codex-m-dev-36-t36-7-no-orphan-routeability",
+  "leaseExpiresAt": "2026-06-27T12:15:45.314Z",
+  "worktree": null,
+  "task": {
+    "id": "36.T36.7",
+    "trackId": "36",
+    "tranche": "T36.7",
+    "title": "No-orphan and routeability closure",
+    "effort": null,
+    "file": "36-anuttara-pentadic-runtime-trace.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/36-anuttara-pentadic-runtime-trace.md",
+    "dependsOn": [
+      "36.T36.6"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

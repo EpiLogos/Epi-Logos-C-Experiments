@@ -17,6 +17,12 @@ Inherit cycle-2's no-ambient registry (plan 14). Cycle 3 extends with:
 - **Integration plugins** (`plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`) — each owns its composition contract (Tranches 07, 08).
 - **UX doc load-bearing claims** — every claim has a row in a four-way matrix (Tranches 01-06 matrix files) with status ALIGNED / DOC-AHEAD landing tranche / SPEC-AHEAD integration tranche / CODE-PENDING closure / CONTRADICTION decision-register entry / ORPHAN no-orphan-fill tranche.
 
+## Closed Canonical Profile Fields
+
+| Profile field | Canonical trace claims | Producer | Inspection / composition / recognition owners | Grounding witness | Routeability status |
+|---|---|---|---|---|---|
+| **`anuttara_pentadic_trace`** | `0/1->5`, paired Mahamaya `15 + 15`, `24x15=360`, `72*5=360`, and `360+24=384` line-change relation | `portal-core` / kernel bridge via **10.P5** + **36.1-36.2** | Physics/computation inspector: M3 Mahamaya (**36.3** / **24.18**); cosmic composition consumer: integrated 1-2-3 (**36.4** / **29.15**); personal recognition consumer: integrated 4-5-0 + M4/M5 (**36.5** / **25/26**); learning-loop consumer: M5 Epii (**36.6**) | M0 Anuttara grounding witness | **CLOSED by 36.7** — no orphan row remains for `0/1->5`, paired 15s, `24x15=360`, or the pentadic runtime trace. |
+
 ## Open Orphans Routed Through Cycle 3
 
 | Orphan | Surface / claim | Owner-assignment route |
@@ -44,7 +50,6 @@ Inherit cycle-2's no-ambient registry (plan 14). Cycle 3 extends with:
 | **`bedrock_link` computation** | CCT-6: kernel-substrate provenance chain proving profile-field values derive from `.rodata` | Tranche **CCT-6** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
 | **`pattern_packet_handle` source-of-truth** | CCT-7: M4-3' day-episode evidence aggregator consumed across M4, M5, integrated 4-5-0 | Tranche **CCT-7** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
 | **`cron_evening` Möbius hook scheduler** | M5-ARCHITECTURE.md §Möbius write-back: night-pass scheduler for Logos Atelier crystallisations; no scheduler owner | Tranche **12.9** (Moirai night-pass routing) extended |
-| **`anuttara_pentadic_trace` profile field** | 0/1 -> 5 hinge, paired Mahamaya 15s, `24*15=360`, `72*5=360`, and 384 line-change relation are canonical but need one typed runtime carrier | **10.P5** + **Track 36.1-36.7**; consumers: **4.14**, **24.18**, **29.15**, **25/26** recognition handoff |
 | ~~**Techne profile (7th of "six Aletheia guardians")**~~ **RESOLVED 2026-06-03 by DR-S4-TECHNE** | Was: S4 canon §14-Agent Roster lists Techne as Aletheia-7 member. **Now: DR-S4-TECHNE ratified — Techne is NOT an agent; it is Pleroma's atomic-skills substrate (Pleroma's second face alongside VAK).** No agent profile lands. Techne moves to Pleroma CONTRACT.md §Techne section. The 6 Aletheia subagents are techne-guardians. | RESOLVED — see DR-S4-TECHNE in 13-decision-register.md |
 
 ## Decision-Register Gate
