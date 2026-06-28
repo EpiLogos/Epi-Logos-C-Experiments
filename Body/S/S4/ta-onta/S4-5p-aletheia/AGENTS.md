@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-5'-SPEC]] (actualises [[S5-SPEC]] /
 - `extension.ts` — PI extension entry/facade; composes Aletheia tool modules and owns session/cron hook wiring.
 - `CONTRACT.md` — binding extension contract (responsibility, hook seams, registered tools)
 - `spine-contribution.ts` — this carrier's spine contribution
-- `modules/` — implementation units (anansi-lineage, anansi-elo-index, moirai-rehear, moirai-fair-comparison, janus-doorway, janus-threshold, mercurius-translation, mercurius-elo, agora-staging, zeithoven-autoresearch, sophia-ingest, q-proposal-candidate, thought-vak, gate-trigger, chronos-integration, hen-integration, coordinate-loop)
+- `modules/` — implementation units (aeon-graduation, anansi-lineage, anansi-elo-index, moirai-rehear, moirai-fair-comparison, janus-doorway, janus-threshold, mercurius-translation, mercurius-elo, agora-staging, zeithoven-autoresearch, sophia-ingest, q-proposal-candidate, thought-vak, gate-trigger, chronos-integration, hen-integration, coordinate-loop)
 - `tests/` — `*.test.ts` per module + `z_cycle_smoke.test.ts`
 - `S5/tools.json` — S5 primitive tool descriptors; `S5'/` — QL augmentation: agents (anansi, moirai, janus, mercurius, agora, zeithoven, aletheia), skills, `tools/` (gnosis/thought/episodic/seed registrations), `janus-envelope.schema.json`
 - `skills/`, `clusters/`, `modules/` — workflow gates, per-subagent clusters

@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T102133Z-17-T17.8",
+  "taskId": "17.T17.8",
+  "startedAt": "2026-06-28T10:21:33.834Z",
+  "owner": "codex-m-dev-17-t17-8-sync-split",
+  "leaseExpiresAt": "2026-06-28T12:21:33.834Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.8",
+    "trackId": "17",
+    "tranche": "T17.8",
+    "title": "Split `Body/S/S2/graph-services/src/sync_coordinator.rs` (1,384 LOC)",
+    "effort": "1,384 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.7"
+    ],
+    "writeScopes": [
+      "Body/S/S2/graph-services/src/sync_coordinator.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

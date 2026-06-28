@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T093510Z-17-T17.7",
+  "taskId": "17.T17.7",
+  "startedAt": "2026-06-28T09:35:10.879Z",
+  "owner": "codex-m-dev-17-t17-7-spacetime-split",
+  "leaseExpiresAt": "2026-06-28T11:35:10.879Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.7",
+    "trackId": "17",
+    "tranche": "T17.7",
+    "title": "Split `Body/S/S3/gateway/src/spacetime.rs` (1,765 LOC)",
+    "effort": "1,765 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.6"
+    ],
+    "writeScopes": [
+      "Body/S/S3/gateway/src/spacetime.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

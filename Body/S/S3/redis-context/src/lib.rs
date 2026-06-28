@@ -1,9 +1,33 @@
+//! epi-s3-redis-context — Redis runtime context, key families, and eval-ledger payloads.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S3 |
+//! | Residency  | Body/S/S3/redis-context/src/lib.rs |
+//! | Position   | #3 - Gateway Control Plane Redis context |
+//! | Actualises | [[S3-SPEC]], [[S3-ARCHITECTURE]], and 46.T46.5 Aeon eval ledger |
+//!
+//! # Public surface
+//! * `RedisRuntimeRole` - Redis/RedisVL residency declaration.
+//! * `RedisKey`, `RedisCache`, `RedisConfig`, `CacheTier` - tiered Redis runtime keys and client helpers.
+//! * `AeonEvalLedger`, `AeonEvalMetrics`, `aeon_eval_ledger_from_transcript` - harness-neutral transcript metrics and promotion payloads.
+//!
+//! # Does NOT own
+//! * Harness transcript writing, Aletheia tool registration, Graphiti sidecar transport, or S5 domain interpretation.
+
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+pub mod aeon_eval;
 pub mod redis_cache;
 
+pub use aeon_eval::{
+    aeon_eval_ledger_from_transcript, AeonEvalContext, AeonEvalGraphitiEpisode, AeonEvalLedger,
+    AeonEvalMetrics, AeonEvalRedisRecord,
+};
 pub use redis_cache::{CacheTier, RedisCache, RedisConfig, RedisKey};
 
 pub const REDIS_RUNTIME_OWNER: &str = "S3";

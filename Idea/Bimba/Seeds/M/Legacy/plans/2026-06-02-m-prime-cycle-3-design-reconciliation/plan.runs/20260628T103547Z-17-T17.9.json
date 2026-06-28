@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T103547Z-17-T17.9",
+  "taskId": "17.T17.9",
+  "startedAt": "2026-06-28T10:35:47.553Z",
+  "owner": "codex-m-dev-17-t17-9-aletheia-tools",
+  "leaseExpiresAt": "2026-06-28T12:35:47.553Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.9",
+    "trackId": "17",
+    "tranche": "T17.9",
+    "title": "Split `Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts` (1,114 LOC)",
+    "effort": "1,114 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.8"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

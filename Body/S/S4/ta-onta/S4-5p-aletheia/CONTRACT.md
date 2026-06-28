@@ -33,7 +33,7 @@ aletheia/S5'/agents/
 
 ## Responsibility
 
-Aletheia is the **crystallisation and truth-disclosure** layer. It owns Gnosis (the local RAG pipeline: ingestion, retrieval, session notebooks), thought extraction and T-bucket routing (from `{NOW}/thoughts/` to `/Pratibimba/Self/Thought/T{n}/`), the SEED.md evening crystallisation cycle, and the specialist subagents that Psyche and Sophia invoke for deep inquiry.
+Aletheia is the **crystallisation and truth-disclosure** layer. It owns Gnosis (the local RAG pipeline: ingestion, retrieval, session notebooks), thought extraction and T-bucket routing (from `{NOW}/thoughts/` to `/Pratibimba/Self/Thought/T{n}/`), the SEED.md evening crystallisation cycle, Z-thread to [[Aeon]] graduation records, and the specialist subagents that Psyche and Sophia invoke for deep inquiry.
 
 Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sophia; Aletheia is an effect produced through those invocations. All invocation routes through Anima's dispatch. Day/Night' is a CS runtime phase — when CS = night', the full Möbius crystallisation pass runs, but Aletheia's tooling is reachable in any context — always through the uniform entitlement contract at the `aletheia-mode-internal` class (see Entitlement Routing above), never via a separate dispatch path.
 
@@ -63,6 +63,12 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | `aletheia_crystallise` | Distill patterns from T-bucket contents into Bimba canonical form |
 | `aletheia_seed_refresh` | Generate SEED.md morning-context package from evening crystallisation |
 | `moirai_arena_distill` | Closure-distill an arena scene into a Graphiti episode plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` graph edges |
+
+## Module Surfaces
+
+| Module | Purpose |
+|--------|---------|
+| `modules/aeon-graduation.ts` | Consent-gated Z-thread -> [[Aeon]] accrual renderer: builds the Sophia/Aletheia improvement proposal, preserves eval/run history, and updates an [[Aeon]] form block for Anima's Night' dispatch seam |
 
 ---
 

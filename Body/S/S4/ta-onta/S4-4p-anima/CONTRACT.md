@@ -57,11 +57,18 @@ The [[S4-4'-SPEC]] Z-thread cycle is Compose -> Perform -> Verify -> Rehear -> R
 | `vak_evaluate` | Assign 6-layer VAK coordinates (CPF/CT/CP/CF/CFP/CS) to a task |
 | `anima_orchestrate` | CF code → constitutional agent routing decision |
 | `dispatch_agent` | Spawn agent from team grid (agent-team.ts) |
+| `dispatch_moirai_night_pass` | Dispatch Klotho/Lachesis/Atropos for Night' rehearing; with optional CPF `(00/00)` consented `aeon_graduation`, writes the Z-thread accrual block into an [[Aeon]] form and returns the Aletheia improvement proposal payload |
+| `dispatch_parallel_agents` | Spawn parallel constitutional agents with VAK validation |
+| `dispatch_fusion_agents` | Run CFP3 fusion dispatch with shared task aggregation |
+| `anima_self_invoke` | Queue an Anima invocation into another session through the gateway route |
+| `nous_disclose` | Prepare the Nous clearing context package without dispatching execution |
+| `goal_prelude` | Create a NOW-bound dialogical goal prelude artifact |
 | `run_chain` | Execute sequential agent pipeline (agent-chain.ts) |
 | `subagent_create` | Spawn background subagent (subagent-widget.ts) |
 | `subagent_continue` | Resume background subagent |
 | `subagent_list` | List active background subagents |
 | `subagent_remove` | Terminate and clean up subagent |
+| `tilldone` | Continue a bounded agent loop until a terminal condition |
 
 ---
 

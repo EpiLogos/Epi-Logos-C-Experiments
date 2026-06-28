@@ -1,6 +1,7 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { spawnSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
 import {
   validateParallelDispatch,
   validateFusionDispatch,
@@ -18,6 +19,11 @@ import {
   defaultM5CoordinateClusters,
 } from "../modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "../modules/anima-invoke-payload.ts";
+import {
+  applyAeonGraduationToForm,
+  buildAeonGraduationRecord,
+  type AeonGraduationInput,
+} from "../../S4-5p-aletheia/modules/aeon-graduation.ts";
 import { isValidVakAddress, type VakAddress } from "../../shared/vak_address.ts";
 import { suggestedSkillsForVak, validCfCodes } from "./capabilities.ts";
 import { dispatchTeamMember, runEpi } from "./dispatch.ts";
@@ -464,6 +470,10 @@ export function registerAnimaTools(api: ExtensionAPI) {
     parameters: Type.Object({
       session_id: Type.String({ description: "Session id whose Sophia disclosure is being rehearsed" }),
       disclosure_path: Type.String({ description: "Filesystem path to the Sophia disclosure JSONL line / inbox file" }),
+      aeon_graduation: Type.Optional(Type.Any({
+        description:
+          "Optional consent-gated Z-to-Aeon graduation payload. Carries AeonGraduationInput plus optional world_form_path; writes the accrued block only after the Moirai Night' pass fully succeeds.",
+      })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const plan = planMoiraiNightPass({
@@ -534,6 +544,37 @@ export function registerAnimaTools(api: ExtensionAPI) {
       }
       const summary = `Moirai Night' pass: ${okCount}/3 succeeded`;
       const anyFailed = okCount !== plan.dispatches.length;
+      let graduationText = "";
+      let graduationDetails: Record<string, unknown> | undefined;
+
+      if (params.aeon_graduation) {
+        if (anyFailed) {
+          graduationText = "\nAeon graduation skipped: Moirai Night' pass did not fully succeed.";
+        } else {
+          try {
+            const { world_form_path, ...graduationInput } = params.aeon_graduation as AeonGraduationInput & {
+              world_form_path?: string;
+            };
+            const record = buildAeonGraduationRecord(graduationInput);
+            const formPath = world_form_path ?? "Idea/Bimba/World/Aeon.md";
+            const current = readFileSync(formPath, "utf8");
+            const updated = applyAeonGraduationToForm(current, record);
+            writeFileSync(formPath, updated);
+            graduationText =
+              `\nAeon graduation: wrote ${formPath} for ${record.state.aeon_name} ` +
+              `(${record.state.aeon_id}); pass record.state.improvement_proposal to ` +
+              "`aletheia_session_promote.q_proposals` to promote the rubric proposal.";
+            graduationDetails = {
+              world_form_path: formPath,
+              aeon_id: record.state.aeon_id,
+              aeon_name: record.state.aeon_name,
+              improvement_proposal: record.state.improvement_proposal,
+            };
+          } catch (e) {
+            graduationText = `\nAeon graduation failed: ${String(e)}`;
+          }
+        }
+      }
 
       return {
         content: [
@@ -544,15 +585,17 @@ export function registerAnimaTools(api: ExtensionAPI) {
               `CFP3 F-Thread Night' rehearing — Moirai dispatch\n` +
               `session_id: ${params.session_id}\n` +
               `disclosure: ${params.disclosure_path}\n\n` +
-              sections.join("\n\n"),
+              sections.join("\n\n") +
+              graduationText,
           },
         ],
-        ...(anyFailed ? { isError: true } : {}),
+        ...(anyFailed || graduationText.startsWith("\nAeon graduation failed") ? { isError: true } : {}),
         details: {
           plan,
           session_id: params.session_id,
           disclosure_path: params.disclosure_path,
           ok_count: okCount,
+          ...(graduationDetails ? { aeon_graduation: graduationDetails } : {}),
         },
       };
     },

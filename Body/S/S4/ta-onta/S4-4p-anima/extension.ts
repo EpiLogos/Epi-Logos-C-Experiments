@@ -13,9 +13,10 @@ import { animaExtension } from "./extension/mod.ts";
  *
  * Active-tool contract:
  * const animaDefaultTools = [
- * "vak_evaluate", "anima_orchestrate", "anima_arena_orchestrate", "dispatch_agent", "run_chain",
- * "subagent_create", "tilldone", "dispatch_parallel_agents",
- * "dispatch_fusion_agents"
+ * "vak_evaluate", "goal_prelude", "anima_orchestrate", "anima_arena_orchestrate", "nous_disclose",
+ * "dispatch_agent", "dispatch_parallel_agents", "dispatch_fusion_agents", "dispatch_moirai_night_pass",
+ * "anima_self_invoke", "run_chain", "subagent_create", "subagent_continue", "subagent_list",
+ * "subagent_remove", "tilldone"
  * ]
  * api.on("session_start"
  * api.setActiveTools(animaDefaultTools)

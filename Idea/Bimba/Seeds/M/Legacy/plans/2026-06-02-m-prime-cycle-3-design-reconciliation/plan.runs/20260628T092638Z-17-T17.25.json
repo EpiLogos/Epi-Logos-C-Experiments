@@ -1,0 +1,33 @@
+{
+  "runId": "20260628T092638Z-17-T17.25",
+  "taskId": "17.T17.25",
+  "startedAt": "2026-06-28T09:26:38.694Z",
+  "owner": "codex-m-dev-17-t17-25-capability-matrix-schema",
+  "leaseExpiresAt": "2026-06-28T11:26:38.694Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.25",
+    "trackId": "17",
+    "tranche": "T17.25",
+    "title": "Capability matrix schema co-location",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.24"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

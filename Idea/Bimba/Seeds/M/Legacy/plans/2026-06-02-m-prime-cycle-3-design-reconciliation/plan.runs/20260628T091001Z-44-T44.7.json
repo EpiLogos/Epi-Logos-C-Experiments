@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T091001Z-44-T44.7",
+  "taskId": "44.T44.7",
+  "startedAt": "2026-06-28T09:10:01.956Z",
+  "owner": "codex-m-dev-44-t44-7-block-doc",
+  "leaseExpiresAt": "2026-06-28T11:10:01.956Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.7",
+    "trackId": "44",
+    "tranche": "T44.7",
+    "title": "Persisted block-doc (CTX-structured, markdown *or* MDX) in Empty/Present",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.6"
+    ],
+    "writeScopes": [
+      "Idea/Empty/Present/{day_id}/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

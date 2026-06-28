@@ -172,6 +172,27 @@ impl RedisKey {
         ))
     }
 
+    pub fn aeon_eval_metric(
+        day_id: &str,
+        session_id: &str,
+        turn_id: &str,
+        coordinate: &str,
+        metric: &str,
+    ) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "epi",
+            &[
+                &sanitize_key_segment(day_id),
+                &sanitize_key_segment(session_id),
+                &sanitize_key_segment(turn_id),
+                &sanitize_key_segment(coordinate),
+                "eval",
+                &sanitize_key_segment(metric),
+            ],
+        )
+    }
+
     pub fn tier(&self) -> CacheTier {
         self.tier
     }
@@ -276,6 +297,31 @@ impl RedisCache {
             format!("s2:coordinate:lookup:legacy:{bimba_coordinate}"),
         );
         self.set_key(&key, json_value).await
+    }
+
+    pub async fn set_aeon_eval_records(
+        &mut self,
+        records: &[crate::AeonEvalRedisRecord],
+    ) -> Result<(), redis::RedisError> {
+        for record in records {
+            self.set_key(&record.key, &record.value).await?;
+        }
+        Ok(())
+    }
+}
+
+fn sanitize_key_segment(segment: &str) -> String {
+    let sanitized = segment
+        .chars()
+        .map(|ch| match ch {
+            ':' | '/' | '\\' | '\n' | '\r' | '\t' | ' ' => '_',
+            _ => ch,
+        })
+        .collect::<String>();
+    if sanitized.is_empty() {
+        "unknown".to_owned()
+    } else {
+        sanitized
     }
 }
 

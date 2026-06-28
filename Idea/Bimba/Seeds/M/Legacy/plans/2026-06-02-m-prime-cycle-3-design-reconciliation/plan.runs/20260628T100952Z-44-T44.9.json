@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T100952Z-44-T44.9",
+  "taskId": "44.T44.9",
+  "startedAt": "2026-06-28T10:09:52.033Z",
+  "owner": "codex-m-dev-44-t44-9-surface-standard",
+  "leaseExpiresAt": "2026-06-28T12:09:52.033Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.9",
+    "trackId": "44",
+    "tranche": "T44.9",
+    "title": "Foundation principles + design language + visual regression (G7/G8)",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.8"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

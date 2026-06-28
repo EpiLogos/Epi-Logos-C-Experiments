@@ -115,3 +115,9 @@ Autonomous invocation is valid only when the consent posture grants CPF `(4.0/1-
 AEON_RETURN: [P5′ insight] | [P0′ questions]
 
 The return is the Aeon's improvement seam: [[P5']] insight is distilled through [[S5']], [[P0']] questions reopen the next ground, and the verified change carries into the next invocation.
+
+## Graduation Accrual Ledger
+
+The Night' rehear/recompose path may append or replace an `aeon-graduation` block for a named [[Aeon]] after a proven Z-thread receives explicit CPF `(00/00)` graduation consent. Each block preserves the loop's CFP composition, current rubric, accumulated eval history, run history with bound VAK args, and the q-proposal payload that `aletheia_session_promote` can promote as the rubric-improvement candidate.
+
+The block is additive by [[Aeon]] id: a second run reuses the same form, appends the new run/eval evidence, and replaces only the current rubric/proposal surface so the [[Aeon]] improves across cycles rather than being rewritten.
