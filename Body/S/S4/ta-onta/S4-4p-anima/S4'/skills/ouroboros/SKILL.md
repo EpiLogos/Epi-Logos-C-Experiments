@@ -1,6 +1,6 @@
 ---
 name: ouroboros
-description: "Lemniscate incubation of an external coding agent. Spawns an isolated agent instance (via pleroma-skill-proxy) into a worktrunk worktree, establishing a surgeon-patient relation where the external agent operates on the parent agent's codebase. Ralph manages deterministic task looping."
+description: "Lemniscate self-fold — the QL P↔P′ syzygy return made operational (constitutional cognition). One instantiation of this fold is spawning an external coding agent into a worktree for bounded self-modification, per Track 42's harness=instantiation framing. Ralph manages deterministic task looping."
 port_type: port-and-refine
 skill_class: vak
 ct: CT2, CT3
@@ -8,9 +8,9 @@ cp: "4.3"
 agent_affinity: psyche, anima
 ---
 
-# Ouroboros -- Lemniscate Incubation of an External Coding Agent
+# Ouroboros -- The Lemniscate Self-Fold
 
-Ouroboros is the #4 self-fold made operational. The parent agent incubates within itself an external coding agent that operates *on* the parent's own codebase. This is the Lemniscate topology: the inside loop (parent agent context) contains the outside loop (external agent working on it). Rather than modifying itself directly, the system delegates modification to a spawned instance with fresh context and bounded scope.
+Ouroboros is the #4 self-fold — the QL P↔P′ syzygy return (constitutional cognition) made operational. One instantiation of this fold is the surgeon-patient pattern: the parent agent delegates modification to an external coding agent operating on its own codebase within an isolated worktree. The fold IS the return; the agent-in-worktree is an agnostic instance that can carry a Z-thread/Aeon, per Track 42's harness=instantiation framing (Track 42 §42.6: ouroboros is "one topology over this surface"). This is the Lemniscate topology: the inside loop (parent agent context) contains the outside loop (external agent working on it). Rather than modifying itself directly, the system delegates modification to a spawned instance with fresh context and bounded scope.
 
 ## Topology
 
@@ -130,10 +130,11 @@ Patient: [parent-context-summary]
 
 ## Coordinate Semantics
 
-- **CP 4.3**: Position 4 (Context/Lemniscate), sub-position 3 (Pattern). The self-fold that reveals processual pattern through delegation.
-- **CT2**: The operational frame -- the Trika of User (architect), Agent (parent), Code (external agent as processor).
-- **CT3**: The pattern frame -- the recurring loop structure of ralph bead iteration.
-- **CF**: The Lemniscate anchor. Ouroboros IS cf made executable -- the system nesting within itself an agent that operates on itself.
+- **CP 4.3**: Position 4 (Context/Lemniscate), sub-position 3 (Pattern). The self-fold IS the QL P↔P′ syzygy return — constitutional cognition, not a spawn mechanism. The surgeon-patient worktree pattern is *one instantiation* of this topology.
+- **CT2**: The operational frame — the Trika of User (architect), Agent (parent), Code (external agent as processor).
+- **CT3**: The pattern frame — the recurring loop structure of ralph bead iteration.
+- **CF**: The Lemniscate anchor. Ouroboros IS cf made executable — the system nesting within itself an agent that operates on itself.
+- **Track 42 reference**: The harness=instantiation framing (Track 42 §42.6) establishes that ouroboros is "one topology over this surface." Z-threads and Aeons are the units that ride this fold; the external agent is an agnostic carrier.
 
 ## Constraints
 

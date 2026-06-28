@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T10:48:19.735Z",
+  "updatedAt": "2026-06-28T10:53:06.223Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9965,13 +9965,18 @@
       "worktree": null
     },
     "46.T46.6": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T10:52:46.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T10:52:46.000Z",
+          "text": "Hermes-direct canon clarification. Updated ouroboros/SKILL.md: (1) description now says 'QL P↔P′ syzygy return (constitutional cognition)' with agent-in-worktree as one instantiation per Track 42; (2) body paragraph rephrased: fold IS the return, agent is agnostic carrier; (3) Coordinate Semantics updated with Track 42 §42.6 cross-reference. No code change — pure canon clarification."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -13732,21 +13737,16 @@
     }
   ],
   "activeRoute": {
-    "status": "active",
-    "createdAt": "2026-06-28T10:35:29.587Z",
-    "updatedAt": "2026-06-28T10:35:29.587Z",
-    "taskIds": [
-      "17.T17.9"
-    ],
-    "totalWeight": 1,
+    "status": "empty",
+    "createdAt": "2026-06-28T10:53:06.168Z",
+    "updatedAt": "2026-06-28T10:53:06.168Z",
+    "taskIds": [],
+    "totalWeight": 0,
     "taxingLevel": "light",
     "weightBudget": 8,
-    "modeHints": {
-      "17.T17.9": "in-session"
-    },
+    "modeHints": {},
     "rationale": [
-      "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 1 task(s) with total effort weight 1/8 unless fewer tasks were available."
+      "No pending task is dependency-ready under the current ledger."
     ]
   }
 }
