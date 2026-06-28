@@ -7,7 +7,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 ## Ownership
 - `Cargo.toml` — crate manifest (`portal-core`); deps `epi-lib`, `serde`, `serde_json`, `toml`; feature `resonance_ebm_runtime`
 - `src/lib.rs` — crate root / public surface (re-exports the modules below)
-- `src/kernel.rs` — largest module; clock kernel math (tick/epogdoon/projection), `E4PersonalInputs`, and [[E_4]] personal-energy scalar/gradient provenance.
+- `src/kernel.rs` — clock kernel math (tick/epogdoon/projection), `E4PersonalInputs`, [[E_4]] personal-energy scalar/gradient provenance, and the re-export root for `src/kernel/`.
+- `src/kernel/` — split [[MathemeHarmonicProfile]] implementation and per-projection modules (`profile.rs`, `projections/*.rs`) surfaced through `src/kernel.rs` and the `src/harmonic_profile.rs` façade.
 - `src/state.rs`, `src/quaternion.rs`, `src/hopf.rs`, `src/spanda.rs` — clock state + quaternion/Hopf/spanda math
 - `src/luts/` — consolidated codon, transcription, [[M3]] mahamaya, oracle, rotational, and planet-Keplerian LUT surfaces; `src/lib.rs` keeps legacy module-path re-exports for compatibility
 - `src/codon_rotation_projection.rs`, `src/m3_transcription_bridge.rs` — [[M3]] bridge projection and transcription bridge logic

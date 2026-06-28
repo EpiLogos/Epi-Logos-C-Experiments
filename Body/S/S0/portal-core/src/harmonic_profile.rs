@@ -9,9 +9,9 @@ pub use crate::kernel::{
     AnandaMatrixOp, AnandaSkeletonEvent, AnandaVortexCell, AnandaVortexProjection,
     ConjugateFormCharacter, DrRingPhase, MathemeBedrockProjection, MathemeBinaryProjection,
     MathemeChromaticProfile, MathemeContextFrameWebProjection, MathemeDiatonicContext,
-    MathemeElementalProjection, MathemeHarmonicProfile, MathemeNodalConstraint,
-    MathemePlanetaryChakralProjection, MathemePointerAnchorProjection,
-    MathemeResonance72Projection, ProfilePrivacyClass,
+    MathemeElementalProjection, MathemeHarmonicFamilyProjection, MathemeHarmonicGrammarProjection,
+    MathemeHarmonicProfile, MathemeNodalConstraint, MathemePlanetaryChakralProjection,
+    MathemePointerAnchorProjection, MathemeResonance72Projection, ProfilePrivacyClass,
 };
 pub use crate::profile_projections::{
     AnuttaraWitnessBandBalance, AnuttaraWitnessPalindromeState, AnuttaraWitnessProjection,

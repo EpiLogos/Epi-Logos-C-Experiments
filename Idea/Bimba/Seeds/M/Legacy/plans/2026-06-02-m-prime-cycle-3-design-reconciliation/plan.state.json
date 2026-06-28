@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:24:17.864Z",
+  "updatedAt": "2026-06-28T09:30:59.019Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2667,14 +2667,19 @@
       "worktree": null
     },
     "17.T17.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-28T09:19:16.479Z",
+      "status": "done",
+      "updatedAt": "2026-06-28T09:30:23.325Z",
       "claimedAt": "2026-06-28T09:19:16.479Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T09:30:23.325Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:30:23.325Z",
+          "text": "cargo check -p portal-core; cargo test -p portal-core (85 unit tests + all integration/doc suites passed); cargo check --manifest-path Body/S/epi-kernel-contract/Cargo.toml --offline; temp facade crate imports Matheme*Projection via harmonic_profile; key paths Body/S/S0/portal-core/src/kernel.rs + src/kernel/{profile.rs,projections/*.rs}; M' test:contracts attempted but fails on pre-existing missing compiled deps/preflight."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-17-t17-6-kernel-split",
-      "leaseExpiresAt": "2026-06-28T11:19:16.479Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-28T09:19:16.479Z",
       "runId": "20260628T091916Z-17-T17.6",
       "worktree": null
@@ -2999,16 +3004,21 @@
       "worktree": null
     },
     "17.T17.25": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T09:30:58.952Z",
+      "claimedAt": "2026-06-28T09:26:38.694Z",
+      "completedAt": "2026-06-28T09:30:58.952Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:30:58.952Z",
+          "text": "python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py: 18 passed; node source-shape check passed for Body/S/S4/plugins/pleroma/capability-matrix.schema.ts next to Body/S/S4/plugins/pleroma/capability-matrix.json; git diff --check clean"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-17-t17-25-capability-matrix-schema",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T09:26:38.694Z",
+      "runId": "20260628T092638Z-17-T17.25",
       "worktree": null
     },
     "17.T17.26": {
@@ -13594,11 +13604,22 @@
     {
       "runId": "20260628T091916Z-17-T17.6",
       "taskId": "17.T17.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-28T09:19:16.479Z",
       "owner": "codex-m-dev-17-t17-6-kernel-split",
       "leaseExpiresAt": "2026-06-28T11:19:16.479Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-28T09:30:23.325Z"
+    },
+    {
+      "runId": "20260628T092638Z-17-T17.25",
+      "taskId": "17.T17.25",
+      "status": "done",
+      "startedAt": "2026-06-28T09:26:38.694Z",
+      "owner": "codex-m-dev-17-t17-25-capability-matrix-schema",
+      "leaseExpiresAt": "2026-06-28T11:26:38.694Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T09:30:58.952Z"
     }
   ],
   "activeRoute": {
