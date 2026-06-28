@@ -11,8 +11,9 @@ const aletheiaRoot = resolve(repoRoot, "Body/S/S4/ta-onta/S4-5p-aletheia");
 const gnosticRoot = resolve(repoRoot, "Body/S/S5/epi-gnostic");
 
 describe("moirai_arena_distill registration", () => {
-  it("registers the Moirai arena closure-distillation tool in Aletheia", () => {
-    const source = readFileSync(resolve(aletheiaRoot, "extension.ts"), "utf8");
+  it("keeps the Moirai arena closure-distillation tool in the episodic tool module", () => {
+    const source = readFileSync(resolve(aletheiaRoot, "S5'/tools/episodic-tools.ts"), "utf8");
+    assert.match(source, /export function registerEpisodicTools/);
     assert.match(source, /name:\s*"moirai_arena_distill"/);
     assert.match(source, /epi_gnostic\.arena_distillation/);
     assert.match(source, /Jungian amplification routed back to canon/);

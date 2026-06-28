@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T10:32:05.391Z",
+  "updatedAt": "2026-06-28T10:48:19.735Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2725,16 +2725,21 @@
       "worktree": null
     },
     "17.T17.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T10:48:19.684Z",
+      "claimedAt": "2026-06-28T10:35:47.553Z",
+      "completedAt": "2026-06-28T10:48:19.684Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T10:48:19.684Z",
+          "text": "node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/*.test.ts passed 79/79; split Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts into S5'/tools/{gnosis,thought,episodic,seed}-tools.ts with extension.ts facade; pnpm --filter @epi-logos/aletheia build reported no matching workspace project"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-17-t17-9-aletheia-tools",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T10:35:47.553Z",
+      "runId": "20260628T103547Z-17-T17.9",
       "worktree": null
     },
     "17.T17.10": {
@@ -13714,26 +13719,34 @@
       "leaseExpiresAt": "2026-06-28T12:21:33.834Z",
       "worktree": null,
       "completedAt": "2026-06-28T10:32:05.331Z"
+    },
+    {
+      "runId": "20260628T103547Z-17-T17.9",
+      "taskId": "17.T17.9",
+      "status": "done",
+      "startedAt": "2026-06-28T10:35:47.553Z",
+      "owner": "codex-m-dev-17-t17-9-aletheia-tools",
+      "leaseExpiresAt": "2026-06-28T12:35:47.553Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T10:48:19.684Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T10:21:16.227Z",
-    "updatedAt": "2026-06-28T10:21:16.227Z",
+    "createdAt": "2026-06-28T10:35:29.587Z",
+    "updatedAt": "2026-06-28T10:35:29.587Z",
     "taskIds": [
-      "17.T17.8",
       "17.T17.9"
     ],
-    "totalWeight": 2,
+    "totalWeight": 1,
     "taxingLevel": "light",
     "weightBudget": 8,
     "modeHints": {
-      "17.T17.8": "in-session",
       "17.T17.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 2 task(s) with total effort weight 2/8 unless fewer tasks were available."
+      "Capped the route at 1 task(s) with total effort weight 1/8 unless fewer tasks were available."
     ]
   }
 }
