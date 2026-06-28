@@ -31,6 +31,7 @@ mod retrieval_query;
 pub mod schema;
 pub mod seed;
 pub mod semantic;
+pub mod sync;
 pub mod sync_coordinator;
 pub mod types;
 pub mod vault;
@@ -101,7 +102,7 @@ pub use retrieval_query::{
     HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
 };
 pub use semantic::SemanticDocument;
-pub use sync_coordinator::{
+pub use sync::{
     CodeProvenanceEvidence, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
     GraphPromotionSyncReport, GraphitiEpisodePlan, PromotionClass, PromotionFrontmatterEvidence,
     PromotionLinkEvidence, PromotionNodeIntent, PromotionPlan, PromotionPolicyDecision,

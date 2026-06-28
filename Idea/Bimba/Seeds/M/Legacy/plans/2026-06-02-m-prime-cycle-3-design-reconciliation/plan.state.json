@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T10:17:49.052Z",
+  "updatedAt": "2026-06-28T10:32:05.391Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2707,16 +2707,21 @@
       "worktree": null
     },
     "17.T17.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T10:32:05.331Z",
+      "claimedAt": "2026-06-28T10:21:33.834Z",
+      "completedAt": "2026-06-28T10:32:05.331Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T10:32:05.331Z",
+          "text": "1/1 cargo fmt --manifest-path Body/S/S2/graph-services/Cargo.toml --check passed; cargo check -p epi-s2-graph-services unavailable in root workspace and manifest-path check blocked by pre-existing epi-s3-gateway-contract LensOrbiterRelationProjection::planetary_lens_aspect errors; split into Body/S/S2/graph-services/src/sync/{mod,intent_types,policy,property_proposals,frontmatter_rules,code_provenance,graphiti_episode,plan,coordinator,report}.rs with sync_coordinator.rs shim and lib.rs re-export."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-17-t17-8-sync-split",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T10:21:33.834Z",
+      "runId": "20260628T102133Z-17-T17.8",
       "worktree": null
     },
     "17.T17.9": {
@@ -13699,28 +13704,36 @@
       "leaseExpiresAt": "2026-06-28T12:09:52.033Z",
       "worktree": null,
       "completedAt": "2026-06-28T10:17:48.997Z"
+    },
+    {
+      "runId": "20260628T102133Z-17-T17.8",
+      "taskId": "17.T17.8",
+      "status": "done",
+      "startedAt": "2026-06-28T10:21:33.834Z",
+      "owner": "codex-m-dev-17-t17-8-sync-split",
+      "leaseExpiresAt": "2026-06-28T12:21:33.834Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T10:32:05.331Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T10:09:26.341Z",
-    "updatedAt": "2026-06-28T10:09:26.341Z",
+    "createdAt": "2026-06-28T10:21:16.227Z",
+    "updatedAt": "2026-06-28T10:21:16.227Z",
     "taskIds": [
       "17.T17.8",
-      "17.T17.9",
-      "44.T44.9"
+      "17.T17.9"
     ],
-    "totalWeight": 4,
+    "totalWeight": 2,
     "taxingLevel": "light",
     "weightBudget": 8,
     "modeHints": {
       "17.T17.8": "in-session",
-      "17.T17.9": "in-session",
-      "44.T44.9": "in-session"
+      "17.T17.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 3 task(s) with total effort weight 4/8 unless fewer tasks were available."
+      "Capped the route at 2 task(s) with total effort weight 2/8 unless fewer tasks were available."
     ]
   }
 }
