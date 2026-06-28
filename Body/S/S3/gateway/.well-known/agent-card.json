@@ -1,0 +1,908 @@
+{
+  "protocolVersion": "1.0",
+  "name": "Epi-Logos Constitutional Gateway",
+  "description": "A2A discovery card for the existing S3 gateway RPC surface that lets Hermes, Claude Code, Codex, and other external agents interoperate with the Epi-Logos constitutional agents without introducing a new transport.",
+  "url": "urn:epi-logos:s3-gateway:existing-rpc",
+  "preferredTransport": "JSONRPC",
+  "provider": {
+    "organization": "Epi-Logos",
+    "url": "urn:epi-logos"
+  },
+  "version": "44.T44.8",
+  "documentationUrl": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md#tranche-448--a2a-via-agent-card",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true,
+    "extensions": [
+      {
+        "uri": "urn:epi-logos:gateway-rpc-method-card:v1",
+        "description": "Publishes the existing gateway JSON-RPC frame methods as callable A2A skills. This extension is descriptive only; DR-PSS-6 forbids adding a new transport for this card.",
+        "required": true,
+        "params": {
+          "transportInvariant": "No new transport. Invoke the listed method names through the existing S3 gateway RequestFrame { type: 'req', id, method, params } over the configured stdio or websocket gateway transport.",
+          "responseFrame": {
+            "type": "res",
+            "id": "number",
+            "result": "method-specific JSON value when successful",
+            "error": {
+              "code": "string",
+              "message": "string"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "securitySchemes": {
+    "gatewayAuthority": {
+      "type": "mutualTLS",
+      "description": "Deployment-local gateway authority. This public card contains no credentials; protected and protected-local payloads require the existing gateway/S4/S5 authorization path."
+    }
+  },
+  "security": [
+    {
+      "gatewayAuthority": []
+    }
+  ],
+  "defaultInputModes": [
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "application/json"
+  ],
+  "supportedInterfaces": [
+    {
+      "url": "urn:epi-logos:s3-gateway:existing-rpc",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "s3-gateway-dev",
+      "transportModes": [
+        "stdio",
+        "websocket"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "epi-logos-temporal-context",
+      "name": "Bind Temporal Context",
+      "description": "Read the S3' day/NOW temporal context envelope for a session, including safe Redis, SpaceTimeDB, Graphiti handle, kernel, Pratibimba anchor, and block projections.",
+      "tags": [
+        "S3'",
+        "temporal-context",
+        "day-now-runtime",
+        "blocks"
+      ],
+      "examples": [
+        "Fetch the day/NOW context for agent:main:main before invoking Anima.",
+        "Hydrate the Redis Hot tier after reading a session's block projection."
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    },
+    {
+      "id": "epi-logos-psyche-state",
+      "name": "Read Psyche State",
+      "description": "Read S4' Psyche session state and protected handles for renderer continuity, carry-forward, and handoff state.",
+      "tags": [
+        "S4'",
+        "psyche",
+        "state",
+        "renderer"
+      ],
+      "examples": [
+        "Read renderer activeBlockIds before projecting blocks through temporal.context."
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    },
+    {
+      "id": "epi-logos-psyche-update",
+      "name": "Update Psyche State",
+      "description": "Patch S4' Psyche session state, including the block renderer continuity state used by verdict and annotation flows.",
+      "tags": [
+        "S4'",
+        "psyche",
+        "state",
+        "human-gate",
+        "renderer"
+      ],
+      "examples": [
+        "Apply a blocks.verdict operation by patching renderer.pendingVerdict and renderer.appliedOperations."
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    },
+    {
+      "id": "epi-logos-anima-invoke",
+      "name": "Invoke Anima Session",
+      "description": "Patch a target session's VAK address and append an anima_invoke task to that session transcript.",
+      "tags": [
+        "S3",
+        "S4'",
+        "Anima",
+        "multi-session",
+        "VAK"
+      ],
+      "examples": [
+        "Dispatch a task from one Anima session to another with an explicit VakAddress."
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    },
+    {
+      "id": "epi-logos-mediation-route",
+      "name": "Route Mediation",
+      "description": "Submit a governed mediation envelope to S4' Anima routing so the constitutional agent, dispatch tool, VAK address, and session patch decision are derived through the existing gateway authority path.",
+      "tags": [
+        "S4'",
+        "Anima",
+        "mediation",
+        "VAK",
+        "dispatch"
+      ],
+      "examples": [
+        "Route a tool dispatch envelope after upstream vak-evaluate evidence has been attached."
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    }
+  ],
+  "x-epiLogosGateway": {
+    "decision": "DR-PSS-6",
+    "coordinateOwner": "S3/S3'",
+    "agentAccessOwner": "S4/S5",
+    "transportInvariant": "No new transport. This card publishes existing gateway methods only.",
+    "requestFrame": {
+      "type": "req",
+      "id": "number",
+      "method": "one of x-epiLogosGateway.methods[*].method",
+      "params": "method-specific JSON object"
+    },
+    "privacyClasses": [
+      "public",
+      "protected",
+      "protected-local"
+    ],
+    "sharedSchemas": {
+      "VakAddress": {
+        "type": "object",
+        "required": [
+          "cpf",
+          "ct",
+          "cp",
+          "cf",
+          "cfp",
+          "cs"
+        ],
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "enum": [
+              "(00/00)",
+              "(4.0/1-4.4/5)"
+            ]
+          },
+          "ct": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cp": {
+            "type": "string"
+          },
+          "cf": {
+            "type": "string"
+          },
+          "cfp": {
+            "type": "string"
+          },
+          "cs": {
+            "type": "object",
+            "required": [
+              "code",
+              "direction"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "Day",
+                  "Night'"
+                ]
+              },
+              "recognized": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "Block": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "ctx",
+          "privacyClass",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "ctx": {
+            "type": "object",
+            "required": [
+              "cf",
+              "ct",
+              "cp"
+            ],
+            "properties": {
+              "cf": {
+                "type": "string"
+              },
+              "ct": {
+                "type": "string"
+              },
+              "cp": {
+                "type": "string"
+              },
+              "cpf": {
+                "type": "string"
+              },
+              "cs": {
+                "type": "string"
+              }
+            }
+          },
+          "coordinate": {
+            "type": "string"
+          },
+          "privacyClass": {
+            "type": "string",
+            "enum": [
+              "public",
+              "protected",
+              "protected-local"
+            ]
+          },
+          "provenance": {
+            "type": "object"
+          },
+          "data": {
+            "type": "object"
+          },
+          "affordances": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verdict",
+                "annotate",
+                "select",
+                "navigate"
+              ]
+            }
+          }
+        }
+      },
+      "RendererState": {
+        "type": "object",
+        "required": [
+          "activeBlockIds",
+          "pendingVerdict",
+          "currentSelection"
+        ],
+        "properties": {
+          "activeBlockIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/Block"
+            }
+          },
+          "pendingVerdict": {
+            "anyOf": [
+              {
+                "$ref": "#/x-epiLogosGateway/sharedSchemas/BlockSessionOperation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currentSelection": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "appliedOperations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/BlockSessionOperation"
+            }
+          }
+        }
+      },
+      "BlockSessionOperation": {
+        "type": "object",
+        "required": [
+          "method",
+          "blockId",
+          "actor",
+          "actorIsHuman",
+          "resolutionTarget",
+          "reason",
+          "routesTo"
+        ],
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "blocks.annotate",
+              "blocks.verdict"
+            ]
+          },
+          "blockId": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "actorIsHuman": {
+            "type": "boolean"
+          },
+          "resolutionTarget": {
+            "type": "string",
+            "enum": [
+              "agent",
+              "human"
+            ]
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "revise",
+              "defer"
+            ]
+          },
+          "annotation": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "routesTo": {
+            "const": "s4'.psyche.update"
+          }
+        }
+      }
+    },
+    "methods": [
+      {
+        "method": "s3'.temporal.context",
+        "skillId": "epi-logos-temporal-context",
+        "purpose": "Temporal context binding for a gateway session on the day/NOW runtime.",
+        "privacyClass": "protected",
+        "dispatch": {
+          "kind": "S3NativeHandler",
+          "authorityPath": "Body/S/S3/gateway::temporal + Body/S/S0/portal-core kernel",
+          "routeId": "s3-prime.temporal-context",
+          "coordinateOwner": "S3'",
+          "agentAccessOwner": "S4/S5"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "sessionKey": {
+              "type": "string",
+              "default": "agent:main:main",
+              "description": "SessionStore key to resolve before building context."
+            },
+            "agentId": {
+              "type": "string",
+              "default": "operator",
+              "description": "Agent id used for agent-orientation Redis keys."
+            },
+            "hydrateRedis": {
+              "type": "boolean",
+              "default": false,
+              "description": "When true, writes NOW, day, agent, Kairos, Pratibimba, and blocks values into existing Redis tier keys."
+            }
+          },
+          "additionalProperties": false
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "coordinateOwner",
+            "agentAccessOwner",
+            "privacy",
+            "session",
+            "day",
+            "kairos",
+            "kernel",
+            "now",
+            "pratibimba",
+            "blocks",
+            "history",
+            "redis",
+            "spacetimedb",
+            "graphiti"
+          ],
+          "properties": {
+            "coordinateOwner": {
+              "const": "S3'"
+            },
+            "agentAccessOwner": {
+              "const": "S4/S5"
+            },
+            "session": {
+              "type": "object",
+              "description": "Resolved session identity, aliases, active/requested agent ids, runtime cwd, source lineage, and channel fields."
+            },
+            "day": {
+              "type": "object",
+              "properties": {
+                "dayId": {
+                  "type": "string"
+                },
+                "wikilink": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "now": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "wikilink": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "content": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "blocks": {
+              "type": "object",
+              "description": "Projection from s4'.psyche.state.renderer into the day-now-runtime Hot tier.",
+              "required": [
+                "projectionOwner",
+                "agentAccessOwner",
+                "source",
+                "transport",
+                "privacy",
+                "sessionKey",
+                "sessionId",
+                "redisKey",
+                "ttlSeconds",
+                "activeBlockIds",
+                "currentSelection",
+                "pendingVerdict",
+                "appliedOperations",
+                "items"
+              ],
+              "properties": {
+                "projectionOwner": {
+                  "const": "S3'"
+                },
+                "agentAccessOwner": {
+                  "const": "S4/S5"
+                },
+                "source": {
+                  "const": "s4'.psyche.state.renderer"
+                },
+                "transport": {
+                  "const": "day-now-runtime"
+                },
+                "privacy": {
+                  "const": "public/protected block wire payloads only; protected-local bodies remain handles"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/x-epiLogosGateway/sharedSchemas/Block"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "method": "s4'.psyche.state",
+        "skillId": "epi-logos-psyche-state",
+        "purpose": "Read S4' Psyche session state and the protected state file handles for one session.",
+        "privacyClass": "protected",
+        "dispatch": {
+          "kind": "S4OrchestrationAdapter",
+          "authorityPath": "Body/S/S4/ta-onta/S4-4p-anima",
+          "routeId": "s4-prime.ta-onta-runtime",
+          "coordinateOwner": "S4/S4'",
+          "agentAccessOwner": "S4"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "sessionKey": {
+              "type": "string",
+              "default": "main"
+            }
+          },
+          "additionalProperties": false
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "owner",
+            "sessionKey",
+            "handles",
+            "state"
+          ],
+          "properties": {
+            "owner": {
+              "const": "S4'"
+            },
+            "sessionKey": {
+              "type": "string"
+            },
+            "handles": {
+              "type": "object",
+              "description": "Protected handles for Psyche state residency."
+            },
+            "state": {
+              "type": "object",
+              "description": "Psyche session state; renderer, carry-forward, and updatedAtMs may be present depending on prior updates."
+            }
+          }
+        }
+      },
+      {
+        "method": "s4'.psyche.update",
+        "skillId": "epi-logos-psyche-update",
+        "purpose": "Patch S4' Psyche session state; this is the existing UI-to-agent carrier for block verdict and annotation continuity.",
+        "privacyClass": "protected",
+        "dispatch": {
+          "kind": "S4OrchestrationAdapter",
+          "authorityPath": "Body/S/S4/ta-onta/S4-4p-anima",
+          "routeId": "s4-prime.ta-onta-runtime",
+          "coordinateOwner": "S4/S4'",
+          "agentAccessOwner": "S4"
+        },
+        "input": {
+          "type": "object",
+          "required": [
+            "patch"
+          ],
+          "properties": {
+            "sessionKey": {
+              "type": "string",
+              "default": "main"
+            },
+            "patch": {
+              "type": "object",
+              "description": "JSON object merged into current Psyche state after gateway validation.",
+              "properties": {
+                "renderer": {
+                  "$ref": "#/x-epiLogosGateway/sharedSchemas/RendererState"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "owner",
+            "sessionKey",
+            "handles",
+            "state"
+          ],
+          "properties": {
+            "owner": {
+              "const": "S4'"
+            },
+            "sessionKey": {
+              "type": "string"
+            },
+            "handles": {
+              "type": "object"
+            },
+            "state": {
+              "type": "object",
+              "description": "Merged Psyche state with updatedAtMs set by the gateway adapter."
+            }
+          }
+        }
+      },
+      {
+        "method": "route_anima_invoke",
+        "skillId": "epi-logos-anima-invoke",
+        "purpose": "Multi-session agent invocation: patch the target session VAK address and append the task to its transcript as an anima_invoke message.",
+        "privacyClass": "protected",
+        "dispatch": {
+          "kind": "S3NativeHandler",
+          "authorityPath": "Body/S/S3/gateway::dispatch::route_anima_invoke",
+          "routeId": "s3.gateway.agent-runtime",
+          "coordinateOwner": "S3",
+          "agentAccessOwner": "S4/S5"
+        },
+        "input": {
+          "type": "object",
+          "required": [
+            "target_session_key",
+            "task",
+            "vak_address"
+          ],
+          "properties": {
+            "target_session_key": {
+              "type": "string",
+              "description": "Canonical target SessionStore key, for example agent:anima:user-b."
+            },
+            "task": {
+              "type": "string",
+              "description": "Task text appended to the target transcript."
+            },
+            "vak_address": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/VakAddress"
+            }
+          },
+          "additionalProperties": false
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "dispatched_to",
+            "task_queued"
+          ],
+          "properties": {
+            "dispatched_to": {
+              "type": "string"
+            },
+            "task_queued": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        }
+      },
+      {
+        "method": "s4'.mediation.route",
+        "skillId": "epi-logos-mediation-route",
+        "purpose": "Governed mediation routing: derive route outcome, constitutional agent, VAK address, dispatch tool, and optional session patch from an S4' mediation envelope.",
+        "privacyClass": "protected",
+        "dispatch": {
+          "kind": "S4OrchestrationAdapter",
+          "authorityPath": "Body/S/S4/ta-onta/S4-4p-anima",
+          "routeId": "s4-prime.ta-onta-runtime",
+          "coordinateOwner": "S4/S4'",
+          "agentAccessOwner": "S4"
+        },
+        "input": {
+          "type": "object",
+          "description": "Either the envelope object directly or { envelope, evaluatedVak, upstreamRequired/upstreamEvidence }. Dispatch tools require upstream vak-evaluate evidence.",
+          "required": [
+            "envelope"
+          ],
+          "properties": {
+            "envelope": {
+              "type": "object",
+              "required": [
+                "taskText",
+                "sessionKey",
+                "dayId",
+                "nowPath",
+                "privacyClass",
+                "artifactRefs",
+                "declaredWriteScope",
+                "coordinateContext",
+                "actorRequest",
+                "profileGeneration",
+                "readinessSnapshot",
+                "requestedCapacityProfile"
+              ],
+              "properties": {
+                "taskText": {
+                  "type": "string"
+                },
+                "sessionKey": {
+                  "type": "string"
+                },
+                "dayId": {
+                  "type": "string"
+                },
+                "nowPath": {
+                  "type": "string"
+                },
+                "privacyClass": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "protected",
+                    "protected-local"
+                  ]
+                },
+                "artifactRefs": {
+                  "type": "array"
+                },
+                "declaredWriteScope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "coordinateContext": {
+                  "type": "object"
+                },
+                "actorRequest": {},
+                "profileGeneration": {},
+                "readinessSnapshot": {},
+                "requestedCapacityProfile": {},
+                "requestedThreadMode": {
+                  "type": "string",
+                  "enum": [
+                    "single",
+                    "session"
+                  ]
+                },
+                "callerSuppliedCf": {
+                  "type": "string"
+                },
+                "dispatchTool": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            },
+            "evaluatedVak": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/VakAddress"
+            },
+            "upstreamRequired": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "upstreamEvidence": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "owner",
+            "method",
+            "outcome",
+            "agent",
+            "upstreamRequired",
+            "envelope",
+            "evaluatedVak",
+            "vakAddress",
+            "sessionPatch",
+            "decision",
+            "capability",
+            "authority",
+            "timestampMs"
+          ],
+          "properties": {
+            "owner": {
+              "const": "S4'"
+            },
+            "method": {
+              "const": "s4'.mediation.route"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "UserBrainstormRequired",
+                "NousRequired",
+                "MoiraiNightPass",
+                "FusionDispatch",
+                "AnimaSelfInvoke",
+                "AletheiaDisclosure",
+                "SophiaLed",
+                "AnimaPrimary",
+                "PiDispatch"
+              ]
+            },
+            "agent": {
+              "type": "string"
+            },
+            "dispatchTool": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evaluatedVak": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/VakAddress"
+            },
+            "vakAddress": {
+              "$ref": "#/x-epiLogosGateway/sharedSchemas/VakAddress"
+            },
+            "sessionPatch": {},
+            "decision": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "const": "anima.mediation_route"
+                },
+                "routeLaw": {
+                  "const": "vak_evaluate -> anima_orchestrate -> dispatch_agent"
+                },
+                "persisted": {
+                  "const": true
+                }
+              }
+            },
+            "timestampMs": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

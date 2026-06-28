@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:47:58.147Z",
+  "updatedAt": "2026-06-28T09:56:33.023Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9813,14 +9813,19 @@
       "worktree": null
     },
     "44.T44.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-28T09:47:58.085Z",
+      "status": "done",
+      "updatedAt": "2026-06-28T09:56:32.969Z",
       "claimedAt": "2026-06-28T09:47:58.085Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T09:56:32.969Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:56:32.969Z",
+          "text": "Body/S/S3/gateway/.well-known/agent-card.json"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-44-t44-8-agent-card",
-      "leaseExpiresAt": "2026-06-28T11:47:58.085Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-28T09:47:58.085Z",
       "runId": "20260628T094758Z-44-T44.8",
       "worktree": null
@@ -13673,11 +13678,12 @@
     {
       "runId": "20260628T094758Z-44-T44.8",
       "taskId": "44.T44.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-28T09:47:58.085Z",
       "owner": "codex-m-dev-44-t44-8-agent-card",
       "leaseExpiresAt": "2026-06-28T11:47:58.085Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-28T09:56:32.969Z"
     }
   ],
   "activeRoute": {
