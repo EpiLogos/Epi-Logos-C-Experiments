@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::profile_projections::ElementalWeightProjection;
+use crate::profile_projections::{
+    ElementalWeightProjection, LensOrbiterRelationProjection, MahamayaLensStack,
+    PendingPlanetDatasetBadge, PlanetApertureAspectEdge, PlanetPlanetAspectEdge,
+};
 use crate::types::{PlanetaryAspect, PortalClockState};
 
 /// (angle_degrees, orb_degrees) for the 5 Ptolemaic aspects.
@@ -9,6 +12,9 @@ pub const ASPECT_ANGLES: [(u16, u8); 5] = [(0, 10), (60, 6), (90, 8), (120, 8), 
 
 /// Human-readable label for each aspect index, ordered to match `ASPECT_ANGLES`.
 pub const ASPECT_LABELS: [&str; 5] = ["conjunction", "sextile", "square", "trine", "opposition"];
+
+/// Track 23.10 readiness marker for the outer-planet data substrate.
+pub const OUTER_PLANET_PENDING_DATASET_BADGE: &str = "pending-dataset:23.10";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Planetary elemental-weight feed (23.19)
@@ -257,6 +263,212 @@ pub fn compute_aspects(state: &mut PortalClockState) {
         }
     }
     state.aspects = aspects;
+}
+
+/// Compute `kernelBridge.m2m3.lensOrbiterRelations()` from the kernel's kairos
+/// and M3 lens-stack state. Planet↔planet edges are a direct `compute_aspects`
+/// projection; planet↔aperture edges treat each active aperture boundary as the
+/// second body while preserving the same aspect angles/orbs.
+pub fn lens_orbiter_relations(
+    state: &PortalClockState,
+    lens_stack: &MahamayaLensStack,
+) -> LensOrbiterRelationProjection {
+    let mut aspect_state = state.clone();
+    compute_aspects(&mut aspect_state);
+    let planet_planet_edges = aspect_state
+        .aspects
+        .iter()
+        .map(planet_planet_edge)
+        .collect::<Vec<_>>();
+
+    let planet_aperture_edges = planet_aperture_edges(state, lens_stack);
+    let pending_dataset_badges = outer_planet_pending_dataset_badges(state);
+
+    LensOrbiterRelationProjection {
+        relation_handle: format!("m2m3://lens-orbiter/{}", lens_stack.stack_id),
+        source: "portal-core::aspect::lens_orbiter_relations".to_owned(),
+        planet_planet_edges,
+        planet_aperture_edges,
+        pending_dataset_badges,
+    }
+}
+
+fn planet_planet_edge(aspect: &PlanetaryAspect) -> PlanetPlanetAspectEdge {
+    PlanetPlanetAspectEdge {
+        planet_a: aspect.planet_a,
+        planet_b: aspect.planet_b,
+        aspect_type: aspect.aspect_type,
+        angle: aspect.angle,
+        orb: aspect.orb,
+    }
+}
+
+fn planet_aperture_edges(
+    state: &PortalClockState,
+    lens_stack: &MahamayaLensStack,
+) -> Vec<PlanetApertureAspectEdge> {
+    if lens_stack.aperture_count == 0 {
+        return Vec::new();
+    }
+
+    let mut edges = Vec::new();
+    for planet in FIRST_ORBITER..10usize {
+        let planet_degree = state.kairos.planets[planet].degree;
+        if planet_degree == 0xFFFF {
+            continue;
+        }
+
+        for &lens_id in &lens_stack.active_segments {
+            let aperture_phase = aperture_boundary_degree(lens_id, lens_stack.aperture_count);
+            let angular_diff = angular_difference(planet_degree, aperture_phase);
+            for (idx, &(target, orb)) in ASPECT_ANGLES.iter().enumerate() {
+                let diff_from_exact = (angular_diff as f32 - target as f32).abs();
+                if diff_from_exact <= orb as f32 {
+                    edges.push(PlanetApertureAspectEdge {
+                        planet: planet as u8,
+                        lens_id,
+                        aperture_phase,
+                        aspect_type: idx as u8,
+                        orb: diff_from_exact,
+                    });
+                }
+            }
+        }
+    }
+
+    edges
+}
+
+fn aperture_boundary_degree(lens_id: u8, aperture_count: u8) -> u16 {
+    ((lens_id as u32 * 360) / aperture_count as u32 % 360) as u16
+}
+
+fn angular_difference(a: u16, b: u16) -> u16 {
+    let diff = ((a % 360) as i32 - (b % 360) as i32).unsigned_abs() as u16;
+    diff.min(360 - diff)
+}
+
+fn outer_planet_pending_dataset_badges(state: &PortalClockState) -> Vec<PendingPlanetDatasetBadge> {
+    (7u8..=9)
+        .filter(|planet| state.kairos.planets[*planet as usize].degree != 0xFFFF)
+        .map(|planet| PendingPlanetDatasetBadge {
+            planet,
+            badge: OUTER_PLANET_PENDING_DATASET_BADGE.to_owned(),
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod lens_orbiter_relation_tests {
+    use super::{compute_aspects, lens_orbiter_relations};
+    use crate::profile_projections::MahamayaLensStack;
+    use crate::types::{PlanetState, PortalClockState};
+
+    fn fixed_state() -> PortalClockState {
+        let mut state = PortalClockState::default();
+        for (planet, degree) in [
+            (0usize, 12u16),
+            (1, 0),
+            (2, 30),
+            (3, 90),
+            (4, 120),
+            (5, 180),
+            (6, 240),
+            (7, 60),
+            (8, 300),
+            (9, 270),
+        ] {
+            state.kairos.planets[planet] = PlanetState {
+                degree,
+                ..PlanetState::default()
+            };
+        }
+        state
+    }
+
+    fn lens_stack() -> MahamayaLensStack {
+        MahamayaLensStack {
+            stack_id: "m3-lens-stack:test".to_owned(),
+            aperture_count: 16,
+            active_segments: vec![0, 4, 8, 12],
+            fibonacci_ground_ref: "m3://fibonacci-ground/test".to_owned(),
+        }
+    }
+
+    #[test]
+    fn planet_planet_edges_match_compute_aspects_for_fixed_kairos() {
+        let state = fixed_state();
+        let projection = lens_orbiter_relations(&state, &lens_stack());
+
+        let mut expected_state = state.clone();
+        compute_aspects(&mut expected_state);
+
+        assert_eq!(
+            projection.planet_planet_edges.len(),
+            expected_state.aspects.len()
+        );
+        for (edge, aspect) in projection
+            .planet_planet_edges
+            .iter()
+            .zip(expected_state.aspects.iter())
+        {
+            assert_eq!(edge.planet_a, aspect.planet_a);
+            assert_eq!(edge.planet_b, aspect.planet_b);
+            assert_eq!(edge.aspect_type, aspect.aspect_type);
+            assert_eq!(edge.angle, aspect.angle);
+            assert_eq!(edge.orb, aspect.orb);
+        }
+    }
+
+    #[test]
+    fn planet_aperture_edges_are_kernel_computed_from_active_boundaries() {
+        let projection = lens_orbiter_relations(&fixed_state(), &lens_stack());
+
+        assert!(
+            !projection.planet_aperture_edges.is_empty(),
+            "fixed kairos should generate planet-aperture relations"
+        );
+        assert!(
+            projection
+                .planet_aperture_edges
+                .iter()
+                .all(|edge| edge.planet != 0),
+            "Sun is the identity root and must not be counted among the nine orbiters"
+        );
+        assert!(projection.planet_aperture_edges.iter().any(|edge| {
+            edge.planet == 1
+                && edge.lens_id == 0
+                && edge.aperture_phase == 0
+                && edge.aspect_type == 0
+                && edge.orb == 0.0
+        }));
+        assert!(projection.planet_aperture_edges.iter().any(|edge| {
+            edge.planet == 3
+                && edge.lens_id == 4
+                && edge.aperture_phase == 90
+                && edge.aspect_type == 0
+                && edge.orb == 0.0
+        }));
+    }
+
+    #[test]
+    fn outer_planets_carry_track_23_10_pending_dataset_badges() {
+        let projection = lens_orbiter_relations(&fixed_state(), &lens_stack());
+        let badges = projection
+            .pending_dataset_badges
+            .iter()
+            .map(|badge| (badge.planet, badge.badge.as_str()))
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            badges,
+            vec![
+                (7, "pending-dataset:23.10"),
+                (8, "pending-dataset:23.10"),
+                (9, "pending-dataset:23.10"),
+            ]
+        );
+    }
 }
 
 #[cfg(test)]

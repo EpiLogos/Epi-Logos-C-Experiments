@@ -22,6 +22,14 @@ pub fn epogdoon_log() -> f32 {
     epogdoon_ratio().ln()
 }
 
+/// Kernel-bridge producer for the M2↔M3 16/9 reading relation.
+pub fn kernel_bridge_m2m3_lens_orbiter_relations(
+    state: &crate::types::PortalClockState,
+    lens_stack: &crate::profile_projections::MahamayaLensStack,
+) -> crate::profile_projections::LensOrbiterRelationProjection {
+    crate::aspect::lens_orbiter_relations(state, lens_stack)
+}
+
 // ── Epogdoon 72→64 bridge projection (37.T37.1) ─────────────────────────────
 //
 // The 9:8 compression as the M2 vibrational address (0..71) descends into the

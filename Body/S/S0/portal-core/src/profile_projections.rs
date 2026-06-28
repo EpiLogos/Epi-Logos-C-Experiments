@@ -115,11 +115,42 @@ pub struct BeingPatternClockAddress {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct M2M3RelationProjection {
-    pub relation_handle: String,
-    pub planetary_lens_aspect: String,
-    pub source: String,
+pub struct PlanetPlanetAspectEdge {
+    pub planet_a: u8,
+    pub planet_b: u8,
+    pub aspect_type: u8,
+    pub angle: f32,
+    pub orb: f32,
 }
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlanetApertureAspectEdge {
+    pub planet: u8,
+    pub lens_id: u8,
+    pub aperture_phase: u16,
+    pub aspect_type: u8,
+    pub orb: f32,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PendingPlanetDatasetBadge {
+    pub planet: u8,
+    pub badge: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LensOrbiterRelationProjection {
+    pub relation_handle: String,
+    pub source: String,
+    pub planet_planet_edges: Vec<PlanetPlanetAspectEdge>,
+    pub planet_aperture_edges: Vec<PlanetApertureAspectEdge>,
+    pub pending_dataset_badges: Vec<PendingPlanetDatasetBadge>,
+}
+
+pub type M2M3RelationProjection = LensOrbiterRelationProjection;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

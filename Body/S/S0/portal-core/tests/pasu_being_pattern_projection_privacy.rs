@@ -2,8 +2,8 @@ use portal_core::{
     kernel_tick_from_epogdoon, BeingEntityRef, BeingObserverAnchor, BeingPatternClockAddress,
     BeingPatternProtectedRef, BeingPatternRelationEdge, BioQuaternionHandle,
     ElementalWeightProjection, M2M3RelationProjection, MathemeHarmonicProfile, MonoPolyOperator,
-    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PerspectiveRole,
-    StableIdentityHandle,
+    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PendingPlanetDatasetBadge,
+    PerspectiveRole, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, StableIdentityHandle,
 };
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -13,6 +13,31 @@ fn protected_ref(id: &str, source: &str, summary: &str) -> BeingPatternProtected
         episode_id: id.to_owned(),
         source_ref: source.to_owned(),
         public_summary: summary.to_owned(),
+    }
+}
+
+fn m2_m3_relation() -> M2M3RelationProjection {
+    M2M3RelationProjection {
+        relation_handle: "m2m3://relation/pasu-self/lens-orbiter".to_owned(),
+        source: "portal-core::aspect::lens_orbiter_relations".to_owned(),
+        planet_planet_edges: vec![PlanetPlanetAspectEdge {
+            planet_a: 1,
+            planet_b: 5,
+            aspect_type: 3,
+            angle: 120.0,
+            orb: 0.0,
+        }],
+        planet_aperture_edges: vec![PlanetApertureAspectEdge {
+            planet: 1,
+            lens_id: 4,
+            aperture_phase: 90,
+            aspect_type: 2,
+            orb: 0.0,
+        }],
+        pending_dataset_badges: vec![PendingPlanetDatasetBadge {
+            planet: 7,
+            badge: "pending-dataset:23.10".to_owned(),
+        }],
     }
 }
 
@@ -66,11 +91,7 @@ fn projection(operator: MonoPolyOperator) -> PasuBeingPatternProjection {
         monopoly_operator: operator,
         perspective_role: PerspectiveRole::FirstPerson,
         nara_family_role: None,
-        m2_m3_relation: M2M3RelationProjection {
-            relation_handle: "m2m3://relation/pasu-self/trine".to_owned(),
-            planetary_lens_aspect: "backend-supplied-trine".to_owned(),
-            source: "S3 CCT-21".to_owned(),
-        },
+        m2_m3_relation: m2_m3_relation(),
         bioquaternion_handles: vec![
             BioQuaternionHandle {
                 handle: "protected://bioquaternion/q_identity".to_owned(),
@@ -101,11 +122,7 @@ fn projection(operator: MonoPolyOperator) -> PasuBeingPatternProjection {
             edge_kind: "aspect-like".to_owned(),
             aspect_label: "trine-like-resonance".to_owned(),
             generation: 42,
-            m2_m3_relation: M2M3RelationProjection {
-                relation_handle: "m2m3://relation/pasu-self/trine".to_owned(),
-                planetary_lens_aspect: "backend-supplied-trine".to_owned(),
-                source: "S3 CCT-21".to_owned(),
-            },
+            m2_m3_relation: m2_m3_relation(),
             elemental_delta: ElementalWeightProjection {
                 fire: 0.1,
                 water: 0.0,
@@ -157,8 +174,16 @@ fn pasu_being_pattern_serializes_live_state_without_canon_mutation_or_private_bo
         "graphiti:episode:pasu-self:42"
     );
     assert_eq!(
-        pasu["relationEdges"][0]["m2M3Relation"]["planetaryLensAspect"],
-        "backend-supplied-trine"
+        pasu["relationEdges"][0]["m2M3Relation"]["planetApertureEdges"][0]["lensId"],
+        4
+    );
+    assert_eq!(
+        pasu["m2M3Relation"]["planetPlanetEdges"][0]["aspectType"],
+        3
+    );
+    assert_eq!(
+        pasu["m2M3Relation"]["pendingDatasetBadges"][0]["badge"],
+        "pending-dataset:23.10"
     );
     assert_eq!(pasu["relationEdges"][0]["canonStatus"], "live-only");
     assert!(

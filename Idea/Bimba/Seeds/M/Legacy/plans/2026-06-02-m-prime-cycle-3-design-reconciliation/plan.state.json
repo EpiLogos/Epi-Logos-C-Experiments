@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:30:59.019Z",
+  "updatedAt": "2026-06-28T09:43:06.145Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2685,16 +2685,16 @@
       "worktree": null
     },
     "17.T17.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-28T09:35:10.879Z",
+      "claimedAt": "2026-06-28T09:35:10.879Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-17-t17-7-spacetime-split",
+      "leaseExpiresAt": "2026-06-28T11:35:10.879Z",
+      "heartbeatAt": "2026-06-28T09:35:10.879Z",
+      "runId": "20260628T093510Z-17-T17.7",
       "worktree": null
     },
     "17.T17.8": {
@@ -3022,16 +3022,16 @@
       "worktree": null
     },
     "17.T17.26": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-28T09:35:06.466Z",
+      "claimedAt": "2026-06-28T09:35:06.466Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-17-t17-26-graphiti-native",
+      "leaseExpiresAt": "2026-06-28T11:35:06.466Z",
+      "heartbeatAt": "2026-06-28T09:35:06.466Z",
+      "runId": "20260628T093506Z-17-T17.26",
       "worktree": null
     },
     "17.T17.27": {
@@ -8534,16 +8534,21 @@
       "worktree": null
     },
     "37.T37.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T09:43:06.067Z",
+      "claimedAt": "2026-06-28T09:35:17.894Z",
+      "completedAt": "2026-06-28T09:43:06.067Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:43:06.067Z",
+          "text": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml passed: 88 lib tests plus all integration/doc tests; key files Body/S/S0/portal-core/src/aspect.rs, Body/S/S0/portal-core/src/profile_projections.rs, Body/S/S0/portal-core/src/kernel.rs, Body/S/S0/portal-core/tests/pasu_being_pattern_projection_privacy.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-37-t37-9-aspect-projection",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T09:35:17.894Z",
+      "runId": "20260628T093517Z-37-T37.9",
       "worktree": null
     },
     "37.T37.10": {
@@ -13620,33 +13625,60 @@
       "leaseExpiresAt": "2026-06-28T11:26:38.694Z",
       "worktree": null,
       "completedAt": "2026-06-28T09:30:58.952Z"
+    },
+    {
+      "runId": "20260628T093506Z-17-T17.26",
+      "taskId": "17.T17.26",
+      "status": "in_progress",
+      "startedAt": "2026-06-28T09:35:06.466Z",
+      "owner": "codex-m-dev-17-t17-26-graphiti-native",
+      "leaseExpiresAt": "2026-06-28T11:35:06.466Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260628T093510Z-17-T17.7",
+      "taskId": "17.T17.7",
+      "status": "in_progress",
+      "startedAt": "2026-06-28T09:35:10.879Z",
+      "owner": "codex-m-dev-17-t17-7-spacetime-split",
+      "leaseExpiresAt": "2026-06-28T11:35:10.879Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260628T093517Z-37-T37.9",
+      "taskId": "37.T37.9",
+      "status": "done",
+      "startedAt": "2026-06-28T09:35:17.894Z",
+      "owner": "codex-m-dev-37-t37-9-aspect-projection",
+      "leaseExpiresAt": "2026-06-28T11:35:17.894Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T09:43:06.067Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T09:24:17.467Z",
-    "updatedAt": "2026-06-28T09:24:17.467Z",
+    "createdAt": "2026-06-28T09:34:57.565Z",
+    "updatedAt": "2026-06-28T09:34:57.565Z",
     "taskIds": [
-      "17.T17.6",
-      "17.T17.25",
       "17.T17.26",
       "17.T17.7",
-      "17.T17.8"
+      "17.T17.8",
+      "17.T17.9",
+      "37.T37.9"
     ],
     "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "17.T17.6": "in-session",
-      "17.T17.25": "in-session",
       "17.T17.26": "in-session",
       "17.T17.7": "in-session",
-      "17.T17.8": "in-session"
+      "17.T17.8": "in-session",
+      "17.T17.9": "in-session",
+      "37.T37.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available."
     ]
   }
 }
