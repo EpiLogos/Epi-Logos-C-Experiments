@@ -144,7 +144,7 @@ The live implementation is broad but not yet coordinate-native:
 - The 2026-05-30 shared-cosmos contract adds the first native SpaceTimeDB world-plane tables and reducers to the S3/S3' law: `world_clock`, RLS-filtered `pratibimba_presence`, opt-in `shared_archetype_event`, and participant-filtered `coincidence`; reducers `advance_world_clock` at 1 Hz, `bind_pratibimba_presence`, and `detect_coincidences` at 1/min; quaternionic identity signatures where `quintessence_hash = BLAKE3(canonical_bytes(q_Nara) || caps)` is an indexing fingerprint over canonical quaternionic bytes, not the ontological identity itself.
 - `Body/S/S3/epi-spacetime-module` now carries the gateway-client registration module shape: gateway instances, PI-agent instances, TUI/desktop/browser clients, session temporal surfaces, global temporal surfaces, Kairos surfaces, and temporal activity events keyed by installation/workspace and instance identity.
 - `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and is now demoted behind `Body/S/S3/graphiti-runtime`.
-- There are now dedicated `Body/S/S3/redis-context`, `Body/S/S3/gateway`, and `Body/S/S3/graphiti-runtime` modules for Redis runtime residency, gateway protocol/session/runtime residency, and Graphiti runtime adapter law. The live gateway dispatch/server body is still S0-hosted, but it consults S3 route ownership and passes Graphiti envelope/provenance/deposit/search law through the S3 crate rather than owning it locally. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the next S3 extraction step is the live dispatch/server adapter.
+- There are now dedicated `Body/S/S3/redis-context`, `Body/S/S3/gateway`, `Body/S/S3/graphiti-runtime`, and `Body/S/S3/epi-spacetime-module` modules for Redis runtime residency, gateway protocol/session/runtime residency, Graphiti runtime adapter law, and the SpaceTimeDB module surface. The live gateway dispatch/server body is still S0-hosted, but it consults S3 route ownership and passes Graphiti envelope/provenance/deposit/search law through the S3 crate rather than owning it locally. `Body/S/S3/epi-app` is deprecated legacy parity material only; M' shell authority is `Body/M/epi-theia`, and the next S3 extraction step is the live dispatch/server adapter.
 
 ### Planning consequence
 
@@ -210,24 +210,23 @@ Current canonical S3 base technology:
 | Gateway method manifest | [[S3.1]] / [[S3.1']] | Rust | `gate/parity.rs` | Product/RPC compatibility surface |
 | SessionStore | [[S3.2]] / [[S3.2']] | `Body/S/S3/gateway` Rust/files, S0 Pi adapter | `.epi/gate/sessions` | Session identity and patch authority with Pi/Khora context injected at creation |
 | GatewayRuntimeState | [[S3.3]] | Rust memory | Process-local | Run registry, event listeners, chat process tracking |
-| OmniPanel / app bridge | [[S3.5]] | Current Electron/React app side; future Tauri v2 shell | Client process | Human-facing gateway client and eventual desktop mirror of the TUI portal |
+| M' Theia bridge | [[S3.5]] | `Body/M/epi-theia` kernel-bridge + M' extensions | Theia/Electron client process | Human-facing gateway client consuming the S3 gateway through the M' shell of record |
 | Graphiti runtime | [[S3.4']] / [[S3.5']] | Rust adapter over current Python library wrapper, target native library runtime | Current compatibility wrapper port `37778` | Temporal episodic architecture; `Body/S/S3/graphiti-runtime` owns envelope/provenance/deposit/search law, including kernel resonance deposition |
 
-### Desktop App / Tauri V2 Direction
+### M' Shell / Legacy `epi-app` Disposition
 
-Current checkup: `Body/S/S3/epi-app` is an Electron + Vite + React app. It already contains a gateway WebSocket client, Epi-Claw-compatible RPC client, shared capability/envelope types, and M0-M5 renderer domains. It currently also has Electron main-process filesystem and Neo4j access. The Tauri v2 migration should be specified before porting code.
+Current disposition: `Body/S/S3/epi-app` is deprecated legacy parity material. It is not the M' shell of record; active shell authority is `Body/M/epi-theia` per [[M'-SYSTEM-SPEC]] and the S3 consumed boundary above. Do not port or extend the Electron app here as a new product surface.
 
-Target shape:
+Decommission targets:
 
-| Layer | Current state | Tauri v2 target |
+| Surface | Current status | Target |
 |---|---|---|
-| Renderer | React M-domain shell, M0-M5 domain components, OmniPanel, command palette | Preserve useful renderer/domain components, but reshape primary layout to mirror the TUI `0` / `/` / `1` topology |
-| Main process | Electron IPC, direct filesystem helpers, direct Neo4j driver, gateway WebSocket client | Rust Tauri command layer that prefers gateway RPC and SpaceTimeDB subscriptions; direct filesystem access only through explicit S1/Hen/vault commands |
-| Live state | Gateway WebSocket plus local stores | Gateway RPC for commands and SpaceTimeDB registration/projection for gateway/agent/client/session liveness |
-| Settings | App-local config and UI panels | Same S0' portal surface registry/config ownership used by the TUI; no parallel desktop-only settings ontology |
-| Desktop role | M-domain exploration shell | External M-form mirror of the TUI portal: left `0` structural clock, centre `/` command/config/readiness, right `1` Nara/Epii/review/autoresearch |
+| Renderer domains / OmniPanel / command palette | Legacy parity reference | Port only still-useful behavior into `Body/M/epi-theia` M' extensions or acceptance tests |
+| Gateway WebSocket and Epi-Claw-compatible clients | Evidence of prior client behavior | Preserve required S3 invariants in `Body/S/S3/gateway*/tests` or the `Body/M/epi-theia` kernel-bridge test surface before archival |
+| Electron main-process filesystem / Neo4j access | Deprecated bypass of S1/S2/S3 ownership | Replace through explicit [[S1]] / [[Hen]] vault commands, [[S2]] graph contracts, and S3 gateway RPC/subscription surfaces |
+| Package root | Deprecated legacy material | Move/archive/delete only under an explicit follow-up; no new feature work lands here |
 
-The app port must not make Electron-to-Tauri a mechanical shell swap. The port is an architectural promotion: desktop state should be driven by the same gateway parity, SpaceTimeDB registration, and portal surface registry contracts used by `epi portal`.
+Any removal must first prove that no live S3 invariant is uniquely tested by `epi-app`. Until then, `epi-app` remains a named parity reference, not a current substrate or shell authority.
 
 ### API Methods Homed Here
 
@@ -728,7 +727,7 @@ S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairo
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S3/S3.md` mtime 2026-04-10 21:43:47; `Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md` mtime 2026-04-10 17:52:42; `Idea/Bimba/World/NOW.md` and `Daily-Note.md` for S3' temporal artifact semantics |
 | docs/specs | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` mtime 2026-05-31 16:35:19; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
 | docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
-| Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S3/epi-app/**`, `Body/S/S0/epi-cli/src/gate/**` |
+| Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S0/epi-cli/src/gate/**`; deprecated legacy parity reference: `Body/S/S3/epi-app/**` |
 | sibling seeds | `S3-0-SPEC.md`..`S3-5-SPEC.md`, `S3'/S3'-SPEC.md`, `S3'/S3-0'-SPEC.md`..`S3'/S3-5'-SPEC.md`, `S3-SHARD-INDEX.md`, `S3-TRACEABILITY-INDEX.md`, `S3'/S3'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 03 owns gateway/SpaceTimeDB; Track 13 owns later S0 membrane extraction; Track 10 owns integration gates |
 | open decisions | WebSocket surface, SpaceTimeDB auth/RLS, world-clock cadence, Graphiti runtime boundary, Theia subscription ownership, production fallback |

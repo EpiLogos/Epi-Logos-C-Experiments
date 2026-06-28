@@ -11,8 +11,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `graphiti-runtime/` — `epi-s3-graphiti-runtime`: "S3 Graphiti runtime adapter contracts and compatibility HTTP client". (Physically at S3; conceptually actualises S5 world-return per the residency-vs-coordinate law.)
 - `epi-spacetime-module/` — `epi-spacetime-module`: "SpacetimeDB WASM module for Epi-Logos gateway/client/agent registration".
 - `spacetime-context/` — declarative SpacetimeDB schema artifacts for S3/S3' persistence surfaces not yet housed in the Rust module table declarations.
-- `epi-app/` — `epi-electron` Electron shell (RETIRING — see Child DOX Index).
-- Does NOT own coordinate semantics or domain law for other layers: agent dispatch lives at [[S4-SPEC]], knowledge graph at [[S2-SPEC]], world-return canon at [[S5-SPEC]]. The S-coordinate is the conceptual law; physical residency here is convenience.
+- `epi-app/` — deprecated `epi-electron` legacy parity reference only (RETIRING — see Child DOX Index); M' shell authority lives at `Body/M/epi-theia`.
+- Does NOT own coordinate semantics or domain law for other layers, and does NOT own M' shell authority: agent dispatch lives at [[S4-SPEC]], knowledge graph at [[S2-SPEC]], world-return canon at [[S5-SPEC]], and the active M' shell at [[M'-SYSTEM-SPEC]] / `Body/M/epi-theia`. The S-coordinate is the conceptual law; physical residency here is convenience.
 
 ## Local Contracts
 - Code Coordinate Headers: the Cargo.toml `description` of each crate above (no `src/lib.rs //!` headers present).
@@ -34,4 +34,4 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `spacetime-context/AGENTS.md` — declarative SpacetimeDB schema artifacts for S3/S3' runtime persistence surfaces.
 - `graphiti-runtime/AGENTS.md` — `epi-s3-graphiti-runtime`: Graphiti runtime adapter contracts + compat HTTP client (resides S3, actualises S5).
 - `redis-context/AGENTS.md` — `epi-s3-redis-context`: Redis runtime context + RedisVL bridge residency contract.
-- `epi-app/AGENTS.md` — `epi-electron` M' Domain Electron shell. RETIRING — do not build on this.
+- `epi-app/AGENTS.md` — deprecated `epi-electron` legacy parity reference. RETIRING — do not build on this; active M' shell authority is `Body/M/epi-theia`.
