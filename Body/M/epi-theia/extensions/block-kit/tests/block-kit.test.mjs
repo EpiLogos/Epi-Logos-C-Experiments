@@ -17,10 +17,14 @@ const {
     createRendererSessionState,
     createSelectionContextAgentInjectionRequest,
     createVerdictOperation,
+    blockDocVaultPath,
+    fromDoc,
     inscribeSelectionContextHighlightBack,
     parseBlockDoc,
     requestSelectionContextHandle,
-    serializeBlockDoc
+    serializeBlockDoc,
+    toDoc,
+    assertBlockDocWritablePath
 } = require('../lib/common/index.js');
 
 function block(overrides = {}) {
@@ -143,7 +147,7 @@ test('block verdict and annotation ops route renderer state to s4 psyche update 
     assert.equal(request.params.patch.renderer.appliedOperations[0].resolutionTarget, 'agent');
 });
 
-test('block docs round-trip in markdown and MDX with the same validated block payload', () => {
+test('block docs round-trip Block[] through toDoc/fromDoc in markdown and MDX with C-family frontmatter', () => {
     const b = block();
     const doc = createBlockDoc([b], b.ctx, 'protected');
     for (const format of ['markdown', 'mdx']) {
@@ -153,7 +157,33 @@ test('block docs round-trip in markdown and MDX with the same validated block pa
         assert.equal(parsed.coordinate, 'M5-4');
         assert.equal(parsed.ct, 'CT2');
         assert.equal(parsed.ctxFrame, '(0/1/2)');
+        assert.equal(parsed.privacyClass, 'protected');
+        assert.match(serialized, /^coordinate: "M5-4"$/m);
+        assert.match(serialized, /^c_1_ct_type: "CT2"$/m);
+        assert.match(serialized, /^c_3_ctx_frame: "\(0\/1\/2\)"$/m);
+        assert.match(serialized, /^privacyClass: "protected"$/m);
+        assert.doesNotMatch(serialized, /^block_count:/m);
+        assert.doesNotMatch(serialized, /^block_doc_format:/m);
+        assert.deepEqual(fromDoc(toDoc([b], { format }), format), [b]);
     }
+    const temporal = parseBlockDoc(toDoc([b], {
+        format: 'mdx',
+        dayId: '02-06-2026',
+        createdAt: '2026-06-02T20:10:32.000Z',
+        artifactRole: 'block-doc'
+    }));
+    assert.equal(temporal.dayId, '02-06-2026');
+    assert.equal(temporal.createdAt, '2026-06-02T20:10:32.000Z');
+    assert.equal(temporal.artifactRole, 'block-doc');
+});
+
+test('block-doc path guard restricts persisted writes to Empty/Present day folders', () => {
+    const path = blockDocVaultPath('02-06-2026', 'nara-daily-briefing.block-doc.mdx');
+    assert.equal(path, 'Idea/Empty/Present/02-06-2026/nara-daily-briefing.block-doc.mdx');
+    assert.equal(assertBlockDocWritablePath(path), path);
+    assert.throws(() => blockDocVaultPath('2026-06-02', 'briefing.mdx'), /DD-MM-YYYY/);
+    assert.throws(() => blockDocVaultPath('02-06-2026', '../briefing.mdx'), /local/);
+    assert.throws(() => assertBlockDocWritablePath('Idea/Bimba/World/briefing.mdx'), /Empty\/Present/);
 });
 
 test('selection context handle fires context_xray and injects the CTX-framed handle into Psyche', async () => {

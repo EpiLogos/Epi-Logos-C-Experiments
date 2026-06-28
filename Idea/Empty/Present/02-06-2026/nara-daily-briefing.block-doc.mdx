@@ -1,0 +1,130 @@
+---
+coordinate: "M4-4"
+c_1_ct_type: "CT4b"
+c_3_ctx_frame: "(4.5/0)"
+privacyClass: "protected-local"
+c_3_day_id: "02-06-2026"
+c_3_created_at: "2026-06-02T20:10:32.000Z"
+c_4_artifact_role: "block-doc"
+---
+export const blocks = [
+  {
+    "id": "block:nara-daily-briefing:2026-06-02:00",
+    "type": "rich-text",
+    "ctx": {
+      "cf": "(4.5/0)",
+      "ct": "CT4b",
+      "cp": "4.4",
+      "cpf": "nara-daily-briefing",
+      "cs": "02-06-2026"
+    },
+    "coordinate": "M4-4",
+    "privacyClass": "protected-local",
+    "provenance": {
+      "kind": "evidence-envelope",
+      "handle": "track:44.T44.7",
+      "source": "[[44-pratibimba-surface-standard]]"
+    },
+    "data": {
+      "title": "Nara Daily Briefing",
+      "markdown": "Daily briefing for [[M4'-SPEC]] in [[Daily-Note]] / [[NOW]] context. This block-doc is the first persisted Track 44 instance under `Idea/Empty/Present`."
+    },
+    "affordances": [
+      "select",
+      "navigate"
+    ]
+  },
+  {
+    "id": "block:nara-daily-briefing:2026-06-02:01",
+    "type": "kairos-strip",
+    "ctx": {
+      "cf": "(4.5/0)",
+      "ct": "CT4b",
+      "cp": "4.4",
+      "cpf": "nara-daily-briefing",
+      "cs": "02-06-2026"
+    },
+    "coordinate": "M4-4",
+    "privacyClass": "protected-local",
+    "provenance": {
+      "kind": "evidence-envelope",
+      "handle": "session:20260602-201032-77ad76"
+    },
+    "data": {
+      "dayId": "02-06-2026",
+      "nowPath": "Idea/Empty/Present/02-06-2026/20260602-201032-77ad76/now.md",
+      "anchors": [
+        "[[M4'-SPEC]]",
+        "[[m5-prime-pratibimba-surface-standard]]"
+      ],
+      "ctxFrame": "(4.5/0)"
+    },
+    "affordances": [
+      "navigate"
+    ]
+  },
+  {
+    "id": "block:nara-daily-briefing:2026-06-02:02",
+    "type": "checklist",
+    "ctx": {
+      "cf": "(4.5/0)",
+      "ct": "CT4b",
+      "cp": "4.4",
+      "cpf": "nara-daily-briefing",
+      "cs": "02-06-2026"
+    },
+    "coordinate": "M4-4",
+    "privacyClass": "protected-local",
+    "provenance": {
+      "kind": "evidence-envelope",
+      "handle": "track:5.18"
+    },
+    "data": {
+      "title": "Briefing Readiness",
+      "items": [
+        {
+          "label": "Read day/NOW context without promoting private body content",
+          "checked": true
+        },
+        {
+          "label": "Render as CTX-framed blocks in source order",
+          "checked": true
+        },
+        {
+          "label": "Keep CTX template authority with [[adr-05-010-hen-vault-bridge]] while consuming MDX here",
+          "checked": true
+        }
+      ]
+    },
+    "affordances": [
+      "annotate",
+      "select"
+    ]
+  },
+  {
+    "id": "block:nara-daily-briefing:2026-06-02:03",
+    "type": "callout",
+    "ctx": {
+      "cf": "(4.5/0)",
+      "ct": "CT4b",
+      "cp": "4.4",
+      "cpf": "nara-daily-briefing",
+      "cs": "02-06-2026"
+    },
+    "coordinate": "M4-4",
+    "privacyClass": "protected-local",
+    "provenance": {
+      "kind": "evidence-envelope",
+      "handle": "DR-PSS-4"
+    },
+    "data": {
+      "tone": "boundary",
+      "markdown": "Residency boundary: this is an instance artifact in `Idea/Empty/Present/02-06-2026/`, not a canon write and not CTX-template authoring."
+    },
+    "affordances": [
+      "select"
+    ]
+  }
+];
+
+<PratibimbaBlockDoc blocks={blocks} />

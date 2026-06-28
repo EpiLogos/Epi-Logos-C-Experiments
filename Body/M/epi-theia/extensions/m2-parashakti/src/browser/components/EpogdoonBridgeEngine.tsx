@@ -2,14 +2,14 @@
 // Coordinate Header (convention:coordinate-header:v1)
 //   Coordinate:     #2 → #3 (Parashakti vibrational address descending into the
 //                   Mahamaya codon lattice — the 72→64 epogdoon bridge)
-//   Residency:      Body/M/epi-theia/extensions/m2-parashakti (browser component)
+//   Residency:      Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/EpogdoonBridgeEngine.tsx
 //   Position (#18): 23.18 — 72→64 epogdoon-bridge engine
 //   Actualises:     the live 9:8 compression as the M2 vibrational address (0..71)
 //                   descends into the M3 codon space (0..63), reading ONLY the
 //                   typed projection published by the kernel-bridge.
 //   Public surface: EpogdoonBridgeEngine, buildEpogdoonBridgeModel, the
 //                   EpogdoonBridgeProjection / M2EpogdoonProjector / M2KernelBridge
-//                   typed contract, and the lattice-cell view model.
+//                   typed contract, and the 72→64→56 descent-band view models.
 //   Does NOT own:   the compression law itself. The 9:8 fold (m2.h
 //                   `m2_epogdoon_compress`, m3.h `apply_epogdoon_compression`,
 //                   `is_evolutionary_gap`) lives in C and is surfaced through the
@@ -33,6 +33,9 @@ export const EPOGDOON_M2_ADDRESS_COUNT = 72;
 /** The Mahamaya 64-Invariant — the uint64_t codon space (0..63). */
 export const EPOGDOON_M3_CODON_COUNT = 64;
 
+/** The M3 minor-arcana floor — 4 suits × 14 live minor cards = 56 codon seats. */
+export const EPOGDOON_M3_TAROT_FLOOR_COUNT = 56;
+
 /**
  * The nine fold-points: where `isEvolutionaryGap` is true the 9:8 compression
  * folds inward rather than reaching a fresh codon — the evolutionary spiral.
@@ -46,6 +49,29 @@ export const M2_EPOGDOON_PROJECTION_PROVENANCE_FIELD = 'detEvidence.epogdoonBrid
 
 /** The single authority this engine reads through — never a local computation. */
 export const EPOGDOON_PROJECTION_SOURCE = 'kernelBridge.m2.epogdoonProjection(address72)' as const;
+
+/** M3 resonance sentinel displayed in the 64→56 band. */
+export const EPOGDOON_M3_RESONANCE_GAP_SENTINEL = '0xFF' as const;
+
+/**
+ * Display positions for the eight `M3_RES_MATRIX` 0xFF sentinels.
+ * These are substrate citations rendered as sentinels, not a re-derived
+ * compression law; the live 72→64 descent still comes only from the bridge.
+ */
+export const EPOGDOON_M3_RESONANCE_GAP_CODONS = Object.freeze([5, 21, 26, 34, 42, 53, 58, 61] as const);
+
+export interface EpogdoonTarotSuitDescriptor {
+    readonly id: 'cups' | 'wands' | 'pentacles' | 'swords';
+    readonly label: string;
+    readonly integral: 84 | 96 | 88 | 92;
+}
+
+export const EPOGDOON_TAROT_SUITS = Object.freeze([
+    Object.freeze({ id: 'cups', label: 'Cups', integral: 84 }),
+    Object.freeze({ id: 'wands', label: 'Wands', integral: 96 }),
+    Object.freeze({ id: 'pentacles', label: 'Pentacles', integral: 88 }),
+    Object.freeze({ id: 'swords', label: 'Swords', integral: 92 })
+] satisfies readonly EpogdoonTarotSuitDescriptor[]);
 
 // ── Bridge contract (the ONLY typed projection this engine consumes) ─────────
 
@@ -92,6 +118,28 @@ export interface EpogdoonDescentCell {
     readonly isActive: boolean;
 }
 
+export interface EpogdoonCodonBandCell {
+    /** M3 codon index (0..63). */
+    readonly compressedCodon: number;
+    /** True for one of the eight `M3_RES_MATRIX` 0xFF sentinels. */
+    readonly isResonanceGap: boolean;
+    /** All bridge-reported M2 source addresses that descend into this codon. */
+    readonly sourceAddresses: readonly number[];
+    /** True when the live profile-tick descends into this codon. */
+    readonly isActive: boolean;
+}
+
+export interface EpogdoonTarotFloorCell {
+    readonly suitId: EpogdoonTarotSuitDescriptor['id'];
+    readonly suitLabel: string;
+    readonly suitIntegral: EpogdoonTarotSuitDescriptor['integral'];
+    /** Slot in the 4×16 M3 tarot-codon lattice. */
+    readonly slot: number;
+    /** The first 14 slots per suit are the 56-card minor floor; slots 14..15 are padding. */
+    readonly isPadding: boolean;
+    readonly floorIndex: number | null;
+}
+
 export interface EpogdoonBridgeModel {
     /** All 72 descents, address-ordered. */
     readonly cells: readonly EpogdoonDescentCell[];
@@ -101,7 +149,11 @@ export interface EpogdoonBridgeModel {
     readonly activeAddress72: number;
     /** The cell at the active address, if any. */
     readonly activeCell: EpogdoonDescentCell | null;
-    /** Distinct codons reached by non-fold descents (expected 64). */
+    /** The 64-cell M3 codon band, including eight resonance-gap sentinels. */
+    readonly codonBand: readonly EpogdoonCodonBandCell[];
+    /** The 4×16 tarot-codon floor, with 56 live minor-arcana cells and 8 padding slots. */
+    readonly tarotFloor: readonly EpogdoonTarotFloorCell[];
+    /** Distinct codons reached by bridge-reported descents (expected 64). */
     readonly distinctCodonCount: number;
     /** Number of fold-points the bridge actually reported (expected 9). */
     readonly foldPointCount: number;
@@ -142,6 +194,8 @@ export function buildEpogdoonBridgeModel(input: {
             foldPoints: Object.freeze([] as EpogdoonDescentCell[]),
             activeAddress72,
             activeCell: null,
+            codonBand: Object.freeze([] as EpogdoonCodonBandCell[]),
+            tarotFloor: buildTarotFloor(),
             distinctCodonCount: 0,
             foldPointCount: 0,
             latticeComplete: false,
@@ -162,9 +216,7 @@ export function buildEpogdoonBridgeModel(input: {
         const compressedCodon = clampCodon(projection.compressedCodon);
         const isFoldPoint = projection.isEvolutionaryGap === true;
         const expandedBack = clampAddress72(projection.expandedBack);
-        if (!isFoldPoint) {
-            distinctCodons.add(compressedCodon);
-        }
+        distinctCodons.add(compressedCodon);
         cells.push(
             Object.freeze({
                 address72,
@@ -179,6 +231,7 @@ export function buildEpogdoonBridgeModel(input: {
 
     const foldPoints = cells.filter(cell => cell.isFoldPoint);
     const activeCell = cells.find(cell => cell.isActive) ?? null;
+    const codonBand = buildCodonBand(cells, activeCell);
     const latticeComplete = !malformed && cells.length === EPOGDOON_M2_ADDRESS_COUNT;
 
     return Object.freeze({
@@ -186,6 +239,8 @@ export function buildEpogdoonBridgeModel(input: {
         foldPoints: Object.freeze(foldPoints),
         activeAddress72,
         activeCell,
+        codonBand,
+        tarotFloor: buildTarotFloor(),
         distinctCodonCount: distinctCodons.size,
         foldPointCount: foldPoints.length,
         latticeComplete,
@@ -268,16 +323,27 @@ export function EpogdoonBridgeEngine(props: EpogdoonBridgeEngineProps): React.Re
                 onSelect={setPinnedAddress}
             />
 
-            <ol className="m2-epogdoon-bridge-engine__lattice" aria-label="72→64 descent lattice">
-                {model.cells.map(cell => (
-                    <EpogdoonDescentCellView
-                        key={cell.address72}
-                        cell={cell}
-                        focused={cell.address72 === focusedAddress}
-                        onSelect={setPinnedAddress}
-                    />
-                ))}
-            </ol>
+            <div className="m2-epogdoon-bridge-engine__bands" data-epogdoon-descent-bands>
+                <ol
+                    className="m2-epogdoon-bridge-engine__lattice"
+                    aria-label="72→64 descent lattice"
+                    data-descent-band="72"
+                    data-band-cell-count={model.cells.length}
+                >
+                    {model.cells.map(cell => (
+                        <EpogdoonDescentCellView
+                            key={cell.address72}
+                            cell={cell}
+                            focused={cell.address72 === focusedAddress}
+                            onSelect={setPinnedAddress}
+                        />
+                    ))}
+                </ol>
+
+                <CodonBand64 cells={model.codonBand} />
+
+                <TarotCodonFloor56 cells={model.tarotFloor} />
+            </div>
 
             <EpogdoonInspector cell={focusedCell} pinned={pinnedAddress !== null} onClear={() => setPinnedAddress(null)} />
         </section>
@@ -358,7 +424,7 @@ function EpogdoonDescentCellView({
                     {cell.isFoldPoint ? '↺' : '↓'}
                 </span>
                 {cell.isFoldPoint ? (
-                    <span className="m2-epogdoon-bridge-engine__cell-fold" data-fold-point-glyph aria-hidden="true">
+                    <span className="m2-epogdoon-bridge-engine__cell-fold" data-fold-point-marker aria-hidden="true">
                         ∞
                     </span>
                 ) : (
@@ -415,6 +481,61 @@ function EpogdoonInspector({
     );
 }
 
+function CodonBand64({ cells }: { readonly cells: readonly EpogdoonCodonBandCell[] }): React.ReactElement {
+    return (
+        <ol
+            className="m2-epogdoon-bridge-engine__codon-band"
+            aria-label="64-cell M3 codon band with 0xFF resonance sentinels"
+            data-descent-band="64"
+            data-band-cell-count={cells.length}
+        >
+            {cells.map(cell => (
+                <li
+                    key={cell.compressedCodon}
+                    className="m2-epogdoon-bridge-engine__codon-cell"
+                    data-codon-band-cell
+                    data-compressed-codon={cell.compressedCodon}
+                    data-resonance-gap={cell.isResonanceGap ? EPOGDOON_M3_RESONANCE_GAP_SENTINEL : 'false'}
+                    data-active={cell.isActive ? 'true' : 'false'}
+                    data-source-addresses={cell.sourceAddresses.join(',')}
+                >
+                    <span className="m2-epogdoon-bridge-engine__codon-label">
+                        {cell.isResonanceGap ? EPOGDOON_M3_RESONANCE_GAP_SENTINEL : `#3·${cell.compressedCodon}`}
+                    </span>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+function TarotCodonFloor56({ cells }: { readonly cells: readonly EpogdoonTarotFloorCell[] }): React.ReactElement {
+    return (
+        <ol
+            className="m2-epogdoon-bridge-engine__tarot-floor"
+            aria-label="56-card tarot-codon floor"
+            data-descent-band="56"
+            data-band-cell-count={EPOGDOON_M3_TAROT_FLOOR_COUNT}
+        >
+            {cells.map(cell => (
+                <li
+                    key={`${cell.suitId}-${cell.slot}`}
+                    className="m2-epogdoon-bridge-engine__tarot-cell"
+                    data-tarot-floor-cell
+                    data-tarot-padding={cell.isPadding ? 'true' : 'false'}
+                    data-suit={cell.suitId}
+                    data-suit-integral={cell.suitIntegral}
+                    data-floor-index={cell.floorIndex ?? ''}
+                >
+                    <span className="m2-epogdoon-bridge-engine__tarot-suit">{cell.suitLabel}</span>
+                    <span className="m2-epogdoon-bridge-engine__tarot-slot">
+                        {cell.isPadding ? 'padding' : `slot ${cell.slot + 1}`}
+                    </span>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
 // ── Normalisers (bounds-only; no compression arithmetic) ─────────────────────
 
 function safeProject(projector: M2EpogdoonProjector, address72: number): EpogdoonBridgeProjection | null {
@@ -456,6 +577,52 @@ function clampAddress72(value: number): number {
 function clampCodon(value: number): number {
     const rounded = Math.trunc(value);
     return ((rounded % EPOGDOON_M3_CODON_COUNT) + EPOGDOON_M3_CODON_COUNT) % EPOGDOON_M3_CODON_COUNT;
+}
+
+function buildCodonBand(
+    descentCells: readonly EpogdoonDescentCell[],
+    activeCell: EpogdoonDescentCell | null
+): readonly EpogdoonCodonBandCell[] {
+    const sourcesByCodon = new Map<number, number[]>();
+    for (const cell of descentCells) {
+        const sources = sourcesByCodon.get(cell.compressedCodon) ?? [];
+        sources.push(cell.address72);
+        sourcesByCodon.set(cell.compressedCodon, sources);
+    }
+
+    return Object.freeze(
+        Array.from({ length: EPOGDOON_M3_CODON_COUNT }, (_, compressedCodon) =>
+            Object.freeze({
+                compressedCodon,
+                isResonanceGap: EPOGDOON_M3_RESONANCE_GAP_CODONS.includes(
+                    compressedCodon as (typeof EPOGDOON_M3_RESONANCE_GAP_CODONS)[number]
+                ),
+                sourceAddresses: Object.freeze([...(sourcesByCodon.get(compressedCodon) ?? [])]),
+                isActive: activeCell?.compressedCodon === compressedCodon
+            })
+        )
+    );
+}
+
+function buildTarotFloor(): readonly EpogdoonTarotFloorCell[] {
+    const cells: EpogdoonTarotFloorCell[] = [];
+    for (const suit of EPOGDOON_TAROT_SUITS) {
+        for (let slot = 0; slot < 16; slot += 1) {
+            const isPadding = slot >= 14;
+            const floorIndex = isPadding ? null : cells.filter(cell => !cell.isPadding).length;
+            cells.push(
+                Object.freeze({
+                    suitId: suit.id,
+                    suitLabel: suit.label,
+                    suitIntegral: suit.integral,
+                    slot,
+                    isPadding,
+                    floorIndex
+                })
+            );
+        }
+    }
+    return Object.freeze(cells);
 }
 
 export default EpogdoonBridgeEngine;

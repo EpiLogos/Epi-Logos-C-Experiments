@@ -113,6 +113,64 @@ const loadNodes = (branchKey) => {
   return readJson(path.join(DATASETS, "low-detail", `nodes_${branchKey}.json`)); // fallback
 };
 
+// ---- live Neo4j q_ register fetch (Track 45 — the psychoid quaternal layer) ----
+// The deep JSON snapshots predate the q_{n}_{semantic} enrichment, which lives ONLY in the live
+// graph (already in canonical 'M' form, so it joins directly on canonical(coord)). We pull every
+// q_-bearing node once at startup into canonicalCoord -> {q_key: value}. Reads the same REST tx
+// endpoint fetch_bimba.py uses; offline / no-graph runs degrade gracefully to an empty map (no q_
+// section, existing output unchanged). Override host with EPI_NEO4J_URL / -USER / -PASS.
+const NEO4J_URL = process.env.EPI_NEO4J_URL || "http://localhost:7474/db/neo4j/tx/commit";
+const NEO4J_USER = process.env.EPI_NEO4J_USER || "neo4j";
+const NEO4J_PASS = process.env.EPI_NEO4J_PASS || "password";
+async function fetchQRegisters() {
+  const out = new Map(); // canonical coord -> { q_key: value }
+  const cypher =
+    "MATCH (n) WHERE n.coordinate IS NOT NULL AND any(k IN keys(n) WHERE k STARTS WITH 'q_') " +
+    "RETURN n.coordinate AS coordinate, " +
+    "[k IN keys(n) WHERE k STARTS WITH 'q_' | [k, n[k]]] AS qregs";
+  try {
+    const auth = "Basic " + Buffer.from(`${NEO4J_USER}:${NEO4J_PASS}`).toString("base64");
+    const resp = await fetch(NEO4J_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: auth },
+      body: JSON.stringify({ statements: [{ statement: cypher }] }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.errors && json.errors.length) throw new Error(json.errors[0].message || "neo4j error");
+    const data = json.results?.[0]?.data || [];
+    for (const { row } of data) {
+      const coord = row[0]; // already canonical 'M' form in the live graph
+      if (!coord) continue;
+      const regs = {};
+      for (const [k, v] of row[1] || []) if (v != null && String(v).trim()) regs[k] = v;
+      if (Object.keys(regs).length) out.set(coord, regs);
+    }
+    console.error(`[q_] fetched quaternal registers for ${out.size} coordinate(s) from ${NEO4J_URL}`);
+  } catch (e) {
+    console.error(`[q_] live Neo4j unavailable (${e.message}) — projecting WITHOUT q_ registers. ` +
+      `Set EPI_NEO4J_URL/USER/PASS or start the graph, then re-run to surface them.`);
+  }
+  return out;
+}
+const Q_REGISTERS = await fetchQRegisters();
+
+// q-key sort: by position digit (q_0..q_5), then by the full key (groups variant registers per
+// position deterministically). Returns the rendered section lines for a canonical coordinate.
+const Q_POS = (k) => { const m = /^q_(\d+)_/.exec(k); return m ? Number(m[1]) : 99; };
+function renderQuaternal(canon) {
+  const regs = Q_REGISTERS.get(canon);
+  if (!regs) return [];
+  const keys = Object.keys(regs).sort((a, b) => (Q_POS(a) - Q_POS(b)) || (a < b ? -1 : a > b ? 1 : 0));
+  if (!keys.length) return [];
+  const lines = ["## Quaternal Register",
+    "*Psychoid `q_{n}_{semantic}` registers (position-ordered q_0..q_5), projected live from the Bimba graph.*", ""];
+  for (const k of keys) lines.push(`- **${k}:** ${fmtVal(regs[k], 1200)}`);
+  lines.push("");
+  return lines;
+}
+
 // ---- node content rendering (rich, but curated + bounded) ----
 const CONTENT_FIELDS = [
   ["description", "Description"], ["operationalEssence", "Operational essence"],
@@ -280,6 +338,7 @@ for (const br of BRANCHES) {
     const body = [`# ${canon} · ${name}`.trim(), ""];
     if (lead) body.push(`> ${lead}`, "");
     if (content.length) { body.push("## Detail"); body.push(...content); body.push(""); }
+    body.push(...renderQuaternal(canon)); // q_ register (live-graph, no-op when absent/offline)
     if (kids.length || kidsDeeper > 0) {
       body.push("## Contains");
       if (kids.length) body.push(kids.map(coordRef).join(" · "));

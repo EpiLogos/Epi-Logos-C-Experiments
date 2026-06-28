@@ -121,7 +121,14 @@ test('Track 44 persisted block-doc gate: markdown and MDX round-trip the same va
         assert.equal(parsed.coordinate, 'M5-4');
         assert.equal(parsed.ct, 'CT2');
         assert.equal(parsed.ctxFrame, '(0/1/2)');
+        assert.deepEqual(blockKit.fromDoc(blockKit.toDoc([b], { format }), format), [b]);
+        assert.doesNotMatch(serialized, /^block_count:/m);
+        assert.doesNotMatch(serialized, /^block_doc_format:/m);
     }
+    assert.equal(
+        blockKit.assertBlockDocWritablePath(blockKit.blockDocVaultPath('02-06-2026', 'nara-daily-briefing.block-doc.mdx')),
+        'Idea/Empty/Present/02-06-2026/nara-daily-briefing.block-doc.mdx'
+    );
 });
 
 test('Track 44 rollout gate: ACR, evidence inspector, and M0-M5 block surfaces are registered', () => {

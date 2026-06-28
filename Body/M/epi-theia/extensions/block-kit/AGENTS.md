@@ -5,9 +5,9 @@ The `@pratibimba/block-kit` Theia extension: native Pratibimba block registry, b
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
 
 ## Ownership
-- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (markdown/MDX persisted block-doc serializer/parser), `verdict-loop.ts` (Human-Gate `blocks.annotate` / `blocks.verdict` session-op helpers and `s4'.psyche.update` renderer patch request), `selection-context.ts` (selection → `s2'.coordinate.context_xray` / `s4'.context.assemble` bridge helper, Psyche context-handle injection, M4-Nara highlight-back port), and `index.ts` public surface.
+- `src/common/` — `registry.ts` (core block specs, no-orphan owner registrations, gateway-method contract entries), `block-doc.ts` (`toDoc`/`fromDoc` plus markdown/MDX persisted block-doc serializer/parser and `Idea/Empty/Present/{day_id}/` path guard), `verdict-loop.ts` (Human-Gate `blocks.annotate` / `blocks.verdict` session-op helpers and `s4'.psyche.update` renderer patch request), `selection-context.ts` (selection → `s2'.coordinate.context_xray` / `s4'.context.assemble` bridge helper, Psyche context-handle injection, M4-Nara highlight-back port), and `index.ts` public surface.
 - `src/browser/` — `BlockHost` React renderer and `BlockHostWidget` Theia widget.
-- `tests/` — `node --test` suites for no-orphan ownership, gateway contract ownership, verdict-loop round-trip, and block-doc round-trips.
+- `tests/` — `node --test` suites for no-orphan ownership, gateway contract ownership, verdict-loop round-trip, block-doc round-trips, and persisted block-doc path residency.
 - Does NOT own: block wire types (owned by `@pratibimba/m-extension-runtime`), gateway runtime ([[S3-SPEC]]), review law ([[M5'-SPEC]] / `agentic-control-room` Human Gate), or domain widgets in the six M' extensions.
 
 ## Local Contracts
