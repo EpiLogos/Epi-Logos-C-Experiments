@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `gateway/` — `epi-s3-gateway`: "S3 gateway runtime primitives for sessions, transcripts, workspace scope, and product gateway parity".
 - `gateway-contract/` — `epi-s3-gateway-contract`: "S3 gateway protocol and method contract for Epi-Logos".
 - `redis-context/` — `epi-s3-redis-context`: "S3 Redis runtime context and RedisVL bridge residency contract".
-- `graphiti-runtime/` — `epi-s3-graphiti-runtime`: "S3 Graphiti runtime adapter contracts and compatibility HTTP client". (Physically at S3; conceptually actualises S5 world-return per the residency-vs-coordinate law.)
+- `graphiti-runtime/` — `epi-s3-graphiti-runtime`: S3 Graphiti runtime adapter contracts, canonical `NativeLibraryClient`, and deprecated HTTP compatibility client. (Physically at S3; conceptually actualises S5 world-return per the residency-vs-coordinate law.)
 - `epi-spacetime-module/` — `epi-spacetime-module`: "SpacetimeDB WASM module for Epi-Logos gateway/client/agent registration".
 - `spacetime-context/` — declarative SpacetimeDB schema artifacts for S3/S3' persistence surfaces not yet housed in the Rust module table declarations.
 - `epi-app/` — deprecated `epi-electron` legacy parity reference only (RETIRING — see Child DOX Index); M' shell authority lives at `Body/M/epi-theia`.
@@ -32,6 +32,6 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `gateway-contract/AGENTS.md` — `epi-s3-gateway-contract`: gateway protocol + method contract (protocol, session, temporal, verifier, release).
 - `epi-spacetime-module/AGENTS.md` — `epi-spacetime-module`: SpacetimeDB WASM module for gateway/client/agent registration.
 - `spacetime-context/AGENTS.md` — declarative SpacetimeDB schema artifacts for S3/S3' runtime persistence surfaces.
-- `graphiti-runtime/AGENTS.md` — `epi-s3-graphiti-runtime`: Graphiti runtime adapter contracts + compat HTTP client (resides S3, actualises S5).
+- `graphiti-runtime/AGENTS.md` — `epi-s3-graphiti-runtime`: Graphiti runtime adapter contracts + native client, with deprecated HTTP compatibility path (resides S3, actualises S5).
 - `redis-context/AGENTS.md` — `epi-s3-redis-context`: Redis runtime context + RedisVL bridge residency contract.
 - `epi-app/AGENTS.md` — deprecated `epi-electron` legacy parity reference. RETIRING — do not build on this; active M' shell authority is `Body/M/epi-theia`.

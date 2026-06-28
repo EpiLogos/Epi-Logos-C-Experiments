@@ -19,7 +19,7 @@ tokio = { version = "1", features = ["process", "sync"] }
 uuid = { version = "1", features = ["v4"] }
 
 # 13.T4: SpaceTimeDB native subscription / HTTP reducer client / fallback policy
-# all live in the S3 spacetime module (gateway/src/spacetime.rs). These deps
+# all live in the S3 spacetime module tree (gateway/src/spacetime/). These deps
 # previously belonged to S0; moving them here decouples the membrane.
 futures-util = "0.3"
 tokio-tungstenite = "0.24"

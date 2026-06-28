@@ -50,7 +50,7 @@ Bimba (S3) / Pratibimba (S3') mapping verified against actual crate layout (`ls 
 | **S3-0 / S3-0'** | Protocol / connection ground | Hello-ok, JSON-RPC frame, METHOD/EVENT advertisement | Live-state ground, connection error law, shared-field root | `gateway/src/protocol.rs`, `gateway-contract/src/lib.rs:115-271, 289-388` |
 | **S3-1 / S3-1'** | Sessions / channels / chat | SessionStore CRUD, chat run registry, channel binding | Identity & presence law, method/reducer definition | `gateway/src/session_store.rs`, `gateway/src/sessions.rs`, `gateway/src/chat.rs`, `gateway/src/transcripts.rs` |
 | **S3-2 / S3-2'** | Redis temporal context | n/a (cross-process, not gateway-internal) | DAY/NOW/Kairos/agent-orientation Redis keys; RedisVL bridge residency | `redis-context/src/lib.rs`, `redis-context/src/redis_cache.rs`, `gateway-contract/src/lib.rs:3343-3389` |
-| **S3-3 / S3-3'** | SpaceTimeDB projection | n/a (no S3 base-surface) | Native WS subscription, HTTP SQL fallback, reducer client, lifecycle envelopes | `gateway/src/spacetime.rs` (1,765 LOC), `epi-spacetime-module/src/lib.rs` (820 LOC), `gateway-contract/src/lib.rs:1853-2333` |
+| **S3-3 / S3-3'** | SpaceTimeDB projection | n/a (no S3 base-surface) | Native WS subscription, HTTP SQL fallback, reducer client, lifecycle envelopes | `gateway/src/spacetime/` module tree, `epi-spacetime-module/src/lib.rs` (820 LOC), `gateway-contract/src/lib.rs:1853-2333` |
 | **S3-4 / S3-4'** | Graphiti runtime / dispatch routing | Dispatch route classifier, anima-invoke law | Graphiti runtime adapter, episodic deposit payload builders, provenance fire | `gateway/src/dispatch.rs` (504 LOC), `graphiti-runtime/src/lib.rs` (788 LOC), `gateway-contract/src/lib.rs:2415-2480, 3513-3546` |
 | **S3-5 / S3-5'** | Runtime state / app bridge / return | Event broadcast, run snapshot cache, subscription registry | Kernel envelope publication, portal events, M' kernel-bridge stream | `gateway/src/runtime.rs` (316 LOC), `gateway-contract/src/lib.rs:2335-2786 (kernel-bridge), 504-537 (kernel-envelope), 299-348 (portal events)` |
 
@@ -108,7 +108,7 @@ Sub-coordinate **S3-1** has the densest test surface: `gateway/tests/session_sto
 
 ### 2.4 S3-3 / S3-3' — SpaceTimeDB Projection (the heaviest sub-coordinate)
 
-**Crates**: `gateway/src/spacetime.rs` (1,765 LOC — the single largest gateway file) + `epi-spacetime-module/src/lib.rs` (820 LOC, the WASM module) + ~480 LOC of contract types in `gateway-contract`.
+**Crates**: `gateway/src/spacetime/` (split SpaceTimeDB gateway bridge module tree) + `epi-spacetime-module/src/lib.rs` (820 LOC, the WASM module) + ~480 LOC of contract types in `gateway-contract`.
 
 #### 2.4.1 Module crate: `epi-spacetime-module/src/lib.rs`
 
@@ -141,23 +141,21 @@ Declares 14 typed tables (one per `SPACETIME_PROJECTION_TABLES` entry) and 13 re
 
 Build target: `wasm32-unknown-unknown`, pinned to `spacetimedb = "=2.2.0"` (`epi-spacetime-module/Cargo.toml:29`), `crate-type = ["cdylib"]`.
 
-#### 2.4.2 Gateway bridge: `gateway/src/spacetime.rs`
+#### 2.4.2 Gateway bridge: `gateway/src/spacetime/`
 
-The 1,765-LOC file extracted from S0 per Tranche 13.T4. Major regions (verified via grep `^// ===` and `^pub fn`):
+The gateway bridge extracted from S0 per Tranche 13.T4 is now split into a `spacetime/` submodule directory. Major regions:
 
 | Region | Lines | Function |
 |---|---|---|
-| Silent-fallback sentinel + policy derivation | `spacetime.rs:42-68` | `silent_fallback_refused()`, `fallback_policy_for_plan(plan)` — the contract-named refuse gate |
-| Connection state + resync tracker | `spacetime.rs:70-189` | `SpacetimeProjectionConnectionState`, `SpacetimeProjectionUpdate`, `SpacetimeProjectionResyncTracker` (mark_connection_lost / mark_reconnecting / mark_degraded_but_subscribable / observe_context) |
-| `SpacetimeRegistration` (the env-config layer) | `spacetime.rs:191-491` | `from_env`, `readiness_value`, `subscription_plan`, `register_gateway`, `register_client`, `register_agent`, `subscribe_projection`, `client()` — the principal entry point S0 invokes |
-| `SpacetimeProjectionSubscription` | `spacetime.rs:403-491` | The live WS subscription wrapper with resync tracker |
-| Standalone readiness functions | `spacetime.rs:493-575` | `readiness_value(port, state_root)` (non-method), `readiness_value_default(state_root)` |
-| `SpacetimePresence` (the HTTP reducer client) | `spacetime.rs:577-1141` | All 13 reducers invoked via HTTP POST against `/v1/database/{db}/call/{reducer}`; SQL polling helpers; presence/agent/session/world-clock helpers |
-| `ReducerRetryPolicy` | `spacetime.rs:1142-1173` | Backoff config: `max_attempts`, `base_delay_ms`, `max_delay_ms` |
-| Projection context decoder | `spacetime.rs:1174-1490` | `projection_context_from_sql_result`, `projection_context_from_subscription_message` — turn raw SpaceTimeDB rows into `Value` consumer payloads |
-| Helper utilities | `spacetime.rs:1491-1648` | `agent_instance_id`, `global_temporal_surface_key`, `redis_global_context_key`, `day_wikilink`, `capability_surface_hash`, `agent_kind`, `kairos_snapshot_id`, `quintessence_hash_blake3`, `identity_handle_blake3`, `kernel_projection_from_rows` |
-| Lifecycle envelope helpers | `spacetime.rs:1649-1762` | `lifecycle_envelope_from_update`, `fallback_active_envelope`, `assert_no_silent_fallback_in_value`, recursive walk |
-| Public readiness re-exports | `spacetime.rs:1763+` | `readiness_value_for_state_root` |
+| Public façade | `spacetime/mod.rs` | Keeps the existing `gateway::spacetime::*` public surface stable through re-exports |
+| Silent-fallback sentinel + policy derivation | `spacetime/fallback.rs` | `silent_fallback_refused()`, `fallback_policy_for_plan(plan)` — the contract-named refuse gate |
+| Connection state + resync tracker | `spacetime/resync.rs` | `SpacetimeProjectionConnectionState`, `SpacetimeProjectionUpdate`, `SpacetimeProjectionResyncTracker` (mark_connection_lost / mark_reconnecting / mark_degraded_but_subscribable / observe_context) |
+| `SpacetimeRegistration` + subscription | `spacetime/registration.rs` | `from_env`, readiness, subscription plan, gateway/client/agent registration, `subscribe_projection`, and `SpacetimeProjectionSubscription` |
+| `SpacetimePresence` (the HTTP reducer client) | `spacetime/presence.rs` | Reducer calls, SQL polling helpers, presence/agent/session/world-clock helpers, and oracle-spread live-state projection types |
+| `ReducerRetryPolicy` | `spacetime/retry.rs` | Backoff config and bounded blocking HTTP helper |
+| Projection context decoder | `spacetime/projection.rs` | `projection_context_from_sql_result`, `projection_context_from_subscription_message`, and `kernel_projection_from_rows` |
+| Helper utilities | `spacetime/identity.rs` | ID/key helpers, env/root hashing helpers, BLAKE3 identity fingerprints, and row/string utilities |
+| Lifecycle envelope helpers | `spacetime/lifecycle.rs` | `lifecycle_envelope_from_update`, `fallback_active_envelope`, `assert_no_silent_fallback_in_value`, recursive walk |
 
 #### 2.4.3 Contract types in `gateway-contract`
 
@@ -350,11 +348,11 @@ gateway-contract/src/
 
 **Blast radius**: HIGH. Every consumer of `epi_s3_gateway_contract::...` keeps working because we keep `lib.rs` as re-export-only (`pub use protocol::*; pub use session::*; ...`). But the file-count delta is significant. Recommend doing this as ONE PR with mechanical splits, no semantic changes.
 
-### 5.2 [HIGH] Split `gateway/src/spacetime.rs` (1,765 LOC) into a submodule directory
+### 5.2 [LANDED] Split `gateway/src/spacetime.rs` into a submodule directory
 
-**Location**: `Body/S/S3/gateway/src/spacetime.rs` (1,765 LOC).
+**Location**: `Body/S/S3/gateway/src/spacetime/`.
 
-**Current shape**: ten distinct concerns in one file (per §2.4.2 above): fallback policy, connection state + resync tracker, `SpacetimeRegistration` (env-config + readiness), `SpacetimeProjectionSubscription` (WS wrapper), `SpacetimePresence` (HTTP reducer client, ~560 LOC by itself), retry policy, projection context decoder, helpers (Blake3 hashes, agent IDs), lifecycle envelope builders, public readiness re-exports.
+**Landed shape**: the former monolith is now a façade plus eight concern modules (per §2.4.2 above): fallback policy, connection state + resync tracker, `SpacetimeRegistration` (env-config + readiness), `SpacetimeProjectionSubscription` (WS wrapper), `SpacetimePresence` (HTTP reducer client and oracle-spread live-state projection), retry policy, projection context decoder, helpers (Blake3 hashes, agent IDs), and lifecycle envelope builders.
 
 **Proposed refactor**:
 ```
@@ -632,7 +630,7 @@ Per the binding rule: substrate is consumed as-is, audited, extended, or refacto
 ### 8.2 Pending (extend / refactor with named scope)
 
 - 🔧 **5.1**: split `gateway-contract/src/lib.rs` into module tree (refactor, NOT rebuild — pure file motion).
-- 🔧 **5.2**: split `gateway/src/spacetime.rs` into `spacetime/` submodule directory (refactor).
+- ✅ **5.2**: split `gateway/src/spacetime.rs` into `spacetime/` submodule directory (refactor landed by 17.T17.7).
 - 🔧 **5.3**: collapse `classify_method` and `METHOD_DISPATCH_PLAN` to one canonical source (refactor).
 - 🔧 **5.4**: extract `SessionRecord` sub-records (refactor with migration discipline).
 - 🔧 **5.5**: consolidate `GatewayRuntimeState` locks (refactor).
@@ -704,7 +702,7 @@ This section names the actions to propose for the cycle-3 ledger harmonisation (
 
 | Tranche | Enrichment |
 |---|---|
-| **03.T2-T6** (S3' SpaceTimeDB / Graphiti / kernel-envelope closure) | Add deliverables: (a) split `gateway/src/spacetime.rs` per §5.2; (b) add `epi-spacetime-module/tests/` per §5.10; (c) extract version constants per §5.11 |
+| **03.T2-T6** (S3' SpaceTimeDB / Graphiti / kernel-envelope closure) | Remaining deliverables: (a) add `epi-spacetime-module/tests/` per §5.10; (b) extract version constants per §5.11 |
 | **13.T2** (S3 route ownership extraction) | Add deliverable: collapse `classify_method` and `METHOD_DISPATCH_PLAN` per §5.3 — single source of truth |
 | **13.T3** (channel/chat runtime extraction) | Confirm scope: the six methods tagged `planned 13.T3 extraction` in `gateway-contract/src/lib.rs:925-979` ARE the extraction surface |
 | **13.T4** (explicit fallback policy) | Already landed; no enrichment needed |
@@ -759,14 +757,14 @@ For grep-friendly cross-reference:
 - `Body/S/S3/gateway/src/subagents.rs:18-39` — `parse_agent_session_key`
 - `Body/S/S3/gateway/src/subagents.rs:41-68` — `validate_spawned_by_patch`
 - `Body/S/S3/gateway/src/subagents.rs:70-117` — `resolve_agent_launch_context`
-- `Body/S/S3/gateway/src/spacetime.rs:42-68` — fallback sentinel + policy
-- `Body/S/S3/gateway/src/spacetime.rs:70-189` — resync tracker
-- `Body/S/S3/gateway/src/spacetime.rs:191-491` — `SpacetimeRegistration`
-- `Body/S/S3/gateway/src/spacetime.rs:577-1141` — `SpacetimePresence`
-- `Body/S/S3/gateway/src/spacetime.rs:1142-1173` — `ReducerRetryPolicy`
-- `Body/S/S3/gateway/src/spacetime.rs:1174-1490` — projection context decoders
-- `Body/S/S3/gateway/src/spacetime.rs:1491-1648` — identity helpers (Blake3 etc.)
-- `Body/S/S3/gateway/src/spacetime.rs:1649-1762` — lifecycle envelopes
+- `Body/S/S3/gateway/src/spacetime/fallback.rs` — fallback sentinel + policy
+- `Body/S/S3/gateway/src/spacetime/resync.rs` — resync tracker
+- `Body/S/S3/gateway/src/spacetime/registration.rs` — `SpacetimeRegistration` + native subscription wrapper
+- `Body/S/S3/gateway/src/spacetime/presence.rs` — `SpacetimePresence` + oracle-spread live-state projection
+- `Body/S/S3/gateway/src/spacetime/retry.rs` — `ReducerRetryPolicy`
+- `Body/S/S3/gateway/src/spacetime/projection.rs` — projection context decoders
+- `Body/S/S3/gateway/src/spacetime/identity.rs` — identity helpers (Blake3 etc.)
+- `Body/S/S3/gateway/src/spacetime/lifecycle.rs` — lifecycle envelopes
 - `Body/S/S3/gateway-contract/src/lib.rs:15-114` — version constants + table lists
 - `Body/S/S3/gateway-contract/src/lib.rs:115-271` — METHOD_NAMES (134 entries)
 - `Body/S/S3/gateway-contract/src/lib.rs:289-388` — portal events + protocol contracts

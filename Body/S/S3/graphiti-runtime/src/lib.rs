@@ -1,12 +1,56 @@
+//! epi-s3-graphiti-runtime — S3 Graphiti runtime adapter contracts and native client.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S5/S5' |
+//! | Residency  | Body/S/S3/graphiti-runtime/src/lib.rs (physically S3, conceptually actualises S5 world-return) |
+//! | Position   | #3 — Gateway runtime adapter / world-return bridge |
+//! | Actualises | [[S3-SPEC]], [[S3-ARCHITECTURE]], and [[S5-SPEC]] Graphiti world-return runtime |
+//!
+//! # Public surface
+//! * `GraphitiClient` / `NativeLibraryClient` — canonical native Graphiti runtime client.
+//! * `HttpCompatibilityClient` — deprecated HTTP compatibility client.
+//! * Episode, Nara relation, provenance, and kernel deposit payload helpers.
+//!
+//! # Does NOT own
+//! * S2 graph storage law, S0 kernel state, or S5 identity promotion authority.
+
 use chrono::Utc;
-use epi_s3_gateway_contract::{
-    ProvenanceEvent, GRAPHITI_BASE_URL, GRAPHITI_INVOCATION_OWNER, GRAPHITI_PORT,
-    GRAPHITI_RUNTIME_AUTHORITY,
-};
 use portal_core::VakAddress;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
+
+#[path = "sidecar-compat/mod.rs"]
+pub mod http_compatibility;
+pub mod native;
+
+#[allow(deprecated)]
+pub use http_compatibility::HttpCompatibilityClient;
+pub use native::{
+    canonicalise_transcript, EntityNode, EpisodeNode, ExtractedEntity, ExtractedEventAnchor,
+    ExtractedRelationship, GraphitiClient, InMemoryGraphitiStore, IngestReceipt, MemoryQueryResult,
+    NativeLibraryClient, NeutralTranscript, RelationshipEdge, SophiaExtraction,
+    SophiaExtractionService, TranscriptMessage,
+};
+
+pub const GRAPHITI_PORT: u16 = 37778;
+pub const GRAPHITI_BASE_URL: &str = "http://127.0.0.1:37778";
+pub const GRAPHITI_RUNTIME_AUTHORITY: &str = "S3 graphiti runtime adapter";
+pub const GRAPHITI_INVOCATION_OWNER: &str = "S5 episodic invocation and arc governance";
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProvenanceEvent {
+    pub event_type: String,
+    pub session_id: String,
+    pub channel_id: String,
+    pub channel_type: String,
+    pub day_id: String,
+    pub vault_now_path: String,
+    pub timestamp: String,
+}
 
 /// Bag of episode attributes flattened into the episode payload.
 ///

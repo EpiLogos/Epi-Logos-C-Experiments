@@ -1,9 +1,14 @@
-"""Graphiti episodic memory HTTP compatibility adapter — port 37778.
+"""Deprecated Graphiti episodic memory HTTP compatibility adapter — port 37778.
 
 Wraps graphiti-core for the Pratibimba namespace in the shared Neo4j database while
 the target architecture moves Graphiti into a native S3 runtime adapter.
 The group_id→database switch is patched out: group_id operates as a property
 filter only. All data stays in the "neo4j" database alongside Bimba and Gnostic.
+
+Deprecated since 2026-06-03 per DR-S3-2 / DR-S5-1. The canonical
+implementation now lives in Body/S/S3/graphiti-runtime as NativeLibraryClient;
+keep this module only as compatibility source for cycle-4 deletion under
+epi_gnostic/_deprecated/.
 """
 from __future__ import annotations
 
@@ -25,6 +30,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 load_dotenv()
+
+__deprecated_since__ = "2026-06-03"
+__deprecated_note__ = (
+    "Graphiti sidecar wrapper deprecated per DR-S3-2; use "
+    "Body/S/S3/graphiti-runtime NativeLibraryClient. Move to "
+    "epi_gnostic/_deprecated/ for cycle-4 deletion."
+)
 
 # ── Lazy graphiti init (avoids import cost at startup) ────────────────────────
 _graphiti: Any = None

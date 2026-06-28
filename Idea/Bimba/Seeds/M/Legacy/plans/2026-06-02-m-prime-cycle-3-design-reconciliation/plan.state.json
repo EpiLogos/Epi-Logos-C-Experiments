@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:43:06.145Z",
+  "updatedAt": "2026-06-28T09:47:58.147Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2685,15 +2685,24 @@
       "worktree": null
     },
     "17.T17.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-28T09:35:10.879Z",
+      "status": "done",
+      "updatedAt": "2026-06-28T09:47:53.091Z",
       "claimedAt": "2026-06-28T09:35:10.879Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T09:47:53.091Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:47:36.096Z",
+          "text": "Split Body/S/S3/gateway/src/spacetime.rs into spacetime/{mod,fallback,resync,registration,presence,retry,projection,identity,lifecycle}.rs; clean overlay cargo check --manifest-path Body/S/S3/gateway/Cargo.toml passed against HEAD deps (1 gateway lib target, existing warnings only); live workspace cargo check blocked by unrelated gateway-contract/portal-core LensOrbiterRelationProjection dirty mismatch, and requested cargo check -p gateway has no matching root package."
+        },
+        {
+          "at": "2026-06-28T09:47:53.091Z",
+          "text": "Split Body/S/S3/gateway/src/spacetime.rs into spacetime/{mod,fallback,resync,registration,presence,retry,projection,identity,lifecycle}.rs plus DOX/S3-ARCHITECTURE updates; clean overlay cargo check --manifest-path Body/S/S3/gateway/Cargo.toml passed against HEAD deps (1 gateway lib target, existing warnings only); live workspace cargo check --manifest-path Body/S/S3/gateway/Cargo.toml is blocked by unrelated gateway-contract/portal-core LensOrbiterRelationProjection dirty mismatch, and requested cargo check -p gateway has no matching root package."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-17-t17-7-spacetime-split",
-      "leaseExpiresAt": "2026-06-28T11:35:10.879Z",
-      "heartbeatAt": "2026-06-28T09:35:10.879Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-06-28T09:47:36.096Z",
       "runId": "20260628T093510Z-17-T17.7",
       "worktree": null
     },
@@ -3022,14 +3031,19 @@
       "worktree": null
     },
     "17.T17.26": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-28T09:35:06.466Z",
+      "status": "done",
+      "updatedAt": "2026-06-28T09:47:17.966Z",
       "claimedAt": "2026-06-28T09:35:06.466Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T09:47:17.966Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:47:17.966Z",
+          "text": "cargo check --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml --no-default-features --features native_library_client passed; cargo test --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml passed 12/12 tests; grep sidecar/FastAPI limited to src/sidecar-compat deprecated path; key paths Body/S/S3/graphiti-runtime/src/{lib.rs,native.rs,sidecar-compat/mod.rs} and Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-17-t17-26-graphiti-native",
-      "leaseExpiresAt": "2026-06-28T11:35:06.466Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-28T09:35:06.466Z",
       "runId": "20260628T093506Z-17-T17.26",
       "worktree": null
@@ -9799,16 +9813,16 @@
       "worktree": null
     },
     "44.T44.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-28T09:47:58.085Z",
+      "claimedAt": "2026-06-28T09:47:58.085Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-44-t44-8-agent-card",
+      "leaseExpiresAt": "2026-06-28T11:47:58.085Z",
+      "heartbeatAt": "2026-06-28T09:47:58.085Z",
+      "runId": "20260628T094758Z-44-T44.8",
       "worktree": null
     },
     "44.T44.9": {
@@ -13629,20 +13643,22 @@
     {
       "runId": "20260628T093506Z-17-T17.26",
       "taskId": "17.T17.26",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-28T09:35:06.466Z",
       "owner": "codex-m-dev-17-t17-26-graphiti-native",
       "leaseExpiresAt": "2026-06-28T11:35:06.466Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-28T09:47:17.966Z"
     },
     {
       "runId": "20260628T093510Z-17-T17.7",
       "taskId": "17.T17.7",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-06-28T09:35:10.879Z",
       "owner": "codex-m-dev-17-t17-7-spacetime-split",
       "leaseExpiresAt": "2026-06-28T11:35:10.879Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-28T09:47:36.096Z"
     },
     {
       "runId": "20260628T093517Z-37-T37.9",
@@ -13653,32 +13669,42 @@
       "leaseExpiresAt": "2026-06-28T11:35:17.894Z",
       "worktree": null,
       "completedAt": "2026-06-28T09:43:06.067Z"
+    },
+    {
+      "runId": "20260628T094758Z-44-T44.8",
+      "taskId": "44.T44.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-28T09:47:58.085Z",
+      "owner": "codex-m-dev-44-t44-8-agent-card",
+      "leaseExpiresAt": "2026-06-28T11:47:58.085Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T09:34:57.565Z",
-    "updatedAt": "2026-06-28T09:34:57.565Z",
+    "createdAt": "2026-06-28T09:47:43.455Z",
+    "updatedAt": "2026-06-28T09:47:43.455Z",
     "taskIds": [
-      "17.T17.26",
       "17.T17.7",
       "17.T17.8",
       "17.T17.9",
-      "37.T37.9"
+      "44.T44.8",
+      "44.T44.9"
     ],
     "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "17.T17.26": "in-session",
       "17.T17.7": "in-session",
       "17.T17.8": "in-session",
       "17.T17.9": "in-session",
-      "37.T37.9": "in-session"
+      "44.T44.8": "in-session",
+      "44.T44.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available."
+      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

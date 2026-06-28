@@ -10,7 +10,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
 - `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.
-- `src/spacetime.rs` — SpaceTimeDB subscription / reducer client + fallback (~78k), plus CCT-21 BeingPattern replay and handle-forward payload helpers.
+- `src/spacetime/` — SpaceTimeDB subscription / reducer client + fallback façade split across `mod`, `fallback`, `resync`, `registration`, `presence`, `retry`, `projection`, `identity`, and `lifecycle`, plus CCT-21 BeingPattern replay and handle-forward payload helpers.
 - `src/temporal_context.rs` — temporal/kairos context plumbing.
 - `src/transcripts.rs`, `src/chat.rs` — transcript append/read + chat surface, including harness-neutral `HarnessTurnEvent` records for [[S3]] session transcript-of-record writes.
 - `src/protocol.rs`, `src/verifier.rs`, `src/bootstrap.rs`, `src/subagents.rs`, `src/workspace.rs` — protocol, verifier, bootstrap, subagent launch, workspace scope.
