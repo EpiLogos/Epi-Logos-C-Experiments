@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 export async function main(api: ExtensionAPI) {
-  const { default: taOntaCompositeEntry } = await import("./extensions/ta-onta/composite-entry.ts");
+  const { default: taOntaCompositeEntry } = await import("../ta-onta/composite-entry.ts");
   await taOntaCompositeEntry(api);
 
   // ── epii skill/tool entitlement activation (defensive, no-op if not epii) ──
