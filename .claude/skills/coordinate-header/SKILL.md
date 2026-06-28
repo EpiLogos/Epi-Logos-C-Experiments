@@ -1,10 +1,11 @@
 ---
 name: coordinate-header
 description: >
-  Author and validate a module's Coordinate Header against the
-  43.2 Unified Coordinate Header schema. Run before committing any
-  new code unit (header, lib.rs, extension barrel, agent skill,
-  CONTRACT.md). Missing fields are ERRORS not warnings.
+  Author and validate a module's Coordinate Header against the unified 43.2
+  convention. The code-side sibling of bimba-vault-validate: where that skill
+  validates /Idea vault frontmatter, this one validates the in-code coordinate
+  block carried by every named code unit. Run before committing any new or
+  moved module surface. Missing fields are ERRORS, not warnings.
 ---
 
 # Coordinate Header: Author & Validate
@@ -16,7 +17,11 @@ All named code units within:
 /Users/admin/Documents/Epi-Logos C Experiments/
 ```
 
-Per the Unified Coordinate Header Convention (`convention:coordinate-header:v1`, `43.T43.2-convention.md`), every `include/*.h`, `src/lib.rs`/`main.rs`, extension barrel (`extensions/*/src/common/index.ts`), agent skill (`skills/*/SKILL.md`), and `CONTRACT.md` SHALL carry a Coordinate Header.
+Per the Unified Coordinate Header Convention (`convention:coordinate-header:v1`,
+`Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/43.T43.2-convention.md`), every `include/*.h`, `src/lib.rs`/`main.rs`, extension barrel (`extensions/*/src/common/index.ts`), agent skill (`skills/*/SKILL.md`), and `CONTRACT.md` SHALL carry a Coordinate Header.
+
+Hen is the durable validator. This skill is the author-time check that keeps
+headers aligned before Hen/CI sees them.
 
 ## Schema (43.2)
 
@@ -83,6 +88,26 @@ Every Coordinate Header must declare at least one genuine exclusion — somethin
 ### 7. Contract Link Validity
 
 If `Contract` is present, verify the linked file exists on disk. Broken contract links are ERRORS.
+
+### 8. Declare-vs-Define
+
+Headers live on declaration surfaces: `.h`, `lib.rs`/`main.rs`, TS barrels, and
+`CONTRACT.md`. `.c`/`.rs` implementation bodies define; they do not absorb
+declarations to save a navigation hop. The 43.4 invariant remains primary:
+every C header stays smaller than its sibling `.c`.
+
+### 9. Boundary Cross-Check
+
+Coordinate Headers must not contradict enforced import boundaries. Check
+`Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json`
+before adding dependencies:
+
+- `rustSStackBoundary` governs Rust S-stack layer imports.
+- `forbiddenImports` / `forbiddenImportsFromLayer` governs M-stack extension
+  boundaries.
+
+If a header claims a layer whose real imports violate this matrix, the import
+matrix wins and the module boundary must be fixed.
 
 ## Rendering Templates
 
@@ -203,6 +228,7 @@ Agent workflow:
 4. If ERROR → fix before writing
 5. Write the file with the header
 6. Post-write: verify the header is present and complete
+7. Cross-check dependency edges against the forbidden-imports matrix
 ```
 
 ### Quick Commands
@@ -219,3 +245,10 @@ for f in include/*.h; do
   grep -q 'Coordinate:' "$f" || echo "MISSING: $f"
 done
 ```
+
+## Relationship to `bimba-vault-validate`
+
+`bimba-vault-validate` validates `c_n_*` frontmatter, residency, wikilinks, and
+artifact roles in `/Idea`. `coordinate-header` applies the same navigability
+discipline to code declarations in `Body/` and agent skill surfaces. Both are
+guardrails; Track 43's structural checks and CI lints remain the primary lever.

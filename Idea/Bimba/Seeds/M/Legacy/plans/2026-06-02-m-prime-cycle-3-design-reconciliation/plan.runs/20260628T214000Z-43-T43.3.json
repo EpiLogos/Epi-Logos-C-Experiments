@@ -1,0 +1,35 @@
+{
+  "runId": "20260628T214000Z-43-T43.3",
+  "taskId": "43.T43.3",
+  "startedAt": "2026-06-28T21:40:00.256Z",
+  "owner": "codex-m-dev-43-t43-3-kbase-header",
+  "leaseExpiresAt": "2026-06-28T23:40:00.256Z",
+  "worktree": null,
+  "task": {
+    "id": "43.T43.3",
+    "trackId": "43",
+    "tranche": "T43.3",
+    "title": "Apply the convention across S/S'→M'",
+    "effort": null,
+    "file": "43-end-of-cycle-3-audit-protocol.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md",
+    "dependsOn": [
+      "43.T43.2"
+    ],
+    "writeScopes": [
+      "Body/S/S5/epi-kbase-core/src/lib.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -138,7 +138,9 @@ function commonIndex(entry) {
   const routePredicate = routeIds.length > 0
     ? `${JSON.stringify(routeIds)}.includes(contract.id)`
     : 'false';
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import {
     CROSS_EXTENSION_ROUTE_CONTRACTS,
     MExtensionContributionContract,
@@ -234,7 +236,9 @@ function widgetTsx(entry) {
     .slice(1)
     .map(p => p[0].toUpperCase() + p.slice(1))
     .join(' ')}`;
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import * as React from 'react';
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
@@ -367,7 +371,9 @@ function frontendModuleTs(entry) {
             () => this.openView({ activate: true, reveal: true })
         );`)
     .join('\n');
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry } from '@theia/core/lib/common';
 import {

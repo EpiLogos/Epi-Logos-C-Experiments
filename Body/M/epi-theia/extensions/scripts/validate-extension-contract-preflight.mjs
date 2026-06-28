@@ -43,6 +43,7 @@ const omnipanelAllowedSharedSiblingImports = new Set([
   "@pratibimba/pratibimba-layouts",
   "@pratibimba/kernel-bridge",
   "@pratibimba/kernel-bridge-readiness",
+  "@pratibimba/block-kit/lib/browser/block-host",
   "@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed",
   "@pratibimba/integrated-composition/common/evidence-shapes"
 ]);

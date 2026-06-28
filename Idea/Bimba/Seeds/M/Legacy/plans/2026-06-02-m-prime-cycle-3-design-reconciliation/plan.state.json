@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T21:37:12.707Z",
+  "updatedAt": "2026-06-28T21:44:36.219Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9548,16 +9548,21 @@
       "worktree": null
     },
     "43.T43.3": {
-      "status": "pending",
-      "updatedAt": "2026-06-28T21:25:10.000Z",
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T21:44:36.132Z",
+      "claimedAt": "2026-06-28T21:40:00.256Z",
+      "completedAt": "2026-06-28T21:44:36.132Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T21:44:36.132Z",
+          "text": "Updated Body/S/S5/epi-kbase-core/src/lib.rs to convention:coordinate-header:v1 seven-field Rust header; GitNexus impact on kbase LOW/0 dependants; cargo check/test --manifest-path Body/S/S5/epi-kbase-core/Cargo.toml passed; cargo check --workspace passed; validate-extension-contract-preflight ok and test suite 10/10 passed."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-43-t43-3-kbase-header",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T21:40:00.256Z",
+      "runId": "20260628T214000Z-43-T43.3",
       "worktree": null
     },
     "43.T43.4": {
@@ -9587,11 +9592,16 @@
       "worktree": null
     },
     "43.T43.6": {
-      "status": "pending",
-      "updatedAt": "2026-06-28T21:25:10.000Z",
+      "status": "done",
+      "updatedAt": "2026-06-28T21:43:22.863Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T21:43:22.863Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T21:43:22.863Z",
+          "text": "Rule block present in AGENTS.md/CLAUDE.md; .claude coordinate-header skill aligned with 43.2 + bimba-vault-validate sibling; generated M-stack barrels and scaffold source link to 07-t0 forbidden-imports contract; node validator ok and validate-extension-contract-preflight.test.mjs 10/10 passed."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -13724,26 +13734,36 @@
       "leaseExpiresAt": "2026-06-28T23:33:41.720Z",
       "worktree": null,
       "completedAt": "2026-06-28T21:37:12.650Z"
+    },
+    {
+      "runId": "20260628T214000Z-43-T43.3",
+      "taskId": "43.T43.3",
+      "status": "done",
+      "startedAt": "2026-06-28T21:40:00.256Z",
+      "owner": "codex-m-dev-43-t43-3-kbase-header",
+      "leaseExpiresAt": "2026-06-28T23:40:00.256Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T21:44:36.132Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T21:33:28.931Z",
-    "updatedAt": "2026-06-28T21:33:28.931Z",
+    "createdAt": "2026-06-28T21:39:41.882Z",
+    "updatedAt": "2026-06-28T21:39:41.882Z",
     "taskIds": [
-      "43.T43.2",
       "43.T43.3",
       "43.T43.4",
-      "43.T43.5"
+      "43.T43.5",
+      "43.T43.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "43.T43.2": "in-session",
       "43.T43.3": "in-session",
       "43.T43.4": "in-session",
-      "43.T43.5": "in-session"
+      "43.T43.5": "in-session",
+      "43.T43.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
