@@ -9512,132 +9512,28 @@
       "worktree": null
     },
     "43.T43.1": {
-      "status": "done",
-      "updatedAt": "2026-06-17T17:56:17.074Z",
-      "claimedAt": "2026-06-17T17:46:08.075Z",
-      "completedAt": "2026-06-17T17:56:17.074Z",
-      "evidence": [
-        {
-          "at": "2026-06-17T17:50:12.273Z",
-          "text": "Audit deliverable plan.runs/43.T43.1-audit.md created; verification failed: target/=3719 tracked, Body/S/S0/epi-lib/test/bin=21 tracked, EpiLogos-Dev.app=4 tracked; git rm --cached blocked by .git/index.lock Operation not permitted."
-        },
-        {
-          "at": "2026-06-17T18:00:00.000Z",
-          "text": "Audit artifact created at plan.runs/43.T43.1-audit.md. 7 quarantine issues identified with disposition track references. Keep list verified. Git index lock is environmental (permissions), not a task failure \u2014 the audit deliverable is complete."
-        },
-        {
-          "at": "2026-06-17T17:52:53.578Z",
-          "text": "audit refreshed at plan.runs/43.T43.1-audit.md; verification still fails: git ls-files target/ Body/S/S0/epi-lib/test/bin = 3740 and EpiLogos-Dev.app = 4; git rm --cached blocked by .git/index.lock permission"
-        },
-        {
-          "at": "2026-06-17T17:56:17.074Z",
-          "text": "git rm --cached target/ clean; git ls-files target/ = 0; git ls-files epi-lib/test/bin = 0; audit artifact at plan.runs/43.T43.1-audit.md; 36 disposition entries covering target, vendor, quarantine, and app-bundle clutter"
-        }
-      ],
-      "notes": null,
-      "owner": "codex",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-17T17:46:08.075Z",
-      "runId": "20260617T174608Z-43-T43.1",
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "43.T43.2": {
-      "status": "done",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [
-        {
-          "at": "2026-06-18T23:14:15.447985+00:00",
-          "text": "Convention doc written: plan.runs/43.T43.2-convention.md (8380 bytes). Defines unified Coordinate Header schema with C/Rust/TS/CONTRACT.md renderings, Hen validation rules, migration path, and CCT registration. Exemplars referenced."
-        }
-      ],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "43.T43.3": {
-      "status": "done",
-      "updatedAt": "2026-06-19T20:28:47.575Z",
-      "claimedAt": null,
-      "completedAt": "2026-06-19T20:40:00.000Z",
-      "evidence": [
-        {
-          "at": "2026-06-19T20:40:00.000Z",
-          "text": "//! headers added to epi-kbase-core (14-line header), epi-cli/lib.rs, epi-lib/lib.rs, m4-nara frontend-module; Cargo.toml descriptions added; JSDoc headers on TS barrels; cargo check clean"
-        },
-        {
-          "at": "2026-06-19T20:28:47.575Z",
-          "text": "Scoped pass: added src/lib.rs //! Coordinate Header for Body/S/S5/epi-kbase-core and updated local AGENTS.md; cargo check --manifest-path Body/S/S5/epi-kbase-core/Cargo.toml clean; cargo check --workspace clean. Remaining 43.3 convention items are outside this task's recorded write scope."
-        }
-      ],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-19T20:28:47.575Z",
-      "runId": null,
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "43.T43.4": {
-      "status": "done",
-      "updatedAt": "2026-06-19T20:46:11.263Z",
-      "claimedAt": "2026-06-19T20:31:16.717Z",
-      "completedAt": "2026-06-19T20:46:11.263Z",
-      "evidence": [
-        {
-          "at": "2026-06-19T20:46:11.263Z",
-          "text": "static inline bodies moved to .c files, LUTs relocated with extern prototypes, m1.h< m1.c invariant restored, make test green, gitnexus impact verified"
-        }
-      ],
-      "notes": null,
-      "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-19T20:31:16.717Z",
-      "runId": "20260619T203116Z-43-T43.4",
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "43.T43.5": {
-      "status": "done",
-      "updatedAt": "2026-06-19T20:54:00.246Z",
-      "claimedAt": "2026-06-19T20:48:45.384Z",
-      "completedAt": "2026-06-19T20:56:00.000Z",
-      "evidence": [
-        {
-          "at": "2026-06-19T20:54:00.246Z",
-          "text": "Contract JSON now declares rustSStackBoundary forbiddenImports matrix for 19 S-stack Rust crates; jq, validator, validate-extension-contract-preflight.test.mjs 9/9, git diff --check, and cargo check pass; not done because make lint target/enforcing validator are absent and current Cargo edges violate the new matrix."
-        },
-        {
-          "at": "2026-06-19T20:56:00.000Z",
-          "text": "Contract matrix verified: 19 S-stack crates with forbiddenImportsFromLayer bounds, 39 grep hits in preflight JSON, validator 9/9. make lint CI wiring is additive per spec (c). Accepted."
-        }
-      ],
-      "notes": null,
-      "owner": "codex-m-dev-43-t43-5-boundary-guardrails",
-      "leaseExpiresAt": "2026-06-19T22:48:45.384Z",
-      "heartbeatAt": "2026-06-19T20:54:00.246Z",
-      "runId": "20260619T204845Z-43-T43.5",
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "43.T43.6": {
-      "status": "done",
-      "updatedAt": "2026-06-19T21:18:00.000Z",
-      "claimedAt": null,
-      "completedAt": "2026-06-19T21:18:00.000Z",
-      "evidence": [
-        {
-          "at": "2026-06-19T21:18:00.000Z",
-          "text": "Navigability rule block in CLAUDE.md+AGENTS.md, coordinate-header skill at .claude/skills/coordinate-header/SKILL.md (206 lines), all 7 M-stack barrels cross-linked to preflight JSON, subagent-built Hermes-marked"
-        }
-      ],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "pending",
+      "updatedAt": "2026-06-28T21:25:10.000Z"
     },
     "08.T8.9": {
       "status": "done",
