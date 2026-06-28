@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/block-host-widget",
+  "plan": "track-44-t44.9-pratibimba-surface-standard",
+  "tranche": "44.T44.9",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "coverage": [
+    "44.9 BlockHostWidget surface standard",
+    "G8 visual-regression baseline"
+  ],
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "blockHostWidget": {
+    "renderer": "@pratibimba/block-kit",
+    "source": "block-kit/src/browser/block-host.tsx",
+    "registrySource": "block-kit/src/common/registry.ts",
+    "foundationPrinciplesHonoured": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "blockTypes": [
+      "review-item",
+      "evidence",
+      "dispatch-genealogy"
+    ],
+    "designContracts": [
+      "ui-foundation-principles.md",
+      "ui-design-tokens.ts",
+      "ui-colour-tokens.ts",
+      "ui-typography.ts",
+      "ui-motion-tokens.ts",
+      "ui-accessibility.ts",
+      "ui-composition-rules.md",
+      "ui-visual-regression-catalog.md"
+    ]
+  }
+}

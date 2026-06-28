@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:56:33.023Z",
+  "updatedAt": "2026-06-28T10:17:49.052Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9831,16 +9831,21 @@
       "worktree": null
     },
     "44.T44.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T10:17:48.997Z",
+      "claimedAt": "2026-06-28T10:09:52.033Z",
+      "completedAt": "2026-06-28T10:17:48.997Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T10:17:48.997Z",
+          "text": "12/12 visual-regression.test.mjs pass incl BlockHostWidget; 8/8 composition preflight pass; git diff --check clean; key paths Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md, Body/M/epi-theia/extensions/contracts/ui-visual-regression-catalog.md, Body/M/epi-theia/extensions/acceptance-harness/fixtures/visual-regression/block-host-widget/"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-44-t44-9-surface-standard",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T10:09:52.033Z",
+      "runId": "20260628T100952Z-44-T44.9",
       "worktree": null
     },
     "44.T44.10": {
@@ -13684,33 +13689,38 @@
       "leaseExpiresAt": "2026-06-28T11:47:58.085Z",
       "worktree": null,
       "completedAt": "2026-06-28T09:56:32.969Z"
+    },
+    {
+      "runId": "20260628T100952Z-44-T44.9",
+      "taskId": "44.T44.9",
+      "status": "done",
+      "startedAt": "2026-06-28T10:09:52.033Z",
+      "owner": "codex-m-dev-44-t44-9-surface-standard",
+      "leaseExpiresAt": "2026-06-28T12:09:52.033Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T10:17:48.997Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T09:47:43.455Z",
-    "updatedAt": "2026-06-28T09:47:43.455Z",
+    "createdAt": "2026-06-28T10:09:26.341Z",
+    "updatedAt": "2026-06-28T10:09:26.341Z",
     "taskIds": [
-      "17.T17.7",
       "17.T17.8",
       "17.T17.9",
-      "44.T44.8",
       "44.T44.9"
     ],
-    "totalWeight": 7,
-    "taxingLevel": "balanced",
+    "totalWeight": 4,
+    "taxingLevel": "light",
     "weightBudget": 8,
     "modeHints": {
-      "17.T17.7": "in-session",
       "17.T17.8": "in-session",
       "17.T17.9": "in-session",
-      "44.T44.8": "in-session",
       "44.T44.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 3 task(s) with total effort weight 4/8 unless fewer tasks were available."
     ]
   }
 }

@@ -165,6 +165,8 @@ Activity-bar-switched. Same slots in both layouts; what populates each slot scal
 
     Extend `acceptance-harness` with a visual-regression suite covering: the lemniscate transition (15.5), the tick choreography across the six matrices (15.9), the integrated 1-2-3 composition (15.4 + 07), the integrated 4-5-0 composition (15.4 + 08). Frame-by-frame baselines stored in `acceptance-harness/fixtures/visual-regression/`.
 
+    Track 44.9 extends this G7/G8 closure through the [[m5-prime-pratibimba-surface-standard]]: `Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md` now carries the Surface-Standard section, and `acceptance-harness/fixtures/visual-regression/block-host-widget/` commits the `BlockHostWidget` baseline family.
+
     Verification: `pnpm --filter @pratibimba/acceptance-harness test:visual` passes; baseline images committed; diff threshold documented.
 
 ## Cycle 2 Substrate Inheritance

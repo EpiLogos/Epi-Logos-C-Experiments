@@ -28,6 +28,7 @@ classed `protected-local-synthetic-fixture`.
 | [`six-matrix-tick-choreography/`](./six-matrix-tick-choreography/manifest.json) | 15.9 profile-tick choreography | 12 tick frames across `M0`..`M5` | kernel-bridge profile tick |
 | [`integrated-1-2-3/`](./integrated-1-2-3/manifest.json) | 15.4 + Track 07 integrated composition | 2 viewport frames | `cosmic-engine.integrated` on `daily-0-1` |
 | [`integrated-4-5-0/`](./integrated-4-5-0/manifest.json) | 15.4 + Track 08 integrated composition | 2 viewport frames | `jiva-siva.integrated` on `ide-deep` |
+| [`block-host-widget/`](./block-host-widget/manifest.json) | 44.9 Surface Standard / G8 | 3 block-host frames | `BlockHostWidget` via `@pratibimba/block-kit` |
 | [`m2-parashakti-manifest.json`](./m2-parashakti-manifest.json) | 23.17 M2 cymatic determinism | 27 `m2-*` frames | `m2-parashakti` suite |
 
 ## Per-set layout
@@ -43,6 +44,7 @@ integrated-<range>/
 
 lemniscate-transition/
 six-matrix-tick-choreography/
+block-host-widget/
   manifest.json                  fixture manifest / choreography metadata
   screenshots/
     baseline.manifest.json       frame list + sha256 + tolerance

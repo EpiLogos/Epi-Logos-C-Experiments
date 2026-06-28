@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/block-host-widget",
+  "plan": "track-44-t44.9-pratibimba-surface-standard",
+  "tranche": "44.T44.9",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "captureRecipe": {
+    "command": "pnpm --filter @pratibimba/acceptance-harness test:visual",
+    "renderer": "scripts/visual-regression-renderer.mjs",
+    "reviewGate": "visual review required when any frame exceeds 0.02 pixelRatio"
+  },
+  "frames": [
+    {
+      "id": "block-host-review",
+      "screenshot": "block-host-review.png",
+      "width": 960,
+      "height": 540,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "blockType": "review-item",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 10368
+      },
+      "sha256": "970902f50ee2095e439b817a6c56d6c51759525df57c3f0efa0d6633c2a372b0"
+    },
+    {
+      "id": "block-host-protected",
+      "screenshot": "block-host-protected.png",
+      "width": 960,
+      "height": 540,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "blockType": "evidence",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 10368
+      },
+      "sha256": "e816e065ac8126c655846c19cce65777dbac6b18b87dd4894c904e786aeaa488"
+    },
+    {
+      "id": "block-host-catalog",
+      "screenshot": "block-host-catalog.png",
+      "width": 960,
+      "height": 540,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "blockType": "dispatch-genealogy",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 10368
+      },
+      "sha256": "822640bae81f7479095189fd13386e031984f6e622fab196de46ff64771fd384"
+    }
+  ]
+}

@@ -376,6 +376,8 @@ Plus a **consumption lint** at `Body/M/epi-theia/extensions/scripts/validate-des
 
     Author `Body/M/epi-theia/extensions/contracts/ui-visual-regression-catalog.md` listing per-fixture: owning extension, what state is captured, update procedure, diff threshold. Per DR-WC-DL-5 default scope: cross-cutting primitives + per-extension flagship fixture (~30 total).
 
+    Track 44.9 binds the [[m5-prime-pratibimba-surface-standard]] into this design-language layer: `Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md` names the Surface-Standard dependency on the token/typography/motion/accessibility/composition contracts, and `acceptance-harness/fixtures/visual-regression/block-host-widget/` is the G8 `BlockHostWidget` baseline family.
+
     **Cross-cutting primitive fixtures (15 fixtures):**
     - `provenance-border-{ready,degraded,blocked}` (3) — each readiness severity band
     - `pending-badge-each-id` (9 fixtures combined as one paged catalog page — covers all 9 readiness ids)

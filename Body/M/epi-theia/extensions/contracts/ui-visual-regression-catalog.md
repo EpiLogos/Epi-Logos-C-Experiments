@@ -108,6 +108,14 @@ These fixtures cover primitives shared across all M-extensions. They are the can
 - **Update procedure:** Regenerate when privacy-class chrome styling changes
 - **Diff threshold:** 0.02
 
+### Track 44.9 Add-On. `block-host-widget`
+- **Owning extension:** `@pratibimba/block-kit`
+- **Capture:** `BlockHostWidget` rendering the Surface Standard in review-item, protected-evidence, and dispatch-catalog states; captures owner extension, edit surface, privacy class, provenance/readiness rail, OmniPanel review membrane, and mixed-block composition.
+- **Baseline path:** `acceptance-harness/fixtures/visual-regression/block-host-widget/screenshots/block-host-*.png`
+- **Update procedure:** Regenerate with `pnpm --filter @pratibimba/acceptance-harness baseline:visual` after approved changes to `block-kit/src/browser/block-host.tsx`, `block-kit/src/common/registry.ts`, or the Surface-Standard section of `ui-foundation-principles.md`.
+- **Diff threshold:** 0.02
+- **Note:** Feeds release gate G8 for Track 44.9 and proves the renderer honours all nine Foundation Principles named in `ui-foundation-principles.md`.
+
 ---
 
 ## Per-Extension Flagship Fixtures (~15)

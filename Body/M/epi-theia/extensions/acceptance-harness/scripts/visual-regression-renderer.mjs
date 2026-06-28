@@ -348,6 +348,48 @@ function drawIntegratedComposition(rgba, width, height, palette, manifest, frame
     }
 }
 
+function drawBlockHost(rgba, width, height, palette, manifest, frame) {
+    const top = 42;
+    const margin = 20;
+    const sidebarWidth = Math.floor(width * 0.18);
+    const hostX = margin + sidebarWidth + 16;
+    const hostWidth = width - hostX - margin;
+    const hostHeight = height - top - 34;
+    const blockTypes = manifest.blockHostWidget?.blockTypes ?? ['review-item', 'evidence', 'dispatch-genealogy'];
+    const activeIndex = Math.max(0, blockTypes.indexOf(frame.blockType ?? blockTypes[0]));
+    const blockHeight = Math.floor((hostHeight - 24) / blockTypes.length);
+
+    rect(rgba, width, height, margin, top, sidebarWidth, hostHeight, [palette.muted[0], palette.muted[1], palette.muted[2], 255]);
+    for (let principle = 0; principle < 9; principle++) {
+        const y = top + 14 + principle * Math.max(12, Math.floor((hostHeight - 28) / 9));
+        const color = principle === activeIndex || principle === 8 ? palette.green : palette.cool;
+        rect(rgba, width, height, margin + 12, y, sidebarWidth - 24, 6, color);
+    }
+
+    rect(rgba, width, height, hostX, top, hostWidth, hostHeight, [palette.cool[0], palette.cool[1], palette.cool[2], 255]);
+    rect(rgba, width, height, hostX + 5, top + 5, hostWidth - 10, hostHeight - 10, palette.background);
+
+    for (let i = 0; i < blockTypes.length; i++) {
+        const y = top + 18 + i * blockHeight;
+        const isActive = i === activeIndex;
+        const accent = isActive ? palette.warm : (i % 2 === 0 ? palette.green : palette.cool);
+        rect(rgba, width, height, hostX + 18, y, hostWidth - 36, blockHeight - 12, accent);
+        rect(rgba, width, height, hostX + 24, y + 6, hostWidth - 48, blockHeight - 24, palette.background);
+        rect(rgba, width, height, hostX + 36, y + 18, Math.floor(hostWidth * 0.26), 6, accent);
+        rect(rgba, width, height, hostX + 36, y + 36, Math.floor(hostWidth * 0.58), 5, palette.muted);
+        rect(rgba, width, height, hostX + 36, y + 50, Math.floor(hostWidth * 0.48), 5, palette.muted);
+        rect(rgba, width, height, hostX + hostWidth - 114, y + 18, 76, 10, i === 1 ? palette.red : palette.green);
+        circle(rgba, width, height, hostX + hostWidth - 38, y + 23, 7, accent);
+    }
+
+    const tabCount = 8;
+    const tabWidth = Math.max(14, Math.floor((hostWidth - 28) / tabCount));
+    for (let tab = 0; tab < tabCount; tab++) {
+        const color = tab === 5 ? palette.warm : palette.muted;
+        rect(rgba, width, height, hostX + 14 + tab * tabWidth, height - 22, tabWidth - 4, 7, color);
+    }
+}
+
 export function renderVisualBaselinePng(manifest, frame) {
     const width = frame.width;
     const height = frame.height;
@@ -358,7 +400,9 @@ export function renderVisualBaselinePng(manifest, frame) {
     rect(rgba, width, height, 0, 0, width, height, palette.background);
     drawHeader(rgba, width, height, palette, seed, frame);
 
-    if (manifest.fixtureId.includes('lemniscate')) {
+    if (manifest.fixtureId.includes('block-host')) {
+        drawBlockHost(rgba, width, height, palette, manifest, frame);
+    } else if (manifest.fixtureId.includes('lemniscate')) {
         drawLemniscate(rgba, width, height, palette, frame);
     } else if (manifest.fixtureId.includes('tick')) {
         drawTickMatrices(rgba, width, height, palette, frame);

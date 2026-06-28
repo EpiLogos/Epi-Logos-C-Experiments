@@ -101,12 +101,12 @@ function commitIntegratedFixture(fixtureDir, coverage) {
     writeJson(screenshotsPath, screenshotManifest);
 }
 
-function commitFrameFixture({ dir, fixtureId, coverage, frameSpecs, extraManifest }) {
+function commitFrameFixture({ dir, fixtureId, coverage, frameSpecs, extraManifest, plan = PLAN, tranche = TRANCHE }) {
     const manifest = {
         schemaVersion: '1.0.0',
         fixtureId,
-        plan: PLAN,
-        tranche: TRANCHE,
+        plan,
+        tranche,
         status: 'baseline-committed',
         privacyClass: PRIVACY_CLASS,
         coverage,
@@ -126,6 +126,7 @@ function commitFrameFixture({ dir, fixtureId, coverage, frameSpecs, extraManifes
             tickIndex: spec.tickIndex,
             matrixIndex: spec.matrixIndex,
             matrixId: spec.matrixId,
+            blockType: spec.blockType,
             tolerance: frameTolerance(spec.width, spec.height)
         };
         const digest = writeFramePng(dir, manifest, frame);
@@ -138,8 +139,8 @@ function commitFrameFixture({ dir, fixtureId, coverage, frameSpecs, extraManifes
     const screenshotManifest = {
         schemaVersion: '1.0.0',
         fixtureId,
-        plan: PLAN,
-        tranche: TRANCHE,
+        plan,
+        tranche,
         status: 'baseline-committed',
         privacyClass: PRIVACY_CLASS,
         diffThreshold: DIFF_THRESHOLD,
@@ -212,6 +213,38 @@ function main() {
             matrixIndex: tick % matrices.length,
             matrixId: matrices[tick % matrices.length]
         }))
+    });
+
+    commitFrameFixture({
+        dir: 'block-host-widget',
+        fixtureId: 'visual-regression/block-host-widget',
+        plan: 'track-44-t44.9-pratibimba-surface-standard',
+        tranche: '44.T44.9',
+        coverage: ['44.9 BlockHostWidget surface standard', 'G8 visual-regression baseline'],
+        extraManifest: {
+            blockHostWidget: {
+                renderer: '@pratibimba/block-kit',
+                source: 'block-kit/src/browser/block-host.tsx',
+                registrySource: 'block-kit/src/common/registry.ts',
+                foundationPrinciplesHonoured: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                blockTypes: ['review-item', 'evidence', 'dispatch-genealogy'],
+                designContracts: [
+                    'ui-foundation-principles.md',
+                    'ui-design-tokens.ts',
+                    'ui-colour-tokens.ts',
+                    'ui-typography.ts',
+                    'ui-motion-tokens.ts',
+                    'ui-accessibility.ts',
+                    'ui-composition-rules.md',
+                    'ui-visual-regression-catalog.md'
+                ]
+            }
+        },
+        frameSpecs: [
+            { id: 'block-host-review', width: 960, height: 540, blockType: 'review-item' },
+            { id: 'block-host-protected', width: 960, height: 540, blockType: 'evidence' },
+            { id: 'block-host-catalog', width: 960, height: 540, blockType: 'dispatch-genealogy' }
+        ]
     });
 }
 

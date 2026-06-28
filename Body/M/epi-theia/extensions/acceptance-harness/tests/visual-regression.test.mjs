@@ -57,6 +57,12 @@ const FIXTURES = [
         dir: 'six-matrix-tick-choreography',
         fixtureId: 'visual-regression/six-matrix-tick-choreography',
         requiredFrames: Array.from({ length: 12 }, (_, tick) => `tick-${String(tick).padStart(2, '0')}`)
+    },
+    {
+        dir: 'block-host-widget',
+        fixtureId: 'visual-regression/block-host-widget',
+        expectedTranche: '44.T44.9',
+        requiredFrames: ['block-host-review', 'block-host-protected', 'block-host-catalog']
     }
 ];
 
@@ -153,11 +159,13 @@ test('15.12 fixture families have committed PNG baselines within the documented 
     for (const fixture of FIXTURES) {
         const manifest = readJson(fixture.dir, 'manifest.json');
         const shots = readJson(fixture.dir, 'screenshots', 'baseline.manifest.json');
+        const expectedTranche = fixture.expectedTranche ?? '15.T15.12';
         assert.equal(manifest.fixtureId, fixture.fixtureId ?? `visual-regression/${fixture.dir}`);
-        assert.equal(manifest.tranche, '15.T15.12');
+        assert.equal(manifest.tranche, expectedTranche);
         assert.equal(manifest.status, 'baseline-committed');
         assert.equal(manifest.privacyClass, 'protected-local-synthetic-fixture');
         assert.equal(manifest.diffThreshold.pixelRatio, T15_DIFF_THRESHOLD);
+        assert.equal(shots.tranche, expectedTranche);
         assert.equal(shots.diffThreshold.pixelRatio, T15_DIFF_THRESHOLD);
 
         const frames = visualFrames(manifest, shots);
@@ -188,6 +196,20 @@ test('15.12 fixture families have committed PNG baselines within the documented 
             );
         }
     }
+});
+
+test('44.9 BlockHostWidget fixture metadata proves Surface-Standard coverage', () => {
+    const manifest = readJson('block-host-widget', 'manifest.json');
+    assert.deepEqual(
+        manifest.coverage,
+        ['44.9 BlockHostWidget surface standard', 'G8 visual-regression baseline']
+    );
+    assert.equal(manifest.blockHostWidget.renderer, '@pratibimba/block-kit');
+    assert.equal(manifest.blockHostWidget.source, 'block-kit/src/browser/block-host.tsx');
+    assert.deepEqual(manifest.blockHostWidget.foundationPrinciplesHonoured, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    assert.deepEqual(manifest.blockHostWidget.blockTypes, ['review-item', 'evidence', 'dispatch-genealogy']);
+    assert.ok(manifest.blockHostWidget.designContracts.includes('ui-design-tokens.ts'));
+    assert.ok(manifest.blockHostWidget.designContracts.includes('ui-visual-regression-catalog.md'));
 });
 
 test('15.12 choreography fixture metadata covers the requested transition and six-matrix ticks', () => {

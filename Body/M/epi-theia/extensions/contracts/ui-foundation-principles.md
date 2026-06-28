@@ -14,6 +14,34 @@ Source plan: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-
 - `omnipanel`: the persistent right-sidebar `/` operator membrane, identical across `cosmic-side`, `personal-side`, and `ide-deep`.
 - `left-sidebar-system`: the activity-bar-switched bimba face shared by `daily-0-1` and `ide-deep`.
 
+## Surface-Standard
+
+The [[m5-prime-pratibimba-surface-standard]] materializes these principles as the app-wide block rendering contract for [[M'-SYSTEM-SPEC]] surfaces. It is the missing grammar between Track 15's foundation principles and Track 30's design-language layer: typed data becomes `Block[]`, the `BlockRegistry` accepts or rejects each block against the live catalog, and `BlockHostWidget` renders the accepted blocks through the owning `BlockSpec` while preserving Theia shell residency.
+
+Binding surface facts:
+
+- **Renderer:** `@pratibimba/block-kit` owns `BlockHostWidget` at `Body/M/epi-theia/extensions/block-kit/src/browser/block-host.tsx`; it renders blocks through registry-owned specs and carries `data-block-type`, `data-owner-extension`, `data-edit-surface`, and `data-privacy-class` attributes as visual-regression anchors.
+- **Catalog:** `Body/M/epi-theia/extensions/block-kit/src/common/registry.ts` owns `CORE_BLOCK_OWNER_REGISTRATIONS`, `BLOCK_KIT_SURFACE_REGISTRATIONS`, and `BLOCK_KIT_GATEWAY_METHOD_CONTRACTS`; no core block type may render without an owner.
+- **Live edge:** live blocks ride the day-now context runtime (`s3'.temporal.context` / `s3'.temporal.subscribe`) into the owning host. The standard does not create a new channel or store.
+- **Persisted edge:** block-docs serialize `Block[]` into `Idea/Empty/Present/{day_id}/` as CTX-structured markdown or MDX instances. They are Pratibimba working artifacts, never canon writes.
+- **Interaction loop:** verdict and annotation affordances route through `blocks.verdict` / `blocks.annotate` to `s4'.psyche.update` under the existing Human Gate; the standard renders governance, it does not redefine governance.
+- **Design-language consumption:** block surfaces consume the binding token and primitive contracts (`ui-design-tokens`, `ui-colour-tokens`, `ui-typography`, `ui-motion-tokens`, `ui-accessibility`, `ui-composition-rules`, `ui-visual-regression-catalog`) and MUST NOT fork local visual grammar.
+- **Visual-regression coverage:** the G8 baseline family `acceptance-harness/fixtures/visual-regression/block-host-widget/` pins `BlockHostWidget` in review, protected-evidence, and catalog/dispatch states with a 0.02 pixel-ratio threshold.
+
+Compliance with the nine principles:
+
+| Principle | Surface-Standard obligation |
+| --- | --- |
+| 1. Coordinate as Primary Navigation | Every block carries `ctx` and MAY carry `coordinate`; navigation/select affordances root in those addresses. |
+| 2. Profile-Tick As Primary Clock | Live block updates arrive through the temporal context runtime and profile generation, not independent widget timers. |
+| 3. Provenance Always Visible | `privacyClass`, `provenance`, owner extension, edit surface, readiness, and verdict state render inline with each block. |
+| 4. Bimba/Pratibimba As UI Dial | The same typed truth renders as a Pratibimba block face without changing coordinate, session, day-now, or profile identity. |
+| 5. OmniPanel As `/` Operator Membrane | Review, evidence, dispatch genealogy, and tool-stream blocks land inside the existing OmniPanel tabs, not modal clones. |
+| 6. Composition Over Juxtaposition | One `BlockHostWidget` composes heterogeneous blocks into a coherent surface instead of adjacent standalone panes. |
+| 7. Activity-Bar Discipline | The renderer is content inside existing Theia slots; it adds no competing left/right sidebar ownership. |
+| 8. Theia Conventions | The standard uses `ReactWidget`, contribution points, shell layout restoration, commands, and package manifests already owned by Theia. |
+| 9. Day-Now As Ambient Thread | Day-now is carried as ambient live/persisted context; no block or widget claims day-now as primary real estate. |
+
 ## Principle 1: Coordinate As Primary Navigation
 
 Every UI surface MUST root navigation, selection, deep links, evidence anchors, and widget state in the active coordinate. The active coordinate is global UI state. A surface MUST NOT introduce an alternate primary navigation model that bypasses or obscures coordinate identity.
