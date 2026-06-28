@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T21:30:49.163Z",
+  "updatedAt": "2026-06-28T21:37:12.707Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9530,16 +9530,21 @@
       "worktree": null
     },
     "43.T43.2": {
-      "status": "pending",
-      "updatedAt": "2026-06-28T21:25:10.000Z",
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T21:37:12.650Z",
+      "claimedAt": "2026-06-28T21:33:41.720Z",
+      "completedAt": "2026-06-28T21:37:12.650Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T21:37:12.650Z",
+          "text": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/43.T43.2-convention.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-43-t43-2-coordinate-header-convention",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T21:33:41.720Z",
+      "runId": "20260628T213341Z-43-T43.2",
       "worktree": null
     },
     "43.T43.3": {
@@ -13709,26 +13714,36 @@
       "leaseExpiresAt": "2026-06-28T23:28:06.712Z",
       "worktree": null,
       "completedAt": "2026-06-28T21:30:49.086Z"
+    },
+    {
+      "runId": "20260628T213341Z-43-T43.2",
+      "taskId": "43.T43.2",
+      "status": "done",
+      "startedAt": "2026-06-28T21:33:41.720Z",
+      "owner": "codex-m-dev-43-t43-2-coordinate-header-convention",
+      "leaseExpiresAt": "2026-06-28T23:33:41.720Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T21:37:12.650Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T21:27:43.679Z",
-    "updatedAt": "2026-06-28T21:27:43.679Z",
+    "createdAt": "2026-06-28T21:33:28.931Z",
+    "updatedAt": "2026-06-28T21:33:28.931Z",
     "taskIds": [
-      "43.T43.1",
       "43.T43.2",
       "43.T43.3",
-      "43.T43.4"
+      "43.T43.4",
+      "43.T43.5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "43.T43.1": "in-session",
       "43.T43.2": "in-session",
       "43.T43.3": "in-session",
-      "43.T43.4": "in-session"
+      "43.T43.4": "in-session",
+      "43.T43.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
