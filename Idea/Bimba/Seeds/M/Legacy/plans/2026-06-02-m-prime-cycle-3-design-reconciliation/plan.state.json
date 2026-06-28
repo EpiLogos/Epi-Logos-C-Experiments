@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T09:19:54.065Z",
+  "updatedAt": "2026-06-28T09:24:17.864Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8506,13 +8506,18 @@
       "worktree": null
     },
     "37.T37.8": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-28T09:24:04.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T09:24:04.000Z",
+          "text": "Hermes-direct verification. LensCodonBinaryProjection at M3TranscriptionEngine.tsx:12-60 matches spec: lensId, segment[], perDegree[{degree360, exactDegree720, codonUpper, codonLower, codonClass, charges{pp,nn,np,pn}, quaternion[4], elementCanonical, hexagramId, lineChangeOperator, tick12}]. Kernel CodonRotationProjection feeds MathemeHarmonicProfile. Bridge via m_canonical.h. Complete transcription chain ratified."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -13598,28 +13603,28 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T09:19:03.374Z",
-    "updatedAt": "2026-06-28T09:19:03.374Z",
+    "createdAt": "2026-06-28T09:24:17.467Z",
+    "updatedAt": "2026-06-28T09:24:17.467Z",
     "taskIds": [
-      "44.T44.7",
+      "17.T17.6",
       "17.T17.25",
       "17.T17.26",
-      "17.T17.6",
-      "17.T17.7"
+      "17.T17.7",
+      "17.T17.8"
     ],
-    "totalWeight": 8,
+    "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "44.T44.7": "in-session",
+      "17.T17.6": "in-session",
       "17.T17.25": "in-session",
       "17.T17.26": "in-session",
-      "17.T17.6": "in-session",
-      "17.T17.7": "in-session"
+      "17.T17.7": "in-session",
+      "17.T17.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 7/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
