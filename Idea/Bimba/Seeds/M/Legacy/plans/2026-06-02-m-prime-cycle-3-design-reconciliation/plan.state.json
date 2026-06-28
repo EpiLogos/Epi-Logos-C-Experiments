@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T21:44:36.219Z",
+  "updatedAt": "2026-06-28T22:00:41.332Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9566,16 +9566,21 @@
       "worktree": null
     },
     "43.T43.4": {
-      "status": "pending",
-      "updatedAt": "2026-06-28T21:25:10.000Z",
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T22:00:41.278Z",
+      "claimedAt": "2026-06-28T21:46:32.109Z",
+      "completedAt": "2026-06-28T22:00:41.278Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T22:00:41.278Z",
+          "text": "Moved algorithmic C header bodies/static storage from m0.h/m4.h/m5.h into sibling .c files; make test passed all suites; cargo test --manifest-path Body/S/S0/epi-lib/Cargo.toml passed 9/9; include/m*.h line-count invariant passed."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T21:46:32.109Z",
+      "runId": "20260628T214632Z-43-T43.4",
       "worktree": null
     },
     "43.T43.5": {
@@ -13744,30 +13749,36 @@
       "leaseExpiresAt": "2026-06-28T23:40:00.256Z",
       "worktree": null,
       "completedAt": "2026-06-28T21:44:36.132Z"
+    },
+    {
+      "runId": "20260628T214632Z-43-T43.4",
+      "taskId": "43.T43.4",
+      "status": "done",
+      "startedAt": "2026-06-28T21:46:32.109Z",
+      "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
+      "leaseExpiresAt": "2026-06-28T23:46:32.109Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T22:00:41.278Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T21:39:41.882Z",
-    "updatedAt": "2026-06-28T21:39:41.882Z",
+    "createdAt": "2026-06-28T21:46:12.150Z",
+    "updatedAt": "2026-06-28T21:46:12.150Z",
     "taskIds": [
-      "43.T43.3",
       "43.T43.4",
-      "43.T43.5",
-      "43.T43.6"
+      "43.T43.5"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 4,
+    "taxingLevel": "light",
     "weightBudget": 8,
     "modeHints": {
-      "43.T43.3": "in-session",
       "43.T43.4": "in-session",
-      "43.T43.5": "in-session",
-      "43.T43.6": "in-session"
+      "43.T43.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 2 task(s) with total effort weight 4/8 unless fewer tasks were available."
     ]
   }
 }

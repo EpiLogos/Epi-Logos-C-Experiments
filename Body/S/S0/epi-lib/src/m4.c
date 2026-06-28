@@ -245,6 +245,8 @@ const M4_Container_Entry M4_CONTAINER_LUT[M4_CONTAINER_COUNT] = {
     { 2, 6, {0, 0} },      /* Vessel: group (up to 6) */
 };
 
+const uint16_t M4_EMPTY_PLANET_DEGREES[M2_PLANET_COUNT] = {0};
+
 
 /* ===================================================================
  * _Static_asserts for size claims
@@ -254,6 +256,139 @@ _Static_assert(sizeof(M4_Voice_Config) == 8,
     "M4_Voice_Config must be 8 bytes");
 _Static_assert(sizeof(M4_Container_Entry) == 4,
     "M4_Container_Entry must be 4 bytes");
+
+
+uint8_t m4_identity_layer_count(const M4_Identity_Matrix* id) {
+    uint8_t count = 0;
+    uint8_t mask = id->layer_presence;
+    while (mask) {
+        count += (uint8_t)(mask & 1u);
+        mask >>= 1u;
+    }
+    return count;
+}
+
+KairosFrame m4_kairos_frame_init(KairosFrameKind kind, uint64_t captured_at_ns) {
+    KairosFrame frame;
+    frame.kind = kind;
+    frame.captured_at_ns = captured_at_ns;
+    frame.decays_at_ns = 0;
+    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) {
+        frame.planet_degrees[i] = 0;
+    }
+    frame.pp = 0.0f;
+    frame.mm = 0.0f;
+    frame.mp = 0.0f;
+    frame.pn = 0.0f;
+    frame._pad = 0;
+    return frame;
+}
+
+void m4_kairos_frame_set_planets(KairosFrame* frame,
+                                 const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                 uint16_t planet_valid) {
+    (void)planet_valid;
+    if (frame == NULL || planet_degrees == NULL) return;
+    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) {
+        frame->planet_degrees[i] = planet_degrees[i] % 720u;
+    }
+}
+
+M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
+    M4_Temporal_Now now;
+    uint64_t captured_at_ns = m4_epoch_to_ns(epoch);
+    now.clock = m0_read_cosmic_clock(degree);
+    now.degree = degree;
+    now.chronos_epoch = epoch;
+    now.natal = m4_kairos_frame_init(KAIROS_FRAME_NATAL, captured_at_ns);
+    now.realtime = m4_kairos_frame_init(KAIROS_FRAME_REALTIME, captured_at_ns);
+    now.kairotic = m4_kairos_frame_init(KAIROS_FRAME_KAIROTIC, captured_at_ns);
+    now.kairotic_active = 0;
+    now.planet_valid = 0x00;
+    return now;
+}
+
+void m4_temporal_now_set_planets(M4_Temporal_Now* now,
+                                 const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                 uint16_t planet_valid) {
+    if (now == NULL || planet_degrees == NULL) return;
+    m4_kairos_frame_set_planets(&now->realtime, planet_degrees, planet_valid);
+    now->planet_valid = (uint16_t)(planet_valid & M4_PLANET_VALID_ALL);
+}
+
+const uint16_t* m4_planet_degrees_live(const M4_Temporal_Now* now) {
+    if (now == NULL) return M4_EMPTY_PLANET_DEGREES;
+    if (now->kairotic_active) return now->kairotic.planet_degrees;
+    return now->realtime.planet_degrees;
+}
+
+const uint16_t* m4_planet_degrees_live_at(M4_Temporal_Now* now, uint64_t now_ns) {
+    if (now == NULL) return M4_EMPTY_PLANET_DEGREES;
+    if (now->kairotic_active && now->kairotic.decays_at_ns != 0 && now_ns > now->kairotic.decays_at_ns) {
+        now->kairotic_active = 0;
+    }
+    return m4_planet_degrees_live(now);
+}
+
+M4_Temporal_Now m4_snapshot_now_with_planets(uint16_t degree,
+                                             uint32_t epoch,
+                                             const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                             uint16_t planet_valid) {
+    M4_Temporal_Now now = m4_snapshot_now(degree, epoch);
+    m4_temporal_now_set_planets(&now, planet_degrees, planet_valid);
+    return now;
+}
+
+void m4_advance_transformation(M4_Cycle_Engine* engine) {
+    engine->current_stroke = (uint8_t)((engine->current_stroke + 1) % 24);
+    if (engine->current_stroke % 2 == 0) {
+        engine->current_storey = (uint8_t)((engine->current_storey + 1) % 12);
+        if (engine->current_storey % 4 == 0) {
+            engine->current_decan = (uint8_t)((engine->current_decan + 1) % 3);
+        }
+    }
+}
+
+M4_Safety_Governor m4_safety_check(
+    const M4_Cycle_Engine* engine,
+    const M4_Sympathetic_Medicine* med,
+    const M4_Sacred_Random* rng)
+{
+    M4_Safety_Governor gov = {STALL_NONE, 0, 10, 0};
+    if (med->contraindicated) {
+        gov.type = STALL_CONTRAINDICATED;
+        gov.severity = 255;
+        return gov;
+    }
+    if (!m4_transformation_safe(engine)) {
+        gov.type = STALL_AROUSAL;
+        gov.severity = (uint8_t)(engine->arousal_level - engine->safety_threshold);
+        return gov;
+    }
+    if (rng && !rng->consent_granted) {
+        gov.type = STALL_CONSENT;
+        gov.severity = 128;
+        return gov;
+    }
+    return gov;
+}
+
+bool m4_alchemy_can_advance(M4_Alchemical_Stage current,
+                            M4_Alchemical_Stage target) {
+    return target == (M4_Alchemical_Stage)(current + 1) || target == ALCH_PRIMA_MATERIA;
+}
+
+void m4_mobius_return(M4_Epii_Integration* epii,
+                      M4_Identity_Matrix* identity) {
+    uint64_t tmp;
+    memcpy(&tmp, identity->quintessence_hash, 8);
+    tmp ^= epii->wisdom_delta;
+    memcpy(identity->quintessence_hash, &tmp, 8);
+    identity->computed = false;
+    epii->return_ready = false;
+    epii->logos.position = 0;
+    epii->logos.cycle_count++;
+}
 
 
 /* ===================================================================

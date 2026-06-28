@@ -13,6 +13,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+const Quaternion PURNATA_QUATERNION_SEED = {
+    .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f
+};
+
 /* =============================================================================
  * FR 2.0.0: VIMARSA OPERATOR TABLE — 7 entries
  *
@@ -85,6 +89,29 @@ const Virtue_Entry VIRTUE_LUT[9] = {
       .name = "Reality - Completion Virtue",
       .symbol = "5R = @ = (##)" },
 };
+
+Unified_Clock_State m0_read_cosmic_clock(uint16_t degree_0_to_719) {
+    Unified_Clock_State s;
+    s.is_implicate_phase = hopf_fiber(degree_0_to_719);
+    uint16_t base = hopf_project(degree_0_to_719);
+    s.tick12 = hopf_tick12(degree_0_to_719);
+    uint8_t base_decan = (uint8_t)(base / 10u);
+    s.m2_decan_phase = s.is_implicate_phase ? (uint8_t)(base_decan + 36u) : base_decan;
+    s.m3_hexagram_id = (uint8_t)((base * 64u) / FULL_CYCLE_DEG);
+    return s;
+}
+
+Unified_Logos_State m0_compute_logos_state(uint8_t tick_0_to_11) {
+    Unified_Logos_State s;
+    s.pipeline_tick = tick_0_to_11;
+    s.is_implicate  = (tick_0_to_11 >= 6u);
+    s.current_stage = (LogosStage)(s.is_implicate
+                          ? (11u - tick_0_to_11)
+                          : tick_0_to_11);
+    s.active_divine_act = (Divine_Act)s.current_stage;
+    s.active_r_factor   = (uint8_t)s.current_stage;
+    return s;
+}
 
 M0_VerifierVerdict m0_check_tune_structural_invariant_compliance(
     const M0_TuneProposal* proposal

@@ -219,12 +219,7 @@ typedef struct {
     bool               write_back_ready;
 } M5_Etymology_FSM;
 
-static inline void m5_etymology_advance(M5_Etymology_FSM* fsm) {
-    if (fsm->stage < ETYM_STAGE_MOBIUS_WRITEBACK) {
-        fsm->stage = (M5_Etymology_Stage)(fsm->stage + 1);
-    }
-    fsm->write_back_ready = (fsm->stage == ETYM_STAGE_MOBIUS_WRITEBACK);
-}
+void m5_etymology_advance(M5_Etymology_FSM* fsm);
 
 
 /* ===================================================================
@@ -248,23 +243,10 @@ typedef struct {
     bool     resolved;
 } M5_Paradox_Hold;
 
-static inline void m5_hold_paradox(M5_Paradox_Hold* ph, uint64_t thesis,
-                                    uint64_t antithesis, uint8_t current_tick) {
-    ph->thesis_mask     = thesis;
-    ph->antithesis_mask = antithesis;
-    ph->hold_since_tick = current_tick;
-    ph->resolution_stage = ANALOGOS;
-    ph->holding         = true;
-    ph->resolved        = false;
-}
+void m5_hold_paradox(M5_Paradox_Hold* ph, uint64_t thesis,
+                     uint64_t antithesis, uint8_t current_tick);
 
-static inline uint64_t m5_resolve_paradox(M5_Paradox_Hold* ph) {
-    if (!ph->holding) return 0;
-    uint64_t synthesis = ph->thesis_mask ^ ph->antithesis_mask;
-    ph->resolved = (synthesis != 0);
-    ph->holding  = !ph->resolved;
-    return synthesis;
-}
+uint64_t m5_resolve_paradox(M5_Paradox_Hold* ph);
 
 
 /* ===================================================================
@@ -342,20 +324,11 @@ typedef struct {
     void*                            user_data;
 } M5_Mobius_Return_Target;
 
-static inline M5_Mobius_Return_Target m5_mobius_return_target(
+M5_Mobius_Return_Target m5_mobius_return_target(
     M4_Epii_Integration* epii,
     M4_Identity_Matrix* identity,
     M5_ContemplateSessionCloseFn contemplate_session_close,
-    void* user_data) {
-    M5_Mobius_Return_Target target;
-    target.magic = M5_MOBIUS_RETURN_TARGET_MAGIC;
-    target.size = (uint32_t)sizeof(M5_Mobius_Return_Target);
-    target.epii = epii;
-    target.identity = identity;
-    target.contemplate_session_close = contemplate_session_close;
-    target.user_data = user_data;
-    return target;
-}
+    void* user_data);
 
 
 /* ===================================================================

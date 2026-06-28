@@ -115,9 +115,7 @@ _Static_assert(CONCRESCENCE_STEPS == RING_SIZE,
 
 /* The Quaternionic Ground — Purnata (#0-3-7)
  * q = 0 + 0i + 0j + 0k — all rotation latent, none manifest. */
-static const Quaternion PURNATA_QUATERNION_SEED = {
-    .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f
-};
+extern const Quaternion PURNATA_QUATERNION_SEED;
 
 
 /* ===================================================================
@@ -588,16 +586,7 @@ typedef struct {
     bool     is_implicate_phase;
 } Unified_Clock_State;
 
-static inline Unified_Clock_State m0_read_cosmic_clock(uint16_t degree_0_to_719) {
-    Unified_Clock_State s;
-    s.is_implicate_phase = hopf_fiber(degree_0_to_719);
-    uint16_t base = hopf_project(degree_0_to_719);
-    s.tick12 = hopf_tick12(degree_0_to_719);
-    uint8_t base_decan = (uint8_t)(base / 10u);  /* 10° per decan — decan-specific */
-    s.m2_decan_phase = s.is_implicate_phase ? (uint8_t)(base_decan + 36u) : base_decan;
-    s.m3_hexagram_id = (uint8_t)((base * 64u) / FULL_CYCLE_DEG);
-    return s;
-}
+Unified_Clock_State m0_read_cosmic_clock(uint16_t degree_0_to_719);
 
 typedef uint8_t LogosStage;
 
@@ -609,17 +598,7 @@ typedef struct {
     uint8_t    active_r_factor;
 } Unified_Logos_State;
 
-static inline Unified_Logos_State m0_compute_logos_state(uint8_t tick_0_to_11) {
-    Unified_Logos_State s;
-    s.pipeline_tick = tick_0_to_11;
-    s.is_implicate  = (tick_0_to_11 >= 6u);
-    s.current_stage = (LogosStage)(s.is_implicate
-                          ? (11u - tick_0_to_11)
-                          : tick_0_to_11);
-    s.active_divine_act = (Divine_Act)s.current_stage;
-    s.active_r_factor   = (uint8_t)s.current_stage;
-    return s;
-}
+Unified_Logos_State m0_compute_logos_state(uint8_t tick_0_to_11);
 
 
 /* ===================================================================
