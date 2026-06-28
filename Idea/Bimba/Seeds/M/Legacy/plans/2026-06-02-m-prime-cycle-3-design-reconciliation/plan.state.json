@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-28T22:00:41.332Z",
+  "updatedAt": "2026-06-28T22:11:15.067Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -9584,16 +9584,21 @@
       "worktree": null
     },
     "43.T43.5": {
-      "status": "pending",
-      "updatedAt": "2026-06-28T21:25:10.000Z",
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-28T22:11:15.011Z",
+      "claimedAt": "2026-06-28T22:02:56.466Z",
+      "completedAt": "2026-06-28T22:11:15.011Z",
+      "evidence": [
+        {
+          "at": "2026-06-28T22:11:15.011Z",
+          "text": "Added Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs; broken temp fixture fails forbidden-import, missing Cargo description, missing 43.2 header, and C header>sibling .c; real repo passes via node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs with current migration gaps explicitly allowlisted; node --check and git diff --check clean."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-43-t43-5-boundary-guardrails",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-28T22:02:56.466Z",
+      "runId": "20260628T220256Z-43-T43.5",
       "worktree": null
     },
     "43.T43.6": {
@@ -13759,26 +13764,34 @@
       "leaseExpiresAt": "2026-06-28T23:46:32.109Z",
       "worktree": null,
       "completedAt": "2026-06-28T22:00:41.278Z"
+    },
+    {
+      "runId": "20260628T220256Z-43-T43.5",
+      "taskId": "43.T43.5",
+      "status": "done",
+      "startedAt": "2026-06-28T22:02:56.466Z",
+      "owner": "codex-m-dev-43-t43-5-boundary-guardrails",
+      "leaseExpiresAt": "2026-06-29T00:02:56.466Z",
+      "worktree": null,
+      "completedAt": "2026-06-28T22:11:15.011Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-28T21:46:12.150Z",
-    "updatedAt": "2026-06-28T21:46:12.150Z",
+    "createdAt": "2026-06-28T22:02:42.405Z",
+    "updatedAt": "2026-06-28T22:02:42.405Z",
     "taskIds": [
-      "43.T43.4",
       "43.T43.5"
     ],
-    "totalWeight": 4,
+    "totalWeight": 2,
     "taxingLevel": "light",
     "weightBudget": 8,
     "modeHints": {
-      "43.T43.4": "in-session",
       "43.T43.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 2 task(s) with total effort weight 4/8 unless fewer tasks were available."
+      "Capped the route at 1 task(s) with total effort weight 2/8 unless fewer tasks were available."
     ]
   }
 }
