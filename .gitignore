@@ -41,6 +41,8 @@ Body/**/dist/
 Body/**/coverage/
 Body/**/test-results/
 Body/**/playwright-report/
+# Compiled TS output — block-kit tracked its lib/ by accident; it is tsc build output.
+Body/M/epi-theia/extensions/block-kit/lib/
 
 # macOS
 .DS_Store
@@ -102,9 +104,14 @@ epi-dev-vault/state/
 epi-dev-vault/raw/
 epi-dev-vault/inbox/
 epi-dev-vault/agent/
-# User requested broad ignores
-.codex/
-.claude/
+# User requested broad ignores — EXCEPT the verification trust kernel and the
+# builder protocol files: the gate that adjudicates every done claim must be
+# version-controlled, or its own edits are invisible (Track 00 hardening 2026-07-06).
+.codex/*
+!.codex/scripts/
+!.codex/m-dev-subagent-brief.md
+.claude/*
+!.claude/commands/
 epi-dev-vault/
 /vendor/
 agents.md
