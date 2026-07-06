@@ -6,6 +6,8 @@ pub mod context_frame_web;
 pub mod diatonic;
 pub mod elemental;
 pub mod harmonic_grammar;
+pub mod modal_resonator;
+pub mod phase_space;
 pub mod planetary_chakral;
 pub mod pointer_anchor;
 pub mod resonance72;
@@ -20,6 +22,16 @@ pub use context_frame_web::MathemeContextFrameWebProjection;
 pub use diatonic::MathemeDiatonicContext;
 pub use elemental::MathemeElementalProjection;
 pub use harmonic_grammar::{MathemeHarmonicFamilyProjection, MathemeHarmonicGrammarProjection};
+pub use modal_resonator::{
+    BellPartialRole, ModalChromaticSlot, ModalCymaticMaterialProfile, ModalDiatonicRole,
+    ModalLensMode, ModalM2Address72, ModalNodalAnchor, ModalOctetCarrier, ModalResonatorProfile,
+    ModalSilentAnchor, BELL_PARTIAL_ROLES, NODAL_ANCHOR_ROLES,
+};
+pub use phase_space::{
+    raw_clock_degree_entry, ClockDegreeNode, ClockLensDivision, FibonacciGroundPhase,
+    LensSegmentPhase, PhasePlane, PhaseSpaceAddress, PhaseValence, RawClockDegreeEntry,
+    CLOCK_LENSES_16,
+};
 pub use planetary_chakral::MathemePlanetaryChakralProjection;
 pub use pointer_anchor::MathemePointerAnchorProjection;
 pub use resonance72::MathemeResonance72Projection;

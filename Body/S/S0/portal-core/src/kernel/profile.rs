@@ -21,6 +21,104 @@ use super::{
 
 pub const CURRENT_PROFILE_SCHEMA_VERSION: u16 = 1;
 
+/// Handle-only quintessence identity summary (quintessence-hash architecture
+/// + DR-M4-3 opaque-handle law). What crosses the bus: the natal clock
+/// address (`(natal_hash[0] | natal_hash[1] << 8) % 360` — hash-derived,
+/// never the natal chart), the quintessence weight (1 − variance of the five
+/// identity-layer elemental profiles), the enrichment-arc honesty
+/// (`layer_count`/`partial` — only a full 5-layer hash reaches weight ≥ 0.5),
+/// an 8-hex-char hash PREVIEW (the handle, never the 32-byte hash), and the
+/// quintessence quaternion — the elemental distillation of identity in the
+/// kernel's `[w=Earth, x=Fire, y=Water, z=Air]` axis law (clock_state
+/// `update_quintessence_quaternion`), which is the public-safe
+/// elemental-balance class per M4' privacy law. The natal 10-planet
+/// distribution is NOT here by design: it renders from a local read on the
+/// personal pole and never crosses this bus.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QuintessenceProjection {
+    /// The entity's Bimba address on the cosmic clock (0-359).
+    pub natal_degree: u16,
+    /// tick12 arc of the natal degree (0-11).
+    pub natal_tick12: u8,
+    /// 1.0 − variance across the present identity-layer profiles.
+    pub quintessence_weight: f32,
+    /// How many of the 5 identity layers are present (0-5).
+    pub layer_count: u8,
+    /// True while layer_count < 5 — the hash is still enriching.
+    pub partial: bool,
+    /// First 4 bytes of the BLAKE3 identity hash as 8 hex chars.
+    pub hash_preview: String,
+    /// Unit quaternion `[w=Earth, x=Fire, y=Water, z=Air]` — the stable
+    /// ground reference the torus reads against `q_cosmic`.
+    pub quintessence_quaternion: [f32; 4],
+    pub authority: String,
+}
+
+/// Per-planet live-sky projection — the cosmic-clock `Clock_Planet_State`
+/// (§5.2/§5.3) made profile-native. Every field is kernel data: the decan
+/// ruler comes from the Chaldean `DECAN_RULERS_36` table, the element
+/// identity and Keplerian velocity mirror `M2_PLANET_LUT` — renderers give
+/// planets bodies from these fields and never carry their own tables.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LivePlanetProjection {
+    /// Canonical mod-10 id: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4,
+    /// Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9. Earth is the
+    /// observer-centre and never appears here.
+    pub planet_id: u8,
+    /// Ecliptic longitude 0.0-360.0, fractional precision preserved
+    /// (cosmic-clock §13.4.4 percentile law).
+    pub degree: f32,
+    pub retrograde: bool,
+    /// Decan the planet transits: `floor(degree / 10)`, 0-35.
+    pub decan36: u8,
+    /// Chaldean ruler of that decan (kernel table, never renderer-derived).
+    pub decan_ruler: u8,
+    /// True when the transiting planet stands in a decan it rules — the
+    /// resonance event of cosmic-clock §5.2 ("at home in its own domain").
+    /// The engine pulses the marker; it never recomputes the rulership.
+    pub is_resonance: bool,
+    /// Element_Id mirroring `ELEM_SIG_GET_ELEMENT(M2_PLANET_LUT[i].elem_sig)`
+    /// — the planet's visual identity source (colour-binary is renderer
+    /// choreography OVER this id, per M2-ARCHITECTURE §9.3).
+    pub element_id: u8,
+    /// `M2_PLANET_LUT[i].keplerian_vel` (arcsec/day × 10) — the kernel datum
+    /// renderers may scale body size/weight from.
+    pub keplerian_vel: u16,
+}
+
+impl LivePlanetProjection {
+    pub fn from_degree(planet_id: u8, degree: f32, retrograde: bool) -> Self {
+        let normalized = degree.rem_euclid(360.0);
+        let decan36 = ((normalized / 10.0).floor() as u8).min(35);
+        let decan_ruler = crate::parashakti::decan_ruler(decan36);
+        let idx = (planet_id as usize).min(9);
+        Self {
+            planet_id,
+            degree: normalized,
+            retrograde,
+            decan36,
+            decan_ruler,
+            is_resonance: planet_id == decan_ruler,
+            element_id: crate::aspect::PLANET_ELEMENT_ID[idx],
+            keplerian_vel: crate::aspect::PLANET_KEPLERIAN_VEL[idx],
+        }
+    }
+}
+
+/// Build the ten-planet live-sky projection from a complete Kerykeion read.
+/// Callers gate completeness upstream (the `planetDegrees` law): this
+/// function assumes ten finite canonical-order degrees.
+pub fn live_planets_from_sky(
+    degrees: &[f32; 10],
+    retrograde: &[bool; 10],
+) -> [LivePlanetProjection; 10] {
+    std::array::from_fn(|i| {
+        LivePlanetProjection::from_degree(i as u8, degrees[i], retrograde[i])
+    })
+}
+
 fn default_profile_schema_version() -> u16 {
     CURRENT_PROFILE_SCHEMA_VERSION
 }
@@ -474,8 +572,48 @@ pub struct MathemeHarmonicProfile {
     pub graph_handle: GraphAnchorProjection,
     pub audio_octet: [f32; 8],
     pub nodal_quartet: [MathemeNodalConstraint; 4],
+    /// Modal/bell interpretation of the 8+4 bus (bell-kernel spec §4): the
+    /// standing resonant body — 12-slot chromatic body, bell-partial roles
+    /// over the live octet, nodal anchor roles, 7+5 diatonic/silent
+    /// partition. Derived entirely from this profile's own state; authority
+    /// for pitch and nodal truth stays with `audio_octet`/`nodal_quartet`
+    /// (`liveOctet[i].hz` MUST equal `audio_octet[i]`). Optional on profile
+    /// schema v1 so legacy payloads keep deserializing — additive, never a
+    /// second carrier ontology.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub modal_resonator: Option<ModalResonatorProfile>,
     pub elements: MathemeElementalProjection,
     pub planetary_chakral: MathemePlanetaryChakralProjection,
+    /// Live Kerykeion transit degrees, canonical mod-10 order Sun(0)..Pluto(9),
+    /// ecliptic 0.0-360.0 with fractional precision preserved (cosmic-clock
+    /// §13.4.4 percentile law — markers sit at exact positions, never snapped).
+    /// Earth is the observer-centre and is never in this array. `None` IS the
+    /// honest `kairos_valid = false` state (cosmic-clock §5.3): renderers show
+    /// "kairos pending" and never invent positions. The kernel constructor never
+    /// fabricates this field; the S3 gateway heartbeat attaches it from the
+    /// `epi nara kairos` cache when fresh and complete.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub planet_degrees: Option<[f32; 10]>,
+    /// Full per-planet live-sky projection (decan, Chaldean ruler, resonance
+    /// event, element identity, Keplerian velocity) — same gating law as
+    /// `planet_degrees`: attached by the gateway heartbeat only when the
+    /// kairos cache is fresh and complete; never fabricated kernel-side.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub live_planets: Option<[LivePlanetProjection; 10]>,
+    /// The tick's address in the 720 possibility space (Sprint-8 E1): plane
+    /// (codon vs hexagram valence), the full clock-degree node from the C
+    /// `.rodata` LUT, and the tick carried across the 16+1 temporal apertures
+    /// (E2). Derived entirely from `degree720`; optional on schema v1 so
+    /// legacy payloads keep deserializing — always attached by `from_tick`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub phase_space: Option<PhaseSpaceAddress>,
+    /// Handle-only quintessence identity summary (Sprint-8 E6, DR-M4-3): the
+    /// person's address ON the clock, never raw identity bodies. Attached by
+    /// the S3 gateway heartbeat from the local PASU identity when one exists;
+    /// the kernel constructor never fabricates it. Absence IS the honest
+    /// "no identity anchored" state.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub quintessence: Option<QuintessenceProjection>,
     pub binary: MathemeBinaryProjection,
     pub mahamaya: MathemeBinaryProjection,
     pub codon_rotation_projection: CodonRotationProjection,
@@ -548,6 +686,15 @@ impl MathemeHarmonicProfile {
             binary.mahamaya_address64,
         );
         let graph_handle = GraphAnchorProjection::from_anchor(&source_coordinate, position, helix);
+        let modal_resonator = ModalResonatorProfile::from_profile_parts(
+            absolute_tick,
+            tick12,
+            degree720,
+            lens_mode,
+            &resonance72,
+            &vimarsha_reading.audio_octet,
+            &vimarsha_reading.nodal_quartet,
+        );
         Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
@@ -577,8 +724,14 @@ impl MathemeHarmonicProfile {
             graph_handle,
             audio_octet: vimarsha_reading.audio_octet,
             nodal_quartet: vimarsha_reading.nodal_quartet,
+            modal_resonator: Some(modal_resonator),
             elements: MathemeElementalProjection::from_position(position),
             planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
+            planet_degrees: None,
+            live_planets: None,
+            phase_space: Some(PhaseSpaceAddress::from_degree720(degree720)),
+            // never fabricated kernel-side — the gateway attaches identity
+            quintessence: None,
             binary: binary.clone(),
             mahamaya: binary,
             codon_rotation_projection,

@@ -150,6 +150,394 @@
       "n": 7
     }
   ],
+  "modalResonator": {
+    "schemaVersion": 1,
+    "source": "MathemeHarmonicProfile",
+    "tick": 0,
+    "tick12": 0,
+    "degree720": 0,
+    "lensMode": {
+      "lens": 0,
+      "mode": 0,
+      "lensModeIndex": 0
+    },
+    "m2Address72": {
+      "address72": 0,
+      "lensAnchorIndex": 0,
+      "tick12": 0,
+      "position": 0,
+      "source": "MathemeHarmonicProfile.resonance72.lensAnchorIndex"
+    },
+    "chromaticBody": [
+      {
+        "pitchClass": 0,
+        "note": "C",
+        "isDiatonic": true,
+        "diatonicDegree": 1,
+        "octetIndices": [],
+        "nodalRoles": [
+          0
+        ],
+        "silentAnchorRole": null,
+        "mirror": 10
+      },
+      {
+        "pitchClass": 1,
+        "note": "C#",
+        "isDiatonic": false,
+        "diatonicDegree": null,
+        "octetIndices": [],
+        "nodalRoles": [
+          2
+        ],
+        "silentAnchorRole": 0,
+        "mirror": 11
+      },
+      {
+        "pitchClass": 2,
+        "note": "D",
+        "isDiatonic": true,
+        "diatonicDegree": 2,
+        "octetIndices": [
+          0
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": null,
+        "mirror": 8
+      },
+      {
+        "pitchClass": 3,
+        "note": "D#",
+        "isDiatonic": false,
+        "diatonicDegree": null,
+        "octetIndices": [
+          4
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": 1,
+        "mirror": 9
+      },
+      {
+        "pitchClass": 4,
+        "note": "E",
+        "isDiatonic": true,
+        "diatonicDegree": 3,
+        "octetIndices": [
+          1
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": null,
+        "mirror": 6
+      },
+      {
+        "pitchClass": 5,
+        "note": "F",
+        "isDiatonic": true,
+        "diatonicDegree": 4,
+        "octetIndices": [
+          5
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": null,
+        "mirror": 7
+      },
+      {
+        "pitchClass": 6,
+        "note": "F#",
+        "isDiatonic": false,
+        "diatonicDegree": null,
+        "octetIndices": [
+          2
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": 2,
+        "mirror": 4
+      },
+      {
+        "pitchClass": 7,
+        "note": "G",
+        "isDiatonic": true,
+        "diatonicDegree": 5,
+        "octetIndices": [
+          6
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": null,
+        "mirror": 5
+      },
+      {
+        "pitchClass": 8,
+        "note": "G#",
+        "isDiatonic": false,
+        "diatonicDegree": null,
+        "octetIndices": [
+          3
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": 3,
+        "mirror": 2
+      },
+      {
+        "pitchClass": 9,
+        "note": "A",
+        "isDiatonic": true,
+        "diatonicDegree": 6,
+        "octetIndices": [
+          7
+        ],
+        "nodalRoles": [],
+        "silentAnchorRole": null,
+        "mirror": 3
+      },
+      {
+        "pitchClass": 10,
+        "note": "A#",
+        "isDiatonic": false,
+        "diatonicDegree": null,
+        "octetIndices": [],
+        "nodalRoles": [
+          1
+        ],
+        "silentAnchorRole": 4,
+        "mirror": 0
+      },
+      {
+        "pitchClass": 11,
+        "note": "B",
+        "isDiatonic": true,
+        "diatonicDegree": 7,
+        "octetIndices": [],
+        "nodalRoles": [
+          3
+        ],
+        "silentAnchorRole": null,
+        "mirror": 1
+      }
+    ],
+    "liveOctet": [
+      {
+        "octetIndex": 0,
+        "hz": 146.8324,
+        "qlPosition": 1,
+        "helix": "bimba",
+        "pitchClass": 2
+      },
+      {
+        "octetIndex": 1,
+        "hz": 167.55635,
+        "qlPosition": 2,
+        "helix": "bimba",
+        "pitchClass": 4
+      },
+      {
+        "octetIndex": 2,
+        "hz": 191.20532,
+        "qlPosition": 3,
+        "helix": "bimba",
+        "pitchClass": 6
+      },
+      {
+        "octetIndex": 3,
+        "hz": 216.39905,
+        "qlPosition": 4,
+        "helix": "bimba",
+        "pitchClass": 8
+      },
+      {
+        "octetIndex": 4,
+        "hz": 174.61412,
+        "qlPosition": 1,
+        "helix": "pratibimba",
+        "pitchClass": 3
+      },
+      {
+        "octetIndex": 5,
+        "hz": 199.25922,
+        "qlPosition": 2,
+        "helix": "pratibimba",
+        "pitchClass": 5
+      },
+      {
+        "octetIndex": 6,
+        "hz": 227.38274,
+        "qlPosition": 3,
+        "helix": "pratibimba",
+        "pitchClass": 7
+      },
+      {
+        "octetIndex": 7,
+        "hz": 233.0819,
+        "qlPosition": 4,
+        "helix": "pratibimba",
+        "pitchClass": 9
+      }
+    ],
+    "nodalQuartet": [
+      {
+        "quartetIndex": 0,
+        "qlPosition": 0,
+        "helix": "bimba",
+        "m": 1,
+        "n": 1,
+        "pitchClass": 0,
+        "role": "bimba-p0-anchor"
+      },
+      {
+        "quartetIndex": 1,
+        "qlPosition": 5,
+        "helix": "bimba",
+        "m": 6,
+        "n": 1,
+        "pitchClass": 10,
+        "role": "bimba-p5-anchor"
+      },
+      {
+        "quartetIndex": 2,
+        "qlPosition": 0,
+        "helix": "pratibimba",
+        "m": 2,
+        "n": 5,
+        "pitchClass": 1,
+        "role": "pratibimba-p0-anchor"
+      },
+      {
+        "quartetIndex": 3,
+        "qlPosition": 5,
+        "helix": "pratibimba",
+        "m": 7,
+        "n": 7,
+        "pitchClass": 11,
+        "role": "pratibimba-p5-anchor"
+      }
+    ],
+    "diatonicSet": [
+      {
+        "pitchClass": 0,
+        "degree": 1,
+        "note": "C",
+        "contextFrame": "00/00",
+        "contextAgent": "Nous"
+      },
+      {
+        "pitchClass": 2,
+        "degree": 2,
+        "note": "D",
+        "contextFrame": "0/1",
+        "contextAgent": "Logos"
+      },
+      {
+        "pitchClass": 4,
+        "degree": 3,
+        "note": "E",
+        "contextFrame": "0/1/2",
+        "contextAgent": "Eros"
+      },
+      {
+        "pitchClass": 5,
+        "degree": 4,
+        "note": "F",
+        "contextFrame": "0/1/2/3",
+        "contextAgent": "Mythos"
+      },
+      {
+        "pitchClass": 7,
+        "degree": 5,
+        "note": "G",
+        "contextFrame": "4.0/1-4.4/5",
+        "contextAgent": "Anima/Psyche"
+      },
+      {
+        "pitchClass": 9,
+        "degree": 6,
+        "note": "A",
+        "contextFrame": "4.5/0",
+        "contextAgent": "Psyche"
+      },
+      {
+        "pitchClass": 11,
+        "degree": 7,
+        "note": "B",
+        "contextFrame": "5/0",
+        "contextAgent": "Sophia"
+      }
+    ],
+    "silentComplement": [
+      {
+        "pitchClass": 1,
+        "silentIndex": 0,
+        "note": "C#"
+      },
+      {
+        "pitchClass": 3,
+        "silentIndex": 1,
+        "note": "D#"
+      },
+      {
+        "pitchClass": 6,
+        "silentIndex": 2,
+        "note": "F#"
+      },
+      {
+        "pitchClass": 8,
+        "silentIndex": 3,
+        "note": "G#"
+      },
+      {
+        "pitchClass": 10,
+        "silentIndex": 4,
+        "note": "A#"
+      }
+    ],
+    "bellPartials": [
+      {
+        "octetIndex": 0,
+        "role": "hum"
+      },
+      {
+        "octetIndex": 1,
+        "role": "prime"
+      },
+      {
+        "octetIndex": 2,
+        "role": "tierce"
+      },
+      {
+        "octetIndex": 3,
+        "role": "quint"
+      },
+      {
+        "octetIndex": 4,
+        "role": "nominal"
+      },
+      {
+        "octetIndex": 5,
+        "role": "upper"
+      },
+      {
+        "octetIndex": 6,
+        "role": "warble"
+      },
+      {
+        "octetIndex": 7,
+        "role": "residue"
+      }
+    ],
+    "cymaticMaterial": {
+      "mode": "deterministic-stylised",
+      "antinodalDriver": "MathemeHarmonicProfile.audio_octet",
+      "boundaryConstraint": "MathemeHarmonicProfile.nodal_quartet"
+    },
+    "privacyClass": "public-current-context",
+    "authority": {
+      "pitch": "MathemeHarmonicProfile.audio_octet",
+      "nodal": "MathemeHarmonicProfile.nodal_quartet"
+    },
+    "sourceFields": {
+      "activeChromatic": "MathemeHarmonicProfile.chromatic",
+      "activeDiatonicContext": "MathemeHarmonicProfile.diatonic",
+      "resonance72": "MathemeHarmonicProfile.resonance72"
+    }
+  },
   "elements": {
     "pPositionElement": "Aether",
     "l2PrimeElement": "Aether",
@@ -162,6 +550,233 @@
     "musicalRole": "1/1 tonic",
     "modalColor": "Rast / stable tonic ground",
     "provenance": "initial M2/M' alignment; canonical values must be governed by S2 graph law"
+  },
+  "phaseSpace": {
+    "degree720": 0,
+    "degree360": 0,
+    "plane": "primary-codon",
+    "activeValence": {
+      "kind": "codon",
+      "upperPair": 0,
+      "lowerPair": 0,
+      "codonClass": 0,
+      "isNonDual": true
+    },
+    "node": {
+      "degree360": 0,
+      "exactDegree720": 0.0,
+      "zodiacSign": 0,
+      "zodiacDegree": 0,
+      "decan36": 0,
+      "decanPosition": 0,
+      "isBackboneNode": true,
+      "hexagramId": 0,
+      "hexagramLineActive": 0,
+      "isNonDualCodon": true,
+      "codonClass": 0,
+      "codonUpperPair": 0,
+      "codonLowerPair": 0,
+      "tarotCardId": 0,
+      "decanPlanet": 4,
+      "decanElement": 0,
+      "decanChakra": 2,
+      "degreeTick12": 0,
+      "strand": 0,
+      "drRing": 0,
+      "m1AnandaValue": 0,
+      "m0Archetype": 0,
+      "shadowDegree": 360,
+      "polarOpposite": 180,
+      "enneadicChamber": 0,
+      "chamberDayNight": 0,
+      "lensSegment": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "lensCarrier": [
+      {
+        "lensIndex": 0,
+        "slice": 1,
+        "sections": 360,
+        "name": "Microscopic",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 1,
+        "slice": 2,
+        "sections": 180,
+        "name": "Binary",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 2,
+        "slice": 4,
+        "sections": 90,
+        "name": "Quaternary",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 3,
+        "slice": 8,
+        "sections": 45,
+        "name": "Octagonal",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 4,
+        "slice": 9,
+        "sections": 40,
+        "name": "Enneadic",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 5,
+        "slice": 10,
+        "sections": 36,
+        "name": "Decan",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 6,
+        "slice": 12,
+        "sections": 30,
+        "name": "Zodiacal",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 7,
+        "slice": 15,
+        "sections": 24,
+        "name": "Hourly",
+        "temporalCanon": true,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 8,
+        "slice": 24,
+        "sections": 15,
+        "name": "Expanded Hours",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 9,
+        "slice": 30,
+        "sections": 12,
+        "name": "Solar Month",
+        "temporalCanon": true,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 10,
+        "slice": 36,
+        "sections": 10,
+        "name": "Decadic",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 11,
+        "slice": 40,
+        "sections": 9,
+        "name": "Greater Chamber",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 12,
+        "slice": 45,
+        "sections": 8,
+        "name": "Octant",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 13,
+        "slice": 90,
+        "sections": 4,
+        "name": "Quadrant",
+        "temporalCanon": true,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 14,
+        "slice": 180,
+        "sections": 2,
+        "name": "Hemisphere",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      },
+      {
+        "lensIndex": 15,
+        "slice": 360,
+        "sections": 1,
+        "name": "Unity",
+        "temporalCanon": false,
+        "segment": 0,
+        "degreeInSegment": 0,
+        "phase01": 0.0
+      }
+    ],
+    "fibonacciGround": {
+      "position": 0,
+      "digit": 0,
+      "phase01": 0.0,
+      "temporalCanon": true
+    },
+    "authority": "epi-lib::CLOCK_DEGREE_LUT (.rodata, 384 = 360 + 24 = 64x6)"
   },
   "binary": {
     "mahamayaAddress64": 0,

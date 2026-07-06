@@ -21,6 +21,7 @@ fn main() {
         .file("src/m1.c")
         .file("src/m2.c")
         .file("src/m3.c")
+        .file("src/m3_clock_lut.c")
         .file("src/m4.c")
         .file("src/m5.c")
         .file("src/kernel.c")

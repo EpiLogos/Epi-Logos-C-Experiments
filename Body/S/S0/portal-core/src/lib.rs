@@ -45,7 +45,8 @@ pub mod transcription {
 
 pub use aspect::{
     compute_aspects, planetary_elemental_weights, PlanetaryAspectHandle,
-    PlanetaryElementContribution, PlanetaryElementalWeights,
+    PlanetaryElementContribution, PlanetaryElementalWeights, PLANET_ELEMENT_ID,
+    PLANET_KEPLERIAN_VEL,
 };
 pub use birthdate_identity::*;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};

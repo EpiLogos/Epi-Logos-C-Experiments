@@ -292,6 +292,67 @@ static void test_integral_invariant(void) {
 }
 
 /* ===================================================================
+ * FR 2.3.15 (runtime, tarot partition): Suit integrals at RUN time
+ * (Track 00.T14.C7)
+ *
+ * m3.h pins the suit integrals only as a compile-time _Static_assert
+ * over the four #defines, and test_integral_invariant() above sums by
+ * the codon's OUTER-nucleotide bits. This walks the tarot map's OWN
+ * suit partition (M3_TAROT_CODON_MAP, dual-codon courts included) and
+ * proves at runtime that (a) the 4x14 card layout covers all 64 codons
+ * exactly once, and (b) each SUIT's (+,+) evaluation integral carries
+ * the spec value — Cups=84, Wands=96, Pentacles=88, Swords=92, total
+ * 360 (x4 in the raw charge domain) — via evaluate_codon(), the
+ * spec-named "(+,+) codon evaluation" surface.
+ * =================================================================== */
+
+static void test_suit_integral_runtime_tarot_partition(void) {
+    int32_t suit_pp[4] = {0, 0, 0, 0};
+    uint8_t seen[64] = {0};
+    int codon_count = 0;
+    int suit, rank, k, c;
+
+    for (suit = 0; suit < (int)M3_TAROT_SUITS; suit++) {
+        for (rank = 0; rank <= M3_TAROT_PIP_KING; rank++) {
+            const M3_TarotCodonEntry* entry = &M3_TAROT_CODON_MAP[suit][rank];
+            uint8_t codons[2];
+            TEST("tarot entry suit field matches its row",
+                 entry->suit == (uint8_t)suit);
+            codons[0] = entry->codon_a;
+            codons[1] = entry->codon_b;
+            for (k = 0; k < 2; k++) {
+                uint8_t codon = codons[k];
+                if (codon == M3_TAROT_SINGLE_CODON) continue;
+                TEST("tarot codon in 6-bit range", codon < 64);
+                seen[codon & 0x3F]++;
+                codon_count++;
+                suit_pp[suit] += evaluate_codon(codon).pp;
+            }
+        }
+    }
+
+    TEST("tarot partition carries 64 codons", codon_count == 64);
+    for (c = 0; c < 64; c++) {
+        TEST("each codon appears exactly once in the tarot map", seen[c] == 1);
+    }
+
+    TEST("Cups runtime suit integral = 4x84",
+         suit_pp[0] == 4 * (int32_t)M3_SUIT_A_INTEGRAL);
+    TEST("Wands runtime suit integral = 4x96",
+         suit_pp[1] == 4 * (int32_t)M3_SUIT_T_INTEGRAL);
+    TEST("Pentacles runtime suit integral = 4x88",
+         suit_pp[2] == 4 * (int32_t)M3_SUIT_C_INTEGRAL);
+    TEST("Swords runtime suit integral = 4x92",
+         suit_pp[3] == 4 * (int32_t)M3_SUIT_G_INTEGRAL);
+    TEST("runtime suit integrals close at 4x360",
+         suit_pp[0] + suit_pp[1] + suit_pp[2] + suit_pp[3] ==
+         4 * (int32_t)M3_INTEGRAL_INVARIANT);
+    TEST("suit-level projection closes at 360",
+         (suit_pp[0] + suit_pp[1] + suit_pp[2] + suit_pp[3]) / 4 ==
+         (int32_t)M3_INTEGRAL_INVARIANT);
+}
+
+/* ===================================================================
  * FR 2.3.9: Three Matrix Operators
  * =================================================================== */
 
@@ -871,6 +932,7 @@ int main(void) {
     test_nondual();
     test_charges();
     test_integral_invariant();
+    test_suit_integral_runtime_tarot_partition();
     test_matrices();
     test_quaternion_overlay_foundations();
     test_su2();

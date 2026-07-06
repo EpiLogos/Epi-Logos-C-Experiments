@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `Cargo.toml` — crate manifest (`portal-core`); deps `epi-lib`, `serde`, `serde_json`, `toml`; feature `resonance_ebm_runtime`
 - `src/lib.rs` — crate root / public surface (re-exports the modules below)
 - `src/kernel.rs` — clock kernel math (tick/epogdoon/projection), `E4PersonalInputs`, [[E_4]] personal-energy scalar/gradient provenance, and the re-export root for `src/kernel/`.
-- `src/kernel/` — split [[MathemeHarmonicProfile]] implementation and per-projection modules (`profile.rs`, `projections/*.rs`) surfaced through `src/kernel.rs` and the `src/harmonic_profile.rs` façade.
+- `src/kernel/` — split [[MathemeHarmonicProfile]] implementation and per-projection modules (`profile.rs`, `projections/*.rs`) surfaced through `src/kernel.rs` and the `src/harmonic_profile.rs` façade. `projections/modal_resonator.rs` is the bell-kernel contract ([[m123-modal-resonator-bell-kernel-spec]] §4): the additive `modalResonator` field on the profile — 12-slot chromatic body, 8 live carriers with exact-bus Hz, 4 nodal anchors, 7+5 partition, bell-partial roles; authority stays with `audio_octet`/`nodal_quartet`.
 - `src/state.rs`, `src/quaternion.rs`, `src/hopf.rs`, `src/spanda.rs` — clock state + quaternion/Hopf/spanda math
 - `src/luts/` — consolidated codon, transcription, [[M3]] mahamaya, oracle, rotational, and planet-Keplerian LUT surfaces; `src/lib.rs` keeps legacy module-path re-exports for compatibility
 - `src/codon_rotation_projection.rs`, `src/m3_transcription_bridge.rs` — [[M3]] bridge projection and transcription bridge logic
@@ -36,6 +36,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - Baseline fixture: `cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test track_01_t0_baseline_fixture`.
 - Phase-qualified VAK resolve: `cargo test -p portal-core --test vak_resolve_preserves_prime_phase`.
 - Profile projections: `cargo test -p portal-core --test profile_projections_full_suite`.
+- Modal resonator (bell kernel §11): `cargo test -p portal-core --test modal_resonator_profile_field`.
+- Live-sky planet degrees: `cargo test -p portal-core --test planet_degrees_profile_field`.
+- Phase-space core (Sprint-8 E1/E2): `cargo test -p portal-core --test phase_space_profile_field` — FFI parity with `epi-lib::CLOCK_DEGREE_LUT` (.rodata; the C table is the ONLY degree/hexagram/codon authority, bound in `src/kernel/projections/phase_space.rs`, never re-derived), the 384=360+24=64×6 topology, the zodiac-ordered Chaldean decan law (one table kernel-wide), the §4 lens formula, and the 16+1 temporal apertures.
 - [[M4-0-0]] birthdate encoding: `cargo test -p portal-core m4_0_0_birthdate_encoding`.
 - [[Vama Shakti]] Q-activity accumulator: `cargo test -p portal-core --test q_activity_accumulator`.
 - Psychoid-cymatic handle derivation: `cargo test -p portal-core --test psychoid_cymatic_handle`.

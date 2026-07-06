@@ -146,7 +146,7 @@ impl IngestionSession {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use portal_core::KernelProjection;
+    use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelProjection};
 
     fn envelope(element_sub_tick: u8) -> KernelTickEnvelope {
         let projection = KernelProjection::from_clock_state(
@@ -155,8 +155,9 @@ mod tests {
             [1.0, 0.0, 0.0, 0.0],
             [0.5, 0.5, 0.5, 0.5],
             None,
-            None,
-            0.0,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
         );
         KernelTickEnvelope::from_kernel_projection(0, &projection)
     }

@@ -164,6 +164,11 @@ pub fn update_kairos_full(state: &mut PortalClockState, kairos: KairosState) {
 
 /// Update quintessence quaternion after identity augment.
 /// `profiles`: 5 x [FIRE, WATER, EARTH, AIR] from identity layers.
+/// DUPLICATE-LAW NOTE (E6 verifier, 2026-07-02): this body is the same math
+/// as epi-cli `portal::clock_state::quintessence_quaternion_from_profiles`
+/// (the pure fn the TUI + S3 heartbeat share). Unification follow-up flagged
+/// in the Sprint-8 plan — until then, any change to the filter/remap/
+/// normalise law MUST land in both sites.
 pub fn update_quintessence_quaternion(state: &mut PortalClockState, profiles: &[[f32; 4]; 5]) {
     let valid: Vec<_> = profiles
         .iter()

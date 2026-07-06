@@ -24,43 +24,56 @@ const PLANETARY_HOUR_RULERS: [u8; 7] = [
     planet::MARS,
 ];
 
+/// Chaldean decan rulers in ZODIAC-DEGREE order (decan n = degrees n*10 to
+/// n*10+9): the descending Chaldean cycle Mars→Sun→Venus→Mercury→Moon→
+/// Saturn→Jupiter repeating from Aries I, closing on Mars at Pisces III —
+/// the cosmic-clock §5.2 rulership law, agreeing with `CLOCK_DEGREE_LUT`
+/// (.rodata, epi-lib) and the m2 portal plugin's DECAN_RULER_TABLE.
+///
+/// CORRECTED 2026-07-02 (Sprint-8 E1 cross-LUT test): the previous data was
+/// a Vedic drekkana table GROUPED BY TRIPLICITY (fire signs' nine decans
+/// first: Mars/Sun/Jupiter…), which diverges from the zodiac-degree indexing
+/// every consumer of this table uses (DecanAxisView.ruling_planet and the
+/// live-planet resonance events both index by floor(degree/10)). Flagged for
+/// [[M2'-SPEC]] harmonisation write-back — if a triplicity-grouped drekkana
+/// axis is ever needed, it must be its own table with its own index law.
 const DECAN_RULERS_36: [u8; 36] = [
-    planet::MARS,
-    planet::SUN,
-    planet::JUPITER,
-    planet::SUN,
-    planet::JUPITER,
-    planet::MARS,
-    planet::JUPITER,
-    planet::MARS,
-    planet::SUN,
-    planet::VENUS,
-    planet::MERCURY,
-    planet::SATURN,
-    planet::MERCURY,
-    planet::SATURN,
-    planet::VENUS,
-    planet::SATURN,
-    planet::VENUS,
-    planet::MERCURY,
-    planet::MERCURY,
-    planet::VENUS,
-    planet::SATURN,
-    planet::VENUS,
-    planet::SATURN,
-    planet::MERCURY,
-    planet::SATURN,
-    planet::MERCURY,
-    planet::VENUS,
-    planet::MOON,
-    planet::MARS,
-    planet::JUPITER,
-    planet::MARS,
-    planet::JUPITER,
-    planet::MOON,
-    planet::JUPITER,
-    planet::MOON,
-    planet::MARS,
+    planet::MARS,    // 0  Aries I
+    planet::SUN,     // 1  Aries II
+    planet::VENUS,   // 2  Aries III
+    planet::MERCURY, // 3  Taurus I
+    planet::MOON,    // 4  Taurus II
+    planet::SATURN,  // 5  Taurus III
+    planet::JUPITER, // 6  Gemini I
+    planet::MARS,    // 7  Gemini II
+    planet::SUN,     // 8  Gemini III
+    planet::VENUS,   // 9  Cancer I
+    planet::MERCURY, // 10 Cancer II
+    planet::MOON,    // 11 Cancer III
+    planet::SATURN,  // 12 Leo I
+    planet::JUPITER, // 13 Leo II
+    planet::MARS,    // 14 Leo III
+    planet::SUN,     // 15 Virgo I
+    planet::VENUS,   // 16 Virgo II
+    planet::MERCURY, // 17 Virgo III
+    planet::MOON,    // 18 Libra I
+    planet::SATURN,  // 19 Libra II
+    planet::JUPITER, // 20 Libra III
+    planet::MARS,    // 21 Scorpio I
+    planet::SUN,     // 22 Scorpio II
+    planet::VENUS,   // 23 Scorpio III
+    planet::MERCURY, // 24 Sagittarius I
+    planet::MOON,    // 25 Sagittarius II
+    planet::SATURN,  // 26 Sagittarius III
+    planet::JUPITER, // 27 Capricorn I
+    planet::MARS,    // 28 Capricorn II
+    planet::SUN,     // 29 Capricorn III
+    planet::VENUS,   // 30 Aquarius I
+    planet::MERCURY, // 31 Aquarius II
+    planet::MOON,    // 32 Aquarius III
+    planet::SATURN,  // 33 Pisces I
+    planet::JUPITER, // 34 Pisces II
+    planet::MARS,    // 35 Pisces III — the Chaldean closure on Mars
 ];
 
 const MAQAM_RANGES: [(u8, u8, u8); 10] = [
@@ -385,6 +398,13 @@ impl TattvaAxisView {
     pub fn index72(&self) -> u8 {
         self.tattva_index * 2 + self.phase
     }
+}
+
+/// Chaldean ruler of a decan (0-35). The kernel-owned rulership law the
+/// resonance event of cosmic-clock §5.2 reads from — renderers consume the
+/// projected flag and never carry their own decan tables.
+pub fn decan_ruler(decan36: u8) -> u8 {
+    DECAN_RULERS_36[(decan36 % DECAN_COUNT) as usize]
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

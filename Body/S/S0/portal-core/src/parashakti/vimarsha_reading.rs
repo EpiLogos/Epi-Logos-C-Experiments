@@ -5,8 +5,17 @@ use crate::events::{KleinFlipEvent, Valence};
 use crate::kernel::{harmonic_ratio_fraction_for_sub_tick, KernelTick, MathemeNodalConstraint};
 
 const C3_HZ: f32 = 130.812_79;
-const INNER_FOUR_OFFSETS: [u8; 8] = [2, 4, 6, 8, 3, 5, 7, 9];
-const MODE_INTERVALS: [u8; 7] = [0, 2, 4, 5, 7, 9, 11];
+/// The eight explicate-sung carrier offsets on the whole-tone ladder:
+/// bimba inner-four (P1-P4 → 2,4,6,8) then pratibimba inner-four
+/// (P1'-P4' → 3,5,7,9). Public because the modal-resonator projection
+/// labels the chromatic body from THIS law — one source, no drift.
+pub const INNER_FOUR_OFFSETS: [u8; 8] = [2, 4, 6, 8, 3, 5, 7, 9];
+/// The four implicate-nodal anchor offsets on the same ladder: bimba P0/P5
+/// (0, 10) and pratibimba P0'/P5' (1, 11). Together with the octet offsets
+/// these tile all 12 chromatic slots — the 12 = 8 + 4 law is literal.
+pub const NODAL_ANCHOR_OFFSETS: [u8; 4] = [0, 10, 1, 11];
+/// Diatonic interval pattern carrying the 12×7 mode-anchored landscape.
+pub const MODE_INTERVALS: [u8; 7] = [0, 2, 4, 5, 7, 9, 11];
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
