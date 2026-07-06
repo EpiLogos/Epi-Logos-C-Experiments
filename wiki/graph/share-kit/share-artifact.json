@@ -1,63 +1,113 @@
 {
-  "generatedAt": "2026-06-13T08:43:29.716Z",
+  "generatedAt": "2026-07-06T14:20:25.279Z",
   "vaultName": "Epi-Logos C Experiments",
-  "tagline": "A local-first map of Epi-Logos C Experiments: 0 sources compiled into 2 graph nodes and 8 wiki pages.",
+  "tagline": "A local-first map of Epi-Logos C Experiments: 0 sources compiled into 14 graph nodes and 19 wiki pages.",
   "overview": {
     "sources": 0,
-    "nodes": 2,
-    "edges": 2,
-    "pages": 8,
+    "nodes": 14,
+    "edges": 55,
+    "pages": 19,
     "communities": 1
   },
   "firstPartyOverview": {
-    "nodes": 2,
-    "edges": 2,
-    "pages": 8,
+    "nodes": 14,
+    "edges": 55,
+    "pages": 19,
     "communities": 1
   },
   "highlights": {
     "topHubs": [
       {
-        "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
-        "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
-        "degree": 1
+        "nodeId": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "label": "Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads...",
+        "degree": 13
       },
       {
-        "nodeId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
-        "label": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
-        "degree": 1
+        "nodeId": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "label": "Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la...",
+        "degree": 13
+      },
+      {
+        "nodeId": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+        "degree": 13
+      },
+      {
+        "nodeId": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+        "degree": 13
+      },
+      {
+        "nodeId": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "label": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+        "degree": 13
       }
     ],
     "bridgeNodes": [
       {
-        "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
-        "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+        "nodeId": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
         "bridgeScore": 0
       },
       {
-        "nodeId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
-        "label": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
+        "nodeId": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+        "bridgeScore": 0
+      },
+      {
+        "nodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "label": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
         "bridgeScore": 0
       }
     ],
-    "surprisingConnections": [],
+    "surprisingConnections": [
+      {
+        "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+        "targetLabel": "Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+        "relation": "uses_context",
+        "why": "it spans different canonical pages; it bridges memory_task and decision nodes"
+      },
+      {
+        "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+        "targetLabel": "LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+        "relation": "uses_context",
+        "why": "it spans different canonical pages; it bridges memory_task and decision nodes"
+      },
+      {
+        "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+        "targetLabel": "OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+        "relation": "uses_context",
+        "why": "it spans different canonical pages; it bridges memory_task and decision nodes"
+      }
+    ],
     "suggestedQuestions": [
-      "What sources would strengthen community Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...?",
-      "What connects Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... to the rest of the vault?",
-      "What connects Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali... to the rest of the vault?"
+      "Are the inferred relationships involving Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la... correct?",
+      "Are the inferred relationships involving Memory Task: Author paramasiva tick canon-rooting session prompt correct?",
+      "Are the inferred relationships involving Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 correct?",
+      "Are the inferred relationships involving Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... correct?"
     ]
   },
   "knowledgeGaps": [
-    "1 of 1 communities have 2 or fewer nodes — the graph may be fragmented."
+    "Non-first-party material accounts for 100.0% of graph nodes."
   ],
-  "shortPost": "I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 8 wiki pages, 2 graph nodes, 2 edges.\nTop hubs: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... and Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali....\nThe graph is ready for its first surprising connection.\nEverything stays local. Try: npm install -g @swarmvaultai/cli && swarmvault quickstart ./your-repo",
+  "shortPost": "I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 19 wiki pages, 14 graph nodes, 55 edges.\nTop hubs: Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads..., Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la..., and Memory Task: Author paramasiva tick canon-rooting session prompt.\nMost surprising link: Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... uses_context Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo....\nEverything stays local. Try: npm install -g @swarmvaultai/cli && swarmvault quickstart ./your-repo",
   "relatedNodeIds": [
-    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
-    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+    "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+    "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+    "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
   ],
   "relatedPageIds": [
-    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
-    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+    "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+    "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+    "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
   ],
-  "relatedSourceIds": []
+  "relatedSourceIds": [
+    "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+  ]
 }

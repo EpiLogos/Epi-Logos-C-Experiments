@@ -1,4 +1,4 @@
-I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 8 wiki pages, 2 graph nodes, 2 edges.
-Top hubs: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... and Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali....
-The graph is ready for its first surprising connection.
+I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 19 wiki pages, 14 graph nodes, 55 edges.
+Top hubs: Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads..., Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la..., and Memory Task: Author paramasiva tick canon-rooting session prompt.
+Most surprising link: Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... uses_context Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo....
 Everything stays local. Try: npm install -g @swarmvaultai/cli && swarmvault quickstart ./your-repo
