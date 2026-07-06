@@ -613,7 +613,7 @@ Full contract at [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §5. Summary: K² mesh with
 **Mode**: primary view of the `m1-paramasiva-played-torus` Bevy/wgpu extension (3D); shadow view in 2D `m1-paramasiva` `kleinTopology` view (`m1.paramasiva.kleinTopology`).
 
 - **3D played K² torus** (the cosmic-1-2-3 composition centrepiece):
-  - **K² mesh** as Bevy `Mesh3d` per [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §5.1 — chromatic-longitude × fifths-meridian, R/r = 16/9 epogdoon aspect (matches `compute_orbital_position` `state.rs:9-22`'s `R=0.64, r=0.36`).
+  - **K² mesh** as Bevy `Mesh3d` per [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §5.1 — chromatic-longitude × fifths-meridian, R/r = 16/9 totality-ratio aspect — the standing identity 64+36=100 as body proportions, R+r=1 (matches `compute_orbital_position` `state.rs:9-22`'s `R=0.64, r=0.36`; "epogdoon aspect" was a mislabel — the epogdoon's seats are the 30°/tick step and 2r/R=72/64=9/8, per [[ql-musical-derivation-v3]] register law, corrected 2026-07-06).
   - **Slerping orientation** through `RING_QUATERNION_LUT[12]` — the load-bearing animation primitive per [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §6.1.
   - **Hopf shadow torus** at 30% opacity, concentric, phase-shifted by 360° — the SU(2) second sheet.
   - **Diamond octahedron at centre** — the QL geometric object (six vertices, Cl(4,2)-coloured), still-point against the slerp.

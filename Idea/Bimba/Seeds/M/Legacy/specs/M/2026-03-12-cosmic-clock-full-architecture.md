@@ -16,6 +16,19 @@
 > Where this document still uses older names like `m1_torus_stage` or quaternion→degree identity
 > projections, the harmonized canonical model wins.
 
+> **Errata (2026-07-02, whole-derivation session — each pinned by tests in the pratibimba-app carrier):**
+> 1. **§4's worked-example block miscomputes two lens rows against this document's own LUT + formula**
+>    (the Lens 2 and Lens 6 lines). The LUT formula (`segment = degree / slice_degrees`) is the
+>    authority; the prose example is wrong. Pinning test: `Body/M/pratibimba-app/src/engine/cosmicMath.test.ts`
+>    ("the 16 lenses each tile 360 exactly").
+> 2. **§5.3's planet-order comment swaps Venus and Mercury.** Kernel canon (kairos.rs tests,
+>    `M2_PLANET_LUT`, `aspect.rs`) is Sun 0, Moon 1, **Mercury 2, Venus 3**, Mars 4 … Pluto 9.
+>    This erratum had propagated into the app's `PLANET_ORDER` and was corrected with a pinning
+>    test (same file, "planet order follows the kernel canon").
+> 3. **§10.1's TUI torus used `R/r = 16/9`** — that ratio belongs to the retired hypertile-portal
+>    visualizer register; the rendered K² aspect is an `OPEN —` contradiction (9/8 vs 16/9)
+>    awaiting Architect ratification in [[M1'-SPEC]] §13.6.
+
 **Coordinate:** #3-5 (The 360-Degree Synthesis Wheel) + #3-0 (Reception Ground anchor)
 **Companion specs:** M1-paramasiva-mathematical-dna.md, M2-parashakti-vibrational-architecture.md,
   M3-mahamaya-symbolic-transcription.md, M4-nara-subtle-body-map.md

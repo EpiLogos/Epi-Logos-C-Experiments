@@ -597,6 +597,8 @@ export interface CosmicEngineRenderContext {
 
 When the M-extension is loaded **standalone** (in `ide-deep` for example), its compositionMount is **not** activated — the extension's own widget renders instead. The compositionMount is only addressed when the integrated 1-2-3 plugin is the active layout.
 
+> **Carrier foothold (2026-07-02, pratibimba-app Sprint-8 E3 — flagged for canon ratification since it moves this contract surface):** the active M' carrier realises §7.3 as a **typed modulation graph** (`Body/M/pratibimba-app/src/engine/modulation/`): the torus is the oscillator, the lens system is the modulator, the clock is the temporal carrier, the profile is the patch. The carrier-side analogue of `CosmicEngineCompositionMount` is `ModulationCarrier { id, layer?, requiredInputs, onFrame, onTick?, onKleinFlip?, onUnready? }` — `requiredProfileFields`/`checkReadiness` become `requiredInputs` gated by the engine per frame (§5.6 inline degradation as one-shot `onUnready`); `CosmicEngineRenderContext` becomes the typed `ModulationFrame` (oscillator · division · tonality · codon · klein · kairos · cymatic), the SAME frame object fanned to every carrier from ONE profile subscription (§7.2 preserved) with the klein flip atomic across carriers (§6.5 preserved). The engine owns the rAF loop, §6.7 determinism (pure `deriveFrame` over records + frame fraction), and §8.8 pause/scrub over a 720-tick ring (deviation: cmd-space is macOS-owned; bare space with a focus guard + palette commands stand in). Two lens namespaces stay unmerged per M3'-SPEC: the 16+1 clock division apertures gear rendering AND the instrument's rhythmic subdivision (temporal canon [24,12,4]); (lens,mode) tonality is a separate kernel-owned modulator. The kernel's E1 `phaseSpace.lensCarrier` is the carried-tick authority (`source: 'kernel'`), local arithmetic an honestly-reported fallback.
+
 ### 7.4 Boundaries to other integrated plugins
 
 The integrated 1-2-3 (cosmic) and integrated 4-5-0 (personal) are **two sides of the same daily**. Their boundary contract:
@@ -651,6 +653,10 @@ The integrated 1-2-3 plugin **MUST NOT**:
 - **No local codon/72/tarot LUT** — every datum read from `profile.payload`, never from a forked TS/wgsl table (`cosmic-engine-no-local-tables.test.mjs`).
 - **No graph relation inference** — relation-walks consume S2 typed pointer descriptors via the bridge, never inferred locally.
 - **No private/journal content** — privacy class is `public_current`; protected-local is the 4-5-0 side's concern.
+
+### 7.9 M123ChimeFrame — additive composition proof (2026-07-02 foothold)
+
+Per [[m123-modal-resonator-bell-kernel-spec]] §5/§13, landed: `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) is an **additive composition proof object over the existing handles** — it references the K² surface handle slot (§7.3), the M2 cymatic contribution (as `modalResonator` + a deterministic `cymaticFrameHandle` digest), and the M3 `codonRotationProjection` + world-clock binding, without replacing any of them. Coherence law: the frame's `tickMatchesProfile` / `degree720MatchesProfile` booleans are explicit; any mismatch makes the chime incoherent and blocks integrated readiness (the pratibimba-app carrier blocks the bell strike on it — silence, never a faked chime). The chime is proof only when the same profile generation, tick, degree720, and M2 address are coherent across all three contributors — the §7.2 single-subscription atomicity, now attested kernel-side per tick.
 
 ---
 

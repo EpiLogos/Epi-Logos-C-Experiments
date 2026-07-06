@@ -108,7 +108,7 @@ y = (R + r·cos(θ)) · sin(φ)
 z = r · sin(θ)
 ```
 
-where R is the major radius (distance from torus centre to small-circle centre) and r is the minor radius. The aspect ratio R/r is structurally significant: setting R/r = φ (the golden ratio, ~1.618) produces the *Clifford-symmetric torus* whose intrinsic geometry is closest to flat; setting R/r = 9/8 (the epogdoon!) produces a torus whose geometric proportions literally encode the kernel's tick-quantum.
+where R is the major radius (distance from torus centre to small-circle centre) and r is the minor radius. The aspect ratio R/r is structurally significant. *(Illustrative options in the original draft — φ for the Clifford-symmetric torus, 9/8 for a tick-quantum-shaped body — were asides, not derivations; the 9/8 option was later mistakenly hardened into rendering canon. RESOLVED 2026-07-06 by [[ql-musical-derivation-v3]] register law, see [[M1'-SPEC]] §13.6: the canonical aspect is R/r = 16/9 with R + r = 1 — the standing identity 100% = 64 + 36 as body proportions; the epogdoon 9/8 lives on that body as the 30°/tick stepping arc and the double-cover relation 2r/R = 72/64 = 9/8, never as the aspect.)*
 
 ### The bioquaternionic state on the torus
 

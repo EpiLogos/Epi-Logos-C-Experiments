@@ -1008,6 +1008,8 @@ The 2026-05-30 alpha-quaternionic pass adds that M3' is also the 0-side temporal
 
 The 2026-05-31 canon update absorbs four additional M3' deltas: M3-0 as 72→64 reception/transduction provenance; M3-5 as the co-foliated double-torus world-clock view; `m3-mahamaya` / integrated 1-2-3 app placement through the kernel-bridge; and M5 pipeline overlays as read-only renderer evidence rather than local training logic.
 
+Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M3' is declared the **world-clock / codon INSCRIPTION of the chime event**. `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) carries in its `m3` section the profile's `codonRotationProjection` plus an explicit `worldClockBinding` with `tickMatchesProfile` / `degree720MatchesProfile` booleans — the temporal proof that the chime happened at this address. Any mismatch makes the frame incoherent and MUST block integrated readiness (the pratibimba-app carrier blocks the bell strike on it). The frame's `m2Address72` is the `resonance72.lensAnchorIndex` value (tick12·6+position) — the M2 72-address, distinct from and never conflated with the 84-state `(lens, mode)` landscape index.
+
 ### §10.1 Open Questions and Held Contradictions
 
 - [[m3-prime-symbolic-transcription-research]] reports a dataset/code mismatch: `TCT` / Nine of Wands is marked 8/full-rotational in the JSON but is 7/non-dual in current code/spec/tests. M3' keeps code/spec/tests as runtime authority and treats the dataset value as reconciliation work.

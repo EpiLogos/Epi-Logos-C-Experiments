@@ -14,6 +14,7 @@ This folder holds the canonical seed layer for [[M]] / [[M']] interface, visuali
 
 ## Current Seeds
 
+- [[M'-SURFACE-REENVISIONING-2026-07-01]] — **ratified 2026-07-02** carrier re-conception: one Tauri v2 binary (`Body/M/pratibimba-app/`) supervising the `epi` gateway; `Body/M/epi-theia` frozen as parts warehouse (DR-FACE-1..6); dev-protocol corrections (verifier ≠ closer, behavioral proof, drivable-loop gates). Active plan: [[2026-07-02-pratibimba-app-phase-1]]. Harmonisation law: [[SEED-HARMONISATION-PROTOCOL]].
 - [[M'-SYSTEM-SPEC]] — full [[M']] system language and domain contract: how to speak about M0'-M5', how the musical instrument ramifies through the portal/app stack, and how M' consumes S-layer services without owning them.
 - [[M'-PORTAL-SPEC]] — shared `0` / `/` / `1` portal grammar for TUI and desktop, now expanded across the full [[M0']] through [[M5']] domain set.
 - [[M'-TAURI-PORT-SPEC]] — Tauri v2 port specification for the current Electron `epi-app`, preserving [[OmniPanel]] as the `/` surface and deepening [[Nara]], [[Epii]], agentic execution, inbox, and clock-platform targets.

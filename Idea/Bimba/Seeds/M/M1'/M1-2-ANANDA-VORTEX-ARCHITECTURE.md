@@ -301,7 +301,7 @@ The DR-M1-2-ratified Bevy/wgpu extension `m1-paramasiva-played-torus` consumes t
 - Bevy `Mesh3d` for the chromatic-fifths torus `T² = S¹_chromatic × S¹_fifths`.
 - **Major radius `R`** along chromatic-longitude (12-stack of `9/8` epogdoon ticks).
 - **Minor radius `r`** along fifths-meridian (`3/2` leaps).
-- **Aspect `R/r = 9/8`** — the epogdoon-tick encoded directly as torus geometry (`physical-pole-stack-architecture.md:110`).
+- **Aspect `R/r = 16/9` with `R + r = 1`** *(corrected 2026-07-06 by derivation — [[ql-musical-derivation-v3]] register law, see [[M1'-SPEC]] §13.6 RESOLVED entry)*: the torus body carries the standing identity 100% = 64 + 36 as its proportions (R = 0.64 Mahāmāyā 2⁶ · r = 0.36 Paraśakti 6²; outer equator = the unit 1/1). The epogdoon 9/8 is a generator/step-register ratio: its seats on this body are the 30°/tick stepping arc and the double-cover relation 2r/R = 72/64 = 9/8 — never the aspect. The former "R/r = 9/8" line hardened an underived aside (physical-pole-stack-architecture.md:110) into a mandate; superseded.
 - **Klein identification** rendered via parameter `helix_sheet ∈ {0, 1}` from `ananda_vortex.helix_sheet` — an SO(3) rotation applied to the torus's binormal frame, computed from `ring_quaternion` via `quat_rotate`.
 
 ### 5.2 Ananda vortex placement on K² — the texture parameterisation

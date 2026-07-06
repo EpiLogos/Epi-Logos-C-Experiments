@@ -196,9 +196,15 @@ Release evidence must stay tied to concrete paths, commands, or records. Valid e
 - Tests prove Jiva-is-Śiva recognition claims include privacy boundary, M4 protected-field source, BEDROCK link, activity-resonance traces, and S2/S3 evidence handles before promotion into canon.
 - Readiness is blocked for full M2/M3 review until the kernel profile tranche exposes resonance72, planetaryChakral, mahamaya, pointerAnchor, and depositionAnchor.
 
-## Canonical Source Lock - 2026-06-02
+## Carrier Status Foothold — 2026-07-02
+
+(absorbed from [[M'-SYSTEM-SPEC]] Carrier Decision + [[M'-SURFACE-REENVISIONING-2026-07-01]] DR-FACE-1..6, per [[SEED-HARMONISATION-PROTOCOL]] as-we-go law)
+
+The §M5'.2 / §M5'.6 statements that "[[Theia]] is THE shell" are **superseded**: the ratified M' carrier is the single Tauri v2 binary at `Body/M/pratibimba-app/` supervising the `epi` gateway; `Body/M/epi-theia` is frozen as a parts warehouse. The carrier-independent contracts of this spec are unchanged and remain binding — the sixfold IDE surface, the graph namespace model (`bimba`/`gnosis`/`etymology`/protected `pratibimba` — never one plane), conversational-first agent-as-IDE law, review/improve governance (`s5'.review.*`/`s5'.improve.*`/`s5'.epii.*`; human-required items deferrable-never-agent-approved), the EBM position-5' kernel role, the three-tier Pi/Anima/Aletheia capacity architecture, and the release-gate matrix. DR-FACE-5: Backend Studio (M5-2') lands as external-editor + agent-mediated diffs, no embedded LSP in v1/v2. This spec's full harmonisation (worklist row 2: DR-MP-2/3, DR-ELO-1, capacity surfacing, M'-runtime cross-refs) remains open.
 
 M5' is Epii return/integration and agent-led developer/pedagogical IDE. It reviews, teaches, improves, and promotes; it does not bypass S5' review law or S1' residency law.
+
+Bell-kernel review obligations, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M5' review/evidence surfaces gain two standing obligations. (1) **Chime coherence** — `M123ChimeFrame.m3.worldClockBinding` mismatches (`tickMatchesProfile`/`degree720MatchesProfile` false) are reviewable incoherence evidence; consumers must have blocked readiness on them, and an M5' review that finds a surface rendering an incoherent chime as live flags it. (2) **Schema drift** — the Rust/Zod/consumer parity of `modalResonator` and `M123ChimeFrame` (lensMode order lens 0..11/mode 0..6, `m2Address72` derivation from `resonance72.lensAnchorIndex`, camelCase casing, additive optionality on profile schema v1) is drift-guarded by tests (`portal-core/tests/modal_resonator_profile_field.rs`, `epi-cli/tests/kernel_bridge_m123_chime_frame.rs`, `epi-cli/schemas/tests/kernel-bridge.test.ts`); review evidence for any bell-surface change must include those suites green plus a live wire capture parsing under the Zod contracts. M5' verifies; it does not own the audio bus.
 
 | Required coverage | Canonical citations |
 |---|---|
