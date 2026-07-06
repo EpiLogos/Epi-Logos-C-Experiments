@@ -79,11 +79,17 @@ fn replay_emits_ordered_stream_and_projection_payload() {
         replay.user_projection.stable_identity.graph_anchor,
         "neo4j://s2/Bimba/user-being"
     );
+    let relation_projection = &replay.user_projection.relation_edges[0].m2_m3_relation;
     assert_eq!(
-        replay.user_projection.relation_edges[0]
-            .m2_m3_relation
-            .planetary_lens_aspect,
-        "backend-supplied-trine"
+        relation_projection.relation_handle,
+        "m2m3:edge:user-being:school-being:42"
+    );
+    assert_eq!(relation_projection.planet_planet_edges.len(), 1);
+    assert_eq!(relation_projection.planet_planet_edges[0].aspect_type, 120);
+    assert_eq!(relation_projection.planet_aperture_edges.len(), 1);
+    assert_eq!(
+        relation_projection.pending_dataset_badges[0].badge,
+        "track-23.10-pending"
     );
 }
 

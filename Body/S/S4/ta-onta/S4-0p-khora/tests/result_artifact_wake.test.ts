@@ -41,6 +41,7 @@ describe("Khora result artifact wake", () => {
       });
       watcher.start();
     });
+    await armed();
 
     writeFileSync(
       join(nowDir, "implement.result.md"),
@@ -74,6 +75,7 @@ describe("Khora result artifact wake", () => {
       });
       watcher.start();
     });
+    await armed();
 
     writeFileSync(
       join(dayDir, "review.result.md"),
@@ -91,9 +93,19 @@ describe("Khora result artifact wake", () => {
   });
 });
 
+/** Let the fs watcher arm before the artifact write — under full-gate load
+ * the create can land inside the arming window and the wake is then racing
+ * a wall-clock timer, not the behavior under test. */
+function armed(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 100));
+}
+
 function nextWake(start: (onEvent: (event: KhoraFlowEvent) => void) => void): Promise<Extract<KhoraFlowEvent, { kind: typeof RESULT_ARTIFACT_WAKE }>> {
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("timed out waiting for result artifact wake")), 2_000);
+    // Generous bound: the law is "the wake ARRIVES", not "arrives within 2s
+    // on an idle box" — a loaded verify-all run must not turn latency into
+    // a false red (observed: 2012ms timeout under the 23-suite gate).
+    const timer = setTimeout(() => reject(new Error("timed out waiting for result artifact wake")), 15_000);
     start((event) => {
       if (event.kind !== RESULT_ARTIFACT_WAKE) return;
       clearTimeout(timer);

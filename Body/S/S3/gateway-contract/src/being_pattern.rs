@@ -4,7 +4,8 @@ pub use portal_core::{
     BeingEntityRef, BeingObserverAnchor, BeingPatternClockAddress, BeingPatternProtectedRef,
     BeingPatternRelationEdge as BeingPatternRelationEdgeProjection, BioQuaternionHandle,
     ElementalWeightProjection, M2M3RelationProjection, MonoPolyOperator,
-    PasuBeingPatternProjection, PasuLiveStateHandle as LiveStateHandle, PasuReviewRisk,
+    PasuBeingPatternProjection, PasuLiveStateHandle as LiveStateHandle,
+    PendingPlanetDatasetBadge, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, PasuReviewRisk,
     PerspectiveRole, StableIdentityHandle,
 };
 use serde::{Deserialize, Serialize};
@@ -112,8 +113,25 @@ pub fn being_pattern_acceptance_replay() -> BeingPatternReplay {
         generation,
         m2_m3_relation: M2M3RelationProjection {
             relation_handle: "m2m3:edge:user-being:school-being:42".to_owned(),
-            planetary_lens_aspect: "backend-supplied-trine".to_owned(),
             source: "CCT-21 SpaceTimeDB replay".to_owned(),
+            planet_planet_edges: vec![PlanetPlanetAspectEdge {
+                planet_a: 0,
+                planet_b: 4,
+                aspect_type: 120,
+                angle: 120.0,
+                orb: 1.5,
+            }],
+            planet_aperture_edges: vec![PlanetApertureAspectEdge {
+                planet: 0,
+                lens_id: 2,
+                aperture_phase: 137,
+                aspect_type: 120,
+                orb: 1.5,
+            }],
+            pending_dataset_badges: vec![PendingPlanetDatasetBadge {
+                planet: 7,
+                badge: "track-23.10-pending".to_owned(),
+            }],
         },
         elemental_delta: ElementalWeightProjection {
             fire: 0.10,
@@ -218,8 +236,10 @@ fn projection(
         .map(|edge| edge.m2_m3_relation.clone())
         .unwrap_or_else(|| M2M3RelationProjection {
             relation_handle: format!("m2m3:{entity_id}:{generation}"),
-            planetary_lens_aspect: "none".to_owned(),
             source: "CCT-21 SpaceTimeDB replay".to_owned(),
+            planet_planet_edges: vec![],
+            planet_aperture_edges: vec![],
+            pending_dataset_badges: vec![],
         });
 
     PasuBeingPatternProjection {

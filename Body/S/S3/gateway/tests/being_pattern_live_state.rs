@@ -52,10 +52,23 @@ fn bridge_payload_forwards_handles_without_reconstructing_stream() {
         payload["stableIdentity"]["graphAnchor"],
         "neo4j://s2/Bimba/user-being"
     );
+    // 37.T37.9 (design-reconciliation 37-biological-quaternionic §37.9): the
+    // flat planetaryLensAspect string was replaced by the typed
+    // LensOrbiterRelationProjection edge classes. The edges stay
+    // backend-supplied (kernel-computed, CCT-21 SpaceTimeDB replay) — the
+    // bridge forwards them without recomputing aspects.
+    let relation = &payload["m2M3Relation"];
     assert_eq!(
-        payload["m2M3Relation"]["planetaryLensAspect"],
-        "backend-supplied-trine"
+        relation["relationHandle"],
+        "m2m3:edge:user-being:school-being:42"
     );
+    assert_eq!(relation["planetPlanetEdges"][0]["aspectType"], 120);
+    assert_eq!(relation["planetApertureEdges"][0]["aspectType"], 120);
+    assert_eq!(
+        relation["pendingDatasetBadges"][0]["badge"],
+        "track-23.10-pending"
+    );
+    assert_eq!(relation["source"], "CCT-21 SpaceTimeDB replay");
     assert!(
         payload.get("events").is_none(),
         "bridge must not reconstruct event stream"

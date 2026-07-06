@@ -100,6 +100,10 @@ mod tests {
     #[test]
     fn test_config_from_env_with_key() {
         let _lock = ENV_MUTEX.lock().unwrap();
+        // Clear ambient model overrides (e.g. a shell-exported GEMINI_EMBEDDING_MODEL)
+        // so the model_version written to the fixture config file is what round-trips.
+        std::env::remove_var("GEMINI_EMBED_MODEL");
+        std::env::remove_var(gemini_embedding::DEFAULT_MODEL_ENV);
         std::env::set_var("GEMINI_API_KEY", "test-key-12345");
         let config_path = write_config("graph-services-default-config.toml");
         std::env::set_var(gemini_embedding::DEFAULT_SETTINGS_PATH_ENV, &config_path);

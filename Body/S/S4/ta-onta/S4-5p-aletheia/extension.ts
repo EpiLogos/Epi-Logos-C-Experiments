@@ -16,6 +16,7 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
+import { validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
 import { registerEpisodicTools } from "./S5'/tools/episodic-tools.ts";
 import { registerGnosisTools } from "./S5'/tools/gnosis-tools.ts";
@@ -45,6 +46,12 @@ export async function aletheiaExtension(api: ExtensionAPI) {
       void threshold;
 
       if (envelope?.session_ids?.length) {
+        // Hen (S1') topology must be current before Aletheia promotes —
+        // crystallising against a stale coordinate map corrupts T-buckets.
+        const henSync = validateHenSync();
+        if (!henSync.ok) {
+          return;
+        }
         const allIds: string[] = [...envelope.session_ids];
         if (envelope.child_session_map) {
           for (const children of Object.values(envelope.child_session_map) as string[][]) {

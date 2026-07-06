@@ -454,13 +454,38 @@ mod t9_route_ownership_cross_walk {
     }
 
     fn s0_server_source() -> String {
-        let path = workspace_root().join("Body/S/S0/epi-cli/src/gate/server.rs");
-        fs::read_to_string(&path).unwrap_or_else(|e| {
+        // 17.T17.2 split gate/server.rs into gate/server/{mod, dispatch,
+        // websocket, method_envelope, subscription, observability}.rs — the
+        // S0 dispatch surface now spans every .rs file in that directory.
+        let dir = workspace_root().join("Body/S/S0/epi-cli/src/gate/server");
+        let entries = fs::read_dir(&dir).unwrap_or_else(|e| {
             panic!(
                 "T9 cross-walk requires {} to be readable: {e}",
-                path.display()
+                dir.display()
             )
-        })
+        });
+        let mut paths: Vec<PathBuf> = entries
+            .filter_map(|entry| entry.ok().map(|entry| entry.path()))
+            .filter(|path| path.extension().is_some_and(|ext| ext == "rs"))
+            .collect();
+        paths.sort();
+        assert!(
+            !paths.is_empty(),
+            "T9 cross-walk found no .rs files in {}",
+            dir.display()
+        );
+        paths
+            .iter()
+            .map(|path| {
+                fs::read_to_string(path).unwrap_or_else(|e| {
+                    panic!(
+                        "T9 cross-walk requires {} to be readable: {e}",
+                        path.display()
+                    )
+                })
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
     }
 
     /// Extract every method name appearing as a quoted match-arm pattern in
@@ -564,6 +589,14 @@ mod t9_route_ownership_cross_walk {
             "m2.cymatic_invert",
             "s0'.anuttara.trace",
             "s2.graph.ananda_position",
+            // S1' canon-promotion family — contract-declared, dispatch NOT YET
+            // BUILT anywhere (tracked absent by the T11 gateway-method gate;
+            // NOT in the expected-present ratchet). Owning tracks: 40/48
+            // (canon-update / base.ensure family). Remove from this list the
+            // moment a dispatch arm lands, so the cross-walk re-arms.
+            "s1'.entity.promote_to_type",
+            "s1'.type.classify_c_layer",
+            "s1'.world.graduate",
             // S3-native live-state routes handled by gateway runtime surfaces.
             "s3'.being_pattern.observe",
             "s3'.being_pattern.project",

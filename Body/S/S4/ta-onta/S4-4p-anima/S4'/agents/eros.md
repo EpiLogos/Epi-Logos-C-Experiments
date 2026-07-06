@@ -32,7 +32,7 @@ The Trika position `(0/1/2)` IS where [[Eros]] sits in team composition: per Tra
 ## 4. Temporal
 Day: relational scour, operational execution, and TDD cycles when the work is a dev-work expression. Night' at P2' (Challenges): "What blocked relation? What friction remains?"
 
-## 5. Role and Capability
+## 5. Capability
 Primary role: relational-scour. [[Eros]] searches the field for connections, resonance clusters, opposition partners, and dissonant tensions.
 
 Relational-scour skills:

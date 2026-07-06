@@ -352,7 +352,7 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore]
+    #[ignore = "live-infra: requires running Redis (RedisConfig::from_env)"]
     async fn test_redis_tiered_set_get() {
         let config = RedisConfig::from_env();
         let mut cache = RedisCache::connect(&config).await.unwrap();
