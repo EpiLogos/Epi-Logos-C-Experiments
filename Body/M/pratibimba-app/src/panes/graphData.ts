@@ -1,0 +1,71 @@
+/**
+ * Coordinate: M' M0' (graph data coercion, Phase-2)
+ * Actualises: defensive coercion of `s2.graph.query` results into force-graph
+ *   data. Pure functions, unit-tested; the pane renders what these return.
+ *   Family hue discipline per THEIA-UI-PATTERNS §1.3 (carrier-independent).
+ */
+
+import { FAMILY_HUES } from '../ui/tokens';
+
+export interface ExplorerNode {
+    id: string;
+    label: string | null;
+    family: string;
+}
+
+export interface ExplorerLink {
+    source: string;
+    target: string;
+    type: string;
+}
+
+// Hue values live in the JS token source (Track 30); re-exported so graph
+// consumers keep importing the palette alongside the coercers.
+export { FAMILY_HUES } from '../ui/tokens';
+
+export function familyOf(coordinate: string): string {
+    const first = coordinate.charAt(0).toUpperCase();
+    return FAMILY_HUES[first] ? first : 'M';
+}
+
+/** Gateway query artifacts vary: bare row arrays, {rows}, {records}. */
+export function queryRows(artifact: unknown): Record<string, unknown>[] {
+    const raw = Array.isArray(artifact)
+        ? artifact
+        : ((artifact as { rows?: unknown[] } | null)?.rows ??
+          (artifact as { records?: unknown[] } | null)?.records ??
+          (artifact as { items?: unknown[] } | null)?.items ??
+          []);
+    return (raw as unknown[]).filter((r): r is Record<string, unknown> => !!r && typeof r === 'object');
+}
+
+export function coerceNodes(artifact: unknown): ExplorerNode[] {
+    const seen = new Set<string>();
+    const nodes: ExplorerNode[] = [];
+    for (const row of queryRows(artifact)) {
+        const coordinate = typeof row.coordinate === 'string' ? row.coordinate : null;
+        if (!coordinate || seen.has(coordinate)) {
+            continue;
+        }
+        seen.add(coordinate);
+        nodes.push({
+            id: coordinate,
+            label: typeof row.label === 'string' ? row.label : null,
+            family: familyOf(coordinate)
+        });
+    }
+    return nodes;
+}
+
+export function coerceLinks(artifact: unknown, nodeIds: ReadonlySet<string>): ExplorerLink[] {
+    const links: ExplorerLink[] = [];
+    for (const row of queryRows(artifact)) {
+        const source = typeof row.source === 'string' ? row.source : null;
+        const target = typeof row.target === 'string' ? row.target : null;
+        if (!source || !target || !nodeIds.has(source) || !nodeIds.has(target)) {
+            continue;
+        }
+        links.push({ source, target, type: typeof row.type === 'string' ? row.type : 'RELATES' });
+    }
+    return links;
+}
