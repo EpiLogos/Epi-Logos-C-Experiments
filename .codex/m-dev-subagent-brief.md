@@ -26,11 +26,19 @@ If `activeDevelopmentContext.nowExists` is false, do not improvise a note path. 
 
 ## Mark
 
+A `done` mark is fail-closed: it requires a structured receipt AND an independent PASS verification record whose verifier-owner differs from yours. **You may not verify your own tranche.** When your implementation is finished and your own checks are green, mark `review` with your receipt and return — the orchestrator dispatches the independent verifier (`node .codex/scripts/verify-tranche.mjs <TASK_ID> --owner <VERIFIER_ID>`) and closes.
+
 ```bash
-node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done --evidence "<one sentence: test counts + key file path>" --write --json --require-now <PLAN_FOLDER>
+node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status review \
+  --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"],"tokenUsage":{"input":<n>,"output":<n>}}' \
+  --evidence "<one sentence: what landed>" --owner <YOUR_ID> --write --json --require-now <PLAN_FOLDER>
 ```
 
-Use `review` for partial; `blocked` only when a real external blocker holds.
+Include `tokenUsage` (your session's approximate input/output tokens) — the daily budget refuses new claims when exhausted.
+
+If you were dispatched AS the verifier for someone else's tranche, run verify-tranche with your own `--owner` and mark done with their receipt only when the record says PASS.
+
+Use `review` for partial too; `blocked` only when a real external blocker holds. Cited `DR-*` ids are machine-checked against the decision registers and fail closed. UF-class tracks need playwright/test:e2e/boot-smoke proof; W-class tracks need live-wire/gateway proof — jsdom or manifest strings will be refused.
 
 ## Don't
 

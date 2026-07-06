@@ -67,19 +67,41 @@ Pick the first `resume` or `claim` work order. For parallel batches, only group 
 node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --owner <AGENT_OR_THREAD_ID> --lease-minutes 120 --write --json --require-now $ARGUMENTS
 ```
 
+The claim REFUSES when hard stops are unresolved (missing or stale NOW — a month-old NOW no longer satisfies `--require-now`) or when the working tree carries too many dirty files outside plan artifacts. `--allow-dirty` overrides the dirty gate and the override is recorded in the ledger. `audit_required` tasks are claimable — they are the re-verification queue. `quarantine` tasks are not; a human lifts quarantine.
+
 ## Step 4 — Execute
 
 Read the tranche body in the plan markdown (one section, line-range) and the substrate files you'll actually touch. The body lists deliverables + verification commands. That's the brief. Skip required-reading rituals unless the body itself names specific files.
 
 Code changes: TDD when reasonable. Real verification — no mocks/fake/placeholder.
 
-## Step 5 — Mark
+## Step 5 — Verify, then Mark
+
+The close path is two commands, two identities. The implementer never closes alone.
+
+**1. Independent verification** — a different owner than the implementer re-runs the tranche's checks fresh:
 
 ```bash
-node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done --evidence "<one sentence: test counts + key file path>" --write --json --require-now $ARGUMENTS
+node .codex/scripts/verify-tranche.mjs <TASK_ID> --owner <VERIFIER_ID>
 ```
 
-Use `review` for partial; `blocked` only when a real external blocker holds (waiting on user, missing service, deferred decision).
+This re-executes the Verify-line commands plus honesty-lint and verify-all, and writes `plan.runs/verifications/<TASK_ID>.md` with a PASS or REFUSED verdict. A red stage refuses the record.
+
+**2. Mark with a structured receipt:**
+
+```bash
+node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done \
+  --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"],"tokenUsage":{"input":<n>,"output":<n>}}' \
+  --evidence "<one sentence: what landed>" --owner <IMPLEMENTER_ID> --write --json --require-now $ARGUMENTS
+```
+
+Receipts SHOULD carry `tokenUsage`; the ledger accumulates a daily spend (budget default 5M, `M_DEV_TOKEN_BUDGET` overrides). An exhausted budget refuses NEW claims — finish and mark in-flight work, report, hand off. It never blocks marking finished work.
+
+The mark is REFUSED (fail closed) when: no receipt or the receipt isn't exit-0 with 0 failures; no fresh PASS verification record exists; the record's verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers (or claimed VALIDATED when the register doesn't say so); a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
+
+Use `review` for partial; `blocked` only when a real external blocker holds (waiting on user, missing service, deferred decision). Neither requires the done gate — use them honestly instead of forcing a done.
+
+`--status quarantine` marks fraud: dependents that trusted the task flip to `audit_required` automatically.
 
 **Evidence is a string in the ledger, not a separate file.** Do NOT write `*-evidence.md` / `*-summary.md` / `*-report.md` that restate the ledger entry. The ledger IS the record.
 

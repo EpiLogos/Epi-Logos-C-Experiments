@@ -64,15 +64,31 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
    node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --owner <AGENT_OR_THREAD_ID> --lease-minutes 120 --write --json --require-now
    ```
 
+   The claim REFUSES on unresolved hard stops (missing or STALE NOW — another day's NOW no longer satisfies `--require-now`) and on a dirty tree over the limit (`--allow-dirty` overrides, recorded in the ledger). `audit_required` tasks are claimable — they are the re-verification queue. `quarantine` tasks are not; a human lifts quarantine.
+
 4. **Execute.** Read the tranche body (one section of the plan markdown) and the substrate files you'll actually touch. Skip required-reading rituals unless the body itself names specific files. TDD when reasonable. Real verification (no mocks/fakes/placeholders).
 
-5. **Mark.**
+5. **Verify, then Mark.** The close path is two commands, two identities — the implementer never closes alone.
+
+   Independent verification first (a different owner re-runs the tranche's checks fresh, plus honesty-lint and verify-all; writes `plan.runs/verifications/<TASK_ID>.md`):
 
    ```bash
-   node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done --evidence "<one sentence: test counts + key file>" --write --json --require-now
+   node .codex/scripts/verify-tranche.mjs <TASK_ID> --owner <VERIFIER_ID>
    ```
 
-   Use `review` for partial; `blocked` only for real external blockers.
+   Then mark with a structured receipt:
+
+   ```bash
+   node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done \
+     --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"],"tokenUsage":{"input":<n>,"output":<n>}}' \
+     --evidence "<one sentence: what landed>" --owner <IMPLEMENTER_ID> --write --json --require-now
+   ```
+
+   Receipts SHOULD carry `tokenUsage`; the daily spend accumulates in the ledger (budget default 5M, `M_DEV_TOKEN_BUDGET` overrides). An exhausted budget refuses NEW claims — finish in-flight work, report, hand off; it never blocks marking finished work.
+
+   The mark is REFUSED (fail closed) when: no green receipt; no fresh PASS verification record; verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers; a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
+
+   Use `review` for partial; `blocked` only for real external blockers. Neither needs the done gate — use them honestly instead of forcing a done. `--status quarantine` marks fraud; dependents that trusted the task flip to `audit_required` automatically.
 
 6. **Evidence is the string in the ledger, not a separate file.** Do NOT write `*-evidence.md` / `*-summary.md` / `*-report.md` that restate the ledger entry.
 

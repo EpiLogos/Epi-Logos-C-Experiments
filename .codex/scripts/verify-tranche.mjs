@@ -1,0 +1,214 @@
+#!/usr/bin/env node
+/**
+ * Coordinate: #5/S0 (verifier protocol runner — Track 00.T6, cycle-3 full rerun)
+ * Residency: .codex/scripts/verify-tranche.mjs
+ * Position (#n): #5 — Integration; verifier ≠ closer made mechanical
+ * Actualises: [[00-verification-harness]] T6 + charter Verification-law §2 —
+ *   the independent verifier re-executes a tranche's Verify commands FRESH,
+ *   records verbatim output under plan.runs/verifications/, and refuses to
+ *   record a pass when the tranche checks, the honesty lint, or verify-all
+ *   are red. The verifier reads the recorded output, never the implementer's
+ *   claim.
+ * Public surface: extractVerifyCommands, resolveTaskVerify, runVerification,
+ *   main; CLI: node .codex/scripts/verify-tranche.mjs <TASK_ID>
+ *     [--plan <folder-or-md>] [--cwd <dir>] [--only <verify-all suites>]
+ *     [--owner <independent-verifier-id>] — recorded as verifier-owner; the
+ *     ledger close path (m-dev-plan-assess.mjs) refuses a done mark whose
+ *     verifier-owner equals the closing owner.
+ * Does NOT own: suite definitions (verify-all.mjs); the ledger write path
+ *   (m-dev-plan-assess.mjs) — this records evidence, the closer marks.
+ * Contract: a PASS file is only written when every stage is green; every run
+ *   (pass or refusal) leaves a verbatim record.
+ */
+
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+export const REPO_ROOT = resolve(SCRIPT_DIR, "..", "..");
+const DEFAULT_PLAN = join(
+  REPO_ROOT,
+  "Idea", "Bimba", "Seeds", "M", "Legacy", "plans", "2026-07-03-m-prime-cycle-3-full-rerun",
+);
+const MAX_RECORDED_OUTPUT = 200_000;
+
+/** Backticked shell fragments on the Verify line(s) of a tranche body. */
+export function extractVerifyCommands(body) {
+  const commands = [];
+  for (const line of body.split("\n")) {
+    if (!/\bVerify:/i.test(line)) continue;
+    for (const match of line.matchAll(/`([^`]+)`/g)) {
+      const fragment = match[1].trim();
+      // command-shaped: starts with a known runner, not a bare path/flag
+      if (/^(node|pnpm|npm|cargo|make|sh|bash|python3?|rg|npx|echo|exit)\b/.test(fragment)) {
+        commands.push(fragment);
+      }
+    }
+  }
+  return commands;
+}
+
+/** Resolve a task's Verify text + commands from a plan folder or single .md. */
+export function resolveTaskVerify(taskId, planPath = DEFAULT_PLAN) {
+  const stats = statSync(planPath);
+  if (stats.isDirectory()) {
+    const index = JSON.parse(readFileSync(join(planPath, "plan.index.json"), "utf8"));
+    const tasks = index.tasks ?? [];
+    const task = (Array.isArray(tasks) ? tasks : Object.values(tasks)).find(
+      (t) => t.id === taskId,
+    );
+    if (!task) throw new Error(`task ${taskId} not found in ${planPath}`);
+    const body = task.body ?? "";
+    return { taskId, verifyText: body, commands: extractVerifyCommands(body), file: task.file ?? null };
+  }
+  // single-file plan: take the section from the line naming the task id to the
+  // next task-looking line, and use its Verify line(s)
+  const text = readFileSync(planPath, "utf8");
+  const lines = text.split("\n");
+  const idPattern = new RegExp(`(^|[^\\w.])${taskId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^\\w.]|$)`);
+  const start = lines.findIndex((line) => idPattern.test(line));
+  if (start === -1) throw new Error(`task ${taskId} not found in ${planPath}`);
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i += 1) {
+    if (/^\s*[-*]?\s*(\*\*)?T?\d+(\.\d+)*\s*[—-]|^#{1,3} /.test(lines[i]) && /T\d/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  const section = lines.slice(start, end).join("\n");
+  return { taskId, verifyText: section, commands: extractVerifyCommands(section), file: planPath };
+}
+
+function runShell(command, cwd) {
+  return new Promise((resolveRun) => {
+    const child = spawn("sh", ["-c", command], { cwd, env: process.env, stdio: ["ignore", "pipe", "pipe"] });
+    let output = "";
+    const onChunk = (chunk) => {
+      output += String(chunk);
+    };
+    child.stdout.on("data", onChunk);
+    child.stderr.on("data", onChunk);
+    child.on("error", (err) => resolveRun({ code: 1, output: `${output}\n[spawn error] ${err.message}` }));
+    child.on("close", (code) => resolveRun({ code: code ?? 1, output }));
+  });
+}
+
+function runArgv(argv, cwd) {
+  return runShell(argv.map((part) => (/\s/.test(part) ? JSON.stringify(part) : part)).join(" "), cwd);
+}
+
+function clip(output) {
+  if (output.length <= MAX_RECORDED_OUTPUT) return output;
+  return `${output.slice(0, MAX_RECORDED_OUTPUT)}\n… [truncated at ${MAX_RECORDED_OUTPUT} bytes]`;
+}
+
+/**
+ * Execute tranche commands then gate commands; write the verbatim record.
+ * Returns { verdict: 'PASS' | 'REFUSED', recordPath }.
+ */
+export async function runVerification({
+  taskId,
+  commands,
+  gateCommands,
+  cwd = REPO_ROOT,
+  outDir,
+  verifyText = "",
+  owner = null,
+}) {
+  const sections = [];
+  let refused = false;
+
+  for (const command of commands) {
+    const { code, output } = await runShell(command, cwd);
+    sections.push({ title: `tranche check: \`${command}\` (cwd ${cwd})`, code, output });
+    if (code !== 0) refused = true;
+  }
+  if (commands.length === 0) {
+    sections.push({
+      title: "tranche check: (no machine-runnable commands on the Verify line — gate only)",
+      code: 0,
+      output: verifyText.trim(),
+    });
+  }
+  for (const gate of gateCommands) {
+    if (refused) break; // already refusing; don't burn the full gate
+    const { code, output } = await runArgv(gate, REPO_ROOT);
+    sections.push({ title: `gate: \`${gate.join(" ")}\``, code, output });
+    if (code !== 0) refused = true;
+  }
+
+  const verdict = refused ? "REFUSED" : "PASS";
+  const record = [
+    `# Verification record — ${taskId}`,
+    ``,
+    `- verdict: **${verdict}**${refused ? " (a pass may not be recorded while any stage is red)" : ""}`,
+    `- verifiedAt: ${new Date().toISOString()}`,
+    `- verifier: verify-tranche.mjs (independent re-execution; verifier ≠ closer)`,
+    `- verifier-owner: ${owner ?? "unspecified"}`,
+    ``,
+    ...sections.flatMap((section) => [
+      `## ${section.title}`,
+      ``,
+      `exit code: ${section.code}`,
+      ``,
+      "```",
+      clip(section.output.trim()),
+      "```",
+      ``,
+    ]),
+  ].join("\n");
+
+  mkdirSync(outDir, { recursive: true });
+  const recordPath = join(outDir, `${taskId}.md`);
+  writeFileSync(recordPath, record);
+  return { verdict, recordPath };
+}
+
+async function main() {
+  const argv = process.argv.slice(2);
+  const taskId = argv[0];
+  if (!taskId || taskId.startsWith("--")) {
+    console.error("usage: node .codex/scripts/verify-tranche.mjs <TASK_ID> [--plan <folder-or-md>] [--cwd <dir>] [--only <suites>] [--owner <verifier-id>]");
+    process.exit(2);
+  }
+  let plan = DEFAULT_PLAN;
+  let cwd = REPO_ROOT;
+  let only = null;
+  let owner = process.env.M_DEV_VERIFIER || process.env.M_DEV_OWNER || process.env.USER || "verify-tranche";
+  for (let i = 1; i < argv.length; i += 1) {
+    if (argv[i] === "--plan") plan = resolve(REPO_ROOT, argv[(i += 1)]);
+    else if (argv[i] === "--cwd") cwd = resolve(REPO_ROOT, argv[(i += 1)]);
+    else if (argv[i] === "--only") only = argv[(i += 1)];
+    else if (argv[i] === "--owner") owner = argv[(i += 1)];
+    else throw new Error(`unknown argument '${argv[i]}'`);
+  }
+
+  const resolved = resolveTaskVerify(taskId, plan);
+  console.log(`[verify-tranche] ${taskId}: ${resolved.commands.length} command(s) from the Verify line`);
+
+  const verifyAll = ["node", join(SCRIPT_DIR, "verify-all.mjs"), "--quiet"];
+  if (only) verifyAll.push("--only", only);
+  const gateCommands = [
+    ["node", join(SCRIPT_DIR, "lint-test-honesty.mjs")],
+    verifyAll,
+  ];
+  const planDir = statSync(plan).isDirectory() ? plan : DEFAULT_PLAN;
+  const outDir = join(planDir, "plan.runs", "verifications");
+  const { verdict, recordPath } = await runVerification({
+    taskId,
+    commands: resolved.commands,
+    gateCommands,
+    cwd,
+    outDir,
+    verifyText: resolved.verifyText,
+    owner,
+  });
+  console.log(`[verify-tranche] ${verdict} — record: ${recordPath}`);
+  process.exit(verdict === "PASS" ? 0 : 1);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}
