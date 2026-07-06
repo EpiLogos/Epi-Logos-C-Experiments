@@ -1,6 +1,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { M0LayerRail } from './M0LayerRail';
+import { commands } from '../commands/registry';
 import { useCoordinateStore } from '../state/stores';
 
 describe('M0LayerRail', () => {
@@ -36,6 +37,38 @@ describe('M0LayerRail', () => {
         });
         expect(screen.getByTestId('m0-layer-relations').getAttribute('data-active')).toBe('true');
         expect(screen.getByTestId('m0-layer-language').getAttribute('data-active')).toBe('false');
+    });
+
+    it('registers the m0.layer.* commands while mounted and switches tabs through them (09.T9.1)', async () => {
+        const onLayerChange = vi.fn();
+        const { unmount } = render(<M0LayerRail onLayerChange={onLayerChange} />);
+        for (const id of ['m0.layer.lang', 'm0.layer.ql', 'm0.layer.rel', 'm0.layer.time']) {
+            expect(commands.has(id)).toBe(true);
+        }
+        // bridged layers are routes, never local tab commands
+        expect(commands.has('m0.layer.pers')).toBe(false);
+        expect(commands.has('m0.layer.pedag')).toBe(false);
+
+        await act(async () => {
+            await commands.execute('m0.layer.time');
+        });
+        expect(
+            screen.getByTestId('m0-layer-time-community').getAttribute('data-active')
+        ).toBe('true');
+        expect(onLayerChange).toHaveBeenCalledWith('time');
+
+        unmount();
+        expect(commands.has('m0.layer.lang')).toBe(false);
+    });
+
+    it('carries the frozen tab-route law on every entry', () => {
+        render(<M0LayerRail />);
+        expect(screen.getByTestId('m0-layer-language').getAttribute('data-route')).toBe(
+            '/m0-anuttara/coordinate/language'
+        );
+        expect(screen.getByTestId('m0-layer-pedagogy').getAttribute('data-route')).toBe(
+            '/m0-anuttara/coordinate/pedagogy'
+        );
     });
 
     it('bridged layers carry the deep-link for the selected coordinate and follow the store', async () => {

@@ -154,3 +154,87 @@ export function bridgedLayerRoute(
         : '?source=m0-anuttara';
     return `${M0_BRIDGE_ROUTE_SCHEME}/${layer.bridgeExtensionId}${layer.bridgeRoutePath}${query}`;
 }
+
+/* ------------------------------------------------------------------------ *
+ * Per-layer routing model (rerun 09.T9.1, sibling of 01.T1.1)
+ * Frozen-warehouse law: m0-inspector.ts M0InspectorLayer short keys +
+ * M0_LAYER_ROUTE_SPECS tab routes. The single S2 query path is shared across
+ * every local layer — layers discriminate WHICH spec-named projections render,
+ * never HOW the substrate is read.
+ * ------------------------------------------------------------------------ */
+
+/** Short layer discriminator carried by tab routes and cross-pane commands. */
+export type M0InspectorLayer = 'lang' | 'ql' | 'rel' | 'time' | 'pers' | 'pedag';
+
+export interface M0LayerRoute {
+    readonly layer: M0InspectorLayer;
+    readonly layerKey: M0LayerKey;
+    readonly routePath: string;
+    readonly commandId: string;
+    readonly view: M0LayerView;
+}
+
+const LAYER_ROUTE_SPECS: readonly Readonly<{
+    layer: M0InspectorLayer;
+    layerKey: M0LayerKey;
+    routePath: string;
+}>[] = Object.freeze([
+    { layer: 'lang', layerKey: 'language', routePath: '/m0-anuttara/coordinate/language' },
+    { layer: 'ql', layerKey: 'ql-structure', routePath: '/m0-anuttara/coordinate/ql' },
+    { layer: 'rel', layerKey: 'relations', routePath: '/m0-anuttara/coordinate/relations' },
+    { layer: 'time', layerKey: 'time-community', routePath: '/m0-anuttara/coordinate/time' },
+    { layer: 'pers', layerKey: 'personal', routePath: '/m0-anuttara/coordinate/personal' },
+    { layer: 'pedag', layerKey: 'pedagogy', routePath: '/m0-anuttara/coordinate/pedagogy' }
+]);
+
+export const M0_LAYER_ROUTES: readonly M0LayerRoute[] = Object.freeze(
+    LAYER_ROUTE_SPECS.map(spec => {
+        const view = M0_LAYER_VIEWS.find(candidate => candidate.key === spec.layerKey);
+        if (!view) {
+            throw new Error(`m0Layers: no layer view for route key ${spec.layerKey}`);
+        }
+        return Object.freeze({
+            layer: spec.layer,
+            layerKey: spec.layerKey,
+            routePath: spec.routePath,
+            commandId: `m0.layer.${spec.layer}`,
+            view
+        });
+    })
+);
+
+/**
+ * Spec-named projections each LOCAL layer renders over the shared query result
+ * (M0'-SPEC §The Six M0-X' Data Layers). Bridged layers render nothing locally.
+ */
+export const M0_LAYER_FIELDS: Readonly<Record<M0InspectorLayer, readonly string[]>> =
+    Object.freeze({
+        lang: ['c_1_symbol', 'c_1_formulation_type', 'c_1_complete_formulation'],
+        ql: ['family', 'mirror', 'lens', 'inversion', 'position_character', 'gebser_register'],
+        rel: ['relations', 'c_1_relation_family'],
+        time: ['community', 'active_now_clock'],
+        pers: [],
+        pedag: []
+    });
+
+export interface M0LayerS2Query {
+    readonly method: 's2.graph.node';
+    readonly params: Readonly<{ coordinate: string }>;
+}
+
+/**
+ * The ONE S2 read path every local layer shares: the coordinate's node +
+ * relations via the real gateway method (`s2.graph.node`, live-probed). Layer
+ * identity never changes the read — it selects which M0_LAYER_FIELDS render.
+ * Returns null when no coordinate is selected or the layer is bridged
+ * (bridged layers route via bridgedLayerRoute, they never query locally).
+ */
+export function m0LayerS2Query(
+    route: M0LayerRoute,
+    coordinate: string | null
+): M0LayerS2Query | null {
+    if (route.view.placement !== 'local' || !coordinate) {
+        return null;
+    }
+    return { method: 's2.graph.node', params: { coordinate } };
+}

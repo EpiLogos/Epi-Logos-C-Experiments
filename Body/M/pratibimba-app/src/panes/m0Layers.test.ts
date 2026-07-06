@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
     bridgedLayerRoute,
+    m0LayerS2Query,
     M0_BRIDGE_ROUTE_SCHEME,
+    M0_LAYER_FIELDS,
+    M0_LAYER_ROUTES,
     M0_LAYER_VIEWS
 } from './m0Layers';
 
@@ -65,6 +68,52 @@ describe('m0Layers — the six M0-X\' surface contract (M0\'-SPEC §The Six M0-X
         for (const view of M0_LAYER_VIEWS.filter(v => v.placement === 'local')) {
             expect(bridgedLayerRoute(view, 'M1')).toBeNull();
         }
+    });
+
+    it('routes all six layers with the frozen tab-route law and 1:1 short keys (09.T9.1)', () => {
+        expect(M0_LAYER_ROUTES.map(r => r.layer)).toEqual([
+            'lang',
+            'ql',
+            'rel',
+            'time',
+            'pers',
+            'pedag'
+        ]);
+        expect(M0_LAYER_ROUTES.map(r => r.routePath)).toEqual([
+            '/m0-anuttara/coordinate/language',
+            '/m0-anuttara/coordinate/ql',
+            '/m0-anuttara/coordinate/relations',
+            '/m0-anuttara/coordinate/time',
+            '/m0-anuttara/coordinate/personal',
+            '/m0-anuttara/coordinate/pedagogy'
+        ]);
+        for (const route of M0_LAYER_ROUTES) {
+            expect(route.view.key).toBe(route.layerKey);
+            expect(route.commandId).toBe(`m0.layer.${route.layer}`);
+        }
+    });
+
+    it('shares ONE S2 query path across every local layer; bridged layers never query', () => {
+        const localQueries = M0_LAYER_ROUTES.filter(r => r.view.placement === 'local').map(r =>
+            m0LayerS2Query(r, 'M0-2')
+        );
+        expect(localQueries).toHaveLength(4);
+        for (const query of localQueries) {
+            expect(query).toEqual({ method: 's2.graph.node', params: { coordinate: 'M0-2' } });
+        }
+        for (const route of M0_LAYER_ROUTES.filter(r => r.view.placement === 'bridged')) {
+            expect(m0LayerS2Query(route, 'M0-2')).toBeNull();
+            expect(M0_LAYER_FIELDS[route.layer]).toEqual([]);
+        }
+        // no coordinate selected → no read fires
+        expect(m0LayerS2Query(M0_LAYER_ROUTES[0], null)).toBeNull();
+    });
+
+    it('names spec projections per local layer so layers discriminate rendering, not reads', () => {
+        expect(M0_LAYER_FIELDS.lang).toContain('c_1_complete_formulation');
+        expect(M0_LAYER_FIELDS.ql).toContain('gebser_register');
+        expect(M0_LAYER_FIELDS.rel).toContain('c_1_relation_family');
+        expect(M0_LAYER_FIELDS.time).toContain('active_now_clock');
     });
 
     it('never doubles the extension id in the emitted route (frozen-carrier regression)', () => {
