@@ -23,6 +23,7 @@ import {
 } from '@pratibimba/m-extension-runtime';
 import {
     BaseViewConfig,
+    BasesDataSource,
     BasesRecord,
     BasesRenderModel,
     BasesViewMode,
@@ -32,7 +33,7 @@ import {
     BASES_VIEW_WIDGET_ID,
     EXTENSION_ID
 } from '../common';
-import { BasesDataSource, createBasesDataSource } from './bases-data-source';
+import { createBasesDataSource } from './bases-data-source';
 
 export const DEFAULT_BASE_VIEW_CONFIG: BaseViewConfig = Object.freeze({
     source: 'dynamic',

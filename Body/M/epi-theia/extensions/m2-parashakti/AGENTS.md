@@ -5,7 +5,7 @@ The `@pratibimba/m2-parashakti` Theia extension — "M2PrimeMeaningPacket viewer
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (architecture: [[M2-ARCHITECTURE]]).
 
 ## Ownership
-- `package.json` — `@pratibimba/m2-parashakti` workspace package manifest; `theiaExtensions.frontend` -> `lib/browser/frontend-module`.
+- `package.json` — `@pratibimba/m2-parashakti` workspace package manifest; `theiaExtensions.frontend` -> `lib/browser/frontend-module`, and the `exports` map must expose that Theia entrypoint for Electron/browser bundle resolution.
 - `src/common/index.ts` — generated public surface (view ids, command ids, route, privacy class, observability event types, Track 08 contribution/exports). Header: "Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit."
 - `src/common/meaning-packet.ts` — `M2_MEANING_PACKET_CONTRACT_VERSION` packet types and selectors.
 - `src/common/composition.ts` — `M2CymaticTextureContribution` data-shape builder for the Track 23.12 Cosmic Engine texture mount; also the Layer C variant registry (`M2_SURFACE_VARIANT_REGISTRY` / `M2SurfaceVariantStatus` / `m2SurfaceVariantIsDeferred`), where `'spheres' → 'deferred-23.9'` names the deferred solar-anchor carrier (23.9). Exported as `@pratibimba/m2-parashakti/common/composition`.

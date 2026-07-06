@@ -2,6 +2,10 @@ import type {
   BimbaPratibimbaUiState,
   CompositionToggleClass
 } from '@pratibimba/integrated-composition';
+import {
+  isActivityBarMode,
+  isOmniPanelTabId
+} from '@pratibimba/integrated-composition';
 import type { MathemeHarmonicProfileBoundary } from '@pratibimba/m-extension-runtime';
 import type { PlanetaryViewMode } from '../../common/planetary-lut';
 
@@ -163,6 +167,8 @@ export const M2_BIMBA_PRATIBIMBA_STATE_FIELDS: readonly (keyof M2BimbaPratibimba
     'profileGeneration',
     'sessionKey',
     'dayNow',
+    'activeOmniPanelTab',
+    'activityBarMode',
     // M2-side slice
     ...M2_SIDE_STATE_FIELDS
   ]);
@@ -188,6 +194,8 @@ export const M2_EMPTY_STATE: M2BimbaPratibimbaUiState = Object.freeze({
   profileGeneration: 0,
   sessionKey: null,
   dayNow: null,
+  activeOmniPanelTab: null,
+  activityBarMode: null,
   lens_mode: '',
   tick12: 0,
   position6: 0,
@@ -394,6 +402,12 @@ export function normalizeM2State(
     profileGeneration: finiteNumber(partial.profileGeneration) ?? M2_EMPTY_STATE.profileGeneration,
     sessionKey: stringValue(partial.sessionKey) ?? M2_EMPTY_STATE.sessionKey,
     dayNow: stringValue(partial.dayNow) ?? M2_EMPTY_STATE.dayNow,
+    activeOmniPanelTab: isOmniPanelTabId(partial.activeOmniPanelTab)
+      ? partial.activeOmniPanelTab
+      : M2_EMPTY_STATE.activeOmniPanelTab,
+    activityBarMode: isActivityBarMode(partial.activityBarMode)
+      ? partial.activityBarMode
+      : M2_EMPTY_STATE.activityBarMode,
     lens_mode: typeof partial.lens_mode === 'string' ? partial.lens_mode : M2_EMPTY_STATE.lens_mode,
     tick12: finiteNumber(partial.tick12) ?? M2_EMPTY_STATE.tick12,
     position6: finiteNumber(partial.position6) ?? M2_EMPTY_STATE.position6,

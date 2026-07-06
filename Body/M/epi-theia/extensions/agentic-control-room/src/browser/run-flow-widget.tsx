@@ -280,20 +280,24 @@ export class RunFlowWidget extends ReactWidget {
     }
 
     protected toolStreamBlocks(s: RunState): readonly Block[] {
-        return Object.freeze(s.toolStream.map(ev => ({
-            id: `block:acr:tool:${ev.id}`,
-            type: 'tool-stream-event',
-            ctx: this.blockCtx('tool-stream'),
-            coordinate: 'M5-4',
-            privacyClass: ev.privacyClass === 'protected-local' ? 'protected-local' : 'protected',
-            provenance: {
-                kind: 'evidence-envelope',
-                handle: ev.id,
-                source: 'agentic-control-room.toolStream'
-            },
-            data: ev,
-            affordances: ['navigate']
-        })));
+        return Object.freeze(s.toolStream.map((ev): Block => {
+            const privacyClass: Block['privacyClass'] =
+                ev.privacyClass === 'protected-local' ? 'protected-local' : 'protected';
+            return {
+                id: `block:acr:tool:${ev.id}`,
+                type: 'tool-stream-event',
+                ctx: this.blockCtx('tool-stream'),
+                coordinate: 'M5-4',
+                privacyClass,
+                provenance: {
+                    kind: 'evidence-envelope',
+                    handle: ev.id,
+                    source: 'agentic-control-room.toolStream'
+                },
+                data: ev,
+                affordances: ['navigate']
+            };
+        }));
     }
 
     protected blockCtx(cpf: string): Block['ctx'] {

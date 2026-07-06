@@ -42,6 +42,13 @@ export interface GatewayPanelSessionState {
   readonly tryItDraft?: Record<string, unknown>;
 }
 
+export interface LegacyGatewayAutoConnectInput {
+  readonly bridgeRpcAvailable: boolean;
+  readonly visible: boolean;
+  readonly hasClient: boolean;
+  readonly connectionState: 'disconnected' | 'connecting' | 'connected' | 'error';
+}
+
 export const GATEWAY_SUBVIEWS: readonly { readonly id: GatewaySubView; readonly label: string }[] = Object.freeze([
   { id: 'capabilities', label: 'Capabilities' },
   { id: 'nodes', label: 'Nodes' },
@@ -99,6 +106,24 @@ export function gatewayStatusFromReadiness(snapshot: MExtensionReadinessSnapshot
     default:
       return 'pending-bridge';
   }
+}
+
+export function isGatewayReadinessReadable(snapshot: MExtensionReadinessSnapshot | null | undefined): boolean {
+  return snapshot?.state === 'ready_public_current' || snapshot?.state === 'degraded_but_readable';
+}
+
+export function shouldLoadGatewayCapabilities(
+  activeSubView: GatewaySubView,
+  readiness: MExtensionReadinessSnapshot | null | undefined
+): boolean {
+  return activeSubView === 'capabilities' && isGatewayReadinessReadable(readiness);
+}
+
+export function shouldAutoConnectLegacyGateway(input: LegacyGatewayAutoConnectInput): boolean {
+  return !input.bridgeRpcAvailable &&
+    input.visible &&
+    !input.hasClient &&
+    (input.connectionState === 'disconnected' || input.connectionState === 'error');
 }
 
 export function normalizeCapabilitiesPayload(payload: unknown, readiness?: MExtensionReadinessSnapshot | null): readonly GatewayCapability[] {

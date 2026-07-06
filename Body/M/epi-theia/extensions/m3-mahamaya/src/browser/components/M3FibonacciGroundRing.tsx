@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { MExtensionReadinessSnapshot } from '@pratibimba/m-extension-runtime';
+import { readinessSeverity } from '@pratibimba/m-extension-runtime';
 import { useM3ProfileTick } from '../context/M3ProfileTickContext';
 import { useM3Readiness } from '../context/M3ReadinessContext';
 import { ReadinessChip } from './ReadinessChip';
@@ -145,7 +146,7 @@ export const M3FibonacciGroundRing: React.FC<M3FibonacciGroundRingProps> = ({
                 </div>
                 <ReadinessChip
                     bindingKey="profile.fibonacciGround"
-                    state={resolved.ready ? (readiness?.state === 'blocked' ? 'blocked' : 'ready') : 'pending'}
+                    state={resolved.ready ? (readiness && readinessSeverity(readiness.state) === 'blocked' ? 'blocked' : 'ready') : 'pending'}
                     style={chipStyle}
                 >
                     {resolved.ready ? 'level-0 ready' : 'ground pending'}

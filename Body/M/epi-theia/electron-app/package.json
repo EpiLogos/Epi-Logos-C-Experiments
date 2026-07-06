@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@theia/cli": "1.56.0",
-    "electron": "^32.0.0",
+    "electron": "32.3.3",
     "electron-builder": "^24.13.3",
     "typescript": "~5.4.5"
   },
@@ -56,8 +56,8 @@
     "build:prod": "EPI_SKIP_FFMPEG_REPLACE=1 theia build --mode production",
     "clean": "theia clean && rimraf lib src-gen dist",
     "watch": "EPI_SKIP_FFMPEG_REPLACE=1 theia build --watch --mode development",
-    "start": "EPI_SKIP_FFMPEG_REPLACE=1 theia start",
-    "start:debug": "EPI_SKIP_FFMPEG_REPLACE=1 theia start --inspect",
+    "start": "node ../scripts/ensure-electron-dist.mjs && node ../scripts/ensure-electron-native-modules.mjs && EPI_SKIP_FFMPEG_REPLACE=1 theia start",
+    "start:debug": "node ../scripts/ensure-electron-dist.mjs && node ../scripts/ensure-electron-native-modules.mjs && EPI_SKIP_FFMPEG_REPLACE=1 theia start --inspect",
     "dev": "pnpm run build && pnpm run start",
     "package:dir": "electron-builder --dir",
     "package": "electron-builder",

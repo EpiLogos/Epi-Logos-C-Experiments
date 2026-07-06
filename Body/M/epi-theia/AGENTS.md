@@ -1,5 +1,7 @@
 # AGENTS.md — epi-theia
 
+> **FROZEN — parts warehouse (2026-07-02, DR-FACE-4 per [[M'-SURFACE-REENVISIONING-2026-07-01]], ratified; supersedes Tranche 11.7).** The active M' carrier is `Body/M/pratibimba-app/`. Do not add extensions, tasks, or fixes here. This tree remains readable as the source of ports — React component internals, `src/common` model layers, kernel-bridge types, design patterns — each port carries a provenance line back to its file here. Archive alongside `epi-tauri`/`epi-app` once port parity is reached.
+
 ## Purpose
 The `@pratibimba/system` pnpm workspace: "Pratibimba System — Theia-based IDE surface for the Epi-Logos M5-3 layer. Hosts the six individual M-extensions, two integrated plugins (1-2-3 and 4/5/0), and the foundational kernel-bridge." (per `package.json`).
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
@@ -25,6 +27,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
 - [[wikilink]] all coordinate/spec/agent references in any authored doc or vault write; coordinate-prefixed `c_n_*` frontmatter for vault writes.
 - Residency: do not place design/canon docs here (only implementation-local READMEs); do not treat `node_modules`, bundles, or coverage as vault material; keep paths repo-local (no legacy absolute paths).
 - Electron is the primary development/acceptance surface; browser mode is the derived gateway-mediated profile and must not be the only target carrying a Pratibimba surface package.
+- Electron app startup scripts must run `scripts/ensure-electron-dist.mjs` and `scripts/ensure-electron-native-modules.mjs` before `theia start` so missing Electron dist artifacts and Electron-ABI native backend modules are repaired before launch.
 
 ## Verification
 `pnpm --dir "Body/M/epi-theia" test` (runs `pnpm -r test` plus `pnpm test:contracts`); contract/acceptance set only: `pnpm --dir "Body/M/epi-theia" test:contracts`.

@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useEpiClawGatewayStore } from '../stores/epiClawGatewayStore';
 import type { GatewaySessionRow, CronJob } from '../controllers/epi-claw/types';
 import { ADVANCED_PANELS, isGatewayPanel } from './omni/contracts/panels';
+import { shouldAutoConnectLegacyGateway } from './omni/gateway/gatewayModel';
 import { PrimaryTabs } from './omni/layout/PrimaryTabs';
 import { OmniPanelHeader } from './omni/layout/OmniPanelHeader';
 import { PiChatPanel } from './omni/chat/PiChatPanel';
@@ -485,16 +486,18 @@ export function OmniPanel({
     if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
       return;
     }
-    if (!isVisible) {
-      return;
-    }
-    if (!client && (connectionState === 'disconnected' || connectionState === 'error')) {
+    if (shouldAutoConnectLegacyGateway({
+      bridgeRpcAvailable: Boolean(onInvokeGatewayRpc),
+      visible: isVisible,
+      hasClient: Boolean(client),
+      connectionState,
+    })) {
       void (async () => {
         await syncMainS3Connection();
         connect();
       })();
     }
-  }, [client, connect, connectionState, isVisible, syncMainS3Connection]);
+  }, [client, connect, connectionState, isVisible, onInvokeGatewayRpc, syncMainS3Connection]);
 
   const handleAddCron = async () => {
     try {

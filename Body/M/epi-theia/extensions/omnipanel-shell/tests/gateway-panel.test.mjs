@@ -27,6 +27,9 @@ const {
     CapabilityCheckCell
 } = require('../lib/browser/components/omni/gateway/CapabilityCheckCell.js');
 const {
+    DEFAULT_GATEWAY_URL
+} = require('../lib/browser/controllers/epi-claw/gateway-client.js');
+const {
     CapabilityListView
 } = require('../lib/browser/components/omni/gateway/CapabilityListView.js');
 const {
@@ -42,6 +45,8 @@ const {
     gatewayStatusFromReadiness,
     normalizeCapabilitiesPayload,
     normalizeGatewayPanelSessionState,
+    shouldAutoConnectLegacyGateway,
+    shouldLoadGatewayCapabilities,
     submitTryItCapability
 } = require('../lib/browser/components/omni/gateway/gatewayModel.js');
 
@@ -88,6 +93,10 @@ function syntheticCapabilities() {
         ]
     }, READY_SNAPSHOT);
 }
+
+test('legacy gateway fallback uses IPv4 loopback to match the managed gateway bind address', () => {
+    assert.equal(DEFAULT_GATEWAY_URL, 'ws://127.0.0.1:18794');
+});
 
 test('CapabilityListView renders gateway capabilities from the synthetic capability matrix fixture', () => {
     const capabilities = syntheticCapabilities();
@@ -211,6 +220,55 @@ test('CapabilityListView shows ReadinessBanner fallback when the S4 capability l
     assert.match(html, /Gateway capabilities/);
     assert.match(html, /CapabilityListView fallback/);
     assert.match(html, /Capability list unavailable/);
+});
+
+test('gateway capabilities load only after kernel bridge readiness is readable', () => {
+    assert.equal(shouldLoadGatewayCapabilities('capabilities', PENDING_READINESS), false);
+    assert.equal(shouldLoadGatewayCapabilities('capabilities', {
+        ...PENDING_READINESS,
+        state: 's3_subscription_blocked',
+        reason: 'gateway is starting'
+    }), false);
+    assert.equal(shouldLoadGatewayCapabilities('capabilities', {
+        ...PENDING_READINESS,
+        state: 'degraded_but_readable',
+        reason: 'cached profile available while gateway catches up'
+    }), true);
+    assert.equal(shouldLoadGatewayCapabilities('capabilities', READY_SNAPSHOT), true);
+    assert.equal(shouldLoadGatewayCapabilities('settings', READY_SNAPSHOT), false);
+});
+
+test('legacy gateway auto-connect is disabled when bridge RPC is present', () => {
+    assert.equal(shouldAutoConnectLegacyGateway({
+        bridgeRpcAvailable: true,
+        visible: true,
+        hasClient: false,
+        connectionState: 'disconnected'
+    }), false);
+    assert.equal(shouldAutoConnectLegacyGateway({
+        bridgeRpcAvailable: false,
+        visible: true,
+        hasClient: false,
+        connectionState: 'disconnected'
+    }), true);
+    assert.equal(shouldAutoConnectLegacyGateway({
+        bridgeRpcAvailable: false,
+        visible: true,
+        hasClient: false,
+        connectionState: 'error'
+    }), true);
+    assert.equal(shouldAutoConnectLegacyGateway({
+        bridgeRpcAvailable: false,
+        visible: false,
+        hasClient: false,
+        connectionState: 'disconnected'
+    }), false);
+    assert.equal(shouldAutoConnectLegacyGateway({
+        bridgeRpcAvailable: false,
+        visible: true,
+        hasClient: true,
+        connectionState: 'disconnected'
+    }), false);
 });
 
 test('gateway model normalizes status taxonomy and durable tab-state payloads', () => {

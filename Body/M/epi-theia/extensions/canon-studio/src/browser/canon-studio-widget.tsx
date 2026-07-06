@@ -111,7 +111,7 @@ export class CanonStudioWidget extends ReactWidget {
         const receipt = await this.bridge.invokeCapability({
             method: 'invokeGatewayRpc',
             sessionKey: `${EXTENSION_ID}:semantic-autocomplete`,
-            params: request,
+            params: { ...request },
             profileGeneration: this.bridge.cachedProfile?.generation ?? null,
             provenanceHandles: [],
             vak: null
@@ -127,7 +127,7 @@ export class CanonStudioWidget extends ReactWidget {
         await this.bridge.invokeCapability({
             method: 'invokeGatewayRpc',
             sessionKey: `${EXTENSION_ID}:vault-write`,
-            params: request,
+            params: { ...request },
             profileGeneration: this.bridge.cachedProfile?.generation ?? null,
             provenanceHandles: request.provenanceHandles,
             vak: null

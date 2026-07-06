@@ -24,6 +24,7 @@ import {
 import {
   normalizeCapabilitiesPayload,
   normalizeGatewaySubView,
+  shouldLoadGatewayCapabilities,
   type GatewayCapability,
   type GatewaySubView
 } from '../gateway/gatewayModel';
@@ -79,6 +80,12 @@ export function GatewayPanel({
   const [tryItDrafts, setTryItDrafts] = useState<Record<string, string>>(() => normalizeTryItDrafts(initialTryItDraft));
 
   const refreshCapabilities = useCallback(async () => {
+    if (!shouldLoadGatewayCapabilities(activeSubView, readinessSnapshot)) {
+      setCapabilities([]);
+      setCapabilitiesLoading(false);
+      setCapabilitiesError(null);
+      return;
+    }
     setCapabilitiesLoading(true);
     setCapabilitiesError(null);
     try {
@@ -94,14 +101,17 @@ export function GatewayPanel({
     } finally {
       setCapabilitiesLoading(false);
     }
-  }, [onInvokeGatewayRpc, readinessSnapshot]);
+  }, [activeSubView, onInvokeGatewayRpc, readinessSnapshot]);
 
   useEffect(() => {
-    if (activeSubView !== 'capabilities') {
+    if (!shouldLoadGatewayCapabilities(activeSubView, readinessSnapshot)) {
+      setCapabilities([]);
+      setCapabilitiesLoading(false);
+      setCapabilitiesError(null);
       return;
     }
     void refreshCapabilities();
-  }, [activeSubView, refreshCapabilities]);
+  }, [activeSubView, readinessSnapshot, refreshCapabilities]);
 
   useEffect(() => {
     setActiveSubView(normalizeGatewaySubView(initialSubView));

@@ -8,6 +8,22 @@ import { dirname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
+
+if (!globalThis.Element) {
+    globalThis.Element = class Element {
+        matches() {
+            return false;
+        }
+    };
+}
+if (!globalThis.document) {
+    globalThis.document = {
+        createElement: () => new globalThis.Element(),
+        documentElement: { style: {} },
+        querySelectorAll: () => []
+    };
+}
+
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 

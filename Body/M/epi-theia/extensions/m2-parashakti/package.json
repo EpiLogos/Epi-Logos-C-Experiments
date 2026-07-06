@@ -22,12 +22,17 @@
     "./common/composition": {
       "types": "./lib/common/composition.d.ts",
       "default": "./lib/common/composition.js"
+    },
+    "./lib/browser/frontend-module": {
+      "types": "./lib/browser/frontend-module.d.ts",
+      "default": "./lib/browser/frontend-module.js"
     }
   },
   "typesVersions": {
     "*": {
       "meaning-packet": ["lib/common/meaning-packet.d.ts"],
-      "common/composition": ["lib/common/composition.d.ts"]
+      "common/composition": ["lib/common/composition.d.ts"],
+      "lib/browser/frontend-module": ["lib/browser/frontend-module.d.ts"]
     }
   },
   "theiaExtensions": [

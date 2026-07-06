@@ -233,4 +233,4 @@ export class GatewayClient {
  * Default gateway URL for Epi-Claw
  * Port 18794 — canonical S3' gateway port (epi gate)
  */
-export const DEFAULT_GATEWAY_URL = "ws://localhost:18794";
+export const DEFAULT_GATEWAY_URL = "ws://127.0.0.1:18794";
