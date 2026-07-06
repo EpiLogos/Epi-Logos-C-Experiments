@@ -10,7 +10,7 @@ async fn test_neo4j_connect_and_health() {
 }
 
 #[tokio::test]
-#[ignore]
+#[ignore = "live-infra: requires running Neo4j (Neo4jConfig::from_env)"]
 async fn test_neo4j_run_query() {
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).unwrap();
@@ -19,7 +19,7 @@ async fn test_neo4j_run_query() {
 }
 
 #[tokio::test]
-#[ignore]
+#[ignore = "live-infra: requires running Neo4j (Neo4jConfig::from_env)"]
 async fn test_neo4j_create_and_delete_node() {
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).unwrap();

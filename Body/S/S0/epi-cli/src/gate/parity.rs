@@ -623,13 +623,26 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s0.command.exec"
         | "s0.command.completion"
         | "s0'.verifier.check_state"
-        | "s0'.verifier.emit_question" => Some("s0.*"),
+        | "s0'.verifier.emit_query"
+        | "s0'.verifier.validate_membership"
+        | "s0'.verifier.owl_query"
+        | "s0'.anuttara.trace"
+        // portal-core parashakti adapter — dispatch classifies it S0 product
+        | "m2.cymatic_invert" => Some("s0.*"),
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
         | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
-        | "s2.graph.pointer_web.refresh" => Some("s2.graph.*"),
+        | "s2.graph.pointer_web.refresh"
+        | "s2.graph.ananda_position"
+        | "s2.graph.gds.tangent_overlay"
+        | "s2.graph.ontology.reload"
+        | "s2.graph.seed.snapshot"
+        | "s2.graph.core65.audit"
+        | "s2.graph.promotion.dry_run"
+        | "s2.graph.promotion.commit"
+        | "s2.graph.relation_family.list" => Some("s2.graph.*"),
         "s2.graph.kernel_resonance.record" | "s2.parashaktiCorrespondences" => Some("s2.graph.*"),
         "s2'.coordinate.resolve"
         | "s2'.coordinate.cypher"
@@ -643,12 +656,19 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s2'.retrieve"
         | "s2'.rerank"
         | "s2'.enrich" => Some("s2'.*"),
-        "s3'.kernel.envelope.publish" => Some("s3'.*"),
+        "s3'.kernel.envelope.publish"
+        | "s3'.being_pattern.observe"
+        | "s3'.being_pattern.project"
+        | "s3'.being_pattern.subscribe"
+        | "s3'.being_pattern.review_candidate" => Some("s3'.*"),
         "s1'.vault.read_file"
         | "s1'.vault.write_file"
         | "s1'.vault.rename_file"
         | "s1'.vault.move_file"
-        | "s1'.semantic.suggest_links" => Some("s1'.*"),
+        | "s1'.semantic.suggest_links"
+        | "s1'.type.classify_c_layer"
+        | "s1'.entity.promote_to_type"
+        | "s1'.world.graduate" => Some("s1'.*"),
         "s5.trajectory.verify" | "s5.ebm.train" | "s5.ebm.export_state" => Some("s5'.improve.*"),
         "s5'.anuttara.diagnose" => Some("s5'.ql.*"),
         "channels.status"
@@ -737,7 +757,9 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.gnostic.query"
         | "s5'.gnostic.notebook"
         | "s5'.gnostic.status"
-        | "s5'.gnostic.models" => Some("s5'.gnostic.*"),
+        | "s5'.gnostic.models"
+        | "s5'.gnostic.resolve"
+        | "s5'.gnostic.musical_transcript" => Some("s5'.gnostic.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,

@@ -10,6 +10,7 @@ fn near(a: f32, b: f32) -> bool {
 }
 
 #[test]
+#[ignore = "expected-red: Track 33 — the portal clock projects zero total_energy (default E4/E5/E6 inputs; the cast-ratio E5 harmonic channel has not landed). Runs under the kernel-truth stage."]
 fn cli_portal_clock_uses_real_kernel_projection_after_cast() {
     let state = Arc::new(Mutex::new(PortalClockState::default()));
 

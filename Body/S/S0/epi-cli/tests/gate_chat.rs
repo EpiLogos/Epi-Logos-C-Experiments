@@ -58,6 +58,20 @@ async fn sessions_rpc_lifecycle_mutates_real_store() {
         .await
         .unwrap();
 
+    // Let the seeded run fully settle before lifecycle assertions — a late
+    // transcript append from the async fake-pi run raced sessions.reset and
+    // flaked this test (messageCount 1 after reset).
+    for _ in 0..100 {
+        let state = client
+            .request("sessions.resolve", json!({"session":"agent:main:main"}))
+            .await
+            .unwrap();
+        if state["runState"]["idleState"] == "idle" {
+            break;
+        }
+        tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+    }
+
     client
         .request(
             "sessions.patch",
@@ -89,7 +103,9 @@ async fn sessions_rpc_lifecycle_mutates_real_store() {
     assert_eq!(list["items"].as_array().unwrap().len(), 1);
     assert_eq!(resolve["canonicalKey"], "agent:main:main");
     assert_eq!(resolve["activeAgentId"], "pi.main");
-    assert_eq!(preview["messageCount"], 1);
+    // Settled transcript = user seed + assistant reply (the old ==1 only
+    // passed by racing the async run).
+    assert_eq!(preview["messageCount"], 2);
     assert_eq!(compact["compacted"], true);
 
     client

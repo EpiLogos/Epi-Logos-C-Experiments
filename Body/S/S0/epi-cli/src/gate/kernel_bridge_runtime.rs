@@ -1053,6 +1053,203 @@ fn m_prime_performance_event_from_profile(
     .expect("profile-derived MPrimePerformanceEvent is valid")
 }
 
+/// Bridge-contract identifier for the M1'/M2'/M3' chime frame (bell-kernel
+/// spec §5): the tick event proving all three poles resolved the same
+/// resonant state at one tick. Published as a SIBLING to the M1 performance
+/// stream — additive, never a replacement.
+pub const M123_CHIME_FRAME_CONTRACT: &str = "S0.kernel-bridge.m123-chime-frame";
+pub const M123_CHIME_EVENT_TYPE: &str = "m123.chime";
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M123ChimeM1JsonShape {
+    /// Always "K2" — the resonant body topology.
+    pub surface: String,
+    /// The active M1 composition mount handle when one is registered. The
+    /// pratibimba-app carrier renders the K2 client-side; kernel-side this
+    /// stays None until a composition mount registers a handle.
+    pub k2_surface_handle: Option<String>,
+    /// `m1-paramasiva-played-torus` is a retiring Theia surface — absent in
+    /// this carrier, kept for contract compatibility.
+    pub played_torus_handle: Option<String>,
+    pub played_torus_status: Option<String>,
+    /// "profile-bus" | "world-clock" | "manual-scrub".
+    pub strike_route: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M123ChimeM2JsonShape {
+    /// The full modal/bell interpretation — liveOctet MUST stay
+    /// byte-compatible with the source profile bus after JSON round-trip.
+    pub modal_resonator: portal_core::ModalResonatorProfile,
+    pub m2_prime_meaning_packet_ref: Option<String>,
+    /// Deterministic digest handle for renderer determinism — never a raw
+    /// protected field body.
+    pub cymatic_frame_handle: String,
+    pub cymatic_texture_contribution_handle: Option<String>,
+    pub exact_profile_bus: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M123ChimeWorldClockBindingJsonShape {
+    /// "ready" | "pending" | "stale" | "blocked".
+    pub state: String,
+    pub world_clock_handle: Option<String>,
+    pub generation: Option<u64>,
+    pub source: Option<String>,
+    pub subscription_mode: Option<String>,
+    pub tick: Option<u64>,
+    pub degree720: Option<u16>,
+    pub degree720_matches_profile: bool,
+    pub tick_matches_profile: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M123ChimeM3JsonShape {
+    pub codon_rotation_projection: Option<Value>,
+    pub world_clock_binding: M123ChimeWorldClockBindingJsonShape,
+}
+
+/// The world-clock reading the gateway binds a chime against. Kept separate
+/// from the profile so the coherence booleans compare two REAL derivation
+/// paths instead of asserting a tautology.
+#[derive(Debug, Clone, PartialEq)]
+pub struct M123WorldClockReading {
+    pub world_clock_handle: String,
+    pub generation: u64,
+    pub subscription_mode: String,
+    pub tick: u64,
+    pub degree720: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M123ChimeFrameJsonShape {
+    pub event_type: String,
+    pub contract: String,
+    pub source_profile_generation: u64,
+    pub tick: u64,
+    pub tick12: u8,
+    pub degree720: u16,
+    pub m2_address72: usize,
+    pub m1: M123ChimeM1JsonShape,
+    pub m2: M123ChimeM2JsonShape,
+    pub m3: M123ChimeM3JsonShape,
+    pub privacy_class: String,
+}
+
+impl M123ChimeFrameJsonShape {
+    /// Coherence rule (bell-kernel spec §5): a present world clock with any
+    /// tick or degree720 mismatch makes the chime frame incoherent —
+    /// consumers must block integrated readiness on it. A pending binding
+    /// carries no mismatch evidence and does not by itself refute coherence.
+    pub fn is_coherent(&self) -> bool {
+        matches!(
+            self.m3.world_clock_binding.state.as_str(),
+            "ready" | "pending"
+        )
+    }
+}
+
+/// Build the chime frame for one resolved profile tick. Fails when the
+/// profile carries no `modalResonator` (a chime cannot be attested without
+/// the resonant body) or when the serialized frame would leak a private
+/// payload key.
+pub fn m123_chime_frame_from_profile(
+    profile_generation: u64,
+    profile: &MathemeHarmonicProfile,
+    world_clock: Option<&M123WorldClockReading>,
+) -> Result<M123ChimeFrameJsonShape, String> {
+    let modal_resonator = profile
+        .modal_resonator
+        .clone()
+        .ok_or_else(|| "chime frame requires MathemeHarmonicProfile.modalResonator".to_owned())?;
+
+    let digest_input = serde_json::to_vec(&(
+        &profile.audio_octet,
+        &profile.nodal_quartet,
+        profile.tick,
+        profile_generation,
+    ))
+    .map_err(|err| err.to_string())?;
+    let cymatic_frame_handle = format!(
+        "cymatic-frame-{}-{}",
+        profile.tick,
+        &blake3::hash(&digest_input).to_hex().as_str()[..16]
+    );
+
+    let world_clock_binding = match world_clock {
+        Some(reading) => {
+            let tick_matches_profile = reading.tick == profile.tick;
+            let degree720_matches_profile = reading.degree720 == profile.degree720;
+            M123ChimeWorldClockBindingJsonShape {
+                state: if tick_matches_profile && degree720_matches_profile {
+                    "ready"
+                } else {
+                    "stale"
+                }
+                .to_owned(),
+                world_clock_handle: Some(reading.world_clock_handle.clone()),
+                generation: Some(reading.generation),
+                source: Some("s3.world_clock".to_owned()),
+                subscription_mode: Some(reading.subscription_mode.clone()),
+                tick: Some(reading.tick),
+                degree720: Some(reading.degree720),
+                degree720_matches_profile,
+                tick_matches_profile,
+            }
+        }
+        None => M123ChimeWorldClockBindingJsonShape {
+            state: "pending".to_owned(),
+            world_clock_handle: None,
+            generation: None,
+            source: None,
+            subscription_mode: None,
+            tick: None,
+            degree720: None,
+            degree720_matches_profile: false,
+            tick_matches_profile: false,
+        },
+    };
+
+    let frame = M123ChimeFrameJsonShape {
+        event_type: M123_CHIME_EVENT_TYPE.to_owned(),
+        contract: M123_CHIME_FRAME_CONTRACT.to_owned(),
+        source_profile_generation: profile_generation,
+        tick: profile.tick,
+        tick12: profile.tick12,
+        degree720: profile.degree720,
+        m2_address72: modal_resonator.m2_address72.address72,
+        m1: M123ChimeM1JsonShape {
+            surface: "K2".to_owned(),
+            k2_surface_handle: None,
+            played_torus_handle: None,
+            played_torus_status: None,
+            strike_route: "profile-bus".to_owned(),
+        },
+        m2: M123ChimeM2JsonShape {
+            modal_resonator,
+            m2_prime_meaning_packet_ref: None,
+            cymatic_frame_handle,
+            cymatic_texture_contribution_handle: None,
+            exact_profile_bus: true,
+        },
+        m3: M123ChimeM3JsonShape {
+            codon_rotation_projection: serde_json::to_value(&profile.codon_rotation_projection)
+                .ok(),
+            world_clock_binding,
+        },
+        privacy_class: "public-current-context".to_owned(),
+    };
+
+    let serialized = serde_json::to_value(&frame).map_err(|err| err.to_string())?;
+    forbid_private_payload_keys(&serialized)?;
+    Ok(frame)
+}
+
 fn relation_family_for_position(position6: u8) -> RelationFamily {
     match position6 {
         0 => RelationFamily::A,

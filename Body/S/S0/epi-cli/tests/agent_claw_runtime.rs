@@ -55,12 +55,19 @@ fn claw_verify_runtime_is_non_destructive() {
 }
 
 /// Task 7: The claw operator protocol doc must exist.
+/// (Migrated to the S4' seed tree by the seed migration, commit 30208ae6.)
 #[test]
 fn claw_operator_protocol_doc_exists() {
-    let doc = repo_root().join("docs/dev/claw-operator-protocol.md");
+    let doc = repo_root()
+        .parent()
+        .and_then(|s| s.parent())
+        .and_then(|body| body.parent())
+        .expect("Body/S/S0 should sit under the repo root")
+        .join("Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/claw-operator-protocol.md");
     assert!(
         doc.exists(),
-        "docs/dev/claw-operator-protocol.md does not exist"
+        "claw-operator-protocol.md not found at its migrated seed path: {}",
+        doc.display()
     );
     let text = fs::read_to_string(&doc).unwrap();
     assert!(

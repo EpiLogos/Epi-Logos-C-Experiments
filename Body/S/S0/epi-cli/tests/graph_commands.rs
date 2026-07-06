@@ -431,7 +431,7 @@ async fn live_graph_commands_suite() {
 }
 
 #[test]
-#[ignore]
+#[ignore = "live-infra: requires running graph backends"]
 fn live_graph_doctor_reports_backend_readiness() {
     let _lock = live_lock();
     let env = TestEnv::empty()
@@ -471,7 +471,7 @@ fn live_graph_doctor_reports_backend_readiness() {
 }
 
 #[test]
-#[ignore]
+#[ignore = "live-infra: requires running graph backends"]
 fn live_bootstrap_dev_writes_env_file() {
     let _lock = live_lock();
     let env = TestEnv::empty()

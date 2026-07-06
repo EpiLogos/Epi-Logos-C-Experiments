@@ -41,7 +41,8 @@ fn semantic_cache_role_is_s2_graph_authority() {
     assert_eq!(role.redis_namespace, "s2:graph:semantic");
     assert_eq!(role.embedding_dimensions, 3072);
     assert_eq!(role.embedding_version, "q-semantic-v2-3072");
-    assert_eq!(role.q_schema_version, "q-prefix-v2");
+    // Version authority: epi_s2_graph_schema::Q_SCHEMA_VERSION.
+    assert_eq!(role.q_schema_version, "q-prefix-v3");
     assert!(!role.description.contains("session"));
 }
 
@@ -109,7 +110,7 @@ fn semantic_cache_health_contract_reports_runtime_and_stack_fields() {
 }
 
 #[tokio::test]
-#[ignore]
+#[ignore = "live-infra: requires Python bridge env (EPI_GNOSTIC_PYTHON)"]
 async fn semantic_cache_python_bridge_round_trip() {
     let _lock = ENV_MUTEX.lock().unwrap();
     std::env::set_var(
@@ -170,7 +171,7 @@ async fn semantic_cache_python_bridge_round_trip() {
 }
 
 #[tokio::test]
-#[ignore]
+#[ignore = "live-infra: requires Python bridge env (EPI_GNOSTIC_PYTHON)"]
 async fn semantic_cache_python_bridge_health() {
     let _lock = ENV_MUTEX.lock().unwrap();
     std::env::set_var(

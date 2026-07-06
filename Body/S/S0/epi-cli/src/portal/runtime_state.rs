@@ -623,9 +623,10 @@ mod tests {
         assert_eq!(temporal.source, PortalTemporalSource::GatewayContext);
         assert_eq!(temporal.day_id.as_deref(), Some("07-05-2026"));
         assert_eq!(temporal.session_id.as_deref(), Some("session-main"));
+        // Key shape is owned by gateway-contract TemporalKeys::session_now_key (cache:hot: prefix).
         assert_eq!(
             temporal.redis_session_now_key.as_deref(),
-            Some("s3:gateway:temporal:session:session-main:now:md")
+            Some("cache:hot:s3:gateway:temporal:session:session-main:now:md")
         );
     }
 

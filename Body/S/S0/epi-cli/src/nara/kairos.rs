@@ -333,6 +333,43 @@ pub fn parse_kerykeion_to_kairos_state(json: &str) -> Result<KairosState, String
     })
 }
 
+/// Pure mapper: `KerykeionResult` → the ten canonical transit degrees
+/// (Sun=0 … Pluto=9, ecliptic 0.0-360.0, fractional precision preserved).
+/// Returns `Some` ONLY when all ten planets are present with finite degrees —
+/// partial skies are refused rather than padded (honest `kairos_valid` law,
+/// cosmic-clock §5.3).
+pub fn planet_degrees_from_result(result: &KerykeionResult) -> Option<[f32; 10]> {
+    let mut degrees = [f32::NAN; 10];
+    for p in &result.planets {
+        if let Some(slot) = degrees.get_mut(p.planet_id as usize) {
+            if p.degree.is_finite() {
+                *slot = p.degree.rem_euclid(360.0);
+            }
+        }
+    }
+    degrees.iter().all(|d| d.is_finite()).then_some(degrees)
+}
+
+/// Gated read for the S3 profile heartbeat: `Some` only when the kairos cache
+/// is fresh (<24h) AND the sky is complete. Absence IS the "kairos pending"
+/// state the renderers display; stale or partial data never reaches the
+/// shared profile. Returns the canonical degrees plus per-planet retrograde
+/// flags (both feed the profile's `planetDegrees` / `livePlanets` fields).
+pub fn heartbeat_live_sky() -> Option<([f32; 10], [bool; 10])> {
+    if !is_current_fresh() {
+        return None;
+    }
+    let result = load_current().ok().flatten()?;
+    let degrees = planet_degrees_from_result(&result)?;
+    let mut retrograde = [false; 10];
+    for p in &result.planets {
+        if let Some(slot) = retrograde.get_mut(p.planet_id as usize) {
+            *slot = p.retrograde;
+        }
+    }
+    Some((degrees, retrograde))
+}
+
 /// Load natal kairos state from cache. Returns None if no natal chart cached.
 pub fn load_natal() -> Result<Option<KerykeionResult>, String> {
     let path = kairos_dir().join("natal.json");
@@ -383,5 +420,48 @@ mod kairos_parse_tests {
     #[test]
     fn parse_kerykeion_invalid_json_returns_err() {
         assert!(parse_kerykeion_to_kairos_state("not json").is_err());
+    }
+
+    fn full_result() -> KerykeionResult {
+        KerykeionResult {
+            planets: (0u8..10)
+                .map(|id| PlanetPosition {
+                    planet_id: id,
+                    degree: 10.25 + id as f32 * 30.0,
+                    degree_anchor: 0,
+                    retrograde: false,
+                })
+                .collect(),
+            dominant_sign: 0,
+            dominant_element: 2,
+            active_decan: 1,
+            active_tattva: 0,
+        }
+    }
+
+    #[test]
+    fn planet_degrees_full_sky_maps_in_canonical_order_with_fractions() {
+        let degrees = planet_degrees_from_result(&full_result()).expect("complete sky");
+        assert_eq!(degrees[0], 10.25); // Sun keeps fractional precision (§13.4.4)
+        assert_eq!(degrees[2], 70.25); // Mercury at canonical index 2
+        assert_eq!(degrees[9], 280.25); // Pluto at index 9
+    }
+
+    #[test]
+    fn planet_degrees_partial_sky_is_refused_not_padded() {
+        let mut result = full_result();
+        result.planets.remove(4); // drop Mars
+        assert_eq!(planet_degrees_from_result(&result), None);
+    }
+
+    #[test]
+    fn planet_degrees_normalises_out_of_range_and_refuses_non_finite() {
+        let mut result = full_result();
+        result.planets[0].degree = 370.5; // wraps to 10.5
+        let degrees = planet_degrees_from_result(&result).expect("finite sky");
+        assert!((degrees[0] - 10.5).abs() < 1e-4);
+
+        result.planets[1].degree = f32::NAN;
+        assert_eq!(planet_degrees_from_result(&result), None);
     }
 }

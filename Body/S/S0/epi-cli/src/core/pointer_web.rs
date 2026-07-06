@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/epi-lib — CLI render of the C kernel's 16-fold pointer web; resolution law lives in epi-lib FFI.
 use crate::ffi::tagged;
 use crate::ffi::{self, EpiLib};
 

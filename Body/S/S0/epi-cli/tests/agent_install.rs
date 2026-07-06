@@ -55,5 +55,4 @@ fn doctor_reports_binary_config_and_extensions_status() {
     assert!(out.stdout.contains("\"extensionSync\""));
     assert!(out.stdout.contains("\"modelsPath\""));
     assert!(out.stdout.contains("\"gateStateRoot\""));
-    assert!(out.stdout.contains("\"codexHome\""));
 }

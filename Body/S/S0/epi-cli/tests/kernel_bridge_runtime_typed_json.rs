@@ -7,8 +7,8 @@ use portal_core::{
     AnuttaraWitnessProjection, AnuttaraWitnessRFactorBand, AnuttaraWitnessRFactorPathStep,
     BeingEntityRef, BeingObserverAnchor, BeingPatternClockAddress, BioQuaternionHandle,
     ElementalWeightProjection, M2M3RelationProjection, MathemeHarmonicProfile, MonoPolyOperator,
-    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PerspectiveRole,
-    StableIdentityHandle,
+    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PendingPlanetDatasetBadge,
+    PerspectiveRole, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, StableIdentityHandle,
 };
 use std::collections::BTreeMap;
 
@@ -54,8 +54,25 @@ fn pasu_projection() -> PasuBeingPatternProjection {
         nara_family_role: None,
         m2_m3_relation: M2M3RelationProjection {
             relation_handle: "m2m3://relation/pasu-self/trine".to_owned(),
-            planetary_lens_aspect: "backend-supplied-trine".to_owned(),
             source: "S3 CCT-21".to_owned(),
+            planet_planet_edges: vec![PlanetPlanetAspectEdge {
+                planet_a: 0,
+                planet_b: 4,
+                aspect_type: 120,
+                angle: 120.0,
+                orb: 1.5,
+            }],
+            planet_aperture_edges: vec![PlanetApertureAspectEdge {
+                planet: 0,
+                lens_id: 2,
+                aperture_phase: 137,
+                aspect_type: 120,
+                orb: 1.5,
+            }],
+            pending_dataset_badges: vec![PendingPlanetDatasetBadge {
+                planet: 7,
+                badge: "track-23.10-pending".to_owned(),
+            }],
         },
         bioquaternion_handles: vec![BioQuaternionHandle {
             handle: "protected://bio/q_identity".to_owned(),

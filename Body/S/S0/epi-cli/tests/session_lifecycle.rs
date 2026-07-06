@@ -17,6 +17,38 @@ use std::ffi::OsString;
 use std::fs;
 use std::path::PathBuf;
 
+
+/// The developer shell exports EPILOGOS_VAULT globally (points at the real
+/// vault); these cwd-bound-resolution tests must see a clean process env or
+/// resolution step 2 short-circuits step 3. Serialized so parallel tests
+/// don't race the process env.
+fn vault_env_guard() -> VaultEnvGuard {
+    use std::sync::{Mutex, MutexGuard, OnceLock};
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    fn lock() -> MutexGuard<'static, ()> {
+        LOCK.get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
+    let held = lock();
+    let saved = env::var_os("EPILOGOS_VAULT");
+    env::remove_var("EPILOGOS_VAULT");
+    VaultEnvGuard { _lock: held, saved }
+}
+
+struct VaultEnvGuard {
+    _lock: std::sync::MutexGuard<'static, ()>,
+    saved: Option<OsString>,
+}
+
+impl Drop for VaultEnvGuard {
+    fn drop(&mut self) {
+        if let Some(value) = self.saved.take() {
+            env::set_var("EPILOGOS_VAULT", value);
+        }
+    }
+}
+
 #[test]
 fn session_id_matches_required_format() {
     let now = Utc.with_ymd_and_hms(2026, 3, 10, 9, 8, 7).unwrap();
@@ -148,6 +180,7 @@ fn bootstrap_sequence_returns_ordered_artifacts() {
 
 #[test]
 fn agent_session_runtime_factory_recreates_cwd_bound_runtime_idempotently() {
+    let _vault_env = vault_env_guard();
     let root = std::env::temp_dir().join(format!(
         "epi-session-runtime-factory-{}",
         std::process::id()
@@ -359,6 +392,7 @@ fn resource_loader_identity_is_stable_and_scoped_by_cwd_agent_and_plugin_runtime
 
 #[test]
 fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
+    let _vault_env = vault_env_guard();
     let root = std::env::temp_dir().join(format!(
         "epi-session-runtime-propagation-{}",
         std::process::id()
@@ -507,6 +541,7 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
 
 #[test]
 fn pi_runtime_propagation_recreates_cwd_bound_identity_for_distinct_repos() {
+    let _vault_env = vault_env_guard();
     let root = std::env::temp_dir().join(format!(
         "epi-session-runtime-cwd-propagation-{}",
         std::process::id()

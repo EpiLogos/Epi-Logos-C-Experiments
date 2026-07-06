@@ -121,7 +121,7 @@ enum Commands {
         #[command(subcommand)]
         cmd: techne::TechneCmd,
     },
-    /// EpiLogos Tauri desktop app
+    /// Pratibimba Theia/Electron desktop app
     App {
         #[command(subcommand)]
         cmd: app::AppCmd,
@@ -304,7 +304,7 @@ async fn main() -> color_eyre::Result<()> {
         },
         Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
-        Commands::App { cmd } => app::dispatch(cmd),
+        Commands::App { cmd } => app::dispatch(cmd).await,
         Commands::Up(cmd) => match up::dispatch(cmd, cli.json).await {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("up error: {}", e),

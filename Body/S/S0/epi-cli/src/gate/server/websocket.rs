@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::Duration;
 
 use futures_util::{SinkExt, StreamExt};
 use serde_json::{json, Value};
@@ -12,7 +11,8 @@ use tokio_tungstenite::{accept_async, tungstenite::Message};
 use crate::agent;
 use crate::gate::events::GatewayEvent;
 use crate::gate::protocol::{self, RequestFrame};
-use crate::gate::runtime::{GatewayRuntimeState, RunContext, RunSnapshot};
+use crate::gate::runs::{RunContext, RunSnapshot};
+use crate::gate::runtime::GatewayRuntimeState;
 use crate::gate::spacetimedb_bridge::SpacetimeRegistration;
 use crate::gate::{auth, chat, transcripts};
 
@@ -20,13 +20,28 @@ use super::method_envelope::PostResponseAction;
 use super::{agent_id_from_session_key, now_ms};
 
 pub(super) async fn bind_with_retry(port: u16) -> Result<TcpListener, String> {
+    // Successive test servers reuse one fixed port; the previous server's
+    // sockets can take seconds to release under load. A 500ms budget here
+    // cascaded into whole-binary failures (poisoned env lock), so wait up
+    // to ~10s before declaring the port dead. Green path binds first try.
+    // SO_REUSEADDR: successive test servers rebind the port while the previous
+    // server's connections sit in TIME_WAIT; without it macOS refuses the bind
+    // for up to 2*MSL (~30s) and the chat/lineage binaries fail spuriously.
+    let bind_once = || -> Result<TcpListener, String> {
+        let socket = tokio::net::TcpSocket::new_v4().map_err(|err| err.to_string())?;
+        socket.set_reuseaddr(true).map_err(|err| err.to_string())?;
+        socket
+            .bind(std::net::SocketAddr::from(([127, 0, 0, 1], port)))
+            .map_err(|err| err.to_string())?;
+        socket.listen(1024).map_err(|err| err.to_string())
+    };
     let mut last_error = None;
-    for _ in 0..20 {
-        match TcpListener::bind(("127.0.0.1", port)).await {
+    for _ in 0..200 {
+        match bind_once() {
             Ok(listener) => return Ok(listener),
             Err(err) => {
-                last_error = Some(err.to_string());
-                tokio::time::sleep(std::time::Duration::from_millis(25)).await;
+                last_error = Some(err);
+                tokio::time::sleep(std::time::Duration::from_millis(50)).await;
             }
         }
     }

@@ -47,7 +47,7 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
     let _guard = env.apply_to_process();
     let store = SessionStore::new(&gate_root).unwrap();
     let record = store
-        .resolve("agent:main:main")
+        .resolve("agent:epii:main")
         .expect("session init should propagate PI runtime identity into S3 gateway session store");
 
     assert_eq!(record.session_id, khora.context.session_id);
@@ -59,7 +59,8 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
         record.vault_now_path.as_deref(),
         Some(khora.context.now_path.to_string_lossy().as_ref())
     );
-    assert_eq!(record.active_agent_id, "main");
+    // Default agent is `epii` (DEFAULT_PI_AGENT_ID, Anima/Epii split law).
+    assert_eq!(record.active_agent_id, "epii");
     assert_eq!(
         record.runtime_cwd.as_deref(),
         Some(env.repo_root.to_string_lossy().as_ref())
@@ -72,7 +73,7 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
         .resource_loader_id
         .as_deref()
         .unwrap_or_default()
-        .contains("pi:main:"));
+        .contains("pi:epii:"));
     assert!(record
         .resource_loader_id
         .as_deref()
@@ -107,13 +108,13 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
     );
     assert_eq!(
         health["checks"]["gatewaySession"]["canonicalKey"],
-        "agent:main:main"
+        "agent:epii:main"
     );
     assert_eq!(
         health["checks"]["gatewaySession"]["sessionId"],
         khora.context.session_id
     );
-    assert_eq!(health["checks"]["gatewaySession"]["activeAgentId"], "main");
+    assert_eq!(health["checks"]["gatewaySession"]["activeAgentId"], "epii");
     assert_eq!(
         health["checks"]["gatewaySession"]["projection"]["sessionSurfaceTable"],
         "session_surface"

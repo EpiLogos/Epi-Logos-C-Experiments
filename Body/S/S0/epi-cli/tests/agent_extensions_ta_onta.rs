@@ -139,7 +139,7 @@ fn repo_pi_foundation_has_bootable_root_assets() {
 
     let composite = fs::read_to_string(root.join("Body/S/S4/pi-agent/composite-entry.ts")).unwrap();
     assert!(composite.contains("export default async function"));
-    assert!(composite.contains("./extensions/ta-onta/composite-entry.ts"));
+    assert!(composite.contains("../ta-onta/composite-entry.ts"));
 
     let epi_citta =
         fs::read_to_string(root.join("Body/S/S4/pi-agent/extensions/epi-citta.ts")).unwrap();
@@ -188,9 +188,12 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_team.contains("pi.registerTool({"));
     assert!(agent_team.contains("name: \"dispatch_agent\""));
     assert!(agent_team.contains("pi.registerCommand(\"agents-team\""));
-    assert!(agent_team.contains("childPiRuntimeArgs()"));
-    assert!(agent_team.contains("\"--tools\", state.def.tools"));
-    assert!(agent_team.contains("spawn(\"pi\""));
+    assert!(agent_team.contains("childPiRuntimeArgs"));
+    // Child spawn-arg construction moved into the pi-pi dispatch seam.
+    let pi_pi =
+        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts")).unwrap();
+    assert!(pi_pi.contains("\"--tools\", state.def.tools"));
+    assert!(pi_pi.contains("spawn(\"pi\""));
 
     let agent_chain =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts")).unwrap();
@@ -379,7 +382,7 @@ fn pleroma_ports_damage_control_tilldone_and_cmux_visibility_helpers() {
     let pleroma =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts")).unwrap();
     assert!(pleroma.contains("./S2/damage-control.ts"));
-    assert!(pleroma.contains("import registerTilldone from \"./S2/tilldone.ts\""));
+    assert!(pleroma.contains("await import(\"./S2/tilldone.ts\")"));
     assert!(pleroma.contains("registerTilldone(api);"));
     assert!(pleroma.contains("shouldRegisterTilldone"));
     assert!(pleroma.contains("EPI_TILLDONE_MODE"));

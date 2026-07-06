@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S1 (vault day/NOW law — Hen authority) — day scaffolding adapter; DR-PRANA-1 flat-Present rider pending (this file still nests Present under W/year/month for History).
 use crate::vault::templates::{render_template, TemplateRenderContext};
 use chrono::{DateTime, Datelike, NaiveDate, TimeZone, Utc};
 use serde::{Deserialize, Serialize};

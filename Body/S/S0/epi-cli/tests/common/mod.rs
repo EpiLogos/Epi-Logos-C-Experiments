@@ -36,7 +36,14 @@ impl TestEnv {
             home,
             repo_root,
             fake_pi_log: PathBuf::new(),
-            extra_env: Vec::new(),
+            // Tests must never implicitly spawn a DETACHED real gateway
+            // daemon (the agent-lane preflight does exactly that and leaked
+            // orphan `epi gate start` processes that poisoned later runs).
+            // Tests that want a real gateway spawn one explicitly and guard it.
+            extra_env: vec![(
+                "EPI_AGENT_GATEWAY_PREFLIGHT".to_owned(),
+                "skip".to_owned(),
+            )],
             path_prefixes: Vec::new(),
         }
     }
@@ -208,7 +215,11 @@ impl TestEnv {
     }
 
     pub fn apply_to_process(&self) -> ProcessEnvGuard {
-        let lock = process_env_lock().lock().unwrap();
+        // Recover from poisoning: one panicking test must not cascade into
+        // every later apply_to_process() in the binary (Track 00 T1 triage).
+        let lock = process_env_lock()
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         let mut saved = Vec::new();
         for key in [
             "HOME",

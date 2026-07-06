@@ -4,17 +4,20 @@ use std::path::PathBuf;
 use std::process::Command;
 
 fn repo_root() -> PathBuf {
+    // True repo root: the vendored bundle lives at <root>/vendors/ and the
+    // plugin registry at <root>/Body/S/S4/plugins/ (S4 owns agent plugins).
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("epi-cli lives under repo root")
+        .ancestors()
+        .nth(4)
+        .expect("epi-cli crate should live at Body/S/S0/epi-cli under repo root")
         .to_path_buf()
 }
 
 #[test]
 fn vendored_claude_mem_bundle_is_present_and_validates() {
     let repo_root = repo_root();
-    let plugin_root = repo_root.join("vendor/claude-mem-v10.5.5/plugin");
-    let registry_path = repo_root.join("plugins/registry.jsonl");
+    let plugin_root = repo_root.join("vendors/claude-mem-v10.5.5/plugin");
+    let registry_path = repo_root.join("Body/S/S4/plugins/registry.jsonl");
 
     assert!(
         plugin_root.join(".claude-plugin/plugin.json").exists(),

@@ -10,8 +10,11 @@ import {
   KernelBridgeReadinessSnapshot,
   KernelBridgeRpcEnvelope,
   KernelBridgeRuntimeSnapshot,
+  KleinFlipEvent,
+  M123ChimeFrame,
   MathemeHarmonicProfile,
   MonoPolyOperator,
+  isM123ChimeCoherent,
   PasuBeingPatternProjection,
   PerspectiveRole,
   RFactorBand,
@@ -69,6 +72,231 @@ describe("Kernel bridge contract package", () => {
     expect(encoded).not.toContain("resonance72Index");
     expect(encoded).not.toContain("halfDecanIndex");
     expect(encoded).not.toContain("modeTonicCf");
+  });
+
+  it("parses the baseline modalResonator and pins the m2Address72 derivation", () => {
+    const parsed = MathemeHarmonicProfile.parse(baselineProfile);
+    const modal = parsed.modalResonator;
+    expect(modal).toBeDefined();
+    expect(modal!.chromaticBody).toHaveLength(12);
+    expect(modal!.liveOctet).toHaveLength(8);
+    expect(modal!.nodalQuartet).toHaveLength(4);
+    expect(modal!.diatonicSet).toHaveLength(7);
+    expect(modal!.silentComplement).toHaveLength(5);
+    // Drift guard: the bus stays the only pitch authority…
+    modal!.liveOctet.forEach((carrier, i) => {
+      expect(carrier.hz).toBe(parsed.audioOctet[i]);
+    });
+    // …and the M2 72-address derives from resonance72.lensAnchorIndex,
+    // never from lens * 7 + mode.
+    expect(modal!.m2Address72.address72).toBe(
+      (baselineProfile.resonance72 as Record<string, unknown>)
+        .lensAnchorIndex,
+    );
+    expect(modal!.lensMode.lensModeIndex).toBe(
+      modal!.lensMode.lens * 7 + modal!.lensMode.mode,
+    );
+  });
+
+  it("keeps lensMode bounds in Rust order — lens 0..11, mode 0..6", () => {
+    // Guard against the historic swapped-bounds drift (bell spec §6).
+    MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      lensMode: { lens: 11, mode: 6 },
+    });
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        lensMode: { lens: 0, mode: 7 },
+      }),
+    ).toThrow();
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        lensMode: { lens: 12, mode: 0 },
+      }),
+    ).toThrow();
+  });
+
+  it("parses the baseline phaseSpace under the HARDENED E3 schema and pins the two-plane law", () => {
+    const parsed = MathemeHarmonicProfile.parse(baselineProfile);
+    const ps = parsed.phaseSpace;
+    expect(ps).toBeDefined();
+    // primary plane below 360 reads the codon valence of the degree
+    expect(ps!.plane).toBe(ps!.degree720 < 360 ? "primary-codon" : "shadow-hexagram");
+    if (ps!.degree720 < 360) {
+      expect(ps!.activeValence.kind).toBe("codon");
+    }
+    expect(ps!.lensCarrier).toHaveLength(16);
+    // the temporal canon is exactly the 24/12/4-section rows (E2 law);
+    // Fibonacci Ground rides beside as the +1, never a 17th row
+    const temporal = ps!.lensCarrier
+      .filter((lens) => lens.temporalCanon)
+      .map((lens) => lens.sections)
+      .sort((a, b) => a - b);
+    expect(temporal).toEqual([4, 12, 24]);
+    expect(ps!.fibonacciGround.temporalCanon).toBe(true);
+    // node/lensCarrier agree on the §4 formula at every aperture
+    ps!.lensCarrier.forEach((lens, i) => {
+      expect(lens.segment).toBe(ps!.node.lensSegment[i]);
+      expect(lens.segment).toBe(Math.floor(ps!.degree360 / lens.slice));
+    });
+  });
+
+  it("admits the E6 quintessence handle and rejects identity-body leaks by bounds", () => {
+    const quintessence = {
+      natalDegree: 217,
+      natalTick12: 7,
+      quintessenceWeight: 0.62,
+      layerCount: 5,
+      partial: false,
+      hashPreview: "9f3a1c2b",
+      quintessenceQuaternion: [0.61, 0.45, 0.42, 0.5],
+      authority: "epi nara identity (BLAKE3, hash_to_clock_position)",
+    };
+    const parsed = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      quintessence,
+    });
+    expect(parsed.quintessence?.natalDegree).toBe(217);
+    // absence is honest — the baseline itself carries no identity
+    expect(MathemeHarmonicProfile.parse(baselineProfile).quintessence)
+      .toBeUndefined();
+    // strict object: a 64-char hash (the raw identity body) must not pass
+    // as a preview, degrees must stay on the clock, layers within 5
+    for (const bad of [
+      { ...quintessence, hashPreview: "9f".repeat(32) },
+      { ...quintessence, natalDegree: 360 },
+      { ...quintessence, layerCount: 6 },
+      { ...quintessence, natalHash: [1, 2, 3] },
+    ]) {
+      expect(() =>
+        MathemeHarmonicProfile.parse({ ...baselineProfile, quintessence: bad }),
+      ).toThrow();
+    }
+  });
+
+  it("rejects malformed phase-space valence and a 17th lensCarrier row", () => {
+    const ps = (baselineProfile as Record<string, any>).phaseSpace;
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        phaseSpace: {
+          ...ps,
+          activeValence: { kind: "codon", hexagramId: 10, lineActive: 4 },
+        },
+      }),
+    ).toThrow();
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        phaseSpace: {
+          ...ps,
+          lensCarrier: [...ps.lensCarrier, ps.lensCarrier[0]],
+        },
+      }),
+    ).toThrow();
+  });
+
+  it("rejects wrong octet/quartet lengths in the modal resonator", () => {
+    const modal = (baselineProfile as Record<string, any>).modalResonator;
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        modalResonator: { ...modal, liveOctet: modal.liveOctet.slice(0, 7) },
+      }),
+    ).toThrow();
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        modalResonator: {
+          ...modal,
+          nodalQuartet: modal.nodalQuartet.slice(0, 3),
+        },
+      }),
+    ).toThrow();
+  });
+
+  it("accepts the additive live-sky fields and payloads without them", () => {
+    const degrees = Array.from({ length: 10 }, (_, i) => 10.25 + i * 30);
+    const parsed = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      planetDegrees: degrees,
+      livePlanets: degrees.map((degree, i) => ({
+        planetId: i,
+        degree,
+        retrograde: false,
+        decan36: Math.floor(degree / 10),
+        decanRuler: 4,
+        isResonance: i === 4,
+        elementId: 0,
+        keplerianVel: 100,
+      })),
+    });
+    expect(parsed.planetDegrees).toHaveLength(10);
+    expect(parsed.livePlanets?.[4].isResonance).toBe(true);
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        planetDegrees: degrees.slice(0, 9),
+      }),
+    ).toThrow();
+  });
+
+  it("parses an m123 chime frame and blocks readiness on world-clock mismatch", () => {
+    const modal = (baselineProfile as Record<string, any>).modalResonator;
+    const frame = {
+      eventType: "m123.chime",
+      contract: "S0.kernel-bridge.m123-chime-frame",
+      sourceProfileGeneration: 42,
+      tick: baselineProfile.tick,
+      tick12: baselineProfile.tick12,
+      degree720: baselineProfile.degree720,
+      m2Address72: modal.m2Address72.address72,
+      m1: {
+        surface: "K2",
+        k2SurfaceHandle: null,
+        playedTorusHandle: null,
+        playedTorusStatus: null,
+        strikeRoute: "profile-bus",
+      },
+      m2: {
+        modalResonator: modal,
+        m2PrimeMeaningPacketRef: null,
+        cymaticFrameHandle: "cymatic-frame-0-0123456789abcdef",
+        cymaticTextureContributionHandle: null,
+        exactProfileBus: true,
+      },
+      m3: {
+        codonRotationProjection: baselineProfile.codonRotationProjection,
+        worldClockBinding: {
+          state: "ready",
+          worldClockHandle: "s3-world-clock-42",
+          generation: 42,
+          source: "s3.world_clock",
+          subscriptionMode: "gateway-heartbeat",
+          tick: baselineProfile.tick,
+          degree720: baselineProfile.degree720,
+          degree720MatchesProfile: true,
+          tickMatchesProfile: true,
+        },
+      },
+      privacyClass: "public-current-context",
+    };
+    expect(isM123ChimeCoherent(M123ChimeFrame.parse(frame))).toBe(true);
+
+    const stale = M123ChimeFrame.parse({
+      ...frame,
+      m3: {
+        ...frame.m3,
+        worldClockBinding: {
+          ...frame.m3.worldClockBinding,
+          state: "stale",
+          tickMatchesProfile: false,
+        },
+      },
+    });
+    expect(isM123ChimeCoherent(stale)).toBe(false);
   });
 
   it("rejects renderer-local profile fields that are absent from the S0 profile contract", () => {
@@ -540,6 +768,52 @@ describe("Kernel bridge contract package", () => {
         }),
       ),
     ).toThrow(/positions/);
+  });
+});
+
+describe("KleinFlipEvent typed union (T12 discharge, 2026-07-06)", () => {
+  // Wire shapes captured from the Rust serde output of
+  // portal-core/src/events/flip_events.rs (tag "kind", camelCase):
+  const m1Flip = { kind: "m1TritoneCrossing", tick12: 6, lensPair: [0, 6] };
+  const m2Flip = {
+    kind: "m2CymaticValenceInvert",
+    valenceBefore: "primary",
+    valenceAfter: "inverted",
+  };
+  const m3Flip = { kind: "m3CodonRotationCross", codonBefore: 12, codonAfter: 13 };
+
+  it("parses all three Rust-serialized flip variants", () => {
+    for (const flip of [m1Flip, m2Flip, m3Flip]) {
+      const parsed = KleinFlipEvent.parse(flip);
+      expect(parsed.kind).toBe(flip.kind);
+    }
+  });
+
+  it("rejects an unknown kind, an out-of-range lens pair, and a stray field", () => {
+    expect(() => KleinFlipEvent.parse({ kind: "m4NotAFlip" })).toThrow();
+    expect(() =>
+      KleinFlipEvent.parse({ ...m1Flip, lensPair: [0, 12] }),
+    ).toThrow();
+    expect(() => KleinFlipEvent.parse({ ...m3Flip, codonAfter: 64 })).toThrow();
+    expect(() => KleinFlipEvent.parse({ ...m2Flip, extra: true })).toThrow();
+  });
+
+  it("rides the strict profile parse: typed when present, null between flips", () => {
+    // Baseline (tick 0) carries kleinFlip: null — still parses strict.
+    expect(baselineProfile.kleinFlip).toBeNull();
+    const withFlip = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      kleinFlip: m1Flip,
+    });
+    expect(withFlip.kleinFlip).toEqual(m1Flip);
+    // A malformed flip must now FAIL the whole strict profile parse — the
+    // z.unknown() hole is closed.
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        kleinFlip: { kind: "m1TritoneCrossing", tick12: 6 },
+      }),
+    ).toThrow();
   });
 });
 

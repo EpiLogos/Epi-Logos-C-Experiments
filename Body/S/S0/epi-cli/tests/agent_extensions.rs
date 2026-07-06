@@ -24,11 +24,11 @@ fn sync_includes_curated_pi_extension_set() {
     assert!(out.status.success(), "stderr: {}", out.stderr);
     assert!(env
         .repo_root
-        .join(".epi/agents/main/agent/extensions/subagent-widget.ts")
+        .join(".epi/agents/epii/agent/extensions/subagent-widget.ts")
         .exists());
     assert!(env
         .repo_root
-        .join(".epi/agents/main/agent/extensions/cross-agent.ts")
+        .join(".epi/agents/epii/agent/extensions/cross-agent.ts")
         .exists());
 }
 

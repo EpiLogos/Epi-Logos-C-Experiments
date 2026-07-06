@@ -5,7 +5,10 @@ pub mod render;
 pub mod types;
 pub mod vimarsa;
 
-use super::{branch_for_family, overlay, FAMILY_LETTERS, FAMILY_NAMES, RELATION_PITHYS};
+use super::overlay;
+use super::quintessential_view::{
+    branch_for_family, FAMILY_LETTERS, FAMILY_NAMES, RELATION_PITHYS,
+};
 use chrono::Utc;
 use types::{
     EssenceFacet, KnowingAction, KnowingDossier, NotebookPulseFacet, QvFacet, RelationalFieldFacet,

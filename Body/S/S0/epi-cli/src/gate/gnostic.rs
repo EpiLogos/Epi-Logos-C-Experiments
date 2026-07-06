@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S5 (epi-gnostic) — thin gate bridge; validation at the membrane, execution delegated to the production epi-gnostic CLI.
 //! S0 gate bridge for the production S5 `epi-gnostic` stack.
 //!
 //! The gateway surface is intentionally thin: parameters are validated at the

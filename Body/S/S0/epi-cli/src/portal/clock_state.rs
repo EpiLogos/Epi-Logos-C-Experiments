@@ -774,19 +774,24 @@ pub fn update_from_cast(
     sync_kernel_projection(&mut s);
 }
 
-/// Update the quintessence quaternion after identity augment.
-/// `profiles`: 5 × [FIRE, WATER, EARTH, AIR] from M4_Quintessence_Identity.
-/// Weighted average across valid (non-zero) profiles → unit quaternion.
-pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32; 4]; 5]) {
+/// Pure core of the quintessence-quaternion law (the ONE authority WITHIN
+/// epi-cli — the TUI clock state and the S3 heartbeat projection both derive
+/// from here): weighted elemental average of the PRESENT (non-zero)
+/// identity-layer profiles, remapped and normalised to a unit quaternion.
+/// None when no layer carries weight — never a fabricated identity ground.
+/// DUPLICATE-LAW NOTE (E6 verifier, 2026-07-02): portal-core
+/// `state.rs::update_quintessence_quaternion` carries a pre-existing copy of
+/// the same math — unification follow-up flagged in the Sprint-8 plan; any
+/// law change MUST land in both sites until then.
+pub fn quintessence_quaternion_from_profiles(profiles: &[[f32; 4]; 5]) -> Option<[f32; 4]> {
     let valid: Vec<_> = profiles
         .iter()
         .filter(|p| p.iter().any(|&v| v > f32::EPSILON))
         .collect();
     let n = valid.len() as f32;
     if n < f32::EPSILON {
-        return;
+        return None;
     }
-
     let mut avg = [0.0f32; 4];
     for p in &valid {
         for i in 0..4 {
@@ -797,11 +802,21 @@ pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32
     let (w, x, y, z) = (avg[2] / n, avg[0] / n, avg[1] / n, avg[3] / n);
     let mag = (w * w + x * x + y * y + z * z).sqrt();
     if mag < f32::EPSILON {
-        return;
+        return None;
     }
+    Some([w / mag, x / mag, y / mag, z / mag])
+}
+
+/// Update the quintessence quaternion after identity augment.
+/// `profiles`: 5 × [FIRE, WATER, EARTH, AIR] from M4_Quintessence_Identity.
+/// Weighted average across valid (non-zero) profiles → unit quaternion.
+pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32; 4]; 5]) {
+    let Some(quaternion) = quintessence_quaternion_from_profiles(profiles) else {
+        return;
+    };
     {
         let mut s = state.lock().unwrap();
-        s.quintessence_quaternion = [w / mag, x / mag, y / mag, z / mag];
+        s.quintessence_quaternion = quaternion;
         recompute_composed_quaternion_state(&mut s);
         s.generation += 1;
         sync_kernel_projection(&mut s);

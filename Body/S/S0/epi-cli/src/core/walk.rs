@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/epi-lib — CLI walk driver over epi-lib WalkContext; traversal law lives in the C kernel.
 use crate::ffi::{self, EpiLib};
 
 pub(super) fn walk(epi: &EpiLib, steps: u32, json: bool) -> color_eyre::Result<()> {

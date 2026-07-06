@@ -79,17 +79,9 @@ fn up_command_runs_tmux_cmux_and_app_steps_when_enabled() {
     let bin_dir = base_env.root.join("bin");
     fs::create_dir_all(&bin_dir).unwrap();
 
-    let session_log = base_env.root.join("session.log");
     let cmux_log = base_env.root.join("cmux.log");
     let app_log = base_env.root.join("app.log");
 
-    let session_script = write_executable(
-        bin_dir.join("epi-session-v2.sh"),
-        &format!(
-            "#!/bin/sh\nprintf 'launch:%s\\n' \"$1\" >> \"{}\"\n",
-            session_log.display()
-        ),
-    );
     let cmux_bin = write_executable(
         bin_dir.join("cmux"),
         &format!(
@@ -107,7 +99,6 @@ fn up_command_runs_tmux_cmux_and_app_steps_when_enabled() {
 
     let env = base_env
         .with_env("EPILOGOS_VAULT", vault_root.display().to_string())
-        .with_env("EPI_SESSION_SCRIPT", session_script.display().to_string())
         .with_env("EPI_CMUX_BIN", cmux_bin.display().to_string())
         .with_env("EPI_UP_APP_LAUNCHER", app_launcher.display().to_string());
 
@@ -123,17 +114,25 @@ fn up_command_runs_tmux_cmux_and_app_steps_when_enabled() {
     );
 
     let payload: Value = serde_json::from_str(&output.stdout).expect("epi up json output");
+    // Kill-guard FIRST: a failing assert below must never leak the detached
+    // gateway daemon `epi up` spawns (leaked orphans on 18832 poisoned runs).
+    struct KillGuard(i32);
+    impl Drop for KillGuard {
+        fn drop(&mut self) {
+            kill_pid(self.0);
+        }
+    }
+    let _gateway_guard = KillGuard(payload["gateway"]["pid"].as_u64().unwrap() as i32);
+
     assert_eq!(payload["ok"], true);
-    assert_eq!(payload["steps"][5]["name"], "tmux-launch");
+    // tmux-launch was renamed cmux-launch with the tmux->cmux migration.
+    assert_eq!(payload["steps"][5]["name"], "cmux-launch");
     assert_eq!(payload["steps"][6]["name"], "app-launch");
     assert_eq!(payload["steps"][7]["name"], "cmux-attach");
-    assert!(fs::read_to_string(&session_log)
-        .unwrap()
-        .contains("launch:sesh"));
+    // The tmux session-script step was retired by the cmux migration; the
+    // session surface now rides cmux surface-create (asserted via cmux_log).
     assert!(fs::read_to_string(&cmux_log).unwrap().contains("cmux:"));
     assert!(fs::read_to_string(&app_log).unwrap().contains("app-launch"));
-
-    kill_pid(payload["gateway"]["pid"].as_u64().unwrap() as i32);
 }
 
 fn write_executable(path: PathBuf, contents: &str) -> PathBuf {

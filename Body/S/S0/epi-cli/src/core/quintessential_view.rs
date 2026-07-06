@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/epi-lib — CLI view over the C kernel's quintessential knowing surface; law lives in epi-lib (m4/m5), this file only parses coords and renders.
 use crate::ffi::EpiLib;
 
 use super::{knowing, overlay, write_gate};
@@ -17,8 +18,8 @@ enum ParsedCoord {
     SubBranch { raw: String },
 }
 
-const FAMILY_LETTERS: [&str; 6] = ["C", "P", "L", "S", "T", "M"];
-const FAMILY_NAMES: [&str; 6] = [
+pub(crate) const FAMILY_LETTERS: [&str; 6] = ["C", "P", "L", "S", "T", "M"];
+pub(crate) const FAMILY_NAMES: [&str; 6] = [
     "Category",
     "Position",
     "Lens",
@@ -53,7 +54,7 @@ const WEAVE_DATA: [(&str, &str); 4] = [
     ("W5.5", "Pure Instance — #5 implicate"),
 ];
 
-const RELATION_PITHYS: [[&str; 6]; 6] = [
+pub(crate) const RELATION_PITHYS: [[&str; 6]; 6] = [
     ["Bimba", "Form", "Entity", "Process", "Type", "Pratibimba"],
     [
         "Ground",
@@ -297,7 +298,7 @@ pub(super) fn knowing(
     }
 }
 
-fn branch_for_family(family: u8, inverted: bool) -> (&'static str, &'static str) {
+pub(crate) fn branch_for_family(family: u8, inverted: bool) -> (&'static str, &'static str) {
     match (family, inverted) {
         (5, false) => ("5-0", "M+M' integral identity"),
         (5, true) => ("5-0", "M+M' integral identity"),

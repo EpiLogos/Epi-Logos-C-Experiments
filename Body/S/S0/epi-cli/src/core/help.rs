@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/epi-lib — help dispatch glue over the quintessential-view adapter; no domain law here.
 pub(super) fn dispatch(topic: Option<&str>, json: bool) -> color_eyre::Result<()> {
     match topic {
         None => super::quintessential_view::knowing_hash_op(json),

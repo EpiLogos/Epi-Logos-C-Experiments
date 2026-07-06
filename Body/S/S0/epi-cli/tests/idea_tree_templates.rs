@@ -99,7 +99,7 @@ fn canonical_idea_tree_and_template_authority_exist() {
 
     assert!(root.join("repo-ontology.md").is_file());
 
-    let templates_json = fs::read_to_string(root.join(".obsidian/templates.json")).unwrap();
+    let templates_json = fs::read_to_string(root.join("Idea/.obsidian/templates.json")).unwrap();
     assert!(templates_json.contains("Idea/Bimba/World"));
 
     assert!(root.join("Idea/Bimba/World/Types/README.md").is_file());
@@ -212,8 +212,10 @@ fn canonical_idea_tree_and_template_authority_exist() {
 }
 
 fn repo_root() -> PathBuf {
+    // True repo root (epi-cli lives at Body/S/S0/epi-cli; Idea/ is at the root).
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
+        .ancestors()
+        .nth(4)
         .unwrap()
         .to_path_buf()
 }

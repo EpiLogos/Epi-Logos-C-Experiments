@@ -22,6 +22,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - C/FFI invariant: `GET_PTR(ptr)` before every dereference; the HC struct stays 128 bytes.
 - Reference all coordinates/specs/crates/agents as `[[wikilink]]`; vault writes use coordinate-prefixed `c_n_*` frontmatter.
 - `src/gate/kernel_bridge_runtime.rs` must enforce [[DR-M4-4]] q-partition checks before caching or serialising safe profile payloads: private `q_personal` / `q_identity` / `q_activity` / `q_composed` snake-case keys and derivatives are refused; public `q_*` / `qm_*` carrier keys must match the 0-5 allowlist.
+- Bell kernel ([[m123-modal-resonator-bell-kernel-spec]] §§5–6): `src/gate/kernel_bridge_runtime.rs` owns `M123ChimeFrameJsonShape` + `m123_chime_frame_from_profile` (contract `S0.kernel-bridge.m123-chime-frame`); the heartbeat in `src/gate/server/mod.rs` publishes it as a 1 Hz `m123.chime` SIBLING of `profile.update` — additive, never a replacement. World-clock tick/degree mismatch → `worldClockBinding.state: "stale"` + incoherent frame; consumers block readiness. The Zod mirrors live in `schemas/src/kernel-bridge.ts` (lensMode law: lens 0..11, mode 0..6 — never swap back).
+- Zod surface growth 2026-07-06 (Track 00.T12/T13): `schemas/src/kernel-bridge.ts` + new `schemas/src/gateway-bus.ts` now type the previously-`z.unknown()` profile projections (anandaVortex, harmonicGrammar, bedrock, graph/deposition/future anchors, readinessLedger — snake_case on the wire, context-frame web, pointer anchors) and 4 gateway bus event channels; these TYPE what the kernel already emits (conforming, not inventing). Quintessence is handle-only per [[DR-M4-3]]: 8-key allow-list, no ≥16-hex digests in string values, unit-quaternion norm, `quintessenceWeight` the one resonance scalar. Live-wire (`Body/M/pratibimba-app/scripts/live-wire.mjs`) enforces field-coverage: every wire field is manifest-covered, justified-EXEMPT, or DECLARED_NOT_EMITTED — an uncovered field FAILS. Still-`z.record` gaps (EXEMPT-tracked): chromatic, elements, planetaryChakral, binary, codonRotationProjection. Owning canon flag: [[S0-SPEC]]/kernel-bridge contract docs should absorb the typed-surface inventory on the next harmonisation pass.
+- `epi app dev` / `epi app launch` must preflight the local gateway before launching the Pratibimba Electron surface; `epi app dev` passes `EPI_GATEWAY_URL` into Theia so `kernel-bridge` and OmniPanel use the managed gateway instead of a stale or absent process.
+- Gateway liveness records must describe a real bound listener: write `status.json` only after bind/registration succeeds, and clear stale status/PID files when preflight cannot probe a gateway.
 
 ## Verification
 - `cargo test -p epi-logos` (Rust). FFI bridge to the C layer: `make rust-test` at the repo root.
@@ -29,6 +33,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml slot_list_round_trip` for `epi slot` model/harness config round-tripping.
 - `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test pi_ebm_commands` for the `pi train-ebm` / `pi export-ebm-state` S0 mirror.
 - `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test cli_canon_coord_depth_ladder`; `--test cli_canon_search_semantic`; `--test cli_canon_diff_structural` for `epi canon` surfaces.
+- `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_m123_chime_frame` for the bell-kernel chime frame; `cd schemas && npx vitest run` for Zod contract parity (parses the real generated baseline profile incl. `modalResonator`).
 
 ## Child DOX Index
 - (leaf)

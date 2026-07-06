@@ -1,0 +1,175 @@
+{
+  "capturedFrom": "plan.runs/wire-captures/2026-07-06T13-34-36-451Z-live-wire.json (REAL gateway frame, generation 2)",
+  "tick": 1783344872,
+  "tick12": 8,
+  "position6": 2,
+  "degree720": 480,
+  "degree360": 120,
+  "helix": "pratibimba",
+  "kleinFlip": {
+    "codonAfter": 45,
+    "codonBefore": 39,
+    "kind": "m3CodonRotationCross"
+  },
+  "anandaVortex": {
+    "activeCell": [
+      8,
+      2
+    ],
+    "activeCellValue": {
+      "drBimba": 7,
+      "drPratibimba": 8,
+      "drSum": 6,
+      "drValue": 6,
+      "family": "sum",
+      "positionP": 2,
+      "rawBimba": 16,
+      "rawDelta": 1,
+      "rawPratibimba": 17,
+      "rawSum": 33,
+      "rawValue": 33,
+      "rowK": 8,
+      "ruleValue": null,
+      "skeletonEvent": null
+    },
+    "activeMatrixOp": "sum",
+    "cl42SignatureAtPosition": 1,
+    "drRingPhase": {
+      "mahamayaIdx": 4,
+      "parashaktiIdx": 9
+    },
+    "helixSheet": 1,
+    "kleinFlipAtThisTick": false,
+    "ringQuaternion": [
+      0,
+      -1,
+      0,
+      0
+    ]
+  },
+  "harmonicGrammar": {
+    "activeLenses": [
+      "L2'",
+      "L3"
+    ],
+    "basePair": "L2/L3",
+    "dFace": "D_LEFT",
+    "depth": 3,
+    "families": [
+      {
+        "family": "A",
+        "intervalSignature": "chromatic:whole-tone; fifths:perfect-fourth",
+        "register": "Being",
+        "relationType": "ADJACENTLY_ARTICULATES"
+      },
+      {
+        "family": "B",
+        "intervalSignature": "chromatic:minor-seventh/tritone/whole-tone; fifths:perfect-fifth/minor-third/major-seventh",
+        "register": "Becoming",
+        "relationType": "MIRRORS_COMPLEMENT"
+      }
+    ],
+    "harmonicRelation": "A/B/C+D=1",
+    "lensRefraction": "L/L'=/",
+    "positionSubstance": "P/P'=0",
+    "primaryAnchor": "Night"
+  },
+  "bedrock": {
+    "bimbaPitchClass": 4,
+    "hashOperator": "#",
+    "inversionPitchClass": 5,
+    "inversionRelation": "inversion-spanda",
+    "invertedPsychoidNumber": "#2'",
+    "psychoidNumber": "#2",
+    "successorPsychoidNumber": "#3",
+    "successorRelation": "epogdoon-tick"
+  },
+  "graphHandle": {
+    "axis": "pratibimba",
+    "canonicalForm": "M2'",
+    "coordinateHome": "M2'",
+    "depth": 0,
+    "gdsOverlayState": "blocked",
+    "parent": "M",
+    "prefix": "M",
+    "resolverProvenance": "Body/S/S2/graph-services/src/coordinate.rs::CoordinateArrayParser (pre-resolved at the S0 profile bus to avoid per-tick re-parse)"
+  },
+  "depositionAnchor": {
+    "mahamayaAddress64": 21,
+    "privacyBoundary": "public-current-context-to-protected-local-episodic-memory",
+    "resonance72Index": 50,
+    "s3Method": "s5.episodic.kernel_profile_observation.deposit",
+    "sourceCoordinate": "M2'"
+  },
+  "s2Anchor": {
+    "coordinate": "M2'",
+    "provenance": "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for",
+    "readiness": "cycle-2-s2-coordinate-anchor"
+  },
+  "s3Anchor": {
+    "coordinate": "M2'",
+    "provenance": "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile",
+    "readiness": "cycle-2-s3-profile-observation-anchor"
+  },
+  "pointerAnchor": {
+    "bedrockIndex": 2,
+    "familyRingSize": 12,
+    "helix": "pratibimba",
+    "lensAnchor": "L2'",
+    "lensRingSize": 12,
+    "pitchClass": 5,
+    "positionRingSize": 12,
+    "provenance": "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract",
+    "qlPosition": 2,
+    "relationRole": "inversion-spanda",
+    "sourceCoordinate": "S0/QL-meta",
+    "webCardinality": 36,
+    "webIndex": 8
+  },
+  "contextFrames": {
+    "activeAgent": "Mythos",
+    "activeFrame": "0/1/2/3",
+    "activeFrameIndex": 3,
+    "frameCount": 7,
+    "projection": "CF7 diatonic lemniscate overlay"
+  },
+  "readinessLedger": [
+    {
+      "bedrock_link": "kernel-matheme-bedrock-projection-v1",
+      "field": "bedrock",
+      "provenance_chain": "Body/S/S0/portal-core/src/kernel.rs:878 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link",
+      "state": "authoritative"
+    }
+  ],
+  "quintessence": {
+    "authority": "epi nara identity (BLAKE3 → hash_to_clock_position; clock_state quaternion law)",
+    "hashPreview": "c889c6ed",
+    "layerCount": 2,
+    "natalDegree": 352,
+    "natalTick12": 11,
+    "partial": true,
+    "quintessenceQuaternion": [
+      0.13997872173786163,
+      0.13997872173786163,
+      0.4138501286506653,
+      0.8885606527328491
+    ],
+    "quintessenceWeight": 0.3954467475414276
+  },
+  "resonance72": {
+    "baseLens": 2,
+    "helixBit": 1,
+    "legacyResonanceIndex": 32,
+    "lensAnchor": 8,
+    "lensAnchorIndex": 50,
+    "position": 2
+  },
+  "diatonic": {
+    "contextAgent": "Mythos",
+    "contextFrame": "0/1/2/3",
+    "degree": 4,
+    "note": "F",
+    "pitchClass": 5,
+    "vakRegister": "Pasyanti"
+  }
+}

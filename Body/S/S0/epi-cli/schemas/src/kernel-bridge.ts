@@ -465,6 +465,603 @@ export type VakLanguificationTrace = z.infer<
   typeof VakLanguificationTrace
 >;
 
+// --- Modal resonator / bell kernel (bell-kernel spec §4) -------------------
+// The modal/bell interpretation of the 8+4 bus. Mirrors
+// portal-core/src/kernel/projections/modal_resonator.rs exactly; the bus
+// (audioOctet / nodalQuartet) stays the only pitch/nodal authority.
+
+export const BellPartialRoleName = z.enum([
+  "hum",
+  "prime",
+  "tierce",
+  "quint",
+  "nominal",
+  "upper",
+  "warble",
+  "residue",
+]);
+export type BellPartialRoleName = z.infer<typeof BellPartialRoleName>;
+
+export const ModalLensMode = z
+  .object({
+    // Rust MathemeLensMode law: lens 0..11, mode 0..6 (12 lenses × 7 modes).
+    lens: z.number().int().min(0).max(11),
+    mode: z.number().int().min(0).max(6),
+    lensModeIndex: z.number().int().min(0).max(83),
+  })
+  .strict()
+  .refine((value) => value.lensModeIndex === value.lens * 7 + value.mode, {
+    message: "lensModeIndex must equal lens * 7 + mode",
+  });
+export type ModalLensMode = z.infer<typeof ModalLensMode>;
+
+export const ModalM2Address72 = z
+  .object({
+    address72: z.number().int().min(0).max(71),
+    lensAnchorIndex: z.number().int().min(0).max(71),
+    tick12: z.number().int().min(0).max(11),
+    position: z.number().int().min(0).max(5),
+    source: z.literal("MathemeHarmonicProfile.resonance72.lensAnchorIndex"),
+  })
+  .strict()
+  .refine((value) => value.address72 === value.lensAnchorIndex, {
+    message: "address72 must equal resonance72.lensAnchorIndex",
+  });
+export type ModalM2Address72 = z.infer<typeof ModalM2Address72>;
+
+export const ModalChromaticSlot = z
+  .object({
+    pitchClass: z.number().int().min(0).max(11),
+    note: z.string().min(1),
+    isDiatonic: z.boolean(),
+    diatonicDegree: z.number().int().min(1).max(7).nullable(),
+    octetIndices: z.array(z.number().int().min(0).max(7)),
+    nodalRoles: z.array(z.number().int().min(0).max(3)),
+    silentAnchorRole: z.number().int().min(0).max(4).nullable(),
+    mirror: z.number().int().min(0).max(11),
+  })
+  .strict();
+export type ModalChromaticSlot = z.infer<typeof ModalChromaticSlot>;
+
+export const ModalOctetCarrier = z
+  .object({
+    octetIndex: z.number().int().min(0).max(7),
+    hz: z.number().positive(),
+    qlPosition: z.number().int().min(1).max(4),
+    helix: z.enum(["bimba", "pratibimba"]),
+    pitchClass: z.number().int().min(0).max(11),
+  })
+  .strict();
+export type ModalOctetCarrier = z.infer<typeof ModalOctetCarrier>;
+
+export const ModalNodalAnchor = z
+  .object({
+    quartetIndex: z.number().int().min(0).max(3),
+    qlPosition: z.number().int(),
+    helix: z.enum(["bimba", "pratibimba"]),
+    m: z.number().int().min(1).max(12),
+    n: z.number().int().min(1).max(12),
+    pitchClass: z.number().int().min(0).max(11),
+    role: z.enum([
+      "bimba-p0-anchor",
+      "bimba-p5-anchor",
+      "pratibimba-p0-anchor",
+      "pratibimba-p5-anchor",
+    ]),
+  })
+  .strict();
+export type ModalNodalAnchor = z.infer<typeof ModalNodalAnchor>;
+
+export const ModalDiatonicRole = z
+  .object({
+    pitchClass: z.number().int().min(0).max(11),
+    degree: z.number().int().min(1).max(7),
+    note: z.string().min(1),
+    contextFrame: z.string().min(1),
+    contextAgent: z.string().min(1),
+  })
+  .strict();
+export type ModalDiatonicRole = z.infer<typeof ModalDiatonicRole>;
+
+export const ModalSilentAnchor = z
+  .object({
+    pitchClass: z.number().int().min(0).max(11),
+    silentIndex: z.number().int().min(0).max(4),
+    note: z.string().min(1),
+  })
+  .strict();
+export type ModalSilentAnchor = z.infer<typeof ModalSilentAnchor>;
+
+export const BellPartialRole = z
+  .object({
+    octetIndex: z.number().int().min(0).max(7),
+    role: BellPartialRoleName,
+  })
+  .strict();
+export type BellPartialRole = z.infer<typeof BellPartialRole>;
+
+export const ModalResonatorProfile = z
+  .object({
+    schemaVersion: z.literal(1),
+    source: z.literal("MathemeHarmonicProfile"),
+    tick: z.number().int().nonnegative(),
+    tick12: z.number().int().min(0).max(11),
+    degree720: z.number().int().min(0).max(720),
+    lensMode: ModalLensMode,
+    m2Address72: ModalM2Address72,
+    chromaticBody: z.array(ModalChromaticSlot).length(12),
+    liveOctet: z.array(ModalOctetCarrier).length(8),
+    nodalQuartet: z.array(ModalNodalAnchor).length(4),
+    diatonicSet: z.array(ModalDiatonicRole).length(7),
+    silentComplement: z.array(ModalSilentAnchor).length(5),
+    bellPartials: z.array(BellPartialRole).length(8),
+    cymaticMaterial: z
+      .object({
+        mode: z.string().min(1),
+        antinodalDriver: z.literal("MathemeHarmonicProfile.audio_octet"),
+        boundaryConstraint: z.literal("MathemeHarmonicProfile.nodal_quartet"),
+      })
+      .strict(),
+    privacyClass: z.literal("public-current-context"),
+    authority: z
+      .object({
+        pitch: z.literal("MathemeHarmonicProfile.audio_octet"),
+        nodal: z.literal("MathemeHarmonicProfile.nodal_quartet"),
+      })
+      .strict(),
+    sourceFields: z
+      .object({
+        activeChromatic: z.literal("MathemeHarmonicProfile.chromatic"),
+        activeDiatonicContext: z.literal("MathemeHarmonicProfile.diatonic"),
+        resonance72: z.literal("MathemeHarmonicProfile.resonance72"),
+      })
+      .strict(),
+  })
+  .strict()
+  .refine(
+    (value) =>
+      value.bellPartials.every((partial, index) => partial.octetIndex === index),
+    { message: "bellPartials[i].octetIndex must equal i" },
+  );
+export type ModalResonatorProfile = z.infer<typeof ModalResonatorProfile>;
+
+/// Live Kerykeion sky projection (cosmic-clock §5.2/§5.3), mirrored from
+/// portal-core LivePlanetProjection. Attached by the gateway heartbeat only
+/// when the kairos cache is fresh and complete.
+export const LivePlanetProjection = z
+  .object({
+    planetId: z.number().int().min(0).max(9),
+    degree: z.number().min(0).max(360),
+    retrograde: z.boolean(),
+    decan36: z.number().int().min(0).max(35),
+    decanRuler: z.number().int().min(0).max(9),
+    isResonance: z.boolean(),
+    elementId: z.number().int().nonnegative(),
+    keplerianVel: z.number().int().nonnegative(),
+  })
+  .strict();
+export type LivePlanetProjection = z.infer<typeof LivePlanetProjection>;
+
+/// Handle-only quintessence identity summary (Sprint-8 E6, DR-M4-3; mirrors
+/// portal-core kernel/profile.rs QuintessenceProjection). Only handles cross:
+/// the natal clock address (hash-derived), weight, enrichment honesty, an
+/// 8-hex hash preview, and the elemental quaternion ([w=Earth, x=Fire,
+/// y=Water, z=Air] — public-safe elemental-balance class). Never the 32-byte
+/// hash, natal chart, or per-layer identity profiles.
+export const QuintessenceProjection = z
+  .object({
+    natalDegree: z.number().int().min(0).max(359),
+    natalTick12: z.number().int().min(0).max(11),
+    quintessenceWeight: z.number().min(0).max(1),
+    layerCount: z.number().int().min(0).max(5),
+    partial: z.boolean(),
+    hashPreview: z.string().regex(/^[0-9a-f]{8}$/),
+    quintessenceQuaternion: z.array(z.number()).length(4),
+    authority: z.string().min(1),
+  })
+  .strict();
+export type QuintessenceProjection = z.infer<typeof QuintessenceProjection>;
+
+/// Sprint-8 E1+E3 phase-space law (portal-core projections/phase_space.rs;
+/// C authority epi-lib CLOCK_DEGREE_LUT, 384 = 360 + 24 = 64×6). The carried
+/// tick across one of the 16 clock division apertures.
+export const PhaseSpaceLensSegmentPhase = z
+  .object({
+    lensIndex: z.number().int().min(0).max(15),
+    slice: z.number().int().min(1).max(360),
+    sections: z.number().int().min(1).max(360),
+    name: z.string().min(1),
+    temporalCanon: z.boolean(),
+    segment: z.number().int().min(0).max(359),
+    degreeInSegment: z.number().int().min(0).max(359),
+    phase01: z.number().min(0).max(1),
+  })
+  .strict();
+export type PhaseSpaceLensSegmentPhase = z.infer<
+  typeof PhaseSpaceLensSegmentPhase
+>;
+
+/// The typed view of one C `Clock_Degree_Entry` plus the computed 16-lens
+/// membership (u16 because Microscopic has 360 segments — the spec's uint8_t
+/// erratum is flagged in phase_space.rs).
+export const PhaseSpaceClockDegreeNode = z
+  .object({
+    degree360: z.number().int().min(0).max(359),
+    // exact_degree_720 = degree * 2 → even values in [0, 718]
+    exactDegree720: z.number().min(0).max(718),
+    zodiacSign: z.number().int().min(0).max(11),
+    zodiacDegree: z.number().int().min(0).max(29),
+    decan36: z.number().int().min(0).max(35),
+    decanPosition: z.number().int().min(0).max(9),
+    isBackboneNode: z.boolean(),
+    // m3.h domain law (E3 verifier tightening): hexagram 0-63, line 0-5
+    hexagramId: z.number().int().min(0).max(63),
+    hexagramLineActive: z.number().int().min(0).max(5),
+    isNonDualCodon: z.boolean(),
+    // 0=perfect, 1=imperfect, 2=non-palindromic-non-dual, 3=dual
+    codonClass: z.number().int().min(0).max(3),
+    codonUpperPair: z.number().int().min(0).max(3),
+    codonLowerPair: z.number().int().min(0).max(3),
+    // 0-55 Minor Arcana; 0 = dataset-unavailable (honest pending state)
+    tarotCardId: z.number().int().min(0).max(55),
+    decanPlanet: z.number().int().min(0).max(9),
+    decanElement: z.number().int().min(0).max(4),
+    decanChakra: z.number().int().min(0).max(7),
+    degreeTick12: z.number().int().min(0).max(11),
+    strand: z.number().int().min(0).max(1),
+    drRing: z.number().int().min(0).max(1),
+    m1AnandaValue: z.number().int().min(0).max(255),
+    m0Archetype: z.number().int().min(0).max(11),
+    // shadow_degree = degree + 360 (SU(2) double-cover) → always 360-719
+    shadowDegree: z.number().int().min(360).max(719),
+    polarOpposite: z.number().int().min(0).max(359),
+    enneadicChamber: z.number().int().min(0).max(8),
+    chamberDayNight: z.number().int().min(0).max(1),
+    lensSegment: z.array(z.number().int().min(0).max(359)).length(16),
+  })
+  .strict();
+export type PhaseSpaceClockDegreeNode = z.infer<
+  typeof PhaseSpaceClockDegreeNode
+>;
+
+/// The two planes of the 720 double-cover: the primary/explicate traversal
+/// reads the degree's codon valence, the shadow/implicate its hexagram face.
+export const PhaseSpaceValence = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("codon"),
+      upperPair: z.number().int().min(0).max(3),
+      lowerPair: z.number().int().min(0).max(3),
+      codonClass: z.number().int().min(0).max(3),
+      isNonDual: z.boolean(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("hexagram"),
+      hexagramId: z.number().int().min(0).max(63),
+      lineActive: z.number().int().min(0).max(5),
+    })
+    .strict(),
+]);
+export type PhaseSpaceValence = z.infer<typeof PhaseSpaceValence>;
+
+/// The +1 Level-0 aperture (16+1 law — NEVER a 17th lens row).
+export const PhaseSpaceFibonacciGround = z
+  .object({
+    position: z.number().int().min(0).max(59),
+    digit: z.number().int().min(0).max(9),
+    phase01: z.number().min(0).max(1),
+    temporalCanon: z.boolean(),
+  })
+  .strict();
+export type PhaseSpaceFibonacciGround = z.infer<
+  typeof PhaseSpaceFibonacciGround
+>;
+
+export const PhaseSpaceAddress = z
+  .object({
+    degree720: z.number().int().min(0).max(719),
+    degree360: z.number().int().min(0).max(359),
+    plane: z.enum(["primary-codon", "shadow-hexagram"]),
+    activeValence: PhaseSpaceValence,
+    node: PhaseSpaceClockDegreeNode,
+    lensCarrier: z.array(PhaseSpaceLensSegmentPhase).length(16),
+    fibonacciGround: PhaseSpaceFibonacciGround,
+    authority: z.string().min(1),
+  })
+  .strict();
+export type PhaseSpaceAddress = z.infer<typeof PhaseSpaceAddress>;
+
+// --- Klein-flip event (typed 2026-07-06, computational-core truth session) --
+// Mirrors portal-core/src/events/flip_events.rs KleinFlipEvent — the ONE
+// three-variant union (DR-IG-2) serialized with serde tag "kind", camelCase.
+// Fires from the Vimarśa detector at ticks 6/7/8 (M1 tritone crossing at the
+// lens N↔N+3 boundary, M2 cymatic valence inversion, M3 codon-rotation
+// cross); null on all other ticks. Discharges the T12 z.unknown() hole for
+// the quaternionic flip field.
+
+export const KleinFlipValence = z.enum(["primary", "inverted"]);
+export type KleinFlipValence = z.infer<typeof KleinFlipValence>;
+
+export const KleinFlipEvent = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("m1TritoneCrossing"),
+      tick12: z.number().int().min(0).max(11),
+      // Rust (u8, u8) tuple — the tritone lens pair, serialized as a 2-array.
+      lensPair: z.tuple([
+        z.number().int().min(0).max(11),
+        z.number().int().min(0).max(11),
+      ]),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("m2CymaticValenceInvert"),
+      valenceBefore: KleinFlipValence,
+      valenceAfter: KleinFlipValence,
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("m3CodonRotationCross"),
+      codonBefore: z.number().int().min(0).max(63),
+      codonAfter: z.number().int().min(0).max(63),
+    })
+    .strict(),
+]);
+export type KleinFlipEvent = z.infer<typeof KleinFlipEvent>;
+
+// --- Always-on profile projections (T12 hardening, 2026-07-06) --------------
+// Typed from the REAL wire (plan.runs/wire-captures 2026-07-06 capture) plus
+// the Rust authorities: portal-core kernel/profile.rs and
+// kernel/projections/{ananda_vortex,harmonic_grammar,bedrock,context_frame_web}.rs.
+// These discharge the remaining z.unknown()/z.record(z.unknown()) holes for
+// fields the gateway emits on EVERY profile frame.
+
+/// Ananda vortex (ananda_vortex.rs) — the 12x6 M1 matrix walk.
+/// Laws pinned by the live-wire manifest: activeCell = (tick12, position6),
+/// kleinFlipAtThisTick = (tick12 == 5), helixSheet = degree720 >= 360,
+/// drRingPhase from the Vedic {1,2,4,8,7,5}/{3,6,9} rings.
+export const AnandaMatrixOp = z.enum([
+  "bimba",
+  "pratibimba",
+  "sum",
+  "diff-a",
+  "diff-b",
+  "quintessence",
+]);
+export type AnandaMatrixOp = z.infer<typeof AnandaMatrixOp>;
+
+export const AnandaSkeletonEvent = z.enum([
+  "Hit36",
+  "Hit64",
+  "Hit72",
+  "Ratio64Over36",
+  "Additive137",
+  "IdentityReturn4Plus2",
+]);
+export type AnandaSkeletonEvent = z.infer<typeof AnandaSkeletonEvent>;
+
+export const AnandaVortexCell = z
+  .object({
+    family: AnandaMatrixOp,
+    rowK: z.number().int().min(0).max(11),
+    positionP: z.number().int().min(0).max(5),
+    rawValue: z.number().int().nullable(),
+    rawBimba: z.number().int(),
+    rawPratibimba: z.number().int(),
+    rawSum: z.number().int(),
+    rawDelta: z.number().int(),
+    drValue: z.number().int().min(0).max(9).nullable(),
+    drBimba: z.number().int().min(0).max(9),
+    drPratibimba: z.number().int().min(0).max(9),
+    drSum: z.number().int().min(0).max(9),
+    ruleValue: z.string().min(1).nullable(),
+    skeletonEvent: AnandaSkeletonEvent.nullable(),
+  })
+  .strict();
+export type AnandaVortexCell = z.infer<typeof AnandaVortexCell>;
+
+export const DrRingPhase = z
+  .object({
+    // Vedic doubling ring {1,2,4,8,7,5} / trinity ring {3,6,9}.
+    mahamayaIdx: z.number().int().min(1).max(9),
+    parashaktiIdx: z.number().int().min(3).max(9),
+  })
+  .strict();
+export type DrRingPhase = z.infer<typeof DrRingPhase>;
+
+export const AnandaVortexProjection = z
+  .object({
+    activeMatrixOp: AnandaMatrixOp,
+    activeCell: z.tuple([
+      z.number().int().min(0).max(11),
+      z.number().int().min(0).max(5),
+    ]),
+    activeCellValue: AnandaVortexCell,
+    drRingPhase: DrRingPhase,
+    cl42SignatureAtPosition: z.number().int().min(-128).max(127),
+    ringQuaternion: z.array(z.number()).length(4),
+    helixSheet: z.number().int().min(0).max(1),
+    kleinFlipAtThisTick: z.boolean(),
+  })
+  .strict()
+  .refine(
+    (value) =>
+      value.activeCellValue.rowK === value.activeCell[0] &&
+      value.activeCellValue.positionP === value.activeCell[1],
+    { message: "activeCellValue (rowK, positionP) must equal activeCell" },
+  );
+export type AnandaVortexProjection = z.infer<typeof AnandaVortexProjection>;
+
+/// Harmonic grammar (kernel/projections/harmonic_grammar.rs). Wire law
+/// (from_tick): bimba pairs L{p}/L{(p+1)%6} anchored Day/depth-2/NONE;
+/// pratibimba pairs are COMPLEMENTARY L{p}/L{5-p} anchored Night/depth-3/
+/// D_LEFT. `families` is the A/B/C table for the pair and is legitimately
+/// EMPTY for pairs outside the table (e.g. pratibimba (3,2)/(4,1)).
+export const MathemeHarmonicFamilyProjection = z
+  .object({
+    family: z.string().min(1),
+    register: z.string().min(1),
+    relationType: z.string().min(1),
+    intervalSignature: z.string().min(1),
+  })
+  .strict();
+export type MathemeHarmonicFamilyProjection = z.infer<
+  typeof MathemeHarmonicFamilyProjection
+>;
+
+export const MathemeHarmonicGrammarProjection = z
+  .object({
+    positionSubstance: z.string().min(1),
+    lensRefraction: z.string().min(1),
+    harmonicRelation: z.string().min(1),
+    basePair: z.string().regex(/^L[0-5]\/L[0-5]$/),
+    activeLenses: z.array(z.string().min(1)).min(1),
+    primaryAnchor: z.enum(["Day", "Night"]),
+    dFace: z.enum(["NONE", "D_LEFT"]),
+    depth: z.number().int().min(2).max(3),
+    families: z.array(MathemeHarmonicFamilyProjection),
+  })
+  .strict();
+export type MathemeHarmonicGrammarProjection = z.infer<
+  typeof MathemeHarmonicGrammarProjection
+>;
+
+/// Bedrock psychoid-number projection (kernel/projections/bedrock.rs).
+export const MathemeBedrockProjection = z
+  .object({
+    hashOperator: z.literal("#"),
+    psychoidNumber: z.string().regex(/^#[0-5]$/),
+    invertedPsychoidNumber: z.string().regex(/^#[0-5]'$/),
+    successorPsychoidNumber: z.string().regex(/^#[0-5]$/),
+    successorRelation: z.enum(["epogdoon-tick", "mobius-return"]),
+    inversionRelation: z.literal("inversion-spanda"),
+    bimbaPitchClass: z.number().int().min(0).max(11),
+    inversionPitchClass: z.number().int().min(0).max(11),
+  })
+  .strict();
+export type MathemeBedrockProjection = z.infer<typeof MathemeBedrockProjection>;
+
+/// Pre-resolved S2 graph anchor (kernel/profile.rs GraphAnchorProjection;
+/// S2-ARCHITECTURE §4.3/§10.4 — published so M' surfaces stop re-parsing
+/// canonical_form per tick).
+export const GraphCoordinateHome = z.enum([
+  "M",
+  "M0'",
+  "M1'",
+  "M2'",
+  "M3'",
+  "M4'",
+  "M5",
+  "M5'",
+  "S2-5",
+]);
+export type GraphCoordinateHome = z.infer<typeof GraphCoordinateHome>;
+
+export const GdsOverlayState = z.enum([
+  "blocked",
+  "projection_ready",
+  "algorithm_active",
+]);
+export type GdsOverlayState = z.infer<typeof GdsOverlayState>;
+
+export const GraphAnchorProjection = z
+  .object({
+    canonicalForm: z.string().min(1),
+    depth: z.number().int(),
+    prefix: z.string().min(1),
+    parent: z.string().min(1).nullable(),
+    axis: z.enum(["bimba", "pratibimba"]),
+    coordinateHome: GraphCoordinateHome,
+    gdsOverlayState: GdsOverlayState,
+    resolverProvenance: z.string().min(1),
+  })
+  .strict();
+export type GraphAnchorProjection = z.infer<typeof GraphAnchorProjection>;
+
+/// Episodic deposition anchor (kernel/profile.rs DepositionAnchorProjection).
+export const DepositionAnchorProjection = z
+  .object({
+    sourceCoordinate: z.string().min(1),
+    resonance72Index: z.number().int().min(0).max(71),
+    mahamayaAddress64: z.number().int().min(0).max(63).nullable(),
+    s3Method: z.string().min(1),
+    privacyBoundary: z.string().min(1),
+  })
+  .strict();
+export type DepositionAnchorProjection = z.infer<
+  typeof DepositionAnchorProjection
+>;
+
+/// Cycle-2 future anchors (kernel/profile.rs MathemeFutureAnchor) — s2Anchor /
+/// s3Anchor. Rust Option WITHOUT skip_serializing_if: null is the honest
+/// not-anchored state, an object the landed anchor.
+export const MathemeFutureAnchor = z
+  .object({
+    coordinate: z.string().min(1),
+    readiness: z.string().min(1),
+    provenance: z.string().min(1),
+  })
+  .strict();
+export type MathemeFutureAnchor = z.infer<typeof MathemeFutureAnchor>;
+
+/// Readiness ledger fact — NOTE the Rust struct is serde snake_case, so the
+/// wire keys are bedrock_link / provenance_chain (not camelCase).
+export const MathemeHarmonicProfileReadinessFact = z
+  .object({
+    field: z.string().min(1),
+    state: z.literal("authoritative"),
+    bedrock_link: z.literal("kernel-matheme-bedrock-projection-v1"),
+    provenance_chain: z.string().min(1),
+  })
+  .strict();
+export type MathemeHarmonicProfileReadinessFact = z.infer<
+  typeof MathemeHarmonicProfileReadinessFact
+>;
+
+/// CF7 context-frame web (kernel/projections/context_frame_web.rs). The
+/// active* trio is null exactly on non-diatonic ticks, and
+/// activeFrameIndex = diatonic.degree - 1 when diatonic is present.
+export const MathemeContextFrameWebProjection = z
+  .object({
+    frameCount: z.number().int().min(1),
+    activeFrameIndex: z.number().int().min(0).nullable(),
+    activeFrame: z.string().min(1).nullable(),
+    activeAgent: z.string().min(1).nullable(),
+    projection: z.string().min(1),
+  })
+  .strict();
+export type MathemeContextFrameWebProjection = z.infer<
+  typeof MathemeContextFrameWebProjection
+>;
+
+/// S0 harmonic pointer anchor (Bedrock7/PointerWeb36/CF7 contract; mirrors
+/// the app-side MathemePointerAnchorProjection boundary in
+/// Body/M/pratibimba-app/src/bridge/types.ts).
+export const MathemePointerAnchorProjection = z
+  .object({
+    sourceCoordinate: z.string().min(1),
+    qlPosition: z.number().int().min(0).max(5),
+    helix: z.enum(["bimba", "pratibimba"]),
+    webIndex: z.number().int().min(0).max(35),
+    bedrockIndex: z.number().int().min(0).max(6),
+    familyRingSize: z.number().int().positive(),
+    positionRingSize: z.number().int().positive(),
+    lensRingSize: z.number().int().positive(),
+    webCardinality: z.literal(36),
+    lensAnchor: z.string().min(1),
+    relationRole: z.string().min(1),
+    pitchClass: z.number().int().min(0).max(11),
+    provenance: z.string().min(1),
+  })
+  .strict();
+export type MathemePointerAnchorProjection = z.infer<
+  typeof MathemePointerAnchorProjection
+>;
+
 export const MathemeHarmonicProfile = z
   .object({
     profileSchemaVersion: z.literal(1),
@@ -486,45 +1083,157 @@ export const MathemeHarmonicProfile = z
     position6: z.number().int().min(0).max(5),
     helix: z.enum(["bimba", "pratibimba"]),
     ratioRole: z.string(),
+    // Rust MathemeLensMode law: lens 0..11, mode 0..6. (The former swapped
+    // bounds were the drift flagged in the bell-kernel spec §6.)
     lensMode: z.object({
-      lens: z.number().int().min(0).max(6),
-      mode: z.number().int().min(0).max(11),
+      lens: z.number().int().min(0).max(11),
+      mode: z.number().int().min(0).max(6),
     }),
     chromatic: z.record(z.unknown()),
-    diatonic: z.record(z.unknown()),
+    // Rust: Option<MathemeDiatonicContext> — null on non-diatonic ticks.
+    diatonic: z.record(z.unknown()).nullable(),
     resonance72: z.record(z.unknown()),
-    depositionAnchor: z.record(z.unknown()),
-    graphHandle: z.record(z.unknown()),
+    depositionAnchor: DepositionAnchorProjection,
+    graphHandle: GraphAnchorProjection,
     audioOctet: z.array(z.number()).length(8),
     nodalQuartet: z.array(z.record(z.unknown())).length(4),
+    modalResonator: ModalResonatorProfile.optional(),
+    planetDegrees: z.array(z.number()).length(10).optional(),
+    livePlanets: z.array(LivePlanetProjection).length(10).optional(),
+    // Sprint-8 E1: the tick's address in the 720 possibility space (plane,
+    // clock-degree node, 16+1 lens carrier). Hardened with E3 (the app-side
+    // modulation-graph consumer): full field law mirrored from portal-core
+    // phase_space.rs, whose C authority is epi-lib CLOCK_DEGREE_LUT.
+    phaseSpace: PhaseSpaceAddress.optional(),
+    // Sprint-8 E6: handle-only PASU identity summary — attached by the
+    // gateway heartbeat when a local identity exists; absence is honest.
+    quintessence: QuintessenceProjection.optional(),
     elements: z.record(z.unknown()),
     planetaryChakral: z.record(z.unknown()),
     binary: z.record(z.unknown()),
     mahamaya: z.record(z.unknown()),
     codonRotationProjection: z.record(z.unknown()),
     qCosmic: z.union([z.number(), z.array(z.number()).length(4)]),
-    resonance: z.record(z.unknown()).nullable(),
+    // Rust: Option<f32> — a scalar resonance score or null, never an object.
+    resonance: z.number().nullable(),
     conjugateFormCharacter: z.string(),
     privacyClass: z.literal("public-current-context"),
-    bedrock: z.record(z.unknown()),
-    readinessLedger: z.array(z.record(z.unknown())),
-    pointerAnchor: z.record(z.unknown()),
-    contextFrames: z.union([
-      z.array(z.record(z.unknown())),
-      z.record(z.unknown()),
-    ]),
-    kleinFlip: z.unknown().nullable().optional(),
-    anandaVortex: z.unknown().optional(),
-    harmonicGrammar: z.unknown().optional(),
+    bedrock: MathemeBedrockProjection,
+    readinessLedger: z.array(MathemeHarmonicProfileReadinessFact),
+    pointerAnchor: MathemePointerAnchorProjection,
+    // Rust: MathemeContextFrameWebProjection struct — always a single object
+    // (the former array-or-record union was a placeholder, never on the wire).
+    contextFrames: MathemeContextFrameWebProjection,
+    // Typed 2026-07-06 (was z.unknown()): the three-variant flip union, null
+    // between flip ticks. Optional for legacy payload compatibility.
+    kleinFlip: KleinFlipEvent.nullable().optional(),
+    // T12 hardening: anandaVortex/harmonicGrammar are serde(default) structs,
+    // serialized on every current profile frame; optional only for legacy
+    // pre-projection payload compatibility, never z.unknown().
+    anandaVortex: AnandaVortexProjection.optional(),
+    harmonicGrammar: MathemeHarmonicGrammarProjection.optional(),
     pasuBeingPattern: PasuBeingPatternProjection.optional(),
     anuttaraWitness: AnuttaraWitnessProjection.optional(),
+    // Composition projections (Rust optional, skip-serialized when absent) —
+    // kept as unknown until their own schemas land; listed so a strict parse
+    // of a live profile carrying them does not reject the whole payload.
+    cosmicCompositionState: z.unknown().optional(),
+    personalPole: z.unknown().optional(),
+    psychoidField: z.unknown().optional(),
+    canonRecognitionStream: z.array(z.unknown()).optional(),
     vakLanguificationTrace: VakLanguificationTrace.optional(),
-    s2Anchor: z.unknown().nullable(),
-    s3Anchor: z.unknown().nullable(),
+    s2Anchor: MathemeFutureAnchor.nullable(),
+    s3Anchor: MathemeFutureAnchor.nullable(),
     vakAddress: z.unknown().nullable().optional(),
   })
   .strict();
 export type MathemeHarmonicProfile = z.infer<typeof MathemeHarmonicProfile>;
+
+// --- M1'/M2'/M3' chime frame (bell-kernel spec §5) --------------------------
+// The tick event proving all three poles resolved the same resonant state.
+// Mirrors epi-cli/src/gate/kernel_bridge_runtime.rs M123ChimeFrameJsonShape.
+
+export const M123_CHIME_FRAME_CONTRACT = "S0.kernel-bridge.m123-chime-frame";
+export const M123_CHIME_EVENT_TYPE = "m123.chime";
+
+export const M123ChimeWorldClockBinding = z
+  .object({
+    state: z.enum(["ready", "pending", "stale", "blocked"]),
+    worldClockHandle: z.string().nullable(),
+    generation: z.number().int().nonnegative().nullable(),
+    source: z.literal("s3.world_clock").nullable(),
+    subscriptionMode: z.string().nullable(),
+    tick: z.number().int().nonnegative().nullable(),
+    degree720: z.number().int().min(0).max(720).nullable(),
+    degree720MatchesProfile: z.boolean(),
+    tickMatchesProfile: z.boolean(),
+  })
+  .strict();
+export type M123ChimeWorldClockBinding = z.infer<
+  typeof M123ChimeWorldClockBinding
+>;
+
+export const M123ChimeFrame = z
+  .object({
+    eventType: z.literal(M123_CHIME_EVENT_TYPE),
+    contract: z.literal(M123_CHIME_FRAME_CONTRACT),
+    sourceProfileGeneration: z.number().int().nonnegative(),
+    tick: z.number().int().nonnegative(),
+    tick12: z.number().int().min(0).max(11),
+    degree720: z.number().int().min(0).max(720),
+    m2Address72: z.number().int().min(0).max(71),
+    m1: z
+      .object({
+        surface: z.literal("K2"),
+        k2SurfaceHandle: z.string().nullable(),
+        playedTorusHandle: z.string().nullable(),
+        playedTorusStatus: z
+          .enum(["current-retiring", "active-successor"])
+          .nullable(),
+        strikeRoute: z.enum(["profile-bus", "world-clock", "manual-scrub"]),
+      })
+      .strict(),
+    m2: z
+      .object({
+        modalResonator: ModalResonatorProfile,
+        m2PrimeMeaningPacketRef: z.string().nullable(),
+        cymaticFrameHandle: z.string().min(1),
+        cymaticTextureContributionHandle: z.string().nullable(),
+        exactProfileBus: z.literal(true),
+      })
+      .strict(),
+    m3: z
+      .object({
+        codonRotationProjection: z.record(z.unknown()).nullable(),
+        worldClockBinding: M123ChimeWorldClockBinding,
+      })
+      .strict(),
+    privacyClass: z.literal("public-current-context"),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    const raw = JSON.stringify(value);
+    for (const key of FORBIDDEN_PRIVATE_PAYLOAD_KEYS) {
+      if (raw.includes(`"${key}"`)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `M123ChimeFrame must not include protected/private field ${key}`,
+          path: [key],
+        });
+      }
+    }
+  });
+export type M123ChimeFrame = z.infer<typeof M123ChimeFrame>;
+
+/** Bell-kernel spec §5 coherence rule: a present world clock with any tick
+ * or degree720 mismatch makes the chime incoherent — consumers must block
+ * integrated readiness on it. */
+export function isM123ChimeCoherent(frame: M123ChimeFrame): boolean {
+  return (
+    frame.m3.worldClockBinding.state === "ready" ||
+    frame.m3.worldClockBinding.state === "pending"
+  );
+}
 
 export const KernelBridgeConnectionStatus = z.object({
   connected: z.boolean(),

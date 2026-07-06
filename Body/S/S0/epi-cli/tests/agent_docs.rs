@@ -1,9 +1,12 @@
 use std::path::PathBuf;
 
 fn repo_root() -> PathBuf {
+    // True repo root: epi-cli lives at Body/S/S0/epi-cli (seed migration moved
+    // the doc trees to the repo-root Idea/ vault).
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("epi-cli crate should live under repo root")
+        .ancestors()
+        .nth(4)
+        .expect("epi-cli crate should live at Body/S/S0/epi-cli under repo root")
         .to_path_buf()
 }
 

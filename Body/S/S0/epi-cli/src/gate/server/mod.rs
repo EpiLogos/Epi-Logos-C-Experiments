@@ -15,6 +15,8 @@ mod subscription;
 mod websocket;
 
 use super::config::{BindMode, GatewayConfig};
+use super::events::GatewayEvent;
+use super::kernel_bridge_runtime;
 use super::parity::DEFAULT_GATEWAY_PORT;
 use super::runtime::GatewayRuntimeState;
 use super::sessions::{self, SessionPatch, SessionRecord, SessionStore};
@@ -47,7 +49,6 @@ impl Drop for TestServerHandle {
 
 pub async fn start(config: &GatewayConfig, json: bool) -> Result<String, String> {
     let status = status_from_config(config)?;
-    persist_status(config.state_root.as_deref(), &status)?;
     let state_root = gate_root(config.state_root.as_deref())?;
     publish_m_clock_placeholder(&state_root)?;
     let bind_host = bind_host(&config.bind_mode);
@@ -56,10 +57,91 @@ pub async fn start(config: &GatewayConfig, json: bool) -> Result<String, String>
         .await
         .map_err(|err| err.to_string())?;
     observability::register_gateway_with_spacetimedb(port, &state_root).await?;
-    websocket::run_listener_loop(listener, state_root, GatewayRuntimeState::default(), None)
-        .await?;
+    persist_status(config.state_root.as_deref(), &status)?;
+    let runtime = GatewayRuntimeState::default();
+    let heartbeat = spawn_profile_heartbeat(runtime.clone());
+    let result = websocket::run_listener_loop(listener, state_root, runtime, None).await;
+    heartbeat.abort();
+    result?;
 
     render(&status, json)
+}
+
+/// S0 kernel tick → S3' shared `profile.update` stream. One heartbeat per
+/// gateway process; every connected client reads the same broadcast —
+/// renderers may not run a private clock (M'-SYSTEM-SPEC harmonic clock law).
+fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
+    tokio::spawn(async move {
+        let mut generation: u64 = 0;
+        let mut ticker = tokio::time::interval(std::time::Duration::from_secs(1));
+        loop {
+            ticker.tick().await;
+            generation += 1;
+            let now_ms = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_millis() as u64;
+            let mut projection =
+                portal_core::KernelTemporalProjection::from_clock_tick(now_ms, generation);
+            // Live Kerykeion sky, attached only when the kairos cache is fresh
+            // and complete (cosmic-clock §5.3 kairos_valid law) — the fields'
+            // absence is the renderers' honest "kairos pending" state.
+            if let Some((degrees, retrograde)) = crate::nara::kairos::heartbeat_live_sky() {
+                projection.harmonic_profile.planet_degrees = Some(degrees);
+                projection.harmonic_profile.live_planets =
+                    Some(portal_core::live_planets_from_sky(&degrees, &retrograde));
+            }
+            // Handle-only PASU identity summary (Sprint-8 E6, DR-M4-3):
+            // natal clock address + weight + preview + elemental quaternion.
+            // Absence is the honest "no identity anchored" state; identity
+            // BODIES (natal chart, per-layer profiles) never cross this bus.
+            projection.harmonic_profile.quintessence =
+                crate::nara::identity::heartbeat_quintessence();
+            let payload = match serde_json::to_value(&projection) {
+                Ok(value) => value,
+                Err(_) => continue,
+            };
+            runtime.broadcast(GatewayEvent::new(
+                "profile.update",
+                None,
+                None,
+                Some(generation),
+                payload,
+            ));
+            // Bell-kernel spec §5: the chime frame is a tick EVENT published
+            // as a sibling to the profile stream — the proof that M1'/M2'/M3'
+            // resolved the same resonant state at this tick. HONESTY NOTE
+            // (verifier 2026-07-02): this reading is SYNTHESIZED here from
+            // the temporal projection's own tick arithmetic — the same
+            // authority the `s3.world_clock` surface serves, but not an
+            // independent subscription. The coherence booleans therefore
+            // guard gateway-vs-kernel derivation drift (two code paths over
+            // one clock), not clock independence; when a real S3 world-clock
+            // subscription lands, it should replace this reading.
+            let world_clock = kernel_bridge_runtime::M123WorldClockReading {
+                world_clock_handle: format!("s3-world-clock-{generation}"),
+                generation,
+                subscription_mode: "gateway-heartbeat".to_owned(),
+                tick: projection.tick.cycle * 12 + (projection.tick.sub_tick % 12) as u64,
+                degree720: (projection.tick.sub_tick % 12) as u16 * 60,
+            };
+            if let Ok(chime) = kernel_bridge_runtime::m123_chime_frame_from_profile(
+                generation,
+                &projection.harmonic_profile,
+                Some(&world_clock),
+            ) {
+                if let Ok(chime_payload) = serde_json::to_value(&chime) {
+                    runtime.broadcast(GatewayEvent::new(
+                        kernel_bridge_runtime::M123_CHIME_EVENT_TYPE,
+                        None,
+                        None,
+                        Some(generation),
+                        chime_payload,
+                    ));
+                }
+            }
+        }
+    })
 }
 
 pub fn stop(json: bool) -> Result<String, String> {
@@ -536,8 +618,14 @@ fn now_ms() -> u128 {
 
 mod tests {
     use super::*;
+    use std::time::Duration;
+
+    use futures_util::{SinkExt, StreamExt};
     use tokio_tungstenite::connect_async;
+    use tokio_tungstenite::tungstenite::Message;
     use uuid::Uuid;
+
+    use crate::gate::cron;
 
     #[tokio::test]
     async fn heartbeat_auto_fires_due_cron_job_without_manual_run() {
