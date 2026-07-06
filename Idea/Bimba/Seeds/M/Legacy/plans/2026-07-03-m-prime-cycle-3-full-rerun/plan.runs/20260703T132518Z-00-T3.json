@@ -1,0 +1,33 @@
+{
+  "runId": "20260703T132518Z-00-T3",
+  "taskId": "00.T3",
+  "startedAt": "2026-07-03T13:25:18.819Z",
+  "owner": "claude-track00",
+  "leaseExpiresAt": "2026-07-03T15:25:18.819Z",
+  "worktree": null,
+  "task": {
+    "id": "00.T3",
+    "trackId": "00",
+    "tranche": "T3",
+    "title": "Anti-fraud test lint",
+    "effort": null,
+    "file": "00-verification-harness.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness.md",
+    "dependsOn": [
+      "00.T2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

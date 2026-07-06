@@ -1,0 +1,181 @@
+{
+ "law": "T11 expected-present ratchet: a method a track marks done is registered here and may NEVER be absent from the live gateway again. The gate (gateway-method-gate.mjs) fails on any missing entry. Only grow this list; each entry carries claimedBy.",
+ "expectedPresent": [
+  {
+   "method": "chat.send",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.lens.apply",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.lens.list",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.lens.synthesize",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.oracle.cast",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.oracle.hygiene",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.session_close",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "nara.session_open",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s1'.vault.read_file",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2'.coordinate.resolve",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2'.retrieve",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.core65.audit",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.gds.tangent_overlay",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.node",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.ontology.reload",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.promotion.commit",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.promotion.dry_run",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.query",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.relation_family.list",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.seed.snapshot",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.parashaktiCorrespondences",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s3'.temporal.context",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s3'.temporal.subscribe",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s4'.mediation.capabilities.list",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s4'.mediation.route",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s4'.psyche.state",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s4'.psyche.update",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s4'.vak.evaluate",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.epii.deposit",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.gnostic.ingest",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.gnostic.notebook",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.gnostic.query",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.gnostic.status",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.improve.history",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.improve.propose",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.improve.status",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.review.history",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.review.inbox",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.review.submit",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "sessions.fork",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "sessions.list",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "sessions.patch",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "sessions.resolve",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "sessions.resume",
+   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  }
+ ]
+}

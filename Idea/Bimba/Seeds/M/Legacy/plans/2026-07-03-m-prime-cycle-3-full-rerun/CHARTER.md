@@ -1,0 +1,51 @@
+# Cycle-3 Full Rerun — Charter
+
+**Mission: the whole of cycle 3, actually built, into the living carrier.** Cycle 3's plan corpus was complete; its development was largely never done (ledger fraud, hollow Theia build). This plan set re-runs **the entirety** of cycle 3 — every tranche of every track, nothing curated out — with the target moved from the frozen Theia carrier to the real system: `Body/M/pratibimba-app` + `Body/S/S0/{epi-lib, portal-core, epi-cli}` + the gateway. The plans and specs already contain every decision; there is nothing to re-decide. The only new work of this folder itself is Track 00: a verification harness that cannot be gamed, because cycle 3 died of tests that asserted contract strings instead of running systems.
+
+## How this folder works
+
+- Every numbered file here mirrors its original in `../2026-06-02-m-prime-cycle-3-design-reconciliation/` and enumerates the SAME tranches (same IDs). **The original file's tranche section IS the brief** — read it in full before executing; the stub here only carries retarget + audit posture. The owning [[Sn-SPEC]]/[[Mn'-SPEC]] specs remain the law above both.
+- [[2026-07-03-cycle-3-recapture-register]] is the audit map: §1 standing invariants, §2 per-track LAW/SEAMS/VERIFY/CARRIER, §5 data-spine violations. Consult it per track; it never replaces the original brief.
+- The old ledger's statuses are carried into each stub as `Original ledger status:` — **that status is a CLAIM about the dead carrier, never truth about this one.** `done` requires fresh verification before anything builds on it; `audit_required`/`quarantine` means assume nothing exists.
+- Law-only source files (no tranches) appear here as a single `T0 — Absorb and retarget` task: read the original in full, enumerate its unbuilt commitments as new tranches by editing that rerun file, then close.
+- Reading rail (binding, not tasks): original `00-overview-and-design-reconciliation.md` (method + standing invariants), `13-decision-register.md` (all DR law), the recapture register. The original `00-KICKOFF-PROMPT.md` is historical; its "Trust the ledger" instruction is repudiated repo-wide.
+
+## Retarget law (Theia → carrier)
+
+1. **Substrate work carries unchanged.** Anything targeting epi-lib (C), portal-core, epi-cli/gateway/schemas, ta-onta, SpacetimeDB, Neo4j/Redis, the vault, Hen, Graphiti is carrier-independent — execute as written (paths per today's tree; substrate-residency law applies).
+2. **"Theia extension/widget X" deliverables land as pratibimba-app carriers** — panes, engine modulation-carriers, primitives, commands — per the capability-parity pattern of [[2026-07-02-pratibimba-app-phase-1]]. The Theia contract surfaces (readiness ids, intent envelope fields, tab inventories, composition slots, block shapes) are LAW; the Theia plumbing (Inversify, ThemeService, package.json contributes, widget ids) is dead.
+3. **epi-theia is FROZEN** — read-only capability reference. Build law: build from the specs, never port from the failed carrier; code may be cribbed only after reading it and verifying it against spec + a live surface; cribbed code counts as new code (tests + provenance line).
+4. **Current basis (verified, build FROM it):** phase-1 Sprints 1–8 — supervisor+GatewayClient, four stores, 0/1 faces over flexlayout, vault service (Present scope), palette, sessions/chat, oracle via real CLI, CosmicEngine (K² torus · cymatic χ-solver · codon annulus · clock strata · live-kairos planet atlas), typed modulation graph (720-tick scrub), bell via `m123.chime`, `phaseSpace`/quintessence/modalResonator projections, Zod parity, Walk + Bimba panes. Do not rebuild these; extend them.
+
+## Resolved by plan authority (formerly "open decisions" — build them)
+
+- **S5.5b:** read-only `kernelBridge.profileAtLensMode(lens, mode)` over the pure `vimarsha_read_profile` seam (the corpus's own recommendation). Unblocks the playable-84 (Tracks 22/23/24).
+- **Lens stack:** DR-M3-LENS-18 is ratified — 16+2=18 (aperture 16 `()` Frame ≡ the Level-0/fibonacciGround "+1" already carried; aperture 17 `(-)` Operator no-frame). Update kernel lensCarrier, Zod pins, engine cycling to the 18-shape (Track 24/35 work).
+- **Motion:** DR-UI-4 ratified — lemniscate 0/1 400ms cubic-out · Klein 240ms linear · Möbius 320ms smoothstep. The 600/420ms texts are superseded.
+- **Palette:** Track 30.8 derivation-backed family tiers are the token law (UI-PATTERNS §1.3 flat hues superseded — earlier, underivated). Element palette = M2 canon. Engraved-atlas remains the rendering register. (Track 30.)
+- **Day path:** month-first `Idea/Empty/Present/{MM-DD-YYYY}/`, flat — Architect-ratified 2026-07-02, supersedes older DD-MM examples.
+- **Roster:** DR-S4-TECHNE — 7 constitutional + 6 Aletheia techne-guardians; Techne is Pleroma's skills substrate, not an agent; Aletheia is a mode. Correct stale "14-agent" texts on contact (CLAUDE.md flagged).
+- **planet:{Name} selection:** stays the provisional self-describing namespace until a kernel-declared planetary coordinate exists (never a walkable Bimba address).
+- **Charge names:** `pp/nn/np/pn` only at every exposed surface (DR-37-2); element IDs cross M2↔M3 as canonical-B only (DR-37-3).
+- **Tick primitive (M1-3 spanda) — ratified in-session 2026-07-04:** the tick is the (0/1)/(1/0) dual counter-phase oscillation — a continuous Haken–Kelso–Bunz relative-phase field (bistable in-phase φ=0 / antiphase φ=π = bimba/pratibimba fused vs opposed), **authored in `epi-lib` C and propagating into `portal-core/spanda.rs`** (C ground → Rust surface, as everywhere). Its **twelvefold is intrinsic to spanda's flowering (M1-3), prior to and generative of QL** — not a ring sampled from above. Frequency-anchored to the conserved-delta band **~2.5 Hz** (cited, never fake-2.0). Rooting: M1-0 (0/1) / M1-1 (1/0) / M1-3 (Trika); Ananda's six DR matrices are a separate structure off the same seed. The **discrete `tick12` integer is a readout, not the grounding** — nothing re-grounds on it; the active codon advances on the real quaternionic-rotational state + clock + **epogdoon (9:8)**, never on `tick12`. The **epogdoon is structurally essential** — preserved in `kernel_tick_from_epogdoon`, the 12-epogdoon cycle, the 16/9 gap, and the M2 `resonance72` (=8×9) → M3 64 transduction; never removed or simplified. Builds as **Track 02 T2.11** — substrate work, execute as written. The biological/physics grounding (M3 physics + codon, cross-M') is async research that informs the anchor, never a gate.
+
+## Verification law (Track 00 gates everything)
+
+1. **Track 00 lands first.** No non-00 tranche is marked `done` until `verify-all` exists and runs green on the current basis.
+2. **Verifier ≠ closer.** The implementer never closes; an independent pass re-runs the tranche's checks and records real output under the task stub (or `plan.runs/`).
+3. **Behavioral proof only.** A test must exercise the real system: kernel functions called, gateway frames captured live, components mounted and interacted with. **Banned as evidence:** source-grep/manifest-string assertions, file-existence checks, test counts, "design only", "deferred", "direct close", prose. The anti-fraud lint (T0.3) enforces this mechanically.
+4. **Bus/gateway claims need the live wire:** a real spawned `epi gate start`, captured frames, strict Zod parse (T0.2 harness).
+5. **Gates are drivable loops** — the real app launched, observed by the Architect, per phase-1 practice.
+
+## Session + running
+
+**Developers here are Claude Code / Codex sessions — NOT the system's own agent.** `epi agent session init` / Khora NOW-binding is the PI agent's runtime machinery, part of the system under construction; it is never a prerequisite for dev work (do not pass `--require-now`). If a live day/NOW exists, cite it in evidence; otherwise **the ledger is the record**. The loop:
+
+```bash
+node .codex/scripts/m-dev-plan-assess.mjs --route --write --json                     # assess (this folder is the active pointer)
+node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --owner <ID> --write --json
+# execute per the ORIGINAL tranche body + this charter; verify per Track 00
+node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done --evidence "<real output summary>" --write --json
+```
+
+`/m-dev` (Claude) and the Codex subagent brief (`.codex/m-dev-subagent-brief.md`) both drive this; where `/m-dev`'s text says `--require-now`, this charter overrides for this plan set. Evidence is a string in the ledger; no evidence-restating files. Spec write-backs as-we-go per [[SEED-HARMONISATION-PROTOCOL]]; DOX pass per meaningful change.

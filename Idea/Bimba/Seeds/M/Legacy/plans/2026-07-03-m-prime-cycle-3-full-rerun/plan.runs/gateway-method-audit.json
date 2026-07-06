@@ -1,0 +1,1480 @@
+{
+ "generatedAt": "2026-07-06T18:46:48.898Z",
+ "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/target/debug/epi",
+ "port": 18923,
+ "corpus": [
+  "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
+  "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
+ ],
+ "summary": {
+  "probed": 209,
+  "present": 44,
+  "absent": 165,
+  "unknown": 0
+ },
+ "methods": [
+  {
+   "method": "chat.send",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "config.aletheia.drift_detection.coverage_days",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.drift_detection.delta_elo",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.drift_detection.min_trials",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.drift_detection.verifier_violation_multiplier",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.drift_detection.veto_consecutive_sessions",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.drift_detection.veto_count_per_facet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.elo.bootstrap_sigma",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.elo.bootstrap_trials",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.elo.confidence_penalty_alpha",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.elo.seed_rating",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.aletheia.elo.sigmoid_midpoint_percentile",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.harness.cost_class",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "config.harness.subscription",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "contemplate_session_close",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "cron.error",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "cron.fired",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.cymatic.valence.invert",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.decodeAxisAt",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.element_chakra.tradition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.klein_flip",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.meaning_packet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.parashakti.correspondenceTree",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.parashakti.cymaticEngine",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.parashakti.meaningPacket",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m2.routing_trace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m3.codon.rotation.cross",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m3.mahamaya.codonNavigator",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m3.mahamaya.cosmicWheel",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m3.tarot_codon_map",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.scene_close",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.scene_open",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.subscribe",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.summon",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.turn_advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.vama_list_warm",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m4.arena.vama_release_warm",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.day.open",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.day.open'",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.graphiti.body.inspect",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.identity.proposals.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.journal.timeline'",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.kairos.natal_positions",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.kairos.snapshot",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.lens.apply",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'lens'"
+  },
+  {
+   "method": "nara.lens.list",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.lens.synthesize",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'lenses'"
+  },
+  {
+   "method": "nara.lens.synthesize'",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.logos.advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.logos.regress",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.medicine.pin",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.oracle.cast",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'system'"
+  },
+  {
+   "method": "nara.oracle.cast_tarot",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.oracle.hygiene",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.oracle.update_position_state",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.pasu.clear",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.pasu.set",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.pasu.show",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.pasu.show'",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.protected_handle_strict",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.protein_capacity",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.stop_codon_policy",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.write_through_mode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session_close",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'sessionId'"
+  },
+  {
+   "method": "nara.session_open",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'sessionId'"
+  },
+  {
+   "method": "nara.transform.advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.transform.start",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.weights",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.weights.body_natal",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "node.coordinate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "node.relations",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.anuttara.compress_entity",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.anuttara.trace",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.anuttara.unified_act_trace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.settings.api_key_status",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.settings.opt_in",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.verifier",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.verifier.check_state",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.verifier.emit_question",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0'.verifier.respond_question",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s0.current_profile",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.base.ensure",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.canvas.create_or_update",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.entity.capture",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.entity.classify",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.entity.promote_to_type",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.moc.ensure",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.residency.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.semantic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.semantic.neighbors_of",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.semantic.suggest",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.type.classify_c_layer",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.type.index",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.vault",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.vault.read_file",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: path is required"
+  },
+  {
+   "method": "s1'.world.graduate",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.world.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1.semantic.suggest_links",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2'.coordinate.context_xray",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2'.coordinate.cypher",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2'.coordinate.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2'.retrieve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: query must be a string"
+  },
+  {
+   "method": "s2.codon.aa_lookup",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.codon.scalar_ref.read",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.decanFace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.earthObserverHandle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph.ananda_position",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph.core65.audit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: s2.graph.core65.audit failed: The client is unauthorized due to authentication failure."
+  },
+  {
+   "method": "s2.graph.gds.tangent_overlay",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2.graph.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph.list_by_filter",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph.node",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2.graph.ontology.reload",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: n10s epi ontology import failed: The client is unauthorized due to authentication failure."
+  },
+  {
+   "method": "s2.graph.promotion.commit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid promotion intent: missing field `node`"
+  },
+  {
+   "method": "s2.graph.promotion.dry_run",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid promotion intent: missing field `node`"
+  },
+  {
+   "method": "s2.graph.query",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: cypher must be a string"
+  },
+  {
+   "method": "s2.graph.relation_family.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph.seed.snapshot",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph_services",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.graph_services.ping",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.outerPlanetGraphNode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.parashaktiCorrespondences",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: address72 must be a positive integer"
+  },
+  {
+   "method": "s2.pointer.walk.read",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.provenanceHandle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.sacredSonic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.being_pattern.observe",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.being_pattern.project",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.being_pattern.review_candidate",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.being_pattern.subscribe",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.subscription.lifecycle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3'.temporal.context",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: session not found: agent:main:main"
+  },
+  {
+   "method": "s3'.temporal.subscribe",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s3.gateway",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3.world_clock",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3.world_clock.aperture.activate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s3.world_clock.walk.advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4'.context.assemble",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4'.mediation.capabilities.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.mediation.route",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: taskText must be a non-empty string"
+  },
+  {
+   "method": "s4'.psyche.state",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.psyche.update",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: patch must be an object"
+  },
+  {
+   "method": "s4'.vak.evaluate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: task must be a non-empty string"
+  },
+  {
+   "method": "s4.khora.session_archive",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4.khora.session_list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4.khora.session_resume",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4.khora.session_start",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s4.pi.chat.stream",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.land",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.propose",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.refuse",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.status",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.decision_register.list_for_packet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.epii.axiom_translation_history",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.epii.deposit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `source_agent`"
+  },
+  {
+   "method": "s5'.epii.deposit.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.epii.runtimeContext",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.epii.runtime_control",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.candidates",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.comparative_retrieval",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.episode_search",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.etymology",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.evidence_trace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.ingest",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of source, path, filePath, file_path"
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.musical_transcript",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.notebook",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+  },
+  {
+   "method": "s5'.gnostic.query",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
+  },
+  {
+   "method": "s5'.gnostic.query_with_layers",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.resolve",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.seed_resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.status",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+  },
+  {
+   "method": "s5'.improve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.improve.history",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.improve.propose",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `target_family`"
+  },
+  {
+   "method": "s5'.improve.status",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.review.history",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review.inbox",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review.submit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `source`"
+  },
+  {
+   "method": "s5'.review.transition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.audit.read",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.get",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.lock.toggle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.proposals",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.proposals.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.proposals.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.propose",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.registry.get",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.registry.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.tune.registry.set",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5.evidence.deposit",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5.oracle.iching.cast",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5.oracle.tarot.cast",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5.review.annotate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "session.compact",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "session.insert",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "session.resume",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "sessions.fork",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "sessions.patch",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.resume",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  }
+ ]
+}
