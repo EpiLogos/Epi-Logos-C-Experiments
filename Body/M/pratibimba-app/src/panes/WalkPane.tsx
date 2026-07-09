@@ -48,8 +48,15 @@ export function invertCoordinate(coordinate: string): string {
 function sessionHeldInversionOperator(
     cached: { profile?: unknown } | null
 ): { operator: string; handle: string } | null {
+    // The live profile nests the serialized MathemeHarmonicProfile under
+    // `harmonicProfile` — the SAME level as audioOctet/modalResonator (see the
+    // working reader in App.tsx onProfile). The earlier flat
+    // `profile.inversionOperator` path never resolved against the real gateway;
+    // only a hand-crafted jsdom mock made it look present. The visual-panes e2e
+    // spec (real app + real gateway) caught it.
     const payload = (cached?.profile as Record<string, unknown> | undefined) ?? undefined;
-    const op = payload?.inversionOperator as Record<string, unknown> | undefined;
+    const harmonic = payload?.harmonicProfile as Record<string, unknown> | undefined;
+    const op = harmonic?.inversionOperator as Record<string, unknown> | undefined;
     if (!op || typeof op.handle !== 'string') {
         return null;
     }

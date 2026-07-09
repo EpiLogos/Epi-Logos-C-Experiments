@@ -46,7 +46,15 @@ test('begin today → type → real bytes in the vault → reload shows it', asy
     expect(bytes.startsWith('---\n')).toBeTruthy();
     expect(bytes).toContain(`c_3_day_id: "${dayId}"`);
 
-    // relaunch-shows-it: a fresh boot re-reads the vault, not memory
-    await page.reload();
-    await expect(page.locator('.face-active .cm-content')).toContainText(marker, { timeout: 15_000 });
+    // relaunch-shows-it: a fresh boot re-reads the vault, not memory. reload()
+    // occasionally races the vite client / an in-flight gateway socket into
+    // net::ERR_ABORTED ("frame detached"); a fresh goto('/') is the same full
+    // boot without the reload-specific abort, and toPass retries the transient
+    // navigation race while still proving the vault-backed marker returns.
+    await expect(async () => {
+        await page.goto('/', { waitUntil: 'load' });
+        await expect(page.locator('.face-active .cm-content')).toContainText(marker, {
+            timeout: 15_000
+        });
+    }).toPass({ timeout: 45_000 });
 });

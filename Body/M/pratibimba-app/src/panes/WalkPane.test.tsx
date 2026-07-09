@@ -91,11 +91,17 @@ describe('WalkPane', () => {
                 stale: false,
                 stalenessMs: 0,
                 privacyClass: 'public-current-context',
+                // REAL gateway shape: MathemeHarmonicProfile nests under
+                // `harmonicProfile` (verified against the live profile in the
+                // visual-panes e2e). A flat `profile.inversionOperator` mock
+                // hid the T2.5 path bug — never seed the flat shape again.
                 profile: {
-                    inversionOperator: {
-                        operator: 'matheme-shell-toggle',
-                        handle: 'm1://inversion/operator',
-                        provenance: 'session-held'
+                    harmonicProfile: {
+                        inversionOperator: {
+                            operator: 'matheme-shell-toggle',
+                            handle: 'm1://inversion/operator',
+                            provenance: 'session-held'
+                        }
                     }
                 }
             }
