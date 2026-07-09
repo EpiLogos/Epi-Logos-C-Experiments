@@ -7,14 +7,14 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] / [[S4-ARCHITECTURE]] (see a
 ## Ownership
 - `CONTRACT.md` — binding interface (responsibility, registered tools, CF→agent map, CFP thread types, invariants)
 - `extension.ts` — source-contract facade + entrypoint; re-exports the runtime under `./extension/`
-- `extension/` — runtime: `mod.ts`, `tools.ts`, `dispatch.ts`, `capabilities.ts`, `subscriptions.ts`
+- `extension/` — runtime: `mod.ts`, `tools.ts` (aggregator: vak_evaluate + goal_prelude, then registers the split families per 17.T17.10), `dispatch-tools.ts` (the six-tool dispatch family: anima_orchestrate, anima_arena_orchestrate, dispatch_parallel_agents, dispatch_fusion_agents, dispatch_moirai_night_pass, anima_self_invoke + arena/Mercurius helpers), `nous-disclose.ts` (isolated nous_disclose S0'/S1'/S2' dis-closure tool), `dispatch.ts` (incl. the 46.1 [[Z-thread]] runtime primitive: `registerZThreadShape`/`dispatchZThread` composing ≥2 distinct CFP moves under one autonomous envelope, closed only by the 12.35 Verify gate via `evaluateVerifyGate`; state queryable via `getZThreadSnapshot`/`listZThreadSnapshots`), `capabilities.ts`, `subscriptions.ts`
 - `lib/` — pure reusable Anima orchestration helpers; currently `arena-orchestrator.ts` holds classifier-aware arena turn routing, Mercurius kairos state, CPF-gate, and dispatch-plan policy.
 - `modules/` — per-agent dispatch/route/hook units (nous-clearing, logos-scope, eros-route, mythos-pattern, psyche-continuity with renderer-state carry-forward for review blocks, reading-frame-evaluator, sophia-hook/synthesis, aphoristic-skill, moirai-dispatch, judge-role, dispatch-policy, skill-registry, dispatch-validate, anima-invoke-payload)
 - `S4/` — CFP execution primitives: `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, `pi-pi.ts`, `cross-agent.ts`, `epi-citta.ts` (+ `teams.yaml`, `agent-chain.yaml`)
 - `S4'/agents/` — constitutional agent .md files (anima, nous, logos, eros, mythos, psyche, sophia, techne-helper); `psyche.md` is also the `techne_vama_summon` template-authority profile.
 - `S4'/skills/` — skills that gate tool use (anima-orchestration, vak-evaluate, klein-mode, day-night-pass, ouroboros, symbolic-protein-reading, etc.)
 - `spine-contribution.ts` — S4/S4' spine injection/ledger/query contribution
-- `tests/` — contract + behaviour tests (dispatch gate, VAK-required, reading-frame evaluator, fusion validate, agent hooks)
+- `tests/` — contract + behaviour tests (dispatch gate, VAK-required, reading-frame evaluator, fusion validate, agent hooks, `z_thread_dispatch.test.ts` for the 46.1 Z-thread envelope/gate/query behaviour)
 - Does NOT own: vault writes ([[S4-0p-khora]]), content/templates ([[S4-1p-hen]]), bounded primitives ([[S4-2p-pleroma]]), temporal scheduling ([[S4-3p-chronos]]), knowledge crystallisation tooling ([[S4-5p-aletheia]] — Anima dispatches TO its subagents, does not define them).
 
 ## Local Contracts

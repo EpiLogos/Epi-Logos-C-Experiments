@@ -25,6 +25,19 @@ pub struct VimarshaReading {
     pub klein_flip: Option<KleinFlipEvent>,
 }
 
+/// The latched Klein-flip surface state for a tick position: the M2 cymatic
+/// valence inverts at tick12 == 7 (`klein_flip_event` below emits the
+/// M2CymaticValenceInvert there) and stays inverted until the Möbius return
+/// at tick 0. One law, two faces: the EVENT marks the crossing, this STATE
+/// is what the crossing leaves behind (Tranche 03.T3.1).
+pub fn cymatic_valence_state(tick12: u8) -> Valence {
+    if tick12 % 12 >= 7 {
+        Valence::Inverted
+    } else {
+        Valence::Primary
+    }
+}
+
 pub fn vimarsha_read_profile(tick: KernelTick, lens_mode: MathemeLensMode) -> VimarshaReading {
     let tick12 = tick.sub_tick % 12;
     let substrate_pitch = pitch_class_for_tick(tick12);

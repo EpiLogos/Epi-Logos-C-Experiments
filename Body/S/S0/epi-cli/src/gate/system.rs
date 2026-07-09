@@ -368,13 +368,33 @@ fn graph_health(state_root: &Path) -> Result<Value, String> {
 }
 
 fn collect_graph_report(repo_root: PathBuf) -> Result<Value, String> {
+    // The graph doctor runs a LIVE Neo4j report. Under substrate load (e.g. a
+    // parallel session hammering the graph) it can take many seconds — and the
+    // gateway health clock calls this on every 5s cache miss. Left unbounded,
+    // a slow probe stalls the detached health snapshot, which starves `health`
+    // emission: the periodic clock keeps ticking, but 0-1 health frames land
+    // per capture window and the live-wire gate goes flaky. Bound the probe so
+    // a slow graph reports DEGRADED (honest `ok:false`) fast and health keeps
+    // emitting on schedule. The report future runs in this thread's dedicated
+    // current-thread runtime, so timing it out drops it cleanly (no leak).
+    const GRAPH_PROBE_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(2);
     let join_result = std::thread::spawn(move || -> Result<Value, String> {
         let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
             .map_err(|err| err.to_string())?;
-        let report = runtime.block_on(doctor::collect_report(&repo_root));
-        serde_json::to_value(report).map_err(|err| err.to_string())
+        runtime.block_on(async move {
+            match tokio::time::timeout(GRAPH_PROBE_TIMEOUT, doctor::collect_report(&repo_root)).await
+            {
+                Ok(report) => serde_json::to_value(report).map_err(|err| err.to_string()),
+                Err(_) => Ok(json!({
+                    "ok": false,
+                    "source": "probe-timeout",
+                    "reason": "graph health probe exceeded 2s (graph substrate under load); \
+                               reported degraded so the gateway health clock keeps emitting",
+                })),
+            }
+        })
     })
     .join();
 

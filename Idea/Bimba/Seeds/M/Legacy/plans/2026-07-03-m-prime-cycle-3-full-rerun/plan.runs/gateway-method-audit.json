@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-06T18:46:48.898Z",
+ "generatedAt": "2026-07-08T12:12:54.050Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,9 +7,9 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 209,
+  "probed": 212,
   "present": 44,
-  "absent": 165,
+  "absent": 168,
   "unknown": 0
  },
  "methods": [
@@ -154,6 +154,13 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "m2.epogdoonProjection",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "m2.klein_flip",
    "advertised": false,
    "exists": false,
@@ -196,7 +203,21 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "m3.bioquaternionTranscription",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "m3.codon.rotation.cross",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "m3.lensCodonBinary",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -788,7 +809,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: s2.graph.core65.audit failed: The client is unauthorized due to authentication failure."
+   "errorClass": null
   },
   {
    "method": "s2.graph.gds.tangent_overlay",
@@ -823,7 +844,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: n10s epi ontology import failed: The client is unauthorized due to authentication failure."
+   "errorClass": "domain-error: n10s epi ontology import failed: Neo4j error `Neo.ClientError.Procedure.ProcedureNotFound`: There is no procedure with t"
   },
   {
    "method": "s2.graph.promotion.commit",

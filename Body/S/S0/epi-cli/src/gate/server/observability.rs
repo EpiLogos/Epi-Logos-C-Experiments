@@ -1,4 +1,6 @@
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 
 use serde_json::{json, Value};
@@ -52,6 +54,21 @@ pub(super) async fn maintenance_loop(
     let mut heartbeat_interval = tokio::time::interval(Duration::from_millis(550));
     heartbeat_interval.tick().await;
 
+    // The periodic clock must NEVER stall on blocking work. Earlier this loop
+    // `.await`ed the health-snapshot filesystem scan and the cron scan INSIDE
+    // the `select!` branch — and `select!` runs the chosen branch to completion
+    // before polling any other, so a slow blocking call (e.g. blocking-pool
+    // saturation or cron-state lock contention under concurrent gateways) froze
+    // the whole loop: no tick, no health, no heartbeat emitted while it waited.
+    // Fix: emit tick/health/heartbeat on schedule and run the blocking snapshot
+    // and cron scan as DETACHED tasks that broadcast their results when done.
+    // The single-flight guards preserve the original "one snapshot / one cron
+    // check at a time" semantics (no overlapping fires) without blocking the
+    // clock — if a scan is still running when the next interval fires, that tick
+    // simply skips spawning a duplicate.
+    let health_busy = Arc::new(AtomicBool::new(false));
+    let cron_busy = Arc::new(AtomicBool::new(false));
+
     loop {
         tokio::select! {
             _ = tick_interval.tick() => {
@@ -77,69 +94,36 @@ pub(super) async fn maintenance_loop(
                             "source": "lightweight-test-maintenance",
                         }),
                     ));
-                    continue;
+                } else if health_busy
+                    .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                    .is_ok()
+                {
+                    let state_root = state_root.clone();
+                    let runtime = runtime.clone();
+                    let health_busy = Arc::clone(&health_busy);
+                    tokio::spawn(async move {
+                        let payload = tokio::task::spawn_blocking(move || {
+                            crate::gate::system::health_snapshot(&state_root)
+                                .unwrap_or_else(|_| json!({ "ok": false }))
+                        })
+                        .await
+                        .unwrap_or_else(|_| json!({ "ok": false }));
+                        let seq = runtime.next_seq("__gateway__");
+                        runtime.broadcast(GatewayEvent::new(
+                            "health",
+                            None,
+                            None,
+                            Some(seq),
+                            payload,
+                        ));
+                        health_busy.store(false, Ordering::Release);
+                    });
                 }
-                let state_root = state_root.clone();
-                let payload = tokio::task::spawn_blocking(move || {
-                    crate::gate::system::health_snapshot(&state_root).unwrap_or_else(|_| json!({
-                        "ok": false,
-                    }))
-                })
-                .await
-                .unwrap_or_else(|_| json!({ "ok": false }));
-                let seq = runtime.next_seq("__gateway__");
-                runtime.broadcast(GatewayEvent::new(
-                    "health",
-                    None,
-                    None,
-                    Some(seq),
-                    payload,
-                ));
             }
             _ = heartbeat_interval.tick() => {
+                // Emit the heartbeat on schedule first — it is never gated on the
+                // cron scan (cron.fired/cron.error carry their own later seq).
                 let seq = runtime.next_seq("__gateway__");
-                if let Some(registration) = registration.clone() {
-                    let _ =
-                        tokio::task::spawn_blocking(move || registration.heartbeat_gateway());
-                }
-                let cron_result = {
-                    let state_root = state_root.clone();
-                    tokio::task::spawn_blocking(move || cron::check_due_and_fire(&state_root)).await
-                };
-                match cron_result {
-                    Ok(Ok(fired_jobs)) => {
-                        for payload in fired_jobs {
-                            let cron_seq = runtime.next_seq("__gateway__:cron");
-                            runtime.broadcast(GatewayEvent::new(
-                                "cron.fired",
-                                None,
-                                None,
-                                Some(cron_seq),
-                                payload,
-                            ));
-                        }
-                    }
-                    Ok(Err(message)) => {
-                        let cron_seq = runtime.next_seq("__gateway__:cron");
-                        runtime.broadcast(GatewayEvent::new(
-                            "cron.error",
-                            None,
-                            None,
-                            Some(cron_seq),
-                            json!({ "message": message }),
-                        ));
-                    }
-                    Err(err) => {
-                        let cron_seq = runtime.next_seq("__gateway__:cron");
-                        runtime.broadcast(GatewayEvent::new(
-                            "cron.error",
-                            None,
-                            None,
-                            Some(cron_seq),
-                            json!({ "message": err.to_string() }),
-                        ));
-                    }
-                }
                 runtime.broadcast(GatewayEvent::new(
                     "heartbeat",
                     None,
@@ -150,6 +134,61 @@ pub(super) async fn maintenance_loop(
                         "status": "idle",
                     }),
                 ));
+
+                if let Some(registration) = registration.clone() {
+                    let _ =
+                        tokio::task::spawn_blocking(move || registration.heartbeat_gateway());
+                }
+
+                if cron_busy
+                    .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                    .is_ok()
+                {
+                    let state_root = state_root.clone();
+                    let runtime = runtime.clone();
+                    let cron_busy = Arc::clone(&cron_busy);
+                    tokio::spawn(async move {
+                        let cron_result = tokio::task::spawn_blocking(move || {
+                            cron::check_due_and_fire(&state_root)
+                        })
+                        .await;
+                        match cron_result {
+                            Ok(Ok(fired_jobs)) => {
+                                for payload in fired_jobs {
+                                    let cron_seq = runtime.next_seq("__gateway__:cron");
+                                    runtime.broadcast(GatewayEvent::new(
+                                        "cron.fired",
+                                        None,
+                                        None,
+                                        Some(cron_seq),
+                                        payload,
+                                    ));
+                                }
+                            }
+                            Ok(Err(message)) => {
+                                let cron_seq = runtime.next_seq("__gateway__:cron");
+                                runtime.broadcast(GatewayEvent::new(
+                                    "cron.error",
+                                    None,
+                                    None,
+                                    Some(cron_seq),
+                                    json!({ "message": message }),
+                                ));
+                            }
+                            Err(err) => {
+                                let cron_seq = runtime.next_seq("__gateway__:cron");
+                                runtime.broadcast(GatewayEvent::new(
+                                    "cron.error",
+                                    None,
+                                    None,
+                                    Some(cron_seq),
+                                    json!({ "message": err.to_string() }),
+                                ));
+                            }
+                        }
+                        cron_busy.store(false, Ordering::Release);
+                    });
+                }
             }
         }
     }

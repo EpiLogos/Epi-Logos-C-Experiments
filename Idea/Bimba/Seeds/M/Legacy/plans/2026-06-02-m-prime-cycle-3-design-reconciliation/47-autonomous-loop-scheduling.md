@@ -1,5 +1,9 @@
 # Track 47 — Autonomous Loop Scheduling (Aeon Invocation: Cron Auto-Fire + Event + Consent)
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 **Status:** Future-dev (post-cycle-3) — newly proposed 2026-06-19. **NOT part of the cycle-3 landed release set.** Released into future development needs. Closes the one genuine substrate gap that stands between "an Aeon (Track 46) is defined" and "it runs autonomously on a schedule": the cron **auto-fire tick**. Builds on landed cycle-3 substrate (Track 42 dispatch, Track 39 session-workspace, Khora result-drop wake); reopens no landed tranche; introduces no DR gate.
 
 **Why this track exists.** Every piece of autonomous-loop invocation exists *except the time-based auto-fire*:

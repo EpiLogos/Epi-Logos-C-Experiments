@@ -1,0 +1,36 @@
+{
+  "runId": "20260707T220051Z-01-T1.5",
+  "taskId": "01.T1.5",
+  "startedAt": "2026-07-07T22:00:51.917Z",
+  "owner": "fable-a-kernel",
+  "leaseExpiresAt": "2026-07-08T00:00:51.917Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.5",
+    "trackId": "01",
+    "tranche": "T1.5",
+    "title": "M0-3' community + clock overlay surface",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.4"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

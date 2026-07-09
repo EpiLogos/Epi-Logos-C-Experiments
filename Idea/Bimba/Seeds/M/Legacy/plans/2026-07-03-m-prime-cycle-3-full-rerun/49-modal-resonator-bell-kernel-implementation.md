@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 49). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 49) — build/verify HERE, never epi-theia:** SUBSTRATE — modal resonator bell kernel (bell/modal interpretive over the existing 8+4 bus; kernel/gateway/Zod core LANDED & independently verified: ModalResonatorProfile, M123ChimeFrame, kernelBridge.m2.epogdoonProjection). CARRIER: 49.6 integrated coherence gate + 49.7 privacy/drift Zod guards + epogdoon capability parity. §2 track 49.
+
 1. **T49.1 — S0 `ModalResonatorProfile` Projection**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md` — Tranche 49.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

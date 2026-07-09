@@ -12,6 +12,12 @@ import { RESULT_ARTIFACT_WAKE, type ResultArtifactWakeEvent } from "../../S4-0p-
 import type { ChronosCronDispatch, ChronosCronWakeMode } from "../extension.ts";
 import { dispatchTeamMember } from "../../S4-4p-anima/extension/dispatch.ts";
 import { isValidVakAddress, type CpfPolarity, type VakAddress } from "../../shared/vak_address.ts";
+import {
+  advanceAeonTaskSource,
+  aeonTaskSourceBlock,
+  type AeonTaskAdvance,
+  type AeonTaskSourceRef,
+} from "./aeon-task-source.ts";
 
 export type AeonEventTriggerPurpose = ResultArtifactWakeEvent["purpose"];
 
@@ -38,6 +44,8 @@ export interface AeonInvocationForm {
   readonly consent_posture: AeonConsentPosture;
   readonly session_target?: string;
   readonly wake_mode?: ChronosCronWakeMode;
+  /** 47.4: bound structured work-list (Ralph PRD) advanced one tranche per fire. */
+  readonly task_source?: AeonTaskSourceRef;
 }
 
 export interface AeonFireInput {
@@ -58,6 +66,8 @@ export interface AeonFireResult {
   readonly wake_mode: ChronosCronWakeMode;
   readonly vak_address: VakAddress;
   readonly dispatch_output: string;
+  /** 47.4: present when the Aeon carries a task_source; records this fire's tranche. */
+  readonly task_source_advance?: AeonTaskAdvance;
 }
 
 export interface AeonCronRegistration {
@@ -138,7 +148,11 @@ export function bindAeonCronRegistration(aeon: AeonInvocationForm): AeonCronRegi
   };
 }
 
-function aeonTaskEnvelope(input: AeonFireInput, wakeMode: ChronosCronWakeMode): string {
+function aeonTaskEnvelope(
+  input: AeonFireInput,
+  wakeMode: ChronosCronWakeMode,
+  advance?: AeonTaskAdvance,
+): string {
   const { aeon, event } = input;
   return [
     "Chronos invoked an Aeon from its CT4b scheduling binding. Run the reusable loop with the bound VAK args.",
@@ -154,6 +168,8 @@ function aeonTaskEnvelope(input: AeonFireInput, wakeMode: ChronosCronWakeMode): 
     "",
     "VAK args:",
     JSON.stringify({ vak_address: aeon.vak_address, args: aeon.args ?? {} }, null, 2),
+    advance ? "" : undefined,
+    advance ? aeonTaskSourceBlock(advance) : undefined,
     "",
     aeon.task,
   ].filter((line): line is string => line !== undefined).join("\n");
@@ -166,12 +182,8 @@ export async function chronos_aeon_fire(
   assertAeonInvocationForm(input.aeon);
   assertAutonomousAeonConsent(input.aeon);
   const wakeMode = input.aeon.wake_mode ?? "next-heartbeat";
-  const dispatchOutput = await dispatch(
-    input.aeon.agent,
-    aeonTaskEnvelope(input, wakeMode),
-    input.aeon.vak_address,
-  );
-  return {
+
+  const base = {
     aeon_id: input.aeon.aeon_id,
     aeon_name: input.aeon.aeon_name,
     trigger: input.trigger,
@@ -179,7 +191,31 @@ export async function chronos_aeon_fire(
     session_target: input.aeon.session_target ?? "main",
     wake_mode: wakeMode,
     vak_address: input.aeon.vak_address,
+  };
+
+  // 47.4: a task-source Aeon advances its checkpointed work-list one tranche
+  // per fire; an exhausted list refuses dispatch instead of firing an open task.
+  let advance: AeonTaskAdvance | undefined;
+  if (input.aeon.task_source) {
+    advance = advanceAeonTaskSource(input.aeon.task_source, input.fired_at_ms);
+    if (advance.exhausted) {
+      return {
+        ...base,
+        dispatch_output: "task-source exhausted; no dispatch",
+        task_source_advance: advance,
+      };
+    }
+  }
+
+  const dispatchOutput = await dispatch(
+    input.aeon.agent,
+    aeonTaskEnvelope(input, wakeMode, advance),
+    input.aeon.vak_address,
+  );
+  return {
+    ...base,
     dispatch_output: dispatchOutput,
+    ...(advance ? { task_source_advance: advance } : {}),
   };
 }
 

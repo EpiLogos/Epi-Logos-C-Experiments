@@ -1,4 +1,5 @@
-use portal_core::{kernel_tick_from_epogdoon, MathemeHarmonicProfile};
+use portal_core::m3_transcription_bridge::{M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_NODE_COUNT};
+use portal_core::{kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile};
 
 #[derive(Debug)]
 struct AnuttaraPentadicRuntimeTraceProbe {
@@ -109,6 +110,93 @@ fn backbone_identity_24x15_equals_360_and_360_plus_24_equals_384() {
     assert!(source.contains("readonly lineGraphIdentity: '360+24=384';"));
 
     let trace = trace_for(0, 0);
+    assert_eq!(trace.backbone_identity, "24x15=360");
+    assert_eq!(trace.line_graph_identity, "360+24=384");
+}
+
+fn real_trace(cycle: u64, tick12: u8) -> AnuttaraPentadicRuntimeTrace {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+    AnuttaraPentadicRuntimeTrace::from_profile(&profile)
+}
+
+/// Tranche 36.T36.1 bullet 1 — the Rust trace round-trips JSON and every
+/// serialized key is declared verbatim by the kernel-bridge TS interface;
+/// one projection law on both sides of the wire.
+#[test]
+fn pentadic_trace_round_trips_json_against_the_kernel_bridge_interface() {
+    let source = kernel_bridge_types_source();
+    let trace = real_trace(4, 7);
+
+    let wire = serde_json::to_value(&trace).expect("trace serializes");
+    for key in wire.as_object().expect("trace is an object").keys() {
+        assert!(
+            source.contains(&format!("readonly {key}")),
+            "kernel-bridge interface must declare `{key}`"
+        );
+    }
+
+    let decoded: AnuttaraPentadicRuntimeTrace =
+        serde_json::from_value(wire).expect("trace deserializes");
+    assert_eq!(decoded, trace);
+    assert_eq!(decoded.whole_number_endpoint, 5);
+    assert_eq!(decoded.natural_number_endpoint, 6);
+    assert!(matches!(
+        decoded.evolutionary_gap.as_str(),
+        "m2-wholeness-gap" | "m3-transcription-gap" | "m1-parent-restored"
+    ));
+}
+
+/// Tranche 36.T36.1 bullet 3 — the 72-sample grid: 72 x 5 = 360, the
+/// epogdoon 8/9 compression, and the mahamaya 64/360 address law all hold
+/// on the trace's projected values (codec path checked against the raw
+/// floor identities, not against itself).
+#[test]
+fn seventy_two_sample_grid_holds_the_epogdoon_and_mahamaya_floor_laws() {
+    assert_eq!(
+        72u16 * 5,
+        M3_BACKBONE_DEGREE_STEP * M3_BACKBONE_NODE_COUNT,
+        "72 x 5 = 360 = the backbone tiling"
+    );
+
+    for cycle in 0..6u64 {
+        for tick12 in 0..12u8 {
+            let trace = real_trace(cycle, tick12);
+            assert!(trace.resonance72_index < 72, "{trace:?}");
+            assert_eq!(trace.shem_degree_quantum, 5);
+            assert!(trace.degree360 < 360);
+            assert_eq!(
+                trace.m2_to_m3_symbol as usize,
+                (trace.resonance72_index * 8) / 9,
+                "epogdoon 8/9 law at cycle {cycle} tick {tick12}"
+            );
+            assert_eq!(
+                u32::from(trace.mahamaya_address64),
+                u32::from(trace.degree360 % 360) * 64 / 360,
+                "mahamaya 64/360 address law at cycle {cycle} tick {tick12}"
+            );
+        }
+    }
+}
+
+/// Tranche 36.T36.1 bullet 4 — the paired fifteens and both identity
+/// strings are sourced from the M3 transcription-bridge constants, not
+/// duplicated literals.
+#[test]
+fn mahamaya_backbone_paired_fifteens_are_sourced_from_m3_helpers() {
+    let trace = real_trace(0, 3);
+    assert_eq!(
+        trace.paired_mahamaya_fifteens,
+        [M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_DEGREE_STEP]
+    );
+    assert_eq!(
+        trace.backbone_identity,
+        format!(
+            "{}x{}={}",
+            M3_BACKBONE_NODE_COUNT,
+            M3_BACKBONE_DEGREE_STEP,
+            M3_BACKBONE_NODE_COUNT * M3_BACKBONE_DEGREE_STEP
+        )
+    );
     assert_eq!(trace.backbone_identity, "24x15=360");
     assert_eq!(trace.line_graph_identity, "360+24=384");
 }

@@ -3,6 +3,8 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::events::KleinFlipEvent;
+use crate::quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
 use crate::vak_address::VakAddress;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -297,7 +299,7 @@ pub struct AssetHandle {
     pub provenance: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct M1TopologyProjection {
     pub double_cover_deg: u16,
@@ -316,21 +318,111 @@ pub struct M1TopologyProjection {
     pub parent_attribution: String,
     pub prior_ground: String,
     pub downstream_double_torus: String,
+    /// Track 02.T2.3 — the live Klein-flip descriptors the carrier's
+    /// `topologyFromPayload` reads (`k2TritoneCrossing` / `m1OriginKleinFlip`).
+    /// `k2_tritone_crossing` names the tick-6 K² lens-tritone fold; the other
+    /// reports whether *this* tick carries the M1-origin flip.
+    pub k2_tritone_crossing: String,
+    pub m1_origin_klein_flip: String,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+impl M1TopologyProjection {
+    /// Track 02.T2.3 — derive the M1-5 single-torus topology from real kernel
+    /// values, killing the orphan (defined + fixture-tested, never produced).
+    /// The invariants (double-cover 720°, genus-1 torus, χ=0, S3->S2 Hopf) come
+    /// from `hopf.rs` constants + the fibration; the quaternion fields from the
+    /// tick's real codon-charge ring quaternion via `quaternion.rs` (mirroring
+    /// the C walk in `state.rs`: compose → walk-mode → bifurcation); the
+    /// Klein-flip descriptors from the live event. No fabricated constants —
+    /// every field traces to a kernel source.
+    pub fn from_tick_parts(
+        tick12: u8,
+        degree720: u16,
+        ring_quaternion: [f32; 4],
+        klein_flip: Option<&KleinFlipEvent>,
+    ) -> Self {
+        let ring = quat_normalize(ring_quaternion);
+        // Double-cover step: the ring rotation composed toward the 720° return.
+        let composed = quat_normalize(quat_mul(ring, ring));
+        let walk_mode = derive_walk_mode(composed);
+        let (bifurcation_lambda, resolution_level) = derive_bifurcation(composed);
+        let torus_genus: u8 = 1;
+        let degree = f64::from(degree720);
+
+        let k2_tritone_crossing = match klein_flip {
+            Some(KleinFlipEvent::M1TritoneCrossing { tick12: t, lens_pair }) => format!(
+                "K² lens-tritone crossing at tick {t}: lens pair {lens_pair:?} (6-semitone fold)"
+            ),
+            _ => format!("no K² tritone crossing at tick {tick12}"),
+        };
+        let m1_origin_klein_flip = match klein_flip {
+            Some(KleinFlipEvent::M1TritoneCrossing { .. }) => {
+                "M1-origin Klein flip present (bimba<->pratibimba half-turn)".to_owned()
+            }
+            Some(_) => "downstream Klein-flip variant on this tick (not M1-origin)".to_owned(),
+            None => "klein_flip = None on current tick".to_owned(),
+        };
+
+        Self {
+            double_cover_deg: u16::from(crate::hopf::DOUBLE_COVER_STEPS)
+                * crate::hopf::TRIG_STEP_DEG as u16,
+            torus_genus,
+            euler_characteristic: 2 - 2 * torus_genus as i8,
+            hopf_project_deg: crate::hopf::hopf_project(degree) as u16,
+            hopf_fiber: crate::hopf::hopf_fiber(degree),
+            hopf_identity: "S3 -> S2 Hopf fibration".to_owned(),
+            ring_quaternion: ring,
+            element_count: crate::hopf::get_topological_element_count(tick12),
+            composed_quaternion: composed,
+            walk_mode: walk_mode.label().to_owned(),
+            bifurcation_lambda,
+            resolution_level,
+            torus_knot_phase: TorusKnotPhase {
+                p: f32::from(tick12) / f32::from(crate::hopf::DOUBLE_COVER_STEPS),
+                q: f32::from(degree720)
+                    / (f32::from(crate::hopf::DOUBLE_COVER_STEPS) * crate::hopf::TRIG_STEP_DEG as f32),
+            },
+            parent_attribution: "M1-5 is the +1 parent".to_owned(),
+            prior_ground: "M0 is the prior 0/1 ground".to_owned(),
+            downstream_double_torus: "Double-torus delegated to M3-5".to_owned(),
+            k2_tritone_crossing,
+            m1_origin_klein_flip,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TorusKnotPhase {
     pub p: f32,
     pub q: f32,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InversionOperatorHandle {
     pub operator: String,
     pub handle: String,
     pub provenance: String,
+}
+
+impl InversionOperatorHandle {
+    /// Track 02.T2.5 — the SINGLE session-held `#` (Inversion_Operator), killing
+    /// the orphan (defined + fixture-tested, never produced). Per M1'-SPEC §14
+    /// the (0/1) wired into every coordinate is the same (0/1): this returns the
+    /// one operator handle attached to every profile, so an invert at any walked
+    /// coordinate reaches this same operator — never a per-coordinate fork. The
+    /// session-held `#`/Psychoid_Hash lives in `state.rs`; this is its
+    /// addressable, opaque handle (DR-M4-3 handle-only law).
+    pub fn session_held() -> Self {
+        Self {
+            operator: "matheme-shell-toggle".to_owned(),
+            handle: "m1://inversion/operator".to_owned(),
+            provenance:
+                "S0 single session-held # (Inversion_Operator); the same (0/1) at every coordinate (M1'-SPEC §14)"
+                    .to_owned(),
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

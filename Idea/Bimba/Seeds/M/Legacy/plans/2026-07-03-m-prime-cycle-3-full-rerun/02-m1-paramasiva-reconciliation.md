@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 02). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 02) — build/verify HERE, never epi-theia:** CARRIER: M1' instrument strata (Spanda walk navigator, Cl(4,2) inspector, klein-flip chronograph, vortex-matrix browser) in pratibimba-app engine/panes. SUBSTRATE: epi-lib m1 + portal-core spanda.rs. §2 track 02/22.
+
 1. **T2.1 — Audit and downgrade residual M0-witness wording**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
@@ -19,19 +21,24 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Landed (2026-07-08): substrate now PRODUCES the orphan `M1TopologyProjection` — `MathemeHarmonicProfile::from_tick` attaches a real `m1_topology` (double-cover 720°, genus-1 torus, χ=0, S3→S2 Hopf, unit ring quaternion via `quaternion.rs`, klein-flip descriptors) serialising as `m1Topology`. Carrier widget = `Body/M/pratibimba-app/src/panes/{m1KleinTopology.ts,KleinTopologyPane.tsx}` (ported from frozen `clock-instrument.ts` + re-verified against the live producer), wired as the `Klein` tab; renders DOUBLE_COVER_DEG/TORUS_GENUS/Hopf/K²-tritone from the bridge payload and fires `m1.klein_flip.source` on `klein_flip=Some`.
+   Verify: (retargeted per CHARTER — Theia widget → carrier pane; substrate carries unchanged) substrate producer `cargo test -p portal-core --test m1_topology_profile` (profile carries real `m1Topology`; serialises under the carrier-read key); carrier widget mount `sh -c 'cd Body/M/pratibimba-app && npx vitest run src/panes/KleinTopologyPane.test.tsx'` (KleinTopologyPane mounted — renders DOUBLE_COVER_DEG=720/TORUS_GENUS=1 from the payload, fires `m1.klein_flip.source` on Some, silent on None); plus class-K gate + honesty-lint. verifier ≠ closer; evidence = fresh command output.
 
 4. **T2.4 — Verify `m1_performance_event_from_profile` + `MPrimePerformanceEvent` replay**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Landed (2026-07-08, verify-not-build): `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs::m1_performance_event_from_profile` (:936) produces the `mPrimePerformanceEvent` envelope; the deterministic replay test `m1_performance_event_replay_reconstructs_m_prime_performance_event_deterministically` (`tests/kernel_bridge_runtime_contract.rs:769`) reconstructs `MPrimePerformanceEvent` twice → equality + round-trip, asserting every spec field. Confirmed green after the T2.3 profile change (m1Topology is additive, unread by the perf event). NOTE: the spec's `cargo test -p epi-cli` is a stale package id — the crate is `epi-logos`; run from the epi-cli dir.
+   Verify: (substrate carries unchanged; package `epi-logos`, run from the epi-cli dir) deterministic replay `sh -c 'cd Body/S/S0/epi-cli && cargo test --offline --test kernel_bridge_runtime_contract m1_performance_event_replay'` (envelope: event_id/session_id/tick/lens/mode/audio_octet_hz[8]/nodal_quartet[4]/klein_flip/privacy/deposition, reconstructed deterministically + round-trip); plus class-K gate + honesty-lint. verifier ≠ closer; evidence = fresh command output.
 
 5. **T2.5 — Surface the single session-held # (Inversion_Operator) carrier**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Status 2026-07-08: **review (substrate landed, carrier affordance remaining)**.
+   - SUBSTRATE (done, class-K green): killed the orphan `InversionOperatorHandle` — `InversionOperatorHandle::session_held()` (`profile_projections.rs`) returns the ONE `#` operator (`operator: matheme-shell-toggle`, `handle: m1://inversion/operator`), and `MathemeHarmonicProfile::from_tick` attaches it as the additive `inversionOperator` field so every walked coordinate carries the SAME invert field (M1'-SPEC §14, no per-coordinate forks). Integration test `invert_reaches_the_single_session_held_operator` (`tests/m1_inversion_operator.rs`) proves identity across ticks/coordinates + serialisation under the carrier key. Zod parity (`epi-cli/schemas/kernel-bridge.ts` `InversionOperatorHandle`) + baseline fixture re-blessed. Verify: `cargo test -p portal-core --test m1_inversion_operator`.
+   - REMAINING (carrier): the `m1-invert-current-coordinate` affordance reachable from `m1.startWalk` (pratibimba-app `WalkPane`) — a button that inverts the current coordinate via the single session-held operator (reciprocal relation / lens-mode reverse / helix flip per §14) and **round-trips** (X → X' → X); mount test asserting the `m1-invert-current-coordinate` data-testid round-trips. Needs the coordinate-inversion (X↔X') semantics in the carrier (string-prime toggle vs S2 reciprocal lookup — decide against §14 + `S0-HARMONIC-POINTER-WEB36-SPEC` §F).
+   Verify: `cargo test -p portal-core --test m1_inversion_operator` (substrate); carrier affordance round-trip mount test pending.
 
 6. **T2.6 — K² played-torus 3D surface — full Bevy/wgpu extension**
 

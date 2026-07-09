@@ -195,3 +195,48 @@ fn anuttara_property_mappings_round_trip() {
         assert_eq!(mapping.disclosure, "public-s2-supplied");
     }
 }
+
+/// Law 6 ↔ open-world assumption (Tranche 01.T1.15d): a SHACL failure
+/// report IS a `?`-object. This binds the S5 adapter shape
+/// (`candidate_from_anuttara_shacl`) to the Tranche 1.11 symbolic-
+/// coordinate-string form so a validation failure surfaces as a
+/// contemplation seed, never an error. Kernel-side the string lands in
+/// `M0VerifierReport.open_questions`; graph-side this is the canonical
+/// renderer for `n10s.validation.shacl.validate()` rows.
+pub fn shacl_failure_as_query_object(focus_node_coordinate: &str, state_marker: &str) -> String {
+    let marker = match state_marker {
+        "pending" | "unwitnessed" | "drift" | "incoherent" | "violated" => state_marker,
+        _ => "violated",
+    };
+    // "M0-2-9-1" → namespace "M0", coordinate fragments "2/9/1" (1.11 EBNF:
+    // ql-coordinate atoms joined by '/'). Non-M coordinates keep their head.
+    let mut parts = focus_node_coordinate.split('-');
+    let namespace = parts.next().unwrap_or("M0");
+    let fragments: Vec<&str> = parts.collect();
+    if fragments.is_empty() {
+        return format!("#{namespace}-0/1-{marker}?");
+    }
+    format!("#{namespace}-{}-{marker}?", fragments.join("/"))
+}
+
+#[cfg(test)]
+mod shacl_query_object_tests {
+    use super::shacl_failure_as_query_object;
+
+    /// Tranche 01.T1.15 — a synthetic SHACL failure round-trips into the
+    /// `open_questions` coordinate-string form via the S5 adapter shape.
+    #[test]
+    fn shacl_reports_as_query_objects() {
+        // Synthetic n10s validation failure on the Truth virtue node.
+        let question = shacl_failure_as_query_object("M0-2-9-1", "violated");
+        assert_eq!(question, "#M0-2/9/1-violated?");
+        // 1.11 EBNF conformance: question-form, namespace head, marker tail.
+        assert!(question.starts_with('#'));
+        assert!(question.ends_with('?'));
+
+        // Unknown severities degrade to the explicit violation marker —
+        // never an error, never a silent drop (Law 6).
+        let degraded = shacl_failure_as_query_object("M0-4", "catastrophic");
+        assert_eq!(degraded, "#M0-4-violated?");
+    }
+}

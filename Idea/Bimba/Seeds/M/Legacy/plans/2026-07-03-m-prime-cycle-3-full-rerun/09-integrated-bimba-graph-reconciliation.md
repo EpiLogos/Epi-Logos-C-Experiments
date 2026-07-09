@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 09). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 09) — build/verify HERE, never epi-theia:** CARRIER: gnostic/graph panes + `epi know`/`epi canon` knowledge surfaces (none landed). SUBSTRATE: graph-services single :Bimba label + four namespaces, governed-route writes only. Zero done. §2 track 09.
+
 1. **T9.1 — M0' six-layer surface contract — author per-layer routing model**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md` — Tranche 9.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

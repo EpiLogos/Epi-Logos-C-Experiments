@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const DEFAULT_LEASE_TTL_SECONDS: u64 = 12 * 60 * 60;
@@ -308,6 +308,9 @@ fn has_session(session_name: &str) -> Result<bool, String> {
         .arg("has-session")
         .arg("-t")
         .arg(session_name)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .status()
         .map_err(|err| format!("failed to run tmux: {err}"))?;
     Ok(status.success())
@@ -320,7 +323,15 @@ fn run_tmux<const N: usize>(args: [&str; N]) -> Result<(), String> {
 }
 
 fn run_command(mut command: Command) -> Result<(), String> {
+    // Detach the tmux client from the caller's stdio. When `epi` itself runs
+    // with piped output (test harnesses, the gateway), an inheriting
+    // `tmux new-session` that has to BOOT the server hands those pipe fds to
+    // the daemonized server and the client can hang past the caller's
+    // deadline (observed as the terminal-safety e2e flake under verify-all).
     let status = command
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .status()
         .map_err(|err| format!("failed to run tmux: {err}"))?;
     if status.success() {
@@ -381,6 +392,7 @@ fn display_message(target: &str, format: &str) -> Result<String, String> {
         .arg("-t")
         .arg(target)
         .arg(format)
+        .stdin(Stdio::null())
         .output()
         .map_err(|err| format!("failed to run tmux: {err}"))?;
     if !output.status.success() {
@@ -394,10 +406,36 @@ fn display_message(target: &str, format: &str) -> Result<String, String> {
     }
 }
 
+/// Wait for the pane's shell to draw a prompt before typing into it.
+/// zsh's line editor FLUSHES pending typeahead during init — under load a
+/// command sent into a still-booting pane simply evaporates (observed as
+/// the terminal-binding e2e flake under the full repo gate, and as lost
+/// launches on slow shells live). A rendered prompt implies the line
+/// editor is up; after that, send-keys is safe. Times out to the old
+/// fire-and-hope behavior rather than failing the launch.
+fn wait_for_pane_shell_ready(pane_id: &str) {
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(15);
+    while std::time::Instant::now() < deadline {
+        let output = tmux_command()
+            .args(["capture-pane", "-p", "-t", pane_id])
+            .stdin(Stdio::null())
+            .output();
+        if let Ok(output) = output {
+            if output.status.success()
+                && !String::from_utf8_lossy(&output.stdout).trim().is_empty()
+            {
+                return;
+            }
+        }
+        std::thread::sleep(std::time::Duration::from_millis(100));
+    }
+}
+
 fn inject_runtime_command(pane_id: &str, argv: &[String]) -> Result<(), String> {
     let Some((program, args)) = argv.split_first() else {
         return Err("missing PI runtime command".to_owned());
     };
+    wait_for_pane_shell_ready(pane_id);
     send_literal(pane_id, program)?;
     for arg in args {
         run_tmux(["send-keys", "-t", pane_id, "Space"])?;

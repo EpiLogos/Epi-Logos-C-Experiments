@@ -1,3 +1,37 @@
+//! epi-s3-gateway-contract — S3 gateway protocol and method contract for Epi-Logos.
+//!
+//! Re-export façade over the split contract modules (Track 17.1): every public
+//! symbol reaches consumers through this crate root, so module residency can
+//! move without touching downstream imports.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S3 |
+//! | Residency  | Body/S/S3/gateway-contract/src/lib.rs |
+//! | Position   | #3 — Gateway Control Plane contract surface |
+//! | Actualises | [[S3-SPEC]], [[S3-ARCHITECTURE]] §2/§5.1, and Track 17.1 module split |
+//!
+//! # Public surface
+//! * `protocol` — wire protocol (handshake / RPC envelope) + method-name registry.
+//! * `dispatch_plan` — `METHOD_DISPATCH_PLAN` 7-kind classification of every method.
+//! * `session` — session authority types and methods.
+//! * `harness` — normalized harness dispatch envelope + turn-event stream (Track 42).
+//! * `context` — contextual-slice surface (`ConversationSliceHandle`, redaction policies).
+//! * `spacetime` / `being_pattern` — SpacetimeDB presence-layer + BeingPattern carriers.
+//! * `kernel_bridge` — S0 kernel bridge packet/projection contract.
+//! * `s1_vault` / `graphiti` / `temporal` / `privacy` / `portal_events` / `release` — per-domain method contracts.
+//! * `aletheia` / `verifier` — S4-5' crystallisation and `s0'.verifier.*` contracts.
+//! * Crate-root constants: `S0_PRIME_VERIFIER_METHODS`, `S2_GRAPH_GATEWAY_EXPOSED_METHODS`,
+//!   S1 C-first type lifecycle method names, and the `M4_ARENA_*` route family
+//!   (41.T41.6 — the `m4.arena.` literals stay in this file; its verification greps here).
+//!
+//! # Does NOT own
+//! * Runtime behaviour — sibling `gateway/` (`epi-s3-gateway`) executes these contracts.
+//! * Domain law for other layers: S4 dispatch semantics, S2 graph law, S5 world-return.
+//! * Kernel state or projection math — `portal-core` / `epi-kernel-contract`.
+
 mod aletheia;
 mod being_pattern;
 mod context;

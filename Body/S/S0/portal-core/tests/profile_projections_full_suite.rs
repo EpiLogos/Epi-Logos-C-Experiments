@@ -83,6 +83,8 @@ fn m1_topology() -> M1TopologyProjection {
         parent_attribution: "M1-5 is the +1 parent".to_owned(),
         prior_ground: "M0 is the prior 0/1 ground".to_owned(),
         downstream_double_torus: "Double-torus delegated to M3-5".to_owned(),
+        k2_tritone_crossing: "K² lens-tritone crossing at tick 6".to_owned(),
+        m1_origin_klein_flip: "M1-origin Klein flip present".to_owned(),
     }
 }
 

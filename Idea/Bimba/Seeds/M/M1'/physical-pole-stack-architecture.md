@@ -34,7 +34,7 @@ Everything else depends on this. The Paramaśiva tick is not a frame-rate — it
 
 ### Tick rate specification
 
-The fundamental tick-rate is a configurable parameter, but the *harmonic structure* is fixed. One complete kernel-cycle traverses 12 epogdoon-steps (8 element-positions plus 4 transitional epogdoons that fold the matheme). At a default user-facing tick-rate of 12 ticks per second, one complete kernel-cycle takes exactly 1 second — the kernel's natural breath-rate. This gives:
+The fundamental tick-rate is a configurable parameter, but the *harmonic structure* is fixed. One complete kernel-cycle traverses 12 epogdoon-steps (8 element-positions plus 4 transitional epogdoons that fold the matheme). At a default user-facing tick-rate of 12 ticks per second, one complete kernel-cycle takes exactly 1 second. **Corrected (T2.11, 2026-07-08):** this 12 Hz is a UI **display framerate** — a rendering convenience, NOT "the kernel's natural breath-rate" as an earlier draft mislabeled it. The kernel's beat anchor is the spanda dual-oscillator's conserved-delta band, ~2.5 Hz cited (see [[02-m1-paramasiva-reconciliation]] T2.11 and `spanda_hkb_frequency_citation` in epi-lib m1.c); three rates are never conflated — the ~2.5 Hz oscillation beat ≠ the 1 Hz `profile.update` heartbeat ≠ this 12 Hz display framerate. The 12-per-second default gives:
 
 - **Element-rate**: 8 elements per second (the operator advances through one matheme-position every 125ms)
 - **Sub-tick rate**: 12 per second (each epogdoon-step takes 1/12 second = ~83.3ms)

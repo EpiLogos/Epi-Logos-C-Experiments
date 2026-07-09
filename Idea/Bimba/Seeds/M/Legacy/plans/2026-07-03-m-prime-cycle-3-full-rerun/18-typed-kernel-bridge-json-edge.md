@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 18). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 18) — build/verify HERE, never epi-theia:** SUBSTRATE — typed-at-the-edge projection catalog (portal-core projections + schemas Zod: KleinFlipEvent, AnandaVortexProjection, M1TopologyProjection torus_knot_phase SSOT, pasu_being_pattern). Acceptance = no Record<string,unknown> outside documented boundaries. §2 track 18.
+
 1. **T18.1 — Typed JSON shape extraction**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md` — Tranche 18.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

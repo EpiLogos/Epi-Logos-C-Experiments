@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 19). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 19) — build/verify HERE, never epi-theia:** CARRIER: contemplation pane. SUBSTRATE: portal-core contemplate_session_close(ContemplationObject)->wisdom_delta, chronos_response_orbit. §2 track 19.
+
 1. **T19.1 — Land M0 ARCHETYPE_LUT ordering fix**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md` — Tranche 19.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

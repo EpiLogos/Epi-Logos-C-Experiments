@@ -555,74 +555,278 @@ fn q_composed_carries_identity_transit_activity_order() {
 
 // ---------------------------------------------------------------------------
 // Track 02 T2.11 — the Spanda dual-oscillator primitive (the tick floor).
-// EXPECTED RED, all six: the (0/1)/(1/0) dual oscillation exists in
-// m1.h:147-210 + spanda.rs only as static algebra (SPANDA_SEED_BITS = 0x03,
-// spanda_invert(n) = 11−n); there is NO continuous oscillator — no HKB
-// relative-phase field, no counter-phase superposition, no standing wave, no
-// flowering-generated twelvefold. Each test names the law it will assert the
-// day the primitive lands (authored 2026-07-06, computational-core truth
-// session; canon: 02-m1-paramasiva-reconciliation.md T2.11).
+// GREEN since 2026-07-08: the primitive landed in epi-lib C (m1.c/m1.h) and
+// propagates through portal-core/spanda.rs (C ground → Rust surface). Each
+// test asserts the law authored 2026-07-06 (computational-core truth session;
+// canon: 02-m1-paramasiva-reconciliation.md T2.11) against the live field.
 // ---------------------------------------------------------------------------
 
+/// The 12 RING_QUATERNION_LUT states, reconstructed as spec arithmetic
+/// (independent of the implementation): ascent half-angles 0..150° at
+/// positions 0-5, descent −30..−150° at 6-10, the 180° antipode at 11.
+fn ring_quaternion_spec(n: u8) -> portal_core::SpandaQuaternion {
+    let half_angle_deg: f64 = match n {
+        0..=5 => 30.0 * f64::from(n),
+        11 => 180.0,
+        _ => -30.0 * (f64::from(n) - 5.0),
+    };
+    let half_angle = half_angle_deg.to_radians();
+    portal_core::SpandaQuaternion {
+        w: half_angle.cos() as f32,
+        x: half_angle.sin() as f32,
+        y: 0.0,
+        z: 0.0,
+    }
+}
+
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — no HKB relative-phase oscillator exists (m1.c/spanda.rs carry only the static pole algebra); the law: integrating the HKB ODE dφ/dt = Δω − a·sin φ − 2b·sin 2φ from perturbed init must converge to φ=0 (in-phase, SPANDA_SEED, the `=`) or φ=π (antiphase, the `≠`)"]
 fn spanda_hkb_antiphase_bistability() {
-    panic!(
-        "the HKB relative-phase field (bistable φ=0 / φ=π, barrier b·cos2φ) has no \
-         compiled surface in epi-lib or portal-core — the tick's oscillatory \
-         substrate cannot be observed (Track 02 T2.11 primitive unbuilt)"
+    // The law: integrating dφ/dt = Δω − a·sin φ − 2b·sin 2φ from a perturbed
+    // init converges to φ=0 (in-phase, SPANDA_SEED, the `=`) or φ=π
+    // (antiphase, the `≠`) — two real attractors with the slash-as-barrier
+    // (the b·cos 2φ term) standing between them.
+    let p = portal_core::SpandaHkbParams::default_derived();
+    let settled_in = portal_core::hkb_settle(0.4, 1e-3, 200_000, &p);
+    assert!(
+        settled_in.abs() < 1e-3,
+        "perturbed in-phase init must fall back to φ=0, settled {settled_in}"
     );
+    let settled_anti = portal_core::hkb_settle(std::f64::consts::PI - 0.4, 1e-3, 200_000, &p);
+    assert!(
+        (settled_anti.abs() - std::f64::consts::PI).abs() < 1e-3,
+        "perturbed antiphase init must fall back to φ=π, settled {settled_anti}"
+    );
+    assert!(portal_core::hkb_drift(0.0, &p).abs() < 1e-12);
+    assert!(portal_core::hkb_curvature(0.0, &p) > 0.0);
+    assert!(portal_core::hkb_curvature(std::f64::consts::PI, &p) > 0.0);
+    let barrier = portal_core::hkb_potential(std::f64::consts::FRAC_PI_2, &p);
+    assert!(barrier > portal_core::hkb_potential(0.0, &p));
+    assert!(barrier > portal_core::hkb_potential(std::f64::consts::PI, &p));
 }
 
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — no standing-wave/superposition surface exists; the law: the counter-phase superposition at the node computes 0/1 + 1/0 = 1/1 (antinode = 2× constructive = the 100%, node = 0 destructive = the ≠ heard as silence)"]
 fn spanda_standing_identity_superposition() {
-    panic!(
-        "the standing-identity superposition (node computes 0/1 + 1/0 = 1/1) has no \
-         compiled surface — the matheme's standing identity is asserted in .rodata \
-         constants but never computed from counter-phase waves (Track 02 T2.11)"
-    );
+    // The law: the counter-phase superposition computes 0/1 + 1/0 = 1/1 —
+    // at the antinode each unit pole contributes exactly 1 and the sum peaks
+    // at 2 (the 100%); at the node the SAME two waves cancel to 0 at every
+    // instant (the ≠ heard as silence).
+    assert!((portal_core::pole_wave(0.0, 0.0, 0, false) - 1.0).abs() < 1e-12);
+    assert!((portal_core::pole_wave(0.0, 0.0, 1, false) - 1.0).abs() < 1e-12);
+    assert!((portal_core::superposition(0.0, 0.0, false) - 2.0).abs() < 1e-12);
+    let mut peak = 0.0f64;
+    for i in 0..=1000u32 {
+        let t = f64::from(i) * std::f64::consts::TAU / 1000.0;
+        peak = peak.max(portal_core::superposition(0.0, t, false).abs());
+        assert!(
+            portal_core::superposition(std::f64::consts::FRAC_PI_2, t, false).abs() < 1e-9,
+            "the node must be silent at every t"
+        );
+    }
+    assert!((peak - 2.0).abs() < 1e-3, "antinode peak must be 2x constructive, got {peak}");
+    assert!((portal_core::standing_envelope(0.0, false) - 2.0).abs() < 1e-12);
+    assert!(portal_core::standing_envelope(std::f64::consts::FRAC_PI_2, false) < 1e-12);
 }
 
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — the twelvefold is a bare integer LUT (RING_SIZE 12 /* 6 × 2 */ reads QL-first); the law: tick12 is GENERATED by spanda's flowering internal to the oscillation (SPANDA_CF_FOLD_COUNT 4→6→8→10→12) and QL derives FROM it — not an independent 12-LUT, not QL-positions-first"]
 fn tick12_flowers_from_oscillation() {
-    panic!(
-        "tick12 has no oscillatory derivation — the 12-ring is asserted as a static \
-         LUT with QL-first causality; the flowering→twelvefold→QL generation chain \
-         has no compiled surface (Track 02 T2.11)"
+    // The law: the twelvefold is GENERATED by spanda's flowering internal to
+    // the oscillation (fold-counts 4→6→8→10→12) and QL derives FROM it — not
+    // an independent 12-LUT, not QL-positions-first. The C generator returns
+    // 0 if SPANDA_CF_FOLD_COUNT/SPANDA_CF_SUBSTAGE_LUT ever disagree with the
+    // +2 progression, so 12 here means generation-and-agreement, never a
+    // read-back literal.
+    assert_eq!(
+        portal_core::intrinsic_twelvefold(),
+        12,
+        "the flowering progression 4→6→8→10→12 must generate the twelvefold"
     );
+    assert_eq!(
+        portal_core::ql_positions_derived(),
+        6,
+        "QL's 6 positions derive from the twelvefold (6 = 12/2), never the reverse"
+    );
+    // tick12 is a READOUT of the continuous cycle phase — monotone across one
+    // oscillation, wrapping on the Möbius return, never an independent counter.
+    let readouts: Vec<u8> = (0..12u8)
+        .map(|i| {
+            let phase = (f64::from(i) + 0.5) * std::f64::consts::TAU / 12.0;
+            portal_core::tick12_readout(phase)
+        })
+        .collect();
+    assert_eq!(readouts, (0..12u8).collect::<Vec<u8>>());
+    assert_eq!(portal_core::tick12_readout(std::f64::consts::TAU + 0.01), 0);
 }
 
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — the active codon is derived from the bare tick12 integer (from_tick → lens_mode(tick12) → codon_rotation_from_lens_mode); the law: the codon advances on the real quaternionic-rotational state of the oscillation + the clock + the epogdoon, never on the bare tick12 index"]
 fn codon_advances_on_rotational_state_not_tick12() {
-    panic!(
-        "codon advancement reads the bare tick12 integer as its clock \
-         (kernel profile from_tick chain); the quaternionic-rotational + epogdoon \
-         stepping rule has no compiled surface (Track 02 T2.11)"
+    // The law: the active codon steps from the quaternionic-rotational state
+    // + the clock + the epogdoon — never from the bare tick12 integer.
+    // Spec arithmetic (independent of the implementation): the rotational
+    // arc gives (helix, position); the cycle gives the lens class; the
+    // 72-address compresses 9:8 into the 64 codon space (m3.c law,
+    // apply_epogdoon_compression = addr72 * 8 / 9).
+    let expected = |arc: u8, cycle: u64| -> u8 {
+        let lens = (cycle % 6) as u8;
+        let helix = u8::from(arc >= 6);
+        let addr72 = lens * 12 + helix * 6 + (arc % 6);
+        (u16::from(addr72) * 8 / 9) as u8
+    };
+    // LUT index → rotational angle-step: ascent 0-5 sit at 0..150°, the
+    // antipode 11 at 180° (step 6), descent 6-10 at 330°..210° (steps 11..7).
+    // The rule reads the REAL half-angle, so the arc is the angle-step, not
+    // the LUT ordinal.
+    let angle_step = |n: u8| -> u8 {
+        match n {
+            0..=5 => n,
+            11 => 6,
+            _ => 17 - n,
+        }
+    };
+    // (1) The codon advances as the rotational state advances.
+    let codons: Vec<u8> = (0..12u8)
+        .map(|n| portal_core::codon_advance(ring_quaternion_spec(n), 0))
+        .collect();
+    for (n, &codon) in codons.iter().enumerate() {
+        assert_eq!(
+            codon,
+            expected(angle_step(n as u8), 0),
+            "ring state {n} must follow the derived rule"
+        );
+    }
+    assert!(
+        codons.iter().collect::<std::collections::HashSet<_>>().len() > 1,
+        "the codon must actually advance with the rotational state"
+    );
+    // (2) The SU(2) sign is read: antipodal states q and −q are the SAME
+    // SO(3) face — a face-level (tick12-style) clock cannot tell them apart —
+    // yet the codon differs, because the double cover is load-bearing.
+    let q2 = ring_quaternion_spec(2);
+    let q2_antipode = portal_core::SpandaQuaternion { w: -q2.w, x: -q2.x, y: -q2.y, z: -q2.z };
+    assert_ne!(
+        portal_core::codon_advance(q2, 0),
+        portal_core::codon_advance(q2_antipode, 0),
+        "q and -q (same SO(3) rotation) must resolve to different codons"
+    );
+    // (3) The clock enters as the real cycle, not the bare tick12: identical
+    // rotational state (hence identical tick12 readout), different cycle →
+    // the codon still advances. The bare tick12 integer is provably
+    // insufficient as the codon's clock.
+    let q3 = ring_quaternion_spec(3);
+    assert_ne!(
+        portal_core::codon_advance(q3, 0),
+        portal_core::codon_advance(q3, 1),
+        "same rotational state across cycles must not freeze the codon clock"
     );
 }
 
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — no HKB potential exists to sweep; the law: with b/a > 1/4 both attractors hold from perturbed inits; sweeping b/a below 1/4 collapses the antiphase basin into in-phase while φ=0 stays stable at EVERY swept value (V″(0)=a+4b>0 always; V″(π)=4b−a>0 ⇔ b/a>1/4) — identity unconditional, difference conditional, with hysteresis across the sweep"]
 fn spanda_bistability_threshold_asymmetry() {
-    panic!(
-        "the non-dual landscape asymmetry (φ=0 unconditionally stable, φ=π \
-         conditional on b/a > 1/4) has no compiled surface — no potential, no \
-         sweep, no phase transition observable (Track 02 T2.11)"
+    // The law: φ=0 is stable at EVERY positive coupling (V″(0)=a+4b>0 —
+    // identity unconditional); φ=π is stable ONLY above b/a > 1/4
+    // (V″(π)=4b−a>0 — difference real but conditional, a held achievement).
+    // Sweeping b/a downward collapses the antiphase basin into in-phase;
+    // sweeping back up does NOT recapture it — hysteresis across the sweep.
+    let pi = std::f64::consts::PI;
+    let params_for = |b_over_a: f64| portal_core::SpandaHkbParams {
+        delta_omega: 0.0,
+        a: 1.0,
+        b: b_over_a,
+        base_freq_hz: 2.5,
+    };
+    let mut phi_carried = pi - 0.15; // the held antiphase state, carried across the sweep
+    let mut collapsed = false;
+    for i in 0..=11u32 {
+        let ratio = 0.60 - 0.05 * f64::from(i); // 0.60 down to 0.05
+        let p = params_for(ratio);
+        // Identity is unconditional at every swept value.
+        let settled_in = portal_core::hkb_settle(0.3, 1e-3, 400_000, &p);
+        assert!(settled_in.abs() < 1e-3, "phi=0 must hold at b/a={ratio}");
+        assert!(portal_core::hkb_curvature(0.0, &p) > 0.0);
+        // The curvature law pins the threshold analytically (skipping only
+        // the marginal point itself, where V″(π) crosses zero).
+        if (ratio - 0.25).abs() > 1e-6 {
+            assert_eq!(
+                portal_core::hkb_curvature(pi, &p) > 0.0,
+                ratio > 0.25,
+                "V''(pi) = 4b-a must change sign exactly at b/a = 1/4 (at {ratio})"
+            );
+        }
+        // Difference is conditional: the carried antiphase state survives
+        // clearly above threshold and MUST be gone clearly below it. The
+        // probe kick matters: a settled state sits at φ=π to machine
+        // precision, and exactly-π has zero drift even once unstable — the
+        // "trembling slash" (critical fluctuation near threshold) is what
+        // reveals the collapse, so each sweep step perturbs before settling.
+        phi_carried = portal_core::hkb_settle(phi_carried - 0.05, 1e-3, 400_000, &p);
+        let anti_holds = (phi_carried.abs() - pi).abs() < 1e-2;
+        if ratio > 0.30 {
+            assert!(anti_holds, "antiphase must hold at b/a={ratio}");
+            // And fresh perturbed inits reach BOTH attractors up here.
+            let fresh = portal_core::hkb_settle(pi - 0.4, 1e-3, 400_000, &p);
+            assert!((fresh.abs() - pi).abs() < 1e-3);
+        }
+        if ratio < 0.20 {
+            assert!(!anti_holds, "antiphase basin must have collapsed at b/a={ratio}");
+            collapsed = true;
+        }
+    }
+    assert!(collapsed, "the sweep must actually cross the collapse");
+    // Hysteresis: after the collapse the state sits in φ=0; restoring the
+    // coupling far above threshold does not lift it back into antiphase.
+    let phi_after = portal_core::hkb_settle(phi_carried - 0.05, 1e-3, 400_000, &params_for(0.60));
+    assert!(
+        phi_after.abs() < 1e-3,
+        "the collapsed state must stay in-phase when coupling returns - path dependence"
     );
 }
 
 #[test]
-#[ignore = "expected-red: Track 02 T2.11 — the half-turn involution (n ↦ n+6 mod 12, the antiphase pole-swap) has no named operation on any continuous field; the law: on the field the pole-swap leaves every solo-pole observable invariant and is detectable ONLY in superposition, where it exchanges node and antinode (the relational-only audibility of the ≠). The index-arithmetic half (reflection 11−n vs half-turn n+6, Klein four-group closure) is pinned GREEN in tests/spanda_involutions.rs"]
 fn spanda_two_involutions_distinct() {
-    panic!(
-        "the two involutions are distinct as index maps (pinned green in \
-         spanda_involutions.rs) but the field-level law — pole-swap invisible on \
-         solo poles, audible only in superposition — has no compiled surface: \
-         there is no field (Track 02 T2.11)"
-    );
+    // Index half (cross-pinned in tests/spanda_involutions.rs): reflection
+    // 11−n and half-turn n+6 are each order-2, never coincide, and compose
+    // to 5−n — Klein four-group closure on the ring.
+    for n in 0..12u8 {
+        assert_eq!(portal_core::spanda_half_turn(portal_core::spanda_half_turn(n)), n);
+        assert_eq!(portal_core::spanda_invert(portal_core::spanda_invert(n)), n);
+        assert_ne!(portal_core::spanda_half_turn(n), portal_core::spanda_invert(n));
+        assert_eq!(
+            portal_core::spanda_half_turn(portal_core::spanda_invert(n)),
+            (5 + 12 - n) % 12,
+            "reflection then half-turn must compose to 5-n at {n}"
+        );
+    }
+    // Field half — the law this test exists for: the pole-swap (half-turn,
+    // the π polarity flip = 6 ticks × 30°) leaves every solo-pole observable
+    // invariant …
+    for pole in 0..2u8 {
+        let unswapped = portal_core::pole_rms(pole, false);
+        let swapped = portal_core::pole_rms(pole, true);
+        assert!(
+            (unswapped - swapped).abs() < 1e-9,
+            "solo pole {pole} RMS must be swap-invariant: {unswapped} vs {swapped}"
+        );
+    }
+    for i in 0..100u32 {
+        let t = f64::from(i) * 0.1;
+        // pole A untouched entirely; pole B a pure sign — inaudible alone.
+        assert_eq!(
+            portal_core::pole_wave(0.3, t, 0, false),
+            portal_core::pole_wave(0.3, t, 0, true)
+        );
+        assert!(
+            (portal_core::pole_wave(0.3, t, 1, true) + portal_core::pole_wave(0.3, t, 1, false))
+                .abs()
+                < 1e-12
+        );
+    }
+    // … and is detectable ONLY in superposition, where it exchanges node and
+    // antinode — the relational-only audibility of the ≠.
+    let antinode = 0.0;
+    let node = std::f64::consts::FRAC_PI_2;
+    assert!((portal_core::standing_envelope(antinode, false) - 2.0).abs() < 1e-12);
+    assert!(portal_core::standing_envelope(antinode, true) < 1e-12);
+    assert!((portal_core::standing_envelope(node, true) - 2.0).abs() < 1e-12);
+    assert!(portal_core::standing_envelope(node, false) < 1e-12);
 }
 
 // ---------------------------------------------------------------------------

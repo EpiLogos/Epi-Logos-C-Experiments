@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 03). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 03) — build/verify HERE, never epi-theia:** CARRIER: M2' six-axis/sonic/breadcrumb/descent/MonoPoly surfaces (Chladni chi shader) in pratibimba-app. SUBSTRATE: portal-core parashakti/vimarsha_reading.rs (canonical writer). §2 track 03/23.
+
 1. **T3.1 — Klein-flip profile field closure**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md` — Tranche 3.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

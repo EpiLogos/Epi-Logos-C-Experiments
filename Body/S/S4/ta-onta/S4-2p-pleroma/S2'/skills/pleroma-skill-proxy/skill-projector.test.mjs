@@ -189,4 +189,67 @@ describe("pleroma skill projector", () => {
 
     assert.equal(existsSync(join(targets["hermes-acp"], "using-epi-logos", "SKILL.md")), true);
   });
+
+  it("projects an Aeon to a sub-session like any skill and skill_lookup surfaces it with the aeon kind (46.3)", async () => {
+    const root = tempDir("epi-skill-projector-aeon-");
+    writeFileSync(join(root, "AGENTS.md"), "# fixture\n", "utf8");
+    writeSkill(root, CENTRAL_SKILL_ROOTS[0], "techne-spawn", "spawn bounded tools");
+    const aeonDir = join(root, CENTRAL_SKILL_ROOTS[1], "assess-improve-aeon");
+    mkdirSync(aeonDir, { recursive: true });
+    writeFileSync(
+      join(aeonDir, "SKILL.md"),
+      [
+        "---",
+        "name: assess-improve-aeon",
+        "description: Reusable Aeon loop for scheduled assess-and-improve passes.",
+        "kind: aeon",
+        "vak_coordinate: \"CPF:(4.0/1-4.4/5);CT:CT4b;CP:4.2;CF:(0/1/2);CFP:Z;CS:S4\"",
+        "quintessential_form: \"q_assess_improve\"",
+        "bimba_coordinate: \"M5-1\"",
+        "entitlement_class: \"constitutional\"",
+        "---",
+        "",
+        "# assess-improve-aeon",
+        "",
+        "Reusable Aeon loop form.",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+
+    const targetRoot = tempDir("epi-skill-projector-aeon-targets-");
+    const targets = { "claude-native": join(targetRoot, "claude", "skills") };
+    const result = projectSkills({
+      repoRoot: root,
+      harnesses: ["claude-native"],
+      cfIdentity: "(0/1/2)",
+      targetOverrides: targets,
+    });
+
+    // the Aeon rides the same projection path as any skill: a live symlink
+    assert.equal(result.skillCount, 2);
+    const linkPath = join(targets["claude-native"], "assess-improve-aeon");
+    assert.equal(lstatSync(linkPath).isSymbolicLink(), true);
+    assert.equal(realpathSync(linkPath), realpathSync(aeonDir));
+
+    // and the projected universe surfaces it through skill_lookup with kind "aeon"
+    const config = parseSkillLookupConfigToml(CONFIG_TOML);
+    const universe = enumerateSkillUniverse([targets["claude-native"]]);
+    const effective = computeAgentEntitlement(
+      { skills: universe, tools: [] },
+      undefined,
+      { skills: { allow: [] }, tools: { allow: [] } },
+    );
+    const service = await createSkillLookupService({
+      repoRoot: root,
+      skillUniverseRoots: [targets["claude-native"]],
+      effective,
+      config,
+      homeDir: tempDir("epi-skill-projector-aeon-cache-"),
+    });
+    const entries = service.lookup("reusable assess and improve loop", 50);
+    const aeon = entries.find((entry) => entry.name === "assess-improve-aeon");
+    assert.ok(aeon, "projected Aeon must be discoverable via skill_lookup");
+    assert.equal(aeon.kind, "aeon");
+  });
 });

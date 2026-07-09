@@ -32,6 +32,44 @@
     "mode": 0
   },
   "kleinFlip": null,
+  "m1Topology": {
+    "doubleCoverDeg": 720,
+    "torusGenus": 1,
+    "eulerCharacteristic": 0,
+    "hopfProjectDeg": 0,
+    "hopfFiber": 0,
+    "hopfIdentity": "S3 -> S2 Hopf fibration",
+    "ringQuaternion": [
+      0.86602545,
+      -0.28867516,
+      0.28867516,
+      0.28867516
+    ],
+    "elementCount": 1,
+    "composedQuaternion": [
+      0.49999997,
+      -0.50000006,
+      0.5,
+      0.50000006
+    ],
+    "walkMode": "torus",
+    "bifurcationLambda": 0.86602545,
+    "resolutionLevel": 3,
+    "torusKnotPhase": {
+      "p": 0.0,
+      "q": 0.0
+    },
+    "parentAttribution": "M1-5 is the +1 parent",
+    "priorGround": "M0 is the prior 0/1 ground",
+    "downstreamDoubleTorus": "Double-torus delegated to M3-5",
+    "k2TritoneCrossing": "no K² tritone crossing at tick 0",
+    "m1OriginKleinFlip": "klein_flip = None on current tick"
+  },
+  "inversionOperator": {
+    "operator": "matheme-shell-toggle",
+    "handle": "m1://inversion/operator",
+    "provenance": "S0 single session-held # (Inversion_Operator); the same (0/1) at every coordinate (M1'-SPEC §14)"
+  },
   "anandaVortex": {
     "activeMatrixOp": "bimba",
     "activeCell": [

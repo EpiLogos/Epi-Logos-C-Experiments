@@ -23,6 +23,13 @@ pub const M3_ELEMENTAL_QUATERNION_PATH: &str =
     "m3_compute_charges/evaluate_codon -> m3_eval_to_quat";
 pub const M3_RING_POSITION_QUATERNION_SHORTCUT: &str = "m3_quat_from_codon";
 
+/// The Mahamaya clock backbone: 24 nodes every 15 degrees tile the 360.
+/// 24 x 15 = 360 (backbone identity); 360 + 24 = 384 (line-graph identity).
+/// These are the M3-owned source for every paired-fifteens reading — do not
+/// duplicate the literals elsewhere (Tranche 36.T36.1 bullet 4).
+pub const M3_BACKBONE_DEGREE_STEP: u16 = 15;
+pub const M3_BACKBONE_NODE_COUNT: u16 = 24;
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct ClockDegreeEntry {
@@ -410,7 +417,7 @@ pub fn clock_degree_entry(clock_degree: ClockDegree) -> ClockDegreeEntry {
         zodiac_degree: (degree % 30) as u8,
         decan_idx,
         decan_position: (degree % 10) as u8,
-        is_backbone_node: ((degree % 15) == 0) as u8,
+        is_backbone_node: ((degree % M3_BACKBONE_DEGREE_STEP) == 0) as u8,
         hexagram_id: step.hexagram,
         hexagram_line_active: (degree % 6) as u8,
         is_non_dual_codon: is_non_dual_codon(step.codon) as u8,

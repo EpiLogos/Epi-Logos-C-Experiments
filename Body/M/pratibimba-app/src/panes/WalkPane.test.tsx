@@ -5,7 +5,7 @@ import { modulationEngine, useEngineStore } from '../engine/modulation/engine';
 import { setGateway } from '../bridge/gatewayHolder';
 import { instrument } from '../audio/instrument';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
-import { useCoordinateStore, useProvenanceStore } from '../state/stores';
+import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
 
 // REAL gateway envelope shapes (verifier live probe 2026-07-02)
 const GRAPH: Record<string, { label: string; rels: { type: string; direction: string; coordinate: string }[] }> = {
@@ -36,6 +36,7 @@ describe('WalkPane', () => {
             connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
         });
         useCoordinateStore.setState({ selected: null });
+        useTickStore.setState({ profile: null, generation: null });
     });
 
     afterEach(() => {
@@ -77,6 +78,50 @@ describe('WalkPane', () => {
         // the graph was asked for the fallback seed, never the planet address
         expect(invoke).toHaveBeenCalledWith('s2.graph.node', { coordinate: 'M1' });
         expect(invoke).not.toHaveBeenCalledWith('s2.graph.node', { coordinate: 'planet:Venus' });
+    });
+
+    it('surfaces the single session-held # operator and round-trips the invert (X → X′ → X) without walking', async () => {
+        // The profile bus carries the ONE session-held # (Inversion_Operator),
+        // identical at every coordinate (M1'-SPEC §14). Seed the real shape.
+        useTickStore.setState({
+            generation: 1,
+            profile: {
+                generation: 1,
+                cachedAtMs: 0,
+                stale: false,
+                stalenessMs: 0,
+                privacyClass: 'public-current-context',
+                profile: {
+                    inversionOperator: {
+                        operator: 'matheme-shell-toggle',
+                        handle: 'm1://inversion/operator',
+                        provenance: 'session-held'
+                    }
+                }
+            }
+        } as never);
+
+        render(<WalkPane />);
+        expect((await screen.findByTestId('walk-node')).textContent).toContain('M1');
+
+        // the single session-held operator handle is surfaced on the walked coordinate
+        expect(screen.getByTestId('m1-inversion-operator').textContent).toBe('m1://inversion/operator');
+
+        const invokesBefore = invoke.mock.calls.length;
+        // base face is the current coordinate
+        expect(screen.getByTestId('m1-invert-face').textContent).toBe('M1');
+        // invert → the X′ partner
+        await act(async () => {
+            screen.getByTestId('m1-invert-current-coordinate').click();
+        });
+        expect(screen.getByTestId('m1-invert-face').textContent).toBe("M1'");
+        // invert again → round-trips back to X (pure involution: invert∘invert = id)
+        await act(async () => {
+            screen.getByTestId('m1-invert-current-coordinate').click();
+        });
+        expect(screen.getByTestId('m1-invert-face').textContent).toBe('M1');
+        // the reciprocal face was surfaced WITHOUT any new graph walk — no node fetch
+        expect(invoke.mock.calls.length).toBe(invokesBefore);
     });
 
     it('isWalkableCoordinate admits Bimba shapes and rejects namespaced/empty addresses', () => {

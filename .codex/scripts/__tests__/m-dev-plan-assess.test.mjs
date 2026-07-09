@@ -22,7 +22,6 @@ import {
   readVerificationRecord,
   receiptViolations,
   run,
-  tokenBudgetStatus,
 } from "../m-dev-plan-assess.mjs";
 
 // Shared decision-register fixture for the DR-citation fail-closed guards.
@@ -567,6 +566,30 @@ test("quarantine propagates audit_required to dependents that trusted the work",
   assert.equal(marked.state.tasks["02.T1"].status, "pending");
 });
 
+test("a blocked task does not wall its chain successors; authored deps still hold", () => {
+  const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--write", "--no-git"], root);
+  // 02.T1's only dep is the mechanical chain on 02.T0. While 02.T0 is merely
+  // pending, the chain holds and 02.T1 waits.
+  let assessment = run(["--plan", planFolder, "--write", "--no-git"], root);
+  let surfaceSlice = assessment.tasks.find((t) => t.id === "02.T1");
+  assert.equal(surfaceSlice.computedStatus, "waiting");
+  // Once 02.T0 is blocked (external blocker), the chain skips it — successors
+  // must not be walled behind another lane's blocker (ruling 2026-07-08).
+  setTaskStatus(planFolder, "02.T0", "blocked");
+  assessment = run(["--plan", planFolder, "--write", "--no-git"], root);
+  surfaceSlice = assessment.tasks.find((t) => t.id === "02.T1");
+  assert.equal(surfaceSlice.computedStatus, "ready");
+  assert.ok(!surfaceSlice.dependsOn.includes("02.T0"));
+  // Authored deps are law and are NOT skipped: 01.T1 names Track 02 Tranches
+  // 0-1 in its heading, so it keeps waiting on blocked 02.T0.
+  const bridge = assessment.tasks.find((t) => t.id === "01.T1");
+  assert.ok(bridge.dependsOn.includes("02.T0"));
+  assert.equal(bridge.computedStatus, "waiting");
+  const claimed = run(["--plan", planFolder, "--claim", "02.T1", "--owner", "impl-1", "--write", "--no-git"], root);
+  assert.equal(claimed.state.tasks["02.T1"].status, "in_progress");
+});
+
 test("a quarantined task cannot be claimed; an audit_required task can (it IS the re-verification queue)", () => {
   const { root, planFolder } = makePlanSet();
   run(["--plan", planFolder, "--write", "--no-git"], root);
@@ -698,61 +721,6 @@ test("loadVerificationClasses reads a class manifest and done marks enforce it",
     root,
   );
   assert.equal(marked.state.tasks["01.T0"].status, "done");
-});
-
-test("receipts with tokenUsage accumulate into the daily token ledger", () => {
-  const { root, planFolder } = makePlanSet();
-  run(["--plan", planFolder, "--claim", "01.T0", "--owner", "impl-1", "--write", "--no-git"], root);
-  const receipt = JSON.stringify({
-    command: "cargo test -p portal-core",
-    exitCode: 0,
-    testsFailed: 0,
-    tokenUsage: { input: 200000, output: 30000 },
-  });
-  const marked = run(
-    ["--plan", planFolder, "--mark", "01.T0", "--status", "review", "--owner", "impl-1", "--receipt", receipt, "--write", "--no-git"],
-    root,
-  );
-  const today = new Date().toISOString().slice(0, 10);
-  assert.equal(marked.state.tokenLedger[today], 230000);
-  // a second mark accumulates
-  const again = run(
-    ["--plan", planFolder, "--mark", "01.T0", "--status", "review", "--owner", "impl-1", "--receipt", receipt, "--write", "--no-git"],
-    root,
-  );
-  assert.equal(again.state.tokenLedger[today], 460000);
-});
-
-test("an exhausted daily token budget refuses new claims but never blocks marking finished work", () => {
-  const { root, planFolder } = makePlanSet();
-  run(["--plan", planFolder, "--write", "--no-git"], root);
-  const today = new Date().toISOString().slice(0, 10);
-  const statePath = join(planFolder, "plan.state.json");
-  const state = JSON.parse(readFileSync(statePath, "utf8"));
-  state.tokenLedger = { [today]: 5_000_001 };
-  writeFileSync(statePath, `${JSON.stringify(state, null, 2)}\n`);
-
-  assert.throws(
-    () => run(["--plan", planFolder, "--claim", "01.T0", "--owner", "impl-1", "--no-git"], root),
-    /daily token budget exhausted/,
-  );
-  // marking in-flight work as review still lands
-  const reviewed = run(
-    ["--plan", planFolder, "--mark", "01.T0", "--status", "review", "--evidence", "handing off at budget", "--no-git"],
-    root,
-  );
-  assert.equal(reviewed.state.tasks["01.T0"].status, "review");
-});
-
-test("tokenBudgetStatus respects M_DEV_TOKEN_BUDGET and reports exhaustion", () => {
-  const today = new Date().toISOString().slice(0, 10);
-  const state = { tokenLedger: { [today]: 900 } };
-  const status = tokenBudgetStatus(state, { M_DEV_TOKEN_BUDGET: "1000" });
-  assert.equal(status.budget, 1000);
-  assert.equal(status.spent, 900);
-  assert.equal(status.exhausted, false);
-  assert.equal(tokenBudgetStatus({ tokenLedger: { [today]: 1000 } }, { M_DEV_TOKEN_BUDGET: "1000" }).exhausted, true);
-  assert.equal(tokenBudgetStatus({}, {}).budget, 5_000_000);
 });
 
 test("readVerificationRecord parses verdict, verifiedAt, and verifier-owner", () => {

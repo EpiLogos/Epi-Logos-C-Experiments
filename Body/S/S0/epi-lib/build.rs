@@ -26,6 +26,11 @@ fn main() {
         .file("src/m5.c")
         .file("src/kernel.c")
         .file("src/qv_data.c")
+        // Kernel substrate, unconditional: the Anuttara term-rewriting
+        // calculus (Tranche 01.T1.13) and the coordinate-language registry
+        // it reduces against (01.T1.10) — like the m0-m5 LUTs, not optional.
+        .file("src/m0_calculus.c")
+        .file("src/anuttara_language.c")
         .file("../vendor/blake3/blake3.c")
         .file("../vendor/blake3/blake3_dispatch.c")
         .file("../vendor/blake3/blake3_portable.c");

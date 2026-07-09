@@ -1,5 +1,9 @@
 # Track 08 — Integrated 4-5-0 Recognition Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles the integrated `4-5-0` recognition plugin across the four corpora. This plugin composes [[M4']] + [[M5']] + [[M0']] through the kernel-bridge profile-tick + Nara protected-local handles — the personal stratum of *Jiva-is-Śiva* recognition. The plugin package is landed; cycle-3 work is the privacy-class composition contract, the M4 deposit-handle handoff (from M2 F_routing), and the M0' deep-link return for pedagogical anchoring. Anti-greenfield throughout.
 
 ## Total-Shape Architecture (Phase A)

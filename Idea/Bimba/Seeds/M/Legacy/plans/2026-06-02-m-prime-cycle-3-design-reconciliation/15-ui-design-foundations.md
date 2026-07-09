@@ -1,5 +1,9 @@
 # Track 15 — UI Design Foundations
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Cycle 3 routed the substrate cleanly but said nothing about how the system shows up to the user. That silence is what drove the ACR-vs-OmniPanel confusion: real substrate (run-model, tool-stream, dispatch traces) was built without a UI grammar that knew where it belonged. This tranche grounds the cycle in foundational UI principles, anchors them in the Theia substrate the project has already chosen, and names how each load-bearing surface (cosmic-1-2-3, personal-4-5-0, ide-deep, OmniPanel, left-sidebar-system) consumes those principles.
 
 The OmniPanel is the load-bearing reframe: it is the agentic sidebar — a persistent right-side panel that hosts Pi as the conversational membrane, surfaces session continuity, shows dispatch genealogy, and exposes the gateway state. It is the `/` operator as a UI surface. The repurposed-ACR substrate (Tranche 12.14) becomes the OmniPanel's underlying content model, NOT a standalone extension.

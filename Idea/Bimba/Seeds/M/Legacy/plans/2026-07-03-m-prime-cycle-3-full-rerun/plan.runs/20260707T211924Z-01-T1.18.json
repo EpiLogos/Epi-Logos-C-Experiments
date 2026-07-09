@@ -1,0 +1,36 @@
+{
+  "runId": "20260707T211924Z-01-T1.18",
+  "taskId": "01.T1.18",
+  "startedAt": "2026-07-07T21:19:24.478Z",
+  "owner": "fable-a-kernel",
+  "leaseExpiresAt": "2026-07-07T22:19:24.478Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.18",
+    "trackId": "01",
+    "tranche": "T1.18",
+    "title": "VAK as four-expression typed transition calculus *(doc-ahead-landing; DR-VAK-7 bound; CCT-17 cross-link; canonical VAK-layering reference for the whole corpus)",
+    "effort": "doc-ahead-landing; DR-VAK-7 bound; CCT-17 cross-link; canonical VAK-layering reference for the whole corpus",
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.17"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

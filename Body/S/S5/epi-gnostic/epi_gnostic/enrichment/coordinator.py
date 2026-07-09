@@ -305,22 +305,21 @@ _DOUBLING_CANON = "4.(4.0/1-4.4/5)"
 
 
 def _normalise_coordinate(coord: str) -> str:
-    """Normalise a Bimba coordinate to canonical form (legacy ``#``->``M`` + context frames).
+    """Normalise a Bimba coordinate's context frames to canonical parenthesised form.
 
-    Idempotent. MUST stay in parity with the Rust generator ``wrap_context_frames``
-    (Body/S/S2/graph-services/src/coordinate.rs), the TS bimba-mcp ``wrapContextFrames``, and the
-    projector ``canonical()`` (Idea/Bimba/Map/datasets/scripts/project-map-index.mjs). A position-N
-    frame keeps its ``N.`` outside the parens (``4.0/1`` -> ``4.(0/1)``); the QL fractal-doubling
-    frame stays atomic (``4.4.0-4.4/5`` -> ``4.(4.0/1-4.4/5)``).
+    Idempotent. A position-N frame keeps its ``N.`` outside the parens
+    (``4.0/1`` -> ``4.(0/1)``); the QL fractal-doubling frame stays atomic
+    (``4.4.0-4.4/5`` -> ``4.(4.0/1-4.4/5)``).
+
+    Does NOT convert ``#`` -> ``M``. ``#n`` (raw archetype / ``:Psychoid``) and
+    ``Mn`` (M-family / ``:Subsystem``) are DISTINCT coordinates and distinct
+    ``:Bimba`` nodes; a ``#`` coordinate must resolve to its own ``#`` node.
+    The ``#`` -> ``M`` mapping was a one-time legacy port of the old neo4j
+    coordinate data (done historically) and is NOT a live normalisation — never
+    apply it at runtime here.
     """
     if not coord:
         return coord
-    if coord == "#":
-        coord = "M"
-    elif coord.startswith("#"):
-        rest = coord[1:]
-        if rest[:1].isdigit() or rest[:1] in ("-", "."):
-            coord = "M" + rest
     protected = coord.replace(_DOUBLING_RAW, _DOUBLING_TOK)
     segs: list[str] = []
     depth = 0

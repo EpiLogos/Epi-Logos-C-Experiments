@@ -45,6 +45,10 @@ dev_changed_paths: []
 
 # Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 This document specs the **M2↔M3 living symbolic body** of the system — the band where Parashakti's 72-fold vibration descends into Mahamaya's 64 codons, where codons become quaternions, quaternions carry elements, elements thread to the body, and the whole renders through the cosmic clock + aural body + cymatics as ONE living symbolic body. The substrate is **already implemented** in `epi-lib` (m2.h / m3.h / m3.c), `portal-core` (aspect.rs) and `nara` (medicine_frame.rs). Track 37's job is to formalize the cross-layer integration and spec the frontend/integration work that surfaces it — not to reinvent the substrate.
 
 Every numeric and structural claim below is grounded in a `file:line` citation, verified against code. Where the prompt-supplied facts and the code disagree, the discrepancy is recorded as an open DR (§9).

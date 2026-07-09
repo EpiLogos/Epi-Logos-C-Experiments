@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 43). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 43) — build/verify HERE, never epi-theia:** SUBSTRATE — end-of-cycle hygiene (coordinate headers convention:coordinate-header:v1, .h < .c, forbidden-imports machine-enforced, DR-HYGIENE-1..3). CARRIER: pratibimba-app itself needs the header convention + its own forbidden-imports row (not covered by the Theia preflight). §2 track 43.
+
 1. **T43.1 — Repo-hygiene sweep: immediate fixes + gated legacy removal**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

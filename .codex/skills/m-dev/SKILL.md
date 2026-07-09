@@ -80,11 +80,9 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    ```bash
    node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done \
-     --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"],"tokenUsage":{"input":<n>,"output":<n>}}' \
+     --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"]}' \
      --evidence "<one sentence: what landed>" --owner <IMPLEMENTER_ID> --write --json --require-now
    ```
-
-   Receipts SHOULD carry `tokenUsage`; the daily spend accumulates in the ledger (budget default 5M, `M_DEV_TOKEN_BUDGET` overrides). An exhausted budget refuses NEW claims — finish in-flight work, report, hand off; it never blocks marking finished work.
 
    The mark is REFUSED (fail closed) when: no green receipt; no fresh PASS verification record; verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers; a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
 

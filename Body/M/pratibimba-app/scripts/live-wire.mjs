@@ -115,6 +115,8 @@ export const EXEMPT_PROFILE_FIELDS = {
     resonance: 'nullable scalar pinned in the strict parse (Rust Option<f32>)',
     conjugateFormCharacter: 'string surface pinned in the strict parse',
     nodalQuartet: 'length-4 law pinned in the strict parse; nodal role truth asserted through modalResonator.nodalQuartet in the schema',
+    m1Topology: 'typed M1TopologyProjection pinned in the strict parse; the 720°/genus-1/Euler-0 double-cover + Hopf-fibration + Klein-flip topology law is asserted in portal-core + schemas tests (Track 02.T2.3)',
+    inversionOperator: 'handle-only InversionOperatorHandle pinned in the strict parse (operator/handle/provenance); the single session-held # (0/1) identity — the same operator at every coordinate — is asserted in portal-core + schemas tests (Track 02.T2.5, M1\'-SPEC §14)',
 };
 
 /**

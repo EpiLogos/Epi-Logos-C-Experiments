@@ -1,0 +1,36 @@
+{
+  "runId": "20260706T231321Z-04-T4.10",
+  "taskId": "04.T4.10",
+  "startedAt": "2026-07-06T23:13:21.325Z",
+  "owner": "fable-b-agentic",
+  "leaseExpiresAt": "2026-07-07T01:13:21.325Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.10",
+    "trackId": "04",
+    "tranche": "T4.10",
+    "title": "Coupling-flow / measurement-face inspector",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.1"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

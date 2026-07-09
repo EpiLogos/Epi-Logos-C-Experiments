@@ -515,7 +515,10 @@ fn parse_line_value<'a>(body: &'a str, prefix: &str) -> Option<&'a str> {
 }
 
 fn wait_for_capture(tmux_bin: &str, pane_id: &str, needle: &str) -> String {
-    let deadline = Instant::now() + Duration::from_secs(6);
+    // 45s, not 6s: under the full verify-all gate the machine is saturated
+    // (playwright + cargo builds) and the pane's worker can take well past
+    // 6s to appear. The poll exits early on match, so healthy runs pay ~0.
+    let deadline = Instant::now() + Duration::from_secs(45);
     let mut last = String::new();
     while Instant::now() < deadline {
         let output = Command::new(tmux_bin)

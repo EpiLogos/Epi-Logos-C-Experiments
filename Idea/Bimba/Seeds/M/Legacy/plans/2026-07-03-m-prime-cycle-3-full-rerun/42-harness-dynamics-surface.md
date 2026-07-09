@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/42-harness-dynamics-surface.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 42). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 42) — build/verify HERE, never epi-theia:** SUBSTRATE — harness dynamics (harness = access/cost lever vs model-family = diversity lever; HarnessTurnEvent/HarnessDispatch, transcript-of-record ~/.epi/gate/transcripts). CARRIER: future session UI shows harness/lineage. Whole track suspect. §2 track 42.
+
 1. **T42.1 — Harness dispatch envelope + normalized turn-event stream (gateway-contract)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/42-harness-dynamics-surface.md` — Tranche 42.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

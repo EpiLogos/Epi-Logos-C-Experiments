@@ -6,6 +6,8 @@
  */
 
 #include "m1.h"
+#include "kernel.h"  /* kernel_resonance_index — the 72-space address (T2.11) */
+#include "m3.h"      /* apply_epogdoon_compression — the 9:8 72→64 transduction (T2.11) */
 #include "psychoid_numbers.h"
 #include <math.h>
 #include <stdio.h>
@@ -469,6 +471,158 @@ const Spanda_Mutator SPANDA_COMPILER_PASSES[6] = {
     spanda_pass_flower,
     spanda_pass_meta,
 };
+
+/* ===================================================================
+ * T2.11: SPANDA DUAL-OSCILLATOR — THE TICK FLOOR (M1-3)
+ * Contract in m1.h. The continuous stratum beneath the integer ring;
+ * the ring's M_PI ban is a ring-traversal law and does not bind the
+ * field layer that generates what the ring reads out.
+ * =================================================================== */
+
+Spanda_HKB_Params spanda_hkb_params_default(void) {
+    /* Derived, not guessed (m1.h contract): a normalizes the fundamental;
+     * b/a = 9/16 is the 16/9 generative gap inverted (Base Frame equation:
+     * 100% = 64+36 → 16/9 → 4+2); Δω = 0 — the poles are co-original;
+     * 2.5 Hz = conserved-delta band centre (see citation fn). */
+    return (Spanda_HKB_Params){
+        .delta_omega  = 0.0,
+        .a            = 1.0,
+        .b            = 9.0 / 16.0,
+        .base_freq_hz = 2.5,
+    };
+}
+
+void spanda_hkb_frequency_band(double* lo_hz, double* hi_hz) {
+    if (lo_hz) *lo_hz = 1.5;
+    if (hi_hz) *hi_hz = 4.0;
+}
+
+const char* spanda_hkb_frequency_citation(void) {
+    return "Conserved-delta band ~1.5-4.0 Hz, centre ~2.5 Hz: Buzsaki, "
+           "Logothetis & Singer 2013 + Mizuseki 2014 (oscillation-frequency "
+           "hierarchy preserved across a 17,000-fold brain-volume range, "
+           "non-allometric); PLOS Biology 2026 (98-species acoustic rhythm "
+           "converges on 2.7 Hz, non-allometric). A clean 2.0 Hz is "
+           "human-only spontaneous motor tempo - cite as such if used.";
+}
+
+double spanda_hkb_drift(double phi, const Spanda_HKB_Params* p) {
+    return p->delta_omega - p->a * sin(phi) - 2.0 * p->b * sin(2.0 * phi);
+}
+
+double spanda_hkb_potential(double phi, const Spanda_HKB_Params* p) {
+    return -p->a * cos(phi) - p->b * cos(2.0 * phi);
+}
+
+double spanda_hkb_curvature(double phi, const Spanda_HKB_Params* p) {
+    /* V″(φ) = a·cos φ + 4b·cos 2φ — V″(0) = a+4b (always > 0 for positive
+     * coupling: identity unconditional); V″(π) = 4b−a (> 0 ⇔ b/a > 1/4:
+     * difference conditional). */
+    return p->a * cos(phi) + 4.0 * p->b * cos(2.0 * phi);
+}
+
+/* Wrap an angle to (−π, π]. */
+static double spanda_wrap_phase(double phi) {
+    double wrapped = fmod(phi + M_PI, 2.0 * M_PI);
+    if (wrapped <= 0.0) wrapped += 2.0 * M_PI;
+    return wrapped - M_PI;
+}
+
+double spanda_hkb_settle(double phi0, double dt, uint32_t steps,
+                         const Spanda_HKB_Params* p) {
+    double phi = phi0;
+    for (uint32_t i = 0u; i < steps; i++) {
+        phi += dt * spanda_hkb_drift(phi, p);
+    }
+    return spanda_wrap_phase(phi);
+}
+
+double spanda_pole_wave(double x, double t, uint8_t pole, bool pole_swapped) {
+    if (pole == 0u) {
+        return cos(x - t);                       /* bimba (0/1), rightward */
+    }
+    double wave = cos(x + t);                    /* pratibimba (1/0), leftward */
+    /* The half-turn on the field: π polarity flip of the reflection pole
+     * (6 ticks × 30°/tick = 180°). */
+    return pole_swapped ? -wave : wave;
+}
+
+double spanda_superposition(double x, double t, bool pole_swapped) {
+    return spanda_pole_wave(x, t, 0u, pole_swapped)
+         + spanda_pole_wave(x, t, 1u, pole_swapped);
+}
+
+double spanda_standing_envelope(double x, bool pole_swapped) {
+    /* cos(x−t) + cos(x+t) = 2·cos x·cos t → envelope 2|cos x|;
+     * cos(x−t) − cos(x+t) = 2·sin x·sin t → envelope 2|sin x|.
+     * The swap exchanges node and antinode — the ≠ made audible only
+     * in co-presence. */
+    return 2.0 * (pole_swapped ? fabs(sin(x)) : fabs(cos(x)));
+}
+
+double spanda_pole_rms(uint8_t pole, bool pole_swapped) {
+    /* RMS over one full period at x = 0, computed (not asserted): the
+     * polarity flip of a lone wave leaves every solo observable intact. */
+    const uint32_t samples = 4096u;
+    double sum_sq = 0.0;
+    for (uint32_t i = 0u; i < samples; i++) {
+        double t = (2.0 * M_PI * (double)i) / (double)samples;
+        double v = spanda_pole_wave(0.0, t, pole, pole_swapped);
+        sum_sq += v * v;
+    }
+    return sqrt(sum_sq / (double)samples);
+}
+
+uint8_t spanda_half_turn_index(uint8_t n) {
+    return (uint8_t)((n + RING_HALF) % RING_SIZE);
+}
+
+uint8_t spanda_intrinsic_twelvefold(void) {
+    /* Generation, cross-checked — the twelvefold is the terminal of the
+     * flowering's own +2 progression from the 4-fold static seed, never an
+     * independent 12 literal. Sub-stage 5 is the meta/percentile return
+     * (fold 0) and is not part of the climb. */
+    uint8_t fold = SPANDA_CF_FOLD_COUNT[0];              /* the 4-fold seed */
+    if (fold != 4u) return 0u;
+    for (uint8_t substage = 1u; substage <= 4u; substage++) {
+        fold = (uint8_t)(fold + 2u);                     /* contextual flowering: the dyad enters */
+        if (fold != SPANDA_CF_FOLD_COUNT[substage]) return 0u;
+        if (fold != SPANDA_CF_SUBSTAGE_LUT[substage].fold_count) return 0u;
+    }
+    return fold;                                         /* 12 — flowered, not sampled */
+}
+
+uint8_t spanda_ql_positions_derived(void) {
+    /* QL derives FROM the twelvefold: the double cover halves to 6. */
+    return (uint8_t)(spanda_intrinsic_twelvefold() / 2u);
+}
+
+uint8_t spanda_tick12_readout(double cycle_phase) {
+    uint8_t twelvefold = spanda_intrinsic_twelvefold();
+    if (twelvefold == 0u) return 0u;
+    double norm = fmod(cycle_phase, 2.0 * M_PI);
+    if (norm < 0.0) norm += 2.0 * M_PI;
+    uint8_t tick = (uint8_t)(norm / (2.0 * M_PI) * (double)twelvefold);
+    return (uint8_t)(tick % twelvefold);
+}
+
+uint8_t spanda_codon_advance(Quaternion rot, uint64_t cycle) {
+    /* (1) Rotational state: atan2 over (x, w) reads the SU(2) half-angle
+     * WITH its sign — antipodal states q and −q (the same SO(3) face,
+     * reflection-related arcs n and 11−n) resolve to arcs 6 apart. A bare
+     * tick12 integer carries no sign and cannot make this distinction. */
+    double half_angle = atan2((double)rot.x, (double)rot.w);
+    if (half_angle < 0.0) half_angle += 2.0 * M_PI;
+    uint8_t arc = (uint8_t)(half_angle / (M_PI / 6.0) + 0.5) % RING_SIZE;
+    uint8_t helix    = (uint8_t)(arc >= RING_HALF ? 1u : 0u);
+    uint8_t position = (uint8_t)(arc % RING_HALF);
+    /* (2) Clock: the cycle selects the lens class of the 72-space. */
+    uint8_t lens = (uint8_t)(cycle % (uint64_t)MEF_BASE_LENSES);
+    uint8_t addr72 = kernel_resonance_index(lens, helix, position);
+    if (addr72 >= PARASHAKTI_TOTAL) return 0u;
+    /* (3) Epogdoon: the canonical 9:8 transduction 72 → 64 (M2 → M3). */
+    return apply_epogdoon_compression(addr72);
+}
 
 /* ===================================================================
  * PUBLIC API

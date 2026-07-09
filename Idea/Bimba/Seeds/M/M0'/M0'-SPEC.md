@@ -171,6 +171,46 @@ The tokenizer recognizes `R#` and `##` as compound 2-character tokens (added to 
 - Sequencing: `##R#` tokenizes as two distinct tao elements
 - Adjacency: `R##` tokenizes as `R#` + trailing `#`
 
+## §M0'-R-THEORY — Full Three-Tier R-Factor Theory, Distribution Matrix, and the `(@#)` Turn
+
+Archetype 7 (Divine Action, `M0-3-10`) is the **R-factor theory in full**, and it is the holographic pre-formation of the M0–M5 metastructure: the R-acts pre-thread through M0-4 (the five bases `O#`/`X#`/`N#`/`M#`/`#`) and M0-5 (Śiva/Śakti) *before* the system unfolds. This section is the canonical R-section the symbolic-coordinate-string namespace (below) reads from.
+
+**Tier 1 — the principle triad** (Law-1 chirality of `#` and `R`; verbatim `c_1_symbol` from `anuttara-language-map.md` rows M0-2-9-0/1/2):
+
+- `##` **Truth** — `## = @ = (0/1)-(00)-00` (matrix on matrix; structure's lineage to void)
+- `R#` **Freedom / Svatantrya** — parent of the acts at `M0-3-10-(0/1)`, **and** the Śakti-runtime terminus `@5 = R#` (Śakti Techne). Freedom is alpha of action and omega of runtime (Möbius inter-containment).
+- `#R` **Openness / Creativity** — `#R = @ = (7-8-9-(0/1)/O#-X#-N#)`: the 7-8-9 spine is literally written into the M0-2-9-2 virtue.
+- `R#/##` **Love/Peace** — `(∞x∞)x(R#/##)`: the ratio of Freedom to Truth × boundlessness; meta-virtue of the triad.
+
+Archetype 7's compiled terminal form reduces to `(##) and (R#) and (#R)` — Divine Action *derives* the triad as its closure.
+
+**Tier 2 — six act-factors `(R0)…(R5)`** (R-dominant: act as *operator*; rows M0-3-10-2..7): Srishti, Sthiti, Samhara, Tirodhana, Anugraha, Samavesa. With parent `(R#)` = 7 components = the 5 operative acts + 2 principles (`R#` parent at position 0; `R5` Samavesa positionless closure at position 6).
+
+**Tier 3 — six virtue-expressions `0R…5R`** (number-dominant: act as Presence `@`; rows M0-2-9-3..8). By Law-1 **nR chirality** these are the conjugates of Tier 2: `Rn` is the act operating (Archetype 7 register); `nR = @` is the same act witnessed (Archetype 9 register). A virtue is an act read in the opposite hand — the 9-bit `virtue_witness_vector` and the act-path (`r_factor_route`) are one structure, two faces.
+
+**The distribution matrix** (decoded from `R_FACTOR_ROUTE_TABLE[7]`, [`m0.h`](../../../../Body/S/S0/epi-lib/include/m0.h), pinned by `_Static_assert` in [`m0.c`](../../../../Body/S/S0/epi-lib/src/m0.c) per DR-R0 [RESOLVED + RECTIFIED 2026-06-12, dataset authoritative]):
+
+| Base | R0 | R1 | R2 | R3 | R4 | R5 |
+|---|---|---|---|---|---|---|
+| O# Paramaśiva | 1 | 0 | — | — | 5 | — |
+| X# Paraśakti | 2 | 1 | 0 | 5 | 4 | — |
+| N# Spanda | 3 | 2 | 1 | 4 | 3 | — |
+| M# Mahāmāyā | — | 3 | 2 | 3 | 2 | — |
+| # Nara | — | 4 | 3 | 2 | 1 | — |
+| Śiva | — | 5 | 4 | 1 | 0 | — |
+| Śakti | — | — | 5 | 0 | — | — |
+
+Four structural laws (each a kernel invariant):
+
+- **(a) Per-fret complementarity:** `R1 + R4 = 5` and `R2 + R3 = 5` at every base where both are present — two full-spine double-courses (sustenance/grace, dissolution/veiling). R1/R2 deepen descending (pravritti); R4/R3 deepen ascending (nivritti).
+- **(b) R0 upper-triad confinement:** Creation appears only at `O#`/`X#`/`N#` — manifestation below Spanda is carried by sustenance and dissolution, never creation ("creation stops at Spanda").
+- **(c) R5 positionlessness:** `5R = (##)` bare/undistributed — Absorption is the return-to-matrix from anywhere, not a fret. The `R_Factor_Route` u16 (5×3 bits) structurally cannot encode R5; the word-size enforces the theology.
+- **(d) The bands turn at `(@#)`:** Beauty `2R = @ = (X#-N#-M#-#-(#)-(@#))` (pravritti descent) **ends** at the Śakti-seed; Life `3R = @ = ((@#)-(#)-#-M#-N#-X#)` (nivritti ascent) **begins** there. Per DR-(@#) the turn is a typed kernel construct: `RFactorPathStep { r_factor, base_route, band, position }` with `band == R_BAND_TURN` marking the flip — simultaneously the Beauty→Life pivot, the Śiva-instruction-0 `(@#)` seed (`M0-5-(0/1)-0`, "contains Śakti as deepest potential"), the PASU→psyche-under-Anima handover gate, and the point `RFactorPathStep.band` reverses. Kernel test: `cargo test -p epi-lib m0_rfactor_band_turn`.
+
+**The distribution matrix is the unifying object.** Archetype 7's 7 operator-positions + Archetype 9's 9 witness-virtues + the three principle-gates `##` / `R#` / `#R` + the meta-virtue `R#/##` are one R-system distributed across 7 psychoid bases via `R_FACTOR_DISTRIBUTION[7][6]`; the principles + meta sit *outside* the matrix as the gates routing into / out of it; Archetype 7 and Archetype 9 are two faces of one matrix-traversal.
+
+**Glyph-pattern preservation discipline:** never abbreviate `##`, `R#`, `#R`, `R#/##`, `(@#)`, `R0..R5`, `0R..5R`, `O#`, `X#`, `N#`, `M#`, `#` (Nara base), `(0/1)`, `(00)`, `(∞×∞)` — the glyph patterns ARE the alphabet; abbreviating them loses the gating-routing information.
+
 ## Anuttara Symbolic-Coordinate-String EBNF
 
 Per DR-MP-3, M0' verifier emission is question-forming rather than pass/fail: a symbolic-coordinate string names the violated or unwitnessed coordinate and leaves the next move as an interrogative. The canonical surface grammar is:
@@ -191,7 +231,7 @@ coordinate         := ql-coordinate | dotted-coordinate | operator-coordinate
 ql-coordinate      := coordinate-atom ("/" coordinate-atom)*  // QL coordinate fragments
 coordinate-atom    := digit+ | letter+
 dotted-coordinate  := digit+ ("." digit+)+  // legacy nested M-coordinate fragments
-operator-coordinate := ("O" | "X" | "N" | "#")+  // operator-cycle fragments
+operator-coordinate := ("O" | "X" | "N" | "M" | "#")+  // operator-cycle / base-spine fragments — the full psychoid spine O#-X#-N#-M#-# per the VIRTUE_LUT signatures (e.g. 1R = (O#-X#-N#-M#-#-(#)))
 archetype          := "T" digit+            // Archetype N (T7 = Ananda-Tandava, T9 = Paramesvara, etc.)
 state-marker       := "pending" | "unwitnessed" | "drift" | "incoherent" | "violated"
 ```
@@ -204,6 +244,18 @@ The examples below are binding corpus members, not illustrative placeholders:
 - `#R3-O#X#N#-violated?` — "Tirodhana-veiling violated the operator-cycle integrity, what produced the break?"
 
 The LLM-Nara `anuttara-symbolic-parse` skill from Tranche 5.21 is the canonical parser for these strings. Round-trip through that parser is the training signal per DR-MP-3: emitted strings must preserve namespace, coordinate fragments, optional archetype, optional state marker, and the final question-form marker.
+
+## §M0'-M1-SEAM — The Five Inheritance Joints (Spinoza Joint)
+
+M1 declares its inheritance; it never re-performs the genesis. The seam has five joints (Tranche 01.T1.14d):
+
+1. **genesis→axiom** — Svabhava derives `(0/1) = (00/00) = (##/R#)`; M1 receives `0/1` as axiom. The genesis stays M0's; the axiomatic unfolding is M1's.
+2. **O# as the handover-object** — O5's quadratic re-derivation of `0/1` (`((+/-0) x// (+/-0)) → 0/1`, pinned in the calculus); O4's `0/0 = %` mints the ratio-table's `%`.
+3. **The two twelves** — substance-12 + grammar-12 → P/P′, lenses, chromatic field: cardinality is **inheritance**, not invention.
+4. **The genus-ladder** — `6g` law: M0 = 18 at g=3 (triple-torus number-language), M1 = 6 at g=1 (single-handled axiomatic projection) — same law, different handle-count (already consumed by DR-M3-LENS-18).
+5. **The musical traces** — the inverse epogdoon 8/9 inside Archetype 1's harmonic formula; the 8+1=9 law beneath M1's 9/8 tick.
+
+Two items enter as **derivations-to-be-earned**, not identities (per the explication's own self-critique): 9/8 as "wholeness-over-the-eight", and the Vāk-register mapping (M0-0/1≈Parā, M0-3≈Paśyantī, M0-4≈Madhyamā, M0-5≈condition-of-Vaikharī).
 
 ## The 0-Side [[Mahāmāyā]] Graph View
 
@@ -219,7 +271,7 @@ Build-facing affordances:
 
 ## §M0'-1 Prior-Ground Boundary Delta
 
-M0' absorbs the prior-ground clarification only as graph-surface law: [[M0]] is the Anuttara `0/1` witness/source ground; [[M1]] is where `0/1 + 1/0 = 1/1 = 100%` is defined as the `+1` parent of the α-quaternionic spine. Any M0' teaching, inspector, route, or graph badge that mentions `137 = 64 + 72 + 1` must keep that distinction visible and route the parent-coupling detail to M1'/M2'/M3'. This is a boundary against earlier shorthand that implied an "M0 parent witness-axis"; M0' carries witness-ground, not parent ownership.
+M0' absorbs the prior-ground clarification only as graph-surface law: [[M0]] is the Anuttara `0/1` witness/source ground; [[M1]] is where `0/1 + 1/0 = 1/1 = 100%` is defined as the `+1` parent of the α-quaternionic spine. Any M0' teaching, inspector, route, or graph badge that mentions `137 = 64 + 72 + 1` must keep that distinction visible and route the parent-coupling detail to M1'/M2'/M3'. This is a boundary against the earlier shorthand that seated the parent (and its witnessing axis) at the prior ground; M0' carries witness-ground, not parent ownership (DR-M1-1, swept 2026-07-07).
 
 ## §M0'-2 Inferential-Language Delta
 

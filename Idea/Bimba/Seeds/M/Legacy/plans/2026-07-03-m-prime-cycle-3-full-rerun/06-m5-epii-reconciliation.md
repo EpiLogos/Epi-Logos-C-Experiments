@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 06). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 06) — build/verify HERE, never epi-theia:** CARRIER: M5' EBM observatory (72-grid, Klein-V4 tritone squares, Logos Atelier) in pratibimba-app. SUBSTRATE: epii-autoresearch-core resonance_ebm + portal-core. §2 track 06/26.
+
 1. **T6.1 — Register `s5'.gnostic.*` over production epi-gnostic — EXPANDED to ONE substrate layer**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

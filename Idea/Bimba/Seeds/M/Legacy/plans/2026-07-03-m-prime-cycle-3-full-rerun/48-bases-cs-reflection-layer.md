@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 48). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 48) — build/verify HERE, never epi-theia:** SUBSTRATE — Bases/CS reflection layer (C-ladder CT=C1' write-form -> MOC=C4 -> Base=C5/CS read-only -> Mobius to C0; s1'.base.ensure, s2.graph.list_by_filter, BaseViewConfig/BasesRecord). CARRIER: a coordinate-keyed query-view pane (table/cards/list) over the existing GatewayClient. §2 track 48.
+
 1. **T48.1 — `.base` artifact class + the CS/Pratibimba framing law *(L1; canon/contract + bimba-vault-validate)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md` — Tranche 48.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

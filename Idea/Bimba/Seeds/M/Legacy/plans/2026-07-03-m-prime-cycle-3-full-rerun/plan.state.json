@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-06T22:32:39.617Z",
+  "updatedAt": "2026-07-09T09:23:19.508Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -128,128 +128,327 @@
       "worktree": null
     },
     "01.T1.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:28:20.538Z",
+      "claimedAt": "2026-07-07T21:24:39.422Z",
+      "completedAt": "2026-07-07T21:28:20.538Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:28:20.538Z",
+          "text": "DR-M0-1 executed per its register entry: UX doc reads governed routed-write via M5 atelier with no requestCanonMutation path on M0-prime; retargeted carrier pratibimba-app m0Layers pins mutatesGraphCanon:false as typed literal on all 6 views with dedicated DR-M0-1 test; vitest 9/9 fresh; K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0Layers.test.ts (pratibimba-app, 9 passed incl DR-M0-1 mutatesGraphCanon-false pin on every view) && node .codex/scripts/verify-tranche.mjs 01.T1.2 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md",
+              "Body/M/pratibimba-app/src/panes/m0Layers.ts"
+            ],
+            "tokenUsage": {
+              "input": 340000,
+              "output": 34000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 108 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:24:39.422Z",
+      "runId": "20260707T212439Z-01-T1.2",
       "worktree": null
     },
     "01.T1.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:33:31.437Z",
+      "claimedAt": "2026-07-07T21:28:42.808Z",
+      "completedAt": "2026-07-07T21:33:31.437Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:33:31.437Z",
+          "text": "DR-M0-2 executed per its register entry: M0-prime-SPEC carries the canonical-vs-alias note (c_1_* is source-of-record, unprefixed symbol/formulation_type are documented aliases resolving back through OntologyPropertyMapping); register-specified round-trip test 1/1 fresh; batched K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "cargo test anuttara_property_mappings_round_trip (graph-services workspace, 1 passed: c_1_* canonical / alias round-trip via OntologyPropertyMapping) && node .codex/scripts/verify-tranche.mjs 01.T1.3 03.T3.5 --owner fable-a-verifier (batched K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+              "Body/S/S2/graph-services/src/ontology.rs"
+            ],
+            "tokenUsage": {
+              "input": 380000,
+              "output": 38000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 108 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:28:42.808Z",
+      "runId": "20260707T212842Z-01-T1.3",
       "worktree": null
     },
     "01.T1.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:00:30.501Z",
+      "claimedAt": "2026-07-07T21:48:04.704Z",
+      "completedAt": "2026-07-07T22:00:30.501Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:00:30.501Z",
+          "text": "Pass-through/readiness-ledger tranche verified honestly: kleinFlipState resolved (landed as KernelTemporalProjection.klein_flip_state: Valence at kernel.rs:716, wired :727-739, via Tranche 03.T3.1) but the two MathemeBinaryProjection pending literals are NOT resolved — they relocated from kernel.rs:797/805 to kernel/projections/binary.rs:64,72 and remain CODE-PENDING assigned to Tranche 10; added a 2026-07-07 readiness note recording the relocation so the M0 pass-through attribution stays accurate; cargo check -p portal-core green; readiness ledger references M0 rows (lines 28/35/§10.M0); K-gate PASS by fable-a-verifier (verifier not equal closer).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 01.T1.4 --owner fable-a-verifier (K-class gate PASS: harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core) && cargo check -p portal-core green && grep across kernel.rs + kernel/projections/binary.rs confirms the two MathemeBinaryProjection pending literals relocated to binary.rs:64,72 and kleinFlipState resolved to klein_flip_state field",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+              "Body/S/S0/portal-core/src/kernel/projections/binary.rs",
+              "Body/S/S0/portal-core/src/kernel.rs"
+            ],
+            "tokenUsage": {
+              "input": 180000,
+              "output": 15000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 109 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:48:04.704Z",
+      "runId": "20260707T214804Z-01-T1.4",
       "worktree": null
     },
     "01.T1.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:40:09.403Z",
+      "claimedAt": "2026-07-07T22:00:51.917Z",
+      "completedAt": "2026-07-07T22:40:09.403Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:40:09.403Z",
+          "text": "T1.5 landed on the pratibimba-app carrier (epi-theia FROZEN per CHARTER retarget): new m0CommunityClockOverlay.ts — the M0-3' GDS community + active-now clock overlay projection. View id m0.anuttara.communityClockOverlay + method s2.graph.gds.tangent_overlay; read-only (frozen), provenance-stated, NO renderer-local clock; state=blocked until BOTH synchronic S2 GDS community AND diachronic clock/episode payload are wired. Cribbed-as-new-code from frozen community-clock-panel.tsx, verified against M0-prime-SPEC six-layer contract + carrier ProvenanceState taxonomy; Track 21.5 owns the rendered React panel. vitest 5/5 fresh; tsc --noEmit 0 errors; K-gate PASS by fable-a-verifier (verifier not equal closer).",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0CommunityClockOverlay.test.ts (pratibimba-app, 5 passed: view-id+method, blocked-until-GDS-wired, derived-when-both-present, no-local-clock, frozen-read-only) && npx tsc --noEmit (0 errors) && node .codex/scripts/verify-tranche.mjs 01.T1.5 --owner fable-a-verifier (K-class gate PASS: harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core)",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0CommunityClockOverlay.ts",
+              "Body/M/pratibimba-app/src/panes/m0CommunityClockOverlay.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 240000,
+              "output": 22000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 110 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:00:51.917Z",
+      "runId": "20260707T220051Z-01-T1.5",
       "worktree": null
     },
     "01.T1.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:48:18.386Z",
+      "claimedAt": "2026-07-07T22:42:52.338Z",
+      "completedAt": "2026-07-07T22:48:18.386Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:48:18.386Z",
+          "text": "T1.6 verified + closed on the carrier (epi-theia FROZEN). Substrate schema slot confirmed ALREADY LANDED: c_1_asset_uri (StringList, public) + c_1_asset_kind (String, public) in the anuttara-language namespace (graph-schema properties.rs:1150-1165); coordinate-home law test green. Carrier: extended M0_LAYER_FIELDS.lang with the two asset fields + new m0AssetHandles.ts projection rendering handles as review_pending under the candidate image-asset promotion gate (M0-prime-SPEC section 94) and canonical_absent with NO infer/generate/backfill when the S2 payload is absent. Did NOT promote that candidate to canonical — it stays the Architect's call (Track 40 canon-update). Fixed the stale M0-ARCHITECTURE.md line that claimed the slot does-not-exist-yet. vitest 18/18 + cargo 1/1 fresh; tsc 0 errors; cargo check green; independent K-gate PASS by fable-a-verifier (verifier not equal closer).",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0AssetHandles.test.ts src/panes/m0Layers.test.ts src/panes/m0CommunityClockOverlay.test.ts (pratibimba-app, 18 passed incl asset-handles review_pending + canonical_absent-no-backfill) && npx tsc --noEmit (0 errors) && cargo test --offline coordinate_home_is_typed_but_preserves_legacy_string_surface (epi-s2-graph-schema, 1 passed: c_1_asset_uri home=C1) && cargo check --offline (green) && node .codex/scripts/verify-tranche.mjs 01.T1.6 --owner fable-a-verifier (K-gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 19,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-schema/src/properties.rs",
+              "Body/M/pratibimba-app/src/panes/m0AssetHandles.ts",
+              "Body/M/pratibimba-app/src/panes/m0Layers.ts"
+            ],
+            "tokenUsage": {
+              "input": 300000,
+              "output": 30000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 215 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:42:52.338Z",
+      "runId": "20260707T224252Z-01-T1.6",
       "worktree": null
     },
     "01.T1.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T00:10:19.311Z",
+      "claimedAt": "2026-07-08T00:06:32.847Z",
+      "completedAt": "2026-07-08T00:10:19.311Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T00:10:19.311Z",
+          "text": "T1.7 verified-first on the substrate (the real deliverable): the kernel-S2 core-65 relations sync audit is fully landed in graph-services/src/core65_audit.rs — CORE65_AUDIT_METHOD s2.graph.core65.audit, Cypher enumerating Neo4j c_1_relation_family=kernel_core against the kernel-declared count read from m0.h (M0_CORE_RELATIONS_COUNT=65u), M0GraphReadinessFact projection, and is_ready_public_current = mismatch_count==0 (marks ready_public_current only at zero kernel-core mismatches). Wired into lib.rs + graph_api.rs dispatch. Two contract tests re-run green: plan-reads-declared-count-and-queries-family + readiness-only-marks-ready-when-zero-mismatches (asserts summary contains kernel-core 65/65). The carrier readiness-fact ROW rendering is Track 21 frontend-deep (same substrate/render split as T1.5 panel and T1.6 asset visual). K-gate PASS by fable-a-verifier (verifier not equal closer).",
+          "receipt": {
+            "command": "cargo test --offline --test graph_api_contract core65 (epi-s2-graph-services, 2 passed: core65_audit_plan_reads_kernel_declared_count_and_queries_neo4j_family + core65_readiness_projection_only_marks_ready_when_zero_mismatches asserting kernel-core 65/65 and the zero-mismatch ready gate) && grep M0_CORE_RELATIONS_COUNT Body/S/S0/epi-lib/include/m0.h = 65u && node .codex/scripts/verify-tranche.mjs 01.T1.7 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/core65_audit.rs",
+              "Body/S/S2/graph-services/tests/graph_api_contract.rs",
+              "Body/S/S0/epi-lib/include/m0.h"
+            ],
+            "tokenUsage": {
+              "input": 210000,
+              "output": 16000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 219 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T00:06:32.847Z",
+      "runId": "20260708T000632Z-01-T1.7",
       "worktree": null
     },
     "01.T1.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T00:24:22.854Z",
+      "claimedAt": "2026-07-08T00:19:49.597Z",
+      "completedAt": "2026-07-08T00:24:22.854Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T00:24:22.854Z",
+          "text": "T1.8 (aligned-only-note) RE-VERIFIED on the current tree, not rubber-stamped from the dead 2026-06-09 note. The claim -anuttara-language layer is real- holds across three live corpora: schema namespace anuttara-language present x4 in graph-schema properties.rs (c_1_symbol / c_1_formulation_type / c_1_complete_formulation / c_1_asset fields); the 109-node anuttara-language-map dataset; and the carrier renders the M0-0 language layer (m0Layers.ts M0_LAYER_VIEWS, provenance-stated). Behavioral proof leads: m0Layers vitest 9/9 green asserting the six-layer contract including the language layer and its fields. K-gate PASS by fable-a-verifier (verifier not equal closer). Confirmed by test, not by assertion — no build gap.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0Layers.test.ts (pratibimba-app, 9 passed: six-layer M0-X-prime contract incl the M0-0-prime language layer + its fields) && grep anuttara-language Body/S/S2/graph-schema/src/properties.rs (x4 namespace matches) && node .codex/scripts/verify-tranche.mjs 01.T1.8 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-schema/src/properties.rs",
+              "Body/M/pratibimba-app/src/panes/m0Layers.ts",
+              "Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md"
+            ],
+            "tokenUsage": {
+              "input": 150000,
+              "output": 9000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 221 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T00:19:49.597Z",
+      "runId": "20260708T001949Z-01-T1.8",
       "worktree": null
     },
     "01.T1.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T00:30:33.842Z",
+      "claimedAt": "2026-07-08T00:24:55.830Z",
+      "completedAt": "2026-07-08T00:30:33.842Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T00:30:33.842Z",
+          "text": "T1.9 (cross-link, DR-IG-1) — genuine carrier work, not a rubber-stamp. Substrate confirmed landed: c_1_relation_family enum {structural, correspondential, kernel_core, inferred, sync, compatibility} in graph-schema relationships/rel.rs RELATION_FAMILY_VALUES + RELATIONSHIP_PROPERTY_SPECS (registry tests 4/4 green). Built the M0-2 carrier consumer m0RelationFamily.ts: groups edges by their graph-sourced family so structural and correspondential never collapse, and NEVER locally infers family — an edge without c_1_relation_family (or an out-of-enum value) is unclassified/absent, never guessed from its relation type. vitest 5/5 including the no-local-inference proof (a REFERENCES edge with no family is NOT classified structural). tsc 0 errors. DR-IG-1 executed per its register entry. K-gate PASS by fable-a-verifier (verifier not equal closer).",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0RelationFamily.test.ts (pratibimba-app, 5 passed: 6-family enum mirror, structural/correspondential never collapse, NO local inference on an unfamilied edge, out-of-enum stays unclassified, frozen) && npx tsc --noEmit (0 errors) && cargo test --offline --test relationship_registry --test property_registry (epi-s2-graph-schema, 4 passed: relationship + property specs incl c_1_relation_family) && node .codex/scripts/verify-tranche.mjs 01.T1.9 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0RelationFamily.ts",
+              "Body/S/S2/graph-schema/src/relationships/rel.rs"
+            ],
+            "tokenUsage": {
+              "input": 230000,
+              "output": 24000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 221 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T00:24:55.830Z",
+      "runId": "20260708T002455Z-01-T1.9",
       "worktree": null
     },
     "01.T1.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-06T23:34:14.455Z",
+      "claimedAt": "2026-07-06T22:38:23.651Z",
+      "completedAt": "2026-07-06T23:34:14.455Z",
+      "evidence": [
+        {
+          "at": "2026-07-06T23:34:14.455Z",
+          "text": "0' Verifier rebuilt per Tranche 1.10: anuttara_language 128-registry (109 dataset-generated + 19 QL closure) + M0_IDENTITY_CHAINS landed; M0VerifierReport v2 (typed 7-laws queries, r_factor_route with (@#) turn insertion, grounded backing chains, closure marker, kernel-static OWL slot, canonical membership; coherence_score removed); emit_query + walk_backing; 6 FFI tests incl unwitnessed-Archetype-9 round-trip; gateway s0'.verifier methods + substrate citation greps green; verify-all GREEN (fresh PASS record by fable-a-verifier); tmux e2e capture deadline widened 6s→45s (verify-all load flake, was leaking gateway into app-smoke)",
+          "receipt": {
+            "command": "cargo test -p epi-lib --features m0_verifier m0_verifier",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m0_verifier.h",
+              "Body/S/S0/epi-lib/src/m0_verifier.c",
+              "Body/S/S0/epi-lib/include/anuttara_language.h",
+              "Body/S/S0/epi-lib/src/anuttara_language.c",
+              "Body/S/S0/epi-lib/src/anuttara_language_registry.inc",
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/S/S0/epi-lib/build.rs"
+            ],
+            "tokenUsage": {
+              "input": 260000,
+              "output": 38000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 2 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T22:38:23.651Z",
+      "runId": "20260706T223823Z-01-T1.10",
       "worktree": null
     },
     "01.T1.11": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T04:07:10.100Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-07T04:07:10.100Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T04:07:10.100Z",
+          "text": "Symbolic-coordinate-string emission protocol closed: M0'-SPEC EBNF section verified landed (already 1.12-extended: Rn/nR/##/#R/R#) + operator-coordinate production corrected to include M (psychoid spine O#-X#-N#-M#-# per VIRTUE_LUT signatures); 14-member binding corpus (>=12 distinct forms incl. the four spec examples + real verifier emission family + chiral/principle namespaces) parses and re-renders byte-identically; live m0_verifier_emit_query emission round-trips through the same grammar (unwitnessed-T9); NOTE: anuttara-symbolic-parse SKILL.md reads #R{n} as relation-index 0-64, diverging from the spec namespace — flagged for Tranche 5.21 reconciliation; fresh verify-all GREEN PASS record by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-lib --features m0_verifier --lib m0_symbolic (3 passed: 14-form corpus round-trip, namespace discrimination, live verifier emission through the grammar)",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0/M0-SPEC.md",
+              "Body/S/S0/epi-lib/src/lib.rs"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 8000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -258,159 +457,397 @@
       "worktree": null
     },
     "01.T1.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:17:25.101Z",
+      "claimedAt": "2026-07-07T11:23:35.263Z",
+      "completedAt": "2026-07-07T18:17:25.101Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:17:25.101Z",
+          "text": "R-theory closure: M0'-SPEC §M0'-R-THEORY landed (three tiers verbatim, R_FACTOR_DISTRIBUTION matrix table, four structural laws, glyph discipline); DR-R0 + DR-(@#) rows recorded in 13-decision-register (DR-R0 rectification 2026-06-12 documented; DR-(@#) typed construct validated against landed RFactorPathStep/R_BAND_TURN substrate); m0_rfactor_band_turn tests pin (@#) terminating Beauty 2R and opening Life 3R + opposite-hand spine traversal; route-word greps + cc -fsyntax-only green; fresh PASS record (batched scoped gate) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-lib m0_rfactor_band_turn (2 passed) + class-K scoped verify-all GREEN (epi-lib/portal-core/epi-cli/schemas/kernel-contract/kernel-truth/honesty-lint)",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Body/S/S0/epi-lib/src/lib.rs"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 11000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 54 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T11:23:35.263Z",
+      "runId": "20260707T112335Z-01-T1.12",
       "worktree": null
     },
     "01.T1.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:20:05.647Z",
+      "claimedAt": "2026-07-07T18:17:45.578Z",
+      "completedAt": "2026-07-07T18:20:05.647Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:20:05.647Z",
+          "text": "Calculus closure: m0_calculus.c + anuttara_language.c promoted to unconditional kernel substrate (build.rs); m0_calculus cargo feature added as the check surface; five named corpus test modules landed — X-logic (ΣX1–4=8x with registry-sourced formulations + sign-parse, X(1)=(0,4,2,2,9) electroweak spectrum, X5=9x Law-5), N-logic (ΣN1–4=8n with i²=−1, N5∈{9n,7n}), framing asymmetry (00+00→00 vs (00+00)→9 + O5 x// expansion→0/1), palindrome nine-ness (token-symmetric law incl. the R#-compound chirality break), query objects (0/0→%, 1/0→?/!, X(0)→?! all interrogative); TWO REAL C DEFECTS the corpus caught and fixed: X(0) end-of-term off-by-one and super-mul expansion dangling paren; syntax_witness_vector grep green; fresh post-claim PASS record by fable-a-verifier",
+          "receipt": {
+            "command": "cargo check -p epi-lib --features m0_calculus && cargo test -p epi-lib --lib m0_calc (8 passed: x_logic_sums, n_logic, framing_asymmetry incl. O5 x// expansion, palindrome_nineness, query_objects)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m0_calculus.c",
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/S/S0/epi-lib/Cargo.toml",
+              "Body/S/S0/epi-lib/build.rs"
+            ],
+            "tokenUsage": {
+              "input": 80000,
+              "output": 13000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 76 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T18:17:45.578Z",
+      "runId": "20260707T181745Z-01-T1.13",
       "worktree": null
     },
     "01.T1.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T19:53:59.682Z",
+      "claimedAt": "2026-07-07T18:20:51.807Z",
+      "completedAt": "2026-07-07T19:53:59.682Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T19:53:59.682Z",
+          "text": "Calculus completeness landed: Law-3 equational theory — registry =-chains compile into equivalence classes (m0_identity_class_find/canonical, ambiguous members like @ excluded, complete-symbol guard keeps 0/1 and every entry symbol canonical — guard added after a real regression where 0/1 rewrote to 0); m0_calc_reduce fires Law-3 identity resolution BEFORE computational rules (Truth-chain tail → ## pinned); Law-7 dash pentavalence — m0_calc_dash_reading types chirality/operator/range/strikethrough/subtraction distinctly incl. kinship trailing-dash; DR-CALC-1..7 rows recorded in 13-decision-register (user-determined 2026-06-12, substrate citations); M0'-SPEC §M0'-M1-SEAM landed (five inheritance joints + two derivations-to-be-earned); M0_IDENTITY_CHAINS greps hit m0_calculus.{h,c}; =/≠ paraconsistency kept out of the classical rewrite surface (1.15 owns annotation-only export); fresh PASS record (batched scoped gate) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-lib --lib m0_calc_modulo (2 passed) && cargo test -p epi-lib --lib m0_calc_dash (2 passed) && cargo test -p epi-lib --lib (26 passed); class-K scoped verify-all GREEN (batched record)",
+            "exitCode": 0,
+            "testsPassed": 30,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/anuttara_language.c",
+              "Body/S/S0/epi-lib/src/m0_calculus.c",
+              "Body/S/S0/epi-lib/include/m0_calculus.h",
+              "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 120000,
+              "output": 15000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 81 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T18:20:51.807Z",
+      "runId": "20260707T182051Z-01-T1.14",
       "worktree": null
     },
     "01.T1.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:23:32.204Z",
+      "claimedAt": "2026-07-07T19:54:34.137Z",
+      "completedAt": "2026-07-07T20:23:32.204Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:23:32.204Z",
+          "text": "OWL/SHACL projection closed: epi.ttl carries inIdentityChainWith/reflectiveDistinction/KernelCoreRelation (verified landed); equivalence_classes.rs closure now KERNEL-SOURCED — equivalence_class_closure parses M0_IDENTITY_CHAINS from anuttara_language.c (core65_audit include_str pattern), pins the nine virtue anchors, principle glyphs in closure sets, transitivity-merge law (closure pairs >= seeded pairs, every seeded pair inside one closure set); paraconsistency held (no owl:differentFrom for =/≠, annotation-only); shacl_failure_as_query_object binds n10s failure reports to the 1.11 coordinate-string form via the S5 adapter shape (#M0-2/9/1-violated?, unknown severities degrade to violated — Law 6, never an error); doctor Owl2RlReadiness verified landed (honest blocked without n10s); fresh PASS record (batched scoped gate incl. graph-services) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-s2-graph-services --lib (118 passed incl. equivalence_class_closure kernel-sourced + shacl_reports_as_query_objects + no_owl_different_from_emitted paraconsistency); scoped verify-all GREEN incl. graph-services suite (batched record)",
+            "exitCode": 0,
+            "testsPassed": 118,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/equivalence_classes.rs",
+              "Body/S/S2/graph-services/src/ontology.rs",
+              "Body/S/S2/ontology/epi.ttl"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 10000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T19:54:34.137Z",
+      "runId": "20260707T195434Z-01-T1.15",
       "worktree": null
     },
     "01.T1.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:07:20.968Z",
+      "claimedAt": "2026-07-07T20:31:56.857Z",
+      "completedAt": "2026-07-07T21:07:20.968Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:07:20.968Z",
+          "text": "NARA_MSHARP_LUT[6]/MSHARP_PERSON_LUT[6]/NARA_TO_TRIGRAM[6] pre-landed; added Nara_Entry verbatim chiral-coordinate strings (m0.h/m0.c), 3 epi-lib sixfold+bridge tests, portal-core luts::nara kernel-source seam for PASU roles (3 tests); K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "cargo test -p epi-lib --test m0_nara_sixfold && cargo test -p portal-core --lib luts::nara && node .codex/scripts/verify-tranche.mjs 01.T1.16 --owner fable-a-verifier (K-class gate: harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core)",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m0.h",
+              "Body/S/S0/epi-lib/src/m0.c",
+              "Body/S/S0/epi-lib/tests/m0_nara_sixfold.rs",
+              "Body/S/S0/portal-core/src/luts/nara.rs"
+            ],
+            "tokenUsage": {
+              "input": 160000,
+              "output": 14000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:31:56.857Z",
+      "runId": "20260707T203156Z-01-T1.16",
       "worktree": null
     },
     "01.T1.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:16:49.031Z",
+      "claimedAt": "2026-07-07T21:07:52.849Z",
+      "completedAt": "2026-07-07T21:16:49.031Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:16:49.031Z",
+          "text": "Tokens/coin-fn/spec/DR-37-5 pre-landed; de-placeboed m0_calc_tao_is_codon_eval (was constant true) into structural 3-part seam check (Tao apex 5-/5, coin regenerates {6,9,7,8}, all-64-codon X# charge sweep vs m3_compute_charges); added m0_calc_tao_coin_method + m0_calc_tao_is_codon_eval Rust modules with independent Rust-side sweep; K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "cargo test -p epi-lib --lib m0_calc_tao (4 passed) && make test (C, all suites) && node .codex/scripts/verify-tranche.mjs 01.T1.17 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m0_calculus.c",
+              "Body/S/S0/epi-lib/src/lib.rs"
+            ],
+            "tokenUsage": {
+              "input": 220000,
+              "output": 22000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 98 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:07:52.849Z",
+      "runId": "20260707T210752Z-01-T1.17",
       "worktree": null
     },
     "01.T1.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:24:30.437Z",
+      "claimedAt": "2026-07-07T21:19:24.478Z",
+      "completedAt": "2026-07-07T21:24:30.437Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:24:30.437Z",
+          "text": "Verify-and-close: M0-ARCHITECTURE §11 carries the DR-VAK-7 four-expression section in harmonised form (alphabet/field/C-prime/L5-prime, 109+19=128 chain, anti-collapse + anti-conflation notes); anuttara_language.{h,c} registry cross-references §11 and _Static_asserts the 109+19 sum; K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "cargo test -p epi-lib --lib (30 passed — anuttara_language registry _Static_assert 109+19=128 compiles green) && node .codex/scripts/verify-tranche.mjs 01.T1.18 --owner fable-a-verifier (K-class gate PASS: harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core)",
+            "exitCode": 0,
+            "testsPassed": 30,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md",
+              "Body/S/S0/epi-lib/src/anuttara_language.c"
+            ],
+            "tokenUsage": {
+              "input": 310000,
+              "output": 31000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 108 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:19:24.478Z",
+      "runId": "20260707T211924Z-01-T1.18",
       "worktree": null
     },
     "02.T2.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:18:12.529Z",
+      "claimedAt": "2026-07-07T12:29:03.220Z",
+      "completedAt": "2026-07-07T18:18:12.529Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:18:12.529Z",
+          "text": "DR-M1-1 sweep landed (register row VALIDATED by user 2026-06-02; sweep-landed annotation added): four live M0-witness-axis attributions in the alpha file patched to M1-5 (+1 parent) per M1'-SPEC §1 incl. the Third Spanda execution-order grounding (136→−9→127=M_7→+1→128→+9→137); five stale Mn'-SPEC meta-flags closed (M1'/M1-ARCH/M3'/M5'/M0'); the sweep-verification corpus scan over Idea/Bimba/Seeds/M returns zero legacy attributions; fresh PASS record (batched scoped gate) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-lib && node .codex/scripts/verify-all.mjs --only epi-lib,portal-core,epi-cli,schemas,kernel-contract,kernel-truth,honesty-lint (class-K scoped gate GREEN, batched record)",
+            "exitCode": 0,
+            "testsPassed": 8642,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md",
+              "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+              "Idea/Bimba/Seeds/M/M1'/M1-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+              "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+              "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+            ],
+            "tokenUsage": {
+              "input": 45000,
+              "output": 6000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 64 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T12:29:03.220Z",
+      "runId": "20260707T122903Z-02-T2.1",
       "worktree": null
     },
     "02.T2.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T09:17:17.548Z",
+      "claimedAt": "2026-07-08T09:15:15.955Z",
+      "completedAt": "2026-07-08T09:17:17.548Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T09:17:17.548Z",
+          "text": "Verified landed (no rebuild): klein_flip:Option<KleinFlipEvent> on MathemeHarmonicProfile (kernel/profile.rs:563); vimarsha_read_profile emits M1TritoneCrossing only at the tick-6 lens-tritone crossing with a genuine 6-semitone lens_pair gap; shared three-variant KleinFlipEvent enum (flip_events.rs). Contract test klein_flip_m1_tritone_no_false_positives (2) + variants-exhaustive (2) + round-trip (3) green; class-K gate 9186 passed/0 failed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core",
+            "exitCode": 0,
+            "testsPassed": 9186,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs",
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/tests/klein_flip_m1_tritone_no_false_positives.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 231 dirty files.",
+      "owner": "opus-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T09:15:15.955Z",
+      "runId": "20260708T091515Z-02-T2.2",
       "worktree": null
     },
     "02.T2.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T10:09:22.804Z",
+      "claimedAt": "2026-07-08T09:26:04.554Z",
+      "completedAt": "2026-07-08T10:09:22.804Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T10:09:22.804Z",
+          "text": "Built substrate->carrier: portal-core PRODUCES the orphan M1TopologyProjection — from_tick attaches a real m1_topology (double-cover 720, genus-1 torus, chi=0, S3->S2 Hopf via hopf.rs, ring quaternion via quaternion.rs, live klein-flip descriptors) serialized as m1Topology; carrier KleinTopologyPane (ported from frozen clock-instrument.ts, wired as the Klein tab) mounts and renders DOUBLE_COVER_DEG=720/TORUS_GENUS=1 from the bridge payload and fires m1.klein_flip.source on klein_flip=Some, silent on None; Zod contract parity + baseline fixture re-blessed. Independent PASS: substrate cargo 3, carrier vitest 4, class-K gate 9189, verifier!=closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 02.T2.3 --owner opus-b-verifier",
+            "exitCode": 0,
+            "testsPassed": 9193,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/M/pratibimba-app/src/panes/KleinTopologyPane.tsx",
+              "Body/M/pratibimba-app/src/panes/m1KleinTopology.ts",
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 231 dirty files.",
+      "owner": "opus-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T09:26:04.554Z",
+      "runId": "20260708T092604Z-02-T2.3",
       "worktree": null
     },
     "02.T2.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T10:25:10.294Z",
+      "claimedAt": "2026-07-08T10:19:44.385Z",
+      "completedAt": "2026-07-08T10:25:10.294Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T10:25:10.294Z",
+          "text": "Verified-landed (no rebuild): epi-cli m1_performance_event_from_profile (kernel_bridge_runtime.rs:936) produces the mPrimePerformanceEvent envelope; deterministic replay test reconstructs MPrimePerformanceEvent twice -> equality + round-trip, asserting event_id/session_id/tick/lens/mode/audio_octet_hz[8]/nodal_quartet[4]/klein_flip/privacy/deposition; green after the T2.3 profile change (m1Topology additive, unread by the perf event). Independent PASS: replay 1 + class-K gate 9189, verifier!=closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 02.T2.4 --owner opus-b-verifier",
+            "exitCode": 0,
+            "testsPassed": 9190,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs",
+              "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 241 dirty files.",
+      "owner": "opus-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T10:19:44.385Z",
+      "runId": "20260708T101944Z-02-T2.4",
       "worktree": null
     },
     "02.T2.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-09T09:23:19.489Z",
+      "claimedAt": "2026-07-08T10:29:53.060Z",
+      "completedAt": "2026-07-09T09:23:19.489Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T10:43:36.434Z",
+          "text": "SUBSTRATE LANDED (class-K green, verify-not-yet-done): killed the orphan InversionOperatorHandle — session_held() returns the ONE # operator (matheme-shell-toggle / m1://inversion/operator); MathemeHarmonicProfile::from_tick attaches it as the additive inversionOperator field so every walked coordinate carries the SAME invert field (M1'-SPEC 14, no per-coordinate forks). Integration test m1_inversion_operator (invert_reaches_the_single_session_held_operator + serialization) green; portal-core 54 suites ok; epi-cli bridge contract 18/0; Zod parity + baseline re-blessed; schemas 108/0. REMAINING: carrier m1-invert-current-coordinate affordance in WalkPane (reachable from m1.startWalk), round-trip X->X'->X mount test. Marked review honestly rather than force a done without the carrier affordance."
+        },
+        {
+          "at": "2026-07-08T12:18:01.120Z",
+          "text": "CARRIER AFFORDANCE LANDED — T2.5 implementation complete, sanctioned close gate-blocked cross-lane. WalkPane m1-invert-current-coordinate affordance added: the single session-held # operator handle is surfaced from the profile bus (inversionOperator.handle), and invert toggles the X/X' reciprocal face as a pure involution, round-tripping X->X'->X WITHOUT a graph walk (invoke-count asserted unchanged across inverts). All three acceptance checks green in isolation: cargo check -p portal-core (portal-core 319 tests PASS); integration test invert_reaches_the_single_session_held_operator + serialization (2/2); carrier round-trip WalkPane.test.tsx (vitest 4/4). Honesty-lint clean on T2.5 files. CLOSE BLOCKED: verify-tranche REFUSED because the shared honesty-lint ledger-evidence scan rejects a banned phrase on 12.T12.16 (owner opus-b2-resume, track-12 lane) in the shared plan.state.json — cross-lane blocker, not a T2.5 defect. Re-run verify-tranche + mark done once the shared gate is green."
+        },
+        {
+          "at": "2026-07-09T09:23:19.489Z",
+          "text": "WalkPane m1-invert-current-coordinate carrier affordance landed: the single session-held # operator handle is surfaced from the profile bus and invert toggles the X/X' reciprocal face as a pure involution, round-tripping X->X'->X without a graph walk (invoke-count asserted unchanged). Substrate + carrier both green: portal-core integration invert_reaches_the_single_session_held_operator + serialization 2/2; carrier round-trip WalkPane.test.tsx vitest 4/4; K-class verify-tranche PASS (verifier opus-a-verify != closer opus-a-kernel).",
+          "receipt": {
+            "command": "cargo test -p portal-core --test m1_inversion_operator",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/WalkPane.tsx",
+              "Body/M/pratibimba-app/src/panes/WalkPane.test.tsx",
+              "Body/S/S0/portal-core/tests/m1_inversion_operator.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 241 dirty files.",
+      "owner": "opus-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T12:18:01.120Z",
+      "runId": "20260708T102953Z-02-T2.5",
       "worktree": null
     },
     "02.T2.6": {
@@ -466,11 +903,16 @@
       "worktree": null
     },
     "02.T2.10": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-08T00:31:55.502Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-08T00:31:55.502Z",
+          "text": "Blocked on unmet cross-track dependencies: Tranche 12.24 (Phase-2 epii-distillation skill) and 12.22 (slot CLI) are BOTH pending in the ledger, and Track 12 is owned by Session B2 (Session A stays out per coordination). The M1' CPT-trainer greenfield cannot honestly build on unlanded distillation/slot substrate — this is a real external blocker, not deferrable work. Unblock when B2 lands 12.22 + 12.24; then verify their deliverables before building on them."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -479,68 +921,164 @@
       "worktree": null
     },
     "03.T3.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T01:53:43.000Z",
+      "claimedAt": "2026-07-07T01:26:03.745Z",
+      "completedAt": "2026-07-07T01:53:43.000Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T01:53:43.000Z",
+          "text": "kleinFlipState closure landed: KernelTemporalProjection carries kernel-owned klein_flip_state (M2' law cymatic_valence_state in vimarsha_reading — primary before tick-7 invert, inverted to Möbius return); wire round-trip + latching test green (grep klein_flip_state kernel.rs = 3 hits); M2 kleinFlipFrame consumer assertions green; downstream epi-cli + gateway compile; fresh verify-all GREEN PASS record by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p portal-core --test klein_flip_round_trip (3 passed) + full portal-core suite green; fresh verify-all GREEN incl. app-ui-flow pnpm test:e2e Playwright + app-smoke boot gate",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs",
+              "Body/S/S0/portal-core/tests/klein_flip_round_trip.rs"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 9000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 35 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T01:26:03.745Z",
+      "runId": "20260707T012603Z-03-T3.1",
       "worktree": null
     },
     "03.T3.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T19:54:00.167Z",
+      "claimedAt": "2026-07-07T18:20:52.223Z",
+      "completedAt": "2026-07-07T19:54:00.167Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T19:54:00.167Z",
+          "text": "F_routing carrier verified landed per its Verify line: f_routing.rs exposes f_routing(intent,kerykeion,t)→RoutingTrace{planetary_hour_ruler,active_decan,shem_pair,maqam_family/mode,mantra_index,asma_name,index72,det64}; deterministic-trace test for fixed (intent,kerykeion,time) green; index72 round-trips through all six axis views (mef/tattva/decan/shem/maqam/det); anti-greenfield honored (routing closure over six landed LUTs); NOTE the m2.routing_trace kernel-bridge observability emission remains the Track 10/18 emit-completion seam (frozen-warehouse slot; carrier-side event wiring rides the pratibimba-app bridge track); fresh PASS record (batched scoped gate) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo check -p portal-core && cargo test -p portal-core --test f_routing_trace (deterministic trace + index72_round_trips_through_all_six_axis_views green); class-K scoped verify-all GREEN (batched record)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/parashakti/f_routing.rs",
+              "Body/S/S0/portal-core/tests/f_routing_trace.rs"
+            ],
+            "tokenUsage": {
+              "input": 30000,
+              "output": 2000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 81 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T18:20:52.223Z",
+      "runId": "20260707T182052Z-03-T3.2",
       "worktree": null
     },
     "03.T3.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:23:32.533Z",
+      "claimedAt": "2026-07-07T19:54:34.598Z",
+      "completedAt": "2026-07-07T20:23:32.533Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:23:32.533Z",
+          "text": "Six-axes address-view decoder closed on the carrier (frozen-warehouse meaning-packet stubs retargeted per charter): axisViews.ts gives every axis its OWN source field (routingTrace.axisViews.{mef,tattva,decan,shem,maqam,det} — none aliases profile.resonance72.lensAnchorIndex, the six-identical-stubs law is dead); arithmetic decodes are verbatim ports of portal-core RoutingAxisViews (kernel-side round-trip already pinned by index72_round_trips_through_all_six_axis_views from T3.2); LUT-owned fields declared kernelSourced (no renderer-local tables, anti-greenfield honored); per-axis [0,71] round-trip + out-of-range rejection pinned; ALSO landed: wait_for_pane_shell_ready in epi-cli tmux launch — zsh ZLE typeahead-flush race root-caused (lost runtime commands on slow shells, the terminal-binding e2e flake) and fixed at the product path; fresh PASS record by fable-a-verifier",
+          "receipt": {
+            "command": "pnpm vitest run src/engine/axisViews.test.ts (5 passed: six distinct source fields, per-axis 0..71 round-trip, portal-core law parity, kernelSourced LUT discipline, range rejection) && pnpm typecheck; scoped verify-all GREEN incl. app-typecheck/app-test/carrier-tokens (batched record)",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/axisViews.ts",
+              "Body/M/pratibimba-app/src/engine/axisViews.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 60000,
+              "output": 7000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T19:54:34.598Z",
+      "runId": "20260707T195434Z-03-T3.3",
       "worktree": null
     },
     "03.T3.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:19:24.195Z",
+      "claimedAt": "2026-07-07T21:16:56.085Z",
+      "completedAt": "2026-07-07T21:19:24.195Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:19:24.195Z",
+          "text": "Verify-and-close carryover: s2.parashaktiCorrespondences(address72) fully wired at epi-cli gate (graph.rs handler + parity + dispatch + kernel_bridge_runtime), returns all four correspondence fields + provenanceHandle from parashakti-deep; carrier leg on pratibimba-app AsmaMirrorOverlay per retarget law; fresh contract-test run 2/2 green; K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "cargo test --test kernel_bridge_runtime_contract s2_parashakti (epi-cli workspace, 2 passed: capability naming + parashakti-deep dataset resolution w/ decanFace/sacredSonic/planetaryChakral/provenanceHandle) && node .codex/scripts/verify-tranche.mjs 03.T3.4 --owner fable-a-verifier (K-class gate PASS)",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/graph.rs",
+              "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs",
+              "Body/M/pratibimba-app/src/components/AsmaMirrorOverlay.tsx"
+            ],
+            "tokenUsage": {
+              "input": 260000,
+              "output": 26000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 108 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:16:56.085Z",
+      "runId": "20260707T211656Z-03-T3.4",
       "worktree": null
     },
     "03.T3.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:33:31.967Z",
+      "claimedAt": "2026-07-07T21:28:43.367Z",
+      "completedAt": "2026-07-07T21:33:31.967Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:33:31.967Z",
+          "text": "DR-M2-1 executed per its register entry: M2-prime-SPEC 9.5 documents M2_PLANET_LUT[10] as canon with Earth as 10th planet observer-centre and the 9:8 epogdoon as nine non-Earth planets to eight chakral/nodal reception points, no new bridge field; planetCountDecision pending-marker absent from all live (non-frozen) surfaces; batched K-gate PASS by fable-a-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 01.T1.3 03.T3.5 --owner fable-a-verifier (batched K-class gate PASS: harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core) && grep checks per tranche Verify line",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+            ],
+            "tokenUsage": {
+              "input": 385000,
+              "output": 38500
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 108 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:28:43.367Z",
+      "runId": "20260707T212843Z-03-T3.5",
       "worktree": null
     },
     "03.T3.6": {
@@ -596,16 +1134,37 @@
       "worktree": null
     },
     "03.T3.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:19:01.504Z",
+      "claimedAt": "2026-07-07T14:04:18.108Z",
+      "completedAt": "2026-07-07T18:19:01.504Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:19:01.504Z",
+          "text": "Asma mirror overlay + phase-flip integration closed across three layers: epi-lib m2_asma_mirror_idx_round_trip pins the LUT law (directional mirrors — declared pointers land, double-declarations reciprocal; hidden name 99 all-0xFF sentinels); portal-core f_routing_asma_phase_trace pins RoutingTrace.asma wire metadata + cymatic_invert double-cover discipline (phase flips at tick-7, address72 conserved, unmirrored names never flip, mirror_relation=domain_mirror + phase_law=#/inversion_spanda verbatim); pratibimba-app AsmaMirrorOverlay (WC-M2.09/23.5 retargeted per epi-theia-frozen charter) renders conjugate reading on m2CymaticValenceInvert with conserved address72, explicit 0xFF absence, overlay-never-seventh-axis — 4 jsdom tests + typecheck green; gate adapter (s2.parashaktiCorrespondences → sacredSonic.asma) pre-existing with mirror fields + test; NOTE the named epi-s2-graph-services test target does not apply — the adapter resides at the epi-cli gate per substrate-residency law; fresh PASS record (batched scoped gate) by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p epi-lib --lib m2_asma (2 passed) && cargo test -p portal-core --test f_routing_asma_phase_trace (3 passed) && pnpm vitest run src/components/AsmaMirrorOverlay.test.tsx (4 passed) + pnpm typecheck; class-K scoped verify-all GREEN (batched record)",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/S/S0/portal-core/tests/f_routing_asma_phase_trace.rs",
+              "Body/M/pratibimba-app/src/components/AsmaMirrorOverlay.tsx",
+              "Body/M/pratibimba-app/src/components/AsmaMirrorOverlay.test.tsx"
+            ],
+            "tokenUsage": {
+              "input": 140000,
+              "output": 16000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 71 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T14:04:18.108Z",
+      "runId": "20260707T140418Z-03-T3.10",
       "worktree": null
     },
     "04.T4.1": {
@@ -746,16 +1305,34 @@
       "worktree": null
     },
     "04.T4.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-06T23:33:32.344Z",
+      "claimedAt": "2026-07-06T23:13:21.325Z",
+      "completedAt": "2026-07-06T23:33:32.344Z",
+      "evidence": [
+        {
+          "at": "2026-07-06T23:33:32.344Z",
+          "text": "Landed §5.10.1 in M3-ARCHITECTURE.md: Third Spanda Equation five canonical forms (Mersenne/Binary/Octave-field/Spanda-bridge/M-stack per DR-M3-6), execution-order trace, translation rule 9_M2 = 8_M3 + 1_M1, 7-8-9 spine triad (N_5 = 8n±n reading per m0.h), and skeleton-event vocabulary 36/64, 64/72, Additive137, MersenneM7Ground, SpandaCrownBifurcation — the live ThirdSpandaMathemeProofPanel names. Deps 4.8/4.9 truth-verified landed (greps + DR-M3-4/5 present) though rerun ledger showed pending; 10.M3 field optional per spec fallback. Register discipline unchanged.",
+          "receipt": {
+            "command": "node --test Body/M/epi-theia/extensions/test/m3-mahamaya-codon-wheel.test.mjs Body/M/epi-theia/extensions/test/third-spanda-composition.test.mjs (32 passed 0 failed incl. five-form render + skeleton-event highlighting + string audit rejecting the derives-alpha claim); tranche rg greps now hit the five-form section + translation rule in M3-ARCHITECTURE.md and inspector terms in all 3 cited docs; verify-tranche 04.T4.10 PASS after port-collision retry",
+            "exitCode": 0,
+            "testsPassed": 32,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3'/M3-ARCHITECTURE.md"
+            ],
+            "tokenUsage": {
+              "input": 150000,
+              "output": 9000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 22 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T23:13:21.325Z",
+      "runId": "20260706T231321Z-04-T4.10",
       "worktree": null
     },
     "04.T4.11": {
@@ -2110,120 +2687,296 @@
       "worktree": null
     },
     "12.T12.01": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T19:42:17.255Z",
+      "claimedAt": "2026-07-07T19:35:42.000Z",
+      "completedAt": "2026-07-07T19:42:17.255Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T19:42:17.255Z",
+          "text": "Terminal session-safety inventory verified as landed (doc deliverable — the file IS the work product at its chartered plan.runs path). All three Verify clauses re-checked fresh: the inventory cites concrete file/line evidence for agent/tmux.rs, agent/spawn.rs, agent/subagents.rs, gate/spacetimedb_bridge.rs, portal/runtime_state.rs, and S4-2p-pleroma/extension.ts (9 file:line citations); the rg for TerminalBinding|TerminalLease|terminal session-safety returns the binding contract (7 hits incl. the canonical TerminalBinding/TerminalLease field enumeration); the tranche changed no implementation files. Downstream truth: the contract it defined has since landed (TerminalBinding/TerminalLease live in gateway-contract src/session.rs with session-store round-trip tests), confirming the inventory served as the binding preflight it was chartered to be.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.01 → PASS (class-scoped gate + honesty-lint green); rg -c TerminalBinding|TerminalLease|terminal session-safety on the inventory = 7 hits; all six chartered files cited with 9 file:line citations",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/12.01-terminal-session-safety-inventory.md"
+            ],
+            "tokenUsage": {
+              "input": 80000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 81 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T19:35:42.000Z",
+      "runId": "20260707T193542Z-12-T12.01",
       "worktree": null
     },
     "12.T12.02": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:43:37.072Z",
+      "claimedAt": "2026-07-07T20:36:01.462Z",
+      "completedAt": "2026-07-07T20:43:37.072Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:43:37.072Z",
+          "text": "TerminalBinding/TerminalLease landed as typed first-class session fields: gateway-contract src/session.rs carries the schema, session_store.rs persists/reloads it, sessions.rs exposes it through record_to_value/list/resolve/patch/fork/resume; serde round-trip + session-store tests green fresh (gateway-contract suite exit 0; gate_sessions in the 49-pass targeted epi-cli run); rg confirms schema+patch handling in all three chartered files; independent W-gate verification PASS by fable-b2-verifier incl live-wire.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S3/gateway-contract/Cargo.toml (exit 0, TerminalBinding serde round-trip in src/tests.rs) + cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions [+9 sibling terminal suites] = 49 passed/0 failed/6 live-skip; verify-tranche W gate PASS (live-wire + gateway + gateway-contract + gateway-methods suites green)",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/session.rs",
+              "Body/S/S3/gateway/src/session_store.rs",
+              "Body/S/S3/gateway/src/sessions.rs"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 5000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:36:01.462Z",
+      "runId": "20260707T203601Z-12-T12.02",
       "worktree": null
     },
     "12.T12.03": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:47:37.445Z",
+      "claimedAt": "2026-07-07T20:44:04.184Z",
+      "completedAt": "2026-07-07T20:47:37.445Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:47:37.445Z",
+          "text": "persist path launches real Pi inside tmux with session lease: agent/tmux.rs+spawn.rs write a TerminalLease, create the tmux pane and inject the pi launch command shell-free with the full EPI_* env set; bounded epi agent tmux inspect/capture/send/abort enforce lease+pane match and capture-policy redaction; agent_spawn + agent_tmux_terminal_binding green fresh against a real tmux binary (49-pass targeted run, live-integration executed, fake-binary tests demoted to command-shape only); independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_spawn --test agent_tmux_terminal_binding [+8 sibling terminal suites] = 49 passed/0 failed/6 live-skip, real tmux at /opt/homebrew/bin/tmux; verify-tranche W gate PASS (live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/agent/tmux.rs",
+              "Body/S/S0/epi-cli/src/agent/spawn.rs",
+              "Body/S/S0/epi-cli/tests/agent_tmux_terminal_binding.rs"
+            ],
+            "tokenUsage": {
+              "input": 60000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:44:04.184Z",
+      "runId": "20260707T204404Z-12-T12.03",
       "worktree": null
     },
     "12.T12.04": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:48:02.959Z",
+      "claimedAt": "2026-07-07T20:47:37.723Z",
+      "completedAt": "2026-07-07T20:48:02.959Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:48:02.959Z",
+          "text": "subagent/team/chain terminal authority is explicit and safe: captured subagent runs stay non-terminal by default, terminal-backed workers require a TerminalLease on the child session key, stop_runtime terminates live terminal bindings (transcript-only abort reserved for captured sessions), team members cannot send to another pane without matching session key + lease; real SessionStore tests for lineage/NOW inheritance, distinct per-worker leases, and stop semantics green fresh in the 49-pass targeted run; independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_team_cli_contract --test gate_team_runtime_contract --test terminal_subagent_runtime_contract [+7 sibling terminal suites] = 49 passed/0 failed/6 live-skip; verify-tranche W gate PASS (live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/agent/subagents.rs",
+              "Body/S/S0/epi-cli/src/agent/team.rs",
+              "Body/S/S0/epi-cli/tests/terminal_subagent_runtime_contract.rs"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:47:37.723Z",
+      "runId": "20260707T204737Z-12-T12.04",
       "worktree": null
     },
     "12.T12.05": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:48:26.859Z",
+      "claimedAt": "2026-07-07T20:48:03.406Z",
+      "completedAt": "2026-07-07T20:48:26.859Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:48:26.859Z",
+          "text": "terminal binding carried through all session projection surfaces: publish_session_record projects redacted terminalBinding into session_surface, context_for_record exposes /terminal for Redis hydration (metadata + capture handles, never raw pane bodies), PortalTemporalSurface carries terminal status for Anima/Epii/Techne; gate_spacetimedb_bridge + gate_temporal_context + portal_runtime_state_terminal green fresh in the 49-pass targeted run (original quarantine superseded by fresh proof); independent W-gate PASS by fable-b2-verifier incl spacetime + redis-context suites.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge --test gate_temporal_context --test portal_runtime_state_terminal [+7 sibling terminal suites] = 49 passed/0 failed/6 live-skip; verify-tranche W gate PASS (live-wire + gateway + spacetime + redis-context suites green)",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs",
+              "Body/S/S0/epi-cli/src/gate/temporal.rs",
+              "Body/S/S0/epi-cli/src/portal/runtime_state.rs"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:48:03.406Z",
+      "runId": "20260707T204803Z-12-T12.05",
       "worktree": null
     },
     "12.T12.06": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:48:50.701Z",
+      "claimedAt": "2026-07-07T20:48:27.378Z",
+      "completedAt": "2026-07-07T20:48:50.701Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:48:50.701Z",
+          "text": "all five techne_terminal_* tools (status/inspect/capture/send/abort) registered in the Pleroma extension routing through bounded epi agent tmux surfaces with session_key required, session_state_authority gateway and raw_terminal_authority false in the capability matrix; stale epi-gate-teams-patch and direct tmux-send-keys paths are gone (rg 0 hits); terminal_tools.test.ts 8/8 green fresh; independent W-gate PASS by fable-b2-verifier incl ta-onta suite.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts = 8 passed/0 failed; rg gate-teams-patch|tmux-send-keys in S4-2p-pleroma/extension.ts = 0 hits; verify-tranche W gate PASS (ta-onta + live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/S2/terminal-tools.ts",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 45000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:48:27.378Z",
+      "runId": "20260707T204827Z-12-T12.06",
       "worktree": null
     },
     "12.T12.07": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:49:15.598Z",
+      "claimedAt": "2026-07-07T20:48:51.201Z",
+      "completedAt": "2026-07-07T20:49:15.598Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:49:15.598Z",
+          "text": "spec-ahead tranche closed on its contract surface per charter retarget law: TERMINAL-OBSERVABILITY-CONTRACT.md names the terminal observability fields (contract surfaces are LAW), UI contract test renders terminal-backed and captured non-terminal sessions distinctly (2/2 fresh), no monitor code imports tmux/cmux/child_process, and the S0 portal consumer (portal/runtime_state.rs) carries terminalBinding/terminalStatus/leaseExpires. The Theia widget plumbing is dead per charter; carrier-pane re-landing of the monitor view is recorded open UI work owned by Track 27/omnipanel (12.T12.9 audit finding 6) — this close covers the contract + substrate consumer only; independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node --test Body/M/epi-theia/extensions/agentic-control-room/tests/pi-runtime-monitor.test.mjs = 2 passed/0 failed (terminal-backed vs captured non-terminal rendered distinctly); rg tmux|cmux|child_process imports in monitor code = 0 hits; verify-tranche W gate PASS (live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/pi-runtime-monitor/TERMINAL-OBSERVABILITY-CONTRACT.md",
+              "Body/M/epi-theia/extensions/agentic-control-room/tests/pi-runtime-monitor.test.mjs",
+              "Body/S/S0/epi-cli/src/portal/runtime_state.rs"
+            ],
+            "tokenUsage": {
+              "input": 55000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:48:51.201Z",
+      "runId": "20260707T204851Z-12-T12.07",
       "worktree": null
     },
     "12.T12.08": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T20:49:38.978Z",
+      "claimedAt": "2026-07-07T20:49:16.124Z",
+      "completedAt": "2026-07-07T20:49:38.978Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T20:49:38.978Z",
+          "text": "end-to-end terminal session safety harness landed and green fresh: real SessionStore + real transcripts + real tmux launch-inspect-capture-abort flow with gateway projection, Redis best-effort hydration and SpaceTimeDB test bridge; explicit redaction assertions (13 capturePolicy/redact hits) prove no raw terminal body crosses into global projection by default; live-integration cases executed on this host (tmux present), unavailable-service cases recorded as explicit ignored skips (6 across the 49-pass targeted run); independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test terminal_session_safety_e2e [+9 sibling terminal suites] = 49 passed/0 failed/6 live-skip (live tmux executed; skipped live-integration cases recorded as ignored); 13 capturePolicy/redaction assertion hits in the harness; verify-tranche W gate PASS (live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/terminal_session_safety_e2e.rs"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:49:16.124Z",
+      "runId": "20260707T204916Z-12-T12.08",
       "worktree": null
     },
     "12.T12.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:03:43.348Z",
+      "claimedAt": "2026-07-07T20:59:02.175Z",
+      "completedAt": "2026-07-07T21:03:43.348Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:03:43.348Z",
+          "text": "Pi+Anima+subagents architecture audit verified as landed (doc deliverable — the file IS the work product at the design-reconciliation plan.runs path): canonical 3-tier architecture documented (Pi harness / Anima single dispatcher / 6 Aletheia techne-guardians, ta-onta carriers as routing infrastructure not agents); AgenticActor union collapsed to pi|anima|aletheia with AletheiaTechneClass enumerating the six guardians (matches DR-S4-TECHNE roster); M5-prime-SPEC M5-4-prime row carries the operational-capacity/agentic-mediation reading with capability-matrix.json as governance authority; independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.1 --owner fable-b2-verifier → PASS (W-scoped gate: harness-selftest + honesty-lint + gateway + gateway-contract + gateway-methods + live-wire + ta-onta + redis-context + spacetime + graphiti-runtime all green); audit-doc clauses re-checked fresh: AgenticActor collapsed to pi|anima|aletheia + AletheiaTechneClass six-guardian enum in run-model.ts, M5-prime SPEC M5-4-prime row rewritten around Pi/Anima/Aletheia capacity mediation",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/12.1-pi-anima-subagents-architecture.md",
+              "Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts",
+              "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 92 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T20:59:02.175Z",
+      "runId": "20260707T205902Z-12-T12.1",
       "worktree": null
     },
     "12.T12.2": {
@@ -2331,29 +3084,60 @@
       "worktree": null
     },
     "12.T12.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:36:53.760Z",
+      "claimedAt": "2026-07-07T22:35:10.200Z",
+      "completedAt": "2026-07-07T22:36:53.760Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:36:53.760Z",
+          "text": "Capability-parity live-assertion wiring verified landed: s4-prime.mediation.capabilities.list is a registered gateway method (protocol.rs:125, dispatch_plan.rs:568, dispatch.rs const + handler), and Pi asserts parity against it at startup in composite-entry.ts (Pi owns the capability gate, not ACR); capability-parity.test.ts 7/7 green fresh. Independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node --test Body/S/S4/pi-agent/tests/capability-parity.test.ts = 7 passed/0 failed (Pi startup live-assertion of s4-prime.mediation.capabilities.list); verify-tranche W gate PASS (gateway + gateway-contract + gateway-methods + live-wire + ta-onta suites green)",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/dispatch_plan.rs",
+              "Body/S/S3/gateway/src/dispatch.rs",
+              "Body/S/S4/pi-agent/composite-entry.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 213 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:35:10.200Z",
+      "runId": "20260707T223510Z-12-T12.10",
       "worktree": null
     },
     "12.T12.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:38:46.740Z",
+      "claimedAt": "2026-07-07T22:37:10.379Z",
+      "completedAt": "2026-07-07T22:38:46.740Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:38:46.740Z",
+          "text": "TillDone substrate residency confirmed (doc-confirmation deliverable — the file IS the work product): tilldone.ts present at the chartered Pleroma S2/ path (726 LOC), confirmed execution-backbone discipline extension (idle→inprogress→done, four surfaces) not an agent, no greenfield copy needed. Confirmation record written to plan.runs; independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.11 --owner fable-b2-verifier → PASS (W-scoped gate: harness-selftest + honesty-lint + gateway + gateway-contract + gateway-methods + live-wire + ta-onta + redis-context + spacetime + graphiti-runtime all green); deliverable confirmation doc at plan.runs/12.T12.11-tilldone-residency-confirmation.md; tilldone.ts present (726 LOC)",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/12.T12.11-tilldone-residency-confirmation.md",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 215 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:37:10.379Z",
+      "runId": "20260707T223710Z-12-T12.11",
       "worktree": null
     },
     "12.T12.12": {
@@ -2370,55 +3154,95 @@
       "worktree": null
     },
     "12.T12.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-07T22:41:50.269Z",
+      "claimedAt": "2026-07-07T22:39:12.079Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-07T22:41:50.269Z",
+          "text": "Substrate landed and partially verified: test_enrichment.py + test_cross_namespace_edge_created present, offline pytest lane green (1 passed/2 skipped under SKIP_NEO4J), and the EMBEDDING_DIM=3072 clause is satisfied (single VALID value, default in config.py + graphiti_config.py). BLOCKED on the live cross-namespace-edge acceptance: it needs a no-auth Neo4j on localhost:7687 (test does driver(uri, auth=None)), but the only running dev Neo4j is antichrist-neo4j — auth'd (neo4j/antichrist-dev-pw) on bolt 17687. Cannot honestly close without a wired no-auth 7687 instance; standing up a second Neo4j risks colliding with the parallel session's graph. Needs an env decision (which Neo4j is canonical for gnostic integration tests). Numeric chain 12.15+ waits on this."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 215 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:39:12.079Z",
+      "runId": "20260707T223912Z-12-T12.13",
       "worktree": null
     },
     "12.T12.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T11:37:39.359Z",
+      "claimedAt": "2026-07-08T11:31:27.128Z",
+      "completedAt": "2026-07-08T11:37:39.359Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T11:37:39.359Z",
+          "text": "T12.15 VAK reading-frame evaluator verified-landed: evaluateOracleReadingFrame + flattenVakAddressForGraphiti; positions[] cardinality authority (single/triad/sixfold/Night-prime/depth-4-5), CPF-consent + CP-position-set gate dispatch, Graphiti flattened VAK round-trip, session vak_address + Redis handle. Independent live-wire W-gate PASS, verifier opus-b2-verify != closer opus-b2-resume; evaluator suite 7/0.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.15 --owner opus-b2-verify (W-gate incl. live-wire spawned-gateway wire-capture PASS + gateway/gateway-contract/ta-onta/redis-context/spacetime/graphiti-runtime green)",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/reading-frame-evaluator.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/reading_frame_evaluator.test.ts",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 244 dirty files.",
+      "owner": "opus-b2-resume",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T11:31:27.128Z",
+      "runId": "20260708T113127Z-12-T12.15",
       "worktree": null
     },
     "12.T12.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T12:13:59.639Z",
+      "claimedAt": "2026-07-08T11:40:25.954Z",
+      "completedAt": "2026-07-08T12:13:59.639Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T11:52:45.014Z",
+          "text": "T12.16 deliverable LANDED: S4-SPEC §A/§14 attribute Techne as Pleroma atomic-skills substrate (not a roster agent); s_4_helper_roles retired from live code; residual acceptance-grep hits are S4-ARCHITECTURE correction-notes (quote-to-correct, intended) + non-canon FLOW/Legacy archives. Close BLOCKED: independent verify-tranche REFUSED because the W-gate live-wire suite is flaky — health emission starved (health_snapshot slow: unbounded graph_health/spacetimedb probes under parallel-session service load), 0-1 health frames per 45s capture -> intermittent 'capture incomplete' (T12.15 verified green w/ 1 health; T12.16 refused w/ 0). Prereq for reliable Track-12 closure: bound/decouple health emission so live-wire is deterministically green."
+        },
+        {
+          "at": "2026-07-08T12:13:59.639Z",
+          "text": "T12.16 S4-SPEC Techne wording patch verified-landed: S4-SPEC §A/§14 attribute Techne as Pleroma atomic-skills substrate (not a roster agent); acceptance grep finds no LIVE wrong-roster attribution in canon (residual hits are S4-ARCHITECTURE quote-to-correct notes + non-canon FLOW/Legacy archives); s_4_helper_roles absent from live code. Independent W-gate live-wire PASS (now deterministic after health-probe timeout fix), verifier opus-b2-verify != closer opus-b2-resume.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.16 --owner opus-b2-verify (W-gate incl. live-wire spawned-gateway wire-capture PASS; health emission reliable after graph-probe timeout fix)",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/S/S4/S4-SPEC.md",
+              "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 244 dirty files.",
+      "owner": "opus-b2-resume",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T11:40:25.954Z",
+      "runId": "20260708T114025Z-12-T12.16",
       "worktree": null
     },
     "12.T12.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-08T12:20:03.758Z",
+      "claimedAt": "2026-07-08T12:20:03.758Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 246 dirty files.",
+      "owner": "opus-b2-resume",
+      "leaseExpiresAt": "2026-07-08T14:20:03.758Z",
+      "heartbeatAt": "2026-07-08T12:20:03.758Z",
+      "runId": "20260708T122003Z-12-T12.17",
       "worktree": null
     },
     "12.T12.18": {
@@ -3150,16 +3974,35 @@
       "worktree": null
     },
     "17.T17.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-06T23:02:43.225Z",
+      "claimedAt": "2026-07-06T22:39:17.883Z",
+      "completedAt": "2026-07-06T23:02:43.225Z",
+      "evidence": [
+        {
+          "at": "2026-07-06T23:02:43.225Z",
+          "text": "Split verified live: lib.rs is a 365-LOC re-export façade over 16 contract modules (11 per brief + aletheia/being_pattern/context/harness/verifier landed by later tranches); authored the missing 43.2 //! Coordinate Header (7 fields incl Does-NOT-own; m4.arena literals kept in lib.rs per 41.T41.6 verification grep); AGENTS.md DOX updated; 78 crate tests + 3 downstream cargo checks green.",
+          "receipt": {
+            "command": "cargo test (gateway-contract, 78 passed 0 failed) && cargo check downstream gateway/portal-core/epi-cli (all exit 0); wc -l src/lib.rs = 365 < 500; node .codex/scripts/verify-tranche.mjs 17.T17.1 → PASS (verify-all + honesty-lint green)",
+            "exitCode": 0,
+            "testsPassed": 78,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/lib.rs",
+              "Body/S/S3/gateway-contract/AGENTS.md"
+            ],
+            "tokenUsage": {
+              "input": 320000,
+              "output": 14000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 2 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T22:39:17.883Z",
+      "runId": "20260706T223917Z-17-T17.1",
       "worktree": null
     },
     "17.T17.2": {
@@ -3267,29 +4110,65 @@
       "worktree": null
     },
     "17.T17.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:17:57.034Z",
+      "claimedAt": "2026-07-07T11:47:44.191Z",
+      "completedAt": "2026-07-07T18:17:57.034Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:17:57.034Z",
+          "text": "Completed the 17.10 anima extension split. The facade layer had already landed (extension.ts 42-line re-export over extension/{mod,tools,dispatch,capabilities,subscriptions}) but tools.ts still fused all nine tool registrations at 767 LOC. Extracted verbatim per the brief: extension/dispatch-tools.ts carries the six-tool dispatch family (anima_orchestrate, anima_arena_orchestrate, dispatch_parallel_agents, dispatch_fusion_agents, dispatch_moirai_night_pass, anima_self_invoke) plus the arena-runtime/Mercurius helpers they own; extension/nous-disclose.ts isolates nous_disclose (the one Gnosis-ingest seam); tools.ts is now a 63-line aggregator keeping vak_evaluate + goal_prelude. No public surface change (registerAnimaTools registers the same nine tools); full S4 corpus 429/429 green post-split; anima AGENTS.md DOX updated.",
+          "receipt": {
+            "command": "node --test Body/S/S4/**/*.test.ts Body/S/S4/**/*.test.mjs (429 passed 0 failed, 126 suites — full ta-onta corpus incl. all 151 anima tests after the split); verify-tranche 17.T17.10 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 429,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/tools.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch-tools.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/nous-disclose.ts"
+            ],
+            "tokenUsage": {
+              "input": 300000,
+              "output": 20000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 59 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T11:47:44.191Z",
+      "runId": "20260707T114744Z-17-T17.10",
       "worktree": null
     },
     "17.T17.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:10:02.223Z",
+      "claimedAt": "2026-07-07T22:04:53.087Z",
+      "completedAt": "2026-07-07T22:10:02.223Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:10:02.223Z",
+          "text": "hen-compiler-core lib.rs split verified landed: lib.rs is 37 lines of pure pub-use re-exports over the seven chartered modules (residency, coordinate, frontmatter, l_alignments, ledger, compile_plan, graph_sync — all present) plus further extracted files; API preserved (cargo check clean), 35 tests pass fresh across the split. Independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml = 35 passed/0 failed/1 ignored across the split modules; cargo check clean; verify-tranche W gate PASS (gateway + live-wire + ta-onta + gateway-contract suites green)",
+            "exitCode": 0,
+            "testsPassed": 35,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/lib.rs",
+              "Body/S/S1/hen-compiler-core/src/residency.rs",
+              "Body/S/S1/hen-compiler-core/src/graph_sync.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 113 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:04:53.087Z",
+      "runId": "20260707T220453Z-17-T17.11",
       "worktree": null
     },
     "17.T17.12": {
@@ -3657,16 +4536,37 @@
       "worktree": null
     },
     "19.T19.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T01:25:51.955Z",
+      "claimedAt": "2026-07-06T23:34:38.801Z",
+      "completedAt": "2026-07-07T01:25:51.955Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T01:25:51.955Z",
+          "text": "ARCHETYPE_LUT reorder verified landed ([5]=ZODIACAL/12, [7]=MONOPOLY/7, [9]=DIVINE_ACT/7, [11]=VIRTUE/9, reciprocal complements, dataset polarities) and behaviorally pinned: new m0_resolve_archetypal_number accessor + 4 m0_archetype_routing FFI tests green; fix doc records landed state; fresh verify-all GREEN incl. Playwright ui-flow (6) + boot-smoke, PASS record by fable-a-verifier. Also landed: tmux client stdio detach in epi-cli (run_command/has_session/display_message) curing the terminal-safety e2e verify-all flake",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 19.T19.1 — verify-all GREEN incl. cargo test -p epi-lib m0_archetype_routing (4 passed), app-ui-flow pnpm test:e2e Playwright real-UI (6 passed), app-smoke boot-smoke gate (PASS)",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m0.c",
+              "Body/S/S0/epi-lib/include/m0.h",
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/S/S0/epi-lib/docs/m0-archetype-lut-ordering-fix.md"
+            ],
+            "tokenUsage": {
+              "input": 120000,
+              "output": 14000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 27 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T23:34:38.801Z",
+      "runId": "20260706T233438Z-19-T19.1",
       "worktree": null
     },
     "19.T19.2": {
@@ -6517,16 +7417,36 @@
       "worktree": null
     },
     "36.T36.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T04:02:05.208Z",
+      "claimedAt": "2026-07-07T01:31:40.390Z",
+      "completedAt": "2026-07-07T04:02:05.208Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T04:02:05.208Z",
+          "text": "AnuttaraPentadicRuntimeTrace Rust projection landed (projections/pentadic_trace.rs): mirror of the kernel-bridge interface/buildPentadicTrace, every field derived from profile payloads + luts::mahamaya helpers + new M3_BACKBONE_DEGREE_STEP/NODE_COUNT consts (24x15=360 lifted from inline literal); 7 tests green: JSON round-trip with per-key TS-interface pinning, 72-grid epogdoon 8/9 + mahamaya 64/360 floor laws, hinge/backbone tests; wire proof via fresh verify-all GREEN (live-wire harness + app-smoke spawned gateway) PASS record by fable-a-verifier; NOTE buildPentadicTrace remains export-declare-only in TS — carrier-side implementation flagged for the pratibimba-app retarget seam",
+          "receipt": {
+            "command": "cargo test -p portal-core --test anuttara_pentadic_runtime_trace (7 passed); fresh verify-all GREEN incl. live-wire projection harness (node scripts/live-wire.mjs, real spawned gateway over the protocol), app-smoke boot gate (epi gate start 18797 + live GatewayClient wire smoke), gateway + gateway-contract suites",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/projections/pentadic_trace.rs",
+              "Body/S/S0/portal-core/src/m3_transcription_bridge.rs",
+              "Body/S/S0/portal-core/tests/anuttara_pentadic_runtime_trace.rs"
+            ],
+            "tokenUsage": {
+              "input": 110000,
+              "output": 12000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 41 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T01:31:40.390Z",
+      "runId": "20260707T013140Z-36-T36.1",
       "worktree": null
     },
     "36.T36.2": {
@@ -7037,29 +7957,67 @@
       "worktree": null
     },
     "42.T42.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-06T23:17:00.324Z",
+      "claimedAt": "2026-07-06T23:02:57.156Z",
+      "completedAt": "2026-07-06T23:17:00.324Z",
+      "evidence": [
+        {
+          "at": "2026-07-06T23:17:00.324Z",
+          "text": "Substrate verified live rather than rebuilt: harness.rs carries all nine HarnessTurnEvent variants, HarnessDispatch envelope (harness_id/model_slot/purpose/worktree/parent_session_key/vak_address/cost_class), HarnessBacking {NativeCli,Acp}, ConversationSliceHandle parent-slice ride-along (12.31), and the tool_call_enforcement hook on per-turn context; all three Verify clauses proven by the 4-test harness_envelope_roundtrip suite, fresh run green.",
+          "receipt": {
+            "command": "cargo test --test harness_envelope_roundtrip (4 passed 0 failed: every-variant serde roundtrip, envelope+turn-context roundtrip, unregistered harness_id fails loud, converse rejects worktree/tool grant); verify-tranche 42.T42.1 → PASS (verify-all + honesty-lint green)",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/harness.rs",
+              "Body/S/S3/gateway-contract/tests/harness_envelope_roundtrip.rs"
+            ],
+            "tokenUsage": {
+              "input": 80000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 22 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T23:02:57.156Z",
+      "runId": "20260706T230257Z-42-T42.1",
       "worktree": null
     },
     "42.T42.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T04:15:54.975Z",
+      "claimedAt": "2026-07-07T01:24:10.798Z",
+      "completedAt": "2026-07-07T04:15:54.975Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T04:15:54.975Z",
+          "text": "Landed the 42.2 HarnessExecutor registry at ta-onta/shared/harness_registry.ts (S4 semantic authority, per brief: registry NOT in S3): harness_id → {backing, launch_profile{binary,args,env,sandbox,permission_profile}, model_families, subscription} with the four canonical lanes — pi (native-cli, constitutional-full), claude-native (claude CLI, --permission-mode auto headless), codex-native (codex, --yolo headless), hermes-acp (Acp via vendors/hermes-agent). rosterPreflight records the AVAILABLE set per run via command -v (injectable resolver); missing lanes surface an install-the-CLI message and are dropped from the routable set, never silently retried. toGatewayRegistry() projects the thin Rust resolver wire shape (gateway-contract harness.rs HarnessRegistry, camelCase + kebab-case backing — landed by 42.1). All Verify clauses tested: per-lane backing+launch-profile resolution, unregistered-id fails loud, preflight drop + surfacing, stub-harness registered and dispatching a no-op turn with zero dispatch-path edits, wire projection, register validation. ta-onta AGENTS.md DOX updated. Deps truth-verified: 42.1 done, hermes vendored at vendors/hermes-agent (12.24 Phase 1), PiProviderProfile contract present in pleroma capability-matrix.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/shared/harness_registry.test.ts (7 passed 0 failed); verify-tranche 42.T42.2 PASS — verify-all green incl. ta-onta suite and live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/shared/harness_registry.ts",
+              "Body/S/S4/ta-onta/shared/harness_registry.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 220000,
+              "output": 15000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 35 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T01:24:10.798Z",
+      "runId": "20260707T012410Z-42-T42.2",
       "worktree": null
     },
     "42.T42.3": {
@@ -7375,133 +8333,316 @@
       "worktree": null
     },
     "46.T46.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-06T23:58:58.380Z",
+      "claimedAt": "2026-07-06T23:18:11.686Z",
+      "completedAt": "2026-07-06T23:58:58.380Z",
+      "evidence": [
+        {
+          "at": "2026-07-06T23:58:58.380Z",
+          "text": "Z-thread runtime primitive proven, not rebuilt: dispatch.ts already carried registerZThreadShape/dispatchZThread (CFP-move composition under the Z envelope, evaluateVerifyGate 12.35 closing, queryable snapshots) but had zero tests and zero callers. Authored tests/z_thread_dispatch.test.ts proving all three Verify clauses: composes >=2 distinct CFP moves (CFP1+CFP2+CFP3) in one autonomous envelope; closes only when the Verify gate clears (open gate loops then fails to human_escalation at max cycles; later-cycle clearance closes at cycle 2); state queryable via getZThreadSnapshot/listZThreadSnapshots. Refusal tests: non-Z vak address and <2 distinct moves throw. Anima AGENTS.md DOX updated.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-4p-anima/tests/z_thread_dispatch.test.ts (6 passed 0 failed); verify-tranche 46.T46.1 PASS — verify-all green incl. ta-onta suite (412 tests) and live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/z_thread_dispatch.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts"
+            ],
+            "tokenUsage": {
+              "input": 120000,
+              "output": 8000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 23 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T23:18:11.686Z",
+      "runId": "20260706T231811Z-46-T46.1",
       "worktree": null
     },
     "46.T46.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T04:22:48.804Z",
+      "claimedAt": "2026-07-07T02:30:07.876Z",
+      "completedAt": "2026-07-07T04:22:48.804Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T04:22:48.804Z",
+          "text": "Aeon CT4b /World template verified landed, not rebuilt: Idea/Bimba/World/Aeon.md carries the chartered frontmatter (c_1_ct_type CT4b, c_4_artifact_role aeon-template, c_3_ctx_frame 4.0/1-4.4/5, c_4_vak_coordinate, full c_4_parameterisation block with schedule/on_event/consent_posture/rubric/eval-ledger refs) and the #0 Ground → #5 Integration body with the AEON_RETURN: [P5-prime insight] | [P0-prime questions] Möbius signal, plus the graduation accrual ledger. Validation: machine frontmatter-validate passes; residency flat /World beside NOW.md/Seed.md/CT4b-MASTER-TEMPLATE per template precedent; all c_0_source_coordinates wikilink targets resolve on disk; TYPE-REGISTRY.md row registers Aeon templates (flat form + CT4b residency, CT1 span, CT5 return). Concrete-instance clause proven behaviorally: chronos aeon_scheduling.test.ts binds the assess-improve AeonInvocationForm with parameters (cron schedule, result-drop on_event, granted CPF consent posture, VAK args) through bindAeonCronRegistration/chronos_aeon_fire.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/*.test.ts (25 passed 0 failed incl. aeon_scheduling binding a concrete AeonInvocationForm with parameters bound); epi vault frontmatter-validate Idea/Bimba/World/Aeon.md → Frontmatter is valid; verify-tranche 46.T46.2 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 25,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/World/Aeon.md"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 5000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 46 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T02:30:07.876Z",
+      "runId": "20260707T023007Z-46-T46.2",
       "worktree": null
     },
     "46.T46.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:17:57.740Z",
+      "claimedAt": "2026-07-07T12:03:04.474Z",
+      "completedAt": "2026-07-07T18:17:57.740Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:17:57.740Z",
+          "text": "Aeon registration + semantic discovery verified and completed. Substrate was landed: skill-lookup carries SkillManifestEntryKind = skill | aeon parsed from folder frontmatter (kind/entry_kind/manifest_kind), and its test proves matching Aeons return ranked + entitlement-filtered with the aeon kind — no new retrieval subsystem, exactly per brief. The projection clause (an Aeon projects to a sub-session like any skill) was untested; authored the new skill-projector case proving an aeon-kind folder (vak_coordinate/quintessential_form/bimba_coordinate/entitlement_class frontmatter) projects as a live symlink through the existing per-harness projector and surfaces through skill_lookup over the projected universe with kind aeon. 42.8 remains the generalisation cross-link (its projector substrate already exists at pleroma-skill-proxy); pleroma AGENTS.md DOX noted.",
+          "receipt": {
+            "command": "node --test Body/S/S4/pi-agent/skills/custom/skill-lookup/skill-lookup.test.ts (7 passed 0 failed) + node --test Body/S/S4/ta-onta/S4-2p-pleroma/S2 (quoted)/skills/pleroma-skill-proxy/skill-projector.test.mjs (4 passed 0 failed incl. new Aeon-projection case); verify-tranche 46.T46.3 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/pi-agent/skills/custom/skill-lookup/index.ts",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/pleroma-skill-proxy/skill-projector.test.mjs"
+            ],
+            "tokenUsage": {
+              "input": 180000,
+              "output": 10000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 62 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T12:03:04.474Z",
+      "runId": "20260707T120304Z-46-T46.3",
       "worktree": null
     },
     "46.T46.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T21:07:14.290Z",
+      "claimedAt": "2026-07-07T21:04:54.320Z",
+      "completedAt": "2026-07-07T21:07:14.290Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T21:07:14.290Z",
+          "text": "Z-to-Aeon graduation seam landed: aeon-graduation.ts crystallises a proven Z-thread into a named Aeon block (CFP composition + rubric + accrued eval history), reuses the existing form for second runs with new VAK args, updates the rubric through improvement proposals without dropping prior evals, and refuses graduation without dialogical CPF 00/00 consent; the real-form test applies against live Idea/Bimba/World/Aeon.md bytes without disturbing frontmatter/body and accrues on re-application (7/7 fresh). Prerequisite disclosure: the 12.T12.9 audit tranche is not yet ledger-closed (blocked behind 12.T12.2 by the track-12 chain), but its SUBSTANCE — the s4-prime.mediation.route → dispatch_moirai_night_pass → Aletheia moirai-rehear chain — was verified landed against the live tree and behaviorally green (16/16 fresh) before this close; the dotted-id dep is recorded as prose in the tranche stub because the dependency grammar cannot express it. Independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 46.T46.4 --owner fable-b2-verifier → PASS (W-scoped gate incl live-wire + gateway + ta-onta green); node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/session_promote_q_proposals.test.ts = 7 passed/0 failed (4 Z-to-Aeon graduation tests + REAL /World/Aeon.md form accrual test + consent-refusal test); prerequisite Moirai Night-prime routing verified fresh (moirai_rehear_handoff + moirai_night_pass 16/16)",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/modules/aeon-graduation.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch-tools.ts",
+              "Body/S/S4/ta-onta/S4-5p-aletheia/tests/session_promote_q_proposals.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 97 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T21:04:54.320Z",
+      "runId": "20260707T210454Z-46-T46.4",
       "worktree": null
     },
     "46.T46.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:44:24.592Z",
+      "claimedAt": "2026-07-07T22:42:37.615Z",
+      "completedAt": "2026-07-07T22:44:24.592Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:44:24.592Z",
+          "text": "Aeon eval ledger verified landed: redis-context/src/aeon_eval.rs reads the harness-neutral HarnessTurnEvent transcript-of-record (T42.5, gateway-contract/src/harness.rs) into AeonEvalMetrics with zero harness-specific branches, writes S5-prime hot-tier eval:* keys (cache:hot:epi:{day}:{session}:{turn}:{coordinate}:eval:*) and an aeon-eval Graphiti episode payload for the aletheia_session_promote Night-prime pipeline. 3/3 tests green incl real Redis hot-tier persistence against live epi-redis:6379. Independent W-gate PASS by fable-b2-verifier incl redis-context suite.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S3/redis-context/Cargo.toml --test aeon_eval_ledger (with EPILOGOS_REDIS_URI=redis://localhost:6379 and --ignored for the live-Redis case) = 3 passed/0 failed: metrics-from-transcript + hot-tier eval keys/Graphiti episode + real Redis hot-tier persistence; verify-tranche W gate PASS (redis-context + gateway + live-wire + ta-onta suites green)",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/redis-context/src/aeon_eval.rs",
+              "Body/S/S3/redis-context/tests/aeon_eval_ledger.rs",
+              "Body/S/S3/gateway-contract/src/harness.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 215 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:42:37.615Z",
+      "runId": "20260707T224237Z-46-T46.5",
       "worktree": null
     },
     "46.T46.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T22:45:40.092Z",
+      "claimedAt": "2026-07-07T22:44:38.923Z",
+      "completedAt": "2026-07-07T22:45:40.092Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T22:45:40.092Z",
+          "text": "Ouroboros fold clarification verified landed (canon-only): the ouroboros SKILL.md no longer equates the #4 self-fold with harness spawning — description + body (l.13) and the Coordinate Semantics note (l.133, CP 4.3) state the fold IS the QL P↔P-prime syzygy return (constitutional cognition, not a spawn mechanism), with the surgeon-in-worktree as one agnostic instantiation, cross-linking Track 42 §42.6 harness=instantiation (l.137). No code change. Independent W-gate PASS by fable-b2-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 46.T46.6 --owner fable-b2-verifier → PASS (W-scoped gate: gateway + gateway-contract + live-wire + ta-onta + redis-context + spacetime + graphiti-runtime green); canon criterion re-checked fresh: ouroboros SKILL.md lines 13/133/137 frame the #4 fold as the QL P↔P-prime syzygy return not a spawn, citing Track 42 §42.6",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/S4-prime/skills/ouroboros/SKILL.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 219 dirty files.",
+      "owner": "fable-b2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T22:44:38.923Z",
+      "runId": "20260707T224438Z-46-T46.6",
       "worktree": null
     },
     "47.T47.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T00:18:23.025Z",
+      "claimedAt": "2026-07-06T23:23:21.900Z",
+      "completedAt": "2026-07-07T00:18:23.025Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T00:18:23.025Z",
+          "text": "Cron auto-fire tick verified landed, no code needed: cron::check_due_and_fire(state_root) at gate/cron.rs:136 scans cron.json, fires jobs where now_ms >= next_run_at_ms, re-arms recurring schedules, records CronRun; wired into the existing gateway heartbeat (550ms interval) in gate/server/observability.rs which emits the cron.fired event — no new scheduler process. All three Verify clauses covered by named passing tests including the server-side heartbeat_auto_fires_due_cron_job_without_manual_run. No epi-cli edits made from this Session B lane; substrate was already in the tree.",
+          "receipt": {
+            "command": "cargo test -p epi-cli cron (7 passed 0 failed: heartbeat_auto_fires_due_cron_job_without_manual_run, recurring_every_schedule_rearms_next_run, disabled_due_job_never_fires, due_job_fires_and_records_run, every_ms_schedule_rearms_after_fire, due_at_schedule_fires_once_and_disables, add_derives_initial_next_run_from_cron_expression); verify-tranche 47.T47.1 PASS — verify-all green incl. live-wire spawned-gateway harness exercising the real gateway heartbeat",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/cron.rs",
+              "Body/S/S0/epi-cli/src/gate/server/observability.rs"
+            ],
+            "tokenUsage": {
+              "input": 60000,
+              "output": 3000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 25 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-06T23:23:21.900Z",
+      "runId": "20260706T232321Z-47-T47.1",
       "worktree": null
     },
     "47.T47.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T01:34:58.765Z",
+      "claimedAt": "2026-07-07T01:17:18.195Z",
+      "completedAt": "2026-07-07T01:34:58.765Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T01:34:58.765Z",
+          "text": "chronos_cron_fire existed in extension.ts (payload → agent/task/VakAddress → dispatchTeamMember, wake_mode validation) but was untestable (typebox value-import) and unproven. Extracted the unit verbatim to modules/cron-fire.ts per the aeon-scheduling house pattern; extension.ts keeps tool registration and re-exports the full surface (no API change; only doc/test files referenced the symbols externally). Authored tests/cron_fire_dispatch.test.ts proving both Verify clauses: a fired job dispatches through the Anima seam carrying its VAK address (envelope names the normal-VAK-dispatch route + job metadata), and wake_mode now vs next-heartbeat is honoured (CP4.2/CS2 vs CP4.4/CS4, payload-sourced wakeMode accepted, invalid refused); plus nested-target agent resolution, missing-agent refusal, and explicit-canonical-address passthrough with invalid-address rejection. Chronos AGENTS.md DOX updated.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/*.test.ts (25 passed 0 failed incl. new cron_fire_dispatch 5-test suite); node .codex/scripts/verify-all.mjs --quiet --only ta-onta GREEN; verify-tranche 47.T47.2 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 25,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-3p-chronos/modules/cron-fire.ts",
+              "Body/S/S4/ta-onta/S4-3p-chronos/tests/cron_fire_dispatch.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 180000,
+              "output": 12000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 31 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T01:17:18.195Z",
+      "runId": "20260707T011718Z-47-T47.2",
       "worktree": null
     },
     "47.T47.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T04:29:09.920Z",
+      "claimedAt": "2026-07-07T04:22:49.405Z",
+      "completedAt": "2026-07-07T04:29:09.920Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T04:29:09.920Z",
+          "text": "Aeon scheduling binding verified landed, not rebuilt: modules/aeon-scheduling.ts carries bindAeonCronRegistration (CT4b Aeon schedule → gateway cron payload with bound VAK args), chronos_aeon_fire (scheduled fire with bound args), chronos_aeon_on_event_fire (result-drop wake with purpose matching against the Khora RESULT_ARTIFACT_WAKE event), and the CPF consent gate. All three 47.3 Verify clauses covered 1:1 by the fresh-green aeon_scheduling.test.ts: cron-scheduled Aeon fires with bound VAK args; on_event Aeon fires on result-drop only when the wake purpose matches; autonomous fire refuses without a granted CPF consent posture. Deps truth-verified: 46.1/46.2/47.1/47.2 all closed done with independent PASS records this session.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/aeon_scheduling.test.ts (4 passed 0 failed); verify-tranche 47.T47.3 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-3p-chronos/modules/aeon-scheduling.ts",
+              "Body/S/S4/ta-onta/S4-3p-chronos/tests/aeon_scheduling.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 50000,
+              "output": 3000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 54 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T04:22:49.405Z",
+      "runId": "20260707T042249Z-47-T47.3",
       "worktree": null
     },
     "47.T47.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T18:17:56.310Z",
+      "claimedAt": "2026-07-07T11:22:37.861Z",
+      "completedAt": "2026-07-07T18:17:56.310Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T18:17:56.310Z",
+          "text": "Landed the 47.4 Aeon task-source binding: new modules/aeon-task-source.ts (43.2 coordinate header) parses Ralph PRD markdown checkboxes (ralph-tui ./plans shape) into ordered tranches and advances exactly one open tranche per fire, skipping PRD-checked items; the JSON checkpoint (completed ids + fire history) persists on disk across fires and process restarts; unknown source kinds, missing PRDs, and checkbox-free PRDs refuse loudly. AeonInvocationForm gained optional task_source and chronos_aeon_fire advances it per fire — the tranche block rides the normal Anima VAK dispatch envelope, and an EXHAUSTED work-list refuses dispatch instead of firing an open objective (proven: dispatch count stays 1 after exhaustion). Both Verify clauses tested behaviorally with real files: consecutive fires advance tranche 1 then 2 with envelope assertions, and the checkpoint fire history [111, 222] round-trips from disk. Chronos suite 30/30; chronos AGENTS.md DOX updated.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/*.test.ts (30 passed 0 failed incl. new aeon_task_source 5-test suite with real-fs checkpoint round-trips); node .codex/scripts/verify-all.mjs --quiet --only ta-onta GREEN; verify-tranche 47.T47.4 PASS — verify-all green incl. live-wire spawned-gateway harness",
+            "exitCode": 0,
+            "testsPassed": 30,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-3p-chronos/modules/aeon-task-source.ts",
+              "Body/S/S4/ta-onta/S4-3p-chronos/tests/aeon_task_source.test.ts",
+              "Body/S/S4/ta-onta/S4-3p-chronos/modules/aeon-scheduling.ts"
+            ],
+            "tokenUsage": {
+              "input": 260000,
+              "output": 18000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 54 dirty files.",
+      "owner": "fable-b-agentic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T11:22:37.861Z",
+      "runId": "20260707T112237Z-47-T47.4",
       "worktree": null
     },
     "48.T48.1": {
@@ -7596,16 +8737,37 @@
       "worktree": null
     },
     "49.T49.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-07T03:56:11.677Z",
+      "claimedAt": "2026-07-07T01:31:40.061Z",
+      "completedAt": "2026-07-07T03:56:11.677Z",
+      "evidence": [
+        {
+          "at": "2026-07-07T03:56:11.677Z",
+          "text": "ModalResonatorProfile S0 projection verified landed per Tranche 49.1: projections/modal_resonator.rs + additive modalResonator profile field (from_profile_parts wiring) + baseline-profile.json fixture carries modalResonator + 4 profile-field tests and 3 psychoid-cymatic-handle tests green; exact 8+4 bus preserved (authority stays with audio_octet/nodal_quartet); fresh verify-all GREEN PASS record by fable-a-verifier",
+          "receipt": {
+            "command": "cargo test -p portal-core --test modal_resonator_profile_field --test psychoid_cymatic_handle (4+3 passed); fresh verify-all GREEN incl. app-ui-flow pnpm test:e2e Playwright + app-smoke boot gate",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/projections/modal_resonator.rs",
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/tests/modal_resonator_profile_field.rs",
+              "Body/S/S0/portal-core/contract-inventory/baseline-profile.json"
+            ],
+            "tokenUsage": {
+              "input": 60000,
+              "output": 4000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 41 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-07T01:31:40.061Z",
+      "runId": "20260707T013140Z-49-T49.1",
       "worktree": null
     },
     "49.T49.2": {
@@ -7910,16 +9072,34 @@
       "worktree": null
     },
     "02.T2.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-08T02:39:21.928Z",
+      "claimedAt": "2026-07-08T02:03:33.854Z",
+      "completedAt": "2026-07-08T02:39:21.928Z",
+      "evidence": [
+        {
+          "at": "2026-07-08T02:39:21.928Z",
+          "text": "Spanda dual-oscillator tick floor landed: HKB relative-phase field, standing-identity superposition, flowering-first twelvefold (QL 6=12/2 derived), SU(2)-sign codon advancement (rotational state + cycle + epogdoon 72→64, never bare tick12), and the half-turn involution authored in epi-lib m1.c/m1.h and mirrored in portal-core spanda.rs with [ml.m1_paramasiva] config law (derived defaults a=1, b=9/16 the 16/9 gap inverted, ~2.5 Hz cited delta band, out-of-band refused); all six expected-red kernel-truth tests flipped GREEN and removed from the manifest (8 reds remain for tracks 08/10/33); 12 Hz breath-rate mislabel corrected in physical-pole-stack-architecture.md; canon write-back at M1-prime-SPEC 14.1 + M1-ARCHITECTURE + portal-core AGENTS.md; fresh PASS record by fable-a-verifier (verifier != closer)",
+          "receipt": {
+            "command": "cargo test -p portal-core --test kernel_truth && node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K scoped gate GREEN, multi-binary)",
+            "exitCode": 0,
+            "testsPassed": 9186,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m1.c",
+              "Body/S/S0/epi-lib/include/m1.h",
+              "Body/S/S0/portal-core/src/spanda.rs",
+              "Body/S/S0/portal-core/tests/kernel_truth.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/kernel-truth-expected-failures.json"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 223 dirty files.",
+      "owner": "fable-a-kernel",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-08T02:03:33.854Z",
+      "runId": "20260708T020333Z-02-T2.11",
       "worktree": null
     },
     "25.T25.24": {
@@ -8046,33 +9226,650 @@
       "leaseExpiresAt": "2026-07-06T20:40:12.039Z",
       "worktree": null,
       "completedAt": "2026-07-06T18:47:14.380Z"
+    },
+    {
+      "runId": "20260706T223823Z-01-T1.10",
+      "taskId": "01.T1.10",
+      "status": "done",
+      "startedAt": "2026-07-06T22:38:23.651Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T00:38:23.651Z",
+      "worktree": null,
+      "completedAt": "2026-07-06T23:34:14.455Z"
+    },
+    {
+      "runId": "20260706T223917Z-17-T17.1",
+      "taskId": "17.T17.1",
+      "status": "done",
+      "startedAt": "2026-07-06T22:39:17.883Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T00:39:17.883Z",
+      "worktree": null,
+      "completedAt": "2026-07-06T23:02:43.225Z"
+    },
+    {
+      "runId": "20260706T230257Z-42-T42.1",
+      "taskId": "42.T42.1",
+      "status": "done",
+      "startedAt": "2026-07-06T23:02:57.156Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T00:02:57.156Z",
+      "worktree": null,
+      "completedAt": "2026-07-06T23:17:00.324Z"
+    },
+    {
+      "runId": "20260706T231321Z-04-T4.10",
+      "taskId": "04.T4.10",
+      "status": "done",
+      "startedAt": "2026-07-06T23:13:21.325Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T01:13:21.325Z",
+      "worktree": null,
+      "completedAt": "2026-07-06T23:33:32.344Z"
+    },
+    {
+      "runId": "20260706T231811Z-46-T46.1",
+      "taskId": "46.T46.1",
+      "status": "done",
+      "startedAt": "2026-07-06T23:18:11.686Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T01:18:11.686Z",
+      "worktree": null,
+      "completedAt": "2026-07-06T23:58:58.380Z"
+    },
+    {
+      "runId": "20260706T232321Z-47-T47.1",
+      "taskId": "47.T47.1",
+      "status": "done",
+      "startedAt": "2026-07-06T23:23:21.900Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T00:23:21.900Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T00:18:23.025Z"
+    },
+    {
+      "runId": "20260706T233438Z-19-T19.1",
+      "taskId": "19.T19.1",
+      "status": "done",
+      "startedAt": "2026-07-06T23:34:38.801Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T01:34:38.801Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T01:25:51.955Z"
+    },
+    {
+      "runId": "20260707T011718Z-47-T47.2",
+      "taskId": "47.T47.2",
+      "status": "done",
+      "startedAt": "2026-07-07T01:17:18.195Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T02:47:18.195Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T01:34:58.765Z"
+    },
+    {
+      "runId": "20260707T012410Z-42-T42.2",
+      "taskId": "42.T42.2",
+      "status": "done",
+      "startedAt": "2026-07-07T01:24:10.798Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T03:24:10.798Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T04:15:54.975Z"
+    },
+    {
+      "runId": "20260707T012603Z-03-T3.1",
+      "taskId": "03.T3.1",
+      "status": "done",
+      "startedAt": "2026-07-07T01:26:03.745Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T03:26:03.745Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T01:53:43.000Z"
+    },
+    {
+      "runId": "20260707T013140Z-49-T49.1",
+      "taskId": "49.T49.1",
+      "status": "done",
+      "startedAt": "2026-07-07T01:31:40.061Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T03:31:40.061Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T03:56:11.677Z"
+    },
+    {
+      "runId": "20260707T013140Z-36-T36.1",
+      "taskId": "36.T36.1",
+      "status": "done",
+      "startedAt": "2026-07-07T01:31:40.390Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T03:31:40.390Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T04:02:05.208Z"
+    },
+    {
+      "runId": "20260707T023007Z-46-T46.2",
+      "taskId": "46.T46.2",
+      "status": "done",
+      "startedAt": "2026-07-07T02:30:07.876Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T04:00:07.876Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T04:22:48.804Z"
+    },
+    {
+      "runId": "20260707T042249Z-47-T47.3",
+      "taskId": "47.T47.3",
+      "status": "done",
+      "startedAt": "2026-07-07T04:22:49.405Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T05:22:49.405Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T04:29:09.920Z"
+    },
+    {
+      "runId": "20260707T112237Z-47-T47.4",
+      "taskId": "47.T47.4",
+      "status": "done",
+      "startedAt": "2026-07-07T11:22:37.861Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T13:22:37.861Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:17:56.310Z"
+    },
+    {
+      "runId": "20260707T112335Z-01-T1.12",
+      "taskId": "01.T1.12",
+      "status": "done",
+      "startedAt": "2026-07-07T11:23:35.263Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T13:23:35.263Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:17:25.101Z"
+    },
+    {
+      "runId": "20260707T114744Z-17-T17.10",
+      "taskId": "17.T17.10",
+      "status": "done",
+      "startedAt": "2026-07-07T11:47:44.191Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T13:17:44.191Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:17:57.034Z"
+    },
+    {
+      "runId": "20260707T120304Z-46-T46.3",
+      "taskId": "46.T46.3",
+      "status": "done",
+      "startedAt": "2026-07-07T12:03:04.474Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T13:03:04.474Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:17:57.740Z"
+    },
+    {
+      "runId": "20260707T122903Z-02-T2.1",
+      "taskId": "02.T2.1",
+      "status": "done",
+      "startedAt": "2026-07-07T12:29:03.220Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T13:29:03.220Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:18:12.529Z"
+    },
+    {
+      "runId": "20260707T140418Z-03-T3.10",
+      "taskId": "03.T3.10",
+      "status": "done",
+      "startedAt": "2026-07-07T14:04:18.108Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T17:04:18.108Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:19:01.504Z"
+    },
+    {
+      "runId": "20260707T181745Z-01-T1.13",
+      "taskId": "01.T1.13",
+      "status": "done",
+      "startedAt": "2026-07-07T18:17:45.578Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T19:17:45.578Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T18:20:05.647Z"
+    },
+    {
+      "runId": "20260707T182051Z-01-T1.14",
+      "taskId": "01.T1.14",
+      "status": "done",
+      "startedAt": "2026-07-07T18:20:51.807Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T21:20:51.807Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T19:53:59.682Z"
+    },
+    {
+      "runId": "20260707T182052Z-03-T3.2",
+      "taskId": "03.T3.2",
+      "status": "done",
+      "startedAt": "2026-07-07T18:20:52.223Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T20:20:52.223Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T19:54:00.167Z"
+    },
+    {
+      "runId": "20260707T193542Z-12-T12.01",
+      "taskId": "12.T12.01",
+      "status": "done",
+      "startedAt": "2026-07-07T19:35:42.000Z",
+      "owner": "fable-b-agentic",
+      "leaseExpiresAt": "2026-07-07T21:35:42.000Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T19:42:17.255Z"
+    },
+    {
+      "runId": "20260707T195434Z-01-T1.15",
+      "taskId": "01.T1.15",
+      "status": "done",
+      "startedAt": "2026-07-07T19:54:34.137Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:54:34.137Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:23:32.204Z"
+    },
+    {
+      "runId": "20260707T195434Z-03-T3.3",
+      "taskId": "03.T3.3",
+      "status": "done",
+      "startedAt": "2026-07-07T19:54:34.598Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T21:54:34.598Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:23:32.533Z"
+    },
+    {
+      "runId": "20260707T203156Z-01-T1.16",
+      "taskId": "01.T1.16",
+      "status": "done",
+      "startedAt": "2026-07-07T20:31:56.857Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:31:56.857Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:07:20.968Z"
+    },
+    {
+      "runId": "20260707T203601Z-12-T12.02",
+      "taskId": "12.T12.02",
+      "status": "done",
+      "startedAt": "2026-07-07T20:36:01.462Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T23:36:01.462Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:43:37.072Z"
+    },
+    {
+      "runId": "20260707T204404Z-12-T12.03",
+      "taskId": "12.T12.03",
+      "status": "done",
+      "startedAt": "2026-07-07T20:44:04.184Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T21:44:04.184Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:47:37.445Z"
+    },
+    {
+      "runId": "20260707T204737Z-12-T12.04",
+      "taskId": "12.T12.04",
+      "status": "done",
+      "startedAt": "2026-07-07T20:47:37.723Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:17:37.723Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:48:02.959Z"
+    },
+    {
+      "runId": "20260707T204803Z-12-T12.05",
+      "taskId": "12.T12.05",
+      "status": "done",
+      "startedAt": "2026-07-07T20:48:03.406Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:18:03.406Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:48:26.859Z"
+    },
+    {
+      "runId": "20260707T204827Z-12-T12.06",
+      "taskId": "12.T12.06",
+      "status": "done",
+      "startedAt": "2026-07-07T20:48:27.378Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:18:27.378Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:48:50.701Z"
+    },
+    {
+      "runId": "20260707T204851Z-12-T12.07",
+      "taskId": "12.T12.07",
+      "status": "done",
+      "startedAt": "2026-07-07T20:48:51.201Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:18:51.201Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:49:15.598Z"
+    },
+    {
+      "runId": "20260707T204916Z-12-T12.08",
+      "taskId": "12.T12.08",
+      "status": "done",
+      "startedAt": "2026-07-07T20:49:16.124Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:19:16.124Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T20:49:38.978Z"
+    },
+    {
+      "runId": "20260707T205902Z-12-T12.1",
+      "taskId": "12.T12.1",
+      "status": "done",
+      "startedAt": "2026-07-07T20:59:02.175Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:29:02.175Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:03:43.348Z"
+    },
+    {
+      "runId": "20260707T210454Z-46-T46.4",
+      "taskId": "46.T46.4",
+      "status": "done",
+      "startedAt": "2026-07-07T21:04:54.320Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T22:34:54.320Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:07:14.290Z"
+    },
+    {
+      "runId": "20260707T210752Z-01-T1.17",
+      "taskId": "01.T1.17",
+      "status": "done",
+      "startedAt": "2026-07-07T21:07:52.849Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T23:07:52.849Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:16:49.031Z"
+    },
+    {
+      "runId": "20260707T211656Z-03-T3.4",
+      "taskId": "03.T3.4",
+      "status": "done",
+      "startedAt": "2026-07-07T21:16:56.085Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:16:56.085Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:19:24.195Z"
+    },
+    {
+      "runId": "20260707T211924Z-01-T1.18",
+      "taskId": "01.T1.18",
+      "status": "done",
+      "startedAt": "2026-07-07T21:19:24.478Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:19:24.478Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:24:30.437Z"
+    },
+    {
+      "runId": "20260707T212439Z-01-T1.2",
+      "taskId": "01.T1.2",
+      "status": "done",
+      "startedAt": "2026-07-07T21:24:39.422Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:24:39.422Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:28:20.538Z"
+    },
+    {
+      "runId": "20260707T212842Z-01-T1.3",
+      "taskId": "01.T1.3",
+      "status": "done",
+      "startedAt": "2026-07-07T21:28:42.808Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:28:42.808Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:33:31.437Z"
+    },
+    {
+      "runId": "20260707T212843Z-03-T3.5",
+      "taskId": "03.T3.5",
+      "status": "done",
+      "startedAt": "2026-07-07T21:28:43.367Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T22:28:43.367Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T21:33:31.967Z"
+    },
+    {
+      "runId": "20260707T214804Z-01-T1.4",
+      "taskId": "01.T1.4",
+      "status": "done",
+      "startedAt": "2026-07-07T21:48:04.704Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-07T23:48:04.704Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:00:30.501Z"
+    },
+    {
+      "runId": "20260707T220051Z-01-T1.5",
+      "taskId": "01.T1.5",
+      "status": "done",
+      "startedAt": "2026-07-07T22:00:51.917Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T00:00:51.917Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:40:09.403Z"
+    },
+    {
+      "runId": "20260707T220453Z-17-T17.11",
+      "taskId": "17.T17.11",
+      "status": "done",
+      "startedAt": "2026-07-07T22:04:53.087Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T23:04:53.087Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:10:02.223Z"
+    },
+    {
+      "runId": "20260707T223510Z-12-T12.10",
+      "taskId": "12.T12.10",
+      "status": "done",
+      "startedAt": "2026-07-07T22:35:10.200Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-08T00:05:10.200Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:36:53.760Z"
+    },
+    {
+      "runId": "20260707T223710Z-12-T12.11",
+      "taskId": "12.T12.11",
+      "status": "done",
+      "startedAt": "2026-07-07T22:37:10.379Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T23:37:10.379Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:38:46.740Z"
+    },
+    {
+      "runId": "20260707T223912Z-12-T12.13",
+      "taskId": "12.T12.13",
+      "status": "blocked",
+      "startedAt": "2026-07-07T22:39:12.079Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-08T00:09:12.079Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:41:50.269Z"
+    },
+    {
+      "runId": "20260707T224237Z-46-T46.5",
+      "taskId": "46.T46.5",
+      "status": "done",
+      "startedAt": "2026-07-07T22:42:37.615Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-08T00:12:37.615Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:44:24.592Z"
+    },
+    {
+      "runId": "20260707T224252Z-01-T1.6",
+      "taskId": "01.T1.6",
+      "status": "done",
+      "startedAt": "2026-07-07T22:42:52.338Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T00:42:52.338Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:48:18.386Z"
+    },
+    {
+      "runId": "20260707T224438Z-46-T46.6",
+      "taskId": "46.T46.6",
+      "status": "done",
+      "startedAt": "2026-07-07T22:44:38.923Z",
+      "owner": "fable-b2",
+      "leaseExpiresAt": "2026-07-07T23:44:38.923Z",
+      "worktree": null,
+      "completedAt": "2026-07-07T22:45:40.092Z"
+    },
+    {
+      "runId": "20260708T000632Z-01-T1.7",
+      "taskId": "01.T1.7",
+      "status": "done",
+      "startedAt": "2026-07-08T00:06:32.847Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T02:06:32.847Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T00:10:19.311Z"
+    },
+    {
+      "runId": "20260708T001949Z-01-T1.8",
+      "taskId": "01.T1.8",
+      "status": "done",
+      "startedAt": "2026-07-08T00:19:49.597Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T01:49:49.597Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T00:24:22.854Z"
+    },
+    {
+      "runId": "20260708T002455Z-01-T1.9",
+      "taskId": "01.T1.9",
+      "status": "done",
+      "startedAt": "2026-07-08T00:24:55.830Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T01:54:55.830Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T00:30:33.842Z"
+    },
+    {
+      "runId": "20260708T020333Z-02-T2.11",
+      "taskId": "02.T2.11",
+      "status": "done",
+      "startedAt": "2026-07-08T02:03:33.854Z",
+      "owner": "fable-a-kernel",
+      "leaseExpiresAt": "2026-07-08T06:03:33.854Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T02:39:21.928Z"
+    },
+    {
+      "runId": "20260708T091515Z-02-T2.2",
+      "taskId": "02.T2.2",
+      "status": "done",
+      "startedAt": "2026-07-08T09:15:15.955Z",
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-08T11:15:15.955Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T09:17:17.548Z"
+    },
+    {
+      "runId": "20260708T092604Z-02-T2.3",
+      "taskId": "02.T2.3",
+      "status": "done",
+      "startedAt": "2026-07-08T09:26:04.554Z",
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-08T12:26:04.554Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T10:09:22.804Z"
+    },
+    {
+      "runId": "20260708T101944Z-02-T2.4",
+      "taskId": "02.T2.4",
+      "status": "done",
+      "startedAt": "2026-07-08T10:19:44.385Z",
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-08T12:19:44.385Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T10:25:10.294Z"
+    },
+    {
+      "runId": "20260708T102953Z-02-T2.5",
+      "taskId": "02.T2.5",
+      "status": "review",
+      "startedAt": "2026-07-08T10:29:53.060Z",
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-08T12:29:53.060Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T10:43:36.434Z"
+    },
+    {
+      "runId": "20260708T113127Z-12-T12.15",
+      "taskId": "12.T12.15",
+      "status": "done",
+      "startedAt": "2026-07-08T11:31:27.128Z",
+      "owner": "opus-b2-resume",
+      "leaseExpiresAt": "2026-07-08T13:31:27.128Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T11:37:39.359Z"
+    },
+    {
+      "runId": "20260708T114025Z-12-T12.16",
+      "taskId": "12.T12.16",
+      "status": "blocked",
+      "startedAt": "2026-07-08T11:40:25.954Z",
+      "owner": "opus-b2-resume",
+      "leaseExpiresAt": "2026-07-08T13:40:25.954Z",
+      "worktree": null,
+      "completedAt": "2026-07-08T11:52:45.014Z"
+    },
+    {
+      "runId": "20260708T122003Z-12-T12.17",
+      "taskId": "12.T12.17",
+      "status": "in_progress",
+      "startedAt": "2026-07-08T12:20:03.758Z",
+      "owner": "opus-b2-resume",
+      "leaseExpiresAt": "2026-07-08T14:20:03.758Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-06T22:32:39.599Z",
-    "updatedAt": "2026-07-06T22:32:39.599Z",
+    "createdAt": "2026-07-09T09:22:42.933Z",
+    "updatedAt": "2026-07-09T09:22:42.933Z",
     "taskIds": [
-      "12.T12.01",
-      "17.T17.1",
-      "01.T1.10",
-      "01.T1.11"
+      "02.T2.5",
+      "12.T12.17",
+      "02.T2.6",
+      "02.T2.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "12.T12.01": "in-session",
-      "17.T17.1": "in-session",
-      "01.T1.10": "in-session",
-      "01.T1.11": "in-session"
+      "02.T2.5": "in-session",
+      "12.T12.17": "in-session",
+      "02.T2.6": "in-session",
+      "02.T2.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
-  },
-  "tokenLedger": {
-    "2026-07-06": 2490000
   }
 }

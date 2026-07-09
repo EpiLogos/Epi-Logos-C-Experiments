@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 23). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 23) — build/verify HERE, never epi-theia:** CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23.
+
 1. **T23.1 — Per-view widget class registration (cymaticEngine + correspondenceTree)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

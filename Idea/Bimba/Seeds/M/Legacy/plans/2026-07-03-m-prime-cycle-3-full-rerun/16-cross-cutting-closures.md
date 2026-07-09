@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/16-cross-cutting-closures.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 16). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 16) — build/verify HERE, never epi-theia:** MIXED — CCT bundle. CCT-16 substrate-integrity five-fix (frontmatter whitelist ERROR, real khora_sync_queue_flush, fire_provenance retry+dead-letter, MostRecent picker, graph_revision bump) is SUBSTRATE (vault/gateway); CCT-21 BeingPattern producer bridges handles. §2 track 16.
+
 1. **T16.21 — CCT-21: S3 BeingPattern live-state producer stream *(code-pending-closure; depends on CCT-14, CCT-16, 10.PASU, 18.10, 23.19, 23.20, 24.20, 25.22, 29.16)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/16-cross-cutting-closures.md` — Tranche 16.21 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

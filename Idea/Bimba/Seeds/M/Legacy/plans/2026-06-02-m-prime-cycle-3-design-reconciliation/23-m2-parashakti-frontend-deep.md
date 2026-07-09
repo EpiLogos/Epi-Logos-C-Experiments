@@ -1,5 +1,9 @@
 # Track 23 — M2' Paraśakti Frontend Deep Design
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 This tranche closes the per-extension widget UX for the M2' Paraśakti surface — the harmonic-correspondential instrument made visible. Cycle 2 landed substrate; waves A and B routed the kernel-bridge and shell; tranches 11 and 15 set the foundation principles and the composition contract; tranche 03 routed the M2 substrate-side closures (klein_flip, F_routing, axis decoder, S2 adapter); tranche 19 ratified the M0/M2 parity LUT bridges. What remained silent was **how M2' shows up to the user**: the three-layer deep-widget design, the six-axis correspondence-tree filter, the vibrational-vs-psychoid view-switcher, the 72-fold breadcrumb, and — most load-bearing — the composition mount-point that lets M2' cymatic frequencies render ON the M1 K² torus surface per 15.4, not as a side-by-side pane.
 
 Two roles, one tranche owns both:

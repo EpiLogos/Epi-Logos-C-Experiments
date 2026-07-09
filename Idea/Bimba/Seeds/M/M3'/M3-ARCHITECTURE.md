@@ -533,6 +533,38 @@ This summonable technical panel sits beside the Transcription Clock Chain panel.
 3. **Measurement-face lane** — displays measured/reference faces such as `alpha_EM(0)^-1 ~= 137.036`, `alpha_EM(M_Z)^-1 ~= 128`, and `alpha_s(M_Z)` only as cited facts or backend-provided constants. It must show the caveat: `137 is the integer skeleton; 137.035999... is the dressed low-energy measurement-face`.
 4. **Recognition/Nara lane** — shows whether the active packet-chain has been handed to Nara as oracle, identity, journal/body, or experiment-analogue evidence. This lane reads protected handles only; it never loads private artifact bodies.
 
+#### §5.10.1 Third Spanda Equation — the five canonical forms (required skeleton display)
+
+The symbolic-skeleton lane anchors on the **Third Spanda Equation** in its five canonical forms per [[ql_m0_m3_third_spanda_integral_quilting_v2]] (kernel-canon per DR-M3-6; the transcriptional sixth form per CU-FORM-1 may be shown in expanded mode):
+
+```text
+Mersenne view:      137 = (2^7 - 1) + 1 + 9    (M_7 ground + parent-seal + wholeness-dressing)
+Binary view:        137 = 2^7 + 9               (binary closure + wholeness)
+Octave-field view:  137 = 8(8+9) + 1            (octave-applied-to-(octave+wholeness) + parent)
+Spanda-bridge view: 137 = 64 + 2(36) + 1        (Mahāmāyā + doubled recognition-square + parent)
+M-stack view:       137 = M_3(64) + M_2(72) + M_1(1)
+```
+
+The lane must also display the **execution-order trace** — the dynamic reading in which the 9 is first withdrawn to expose the Mersenne prime substrate, then restored as wholeness dressing:
+
+```text
+64 + 72 = 136 → (−9) → 127 = 2^7 - 1 = M_7 → (+1) → 128 = 2^7 → (+9) → 137 → (+δ) → 137.035999…
+```
+
+and the **translation rule**:
+
+```text
+9_M2 = 8_M3 + 1_M1
+```
+
+(the 9-gap at M2's 72-fold = 8 evolutionary-discontinuity markers at M3's RES_MATRIX + the M1 parent unit; the same shape recurs as QCD `3 ⊗ 3̄ = 8 ⊕ 1` in the physics-descent lane).
+
+The **7-8-9 spine** is displayed as a labelled triad anchoring the lane: `7 = action/generator (127 = M_7)`, `8 = octave-field (128 = 2^7)`, `9 = wholeness/recognition (137 − 128)`. This triad is the operational reading of `N_5 = 8n ± n → {7n, 9n}` per M0-4 N# at [m0.h](Body/S/S0/epi-lib/include/m0.h).
+
+**Provenance highlighting:** the lane may highlight current packet links to Ananda/Mahāmāyā skeleton events — `36/64`, `64/72`, `Additive137`, `MersenneM7Ground`, `SpandaCrownBifurcation` — and the current Nara handoff state (recognition lane). These names are the live `skeletonEventsActive` vocabulary consumed by the Theia `ThirdSpandaMathemeProofPanel`.
+
+**Register discipline (unchanged):** this subsection adds displayed skeletons only. The inspector remains source-warrant/provenance UI — it must not compute RG flow, electroweak mixing, QCD corrections, or experimental constants in the renderer, and it never claims a QL derivation of the fine-structure constant. The caveat stands: `137 is the integer skeleton; 137.035999... is the dressed low-energy measurement-face`.
+
 The panel's default state is compact: one line per register with the caveat visible. It expands only in developer/pedagogical mode. Its value is not spectacle; it is preventing the system from sliding between symbolic mathematics, physics, and psychoid bridge without saying which register is speaking.
 
 ---

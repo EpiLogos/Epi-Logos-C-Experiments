@@ -7,6 +7,7 @@ pub mod diatonic;
 pub mod elemental;
 pub mod harmonic_grammar;
 pub mod modal_resonator;
+pub mod pentadic_trace;
 pub mod phase_space;
 pub mod planetary_chakral;
 pub mod pointer_anchor;
@@ -27,6 +28,7 @@ pub use modal_resonator::{
     ModalLensMode, ModalM2Address72, ModalNodalAnchor, ModalOctetCarrier, ModalResonatorProfile,
     ModalSilentAnchor, BELL_PARTIAL_ROLES, NODAL_ANCHOR_ROLES,
 };
+pub use pentadic_trace::AnuttaraPentadicRuntimeTrace;
 pub use phase_space::{
     raw_clock_degree_entry, ClockDegreeNode, ClockLensDivision, FibonacciGroundPhase,
     LensSegmentPhase, PhasePlane, PhaseSpaceAddress, PhaseValence, RawClockDegreeEntry,

@@ -19,6 +19,19 @@ const dry = process.argv.includes("--dry");
 const origState = JSON.parse(readFileSync(join(ORIG, "plan.state.json"), "utf8"));
 const statusOf = (id) => origState.tasks?.[id]?.status ?? "not-in-ledger";
 
+// Concrete per-track carrier target (single source: carrier-contract.json).
+// Emitted into every stub header so the carrier is named IN the brief, not re-derived.
+let carrierContract = null;
+try {
+  carrierContract = JSON.parse(readFileSync(join(DEST, "carrier-contract.json"), "utf8"));
+} catch {
+  carrierContract = null;
+}
+const carrierFor = (trackId) =>
+  carrierContract?.perTrack?.[trackId] ??
+  carrierContract?.defaultCarrier ??
+  "CARRIER = Body/M/pratibimba-app (panes/engine); SUBSTRATE crates carry unchanged; epi-theia FROZEN.";
+
 const files = readdirSync(ORIG)
   .filter((f) => /^\d{2}-.+\.md$/.test(f) && !EXCLUDE.has(f))
   .sort();
@@ -42,6 +55,8 @@ for (const file of files) {
   lines.push(
     `Source of truth for every tranche below: \`${origRel}\` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: \`CHARTER.md\`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track ${trackId}). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.`,
   );
+  lines.push("");
+  lines.push(`**⚑ Carrier (track ${trackId}) — build/verify HERE, never epi-theia:** ${carrierFor(trackId)}`);
   lines.push("");
 
   if (tasks.length === 0) {

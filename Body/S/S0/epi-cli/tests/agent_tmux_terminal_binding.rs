@@ -69,7 +69,10 @@ fn persist_launch_starts_real_pi_process_inside_tmux_pane() {
 }
 
 fn wait_for_capture(tmux_bin: &str, pane_id: &str, needle: &str) -> String {
-    let deadline = Instant::now() + Duration::from_secs(5);
+    // 45s, not 5s: under the full verify-all gate the machine is saturated
+    // and the pane's worker can take well past 5s to appear (same law as
+    // terminal_session_safety_e2e::wait_for_capture). Early-exit on match.
+    let deadline = Instant::now() + Duration::from_secs(45);
     let mut last = String::new();
     while Instant::now() < deadline {
         let output = Command::new(tmux_bin)

@@ -382,6 +382,11 @@ const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE] = {
     },
 };
 
+const Archetype_Entry* m0_resolve_archetypal_number(uint8_t number) {
+    if (number > 9u) return NULL;
+    return &ARCHETYPE_LUT[number + 2u];
+}
+
 /* Session-close contemplation questions keyed by archetype index. */
 const char* const CONTEMPLATION_PROMPT_LUT[12] = {
     "", /* CONTEMPLATION_PROMPT_LUT[0] */
@@ -495,27 +500,27 @@ const Nara_Entry NARA_MSHARP_LUT[6] = {
     /* [0] ## — kinship ground (0/1), MATRIX */
     { .frame_position = 0, .polarity = NARA_POLARITY_BOTH,
       .dominant_val = 0, .archetype_role = 0,
-      .dominance_mode = NARA_DOM_MATRIX },
+      .dominance_mode = NARA_DOM_MATRIX, .coordinate = "0/1" },
     /* [1] Daughter (1/1-), SUBDOMINANT */
     { .frame_position = 1, .polarity = NARA_POLARITY_YIN,
       .dominant_val = 1, .archetype_role = 1,
-      .dominance_mode = NARA_DOM_SUBDOMINANT },
+      .dominance_mode = NARA_DOM_SUBDOMINANT, .coordinate = "1/1-" },
     /* [2] Father (2-/2), DOMINANT */
     { .frame_position = 2, .polarity = NARA_POLARITY_YANG,
       .dominant_val = 2, .archetype_role = 2,
-      .dominance_mode = NARA_DOM_DOMINANT },
+      .dominance_mode = NARA_DOM_DOMINANT, .coordinate = "2-/2" },
     /* [3] Son (3/3-), SUBDOMINANT */
     { .frame_position = 3, .polarity = NARA_POLARITY_YANG,
       .dominant_val = 3, .archetype_role = 3,
-      .dominance_mode = NARA_DOM_SUBDOMINANT },
+      .dominance_mode = NARA_DOM_SUBDOMINANT, .coordinate = "3/3-" },
     /* [4] Mother (4./4), INTEGRATIVE */
     { .frame_position = 4, .polarity = NARA_POLARITY_YIN,
       .dominant_val = 4, .archetype_role = 4,
-      .dominance_mode = NARA_DOM_INTEGRATIVE },
+      .dominance_mode = NARA_DOM_INTEGRATIVE, .coordinate = "4./4" },
     /* [5] Tao (5-/5), DOMINANT — synthesis pole, polarity BOTH */
     { .frame_position = 5, .polarity = NARA_POLARITY_BOTH,
       .dominant_val = 5, .archetype_role = 5,
-      .dominance_mode = NARA_DOM_DOMINANT },
+      .dominance_mode = NARA_DOM_DOMINANT, .coordinate = "5-/5" },
 };
 
 _Static_assert(sizeof(NARA_MSHARP_LUT) / sizeof(NARA_MSHARP_LUT[0]) == 6u,

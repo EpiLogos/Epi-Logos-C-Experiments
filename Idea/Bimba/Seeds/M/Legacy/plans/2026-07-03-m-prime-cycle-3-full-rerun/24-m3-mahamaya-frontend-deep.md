@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 24). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 24) — build/verify HERE, never epi-theia:** CARRIER: M3' inspectors in pratibimba-app (18-aperture switcher, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). NO Math.random — casts dispatch to the gateway. §2 track 24.
+
 1. **T24.1 — `M3CosmicWheelRenderService`: the alive-and-tarot-like default surface *(doc-ahead-landing; first-build of named component, no new contract)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md` — Tranche 24.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

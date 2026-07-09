@@ -91,11 +91,9 @@ This re-executes the Verify-line commands plus honesty-lint and verify-all, and 
 
 ```bash
 node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done \
-  --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"],"tokenUsage":{"input":<n>,"output":<n>}}' \
+  --receipt '{"command":"<verification command run>","exitCode":0,"testsPassed":<n>,"testsFailed":0,"keyPaths":["<key file>"]}' \
   --evidence "<one sentence: what landed>" --owner <IMPLEMENTER_ID> --write --json --require-now $ARGUMENTS
 ```
-
-Receipts SHOULD carry `tokenUsage`; the ledger accumulates a daily spend (budget default 5M, `M_DEV_TOKEN_BUDGET` overrides). An exhausted budget refuses NEW claims — finish and mark in-flight work, report, hand off. It never blocks marking finished work.
 
 The mark is REFUSED (fail closed) when: no receipt or the receipt isn't exit-0 with 0 failures; no fresh PASS verification record exists; the record's verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers (or claimed VALIDATED when the register doesn't say so); a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
 

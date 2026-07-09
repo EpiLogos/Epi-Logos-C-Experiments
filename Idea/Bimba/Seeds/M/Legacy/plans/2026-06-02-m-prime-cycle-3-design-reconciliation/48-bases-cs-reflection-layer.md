@@ -1,5 +1,9 @@
 # Track 48 — Obsidian Bases as the C5/CS Reflection Layer (Hen-Emitted `.base` Triad over CTx + MOC)
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 > **Status / how to read this file.** Design + scoping tranche, authored 2026-06-25. **Future-dev
 > (post-cycle-3) — NOT part of the cycle-3 landed release set or its release gate (Track 14 /
 > Track 43).** Released into future-development needs. It **extends [[45-bimba-map-indexing-and-dox-okf-unification]]**

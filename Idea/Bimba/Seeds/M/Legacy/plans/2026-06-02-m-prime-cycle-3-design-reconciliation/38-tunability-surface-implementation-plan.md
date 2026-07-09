@@ -1,5 +1,9 @@
 # Track 38 — Tunability Surface Implementation Plan
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Companion to [`38-tunability-surface-architecture.md`](38-tunability-surface-architecture.md) (the spec) and [`13-decision-register.md`](13-decision-register.md) (DR-TUNE-1..4 PROPOSED rows that gate execution).
 
 **Goal:** Land Tranches **06.7-06.12** — the system-wide tunability surface at M5-2'/M5-3'/M5-4' (schema authority / Tuning UI / runtime lifecycle), making every system "knob" stable, observable, manipulable, and reviewable across developer / self-awareness / ML-training tiers.

@@ -212,3 +212,85 @@
 - Included: 16
 - Omitted: 54
 
+## [2026-07-06 23:01:14] context | 01.T1.10 Verifier-Anuttara 0' rebuild: [[M0]] verifier v2 + [[anuttara-language]] 128-registry + M0_IDENTITY_CHAINS in [[S0]] epi-lib
+- session: `state/sessions/2026-07-06T23-01-14-851Z-context-01-t1-10-verifier-anuttara-0-rebuild-m0-verifier-v2-anuttara-language-128-regist.md`
+- Context pack: 2026-07-06T23-01-14-851Z-01-t1-10-verifier-anuttara-0-rebuild-m0-verifier-v2-anuttara-language-128-regist
+- Budget: 8000 tokens
+- Included: 15
+- Omitted: 50
+
+## [2026-07-06 23:34:29] lint | Linted 31 page(s)
+- session: `state/sessions/2026-07-06T23-34-29-514Z-lint-linted-31-page-s.md`
+- findings=26
+- deep=false
+- web=false
+- conflicts=false
+- decay=false
+
+## [2026-07-07 02:35:10] context | 19.T19.1+03.T3.1+49.T49.1+36.T36.1+01.T1.11 Session-A kernel lane: [[M0]] ARCHETYPE_LUT routing pin, [[M2]] kleinFlipState closure, bell-kernel + pentadic-trace projections, [[Anuttara]] EBNF corpus round-trip
+- session: `state/sessions/2026-07-07T02-35-10-782Z-context-19-t19-1-03-t3-1-49-t49-1-36-t36-1-01-t1-11-session-a-kernel-lane-m0-archetype-l.md`
+- Context pack: 2026-07-07T02-35-10-782Z-19-t19-1-03-t3-1-49-t49-1-36-t36-1-01-t1-11-session-a-kernel-lane-m0-archetype-l
+- Budget: 8000 tokens
+- Included: 15
+- Omitted: 54
+
+## [2026-07-07 04:07:21] lint | Linted 31 page(s)
+- session: `state/sessions/2026-07-07T04-07-21-431Z-lint-linted-31-page-s.md`
+- findings=26
+- deep=false
+- web=false
+- conflicts=false
+- decay=false
+
+## [2026-07-07 04:07:31] lint | Linted 31 page(s)
+- session: `state/sessions/2026-07-07T04-07-31-097Z-lint-linted-31-page-s.md`
+- findings=26
+- deep=false
+- web=false
+- conflicts=false
+- decay=false
+
+## [2026-07-07 18:20:25] context | Session-A wave 2: [[M0]] R-theory + calculus closure, [[DR-M1-1]] sweep, [[M2]] Asma mirror overlay across kernel/portal/carrier, verify-tranche batch+class-scoped gate
+- session: `state/sessions/2026-07-07T18-20-25-155Z-context-session-a-wave-2-m0-r-theory-calculus-closure-dr-m1-1-sweep-m2-asma-mirror-overl.md`
+- Context pack: 2026-07-07T18-20-25-155Z-session-a-wave-2-m0-r-theory-calculus-closure-dr-m1-1-sweep-m2-asma-mirror-overl
+- Budget: 8000 tokens
+- Included: 15
+- Omitted: 52
+
+## [2026-07-07 20:59:23] context | Session A wave: close 01.T1.16 M#/# 6-fold kernel LUTs + trigram bridge, then walk 01.T1.17 / 03.T3.4
+- session: `state/sessions/2026-07-07T20-59-23-915Z-context-session-a-wave-close-01-t1-16-m-6-fold-kernel-luts-trigram-bridge-then-walk-01-t.md`
+- Context pack: 2026-07-07T20-59-23-915Z-session-a-wave-close-01-t1-16-m-6-fold-kernel-luts-trigram-bridge-then-walk-01-t
+- Budget: 8000 tokens
+- Included: 16
+- Omitted: 53
+
+## [2026-07-07 21:07:49] lint | Linted 31 page(s)
+- session: `state/sessions/2026-07-07T21-07-49-494Z-lint-linted-31-page-s.md`
+- findings=26
+- deep=false
+- web=false
+- conflicts=false
+- decay=false
+
+## [2026-07-07 21:08:15] context | Track 12 walk from 12.T12.02: verify-and-close landed terminal-session-safety carryovers
+- session: `state/sessions/2026-07-07T21-08-15-546Z-context-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car.md`
+- Context pack: 2026-07-07T21-08-15-546Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car
+- Budget: 8000 tokens
+- Included: 16
+- Omitted: 52
+
+## [2026-07-07 21:08:53] context | Track 12 walk from 12.T12.02: verify-and-close landed terminal-session-safety carryovers
+- session: `state/sessions/2026-07-07T21-08-53-764Z-context-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car.md`
+- Context pack: 2026-07-07T21-08-53-764Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car
+- Budget: 8000 tokens
+- Included: 16
+- Omitted: 53
+
+## [2026-07-07 21:33:52] lint | Linted 31 page(s)
+- session: `state/sessions/2026-07-07T21-33-52-887Z-lint-linted-31-page-s.md`
+- findings=26
+- deep=false
+- web=false
+- conflicts=false
+- decay=false
+

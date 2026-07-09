@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 29). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 29) — build/verify HERE, never epi-theia:** CARRIER: composition geometric-slot registry (handle-class allow/forbid; compositionLoad hard-fails juxtaposition) + 14 composition events + one useCompositionProfile subscription in pratibimba-app. §2 track 29.
+
 1. **T29.1 — Composition slot taxonomy extension: `IntegratedGeometricSlot` enum + `GeometricCompositionCoordinator` *(spec-ahead-integration; DR-WC-IP-1 ratifying decision)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md` — Tranche 29.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

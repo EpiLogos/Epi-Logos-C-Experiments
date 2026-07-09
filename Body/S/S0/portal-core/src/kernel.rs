@@ -708,6 +708,12 @@ pub struct KernelTemporalProjection {
     pub harmonic_pulse: KernelTemporalPulse,
     pub energy: KernelTemporalEnergy,
     pub harmonic_profile: MathemeHarmonicProfile,
+    /// Kernel-owned Klein-flip surface state (M2' law): primary until the
+    /// cymatic valence inversion at tick12 == 7, inverted through the Möbius
+    /// return. The profile's `klein_flip` marks the crossing EVENT; this
+    /// field is the latched STATE, so wire consumers stop deriving valence
+    /// ad hoc (Tranche 03.T3.1 kleinFlipState closure).
+    pub klein_flip_state: crate::events::Valence,
 }
 
 impl KernelTemporalProjection {
@@ -717,6 +723,9 @@ impl KernelTemporalProjection {
     pub const COMPUTATION_SOURCE: &'static str = "portal-core::KernelProjection";
 
     pub fn from_kernel_projection(generation: u64, projection: &KernelProjection) -> Self {
+        let harmonic_profile = MathemeHarmonicProfile::from_tick(projection.tick);
+        let klein_flip_state =
+            crate::parashakti::vimarsha_reading::cymatic_valence_state(harmonic_profile.tick12);
         Self {
             coordinate_owner: Self::COORDINATE_OWNER.to_owned(),
             projection_owner: Self::PROJECTION_OWNER.to_owned(),
@@ -726,7 +735,8 @@ impl KernelTemporalProjection {
             tick: KernelTemporalTick::from_tick(projection.tick),
             harmonic_pulse: KernelTemporalPulse::from_pulse(projection.harmonic_pulse),
             energy: KernelTemporalEnergy::from_energy(projection.energy),
-            harmonic_profile: MathemeHarmonicProfile::from_tick(projection.tick),
+            harmonic_profile,
+            klein_flip_state,
         }
     }
 

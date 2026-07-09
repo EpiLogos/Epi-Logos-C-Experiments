@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 44). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 44) — build/verify HERE, never epi-theia:** CARRIER — Pratibimba surface standard: THE LARGEST structural gap. No block contract, registry, catalog, verdict/annotate loop, s3'.temporal.* live transport, or block-doc persistence. §1 Blocks are carrier-independent LAW. Re-derive natively (React/Tauri), spec-first. §2 track 44.
+
 1. **T44.1 — Block contract + CTX-framing + live catalog *(doc-ahead-landing; blocks 44.2..44.10)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md` — Tranche 44.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

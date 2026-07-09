@@ -486,6 +486,81 @@ mod tests {
         }
     }
 
+    /// Tranche 01.T1.15a — the owl:sameAs closure matches the KERNEL's
+    /// M0_IDENTITY_CHAINS (anuttara_language.c is the source of truth,
+    /// parsed from source like core65_audit parses m0.h). Kernel drift
+    /// fails here first.
+    #[test]
+    fn equivalence_class_closure() {
+        const KERNEL_SOURCE: &str =
+            include_str!("../../../S0/epi-lib/src/anuttara_language.c");
+
+        // Parse the kernel chain anchors out of the M0_IDENTITY_CHAINS
+        // initializer: `.coordinate = "M0-2-9-N"`.
+        let table = KERNEL_SOURCE
+            .split("M0_IDENTITY_CHAINS[] = {")
+            .nth(1)
+            .expect("kernel declares M0_IDENTITY_CHAINS")
+            .split("};")
+            .next()
+            .expect("initializer closes");
+        let anchors: Vec<&str> = table
+            .split(".coordinate = \"")
+            .skip(1)
+            .map(|seg| seg.split('\"').next().unwrap())
+            .collect();
+        assert_eq!(
+            anchors.len(),
+            9,
+            "the kernel carries the nine virtue chains (M0-2-9-0..8)"
+        );
+        for n in 0..9 {
+            assert!(
+                anchors.contains(&format!("M0-2-9-{n}").as_str()),
+                "kernel anchor M0-2-9-{n} present"
+            );
+        }
+
+        // The graph-side closure carries the principle-triad glyphs the
+        // kernel chains anchor (## Truth, #R Openness, R# Freedom), and
+        // every closure set generates its full n*(n-1)/2 sameAs pairs.
+        let chains = m0_identity_chains();
+        let closure = IdentityChain::transitive_closure(&chains);
+        for glyph in ["##", "#R", "R#"] {
+            assert!(
+                closure.iter().any(|set| set.contains(glyph)),
+                "closure must carry the {glyph} principle glyph"
+            );
+        }
+        // Transitivity MERGES chains sharing a term, so the closure's
+        // derivable pair count meets or exceeds the raw per-chain pairs —
+        // the asserted triples seed the reasoner, owl:sameAs transitivity
+        // derives the rest. Every raw pair must live inside one closure set.
+        let closure_pairs: usize = closure
+            .iter()
+            .map(|set| set.len() * (set.len().saturating_sub(1)) / 2)
+            .sum();
+        let seed_pairs: usize = chains.iter().map(|c| c.same_as_pairs().len()).sum();
+        assert!(
+            closure_pairs >= seed_pairs && seed_pairs > 0,
+            "closure derives at least the seeded pairs ({closure_pairs} >= {seed_pairs})"
+        );
+        for chain in &chains {
+            for (a, b) in chain.same_as_pairs() {
+                assert!(
+                    closure
+                        .iter()
+                        .any(|set| set.contains(a) && set.contains(b)),
+                    "seeded pair ({a}, {b}) must land inside one closure set"
+                );
+            }
+        }
+
+        // And the chain-membership property rides every chain.
+        let membership = in_identity_chain_cypher(&chains);
+        assert_eq!(membership.iter().filter(|c| c.contains("inIdentityChainWith")).count() > 0, true);
+    }
+
     #[test]
     fn audit_reports_meaningful_counts() {
         let audit = audit_equivalence_classes();

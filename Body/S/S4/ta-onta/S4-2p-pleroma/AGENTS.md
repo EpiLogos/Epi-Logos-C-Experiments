@@ -27,7 +27,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-2-SPEC]] (carrier law); layer groun
 
 ## Verification
 - `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts"` (Techne terminal-tools contract test).
-- `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/pleroma-skill-proxy/skill-projector.test.mjs"` (central skill-store symlink projection and `skill_lookup` parity).
+- `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/S2'/skills/pleroma-skill-proxy/skill-projector.test.mjs (incl. 46.3 Aeon-projects-like-any-skill case)"` (central skill-store symlink projection and `skill_lookup` parity).
 
 ## Child DOX Index
 - (leaf)

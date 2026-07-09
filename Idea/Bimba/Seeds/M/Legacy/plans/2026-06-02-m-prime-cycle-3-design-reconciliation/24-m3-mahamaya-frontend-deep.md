@@ -1,5 +1,9 @@
 # Track 24 — M3' Mahāmāyā Frontend Deep Design
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Closes the per-extension widget UX for the **M3' Mahāmāyā** surface — the alive-and-tarot-like Mahāmāyā wheel as it must actually appear, render, and behave inside Theia. The substrate (Tranche 04 / Wave-A M3) and the shell hosting (Tranche 11 / Wave-B Theia shell) and the foundation principles + composition contract (Tranche 15 / Wave-C Theia shell) are landed; this tranche closes the **depth** of what M3' shows and how it shows it.
 
 Two surface roles must close in lock-step:

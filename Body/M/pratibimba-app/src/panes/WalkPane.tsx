@@ -13,7 +13,7 @@ import { gateway } from '../bridge/gatewayHolder';
 import { GraphClient, GraphNode, GraphRelation } from '../bridge/graphClient';
 import { instrument } from '../audio/instrument';
 import { modulationEngine } from '../engine/modulation/engine';
-import { useCoordinateStore, useProvenanceStore } from '../state/stores';
+import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
 
 interface WalkStep {
     coordinate: string;
@@ -33,6 +33,29 @@ export function isWalkableCoordinate(value: string | null | undefined): value is
     return typeof value === 'string' && value.length > 0 && !value.includes(':');
 }
 
+/** Track 02.T2.5 — invert(coordinate) → the X/X' partner. A pure involution
+ *  (invert∘invert = identity): the prime marker toggles, so the walk can surface
+ *  the reciprocal face WITHOUT fabricating a graph node (the reciprocal relation
+ *  mapping itself is resolved in the substrate, M1'-SPEC §14). This is the
+ *  single # operator "acting locally at that position". */
+export function invertCoordinate(coordinate: string): string {
+    return coordinate.endsWith("'") ? coordinate.slice(0, -1) : `${coordinate}'`;
+}
+
+/** The single session-held `#` (Inversion_Operator) handle carried on every
+ *  profile (M1'-SPEC §14) — the SAME operator at every coordinate, never a
+ *  per-coordinate fork. Returns null until the bridge delivers a profile. */
+function sessionHeldInversionOperator(
+    cached: { profile?: unknown } | null
+): { operator: string; handle: string } | null {
+    const payload = (cached?.profile as Record<string, unknown> | undefined) ?? undefined;
+    const op = payload?.inversionOperator as Record<string, unknown> | undefined;
+    if (!op || typeof op.handle !== 'string') {
+        return null;
+    }
+    return { operator: typeof op.operator === 'string' ? op.operator : '', handle: op.handle };
+}
+
 export function WalkPane() {
     const connected = useProvenanceStore(s => s.connection.connected);
     const selected = useCoordinateStore(s => s.selected);
@@ -42,6 +65,13 @@ export function WalkPane() {
     const [path, setPath] = useState<WalkStep[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    // T2.5 — the single session-held # operator (from the profile) + the local
+    // invert toggle. `shownInvert` starts as the current coordinate and flips to
+    // its X' partner on each invert, round-tripping.
+    const cachedProfile = useTickStore(s => s.profile);
+    const inversionOperator = sessionHeldInversionOperator(cachedProfile);
+    const [invertedCoord, setInvertedCoord] = useState<string | null>(null);
+    const currentCoordinate = node?.coordinate ?? null;
 
     const arrive = async (coordinate: string, relation: string | null) => {
         setLoading(true);
@@ -73,6 +103,12 @@ export function WalkPane() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connected]);
+
+    // The invert control resets to the current coordinate whenever the walk moves.
+    useEffect(() => {
+        setInvertedCoord(null);
+    }, [currentCoordinate]);
+    const shownInvert = invertedCoord ?? currentCoordinate;
 
     if (!connected) {
         return <div className="pane-message">Gateway disconnected — the walk needs the topology.</div>;
@@ -114,6 +150,37 @@ export function WalkPane() {
                 <div className="walk-node" data-testid="walk-node">
                     <h3>{node.coordinate}</h3>
                     {node.label ? <p>{node.label}</p> : null}
+                </div>
+            ) : null}
+            {/* T2.5 — the single session-held # (Inversion_Operator) acting locally
+                at the walked coordinate. Clicking toggles the X/X' reciprocal face
+                (a pure involution, so it round-trips) WITHOUT walking — the invert
+                surfaces the partner without fabricating a graph node. The operator
+                handle is the SAME at every coordinate (M1'-SPEC §14), read off the
+                profile bus, never per-coordinate forked. */}
+            {node ? (
+                <div className="walk-invert" data-testid="m1-invert-affordance">
+                    <button
+                        type="button"
+                        className="vault-node"
+                        data-testid="m1-invert-current-coordinate"
+                        disabled={loading || !shownInvert}
+                        onClick={() => {
+                            if (shownInvert) {
+                                setInvertedCoord(invertCoordinate(shownInvert));
+                            }
+                        }}
+                    >
+                        # invert
+                    </button>
+                    <span className="walk-invert-face" data-testid="m1-invert-face">
+                        {shownInvert}
+                    </span>
+                    {inversionOperator ? (
+                        <span className="walk-invert-op" data-testid="m1-inversion-operator">
+                            {inversionOperator.handle}
+                        </span>
+                    ) : null}
                 </div>
             ) : null}
             <ul className="walk-relations">

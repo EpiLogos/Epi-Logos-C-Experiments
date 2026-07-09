@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-06T22:32:39.615Z",
+  "generatedAt": "2026-07-09T09:23:19.507Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -29,343 +29,343 @@
       "file": "01-m0-anuttara-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
       "title": "Track 01 — M0 Anuttara Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "e8284e4bfba7291f47156250a60fb62e4ceedf7e0ecd057643a73bcb36b86632"
+      "checksum": "3a7a2027ef5409c6541e38a20e29c948bf6ae6136de1fbd03f74d0b4a7248ba2"
     },
     {
       "id": "02",
       "file": "02-m1-paramasiva-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
       "title": "Track 02 — M1 Paramaśiva Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "f690d62447de24dbdb8445c15b31a2c8151a3d5df79ebf04418a5b60af2c4f2c"
+      "checksum": "7d203effe6e5b5e1a2fb919e21d68927cf939fb2efb1ed9870118a038db44af3"
     },
     {
       "id": "03",
       "file": "03-m2-parashakti-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/03-m2-parashakti-reconciliation.md",
       "title": "Track 03 — M2 Paraśakti Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "88e7ec8506b973f5deea3a019c2d5a01cf2428a8cabaf8dd0f93392d2d342e1d"
+      "checksum": "c42e763bc8cd2581956904fe645c8c3a1290146dc093bf3aad5daf213b0c6260"
     },
     {
       "id": "04",
       "file": "04-m3-mahamaya-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
       "title": "Track 04 — M3 Mahāmāyā Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "0f683d333f0572555591d64ded1d9ebfe45cf042db16e6b612df3f22c0ff1f47"
+      "checksum": "8d2598db23777b91a50f32b26a7e4fcf5a58cfab42ff1afa495ea1446941c17a"
     },
     {
       "id": "05",
       "file": "05-m4-nara-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/05-m4-nara-reconciliation.md",
       "title": "Track 05 — M4 Nara Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "24c518a9eb22e69a29331c2d4893195ffc420ee0a1adb171382338ccaad73e34"
+      "checksum": "598e98ba260332c6479e6c0f5ac66b49537ea0181d2f600fe8136e5a35122b5b"
     },
     {
       "id": "06",
       "file": "06-m5-epii-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md",
       "title": "Track 06 — M5 Epii Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "e09623017cc6bc6ea64c349ed1d23812c0a4a7b09a6e5c9c6a4e87a86024488e"
+      "checksum": "14b4758333d23f279c6791f8281c11443eb4227bfa8c6984c010ab0f2260f98b"
     },
     {
       "id": "07",
       "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
       "title": "Track 07 — Integrated 1-2-3 Cosmic Engine Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "8ed266b11be9a1c4c4a80e6aa4c402be7e81e13cdbd5b403304b89b7383fc4a1"
+      "checksum": "101ea2ced5d5b021726bef397d816cfe6e24f686ec6ecf25c996c0ef70e851d0"
     },
     {
       "id": "08",
       "file": "08-integrated-4-5-0-recognition-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/08-integrated-4-5-0-recognition-reconciliation.md",
       "title": "Track 08 — Integrated 4-5-0 Recognition Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "5d2119d92dd06a342c2c816092a0550c5b3d0a797d5c0eb8dff5939b90a4f9b2"
+      "checksum": "fd76b2d8f4f617a3e36f63ad648e91ae930f190f5ffc007eaa9da1fca59305ab"
     },
     {
       "id": "09",
       "file": "09-integrated-bimba-graph-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
       "title": "Track 09 — Integrated Bimba-Graph Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "0a17ecb289be37a3135e16aeeb3e587fd1e5896b80fdd672fb2d9a15abd27499"
+      "checksum": "421758bc7f64c55ecf4a93556a9b6a071ff1a71bc7659d041790e4ffb81f675d"
     },
     {
       "id": "10",
       "file": "10-kernel-bridge-profile-contract.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/10-kernel-bridge-profile-contract.md",
       "title": "Track 10 — Kernel-Bridge / Profile-Contract Readiness Ledger (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "ca1a2c54ddfe26415cbb2dd99b6dda1637eb6fa95d7360bdeb928eaad0a45b68"
+      "checksum": "abbf91a2bcf2784d99325954629ca59ae0e7d6e71858f686c16deee1be781058"
     },
     {
       "id": "11",
       "file": "11-theia-shell-surface-hosting.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md",
       "title": "Track 11 — Theia Shell / Surface Hosting (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "bbde36c2999142474b4accfa7c9dae5f1beca5e9c2aa3b14aa006ce0ddbccd5f"
+      "checksum": "acecda71f88a868ecf057d78cef41097c9701190a94c9dfde0752397a14ec2fb"
     },
     {
       "id": "12",
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
       "title": "Track 12 — Agentic Layer (S4 ↔ S5) Ownership Closure — Pi + Anima + Subagents (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "1b1f2b9d8aba24ffcc12a6de4f550e6db7ecc1ef9a9ea7fdbf1a553902c942c8"
+      "checksum": "44ae87964607807f76b0c367bd06e4115c9fdfc9043cad728c9d18410bfc6965"
     },
     {
       "id": "14",
       "file": "14-no-orphan-audit-and-release-gates.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
       "title": "Track 14 — No-Orphan Audit + Release Gates (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "a0142ff91122544514629e65fdf29da3dae7d4a9454d298e664584b16ae317c1"
+      "checksum": "9045e210bf29e6a6edf50025b9832ff1e9a1a03d7c180cd1f55b2cb92c3aea46"
     },
     {
       "id": "15",
       "file": "15-ui-design-foundations.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md",
       "title": "Track 15 — UI Design Foundations (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "e7ce1c1ad761c9d8193cbeb4fb0979df9ba818b808bb61225dd37f795af91dc9"
+      "checksum": "420042274f634e8d117165fa321f81220032a27de37eb0980fc1fde67daf49dd"
     },
     {
       "id": "16",
       "file": "16-cross-cutting-closures.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/16-cross-cutting-closures.md",
       "title": "Track 16 — Cross-Cutting Closures (CCT-1..8) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "b7b69f8a81f3a81274094d34fafc60d3b0e360488d331117f634ee5986bf86ed"
+      "checksum": "53801f0522f7f85502ccc80718343bf915db7e9e9a46100438a7bb93b9642346"
     },
     {
       "id": "17",
       "file": "17-s-stack-modularisation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
       "title": "Track 17 — S-Stack Modularisation Campaign (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "9da43c01b579f5c477a543df1e132267ac2c64fd95e4d2c5fdcfa02be2d6da40"
+      "checksum": "fc159e926257693828061dc03fbd865ce786ab4b488f71d64304be3951af9467"
     },
     {
       "id": "18",
       "file": "18-typed-kernel-bridge-json-edge.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/18-typed-kernel-bridge-json-edge.md",
       "title": "Track 18 — Typed Kernel-Bridge JSON Edge (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "1eebe44b8c23db50ae52bfef6278607a7e07f5baddbc894bd60b5f38e6b530d0"
+      "checksum": "6a1dd678ddb3f23a75ea08077b38742011e712930155a35a3037496ea51783d6"
     },
     {
       "id": "19",
       "file": "19-contemplation-surface-integration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/19-contemplation-surface-integration.md",
       "title": "Track 19 — Contemplation Surface Integration (4/5/0 Closure as Agentic-Intelligence Triad) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "6325099b7d489cd61cb701626fee2e7fffb5917f897c8ac2c129dc47ae7ea85b"
+      "checksum": "e88b32d74319c0a8e53b9d55a176cd437e47dce5ab26e4d3a0e6ac1aa21d17b1"
     },
     {
       "id": "20",
       "file": "20-wave-c-frontend-deep-overview.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/20-wave-c-frontend-deep-overview.md",
       "title": "Wave C — Frontend Depth Overview (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "6cd38bf70cc901408d51c5e172bcf630400f6e40e62bd5ecda63e280410fa1a0"
+      "checksum": "d937cd4f6de06924160305dfa05011c9bb3d1ee627f76c7cae5bd61d0ca4ab9e"
     },
     {
       "id": "21",
       "file": "21-m0-anuttara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
       "title": "Track 21 — M0' Anuttara Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "dc02ea6eeb8ebdd47a495612fba121e82a5b1b19ad363a7424499286c6714c88"
+      "checksum": "c86ba84b446107f3b33b7493fb2d38003ddcd3e0a7fd40acb660121c3b371740"
     },
     {
       "id": "22",
       "file": "22-m1-paramasiva-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
       "title": "Track 22 — M1' Paramaśiva Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "61fc2818123f4b2900ab745c276fccd19a25578c577a61dfe86adc857b49d842"
+      "checksum": "f4cae025bd82e27b6c8581013351013cd5ce7f96f88f93dd927f3a72373cc95d"
     },
     {
       "id": "23",
       "file": "23-m2-parashakti-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
       "title": "Track 23 — M2' Paraśakti Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "99c39ecc2d93432aaf9e8f70d5dfa6b53530b06ef02e30fd9632252669cd4ba5"
+      "checksum": "a90ee70d4ada571a9d1ef40bc9ec1b3d650560805cb9a48049d1f6968125c7f3"
     },
     {
       "id": "24",
       "file": "24-m3-mahamaya-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
       "title": "Track 24 — M3' Mahāmāyā Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "bf30874121dc1a972b9eb17b3064863b8e90735fde55aa27c95524386f60294d"
+      "checksum": "901472689e9084c11bbb424c933bd9f3645820773f661e43f0f09787c980349e"
     },
     {
       "id": "25",
       "file": "25-m4-nara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
       "title": "Track 25 — M4' Nara Frontend Deep Design (Delta) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "de434868d85dccd5397a10d1ef985b7b3318214737bbfee1bc12ebaaa74d6bf3"
+      "checksum": "94deb03cf8b511be1ba1e59790c8c57d9b6741dab856cdb62361cd99d3e70c18"
     },
     {
       "id": "26",
       "file": "26-m5-epii-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
       "title": "Track 26 — M5' Epii Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "57a7ae5e6f69a92cd8ce97393fbd9836ee0e0f4f067f47ee1227eae96f65cf43"
+      "checksum": "7b804f94c10ba91c4a09e4e8aa7fe25629d63022e9162289078b060a58a82cc0"
     },
     {
       "id": "27",
       "file": "27-omnipanel-tabs-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/27-omnipanel-tabs-deep.md",
       "title": "Track 27 — OmniPanel Tabs Deep UX (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "333cc5f079b1b84244109f481f844575f3e763ded83cbc11469efe33863c0426"
+      "checksum": "95ab44f4f0cc8bc1d605ac87ab58d8d70204bb50025a0b0b0fc2a0b6b8647fc0"
     },
     {
       "id": "28",
       "file": "28-ide-shell-chrome-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
       "title": "Track 28 — `ide-shell-m0-m5` Chrome Deep UX (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "955b7b18dd4d9e415d3201ae0d2033876478b3eb761b53e8e644f876a6e6019e"
+      "checksum": "064bde300dc75605bd2e737e2522d32ffa5e2b27b900ceeb2471abef1f27390d"
     },
     {
       "id": "29",
       "file": "29-integrated-plugins-composition-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
       "title": "Track 29 — Integrated Plugin Composition Deep UX (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "f627537559c8b100f20399f5525d519edeaf17a236a1e1af8ca3313da0e011dd"
+      "checksum": "26f6b4f4635bcd1b90f69f73e93fb371c842d7ae39ee4e994cf857f7b6d65ad9"
     },
     {
       "id": "30",
       "file": "30-design-language-layer.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/30-design-language-layer.md",
       "title": "Track 30 — Design Language Layer (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "d4b0e92e8864c340601fad636d4bb29490f70f89ac56d1a3a18180b5abbe6015"
+      "checksum": "a68bcba17145e7cf6385783b9d1389e1e3954fdf905ee2df82ff1c748065127d"
     },
     {
       "id": "31",
       "file": "31-chrome-contributions-catalog.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md",
       "title": "Track 31 — Theia Chrome Contributions Catalog (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "e1f5eefc57c7eb9deef4d453a3fe3e47ab0e4ecd121701167fbb08fde168dcfb"
+      "checksum": "4f8cb4dabd09b4a6f6248d040e2ed1149e1f78b93a195b0e37d520d0fa1415b6"
     },
     {
       "id": "32",
       "file": "32-onboarding-settings-empty-states.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
       "title": "Track 32 — Onboarding, Settings, Empty States, Cold Start (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "1c85cc525082a8cb7d7600dd0f3d0f097fb70d9f404afdd466afd8c47290aac6"
+      "checksum": "6710f09e99a5c6601bc8e4f463fe50db2da240eb8efa5eb134eaec631ae36c35"
     },
     {
       "id": "33",
       "file": "33-harmonic-energy-channel-handoff.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
       "title": "§0 — Handoff Context (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "73c6aaa4ef1ef8fe0d7dd0727b90f07445605cb6e32c700cd6b29a7880bdc5c8"
+      "checksum": "ef22bc861e82d952a3bcea83d9406021dd31c7bf79cb4eeeeec4da958f81de55"
     },
     {
       "id": "34",
       "file": "34-s0-settings-and-gemini-embedding.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/34-s0-settings-and-gemini-embedding.md",
       "title": "Track 34 — S0 Settings Infrastructure + Gemini Embedding 2 Accessor (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "060770e2b4f5715c09c17ba19c65a476f3f4d807267e64ad34cf31ccef8452d9"
+      "checksum": "50bb552e4b980b4f8bbdb112d0b79c9e6c3b8d86ef2f52407c2d02946847b6de"
     },
     {
       "id": "35",
       "file": "35-fibonacci-ground-level-0-temporal-substrate.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/35-fibonacci-ground-level-0-temporal-substrate.md",
       "title": "§0 — Handoff Context (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "d40efffbbd6f7ccbe7e5d0b83fd336b8be4ffcebb50269b3c45c7ea5e94bf320"
+      "checksum": "bbce9fdf86803a2d967972f5e7f093c3a8f7a09d9268a46dc936851eaec71971"
     },
     {
       "id": "36",
       "file": "36-anuttara-pentadic-runtime-trace.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md",
       "title": "Track 36 — Anuttara Pentadic Runtime Trace (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "787506108c175e1a2ba0851167681ae5b31a0bf6d20e8a70e959293dfeda5684"
+      "checksum": "3144bcfdba827bd17c46c8181fc55dc2a67911c229cd565514f9157237874f42"
     },
     {
       "id": "37",
       "file": "37-biological-quaternionic-cross-layer-integration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
       "title": "Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "3d3292446a4534e965bf7b1feaaaf2a98c00ed7994c92ceaef3532173d638866"
+      "checksum": "8f1750b506bf37fed98093d7302a27d524d5c80ad48bd0d86684cc686c7cc1b3"
     },
     {
       "id": "38",
       "file": "38-tunability-surface-architecture.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md",
       "title": "Track 38 — Tunability Surface Architecture (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "08ada031fd676a73d54185ffc470f64f5d368a5355c28834a8733a9f52134fa9"
+      "checksum": "c36cdbdd82580bc9da077ca6822a8e638215c0b8ad8f94dff5eb59d054bad714"
     },
     {
       "id": "38",
       "file": "38-tunability-surface-implementation-plan.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-implementation-plan.md",
       "title": "Track 38 — Tunability Surface Implementation Plan (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "e1c1b40b9b79e7d33013318f2623864df93f4cf601e11adf3ef74c7ed7282fba"
+      "checksum": "582d704f57d9ad6207bbf55443e5ad11cda0a74bfd9bf135d12f9b41c068642d"
     },
     {
       "id": "39",
       "file": "39-s5-prime-one-substrate-layer.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/39-s5-prime-one-substrate-layer.md",
       "title": "Track 39 — S5' as ONE Substrate Layer (gateway + Khora + S0 tmux + Redis hierarchical + CLI) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "db2a5ed17d08d5449e5632e207c57375acf95d449f6fb94a8d351fbc526334cc"
+      "checksum": "bee8e4859731fe8d4e0af55652dca3eb023fc05aaf30381afe42a585008e7707"
     },
     {
       "id": "40",
       "file": "40-bimba-canon-update-ledger.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/40-bimba-canon-update-ledger.md",
       "title": "Track 40 — Bimba Canon Update Ledger (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "26e545e51eed9a87953e72e233a8900aab79af21898a8053267324577e6db317"
+      "checksum": "23cf371d6e7ec178946310018d2bd844ee712ec43afd57abe557df057ba935c7"
     },
     {
       "id": "41",
       "file": "41-vama-shakti-factory-and-dialogical-arena.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/41-vama-shakti-factory-and-dialogical-arena.md",
       "title": "Track 41 — Vama Shakti Factory + Nara M4' Dia-logical Arena (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "ecfdf134f4a7917a37e9dcb6b8bf64d90048ee78d4acd096bc93fd0997806b6d"
+      "checksum": "7edc4c26e664808ce152f0b519b21372f9408ee55e8940727700c79350db0213"
     },
     {
       "id": "42",
       "file": "42-harness-dynamics-surface.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/42-harness-dynamics-surface.md",
       "title": "Track 42 — Harness Dynamics Surface (Multi-Harness Session Substrate + Skill Centralisation) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "bbbe6983038aa6319335360293700b19701bb0eb06a4173bfb7452e905424eaa"
+      "checksum": "aa01e3bfa767737701774341da3a4721bc0c51850f469e72335a357ef774db39"
     },
     {
       "id": "43",
       "file": "43-end-of-cycle-3-audit-protocol.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/43-end-of-cycle-3-audit-protocol.md",
       "title": "Track 43 — End-of-Cycle-3 Audit Protocol (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "7ef928456db4a6caa1c52ec94134553a04fef3ea006b83bc1d244843d34988da"
+      "checksum": "af29b5582f19061775f12f98e10c539233c2ca0a7fb5d8db4880b663c344a5e0"
     },
     {
       "id": "44",
       "file": "44-pratibimba-surface-standard.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
       "title": "Track 44 — Pratibimba Surface Standard (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "1b61972df02512801464ab235a1309646577d3ba2803dee590aaf28ac7e67f9f"
+      "checksum": "b82b1e355d2b30a0543427f870e295e86b8d822da2511537298dc08ca318cd12"
     },
     {
       "id": "45",
       "file": "45-bimba-map-indexing-and-dox-okf-unification.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md",
       "title": "Track 45 — Bimba Map Repo-Level Indexing + DOX/OKF Unification (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "5a3f742a2f53754c73ad57184ecc13b63f1e21c2e17deae764c0311073b0ac07"
+      "checksum": "85f3ad43d87cef97b1489e650f8b4a54b41d4a5f279a1a5df6b4f79cb4dc5557"
     },
     {
       "id": "46",
       "file": "46-aeon-loop-unit-paradigm.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/46-aeon-loop-unit-paradigm.md",
       "title": "Track 46 — Aeon Loop-Unit Paradigm (Z-Thread Graduation + Reusable Loop Registry) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "ae799188c4739a907d5d066eda3ba2f8803a0c54f4c5b2543d0b80237ba7aae7"
+      "checksum": "9b77379e297ee8a4ac0084fc0fbd65267374abee2ac31d61d30daf92c8be53d4"
     },
     {
       "id": "47",
       "file": "47-autonomous-loop-scheduling.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/47-autonomous-loop-scheduling.md",
       "title": "Track 47 — Autonomous Loop Scheduling (Aeon Invocation: Cron Auto-Fire + Event + Consent) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "b4e6ec7d4ef74157114ab3bc610e51b2e90b61b583be95f95c84604b12e20501"
+      "checksum": "64d13dae45d845fad8b644087f43380b78394b339d05a29d526f79bf68dadb3f"
     },
     {
       "id": "48",
       "file": "48-bases-cs-reflection-layer.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
       "title": "Track 48 — Obsidian Bases as the C5/CS Reflection Layer (Hen-Emitted `.base` Triad over CTx + MOC) (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "1c2cd3d9eee642a61f295c357d6af8aa48baacc9471fbfbc4806d23a696a0bf2"
+      "checksum": "ec2315dd52a4acd7804da62eaa6db87e83194f484d83bdbe5046fc61e369a1a6"
     },
     {
       "id": "49",
       "file": "49-modal-resonator-bell-kernel-implementation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md",
       "title": "Modal Resonator Bell Kernel Implementation Plan (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "5d31768389b0af24d636fac2f861a2b52fa6d8fe7d10bcae7fee59cf644cdfab"
+      "checksum": "549b26fd4d27d8ee4f1943adfc52b5bc2121b36c25938e589241687f9d7b2b16"
     }
   ],
   "tasks": [
@@ -824,10 +824,11 @@
         "02.T2.2"
       ],
       "writeScopes": [
+        "Body/M/pratibimba-app/src/panes/{m1KleinTopology.ts,KleinTopologyPane.tsx}",
         "Body/S/S2/**",
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
       ],
-      "body": "3. **T2.3 — Wire Klein-flip + topology values into `m1.paramasiva.kleinTopology` view**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "3. **T2.3 — Wire Klein-flip + topology values into `m1.paramasiva.kleinTopology` view**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Landed (2026-07-08): substrate now PRODUCES the orphan `M1TopologyProjection` — `MathemeHarmonicProfile::from_tick` attaches a real `m1_topology` (double-cover 720°, genus-1 torus, χ=0, S3→S2 Hopf, unit ring quaternion via `quaternion.rs`, klein-flip descriptors) serialising as `m1Topology`. Carrier widget = `Body/M/pratibimba-app/src/panes/{m1KleinTopology.ts,KleinTopologyPane.tsx}` (ported from frozen `clock-instrument.ts` + re-verified against the live producer), wired as the `Klein` tab; renders DOUBLE_COVER_DEG/TORUS_GENUS/Hopf/K²-tritone from the bridge payload and fires `m1.klein_flip.source` on `klein_flip=Some`.\n   Verify: (retargeted per CHARTER — Theia widget → carrier pane; substrate carries unchanged) substrate producer `cargo test -p portal-core --test m1_topology_profile` (profile carries real `m1Topology`; serialises under the carrier-read key); carrier widget mount `sh -c 'cd Body/M/pratibimba-app && npx vitest run src/panes/KleinTopologyPane.test.tsx'` (KleinTopologyPane mounted — renders DOUBLE_COVER_DEG=720/TORUS_GENUS=1 from the payload, fires `m1.klein_flip.source` on Some, silent on None); plus class-K gate + honesty-lint. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "02.T2.4",
@@ -841,10 +842,12 @@
         "02.T2.3"
       ],
       "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs::m1_performance_event_from_profile",
         "Body/S/S2/**",
-        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+        "tests/kernel_bridge_runtime_contract.rs:769"
       ],
-      "body": "4. **T2.4 — Verify `m1_performance_event_from_profile` + `MPrimePerformanceEvent` replay**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "4. **T2.4 — Verify `m1_performance_event_from_profile` + `MPrimePerformanceEvent` replay**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Landed (2026-07-08, verify-not-build): `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs::m1_performance_event_from_profile` (:936) produces the `mPrimePerformanceEvent` envelope; the deterministic replay test `m1_performance_event_replay_reconstructs_m_prime_performance_event_deterministically` (`tests/kernel_bridge_runtime_contract.rs:769`) reconstructs `MPrimePerformanceEvent` twice → equality + round-trip, asserting every spec field. Confirmed green after the T2.3 profile change (m1Topology is additive, unread by the perf event). NOTE: the spec's `cargo test -p epi-cli` is a stale package id — the crate is `epi-logos`; run from the epi-cli dir.\n   Verify: (substrate carries unchanged; package `epi-logos`, run from the epi-cli dir) deterministic replay `sh -c 'cd Body/S/S0/epi-cli && cargo test --offline --test kernel_bridge_runtime_contract m1_performance_event_replay'` (envelope: event_id/session_id/tick/lens/mode/audio_octet_hz[8]/nodal_quartet[4]/klein_flip/privacy/deposition, reconstructed deterministically + round-trip); plus class-K gate + honesty-lint. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "02.T2.5",
@@ -859,9 +862,10 @@
       ],
       "writeScopes": [
         "Body/S/S2/**",
-        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+        "tests/m1_inversion_operator.rs"
       ],
-      "body": "5. **T2.5 — Surface the single session-held # (Inversion_Operator) carrier**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "5. **T2.5 — Surface the single session-held # (Inversion_Operator) carrier**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Status 2026-07-08: **review (substrate landed, carrier affordance remaining)**.\n   - SUBSTRATE (done, class-K green): killed the orphan `InversionOperatorHandle` — `InversionOperatorHandle::session_held()` (`profile_projections.rs`) returns the ONE `#` operator (`operator: matheme-shell-toggle`, `handle: m1://inversion/operator`), and `MathemeHarmonicProfile::from_tick` attaches it as the additive `inversionOperator` field so every walked coordinate carries the SAME invert field (M1'-SPEC §14, no per-coordinate forks). Integration test `invert_reaches_the_single_session_held_operator` (`tests/m1_inversion_operator.rs`) proves identity across ticks/coordinates + serialisation under the carrier key. Zod parity (`epi-cli/schemas/kernel-bridge.ts` `InversionOperatorHandle`) + baseline fixture re-blessed. Verify: `cargo test -p portal-core --test m1_inversion_operator`.\n   - REMAINING (carrier): the `m1-invert-current-coordinate` affordance reachable from `m1.startWalk` (pratibimba-app `WalkPane`) — a button that inverts the current coordinate via the single session-held operator (reciprocal relation / lens-mode reverse / helix flip per §14) and **round-trips** (X → X' → X); mount test asserting the `m1-invert-current-coordinate` data-testid round-trips. Needs the coordinate-inversion (X↔X') semantics in the carrier (string-prime toggle vs S2 reciprocal lookup — decide against §14 + `S0-HARMONIC-POINTER-WEB36-SPEC` §F).\n   Verify: `cargo test -p portal-core --test m1_inversion_operator` (substrate); carrier affordance round-trip mount test pending."
     },
     {
       "id": "02.T2.6",
@@ -939,9 +943,7 @@
       "effort": null,
       "file": "02-m1-paramasiva-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
-      "dependsOn": [
-        "02.T2.1"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Body/S/S2/**",
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
@@ -957,7 +959,7 @@
       "file": "02-m1-paramasiva-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
       "dependsOn": [
-        "02.T2.10"
+        "02.T2.1"
       ],
       "writeScopes": [
         "Body/S/S2/**",
@@ -3413,9 +3415,7 @@
       "effort": null,
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
-      "dependsOn": [
-        "12.T12.7"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
       ],
@@ -3430,7 +3430,7 @@
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
       "dependsOn": [
-        "12.T12.8"
+        "12.T12.7"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
@@ -3477,9 +3477,7 @@
       "effort": null,
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
-      "dependsOn": [
-        "12.T12.11"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
       ],
@@ -3493,9 +3491,7 @@
       "effort": null,
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
-      "dependsOn": [
-        "12.T12.12"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
       ],
@@ -3510,7 +3506,7 @@
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
       "dependsOn": [
-        "12.T12.13"
+        "12.T12.11"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
@@ -9693,13 +9689,12 @@
       "file": "46-aeon-loop-unit-paradigm.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/46-aeon-loop-unit-paradigm.md",
       "dependsOn": [
-        "12.T9",
         "46.T46.3"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md"
       ],
-      "body": "4. **T46.4 — Z-to-Aeon graduation**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md` — Tranche 46.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Depends on Track 12 Tranche 9.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "4. **T46.4 — Z-to-Aeon graduation**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md` — Tranche 46.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Prerequisite substance: the Moirai Night′ routing audit at plan.runs/12.T12.9-audit.md (routing chain verified landed + behaviorally tested 2026-07-07; the ledger row for that audit tranche closes with its own track walk — the dotted tranche id cannot be expressed in the dependency grammar, so the prerequisite is recorded here as prose, not as a parsed dep).\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "46.T46.5",

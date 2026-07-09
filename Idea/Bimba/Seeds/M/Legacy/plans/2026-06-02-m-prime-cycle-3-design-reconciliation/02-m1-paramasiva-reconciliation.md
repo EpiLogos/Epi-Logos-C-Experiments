@@ -1,5 +1,9 @@
 # Track 02 — M1 Paramaśiva Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles [[M1']] across the four corpora. The substrate is rich and the Theia surface is intentionally shallow: `epi-lib/include/m1.h` carries `ANANDA_BIMBA`/`PRATIBIMBA`, `SPANDA_SEED_BITS=0x03`, `TORUS_GENUS=1`, `DOUBLE_COVER_DEG=720`, `RING_QUATERNION_LUT[12]`, `CL42_BASIS[6]`, `QL_TRIG_TABLE[6]` with static asserts; `portal-core/src/kernel.rs:346` owns `MathemeHarmonicProfile` with `tick12`, `degree720`, `lens_mode`, `resonance72`, `audio_octet[8]`, `nodal_quartet[4]`; `portal-core/src/parashakti/vimarsha_reading.rs` writes the audio bus (resolving the M2-1' Vimarsha-writes / M1' consumes architecture); `hopf.rs` + `quaternion.rs` land the Hopf bundle and SU(2) math. The m1-paramasiva extension is a scaffold with all the right slot names and explicit `DECLARED_BLOCKERS`.
 
 ## Total-Shape Architecture (Phase A)

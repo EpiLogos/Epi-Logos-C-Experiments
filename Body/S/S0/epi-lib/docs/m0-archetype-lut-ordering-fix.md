@@ -1,6 +1,16 @@
 # ARCHETYPE_LUT Ordering Fix
 
-**Status:** FIXED (2026-03-07)
+**Status:** FIXED (2026-03-07) — VERIFIED + PINNED (2026-07-07, Tranche 19.T19.1)
+
+## Landed State (behaviorally pinned by `cargo test -p epi-lib m0_archetype_routing`)
+
+- Archetype 3 (Vak) → `ZODIACAL_LUT[12]` at `ARCHETYPE_LUT[5]`
+- Archetype 5 (Dynamic Harmony) → `MONOPOLY_LUT[7]` at `ARCHETYPE_LUT[7]`
+- Archetype 7 (Divine Action) → `DIVINE_ACT_LUT[7]` at `ARCHETYPE_LUT[9]`
+- Archetype 9 (Paramesvara) → `VIRTUE_LUT[9]` at `ARCHETYPE_LUT[11]`
+- Polarities per dataset: numbers 0/1 NEUTRAL (transcendent roots), number 6 ADAM, number 9 EVE
+- All six complement pairs reciprocal: (2,3), (4,5), (6,7), (8,9), (10,11) plus the (-)/0/1 sentinels
+- Accessor: `m0_resolve_archetypal_number(number 0-9)` → `&ARCHETYPE_LUT[number + 2]` (m0.h/m0.c); NULL out of range
 **Severity:** Moderate — affects M4 oracle interpretation via `m0_resolve_archetypal_number()`
 **File:** `src/m0.c` lines 119-252
 **Discovered:** 2026-03-07, during M4 Nara design research

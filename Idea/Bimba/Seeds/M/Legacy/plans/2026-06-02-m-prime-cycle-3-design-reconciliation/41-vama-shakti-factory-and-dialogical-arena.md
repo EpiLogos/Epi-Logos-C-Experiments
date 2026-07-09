@@ -1,5 +1,9 @@
 # Track 41 — Vama Shakti Factory + Nara M4' Dia-logical Arena
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 **Status:** Phase-K 2026-06-16 — VALIDATED design; DR-VAMA-1..6 VALIDATED (no further gating); consolidates the "Vama Shakti summon from any /World entity" capability and the Vāmeśvarī / four-Vāmā Trika Shaivite lineage's operational expression into the cycle 3 build.
 
 **Canonical home:** [`Idea/Bimba/Seeds/M/M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md`](../../../M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md) — the M4' seed holds the structural-philosophical authority; this track is its cycle 3 execution plan.

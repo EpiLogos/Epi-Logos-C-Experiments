@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 08). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 08) — build/verify HERE, never epi-theia:** CARRIER: 4-5-0 recognition engine as the E4/E5/E6 consumption point (dipyramid 6+6=12 DR-IG-6, Mobius write-back read-only). SUBSTRATE: portal-core. §2 track 08.
+
 1. **T8.1 — Privacy-first composition contract (no raw bodies cross plugin)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md` — Tranche 8.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

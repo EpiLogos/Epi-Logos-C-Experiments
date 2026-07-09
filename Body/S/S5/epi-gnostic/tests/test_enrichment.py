@@ -188,7 +188,10 @@ async def test_cross_namespace_edge_created(enricher):
     coord_enricher, ws, drv = enricher
     vid = f"test-edge-{uuid.uuid4().hex[:8]}"
 
-    # Use a raw archetype coordinate that the existing Neo4j instance holds
+    # #0 (raw archetype, :Psychoid) is a DISTINCT coordinate from M0 (M-family
+    # :Subsystem) and both exist as separate :Bimba nodes. assign_direct must
+    # preserve the raw-archetype coordinate as-is — the "#"->"M" mapping was a
+    # one-time legacy port of the old neo4j data, never a live normalisation.
     coordinate = "#0"
 
     await _create_gnostic_node(drv, ws, vid)

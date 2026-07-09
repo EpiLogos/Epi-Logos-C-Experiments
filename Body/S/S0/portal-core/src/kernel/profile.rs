@@ -9,7 +9,8 @@ use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
 use crate::profile_projections::{
     AnuttaraWitnessProjection, CanonRecognitionEvent, CosmicCompositionState,
-    PasuBeingPatternProjection, PersonalPoleProjection, PsychoidFieldProjection,
+    InversionOperatorHandle, M1TopologyProjection, PasuBeingPatternProjection, PersonalPoleProjection,
+    PsychoidFieldProjection,
 };
 use crate::vak_address::{CpfState, VakAddress};
 
@@ -561,6 +562,19 @@ pub struct MathemeHarmonicProfile {
     pub lens_mode: MathemeLensMode,
     #[serde(default)]
     pub klein_flip: Option<KleinFlipEvent>,
+    /// Track 02.T2.3 — the M1-5 single-torus topology invariants + live
+    /// Klein-flip descriptors, serialized as `m1Topology` for the carrier's
+    /// `topologyFromPayload`. `#[serde(default)]` keeps schema-v1 payloads
+    /// (which predate this field) deserializing — additive, never a second
+    /// carrier ontology.
+    #[serde(default)]
+    pub m1_topology: M1TopologyProjection,
+    /// Track 02.T2.5 — the `invert` field M1'-SPEC §14 wires into every
+    /// coordinate: it points at the SINGLE session-held `#` (Inversion_Operator),
+    /// identical across all coordinates (no per-coordinate forks). Serialized as
+    /// `inversionOperator`; `#[serde(default)]` keeps pre-T2.5 payloads parsing.
+    #[serde(default)]
+    pub inversion_operator: InversionOperatorHandle,
     #[serde(default)]
     pub ananda_vortex: AnandaVortexProjection,
     pub chromatic: MathemeChromaticProfile,
@@ -695,6 +709,12 @@ impl MathemeHarmonicProfile {
             &vimarsha_reading.audio_octet,
             &vimarsha_reading.nodal_quartet,
         );
+        let m1_topology = M1TopologyProjection::from_tick_parts(
+            tick12,
+            degree720,
+            q_cosmic,
+            vimarsha_reading.klein_flip.as_ref(),
+        );
         Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
@@ -716,6 +736,8 @@ impl MathemeHarmonicProfile {
             ratio_role: ratio_role_for_sub_tick(tick12).to_owned(),
             lens_mode,
             klein_flip: vimarsha_reading.klein_flip,
+            m1_topology,
+            inversion_operator: InversionOperatorHandle::session_held(),
             ananda_vortex: AnandaVortexProjection::from_tick(tick12, position, degree720),
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
             diatonic: diatonic.clone(),

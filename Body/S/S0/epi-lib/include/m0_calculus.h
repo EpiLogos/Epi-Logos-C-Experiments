@@ -188,6 +188,31 @@ bool m0_calc_is_palindrome_normal(const char* term);
  */
 bool m0_calc_is_query_object(const char* term);
 
+/* --- Law 3: the equational theory (Tranche 1.14a) ------------------------
+ * The M0_IDENTITY_CHAINS coordinate walks and the registry =-chain
+ * equivalence classes (both anuttara_language.h) are one Law-3 theory in
+ * two faces; m0_calc_reduce rewrites MODULO the classes — identity
+ * resolution fires before any computational rule. */
+
+/* --- Law 7: dash pentavalence (Tranche 1.14b, DR-CALC-2 adjacent) --------
+ * The `-` mark is five things BY POSITION — positional polysemy, hence
+ * parseable. `~` is NOT canon syntax (author meta-pointer, annotation only).
+ */
+typedef enum {
+    M0C_DASH_CHIRALITY     = 0, /* void-adjacent mirror mark: -0, 0-        */
+    M0C_DASH_OPERATOR      = 1, /* base-spine connector: O#-X#-N#           */
+    M0C_DASH_RANGE         = 2, /* span inside a CF/dotted frame: 4.0/1-4.4/5 */
+    M0C_DASH_STRIKETHROUGH = 3, /* dominance chirality in kinship: 2-/2     */
+    M0C_DASH_SUBTRACTION   = 4, /* plain numeric infix: 9-8                 */
+    M0C_DASH_UNKNOWN       = 5,
+} M0CalcDashReading;
+
+/**
+ * Classify the dash at `pos` in `term` by its positional context (Law 7).
+ * Returns M0C_DASH_UNKNOWN when term[pos] is not a dash.
+ */
+M0CalcDashReading m0_calc_dash_reading(const char* term, size_t pos);
+
 /**
  * Tokenize a formulation string into an array of tokens.
  *

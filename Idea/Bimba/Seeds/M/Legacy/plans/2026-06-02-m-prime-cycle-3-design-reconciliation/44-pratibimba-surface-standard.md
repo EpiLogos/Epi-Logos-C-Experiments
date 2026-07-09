@@ -1,5 +1,9 @@
 # Track 44 — Pratibimba Surface Standard
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 **Status:** 2026-06-17 — VALIDATED design; DR-PSS-1..6 VALIDATED this session (no further gating, per the standing Phase-K posture *"don't hold anything behind DR's or validation gates"*). Lands the app-wide block-render + interaction standard for the M' Theia surface as a native, CTX-typed, day/now-runtime-carried layer over already-built substrate.
 
 **Canonical home:** [`Idea/Bimba/Seeds/M/M5'/m5-prime-pratibimba-surface-standard.md`](../../../M5'/m5-prime-pratibimba-surface-standard.md) — the M5' seed holds the structural-philosophical authority; this track is its cycle 3 execution plan.

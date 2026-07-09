@@ -32,6 +32,10 @@ dev_changed_paths: []
 
 # Track 34 — S0 Settings Infrastructure + Gemini Embedding 2 Accessor
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Scope captured from [[33-harmonic-energy-channel-handoff]] §2.5 (Stream E). This tranche lands two new components at S0 that are prerequisites for the N-channel EBM head training pipeline (Stream C, [[12-agentic-layer-s4-s5]] Tranche 12.24 Phase 2 + [[06-m5-epii-reconciliation]] Tranche 6.8): a cloud-opt-in-gated settings subsystem, and a Gemini Embedding 2 accessor that consumes the settings to fetch and cache unified-multimodal embeddings.
 
 ## §0 — Home-file decision

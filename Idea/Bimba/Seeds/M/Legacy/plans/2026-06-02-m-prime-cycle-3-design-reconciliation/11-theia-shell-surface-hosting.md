@@ -1,5 +1,9 @@
 # Track 11 — Theia Shell / Surface Hosting
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Closure of the shell that hosts the six M' surfaces + two integrated plugins. The substrate is largely **ALIGNED at presence level**: all six M-extensions (`m0-anuttara`..`m5-epii`), both integrated plugins (`plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`), both contract preflights (`07-t0` individual + `08-t0` composition), `kernel-bridge` + `kernel-bridge-readiness`, `omnipanel-shell`, `pratibimba-layouts`, `ide-shell-m0-m5` (with all 8 named widgets + `bridge-gate`), `agentic-control-room`, `body-lite-surface`, `acceptance-harness`, `m-extension-runtime`, and `integrated-composition` are landed packages. `CrossLayoutIntent` envelope is typed; `OMNIPANEL_TABS.availableInLayouts` is typed. `epi-tauri`-as-deprecated standing invariant is honored at substrate level.
 
 ## Target Authority Invariant

@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/34-s0-settings-and-gemini-embedding.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 34). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 34) — build/verify HERE, never epi-theia:** MIXED — S0 settings (cloud-opt-in refusal contract, keys from env never over gateway, s0'.settings.*, epi settings) SUBSTRATE; CARRIER: settings pane presence + opt-in state only. §2 track 34.
+
 1. **T34.1 — Component A: S0 settings infrastructure**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/34-s0-settings-and-gemini-embedding.md` — Tranche 34.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

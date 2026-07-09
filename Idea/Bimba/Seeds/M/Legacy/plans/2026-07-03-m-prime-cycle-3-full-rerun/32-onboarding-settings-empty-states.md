@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 32). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 32) — build/verify HERE, never epi-theia:** CARRIER: onboarding/settings/empty-states — six-stage cold-start (non-modal splash 'Profile-tick 1 — system alive'), 9-id+5-flavour readiness via flavourOf(), per-Mn empty copy, typed-confirmation reset, per-artifact privacy opt-in. §2 track 32.
+
 1. **T32.1 — Cold-start playbook**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md` — Tranche 32.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

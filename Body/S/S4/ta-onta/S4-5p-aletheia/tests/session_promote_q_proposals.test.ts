@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
 import { buildQProposalGraphitiEpisode } from "../modules/q-proposal-candidate.ts";
 import {
   applyAeonGraduationToForm,
@@ -210,5 +211,49 @@ describe("Z-thread to Aeon graduation", () => {
       })),
       /CPF \(00\/00\).*consent/,
     );
+  });
+});
+
+describe("Z-to-Aeon graduation against the REAL /World Aeon form (46.4)", () => {
+  it("applies to the live Idea/Bimba/World/Aeon.md bytes without disturbing frontmatter or body, and accrues on re-application", () => {
+    const realForm = readFileSync("Idea/Bimba/World/Aeon.md", "utf8");
+    const frontmatterEnd = realForm.indexOf("---", 4);
+    const realFrontmatter = realForm.slice(0, frontmatterEnd);
+
+    const first = applyAeonGraduationToForm(
+      realForm,
+      buildAeonGraduationRecord(graduation(), "2026-07-07T09:00:00.000Z"),
+    );
+    // real frontmatter byte-identical; canonical body sections intact
+    assert.ok(first.startsWith(realFrontmatter), "frontmatter untouched");
+    assert.match(first, /## #5 Integration - Syzygy Return/);
+    assert.match(first, /## Graduation Accrual Ledger/);
+    assert.match(first, /<!-- aeon-graduation:start:assess-improve -->/);
+
+    const second = applyAeonGraduationToForm(
+      first,
+      buildAeonGraduationRecord(
+        graduation({
+          z_thread_id: "z-thread-real-2",
+          vak_args: { coordinate: "M5-4", intensity: "night" },
+          eval_history: [{
+            eval_id: "eval-real-2",
+            transcript_ref: "~/.epi/gate/transcripts/z-thread-real-2.jsonl",
+            score: 0.97,
+            summary: "Second accrual against the live form.",
+          }],
+        }),
+        "2026-07-07T10:00:00.000Z",
+      ),
+    );
+    // accrual, not duplication: exactly one marker block, version 2, both runs held
+    assert.equal(second.split("<!-- aeon-graduation:start:assess-improve -->").length, 2);
+    const state = JSON.parse(
+      second.match(/<!-- aeon-graduation-state:start\n([\s\S]*?)\n\s*aeon-graduation-state:end -->/)?.[1] ?? "{}",
+    );
+    assert.equal(state.version, 2);
+    assert.equal(state.run_history.length, 2);
+    assert.deepEqual(state.run_history[1].vak_args, { coordinate: "M5-4", intensity: "night" });
+    assert.ok(second.startsWith(realFrontmatter), "frontmatter still untouched after accrual");
   });
 });

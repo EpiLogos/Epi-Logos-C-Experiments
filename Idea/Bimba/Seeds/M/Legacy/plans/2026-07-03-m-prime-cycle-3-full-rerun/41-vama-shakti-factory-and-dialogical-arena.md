@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/41-vama-shakti-factory-and-dialogical-arena.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 41). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 41) — build/verify HERE, never epi-theia:** SUBSTRATE — Vama Shakti factory (portal-core vama_shakti.rs, m4.arena.* gateway family, epi nara arena CLI parity, SpacetimeDB tables — VERIFY they exist AT ALL; four closed classifiers Egregore/Sprite/Daemon/Mantra, BLAKE3 identity). CARRIER: arena pane (large future); 41.7 widget spec is portable design law. Highest fraud-risk file (done=12, zero verification). §2 track 41.
+
 1. **T41.1 — Architecture + binding contract *(doc-ahead-landing; blocks 41.2..41.12)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/41-vama-shakti-factory-and-dialogical-arena.md` — Tranche 41.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

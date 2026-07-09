@@ -1,5 +1,9 @@
 # Track 36 — Anuttara Pentadic Runtime Trace
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 This track integrates the 0/1 -> 5 discovery as a Cycle-3 development surface, not as commentary. It owns the profile-level trace that carries the Anuttara fivefold hinge through the M' runtime: M0' source substrate, M1' tick and K2 breath, M2' 72-frequency flow, M3' 64-codon Mahamaya computation, M4' bioquaternionic recognition, and M5' Epii EBM review. The target is a real typed payload, renderer consumption contract, tests, and composition overlays.
 
 The core invariant is:

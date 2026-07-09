@@ -10,11 +10,17 @@
  *   are red. The verifier reads the recorded output, never the implementer's
  *   claim.
  * Public surface: extractVerifyCommands, resolveTaskVerify, runVerification,
- *   main; CLI: node .codex/scripts/verify-tranche.mjs <TASK_ID>
+ *   acquireGateLock, releaseGateLock, scopeForTasks, main;
+ *   CLI: node .codex/scripts/verify-tranche.mjs <TASK_ID> [<TASK_ID>…]
  *     [--plan <folder-or-md>] [--cwd <dir>] [--only <verify-all suites>]
- *     [--owner <independent-verifier-id>] — recorded as verifier-owner; the
- *     ledger close path (m-dev-plan-assess.mjs) refuses a done mark whose
- *     verifier-owner equals the closing owner.
+ *     [--full] [--owner <independent-verifier-id>] — recorded as
+ *     verifier-owner; the ledger close path (m-dev-plan-assess.mjs) refuses
+ *     a done mark whose verifier-owner equals the closing owner.
+ *   Gate-lane lock: .codex/verify.lock (mkdir-atomic, stale-pid steal) —
+ *     one verify run machine-wide; concurrent sessions queue, never collide.
+ *   Batch ids to run the shared gate ONCE for N records; scoped gates per
+ *     K/W/UF/D class replace the full 28-suite sweep per close (--full for
+ *     the whole gate; the nightly/checkpoint sweep stays whole-repo).
  * Does NOT own: suite definitions (verify-all.mjs); the ledger write path
  *   (m-dev-plan-assess.mjs) — this records evidence, the closer marks.
  * Contract: a PASS file is only written when every stage is green; every run
@@ -22,7 +28,7 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -33,6 +39,59 @@ const DEFAULT_PLAN = join(
   "Idea", "Bimba", "Seeds", "M", "Legacy", "plans", "2026-07-03-m-prime-cycle-3-full-rerun",
 );
 const MAX_RECORDED_OUTPUT = 200_000;
+
+/* Class-scoped gate: the honest core per close is the tranche's Verify
+ * commands + honesty-lint + the suites the change class can actually reach
+ * (verification-classes.json per track). The FULL gate stays available via
+ * --full and remains the periodic sweep; a scoped PASS record names its
+ * scope verbatim in the gate command line. */
+/* Scopes are the MINIMAL honest set per class. Deliberately excluded from
+ * K and W: `epi-cli` (260s+, carries the live-tmux flake family — its tests
+ * belong to closes that actually touch epi-cli, via the tranche's own
+ * Verify line or an explicit --only) and the app-* suites (UF-only). The
+ * nightly / checkpoint sweep (`verify-all` with no --only) remains the
+ * whole-repo truth; a per-close gate proves the change class, not the
+ * universe (protocol sanity ruling, 2026-07-07). */
+const CLASS_SUITES = {
+  D: ["honesty-lint"],
+  K: [
+    "harness-selftest", "honesty-lint", "kernel-truth",
+    "epi-lib", "kernel-contract", "schemas", "portal-core",
+  ],
+  W: [
+    "harness-selftest", "honesty-lint",
+    "gateway", "gateway-contract", "gateway-methods", "live-wire",
+    "ta-onta", "redis-context", "spacetime", "graphiti-runtime",
+  ],
+  UF: [
+    "harness-selftest", "honesty-lint",
+    "gateway", "gateway-contract", "gateway-methods", "live-wire",
+    "ta-onta", "redis-context", "spacetime", "graphiti-runtime",
+    "app-typecheck", "app-test", "app-build", "app-smoke", "app-ui-flow",
+    "carrier-tokens",
+  ],
+};
+
+/** Union of the class scopes for the given task ids; null = full gate. */
+export function scopeForTasks(taskIds, planDir) {
+  let classes = {};
+  try {
+    classes = JSON.parse(
+      readFileSync(join(planDir, "plan.runs", "verification-classes.json"), "utf8"),
+    ).classes ?? {};
+  } catch {
+    return null; // no class registry — run the full gate
+  }
+  const suites = new Set();
+  for (const taskId of taskIds) {
+    const track = taskId.split(".")[0];
+    const cls = classes[track];
+    const scoped = CLASS_SUITES[cls];
+    if (!scoped) return null; // unknown class — fail open to the full gate
+    for (const suite of scoped) suites.add(suite);
+  }
+  return [...suites];
+}
 
 /** Backticked shell fragments on the Verify line(s) of a tranche body. */
 export function extractVerifyCommands(body) {
@@ -79,6 +138,58 @@ export function resolveTaskVerify(taskId, planPath = DEFAULT_PLAN) {
   }
   const section = lines.slice(start, end).join("\n");
   return { taskId, verifyText: section, commands: extractVerifyCommands(section), file: planPath };
+}
+
+/* Gate-lane lock: the verify gate spawns real gateways on fixed ports and
+ * real tmux sessions, so exactly one verify run may execute machine-wide.
+ * mkdir is the atomic acquire; a lock whose recorded pid is dead is stale
+ * and stolen. Concurrent sessions queue here instead of colliding. */
+const GATE_LOCK_DIR = join(REPO_ROOT, ".codex", "verify.lock");
+
+function pidAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function acquireGateLock(owner) {
+  for (;;) {
+    try {
+      mkdirSync(GATE_LOCK_DIR);
+      writeFileSync(
+        join(GATE_LOCK_DIR, "holder.json"),
+        JSON.stringify({ pid: process.pid, owner, at: new Date().toISOString() }),
+      );
+      return;
+    } catch {
+      let holder = null;
+      try {
+        holder = JSON.parse(readFileSync(join(GATE_LOCK_DIR, "holder.json"), "utf8"));
+      } catch {
+        // holder file not written yet or unreadable — treat as live briefly
+      }
+      if (holder && !pidAlive(holder.pid)) {
+        try {
+          rmSync(GATE_LOCK_DIR, { recursive: true, force: true });
+          console.log(`[verify-tranche] stole stale gate lock (dead pid ${holder.pid})`);
+          continue;
+        } catch { /* another process stole it first */ }
+      }
+      console.log(
+        `[verify-tranche] gate lane held by ${holder?.owner ?? "unknown"} (pid ${holder?.pid ?? "?"}) — waiting`,
+      );
+      await new Promise((r) => setTimeout(r, 10_000));
+    }
+  }
+}
+
+export function releaseGateLock() {
+  try {
+    rmSync(GATE_LOCK_DIR, { recursive: true, force: true });
+  } catch { /* already gone */ }
 }
 
 function runShell(command, cwd) {
@@ -168,45 +279,136 @@ export async function runVerification({
 
 async function main() {
   const argv = process.argv.slice(2);
-  const taskId = argv[0];
-  if (!taskId || taskId.startsWith("--")) {
-    console.error("usage: node .codex/scripts/verify-tranche.mjs <TASK_ID> [--plan <folder-or-md>] [--cwd <dir>] [--only <suites>] [--owner <verifier-id>]");
-    process.exit(2);
-  }
+  const taskIds = [];
   let plan = DEFAULT_PLAN;
   let cwd = REPO_ROOT;
   let only = null;
+  let full = false;
   let owner = process.env.M_DEV_VERIFIER || process.env.M_DEV_OWNER || process.env.USER || "verify-tranche";
-  for (let i = 1; i < argv.length; i += 1) {
+  for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === "--plan") plan = resolve(REPO_ROOT, argv[(i += 1)]);
     else if (argv[i] === "--cwd") cwd = resolve(REPO_ROOT, argv[(i += 1)]);
     else if (argv[i] === "--only") only = argv[(i += 1)];
+    else if (argv[i] === "--full") full = true;
     else if (argv[i] === "--owner") owner = argv[(i += 1)];
-    else throw new Error(`unknown argument '${argv[i]}'`);
+    else if (argv[i].startsWith("--")) throw new Error(`unknown argument '${argv[i]}'`);
+    else taskIds.push(argv[i]);
+  }
+  if (taskIds.length === 0) {
+    console.error("usage: node .codex/scripts/verify-tranche.mjs <TASK_ID> [<TASK_ID>…] [--plan <folder-or-md>] [--cwd <dir>] [--only <suites>] [--owner <verifier-id>]");
+    process.exit(2);
   }
 
-  const resolved = resolveTaskVerify(taskId, plan);
-  console.log(`[verify-tranche] ${taskId}: ${resolved.commands.length} command(s) from the Verify line`);
+  await acquireGateLock(owner);
+  process.on("exit", releaseGateLock);
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => {
+      releaseGateLock();
+      process.exit(130);
+    });
+  }
 
+  const planDir = statSync(plan).isDirectory() ? plan : DEFAULT_PLAN;
   const verifyAll = ["node", join(SCRIPT_DIR, "verify-all.mjs"), "--quiet"];
-  if (only) verifyAll.push("--only", only);
+  if (only) {
+    verifyAll.push("--only", only);
+  } else if (!full) {
+    const scoped = scopeForTasks(taskIds, planDir);
+    if (scoped) {
+      verifyAll.push("--only", scoped.join(","));
+      console.log(`[verify-tranche] class-scoped gate: ${scoped.join(",")} (use --full for the whole gate)`);
+    }
+  }
   const gateCommands = [
     ["node", join(SCRIPT_DIR, "lint-test-honesty.mjs")],
     verifyAll,
   ];
-  const planDir = statSync(plan).isDirectory() ? plan : DEFAULT_PLAN;
   const outDir = join(planDir, "plan.runs", "verifications");
-  const { verdict, recordPath } = await runVerification({
-    taskId,
-    commands: resolved.commands,
-    gateCommands,
-    cwd,
-    outDir,
-    verifyText: resolved.verifyText,
-    owner,
+
+  if (taskIds.length === 1) {
+    const taskId = taskIds[0];
+    const resolved = resolveTaskVerify(taskId, plan);
+    console.log(`[verify-tranche] ${taskId}: ${resolved.commands.length} command(s) from the Verify line`);
+    const { verdict, recordPath } = await runVerification({
+      taskId,
+      commands: resolved.commands,
+      gateCommands,
+      cwd,
+      outDir,
+      verifyText: resolved.verifyText,
+      owner,
+    });
+    console.log(`[verify-tranche] ${verdict} — record: ${recordPath}`);
+    process.exit(verdict === "PASS" ? 0 : 1);
+  }
+
+  // Batched mode: each task's OWN Verify-line commands run per task; the
+  // expensive shared gates (honesty-lint + verify-all) run ONCE, fresh, and
+  // every record carries the same verbatim gate sections. One green gate
+  // honestly backs every task verified against it — the per-task work is
+  // the Verify line, not a re-run of the whole repo gate per task id.
+  const perTask = taskIds.map((taskId) => {
+    const resolved = resolveTaskVerify(taskId, plan);
+    console.log(`[verify-tranche] ${taskId}: ${resolved.commands.length} command(s) from the Verify line`);
+    return { taskId, resolved, sections: [], refused: false };
   });
-  console.log(`[verify-tranche] ${verdict} — record: ${recordPath}`);
-  process.exit(verdict === "PASS" ? 0 : 1);
+
+  for (const task of perTask) {
+    for (const command of task.resolved.commands) {
+      const { code, output } = await runShell(command, cwd);
+      task.sections.push({ title: `tranche check: \`${command}\` (cwd ${cwd})`, code, output });
+      if (code !== 0) task.refused = true;
+    }
+    if (task.resolved.commands.length === 0) {
+      task.sections.push({
+        title: "tranche check: (no machine-runnable commands on the Verify line — gate only)",
+        code: 0,
+        output: task.resolved.verifyText.trim(),
+      });
+    }
+  }
+
+  const gateSections = [];
+  let gateRefused = false;
+  const anyTaskGreen = perTask.some((t) => !t.refused);
+  for (const gate of gateCommands) {
+    if (gateRefused || !anyTaskGreen) break;
+    const { code, output } = await runArgv(gate, REPO_ROOT);
+    gateSections.push({ title: `gate: \`${gate.join(" ")}\` (shared batch run)`, code, output });
+    if (code !== 0) gateRefused = true;
+  }
+
+  mkdirSync(outDir, { recursive: true });
+  let exitCode = 0;
+  for (const task of perTask) {
+    const refused = task.refused || gateRefused || !anyTaskGreen;
+    const verdict = refused ? "REFUSED" : "PASS";
+    if (verdict !== "PASS") exitCode = 1;
+    const sections = [...task.sections, ...gateSections];
+    const record = [
+      `# Verification record — ${task.taskId}`,
+      ``,
+      `- verdict: **${verdict}**${refused ? " (a pass may not be recorded while any stage is red)" : ""}`,
+      `- verifiedAt: ${new Date().toISOString()}`,
+      `- verifier: verify-tranche.mjs (independent re-execution; verifier ≠ closer; batched gate run over ${taskIds.join(", ")})`,
+      `- verifier-owner: ${owner ?? "unspecified"}`,
+      ``,
+      ...sections.flatMap((section) => [
+        `## ${section.title}`,
+        ``,
+        `exit code: ${section.code}`,
+        ``,
+        "```",
+        clip(section.output.trim()),
+        "```",
+        ``,
+      ]),
+    ].join("\n");
+    const recordPath = join(outDir, `${task.taskId}.md`);
+    writeFileSync(recordPath, record);
+    console.log(`[verify-tranche] ${verdict} — record: ${recordPath}`);
+  }
+  process.exit(exitCode);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

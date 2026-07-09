@@ -1,5 +1,9 @@
 # Track 04 — M3 Mahāmāyā Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles [[M3']] across the four corpora. M3 is **structurally aligned at the contract surface**: the 472-state codon-rotation projection is materialised at `Body/S/S0/portal-core/src/codon_rotation_projection.rs` (`CODON_ROTATION_SURFACE_COUNT=472`, forward/reverse maps, `codon_charge_quaternion`); the m3-mahamaya extension (contract `2026-06-01.07-T6`) consumes it via `buildM3ProjectionSurface` and throws when `profile.codonRotationProjection` is missing; the 40 non-dual / 24 dual / 7-rotational split is exactly what `classify_codon` enforces. 8 of 18 load-bearing claims are ALIGNED. M3 has **no genuine CODE-PENDING** — all gaps are doc-ahead rendering work over landed substrate or contradictions for the decision register.
 
 ## Total-Shape Architecture (Phase A)

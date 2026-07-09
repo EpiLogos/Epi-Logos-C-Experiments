@@ -209,7 +209,16 @@ export const M0_LAYER_ROUTES: readonly M0LayerRoute[] = Object.freeze(
  */
 export const M0_LAYER_FIELDS: Readonly<Record<M0InspectorLayer, readonly string[]>> =
     Object.freeze({
-        lang: ['c_1_symbol', 'c_1_formulation_type', 'c_1_complete_formulation'],
+        lang: [
+            'c_1_symbol',
+            'c_1_formulation_type',
+            'c_1_complete_formulation',
+            // M0-0' image-asset handles (rerun 01.T1.6 / 09.3, candidate DR-M0-4):
+            // rendered review_pending until user validation promotes DR-M0-4; the
+            // renderer never infers/backfills. Projection: m0AssetHandles.ts.
+            'c_1_asset_uri',
+            'c_1_asset_kind'
+        ],
         ql: ['family', 'mirror', 'lens', 'inversion', 'position_character', 'gebser_register'],
         rel: ['relations', 'c_1_relation_family'],
         time: ['community', 'active_now_clock'],

@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 17). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 17) — build/verify HERE, never epi-theia:** SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17.
+
 1. **T17.1 — Split `gateway-contract/lib.rs` (4,883 LOC, largest file in repo)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md` — Tranche 17.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

@@ -2,6 +2,8 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 05). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
+**⚑ Carrier (track 05) — build/verify HERE, never epi-theia:** CARRIER: M4' lived-surface depth (oracle aliveness, R-factor fretboard, session-close ceremony, time-axis switcher) in pratibimba-app. SUBSTRATE: portal-core nara/* + kairos. Least-real M surface (22 AR). §2 track 05/25.
+
 1. **T5.1 — Resonance + Conjugate-Form indicator rendering on Nara surface**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md` — Tranche 5.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).

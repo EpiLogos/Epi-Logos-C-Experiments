@@ -1,5 +1,9 @@
 # Track 18 — Typed Kernel-Bridge JSON Edge
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 **The single most leveraged cycle-3 cleanup.** This tranche consolidates the eight separate profile-bus and kernel-bridge surface additions surfaced across Phase A + Phase B into one coherent typed-JSON-edge landing. Landing this first removes coupling across the rest of cycle 3 — every downstream M' extension consumes the typed shapes rather than negotiating with an opaque `Record<string, unknown>` payload at the JSON edge.
 
 The kernel-bridge JSON shape at `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs:580-646` and its Theia mirror at `Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts` become **typed at the edge**: each new field surfaces as a structured projection with a known schema, mirrored cleanly on the TS side, version-stamped per `M5_WORKBENCH_SCHEMA_VERSION` pattern.

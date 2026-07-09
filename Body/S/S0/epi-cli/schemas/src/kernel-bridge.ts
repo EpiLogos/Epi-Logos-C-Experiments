@@ -1062,6 +1062,53 @@ export type MathemePointerAnchorProjection = z.infer<
   typeof MathemePointerAnchorProjection
 >;
 
+// Mirrors portal-core/src/profile_projections.rs M1TopologyProjection +
+// TorusKnotPhase (Track 02.T2.3) — the M1-5 single-torus topology invariants
+// (double-cover 720°, genus-1 torus, χ=0, S3->S2 Hopf) + quaternion state +
+// the live Klein-flip descriptors (k2TritoneCrossing / m1OriginKleinFlip).
+// serde(default) on the profile, so optional here for pre-T2.3 payloads.
+export const M1TorusKnotPhase = z
+  .object({ p: z.number(), q: z.number() })
+  .strict();
+export type M1TorusKnotPhase = z.infer<typeof M1TorusKnotPhase>;
+
+export const M1TopologyProjection = z
+  .object({
+    doubleCoverDeg: z.number().int().nonnegative(),
+    torusGenus: z.number().int().nonnegative(),
+    eulerCharacteristic: z.number().int(),
+    hopfProjectDeg: z.number().int().nonnegative(),
+    hopfFiber: z.number().int().nonnegative(),
+    hopfIdentity: z.string(),
+    ringQuaternion: z.array(z.number()).length(4),
+    elementCount: z.number().int().nonnegative(),
+    composedQuaternion: z.array(z.number()).length(4),
+    walkMode: z.string(),
+    bifurcationLambda: z.number(),
+    resolutionLevel: z.number().int().nonnegative(),
+    torusKnotPhase: M1TorusKnotPhase,
+    parentAttribution: z.string(),
+    priorGround: z.string(),
+    downstreamDoubleTorus: z.string(),
+    k2TritoneCrossing: z.string(),
+    m1OriginKleinFlip: z.string(),
+  })
+  .strict();
+export type M1TopologyProjection = z.infer<typeof M1TopologyProjection>;
+
+// Mirrors portal-core/src/profile_projections.rs InversionOperatorHandle
+// (Track 02.T2.5) — the single session-held `#` (Inversion_Operator) handle
+// M1'-SPEC §14 wires into every coordinate (identical across all coordinates,
+// never per-coordinate forked). serde(default) on the profile, optional here.
+export const InversionOperatorHandle = z
+  .object({
+    operator: z.string(),
+    handle: z.string(),
+    provenance: z.string(),
+  })
+  .strict();
+export type InversionOperatorHandle = z.infer<typeof InversionOperatorHandle>;
+
 export const MathemeHarmonicProfile = z
   .object({
     profileSchemaVersion: z.literal(1),
@@ -1127,6 +1174,12 @@ export const MathemeHarmonicProfile = z
     // Typed 2026-07-06 (was z.unknown()): the three-variant flip union, null
     // between flip ticks. Optional for legacy payload compatibility.
     kleinFlip: KleinFlipEvent.nullable().optional(),
+    // Track 02.T2.3: the M1-5 single-torus topology projection, serde(default)
+    // on the profile — optional here for pre-T2.3 payload compatibility.
+    m1Topology: M1TopologyProjection.optional(),
+    // Track 02.T2.5: the single session-held # (Inversion_Operator) — the
+    // `invert` field wired into every coordinate, serde(default) on the profile.
+    inversionOperator: InversionOperatorHandle.optional(),
     // T12 hardening: anandaVortex/harmonicGrammar are serde(default) structs,
     // serialized on every current profile frame; optional only for legacy
     // pre-projection payload compatibility, never z.unknown().

@@ -219,6 +219,12 @@ typedef struct {
 
 extern const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE];
 
+/* Resolve an archetypal NUMBER (0-9) to its LUT entry. Index = number + 2
+ * because (-) and 0/1 occupy slots 0-1 (dataset law: numbers 0-9 map to
+ * #0-3-2..#0-3-11, with 9 at #0-2-9). NULL for number > 9. The M4 oracle
+ * consumer named by docs/m0-archetype-lut-ordering-fix.md. */
+const Archetype_Entry* m0_resolve_archetypal_number(uint8_t number);
+
 /* Session-close contemplation questions keyed by archetype index. */
 extern const char* const CONTEMPLATION_PROMPT_LUT[12];
 
@@ -326,6 +332,8 @@ typedef struct {
     uint8_t dominant_val;      /* kernel numeric value */
     uint8_t archetype_role;
     uint8_t dominance_mode;    /* Nara_Dominance_Mode — chirality read off coordinate */
+    const char* coordinate;    /* verbatim chiral coordinate, e.g. "2-/2" — the string
+                                  the dominance_mode is read off; never additive #+n */
 } Nara_Entry;
 
 extern const Nara_Entry NARA_MSHARP_LUT[6];

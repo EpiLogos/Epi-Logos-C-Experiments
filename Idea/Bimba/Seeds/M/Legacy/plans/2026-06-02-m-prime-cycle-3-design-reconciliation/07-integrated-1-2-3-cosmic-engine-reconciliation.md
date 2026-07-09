@@ -1,5 +1,9 @@
 # Track 07 — Integrated 1-2-3 Cosmic Engine Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles the integrated `1-2-3` cosmic engine plugin across the four corpora. This plugin composes [[M1']] + [[M2']] + [[M3']] through the kernel-bridge profile-tick — the cosmic stratum of the `137 = 64 + 72 + 1` matheme (M1 +1 → M2 72 → M3 64). The plugin package is landed; cycle-3 work is composition contract + readiness gating against Wave-A pending profile-field markers. Anti-greenfield throughout.
 
 ## Total-Shape Architecture (Phase A)

@@ -45,6 +45,10 @@ dev_changed_paths: []
 
 # §0 — Handoff Context
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 This tranche is a **planning + canon-amendment handoff** following the substrate-clarity session of 2026-06-08. It resolves a single architectural-clarity question (how the 12-fold tick, live Kerykeion time, Nara user-tracking, the Mahamaya 60×6 meta-lens, and the day/NOW context cohere into a single firm temporal substrate) by promoting the **Fibonacci Ground** (`#2-0` Parashakti, 60-fold, LCM(6,5,12)) to its canonical position as **Level 0** of the substrate stack — pre-lensic, pre-walk, pre-tick, intrinsic to every degree node.
 
 The architecture is not new. It is specified in [[02-16-lenses-backbone-temporal]] §0 ("The Fibonacci Ground: Level 0 (Meta-Lens, Pre-Lensic)") under `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/`. What this handoff does is propagate the Level 0 framing into cycle-3 reconciliation tranches, into the canonical kernel header files (`m3.h`, `m4.h`), into the NOW.md frontmatter schema, and into the M3 Mahamaya portal plugin render. After these amendments, every cycle-3 surface that touches temporality reads from a single named substrate.

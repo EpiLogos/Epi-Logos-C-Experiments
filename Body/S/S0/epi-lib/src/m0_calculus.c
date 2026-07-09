@@ -13,6 +13,9 @@
  */
 
 #include "m0_calculus.h"
+#include "anuttara_language.h"
+#include "m0.h"
+#include "m3.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -266,6 +269,30 @@ static bool apply_reduction_step(char* term, size_t term_size, size_t* term_len,
     const char* replacement = "";
     size_t match_len = 0;
 
+    /* --- Law 3 FIRST: identity-chains are declarations, not computations.
+     * The rewriting system runs MODULO the equational theory (Tranche
+     * 1.14a): when the whole term is an unambiguous non-canonical member
+     * of a registry =-chain class, it rewrites to the chain head before
+     * any computational rule fires. The same Law-3 theory read as
+     * coordinate walks is M0_IDENTITY_CHAINS (anuttara_language.c);
+     * these classes are its rewrite face. Whole-term only, and the head
+     * never matches as non-canonical, so this cannot loop. --- */
+    {
+        const int class_id = m0_identity_class_find(term);
+        if (class_id >= 0) {
+            const char* canonical = m0_identity_class_canonical(class_id);
+            if (canonical && strcmp(canonical, term) != 0 &&
+                strlen(canonical) < term_size) {
+                pos = 0;
+                match_len = len;
+                rule = M0C_RULE_IDENTITY;
+                rule_name = "Law-3 identity-chain resolution (modulo rewrite)";
+                replacement = canonical;
+                goto apply;
+            }
+        }
+    }
+
     /* --- Rule priority order (per DR-CALC-1 O# precedence) --- */
 
     /* 1. Framing asymmetry — the hinge: (00+00) → 9 (framed) */
@@ -283,7 +310,6 @@ static bool apply_reduction_step(char* term, size_t term_size, size_t* term_len,
     pos = find_pattern(term, "00+00", 0);
     while (pos >= 0) {
         /* Check if this 00+00 is inside parentheses */
-        bool framed = false;
         if (pos > 0 && term[pos-1] == '(') {
             /* Already handled by framed rule above — skip */
             pos = find_pattern(term, "00+00", (size_t)(pos + 1));
@@ -402,7 +428,9 @@ static bool apply_reduction_step(char* term, size_t term_size, size_t* term_len,
             if (pos3 >= 0) {
                 rule = M0C_RULE_SUPER_MUL_EXPAND;
                 rule_name = "Law-4 superposition expansion: ((+/-0)x//(+/-0))→0/1";
-                match_len = (size_t)(pos3 + 6) - (size_t)pos;
+                /* "(+/-0))" is 7 chars: consume through the outer close so
+                 * the expansion lands "0/1", not "0/1)" (corpus law). */
+                match_len = (size_t)(pos3 + 7) - (size_t)pos;
                 replacement = "0/1";
                 goto apply;
             }
@@ -417,7 +445,7 @@ static bool apply_reduction_step(char* term, size_t term_size, size_t* term_len,
         /* Ensure this isn't part of a longer number like 00/0 */
         bool valid = true;
         if (pos > 0 && term[pos-1] == '0') valid = false;
-        if (pos + 3 < len && term[pos+3] == '0') valid = false;
+        if ((size_t)(pos + 3) < len && term[pos+3] == '0') valid = false;
         if (valid) {
             rule = M0C_RULE_DIV_ZERO_INDET;
             rule_name = "Law-6 indeterminate: 0/0→%";
@@ -428,9 +456,11 @@ static bool apply_reduction_step(char* term, size_t term_size, size_t* term_len,
     }
 
     /* 10. Application to zero: X(0) → ?!/!? */
-    /*     Match pattern: token immediately followed by (0) */
+    /*     Match pattern: token immediately followed by (0).
+     *     i+2 < len (not i+3): the pattern needs indices i..i+2 valid, and
+     *     the earlier off-by-one silently skipped X(0) at end-of-term. */
     {
-        for (size_t i = 0; i + 3 < len; i++) {
+        for (size_t i = 0; i + 2 < len; i++) {
             if (term[i] == '(' && term[i+1] == '0' && term[i+2] == ')') {
                 /* Find the token before '(' */
                 size_t tok_end = i;
@@ -711,8 +741,53 @@ int m0_calc_nucleotide_from_coin(int yin_count, int yang_count) {
 bool m0_calc_tao_is_codon_eval(void) {
     /* The kinship-grammar apex Tao (5-/5, coord-pos 5) IS the act
      * that reads the 0/1 ↔ 1/0 R#/## binary into genetic charges
-     * pp/nn/np/pn. This is the seam where M0 calculus and M3 codon
-     * engine are one operation. */
+     * pp/nn/np/pn — verified structurally, not asserted:
+     *   (1) the apex exists: Tao at kinship position 5, dominant
+     *       synthesis on the verbatim 5-/5 chiral coordinate;
+     *   (2) the R#/## coin construction (4-slot frame, yang+5)
+     *       regenerates NUCLEOTIDE_ICHING_VALUE {6,9,7,8};
+     *   (3) for every codon, m3_compute_charges equals the X#
+     *       sign-algebra over those coin-constructed values. */
+    static const int coin_counts[4][2] = {
+        { 3, 1 }, /* A — Old Yin     3xR# + 1x## -> 6 */
+        { 0, 4 }, /* T — Old Yang    0xR# + 4x## -> 9 */
+        { 2, 2 }, /* C — Young Yin   2xR# + 2x## -> 7 */
+        { 1, 3 }, /* G — Young Yang  1xR# + 3x## -> 8 */
+    };
+
+    const Nara_Entry* tao = &NARA_MSHARP_LUT[5];
+    if (tao->frame_position != 5u ||
+        tao->dominance_mode != (uint8_t)NARA_DOM_DOMINANT ||
+        tao->coordinate == NULL ||
+        strcmp(tao->coordinate, "5-/5") != 0) {
+        return false;
+    }
+
+    for (int n = 0; n < 4; n += 1) {
+        if (m0_calc_nucleotide_from_coin(coin_counts[n][0], coin_counts[n][1])
+            != (int)NUCLEOTIDE_ICHING_VALUE[n]) {
+            return false;
+        }
+    }
+
+    for (int codon = 0; codon < 64; codon += 1) {
+        int8_t pp, nn, np, pn;
+        int x = m0_calc_nucleotide_from_coin(
+            coin_counts[(codon >> 4) & 0x03][0],
+            coin_counts[(codon >> 4) & 0x03][1]);
+        int y = m0_calc_nucleotide_from_coin(
+            coin_counts[(codon >> 2) & 0x03][0],
+            coin_counts[(codon >> 2) & 0x03][1]);
+        int z = m0_calc_nucleotide_from_coin(
+            coin_counts[codon & 0x03][0],
+            coin_counts[codon & 0x03][1]);
+        m3_compute_charges((uint8_t)codon, &pp, &nn, &np, &pn);
+        if (pp != (int8_t)(x + y + z) || nn != (int8_t)(x - y - z) ||
+            np != (int8_t)(x - y + z) || pn != (int8_t)(x + y - z)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -935,3 +1010,61 @@ int main(void) {
 }
 
 #endif /* M0_CALCULUS_SELF_TEST */
+
+/* ===================================================================
+ * Law 7: dash pentavalence (Tranche 1.14b).
+ *
+ * Positional polysemy, hence parseable — the reading is determined by
+ * what flanks the mark, checked in specificity order:
+ *   strikethrough: digit-dash against a kinship slash (2-/2, 1/1-)
+ *   chirality:     void-adjacent mirror mark (-0, 0-)
+ *   operator:      base-spine connector between #-glyphs (O#-X#)
+ *   range:         span between dotted coordinates inside a frame
+ *   subtraction:   plain numeric infix (9-8)
+ * =================================================================== */
+
+static bool idc_is_digit(char c) { return c >= '0' && c <= '9'; }
+
+M0CalcDashReading m0_calc_dash_reading(const char* term, size_t pos) {
+    if (!term) return M0C_DASH_UNKNOWN;
+    const size_t len = strlen(term);
+    if (pos >= len || term[pos] != '-') return M0C_DASH_UNKNOWN;
+
+    const char before = pos > 0 ? term[pos - 1] : '\0';
+    const char after = pos + 1 < len ? term[pos + 1] : '\0';
+
+    /* Strikethrough: the dominance dash rides a kinship ratio — digit
+     * before the dash with a slash directly after (2-/2), or a trailing
+     * dash on a ratio's denominator digit (1/1-). */
+    if (idc_is_digit(before) && after == '/') return M0C_DASH_STRIKETHROUGH;
+    if (idc_is_digit(before) && after == '\0' && memchr(term, '/', pos)) {
+        return M0C_DASH_STRIKETHROUGH;
+    }
+
+    /* Chirality: the mirror mark hugs the void. */
+    if ((after == '0' && !idc_is_digit(before)) ||
+        (before == '0' && !idc_is_digit(after) && after != '/')) {
+        return M0C_DASH_CHIRALITY;
+    }
+
+    /* Operator: connective between #-bearing base glyphs. */
+    if (before == '#' || after == 'O' || after == 'X' || after == 'N' ||
+        after == 'M' || after == '#') {
+        return M0C_DASH_OPERATOR;
+    }
+
+    /* Range: a span between dotted coordinate fragments (CF frames). */
+    if (idc_is_digit(before) && idc_is_digit(after)) {
+        bool dotted_before = false, dotted_after = false;
+        for (size_t i = pos; i-- > 0 && term[i] != '(' && term[i] != ' ';) {
+            if (term[i] == '.') { dotted_before = true; break; }
+        }
+        for (size_t i = pos + 1; i < len && term[i] != ')' && term[i] != ' '; i++) {
+            if (term[i] == '.') { dotted_after = true; break; }
+        }
+        if (dotted_before || dotted_after) return M0C_DASH_RANGE;
+        return M0C_DASH_SUBTRACTION;
+    }
+
+    return M0C_DASH_UNKNOWN;
+}

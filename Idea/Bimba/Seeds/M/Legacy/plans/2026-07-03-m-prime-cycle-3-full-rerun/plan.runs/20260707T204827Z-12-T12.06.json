@@ -1,0 +1,35 @@
+{
+  "runId": "20260707T204827Z-12-T12.06",
+  "taskId": "12.T12.06",
+  "startedAt": "2026-07-07T20:48:27.378Z",
+  "owner": "fable-b2",
+  "leaseExpiresAt": "2026-07-07T22:18:27.378Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.06",
+    "trackId": "12",
+    "tranche": "T12.06",
+    "title": "Pleroma-Techne terminal tools replace stale direct cmux patch paths",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.05"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

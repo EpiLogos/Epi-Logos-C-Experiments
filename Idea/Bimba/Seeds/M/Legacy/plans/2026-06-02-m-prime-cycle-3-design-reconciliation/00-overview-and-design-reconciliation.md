@@ -1,5 +1,9 @@
 # Cycle 3 — First Full System Build: Overview
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Cycle 3 is **the first full system build** — the cycle that wires the canonical AI architecture (the bioquaternionic JEPA-EBM operator; the 4'-5'-0' mental pole) and the full M' surface into one working system over the landed S-stack. **The deliverable is the built system the tranches plan for, not the plan set.** Design reconciliation is the preparatory discipline that precedes execution — contradiction-resolved, gap-explicit, code-grounded tranches that `/m-dev` then builds; plan updates (this pass included) are the final step before execution, in service of it. Cycle 1 built the S-stack. Cycle 2 owned the M' surfaces over landed substrate. Cycle 3 drives the pedagogical/UX design to the bottom against the real code and Theia substrate, resolves every load-bearing decision that needs user final-validation, and **builds the first full system shape on that resolved ground.**
 
 ## Method — the Four Corpora

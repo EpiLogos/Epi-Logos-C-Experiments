@@ -1,5 +1,9 @@
 # Track 03 — M2 Paraśakti Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles [[M2']] across the four corpora. The harmonic-correspondential instrument is well-grounded: `m2.h` enforces the 72-invariant via `_Static_assert` and lands all six 72-cardinality LUTs (MEF, tattva, decan, Shem, maqam, M2→M3 cymatic projection) plus the planet-LUT[10], Asma 99+1, mantra 100. `vimarsha_reading.rs` implements M2-1' Vimarśa correctly, producing `audio_octet[8]` + `nodal_quartet[4]`. The Theia extension's meaning-packet builder lands the full `M2PrimeMeaningPacket` shape with cymatic frame, deterministic standing-wave, and personal-scope blocking. The chief gaps are: the F_routing carrier (every LUT and Kerykeion CLI landed, but no chained-traversal function in portal-core) and the S2 graph-correspondence kernel-bridge adapter.
 
 ## Total-Shape Architecture (Phase A)

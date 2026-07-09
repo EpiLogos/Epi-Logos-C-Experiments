@@ -5,7 +5,7 @@
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]], [[S-SYSTEM-INDEX]])
 
 ## Ownership
-- `src/lib.rs` — crate root; declares + re-exports every contract module, typed [[S0]] bridge packet/projection surfaces, named S1 C-first type lifecycle methods, and named S2 graph gateway-exposure constants (no `//!` header present).
+- `src/lib.rs` — crate root; declares + re-exports every contract module, typed [[S0]] bridge packet/projection surfaces, named S1 C-first type lifecycle methods, and named S2 graph gateway-exposure constants. Carries the 43.2 `//!` Coordinate Header (17.T17.1); the `m4.arena.` method literals stay in this file per the 41.T41.6 verification grep.
 - `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, `s2.graph.ananda_position`, the S1 C-first type lifecycle methods, and the S2 graph exposure family (`gds.tangent_overlay`, `ontology.reload`, `seed.snapshot`, `core65.audit`, `promotion.*`, `relation_family.list`).
 - `src/session.rs` — session authority types/methods.
 - `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle (`ConversationSliceHandle`/`VakAddressFilter` defined here so they ride the dispatch envelope), and tool-call enforcement hook contract.
@@ -21,7 +21,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - Does NOT own runtime behaviour — that is sibling `gateway/` (`epi-s3-gateway`). Domain law for other layers stays in its owning coordinate ([[S4-SPEC]] dispatch, [[S2-SPEC]] graph, [[S5-SPEC]] world-return), not here by convenience.
 
 ## Local Contracts
-- Code Coordinate Header: Cargo.toml `description` (no `src/lib.rs //!` header; no CONTRACT.md / README.md here).
+- Code Coordinate Header: `src/lib.rs` `//!` module-doc (43.2 convention); Cargo.toml `description` mirrors the one-liner (no CONTRACT.md / README.md here).
 - Owning specs: [[S3-SPEC]], [[S3-ARCHITECTURE]].
 - Deps (Cargo.toml): `epi-kernel-contract`, `portal-core`.
 

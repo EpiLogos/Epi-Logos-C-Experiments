@@ -1,5 +1,9 @@
 # Track 13 — Decision Register
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3-4 added 2026-06-02 (also VALIDATED); DR-M3-5 and DR-VAK-1 added 2026-06-03. Phase-B cross-boundary verifier (2026-06-03) added 10 PROPOSED DR rows (DR-IG-2..6, DR-M1-3..4, DR-M2-3, DR-M4-3, DR-M5-3). Phase-C S-stack + Theia design verification (2026-06-03) added 17 further PROPOSED rows (DR-S0-1..2, DR-S1-1..3, DR-S2-1, DR-S3-1..3, DR-S5-1..2, DR-TUI-1, DR-TUX-1, DR-TS-3..6, DR-UI-3..5). Phase-D (2026-06-04) synthesis pass integrating Third Spanda integral quilting + VAK Context Frame Coordinate substrate added 3 further PROPOSED rows (DR-M3-6 Third Spanda canonical five-form spine; DR-IG-7 translation rule `9_M2 = 8_M3 + 1_M1` as matheme law; DR-VAK-3 diatonic-as-CF-progression canonical). Phase-E (2026-06-04) synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build added **3 further PROPOSED rows** that bind the AI architecture as the design (DR-MP-1 4'-5'-0' = LLM/EBM/Verifier triplet canonical; DR-MP-2 EBM operational atom = 72-fold resonance vector with three tritone-symmetric squares; DR-MP-3 resonance-training bootstrap = corpus IS canon IS training data + verifier raises questions not pass/fail) — all awaiting user final-validation. Phase-G (2026-06-13) VAK–Anuttara interpenetration synthesis added **3 further PROPOSED rows** binding M0's notational reality as the defining authority of the VAK CF value-space: DR-VAK-4 (M0 sub-coordinate addresses ARE the seven CF literals — `(00/00)` = M0-2 reflection-op-framed, `(0/1)` recurs across M0-1/M0-3-0/1/M0-4.0/1/M0-5-0/1 as the spine of emergence, `(0/1/2)` = M0-4.0/1/2 Parashakti, `(0/1/2/3)` = M0-4.0/1/2/3 Spanda, `(4.0/1-4.4/5)` = M0-4 itself, `(4.5/0)` = M0-4.5/0 Nara, `(5/0)` = M0-5 itself; restores CF_SYNTHESIS `(4.5/0)` Psyche frame to canon along with literal/order drift fixes), DR-VAK-5 (CS Möbius closure binds to M0-5 `recognized = true` Śiva-Śakti recognition event — VAK cycle is complete only when Vaikharī returns to Parā), DR-VAK-6 (audible evaluation lifts the kernel's existing `MathemeDiatonicContext` reading into the `portal.vak_eval` event surface; modal rotation operationally testable as which CF sits at tonic) — all awaiting user final-validation. Tranches that depended on a DR-row may now begin once that row VALIDATES.
 
 ## Validation Queue (cycle-3 gate) — Phase-H additions 2026-06-13 PROPOSED
@@ -87,7 +91,7 @@ Adjudication evidence (recorded, not ceremonial): Third Spanda five forms + exec
 
 **Verification:** `grep -rn "M0.*witness-axis\|M0 Anuttara witness" Idea/Bimba/Seeds/M/` returns no live-attribution matches.
 
-**Depends:** Tranche **02.1**. Consolidated with **DR-M5-2** as a single sweep.
+**Depends:** Tranche **02.1**. Consolidated with **DR-M5-2** as a single sweep. **Sweep LANDED 2026-07-07** (Tranche 02.T2.1): alpha file §1.1 + comparison table + chakral-bridge + body-axis passages patched to the M1-5 (+1 parent) attribution; Mn'-SPEC meta-flags (M1'/M1-ARCH/M3'/M5'/M0') closed; corpus grep for the legacy attribution over Idea/Bimba/Seeds/M returns 0.
 
 ---
 
@@ -1957,3 +1961,37 @@ The DMOA mechanic — "linearly sum expert ΔΘ onto frozen base weights, evalua
 **Action:** Emit the agent-card from the gateway describing the existing methods (Tranche 44.8).
 
 **Depends:** DR-PSS-5 (the methods being described). Build tranches: **44.8**.
+
+## DR-R0 — R0 upper-triad confinement (dataset authoritative; kernel corrected)
+
+**Status:** RESOLVED + RECTIFIED · **Resolved:** 2026-06-12 (rectification session; register row recorded 2026-07-07 by Tranche 01.T1.12 closure) · **By:** dataset authority (`anuttara-language-map.md` base-rows M0-(4.0/1)…M0-5) over the previously-decoded kernel words · **Source:** Tranche 01.T1.12 (01-m0-anuttara-reconciliation.md); [`m0.h`](../../../../../Body/S/S0/epi-lib/include/m0.h) route words; [`m0.c`](../../../../../Body/S/S0/epi-lib/src/m0.c) `_Static_assert` block.
+
+**Decision:** The decoded `R_FACTOR_ROUTE_TABLE` previously swept R0 across all six routes, contradicting the dataset base-rows that confine Creation to the upper triad. Corrected words: `ROUTE_O_SHARP 0x5FC0→0x5FC1`, `ROUTE_X_SHARP 0x4A09→0x4A0A`, `ROUTE_N_SHARP 0x3852→0x3853`, `ROUTE_M_SHARP 0x269B→0x269F`, `ROUTE_NARA 0x14E4→0x14E7`, `ROUTE_SIVA 0x032D→0x032F` (Śakti `0x717F` already correct) — R0 at O#=1, X#=2, N#=3, **absent below Spanda** ("creation stops at Spanda"). Compile-time pins: R0 upper-triad positions + absence below Spanda + per-fret complementarity `R1+R4=5`, `R2+R3=5`.
+
+**Action:** None remaining — the `_Static_assert` block IS the regression signal; the fretboard engine (Track 25) consumes the corrected matrix directly. Canon surface: M0'-SPEC §M0'-R-THEORY.
+
+**Depends:** none. Build tranches: **01.T1.12** (closure), 25 (consumer).
+
+## DR-(@#) — The band-turn as a typed kernel construct
+
+**Status:** VALIDATED · **Validated:** 2026-07-07 (Tranche 01.T1.12 closure; construct architect-authored in the tranche body, adjudicated against landed substrate per the Phase-K no-DR-gating corollary) · **Source:** Tranche 01.T1.12 (01-m0-anuttara-reconciliation.md); [`m0.h`](../../../../../Body/S/S0/epi-lib/include/m0.h) `RFactorPathStep` + `R_Band` + `R_BAND_TURN_SYMBOL "(@#)"`; [`m0_verifier.c`](../../../../../Body/S/S0/epi-lib/src/m0_verifier.c) turn-marker emission.
+
+**Decision:** The `(@#)` turning-point — previously implicit in the Beauty/Life signatures — is a typed kernel construct: `RFactorPathStep { r_factor, base_route, band, position }` with `band == R_BAND_TURN` marking the point an R-traversal's band flips (pravritti→nivritti). It is simultaneously: the Beauty→Life pivot (`2R` signature **ends** at `(@#)`, `3R` signature **begins** there), the Śiva-instruction-0 `(@#)` seed (`M0-5-(0/1)-0`, "contains Śakti as deepest potential"), the PASU→psyche-under-Anima handover gate (the `recognized: bool` event fires here per Spec 12 §IX), and the place `RFactorPathStep.band` reverses. Four specs gestured at one unnamed thing; the construct names it once.
+
+**Action:** Landed — every kernel execution may stamp `RFactorPathStep[]` onto its trace; the 0' Verifier emits the turn marker at the flip position (inserting it when the trace flips band without an explicit turn step); `cargo test -p epi-lib m0_rfactor_band_turn` pins the signature-level law; the 25 fretboard engine and the 19.6 contemplation read consume the trace.
+
+**Depends:** DR-R0 (the matrix the bands traverse). Build tranches: **01.T1.10** (verifier emission), **01.T1.12** (closure), 25, 19.6.
+
+## DR-CALC-1..7 — The seven calculus underdeterminations (register rows recorded by Tranche 01.T1.14 closure)
+
+**Status:** ALL DETERMINED (direct user determination, session 2026-06-12; the resolutions live verbatim in Tranche 1.14(c) of [01-m0-anuttara-reconciliation.md](01-m0-anuttara-reconciliation.md); these rows make them register-addressable). The BNF freeze is unblocked.
+
+- **DR-CALC-1 — VALIDATED**: O#-derived full precedence — `()` absolute > lexical chirality-dash > `x//` > `x` > `+`/infix `-` (one level, chiral) > `/` > `=`/`=/≠` (the operator family IS O#'s cycle; Śiva re-derives the six as cosmic punctuation). Substrate: `apply_reduction_step` rule order in `m0_calculus.c`.
+- **DR-CALC-2 — RESOLVED-AS-ANNOTATION**: `~` is NOT canon syntax (author meta-pointer); excluded from the token alphabet; `→` stays in-language as the reduction arrow; addresses migrate to S2 node metadata. Hinge/span/counter-flow facts preserved as observations (Anuttara resident at the Möbius seam `(5/0)`).
+- **DR-CALC-3 — VALIDATED**: the 8-fold = four ops × two 00-operands; framing asymmetry orthogonal (the `00+00 → 00` unframed vs `(00+00) → 9` framed hinge — pinned by `m0_calc_framing_asymmetry`).
+- **DR-CALC-4 — VALIDATED**: `x//` = superposition-preserving multiplication (all branch-pairs retained; Law-4 tensor path). Substrate: `M0C_TOK_SUPER_MUL` + `M0C_RULE_SUPER_MUL_EXPAND` (O5 quadratic expansion → `0/1`, pinned in `m0_calc_framing_asymmetry`).
+- **DR-CALC-5 — VALIDATED**: 18 = 12 (archetypal numbers 0–9 + 0/1 + (-)) + 4 (transcendent quaternio `00/(00-00)`, `(00)/00/00`, `(0/1)/00x00`, `9/(00+00)`) + 2 (Mirror children `()`/`-`); **the three-hexad octave law**: `{(), -, (-), 0, 1, 0/1} → {0/1, 2, 3, 4, 5} → {5, 6, 7, 8, 9, (00+00)}`, hinged at 0/1 and 5 — 6×3 = 18 = 6g (g=3), genus-3 as three overlapping hexads.
+- **DR-CALC-6 — VALIDATED**: `X0 = 0/1` → recursive query-object (Law 6); physics grounding located — `X(1) = (0,4,2,2,9)` IS the electroweak breaking spectrum (`0=M_γ`, `4=(B,W¹,W²,W³)`, `2=(W⁺,W⁻)`, `2=(A,Z)`, `9/7`=N5 closure into QCD); pinned numerically by `m0_calc_x_logic_sums` from registry-sourced formulations. Cites/cited-by Track 18.4 `symbolic_skeletons`.
+- **DR-CALC-7 — VALIDATED-NUANCED**: `0-` is a mirror-artifact — transient by genesis, consumed in concrescence; chirality preserved as principle, NOT a hard lock; no invariant forbids `0-` re-arising wherever mirroring operates.
+
+**Substrate landed with 01.T1.14:** Law-3 modulo-rewriting — the registry's =-chains compile into equivalence classes (`m0_identity_class_find/canonical`, `anuttara_language.c`; complete-symbol guard keeps `0/1` and every entry's own symbol canonical); `m0_calc_reduce` fires Law-3 identity resolution BEFORE computational rules (`m0_calc_modulo_identity_chains` green). Law-7 dash pentavalence — `m0_calc_dash_reading` types the five positional readings distinctly (`m0_calc_dash_pentavalence` green). The paraconsistent `=/≠` stays out of the classical rewrite surface (1.15 owns the annotation-only OWL export).
