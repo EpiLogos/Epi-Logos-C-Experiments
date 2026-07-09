@@ -92,7 +92,7 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    Exception: when the tranche's deliverable IS a document (audit inventory, readiness report, runbook update, decision register), write THAT file — it's the work product, not evidence about evidence. Default location: `<plan_folder>/plan.runs/<task-id>-<deliverable-kind>.md`, where `<plan_folder>` is the Seed-hosted plan folder when one exists.
 
-7. **Continue.** Reassess after each mark. Continue until a hard stop or the route exhausts. Don't re-run the assessor as verification before/after every mark — that's overhead, not safety.
+7. **Commit the tranche, then continue.** After a `done` mark, commit that tranche's changes (`git add -A && git commit`) so the working tree returns to clean. This is not optional bookkeeping: the dirty-file gate that guards `--claim` is satisfied ONLY by real commits, so an uncommitted tree silently accumulates across sessions until claims start refusing (the recurring "246 dirty files" stall). One commit per closed tranche — the message names the tranche id + a one-line summary; it is the natural checkpoint boundary. Then reassess. Continue until a hard stop or the route exhausts. Don't re-run the assessor as verification before/after every mark — that's overhead, not safety.
 
 ## Subagents
 

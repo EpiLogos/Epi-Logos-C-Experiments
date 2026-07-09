@@ -105,6 +105,10 @@ Use `review` for partial; `blocked` only when a real external blocker holds (wai
 
 **Allowed exceptions** — write a file only when the tranche's DELIVERABLE is itself a document (audit inventory, readiness report, runbook, decision register update). The file IS the work product, not "evidence about evidence." Default location: `<plan_folder>/plan.runs/<task-id>-<deliverable-kind>.md`, where `<plan_folder>` is the Seed-hosted plan folder when one exists.
 
+## Step 6 — Commit the tranche (keeps the tree clean for the next claim)
+
+After a `done` mark, **commit that tranche's changes** (`git add -A && git commit`). This is part of the close, not optional bookkeeping: the dirty-file gate that guards `--claim` (Step 3) is satisfied ONLY by real commits. An uncommitted tree silently accumulates across sessions until claims start refusing — the recurring "N dirty files outside plan artifacts" stall that halts autonomous flow. One commit per closed tranche; the message names the tranche id + a one-line summary of what landed (it IS the checkpoint boundary). Then loop back to Step 1/Step 3 for the next tranche.
+
 ## Subagents
 
 When dispatching, brief each subagent like:
