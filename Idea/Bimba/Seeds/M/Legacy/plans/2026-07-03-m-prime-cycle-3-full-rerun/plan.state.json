@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-09T09:23:19.508Z",
+  "updatedAt": "2026-07-09T09:42:10.554Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -851,16 +851,21 @@
       "worktree": null
     },
     "02.T2.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-09T09:42:10.535Z",
+      "claimedAt": "2026-07-09T09:26:17.900Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-09T09:42:10.535Z",
+          "text": "INVESTIGATION ONLY (no renderer code written) — checkpoint for Architect. T2.6 is a from-scratch three.js K2 played-torus surface (retarget Bevy/wgpu -> three.js; carrier already uses three@0.185, CosmicEngine precedent). HARD SUBSTRATE DEP on Tranche 10.10 ananda_vortex projection per M1-2-ANANDA-VORTEX-ARCHITECTURE §4.2-4.3, which the ledger dependsOn OMITS: Rust AnandaVortexProjection on MathemeHarmonicProfile (profile.rs:579 via from_tick) + Zod schema (anandaVortex optional) are LANDED; the C-side raw/no-digit-root face fidelity correction (§4.3) is UNVERIFIED (no 7X+1/8X+0/raw-face markers in m1.c/m1.h — likely digit-root-only still); carrier bridge/types.ts does NOT yet mirror anandaVortex. Recommend: verify/complete 10.10 substrate (C raw-face + carrier mirror), THEN build the played-torus renderer with Architect visual review. Large visual tranche, flagged for direction."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-09T11:26:17.900Z",
+      "heartbeatAt": "2026-07-09T09:42:10.535Z",
+      "runId": "20260709T092617Z-02-T2.6",
       "worktree": null
     },
     "02.T2.9": {
@@ -9845,26 +9850,36 @@
       "owner": "opus-b2-resume",
       "leaseExpiresAt": "2026-07-08T14:20:03.758Z",
       "worktree": null
+    },
+    {
+      "runId": "20260709T092617Z-02-T2.6",
+      "taskId": "02.T2.6",
+      "status": "review",
+      "startedAt": "2026-07-09T09:26:17.900Z",
+      "owner": "opus-a-kernel",
+      "leaseExpiresAt": "2026-07-09T11:26:17.900Z",
+      "worktree": null,
+      "completedAt": "2026-07-09T09:42:10.535Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-09T09:22:42.933Z",
-    "updatedAt": "2026-07-09T09:22:42.933Z",
+    "createdAt": "2026-07-09T09:25:38.723Z",
+    "updatedAt": "2026-07-09T09:25:38.723Z",
     "taskIds": [
-      "02.T2.5",
       "12.T12.17",
       "02.T2.6",
-      "02.T2.7"
+      "02.T2.7",
+      "02.T2.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "02.T2.5": "in-session",
       "12.T12.17": "in-session",
       "02.T2.6": "in-session",
-      "02.T2.7": "in-session"
+      "02.T2.7": "in-session",
+      "02.T2.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
