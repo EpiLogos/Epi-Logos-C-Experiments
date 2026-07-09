@@ -2,6 +2,7 @@
   "version": 1,
   "generatedAt": "2026-07-06",
   "source": "Derived from Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md §2 (LAW/SEAMS/CARRIER per track). Enforced by .codex/scripts/m-dev-plan-assess.mjs classViolations() at --mark done time.",
+  "carrierUfRule": "A track whose CARRIER is a pratibimba-app surface (engine/panes) is UF, not K: closing a carrier tranche must cite real app-flow proof (playwright/test:e2e/app-smoke), because a jsdom mount or substrate-only proof never opens the app. Demonstrated 2026-07-09: track 02 T2.5 closed K on a jsdom mock that hand-crafted the profile shape and HID a real read-path bug (inversionOperator read at profile.inversionOperator instead of profile.harmonicProfile.inversionOperator); the visual-panes e2e caught it on the first real-app run. The tranche's own Verify line still carries its substrate command, so UF adds the app gate without dropping substrate proof. SIBLING HOLE (flagged, not yet flipped): tracks 01/03/04/05 are the M0/M2/M3/M4 subsystem carriers, still K — same exposure.",
   "classDefinitions": {
     "K": "Kernel/substrate — receipt.command must be a real test runner (cargo/make/node --test/pnpm test/pytest). C+Rust law, LUTs, contract crates.",
     "W": "Wire/gateway — receipt must additionally reference live-wire, gateway, smoke, or wire-capture proof: a spawned gateway exercised over the real protocol. Manifest-string tests cannot close these.",
@@ -11,7 +12,7 @@
   "classes": {
     "00": "K",
     "01": "K",
-    "02": "K",
+    "02": "UF",
     "03": "K",
     "04": "K",
     "05": "K",
