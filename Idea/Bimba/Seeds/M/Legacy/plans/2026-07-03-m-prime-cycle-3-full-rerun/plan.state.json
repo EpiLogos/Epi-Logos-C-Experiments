@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:06:16.350Z",
+  "updatedAt": "2026-07-10T12:07:41.394Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2555,16 +2555,31 @@
       "worktree": null
     },
     "10.T10.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:07:41.382Z",
+      "claimedAt": "2026-07-10T12:06:42.676Z",
+      "completedAt": "2026-07-10T12:07:41.382Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:07:41.382Z",
+          "text": "DR-KB-1 executed and verified in substance: M2-prime-SPEC:365+392 document M2_PLANET_LUT[10] canon with Earth as 10th planet / observer-centre (epogdoon = 9 non-Earth planets : 8 reception points; no new bridge field required); m2.h:303 carries the 10-cardinality LUT; profile.rs:604 documents Earth-never-in-array observer-centre semantics; no stale EarthObserverHandle blocker remains in the readiness ledger (grep clean; remaining mentions are the documented not-a-separate-handle statements). Behavioral proof: portal-core test m2_parashakti_projection_documents_earth_centre_without_separate_handle green. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite (7 passed incl m2_parashakti_projection_documents_earth_centre_without_separate_handle); verify-tranche 10.T10.3 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M2prime/M2prime-SPEC.md",
+              "Body/S/S0/portal-core/src/kernel/profile.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:06:42.676Z",
+      "runId": "20260710T120642Z-10-T10.3",
       "worktree": null
     },
     "10.T10.4": {
@@ -10144,6 +10159,16 @@
       "leaseExpiresAt": "2026-07-10T14:03:07.555Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:06:16.338Z"
+    },
+    {
+      "runId": "20260710T120642Z-10-T10.3",
+      "taskId": "10.T10.3",
+      "status": "done",
+      "startedAt": "2026-07-10T12:06:42.676Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:06:42.676Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:07:41.382Z"
     }
   ],
   "activeRoute": {
