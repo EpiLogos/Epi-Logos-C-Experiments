@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:19:15.847Z",
+  "updatedAt": "2026-07-10T22:22:28.792Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -3145,16 +3145,21 @@
       "worktree": null
     },
     "11.T11.0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-10T22:19:54.046Z",
+      "claimedAt": "2026-07-10T22:19:53.843Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T22:19:54.046Z",
+          "text": "STOP/review (landed contradicts spec; superseded by carrier). 11.T11.0 is a Body/M/epi-theia electron-app<->theia-app package-parity gate; both Verify commands run in FROZEN epi-theia (node --test extensions/test/electron-target-parity.test.mjs; scripts/smoke-build.sh building @pratibimba/electron-app). Per rerun carrier contract, epi-theia is frozen (never build/verify) and Theia plumbing (package.json contributes, widget ids, electron/browser targets) is DEAD. The carrier @pratibimba/app is a SINGLE Tauri app (scripts: dev,build,typecheck,test,smoke,test:e2e,tauri; no electron dep, no @theia deps, no electron-app/theia-app split) — the electron/theia target-parity concern does not exist on the carrier. UF-class done needs carrier app-flow proof which cannot exist for a dead-plumbing target split. Adjudication (retire as dead-plumbing vs map to a Tauri-bundle surface-parity check on the carrier) routes to a Fable session. Not forcing done; not deferred."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-d-mech",
+      "leaseExpiresAt": "2026-07-10T23:19:53.843Z",
+      "heartbeatAt": "2026-07-10T22:19:54.046Z",
+      "runId": "20260710T221953Z-11-T11.0",
       "worktree": null
     },
     "11.T11.1": {
@@ -8384,16 +8389,30 @@
       "worktree": null
     },
     "33.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T22:22:28.777Z",
+      "claimedAt": "2026-07-10T22:19:48.082Z",
+      "completedAt": "2026-07-10T22:22:28.777Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:22:28.777Z",
+          "text": "T0 absorb-and-retarget closed: harmonic energy-channel handoff source (2026-06-02, read in full, 720 lines) enumerated into 3 Track-33-owned tranches 33.T33.1..33.T33.3, each citing its source section. The eight planning streams A-H stay delegated to tracks 04/05/06/12/17 and are not re-enumerated. T33.1 (E5/E6 channels beyond stub-zero, kernel-truth expected-red; grounded E5/E6Inputs::default stubs), T33.2 (oracle codon-charge FFI, data-spine violation; grounded 17 charge refs in oracle_engine+oracle_frame), T33.3 (energy-decomposition carrier surface; grounded 0 carrier refs). All three parse into the ledger. Independent D-class verify PASS under opus-c-verify.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 33.T0 --owner opus-c-verify --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-c-law",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:19:48.082Z",
+      "runId": "20260710T221948Z-33-T0",
       "worktree": null
     },
     "34.T34.1": {
@@ -10615,6 +10634,45 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "33.T33.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "33.T33.2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "33.T33.3": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -12118,6 +12176,26 @@
       "leaseExpiresAt": "2026-07-10T23:18:46.764Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:18:47.047Z"
+    },
+    {
+      "runId": "20260710T221948Z-33-T0",
+      "taskId": "33.T0",
+      "status": "done",
+      "startedAt": "2026-07-10T22:19:48.082Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:19:48.082Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:22:28.777Z"
+    },
+    {
+      "runId": "20260710T221953Z-11-T11.0",
+      "taskId": "11.T11.0",
+      "status": "review",
+      "startedAt": "2026-07-10T22:19:53.843Z",
+      "owner": "opus-d-mech",
+      "leaseExpiresAt": "2026-07-10T23:19:53.843Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:19:54.046Z"
     }
   ],
   "activeRoute": {
