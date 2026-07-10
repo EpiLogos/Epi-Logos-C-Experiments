@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:56:49.670Z",
+  "updatedAt": "2026-07-10T14:58:03.289Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1455,24 +1455,54 @@
       "worktree": null
     },
     "04.T4.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T14:58:03.058Z",
+      "claimedAt": "2026-07-10T14:57:10.531Z",
+      "completedAt": "2026-07-10T14:58:03.058Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:58:03.058Z",
+          "text": "DR-M3-4 reading/transcription chain verified landed across all four named docs: the deterministic Mahamaya chain terms (TranscriptionalClockPacket / OracleFrame / SymbolicProtein / mahamaya_transcription / M3_LENS_STACK) present in M3-prime-SPEC (15 refs), M-SYMBOLIC-LANGUAGE-ARCHITECTURE (12), Mahamaya UX (6), Nara UX (12); DR-M3-4 register entry present (9 refs); the runtime carriers landed this session (4.11 schema + 4.17 additive + 4.16 C mirror) implement the chain; the Nara boundary (packet chains as mahamaya_transcription evidence, never mutating M4-0 identity sources) is in the Nara UX doc. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3prime-SPEC.md",
+              "Idea/Pratibimba/System/Subsystems/Nara/nara-ux-full-m4-branch-update.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T14:57:10.531Z",
+      "runId": "20260710T145710Z-04-T4.8",
       "worktree": null
     },
     "04.T4.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T14:58:03.275Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:58:03.275Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:58:03.275Z",
+          "text": "DR-M3-5 dynamics-discipline verified landed across all five named docs: AttractorDynamicsIntegrator / dynamical_rigor / symbolic_phase_portrait / Subsystem CF Assignment / Context Frames terms present in M-prime-SYSTEM-SPEC, M3-prime-SPEC (4), Mahamaya UX (5), Nara UX (3), Subsystems README; DR-M3-5 register entry present; the rigor split (symbolic_phase_portrait vs measured_nonlinear_dynamics) and CF assignments are doc law consumed by the 4.10 inspector (done) and the 36.x pentadic line landed this session. K-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3prime-SPEC.md",
+              "Idea/Pratibimba/System/Subsystems/Nara/nara-ux-full-m4-branch-update.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -11180,6 +11210,16 @@
       "worktree": null,
       "heartbeatAt": "2026-07-10T14:56:24.228Z",
       "completedAt": "2026-07-10T14:56:49.289Z"
+    },
+    {
+      "runId": "20260710T145710Z-04-T4.8",
+      "taskId": "04.T4.8",
+      "status": "done",
+      "startedAt": "2026-07-10T14:57:10.531Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T16:57:10.531Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T14:58:03.058Z"
     }
   ],
   "activeRoute": {
