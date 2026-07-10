@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:07:38.500Z",
+  "updatedAt": "2026-07-10T15:09:35.220Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2480,16 +2480,30 @@
       "worktree": null
     },
     "08.T8.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:09:35.208Z",
+      "claimedAt": "2026-07-10T15:07:50.859Z",
+      "completedAt": "2026-07-10T15:09:35.208Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:09:35.208Z",
+          "text": "Mobius write-back receiving path landed on the carrier: receivePedagogicalReturn surfaces an Atelier crystallisation as a READ-ONLY contemplative offering deep-linked on the existing M0-5-prime pedagogy bridged route (m0Layers 01.T1.1 substrate) anchored to its M0 node; NO canon mutation by construction (any mutation intent refused outright - Hen owns canon; non-atelier refs and free-floating content refused). Named acceptance green: return surfaces in the M0-5-prime deep-link without mutating canon. The Atelier FEED (crystallisation genesis) remains Tranche 06.2 per the cross-link; this receiver is what its offerings pass through. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m0PedagogicalReturn.test.ts (3 passed: M0-5-prime deep-link surface, canon-mutation refusal, anchoring law); verify-tranche 08.T8.4 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0PedagogicalReturn.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:07:50.859Z",
+      "runId": "20260710T150750Z-08-T8.4",
       "worktree": null
     },
     "08.T8.5": {
@@ -11317,6 +11331,16 @@
       "leaseExpiresAt": "2026-07-10T17:05:14.473Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:07:38.487Z"
+    },
+    {
+      "runId": "20260710T150750Z-08-T8.4",
+      "taskId": "08.T8.4",
+      "status": "done",
+      "startedAt": "2026-07-10T15:07:50.859Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:07:50.859Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:09:35.208Z"
     }
   ],
   "activeRoute": {
