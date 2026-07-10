@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:19:17.380Z",
+  "updatedAt": "2026-07-10T15:21:06.217Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2616,16 +2616,31 @@
       "worktree": null
     },
     "08.T8.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:21:06.205Z",
+      "claimedAt": "2026-07-10T15:19:29.737Z",
+      "completedAt": "2026-07-10T15:21:06.205Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:21:06.205Z",
+          "text": "The canonical one-act-per-tick statement verified landed at all three layers: DOCTRINE - M0-ARCHITECTURE section 11:724 carries the full statement verbatim (one act of VAK-coordinate-designation per tick, six simultaneous registers not six sub-operations, the unified-act tuple (coord,lens,helix,density,position,cfp_thread,r_factor_slot,ananda_position), descent q_p(n+1)=q_p(n)-log(9/8)*grad(E_total) with E_total=(4E4+5E5+6E6)/15); CODE - kernel_energy_evaluate_unified_act (kernel.rs:1001) validates the tuple and returns the same EnergyDecomposition as the canonical weighted descent; TEST - rust_unified_vak_act_evaluates_once_with_six_faces green (kernel_math 13/13). The six faces map to their implementation slots honestly: landed (coordinate designation via s2.graph, harmonics channels on the bus, physical-pole M1/M2/M3 packages, R-factor route) and expected-red where Track 33 owns the work (E5/E6 channels stub-zero per charter - kernel-truth GREEN with those reds standing). Tunability-scale = kernel-tick-scale sameness is Track 38 section 2.2 doctrine, cross-linked not duplicated. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test kernel_math (13 passed incl rust_unified_vak_act_evaluates_once_with_six_faces); verify-tranche 08.T8.9 W-gate PASS (kernel-truth GREEN with the e5/e6 expected-reds standing as Track-33 work orders)",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0prime/M0-ARCHITECTURE.md",
+              "Body/S/S0/portal-core/src/kernel.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:19:29.737Z",
+      "runId": "20260710T151929Z-08-T8.9",
       "worktree": null
     },
     "09.T9.1": {
@@ -11438,6 +11453,16 @@
       "leaseExpiresAt": "2026-07-10T17:17:11.074Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:19:17.368Z"
+    },
+    {
+      "runId": "20260710T151929Z-08-T8.9",
+      "taskId": "08.T8.9",
+      "status": "done",
+      "startedAt": "2026-07-10T15:19:29.737Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:19:29.737Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:21:06.205Z"
     }
   ],
   "activeRoute": {
