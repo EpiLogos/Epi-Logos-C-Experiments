@@ -1,6 +1,7 @@
 use serde::Serialize;
 
 use super::oracle_cast::IChingResult;
+use crate::ffi::kernel::compute_codon_charges;
 
 // ─── OraclePayload — Four Faces + Eval4 Charges ──────────────────────────
 //
@@ -13,12 +14,13 @@ use super::oracle_cast::IChingResult;
 //   implicate face:   degree as f32 + 360.0 — upper-hemisphere (SU(2) map)
 //   temporal face:    primary_hex XOR changing_lines_mask — hexagram after change
 //
-// Eval4 charges (pp/nn/pn/np): quaternionic polarity scores from the I-Ching
-// line pattern. Named after the charge matrix in M3 Mahamaya.
-//   pp = positive-positive (yang lines in yang positions: lines 1,3,5)
-//   nn = negative-negative (yin lines in yin positions: lines 2,4,6) — stored negative
-//   pn = positive-negative (yang in yin pos)
-//   np = negative-positive (yin in yang pos)
+// Eval4 charges (pp/nn/np/pn): derived from the SINGLE kernel charge authority
+// `m3_compute_charges` (FR 2.3.18 closed form) via the FFI — NOT an independent
+// per-line algebra (recapture register §5.1 / LAW(04): the oracle routes through
+// the kernel; Tao 5-/5 ≡ m3_compute_charges). The hexagram's six yin/yang lines
+// form a 6-bit codon; the kernel reads its three nucleotides' I-Ching values
+// (X,Y,Z) and returns:
+//   pp = X + Y + Z    nn = X - Y - Z    np = X - Y + Z    pn = X + Y - Z
 
 /// Full structured result of an oracle cast — four faces and quaternionic charges.
 ///
@@ -38,13 +40,13 @@ pub struct OraclePayload {
     pub implicate_720: f32,
     /// Temporal face: primary_hex XOR changing_lines_mask — hexagram after change lines resolve.
     pub temporal_hex: u8,
-    /// Quaternionic charge pp: yang lines (1) in yang positions (1,3,5). Range 0..+192.
+    /// Kernel charge pp = X+Y+Z (sum of the three nucleotide I-Ching values), via `m3_compute_charges`.
     pub pp: f32,
-    /// Quaternionic charge nn: yin lines in yin positions (2,4,6). Stored negative. Range -192..0.
+    /// Kernel charge nn = X-Y-Z, via `m3_compute_charges`.
     pub nn: f32,
-    /// Quaternionic charge pn: yang in yin positions. Range 0..+192.
+    /// Kernel charge pn = X+Y-Z, via `m3_compute_charges`.
     pub pn: f32,
-    /// Quaternionic charge np: yin in yang positions. Range 0..+192.
+    /// Kernel charge np = X-Y+Z, via `m3_compute_charges`.
     pub np: f32,
 }
 
@@ -66,31 +68,21 @@ pub fn oracle_eval4(result: &IChingResult, kairos_degree: f32, phase: u8) -> Ora
     // Face 4 — Temporal: hexagram AFTER changing lines resolve (XOR flip)
     let temporal_hex = (result.primary_hexagram ^ result.changing_mask) & 0x3F;
 
-    // Eval4 charges: quaternionic polarity from the 6 line values.
-    //
-    // Yang positions (odd lines: 1, 3, 5 → indices 0, 2, 4):
-    //   yang line (7 or 9) in yang pos → pp += 32.0
-    //   yin line  (6 or 8) in yang pos → np += 32.0
-    // Yin positions (even lines: 2, 4, 6 → indices 1, 3, 5):
-    //   yin line  (6 or 8) in yin pos  → nn -= 32.0 (stored negative)
-    //   yang line (7 or 9) in yin pos  → pn += 32.0
-    //
-    // Weight 32.0 per line × 6 lines = max |charge| = 192.0
-    let mut pp: f32 = 0.0;
-    let mut nn: f32 = 0.0;
-    let mut pn: f32 = 0.0;
-    let mut np: f32 = 0.0;
-
-    for (i, &line_val) in result.lines.iter().enumerate() {
-        let is_yang_line = line_val & 1 == 1; // 7 or 9 = yang (odd); 6 or 8 = yin (even)
-        let is_yang_pos = i % 2 == 0; // positions 0,2,4 (lines 1,3,5) = yang
-        match (is_yang_line, is_yang_pos) {
-            (true, true) => pp += 32.0,
-            (false, false) => nn -= 32.0,
-            (true, false) => pn += 32.0,
-            (false, true) => np += 32.0,
-        }
-    }
+    // Eval4 charges route through the single kernel charge authority
+    // (`m3_compute_charges`, FR 2.3.18) — recapture register §5.1 / LAW(04),
+    // replacing the retired independent ±32-per-line algebra. The six yin/yang
+    // lines are a 6-bit codon (bit i = line i is yang: values 7/9 are odd), and
+    // the kernel derives pp/nn/np/pn from the three nucleotide I-Ching values.
+    let codon6 = result
+        .lines
+        .iter()
+        .enumerate()
+        .fold(0u8, |acc, (i, &line_val)| acc | (((line_val & 1) as u8) << i));
+    let kernel = compute_codon_charges(codon6);
+    let pp = kernel.pp as f32;
+    let nn = kernel.nn as f32;
+    let np = kernel.np as f32;
+    let pn = kernel.pn as f32;
 
     OraclePayload {
         degree,

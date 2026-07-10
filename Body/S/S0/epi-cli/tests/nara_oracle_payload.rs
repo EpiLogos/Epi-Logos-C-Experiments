@@ -1,6 +1,26 @@
 // nara_oracle_payload.rs — oracle four faces and eval4 charges contract
 // Source: CLOCK-AND-NARA-SPECS/08-oracle-four-faces
 
+use epi_logos::nara::oracle::{oracle_eval4, IChingResult};
+
+/// Build a no-changing-lines `IChingResult` for a 6-bit line pattern
+/// (bit i set → yang line 7, clear → yin line 8). oracle_eval4 reconstructs the
+/// 6-bit codon from this pattern and routes charges through the kernel authority.
+fn result_for_codon(codon: u8) -> IChingResult {
+    let mut lines = [0u8; 6];
+    for (i, line) in lines.iter_mut().enumerate() {
+        *line = if (codon >> i) & 1 == 1 { 7 } else { 8 };
+    }
+    IChingResult {
+        lines,
+        primary_hexagram: codon & 0x3F,
+        relating_hexagram: None,
+        nuclear_hexagram: codon & 0x3F,
+        changing_mask: 0,
+        torus_pos: 0,
+    }
+}
+
 #[test]
 fn four_faces_are_distinct() {
     let degree: u16 = 45;
@@ -19,15 +39,12 @@ fn four_faces_are_distinct() {
 }
 
 #[test]
-fn oracle_eval4_charges_from_adenine() {
-    // Pre-stored values from #3-2-1 Adenine (dataset fixture)
-    let pp: f32 = 84.0;
-    let nn: f32 = -36.0;
-    let pn: f32 = 24.0;
-    let np: f32 = 24.0;
-    assert!(pp > 0.0);
-    assert!(nn < 0.0);
-    let _ = (pn, np);
+fn oracle_eval4_charges_route_through_kernel_all_yin() {
+    // Charges come from the single kernel authority (m3_compute_charges, FR 2.3.18),
+    // not the retired ±32-per-line algebra. All-yin lines → codon 0x00 →
+    // nucleotides (0,0,0), I-Ching value 6 each: pp=18, nn=-6, np=6, pn=6.
+    let p = oracle_eval4(&result_for_codon(0x00), 0.0, 0);
+    assert_eq!((p.pp, p.nn, p.np, p.pn), (18.0, -6.0, 6.0, 6.0));
 }
 
 #[test]
@@ -45,53 +62,19 @@ fn payload_fields_are_not_stub_zeros() {
 }
 
 #[test]
-fn eval4_charges_all_yang_lines() {
-    // 6 lines all yang (value 7): positions 0,2,4 = yang pos → pp; 1,3,5 = yin pos → pn
-    // yang line (odd) in yang pos (even index): pp += 32.0 × 3 = 96.0
-    // yang line (odd) in yin pos (odd index):   pn += 32.0 × 3 = 96.0
-    let lines = [7u8, 7, 7, 7, 7, 7];
-    let mut pp: f32 = 0.0;
-    let mut nn: f32 = 0.0;
-    let mut pn: f32 = 0.0;
-    let mut np: f32 = 0.0;
-    for (i, &v) in lines.iter().enumerate() {
-        let is_yang_line = v & 1 == 1;
-        let is_yang_pos = i % 2 == 0;
-        match (is_yang_line, is_yang_pos) {
-            (true, true) => pp += 32.0,
-            (false, false) => nn -= 32.0,
-            (true, false) => pn += 32.0,
-            (false, true) => np += 32.0,
-        }
-    }
-    assert_eq!(pp, 96.0);
-    assert_eq!(nn, 0.0);
-    assert_eq!(pn, 96.0);
-    assert_eq!(np, 0.0);
+fn eval4_charges_all_yang_lines_via_kernel() {
+    // 6 yang lines (7) → codon 0x3F → nucleotides (3,3,3), I-Ching value 8 each:
+    // pp=24, nn=-8, np=8, pn=8 (m3_compute_charges, replacing the retired ±32 algebra).
+    let p = oracle_eval4(&result_for_codon(0x3F), 0.0, 0);
+    assert_eq!((p.pp, p.nn, p.np, p.pn), (24.0, -8.0, 8.0, 8.0));
 }
 
 #[test]
-fn eval4_charges_all_yin_lines() {
-    // 6 lines all yin (value 8): positions 0,2,4 = yang pos → np; 1,3,5 = yin pos → nn
-    let lines = [8u8, 8, 8, 8, 8, 8];
-    let mut pp: f32 = 0.0;
-    let mut nn: f32 = 0.0;
-    let mut pn: f32 = 0.0;
-    let mut np: f32 = 0.0;
-    for (i, &v) in lines.iter().enumerate() {
-        let is_yang_line = v & 1 == 1;
-        let is_yang_pos = i % 2 == 0;
-        match (is_yang_line, is_yang_pos) {
-            (true, true) => pp += 32.0,
-            (false, false) => nn -= 32.0,
-            (true, false) => pn += 32.0,
-            (false, true) => np += 32.0,
-        }
-    }
-    assert_eq!(pp, 0.0);
-    assert_eq!(nn, -96.0);
-    assert_eq!(pn, 0.0);
-    assert_eq!(np, 96.0);
+fn eval4_charges_mixed_lines_via_kernel() {
+    // Lines yang,yin,yang,yin,yang,yin (7,8,7,8,7,8) → bits 0,2,4 set →
+    // codon 0x15 → nucleotides (1,1,1), I-Ching value 9 each: pp=27, nn=-9, np=9, pn=9.
+    let p = oracle_eval4(&result_for_codon(0x15), 0.0, 0);
+    assert_eq!((p.pp, p.nn, p.np, p.pn), (27.0, -9.0, 9.0, 9.0));
 }
 
 #[test]

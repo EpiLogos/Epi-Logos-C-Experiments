@@ -119,3 +119,58 @@ pub fn compute_codon_charges(codon6bit: u8) -> M3CodonCharges {
     }
     M3CodonCharges { pp, nn, np, pn }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Mirror of the canonical C `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}`
+    /// (`Body/S/S0/epi-lib/src/m3.c:25`). The test derives its own golden values
+    /// from this LUT — it does NOT re-call the FFI to produce the expected side.
+    const ICHING: [i16; 4] = [6, 9, 7, 8];
+
+    fn golden(codon: u8) -> (i16, i16, i16) {
+        let x = ICHING[((codon >> 4) & 0x03) as usize];
+        let y = ICHING[((codon >> 2) & 0x03) as usize];
+        let z = ICHING[(codon & 0x03) as usize];
+        (x, y, z)
+    }
+
+    /// Cross-language parity: the FFI charge law must equal the canonical
+    /// `pp=X+Y+Z, nn=X-Y-Z, np=X-Y+Z, pn=X+Y-Z` for every one of the 64 codons.
+    /// This is the behavioral proof that `m3_compute_charges` is the single
+    /// source of the Rust codon-charge surface (no drifting reimplementation).
+    #[test]
+    fn ffi_charges_match_canonical_formula_for_all_64_codons() {
+        for codon in 0u8..64 {
+            let (x, y, z) = golden(codon);
+            let c = compute_codon_charges(codon);
+            assert_eq!(c.pp as i16, x + y + z, "pp mismatch for codon {codon:#04x}");
+            assert_eq!(c.nn as i16, x - y - z, "nn mismatch for codon {codon:#04x}");
+            assert_eq!(c.np as i16, x - y + z, "np mismatch for codon {codon:#04x}");
+            assert_eq!(c.pn as i16, x + y - z, "pn mismatch for codon {codon:#04x}");
+        }
+    }
+
+    /// Aggregate integral invariant, in parity with the C
+    /// `m3_verify_integral_invariant` (`m3.c:930`): the raw sum of `pp` over all
+    /// 64 codons is 1440 (= 360 × 4, the "integral invariant"), and the per-suit
+    /// (outer-nucleotide) raw sums are 336/384/352/368 (each ÷4 = 84/96/88/92,
+    /// the suit integrals). Proves the FFI reproduces the kernel invariant.
+    #[test]
+    fn ffi_pp_integral_invariant_matches_c_kernel() {
+        let mut total: i32 = 0;
+        let mut per_suit = [0i32; 4];
+        for codon in 0u8..64 {
+            let pp = compute_codon_charges(codon).pp as i32;
+            total += pp;
+            per_suit[((codon >> 4) & 0x03) as usize] += pp;
+        }
+        assert_eq!(total, 1440, "sum(pp) over 64 codons must be 1440 (= 360 × 4)");
+        assert_eq!(
+            per_suit,
+            [336, 384, 352, 368],
+            "per-suit pp integrals (÷4 = 84/96/88/92)"
+        );
+    }
+}

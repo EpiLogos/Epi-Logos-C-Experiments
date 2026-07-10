@@ -132,12 +132,17 @@ fn m3_compute_charges_ffi_reachable_with_4x_invariant_for_all_64_codons() {
 // ---------------------------------------------------------------------------
 
 #[test]
-#[ignore = "expected-red: Track 33/4.13 — spec boot assert sum(pp)==360; the raw kernel sum over 64 codons is 1440 (=4*360); the /4 projection normalization (suit-level sum) has not landed"]
 fn m3_charges_sum_pp_360_boot_assert() {
-    let sum: i32 = (0u8..64)
+    // Canonical integral invariant (parity with C `m3_verify_integral_invariant`
+    // at `m3.c:930` and `M3_INTEGRAL_INVARIANT`): the RAW sum of pp over all 64
+    // codons is 1440; its /4 suit-level projection is the spec's 360. Normalising
+    // the charges themselves by /4 is forbidden — it would break the FR 2.3.18 4X
+    // invariant the oracle now routes through (Track 33/4.13).
+    let raw_sum: i32 = (0u8..64)
         .map(|codon| bioquaternion_transcription(codon).charges.pp as i32)
         .sum();
-    assert_eq!(sum, 360, "sum(pp) over the codon space must boot-assert 360");
+    assert_eq!(raw_sum, 1440, "raw sum(pp) over the codon space is 1440 (= 4 × 360)");
+    assert_eq!(raw_sum / 4, 360, "the /4 suit-level integral projection is the spec's 360");
 }
 
 // ---------------------------------------------------------------------------

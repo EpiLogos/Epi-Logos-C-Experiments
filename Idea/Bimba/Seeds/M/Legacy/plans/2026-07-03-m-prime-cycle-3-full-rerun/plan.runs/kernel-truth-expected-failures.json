@@ -5,13 +5,6 @@
   "expectedFailures": [
     {
       "suite": "portal-core",
-      "test": "m3_charges_sum_pp_360_boot_assert",
-      "owningTrack": "33 (4.13)",
-      "registerRow": "§4.7 / §5.1",
-      "reason": "Spec boot assert sum(pp)==360; the raw kernel sum over all 64 codons is 1440 (= 4 x 360). The /4 suit-level projection normalization has not landed; needs the owning track to land the projection or the Architect to pin the sum's domain."
-    },
-    {
-      "suite": "portal-core",
       "test": "m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv",
       "owningTrack": "10 (10.10)",
       "registerRow": "§4.7 / §5.4",
@@ -23,13 +16,6 @@
       "owningTrack": "33",
       "registerRow": "§4.7 / §5.3",
       "reason": "kernel_energy_evaluate hardcodes e_5_harmonic_energy = 0.0 and e_6_verifier_energy = 0.0 (inputs unused). The 4:5:6 canonical_total_energy law is in place but two of its three channels are dead."
-    },
-    {
-      "suite": "epi-cli-oracle",
-      "test": "oracle_eval4_charges_match_kernel_codon_charge_authority",
-      "owningTrack": "33 (4.13)",
-      "registerRow": "§5.1",
-      "reason": "oracle_eval4 computes pp/nn/np/pn with an independent +/-32-per-line algebra; the kernel authority m3_compute_charges derives charges from NUCLEOTIDE_ICHING_VALUE arithmetic (FR 2.3.18). One charge authority must remain; the oracle must route through the kernel."
     },
     {
       "suite": "epi-cli-clock",

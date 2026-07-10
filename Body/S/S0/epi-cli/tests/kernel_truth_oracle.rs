@@ -25,7 +25,6 @@ fn iching_result_for_codon(codon: u8) -> IChingResult {
 }
 
 #[test]
-#[ignore = "expected-red: Track 33/4.13 (register §5.1) — oracle_eval4 carries an independent ±32-per-line charge algebra; the kernel authority m3_compute_charges derives pp/nn/np/pn from NUCLEOTIDE_ICHING_VALUE arithmetic. One charge authority must remain."]
 fn oracle_eval4_charges_match_kernel_codon_charge_authority() {
     for codon in 0u8..64 {
         let kernel = bioquaternion_transcription(codon).charges;
