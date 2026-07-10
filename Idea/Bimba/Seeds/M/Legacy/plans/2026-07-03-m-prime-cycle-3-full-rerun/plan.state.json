@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:32:57.463Z",
+  "updatedAt": "2026-07-10T13:40:59.152Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1563,24 +1563,55 @@
       "worktree": null
     },
     "04.T4.16": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T13:32:42.777Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T13:33:37.707Z",
       "claimedAt": "2026-07-10T13:32:42.777Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:33:37.707Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:33:37.707Z",
+          "text": "Verified landed: the full C-side kernel mirror of transcription.rs - M3_TranscriptClass (SHARED/TRANSCRIBABLE two-class), M3_GovernanceRole (NONE/START/STOP), m3_codon_t_count (pure arithmetic), m3_codon_transcript_class, m3_codon_governance_role, M3_CODON_ATG_AUG=0x07 + M3_STOP_CODONS{0x10,0x13,0x1C} with static-assert ties (m3.h:337-360), m3_verify_transcript_surface boot check (27 SHARED + 37 TRANSCRIBABLE + 1 START + 3 STOP), FFI wrappers consumed by portal-core transcription (silent C/Rust drift closed - transcription_c_rust_parity green, kernel_truth transcription_constants test green in gate). test_m3 transcript_surface_contract in the epi-lib suite. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test transcription_c_rust_parity (per-codon zero-tolerance across 64); make -C Body/S/S0/epi-lib test (incl test_transcript_surface_contract + boot self-check); verify-tranche 04.T4.16 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m3.h",
+              "Body/S/S0/epi-lib/src/m3.c"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T15:32:42.777Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:32:42.777Z",
       "runId": "20260710T133242Z-04-T4.16",
       "worktree": null
     },
     "04.T4.17": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:40:59.138Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:40:59.138Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:40:59.138Z",
+          "text": "Completed the additive 4.17 extension (prior session landed transcript_class/governance_role/chain_position; this close landed the remainder): TCP gains is_orf_seed/is_orf_seal (bool serde-default, false unless governance START/STOP) + session_id_ref (M4 back-ref); SymbolicProtein gains start_packet_ref/stop_packet_ref (ORF chain packet ids), kairos_open/kairos_close (HANDLE strings per the bus handle idiom, populated by 5.26, never raw ephemeris), mythos_archetype_reading Option<MajorArcanaCardRef> (new typed ref: kernel card index 0-21 + label; nullable - session may close before a Mythos read). Both named tests landed and green: transcriptional_clock_packet_schema_additive (pre-4.17 wire form stripped of all 7 additive keys deserializes clean with None/false; populated form round-trips verbatim) + symbolic_protein_chain_invariants (chain_position monotone, ORF seed precedes seal, start/stop refs bind to actual packets, kairos+mythos verbatim). Zod + carrier types.ts mirrored (strict schemas, optional additive keys). FLAGGED DRIFT (pre-existing, not introduced here): Rust parent_packet_hash [u8;32] serializes as a 32-number array while Zod expects z.string().length(64) hex - never crossed the live wire yet; the serialization choice is a contract-surface call for the wire owner. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (20 passed incl transcriptional_clock_packet_schema_additive + symbolic_protein_chain_invariants); npx vitest run (schemas 108); pnpm test (app 200); verify-tranche 04.T4.17 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 328,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs",
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts",
+              "Body/M/pratibimba-app/src/bridge/types.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -10904,11 +10935,12 @@
     {
       "runId": "20260710T133242Z-04-T4.16",
       "taskId": "04.T4.16",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T13:32:42.777Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T15:32:42.777Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T13:33:37.707Z"
     }
   ],
   "activeRoute": {

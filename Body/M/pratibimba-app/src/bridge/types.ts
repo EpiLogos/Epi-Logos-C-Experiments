@@ -408,12 +408,24 @@ export interface OracleSequence {
     codons: readonly OracleSequenceCodon[];
 }
 
+/** Mythos card reference (additive, 4.17) — kernel card index, never a local deck. */
+export interface MajorArcanaCardRef {
+    cardId: number;
+    label?: string;
+}
+
 export interface SymbolicProtein {
     proteinId: string;
     sequence: OracleSequence;
     readingFrame: OracleFrame;
     startPositionRef?: string;
     stopPositionRef?: string;
+    /** additive 4.17 — ORF chain refs + kairos handles + Mythos reading */
+    startPacketRef?: string;
+    stopPacketRef?: string;
+    kairosOpen?: string;
+    kairosClose?: string;
+    mythosArchetypeReading?: MajorArcanaCardRef;
 }
 
 export interface TranscriptionalClockPacket {
@@ -425,6 +437,10 @@ export interface TranscriptionalClockPacket {
     oracleSequence?: OracleSequence;
     symbolicProtein?: SymbolicProtein;
     provenanceHandles?: readonly string[];
+    /** additive 4.17 — ORF governance + session back-ref */
+    isOrfSeed?: boolean;
+    isOrfSeal?: boolean;
+    sessionIdRef?: string;
 }
 
 export interface KernelBridgeSubscriber {

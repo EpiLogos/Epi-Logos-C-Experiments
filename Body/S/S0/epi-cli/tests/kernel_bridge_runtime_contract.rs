@@ -7,7 +7,8 @@ use epi_logos::gate::{
         typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
         KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
         KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
-        KernelBridgeVakContext, OracleFrame, OracleSpreadScale, OracleTraversalDirection,
+        GovernanceRole, KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame, OracleSpreadScale,
+        OracleTraversalDirection, SymbolicProtein,
         ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
@@ -1191,6 +1192,9 @@ fn transcriptional_packet(
         governance_role: None,
         chain_position: None,
         parent_packet_hash: None,
+        is_orf_seed: false,
+        is_orf_seal: false,
+        session_id_ref: None,
     }
 }
 
@@ -1231,4 +1235,125 @@ fn json_contains_string(value: &Value, needle: &str) -> bool {
             .any(|item| json_contains_string(item, needle)),
         _ => false,
     }
+}
+
+/// Tranche 4.17 — strictly additive: a pre-4.17 packet JSON (no new keys)
+/// deserializes cleanly with `None`/`false` on every 4.17 field, and existing
+/// consumers see identical semantics after a round-trip.
+#[test]
+fn transcriptional_clock_packet_schema_additive() {
+    let packet = transcriptional_packet(
+        "tcp:pre-4.17",
+        OracleSpreadScale::SingleCard,
+        vec![reading_position("P2", 0, "CP4.2")],
+        Vec::new(),
+        None,
+        "CP4.2",
+    );
+    let mut wire = serde_json::to_value(&packet).expect("packet serializes");
+    // simulate a pre-4.17 producer: strip every 4.17 key from the wire form
+    let object = wire.as_object_mut().expect("packet is an object");
+    for key in [
+        "transcriptClass",
+        "governanceRole",
+        "chainPosition",
+        "parentPacketHash",
+        "isOrfSeed",
+        "isOrfSeal",
+        "sessionIdRef",
+    ] {
+        object.remove(key);
+    }
+    let decoded: TranscriptionalClockPacket =
+        serde_json::from_value(wire).expect("pre-4.17 packet deserializes");
+    assert_eq!(decoded.transcript_class, None);
+    assert_eq!(decoded.governance_role, None);
+    assert_eq!(decoded.chain_position, None);
+    assert!(!decoded.is_orf_seed);
+    assert!(!decoded.is_orf_seal);
+    assert_eq!(decoded.session_id_ref, None);
+    // and the populated form round-trips verbatim
+    let mut populated = packet;
+    populated.is_orf_seed = true;
+    populated.chain_position = Some(0);
+    populated.session_id_ref = Some("session:demo".to_owned());
+    let round =
+        serde_json::from_value::<TranscriptionalClockPacket>(serde_json::to_value(&populated).expect("ser"))
+            .expect("de");
+    assert_eq!(round, populated);
+}
+
+/// Tranche 4.17 — SymbolicProtein chain invariants: start/stop packet refs are
+/// internally consistent, chain positions are monotone, and the ORF seed
+/// precedes the ORF seal.
+#[test]
+fn symbolic_protein_chain_invariants() {
+    let mut chain: Vec<TranscriptionalClockPacket> = (0..3u32)
+        .map(|n| {
+            let mut packet = transcriptional_packet(
+                &format!("tcp:chain-{n}"),
+                OracleSpreadScale::ClockWalk,
+                vec![reading_position("P2", 0, "CP4.2")],
+                Vec::new(),
+                None,
+                "CP4.2",
+            );
+            packet.chain_position = Some(n);
+            packet
+        })
+        .collect();
+    chain[0].is_orf_seed = true;
+    chain[0].governance_role = Some(GovernanceRole::Start);
+    chain[2].is_orf_seal = true;
+    chain[2].governance_role = Some(GovernanceRole::Stop);
+
+    // chain positions monotone
+    for pair in chain.windows(2) {
+        assert!(pair[0].chain_position < pair[1].chain_position, "chain_position monotone");
+    }
+    // ORF seed precedes ORF seal
+    let seed = chain.iter().position(|p| p.is_orf_seed).expect("seed present");
+    let seal = chain.iter().position(|p| p.is_orf_seal).expect("seal present");
+    assert!(seed < seal, "ORF seed must precede the seal");
+
+    // protein start/stop refs bind to the actual seed/seal packets + kairos +
+    // mythos ref carry verbatim
+    let mut protein = SymbolicProtein {
+        protein_id: "protein:chain-demo".to_owned(),
+        sequence: chain[0]
+            .oracle_sequence
+            .clone()
+            .unwrap_or_else(|| epi_logos::gate::kernel_bridge_runtime::OracleSequence {
+                sequence_id: "seq:chain-demo".to_owned(),
+                frame_id: chain[0].oracle_frame.frame_id.clone(),
+                codons: Vec::new(),
+            }),
+        reading_frame: chain[0].oracle_frame.clone(),
+        start_position_ref: None,
+        stop_position_ref: None,
+        transcript_class: None,
+        governance_role: None,
+        is_canonical_derivation: None,
+        start_packet_ref: None,
+        stop_packet_ref: None,
+        kairos_open: None,
+        kairos_close: None,
+        mythos_archetype_reading: None,
+    };
+    protein.start_packet_ref = Some(chain[seed].packet_id.clone());
+    protein.stop_packet_ref = Some(chain[seal].packet_id.clone());
+    protein.kairos_open = Some("kairos://open/demo".to_owned());
+    protein.kairos_close = Some("kairos://close/demo".to_owned());
+    protein.mythos_archetype_reading = Some(MajorArcanaCardRef {
+        card_id: 13,
+        label: Some("Death".to_owned()),
+    });
+    let round = serde_json::from_value::<SymbolicProtein>(
+        serde_json::to_value(&protein).expect("ser"),
+    )
+    .expect("de");
+    assert_eq!(round, protein);
+    assert_eq!(round.start_packet_ref.as_deref(), Some("tcp:chain-0"));
+    assert_eq!(round.stop_packet_ref.as_deref(), Some("tcp:chain-2"));
+    assert_eq!(round.mythos_archetype_reading.as_ref().map(|c| c.card_id), Some(13));
 }

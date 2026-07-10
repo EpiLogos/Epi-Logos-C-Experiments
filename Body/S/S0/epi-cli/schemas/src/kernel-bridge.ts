@@ -187,6 +187,16 @@ export type TranscriptClass = z.infer<typeof TranscriptClass>;
 export const GovernanceRole = z.enum(["none", "start", "stop"]);
 export type GovernanceRole = z.infer<typeof GovernanceRole>;
 
+/** Mythos's named pattern for a protein — a reference to the kernel's Major
+ *  Arcana card index (0..21), never a local deck (additive, 4.17). */
+export const MajorArcanaCardRef = z
+  .object({
+    cardId: z.number().int().min(0).max(21),
+    label: z.string().min(1).optional(),
+  })
+  .strict();
+export type MajorArcanaCardRef = z.infer<typeof MajorArcanaCardRef>;
+
 export const SymbolicProtein = z
   .object({
     proteinId: z.string().min(1),
@@ -198,6 +208,11 @@ export const SymbolicProtein = z
     transcriptClass: TranscriptClass.optional(),
     governanceRole: GovernanceRole.optional(),
     isCanonicalDerivation: z.boolean().optional(),
+    startPacketRef: z.string().min(1).optional(),
+    stopPacketRef: z.string().min(1).optional(),
+    kairosOpen: z.string().min(1).optional(),
+    kairosClose: z.string().min(1).optional(),
+    mythosArchetypeReading: MajorArcanaCardRef.optional(),
   })
   .strict();
 export type SymbolicProtein = z.infer<typeof SymbolicProtein>;
@@ -217,6 +232,9 @@ export const TranscriptionalClockPacket = z
     governanceRole: GovernanceRole.optional(),
     chainPosition: z.number().int().nonnegative().optional(),
     parentPacketHash: z.string().length(64).optional(),
+    isOrfSeed: z.boolean().optional(),
+    isOrfSeal: z.boolean().optional(),
+    sessionIdRef: z.string().min(1).optional(),
   })
   .strict()
   .superRefine((value, ctx) => {

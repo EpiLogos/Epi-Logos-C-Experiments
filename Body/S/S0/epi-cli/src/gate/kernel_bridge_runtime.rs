@@ -286,6 +286,17 @@ pub enum GovernanceRole {
     Stop = 2,
 }
 
+/// Mythos's named pattern for a protein — a REFERENCE to the kernel's Major
+/// Arcana card index (m3_major_arcana_from_codon: 0..21), never a local deck
+/// (additive, 4.17).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MajorArcanaCardRef {
+    pub card_id: u8,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub label: Option<String>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SymbolicProtein {
@@ -303,6 +314,22 @@ pub struct SymbolicProtein {
     /// True if this protein was derived from canonical spec rather than empirical input (additive, 4.17)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub is_canonical_derivation: Option<bool>,
+    /// Packet-id of the ORF-opening (START/ATG) packet (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub start_packet_ref: Option<String>,
+    /// Packet-id of the ORF-sealing (STOP) packet (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stop_packet_ref: Option<String>,
+    /// Kairos reading HANDLE at chain open (e.g. `kairos://…`) — a reference,
+    /// never a raw ephemeris body (additive, 4.17; populated by 5.26)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kairos_open: Option<String>,
+    /// Kairos reading handle at chain close (additive, 4.17; populated by 5.26)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kairos_close: Option<String>,
+    /// Nullable: the session may close before any Mythos read fires (additive, 4.17; 5.27)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mythos_archetype_reading: Option<MajorArcanaCardRef>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -328,6 +355,15 @@ pub struct TranscriptionalClockPacket {
     /// Hash of the parent TranscriptionalClockPacket for chain verification (additive, 4.17)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parent_packet_hash: Option<[u8; 32]>,
+    /// True when governance_role == START — the packet seeds an ORF (additive, 4.17)
+    #[serde(default)]
+    pub is_orf_seed: bool,
+    /// True when governance_role == STOP — the packet seals an ORF (additive, 4.17)
+    #[serde(default)]
+    pub is_orf_seal: bool,
+    /// Back-ref to the M4 session that produced the packet, when applicable (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub session_id_ref: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
