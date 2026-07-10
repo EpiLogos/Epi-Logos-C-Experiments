@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-09T09:42:10.554Z",
+  "updatedAt": "2026-07-10T09:13:15.601Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1341,16 +1341,33 @@
       "worktree": null
     },
     "04.T4.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T09:13:15.581Z",
+      "claimedAt": "2026-07-10T08:52:46.867Z",
+      "completedAt": "2026-07-10T09:13:15.581Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T09:13:15.581Z",
+          "text": "Verified already-landed T4.11: OracleFrame/ReadingPosition/SymbolicProtein/OracleSequence + TranscriptionalClockPacket(vak,oracle_frame,cp_position_ref) present in Rust (epi-cli kernel_bridge_runtime 18/18 + portal-core profile_projections 7/7) and TS/Zod (schemas kernel-bridge 28/28) + carrier bridge/types.ts; positions[] authoritative + computed complementary pairs + spread_scale 7-family enum enforced; single-card/compressed-triad/sixfold/Night-inverse cases covered; carrier renderer has no local tarot/codon tables. Class-K verify-tranche PASS.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract; cargo test -p portal-core --test profile_projections_full_suite; npx vitest run tests/kernel-bridge.test.ts",
+            "exitCode": 0,
+            "testsPassed": 53,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts",
+              "Body/M/pratibimba-app/src/bridge/types.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T08:52:46.867Z",
+      "runId": "20260710T085246Z-04-T4.11",
       "worktree": null
     },
     "04.T4.12": {
@@ -9860,6 +9877,16 @@
       "leaseExpiresAt": "2026-07-09T11:26:17.900Z",
       "worktree": null,
       "completedAt": "2026-07-09T09:42:10.535Z"
+    },
+    {
+      "runId": "20260710T085246Z-04-T4.11",
+      "taskId": "04.T4.11",
+      "status": "done",
+      "startedAt": "2026-07-10T08:52:46.867Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T10:52:46.867Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T09:13:15.581Z"
     }
   ],
   "activeRoute": {

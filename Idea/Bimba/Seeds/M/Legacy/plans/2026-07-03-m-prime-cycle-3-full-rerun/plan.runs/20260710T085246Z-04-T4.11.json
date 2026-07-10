@@ -1,0 +1,37 @@
+{
+  "runId": "20260710T085246Z-04-T4.11",
+  "taskId": "04.T4.11",
+  "startedAt": "2026-07-10T08:52:46.867Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-10T10:52:46.867Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.11",
+    "trackId": "04",
+    "tranche": "T4.11",
+    "title": "VAK-addressed OracleFrame and SymbolicProtein runtime schema",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.10"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M3' inspectors (18-aperture switcher, tarot wheel, hexagram browser, transcription engine) in pratibimba-app. SUBSTRATE: epi-lib m3 + portal-core m3_transcription_bridge. §2 track 04/24."
+  }
+}
