@@ -55,6 +55,15 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
         return ctx !== null && !ctx.isContextLost();
     });
     expect(glLive, 'three.js WebGL context should be live in the e2e face').toBe(true);
+
+    // 36.4: the pentadic 1-2-3 overlay rides the SAME live profile — ready
+    // (one trace generation across M1/M2/M3 slots), never pending or stale
+    const overlay = page.getByTestId('engine-pentadic-overlay');
+    await expect(overlay).toHaveAttribute('data-state', 'ready', { timeout: 20_000 });
+    await expect(overlay).toContainText(/t12 \d+\/p\d+/);
+    await expect(overlay).toContainText(/72:\d+ q5°/);
+    await expect(overlay).toContainText(/64:\d+ [A-Z]{3}/);
+    await expect(overlay).toContainText('9₂=8₃+1₁');
 });
 
 test('cosmic face: the M1 played-torus renders the ananda vortex live off the bus (T2.6)', async ({

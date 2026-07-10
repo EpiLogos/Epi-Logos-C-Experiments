@@ -32,6 +32,7 @@ import {
     resonancePulse
 } from './cosmicMath';
 import { modulationEngine, useEngineStore } from './modulation/engine';
+import { buildPentadicOverlay } from './cosmicPentadicOverlay';
 import { harmonicSnapshot } from './modulation/modulators';
 import { ModulationCarrier } from './modulation/types';
 import {
@@ -274,6 +275,12 @@ export function CosmicEngine() {
 
     // strip readouts derive from the same snapshot law the graph uses
     const snapshot = useMemo(() => harmonicSnapshot(cached?.profile ?? null), [cached]);
+    // 36.4: the pentadic 1-2-3 overlay reads the SAME single cached profile
+    // subscription — one ProfileTick source for all three slots.
+    const pentadic = useMemo(
+        () => buildPentadicOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
+        [cached]
+    );
     const level = snapshot.degradation;
     const kairosLive = snapshot.planetDegrees !== null;
 
@@ -931,6 +938,17 @@ export function CosmicEngine() {
                     {snapshot.lensMode
                         ? `${snapshot.modeName ?? `CF${snapshot.lensMode.mode + 1}`} @ ${snapshot.chromatic?.note ?? snapshot.lensLabel ?? '—'} · 84:${snapshot.lensModeIndex ?? '—'}`
                         : '—'}
+                </span>
+                <span
+                    data-testid="engine-pentadic-overlay"
+                    data-state={pentadic.state}
+                    title="pentadic 0/1→5 hinge riding the 1-2-3 composition: M1 K² hinge+substrate · M2 72-index+5° quantum · M3 64-address+codon · 9₍M2₎=8₍M3₎+1₍M1₎ (Tranche 36.4; kernel trace, one generation, no local 72/64 conversion)"
+                >
+                    {pentadic.state === 'ready' && pentadic.m1 && pentadic.m2 && pentadic.m3
+                        ? `⟠ t12 ${pentadic.m1.tick12}/p${pentadic.m1.position6} ${pentadic.m1.sourceBinaryState} · 72:${pentadic.m2.resonance72Index} q${pentadic.m2.shemDegreeQuantum}° · 64:${pentadic.m3.mahamayaAddress64} ${pentadic.m3.codon} · 9₂=8₃+1₁`
+                        : pentadic.state === 'stale-trace-generation'
+                          ? '⟠ stale trace generation — rejected'
+                          : '⟠ pending-anuttara-pentadic-trace'}
                 </span>
                 <button
                     type="button"

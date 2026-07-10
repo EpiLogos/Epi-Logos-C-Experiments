@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:51:51.094Z",
+  "updatedAt": "2026-07-10T12:59:46.189Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1175,16 +1175,21 @@
       "worktree": null
     },
     "03.T3.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-10T12:56:09.866Z",
+      "claimedAt": "2026-07-10T12:56:09.629Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T12:56:09.866Z",
+          "text": "Deferred by its own brief: named integration blocker (music_tech.rs MPE/MTS-ESP/Scala emitter over M2_MAQAM_DESC[72]) flagged NOT executed in cycle-3 unless promoted by the user. Substrate note: the 24-TET interval patterns are already in .rodata (m2.h); when promoted this is an emitter build, not greenfield. Blocked = waiting on user promotion, per the tranche text."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:56:09.629Z",
+      "runId": "20260710T125609Z-03-T3.7",
       "worktree": null
     },
     "03.T3.8": {
@@ -7852,16 +7857,31 @@
       "worktree": null
     },
     "36.T36.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:59:46.177Z",
+      "claimedAt": "2026-07-10T12:59:30.460Z",
+      "completedAt": "2026-07-10T12:59:46.177Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:59:46.177Z",
+          "text": "Pentadic trace overlay landed on the cosmic 1-2-3 composition strip: M1 K2 slot shows tick12/position6 hinge + 0/1 substrate marker; M2 slot shows resonance72 index + 5-degree Shem quantum; M3 slot shows mahamaya address64 + codon cell; join line binds 9_M2=8_M3+1_M1 to the live 0/1->5 hinge (never an isolated proof label). ONE profile subscription (the engine existing cached profile feeds the pure builder); read-only; a trace whose tick disagrees with the profile tick is REJECTED whole (stale-trace-generation, all slots null); NO renderer-local 72/64 conversion (kernel-inconsistent values flow verbatim - test enforced); parser shared with the pentadic inspector (one strict reader, no fork). Live e2e: overlay data-state=ready with real values against the spawned gateway. W-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "npx vitest run src/engine/cosmicPentadicOverlay.test.ts (6 passed: one-generation slots, stale rejection, no-local-72/64, hinge-joined rule); pnpm test:e2e (10 passed incl live overlay ready on the real bus); pnpm test (200); verify-tranche 36.T36.4 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 216,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/cosmicPentadicOverlay.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:59:30.460Z",
+      "runId": "20260710T125930Z-36-T36.4",
       "worktree": null
     },
     "36.T36.5": {
@@ -9147,16 +9167,16 @@
       "worktree": null
     },
     "49.T49.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T12:59:26.089Z",
+      "claimedAt": "2026-07-10T12:59:26.089Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T14:59:26.089Z",
+      "heartbeatAt": "2026-07-10T12:59:26.089Z",
+      "runId": "20260710T125926Z-49-T49.2",
       "worktree": null
     },
     "49.T49.3": {
@@ -10441,30 +10461,59 @@
       "leaseExpiresAt": "2026-07-10T14:51:24.938Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:51:51.079Z"
+    },
+    {
+      "runId": "20260710T125609Z-03-T3.7",
+      "taskId": "03.T3.7",
+      "status": "blocked",
+      "startedAt": "2026-07-10T12:56:09.629Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:56:09.629Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:56:09.866Z"
+    },
+    {
+      "runId": "20260710T125926Z-49-T49.2",
+      "taskId": "49.T49.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T12:59:26.089Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T14:59:26.089Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260710T125930Z-36-T36.4",
+      "taskId": "36.T36.4",
+      "status": "done",
+      "startedAt": "2026-07-10T12:59:30.460Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:59:30.460Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:59:46.177Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T11:09:16.862Z",
-    "updatedAt": "2026-07-10T11:09:16.862Z",
+    "createdAt": "2026-07-10T12:56:34.836Z",
+    "updatedAt": "2026-07-10T12:56:34.836Z",
     "taskIds": [
       "12.T12.17",
-      "02.T2.6",
-      "02.T2.7",
-      "02.T2.8"
+      "34.T34.1",
+      "17.T17.12",
+      "03.T3.8"
     ],
-    "totalWeight": 8,
+    "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "12.T12.17": "in-session",
-      "02.T2.6": "in-session",
-      "02.T2.7": "in-session",
-      "02.T2.8": "in-session"
+      "34.T34.1": "in-session",
+      "17.T17.12": "in-session",
+      "03.T3.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 7/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
