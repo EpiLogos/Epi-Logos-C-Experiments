@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:33:27.086Z",
+  "updatedAt": "2026-07-10T22:37:17.616Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8207,16 +8207,30 @@
       "worktree": null
     },
     "32.T32.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T22:37:17.604Z",
+      "claimedAt": "2026-07-10T22:33:47.805Z",
+      "completedAt": "2026-07-10T22:37:17.604Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:37:17.604Z",
+          "text": "Cold-start playbook D-class deliverable landed at plan.runs/32.T32.1-cold-start-playbook.md: the six-stage cold-start CONTRACT (bridge-init -> kernel-bridge subscription -> S2/S3 handshake -> first-profile-tick -> day-now anchor -> optional kairos refresh) + splash contract (matheme-glyph header, per-stage state pill/reason/retry/diagnostic-deep-link, first-ready non-blocking dismiss) + post-cold-start handoff, retargeted from the FROZEN epi-theia ColdStartOrchestrator (Inversify/ReactWidget dead; contract is LAW) to the pratibimba-app carrier per CHARTER. Verify-dont-trust grounding (2026-07-10): carrier day-now landed (37 refs), S2/S3 partial (5 refs), but orchestrator/splash/matheme-glyph/9-id-taxonomy/first-tick/kairos all unbuilt (0 refs) -> surface is SPEC-AHEAD, playbook does not claim it landed. Independent UF-gate verify PASS under opus-c-verify (16 suites incl app-ui-flow + live-wire green).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 32.T32.1 --owner opus-c-verify (UF gate green: app-ui-flow + live-wire + carrier-tokens)",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/32.T32.1-cold-start-playbook.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-c-law",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:33:47.805Z",
+      "runId": "20260710T223347Z-32-T32.1",
       "worktree": null
     },
     "32.T32.2": {
@@ -12346,6 +12360,16 @@
       "leaseExpiresAt": "2026-07-11T00:29:01.553Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:33:27.074Z"
+    },
+    {
+      "runId": "20260710T223347Z-32-T32.1",
+      "taskId": "32.T32.1",
+      "status": "done",
+      "startedAt": "2026-07-10T22:33:47.805Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:33:47.805Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:37:17.604Z"
     }
   ],
   "activeRoute": {
