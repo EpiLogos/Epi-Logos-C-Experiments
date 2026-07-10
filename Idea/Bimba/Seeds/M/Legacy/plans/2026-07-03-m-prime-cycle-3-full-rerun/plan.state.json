@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T21:11:05.985Z",
+  "updatedAt": "2026-07-10T22:07:07.338Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4953,16 +4953,32 @@
       "worktree": null
     },
     "17.T17.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T22:07:07.326Z",
+      "claimedAt": "2026-07-10T22:03:22.467Z",
+      "completedAt": "2026-07-10T22:07:07.326Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:07:07.326Z",
+          "text": "events.rs split already landed as events/{bridge,flip,kernel}_events.rs + mod.rs (4 files vs spec prose 7; KleinFlipEvent 3-variant union M1TritoneCrossing/M2CymaticValenceInvert/M3CodonRotationCross present). cargo check -p portal-core green; klein_flip_event_variants_exhaustive 2/2 green; W-gate PASS (gateway 80, live-wire, ta-onta 431, redis/spacetime/graphiti) under verifier opus-d-mech-verify.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test klein_flip_event_variants_exhaustive --offline",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/events/flip_events.rs",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs (W-gate live-wire PASS)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.13.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-d-mech",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:03:22.467Z",
+      "runId": "20260710T220322Z-17-T17.13",
       "worktree": null
     },
     "17.T17.14": {
@@ -6365,16 +6381,16 @@
       "worktree": null
     },
     "24.T24.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T22:01:59.941Z",
+      "claimedAt": "2026-07-10T22:01:59.941Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T00:01:59.941Z",
+      "heartbeatAt": "2026-07-10T22:01:59.941Z",
+      "runId": "20260710T220159Z-24-T24.1",
       "worktree": null
     },
     "24.T24.2": {
@@ -8861,10 +8877,10 @@
       "worktree": null
     },
     "40.T0": {
-      "status": "review",
-      "updatedAt": "2026-07-10T14:52:55.573Z",
-      "claimedAt": "2026-07-10T14:42:03.749Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T22:06:39.819Z",
+      "claimedAt": "2026-07-10T22:05:16.258Z",
+      "completedAt": "2026-07-10T22:06:39.819Z",
       "evidence": [
         {
           "at": "2026-07-10T14:52:55.573Z",
@@ -8882,13 +8898,30 @@
               "output": 9000
             }
           }
+        },
+        {
+          "at": "2026-07-10T22:05:10.983Z",
+          "text": "Requeue review->pending: prior owner opus-b-sub40 lease expired 2026-07-10T16:42Z; reclaiming under opus-c-law for independent verify + close. Enumeration 40.T40.1..40.T40.5 already landed in the retarget file and confirmed to parse into the ledger."
+        },
+        {
+          "at": "2026-07-10T22:06:39.819Z",
+          "text": "T0 absorb-and-retarget closed: source law (2026-06-02 40-bimba-canon-update-ledger.md, read in full) enumerated into 5 numbered tranches 40.T40.1..40.T40.5 in the retarget file, each citing its originating source section (source Tranches 40.1/40.2/40.3, Cross-reference discipline (a)-(d), Integration Track-39). All five ids parse into the ledger. ARENA intake (routing tier-4) correctly scoped out as Track-41. Independent D-class verify PASS under opus-c-verify.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 40.T0 --owner opus-c-verify --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/40-bimba-canon-update-ledger.md"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "opus-b-sub40",
-      "leaseExpiresAt": "2026-07-10T16:42:03.749Z",
-      "heartbeatAt": "2026-07-10T14:52:55.573Z",
-      "runId": "20260710T144203Z-40-T0",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-10T22:05:16.258Z",
+      "runId": "20260710T220516Z-40-T0",
       "worktree": null
     },
     "41.T41.1": {
@@ -11879,12 +11912,41 @@
       "leaseExpiresAt": "2026-07-10T22:53:01.698Z",
       "worktree": null,
       "completedAt": "2026-07-10T21:11:05.972Z"
+    },
+    {
+      "runId": "20260710T220159Z-24-T24.1",
+      "taskId": "24.T24.1",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T22:01:59.941Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T00:01:59.941Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260710T220322Z-17-T17.13",
+      "taskId": "17.T17.13",
+      "status": "done",
+      "startedAt": "2026-07-10T22:03:22.467Z",
+      "owner": "opus-d-mech",
+      "leaseExpiresAt": "2026-07-11T00:03:22.467Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:07:07.326Z"
+    },
+    {
+      "runId": "20260710T220516Z-40-T0",
+      "taskId": "40.T0",
+      "status": "done",
+      "startedAt": "2026-07-10T22:05:16.258Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:05:16.258Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:06:39.819Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T20:50:56.044Z",
-    "updatedAt": "2026-07-10T20:50:56.044Z",
+    "createdAt": "2026-07-10T22:01:06.851Z",
+    "updatedAt": "2026-07-10T22:01:06.851Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
