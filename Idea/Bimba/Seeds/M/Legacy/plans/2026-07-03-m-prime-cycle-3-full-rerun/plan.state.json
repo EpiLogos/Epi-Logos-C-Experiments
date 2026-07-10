@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:12:46.283Z",
+  "updatedAt": "2026-07-10T15:14:23.203Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2535,16 +2535,30 @@
       "worktree": null
     },
     "08.T8.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:14:23.190Z",
+      "claimedAt": "2026-07-10T15:13:00.995Z",
+      "completedAt": "2026-07-10T15:14:23.190Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:14:23.190Z",
+          "text": "DR-M4-2 clause 5 polarity landed at the audio_octet rendering boundary: cymaticRegisterForFace pins 0=cosmic/1=personal (never inverted - the render-test asserts the ratified canon verbatim); gateCymaticRender enforces the M2-prime-SPEC section 10 law that the personal-Pratibimba register is BLOCKED outside protected M4-prime surfaces while the cosmic K2 cymatic skin renders openly on face 0; Track 11.1 inherits the same sweep per the DR-TS-1 cross-link (the 08.T8.5 layout-claim test pins the same 0/1 face domain). Protected-surface designation stays Track 10.M4/DR-M4-3 territory. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/engine/cymaticPolarity.test.ts (3 passed: ratified 0=cosmic/1=personal pin, open cosmic render, personal blocked outside protected M4-prime surfaces); verify-tranche 08.T8.6 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/cymaticPolarity.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:13:00.995Z",
+      "runId": "20260710T151300Z-08-T8.6",
       "worktree": null
     },
     "08.T8.7": {
@@ -11366,6 +11380,16 @@
       "leaseExpiresAt": "2026-07-10T17:09:49.056Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:12:46.271Z"
+    },
+    {
+      "runId": "20260710T151300Z-08-T8.6",
+      "taskId": "08.T8.6",
+      "status": "done",
+      "startedAt": "2026-07-10T15:13:00.995Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:13:00.995Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:14:23.190Z"
     }
   ],
   "activeRoute": {
