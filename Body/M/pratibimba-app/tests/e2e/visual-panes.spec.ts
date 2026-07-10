@@ -133,6 +133,39 @@ test('cosmic face: the M3 pentadic inspector renders the two fifteens off the li
     await expect(page.getByTestId('m3-pentadic-hinge')).toContainText('whole 0→5 · natural 1→6');
 });
 
+test('cosmic face: the M3 inspectors summon live off the bus and the depth views switch (4.2)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'M3 Inspectors' })
+        .click();
+
+    const pane = page.locator('.face-active [data-testid="m3-inspectors"]');
+    await expect(pane).toBeVisible({ timeout: 15_000 });
+    // mahamaya rides every live profile — ready, never the pending body
+    await expect(pane).toHaveAttribute('data-state', 'ready', { timeout: 20_000 });
+
+    // summon two inspectors and assert LIVE kernel values (no local tables)
+    await page.getByTestId('m3-summon-dna-rna-phase').click();
+    await expect(page.getByTestId('m3-dna-rna')).toContainText(/phase (dna|rna)/i);
+    await expect(page.getByTestId('m3-dna-rna')).toContainText(/line-op \d+/);
+
+    await page.getByTestId('m3-summon-suit-integral').click();
+    await expect(page.getByTestId('m3-suit-integral')).toContainText('84 + 96 + 88 + 92 = 360');
+    await expect(page.getByTestId('m3-suit-integral')).toContainText(/active suit \d/);
+
+    // the four depth views switch and read bus-backed values
+    await page.getByTestId('m3-depth-lens-annulus').click();
+    await expect(page.getByTestId('m3-depth-readout')).toContainText(/lens \d+ · mode \d+ · 472:\d+/);
+    await page.getByTestId('m3-depth-toroidal-world').click();
+    await expect(page.getByTestId('m3-depth-readout')).toContainText(/degree720 \d+ · sheet [01]/);
+    await page.getByTestId('m3-depth-hopf-identity').click();
+    await expect(page.getByTestId('m3-depth-readout')).toContainText(/identity returns at 720°/);
+});
+
 test('cosmic face: the Walk pane walks the REAL graph and the # invert round-trips X → X′ → X', async ({
     page
 }) => {

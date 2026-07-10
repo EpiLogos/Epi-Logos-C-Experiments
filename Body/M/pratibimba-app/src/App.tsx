@@ -31,6 +31,7 @@ import { WalkPane } from './panes/WalkPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { PentadicInspectorPane } from './panes/PentadicInspectorPane';
+import { M3InspectorsPane } from './panes/M3InspectorsPane';
 import { ChatPane } from './panes/ChatPane';
 import { CommandPalette } from './panes/CommandPalette';
 import { FileTreePane } from './panes/FileTreePane';
@@ -116,7 +117,8 @@ const COSMIC_DEFAULT = {
                     { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
                     { type: 'tab', name: 'Played Torus', component: 'm1PlayedTorus', enableClose: false },
-                    { type: 'tab', name: 'Pentadic', component: 'm3PentadicInspector', enableClose: false }
+                    { type: 'tab', name: 'Pentadic', component: 'm3PentadicInspector', enableClose: false },
+                    { type: 'tab', name: 'M3 Inspectors', component: 'm3Inspectors', enableClose: false }
                 ]
             }
         ]
@@ -125,7 +127,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 7;
+const LAYOUT_VERSION = 8;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -162,6 +164,8 @@ function factory(node: TabNode) {
             return <PlayedTorusPane />;
         case 'm3PentadicInspector':
             return <PentadicInspectorPane />;
+        case 'm3Inspectors':
+            return <M3InspectorsPane />;
         case 'personalHome':
             return <NowPane />;
         case 'journalTimeline':
