@@ -1,6 +1,13 @@
 use portal_core::m3_transcription_bridge::{M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_NODE_COUNT};
 use portal_core::{kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile};
 
+// The canonical complement-family law from the statically-linked C substrate
+// (pointer_web.c: mirror = 5 − position, the pentadic-hinge involution) — the
+// 36.2 tests bind the expected pairs to THIS, never to old letter names.
+extern "C" {
+    fn hc_mirror_position(ql_position: u8) -> u8;
+}
+
 #[derive(Debug)]
 struct AnuttaraPentadicRuntimeTraceProbe {
     tick: u64,
@@ -64,6 +71,56 @@ fn anuttara_family_b_complement_pairs_are_pentadic_runtime_hinges() {
             (left + right) % 6,
             0,
             "tick {tick12} must be a genuine complement pair, not a mod-6 self-pair: {trace:?}"
+        );
+
+        // 36.2: bind the expected pair to the canonical substrate involution
+        // (C hc_mirror_position: 5 − p), not to an old family letter name —
+        // every complement pair IS a pentadic runtime hinge: left + right = 5.
+        let expected_right = unsafe { hc_mirror_position(left) };
+        assert_eq!(
+            right, expected_right,
+            "tick {tick12}: complement must equal the canonical C mirror involution: {trace:?}"
+        );
+        assert_eq!(
+            left + right,
+            5,
+            "tick {tick12}: complement pair must close on the whole-number hinge 5: {trace:?}"
+        );
+    }
+}
+
+#[test]
+fn tick_substrate_0_1_projects_to_position5_without_losing_position6_completion() {
+    // The 0/1 tick substrate must be PRESENT in the trace (the test fails if
+    // the trace drops it): tick 0 is the '0' pole, tick 1 the '1' pole, all
+    // later ticks the fused '0/1' non-dual substrate.
+    let real = |cycle: u64, tick12: u8| {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+        AnuttaraPentadicRuntimeTrace::from_profile(&profile)
+    };
+    assert_eq!(real(0, 0).source_binary_state, "0");
+    assert_eq!(real(0, 1).source_binary_state, "1");
+    for tick12 in 2..12u8 {
+        assert_eq!(
+            real(0, tick12).source_binary_state,
+            "0/1",
+            "tick {tick12}: the fused 0/1 substrate must stay on the trace"
+        );
+    }
+
+    // Whole-number addressing reaches position 5 from 0 (position 5 must not
+    // be swallowed by the 6-count) while the natural-number 1→6 completion is
+    // simultaneously held on the SAME trace — one hinge, two addressing modes.
+    for tick12 in [5u8, 11] {
+        let trace = real(0, tick12);
+        assert_eq!(
+            trace.position6, 5,
+            "tick {tick12}: whole-number addressing must reach position 5"
+        );
+        assert_eq!(trace.whole_number_endpoint, 5);
+        assert_eq!(
+            trace.natural_number_endpoint, 6,
+            "tick {tick12}: the natural 1→6 completion must not be lost when position 5 is reached"
         );
     }
 }

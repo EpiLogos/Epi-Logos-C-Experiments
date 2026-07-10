@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:19:25.061Z",
+  "updatedAt": "2026-07-10T12:29:56.336Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7766,16 +7766,30 @@
       "worktree": null
     },
     "36.T36.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:29:56.325Z",
+      "claimedAt": "2026-07-10T12:26:24.550Z",
+      "completedAt": "2026-07-10T12:29:56.325Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:29:56.325Z",
+          "text": "All three 36.2-named kernel tests now real and green: anuttara_family_b_complement_pairs_are_pentadic_runtime_hinges STRENGTHENED to bind expected pairs to the canonical C substrate involution via FFI (hc_mirror_position, pointer_web.c: 5-p; pairs close on the whole-number hinge left+right=5) instead of only the weak mod-6 check - fails if the trace hard-codes old family naming; whole_number_five_and_natural_number_six... (present, 36.1); NEW tick_substrate_0_1_projects_to_position5_without_losing_position6_completion - asserts the 0/1 tick substrate is PRESENT on the trace (tick0=0, tick1=1, else 0/1 via source_binary_state) and position 5 is not swallowed by the 6-count (position6=5 at ticks 5/11 while natural endpoint 6 held on the same trace). W-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test anuttara_pentadic_runtime_trace (8 passed incl the three 36.2-named hinge tests); verify-tranche 36.T36.2 W-gate PASS (live-wire + gateway suites green)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/anuttara_pentadic_runtime_trace.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:26:24.550Z",
+      "runId": "20260710T122624Z-36-T36.2",
       "worktree": null
     },
     "36.T36.3": {
@@ -10341,6 +10355,16 @@
       "leaseExpiresAt": "2026-07-10T14:17:36.652Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:19:25.050Z"
+    },
+    {
+      "runId": "20260710T122624Z-36-T36.2",
+      "taskId": "36.T36.2",
+      "status": "done",
+      "startedAt": "2026-07-10T12:26:24.550Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:26:24.550Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:29:56.325Z"
     }
   ],
   "activeRoute": {
