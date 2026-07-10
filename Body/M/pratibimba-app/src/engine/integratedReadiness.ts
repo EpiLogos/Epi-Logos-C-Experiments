@@ -1,0 +1,252 @@
+/**
+ * Coordinate: M' (integrated 1-2-3 cosmic engine — Wave-A readiness gate, 07.T7.1)
+ * Actualises: the typed `profile_missing_field` blocked-state the integrated
+ *   cosmic surface reports when a Wave-A profile pocket it renders from is
+ *   absent — an honest blocker keyed to a declared marker, never a placeholder.
+ * Provenance: contract cribbed 2026-07-11 from frozen
+ *   `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/common/wave-a-markers.ts`
+ *   (epi-theia is a frozen parts warehouse; readiness ids, marker names, and
+ *   block shapes are LAW — the m-extension-runtime/contributor plumbing is not
+ *   ported). Field paths are carrier-real, per the kernel-bridge readiness
+ *   ledger (`plan.runs/wave-b-kernel-bridge-matrix.md`) and
+ *   `kernel_bridge_runtime.rs` emission sites.
+ * Does NOT own: composition-slot layout or pane rendering (later 7.x work);
+ *   the profile transport (bridge/gatewayClient); kernel-side derivations.
+ */
+
+import type { MathemeHarmonicProfileBoundary } from '../bridge/types';
+
+/** LAW: stable blocker-id namespace so Wave-A blockers stay greppable across tracks. */
+export const WAVE_A_BLOCKER_ID_PREFIX = 'wave-a.pending' as const;
+
+/** LAW: the five canonical marker names as written in the tranche specs. */
+export type WaveAMarkerName =
+    | 'klein_flip'
+    | 'resonance72'
+    | 'six-axes-of-72 decoding'
+    | 'audio_octet[8]'
+    | 'nodal_quartet[4]';
+
+/**
+ * A single Wave-A pending marker.
+ *
+ * - `marker`       — LAW canonical name.
+ * - `ownerTrack`   — the Wave-A tranche(s) that own the field's production.
+ * - `profilePaths` — carrier-real payload paths (checked under
+ *                    `payload.harmonicProfile` first, then the payload root —
+ *                    the same two-level resolution every carrier pane uses).
+ *                    `null` marks a derivation with no transported pocket
+ *                    (LAW: the six-axes decode is an M2 derivation over
+ *                    resonance72, not its own field — it can never block as
+ *                    missing-field).
+ * - `eventPaths`   — pockets on the M1' performance event, for markers whose
+ *                    wire home is `harmonic.*` rather than the profile.
+ * - `conditional`  — LAW: `true` when the field is aligned but expected only
+ *                    once the M1' performance event has been seen.
+ */
+export interface WaveAPendingMarker {
+    readonly marker: WaveAMarkerName;
+    readonly ownerTrack: string;
+    readonly profilePaths: readonly string[] | null;
+    readonly eventPaths: readonly string[];
+    readonly conditional: boolean;
+    readonly conditionalOn: string | null;
+}
+
+/**
+ * The Wave-A pending markers the integrated 1-2-3 surface consumes, ordered
+ * M1 → kernel-bridge → M2 → M1' to mirror the cosmic-spine flow.
+ *
+ * Wire reality (readiness ledger + kernel_bridge_runtime.rs):
+ * - `kleinFlip` — emitted at kernel_bridge_runtime.rs:1011 since Wave-A 02.2 /
+ *   bridge 10.2 landed; also visible as `anandaVortex.kleinFlipAtThisTick`.
+ * - `resonance72` — payload projection + `depositionAnchor.resonance72Index`.
+ * - `audioOctet` / `nodalQuartet` — `harmonic.*` on the M1' performance event.
+ */
+export const WAVE_A_PENDING_MARKERS: readonly WaveAPendingMarker[] = Object.freeze([
+    Object.freeze({
+        marker: 'klein_flip' as const,
+        ownerTrack: 'M1 02.2 / kernel-bridge 10.2',
+        profilePaths: Object.freeze([
+            'kleinFlip',
+            'klein_flip',
+            'kleinFlipState',
+            'klein_flip_state',
+            'anandaVortex.kleinFlipAtThisTick'
+        ]),
+        eventPaths: Object.freeze([]),
+        conditional: false,
+        conditionalOn: null
+    }),
+    Object.freeze({
+        marker: 'resonance72' as const,
+        ownerTrack: 'kernel-bridge (Track 10 readiness ledger)',
+        profilePaths: Object.freeze([
+            'resonance72',
+            'resonance72Index',
+            'depositionAnchor.resonance72Index'
+        ]),
+        eventPaths: Object.freeze([]),
+        conditional: false,
+        conditionalOn: null
+    }),
+    Object.freeze({
+        marker: 'six-axes-of-72 decoding' as const,
+        ownerTrack: 'M2 03.3',
+        // LAW: derivation over resonance72, not a transported pocket.
+        profilePaths: null,
+        eventPaths: Object.freeze([]),
+        conditional: false,
+        conditionalOn: null
+    }),
+    Object.freeze({
+        marker: 'audio_octet[8]' as const,
+        ownerTrack: "M1' performance event 02.4",
+        profilePaths: Object.freeze(['audioOctet', 'audio_octet']),
+        eventPaths: Object.freeze(['harmonic.audioOctet', 'harmonic.audio_octet']),
+        conditional: true,
+        conditionalOn: "M1' performance event 02.4"
+    }),
+    Object.freeze({
+        marker: 'nodal_quartet[4]' as const,
+        ownerTrack: "M1' performance event 02.4",
+        profilePaths: Object.freeze(['nodalQuartet', 'nodal_quartet']),
+        eventPaths: Object.freeze(['harmonic.nodalQuartet', 'harmonic.nodal_quartet']),
+        conditional: true,
+        conditionalOn: "M1' performance event 02.4"
+    })
+]);
+
+/** LAW: build the stable blocker id for a Wave-A marker. */
+export function waveABlockerId(marker: WaveAPendingMarker): string {
+    return `${WAVE_A_BLOCKER_ID_PREFIX}:${marker.marker}`;
+}
+
+/**
+ * LAW: the typed blocked-state. `state` is pinned to `profile_missing_field` —
+ * the field-missing case of the readiness taxonomy — so a renderer can surface
+ * the exact blocking markers instead of faking a placeholder.
+ */
+export interface IntegratedReadinessBlockedState {
+    readonly state: 'profile_missing_field';
+    readonly blockingMarkers: readonly WaveAPendingMarker[];
+    readonly blockerIds: readonly string[];
+}
+
+export interface IntegratedReadinessReady {
+    readonly state: 'ready';
+    readonly blockingMarkers: readonly [];
+    readonly blockerIds: readonly [];
+}
+
+export type IntegratedReadinessResult =
+    (IntegratedReadinessBlockedState | IntegratedReadinessReady) & {
+        /** Conditional markers whose gating event has not been seen — declared,
+         *  not blocking (LAW: aligned-but-conditional is pending, not missing). */
+        readonly conditionalPending: readonly WaveAPendingMarker[];
+    };
+
+/** LAW constructor: a typed blocked-state from the markers found unavailable. */
+export function integratedReadinessBlockedBy(
+    blockingMarkers: readonly WaveAPendingMarker[]
+): IntegratedReadinessBlockedState {
+    return Object.freeze({
+        state: 'profile_missing_field' as const,
+        blockingMarkers: Object.freeze([...blockingMarkers]),
+        blockerIds: Object.freeze(blockingMarkers.map(waveABlockerId))
+    });
+}
+
+/** Minimal slice of the M1' performance event the gate consumes. */
+export interface PerformanceEventSlice {
+    readonly harmonic?: Readonly<Record<string, unknown>>;
+    readonly [key: string]: unknown;
+}
+
+/**
+ * Evaluate the integrated 1-2-3 readiness gate against a profile generation.
+ *
+ * - No profile at all → every unconditional pocket marker blocks.
+ * - Conditional markers block only once `performanceEvent` is provided (the
+ *   M1' performance event has been seen) and their pocket is still absent on
+ *   both the event and the profile; before that they are `conditionalPending`.
+ * - Derivation markers (`profilePaths: null`) never block as missing-field.
+ */
+export function evaluateIntegratedReadiness(
+    profile: MathemeHarmonicProfileBoundary | null,
+    opts?: { readonly performanceEvent?: PerformanceEventSlice | null }
+): IntegratedReadinessResult {
+    const performanceEvent = opts?.performanceEvent ?? null;
+    const blocking: WaveAPendingMarker[] = [];
+    const conditionalPending: WaveAPendingMarker[] = [];
+    for (const marker of WAVE_A_PENDING_MARKERS) {
+        if (marker.profilePaths === null) {
+            continue; // derivation — no pocket to miss
+        }
+        const onProfile = hasAnyProfileValue(profile, marker.profilePaths);
+        const onEvent = performanceEvent !== null
+            && marker.eventPaths.some(path => isPresent(readPath(performanceEvent, path)));
+        if (onProfile || onEvent) {
+            continue;
+        }
+        if (marker.conditional && performanceEvent === null) {
+            conditionalPending.push(marker);
+            continue;
+        }
+        blocking.push(marker);
+    }
+    const frozenPending = Object.freeze(conditionalPending);
+    if (blocking.length > 0) {
+        return Object.freeze({
+            ...integratedReadinessBlockedBy(blocking),
+            conditionalPending: frozenPending
+        });
+    }
+    return Object.freeze({
+        state: 'ready' as const,
+        blockingMarkers: Object.freeze([]) as readonly [],
+        blockerIds: Object.freeze([]) as readonly [],
+        conditionalPending: frozenPending
+    });
+}
+
+/**
+ * Carrier two-level resolution: every pane resolves fields under
+ * `payload.harmonicProfile` falling back to the payload root — the gate does
+ * the same at both levels so a field is found wherever the bridge nests it.
+ */
+function hasAnyProfileValue(
+    profile: MathemeHarmonicProfileBoundary | null,
+    paths: readonly string[]
+): boolean {
+    if (!profile) {
+        return false;
+    }
+    const roots: Readonly<Record<string, unknown>>[] = [profile.payload];
+    const nested = profile.payload['harmonicProfile'];
+    if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+        roots.unshift(nested as Readonly<Record<string, unknown>>);
+    }
+    return paths.some(path => roots.some(root => isPresent(readPath(root, path))));
+}
+
+/** Present = defined and non-null; an empty array is an absent pocket (an
+ *  empty octet cannot drive deterministic replay — faking it is forbidden). */
+function isPresent(value: unknown): boolean {
+    if (value === undefined || value === null) {
+        return false;
+    }
+    return !(Array.isArray(value) && value.length === 0);
+}
+
+function readPath(root: Readonly<Record<string, unknown>>, path: string): unknown {
+    let current: unknown = root;
+    for (const segment of path.split('.')) {
+        if (!current || typeof current !== 'object' || Array.isArray(current)
+            || !(segment in (current as Record<string, unknown>))) {
+            return undefined;
+        }
+        current = (current as Readonly<Record<string, unknown>>)[segment];
+    }
+    return current;
+}
