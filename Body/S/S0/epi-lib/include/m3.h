@@ -584,6 +584,12 @@ typedef struct {
  * 22 Major Arcana cards mapped to autosomal chromosome pairs,
  * 2 transcendent operators beyond the 22-fold autosomal cycle. */
 
+/* Compile-time mask values as integer constant expressions (usable in
+ * _Static_assert); the extern const symbols below carry the identical values
+ * into runtime / FFI / tests. Mirrors the M3_CODON_*_VALUE idiom above. */
+#define M3_RNA_FUNCTIONAL_MASK_VALUE 0x22F222F2FFFF22F2ULL
+#define M3_RNA_DARK_MASK_VALUE       0xDD0DDD0D0000DD0DULL
+
 extern const uint64_t M3_RNA_FUNCTIONAL_MASK;
 extern const uint64_t M3_RNA_DARK_MASK;
 

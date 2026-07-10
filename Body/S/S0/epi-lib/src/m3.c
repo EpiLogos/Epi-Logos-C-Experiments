@@ -533,12 +533,12 @@ const uint8_t M3_NONDUAL_CODONS[16] = {
 _Static_assert(sizeof(M3_NONDUAL_CODONS) == 16,
     "M3 must have exactly 16 non-dual (palindromic) codons");
 
-const uint64_t M3_RNA_FUNCTIONAL_MASK = 0x22F222F2FFFF22F2ULL;
-const uint64_t M3_RNA_DARK_MASK       = 0xDD0DDD0D0000DD0DULL;
+const uint64_t M3_RNA_FUNCTIONAL_MASK = M3_RNA_FUNCTIONAL_MASK_VALUE;
+const uint64_t M3_RNA_DARK_MASK       = M3_RNA_DARK_MASK_VALUE;
 
-_Static_assert((M3_RNA_FUNCTIONAL_MASK & M3_RNA_DARK_MASK) == 0ULL,
+_Static_assert((M3_RNA_FUNCTIONAL_MASK_VALUE & M3_RNA_DARK_MASK_VALUE) == 0ULL,
     "RNA functional/dark masks must not overlap");
-_Static_assert((M3_RNA_FUNCTIONAL_MASK | M3_RNA_DARK_MASK) == 0xFFFFFFFFFFFFFFFFULL,
+_Static_assert((M3_RNA_FUNCTIONAL_MASK_VALUE | M3_RNA_DARK_MASK_VALUE) == 0xFFFFFFFFFFFFFFFFULL,
     "RNA functional/dark masks must cover all 64 codons");
 
 
