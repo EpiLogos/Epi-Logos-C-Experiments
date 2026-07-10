@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:45:03.507Z",
+  "updatedAt": "2026-07-10T15:48:27.273Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4547,14 +4547,28 @@
       "worktree": null
     },
     "16.T16.13": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T15:45:03.494Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T15:48:27.260Z",
       "claimedAt": "2026-07-10T15:45:03.494Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T15:48:27.260Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:48:27.260Z",
+          "text": "CCT-13 executed - the live drift FIXED: the kernel-resonance write in graph_api.rs stamped the Phase-C hyphen literal; now interpolates the TYPED canonical constant RELATION_FAMILY_KERNEL_CORE (kernel_core per DR-IG-1; the 6-member enum + serde surface already in rel.rs with registry tests). New pin: the plan cypher carries the canonical family, the hyphen literal is GONE from the write path, and the value is an enum member. Existing-data sweep is one operator Cypher statement for the live-graph doctor pass (infra-fenced); the pin prevents new drift. W-gate PASS with the real spawned gateway green, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test graph_api_contract (10 passed incl the canonical-family pin); verify-tranche 16.T16.13 W-gate PASS with live-wire + gateway + gateway-methods suites green (real spawned gateway exercised over the protocol)",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/graph_api.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T17:45:03.494Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:45:03.494Z",
       "runId": "20260710T154503Z-16-T16.13",
       "worktree": null
@@ -11752,11 +11766,12 @@
     {
       "runId": "20260710T154503Z-16-T16.13",
       "taskId": "16.T16.13",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T15:45:03.494Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T17:45:03.494Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T15:48:27.260Z"
     }
   ],
   "activeRoute": {
