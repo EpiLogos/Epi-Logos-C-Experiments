@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:23:03.604Z",
+  "updatedAt": "2026-07-10T13:24:33.613Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4785,24 +4785,54 @@
       "worktree": null
     },
     "18.T18.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:32.693Z",
+      "claimedAt": "2026-07-10T13:23:49.296Z",
+      "completedAt": "2026-07-10T13:24:32.693Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:32.693Z",
+          "text": "Verified landed: all six per-domain projections surfaced through the typed edge - AnuttaraLayerProjection (profile_projections.rs:256, six layers + core audit), M1TopologyProjection, ParashaktiMeaningProjection (:454), TranscriptionalClockPacket/M3 handles, PersonalPoleProjection (privacy handles), EpiiReviewWorkbenchProjection (:760); profile_projections_full_suite proves each domain round-trips (m0..m5 tests green). W-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T13:23:49.296Z",
+      "runId": "20260710T132349Z-18-T18.4",
       "worktree": null
     },
     "18.T18.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:32.886Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:24:32.886Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:32.886Z",
+          "text": "Verified landed: the three composition projections exist and export through the facade - CosmicCompositionState (profile_projections.rs:686) with CosmicCompositionMountPoint + CompositionLoadStatus (harmonic_profile.rs:21 re-exports); profile fields cosmic_composition_state carried as declared-optional on the live wire (honest absence until the 1-2-3 composition mounts populate). W-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -4811,11 +4841,26 @@
       "worktree": null
     },
     "18.T18.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:33.063Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:24:33.063Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:33.063Z",
+          "text": "Same audit as 10.T10.5 (closed this session with fresh proof): s2_anchor/s3_anchor resolved on the LAND branch - populated from cycle-2 registries with provenance strings (profile.rs:782/785), Zod honest-null mirrors, track_01_t2_profile_contract green. W-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -4824,11 +4869,26 @@
       "worktree": null
     },
     "18.T18.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:33.241Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:24:33.241Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:33.241Z",
+          "text": "Verified landed: BedrockProvenanceHandle enum on MathemeHarmonicProfileReadinessFact (profile.rs:237) carrying the exact substrate chain string (kernel.rs -> .rodata -> profile.bedrock -> readinessLedger.bedrock_link); readiness ledger renders it inline; live-wire readinessLedger lane asserts the bedrock fact authoritative on the real wire. W-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -4837,11 +4897,26 @@
       "worktree": null
     },
     "18.T18.8": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:33.421Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:24:33.421Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:33.421Z",
+          "text": "Same execution as 10.T10.4 (closed this session): typed deposition_anchor: DepositionAnchorProjection on the profile (kernel authority), bridge JSON edge reads the struct field not synthesis (kernel_bridge_runtime.rs:996), Zod mirror, contract suite 18/18 asserts the edge; DR-KB-2 register entry present. W-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -4850,11 +4925,26 @@
       "worktree": null
     },
     "18.T18.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T13:24:33.602Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:24:33.602Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:24:33.602Z",
+          "text": "Verified landed: graph_handle: GraphAnchorProjection on the profile (profile.rs:403) with typed coordinate_home: CoordinateHome enum (profile.rs:326, mirroring epi-s2-graph-schema canon per 17.17) + gds overlay state - M-prime surfaces read the anchor instead of re-parsing coordinates per tick; live-wire graphHandle manifest lane asserts it on the real wire; c_1_relation_family stays Tranche 09.2/CCT-13 per the brief boundary. W-gate PASS, verifier != closer.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test profile_projections_full_suite --test track_01_t2_profile_contract (14 passed); verify-tranche W-gate PASS (live-wire + gateway green)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -8618,16 +8708,16 @@
       "worktree": null
     },
     "43.T43.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T13:23:10.265Z",
+      "claimedAt": "2026-07-10T13:23:10.265Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:23:10.265Z",
+      "heartbeatAt": "2026-07-10T13:23:10.265Z",
+      "runId": "20260710T132310Z-43-T43.1",
       "worktree": null
     },
     "43.T43.2": {
@@ -9346,14 +9436,14 @@
       "worktree": null
     },
     "49.T49.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T13:22:02.683Z",
+      "status": "pending",
+      "updatedAt": "2026-07-10T13:23:10.053Z",
       "claimedAt": "2026-07-10T13:22:02.683Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
       "owner": "opus-b-track34",
-      "leaseExpiresAt": "2026-07-10T15:22:02.683Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:22:02.683Z",
       "runId": "20260710T132202Z-49-T49.4",
       "worktree": null
@@ -10708,11 +10798,12 @@
     {
       "runId": "20260710T132202Z-49-T49.4",
       "taskId": "49.T49.4",
-      "status": "in_progress",
+      "status": "pending",
       "startedAt": "2026-07-10T13:22:02.683Z",
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T15:22:02.683Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T13:23:10.053Z"
     },
     {
       "runId": "20260710T132227Z-18-T18.2",
@@ -10723,6 +10814,25 @@
       "leaseExpiresAt": "2026-07-10T15:22:27.441Z",
       "worktree": null,
       "completedAt": "2026-07-10T13:23:03.411Z"
+    },
+    {
+      "runId": "20260710T132310Z-43-T43.1",
+      "taskId": "43.T43.1",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T13:23:10.265Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:23:10.265Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260710T132349Z-18-T18.4",
+      "taskId": "18.T18.4",
+      "status": "done",
+      "startedAt": "2026-07-10T13:23:49.296Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T15:23:49.296Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T13:24:32.693Z"
     }
   ],
   "activeRoute": {
