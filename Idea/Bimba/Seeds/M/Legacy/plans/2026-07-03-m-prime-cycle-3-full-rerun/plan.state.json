@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:14:23.203Z",
+  "updatedAt": "2026-07-10T15:16:42.274Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2562,16 +2562,30 @@
       "worktree": null
     },
     "08.T8.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:16:42.262Z",
+      "claimedAt": "2026-07-10T15:14:39.946Z",
+      "completedAt": "2026-07-10T15:16:42.262Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:16:42.262Z",
+          "text": "DR-IG-6 corrected geometry landed as the canonical labeled fixture every M4-5-prime psychoid renderer must consume: buildDipyramid6Plus6 produces P5/P5-prime apex poles, P1-P4 + P1-prime-P4-prime INTERLEAVED base vertices paired by the mirror law x+y-prime=5 (no collapse onto one square - collision test), P0/P0-prime central axis-point through the poles, deliberately non-regular (apex != half-base per QL site research). The retired 6-vertices=6-QL-positions reading cannot render (fixture is 11 labeled vertices = 2+8+1). Doc sweep VERIFIED CLEAN: psychoid-cymatic-field-engine :254-255 and M4-ARCHITECTURE apex-pair language already carry the corrected law; zero dipyramid wrong-count attributions in M4-prime/INTEGRATED docs (grep clean). W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/engine/dipyramidGeometry.test.ts (4 passed: full 6+6 labeled fixture, apex/axis law, interleave-no-collapse via x+y-prime=5, non-regular proportions); verify-tranche 08.T8.7 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/dipyramidGeometry.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:14:39.946Z",
+      "runId": "20260710T151439Z-08-T8.7",
       "worktree": null
     },
     "08.T8.8": {
@@ -11390,6 +11404,16 @@
       "leaseExpiresAt": "2026-07-10T17:13:00.995Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:14:23.190Z"
+    },
+    {
+      "runId": "20260710T151439Z-08-T8.7",
+      "taskId": "08.T8.7",
+      "status": "done",
+      "startedAt": "2026-07-10T15:14:39.946Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:14:39.946Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:16:42.262Z"
     }
   ],
   "activeRoute": {
