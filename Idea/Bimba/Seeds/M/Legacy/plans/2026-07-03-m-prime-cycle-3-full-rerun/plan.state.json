@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:04:43.560Z",
+  "updatedAt": "2026-07-10T15:07:38.500Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2453,16 +2453,30 @@
       "worktree": null
     },
     "08.T8.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:07:38.487Z",
+      "claimedAt": "2026-07-10T15:05:14.473Z",
+      "completedAt": "2026-07-10T15:07:38.487Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:07:38.487Z",
+          "text": "Pi review-routing gate landed on the carrier (cribbed-as-new-code from the frozen m-extension-runtime recursive-self-review-gate.ts + ACR enforceHumanGate, provenance in header) and COMPLETED per the tranche contract: the frozen actor set lacked sophia and aletheia - both now gate (aletheia as the review-lineage MODE per DR-S4-TECHNE, not the six guardians, who gate via techneClass discrimination). Full behavioral contract green: named acceptance verbatim (sophia recursive approve refused), whole-lineage sweep (10 actors), human-required blocks any agent verdict, defer always open, humans commit, clean flows pass, techneClass overrides actor. The M5 review widget (05.9/12.4) routes proposals through THIS gate; gateway parity stays 12.4s contract. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m5ReviewGate.test.ts (6 passed incl the NAMED acceptance enforceHumanGate({approve,humanRequired:false,actorIsHuman:false,recursiveSelfReview:true,actor:sophia}).ok===false); verify-tranche 08.T8.3 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m5ReviewGate.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:05:14.473Z",
+      "runId": "20260710T150514Z-08-T8.3",
       "worktree": null
     },
     "08.T8.4": {
@@ -11293,6 +11307,16 @@
       "leaseExpiresAt": "2026-07-10T17:02:13.170Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:04:43.548Z"
+    },
+    {
+      "runId": "20260710T150514Z-08-T8.3",
+      "taskId": "08.T8.3",
+      "status": "done",
+      "startedAt": "2026-07-10T15:05:14.473Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:05:14.473Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:07:38.487Z"
     }
   ],
   "activeRoute": {
