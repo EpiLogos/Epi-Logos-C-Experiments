@@ -627,6 +627,10 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s0'.verifier.validate_membership"
         | "s0'.verifier.owl_query"
         | "s0'.anuttara.trace"
+        // 34.T34.1 settings surface (mapping repaired under 16.T16.14 —
+        // the methods landed in METHOD_NAMES without a parity row)
+        | "s0'.settings.api_key_status"
+        | "s0'.settings.opt_in"
         // portal-core parashakti adapter — dispatch classifies it S0 product
         | "m2.cymatic_invert" => Some("s0.*"),
         "s2.graph.query"
@@ -668,7 +672,11 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s1'.semantic.suggest_links"
         | "s1'.type.classify_c_layer"
         | "s1'.entity.promote_to_type"
-        | "s1'.world.graduate" => Some("s1'.*"),
+        | "s1'.world.graduate"
+        | "s1'.entity.capture"
+        | "s1'.entity.classify"
+        | "s1'.entity.list"
+        | "s1'.world.list_entities" => Some("s1'.*"),
         "s5.trajectory.verify" | "s5.ebm.train" | "s5.ebm.export_state" => Some("s5'.improve.*"),
         "s5'.anuttara.diagnose" => Some("s5'.ql.*"),
         "channels.status"

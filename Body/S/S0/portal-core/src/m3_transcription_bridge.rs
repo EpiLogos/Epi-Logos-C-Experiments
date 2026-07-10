@@ -567,7 +567,12 @@ fn tao_evaluation(charges: QuaternionCharges) -> TaoEvaluation {
     }
 }
 
-fn major_arcana(codon: Codon6Bit) -> Option<MajorArcanaCard> {
+/// Codon → Major Arcana card, parity with the C kernel authority
+/// `m3_major_arcana_from_codon` (m3.c): the amino-acid index IS the card id
+/// (every `M3_MAJOR_ARCANA` row has `amino_acid_index == card_id`), STOP
+/// codons (aa 10) carry no arcana. Public per CCT-14b: Hen's entity
+/// birth-codon derives `c_5_birth_chromosome` through this seam.
+pub fn major_arcana(codon: Codon6Bit) -> Option<MajorArcanaCard> {
     const MAJOR_ARCANA_NAMES: [&str; 22] = [
         "The Fool",
         "The Magician",

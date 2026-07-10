@@ -3,8 +3,8 @@ use epi_logos::epii_autoresearch::resonance_corpus::{
     EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 use epi_logos::{
-    agent, app, book, canon, code, core, ffi, gate, graph, know, nara, notebook, portal, profile,
-    sesh, settings, skill, slot, sync, techne, up, vault, vimarsa,
+    agent, app, book, canon, code, core, entity, ffi, gate, graph, know, nara, notebook, portal,
+    profile, sesh, settings, skill, slot, sync, techne, up, vault, vimarsa, world,
 };
 
 #[derive(Parser)]
@@ -34,6 +34,16 @@ enum Commands {
     Vault {
         #[command(subcommand)]
         cmd: vault::VaultCmd,
+    },
+    /// Entity-candidate lifecycle (CCT-14) — capture, classify, promote, review
+    Entity {
+        #[command(subcommand)]
+        cmd: entity::EntityCmd,
+    },
+    /// Flat /World namespace — graduate entities, list graduated forms
+    World {
+        #[command(subcommand)]
+        cmd: world::WorldCmd,
     },
     /// Neo4j + Redis graph operations
     Graph {
@@ -206,6 +216,20 @@ async fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => {
                 eprintln!("{}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Entity { cmd } => match entity::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("entity error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::World { cmd } => match world::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("world error: {}", e);
                 std::process::exit(1);
             }
         },

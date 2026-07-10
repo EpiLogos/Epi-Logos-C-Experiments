@@ -610,9 +610,10 @@ mod t9_route_ownership_cross_walk {
             // NOT in the expected-present ratchet). Owning tracks: 40/48
             // (canon-update / base.ensure family). Remove from this list the
             // moment a dispatch arm lands, so the cross-walk re-arms.
-            "s1'.entity.promote_to_type",
+            // 16.T16.14 (CCT-14): `s1'.entity.promote_to_type` and
+            // `s1'.world.graduate` grew real S0 dispatch arms and left this
+            // list; only the type-classify receipt surface remains armless.
             "s1'.type.classify_c_layer",
-            "s1'.world.graduate",
             // S3-native live-state routes handled by gateway runtime surfaces.
             "s3'.being_pattern.observe",
             "s3'.being_pattern.project",

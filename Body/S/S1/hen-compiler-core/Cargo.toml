@@ -14,3 +14,5 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml = "0.9"
 sha2 = "0.10"
+blake3 = "1"
+portal-core = { path = "../../S0/portal-core" }

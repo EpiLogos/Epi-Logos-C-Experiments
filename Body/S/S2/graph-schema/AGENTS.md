@@ -11,10 +11,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S2-SPEC]]
 - `src/coordinate_home.rs` — typed `CoordinateHome` enum preserving legacy string display for schema table homes.
 - `src/coordinate_law.rs` — coordinate prefix/semantic family registries and coordinate property construction law.
 - `src/labels.rs` — label constants and `GraphLabelSpec` registry (`BIMBA_LABEL`, `WORLD_LABEL`, `ARCHETYPAL_LABEL`, `GNOSTIC_LABEL`, Gnostic labels, compatibility labels).
-- `src/properties.rs` — node/relationship property constants and typed `GraphPropertySpec` registries (`COORDINATE_PROPERTY`, `c_*`, `s_*`, `m_*`, relationship evidence, relation family, C-first `World/Types` evidence properties).
+- `src/properties.rs` — node/relationship property constants and typed `GraphPropertySpec` registries (`COORDINATE_PROPERTY`, `c_*`, `s_*`, `m_*`, relationship evidence, relation family, C-first `World/Types` evidence properties, and the CCT-14b `c_5_birth_*` birth-codon family + `birth_codon_state` written by Hen at promotion).
 - `src/relationships/` — relationship constants and registries: `mod.rs` public surface, `node.rs` node/relation constants, `rel.rs` typed `GraphRelationshipTypeSpec` registry, `deep_bimba.rs` deep-dataset relation classifier.
 - `src/validation.rs` / `src/constraints.rs` — property validation helpers and Neo4j constraint/index DDL.
-- `tests/` — schema contract tests: `label_registry.rs`, `property_registry.rs`, `relationship_registry.rs`, `code_provenance_properties.rs`, `coordinate_prefix_properties.rs`, `q_vocabulary_canon_loaded.rs`, `track_02_t1_convergence.rs`, `world_namespace.rs`, `gnostic_label_promotion.rs`.
+- `tests/` — schema contract tests: `label_registry.rs`, `property_registry.rs`, `relationship_registry.rs`, `code_provenance_properties.rs`, `coordinate_prefix_properties.rs`, `q_vocabulary_canon_loaded.rs`, `track_02_t1_convergence.rs`, `world_namespace.rs`, `gnostic_label_promotion.rs`, `c_5_birth_codon_regex_acceptance.rs`.
 - `contract-inventory/` — `track-02-authority-drift.json`: pinned contract inventory snapshot.
 - Does NOT own: Neo4j/Redis service logic or the Turtle ontology (sibling `graph-services/`, `ontology/`); coordinate semantics route through S2' carriers. Domain law lives in this layer's owning spec, not in [[S0-SPEC]]/[[M0'-SPEC]] by convenience.
 

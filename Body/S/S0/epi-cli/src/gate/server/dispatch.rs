@@ -1172,6 +1172,25 @@ pub(super) async fn dispatch_rpc(
         "s1'.semantic.suggest_links" => crate::gate::s1_hen::suggest_links(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        // CCT-14 (+14b): entity-candidate lifecycle + review surfaces.
+        "s1'.entity.capture" => crate::gate::s1_hen::entity_capture(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.entity.classify" => crate::gate::s1_hen::entity_classify(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.entity.promote_to_type" => crate::gate::s1_hen::entity_promote_to_type(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.world.graduate" => crate::gate::s1_hen::world_graduate(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.entity.list" => crate::gate::s1_hen::entity_list(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.world.list_entities" => crate::gate::s1_hen::world_list_entities(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s3'.temporal.subscribe" => super::subscription::dispatch_temporal_subscribe(
             state_root,
             runtime,

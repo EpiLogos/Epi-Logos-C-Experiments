@@ -1,5 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use epi_s3_redis_context::{
@@ -8,11 +9,19 @@ use epi_s3_redis_context::{
 use serde_json::Value;
 
 fn unique_transcript_path() -> PathBuf {
+    // Timestamp alone collides when parallel tests hit the same clock
+    // tick (one truncates the shared file while the other reads it);
+    // pid + per-process counter make the path genuinely unique.
+    static COUNTER: AtomicU64 = AtomicU64::new(0);
     let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_nanos();
-    std::env::temp_dir().join(format!("aeon-eval-ledger-{nanos}.jsonl"))
+    let unique = COUNTER.fetch_add(1, Ordering::Relaxed);
+    std::env::temp_dir().join(format!(
+        "aeon-eval-ledger-{}-{unique}-{nanos}.jsonl",
+        std::process::id()
+    ))
 }
 
 fn write_fixture(lines: &[&str]) -> PathBuf {

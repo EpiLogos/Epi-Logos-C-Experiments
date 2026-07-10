@@ -36,12 +36,15 @@ use epi_s1_hen_compiler_core::wikilinks::{
     RenameRefusal, RenameRefusalReason,
 };
 use epi_s1_hen_compiler_core::{
-    suggest_link_candidates, LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
+    entity_list_entry, plan_entity_capture, plan_entity_classify, plan_entity_promote_to_type,
+    plan_world_graduate, suggest_link_candidates, EntityListEntry, LinkCandidate,
+    LinkCandidateKind, LinkCandidateRequest,
 };
 use epi_s3_gateway_contract::{
-    classify_vault_path_privacy, S1SemanticCandidate, S1SemanticCandidateKind, S1SemanticResponse,
-    S1SemanticStaleness, S1VaultPathPrivacyClass, S1VaultRenameReceipt, S1VaultRenameRefusal,
-    S1VaultRenameRefusalReason,
+    classify_vault_path_privacy, S1EntityCaptureReceipt, S1EntityClassifyReceipt,
+    S1EntityListEntry, S1EntityListReceipt, S1EntityPromoteToTypeReceipt, S1SemanticCandidate,
+    S1SemanticCandidateKind, S1SemanticResponse, S1SemanticStaleness, S1VaultPathPrivacyClass,
+    S1VaultRenameReceipt, S1VaultRenameRefusal, S1VaultRenameRefusalReason, S1WorldGraduateReceipt,
 };
 use serde_json::{json, Value};
 
@@ -306,6 +309,307 @@ fn map_candidate(
         evidence_lines: raw.evidence_lines,
         stale: raw.stale,
         privacy_class,
+    }
+}
+
+// ============= CCT-14 (+14b) entity-candidate lifecycle handlers =============
+//
+// The lifecycle LAW lives in `epi_s1_hen_compiler_core::entity_lifecycle`
+// (pure plans); these handlers execute the IO. The CLI (`epi entity ...` /
+// `epi world ...`) calls the SAME functions, so gateway and CLI capture
+// produce identical Hen behaviour by construction (DR-S5-ONE-1).
+
+/// `s1'.entity.capture` — capture a dangling wikilink target or loose root
+/// note into `Idea/Empty/Present/{day}/entities/`. When `source` names an
+/// existing vault file its body is carried over (the original file is left
+/// in place; removal stays with the governed `s1'.vault.move_file` path).
+pub fn entity_capture(params: &Value) -> Result<Value, String> {
+    let source = require_str(params, "source")?;
+    let day_id = require_str(params, "dayId")?;
+    let creator = params
+        .get("creatorIdentity")
+        .and_then(|v| v.as_str())
+        .map(str::to_owned);
+    let vault_root = resolve_vault_root(params)?;
+
+    let source_abs = vault_root.join(&source);
+    let existing_body = if source_abs.is_file() {
+        Some(
+            fs::read_to_string(&source_abs)
+                .map_err(|err| format!("read capture source `{source}` failed: {err}"))?,
+        )
+    } else {
+        None
+    };
+
+    let plan = plan_entity_capture(&source, &day_id, creator.as_deref(), existing_body.as_deref())?;
+    refuse_if_protected_without_capability(&plan.candidate_path, params)?;
+    let absolute = vault_root.join(&plan.candidate_path);
+    if let Some(parent) = absolute.parent() {
+        fs::create_dir_all(parent).map_err(|err| format!("mkdir failed: {err}"))?;
+    }
+    fs::write(&absolute, &plan.markdown)
+        .map_err(|err| format!("write `{}` failed: {err}", plan.candidate_path))?;
+
+    let receipt = S1EntityCaptureReceipt {
+        candidate_path: plan.candidate_path,
+        title: plan.title,
+        candidate_state: "candidate".to_owned(),
+        birth_codon: plan.birth_codon.record.codon,
+        birth_codon_state: plan.birth_codon.state.as_str().to_owned(),
+    };
+    serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))
+}
+
+/// `s1'.entity.classify` — assign a provisional C-layer to a captured
+/// candidate; the provisional birth-codon recomputes (CCT-14b).
+pub fn entity_classify(params: &Value) -> Result<Value, String> {
+    let candidate_path = require_str(params, "candidatePath")?;
+    let c_layer = params
+        .get("cLayer")
+        .and_then(|v| v.as_str())
+        .map(str::to_owned);
+    let vault_root = resolve_vault_root(params)?;
+    let absolute = vault_root.join(&candidate_path);
+    let current = fs::read_to_string(&absolute)
+        .map_err(|err| format!("read candidate `{candidate_path}` failed: {err}"))?;
+
+    let plan = plan_entity_classify(&candidate_path, &current, c_layer.as_deref())?;
+    fs::write(&absolute, &plan.markdown)
+        .map_err(|err| format!("write `{candidate_path}` failed: {err}"))?;
+
+    let receipt = S1EntityClassifyReceipt {
+        candidate_path: plan.candidate_path,
+        type_coordinate: plan.type_coordinate,
+        birth_codon: plan.birth_codon.record.codon,
+        birth_codon_state: plan.birth_codon.state.as_str().to_owned(),
+    };
+    serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))
+}
+
+/// `s1'.entity.promote_to_type` — move a reviewed candidate into
+/// `World/Types/Coordinates/**`; the birth-codon ratifies.
+pub fn entity_promote_to_type(params: &Value) -> Result<Value, String> {
+    let candidate_path = require_str(params, "candidatePath")?;
+    let vault_root = resolve_vault_root(params)?;
+    let from_abs = vault_root.join(&candidate_path);
+    let current = fs::read_to_string(&from_abs)
+        .map_err(|err| format!("read candidate `{candidate_path}` failed: {err}"))?;
+
+    let plan = plan_entity_promote_to_type(&candidate_path, &current)?;
+    let to_abs = vault_root.join(&plan.to_path);
+    if let Some(parent) = to_abs.parent() {
+        fs::create_dir_all(parent).map_err(|err| format!("mkdir failed: {err}"))?;
+    }
+    fs::write(&to_abs, &plan.markdown)
+        .map_err(|err| format!("write `{}` failed: {err}", plan.to_path))?;
+    fs::remove_file(&from_abs)
+        .map_err(|err| format!("remove promoted candidate `{candidate_path}` failed: {err}"))?;
+
+    let intent = &plan.intent;
+    let string_array = |key: &str| -> Vec<String> {
+        intent
+            .node
+            .properties
+            .get(key)
+            .and_then(|v| v.as_array())
+            .map(|arr| {
+                arr.iter()
+                    .filter_map(|v| v.as_str().map(str::to_owned))
+                    .collect()
+            })
+            .unwrap_or_default()
+    };
+    let type_coordinate = intent
+        .node
+        .properties
+        .get("type_coordinate")
+        .and_then(|v| v.as_str())
+        .unwrap_or("C2")
+        .to_owned();
+    let receipt = S1EntityPromoteToTypeReceipt {
+        entity_path: candidate_path,
+        type_coordinate,
+        aliases: string_array("aliases"),
+        candidate_state: "promoted".to_owned(),
+        accepted_wikilinks: string_array("accepted_wikilinks"),
+        target_type_path: plan.to_path.trim_end_matches(".md").to_owned(),
+        graph_promotion_ready: true,
+    };
+    let mut value =
+        serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))?;
+    value["birthCodon"] = json!(plan.birth_codon.record.codon);
+    value["birthCodonState"] = json!(plan.birth_codon.state.as_str());
+    if let Some(event) = &plan.birth_codon.transition_event {
+        value["birthCodonTransition"] = json!(event);
+    }
+    Ok(value)
+}
+
+/// `s1'.world.graduate` — graduate a stable type-local definition flat
+/// into `World/{Name}.md`, retaining the type-local file as a MOC pointer.
+pub fn world_graduate(params: &Value) -> Result<Value, String> {
+    let type_path = require_str(params, "typePath")?;
+    let vault_root = resolve_vault_root(params)?;
+    let source_abs = vault_root.join(&type_path);
+    let current = fs::read_to_string(&source_abs)
+        .map_err(|err| format!("read type entity `{type_path}` failed: {err}"))?;
+
+    let plan = plan_world_graduate(&type_path, &current)?;
+    let flat_abs = vault_root.join(&plan.flat_world_path);
+    if let Some(parent) = flat_abs.parent() {
+        fs::create_dir_all(parent).map_err(|err| format!("mkdir failed: {err}"))?;
+    }
+    fs::write(&flat_abs, &plan.flat_markdown)
+        .map_err(|err| format!("write `{}` failed: {err}", plan.flat_world_path))?;
+    fs::write(&source_abs, &plan.moc_pointer_markdown)
+        .map_err(|err| format!("rewrite MOC pointer `{type_path}` failed: {err}"))?;
+
+    let type_coordinate = plan
+        .intent
+        .node
+        .properties
+        .get("type_coordinate")
+        .and_then(|v| v.as_str())
+        .unwrap_or("C2")
+        .to_owned();
+    let receipt = S1WorldGraduateReceipt {
+        source_c_authority_path: plan.type_source_path,
+        flat_world_target: plan.flat_world_path,
+        type_coordinate,
+        crystallisation_state: "crystallised_world_form".to_owned(),
+        graph_promotion_ready: true,
+    };
+    let mut value =
+        serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))?;
+    value["birthCodon"] = json!(plan.birth_codon.record.codon);
+    value["birthCodonState"] = json!(plan.birth_codon.state.as_str());
+    Ok(value)
+}
+
+/// `s1'.entity.list` — the candidate-pool review surface. Scans
+/// `Idea/Empty/Present/{day}/entities/` (all days unless `dayId` given)
+/// plus, for `state=promoted|graduated` filters, the World trees.
+pub fn entity_list(params: &Value) -> Result<Value, String> {
+    let vault_root = resolve_vault_root(params)?;
+    let state_filter = params
+        .get("state")
+        .and_then(|v| v.as_str())
+        .map(str::to_owned);
+    let day_filter = params
+        .get("dayId")
+        .and_then(|v| v.as_str())
+        .map(str::to_owned);
+
+    let mut entries = Vec::new();
+    let present = vault_root.join("Idea/Empty/Present");
+    if present.is_dir() {
+        for day_dir in fs::read_dir(&present).map_err(|err| err.to_string())?.flatten() {
+            let day_name = day_dir.file_name().to_string_lossy().to_string();
+            if let Some(day) = &day_filter {
+                if *day != day_name {
+                    continue;
+                }
+            }
+            let entities_dir = day_dir.path().join("entities");
+            collect_entity_entries(&entities_dir, &vault_root, &mut entries);
+        }
+    }
+    if day_filter.is_none() {
+        if matches!(state_filter.as_deref(), Some("promoted")) {
+            let types_root = vault_root.join("Idea/Bimba/World/Types/Coordinates/C");
+            collect_entity_entries_recursive(&types_root, &vault_root, &mut entries, 3);
+        }
+        if matches!(state_filter.as_deref(), Some("graduated")) {
+            collect_entity_entries(&vault_root.join("Idea/Bimba/World"), &vault_root, &mut entries);
+        }
+    }
+
+    if let Some(state) = &state_filter {
+        entries.retain(|entry| entry.state == *state);
+    }
+    entries.sort_by(|a, b| a.path.cmp(&b.path));
+    let receipt = S1EntityListReceipt {
+        entries: entries.into_iter().map(contract_list_entry).collect(),
+    };
+    serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))
+}
+
+/// `s1'.world.list_entities` — graduated flat `World/{Name}.md` entities,
+/// optionally filtered by coordinate prefix.
+pub fn world_list_entities(params: &Value) -> Result<Value, String> {
+    let vault_root = resolve_vault_root(params)?;
+    let coordinate_filter = params
+        .get("coordinate")
+        .and_then(|v| v.as_str())
+        .map(str::to_owned);
+
+    let mut entries = Vec::new();
+    collect_entity_entries(&vault_root.join("Idea/Bimba/World"), &vault_root, &mut entries);
+    entries.retain(|entry| entry.state == "graduated");
+    if let Some(coordinate) = &coordinate_filter {
+        entries.retain(|entry| {
+            entry
+                .type_coordinate
+                .as_deref()
+                .is_some_and(|tc| tc == coordinate || tc.starts_with(&format!("{coordinate}-")))
+        });
+    }
+    entries.sort_by(|a, b| a.path.cmp(&b.path));
+    let receipt = S1EntityListReceipt {
+        entries: entries.into_iter().map(contract_list_entry).collect(),
+    };
+    serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))
+}
+
+fn collect_entity_entries(dir: &Path, vault_root: &Path, entries: &mut Vec<EntityListEntry>) {
+    let Ok(read_dir) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in read_dir.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|x| x.to_str()) != Some("md") {
+            continue;
+        }
+        let relative = path_relative_to(&path, vault_root);
+        let Ok(markdown) = fs::read_to_string(&path) else {
+            continue;
+        };
+        if let Ok(row) = entity_list_entry(&relative, &markdown) {
+            entries.push(row);
+        }
+    }
+}
+
+fn collect_entity_entries_recursive(
+    dir: &Path,
+    vault_root: &Path,
+    entries: &mut Vec<EntityListEntry>,
+    depth: usize,
+) {
+    collect_entity_entries(dir, vault_root, entries);
+    if depth == 0 {
+        return;
+    }
+    let Ok(read_dir) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in read_dir.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            collect_entity_entries_recursive(&path, vault_root, entries, depth - 1);
+        }
+    }
+}
+
+fn contract_list_entry(row: EntityListEntry) -> S1EntityListEntry {
+    S1EntityListEntry {
+        path: row.path,
+        title: row.title,
+        state: row.state,
+        type_coordinate: row.type_coordinate,
+        birth_codon: row.birth_codon,
+        birth_codon_state: row.birth_codon_state,
     }
 }
 

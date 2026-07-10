@@ -4,7 +4,9 @@ use crate::{
     S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
+    S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD,
     S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD,
     S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -805,6 +807,31 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: S1_WORLD_GRADUATE_METHOD,
         kind: MethodDispatchKind::S1HenAdapter,
         authority_path: "Body/S/S1/hen-compiler-core::graph_promotion",
+        needs_extraction_to: None,
+    },
+    // CCT-14 (+14b): entity-candidate lifecycle + review surfaces.
+    MethodDispatchPlanEntry {
+        method: S1_ENTITY_CAPTURE_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::entity_lifecycle",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_ENTITY_CLASSIFY_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::entity_lifecycle",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_ENTITY_LIST_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::entity_lifecycle",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_WORLD_LIST_ENTITIES_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::entity_lifecycle",
         needs_extraction_to: None,
     },
     // ----- S0 product adapters (operator membrane surfaces) -----

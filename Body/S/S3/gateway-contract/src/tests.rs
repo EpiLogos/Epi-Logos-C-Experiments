@@ -1364,6 +1364,91 @@ fn s1_c_first_type_lifecycle_receipts_round_trip_and_methods_are_registered() {
 }
 
 #[test]
+fn cct_14_entity_lifecycle_methods_are_registered_with_dispatch_entries() {
+    assert_eq!(S1_ENTITY_LIFECYCLE_METHODS.len(), 6);
+    for method in S1_ENTITY_LIFECYCLE_METHODS {
+        assert!(
+            METHOD_NAMES.contains(method),
+            "{method} missing from METHOD_NAMES"
+        );
+        let entry = method_dispatch_plan_entry(method)
+            .unwrap_or_else(|| panic!("{method} missing dispatch-plan entry"));
+        assert_eq!(entry.kind, MethodDispatchKind::S1HenAdapter);
+    }
+}
+
+#[test]
+fn cct_14_capture_classify_and_list_payloads_round_trip() {
+    let capture_request = S1EntityCaptureRequest {
+        source: "Loose Root Note".to_owned(),
+        day_id: "10-07-2026".to_owned(),
+        creator_identity: Some("hen".to_owned()),
+    };
+    let capture_receipt = S1EntityCaptureReceipt {
+        candidate_path: "Idea/Empty/Present/10-07-2026/entities/Loose Root Note.md".to_owned(),
+        title: "Loose Root Note".to_owned(),
+        candidate_state: "candidate".to_owned(),
+        birth_codon: 42,
+        birth_codon_state: "provisional".to_owned(),
+    };
+    let classify_request = S1EntityClassifyRequest {
+        candidate_path: capture_receipt.candidate_path.clone(),
+        c_layer: Some("C2".to_owned()),
+    };
+    let classify_receipt = S1EntityClassifyReceipt {
+        candidate_path: capture_receipt.candidate_path.clone(),
+        type_coordinate: "C2".to_owned(),
+        birth_codon: 42,
+        birth_codon_state: "provisional".to_owned(),
+    };
+    let list_receipt = S1EntityListReceipt {
+        entries: vec![S1EntityListEntry {
+            path: capture_receipt.candidate_path.clone(),
+            title: "Loose Root Note".to_owned(),
+            state: "candidate".to_owned(),
+            type_coordinate: Some("C2".to_owned()),
+            birth_codon: Some(42),
+            birth_codon_state: Some("provisional".to_owned()),
+        }],
+    };
+
+    let json = serde_json::to_value(&capture_receipt).unwrap();
+    assert_eq!(json["birthCodon"], 42);
+    assert_eq!(json["birthCodonState"], "provisional");
+
+    assert_eq!(
+        serde_json::from_value::<S1EntityCaptureRequest>(
+            serde_json::to_value(&capture_request).unwrap()
+        )
+        .unwrap(),
+        capture_request
+    );
+    assert_eq!(
+        serde_json::from_value::<S1EntityCaptureReceipt>(json).unwrap(),
+        capture_receipt
+    );
+    assert_eq!(
+        serde_json::from_value::<S1EntityClassifyRequest>(
+            serde_json::to_value(&classify_request).unwrap()
+        )
+        .unwrap(),
+        classify_request
+    );
+    assert_eq!(
+        serde_json::from_value::<S1EntityClassifyReceipt>(
+            serde_json::to_value(&classify_receipt).unwrap()
+        )
+        .unwrap(),
+        classify_receipt
+    );
+    assert_eq!(
+        serde_json::from_value::<S1EntityListReceipt>(serde_json::to_value(&list_receipt).unwrap())
+            .unwrap(),
+        list_receipt
+    );
+}
+
+#[test]
 fn scan_for_forbidden_privacy_fields_catches_every_canonical_invariant() {
     for field in PRIVACY_FORBIDDEN_FIELD_NAMES {
         let payload = format!(r#"{{"safe":"ok","{field}":"should-not-be-here"}}"#);
@@ -1570,8 +1655,9 @@ fn dispatch_plan_carries_all_six_canonical_kinds_or_extensions() {
     assert!(s5 > 0, "expected at least one S5 governance row");
     assert!(s0 > 0, "expected at least one S0 product adapter row");
     // S1 Hen adapter is a 13.T2 plan extension: five 03.T6.5
-    // vault/semantic methods plus three C-first type lifecycle receipts.
-    assert_eq!(s1, 8, "expected exactly eight s1' Hen rows");
+    // vault/semantic methods, three C-first type lifecycle receipts, plus
+    // the four CCT-14 entity-candidate lifecycle/review surfaces.
+    assert_eq!(s1, 12, "expected exactly twelve s1' Hen rows");
     // Missing is currently 0 because no Missing-status methods appear
     // in METHOD_NAMES (parity.rs Missing records all live outside the
     // shipped manifest). The variant must still be expressible.

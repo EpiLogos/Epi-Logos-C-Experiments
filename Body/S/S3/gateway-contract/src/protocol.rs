@@ -145,6 +145,11 @@ pub const METHOD_NAMES: &[&str] = &[
     crate::S1_TYPE_CLASSIFY_C_LAYER_METHOD,
     crate::S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
     crate::S1_WORLD_GRADUATE_METHOD,
+    // CCT-14 (+14b): entity-candidate lifecycle + review surfaces.
+    crate::S1_ENTITY_CAPTURE_METHOD,
+    crate::S1_ENTITY_CLASSIFY_METHOD,
+    crate::S1_ENTITY_LIST_METHOD,
+    crate::S1_WORLD_LIST_ENTITIES_METHOD,
     "s5'.improve.status",
     "s5'.improve.propose",
     "s5'.improve.evaluate",

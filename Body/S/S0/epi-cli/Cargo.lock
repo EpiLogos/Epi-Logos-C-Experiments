@@ -957,6 +957,8 @@ dependencies = [
 name = "epi-s1-hen-compiler-core"
 version = "0.1.0"
 dependencies = [
+ "blake3",
+ "portal-core",
  "serde",
  "serde_json",
  "serde_yaml",

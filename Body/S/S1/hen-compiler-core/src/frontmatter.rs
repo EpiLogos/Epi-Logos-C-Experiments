@@ -40,6 +40,12 @@ const INTEGER_RANGE_KEYS: &[(&str, i64, i64)] = &[
     ("c_3_fibonacci_digit", 0, 9),
     ("c_3_tick12", 0, 11),
     ("c_3_backbone_index", 0, 23),
+    // CCT-14b entity birth-codon family: 6-bit codon + signed kernel charges.
+    ("c_5_birth_codon", 0, 63),
+    ("c_5_birth_pp", -128, 127),
+    ("c_5_birth_nn", -128, 127),
+    ("c_5_birth_np", -128, 127),
+    ("c_5_birth_pn", -128, 127),
 ];
 
 pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {

@@ -3,6 +3,9 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::artifact_evidence::{collect_artifact_evidence, ArtifactEvidence, ArtifactKind};
+use crate::birth_codon::{
+    BirthCodonRecord, BirthCodonSeed, BirthCodonState, DerivationPolicy,
+};
 use crate::property_intelligence::{
     build_property_intelligence_request, PropertyIntelligenceRequest,
 };
@@ -24,6 +27,22 @@ pub struct GraphPromotionIntent {
     pub compatibility_source_coordinate: Option<String>,
     pub promotion_source: String,
     pub sync_version: String,
+    /// CCT-14b: the entity birth-codon computed (or preserved) at promotion
+    /// time. `None` for non-entity artifacts (specs, plans, session notes).
+    pub birth_codon_computed: Option<BirthCodonComputation>,
+}
+
+/// CCT-14b birth-codon computation attached to a promotion intent.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BirthCodonComputation {
+    pub record: BirthCodonRecord,
+    pub state: BirthCodonState,
+    /// True when the codon was carried forward from existing frontmatter
+    /// (ratified codons are invariant across the type → flat lifecycle).
+    pub preserved_from_frontmatter: bool,
+    /// `Some("birth_codon_provisional_ratified")` when this promotion
+    /// ratifies a codon that was provisional at capture.
+    pub transition_event: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -184,6 +203,13 @@ impl GraphPromotionIntent {
             );
         }
 
+        let birth_codon_computed = birth_codon_computation(&evidence, &coordinate);
+        if let Some(computation) = &birth_codon_computed {
+            for (key, value) in computation.record.properties(computation.state) {
+                properties.insert(key, value);
+            }
+        }
+
         let mut relation_candidates = relation_candidates;
         relation_candidates.extend(world_root_relation_candidates(&evidence, &coordinate));
 
@@ -215,8 +241,103 @@ impl GraphPromotionIntent {
                 .map(|legacy| legacy.coordinate.clone()),
             promotion_source: "hen_compiler_core".to_owned(),
             sync_version: "s1-hen-graph-promotion-v1".to_owned(),
+            birth_codon_computed,
         })
     }
+}
+
+/// CCT-14b state law: candidates in `Idea/Empty/` carry provisional codons;
+/// promotion into `Idea/Bimba/World/**` (Types or flat) and Pratibimba
+/// reflections carry ratified codons. Non-entity artifacts get none.
+fn birth_codon_state_for_path(path: &str) -> Option<BirthCodonState> {
+    let normalized = path.replace('\\', "/");
+    if normalized.starts_with("Idea/Empty/") {
+        Some(BirthCodonState::Provisional)
+    } else if normalized.starts_with("Idea/Bimba/World/")
+        || normalized.starts_with("Idea/Pratibimba/")
+    {
+        Some(BirthCodonState::Ratified)
+    } else {
+        None
+    }
+}
+
+fn birth_codon_computation(
+    evidence: &ArtifactEvidence,
+    coordinate: &str,
+) -> Option<BirthCodonComputation> {
+    let state = birth_codon_state_for_path(&evidence.source_path)?;
+
+    let existing_codon = frontmatter_u8(evidence, "c_5_birth_codon");
+    let prior_state = frontmatter_str(evidence, "birth_codon_state");
+
+    // Ratified codons are invariant across the type → flat lifecycle:
+    // preserve when present. Provisional codons recompute on edit
+    // (`provisional_recompute_on_edit` default true), so candidates always
+    // re-derive from current content.
+    let (record, preserved) = match (state, existing_codon) {
+        (BirthCodonState::Ratified, Some(codon)) => (BirthCodonRecord::from_codon(codon), true),
+        _ => {
+            // Seed from the BODY hash, not the full-content hash: Hen
+            // writes the derived `c_5_birth_*` family back into candidate
+            // frontmatter, and the codon must not drift because its own
+            // record landed ("edits to candidate Form BODIES trigger
+            // recomputation").
+            let seed = BirthCodonSeed {
+                content_hash: evidence.markdown_body_hash.clone(),
+                kairos: frontmatter_str(evidence, "created_at")
+                    .or_else(|| frontmatter_str(evidence, "c_3_created_at"))
+                    .unwrap_or_default(),
+                creator_identity: frontmatter_str(evidence, "creator_identity")
+                    .or_else(|| frontmatter_str(evidence, "created_by"))
+                    .unwrap_or_else(|| "hen".to_owned()),
+                coordinate_path: format!("{coordinate}|{}", evidence.source_path),
+            };
+            (
+                BirthCodonRecord::derive(&seed, DerivationPolicy::default()),
+                false,
+            )
+        }
+    };
+
+    let transition_event = (state == BirthCodonState::Ratified
+        && prior_state.as_deref() == Some("provisional"))
+    .then(|| "birth_codon_provisional_ratified".to_owned());
+
+    Some(BirthCodonComputation {
+        record,
+        state,
+        preserved_from_frontmatter: preserved,
+        transition_event,
+    })
+}
+
+fn frontmatter_str(evidence: &ArtifactEvidence, key: &str) -> Option<String> {
+    frontmatter_yaml(evidence, key).and_then(|value| match value {
+        serde_yaml::Value::String(text) => Some(text),
+        serde_yaml::Value::Number(number) => Some(number.to_string()),
+        _ => None,
+    })
+}
+
+fn frontmatter_u8(evidence: &ArtifactEvidence, key: &str) -> Option<u8> {
+    frontmatter_yaml(evidence, key).and_then(|value| match value {
+        serde_yaml::Value::Number(number) => number
+            .as_u64()
+            .and_then(|n| u8::try_from(n).ok())
+            .filter(|n| *n < 64),
+        serde_yaml::Value::String(text) => text.parse::<u8>().ok().filter(|n| *n < 64),
+        _ => None,
+    })
+}
+
+fn frontmatter_yaml(evidence: &ArtifactEvidence, key: &str) -> Option<serde_yaml::Value> {
+    evidence
+        .frontmatter
+        .as_ref()
+        .and_then(serde_yaml::Value::as_mapping)
+        .and_then(|map| map.get(serde_yaml::Value::String(key.to_owned())))
+        .cloned()
 }
 
 fn promotion_class_for_path(path: &str) -> &'static str {

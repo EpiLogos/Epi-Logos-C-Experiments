@@ -187,3 +187,76 @@ pub struct S1WorldGraduateReceipt {
     pub crystallisation_state: String,
     pub graph_promotion_ready: bool,
 }
+
+// ============= CCT-14 (+14b) entity-candidate lifecycle surface =============
+//
+// Per DR-S5-ONE-1 the four lifecycle methods land as BOTH gateway routes AND
+// CLI commands (`epi entity ...` / `epi world ...`); the review surfaces
+// (`s1'.entity.list`, `s1'.world.list_entities`) ride the same law. Hen is
+// the only write authority: capture routes dangling wikilinks / loose root
+// notes into `Idea/Empty/Present/{day}/entities/` as `entity_candidate`
+// artifacts; classify assigns a provisional C-layer + birth-codon (CCT-14b);
+// promotion ratifies into `World/Types/Coordinates/**`; graduation flattens
+// into `World/{Name}.md` with the type-local file retained as MOC pointer.
+
+/// CCT-14: capture a dangling wikilink target or loose root note into the
+/// day's entity-candidate pool.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityCaptureRequest {
+    /// Vault-relative path of a loose note, or a bare wikilink target name
+    /// (no `.md`) for a dangling link with no source file yet.
+    pub source: String,
+    /// DD-MM-YYYY day the candidate is captured under.
+    pub day_id: String,
+    /// Seed component for the CCT-14b birth-codon; defaults to "hen".
+    pub creator_identity: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityCaptureReceipt {
+    pub candidate_path: String,
+    pub title: String,
+    pub candidate_state: String,
+    pub birth_codon: u8,
+    pub birth_codon_state: String,
+}
+
+/// CCT-14: assign a provisional C-layer to a captured candidate. The
+/// birth-codon recomputes (provisional codons recompute on edit).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityClassifyRequest {
+    pub candidate_path: String,
+    /// C0..C5; when omitted Hen keeps the existing / default C2 layer.
+    pub c_layer: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityClassifyReceipt {
+    pub candidate_path: String,
+    pub type_coordinate: String,
+    pub birth_codon: u8,
+    pub birth_codon_state: String,
+}
+
+/// CCT-14: one row of the candidate-pool / graduated-entity review surface.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityListEntry {
+    pub path: String,
+    pub title: String,
+    /// candidate | promoted | graduated
+    pub state: String,
+    pub type_coordinate: Option<String>,
+    pub birth_codon: Option<u8>,
+    pub birth_codon_state: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityListReceipt {
+    pub entries: Vec<S1EntityListEntry>,
+}

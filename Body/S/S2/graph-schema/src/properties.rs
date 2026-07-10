@@ -20,6 +20,17 @@ pub const CANDIDATE_STATE_PROPERTY: &str = "candidate_state";
 pub const ACCEPTED_WIKILINKS_PROPERTY: &str = "accepted_wikilinks";
 pub const SOURCE_C_AUTHORITY_PATH_PROPERTY: &str = "source_c_authority_path";
 pub const FLAT_WORLD_TARGET_PROPERTY: &str = "flat_world_target";
+// CCT-14b: universal entity birth-codon at Hen promotion.
+pub const BIRTH_CODON_PROPERTY: &str = "c_5_birth_codon";
+pub const BIRTH_CHROMOSOME_PROPERTY: &str = "c_5_birth_chromosome";
+pub const BIRTH_ROTATIONAL_CLASS_PROPERTY: &str = "c_5_birth_rotational_class";
+pub const BIRTH_TRANSCRIPT_CLASS_PROPERTY: &str = "c_5_birth_transcript_class";
+pub const BIRTH_GOVERNANCE_ROLE_PROPERTY: &str = "c_5_birth_governance_role";
+pub const BIRTH_CHARGE_PP_PROPERTY: &str = "c_5_birth_pp";
+pub const BIRTH_CHARGE_NN_PROPERTY: &str = "c_5_birth_nn";
+pub const BIRTH_CHARGE_NP_PROPERTY: &str = "c_5_birth_np";
+pub const BIRTH_CHARGE_PN_PROPERTY: &str = "c_5_birth_pn";
+pub const BIRTH_CODON_STATE_PROPERTY: &str = "birth_codon_state";
 pub const SOURCE_ARTIFACT_SPAN_PROPERTY: &str = "c_1_source_artifact_span";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
@@ -443,6 +454,125 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         cardinality: GraphPropertyCardinality::One,
         disclosure: GraphPropertyDisclosure::Public,
         source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    // CCT-14b: universal entity birth-codon family, written by Hen at
+    // promotion time. Codon + state are indexed: the chromosomal-wheel
+    // density query and delete-by-codon expert invalidation both key on
+    // them.
+    GraphPropertySpec {
+        key: BIRTH_CODON_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CHROMOSOME_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_ROTATIONAL_CLASS_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Enum(&[
+            "dual",
+            "non-dual-perfect",
+            "non-dual-imperfect",
+            "non-dual-non-palindromic",
+        ]),
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_TRANSCRIPT_CLASS_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Enum(&["shared", "transcribable"]),
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_GOVERNANCE_ROLE_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Enum(&["none", "start", "stop"]),
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CHARGE_PP_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CHARGE_NN_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CHARGE_NP_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CHARGE_PN_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: BIRTH_CODON_STATE_PROPERTY,
+        coordinate_home: CoordinateHome::C5,
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Enum(&["provisional", "ratified"]),
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "birth-codon",
         indexed: true,
         compatibility: false,
     },

@@ -100,6 +100,21 @@ pub const S2_GRAPH_RELATION_FAMILY_LIST_METHOD: &str = "s2.graph.relation_family
 pub const S1_TYPE_CLASSIFY_C_LAYER_METHOD: &str = "s1'.type.classify_c_layer";
 pub const S1_ENTITY_PROMOTE_TO_TYPE_METHOD: &str = "s1'.entity.promote_to_type";
 pub const S1_WORLD_GRADUATE_METHOD: &str = "s1'.world.graduate";
+// CCT-14 (+14b) entity-candidate lifecycle + review surfaces. Per
+// DR-S5-ONE-1 each route pairs with a CLI command (`epi entity ...` /
+// `epi world ...`).
+pub const S1_ENTITY_CAPTURE_METHOD: &str = "s1'.entity.capture";
+pub const S1_ENTITY_CLASSIFY_METHOD: &str = "s1'.entity.classify";
+pub const S1_ENTITY_LIST_METHOD: &str = "s1'.entity.list";
+pub const S1_WORLD_LIST_ENTITIES_METHOD: &str = "s1'.world.list_entities";
+pub const S1_ENTITY_LIFECYCLE_METHODS: &[&str] = &[
+    S1_ENTITY_CAPTURE_METHOD,
+    S1_ENTITY_CLASSIFY_METHOD,
+    S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
+    S1_WORLD_GRADUATE_METHOD,
+    S1_ENTITY_LIST_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD,
+];
 
 pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,

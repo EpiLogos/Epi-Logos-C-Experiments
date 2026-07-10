@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-10T15:47:57.621Z",
+ "generatedAt": "2026-07-10T20:48:26.173Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 212,
-  "present": 44,
-  "absent": 168,
+  "present": 48,
+  "absent": 164,
   "unknown": 0
  },
  "methods": [
@@ -631,24 +631,24 @@
   },
   {
    "method": "s1'.entity.capture",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: source is required"
   },
   {
    "method": "s1'.entity.classify",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: candidatePath is required"
   },
   {
    "method": "s1'.entity.promote_to_type",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: candidatePath is required"
   },
   {
    "method": "s1'.moc.ensure",
@@ -716,9 +716,9 @@
   {
    "method": "s1'.world.graduate",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: typePath is required"
   },
   {
    "method": "s1'.world.resolve",
