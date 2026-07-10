@@ -828,6 +828,12 @@ extern const Clock_Backbone_Node CLOCK_BACKBONE[24];
 #endif
 void m3_build_backbone(void);
 
+/* Fibonacci ground digit cycle (Track 35 §1.2, consumed by Tranche 5.24):
+ * the Pisano period of Fibonacci mod 10 is exactly 60 — one full clock of
+ * 6° steps (60 × 6 == 360, asserted above). pisano_digit_lut[n] = F(n) % 10;
+ * the cycle closes: F(60) ≡ 0, F(61) ≡ 1 (mod 10). */
+extern const uint8_t pisano_digit_lut[60];
+
 typedef struct {
     /* Identity */
     uint16_t degree_node_360;       /* 0-359  LUT index                         */

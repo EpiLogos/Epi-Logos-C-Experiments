@@ -398,7 +398,10 @@ Clock_Backbone_Node CLOCK_BACKBONE[24] = {{0}};
 void m3_build_backbone(void) {
     for (uint8_t i = 0; i < 24u; i++) {
         CLOCK_BACKBONE[i] = (Clock_Backbone_Node){
-            .degree = i,
+            /* handoff §2.3 law: 24 spokes × 15° = 360 — the backbone degree
+             * IS the spoke degree (the earlier `.degree = i` was a defect
+             * caught by backbone_table_contract, Tranche 4.15) */
+            .degree = (uint16_t)(i * 15u),
             .backbone_index = i,
             .hour_of_day = i,
             .zodiac_sign = (uint8_t)(i / 2u),
@@ -410,6 +413,15 @@ void m3_build_backbone(void) {
     }
 }
 
+
+/* Fibonacci ground digit cycle — F(n) % 10 over the full Pisano-60 period
+ * (Track 35 §1.2; generated from the recurrence, verified by contract test:
+ * lut[n] = (lut[n-1] + lut[n-2]) % 10 with seed 0,1 and a closed 60-wrap). */
+const uint8_t pisano_digit_lut[60] = {
+    0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9, 4, 3, 7, 0, 7, 7, 4, 1,
+    5, 6, 1, 7, 8, 5, 3, 8, 1, 9, 0, 9, 9, 8, 7, 5, 2, 7, 9, 6,
+    5, 1, 6, 7, 3, 0, 3, 3, 6, 9, 5, 4, 9, 3, 2, 5, 7, 2, 9, 1,
+};
 
 /* FFI-exportable wrapper around the inline m3_compute_charges.
    Rust / foreign callers use this; C callers inside m3.c use the inline. */
@@ -1201,7 +1213,7 @@ bool m3_verify(void) {
     }
 
     for (uint8_t i = 0; i < 24u; i++) {
-        if (CLOCK_BACKBONE[i].degree != i) return false;
+        if (CLOCK_BACKBONE[i].degree != (uint16_t)(i * 15u)) return false;
         if (CLOCK_BACKBONE[i].backbone_index != i) return false;
         if (CLOCK_BACKBONE[i].hour_of_day != i) return false;
         if (CLOCK_BACKBONE[i].zodiac_sign != (uint8_t)(i / 2u)) return false;

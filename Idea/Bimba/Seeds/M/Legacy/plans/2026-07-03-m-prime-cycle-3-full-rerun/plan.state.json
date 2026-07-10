@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:25:50.793Z",
+  "updatedAt": "2026-07-10T13:32:20.201Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1534,14 +1534,30 @@
       "worktree": null
     },
     "04.T4.15": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T13:25:06.301Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T13:32:20.189Z",
       "claimedAt": "2026-07-10T13:25:06.301Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T13:32:20.189Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:32:20.189Z",
+          "text": "Residency decision (recorded per brief): landed in epi-lib m3.h/m3.c per substrate-residency law - the handoff-named Body/M/M3/m3-mahamaya-core does not exist. Step 1 substrate was pre-landed (Clock_Backbone_Node 12-byte static-assert, CLOCK_BACKBONE[24] with M3_BUILDING_SOURCE const-outside idiom, 60*6==360 companion assert, m3_build_backbone wired into both init paths m3.c:1142/1166). This tranche completed the gaps + caught a REAL defect: (1) NEW backbone_table_contract test (all 24 nodes per handoff 2.3 law + rebuild idempotence) EXPOSED degree=i where the law is degree=i*15 (24 spokes x 15deg = 360) - fixed populator + the boot self-check that encoded the same defect (only consumer); (2) NEW pisano_digit_lut[60] .rodata table (F(n) mod 10, generated from the recurrence) + contract test proving seed 0,1 / full recurrence / closed 60-wrap (F(60)=0, F(61)=1) - the Track 35 1.2 companion consumed by 5.24. epi-lib all suites green; kernel-truth GREEN. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "make -C Body/S/S0/epi-lib test (all suites incl new backbone_table_contract 169 checks + pisano_digit_lut_contract 62 checks in test_m3); node .codex/scripts/kernel-truth.mjs GREEN; verify-tranche 04.T4.15 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 231,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m3.h",
+              "Body/S/S0/epi-lib/src/m3.c",
+              "Body/S/S0/epi-lib/test/m3/test_m3.c"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T15:25:06.301Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:25:06.301Z",
       "runId": "20260710T132506Z-04-T4.15",
       "worktree": null
@@ -8736,16 +8752,16 @@
       "worktree": null
     },
     "43.T43.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T13:26:47.920Z",
+      "claimedAt": "2026-07-10T13:26:47.920Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:26:47.920Z",
+      "heartbeatAt": "2026-07-10T13:26:47.920Z",
+      "runId": "20260710T132647Z-43-T43.2",
       "worktree": null
     },
     "43.T43.3": {
@@ -10853,10 +10869,20 @@
     {
       "runId": "20260710T132506Z-04-T4.15",
       "taskId": "04.T4.15",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T13:25:06.301Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T15:25:06.301Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T13:32:20.189Z"
+    },
+    {
+      "runId": "20260710T132647Z-43-T43.2",
+      "taskId": "43.T43.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T13:26:47.920Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:26:47.920Z",
       "worktree": null
     }
   ],

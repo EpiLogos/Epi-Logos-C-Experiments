@@ -921,6 +921,45 @@ static void test_det_coverage(void) {
  * Main
  * =================================================================== */
 
+/* Tranche 4.15 backbone_table_contract (handoff §2.3): after m3_build_backbone
+ * every one of the 24 nodes carries the exact clock law — degree = i·15,
+ * hour_of_day = i, zodiac_sign = i/2, is_cusp = (i%2==0), amino_acid_idx = i
+ * into the 24-entry amino/codon table, is_palindromic = 1. */
+static void test_backbone_table_contract(void) {
+    m3_build_backbone();
+    for (int i = 0; i < 24; i++) {
+        TEST("backbone degree = i*15", CLOCK_BACKBONE[i].degree == (uint16_t)(i * 15));
+        TEST("backbone index = i", CLOCK_BACKBONE[i].backbone_index == (uint8_t)i);
+        TEST("backbone hour = i", CLOCK_BACKBONE[i].hour_of_day == (uint8_t)i);
+        TEST("backbone zodiac = i/2", CLOCK_BACKBONE[i].zodiac_sign == (uint8_t)(i / 2));
+        TEST("backbone cusp = (i%2==0)", CLOCK_BACKBONE[i].is_cusp == (uint8_t)((i % 2) == 0));
+        TEST("backbone amino idx = i", CLOCK_BACKBONE[i].amino_acid_idx == (uint8_t)i);
+        TEST("backbone palindromic", CLOCK_BACKBONE[i].is_palindromic == 1u);
+    }
+    /* rebuilding is idempotent — the init path may call it more than once */
+    m3_build_backbone();
+    TEST("backbone rebuild idempotent", CLOCK_BACKBONE[23].degree == 345);
+}
+
+/* Tranche 4.15 pisano LUT contract (Track 35 §1.2): the .rodata table IS the
+ * Fibonacci digit recurrence over the full Pisano-60 period — seeded 0,1,
+ * every entry the mod-10 sum of its two predecessors, closing the 60-wrap
+ * (F(60) ≡ 0, F(61) ≡ 1), never a hand-drifted list. */
+static void test_pisano_digit_lut_contract(void) {
+    TEST("pisano seed F(0)=0", pisano_digit_lut[0] == 0);
+    TEST("pisano seed F(1)=1", pisano_digit_lut[1] == 1);
+    for (int n = 2; n < 60; n++) {
+        TEST("pisano recurrence",
+             pisano_digit_lut[n] ==
+                 (uint8_t)((pisano_digit_lut[n - 1] + pisano_digit_lut[n - 2]) % 10));
+    }
+    /* the cycle closes at period 60: F(60) = F(59)+F(58), F(61) = F(60)+F(59) */
+    TEST("pisano wrap F(60)=0",
+         (uint8_t)((pisano_digit_lut[59] + pisano_digit_lut[58]) % 10) == pisano_digit_lut[0]);
+    TEST("pisano wrap F(61)=1",
+         (uint8_t)((pisano_digit_lut[0] + pisano_digit_lut[59]) % 10) == pisano_digit_lut[1]);
+}
+
 int main(void) {
     printf("=== M3 (Mahamaya) Verification Suite ===\n\n");
 
@@ -948,6 +987,8 @@ int main(void) {
     test_tarot();
     test_m3_api();
     test_det_coverage();
+    test_backbone_table_contract();
+    test_pisano_digit_lut_contract();
 
     printf("\n=== Results: %d passed, %d failed (of %d) ===\n",
            pass_count, fail_count, pass_count + fail_count);
