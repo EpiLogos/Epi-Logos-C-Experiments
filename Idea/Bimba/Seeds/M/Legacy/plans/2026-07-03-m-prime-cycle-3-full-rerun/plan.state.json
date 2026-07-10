@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:09:35.220Z",
+  "updatedAt": "2026-07-10T15:12:46.283Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2507,16 +2507,31 @@
       "worktree": null
     },
     "08.T8.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:12:46.271Z",
+      "claimedAt": "2026-07-10T15:09:49.056Z",
+      "completedAt": "2026-07-10T15:12:46.271Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:12:46.271Z",
+          "text": "Layout claim verified against the ratified DR-TS-1 shell shape and pinned by a NEW behavioral test: ONE 0/1 shell (Face = 0|1; exactly TWO .face-slot containers - the no-third-layout proof), personal IS the 1-side and cosmic the 0-side of the built-in daily-0-1 toggle (cmd-period = # applied to user context, round-trips with state intact), the / OmniPanel operator membrane overlays BOTH faces (chat tab present per face layout - the OMNIPANEL_TABS cross-layout availability), flow-writing (Now) on the 1-side. No code change needed - the carrier already IS the ratified shape (App.tsx header states the law); the claim test makes drift impossible. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/App.test.tsx (4 passed incl the DR-TS-1 layout-claim test); pnpm test (226); verify-tranche 08.T8.5 W-gate PASS (app suites + live-wire green)",
+            "exitCode": 0,
+            "testsPassed": 230,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/App.test.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:09:49.056Z",
+      "runId": "20260710T150949Z-08-T8.5",
       "worktree": null
     },
     "08.T8.6": {
@@ -11341,6 +11356,16 @@
       "leaseExpiresAt": "2026-07-10T17:07:50.859Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:09:35.208Z"
+    },
+    {
+      "runId": "20260710T150949Z-08-T8.5",
+      "taskId": "08.T8.5",
+      "status": "done",
+      "startedAt": "2026-07-10T15:09:49.056Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:09:49.056Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:12:46.271Z"
     }
   ],
   "activeRoute": {
