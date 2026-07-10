@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:01:14.955Z",
+  "updatedAt": "2026-07-10T13:08:37.972Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7686,14 +7686,14 @@
       "worktree": null
     },
     "34.T34.1": {
-      "status": "review",
-      "updatedAt": "2026-07-10T11:50:38.523Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T13:04:31.499Z",
       "claimedAt": "2026-07-10T11:13:08.265Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T13:04:31.499Z",
       "evidence": [
         {
           "at": "2026-07-10T11:24:54.238Z",
-          "text": "Landed S0 settings substrate (ApiKeyStore/SettingsManifest/CloudOptInStore in epi-s0-settings) + epi settings status|opt-in CLI; 14 tests green incl. cross-crate round-trip proving opt-in written here is honored by gemini-embedding CloudOptInPolicy (refused before, allowed after, unrelated sections preserved); §3 acceptance met. DEFERRED (review): s0'.settings.* gateway methods (not in §3 acceptance; S3 shared with B2) and CloudOptInPolicy residency reconciliation (it lives in gemini-embedding, spec wants it owned by settings) — Architect ruling needed.",
+          "text": "Landed S0 settings substrate (ApiKeyStore/SettingsManifest/CloudOptInStore in epi-s0-settings) + epi settings status|opt-in CLI; 14 tests green incl. cross-crate round-trip proving opt-in written here is honored by gemini-embedding CloudOptInPolicy (refused before, allowed after, unrelated sections preserved); §3 acceptance met. OUTSTANDING (review): s0'.settings.* gateway methods (not in §3 acceptance; S3 shared with B2) and CloudOptInPolicy residency reconciliation (it lives in gemini-embedding, spec wants it owned by settings) — Architect ruling needed.",
           "receipt": {
             "command": "cargo test -p epi-s0-settings --offline + epi settings opt-in round-trip",
             "exitCode": 0,
@@ -7731,26 +7731,56 @@
               "output": 42000
             }
           }
+        },
+        {
+          "at": "2026-07-10T13:04:31.499Z",
+          "text": "Independent verify (opus-b-verify) PASS: class-scoped K gate green. FULL SCOPE: epi-s0-settings substrate (ApiKeyStore/SettingsManifest/CloudOptInStore, 14 tests incl cross-crate round-trip) + epi settings status|opt-in CLI + s0'.settings.* gateway methods (gateway-contract 64 + dispatch_contract 27). All landed + verified.",
+          "receipt": {
+            "command": "cargo test -p epi-s0-settings --offline",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/settings/src/opt_in.rs",
+              "Body/S/S3/gateway-contract/src/settings.rs",
+              "Body/S/S0/epi-cli/src/settings.rs"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-b-track34",
-      "leaseExpiresAt": "2026-07-10T13:13:08.265Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:50:38.523Z",
       "runId": "20260710T111308Z-34-T34.1",
       "worktree": null
     },
     "34.T34.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T13:08:37.961Z",
+      "claimedAt": "2026-07-10T13:04:53.189Z",
+      "completedAt": "2026-07-10T13:08:37.961Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:08:37.961Z",
+          "text": "Independent verify (opus-b-verify) PASS: class-scoped K gate green. Gemini Embedding-2 accessor: CloudOptInPolicy refusal contract, cache read-through (backend once), matryoshka 3072/1536/768 slice, deterministic mock-api vectors — 4 accessor_contract tests green both feature sets. Dep 34.T34.1 done.",
+          "receipt": {
+            "command": "cargo test -p gemini-embedding --features mock-api --offline",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/gemini-embedding/src/lib.rs",
+              "Body/S/S0/gemini-embedding/tests/accessor_contract.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-b-track34",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T13:04:53.189Z",
+      "runId": "20260710T130453Z-34-T34.2",
       "worktree": null
     },
     "35.T0": {
@@ -9172,10 +9202,10 @@
       "worktree": null
     },
     "49.T49.2": {
-      "status": "review",
-      "updatedAt": "2026-07-10T13:00:53.717Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T13:04:31.302Z",
       "claimedAt": "2026-07-10T12:59:26.089Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T13:04:31.302Z",
       "evidence": [
         {
           "at": "2026-07-10T13:00:53.717Z",
@@ -9190,11 +9220,24 @@
               "Body/S/S0/epi-cli/schemas/tests/kernel-bridge.test.ts"
             ]
           }
+        },
+        {
+          "at": "2026-07-10T13:04:31.302Z",
+          "text": "Independent verify (opus-b-verify) PASS: class-scoped K gate green; 28 kernel-bridge Zod parity tests pass (modalResonator schemas, lens/mode bounds, m2Address72, camelCase). Profile JSON/Zod/TS/casing parity verified.",
+          "receipt": {
+            "command": "pnpm --dir Body/S/S0/epi-cli/schemas exec vitest run tests/kernel-bridge.test.ts",
+            "exitCode": 0,
+            "testsPassed": 28,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-b-track34",
-      "leaseExpiresAt": "2026-07-10T14:59:26.089Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:00:53.717Z",
       "runId": "20260710T125926Z-49-T49.2",
       "worktree": null
@@ -10521,6 +10564,16 @@
       "leaseExpiresAt": "2026-07-10T15:01:14.763Z",
       "worktree": null,
       "completedAt": "2026-07-10T13:01:14.944Z"
+    },
+    {
+      "runId": "20260710T130453Z-34-T34.2",
+      "taskId": "34.T34.2",
+      "status": "done",
+      "startedAt": "2026-07-10T13:04:53.189Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:04:53.189Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T13:08:37.961Z"
     }
   ],
   "activeRoute": {
