@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:22:43.879Z",
+  "updatedAt": "2026-07-10T15:24:38.539Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4123,14 +4123,28 @@
       "worktree": null
     },
     "14.T0": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T15:21:42.759Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T15:24:38.526Z",
       "claimedAt": "2026-07-10T15:21:42.759Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T15:24:38.526Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:24:38.526Z",
+          "text": "Law-only source read IN FULL; unbuilt commitments enumerated as four new tranches appended to the rerun file, each citing its original section: 14.T14.1 release-gate runner (mechanises G1/G2/G4/G6, reports G3/G5/G7-G12 as track lookups); 14.T14.2 decision-register gate audit (every named DR + Phase-B row VALIDATED-or-downgraded); 14.T14.3 open-orphans re-audit against the CURRENT carrier (noting rows closed this session: F_routing 03.2, played-torus 02.6, Earth DR-KB-1, pentadic 36.x, TCT 04.4); 14.T14.4 cycle-close audit re-run (the final gate, blocked until 36.7 + gates). Assess re-index: 597 tasks, all four ids parse. UF-gate PASS with playwright app-ui-flow green (verifier opus-a-m3-vf != closer opus-a-m3).",
+          "receipt": {
+            "command": "node .codex/scripts/m-dev-plan-assess.mjs --write (re-index: 597 tasks, 14.T14.1-4 parse); verify-tranche 14.T0 UF-gate PASS incl app-ui-flow (playwright test:e2e 11 passed vs real gateway) + app-smoke + live-wire",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:21:42.759Z",
       "runId": "20260710T152142Z-14-T0",
       "worktree": null
@@ -11519,11 +11533,12 @@
     {
       "runId": "20260710T152142Z-14-T0",
       "taskId": "14.T0",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T15:21:42.759Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T15:24:38.526Z"
     }
   ],
   "activeRoute": {
