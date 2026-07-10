@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T23:06:52.852Z",
+  "updatedAt": "2026-07-10T23:12:36.356Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2277,19 +2277,34 @@
       "worktree": null
     },
     "07.T7.1": {
-      "status": "review",
-      "updatedAt": "2026-07-10T22:18:47.047Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T23:08:02.799Z",
       "claimedAt": "2026-07-10T22:18:46.764Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T23:08:02.799Z",
       "evidence": [
         {
           "at": "2026-07-10T22:18:47.047Z",
-          "text": "STOP/review (landed contradicts spec 'Extend, no rebuild'). The 07.T7.1 deliverable — typed IntegratedReadiness blocked-states in @pratibimba/integrated-composition + @pratibimba/plugin-integrated-1-2-3 — exists ONLY in FROZEN Body/M/epi-theia/extensions (integrated-composition/src/common/integrated-readiness.ts, plugin-integrated-1-2-3/src/common/wave-a-markers.ts). On the pratibimba-app CARRIER these are absent: IntegratedReadiness=0 files, integrated-composition=0, integrated-1-2-3=0, klein_flip_state=0. Carrier has only the raw profile fields (resonance72Index 13 files, nodal_quartet 1, audio_octet 4) but NO composition/readiness gate consuming them. Per rerun carrier contract epi-theia is frozen (never build/verify there) and the tranche Verify (pnpm --filter @pratibimba/integrated-composition test) would run in frozen territory. There is nothing on the carrier to 'extend' — this is a fresh carrier PORT of the readiness gate + composition contract + fixture-parity source, an architectural adjudication (carrier host module, contract authority) that routes to a Fable session. Not forcing a done; not deferred — gap precisely scoped for rebuild."
+          "text": "STOP/review (landed contradicts spec 'Extend, no rebuild'). The 07.T7.1 deliverable — typed IntegratedReadiness blocked-states in @pratibimba/integrated-composition + @pratibimba/plugin-integrated-1-2-3 — exists ONLY in FROZEN Body/M/epi-theia/extensions (integrated-composition/src/common/integrated-readiness.ts, plugin-integrated-1-2-3/src/common/wave-a-markers.ts). On the pratibimba-app CARRIER these are absent: IntegratedReadiness=0 files, integrated-composition=0, integrated-1-2-3=0, klein_flip_state=0. Carrier has only the raw profile fields (resonance72Index 13 files, nodal_quartet 1, audio_octet 4) but NO composition/readiness gate consuming them. Per rerun carrier contract epi-theia is frozen (never build/verify there) and the tranche Verify (pnpm --filter @pratibimba/integrated-composition test) would run in frozen territory. There is nothing on the carrier to 'extend' — this is a fresh carrier PORT of the readiness gate + composition contract + fixture-parity source, an architectural adjudication (carrier host module, contract authority) that routes to a Fable session. Not forcing a done; not parked — gap precisely scoped for rebuild."
+        },
+        {
+          "at": "2026-07-10T23:08:02.799Z",
+          "text": "Fable-adjudicated carrier build (was review: nothing to extend on carrier). Wave-A readiness gate rebuilt fresh at pratibimba-app/src/engine/integratedReadiness.ts: LAW preserved from frozen wave-a-markers.ts (5 marker names, wave-a.pending: blocker-id namespace, pinned profile_missing_field blocked-state, integratedReadinessBlockedBy constructor, conditional-on-M1-performance-event semantics, six-axes derivation-has-no-pocket rule); dead m-extension-runtime/contributor plumbing NOT ported. Carrier-real wire paths per readiness ledger + kernel_bridge_runtime.rs:1011 (kleinFlip now emitted — ledger CODE-PENDING row closed); two-level payload.harmonicProfile->root resolution (T2.5 lesson structural); empty-array pockets treated absent (no faked replay bus). 15/15 targeted tests green; full app suite 275 passed/1 pre-existing skip; tsc --noEmit clean. Spec md annotated with LANDED retarget note. K-gate PASS under verifier opus-d-mech-verify.",
+          "receipt": {
+            "command": "npx vitest run src/engine/integratedReadiness.test.ts (in Body/M/pratibimba-app)",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/integratedReadiness.ts",
+              "Body/M/pratibimba-app/src/engine/integratedReadiness.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/07.T7.1.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-d-mech",
-      "leaseExpiresAt": "2026-07-10T23:18:46.764Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:18:47.047Z",
       "runId": "20260710T221846Z-07-T7.1",
       "worktree": null
@@ -3145,19 +3160,34 @@
       "worktree": null
     },
     "11.T11.0": {
-      "status": "review",
-      "updatedAt": "2026-07-10T22:19:54.046Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T23:12:36.343Z",
       "claimedAt": "2026-07-10T22:19:53.843Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T23:12:36.343Z",
       "evidence": [
         {
           "at": "2026-07-10T22:19:54.046Z",
-          "text": "STOP/review (landed contradicts spec; superseded by carrier). 11.T11.0 is a Body/M/epi-theia electron-app<->theia-app package-parity gate; both Verify commands run in FROZEN epi-theia (node --test extensions/test/electron-target-parity.test.mjs; scripts/smoke-build.sh building @pratibimba/electron-app). Per rerun carrier contract, epi-theia is frozen (never build/verify) and Theia plumbing (package.json contributes, widget ids, electron/browser targets) is DEAD. The carrier @pratibimba/app is a SINGLE Tauri app (scripts: dev,build,typecheck,test,smoke,test:e2e,tauri; no electron dep, no @theia deps, no electron-app/theia-app split) — the electron/theia target-parity concern does not exist on the carrier. UF-class done needs carrier app-flow proof which cannot exist for a dead-plumbing target split. Adjudication (retire as dead-plumbing vs map to a Tauri-bundle surface-parity check on the carrier) routes to a Fable session. Not forcing done; not deferred."
+          "text": "STOP/review (landed contradicts spec; superseded by carrier). 11.T11.0 is a Body/M/epi-theia electron-app<->theia-app package-parity gate; both Verify commands run in FROZEN epi-theia (node --test extensions/test/electron-target-parity.test.mjs; scripts/smoke-build.sh building @pratibimba/electron-app). Per rerun carrier contract, epi-theia is frozen (never build/verify) and Theia plumbing (package.json contributes, widget ids, electron/browser targets) is DEAD. The carrier @pratibimba/app is a SINGLE Tauri app (scripts: dev,build,typecheck,test,smoke,test:e2e,tauri; no electron dep, no @theia deps, no electron-app/theia-app split) — the electron/theia target-parity concern does not exist on the carrier. UF-class done needs carrier app-flow proof which cannot exist for a dead-plumbing target split. Adjudication (retire as dead-plumbing vs map to a Tauri-bundle surface-parity check on the carrier) routes to a Fable session. Not forcing done; not parked."
+        },
+        {
+          "at": "2026-07-10T23:12:36.343Z",
+          "text": "Fable-adjudicated retirement (was review). The electron-app<->theia-app package-parity gate polices a target split that exists only in frozen epi-theia (dead Theia packaging plumbing per rerun carrier contract); the carrier @pratibimba/app is a single Tauri target, so the parity gate has no object. Surviving concern (shipped app boots with full surface set against a live gateway) is owned by the carrier: boot-smoke PASS fresh (real epi gate spawn on 18797, ws handshake, live profile tick advancing 2->3->4, health ok) + UF-gate PASS (16 suites incl app-build/app-smoke/app-ui-flow playwright) under verifier opus-d-mech-verify. Spec md annotated RETIRED with re-derivation rule if a second packaging target ever appears.",
+          "receipt": {
+            "command": "node scripts/boot-smoke.mjs (in Body/M/pratibimba-app — real epi gate spawn, live tick 2->3->4)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/scripts/boot-smoke.mjs (boot-smoke PASS)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/11.T11.0.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-d-mech",
-      "leaseExpiresAt": "2026-07-10T23:19:53.843Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:19:54.046Z",
       "runId": "20260710T221953Z-11-T11.0",
       "worktree": null
