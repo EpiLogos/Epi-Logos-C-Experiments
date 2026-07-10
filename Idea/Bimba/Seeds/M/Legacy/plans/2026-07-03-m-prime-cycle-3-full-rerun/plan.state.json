@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:22:28.792Z",
+  "updatedAt": "2026-07-10T22:26:03.966Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8514,16 +8514,30 @@
       "worktree": null
     },
     "35.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T22:26:03.953Z",
+      "claimedAt": "2026-07-10T22:22:49.514Z",
+      "completedAt": "2026-07-10T22:26:03.953Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:26:03.953Z",
+          "text": "T0 absorb-and-retarget closed: Fibonacci Ground source (2026-06-02, read in full, 461 lines) enumerated into 2 Track-35 residual-gap tranches. Verify-dont-trust: the source APPLIED-2026-06-09 note already delegated substrate work to T05.24/T05.25/T04.15/T24.19 + DR-FIB-1..5 VALIDATED, and 2026-07-10 grounding shows the register carrier gap list is largely stale (KairosFrame+m4_planet_degrees_live in m4.h, CLOCK_BACKBONE[24] in m3.h, NOW.md c_3_fibonacci keys, carrier 60-ring+cardinal+zodiacal anchors+natal-gold ring+decay all landed). Genuine remainder: T35.1 live-Sun silver-dot dual marker (grounded 0 silver refs, natal-gold present), T35.2 DR-FIB-1..5 end-to-end coherence audit. Both parse. Independent D-class verify PASS under opus-c-verify.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 35.T0 --owner opus-c-verify --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/35-fibonacci-ground-level-0-temporal-substrate.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-c-law",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:22:49.514Z",
+      "runId": "20260710T222249Z-35-T0",
       "worktree": null
     },
     "36.T36.1": {
@@ -10673,6 +10687,32 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "35.T35.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "35.T35.2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -12196,6 +12236,16 @@
       "leaseExpiresAt": "2026-07-10T23:19:53.843Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:19:54.046Z"
+    },
+    {
+      "runId": "20260710T222249Z-35-T0",
+      "taskId": "35.T0",
+      "status": "done",
+      "startedAt": "2026-07-10T22:22:49.514Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:22:49.514Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:26:03.953Z"
     }
   ],
   "activeRoute": {
