@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-10T15:31:22.667Z",
+  "generatedAt": "2026-07-10T15:31:44.676Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -3948,9 +3948,7 @@
       "effort": "the closing gate",
       "file": "14-no-orphan-audit-and-release-gates.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
-      "dependsOn": [
-        "14.T14.3"
-      ],
+      "dependsOn": [],
       "writeScopes": [],
       "body": "5. **T14.4 — Cycle-close no-orphan audit re-run (the closing gate)**\n\n   Brief: original §Closing the Cycle + the audit-targets list. The FINAL gate: re-run the full no-orphan audit (M' product surfaces, ta-onta carriers, constitutional agents, 6 techne-guardians per DR-S4-TECHNE, profile fields, integration plugins, UX load-bearing claims) once Tracks 36.7 and the release gates land. BLOCKED until the dependency order in §Closing the Cycle reaches the final step — this tranche IS \"cycle-3 closed\".\n   Depends on 14.T14.3.\n   Verify: all release gates report CLOSED; the re-audit shows zero ownerless surfaces; verifier ≠ closer."
     },

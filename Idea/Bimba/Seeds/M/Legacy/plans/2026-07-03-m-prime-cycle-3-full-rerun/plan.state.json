@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:31:22.668Z",
+  "updatedAt": "2026-07-10T15:31:44.678Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10288,16 +10288,21 @@
       "worktree": null
     },
     "14.T14.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-10T15:31:44.665Z",
+      "claimedAt": "2026-07-10T15:31:44.480Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T15:31:44.665Z",
+          "text": "The cycle-close gate itself - BLOCKED by design per its own brief until the dependency order in the original Closing-the-Cycle section reaches the final step: needs 36.T36.7 (no-orphan closure seal, currently waiting on 36.5/36.6) + the open release gates (G7 15.T15.1, G8 15.T15.12, G10 track-16 CCTs - live per release-gates.mjs). The machinery to run it is landed and green: release-gates.mjs (mechanised G1/G2/G4/G6 + honest checklist), dr-gate-audit.mjs (32/32), the orphan re-audit generator (0 still-orphan). Unblock when the checklist reads 12/12."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:31:44.480Z",
+      "runId": "20260710T153144Z-14-T14.4",
       "worktree": null
     }
   },
@@ -11611,6 +11616,16 @@
       "leaseExpiresAt": "2026-07-10T17:30:02.058Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:31:22.656Z"
+    },
+    {
+      "runId": "20260710T153144Z-14-T14.4",
+      "taskId": "14.T14.4",
+      "status": "blocked",
+      "startedAt": "2026-07-10T15:31:44.480Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:31:44.480Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:31:44.665Z"
     }
   ],
   "activeRoute": {
