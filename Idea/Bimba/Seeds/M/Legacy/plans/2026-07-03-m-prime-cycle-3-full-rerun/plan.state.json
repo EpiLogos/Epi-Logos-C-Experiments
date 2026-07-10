@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:27:42.708Z",
+  "updatedAt": "2026-07-10T15:29:21.796Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10234,14 +10234,28 @@
       "worktree": null
     },
     "14.T14.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T15:27:42.695Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T15:29:21.783Z",
       "claimedAt": "2026-07-10T15:27:42.695Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T15:29:21.783Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:29:21.783Z",
+          "text": "Decision-register gate machine-audited and SATISFIED: all 32 named rows (the full core gate list plus every Phase-B row) carry a passing Status per the gate law in 13-decision-register.md - zero missing sections, zero exceptions, zero downgrades needed. Row-by-row report with register status lines at plan.runs/14-dr-gate-audit.md; the audit script is re-runnable for the cycle-close re-check (14.T14.4) and closes gate G11 substantively. UF-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node .codex/scripts/dr-gate-audit.mjs (exit 0: 32/32 named rows pass the gate law, zero missing, zero exceptions; report at plan.runs/14-dr-gate-audit.md); verify-tranche 14.T14.2 UF-gate PASS incl app-ui-flow playwright",
+            "exitCode": 0,
+            "testsPassed": 32,
+            "testsFailed": 0,
+            "keyPaths": [
+              ".codex/scripts/dr-gate-audit.mjs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T17:27:42.695Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:27:42.695Z",
       "runId": "20260710T152742Z-14-T14.2",
       "worktree": null
@@ -11567,11 +11581,12 @@
     {
       "runId": "20260710T152742Z-14-T14.2",
       "taskId": "14.T14.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T15:27:42.695Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T17:27:42.695Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T15:29:21.783Z"
     }
   ],
   "activeRoute": {
