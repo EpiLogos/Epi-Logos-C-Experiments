@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:00:53.731Z",
+  "updatedAt": "2026-07-10T13:01:14.955Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7885,16 +7885,21 @@
       "worktree": null
     },
     "36.T36.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-10T13:01:14.944Z",
+      "claimedAt": "2026-07-10T13:01:14.763Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T13:01:14.944Z",
+          "text": "PARTIAL (honest split): the tranche's own core invariant LANDED - new portal-core tests pentadic_trace_is_public_safe_and_carries_no_protected_bodies (all 12 ticks: no natal/qPersonal/identityHash/journal/featureVector/modelWeights/bioquaternion bodies on the serialized trace; q_cosmic_ref is a handle not a vector; provenance present) + trace_pairs_with_checkpoint_ref_in_bootstrap_and_real_modes (zero-gradient bootstrap: absent ref ABSENT on wire, not null-faked; real mode: ebm-checkpoint:// + q_composed:// handles round-trip verbatim) - 11/11 suite green. The three consumption legs remain blocked on unlanded emissions: M4 (personalPole 10.M4 not emitted - DECLARED_NOT_EMITTED), M5 EBM feature context (Track 33/12.24 EBM path feature-gated dark, kernel_energy e5/e6 expected-red), M0 R-virtue witness display (anuttaraWitness not emitted). Requeue when 10.M4/10.M5 land their fields."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T15:01:14.763Z",
+      "heartbeatAt": "2026-07-10T13:01:14.944Z",
+      "runId": "20260710T130114Z-36-T36.5",
       "worktree": null
     },
     "36.T36.6": {
@@ -10506,6 +10511,16 @@
       "leaseExpiresAt": "2026-07-10T14:59:30.460Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:59:46.177Z"
+    },
+    {
+      "runId": "20260710T130114Z-36-T36.5",
+      "taskId": "36.T36.5",
+      "status": "review",
+      "startedAt": "2026-07-10T13:01:14.763Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T15:01:14.763Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T13:01:14.944Z"
     }
   ],
   "activeRoute": {

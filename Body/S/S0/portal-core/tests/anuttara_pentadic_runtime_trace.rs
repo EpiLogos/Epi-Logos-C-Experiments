@@ -282,3 +282,73 @@ fn mahamaya_backbone_paired_fifteens_are_sourced_from_m3_helpers() {
     assert_eq!(trace.backbone_identity, "24x15=360");
     assert_eq!(trace.line_graph_identity, "360+24=384");
 }
+
+/// Tranche 36.5 privacy invariant — the trace is public-safe BECAUSE it
+/// carries addresses, handles, and provenance, never protected bodies: no raw
+/// quaternion, journal body, natal-chart body, or raw model feature vector
+/// may appear on any serialized trace.
+#[test]
+fn pentadic_trace_is_public_safe_and_carries_no_protected_bodies() {
+    for tick12 in 0..12u8 {
+        let trace = real_trace(3, tick12);
+        let s = serde_json::to_value(&trace).expect("trace serializes").to_string();
+        for forbidden in [
+            "natalChart",
+            "natal_chart",
+            "qPersonal",
+            "q_personal",
+            "identityHash",
+            "identity_hash",
+            "journalBody",
+            "journal_body",
+            "featureVector",
+            "feature_vector",
+            "modelWeights",
+            "model_weights",
+            "bioquaternion",
+        ] {
+            assert!(
+                !s.contains(forbidden),
+                "public-safe trace must not carry {forbidden}; got: {s}"
+            );
+        }
+        // The Q reference is a HANDLE/address, never a raw quaternion body.
+        assert!(
+            !trace.q_cosmic_ref.contains('['),
+            "q_cosmic_ref must be a reference, not a serialized vector: {}",
+            trace.q_cosmic_ref
+        );
+        assert!(!trace.provenance.is_empty(), "provenance handles must be present");
+    }
+}
+
+/// Tranche 36.5 EBM feature-context pairing at the contract level: the trace
+/// is accepted in zero-gradient bootstrap mode (no checkpoint ref — the
+/// Option is absent on the wire) AND with a real checkpoint ref + composed-Q
+/// handle (both round-trip verbatim). The M5 consumer reads this pairing;
+/// it never receives raw model features.
+#[test]
+fn trace_pairs_with_checkpoint_ref_in_bootstrap_and_real_modes() {
+    // zero-gradient bootstrap: from_tick emits no checkpoint ref
+    let bootstrap = real_trace(0, 4);
+    assert_eq!(bootstrap.learned_predictor_checkpoint_ref, None);
+    assert_eq!(bootstrap.q_composed_handle, None);
+    let wire = serde_json::to_value(&bootstrap).expect("serializes");
+    assert!(
+        wire.get("learnedPredictorCheckpointRef").is_none(),
+        "bootstrap mode: absent ref must be absent on the wire, not null-faked"
+    );
+
+    // real checkpoint mode: refs are handles and round-trip verbatim
+    let mut with_ref = bootstrap.clone();
+    with_ref.learned_predictor_checkpoint_ref = Some("ebm-checkpoint://v0.3".to_owned());
+    with_ref.q_composed_handle = Some("q_composed://session/demo".to_owned());
+    let wire = serde_json::to_value(&with_ref).expect("serializes");
+    let decoded: AnuttaraPentadicRuntimeTrace =
+        serde_json::from_value(wire).expect("deserializes");
+    assert_eq!(decoded, with_ref);
+    assert_eq!(
+        decoded.learned_predictor_checkpoint_ref.as_deref(),
+        Some("ebm-checkpoint://v0.3")
+    );
+}
