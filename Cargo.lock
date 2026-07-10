@@ -181,7 +181,10 @@ dependencies = [
 name = "epi-s0-settings"
 version = "0.1.0"
 dependencies = [
+ "gemini-embedding",
  "serde",
+ "tempfile",
+ "toml",
 ]
 
 [[package]]

@@ -25,6 +25,7 @@ pub mod notebook;
 pub mod portal;
 pub mod profile;
 pub mod sesh;
+pub mod settings;
 pub mod skill;
 pub mod slot;
 pub mod sync;

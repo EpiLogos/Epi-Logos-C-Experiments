@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T111308Z-34-T34.1",
+  "taskId": "34.T34.1",
+  "startedAt": "2026-07-10T11:13:08.265Z",
+  "owner": "opus-b-track34",
+  "leaseExpiresAt": "2026-07-10T13:13:08.265Z",
+  "worktree": null,
+  "task": {
+    "id": "34.T34.1",
+    "trackId": "34",
+    "tranche": "T34.1",
+    "title": "Component A: S0 settings infrastructure",
+    "effort": null,
+    "file": "34-s0-settings-and-gemini-embedding.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/34-s0-settings-and-gemini-embedding.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/34-s0-settings-and-gemini-embedding.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "MIXED — S0 settings (cloud-opt-in refusal contract, keys from env never over gateway, s0'.settings.*, epi settings) SUBSTRATE; CARRIER: settings pane presence + opt-in state only. §2 track 34."
+  }
+}

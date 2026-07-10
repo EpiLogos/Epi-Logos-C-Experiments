@@ -4,7 +4,7 @@ use epi_logos::epii_autoresearch::resonance_corpus::{
 };
 use epi_logos::{
     agent, app, book, canon, code, core, ffi, gate, graph, know, nara, notebook, portal, profile,
-    sesh, skill, slot, sync, techne, up, vault, vimarsa,
+    sesh, settings, skill, slot, sync, techne, up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -66,6 +66,11 @@ enum Commands {
     Skill {
         #[command(subcommand)]
         cmd: skill::SkillCmd,
+    },
+    /// S0 settings — API key status + cloud opt-in (keys read from env, never over the gateway)
+    Settings {
+        #[command(subcommand)]
+        cmd: settings::SettingsCmd,
     },
     /// Review a staged retrain artifact before promotion
     #[command(name = "review-retrain")]
@@ -258,6 +263,12 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
+        Commands::Settings { cmd } => {
+            if let Err(e) = settings::run(cmd, cli.json) {
+                eprintln!("settings error: {}", e);
+                std::process::exit(1);
+            }
+        }
         Commands::ReviewRetrain { retrain_id } => {
             match skill::review_retrain(retrain_id, cli.json) {
                 Ok(out) if !out.is_empty() => println!("{}", out),

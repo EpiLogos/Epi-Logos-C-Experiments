@@ -1,3 +1,22 @@
+//! # epi-s0-settings — S0 settings substrate
+//!
+//! - Coordinate: S0 (filesystem + process + command substrate); S0' authority
+//!   over cloud-opt-in policy lookup. Gateway methods land under `s0'.settings.*`.
+//! - Residency: `Body/S/S0/settings`.
+//! - Public surface: [`Settings`] (base config), [`ApiKeyStore`],
+//!   [`SettingsManifest`], [`CloudOptInStore`] + [`OptInStatus`].
+//! - Does NOT own cloud-call *enforcement*: the gemini-embedding accessor's
+//!   `CloudOptInPolicy::require` enforces refusal; this crate *records* opt-in
+//!   and *reports* key/opt-in status.
+
+pub mod keys;
+pub mod manifest;
+pub mod opt_in;
+
+pub use keys::{ApiKeyStore, KeyPresence};
+pub use manifest::{ManifestEntry, PrivacyClass, SettingsManifest};
+pub use opt_in::{CloudOptInStore, OptInStatus};
+
 use std::{
     env, fs, io,
     path::{Path, PathBuf},
