@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:54:27.397Z",
+  "updatedAt": "2026-07-10T14:56:24.241Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1372,14 +1372,14 @@
     },
     "04.T4.5": {
       "status": "in_progress",
-      "updatedAt": "2026-07-10T14:54:27.383Z",
+      "updatedAt": "2026-07-10T14:56:24.228Z",
       "claimedAt": "2026-07-10T14:54:27.383Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T16:54:27.383Z",
-      "heartbeatAt": "2026-07-10T14:54:27.383Z",
+      "leaseExpiresAt": "2026-07-10T16:56:24.228Z",
+      "heartbeatAt": "2026-07-10T14:56:24.228Z",
       "runId": "20260710T145427Z-04-T4.5",
       "worktree": null
     },
@@ -11131,8 +11131,9 @@
       "status": "in_progress",
       "startedAt": "2026-07-10T14:54:27.383Z",
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T16:54:27.383Z",
-      "worktree": null
+      "leaseExpiresAt": "2026-07-10T16:56:24.228Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-10T14:56:24.228Z"
     }
   ],
   "activeRoute": {
