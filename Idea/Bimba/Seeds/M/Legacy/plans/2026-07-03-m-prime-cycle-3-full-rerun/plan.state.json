@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:59:46.189Z",
+  "updatedAt": "2026-07-10T13:00:53.731Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -9167,15 +9167,30 @@
       "worktree": null
     },
     "49.T49.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T12:59:26.089Z",
+      "status": "review",
+      "updatedAt": "2026-07-10T13:00:53.717Z",
       "claimedAt": "2026-07-10T12:59:26.089Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T13:00:53.717Z",
+          "text": "VERIFY-FIRST: substrate landed. 5 Modal* Zod schemas present; lensMode bounds in Rust order (lens 0..11 mode 0..6); chromaticBody.length(12)/liveOctet.length(8)/nodalQuartet.length(4); m2Address72==resonance72.lensAnchorIndex; camelCase canonical (modal_resonator rejected). 28 kernel-bridge tests green, 0 failed. TS types are z.infer from Zod (auto-parity); baseline-profile.json fixture parses. No new code. review pending independent verify + verify-all.",
+          "receipt": {
+            "command": "pnpm --dir Body/S/S0/epi-cli/schemas exec vitest run tests/kernel-bridge.test.ts",
+            "exitCode": 0,
+            "testsPassed": 28,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts",
+              "Body/S/S0/epi-cli/schemas/tests/kernel-bridge.test.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T14:59:26.089Z",
-      "heartbeatAt": "2026-07-10T12:59:26.089Z",
+      "heartbeatAt": "2026-07-10T13:00:53.717Z",
       "runId": "20260710T125926Z-49-T49.2",
       "worktree": null
     },
@@ -10475,11 +10490,12 @@
     {
       "runId": "20260710T125926Z-49-T49.2",
       "taskId": "49.T49.2",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-10T12:59:26.089Z",
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T14:59:26.089Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T13:00:53.717Z"
     },
     {
       "runId": "20260710T125930Z-36-T36.4",
