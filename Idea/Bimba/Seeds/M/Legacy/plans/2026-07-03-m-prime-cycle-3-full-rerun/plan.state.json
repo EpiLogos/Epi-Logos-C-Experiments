@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:00:32.225Z",
+  "updatedAt": "2026-07-10T15:01:56.723Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1221,16 +1221,30 @@
       "worktree": null
     },
     "03.T3.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:01:56.710Z",
+      "claimedAt": "2026-07-10T15:01:00.343Z",
+      "completedAt": "2026-07-10T15:01:56.710Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:01:56.710Z",
+          "text": "DR-M2-1 cleanup verified executed: M2-prime-SPEC section 9.8 carries ZERO DCC-03 / planet-count references (grep clean - even beyond the required historical-only bar); the remaining section 9.8 holds are the three legitimately-open questions (audio-genesis wording, mantra/maqam synthesis targets, M2-to-M3 finality); section 9.5 (line 365) names M2_PLANET_LUT[10] canon with Earth as 10th planet/observer-centre and the section 10 test criterion pins the 9:8 epogdoon reading. Behavioral proof: portal-core m2_parashakti_projection_documents_earth_centre_without_separate_handle green. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green incl the m2_parashakti_projection_documents_earth_centre behavioral test)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M2prime/M2prime-SPEC.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:01:00.343Z",
+      "runId": "20260710T150100Z-03-T3.9",
       "worktree": null
     },
     "03.T3.10": {
@@ -11245,6 +11259,16 @@
       "leaseExpiresAt": "2026-07-10T16:58:45.985Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:00:32.213Z"
+    },
+    {
+      "runId": "20260710T150100Z-03-T3.9",
+      "taskId": "03.T3.9",
+      "status": "done",
+      "startedAt": "2026-07-10T15:01:00.343Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:01:00.343Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:01:56.710Z"
     }
   ],
   "activeRoute": {
