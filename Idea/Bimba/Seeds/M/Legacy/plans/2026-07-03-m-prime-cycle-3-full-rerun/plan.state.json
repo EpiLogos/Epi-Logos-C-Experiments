@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:00:45.645Z",
+  "updatedAt": "2026-07-10T12:02:31.027Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -885,16 +885,32 @@
       "worktree": null
     },
     "02.T2.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:02:31.016Z",
+      "claimedAt": "2026-07-10T12:01:05.766Z",
+      "completedAt": "2026-07-10T12:02:31.016Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:02:31.016Z",
+          "text": "Doc-side total shape verified landed + ratified: M1-2-ANANDA-VORTEX-ARCHITECTURE.md present with profile-bus contract (8 AnandaVortexProjection/Cell refs); M1-prime-SPEC carries 3 cross-refs + section 15a; Paramasiva UX carries section 5b The Visible Heartbeat with subsections. The brief's remaining implementation correction (C/Rust/JSON/UI preserve full CSV dual-register data, not digit-root-only) is CLOSED by this session: 10.T10.10 landed the C raw face (12x12, all-144-cell CSV fixture + DR-mirror parity in test_m1_ananda.c, exceeding the required 7X+1/8X+0 spot checks) and 02.T2.6 landed the UI dual-register rendering. UF-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 02.T2.9 (UF gate PASS incl app-ui-flow); make -C Body/S/S0/epi-lib test (test_m1_ananda 6/6 incl all-144-cell raw-vs-CSV + DR-mirror fixtures)",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M1prime/M1-2-ANANDA-VORTEX-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/M1prime/M1prime-SPEC.md",
+              "Idea/Pratibimba/System/Subsystems/Paramasiva/paramasiva-ux-full-m1-branch.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:01:05.766Z",
+      "runId": "20260710T120105Z-02-T2.9",
       "worktree": null
     },
     "02.T2.7": {
@@ -10093,6 +10109,16 @@
       "leaseExpiresAt": "2026-07-10T13:58:35.182Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:00:45.634Z"
+    },
+    {
+      "runId": "20260710T120105Z-02-T2.9",
+      "taskId": "02.T2.9",
+      "status": "done",
+      "startedAt": "2026-07-10T12:01:05.766Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:01:05.766Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:02:31.016Z"
     }
   ],
   "activeRoute": {
