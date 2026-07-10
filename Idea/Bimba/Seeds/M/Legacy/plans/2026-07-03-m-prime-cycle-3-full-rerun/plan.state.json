@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:58:03.289Z",
+  "updatedAt": "2026-07-10T15:00:32.225Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1193,16 +1193,31 @@
       "worktree": null
     },
     "03.T3.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:00:32.213Z",
+      "claimedAt": "2026-07-10T14:58:45.985Z",
+      "completedAt": "2026-07-10T15:00:32.213Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:00:32.213Z",
+          "text": "M2-side deposit-handle emission verified landed + tested: F_routing trace carries deposit_handle (m4.deposit://nara-journal/m2/f-routing/index72/{i}/det64/{hex} built by deposit_handle_for_trace, f_routing.rs:311/534/557) with deposit_handle_privacy_class serde default; f_routing_trace.rs:36-40 pins the exact wire value + privacy class deterministically. The M4-side reception/journal integration is Tranche 08 scope per the brief (08.T8.2 remains its own ready task - cross-link honored, not double-closed). K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test f_routing_trace (deterministic trace asserts depositHandle wire value + privacy class); verify-tranche 03.T3.8 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/parashakti/f_routing.rs",
+              "Body/S/S0/portal-core/tests/f_routing_trace.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T14:58:45.985Z",
+      "runId": "20260710T145845Z-03-T3.8",
       "worktree": null
     },
     "03.T3.9": {
@@ -11220,6 +11235,16 @@
       "leaseExpiresAt": "2026-07-10T16:57:10.531Z",
       "worktree": null,
       "completedAt": "2026-07-10T14:58:03.058Z"
+    },
+    {
+      "runId": "20260710T145845Z-03-T3.8",
+      "taskId": "03.T3.8",
+      "status": "done",
+      "startedAt": "2026-07-10T14:58:45.985Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T16:58:45.985Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:00:32.213Z"
     }
   ],
   "activeRoute": {
