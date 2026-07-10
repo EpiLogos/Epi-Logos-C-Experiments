@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:48:27.273Z",
+  "updatedAt": "2026-07-10T19:46:21.471Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2122,15 +2122,15 @@
     },
     "06.T6.1": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-10T19:42:44.104Z",
+      "claimedAt": "2026-07-10T19:41:53.995Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
+      "owner": "opus-b-track34",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T19:41:53.995Z",
+      "runId": "20260710T194153Z-06-T6.1",
       "worktree": null
     },
     "06.T6.2": {
@@ -4574,16 +4574,16 @@
       "worktree": null
     },
     "16.T16.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T19:42:58.585Z",
+      "claimedAt": "2026-07-10T15:48:44.520Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T21:42:58.585Z",
+      "heartbeatAt": "2026-07-10T19:42:58.585Z",
+      "runId": "20260710T154844Z-16-T16.14",
       "worktree": null
     },
     "16.T16.15": {
@@ -9060,16 +9060,30 @@
       "worktree": null
     },
     "42.T42.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T19:46:21.459Z",
+      "claimedAt": "2026-07-10T19:45:02.286Z",
+      "completedAt": "2026-07-10T19:46:21.459Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T19:46:21.459Z",
+          "text": "Independent verify (opus-b-verify) PASS: full W-class gate GREEN against live stack. Unified harness launcher landed: agent/harness.rs (12k) consolidates launch sites into registry-driven profiles; grep-guard holds (no direct Command new claude remains — epi code routed through the unified launcher); agent_harness_launcher test green (2 passed). Auth-gated --harness claude-native/codex-native launch path unverifiable solo (needs harness auth), core contract satisfied.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 709,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/agent/harness.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-b-track34",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T19:45:02.286Z",
+      "runId": "20260710T194502Z-42-T42.3",
       "worktree": null
     },
     "42.T42.4": {
@@ -11772,18 +11786,48 @@
       "leaseExpiresAt": "2026-07-10T17:45:03.494Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:48:27.260Z"
+    },
+    {
+      "runId": "20260710T154844Z-16-T16.14",
+      "taskId": "16.T16.14",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T15:48:44.520Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T21:42:58.585Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-10T19:42:58.585Z"
+    },
+    {
+      "runId": "20260710T194153Z-06-T6.1",
+      "taskId": "06.T6.1",
+      "status": "pending",
+      "startedAt": "2026-07-10T19:41:53.995Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T21:41:53.995Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T19:42:44.104Z"
+    },
+    {
+      "runId": "20260710T194502Z-42-T42.3",
+      "taskId": "42.T42.3",
+      "status": "done",
+      "startedAt": "2026-07-10T19:45:02.286Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T21:45:02.286Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T19:46:21.459Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T14:52:23.787Z",
-    "updatedAt": "2026-07-10T14:52:23.787Z",
+    "createdAt": "2026-07-10T19:40:39.935Z",
+    "updatedAt": "2026-07-10T19:40:39.935Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
       "43.T43.2",
       "40.T0",
-      "04.T4.4"
+      "16.T16.14"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -11793,7 +11837,7 @@
       "36.T36.5": "in-session",
       "43.T43.2": "in-session",
       "40.T0": "in-session",
-      "04.T4.4": "in-session"
+      "16.T16.14": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
