@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T09:13:15.601Z",
+  "updatedAt": "2026-07-10T09:42:17.591Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1371,16 +1371,30 @@
       "worktree": null
     },
     "04.T4.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T09:42:17.579Z",
+      "claimedAt": "2026-07-10T09:17:50.591Z",
+      "completedAt": "2026-07-10T09:42:17.579Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T09:42:17.579Z",
+          "text": "Doc-sweep: reconciled M3-ARCHITECTURE.md 9 stale det_fold_state/DetFoldState refs to the DR-M3-2 reading — the 72to64 fold IS the 9:8 epogdoon, NO new profile field; live surface is the existing is_evolutionary_gap bool (portal-core luts/mahamaya.rs + kernel.rs), det_fold_state exists nowhere in substrate. Superseded design kept as explicit historical note. Acceptance met: 9:8 epogdoon named across M3-ARCHITECTURE/M3prime-SPEC/Mahamaya-UX; zero active fold-state-field requests remain. Class-K gate PASS, verifier opus-a-m3-vf not closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core mahamaya; verify-tranche 04.T4.12 class-K gate PASS",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3-ARCHITECTURE.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T09:17:50.591Z",
+      "runId": "20260710T091750Z-04-T4.12",
       "worktree": null
     },
     "04.T4.13": {
@@ -9887,6 +9901,16 @@
       "leaseExpiresAt": "2026-07-10T10:52:46.867Z",
       "worktree": null,
       "completedAt": "2026-07-10T09:13:15.581Z"
+    },
+    {
+      "runId": "20260710T091750Z-04-T4.12",
+      "taskId": "04.T4.12",
+      "status": "done",
+      "startedAt": "2026-07-10T09:17:50.591Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T11:17:50.591Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T09:42:17.579Z"
     }
   ],
   "activeRoute": {
