@@ -137,7 +137,7 @@ Adjudication evidence (recorded, not ceremonial): Third Spanda five forms + exec
 
 **Action:** Patch dataset entry; add validator in `Body/S/S2/graph-services/src/dataset_import.rs` rejecting `cardinality=8` on TCT nodes.
 
-**Verification:** `cargo test -p portal-core::codon::tests` confirms `classify_codon(0x35) == ImperfectPalindromic`; dataset value updated; validator rejects 8.
+**Verification:** `cargo test -p portal-core --lib dr_m3_1` confirms `classify_codon(0x19) == ImperfectPalindromic` *(hex corrected 2026-07-10: TCT encodes as 0x19 = 0b01_10_01 per `M3_NONDUAL_CODONS`; the original `0x35` literal was GTT — typo caught by the pin test)*; dataset value updated; validator `reject_tct_cardinality_eight` (graph-services `dataset_import/validation.rs`) rejects 8 at import.
 
 **Depends:** Tranche **04.4**.
 

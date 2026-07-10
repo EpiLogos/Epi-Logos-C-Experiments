@@ -321,6 +321,34 @@ pub(super) fn truncate_utf8(value: &str, max_len: usize) -> &str {
     &value[..end]
 }
 
+/// DR-M3-1 import-time law: the runtime codon law is authority — TCT is a
+/// 7-state non-dual codon; a dataset node claiming `cardinality = 8` (or a
+/// rotational/state count of 8) for TCT is the known Nine-of-Wands dataset
+/// error and must be REJECTED at import, never written to the graph.
+pub(super) fn reject_tct_cardinality_eight(node: &Value) -> Option<String> {
+    let text_mentions_tct = ["name", "title", "label", "codon"].iter().any(|key| {
+        node.get(key)
+            .or_else(|| node.get("filteredProps").and_then(|p| p.get(key)))
+            .and_then(Value::as_str)
+            .is_some_and(|v| v.to_ascii_uppercase().contains("TCT"))
+    });
+    if !text_mentions_tct {
+        return None;
+    }
+    for key in ["cardinality", "rotationalStates", "stateCount"] {
+        let claimed = node
+            .get(key)
+            .or_else(|| node.get("filteredProps").and_then(|p| p.get(key)))
+            .and_then(Value::as_u64);
+        if claimed == Some(8) {
+            return Some(format!(
+                "DR-M3-1: TCT is 7-state non-dual (runtime classify_codon law); dataset {key}=8 rejected"
+            ));
+        }
+    }
+    None
+}
+
 pub(super) fn layer_string(layer: &CoordLayer) -> &'static str {
     match layer {
         CoordLayer::Psychoid => "PSYCHOID",
@@ -335,6 +363,23 @@ pub(super) fn layer_string(layer: &CoordLayer) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    use super::reject_tct_cardinality_eight;
+    use serde_json::json;
+
+    /// DR-M3-1: the import validator rejects the Nine-of-Wands 8-count on TCT
+    /// and accepts the corrected 7 (and non-TCT nodes untouched).
+    #[test]
+    fn tct_cardinality_eight_rejected_seven_accepted() {
+        let bad = json!({"name": "TCT — Nine of Wands", "cardinality": 8});
+        assert!(reject_tct_cardinality_eight(&bad).is_some());
+        let bad_nested = json!({"filteredProps": {"codon": "tct", "rotationalStates": 8}});
+        assert!(reject_tct_cardinality_eight(&bad_nested).is_some());
+        let good = json!({"name": "TCT", "cardinality": 7});
+        assert!(reject_tct_cardinality_eight(&good).is_none());
+        let unrelated = json!({"name": "GGG", "cardinality": 8});
+        assert!(reject_tct_cardinality_eight(&unrelated).is_none());
+    }
+
     use super::*;
 
     #[test]

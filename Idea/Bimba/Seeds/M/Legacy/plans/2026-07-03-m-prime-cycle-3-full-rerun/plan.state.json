@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:48:10.247Z",
+  "updatedAt": "2026-07-10T14:53:59.150Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1342,14 +1342,30 @@
       "worktree": null
     },
     "04.T4.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T14:47:41.878Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T14:53:59.137Z",
       "claimedAt": "2026-07-10T14:47:41.878Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:53:59.137Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:53:59.137Z",
+          "text": "DR-M3-1 executed with a REAL catch: the register verification hex was a typo (0x35 = GTT; TCT encodes 0x19 = 0b01_10_01 per M3_NONDUAL_CODONS T-outer row) - my pin test exposed it (classify_codon(0x35) = NonPalindromicNonDual), corrected the register with a dated note. Landed: portal-core pin dr_m3_1_tct_0x19_is_imperfect_palindromic_seven_state (ImperfectPalindromic + rotational_state_count 7, never 8 - runtime law is authority); NEW S2 import-time validator reject_tct_cardinality_eight in graph-services dataset_import/validation.rs wired into the node-import loop (skips + records reason; rejects cardinality/rotationalStates/stateCount = 8 on TCT nodes incl nested filteredProps; accepts 7 and non-TCT) with unit tests. K-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core --lib dr_m3_1 (TCT=0x19 ImperfectPalindromic + 7-state pin); cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --lib dataset_import (18 passed incl reject_tct_cardinality_eight); verify-tranche 04.T4.4 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 19,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/luts/codon.rs",
+              "Body/S/S2/graph-services/src/dataset_import/validation.rs",
+              "Body/S/S2/graph-services/src/dataset_import/node_import.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T16:47:41.878Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:47:41.878Z",
       "runId": "20260710T144741Z-04-T4.4",
       "worktree": null
@@ -8475,15 +8491,33 @@
       "worktree": null
     },
     "40.T0": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T14:42:03.749Z",
+      "status": "review",
+      "updatedAt": "2026-07-10T14:52:55.573Z",
       "claimedAt": "2026-07-10T14:42:03.749Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T14:52:55.573Z",
+          "text": "5 tranches enumerated (40.T40.1..40.T40.5) from the law-only source, each citing its source section (Tranches 40.1/40.2/40.3 + Cross-reference discipline (a)-(d) + Integration Track-39) and register section 2 track 40; all five 40.T40.n ids parse into the ledger.",
+          "receipt": {
+            "command": "node .codex/scripts/m-dev-plan-assess.mjs --route",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/40-bimba-canon-update-ledger.md"
+            ],
+            "tokenUsage": {
+              "input": 95000,
+              "output": 9000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-b-sub40",
       "leaseExpiresAt": "2026-07-10T16:42:03.749Z",
-      "heartbeatAt": "2026-07-10T14:42:03.749Z",
+      "heartbeatAt": "2026-07-10T14:52:55.573Z",
       "runId": "20260710T144203Z-40-T0",
       "worktree": null
     },
@@ -9874,6 +9908,71 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "40.T40.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "40.T40.2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "40.T40.3": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "40.T40.4": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "40.T40.5": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -11009,44 +11108,48 @@
     {
       "runId": "20260710T144203Z-40-T0",
       "taskId": "40.T0",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-10T14:42:03.749Z",
       "owner": "opus-b-sub40",
       "leaseExpiresAt": "2026-07-10T16:42:03.749Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T14:52:55.573Z"
     },
     {
       "runId": "20260710T144741Z-04-T4.4",
       "taskId": "04.T4.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T14:47:41.878Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T16:47:41.878Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T14:53:59.137Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T12:56:34.836Z",
-    "updatedAt": "2026-07-10T12:56:34.836Z",
+    "createdAt": "2026-07-10T14:52:23.787Z",
+    "updatedAt": "2026-07-10T14:52:23.787Z",
     "taskIds": [
       "12.T12.17",
-      "34.T34.1",
-      "17.T17.12",
-      "03.T3.8"
+      "36.T36.5",
+      "43.T43.2",
+      "40.T0",
+      "04.T4.4"
     ],
-    "totalWeight": 7,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "12.T12.17": "in-session",
-      "34.T34.1": "in-session",
-      "17.T17.12": "in-session",
-      "03.T3.8": "in-session"
+      "36.T36.5": "in-session",
+      "43.T43.2": "in-session",
+      "40.T0": "in-session",
+      "04.T4.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 7/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

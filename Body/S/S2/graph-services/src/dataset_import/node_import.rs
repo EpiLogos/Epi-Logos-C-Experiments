@@ -50,6 +50,14 @@ impl<'a> DatasetImporter<'a> {
 
         let mut outcome = DatasetNodeImportOutcome::default();
         for node in &nodes {
+            // DR-M3-1 import-time law: reject the TCT 8-count dataset error
+            if let Some(reason) = super::validation::reject_tct_cardinality_eight(node) {
+                outcome.skipped.push(DatasetSkip {
+                    item: node_identity_hint(node),
+                    reason,
+                });
+                continue;
+            }
             let raw_coord = match coordinate_from_node(node) {
                 Some(c) => c,
                 None => {

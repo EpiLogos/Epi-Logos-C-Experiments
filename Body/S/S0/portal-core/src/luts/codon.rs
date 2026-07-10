@@ -53,6 +53,25 @@ pub fn codon_sequence(codon: u8) -> [u8; 3] {
 
 #[cfg(test)]
 mod tests {
+    /// DR-M3-1 pin: TCT is ImperfectPalindromic — the 7-state non-dual runtime
+    /// law that overrides the Nine-of-Wands dataset 8-count. TCT encodes as
+    /// 0x19 (T=01,C=10,T=01 → 0b01_10_01, per M3_NONDUAL_CODONS T-outer row);
+    /// the register's original 0x35 literal was a hex typo (0x35 = GTT) —
+    /// caught by this pin, corrected in the register 2026-07-10.
+    #[test]
+    fn dr_m3_1_tct_0x19_is_imperfect_palindromic_seven_state() {
+        assert_eq!(
+            super::classify_codon(0x19),
+            super::CodonClass::ImperfectPalindromic,
+            "classify_codon(TCT=0x19) is the DR-M3-1 authority"
+        );
+        assert_eq!(
+            super::classify_codon(0x19).rotational_state_count(),
+            7,
+            "TCT is 7-state non-dual, never 8"
+        );
+    }
+
     use super::*;
 
     #[test]
