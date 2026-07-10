@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:21:06.217Z",
+  "updatedAt": "2026-07-10T15:22:43.879Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4123,16 +4123,16 @@
       "worktree": null
     },
     "14.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T15:21:42.759Z",
+      "claimedAt": "2026-07-10T15:21:42.759Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
+      "heartbeatAt": "2026-07-10T15:21:42.759Z",
+      "runId": "20260710T152142Z-14-T0",
       "worktree": null
     },
     "15.T15.1": {
@@ -10191,6 +10191,58 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "14.T14.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "14.T14.2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "14.T14.3": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
+    },
+    "14.T14.4": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -11463,6 +11515,15 @@
       "leaseExpiresAt": "2026-07-10T17:19:29.737Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:21:06.205Z"
+    },
+    {
+      "runId": "20260710T152142Z-14-T0",
+      "taskId": "14.T0",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T15:21:42.759Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

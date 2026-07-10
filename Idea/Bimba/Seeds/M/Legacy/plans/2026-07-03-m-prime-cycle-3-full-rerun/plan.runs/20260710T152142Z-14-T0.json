@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T152142Z-14-T0",
+  "taskId": "14.T0",
+  "startedAt": "2026-07-10T15:21:42.759Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
+  "worktree": null,
+  "task": {
+    "id": "14.T0",
+    "trackId": "14",
+    "tranche": "T0",
+    "title": "Absorb and retarget: 14-no-orphan-audit-and-release-gates.md (law-only source)",
+    "effort": "law-only source",
+    "file": "14-no-orphan-audit-and-release-gates.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "AUDIT — gates G1-G14 (never truly passed; the gate list IS the recapture checklist) + open-orphan table. CARRIER: phase-2 no-orphan registry. §2 track 14."
+  }
+}
