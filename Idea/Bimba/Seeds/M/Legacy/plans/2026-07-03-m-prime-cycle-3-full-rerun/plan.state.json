@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T13:08:37.972Z",
+  "updatedAt": "2026-07-10T13:12:28.188Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -9243,16 +9243,31 @@
       "worktree": null
     },
     "49.T49.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T13:12:28.175Z",
+      "claimedAt": "2026-07-10T13:10:36.613Z",
+      "completedAt": "2026-07-10T13:12:28.175Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T13:12:28.175Z",
+          "text": "Independent verify (opus-b-verify) PASS: class-scoped K gate green. Kernel-Bridge Capability/Envelope/M123ChimeFrame landed both sides: Rust runtime (M123ChimeFrameJsonShape + m123_chime_frame_from_profile; 7 chime-frame tests + 18 runtime-contract) + TS/Zod (KernelBridgeCapabilityName, M123ChimeFrame protected-field rejection + coherence, KernelBridgeRpcEnvelope; 28 kernel-bridge tests). Note: brief-named Rust test kernel_bridge_modal_chime.rs landed as kernel_bridge_m123_chime_frame.rs.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_m123_chime_frame --offline",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs",
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-b-track34",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T13:10:36.613Z",
+      "runId": "20260710T131036Z-49-T49.3",
       "worktree": null
     },
     "49.T49.4": {
@@ -10574,6 +10589,16 @@
       "leaseExpiresAt": "2026-07-10T15:04:53.189Z",
       "worktree": null,
       "completedAt": "2026-07-10T13:08:37.961Z"
+    },
+    {
+      "runId": "20260710T131036Z-49-T49.3",
+      "taskId": "49.T49.3",
+      "status": "done",
+      "startedAt": "2026-07-10T13:10:36.613Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T15:10:36.613Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T13:12:28.175Z"
     }
   ],
   "activeRoute": {
