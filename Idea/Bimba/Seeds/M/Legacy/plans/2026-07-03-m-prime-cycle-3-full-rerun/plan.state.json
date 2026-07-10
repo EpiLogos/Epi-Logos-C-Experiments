@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:56:24.241Z",
+  "updatedAt": "2026-07-10T14:56:49.670Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1371,24 +1371,54 @@
       "worktree": null
     },
     "04.T4.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T14:56:24.228Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T14:56:49.289Z",
       "claimedAt": "2026-07-10T14:54:27.383Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:56:49.289Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:56:49.289Z",
+          "text": "DR-M3-2 cross-reference verified executed: M3-prime-SPEC:1017 names the 72to64 fold as the 9:8 epogdoon compression cross-referenced to M2-prime section 9.5 (plus :48/:269/:483 honest-collision language); retired uniqueness framing has no live mandate (exhaustive 04.T4.12 sweep this session); no fold-state field in substrate. K-gate PASS fresh, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green; portal-core 265+ incl codon/lens/projection suites)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3prime-SPEC.md",
+              "Body/S/S0/portal-core/src/codon_rotation_projection.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T16:56:24.228Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:56:24.228Z",
       "runId": "20260710T145427Z-04-T4.5",
       "worktree": null
     },
     "04.T4.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T14:56:49.475Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:56:49.475Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:56:49.475Z",
+          "text": "DR-M3-3 namespace split verified executed: register entry present; LENS_COUNT=12 exists only as the M1-prime chromatic anchor (codon_rotation_projection.rs:5); no M3_LENS_STACK_COUNT=17 anywhere in Body/S/S0; the 4.2 lens-annulus inspector follows the split (reads the 472 projection, never relabels the 12-count); 16+2=18 aperture stack remains Track 24/35 per CHARTER. K-gate PASS fresh, verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green; portal-core 265+ incl codon/lens/projection suites)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3prime-SPEC.md",
+              "Body/S/S0/portal-core/src/codon_rotation_projection.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -1397,11 +1427,26 @@
       "worktree": null
     },
     "04.T4.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T14:56:49.658Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:56:49.658Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:56:49.658Z",
+          "text": "Handoff note complete (aligned-only per brief; 02.7 + kernel-bridge 10.7 own the memos, both closed this session): plan.runs/02-T2.7 + 10.7 cl42 audit memos confirm ONE Cl(4,2) algebra at the four call-sites (M1 ring / M3 codon / M4 personal / Kerykeion natal = personal_identity.rs); no second quaternion type in portal-core; the Rust mirror is FFI-pinned to CL42_BASIS with net +2 (kernel_truth). K-gate PASS fresh, verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core (class-K gate green; portal-core 265+ incl codon/lens/projection suites)",
+            "exitCode": 0,
+            "testsPassed": 549,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3prime/M3prime-SPEC.md",
+              "Body/S/S0/portal-core/src/codon_rotation_projection.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -11128,12 +11173,13 @@
     {
       "runId": "20260710T145427Z-04-T4.5",
       "taskId": "04.T4.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T14:54:27.383Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T16:56:24.228Z",
       "worktree": null,
-      "heartbeatAt": "2026-07-10T14:56:24.228Z"
+      "heartbeatAt": "2026-07-10T14:56:24.228Z",
+      "completedAt": "2026-07-10T14:56:49.289Z"
     }
   ],
   "activeRoute": {
