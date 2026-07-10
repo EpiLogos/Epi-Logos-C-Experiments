@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T23:12:36.356Z",
+  "updatedAt": "2026-07-10T23:37:14.383Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7041,16 +7041,33 @@
       "worktree": null
     },
     "26.T26.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T23:37:14.369Z",
+      "claimedAt": "2026-07-10T23:30:22.072Z",
+      "completedAt": "2026-07-10T23:37:14.369Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T23:37:14.369Z",
+          "text": "M5-as-EBM observatory landed on the carrier (frozen m5-epii widget body retargeted per CHARTER): buildResonanceEbmSurface pure view-model reads the bussed mathemeResonance72Projection EBM fields verbatim (learnedPredictorCheckpointRef, predicted72/target72, 4-dim q_p gradient); local arithmetic ONLY where the spec states the formula - E = ||target72-predicted72||^2 when not bussed (bussed value wins verbatim), Moebius-descent step -log(9/8)*gradient (epogdoon constant), Klein-V4 square partitions A:(0,5)/B:(1,4)/C:(2,3) proven to cover all 12 lenses x 6 positions; square coherence is kernel-owned - read verbatim or pending, never scored locally. Pane: identity narrative pinning the observatory-vs-M4-voice split, checkpoint badge, 12x6 SVG resonance grid, three tritone overlays via new named tokens (tritoneSquareA indigo / B amber / C emerald - added to the token SOURCE per Track 30 discipline, carrier-tokens lint GREEN), energy/gradient/Moebius readouts. WAVE-B TRUTH: the wire does not yet carry the EBM fields (10.M5 - substrate MathemeResonance72Projection is the address form only, fixture confirms absence), so the LIVE surface exercises the spec-mandated pending-checkpoint path (narrative + banner, grid/energy/gradient suppressed - 'pending: no checkpoint loaded - bootstrap Phase 1'); the ready path is pinned by 8 fixture tests. 'M5 EBM' tab on the cosmic face (LAYOUT_VERSION 9->10). App suite 283 green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.1 (UF class gate PASS: app-typecheck + app-test 283 + app-build + app-smoke + app-ui-flow playwright flows + carrier-tokens + live-wire spawned gateway)",
+            "exitCode": 0,
+            "testsPassed": 283,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m5Ebm.ts",
+              "Body/M/pratibimba-app/src/panes/M5EbmObservatoryPane.tsx",
+              "Body/M/pratibimba-app/src/ui/tokens.ts",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T23:30:22.072Z",
+      "runId": "20260710T233022Z-26-T26.1",
       "worktree": null
     },
     "26.T26.2": {
@@ -12427,6 +12444,16 @@
       "leaseExpiresAt": "2026-07-11T00:52:58.968Z",
       "worktree": null,
       "completedAt": "2026-07-10T23:06:52.839Z"
+    },
+    {
+      "runId": "20260710T233022Z-26-T26.1",
+      "taskId": "26.T26.1",
+      "status": "done",
+      "startedAt": "2026-07-10T23:30:22.072Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T01:30:22.072Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T23:37:14.369Z"
     }
   ],
   "activeRoute": {

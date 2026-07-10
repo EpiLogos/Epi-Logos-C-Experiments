@@ -37,6 +37,14 @@ export const accentShadow = '#4d3e78';
 /** Unlit wheel position; same tone styles.css uses for hairline borders. */
 export const wheelUnlit = '#2e2247';
 
+// ── Tritone squares — M5' EBM observatory (26.T26.1, UX §4.2) ───────────────
+/** Klein V₄ Square A `[0+5]` Speech-Number — indigo (== CL42 implicate). */
+export const tritoneSquareA = '#4b0082';
+/** Klein V₄ Square B `[1+4]` Cause-Experience — amber. */
+export const tritoneSquareB = '#e0b45f';
+/** Klein V₄ Square C `[2+3]` Logic-Process — emerald. */
+export const tritoneSquareC = '#3fa66f';
+
 // ── Family hues — graph surfaces ────────────────────────────────────────────
 /** Coordinate-family hues for graph nodes (THEIA-UI-PATTERNS §1.3 discipline;
  *  the palette is an OPEN Architect decision, DR-WC-DL-1 — named as-is). */
