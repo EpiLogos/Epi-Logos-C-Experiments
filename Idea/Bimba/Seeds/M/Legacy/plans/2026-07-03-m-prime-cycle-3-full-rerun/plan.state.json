@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T09:42:17.591Z",
+  "updatedAt": "2026-07-10T10:12:38.430Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1398,11 +1398,27 @@
       "worktree": null
     },
     "04.T4.13": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T10:12:38.420Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T10:12:38.420Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T10:12:38.420Z",
+          "text": "Routed oracle charges through the single kernel authority (m3_compute_charges, FR 2.3.18), resolving recapture register 5.1/LAW-04 data-spine violation. oracle_eval4 now reconstructs the 6-bit codon from hexagram lines and derives pp/nn/np/pn via the FFI compute_codon_charges, replacing the independent 32-per-line algebra (changes oracle charge values to kernel codon charges). Turned GREEN both owning expected-red kernel-truth tests: oracle_eval4_charges_match_kernel_codon_charge_authority (all 64 codons match kernel) + m3_charges_sum_pp_360_boot_assert (fixed to canonical integral 1440=4x360 per C m3_verify_integral_invariant). Added FFI all-64-codon cross-check + integral-invariant tests; converted 3 hollow eval4 tests to real oracle_eval4 calls. Removed the 2 Track-33/4.13 manifest entries; kernel-truth.mjs GREEN (6 reds stand). Full epi-cli suite green; K-gate verify-tranche PASS (verifier opus-a-m3-vf != closer opus-a-m3). No in-Rust codon-charge reimplementation existed (prior split already removed it + added the FFI); oracle_eval4 was the surviving deviation.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml (full suite green, incl kernel_truth_oracle + nara_oracle_payload + ffi cross-check); cargo test -p portal-core --test kernel_truth; node .codex/scripts/kernel-truth.mjs GREEN; verify-tranche 04.T4.13 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 12,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/oracle_frame.rs",
+              "Body/S/S0/epi-cli/src/ffi/kernel.rs",
+              "Body/S/S0/portal-core/tests/kernel_truth.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -9915,8 +9931,8 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-09T09:25:38.723Z",
-    "updatedAt": "2026-07-09T09:25:38.723Z",
+    "createdAt": "2026-07-10T09:42:33.478Z",
+    "updatedAt": "2026-07-10T09:42:33.478Z",
     "taskIds": [
       "12.T12.17",
       "02.T2.6",
