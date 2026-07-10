@@ -238,7 +238,7 @@ Three gaps, four DR decisions:
 
 **Gap 2: The 16+1 Mahāmāyā lens stack (DR-M3-3).** The 12-count `MathemeLensMode.lens` field is the M1' chromatic-anchor, NOT the §8.10 M3-aperture stack. No `M3_LENS_STACK` field exists on the profile. The Lens Annulus depth view (§5.4 below) cannot render until DR-M3-3 closes the namespace and a field lands.
 
-**Gap 3: The DET fold / gap-marker (DR-M3-2).** The `evolutionaryGap` field is a single bool; SPEC §10.1 names the need for a typed fold-state. The 9-of-72 indices that don't round-trip (`is_evolutionary_gap` at `m3.h:356-360`) need a profile-surface beyond a boolean.
+**Gap 3: The DET fold / gap-marker (DR-M3-2, VALIDATED).** DR-M3-2 ratified the 72→64 fold as the **9:8 epogdoon** (structural harmonic, cross-referenced to [[M2']] §9.5) — **not** a uniqueness/partitioning question, and **no new profile field**. The 9-of-72 indices that don't round-trip stay surfaced by the existing boolean `is_evolutionary_gap(address72)` (C law at `m3.h:356-360`, mirrored as `is_evolutionary_gap: bool` in `portal-core/src/kernel.rs` and `evolutionary_gap: bool` in `portal-core/src/luts/mahamaya.rs`); UI must not assume bijectivity. The earlier "typed fold-state" reading (a `DetFoldState` enum) is **superseded** — see §4.5.
 
 ### §4.3 The `transcription_packet` projection (per Tranche 4.8 / DR-M3-4)
 
@@ -353,19 +353,11 @@ pub struct MahamayaLensSegment {
 
 **Anti-greenfield:** the 16 segments are degree-range partitions of `CLOCK_DEGREE_LUT[360]`; no new LUT. The `+1` meta-aperture's degree range is the **whole wheel** at a different scale — the Fibonacci-Pisano growth term per `mahamaya-deep/fibonacci-60-pisano-integration.md`. The renderer surface (§5.4) reads but never invents.
 
-### §4.5 The `det_fold_state` typed marker (per DR-M3-2)
+### §4.5 The DET fold / gap surface — no new field (DR-M3-2, VALIDATED)
 
-Replace `evolutionaryGap: bool` with `pub det_fold_state: DetFoldState`:
+**Superseded design (do not build).** An earlier reading proposed replacing `evolutionaryGap: bool` with a typed `pub det_fold_state: DetFoldState { Closed, GapFolded { upper_index }, ProvisionalDataset }` enum. **DR-M3-2 ratified against this** (VALIDATED 2026-06-02): the 72→64 fold is the **9:8 epogdoon** structural identity (cross-referenced to [[M2']] §9.5), not a slots-to-codons partition needing a gap-marker contract. **No new profile field is added.**
 
-```rust
-pub enum DetFoldState {
-    Closed,                         // m2_idx round-trips through (×8/9)×(9/8)
-    GapFolded { upper_index: u8 },  // m2_idx is in the 9 fold-points; upper_index is the M2 upper bound
-    ProvisionalDataset,             // S2 graph hasn't supplied the canonical disambiguation yet
-}
-```
-
-**Anti-greenfield:** `is_evolutionary_gap(m2_idx)` at `m3.h:356-360` already computes this; the enum types the existing boolean.
+**Live surface.** The nine fold-points are the existing boolean `is_evolutionary_gap(address72)` (C law at `m3.h:356-360`), already carried as `evolutionary_gap: bool` (`portal-core/src/luts/mahamaya.rs`) and `is_evolutionary_gap: bool` (`portal-core/src/kernel.rs`) and reachable over FFI — there is no `det_fold_state` / `DetFoldState` / `det72to64Fold` type anywhere in the substrate. Provisional-vs-materialised provenance is the separate, existing `dataset_lut_state` (§5.9 provenance-state row). The renderer reads the boolean + dataset-state honestly and must not assert injectivity.
 
 ### §4.6 The `coupling_flow_alignment` inspector projection (per full theoretical alignments)
 
@@ -473,9 +465,9 @@ A horizontal strip below the wheel renders the transduction chain (SPEC §8.12):
 [ M2-5 source: 72-idx=N ] → [ DET ÷9×8: idx=M ] → [ 64-address: addr ] → [ codon: ATG ] → [ q_cosmic: pp,mm,mp,pm ]
 ```
 
-- **Fold/gap visibility:** when `det_fold_state == GapFolded { upper_index }`, the DET arrow flashes red with the upper-bound annotation. When `Closed`, blue.
+- **Fold/gap visibility:** when `is_evolutionary_gap(address72)` is true (a fold-point), the DET arrow flashes red; otherwise blue (DR-M3-2 — the existing boolean is the surface, no typed fold-state field).
 - **Public-current only:** never the user's private bioquaternion. Per SPEC §4 and UX §8.
-- Read from `profile.resonance72`, `profile.mahamaya`, `profile.codon_rotation_projection`, `profile.q_cosmic`, `profile.det_fold_state` (post-DR-M3-2).
+- Read from `profile.resonance72`, `profile.mahamaya` (carries the `is_evolutionary_gap` boolean), `profile.codon_rotation_projection`, `profile.q_cosmic` (DR-M3-2 — no separate `det_fold_state` field).
 
 ### §5.7 M3-5' Four depth-view modes — the double-torus
 
@@ -522,7 +514,7 @@ A summonable side-panel renders the chain of `TranscriptionalClockPacket`s as a 
 | Spoke colour | DR ring | Gold (Mahāmāyā) / emerald (Paraśakti) — **same as M1-2** |
 | Halo colour | Cl(4,2) signature at active codon's matrix-path | indigo for COMPLEMENTARY (i-axis), warm for MOVING_RESTING (j-axis), green for SAME_QUALITY (k-axis) — **using `M3_MATRIX_QUATERNION_AXIS` at `m3.h:166-170`** |
 | Provenance state | `dataset_lut_state` | Materialised = solid; pending = dashed; provisional-gap = dotted |
-| Fold-state marker | `det_fold_state` | Closed = blue; GapFolded = amber; ProvisionalDataset = grey |
+| Fold-state marker | `is_evolutionary_gap` (bool) + `dataset_lut_state` | closed = blue; fold-point = amber; provisional dataset = grey via `dataset_lut_state` (DR-M3-2 — no `det_fold_state` field) |
 
 ### §5.10 Coupling-flow / measurement-face inspector
 
@@ -606,7 +598,7 @@ on tick_advance(t, t+1, dt):
 | Tarot card glow | Re-targets if codon-suit-rank changed | `profile.mahamaya.codonId` → suit, rank | Tick-quantised |
 | Cl(4,2) halo colour | Recolours per matrix-path axis | `profile.transcription_packet.generation.matrix_path` (post-DR-M3-4) | Tick-quantised |
 | M3-0 provenance strip | Re-renders entire chain | `profile.{resonance72, mahamaya, codon_rotation_projection, q_cosmic}` | Tick-quantised |
-| DET arrow flash | Red flash if `det_fold_state == GapFolded` | `profile.det_fold_state` (post-DR-M3-2) | Tick-quantised |
+| DET arrow flash | Red flash if `is_evolutionary_gap` (fold-point) | `profile.mahamaya` `is_evolutionary_gap` (DR-M3-2 — no `det_fold_state` field) | Tick-quantised |
 | Audio pulse (M2-1' window) | 8 emitters at `audio_octet` frequencies | `profile.audio_octet[8]` | Every frame (envelope) |
 | Nodal-quartet glyphs | 4 boundary markers at `nodal_quartet` | `profile.nodal_quartet[4]` | Tick-quantised |
 | Transcription chain lane | Scrolls horizontally one slot left | `profile.transcription_packet` history | Tick-quantised |
@@ -829,7 +821,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 |---|---|---|
 | `transcription_packet: TranscriptionalClockPacket` on profile | 4.8 / 10.x / DR-M3-4 | profile-bus addition |
 | `m3_lens_stack: MahamayaLensStack` on profile | 10.x post-DR-M3-3 | profile-bus addition |
-| `det_fold_state: DetFoldState` typed (replaces `evolutionaryGap: bool`) | 10.x post-DR-M3-2 | profile-bus type swap |
+| ~~`det_fold_state: DetFoldState` typed~~ — **ratified out (DR-M3-2)**: no new field; the existing `is_evolutionary_gap: bool` stays the surface | — | superseded — no change |
 | `coupling_flow_alignment: CouplingFlowAlignment` inspector projection | 4.10 / 10.M3 optional | profile-bus or spec-backed inspector addition |
 | Six summonable inspectors implementation | 4.2 | extension build |
 | Four depth-view-mode rendering implementation | 4.2 / 4.3 | extension build |
@@ -856,7 +848,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 - Local clock — consume `tick`, `tick12`, `degree720`, `degree360` only (SPEC §1 commitment 1)
 - Local Tarot/I-Ching/codon mapping tables — `M3_TAROT_CODON_MAP`, `M3_TAROT_QUATERNION_*`, `M3_MAJOR_ARCANA`, `CODON_TO_AA` are kernel-side (SPEC §4)
 - Local fork of `m3.h` constants into TS — all constants live in the codec (SPEC §6 readiness; cycle-2 enforces forbidden-imports in `index.ts:95`)
-- Local DET fold computation — consume `det_fold_state` (or `is_evolutionary_gap` via FFI when typed) (DR-M3-2)
+- Local DET fold computation — consume the existing `is_evolutionary_gap` flag via FFI / profile (DR-M3-2 — no local recompute, no typed `det_fold_state` field)
 - Local Cl(4,2) algebra — the one quaternion type lives at `portal-core/src/quaternion.rs` (cycle-3 4.7 audit)
 - Local M0' graph fork — render the codon-wheel; address bimba nodes via S2 (SPEC §1 commitment 6, §8.13)
 - Local M5 reward/training logic — read-only kernel-trace overlays only (`rewardTrainingAuthority: 'outside-renderer'`)
@@ -885,7 +877,7 @@ The M3' surface is acceptance-ready when:
 13. Identity-return test: 12-tick × 60° cycle (720° total) ends with whole-surface bloom + centre pulse.
 14. Provenance test: when `transcription_packet` missing, transcription chain lane renders header + empty rows + `pending-transcription-packet` badge (post-DR-M3-4 / Tranche 4.8).
 15. Provenance test: when `m3_lens_stack.namespace_resolved == false`, Lens Annulus renders 16 grey segments + `pending-m3-lens-stack-namespace` banner (post-DR-M3-3).
-16. Provenance test: when `det_fold_state == GapFolded`, M3-0 strip DET arrow renders red with `upper_index` annotation (post-DR-M3-2).
+16. Provenance test: when `is_evolutionary_gap(address72)` is true (a fold-point), the M3-0 strip DET arrow renders red; closed addresses render blue (DR-M3-2 — boolean surface, no `det_fold_state` field).
 17. Round-trip test: `lens_mode_from_codon_rotation(codon_rotation_from_lens_mode(lens, mode))` is single-valued for representative cells from SPEC §7 (Tranche 4.1).
 18. Vimarśa-window audit: `audio_octet` / `nodal_quartet` consumed via `payload.audioOctet` / `payload.nodalQuartet`; no local indexing of `m2.h` LUTs in extension `src/`.
 19. Boundary test: no K² mesh primitive or `RING_QUATERNION_LUT` fork in `m3-mahamaya/src/` — Toroidal mode borrows via FFI / shared geometry handle from M1-5 ARCHITECTURE.md scaffold.
