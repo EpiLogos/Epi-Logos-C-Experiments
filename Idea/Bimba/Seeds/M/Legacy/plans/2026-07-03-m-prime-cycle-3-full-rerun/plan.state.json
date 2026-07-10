@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:10:06.051Z",
+  "updatedAt": "2026-07-10T12:11:44.127Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2638,16 +2638,30 @@
       "worktree": null
     },
     "10.T10.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:11:44.097Z",
+      "claimedAt": "2026-07-10T12:10:26.919Z",
+      "completedAt": "2026-07-10T12:11:44.097Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:11:44.097Z",
+          "text": "resonance72 carrier transport verified exercised in kernel_bridge_runtime_contract.rs:860-922: full JSON round-trip of legacyResonanceIndex/lensAnchorIndex/baseLens/helixBit/lensAnchor + deposition_anchor.resonance72_index parity; Zod additionally pins address72 == resonance72.lensAnchorIndex (kernel-bridge.ts:504-508) and the 0..71 range. No extension needed - transport check present; decoder remains M2 extension work per brief (Tranche 03.3). 18/18 green. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (18 passed); verify-tranche 10.T10.6 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 18,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:10:26.919Z",
+      "runId": "20260710T121026Z-10-T10.6",
       "worktree": null
     },
     "10.T10.7": {
@@ -4373,16 +4387,16 @@
       "worktree": null
     },
     "17.T17.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T12:11:15.904Z",
+      "claimedAt": "2026-07-10T12:11:15.904Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T14:11:15.904Z",
+      "heartbeatAt": "2026-07-10T12:11:15.904Z",
+      "runId": "20260710T121115Z-17-T17.12",
       "worktree": null
     },
     "17.T17.13": {
@@ -10218,6 +10232,25 @@
       "leaseExpiresAt": "2026-07-10T14:08:59.098Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:10:06.028Z"
+    },
+    {
+      "runId": "20260710T121026Z-10-T10.6",
+      "taskId": "10.T10.6",
+      "status": "done",
+      "startedAt": "2026-07-10T12:10:26.919Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:10:26.919Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:11:44.097Z"
+    },
+    {
+      "runId": "20260710T121115Z-17-T17.12",
+      "taskId": "17.T17.12",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T12:11:15.904Z",
+      "owner": "opus-b-track34",
+      "leaseExpiresAt": "2026-07-10T14:11:15.904Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
