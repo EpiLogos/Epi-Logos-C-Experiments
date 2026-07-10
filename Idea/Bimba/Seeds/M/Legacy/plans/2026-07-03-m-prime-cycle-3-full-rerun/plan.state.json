@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:40:48.877Z",
+  "updatedAt": "2026-07-10T15:42:56.222Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4493,16 +4493,30 @@
       "worktree": null
     },
     "16.T16.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:42:56.209Z",
+      "claimedAt": "2026-07-10T15:41:05.245Z",
+      "completedAt": "2026-07-10T15:42:56.209Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:42:56.209Z",
+          "text": "CCT-11 landed at the carrier composition seam (rerun stub retarget: the engine modulation-carrier registration IS the CompositionMountPoint contract): register() now validates AT COMPOSITION LOAD - (1) no juxtaposition: a second carrier claiming a mounted id throws (unregister frees the mount - remount law tested); (2) no missing mount-points: requiredInputs validated against the eight known modulation input keys; (3) no out-of-domain contributions: a declared layer must match the composed strata shape L{n}-{name} (CosmicEngine L0-base/L1-cymatic/L2-codon conform). The live composition (6 carriers) registers clean - e2e cosmic surface green in the gate proves no false rejection. Theia package.json contributes plumbing is dead per retarget. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/engine/modulation/engine.test.ts (15 passed incl the three contract laws: juxtaposition refused + remount law, unknown mount-point refused, out-of-domain layer refused / composed strata accepted); pnpm test (245); pnpm test:e2e green in gate; verify-tranche 16.T16.11 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/modulation/engine.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:41:05.245Z",
+      "runId": "20260710T154105Z-16-T16.11",
       "worktree": null
     },
     "16.T16.12": {
@@ -11700,6 +11714,16 @@
       "leaseExpiresAt": "2026-07-10T17:38:49.802Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:40:48.865Z"
+    },
+    {
+      "runId": "20260710T154105Z-16-T16.11",
+      "taskId": "16.T16.11",
+      "status": "done",
+      "startedAt": "2026-07-10T15:41:05.245Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:41:05.245Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:42:56.209Z"
     }
   ],
   "activeRoute": {

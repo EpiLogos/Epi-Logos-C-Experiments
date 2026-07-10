@@ -281,3 +281,38 @@ describe('command spine', () => {
         expect(engine.divisionIndex).toBe(7);
     });
 });
+
+describe('composition mount-point contract (16.T16.11 / CCT-11)', () => {
+    const engine = new ModulationEngine();
+    const carrier = (id: string, overrides: Record<string, unknown> = {}) => ({
+        id,
+        requiredInputs: ['oscillator'] as const,
+        onFrame: () => undefined,
+        ...overrides
+    });
+
+    it('rejects juxtaposition: two carriers claiming one mount id', () => {
+        const un = engine.register(carrier('cct11-a') as never);
+        expect(() => engine.register(carrier('cct11-a') as never)).toThrow(
+            /juxtaposition refused/
+        );
+        un();
+        // after unregister the mount is free again (remount law)
+        const again = engine.register(carrier('cct11-a') as never);
+        again();
+    });
+
+    it('rejects missing mount-points: unknown required inputs refuse at load', () => {
+        expect(() =>
+            engine.register(carrier('cct11-b', { requiredInputs: ['not-a-mount'] }) as never)
+        ).toThrow(/unknown mount-point/);
+    });
+
+    it('rejects out-of-domain layer contributions; accepts the composed strata', () => {
+        expect(() =>
+            engine.register(carrier('cct11-c', { layer: 'sidebar-takeover' }) as never)
+        ).toThrow(/out-of-domain layer/);
+        const ok = engine.register(carrier('cct11-d', { layer: 'L2-codon' }) as never);
+        ok();
+    });
+});

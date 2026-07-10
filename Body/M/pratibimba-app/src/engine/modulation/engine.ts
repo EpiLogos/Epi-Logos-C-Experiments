@@ -147,6 +147,34 @@ export class ModulationEngine {
     }
 
     register(carrier: ModulationCarrier): () => void {
+        // CCT-11 (16.T16.11): carrier registration IS the composition
+        // mount-point contract — validate at composition load, never at
+        // render time. Three laws:
+        //  1. no JUXTAPOSITION — two carriers may not claim one mount id;
+        //  2. no MISSING mount-points — every required input must be a
+        //     known modulation input key;
+        //  3. no OUT-OF-DOMAIN contributions — a declared layer must be a
+        //     known composed stratum.
+        if (this.carriers.has(carrier.id)) {
+            throw new Error(
+                `composition contract: carrier '${carrier.id}' already mounted — juxtaposition refused (unregister the prior carrier first)`
+            );
+        }
+        const KNOWN_INPUTS = new Set([
+            'oscillator', 'division', 'tonality', 'codon',
+            'klein', 'kairos', 'cymatic', 'quintessence'
+        ]);
+        const unknownInput = carrier.requiredInputs.find(input => !KNOWN_INPUTS.has(input));
+        if (unknownInput !== undefined) {
+            throw new Error(
+                `composition contract: carrier '${carrier.id}' requires unknown mount-point '${String(unknownInput)}'`
+            );
+        }
+        if (carrier.layer !== undefined && !/^L[0-9]+-[a-z0-9-]+$/i.test(carrier.layer)) {
+            throw new Error(
+                `composition contract: carrier '${carrier.id}' declares out-of-domain layer '${carrier.layer}' (strata are 'L{n}-{name}')`
+            );
+        }
         this.carriers.set(carrier.id, { carrier, ready: false });
         return () => {
             this.carriers.delete(carrier.id);
