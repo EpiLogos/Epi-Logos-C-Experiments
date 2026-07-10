@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:11:44.127Z",
+  "updatedAt": "2026-07-10T12:15:02.371Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2665,16 +2665,16 @@
       "worktree": null
     },
     "10.T10.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T12:12:01.099Z",
+      "claimedAt": "2026-07-10T12:12:01.099Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:12:01.099Z",
+      "heartbeatAt": "2026-07-10T12:12:01.099Z",
+      "runId": "20260710T121201Z-10-T10.7",
       "worktree": null
     },
     "10.T10.8": {
@@ -4387,15 +4387,30 @@
       "worktree": null
     },
     "17.T17.12": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T12:11:15.904Z",
+      "status": "review",
+      "updatedAt": "2026-07-10T12:15:02.359Z",
       "claimedAt": "2026-07-10T12:11:15.904Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-10T12:15:02.359Z",
+          "text": "VERIFY-FIRST: substrate already landed. oracle.rs (10-line barrel) re-exports oracle_{cast,engine,frame,identity,route}; medicine.rs (8-line barrel) re-exports medicine_{cast,frame,route}; public crate::nara::oracle::*/medicine::* API preserved; 43.4 invariant holds (barrels<<bodies). epi-cli builds + 247 lib tests green, 0 failed. No new code written. review not done: independent verifier + clean verify-all needed (shared tree dirty from concurrent Track-02).",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib --offline",
+            "exitCode": 0,
+            "testsPassed": 247,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/oracle.rs",
+              "Body/S/S0/epi-cli/src/nara/medicine.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T14:11:15.904Z",
-      "heartbeatAt": "2026-07-10T12:11:15.904Z",
+      "heartbeatAt": "2026-07-10T12:15:02.359Z",
       "runId": "20260710T121115Z-17-T17.12",
       "worktree": null
     },
@@ -10246,10 +10261,20 @@
     {
       "runId": "20260710T121115Z-17-T17.12",
       "taskId": "17.T17.12",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-10T12:11:15.904Z",
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T14:11:15.904Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:15:02.359Z"
+    },
+    {
+      "runId": "20260710T121201Z-10-T10.7",
+      "taskId": "10.T10.7",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T12:12:01.099Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:12:01.099Z",
       "worktree": null
     }
   ],
