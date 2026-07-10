@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:15:02.371Z",
+  "updatedAt": "2026-07-10T12:16:09.953Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2665,14 +2665,29 @@
       "worktree": null
     },
     "10.T10.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T12:12:01.099Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T12:16:09.942Z",
       "claimedAt": "2026-07-10T12:12:01.099Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T12:16:09.942Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:16:09.942Z",
+          "text": "Kernel-side audit memo landed (plan.runs/10.7-cl42-four-scale-audit.md): four touch points confirmed on ONE algebra at current post-split locations (q_cosmic kernel/profile.rs:634; codon_charge_quaternion codon_rotation_projection.rs:117; BioQuaternionState; slash_flip_bimba_prime kernel.rs:925; ops all from quaternion.rs+hopf.rs, no second basis). PLUS executed the M-side audit recommendation: new kernel_truth parity pin cl42_signature_on_bus_matches_c_basis_for_all_six_positions FFI-binds CL42_BASIS[6] (8-byte entries, int-sized Trig_Function) and holds the Rust bus signature to the C .rodata law + net +2 - the one drift-capable mirror is now mechanically pinned (T4.13 pattern). Green. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test kernel_truth cl42 (parity pin green: bus signature == C CL42_BASIS all 6 positions + net +2); verify-tranche 10.T10.7 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/kernel_truth.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/10.7-cl42-four-scale-audit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m1",
-      "leaseExpiresAt": "2026-07-10T14:12:01.099Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:12:01.099Z",
       "runId": "20260710T121201Z-10-T10.7",
       "worktree": null
@@ -10271,11 +10286,12 @@
     {
       "runId": "20260710T121201Z-10-T10.7",
       "taskId": "10.T10.7",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T12:12:01.099Z",
       "owner": "opus-a-m1",
       "leaseExpiresAt": "2026-07-10T14:12:01.099Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T12:16:09.942Z"
     }
   ],
   "activeRoute": {

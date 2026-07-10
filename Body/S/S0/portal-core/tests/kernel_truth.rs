@@ -20,7 +20,17 @@ use std::path::PathBuf;
 // Non-inline C symbols from the statically-linked epi-lib.
 extern "C" {
     static R_FACTOR_ROUTE_TABLE: [u16; 7];
+    static CL42_BASIS: [Cl42BasisEntry; 6];
     fn m1_ananda_get(matrix_idx: u8, row: u8, col: u8) -> u8;
+}
+
+/// Mirror of `Cl42_Basis_Entry` (m1.h:568-572) for the parity pin below.
+/// `Trig_Function` is a C enum (int-sized) — the struct is 8 bytes, not 3.
+#[repr(C)]
+struct Cl42BasisEntry {
+    position: u8,
+    signature: i8,
+    trig_fn: i32,
 }
 
 fn repo_root() -> PathBuf {
@@ -849,4 +859,29 @@ fn psychoid_field_projection_carries_cymatic_signature_64_as_8x8_spectrum() {
          compiled surface on MathemeHarmonicProfile — the recognition path's \
          field-signature law cannot be observed (Track 08)"
     );
+}
+
+// ---------------------------------------------------------------------------
+// (j) Cl(4,2) basis parity pin — Tranche 10.7 (per the 02.T2.7 M-side audit)
+// ---------------------------------------------------------------------------
+
+/// The one drift-capable Cl(4,2) mirror named by the four-scale audit:
+/// `ananda_vortex.rs::cl42_signature` reimplements the ±1 rule in Rust. This
+/// pin holds the bus value to the C `CL42_BASIS[6]` .rodata law (m1.c:56) for
+/// all six positions — same pattern as the T4.13 charge-authority pin.
+#[test]
+fn cl42_signature_on_bus_matches_c_basis_for_all_six_positions() {
+    use portal_core::AnandaVortexProjection;
+    for position6 in 0u8..6 {
+        let bus = AnandaVortexProjection::from_tick(0, position6, 0).cl42_signature_at_position;
+        let c_entry = unsafe { &CL42_BASIS[position6 as usize] };
+        assert_eq!(c_entry.position, position6, "CL42_BASIS[{position6}] position field");
+        assert_eq!(
+            bus, c_entry.signature,
+            "position {position6}: bus cl42 signature must equal the C CL42_BASIS law"
+        );
+        // net +2 signature is implied: P0/P5 = −1, P1–P4 = +1
+    }
+    let net: i32 = (0..6).map(|p| unsafe { CL42_BASIS[p].signature } as i32).sum();
+    assert_eq!(net, 2, "Cl(4,2) net signature must be +2");
 }
