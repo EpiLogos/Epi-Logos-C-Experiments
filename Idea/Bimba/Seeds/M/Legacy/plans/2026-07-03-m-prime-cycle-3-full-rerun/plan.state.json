@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:47:23.010Z",
+  "updatedAt": "2026-07-10T14:48:10.247Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1342,16 +1342,16 @@
       "worktree": null
     },
     "04.T4.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T14:47:41.878Z",
+      "claimedAt": "2026-07-10T14:47:41.878Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T16:47:41.878Z",
+      "heartbeatAt": "2026-07-10T14:47:41.878Z",
+      "runId": "20260710T144741Z-04-T4.4",
       "worktree": null
     },
     "04.T4.5": {
@@ -4542,10 +4542,10 @@
       "worktree": null
     },
     "17.T17.12": {
-      "status": "review",
-      "updatedAt": "2026-07-10T12:15:02.359Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T14:48:10.231Z",
       "claimedAt": "2026-07-10T12:11:15.904Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T14:48:10.231Z",
       "evidence": [
         {
           "at": "2026-07-10T12:15:02.359Z",
@@ -4560,11 +4560,25 @@
               "Body/S/S0/epi-cli/src/nara/medicine.rs"
             ]
           }
+        },
+        {
+          "at": "2026-07-10T14:48:10.231Z",
+          "text": "Independent verify (opus-b-verify) PASS: full W-class gate GREEN against live stack (gateway pid 52809 @18794 + docker neo4j/redis/graphiti) — gateway 80, gateway-contract 80, live-wire PASS, gateway-methods PASS, redis-context 10, graphiti-runtime 12, spacetime 11, ta-onta 431 (61s). oracle.rs/medicine.rs split into API-preserving barrels over focused nara siblings; 43.4 holds; epi-cli 247 lib tests green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 709,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/oracle.rs",
+              "Body/S/S0/epi-cli/src/nara/medicine.rs"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-b-track34",
-      "leaseExpiresAt": "2026-07-10T14:11:15.904Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:15:02.359Z",
       "runId": "20260710T121115Z-17-T17.12",
       "worktree": null
@@ -10999,6 +11013,15 @@
       "startedAt": "2026-07-10T14:42:03.749Z",
       "owner": "opus-b-sub40",
       "leaseExpiresAt": "2026-07-10T16:42:03.749Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260710T144741Z-04-T4.4",
+      "taskId": "04.T4.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T14:47:41.878Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T16:47:41.878Z",
       "worktree": null
     }
   ],
