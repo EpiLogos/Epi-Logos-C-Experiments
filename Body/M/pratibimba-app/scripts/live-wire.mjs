@@ -533,6 +533,33 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'anuttaraPentadicTrace',
+        required: true,
+        covers: ['anuttaraPentadicTrace'],
+        describe: 'Track 36/10.P5 pentadic runtime hinge: trace rides every frame; complement closes on 5; epogdoon 8/9 + mahamaya 64/360 laws; identity strings kernel-sourced',
+        assert(capture, contracts) {
+            const errors = [];
+            for (const profile of profilesOf(capture)) {
+                const parsed = parseInto(errors, contracts.AnuttaraPentadicRuntimeTrace, profile.anuttaraPentadicTrace, 'anuttaraPentadicTrace');
+                if (!parsed) continue;
+                if (parsed.tick12 !== profile.tick12) {
+                    errors.push(`anuttaraPentadicTrace.tick12 ${parsed.tick12} != profile tick12 ${profile.tick12}`);
+                }
+                const [left, right] = parsed.familyBComplement;
+                if (left + right !== 5) {
+                    errors.push(`familyBComplement [${left},${right}] must close on the whole-number hinge 5`);
+                }
+                if (parsed.m2ToM3Symbol !== Math.floor((parsed.resonance72Index * 8) / 9)) {
+                    errors.push(`m2ToM3Symbol ${parsed.m2ToM3Symbol} breaks the epogdoon 8/9 law for resonance72Index ${parsed.resonance72Index}`);
+                }
+                if (parsed.mahamayaAddress64 !== Math.floor((parsed.degree360 % 360) * 64 / 360)) {
+                    errors.push(`mahamayaAddress64 ${parsed.mahamayaAddress64} breaks the 64/360 address law for degree360 ${parsed.degree360}`);
+                }
+            }
+            return errors;
+        }
+    },
+    {
         name: 'harmonicGrammar',
         required: true,
         covers: ['harmonicGrammar'],

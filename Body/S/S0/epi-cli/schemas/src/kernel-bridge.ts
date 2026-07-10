@@ -435,6 +435,49 @@ export type AnuttaraWitnessProjection = z.infer<
   typeof AnuttaraWitnessProjection
 >;
 
+/** Track 36 / 10.P5 — the 0/1 → 5 runtime hinge, first-class on the bus.
+ *  Mirror of portal-core `kernel/projections/pentadic_trace.rs`. Every field
+ *  is a kernel derivation (`from_profile`); renderers never recompute 72→64,
+ *  24×15, codon, or line-change values. */
+export const AnuttaraPentadicRuntimeTrace = z
+  .object({
+    tick: z.number().int().nonnegative(),
+    tick12: z.number().int().min(0).max(11),
+    helix: z.number().int().min(0).max(1),
+    position6: z.number().int().min(0).max(5),
+    sourceBinaryState: z.enum(["0", "1", "0/1"]),
+    wholeNumberEndpoint: z.literal(5),
+    naturalNumberEndpoint: z.literal(6),
+    familyBComplement: z.tuple([
+      z.number().int().min(0).max(5),
+      z.number().int().min(0).max(5),
+    ]),
+    shemDegreeQuantum: z.literal(5),
+    resonance72Index: z.number().int().min(0).max(71),
+    degree360: z.number().int().min(0).max(359),
+    m2ToM3Symbol: z.number().int().min(0).max(63),
+    mahamayaAddress64: z.number().int().min(0).max(63),
+    evolutionaryGap: z.enum([
+      "m2-wholeness-gap",
+      "m3-transcription-gap",
+      "m1-parent-restored",
+    ]),
+    codonId: z.number().int().min(0).max(63),
+    codon: z.string().min(1),
+    lineChangeOperator: z.number().int().min(0).max(383),
+    pairedMahamayaFifteens: z.tuple([z.literal(15), z.literal(15)]),
+    backboneIdentity: z.literal("24x15=360"),
+    lineGraphIdentity: z.literal("360+24=384"),
+    qCosmicRef: z.string().min(1),
+    qComposedHandle: z.string().min(1).optional(),
+    learnedPredictorCheckpointRef: z.string().min(1).optional(),
+    provenance: z.array(z.string().min(1)),
+  })
+  .strict();
+export type AnuttaraPentadicRuntimeTrace = z.infer<
+  typeof AnuttaraPentadicRuntimeTrace
+>;
+
 export const CfNotation = z.enum([
   "(00/00)",
   "(0/1)",
@@ -1184,6 +1227,10 @@ export const MathemeHarmonicProfile = z
     // serialized on every current profile frame; optional only for legacy
     // pre-projection payload compatibility, never z.unknown().
     anandaVortex: AnandaVortexProjection.optional(),
+    // Track 36 / 10.P5: serde(default) Option on the profile — Some on every
+    // current frame (from_tick attaches it); optional/nullable only for
+    // legacy pre-36.3 payload compatibility, never z.unknown().
+    anuttaraPentadicTrace: AnuttaraPentadicRuntimeTrace.nullable().optional(),
     harmonicGrammar: MathemeHarmonicGrammarProjection.optional(),
     pasuBeingPattern: PasuBeingPatternProjection.optional(),
     anuttaraWitness: AnuttaraWitnessProjection.optional(),

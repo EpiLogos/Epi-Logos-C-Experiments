@@ -106,6 +106,41 @@
     "helixSheet": 0,
     "kleinFlipAtThisTick": false
   },
+  "anuttaraPentadicTrace": {
+    "tick": 0,
+    "tick12": 0,
+    "helix": 0,
+    "position6": 0,
+    "sourceBinaryState": "0",
+    "wholeNumberEndpoint": 5,
+    "naturalNumberEndpoint": 6,
+    "familyBComplement": [
+      0,
+      5
+    ],
+    "shemDegreeQuantum": 5,
+    "resonance72Index": 0,
+    "degree360": 0,
+    "m2ToM3Symbol": 0,
+    "mahamayaAddress64": 0,
+    "evolutionaryGap": "m1-parent-restored",
+    "codonId": 0,
+    "codon": "AAA",
+    "lineChangeOperator": 0,
+    "pairedMahamayaFifteens": [
+      15,
+      15
+    ],
+    "backboneIdentity": "24x15=360",
+    "lineGraphIdentity": "360+24=384",
+    "qCosmicRef": "M0",
+    "provenance": [
+      "portal-core::MathemeHarmonicProfile::from_tick",
+      "kernel.binary::MahamayaCodecProjection",
+      "luts::mahamaya::apply_epogdoon_compression",
+      "m3_transcription_bridge::M3_BACKBONE_DEGREE_STEP"
+    ]
+  },
   "chromatic": {
     "position": 0,
     "pitchClass": 0,

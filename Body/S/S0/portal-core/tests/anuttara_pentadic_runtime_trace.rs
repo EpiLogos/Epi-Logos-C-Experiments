@@ -89,6 +89,31 @@ fn anuttara_family_b_complement_pairs_are_pentadic_runtime_hinges() {
     }
 }
 
+/// 36.3 / 10.P5 — the trace is FIRST-CLASS on the profile bus: every
+/// `from_tick` profile carries `anuttara_pentadic_trace = Some(..)` equal to
+/// the pure derivation, and the serialized profile emits the camelCase key
+/// (the bridge serializes the whole profile; no field allowlist to update).
+#[test]
+fn pentadic_trace_rides_the_profile_bus_first_class() {
+    for tick12 in 0..12u8 {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(2, tick12));
+        let on_bus = profile
+            .anuttara_pentadic_trace
+            .as_ref()
+            .expect("from_tick must attach the pentadic trace");
+        assert_eq!(
+            on_bus,
+            &AnuttaraPentadicRuntimeTrace::from_profile(&profile),
+            "bus trace must equal the pure derivation (one source)"
+        );
+        let wire = serde_json::to_value(&profile).expect("profile serializes");
+        assert!(
+            wire.get("anuttaraPentadicTrace").is_some_and(|v| !v.is_null()),
+            "serialized profile must emit anuttaraPentadicTrace"
+        );
+    }
+}
+
 #[test]
 fn tick_substrate_0_1_projects_to_position5_without_losing_position6_completion() {
     // The 0/1 tick substrate must be PRESENT in the trace (the test fails if

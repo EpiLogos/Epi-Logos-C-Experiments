@@ -98,6 +98,32 @@ test('cosmic face: the M1 played-torus renders the ananda vortex live off the bu
     expect(glLive, 'played-torus WebGL context should be live').toBe(true);
 });
 
+test('cosmic face: the M3 pentadic inspector renders the two fifteens off the live bus (36.3)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Pentadic' })
+        .click();
+
+    const pane = page.locator('.face-active [data-testid="m3-pentadic-inspector"]');
+    await expect(pane).toBeVisible({ timeout: 15_000 });
+
+    // the trace rides every live profile frame (Track 36/10.P5) — ready, never pending
+    await expect(pane).toHaveAttribute('data-trace-state', 'ready', { timeout: 20_000 });
+
+    // Maxwell witness citation + the kernel-sourced identities and live fields
+    await expect(page.getByTestId('m3-pentadic-maxwell')).toContainText('15 = 10 + 4 + 1');
+    await expect(page.getByTestId('m3-pentadic-fifteens')).toContainText('15 + 15');
+    await expect(page.getByTestId('m3-pentadic-fifteens')).toContainText('24x15=360');
+    await expect(page.getByTestId('m3-pentadic-fifteens')).toContainText('360+24=384');
+    await expect(page.getByTestId('m3-pentadic-trace')).toContainText(/72-idx \d+/);
+    await expect(page.getByTestId('m3-pentadic-trace')).toContainText(/64-addr \d+/);
+    await expect(page.getByTestId('m3-pentadic-hinge')).toContainText('whole 0→5 · natural 1→6');
+});
+
 test('cosmic face: the Walk pane walks the REAL graph and the # invert round-trips X → X′ → X', async ({
     page
 }) => {

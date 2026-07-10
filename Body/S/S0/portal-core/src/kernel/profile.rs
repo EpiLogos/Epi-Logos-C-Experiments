@@ -577,6 +577,14 @@ pub struct MathemeHarmonicProfile {
     pub inversion_operator: InversionOperatorHandle,
     #[serde(default)]
     pub ananda_vortex: AnandaVortexProjection,
+    /// Track 36 / 10.P5 — the 0/1 → 5 runtime hinge made first-class: the
+    /// Anuttara archetypal number language bridged into the Mahāmāyā stack
+    /// (whole-number 0→5 / natural 1→6 addressing, Shem 5° quantum 72×5=360,
+    /// paired Mahāmāyā fifteens 24×15=360, line-change closure 360+24=384).
+    /// Derived kernel-side by `AnuttaraPentadicRuntimeTrace::from_profile`
+    /// (never renderer-recomputed); `None` only on pre-36.3 payloads.
+    #[serde(default)]
+    pub anuttara_pentadic_trace: Option<AnuttaraPentadicRuntimeTrace>,
     pub chromatic: MathemeChromaticProfile,
     pub diatonic: Option<MathemeDiatonicContext>,
     pub resonance72: MathemeResonance72Projection,
@@ -715,7 +723,10 @@ impl MathemeHarmonicProfile {
             q_cosmic,
             vimarsha_reading.klein_flip.as_ref(),
         );
-        Self {
+        // Two-phase: the pentadic trace is a pure derivation OVER the finished
+        // profile (36.1 law), so it attaches after construction — one source,
+        // never a parallel computation of the same fields.
+        let mut profile = Self {
             profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
             profile_provenance: MathemeProfileProvenance::current_public(),
             tick_address: MathemeTickAddress::from_tick(tick, absolute_tick, tick12),
@@ -785,7 +796,11 @@ impl MathemeHarmonicProfile {
             s3_anchor: Some(MathemeFutureAnchor::s3_profile_observation_anchor(
                 &source_coordinate,
             )),
-        }
+            anuttara_pentadic_trace: None,
+        };
+        profile.anuttara_pentadic_trace =
+            Some(AnuttaraPentadicRuntimeTrace::from_profile(&profile));
+        profile
     }
 
     /// Construct a profile for the given tick and attach the supplied

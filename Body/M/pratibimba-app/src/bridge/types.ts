@@ -728,10 +728,11 @@ export interface AnuttaraPentadicRuntimeTrace {
     readonly provenance: readonly string[];
 }
 
-/** Build an AnuttaraPentadicRuntimeTrace from a MathemeHarmonicProfileBoundary.
- *  Returns null if the profile lacks the minimum fields (tick, tick12, position6).
- *  Fields not derivable from current kernel payloads are set to pending sentinel values. */
-export declare function buildPentadicTrace(profile: MathemeHarmonicProfileBoundary): AnuttaraPentadicRuntimeTrace | null;
+/** The trace now rides the bus first-class (Track 36/10.P5 —
+ *  `profile.anuttaraPentadicTrace`, kernel-derived). The real reader is
+ *  `panes/m3PentadicInspector.ts::pentadicTraceFromPayload`; the former
+ *  doc-ahead `buildPentadicTrace` declare stub is retired (derivation is
+ *  kernel-side only, never the renderer). */
 
 // ---- Bounded capability allow-list (mirror capability_names()) ----
 

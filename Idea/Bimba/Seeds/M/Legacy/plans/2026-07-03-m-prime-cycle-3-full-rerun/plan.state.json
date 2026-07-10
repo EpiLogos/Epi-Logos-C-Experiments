@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:29:56.336Z",
+  "updatedAt": "2026-07-10T12:48:57.578Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1487,16 +1487,30 @@
       "worktree": null
     },
     "04.T4.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:48:57.566Z",
+      "claimedAt": "2026-07-10T12:48:02.989Z",
+      "completedAt": "2026-07-10T12:48:57.566Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:48:57.566Z",
+          "text": "M3-facing binding of Track 36.3 landed in the same inspector: Maxwell 15=10+4+1 as labelled relation-space witness (10 metric body / 4 vector connection / 1 scalar fiber), paired fifteens from the bus (never display constants), 24x15=360 + 360+24=384 + 64-address + codon + line-change operator + q_cosmic_ref from the typed trace payload; coupling_flow_alignment consumed via explicit pending-coupling-flow-alignment chip until Track 10.M3 lands the projection; no renderer recomputation, no local fallback tables (altered-identity test enforces). Live e2e proves render from the real bus. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m3PentadicInspector.test.ts (8 passed incl coupling-flow pending-chip lane + no-local-recompute); pnpm test:e2e (10 passed incl pentadic live); verify-tranche 04.T4.14 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 18,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m3PentadicInspector.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:48:02.989Z",
+      "runId": "20260710T124802Z-04-T4.14",
       "worktree": null
     },
     "04.T4.15": {
@@ -7793,16 +7807,33 @@
       "worktree": null
     },
     "36.T36.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:48:02.800Z",
+      "claimedAt": "2026-07-10T12:30:39.303Z",
+      "completedAt": "2026-07-10T12:48:02.800Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:48:02.800Z",
+          "text": "Landed the 10.P5 bus emit (the unowned gap) + the 36.3 inspector. Substrate: anuttara_pentadic_trace Option field on MathemeHarmonicProfile (serde default; from_tick attaches Some via two-phase over the finished profile - one source, kernel-derived by pentadic_trace.rs::from_profile); Zod AnuttaraPentadicRuntimeTrace strict schema + profile field; live-wire PROJECTION_MANIFEST entry (complement closes on 5, epogdoon 8/9 + 64/360 laws) - PASS against the REAL spawned gateway, trace rides every frame; baseline fixture re-blessed via the sanctioned BASELINE_FIXTURE_BLESS path; fresh real capture installed as the live-wire unit fixture. Carrier: new Pentadic tab (m3.mahamaya.pentadicInspector) - Maxwell/KK witness as labelled citation (15=10+4+1, register fact never computed), paired fifteens + 24x15=360 + 360+24=384 + tick/quantum/72-idx/64-addr/codon/line-op/Q-ref all VERBATIM from the trace, altered-identity test proves no local recomputation table; pending chips for absent trace; retired the buildPentadicTrace doc-ahead stub. e2e 10/10 incl the inspector live off the bus. W-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "node Body/M/pratibimba-app/scripts/live-wire.mjs (PASS live, anuttaraPentadicTrace manifest entry green on real spawned gateway); cargo test -p portal-core --test anuttara_pentadic_runtime_trace (9); npx vitest run (192 app incl 8 inspector); verify-tranche W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 209,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs",
+              "Body/M/pratibimba-app/src/panes/m3PentadicInspector.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:30:39.303Z",
+      "runId": "20260710T123039Z-36-T36.3",
       "worktree": null
     },
     "36.T36.4": {
@@ -10365,6 +10396,26 @@
       "leaseExpiresAt": "2026-07-10T14:26:24.550Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:29:56.325Z"
+    },
+    {
+      "runId": "20260710T123039Z-36-T36.3",
+      "taskId": "36.T36.3",
+      "status": "done",
+      "startedAt": "2026-07-10T12:30:39.303Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:30:39.303Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:48:02.800Z"
+    },
+    {
+      "runId": "20260710T124802Z-04-T4.14",
+      "taskId": "04.T4.14",
+      "status": "done",
+      "startedAt": "2026-07-10T12:48:02.989Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:48:02.989Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:48:57.566Z"
     }
   ],
   "activeRoute": {
