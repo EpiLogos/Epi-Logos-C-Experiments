@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:38:23.152Z",
+  "updatedAt": "2026-07-10T15:40:48.877Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4465,16 +4465,31 @@
       "worktree": null
     },
     "16.T16.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:40:48.865Z",
+      "claimedAt": "2026-07-10T15:38:49.802Z",
+      "completedAt": "2026-07-10T15:40:48.865Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:40:48.865Z",
+          "text": "CCT-10 landed as the carrier shared-primitives barrel (src/ui/primitives per the rerun stub retarget): re-exports the EXISTING DR-UI-3 ProvenanceBadge (7-member taxonomy already landed, verified exact); adds the DR-UI-4 ratified transition configs as the one law (lemniscate01 400ms cubic-out / kleinFlip 240ms linear / mobiusReturn 320ms smoothstep - exactly three, the superseded 600/420 texts cannot re-enter; lemniscate-of-Bernoulli mask law named); adds the CCT-6 BedrockLinkTooltip (kernel chain rendered verbatim, never composed locally); canonicalises the Cl(4,2) colour-binary palette as CL42_PALETTE with the played-torus REFACTORED to consume it (single source proven by identity test - no local palette forks). The GLSL shader implementation + visual baselines remain Track 15 (G8). W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/ui/primitives.test.tsx src/panes/playedTorusScene.test.ts (11 passed: three ratified DR-UI-4 configs exact, palette single-source consumed by the played-torus, CCT-6 tooltip verbatim chain, DR-UI-3 badge re-export); verify-tranche 16.T16.10 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/primitives.tsx",
+              "Body/M/pratibimba-app/src/panes/playedTorusScene.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:38:49.802Z",
+      "runId": "20260710T153849Z-16-T16.10",
       "worktree": null
     },
     "16.T16.11": {
@@ -11675,6 +11690,16 @@
       "leaseExpiresAt": "2026-07-10T17:34:47.056Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:38:23.140Z"
+    },
+    {
+      "runId": "20260710T153849Z-16-T16.10",
+      "taskId": "16.T16.10",
+      "status": "done",
+      "startedAt": "2026-07-10T15:38:49.802Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:38:49.802Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:40:48.865Z"
     }
   ],
   "activeRoute": {

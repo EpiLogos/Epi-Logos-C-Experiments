@@ -28,10 +28,11 @@ import {
 /** One free framing choice — world scale of the unit-proportioned K². */
 export const K2_SCALE = 1.8;
 
-/** Cl(4,2) colour-binary (§5.4): implicate generator poles P0/P5 (signature
- *  −1) cool indigo; explicate derived positions P1–P4 (signature +1) warm. */
-export const CL42_INDIGO = 0x4b0082;
-export const CL42_WARM = 0xff7f2a;
+// Cl(4,2) colour-binary (§5.4) — consumed from the ONE shared palette
+// (ui/primitives CL42_PALETTE, CCT-10); re-exported for existing consumers.
+import { CL42_PALETTE } from '../ui/primitives';
+export const CL42_INDIGO = CL42_PALETTE.implicateIndigo;
+export const CL42_WARM = CL42_PALETTE.explicateWarm;
 const BLOCKED_GREY = 0x5a5a63;
 const K2_SHELL = 0x8fb7d6;
 const DIAMOND_COLOUR = 0xdfe7ef;
