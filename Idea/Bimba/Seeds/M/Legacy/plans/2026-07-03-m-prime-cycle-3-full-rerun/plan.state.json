@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:29:21.796Z",
+  "updatedAt": "2026-07-10T15:31:22.668Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10261,16 +10261,30 @@
       "worktree": null
     },
     "14.T14.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:31:22.656Z",
+      "claimedAt": "2026-07-10T15:30:02.058Z",
+      "completedAt": "2026-07-10T15:31:22.656Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:31:22.656Z",
+          "text": "Every row of the original Open-Orphans table (+ the Closed-Canonical pentadic row) re-audited against the CURRENT carrier via live ledger lookups: 8 CLOSED (all routed tranches done - incl F_routing 03.2, S2 correspondence 03.4, played-torus 02.6 + K2SurfaceHandle side, Earth handle 03.5/03.9/10.3, payload-opacity policy 10.1, TillDone 12.11, bedrock_link 18.7, anuttara_trace 06.6); 15 ROUTED with live pending tranches (Logos Atelier 06.2, psychoid renderer 05.5, constitutional profiles 12.3, daily widgets 11.3, ACR repurpose 12.14, CCT-14/15 via track 16, pentadic final seal 36.7, etc); 1 RESOLVED (Techne per DR-S4-TECHNE - no work lands). ZERO still-orphan rows - every open surface has a live routed tranche, no escalation needed this pass. Report is regenerable for the 14.T14.4 cycle-close re-run. UF-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node re-audit generator over the LIVE plan.state.json (24 orphan rows: 8 CLOSED, 15 ROUTED-live, 1 RESOLVED, 0 still-orphan; report at plan.runs/14-open-orphans-reaudit.md); verify-tranche 14.T14.3 UF-gate PASS incl app-ui-flow playwright",
+            "exitCode": 0,
+            "testsPassed": 24,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/14-open-orphans-reaudit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:30:02.058Z",
+      "runId": "20260710T153002Z-14-T14.3",
       "worktree": null
     },
     "14.T14.4": {
@@ -11587,6 +11601,16 @@
       "leaseExpiresAt": "2026-07-10T17:27:42.695Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:29:21.783Z"
+    },
+    {
+      "runId": "20260710T153002Z-14-T14.3",
+      "taskId": "14.T14.3",
+      "status": "done",
+      "startedAt": "2026-07-10T15:30:02.058Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:30:02.058Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:31:22.656Z"
     }
   ],
   "activeRoute": {
