@@ -69,7 +69,7 @@ impl MathemePlanetaryChakralProjection {
                 _ => (
                     "Pluto",
                     "underworld/transmutation",
-                    "Mineral/depth",
+                    "Salt/depth",
                     "chromatic shadow pressure",
                     "Locrian/shadow mode pressure",
                 ),

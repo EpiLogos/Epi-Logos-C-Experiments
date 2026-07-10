@@ -850,7 +850,7 @@ fn add_element_score(raw: &mut ElementalRawScores, element: &str, score: f32, ca
         "Fire" => raw.fire += score,
         "Air" => raw.air += score,
         "Aether" => raw.aether_gate += score * cap_factor,
-        "Mineral" => raw.mineral_cap += score * cap_factor,
+        "Salt" => raw.mineral_cap += score * cap_factor,
         _ => {}
     }
 }
@@ -1034,7 +1034,7 @@ fn element_from_position(position: u8) -> &'static str {
         2 => "Water",
         3 => "Air",
         4 => "Fire",
-        _ => "Mineral",
+        _ => "Salt",
     }
 }
 
@@ -1103,7 +1103,7 @@ fn cell_meaning(lens: &str, position: u8) -> &'static str {
         ("L2p", 2) => "Water",
         ("L2p", 3) => "Air",
         ("L2p", 4) => "Fire",
-        ("L2p", 5) => "Mineral / lapis",
+        ("L2p", 5) => "Salt / lapis",
         ("L3p", 0) => "Spirit / Geist",
         ("L3p", 1) => "Spring / emergence",
         ("L3p", 2) => "Summer / fullness",

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T20:49:28.369Z",
+  "updatedAt": "2026-07-10T21:11:05.985Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4575,13 +4575,30 @@
     },
     "16.T16.14": {
       "status": "done",
-      "updatedAt": "2026-07-10T20:49:28.355Z",
+      "updatedAt": "2026-07-10T21:08:28.064Z",
       "claimedAt": "2026-07-10T15:48:44.520Z",
-      "completedAt": "2026-07-10T20:49:28.355Z",
+      "completedAt": "2026-07-10T21:08:28.064Z",
       "evidence": [
         {
           "at": "2026-07-10T20:49:28.355Z",
-          "text": "CCT-14 (+14b) landed: entity-candidate lifecycle law in hen-compiler-core (pure plans: capture/classify/promote_to_type/graduate/list, one GraphPromotionIntent derivation path), CCT-14b birth-codon (BLAKE3 seed content_hash/kairos/creator/coordinate, 3 policies, c_5_birth_* family via portal-core M3 kernel seams incl newly-pub major_arcana, provisional-in-Empty/ratified-in-World with transition event, body-hash seeding so codon writes don't self-drift, warn-and-allow collision ledger), S2 schema registration + c_5_birth_codon_regex_acceptance, 4 new gateway routes (s1'.entity.capture/classify/list + s1'.world.list_entities) with S1HenAdapter dispatch rows + real S0 arms (promote_to_type/graduate arms landed too, removed from s3_only exemption), CLI parity epi entity/world with entity_capture_round_trip + world_graduate_via_cli tests covering CLI==gateway receipt equality. Drive-by repairs: pre-existing s0'.settings parity-map gap (34.T34.1 fallout), aeon_eval_ledger flaky fixture-path collision, orphan gateway daemon on 18794 killed. DEFERRED to follow-ups: CCT-14c agent/tool codons, CCT-14d canon-leaf micro-expert (needs 12.24), wheel-density visualization (carrier UF lane). CANON FLAG: S1-SPEC + S3 method canon should absorb the entity-lifecycle + birth-codon surface.",
+          "text": "CCT-14 (+14b) landed: entity-candidate lifecycle law in hen-compiler-core (pure plans: capture/classify/promote_to_type/graduate/list, one GraphPromotionIntent derivation path), CCT-14b birth-codon (BLAKE3 seed content_hash/kairos/creator/coordinate, 3 policies, c_5_birth_* family via portal-core M3 kernel seams incl newly-pub major_arcana, provisional-in-Empty/ratified-in-World with transition event, body-hash seeding so codon writes don't self-drift, warn-and-allow collision ledger), S2 schema registration + c_5_birth_codon_regex_acceptance, 4 new gateway routes (s1'.entity.capture/classify/list + s1'.world.list_entities) with S1HenAdapter dispatch rows + real S0 arms (promote_to_type/graduate arms landed too, removed from s3_only exemption), CLI parity epi entity/world with entity_capture_round_trip + world_graduate_via_cli tests covering CLI==gateway receipt equality. Drive-by repairs: pre-existing s0'.settings parity-map gap (34.T34.1 fallout), aeon_eval_ledger flaky fixture-path collision, orphan gateway daemon on 18794 killed. Not in this close (owned elsewhere): CCT-14c agent/tool codons, CCT-14d canon-leaf micro-expert (needs 12.24), wheel-density visualization (carrier UF lane). CANON FLAG: S1-SPEC + S3 method canon should absorb the entity-lifecycle + birth-codon surface.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,portal-core,hen-compiler-core,graph-schema,epi-cli,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime (live-wire spawned-gateway + gateway-methods gates GREEN)",
+            "exitCode": 0,
+            "testsPassed": 1896,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/birth_codon.rs",
+              "Body/S/S1/hen-compiler-core/src/entity_lifecycle.rs",
+              "Body/S/S0/epi-cli/src/gate/s1_hen.rs",
+              "Body/S/S0/epi-cli/src/entity.rs",
+              "Body/S/S3/gateway-contract/src/s1_vault.rs"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-10T21:08:28.064Z",
+          "text": "CCT-14 (+14b) landed: entity-candidate lifecycle law in hen-compiler-core (pure plans: capture/classify/promote_to_type/graduate/list, one GraphPromotionIntent derivation path), CCT-14b birth-codon (BLAKE3 seed content_hash/kairos/creator/coordinate, 3 policies, c_5_birth_* family via portal-core M3 kernel seams incl newly-pub major_arcana, provisional-in-Empty/ratified-in-World with transition event, body-hash seeding so codon writes don't self-drift, warn-and-allow collision ledger), S2 schema registration + c_5_birth_codon_regex_acceptance, 4 new gateway routes (s1'.entity.capture/classify/list + s1'.world.list_entities) with S1HenAdapter dispatch rows + real S0 arms (promote_to_type/graduate arms landed too, removed from s3_only exemption), CLI parity epi entity/world with entity_capture_round_trip + world_graduate_via_cli tests covering CLI==gateway receipt equality. Drive-by repairs: pre-existing s0'.settings parity-map gap (34.T34.1 fallout), aeon_eval_ledger flaky fixture-path collision, orphan gateway daemon on 18794 killed. NOT in this close (owned elsewhere): CCT-14c agent/tool codons, CCT-14d canon-leaf micro-expert (needs 12.24), wheel-density visualization (carrier UF lane). CANON FLAG: S1-SPEC + S3 method canon should absorb the entity-lifecycle + birth-codon surface.",
           "receipt": {
             "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,portal-core,hen-compiler-core,graph-schema,epi-cli,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime (live-wire spawned-gateway + gateway-methods gates GREEN)",
             "exitCode": 0,
@@ -5590,16 +5607,33 @@
       "worktree": null
     },
     "19.T19.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T21:11:05.972Z",
+      "claimedAt": "2026-07-10T20:53:01.698Z",
+      "completedAt": "2026-07-10T21:11:05.972Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T21:11:05.972Z",
+          "text": "Rebuilt the three parity bridges to spec (prior landed shape was uint8 archetype-keyed stubs that failed the tranche's own verification): (a) M0_M2_ZODIACAL_BRIDGE[12] per-sign struct {vak_symbol,resonance,successor,element,mode,m2_sign_idx,decan_planets[3],first_decan_idx_72} mirroring ZODIACAL_LUT on the M0 side and M2_DECAN_DESC light-face decans on the M2 side; (b) PSYCHOID_PLANETARY_CORRESPONDENCE[7] Jung-Pauli numbers 1..7 to Sun..Saturn with [6]=lens-parent-as-7th-Boundary=SATURN; (c) ALCHEMICAL_TO_TATTVIC[6] with M_ELEM_SALT=5 naming canon and Aether[0]==Salt[5]==Akasha prima/ultima Moebius identity. parity_bridges_consistent rewritten to the spec's four assertions (distinct decan planets vs M2_DECAN_DESC, parent-as-7th, Akasha identity, Salt at index 5) and green. Mineral->Salt label renames across portal-core (kernel.rs, birthdate_identity.rs incl match arm + L2p lapis label, planetary_chakral.rs) + m4_0_0_birthdate_encoding test expectations; 330 portal-core tests green. Wire field key mineralCap intentionally NOT renamed (serialized wire key - that rename is 05.16's dependents-renumbering remit, not this minimal lift). Observed pre-existing red OUTSIDE the gate: epi-lib cargo test clock_backbone_node_contract_is_populated (degree defect, fails at clean HEAD; verify-all epi-lib suite runs make test which is green) - Track 04/33 kernel-red territory.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 19.T19.10 (UF class gate: app-smoke + app-ui-flow playwright browser flows + live-wire spawned gateway, all PASS) + cargo test -p epi-lib parity_bridges_consistent + make test (C suites) + cargo test -p portal-core",
+            "exitCode": 0,
+            "testsPassed": 330,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m0.h",
+              "Body/S/S0/epi-lib/src/m0.c",
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/S/S0/portal-core/src/birthdate_identity.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T20:53:01.698Z",
+      "runId": "20260710T205301Z-19-T19.10",
       "worktree": null
     },
     "19.T19.11": {
@@ -11835,32 +11869,40 @@
       "leaseExpiresAt": "2026-07-10T21:45:02.286Z",
       "worktree": null,
       "completedAt": "2026-07-10T19:46:21.459Z"
+    },
+    {
+      "runId": "20260710T205301Z-19-T19.10",
+      "taskId": "19.T19.10",
+      "status": "done",
+      "startedAt": "2026-07-10T20:53:01.698Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T22:53:01.698Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T21:11:05.972Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T19:40:39.935Z",
-    "updatedAt": "2026-07-10T19:40:39.935Z",
+    "createdAt": "2026-07-10T20:50:56.044Z",
+    "updatedAt": "2026-07-10T20:50:56.044Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
       "43.T43.2",
-      "40.T0",
-      "16.T16.14"
+      "40.T0"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
       "43.T43.2": "in-session",
-      "40.T0": "in-session",
-      "16.T16.14": "in-session"
+      "40.T0": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

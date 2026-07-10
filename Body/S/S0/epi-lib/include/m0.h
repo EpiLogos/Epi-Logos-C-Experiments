@@ -271,6 +271,65 @@ extern const Zodiacal_Entry ZODIACAL_LUT[12];
 #define ZOD_GET_ELEMENT(q)   (((q) >> 2) & 0x03u)
 #define ZOD_GET_MODALITY(q)  ((q) & 0x03u)
 
+/* =============================================================================
+ * 19.10 — M0/M2 PARITY BRIDGES (three minimal LUT lifts, ~1 KB total)
+ *
+ * Structural parity between the M0 archetypal-symbolic and M2
+ * vibrational-decanic representations of the same astrological surface.
+ * NOT the full 96-node Anuttara lift (the lazy strategy in
+ * docs/m0-dataset-audit.md stays in force for the remaining nodes).
+ * ============================================================================= */
+
+/* (a) One entry per zodiacal sign: Archetype-3 traversal at M0 reaches its
+ * M2 decanic-planetary expression in one indirection. `element` is the
+ * classical block index (0 Fire / 1 Earth / 2 Air / 3 Water — equal to
+ * ZOD_GET_ELEMENT), `first_decan_idx_72` indexes M2_DECAN_DESC[72]. */
+typedef struct {
+    const char* vak_symbol;       /* ZODIACAL_LUT operator for this sign */
+    uint8_t m0_resonance_idx;
+    uint8_t m0_successor;
+    uint8_t element;              /* classical element block 0..3 */
+    uint8_t mode;                 /* ZOD_MODE_* */
+    uint8_t m2_sign_idx;          /* zodiac order 0..11 (Aries..Pisces) */
+    uint8_t decan_planets[3];     /* Planet_Id of the sign's three decans */
+    uint8_t first_decan_idx_72;   /* light face of D1 in M2_DECAN_DESC */
+} M0_M2_Zodiacal_Bridge_Entry;
+
+extern const M0_M2_Zodiacal_Bridge_Entry M0_M2_ZODIACAL_BRIDGE[12];
+
+/* (b) Jung-Pauli psychoid archetypal-meaning correspondence: archetypal
+ * numbers 1..7 to the classical Sun..Saturn sequence; entry [6] is the
+ * L0' lens parent itself (7th-Boundary). Coexists with the Cousto
+ * frequency mapping (M2-ARCHITECTURE) as the vibrational view of the
+ * same seven planets. Outer planets belong to the M2-5 transpersonal
+ * extension, not this LUT. */
+typedef struct {
+    uint8_t l0_prime_position;    /* 0..5 = L0'-n child; 6 = lens parent */
+    uint8_t archetypal_number;    /* 1..7 (Unity-Monad .. 7th-Boundary) */
+    uint8_t planet_id;            /* Planet_Id (m2.h) */
+} Psychoid_Planetary_Entry;
+
+extern const Psychoid_Planetary_Entry PSYCHOID_PLANETARY_CORRESPONDENCE[7];
+
+/* (c) L2' Alchemical-Elemental -> M2 tattvic bridge. Naming canon per
+ * 05.16: Salt, not Mineral (alchemical Three Principles — Salt is the
+ * fixed body). Aether and Salt both route to Akasha at different cycle
+ * points: Aether is prima materia, Salt is ultima materia (the Möbius
+ * return of the elemental cycle, parallel to QL 5->0). */
+#define M_ELEM_AETHER 0u
+#define M_ELEM_EARTH  1u
+#define M_ELEM_WATER  2u
+#define M_ELEM_AIR    3u
+#define M_ELEM_FIRE   4u
+#define M_ELEM_SALT   5u
+
+typedef struct {
+    uint8_t alchemical;           /* M_ELEM_* */
+    uint8_t tattvic;              /* Element_Id (m2.h): Akasha..Prithvi */
+} Alchemical_Tattvic_Entry;
+
+extern const Alchemical_Tattvic_Entry ALCHEMICAL_TO_TATTVIC[6];
+
 struct Monopoly_Entry {
     uint8_t position;
     uint8_t shadow_opposite;

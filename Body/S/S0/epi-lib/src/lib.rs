@@ -452,22 +452,32 @@ mod m0_archetype_routing {
 
 #[cfg(test)]
 mod m0_m2_parity {
-    const ARCHETYPE_LUT_SIZE: usize = 12;
-    const M0_SENTINEL: u8 = 0xFF;
+    use std::ffi::CStr;
+    use std::os::raw::c_char;
 
     const ELEMENT_ID_AKASHA: u8 = 0;
     const ELEMENT_ID_VAYU: u8 = 1;
     const ELEMENT_ID_AGNI: u8 = 2;
     const ELEMENT_ID_APAS: u8 = 3;
     const ELEMENT_ID_PRITHVI: u8 = 4;
+    /// Spec name for the tattvic Akasha id (== ELEMENT_ID_AKASHA in m2.h).
+    const TATTVA_AKASHA: u8 = ELEMENT_ID_AKASHA;
 
-    const PLANET_SUN: u8 = 0;
-    const PLANET_MOON: u8 = 1;
-    const PLANET_MERCURY: u8 = 2;
-    const PLANET_VENUS: u8 = 3;
-    const PLANET_MARS: u8 = 4;
-    const PLANET_JUPITER: u8 = 5;
     const PLANET_SATURN: u8 = 6;
+
+    /// 19.10(c)/(d) — L2' alchemical ids per the 05.16 naming canon:
+    /// index 5 is SALT (the fixed body), never Mineral.
+    const M_ELEM_AETHER: u8 = 0;
+    const M_ELEM_SALT: u8 = 5;
+
+    /// Classical element block -> the tattva every decan of that block
+    /// carries in M2_DECAN_DESC (Fire/Earth/Air/Water order).
+    const BLOCK_TATTVA: [u8; 4] = [
+        ELEMENT_ID_AGNI,
+        ELEMENT_ID_PRITHVI,
+        ELEMENT_ID_VAYU,
+        ELEMENT_ID_APAS,
+    ];
 
     #[repr(C)]
     #[derive(Clone, Copy)]
@@ -481,48 +491,124 @@ mod m0_m2_parity {
         meaning_id: u16,
     }
 
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct M0M2ZodiacalBridgeEntry {
+        vak_symbol: *const c_char,
+        m0_resonance_idx: u8,
+        m0_successor: u8,
+        element: u8,
+        mode: u8,
+        m2_sign_idx: u8,
+        decan_planets: [u8; 3],
+        first_decan_idx_72: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct PsychoidPlanetaryEntry {
+        l0_prime_position: u8,
+        archetypal_number: u8,
+        planet_id: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct AlchemicalTattvicEntry {
+        alchemical: u8,
+        tattvic: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct ZodiacalEntry {
+        symbol: *const c_char,
+        resonance: u8,
+        successor: u8,
+        zodiacal_quality: u8,
+    }
+
     extern "C" {
-        static M0_M2_ZODIACAL_BRIDGE: [u8; ARCHETYPE_LUT_SIZE];
-        static PSYCHOID_PLANETARY_CORRESPONDENCE: [u8; ARCHETYPE_LUT_SIZE];
-        static ALCHEMICAL_TO_TATTVIC: [u8; ARCHETYPE_LUT_SIZE];
+        static M0_M2_ZODIACAL_BRIDGE: [M0M2ZodiacalBridgeEntry; 12];
+        static PSYCHOID_PLANETARY_CORRESPONDENCE: [PsychoidPlanetaryEntry; 7];
+        static ALCHEMICAL_TO_TATTVIC: [AlchemicalTattvicEntry; 6];
         static M2_DECAN_DESC: [DecanFaceDesc; 72];
+        static ZODIACAL_LUT: [ZodiacalEntry; 12];
     }
 
     #[test]
     fn parity_bridges_consistent() {
-        let zodiacal_bridge = unsafe { M0_M2_ZODIACAL_BRIDGE };
-        let psychoid_planets = unsafe { PSYCHOID_PLANETARY_CORRESPONDENCE };
-        let alchemical_tattvas = unsafe { ALCHEMICAL_TO_TATTVIC };
+        let bridge = unsafe { M0_M2_ZODIACAL_BRIDGE };
+        let psychoid = unsafe { PSYCHOID_PLANETARY_CORRESPONDENCE };
+        let alchemical = unsafe { ALCHEMICAL_TO_TATTVIC };
         let decans = unsafe { M2_DECAN_DESC };
+        let zodiacal_lut = unsafe { ZODIACAL_LUT };
 
-        for (idx, value) in zodiacal_bridge.iter().enumerate() {
-            if idx == 5 {
-                assert_eq!(*value, 0);
-                assert_eq!(decans[*value as usize].element, ELEMENT_ID_AGNI);
-                assert_eq!(decans[*value as usize].sign, 0);
-            } else {
-                assert_eq!(*value, M0_SENTINEL);
+        // (a) Each m2_sign_idx x element pair carries 3 DISTINCT
+        // decan_planets equal to the first 3 (light-face) decans of the
+        // corresponding sign in M2_DECAN_DESC[72]; the M0 side mirrors
+        // ZODIACAL_LUT exactly.
+        for (sign, entry) in bridge.iter().enumerate() {
+            assert_eq!(entry.m2_sign_idx as usize, sign);
+            assert_eq!(entry.m0_resonance_idx as usize, sign);
+            assert_eq!(entry.m0_successor as usize, (sign + 1) % 12);
+
+            let lut = zodiacal_lut[sign];
+            let bridge_symbol = unsafe { CStr::from_ptr(entry.vak_symbol) };
+            let lut_symbol = unsafe { CStr::from_ptr(lut.symbol) };
+            assert_eq!(bridge_symbol, lut_symbol, "sign {sign} vak symbol");
+            assert_eq!(entry.element, (lut.zodiacal_quality >> 2) & 0x03);
+            assert_eq!(entry.mode, lut.zodiacal_quality & 0x03);
+
+            let planets = entry.decan_planets;
+            assert!(
+                planets[0] != planets[1]
+                    && planets[1] != planets[2]
+                    && planets[0] != planets[2],
+                "sign {sign} must carry 3 distinct decan planets"
+            );
+
+            let first = entry.first_decan_idx_72 as usize;
+            assert_eq!(first % 6, 0, "first decan index must open a sign block");
+            for decan in 0..3 {
+                let face = decans[first + decan * 2];
+                assert_eq!(face.face, 0, "bridge points at light faces");
+                assert_eq!(face.decan as usize, decan);
+                assert_eq!(
+                    face.ruling_planet, planets[decan],
+                    "sign {sign} decan {decan} planet parity"
+                );
+                assert_eq!(
+                    face.element, BLOCK_TATTVA[entry.element as usize],
+                    "sign {sign} element-block parity"
+                );
             }
         }
 
-        assert_eq!(psychoid_planets[0], M0_SENTINEL);
-        assert_eq!(psychoid_planets[1], M0_SENTINEL);
-        assert_eq!(psychoid_planets[2], M0_SENTINEL);
-        assert_eq!(psychoid_planets[3], PLANET_SUN);
-        assert_eq!(psychoid_planets[4], PLANET_MOON);
-        assert_eq!(psychoid_planets[5], PLANET_MERCURY);
-        assert_eq!(psychoid_planets[6], PLANET_VENUS);
-        assert_eq!(psychoid_planets[7], PLANET_MARS);
-        assert_eq!(psychoid_planets[8], PLANET_JUPITER);
-        assert_eq!(psychoid_planets[9], PLANET_SATURN);
-        assert_eq!(psychoid_planets[10], M0_SENTINEL);
-        assert_eq!(psychoid_planets[11], M0_SENTINEL);
+        // (b) Parent-as-7th: the L0' lens parent (7th-Boundary) is Saturn,
+        // closing the Sun..Saturn classical sequence.
+        assert_eq!(psychoid[6].planet_id, PLANET_SATURN);
+        assert_eq!(psychoid[6].archetypal_number, 7);
+        for (idx, entry) in psychoid.iter().enumerate() {
+            assert_eq!(entry.l0_prime_position as usize, idx);
+            assert_eq!(entry.archetypal_number as usize, idx + 1);
+            assert_eq!(entry.planet_id as usize, idx, "Sun..Saturn in order");
+        }
 
-        assert_eq!(alchemical_tattvas[0], ELEMENT_ID_AKASHA);
-        assert_eq!(alchemical_tattvas[5], ELEMENT_ID_VAYU);
-        assert_eq!(alchemical_tattvas[7], ELEMENT_ID_AGNI);
-        assert_eq!(alchemical_tattvas[9], ELEMENT_ID_APAS);
-        assert_eq!(alchemical_tattvas[11], ELEMENT_ID_PRITHVI);
+        // (c) Aether and Salt both route to Akasha — prima and ultima
+        // materia, the Möbius return of the elemental cycle.
+        assert_eq!(alchemical[0].tattvic, TATTVA_AKASHA);
+        assert_eq!(alchemical[5].tattvic, TATTVA_AKASHA);
+        assert_eq!(alchemical[0].alchemical, M_ELEM_AETHER);
+
+        // (d) The element constant at index 5 is SALT per the 05.16 naming
+        // canon (the machine grep over m0.h guards the C-side name).
+        assert_eq!(alchemical[M_ELEM_SALT as usize].alchemical, M_ELEM_SALT);
+        // Earth/Water/Air/Fire land on their tattvas between the two poles.
+        assert_eq!(alchemical[1].tattvic, ELEMENT_ID_PRITHVI);
+        assert_eq!(alchemical[2].tattvic, ELEMENT_ID_APAS);
+        assert_eq!(alchemical[3].tattvic, ELEMENT_ID_VAYU);
+        assert_eq!(alchemical[4].tattvic, ELEMENT_ID_AGNI);
     }
 }
 

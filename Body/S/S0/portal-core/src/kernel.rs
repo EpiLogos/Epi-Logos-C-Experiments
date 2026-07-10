@@ -1441,7 +1441,7 @@ fn l2_prime_element(position: u8) -> &'static str {
         2 => "Water",
         3 => "Air",
         4 => "Fire",
-        _ => "Mineral",
+        _ => "Salt",
     }
 }
 

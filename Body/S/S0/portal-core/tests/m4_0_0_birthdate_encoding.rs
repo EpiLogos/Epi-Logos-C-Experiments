@@ -45,8 +45,8 @@ fn m4_0_0_birthdate_encoding_preserves_mef_evidence_for_frank_taylor() {
     assert_eq!(synthesis.anchor_lens, "L2p");
     assert_eq!(synthesis.direct_cell, "L2p.P5");
     assert_eq!(
-        synthesis.element_projection.position_element, "Mineral",
-        "direct L2' P5 hit must become a Mineral cap, not a fabricated element"
+        synthesis.element_projection.position_element, "Salt",
+        "direct L2' P5 hit must become a Salt cap, not a fabricated element"
     );
     assert!(synthesis.element_projection.direct_alchemical);
     assert_eq!(synthesis.related_lenses.tritone_mirror, "L5p");
@@ -54,11 +54,11 @@ fn m4_0_0_birthdate_encoding_preserves_mef_evidence_for_frank_taylor() {
 
     assert!(
         synthesis.contribution.elemental_score_delta.mineral_cap > 0.0,
-        "direct L2' P5 evidence must contribute to the Mineral cap"
+        "direct L2' P5 evidence must contribute to the Salt cap"
     );
     assert!(
         output.elemental.caps.mineral_cap > 0.0,
-        "Frank Taylor fixture should preserve the Mineral cap named by the spec"
+        "Frank Taylor fixture should preserve the Salt cap named by the spec"
     );
     assert_unit(output.elemental.normalized_quaternion);
     assert!(

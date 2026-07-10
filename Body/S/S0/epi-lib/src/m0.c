@@ -407,44 +407,51 @@ const char* const CONTEMPLATION_PROMPT_LUT[12] = {
  * M0/M2 PARITY BRIDGES - three minimal LUT lifts, not the full Anuttara lift.
  * ============================================================================= */
 
-/* M0 archetype index -> M2 zodiacal operator start index.
- * Only the Vak/Cit archetype currently owns SUB_TABLE_ZODIACAL; it opens the M2
- * decanic zodiac at index 0 (Aries D1 light). Other archetypes use 0xFF. */
-const uint8_t M0_M2_ZODIACAL_BRIDGE[ARCHETYPE_LUT_SIZE] = {
-    0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu, 0u,
-    0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu
+/* (a) One entry per zodiacal sign, zodiac order. `vak_symbol`/`resonance`/
+ * `successor` mirror ZODIACAL_LUT (the M0 side); `decan_planets` and
+ * `first_decan_idx_72` mirror the sign's three light-face decans in
+ * M2_DECAN_DESC (the M2 side). element = classical block (0 Fire / 1 Earth /
+ * 2 Air / 3 Water), so first_decan_idx_72 == element*18 + sign_in_element*6. */
+const M0_M2_Zodiacal_Bridge_Entry M0_M2_ZODIACAL_BRIDGE[12] = {
+    { "!",      0u,  1u,  0u, ZOD_MODE_CARDINAL, 0u,  { PLANET_MARS,    PLANET_SUN,     PLANET_JUPITER }, 0u  }, /* Aries    */
+    { "?",      1u,  2u,  1u, ZOD_MODE_FIXED,    1u,  { PLANET_VENUS,   PLANET_MERCURY, PLANET_SATURN  }, 18u }, /* Taurus   */
+    { "!-",     2u,  3u,  2u, ZOD_MODE_MUTABLE,  2u,  { PLANET_MERCURY, PLANET_VENUS,   PLANET_SATURN  }, 36u }, /* Gemini   */
+    { "-?",     3u,  4u,  3u, ZOD_MODE_CARDINAL, 3u,  { PLANET_MOON,    PLANET_MARS,    PLANET_JUPITER }, 54u }, /* Cancer   */
+    { "!?",     4u,  5u,  0u, ZOD_MODE_FIXED,    4u,  { PLANET_SUN,     PLANET_JUPITER, PLANET_MARS    }, 6u  }, /* Leo      */
+    { "?-",     5u,  6u,  1u, ZOD_MODE_MUTABLE,  5u,  { PLANET_MERCURY, PLANET_SATURN,  PLANET_VENUS   }, 24u }, /* Virgo    */
+    { "-!",     6u,  7u,  2u, ZOD_MODE_CARDINAL, 6u,  { PLANET_VENUS,   PLANET_SATURN,  PLANET_MERCURY }, 42u }, /* Libra    */
+    { "?!",     7u,  8u,  3u, ZOD_MODE_FIXED,    7u,  { PLANET_MARS,    PLANET_JUPITER, PLANET_MOON    }, 60u }, /* Scorpio  */
+    { "-!/!-",  8u,  9u,  0u, ZOD_MODE_MUTABLE,  8u,  { PLANET_JUPITER, PLANET_MARS,    PLANET_SUN     }, 12u }, /* Sagitt.  */
+    { "-?/?-",  9u,  10u, 1u, ZOD_MODE_CARDINAL, 9u,  { PLANET_SATURN,  PLANET_VENUS,   PLANET_MERCURY }, 30u }, /* Capric.  */
+    { "!?/?!",  10u, 11u, 2u, ZOD_MODE_FIXED,    10u, { PLANET_SATURN,  PLANET_MERCURY, PLANET_VENUS   }, 48u }, /* Aquarius */
+    { "?!/!?",  11u, 0u,  3u, ZOD_MODE_MUTABLE,  11u, { PLANET_JUPITER, PLANET_MOON,    PLANET_MARS    }, 66u }, /* Pisces   */
 };
 
-/* M0 archetype index -> M2 personal planet.
- * This is the psychoid extension path: archetypal numbers 1-7 bridge to the
- * classical Sun-through-Saturn planetary sequence now; Uranus/Neptune/Pluto
- * remain reserved for a future M2-5 transpersonal completion. */
-const uint8_t PSYCHOID_PLANETARY_CORRESPONDENCE[ARCHETYPE_LUT_SIZE] = {
-    0xFFu, 0xFFu, 0xFFu,
-    PLANET_SUN, PLANET_MOON, PLANET_MERCURY, PLANET_VENUS,
-    PLANET_MARS, PLANET_JUPITER, PLANET_SATURN,
-    0xFFu, 0xFFu
+/* (b) Jung-Pauli psychoid correspondence: archetypal numbers 1..7 to the
+ * classical planetary sequence; [6] is the L0' lens parent as 7th-Boundary.
+ * Uranus/Neptune/Pluto stay reserved for the M2-5 transpersonal extension. */
+const Psychoid_Planetary_Entry PSYCHOID_PLANETARY_CORRESPONDENCE[7] = {
+    { 0u, 1u, PLANET_SUN     },  /* L0'-0  Number 1, Unity-Monad          */
+    { 1u, 2u, PLANET_MOON    },  /* L0'-1  Number 2, Polarity-Dyad        */
+    { 2u, 3u, PLANET_MERCURY },  /* L0'-2  Number 3, Mediator-Triad       */
+    { 3u, 4u, PLANET_VENUS   },  /* L0'-3  Number 4, Quaternio-Tetrad     */
+    { 4u, 5u, PLANET_MARS    },  /* L0'-4  Number 5, Transcendence-Pentad */
+    { 5u, 6u, PLANET_JUPITER },  /* L0'-5  Number 6, Perfect-Hexad        */
+    { 6u, 7u, PLANET_SATURN  },  /* L0' parent — 7th-Boundary, the lens   */
 };
 
-/* M0 archetype index -> M2 tattvic element.
- *
- * Rationale:
- * - SUB_TABLE_NONE maps to Akasha: an unqualified symbolic space with no
- *   specialized operative sub-table.
- * - SUB_TABLE_ZODIACAL maps to Vayu: Vak as the moving breath/wind that carries
- *   the twelve zodiacal operators.
- * - SUB_TABLE_MONOPOLY maps to Agni: the dynamic Mono/Poly exchange as
- *   transmuting fire.
- * - SUB_TABLE_DIVINE maps to Apas: the seven acts as a flowing sequence of
- *   manifestation, concealment, grace, and return.
- * - SUB_TABLE_VIRTUE maps to Prithvi: virtues as the stabilized, embodied fruit
- *   of the M0 cycle.
- */
-const uint8_t ALCHEMICAL_TO_TATTVIC[ARCHETYPE_LUT_SIZE] = {
-    ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,
-    ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,  ELEMENT_ID_VAYU,
-    ELEMENT_ID_AKASHA,  ELEMENT_ID_AGNI,    ELEMENT_ID_AKASHA,
-    ELEMENT_ID_APAS,    ELEMENT_ID_AKASHA,  ELEMENT_ID_PRITHVI
+/* (c) L2' Alchemical-Elemental -> M2 tattvic. Aether (prima materia) and
+ * Salt (ultima materia — the fixed body of the Three Principles) both
+ * route to Akasha at opposite cycle points: the Möbius return of the
+ * elemental cycle, parallel to QL 5->0. Naming canon per 05.16: Salt,
+ * not Mineral. */
+const Alchemical_Tattvic_Entry ALCHEMICAL_TO_TATTVIC[6] = {
+    { M_ELEM_AETHER, ELEMENT_ID_AKASHA  },
+    { M_ELEM_EARTH,  ELEMENT_ID_PRITHVI },
+    { M_ELEM_WATER,  ELEMENT_ID_APAS    },
+    { M_ELEM_AIR,    ELEMENT_ID_VAYU    },
+    { M_ELEM_FIRE,   ELEMENT_ID_AGNI    },
+    { M_ELEM_SALT,   ELEMENT_ID_AKASHA  },
 };
 
 /* =============================================================================
