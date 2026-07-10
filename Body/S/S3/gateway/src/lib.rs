@@ -6,6 +6,7 @@ pub mod protocol;
 pub mod runtime;
 pub mod session_store;
 pub mod sessions;
+pub mod settings;
 pub mod spacetime;
 pub mod subagents;
 pub mod temporal_context;

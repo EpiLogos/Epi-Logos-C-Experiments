@@ -972,7 +972,15 @@ fn s1_hen_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadat
 
 fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
     let authority = entry.authority_path;
-    if authority.contains("config.rs") || authority.contains("portal/command.rs") {
+    if authority.contains("Body/S/S0/settings") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::ConfigurationSurface,
+            coordinate_owner: "S0'",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0-prime.settings-surface",
+        })
+    } else if authority.contains("config.rs") || authority.contains("portal/command.rs") {
         Some(RouteMetadata {
             owner: GatewayDispatchOwner::S0ProductAdapter,
             class: GatewayDispatchClass::ConfigurationSurface,

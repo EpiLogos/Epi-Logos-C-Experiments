@@ -45,6 +45,7 @@ mod protocol;
 mod release;
 mod s1_vault;
 mod session;
+mod settings;
 mod spacetime;
 mod temporal;
 mod verifier;
@@ -62,6 +63,7 @@ pub use protocol::*;
 pub use release::*;
 pub use s1_vault::*;
 pub use session::*;
+pub use settings::*;
 pub use spacetime::*;
 pub use temporal::*;
 pub use verifier::*;
@@ -77,6 +79,13 @@ pub const S0_PRIME_VERIFIER_METHODS: &[&str] = &[
     S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
+];
+
+pub const S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD: &str = "s0'.settings.api_key_status";
+pub const S0_PRIME_SETTINGS_OPT_IN_METHOD: &str = "s0'.settings.opt_in";
+pub const S0_PRIME_SETTINGS_METHODS: &[&str] = &[
+    S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD,
+    S0_PRIME_SETTINGS_OPT_IN_METHOD,
 ];
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";

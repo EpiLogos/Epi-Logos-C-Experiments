@@ -48,6 +48,35 @@ fn anuttara_verifier_contract_exposes_s0_prime_methods() {
 }
 
 #[test]
+fn settings_contract_exposes_s0_prime_methods() {
+    let methods = s0_prime_settings_methods();
+
+    assert_eq!(
+        methods,
+        &["s0'.settings.api_key_status", "s0'.settings.opt_in"]
+    );
+    for method in methods {
+        assert!(METHOD_NAMES.contains(method));
+        assert!(method_dispatch_plan_entry(method).is_some());
+    }
+}
+
+#[test]
+fn settings_api_key_status_response_never_carries_value() {
+    let response = ApiKeyStatusResponse {
+        present: true,
+        opt_in: "recorded".to_owned(),
+    };
+    let json = serde_json::to_value(&response).expect("status response should serialize");
+    assert_eq!(json["present"], true);
+    assert_eq!(json["optIn"], "recorded");
+    assert!(
+        json.get("value").is_none(),
+        "api key status response must never carry the key value"
+    );
+}
+
+#[test]
 fn anuttara_verifier_typed_query_contract_uses_full_seven_laws() {
     let query = M0VerifierTypedQuery {
         surface: "full-7-laws".to_owned(),

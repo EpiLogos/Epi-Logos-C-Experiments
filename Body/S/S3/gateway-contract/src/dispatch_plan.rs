@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
     S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
@@ -895,6 +896,18 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/settings + Body/S/S3/gateway::settings",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S0_PRIME_SETTINGS_OPT_IN_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/settings + Body/S/S3/gateway::settings",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

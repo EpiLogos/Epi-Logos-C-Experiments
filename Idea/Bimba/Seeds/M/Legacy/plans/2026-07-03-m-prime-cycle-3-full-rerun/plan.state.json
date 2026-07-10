@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T11:27:53.274Z",
+  "updatedAt": "2026-07-10T11:50:38.535Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7461,7 +7461,7 @@
     },
     "34.T34.1": {
       "status": "review",
-      "updatedAt": "2026-07-10T11:24:54.238Z",
+      "updatedAt": "2026-07-10T11:50:38.523Z",
       "claimedAt": "2026-07-10T11:13:08.265Z",
       "completedAt": null,
       "evidence": [
@@ -7485,12 +7485,32 @@
               "output": 20000
             }
           }
+        },
+        {
+          "at": "2026-07-10T11:50:38.523Z",
+          "text": "FULL SCOPE now landed: s0'.settings.api_key_status + s0'.settings.opt_in gateway methods added (contract constants + typed structs + METHOD_NAMES + dispatch-plan entries + s0-prime.settings-surface route + membership helper + contract tests), mirroring the s0'.verifier pattern; api_key_status response never carries the key value (asserted). All green in isolation: gateway-contract 64, dispatch_contract 27 (incl completeness + t9 cross-walk), epi-s0-settings 14, gemini-embedding 4. STILL review (not done) pending: independent verifier (verifier != closer) + a clean verify-all (shared tree currently dirty from concurrent Track-02 played-torus work). Open Architect item: CloudOptInPolicy residency (settings records+reports; gemini-embedding still owns require()).",
+          "receipt": {
+            "command": "cargo test gateway-contract (64) + gateway --test dispatch_contract (27) + epi-s0-settings (14) + gemini-embedding (4)",
+            "exitCode": 0,
+            "testsPassed": 109,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/settings.rs",
+              "Body/S/S3/gateway/tests/dispatch_contract.rs",
+              "Body/S/S0/settings/src/opt_in.rs",
+              "Body/S/S0/epi-cli/src/settings.rs"
+            ],
+            "tokenUsage": {
+              "input": 180000,
+              "output": 42000
+            }
+          }
         }
       ],
       "notes": null,
       "owner": "opus-b-track34",
       "leaseExpiresAt": "2026-07-10T13:13:08.265Z",
-      "heartbeatAt": "2026-07-10T11:24:54.238Z",
+      "heartbeatAt": "2026-07-10T11:50:38.523Z",
       "runId": "20260710T111308Z-34-T34.1",
       "worktree": null
     },

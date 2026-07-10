@@ -206,6 +206,17 @@ fn s0_prime_verifier_methods_route_to_anuttara_constraint_checker() {
 }
 
 #[test]
+fn s0_prime_settings_methods_route_to_settings_surface() {
+    for method in ["s0'.settings.api_key_status", "s0'.settings.opt_in"] {
+        let route = classify_method(method).expect("S0' settings method should be routed");
+        assert_eq!(route.owner, GatewayDispatchOwner::S0ProductAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::ConfigurationSurface);
+        assert_eq!(route.coordinate_owner, "S0'");
+        assert_eq!(route.route_id, "s0-prime.settings-surface");
+    }
+}
+
+#[test]
 fn s2_graph_methods_route_to_graph_service_authority() {
     for method in [
         "s2.graph.query",
@@ -585,6 +596,11 @@ mod t9_route_ownership_cross_walk {
             "s0'.verifier.emit_query",
             "s0'.verifier.validate_membership",
             "s0'.verifier.owl_query",
+            // S0' settings surface — contract-declared, routed by S3 metadata;
+            // backed by the `epi settings` CLI + epi-s0-settings substrate, with
+            // no S0 server.rs match arm (34.T34.1).
+            "s0'.settings.api_key_status",
+            "s0'.settings.opt_in",
             // S0'/S2 projection helpers with contract rows but no S0 host match arm.
             "m2.cymatic_invert",
             "s0'.anuttara.trace",
