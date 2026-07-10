@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:07:07.338Z",
+  "updatedAt": "2026-07-10T22:11:08.556Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2780,16 +2780,16 @@
       "worktree": null
     },
     "09.T9.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-10T22:11:08.540Z",
+      "claimedAt": "2026-07-10T22:11:08.540Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-d-mech",
+      "leaseExpiresAt": "2026-07-11T00:11:08.540Z",
+      "heartbeatAt": "2026-07-10T22:11:08.540Z",
+      "runId": "20260710T221108Z-09-T9.10",
       "worktree": null
     },
     "09.T9.11": {
@@ -9278,10 +9278,10 @@
       "worktree": null
     },
     "43.T43.2": {
-      "status": "review",
-      "updatedAt": "2026-07-10T13:32:57.451Z",
-      "claimedAt": "2026-07-10T13:26:47.920Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-10T22:11:05.182Z",
+      "claimedAt": "2026-07-10T22:10:24.567Z",
+      "completedAt": "2026-07-10T22:11:05.182Z",
       "evidence": [
         {
           "at": "2026-07-10T13:32:57.451Z",
@@ -9296,13 +9296,30 @@
               ".claude/skills/coordinate-header/SKILL.md"
             ]
           }
+        },
+        {
+          "at": "2026-07-10T22:10:15.278Z",
+          "text": "Requeue review->pending: prior owner opus-b-track34 lease expired 2026-07-10T15:26Z; reclaiming under opus-c-law to finish the close. Prior review-hold ('needs 40.T0 canon registration') is resolved: the convention's own CU-XREF intake row depends_on 43.T43.2, so the 40-ledger row is downstream, not a precondition (doc-ahead-landing)."
+        },
+        {
+          "at": "2026-07-10T22:11:05.182Z",
+          "text": "T43.2 closed: convention deliverable 43.T43.2-convention.md complete against source section 43.2 + its own Acceptance block — seven mandatory field labels in order (Coordinate/Residency/Position/Actualises/Public surface/Does NOT own/Contract), Rust //! + TS top-JSDoc + C-header + CONTRACT.md renderings, exemplar corpus with real repo-relative paths, and copy-ready Track-40 CU-XREF intake row + Track-16 CCT closure block. Criterion 2 (referenced by Track 40 intake) met by doc-ahead-landing: the CU-XREF row depends_on 43.T43.2, so it lands downstream, not as a precondition. DR-HYGIENE-1 VALIDATED 2026-06-16. Independent honesty-lint verify PASS under opus-c-verify.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 43.T43.2 --owner opus-c-verify --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/43.T43.2-convention.md"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "opus-b-track34",
-      "leaseExpiresAt": "2026-07-10T15:26:47.920Z",
-      "heartbeatAt": "2026-07-10T13:32:57.451Z",
-      "runId": "20260710T132647Z-43-T43.2",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-10T22:10:24.567Z",
+      "runId": "20260710T221024Z-43-T43.2",
       "worktree": null
     },
     "43.T43.3": {
@@ -11941,6 +11958,25 @@
       "leaseExpiresAt": "2026-07-11T00:05:16.258Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:06:39.819Z"
+    },
+    {
+      "runId": "20260710T221024Z-43-T43.2",
+      "taskId": "43.T43.2",
+      "status": "done",
+      "startedAt": "2026-07-10T22:10:24.567Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:10:24.567Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:11:05.182Z"
+    },
+    {
+      "runId": "20260710T221108Z-09-T9.10",
+      "taskId": "09.T9.10",
+      "status": "in_progress",
+      "startedAt": "2026-07-10T22:11:08.540Z",
+      "owner": "opus-d-mech",
+      "leaseExpiresAt": "2026-07-11T00:11:08.540Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
