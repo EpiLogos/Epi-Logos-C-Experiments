@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:16:09.953Z",
+  "updatedAt": "2026-07-10T12:17:21.426Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2693,16 +2693,30 @@
       "worktree": null
     },
     "10.T10.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:17:21.410Z",
+      "claimedAt": "2026-07-10T12:16:25.223Z",
+      "completedAt": "2026-07-10T12:17:21.410Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:17:21.410Z",
+          "text": "Verified executed: kleinFlipState carries ZERO hits in 07-t0-extension-contract-preflight.json (blocker dropped per 10.2); the kleinFlip payload-narrowing example IS present in the examples array (field kleinFlip, payloadPath payload.kleinFlip, narrowing rule for m2CymaticValenceInvert, examplePayload with profile.kleinFlip source, honest pending-kleinFlip fallback, preflight :402-412). JSON parses clean. Note: this preflight JSON is a Theia CONTRACT surface (LAW per CHARTER retarget rule 2) consumed read-only - no edit needed, state already correct. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "node -e JSON-parse preflight + grep kleinFlipState (zero active hits); cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract; verify-tranche 10.T10.8 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 18,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:16:25.223Z",
+      "runId": "20260710T121625Z-10-T10.8",
       "worktree": null
     },
     "10.T10.9": {
@@ -10292,6 +10306,16 @@
       "leaseExpiresAt": "2026-07-10T14:12:01.099Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:16:09.942Z"
+    },
+    {
+      "runId": "20260710T121625Z-10-T10.8",
+      "taskId": "10.T10.8",
+      "status": "done",
+      "startedAt": "2026-07-10T12:16:25.223Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:16:25.223Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:17:21.410Z"
     }
   ],
   "activeRoute": {
