@@ -72,6 +72,41 @@ export interface ModalResonatorBoundary {
     lensMode?: { lens: number; mode: number; lensModeIndex?: number };
 }
 
+// ---- M1-2 ananda vortex boundary (Tranche 10.10) ----
+// Mirrors portal-core kernel/projections/ananda_vortex.rs + the Zod
+// AnandaVortexProjection in epi-cli/schemas/src/kernel-bridge.ts.
+// Dual-faced per the canonical 12×12 Vortex Modulae CSV: every cell
+// carries a raw/no-digi-root face AND a digit-root face — renderers may
+// emphasize one, never re-derive either (played-torus consumer, T2.6).
+
+export interface AnandaVortexCellBoundary {
+    family: number;
+    rowK: number;
+    positionP: number;
+    rawValue: number | null;
+    rawBimba: number;
+    rawPratibimba: number;
+    rawSum: number;
+    rawDelta: number;
+    drValue: number | null;
+    drBimba: number;
+    drPratibimba: number;
+    drSum: number;
+    ruleValue: string | null;
+    skeletonEvent?: unknown;
+}
+
+export interface AnandaVortexProjectionBoundary {
+    activeMatrixOp: number;
+    activeCell: readonly [number, number];
+    activeCellValue: AnandaVortexCellBoundary;
+    drRingPhase: { mahamayaIdx: number; parashaktiIdx: number };
+    cl42SignatureAtPosition: number;
+    ringQuaternion: readonly number[];
+    helixSheet: number;
+    kleinFlipAtThisTick: boolean;
+}
+
 export interface M123ChimeWorldClockBindingBoundary {
     state: 'ready' | 'pending' | 'stale' | 'blocked' | string;
     tickMatchesProfile: boolean;

@@ -171,7 +171,6 @@ fn csv_vortex_row(text: &str, r: u8, b: u8) -> Option<[i32; 12]> {
 }
 
 #[test]
-#[ignore = "expected-red: Track 10.10 — m1_ananda_get carries the 10×10 %10 core; the canonical Vortex Modulae CSV is 12-fold with RAW (un-modded) values"]
 fn m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv() {
     let csv_path = repo_root().join(
         "Idea/Bimba/Map/datasets/(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number Identities - Sheet1.csv",

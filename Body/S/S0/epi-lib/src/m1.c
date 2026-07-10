@@ -672,57 +672,56 @@ void m1_teardown(M1_Root* root) {
 }
 
 /* ------------------------------------------------------------------ *
- * ANANDA #1-2 MATRICES
+ * ANANDA #1-2 MATRICES — canonical 12×12 Vortex Modulae, dual-faced
+ *
+ * RAW face ("No digi-rooting" block of the canonical CSV): closed-form
+ * affine values, un-modded. DR face ("Digi-rooting" block): routes to
+ * the canonical nibble-packed .rodata matrices (ANANDA_BIMBA /
+ * ANANDA_PRATIBIMBA / ANANDA_SUM) — one source, never a parallel table.
+ * The former 10×10 %10 "operational core" is retired (Tranche 10.10).
  * ------------------------------------------------------------------ */
 
-static uint8_t _ananda_core[6][10][10];
-static uint8_t _ananda_dr[6][10][10];
-static int _ananda_initialized = 0;
-
-static uint8_t _ananda_digital_root(uint8_t n) {
-    if (n == 0) return 0;
-    uint8_t r = n % 9;
-    return (r == 0) ? 9u : r;
-}
-
-static void _ananda_init(void) {
-    if (_ananda_initialized) return;
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            _ananda_core[0][i][j] = (uint8_t)((i * j) % 10);
-            _ananda_core[1][i][j] = (uint8_t)(((i * j) + 1) % 10);
-            _ananda_core[2][i][j] = (uint8_t)(((2 * i * j) + 1) % 10);
-            _ananda_core[3][i][j] = 9u;
-            _ananda_core[4][i][j] = 1u;
-            _ananda_core[5][i][j] = (uint8_t)(((i * j) ^ ((i * j) + 1)) % 10);
-        }
-    }
-    for (int m = 0; m < 6; m++)
-        for (int i = 0; i < 10; i++)
-            for (int j = 0; j < 10; j++)
-                _ananda_dr[m][i][j] = _ananda_digital_root(_ananda_core[m][i][j]);
-    _ananda_initialized = 1;
-}
-
+/* RAW face. Scalar non-negative families:
+ *   0 Bimba       (rX+0)         : r*c            (max 121)
+ *   1 Pratibimba  (rX+1)         : r*c + 1        (max 122)
+ *   2 Sum         (rX+0)+(rX+1)  : 2*r*c + 1      (max 243)
+ *   4 DiffB       (rX+1)-(rX+0)  : +1 constant
+ * Non-scalar-representable families return 0 here:
+ *   3 DiffA       (rX+0)-(rX+1)  : constant -1 (signed; DR face = 9)
+ *   5 NonDual rule (rX+0/1)+/-() : "-1/0/1" tuple — see get_quint_* */
 uint8_t m1_ananda_get(uint8_t matrix_idx, uint8_t row, uint8_t col) {
-    _ananda_init();
-    if (matrix_idx >= 6 || row >= 10 || col >= 10) return 0;
-    return _ananda_core[matrix_idx][row][col];
+    if (matrix_idx >= 6 || row >= 12 || col >= 12) return 0;
+    uint16_t rc = (uint16_t)row * (uint16_t)col;
+    switch (matrix_idx) {
+        case 0:  return (uint8_t)rc;
+        case 1:  return (uint8_t)(rc + 1u);
+        case 2:  return (uint8_t)(2u * rc + 1u);
+        case 4:  return 1u;
+        default: return 0u;   /* 3: signed -1; 5: rule tuple */
+    }
 }
 
+/* DR face — the digi-root mirrors, read from the canonical .rodata
+ * matrices (FR 2.1.1 / FR 2.1.9), never recomputed from the raw face. */
 uint8_t m1_ananda_dr_get(uint8_t matrix_idx, uint8_t row, uint8_t col) {
-    _ananda_init();
-    if (matrix_idx >= 6 || row >= 10 || col >= 10) return 0;
-    return _ananda_dr[matrix_idx][row][col];
+    if (matrix_idx >= 6 || row >= 12 || col >= 12) return 0;
+    switch (matrix_idx) {
+        case 0:  return get_ananda_harmonic(&ANANDA_BIMBA, row, col);
+        case 1:  return get_ananda_harmonic(&ANANDA_PRATIBIMBA, row, col);
+        case 2:  return get_ananda_harmonic(&ANANDA_SUM, row, col);
+        case 3:  return 9u;   /* DR of constant -1 (FR 2.1.9) */
+        case 4:  return 1u;
+        default: return 0u;   /* 5: dyadic — get_quint_bimba/get_quint_sum */
+    }
 }
 
+/* Ananda Axiom on the RAW face: Pratibimba - Bimba == +1 exactly,
+ * across the full canonical 12×12 grid (no modular wrap). */
 int m1_ananda_verify_axiom(void) {
-    _ananda_init();
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++) {
-            uint8_t diff = (uint8_t)((_ananda_core[1][i][j] - _ananda_core[0][i][j] + 10) % 10);
-            if (diff != 1) return 0;
-        }
+    for (uint8_t i = 0; i < 12; i++)
+        for (uint8_t j = 0; j < 12; j++)
+            if ((int)m1_ananda_get(1, i, j) - (int)m1_ananda_get(0, i, j) != 1)
+                return 0;
     return 1;
 }
 

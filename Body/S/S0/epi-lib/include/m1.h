@@ -123,23 +123,29 @@ extern const int8_t ANANDA_FAMILY_SIGNATURE[6];
 
 
 /* ===================================================================
- * ANANDA RUNTIME API — #1-2 dataset, mod10 operational space
+ * ANANDA RUNTIME API — #1-2 dataset, canonical 12×12 Vortex Modulae
  *
- * 6 core matrices (0=Bimba, 1=Pratibimba, 2=Sum, 3=FirstDiff,
- *                  4=SecondDiff, 5=NonDual) + 6 DR reflections.
+ * Dual-faced per the canonical CSV ("(0_1) Vortex Modulae … 12Fold"):
+ * every family has a RAW/no-digi-root face and a digit-root mirror.
+ * 6 families per Ananda_Matrix_Op (0=Bimba rX+0, 1=Pratibimba rX+1,
+ * 2=Sum, 3=DiffA, 4=DiffB, 5=NonDual rule).
  *
- * Ananda Axiom: m1_ananda_get(1,i,j) - m1_ananda_get(0,i,j) == 1 (mod10)
- * This is Pratibimba = Bimba + 1 — the non-dual constant.
- * Source: dataset-bridge/06-ananda-matrices-analysis.md
+ * Ananda Axiom (RAW face): m1_ananda_get(1,i,j) - m1_ananda_get(0,i,j)
+ * == +1 exactly — Pratibimba = Bimba + 1, the non-dual constant.
+ * The former 10×10 %10 "operational space" is retired (Tranche 10.10).
  * =================================================================== */
 
-/* Get cell value from core matrix (matrix_idx 0–5, row/col 0–9) */
+/* RAW face (matrix_idx 0–5, row/col 0–11). Scalar families 0/1/2/4;
+ * family 3 (constant -1, signed) and 5 (rule tuple) return 0 here —
+ * their values route via the DR face / Quintessence getters. */
 uint8_t m1_ananda_get(uint8_t matrix_idx, uint8_t row, uint8_t col);
 
-/* Get digital-root reflection of cell */
+/* DR face (digi-root mirror) — reads the canonical nibble-packed
+ * ANANDA_* .rodata matrices (row/col 0–11), never recomputed. */
 uint8_t m1_ananda_dr_get(uint8_t matrix_idx, uint8_t row, uint8_t col);
 
-/* Runtime axiom check: returns 1 if Pratibimba-Bimba=+1 holds, 0 if corrupted */
+/* Runtime axiom check: returns 1 if RAW Pratibimba-Bimba == +1 holds
+ * across the full 12×12 grid, 0 if corrupted */
 int m1_ananda_verify_axiom(void);
 
 

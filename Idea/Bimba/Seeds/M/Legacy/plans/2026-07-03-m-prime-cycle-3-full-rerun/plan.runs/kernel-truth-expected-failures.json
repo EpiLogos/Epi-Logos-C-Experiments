@@ -5,13 +5,6 @@
   "expectedFailures": [
     {
       "suite": "portal-core",
-      "test": "m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv",
-      "owningTrack": "10 (10.10)",
-      "registerRow": "§4.7 / §5.4",
-      "reason": "m1_ananda_get carries the 10x10 %10 core; the canonical Vortex Modulae CSV is 12-fold with RAW values. Blocks ananda_vortex bussing until the 12x12 raw+DR core lands."
-    },
-    {
-      "suite": "portal-core",
       "test": "kernel_energy_carries_e5_e6_with_456_weighting",
       "owningTrack": "33",
       "registerRow": "§4.7 / §5.3",

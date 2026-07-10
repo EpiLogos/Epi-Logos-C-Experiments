@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T11:27:01.481Z",
+  "updatedAt": "2026-07-10T11:27:53.274Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2571,16 +2571,32 @@
       "worktree": null
     },
     "10.T10.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T11:27:53.262Z",
+      "claimedAt": "2026-07-10T11:27:12.604Z",
+      "completedAt": "2026-07-10T11:27:53.262Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T11:27:53.262Z",
+          "text": "Retired the legacy 10x10 mod-10 _ananda_core; m1_ananda_get is now the canonical 12x12 RAW Vortex Modulae face (rX+b closed form, un-modded, SU(2) rows/cols 10-11 real) and m1_ananda_dr_get routes to the canonical nibble-packed ANANDA_BIMBA/PRATIBIMBA/SUM .rodata matrices (digi-root mirrors, one source). Ananda Axiom now exact raw +1 over all 144 cells. Owning expected-red kernel-truth test m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv GREEN against the actual canonical CSV (both matrices, all rows/cols incl 10/11); manifest entry removed, kernel-truth.mjs GREEN. C test rewritten: raw-vs-CSV closed form all 144 cells, DR-mirror==digital_root(raw) all 144 cells x3 families, CSV DR spot rows, bounds. Carrier mirror landed: AnandaVortexProjectionBoundary/AnandaVortexCellBoundary in pratibimba-app bridge/types.ts (dual-face law documented; Zod + Rust projection already carried it). Unblocks 02.T2.6 played-torus. Verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "make -C Body/S/S0/epi-lib test (all suites incl test_m1_ananda 6/6); cargo test -p portal-core --test kernel_truth m1_ananda (1 passed vs actual CSV); node .codex/scripts/kernel-truth.mjs GREEN; npx tsc --noEmit (0 errors)",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m1.c",
+              "Body/S/S0/epi-lib/include/m1.h",
+              "Body/M/pratibimba-app/src/bridge/types.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T11:27:12.604Z",
+      "runId": "20260710T112712Z-10-T10.10",
       "worktree": null
     },
     "11.T11.0": {
@@ -9983,6 +9999,16 @@
       "leaseExpiresAt": "2026-07-10T13:25:01.158Z",
       "worktree": null,
       "completedAt": "2026-07-10T11:27:01.470Z"
+    },
+    {
+      "runId": "20260710T112712Z-10-T10.10",
+      "taskId": "10.T10.10",
+      "status": "done",
+      "startedAt": "2026-07-10T11:27:12.604Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T13:27:12.604Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T11:27:53.262Z"
     }
   ],
   "activeRoute": {
