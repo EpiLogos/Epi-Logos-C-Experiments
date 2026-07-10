@@ -331,8 +331,8 @@ The **"Agentic Control Room" (ACR)** development in `Body/M/epi-theia/extensions
 
 ## DR-KB-3 — `dataset_lut_state` / `m3_codec_provenance` host struct correction
 
-**Status:** VALIDATED  ·  **Validated:** 2026-06-10  ·  **By:** Tranche 10.9 correction  ·  **Resolution:** The pending literals are `dataset_lut_state` and `m3_codec_provenance`; Wave-A M0 Tranche 01.4 named the Bedrock projection as host. The Wave-B anchor was correct about the literal sites (`kernel.rs:797,805`), and the corrected host struct is `MathemeBinaryProjection`. Current line drift places `MathemeBinaryProjection` at `Body/S/S0/portal-core/src/kernel.rs:1151`, with the two literals at `:1208` and `:1216`.
-`MathemeBedrockProjection` starts only at `:1224`.
+**Status:** VALIDATED  ·  **Validated:** 2026-06-10  ·  **By:** Tranche 10.9 correction  ·  **Resolution:** The pending literals are `dataset_lut_state` and `m3_codec_provenance`; Wave-A M0 Tranche 01.4 named the Bedrock projection as host. The Wave-B anchor was correct about the literal sites (`kernel.rs:797,805`), and the corrected host struct is `MathemeBinaryProjection`. Current line drift (re-swept 2026-07-10 after the kernel-module split): `MathemeBinaryProjection` lives at `Body/S/S0/portal-core/src/kernel/projections/binary.rs:7`, fields at `:26`/`:29`, pending literals at `:64` (`pending-dataset-lut`) and `:72` (`m3_codec_provenance`). (`codon_rotation_projection.rs:72,148` carries its own separate, materialized `dataset_lut_state` — not these pending literals.)
+`MathemeBedrockProjection` is a separate M0 projection at `kernel/projections/bedrock.rs`.
 
 **Action:** M0/M3 closure tranches must name `MathemeBinaryProjection` as the host for these two pending literals. The Bedrock projection remains a separate M0 projection and must not be cited as the host.
 

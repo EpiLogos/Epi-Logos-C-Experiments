@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:17:21.426Z",
+  "updatedAt": "2026-07-10T12:19:25.061Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2720,16 +2720,31 @@
       "worktree": null
     },
     "10.T10.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:19:25.050Z",
+      "claimedAt": "2026-07-10T12:17:36.652Z",
+      "completedAt": "2026-07-10T12:19:25.050Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:19:25.050Z",
+          "text": "DR-KB-3 correction note verified + re-swept to current truth: host struct is MathemeBinaryProjection (never Bedrock), now at kernel/projections/binary.rs:7 post-split with the two pending literals at :64/:72; register updated with the 2026-07-10 line-drift re-sweep while preserving the historical Wave-B anchor kernel.rs:797 (verification clause intact); Bedrock separately at kernel/projections/bedrock.rs; noted codon_rotation_projection.rs carries its own materialized dataset_lut_state (distinct). K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test -p portal-core (binary projection compiled + suite green in K gate); verify-tranche 10.T10.9 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 319,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Body/S/S0/portal-core/src/kernel/projections/binary.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:17:36.652Z",
+      "runId": "20260710T121736Z-10-T10.9",
       "worktree": null
     },
     "10.T10.10": {
@@ -10316,6 +10331,16 @@
       "leaseExpiresAt": "2026-07-10T14:16:25.223Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:17:21.410Z"
+    },
+    {
+      "runId": "20260710T121736Z-10-T10.9",
+      "taskId": "10.T10.9",
+      "status": "done",
+      "startedAt": "2026-07-10T12:17:36.652Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:17:36.652Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:19:25.050Z"
     }
   ],
   "activeRoute": {
