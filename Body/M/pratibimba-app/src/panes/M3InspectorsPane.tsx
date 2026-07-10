@@ -1,14 +1,20 @@
 /**
- * Coordinate: M' M3' (inspectors pane body — Track 04.T4.2)
+ * Coordinate: M' M3' (inspectors pane body — Tracks 04.T4.2 + 24.T24.1)
  * Residency: Body/M/pratibimba-app/src/panes
- * Actualises: the `m3.mahamaya.inspectors` surface — six SUMMONABLE
- *   inspectors (toggle chips; none open by default) + the four depth-view
- *   mode switch, every value verbatim from the view model's bus windows
- *   (m3Inspectors.ts). Pending chips are rendered, never hidden.
- * Does NOT own: inspector law (m3Inspectors.ts), the profile cache, flexlayout.
+ * Actualises: the `m3.mahamaya.inspectors` surface — the cosmic wheel as the
+ *   alive default dominant zone (M3CosmicWheelRenderService, mode="full"),
+ *   six SUMMONABLE inspectors (toggle chips; none open by default) + the
+ *   four depth-view mode switch, every value verbatim from the view model's
+ *   bus windows (m3Inspectors.ts). Pending chips are rendered, never hidden.
+ * Does NOT own: inspector law (m3Inspectors.ts), wheel rendering law
+ *   (components/M3CosmicWheelRenderService.tsx), the profile cache, flexlayout.
  */
 
 import { useMemo, useState } from 'react';
+import {
+    buildM3WheelSurface,
+    M3CosmicWheelRenderService
+} from '../components/M3CosmicWheelRenderService';
 import { useTickStore } from '../state/stores';
 import {
     buildM3InspectorsView,
@@ -43,6 +49,17 @@ export function M3InspectorsPane() {
         });
     }, [cached]);
 
+    // 24.T24.1: the wheel is the alive default (dominant zone); the six
+    // inspectors below stay summonable. Same payload, separate pure builder.
+    const wheelSurface = useMemo(
+        () =>
+            buildM3WheelSurface({
+                payload: (cached?.profile as Record<string, unknown> | null) ?? {},
+                generation: cached?.generation ?? 0
+            }),
+        [cached]
+    );
+
     const toggle = (id: M3InspectorId) => {
         setOpen(previous => {
             const next = new Set(previous);
@@ -65,6 +82,8 @@ export function M3InspectorsPane() {
             data-depth-view={depthView}
         >
             <h3>M3′ inspectors</h3>
+
+            <M3CosmicWheelRenderService mode="full" surface={wheelSurface} />
 
             <div className="m3-inspector-summons" data-testid="m3-inspector-summons">
                 {M3_INSPECTOR_ORDER.map(id => (

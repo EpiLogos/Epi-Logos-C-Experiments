@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:11:08.556Z",
+  "updatedAt": "2026-07-10T22:13:05.869Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2780,14 +2780,32 @@
       "worktree": null
     },
     "09.T9.10": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T22:11:08.540Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T22:12:23.144Z",
       "claimedAt": "2026-07-10T22:11:08.540Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T22:12:23.144Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:12:23.144Z",
+          "text": "All 7 S2 graph methods (gds.tangent_overlay, ontology.reload, seed.snapshot, core65.audit, promotion.dry_run, promotion.commit, relation_family.list) fully registered: contract constants (lib.rs:93-99) + METHOD_NAMES/protocol + dispatch_plan rows (dispatch_plan.rs:403-439) + S0 dispatch arm (dispatch.rs:916-922 -> graph::dispatch_graph_method calling epi_s2_graph_services, real S2 routing not stub) + parity.rs + gateway cross-walk; none in s3_only_methods(). dispatch_contract 27/27 green (incl t9_route_ownership_cross_walk); W-gate PASS under verifier opus-d-mech-verify.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract",
+            "exitCode": 0,
+            "testsPassed": 27,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/lib.rs:93-99",
+              "Body/S/S3/gateway-contract/src/dispatch_plan.rs:403-439",
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs:916-922",
+              "Body/S/S0/epi-cli/src/gate/graph.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.10.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-d-mech",
-      "leaseExpiresAt": "2026-07-11T00:11:08.540Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:11:08.540Z",
       "runId": "20260710T221108Z-09-T9.10",
       "worktree": null
@@ -6381,14 +6399,30 @@
       "worktree": null
     },
     "24.T24.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T22:01:59.941Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T22:13:05.857Z",
       "claimedAt": "2026-07-10T22:01:59.941Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T22:13:05.857Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:13:05.857Z",
+          "text": "M3CosmicWheelRenderService landed on the carrier (spec paths retargeted from frozen epi-theia m3-mahamaya widget per CHARTER): single source of wheel rendering across badge|mini-view|full modes, PURE function of its surface prop via buildM3WheelSurface (reads codonRotationProjection + mahamaya + tick12/degree720 bus windows verbatim - no local codon/arcana tables, per the Inheritance law). 64-cell ring coloured by bussed codonClass through CL42_PALETTE + carrier tokens (carrier-tokens lint GREEN), active cell luminous with rotation arrow over rotation/rotationalStateCount/rotationDegrees, 22 Major-Arcana inner-ring SLOTS rendered honest-pending (pending-major-arcana-map: WC-M3-SA-2 field not yet bussed - fixture shows tarotMinorId/tarotShadowCodon null), Quintessence centre slot pending (indicator body is 24.11's), composition guard refuses render when surfaceReady false and falls to the pending banner, tickHandler consumes bussed tick only (no internal timer). Mounted as the dominant zone of M3InspectorsPane (the carrier's flat-dl default surface), inspectors stay summonable. 7 new component tests + full app suite 252 green; forbidden-import discipline holds (no S0/portal-core code imports in browser src; remaining grep hits are doc-comment prose only).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 24.T24.1 (UF class gate PASS: app-typecheck + app-test 252 + app-build + app-smoke + app-ui-flow 11 playwright flows + carrier-tokens + live-wire spawned gateway) + pnpm exec vitest run (7 new component tests)",
+            "exitCode": 0,
+            "testsPassed": 252,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.test.tsx",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-11T00:01:59.941Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:01:59.941Z",
       "runId": "20260710T220159Z-24-T24.1",
       "worktree": null
@@ -11933,11 +11967,12 @@
     {
       "runId": "20260710T220159Z-24-T24.1",
       "taskId": "24.T24.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T22:01:59.941Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-11T00:01:59.941Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T22:13:05.857Z"
     },
     {
       "runId": "20260710T220322Z-17-T17.13",
@@ -11972,11 +12007,12 @@
     {
       "runId": "20260710T221108Z-09-T9.10",
       "taskId": "09.T9.10",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T22:11:08.540Z",
       "owner": "opus-d-mech",
       "leaseExpiresAt": "2026-07-11T00:11:08.540Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T22:12:23.144Z"
     }
   ],
   "activeRoute": {
