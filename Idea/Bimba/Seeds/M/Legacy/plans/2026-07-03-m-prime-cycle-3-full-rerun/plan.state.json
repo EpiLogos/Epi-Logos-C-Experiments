@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T14:42:03.760Z",
+  "updatedAt": "2026-07-10T14:47:23.010Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1314,14 +1314,29 @@
       "worktree": null
     },
     "04.T4.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-10T14:41:04.280Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T14:47:22.997Z",
       "claimedAt": "2026-07-10T14:41:04.280Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-10T14:47:22.997Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T14:47:22.997Z",
+          "text": "Clock-field overlay landed on the Cosmic Engine wheel (renderer overlay only, substrate m3_clock_lut untouched): aspect edges from a VERBATIM PORT of the C kernel m2_aspect_between (MAJOR_ASPECT_ANGLE {0,60,90,120,180} + MAJOR_ASPECT_ORB {10,6,8,8,10}, tightest-match; parity proven incl orb boundaries + 360-wrap) over the BUSSED planet degrees, drawn as zodiac-radius chords colour-keyed per aspect kind; hop edge along the 384 line-change graph via the involution hexagram XOR (1<<line) on BUSSED hexagram/line (involutivity proven; same XOR law as the oracle temporal face); codon wheel perturbs with tick advance (per-generation redraw guard in the render hook - proven by the tick-perturbation test); absent bus fields = empty overlay, never fabricated edges; strip readout engine-clock-field exposes live counts (e2e asserts the real hop edge on the live gateway). Single profile subscription preserved. UF-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/engine/clockFieldOverlay.test.ts (5 passed: C aspect-law parity incl orb boundaries + wrap, hop involution, tick-perturbation redraw, plane geometry); pnpm test:e2e (11 passed incl live hop edge on the real bus); pnpm test (212); verify-tranche 04.T4.3 UF-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 228,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/clockFieldOverlay.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-10T16:41:04.280Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:41:04.280Z",
       "runId": "20260710T144104Z-04-T4.3",
       "worktree": null
@@ -10970,11 +10985,12 @@
     {
       "runId": "20260710T144104Z-04-T4.3",
       "taskId": "04.T4.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-10T14:41:04.280Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-10T16:41:04.280Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-10T14:47:22.997Z"
     },
     {
       "runId": "20260710T144203Z-40-T0",

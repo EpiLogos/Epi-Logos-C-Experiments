@@ -64,6 +64,13 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
     await expect(overlay).toContainText(/72:\d+ q5°/);
     await expect(overlay).toContainText(/64:\d+ [A-Z]{3}/);
     await expect(overlay).toContainText('9₂=8₃+1₁');
+
+    // 4.3: the clock-field overlay reads the live bus — the hop edge (384
+    // line-change) is always derivable from the bussed hexagram/line; aspect
+    // edges appear when the kairos planet degrees ride the profile
+    const clockField = page.getByTestId('engine-clock-field');
+    await expect(clockField).toHaveAttribute('data-hop', /\d+>\d+/, { timeout: 20_000 });
+    await expect(clockField).toContainText(/hop \d+→\d+/);
 });
 
 test('cosmic face: the M1 played-torus renders the ananda vortex live off the bus (T2.6)', async ({

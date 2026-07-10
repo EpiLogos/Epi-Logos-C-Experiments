@@ -33,6 +33,12 @@ import {
 } from './cosmicMath';
 import { modulationEngine, useEngineStore } from './modulation/engine';
 import { buildPentadicOverlay } from './cosmicPentadicOverlay';
+import {
+    buildClockFieldOverlay,
+    buildClockFieldOverlayState,
+    ClockFieldOverlayState,
+    updateClockFieldOverlay
+} from './clockFieldOverlay';
 import { harmonicSnapshot } from './modulation/modulators';
 import { ModulationCarrier } from './modulation/types';
 import {
@@ -281,6 +287,14 @@ export function CosmicEngine() {
         () => buildPentadicOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
         [cached]
     );
+    // 4.3: clock-field aspect/hop overlay — same single profile subscription;
+    // tick advance perturbs the wheel (a new generation redraws the edge set)
+    const clockField = useMemo(
+        () => buildClockFieldOverlayState((cached?.profile as Record<string, unknown> | null) ?? {}),
+        [cached]
+    );
+    const clockFieldRef = useRef<ClockFieldOverlayState>(clockField);
+    clockFieldRef.current = clockField;
     const level = snapshot.degradation;
     const kairosLive = snapshot.planetDegrees !== null;
 
@@ -323,6 +337,12 @@ export function CosmicEngine() {
         // ── centre: the K² torus (L0 + L1 cymatic skin) ──
         const torusGroup = new THREE.Group();
         scene.add(torusGroup);
+
+        // ── 4.3: clock-field aspect + hop-edge overlay on the zodiac wheel ──
+        const clockFieldParts = buildClockFieldOverlay();
+        clockFieldParts.group.rotation.x = Math.PI / 2; // lie in the clock plane
+        scene.add(clockFieldParts.group);
+        let drawnClockField: ClockFieldOverlayState | null = null;
         const uniforms = {
             uOctet: { value: new Array(8).fill(0) },
             uNodalM: { value: new Array(4).fill(1) },
@@ -823,6 +843,12 @@ export function CosmicEngine() {
             modulationEngine.register(planetsCarrier),
             modulationEngine.register(quintessenceCarrier),
             modulationEngine.addRenderHook(() => {
+                // 4.3: redraw the clock-field overlay only when a new
+                // generation's state arrives (tick advance = perturbation)
+                if (clockFieldRef.current !== drawnClockField) {
+                    drawnClockField = clockFieldRef.current;
+                    updateClockFieldOverlay(clockFieldParts, drawnClockField, R_ZODIAC);
+                }
                 const width = host.clientWidth;
                 const height = host.clientHeight;
                 if (width !== lastW || height !== lastH) {
@@ -938,6 +964,15 @@ export function CosmicEngine() {
                     {snapshot.lensMode
                         ? `${snapshot.modeName ?? `CF${snapshot.lensMode.mode + 1}`} @ ${snapshot.chromatic?.note ?? snapshot.lensLabel ?? '—'} · 84:${snapshot.lensModeIndex ?? '—'}`
                         : '—'}
+                </span>
+                <span
+                    data-testid="engine-clock-field"
+                    data-aspect-edges={clockField.aspectEdges.length}
+                    data-hop={clockField.hopEdge ? `${clockField.hopEdge.fromHexagram}>${clockField.hopEdge.toHexagram}` : 'pending'}
+                    title="4.3 clock-field overlay: kernel aspect law (m2_aspect_between port) over bussed planet degrees + the 384 line-change hop edge (hexagram ⊕ line)"
+                >
+                    ⌁ {clockField.aspectEdges.length} aspects
+                    {clockField.hopEdge ? ` · hop ${clockField.hopEdge.fromHexagram}→${clockField.hopEdge.toHexagram}` : ' · hop pending'}
                 </span>
                 <span
                     data-testid="engine-pentadic-overlay"
