@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-10T22:28:38.772Z",
+  "generatedAt": "2026-07-10T22:33:27.085Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -281,7 +281,7 @@
       "file": "38-tunability-surface-architecture.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md",
       "title": "Track 38 — Tunability Surface Architecture (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "c36cdbdd82580bc9da077ca6822a8e638215c0b8ad8f94dff5eb59d054bad714"
+      "checksum": "f1612d5c5d5bb0f46301e7a9d2771143d354f4bcc625368094fb7e8f8a33c7b2"
     },
     {
       "id": "38",
@@ -9087,9 +9087,27 @@
         "00.T3"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md"
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md",
+        "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:94-95"
       ],
-      "body": "1. **T0 — Absorb and retarget: 38-tunability-surface-architecture.md (law-only source)**\n\n   Brief: read `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md` IN FULL. It carries binding law/design with no tranche list. Enumerate its unbuilt commitments against the current carrier (register §2 track 38 lists known gaps) as new numbered tranches appended to THIS file, then close this task with the enumeration as evidence.\n   Depends on Track 00 Tranche 3.\n   Verify: new tranches parse into the ledger (re-run the assess script and show the new task ids); each cites its original section."
+      "body": "1. **T0 — Absorb and retarget: 38-tunability-surface-architecture.md (law-only source)**\n\n   Brief: read `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md` IN FULL. It carries binding law/design with no tranche list. Enumerate its unbuilt commitments against the current carrier (register §2 track 38 lists known gaps) as new numbered tranches appended to THIS file, then close this task with the enumeration as evidence.\n   Depends on Track 00 Tranche 3.\n   Verify: new tranches parse into the ledger (re-run the assess script and show the new task ids); each cites its original section.\n\n---\n\n## Enumerated tranches (T0 output — Track-38-owned carrier, DR-gated)\n\n*Enumerated from the source law (`../2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md`, read in full) against [[2026-07-03-cycle-3-recapture-register]] §2 track 38 (`Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:94-95`). The source §8 delegates the ENTIRE surface implementation to Track-06 sub-tranches — 06.7 (schema crate), 06.8 (Tuning UI + `s5'.tune.*` gateway), 06.9 (Tier-2 lifecycle), 06.10 (Tier-3 ML hook), 06.11 (audit loop), 06.12 (config migration) — and all six are BLOCKED on DR-TUNE-1..4, which are **PROPOSED** (`13-decision-register.md:1298-1354`; DR-TUNE-1 \"Blocks Tranches 06.7-06.12\" at `:1308`). Those Track-06 tranches are NOT re-enumerated here. Track 38's own unbuilt commitment is the CARRIER Tuning pane (source §8 06.8 lands the UI on the FROZEN `epi-theia/extensions/tuning-surface`; the pratibimba-app equivalent is Track-38-owned). Grounded with a 2026-07-10 receipt.*"
+    },
+    {
+      "id": "38.T38.1",
+      "trackId": "38",
+      "tranche": "T38.1",
+      "title": "Carrier Tuning pane (pratibimba-app, no-modal landing surface over `s5'.tune.*`)",
+      "effort": "pratibimba-app, no-modal landing surface over `s5'.tune.*`",
+      "file": "38-tunability-surface-architecture.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md",
+      "dependsOn": [
+        "38.T06.9"
+      ],
+      "writeScopes": [
+        "Body/M/pratibimba-app",
+        "Body/M/pratibimba-app/src"
+      ],
+      "body": "2. **T38.1 — Carrier Tuning pane (pratibimba-app, no-modal landing surface over `s5'.tune.*`)**\n\n   Brief: source §1 M5-3' Tuning UI authority + §2.1 Tier-1 developer surface (`../2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md:63,72-80`) + §8 tranche 06.8 render contract (`:572-580`) retargeted to `Body/M/pratibimba-app` per `CHARTER.md` (06.8's UI targets the FROZEN `epi-theia/extensions/tuning-surface`; the carrier equivalent is Track-38-owned). Land a Tuning pane on the pratibimba-app carrier consuming the `s5'.tune.{registry.list,get,set,audit.read,lock.toggle,propose}` gateway family (06.8 substrate): left tree grouped by `owning_subsystem`; per-knob current value / default / residency-class / scope-class / risk-class / ml-trainable / citation-back-to-DR; the ~15 structural invariants (source §7.1) rendered **locked / greyed** (`structural_invariant = true`, never editable); audit-trail viewer; lock-knob action. No-modal invariant (source §1, per the 15.2 ACR→OmniPanel reframe) — the pane IS the landing surface, never a popup. Register CARRIER: \"Tuning pane (landing surface, no modals) — after DR-TUNE ratification.\" Register-grounded UNBUILT (2026-07-10: 0 `tuning`/`s5'.tune`/`tunable` refs under `Body/M/pratibimba-app/src`).\n   Depends on 38.T0. **Blocked-gate: DR-TUNE-1..4 (PROPOSED, `13-decision-register.md:1298-1354`) must be VALIDATED before this tranche executes** — the source gates all Track-38/06 tunability work on that ratification (an architect/user decision); until then this row is `blocked`, not workable.\n   Verify: the carrier Tuning pane renders live knobs from a spawned gateway's `s5'.tune.registry.list`, greys the structural invariants, and opens no modal (UF/app-flow per Track 00); DR-TUNE-1..4 VALIDATED in the register before close; verifier ≠ closer."
     },
     {
       "id": "38.T06.7",

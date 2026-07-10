@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:28:38.773Z",
+  "updatedAt": "2026-07-10T22:33:27.086Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8859,16 +8859,30 @@
       "worktree": null
     },
     "38.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T22:33:27.074Z",
+      "claimedAt": "2026-07-10T22:29:01.553Z",
+      "completedAt": "2026-07-10T22:33:27.074Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T22:33:27.074Z",
+          "text": "T0 absorb-and-retarget closed: Tunability Surface source (2026-06-02, read in full, 719 lines) enumerated into 1 Track-38-owned carrier tranche 38.T38.1 (carrier Tuning pane, no-modal, over s5'.tune.*). The entire surface implementation is delegated to Track-06 06.7-06.12 (schema/UI/lifecycle/ML/audit/migration) and BLOCKED on DR-TUNE-1..4 which are PROPOSED (13-decision-register.md:1298-1354; DR-TUNE-1 Blocks 06.7-06.12 at :1308) - not re-enumerated. T38.1 depends on DR-TUNE ratification (architect decision); grounded 0 carrier tune refs. Parses into ledger. Independent UF-gate verify PASS under opus-c-verify (16 suites incl app-ui-flow + live-wire green).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 38.T0 --owner opus-c-verify (UF gate green: app-ui-flow + live-wire + carrier-tokens)",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-c-law",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:29:01.553Z",
+      "runId": "20260710T222901Z-38-T0",
       "worktree": null
     },
     "38.T06.7": {
@@ -10766,6 +10780,19 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "38.T38.1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -12309,6 +12336,16 @@
       "leaseExpiresAt": "2026-07-11T00:26:22.285Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:28:38.760Z"
+    },
+    {
+      "runId": "20260710T222901Z-38-T0",
+      "taskId": "38.T0",
+      "status": "done",
+      "startedAt": "2026-07-10T22:29:01.553Z",
+      "owner": "opus-c-law",
+      "leaseExpiresAt": "2026-07-11T00:29:01.553Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T22:33:27.074Z"
     }
   ],
   "activeRoute": {
