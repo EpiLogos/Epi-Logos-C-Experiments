@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:42:56.222Z",
+  "updatedAt": "2026-07-10T15:44:48.578Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4520,16 +4520,30 @@
       "worktree": null
     },
     "16.T16.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:44:48.565Z",
+      "claimedAt": "2026-07-10T15:43:12.932Z",
+      "completedAt": "2026-07-10T15:44:48.565Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:44:48.565Z",
+          "text": "CCT-12 verified landed in hen-compiler-core: RenameRefusalReason::CoordinateResidencyMismatch (wikilinks.rs:243-252) with coordinate_residency_refusal enforcing default-REFUSE (Option-based, NO override parameter exists in the surface) wired into rename_or_move_file - the only Hen mutation path per DR-S1-2; a file whose coordinate frontmatter disagrees with the destination residency refuses with both coordinates in the detail (S1-under-S2 test green; residency inference covers Seeds + World/Types paths). The named residency_on_move file does not exist under that name - the law lives in the wikilink_parser suite (10/10). Closes the silent-corruption hole DR-M1-4 depends on. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test wikilink_parser (10 passed incl coordinate_residency_refusal_reports_mismatched_frontmatter); verify-tranche 16.T16.12 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/wikilinks.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:43:12.932Z",
+      "runId": "20260710T154312Z-16-T16.12",
       "worktree": null
     },
     "16.T16.13": {
@@ -11724,6 +11738,16 @@
       "leaseExpiresAt": "2026-07-10T17:41:05.245Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:42:56.209Z"
+    },
+    {
+      "runId": "20260710T154312Z-16-T16.12",
+      "taskId": "16.T16.12",
+      "status": "done",
+      "startedAt": "2026-07-10T15:43:12.932Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:43:12.932Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:44:48.565Z"
     }
   ],
   "activeRoute": {
