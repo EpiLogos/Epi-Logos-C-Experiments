@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:24:38.539Z",
+  "updatedAt": "2026-07-10T15:27:13.848Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10207,16 +10207,30 @@
       "worktree": null
     },
     "14.T14.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:27:13.836Z",
+      "claimedAt": "2026-07-10T15:26:15.729Z",
+      "completedAt": "2026-07-10T15:27:13.836Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:27:13.836Z",
+          "text": "Release-gate runner landed at .codex/scripts/release-gates.mjs: mechanises G1 (rerun ledger re-index via plain --write, NEVER --reset per the original CAUTION; 597 tasks parse), G2 (all 10 wave-a/wave-b matrix files present), G4 (119 DR rows >= 20), G6 (anti-greenfield smell-test over the design-recon corpus with the sanctioned M-prime product-surface allow-list; zero violations) - exit code reflects mechanised gates only. G3/G5/G7-G12 report as honest OPEN/CLOSED rows with owning-track ledger lookups (current truth: 5/12 CLOSED - G9 phase-b report + G12 track-43 hygiene also closed; G7/G8/G10/G11 open with owners named). Report stage only - never wired into the per-tranche verify gate. UF-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "node .codex/scripts/release-gates.mjs (exit 0: G1 597-task re-index, G2 all 10 matrices, G4 119 DR rows, G6 zero first-build hits outside the allow-list; honest OPEN rows for G3/G5/G7-G12 with owners); verify-tranche 14.T14.1 UF-gate PASS incl app-ui-flow playwright",
+            "exitCode": 0,
+            "testsPassed": 12,
+            "testsFailed": 0,
+            "keyPaths": [
+              ".codex/scripts/release-gates.mjs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:26:15.729Z",
+      "runId": "20260710T152615Z-14-T14.1",
       "worktree": null
     },
     "14.T14.2": {
@@ -11539,6 +11553,16 @@
       "leaseExpiresAt": "2026-07-10T17:21:42.759Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:24:38.526Z"
+    },
+    {
+      "runId": "20260710T152615Z-14-T14.1",
+      "taskId": "14.T14.1",
+      "status": "done",
+      "startedAt": "2026-07-10T15:26:15.729Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:26:15.729Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:27:13.836Z"
     }
   ],
   "activeRoute": {
