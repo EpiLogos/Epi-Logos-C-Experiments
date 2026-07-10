@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:34:28.478Z",
+  "updatedAt": "2026-07-10T15:38:23.152Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4334,16 +4334,30 @@
       "worktree": null
     },
     "16.T16.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:38:23.140Z",
+      "claimedAt": "2026-07-10T15:34:47.056Z",
+      "completedAt": "2026-07-10T15:38:23.140Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:38:23.140Z",
+          "text": "CCT-1 landed as the named acceptance test (did not exist): klein_flip_personal_scale_propagation proves (a) the M3 codon-rotation axis (472-surface index) flips in the same generation as the fold, (b) the M4 personal-pole q_composed re-read through the Vama classifier (compose_personal_quaternion + perturb_q_activity) moves with the fold AND a lagging read (pre-flip quaternion at the post-flip tick) is distinguishable - the no-surface-lags law, (c) the 4-5-0 lemniscate anchor (PhaseSpaceAddress) re-anchors with degree720 equal to the profile clock - one frame. Replay clause: same tick twice = byte-identical at all three faces (serde). Same-frame atomicity is structural (all derive from ONE from_tick profile) and now pinned. The visual-regression baseline half remains 15.T15.12 (G8) per its own gate. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test klein_flip_personal_scale_propagation (3 passed: flip fires 5-to-6 + clears, all three faces retune in ONE generation with the no-lag distinguishability proof, single-tick replay byte-deterministic at all three); verify-tranche 16.T16.1 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/klein_flip_personal_scale_propagation.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:34:47.056Z",
+      "runId": "20260710T153447Z-16-T16.1",
       "worktree": null
     },
     "16.T16.2": {
@@ -11651,6 +11665,16 @@
       "leaseExpiresAt": "2026-07-10T17:32:10.497Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:34:28.254Z"
+    },
+    {
+      "runId": "20260710T153447Z-16-T16.1",
+      "taskId": "16.T16.1",
+      "status": "done",
+      "startedAt": "2026-07-10T15:34:47.056Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:34:47.056Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:38:23.140Z"
     }
   ],
   "activeRoute": {
