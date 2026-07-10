@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:07:41.394Z",
+  "updatedAt": "2026-07-10T12:08:48.011Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2583,16 +2583,31 @@
       "worktree": null
     },
     "10.T10.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:08:47.998Z",
+      "claimedAt": "2026-07-10T12:07:56.249Z",
+      "completedAt": "2026-07-10T12:08:47.998Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:08:47.998Z",
+          "text": "DR-KB-2 decision (typed MathemeHarmonicProfile field; kernel authority, bridge DTO follows) verified EXECUTED: pub deposition_anchor: DepositionAnchorProjection at kernel/profile.rs:584 built from profile parts at :697; bridge reads the struct field (kernel_bridge_runtime.rs:996 clone, :973 depositionAnchor emit) instead of edge-synthesizing; Zod mirror at kernel-bridge.ts:1143. Register entry present at 13-decision-register.md:320. Contract suite 18/18 asserts the JSON edge. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (18 passed, JSON-edge consistency); verify-tranche 10.T10.4 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 18,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:07:56.249Z",
+      "runId": "20260710T120756Z-10-T10.4",
       "worktree": null
     },
     "10.T10.5": {
@@ -10169,6 +10184,16 @@
       "leaseExpiresAt": "2026-07-10T14:06:42.676Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:07:41.382Z"
+    },
+    {
+      "runId": "20260710T120756Z-10-T10.4",
+      "taskId": "10.T10.4",
+      "status": "done",
+      "startedAt": "2026-07-10T12:07:56.249Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:07:56.249Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:08:47.998Z"
     }
   ],
   "activeRoute": {
