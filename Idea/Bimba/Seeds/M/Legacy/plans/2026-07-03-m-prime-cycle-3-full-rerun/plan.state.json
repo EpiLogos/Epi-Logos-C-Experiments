@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T11:50:38.535Z",
+  "updatedAt": "2026-07-10T11:53:44.619Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -851,19 +851,35 @@
       "worktree": null
     },
     "02.T2.6": {
-      "status": "review",
-      "updatedAt": "2026-07-09T09:42:10.535Z",
+      "status": "done",
+      "updatedAt": "2026-07-10T11:53:44.607Z",
       "claimedAt": "2026-07-09T09:26:17.900Z",
-      "completedAt": null,
+      "completedAt": "2026-07-10T11:53:44.607Z",
       "evidence": [
         {
           "at": "2026-07-09T09:42:10.535Z",
           "text": "INVESTIGATION ONLY (no renderer code written) — checkpoint for Architect. T2.6 is a from-scratch three.js K2 played-torus surface (retarget Bevy/wgpu -> three.js; carrier already uses three@0.185, CosmicEngine precedent). HARD SUBSTRATE DEP on Tranche 10.10 ananda_vortex projection per M1-2-ANANDA-VORTEX-ARCHITECTURE §4.2-4.3, which the ledger dependsOn OMITS: Rust AnandaVortexProjection on MathemeHarmonicProfile (profile.rs:579 via from_tick) + Zod schema (anandaVortex optional) are LANDED; the C-side raw/no-digit-root face fidelity correction (§4.3) is UNVERIFIED (no 7X+1/8X+0/raw-face markers in m1.c/m1.h — likely digit-root-only still); carrier bridge/types.ts does NOT yet mirror anandaVortex. Recommend: verify/complete 10.10 substrate (C raw-face + carrier mirror), THEN build the played-torus renderer with Architect visual review. Large visual tranche, flagged for direction."
+        },
+        {
+          "at": "2026-07-10T11:53:44.607Z",
+          "text": "K2 played-torus landed on the carrier (Bevy/wgpu retarget -> three.js pane per CHARTER; frozen ARCHITECTURE.md surfaces are LAW). New cosmic-face tab m1.paramasiva.playedTorus: single K2 (R/r=16/9, R+r=1 - the 64+36 identity) + SU(2) Hopf shadow sheet at 30% + diamond still-point + luminous dual-register ananda cell with Cl(4,2) halo colour-binary; orientation IS the kernel ringQuaternion; helix-sheet phase + klein-flip interpenetration wired. ALL state off the profile bus (anandaVortex 10.10 projection verbatim, audioOctet/nodalQuartet Vimarsa windows, m1Topology invariants); strict parse -> pending-ananda-vortex blocked overlay, zero local LUT/derivation. Tranche audits landed as behavioral tests: exactly-two-tori boundary (no T2-Mahamaya), source-fidelity (7X+1=36/8X+0=64 verbatim + window-not-derivation 999 test), 720/genus-1 from substrate. Playwright vs REAL gateway shows the vortex LIVE (family sum cell (8,2) raw 33 dr 6; diff-a raw -1 dr 9 - real kernel writes ticking). vitest 19 new/184 total; e2e 9/9; UF-gate PASS (verifier opus-a-m1-vf != closer opus-a-m1). Full heatmap/streamline choreography = Tranches 15.8/15.9; Architect visual review invited - the tab is live in the app.",
+          "receipt": {
+            "command": "pnpm test:e2e (playwright, 9 passed incl T2.6 played-torus live spec vs REAL spawned gateway); pnpm test (184 passed); npx tsc --noEmit; pnpm build; verify-tranche 02.T2.6 UF-gate PASS (app-ui-flow/app-smoke/live-wire green)",
+            "exitCode": 0,
+            "testsPassed": 212,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1PlayedTorus.ts",
+              "Body/M/pratibimba-app/src/panes/playedTorusScene.ts",
+              "Body/M/pratibimba-app/src/panes/PlayedTorusPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-a-kernel",
-      "leaseExpiresAt": "2026-07-09T11:26:17.900Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-09T09:42:10.535Z",
       "runId": "20260709T092617Z-02-T2.6",
       "worktree": null

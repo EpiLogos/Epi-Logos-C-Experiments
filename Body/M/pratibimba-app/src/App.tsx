@@ -29,6 +29,7 @@ import { modulationEngine, registerEngineCommands, useEngineStore } from './engi
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { WalkPane } from './panes/WalkPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
+import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { ChatPane } from './panes/ChatPane';
 import { CommandPalette } from './panes/CommandPalette';
 import { FileTreePane } from './panes/FileTreePane';
@@ -112,7 +113,8 @@ const COSMIC_DEFAULT = {
                     { type: 'tab', name: 'Cosmic Engine', component: 'cosmic', enableClose: false },
                     { type: 'tab', name: 'Walk', component: 'walk', enableClose: false },
                     { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
-                    { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false }
+                    { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
+                    { type: 'tab', name: 'Played Torus', component: 'm1PlayedTorus', enableClose: false }
                 ]
             }
         ]
@@ -121,7 +123,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 5;
+const LAYOUT_VERSION = 6;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -154,6 +156,8 @@ function factory(node: TabNode) {
             return <GraphExplorerPane />;
         case 'kleinTopology':
             return <KleinTopologyPane />;
+        case 'm1PlayedTorus':
+            return <PlayedTorusPane />;
         case 'personalHome':
             return <NowPane />;
         case 'journalTimeline':

@@ -79,8 +79,11 @@ export interface ModalResonatorBoundary {
 // carries a raw/no-digi-root face AND a digit-root face — renderers may
 // emphasize one, never re-derive either (played-torus consumer, T2.6).
 
+/** Matrix families cross the wire as kebab-case strings (Rust
+ *  `AnandaMatrixOp` serde) — 'bimba' | 'pratibimba' | 'sum' | 'diff-a' |
+ *  'diff-b' | 'quintessence'. */
 export interface AnandaVortexCellBoundary {
-    family: number;
+    family: string;
     rowK: number;
     positionP: number;
     rawValue: number | null;
@@ -97,7 +100,7 @@ export interface AnandaVortexCellBoundary {
 }
 
 export interface AnandaVortexProjectionBoundary {
-    activeMatrixOp: number;
+    activeMatrixOp: string;
     activeCell: readonly [number, number];
     activeCellValue: AnandaVortexCellBoundary;
     drRingPhase: { mahamayaIdx: number; parashaktiIdx: number };

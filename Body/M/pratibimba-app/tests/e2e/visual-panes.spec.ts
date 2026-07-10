@@ -57,6 +57,47 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
     expect(glLive, 'three.js WebGL context should be live in the e2e face').toBe(true);
 });
 
+test('cosmic face: the M1 played-torus renders the ananda vortex live off the bus (T2.6)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+
+    // activate the Played Torus tab on the cosmic face
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Played Torus' })
+        .click();
+
+    const pane = page.locator('.face-active [data-testid="m1-played-torus"]');
+    await expect(pane).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId('m1-played-torus-fallback')).toHaveCount(0);
+
+    // ananda_vortex is a NON-optional projection on the live profile
+    // (portal-core kernel/profile.rs:579) — against the real spawned gateway
+    // the surface must reach ready, never the pending overlay
+    await expect(pane).toHaveAttribute('data-vortex-state', 'ready', { timeout: 20_000 });
+
+    // the dual-register cell chrome carries the kernel's raw + digit-root
+    // faces (a window onto the Tranche 10.10 writes, not local math)
+    const cell = page.getByTestId('m1-played-torus-cell');
+    await expect(cell).toContainText(
+        /family (bimba|pratibimba|sum|diff-a|diff-b|quintessence)/
+    );
+    // dual-register faces: raw may be negative (diff-a = −1) or — (rule family)
+    await expect(cell).toContainText(/raw (-?\d+|—) · dr (\d+|—)/);
+
+    // three.js mounted a live GL canvas for the K²
+    const canvas = pane.locator('canvas').first();
+    await expect(canvas).toBeVisible();
+    const glLive = await canvas.evaluate((el: HTMLCanvasElement) => {
+        const ctx =
+            (el.getContext('webgl2') as WebGLRenderingContext | null) ??
+            (el.getContext('webgl') as WebGLRenderingContext | null);
+        return ctx !== null && !ctx.isContextLost();
+    });
+    expect(glLive, 'played-torus WebGL context should be live').toBe(true);
+});
+
 test('cosmic face: the Walk pane walks the REAL graph and the # invert round-trips X → X′ → X', async ({
     page
 }) => {
