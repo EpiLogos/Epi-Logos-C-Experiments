@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:01:56.723Z",
+  "updatedAt": "2026-07-10T15:04:43.560Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2426,16 +2426,30 @@
       "worktree": null
     },
     "08.T8.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:04:43.548Z",
+      "claimedAt": "2026-07-10T15:02:13.170Z",
+      "completedAt": "2026-07-10T15:04:43.548Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:04:43.548Z",
+          "text": "M2-to-M4 deposit-handle reception landed as the handoff VERIFIER (carrier retarget of the plugin-integrated-4-5-0 routing): receiveDepositHandle consumes an F_routing trace and produces the Nara-journal deposit intent (reference-only journal line, never a trace body). Privacy verified at handoff per the brief - and stronger than the brief expected: the emitter class is protected_local_handle_only (f_routing.rs:14), so reception REFUSES wrong classes AND any arrival over the public profile bus (which is exactly why the live wire correctly carries no depositHandle - verified against the fresh capture). The named acceptance runs green: the M4 journal receives the handle on a synthetic F_routing trace matching the emitter shape pinned by f_routing_trace.rs:36-40. Protected transport (personal session path) remains Track 10.M4/12 territory; this verifier is what it must pass through. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/panes/m4DepositReception.test.ts (4 passed: synthetic-trace reception, class verification, public-bus refusal, bogus-ref refusal); cargo test -p portal-core --test f_routing_trace (emitter pin); verify-tranche 08.T8.2 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4DepositReception.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:02:13.170Z",
+      "runId": "20260710T150213Z-08-T8.2",
       "worktree": null
     },
     "08.T8.3": {
@@ -11269,6 +11283,16 @@
       "leaseExpiresAt": "2026-07-10T17:01:00.343Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:01:56.710Z"
+    },
+    {
+      "runId": "20260710T150213Z-08-T8.2",
+      "taskId": "08.T8.2",
+      "status": "done",
+      "startedAt": "2026-07-10T15:02:13.170Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:02:13.170Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:04:43.548Z"
     }
   ],
   "activeRoute": {
