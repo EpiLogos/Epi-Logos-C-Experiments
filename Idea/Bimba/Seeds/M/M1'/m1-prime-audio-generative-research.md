@@ -257,7 +257,7 @@ This event envelope should be the first testable artifact before live UI polish.
 
 ## Open Research Questions
 
-- `MathemeHarmonicProfile` type defined canonically at `Body/S/S0/portal-core/src/kernel.rs:346`, with the public import surface re-exported via `portal-core/src/harmonic_profile.rs`; `portal-core` owns profile generation today.
+- `MathemeHarmonicProfile` type defined canonically at `Body/S/S0/portal-core/src/kernel/profile.rs:545` (moved there by the kernel-module split; formerly `kernel.rs:346`), with the public import surface re-exported via `portal-core/src/harmonic_profile.rs`; `portal-core` owns profile generation today.
 - Should the first M1' API be C (`m1_prime.h/.c`) for kernel parity, Rust for Tauri/audio integration, or a split where C exposes deterministic kernels and Rust owns real-time audio/MIDI?
 - What is the canonical fundamental `f0` policy: fixed A4=440-derived, user-selectable, coordinate-specific, or session-profile-specific?
 - Should the runtime default to pure-ratio output, 12-TET output with exact-ratio metadata, or dual output where pure Hz drives internal audio and 12-TET drives basic MIDI fallback?

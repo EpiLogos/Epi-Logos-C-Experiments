@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T11:58:21.791Z",
+  "updatedAt": "2026-07-10T12:00:45.645Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -925,16 +925,30 @@
       "worktree": null
     },
     "02.T2.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:00:45.634Z",
+      "claimedAt": "2026-07-10T11:58:35.182Z",
+      "completedAt": "2026-07-10T12:00:45.634Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:00:45.634Z",
+          "text": "Resolved the audio-research type-owner question with CURRENT truth: canonical MathemeHarmonicProfile is at portal-core/src/kernel/profile.rs:545 (the brief cited kernel.rs:346 - stale after the kernel-module split; verified by fresh grep of pub struct MathemeHarmonicProfile), re-exported via harmonic_profile.rs; portal-core owns profile generation. One-line doc patch records the move genealogy. UF-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 02.T2.8 (UF gate PASS incl app-ui-flow playwright); cargo test -p portal-core --test profile_projections_full_suite",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M1prime/m1-prime-audio-generative-research.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T11:58:35.182Z",
+      "runId": "20260710T115835Z-02-T2.8",
       "worktree": null
     },
     "02.T2.10": {
@@ -10069,6 +10083,16 @@
       "leaseExpiresAt": "2026-07-10T13:54:32.609Z",
       "worktree": null,
       "completedAt": "2026-07-10T11:58:21.780Z"
+    },
+    {
+      "runId": "20260710T115835Z-02-T2.8",
+      "taskId": "02.T2.8",
+      "status": "done",
+      "startedAt": "2026-07-10T11:58:35.182Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T13:58:35.182Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:00:45.634Z"
     }
   ],
   "activeRoute": {
