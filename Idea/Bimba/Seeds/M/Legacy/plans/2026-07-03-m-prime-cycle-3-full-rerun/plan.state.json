@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:16:42.274Z",
+  "updatedAt": "2026-07-10T15:19:17.380Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2589,16 +2589,30 @@
       "worktree": null
     },
     "08.T8.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:19:17.368Z",
+      "claimedAt": "2026-07-10T15:17:11.074Z",
+      "completedAt": "2026-07-10T15:19:17.368Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:19:17.368Z",
+          "text": "DR-M4-4 partition landed at the carrier envelope boundary (the Theia privacy-scrubber/release-gate retarget): scrubQPartition DENIES the four reserved private names + all prefix derivatives (q_personal/q_identity/q_activity/q_composed - refusal line each, values never serialized), ALLOWS the public canon q_{n}_{i?}_{semantic} + qm_ meta vocabulary (incl the DR-S1-6 inversion slot), and treats unknown q-shaped keys as ERRORS never silent pass/drop - the wildcard q_* bleed path is closed. Release-gate snapshot acceptance green (synthetic envelope: 4 private + public q_5/qm_5 fields -> only public survive + 4 refusals, no SECRET in output). Twin enforcement already proven at the kernel-bridge serializer (runtime.rs:1363-1406 + contract tests). Note: the tranche header said DR-M4-4 PROPOSED - stale; batch-validated 2026-06-09 per the register. W-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/bridge/qPrivacyScrubber.test.ts (4 passed: release-gate snapshot, prefix derivatives, unknown-key errors, DR-S1-6 inversion slot); cargo test epi-cli kernel_bridge_runtime_contract (q-partition twins green in gate); verify-tranche 08.T8.8 W-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/bridge/qPrivacyScrubber.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:17:11.074Z",
+      "runId": "20260710T151711Z-08-T8.8",
       "worktree": null
     },
     "08.T8.9": {
@@ -11414,6 +11428,16 @@
       "leaseExpiresAt": "2026-07-10T17:14:39.946Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:16:42.262Z"
+    },
+    {
+      "runId": "20260710T151711Z-08-T8.8",
+      "taskId": "08.T8.8",
+      "status": "done",
+      "startedAt": "2026-07-10T15:17:11.074Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:17:11.074Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:19:17.368Z"
     }
   ],
   "activeRoute": {
