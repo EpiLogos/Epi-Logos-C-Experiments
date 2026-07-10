@@ -614,3 +614,36 @@ async fn live_m0_inspector_payload_reads_anuttara_fields_from_s2_properties() {
         .await
         .expect("cleanup anuttara test node");
 }
+
+/// CCT-13 / DR-IG-1 (16.T16.13): the kernel-resonance write stamps the TYPED
+/// canonical relation family `kernel_core` — the Phase-C 'kernel-resonance'
+/// hyphen drift can never re-enter the write path.
+#[test]
+fn kernel_resonance_plan_stamps_canonical_relation_family() {
+    let plan =
+        GraphMethodService::kernel_resonance_observation_plan(&KernelResonanceObservationRequest {
+            source_coordinate: "#2".into(),
+            session_key: "cct13:session".into(),
+            timestamp_ms: 1_779_000_009_999,
+            lens: 2,
+            ascent_helix: false,
+            position: 1,
+            score: 0.5,
+            kernel_tick: 3,
+            graphiti_arc_id: None,
+        })
+        .expect("plan builds");
+    assert!(
+        plan.cypher.contains("c_1_relation_family = 'kernel_core'"),
+        "the write must stamp the canonical kernel_core family: {}",
+        plan.cypher
+    );
+    assert!(
+        !plan.cypher.contains("kernel-resonance'"),
+        "the hyphen drift literal must be gone from the write path"
+    );
+    assert!(
+        epi_s2_graph_schema::RELATION_FAMILY_VALUES.contains(&"kernel_core"),
+        "kernel_core is a member of the typed family enum"
+    );
+}

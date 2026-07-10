@@ -337,7 +337,7 @@ impl<'a> GraphMethodService<'a> {
              MERGE (source)-[r:{kernel_relation}]->(obs)
              SET r.c_0_source_coordinate = source.coordinate,
                  r.c_0_target_coordinate = obs.coordinate,
-                 r.c_1_relation_family = 'kernel-resonance',
+                 r.c_1_relation_family = '{relation_family_kernel_core}',
                  r.c_2_relation_type = '{kernel_relation}',
                  r.c_3_created_at = datetime({{epochMillis: $timestamp_ms}}),
                  r.c_4_provenance = $provenance,
@@ -350,6 +350,10 @@ impl<'a> GraphMethodService<'a> {
                     obs.c_4_ql_position AS ql_position",
             kernel_label = KERNEL_RESONANCE_LABEL,
             kernel_relation = KERNEL_RESONANCE_RELATION,
+            // CCT-13 / DR-IG-1: the family literal is the TYPED canonical
+            // constant (kernel_core) — the 'kernel-resonance' hyphen literal
+            // was the Phase-C drift, corrected 2026-07-10.
+            relation_family_kernel_core = epi_s2_graph_schema::relationships::RELATION_FAMILY_KERNEL_CORE,
             resonance_index_property = KERNEL_RESONANCE_INDEX_PROPERTY,
             resonance_score_property = KERNEL_RESONANCE_SCORE_PROPERTY,
             resonance_square_property = KERNEL_RESONANCE_SQUARE_PROPERTY,
