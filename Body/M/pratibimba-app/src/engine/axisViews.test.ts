@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AXIS_ORDER, AXIS_SOURCE_FIELDS, decodeAxisAt, encodeAxis } from './axisViews';
+import { AXIS_ORDER, AXIS_SOURCE_FIELDS, decodeAxisAt, encodeAxis, OVERLAY_ORDER, OVERLAY_CARDINALITY, AXIS_CARDINALITY } from './axisViews';
 
 describe('axisViews (Tranche 03.T3.3 — six distinct per-axis decoders)', () => {
     it('gives every axis its OWN source field — the six-identical-stubs law is dead', () => {
@@ -45,5 +45,26 @@ describe('axisViews (Tranche 03.T3.3 — six distinct per-axis decoders)', () =>
         expect(decodeAxisAt(72, 'mef')).toBeNull();
         expect(decodeAxisAt(-1, 'shem')).toBeNull();
         expect(decodeAxisAt(3.5, 'det')).toBeNull();
+    });
+});
+
+describe('sonic overlays vs axes (DR-M2-2 / 03.T3.6)', () => {
+    it('shem is a real 72-axis; asma is an overlay — the fused shem-asma collapse stays dead', () => {
+        expect(AXIS_ORDER).toContain('shem');
+        expect(AXIS_ORDER as readonly string[]).not.toContain('asma');
+        expect(OVERLAY_ORDER).toContain('asma');
+        expect(OVERLAY_ORDER as readonly string[]).not.toContain('shem');
+    });
+
+    it('the cardinality asymmetry is the law: axes 72, mantra 100, asma 99+1', () => {
+        expect(AXIS_CARDINALITY).toBe(72);
+        expect(OVERLAY_CARDINALITY.mantra).toBe(100);
+        expect(OVERLAY_CARDINALITY.asma).toBe(100); // 99 + 1 — never 72
+        for (const axis of AXIS_ORDER) {
+            // every axis round-trips the full 72-space; overlays never enter it
+            expect(decodeAxisAt(0, axis)).not.toBeNull();
+            expect(decodeAxisAt(71, axis)).not.toBeNull();
+            expect(decodeAxisAt(72, axis)).toBeNull();
+        }
     });
 });

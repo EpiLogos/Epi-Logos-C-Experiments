@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:48:57.578Z",
+  "updatedAt": "2026-07-10T12:51:51.094Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1147,16 +1147,31 @@
       "worktree": null
     },
     "03.T3.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:51:51.079Z",
+      "claimedAt": "2026-07-10T12:51:24.938Z",
+      "completedAt": "2026-07-10T12:51:51.079Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:51:51.079Z",
+          "text": "DR-M2-2 decision executed and verified on the carrier: UX doc already frames one 72-invariant + six addressing-axes (MEF/tattva/decan/Shem/maqam/DET) + two sonic overlays (mantra-100, Asma 99+1) + planetary keying via decan-linked M2_PLANET_LUT[10] (sections at lines 26/30/63/73). The fused shem-asma collapse is dead in ALL live code (grep clean outside the frozen warehouse); shem is a real 72-axis in Axis72/AXIS_ORDER (carrier equivalent of the retargeted M2AddressView contract). Landed the missing overlay half: SonicOverlay type + OVERLAY_ORDER (mantra, asma separate) + OVERLAY_CARDINALITY (100, 99+1) + AXIS_CARDINALITY 72 in axisViews.ts with round-trip tests covering the asymmetry (axes decode 0..71, reject 72; overlays never enter the axis space; asma never 72). K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "npx vitest run src/engine/axisViews.test.ts (7 passed incl DR-M2-2 overlay-vs-axis asymmetry tests); npx tsc --noEmit; verify-tranche 03.T3.6 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/axisViews.ts",
+              "Idea/Pratibimba/System/Subsystems/Parashakti/parashakti-ux-full-m2-branch.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:51:24.938Z",
+      "runId": "20260710T125124Z-03-T3.6",
       "worktree": null
     },
     "03.T3.7": {
@@ -10416,6 +10431,16 @@
       "leaseExpiresAt": "2026-07-10T14:48:02.989Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:48:57.566Z"
+    },
+    {
+      "runId": "20260710T125124Z-03-T3.6",
+      "taskId": "03.T3.6",
+      "status": "done",
+      "startedAt": "2026-07-10T12:51:24.938Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:51:24.938Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:51:51.079Z"
     }
   ],
   "activeRoute": {

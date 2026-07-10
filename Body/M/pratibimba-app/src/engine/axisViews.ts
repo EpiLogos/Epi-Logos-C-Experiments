@@ -15,6 +15,28 @@ export type Axis72 = 'mef' | 'tattva' | 'decan' | 'shem' | 'maqam' | 'det';
 
 export const AXIS_ORDER: readonly Axis72[] = ['mef', 'tattva', 'decan', 'shem', 'maqam', 'det'];
 
+// ---- Sonic overlays (DR-M2-2 / Tranche 03.6) ----
+// The six axes above address the ONE 72-invariant; mantra-100 and
+// Asma'ul-Husna 99+1 are SONIC OVERLAYS routed onto it — never axes. The
+// frozen warehouse fused `shem-asma` into one address view; that collapse was
+// mathematically wrong (72 vs 99+1 cardinality, axis vs overlay role) and is
+// ratified apart: `shem` is the 72-cardinality axis in AXIS_ORDER; `asma` is
+// an overlay here. Overlay values route through kernel payloads (m2.h LUTs),
+// never local tables.
+
+export type SonicOverlay = 'mantra' | 'asma';
+
+export const OVERLAY_ORDER: readonly SonicOverlay[] = ['mantra', 'asma'];
+
+/** Overlay cardinalities per DR-M2-2: mantra 100 (50+50 Matrika/Malini),
+ *  Asma'ul-Husna 99+1 — NOT 72; the asymmetry with the axis space is the law. */
+export const OVERLAY_CARDINALITY: Readonly<Record<SonicOverlay, number>> = {
+    mantra: 100,
+    asma: 99 + 1
+};
+
+export const AXIS_CARDINALITY = 72;
+
 /** Each axis reads its OWN wire field — the anti-stub law. None aliases
  * `profile.resonance72.lensAnchorIndex`; that path stays MEF-only via the
  * trace's axisViews object. */
