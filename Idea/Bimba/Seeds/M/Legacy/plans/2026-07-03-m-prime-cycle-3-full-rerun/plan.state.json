@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T12:08:48.011Z",
+  "updatedAt": "2026-07-10T12:10:06.051Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2611,16 +2611,30 @@
       "worktree": null
     },
     "10.T10.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T12:10:06.028Z",
+      "claimedAt": "2026-07-10T12:08:59.098Z",
+      "completedAt": "2026-07-10T12:10:06.028Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T12:10:06.028Z",
+          "text": "Audit resolved on the LAND branch (not deprecate): s2_anchor/s3_anchor are no longer placeholders - populated at kernel/profile.rs:782/785 via MathemeFutureAnchor::s2_coordinate_anchor (provenance graph-services/src/pointers.rs::kernel_coordinate_anchor_for, readiness cycle-2-s2-coordinate-anchor) and s3_profile_observation_anchor (provenance kernel_events.rs::KernelProfileObservationEvent::from_profile); Zod mirrors nullable with honest-null doc (kernel-bridge.ts:1198-1199); covered by track_01_t2_profile_contract + schemas live fixture. cargo check green. K-gate PASS, verifier opus-a-m1-vf != closer opus-a-m1.",
+          "receipt": {
+            "command": "cargo check -p portal-core; cargo test -p portal-core --test track_01_t2_profile_contract; verify-tranche 10.T10.5 K-gate PASS",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T12:08:59.098Z",
+      "runId": "20260710T120859Z-10-T10.5",
       "worktree": null
     },
     "10.T10.6": {
@@ -10194,6 +10208,16 @@
       "leaseExpiresAt": "2026-07-10T14:07:56.249Z",
       "worktree": null,
       "completedAt": "2026-07-10T12:08:47.998Z"
+    },
+    {
+      "runId": "20260710T120859Z-10-T10.5",
+      "taskId": "10.T10.5",
+      "status": "done",
+      "startedAt": "2026-07-10T12:08:59.098Z",
+      "owner": "opus-a-m1",
+      "leaseExpiresAt": "2026-07-10T14:08:59.098Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T12:10:06.028Z"
     }
   ],
   "activeRoute": {
