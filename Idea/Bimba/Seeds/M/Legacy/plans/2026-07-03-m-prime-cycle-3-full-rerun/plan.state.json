@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T22:37:17.616Z",
+  "updatedAt": "2026-07-10T23:06:52.852Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7206,16 +7206,33 @@
       "worktree": null
     },
     "27.T27.0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T23:06:52.839Z",
+      "claimedAt": "2026-07-10T22:52:58.968Z",
+      "completedAt": "2026-07-10T23:06:52.839Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T23:06:52.839Z",
+          "text": "omnipanel-runtime foundation landed on the carrier (frozen omnipanel-shell paths retargeted per CHARTER; zustand replaces Inversify - the events ring IS subscribeRunEvents): OMNIPANEL_TABS canonical 8-fold manifest with the tab collapse map (/ chat -> pi-chat, logs -> tool-stream temporal fold; sessions unchanged; the collapse-map decision row itself is Track 13's landing, not yet in the register - code JSDoc carries the forward reference per spec), all eight tabs derived into OMNI_BORDER shared by BOTH faces per 15.2 (LAYOUT_VERSION bumped 8->9 so stale saved layouts fall back), five unlanded folds (dispatch-trace/evidence/review/gateway/diagnostics) mount OmniPendingPane naming their owning tranche - honest pending, never hidden. Run-model type-graph (ActorIdentity/DispatchRoute/RunStatus/RunTreeNode/ToolStreamEvent/ReviewDecision/ReviewTransition) + isMediationCapabilityAllowed (exact + prefix.* permits against a caller-supplied list, no hidden registry until 12.10 lands the matrix route) + toToolStreamEvents pure temporal fold. useProfileTick() = the ONE 15.6 re-render seam: generation-gated, stale generations hold the view (render-count-pinned test), tick12/degree720 verbatim from the bussed profile. App shell layout test upgraded from the single / chat label to all 8 canonical labels on both faces. 8 new tests; app suite 260 green; e2e sessions flow unaffected (hasText matching is case-insensitive). TOOLING NOTE: session day identity is UTC-derived while the assess gate + vault Day paradigm are local-day - mismatch surfaces 23:00-00:00 UTC in BST; session pinned to the local calendar day.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 27.T27.0 (UF class gate PASS: app-typecheck + app-test 260 + app-build + app-smoke + app-ui-flow 11 playwright flows + carrier-tokens + live-wire spawned gateway)",
+            "exitCode": 0,
+            "testsPassed": 260,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/src/state/useProfileTick.ts",
+              "Body/M/pratibimba-app/src/panes/omni/OmniPendingPane.tsx",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T22:52:58.968Z",
+      "runId": "20260710T225258Z-27-T27.0",
       "worktree": null
     },
     "27.T27.1": {
@@ -12370,6 +12387,16 @@
       "leaseExpiresAt": "2026-07-11T00:33:47.805Z",
       "worktree": null,
       "completedAt": "2026-07-10T22:37:17.604Z"
+    },
+    {
+      "runId": "20260710T225258Z-27-T27.0",
+      "taskId": "27.T27.0",
+      "status": "done",
+      "startedAt": "2026-07-10T22:52:58.968Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T00:52:58.968Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T23:06:52.839Z"
     }
   ],
   "activeRoute": {

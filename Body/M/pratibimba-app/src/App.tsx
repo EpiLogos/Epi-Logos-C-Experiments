@@ -41,6 +41,8 @@ import { MarkdownEditorPane } from './panes/MarkdownEditorPane';
 import { NowPane } from './panes/NowPane';
 import { OraclePane } from './panes/OraclePane';
 import { SessionsPane } from './panes/SessionsPane';
+import { OmniPendingPane } from './panes/omni/OmniPendingPane';
+import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
 import { VaultEntry } from './panes/FileTreePane';
 
 /** Month-first (Architect correction): sorts within the year in the vault. */
@@ -63,15 +65,20 @@ export type Face = 0 | 1;
 
 const STALE_WINDOW_MS = 10_000;
 
+/** 27.T27.0: the `/` membrane derives its tabs from the canonical 8-fold
+ *  manifest (DR-WC-OP-1 collapse: `/ chat` → Pi, `logs` → Tools); shared
+ *  by BOTH faces per 15.2. Unlanded folds mount the honest pending pane. */
 const OMNI_BORDER = {
     type: 'border',
     location: 'right',
     size: 380,
-    children: [
-        { type: 'tab', id: 'omni-tab', name: '/ chat', component: 'omniChat', enableClose: false },
-        { type: 'tab', name: 'sessions', component: 'omniSessions', enableClose: false },
-        { type: 'tab', name: 'logs', component: 'omniLogs', enableClose: false }
-    ]
+    children: OMNIPANEL_TABS.map(tab => ({
+        type: 'tab',
+        id: tab.id === 'pi-chat' ? 'omni-tab' : `omni-${tab.id}`,
+        name: tab.label,
+        component: tab.component,
+        enableClose: false
+    }))
 };
 
 const PERSONAL_DEFAULT = {
@@ -127,7 +134,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 8;
+const LAYOUT_VERSION = 9;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -178,6 +185,14 @@ function factory(node: TabNode) {
             return <SessionsPane />;
         case 'omniLogs':
             return <LogsPane />;
+        // 27.T27.0: folds whose panels have not landed (27.3/.5/.6/.7/.8
+        // own the bodies) mount the honest pending pane.
+        case 'omniDispatchTrace':
+        case 'omniEvidence':
+        case 'omniReview':
+        case 'omniGateway':
+        case 'omniDiagnostics':
+            return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;
         default:
             return <div className="pane-message">unknown pane: {node.getComponent()}</div>;
     }

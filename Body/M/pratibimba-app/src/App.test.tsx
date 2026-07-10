@@ -71,9 +71,21 @@ describe('App shell', () => {
         });
         expect(shell.dataset.face).toBe('0'); // cosmic = the 0-side
         // the / OmniPanel operator membrane overlays BOTH faces (cross-layout
-        // availability): its chat tab renders in each face layout (flexlayout
+        // availability): the canonical 8-fold manifest (27.T27.0, DR-WC-OP-1
+        // collapse — `/ chat` → Pi) renders in each face layout (flexlayout
         // may render a tab's text twice per layout — button + panel)
-        expect((await screen.findAllByText('/ chat')).length).toBeGreaterThanOrEqual(2);
+        for (const label of [
+            'Pi',
+            'Sessions',
+            'Dispatch',
+            'Tools',
+            'Evidence',
+            'Review',
+            'Gateway',
+            'Diagnostics'
+        ]) {
+            expect((await screen.findAllByText(label)).length).toBeGreaterThanOrEqual(2);
+        }
         // exactly TWO face containers — the 0-side and the 1-side, no third
         expect(document.querySelectorAll('.face-slot').length).toBe(2);
         act(() => {
