@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-10T15:31:44.678Z",
+  "updatedAt": "2026-07-10T15:34:28.478Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4150,16 +4150,31 @@
       "worktree": null
     },
     "15.T15.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-10T15:34:28.254Z",
+      "claimedAt": "2026-07-10T15:32:10.497Z",
+      "completedAt": "2026-07-10T15:34:28.254Z",
+      "evidence": [
+        {
+          "at": "2026-07-10T15:34:28.254Z",
+          "text": "G7 closed: the ui-foundation-principles.md registry EXISTS at the contract path (rich contract: nine numbered principles + surface-standard cross-refs + block-kit obligations - frozen contract surface, LAW per retarget) and the CARRIER now declares adherence (src/ui/foundationPrinciples.ts, the pratibimba-app equivalent of the contributes.uiFoundationPrincipleAdherence package flag) with a registry-PARITY test: the nine named principles must match the contract rows verbatim (drift breaks the build - the kernel-bridge parity pattern). The per-extension package-json validator is Theia plumbing (dead); the carrier is one app whose parity test IS the validator. UF-gate PASS, verifier opus-a-m3-vf != closer opus-a-m3.",
+          "receipt": {
+            "command": "npx vitest run src/ui/foundationPrinciples.test.ts (2 passed: adherence declared + nine names in PARITY with the frozen contract registry rows); verify-tranche 15.T15.1 UF-gate PASS incl app-ui-flow playwright",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/foundationPrinciples.ts",
+              "Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-10T15:32:10.497Z",
+      "runId": "20260710T153210Z-15-T15.1",
       "worktree": null
     },
     "15.T15.2": {
@@ -11626,6 +11641,16 @@
       "leaseExpiresAt": "2026-07-10T17:31:44.480Z",
       "worktree": null,
       "completedAt": "2026-07-10T15:31:44.665Z"
+    },
+    {
+      "runId": "20260710T153210Z-15-T15.1",
+      "taskId": "15.T15.1",
+      "status": "done",
+      "startedAt": "2026-07-10T15:32:10.497Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-10T17:32:10.497Z",
+      "worktree": null,
+      "completedAt": "2026-07-10T15:34:28.254Z"
     }
   ],
   "activeRoute": {
