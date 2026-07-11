@@ -9,8 +9,14 @@
  *   sources — src/styles.css (CSS custom properties) and src/ui/tokens.ts
  *   (JS-side named tokens for canvas/Three.js/force-graph consumers); every
  *   other src file consuming them is a finding.
- * Public surface: RULES, TOKEN_SOURCES, TEST_FILE_RE, stripComments,
- *   scanSource, scanTree, main;
+ *   T30.1 tightening: the type scale landed as the `--type-*` vocabulary, so
+ *   raw font-size VALUES are findings even in styles.css — sizes enter the
+ *   carrier only as `--type-*` custom-property definitions (which carry no
+ *   `font-size:` prefix and so never match the rule); every `font-size:`
+ *   declaration must consume a var(). ui/tokens.ts keeps the full exemption
+ *   (canvas/Three.js consumers may need named numeric sizes there).
+ * Public surface: RULES, TOKEN_SOURCES, TOKEN_SOURCE_ALLOWED_KINDS,
+ *   TEST_FILE_RE, stripComments, scanSource, scanTree, main;
  *   CLI: node .codex/scripts/lint-carrier-tokens.mjs [--src <dir>] [--json]
  * Does NOT own: the token vocabulary itself (styles.css + ui/tokens.ts are
  *   the token sources); the boundary/header lint (lint-boundaries.mjs, T18a);
@@ -34,6 +40,13 @@ export const DEFAULT_SRC_ROOT = join(REPO_ROOT, "Body", "M", "pratibimba-app", "
 /** The files allowed to define raw values — the token sources (srcRoot-relative,
  *  posix form): the CSS custom-property source and the JS-side token module. */
 export const TOKEN_SOURCES = ["styles.css", "ui/tokens.ts"];
+/** Which raw kinds each token source may still DEFINE. styles.css lost its
+ *  font-size exemption when the `--type-*` scale landed (T30.1): a raw
+ *  `font-size: <n>` there is drift re-entering, not a definition. */
+export const TOKEN_SOURCE_ALLOWED_KINDS = {
+  "styles.css": new Set(["raw-hex-color", "raw-ms-duration"]),
+  "ui/tokens.ts": new Set(["raw-hex-color", "raw-ms-duration", "raw-font-size-px"]),
+};
 /** Test files are exempt from the consumption lint (see header Contract). */
 export const TEST_FILE_RE = /\.(test|spec)\.[^./]+$/;
 
@@ -153,8 +166,9 @@ export function scanSource(text, relPath) {
   return findings;
 }
 
-/** Walk srcRoot; every scannable file except the token sources and test
- *  files is linted. */
+/** Walk srcRoot; every scannable file except test files is linted. Token
+ *  sources are scanned too, filtered to the kinds they may not define
+ *  (TOKEN_SOURCE_ALLOWED_KINDS) — a source with no entry is fully exempt. */
 export function scanTree(srcRoot, { tokenSources = TOKEN_SOURCES } = {}) {
   const findings = [];
   const permitted = new Set(tokenSources);
@@ -168,11 +182,17 @@ export function scanTree(srcRoot, { tokenSources = TOKEN_SOURCES } = {}) {
         continue;
       }
       const rel = relative(srcRoot, full);
-      if (permitted.has(rel.split(sep).join("/"))) continue; // permitted definition sites
+      const relPosix = rel.split(sep).join("/");
       if (TEST_FILE_RE.test(entry)) continue; // tests assert values, they don't render
       const ext = entry.slice(entry.lastIndexOf("."));
       if (!SCAN_EXTENSIONS.has(ext)) continue;
-      findings.push(...scanSource(readFileSync(full, "utf8"), rel));
+      let fileFindings = scanSource(readFileSync(full, "utf8"), rel);
+      if (permitted.has(relPosix)) {
+        const allowed = TOKEN_SOURCE_ALLOWED_KINDS[relPosix];
+        if (!allowed) continue; // fully exempt definition site
+        fileFindings = fileFindings.filter((f) => !allowed.has(f.kind));
+      }
+      findings.push(...fileFindings);
     }
   };
   walk(srcRoot);
@@ -207,8 +227,9 @@ async function main() {
   }
   if (findings.length > 0) {
     console.error(
-      `[lint-carrier-tokens] RED — ${findings.length} raw token(s) outside ${TOKEN_SOURCES.join(" + ")} ` +
-        `(Track 30: raw hex/font-size/ms live ONLY in the token sources)`,
+      `[lint-carrier-tokens] RED — ${findings.length} raw token(s) outside their definition sites ` +
+        `(Track 30: raw hex/ms live ONLY in ${TOKEN_SOURCES.join(" + ")}; ` +
+        `font-size enters ONLY as --type-* definitions per T30.1)`,
     );
     process.exit(1);
   }

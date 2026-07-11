@@ -13,7 +13,8 @@ function plantCarrier() {
   mkdirSync(join(root, "ui"), { recursive: true });
   writeFileSync(
     join(root, "styles.css"),
-    ":root { --accent: #ebdca0; --pulse: 200ms; font-size: 13px; }\n",
+    ":root { --accent: #ebdca0; --pulse: 200ms; --type-body: 0.85rem; }\n" +
+      ".x { font-size: var(--type-body); }\n",
   );
   writeFileSync(
     join(root, "ui", "tokens.ts"),
@@ -63,6 +64,26 @@ test("test files are exempt — tests assert values, they don't render", () => {
     "export const c = '#8f6fd8';\n",
   );
   assert.equal(scanTree(root).length, 1);
+});
+
+test("T30.1: raw font-size in styles.css is a finding — sizes enter only as --type-* definitions", () => {
+  const root = plantCarrier();
+  writeFileSync(
+    join(root, "styles.css"),
+    ":root { --accent: #ebdca0; --pulse: 200ms; --type-body: 0.85rem; }\n" +
+      ".drift { font-size: 0.8rem; }\n",
+  );
+  const findings = scanTree(root);
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].kind, "raw-font-size-px");
+  assert.equal(findings[0].file, "styles.css");
+  assert.equal(findings[0].line, 2);
+  // ...while ui/tokens.ts keeps the full exemption (JS-side canvas consumers)
+  writeFileSync(
+    join(root, "ui", "tokens.ts"),
+    "export const wheelLabel = { fontSize: 12 };\n",
+  );
+  assert.equal(scanTree(root).length, 1); // still only the styles.css drift
 });
 
 test("raw font-size px and raw ms durations are findings in any src file", () => {

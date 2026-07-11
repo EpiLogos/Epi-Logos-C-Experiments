@@ -6,6 +6,30 @@
   --ink-dim: #9a8fb8;
   --ring: #ebdca0;
   --accent: #7f6ab8;
+
+  /* ── T30.1 — the organism's one type voice (DR-FACE-7: spine law) ─────────
+     Tier structure per design-recon 30.1 content-law (heading 1–4 / body /
+     small / caption / mono); values NAME the carrier's live size clusters —
+     naming the current values is not redesigning the scale (the DR-WC-DL-1
+     principle, applied to type). Raw sizes are legal ONLY as these
+     definitions; every font-size declaration consumes a var(--type-*)
+     (lint-carrier-tokens enforces this, styles.css included). */
+  --type-heading-1: 1.5rem; /* page title */
+  --type-heading-2: 1.125rem; /* section title; panel glyph display */
+  --type-heading-3: 0.95rem; /* sub-section / card title / prominent input */
+  --type-heading-4: 0.85rem; /* micro-section / chip-label group */
+  --type-body: 0.85rem; /* body text and body-scale readouts */
+  --type-body-small: 0.78rem; /* secondary body: dense lists, cells, toolbars */
+  --type-caption: 0.72rem; /* captions, banners, badges, chips, asides */
+  --type-micro: 0.66rem; /* smallest legible: engraved labels, marks, roles */
+  --type-mono: 0.78rem; /* mono default: strips, phrases, handles, logs */
+  --type-glyph: 1.05rem; /* celestial glyph display (serif atlas tier) */
+  /* Matheme tiers ride the scale by definition (30.1: block at heading-2
+     prominence, inline at body scale). KaTeX rendering itself stays
+     content-law until a live face consumes it. */
+  --type-matheme-block: var(--type-heading-2);
+  --type-matheme-inline: var(--type-body);
+
   font-family: -apple-system, 'SF Pro Text', 'Segoe UI', sans-serif;
 }
 
@@ -87,7 +111,7 @@ body,
   grid-template-columns: auto auto;
   gap: 0.35rem 1.25rem;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.9rem;
+  font-size: var(--type-body);
   color: var(--ink-dim);
 }
 
@@ -109,6 +133,7 @@ body,
   margin-top: 0;
   color: var(--ink);
   font-weight: 500;
+  font-size: var(--type-heading-1);
 }
 
 .status-strip {
@@ -116,7 +141,7 @@ body,
   gap: 1.75rem;
   padding: 0.4rem 1rem;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.78rem;
+  font-size: var(--type-mono);
   color: var(--ink-dim);
   background: var(--ground-raised);
   border-top: 1px solid #2e2247;
@@ -135,14 +160,14 @@ body,
 .pane-message {
   padding: 1rem;
   color: var(--ink-dim);
-  font-size: 0.85rem;
+  font-size: var(--type-body);
 }
 
 .vault-tree-pane {
   height: 100%;
   overflow: auto;
   padding: 0.4rem;
-  font-size: 0.82rem;
+  font-size: var(--type-body-small);
 }
 
 .vault-tree {
@@ -184,7 +209,7 @@ body,
 .editor-banner {
   padding: 3px 10px;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-size: var(--type-caption);
   color: var(--ink-dim);
   background: var(--ground-raised);
   border-bottom: 1px solid #2e2247;
@@ -238,7 +263,7 @@ body,
   border: none;
   outline: none;
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: var(--type-heading-3);
 }
 
 .palette-list {
@@ -279,7 +304,7 @@ body,
   --color-text: var(--ink);
   --color-background: var(--ground);
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: var(--type-body);
 }
 
 .instrument-strip {
@@ -287,7 +312,7 @@ body,
   align-items: center;
   gap: 1rem;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.78rem;
+  font-size: var(--type-mono);
   color: var(--ink-dim);
 }
 
@@ -326,7 +351,7 @@ body,
   gap: 0.6rem;
   align-items: center;
   padding: 0.4rem 0.6rem;
-  font-size: 0.78rem;
+  font-size: var(--type-body-small);
   color: var(--ink-dim);
   border-bottom: 1px solid #2e2247;
 }
@@ -360,7 +385,7 @@ body,
   padding: 0.45rem 0.7rem;
   border-radius: 8px;
   background: var(--ground-raised);
-  font-size: 0.85rem;
+  font-size: var(--type-body);
   white-space: pre-wrap;
 }
 
@@ -372,7 +397,7 @@ body,
 
 .chat-role {
   display: block;
-  font-size: 0.68rem;
+  font-size: var(--type-micro);
   color: var(--ink-dim);
   margin-bottom: 2px;
   text-transform: uppercase;
@@ -381,7 +406,7 @@ body,
 
 .chat-error {
   color: #e08a8a;
-  font-size: 0.75rem;
+  font-size: var(--type-caption);
   padding: 0.2rem 0.6rem;
 }
 
@@ -434,7 +459,7 @@ body,
   border-radius: 5px;
   cursor: pointer;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: var(--type-body-small);
 }
 
 .session-item:hover,
@@ -452,7 +477,7 @@ body,
   gap: 0.7rem;
   padding: 2px 6px;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-size: var(--type-caption);
   color: var(--ink-dim);
 }
 
@@ -489,7 +514,7 @@ body,
 
 .oracle-day {
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.75rem;
+  font-size: var(--type-mono);
 }
 
 .oracle-result pre {
@@ -497,7 +522,7 @@ body,
   background: var(--ground-raised);
   border-radius: 8px;
   padding: 0.7rem;
-  font-size: 0.78rem;
+  font-size: var(--type-mono);
   max-height: 40vh;
   overflow: auto;
 }
@@ -505,7 +530,7 @@ body,
 .provenance-badge {
   display: inline-block;
   margin-right: 0.35rem;
-  font-size: 0.72rem;
+  font-size: var(--type-caption);
 }
 
 .provenance-derived { color: #9fd0a8; }
@@ -534,7 +559,7 @@ body,
 .walk-phrase {
   padding: 0.5rem 0.8rem;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.75rem;
+  font-size: var(--type-mono);
   color: var(--ring);
   border-bottom: 1px solid #2e2247;
   white-space: normal;
@@ -569,7 +594,7 @@ body,
 .walk-relations em {
   color: var(--ink-dim);
   font-style: normal;
-  font-size: 0.75rem;
+  font-size: var(--type-caption);
 }
 
 @keyframes klein-fold {
@@ -618,7 +643,7 @@ body,
   align-items: center;
   padding: 0.35rem 0.9rem;
   font-family: 'SF Mono', ui-monospace, monospace;
-  font-size: 0.75rem;
+  font-size: var(--type-mono);
   color: var(--ink-dim);
   border-top: 1px solid #2e2247;
   background: rgba(24, 16, 38, 0.82);
@@ -630,7 +655,7 @@ body,
 
 .editor-frontmatter {
   border-bottom: 1px solid #2e2247;
-  font-size: 0.72rem;
+  font-size: var(--type-caption);
 }
 
 .editor-frontmatter button {
@@ -669,7 +694,7 @@ body,
 
 .zodiac-glyph {
   font-family: 'Iowan Old Style', 'Palatino', Georgia, serif;
-  font-size: 1.05rem;
+  font-size: var(--type-glyph);
   color: #7d6fa6;
   text-shadow: 0 0 10px rgba(24, 16, 38, 0.9);
   letter-spacing: 0.04em;
@@ -681,7 +706,7 @@ body,
   font-family: 'Iowan Old Style', 'Palatino', Georgia, serif;
   font-variant-caps: small-caps;
   letter-spacing: 0.14em;
-  font-size: 0.68rem;
+  font-size: var(--type-micro);
   color: rgba(235, 220, 160, 0.75);
   white-space: nowrap;
 }
@@ -698,7 +723,7 @@ body,
   border-left: 2px solid var(--ink-dim);
   border-radius: 1px;
   color: var(--ink);
-  font-size: 0.7rem;
+  font-size: var(--type-caption);
   white-space: nowrap;
   transition: background 120ms ease;
 }
@@ -709,7 +734,7 @@ body,
 
 .planet-chip-glyph {
   font-family: 'Iowan Old Style', 'Palatino', Georgia, serif;
-  font-size: 0.85rem;
+  font-size: var(--type-body);
 }
 
 .planet-chip-name {
@@ -721,13 +746,13 @@ body,
 .planet-chip-deg {
   font-family: 'SF Mono', ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: 0.62rem;
+  font-size: var(--type-micro);
   color: var(--ink-dim);
 }
 
 .planet-chip-rx {
   color: #d0a89f;
-  font-size: 0.7rem;
+  font-size: var(--type-caption);
 }
 
 .planet-chip-resonance {
@@ -764,13 +789,13 @@ body,
   font-variant-caps: small-caps;
   letter-spacing: 0.12em;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: var(--type-heading-3);
   color: var(--ink);
 }
 
 .planet-panel-glyph {
   font-family: 'Iowan Old Style', 'Palatino', Georgia, serif;
-  font-size: 1.15rem;
+  font-size: var(--type-heading-2);
 }
 
 .planet-panel-rx {
@@ -782,7 +807,7 @@ body,
   background: none;
   border: none;
   color: var(--ink-dim);
-  font-size: 0.95rem;
+  font-size: var(--type-heading-3);
   cursor: pointer;
   padding: 0 2px;
 }
@@ -792,7 +817,7 @@ body,
   grid-template-columns: auto 1fr;
   gap: 0.14rem 0.7rem;
   margin: 0;
-  font-size: 0.7rem;
+  font-size: var(--type-caption);
 }
 
 .planet-panel dt {
@@ -813,7 +838,7 @@ body,
   margin: 0.55rem 0 0;
   padding-top: 0.5rem;
   border-top: 1px solid #2e2247;
-  font-size: 0.68rem;
+  font-size: var(--type-micro);
   line-height: 1.45;
   color: rgba(235, 220, 160, 0.85);
   font-style: italic;
@@ -824,7 +849,7 @@ body,
   font-family: 'Iowan Old Style', 'Palatino', Georgia, serif;
   font-variant-caps: small-caps;
   letter-spacing: 0.1em;
-  font-size: 0.66rem;
+  font-size: var(--type-micro);
   color: rgba(235, 220, 160, 0.9);
   background: rgba(24, 16, 38, 0.74);
   padding: 1px 7px;
@@ -854,7 +879,7 @@ body,
   border-radius: 4px;
   color: var(--ink-dim);
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: var(--type-body-small);
 }
 .spanda-stops button[data-active='true'] {
   border-color: var(--ring);
@@ -895,7 +920,7 @@ body,
 
 .day-calendar-month {
   color: var(--ink);
-  font-size: 0.86rem;
+  font-size: var(--type-heading-4);
   letter-spacing: 0.02em;
 }
 
@@ -909,7 +934,7 @@ body,
 .day-calendar-weekday {
   text-align: center;
   color: var(--ink-dim);
-  font-size: 0.7rem;
+  font-size: var(--type-caption);
   padding: 0.2rem 0;
 }
 
@@ -919,7 +944,7 @@ body,
   padding: 0.35rem 0;
   border-radius: 5px;
   font: inherit;
-  font-size: 0.78rem;
+  font-size: var(--type-body-small);
   min-height: 1.6rem;
 }
 
@@ -954,7 +979,7 @@ body,
   left: 50%;
   transform: translateX(-50%);
   color: var(--ring);
-  font-size: 0.6rem;
+  font-size: var(--type-micro);
   line-height: 1;
 }
 
@@ -975,13 +1000,13 @@ body,
 
 .corr-address {
   color: var(--ring);
-  font-size: 0.95rem;
+  font-size: var(--type-heading-3);
   letter-spacing: 0.03em;
 }
 
 .corr-shem {
   color: var(--ink-dim);
-  font-size: 0.78rem;
+  font-size: var(--type-body-small);
 }
 
 .corr-nav {
@@ -1007,11 +1032,11 @@ body,
 
 .corr-field-label {
   color: var(--ink-dim);
-  font-size: 0.74rem;
+  font-size: var(--type-caption);
   text-align: right;
 }
 
 .corr-field-value {
   color: var(--ink);
-  font-size: 0.8rem;
+  font-size: var(--type-body-small);
 }

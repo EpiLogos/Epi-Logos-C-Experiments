@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:45:15.219Z",
+  "updatedAt": "2026-07-11T19:15:51.505Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8083,16 +8083,32 @@
       "worktree": null
     },
     "30.T30.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T19:15:51.492Z",
+      "claimedAt": "2026-07-11T19:01:34.630Z",
+      "completedAt": "2026-07-11T19:15:51.492Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T19:15:51.492Z",
+          "text": "Fate-B (spine) per DR-FACE-7: the organism's one type voice landed as the --type-* vocabulary on styles.css :root (heading-1..4 / body / body-small / caption / micro / mono / glyph + matheme block/inline aliases; values NAME the carrier's live size clusters — naming is not redesigning, the DR-WC-DL-1 principle applied to type; colour palette stays Architect-OPEN). Migration did NOT stage: all 42 ad-hoc font-size literals in styles.css collapsed to var(--type-*) in this pass (max snap 0.96px on the day-calendar mark dot) and pending-panel h2 gained explicit heading-1 — zero raw font-size declarations remain in carrier src (the one JS fontSize is wheel-geometry-proportional, not type voice). That total collapse made no-raw-font-size enforceable: lint-carrier-tokens extended with TOKEN_SOURCE_ALLOWED_KINDS (styles.css keeps hex/ms definition rights, loses font-size; ui/tokens.ts fully exempt for canvas consumers), 6/6 lint tests green. KaTeX matheme rendering stays content-law until a live face consumes it. UF proof: new e2e type-voice.spec.ts drives the real app on the spawned gateway and asserts the whole vocabulary is live on :root AND every rendered element's computed font-size resolves to a named step — 18/18 app-ui-flow green; class gate GREEN (app-test 315, app-smoke, live-wire, honesty-lint); PASS record by fable-g-spine-verifier.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 30.T30.1 --owner fable-g-spine-verifier (class-scoped verify-all gate incl app-ui-flow/app-smoke/live-wire/carrier-tokens)",
+            "exitCode": 0,
+            "testsPassed": 1051,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/tests/e2e/type-voice.spec.ts",
+              ".codex/scripts/lint-carrier-tokens.mjs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-g-spine",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T19:01:34.630Z",
+      "runId": "20260711T190134Z-30-T30.1",
       "worktree": null
     },
     "30.T30.2": {
@@ -12870,12 +12886,22 @@
       "leaseExpiresAt": "2026-07-11T21:10:03.946Z",
       "worktree": null,
       "completedAt": "2026-07-11T18:45:15.206Z"
+    },
+    {
+      "runId": "20260711T190134Z-30-T30.1",
+      "taskId": "30.T30.1",
+      "status": "done",
+      "startedAt": "2026-07-11T19:01:34.630Z",
+      "owner": "fable-g-spine",
+      "leaseExpiresAt": "2026-07-11T21:01:34.630Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T19:15:51.492Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-11T18:02:40.622Z",
-    "updatedAt": "2026-07-11T18:02:40.622Z",
+    "createdAt": "2026-07-11T18:58:48.738Z",
+    "updatedAt": "2026-07-11T18:58:48.738Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
