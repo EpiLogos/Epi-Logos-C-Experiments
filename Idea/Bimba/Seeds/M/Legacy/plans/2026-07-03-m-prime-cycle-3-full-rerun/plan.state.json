@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T23:38:38.896Z",
+  "updatedAt": "2026-07-11T23:53:55.543Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4394,16 +4394,32 @@
       "worktree": null
     },
     "16.T16.21": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T23:53:55.530Z",
+      "claimedAt": "2026-07-11T23:49:55.993Z",
+      "completedAt": "2026-07-11T23:53:55.530Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T23:53:55.530Z",
+          "text": "CCT-21 closed verify-first: the producer stream landed via its dependency tranches (10.PASU/18.10/23.19-20/24.20/25.22/29.16, closed by parallel lanes) and every named surface re-verified fresh at this close. (a) SpaceTimeDB module carries all three tables (being_pattern_presence/relation_edge/review_candidate) + the three reducers emitting the nine-event ordered stream; the review reducer ADMITS ONLY ActualisingOne hypotheses, stamps review_risk forced-unification and status emitted-review-only (lib.rs:677-692) - the review-only status IS the no-S2-mutation law at this layer, canon promotion stays with the Hen/S2 write path per (f). (b) The four s3'.being_pattern.* methods are registered and gateway-handled (being_pattern_live_state 3 green); the S0 bridge forwards handles only (gate_spacetimedb_bridge_being_pattern green). (c) Redis key families are namespace-shaped (being_pattern_keys pins the cache:live/active/stream/review:s3:being_pattern shapes). (d) Graphiti live-state events carry episode ids/refs/public-safe summaries only (being_pattern_protected_refs green; every reducer input passes assert_public_safe_json). (e) The Mono/Poly operator + PerspectiveRole laws are behavioral in portal-core (pasu_monopoly_perspective_modes + pasu_being_pattern_projection_privacy, 4 green fresh). COVERAGE HONESTY: the spacetime projection test is a declaration-level check (WASM reducers cannot run hermetically); the behavioral halves live in the adjacent crates above, and the full two-entity acceptance REPLAY driving 18.10 + 25.22 + 29.16 consumers from one live stream generation remains a standing-stack exercise for the live-stack lane. W gate PASS via verify-tranche (first run hit a transient node crash; rerun clean).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.21 (track-16 W class gate PASS incl live-wire spawned gateway + spacetime + redis-context + graphiti-runtime suites) + all five named suites fresh: epi-spacetime-module being_pattern_projection (2), epi-s3-gateway being_pattern_live_state (3), graphiti-runtime being_pattern_protected_refs (1), redis-context being_pattern_keys (1), epi-cli gate_spacetimedb_bridge_being_pattern (1) + portal-core pasu_monopoly_perspective_modes (2) + pasu_being_pattern_projection_privacy (2)",
+            "exitCode": 0,
+            "testsPassed": 12,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/epi-spacetime-module/src/lib.rs",
+              "Body/S/S3/gateway/src/runtime.rs",
+              "Body/S/S3/redis-context/src/redis_cache.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T23:49:55.993Z",
+      "runId": "20260711T234955Z-16-T16.21",
       "worktree": null
     },
     "16.T16.1": {
@@ -12948,6 +12964,16 @@
       "leaseExpiresAt": "2026-07-12T01:32:54.920Z",
       "worktree": null,
       "completedAt": "2026-07-11T23:38:38.883Z"
+    },
+    {
+      "runId": "20260711T234955Z-16-T16.21",
+      "taskId": "16.T16.21",
+      "status": "done",
+      "startedAt": "2026-07-11T23:49:55.993Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T01:49:55.993Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T23:53:55.530Z"
     }
   ],
   "activeRoute": {
