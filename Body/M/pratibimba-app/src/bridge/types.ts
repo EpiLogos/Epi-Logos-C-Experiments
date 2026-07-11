@@ -793,3 +793,101 @@ export function makeKernelBridgeSafeProfilePending(): KernelBridgeCachedProfile 
         profile: null
     };
 }
+
+// ---- Spanda phase anchor (02.T2.14 / DR-M1-5) ----
+// Mirror of the `spanda` block on `profile.update` and the
+// `portal.spanda_transport` immediate event (gate/server/mod.rs
+// `spanda_block_json`). THE ANCHOR RIDES, NEVER PHASE SAMPLES: clients
+// derive tick12 and the intra-tick fraction locally from these plain
+// numbers at any framerate. `slerpFraction` is never emitted — it
+// dissolved into local anchor evaluation. Evaluating the shared anchor
+// locally is the ONE clock read locally; inventing a rate or advancing
+// an anchor renderer-side stays forbidden.
+
+export type SpandaTransportModeBoundary = 'flowing' | 'held' | 'walking';
+export type SpandaDirectionBoundary = 'forward' | 'reflected';
+
+export interface SpandaAnchorBoundary {
+    epochMs: number;
+    phase0: number;
+    rateHz: number;
+    mode: SpandaTransportModeBoundary;
+    direction: SpandaDirectionBoundary;
+    /** Readout at emission — cheap consumers may use it; live consumers
+     *  derive their own via spandaTick12At. */
+    tick12: number;
+}
+
+export const PORTAL_SPANDA_TRANSPORT_EVENT = 'portal.spanda_transport' as const;
+
+/** The twelvefold readout convention (C ground `spanda_tick12_readout`):
+ *  one 2π cycle = twelve epogdoon-steps. */
+const SPANDA_TWELVEFOLD = 12;
+
+export function readSpandaAnchor(payload: unknown): SpandaAnchorBoundary | null {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+        return null;
+    }
+    const block = (payload as Record<string, unknown>).spanda ?? payload;
+    if (!block || typeof block !== 'object' || Array.isArray(block)) {
+        return null;
+    }
+    const record = block as Record<string, unknown>;
+    const epochMs = record.epochMs;
+    const phase0 = record.phase0;
+    const rateHz = record.rateHz;
+    const mode = record.mode;
+    const direction = record.direction;
+    if (
+        typeof epochMs !== 'number' ||
+        typeof phase0 !== 'number' ||
+        typeof rateHz !== 'number' ||
+        (mode !== 'flowing' && mode !== 'held' && mode !== 'walking') ||
+        (direction !== 'forward' && direction !== 'reflected')
+    ) {
+        return null;
+    }
+    return {
+        epochMs,
+        phase0,
+        rateHz,
+        mode,
+        direction,
+        tick12: typeof record.tick12 === 'number' ? record.tick12 : 0
+    };
+}
+
+/** Cycle phase (radians, unwrapped) at `nowMs` — the local evaluation of the
+ *  shared anchor. Held/walking hold phase0; flowing advances at the STEP rate
+ *  (rateHz steps/sec → 2π/12 radians per step), signed by direction. Instants
+ *  before the epoch evaluate AT the epoch. */
+export function spandaPhaseAt(anchor: SpandaAnchorBoundary, nowMs: number): number {
+    if (anchor.mode !== 'flowing') {
+        return anchor.phase0;
+    }
+    const elapsedS = Math.max(0, nowMs - anchor.epochMs) / 1_000;
+    const signed = anchor.direction === 'reflected' ? -elapsedS : elapsedS;
+    return anchor.phase0 + (signed * anchor.rateHz * (2 * Math.PI)) / SPANDA_TWELVEFOLD;
+}
+
+function normalizedCyclePosition(anchor: SpandaAnchorBoundary, nowMs: number): number {
+    const tau = 2 * Math.PI;
+    let norm = spandaPhaseAt(anchor, nowMs) % tau;
+    if (norm < 0) {
+        norm += tau;
+    }
+    return (norm / tau) * SPANDA_TWELVEFOLD;
+}
+
+/** tick12 derived locally from the shared anchor (readout convention). */
+export function spandaTick12At(anchor: SpandaAnchorBoundary, nowMs: number): number {
+    return Math.floor(normalizedCyclePosition(anchor, nowMs)) % SPANDA_TWELVEFOLD;
+}
+
+/** The intra-tick fraction [0,1) — the continuous phase the tick flowers
+ *  from. THIS is what the old `slerpFraction` ask dissolved into: a pure
+ *  local function of the shared anchor, no renderer clock, no emission. */
+export function spandaFractionAt(anchor: SpandaAnchorBoundary, nowMs: number): number {
+    const position = normalizedCyclePosition(anchor, nowMs);
+    return position - Math.floor(position);
+}

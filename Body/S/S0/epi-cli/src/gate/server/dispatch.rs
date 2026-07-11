@@ -957,25 +957,28 @@ pub(super) async fn dispatch_rpc(
             });
             match acted {
                 Some(anchor) => {
-                    let mode = match anchor.mode {
-                        portal_core::spanda_anchor::SpandaTransportMode::Flowing => "flowing",
-                        portal_core::spanda_anchor::SpandaTransportMode::Held => "held",
-                        portal_core::spanda_anchor::SpandaTransportMode::Walking => "walking",
-                    };
-                    let direction = match anchor.direction {
-                        portal_core::spanda_anchor::SpandaDirection::Forward => "forward",
-                        portal_core::spanda_anchor::SpandaDirection::Reflected => "reflected",
-                    };
+                    let block = super::spanda_block_json(&anchor, at_ms);
+                    // 02.T2.14: the transport act pushes IMMEDIATELY — every
+                    // subscriber learns the organism is held/walked between
+                    // heartbeat samples, not at the next one.
+                    let mut event_payload = json!({ "act": frame.method });
+                    if let (Some(target), Some(source)) =
+                        (event_payload.as_object_mut(), block.as_object())
+                    {
+                        for (key, value) in source {
+                            target.insert(key.clone(), value.clone());
+                        }
+                    }
+                    runtime.broadcast(epi_s3_gateway_contract::GatewayEvent::new(
+                        "portal.spanda_transport",
+                        None,
+                        None,
+                        None,
+                        event_payload,
+                    ));
                     Ok(DispatchResult::immediate(json!({
                         "act": frame.method,
-                        "spanda": {
-                            "epochMs": anchor.epoch_ms,
-                            "phase0": anchor.phase0,
-                            "rateHz": anchor.rate_hz,
-                            "mode": mode,
-                            "direction": direction,
-                            "tick12": anchor.tick12_at(at_ms),
-                        }
+                        "spanda": block,
                     })))
                 }
                 None => Err(internal_error(

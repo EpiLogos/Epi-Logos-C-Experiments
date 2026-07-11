@@ -67,6 +67,9 @@ async function main() {
     const pending = new Map();
     const updates = []; // { generation, tick12 }
 
+    const transportEvents = []; // { act, mode, atMs }
+    let firstSpandaBlock = null;
+
     ws.on('message', data => {
         let frame;
         try {
@@ -83,8 +86,19 @@ async function main() {
             const generation = frame.payload?.generation;
             const tick12 = frame.payload?.harmonicProfile?.tick12 ?? frame.payload?.tick?.tick12;
             if (typeof generation === 'number' && typeof tick12 === 'number') {
-                updates.push({ generation, tick12 });
+                updates.push({ generation, tick12, atMs: Date.now() });
             }
+            // 02.T2.14 — the anchor block rides every heartbeat sample.
+            if (!firstSpandaBlock && frame.payload?.spanda) {
+                firstSpandaBlock = frame.payload.spanda;
+            }
+        }
+        if (eventName === 'portal.spanda_transport') {
+            transportEvents.push({
+                act: frame.payload?.act,
+                mode: frame.payload?.mode,
+                atMs: Date.now()
+            });
         }
     });
 
@@ -123,10 +137,30 @@ async function main() {
     log('flowing ticks arrive', flowing.length === 2,
         flowing.map(u => `g${u.generation}:t${u.tick12}`).join(' '));
 
+    // 1b — 02.T2.14: the anchor block rides profile.update (plain numbers,
+    //      never phase samples; slerpFraction is never on the wire).
+    log('profile.update carries the spanda anchor block',
+        !!firstSpandaBlock && typeof firstSpandaBlock.rateHz === 'number'
+            && typeof firstSpandaBlock.phase0 === 'number' && !!firstSpandaBlock.mode
+            && !('slerpFraction' in (firstSpandaBlock ?? {})),
+        firstSpandaBlock ? `mode=${firstSpandaBlock.mode} rateHz=${firstSpandaBlock.rateHz}` : 'absent');
+
     // 2 — hold: the walk family freezes the ONE anchor.
+    const lastUpdateBeforeHold = updates[updates.length - 1];
     const held = await rpc('m1.spanda.hold');
     const heldTick = held.result?.spanda?.tick12;
     log('m1.spanda.hold responds held', held.result?.spanda?.mode === 'held', `tick12=${heldTick}`);
+
+    // 2b — 02.T2.14: the transport act pushes IMMEDIATELY — the event lands
+    //      between heartbeat samples, not at the next one.
+    await new Promise(res => setTimeout(res, 150));
+    const holdEvent = transportEvents.find(e => e.act === 'm1.spanda.hold');
+    const betweenHeartbeats = holdEvent
+        && (updates[updates.length - 1] === lastUpdateBeforeHold
+            || holdEvent.atMs - lastUpdateBeforeHold.atMs < 1_000);
+    log('portal.spanda_transport pushes between heartbeats',
+        !!holdEvent && holdEvent.mode === 'held' && !!betweenHeartbeats,
+        holdEvent ? `act=${holdEvent.act} +${holdEvent.atMs - lastUpdateBeforeHold.atMs}ms after last sample` : 'no event');
 
     // 3 — generations advance while tick12 stays constant: the organism is
     //     held, the portal keeps pulsing (DR-M1-5 core invariant, on the wire).

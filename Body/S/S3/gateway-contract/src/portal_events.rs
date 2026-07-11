@@ -7,6 +7,7 @@ pub const PORTAL_EVENT_NAMES: &[&str] = &[
     "portal.vak_eval",
     "portal.review_deposit",
     "portal.kairos_shift",
+    "portal.spanda_transport",
 ];
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -66,6 +67,16 @@ pub const PORTAL_EVENT_CONTRACTS: &[PortalEventContract] = &[
         projection_source: "global_temporal_surface",
         payload_keys: &["sessionKey", "dayId", "kairosSnapshotId", "fresh", "source"],
         consumer_surfaces: &["epi portal 0", "epi portal 1", "Tauri M3 clock"],
+    },
+    // 02.T2.14 / DR-M1-5 — engine-walk transport act, pushed IMMEDIATELY
+    // (never waiting for the heartbeat sample). Payload = the act + the
+    // post-act anchor (plain numbers; clients evaluate phase locally).
+    PortalEventContract {
+        event_name: "portal.spanda_transport",
+        coordinate_owner: "S0/M1-3'",
+        projection_source: "gateway spanda phase anchor",
+        payload_keys: &["act", "epochMs", "phase0", "rateHz", "mode", "direction", "tick12"],
+        consumer_surfaces: &["Tauri M1' navigator", "OmniPanel /", "epi portal 0"],
     },
 ];
 

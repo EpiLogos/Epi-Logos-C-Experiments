@@ -77,6 +77,33 @@ pub async fn start(config: &GatewayConfig, json: bool) -> Result<String, String>
 /// cycle phase (`spanda::tick12_readout`), never from a wall-clock dice —
 /// derived-from the oscillation, never 1:1 with it. Wall time remains for
 /// timestamps and the world-owned kairos sky (which never holds).
+/// The public-safe spanda anchor block (02.T2.14 / DR-M1-5): the anchor's
+/// plain numbers + the readout at `at_ms`. Shared by the `profile.update`
+/// heartbeat attachment and the immediate `portal.spanda_transport` event —
+/// one shape, two carriers, no drift.
+pub(super) fn spanda_block_json(
+    anchor: &portal_core::spanda_anchor::SpandaPhaseAnchor,
+    at_ms: u64,
+) -> serde_json::Value {
+    let mode = match anchor.mode {
+        portal_core::spanda_anchor::SpandaTransportMode::Flowing => "flowing",
+        portal_core::spanda_anchor::SpandaTransportMode::Held => "held",
+        portal_core::spanda_anchor::SpandaTransportMode::Walking => "walking",
+    };
+    let direction = match anchor.direction {
+        portal_core::spanda_anchor::SpandaDirection::Forward => "forward",
+        portal_core::spanda_anchor::SpandaDirection::Reflected => "reflected",
+    };
+    serde_json::json!({
+        "epochMs": anchor.epoch_ms,
+        "phase0": anchor.phase0,
+        "rateHz": anchor.rate_hz,
+        "mode": mode,
+        "direction": direction,
+        "tick12": anchor.tick12_at(at_ms),
+    })
+}
+
 fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
     tokio::spawn(async move {
         let mut generation: u64 = 0;
@@ -119,6 +146,7 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             let anchor = runtime.spanda_anchor().unwrap_or(initial_anchor);
             let mut projection =
                 portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, generation);
+            let spanda_block = spanda_block_json(&anchor, now_ms);
             // Live Kerykeion sky, attached only when the kairos cache is fresh
             // and complete (cosmic-clock §5.3 kairos_valid law) — the fields'
             // absence is the renderers' honest "kairos pending" state.
@@ -133,10 +161,17 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             // BODIES (natal chart, per-layer profiles) never cross this bus.
             projection.harmonic_profile.quintessence =
                 crate::nara::identity::heartbeat_quintessence();
-            let payload = match serde_json::to_value(&projection) {
+            let mut payload = match serde_json::to_value(&projection) {
                 Ok(value) => value,
                 Err(_) => continue,
             };
+            // 02.T2.14 / DR-M1-5: the ANCHOR rides the wire (a few plain
+            // numbers), never phase samples — clients derive tick12 and the
+            // intra-tick fraction locally at any framerate. slerpFraction is
+            // never emitted; it dissolved into local anchor evaluation.
+            if let Some(object) = payload.as_object_mut() {
+                object.insert("spanda".to_owned(), spanda_block.clone());
+            }
             runtime.broadcast(GatewayEvent::new(
                 "profile.update",
                 None,
