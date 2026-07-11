@@ -182,6 +182,12 @@ export interface ModulationCarrier {
     readonly id: string;
     /** Which composed stratum this carrier renders (labelling/inspection). */
     readonly layer?: string;
+    /** CCT-2 / DR-IG-5: the parameterisation target a cymatic-class
+     *  contribution renders onto. Inside the cosmic composition the M2
+     *  cymatic surface is PINNED to the K² torus — a carrier consuming the
+     *  `cymatic` mount must declare `'torus'`; plate/sphere belong to the
+     *  standalone M2 surface only, never the composition. */
+    readonly surface?: 'torus' | 'plate' | 'sphere';
     readonly requiredInputs: readonly ModulationInputKey[];
     /** Called every animation frame while required inputs are live. */
     onFrame(frame: ModulationFrame): void;

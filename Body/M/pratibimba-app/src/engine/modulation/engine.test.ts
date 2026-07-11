@@ -282,6 +282,48 @@ describe('command spine', () => {
     });
 });
 
+describe('cymatic torus pin (16.T16.2 / CCT-2, DR-IG-5)', () => {
+    const carrier = (id: string, overrides: Record<string, unknown> = {}) => ({
+        id,
+        requiredInputs: ['oscillator'] as const,
+        onFrame: () => undefined,
+        ...overrides
+    });
+
+    it('accepts an M2 cymatic contribution pinned to the torus', () => {
+        const engine = new ModulationEngine();
+        const dispose = engine.register(
+            carrier('cct2-torus', {
+                requiredInputs: ['cymatic'],
+                surface: 'torus'
+            }) as never
+        );
+        dispose();
+    });
+
+    it('rejects a standalone plate/sphere cymatic contribution at composition load', () => {
+        const engine = new ModulationEngine();
+        for (const surface of ['plate', 'sphere', undefined] as const) {
+            expect(() =>
+                engine.register(
+                    carrier(`cct2-${String(surface)}`, {
+                        requiredInputs: ['cymatic'],
+                        surface
+                    }) as never
+                )
+            ).toThrow(/pinned to the K² torus/);
+        }
+    });
+
+    it('non-cymatic carriers stay free of the pin — a composition-contract claim, not an M2-domain restriction', () => {
+        const engine = new ModulationEngine();
+        const dispose = engine.register(
+            carrier('cct2-free', { requiredInputs: ['oscillator'] }) as never
+        );
+        dispose();
+    });
+});
+
 describe('composition mount-point contract (16.T16.11 / CCT-11)', () => {
     const engine = new ModulationEngine();
     const carrier = (id: string, overrides: Record<string, unknown> = {}) => ({

@@ -170,6 +170,15 @@ export class ModulationEngine {
                 `composition contract: carrier '${carrier.id}' requires unknown mount-point '${String(unknownInput)}'`
             );
         }
+        // Law 4 (CCT-2 / DR-IG-5, VALIDATED 2026-06-03): the M2 cymatic
+        // contribution is pinned to the K² torus inside the composition —
+        // a carrier consuming the `cymatic` mount must declare
+        // surface 'torus'; a standalone plate/sphere is refused at load.
+        if (carrier.requiredInputs.includes('cymatic') && carrier.surface !== 'torus') {
+            throw new Error(
+                `composition contract: carrier '${carrier.id}' consumes the cymatic mount but declares surface '${String(carrier.surface)}' — the M2 cymatic surface is pinned to the K² torus inside the composition (DR-IG-5); plate/sphere stay standalone-only`
+            );
+        }
         if (carrier.layer !== undefined && !/^L[0-9]+-[a-z0-9-]+$/i.test(carrier.layer)) {
             throw new Error(
                 `composition contract: carrier '${carrier.id}' declares out-of-domain layer '${carrier.layer}' (strata are 'L{n}-{name}')`

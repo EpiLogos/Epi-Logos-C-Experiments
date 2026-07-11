@@ -614,6 +614,8 @@ export function CosmicEngine() {
         const cymaticCarrier: ModulationCarrier = {
             id: carrierId('cymatic-skin'),
             layer: 'L1-cymatic',
+            // DR-IG-5: the skin parameterises the K² torus, never a plate.
+            surface: 'torus',
             requiredInputs: ['cymatic', 'oscillator', 'klein'],
             onFrame(frame) {
                 if (!frame.cymatic) {
