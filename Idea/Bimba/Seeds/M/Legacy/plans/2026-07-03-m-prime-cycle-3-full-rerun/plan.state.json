@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:13:12.016Z",
+  "updatedAt": "2026-07-11T18:16:02.447Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8185,16 +8185,32 @@
       "worktree": null
     },
     "31.T31.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T18:16:02.433Z",
+      "claimedAt": "2026-07-11T18:14:05.156Z",
+      "completedAt": "2026-07-11T18:16:02.433Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:16:02.433Z",
+          "text": "Fate-A per DR-FACE-7 §3: the exactly-six StatusBarContribution catalog is dead Theia plumbing; the carrier-native discipline (state-thread entries equal the spine's state threads, each surfaced once) is carried by the live StatusStrip, and 31's catalog-and-validators intent survives as lint over faces (no local clocks, no invented provenance, state-threads-once) already live in the carrier-tokens suite plus foundationPrinciples.ts. UF-proven by e2e status-strip-discipline.spec.ts (2/2 playwright green against the spawned gateway); full UF-scoped gate PASS under verifier opus-f-faces-verify. Zero carrier construction.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app exec playwright test status-strip-discipline",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/status-strip-discipline.spec.ts",
+              "Body/M/pratibimba-app/src/components/StatusStrip.tsx",
+              "Body/M/pratibimba-app/src/ui/foundationPrinciples.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-f-faces",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T18:14:05.156Z",
+      "runId": "20260711T181405Z-31-T31.1",
       "worktree": null
     },
     "31.T31.2": {
@@ -12714,6 +12730,16 @@
       "worktree": null,
       "heartbeatAt": "2026-07-11T18:08:04.379Z",
       "completedAt": "2026-07-11T18:13:12.002Z"
+    },
+    {
+      "runId": "20260711T181405Z-31-T31.1",
+      "taskId": "31.T31.1",
+      "status": "done",
+      "startedAt": "2026-07-11T18:14:05.156Z",
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:14:05.156Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T18:16:02.433Z"
     }
   ],
   "activeRoute": {
