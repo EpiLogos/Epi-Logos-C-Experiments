@@ -744,6 +744,25 @@ impl KernelTemporalProjection {
         let total_seconds = timestamp_ms / 1_000;
         let cycle = total_seconds / 12;
         let sub_tick = (total_seconds % 12) as u8;
+        Self::from_cycle_subtick(cycle, sub_tick, generation)
+    }
+
+    /// Projection from the engine-owned spanda phase anchor (02.T2.12 /
+    /// DR-M1-5): `tick12` is `spanda::tick12_readout(phase)` — never a
+    /// wall-clock dice. `now_ms` evaluates the lazy anchor; it does not
+    /// ground the tick. The live heartbeat samples through THIS path;
+    /// `from_clock_tick` remains for deterministic test construction and
+    /// callers that have not yet grown an anchor.
+    pub fn from_phase_anchor(
+        anchor: &crate::spanda_anchor::SpandaPhaseAnchor,
+        now_ms: u64,
+        generation: u64,
+    ) -> Self {
+        let (cycle, sub_tick) = anchor.projection_inputs(now_ms);
+        Self::from_cycle_subtick(cycle, sub_tick, generation)
+    }
+
+    fn from_cycle_subtick(cycle: u64, sub_tick: u8, generation: u64) -> Self {
         let e_4_inputs = E4PersonalInputs::default();
         let e_5_inputs = E5HarmonicInputs::default();
         let e_6_inputs = E6VerifierInputs::default();

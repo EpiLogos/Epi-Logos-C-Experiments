@@ -17,6 +17,7 @@ pub mod psychoid_cymatic;
 pub mod quaternion;
 pub mod rfactor;
 pub mod spanda;
+pub mod spanda_anchor;
 pub mod state;
 pub mod tunable;
 pub mod types;

@@ -70,10 +70,41 @@ pub async fn start(config: &GatewayConfig, json: bool) -> Result<String, String>
 /// S0 kernel tick → S3' shared `profile.update` stream. One heartbeat per
 /// gateway process; every connected client reads the same broadcast —
 /// renderers may not run a private clock (M'-SYSTEM-SPEC harmonic clock law).
+///
+/// 02.T2.12 / DR-M1-5: the heartbeat is a PORTAL pulse (liveness, staleness,
+/// client sync — its 1 Hz cadence is a portal concern). Its CONTENT samples
+/// the engine-owned `SpandaPhaseAnchor`: `tick12` derives from the spanda
+/// cycle phase (`spanda::tick12_readout`), never from a wall-clock dice —
+/// derived-from the oscillation, never 1:1 with it. Wall time remains for
+/// timestamps and the world-owned kairos sky (which never holds).
 fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
     tokio::spawn(async move {
         let mut generation: u64 = 0;
         let mut ticker = tokio::time::interval(std::time::Duration::from_secs(1));
+        let epoch_ms = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis() as u64;
+        // Band-checked step rate from `[ml.m1_paramasiva]`; an out-of-band
+        // config value is REFUSED by the loader (T2.11 law) and the cited
+        // C-derived default stands in — logged, never silent.
+        let rate_hz = match std::fs::read_to_string(
+            std::env::var_os("HOME")
+                .map(std::path::PathBuf::from)
+                .unwrap_or_default()
+                .join(".epi-logos")
+                .join("config.toml"),
+        ) {
+            Ok(text) => match portal_core::spanda::SpandaHkbParams::from_ml_config(&text) {
+                Ok(params) => params.base_freq_hz,
+                Err(reason) => {
+                    eprintln!("[gate] spanda config refused ({reason}); cited default stands");
+                    portal_core::spanda::SpandaHkbParams::default_derived().base_freq_hz
+                }
+            },
+            Err(_) => portal_core::spanda::SpandaHkbParams::default_derived().base_freq_hz,
+        };
+        let anchor = portal_core::spanda_anchor::SpandaPhaseAnchor::flowing(epoch_ms, rate_hz);
         loop {
             ticker.tick().await;
             generation += 1;
@@ -82,7 +113,7 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                 .unwrap_or_default()
                 .as_millis() as u64;
             let mut projection =
-                portal_core::KernelTemporalProjection::from_clock_tick(now_ms, generation);
+                portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, generation);
             // Live Kerykeion sky, attached only when the kairos cache is fresh
             // and complete (cosmic-clock §5.3 kairos_valid law) — the fields'
             // absence is the renderers' honest "kairos pending" state.
