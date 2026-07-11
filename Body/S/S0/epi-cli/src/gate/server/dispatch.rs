@@ -1172,6 +1172,10 @@ pub(super) async fn dispatch_rpc(
         "s1'.semantic.suggest_links" => crate::gate::s1_hen::suggest_links(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        // CCT-15: C-layer semantic typology classification.
+        "s1'.type.classify_c_layer" => crate::gate::s1_hen::type_classify_c_layer(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         // CCT-14 (+14b): entity-candidate lifecycle + review surfaces.
         "s1'.entity.capture" => crate::gate::s1_hen::entity_capture(&frame.params)
             .map(DispatchResult::immediate)

@@ -50,6 +50,202 @@ pub struct CLayerEvidence {
     pub c_layer_path: String,
 }
 
+/// CCT-15: the `s1'.type.classify_c_layer` result — the C-layer evidence
+/// plus how it was reached (frontmatter beats ancestry beats kind-routing;
+/// C-prime/reflective branches are audited, never plain-C authoritative).
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CLayerClassification {
+    pub evidence: CLayerEvidence,
+    /// `frontmatter` | `world-types-ancestry` | `kind-routing` | `c-prime-audit`
+    pub classification_source: &'static str,
+    pub evidence_kind: String,
+}
+
+/// The graph-evidence kind for a C-layer typology (single source — the
+/// promotion intent and the classify receipt share it).
+pub fn c_layer_evidence_kind(type_coordinate: &str, crystallisation_state: &str) -> &'static str {
+    if crystallisation_state == "crystallised_world_form" {
+        return "c5_world_graduation_receipt";
+    }
+    match type_coordinate {
+        "C2" => "c2_entity_candidate",
+        "C3" => "c3_diagram_canvas_form",
+        "C4" => "c4_type_moc_authority",
+        "C5" => "c5_world_graduation_receipt",
+        _ => "c_layer_typology",
+    }
+}
+
+/// Reflective / C-prime branch segments: paths crossing these are the
+/// executional matrix, not the plain-C ontological authority — they must
+/// be audited before any graph-authoritative treatment (CCT-15).
+const C_PRIME_SEGMENTS: &[&str] = &[
+    "C0'", "C1'", "C2'", "C3'", "C4'", "C5'", "C'", "CPF", "CT", "CP", "CF", "CFP", "CS",
+];
+
+fn c_prime_segment_in_path(path: &str) -> Option<&'static str> {
+    path.split('/')
+        .find_map(|part| C_PRIME_SEGMENTS.iter().find(|seg| **seg == part).copied())
+}
+
+/// CCT-15 routing law: classify an artifact into its C-native authority.
+/// Frontmatter / World-Types ancestry win when present; otherwise kind
+/// routing applies — templates → C1, entities/properties/tags → C2,
+/// canvases/diagrams → C3, same-name MOC index canvases → C4, flat World
+/// residency → C5. Unroutable artifacts are refused, never defaulted.
+pub fn classify_c_layer(
+    source_path: impl Into<String>,
+    content: &str,
+) -> Result<CLayerClassification, String> {
+    let source_path = source_path.into();
+    let normalized = source_path.replace('\\', "/");
+
+    // C-prime ancestry audit comes first: CPF/CT/…/C4' branches carry the
+    // reflective scaffold, never plain-C graph authority.
+    if let Some(segment) = c_prime_segment_in_path(&normalized) {
+        let c_layer_path = normalized
+            .split('/')
+            .take_while(|part| *part != segment)
+            .chain(std::iter::once(segment))
+            .collect::<Vec<_>>()
+            .join("/");
+        return Ok(CLayerClassification {
+            evidence: CLayerEvidence {
+                type_family: "C'".to_owned(),
+                type_path: normalized
+                    .strip_suffix(".md")
+                    .or_else(|| normalized.strip_suffix(".canvas"))
+                    .unwrap_or(&normalized)
+                    .to_owned(),
+                type_coordinate: segment.to_owned(),
+                semantic_authority: "reflective_scaffold_pending_review".to_owned(),
+                crystallisation_state: "reflective_scaffold".to_owned(),
+                c_layer_path,
+            },
+            classification_source: "c-prime-audit",
+            evidence_kind: "c_prime_reflective_scaffold".to_owned(),
+        });
+    }
+
+    // Canvas artifacts never parse as markdown: same-name index canvases
+    // are C4 MOC authorities, every other canvas/diagram is C3.
+    if normalized.ends_with(".canvas") {
+        let stem = normalized
+            .rsplit('/')
+            .next()
+            .unwrap_or(&normalized)
+            .trim_end_matches(".canvas");
+        let parent = normalized
+            .split('/')
+            .rev()
+            .nth(1)
+            .unwrap_or_default();
+        let already_c4 = normalized.contains("/C/C4/");
+        let is_moc_index = stem == parent || already_c4;
+        let layer = if is_moc_index { "C4" } else { "C3" };
+        let segment = crate::entity_lifecycle::c_layer_segment(layer)
+            .expect("canonical C-layer segment exists");
+        let evidence = CLayerEvidence {
+            type_family: "C".to_owned(),
+            type_path: format!("Idea/Bimba/World/Types/Coordinates/C/{layer}/{segment}/{stem}"),
+            type_coordinate: layer.to_owned(),
+            semantic_authority: if is_moc_index {
+                "authoritative".to_owned()
+            } else {
+                "candidate_pending_review".to_owned()
+            },
+            crystallisation_state: "incubating_type_index".to_owned(),
+            c_layer_path: format!("Idea/Bimba/World/Types/Coordinates/C/{layer}"),
+        };
+        let kind = c_layer_evidence_kind(&evidence.type_coordinate, &evidence.crystallisation_state);
+        return Ok(CLayerClassification {
+            evidence,
+            classification_source: "kind-routing",
+            evidence_kind: kind.to_owned(),
+        });
+    }
+
+    let evidence = collect_artifact_evidence(source_path.clone(), content)?;
+    if let Some(c_layer) = evidence.c_layer_evidence.clone() {
+        let from_frontmatter = evidence
+            .frontmatter
+            .as_ref()
+            .and_then(Value::as_mapping)
+            .map(|map| map.contains_key(Value::String("type_coordinate".to_owned())))
+            .unwrap_or(false);
+        let kind =
+            c_layer_evidence_kind(&c_layer.type_coordinate, &c_layer.crystallisation_state);
+        return Ok(CLayerClassification {
+            evidence: c_layer,
+            classification_source: if from_frontmatter {
+                "frontmatter"
+            } else {
+                "world-types-ancestry"
+            },
+            evidence_kind: kind.to_owned(),
+        });
+    }
+
+    // Kind routing for artifacts with no C evidence at all.
+    let stem = normalized
+        .rsplit('/')
+        .next()
+        .unwrap_or(&normalized)
+        .trim_end_matches(".md")
+        .to_owned();
+    let lower = normalized.to_ascii_lowercase();
+    let has_template_marker = lower.contains("/templates/")
+        || evidence
+            .frontmatter
+            .as_ref()
+            .and_then(Value::as_mapping)
+            .is_some_and(|map| {
+                map.contains_key(Value::String("q_4_template_role".to_owned()))
+                    || map
+                        .get(Value::String("artifact_role".to_owned()))
+                        .and_then(Value::as_str)
+                        == Some("template")
+            });
+    let layer = if has_template_marker {
+        "C1"
+    } else if evidence.candidate_state.is_some()
+        || lower.contains("/entities/")
+        || lower.contains("/properties/")
+        || lower.contains("/tags/")
+    {
+        "C2"
+    } else if normalized.starts_with("Idea/Bimba/World/")
+        && !normalized.starts_with("Idea/Bimba/World/Types/")
+    {
+        "C5"
+    } else {
+        return Err(format!(
+            "no C-layer route for `{source_path}` — carries neither C frontmatter, World/Types ancestry, nor a template/entity/canvas/World kind marker"
+        ));
+    };
+    let segment = crate::entity_lifecycle::c_layer_segment(layer)
+        .expect("canonical C-layer segment exists");
+    let crystallisation_state = match layer {
+        "C2" => "entity_candidate",
+        "C5" => "candidate",
+        _ => "candidate",
+    };
+    let evidence = CLayerEvidence {
+        type_family: "C".to_owned(),
+        type_path: format!("Idea/Bimba/World/Types/Coordinates/C/{layer}/{segment}/{stem}"),
+        type_coordinate: layer.to_owned(),
+        semantic_authority: "candidate_pending_review".to_owned(),
+        crystallisation_state: crystallisation_state.to_owned(),
+        c_layer_path: format!("Idea/Bimba/World/Types/Coordinates/C/{layer}"),
+    };
+    let kind = c_layer_evidence_kind(&evidence.type_coordinate, &evidence.crystallisation_state);
+    Ok(CLayerClassification {
+        evidence,
+        classification_source: "kind-routing",
+        evidence_kind: kind.to_owned(),
+    })
+}
+
 pub fn collect_artifact_evidence(
     source_path: impl Into<String>,
     markdown: &str,

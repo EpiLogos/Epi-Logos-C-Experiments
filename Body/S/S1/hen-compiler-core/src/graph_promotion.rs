@@ -578,16 +578,9 @@ fn c_layer_role(coordinate: &str) -> Option<&'static str> {
 }
 
 fn graph_evidence_kind(type_coordinate: &str, crystallisation_state: &str) -> &'static str {
-    if crystallisation_state == "crystallised_world_form" {
-        return "c5_world_graduation_receipt";
-    }
-    match type_coordinate {
-        "C2" => "c2_entity_candidate",
-        "C3" => "c3_diagram_canvas_form",
-        "C4" => "c4_type_moc_authority",
-        "C5" => "c5_world_graduation_receipt",
-        _ => "c_layer_typology",
-    }
+    // Single source: the classify receipt and the promotion intent share
+    // the mapping (CCT-15).
+    crate::artifact_evidence::c_layer_evidence_kind(type_coordinate, crystallisation_state)
 }
 
 fn coordinate_promotion_metadata(coordinate: &str) -> Option<CoordinatePromotionMetadata> {

@@ -17,6 +17,9 @@ pub mod residency;
 mod smart_env;
 pub mod wikilinks;
 
+pub use artifact_evidence::{
+    c_layer_evidence_kind, classify_c_layer, CLayerClassification, CLayerEvidence,
+};
 pub use birth_codon::{
     derive_birth_codon, derive_birth_codon_with_composition, BirthCodonLedger, BirthCodonRecord,
     BirthCodonSeed, BirthCodonState, CollisionOutcome, DerivationPolicy,

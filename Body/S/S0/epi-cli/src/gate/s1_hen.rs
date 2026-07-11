@@ -36,15 +36,16 @@ use epi_s1_hen_compiler_core::wikilinks::{
     RenameRefusal, RenameRefusalReason,
 };
 use epi_s1_hen_compiler_core::{
-    entity_list_entry, plan_entity_capture, plan_entity_classify, plan_entity_promote_to_type,
-    plan_world_graduate, suggest_link_candidates, EntityListEntry, LinkCandidate,
-    LinkCandidateKind, LinkCandidateRequest,
+    classify_c_layer, entity_list_entry, plan_entity_capture, plan_entity_classify,
+    plan_entity_promote_to_type, plan_world_graduate, suggest_link_candidates, EntityListEntry,
+    LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
 };
 use epi_s3_gateway_contract::{
-    classify_vault_path_privacy, S1EntityCaptureReceipt, S1EntityClassifyReceipt,
-    S1EntityListEntry, S1EntityListReceipt, S1EntityPromoteToTypeReceipt, S1SemanticCandidate,
-    S1SemanticCandidateKind, S1SemanticResponse, S1SemanticStaleness, S1VaultPathPrivacyClass,
-    S1VaultRenameReceipt, S1VaultRenameRefusal, S1VaultRenameRefusalReason, S1WorldGraduateReceipt,
+    classify_vault_path_privacy, S1CFirstTypologyReceipt, S1EntityCaptureReceipt,
+    S1EntityClassifyReceipt, S1EntityListEntry, S1EntityListReceipt, S1EntityPromoteToTypeReceipt,
+    S1SemanticCandidate, S1SemanticCandidateKind, S1SemanticResponse, S1SemanticStaleness,
+    S1VaultPathPrivacyClass, S1VaultRenameReceipt, S1VaultRenameRefusal,
+    S1VaultRenameRefusalReason, S1WorldGraduateReceipt,
 };
 use serde_json::{json, Value};
 
@@ -484,6 +485,35 @@ pub fn world_graduate(params: &Value) -> Result<Value, String> {
         serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))?;
     value["birthCodon"] = json!(plan.birth_codon.record.codon);
     value["birthCodonState"] = json!(plan.birth_codon.state.as_str());
+    Ok(value)
+}
+
+/// `s1'.type.classify_c_layer` — CCT-15: classify an artifact into its
+/// C-native authority (frontmatter beats World/Types ancestry beats kind
+/// routing; C-prime/reflective branches are audited, never plain-C
+/// authoritative). Returns the S1CFirstTypologyReceipt.
+pub fn type_classify_c_layer(params: &Value) -> Result<Value, String> {
+    let path = require_str(params, "path")?;
+    refuse_if_protected_without_capability(&path, params)?;
+    let vault_root = resolve_vault_root(params)?;
+    let absolute = vault_root.join(&path);
+    let content = fs::read_to_string(&absolute)
+        .map_err(|err| format!("read `{path}` for classification failed: {err}"))?;
+
+    let classification = classify_c_layer(&path, &content)?;
+    let receipt = S1CFirstTypologyReceipt {
+        source_path: path,
+        type_family: classification.evidence.type_family,
+        type_path: classification.evidence.type_path,
+        type_coordinate: classification.evidence.type_coordinate,
+        semantic_authority: classification.evidence.semantic_authority,
+        crystallisation_state: classification.evidence.crystallisation_state,
+        c_layer_path: classification.evidence.c_layer_path,
+        evidence_kind: classification.evidence_kind,
+    };
+    let mut value =
+        serde_json::to_value(&receipt).map_err(|err| format!("serialize receipt: {err}"))?;
+    value["classificationSource"] = json!(classification.classification_source);
     Ok(value)
 }
 

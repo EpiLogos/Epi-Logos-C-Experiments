@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-10T23:36:51.100Z",
+ "generatedAt": "2026-07-11T11:46:38.643Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 212,
-  "present": 48,
-  "absent": 164,
+  "present": 49,
+  "absent": 163,
   "unknown": 0
  },
  "methods": [
@@ -688,9 +688,9 @@
   {
    "method": "s1'.type.classify_c_layer",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: path is required"
   },
   {
    "method": "s1'.type.index",
