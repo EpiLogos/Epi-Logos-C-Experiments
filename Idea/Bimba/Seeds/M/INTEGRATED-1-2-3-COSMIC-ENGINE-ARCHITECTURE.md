@@ -540,6 +540,8 @@ The composition is **deterministic under `(tick12, degree720, lens_mode, codon_i
 
 Scrubbing (pause + `scrub_to_tick(t)`) is supported because the slerp is the only animation primitive — every other element is a function of profile state at the scrubbed tick. The single-primitive discipline (§6.1) is what makes scrubbing tractable.
 
+> **⚑ NAMING LAW (2026-07-11, DR-M1-5)** — this §6.7 scrubbability is **display-scrub** (face-local replay of received records; correct as landed in the carrier's modulation engine). The distinct **engine-walk** — holding/walking the kernel's own `SpandaPhaseAnchor`, broadcast to every subscriber — is designed at [[M1-3-SPANDA-TRANSPORT-ARCHITECTURE]] and is additive to, never a replacement for, this contract.
+
 ---
 
 ## 7. Boundary Contracts

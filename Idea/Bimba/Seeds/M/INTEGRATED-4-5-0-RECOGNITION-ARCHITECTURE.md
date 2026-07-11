@@ -704,6 +704,8 @@ Per §7.1 and Tranche 15.7: state survives the toggle and the layout switch. The
 - **Scrub:** scrubbing to a prior tick replays the deterministic state at `(tick12, degree720, lens_mode, resonance)` — for the personal field, scrubbing also re-evaluates `Q_composed` at the past kerykeion_current tick
 - **Protected-local guards:** scrubbing **does not** unlock past raw bodies. The protected-local boundary is time-invariant; scrubbing replays the handles, not the data.
 
+> **⚑ (2026-07-11, DR-M1-5)** — this time-invariance law holds for BOTH transports named at [[M1-3-SPANDA-TRANSPORT-ARCHITECTURE]]: display-scrub (face-local replay) AND engine-walk (kernel `SpandaPhaseAnchor` walk). Walking the organism to a past phase re-derives handles only; protected-local bodies never re-materialise at any phase.
+
 ### 8.7 Empty-state and readiness behaviour
 
 When required contributors (`m4-nara`, `m5-epii`, `m0-anuttara`) are not all present (`widget.tsx:128-148`):

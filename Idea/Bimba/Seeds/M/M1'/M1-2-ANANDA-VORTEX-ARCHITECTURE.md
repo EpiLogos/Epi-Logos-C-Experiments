@@ -477,6 +477,8 @@ When the user toggles `daily-0-1` ↔ `ide-deep`, or 0/1 cosmic/personal:
 
 The played-torus accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replays the deterministic state at `(tick12, degree720, lens_mode, active_matrix_op)`. The animation primitive (slerp) is deterministic under replay per Tranche 15.9 verification.
 
+> **⚑ NAMING LAW (2026-07-11, DR-M1-5)** — this §8.6 affordance is **display-scrub** (face-local replay of received records). The distinct **engine-walk** (holding/walking the organism's own phase, broadcast to all subscribers) is designed at [[M1-3-SPANDA-TRANSPORT-ARCHITECTURE]]; the two are never both called "scrub".
+
 ---
 
 ## 9. Anti-Greenfield Audit

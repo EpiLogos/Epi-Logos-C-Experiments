@@ -152,6 +152,8 @@ Activity-bar-switched. Same slots in both layouts; what populates each slot scal
 
    The profile-tick crosses six matrix families simultaneously: `CL42_BASIS[6]` · `RING_QUATERNION_LUT[12]` · `QL_TRIG_TABLE[6]` · the six raw+digit-root Ananda vortex families · `audio_octet[8]` · `nodal_quartet[4]`. **Single animation primitive carries the tick honestly**: `quat_slerp` of K² orientation across `RING_QUATERNION_LUT[12]` (`m1.h:493-523, 551-564`). One full 360° SO(3) revolution per 12 ticks; Hopf-fibre flag flips at tick 5→6 (Klein crossing; cross-link Tranche 02.2 `klein_flip` field landing); second 360° returns identity at tick 11→0 — the 720° SU(2) recognition (the `DOUBLE_COVER_DEG=720` invariant becomes visible).
 
+   > **⚑ ANCHOR-CONSUMING (2026-07-11, DR-M1-5)** — the slerp primitive stands; its phase input is now the kernel-owned `SpandaPhaseAnchor` evaluated locally (one clock read at any grain), never a renderer-invented animation variable. The "scrub capability added through 15.9" rider is superseded: transport is the `m1.spanda.*` walk family per [[M1-3-SPANDA-TRANSPORT-ARCHITECTURE]].
+
    Every other surface element derives from or rides on the slerp:
    - Luminous Ananda cell jumps on each tick advance (Tranche 15.8)
    - Gold/emerald DR streamlines advance one position per tick
