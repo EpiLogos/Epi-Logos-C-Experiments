@@ -140,6 +140,16 @@ Graduated from [[SomeEntity]].
         intent.node.properties.get("crystallisation_state").unwrap(),
         "crystallised_world_form"
     );
+    // CCT-17b (c): graduation writes span pointers onto the flat-entity
+    // node — the graduated body's wikilink references stay dereferenceable.
+    assert_eq!(
+        intent
+            .node
+            .properties
+            .get("c_1_source_artifact_span")
+            .unwrap(),
+        &serde_json::json!(["SomeEntity@8:16"])
+    );
 
     let root_link = intent
         .relation_candidates

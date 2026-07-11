@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T17:10:26.600Z",
+  "updatedAt": "2026-07-11T17:49:53.425Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4740,16 +4740,33 @@
       "worktree": null
     },
     "16.T16.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T17:49:53.412Z",
+      "claimedAt": "2026-07-11T17:39:01.929Z",
+      "completedAt": "2026-07-11T17:49:53.412Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T17:49:53.412Z",
+          "text": "CCT-17 (+17b) closed verify-first + gap-build. CCT-17 core verified pre-landed and re-checked fresh: the 128 = 109 + 19 four-expression canon section stands in the 01 file, s0'.anuttara.trace is registered in METHOD_NAMES, vak_envelope_required_on_emissions lint test exists and passes, the spine compositor already replaces silent truncation with overflowVakToken references (spine_phase_overflow.test.ts covers it), and NO Body/S/S4/compress orchestrator dir exists (the collapsed-framing negative invariant holds). Gaps BUILT for 17b: (b) retrieval/wikilink_index.rs - suggest_world_links_by_coordinate promotes wikilinks from presentation to retrieval primitive (coordinate-literal targets resolve directly, named targets resolve through sibling World/Types entities, spans carry the c_1_source_artifact_span {file}:{line}:{column} shape, unresolvable targets never invented, Empty-residency files never contribute; wikilink_index_round_trip green). (c) Hen graduation write-back - flat World entities with source_c_authority_path now emit c_1_source_artifact_span (graduated body references stay dereferenceable; lifecycle test pins SomeEntity@8:16). (d) EvidenceAnchor landed in epii-autoresearch-core types (artifact_kind Vault|Repo|GraphBimba|Gnosis|World, path, passage_id, TextSpan line range, retrieved_at_tick) as EvidenceSourceRef.anchor, all constructions across autoresearch + agent-core updated, both crates green. (e) tri_layer.rs MemoryGraphRAG composition (ontology-filter -> fact-traverse -> cosine-rank; ranking never resurrects filtered passages, facts require span anchors; tri_layer_retrieval_composition green). NOT in this close (owned elsewhere): s5'.gnostic.query_with_layers gateway registration + skills-notebook :Gnostic:Skills VAK indexing (both Track 12 registrations, B2 lane); s1'.semantic.neighbors_of deeper surface (CCT-14 residual). CANON FLAG: S2-SPEC should absorb the wikilink-retrieval + tri-layer surfaces.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.17 (W class gate PASS incl live-wire spawned gateway) + verify-all --only hen-compiler-core,graph-services,epii-autoresearch-core,epii-agent-core,ta-onta,gateway,gateway-contract,gateway-methods,live-wire GREEN + cargo test wikilink_index_round_trip + tri_layer_retrieval_composition",
+            "exitCode": 0,
+            "testsPassed": 1950,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/retrieval/wikilink_index.rs",
+              "Body/S/S2/graph-services/src/retrieval/tri_layer.rs",
+              "Body/S/S5/epii-autoresearch-core/src/types.rs",
+              "Body/S/S1/hen-compiler-core/src/graph_promotion.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T17:39:01.929Z",
+      "runId": "20260711T173901Z-16-T16.17",
       "worktree": null
     },
     "16.T16.18": {
@@ -6058,16 +6075,33 @@
       "worktree": null
     },
     "22.T22.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T17:34:02.468Z",
+      "claimedAt": "2026-07-11T17:22:59.459Z",
+      "completedAt": "2026-07-11T17:34:02.468Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T17:34:02.468Z",
+          "text": "Spanda walk navigator landed as a FACE per DR-FACE-7 + M1-3-SPANDA-TRANSPORT-ARCHITECTURE S5 (22.1 re-sorted A/B+C; C-half unblocked by 02.T2.12-14). Twelve epogdoon stops (click=walk_to), hold/release, involutions NAMED in the UI (# reflect=11-n, half-turn=n+6), next-event preview (Klein flip 5->6, Mobius return 11->0), anchor-derived fraction bar (the dissolved slerpFraction). Owns nothing: no rAF/interval (renders per heartbeat + transport response); honest absence when no anchor rides the bus (no disabled placeholders). Registered as Spanda tab on cosmic face, LAYOUT_VERSION 11, token-clean CSS. E2e caught one real read-path bug (stale act response after release under >= freshness; stream now wins equal epochs) - the live-loop discipline working as designed. Playwright PASS 7.4s driving the real organism: hold freezes active stop across 2 heartbeats, walk lands, involutions answer, release flows. 5/5 jsdom, app 296, all 12 e2e green. UF gate PASS under verifier opus-e-widgets-verify.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/spanda-navigator.spec.ts (real Chromium vs real spawned gateway) + npx vitest run src/panes/SpandaNavigatorPane.test.tsx",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/SpandaNavigatorPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/spanda-navigator.spec.ts (app-ui-flow PASS 7.4s)",
+              "Body/M/pratibimba-app/src/App.tsx (Spanda tab, cosmic face, LAYOUT_VERSION 11)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/22.T22.1.md (UF gate PASS)"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-e-widgets",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T17:22:59.459Z",
+      "runId": "20260711T172259Z-22-T22.1",
       "worktree": null
     },
     "22.T22.2": {
@@ -10938,29 +10972,68 @@
       "worktree": null
     },
     "02.T2.13": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-11T16:57:27.618Z",
+      "status": "done",
+      "updatedAt": "2026-07-11T17:13:06.387Z",
       "claimedAt": "2026-07-11T16:57:27.618Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-11T17:13:06.387Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T17:13:06.387Z",
+          "text": "SPANDA-T2 landed per M1-3-SPANDA-TRANSPORT-ARCHITECTURE S3/DR-M1-5. m1.spanda.{hold,release,walk_to,step,half_turn} through the full 16.T16.14 chain: contract constants + METHOD_NAMES + dispatch_plan rows (S0ProductAdapter, anchor authority paths) + S3 route metadata (s0.product-spanda-transport; S0 hosts, S3 owns route law) + S0 dispatch arm + parity rows. ONE anchor on GatewayRuntimeState (heartbeat installs+samples, arm mutates, all subscribers see the held/walked organism); reflect and backward are distinct named acts (both-in-one refused); missing anchor answered honestly. dispatch_contract 27/27; parity manifests 11+9; live-wire walk-smoke PASS against spawned gateway: flowing g2:t2->g3:t5 (2.5 steps/s), hold=tick12 constant across advancing generations (g4:t5,g5:t5), walk_to 8 rides the stream, reflection 8->3 (11-n), half_turn 3->9 (n+6), release flows again (g7:t11,g8:t2). UF gate PASS first run under verifier opus-e-widgets-verify.",
+          "receipt": {
+            "command": "bash -c \"cd Body/M/pratibimba-app && node scripts/spanda-walk-smoke.mjs\" (spawned gateway live-wire) + cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract",
+            "exitCode": 0,
+            "testsPassed": 27,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/lib.rs (5 M1_SPANDA constants)",
+              "Body/S/S3/gateway-contract/src/dispatch_plan.rs (5 rows)",
+              "Body/S/S3/gateway/src/dispatch.rs (s0.product-spanda-transport route)",
+              "Body/S/S3/gateway/src/runtime.rs (shared anchor accessors)",
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs (walk-family arm)",
+              "Body/M/pratibimba-app/scripts/spanda-walk-smoke.mjs (live-wire PASS)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/02.T2.13.md (UF gate PASS)"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-e-widgets",
-      "leaseExpiresAt": "2026-07-11T18:57:27.618Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T16:57:27.618Z",
       "runId": "20260711T165727Z-02-T2.13",
       "worktree": null
     },
     "02.T2.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T17:21:34.908Z",
+      "claimedAt": "2026-07-11T17:13:32.937Z",
+      "completedAt": "2026-07-11T17:21:34.908Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T17:21:34.908Z",
+          "text": "SPANDA-T3 (wire leg) landed per M1-3-SPANDA-TRANSPORT-ARCHITECTURE S4/DR-M1-5. The ANCHOR rides profile.update as public-safe plain numbers (epochMs/phase0/rateHz/mode/direction/tick12) via shared spanda_block_json — one shape, two carriers, no drift; slerpFraction NEVER emitted (live capture confirms absent). portal.spanda_transport registered in PORTAL_EVENT_NAMES + PORTAL_EVENT_CONTRACTS and pushed IMMEDIATELY on every walk act — live capture: +27ms after the last heartbeat sample, between heartbeats. Carrier mirror in bridge/types.ts: SpandaAnchorBoundary + readSpandaAnchor (refuses malformed, never fabricates) + spandaPhaseAt/spandaTick12At/spandaFractionAt — the dissolved slerpFraction as pure local evaluation of the shared anchor, semantics pinned against the Rust anchor (8/8 vitest). Walk-smoke extended: 13/13 wire steps PASS. gateway-contract 4+5+3, dispatch_contract 27/27, app suite 291 green, tsc clean. UF gate PASS first run under verifier opus-e-widgets-verify.",
+          "receipt": {
+            "command": "bash -c \"cd Body/M/pratibimba-app && node scripts/spanda-walk-smoke.mjs\" (live-wire: spanda block on profile.update + portal.spanda_transport +27ms between heartbeats) + npx vitest run src/bridge/spandaAnchor.test.ts",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/portal_events.rs (portal.spanda_transport contract row)",
+              "Body/S/S0/epi-cli/src/gate/server/mod.rs (spanda_block_json + heartbeat attachment)",
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs (immediate event push)",
+              "Body/M/pratibimba-app/src/bridge/types.ts (SpandaAnchorBoundary + local evaluation)",
+              "Body/M/pratibimba-app/scripts/spanda-walk-smoke.mjs (extended wire assertions PASS)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/02.T2.14.md (UF gate PASS)"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-e-widgets",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T17:13:32.937Z",
+      "runId": "20260711T171332Z-02-T2.14",
       "worktree": null
     }
   },
@@ -12579,11 +12652,42 @@
     {
       "runId": "20260711T165727Z-02-T2.13",
       "taskId": "02.T2.13",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-11T16:57:27.618Z",
       "owner": "opus-e-widgets",
       "leaseExpiresAt": "2026-07-11T18:57:27.618Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-11T17:13:06.387Z"
+    },
+    {
+      "runId": "20260711T171332Z-02-T2.14",
+      "taskId": "02.T2.14",
+      "status": "done",
+      "startedAt": "2026-07-11T17:13:32.937Z",
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": "2026-07-11T19:13:32.937Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T17:21:34.908Z"
+    },
+    {
+      "runId": "20260711T172259Z-22-T22.1",
+      "taskId": "22.T22.1",
+      "status": "done",
+      "startedAt": "2026-07-11T17:22:59.459Z",
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": "2026-07-11T19:22:59.459Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T17:34:02.468Z"
+    },
+    {
+      "runId": "20260711T173901Z-16-T16.17",
+      "taskId": "16.T16.17",
+      "status": "done",
+      "startedAt": "2026-07-11T17:39:01.929Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T19:39:01.929Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T17:49:53.412Z"
     }
   ],
   "activeRoute": {

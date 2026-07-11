@@ -1,0 +1,34 @@
+{
+  "runId": "20260711T173901Z-16-T16.17",
+  "taskId": "16.T16.17",
+  "startedAt": "2026-07-11T17:39:01.929Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-11T19:39:01.929Z",
+  "worktree": null,
+  "task": {
+    "id": "16.T16.17",
+    "trackId": "16",
+    "tranche": "T16.17",
+    "title": "CCT-17 (+17b): VAK coordinate-tagging-IS-compression canon + wikilink span-pointer retrieval primitive",
+    "effort": null,
+    "file": "16-cross-cutting-closures.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/16-cross-cutting-closures.md",
+    "dependsOn": [
+      "16.T16.16"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "MIXED — CCT bundle. CCT-16 substrate-integrity five-fix (frontmatter whitelist ERROR, real khora_sync_queue_flush, fire_provenance retry+dead-letter, MostRecent picker, graph_revision bump) is SUBSTRATE (vault/gateway); CCT-21 BeingPattern producer bridges handles. §2 track 16."
+  }
+}

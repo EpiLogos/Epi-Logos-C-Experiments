@@ -22,6 +22,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 - `tests/` — contract/behaviour tests (spine schema, inbox contract, improvement loop, recompose pass, release gate, etc.).
 - Does NOT own review/inbox decision law (delegated to [[S5-SPEC]] sibling crate `epi-s5-epii-review-core`), Hen compile contract (`epi-s1-hen-compiler-core`), or kernel projection (`portal-core`); coordinate semantics live in the owning spec, not here.
 
+- CCT-17b (d): `EvidenceSourceRef.anchor: Option<EvidenceAnchor>` (types.rs) — span-anchored evidence pointers (`artifact_kind` Vault|Repo|GraphBimba|Gnosis|World, path, optional passage_id, optional `TextSpan` line range, `retrieved_at_tick`) making evidence dereferenceable instead of narrative.
+
 ## Local Contracts
 - Code Coordinate Headers: `src/lib.rs` (no `//!` — `use`-first) plus per-module `//!` headers (`types.rs`, `spine.rs`, `inbox.rs`, `recompose.rs`, `promotion.rs`, `orchestration.rs`, `kernel_evidence.rs`, `resonance_corpus/mod.rs`, `resonance_ebm/mod.rs`).
 - Owning specs: [[S5-SPEC]], [[S5-ARCHITECTURE]], [[S-SYSTEM-INDEX]].

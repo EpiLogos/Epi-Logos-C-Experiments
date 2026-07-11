@@ -13,6 +13,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S2-SPEC]]
 
 - CCT-16 substrate integrity (16.T16.16): `src/sync/frontmatter_rules.rs` owns the `{family}_{n}_{i?}_{semantic}` shape law (`resolve_frontmatter_key`: codified families q/qm/c/p/s/t/m/l survive verbatim, vault prime form `q_5'_x` canonicalises to `q_5_i_x` with both forms DISTINCT per DR-S1-6, the DR-M4-4 private q-partition is rejected, unknown families are lint ERRORS never silent drops); `src/bidirectional_sync.rs` carries the `MostRecent` floor (`most_recent_winner` — ISO timestamps lexicographic, timestamped side beats bare side, both-bare refuses; Merge/Manual remain stubs by design); `src/meta.rs::bump_graph_revision` flips the Redis cold-tier namespace atomically and is wired into the sync coordinator + the `epi graph cypher --write/--admin` arms.
 
+- CCT-17b (16.T16.17): `src/retrieval/wikilink_index.rs` promotes wikilinks from presentation to retrieval primitive (`suggest_world_links_by_coordinate` over World/Types entity files — coordinate-literal targets resolve directly, named targets resolve through sibling entities, spans carry the `c_1_source_artifact_span` pointer shape, unresolvable targets are never invented); `src/retrieval/tri_layer.rs` is the MemoryGraphRAG three-layer composition (ontology-filter → fact-traverse → cosine-rank; ranking never resurrects a filtered passage, facts need span anchors) — the `s5'.gnostic.query_with_layers` endpoint registration is Track 12's landing.
+
 ## Local Contracts
 - Code Coordinate Header: `src/lib.rs` (public module + re-export surface; no `//!` — description per Cargo.toml).
 - Owning specs: [[S2-SPEC]], [[S2-ARCHITECTURE]].

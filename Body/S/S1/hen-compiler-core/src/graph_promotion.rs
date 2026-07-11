@@ -195,7 +195,13 @@ impl GraphPromotionIntent {
             insert_property(&mut properties, "flat_world_target", target);
         }
 
-        if is_world_types_path(&evidence.source_path) {
+        // CCT-17b (c): span pointers ride World/Types entities AND flat
+        // World graduations (the graduated body carries the type-local
+        // references forward, so its spans ARE the entity's references).
+        if is_world_types_path(&evidence.source_path)
+            || (is_world_path(&evidence.source_path)
+                && evidence.source_c_authority_path.is_some())
+        {
             insert_string_array_property(
                 &mut properties,
                 "c_1_source_artifact_span",

@@ -91,6 +91,7 @@ fn recursive_spine_protocol_requires_human_final_and_persisted_inspector_is_hand
                     uri: "review://s5/history/recursive-window".to_owned(),
                     coordinate: Some("M5/Epii".to_owned()),
                     summary: Some("deferred and rejected review history".to_owned()),
+                    anchor: None,
                 }],
                 kernel_evidence: None,
             }],

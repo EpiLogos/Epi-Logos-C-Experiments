@@ -124,6 +124,7 @@ fn evaluation_persists_source_refs_for_world_return_observations() {
                         uri: "s5'.epii.status#/world_return/gnosis".to_owned(),
                         coordinate: Some("S5.2".to_owned()),
                         summary: Some("documents_count=1 notebooks_count=1".to_owned()),
+                        anchor: None,
                     },
                     EvidenceSourceRef {
                         kind: "graphiti_status".to_owned(),
@@ -132,6 +133,7 @@ fn evaluation_persists_source_refs_for_world_return_observations() {
                         summary: Some(
                             "runtime authority remains S3; invocation owner S5".to_owned(),
                         ),
+                        anchor: None,
                     },
                 ],
                 kernel_evidence: None,
@@ -252,6 +254,7 @@ fn kernel_evidence_is_advisory_and_never_final_judgement() {
                     uri: "s3'.temporal.context#/kernel".to_owned(),
                     coordinate: Some("S3'".to_owned()),
                     summary: Some("safe-public-current-kernel-tick".to_owned()),
+                    anchor: None,
                 }],
                 kernel_evidence: Some(kernel_evidence),
             }],

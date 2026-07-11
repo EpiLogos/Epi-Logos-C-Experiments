@@ -1041,6 +1041,7 @@ fn slice_evaluation_evidence_for_target(
             summary: Some(format!(
                 "{target:?} evidence consumed by deterministic capacity slice"
             )),
+            anchor: None,
         }],
         kernel_evidence: None,
     }

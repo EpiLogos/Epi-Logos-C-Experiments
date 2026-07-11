@@ -65,6 +65,7 @@ fn snapshot_reads_real_review_and_autoresearch_state() {
                         "Epii observed review and autoresearch state through real stores."
                             .to_owned(),
                     ),
+                    anchor: None,
                 }],
                 kernel_evidence: None,
             }],
@@ -588,6 +589,7 @@ fn m5_promotion_dry_run_returns_filtered_dto_from_real_review_and_improvement_st
                     uri: "review://m5/workbench/open-gate".to_owned(),
                     coordinate: Some("S5/S5'".to_owned()),
                     summary: Some("M5 workbench DTO checked through review gate.".to_owned()),
+                    anchor: None,
                 }],
                 kernel_evidence: None,
             }],

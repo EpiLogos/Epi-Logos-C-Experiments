@@ -64,6 +64,46 @@ pub struct EvidenceSourceRef {
     pub coordinate: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub summary: Option<String>,
+    /// CCT-17b (d): the load-bearing retrieval anchor — where in which
+    /// artifact this evidence lives, at which kernel tick it was valid.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub anchor: Option<EvidenceAnchor>,
+}
+
+/// CCT-17b (d): a span-anchored evidence pointer. `span` carries the same
+/// `{line_start}-{line_end}` shape as `c_1_source_artifact_span`; the
+/// anchor makes wikilink/graph evidence dereferenceable instead of
+/// narrative.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EvidenceAnchor {
+    /// Vault | Repo | GraphBimba | Gnosis | World
+    pub artifact_kind: EvidenceArtifactKind,
+    /// Filesystem path or bimba-coordinate path.
+    pub path: String,
+    /// S5 Graphiti arc id OR gnosis node id, when the passage lives there.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub passage_id: Option<String>,
+    /// Source line range — load-bearing for retrieval.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub span: Option<TextSpan>,
+    /// The kernel tick this anchor was valid at.
+    pub retrieved_at_tick: u32,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum EvidenceArtifactKind {
+    Vault,
+    Repo,
+    GraphBimba,
+    Gnosis,
+    World,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TextSpan {
+    pub line_start: u32,
+    pub line_end: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
