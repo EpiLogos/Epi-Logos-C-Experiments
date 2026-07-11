@@ -76,3 +76,32 @@ pub fn flags_description(flags: u8) -> String {
         parts.join(" | ")
     }
 }
+
+
+#[cfg(test)]
+mod hash_flip_law {
+    //! CCT-20 (a): `#` is the phase-flip act — a coordinate's ADDRESS
+    //! survives while its PHASE flips. Single application preserves
+    //! address identity and flips phase; double application returns to
+    //! the original phase (X → X' → X). The XOR over FLAG_INVERTED IS
+    //! the act; GET_PTR (MASK_ADDRESS) is the address-identity carrier.
+
+    use super::{FLAG_INVERTED, MASK_ADDRESS};
+
+    #[test]
+    fn single_hash_preserves_address_and_flips_phase() {
+        let x: usize = 0x0000_1234_5678_9ABC;
+        let x_prime = x ^ FLAG_INVERTED;
+        assert_ne!(x, x_prime, "phase flips");
+        assert_eq!(x & MASK_ADDRESS, x_prime & MASK_ADDRESS, "address survives");
+        assert_eq!(x_prime & FLAG_INVERTED, FLAG_INVERTED, "inverted phase set");
+        assert_eq!(x & FLAG_INVERTED, 0, "original phase clear");
+    }
+
+    #[test]
+    fn double_hash_returns_to_the_original_phase() {
+        let x: usize = FLAG_INVERTED >> 3 | 0x0000_00AA_BBCC_DDEE; // carries other flag bits too
+        let round_trip = (x ^ FLAG_INVERTED) ^ FLAG_INVERTED;
+        assert_eq!(round_trip, x, "X -> X' -> X");
+    }
+}

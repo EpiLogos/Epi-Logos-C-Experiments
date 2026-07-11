@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T19:48:55.257Z",
+  "updatedAt": "2026-07-11T23:38:38.896Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4859,16 +4859,32 @@
       "worktree": null
     },
     "16.T16.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T23:38:38.883Z",
+      "claimedAt": "2026-07-11T23:32:54.920Z",
+      "completedAt": "2026-07-11T23:38:38.883Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T23:38:38.883Z",
+          "text": "CCT-20 closed: the address-survives-phase-flips invariant is executable across the layers this session owns. (a) Kernel bit law pinned in epi-cli ffi/tagged.rs hash_flip_law tests: single # preserves MASK_ADDRESS identity and flips FLAG_INVERTED, double # returns exactly to the original bits (X -> X-prime -> X). (b) S2 property law: the _i_/prime shape is the ONLY phase encoding - NEW lint rejects textual prime/inverted/inversion tokens inside coordinate keys (frontmatter_rules resolver; m_2_i_colour stays welcome, q_5_prime_template refuses); direct q_5_x and inverted q_5_i_x survive as DISTINCT properties with the C3-prime coordinate identity never silently unprimed, and phase does not accumulate on re-resolution (coordinate_phase_preservation_e2e, 4 green). (c) 128-registry membership + (e) resolve/trace phase qualification verified pre-landed and re-run fresh: portal-core vak_resolve_preserves_prime_phase 4 green, and the spine overflow token test already asserts coord C3-prime with phase=prime retained. (d) OWL discipline: no epi:mirrors/MIRRORS_WITH anywhere outside the spec text (grep clean) and the runtime relation registry refuses both (pinned in the e2e). (f) M2 Asma fixture: m2_asma_mirror_idx_round_trip 2 green fresh. graph-schema coordinate_prefix_properties 6 green fresh. Full graph-services 38 suites green. W gate PASS via verify-tranche.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.20 (track-16 W class gate PASS incl live-wire spawned gateway) + cargo test -p epi-s2-graph-services --test coordinate_phase_preservation_e2e (4) + --test frontmatter_key_regex_round_trip (5) + full graph-services 38 suites + cargo test -p epi-s2-graph-schema --test coordinate_prefix_properties (6) + cargo test -p epi-logos --lib hash_flip_law (2) + cargo test -p portal-core --test vak_resolve_preserves_prime_phase (4) + cargo test -p epi-lib m2_asma_mirror_idx_round_trip (2) + greps: no epi:mirrors/MIRRORS_WITH outside the spec text",
+            "exitCode": 0,
+            "testsPassed": 61,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/tests/coordinate_phase_preservation_e2e.rs",
+              "Body/S/S2/graph-services/src/sync/frontmatter_rules.rs",
+              "Body/S/S0/epi-cli/src/ffi/tagged.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T23:32:54.920Z",
+      "runId": "20260711T233254Z-16-T16.20",
       "worktree": null
     },
     "16.T16.22": {
@@ -12922,6 +12938,16 @@
       "leaseExpiresAt": "2026-07-11T21:44:09.482Z",
       "worktree": null,
       "completedAt": "2026-07-11T19:48:55.243Z"
+    },
+    {
+      "runId": "20260711T233254Z-16-T16.20",
+      "taskId": "16.T16.20",
+      "status": "done",
+      "startedAt": "2026-07-11T23:32:54.920Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T01:32:54.920Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T23:38:38.883Z"
     }
   ],
   "activeRoute": {

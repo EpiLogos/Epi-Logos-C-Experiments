@@ -97,6 +97,17 @@ pub fn resolve_frontmatter_key(key: &str) -> FrontmatterKeyResolution {
     if !semantic_valid {
         return FrontmatterKeyResolution::NotCoordinate;
     }
+    // CCT-20 (b): the `_i_` / prime shape is the ONLY property-level
+    // phase encoding — textual `prime`/`inverted`/`inversion` tokens
+    // inside coordinate keys are lint errors, never a parallel encoding.
+    if semantic
+        .split('_')
+        .any(|token| matches!(token, "prime" | "inverted" | "inversion"))
+    {
+        return FrontmatterKeyResolution::UnknownFamily(format!(
+            "textual phase token in frontmatter key `{key}` — the {{family}}_{{n}}_{{i?}}_{{semantic}} shape is the only phase encoding (CCT-20/DR-FLIP-1 lint ERROR)"
+        ));
+    }
     if !FRONTMATTER_KEY_FAMILIES.contains(&family) {
         return FrontmatterKeyResolution::UnknownFamily(format!(
             "unknown coordinate-key family `{family}` in frontmatter key `{key}` — codified families are {FRONTMATTER_KEY_FAMILIES:?} (DR-S1-6 lint ERROR, not a silent drop)"
