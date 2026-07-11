@@ -834,3 +834,46 @@ body,
   pointer-events: auto;
   cursor: default;
 }
+
+/* ── Spanda walk navigator (22.T22.1 / DR-M1-5) — the matheme as transport bar ── */
+.spanda-navigator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem;
+}
+.spanda-stops {
+  display: flex;
+  gap: 0.3rem;
+}
+.spanda-stops button {
+  flex: 1;
+  padding: 0.45rem 0;
+  background: transparent;
+  border: 1px solid #3a2c5c;
+  border-radius: 4px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+.spanda-stops button[data-active='true'] {
+  border-color: var(--ring);
+  color: var(--ring);
+  font-weight: 600;
+}
+.spanda-fraction-rail {
+  height: 4px;
+  background: #2e2247;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.spanda-fraction {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.spanda-transport {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}

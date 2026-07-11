@@ -27,6 +27,7 @@ import { StatusStrip } from './components/StatusStrip';
 import { CosmicEngine } from './engine/CosmicEngine';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
+import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
@@ -121,6 +122,7 @@ const COSMIC_DEFAULT = {
                 id: 'cosmic-main',
                 children: [
                     { type: 'tab', name: 'Cosmic Engine', component: 'cosmic', enableClose: false },
+                    { type: 'tab', name: 'Spanda', component: 'spandaNavigator', enableClose: false },
                     { type: 'tab', name: 'Walk', component: 'walk', enableClose: false },
                     { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
@@ -136,7 +138,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 10;
+const LAYOUT_VERSION = 11;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -165,6 +167,9 @@ function factory(node: TabNode) {
             );
         case 'walk':
             return <WalkPane />;
+        // 22.T22.1 — the spanda walk navigator (engine-walk face, DR-M1-5)
+        case 'spandaNavigator':
+            return <SpandaNavigatorPane />;
         case 'bimbaGraph':
             return <GraphExplorerPane />;
         case 'kleinTopology':
