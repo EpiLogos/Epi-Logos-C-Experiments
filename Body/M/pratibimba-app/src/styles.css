@@ -877,3 +877,83 @@ body,
   gap: 0.4rem;
   flex-wrap: wrap;
 }
+
+/* 25.1 — day-calendar navigation face (M4' personal pole) */
+.day-calendar {
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem;
+  overflow: auto;
+}
+
+.day-calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.day-calendar-month {
+  color: var(--ink);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+}
+
+.day-calendar-weekdays,
+.day-calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day-calendar-weekday {
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 0.7rem;
+  padding: 0.2rem 0;
+}
+
+.day-calendar-cell {
+  position: relative;
+  text-align: center;
+  padding: 0.35rem 0;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 0.78rem;
+  min-height: 1.6rem;
+}
+
+.day-calendar-empty {
+  color: var(--ink-dim);
+  opacity: 0.5;
+}
+
+.day-calendar-blank {
+  visibility: hidden;
+}
+
+.day-calendar-lived {
+  background: var(--ground-raised);
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.day-calendar-lived:hover {
+  background: var(--accent);
+}
+
+.day-calendar-now {
+  border: 1px solid var(--ring);
+  color: var(--ring);
+}
+
+.day-calendar-mark {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--ring);
+  font-size: 0.6rem;
+  line-height: 1;
+}

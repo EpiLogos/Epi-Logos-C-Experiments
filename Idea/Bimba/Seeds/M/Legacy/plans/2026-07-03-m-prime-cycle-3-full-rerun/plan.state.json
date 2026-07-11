@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:36:43.327Z",
+  "updatedAt": "2026-07-11T18:37:22.411Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -6873,14 +6873,30 @@
       "worktree": null
     },
     "25.T25.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-11T18:29:47.150Z",
+      "status": "done",
+      "updatedAt": "2026-07-11T18:37:22.397Z",
       "claimedAt": "2026-07-11T18:29:47.150Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-11T18:37:22.397Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:37:22.397Z",
+          "text": "Fate B per DR-FACE-7 §3: a 4-5-0 personal-pole day-navigation face (DayCalendarPane) laying the real Idea/Empty/Present day-tree into a 7-column weekday calendar grid — the pivot the linear JournalTimelinePane list does not give. It READS the session store day-now thread and never owns it: prev/next month is a local view selection, App.tsx keeps the day-now write. Registered as the Calendar tab on the personal face (LAYOUT_VERSION 12); opens a lived day via the existing vault.open command. UF-proven by new e2e day-calendar.spec.ts against the real vault sidecar: begin-today anchors a real Present folder, the grid marks today as the day-now anchor, month navigation changes the local view while the status-strip day-now entry stays unchanged (7/7 jsdom incl. parser+grid, 312 app unit green, carrier-tokens GREEN); full UF gate PASS under verifier opus-f-faces-verify.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app exec playwright test day-calendar",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/DayCalendarPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/day-calendar.spec.ts",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-f-faces",
-      "leaseExpiresAt": "2026-07-11T20:59:47.150Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:29:47.150Z",
       "runId": "20260711T182947Z-25-T25.1",
       "worktree": null
@@ -12822,11 +12838,12 @@
     {
       "runId": "20260711T182947Z-25-T25.1",
       "taskId": "25.T25.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-11T18:29:47.150Z",
       "owner": "opus-f-faces",
       "leaseExpiresAt": "2026-07-11T20:59:47.150Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-11T18:37:22.397Z"
     }
   ],
   "activeRoute": {
