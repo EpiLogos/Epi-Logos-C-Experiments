@@ -11,6 +11,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S2-SPEC]]
 - `tests/` — contract test suite (graph_api, coordinate_query, promotion_policy, graph_promotion_contract, semantic_cache, semantic_doc_includes_locality_signature, q_5_fallback_bucket_law, neo4j, dataset_import_live, etc.).
 - Does NOT own the schema registries (sibling `graph-schema/`), the Turtle ontology source (sibling `ontology/epi.ttl`, consumed by `src/ontology.rs`), or coordinate semantics (route through S2' carriers). Domain law lives in this layer's owning spec, not in [[S0-SPEC]]/[[M0'-SPEC]] by convenience.
 
+- CCT-16 substrate integrity (16.T16.16): `src/sync/frontmatter_rules.rs` owns the `{family}_{n}_{i?}_{semantic}` shape law (`resolve_frontmatter_key`: codified families q/qm/c/p/s/t/m/l survive verbatim, vault prime form `q_5'_x` canonicalises to `q_5_i_x` with both forms DISTINCT per DR-S1-6, the DR-M4-4 private q-partition is rejected, unknown families are lint ERRORS never silent drops); `src/bidirectional_sync.rs` carries the `MostRecent` floor (`most_recent_winner` — ISO timestamps lexicographic, timestamped side beats bare side, both-bare refuses; Merge/Manual remain stubs by design); `src/meta.rs::bump_graph_revision` flips the Redis cold-tier namespace atomically and is wired into the sync coordinator + the `epi graph cypher --write/--admin` arms.
+
 ## Local Contracts
 - Code Coordinate Header: `src/lib.rs` (public module + re-export surface; no `//!` — description per Cargo.toml).
 - Owning specs: [[S2-SPEC]], [[S2-ARCHITECTURE]].

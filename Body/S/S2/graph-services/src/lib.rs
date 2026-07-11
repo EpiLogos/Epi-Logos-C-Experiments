@@ -36,7 +36,9 @@ pub mod sync_coordinator;
 pub mod types;
 pub mod vault;
 
-pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
+pub use bidirectional_sync::{
+    most_recent_winner, BidirectionalSyncer, ConflictResolution, MostRecentWinner, SyncConflict,
+};
 pub use consumption::{
     m5_handoff_consumption_contract, FORBIDDEN_CLIENT_DERIVATIONS, M5_HANDOFF_CONTRACT_VERSION,
 };
@@ -103,7 +105,8 @@ pub use retrieval_query::{
 };
 pub use semantic::SemanticDocument;
 pub use sync::{
-    CodeProvenanceEvidence, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
+    plan_frontmatter_properties, resolve_frontmatter_key, CodeProvenanceEvidence,
+    FrontmatterKeyResolution, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
     GraphPromotionSyncReport, GraphitiEpisodePlan, PromotionClass, PromotionFrontmatterEvidence,
     PromotionLinkEvidence, PromotionNodeIntent, PromotionPlan, PromotionPolicyDecision,
     PromotionRelationCandidate, PromotionTargetSurface, PropertyProposal, PropertySchemaStatus,

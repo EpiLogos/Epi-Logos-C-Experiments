@@ -923,6 +923,16 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             let neo4j = client::Neo4jClient::connect(&config)
                 .map_err(|e| format!("connect failed: {}", e))?;
             let result = cypher::run(&neo4j, query, &parsed, mode, *limit).await?;
+            // CCT-16 (v): the --write/--admin arms MUST bump graph_revision
+            // — without it the Redis cold tier serves stale coordinate
+            // lookups for up to the TTL after a manual Cypher write.
+            if *write || *admin {
+                if let Err(error) =
+                    epi_s2_graph_services::meta::bump_graph_revision(&neo4j).await
+                {
+                    eprintln!("[graph] graph_revision bump failed: {error}");
+                }
+            }
             serde_json::to_string_pretty(&result).map_err(|e| e.to_string())
         }
         GraphCmd::Ingest {

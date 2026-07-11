@@ -14,6 +14,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] (carrier class) -> [[S0-SPEC
 - `tests/` — `now_fibonacci_ground.test.ts`, `session_workspace.test.ts`, `sophia_disclosure_wire.test.ts`, `z_phase_vak.test.ts`
 - Does NOT own: vault folder structure / templates / Day-NOW logic (Hen), agent routing (Anima), temporal scheduling (Chronos), knowledge crystallisation (Aletheia). Domain law for S0 ground lives in its owning [[S0-SPEC]], not redefined here.
 
+- CCT-16 (ii): `modules/sync-queue-flush.ts` owns the REAL `.khora-sync-queue.jsonl` flush law (was the "Neo4j not yet wired" stub) — batch by path, one `epi graph sync <path>` per batch (Hen/S2 own the write law), append-only `.khora-sync-queue.flushed.jsonl` audit, idempotent on `(path, ts)`, Janus staleness warning past 60 minutes. `extension.ts::khora_sync_queue_flush` is the thin tool wiring.
+
 ## Local Contracts
 - `CONTRACT.md` (this directory) — the binding interface: tools, hook seams, bootstrap-sequence order, write-authority invariant, secrets invariant
 - Code coordinate: `spine-contribution.ts` declares `coordinate: "S0/S0'"`; `extension.ts` is the PI registration surface

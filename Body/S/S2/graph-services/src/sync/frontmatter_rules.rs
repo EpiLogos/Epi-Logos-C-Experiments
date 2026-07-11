@@ -26,6 +26,90 @@ pub(crate) fn canonical_frontmatter_key(key: &str) -> Option<&'static str> {
     })
 }
 
+// ===================== CCT-16 (i): {family}_{n}_{i?}_{semantic} law =====================
+//
+// DR-S1-6: the static alias map above stays for legacy bare keys, but
+// coordinate-prefixed keys survive vault → graph sync by SHAPE, not by
+// enumeration. Unknown families are a lint ERROR, never a silent drop.
+// DR-M4-4: the private q-partition is REJECTED at the sync boundary.
+
+/// The codified coordinate-key family set (DR-S1-6).
+pub const FRONTMATTER_KEY_FAMILIES: &[&str] = &["q", "qm", "c", "p", "s", "t", "m", "l"];
+
+/// DR-M4-4 privacy partition: these q-roots (and derivatives) never cross
+/// the sync boundary.
+pub const REJECTED_PRIVACY_KEY_ROOTS: &[&str] =
+    &["q_personal", "q_identity", "q_activity", "q_composed"];
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FrontmatterKeyResolution {
+    /// Legacy bare key remapped via the alias table.
+    Alias(&'static str),
+    /// A `{family}_{n}_{i?}_{semantic}` key surviving verbatim (the vault
+    /// prime form `q_5'_x` canonicalises to the graph form `q_5_i_x`; both
+    /// forms survive as DISTINCT properties on the same node per DR-S1-6).
+    Canonical(String),
+    /// DR-M4-4 private q-partition — rejected, never persisted.
+    RejectedPrivacy,
+    /// Plain metadata key, not coordinate-shaped — caller keeps its
+    /// existing skip/alias behaviour.
+    NotCoordinate,
+    /// Coordinate-shaped but the family is not codified — lint ERROR.
+    UnknownFamily(String),
+}
+
+pub fn resolve_frontmatter_key(key: &str) -> FrontmatterKeyResolution {
+    if REJECTED_PRIVACY_KEY_ROOTS
+        .iter()
+        .any(|root| key == *root || key.starts_with(&format!("{root}_")))
+    {
+        return FrontmatterKeyResolution::RejectedPrivacy;
+    }
+    if let Some(alias) = canonical_frontmatter_key(key) {
+        return FrontmatterKeyResolution::Alias(alias);
+    }
+
+    // Coordinate shape: {family}_{n}{'?}_{semantic} or {family}_{n}_i_{semantic}.
+    let Some((family, rest)) = key.split_once('_') else {
+        return FrontmatterKeyResolution::NotCoordinate;
+    };
+    let mut chars = rest.chars();
+    let Some(position) = chars.next().filter(|ch| ('0'..='5').contains(ch)) else {
+        return FrontmatterKeyResolution::NotCoordinate;
+    };
+    let after_position = chars.as_str();
+    let (inverted, semantic) = if let Some(semantic) = after_position.strip_prefix("'_") {
+        (true, semantic)
+    } else if let Some(semantic) = after_position.strip_prefix("_i_") {
+        (true, semantic)
+    } else if let Some(semantic) = after_position.strip_prefix('_') {
+        (false, semantic)
+    } else {
+        return FrontmatterKeyResolution::NotCoordinate;
+    };
+    let semantic_valid = !semantic.is_empty()
+        && semantic.split('_').all(|part| {
+            !part.is_empty()
+                && part
+                    .chars()
+                    .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
+        });
+    if !semantic_valid {
+        return FrontmatterKeyResolution::NotCoordinate;
+    }
+    if !FRONTMATTER_KEY_FAMILIES.contains(&family) {
+        return FrontmatterKeyResolution::UnknownFamily(format!(
+            "unknown coordinate-key family `{family}` in frontmatter key `{key}` — codified families are {FRONTMATTER_KEY_FAMILIES:?} (DR-S1-6 lint ERROR, not a silent drop)"
+        ));
+    }
+    let canonical = if inverted {
+        format!("{family}_{position}_i_{semantic}")
+    } else {
+        format!("{family}_{position}_{semantic}")
+    };
+    FrontmatterKeyResolution::Canonical(canonical)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum FrontmatterPropertyRuleKind {
     Identity,
@@ -57,14 +141,18 @@ pub fn plan_frontmatter_properties(
         let Some(raw_key) = key.as_str() else {
             continue;
         };
-        let Some(canonical) = canonical_frontmatter_key(raw_key) else {
-            continue;
-        };
         if raw_key == "bimbaCoordinate" || raw_key == "bimba_coordinate" {
             continue;
         }
+        let target = match resolve_frontmatter_key(raw_key) {
+            FrontmatterKeyResolution::Alias(alias) => alias.to_owned(),
+            FrontmatterKeyResolution::Canonical(canonical) => canonical,
+            FrontmatterKeyResolution::RejectedPrivacy
+            | FrontmatterKeyResolution::NotCoordinate => continue,
+            FrontmatterKeyResolution::UnknownFamily(error) => return Err(error),
+        };
         if let Some(value) = yaml_scalar_or_first_sequence_value(value) {
-            properties.insert(canonical.to_owned(), value);
+            properties.insert(target, value);
         }
     }
     Ok(properties)

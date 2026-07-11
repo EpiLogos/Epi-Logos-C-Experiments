@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T11:47:05.710Z",
+  "updatedAt": "2026-07-11T17:10:26.600Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4709,16 +4709,34 @@
       "worktree": null
     },
     "16.T16.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T17:10:26.588Z",
+      "claimedAt": "2026-07-11T16:32:38.579Z",
+      "completedAt": "2026-07-11T17:10:26.588Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T17:10:26.588Z",
+          "text": "CCT-16 Substrate Integrity Bundle: all five fixes landed. (i) canonical_frontmatter_key whitelist -> resolve_frontmatter_key shape law per DR-S1-6 at BOTH call sites (plan + coordinator write path): codified families q/qm/c/p/s/t/m/l survive verbatim, vault prime form q_5'_x canonicalises to q_5_i_x with both forms DISTINCT on one node, DR-M4-4 private q-partition (q_personal/identity/activity/composed + derivatives) rejected at the boundary, unknown families are lint ERRORS never silent drops; property writes backtick-quoted. (ii) khora_sync_queue_flush real path replaces the Neo4j-not-wired stub: modules/sync-queue-flush.ts batches by path, one epi graph sync per batch (Hen/S2 own write law), append-only flushed audit companion, idempotent on (path,ts), failed batches stay queued, Janus staleness warning past 60min; 3 node:test behaviors green. (iii) fire_provenance at-least-once: deliver_provenance_to with exponential-backoff retry (max 5), x-idempotency-key (session_id,event_type,timestamp), dead-letter to {day}/.provenance-dead-letter.jsonl on final failure; retry-then-succeed and dead-letter tests green (mock TCP endpoint); the three dispatch.rs call sites ride the improved fire_provenance whose failures now log + dead-letter (observable, not invisible). (iv) BidirectionalSyncer MostRecent floor: SyncConflict carries vault/graph timestamps, most_recent_winner pure law (ISO lexicographic, timestamped side beats bare, both-bare refuses, ties keep graph), vault-newer writes through, graph-newer reports the return-path value; Merge/Manual stay stubs by design. (v) bump_graph_revision in meta.rs (MERGE coalesce+1) wired into the sync coordinator AND the epi graph cypher --write/--admin arms; LIVE proof against standing Neo4j: inverted q_5_i key persisted and revision advanced monotonically (cargo test -- --ignored PASS). Close was held ~15min for lane E's in-flight m1.spanda gateway landing (shared-gate discipline), re-verified fresh after. Remaining live-stack residue: the Redis KEYS namespace observation and a live graphiti provenance ack ride the standing-stack lane; hermetic + live-Neo4j slices are pinned.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.16 (W class gate PASS: gateway + gateway-contract + gateway-methods + live-wire spawned gateway + ta-onta + graphiti-runtime + redis-context) + cargo test -p epi-s2-graph-services --test frontmatter_key_regex_round_trip --test bidirectional_most_recent --test cct_16_end_to_end_integration (incl LIVE --ignored against standing Neo4j: inverted key persisted + revision bumped monotonically) + cargo test -p epi-s3-graphiti-runtime --test fire_provenance_at_least_once + node --test sync_queue_flush.test.ts (3 pass)",
+            "exitCode": 0,
+            "testsPassed": 1920,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/sync/frontmatter_rules.rs",
+              "Body/S/S2/graph-services/src/bidirectional_sync.rs",
+              "Body/S/S2/graph-services/src/meta.rs",
+              "Body/S/S3/graphiti-runtime/src/lib.rs",
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/sync-queue-flush.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T16:32:38.579Z",
+      "runId": "20260711T163238Z-16-T16.16",
       "worktree": null
     },
     "16.T16.17": {
@@ -10887,6 +10905,63 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
+    },
+    "02.T2.12": {
+      "status": "done",
+      "updatedAt": "2026-07-11T16:56:45.396Z",
+      "claimedAt": "2026-07-11T16:35:08.976Z",
+      "completedAt": "2026-07-11T16:56:45.396Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T16:56:45.396Z",
+          "text": "SPANDA-T1 landed per M1-3-SPANDA-TRANSPORT-ARCHITECTURE S2/DR-M1-5. SpandaPhaseAnchor in portal-core: engine-owned lazy phase state (epoch_ms, phase0, rate_hz, mode Flowing|Held|Walking, direction Forward|Reflected), computed on read at any grain, no loop at any frequency; rate law beat=epogdoon-step derived from the citation (cycle-rate reading would put felt pulse 12x outside the band the loader refuses); both involutions as named kernel acts (apply_reflection 11-n, apply_half_turn n+6, compose to 5-n Klein four-group). from_phase_anchor beside retained from_clock_tick (tests/S3 unchanged). Heartbeat now a PORTAL SAMPLER of the anchor: tick12 from spanda::tick12_readout, wall-clock retired from tick derivation (kept for timestamps/kairos), band-refused config via [ml.m1_paramasiva], generation counter untouched. 11/11 new behavioral tests; 56 portal-core suites green; boot-smoke PASS with tick12=5 at ~2s (2.5 steps/sec visible - was 1/sec wall-dice). First UF gate REFUSED on graphiti-runtime fire_provenance flake (concurrent session cargo build confirmed in process listing; test 2/2 standalone); re-run gate PASS under verifier opus-e-widgets-verify.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test spanda_phase_anchor --offline && bash -c \"cd Body/M/pratibimba-app && node scripts/boot-smoke.mjs\"",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/spanda_anchor.rs",
+              "Body/S/S0/portal-core/src/kernel.rs (from_phase_anchor)",
+              "Body/S/S0/epi-cli/src/gate/server/mod.rs (heartbeat samples the anchor)",
+              "Body/M/pratibimba-app/scripts/boot-smoke.mjs (boot-smoke PASS, tick12 flowering at cited rate)",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/02.T2.12.md (UF gate PASS incl app-ui-flow playwright 11)"
+            ]
+          }
+        }
+      ],
+      "notes": null,
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-11T16:35:08.976Z",
+      "runId": "20260711T163508Z-02-T2.12",
+      "worktree": null
+    },
+    "02.T2.13": {
+      "status": "in_progress",
+      "updatedAt": "2026-07-11T16:57:27.618Z",
+      "claimedAt": "2026-07-11T16:57:27.618Z",
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": "2026-07-11T18:57:27.618Z",
+      "heartbeatAt": "2026-07-11T16:57:27.618Z",
+      "runId": "20260711T165727Z-02-T2.13",
+      "worktree": null
+    },
+    "02.T2.14": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     }
   },
   "runs": [
@@ -12480,6 +12555,35 @@
       "leaseExpiresAt": "2026-07-11T13:32:45.198Z",
       "worktree": null,
       "completedAt": "2026-07-11T11:47:05.697Z"
+    },
+    {
+      "runId": "20260711T163238Z-16-T16.16",
+      "taskId": "16.T16.16",
+      "status": "done",
+      "startedAt": "2026-07-11T16:32:38.579Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T18:32:38.579Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T17:10:26.588Z"
+    },
+    {
+      "runId": "20260711T163508Z-02-T2.12",
+      "taskId": "02.T2.12",
+      "status": "done",
+      "startedAt": "2026-07-11T16:35:08.976Z",
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": "2026-07-11T18:35:08.976Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T16:56:45.396Z"
+    },
+    {
+      "runId": "20260711T165727Z-02-T2.13",
+      "taskId": "02.T2.13",
+      "status": "in_progress",
+      "startedAt": "2026-07-11T16:57:27.618Z",
+      "owner": "opus-e-widgets",
+      "leaseExpiresAt": "2026-07-11T18:57:27.618Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

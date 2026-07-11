@@ -13,7 +13,7 @@ use serde_json::Value;
 use crate::{CoordinateArrayParser, Neo4jClient, RelationshipManager, RelationshipWritePlan};
 
 use super::code_provenance::{self, CodeProvenanceEvidence};
-use super::frontmatter_rules::{self, canonical_frontmatter_key, FrontmatterPropertyRule};
+use super::frontmatter_rules::{self, FrontmatterPropertyRule};
 use super::graphiti_episode::{self, GraphitiEpisodePlan};
 use super::intent_types::S2GraphPromotionIntent;
 use super::plan::{validate_promotion_coordinate, PromotionPlan};
@@ -356,8 +356,11 @@ impl<'a> SyncCoordinator<'a> {
             .await
             .map_err(|e| format!("upsert error: {}", e))?;
 
-        // Set additional frontmatter properties, remapping bare keys to their
-        // coordinate-driven canonical names.
+        // Set additional frontmatter properties. CCT-16 (i)/DR-S1-6: keys
+        // survive by SHAPE via the {family}_{n}_{i?}_{semantic} resolver —
+        // q_/qm_ (and every codified family) persist verbatim, the DR-M4-4
+        // private q-partition is rejected, and an unknown coordinate-key
+        // family is a lint ERROR, never a silent drop.
         if let Some(map) = frontmatter.as_mapping() {
             let skip_keys = ["coordinate"];
             for (key, value) in map {
@@ -365,16 +368,16 @@ impl<'a> SyncCoordinator<'a> {
                     if skip_keys.contains(&k) {
                         continue;
                     }
-                    let canonical = canonical_frontmatter_key(k);
-                    // Only persist keys we've explicitly mapped or that already follow the prefix.
-                    let target_key = match canonical {
-                        Some(canonical) => canonical,
-                        None if k.starts_with("c_") || k.starts_with("s_") => k,
-                        None => continue,
+                    use frontmatter_rules::FrontmatterKeyResolution as KeyRes;
+                    let target_key = match frontmatter_rules::resolve_frontmatter_key(k) {
+                        KeyRes::Alias(alias) => alias.to_owned(),
+                        KeyRes::Canonical(canonical) => canonical,
+                        KeyRes::RejectedPrivacy | KeyRes::NotCoordinate => continue,
+                        KeyRes::UnknownFamily(error) => return Err(error),
                     };
                     let escaped_v = v.replace('\'', "\\'");
                     let set_cypher = format!(
-                        "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.{} = '{}'",
+                        "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.`{}` = '{}'",
                         coord, target_key, escaped_v
                     );
                     let _ = self.client.run(&set_cypher).await;
@@ -389,6 +392,13 @@ impl<'a> SyncCoordinator<'a> {
             let targets: Vec<String> = links.iter().map(|l| l.target.clone()).collect();
             let kv = vec![(key.clone(), targets)];
             rel_count += self.rel_manager.create_from_frontmatter(coord, &kv).await?;
+        }
+
+        // CCT-16 (v): a vault→graph sync IS a :Bimba write — bump the
+        // revision so the Redis cold-tier namespace flips atomically. A
+        // bump failure must be observable, never fatal to the sync itself.
+        if let Err(error) = crate::meta::bump_graph_revision(self.client).await {
+            eprintln!("[sync] graph_revision bump failed (cold-tier cache may serve stale hits): {error}");
         }
 
         Ok(SyncResult {

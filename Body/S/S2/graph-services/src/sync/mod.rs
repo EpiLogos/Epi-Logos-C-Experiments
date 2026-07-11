@@ -11,8 +11,9 @@ mod report;
 pub use code_provenance::{plan_code_provenance_properties, CodeProvenanceEvidence};
 pub use coordinator::SyncCoordinator;
 pub use frontmatter_rules::{
-    frontmatter_property_rules, plan_frontmatter_properties, FrontmatterPropertyRule,
-    FrontmatterPropertyRuleKind,
+    frontmatter_property_rules, plan_frontmatter_properties, resolve_frontmatter_key,
+    FrontmatterKeyResolution, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
+    FRONTMATTER_KEY_FAMILIES, REJECTED_PRIVACY_KEY_ROOTS,
 };
 pub use graphiti_episode::{plan_graphiti_episode, GraphitiEpisodePlan};
 pub use intent_types::{

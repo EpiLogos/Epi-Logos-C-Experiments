@@ -14,6 +14,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (world-return canon: [[S5-SP
 - `tests/nara_relations.rs` — contract tests for Nara relation edge labels, protected-local privacy enforcement, and the relation insertion envelope.
 - Does NOT own gateway protocol/method contract (delegated to sibling `gateway-contract`, [[S3-SPEC]]) or knowledge-graph storage ([[S2-SPEC]]); identity-affecting deposits are rejected here and routed through Epii review.
 
+- CCT-16 (iii): `fire_provenance` is at-least-once — `deliver_provenance_to` retries with exponential backoff (max 5), carries an `x-idempotency-key` header `(session_id, event_type, timestamp)`, and dead-letters to `{day_dir}/.provenance-dead-letter.jsonl` (append-only) on final failure so dropped events are observable, never invisible.
+
 ## Local Contracts
 - Code Coordinate Header: `src/lib.rs` module-level `//!` header; `src/sidecar-compat/mod.rs` deprecated compatibility header; VAK field grammar documented on `EpisodeAttrs::with_vak`.
 - Owning specs: [[S3-SPEC]], [[S3-ARCHITECTURE]]; world-return semantics [[S5-SPEC]].

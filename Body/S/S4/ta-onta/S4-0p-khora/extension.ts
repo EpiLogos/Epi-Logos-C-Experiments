@@ -401,11 +401,29 @@ export async function khoraExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "khora_sync_queue_flush",
     label: "Khora Sync Queue Flush",
-    description: "Flush .khora-sync-queue.jsonl to Neo4j (delegated to Hen/S2 for execution). Returns count of events processed.",
+    description: "Flush .khora-sync-queue.jsonl to Neo4j via `epi graph sync` per path-batch (Hen/S2 own the write law). Appends the flushed audit companion; idempotent on (path, ts). Returns counts + failures + Janus staleness warning.",
     parameters: Type.Object({}),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      // Stub: real implementation requires Neo4j connection (Phase 6)
-      return { content: [{ type: "text", text: "sync_queue_flush: stub (Neo4j not yet wired)" }] };
+    async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // CCT-16 (ii): the real flush path (was: "Neo4j not yet wired" stub).
+      const { flushSyncQueue } = await import("./modules/sync-queue-flush.ts");
+      const repoRoot = process.env.EPI_REPO_ROOT || ".";
+      const report = flushSyncQueue(repoRoot, (path: string) => {
+        const result = spawnSync("epi", ["graph", "sync", path], { encoding: "utf8" });
+        return {
+          ok: result.status === 0,
+          output: (result.stdout || "") + (result.stderr || ""),
+        };
+      });
+      const lines = [
+        `sync_queue_flush: ${report.processed} event(s) flushed in ${report.batches} batch(es); ${report.skippedAlreadyFlushed} already-flushed skipped`,
+      ];
+      for (const failure of report.failures) {
+        lines.push(`FAILED ${failure.path}: ${failure.output.slice(0, 200)}`);
+      }
+      if (report.staleWarning) {
+        lines.push(report.staleWarning);
+      }
+      return { content: [{ type: "text", text: lines.join("\n") }] };
     },
   });
 

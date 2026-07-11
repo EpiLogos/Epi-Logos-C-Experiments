@@ -180,16 +180,124 @@ pub struct GraphitiStatus {
     pub health: Option<Value>,
 }
 
+/// CCT-16 (iii): at-least-once provenance delivery. The old 3-second
+/// fire-and-forget silently dropped events on any hiccup; delivery now
+/// retries with exponential backoff and dead-letters on final failure so
+/// a dropped event is observable, never invisible.
+pub const PROVENANCE_MAX_ATTEMPTS: u32 = 5;
+
 pub fn fire_provenance(event: ProvenanceEvent) {
     tokio::spawn(async move {
-        let client = reqwest::Client::new();
-        let _ = client
-            .post(format!("{GRAPHITI_BASE_URL}/provenance"))
-            .json(&event)
+        if let Err(error) =
+            deliver_provenance_to(GRAPHITI_BASE_URL, &event, PROVENANCE_MAX_ATTEMPTS, None).await
+        {
+            eprintln!(
+                "[graphiti] provenance delivery failed after retries (dead-lettered): {error}"
+            );
+        }
+    });
+}
+
+/// Deliver one provenance event with bounded retry (exponential backoff,
+/// `max_attempts` tries). Idempotency key = `(session_id, event_type,
+/// timestamp)`, carried as a header so the receiver can dedupe replays.
+/// On final failure the event dead-letters to
+/// `{day_dir}/.provenance-dead-letter.jsonl` (append-only) — `day_dir` is
+/// the override when given, else derived from `vault_now_path` /
+/// `EPILOGOS_VAULT` + `day_id`. Returns the attempt count that delivered.
+pub async fn deliver_provenance_to(
+    base_url: &str,
+    event: &ProvenanceEvent,
+    max_attempts: u32,
+    dead_letter_dir: Option<std::path::PathBuf>,
+) -> Result<u32, String> {
+    let client = reqwest::Client::new();
+    let idempotency_key = format!(
+        "{}:{}:{}",
+        event.session_id, event.event_type, event.timestamp
+    );
+    let mut last_error = String::new();
+    for attempt in 1..=max_attempts.max(1) {
+        let sent = client
+            .post(format!("{base_url}/provenance"))
+            .header("x-idempotency-key", &idempotency_key)
+            .json(event)
             .timeout(std::time::Duration::from_secs(3))
             .send()
             .await;
+        match sent {
+            Ok(response) if response.status().is_success() => return Ok(attempt),
+            Ok(response) => {
+                last_error = format!("provenance endpoint returned {}", response.status());
+            }
+            Err(error) => {
+                last_error = format!("provenance send failed: {error}");
+            }
+        }
+        if attempt < max_attempts {
+            tokio::time::sleep(std::time::Duration::from_millis(100u64 << attempt)).await;
+        }
+    }
+    dead_letter_provenance(event, &last_error, dead_letter_dir);
+    Err(format!(
+        "provenance event {idempotency_key} dead-lettered after {max_attempts} attempts: {last_error}"
+    ))
+}
+
+fn dead_letter_provenance(
+    event: &ProvenanceEvent,
+    last_error: &str,
+    dead_letter_dir: Option<std::path::PathBuf>,
+) {
+    use std::io::Write;
+
+    let day_dir = dead_letter_dir.or_else(|| provenance_day_dir(event));
+    let Some(day_dir) = day_dir else {
+        eprintln!(
+            "[graphiti] provenance dead-letter UNWRITABLE (no day dir resolvable) — event lost: {}",
+            serde_json::to_string(event).unwrap_or_default()
+        );
+        return;
+    };
+    let path = day_dir.join(".provenance-dead-letter.jsonl");
+    let record = json!({
+        "event": event,
+        "lastError": last_error,
+        "idempotencyKey": format!("{}:{}:{}", event.session_id, event.event_type, event.timestamp),
+        "deadLetteredAt": iso8601_now(),
     });
+    let appended = std::fs::create_dir_all(&day_dir).and_then(|_| {
+        std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&path)
+            .and_then(|mut file| writeln!(file, "{record}"))
+    });
+    if let Err(error) = appended {
+        eprintln!(
+            "[graphiti] provenance dead-letter write failed at {}: {error}",
+            path.display()
+        );
+    }
+}
+
+fn provenance_day_dir(event: &ProvenanceEvent) -> Option<std::path::PathBuf> {
+    if !event.vault_now_path.is_empty() {
+        // vault_now_path = .../Idea/Empty/Present/{day}/{session}/now.md —
+        // the day dir is two ancestors up from the file.
+        let path = std::path::Path::new(&event.vault_now_path);
+        if let Some(day_dir) = path.parent().and_then(std::path::Path::parent) {
+            return Some(day_dir.to_path_buf());
+        }
+    }
+    if event.day_id.is_empty() {
+        return None;
+    }
+    std::env::var("EPILOGOS_VAULT").ok().map(|vault| {
+        std::path::PathBuf::from(vault)
+            .join("Empty/Present")
+            .join(&event.day_id)
+    })
 }
 
 pub fn provenance_from_record(
