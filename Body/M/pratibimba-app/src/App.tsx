@@ -16,10 +16,11 @@ import { Actions, DockLocation, Layout, Model, TabNode } from 'flexlayout-react'
 import { createStrikeRouter, instrument, useInstrumentStore } from './audio/instrument';
 import { GatewayClient } from './bridge/gatewayClient';
 import { extractBellRoles, isChimeCoherent, ModalResonatorBoundary } from './bridge/types';
-import { setGateway } from './bridge/gatewayHolder';
+import { gateway, gatewayReady, setGateway } from './bridge/gatewayHolder';
 import { SessionClient } from './bridge/sessionClient';
 import { invokeCommand } from './bridge/tauri';
 import { wireSupervisorEvents } from './bridge/tauriEvents';
+import { registerAtelierCommands } from './commands/atelier';
 import { commands, usePaletteStore } from './commands/registry';
 import { useEventsStore } from './state/eventsStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
@@ -42,6 +43,7 @@ import { LogsPane } from './panes/LogsPane';
 import { MarkdownEditorPane } from './panes/MarkdownEditorPane';
 import { NowPane } from './panes/NowPane';
 import { OraclePane } from './panes/OraclePane';
+import { DayCalendarPane } from './panes/DayCalendarPane';
 import { SessionsPane } from './panes/SessionsPane';
 import { OmniPendingPane } from './panes/omni/OmniPendingPane';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
@@ -94,6 +96,7 @@ const PERSONAL_DEFAULT = {
             children: [
                 { type: 'tab', name: 'Vault', component: 'fileTree', enableClose: false },
                 { type: 'tab', name: 'Journal', component: 'journalTimeline', enableClose: false },
+                { type: 'tab', name: 'Calendar', component: 'dayCalendar', enableClose: false },
                 { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false }
             ]
         },
@@ -138,7 +141,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 11;
+const LAYOUT_VERSION = 12;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -186,6 +189,8 @@ function factory(node: TabNode) {
             return <NowPane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
+        case 'dayCalendar':
+            return <DayCalendarPane />;
         case 'oracle':
             return <OraclePane />;
         case 'omniChat':
@@ -366,7 +371,32 @@ export function App() {
 
     // command registration
     useEffect(() => {
+        // 16.T16.19 (CCT-19): Atelier activation — commands over the file
+        // the user is already in; scent-follow stages a Hen candidate.
+        const atelierDisposers = registerAtelierCommands({
+            activeMarkdownPath: () => {
+                const current = modelsRef.current;
+                if (!current) {
+                    return null;
+                }
+                let path: string | null = null;
+                current.personal.visitNodes(node => {
+                    if (
+                        node.getType() === 'tab' &&
+                        (node as TabNode).getComponent() === 'editor' &&
+                        (node as TabNode).isVisible()
+                    ) {
+                        path = ((node as TabNode).getConfig() as { path?: string })?.path ?? null;
+                    }
+                });
+                return path;
+            },
+            dayId: () => useSessionStore.getState().dayNow ?? null,
+            invoke: (method, params) => gateway().invoke(method, params),
+            ready: () => gatewayReady()
+        });
         const disposers = [
+            ...atelierDisposers,
             commands.register({
                 id: 'face.toggle',
                 title: 'Shell: Toggle 0/1 face (⌘.)',

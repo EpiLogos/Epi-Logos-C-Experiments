@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:24:57.170Z",
+  "updatedAt": "2026-07-11T18:36:43.327Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4814,14 +4814,30 @@
       "worktree": null
     },
     "16.T16.19": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-11T18:24:10.231Z",
+      "status": "done",
+      "updatedAt": "2026-07-11T18:36:43.313Z",
       "claimedAt": "2026-07-11T18:24:10.231Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-11T18:36:43.313Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:36:43.313Z",
+          "text": "CCT-19 closed as activation-not-building, retargeted to carrier lenses per the rerun note. Verified pre-standing: the 06-file reframe text is present (25 projection/lensing hits), NO library-surface or scent-following-workspace extension dirs exist (the anti-rebuild negative invariant holds; epi-theia is frozen anyway). Built the carrier activations: (1) Atelier = three commands over the file the user is already in - atelier.scentFollow stages the open note as a Hen-promotion CANDIDATE via the landed s1'.entity.capture route (Atelier proposes, Hen reviews, canon-write follows the CCT-14 lifecycle - the test pins that no vault-write or promotion-commit method is ever invoked), atelier.cognateSearch rides s1'.semantic.suggest_links, atelier.psychoidTrace rides s0'.anuttara.trace; deps injected (active editor path scan, session day, gateway invoke) so bindings are pure; all disable without an open file or live gateway. (2) Library = a pure coordinate-ancestry shelving lens (buildLibraryProjection: World/Types entries organise by coordinate root with primes preserved, uncoordinated shelf honest and last) - a lens over the existing file tree, no new surface. 6 new tests; app suite 305 green; typecheck/build/smoke/carrier-tokens green; W class gate PASS fresh via verify-tranche. HARNESS NOTE: two app-ui-flow attempts went red on ERR_CONNECTION_REFUSED then port-already-used at 14621 - a concurrent session held the Playwright harness (their Vite + chromium workers live); one-e2e-run-at-a-time etiquette applies, the failures touched every spec incl ones this tranche never modified. The atelier runtime completeness of s0'.anuttara.trace's arm stays with Track 12/1.10.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.19 (track-16 W class gate PASS fresh: gateway + gateway-contract + gateway-methods + live-wire spawned gateway + ta-onta + graphiti-runtime) + pnpm exec vitest run (305 tests incl 6 new Atelier/Library) + app-typecheck/app-build/app-smoke PASS + carrier-tokens GREEN",
+            "exitCode": 0,
+            "testsPassed": 305,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "Body/M/pratibimba-app/src/panes/libraryProjection.ts",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-a-m3",
-      "leaseExpiresAt": "2026-07-11T20:24:10.231Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:24:10.231Z",
       "runId": "20260711T182410Z-16-T16.19",
       "worktree": null
@@ -6857,16 +6873,16 @@
       "worktree": null
     },
     "25.T25.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-11T18:29:47.150Z",
+      "claimedAt": "2026-07-11T18:29:47.150Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:59:47.150Z",
+      "heartbeatAt": "2026-07-11T18:29:47.150Z",
+      "runId": "20260711T182947Z-25-T25.1",
       "worktree": null
     },
     "25.T25.2": {
@@ -12796,10 +12812,20 @@
     {
       "runId": "20260711T182410Z-16-T16.19",
       "taskId": "16.T16.19",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-11T18:24:10.231Z",
       "owner": "opus-a-m3",
       "leaseExpiresAt": "2026-07-11T20:24:10.231Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T18:36:43.313Z"
+    },
+    {
+      "runId": "20260711T182947Z-25-T25.1",
+      "taskId": "25.T25.1",
+      "status": "in_progress",
+      "startedAt": "2026-07-11T18:29:47.150Z",
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:59:47.150Z",
       "worktree": null
     }
   ],
