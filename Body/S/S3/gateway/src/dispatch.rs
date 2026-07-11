@@ -1050,6 +1050,16 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
             agent_access_owner: "S0/S4/S5",
             route_id: "s0.product-system-surface",
         })
+    } else if authority.contains("portal-core::spanda_anchor") {
+        // 02.T2.13 / DR-M1-5 — the m1.spanda.* walk family: engine-walk
+        // transport on the kernel-owned phase anchor (M1-3' pulse stratum).
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::SystemSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0.product-spanda-transport",
+        })
     } else {
         None
     }

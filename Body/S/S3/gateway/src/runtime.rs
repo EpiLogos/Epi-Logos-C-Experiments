@@ -22,6 +22,11 @@ struct GatewayRuntimeInner {
     chat_processes: Mutex<HashMap<String, Arc<AsyncMutex<tokio::process::Child>>>>,
     aborted_chat_runs: Mutex<HashSet<String>>,
     subscriptions: Mutex<HashMap<String, GatewaySubscriptionRecord>>,
+    /// 02.T2.13 / DR-M1-5 — the ONE engine-owned spanda phase anchor this
+    /// gateway process hosts. The heartbeat samples it; the `m1.spanda.*`
+    /// walk family mutates it; every subscriber sees the same organism.
+    /// `None` until the heartbeat installs the config-anchored instance.
+    spanda_anchor: Mutex<Option<portal_core::spanda_anchor::SpandaPhaseAnchor>>,
 }
 
 /// Per-gateway record of an active live subscription (s3'.temporal.subscribe or
@@ -73,6 +78,48 @@ impl GatewayEventSubscription {
 }
 
 impl GatewayRuntimeState {
+    /// Install the process's ONE spanda phase anchor (heartbeat spawn,
+    /// config-anchored rate). Idempotent by intent: later installs replace,
+    /// but only the heartbeat calls this.
+    pub fn install_spanda_anchor(&self, anchor: portal_core::spanda_anchor::SpandaPhaseAnchor) {
+        *self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison") = Some(anchor);
+    }
+
+    /// Copy out the current anchor (it is a few plain numbers). `None`
+    /// before the heartbeat installs it.
+    pub fn spanda_anchor(&self) -> Option<portal_core::spanda_anchor::SpandaPhaseAnchor> {
+        *self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison")
+    }
+
+    /// Mutate the ONE anchor through a transport act (`m1.spanda.*` walk
+    /// family). Returns the post-act anchor, or `None` when no anchor is
+    /// installed yet (the honest not-ready state, never a fabricated one).
+    pub fn with_spanda_anchor(
+        &self,
+        act: impl FnOnce(&mut portal_core::spanda_anchor::SpandaPhaseAnchor),
+    ) -> Option<portal_core::spanda_anchor::SpandaPhaseAnchor> {
+        let mut guard = self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison");
+        match guard.as_mut() {
+            Some(anchor) => {
+                act(anchor);
+                Some(*anchor)
+            }
+            None => None,
+        }
+    }
+
     pub fn register_run(&self, context: RunContext) {
         self.inner
             .runs

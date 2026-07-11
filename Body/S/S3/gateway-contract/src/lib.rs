@@ -97,6 +97,16 @@ pub const S2_GRAPH_CORE65_AUDIT_METHOD: &str = "s2.graph.core65.audit";
 pub const S2_GRAPH_PROMOTION_DRY_RUN_METHOD: &str = "s2.graph.promotion.dry_run";
 pub const S2_GRAPH_PROMOTION_COMMIT_METHOD: &str = "s2.graph.promotion.commit";
 pub const S2_GRAPH_RELATION_FAMILY_LIST_METHOD: &str = "s2.graph.relation_family.list";
+// 02.T2.13 / DR-M1-5 — the spanda walk family: engine-walk transport acts on
+// the kernel-owned SpandaPhaseAnchor (M1-3-SPANDA-TRANSPORT-ARCHITECTURE §3).
+// Involutions are NAMED: step carries `reflect` (11−n traversal-reversal);
+// half_turn is the antiphase pole-swap (n+6 mod 12). One organism, one clock —
+// these mutate the shared broadcast, never a private timeline.
+pub const M1_SPANDA_HOLD_METHOD: &str = "m1.spanda.hold";
+pub const M1_SPANDA_RELEASE_METHOD: &str = "m1.spanda.release";
+pub const M1_SPANDA_WALK_TO_METHOD: &str = "m1.spanda.walk_to";
+pub const M1_SPANDA_STEP_METHOD: &str = "m1.spanda.step";
+pub const M1_SPANDA_HALF_TURN_METHOD: &str = "m1.spanda.half_turn";
 pub const S1_TYPE_CLASSIFY_C_LAYER_METHOD: &str = "s1'.type.classify_c_layer";
 pub const S1_ENTITY_PROMOTE_TO_TYPE_METHOD: &str = "s1'.entity.promote_to_type";
 pub const S1_WORLD_GRADUATE_METHOD: &str = "s1'.world.graduate";

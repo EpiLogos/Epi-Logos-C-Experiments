@@ -4,6 +4,8 @@ use crate::{
     S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
+    M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD, M1_SPANDA_RELEASE_METHOD,
+    M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
     S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD,
     S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
     S1_WORLD_LIST_ENTITIES_METHOD,
@@ -452,6 +454,37 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "m2.cymatic_invert",
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/portal-core::parashakti::cymatic_invert",
+        needs_extraction_to: None,
+    },
+    // 02.T2.13 / DR-M1-5 — engine-walk transport on the kernel-owned anchor.
+    MethodDispatchPlanEntry {
+        method: M1_SPANDA_HOLD_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::spanda_anchor::SpandaPhaseAnchor::hold",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: M1_SPANDA_RELEASE_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::spanda_anchor::SpandaPhaseAnchor::release",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: M1_SPANDA_WALK_TO_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::spanda_anchor::SpandaPhaseAnchor::walk_to_tick",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: M1_SPANDA_STEP_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::spanda_anchor::SpandaPhaseAnchor::step (reflect names spanda_invert 11-n)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: M1_SPANDA_HALF_TURN_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::spanda_anchor::SpandaPhaseAnchor::apply_half_turn (n+6 pole-swap)",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

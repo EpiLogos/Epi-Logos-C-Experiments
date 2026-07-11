@@ -104,7 +104,11 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             },
             Err(_) => portal_core::spanda::SpandaHkbParams::default_derived().base_freq_hz,
         };
-        let anchor = portal_core::spanda_anchor::SpandaPhaseAnchor::flowing(epoch_ms, rate_hz);
+        let initial_anchor =
+            portal_core::spanda_anchor::SpandaPhaseAnchor::flowing(epoch_ms, rate_hz);
+        // The ONE anchor lives on the shared runtime (02.T2.13): the walk
+        // family mutates it there; this loop only SAMPLES it per emission.
+        runtime.install_spanda_anchor(initial_anchor);
         loop {
             ticker.tick().await;
             generation += 1;
@@ -112,6 +116,7 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                 .duration_since(UNIX_EPOCH)
                 .unwrap_or_default()
                 .as_millis() as u64;
+            let anchor = runtime.spanda_anchor().unwrap_or(initial_anchor);
             let mut projection =
                 portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, generation);
             // Live Kerykeion sky, attached only when the kairos cache is fresh

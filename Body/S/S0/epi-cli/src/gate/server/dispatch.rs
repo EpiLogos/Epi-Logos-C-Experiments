@@ -907,6 +907,82 @@ pub(super) async fn dispatch_rpc(
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }
+        // 02.T2.13 / DR-M1-5 — the spanda walk family: engine-walk transport
+        // acts on the ONE kernel-owned anchor (installed by the heartbeat,
+        // sampled by every emission). The response is the post-act anchor —
+        // public-safe plain numbers; clients evaluate phase locally. A
+        // missing anchor is the honest not-ready state, never fabricated.
+        "m1.spanda.hold" | "m1.spanda.release" | "m1.spanda.walk_to" | "m1.spanda.step"
+        | "m1.spanda.half_turn" => {
+            let at_ms = now_ms() as u64;
+            let walk_tick = if frame.method == "m1.spanda.walk_to" {
+                let tick = frame
+                    .params
+                    .get("tick")
+                    .and_then(Value::as_u64)
+                    .ok_or_else(|| invalid_params_error("tick (0-11) is required".to_owned()))?;
+                if tick > 11 {
+                    return Err(invalid_params_error(format!(
+                        "tick {tick} outside the twelvefold (0-11)"
+                    )));
+                }
+                Some(tick as u8)
+            } else {
+                None
+            };
+            // `reflect` NAMES the involution (spanda_invert, 11−n); `backward`
+            // is the plain −1 ring-step. Naming both apart is the T2.11 law.
+            let reflect = frame
+                .params
+                .get("reflect")
+                .and_then(Value::as_bool)
+                .unwrap_or(false);
+            let backward = frame
+                .params
+                .get("backward")
+                .and_then(Value::as_bool)
+                .unwrap_or(false);
+            if reflect && backward {
+                return Err(invalid_params_error(
+                    "reflect and backward are distinct acts — name one".to_owned(),
+                ));
+            }
+            let acted = runtime.with_spanda_anchor(|anchor| match frame.method.as_str() {
+                "m1.spanda.hold" => anchor.hold(at_ms),
+                "m1.spanda.release" => anchor.release(at_ms),
+                "m1.spanda.walk_to" => anchor.walk_to_tick(at_ms, walk_tick.unwrap_or(0)),
+                "m1.spanda.step" if reflect => anchor.apply_reflection(at_ms),
+                "m1.spanda.step" => anchor.step(at_ms, backward),
+                _ => anchor.apply_half_turn(at_ms),
+            });
+            match acted {
+                Some(anchor) => {
+                    let mode = match anchor.mode {
+                        portal_core::spanda_anchor::SpandaTransportMode::Flowing => "flowing",
+                        portal_core::spanda_anchor::SpandaTransportMode::Held => "held",
+                        portal_core::spanda_anchor::SpandaTransportMode::Walking => "walking",
+                    };
+                    let direction = match anchor.direction {
+                        portal_core::spanda_anchor::SpandaDirection::Forward => "forward",
+                        portal_core::spanda_anchor::SpandaDirection::Reflected => "reflected",
+                    };
+                    Ok(DispatchResult::immediate(json!({
+                        "act": frame.method,
+                        "spanda": {
+                            "epochMs": anchor.epoch_ms,
+                            "phase0": anchor.phase0,
+                            "rateHz": anchor.rate_hz,
+                            "mode": mode,
+                            "direction": direction,
+                            "tick12": anchor.tick12_at(at_ms),
+                        }
+                    })))
+                }
+                None => Err(internal_error(
+                    "spanda anchor not installed yet — the heartbeat has not started".to_owned(),
+                )),
+            }
+        }
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"

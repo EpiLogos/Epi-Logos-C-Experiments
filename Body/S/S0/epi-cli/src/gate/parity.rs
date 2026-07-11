@@ -632,7 +632,13 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s0'.settings.api_key_status"
         | "s0'.settings.opt_in"
         // portal-core parashakti adapter — dispatch classifies it S0 product
-        | "m2.cymatic_invert" => Some("s0.*"),
+        | "m2.cymatic_invert"
+        // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
+        | "m1.spanda.hold"
+        | "m1.spanda.release"
+        | "m1.spanda.walk_to"
+        | "m1.spanda.step"
+        | "m1.spanda.half_turn" => Some("s0.*"),
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
