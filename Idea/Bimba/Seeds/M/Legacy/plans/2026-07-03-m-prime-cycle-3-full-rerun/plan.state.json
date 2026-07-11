@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:16:02.447Z",
+  "updatedAt": "2026-07-11T18:23:09.877Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4785,16 +4785,32 @@
       "worktree": null
     },
     "16.T16.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T18:23:09.860Z",
+      "claimedAt": "2026-07-11T18:21:34.698Z",
+      "completedAt": "2026-07-11T18:23:09.860Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:23:09.860Z",
+          "text": "CCT-18 closed verify-first: the original section IS the CCT-14 EXPANSION (PASU orphan-entity lifecycle CLI parity per DR-S5-ONE-1 + DR-WORLD-1), and its substrate landed under 16.T16.14 in this same session - epi entity capture/classify/promote_to_type/list + epi world graduate/list_entities CLI commands calling the SAME gate::s1_hen handlers the gateway s1'.entity.*/s1'.world.* dispatch arms use (one implementation, two entrances), typed contract receipts in gateway-contract s1_vault.rs. Every CCT-18 verification line re-run FRESH at this close: the CLI-registration greps return hits in both entity.rs and world.rs, entity_capture_round_trip (2 tests incl CLI==gateway receipt equality) and world_graduate_via_cli (full capture->classify->promote->graduate chain via CLI with codon invariance) all green, and the W gate re-passed via verify-tranche. No new substrate was needed; this close records the CCT-18 identity of the landed surface.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.18 (W class gate PASS incl live-wire spawned gateway) + grep -cE \"epi entity|epi world\" entity.rs world.rs (both registered) + cargo test --test entity_capture_round_trip --test world_graduate_via_cli (3 tests, fresh)",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/entity.rs",
+              "Body/S/S0/epi-cli/src/world.rs",
+              "Body/S/S0/epi-cli/src/gate/s1_hen.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T18:21:34.698Z",
+      "runId": "20260711T182134Z-16-T16.18",
       "worktree": null
     },
     "16.T16.19": {
@@ -5830,16 +5846,16 @@
       "worktree": null
     },
     "21.T21.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-11T18:20:53.213Z",
+      "claimedAt": "2026-07-11T18:20:53.213Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:20:53.213Z",
+      "heartbeatAt": "2026-07-11T18:20:53.213Z",
+      "runId": "20260711T182053Z-21-T21.1",
       "worktree": null
     },
     "21.T21.2": {
@@ -12740,6 +12756,25 @@
       "leaseExpiresAt": "2026-07-11T20:14:05.156Z",
       "worktree": null,
       "completedAt": "2026-07-11T18:16:02.433Z"
+    },
+    {
+      "runId": "20260711T182053Z-21-T21.1",
+      "taskId": "21.T21.1",
+      "status": "in_progress",
+      "startedAt": "2026-07-11T18:20:53.213Z",
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:20:53.213Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260711T182134Z-16-T16.18",
+      "taskId": "16.T16.18",
+      "status": "done",
+      "startedAt": "2026-07-11T18:21:34.698Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T19:21:34.698Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T18:23:09.860Z"
     }
   ],
   "activeRoute": {
