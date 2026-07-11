@@ -1,5 +1,16 @@
 # Track 23 — M2' Paraśakti Frontend Deep Design
 
+> **⚑ ONTOLOGY SUPERSEDED (2026-07-11, DR-FACE-7)** — The widget/registration framing
+> below is the dead Theia paradigm. Before executing ANY tranche in this file, read
+> [[M'-ENGINE-FACES-ONTOLOGY-2026-07-11]] and enter its frame: the carrier is one
+> playing organism (two poles — 1-2-3 cosmic instrument, 4-5-0 lived return — over
+> one kernel spine); the unit is the stateless **face**, not the widget. Sort every
+> tranche through the ontology §2 fate algorithm (carried-by-integration / face-gap /
+> spine-gap) and close per fate. The CONTENT-LAW below (data shapes, field lists,
+> pedagogy contracts, privacy rules) remains binding; the Theia nouns (WidgetFactory,
+> frontend-module, contributions, shell slots, "exactly six" chrome enumerations) do not.
+
+
 <!-- carrier-retarget-banner v1 -->
 > ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
 

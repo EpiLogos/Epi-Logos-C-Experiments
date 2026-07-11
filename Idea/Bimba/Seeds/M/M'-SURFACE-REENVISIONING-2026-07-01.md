@@ -177,5 +177,6 @@ Standing laws across all phases: every stratum subscribes to the one profile (no
 | DR-FACE-4 | Theia carrier status: freeze `epi-theia` as parts warehouse | Freeze at Phase-1 start; supersede Tranche 11.7 |
 | DR-FACE-5 | M5' Backend Studio scope: external-editor + agent-mediated, no embedded LSP in v1/v2 | Accept |
 | DR-FACE-6 | Adopt §7 dev-protocol corrections as binding for all M' cycles | Accept before Phase 0 ends |
+| DR-FACE-7 | Frontend unit = face (stateless bus projection), not Theia widget; two poles over one spine; widget-intents sort carried / face-gap / spine-gap | VALIDATED 2026-07-11 — full ontology + fate table in [[M'-ENGINE-FACES-ONTOLOGY-2026-07-11]]; supersedes the widget framing of design-recon Tracks 21–26 + 15/30/31 (content-law stands) |
 
 If DR-FACE-4 is rejected and Theia is retained, the honest alternative is a strictly-ordered five-seam repair (supervise gateway from a Theia backend contribution; default-layout applier; `@theia/navigator` + vault workspace; journal write-back; scripted boot gate) *before any other task* — but the carrier-grain risk documented in §2 remains, and the same §7 protocol corrections are non-negotiable either way.
