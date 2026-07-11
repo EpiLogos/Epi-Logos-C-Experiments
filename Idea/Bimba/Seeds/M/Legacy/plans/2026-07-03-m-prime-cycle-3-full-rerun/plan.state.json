@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:23:09.877Z",
+  "updatedAt": "2026-07-11T18:24:57.170Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4814,16 +4814,16 @@
       "worktree": null
     },
     "16.T16.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-11T18:24:10.231Z",
+      "claimedAt": "2026-07-11T18:24:10.231Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T20:24:10.231Z",
+      "heartbeatAt": "2026-07-11T18:24:10.231Z",
+      "runId": "20260711T182410Z-16-T16.19",
       "worktree": null
     },
     "16.T16.20": {
@@ -5846,14 +5846,30 @@
       "worktree": null
     },
     "21.T21.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-11T18:20:53.213Z",
+      "status": "done",
+      "updatedAt": "2026-07-11T18:24:57.151Z",
       "claimedAt": "2026-07-11T18:20:53.213Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-11T18:24:57.151Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:24:57.151Z",
+          "text": "Fate A + small B per DR-FACE-7 §3: M0LayerRail already carries the six-register grammar (local buttons + bridged deep-links + m0.layer.* commands); the small-B gap is a per-local-layer provenance chip built with the EXISTING ProvenanceBadge/ProvenanceState over the shared s2.graph.node read state (canonical when the coordinate has a :Bimba node, canonical_absent when not, pending in flight, blocked on error). Bridged-ness stays structural placement, not provenance — no bridged_local/bridged_public states, bridged layers carry no S2 chip. UF-proven by new e2e m0-layer-rail-provenance.spec.ts: cosmic face walks to M1, opens the Bimba rail, local chips report real canonical off the spawned gateway, bridged layers carry no chip (1/1 playwright green); 8/8 jsdom behavioral; full UF-scoped gate PASS under verifier opus-f-faces-verify.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app exec playwright test m0-layer-rail-provenance",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0LayerRail.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m0-layer-rail-provenance.spec.ts",
+              "Body/M/pratibimba-app/src/panes/M0LayerRail.test.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-f-faces",
-      "leaseExpiresAt": "2026-07-11T20:20:53.213Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:20:53.213Z",
       "runId": "20260711T182053Z-21-T21.1",
       "worktree": null
@@ -12760,11 +12776,12 @@
     {
       "runId": "20260711T182053Z-21-T21.1",
       "taskId": "21.T21.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-11T18:20:53.213Z",
       "owner": "opus-f-faces",
       "leaseExpiresAt": "2026-07-11T20:20:53.213Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-11T18:24:57.151Z"
     },
     {
       "runId": "20260711T182134Z-16-T16.18",
@@ -12775,6 +12792,15 @@
       "leaseExpiresAt": "2026-07-11T19:21:34.698Z",
       "worktree": null,
       "completedAt": "2026-07-11T18:23:09.860Z"
+    },
+    {
+      "runId": "20260711T182410Z-16-T16.19",
+      "taskId": "16.T16.19",
+      "status": "in_progress",
+      "startedAt": "2026-07-11T18:24:10.231Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-11T20:24:10.231Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

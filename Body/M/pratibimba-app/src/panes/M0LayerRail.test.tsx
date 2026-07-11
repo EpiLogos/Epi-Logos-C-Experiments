@@ -1,16 +1,22 @@
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { M0LayerRail } from './M0LayerRail';
 import { commands } from '../commands/registry';
-import { useCoordinateStore } from '../state/stores';
+import { setGateway } from '../bridge/gatewayHolder';
+import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
+import { useCoordinateStore, useProvenanceStore } from '../state/stores';
 
 describe('M0LayerRail', () => {
     beforeEach(() => {
         useCoordinateStore.setState({ selected: null });
+        useProvenanceStore.setState({ connection: { ...DEFAULT_CONNECTION_STATUS } });
+        setGateway(null);
     });
 
     afterEach(() => {
         cleanup();
+        setGateway(null);
+        useProvenanceStore.setState({ connection: { ...DEFAULT_CONNECTION_STATUS } });
     });
 
     it('renders all six layers and discriminates local from bridged', () => {
@@ -86,5 +92,65 @@ describe('M0LayerRail', () => {
         expect(screen.getByTestId('m0-layer-personal').getAttribute('href')).toBe(
             "epi-logos://ide/m4-nara/artifact?coordinate=M0-1'&source=m0-anuttara"
         );
+    });
+
+    /* 21.T21.1 (DR-FACE-7 fate A + small B) — the per-layer S2 read-state chip.
+     * The chip is the EXISTING ProvenanceBadge/ProvenanceState over the shared
+     * s2.graph.node read; bridged layers carry no chip (placement ≠ provenance). */
+
+    const connectGateway = (
+        node: { coordinate: string; label: string | null } | null
+    ) => {
+        const invoke = vi.fn(async (method: string) =>
+            method === 's2.graph.node'
+                ? ({ artifact: { contract: 's2.graph.node', node, relations: [] } } as never)
+                : ({ artifact: {} } as never)
+        );
+        setGateway({ invoke } as never);
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        return invoke;
+    };
+
+    it('carries no S2 read chip until a coordinate is selected (honest absence, not a placeholder)', () => {
+        render(<M0LayerRail />);
+        expect(screen.getByTestId('m0-layer-language').getAttribute('data-s2-read')).toBe('none');
+        // no provenance glyph is rendered when there is nothing to read
+        expect(screen.queryByTestId('provenance-canonical_absent')).toBeNull();
+        expect(screen.queryByTestId('provenance-pending')).toBeNull();
+    });
+
+    it('shows the canonical S2 read state on every local layer when the coordinate has a :Bimba node (21.1)', async () => {
+        connectGateway({ coordinate: 'M1', label: 'Paramasiva' });
+        useCoordinateStore.setState({ selected: 'M1' });
+        render(<M0LayerRail />);
+
+        for (const key of ['language', 'ql-structure', 'relations', 'time-community']) {
+            await waitFor(() =>
+                expect(screen.getByTestId(`m0-layer-${key}`).getAttribute('data-s2-read')).toBe(
+                    'canonical'
+                )
+            );
+        }
+        // canonical is clean — the ProvenanceBadge renders no glyph (no clutter)
+        expect(screen.queryByTestId('provenance-canonical')).toBeNull();
+        // bridged layers perform no S2 read, so they carry no chip attribute at all
+        expect(screen.getByTestId('m0-layer-personal').getAttribute('data-s2-read')).toBeNull();
+        expect(screen.getByTestId('m0-layer-pedagogy').getAttribute('data-s2-read')).toBeNull();
+    });
+
+    it('shows canonical_absent when the selected coordinate has no canonical node (never inferred)', async () => {
+        connectGateway(null);
+        useCoordinateStore.setState({ selected: 'M9-9-9' });
+        render(<M0LayerRail />);
+
+        await waitFor(() =>
+            expect(
+                screen.getByTestId('m0-layer-language').getAttribute('data-s2-read')
+            ).toBe('canonical_absent')
+        );
+        // the ∅ glyph surfaces exactly once per local layer (four local layers)
+        expect(screen.getAllByTestId('provenance-canonical_absent')).toHaveLength(4);
     });
 });
