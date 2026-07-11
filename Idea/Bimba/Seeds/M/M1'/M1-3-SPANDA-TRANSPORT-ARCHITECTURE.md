@@ -1,6 +1,6 @@
 ---
 coordinate: "M1-3'"
-status: "designed-2026-07-11 (awaiting build; tranches in §8)"
+status: "landed-2026-07-11 (§8 T1–T3 closed as rerun 02.T2.12–14; T4 navigator face closed under 22.T22.1; canon: [[M1-ARCHITECTURE]] §T2.12–14)"
 created: "2026-07-11"
 authored_by: "Claude (Fable 5), derived from the M-level substrate per the Architect's challenge; ownership law per Architect dialogue 2026-07-11"
 depends_on:
