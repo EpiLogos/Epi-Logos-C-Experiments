@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T17:49:53.425Z",
+  "updatedAt": "2026-07-11T18:13:12.016Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4340,16 +4340,31 @@
       "worktree": null
     },
     "15.T15.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T18:13:12.002Z",
+      "claimedAt": "2026-07-11T18:07:47.034Z",
+      "completedAt": "2026-07-11T18:13:12.002Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:13:12.002Z",
+          "text": "Fate-A per DR-FACE-7 §3: the live StatusStrip already carries the status-bar discipline — six spine state-threads surfaced exactly once each (supervisor as carrier-truth boot=supervise, day-now and session as the session store's two distinct threads, tick=monotonic generation the only clock). UF-proven by new e2e status-strip-discipline.spec.ts driving the real Vite app against the spawned gateway (2/2 playwright green, tick advances on the live wire); full UF-scoped gate PASS under verifier opus-f-faces-verify. Zero carrier construction — the honest close is proof, the widget/exactly-six framing is dead.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app exec playwright test status-strip-discipline",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/status-strip-discipline.spec.ts",
+              "Body/M/pratibimba-app/src/components/StatusStrip.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-f-faces",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T18:08:04.379Z",
+      "runId": "20260711T180747Z-15-T15.10",
       "worktree": null
     },
     "15.T15.11": {
@@ -12688,17 +12703,28 @@
       "leaseExpiresAt": "2026-07-11T19:39:01.929Z",
       "worktree": null,
       "completedAt": "2026-07-11T17:49:53.412Z"
+    },
+    {
+      "runId": "20260711T180747Z-15-T15.10",
+      "taskId": "15.T15.10",
+      "status": "done",
+      "startedAt": "2026-07-11T18:07:47.034Z",
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T20:08:04.379Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-11T18:08:04.379Z",
+      "completedAt": "2026-07-11T18:13:12.002Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-10T22:01:06.851Z",
-    "updatedAt": "2026-07-10T22:01:06.851Z",
+    "createdAt": "2026-07-11T18:02:40.622Z",
+    "updatedAt": "2026-07-11T18:02:40.622Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "43.T43.2",
-      "40.T0"
+      "05.T5.1",
+      "05.T5.10"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -12706,8 +12732,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "43.T43.2": "in-session",
-      "40.T0": "in-session"
+      "05.T5.1": "in-session",
+      "05.T5.10": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
