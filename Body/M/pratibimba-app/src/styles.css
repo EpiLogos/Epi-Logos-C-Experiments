@@ -957,3 +957,61 @@ body,
   font-size: 0.6rem;
   line-height: 1;
 }
+
+/* 23.1 — M2 parashakti correspondence-as-navigable-face (1-2-3 cosmic pole) */
+.m2-correspondence {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem;
+  gap: 0.4rem;
+  overflow: auto;
+}
+
+.corr-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.corr-address {
+  color: var(--ring);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+}
+
+.corr-shem {
+  color: var(--ink-dim);
+  font-size: 0.78rem;
+}
+
+.corr-nav {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.corr-nav button[data-active='true'] {
+  color: var(--ink);
+  border-bottom: 2px solid var(--ring);
+}
+
+.corr-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.8rem;
+  padding: 0.3rem 0.2rem;
+}
+
+.corr-field {
+  display: contents;
+}
+
+.corr-field-label {
+  color: var(--ink-dim);
+  font-size: 0.74rem;
+  text-align: right;
+}
+
+.corr-field-value {
+  color: var(--ink);
+  font-size: 0.8rem;
+}

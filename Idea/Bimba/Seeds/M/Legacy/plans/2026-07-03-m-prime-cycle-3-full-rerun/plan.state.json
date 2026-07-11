@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T18:37:22.411Z",
+  "updatedAt": "2026-07-11T18:45:15.219Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -6324,16 +6324,32 @@
       "worktree": null
     },
     "23.T23.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-11T18:45:15.206Z",
+      "claimedAt": "2026-07-11T18:40:03.946Z",
+      "completedAt": "2026-07-11T18:45:15.206Z",
+      "evidence": [
+        {
+          "at": "2026-07-11T18:45:15.206Z",
+          "text": "Fate A×2 + B×1 per DR-FACE-7 §3: M2 cymatic (CymaticField) and meaning-packet (AsmaMirrorOverlay) are carried; the gap — correspondence made navigable — lands as M2CorrespondencePane on the 1-2-3 cosmic pole. It reads the active 72-address from the live pentadic trace (resonance72Index, kernel-verbatim) and invokes the REAL s2.parashaktiCorrespondences gateway method (verified served at epi-cli graph.rs:76/335, parashakti-deep dataset) for that address, then navigates the conserved address's three correspondence faces (decan / sacred-sonic / planetary-chakral). No local correspondence table; absent fields render canonical-absence, never fabricated; WidgetFactory registration dead with no residue. Registered as the Correspondence tab on the cosmic face (LAYOUT_VERSION 13). UF-proven by new e2e m2-correspondence.spec.ts against the spawned gateway: real zodiac decan + asma group + planetary mode, navigation across all three faces (1/1 playwright green); 3/3 jsdom, 316 app unit green, carrier-tokens GREEN; full UF gate PASS under verifier opus-f-faces-verify.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app exec playwright test m2-correspondence",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m2-correspondence.spec.ts",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-f-faces",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-11T18:40:03.946Z",
+      "runId": "20260711T184003Z-23-T23.1",
       "worktree": null
     },
     "23.T23.2": {
@@ -12844,6 +12860,16 @@
       "leaseExpiresAt": "2026-07-11T20:59:47.150Z",
       "worktree": null,
       "completedAt": "2026-07-11T18:37:22.397Z"
+    },
+    {
+      "runId": "20260711T184003Z-23-T23.1",
+      "taskId": "23.T23.1",
+      "status": "done",
+      "startedAt": "2026-07-11T18:40:03.946Z",
+      "owner": "opus-f-faces",
+      "leaseExpiresAt": "2026-07-11T21:10:03.946Z",
+      "worktree": null,
+      "completedAt": "2026-07-11T18:45:15.206Z"
     }
   ],
   "activeRoute": {

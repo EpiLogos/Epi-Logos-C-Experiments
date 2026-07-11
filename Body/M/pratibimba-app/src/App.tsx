@@ -44,6 +44,7 @@ import { MarkdownEditorPane } from './panes/MarkdownEditorPane';
 import { NowPane } from './panes/NowPane';
 import { OraclePane } from './panes/OraclePane';
 import { DayCalendarPane } from './panes/DayCalendarPane';
+import { M2CorrespondencePane } from './panes/M2CorrespondencePane';
 import { SessionsPane } from './panes/SessionsPane';
 import { OmniPendingPane } from './panes/omni/OmniPendingPane';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
@@ -128,6 +129,7 @@ const COSMIC_DEFAULT = {
                     { type: 'tab', name: 'Spanda', component: 'spandaNavigator', enableClose: false },
                     { type: 'tab', name: 'Walk', component: 'walk', enableClose: false },
                     { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
+                    { type: 'tab', name: 'Correspondence', component: 'm2Correspondence', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
                     { type: 'tab', name: 'Played Torus', component: 'm1PlayedTorus', enableClose: false },
                     { type: 'tab', name: 'Pentadic', component: 'm3PentadicInspector', enableClose: false },
@@ -141,7 +143,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 12;
+const LAYOUT_VERSION = 13;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -175,6 +177,8 @@ function factory(node: TabNode) {
             return <SpandaNavigatorPane />;
         case 'bimbaGraph':
             return <GraphExplorerPane />;
+        case 'm2Correspondence':
+            return <M2CorrespondencePane />;
         case 'kleinTopology':
             return <KleinTopologyPane />;
         case 'm1PlayedTorus':
