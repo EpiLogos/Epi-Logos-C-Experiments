@@ -15,9 +15,11 @@ import {
   type MapNodeSnapshot,
 } from './map-index.js';
 
-// A real in-memory live-graph source. Node data is real (not a mock of the projection); the
-// projection + file write + freshness/idempotency are exercised end-to-end against a temp filesystem.
-class InMemorySource implements MapIndexGraphSource {
+// A hand-authored in-memory FIXTURE source — NOT the live graph. It supplies fixed snapshot data so
+// the projection + file write + freshness/idempotency machinery can be exercised end-to-end against a
+// temp filesystem. Real live-Neo4j coverage of the default `Neo4jMapIndexSource` lives in the sibling
+// `map-index.live.test.ts` suite.
+class FixtureMapIndexSource implements MapIndexGraphSource {
   constructor(private snapshots: MapNodeSnapshot[]) {}
   setSnapshots(snapshots: MapNodeSnapshot[]): void {
     this.snapshots = snapshots;
@@ -118,7 +120,7 @@ describe('syncMapIndex — the maintained Neo4j->repo reflection direction', () 
   });
 
   it('projects a changed graph node into its /map file, then re-projects freshly when it changes', async () => {
-    const source = new InMemorySource([m25('original heptarchy essence')]);
+    const source = new FixtureMapIndexSource([m25('original heptarchy essence')]);
 
     const first = await syncMapIndex({ direction: 'neo4j_to_obsidian', mapRoot, source });
     expect(first.success).toBe(true);
@@ -140,7 +142,7 @@ describe('syncMapIndex — the maintained Neo4j->repo reflection direction', () 
   });
 
   it('is idempotent: re-projecting an unchanged graph node writes nothing (byte-identical on disk)', async () => {
-    const source = new InMemorySource([m25('stable essence')]);
+    const source = new FixtureMapIndexSource([m25('stable essence')]);
 
     const first = await syncMapIndex({ direction: 'neo4j_to_obsidian', mapRoot, source });
     expect(first.graph_to_vault).toMatchObject({ created: 1, updated: 0, skipped: 0 });
@@ -162,21 +164,21 @@ describe('syncMapIndex — the maintained Neo4j->repo reflection direction', () 
       children: [],
       ancestors: ['M2-5'],
     };
-    const source = new InMemorySource([m25('essence'), child]);
+    const source = new FixtureMapIndexSource([m25('essence'), child]);
     const res = await syncMapIndex({ direction: 'neo4j_to_obsidian', mapRoot, source, coordinateFilter: 'M2-5-2' });
     expect(res.graph_to_vault).toMatchObject({ processed: 1, created: 1 });
     await expect(readFile(join(mapRoot, 'M2', 'M2-5', 'M2-5-2.md'), 'utf-8')).resolves.toContain('# M2-5-2 · Diagonal Beauty Component');
   });
 
   it('dry_run reports what would change without writing files', async () => {
-    const source = new InMemorySource([m25('essence')]);
+    const source = new FixtureMapIndexSource([m25('essence')]);
     const res = await syncMapIndex({ direction: 'neo4j_to_obsidian', mapRoot, source, dryRun: true });
     expect(res.graph_to_vault).toMatchObject({ processed: 1, created: 1 });
     await expect(readFile(join(mapRoot, 'M2', 'M2-5', 'M2-5.md'), 'utf-8')).rejects.toThrow();
   });
 
   it('REFUSES to re-promote map-index upward (obsidian_to_neo4j / bidirectional)', async () => {
-    const source = new InMemorySource([m25('essence')]);
+    const source = new FixtureMapIndexSource([m25('essence')]);
     for (const direction of ['obsidian_to_neo4j', 'bidirectional'] as const) {
       const res = await syncMapIndex({ direction, mapRoot, source });
       expect(res.success).toBe(false);
