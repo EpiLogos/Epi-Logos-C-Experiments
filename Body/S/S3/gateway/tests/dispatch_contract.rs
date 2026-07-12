@@ -778,20 +778,14 @@ mod t9_route_ownership_cross_walk {
 
 // ======== 05.T5.10 connectivity ≠ bounded-access contract ========
 //
-// Task 05.T5.10. The S5 world-boundary plumbs the gateway into external
-// substrates — Graphiti (the episodic-memory HTTP runtime), Neo4j (the S2
-// graph store), Redis (the S3' context cache), and SpaceTimeDB (the S3'
-// presence projection). It is *tempting*, but wrong, to treat reachability of
-// any of these as if it were authorization to read a user's personal nara
-// domains:
-//
-//   * jiva   — the durable self / identity surface (`nara.identity.*`)
-//   * jagrat — the waking present-state / oracle surface (`nara.oracle.*`,
-//              `nara.kairos.*`)
-//   * flow   — the journal / lived-process surface (`nara.journal.*`,
-//              `nara.flow.*`)
-//
-// The architectural law this module pins:
+// Task 05.T5.10. The discriminator LAW lives in the gateway src seam — see
+// the "connectivity_check ≠ bounded_access" section of `src/dispatch.rs`
+// (`nara_bounded_access`, `ConnectivityReport`, `BoundedAccessGrant`,
+// `is_substrate_connectivity_class`). This module exercises that REAL seam
+// against the real route table (`classify_method`) with LIVE connectivity
+// pings of the four external substrates — Graphiti (episodic-memory HTTP
+// runtime), Neo4j (S2 graph store), Redis (S3' context cache), and
+// SpaceTimeDB (S3' presence projection):
 //
 //   "can ping an external service"  ≠  "may read jiva / jagrat / flow"
 //
@@ -799,7 +793,8 @@ mod t9_route_ownership_cross_walk {
 // (GraphService / GraphitiInvocation / TemporalContext). nara.* personal
 // access is owned by an entirely separate authority — the S4/S5 agent
 // runtime (`agent_access_owner == "S4/S5"`, `coordinate_owner == "M4'/S4"`).
-// A successful ping carries NONE of that grant.
+// A successful ping carries NONE of that grant, and the gate's decision is
+// provably invariant to the connectivity input in BOTH directions.
 //
 // The probe is graceful: in CI / offline the services are simply unreachable,
 // and the test still exercises every logical assertion (connectivity is an
@@ -809,58 +804,43 @@ mod t9_route_ownership_cross_walk {
 #[cfg(test)]
 mod t5_10_connectivity_vs_bounded_access {
     use super::*;
+    use epi_s3_gateway::dispatch::{
+        is_substrate_connectivity_class, nara_bounded_access, nara_personal_domain,
+        BoundedAccessDecision, BoundedAccessGrant, ConnectivityReport, ExternalSubstrate,
+        NaraPersonalDomain, SubstrateReachability, BOUNDED_ACCESS_DENIED_GRANT_SCOPE,
+        BOUNDED_ACCESS_DENIED_NO_DOMAIN_LAW, BOUNDED_ACCESS_DENIED_NO_GRANT,
+        BOUNDED_ACCESS_DENIED_SUBSTRATE_SURFACE, BOUNDED_ACCESS_DENIED_UNROUTED,
+    };
     use std::net::{TcpStream, ToSocketAddrs};
     use std::time::Duration;
 
-    /// The four external substrates the S5 boundary plumbs into. Each is a
-    /// *connectivity* concern only — reaching it proves the wire is up, never
-    /// that the caller may read personal data.
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    enum ExternalService {
-        Graphiti,
-        Neo4j,
-        Redis,
-        SpaceTimeDb,
-    }
-
-    impl ExternalService {
-        fn label(self) -> &'static str {
-            match self {
-                ExternalService::Graphiti => "Graphiti",
-                ExternalService::Neo4j => "Neo4j",
-                ExternalService::Redis => "Redis",
-                ExternalService::SpaceTimeDb => "SpaceTimeDB",
+    /// `host:port` to probe for one substrate. Honours the same env vars the
+    /// runtime reads (falling back to canonical local defaults) so a real
+    /// local stack is actually probed, while an offline box degrades cleanly.
+    fn endpoint(substrate: ExternalSubstrate) -> String {
+        match substrate {
+            // Graphiti HTTP runtime — same default as GRAPHITI_BASE_URL
+            // (http://127.0.0.1:37778) in the gateway contract.
+            ExternalSubstrate::Graphiti => host_port_from_url(
+                &env_or("GRAPHITI_BASE_URL", "http://127.0.0.1:37778"),
+                37778,
+            ),
+            // Neo4j bolt.
+            ExternalSubstrate::Neo4j => {
+                host_port_from_url(&env_or("NEO4J_URI", "bolt://127.0.0.1:7687"), 7687)
             }
-        }
-
-        /// `host:port` to probe. Honours the same env vars the runtime reads
-        /// (falling back to canonical local defaults) so a real local stack is
-        /// actually probed, while an offline box degrades cleanly.
-        fn endpoint(self) -> String {
-            match self {
-                // Graphiti HTTP runtime — same default as GRAPHITI_BASE_URL
-                // (http://127.0.0.1:37778) in the gateway contract.
-                ExternalService::Graphiti => host_port_from_url(
-                    &env_or("GRAPHITI_BASE_URL", "http://127.0.0.1:37778"),
-                    37778,
-                ),
-                // Neo4j bolt.
-                ExternalService::Neo4j => {
-                    host_port_from_url(&env_or("NEO4J_URI", "bolt://127.0.0.1:7687"), 7687)
-                }
-                // Redis context cache.
-                ExternalService::Redis => {
-                    host_port_from_url(&env_or("REDIS_URL", "redis://127.0.0.1:6379"), 6379)
-                }
-                // SpaceTimeDB presence projection — same env precedence as
-                // spacetime::SpacetimeRuntimeConfig::from_env.
-                ExternalService::SpaceTimeDb => host_port_from_url(
-                    &std::env::var("EPI_GATE_SPACETIME_URL")
-                        .or_else(|_| std::env::var("SPACETIMEDB_URL"))
-                        .unwrap_or_else(|_| "ws://127.0.0.1:3000".to_string()),
-                    3000,
-                ),
+            // Redis context cache.
+            ExternalSubstrate::Redis => {
+                host_port_from_url(&env_or("REDIS_URL", "redis://127.0.0.1:6379"), 6379)
             }
+            // SpaceTimeDB presence projection — same env precedence as
+            // spacetime::SpacetimeRuntimeConfig::from_env.
+            ExternalSubstrate::SpacetimeDb => host_port_from_url(
+                &std::env::var("EPI_GATE_SPACETIME_URL")
+                    .or_else(|_| std::env::var("SPACETIMEDB_URL"))
+                    .unwrap_or_else(|_| "ws://127.0.0.1:3000".to_string()),
+                3000,
+            ),
         }
     }
 
@@ -888,156 +868,47 @@ mod t5_10_connectivity_vs_bounded_access {
         }
     }
 
-    /// Result of attempting to reach one service. `Unknown` is the graceful
-    /// degradation outcome (offline / CI / DNS failure) — explicitly NOT an
-    /// error and explicitly NOT "reachable".
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    enum Reachability {
-        Reachable,
-        Unreachable,
-    }
-
-    /// Attempt a short, non-blocking-ish TCP connect. Any failure — refused,
-    /// timed out, unresolvable — degrades to `Unreachable`. This function can
-    /// NEVER panic and NEVER blocks the test for long.
-    fn probe(service: ExternalService) -> Reachability {
-        let endpoint = service.endpoint();
+    /// Attempt a short, non-blocking-ish TCP connect — the LIVE ping. Any
+    /// failure — refused, timed out, unresolvable — degrades to
+    /// `Unreachable`. This function can NEVER panic and NEVER blocks the
+    /// test for long.
+    fn probe(substrate: ExternalSubstrate) -> SubstrateReachability {
+        let endpoint = endpoint(substrate);
         // Resolve first; an unresolvable host is simply unreachable.
         let addrs = match endpoint.to_socket_addrs() {
             Ok(iter) => iter.collect::<Vec<_>>(),
-            Err(_) => return Reachability::Unreachable,
+            Err(_) => return SubstrateReachability::Unreachable,
         };
         for addr in addrs {
             if TcpStream::connect_timeout(&addr, Duration::from_millis(250)).is_ok() {
-                return Reachability::Reachable;
+                return SubstrateReachability::Reachable;
             }
         }
-        Reachability::Unreachable
+        SubstrateReachability::Unreachable
     }
 
-    /// A connectivity snapshot across all four substrates. This is *pure
-    /// connectivity* — it deliberately carries no notion of who may read what.
-    struct ConnectivityReport {
-        graphiti: Reachability,
-        neo4j: Reachability,
-        redis: Reachability,
-        spacetime: Reachability,
+    /// Build the src-seam `ConnectivityReport` from real TCP pings of all
+    /// four substrates.
+    fn live_connectivity_report() -> ConnectivityReport {
+        ConnectivityReport::from_reachability(probe)
     }
 
-    impl ConnectivityReport {
-        fn probe_all() -> Self {
-            ConnectivityReport {
-                graphiti: probe(ExternalService::Graphiti),
-                neo4j: probe(ExternalService::Neo4j),
-                redis: probe(ExternalService::Redis),
-                spacetime: probe(ExternalService::SpaceTimeDb),
-            }
-        }
-
-        /// Test-only fabricated "everything is up" report, so the bounded-access
-        /// assertions hold their meaning even when the box is offline. The
-        /// whole point of the contract is that this changes NOTHING about nara
-        /// authorization.
-        fn all_reachable() -> Self {
-            ConnectivityReport {
-                graphiti: Reachability::Reachable,
-                neo4j: Reachability::Reachable,
-                redis: Reachability::Reachable,
-                spacetime: Reachability::Reachable,
-            }
-        }
-
-        fn any_reachable(&self) -> bool {
-            [self.graphiti, self.neo4j, self.redis, self.spacetime]
-                .iter()
-                .any(|r| *r == Reachability::Reachable)
+    /// A representative nara.* method that reads each personal domain. Each is
+    /// a real route-extension method handled by `classify_method` via the
+    /// `nara.` prefix.
+    fn representative_method(domain: NaraPersonalDomain) -> &'static str {
+        match domain {
+            NaraPersonalDomain::Jiva => "nara.identity.get",
+            NaraPersonalDomain::Jagrat => "nara.oracle.cast",
+            NaraPersonalDomain::Flow => "nara.journal.entry",
         }
     }
 
-    /// The personal nara domains a bounded-access grant can cover. These are
-    /// the "what may be read" axis — orthogonal to "what wire is up".
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    enum NaraDomain {
-        Jiva,   // identity / self
-        Jagrat, // waking present-state / oracle
-        Flow,   // journal / lived process
-    }
-
-    impl NaraDomain {
-        /// A representative nara.* method that reads this domain. Each is a
-        /// real route-extension method handled by `classify_method` via the
-        /// `nara.` prefix.
-        fn representative_method(self) -> &'static str {
-            match self {
-                NaraDomain::Jiva => "nara.identity.get",
-                NaraDomain::Jagrat => "nara.oracle.cast",
-                NaraDomain::Flow => "nara.journal.entry",
-            }
-        }
-    }
-
-    /// An explicit bounded-access grant: the SEPARATE authorization that nara.*
-    /// reads require. It is issued by the agent-access authority (S4/S5), not
-    /// by any connectivity event. Modelled here as the contract object the
-    /// gateway gate would consult.
-    struct BoundedAccessGrant {
-        domains: Vec<NaraDomain>,
-    }
-
-    impl BoundedAccessGrant {
-        fn covering(domains: &[NaraDomain]) -> Self {
-            BoundedAccessGrant {
-                domains: domains.to_vec(),
-            }
-        }
-    }
-
-    /// The decision returned by the bounded-access gate, with a reason that
-    /// makes the connectivity/authorization distinction explicit in failure
-    /// output.
-    #[derive(Debug, PartialEq, Eq)]
-    enum AccessDecision {
-        Granted,
-        Denied { reason: &'static str },
-    }
-
-    /// THE GATE. Decide whether a nara.* read of `domain` is authorized.
-    ///
-    /// Contract, enforced here:
-    ///   1. Connectivity is NOT an input that can grant access. A `None` grant
-    ///      is denied no matter how many services are reachable.
-    ///   2. A grant must explicitly cover the requested domain.
-    ///   3. Authorization is independent of connectivity in BOTH directions: a
-    ///      valid grant authorizes even when everything is offline (the
-    ///      subsequent *fetch* may fail, but the access *right* stands), and a
-    ///      fully-reachable stack authorizes nothing on its own.
-    fn nara_bounded_access(
-        _connectivity: &ConnectivityReport,
-        grant: Option<&BoundedAccessGrant>,
-        domain: NaraDomain,
-    ) -> AccessDecision {
-        match grant {
-            None => AccessDecision::Denied {
-                reason: "connectivity is not authorization: no bounded-access grant present",
-            },
-            Some(grant) if grant.domains.contains(&domain) => AccessDecision::Granted,
-            Some(_) => AccessDecision::Denied {
-                reason: "bounded-access grant does not cover the requested nara domain",
-            },
-        }
-    }
-
-    /// The set of dispatch classes that represent pure *connectivity* surfaces
-    /// to the external substrates. None of these is the nara personal-access
-    /// authority.
-    fn is_connectivity_class(class: GatewayDispatchClass) -> bool {
-        matches!(
-            class,
-            GatewayDispatchClass::GraphService            // Neo4j / S2
-                | GatewayDispatchClass::GraphitiInvocation // Graphiti episodic
-                | GatewayDispatchClass::TemporalContext // Redis + SpaceTimeDB (S3')
-        )
-    }
+    const ALL_DOMAINS: [NaraPersonalDomain; 3] = [
+        NaraPersonalDomain::Jiva,
+        NaraPersonalDomain::Jagrat,
+        NaraPersonalDomain::Flow,
+    ];
 
     // ---- Assertion 1: connectivity success does NOT grant nara access ----
 
@@ -1051,18 +922,31 @@ mod t5_10_connectivity_vs_bounded_access {
             fully_connected.any_reachable(),
             "fabricated report must model full connectivity"
         );
+        assert!(
+            fully_connected
+                .connectivity_checks()
+                .iter()
+                .all(|check| check.reachability == SubstrateReachability::Reachable),
+            "fabricated report must mark every substrate reachable"
+        );
 
-        for domain in [NaraDomain::Jiva, NaraDomain::Jagrat, NaraDomain::Flow] {
-            let decision = nara_bounded_access(&fully_connected, None, domain);
+        for domain in ALL_DOMAINS {
+            let method = representative_method(domain);
+            assert_eq!(
+                nara_personal_domain(method),
+                Some(domain),
+                "{method} must map onto the {domain:?} personal domain in src law"
+            );
+            let decision = nara_bounded_access(method, &fully_connected, None);
             assert_eq!(
                 decision,
-                AccessDecision::Denied {
-                    reason: "connectivity is not authorization: no bounded-access grant present",
+                BoundedAccessDecision::Denied {
+                    reason: BOUNDED_ACCESS_DENIED_NO_GRANT,
                 },
                 "pinging Graphiti/Neo4j/Redis/SpaceTimeDB must NOT grant read of {:?} \
                  ({}). Connectivity ≠ bounded access.",
                 domain,
-                domain.representative_method(),
+                method,
             );
         }
     }
@@ -1075,17 +959,12 @@ mod t5_10_connectivity_vs_bounded_access {
         // With NO connectivity at all (offline box) but a valid grant, the
         // access RIGHT still stands — proving the grant is the authorization
         // axis, wholly separate from the connectivity axis.
-        let offline = ConnectivityReport {
-            graphiti: Reachability::Unreachable,
-            neo4j: Reachability::Unreachable,
-            redis: Reachability::Unreachable,
-            spacetime: Reachability::Unreachable,
-        };
-        let grant = BoundedAccessGrant::covering(&[NaraDomain::Jiva]);
+        let offline = ConnectivityReport::all_unreachable();
+        let grant = BoundedAccessGrant::covering(&[NaraPersonalDomain::Jiva]);
 
         assert_eq!(
-            nara_bounded_access(&offline, Some(&grant), NaraDomain::Jiva),
-            AccessDecision::Granted,
+            nara_bounded_access("nara.identity.get", &offline, Some(&grant)),
+            BoundedAccessDecision::Granted,
             "an explicit bounded-access grant must authorize nara reads independently \
              of connectivity (authorization ⟂ reachability)"
         );
@@ -1094,11 +973,15 @@ mod t5_10_connectivity_vs_bounded_access {
         // whole substrate is reachable. Authorization is per-domain, never a
         // side effect of the wire being up.
         let fully_connected = ConnectivityReport::all_reachable();
-        for forbidden in [NaraDomain::Jagrat, NaraDomain::Flow] {
+        for forbidden in [NaraPersonalDomain::Jagrat, NaraPersonalDomain::Flow] {
             assert_eq!(
-                nara_bounded_access(&fully_connected, Some(&grant), forbidden),
-                AccessDecision::Denied {
-                    reason: "bounded-access grant does not cover the requested nara domain",
+                nara_bounded_access(
+                    representative_method(forbidden),
+                    &fully_connected,
+                    Some(&grant)
+                ),
+                BoundedAccessDecision::Denied {
+                    reason: BOUNDED_ACCESS_DENIED_GRANT_SCOPE,
                 },
                 "a jiva-only grant must not authorize {:?}, regardless of connectivity",
                 forbidden,
@@ -1113,8 +996,8 @@ mod t5_10_connectivity_vs_bounded_access {
     fn dispatch_surface_separates_connectivity_owners_from_nara_access_owner() {
         // nara.* routes through the S4/S5 domain adapter — the agent-access
         // authority — NOT through any connectivity class.
-        for domain in [NaraDomain::Jiva, NaraDomain::Jagrat, NaraDomain::Flow] {
-            let method = domain.representative_method();
+        for domain in ALL_DOMAINS {
+            let method = representative_method(domain);
             let route = classify_method(method)
                 .unwrap_or_else(|| panic!("{method} must classify as a nara extension"));
 
@@ -1130,7 +1013,7 @@ mod t5_10_connectivity_vs_bounded_access {
                 "{method} must be a NaraExtension, never a connectivity class"
             );
             assert!(
-                !is_connectivity_class(route.class),
+                !is_substrate_connectivity_class(route.class),
                 "{method} must NOT be classified as a connectivity surface — \
                  being able to ping a service is not the right to read {:?}",
                 domain
@@ -1148,8 +1031,12 @@ mod t5_10_connectivity_vs_bounded_access {
         }
 
         // Cross-check the OTHER side: the substrate connectivity methods that
-        // back the four pings are connectivity classes and are NOT owned by
-        // the nara/agent personal-access adapter.
+        // back the four pings are connectivity classes, are NOT owned by the
+        // nara/agent personal-access adapter, and — crucially — even a FULL
+        // personal grant plus full connectivity buys them nothing from the
+        // personal-access gate.
+        let full_grant = BoundedAccessGrant::covering(&ALL_DOMAINS);
+        let fully_connected = ConnectivityReport::all_reachable();
         let connectivity_methods = [
             ("s2.graph.query", "Neo4j"),
             ("s5.episodic.deposit", "Graphiti"),
@@ -1160,7 +1047,7 @@ mod t5_10_connectivity_vs_bounded_access {
             let route = classify_method(method)
                 .unwrap_or_else(|| panic!("{method} ({service}) must classify"));
             assert!(
-                is_connectivity_class(route.class),
+                is_substrate_connectivity_class(route.class),
                 "{method} should be a connectivity surface for {service}"
             );
             assert_ne!(
@@ -1174,10 +1061,46 @@ mod t5_10_connectivity_vs_bounded_access {
                 GatewayDispatchClass::NaraExtension,
                 "{method} ({service}) must not masquerade as a nara personal surface"
             );
+            assert_eq!(
+                nara_bounded_access(method, &fully_connected, Some(&full_grant)),
+                BoundedAccessDecision::Denied {
+                    reason: BOUNDED_ACCESS_DENIED_SUBSTRATE_SURFACE,
+                },
+                "{method} ({service}) is a substrate surface: the personal-access \
+                 gate must refuse it even under a full grant"
+            );
         }
+
+        // Non-personal nara surfaces (lens, session lifecycle, PASU wizard)
+        // fail CLOSED pending explicit domain law — a grant covering every
+        // personal domain still authorizes nothing for them.
+        for method in ["nara.lens.list", "nara.session_open", "nara.pasu.show"] {
+            assert_eq!(
+                nara_personal_domain(method),
+                None,
+                "{method} must not map onto a personal domain"
+            );
+            assert_eq!(
+                nara_bounded_access(method, &fully_connected, Some(&full_grant)),
+                BoundedAccessDecision::Denied {
+                    reason: BOUNDED_ACCESS_DENIED_NO_DOMAIN_LAW,
+                },
+                "{method} has no mapped personal domain and must fail closed"
+            );
+        }
+
+        // Unrouted methods have nothing to grant at all.
+        assert_eq!(
+            nara_bounded_access("totally.unknown", &fully_connected, Some(&full_grant)),
+            BoundedAccessDecision::Denied {
+                reason: BOUNDED_ACCESS_DENIED_UNROUTED,
+            },
+            "a method outside the route table must be refused by the gate"
+        );
     }
 
-    // ---- Liveness: the probe runs, degrades gracefully, and never panics ----
+    // ---- Liveness: the probe runs, degrades gracefully, and the decision is
+    //      provably invariant to the LIVE connectivity input ----
 
     #[test]
     fn connectivity_probe_runs_and_degrades_gracefully_offline() {
@@ -1186,31 +1109,65 @@ mod t5_10_connectivity_vs_bounded_access {
         // mixed — the probe must complete without panicking, and the
         // connectivity/authorization invariant must hold against the LIVE
         // report.
-        let live = ConnectivityReport::probe_all();
+        let live = live_connectivity_report();
 
         // Reaching the probe's end at all is the liveness proof; record what
         // we saw for the evidence log.
-        for (service, reach) in [
-            (ExternalService::Graphiti, live.graphiti),
-            (ExternalService::Neo4j, live.neo4j),
-            (ExternalService::Redis, live.redis),
-            (ExternalService::SpaceTimeDb, live.spacetime),
-        ] {
+        for check in live.connectivity_checks() {
             // Either outcome is acceptable; the assert documents the binary.
             assert!(
-                matches!(reach, Reachability::Reachable | Reachability::Unreachable),
+                matches!(
+                    check.reachability,
+                    SubstrateReachability::Reachable | SubstrateReachability::Unreachable
+                ),
                 "{} probe must resolve to a definite reachability",
-                service.label()
+                check.substrate.label()
             );
+        }
+
+        // THE DISCRIMINATOR PROPERTY: for every method shape and grant shape,
+        // the gate's decision is IDENTICAL under the live report, a fully
+        // reachable report, and a fully unreachable report. A live ping can
+        // never flip an authorization decision in either direction.
+        let full_grant = BoundedAccessGrant::covering(&ALL_DOMAINS);
+        let jiva_only = BoundedAccessGrant::covering(&[NaraPersonalDomain::Jiva]);
+        let grants: [Option<&BoundedAccessGrant>; 3] = [None, Some(&jiva_only), Some(&full_grant)];
+        let methods = [
+            "nara.identity.get",
+            "nara.oracle.cast",
+            "nara.kairos.current",
+            "nara.journal.entry",
+            "nara.flow.read",
+            "nara.lens.list",
+            "s2.graph.query",
+            "s5.episodic.deposit",
+            "s3'.temporal.context",
+            "s3'.spacetime.subscribe",
+            "totally.unknown",
+        ];
+        for method in methods {
+            for grant in grants {
+                let under_live = nara_bounded_access(method, &live, grant);
+                assert_eq!(
+                    under_live,
+                    nara_bounded_access(method, &ConnectivityReport::all_reachable(), grant),
+                    "{method}: decision must not change when every substrate becomes reachable"
+                );
+                assert_eq!(
+                    under_live,
+                    nara_bounded_access(method, &ConnectivityReport::all_unreachable(), grant),
+                    "{method}: decision must not change when every substrate goes offline"
+                );
+            }
         }
 
         // The crucial invariant against the LIVE report: whatever is reachable,
         // nara reads are still denied without a grant.
-        for domain in [NaraDomain::Jiva, NaraDomain::Jagrat, NaraDomain::Flow] {
+        for domain in ALL_DOMAINS {
             assert!(
                 matches!(
-                    nara_bounded_access(&live, None, domain),
-                    AccessDecision::Denied { .. }
+                    nara_bounded_access(representative_method(domain), &live, None),
+                    BoundedAccessDecision::Denied { .. }
                 ),
                 "live connectivity (any_reachable={}) must never grant ungranted \
                  access to {:?}",
