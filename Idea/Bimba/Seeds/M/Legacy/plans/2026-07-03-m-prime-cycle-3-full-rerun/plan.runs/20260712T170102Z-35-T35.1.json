@@ -1,0 +1,38 @@
+{
+  "runId": "20260712T170102Z-35-T35.1",
+  "taskId": "35.T35.1",
+  "startedAt": "2026-07-12T17:01:02.471Z",
+  "owner": "uc-t35",
+  "leaseExpiresAt": "2026-07-12T21:01:02.471Z",
+  "worktree": null,
+  "task": {
+    "id": "35.T35.1",
+    "trackId": "35",
+    "tranche": "T35.1",
+    "title": "Live-Sun silver-dot marker at fibonacci-position on the carrier cosmic clock (the natal-gold-ring dual)",
+    "effort": "the natal-gold-ring dual",
+    "file": "35-fibonacci-ground-level-0-temporal-substrate.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/35-fibonacci-ground-level-0-temporal-substrate.md",
+    "dependsOn": [
+      "00.T3",
+      "35.T0"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app",
+      "Body/M/pratibimba-app/src/engine"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Fibonacci Ground clock (CLOCK_BACKBONE[24], KairosFrame m4_planet_degrees_live, NOW frontmatter c_3_fibonacci_position/digit/tick12/backbone_index; Khora stamps, Hen validates). CARRIER: engine ring cardinal-zero {0,15,30,45} + zodiacal-five anchors, natal-Sun gold ring vs live-Sun silver dot. §2 track 35."
+  }
+}

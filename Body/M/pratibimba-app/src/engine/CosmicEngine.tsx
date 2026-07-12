@@ -40,6 +40,7 @@ import {
     updateClockFieldOverlay
 } from './clockFieldOverlay';
 import { harmonicSnapshot } from './modulation/modulators';
+import { fibonacciGroundPoint } from './fibonacciGround';
 import { ModulationCarrier } from './modulation/types';
 import {
     decanLabel,
@@ -405,6 +406,27 @@ export function CosmicEngine() {
         scene.add(natalChip);
         let natalIdentityKey = '';
 
+        // Track 35.T35.1: the LIVE-Sun marker — the natal gold ring's dual.
+        // A moving silver dot at the live Sun's Level-0 Fibonacci-Ground
+        // position (source §2.4 point 4). The live Sun is kairos body index 0
+        // (`m4_planet_degrees_live()[0]` on the wire === `kairos.degrees[0]`);
+        // it advances as the Sun crosses each 6° ground wedge. The geometric
+        // distance between this silver dot and the gold ring reads the
+        // person's structural-vs-current ground state on the 60-ring.
+        const liveSunMarker = new THREE.Mesh(
+            new THREE.SphereGeometry(0.05, 14, 14),
+            new THREE.MeshStandardMaterial({
+                color: 0xd6dae4,
+                emissive: 0xaeb4c4,
+                emissiveIntensity: 0.7,
+                metalness: 0.6,
+                roughness: 0.3
+            })
+        );
+        liveSunMarker.name = 'fibonacci-live-sun';
+        liveSunMarker.visible = false;
+        scene.add(liveSunMarker);
+
         // E6 privacy split: the natal 10-planet DISTRIBUTION is an identity
         // body — it renders from a LOCAL read (src-tauri identity::natal_sky)
         // and never crosses the gateway bus. Absent cache → nothing, honest.
@@ -715,6 +737,20 @@ export function CosmicEngine() {
                 // projection (element id, Keplerian velocity, §5.2 resonance)
                 const { degrees, livePlanets } = frame.kairos;
                 latestSky.live = livePlanets ?? [];
+
+                // Track 35.T35.1: the live-Sun silver dot at its Level-0
+                // Fibonacci-Ground position. Body 0 IS the Sun (PLANET_ORDER);
+                // its degree is quantised to the 60-fold ground and placed on
+                // the same R_DEGREE ring the natal gold ring rides — advancing
+                // as the live Sun crosses each 6° wedge (dual of the gold ring).
+                const sunDegree = degrees[0];
+                if (typeof sunDegree === 'number' && Number.isFinite(sunDegree)) {
+                    const p = fibonacciGroundPoint(sunDegree, R_DEGREE);
+                    liveSunMarker.position.set(p.x, 0.08, p.z);
+                    liveSunMarker.visible = true;
+                } else {
+                    liveSunMarker.visible = false;
+                }
                 planetMarkers.forEach((marker, i) => {
                     const d = degrees[i];
                     const chip = planetChips[i];
@@ -781,6 +817,7 @@ export function CosmicEngine() {
             },
             onUnready() {
                 latestSky.live = [];
+                liveSunMarker.visible = false; // no live sky → no live-Sun dot
                 planetMarkers.forEach(marker => {
                     marker.visible = false;
                 });
@@ -807,17 +844,16 @@ export function CosmicEngine() {
                 const identity = frame.quintessence.identity;
                 natalMarker.visible = true;
                 natalChip.visible = true;
-                const a = clockAngle(identity.natalDegree);
-                natalMarker.position.set(
-                    Math.cos(a) * R_DEGREE,
-                    0.05,
-                    -Math.sin(a) * R_DEGREE
-                );
-                natalChip.position.set(
-                    Math.cos(a) * (R_DEGREE + 0.42),
-                    0.2,
-                    -Math.sin(a) * (R_DEGREE + 0.42)
-                );
+                // Track 35.T35.1: the natal gold ring reads its STRUCTURAL
+                // ground-position — the natal Sun degree folded onto its Level-0
+                // Fibonacci-Ground wedge via the SAME fibonacciGroundPoint
+                // projection the live-Sun silver dot rides (source §2.4 point 4).
+                // Both Suns sit at their Fibonacci-positions; they coincide when
+                // they share a 6° ground wedge — the distance is the reading.
+                const natalPoint = fibonacciGroundPoint(identity.natalDegree, R_DEGREE);
+                natalMarker.position.set(natalPoint.x, 0.05, natalPoint.z);
+                const natalChipPoint = fibonacciGroundPoint(identity.natalDegree, R_DEGREE + 0.42);
+                natalChip.position.set(natalChipPoint.x, 0.2, natalChipPoint.z);
                 // engraved, not repainted: reading refreshes only when the
                 // identity or the kernel resonance scalar moves
                 const key = `${identity.natalDegree}|${identity.quintessenceWeight}|${identity.layerCount}|${frame.quintessence.resonance ?? 'pending'}`;
