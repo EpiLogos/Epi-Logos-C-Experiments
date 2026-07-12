@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:26:51.196Z",
+  "updatedAt": "2026-07-12T01:28:23.974Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2860,16 +2860,32 @@
       "worktree": null
     },
     "09.T9.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:28:23.960Z",
+      "claimedAt": "2026-07-12T01:27:44.204Z",
+      "completedAt": "2026-07-12T01:28:23.960Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:28:23.960Z",
+          "text": "9.12 closed verify-first: the Hen C-first evidence contract is the substrate this session built and hardened across 16.T16.14/15/17 - graph promotion classifies C-first before other coordinate-family qualifiers and emits type_family/type_path/type_coordinate/semantic_authority/crystallisation_state/c_layer_path as node properties + frontmatter evidence (c_first_typology kind); the C2 entity-candidate fixture carries type_coordinate C2 + aliases + candidate_state + accepted_wikilinks and the C5 graduation fixture carries source_c_authority_path + flat_world_target with distinct graph_evidence_kind per class (c2_entity_candidate / c3_diagram_canvas_form / c4_type_moc_authority / c5_world_graduation_receipt via the single c_layer_evidence_kind source); the S3 receipts for s1'.type.classify_c_layer + s1'.entity.promote_to_type + s1'.world.graduate all carry real dispatch arms; Smart Env remains read-only evidence (suggest_links never mutates). Both named suites re-run fresh at this close (6+5 green) and the Empty -> World/Types -> flat World lifecycle is pinned end to end by the CCT-14 chain test.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 09.T9.12 (track-09 W class gate PASS incl live-wire) + cargo test --offline -p epi-s1-hen-compiler-core --test c_layer_typology_classification (6) + --test entity_candidate_lifecycle (5) fresh",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/graph_promotion.rs",
+              "Body/S/S1/hen-compiler-core/src/artifact_evidence.rs",
+              "Body/S/S3/gateway-contract/src/s1_vault.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:27:44.204Z",
+      "runId": "20260712T012744Z-09-T9.12",
       "worktree": null
     },
     "09.T9.13": {
@@ -13198,6 +13214,16 @@
       "leaseExpiresAt": "2026-07-12T03:21:29.498Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:26:51.183Z"
+    },
+    {
+      "runId": "20260712T012744Z-09-T9.12",
+      "taskId": "09.T9.12",
+      "status": "done",
+      "startedAt": "2026-07-12T01:27:44.204Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T02:27:44.204Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:28:23.960Z"
     }
   ],
   "activeRoute": {
