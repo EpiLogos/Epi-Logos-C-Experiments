@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:04:10.009Z",
+  "updatedAt": "2026-07-12T01:05:17.775Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4533,16 +4533,30 @@
       "worktree": null
     },
     "16.T16.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:05:17.761Z",
+      "claimedAt": "2026-07-12T01:04:10.529Z",
+      "completedAt": "2026-07-12T01:05:17.761Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:05:17.761Z",
+          "text": "CCT-5 closed verify-first: the three-variant KleinFlipEvent enum is landed at portal-core events/flip_events.rs (M1TritoneCrossing / M2CymaticValenceInvert / M3CodonRotationCross), the named exhaustive-variants test plus the round-trip suite re-run fresh and green (2+3), two further klein_flip suites exist (m1-tritone no-false-positives, personal-scale propagation), and the bridge JSON edge emits variant kinds on the wire - the capture fixture carries kleinFlip.kind m2CymaticValenceInvert with valenceBefore/After. Subscribers match exhaustively (Rust enforces at compile time; the carrier consumes kleinFlip via the typed bridge and the engine dispatches onKleinFlip across ALL carriers in the same frame per the CCT-11 seam).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.5 (track-16 W class gate PASS) + cargo test -p portal-core --test klein_flip_event_variants_exhaustive (2) + --test klein_flip_round_trip (3) fresh; wire fixture carries the variant kind (m2CymaticValenceInvert with valence before/after)",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/events/flip_events.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:04:10.529Z",
+      "runId": "20260712T010410Z-16-T16.5",
       "worktree": null
     },
     "16.T16.6": {
@@ -13046,6 +13060,16 @@
       "leaseExpiresAt": "2026-07-12T03:00:15.537Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:04:09.995Z"
+    },
+    {
+      "runId": "20260712T010410Z-16-T16.5",
+      "taskId": "16.T16.5",
+      "status": "done",
+      "startedAt": "2026-07-12T01:04:10.529Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T03:04:10.529Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:05:17.761Z"
     }
   ],
   "activeRoute": {
