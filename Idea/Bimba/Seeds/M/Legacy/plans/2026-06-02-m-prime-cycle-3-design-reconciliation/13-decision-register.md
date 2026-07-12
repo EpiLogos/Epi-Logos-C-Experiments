@@ -207,7 +207,7 @@ For Tarot/QL reading frames, `reading_frame.positions[]` / `OracleFrame.vak_addr
 
 ## DR-M4-1 — DayContainer vault path
 
-**Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The canonical day path has **always been** `Idea/Empty/Present/{day_id}/`. Both `M4'-SPEC §6.6` (`${VAULT}/Pratibimba/Nara/{day_id}/`) and `m4-nara/src/common/nara-surface.ts::dayContainerPath` (`${vaultRoot}/day/{dayId}/`) were drift — neither matches the actual vault layout that `epi vault day-init` writes.
+**Status:** DR-M4-1 VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The canonical day path has **always been** `Idea/Empty/Present/{day_id}/`. Both `M4'-SPEC §6.6` (`${VAULT}/Pratibimba/Nara/{day_id}/`) and `m4-nara/src/common/nara-surface.ts::dayContainerPath` (`${vaultRoot}/day/{dayId}/`) were drift — neither matches the actual vault layout that `epi vault day-init` writes.
 
 **Action:** Patch BOTH spec AND extension to `${VAULT_ROOT}/Idea/Empty/Present/{day_id}/`. This aligns to the standing vault convention used by `epi vault day-init` and confirmed in the live session (`/Users/admin/Documents/Epi-Logos/Idea/Empty/Present/02-06-2026/daily-note.md`).
 

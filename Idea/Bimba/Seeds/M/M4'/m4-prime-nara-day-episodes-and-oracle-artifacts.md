@@ -68,7 +68,7 @@ interface DayContainer {
   invalid_at: ISO8601 | null;                  // day-end (24:00 local) when day closes; null while day active
   
   // Day identity
-  day_id: string;                              // YYYY-MM-DD format
+  day_id: string;                              // MM-DD-YYYY month-first (Architect-ratified 2026-07-02; legacy folders still adopt)
   day_of_week: 0 | 1 | 2 | 3 | 4 | 5 | 6;     // Sun=0
   
   // Kairos snapshot (cosmic-state at day-start)
@@ -163,7 +163,7 @@ interface NaraArtifact {
   
   // Day-container linkage
   day_container_id: EpisodeId;
-  day_id: string;                              // YYYY-MM-DD for convenience
+  day_id: string;                              // MM-DD-YYYY month-first for convenience (Architect-ratified 2026-07-02)
   
   // NOW lineage (S3 Khora)
   now_path: NOWPath;                           // precise moment from S3 Khora
@@ -267,7 +267,7 @@ The `/Self/aham/daily/` placeholder currently used by the Quaternal Tarot and Qu
 
 ```
 ${VAULT}/Idea/Empty/Present/
-├── {day_id}/                            # e.g., 2026-05-31/
+├── {day_id}/                            # e.g., 05-31-2026/ (MM-DD-YYYY month-first)
 │   ├── daily-note.md                    # primary daily-note artifact (if exists)
 │   ├── day-container.json               # the DayContainer episode envelope (machine-readable)
 │   └── artifacts/
@@ -330,13 +330,13 @@ episode_id: ep_2026-05-31_T1430_8a3f...
 episode_type: oracle_quaternal_tarot
 group_id: 8a3f4b2c...  # quintessence_hash
 valid_at: 2026-05-31T14:30:00+00:00
-day_id: 2026-05-31
+day_id: 05-31-2026
 now_path: /Khora/now/2026/05/31/14-30-00
 session_key: sess_abc123
 privacy_class: protected-local-body
 source_skill: quaternal-tarot
 source_agent: user
-vault_path: Idea/Empty/Present/2026-05-31/artifacts/oracle/tarot-cast_uuid.md
+vault_path: Idea/Empty/Present/05-31-2026/artifacts/oracle/tarot-cast_uuid.md
 bimba_coordinate_refs:
   - "#3.5"           # M3-5 cosmic wheel
   - "#3-tarot-fool"  # M3 Tarot library Fool card

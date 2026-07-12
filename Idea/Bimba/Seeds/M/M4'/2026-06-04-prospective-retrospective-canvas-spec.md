@@ -78,7 +78,7 @@ Both fields take the same enum: `"prospective" | "retrospective"`. Compose phase
 |-----------|------|--------|
 | Extension contract | `Body/M/epi-theia/extensions/m4-nara/src/common/index.ts` | `EXTENSION_ID`, `PRIMARY_VIEW_ID`, `DECLARED_BLOCKERS`, `PRIVACY_CLASS`, `buildM4NaraSurface` |
 | DayContainer + NaraSurface types | `.../src/common/nara-surface.ts` | `NaraArtifactKind` (`journal | dream | oracle | reminder | contemplative | agent-chat`), `NaraPrivacyClass`, `NaraScalarRef`, `NaraArtifactEnvelope`, `NaraDayContainer`, `M4NaraSurface`, `QActivityUpdatePolicy`, `ConsentRecord`, `VoiceCorpusAdmissionInput` |
-| `createNaraArtifact` | `.../src/common/nara-surface.ts:137` | Writes an artifact md + envelope json into `Idea/Empty/Present/<dayId>/artifacts/<kind>/` |
+| `createNaraArtifact` | `.../src/common/nara-surface.ts:137` | Writes an artifact md + envelope json into the day container's `artifacts/<kind>/` (frozen code still joins the superseded `Pratibimba/Nara/<dayId>/`; canonical target per DR-M4-1 is `Idea/Empty/Present/{day_id}/`, month-first `MM-DD-YYYY`) |
 | `readNaraDayContainer` | `.../src/common/nara-surface.ts:210` | Reads the day folder into a `NaraDayContainer` |
 | `buildM4NaraSurface` | `.../src/common/nara-surface.ts:239` | Composes the rendered surface, includes `M4_NARA_CONTRACT_VERSION` and observability event |
 | ReactWidget | `.../src/browser/m4-nara-widget.tsx` | Readiness banner + profile-snapshot dl + DayContainer dl, subscribes to `SharedBridgeAdapter.onReadiness/onProfile/onCoordinateContext` |
