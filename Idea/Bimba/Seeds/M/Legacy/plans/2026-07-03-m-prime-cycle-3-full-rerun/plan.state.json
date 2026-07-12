@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T18:46:24.489Z",
+  "updatedAt": "2026-07-12T19:15:20.069Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2333,16 +2333,16 @@
       "worktree": null
     },
     "05.T5.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-12T18:50:46.760Z",
+      "claimedAt": "2026-07-12T18:50:46.760Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-0518",
+      "leaseExpiresAt": "2026-07-12T22:50:46.760Z",
+      "heartbeatAt": "2026-07-12T18:50:46.760Z",
+      "runId": "20260712T185046Z-05-T5.18",
       "worktree": null
     },
     "05.T5.19": {
@@ -9925,16 +9925,32 @@
       "worktree": null
     },
     "37.T37.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T19:15:19.582Z",
+      "claimedAt": "2026-07-12T18:50:46.365Z",
+      "completedAt": "2026-07-12T19:15:19.582Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T19:15:19.582Z",
+          "text": "Element-ID converters + stale-spec flag closed verify-first (DR-37-3 / DR-37-5, track-local to 37 doc section 9): the three converters (canonical_from_nucleotide C-scheme A=Water/T=Fire/C=Earth/G=Air by name -> canonical-B; canonical_from_m3_decan_element D-scheme -> B; canonical_from_m2_tattva A-scheme -> B) plus the honest thin alias canonical_from_medicine_rs_legacy delegating to canonical_from_m2_tattva were pre-landed at commit c0584ff7 and are now PROVEN by 14/14 nara::medicine_frame::canonical_tests re-run fresh — each converter round-trips to the canonical-B enum matching m_canonical.h from 5.16, the C-side m4_nuc_to_elem mirror agrees exactly, the Track-18 single-canonical-B-enum invariant is asserted over the full 0..=255 domain, and the three medicine_cast.rs callers compile green. STALE_SPEC_FLAG landed at cosmic-clock spec section 15.3 (superseded-by-code note). This session's only working-tree edit is the 37 design-recon write-back (citation drift noted, not silently rewritten: DR-37-3 now at medicine_frame.rs:791-852, DR-37-5 flag at ~1699-1731). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib nara::medicine_frame::canonical_tests (14 passed / 0 failed, re-run fresh) ; verify-tranche K-gate PASS by fable-c-verifier; adversarial review verdict solid (every acceptance clause checked, C-side m4_nuc_to_elem parity confirmed, realtests=true)",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/medicine_frame.rs",
+              "Body/S/S0/epi-lib/include/m_canonical.h",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/37.T37.10.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-3710",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T18:50:46.365Z",
+      "runId": "20260712T185046Z-37-T37.10",
       "worktree": null
     },
     "37.T37.11": {
@@ -11902,16 +11918,32 @@
       "worktree": null
     },
     "45.T45.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T19:15:20.037Z",
+      "claimedAt": "2026-07-12T18:50:46.565Z",
+      "completedAt": "2026-07-12T19:15:20.037Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T19:15:20.037Z",
+          "text": "Map projector graduated into the maintained bimba-mcp: graph_sync gains a scope=map-index option routed to new syncMapIndex/projectMapNode, live-graph-sourced via Neo4jMapIndexSource, reusing the shared wrapContextFrames/convertHashToMFamily normaliser (not a sixth impl). 11 new behavioral tests drive real projection + real temp-filesystem writes proving freshness (a changed graph node re-projects into its /map file), idempotency (an unchanged node writes nothing, byte-identical since c_3_projected_at comes from the node's own updated_at not wall-clock), containment-path mirroring, canonical M-family rendering, and the UPWARD REFUSAL (map-index reflection rows are never re-promoted — syncMapIndex refuses obsidian_to_neo4j/bidirectional and syncVaultToGraph skips c_4_artifact_role: map-index). Cross-namespace M2-5 to M3 edge renders in the Relations index. 53 src vitest green. bimba-mcp is node/pnpm (npx vitest run src), not cargo. FINDING (not this tranche): bimba-mcp tests/canon_parity.test.ts has 18 pre-existing failures shelling to `epi canon coord --depth qv-detail|relational` with a stale rejected enum — belongs to track 09 (epi canon coord depth ladder), not 45.2. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src (Body/S/S2/external/bimba-mcp: 53 passed / 0 failed, re-run fresh by controller) ; verify-tranche K-gate PASS by fable-c-verifier; adversarial review verdict solid (both Verify clauses met with real behavioral tests, clean scope, realtests=true)",
+            "exitCode": 0,
+            "testsPassed": 53,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/external/bimba-mcp/src/api/map-index.ts",
+              "Body/S/S2/external/bimba-mcp/src/api/sync.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/45.T45.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4502",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T18:50:46.565Z",
+      "runId": "20260712T185046Z-45-T45.2",
       "worktree": null
     },
     "45.T45.3": {
@@ -14101,12 +14133,41 @@
       "leaseExpiresAt": "2026-07-12T21:01:02.661Z",
       "worktree": null,
       "completedAt": "2026-07-12T18:19:46.930Z"
+    },
+    {
+      "runId": "20260712T185046Z-37-T37.10",
+      "taskId": "37.T37.10",
+      "status": "done",
+      "startedAt": "2026-07-12T18:50:46.365Z",
+      "owner": "uc-3710",
+      "leaseExpiresAt": "2026-07-12T22:50:46.365Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T19:15:19.582Z"
+    },
+    {
+      "runId": "20260712T185046Z-45-T45.2",
+      "taskId": "45.T45.2",
+      "status": "done",
+      "startedAt": "2026-07-12T18:50:46.565Z",
+      "owner": "uc-4502",
+      "leaseExpiresAt": "2026-07-12T22:50:46.565Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T19:15:20.037Z"
+    },
+    {
+      "runId": "20260712T185046Z-05-T5.18",
+      "taskId": "05.T5.18",
+      "status": "in_progress",
+      "startedAt": "2026-07-12T18:50:46.760Z",
+      "owner": "uc-0518",
+      "leaseExpiresAt": "2026-07-12T22:50:46.760Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T16:58:21.878Z",
-    "updatedAt": "2026-07-12T16:58:21.878Z",
+    "createdAt": "2026-07-12T18:48:02.760Z",
+    "updatedAt": "2026-07-12T18:48:02.760Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
