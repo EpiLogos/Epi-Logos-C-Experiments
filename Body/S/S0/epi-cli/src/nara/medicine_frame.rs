@@ -1053,6 +1053,82 @@ mod canonical_tests {
     }
 
     #[test]
+    fn canonical_element_id_round_trip() {
+        // Tranche 05.T5.16 named invariant: canonical → legacy → canonical ==
+        // identity for every Rust-side conversion helper. (The C-side helpers
+        // — m4_h legacy and the m2-3 branch bijection — are covered by the
+        // epi-lib `test_m_canonical` suite; this is the Rust mirror.)
+        //
+        // medicine.rs legacy (== m2.h tattva Element_Id) pair:
+        for canonical in [0u8, 1, 2, 3, 4] {
+            let legacy = canonical_to_medicine_rs_legacy(canonical);
+            assert_ne!(legacy, 0xFF, "canonical {canonical} must have a legacy id");
+            assert_eq!(
+                canonical_from_medicine_rs_legacy(legacy),
+                canonical,
+                "canonical → medicine-legacy → canonical failed for {canonical}"
+            );
+        }
+        // ...and the legacy → canonical → legacy direction:
+        for legacy in 0u8..5 {
+            let canonical = canonical_from_medicine_rs_legacy(legacy);
+            assert_eq!(canonical_to_medicine_rs_legacy(canonical), legacy);
+        }
+        // The honest-name alias participates in the identical round trip.
+        for legacy in 0u8..5 {
+            assert_eq!(
+                canonical_from_m2_tattva(canonical_to_medicine_rs_legacy(
+                    canonical_from_m2_tattva(legacy)
+                )),
+                canonical_from_m2_tattva(legacy)
+            );
+        }
+        // Salt (5) has no medicine-legacy counterpart: invalid sentinel, and
+        // the sentinel never round-trips into a valid canonical id.
+        assert_eq!(canonical_to_medicine_rs_legacy(5), 0xFF);
+        assert_eq!(canonical_from_medicine_rs_legacy(0xFF), 0xFF);
+        // One-way converters (no legacy inverse) still land inside the
+        // canonical-B enum for their whole domain: nucleotide + m3 decan.
+        for nuc in 0u8..4 {
+            assert!(canonical_from_nucleotide(nuc) <= 5);
+        }
+        for decan_elem in 0u8..5 {
+            assert!(canonical_from_m3_decan_element(decan_elem) <= 5);
+        }
+    }
+
+    #[test]
+    fn body_zones_for_elem_sig_bit_layout() {
+        // Tranche 05.T5.16 named invariant: `body_zones_for_elem_sig` extracts
+        // the chakra from bits 5:3 (m2.h ELEM_SIG_GET_CHAKRA), NOT the old
+        // buggy bits 4:2 straddle. For every packed signature the returned
+        // zones must be exactly the packed chakra's zones.
+        for elem in 0u8..8 {
+            for chakra in 0u8..8 {
+                for phase in 0u8..4 {
+                    let sig = elem_sig_pack(elem, chakra, phase);
+                    assert_eq!(
+                        body_zones_for_elem_sig(sig),
+                        body_zones_for_chakra(chakra),
+                        "elem={elem} chakra={chakra} phase={phase} sig={sig:#010b}"
+                    );
+                }
+            }
+        }
+        // Regression witness: a signature where the old `(sig >> 2) & 0b111`
+        // extraction disagrees with the canonical bit layout. Fire(4) packed
+        // with Anahata(4): old code read chakra 1 (Muladhara) — wrong zones.
+        let sig = elem_sig_pack(4, 4, 0);
+        let old_buggy_chakra = (sig >> 2) & 0b111;
+        assert_ne!(old_buggy_chakra, 4);
+        assert_eq!(body_zones_for_elem_sig(sig), body_zones_for_chakra(4));
+        assert_ne!(
+            body_zones_for_elem_sig(sig),
+            body_zones_for_chakra(old_buggy_chakra)
+        );
+    }
+
+    #[test]
     fn chakra_lookup_is_invariant_under_migration() {
         // Pre-migration ELEMENT_CHAKRA was legacy-indexed: [5,4,3,2,1].
         // After re-keying, converting the legacy id then indexing the canonical
