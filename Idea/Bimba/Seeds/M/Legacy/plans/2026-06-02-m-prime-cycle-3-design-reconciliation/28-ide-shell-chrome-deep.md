@@ -37,7 +37,7 @@ Extend existing —
 - `bridge-gate.tsx` gains nine-id readiness taxonomy + per-binding inline rendering (28.11).
 - `frontend-module.ts` registers four additional `registerIntentTarget` calls (28.14).
 - New `src/browser/{activity-bar, acr, backend-studio, smart-connections, services}/*` sub-folders host the closing first-builds (activity-bar contribution 28.2, ACR T8 contents 28.5, Backend Studio 28.13, Smart-Connections stub 28.12, PrivacyDropFeed service 28.16).
-- `Body/M/epi-theia/extensions/ide-shell-m0-m5/CHROME-CONTRACT.md` lands at 28.1 as the single source-of-truth for the chrome partition.
+- `Body/M/epi-theia/extensions/ide-shell-m0-m5/CHROME-CONTRACT.md` lands at 28.1 as the single source-of-truth for the chrome partition. *(RERUN 2026-07-12: the carrier equivalent is `Body/M/pratibimba-app/CHROME-CONTRACT.md` + validator `src/chromeContract.test.ts` — the frozen Theia file stays read-only lineage; carrier tranches cite the carrier contract's section numbers.)*
 
 ## Surface Contracts
 

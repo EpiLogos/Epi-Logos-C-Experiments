@@ -8,6 +8,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md` — Tranche 28.1 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Landed (rerun, 2026-07-12): carrier contract at `Body/M/pratibimba-app/CHROME-CONTRACT.md` (§1–§9 remapped onto the live flexlayout registry; DR-WC-IS-1/2 RESOLVED in §5); validator `Body/M/pratibimba-app/src/chromeContract.test.ts` (vitest; live registry via `OMNIPANEL_TABS` import + App.tsx AST walk ⇄ contract table, both directions + pending-flip ratchet + nine-id §6 check). 28.3+ tranches cite the CARRIER contract by section number.
    Depends on Track 00 Tranche 3.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
