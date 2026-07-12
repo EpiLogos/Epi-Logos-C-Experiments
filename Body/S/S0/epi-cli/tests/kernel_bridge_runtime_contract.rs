@@ -613,40 +613,59 @@ fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
     assert!(err.contains("codon space 0..63"), "{err}");
 }
 
+/// INVERSION of the retired `..._uses_parashakti_deep_dataset` contract. That
+/// test asserted the adapter "should resolve without Neo4j" by reading the
+/// static JSON seed — it encoded the exact violation this work eliminates
+/// (Architect law: static datasets under Idea/Bimba/Map/datasets are one-way
+/// Neo4j seeds, never serving truth). The decan chain now resolves bridge-side
+/// from the KERNEL LUTs (offline-safe kernel law), and NO dataset file path may
+/// appear on the wire. (Live asma/maqam graph sourcing is proven separately in
+/// `tests/parashakti_correspondences_live_graph.rs`.)
 #[tokio::test]
-async fn s2_parashakti_correspondences_uses_parashakti_deep_dataset() {
+async fn s2_parashakti_correspondences_decan_chain_is_kernel_lut_sourced() {
     let artifact =
         dispatch_graph_method("s2.parashaktiCorrespondences", &json!({ "address72": 17 }))
             .await
-            .expect("parashakti-deep correspondence adapter should resolve without Neo4j");
+            .expect("parashakti adapter resolves its kernel decan chain without a dataset file");
 
     assert_eq!(artifact["address72"], 17);
     assert_eq!(artifact["provenanceHandle"]["source"], "s2");
-    assert!(artifact["provenanceHandle"]["handle"]
-        .as_str()
-        .expect("handle string")
-        .contains("parashakti-deep/address72/17"));
-    assert!(artifact["decanFace"]["coordinate"]
-        .as_str()
-        .expect("decan coordinate")
-        .starts_with("#2-3"));
-    assert!(artifact["decanFace"]["dataset"]
-        .as_str()
-        .expect("decan dataset")
-        .contains("parashakti-deep/nodes-full-detail.json"));
-    assert!(artifact["sacredSonic"]["coordinate"]
-        .as_str()
-        .expect("sonic coordinate")
-        .starts_with("#2-4"));
-    assert!(artifact["planetaryChakral"]["planetaryMode"].is_string());
+    // address 17 → decan 8 = Gemini Decan 3 in ZODIAC_DECAN_TABLE (kernel law).
+    assert_eq!(artifact["decanFace"]["zodiacSign"], "Gemini");
+    assert_eq!(artifact["decanFace"]["planetaryRuler"], "Sun");
+    assert_eq!(artifact["decanFace"]["element"], "Air");
+    assert_eq!(artifact["decanFace"]["tarotCard"], "10 of Swords");
+    assert_eq!(artifact["decanFace"]["coordinate"], "M2-3-3-0-2");
+    assert_eq!(artifact["decanFace"]["provenance"], "kernel-lut");
+    // graphUnavailable is always present as an explicit provenance marker.
+    assert!(artifact["graphUnavailable"].is_boolean());
     assert_eq!(
         artifact["planetaryChakral"]["earthObserverHandle"],
         artifact["earthObserverHandle"]
     );
-    assert!(artifact["earthObserverHandle"]
-        .as_str()
-        .expect("earth observer handle")
-        .contains("address72/17"));
+    // no dataset file path may ever be served
+    assert!(!json_contains_string(&artifact, "nodes-full-detail.json"));
+    assert!(!json_contains_string(&artifact, "Idea/Bimba/Map/datasets"));
+    assert!(!json_contains_string(&artifact, "filteredProps"));
+}
+
+/// The adapter source itself must not reference the parashakti-deep dataset file
+/// or the deleted `read_parashakti_deep_nodes` reader — the JSON seam is gone.
+#[test]
+fn s2_parashakti_adapter_source_never_references_dataset_file() {
+    let source = include_str!("../src/gate/graph.rs");
+    assert!(
+        !source.contains("nodes-full-detail.json"),
+        "gate/graph.rs still references the parashakti-deep dataset file"
+    );
+    assert!(
+        !source.contains("read_parashakti_deep_nodes"),
+        "gate/graph.rs still carries the deleted dataset reader"
+    );
+    assert!(
+        !source.contains("datasets/parashakti-deep"),
+        "gate/graph.rs still points at the datasets/ tree"
+    );
 }
 
 #[test]
