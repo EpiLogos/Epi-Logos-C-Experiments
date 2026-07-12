@@ -20,8 +20,9 @@ The skill is a reader. Every number and name it speaks already exists in a Medic
 | Element intensities, dominant, deficient, chakra state, triage vector | `balance()` (`Body/S/S0/epi-cli/src/nara/medicine_cast.rs`) | `ElementalBalance` |
 | Prescription / materia for the active configuration | `prescribe(context, is_shadow)`, `materia()` | `MateriaRecord` |
 | Active chakra state | `chakra()` | `ChakraState` |
-| Active decan → zodiac sign, ruling planet, decan element, body part, herb, tarot correspondence | `ZODIAC_DECAN_TABLE[active_decan]` (`medicine_frame.rs`) via `zodiac_decan(idx)` | `ZodiacDecanEntry` |
-| Live planetary degrees (canonical mod-10, Sun[0]–Pluto[9]) | `M4_Temporal_Now.planet_degrees[10]` | per-planet f32 |
+| Active decan → zodiac sign, ruling planet, decan element, body part, herb | `ZODIAC_DECAN_TABLE[active_decan]` (`medicine_frame.rs:104`) via `zodiac_decan(idx)` | `ZodiacDecanEntry` (fields: `sign`, `decan_in_sign`, `ruling_planet`, `element`, `mode`, `ananda_harmonic`, `body_part`, `herb` — **no `tarot` field**) |
+| Decan → tarot (pip) correspondence | Golden-Dawn `PIP_DECAN_MAP` (`oracle_identity.rs:225`), reached by inverting `pip_decan_lookup(suit, value)` | `PipDecanEntry { zodiac_sign, decan, ruling_planet }` — the tarot pip is **not** a decan-table field; a direct `decan → pip` accessor is a **pending convenience seam** (the inverse table is fully live) |
+| Live planetary degrees (canonical mod-10, Sun[0]–Pluto[9]) | `M4_Temporal_Now.planet_degrees[10]` (`m4.h:270`) / kairos-live `planet_degrees_from_result` (`kairos.rs:341`) | per-planet degree — `u16` in the C `M4_Temporal_Now`, `f32` from the Rust kairos-live seam |
 | Active body zones for the current element signature | `body_zones_for_elem_sig(elem_sig)` | `&[&str]` |
 | Klein weighting (prospective/retrospective) + primary lens-square | [[Janus]] (`janus-doorway.ts`, §4.3) | `c_3_klein_weighting` |
 | Live spread state (one per active spread) | [[Janus]] over the `OracleSpreadPosition` table (§4.1) | per-position `live_state` |
@@ -39,13 +40,15 @@ Today's prospective/retrospective weighting from [[Janus]], the driving aspect t
 
 > `<X>%` prospective / `<Y>%` retrospective. `<driving aspect named>`. `<primary lens-square — Square A / B / C — noted>`.
 
+**Honest-pending seam.** The weighting reaches the briefing only through the `c_3_klein_weighting` frontmatter key on the session NOW. When that key is absent or malformed — which it currently is at runtime: Khora session-init does not yet stamp it (the NOW template declares a `0.5 / 0.5` default per 5.19, but session-init does not write it; Track 11/12 seam) — Section 1 reads `pending-weighting` and omits the percentages. **Never fabricate a split.** Janus's §4.3 computation enters the briefing only via this frontmatter key, never by recompute here.
+
 A heavy retrospective tilt licenses the Hegel/Aion/Whitehead-perishing band in Section 3; a heavy prospective tilt licenses the concrescent-desire / eternal-objects-ingression band (§4.3 → §6.5).
 
 ### Section 2 — Cross-system bridge (3–4 lines)
 
 The bridge across M0→M1→M2 made concrete for today:
 
-- Active decan with its zodiac sign, **ruling planet**, and **tarot correspondence** from `ZODIAC_DECAN_TABLE[36]`.
+- Active decan with its zodiac sign, **ruling planet**, decan element, body part and herb from `ZODIAC_DECAN_TABLE[36]` (`ZodiacDecanEntry`), and its **tarot (pip) correspondence** from the Golden-Dawn `PIP_DECAN_MAP` (`oracle_identity.rs`). The decan table itself carries **no** tarot field, so the pip correspondence is the one cross-table join the bridge performs — invert `pip_decan_lookup(suit, value)` to find the (suit, value) whose `PipDecanEntry` matches the active `(sign, decan)`. A direct `decan → pip` accessor is a pending convenience seam, not a blocker: the mapping is already live in `PIP_DECAN_MAP`.
 - **Dominant** and **deficient** element from `balance()`.
 - **Active chakra** and **body zones** from `body_zones_for_elem_sig`.
 - Any **kairos windows** opening or closing within ±24h from [[Mercurius]].
@@ -106,7 +109,7 @@ When the briefing is composed, inscribe it via `khora_write_highlighted_inscript
 
 ```
 khora_write_highlighted_inscription({
-  path: "<current day's NOW.md>",          // Idea/Empty/Present/{DD-MM-YYYY}/{sessionId}/now.md
+  path: "<current day's NOW.md>",          // Idea/Empty/Present/{MM-DD-YYYY}/{sessionId}/now.md — month-first, flat (CHARTER, Architect-ratified 2026-07-02)
   category: "retrospective-surfacing",      // the canonical highlight category for this briefing
   position: "top",                          // top of the current day's surface
   content: "<the five composed sections>",
