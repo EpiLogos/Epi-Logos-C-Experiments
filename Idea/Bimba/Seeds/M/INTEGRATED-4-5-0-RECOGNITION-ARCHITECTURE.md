@@ -374,7 +374,7 @@ Per M4'-SPEC §10 (psychoid cymatic field): the foreground IS the live Nara fiel
 - `audio_octet[8]` → drives the 8-band cymatic emitters (windows onto Vimarśa, never local-synthesised)
 
 **Geometry:**
-- A psychoid torus distinct from M1's K² — at the *personal scale*, a smaller-radius torus with Hopf-linked secondary torus (the Q_identity/Q_transit pair) intersecting at the trajectory point. The M4 personal field is the Cl(4,2) algebra rendered at *human* scale.
+- The **dipyramid + Hopf-linked tori** scaffold (canonical terminology per DR-IG-6; "psychoid torus" survives only as colloquial UX prose for one of the Hopf-linked tori threading the dipyramid), distinct from M1's K² — at the *personal scale*, a smaller-radius torus with Hopf-linked secondary torus (the Q_identity/Q_transit pair) intersecting at the trajectory point. The M4 personal field is the Cl(4,2) algebra rendered at *human* scale.
 - The cymatic standing-wave pattern lives **on the field's surface**, not as a separate object. The 8×8 = 64 nodal pattern is the texture parameterisation.
 - The field is **rendered protected-local only**: the plugin emits `bodyRendered: false` per `nara-surface.ts:337`; only the deterministic lower-fidelity Option-S signature crosses unless `PsychoidFieldReadiness::FullPhysicsRunning` AND consent gate allows.
 

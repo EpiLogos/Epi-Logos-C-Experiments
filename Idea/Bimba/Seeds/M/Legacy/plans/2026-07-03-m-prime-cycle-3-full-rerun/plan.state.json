@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T00:58:31.792Z",
+  "updatedAt": "2026-07-12T01:00:15.055Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4479,16 +4479,30 @@
       "worktree": null
     },
     "16.T16.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:00:15.042Z",
+      "claimedAt": "2026-07-12T00:58:32.276Z",
+      "completedAt": "2026-07-12T01:00:15.042Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:00:15.042Z",
+          "text": "CCT-3 closed: the DR-IG-6 terminology sweep was largely landed by tranches 5.12 + 8.7 (corrected 6+6=12 P/P-prime dipyramid geometry - 2 apex poles P5/P5-prime, 4 base P1-P4, 4 interleaved inverted-base P1-prime..P4-prime, central axis-point P0/P0-prime - present across M4-ARCHITECTURE and the psychoid-cymatic-field-engine spec; no live 6-vertices wrong-count attributions anywhere). ONE live unmarked instance remained - the exact INTEGRATED-4-5-0 line 377 that the Phase-B verification report Finding 1.i flagged - patched to adopt the canonical dipyramid + Hopf-linked tori naming with psychoid-torus explicitly downgraded to colloquial UX prose for one of the Hopf-linked tori threading the dipyramid. All three verification greps clean after the patch.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.3 (track-16 W class gate PASS) + the three CCT-3 verification greps: no live wrong-count dipyramid attributions (all hits are verification-line text or the correction record), psychoid-torus instances now colloquial-marked only, corrected axis-point framing present across M4-ARCHITECTURE + psychoid-cymatic-field-engine (42 corrected-framing hits)",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T00:58:32.276Z",
+      "runId": "20260712T005832Z-16-T16.3",
       "worktree": null
     },
     "16.T16.4": {
@@ -12998,6 +13012,16 @@
       "leaseExpiresAt": "2026-07-12T02:56:39.962Z",
       "worktree": null,
       "completedAt": "2026-07-12T00:58:31.779Z"
+    },
+    {
+      "runId": "20260712T005832Z-16-T16.3",
+      "taskId": "16.T16.3",
+      "status": "done",
+      "startedAt": "2026-07-12T00:58:32.276Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T02:58:32.276Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:00:15.042Z"
     }
   ],
   "activeRoute": {
