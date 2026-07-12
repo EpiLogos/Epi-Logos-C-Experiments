@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:12:08.993Z",
+  "updatedAt": "2026-07-12T01:13:01.765Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4646,16 +4646,31 @@
       "worktree": null
     },
     "16.T16.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:13:01.751Z",
+      "claimedAt": "2026-07-12T01:12:09.365Z",
+      "completedAt": "2026-07-12T01:13:01.751Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:13:01.751Z",
+          "text": "CCT-9 closed jointly with Track 18 exactly as the spec directs (consolidates into Track 18 - close jointly; verification: see Tranche 18 acceptance gate). Track 18 stands COMPLETE in the ledger - all eleven tranches done with their own verified receipts - and the typed kernel-bridge JSON edge is the live law this whole session has been running through: every W-class close here exercises the live-wire harness whose strict Zod parse of every profile.update/m123.chime frame + PROJECTION_MANIFEST field-coverage (covered / justified-EXEMPT / DECLARED_NOT_EMITTED, uncovered FAILS) IS the typed-edge acceptance gate, re-passed fresh in this close via verify-tranche. The eight consolidated additions (10.2 + 10.10 + 10.M0..10.IG + CCT-5 + CCT-6 + DR-KB-2) each carry their own closed receipts in the ledger (CCT-5 and CCT-6 closed earlier this session with fresh runs).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.9 (track-16 W class gate PASS incl live-wire, whose manifest field-coverage IS the typed-edge acceptance running fresh) + track-18 ledger: all eleven tranches 18.T18.1..18.T18.11 done with W receipts",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts",
+              "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:12:09.365Z",
+      "runId": "20260712T011209Z-16-T16.9",
       "worktree": null
     },
     "16.T16.10": {
@@ -13147,6 +13162,16 @@
       "leaseExpiresAt": "2026-07-12T03:08:06.533Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:12:08.980Z"
+    },
+    {
+      "runId": "20260712T011209Z-16-T16.9",
+      "taskId": "16.T16.9",
+      "status": "done",
+      "startedAt": "2026-07-12T01:12:09.365Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T02:12:09.365Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:13:01.751Z"
     }
   ],
   "activeRoute": {
