@@ -212,25 +212,17 @@ impl WalkType {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Hamilton product of two quaternions [w, x, y, z].
+/// CCT-8: delegates to the ONE Cl(4,2) primitive (portal-core) — the
+/// 16.T16.8 audit caught this as a parallel implementation; the local
+/// tests below stay as parity pins on the delegation.
 pub fn quat_mul(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
-    let (aw, ax, ay, az) = (a[0], a[1], a[2], a[3]);
-    let (bw, bx, by, bz) = (b[0], b[1], b[2], b[3]);
-    [
-        aw * bw - ax * bx - ay * by - az * bz,
-        aw * bx + ax * bw + ay * bz - az * by,
-        aw * by - ax * bz + ay * bw + az * bx,
-        aw * bz + ax * by - ay * bx + az * bw,
-    ]
+    portal_core::quat_mul(a, b)
 }
 
 /// Normalize a quaternion to unit length. Returns identity if magnitude is near zero.
+/// CCT-8: delegates to the ONE Cl(4,2) primitive (portal-core).
 pub fn quat_normalize(q: [f32; 4]) -> [f32; 4] {
-    let mag = (q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]).sqrt();
-    if mag < f32::EPSILON {
-        [1.0, 0.0, 0.0, 0.0]
-    } else {
-        [q[0] / mag, q[1] / mag, q[2] / mag, q[3] / mag]
-    }
+    portal_core::quat_normalize(q)
 }
 
 /// Derive walk mode from quaternion: argmax of |w|, |x|, |y|, |z|.

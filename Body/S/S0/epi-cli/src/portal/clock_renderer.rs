@@ -73,21 +73,10 @@ fn sign_to_element(sign: u8) -> u8 {
 }
 
 /// Hamilton product of two quaternions, normalized to unit length.
+/// CCT-8: composed from the ONE Cl(4,2) primitive (portal-core), never a
+/// third implementation.
 pub fn quat_mul_norm(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
-    let (aw, ax, ay, az) = (a[0], a[1], a[2], a[3]);
-    let (bw, bx, by, bz) = (b[0], b[1], b[2], b[3]);
-    let r = [
-        aw * bw - ax * bx - ay * by - az * bz,
-        aw * bx + ax * bw + ay * bz - az * by,
-        aw * by - ax * bz + ay * bw + az * bx,
-        aw * bz + ax * by - ay * bx + az * bw,
-    ];
-    let mag = (r[0] * r[0] + r[1] * r[1] + r[2] * r[2] + r[3] * r[3]).sqrt();
-    if mag < 1e-10 {
-        [1.0, 0.0, 0.0, 0.0]
-    } else {
-        [r[0] / mag, r[1] / mag, r[2] / mag, r[3] / mag]
-    }
+    portal_core::quat_normalize(portal_core::quat_mul(a, b))
 }
 
 /// Build a quaternion from axis-angle (axis must be unit length, angle in radians).
