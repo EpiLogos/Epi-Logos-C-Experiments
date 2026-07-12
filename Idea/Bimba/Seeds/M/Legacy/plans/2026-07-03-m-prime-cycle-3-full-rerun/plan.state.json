@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T02:20:56.270Z",
+  "updatedAt": "2026-07-12T09:22:30.597Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1974,16 +1974,55 @@
       "worktree": null
     },
     "05.T5.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T09:22:30.373Z",
+      "claimedAt": "2026-07-12T08:42:38.453Z",
+      "completedAt": "2026-07-12T09:22:30.373Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T09:10:20.187Z",
+          "text": "05.T5.11 landed: portal-core src/nara NaraArtifactEnvelope preserves oracle_frame_ref/symbolic_protein_ref/vak_address/deck_context(macro_deck_ref,session_deck_ref,deck_order_hash,entropy_mode)/sequence_mode/packet_refs/graph_provenance/review_state with protected interpretation body in a separate serde(skip) local file, project_scalar_refs = Tarot<->I-Ching mutual projectability gated on m3-codon provenance body-free, reading_cardinality/validate enforce DR-VAK-1 positions authority (labels decorative), apply_pattern_packet_chain takes NO identity/evidence param (Q_activity via perturb_q_activity + trajectory only) proven immutable against PersonalIdentityProfile + run_m4_0_0_birthdate_encoding snapshots incl. Night-prime inverse-pass and CP4.4/CP4.5 depth fixtures; gateway-contract nara_pattern.rs types the live route_nara_session_close PatternPacket JSON per Track 16/18 typed-edge law with 5.11 refs typed-optional + assert_pattern_packet_identity_safe refusing q_identity/M4-0-evidence payloads; carrier m4NaraOracleEnvelope read-law + OraclePane envelope strip normalize snake_case Rust edge and camelCase frozen-TS vocabulary with pending-envelope fallback; honest gaps owned: S3 close seam and src-tauri oracle_cast do not stamp yet, no Zod change until the envelope crosses the wire.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test nara_artifact_envelope (10/0); cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml (86/0 incl. 4 new nara_pattern_packet_contract); npx vitest run src/panes/m4NaraOracleEnvelope.test.ts src/panes/OraclePane.test.tsx from Body/M/pratibimba-app (16/0); npx tsc --noEmit clean",
+            "exitCode": 0,
+            "testsPassed": 112,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/nara/mod.rs",
+              "Body/S/S0/portal-core/tests/nara_artifact_envelope.rs",
+              "Body/S/S3/gateway-contract/src/nara_pattern.rs",
+              "Body/S/S3/gateway-contract/tests/nara_pattern_packet_contract.rs",
+              "Body/M/pratibimba-app/src/panes/m4NaraOracleEnvelope.ts",
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx"
+            ],
+            "tokenUsage": {
+              "input": 125000,
+              "output": 33000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T09:22:30.373Z",
+          "text": "NaraArtifactEnvelope preserves all 5.11 refs (oracle_frame_ref, symbolic_protein_ref, vak_address, deck_context incl. deck_order_hash/entropy_mode, sequence_mode, provenance, review state) with the protected interpretation body serde(skip) local-only; project_scalar_refs gives Tarot/I-Ching mutual projectability gated on m3-codon provenance body-free; reading cardinality authority = vak_address.cp[]/reading_frame.positions[] per DR-VAK-1; apply_pattern_packet_chain takes no identity/evidence param — Q_identity/M4-0 immutability proven against birthdate-encoding snapshots; typed NaraPatternPacket/MahamayaTranscription over the live route_nara_session_close JSON; OraclePane envelope strip with pending-envelope fallback. Spec-ahead seams named: S3 close seam + src-tauri oracle_cast do not stamp the new fields yet. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.11 15.T15.11 --owner fable-c-verifier (fresh PASS on repaired tree: portal-core cargo 351 PASS incl. tests/nara_artifact_envelope.rs 10/10; gateway-contract 86 PASS incl. nara_pattern; app-test vitest 392 PASS incl. m4NaraOracleEnvelope 16; app-ui-flow 18 PASS; honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 392,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/nara/mod.rs",
+              "Body/S/S3/gateway-contract/src/nara_pattern.rs",
+              "Body/M/pratibimba-app/src/panes/m4NaraOracleEnvelope.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.11.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-5",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T09:10:20.187Z",
+      "runId": "20260712T084238Z-05-T5.11",
       "worktree": null
     },
     "05.T5.12": {
@@ -4474,16 +4513,55 @@
       "worktree": null
     },
     "15.T15.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T09:22:30.583Z",
+      "claimedAt": "2026-07-12T08:42:38.757Z",
+      "completedAt": "2026-07-12T09:22:30.583Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T08:54:02.547Z",
+          "text": "Sorted face-gap per DR-FACE-7 (data contract types from the landed 27.T27.0 run-model type-graph, so not spine-gap; no genealogy folding existed, so not carried-by-integration): dispatch genealogy landed as a first-class primitive — one flat DispatchGenealogyRecord dataset (provenance/timing/capability-gate) with pure structural fold to RunTreeNode trees and pure temporal fold to DispatchStreamEvent rows sharing the SAME node ids, plus reusable DispatchGenealogyTree/DispatchGenealogyStream foldings and the synthetic Pi->Anima->Moirai fixture proof (19 vitest green: consistent ids across both foldings, nesting, time-ordering, selection, deep-link descriptors to omniEvidence/backendStudio per CHROME-CONTRACT s2); omniDispatchTrace stays pending-fold — 27.3 owns the tab body + live track-12 wire->record feed, 27.4 the Tools composition, 28.14 the intent routing; NOW: Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md",
+          "receipt": {
+            "command": "npx vitest run src/panes/omni/dispatchGenealogy.test.ts src/panes/omni/dispatchGenealogyFoldings.test.tsx (2 files, 19 passed/0 failed) + npx tsc --noEmit (exit 0) + pnpm build (exit 0), all from Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 19,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogy.ts",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyTree.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyStream.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogy.fixture.ts",
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogyFoldings.test.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+            ],
+            "tokenUsage": {
+              "input": 95000,
+              "output": 15000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T09:22:30.583Z",
+          "text": "Dispatch genealogy landed as a first-class primitive (face-gap fate per the DR-FACE-7 register row): one flat dispatch-record dataset folds pure into the Trace tree and the time-ordered Stream with identical node ids, deep-link descriptors to omniEvidence/backendStudio, synthetic Pi-Anima-Moirai fixture as acceptance; data contract typed from the landed 27.T27.0 run-model type-graph. Honest remainder named: no dispatch events reach the app ring today (wire-to-record producer is track-12 seam) and the Dispatch tab body mount stays 27.3 lane — mount diff recorded in the 15 write-back. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.11 15.T15.11 --owner fable-c-verifier (UF proof: app-ui-flow playwright 18 PASS via spawned real gateway + app-smoke 1 PASS; app-test vitest 392 PASS incl. dispatchGenealogy tree/stream folding suites 19; app-typecheck/app-build PASS)",
+            "exitCode": 0,
+            "testsPassed": 392,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogy.ts",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyTree.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyStream.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.11.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-7",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T08:54:02.547Z",
+      "runId": "20260712T084238Z-15-T15.11",
       "worktree": null
     },
     "15.T15.12": {
@@ -13409,17 +13487,37 @@
       "leaseExpiresAt": "2026-07-12T04:07:03.967Z",
       "worktree": null,
       "completedAt": "2026-07-12T02:18:23.534Z"
+    },
+    {
+      "runId": "20260712T084238Z-05-T5.11",
+      "taskId": "05.T5.11",
+      "status": "review",
+      "startedAt": "2026-07-12T08:42:38.453Z",
+      "owner": "thread-5",
+      "leaseExpiresAt": "2026-07-12T11:42:38.453Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T09:10:20.187Z"
+    },
+    {
+      "runId": "20260712T084238Z-15-T15.11",
+      "taskId": "15.T15.11",
+      "status": "review",
+      "startedAt": "2026-07-12T08:42:38.757Z",
+      "owner": "thread-7",
+      "leaseExpiresAt": "2026-07-12T11:42:38.757Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T08:54:02.547Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T01:34:31.284Z",
-    "updatedAt": "2026-07-12T01:34:31.284Z",
+    "createdAt": "2026-07-12T08:41:07.470Z",
+    "updatedAt": "2026-07-12T08:41:07.470Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "05.T5.1",
-      "05.T5.10"
+      "05.T5.11",
+      "05.T5.12"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -13427,8 +13525,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "05.T5.1": "in-session",
-      "05.T5.10": "in-session"
+      "05.T5.11": "in-session",
+      "05.T5.12": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

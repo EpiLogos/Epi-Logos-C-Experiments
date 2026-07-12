@@ -21,6 +21,8 @@
 //! * `context` — contextual-slice surface (`ConversationSliceHandle`, redaction policies).
 //! * `spacetime` / `being_pattern` — SpacetimeDB presence-layer + BeingPattern carriers.
 //! * `kernel_bridge` — S0 kernel bridge packet/projection contract.
+//! * `nara_pattern` — typed PatternPacket edge for the nara-session close seam
+//!   (05.T5.11 `mahamaya_transcription` preserved refs + identity-safety law).
 //! * `s1_vault` / `graphiti` / `temporal` / `privacy` / `portal_events` / `release` — per-domain method contracts.
 //! * `aletheia` / `verifier` — S4-5' crystallisation and `s0'.verifier.*` contracts.
 //! * Crate-root constants: `S0_PRIME_VERIFIER_METHODS`, `S2_GRAPH_GATEWAY_EXPOSED_METHODS`,
@@ -39,6 +41,7 @@ mod dispatch_plan;
 mod graphiti;
 mod harness;
 mod kernel_bridge;
+mod nara_pattern;
 mod portal_events;
 mod privacy;
 mod protocol;
@@ -57,6 +60,7 @@ pub use dispatch_plan::*;
 pub use graphiti::*;
 pub use harness::*;
 pub use kernel_bridge::*;
+pub use nara_pattern::*;
 pub use portal_events::*;
 pub use privacy::*;
 pub use protocol::*;

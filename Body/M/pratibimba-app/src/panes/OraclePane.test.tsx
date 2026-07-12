@@ -119,6 +119,66 @@ describe('OraclePane', () => {
         expect(screen.getByTestId('oracle-artifact-resonance').textContent).toBe('0.931 Shadow');
     });
 
+    it('renders the §5.11 envelope strip from a stamped deposit (05.T5.11)', async () => {
+        useSessionStore.setState({ dayNow: '12-07-2026' });
+        invokeCommand.mockResolvedValue({
+            artifactPath: 'Empty/Present/12-07-2026/oracle-120000-tarot.md',
+            output: 'The Magician',
+            system: 'tarot',
+            envelope: {
+                system: 'tarot',
+                cp_position_refs: ['CP4.4', 'CP4.5'],
+                vak_address: { cp: 'CP4.4,CP4.5', cs: { code: 'CS0', direction: "Night'" } },
+                spread_label: 'sixfold-ql-traverse',
+                oracle_frame_ref: 'oracle-frame-four-five',
+                deck_context: {
+                    macro_deck_ref: 'protected://nara/deck/macro-inhabited-rws',
+                    deck_order_hash: 'blake3:deck-order-fixture',
+                    entropy_mode: 'seeded_replay'
+                },
+                review_state: 'live-only',
+                scalar_refs: [
+                    { ref_kind: 'm3-codon', scalar_ref: 'codon://ATG', source_handle: 'm3://bridge' }
+                ]
+            }
+        });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'depth?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+
+        await screen.findByTestId('oracle-result');
+        const strip = screen.getByTestId('oracle-envelope');
+        expect(strip.dataset.state).toBe('resolved');
+        // DR-VAK-1: positions authority (2), never the sixfold label.
+        expect(screen.getByTestId('oracle-envelope-cardinality').textContent).toContain('2 positions');
+        expect(screen.getByTestId('oracle-envelope-cardinality').textContent).toContain('CP4.4 CP4.5');
+        expect(screen.getByTestId('oracle-envelope-direction').textContent).toBe("Night'");
+        expect(screen.getByTestId('oracle-envelope-deck').textContent).toContain('blake3:deck-order-fixture');
+        expect(screen.getByTestId('oracle-envelope-frame').textContent).toBe('oracle-frame-four-five');
+        expect(screen.getByTestId('oracle-envelope-review').textContent).toBe('live-only');
+        // M3 provenance present → mutual projectability affordance.
+        expect(screen.getByTestId('oracle-envelope-projectable').textContent).toContain('tarot');
+        expect(screen.getByTestId('oracle-envelope-projectable').textContent).toContain('i-ching');
+    });
+
+    it('renders the pending-envelope fallback on an unstamped deposit (05.T5.11)', async () => {
+        useSessionStore.setState({ dayNow: '12-07-2026' });
+        invokeCommand.mockResolvedValue({
+            artifactPath: 'Empty/Present/12-07-2026/oracle-120000-tarot.md',
+            output: 'The Star',
+            system: 'tarot'
+        });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'what now?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+
+        await screen.findByTestId('oracle-result');
+        const strip = screen.getByTestId('oracle-envelope');
+        expect(strip.dataset.state).toBe('pending-envelope');
+        expect(strip.textContent).toBe('pending-envelope');
+        expect(screen.queryByTestId('oracle-envelope-projectable')).toBeNull();
+    });
+
     it('surfaces cast errors honestly (hygiene refusals included)', async () => {
         useSessionStore.setState({ dayNow: '02-07-2026' });
         invokeCommand.mockRejectedValue(new Error('Excessive frequency: 6 casts today (max 6)'));

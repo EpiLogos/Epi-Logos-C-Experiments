@@ -5,7 +5,10 @@
  *   Requires an anchored day (casts are lived events, not floating queries).
  *   Each deposited artifact renders its §6.5 resonance indicator (numeric +
  *   Major/Minor/Shadow, pending-resonance fallback) via M4NaraResonance
- *   (05.T5.1).
+ *   (05.T5.1) and its §5.11 envelope strip (oracle-frame/protein refs, deck
+ *   context, DR-VAK-1 cardinality, review state, tarot↔i-ching
+ *   projectability; pending-envelope fallback) via m4NaraOracleEnvelope
+ *   (05.T5.11).
  */
 
 import { useState } from 'react';
@@ -15,6 +18,12 @@ import { useSessionStore, useTickStore } from '../state/stores';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge';
 import { NaraResonanceChip } from './M4NaraResonanceSurface';
 import { artifactResonanceIndicator } from './m4NaraResonance';
+import {
+    normalizeOracleEnvelopeStamp,
+    projectableSystems,
+    readingCardinality,
+    type NaraOracleEnvelopeIndicator
+} from './m4NaraOracleEnvelope';
 
 interface CastResult {
     artifactPath: string;
@@ -26,6 +35,54 @@ interface CastResult {
      * pending-resonance fallback, never a fabricated reading).
      */
     resonance?: unknown;
+    /**
+     * Optional §5.11 envelope stamp (05.T5.11 spec-ahead: the src-tauri
+     * deposition seam does not stamp it yet — absent renders the
+     * pending-envelope fallback, never fabricated refs).
+     */
+    envelope?: unknown;
+}
+
+/**
+ * §5.11 envelope strip: preserved refs rendered stamp-first. Cardinality
+ * comes from the positions authority (DR-VAK-1) — the spread label never
+ * determines it.
+ */
+function OracleEnvelopeStrip({ indicator }: { indicator: NaraOracleEnvelopeIndicator }) {
+    if (indicator.state !== 'resolved') {
+        return (
+            <span className="oracle-envelope" data-testid="oracle-envelope" data-state="pending-envelope">
+                {indicator.label}
+            </span>
+        );
+    }
+    const projectable = projectableSystems(indicator);
+    return (
+        <div className="oracle-envelope" data-testid="oracle-envelope" data-state="resolved">
+            <span data-testid="oracle-envelope-cardinality">
+                {readingCardinality(indicator)} positions · {indicator.cpPositionRefs.join(' ')}
+            </span>
+            {indicator.csDirection ? (
+                <span data-testid="oracle-envelope-direction">{indicator.csDirection}</span>
+            ) : null}
+            {indicator.deckContext ? (
+                <span data-testid="oracle-envelope-deck">
+                    deck {indicator.deckContext.deckOrderHash} · {indicator.deckContext.entropyMode}
+                </span>
+            ) : null}
+            {indicator.oracleFrameRef ? (
+                <span data-testid="oracle-envelope-frame">{indicator.oracleFrameRef}</span>
+            ) : null}
+            {indicator.reviewState ? (
+                <span data-testid="oracle-envelope-review">{indicator.reviewState}</span>
+            ) : null}
+            {projectable.length > 0 ? (
+                <span data-testid="oracle-envelope-projectable">
+                    projects: {projectable.join(' ↔ ')}
+                </span>
+            ) : null}
+        </div>
+    );
 }
 
 export function OraclePane() {
@@ -109,6 +166,7 @@ export function OraclePane() {
                         indicator={artifactResonanceIndicator(result.resonance, profilePayload)}
                         testId="oracle-artifact-resonance"
                     />
+                    <OracleEnvelopeStrip indicator={normalizeOracleEnvelopeStamp(result.envelope)} />
                     <pre>{result.output}</pre>
                     <button
                         type="button"
