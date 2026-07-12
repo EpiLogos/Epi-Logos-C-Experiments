@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T09:34:28.745Z",
+  "updatedAt": "2026-07-12T10:16:27.968Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2078,16 +2078,52 @@
       "worktree": null
     },
     "05.T5.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T10:16:27.952Z",
+      "claimedAt": "2026-07-12T10:08:01.684Z",
+      "completedAt": "2026-07-12T10:16:27.952Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T10:14:24.818Z",
+          "text": "§4.3 pseudocode verified fully handle-only with the no-raw-bodies-cross-the-bus banner and §4.2 gap statements repatched from raw Option<[f32; 4]> to OpaqueProtectedHandle form; grep \"OpaqueProtectedHandle\" hits 14 lines in M4-ARCHITECTURE.md while raw q_personal/q_composed body fields are absent from all profile-bus projection pseudocode (remaining [f32; 4] are protected-local substrate quotations); portal-core substrate AGREES with DR-M4-3 (PersonalPoleProjection profile_projections.rs:601-617 handle-only, naming-only divergence recorded in §4.3 Substrate landed note); 8/8 tests green incl. m4_personal_pole_projection_surfaces_only_protected_handles; DR-M4-3 status line amended to id-on-status-line (DR-M4-3 VALIDATED).",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test profile_projections_full_suite --test integrated_plugin_projections",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M4'/M4-ARCHITECTURE.md",
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/portal-core/tests/profile_projections_full_suite.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 62000,
+              "output": 7000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T10:16:27.952Z",
+          "text": "DR-M4-3 strict-invariant sweep: M4-ARCHITECTURE §4.3 pseudocode confirmed handle-only with the \"no raw bodies cross the bus\" banner; §4.2's four residual raw Option<[f32;4]>/BioQuaternionState gap statements patched to OpaqueProtectedHandle form; M4' folder swept — no other profile-bus projection carries raw bodies (day-episodes QuaternionRef, Graphiti raw_body_handle, psychoid engine local-private). Live portal-core AGREES (PersonalPoleProjection handle-only, profile_projections.rs:601-617; divergence naming-only: monomorphic ProtectedHandle vs generic doc form — recorded in §4.3 substrate note). DR-M4-3 VALIDATED (register status line now carries the id). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml m4_personal_pole (8 passed / 0 failed incl. m4_personal_pole_projection_surfaces_only_protected_handles; verify-tranche K-gate PASS by fable-c-verifier; grep OpaqueProtectedHandle M4-ARCHITECTURE.md = 14 hits, controller re-checked)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M4'/M4-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.13.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-8",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T10:14:24.818Z",
+      "runId": "20260712T100801Z-05-T5.13",
       "worktree": null
     },
     "05.T5.14": {
@@ -4604,16 +4640,16 @@
       "worktree": null
     },
     "15.T15.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-12T10:08:01.883Z",
+      "claimedAt": "2026-07-12T10:08:01.883Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "thread-9",
+      "leaseExpiresAt": "2026-07-12T13:08:01.883Z",
+      "heartbeatAt": "2026-07-12T10:08:01.883Z",
+      "runId": "20260712T100801Z-15-T15.12",
       "worktree": null
     },
     "16.T16.21": {
@@ -13556,17 +13592,36 @@
       "leaseExpiresAt": "2026-07-12T11:24:04.925Z",
       "worktree": null,
       "completedAt": "2026-07-12T09:31:14.410Z"
+    },
+    {
+      "runId": "20260712T100801Z-05-T5.13",
+      "taskId": "05.T5.13",
+      "status": "review",
+      "startedAt": "2026-07-12T10:08:01.684Z",
+      "owner": "thread-8",
+      "leaseExpiresAt": "2026-07-12T12:38:01.684Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T10:14:24.818Z"
+    },
+    {
+      "runId": "20260712T100801Z-15-T15.12",
+      "taskId": "15.T15.12",
+      "status": "in_progress",
+      "startedAt": "2026-07-12T10:08:01.883Z",
+      "owner": "thread-9",
+      "leaseExpiresAt": "2026-07-12T13:08:01.883Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T08:41:07.470Z",
-    "updatedAt": "2026-07-12T08:41:07.470Z",
+    "createdAt": "2026-07-12T10:07:03.536Z",
+    "updatedAt": "2026-07-12T10:07:03.536Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "05.T5.11",
-      "05.T5.12"
+      "05.T5.13",
+      "05.T5.14"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -13574,8 +13629,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "05.T5.11": "in-session",
-      "05.T5.12": "in-session"
+      "05.T5.13": "in-session",
+      "05.T5.14": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

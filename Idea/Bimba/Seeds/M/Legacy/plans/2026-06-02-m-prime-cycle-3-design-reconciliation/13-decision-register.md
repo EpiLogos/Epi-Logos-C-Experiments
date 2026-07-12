@@ -492,7 +492,7 @@ So the dipyramid IS bimba/pratibimba conjugation made geometric: every position 
 
 ## DR-M4-3 — `personal_pole` projection strict invariant
 
-**Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below.
+**Status:** DR-M4-3 VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below.
 
 ###### Original PROPOSED text retained:
 
