@@ -8,51 +8,7 @@
  */
 
 import { expect, test } from '@playwright/test';
-import WebSocket from 'ws';
-import { GATEWAY_URL } from './e2e-env';
-
-/** Minimal real-wire RPC against the spawned gateway (protocol v3 dialect:
- *  `connect` first, then the method — same frames the app itself sends). */
-function gatewayRpc(method: string, params: Record<string, unknown>): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-        const ws = new WebSocket(GATEWAY_URL);
-        const timeout = setTimeout(() => {
-            ws.close();
-            reject(new Error(`gateway rpc ${method}: no response within 10s`));
-        }, 10_000);
-        ws.on('open', () => {
-            ws.send(JSON.stringify({ type: 'req', id: 1, method: 'connect', params: {} }));
-        });
-        ws.on('message', data => {
-            const frame = JSON.parse(String(data));
-            if (frame.type !== 'res') {
-                return; // tick/profile events — not ours
-            }
-            if (frame.id === 1) {
-                if (frame.error) {
-                    clearTimeout(timeout);
-                    ws.close();
-                    reject(new Error(`connect failed: ${JSON.stringify(frame.error)}`));
-                    return;
-                }
-                ws.send(JSON.stringify({ type: 'req', id: 2, method, params }));
-            }
-            if (frame.id === 2) {
-                clearTimeout(timeout);
-                ws.close();
-                if (frame.error) {
-                    reject(new Error(`${method} failed: ${JSON.stringify(frame.error)}`));
-                } else {
-                    resolve(frame.result);
-                }
-            }
-        });
-        ws.on('error', err => {
-            clearTimeout(timeout);
-            reject(err);
-        });
-    });
-}
+import { gatewayRpc } from './gateway-rpc';
 
 test('a real gateway session record surfaces in the sessions pane and binds', async ({ page }) => {
     // create a REAL session record in the spawned gateway's SessionStore

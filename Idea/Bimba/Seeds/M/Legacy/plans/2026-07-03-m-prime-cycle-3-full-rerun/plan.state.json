@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T10:59:23.851Z",
+  "updatedAt": "2026-07-12T11:44:45.843Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2177,16 +2177,16 @@
       "worktree": null
     },
     "05.T5.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-12T11:30:22.136Z",
+      "claimedAt": "2026-07-12T11:30:22.136Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "thread-10",
+      "leaseExpiresAt": "2026-07-12T14:30:22.136Z",
+      "heartbeatAt": "2026-07-12T11:30:22.136Z",
+      "runId": "20260712T113022Z-05-T5.15",
       "worktree": null
     },
     "05.T5.16": {
@@ -4493,16 +4493,51 @@
       "worktree": null
     },
     "15.T15.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T11:44:45.829Z",
+      "claimedAt": "2026-07-12T11:30:22.339Z",
+      "completedAt": "2026-07-12T11:44:45.829Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T11:41:37.202Z",
+          "text": "Fate carried-by-integration per DR-FACE-7 (15.2 law landed as 27.T27.0: OMNIPANEL_TABS 8-fold manifest + run-model type-graph + OMNI_BORDER on both faces; Review a border tab, never modal). UF-proof added: session-continuity.spec.ts binds a REAL sessions.import record at the rendered surface and proves identity survives the cmd-period 0/1 toggle BOTH directions (exact status-strip string + each face's own SessionsPane session-bound marker); follows 15.12 suite-order laws (border-tab ensure idiom, pinned unique target) — passes isolation AND full-suite (23/23). Capability-list gap named honestly: no real UI surface until 27.7 Gateway fold + 12.10 matrix; spec asserts the real 8-fold border manifest + pending-tranche-27.7 body per face, fabricates nothing. gatewayRpc extracted to shared tests/e2e/gateway-rpc.ts (impact LOW, sole caller sessions.spec).",
+          "receipt": {
+            "command": "pnpm exec playwright test tests/e2e/session-continuity.spec.ts (1 passed) && pnpm test:e2e (23 passed, full-suite order)",
+            "exitCode": 0,
+            "testsPassed": 23,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/session-continuity.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/gateway-rpc.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+            ],
+            "tokenUsage": {
+              "input": 150000,
+              "output": 13000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T11:44:45.829Z",
+          "text": "OmniPanel-as-agentic-membrane closed carried-by-integration per the DR-FACE-7 register row: the 15.2 law already lives in the carrier as 27.T27.0 (OMNIPANEL_TABS 8-fold manifest + repurposed run-model type-graph in omnipanelRuntime.ts; one OMNI_BORDER instance on BOTH faces; Review is a border tab, never modal) — verified at read-time, no construction. The one unproven law is now UF-proven at the rendered surface: session-continuity.spec.ts imports a real gateway session via the new shared tests/e2e/gateway-rpc.ts helper, binds it, and proves session identity survives the cmd-period 0/1 face toggle in BOTH directions (exact status-strip string + each face's own SessionsPane instance showing session-bound — two flexlayout models over the one zustand store, observed at the DOM). Follows the 15.12 suite-order determinism laws; full suite 23/23 in order. Honest gap named: capability list has no real UI surface yet (Gateway fold pending 27.7, permit matrix 12.10) — spec asserts the real 8-fold manifest + pending body per face, extend assertCapabilitySurface when those land. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 15.T15.2 --owner fable-c-verifier (UF gate PASS: app-ui-flow playwright 23 PASS in suite order incl. session-continuity.spec.ts; app-test 407 PASS; live-wire/app-smoke PASS; honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 407,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/session-continuity.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/gateway-rpc.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-11",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T11:41:37.202Z",
+      "runId": "20260712T113022Z-15-T15.2",
       "worktree": null
     },
     "15.T15.3": {
@@ -13721,17 +13756,36 @@
       "leaseExpiresAt": "2026-07-12T12:16:28.255Z",
       "worktree": null,
       "completedAt": "2026-07-12T10:22:56.101Z"
+    },
+    {
+      "runId": "20260712T113022Z-05-T5.15",
+      "taskId": "05.T5.15",
+      "status": "in_progress",
+      "startedAt": "2026-07-12T11:30:22.136Z",
+      "owner": "thread-10",
+      "leaseExpiresAt": "2026-07-12T14:30:22.136Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260712T113022Z-15-T15.2",
+      "taskId": "15.T15.2",
+      "status": "review",
+      "startedAt": "2026-07-12T11:30:22.339Z",
+      "owner": "thread-11",
+      "leaseExpiresAt": "2026-07-12T14:00:22.339Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T11:41:37.202Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T10:18:51.043Z",
-    "updatedAt": "2026-07-12T10:18:51.043Z",
+    "createdAt": "2026-07-12T11:29:20.879Z",
+    "updatedAt": "2026-07-12T11:29:20.879Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "15.T15.12",
-      "05.T5.14"
+      "05.T5.15",
+      "05.T5.16"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -13739,8 +13793,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "15.T15.12": "in-session",
-      "05.T5.14": "in-session"
+      "05.T5.15": "in-session",
+      "05.T5.16": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
