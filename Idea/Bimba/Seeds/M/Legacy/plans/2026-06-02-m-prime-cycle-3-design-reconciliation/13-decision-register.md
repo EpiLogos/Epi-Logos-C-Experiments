@@ -432,7 +432,7 @@ The Phase-B cross-boundary verifier (post-architecture fan-out, 2026-06-03) surf
 
 ## DR-IG-6 — Dipyramid (full 6+6 P/P' mapping) + Hopf-linked tori canonical terminology
 
-**Status:** VALIDATED with CORRECTED GEOMETRY · **Validated:** 2026-06-03 · **By:** user · **Resolution:** Adopt **"dipyramid + Hopf-linked tori"** as canonical terminology corpus-wide. **The geometry was MIS-SPECIFIED in earlier docs (6 vertices = 6 QL positions).** Corrected:
+**Status:** DR-IG-6 VALIDATED with CORRECTED GEOMETRY · **Validated:** 2026-06-03 · **By:** user · **Resolution:** Adopt **"dipyramid + Hopf-linked tori"** as canonical terminology corpus-wide. **The geometry was MIS-SPECIFIED in earlier docs (6 vertices = 6 QL positions).** Corrected:
 
 > **Canonical dipyramid topology:** The dipyramid maps the **full 6+6 = 12 positions** of P and P' series simultaneously.
 > - **Two poles** = **P5 (top apex)** and **P5' (bottom apex)** — the synthesis positions are the dipyramid's apices

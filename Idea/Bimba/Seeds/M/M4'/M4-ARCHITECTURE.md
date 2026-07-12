@@ -410,7 +410,7 @@ This is the M' product surface owned at M4-5'. The render contract follows `m4-p
 
 - **Dipyramid + full 6+6 P/P' mapping (DR-IG-6 corrected)** — the renderer carries 2 apex poles (P5/P5'), 4 top/base vertices (P1-P4), 4 inverted-base vertices (P1'-P4') interleaved by mirror law `x + y' = 5`, and 1 central axis-point (P0/P0', not a vertex) projected through the pole-to-pole axis. The mirror law keeps P0/P0' on the axis rather than assigning it to either base. The geometric scaffold is the bounding shell of the psychoid field; avoid the obsolete six-vertex shortcut that miscounts the 6+6 QL mapping. Rendered as faint geometric wireframe (the bounding shell, not a frame around a figure). Vertical apex-to-apex = head-top-to-base-of-spine; equatorial half-base = arm-span / 2.
 - **Vertical sushumna axis** — central thread carrying chakra assemblage points (vertebrae of a luminous spine). Position-fixed; tilts only with macro-orientation gestures.
-- **Equatorial plane at heart-level** — the elemental-quaternion belt: four equatorial vertices render the four elemental colours per §5.3.4 below.
+- **Equatorial plane at heart-level** — the elemental-quaternion belt: the eight interleaved base vertices (P1-P4 + P1'-P4', mirror-paired per the §5.3.1 mapping) carry the four elemental basis colours per §5.3.4 below — four colours across an eight-vertex belt, never the retired four-vertex square.
 - **Polar caps** — Aether-cap at crown radiates violet-luminous when scalar-positive cap active; Mineral-cap at root radiates gold-crystalline when scalar-negative cap dominant.
 
 **§5.3.2 Hopf-linked tori (psychoid §7.2)**

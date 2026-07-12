@@ -336,7 +336,7 @@ Rendering law:
 - audio-always-running as state driver, with visual cymatics derived from the M2-1' bus;
 - body-topological without body-figurative representation;
 - 0/1/4+2 layout discipline preserved: 1 side hosts the personal field and flow surface; 4+2 depth brings the field together with graph/clock/city-scape architectural backdrop;
-- [[Diamond-QL]] Vitruvian geometry is the user's lived self-image surface, preferably as square-base dipyramid / diamond containment with Hopf-linked tori and lens rings, not as a literal human icon.
+- [[Diamond-QL]] Vitruvian geometry is the user's lived self-image surface, preferably as the DR-IG-6 6+6 P/P' dipyramid / diamond containment (2 apex poles P5/P5', eight interleaved base vertices P1-P4 + P1'-P4' paired by mirror law `x + y' = 5`, central axis-point P0/P0' — never the retired square-base six-vertex form) with Hopf-linked tori and lens rings, not as a literal human icon.
 
 Open design decisions remain explicit: Option F full physics simulation is the target while Option S stylised cymatic-inspired rendering is the fallback; device-capability thresholds must be chosen in the implementation spec. City-scape rendering at 4+2 depth still needs UX decision between literal architecture and stylised geometric abstraction.
 

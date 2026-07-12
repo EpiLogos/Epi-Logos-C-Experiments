@@ -156,7 +156,7 @@ The colour-quaternion projects at multiple scopes simultaneously:
 - **Global field tint** — overall field colouration driven by dominant element of `Q_composed`
 - **Per-chakra colour** — each chakra's local cymatic pattern coloured by its locally-dominant element (heart-chakra projects through Air register, sacral through Water, etc., modulated by current `Q_transit` at that chakra)
 - **Particle colours in toroidal currents** — particles in flow carry the colour-quaternion projected through their local field-region
-- **Equatorial belt** — the diamond's equatorial vertices render the four elemental colours as the canonical quaternionic basis-vectors made visible
+- **Equatorial belt** — the diamond's eight interleaved equatorial base vertices (P1-P4 + P1'-P4', per §7.1) render the four elemental colours as the canonical quaternionic basis-vectors made visible — four colours across the eight-vertex belt
 - **Polar caps** — Aether-cap at crown radiates violet-luminous when active; Mineral-cap at root radiates gold-crystalline when the user's state is heavily crystallised/structured
 
 ### §4.2 Why this matters
