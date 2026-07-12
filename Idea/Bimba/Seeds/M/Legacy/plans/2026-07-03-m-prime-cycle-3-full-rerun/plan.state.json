@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T19:23:38.602Z",
+  "updatedAt": "2026-07-12T20:09:09.041Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2669,16 +2669,32 @@
       "worktree": null
     },
     "07.T7.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T20:09:08.823Z",
+      "claimedAt": "2026-07-12T19:26:33.315Z",
+      "completedAt": "2026-07-12T20:09:08.823Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T20:09:08.823Z",
+          "text": "137 = 64 + 72 + 1 composition-matheme assertion landed in the app engine carrier (src/engine/compositionMatheme.ts) per the 07 rerun carrier banner — the plan.index.json writeScope still literally lists the FROZEN Body/M/epi-theia/extensions path, a stale un-retargeted scope that the CHARTER retarget law + the carrier banner override to the engine carrier (adversarial review confirmed this is the correct placement). The assertion proves the integrated 1-2-3 stratification preserves the matheme spine: M3 codon (64) + M2 invariant (72) + M1-5 (+1) = 137, with the +1 parent attribution in the topology slot parentAttribution reading M1-5 NOT M0-Anuttara-witness (DR-M1-1 / DR-M5-2), plus the Third Spanda Equation five canonical forms with real arithmetic over the real producers (topologyFromPayload, buildPentadicOverlay) — not mocks. 13 vitest green; adversarial review verdict solid. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/engine/compositionMatheme.test.ts (13 passed / 0 failed, Body/M/pratibimba-app) ; verify-tranche --full gate PASS by fable-c-verifier incl. app-test 447 + app-ui-flow 23 + app-build",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/compositionMatheme.ts",
+              "Body/M/pratibimba-app/src/engine/compositionMatheme.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/07.T7.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-0702",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T19:26:33.315Z",
+      "runId": "20260712T192633Z-07-T7.2",
       "worktree": null
     },
     "07.T7.3": {
@@ -5864,16 +5880,32 @@
       "worktree": null
     },
     "17.T17.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T20:09:08.616Z",
+      "claimedAt": "2026-07-12T19:26:33.116Z",
+      "completedAt": "2026-07-12T20:09:08.616Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T20:09:08.616Z",
+          "text": "Split the 1,655-LOC dataset_import.rs into the canonical S2-ARCHITECTURE section-5.7 axis {mod, importer, branch, plans, property_mapping, json_utils, cypher} — a pure behavior-preserving code move (the old non-canonical {node_import, edge_import, validation} split is retired). Adversarial review CONFIRMED behavior preservation: it concatenated the old and new corpora, stripped use/mod/comment/blank lines, sorted and diffed, and found the only deltas are import regrouping + two visibility adjustments forced by the move (no logic change). Every pub item is preserved or re-exported from mod.rs so external callers (DatasetImporter at lib.rs:54, canonical_q_import_property_key in the fallback-bucket test) still resolve; all 18 module unit tests moved verbatim and green; gitnexus impact LOW/zero upstream. Full graph-services suite 243 passed / 0 failed identically before and after. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml (243 passed / 0 failed / 13 ignored-live-Neo4j) ; verify-tranche --full gate PASS by fable-c-verifier incl. graph-services 243 + live-wire (W-class) + honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 243,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/dataset_import/mod.rs",
+              "Body/S/S2/graph-services/src/dataset_import/importer.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.14.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-1714",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T19:26:33.116Z",
+      "runId": "20260712T192633Z-17-T17.14",
       "worktree": null
     },
     "17.T17.15": {
@@ -11838,16 +11870,33 @@
       "worktree": null
     },
     "33.T33.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T20:09:09.027Z",
+      "claimedAt": "2026-07-12T19:26:32.921Z",
+      "completedAt": "2026-07-12T20:09:09.027Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T20:09:09.027Z",
+          "text": "Oracle codon-charge data-spine (honest attribution after adversarial review corrected an overclaim): the codon-charge BINDING itself — oracle_eval4 folding six yin/yang lines into a 6-bit codon then routing pp/nn/np/pn through compute_codon_charges to m3_compute_charges_ffi, the 64-codon zero-tolerance cross-check vs bioquaternion_transcription, and the sum(pp)=1440=360x4 boot assert in C m3_verify + its Rust mirror — is CO-OWNED with Track-04 4.13 (landed commit 3487e3ef 2026-07-10) and was verified fresh GREEN (binding test oracle_eval4_charges_match_kernel_codon_charge_authority 1 passed); it was already green before this tranche, NOT flipped by it. 33.2's own incremental contribution is: single-sourcing the tarot element-charge algebra into TAROT_ELEMENT_CHARGE_UNIT in oracle_engine.rs (tied to the spine at its two real seams — the pp/nn/np/pn charge faces + the 5.16 canonical element IDs in the Ace branch), 5 tarot-modality drift-guard behavioral tests, and closing the recapture-register section-5.1 item-1 violation record. Tarot charges are NOT re-derived through the codon spine (a tarot spread has no 6-bit codon); retiring the independent tarot algebra would change tarot charge semantics and is an Architect interface decision (CHARTER propose-don't-land). Receipt: 6 real tests (binding 1 + tarot 5) via the correct --manifest-path commands; an earlier draft's 16-passed aggregate was wrong (it counted suites the commands do not run). Corrected the -p epi-cli Verify-line bug to --manifest-path (epi-cli is workspace-excluded package epi-logos). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_truth_oracle oracle_eval4_charges_match_kernel_codon_charge_authority (1 passed, binding) + cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib nara::oracle_engine::tests (5 passed, tarot drift) = 6 passed / 0 failed, re-run fresh by controller ; verify-tranche --full gate PASS by fable-c-verifier",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/oracle_engine.rs",
+              "Body/S/S0/epi-cli/tests/kernel_truth_oracle.rs",
+              "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/33.T33.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-3302",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T19:26:32.921Z",
+      "runId": "20260712T192632Z-33-T33.2",
       "worktree": null
     },
     "33.T33.3": {
@@ -14180,6 +14229,36 @@
       "leaseExpiresAt": "2026-07-12T22:50:46.760Z",
       "worktree": null,
       "completedAt": "2026-07-12T19:23:38.587Z"
+    },
+    {
+      "runId": "20260712T192632Z-33-T33.2",
+      "taskId": "33.T33.2",
+      "status": "done",
+      "startedAt": "2026-07-12T19:26:32.921Z",
+      "owner": "uc-3302",
+      "leaseExpiresAt": "2026-07-12T23:26:32.921Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T20:09:09.027Z"
+    },
+    {
+      "runId": "20260712T192633Z-17-T17.14",
+      "taskId": "17.T17.14",
+      "status": "done",
+      "startedAt": "2026-07-12T19:26:33.116Z",
+      "owner": "uc-1714",
+      "leaseExpiresAt": "2026-07-12T23:26:33.116Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T20:09:08.616Z"
+    },
+    {
+      "runId": "20260712T192633Z-07-T7.2",
+      "taskId": "07.T7.2",
+      "status": "done",
+      "startedAt": "2026-07-12T19:26:33.315Z",
+      "owner": "uc-0702",
+      "leaseExpiresAt": "2026-07-12T23:26:33.315Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T20:09:08.823Z"
     }
   ],
   "activeRoute": {

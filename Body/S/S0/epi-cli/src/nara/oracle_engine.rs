@@ -31,7 +31,25 @@ use super::oracle_identity::{element, ACE_ELEMENT_MAP, COURT_SIGN_MAP, PIP_DECAN
 // ─── Tarot Elemental Quaternion Bridge ───────────────────────────────────────
 //
 // Maps TarotCard → elemental weights [EARTH, FIRE, WATER, AIR] → OraclePayload
-// pp/nn/pn/np charges, mirroring the I-Ching eval4 charge algebra.
+// pp/nn/pn/np charges.
+//
+// DATA-SPINE NOTE (T33.2 / register §5.1): this is the tarot ELEMENT-charge
+// modality — card → element (Golden Dawn / decan attribution) → charge-face. It
+// is a *distinct oracle surface* from the CODON-charge spine, which routes
+// through the single kernel authority `m3_compute_charges` (FR 2.3.18 closed
+// form) via `compute_codon_charges` (see `oracle_frame.rs::oracle_eval4`). There
+// is no 6-bit codon in a tarot spread, so it cannot route through
+// `m3_compute_charges`; instead it shares that spine's contracts at the two
+// points where a shared source exists:
+//   1. the charge-FACE semantics pp/nn/np/pn are the same four faces the kernel
+//      emits (FIRE→pp, WATER→nn, AIR→pn, EARTH→np — the yang×yang / yin×yin /
+//      yang×yin / yin×yang folds), and
+//   2. element identity is read from the canonical element IDs
+//      (`oracle_identity::element::{AGNI,APAS,PRITHVI,VAYU}` ≡ m2.h
+//      `ELEMENT_ID_*`, canon §5.16) in the Ace branch, not a private table.
+// The retired ±32-per-LINE I-Ching charge algebra (old `oracle.rs:1236-1665`)
+// no longer exists on the codon path; the per-card magnitude here is a single
+// named unit (`TAROT_ELEMENT_CHARGE_UNIT`), not a scattered literal.
 //
 // Card-id encoding (78 cards):
 //   0–21  = Major Arcana
@@ -43,6 +61,14 @@ use super::oracle_identity::{element, ACE_ELEMENT_MAP, COURT_SIGN_MAP, PIP_DECAN
 // Quaternion format: [w=EARTH, x=FIRE, y=WATER, z=AIR]
 // Charge mapping:  FIRE→pp  WATER→nn(neg)  AIR→pn  EARTH→np
 // Spec: validation-matrix row 14; 07-unified-architecture §7
+
+/// Per-card element-charge magnitude for the tarot modality — the single source
+/// of the scale (was a scattered `32.0` literal). A single upright card
+/// contributes exactly one unit to its dominant element's charge face; a
+/// reversed card contributes `-unit`. Balanced (Akasha) aces split one unit
+/// across all four faces. Kept as one named constant so the scale never drifts
+/// across the fold sites in `tarot_draw_to_oracle_payload`.
+pub const TAROT_ELEMENT_CHARGE_UNIT: f32 = 32.0;
 
 /// Zodiac sign (0–11) → quaternion element index [0=EARTH, 1=FIRE, 2=WATER, 3=AIR].
 fn sign_to_elem_idx(sign: u8) -> usize {
@@ -88,7 +114,7 @@ fn major_arcana_elem_idx(card_id: u8) -> usize {
 ///
 /// Returns 1.0 in the dominant element slot (or 0.25 in all for Akasha/balanced).
 /// Reversed cards return -1.0 (inversion of elemental expression).
-/// Multiply by 32.0 to match the I-Ching charge scale (32.0 per line × 6 lines).
+/// Multiply by `TAROT_ELEMENT_CHARGE_UNIT` to land on the charge-face scale.
 pub fn tarot_card_to_element_weights(card: &TarotCard) -> [f32; 4] {
     let mut weights = [0.0f32; 4]; // [EARTH, FIRE, WATER, AIR]
     let polarity = if card.reversed { -1.0f32 } else { 1.0f32 };
@@ -138,7 +164,7 @@ pub fn tarot_card_to_element_weights(card: &TarotCard) -> [f32; 4] {
 ///   AIR   → pn  (clarifying tension, yang×yin)
 ///   EARTH → np  (grounding embodiment, yin×yang)
 ///
-/// Each card contributes ±32.0 to its element charge (I-Ching line weight scale).
+/// Each card contributes ±`TAROT_ELEMENT_CHARGE_UNIT` to its element charge.
 /// Primary hex from clock degree position (5.625°/hex = 360°/64).
 /// Temporal hex from shadow degree (complement +180°).
 pub fn tarot_draw_to_oracle_payload(
@@ -150,10 +176,10 @@ pub fn tarot_draw_to_oracle_payload(
 
     for card in cards {
         let w = tarot_card_to_element_weights(card);
-        pp += w[1] * 32.0; // FIRE  → pp
-        nn -= w[2] * 32.0; // WATER → nn (upright water makes nn more negative)
-        pn += w[3] * 32.0; // AIR   → pn
-        np += w[0] * 32.0; // EARTH → np
+        pp += w[1] * TAROT_ELEMENT_CHARGE_UNIT; // FIRE  → pp
+        nn -= w[2] * TAROT_ELEMENT_CHARGE_UNIT; // WATER → nn (upright water → more negative)
+        pn += w[3] * TAROT_ELEMENT_CHARGE_UNIT; // AIR   → pn
+        np += w[0] * TAROT_ELEMENT_CHARGE_UNIT; // EARTH → np
     }
 
     let degree = (kairos_degree as u16).min(359);
@@ -174,5 +200,111 @@ pub fn tarot_draw_to_oracle_payload(
         nn,
         pn,
         np,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    //! Behavioral proof that the tarot ELEMENT-charge modality shares the codon
+    //! spine's contracts (T33.2 / register §5.1): the four charge faces are the
+    //! kernel's pp/nn/np/pn faces, element identity is the canonical §5.16 IDs
+    //! (`element::{AGNI,APAS,PRITHVI,VAYU}`), and the scale is one named unit.
+    use super::*;
+    use crate::nara::oracle_identity::element;
+
+    const U: f32 = TAROT_ELEMENT_CHARGE_UNIT;
+
+    fn card(id: u8) -> TarotCard {
+        TarotCard {
+            card_id: id,
+            reversed: false,
+        }
+    }
+
+    fn reversed(id: u8) -> TarotCard {
+        TarotCard {
+            card_id: id,
+            reversed: true,
+        }
+    }
+
+    /// Charges of a single upright card, as the tarot payload folds them.
+    fn faces(id: u8) -> (f32, f32, f32, f32) {
+        let p = tarot_draw_to_oracle_payload(&[card(id)], 0.0, 0);
+        (p.pp, p.nn, p.pn, p.np)
+    }
+
+    /// Charge-FACE law: each element lands on exactly the kernel face it shares.
+    /// FIRE→pp, WATER→nn(neg), AIR→pn, EARTH→np. Verified with single-face Major
+    /// Arcana cards (Emperor=Fire, HighPriestess=Water, Fool=Air, Empress=Earth).
+    #[test]
+    fn charge_faces_match_the_kernel_pp_nn_np_pn_faces() {
+        assert_eq!(faces(4), (U, 0.0, 0.0, 0.0), "Emperor (Fire) → pp only");
+        assert_eq!(
+            faces(2),
+            (0.0, -U, 0.0, 0.0),
+            "High Priestess (Water) → nn only (negative)"
+        );
+        assert_eq!(faces(0), (0.0, 0.0, U, 0.0), "Fool (Air) → pn only");
+        assert_eq!(faces(3), (0.0, 0.0, 0.0, U), "Empress (Earth) → np only");
+    }
+
+    /// The Ace branch reads the CANONICAL element IDs (`element::AGNI/APAS/
+    /// PRITHVI/VAYU` ≡ m2.h `ELEMENT_ID_*`, canon §5.16) from `ACE_ELEMENT_MAP`,
+    /// not a private table — so each Ace's charge face is driven by canon.
+    /// Aces: Cups=22(Water/Apas), Wands=36(Fire/Agni), Pentacles=50(Earth/
+    /// Prithvi), Swords=64(Air/Vayu).
+    #[test]
+    fn canonical_element_ids_drive_ace_charge_faces() {
+        // Guard the canonical IDs themselves (0=Akasha,1=Vayu,2=Agni,3=Apas,4=Prithvi).
+        assert_eq!(
+            (element::AGNI, element::APAS, element::PRITHVI, element::VAYU),
+            (2, 3, 4, 1),
+            "canonical §5.16 element IDs"
+        );
+        assert_eq!(faces(36), (U, 0.0, 0.0, 0.0), "Ace of Wands → Agni/Fire → pp");
+        assert_eq!(faces(22), (0.0, -U, 0.0, 0.0), "Ace of Cups → Apas/Water → nn");
+        assert_eq!(faces(64), (0.0, 0.0, U, 0.0), "Ace of Swords → Vayu/Air → pn");
+        assert_eq!(
+            faces(50),
+            (0.0, 0.0, 0.0, U),
+            "Ace of Pentacles → Prithvi/Earth → np"
+        );
+    }
+
+    /// Reversal inverts the elemental expression: a reversed card contributes
+    /// `-unit` on its face (the # inversion of the upright charge).
+    #[test]
+    fn reversed_card_inverts_the_charge_face() {
+        let up = tarot_draw_to_oracle_payload(&[card(4)], 0.0, 0);
+        let down = tarot_draw_to_oracle_payload(&[reversed(4)], 0.0, 0);
+        assert_eq!(up.pp, U);
+        assert_eq!(down.pp, -U, "reversed Emperor → -pp");
+        assert_eq!(down.pp, -up.pp, "reversal is the negation of upright");
+    }
+
+    /// The scale is single-sourced: a single upright single-face card contributes
+    /// exactly one `TAROT_ELEMENT_CHARGE_UNIT` — no scattered literal can drift it.
+    #[test]
+    fn scale_is_a_single_named_unit() {
+        let p = tarot_draw_to_oracle_payload(&[card(4)], 0.0, 0);
+        assert_eq!(p.pp.abs(), TAROT_ELEMENT_CHARGE_UNIT);
+    }
+
+    /// The weight vector uses the quaternion-axis order [EARTH, FIRE, WATER, AIR]
+    /// (w,x,y,z) — the ordering documented from Cl(4,2)/Hopf, upright = +1.0 in
+    /// the dominant slot.
+    #[test]
+    fn element_weights_use_quaternion_axis_order() {
+        assert_eq!(
+            tarot_card_to_element_weights(&card(4)),
+            [0.0, 1.0, 0.0, 0.0],
+            "Emperor → x=FIRE slot"
+        );
+        assert_eq!(
+            tarot_card_to_element_weights(&card(3)),
+            [1.0, 0.0, 0.0, 0.0],
+            "Empress → w=EARTH slot"
+        );
     }
 }

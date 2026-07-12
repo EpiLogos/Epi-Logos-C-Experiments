@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-12T18:46:24.487Z",
+  "generatedAt": "2026-07-12T20:09:09.040Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -246,7 +246,7 @@
       "file": "33-harmonic-energy-channel-handoff.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
       "title": "§0 — Handoff Context (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "999b997827e115b6e48f03da049bf83647cc2e6fe24b4c32755aeb6442378964"
+      "checksum": "269c9f9e9a9676fc5d7355c60999406345d04be8b89b50e96f27f228de9c7a6a"
     },
     {
       "id": "34",
@@ -8717,7 +8717,7 @@
         "Body/S/S0/epi-lib/include/m3.h:755-767",
         "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:165"
       ],
-      "body": "3. **T33.2 — Oracle codon-charge data-spine unification (m3_compute_charges FFI; retire the independent Rust algebra)**\n\n   Brief: source §2.1 Stream A oracle Rust wiring (`../2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff.md:215-229`) in full; register §5.1 data-spine violation of record (`Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:165`). The C authority `m3_compute_charges(codon6bit, pp, mm, mp, pn)` (`Body/S/S0/epi-lib/include/m3.h:755-767`) is tested in C but the oracle still reimplements the ±32-per-line charge algebra in Rust (`Body/S/S0/epi-cli/src/nara/oracle_engine.rs` + `oracle_frame.rs`). Bind the oracle path to `m3_compute_charges_ffi`, add the boot assert `sum(pp for codon in 0..64) == 360`, and cross-check all 64 codons against the retired Rust baseline at zero tolerance. Co-owned with Track-04 Tranche 4.13 (register writes \"33/4.13\"); this row is the kernel-truth closure. Substrate work — carries unchanged. Register-grounded UNBUILT (2026-07-10: 17 charge refs still in `oracle_engine.rs`+`oracle_frame.rs`; expected-red `epi-cli kernel_truth_oracle.rs::oracle_eval4_charges_match_kernel_codon_charge_authority`).\n   Depends on Track 00 Tranche 3.\n   Verify: `cargo test -p epi-cli oracle_eval4_charges_match_kernel_codon_charge_authority` passes green (flips the expected-red); boot assert `sum(pp)==360` present; 64-codon cross-check at zero tolerance; verifier ≠ closer."
+      "body": "3. **T33.2 — Oracle codon-charge data-spine unification (m3_compute_charges FFI; retire the independent Rust algebra)**\n\n   Brief: source §2.1 Stream A oracle Rust wiring (`../2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff.md:215-229`) in full; register §5.1 data-spine violation of record (`Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:165`). The C authority `m3_compute_charges(codon6bit, pp, mm, mp, pn)` (`Body/S/S0/epi-lib/include/m3.h:755-767`) is tested in C but the oracle still reimplements the ±32-per-line charge algebra in Rust (`Body/S/S0/epi-cli/src/nara/oracle_engine.rs` + `oracle_frame.rs`). Bind the oracle path to `m3_compute_charges_ffi`, add the boot assert `sum(pp for codon in 0..64) == 360`, and cross-check all 64 codons against the retired Rust baseline at zero tolerance. Co-owned with Track-04 Tranche 4.13 (register writes \"33/4.13\"); this row is the kernel-truth closure. Substrate work — carries unchanged. Register-grounded UNBUILT (2026-07-10: 17 charge refs still in `oracle_engine.rs`+`oracle_frame.rs`; expected-red `epi-cli kernel_truth_oracle.rs::oracle_eval4_charges_match_kernel_codon_charge_authority`).\n   Depends on Track 00 Tranche 3.\n   Verify: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_truth_oracle oracle_eval4_charges_match_kernel_codon_charge_authority` passes green (epi-cli is workspace-excluded package `epi-logos` — `-p epi-cli` never resolves); boot assert `sum(pp)==360` present; 64-codon cross-check at zero tolerance; verifier ≠ closer."
     },
     {
       "id": "33.T33.3",
