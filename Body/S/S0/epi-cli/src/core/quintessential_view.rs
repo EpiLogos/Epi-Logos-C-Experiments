@@ -691,50 +691,23 @@ pub(super) fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
             .to_string()
     });
 
-    // Try loading rich data from nodes_hash.json
-    let dataset_path =
-        project_root().map(|p| p.join("Idea/Bimba/Map/datasets/low-detail/nodes_hash.json"));
-    let mut root_description: Option<String> = None;
-    let mut root_core_nature: Option<String> = None;
-    let mut help_topics: Vec<(String, String, String)> = Vec::new(); // (coord, name, coreNature)
-
-    if let Some(ref dp) = dataset_path {
-        if dp.exists() {
-            if let Ok(contents) = std::fs::read_to_string(dp) {
-                if let Ok(nodes) = serde_json::from_str::<Vec<serde_json::Value>>(&contents) {
-                    for node in &nodes {
-                        let coord = node
-                            .get("coordinate")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("");
-                        if coord == "#" {
-                            root_description = node
-                                .get("description")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                            root_core_nature = node
-                                .get("coreNature")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                        } else if coord.starts_with("#-") && coord.len() == 3 {
-                            let name = node
-                                .get("name")
-                                .and_then(|v| v.as_str())
-                                .unwrap_or("?")
-                                .to_string();
-                            let cn = node
-                                .get("coreNature")
-                                .and_then(|v| v.as_str())
-                                .unwrap_or("")
-                                .to_string();
-                            help_topics.push((coord.to_string(), name, cn));
-                        }
-                    }
-                }
-            }
-        }
-    }
-    help_topics.sort_by(|a, b| a.0.cmp(&b.0));
+    // Live `:Bimba` graph is the ONLY source for the `#` node's rich surface and
+    // any `#-N` help branches — no static-dataset read. `Err` means Neo4j is
+    // unreachable → HONEST-ABSENT (never a file fallback).
+    let (graph_unavailable, root_description, root_core_nature, help_topics): (
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Vec<(String, String, String)>,
+    ) = match load_graph_hash_portal() {
+        Err(msg) => (Some(msg), None, None, Vec::new()),
+        Ok(portal) => (
+            None,
+            portal.description,
+            portal.core_nature,
+            portal.help_topics,
+        ),
+    };
 
     if json {
         let mut obj = serde_json::json!({
@@ -746,7 +719,11 @@ pub(super) fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
             "tagged_pointer_bit": 63,
             "flag": "FLAG_INVERTED",
             "subtitle": "A living mandala where consciousness recognizes itself through technological mirror",
+            "graph_available": graph_unavailable.is_none(),
         });
+        if let Some(ref status) = graph_unavailable {
+            obj["graph_status"] = serde_json::Value::String(status.clone());
+        }
         if let Some(ref cn) = root_core_nature {
             obj["coreNature"] = serde_json::Value::String(cn.clone());
         }
@@ -768,6 +745,11 @@ pub(super) fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
         println!(
             "  Subtitle: A living mandala where consciousness recognizes itself through technological mirror"
         );
+        if let Some(ref status) = graph_unavailable {
+            println!();
+            println!("Live Graph:");
+            println!("  (unavailable — {status}; no static-file fallback)");
+        }
         if let Some(ref cn) = root_core_nature {
             println!();
             println!("Core Nature:");
@@ -849,19 +831,6 @@ fn knowing_weave(label: &str, json: bool) -> color_eyre::Result<()> {
     Ok(())
 }
 
-/// Map a root psychoid position (0-5) to its dataset filename
-fn dataset_filename(root: u8) -> &'static str {
-    match root {
-        0 => "nodes_anuttara.json",
-        1 => "nodes_paramasiva.json",
-        2 => "nodes_parashakti.json",
-        3 => "nodes_mahamaya.json",
-        4 => "nodes_nara.json",
-        5 => "nodes_epii.json",
-        _ => "",
-    }
-}
-
 /// M-branch name for a root position
 fn mbranch_name(root: u8) -> &'static str {
     match root {
@@ -908,91 +877,26 @@ pub(super) fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()>
         )
     };
 
-    // Try to load from dataset
-    let dataset_file = if is_help_branch {
-        "low-detail/nodes_hash.json"
+    // Live `:Bimba` graph is the ONLY node source. `Err` means Neo4j is
+    // unreachable → HONEST-ABSENT; there is deliberately no dataset fallback.
+    let lookup = load_graph_subbranch(raw);
+    let graph_unavailable: Option<String> = lookup.as_ref().err().cloned();
+    let graph_node: Option<GraphSubbranch> = lookup.ok().flatten();
+
+    let node_name = graph_node.as_ref().and_then(|node| node.name.clone());
+    let node_essence = graph_node.as_ref().and_then(|node| node.essence.clone());
+    let node_core_nature = graph_node.as_ref().and_then(|node| node.core_nature.clone());
+    let node_description = graph_node.as_ref().and_then(|node| node.description.clone());
+    let children: Vec<(String, String)> = graph_node
+        .as_ref()
+        .map(|node| node.children.clone())
+        .unwrap_or_default();
+
+    let display_name = node_name.as_deref().unwrap_or(if graph_unavailable.is_some() {
+        "(graph unavailable)"
     } else {
-        dataset_filename(root.unwrap_or(0))
-    };
-    let dataset_path = project_root().map(|p| p.join("Idea/Bimba/Map/datasets").join(dataset_file));
-
-    let mut node_name: Option<String> = None;
-    let mut node_essence: Option<String> = None;
-    let mut node_core_nature: Option<String> = None;
-    let mut node_description: Option<String> = None;
-    let mut children: Vec<(String, String)> = Vec::new();
-
-    if let Some(ref dp) = dataset_path {
-        if dp.exists() {
-            if let Ok(contents) = std::fs::read_to_string(dp) {
-                if let Ok(nodes) = serde_json::from_str::<Vec<serde_json::Value>>(&contents) {
-                    // Find this exact coordinate
-                    for node in &nodes {
-                        let coord = node
-                            .get("coordinate")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("");
-                        if coord == raw {
-                            node_name = node
-                                .get("name")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                            node_essence = node
-                                .get("essence")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                            node_core_nature = node
-                                .get("coreNature")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                            node_description = node
-                                .get("description")
-                                .and_then(|v| v.as_str())
-                                .map(|s| s.to_string());
-                        }
-                    }
-                    // Find direct children (coordinates that are raw + separator + more)
-                    let prefix_dash = format!("{}-", raw);
-                    let prefix_dot = format!("{}.", raw);
-                    for node in &nodes {
-                        let coord = node
-                            .get("coordinate")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("");
-                        let is_child =
-                            coord.starts_with(&prefix_dash) || coord.starts_with(&prefix_dot);
-                        if is_child {
-                            // Only direct children: no further separators after the prefix
-                            let suffix = if coord.starts_with(&prefix_dash) {
-                                &coord[prefix_dash.len()..]
-                            } else {
-                                &coord[prefix_dot.len()..]
-                            };
-                            // Direct child if suffix has no more dashes (allow dots, slashes within)
-                            if !suffix.contains('-') {
-                                let name = node
-                                    .get("name")
-                                    .and_then(|v| v.as_str())
-                                    .unwrap_or("?")
-                                    .to_string();
-                                children.push((coord.to_string(), name));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    let graph_node = load_graph_subbranch(raw);
-    if let Some(ref node) = graph_node {
-        node_name = node.name.clone().or(node_name);
-        node_essence = node.essence.clone().or(node_essence);
-        node_core_nature = node.core_nature.clone().or(node_core_nature);
-        node_description = node.description.clone().or(node_description);
-    }
-
-    let display_name = node_name.as_deref().unwrap_or("(unknown)");
+        "(unknown)"
+    });
     let display_coord = graph_node
         .as_ref()
         .map(|node| node.coordinate.as_str())
@@ -1010,7 +914,11 @@ pub(super) fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()>
             "type": if is_help_branch { "help_topic" } else { "sub_branch" },
             "branch": branch_label,
             "name": display_name,
+            "graph_available": graph_unavailable.is_none(),
         });
+        if let Some(ref status) = graph_unavailable {
+            obj["graph_status"] = serde_json::Value::String(status.clone());
+        }
         if let Some(r) = root {
             obj["root"] = serde_json::Value::Number(r.into());
         }
@@ -1083,8 +991,12 @@ pub(super) fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()>
                 }
             }
         }
-        if node_name.is_none() {
-            println!("  (no dataset entry found — coordinate may be invalid)");
+        if let Some(ref status) = graph_unavailable {
+            println!(
+                "  (live graph unavailable — {status}; no static-file fallback)"
+            );
+        } else if node_name.is_none() {
+            println!("  (no live :Bimba node for this coordinate)");
         } else if pithy.is_none() && !is_help_branch {
             println!("  (no quintessence yet — use --update to add)");
         }
@@ -1109,27 +1021,48 @@ struct GraphSubbranch {
     description: Option<String>,
     q_props: Vec<(String, String)>,
     regional_props: Vec<(String, String)>,
+    children: Vec<(String, String)>,
 }
 
-fn load_graph_subbranch(raw: &str) -> Option<GraphSubbranch> {
+/// Read a coordinate's live `:Bimba` node from the graph through the SAME S2
+/// seam the rest of the CLI uses (`Neo4jConfig::from_env` / `Neo4jClient`, see
+/// `gate/graph.rs`). This is the only node source for `epi core knowing` sub-
+/// branches — there is deliberately NO static-dataset fallback (per the C-first
+/// law: JSON under `Idea/Bimba/Map/datasets/**` is a one-way Neo4j seed, never
+/// serving truth). Outcomes:
+///   * `Err(msg)` — Neo4j unreachable or the query failed. Callers emit
+///     HONEST-ABSENT ("graph unavailable"); they must NOT read files instead.
+///   * `Ok(None)` — graph reachable but no `:Bimba` node carries this coordinate.
+///   * `Ok(Some(node))` — the live node: name / essence / coreNature / description
+///     plus every live `q_*` property and its direct children, read as they are.
+fn load_graph_subbranch(raw: &str) -> Result<Option<GraphSubbranch>, String> {
     let alternates = graph_coordinate_alternates(raw);
     let quoted = alternates
         .iter()
         .map(|coord| format!("'{}'", escape_cypher_literal(coord)))
         .collect::<Vec<_>>()
         .join(", ");
-    let m_prime_keys = graph_m_prime_surface_keys(raw);
-    let m_prime_return = m_prime_keys
+
+    // Regional surface = fixed cross-family keys + any M'-projection keys.
+    // Collected over a candidate list so absent keys simply drop out (the graph
+    // decides what exists, not a hard-coded RETURN list).
+    let mut regional_candidates = vec![
+        "l_4_mef_condition".to_string(),
+        "s_4_function_role".to_string(),
+        "t_1_epistemic_function".to_string(),
+        "t_5_next_evolution_phase".to_string(),
+    ];
+    regional_candidates.extend(graph_m_prime_surface_keys(raw));
+    let regional_list = regional_candidates
         .iter()
-        .map(|key| format!("                n.{key} AS {key}"))
+        .map(|key| format!("'{}'", escape_cypher_literal(key)))
         .collect::<Vec<_>>()
-        .join(",\n");
-    let m_prime_return = if m_prime_return.is_empty() {
-        String::new()
-    } else {
-        format!(",\n{m_prime_return}")
-    };
-    let cypher = format!(
+        .join(", ");
+
+    // The node itself. `q_*` keys are node-specific (each coordinate carries its
+    // own quaternal register slugs), so collect them dynamically from `keys(n)`
+    // rather than pinning a fixed set — parallel key/value lists keep order.
+    let node_cypher = format!(
         "MATCH (n:Bimba) \
          WHERE n.coordinate IN [{coords}] \
          RETURN n.coordinate AS coordinate, \
@@ -1137,69 +1070,189 @@ fn load_graph_subbranch(raw: &str) -> Option<GraphSubbranch> {
                 n.c_0_essence AS essence, \
                 n.c_0_core_nature AS core_nature, \
                 n.c_1_description AS description, \
-                n.q_1_theoretical_thesis AS q_1_theoretical_thesis, \
-                n.q_2_sophia_logos_dialectic AS q_2_sophia_logos_dialectic, \
-                n.q_2_instantiation_mode AS q_2_instantiation_mode, \
-                n.q_3_dialectical_movement AS q_3_dialectical_movement, \
-                n.q_4_historical_diagnosis AS q_4_historical_diagnosis, \
-                n.q_5_integration_template AS q_5_integration_template, \
-                n.q_5_conjunctive_threshold AS q_5_conjunctive_threshold, \
-                n.l_4_mef_condition AS l_4_mef_condition, \
-                n.s_4_function_role AS s_4_function_role, \
-                n.t_1_epistemic_function AS t_1_epistemic_function, \
-                n.t_5_next_evolution_phase AS t_5_next_evolution_phase{m_prime_return} \
+                [k IN keys(n) WHERE k STARTS WITH 'q_' AND n[k] IS NOT NULL] AS q_keys, \
+                [k IN keys(n) WHERE k STARTS WITH 'q_' AND n[k] IS NOT NULL | toString(n[k])] AS q_vals, \
+                [x IN [{regionals}] WHERE n[x] IS NOT NULL] AS reg_keys, \
+                [x IN [{regionals}] WHERE n[x] IS NOT NULL | toString(n[x])] AS reg_vals \
          LIMIT 1",
         coords = quoted,
-        m_prime_return = m_prime_return,
+        regionals = regional_list,
+    );
+
+    // Direct children: any coordinate exactly one separator deeper whose
+    // remainder carries no further '-' branch (light/shadow and dotted context
+    // frames stay inline). Coordinates are stored M-form (e.g. M2-3-1); the '#'
+    // alternates are harmless extras that match nothing.
+    let child_clauses = alternates
+        .iter()
+        .flat_map(|alt| {
+            ['-', '.'].into_iter().map(move |sep| {
+                let prefix = format!("{alt}{sep}");
+                let plen = prefix.chars().count();
+                format!(
+                    "(c.coordinate STARTS WITH '{p}' AND NOT substring(c.coordinate, {plen}) CONTAINS '-')",
+                    p = escape_cypher_literal(&prefix),
+                    plen = plen,
+                )
+            })
+        })
+        .collect::<Vec<_>>()
+        .join(" OR ");
+    let child_cypher = format!(
+        "MATCH (c:Bimba) WHERE {clauses} \
+         RETURN c.coordinate AS coordinate, c.c_1_name AS name \
+         ORDER BY c.coordinate",
+        clauses = child_clauses,
     );
 
     let fetch = async move {
         let config = crate::graph::client::Neo4jConfig::from_env();
-        let client = crate::graph::client::Neo4jClient::connect(&config).ok()?;
-        let rows = client.run(&cypher).await.ok()?;
-        let row = rows.first()?;
+        let client = crate::graph::client::Neo4jClient::connect(&config)
+            .map_err(|err| format!("Neo4j connect failed: {err}"))?;
 
-        let q_props = collect_optional_row_strings(
-            row,
-            &[
-                "q_1_theoretical_thesis",
-                "q_2_sophia_logos_dialectic",
-                "q_2_instantiation_mode",
-                "q_3_dialectical_movement",
-                "q_4_historical_diagnosis",
-                "q_5_integration_template",
-                "q_5_conjunctive_threshold",
-            ],
+        let rows = client
+            .run(&node_cypher)
+            .await
+            .map_err(|err| format!("Neo4j node query failed: {err}"))?;
+        let Some(row) = rows.first() else {
+            return Ok::<Option<GraphSubbranch>, String>(None);
+        };
+
+        let q_props = zip_graph_pairs(
+            row.get::<Vec<String>>("q_keys").unwrap_or_default(),
+            row.get::<Vec<String>>("q_vals").unwrap_or_default(),
         );
-        let mut regional_keys = vec![
-            "l_4_mef_condition",
-            "s_4_function_role",
-            "t_1_epistemic_function",
-            "t_5_next_evolution_phase",
-        ];
-        regional_keys.extend(m_prime_keys.iter().map(String::as_str));
-        let regional_props = collect_optional_row_strings(row, &regional_keys);
+        let regional_props = zip_graph_pairs(
+            row.get::<Vec<String>>("reg_keys").unwrap_or_default(),
+            row.get::<Vec<String>>("reg_vals").unwrap_or_default(),
+        );
 
-        Some(GraphSubbranch {
-            coordinate: row.get::<String>("coordinate").ok()?,
-            name: row.get::<String>("name").ok(),
-            essence: row.get::<String>("essence").ok(),
-            core_nature: row.get::<String>("core_nature").ok(),
-            description: row.get::<String>("description").ok(),
+        let child_rows = client
+            .run(&child_cypher)
+            .await
+            .map_err(|err| format!("Neo4j children query failed: {err}"))?;
+        let mut children = Vec::new();
+        for child in &child_rows {
+            if let Ok(coord) = child.get::<String>("coordinate") {
+                let name = child.get::<String>("name").unwrap_or_default();
+                children.push((coord, name));
+            }
+        }
+
+        Ok(Some(GraphSubbranch {
+            coordinate: row
+                .get::<String>("coordinate")
+                .map_err(|err| format!("Neo4j row missing coordinate: {err}"))?,
+            name: non_empty(row.get::<String>("name").ok()),
+            essence: non_empty(row.get::<String>("essence").ok()),
+            core_nature: non_empty(row.get::<String>("core_nature").ok()),
+            description: non_empty(row.get::<String>("description").ok()),
             q_props,
             regional_props,
+            children,
+        }))
+    };
+
+    block_on_graph(fetch)
+}
+
+/// Drop a graph string value that is missing or blank.
+fn non_empty(value: Option<String>) -> Option<String> {
+    value.filter(|text| !text.trim().is_empty())
+}
+
+/// Zip parallel key/value lists from a Cypher comprehension into sorted pairs,
+/// dropping blanks. The two comprehensions iterate the same `keys(n)` order, so
+/// index i of each aligns.
+fn zip_graph_pairs(keys: Vec<String>, vals: Vec<String>) -> Vec<(String, String)> {
+    let mut pairs: Vec<(String, String)> = keys
+        .into_iter()
+        .zip(vals)
+        .filter(|(_, value)| !value.trim().is_empty())
+        .collect();
+    pairs.sort_by(|a, b| a.0.cmp(&b.0));
+    pairs
+}
+
+/// Drive a graph future to completion whether or not we are already inside a
+/// tokio runtime, surfacing runtime-construction failure as a graph error
+/// (HONEST-ABSENT) rather than a silent `None`.
+fn block_on_graph<F, T>(fut: F) -> Result<T, String>
+where
+    F: std::future::Future<Output = Result<T, String>>,
+{
+    if let Ok(handle) = tokio::runtime::Handle::try_current() {
+        tokio::task::block_in_place(|| handle.block_on(fut))
+    } else {
+        match tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+        {
+            Ok(runtime) => runtime.block_on(fut),
+            Err(err) => Err(format!("tokio runtime unavailable: {err}")),
+        }
+    }
+}
+
+struct HashPortal {
+    core_nature: Option<String>,
+    description: Option<String>,
+    help_topics: Vec<(String, String, String)>,
+}
+
+/// Live-graph read for the `#` root portal: the `#` node's core nature +
+/// description, plus any `#-0`..`#-5` help-topic branches the graph carries.
+/// Uses the same S2 seam as everything else. `Err` = Neo4j unreachable
+/// (HONEST-ABSENT). Help topics are seed-only and legitimately empty when the
+/// live graph does not carry them — that absence is reported, never patched from
+/// a file.
+fn load_graph_hash_portal() -> Result<HashPortal, String> {
+    let node_cypher = "MATCH (n:Bimba) WHERE n.coordinate = '#' \
+         RETURN n.c_0_core_nature AS core_nature, n.c_1_description AS description LIMIT 1";
+    let help_cypher = "MATCH (n:Bimba) \
+         WHERE n.coordinate STARTS WITH '#-' AND size(n.coordinate) = 3 \
+         RETURN n.coordinate AS coordinate, n.c_1_name AS name, n.c_0_core_nature AS core_nature \
+         ORDER BY n.coordinate";
+
+    let fetch = async move {
+        let config = crate::graph::client::Neo4jConfig::from_env();
+        let client = crate::graph::client::Neo4jClient::connect(&config)
+            .map_err(|err| format!("Neo4j connect failed: {err}"))?;
+
+        let node_rows = client
+            .run(node_cypher)
+            .await
+            .map_err(|err| format!("Neo4j '#' node query failed: {err}"))?;
+        let (core_nature, description) = match node_rows.first() {
+            Some(row) => (
+                non_empty(row.get::<String>("core_nature").ok()),
+                non_empty(row.get::<String>("description").ok()),
+            ),
+            None => (None, None),
+        };
+
+        let help_rows = client
+            .run(help_cypher)
+            .await
+            .map_err(|err| format!("Neo4j '#' help-topic query failed: {err}"))?;
+        let mut help_topics = Vec::new();
+        for row in &help_rows {
+            if let Ok(coord) = row.get::<String>("coordinate") {
+                let name =
+                    non_empty(row.get::<String>("name").ok()).unwrap_or_else(|| "?".to_string());
+                let core = row.get::<String>("core_nature").ok().unwrap_or_default();
+                help_topics.push((coord, name, core));
+            }
+        }
+
+        Ok::<HashPortal, String>(HashPortal {
+            core_nature,
+            description,
+            help_topics,
         })
     };
 
-    if let Ok(handle) = tokio::runtime::Handle::try_current() {
-        tokio::task::block_in_place(|| handle.block_on(fetch))
-    } else {
-        tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-            .ok()?
-            .block_on(fetch)
-    }
+    block_on_graph(fetch)
 }
 
 fn graph_m_prime_surface_keys(raw: &str) -> Vec<String> {
@@ -1257,19 +1310,6 @@ fn graph_coordinate_alternates(raw: &str) -> Vec<String> {
     alternates.sort();
     alternates.dedup();
     alternates
-}
-
-fn collect_optional_row_strings(row: &neo4rs::Row, keys: &[&str]) -> Vec<(String, String)> {
-    keys.iter()
-        .filter_map(|key| {
-            let value = row.get::<String>(*key).ok()?;
-            if value.trim().is_empty() {
-                None
-            } else {
-                Some(((*key).to_string(), value))
-            }
-        })
-        .collect()
 }
 
 fn escape_cypher_literal(value: &str) -> String {
@@ -1856,5 +1896,56 @@ mod tests {
             escape_cypher_literal("Sophia's\nLogos\tbridge"),
             "Sophia\\'s\\nLogos\\tbridge"
         );
+    }
+
+    #[test]
+    fn non_empty_drops_blank_and_missing_graph_values() {
+        assert_eq!(non_empty(None), None);
+        assert_eq!(non_empty(Some("   ".to_string())), None);
+        assert_eq!(non_empty(Some("\n\t".to_string())), None);
+        assert_eq!(
+            non_empty(Some("Decans System".to_string())),
+            Some("Decans System".to_string())
+        );
+    }
+
+    #[test]
+    fn zip_graph_pairs_sorts_by_key_and_drops_blank_values() {
+        // Cypher returns q_keys/q_vals as parallel lists in keys(n) order; the
+        // helper must pair them, drop blanks, and sort deterministically.
+        let keys = vec![
+            "q_3_four_three_three_two_nesting".to_string(),
+            "q_0_uncut_zodiacal_circle".to_string(),
+            "q_9_blank".to_string(),
+        ];
+        let vals = vec![
+            "nested product 4*3*3*2 = 72".to_string(),
+            "undivided 360 circle".to_string(),
+            "   ".to_string(),
+        ];
+        let pairs = zip_graph_pairs(keys, vals);
+        assert_eq!(
+            pairs,
+            vec![
+                (
+                    "q_0_uncut_zodiacal_circle".to_string(),
+                    "undivided 360 circle".to_string()
+                ),
+                (
+                    "q_3_four_three_three_two_nesting".to_string(),
+                    "nested product 4*3*3*2 = 72".to_string()
+                ),
+            ]
+        );
+    }
+
+    #[test]
+    fn zip_graph_pairs_tolerates_ragged_key_value_lengths() {
+        // A value list shorter than the key list must not panic; zip truncates.
+        let pairs = zip_graph_pairs(
+            vec!["q_1_a".to_string(), "q_2_b".to_string()],
+            vec!["only-one".to_string()],
+        );
+        assert_eq!(pairs, vec![("q_1_a".to_string(), "only-one".to_string())]);
     }
 }
