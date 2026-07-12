@@ -1,489 +1,39 @@
-use super::edge_import::DatasetRelationImportOutcome;
-use super::validation::{
-    canonical_dataset_plan, cypher_literal, deep_dataset_plan, escape_cypher, layer_string,
-    low_detail_dataset_plan, sanitize_json_control_chars, strip_json_bom, truncate_utf8,
-    DatasetBranch, DatasetBranchReport, DatasetImportReport, DatasetSkip,
-};
-use crate::coordinate::{convert_hash_to_m_family, wrap_context_frames, CoordinateArrayParser};
-use crate::Neo4jClient;
+//! dataset_import::property_mapping — source-key → canonical-property mapping.
+//!
+//! The reviewed maps that promote raw dataset `filteredProps` / `relProperties`
+//! keys into canonical `c_/p_/l_/s_/t_/q_/m_` coordinate-family properties, the
+//! asset-field lifting, the string-list whitelist, the relationship-type
+//! sanitizer, the relation-family classifier, and the coordinate-layer string.
+//! Split out of the former `dataset_import.rs` per S2-ARCHITECTURE.md §5.7
+//! (finding 7).
+
+use super::cypher::{cypher_literal, escape_cypher};
+use super::json_utils::{coordinate_from_node, nested_filtered_property};
+use crate::coordinate::{convert_hash_to_m_family, CoordLayer};
+use epi_s2_graph_schema::relation_family_for_relationship_type;
 use serde_json::Value;
-use std::path::{Path, PathBuf};
-use uuid::Uuid;
 
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
-struct DatasetNodeImportOutcome {
-    imported: Vec<String>,
-    skipped: Vec<DatasetSkip>,
-}
+pub(super) const STRING_LIST_TARGETS: &[&str] = &[
+    "c_1_asset_uri",
+    "c_4_ql_operator_types",
+    "c_5_resonances",
+    "l_2_therapeutic_properties",
+    "s_5_tool_affinity",
+];
 
-pub struct DatasetImporter<'a> {
-    pub(super) client: &'a Neo4jClient,
-    pub(super) datasets_dir: String,
-}
-
-impl<'a> DatasetImporter<'a> {
-    pub fn new(client: &'a Neo4jClient, datasets_dir: &str) -> Self {
-        Self {
-            client,
-            datasets_dir: datasets_dir.to_string(),
-        }
-    }
-
-    /// Import a nodes JSON file. Each entry becomes a Bimba node.
-    /// Uses MERGE on coordinate to avoid duplicates with seed data.
-    pub async fn import_nodes(&self, filename: &str) -> Result<usize, String> {
-        let report = self.import_nodes_with_metadata(filename, None).await?;
-        Ok(report.imported.len())
-    }
-
-    async fn import_nodes_with_metadata(
-        &self,
-        filename: &str,
-        branch: Option<&DatasetBranch>,
-    ) -> Result<DatasetNodeImportOutcome, String> {
-        let path = self.resolve_dataset_path(filename);
-        let data = std::fs::read_to_string(&path)
-            .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let sanitized = sanitize_json_control_chars(strip_json_bom(&data));
-        let nodes: Vec<Value> = serde_json::from_str(&sanitized)
-            .map_err(|e| format!("parse {}: {}", path.display(), e))?;
-
-        let mut outcome = DatasetNodeImportOutcome::default();
-        for node in &nodes {
-            // DR-M3-1 import-time law: reject the TCT 8-count dataset error
-            if let Some(reason) = super::validation::reject_tct_cardinality_eight(node) {
-                outcome.skipped.push(DatasetSkip {
-                    item: node_identity_hint(node),
-                    reason,
-                });
-                continue;
-            }
-            let raw_coord = match coordinate_from_node(node) {
-                Some(c) => c,
-                None => {
-                    outcome.skipped.push(DatasetSkip {
-                        item: node_identity_hint(node),
-                        reason: "missing coordinate or filteredProps.bimbaCoordinate".into(),
-                    });
-                    continue;
-                }
-            };
-            let coord = wrap_context_frames(&convert_hash_to_m_family(raw_coord));
-            let parsed = CoordinateArrayParser::parse_one(&coord).ok();
-
-            let mut set_parts = Vec::new();
-
-            // Provenance (C3 — process)
-            set_parts.push(format!(
-                "n.c_3_source_dataset = COALESCE(n.c_3_source_dataset, 'bimba')"
-            ));
-            if let Some(branch) = branch {
-                set_parts.push(format!(
-                    "n.c_3_dataset_branch = '{}'",
-                    escape_cypher(branch.id)
-                ));
-                set_parts.push(format!(
-                    "n.c_3_dataset_branch_label = '{}'",
-                    escape_cypher(branch.label)
-                ));
-            }
-
-            // Deterministic UUID v5 from coordinate (C2 — Entity).
-            let uuid = Uuid::new_v5(&Uuid::NAMESPACE_OID, coord.as_bytes());
-            set_parts.push(format!("n.c_2_uuid = COALESCE(n.c_2_uuid, '{}')", uuid));
-
-            // Computed coordinate-driven metadata (C4 — Type).
-            if let Some(parsed) = &parsed {
-                if let Some(family) = &parsed.family {
-                    set_parts.push(format!(
-                        "n.c_4_family = COALESCE(n.c_4_family, '{}')",
-                        escape_cypher(family)
-                    ));
-                }
-                if let Some(pos) = parsed.ql_position {
-                    set_parts.push(format!(
-                        "n.c_4_ql_position = COALESCE(n.c_4_ql_position, {})",
-                        pos
-                    ));
-                }
-                let layer_str = layer_string(&parsed.layer);
-                set_parts.push(format!(
-                    "n.c_4_layer = COALESCE(n.c_4_layer, '{}')",
-                    layer_str
-                ));
-                if parsed.inverted {
-                    set_parts.push(
-                        "n.c_4_inversion_state = COALESCE(n.c_4_inversion_state, 1)".to_string(),
-                    );
-                }
-            }
-
-            // Identity (C1 — Form)
-            if let Some(name) = node_text_property(
-                node,
-                &[
-                    "name",
-                    "title",
-                    "primaryDesignation",
-                    "label",
-                    "displayName",
-                ],
-            ) {
-                set_parts.push(format!(
-                    "n.c_1_name = COALESCE(n.c_1_name, '{}')",
-                    escape_cypher(name)
-                ));
-            }
-            if let Some(desc) = node_text_property(
-                node,
-                &[
-                    "description",
-                    "summary",
-                    "operationalDescription",
-                    "bimbaDescription",
-                ],
-            ) {
-                set_parts.push(format!(
-                    "n.c_1_description = COALESCE(n.c_1_description, '{}')",
-                    escape_cypher(truncate_utf8(desc, 2000))
-                ));
-            }
-            if let Some(form) = node_text_property(
-                node,
-                &[
-                    "formulation",
-                    "form",
-                    "operationalFormulation",
-                    "metaphysicalFormulation",
-                ],
-            ) {
-                set_parts.push(format!(
-                    "n.c_1_form = COALESCE(n.c_1_form, '{}')",
-                    escape_cypher(truncate_utf8(form, 2000))
-                ));
-            }
-            if let Some(structure) = node_text_property(
-                node,
-                &["structure", "structuralPattern", "operationalStructure"],
-            ) {
-                set_parts.push(format!(
-                    "n.c_1_structure = COALESCE(n.c_1_structure, '{}')",
-                    escape_cypher(truncate_utf8(structure, 2000))
-                ));
-            }
-
-            // Ground / essence (C0 — Bimba)
-            if let Some(essence) = node_text_property(
-                node,
-                &[
-                    "essence",
-                    "operationalEssence",
-                    "metaphysicalEssence",
-                    "ontologicalEssence",
-                ],
-            ) {
-                set_parts.push(format!(
-                    "n.c_0_essence = COALESCE(n.c_0_essence, '{}')",
-                    escape_cypher(truncate_utf8(essence, 1000))
-                ));
-            }
-            if let Some(core_nature) = node_text_property(node, &["coreNature", "core_nature"]) {
-                set_parts.push(format!(
-                    "n.c_0_core_nature = COALESCE(n.c_0_core_nature, '{}')",
-                    escape_cypher(truncate_utf8(core_nature, 1000))
-                ));
-            }
-
-            append_deep_prefixed_filtered_props(node, parsed.as_ref(), &mut set_parts);
-
-            // Per-node `labels` field (added by Bimba label exports). When present,
-            // these are authoritative — applied via APOC after the MERGE.
-            let node_labels: Vec<String> = node
-                .get("labels")
-                .and_then(|v| v.as_array())
-                .map(|arr| {
-                    arr.iter()
-                        .filter_map(|v| v.as_str())
-                        .filter(|s| {
-                            !s.is_empty()
-                                && *s != "Bimba"
-                                && *s != "BimbaNode"
-                                && *s != "BimbaCoordinate"
-                        })
-                        .map(|s| s.to_string())
-                        .collect()
-                })
-                .unwrap_or_default();
-
-            let cypher = format!(
-                "MERGE (n:Bimba {{coordinate: '{}'}}) SET {} RETURN n.coordinate",
-                escape_cypher(&coord),
-                set_parts.join(", ")
-            );
-
-            match self.client.run(&cypher).await {
-                Ok(rows) if !rows.is_empty() => outcome.imported.push(coord.clone()),
-                Ok(_) => outcome.skipped.push(DatasetSkip {
-                    item: coord.clone(),
-                    reason: "Neo4j write returned no node confirmation".into(),
-                }),
-                Err(e) => {
-                    let reason = e.to_string();
-                    eprintln!("  warn: skip node '{}': {}", coord, reason);
-                    outcome.skipped.push(DatasetSkip {
-                        item: coord.clone(),
-                        reason,
-                    });
-                    continue;
-                }
-            }
-
-            if !node_labels.is_empty() {
-                let labels_lit = node_labels
-                    .iter()
-                    .map(|l| format!("'{}'", escape_cypher(l)))
-                    .collect::<Vec<_>>()
-                    .join(", ");
-                let label_cypher = format!(
-                    "MATCH (n:Bimba {{coordinate: '{}'}}) \
-                     CALL apoc.create.addLabels(n, [{}]) YIELD node RETURN node.coordinate",
-                    escape_cypher(&coord),
-                    labels_lit
-                );
-                if let Err(e) = self.client.run(&label_cypher).await {
-                    eprintln!("  warn: skip labels for '{}': {}", coord, e);
-                }
-            }
-
-            // Tie every embedded context frame to its canonical CF_* node via OPERATES_IN.
-            // `(0/1) → CF_BINARY`, `(5/0) → CF_MOBIUS`, all `(4.*/*) → CF_FRACTAL`, etc.
-            for frame in crate::coordinate::extract_context_frames(&coord) {
-                let Some(cf_node) = crate::coordinate::cf_node_for_frame(&frame) else {
-                    continue;
-                };
-                let op_cypher = format!(
-                    "MATCH (s:Bimba {{coordinate: '{src}'}}) \
-                     MATCH (t:Bimba {{coordinate: '{tgt}'}}) \
-                     MERGE (s)-[r:OPERATES_IN]->(t) \
-                     ON CREATE SET r.c_3_created_at = datetime(), \
-                                   r.c_0_source_coordinate = '{src}', \
-                                   r.c_0_target_coordinate = '{tgt}', \
-                                   r.c_2_relation_type = 'OPERATES_IN'",
-                    src = escape_cypher(&coord),
-                    tgt = cf_node,
-                );
-                if let Err(e) = self.client.run(&op_cypher).await {
-                    eprintln!(
-                        "  warn: skip OPERATES_IN '{}' -> '{}': {}",
-                        coord, cf_node, e
-                    );
-                }
-            }
-        }
-        Ok(outcome)
-    }
-
-    /// Import all canonical datasets in dependency order.
-    pub async fn import_all(&self) -> Result<String, String> {
-        let report = self
-            .import_branches(canonical_dataset_plan(Path::new(&self.datasets_dir)))
-            .await?;
-        let labels_report = self
-            .import_labels_if_present("low-detail/bimba_labels.json")
-            .await?;
-        Ok(format!("{}\n{}", report.render(), labels_report))
-    }
-
-    pub async fn import_low_detail_all(&self) -> Result<String, String> {
-        let report = self.import_branches(low_detail_dataset_plan()).await?;
-        let labels_report = self
-            .import_labels_if_present("low-detail/bimba_labels.json")
-            .await?;
-        Ok(format!("{}\n{}", report.render(), labels_report))
-    }
-
-    pub async fn import_deep_all(&self) -> Result<String, String> {
-        self.import_branches(deep_dataset_plan())
-            .await
-            .map(|report| report.render())
-    }
-
-    pub async fn import_deep_branch(&self, branch_id: &str) -> Result<String, String> {
-        let branch = deep_dataset_plan()
-            .into_iter()
-            .find(|branch| branch.id == branch_id)
-            .ok_or_else(|| format!("unknown deep dataset branch: {}", branch_id))?;
-        self.import_branches(vec![branch])
-            .await
-            .map(|report| report.render())
-    }
-
-    async fn import_branches(
-        &self,
-        branches: Vec<DatasetBranch>,
-    ) -> Result<DatasetImportReport, String> {
-        let mut report = DatasetImportReport::default();
-        for branch in branches {
-            if !self.resolve_dataset_path(branch.nodes_file).exists() {
-                continue;
-            }
-            let node_outcome = self
-                .import_nodes_with_metadata(branch.nodes_file, Some(&branch))
-                .await?;
-            let relation_outcome = match branch.relations_file {
-                Some(rel_file) if self.resolve_dataset_path(rel_file).exists() => {
-                    self.import_relations_with_metadata(rel_file, Some(&branch))
-                        .await?
-                }
-                _ => DatasetRelationImportOutcome::default(),
-            };
-            report.push(DatasetBranchReport {
-                branch_id: branch.id.into(),
-                label: branch.label.into(),
-                nodes: node_outcome.imported.len(),
-                relations: relation_outcome.imported.len(),
-                skipped_nodes: node_outcome.skipped.len(),
-                skipped_relations: relation_outcome.skipped.len(),
-                imported_nodes: node_outcome.imported,
-                imported_relations: relation_outcome.imported,
-                skipped_node_details: node_outcome.skipped,
-                skipped_relation_details: relation_outcome.skipped,
-            });
-        }
-        Ok(report)
-    }
-
-    pub(super) fn resolve_dataset_path(&self, filename: &str) -> PathBuf {
-        Path::new(&self.datasets_dir).join(filename)
-    }
-
-    /// Apply secondary labels from a `[{coord, labels}]` JSON file to existing :Bimba
-    /// nodes. Coordinates are `# → M`-converted before matching. Nodes referenced by
-    /// the label file that don't yet exist are CREATEd as stubs so the variant Bimba
-    /// structure stays whole (the QL ideal 0..=5 doesn't gate which positions exist —
-    /// real subsystems have decan degrees 0..=360, codon indices 0..=63, etc.).
-    ///
-    /// Requires APOC (`apoc.create.addLabels`). Returns a human-readable summary.
-    pub async fn import_labels_if_present(&self, filename: &str) -> Result<String, String> {
-        let path = self.resolve_dataset_path(filename);
-        if !path.exists() {
-            return Ok(format!("Labels import skipped: {} not present", filename));
-        }
-        let data = std::fs::read_to_string(&path)
-            .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let sanitized = sanitize_json_control_chars(strip_json_bom(&data));
-        let entries: Vec<Value> = serde_json::from_str(&sanitized)
-            .map_err(|e| format!("parse {}: {}", path.display(), e))?;
-
-        const EXCLUDE: &[&str] = &["Bimba", "BimbaNode", "BimbaCoordinate"];
-        let mut stubbed = 0usize;
-        let mut labeled = 0usize;
-        let mut skipped = 0usize;
-
-        for entry in &entries {
-            let raw_coord = match entry.get("coord").and_then(|v| v.as_str()) {
-                Some(c) if !c.trim().is_empty() => c,
-                _ => {
-                    skipped += 1;
-                    continue;
-                }
-            };
-            let coord = wrap_context_frames(&convert_hash_to_m_family(raw_coord));
-            let labels: Vec<&str> = entry
-                .get("labels")
-                .and_then(|v| v.as_array())
-                .map(|arr| {
-                    arr.iter()
-                        .filter_map(|v| v.as_str())
-                        .filter(|l| !EXCLUDE.contains(l) && !l.is_empty())
-                        .collect()
-                })
-                .unwrap_or_default();
-            if labels.is_empty() {
-                skipped += 1;
-                continue;
-            }
-            let labels_lit = labels
-                .iter()
-                .map(|l| format!("'{}'", escape_cypher(l)))
-                .collect::<Vec<_>>()
-                .join(", ");
-
-            // Pre-check whether the node already exists so we report stub creations honestly.
-            let exists_cypher = format!(
-                "MATCH (n:Bimba {{coordinate: '{}'}}) RETURN 1 AS hit LIMIT 1",
-                escape_cypher(&coord)
-            );
-            let pre_exists = self
-                .client
-                .run(&exists_cypher)
-                .await
-                .map(|rows| !rows.is_empty())
-                .unwrap_or(false);
-
-            let cypher = format!(
-                "MERGE (n:Bimba {{coordinate: '{coord}'}}) \
-                 ON CREATE SET n.c_3_source_dataset = 'bimba-labels', \
-                               n.c_3_dataset_branch = 'low-detail/labels-only' \
-                 WITH n \
-                 CALL apoc.create.addLabels(n, [{labels_lit}]) YIELD node \
-                 RETURN node.coordinate AS coord",
-                coord = escape_cypher(&coord),
-                labels_lit = labels_lit,
-            );
-
-            match self.client.run(&cypher).await {
-                Ok(_) => {
-                    labeled += 1;
-                    if !pre_exists {
-                        stubbed += 1;
-                    }
-                }
-                Err(e) => {
-                    eprintln!("  warn: skip labels for '{}': {}", coord, e);
-                    skipped += 1;
-                }
-            }
-        }
-        Ok(format!(
-            "Labels applied: {} nodes labeled ({} newly stubbed, {} skipped)",
-            labeled, stubbed, skipped
-        ))
+pub(super) fn layer_string(layer: &CoordLayer) -> &'static str {
+    match layer {
+        CoordLayer::Psychoid => "PSYCHOID",
+        CoordLayer::Family => "COORDINATE",
+        CoordLayer::FamilyRoot => "FAMILY_ROOT",
+        CoordLayer::Lens => "LENS",
+        CoordLayer::ContextFrame => "CONTEXT_FRAME",
+        CoordLayer::Vak => "VAK",
+        CoordLayer::Weave => "WEAVE",
     }
 }
 
-pub fn coordinate_from_node(node: &Value) -> Option<&str> {
-    node.get("coordinate")
-        .and_then(|value| value.as_str())
-        .or_else(|| nested_filtered_property(node, "coordinate"))
-        .or_else(|| nested_filtered_property(node, "bimbaCoordinate"))
-}
-
-pub fn node_text_property<'a>(node: &'a Value, keys: &[&str]) -> Option<&'a str> {
-    for key in keys {
-        if let Some(value) = node.get(*key).and_then(|value| value.as_str()) {
-            return Some(value);
-        }
-        if let Some(value) = nested_filtered_property(node, key) {
-            return Some(value);
-        }
-    }
-    None
-}
-
-fn node_identity_hint(node: &Value) -> String {
-    node_text_property(node, &["name", "title", "label", "primaryDesignation"])
-        .map(|value| truncate_utf8(value, 96).to_string())
-        .unwrap_or_else(|| "<node-without-coordinate>".into())
-}
-
-fn nested_filtered_property<'a>(node: &'a Value, key: &str) -> Option<&'a str> {
-    node.get("filteredProps")?
-        .get(key)
-        .and_then(|value| value.as_str())
-}
-
-fn append_deep_prefixed_filtered_props(
+pub(super) fn append_deep_prefixed_filtered_props(
     node: &Value,
     parsed: Option<&crate::coordinate::ParsedCoordinate>,
     set_parts: &mut Vec<String>,
@@ -892,11 +442,76 @@ fn node_position(node: &Value, parsed: Option<&crate::coordinate::ParsedCoordina
         .unwrap_or(0)
 }
 
+/// Sanitize relationship type to valid Neo4j identifier (uppercase, underscores only)
+pub(super) fn sanitize_rel_type(t: &str) -> String {
+    t.chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '_' {
+                c.to_ascii_uppercase()
+            } else {
+                '_'
+            }
+        })
+        .collect()
+}
+
+pub(super) fn relation_family_for_rel_type(rel_type: &str) -> &'static str {
+    relation_family_for_relationship_type(rel_type)
+}
+
+pub(super) fn append_deep_prefixed_rel_props(rel: &Value, set_parts: &mut Vec<String>) {
+    let Some(props) = rel.get("relProperties").and_then(|value| value.as_object()) else {
+        return;
+    };
+
+    for (source_key, value) in props {
+        let Some(target_key) = explicit_deep_relation_property_key(source_key) else {
+            continue;
+        };
+        if rel_target_already_set(set_parts, &target_key) {
+            continue;
+        }
+        let Some(literal) = cypher_literal(value, &target_key) else {
+            continue;
+        };
+        set_parts.push(format!(
+            "r.{target_key} = COALESCE(r.{target_key}, {literal})"
+        ));
+    }
+}
+
+fn explicit_deep_relation_property_key(source_key: &str) -> Option<String> {
+    let target = match source_key {
+        "description" => "c_1_relation_description",
+        "type" | "relationship" | "relationshipType" => "c_2_relation_kind",
+        "createdAt" => "c_3_created_at",
+        "correspondenceType" | "specificCorrespondence" | "correspondence" => "c_5_correspondence",
+        "basis" => "c_5_correspondence_basis",
+        "fromCoordinate" => "c_0_source_coordinate",
+        "toCoordinate" => "c_0_target_coordinate",
+        "realizationLevel" => "l_5_realization_level",
+        "mysticalIdentity" => "l_5_mystical_identity",
+        "functionalRole" | "systemicFunction" => "s_4_function_role",
+        "hierarchyLevel" => "s_4_hierarchy_level",
+        "insight" | "holisticInsight" => "t_5_insight",
+        "patternStructure" => "p_3_pattern_structure",
+        "patternName" => "p_3_pattern_name",
+        "developmentalFunction" => "t_3_developmental_function",
+        _ => return None,
+    };
+    Some(target.to_string())
+}
+
+fn rel_target_already_set(set_parts: &[String], target_key: &str) -> bool {
+    let prefix = format!("r.{target_key} ");
+    set_parts.iter().any(|part| part.starts_with(&prefix))
+}
+
 #[cfg(test)]
 mod tests {
-    use super::super::edge_import::sanitize_rel_type;
     use super::*;
-    use crate::dataset_import::{relation_endpoint, relation_type_from_value};
+    use crate::coordinate::CoordinateArrayParser;
+    use crate::dataset_import::{node_text_property, relation_endpoint, relation_type_from_value};
 
     #[test]
     fn helpers_understand_deep_dataset_shape() {
@@ -1036,5 +651,113 @@ mod tests {
 
         assert!(root_parts.contains(&"n.m_3_degree = 0".into()));
         assert!(sub_parts.contains(&"n.m_3_5_degree = 248".into()));
+    }
+
+    #[test]
+    fn lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots() {
+        let node = serde_json::json!({
+            "coordinate": "#0",
+            "filteredProps": {
+                "asset": "vault://Idea/Bimba/Map/assets/root.png",
+                "assetKind": "image",
+                "seal": "ipfs://bafybeigdecanseal",
+                "sigilUri": "vault://Idea/Bimba/Map/assets/sigil.svg",
+                "glyph": "vault://Idea/Bimba/Map/assets/glyph.svg"
+            }
+        });
+        let parsed = CoordinateArrayParser::parse_one("M0").ok();
+
+        let set_parts = mapped_filtered_props_for_test(&node, parsed.as_ref());
+
+        assert!(set_parts.contains(
+            &"n.c_1_asset_uri = ['vault://Idea/Bimba/Map/assets/root.png', 'ipfs://bafybeigdecanseal', 'vault://Idea/Bimba/Map/assets/sigil.svg', 'vault://Idea/Bimba/Map/assets/glyph.svg']".into()
+        ));
+        assert!(set_parts.contains(&"n.c_1_asset_kind = 'image'".into()));
+        assert_eq!(
+            set_parts
+                .iter()
+                .filter(|part| part.starts_with("n.c_1_asset_uri "))
+                .count(),
+            1,
+            "asset aliases should merge into the canonical StringList once"
+        );
+    }
+
+    #[test]
+    fn test_sanitize_rel_type() {
+        assert_eq!(sanitize_rel_type("LINKS_TO"), "LINKS_TO");
+        assert_eq!(
+            sanitize_rel_type("SUCCEEDED_BY_AND_MANIFESTS_THROUGH"),
+            "SUCCEEDED_BY_AND_MANIFESTS_THROUGH"
+        );
+        assert_eq!(sanitize_rel_type("has-relation"), "HAS_RELATION");
+    }
+
+    #[test]
+    fn relation_family_classifies_dataset_relationships() {
+        assert_eq!(relation_family_for_rel_type("CONTAINS"), "structural");
+        assert_eq!(relation_family_for_rel_type("SYNCED_FROM"), "sync");
+        assert_eq!(relation_family_for_rel_type("ELABORATES"), "inferred");
+        assert_eq!(
+            relation_family_for_rel_type("POS0_LINKS_TO"),
+            "compatibility"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_KERNEL_RESONANCE"),
+            "kernel_core"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_DECAN"),
+            "correspondential"
+        );
+        assert_eq!(
+            relation_family_for_rel_type("HAS_MAQAM_FAMILY"),
+            "correspondential"
+        );
+        assert_eq!(relation_family_for_rel_type("RULED_BY"), "correspondential");
+        assert_eq!(
+            relation_family_for_rel_type("VORTEX_SPIRIT_AXIS"),
+            "correspondential"
+        );
+    }
+
+    #[test]
+    fn relation_properties_are_promoted_from_reviewed_map_only() {
+        let rel = serde_json::json!({
+            "relProperties": {
+                "description": "relation prose",
+                "correspondenceType": "harmonic",
+                "functionalRole": "bridge",
+                "patternStructure": "triadic",
+                "mysteryField": "do not guess"
+            }
+        });
+        let mut set_parts = Vec::new();
+
+        append_deep_prefixed_rel_props(&rel, &mut set_parts);
+
+        assert!(set_parts.contains(
+            &"r.c_1_relation_description = COALESCE(r.c_1_relation_description, 'relation prose')"
+                .into()
+        ));
+        assert!(set_parts
+            .contains(&"r.c_5_correspondence = COALESCE(r.c_5_correspondence, 'harmonic')".into()));
+        assert!(set_parts
+            .contains(&"r.s_4_function_role = COALESCE(r.s_4_function_role, 'bridge')".into()));
+        assert!(set_parts.contains(
+            &"r.p_3_pattern_structure = COALESCE(r.p_3_pattern_structure, 'triadic')".into()
+        ));
+        assert!(
+            set_parts.iter().all(|part| !part.contains("mystery")),
+            "unreviewed relation properties must not be guessed into coordinate families"
+        );
+    }
+
+    #[test]
+    fn layer_string_covers_all_variants() {
+        assert_eq!(layer_string(&CoordLayer::Psychoid), "PSYCHOID");
+        assert_eq!(layer_string(&CoordLayer::Family), "COORDINATE");
+        assert_eq!(layer_string(&CoordLayer::FamilyRoot), "FAMILY_ROOT");
+        assert_eq!(layer_string(&CoordLayer::Lens), "LENS");
     }
 }

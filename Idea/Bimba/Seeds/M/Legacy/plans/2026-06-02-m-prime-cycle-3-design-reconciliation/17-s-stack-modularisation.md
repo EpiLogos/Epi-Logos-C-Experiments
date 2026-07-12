@@ -114,6 +114,8 @@ Every row in this tranche follows the same shape:
 
     Split into `dataset_import/{mod, importer, branch, plans, property_mapping, json_utils, cypher}.rs`. Per S2-ARCHITECTURE.md §5 finding 7.
 
+    **LANDED (rerun T17.14):** the seven canonical submodules exist and carry the code (`importer.rs` 740 · `property_mapping.rs` 763 · `plans.rs` 161 · `branch.rs` 137 · `json_utils.rs` 133 · `cypher.rs` 72 · `mod.rs` 44 re-exports, ~2,050 LOC total — grown from 1,655 by Track 04/09 schema-slot additions). A prior pass had split the module along a non-canonical `{node_import, edge_import, validation}` axis; this reorg realigns to the finding-7 axis. **Pure move refactor — no logic edits:** every `pub`/`pub(super)` item preserved and re-exported from `mod.rs` (`DatasetImporter`, `canonical_q_import_property_key`, `coordinate_from_node`, `node_text_property`, `relation_endpoint`, `relation_type_from_value`, `strip_json_bom`, the plan helpers, and the branch/report types), so external callers (`lib.rs:54` `pub use`, `tests/q_5_fallback_bucket_law.rs`) stay green. All 18 module unit tests moved verbatim with their code; full crate suite: 243 passed / 0 failed / 13 ignored (live-Neo4j).
+
 15. **17.15 — Split `Body/S/S5/epii-autoresearch-core/src/lib.rs` (2,049 LOC) + `epii-agent-core/src/lib.rs` (1,170 LOC)** *(code-cleanup-refactor)*
 
     Per S5-ARCHITECTURE.md §5 findings F2 + F3. F2 splits `epii-autoresearch-core/src/lib.rs`; F3 splits `epii-agent-core/src/lib.rs`.
