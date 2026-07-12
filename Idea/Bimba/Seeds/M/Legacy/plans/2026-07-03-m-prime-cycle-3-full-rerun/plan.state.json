@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T12:22:58.987Z",
+  "updatedAt": "2026-07-12T16:04:46.268Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2260,7 +2260,7 @@
         },
         {
           "at": "2026-07-12T12:22:58.973Z",
-          "text": "L2' canonical element-ID harmonisation closed verify-first: deliverables 1-3 (m_canonical.h enum+mask+5 helpers; m4.h canonical renumber with _Static_assert via m4_nuc_to_elem; medicine renumber incl. ELEMENT_CHAKRA[6] Salt-to-Sahasrara + elem_sig_chakra) were pre-landed at HEAD and are now PROVEN by the two named tests added this tranche (canonical_element_id_round_trip; body_zones_for_elem_sig_bit_layout full-domain sweep + old-bug witness for the >>2 vs >>3 chakra bit fix). Migration script pre-existing — dry-run reviewed then APPLIED: +12 additive element_canonical_id lines only (Fire=4/Earth=1/Air=3/Water=2), 595 nodes invariant, element-string lookups identical, #2-3-x branch coordinates untouched per convention. Types-tree L2'.md patched (Mineral-to-Salt + Canonical Element IDs section, 3 Salt hits); Map M2-3.md gains the branch-convention section (NOTE: generated projection — must survive re-projection); ALCHEMICAL_TO_TATTVIC already Salt in m0.c. Consumer sweep CLEAN: no canonical IDs cross the wire; app palette is scheme-A tattva end-to-end; gateway-contract/schemas carry no element vocab; m4.arena pins untouched. Findings: dataset JSON pre-existing unescaped control chars (strict parse fails at HEAD too); portal-core mineral_cap deferred to spec section 6.3. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "text": "L2' canonical element-ID harmonisation closed verify-first: deliverables 1-3 (m_canonical.h enum+mask+5 helpers; m4.h canonical renumber with _Static_assert via m4_nuc_to_elem; medicine renumber incl. ELEMENT_CHAKRA[6] Salt-to-Sahasrara + elem_sig_chakra) were pre-landed at HEAD and are now PROVEN by the two named tests added this tranche (canonical_element_id_round_trip; body_zones_for_elem_sig_bit_layout full-domain sweep + old-bug witness for the >>2 vs >>3 chakra bit fix). Migration script pre-existing — dry-run reviewed then APPLIED: +12 additive element_canonical_id lines only (Fire=4/Earth=1/Air=3/Water=2), 595 nodes invariant, element-string lookups identical, #2-3-x branch coordinates untouched per convention. Types-tree L2'.md patched (Mineral-to-Salt + Canonical Element IDs section, 3 Salt hits); Map M2-3.md gains the branch-convention section (NOTE: generated projection — must survive re-projection); ALCHEMICAL_TO_TATTVIC already Salt in m0.c. Consumer sweep CLEAN: no canonical IDs cross the wire; app palette is scheme-A tattva end-to-end; gateway-contract/schemas carry no element vocab; m4.arena pins untouched. Findings: dataset JSON pre-existing unescaped control chars (strict parse fails at HEAD too); portal-core mineral_cap is owned by spec section 6.3 (out of this tranche scope). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
           "receipt": {
             "command": "make test (epi-lib all green: test_m_canonical 60/60, m1 quaternion 7674/7674) + cargo test (epi-cli 751 passed / 0 failed incl. canonical_element_id_round_trip + body_zones_for_elem_sig_bit_layout, both re-run fresh by controller: 1/1 each) ; verify-tranche K-gate PASS by fable-c-verifier; grep Salt in Types-tree L2-prime doc = 3 hits",
             "exitCode": 0,
@@ -2283,16 +2283,53 @@
       "worktree": null
     },
     "05.T5.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T16:04:46.038Z",
+      "claimedAt": "2026-07-12T15:29:35.497Z",
+      "completedAt": "2026-07-12T16:04:46.038Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T15:56:40.212Z",
+          "text": "05.T5.17 verified (rerun substrate PRE-LANDED at HEAD, baseline ee05521a; spacetime.rs:994 split into spacetime/presence.rs under 17.T17.7). OracleSpreadPosition aliveness table + TargetAspect/CardKind/LiveState/KleinFace + generating->muting->mute + reopen-on-aspect-proximity state machine + record_oracle_spread/update_position_state reducer methods all present, re-exported via spacetime/mod.rs. DECIDED+TESTED classification: SUBSTRATE reducer methods (host-side pub fn publishing nara.oracle_spread/nara.oracle_position_state via publish_temporal_event, sibling of record_oracle_draw), NOT nara-bounded-access RPC methods -- no classify_method entry, no method-parity ripple; gateway-methods ratchet unaffected (holds only nara.oracle.cast/hygiene); 05.T5.10 t5_10_connectivity_vs_bounded_access 7/7 green. oracle_spread_contract 3/3 (state transitions + two-target-aspect round-trip + enum wire stability). cargo check clean. DOX + 05 doc section 5.17 Landed line written.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test oracle_spread_contract",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/spacetime/presence.rs",
+              "Body/S/S3/gateway/tests/oracle_spread_contract.rs",
+              "Body/S/S3/gateway/src/spacetime/mod.rs",
+              "Body/S/S3/gateway/AGENTS.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md"
+            ],
+            "tokenUsage": {
+              "input": 118000,
+              "output": 12000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T16:04:46.038Z",
+          "text": "OracleSpreadPosition aliveness substrate proven verify-first (baseline-landed, split into spacetime/presence.rs by 17.T17.7): OracleSpreadPosition table + TargetAspect/CardKind/LiveState/KleinFace + the generating->muting->mute + reopen-on-target-aspect-proximity state machine + record_oracle_spread/update_position_state methods all present and green (oracle_spread_contract 3/3, re-run fresh by controller). Method classification DECIDED + TESTED: SUBSTRATE (host-side pub fn publishing nara.oracle_spread / nara.oracle_position_state via publish_temporal_event, the record_oracle_draw sibling shape) — NOT nara.* bounded-access RPC, so no classify_method entry and the 05.T5.10 nara_bounded_access gate stays green (t5_10 7/7). No method-parity surface required changes (RPC-name ratchets track wire names; these ride the temporal-event seam). epi-spacetime-module is the WASM stub; OracleSpreadPosition is the honest S3 host-side projection. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test oracle_spread_contract (3 passed / 0 failed: state transitions incl. reopen-on-aspect-proximity + illegal-transition refusal + two-target-aspect JSON round-trip + enum wire stability) + t5_10 bounded-access gate 7/7 (classification proven) ; verify-tranche batched UF gate PASS by fable-c-verifier incl. app-ui-flow 22 + gateway + live-wire; grep table+methods = 10 hits",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/spacetime/presence.rs",
+              "Body/S/S3/gateway/tests/oracle_spread_contract.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.17.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-13",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T15:56:50.810Z",
+      "runId": "20260712T152935Z-05-T5.17",
       "worktree": null
     },
     "05.T5.18": {
@@ -4621,16 +4658,50 @@
       "worktree": null
     },
     "15.T15.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T16:04:46.254Z",
+      "claimedAt": "2026-07-12T15:29:35.693Z",
+      "completedAt": "2026-07-12T16:04:46.254Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T15:58:16.338Z",
+          "text": "spine-gap: typed left-sidebar MODE REGISTRY landed on carrier (src/ui/leftSidebarModes.ts) — inventory {id,label,surfaceId per CHROME-CONTRACT §2,availableInLayouts,pendingOwner}, exactly 3 daily-0-1 modes / 5 ide-deep; useLeftSidebarModeStore singleton survives the 0/1 face toggle + cross-layout persistence with backbone fallback; registerLeftSidebarModeCommands rides the command spine. 16 tests + pnpm build green; §2 consistency asserted; chrome-contract validator unaffected. Stays 28.x-owned: pane bodies coordinateTree(28.6)/backendStudio(28.13)/smartConnections(28.12) + App.tsx activity-bar mount(28.2). App.tsx/stores.ts/CHROME-CONTRACT.md untouched.",
+          "receipt": {
+            "command": "npx vitest run src/ui/leftSidebarModes.test.ts src/chromeContract.test.ts && pnpm build",
+            "exitCode": 0,
+            "testsPassed": 16,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 115000,
+              "output": 9500
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T16:04:46.254Z",
+          "text": "Left-sidebar activity-bar mode registry landed as spine grammar (spine-gap per DR-FACE-7): typed leftSidebarModes.ts inventory {id,label,surfaceId (CHROME-CONTRACT §2 key),availableInLayouts,pendingOwner} — exactly 3 daily-0-1 modes (Coordinate Tree->coordinateTree, Bimba Graph Viewer->bimbaGraph, Canon Studio->editor) and 5 ide-deep (+Backend Studio->backendStudio, Smart Connections->smartConnections); useLeftSidebarModeStore is the module-scope zustand singleton = the 15.7 mode field, surviving the cmd-period 0/1 face toggle by construction with backbone-fallback cross-layout persistence; registerLeftSidebarModeCommands is the command-spine switch path (exercised by tests, awaiting its activity-bar mount). §2 consistency asserted (every surfaceId a real row; live/pending status agrees); chromeContract lockstep validator still green (no factory cases/rows added). Pane bodies stay 28.x-owned: coordinateTree (28.6), backendStudio (28.13), smartConnections (28.12) render honest pending; activity-bar mount into App.tsx is 28.2 first-build (one-line registerLeftSidebarModeCommands wiring returned to controller, left for the 28.2 mount owner). 16 tests. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/ui/leftSidebarModes.test.ts (16 passed / 0 failed) + pnpm build clean ; verify-tranche batched UF gate PASS by fable-c-verifier incl. app-ui-flow 22 + app-test 423 + chromeContract lockstep still green",
+            "exitCode": 0,
+            "testsPassed": 16,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.3.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-14",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T15:58:16.338Z",
+      "runId": "20260712T152935Z-15-T15.3",
       "worktree": null
     },
     "15.T15.4": {
@@ -13866,17 +13937,37 @@
       "leaseExpiresAt": "2026-07-12T15:50:19.799Z",
       "worktree": null,
       "completedAt": "2026-07-12T12:19:06.085Z"
+    },
+    {
+      "runId": "20260712T152935Z-05-T5.17",
+      "taskId": "05.T5.17",
+      "status": "review",
+      "startedAt": "2026-07-12T15:29:35.497Z",
+      "owner": "thread-13",
+      "leaseExpiresAt": "2026-07-12T18:59:35.497Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T15:56:40.212Z"
+    },
+    {
+      "runId": "20260712T152935Z-15-T15.3",
+      "taskId": "15.T15.3",
+      "status": "review",
+      "startedAt": "2026-07-12T15:29:35.693Z",
+      "owner": "thread-14",
+      "leaseExpiresAt": "2026-07-12T17:59:35.693Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T15:58:16.338Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T11:29:20.879Z",
-    "updatedAt": "2026-07-12T11:29:20.879Z",
+    "createdAt": "2026-07-12T15:28:59.616Z",
+    "updatedAt": "2026-07-12T15:28:59.616Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "05.T5.15",
-      "05.T5.16"
+      "05.T5.17",
+      "05.T5.18"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -13884,8 +13975,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "05.T5.15": "in-session",
-      "05.T5.16": "in-session"
+      "05.T5.17": "in-session",
+      "05.T5.18": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
