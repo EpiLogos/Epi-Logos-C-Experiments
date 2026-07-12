@@ -16,7 +16,24 @@ export default defineConfig({
     testDir: './tests/e2e',
     outputDir: './test-results/artifacts',
     timeout: 60_000,
-    expect: { timeout: 10_000 },
+    // 15.T15.12 visual-regression baselines live under the e2e tree per the
+    // tranche's fixtures/visual-regression convention; {platform} suffix kept
+    // because font raster + swiftshader output are platform truths (darwin
+    // baselines are the committed set; other platforms regenerate with
+    // --update-snapshots).
+    snapshotPathTemplate: '{testDir}/fixtures/visual-regression/{arg}-{platform}{ext}',
+    expect: {
+        timeout: 10_000,
+        // Documented diff threshold (15.T15.12; rationale also at the top of
+        // tests/e2e/visual-regression.spec.ts and in the track-15 write-back):
+        // per-pixel threshold 0.2 (Playwright's default YIQ distance) absorbs
+        // sub-quantum antialias jitter; maxDiffPixels 400 ≈ 0.04% of the
+        // 1280×800 frame — measured cross-run drift on the masked
+        // compositions is 0 px on the darwin/swiftshader rig, so 400 is
+        // headroom, while the smallest guarded chrome unit (a strip toggle /
+        // border tab, ≥ ~1200 px) exceeds it several-fold and cannot hide.
+        toHaveScreenshot: { threshold: 0.2, maxDiffPixels: 400 }
+    },
     // one worker: the specs share one app origin, one gateway, one vault
     fullyParallel: false,
     workers: 1,
