@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-11T23:53:55.543Z",
+  "updatedAt": "2026-07-12T00:58:31.792Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4904,16 +4904,30 @@
       "worktree": null
     },
     "16.T16.22": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T00:58:31.779Z",
+      "claimedAt": "2026-07-12T00:56:39.962Z",
+      "completedAt": "2026-07-12T00:58:31.779Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T00:58:31.779Z",
+          "text": "CCT-22 closed verify-first + one measurable gap built. All five doc surfaces landed via the doc lanes and re-verified fresh by grep: (a) the Shannon-floor / coordinate-tagging-IS-compression / substrate-IS-the-compression-scheme structural-identity statements stand in M0-ARCHITECTURE.md; (c) slot.gnostic_extractor + the O# handover pattern are named in M-MODEL-SLOT-SPEC (2 hits) and the 12-agentic file (3 hits) - the pattern, not any named model, is what landed; (d) the compression_equivalence_hypothesis Class B knob is named in the 38-tunability file (the honest EBM-side gap stays OPEN by that knob, never silently assumed); (e) the ql-musical-derivation-v3 cross-citation stands in mental-pole-mechanics. BUILT: cct_22_compression_register - a synthetic compress-to-VAK emission measures per-symbol Shannon entropy strictly under the log2(109)=6.77-bit alphabet ceiling AND round-trips its address-resolution (the same q_*_semantic properties resolve back out, incl the prime form to _i_), pinning that decompression is the substrate running forward from the address. Glyph audit: R#/## appear verbatim in the M0 architecture prose (no paraphrase-abbreviation).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.22 (track-16 W class gate PASS incl live-wire) + cargo test -p epi-s2-graph-services --test cct_22_compression_register (1) + all five grep verification lines return hits",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/tests/cct_22_compression_register.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T00:56:39.962Z",
+      "runId": "20260712T005639Z-16-T16.22",
       "worktree": null
     },
     "17.T17.1": {
@@ -12974,6 +12988,16 @@
       "leaseExpiresAt": "2026-07-12T01:49:55.993Z",
       "worktree": null,
       "completedAt": "2026-07-11T23:53:55.530Z"
+    },
+    {
+      "runId": "20260712T005639Z-16-T16.22",
+      "taskId": "16.T16.22",
+      "status": "done",
+      "startedAt": "2026-07-12T00:56:39.962Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T02:56:39.962Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T00:58:31.779Z"
     }
   ],
   "activeRoute": {
