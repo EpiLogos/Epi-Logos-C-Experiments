@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:05:17.775Z",
+  "updatedAt": "2026-07-12T01:06:29.759Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4560,16 +4560,31 @@
       "worktree": null
     },
     "16.T16.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:06:29.745Z",
+      "claimedAt": "2026-07-12T01:05:18.150Z",
+      "completedAt": "2026-07-12T01:06:29.745Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:06:29.745Z",
+          "text": "CCT-6 closed verify-first: the no-orphan-fill is filled - bedrock_link has its owner. BedrockProvenanceHandle enum + MathemeHarmonicProfileReadinessFact.bedrock_link live at portal-core kernel/profile.rs:237-262, the chain string names the full derivation (kernel.rs:878 -> .rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link), the Track-01 profile contract suite pins it (7 green fresh, 4 bedrock_link assertions), the wire carries 38 bedrock hits in the capture fixture, and the carrier renders the KERNEL-written chain verbatim via the CCT-6 BedrockLinkTooltip primitive (ui/primitives.tsx - the chain is never composed locally, per the 16.T16.10 landing).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.6 (track-16 W class gate PASS) + cargo test -p portal-core --test track_01_t2_profile_contract (7, incl 4 bedrock_link assertions) fresh; wire fixture carries 38 bedrock hits",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/M/pratibimba-app/src/ui/primitives.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:05:18.150Z",
+      "runId": "20260712T010518Z-16-T16.6",
       "worktree": null
     },
     "16.T16.7": {
@@ -13070,6 +13085,16 @@
       "leaseExpiresAt": "2026-07-12T03:04:10.529Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:05:17.761Z"
+    },
+    {
+      "runId": "20260712T010518Z-16-T16.6",
+      "taskId": "16.T16.6",
+      "status": "done",
+      "startedAt": "2026-07-12T01:05:18.150Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T03:05:18.150Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:06:29.745Z"
     }
   ],
   "activeRoute": {
