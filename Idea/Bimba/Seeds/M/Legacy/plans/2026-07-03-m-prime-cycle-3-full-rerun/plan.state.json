@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T11:44:45.843Z",
+  "updatedAt": "2026-07-12T11:48:13.481Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2177,15 +2177,56 @@
       "worktree": null
     },
     "05.T5.15": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-12T11:30:22.136Z",
+      "status": "done",
+      "updatedAt": "2026-07-12T11:48:13.466Z",
       "claimedAt": "2026-07-12T11:30:22.136Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-12T11:48:13.466Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T11:44:58.853Z",
+          "text": "Klein sense gloss landed: cs sense:\"prospective\"/\"retrospective\" renames with Day/Night' legacy aliases retained (ta-onta 437/437), L'.md + klein-mode gloss patched (janus.md already conformant via 12.T12.18), M4'-SPEC §6.5 declares the c_3_klein_weighting chip, and the carrier day-summary weight chip renders from session NOW frontmatter with honest pending state (vitest 407 pass, pnpm build clean); chip is pending live today — session-init does not stamp the key yet.",
+          "receipt": {
+            "command": "node --test Body/S/S4/**/*.test.ts Body/S/S4/**/*.test.mjs && cd Body/M/pratibimba-app && npx vitest run && pnpm build && npx tsc --noEmit",
+            "exitCode": 0,
+            "testsPassed": 844,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/z-phase-vak.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/moirai-dispatch.ts",
+              "Body/S/S4/ta-onta/shared/vak_address.ts",
+              "Body/M/pratibimba-app/src/panes/m4NaraKleinWeighting.ts",
+              "Body/M/pratibimba-app/src/panes/M4NaraResonanceSurface.tsx",
+              "Idea/Bimba/World/Types/Coordinates/L/L'/L'.md",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/klein-mode/SKILL.md",
+              "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+            ],
+            "tokenUsage": {
+              "input": 95000,
+              "output": 15000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T11:48:13.466Z",
+          "text": "Klein sense-semantics landed: prospective/retrospective senses-of-sight gloss live across the four surfaces — z-phase-vak.ts cs gains sense:\"prospective\"/\"retrospective\" and moirai-dispatch.ts gains cs_sense:\"retrospective\" with Day/Night' direction aliases retained per alias law (consumers checked d=1 pass-through; portal-core CsField ignores unknown keys, Night' Rust spelling untouched); shared/vak_address.ts widened ADDITIVELY (CsSense, optional sense?, validator) — contract-surface touch, owning S4-SPEC flagged for canon update; L'.md senses-of-sight paragraph + klein-mode SKILL.md structural gloss landed (janus.md already carried the widened CF1 contract from 12.T12.18 — verified, not re-patched); M4'-SPEC §6.5 declares the c_3_klein_weighting day-summary chip and the carrier renders it via m4NaraKleinWeighting.ts + NaraKleinWeightingChip in honest pending state — live now.md carries no c_3_klein_weighting key; finding for Tracks 11/12: session-init does not stamp it (template has it, Janus seam spec-ahead). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "npx vitest run (Body/M/pratibimba-app: 407 passed incl. 19 NaraKleinWeightingChip tests) + node --test ta-onta suite (437 passed, +3 sense tests) + pnpm build + tsc --noEmit clean; verify-tranche K-gate PASS by fable-c-verifier; controller re-checked renames via grep (sense: prospective at z-phase-vak.ts:38, cs_sense: retrospective at moirai-dispatch.ts:71 with alias comment)",
+            "exitCode": 0,
+            "testsPassed": 437,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/z-phase-vak.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/moirai-dispatch.ts",
+              "Body/M/pratibimba-app/src/panes/m4NaraKleinWeighting.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.15.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "thread-10",
-      "leaseExpiresAt": "2026-07-12T14:30:22.136Z",
-      "heartbeatAt": "2026-07-12T11:30:22.136Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-12T11:44:58.853Z",
       "runId": "20260712T113022Z-05-T5.15",
       "worktree": null
     },
@@ -13760,11 +13801,12 @@
     {
       "runId": "20260712T113022Z-05-T5.15",
       "taskId": "05.T5.15",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-12T11:30:22.136Z",
       "owner": "thread-10",
       "leaseExpiresAt": "2026-07-12T14:30:22.136Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-12T11:44:58.853Z"
     },
     {
       "runId": "20260712T113022Z-15-T15.2",

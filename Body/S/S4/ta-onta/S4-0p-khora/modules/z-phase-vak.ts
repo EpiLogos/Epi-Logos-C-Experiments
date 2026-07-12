@@ -24,7 +24,9 @@ import type { VakAddress } from "../../shared/vak_address.ts";
  * - cp `CP4.0` — pre-task ground
  * - ct `CT0` — relational, no artifact bucket yet
  * - cfp `CFP0` — base thread (single-stream)
- * - cs `CS1/Day` — quick ground → context (synthesis direction)
+ * - cs `CS1`, sense `prospective` — quick ground → context, forward into what
+ *   is forming (`direction: "Day"` kept as the atmospheric legacy alias for
+ *   one release per 05.T5.15; readers prefer `sense` when both are present)
  */
 export function composePhaseVakAddress(): VakAddress {
   return {
@@ -33,7 +35,7 @@ export function composePhaseVakAddress(): VakAddress {
     cp: "CP4.0",
     cf: "(00/00)",
     cfp: "CFP0",
-    cs: { code: "CS1", direction: "Day" },
+    cs: { code: "CS1", direction: "Day", sense: "prospective" },
   };
 }
 
@@ -45,7 +47,9 @@ export function composePhaseVakAddress(): VakAddress {
  * - cp `CP4.5` — integration ledge
  * - ct `CT5` — insight bucket
  * - cfp `CFP3` — parallel-fold (Moirai three-way Night' pass)
- * - cs `CS0/Night'` — analytic synthesis direction
+ * - cs `CS0`, sense `retrospective` — analytic synthesis, backward across what
+ *   has gathered (`direction: "Night'"` kept as the atmospheric legacy alias
+ *   for one release per 05.T5.15; readers prefer `sense` when both are present)
  *
  * Consumed by C2 (Sophia post-execution hook in S4-4p-anima/modules/sophia-hook.ts
  * and S4-0p-khora/extension.ts session_shutdown handler).
@@ -57,6 +61,6 @@ export function rehearPhaseVakAddress(): VakAddress {
     cp: "CP4.5",
     cf: "(5/0)",
     cfp: "CFP3",
-    cs: { code: "CS0", direction: "Night'" },
+    cs: { code: "CS0", direction: "Night'", sense: "retrospective" },
   };
 }

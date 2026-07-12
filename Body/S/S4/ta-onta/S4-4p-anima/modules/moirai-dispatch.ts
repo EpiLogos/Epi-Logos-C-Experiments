@@ -62,7 +62,13 @@ export function defaultM5CoordinateClusters(): MoiraiCoordinateCluster[] {
 
 export interface MoiraiDispatchPlan {
   cfp: "CFP3";                              // parallel-fold, three-way Night' pass
-  cs_direction: "Night'";                   // analytic synthesis direction
+  /** Legacy alias (one release, 05.T5.15) — atmospheric Day/Night' spelling.
+   * Kept alongside `cs_sense` so existing consumers stay green; readers
+   * prefer `cs_sense` when both are present. */
+  cs_direction: "Night'";
+  /** Operative Klein sense-of-sight binary (canvas-spec §1.2): the rehearing
+   * pass reads retrospectively — backward across what has gathered. */
+  cs_sense: "retrospective";
   dispatches: Array<{
     agent: MoiraiAgent;
     night_position: "P1'" | "P4'" | "P5'"; // Klotho=P1' (traces), Lachesis=P4' (sources), Atropos=P5' (insights)
@@ -93,6 +99,7 @@ export function planMoiraiNightPass(input: {
   return {
     cfp: "CFP3",
     cs_direction: "Night'",
+    cs_sense: "retrospective",
     dispatches: [
       { agent: "klotho", night_position: "P1'", task: t("traces (P1' Traces)") },
       { agent: "lachesis", night_position: "P4'", task: t("sources (P4' Discovery)") },
@@ -142,7 +149,9 @@ export function classifyMoiraiOutput(output: string): MoiraiOutputClass {
  *   - ct ["CT5"]           insight bucket
  *   - cp "CP4.5"           integration ledge
  *   - cfp "CFP3"           parallel-fold (fusion)
- *   - cs { code "CS0", direction "Night'" } analytic synthesis
+ *   - cs { code "CS0", direction "Night'", sense "retrospective" }
+ *     analytic synthesis — the retrospective sense of sight (direction kept
+ *     as the legacy alias for one release per 05.T5.15)
  *
  * The cf varies per Moirai — it carries the host constitutional CF of the
  * territory being dissected (see `MOIRAI_HOST_CF` in dispatch-validate.ts).
@@ -163,6 +172,6 @@ export function buildMoiraiVak(cf: string): VakAddress {
     cp: "CP4.5",
     cf: cf as VakAddress["cf"],
     cfp: "CFP3",
-    cs: { code: "CS0", direction: "Night'" },
+    cs: { code: "CS0", direction: "Night'", sense: "retrospective" },
   };
 }

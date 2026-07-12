@@ -12,6 +12,8 @@ agent_affinity: sophia
 
 Klein mode runs a Day pass (forward synthesis) and a Night' pass (analytical inversion) as a single topological surface. The Night' pass does not review some external target -- it reviews the Day pass that just ran. The execution becomes the review target. The inside becomes the outside.
 
+Structural gloss (05.T5.15): Day pass = prospective synthesis (forward into what is forming); Night' pass = retrospective inversion (backward across what has gathered). The two are senses of sight on the same Klein surface, not sequential zones -- the `#` inversion operator is the sense-switch on a single point. Day/Night' stay as the ritual phase names below.
+
 This is the Klein bottle: the map reviews the territory that IS the map.
 
 ## What It Does

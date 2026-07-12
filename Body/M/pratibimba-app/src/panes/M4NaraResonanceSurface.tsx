@@ -6,16 +6,24 @@
  *   Major/Minor/Shadow + pending count). No quaternion-dump: only the
  *   indicator label, character, and counts ever reach the DOM; sourceHandle
  *   stays a title-attribute handle reference (handle-only per DR-M4-3).
- * Public surface: NaraResonanceChip, NaraDayResonanceStrip.
- * Does NOT own: indicator/summary law (m4NaraResonance.ts), the resonance
- *   computation (portal-core), vault listing (vault service), the kernel
- *   tick (useTickStore), pane composition.
+ * Public surface: NaraResonanceChip, NaraDayResonanceStrip,
+ *   NaraKleinWeightingChip.
+ * Does NOT own: indicator/summary law (m4NaraResonance.ts), Klein weighting
+ *   law (m4NaraKleinWeighting.ts), the resonance computation (portal-core),
+ *   vault listing (vault service), the kernel tick (useTickStore), pane
+ *   composition.
  */
 
 import { useCallback, useEffect, useState } from 'react';
 import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { useTickStore } from '../state/stores';
 import { VaultEntry } from './FileTreePane';
+import {
+    kleinWeightingFromNowContent,
+    latestSessionNowPath,
+    NaraKleinWeighting,
+    pendingKleinWeighting
+} from './m4NaraKleinWeighting';
 import {
     NaraArtifactResonanceSource,
     NaraResonanceIndicator,
@@ -48,11 +56,65 @@ export function NaraResonanceChip({
 }
 
 /**
+ * The §6.5 Klein weighting chip (05.T5.15): the prospective/retrospective
+ * weight read from `c_3_klein_weighting` in the day's latest session NOW
+ * frontmatter. Sessions without the key (today's reality — Janus's default
+ * computation is spec-ahead, canvas-spec §4.3) render the honest
+ * `pending-weighting` state; a weighting is never fabricated.
+ */
+export function NaraKleinWeightingChip({ dayNow }: { dayNow: string }) {
+    const [weighting, setWeighting] = useState<NaraKleinWeighting>(pendingKleinWeighting());
+    const dayPath = `Empty/Present/${dayNow}`;
+
+    const load = useCallback(() => {
+        invokeCommand<VaultEntry[]>('vault_list', { path: dayPath })
+            .then(entries => {
+                const nowPath = latestSessionNowPath(entries);
+                if (nowPath === null) {
+                    setWeighting(pendingKleinWeighting());
+                    return;
+                }
+                return invokeCommand<{ path: string; content: string }>('vault_read', {
+                    path: nowPath
+                }).then(file => setWeighting(kleinWeightingFromNowContent(file.content, nowPath)));
+            })
+            .catch(() => setWeighting(pendingKleinWeighting()));
+    }, [dayPath]);
+
+    useEffect(() => {
+        load();
+        let unlisten: (() => void) | undefined;
+        void listenEvent<string[]>('vault://changed', paths => {
+            if (paths.some(p => p.startsWith(dayPath))) {
+                load();
+            }
+        }).then(u => {
+            unlisten = u;
+        });
+        return () => unlisten?.();
+    }, [load, dayPath]);
+
+    return (
+        <span
+            className={`nara-klein-weighting-chip nara-klein-${weighting.state}`}
+            data-testid="nara-klein-weighting"
+            data-state={weighting.state}
+            data-prospective={weighting.prospective ?? ''}
+            data-retrospective={weighting.retrospective ?? ''}
+            title={weighting.sourcePath ?? undefined}
+        >
+            {weighting.label}
+        </span>
+    );
+}
+
+/**
  * The day-summary strip: at-now resonance (kernel profile) beside the
- * aggregate over the day's artifact envelopes. Envelopes are listed from the
- * real Present day folder; deposition does not stamp the §6.6 `resonance`
- * field yet (spec-ahead), so listed artifacts aggregate as pending until the
- * stamping seam lands — the pending-resonance fallback is the honest state.
+ * aggregate over the day's artifact envelopes and the Klein weighting chip.
+ * Envelopes are listed from the real Present day folder; deposition does not
+ * stamp the §6.6 `resonance` field yet (spec-ahead), so listed artifacts
+ * aggregate as pending until the stamping seam lands — the pending-resonance
+ * fallback is the honest state.
  */
 export function NaraDayResonanceStrip({ dayNow }: { dayNow: string }) {
     const cached = useTickStore(s => s.profile);
@@ -93,6 +155,7 @@ export function NaraDayResonanceStrip({ dayNow }: { dayNow: string }) {
             data-state={summary.state}
         >
             <NaraResonanceChip indicator={nowIndicator} testId="nara-resonance-now" />
+            <NaraKleinWeightingChip dayNow={dayNow} />
             <span className="nara-day-resonance-label" data-testid="nara-day-resonance-label">
                 {summary.label}
             </span>

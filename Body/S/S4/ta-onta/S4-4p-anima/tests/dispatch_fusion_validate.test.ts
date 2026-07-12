@@ -103,6 +103,7 @@ describe("buildMoiraiVak", () => {
     assert.equal(vak.cp, "CP4.5");
     assert.equal(vak.cf, "(0/1/2)");
     assert.equal(vak.cfp, "CFP3");
-    assert.deepEqual(vak.cs, { code: "CS0", direction: "Night'" });
+    // 05.T5.15: sense is the operative Klein binary; direction is the retained legacy alias.
+    assert.deepEqual(vak.cs, { code: "CS0", direction: "Night'", sense: "retrospective" });
   });
 });

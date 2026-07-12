@@ -1,6 +1,10 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { NaraDayResonanceStrip, NaraResonanceChip } from './M4NaraResonanceSurface';
+import {
+    NaraDayResonanceStrip,
+    NaraKleinWeightingChip,
+    NaraResonanceChip
+} from './M4NaraResonanceSurface';
 import { normalizeResonanceIndicator } from './m4NaraResonance';
 import { useTickStore } from '../state/stores';
 
@@ -114,5 +118,69 @@ describe('NaraDayResonanceStrip (day summary on the day surface)', () => {
         expect((await screen.findByTestId('nara-day-resonance')).dataset.state).toBe(
             'pending-resonance'
         );
+        // The Klein chip mounts on the strip and shows the honest no-session state
+        expect(screen.getByTestId('nara-klein-weighting').dataset.state).toBe('pending-weighting');
+    });
+});
+
+describe('NaraKleinWeightingChip (05.T5.15 c_3_klein_weighting render law)', () => {
+    beforeEach(() => {
+        invokeCommand.mockReset();
+    });
+    afterEach(cleanup);
+
+    const day = '12-07-2026';
+    const dayPath = `Empty/Present/${day}`;
+    const sessionDir = `${dayPath}/20260712-000600-9b0057`;
+    const entries = [
+        { name: 'daily-note.md', path: `${dayPath}/daily-note.md`, isDir: false },
+        { name: '20260712-000600-9b0057', path: sessionDir, isDir: true }
+    ];
+
+    function mockVault(nowContent: string | null) {
+        invokeCommand.mockImplementation((command: unknown, args: unknown) => {
+            if (command === 'vault_list') {
+                return Promise.resolve(entries);
+            }
+            if (command === 'vault_read') {
+                expect(args).toEqual({ path: `${sessionDir}/now.md` });
+                return nowContent === null
+                    ? Promise.reject(new Error('not-found'))
+                    : Promise.resolve({ path: `${sessionDir}/now.md`, content: nowContent });
+            }
+            return Promise.reject(new Error(`unexpected: ${String(command)}`));
+        });
+    }
+
+    it('renders the weighting from the latest session NOW frontmatter', async () => {
+        mockVault(
+            `---\nsession_id: "20260712-000600-9b0057"\nc_3_klein_weighting:\n  prospective: 0.4\n  retrospective: 0.6\n---\n# NOW\n`
+        );
+        render(<NaraKleinWeightingChip dayNow={day} />);
+
+        const chip = await screen.findByText('40% prospective · 60% retrospective');
+        expect(chip.dataset.state).toBe('resolved');
+        expect(chip.dataset.prospective).toBe('0.4');
+        expect(chip.dataset.retrospective).toBe('0.6');
+        expect(chip.title).toBe(`${sessionDir}/now.md`);
+    });
+
+    it('renders the honest pending state when the frontmatter key is absent (live shape today)', async () => {
+        mockVault(`---\nsession_id: "20260712-000600-9b0057"\nday_id: "12-07-2026"\n---\n# NOW\n`);
+        render(<NaraKleinWeightingChip dayNow={day} />);
+
+        const chip = await screen.findByTestId('nara-klein-weighting');
+        expect(chip.textContent).toBe('pending-weighting');
+        expect(chip.dataset.state).toBe('pending-weighting');
+        expect(chip.dataset.prospective).toBe('');
+    });
+
+    it('renders pending when the session now.md cannot be read', async () => {
+        mockVault(null);
+        render(<NaraKleinWeightingChip dayNow={day} />);
+
+        const chip = await screen.findByTestId('nara-klein-weighting');
+        expect(chip.dataset.state).toBe('pending-weighting');
+        expect(chip.textContent).toBe('pending-weighting');
     });
 });

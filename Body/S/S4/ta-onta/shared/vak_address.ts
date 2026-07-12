@@ -43,6 +43,15 @@ export type CpfPolarity = (typeof CPF_POLARITIES)[number];
 const CS_DIRECTIONS = ["Day", "Night'"] as const;
 export type CsDirection = (typeof CS_DIRECTIONS)[number];
 
+// Klein-topological sense of sight (05.T5.15, canvas-spec §1.2): prospective =
+// forward into what is forming; retrospective = backward across what has
+// gathered. The `#` inversion operator is the sense-switch on a single point.
+// `sense` is the operative structural binary; `direction` (Day/Night') stays as
+// the atmospheric legacy alias for one release — readers prefer `sense` when
+// both are present. This-side-ahead of the cross-repo canonical ql_types mirror.
+const CS_SENSES = ["prospective", "retrospective"] as const;
+export type CsSense = (typeof CS_SENSES)[number];
+
 export type CfLiteral =
   | "(00/00)"
   | "(0/1)"
@@ -54,7 +63,12 @@ export type CfLiteral =
 
 export interface CsField {
   code: CsLiteral;
+  /** Legacy alias (one release, 05.T5.15): kept alongside `sense` so wire
+   * consumers (gateway sessions.patch, template/thought frontmatter renderers,
+   * reading-frame evaluator) stay green. Readers prefer `sense` if both present. */
   direction: CsDirection;
+  /** Operative Klein sense-of-sight binary (canvas-spec §1.2). */
+  sense?: CsSense;
   recognized?: boolean;
 }
 
@@ -135,6 +149,7 @@ const CS_SET: Set<CsLiteral> = new Set(CS_LITERALS);
 const CP_SET: Set<CpLiteral> = new Set(CP_LITERALS);
 const CPF_SET: Set<CpfPolarity> = new Set(CPF_POLARITIES);
 const CS_DIR_SET: Set<CsDirection> = new Set(CS_DIRECTIONS);
+const CS_SENSE_SET: Set<CsSense> = new Set(CS_SENSES);
 const CF_SET: Set<string> = new Set(Object.keys(CANONICAL_CF_POSITIONS));
 
 export function isValidVakAddress(value: unknown): value is VakAddress {
@@ -152,6 +167,7 @@ export function isValidVakAddress(value: unknown): value is VakAddress {
   const cs = v.cs as Record<string, unknown>;
   if (typeof cs.code !== "string" || !CS_SET.has(cs.code as CsLiteral)) return false;
   if (typeof cs.direction !== "string" || !CS_DIR_SET.has(cs.direction as CsDirection)) return false;
+  if (cs.sense !== undefined && (typeof cs.sense !== "string" || !CS_SENSE_SET.has(cs.sense as CsSense))) return false;
   if (cs.recognized !== undefined && typeof cs.recognized !== "boolean") return false;
   return true;
 }

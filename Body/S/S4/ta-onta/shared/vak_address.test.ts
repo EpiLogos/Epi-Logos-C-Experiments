@@ -149,6 +149,47 @@ describe("ta-onta shared VakAddress mirror", () => {
     }), true);
   });
 
+  it("accepts the Klein sense binary alongside the legacy direction alias (05.T5.15)", () => {
+    assert.equal(isValidVakAddress({
+      cpf: "(00/00)",
+      ct: ["CT0"],
+      cp: "CP4.0",
+      cf: "(00/00)",
+      cfp: "CFP0",
+      cs: { code: "CS1", direction: "Day", sense: "prospective" },
+    }), true);
+    assert.equal(isValidVakAddress({
+      cpf: "(4.0/1-4.4/5)",
+      ct: ["CT5"],
+      cp: "CP4.5",
+      cf: "(5/0)",
+      cfp: "CFP3",
+      cs: { code: "CS0", direction: "Night'", sense: "retrospective" },
+    }), true);
+  });
+
+  it("rejects a non-canonical cs.sense value", () => {
+    assert.equal(isValidVakAddress({
+      cpf: "(00/00)",
+      ct: ["CT0"],
+      cp: "CP4.0",
+      cf: "(00/00)",
+      cfp: "CFP0",
+      cs: { code: "CS1", direction: "Day", sense: "forward" }, // not prospective|retrospective
+    }), false);
+  });
+
+  it("still validates sense-less addresses (legacy readers, one-release alias window)", () => {
+    assert.equal(isValidVakAddress({
+      cpf: "(00/00)",
+      ct: ["CT0"],
+      cp: "CP4.0",
+      cf: "(00/00)",
+      cfp: "CFP0",
+      cs: { code: "CS1", direction: "Day" },
+    }), true);
+  });
+
   it("rejects the legacy no-dot synthesis spelling", () => {
     assert.equal(isValidVakAddress({
       cpf: "(4.0/1-4.4/5)",
