@@ -3,8 +3,8 @@ use epi_logos::epii_autoresearch::resonance_corpus::{
     EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 use epi_logos::{
-    agent, app, book, canon, code, core, entity, ffi, gate, graph, know, nara, notebook, portal,
-    profile, sesh, settings, skill, slot, sync, techne, up, vault, vimarsa, world,
+    agent, app, bimba, book, canon, code, core, entity, ffi, gate, graph, know, nara, notebook,
+    portal, profile, sesh, settings, skill, slot, sync, techne, up, vault, vimarsa, world,
 };
 
 #[derive(Parser)]
@@ -56,6 +56,11 @@ enum Commands {
     Canon {
         #[command(subcommand)]
         cmd: canon::CanonCmd,
+    },
+    /// Bimba canon-update ledger (Track 40) — propose, list, show, land, refuse
+    Bimba {
+        #[command(subcommand)]
+        cmd: bimba::BimbaCmd,
     },
     /// Gateway (S3') — RPC server, plugin host
     Gate {
@@ -252,6 +257,14 @@ async fn main() -> color_eyre::Result<()> {
             Ok(_) => {}
             Err(e) => {
                 eprintln!("canon error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Bimba { cmd } => match bimba::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("bimba error: {}", e);
                 std::process::exit(1);
             }
         },

@@ -555,6 +555,32 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         ],
     },
     CoordinateParityRecord {
+        // 40.T40.1 — the Track 40 bimba-canon-update ledger route family. Like
+        // the m4.arena.* family (41.6), it lives outside METHOD_NAMES: the
+        // gateway runtime + contract inventory (S5_CANON_UPDATE_METHODS) and the
+        // `epi bimba` admin CLI drive one substrate (DR-S5-ONE-1). SUBSTRATE,
+        // not nara personal access (05.T5.10).
+        canonical_method: "s5'.canon_update.*",
+        owner: "S5'",
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some(
+            "s5'.canon_update.propose / s5'.canon_update.status / s5'.canon_update.list / s5'.canon_update.land / s5'.canon_update.refuse",
+        ),
+        cli_mirror: Some("epi bimba"),
+        body_path: "Body/S/S3/gateway::canon_update",
+        test_evidence: &[
+            "Body/S/S3/gateway/src/canon_update.rs s5_canon_update_round_trip",
+            "gate_bimba_canon_update.rs",
+        ],
+        authority_path: Some("Body/S/S3/gateway (canon_update runtime) + Body/S/S3/gateway-contract"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/bimba.rs"),
+        extraction_task: Some("40.T40.1"),
+        allowed_s0_responsibilities: &[
+            "epi bimba CLI surface driving the canon_update runtime",
+            "ledger JSON persistence for the admin/scripted ONE-substrate carve-out",
+        ],
+    },
+    CoordinateParityRecord {
         canonical_method: "s5'.explain",
         owner: "S5'",
         status: CoordinateParityStatus::Missing,
@@ -767,6 +793,13 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.epii.pratibimba.status"
         | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
         "s5'.gnosis.context.retrieve" => Some("s5'.gnosis.*"),
+        // 40.T40.1 canon-update ledger family (parity-visible; not in
+        // METHOD_NAMES — driven by the gateway runtime + `epi bimba` CLI).
+        "s5'.canon_update.propose"
+        | "s5'.canon_update.status"
+        | "s5'.canon_update.list"
+        | "s5'.canon_update.land"
+        | "s5'.canon_update.refuse" => Some("s5'.canon_update.*"),
         "s5'.gnostic.ingest"
         | "s5'.gnostic.query"
         | "s5'.gnostic.notebook"

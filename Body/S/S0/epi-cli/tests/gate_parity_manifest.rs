@@ -39,6 +39,31 @@ async fn pointer_web_compute_dispatch_is_deprecated_projection_without_neo4j_con
 }
 
 #[test]
+fn canon_update_family_registers_in_the_parity_manifest() {
+    // 40.T40.1: the s5'.canon_update.* family is parity-visible even though it
+    // lives outside METHOD_NAMES (like m4.arena.*), driven by the gateway
+    // runtime + `epi bimba` CLI over one substrate.
+    use epi_logos::gate::parity::{coordinate_family_for_gateway_method, CoordinateParityStatus};
+
+    for method in epi_s3_gateway_contract::S5_CANON_UPDATE_METHODS {
+        assert_eq!(
+            coordinate_family_for_gateway_method(method),
+            Some("s5'.canon_update.*"),
+            "{method} must map to the canon-update parity family"
+        );
+    }
+
+    let record = epi_logos::gate::parity::coordinate_parity_records()
+        .iter()
+        .find(|record| record.canonical_method == "s5'.canon_update.*")
+        .expect("canon-update parity record");
+    assert_eq!(record.owner, "S5'");
+    assert_eq!(record.status, CoordinateParityStatus::Native);
+    assert_eq!(record.cli_mirror, Some("epi bimba"));
+    assert_eq!(record.body_path, "Body/S/S3/gateway::canon_update");
+}
+
+#[test]
 fn every_product_gateway_method_has_coordinate_mapping() {
     for method in epi_logos::gate::parity::method_names() {
         let mapped = epi_logos::gate::parity::coordinate_family_for_gateway_method(method);

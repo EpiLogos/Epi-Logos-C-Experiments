@@ -1,5 +1,6 @@
 pub mod agent;
 pub mod app;
+pub mod bimba;
 pub mod book;
 pub mod canon;
 pub mod code;

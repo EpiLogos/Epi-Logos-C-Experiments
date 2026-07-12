@@ -159,6 +159,15 @@ Plus CLI parity:
 
 **Verification:** `grep -nE "s5'.canon_update\." Body/S/S3/gateway-contract/src/lib.rs` returns ≥5 method registrations; `grep -nE "epi bimba propose|epi bimba list|epi bimba land" Body/S/S0/epi-cli/src/bimba.rs` returns the CLI bindings; `cargo test -p epi-s3-gateway s5_canon_update_round_trip`.
 
+**Implementation landed (40.T40.1 — 2026-07-12).** Substrate in place and behaviorally green:
+
+- **Contract inventory** — `S5_CANON_UPDATE_METHODS` (the five `s5'.canon_update.propose|status|list|land|refuse` name constants), the typed receipts (`CanonUpdateDraftReceipt` / `CanonUpdateStatus` / `CanonUpdateRow` / `CanonUpdateLandConfirmation` / `CanonUpdateRefusal` / `CanonUpdateFilter` / `CanonUpdateLandedMarker`), the `CanonUpdateCategory` + `CanonUpdateState` lifecycle enums, and `S5_CANON_UPDATE_ROUTE_CONTRACTS` (each route ↔ its `epi bimba` CLI command, DR-S5-ONE-1) — all in `Body/S/S3/gateway-contract/src/lib.rs`.
+- **S3-native runtime** — `CanonUpdateRuntime` (propose / status / list / land / refuse + forward-only `advance` along the surfaced→designed→reviewed→validated spine) at `Body/S/S3/gateway/src/canon_update.rs`. `land` authors the `<!-- canon-update: CU-* (landed YYYY-MM-DD) -->` marker + the `canon_updates_landed` frontmatter entry as the ledger record (§Cross-reference discipline); Hen writes that marker into the target canon file at promotion — the CLI never writes into `Idea/`.
+- **CLI parity** — `epi bimba propose|list|show|land|refuse` at `Body/S/S0/epi-cli/src/bimba.rs`, driving the SAME runtime over a JSON ledger store (the `epi nara arena` ONE-substrate carve-out pattern from 41.6).
+- **05.T5.10 decision (tested):** `s5'.canon_update.*` is **substrate, not a personal nara bounded-access domain** — `nara_bounded_access` denies every method even under a full grant + full connectivity (`nara_personal_domain` returns `None`); test `canon_update_is_substrate_not_nara_bounded_access` exercises the real gate and t5_10 stays green.
+- **Behavioral proof:** `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml s5_canon_update_round_trip` (+ `canon_update_is_substrate_not_nara_bounded_access`) and `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_bimba_canon_update` (public `epi bimba` end-to-end with on-disk persistence). Parity: the family is registered in the epi-cli gate-parity ledger (`s5'.canon_update.*` record + `coordinate_family_for_gateway_method` mapping).
+- **Wire-probe note:** like `m4.arena.*` (41.6) the family is runtime/CLI-driven and not wired into the over-the-wire server dispatch, so it remains `exists:false` (absent, unratcheted) in the live `gateway-method-audit.json` probe — consistent with the m4.arena precedent, not a regression.
+
 40.2 — **Lint test: canon-update landed-marker consistency** *(code-pending-closure; depends on 40.1)*
 
 Land the lint test `cargo test -p epi-s2-graph-services --test canon_update_landed_xref_consistency` enforcing the landing invariant per §Cross-reference discipline above.

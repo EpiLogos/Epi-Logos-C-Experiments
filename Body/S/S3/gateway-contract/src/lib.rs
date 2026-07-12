@@ -399,5 +399,313 @@ pub struct ArenaSceneFilter {
     pub max_age_ms: Option<u64>,
 }
 
+// ===================== 40.T40.1 s5' canon-update ledger route family =====================
+//
+// The Track 40 bimba-canon-update ledger is the trackable aggregator of
+// *additive* canon proposals (identities, forms, entities, typed relations,
+// vocabulary, cross-references). Tranche 40.1 lands its second-tier intake:
+// five gateway routes under `s5'.canon_update.*` and the `epi bimba` CLI
+// parity commands that drive the same runtime (DR-S5-ONE-1: no route without
+// a CLI command, both over one substrate).
+//
+// SUBSTRATE, NOT NARA PERSONAL ACCESS (05.T5.10 decision): the canon-update
+// ledger is a governed substrate surface, never one of the personal nara
+// domains (jiva/jagrat/flow). `nara_bounded_access` therefore denies every
+// `s5'.canon_update.*` method — proven by
+// `canon_update_is_substrate_not_nara_bounded_access` in the gateway crate.
+//
+// These five method-name constants are the canonical registration surface;
+// the 40.1 verification greps THIS file for the `s5'.canon_update.` literal,
+// so keep that literal confined to these constants.
+
+pub const S5_CANON_UPDATE_PROPOSE_METHOD: &str = "s5'.canon_update.propose";
+pub const S5_CANON_UPDATE_STATUS_METHOD: &str = "s5'.canon_update.status";
+pub const S5_CANON_UPDATE_LIST_METHOD: &str = "s5'.canon_update.list";
+pub const S5_CANON_UPDATE_LAND_METHOD: &str = "s5'.canon_update.land";
+pub const S5_CANON_UPDATE_REFUSE_METHOD: &str = "s5'.canon_update.refuse";
+
+/// All five canon-update method names, registration order matching the 40.1
+/// route table.
+pub const S5_CANON_UPDATE_METHODS: &[&str] = &[
+    S5_CANON_UPDATE_PROPOSE_METHOD,
+    S5_CANON_UPDATE_STATUS_METHOD,
+    S5_CANON_UPDATE_LIST_METHOD,
+    S5_CANON_UPDATE_LAND_METHOD,
+    S5_CANON_UPDATE_REFUSE_METHOD,
+];
+
+pub fn s5_canon_update_methods() -> &'static [&'static str] {
+    S5_CANON_UPDATE_METHODS
+}
+
+/// The Track 40 §Categories enum. A ledger row is one of these seven kinds.
+/// Only `Form` and `Rel` may escalate to a DR row (§Boundary discipline).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CanonUpdateCategory {
+    Identity,
+    Form,
+    Entity,
+    Rel,
+    Vocab,
+    Xref,
+    FormExecTrace,
+}
+
+impl CanonUpdateCategory {
+    /// Uppercase code used in the `CU-{CODE}-{N}` id (matches the ledger index).
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::Identity => "IDENTITY",
+            Self::Form => "FORM",
+            Self::Entity => "ENTITY",
+            Self::Rel => "REL",
+            Self::Vocab => "VOCAB",
+            Self::Xref => "XREF",
+            Self::FormExecTrace => "FORM-EXEC-TRACE",
+        }
+    }
+
+    /// Only `Form` (new canonical form in an enumerated set) and `Rel` (new
+    /// typed relation / schema family) escalate to a DR row (§Boundary
+    /// discipline). All others ratify via batch user validation or the CCT-14
+    /// entity-candidate lifecycle.
+    pub fn escalates_to_dr(self) -> bool {
+        matches!(self, Self::Form | Self::Rel)
+    }
+
+    /// The §Categories "Routes to" ratification path.
+    pub fn ratification_path(self) -> &'static str {
+        match self {
+            Self::Identity | Self::Xref => "XREF paragraph (doc-ahead-landing)",
+            Self::Form => "DR escalation",
+            Self::Entity => "Entity-candidate lifecycle (CCT-14)",
+            Self::Rel => "DR escalation (DR-IG-1 schema) + S2 graph-schema PR",
+            Self::Vocab => "Vocabulary law extension (DR-S1-6)",
+            Self::FormExecTrace => "FORM-EXEC-TRACE addition (extends DR-M3-6 trace)",
+        }
+    }
+}
+
+impl std::str::FromStr for CanonUpdateCategory {
+    type Err = String;
+
+    fn from_str(raw: &str) -> Result<Self, Self::Err> {
+        match raw.trim().to_ascii_uppercase().replace('_', "-").as_str() {
+            "IDENTITY" => Ok(Self::Identity),
+            "FORM" => Ok(Self::Form),
+            "ENTITY" => Ok(Self::Entity),
+            "REL" => Ok(Self::Rel),
+            "VOCAB" => Ok(Self::Vocab),
+            "XREF" => Ok(Self::Xref),
+            "FORM-EXEC-TRACE" => Ok(Self::FormExecTrace),
+            other => Err(format!(
+                "unknown canon-update category `{other}` (one of IDENTITY/FORM/ENTITY/REL/VOCAB/XREF/FORM-EXEC-TRACE)"
+            )),
+        }
+    }
+}
+
+/// The Track 40 §Lifecycle state of a ledger row.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CanonUpdateState {
+    Surfaced,
+    Designed,
+    Reviewed,
+    Validated,
+    Landed,
+    Refused,
+    Deferred,
+    Superseded,
+}
+
+impl CanonUpdateState {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Surfaced => "surfaced",
+            Self::Designed => "designed",
+            Self::Reviewed => "reviewed",
+            Self::Validated => "validated",
+            Self::Landed => "landed",
+            Self::Refused => "refused",
+            Self::Deferred => "deferred",
+            Self::Superseded => "superseded",
+        }
+    }
+
+    /// Forward rank along the `surfaced → designed → reviewed → validated →
+    /// landed` spine. Terminal off-spine states (refused/deferred/superseded)
+    /// carry no forward rank (`None`).
+    pub fn spine_rank(self) -> Option<u8> {
+        match self {
+            Self::Surfaced => Some(0),
+            Self::Designed => Some(1),
+            Self::Reviewed => Some(2),
+            Self::Validated => Some(3),
+            Self::Landed => Some(4),
+            Self::Refused | Self::Deferred | Self::Superseded => None,
+        }
+    }
+
+    /// True when a row in this state may still transition (not a closed row).
+    pub fn is_active(self) -> bool {
+        !matches!(self, Self::Landed | Self::Refused | Self::Superseded)
+    }
+}
+
+impl std::str::FromStr for CanonUpdateState {
+    type Err = String;
+
+    fn from_str(raw: &str) -> Result<Self, Self::Err> {
+        match raw.trim().to_ascii_lowercase().as_str() {
+            "surfaced" => Ok(Self::Surfaced),
+            "designed" => Ok(Self::Designed),
+            "reviewed" => Ok(Self::Reviewed),
+            "validated" => Ok(Self::Validated),
+            "landed" => Ok(Self::Landed),
+            "refused" => Ok(Self::Refused),
+            "deferred" => Ok(Self::Deferred),
+            "superseded" => Ok(Self::Superseded),
+            other => Err(format!("unknown canon-update status `{other}`")),
+        }
+    }
+}
+
+/// The inline `<!-- canon-update: CU-* (landed YYYY-MM-DD) -->` marker location
+/// a landed row records (§Cross-reference discipline). The ledger is the only
+/// legal source of canon-update markers; Hen writes the actual marker into the
+/// target canon file at promotion time.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateLandedMarker {
+    pub file: String,
+    pub anchor: String,
+    pub date: String,
+}
+
+/// Result of `s5'.canon_update.propose` — a freshly drafted `surfaced` row.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateDraftReceipt {
+    pub id: String,
+    pub category: CanonUpdateCategory,
+    pub status: CanonUpdateState,
+    pub claim: String,
+    pub target_landing_hint: Option<String>,
+    pub ratification_path: String,
+    pub escalates_to_dr: bool,
+    pub surfaced_at_ms: u64,
+}
+
+/// Result of `s5'.canon_update.status` — the lifecycle view of one row.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateStatus {
+    pub id: String,
+    pub category: CanonUpdateCategory,
+    pub status: CanonUpdateState,
+    pub claim: String,
+    pub target_landing_hint: Option<String>,
+    pub landed_marker: Option<CanonUpdateLandedMarker>,
+    pub refusal_reason: Option<String>,
+}
+
+/// A full ledger row as returned by `s5'.canon_update.list`.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateRow {
+    pub id: String,
+    pub category: CanonUpdateCategory,
+    pub status: CanonUpdateState,
+    pub claim: String,
+    pub target_landing_hint: Option<String>,
+    pub landed_marker: Option<CanonUpdateLandedMarker>,
+    pub refusal_reason: Option<String>,
+    pub surfaced_at_ms: u64,
+    pub updated_at_ms: u64,
+}
+
+/// Filter for `s5'.canon_update.list` — by lifecycle status and/or category.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateFilter {
+    pub status: Option<CanonUpdateState>,
+    pub category: Option<CanonUpdateCategory>,
+}
+
+/// Result of `s5'.canon_update.land` — confirmation the row reached `landed`
+/// and the marker the ledger authored for Hen to write into the target file.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateLandConfirmation {
+    pub id: String,
+    pub status: CanonUpdateState,
+    pub marker: CanonUpdateLandedMarker,
+    /// The `CU-*@YYYY-MM-DD` entry for the target file's `canon_updates_landed`
+    /// frontmatter array (§Cross-reference discipline (b)).
+    pub frontmatter_index_entry: String,
+}
+
+/// Result of `s5'.canon_update.refuse` — the row closed as `refused`.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateRefusal {
+    pub id: String,
+    pub status: CanonUpdateState,
+    pub reason: String,
+}
+
+/// One row of the canon-update route contract. Every route pairs with an
+/// `epi bimba ...` CLI command (DR-S5-ONE-1) and names its return shape.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CanonUpdateRouteContract {
+    pub method: &'static str,
+    /// `epi bimba ...` parity command.
+    pub cli_command: &'static str,
+    /// Contract return-shape type name.
+    pub returns: &'static str,
+    /// Backing authority that executes the route.
+    pub backing: &'static str,
+}
+
+pub const S5_CANON_UPDATE_ROUTE_CONTRACTS: &[CanonUpdateRouteContract] = &[
+    CanonUpdateRouteContract {
+        method: S5_CANON_UPDATE_PROPOSE_METHOD,
+        cli_command: "epi bimba propose",
+        returns: "CanonUpdateDraftReceipt",
+        backing: "drafts a new CU row at status: surfaced",
+    },
+    CanonUpdateRouteContract {
+        method: S5_CANON_UPDATE_STATUS_METHOD,
+        cli_command: "epi bimba show",
+        returns: "CanonUpdateStatus",
+        backing: "reads the lifecycle state of one CU row",
+    },
+    CanonUpdateRouteContract {
+        method: S5_CANON_UPDATE_LIST_METHOD,
+        cli_command: "epi bimba list",
+        returns: "[CanonUpdateRow]",
+        backing: "lists CU rows by status / category",
+    },
+    CanonUpdateRouteContract {
+        method: S5_CANON_UPDATE_LAND_METHOD,
+        cli_command: "epi bimba land",
+        returns: "CanonUpdateLandConfirmation",
+        backing: "transitions a CU row to status: landed; authors the marker for Hen",
+    },
+    CanonUpdateRouteContract {
+        method: S5_CANON_UPDATE_REFUSE_METHOD,
+        cli_command: "epi bimba refuse",
+        returns: "CanonUpdateRefusal",
+        backing: "closes a CU row as status: refused",
+    },
+];
+
+pub fn s5_canon_update_route_contracts() -> &'static [CanonUpdateRouteContract] {
+    S5_CANON_UPDATE_ROUTE_CONTRACTS
+}
+
 #[cfg(test)]
 mod tests;

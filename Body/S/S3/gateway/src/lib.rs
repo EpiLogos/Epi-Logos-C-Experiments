@@ -1,4 +1,5 @@
 pub mod bootstrap;
+pub mod canon_update;
 pub mod chat;
 pub mod dispatch;
 pub mod m4_arena;
