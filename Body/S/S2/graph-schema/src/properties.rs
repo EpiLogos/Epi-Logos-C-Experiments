@@ -96,6 +96,10 @@ pub const M_COMPONENT_PROPERTY: &str = "m_0_component";
 pub const M_SYMBOL_REFS_PROPERTY: &str = "m_0_symbol_refs";
 
 pub const REL_EVIDENCE_KIND_PROPERTY: &str = "evidence_kind";
+// 09.T9.11: the frontmatter key a sync-created relation derives from —
+// written by the relationship manager since 03.T6.x but never registered,
+// which refused every `epi graph sync` at validation time.
+pub const REL_FRONTMATTER_KEY_PROPERTY: &str = "frontmatter_key";
 pub const REL_EVIDENCE_TEXT_PROPERTY: &str = "evidence_text";
 pub const REL_SOURCE_PATH_PROPERTY: &str = "source_path";
 pub const REL_SOURCE_LINE_PROPERTY: &str = "source_line";
@@ -2077,6 +2081,17 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         disclosure: GraphPropertyDisclosure::Public,
         source_family: "evidence",
         indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: REL_FRONTMATTER_KEY_PROPERTY,
+        coordinate_home: CoordinateHome::S1_2,
+        owner: GraphPropertyOwner::Relationship,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "sync",
+        indexed: false,
         compatibility: false,
     },
     GraphPropertySpec {

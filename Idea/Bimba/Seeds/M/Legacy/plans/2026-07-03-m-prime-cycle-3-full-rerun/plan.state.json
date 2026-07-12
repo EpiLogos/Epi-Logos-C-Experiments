@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:13:01.765Z",
+  "updatedAt": "2026-07-12T01:26:51.196Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2831,16 +2831,32 @@
       "worktree": null
     },
     "09.T9.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:26:51.183Z",
+      "claimedAt": "2026-07-12T01:21:29.498Z",
+      "completedAt": "2026-07-12T01:26:51.183Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:26:51.183Z",
+          "text": "9.11 closed: the parser/scope/boost substrate was landed (CoordinateSearchScope with the c_layer_type_ontology scope + term triggers, c_layer_metadata extraction with the C-prime non-authoritative audit, hybrid GraphRAG scoring with c_layer_hits*7 / c_authority*5 / c_world_path*4 boosts and scope-triggered +16/+12 for C-coordinates) BUT the boosts were DEAD on the live graph: the C0-C5 authority nodes carried none of the properties the scoring keys on. THE LIVE MIGRATION RAN AT THIS CLOSE against the standing Neo4j: six authority-file syncs through the Hen/S2 write path + six S2-side property writes landing c_layer_path/c_layer_role/world_type_path/type_family/type_coordinate/semantic_authority/crystallisation_state + same-name .md/.canvas MOC evidence (c_3_moc_evidence_paths) on each C-authority node - count(c_layer_role)=6 verified live, no top-level semantic peers introduced (World/Types listing unchanged), and graph_revision advanced 11->17 through the CCT-16 bump wiring on every write (the substrate dogfooding its own cache-invalidation law). SUBSTRATE BUG FOUND AND FIXED en route: the relationship manager has written frontmatter_key on sync relations since 03.T6.x but the schema registry never registered it - every epi graph sync was refused at validation; REL_FRONTMATTER_KEY_PROPERTY now registered (schema suite 12 green). Fully-ranked live GraphRAG queries over embeddings ride the seeded-embeddings lane (Bimba 768->3072 migration pending) - the boost arithmetic they consume is pinned hermetically by the 10 fresh tests.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 09.T9.11 (track-09 W class gate PASS incl live-wire) + cargo test coordinate_query_contract (7) + retrieval_vak_bias (3) fresh + LIVE migration against standing Neo4j: six C-authority syncs (2-3 relationships each) + six property writes, graph_revision advanced 11->17 through the CCT-16 bump on every write, count(c_layer_role)=6 verified live",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/retrieval_query.rs",
+              "Body/S/S2/graph-services/src/retrieval/hybrid.rs",
+              "Body/S/S2/graph-schema/src/properties.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:21:29.498Z",
+      "runId": "20260712T012129Z-09-T9.11",
       "worktree": null
     },
     "09.T9.12": {
@@ -13172,6 +13188,16 @@
       "leaseExpiresAt": "2026-07-12T02:12:09.365Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:13:01.751Z"
+    },
+    {
+      "runId": "20260712T012129Z-09-T9.11",
+      "taskId": "09.T9.11",
+      "status": "done",
+      "startedAt": "2026-07-12T01:21:29.498Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T03:21:29.498Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:26:51.183Z"
     }
   ],
   "activeRoute": {
