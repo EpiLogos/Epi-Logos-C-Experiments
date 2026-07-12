@@ -7,8 +7,11 @@
     "K": "Kernel/substrate — receipt.command must be a real test runner (cargo/make/node --test/pnpm test/pytest). C+Rust law, LUTs, contract crates.",
     "W": "Wire/gateway — receipt must additionally reference live-wire, gateway, smoke, or wire-capture proof: a spawned gateway exercised over the real protocol. Manifest-string tests cannot close these.",
     "UF": "UI flow — receipt must additionally reference playwright/test:e2e/smoke/ui-flow proof: the real surface driven in a real browser or the scripted boot gate. jsdom-only proof cannot close these.",
-    "D": "Document/spec deliverable — base receipt rules apply; the deliverable file is the work product and the SEED-HARMONISATION adversarial gate is the reviewer."
+    "D": "Document/spec deliverable — base receipt rules apply; the deliverable file is the work product and the SEED-HARMONISATION adversarial gate is the reviewer.",
+    "G": "Live-graph — receipt must reference the graph-live stage: a real epi/gateway read against live Neo4j (CLI -> graph-services -> live graph, coordinate M2-3 q_3 register). Fixtures/static datasets under Idea/Bimba/Map/datasets/** are one-way seeds and CANNOT close these. G is an ADD-ON to a track's base K/W/UF/D class (see graphLiveTracks), not a replacement — it never relaxes the base class's proof rules; it adds the live-graph gate on top. Enforced mechanically: verify-tranche.mjs unions the graph-live suite into the gate for graphLiveTracks, so a graph-bypass tranche cannot produce a PASS verification record and therefore cannot close."
   },
+  "graphLiveTracksNote": "harness-g-class (Architect-ordered, 2026-07-12): tracks whose LAW/SEAMS/CARRIER name Bimba-graph serving surfaces additionally require the graph-live stage. Chosen conservatively from the recapture register: 09 (single :Bimba label + four namespaces + `epi canon coord` node-essence reader over q registers), 40 (Bimba canon-update ledger `epi bimba propose|land|refuse` into the graph), 45 (Bimba Map indexing = reflection projection of the M Bimba graph — alignment is exactly what testing proves), 48 (Bases / CS reflection over `s2.graph.list_by_filter`). Their base classes (W/K/K/W respectively) are UNCHANGED in `classes`; graph-live is layered on. Further candidate flagged for the Architect: 08 (`epi know`/`epi canon` knowledge surfaces).",
+  "graphLiveTracks": ["09", "40", "45", "48"],
   "classes": {
     "00": "K",
     "01": "K",

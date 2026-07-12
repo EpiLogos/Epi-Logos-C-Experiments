@@ -44,6 +44,7 @@ test("suite inventory covers the base suites, live-wire, and the T8 backend crat
     "app-smoke",
     "app-ui-flow",
     "live-wire",
+    "graph-live",
     "gateway-methods",
     "lint-boundaries",
     "carrier-tokens",

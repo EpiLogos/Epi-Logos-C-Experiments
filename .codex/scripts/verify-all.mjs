@@ -231,6 +231,18 @@ export const SUITES = [
     cwd: join(REPO_ROOT, "Body", "M", "pratibimba-app"),
     commands: [["node", "scripts/live-wire.mjs"]],
   },
+  // harness-g-class (Architect-ordered, 2026-07-12): the live-graph gate the
+  // K/W/UF/D classes never had. Proves CLI -> graph-services -> live Neo4j in
+  // one pass — a bolt connectivity probe on the Neo4jConfig::from_env contract,
+  // then a real `epi graph query`/`epi graph cypher` read of coordinate M2-3
+  // asserting the live q_3_four_three_three_two_nesting register. Track 00 law:
+  // Neo4j unreachable = FAIL (skipped live-graph suite is never a silent pass).
+  {
+    id: "graph-live",
+    label: "graph-live: CLI -> graph-services -> live Neo4j (M2-3 real property read)",
+    cwd: REPO_ROOT,
+    commands: [["node", ".codex/scripts/graph-live.mjs"]],
+  },
   {
     id: "gateway-methods",
     label: "gateway-method probe + expected-present ratchet (T11)",
@@ -362,7 +374,7 @@ export async function runSuite(suite, { quiet = false } = {}) {
         // Never hide a failure's identity: surface the failing suite's tail
         // even in quiet mode (flake chases died on --quiet swallowing names).
         const tail = output.split("\n").filter((line) =>
-          /FAILED|failures:|panicked at|error\[|error: test failed|✖|^not ok|\[live-wire\] FAIL|\[gateway-method-gate\] FAIL/.test(line),
+          /FAILED|failures:|panicked at|error\[|error: test failed|✖|^not ok|\[live-wire\] FAIL|\[gateway-method-gate\] FAIL|\[graph-live\] FAIL/.test(line),
         );
         for (const line of tail.slice(0, 30)) console.error(`[verify-all] ${suite.id}> ${line}`);
       }

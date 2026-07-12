@@ -8,7 +8,47 @@ import {
   extractVerifyCommands,
   resolveTaskVerify,
   runVerification,
+  scopeForTasks,
 } from "../verify-tranche.mjs";
+
+/** Write a minimal verification-classes.json into a fake plan dir. */
+function writeClassManifest(manifest) {
+  const dir = mkdtempSync(join(tmpdir(), "verify-tranche-classes-"));
+  mkdirSync(join(dir, "plan.runs"), { recursive: true });
+  writeFileSync(join(dir, "plan.runs", "verification-classes.json"), JSON.stringify(manifest));
+  return dir;
+}
+
+test("scopeForTasks keeps the base K scope for a non-graph-truth track", () => {
+  const dir = writeClassManifest({ classes: { "03": "K" }, graphLiveTracks: ["09", "45"] });
+  const scope = scopeForTasks(["03.T3.1"], dir);
+  assert.ok(scope.includes("kernel-truth"), "K scope preserved");
+  assert.ok(!scope.includes("graph-live"), "non-graph-truth track must not gain graph-live");
+});
+
+test("scopeForTasks layers graph-live onto a graph-truth track's base class", () => {
+  const dir = writeClassManifest({
+    classes: { "09": "W", "45": "K" },
+    graphLiveTracks: ["09", "40", "45", "48"],
+  });
+  const w = scopeForTasks(["09.T9.1"], dir);
+  assert.ok(w.includes("live-wire"), "track 09 keeps its base W scope");
+  assert.ok(w.includes("graph-live"), "track 09 additionally gates on graph-live");
+  const k = scopeForTasks(["45.T45.1"], dir);
+  assert.ok(k.includes("kernel-truth"), "track 45 keeps its base K scope");
+  assert.ok(k.includes("graph-live"), "track 45 additionally gates on graph-live");
+});
+
+test("scopeForTasks resolves a standalone class-G track to the live-graph gate", () => {
+  const dir = writeClassManifest({ classes: { "88": "G" }, graphLiveTracks: [] });
+  const scope = scopeForTasks(["88.T88.1"], dir);
+  assert.ok(scope.includes("graph-live"), "class G resolves to the graph-live gate");
+});
+
+test("scopeForTasks falls open to the full gate for an unknown class", () => {
+  const dir = writeClassManifest({ classes: { "77": "Z" }, graphLiveTracks: ["77"] });
+  assert.equal(scopeForTasks(["77.T77.1"], dir), null);
+});
 
 test("extractVerifyCommands pulls backticked commands from Verify lines", () => {
   const body = `1. **T1.4 — GatewayClient.** Port the wire protocol.

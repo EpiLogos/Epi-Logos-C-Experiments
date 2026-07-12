@@ -70,18 +70,32 @@ const CLASS_SUITES = {
     "app-typecheck", "app-test", "app-build", "app-smoke", "app-ui-flow",
     "carrier-tokens",
   ],
+  // harness-g-class (Architect-ordered, 2026-07-12): the live-graph gate. In
+  // practice G is layered ON a base K/W/UF/D class via `graphLiveTracks` (a
+  // graph-truth track keeps its base class AND additionally runs graph-live);
+  // this entry defines the standalone gate should a track ever be set to "G".
+  G: ["harness-selftest", "honesty-lint", "graph-live"],
 };
 
-/** Union of the class scopes for the given task ids; null = full gate. */
+/**
+ * Union of the class scopes for the given task ids; null = full gate.
+ * Graph-truth tracks (verification-classes.json `graphLiveTracks`) keep their
+ * base K/W/UF/D scope AND additionally include the `graph-live` suite — a
+ * graph-bypass tranche cannot produce a PASS record, so it cannot close.
+ */
 export function scopeForTasks(taskIds, planDir) {
-  let classes = {};
+  let manifest;
   try {
-    classes = JSON.parse(
+    manifest = JSON.parse(
       readFileSync(join(planDir, "plan.runs", "verification-classes.json"), "utf8"),
-    ).classes ?? {};
+    );
   } catch {
     return null; // no class registry — run the full gate
   }
+  const classes = manifest.classes ?? {};
+  const graphLiveTracks = new Set(
+    Array.isArray(manifest.graphLiveTracks) ? manifest.graphLiveTracks.map(String) : [],
+  );
   const suites = new Set();
   for (const taskId of taskIds) {
     const track = taskId.split(".")[0];
@@ -89,6 +103,7 @@ export function scopeForTasks(taskIds, planDir) {
     const scoped = CLASS_SUITES[cls];
     if (!scoped) return null; // unknown class — fail open to the full gate
     for (const suite of scoped) suites.add(suite);
+    if (graphLiveTracks.has(track)) suites.add("graph-live");
   }
   return [...suites];
 }
