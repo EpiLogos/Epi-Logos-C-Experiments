@@ -283,7 +283,7 @@ parser, sync all depend on them). OKF's plain `[text](path)` links are produced 
 4. `bimba-vault-validate` skill updated (`map-index` role, `Map/**` residency, deep-coordinate grammar).
 
 **L2 — operative / code reality (named, flagged to owning specs):**
-1. Extend Hen coordinate grammar to full depth + tests ([[S1-SPEC]]).
+1. Extend Hen coordinate grammar to full depth + tests ([[S1-SPEC]]). **BUILT (Track 45.T45.1, 2026-07-12; independent verification pending).** `is_valid_coordinate` / `is_valid_family_coordinate_base` in [coordinate.rs](Body/S/S1/hen-compiler-core/src/coordinate.rs) now accept the full multi-level grammar — multi-level dash sub-paths (`M2-5-0`, `M2-3-0-360`, range-unconstrained sub-positions), deep/lens psychoid tags (`#0-2-9`, `#3-1-0-7`, `#-0`), raw + canonical context frames (`M0-4.0/1`, `M0-4.(0/1)`, `M2-5-(0/1)-6`, the Mod 4/6 doubling), and a trailing prime at any exposed level (`M2-5-0'`); base QL position stays 0-5 (over-range/malformed still rejected). Grammar mirrors graph-services `CoordinateArrayParser::parse_one` (the sixth impl kept in sync per §3.3). Behavioural proof: `cargo test -p epi-s1-hen-compiler-core` — the deep-coordinate suite `tests/coordinate_deep_grammar.rs` (7 tests) exercises the real validator on the above corpus + rejection cases; full crate suite green (94 passed / 0 failed / 1 live-PI ignored).
 2. Promote the projector into a maintained Neo4j→repo sync direction in S2 / `bimba-mcp`
    (`graph_sync neo4j_to_obsidian` scoped to `map-index`), keeping `/map` fresh.
 3. Populate `M↔S` reflections from live cross-namespace edges.

@@ -1,0 +1,37 @@
+{
+  "runId": "20260712T170101Z-33-T33.1",
+  "taskId": "33.T33.1",
+  "startedAt": "2026-07-12T17:01:01.895Z",
+  "owner": "uc-t33",
+  "leaseExpiresAt": "2026-07-12T21:01:01.895Z",
+  "worktree": null,
+  "task": {
+    "id": "33.T33.1",
+    "trackId": "33",
+    "tranche": "T33.1",
+    "title": "Close the E₅/E₆ energy channels beyond stub-zero (kernel-truth 4:5:6 expected-red)",
+    "effort": "kernel-truth 4:5:6 expected-red",
+    "file": "33-harmonic-energy-channel-handoff.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
+    "dependsOn": [
+      "00.T3",
+      "33.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs:352-353,653-670"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — harmonic energy channel handoff (kernel_energy_evaluate E4 personal / E5 harmonic [user data NEVER enters E5] / E6 verifier, 4:5:6 weighting; oracle codon-charge FFI fix — m3_compute_charges has zero Rust callers). CARRIER: the 4-5-0 engine is its consumption point. Expected-red owner. §2 track 33 + §5.1/§5.3."
+  }
+}

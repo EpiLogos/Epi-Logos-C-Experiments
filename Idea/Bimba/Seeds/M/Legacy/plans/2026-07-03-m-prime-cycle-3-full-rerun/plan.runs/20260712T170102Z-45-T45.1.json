@@ -1,0 +1,37 @@
+{
+  "runId": "20260712T170102Z-45-T45.1",
+  "taskId": "45.T45.1",
+  "startedAt": "2026-07-12T17:01:02.086Z",
+  "owner": "uc-t45",
+  "leaseExpiresAt": "2026-07-12T21:01:02.086Z",
+  "worktree": null,
+  "task": {
+    "id": "45.T45.1",
+    "trackId": "45",
+    "tranche": "T45.1",
+    "title": "Extend Hen `is_valid_coordinate` to the full multi-level coordinate grammar (+ tests)",
+    "effort": "+ tests",
+    "file": "45-bimba-map-indexing-and-dox-okf-unification.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md",
+    "dependsOn": [
+      "00.T3",
+      "45.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler-core/src/coordinate.rs:14-49"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Bimba Map indexing / DOX-OKF (crystallisation upward Hen vs reflection downward Map projection never re-promotes; five cross-language normaliser impls must stay in sync; Hen is_valid_coordinate rejects depth>=2 — real gap). Coordinate rendering must use gateway-side normalisation, never a 6th local impl. §2 track 45."
+  }
+}
