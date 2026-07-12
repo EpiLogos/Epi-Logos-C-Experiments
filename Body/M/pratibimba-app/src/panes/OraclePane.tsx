@@ -3,22 +3,34 @@
  * Actualises: the cast surface — typed invocation of the real consent-gated
  *   epi oracle, deposited as a day artifact the timeline shows immediately.
  *   Requires an anchored day (casts are lived events, not floating queries).
+ *   Each deposited artifact renders its §6.5 resonance indicator (numeric +
+ *   Major/Minor/Shadow, pending-resonance fallback) via M4NaraResonance
+ *   (05.T5.1).
  */
 
 import { useState } from 'react';
 import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
-import { useSessionStore } from '../state/stores';
+import { useSessionStore, useTickStore } from '../state/stores';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge';
+import { NaraResonanceChip } from './M4NaraResonanceSurface';
+import { artifactResonanceIndicator } from './m4NaraResonance';
 
 interface CastResult {
     artifactPath: string;
     output: string;
     system: string;
+    /**
+     * Optional §6.6 envelope resonance stamp (05.T5.1 spec-ahead: the
+     * deposition seam does not stamp it yet — absent renders the
+     * pending-resonance fallback, never a fabricated reading).
+     */
+    resonance?: unknown;
 }
 
 export function OraclePane() {
     const dayNow = useSessionStore(s => s.dayNow);
+    const profilePayload = useTickStore(s => s.profile?.profile ?? null);
     // valid systems per the real CLI (verifier live probe 2026-07-02):
     // tarot decks are rws/thoth/marseille/ql; plus iching. "tarot" bare is rejected.
     const [system, setSystem] = useState('rws');
@@ -93,6 +105,10 @@ export function OraclePane() {
             ) : null}
             {result ? (
                 <div className="oracle-result" data-testid="oracle-result">
+                    <NaraResonanceChip
+                        indicator={artifactResonanceIndicator(result.resonance, profilePayload)}
+                        testId="oracle-artifact-resonance"
+                    />
                     <pre>{result.output}</pre>
                     <button
                         type="button"

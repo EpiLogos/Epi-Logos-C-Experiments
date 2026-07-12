@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:28:23.974Z",
+  "updatedAt": "2026-07-12T02:03:39.724Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1770,16 +1770,56 @@
       "worktree": null
     },
     "05.T5.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T02:03:39.711Z",
+      "claimedAt": "2026-07-12T01:38:47.916Z",
+      "completedAt": "2026-07-12T02:03:39.711Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:55:18.215Z",
+          "text": "M4-SPEC 6.5 resonance indicator (numeric + Major/Minor/Shadow; kernel wire ShadowInversion normalised to Shadow) now renders per deposited artifact (OraclePane chip, envelope-stamp-first with at-now personalPole fallback) and per day (NowPane strip: at-now indicator + envelope aggregation) via new m4NaraResonance law module; pending-resonance fallback covered by render tests at chip, strip, oracle and day levels; no quaternion-dump asserted (raw qCosmic components never reach DOM); pnpm build + typecheck + full 363-test vitest suite green; live NOW Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && npx vitest run (full suite; focused: npx vitest run src/panes/m4NaraResonance.test.ts src/panes/M4NaraResonanceSurface.test.tsx src/panes/OraclePane.test.tsx src/panes/NowPane.test.tsx = 31 passed) && pnpm build",
+            "exitCode": 0,
+            "testsPassed": 363,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4NaraResonance.ts",
+              "Body/M/pratibimba-app/src/panes/M4NaraResonanceSurface.tsx",
+              "Body/M/pratibimba-app/src/panes/m4NaraResonance.test.ts",
+              "Body/M/pratibimba-app/src/panes/M4NaraResonanceSurface.test.tsx",
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/src/panes/NowPane.tsx"
+            ],
+            "tokenUsage": {
+              "input": 260000,
+              "output": 14000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T02:03:39.711Z",
+          "text": "Resonance + conjugate-form character live on the Nara carrier: envelope-stamp-first law in m4NaraResonance.ts (kernel ShadowInversion wire value normalised to surface Shadow), per-artifact chip on OraclePane + day-resonance strip on NowPane with pending-resonance fallback tested at chip/strip/oracle/day levels; M4 §6.5 no-quaternion-dump asserted (raw qCosmic never reaches DOM); open seam: src-tauri/oracle.rs does not yet stamp envelope resonance — deposit-envelope owner's lane. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.1 22.T22.10 28.T28.1 --owner fable-c-verifier (class-scoped gate: app-test vitest 363 PASS incl. m4NaraResonance + M4NaraResonanceSurface suites, app-typecheck/app-build PASS, epi-lib 8872 PASS, portal-core 341 PASS, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 363,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4NaraResonance.ts",
+              "Body/M/pratibimba-app/src/panes/M4NaraResonanceSurface.tsx",
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/src/panes/NowPane.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "thread-1",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:55:18.215Z",
+      "runId": "20260712T013847Z-05-T5.1",
       "worktree": null
     },
     "05.T5.2": {
@@ -6470,16 +6510,36 @@
       "worktree": null
     },
     "22.T22.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-12T01:53:41.490Z",
+      "claimedAt": "2026-07-12T01:39:08.614Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-12T01:53:41.490Z",
+          "text": "Typed M1 surface-dispatch contract landed on the carrier: M1SurfaceMode three-mode inventory + M1SurfaceContext + total selectM1Body (shape-exact LAW), three mode bodies as pure views over the tick-store singleton (standalone composes landed deep faces 22.1/T2.5/T2.3 + honest pending slots 22.3/22.4/22.8/22.9; composed = compact walk-strip + topology mini + cross-pole contribution, played-torus stays 15.4 mount-point), mid-tick composed-to-standalone switch preserves (tick12, position6, active_matrix_op, k2_orientation_q) with store identity unchanged and stale mid-switch generation refused (10/10 vitest); DR-WC-M1-1 RATIFIED at 13-decision-register.md:2013 with the resolution paragraph as the module top-of-file comment per [[NOW-9b0057]]",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && npx vitest run src/panes/m1SurfaceDispatch.test.tsx src/panes/SpandaNavigatorPane.test.tsx src/panes/WalkPane.test.tsx src/panes/KleinTopologyPane.test.tsx src/panes/m1PlayedTorus.test.ts src/state/stores.test.ts src/state/useProfileTick.test.tsx && pnpm build",
+            "exitCode": 0,
+            "testsPassed": 39,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1SurfaceDispatch.tsx",
+              "Body/M/pratibimba-app/src/panes/m1SurfaceDispatch.test.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 95000,
+              "output": 16000
+            }
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "thread-2",
+      "leaseExpiresAt": "2026-07-12T04:39:08.614Z",
+      "heartbeatAt": "2026-07-12T01:53:41.490Z",
+      "runId": "20260712T013908Z-22-T22.10",
       "worktree": null
     },
     "22.T22.11": {
@@ -7813,16 +7873,35 @@
       "worktree": null
     },
     "28.T28.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-12T01:52:38.861Z",
+      "claimedAt": "2026-07-12T01:39:08.833Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-12T01:52:38.861Z",
+          "text": "Carrier chrome contract landed at Body/M/pratibimba-app/CHROME-CONTRACT.md (S1-S9 remapped onto live flexlayout registry, 38 surfaces partitioned M0-prime/M5-prime/shared, DR-WC-IS-1/2 RESOLVED in S5, nine-id readiness S6) + behavioral validator src/chromeContract.test.ts green 9/9 (OMNIPANEL_TABS import + App.tsx AST walk vs contract table both directions, red-checked); NOW: Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md",
+          "receipt": {
+            "command": "pnpm vitest run src/chromeContract.test.ts",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/src/chromeContract.test.ts"
+            ],
+            "tokenUsage": {
+              "input": 110000,
+              "output": 16000
+            }
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "thread-3",
+      "leaseExpiresAt": "2026-07-12T04:39:08.833Z",
+      "heartbeatAt": "2026-07-12T01:52:38.861Z",
+      "runId": "20260712T013908Z-28-T28.1",
       "worktree": null
     },
     "28.T28.2": {
@@ -13224,12 +13303,43 @@
       "leaseExpiresAt": "2026-07-12T02:27:44.204Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:28:23.960Z"
+    },
+    {
+      "runId": "20260712T013847Z-05-T5.1",
+      "taskId": "05.T5.1",
+      "status": "review",
+      "startedAt": "2026-07-12T01:38:47.916Z",
+      "owner": "thread-1",
+      "leaseExpiresAt": "2026-07-12T03:47:27.480Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-12T01:47:27.480Z",
+      "completedAt": "2026-07-12T01:55:18.215Z"
+    },
+    {
+      "runId": "20260712T013908Z-22-T22.10",
+      "taskId": "22.T22.10",
+      "status": "review",
+      "startedAt": "2026-07-12T01:39:08.614Z",
+      "owner": "thread-2",
+      "leaseExpiresAt": "2026-07-12T04:39:08.614Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:53:41.490Z"
+    },
+    {
+      "runId": "20260712T013908Z-28-T28.1",
+      "taskId": "28.T28.1",
+      "status": "review",
+      "startedAt": "2026-07-12T01:39:08.833Z",
+      "owner": "thread-3",
+      "leaseExpiresAt": "2026-07-12T04:39:08.833Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:52:38.861Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-11T18:58:48.738Z",
-    "updatedAt": "2026-07-11T18:58:48.738Z",
+    "createdAt": "2026-07-12T01:34:31.284Z",
+    "updatedAt": "2026-07-12T01:34:31.284Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",

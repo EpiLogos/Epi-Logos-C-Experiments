@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { OraclePane } from './OraclePane';
 import { commands } from '../commands/registry';
-import { useSessionStore } from '../state/stores';
+import { useSessionStore, useTickStore } from '../state/stores';
 
 const invokeCommand = vi.fn();
 vi.mock('../bridge/tauri', () => ({
@@ -14,6 +14,7 @@ describe('OraclePane', () => {
     beforeEach(() => {
         invokeCommand.mockReset();
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+        useTickStore.setState({ generation: null, profile: null } as never);
     });
     afterEach(cleanup);
 
@@ -48,6 +49,74 @@ describe('OraclePane', () => {
         expect(opened).toEqual(['Empty/Present/02-07-2026/oracle-120000-tarot.md']);
         expect(screen.getByTestId('provenance-derived')).toBeTruthy();
         dispose();
+    });
+
+    it('renders a stamped envelope resonance as numeric + conjugate-form-character (05.T5.1)', async () => {
+        useSessionStore.setState({ dayNow: '02-07-2026' });
+        invokeCommand.mockResolvedValue({
+            artifactPath: 'Empty/Present/02-07-2026/oracle-120000-tarot.md',
+            output: 'The Star',
+            system: 'tarot',
+            resonance: { numeric: 0.62, conjugateFormCharacter: 'Minor' }
+        });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'what now?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+
+        await screen.findByTestId('oracle-result');
+        const chip = screen.getByTestId('oracle-artifact-resonance');
+        expect(chip.textContent).toBe('0.620 Minor');
+        expect(chip.dataset.state).toBe('resolved');
+    });
+
+    it('renders the pending-resonance fallback on an unstamped deposit with no live profile (05.T5.1)', async () => {
+        useSessionStore.setState({ dayNow: '02-07-2026' });
+        invokeCommand.mockResolvedValue({
+            artifactPath: 'Empty/Present/02-07-2026/oracle-120000-tarot.md',
+            output: 'The Star',
+            system: 'tarot'
+        });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'what now?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+
+        await screen.findByTestId('oracle-result');
+        const chip = screen.getByTestId('oracle-artifact-resonance');
+        expect(chip.textContent).toBe('pending-resonance');
+        expect(chip.dataset.state).toBe('pending-resonance');
+    });
+
+    it('falls back to the at-now kernel resonance for an unstamped deposit when the profile carries one (05.T5.1)', async () => {
+        useSessionStore.setState({ dayNow: '02-07-2026' });
+        useTickStore.setState({
+            generation: 2,
+            profile: {
+                generation: 2,
+                cachedAtMs: 0,
+                stale: false,
+                stalenessMs: 0,
+                privacyClass: 'safe-public-current-kernel-tick',
+                profile: {
+                    harmonicProfile: {
+                        personalPole: {
+                            resonance: { score: 0.931, conjugateFormCharacter: 'ShadowInversion' }
+                        }
+                    }
+                }
+            } as never
+        } as never);
+        invokeCommand.mockResolvedValue({
+            artifactPath: 'Empty/Present/02-07-2026/oracle-120000-tarot.md',
+            output: 'The Star',
+            system: 'tarot'
+        });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'what now?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+
+        await screen.findByTestId('oracle-result');
+        // kernel wire spelling ShadowInversion renders as §6.5 Shadow
+        expect(screen.getByTestId('oracle-artifact-resonance').textContent).toBe('0.931 Shadow');
     });
 
     it('surfaces cast errors honestly (hygiene refusals included)', async () => {

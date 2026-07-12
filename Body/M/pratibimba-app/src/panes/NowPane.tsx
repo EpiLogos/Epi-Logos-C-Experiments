@@ -4,11 +4,15 @@
  *   "begin today"; an anchored day IS the daily-note open for writing
  *   (write-back through the vault service, S1 scope). Session-NOW folders
  *   remain Khora's law; this surface anchors and writes the day parent.
+ *   The anchored day carries the §6.5 day-resonance strip (at-now indicator +
+ *   Major/Minor/Shadow summary over the day's artifact envelopes,
+ *   pending-resonance fallback) via M4NaraResonance (05.T5.1).
  */
 
 import { useSessionStore } from '../state/stores';
 import { commands } from '../commands/registry';
 import { MarkdownEditorPane } from './MarkdownEditorPane';
+import { NaraDayResonanceStrip } from './M4NaraResonanceSurface';
 
 export function NowPane() {
     const dayNow = useSessionStore(s => s.dayNow);
@@ -33,6 +37,7 @@ export function NowPane() {
     }
     return (
         <div className="now-pane" data-testid="now-pane" data-day={dayNow}>
+            <NaraDayResonanceStrip dayNow={dayNow} />
             <MarkdownEditorPane path={`Empty/Present/${dayNow}/daily-note.md`} />
         </div>
     );
