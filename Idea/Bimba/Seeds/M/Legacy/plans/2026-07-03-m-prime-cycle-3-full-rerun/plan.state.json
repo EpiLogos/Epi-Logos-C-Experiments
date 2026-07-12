@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:06:29.759Z",
+  "updatedAt": "2026-07-12T01:08:06.168Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4588,16 +4588,32 @@
       "worktree": null
     },
     "16.T16.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:08:06.154Z",
+      "claimedAt": "2026-07-12T01:06:30.129Z",
+      "completedAt": "2026-07-12T01:08:06.154Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:08:06.154Z",
+          "text": "CCT-7 closed: the PatternPacket chain now has ONE owner and a sequenced dependency graph, with consistent HANDLE-ONLY typing at every live site (no site invents a packet body - the M4-3 day-episode evidence aggregator crosses layers as ProtectedHandle/handle-string per the privacy partition). Chain as it stands: (1) PRODUCER - portal-core projections carry nara_pattern_packet_handle (Option<String>) + pattern_packet_handle (ProtectedHandle) at profile_projections.rs:570/608/751; (2) BUS - the session-close packet surfaces pattern_packet.mahamaya_transcription.protein_handle (gate/mod.rs:550 asserts it) and the CCT-21 spacetime stream emits PatternPacketFormed as the composition-side event; (3) M5 REVIEW CONSUMER - the one PENDING edge: epii-review-core does not yet read the handle (owned by the 6.12/26.x review lanes; the profile-bus handle fields are not yet in the wire capture either - handle emission rides 10.M4 field landing); (4) 4-5-0 COMPOSITION - consumes the spacetime PatternPacketFormed event (landed under CCT-21). The frozen epi-theia extension sites named by the original grep are excluded per the carrier contract; their carrier equivalents are the sites above.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.7 (track-16 W class gate PASS) + chain-site greps: portal-core projections carry nara_pattern_packet_handle + pattern_packet_handle (ProtectedHandle), gate session-close packet asserts pattern_packet.mahamaya_transcription.protein_handle, spacetime module emits PatternPacketFormed",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/epi-cli/src/gate/mod.rs",
+              "Body/S/S3/epi-spacetime-module/src/lib.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:06:30.129Z",
+      "runId": "20260712T010630Z-16-T16.7",
       "worktree": null
     },
     "16.T16.8": {
@@ -13095,6 +13111,16 @@
       "leaseExpiresAt": "2026-07-12T03:05:18.150Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:06:29.745Z"
+    },
+    {
+      "runId": "20260712T010630Z-16-T16.7",
+      "taskId": "16.T16.7",
+      "status": "done",
+      "startedAt": "2026-07-12T01:06:30.129Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T03:06:30.129Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:08:06.154Z"
     }
   ],
   "activeRoute": {
