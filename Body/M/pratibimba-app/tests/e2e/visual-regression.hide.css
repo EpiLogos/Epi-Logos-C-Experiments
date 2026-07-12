@@ -1,0 +1,28 @@
+/**
+ * 15.T15.12 — screenshot-time hiding of live-profile / wall-clock /
+ * lived-vault regions for the committed visual-regression baselines.
+ * Injected ONLY during `toHaveScreenshot` capture (Playwright `stylePath`);
+ * the live page and every assertion see the real surfaces.
+ *
+ * Why visibility:hidden instead of Playwright mask boxes: masks paint pink
+ * rectangles at the element's rounded bounding box, and a sub-pixel layout
+ * edge can round differently across runs — the close-gate re-run caught a
+ * 1px sliver of LIVE canvas escaping the mask at the pane edge (1913 px
+ * diff). visibility:hidden preserves the layout box exactly while removing
+ * every volatile pixel source, so edge rounding has nothing live to expose:
+ * the region renders the pane's own deterministic background.
+ *
+ * Regions (same inventory the spec asserts textually):
+ * - canvases + CSS2D layers: real kernel tick content, differs across runs
+ * - engine strip: kernel readouts reflow at 1 Hz
+ * - status strip: generation / day / session churn
+ * - vault tree + now-pane: lived-vault content (day folders, typed prose)
+ */
+.cosmic-engine-canvas,
+canvas,
+.cosmic-engine-strip,
+[data-testid='status-strip'],
+[data-testid='vault-tree'],
+[data-testid='now-pane'] {
+    visibility: hidden !important;
+}

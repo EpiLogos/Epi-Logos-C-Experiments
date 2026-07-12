@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T10:24:26.759Z",
+  "updatedAt": "2026-07-12T10:59:23.851Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4677,15 +4677,76 @@
       "worktree": null
     },
     "15.T15.12": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-12T10:18:35.208Z",
+      "status": "done",
+      "updatedAt": "2026-07-12T10:59:23.837Z",
       "claimedAt": "2026-07-12T10:08:01.883Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-12T10:59:23.837Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T10:38:20.031Z",
+          "text": "Fate face-gap per DR-FACE-7 (harness construction on the carrier; no prior toHaveScreenshot anywhere): visual-regression.spec.ts covers 0/1 lemniscate crossing (DR-UI-4 400ms asserted, WAAPI-frozen mid-crossing), tick choreography via engine §8.8 pause/scrub (in-run pixel-ratio proofs: frozen floor 0.00018 vs step 0.00956, thresholds 0.002/0.004), and both compositions (4-5-0 = honest personal default, dedicated composed layout named as gap); committed masked-chrome baselines with documented threshold YIQ 0.2 + maxDiffPixels 400 (~0.04% of 1280x800), stability proven by two consecutive green runs (4 passed each) against baselines from an independent third run; findings: styles.css ships 400ms ease vs DR-UI-4 cubic-out, and the engine strip's 1Hz reflow makes mouse clicks dissolve into the strip container (keyboard command surface used); pnpm build + typecheck green; NOW Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/visual-regression.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/face-toggle-mid-crossing-darwin.png",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/composition-1-2-3-cosmic-darwin.png",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/composition-4-5-0-personal-darwin.png",
+              "Body/M/pratibimba-app/playwright.config.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+            ],
+            "tokenUsage": {
+              "input": 220000,
+              "output": 32000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T10:56:44.792Z",
+          "text": "Close-gate fix landed + full-suite proof: (d) failed in suite order because the shared sidecar vault boots the personal face ANCHORED (earlier specs beginToday) while isolation boots PRISTINE — layout persistence disproven as channel (sidecar pins ui_state_load->null); spec now anchors the day itself (journal.spec house idiom, idempotent begin_today), pins target tabs (ensureTabSelected), and committed shots switched from mask boxes to stylePath visibility-hiding (visual-regression.hide.css) after a 1px bounding-box-rounding sliver leaked live canvas (1913px diff); three baselines regenerated; proof = full pnpm test:e2e in order, 22/22 passed, ports clean; fate face-gap per DR-FACE-7 unchanged; thresholds unchanged (YIQ 0.2 + maxDiffPixels 400 committed; 0.002/0.004 in-run ratios)",
+          "receipt": {
+            "command": "pnpm test:e2e (from Body/M/pratibimba-app; full suite in order)",
+            "exitCode": 0,
+            "testsPassed": 22,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.hide.css",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/face-toggle-mid-crossing-darwin.png",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/composition-1-2-3-cosmic-darwin.png",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/composition-4-5-0-personal-darwin.png",
+              "Body/M/pratibimba-app/playwright.config.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+            ],
+            "tokenUsage": {
+              "input": 340000,
+              "output": 45000
+            }
+          }
+        },
+        {
+          "at": "2026-07-12T10:59:23.837Z",
+          "text": "Visual-regression harness live on the carrier e2e suite (face-gap per DR-FACE-7): (a) 0/1 lemniscate crossing with the DR-UI-4 400ms law asserted + WAAPI-frozen mid-crossing committed baseline, (b) tick choreography determinism via engine pause/scrub with in-run pixel-ratio proofs (frozen 0.00018 vs stepped 0.00956), (c) 1-2-3 cosmic and (d) 4-5-0 personal full-face baselines; thresholds documented (YIQ 0.2 + maxDiffPixels 400 on 1280x800, live-profile rows hidden via stylePath visibility law after a 1px mask-rounding leak). First gate run caught a REAL suite-order coupling (shared sidecar vault day-anchoring, not ui_state which the harness pins null) — fixed with the ensureDayAnchored/ensureTabSelected idioms, baselines regenerated, 22/22 in suite order twice (worker run + gate). Findings recorded: styles.css 400ms ease vs DR-UI-4 cubic-out (owner 15.5/30), engine-strip 1 Hz reflow click-dissolve UX defect, no dedicated composed 4-5-0 layout yet (honest surface baselined). NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 15.T15.12 --owner fable-c-verifier (UF gate PASS: app-ui-flow playwright 22 PASS in suite order incl. the four new visual-regression tests; app-test 392 PASS; app-smoke/live-wire PASS; prior refusal on suite-order coupling fixed and re-proven)",
+            "exitCode": 0,
+            "testsPassed": 392,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.12.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "thread-9",
-      "leaseExpiresAt": "2026-07-12T12:18:35.208Z",
-      "heartbeatAt": "2026-07-12T10:18:35.208Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-12T10:56:44.792Z",
       "runId": "20260712T100801Z-15-T15.12",
       "worktree": null
     },
@@ -13643,12 +13704,13 @@
     {
       "runId": "20260712T100801Z-15-T15.12",
       "taskId": "15.T15.12",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-12T10:08:01.883Z",
       "owner": "thread-9",
       "leaseExpiresAt": "2026-07-12T12:18:35.208Z",
       "worktree": null,
-      "heartbeatAt": "2026-07-12T10:18:35.208Z"
+      "heartbeatAt": "2026-07-12T10:18:35.208Z",
+      "completedAt": "2026-07-12T10:38:20.031Z"
     },
     {
       "runId": "20260712T101628Z-05-T5.14",
