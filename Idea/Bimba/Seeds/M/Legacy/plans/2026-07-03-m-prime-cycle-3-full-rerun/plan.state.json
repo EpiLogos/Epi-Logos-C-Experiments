@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T01:00:15.055Z",
+  "updatedAt": "2026-07-12T01:04:10.009Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4506,16 +4506,30 @@
       "worktree": null
     },
     "16.T16.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-12T01:04:09.995Z",
+      "claimedAt": "2026-07-12T01:00:15.537Z",
+      "completedAt": "2026-07-12T01:04:09.995Z",
+      "evidence": [
+        {
+          "at": "2026-07-12T01:04:09.995Z",
+          "text": "CCT-4 closed as a clean audit: torus_knot_phase has exactly ONE live definition site - the TorusKnotPhase struct on the M1 topology projection in portal-core profile_projections.rs (the DR-IG-4 register entry names this owner with the 2026-06-03 user sign-off, read directly at 13-decision-register.md:405-413). The audit found NOTHING to remove: no parallel definition exists in live code (the frozen epi-theia plugin is excluded by the carrier contract; schemas/src/kernel-bridge.ts is the Zod MIRROR typing what the kernel emits, not a source; Rust single-definition is compiler-enforced). The bridge JSON emit reads from the struct - the wire fixture carries torusKnotPhase 7 times, and the carrier consumes it via the typed m1Topology blob (KleinTopologyPane). Both projection suites fresh green; a protected-handle variant (torus_knot_phase_handle) rides the same single source. W gate PASS via verify-tranche (one transient node crash, rerun clean).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 16.T16.4 (track-16 W class gate PASS) + cargo test -p portal-core --test integrated_plugin_projections (1) + --test profile_projections_full_suite (7) fresh + single-source audit greps",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-12T01:00:15.537Z",
+      "runId": "20260712T010015Z-16-T16.4",
       "worktree": null
     },
     "16.T16.5": {
@@ -13022,6 +13036,16 @@
       "leaseExpiresAt": "2026-07-12T02:58:32.276Z",
       "worktree": null,
       "completedAt": "2026-07-12T01:00:15.042Z"
+    },
+    {
+      "runId": "20260712T010015Z-16-T16.4",
+      "taskId": "16.T16.4",
+      "status": "done",
+      "startedAt": "2026-07-12T01:00:15.537Z",
+      "owner": "opus-a-m3",
+      "leaseExpiresAt": "2026-07-12T03:00:15.537Z",
+      "worktree": null,
+      "completedAt": "2026-07-12T01:04:09.995Z"
     }
   ],
   "activeRoute": {
