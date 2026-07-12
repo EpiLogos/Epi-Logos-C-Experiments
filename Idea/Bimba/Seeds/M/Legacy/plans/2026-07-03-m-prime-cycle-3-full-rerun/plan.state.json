@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T02:04:22.447Z",
+  "updatedAt": "2026-07-12T02:06:05.722Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -6510,10 +6510,10 @@
       "worktree": null
     },
     "22.T22.10": {
-      "status": "review",
-      "updatedAt": "2026-07-12T01:53:41.490Z",
+      "status": "done",
+      "updatedAt": "2026-07-12T02:06:05.709Z",
       "claimedAt": "2026-07-12T01:39:08.614Z",
-      "completedAt": null,
+      "completedAt": "2026-07-12T02:06:05.709Z",
       "evidence": [
         {
           "at": "2026-07-12T01:53:41.490Z",
@@ -6533,11 +6533,27 @@
               "output": 16000
             }
           }
+        },
+        {
+          "at": "2026-07-12T02:06:05.709Z",
+          "text": "M1 standalone-vs-composed dispatch contract live in the carrier: M1SurfaceMode three-mode inventory + M1SurfaceContext discriminator + total selectM1Body at src/panes/m1SurfaceDispatch.tsx, pure views over the zustand tick/coordinate singleton; mid-tick composed-to-standalone switch preserves (tick12, position6, active_matrix_op, k2_orientation_q) with store identity unchanged and stale generation refused; wired into both faces as m1SurfaceComposed (face 0 cosmic-main) + m1SurfaceDeep (face 1 personal-main), LAYOUT_VERSION 13-to-14, CHROME-CONTRACT §2 rows added; DR-WC-M1-1 RATIFIED in 13-decision-register.md with carrier mapping. Pending slots honest for unlanded 22.3/22.4/22.8/22.9. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.1 22.T22.10 28.T28.1 --owner fable-c-verifier (UF proof: app-ui-flow playwright 18 PASS + app-smoke 1 PASS via spawned gateway; app-test vitest 363 PASS incl. m1SurfaceDispatch.test.tsx 10-test suite with the mid-tick switch acceptance; app-typecheck/app-build PASS; honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 382,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1SurfaceDispatch.tsx",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/22.T22.10.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "thread-2",
-      "leaseExpiresAt": "2026-07-12T04:39:08.614Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:53:41.490Z",
       "runId": "20260712T013908Z-22-T22.10",
       "worktree": null

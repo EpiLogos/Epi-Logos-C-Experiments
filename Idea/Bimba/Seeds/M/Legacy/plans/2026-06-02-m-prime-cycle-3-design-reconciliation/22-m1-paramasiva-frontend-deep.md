@@ -252,6 +252,8 @@ The played-torus extension `m1-paramasiva-played-torus` is the 3D Bevy/wgpu rend
 
 10. **22.10 — Standalone vs composed dispatch contract** *(spec-ahead-integration; cross-links 15.4 / 11.x / DR-WC-M1-1)*
 
+    > **⚑ CARRIER-LANDED (2026-07-12, rerun 22.T22.10)** — The contract below landed shape-exact in the carrier as `Body/M/pratibimba-app/src/panes/m1SurfaceDispatch.tsx` (+`.test.tsx`): `M1SurfaceMode`/`M1SurfaceContext`/`selectM1Body` are LAW verbatim; the Theia plumbing (`M1ParamasivaWidget`, `SharedBridgeAdapter`, `M1ProfileClockModel` DI) retargets to the zustand store singletons + flexlayout 0/1 faces per DR-FACE-7. Standalone body composes the LANDED deep faces (22.1 navigator, T2.5 walk+invert, T2.3 Klein topology) with honest pending slots for 22.3/22.4/22.8/22.9; composed body = compact walk-strip + topology mini-view + cross-pole contribution (played-torus stays the 15.4 mount-point, not rendered by the body). DR-WC-M1-1 entry RATIFIED in [13-decision-register.md](13-decision-register.md).
+
     Author `Body/M/epi-theia/extensions/m1-paramasiva/src/common/surface-dispatch.ts` declaring the typed surface contract:
 
     ```ts

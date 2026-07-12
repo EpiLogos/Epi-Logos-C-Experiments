@@ -32,6 +32,7 @@ import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
+import { M1SurfaceDispatchPane, resolveM1SurfaceContext } from './panes/m1SurfaceDispatch';
 import { PentadicInspectorPane } from './panes/PentadicInspectorPane';
 import { M3InspectorsPane } from './panes/M3InspectorsPane';
 import { M5EbmObservatoryPane } from './panes/M5EbmObservatoryPane';
@@ -109,7 +110,10 @@ const PERSONAL_DEFAULT = {
             {
                 type: 'tabset',
                 id: 'personal-main',
-                children: [{ type: 'tab', name: 'Now', component: 'personalHome', enableClose: false }]
+                children: [
+                    { type: 'tab', name: 'Now', component: 'personalHome', enableClose: false },
+                    { type: 'tab', name: 'M1 Deep', component: 'm1SurfaceDeep', enableClose: false }
+                ]
             }
         ]
     }
@@ -132,6 +136,7 @@ const COSMIC_DEFAULT = {
                     { type: 'tab', name: 'Correspondence', component: 'm2Correspondence', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
                     { type: 'tab', name: 'Played Torus', component: 'm1PlayedTorus', enableClose: false },
+                    { type: 'tab', name: 'M1 Surface', component: 'm1SurfaceComposed', enableClose: false },
                     { type: 'tab', name: 'Pentadic', component: 'm3PentadicInspector', enableClose: false },
                     { type: 'tab', name: 'M3 Inspectors', component: 'm3Inspectors', enableClose: false },
                     { type: 'tab', name: 'M5 EBM', component: 'm5Ebm', enableClose: false }
@@ -143,7 +148,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 13;
+const LAYOUT_VERSION = 14;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -183,6 +188,11 @@ function factory(node: TabNode) {
             return <KleinTopologyPane />;
         case 'm1PlayedTorus':
             return <PlayedTorusPane />;
+        // 22.T22.10 — M1 surface dispatch (DR-WC-M1-1: one singleton, pure views)
+        case 'm1SurfaceComposed':
+            return <M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0 })} />;
+        case 'm1SurfaceDeep':
+            return <M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1 })} />;
         case 'm3PentadicInspector':
             return <PentadicInspectorPane />;
         case 'm3Inspectors':
