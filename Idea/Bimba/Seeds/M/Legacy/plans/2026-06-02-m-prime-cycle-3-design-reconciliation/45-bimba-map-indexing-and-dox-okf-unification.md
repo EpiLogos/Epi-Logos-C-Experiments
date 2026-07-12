@@ -217,7 +217,9 @@ the Paramasiva QL essays (`#1`), `13-03-2026-claude-nara-thinking-marketing.md` 
 `relProperties`, incl. the containment edges that build the tree) both come from the rich
 `datasets/{branch}-deep/`, read with a tolerant loader (those files are BOM'd + carry raw control
 chars). It is the **operative seed**: L2 graduates it from a vault script into a Hen/S2 sync
-direction sourced from the live graph.
+direction sourced from the live graph. **DONE (Track 45.T45.2):** graduated into `bimba-mcp`
+`syncMapIndex` / `graph_sync … scope: "map-index"` (direction `neo4j_to_obsidian`), live-graph-sourced,
+idempotent + fresh, reflection-downward only — see §8 L2.2.
 
 ---
 
@@ -285,8 +287,27 @@ parser, sync all depend on them). OKF's plain `[text](path)` links are produced 
 **L2 — operative / code reality (named, flagged to owning specs):**
 1. Extend Hen coordinate grammar to full depth + tests ([[S1-SPEC]]). **BUILT (Track 45.T45.1, 2026-07-12; independent verification pending).** `is_valid_coordinate` / `is_valid_family_coordinate_base` in [coordinate.rs](Body/S/S1/hen-compiler-core/src/coordinate.rs) now accept the full multi-level grammar — multi-level dash sub-paths (`M2-5-0`, `M2-3-0-360`, range-unconstrained sub-positions), deep/lens psychoid tags (`#0-2-9`, `#3-1-0-7`, `#-0`), raw + canonical context frames (`M0-4.0/1`, `M0-4.(0/1)`, `M2-5-(0/1)-6`, the Mod 4/6 doubling), and a trailing prime at any exposed level (`M2-5-0'`); base QL position stays 0-5 (over-range/malformed still rejected). Grammar mirrors graph-services `CoordinateArrayParser::parse_one` (the sixth impl kept in sync per §3.3). Behavioural proof: `cargo test -p epi-s1-hen-compiler-core` — the deep-coordinate suite `tests/coordinate_deep_grammar.rs` (7 tests) exercises the real validator on the above corpus + rejection cases; full crate suite green (94 passed / 0 failed / 1 live-PI ignored).
 2. Promote the projector into a maintained Neo4j→repo sync direction in S2 / `bimba-mcp`
-   (`graph_sync neo4j_to_obsidian` scoped to `map-index`), keeping `/map` fresh.
-3. Populate `M↔S` reflections from live cross-namespace edges.
+   (`graph_sync neo4j_to_obsidian` scoped to `map-index`), keeping `/map` fresh. **BUILT (Track
+   45.T45.2, 2026-07-12; independent verification pending).** The vault-side projector seed
+   (`project-map-index.mjs`) is graduated into a maintained downward sync direction: `graph_sync`
+   gains a `scope: "map-index"` option ([schemas/sync.ts](Body/S/S2/external/bimba-mcp/src/schemas/sync.ts))
+   routed through the new `syncMapIndex` ([api/map-index.ts](Body/S/S2/external/bimba-mcp/src/api/map-index.ts)),
+   sourced from the live graph via `Neo4jMapIndexSource` (reflection-downward read only — never writes
+   the graph). `projectMapNode` reproduces the map-index format (canonical frontmatter + `## Detail` +
+   `## Contains` + the full `## Relations` index) reusing the shared `wrapContextFrames` /
+   `convertHashToMFamily` normaliser — NOT a sixth impl (§3.3). **Freshness:** the `c_3_projected_at`
+   stamp is sourced from the node's own `updated_at`, so re-projecting an unchanged node is
+   byte-identical (`syncMapIndex` only writes when the projected bytes differ = idempotent) while a
+   changed node re-projects fresh. **No re-promotion:** `syncMapIndex` refuses any upward direction and
+   `syncVaultToGraph` skips `c_4_artifact_role: map-index` files (source §3). Behavioural proof:
+   `npx vitest run src` — `src/api/map-index.test.ts` (11 tests) drives the real projection + real
+   temp-filesystem writes for freshness, idempotency, containment-path mirroring, canonical rendering,
+   and the upward refusal; full `src` suite green (53 passed).
+3. Populate `M↔S` reflections from live cross-namespace edges. **BUILT with L2.2 (Track 45.T45.2).**
+   `projectMapNode` sources the `## Relations` index + `c_0_related_coordinates` from every edge
+   incident to the node (source OR target), so cross-namespace `M↔S` reflections (`MAPS_TO_COORDINATE`,
+   `RESONATES_WITH`, `QUANTUM_TRANSLATION_BRIDGE`, …) fill from live graph edges rather than curated
+   seeds — proven by the `M2-5 → M3` cross-branch edge rendered in the map-index test.
 4. OKF bundle-export adapter (wikilink → markdown-link) at the export boundary.
 
 **Cycle-3 touch points:** [[40-bimba-canon-update-ledger]] (the map index is a read surface for

@@ -1193,7 +1193,8 @@ Domain-specific edges emitted by dataset importers, e.g. **HAS_INTERNAL_COMPONEN
         args.path,
         args.direction ?? 'obsidian_to_neo4j',
         args.coordinate_filter,
-        args.dry_run ?? false
+        args.dry_run ?? false,
+        args.scope ?? 'default'
       );
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
