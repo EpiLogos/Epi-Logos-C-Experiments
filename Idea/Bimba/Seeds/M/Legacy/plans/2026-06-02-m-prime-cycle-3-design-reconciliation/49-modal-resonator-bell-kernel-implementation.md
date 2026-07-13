@@ -378,6 +378,16 @@ pnpm --dir Body/M/epi-theia --filter @pratibimba/m2-parashakti test
 
 Expected: PASS, including existing byte-identical Chladni/cymatic determinism and no-audio-output tests.
 
+**Carrier landing (49.4 — `Body/M/pratibimba-app`, epi-theia FROZEN):**
+
+The frozen `m2-parashakti` originals (`meaning-packet.ts` + `cymatic-chladni.ts` + `AudioBusVisualiser.tsx`) landed as these carrier equivalents. The carrier already owned the E4 Chladni solver (`src/engine/cymaticField.ts`, byte-hash pinned) and the graph-backed maqam/mode surface (`M2CorrespondencePane` via `s2.parashaktiCorrespondences`); 49.4 added the three missing pieces without duplicating the solver:
+
+- **Cymatic digest** — `src/engine/cymaticField.ts` extended with `cymaticDigest()` / `CymaticDigest`: a compact deterministic summary of the real field (`fieldHash` pins it to the exact rasterised field; `nodalFraction`/`antinodeFraction` read `sandIntensity`'s own 0.05/0.55 edges; malformed bus → stillness digest, never invented).
+- **M2 meaning packet** — new `src/engine/m2MeaningPacket.ts`: `buildM2MeaningPacket()` bundling the exact 8+4 bus + `modalResonatorDigest` (verbatim kernel ref via `extractBellRoles`, never a recompute) + the cymatic digest + graph-sourced `modalLabels`. Throws rather than synthesise pitch/nodal state on a non-8+4 bus; `packetHash` moves iff the bus or the declared modal digest moves — descriptive maqam/mode labels never move it.
+- **Modal labels surface** — new `src/components/ModalDigestStrip.tsx`: the `AudioBusVisualiser` carrier-equivalent (`data-audio-output="none"`, no browser audio APIs). Reads the active 72-address off the live pentadic trace and routes maqam/mode through the same `s2.parashaktiCorrespondences` gateway seam (graph, not a fixture); absent labels render `—`, never fabricated. Shell wiring is returned as a diff (App.tsx is out of scope).
+
+Verify (carrier runner): `npx vitest run src/engine/cymaticDigest.test.ts src/engine/m2MeaningPacket.test.ts src/components/ModalDigestStrip.test.tsx` (20 + a shared engine regression pass over `src/engine`, 149 green; no `pnpm build`).
+
 ---
 
 ## Tranche 49.5 — M3 World-Clock And Codon Chime Binding

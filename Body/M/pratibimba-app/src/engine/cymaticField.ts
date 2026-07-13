@@ -141,3 +141,97 @@ export function cymaticFieldHash(field: Float32Array): string {
     }
     return hash.toString(16).padStart(8, '0');
 }
+
+/**
+ * The CYMATIC DIGEST (Tranche 49.4) — a compact, deterministic summary of the
+ * whole standing-wave field, the thing the M2 meaning packet carries INSTEAD of
+ * the full frame. It is derived FROM the real field (rasterizeCymaticField),
+ * never a second solver: `fieldHash` pins it to the exact field the shader must
+ * conform to, and the scalar stats read the sand law directly — the 0.05 / 0.55
+ * thresholds are `sandIntensity`'s own edges (nodal-stillness gather vs
+ * antinodal gather). Deterministic under (octet, quartet, theta); a malformed
+ * bus yields the stillness digest (the all-zero field), never an invented one.
+ */
+export interface CymaticDigest {
+    readonly resolution: number;
+    readonly sampleCount: number;
+    /** FNV byte-hash of the exact field — the GPU-parity pin (M2' invariant). */
+    readonly fieldHash: string;
+    readonly meanMagnitude: number;
+    readonly peakMagnitude: number;
+    /** Fraction of samples on the nodal stillness lines (|χ| < 0.05) — where the
+     *  sand gathers at bimba valence. */
+    readonly nodalFraction: number;
+    /** Fraction in the antinodal band (|χ| > 0.55) — the klein-valence gather. */
+    readonly antinodeFraction: number;
+    /** FNV over the quantised scalar summary + fieldHash — the single compact
+     *  pin the meaning packet folds into its own hash. */
+    readonly digestHash: string;
+}
+
+function round6(value: number): number {
+    return Math.round(value * 1_000_000) / 1_000_000;
+}
+
+export function cymaticDigest(
+    octet: readonly number[],
+    quartet: readonly NodalMN[],
+    theta: number,
+    resolution = 32
+): CymaticDigest {
+    const res = Math.max(2, Math.trunc(resolution));
+    const field = rasterizeCymaticField(res, octet, quartet, theta);
+    const fieldHash = cymaticFieldHash(field);
+
+    let sum = 0;
+    let peak = 0;
+    let nodal = 0;
+    let antinode = 0;
+    for (let i = 0; i < field.length; i++) {
+        const magnitude = Math.abs(field[i]);
+        sum += magnitude;
+        if (magnitude > peak) peak = magnitude;
+        if (magnitude < 0.05) nodal += 1;
+        if (magnitude > 0.55) antinode += 1;
+    }
+    const count = field.length;
+    const summary = {
+        resolution: res,
+        sampleCount: count,
+        fieldHash,
+        meanMagnitude: round6(sum / count),
+        peakMagnitude: round6(peak),
+        nodalFraction: round6(nodal / count),
+        antinodeFraction: round6(antinode / count)
+    };
+    return Object.freeze({ ...summary, digestHash: cymaticDigestHash(summary) });
+}
+
+/** FNV-1a over a digest's quantised scalars — the compact byte pin the meaning
+ *  packet folds in. Reads the same field bytes as `fieldHash`, so it moves iff
+ *  the field moves. */
+function cymaticDigestHash(summary: {
+    readonly resolution: number;
+    readonly sampleCount: number;
+    readonly fieldHash: string;
+    readonly meanMagnitude: number;
+    readonly peakMagnitude: number;
+    readonly nodalFraction: number;
+    readonly antinodeFraction: number;
+}): string {
+    const canonical = [
+        summary.resolution,
+        summary.sampleCount,
+        summary.fieldHash,
+        Math.round(summary.meanMagnitude * 1_000_000),
+        Math.round(summary.peakMagnitude * 1_000_000),
+        Math.round(summary.nodalFraction * 1_000_000),
+        Math.round(summary.antinodeFraction * 1_000_000)
+    ].join('|');
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < canonical.length; i++) {
+        hash ^= canonical.charCodeAt(i) & 0xff;
+        hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return hash.toString(16).padStart(8, '0');
+}
