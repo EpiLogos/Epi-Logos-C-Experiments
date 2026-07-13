@@ -192,6 +192,25 @@ Map/
     Out of scope (verified, intentionally different): the epi-app `coordinate.ts` UI domain-link
     *classifier* (only matches top-level `M0–M5`), and the `epii-autoresearch-core` resonance-corpus
     seed coords (`#2-1-0`, …) — flagged for that module's owner if it queries the live graph.
+  - **Carrier forward-guard: never a sixth local impl (Track 45.T45.3, 2026-07-13; independent
+    verification pending).** The `pratibimba-app` carrier holds the five-impl parity by adding NO
+    sixth: it renders coordinates VERBATIM as the gateway returns them. The canonical form arrives
+    from `s2.graph.*` (graph-services `GraphMethodService::resolve_coordinate_string` →
+    `CoordinateArrayParser::parse_one`, the gateway-side normaliser) already stored canonical in
+    Neo4j, and the carrier's single display seam `renderGatewayCoordinate`
+    ([coordinateRender.ts](Body/M/pratibimba-app/src/bridge/coordinateRender.ts)) is a pure
+    passthrough — a local `#`→`M` transform here would be the forbidden sixth impl AND would corrupt
+    the legitimate raw-archetype nodes (`#`, `#0`..`#5` are real Bimba coordinates that must display
+    unchanged). A guard vitest ([coordinateNormaliserGuard.ts](Body/M/pratibimba-app/src/bridge/coordinateNormaliserGuard.ts),
+    `coordinateNormaliserGuard.test.ts`) scans the whole carrier `src` and fails if any local
+    normaliser signature appears (reused `wrap_context_frames`/`convert_hash_to_m_family` identifiers,
+    a `#`→`M` `.replace(...)`, or a U+2215 division-slash substitution) — 0 today, and the test proves
+    teeth against synthetic violations. Behavioural proof: `npx vitest run src/bridge/coordinateRender.test.ts
+    src/bridge/coordinateNormaliserGuard.test.ts src/panes/WalkPane.test.tsx` (14 green), plus the live
+    e2e [coordinate-render-live.spec.ts](Body/M/pratibimba-app/tests/e2e/coordinate-render-live.spec.ts)
+    which walks `M0-4` against a real spawned gateway + live Neo4j and asserts its context-frame child
+    renders the canonical `M0-4.(0/1)` (a Neo4j-only relation target — fails honestly when the graph is
+    down). WalkPane coordinate display now routes every coordinate through the seam.
 - **Hierarchy = the children relation, not a string guess.** Parent comes from the structural
   **containment** edges — `HAS_INTERNAL_COMPONENT` (canonical) + the explicit `HAS_*`/`CONTAINS_*`
   family; SEMANTIC verbs (`PROVIDES_*`, `GENERATES`, `INITIATES`, `DEVELOPS_INTO`) are excluded

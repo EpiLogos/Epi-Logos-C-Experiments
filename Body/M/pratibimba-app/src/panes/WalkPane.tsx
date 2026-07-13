@@ -11,6 +11,7 @@
 import { useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { GraphClient, GraphNode, GraphRelation } from '../bridge/graphClient';
+import { renderGatewayCoordinate } from '../bridge/coordinateRender';
 import { instrument } from '../audio/instrument';
 import { modulationEngine } from '../engine/modulation/engine';
 import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
@@ -136,7 +137,7 @@ export function WalkPane() {
                         }
                     }}
                 />
-                <span>{loading ? 'walking…' : node ? `at ${node.coordinate}` : ''}</span>
+                <span>{loading ? 'walking…' : node ? `at ${renderGatewayCoordinate(node.coordinate)}` : ''}</span>
             </div>
             {error ? (
                 <div className="chat-error" data-testid="walk-error">
@@ -148,14 +149,14 @@ export function WalkPane() {
                     {path.map((step, i) => (
                         <span key={i} className="walk-step">
                             {step.relation ? <em> —{step.relation}→ </em> : null}
-                            {step.coordinate}
+                            {renderGatewayCoordinate(step.coordinate)}
                         </span>
                     ))}
                 </div>
             ) : null}
             {node ? (
                 <div className="walk-node" data-testid="walk-node">
-                    <h3>{node.coordinate}</h3>
+                    <h3>{renderGatewayCoordinate(node.coordinate)}</h3>
                     {node.label ? <p>{node.label}</p> : null}
                 </div>
             ) : null}
@@ -181,7 +182,7 @@ export function WalkPane() {
                         # invert
                     </button>
                     <span className="walk-invert-face" data-testid="m1-invert-face">
-                        {shownInvert}
+                        {renderGatewayCoordinate(shownInvert)}
                     </span>
                     {inversionOperator ? (
                         <span className="walk-invert-op" data-testid="m1-inversion-operator">
@@ -200,7 +201,7 @@ export function WalkPane() {
                             disabled={loading}
                             onClick={() => void arrive(rel.target, rel.type)}
                         >
-                            <em>{rel.type}</em> → {rel.target}
+                            <em>{rel.type}</em> → {renderGatewayCoordinate(rel.target)}
                         </button>
                     </li>
                 ))}
