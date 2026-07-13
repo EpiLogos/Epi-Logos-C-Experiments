@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T18:47:31.116Z",
+  "updatedAt": "2026-07-13T18:49:54.027Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11474,14 +11474,29 @@
       "worktree": null
     },
     "49.T49.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T18:38:06.693Z",
+      "status": "done",
+      "updatedAt": "2026-07-13T18:49:54.013Z",
       "claimedAt": "2026-07-13T18:38:06.693Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-13T18:49:54.013Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T18:49:54.013Z",
+          "text": "Hardened pratibimba-app carrier isChimeCoherent (the M3 world-clock chime readiness authority at the App.tsx strike gate) to honour the explicit tickMatchesProfile/degree720MatchesProfile flags per bell spec section 5 / T49.5 — a divergent frame (state ready but a match flag false) now blocks instead of trusting state alone; added src/bridge/types.test.ts (7 cases, TDD red-green on the two divergence guards); substrate CLOCK_BACKBONE + M123ChimeFrame binding verified pre-landed.",
+          "receipt": {
+            "command": "sh -c \"cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts\"",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/bridge/types.ts",
+              "Body/M/pratibimba-app/src/bridge/types.test.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-4002",
-      "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:38:06.693Z",
       "runId": "20260713T183806Z-49-T49.5",
       "worktree": null
@@ -14630,11 +14645,12 @@
     {
       "runId": "20260713T183806Z-49-T49.5",
       "taskId": "49.T49.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T18:38:06.693Z",
       "owner": "uc-4002",
       "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-13T18:49:54.013Z"
     },
     {
       "runId": "20260713T184401Z-48-T48.1",

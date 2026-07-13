@@ -33,7 +33,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md` — Tranche 49.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: pending — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: T49.5 carrier binding — `sh -c "cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts"` green (isChimeCoherent blocks a divergent world-clock frame per bell spec §5: state 'ready' with a tick/degree match flag false -> incoherent) + K-class gate (verify-all green, honesty-lint clean); verifier != closer; evidence = fresh command output.
 
 6. **T49.6 — Integrated 1-2-3 Readiness And Wave-A Markers**
 

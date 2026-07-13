@@ -133,12 +133,27 @@ export interface M123ChimeFrameBoundary {
     privacyClass: string;
 }
 
-/** Bell spec §5 coherence rule: a present world clock with any tick/degree
- *  mismatch makes the chime incoherent — the strike (and any integrated
- *  readiness) must block on it. Pending carries no mismatch evidence. */
+/** Bell-kernel spec §5 / T49.5 coherence rule: a present world clock with any
+ *  tick or degree720 mismatch makes the chime incoherent — the strike (and any
+ *  integrated readiness) must block on it. The explicit `tickMatchesProfile` /
+ *  `degree720MatchesProfile` flags are the readiness authority, not a tautology
+ *  on `state`: a divergent frame that claims `state: 'ready'` while a match flag
+ *  is false (malformed / legacy / future-buggy gateway) still blocks. `pending`
+ *  carries no clock reading to compare, so its false flags are absence of
+ *  evidence, not a mismatch. */
 export function isChimeCoherent(frame: M123ChimeFrameBoundary | null | undefined): boolean {
-    const state = frame?.m3?.worldClockBinding?.state;
-    return state === 'ready' || state === 'pending';
+    const binding = frame?.m3?.worldClockBinding;
+    const state = binding?.state;
+    if (state !== 'ready' && state !== 'pending') {
+        return false;
+    }
+    if (
+        state === 'ready' &&
+        (binding?.tickMatchesProfile === false || binding?.degree720MatchesProfile === false)
+    ) {
+        return false;
+    }
+    return true;
 }
 
 /** The eight kernel bell-partial role labels in octet order, or null when the
