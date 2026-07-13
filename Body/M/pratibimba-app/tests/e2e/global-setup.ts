@@ -102,10 +102,22 @@ export default async function globalSetup(): Promise<void> {
     sweepPort(E2E_GATEWAY_PORT);
     sweepPort(E2E_SIDECAR_PORT);
 
-    // (b) the REAL gateway on the dedicated e2e port, isolated state root
+    // (b) the REAL gateway on the dedicated e2e port, isolated state root.
+    //     s2.parashaktiCorrespondences (the M2 correspondence face) reads the
+    //     live Neo4j parashakti-deep graph via Neo4jConfig::from_env. Pass the
+    //     graph env keys EXPLICITLY (with the CLI's own defaults) so live-graph
+    //     reachability is a DELIBERATE part of the harness — not an ambient
+    //     accident of the launching shell — and the M2 spec is a real live-graph
+    //     gate that fails honestly when Neo4j is down.
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
     const gateway = spawn(EPI_BIN, ['gate', 'start', '--port', String(E2E_GATEWAY_PORT)], {
-        env: { ...process.env, EPI_GATE_STATE_ROOT: gatewayStateRoot },
+        env: {
+            ...process.env,
+            EPI_GATE_STATE_ROOT: gatewayStateRoot,
+            EPILOGOS_NEO4J_URI: process.env.EPILOGOS_NEO4J_URI ?? 'bolt://localhost:7687',
+            EPILOGOS_NEO4J_USER: process.env.EPILOGOS_NEO4J_USER ?? 'neo4j',
+            EPILOGOS_NEO4J_PASSWORD: process.env.EPILOGOS_NEO4J_PASSWORD ?? ''
+        },
         stdio: ['ignore', 'ignore', 'inherit'],
         detached: false
     });

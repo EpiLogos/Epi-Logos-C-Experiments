@@ -39,8 +39,12 @@ const ARTIFACT = {
         asma: { group_name: 'Jamal', mirror_name: 'Yezalel', has_mirror: true }
     },
     planetaryChakral: {
+        // planetaryMode carries the graph's c_0_modal_signature descriptor
+        // (PlanetaryHarmonic node), not an invented "diurnal"/"nocturnal" flag —
+        // this is the real Mars octave signature verbatim from the live graph.
         planetaryRuler: 'Mars',
-        planetaryMode: 'diurnal',
+        planetaryMode:
+            'The E-E octave, manifesting through voices that are "quick, sharp, fierce and menacing."',
         vedicMantra: 'Om Angarakaya Namaha',
         chakraName: 'Manipura',
         chakraRole: 'will and transformation'
@@ -95,7 +99,7 @@ describe('M2CorrespondencePane', () => {
 
         fireEvent.click(screen.getByTestId('corr-nav-planetary'));
         const planetary = await screen.findByTestId('corr-planetary');
-        expect(planetary.textContent).toContain('diurnal');
+        expect(planetary.textContent).toContain('E-E octave');
         expect(planetary.textContent).toContain('Manipura');
     });
 
