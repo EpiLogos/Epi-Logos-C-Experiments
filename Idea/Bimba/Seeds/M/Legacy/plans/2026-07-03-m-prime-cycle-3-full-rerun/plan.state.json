@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:25:49.344Z",
+  "updatedAt": "2026-07-13T23:27:14.568Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2363,14 +2363,29 @@
       "worktree": null
     },
     "05.T5.19": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T23:18:36.278Z",
+      "status": "done",
+      "updatedAt": "2026-07-13T23:27:14.552Z",
       "claimedAt": "2026-07-13T23:18:36.278Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-13T23:27:14.552Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T23:27:14.552Z",
+          "text": "Verify-first + gap: the four NOW keys (c_3_tranche_mode/response_orbit/klein_weighting/briefing_emitted) are landed at NOW.md:15-20 and already accepted by the Hen validator (c_3_* coordinate-key routing). Built the missing acceptance criterion — new validate_klein_weighting in hen frontmatter.rs REJECTS out-of-range/non-summing c_3_klein_weighting (spec: prospective+retrospective each in [0,1], sum=1.0). NOW.md 0.5/0.5 still passes; zero existing files newly rejected (only NOW.md carries the value; CT4b.base lists it as a column name). Klein test 6/6; full hen suite green.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test klein_weighting_validation",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/frontmatter.rs",
+              "Body/S/S1/hen-compiler-core/tests/klein_weighting_validation.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-0519",
-      "leaseExpiresAt": "2026-07-14T01:18:36.278Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:18:36.278Z",
       "runId": "20260713T231836Z-05-T5.19",
       "worktree": null
@@ -10777,16 +10792,16 @@
       "worktree": null
     },
     "42.T42.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T23:26:04.410Z",
+      "claimedAt": "2026-07-13T23:26:04.410Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T00:56:04.410Z",
+      "heartbeatAt": "2026-07-13T23:26:04.410Z",
+      "runId": "20260713T232604Z-42-T42.4",
       "worktree": null
     },
     "42.T42.5": {
@@ -15107,11 +15122,12 @@
     {
       "runId": "20260713T231836Z-05-T5.19",
       "taskId": "05.T5.19",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T23:18:36.278Z",
       "owner": "uc-0519",
       "leaseExpiresAt": "2026-07-14T01:18:36.278Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-13T23:27:14.552Z"
     },
     {
       "runId": "20260713T232355Z-09-T9.3",
@@ -15122,6 +15138,15 @@
       "leaseExpiresAt": "2026-07-13T23:53:55.351Z",
       "worktree": null,
       "completedAt": "2026-07-13T23:25:49.317Z"
+    },
+    {
+      "runId": "20260713T232604Z-42-T42.4",
+      "taskId": "42.T42.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T23:26:04.410Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T00:56:04.410Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

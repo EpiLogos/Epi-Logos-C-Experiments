@@ -173,6 +173,11 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             continue;
         }
 
+        if key_str == "c_3_klein_weighting" {
+            validate_klein_weighting(value, result);
+            continue;
+        }
+
         if is_coordinate_key(key_str) {
             if let Some(error) = validate_coordinate_key(key_str, value) {
                 result.errors.push(error);
@@ -225,6 +230,43 @@ fn validate_integer_range_key(
         None => result.errors.push(format!(
             "Frontmatter key '{key}' must be an integer {min}-{max}"
         )),
+    }
+}
+
+/// Track 05.T5.19: the NOW Klein-weighting split (prospective + retrospective
+/// senses of sight) must carry two numeric weights, each in [0.0, 1.0], summing
+/// to 1.0 (canvas-spec §3.1 complementarity). Any mapping was previously accepted;
+/// this rejects an out-of-range or non-summing split so it is never rendered as a
+/// real weighting.
+fn validate_klein_weighting(value: &Value, result: &mut ValidationResult) {
+    let Some(map) = value.as_mapping() else {
+        result.errors.push(
+            "Frontmatter key 'c_3_klein_weighting' must be a mapping of prospective + retrospective weights".to_owned(),
+        );
+        return;
+    };
+    let weight = |name: &str| -> Option<f64> {
+        map.get(Value::String(name.to_owned())).and_then(Value::as_f64)
+    };
+    let (Some(prospective), Some(retrospective)) = (weight("prospective"), weight("retrospective"))
+    else {
+        result.errors.push(
+            "Frontmatter key 'c_3_klein_weighting' must carry numeric 'prospective' + 'retrospective' weights".to_owned(),
+        );
+        return;
+    };
+    for (name, w) in [("prospective", prospective), ("retrospective", retrospective)] {
+        if !(0.0..=1.0).contains(&w) {
+            result.errors.push(format!(
+                "Frontmatter key 'c_3_klein_weighting.{name}' value {w} is out of range (must be 0.0-1.0)"
+            ));
+        }
+    }
+    let sum = prospective + retrospective;
+    if (sum - 1.0).abs() > 1e-6 {
+        result.errors.push(format!(
+            "Frontmatter key 'c_3_klein_weighting' weights must sum to 1.0 (prospective + retrospective = {sum})"
+        ));
     }
 }
 

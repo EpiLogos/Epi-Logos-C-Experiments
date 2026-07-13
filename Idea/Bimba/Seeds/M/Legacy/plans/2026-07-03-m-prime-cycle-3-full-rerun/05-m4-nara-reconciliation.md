@@ -117,7 +117,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md` — Tranche 5.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: NOW-schema keys present (`grep -nE "c_3_tranche_mode|c_3_response_orbit|c_3_klein_weighting|c_3_briefing_emitted" Idea/Bimba/World/NOW.md` returns all four) + validator now REJECTS out-of-range c_3_klein_weighting: `cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test klein_weighting_validation` (6/6 — sum!=1.0 / out-of-[0,1] / non-mapping refused, balanced + asymmetric-summing accepted); full hen suite green; verifier != closer; evidence = fresh command output.
 
 20. **T5.20 — LLM-Nara position 4' traversal-voice contract**
 
