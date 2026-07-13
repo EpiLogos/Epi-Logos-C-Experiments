@@ -1,17 +1,17 @@
-//! Kernel-evidence value types and their public-projection constructors.
+//! Kernel-evidence value types, their public-projection constructors, and the
+//! validators that guard them.
 //!
-//! Split out of `lib.rs` per S5-ARCHITECTURE.md §5.1 finding F2. The validators
-//! these constructors rely on (`validate_public_kernel_projection`, `parse_f64`,
-//! `required_str`, `required_u64`, `validate_kernel_trajectory`) remain in the
-//! crate root and are reached here via `crate::`.
+//! Split out of `lib.rs` per S5-ARCHITECTURE.md §5.1 finding F2. The kernel
+//! validators (`validate_kernel_evidence`, `validate_kernel_trajectory`,
+//! `validate_public_kernel_projection`, `parse_f64`, `required_str`,
+//! `required_u64`) live here alongside the `KernelEvidence*` types they guard;
+//! the crate root reaches `validate_kernel_evidence` via
+//! `kernel_evidence::validate_kernel_evidence`.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::{
-    parse_f64, required_str, required_u64, validate_kernel_trajectory,
-    validate_public_kernel_projection, KERNEL_EVIDENCE_COMPUTATION_SOURCE, KERNEL_EVIDENCE_PRIVACY,
-};
+use crate::{KERNEL_EVIDENCE_COMPUTATION_SOURCE, KERNEL_EVIDENCE_PRIVACY};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct KernelEvidenceSnapshot {
@@ -119,5 +119,99 @@ impl KernelEvidenceSnapshot {
             pulse_ratio: format!("{ratio_num}/{ratio_den}"),
             total_energy: required_str(value, "/energy/totalEnergy")?.to_owned(),
         })
+    }
+}
+
+pub(crate) fn validate_kernel_evidence(evidence: &KernelEvidence) -> Result<(), String> {
+    if !evidence.advisory_only {
+        return Err("kernel evidence must be advisory_only".to_owned());
+    }
+    if evidence.privacy != KERNEL_EVIDENCE_PRIVACY {
+        return Err(format!(
+            "kernel evidence privacy must be {KERNEL_EVIDENCE_PRIVACY}"
+        ));
+    }
+    if evidence.computation_source != KERNEL_EVIDENCE_COMPUTATION_SOURCE {
+        return Err(format!(
+            "kernel evidence computation_source must be {KERNEL_EVIDENCE_COMPUTATION_SOURCE}"
+        ));
+    }
+    if evidence.interpretation_boundary.trim().is_empty() {
+        return Err("kernel evidence interpretation_boundary is required".to_owned());
+    }
+    parse_f64(&evidence.baseline.total_energy, "baseline total_energy")?;
+    parse_f64(&evidence.challenger.total_energy, "challenger total_energy")?;
+    parse_f64(&evidence.delta.energy_delta, "energy_delta")?;
+    if let Some(trajectory) = &evidence.trajectory {
+        validate_kernel_trajectory(trajectory)?;
+    }
+    Ok(())
+}
+
+fn validate_kernel_trajectory(trajectory: &KernelTrajectoryRef) -> Result<(), String> {
+    if trajectory.session_key.trim().is_empty() {
+        return Err("kernel trajectory session_key is required".to_owned());
+    }
+    if trajectory.day_id.trim().is_empty() {
+        return Err("kernel trajectory day_id is required".to_owned());
+    }
+    for (label, value) in [
+        ("now_path", trajectory.now_path.as_deref()),
+        (
+            "spacetimedb_session_surface",
+            trajectory.spacetimedb_session_surface.as_deref(),
+        ),
+        (
+            "spacetimedb_global_surface",
+            trajectory.spacetimedb_global_surface.as_deref(),
+        ),
+        ("graphiti_arc_id", trajectory.graphiti_arc_id.as_deref()),
+    ] {
+        if value.is_some_and(|value| value.trim().is_empty()) {
+            return Err(format!("kernel trajectory {label} must not be blank"));
+        }
+    }
+    Ok(())
+}
+
+fn validate_public_kernel_projection(value: &Value) -> Result<(), String> {
+    if required_str(value, "/privacy")? != KERNEL_EVIDENCE_PRIVACY {
+        return Err(format!(
+            "kernel projection privacy must be {KERNEL_EVIDENCE_PRIVACY}"
+        ));
+    }
+    if required_str(value, "/computationSource")? != KERNEL_EVIDENCE_COMPUTATION_SOURCE {
+        return Err(format!(
+            "kernel projection computationSource must be {KERNEL_EVIDENCE_COMPUTATION_SOURCE}"
+        ));
+    }
+    if value.get("bioquaternion").is_some() || value.get("resonanceSquareEmphasis").is_some() {
+        return Err("kernel projection must not expose protected kernel fields".to_owned());
+    }
+    Ok(())
+}
+
+fn required_str<'a>(value: &'a Value, pointer: &str) -> Result<&'a str, String> {
+    value
+        .pointer(pointer)
+        .and_then(Value::as_str)
+        .ok_or_else(|| format!("kernel projection field is required: {pointer}"))
+}
+
+fn required_u64(value: &Value, pointer: &str) -> Result<u64, String> {
+    value
+        .pointer(pointer)
+        .and_then(Value::as_u64)
+        .ok_or_else(|| format!("kernel projection field is required: {pointer}"))
+}
+
+fn parse_f64(value: &str, label: &str) -> Result<f64, String> {
+    let parsed = value
+        .parse::<f64>()
+        .map_err(|_| format!("{label} must be a finite decimal"))?;
+    if parsed.is_finite() {
+        Ok(parsed)
+    } else {
+        Err(format!("{label} must be finite"))
     }
 }

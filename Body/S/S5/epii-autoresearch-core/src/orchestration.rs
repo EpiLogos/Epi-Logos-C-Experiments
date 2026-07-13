@@ -1,9 +1,12 @@
-//! Orchestration lifecycle types and cross-cycle continuity DTOs.
+//! Orchestration lifecycle types, cross-cycle continuity DTOs, and the
+//! state-transition legality check.
 //!
-//! Split out of `lib.rs` per S5-ARCHITECTURE.md §5.1 finding F2. Pure data types;
-//! the state-machine logic (`validate_orchestration_transition`,
-//! `cross_cycle_continuity_from_state`) and the `ImprovementStore` orchestration
-//! methods remain in the crate root.
+//! Split out of `lib.rs` per S5-ARCHITECTURE.md §5.1 finding F2. The legal-transition
+//! state machine (`validate_orchestration_transition`) lives here with the
+//! `OrchestrationState` it guards; the continuity builder
+//! (`cross_cycle_continuity_from_state`, which reads the crate-private
+//! `ImprovementState`) and the `ImprovementStore` orchestration methods remain in
+//! the crate root.
 
 use serde::{Deserialize, Serialize};
 
@@ -134,4 +137,63 @@ pub struct CrossCycleContinuity {
     pub user_validation_awaits: Vec<ContinuityHint>,
     pub suppression_windows: Vec<ContinuityHint>,
     pub verification_schedule: Vec<IntegrationVerificationEntry>,
+}
+
+pub(crate) fn validate_orchestration_transition(
+    current: OrchestrationState,
+    next: OrchestrationState,
+) -> Result<(), String> {
+    if current == next {
+        return Ok(());
+    }
+    let legal = match current {
+        OrchestrationState::Queued => matches!(
+            next,
+            OrchestrationState::InReview
+                | OrchestrationState::Discarded
+                | OrchestrationState::Abandoned
+        ),
+        OrchestrationState::InReview => matches!(
+            next,
+            OrchestrationState::AwaitingUserValidation
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+                | OrchestrationState::Promoted
+        ),
+        OrchestrationState::AwaitingUserValidation => matches!(
+            next,
+            OrchestrationState::Integrating
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+        ),
+        OrchestrationState::Retrying => {
+            matches!(
+                next,
+                OrchestrationState::InReview | OrchestrationState::Abandoned
+            )
+        }
+        OrchestrationState::Integrating => {
+            matches!(
+                next,
+                OrchestrationState::Verifying | OrchestrationState::Discarded
+            )
+        }
+        OrchestrationState::Verifying => matches!(
+            next,
+            OrchestrationState::Promoted
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+        ),
+        OrchestrationState::Promoted
+        | OrchestrationState::Discarded
+        | OrchestrationState::Abandoned => false,
+    };
+    if legal {
+        Ok(())
+    } else {
+        Err(format!(
+            "illegal orchestration transition: {:?} -> {:?}",
+            current, next
+        ))
+    }
 }
