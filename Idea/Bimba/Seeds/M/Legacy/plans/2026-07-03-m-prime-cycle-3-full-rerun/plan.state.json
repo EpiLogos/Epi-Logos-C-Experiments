@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:51:26.640Z",
+  "updatedAt": "2026-07-13T23:55:09.033Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10939,16 +10939,16 @@
       "worktree": null
     },
     "42.T42.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T23:52:07.335Z",
+      "claimedAt": "2026-07-13T23:52:07.335Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:22:07.335Z",
+      "heartbeatAt": "2026-07-13T23:52:07.335Z",
+      "runId": "20260713T235207Z-42-T42.9",
       "worktree": null
     },
     "43.T43.1": {
@@ -11079,16 +11079,30 @@
       "worktree": null
     },
     "43.T43.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T23:55:09.018Z",
+      "claimedAt": "2026-07-13T23:52:22.433Z",
+      "completedAt": "2026-07-13T23:55:09.018Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T23:55:09.018Z",
+          "text": "Verify-first ledger close: the 43.5 boundary-lint drift guardrail runs in CI (lint-boundaries is a verify-all suite at verify-all.mjs:256, green) AND catches violations — lint-boundaries.mjs --no-legacy-allowlist exits 1 with 60 violations (forbidden-imports + missing 43.2 headers + missing cargo descriptions), the deliberately-broken-fixture proof independently confirmed by the verifier. No code change; feeds the G12 release gate; unblocks 43.6. Independent verify uc-4305-verify PASS + K gate green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only lint-boundaries",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              ".codex/scripts/verify-all.mjs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4305",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T23:52:22.433Z",
+      "runId": "20260713T235222Z-43-T43.5",
       "worktree": null
     },
     "43.T43.6": {
@@ -15318,6 +15332,25 @@
       "leaseExpiresAt": "2026-07-14T01:19:30.869Z",
       "worktree": null,
       "completedAt": "2026-07-13T23:51:26.626Z"
+    },
+    {
+      "runId": "20260713T235207Z-42-T42.9",
+      "taskId": "42.T42.9",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T23:52:07.335Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:22:07.335Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260713T235222Z-43-T43.5",
+      "taskId": "43.T43.5",
+      "status": "done",
+      "startedAt": "2026-07-13T23:52:22.433Z",
+      "owner": "uc-4305",
+      "leaseExpiresAt": "2026-07-14T01:22:22.433Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:55:09.018Z"
     }
   ],
   "activeRoute": {

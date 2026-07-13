@@ -33,7 +33,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: the 43.5 boundary-lint drift guardrail runs in CI AND catches violations — `node .codex/scripts/verify-all.mjs --only lint-boundaries` is green (the lint is a verify-all suite at verify-all.mjs:256, so it runs in the CI harness); and the fails-on-broken proof: running lint-boundaries.mjs with the --no-legacy-allowlist flag exits 1 on the ungated gaps (missing 43.2 headers) — the guardrail fails when the invariant is broken. Feeds the G12 release gate; verify-first (no code change). verifier != closer; evidence = fresh command output.
 
 6. **T43.6 — Make navigability first-class for the agents**
 
