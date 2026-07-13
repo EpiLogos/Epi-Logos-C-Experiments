@@ -45,6 +45,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `dayCalendar` | face 1 left border "Calendar" | M0' chrome | live | `DayCalendarPane` | — |
 | `oracle` | face 1 left border "Oracle" | M0' chrome | live | `OraclePane` (real CLI cast via Tauri `oracle_cast`) | — |
 | `personalHome` | face 1 `personal-main` tab "Now" | M0' chrome | live | `NowPane` (M4' day surface) | — |
+| `m4DialogicalArena` | face 1 `personal-main` tab "Arena" | M0' chrome | live | `M4DialogicalArenaPane` (41.T41.7 — M4' dia-logical arena; view id `m4.nara.dialogicalArena`; protected-local handle-only; CPF (00/00) wizard gate; renders `pending-wire` while the `m4.arena.*` ws seam is unimplemented) | `m4.nara.dialogicalArena` |
 | `editor` | face 1 dynamic tabs (`vault.open`) | M0' chrome | live | `MarkdownEditorPane` (canonical READ half; S1 Present journal write scope only — see §4) | `canon-studio` (read half) |
 | `coordinateTree` | face 1 left border (designated) | M0' chrome | pending | 28.6 owns; navigation currently carried by `bimbaGraph` click-selection + `walk` traversal via the shared coordinate store | `coordinate-tree` |
 | `backendStudio` | face 0/1 (designated, deep-mode) | M0' chrome | pending | 28.13 owns (first-build allowance, §9) | `backend-studio` |

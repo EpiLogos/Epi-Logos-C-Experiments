@@ -30,6 +30,7 @@ import { modulationEngine, registerEngineCommands, useEngineStore } from './engi
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
+import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { M1SurfaceDispatchPane, resolveM1SurfaceContext } from './panes/m1SurfaceDispatch';
@@ -112,7 +113,8 @@ const PERSONAL_DEFAULT = {
                 id: 'personal-main',
                 children: [
                     { type: 'tab', name: 'Now', component: 'personalHome', enableClose: false },
-                    { type: 'tab', name: 'M1 Deep', component: 'm1SurfaceDeep', enableClose: false }
+                    { type: 'tab', name: 'M1 Deep', component: 'm1SurfaceDeep', enableClose: false },
+                    { type: 'tab', name: 'Arena', component: 'm4DialogicalArena', enableClose: false }
                 ]
             }
         ]
@@ -148,7 +150,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 14;
+const LAYOUT_VERSION = 15;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -201,6 +203,9 @@ function factory(node: TabNode) {
             return <M5EbmObservatoryPane />;
         case 'personalHome':
             return <NowPane />;
+        // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
+        case 'm4DialogicalArena':
+            return <M4DialogicalArenaPane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':

@@ -1040,3 +1040,178 @@ body,
   color: var(--ink);
   font-size: var(--type-body-small);
 }
+
+/* ── M4' dialogical arena (41.T41.7) ─────────────────────────────── */
+
+.m4-arena-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  font-size: var(--type-body-small);
+  color: var(--ink);
+}
+
+.m4-arena-pending {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+
+.m4-arena-kairos-ring {
+  margin-left: auto;
+  color: var(--ink-dim);
+}
+
+.m4-arena-scene-strip {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid #2e2247;
+}
+
+.m4-arena-scene-strip button {
+  background: var(--ground-raised);
+  border: 1px solid #3a2c5c;
+  border-radius: 5px;
+  color: var(--ink);
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.m4-arena-scene-strip button[data-active='true'] {
+  border-color: var(--accent);
+}
+
+.m4-arena-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.m4-arena-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.7rem;
+  min-width: 0;
+}
+
+.m4-arena-roster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.4rem 0;
+}
+
+.m4-arena-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid #3a2c5c;
+  border-radius: 999px;
+  background: var(--ground-raised);
+}
+
+.m4-arena-trika0 {
+  border-color: var(--accent);
+}
+
+.m4-arena-vak {
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+}
+
+.m4-arena-class-distribution {
+  display: inline-flex;
+  gap: 0.5rem;
+  color: var(--ink-dim);
+}
+
+.m4-arena-scrollback {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0.4rem 0;
+  padding: 0;
+  border-top: 1px solid #2e2247;
+}
+
+.m4-arena-turn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #241b38;
+}
+
+.m4-arena-turn-user { color: var(--ink); }
+.m4-arena-turn-vama_shakti { color: var(--ink-dim); }
+
+.m4-arena-input {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.m4-arena-input textarea {
+  flex: 1;
+  background: var(--ground-raised);
+  border: 1px solid #3a2c5c;
+  border-radius: 5px;
+  color: var(--ink);
+  font: inherit;
+  padding: 0.3rem 0.5rem;
+  resize: vertical;
+}
+
+.m4-arena-warm-strip {
+  width: 220px;
+  border-left: 1px solid #2e2247;
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+.m4-arena-warm-strip ul {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+}
+
+.m4-arena-warm-strip li {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #241b38;
+}
+
+.m4-arena-warm-actions {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-left: 0.4rem;
+}
+
+.m4-arena-wizard {
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  margin: 0.5rem 0.7rem;
+  padding: 0.5rem 0.7rem;
+}
+
+.m4-arena-wizard-cpf {
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+}
+
+.m4-arena-wizard-steps {
+  margin: 0.4rem 0;
+  padding-left: 1.2rem;
+}
+
+.m4-arena-wizard-steps li {
+  margin-bottom: 0.4rem;
+}
+
+.m4-arena-wizard footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}

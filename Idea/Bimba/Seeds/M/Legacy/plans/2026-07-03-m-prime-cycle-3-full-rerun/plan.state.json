@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T21:22:40.965Z",
+  "updatedAt": "2026-07-13T21:54:34.637Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10482,16 +10482,33 @@
       "worktree": null
     },
     "41.T41.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T21:54:34.622Z",
+      "claimedAt": "2026-07-13T21:35:57.117Z",
+      "completedAt": "2026-07-13T21:54:34.622Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T21:54:34.622Z",
+          "text": "BUILT (carrier retarget): M4 dialogical arena pane landed in pratibimba-app as the Arena tab (personal face, LAYOUT_VERSION 15, view id m4.nara.dialogicalArena, chrome-contract row). Ported from frozen m4-nara dialogical-arena.tsx and CORRECTED to the live surface: frozen admit/release/utter RPCs never existed — utterances ride turn_advance, warm admission stages into the CPF (00/00) wizard and rides summon (anti-leak pinned by test: zero m4.arena.* invokes while gate closed), release rides vama_release_warm. Non-user dialogue bodies render opaque-handle placeholders per 41.1 contract; live gateway answers unimplemented for the family (ratified CLI-side shape, gate/parity.rs) so the pane renders the honest pending-wire banner. Classifier glyphs per spec (egregore/sprite/daemon/mantra chips), Trika-0 marker, warm rail + class filter, scene strip, scrollback, non-modal wizard. 18 new behavioral tests (fixture scene 3 non-egregore voices + 5 turns, glyph-per-chip, privacy protectedBodiesProjected=false, CPF-gate walk); app suite 526/526 (chrome-contract lockstep caught + fixed); UF gate green incl. playwright 24/24. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 41.T41.7 --owner fable-c-verify --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens — UF+W gate PASS (app-ui-flow playwright 24 real-Chromium specs vs spawned gateway 67.5s, app-smoke boot gate, app-test 526, app-typecheck, app-build, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 437, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean) ; npx vitest run src/panes/m4DialogicalArena.test.ts src/panes/M4DialogicalArenaPane.test.tsx (18 passed / 0 failed)",
+            "exitCode": 0,
+            "testsPassed": 1296,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M4DialogicalArenaPane.tsx",
+              "Body/M/pratibimba-app/src/panes/m4DialogicalArena.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.7.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T21:35:57.117Z",
+      "runId": "20260713T213557Z-41-T41.7",
       "worktree": null
     },
     "41.T41.8": {
@@ -14949,6 +14966,16 @@
       "leaseExpiresAt": "2026-07-13T23:20:19.706Z",
       "worktree": null,
       "completedAt": "2026-07-13T21:22:40.952Z"
+    },
+    {
+      "runId": "20260713T213557Z-41-T41.7",
+      "taskId": "41.T41.7",
+      "status": "done",
+      "startedAt": "2026-07-13T21:35:57.117Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T00:35:57.117Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T21:54:34.622Z"
     }
   ],
   "activeRoute": {
