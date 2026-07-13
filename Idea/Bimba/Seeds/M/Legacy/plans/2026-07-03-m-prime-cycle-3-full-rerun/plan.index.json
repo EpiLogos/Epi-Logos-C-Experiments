@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-13T23:27:14.566Z",
+  "generatedAt": "2026-07-13T23:30:32.332Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -323,7 +323,7 @@
       "file": "43-end-of-cycle-3-audit-protocol.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/43-end-of-cycle-3-audit-protocol.md",
       "title": "Track 43 — End-of-Cycle-3 Audit Protocol (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "af29b5582f19061775f12f98e10c539233c2ca0a7fb5d8db4880b663c344a5e0"
+      "checksum": "f5450f5bc4cd139f8d10a04f786525025573f3394b989366d2817be2156482f9"
     },
     {
       "id": "44",
@@ -9764,7 +9764,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md"
       ],
-      "body": "3. **T43.3 — Apply the convention across S/S'→M'**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "3. **T43.3 — Apply the convention across S/S'→M'**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: the unified coordinate-header convention (convention:coordinate-header:v1) is applied + machine-enforced — `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` passes (43.5 boundary lint: Coordinate Headers on Body/S lib.rs/main.rs + Cargo descriptions + .h<.c size; the remaining crates are ratcheted as allowlisted migration gaps = the deliberate landed shape); worst-first exemplar 43.2 header at Body/S/S5/epi-kbase-core/src/lib.rs; verify-first ledger close (no code change); verifier != closer; evidence = fresh command output."
     },
     {
       "id": "43.T43.4",

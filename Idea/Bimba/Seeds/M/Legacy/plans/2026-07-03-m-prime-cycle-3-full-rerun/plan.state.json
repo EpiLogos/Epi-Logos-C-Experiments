@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:27:14.568Z",
+  "updatedAt": "2026-07-13T23:30:32.334Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10943,16 +10943,30 @@
       "worktree": null
     },
     "43.T43.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T23:30:32.319Z",
+      "claimedAt": "2026-07-13T23:28:53.545Z",
+      "completedAt": "2026-07-13T23:30:32.319Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T23:30:32.319Z",
+          "text": "Verify-first ledger close: the unified coordinate-header convention (convention:coordinate-header:v1, 43.2) is applied + machine-enforced by the 43.5 boundary lint (lint-boundaries.mjs exit 0 — Coordinate Headers on Body/S lib.rs/main.rs + Cargo descriptions + .h<.c size; remaining crates ratcheted as allowlisted migration gaps = the ratified landed shape). Worst-first exemplar full 43.2 header at Body/S/S5/epi-kbase-core/src/lib.rs. No code change (writeScope = plan .md). Independent verify uc-4303-verify PASS + K gate green.",
+          "receipt": {
+            "command": "node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/epi-kbase-core/src/lib.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4303",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T23:28:53.545Z",
+      "runId": "20260713T232853Z-43-T43.3",
       "worktree": null
     },
     "43.T43.4": {
@@ -15147,6 +15161,16 @@
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T00:56:04.410Z",
       "worktree": null
+    },
+    {
+      "runId": "20260713T232853Z-43-T43.3",
+      "taskId": "43.T43.3",
+      "status": "done",
+      "startedAt": "2026-07-13T23:28:53.545Z",
+      "owner": "uc-4303",
+      "leaseExpiresAt": "2026-07-14T00:58:53.545Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:30:32.319Z"
     }
   ],
   "activeRoute": {

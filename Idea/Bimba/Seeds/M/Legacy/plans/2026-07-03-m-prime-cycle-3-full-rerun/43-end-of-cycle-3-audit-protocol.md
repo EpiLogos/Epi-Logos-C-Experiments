@@ -21,7 +21,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: the unified coordinate-header convention (convention:coordinate-header:v1) is applied + machine-enforced — `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` passes (43.5 boundary lint: Coordinate Headers on Body/S lib.rs/main.rs + Cargo descriptions + .h<.c size; the remaining crates are ratcheted as allowlisted migration gaps = the deliberate landed shape); worst-first exemplar 43.2 header at Body/S/S5/epi-kbase-core/src/lib.rs; verify-first ledger close (no code change); verifier != closer; evidence = fresh command output.
 
 4. **T43.4 — C-header information-hiding remediation**
 
