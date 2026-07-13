@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T21:58:04.459Z",
+  "updatedAt": "2026-07-13T21:59:52.765Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10542,16 +10542,33 @@
       "worktree": null
     },
     "41.T41.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T21:59:52.751Z",
+      "claimedAt": "2026-07-13T21:58:04.832Z",
+      "completedAt": "2026-07-13T21:59:52.751Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T21:59:52.751Z",
+          "text": "Verify-first close, zero gap: moirai_arena_distill + arena_closure_distillation registered across the aletheia surfaces (episodic-tools.ts, CONTRACT.md, moirai.md §Capability patch); arena_distillation.py landed (classifier-modulated edge patterns: egregore fan-out, sprite sparse high-weight, daemon user-citation-weighted, mantra element-axis; DIALOGICAL_RESONANCE_AT class_pair edges); ARENA_DIALOGUE_OF + DIALOGICAL_RESONANCE_AT + CLASS_PAIR_PROPERTY in graph-schema (residency note: relationships/node.rs, not lib.rs as spec named — same crate, registry-test-pinned). Fresh proof 6/6 across three runners; classifier edge law additionally proven LIVE during 41.12 close (real Graphiti episode, group_id arena:e2e). W gate green. Track 41 rerun COMPLETE: 12/12 done. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/arena_distill.test.ts (2 passed / 0 failed: fixture-scene closure distillation with classifier-modulated edges + compress_through_VAK invocation) ; python3 -m pytest tests/test_arena_distillation.py -q (2 passed: moirai_arena_distill writes episode + classifier-modulated edges, class_pair resonance) ; cargo test --manifest-path Body/S/S2/graph-schema/Cargo.toml --test relationship_registry (2 passed: ARENA_DIALOGUE_OF/DIALOGICAL_RESONANCE_AT + CLASS_PAIR_PROPERTY registered) ; node .codex/scripts/verify-tranche.mjs 41.T41.9 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 751,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/epi-gnostic/epi_gnostic/arena_distillation.py",
+              "Body/S/S2/graph-schema/src/relationships/node.rs",
+              "Body/S/S4/ta-onta/S4-5p-aletheia/tests/arena_distill.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.9.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T21:58:04.832Z",
+      "runId": "20260713T215804Z-41-T41.9",
       "worktree": null
     },
     "41.T41.10": {
@@ -15003,6 +15020,16 @@
       "leaseExpiresAt": "2026-07-13T23:54:58.685Z",
       "worktree": null,
       "completedAt": "2026-07-13T21:58:04.435Z"
+    },
+    {
+      "runId": "20260713T215804Z-41-T41.9",
+      "taskId": "41.T41.9",
+      "status": "done",
+      "startedAt": "2026-07-13T21:58:04.832Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T23:28:04.832Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T21:59:52.751Z"
     }
   ],
   "activeRoute": {
