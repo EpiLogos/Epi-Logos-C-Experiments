@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T18:59:17.973Z",
+  "updatedAt": "2026-07-13T19:05:35.848Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10466,16 +10466,34 @@
       "worktree": null
     },
     "41.T41.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-13T19:05:35.835Z",
+      "claimedAt": "2026-07-13T19:04:26.297Z",
+      "completedAt": "2026-07-13T19:05:35.835Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T19:05:35.835Z",
+          "text": "Verify-first + gap-close: three surfaces were landed and re-proven fresh (hen_arena_promotion_intake with promotion_proposal_emitted validation + CU-ENTITY vama_shakti_class provenance in S4-1p-hen extension.ts:219-451; Track 40 ledger §Lifecycle arena-promotion intake + class-specific augmentation_target field table; epi_gnostic.arena_promotion pytest 3/3). Gap closed this session: standalone propose-while-warm CLI surface landed TDD (epi nara arena vama-propose-promotion — pure propose_promotion_input helper with active-row guard, row NOT released; red→green, 2 new unit tests; e2e 4/4 regression). Track 40 doc command spelling aligned to landed kebab-case family (vama-propose-promotion). W gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib nara::arena (4 passed / 0 failed incl. 2 new propose-while-warm tests) ; cargo test --test arena_vama_shakti_e2e (4 passed / 0 failed regression) ; python3 -m pytest tests/test_arena_promotion.py -q (3 passed: class threshold-firing, mantra element-signature, non-overwriting augmentation) ; node .codex/scripts/verify-tranche.mjs 41.T41.11 --owner fable-c-verify — W-scoped gate PASS (gateway, gateway-contract, gateway-methods, live-wire spawned-gateway, ta-onta, redis-context, spacetime, graphiti-runtime, harness-selftest, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 756,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/arena.rs",
+              "Body/S/S4/ta-onta/S4-1p-hen/extension.ts",
+              "Body/S/S5/epi-gnostic/epi_gnostic/arena_promotion.py",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.11.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 13 dirty files.",
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T19:04:26.297Z",
+      "runId": "20260713T190426Z-41-T41.11",
       "worktree": null
     },
     "41.T41.12": {
@@ -14719,6 +14737,16 @@
       "leaseExpiresAt": "2026-07-13T20:57:02.623Z",
       "worktree": null,
       "completedAt": "2026-07-13T18:59:17.959Z"
+    },
+    {
+      "runId": "20260713T190426Z-41-T41.11",
+      "taskId": "41.T41.11",
+      "status": "done",
+      "startedAt": "2026-07-13T19:04:26.297Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T20:04:26.297Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T19:05:35.835Z"
     }
   ],
   "activeRoute": {

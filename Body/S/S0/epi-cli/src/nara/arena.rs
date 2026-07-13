@@ -98,6 +98,16 @@ pub enum ArenaCmd {
         #[arg(long)]
         config: Option<PathBuf>,
     },
+    /// epi nara arena vama-propose-promotion — emit an arena-promotion proposal
+    /// while the row stays warm (Tranche 41.11 intake; row is NOT released)
+    #[command(name = "vama-propose-promotion")]
+    VamaProposePromotion {
+        identity_handle: String,
+        #[arg(long)]
+        scenes: Option<u64>,
+        #[arg(long)]
+        config: Option<PathBuf>,
+    },
 }
 
 pub fn dispatch(cmd: &ArenaCmd, json: bool) -> Result<String, String> {
@@ -342,6 +352,19 @@ pub fn dispatch(cmd: &ArenaCmd, json: bool) -> Result<String, String> {
                 Ok(out)
             }
         }
+        ArenaCmd::VamaProposePromotion {
+            identity_handle,
+            scenes,
+            config,
+        } => {
+            let input = propose_promotion_input(&runtime, identity_handle, scenes.unwrap_or(0))?;
+            let proposal = invoke_arena_promotion(&input, config.as_ref())?;
+            if json {
+                serde_json::to_string_pretty(&proposal).map_err(|err| err.to_string())
+            } else {
+                Ok(render_promotion_summary(&proposal))
+            }
+        }
     }
 }
 
@@ -421,6 +444,27 @@ fn runtime_path() -> Result<PathBuf, String> {
         .join(".epi-logos")
         .join("nara")
         .join("arena-runtime.json"))
+}
+
+/// 41.11 propose-while-warm: build the generator input for an ACTIVE warm row
+/// without releasing it. Release-time proposals go through
+/// `vama-release-warm --reason promote --emit-proposal`.
+fn propose_promotion_input(
+    runtime: &M4ArenaRuntime,
+    identity_handle: &str,
+    scene_count: u64,
+) -> Result<Value, String> {
+    let row = runtime
+        .warm_vama_shaktis
+        .warm
+        .get(identity_handle)
+        .ok_or_else(|| format!("no warm Vama Shakti row for {identity_handle}"))?;
+    if !row.is_active() {
+        return Err(format!(
+            "warm Vama Shakti row {identity_handle} is inactive; promotion proposals require an active warm row"
+        ));
+    }
+    promotion_generator_input(row, scene_count, true)
 }
 
 fn promotion_generator_input(
@@ -617,6 +661,68 @@ mod tests {
         assert_eq!(
             input["essentialIdentity"]["vamaShaktiClass"],
             serde_json::Value::String("daemon".to_owned())
+        );
+    }
+
+    #[test]
+    fn propose_promotion_input_keeps_row_warm_and_carries_witness() {
+        let mut runtime = M4ArenaRuntime::default();
+        let psyche = "psyche revision";
+        let row = runtime.warm_vama_shaktis.prewarm(PrewarmVamaShaktiRequest {
+            coordinate_label: "M4.daemon-field".to_owned(),
+            coordinate: vak_address("M4.daemon-field"),
+            canonical_form_digest: hash_revision("M4.daemon-field"),
+            archetypal_sattva: "M4.daemon-field".to_owned(),
+            vama_shakti_class: VamaShaktiClass::Daemon,
+            psyche_template_md: psyche.to_owned(),
+            entity_form_md: "form:M4.daemon-field".to_owned(),
+            psyche_template_revision: hash_revision(psyche),
+            now_ms: 1_000,
+        });
+        let identity_handle = row.identity_handle.clone();
+
+        let input = propose_promotion_input(&runtime, &identity_handle, 4)
+            .expect("active warm row proposes without release");
+
+        assert_eq!(input["sceneCount"], 4);
+        assert_eq!(input["userResponseQualityWitnessed"], true);
+        let still_warm = runtime
+            .warm_vama_shaktis
+            .warm
+            .get(&identity_handle)
+            .expect("proposing must not evict the warm row");
+        assert!(
+            still_warm.is_active(),
+            "41.11 propose-while-warm: the row stays active after a proposal"
+        );
+    }
+
+    #[test]
+    fn propose_promotion_input_refuses_missing_and_inactive_rows() {
+        let mut runtime = M4ArenaRuntime::default();
+        assert!(propose_promotion_input(&runtime, "no-such-handle", 1).is_err());
+
+        let psyche = "psyche revision";
+        let row = runtime.warm_vama_shaktis.prewarm(PrewarmVamaShaktiRequest {
+            coordinate_label: "M4.sprite-field".to_owned(),
+            coordinate: vak_address("M4.sprite-field"),
+            canonical_form_digest: hash_revision("M4.sprite-field"),
+            archetypal_sattva: "M4.sprite-field".to_owned(),
+            vama_shakti_class: VamaShaktiClass::Sprite,
+            psyche_template_md: psyche.to_owned(),
+            entity_form_md: "form:M4.sprite-field".to_owned(),
+            psyche_template_revision: hash_revision(psyche),
+            now_ms: 1_000,
+        });
+        let identity_handle = row.identity_handle.clone();
+        runtime
+            .warm_vama_shaktis
+            .release(&identity_handle, VamaShaktiReleaseReason::Gc, 2_000)
+            .expect("release marks the row inactive");
+
+        assert!(
+            propose_promotion_input(&runtime, &identity_handle, 1).is_err(),
+            "released rows must not emit promotion proposals"
         );
     }
 }
