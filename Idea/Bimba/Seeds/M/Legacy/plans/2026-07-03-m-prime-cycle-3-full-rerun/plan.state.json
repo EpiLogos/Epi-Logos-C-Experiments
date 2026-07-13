@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T21:19:33.642Z",
+  "updatedAt": "2026-07-13T21:22:40.965Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10451,16 +10451,34 @@
       "worktree": null
     },
     "41.T41.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T21:22:40.952Z",
+      "claimedAt": "2026-07-13T21:20:19.706Z",
+      "completedAt": "2026-07-13T21:22:40.952Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T21:22:40.952Z",
+          "text": "Verify-first close, zero gap: all four write-scope surfaces landed — 8 m4.arena.* method literals pinned in gateway-contract lib.rs:161-168 (header :30 declares the pinning law), gateway m4_arena.rs route family, nara/arena.rs admin CLI with all 8 spec subcommands (+ 41.11 vama-propose-promotion), gate_m4_arena.rs parity tests. Fresh proof 12/12 across both crates covering every spec-required assertion: round-trip, CPF-gate, DR-VAMA-3/6 refusals, ONE-substrate Khora-authority-on-every-route, warm lifecycle + release-to-promotion parity. W gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml m4_arena (6 passed / 0 failed: m4_arena_round_trip, scene_open CPF-token refusal, summon non-:World refusal DR-VAMA-3, unknown-classifier refusal DR-VAMA-6, ONE-substrate Khora authority on every route, warm lifecycle) ; cargo test --test gate_m4_arena (6 passed / 0 failed CLI parity) ; node .codex/scripts/verify-tranche.mjs 41.T41.6 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 757,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/lib.rs",
+              "Body/S/S3/gateway/src/m4_arena.rs",
+              "Body/S/S0/epi-cli/src/nara/arena.rs",
+              "Body/S/S0/epi-cli/tests/gate_m4_arena.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.6.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T21:20:19.706Z",
+      "runId": "20260713T212019Z-41-T41.6",
       "worktree": null
     },
     "41.T41.7": {
@@ -14921,6 +14939,16 @@
       "leaseExpiresAt": "2026-07-13T23:13:11.940Z",
       "worktree": null,
       "completedAt": "2026-07-13T21:19:33.628Z"
+    },
+    {
+      "runId": "20260713T212019Z-41-T41.6",
+      "taskId": "41.T41.6",
+      "status": "done",
+      "startedAt": "2026-07-13T21:20:19.706Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T23:20:19.706Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T21:22:40.952Z"
     }
   ],
   "activeRoute": {
