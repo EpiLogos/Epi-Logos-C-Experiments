@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T17:17:33.166Z",
+  "updatedAt": "2026-07-13T18:42:09.108Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10298,16 +10298,31 @@
       "worktree": null
     },
     "41.T41.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T18:42:09.094Z",
+      "claimedAt": "2026-07-13T18:32:14.318Z",
+      "completedAt": "2026-07-13T18:42:09.094Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T18:42:09.094Z",
+          "text": "Verify-first close (doc-ahead-landing): existing 41.1 binding contract verified against live substrate — VamaShaktiClass bytes match vama_shakti.rs:12-17, m4.arena.* literals pinned gateway-contract lib.rs:161-168, five Arena*/WarmVamaShakti tables + protected-local law in epi-spacetime-module, DR-VAMA-5 frozen profile in dispatch-guard.ts. All stale file:line citations re-pinned post-banner; 41.7 downstream binding retargeted Theia widget → pratibimba-app arena pane per CHARTER retarget law §2; substrate-reality section added. No implementation files changed. W gate green 745/0. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 41.T41.1 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean); tranche check: rg six typed shapes present in contract",
+            "exitCode": 0,
+            "testsPassed": 745,
+            "testsFailed": 0,
+            "keyPaths": [
+              "plan.runs/41.1-vama-shakti-factory-and-arena-contract.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T18:32:14.318Z",
+      "runId": "20260713T183214Z-41-T41.1",
       "worktree": null
     },
     "41.T41.2": {
@@ -11442,16 +11457,16 @@
       "worktree": null
     },
     "49.T49.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T18:38:06.693Z",
+      "claimedAt": "2026-07-13T18:38:06.693Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-4002",
+      "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
+      "heartbeatAt": "2026-07-13T18:38:06.693Z",
+      "runId": "20260713T183806Z-49-T49.5",
       "worktree": null
     },
     "49.T49.6": {
@@ -14584,12 +14599,31 @@
       "leaseExpiresAt": "2026-07-13T18:45:37.754Z",
       "worktree": null,
       "completedAt": "2026-07-13T17:17:33.153Z"
+    },
+    {
+      "runId": "20260713T183214Z-41-T41.1",
+      "taskId": "41.T41.1",
+      "status": "done",
+      "startedAt": "2026-07-13T18:32:14.318Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T20:32:14.318Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T18:42:09.094Z"
+    },
+    {
+      "runId": "20260713T183806Z-49-T49.5",
+      "taskId": "49.T49.5",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T18:38:06.693Z",
+      "owner": "uc-4002",
+      "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-13T16:43:17.774Z",
-    "updatedAt": "2026-07-13T16:43:17.774Z",
+    "createdAt": "2026-07-13T18:31:15.492Z",
+    "updatedAt": "2026-07-13T18:31:15.492Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
