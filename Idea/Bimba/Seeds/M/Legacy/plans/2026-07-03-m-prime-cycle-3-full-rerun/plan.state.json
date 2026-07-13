@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:16:04.167Z",
+  "updatedAt": "2026-07-13T23:17:45.313Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11487,16 +11487,21 @@
       "worktree": null
     },
     "48.T48.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-13T23:17:45.299Z",
+      "claimedAt": "2026-07-13T23:16:24.282Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-13T23:17:45.299Z",
+          "text": "PARTIAL (honest split, fable-c 2026-07-14): ZONES LEG DONE — every zone has its working base in functional role: /World+/Types Crystallisation-Pipeline.base (groups by c_5_crystallisation_state per spec, filters non-null state), /Map Map-Aggregate-Browser.base (table + cards view + projection-provenance view), /Seeds Seeds-Provenance-Ledger.base, Empty/Present Present-Console.base, plus Entity-Candidate-Tracker.base. M2-1 WORKED-EXAMPLE LEG OPEN — the Map cards view declares image: c_1_symbol_image but NO producer emits that key (map-index.ts projector emits a fixed frontmatter set without it), no image assets exist in the vault (only .obsidian plugin internals), no graph property carries lens imagery, and M2-1 map nodes verify image-less. Closing needs: (1) Architect content decision on cover imagery for the 36x2 MEF lenses (generate vs fetch public-domain), (2) the graph property + projector emission seam (contract surface on the generated Map projection — propose, not land unilaterally). Read side is already law (cards view keyed to c_1_symbol_image). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:16:24.282Z",
+      "heartbeatAt": "2026-07-13T23:17:45.299Z",
+      "runId": "20260713T231624Z-48-T48.3",
       "worktree": null
     },
     "48.T48.4": {
@@ -15056,6 +15061,16 @@
       "leaseExpiresAt": "2026-07-14T01:13:30.193Z",
       "worktree": null,
       "completedAt": "2026-07-13T23:16:04.153Z"
+    },
+    {
+      "runId": "20260713T231624Z-48-T48.3",
+      "taskId": "48.T48.3",
+      "status": "review",
+      "startedAt": "2026-07-13T23:16:24.282Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:16:24.282Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:17:45.299Z"
     }
   ],
   "activeRoute": {
