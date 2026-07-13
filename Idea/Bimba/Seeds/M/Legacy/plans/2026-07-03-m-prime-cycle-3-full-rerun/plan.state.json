@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T21:10:49.319Z",
+  "updatedAt": "2026-07-13T21:12:56.831Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10391,16 +10391,34 @@
       "worktree": null
     },
     "41.T41.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T21:12:56.817Z",
+      "claimedAt": "2026-07-13T21:11:11.558Z",
+      "completedAt": "2026-07-13T21:12:56.817Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T21:12:56.817Z",
+          "text": "Verify-first close, zero gap: all write-scope surfaces landed — agent-registry.ts with full PiAgentRegistry API (registerVamaShakti :209, resolveSpeaker :275, listByArena :291, lease release + speaker/arena index cleanup), dispatch-guard.ts frozen DialogueOnlyCapabilityProfile mirroring the Rust shape (DR-VAMA-5, refuses tampered profiles), vama-shakti-dialogue-only.test.ts, capability-matrix vama_shakti_dialogue_only_invariant true (:6). Fresh proof 13/13 incl. both spec-mandated classes (typed refusal of non-dialogue tools; scene-close lifecycle ephemeral/warm/promoted routing). W gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node --test Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts (13 passed / 0 failed: dispatch-guard refuses every non-dialogue tool with typed error, frozen-profile tamper refusal, registerVamaShakti/resolveSpeaker/listByArena, scene-close lifecycle routes ephemeral-release + warm-to-WarmVamaShakti + promoted-to-Hen) ; node .codex/scripts/verify-tranche.mjs 41.T41.4 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 758,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/pi-agent/lib/agent-registry.ts",
+              "Body/S/S4/pi-agent/lib/dispatch-guard.ts",
+              "Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts",
+              "Body/S/S4/plugins/pi-agent/capability-matrix.json",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.4.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T21:11:11.558Z",
+      "runId": "20260713T211111Z-41-T41.4",
       "worktree": null
     },
     "41.T41.5": {
@@ -14867,6 +14885,16 @@
       "leaseExpiresAt": "2026-07-13T23:09:10.778Z",
       "worktree": null,
       "completedAt": "2026-07-13T21:10:49.306Z"
+    },
+    {
+      "runId": "20260713T211111Z-41-T41.4",
+      "taskId": "41.T41.4",
+      "status": "done",
+      "startedAt": "2026-07-13T21:11:11.558Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T23:11:11.558Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T21:12:56.817Z"
     }
   ],
   "activeRoute": {
