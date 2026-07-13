@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T17:14:04.530Z",
+  "updatedAt": "2026-07-13T17:17:33.166Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11805,16 +11805,31 @@
       "worktree": null
     },
     "40.T40.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T17:17:33.153Z",
+      "claimedAt": "2026-07-13T17:15:37.754Z",
+      "completedAt": "2026-07-13T17:17:33.153Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T17:17:33.153Z",
+          "text": "Completed the Phase-J landing invariant: added canon_updates_landed whole-file-index frontmatter to alpha_rasa_bridge_ql.md (CU-IDENTITY-1/2/4) and m3-prime-ql-transcriptional-bridge.md (CU-IDENTITY-1..4 + CU-FORM-1) matching their inline markers; ql_m0_m3 was already consistent; T40.2 lint green over all five landed rows; data landed with the paired T40.2 commit f4d52508.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test canon_update_landed_xref_consistency",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M3-prime/alpha_rasa_bridge_ql.md",
+              "Idea/Bimba/Seeds/M/M3-prime/m3-prime-ql-transcriptional-bridge.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4002",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T17:15:37.754Z",
+      "runId": "20260713T171537Z-40-T40.3",
       "worktree": null
     },
     "40.T40.4": {
@@ -14559,6 +14574,16 @@
       "leaseExpiresAt": "2026-07-13T18:51:05.403Z",
       "worktree": null,
       "completedAt": "2026-07-13T17:10:45.729Z"
+    },
+    {
+      "runId": "20260713T171537Z-40-T40.3",
+      "taskId": "40.T40.3",
+      "status": "done",
+      "startedAt": "2026-07-13T17:15:37.754Z",
+      "owner": "uc-4002",
+      "leaseExpiresAt": "2026-07-13T18:45:37.754Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T17:17:33.153Z"
     }
   ],
   "activeRoute": {
