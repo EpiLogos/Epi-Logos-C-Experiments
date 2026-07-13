@@ -8,8 +8,9 @@
 //! the WebSocket/Tokio host process.
 //!
 //! `handler_owner` field is added to surfaces produced by this module so the
-//! live-gateway smoke test in `Body/S/S3/gateway/tests/live_gateway_smoke.rs`
-//! can prove the handler owner is S3.
+//! S3-runtime in-process contract in
+//! `Body/S/S3/gateway/tests/s3_runtime_inproc_contract.rs` can prove the
+//! handler owner is S3.
 //!
 //! State-root layout `~/.epi/gate/sessions/<slug>.json` is preserved unchanged.
 //!

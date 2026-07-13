@@ -3,6 +3,15 @@
 //! and `C'`, direct and `_i_` properties, or phase into an untyped
 //! "mirror". The hermetic slices compose the landed laws; the live sync
 //! path is covered by the CCT-16 live test against a standing Neo4j.
+//!
+//! HONEST-NAME RENAME (uc-cli-5 / `lut-parity-standing` corrective sweep,
+//! 2026-07-13): formerly `coordinate_phase_preservation_e2e.rs`. This file is
+//! NOT end-to-end — it exercises pure hermetic slices of the S2 property law
+//! (`plan_frontmatter_properties`, `resolve_frontmatter_key`,
+//! `relationship_spec`) with zero Neo4j/sync path. The live e2e phase
+//! preservation is the CCT-16 live test against a standing Neo4j (see above);
+//! the `_e2e` suffix was renamed away to stop implying live coverage this file
+//! does not provide.
 
 use epi_s2_graph_services::{
     plan_frontmatter_properties, resolve_frontmatter_key, FrontmatterKeyResolution,

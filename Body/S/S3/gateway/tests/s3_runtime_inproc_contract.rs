@@ -1,4 +1,14 @@
-//! 13.T3 live-gateway smoke test (S3 side).
+//! 13.T3 S3-runtime in-process contract (formerly `live_gateway_smoke.rs`).
+//!
+//! HONEST-NAME RENAME (uc-cli-5 / `lut-parity-standing` corrective sweep,
+//! 2026-07-13): the old name `live_gateway_smoke.rs` implied this file starts a
+//! live gateway server — it does NOT. As the body below states, the S3 crate
+//! cannot spawn the S0 `epi gate start` process (that would be a reverse
+//! dependency), so this test drives the S3 runtime modules IN-PROCESS against a
+//! temp state root. The LIVE WebSocket smoke over the real gateway lives at its
+//! S0 counterpart `Body/S/S0/epi-cli/tests/gate_runtime_handler_owner.rs`
+//! (real `TestGatewayClient` dispatch) — this file is renamed to stop claiming
+//! live/e2e coverage it does not provide.
 //!
 //! Per the 13.T3 task spec:
 //!

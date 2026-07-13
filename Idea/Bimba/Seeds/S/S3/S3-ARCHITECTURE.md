@@ -680,7 +680,7 @@ cargo test -p epi-s3-gateway --test graphiti_runtime_contract
 
 # S3-5 / S3-5' runtime state + smoke
 cargo test -p epi-s3-gateway --test runtime_state_contract
-cargo test -p epi-s3-gateway --test live_gateway_smoke
+cargo test -p epi-s3-gateway --test s3_runtime_inproc_contract
 ```
 
 ### 9.2 Acceptance criteria
@@ -795,7 +795,7 @@ For grep-friendly cross-reference:
 - `Body/S/S3/gateway/tests/runtime_state_contract.rs:1-309` — runtime + subscription regression
 - `Body/S/S3/gateway/tests/graphiti_runtime_contract.rs:1-251` — Graphiti regression
 - `Body/S/S3/gateway/tests/anima_invoke_contract.rs:1-83` — anima invoke regression
-- `Body/S/S3/gateway/tests/live_gateway_smoke.rs:1-163` — live smoke
+- `Body/S/S3/gateway/tests/s3_runtime_inproc_contract.rs` — in-process S3 runtime contract (renamed from the misleading `live_gateway_smoke`; the live-server smoke is the S0 counterpart `Body/S/S0/epi-cli/tests/gate_runtime_handler_owner.rs`)
 - `Body/S/S3/gateway-contract/tests/hermes_inspired_contracts.rs:1-176` — Hermes parity
 
 ---

@@ -14,7 +14,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/temporal_context.rs` — temporal/kairos context plumbing.
 - `src/transcripts.rs`, `src/chat.rs` — transcript append/read + chat surface, including harness-neutral `HarnessTurnEvent` records for [[S3]] session transcript-of-record writes.
 - `src/protocol.rs`, `src/verifier.rs`, `src/bootstrap.rs`, `src/subagents.rs`, `src/workspace.rs` — protocol, verifier, bootstrap, subagent launch, workspace scope.
-- `tests/` — contract + smoke tests (`dispatch_contract`, `session_store_contract`, `oracle_spread_contract`, `live_gateway_smoke`, `elo_runtime_contract`, `contemplation_rpc_dispatches`, etc.).
+- `tests/` — contract + smoke tests (`dispatch_contract`, `session_store_contract`, `oracle_spread_contract`, `s3_runtime_inproc_contract` (in-process S3 runtime; the live-server counterpart is S0 `gate_runtime_handler_owner`), `elo_runtime_contract`, `contemplation_rpc_dispatches`, etc.).
 - Does NOT own the protocol/method contract (delegated to sibling `gateway-contract` = [[S3-SPEC]]), Redis residency (`redis-context`), nor world-return canon ([[S5-SPEC]]). Domain law lives in its owning coordinate, not duplicated here.
 
 ## Local Contracts
