@@ -1,3 +1,27 @@
+//! Contemplation dispatch — route law + pure-helper unit tests (S3 side).
+//!
+//! Live counterpart: `Body/S/S0/epi-cli/tests/gate_contemplation_live.rs`.
+//!
+//! This file exercises two things that do NOT require a WebSocket:
+//!
+//!   * The *route law* — `classify_method(CONTEMPLATE_SESSION_CLOSE_METHOD)`
+//!     resolves the method to a Nara extension owned by the S4/S5 domain
+//!     adapter. This is genuine S3 route-table law and stays here.
+//!   * The *pure helper* — `contemplate_session_close(..)` composes a
+//!     `wisdom_delta` / triplet from a hand-built `ContemplationObject`
+//!     carrying `deterministic_mock: true`. These are unit tests of the
+//!     composition function's arithmetic; the object is synthetic and never
+//!     travels over a real surface.
+//!
+//! Because the pure helper is never reached over the wire, the live counterpart
+//! above drives `nara.contemplate_session_close` over the actual gateway
+//! WebSocket dispatch loop and pins the honest live state: the `nara.*`
+//! extension route is live (a wired sibling answers through the same loop) but
+//! this method has no executable in-process adapter yet, so the live surface
+//! returns the honest `unimplemented` error and can never emit the synthetic
+//! `wisdom_delta` these unit tests assert. Keep the two files in lockstep: if a
+//! live adapter lands, the live counterpart must assert the real wire envelope.
+
 use epi_s3_gateway::dispatch::{
     classify_method, contemplate_session_close, ContemplationObject, ContemplationTick,
     EngagedCoordinateResonance, GatewayDispatchClass, GatewayDispatchOwner, M0VerifierReport,
@@ -76,6 +100,10 @@ fn contemplation_rpc_dispatches_as_headless_nara_extension() {
     assert_eq!(route.agent_access_owner, "S4/S5");
 }
 
+// Pure-helper unit test: composition arithmetic over a synthetic
+// `deterministic_mock` object. The wire-level surface is proven live (as an
+// honest not-yet-implemented route) by the live counterpart named in the
+// module header — this is NOT live coverage.
 #[test]
 fn contemplation_session_close_composes_non_empty_wisdom_delta() {
     let response = contemplate_session_close(synthetic_contemplation_object())
@@ -93,6 +121,9 @@ fn contemplation_session_close_composes_non_empty_wisdom_delta() {
     assert!(response.triplet.llm.psyche_anchor_coherent);
 }
 
+// Pure-helper unit test (see module header): synthetic object in, composed
+// round-trip out — no live surface. Live counterpart:
+// `Body/S/S0/epi-cli/tests/gate_contemplation_live.rs`.
 #[test]
 fn verifier_symbolic_coordinate_questions_round_trip_through_anima() {
     let response = contemplate_session_close(synthetic_contemplation_object())
