@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T19:05:35.848Z",
+  "updatedAt": "2026-07-13T19:10:52.418Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10497,16 +10497,33 @@
       "worktree": null
     },
     "41.T41.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-13T19:10:52.404Z",
+      "claimedAt": "2026-07-13T19:06:25.687Z",
+      "completedAt": "2026-07-13T19:10:52.404Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T19:10:52.404Z",
+          "text": "Verify-first + live-leg fix: harness landed (arena_vama_shakti_e2e.rs 4/4 --offline; four E1-E4 classifier fixtures; DR-VAMA-1..6 invariant assertions across epi-cli + epi-gnostic tests; all four classes exercised in routing/distillation/promotion). Gap closed: live-Graphiti acceptance test payload had drifted from the EpisodeRequest contract (missing required cpf → HTTP 422 masked as skip); fixed with production value cpf=(0/1/2) — live mode now 3/3 with a real episode landed in live Graphiti (group_id arena:e2e), default mode keeps designed opt-in skip (2 passed / 1 skipped, EPI_GRAPHITI_LIVE=1 gate). Live/skipped status: cargo 4 live; pytest 3 live under flag, 1 opt-in skip without. W gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test arena_vama_shakti_e2e (4 passed / 0 failed: scene gate + privacy DR-VAMA-1/3/4/5, hash determinism + classifier byte DR-VAMA-2/6, 16-turn all-classifier routing + dialogue-only refusal, daemon warm lifecycle) ; EPI_GRAPHITI_LIVE=1 python3 -m pytest tests/test_arena_e2e_distillation.py (3 passed / 0 failed LIVE: closure distillation + promotion invariants, count-only global surface privacy, real episode accepted by live Graphiti group_id arena:e2e) ; node .codex/scripts/verify-tranche.mjs 41.T41.12 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 752,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/arena_vama_shakti_e2e.rs",
+              "Body/S/S5/epi-gnostic/tests/test_arena_e2e_distillation.py",
+              "Body/S/S0/epi-cli/tests/fixtures/arena/",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/41.T41.12.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 11 dirty files.",
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T19:06:25.687Z",
+      "runId": "20260713T190625Z-41-T41.12",
       "worktree": null
     },
     "42.T42.1": {
@@ -11926,16 +11943,16 @@
       "worktree": null
     },
     "40.T40.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T19:10:16.870Z",
+      "claimedAt": "2026-07-13T19:10:16.870Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-4004",
+      "leaseExpiresAt": "2026-07-13T21:10:16.870Z",
+      "heartbeatAt": "2026-07-13T19:10:16.870Z",
+      "runId": "20260713T191016Z-40-T40.4",
       "worktree": null
     },
     "40.T40.5": {
@@ -14747,6 +14764,25 @@
       "leaseExpiresAt": "2026-07-13T20:04:26.297Z",
       "worktree": null,
       "completedAt": "2026-07-13T19:05:35.835Z"
+    },
+    {
+      "runId": "20260713T190625Z-41-T41.12",
+      "taskId": "41.T41.12",
+      "status": "done",
+      "startedAt": "2026-07-13T19:06:25.687Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T21:06:25.687Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T19:10:52.404Z"
+    },
+    {
+      "runId": "20260713T191016Z-40-T40.4",
+      "taskId": "40.T40.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T19:10:16.870Z",
+      "owner": "uc-4004",
+      "leaseExpiresAt": "2026-07-13T21:10:16.870Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

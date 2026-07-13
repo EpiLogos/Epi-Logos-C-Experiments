@@ -243,6 +243,7 @@ def test_live_graphiti_episode_accepts_arena_group_id_when_available():
         "content": f"Arena closure distillation proof token {token}",
         "group_id": "arena:e2e",
         "cp": "C5",
+        "cpf": "(0/1/2)",
         "ql_position": "4.5",
     }
     request = urllib.request.Request(
