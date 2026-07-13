@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-12T20:09:09.041Z",
+  "updatedAt": "2026-07-13T10:13:54.674Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -5909,16 +5909,32 @@
       "worktree": null
     },
     "17.T17.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T10:13:54.239Z",
+      "claimedAt": "2026-07-13T09:24:28.765Z",
+      "completedAt": "2026-07-13T10:13:54.239Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T10:13:54.239Z",
+          "text": "Completed the F2 split of epii-autoresearch-core/lib.rs onto the canonical S5-ARCHITECTURE finding-F2 axis: a prior pass had moved only the pure type-defs (leaving lib.rs at 1526 LOC with domain logic still fused); this pass relocated the 6 kernel validators to kernel_evidence.rs, validate_orchestration_transition to orchestration.rs, and 10 destination/governance/timestamp helpers to promotion.rs — pure verbatim code movement (diff +444/-433, lib.rs 1526->1126). Adversarial review confirmed all 17 functions byte-identical to git HEAD modulo visibility prefix; public API unchanged (pub use re-exports intact, ReviewCategory kept as pub(crate) re-export so capacity_workflows children resolve, downstream epii-agent-core builds clean). Crate suite 66/66 bit-identical to the pre-refactor baseline. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml (66 passed / 0 failed) ; verify-tranche --full gate PASS by fable-c-verifier incl. live-wire (W-class); adversarial review solid — 17 relocated fns byte-identical vs HEAD",
+            "exitCode": 0,
+            "testsPassed": 66,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+              "Body/S/S5/epii-autoresearch-core/src/kernel_evidence.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.15.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-1715",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T09:24:28.765Z",
+      "runId": "20260713T092428Z-17-T17.15",
       "worktree": null
     },
     "17.T17.16": {
@@ -10003,16 +10019,31 @@
       "worktree": null
     },
     "37.T37.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T10:13:54.660Z",
+      "claimedAt": "2026-07-13T09:24:29.163Z",
+      "completedAt": "2026-07-13T10:13:54.660Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T10:13:54.660Z",
+          "text": "The bioquaternion transcription totality proven verify-first: portal-core m3_transcription_bridge exercises the full 64-codon bioquaternion transcription against the real kernel functions (7 tests green, re-run fresh), the totality law already landed from the 33.2/37.1 lineage; this tranche verified it fresh (not rebuilt) and landed the 37 design-recon write-back. Adversarial review verdict solid, tests exercise real kernel behavior not mocks. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "cargo test -p portal-core --lib m3_transcription_bridge (7 passed / 0 failed, re-verified fresh) ; verify-tranche --full gate PASS by fable-c-verifier; adversarial review solid, realtests=true",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/m3_transcription_bridge.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/37.T37.11.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-3711",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T09:24:29.163Z",
+      "runId": "20260713T092429Z-37-T37.11",
       "worktree": null
     },
     "38.T0": {
@@ -12013,16 +12044,33 @@
       "worktree": null
     },
     "45.T45.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T10:13:54.450Z",
+      "claimedAt": "2026-07-13T09:24:28.963Z",
+      "completedAt": "2026-07-13T10:13:54.450Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T10:13:54.450Z",
+          "text": "Carrier coordinate rendering routed through a single gateway seam (renderGatewayCoordinate in coordinateRender.ts) — the canonical coordinate form arrives from s2.graph.* (graph-services resolve_coordinate_string -> CoordinateArrayParser, stored canonical in Neo4j), rendered verbatim; WalkPane routes node/relation/phrase/invert-face displays through the seam and never normalises locally (a local hash-to-M or U+2215 substitution would corrupt real raw-archetype nodes # / #0..#5, which the seam test proves render unchanged). A guard test (coordinateNormaliserGuard) scans the whole carrier src and asserts ZERO local-normaliser signatures with teeth against synthetic violations (guards against a 6th local impl). GRAPH-TRUTH proof (track 45 graph-live gated): a live e2e (coordinate-render-live.spec.ts) walks M0-4 on a real spawned gateway + live Neo4j and asserts its context-frame child renders the canonical M0-4.(0/1) — a Neo4j-only relation target that FAILS honestly when the graph is down. Adversarial review stillFixtureGrade=false; the graph-live stage passed in the --full gate. NOW: [[Idea/Empty/Present/12-07-2026/20260712-000600-9b0057/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/bridge/coordinateRender.test.ts src/bridge/coordinateNormaliserGuard.test.ts src/panes/WalkPane.test.tsx (14) + npx playwright test tests/e2e/coordinate-render-live.spec.ts (1) = 15 passed / 0 failed ; verify-tranche --full gate PASS by fable-c-verifier incl. graph-live overlay (track 45) + app-ui-flow; adversarial review solid, stillFixtureGrade=false",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/bridge/coordinateRender.ts",
+              "Body/M/pratibimba-app/src/bridge/coordinateNormaliserGuard.ts",
+              "Body/M/pratibimba-app/tests/e2e/coordinate-render-live.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/45.T45.3.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4503",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T09:24:28.963Z",
+      "runId": "20260713T092428Z-45-T45.3",
       "worktree": null
     },
     "38.T38.1": {
@@ -14259,17 +14307,47 @@
       "leaseExpiresAt": "2026-07-12T23:26:33.315Z",
       "worktree": null,
       "completedAt": "2026-07-12T20:09:08.823Z"
+    },
+    {
+      "runId": "20260713T092428Z-17-T17.15",
+      "taskId": "17.T17.15",
+      "status": "done",
+      "startedAt": "2026-07-13T09:24:28.765Z",
+      "owner": "uc-1715",
+      "leaseExpiresAt": "2026-07-13T13:24:28.765Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T10:13:54.239Z"
+    },
+    {
+      "runId": "20260713T092428Z-45-T45.3",
+      "taskId": "45.T45.3",
+      "status": "done",
+      "startedAt": "2026-07-13T09:24:28.963Z",
+      "owner": "uc-4503",
+      "leaseExpiresAt": "2026-07-13T13:24:28.963Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T10:13:54.450Z"
+    },
+    {
+      "runId": "20260713T092429Z-37-T37.11",
+      "taskId": "37.T37.11",
+      "status": "done",
+      "startedAt": "2026-07-13T09:24:29.163Z",
+      "owner": "uc-3711",
+      "leaseExpiresAt": "2026-07-13T13:24:29.163Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T10:13:54.660Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-12T18:48:02.760Z",
-    "updatedAt": "2026-07-12T18:48:02.760Z",
+    "createdAt": "2026-07-13T09:22:41.404Z",
+    "updatedAt": "2026-07-13T09:22:41.404Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "05.T5.18",
-      "05.T5.19"
+      "05.T5.19",
+      "05.T5.2"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -14277,8 +14355,8 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "05.T5.18": "in-session",
-      "05.T5.19": "in-session"
+      "05.T5.19": "in-session",
+      "05.T5.2": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

@@ -1,0 +1,36 @@
+{
+  "runId": "20260713T092429Z-37-T37.11",
+  "taskId": "37.T37.11",
+  "startedAt": "2026-07-13T09:24:29.163Z",
+  "owner": "uc-3711",
+  "leaseExpiresAt": "2026-07-13T13:24:29.163Z",
+  "worktree": null,
+  "task": {
+    "id": "37.T37.11",
+    "trackId": "37",
+    "tranche": "T37.11",
+    "title": "The bioquaternion transcription totality (one transcribed object, not scattered functions)",
+    "effort": "one transcribed object, not scattered functions",
+    "file": "37-biological-quaternionic-cross-layer-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
+    "dependsOn": [
+      "37.T37.10"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — bio-quaternionic projection backlog (m2.epogdoonProjection, planetaryElementalWeights, cymaticMonoPolyState, m3.lensCodonBinary, m2m3.lensOrbiterRelations, m3.bioquaternionTranscription) in portal-core/epi-lib. CARRIER: epogdoon gap-wheel, MonoPoly cymatic shader state, elemental-weights feed, 24-amino backbone ring. §2 track 37."
+  }
+}
