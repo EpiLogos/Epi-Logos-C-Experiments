@@ -3,6 +3,7 @@ use serde_json::Value;
 
 pub mod coord;
 pub mod diff;
+pub mod framestore;
 pub mod search;
 
 #[derive(Subcommand, Debug, Clone)]

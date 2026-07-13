@@ -1,7 +1,7 @@
 use clap::Args;
 use serde_json::{json, Value};
 
-use super::coord::{canonical_record, square_poles};
+use super::framestore::{canonical_record, square_poles};
 
 #[derive(Args, Debug, Clone)]
 pub struct DiffArgs {
