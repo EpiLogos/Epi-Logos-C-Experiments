@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T18:42:09.108Z",
+  "updatedAt": "2026-07-13T18:47:31.116Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11233,16 +11233,33 @@
       "worktree": null
     },
     "48.T48.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T18:47:31.103Z",
+      "claimedAt": "2026-07-13T18:44:01.892Z",
+      "completedAt": "2026-07-13T18:47:31.103Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T18:47:31.103Z",
+          "text": "Verify-first close, zero gap: all three 48.1 deliverables landed and re-proven fresh — C5 type authority carries the full framing law (C5.md:44 — base-view role, reflection-only residency, Template(C1·CT)→MOC(C4)→Base(C5·CS) ladder, pair→triad rule); World/Types/README.md §MOC Index Rule names the triad + never-canon-write; bimba-vault-validate SKILL.md:56-65 registers base-view role+residency mirroring the map-index precedent. Behavioral accept/reject law proven by hen-compiler-core tests/base_view.rs 3/3 fresh (ensure_base_view_refuses_canon_residency; reflection-residency emit + idempotent). W+graph-live gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test base_view (3 passed / 0 failed: refuses canon residency, accepts reflection residency + idempotent, CT4b schema derivation); node .codex/scripts/verify-tranche.mjs 48.T48.1 --owner fable-c-verify — W+graph-live gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, graph-live live-Neo4j read, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 748,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/World/Types/Coordinates/C/C5/C5.md",
+              "Idea/Bimba/World/Types/README.md",
+              ".claude/skills/bimba-vault-validate/SKILL.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/48.T48.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T18:44:01.892Z",
+      "runId": "20260713T184401Z-48-T48.1",
       "worktree": null
     },
     "48.T48.2": {
@@ -14618,6 +14635,16 @@
       "owner": "uc-4002",
       "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
       "worktree": null
+    },
+    {
+      "runId": "20260713T184401Z-48-T48.1",
+      "taskId": "48.T48.1",
+      "status": "done",
+      "startedAt": "2026-07-13T18:44:01.892Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T20:44:01.892Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T18:47:31.103Z"
     }
   ],
   "activeRoute": {
