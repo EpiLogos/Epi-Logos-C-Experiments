@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:40:26.275Z",
+  "updatedAt": "2026-07-13T23:44:05.057Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10851,16 +10851,33 @@
       "worktree": null
     },
     "42.T42.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T23:44:05.043Z",
+      "claimedAt": "2026-07-13T23:41:45.786Z",
+      "completedAt": "2026-07-13T23:44:05.043Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T23:44:05.043Z",
+          "text": "Verify-first close: the vault IS the inbox — implementation scope fully machine-proven (Khora flow-watcher fires khora.result.wake on result artifacts landing in the parent NOW folder AND the day folder, event-driven folder-watch, fresh 2/2; launcher result-drop projection proven in the 42.4 session-workspace suite; NO external inbox/bin exists anywhere). Ouroboros reframed per spec as one topology over this surface — SKILL.md cites Track 42 §42.6, rides worktrunk + techne-spawn/relay/close, no bespoke mechanism. Honest scope note: the live-agent worktree diff round-trip is an operational workflow over these tested parts (spawn requires a live external agent, outside unit reach); the wake + drop + skill-topology legs it composes are each proven. W gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-0p-khora/tests/result_artifact_wake.test.ts (2 passed / 0 failed: sub-session result artifact in parent NOW folder fires khora.result.wake via folder-watch; cross-session result in day folder wakes — both event-driven, no polling call) ; node --test tests/session_workspace.test.ts leg: launcher result-drop env projects over derived NOW folders (passed in the 42.4 suite 5/5) ; node .codex/scripts/verify-tranche.mjs 42.T42.6 --owner fable-c-verify — W-scoped gate PASS (gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 437, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 747,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/flow-watcher.ts",
+              "Body/S/S4/ta-onta/S4-0p-khora/tests/result_artifact_wake.test.ts",
+              ".claude/skills/ouroboros/SKILL.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/42.T42.6.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T23:41:45.786Z",
+      "runId": "20260713T234145Z-42-T42.6",
       "worktree": null
     },
     "42.T42.7": {
@@ -15215,6 +15232,16 @@
       "leaseExpiresAt": "2026-07-14T01:07:07.944Z",
       "worktree": null,
       "completedAt": "2026-07-13T23:40:26.262Z"
+    },
+    {
+      "runId": "20260713T234145Z-42-T42.6",
+      "taskId": "42.T42.6",
+      "status": "done",
+      "startedAt": "2026-07-13T23:41:45.786Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:11:45.786Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:44:05.043Z"
     }
   ],
   "activeRoute": {
