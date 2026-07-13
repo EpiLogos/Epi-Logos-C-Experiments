@@ -1,8 +1,9 @@
 use epi_logos::gate::{
     graph::dispatch_graph_method,
     kernel_bridge_runtime::{
-        end_to_end_acceptance_report, extract_typed_json, m1_performance_event_from_profile,
-        runtime_for_spacetimedb_plan, typed_json_m2_cymatic_monopoly_state,
+        capability_names, end_to_end_acceptance_report, extract_typed_json,
+        m1_performance_event_from_profile, runtime_for_spacetimedb_plan,
+        typed_json_m2_cymatic_monopoly_state, typed_json_m2_planetary_elemental_weights,
         typed_json_m3_bioquaternion_transcription, typed_json_performance_event_from_profile,
         typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
         KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
@@ -10,15 +11,16 @@ use epi_logos::gate::{
         GovernanceRole, KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame, OracleSpreadScale,
         OracleTraversalDirection, SymbolicProtein,
         ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
 use epi_logos::profile::{run as run_profile_command, ProfileCmd};
 use portal_core::{
-    kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, EventPrivacyClass,
+    compute_aspects, kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, EventPrivacyClass,
     KernelProfileObservationEvent, KleinFlipEvent, MPrimePerformanceEvent, MathemeHarmonicProfile,
-    VakAddress, Valence,
+    PortalClockState, VakAddress, Valence,
 };
 use serde_json::{json, Value};
 
@@ -611,6 +613,75 @@ fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
         })
         .expect_err("codon outside 0..63 must be rejected by the bridge");
     assert!(err.contains("codon space 0..63"), "{err}");
+}
+
+/// 37.T37.2 — Ratify `kernelBridge.m2.planetaryElementalWeights()` at the bridge
+/// edge. The typed-JSON surface must project the exact portal-core kernel feed:
+/// the four-element vector matches a Keplerian kernel-side reference for a fixed
+/// kairos, and the aspect-gain amplification matches `aspect.rs::compute_aspects`.
+/// This is the bridge-contract sibling of the epogdoon (37.1), cymatic (37.3), and
+/// bioquaternion (37.11) edge tests — the projection the design vision names.
+#[test]
+fn kernel_bridge_surfaces_m2_planetary_elemental_weights_for_fixed_kairos() {
+    // Fixed kairos: Moon@100 (water, kepler 47270), Venus@100 (water, 3600),
+    // Mercury@250 (air, 14739). Moon–Venus form an EXACT conjunction and share the
+    // water element, so `compute_aspects` amplifies the water bar. Sun (0) is left
+    // unpositioned — the excluded identity root of the 9:8 epogdoon asymmetry.
+    let mut state = PortalClockState::default();
+    state.kairos.planets[1].degree = 100;
+    state.kairos.planets[3].degree = 100;
+    state.kairos.planets[2].degree = 250;
+
+    let edge = typed_json_m2_planetary_elemental_weights(&state);
+
+    // Bridge-contract envelope — the projection is named on the wire (Add to
+    // bridge contract) and carries the kernel-bridge provenance.
+    assert_eq!(
+        edge["contract"],
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS
+    );
+    assert_eq!(edge["source"], "kernel-bridge");
+    assert_eq!(edge["runtimeOwner"], "S0/S0' kernel-bridge runtime");
+    assert!(capability_names().contains(&KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS));
+
+    // perPlanet excludes the Sun identity root and reports each orbiter's
+    // Keplerian energy + element (mirroring `M2_PLANET_LUT[*].elem_sig`).
+    let per_planet = edge["perPlanet"].as_array().expect("perPlanet array");
+    assert!(
+        per_planet.iter().all(|c| c["planetId"] != 0),
+        "Sun must not appear among the nine orbiters"
+    );
+    let moon = per_planet
+        .iter()
+        .find(|c| c["planetId"] == 1)
+        .expect("Moon contribution");
+    assert_eq!(moon["element"], "water");
+    assert_eq!(moon["couEnergy"].as_f64().unwrap(), 47270.0);
+
+    // aspectGain matches `aspect.rs::compute_aspects` output for this kairos.
+    let mut reference = state.clone();
+    compute_aspects(&mut reference);
+    let gain = edge["aspectGain"].as_array().expect("aspectGain array");
+    assert_eq!(gain.len(), reference.aspects.len());
+    let conjunction = gain
+        .iter()
+        .find(|h| h["planetA"] == 1 && h["planetB"] == 3 && h["aspectType"] == 0)
+        .expect("Moon–Venus conjunction handle");
+    assert_eq!(conjunction["gain"].as_f64().unwrap(), 1.0);
+    assert!(conjunction["handle"]
+        .as_str()
+        .unwrap()
+        .starts_with("aspect:conjunction:"));
+
+    // Four-element vector matches the Keplerian kernel-side reference: the shared
+    // water conjunction amplifies water by half the mean orbiter velocity, and no
+    // fifth (aether) bucket is invented.
+    let amplified_water = 47270.0 + 3600.0 + ((47270.0 + 3600.0) / 2.0);
+    let total = amplified_water + 14739.0;
+    assert!((edge["weights"]["water"].as_f64().unwrap() - (amplified_water / total)).abs() < 1e-4);
+    assert!((edge["weights"]["air"].as_f64().unwrap() - (14739.0 / total)).abs() < 1e-4);
+    assert_eq!(edge["weights"]["fire"].as_f64().unwrap(), 0.0);
+    assert_eq!(edge["weights"]["earth"].as_f64().unwrap(), 0.0);
 }
 
 /// INVERSION of the retired `..._uses_parashakti_deep_dataset` contract. That
