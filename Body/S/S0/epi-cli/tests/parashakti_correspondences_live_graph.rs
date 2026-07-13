@@ -112,3 +112,104 @@ fn json_contains(value: &Value, needle: &str) -> bool {
         _ => false,
     }
 }
+
+/// Result of probing a single scalar property of a `PlanetaryHarmonic` node
+/// through the live seam — distinguishes a present value, a genuine NULL
+/// property on a reachable node, and an unreachable graph / missing node.
+#[derive(Debug)]
+enum ScalarRead {
+    Present(String),
+    Null,
+    Absent,
+}
+
+/// Read one property of a `PlanetaryHarmonic` node by coordinate through the
+/// live `Neo4jClient` seam. `coordinate`/`property` are test-owned literals.
+async fn planetary_scalar(coordinate: &str, property: &str) -> ScalarRead {
+    let Ok(client) = Neo4jClient::connect(&Neo4jConfig::from_env()) else {
+        return ScalarRead::Absent;
+    };
+    let cypher = format!(
+        "MATCH (p:PlanetaryHarmonic {{coordinate:'{coordinate}'}}) RETURN p.{property} AS v"
+    );
+    let Ok(rows) = client.run(&cypher).await else {
+        return ScalarRead::Absent;
+    };
+    match rows.first() {
+        None => ScalarRead::Absent,
+        Some(row) => match row.get::<Option<String>>("v") {
+            Ok(Some(value)) => ScalarRead::Present(value),
+            _ => ScalarRead::Null,
+        },
+    }
+}
+
+/// `planetaryChakral.planetaryMode` is re-sourced from the LIVE
+/// `PlanetaryHarmonic.c_0_modal_signature` (the octaval/musical mode the Bimba
+/// map actually carries) — NOT the retired JSON diurnal/nocturnal field, which
+/// existed nowhere in the ontology. For a classical decan ruler the adapter
+/// value equals an INDEPENDENT read of `c_0_modal_signature`; for a thin
+/// outer-planet seed stub (no modal signature) the value is honest-null.
+#[tokio::test]
+async fn s2_parashakti_planetary_mode_is_live_modal_signature() {
+    // address 17 → Gemini Decan 3 → Sun ruler (kernel LAW(24)); the Sun rides
+    // PlanetaryHarmonic M2-5-(0/1), which carries a modal signature.
+    let artifact = dispatch_graph_method(
+        "s2.parashaktiCorrespondences",
+        &json!({ "address72": 17u64 }),
+    )
+    .await
+    .expect("s2.parashaktiCorrespondences must dispatch");
+
+    // Fail LOUDLY when Neo4j is down — the whole point is a live-sourced mode.
+    assert_eq!(
+        artifact["graphUnavailable"], false,
+        "live Neo4j required: planetaryMode is re-sourced from the live PlanetaryHarmonic \
+         node — graphUnavailable=true means the graph is down."
+    );
+    assert_eq!(artifact["planetaryChakral"]["provenance"], "live-graph");
+    assert_eq!(artifact["planetaryChakral"]["planetaryRuler"], "Sun");
+    assert_eq!(artifact["planetaryChakral"]["planetCoordinate"], "M2-5-(0/1)");
+
+    // ── classical planet: adapter planetaryMode == INDEPENDENT modal-sig read ─
+    let expected_mode = match planetary_scalar("M2-5-(0/1)", "c_0_modal_signature").await {
+        ScalarRead::Present(value) => value,
+        other => panic!(
+            "independent c_0_modal_signature read for the Sun node must succeed against the \
+             live graph, got {other:?}"
+        ),
+    };
+    assert!(
+        !expected_mode.is_empty(),
+        "the live Sun PlanetaryHarmonic node must carry a non-empty modal signature"
+    );
+    assert_eq!(
+        artifact["planetaryChakral"]["planetaryMode"],
+        Value::String(expected_mode),
+        "adapter planetaryMode must equal the live c_0_modal_signature (octaval mode)"
+    );
+
+    // ── the retired JSON diurnal/nocturnal mode must appear NOWHERE ─────────
+    assert!(
+        !json_contains(&artifact, "diurnal") && !json_contains(&artifact, "nocturnal"),
+        "the retired diurnal/nocturnal planetary mode must never resurface"
+    );
+    // ── and no dataset file path is ever served on the live path ────────────
+    assert!(!json_contains(&artifact, "nodes-full-detail.json"));
+    assert!(!json_contains(&artifact, "Idea/Bimba/Map/datasets"));
+
+    // ── thin outer-planet seed stubs (Neptune M2-5-8 / Pluto M2-5-9) exist as
+    //    reachable, named nodes but carry NULL c_0_modal_signature — proving the
+    //    per-planet honest-null is grounded in real graph absence, not invented.
+    for stub in ["M2-5-8", "M2-5-9"] {
+        assert!(
+            matches!(planetary_scalar(stub, "c_1_name").await, ScalarRead::Present(_)),
+            "outer-planet stub {stub} must exist and be reachable on the live graph"
+        );
+        let modal = planetary_scalar(stub, "c_0_modal_signature").await;
+        assert!(
+            matches!(modal, ScalarRead::Null),
+            "outer-planet stub {stub} must carry a NULL modal signature (honest-null), got {modal:?}"
+        );
+    }
+}

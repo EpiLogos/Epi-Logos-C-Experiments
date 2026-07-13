@@ -340,9 +340,12 @@ fn required_string(params: &Value, key: &str) -> Result<String, String> {
 ///   Golden-Dawn `PIP_DECAN_MAP` inversion for the tarot pip. These are kernel
 ///   law and stay available offline.
 /// - The **asma** sacred name + domain mirror, the **maqam**, and the planetary
-///   vedic-mantra / chakral role come from the **live Neo4j parashakti-deep
-///   graph** via the existing `Neo4jClient` seam (DivineName / Maqam /
-///   PlanetaryHarmonic / ChakralCenter nodes). No dataset file is ever read.
+///   vedic-mantra / **modal signature (octaval mode)** / chakral role come from
+///   the **live Neo4j parashakti-deep graph** via the existing `Neo4jClient`
+///   seam (DivineName / Maqam / PlanetaryHarmonic / ChakralCenter nodes). The
+///   planetary mode rides `PlanetaryHarmonic.c_0_modal_signature`; thin
+///   outer-planet seed stubs (Neptune/Pluto) carry none, so it honest-nulls
+///   per-planet. No dataset file is ever read.
 /// - When Neo4j is unreachable, the kernel-LUT fields still serve and every
 ///   graph-sourced field is HONEST-ABSENT (`null`) with `graphUnavailable:
 ///   true` — never a JSON-dataset fallback.
@@ -453,7 +456,11 @@ async fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
         "planetaryChakral": {
             "planetaryRuler": planet_ruler_name,
             "planetCoordinate": planet_coordinate,
-            "planetaryMode": Value::Null,
+            // The planet "mode" is the live PlanetaryHarmonic octaval/musical
+            // signature (`c_0_modal_signature`), not the retired JSON
+            // diurnal/nocturnal field (which existed nowhere in the ontology).
+            // Honest-null for outer-planet seed stubs with no modal signature.
+            "planetaryMode": opt_string(graph.planet_modal_signature),
             "vedicMantra": opt_string(graph.vedic_mantra),
             "chakraCoordinate": if chakra_id >= 1 {
                 Value::String(chakra_coordinate)
@@ -556,6 +563,11 @@ struct ParashaktiGraph {
     maqam_name: Option<String>,
     maqam_function: Option<String>,
     vedic_mantra: Option<String>,
+    /// `PlanetaryHarmonic.c_0_modal_signature` — the octaval/musical mode of the
+    /// ruling planet (what the Bimba map means by a "planet mode"). `None` for
+    /// thin outer-planet seed stubs (Neptune/Pluto) that carry no modal
+    /// signature — an honest per-planet null, never invented.
+    planet_modal_signature: Option<String>,
     chakra_name: Option<String>,
     chakra_role: Option<String>,
 }
@@ -605,6 +617,7 @@ async fn fetch_parashakti_graph_inner(
                 nm.l_2_chakra_correspondence AS asmaChakra,
                 mr.c_1_name AS mirrorName,
                 pl.l_2_vedic_mantra AS vedicMantra,
+                pl.c_0_modal_signature AS planetModalSignature,
                 ch.c_1_name AS chakraName, ch.l_3_spiritual_function AS chakraRole",
     )
     .param("nameCoord", asma_name_coord.to_owned())
@@ -658,6 +671,10 @@ async fn fetch_parashakti_graph_inner(
         maqam_name: maqam.as_ref().and_then(|entry| entry.1.clone()),
         maqam_function: maqam.as_ref().and_then(|entry| entry.2.clone()),
         vedic_mantra: row.get::<Option<String>>("vedicMantra").ok().flatten(),
+        planet_modal_signature: row
+            .get::<Option<String>>("planetModalSignature")
+            .ok()
+            .flatten(),
         chakra_name: row.get::<Option<String>>("chakraName").ok().flatten(),
         chakra_role: row.get::<Option<String>>("chakraRole").ok().flatten(),
     })
