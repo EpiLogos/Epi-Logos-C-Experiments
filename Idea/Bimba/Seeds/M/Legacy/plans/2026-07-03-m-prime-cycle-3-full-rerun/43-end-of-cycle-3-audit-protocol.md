@@ -27,7 +27,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md` — Tranche 43.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: the 43.4 C-header info-hiding invariant (no C header larger than its sibling .c) holds STRICTLY — `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` passes, and the .h>.c size check (lint-boundaries.mjs:377) carries NO legacy allowlist (unlike the header/cargo/import gaps), so a green run proves the invariant clean; make test green via the K-gate epi-lib C suite. Verify-first ledger close (no code change; feeds the G12 release gate). verifier != closer; evidence = fresh command output.
 
 5. **T43.5 — Enforced boundaries + drift guardrails**
 

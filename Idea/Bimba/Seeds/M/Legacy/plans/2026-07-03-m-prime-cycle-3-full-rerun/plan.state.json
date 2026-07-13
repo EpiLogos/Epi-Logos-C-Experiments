@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:48:47.479Z",
+  "updatedAt": "2026-07-13T23:51:04.421Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10910,16 +10910,16 @@
       "worktree": null
     },
     "42.T42.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T23:49:30.869Z",
+      "claimedAt": "2026-07-13T23:49:30.869Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:19:30.869Z",
+      "heartbeatAt": "2026-07-13T23:49:30.869Z",
+      "runId": "20260713T234930Z-42-T42.8",
       "worktree": null
     },
     "42.T42.9": {
@@ -11036,16 +11036,30 @@
       "worktree": null
     },
     "43.T43.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T23:51:04.406Z",
+      "claimedAt": "2026-07-13T23:49:00.720Z",
+      "completedAt": "2026-07-13T23:51:04.406Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T23:51:04.406Z",
+          "text": "Verify-first ledger close: the 43.4 C-header info-hiding invariant (no C header larger than its sibling .c) holds STRICTLY — lint-boundaries.mjs green (exit 0); its .h>.c size check (line 377) carries no legacy allowlist (unlike the header/cargo/import gaps), so a green run proves it clean. epi-lib C suite green via the K gate (make-test equivalent, 8872 tests). No code change (writeScope = plan .md); feeds the G12 release gate. Independent verify uc-4304-verify PASS.",
+          "receipt": {
+            "command": "node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4304",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T23:49:00.720Z",
+      "runId": "20260713T234900Z-43-T43.4",
       "worktree": null
     },
     "43.T43.5": {
@@ -15268,6 +15282,25 @@
       "leaseExpiresAt": "2026-07-14T01:14:27.983Z",
       "worktree": null,
       "completedAt": "2026-07-13T23:48:47.464Z"
+    },
+    {
+      "runId": "20260713T234900Z-43-T43.4",
+      "taskId": "43.T43.4",
+      "status": "done",
+      "startedAt": "2026-07-13T23:49:00.720Z",
+      "owner": "uc-4304",
+      "leaseExpiresAt": "2026-07-14T01:19:00.720Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:51:04.406Z"
+    },
+    {
+      "runId": "20260713T234930Z-42-T42.8",
+      "taskId": "42.T42.8",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T23:49:30.869Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:19:30.869Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
