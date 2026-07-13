@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T18:49:54.027Z",
+  "updatedAt": "2026-07-13T18:51:43.220Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2480,16 +2480,21 @@
       "worktree": null
     },
     "06.T6.1": {
-      "status": "pending",
-      "updatedAt": "2026-07-10T19:42:44.104Z",
-      "claimedAt": "2026-07-10T19:41:53.995Z",
+      "status": "review",
+      "updatedAt": "2026-07-13T18:51:43.206Z",
+      "claimedAt": "2026-07-13T18:51:43.014Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-13T18:51:43.206Z",
+          "text": "PARTIAL (verify-first audit, fable-c 2026-07-13): LANDED on current substrate — 7 unique s5'.gnostic.* gateway methods (ingest/query/resolve/notebook/status/models/musical_transcript; gateway-contract protocol.rs:169-175) + s0'.anuttara.trace (protocol.rs:54, dispatch_plan.rs:932) + epi techne gnosis CLI family (8 subcommands incl. IngestGnostic/QueryGnostic/Enrich shelling to Python epi-gnostic). MISSING vs tranche minimum — 6 named methods (candidates, etymology, list_notebooks, episode_search, evidence_trace, query_with_layers), the s5_one_substrate_e2e_acceptance gateway test (absent), and epi-CLI parity for the missing methods. Canonical execution tranche for this EXPANDED scope is 12.T12.2 (pending) — track 12 is leased to session B2; building the missing routes here would invade that lane. Requeue for close after 12.T12.2 lands; then 6.1 closes as the M5'-side verification. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        }
+      ],
       "notes": null,
-      "owner": "opus-b-track34",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-10T19:41:53.995Z",
-      "runId": "20260710T194153Z-06-T6.1",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T19:21:43.014Z",
+      "heartbeatAt": "2026-07-13T18:51:43.206Z",
+      "runId": "20260713T185143Z-06-T6.1",
       "worktree": null
     },
     "06.T6.2": {
@@ -14661,6 +14666,16 @@
       "leaseExpiresAt": "2026-07-13T20:44:01.892Z",
       "worktree": null,
       "completedAt": "2026-07-13T18:47:31.103Z"
+    },
+    {
+      "runId": "20260713T185143Z-06-T6.1",
+      "taskId": "06.T6.1",
+      "status": "review",
+      "startedAt": "2026-07-13T18:51:43.014Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T19:21:43.014Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T18:51:43.206Z"
     }
   ],
   "activeRoute": {
