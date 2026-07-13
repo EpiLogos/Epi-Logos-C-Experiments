@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:22:40.946Z",
+  "updatedAt": "2026-07-13T23:25:49.344Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -3106,16 +3106,21 @@
       "worktree": null
     },
     "09.T9.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-13T23:25:49.317Z",
+      "claimedAt": "2026-07-13T23:23:55.351Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-13T23:25:49.317Z",
+          "text": "PARTIAL (honest split, fable-c 2026-07-14): IMPLEMENTATION FULLY LANDED and behaviorally green — c_1_asset_uri (StringList) + c_1_asset_kind in graph-schema (properties.rs + coordinate_law.rs, committed at HEAD); dataset-import lift via append_asset_field_mapping with fresh proof lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots 1/1; M0 inspector render slot landed carrier-side (pratibimba-app m0AssetHandles.ts, fresh 4/4). OPEN LEG — the tranche gates this load-bearing schema slot behind candidate DR-M0-4 / explicit user final-validation, and DR-M0-4 is ABSENT from the decision register (never proposed or ratified). The substrate preceded its ratification. Needs Architect: ratify DR-M0-4 (or supersede) then this closes as done; the same asset seam feeds the 48.T48.3 M2-1 cover-image gap (cards view could key c_1_asset_uri instead of the producer-less c_1_symbol_image). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T23:53:55.351Z",
+      "heartbeatAt": "2026-07-13T23:25:49.317Z",
+      "runId": "20260713T232355Z-09-T9.3",
       "worktree": null
     },
     "09.T9.4": {
@@ -15107,6 +15112,16 @@
       "owner": "uc-0519",
       "leaseExpiresAt": "2026-07-14T01:18:36.278Z",
       "worktree": null
+    },
+    {
+      "runId": "20260713T232355Z-09-T9.3",
+      "taskId": "09.T9.3",
+      "status": "review",
+      "startedAt": "2026-07-13T23:23:55.351Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-13T23:53:55.351Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T23:25:49.317Z"
     }
   ],
   "activeRoute": {

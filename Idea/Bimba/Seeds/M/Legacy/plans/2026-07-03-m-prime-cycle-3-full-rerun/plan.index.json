@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-13T23:22:40.944Z",
+  "generatedAt": "2026-07-13T23:25:49.341Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -57,7 +57,7 @@
       "file": "05-m4-nara-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/05-m4-nara-reconciliation.md",
       "title": "Track 05 — M4 Nara Reconciliation (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "598e98ba260332c6479e6c0f5ac66b49537ea0181d2f600fe8136e5a35122b5b"
+      "checksum": "63f7f4103f11e25347dbb20dad505ffbd87c9f372b6a4593f4197e95a329bee2"
     },
     {
       "id": "06",
@@ -1848,7 +1848,7 @@
         "Idea/Pratibimba/System/**",
         "vendor/legacy/epi-tauri/**"
       ],
-      "body": "19. **T5.19 — NOW.md frontmatter schema extension for tranche/orbit/sense controls**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md` — Tranche 5.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "19. **T5.19 — NOW.md frontmatter schema extension for tranche/orbit/sense controls**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md` — Tranche 5.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: NOW-schema keys present (`grep -nE \"c_3_tranche_mode|c_3_response_orbit|c_3_klein_weighting|c_3_briefing_emitted\" Idea/Bimba/World/NOW.md` returns all four) + validator now REJECTS out-of-range c_3_klein_weighting: `cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test klein_weighting_validation` (6/6 — sum!=1.0 / out-of-[0,1] / non-mapping refused, balanced + asymmetric-summing accepted); full hen suite green; verifier != closer; evidence = fresh command output."
     },
     {
       "id": "05.T5.20",
