@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T19:17:46.812Z",
+  "updatedAt": "2026-07-13T19:21:23.236Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11561,20 +11561,24 @@
     },
     "49.T49.6": {
       "status": "pending",
-      "updatedAt": "2026-07-13T18:59:17.959Z",
-      "claimedAt": "2026-07-13T18:57:02.623Z",
+      "updatedAt": "2026-07-13T19:21:23.222Z",
+      "claimedAt": "2026-07-13T19:19:25.471Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-13T18:59:17.959Z",
           "text": "Released unstarted: multi-surface build (integratedReadiness modal/chime markers vs track-07 exactly-five LAW + strikeRouter generation-agreement + composition proof-handles K2/cymatic/codon-rotation). Needs an Architect decision on the modal/chime marker namespace relative to the LAW-fixed Wave-A five. Warm-context handoff; substrate (M123ChimeFrame, isChimeCoherent from T49.5) pre-landed."
+        },
+        {
+          "at": "2026-07-13T19:21:23.222Z",
+          "text": "Decision B locked (separate M123 contributor concern, own namespace integrated-123.pending:*, NOT extending the track-07 exactly-five Wave-A LAW). SCOPE FINDING: the Step-4 coherency core is already delivered — isChimeCoherent (T49.5: tick/degree/world-clock agreement) + strikeRouter generation-advance gating (instrument.ts:236) already block a non-agreeing/stale chime. Remaining = the marker surface (heterogeneous: modalResonator is a profile field; m123ChimeFrame is an EVENT not a field) in integratedReadiness.ts + Step-3 composition proof-handles (K2SurfaceHandle/M2CymaticTextureContribution/M3CodonRotationProjectionForLensRing) in the integrated-composition model. Multi-surface; fresh-session build with the decision made."
         }
       ],
       "notes": null,
-      "owner": "uc-4002",
+      "owner": "uc-4906",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-13T18:57:02.623Z",
-      "runId": "20260713T185702Z-49-T49.6",
+      "heartbeatAt": "2026-07-13T19:19:25.471Z",
+      "runId": "20260713T191925Z-49-T49.6",
       "worktree": null
     },
     "49.T49.7": {
@@ -14799,6 +14803,16 @@
       "leaseExpiresAt": "2026-07-13T21:10:16.870Z",
       "worktree": null,
       "completedAt": "2026-07-13T19:17:46.798Z"
+    },
+    {
+      "runId": "20260713T191925Z-49-T49.6",
+      "taskId": "49.T49.6",
+      "status": "pending",
+      "startedAt": "2026-07-13T19:19:25.471Z",
+      "owner": "uc-4906",
+      "leaseExpiresAt": "2026-07-13T21:19:25.471Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T19:21:23.222Z"
     }
   ],
   "activeRoute": {
