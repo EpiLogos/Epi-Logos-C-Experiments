@@ -38,7 +38,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: source §Cross-reference discipline (d) (`../2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md:140`) + register §1 canon governance (`Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:51`) in full. Hen verification at promotion time MUST refuse any `Idea/Bimba/World/Types/` write or canonical-spec edit that adds a `<!-- canon-update: CU-* -->` marker without a corresponding ledger row at `status: validated` or higher. Register-confirmed UNBUILT (2026-07-10: 0 canon-update refs under `.pi/extensions/ta-onta/hen/`). Substrate work (Hen / S1') — carries unchanged per `CHARTER.md`.
    Depends on Track 00 Tranche 3.
-   Verify: a Hen promotion test where an orphan marker (no validated ledger row) is refused, and one with a validated row passes; verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test canon_update_marker_guard` — orphan canon-update marker refused, validated-row marker passes (DR 40.4 Decision C: caller supplies the validated CU-id set, Hen stays pure); full hen suite green (from_markdown unchanged, no regression); verifier != closer; evidence = fresh command output.
 
 6. **T40.5 — CU-ledger review surface as a pratibimba-app carrier pane (combined with the Track-48 bases view)**
 

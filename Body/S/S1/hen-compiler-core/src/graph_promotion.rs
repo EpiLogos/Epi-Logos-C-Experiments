@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};
 
@@ -78,6 +78,22 @@ impl GraphPromotionIntent {
     pub fn from_markdown(source_path: impl Into<String>, markdown: &str) -> Result<Self, String> {
         let evidence = collect_artifact_evidence(source_path, markdown)?;
         Self::from_artifact_evidence(evidence, Vec::new())
+    }
+
+    /// Track 40.4 — promotion-time guard, then promote. The Track-40 canon-update
+    /// ledger is the only legal source of `<!-- canon-update: CU-* -->` markers,
+    /// so a World/Types write (or any promotion) whose content carries a marker
+    /// with no validated-or-higher ledger row is refused before the intent is
+    /// built. Per DR 40.4 Decision C, Hen stays pure: the caller — which already
+    /// holds the ledger authority (the S3 `CanonUpdateRuntime`) — passes the
+    /// validated CU-id set; Hen never reads that store itself.
+    pub fn from_markdown_guarded(
+        source_path: impl Into<String>,
+        markdown: &str,
+        validated_cu_ids: &BTreeSet<String>,
+    ) -> Result<Self, String> {
+        refuse_orphan_canon_update_markers(markdown, validated_cu_ids)?;
+        Self::from_markdown(source_path, markdown)
     }
 
     pub fn from_artifact_evidence(
@@ -250,6 +266,47 @@ impl GraphPromotionIntent {
             birth_codon_computed,
         })
     }
+}
+
+/// Track 40.4 (ledger §Cross-reference discipline (d)): the Track-40 canon-update
+/// ledger is the ONLY legal source of `<!-- canon-update: CU-* -->` markers.
+/// Refuse content that carries a marker whose CU-id is not in the caller-supplied
+/// validated-or-higher allowlist (an empty allowlist makes every marker an orphan).
+/// Hen stays pure — the caller owns the ledger (`CanonUpdateRuntime`) and passes
+/// the set; this function reads no store and parses no ledger file.
+pub fn refuse_orphan_canon_update_markers(
+    markdown: &str,
+    validated_cu_ids: &BTreeSet<String>,
+) -> Result<(), String> {
+    let orphans: Vec<String> = canon_update_marker_ids(markdown)
+        .into_iter()
+        .filter(|id| !validated_cu_ids.contains(id))
+        .collect();
+    if orphans.is_empty() {
+        return Ok(());
+    }
+    Err(format!(
+        "orphan canon-update marker(s) with no validated Track-40 ledger row: {}; \
+         the ledger is the only legal source of canon-update markers",
+        orphans.join(", ")
+    ))
+}
+
+/// Every `<!-- canon-update: CU-* … -->` marker id present in `markdown`.
+fn canon_update_marker_ids(markdown: &str) -> BTreeSet<String> {
+    const NEEDLE: &str = "<!-- canon-update: ";
+    let mut ids = BTreeSet::new();
+    let mut rest = markdown;
+    while let Some(idx) = rest.find(NEEDLE) {
+        let after = &rest[idx + NEEDLE.len()..];
+        if let Some(token) = after.split_whitespace().next() {
+            if token.starts_with("CU-") {
+                ids.insert(token.to_owned());
+            }
+        }
+        rest = after;
+    }
+    ids
 }
 
 /// CCT-14b state law: candidates in `Idea/Empty/` carry provisional codons;

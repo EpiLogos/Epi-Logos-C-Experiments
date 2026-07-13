@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T19:10:52.418Z",
+  "updatedAt": "2026-07-13T19:17:46.812Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11943,14 +11943,29 @@
       "worktree": null
     },
     "40.T40.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T19:10:16.870Z",
+      "status": "done",
+      "updatedAt": "2026-07-13T19:17:46.798Z",
       "claimedAt": "2026-07-13T19:10:16.870Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-13T19:17:46.798Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T19:17:46.798Z",
+          "text": "Landed Hen promotion-time orphan-canon-update-marker guard per 40.4 Decision C: pure refuse_orphan_canon_update_markers + non-breaking from_markdown_guarded in graph_promotion.rs. Hen reads no ledger; the caller supplies the validated CU-id set. from_markdown unchanged (0 of 24 callers touched); full hen suite green. Guard test 5/5: orphan refused, validated-row passes, mixed flags only orphans, guarded World/Types promotion refuses+allows. Live-path enforcement is the gateway/CLI gate adopting from_markdown_guarded with the CanonUpdateRuntime validated set (caller-side wiring per Decision C, not Hen's pure surface).",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test canon_update_marker_guard",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/graph_promotion.rs",
+              "Body/S/S1/hen-compiler-core/tests/canon_update_marker_guard.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-4004",
-      "leaseExpiresAt": "2026-07-13T21:10:16.870Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T19:10:16.870Z",
       "runId": "20260713T191016Z-40-T40.4",
       "worktree": null
@@ -14778,11 +14793,12 @@
     {
       "runId": "20260713T191016Z-40-T40.4",
       "taskId": "40.T40.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T19:10:16.870Z",
       "owner": "uc-4004",
       "leaseExpiresAt": "2026-07-13T21:10:16.870Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-13T19:17:46.798Z"
     }
   ],
   "activeRoute": {
