@@ -135,7 +135,7 @@ When a row transitions to `status: landed`:
 
 (b) The target file's frontmatter MUST carry a `canon_updates_landed: ["CU-*@YYYY-MM-DD", ...]` array entry (whole-file index for query).
 
-(c) **Lint test** at `cargo test -p epi-s2-graph-services --test canon_update_landed_xref_consistency` scans Track 40 for `status: landed` rows, asserts each row's `target_landing_site.path:anchor` contains the matching `canon-update: CU-*` marker AND the target file's `canon_updates_landed` frontmatter array includes the row id. Mismatch is a build-fail.
+(c) **Lint test** at `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test canon_update_landed_xref_consistency` scans Track 40 for `status: landed` rows, asserts each row's `target_landing_site.path:anchor` contains the matching `canon-update: CU-*` marker AND the target file's `canon_updates_landed` frontmatter array includes the row id. Mismatch is a build-fail.
 
 (d) Hen verification at promotion time additionally refuses any `World/Types/` write or canonical-spec edit that *adds* a canon-update marker without a corresponding ledger row in `status: validated` or higher. **The ledger is the only legal source of canon-update markers.**
 
@@ -170,7 +170,7 @@ Plus CLI parity:
 
 40.2 — **Lint test: canon-update landed-marker consistency** *(code-pending-closure; depends on 40.1)*
 
-Land the lint test `cargo test -p epi-s2-graph-services --test canon_update_landed_xref_consistency` enforcing the landing invariant per §Cross-reference discipline above.
+Land the lint test `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test canon_update_landed_xref_consistency` enforcing the landing invariant per §Cross-reference discipline above.
 
 40.3 — **Phase-J seed entries land + DR-M3-6 amendment** *(doc-ahead-landing; landed inline below; closes the cycle-3 first-batch)*
 
@@ -373,7 +373,7 @@ Five seed entries land Phase-J (Plan-subagent-designed + parent-agent-refined 20
 ## Verification (release-gate G14)
 
 - `grep -n "CU-IDENTITY-\|CU-FORM-\|CU-ENTITY-\|CU-REL-\|CU-VOCAB-\|CU-XREF-\|CU-FORM-EXEC-TRACE-" Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md` returns ≥5 rows (Phase-J seed).
-- `cargo test -p epi-s2-graph-services --test canon_update_landed_xref_consistency` — landing invariant lint passes (Tranche 40.2).
+- `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test canon_update_landed_xref_consistency` — landing invariant lint passes (Tranche 40.2).
 - `grep -nE "s5'.canon_update\." Body/S/S3/gateway-contract/src/lib.rs` returns ≥5 method registrations (Tranche 40.1).
 - `grep -nE "epi bimba propose|epi bimba list|epi bimba land" Body/S/S0/epi-cli/src/bimba.rs` returns the CLI bindings (Tranche 40.1).
 - `cargo test -p epi-s3-gateway s5_canon_update_round_trip` — end-to-end intake / status / landing round-trip.

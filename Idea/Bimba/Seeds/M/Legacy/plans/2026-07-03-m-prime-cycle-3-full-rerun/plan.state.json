@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T15:33:00.561Z",
+  "updatedAt": "2026-07-13T17:14:04.530Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -3294,16 +3294,21 @@
       "worktree": null
     },
     "09.T9.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-13T16:10:43.110Z",
+      "claimedAt": "2026-07-13T16:09:23.869Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-13T16:10:43.110Z",
+          "text": "BLOCKED on an Architect canonical-write decision: 9.14 mints :World/:Archetypal/:Gnostic graph LABELS + WORLD_FORM_OF/WORLD_ONTOLOGY_OF relations, but the live Neo4j baseline graph currently carries NONE of them (db.labels() has no World/Gnostic/Archetypal; World-count=0, Gnostic-count=0). The schema CONSTANTS (graph-schema/src/lib.rs WORLD_LABEL etc.) are pure code and landable, but promoting labels + adding relations onto existing live :Bimba nodes is a mutation of the baseline ontology — per the standing law the live graph is the authority and canonical writes route through Hen/the Architect, not an autonomous agent. Needs the Architect to decide whether/how the label promotion migration runs against the live graph before this can close green (a graph-live test would otherwise be red — labels absent). Reopen with that decision."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-0914",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T16:09:23.869Z",
+      "runId": "20260713T160923Z-09-T9.14",
       "worktree": null
     },
     "10.T10.1": {
@@ -5984,16 +5989,16 @@
       "worktree": null
     },
     "17.T17.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T16:10:55.622Z",
+      "claimedAt": "2026-07-13T16:10:55.622Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-1717",
+      "leaseExpiresAt": "2026-07-13T20:10:55.622Z",
+      "heartbeatAt": "2026-07-13T16:10:55.622Z",
+      "runId": "20260713T161055Z-17-T17.17",
       "worktree": null
     },
     "17.T17.18": {
@@ -9975,16 +9980,16 @@
       "worktree": null
     },
     "37.T37.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T16:09:24.256Z",
+      "claimedAt": "2026-07-13T16:09:24.256Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-3704",
+      "leaseExpiresAt": "2026-07-13T20:09:24.256Z",
+      "heartbeatAt": "2026-07-13T16:09:24.256Z",
+      "runId": "20260713T160924Z-37-T37.4",
       "worktree": null
     },
     "37.T37.5": {
@@ -11773,16 +11778,30 @@
       "worktree": null
     },
     "40.T40.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-13T17:10:45.729Z",
+      "claimedAt": "2026-07-13T16:51:05.403Z",
+      "completedAt": "2026-07-13T17:10:45.729Z",
+      "evidence": [
+        {
+          "at": "2026-07-13T17:10:45.729Z",
+          "text": "Landed graph-services test canon_update_landed_xref_consistency enforcing the Track-40 landing invariant (forward: each status:landed CU row's canon-file target carries the inline marker + canon_updates_landed frontmatter id; reverse: whole-file index, ledger-only markers); green over the 5 Phase-J rows after completing the alpha_rasa + m3-prime frontmatter arrays it requires; also fixed the plan's -p->--manifest-path Verify command for the workspace-excluded crate.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test canon_update_landed_xref_consistency",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/tests/canon_update_landed_xref_consistency.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-4002",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-13T16:51:05.403Z",
+      "runId": "20260713T165105Z-40-T40.2",
       "worktree": null
     },
     "40.T40.3": {
@@ -12069,16 +12088,16 @@
       "worktree": null
     },
     "35.T35.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-13T16:09:24.067Z",
+      "claimedAt": "2026-07-13T16:09:24.067Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-3502",
+      "leaseExpiresAt": "2026-07-13T20:09:24.067Z",
+      "heartbeatAt": "2026-07-13T16:09:24.067Z",
+      "runId": "20260713T160924Z-35-T35.2",
       "worktree": null
     },
     "45.T45.1": {
@@ -14493,30 +14512,79 @@
       "leaseExpiresAt": "2026-07-13T19:01:17.213Z",
       "worktree": null,
       "completedAt": "2026-07-13T15:33:00.547Z"
+    },
+    {
+      "runId": "20260713T160923Z-09-T9.14",
+      "taskId": "09.T9.14",
+      "status": "blocked",
+      "startedAt": "2026-07-13T16:09:23.869Z",
+      "owner": "uc-0914",
+      "leaseExpiresAt": "2026-07-13T20:09:23.869Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T16:10:43.110Z"
+    },
+    {
+      "runId": "20260713T160924Z-35-T35.2",
+      "taskId": "35.T35.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T16:09:24.067Z",
+      "owner": "uc-3502",
+      "leaseExpiresAt": "2026-07-13T20:09:24.067Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260713T160924Z-37-T37.4",
+      "taskId": "37.T37.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T16:09:24.256Z",
+      "owner": "uc-3704",
+      "leaseExpiresAt": "2026-07-13T20:09:24.256Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260713T161055Z-17-T17.17",
+      "taskId": "17.T17.17",
+      "status": "in_progress",
+      "startedAt": "2026-07-13T16:10:55.622Z",
+      "owner": "uc-1717",
+      "leaseExpiresAt": "2026-07-13T20:10:55.622Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260713T165105Z-40-T40.2",
+      "taskId": "40.T40.2",
+      "status": "done",
+      "startedAt": "2026-07-13T16:51:05.403Z",
+      "owner": "uc-4002",
+      "leaseExpiresAt": "2026-07-13T18:51:05.403Z",
+      "worktree": null,
+      "completedAt": "2026-07-13T17:10:45.729Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-13T15:00:40.520Z",
-    "updatedAt": "2026-07-13T15:00:40.520Z",
+    "createdAt": "2026-07-13T16:43:17.774Z",
+    "updatedAt": "2026-07-13T16:43:17.774Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "05.T5.19",
-      "05.T5.2"
+      "35.T35.2",
+      "37.T37.4",
+      "17.T17.17"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "05.T5.19": "in-session",
-      "05.T5.2": "in-session"
+      "35.T35.2": "in-session",
+      "37.T37.4": "in-session",
+      "17.T17.17": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

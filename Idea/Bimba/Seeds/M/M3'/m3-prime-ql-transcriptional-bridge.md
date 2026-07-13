@@ -4,6 +4,12 @@ status: "seed"
 domain: "M3 Mahamaya — transcriptional bridge to M4 Nara"
 description: "T→U quintessential shift as the bridge between I Ching (DNA, 64 hexagrams) and Tarot (RNA, 80-card space); 37/27/101 combinatorial structure; cone geometry of transcription; governance as transcriptional (AUG/stop codons); the 4/6 breathing as molecular event. Sits at the M3-M4 boundary: provides the formal genetic medium that underlies the Nara tarot oracle."
 source: "docs/deep-epi-logos-binary-computational-nara-clock/"
+canon_updates_landed:
+  - "CU-IDENTITY-1@2026-06-15"
+  - "CU-IDENTITY-2@2026-06-15"
+  - "CU-IDENTITY-3@2026-06-15"
+  - "CU-IDENTITY-4@2026-06-15"
+  - "CU-FORM-1@2026-06-15"
 nara_integration: "The T→U transcription is the formal mechanism by which the M3 pattern-weave (Clifford algebra, hexagram space) bridges to M4 identity expression (tarot rotational states, governance signals). The 37 U-nodes create the expressional vocabulary that Nara reads as card orientations."
 ---
 

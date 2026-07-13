@@ -1,3 +1,13 @@
+---
+coordinate: "M3'"
+status: "seed"
+domain: "M3 Mahamaya — the α-rasa bridge: fine structure, Pauli quaternionics, and the 137 Spanda derivation in QL"
+canon_updates_landed:
+  - "CU-IDENTITY-1@2026-06-15"
+  - "CU-IDENTITY-2@2026-06-15"
+  - "CU-IDENTITY-4@2026-06-15"
+---
+
 # The α-Rasa Bridge
 
 ## Fine structure, Pauli quaternionics, and the 137 Spanda derivation in QL
