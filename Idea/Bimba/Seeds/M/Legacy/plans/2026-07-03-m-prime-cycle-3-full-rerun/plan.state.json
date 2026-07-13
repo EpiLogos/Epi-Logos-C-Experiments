@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T18:57:15.522Z",
+  "updatedAt": "2026-07-13T18:59:17.973Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11525,14 +11525,19 @@
       "worktree": null
     },
     "49.T49.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T18:57:02.623Z",
+      "status": "pending",
+      "updatedAt": "2026-07-13T18:59:17.959Z",
       "claimedAt": "2026-07-13T18:57:02.623Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-13T18:59:17.959Z",
+          "text": "Released unstarted: multi-surface build (integratedReadiness modal/chime markers vs track-07 exactly-five LAW + strikeRouter generation-agreement + composition proof-handles K2/cymatic/codon-rotation). Needs an Architect decision on the modal/chime marker namespace relative to the LAW-fixed Wave-A five. Warm-context handoff; substrate (M123ChimeFrame, isChimeCoherent from T49.5) pre-landed."
+        }
+      ],
       "notes": null,
       "owner": "uc-4002",
-      "leaseExpiresAt": "2026-07-13T20:57:02.623Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:57:02.623Z",
       "runId": "20260713T185702Z-49-T49.6",
       "worktree": null
@@ -14708,11 +14713,12 @@
     {
       "runId": "20260713T185702Z-49-T49.6",
       "taskId": "49.T49.6",
-      "status": "in_progress",
+      "status": "pending",
       "startedAt": "2026-07-13T18:57:02.623Z",
       "owner": "uc-4002",
       "leaseExpiresAt": "2026-07-13T20:57:02.623Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-13T18:59:17.959Z"
     }
   ],
   "activeRoute": {
