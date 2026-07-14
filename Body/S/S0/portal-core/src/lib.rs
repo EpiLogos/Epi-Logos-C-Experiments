@@ -2,6 +2,7 @@ pub mod aspect;
 pub mod birthdate_identity;
 pub mod codon_rotation_projection;
 pub mod coordinate_phase;
+pub mod environment;
 pub mod events;
 pub mod harmonic_profile;
 pub mod hopf;
