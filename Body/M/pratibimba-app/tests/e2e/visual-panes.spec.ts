@@ -95,6 +95,20 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
             page.locator('.face-active .engine-degradation', { hasText: 'kairos pending' })
         ).toBeVisible();
     }
+
+    // environment strip (P6.2 ambient epi-genetic transform, DR-ENV-1/8): ALWAYS
+    // in one honest state — a present badge (calm|active) when the S3 heartbeat
+    // serves the ambient env quaternion (a natal chart + live sky ride the bus),
+    // else the "environment pending" indicator. Never both, never a fabricated
+    // wind. (e2e natal-cache/sky freshness is not guaranteed, so the badge is
+    // asserted by CONTRACT when present; the identity rotation reads 'calm'.)
+    const envMode = page.getByTestId('engine-environment');
+    if ((await envMode.count()) > 0) {
+        await expect(envMode).toHaveAttribute('data-state', /^(calm|active)$/);
+        await expect(envMode).toContainText(/calm · no ambient wind|ambient wind \d/);
+    } else {
+        await expect(page.getByTestId('engine-environment-pending')).toBeVisible();
+    }
 });
 
 test('cosmic face: the M1 played-torus renders the ananda vortex live off the bus (T2.6)', async ({
