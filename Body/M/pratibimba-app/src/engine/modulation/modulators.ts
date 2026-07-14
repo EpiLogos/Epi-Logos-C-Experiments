@@ -27,6 +27,7 @@ import {
 import {
     CymaticFrame,
     DivisionFrame,
+    EnvironmentFrame,
     HarmonicSnapshot,
     KairosFrame,
     KleinFrame,
@@ -66,6 +67,7 @@ interface WireHp {
     phaseSpace?: unknown;
     quintessence?: unknown;
     qCosmic?: number | number[];
+    environmentQuaternion?: number[];
     resonance?: number | null;
 }
 
@@ -129,6 +131,10 @@ export function harmonicSnapshot(profile: unknown): HarmonicSnapshot {
         phaseSpace: extractPhaseSpace(hp.phaseSpace),
         quintessence: extractQuintessence(hp.quintessence),
         qCosmic: Array.isArray(hp.qCosmic) && hp.qCosmic.length === 4 ? hp.qCosmic : null,
+        envQuaternion:
+            Array.isArray(hp.environmentQuaternion) && hp.environmentQuaternion.length === 4
+                ? hp.environmentQuaternion
+                : null,
         resonance: typeof hp.resonance === 'number' ? hp.resonance : null,
         chromatic: hp.chromatic ?? null,
         degradation: degradationLevel(hp)
@@ -239,6 +245,9 @@ export function deriveFrame(
               decaysAtMs: typeof hp.kairosDecaysAtMs === 'number' ? hp.kairosDecaysAtMs : null
           }
         : null;
+    const environment: EnvironmentFrame | null = hp.envQuaternion
+        ? { quaternion: hp.envQuaternion }
+        : null;
     const silent = hp.modalResonator?.silentComplement;
     const cymatic: CymaticFrame | null =
         hp.audioOctet && hp.nodalQuartet
@@ -262,6 +271,7 @@ export function deriveFrame(
         codon: hp.codonId !== null ? { codonId: hp.codonId, rotation: hp.codonRotation } : null,
         klein: deriveKlein(cur, controls.flipAtMs, nowMs, controls.live),
         kairos,
+        environment,
         cymatic,
         quintessence: hp.quintessence
             ? { identity: hp.quintessence, qCosmic: hp.qCosmic, resonance: hp.resonance }
@@ -288,6 +298,9 @@ export function availableInputs(frame: ModulationFrame): Set<ModulationInputKey>
     }
     if (frame.kairos !== null) {
         available.add('kairos');
+    }
+    if (frame.environment !== null) {
+        available.add('environment');
     }
     if (frame.cymatic !== null) {
         available.add('cymatic');
@@ -388,4 +401,40 @@ export function fibonacciGroundReadout(
         return null;
     }
     return { position: fib.position, digit: fib.digit, label: `φ${fib.digit}` };
+}
+
+/** The ambient-environment strip readout — the carrier endpoint of the
+ *  epi-genetic transform vertical (DR-ENV-1/8). It READS the bussed
+ *  `envQuaternion` (composed onto the PASU base in the kernel), never derives it.
+ *  Three honest states, never fabricated:
+ *   - `null`  ⇒ the wire carries no env quaternion (env pending);
+ *   - `calm`  ⇒ the identity rotation — present but no ambient influence;
+ *   - `active`⇒ a real ambient wind, `torque` = the vector-part magnitude of the
+ *              transform (how far the ambient sky rotates the base). */
+export interface EnvironmentReadout {
+    state: 'calm' | 'active';
+    /** 0 for calm; grows with the ambient transform's rotation (0..1). */
+    torque: number;
+    /** Compact strip label. */
+    label: string;
+}
+
+/** Magnitude below which the env quaternion counts as the identity rotation
+ *  (calm). Matches the kernel's near-zero honest pass-through. */
+const ENV_CALM_EPSILON = 1e-4;
+
+export function environmentReadout(
+    snapshot: Pick<HarmonicSnapshot, 'envQuaternion'>
+): EnvironmentReadout | null {
+    const q = snapshot.envQuaternion;
+    if (!q || q.length !== 4) {
+        return null;
+    }
+    // vector-part magnitude = how far the ambient wind rotates the PASU base;
+    // the identity rotation [1,0,0,0] has a zero vector part → calm.
+    const torque = Math.hypot(q[1], q[2], q[3]);
+    if (torque < ENV_CALM_EPSILON) {
+        return { state: 'calm', torque: 0, label: '≈ calm · no ambient wind' };
+    }
+    return { state: 'active', torque, label: `∿ ambient wind ${torque.toFixed(2)}` };
 }

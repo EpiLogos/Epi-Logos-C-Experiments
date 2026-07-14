@@ -39,7 +39,12 @@ import {
     ClockFieldOverlayState,
     updateClockFieldOverlay
 } from './clockFieldOverlay';
-import { fibonacciGroundReadout, harmonicSnapshot, kairosTierReadout } from './modulation/modulators';
+import {
+    environmentReadout,
+    fibonacciGroundReadout,
+    harmonicSnapshot,
+    kairosTierReadout
+} from './modulation/modulators';
 import { fibonacciGroundPoint } from './fibonacciGround';
 import { ModulationCarrier } from './modulation/types';
 import {
@@ -305,6 +310,10 @@ export function CosmicEngine() {
     // the kernel's clock-tick Fibonacci-Ground reading (position + Pisano digit),
     // consumed from the wire — never re-derived; null when phase-space is absent
     const fibGround = fibonacciGroundReadout(snapshot);
+    // the ambient epi-genetic transform strip (DR-ENV-1/8): the env quaternion the
+    // heartbeat composed onto the PASU base — 'calm' at the identity rotation,
+    // 'active' under a real ambient wind; null (pending) when the wire carries none.
+    const environment = environmentReadout(snapshot);
 
     useEffect(() => {
         const host = hostRef.current;
@@ -1104,6 +1113,19 @@ export function CosmicEngine() {
                     </span>
                 ) : null}
                 {!kairosLive ? <span className="engine-degradation">kairos pending — orbits structural</span> : null}
+                {environment ? (
+                    <span
+                        data-testid="engine-environment"
+                        data-state={environment.state}
+                        title="the ambient environmental transform (DR-ENV-1/8) the S3 heartbeat composed onto the PASU base — the collective sky's slow forces aspected against the natal invariant. 'calm' is the identity rotation (no ambient influence); an ambient wind rotates the base without ever becoming q_identity (no collapse)."
+                    >
+                        {environment.label}
+                    </span>
+                ) : (
+                    <span className="engine-degradation" data-testid="engine-environment-pending">
+                        environment pending
+                    </span>
+                )}
                 {level !== 'ready_full' ? (
                     <span className="engine-degradation" data-testid="engine-degradation">
                         {level.replace(/_/g, ' ')}

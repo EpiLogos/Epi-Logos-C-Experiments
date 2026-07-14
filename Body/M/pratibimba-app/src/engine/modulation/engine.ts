@@ -162,7 +162,7 @@ export class ModulationEngine {
         }
         const KNOWN_INPUTS = new Set([
             'oscillator', 'division', 'tonality', 'codon',
-            'klein', 'kairos', 'cymatic', 'quintessence'
+            'klein', 'kairos', 'environment', 'cymatic', 'quintessence'
         ]);
         const unknownInput = carrier.requiredInputs.find(input => !KNOWN_INPUTS.has(input));
         if (unknownInput !== undefined) {

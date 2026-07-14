@@ -8,6 +8,7 @@ import {
     deriveDivision,
     deriveFrame,
     EngineControls,
+    environmentReadout,
     fibonacciGroundReadout,
     formatKairosCountdown,
     harmonicSnapshot,
@@ -442,5 +443,43 @@ describe('fibonacci ground readout (kernel Pisano digit — lens digit polish)',
 
     it('is null when the wire carries no phase-space — honest absence, never a fabricated digit', () => {
         expect(fibonacciGroundReadout(harmonicSnapshot({ harmonicProfile: {} }))).toBeNull();
+    });
+});
+
+describe('environment readout (ambient epi-genetic transform carrier endpoint — DR-ENV-1/8)', () => {
+    it('deriveFrame carries the bussed env quaternion onto frame.environment', () => {
+        // transport: the wire's environmentQuaternion (camelCase per the
+        // MathemeHarmonicProfile serde rename) reaches frame.environment.quaternion
+        const frame = deriveFrame(
+            record(1, profileAt(120, { environmentQuaternion: [0.7071, 0.7071, 0, 0] })),
+            null, LIVE, 0, 0
+        );
+        expect(frame.environment?.quaternion).toEqual([0.7071, 0.7071, 0, 0]);
+    });
+
+    it("reads the identity rotation as 'calm' — present but no ambient influence", () => {
+        expect(environmentReadout({ envQuaternion: [1, 0, 0, 0] }))
+            .toEqual({ state: 'calm', torque: 0, label: '≈ calm · no ambient wind' });
+    });
+
+    it("reads a non-identity rotation as an 'active' ambient wind with its torque", () => {
+        const readout = environmentReadout({ envQuaternion: [0.7071, 0.7071, 0, 0] });
+        expect(readout?.state).toBe('active');
+        expect(readout?.torque).toBeCloseTo(0.7071, 4);
+        expect(readout?.label).toBe('∿ ambient wind 0.71');
+    });
+
+    it('is null when the wire carries no env quaternion — the strip shows env-pending instead', () => {
+        expect(environmentReadout({ envQuaternion: null })).toBeNull();
+        expect(environmentReadout(harmonicSnapshot({ harmonicProfile: {} }))).toBeNull();
+    });
+
+    it('gates readiness: environment is available only when the frame carries it', () => {
+        const withEnv = deriveFrame(
+            record(1, profileAt(0, { environmentQuaternion: [1, 0, 0, 0] })), null, LIVE, 0, 0
+        );
+        const without = deriveFrame(record(1, profileAt(0)), null, LIVE, 0, 0);
+        expect(availableInputs(withEnv).has('environment')).toBe(true);
+        expect(availableInputs(without).has('environment')).toBe(false);
     });
 });

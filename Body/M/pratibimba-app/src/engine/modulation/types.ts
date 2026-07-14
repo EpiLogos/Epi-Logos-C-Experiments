@@ -32,6 +32,7 @@ export type ModulationInputKey =
     | 'codon' // codon rotation projection
     | 'klein' // klein-flip fold state (always available)
     | 'kairos' // live planet sky (Kerykeion cadence, never kernel tick)
+    | 'environment' // ambient transform quaternion (PortalClockState.environment_quaternion, DR-ENV-1/8)
     | 'cymatic' // audioOctet + nodalQuartet + resonance72 shell
     | 'quintessence'; // handle-only PASU identity ground (E6)
 
@@ -61,6 +62,11 @@ export interface HarmonicSnapshot {
     phaseSpace: PhaseSpaceBoundary | null;
     quintessence: QuintessenceBoundary | null;
     qCosmic: number[] | null;
+    /** The ambient environmental transform quaternion (`environment_quaternion`,
+     *  DR-ENV-1/8) — the collective sky's slow forces composed onto the PASU base.
+     *  null when the wire carries none (env pending); the identity rotation when
+     *  present but calm (no ambient influence). */
+    envQuaternion: number[] | null;
     resonance: number | null;
     chromatic: { note?: string; xPrimeNote?: string; mirrorNote?: string } | null;
     degradation: DegradationLevel;
@@ -151,6 +157,14 @@ export interface KairosFrame {
     decaysAtMs: number | null;
 }
 
+/** The ambient environmental transform (DR-ENV-1/8) — the `environment_quaternion`
+ *  factor composed onto the PASU base. The renderer READS it, it never derives it;
+ *  present-but-identity means "no ambient influence" (calm), a non-identity rotation
+ *  means a real ambient wind. Absent (null frame) = the wire carries no env yet. */
+export interface EnvironmentFrame {
+    quaternion: number[];
+}
+
 export interface CymaticFrame {
     octet: number[];
     quartet: NodalMN[];
@@ -180,6 +194,7 @@ export interface ModulationFrame {
     codon: CodonFrame | null;
     klein: KleinFrame;
     kairos: KairosFrame | null;
+    environment: EnvironmentFrame | null;
     cymatic: CymaticFrame | null;
     quintessence: QuintessenceFrame | null;
     degradation: DegradationLevel;
