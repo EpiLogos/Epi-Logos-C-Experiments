@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T08:14:02.628Z",
+  "updatedAt": "2026-07-14T08:26:53.474Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10204,15 +10204,20 @@
     },
     "37.T37.8": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-14T08:26:53.439Z",
+      "claimedAt": "2026-07-14T08:14:29.975Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T08:26:53.439Z",
+          "text": "Released FULLY SCOPED (not a decision-defer). BUILD PLAN: (1) projection lens_codon_binary(lens_id) in portal-core/src/aspect.rs mirroring lens_orbiter_relations; struct LensCodonBinaryProjection{lens_id,source,segment:Vec<u16>,per_degree:Vec<LensCodonDegree>} in profile_projections.rs; kernel.rs wrapper kernel_bridge_m3_lens_codon_binary. (2) per degree: codon = raw_clock_degree_entry(deg).hexagram_id & 0x3F (m3_transcription_bridge.rs:332); charges{pp,nn,np,pn}+quaternion[4] REUSE bioquaternion_transcription(codon); codonUpper/Lower/class/hexagramId/lineChangeOperator(=hexagram_line_active)/tick12/exactDegree720 straight off the LUT entry. (3) element canonical: canonical_from_m3_decan_element is epi-cli-ONLY -> normalize at the epi-cli bridge layer typed_json_m3_lens_codon_binary, NOT portal-core. (4) segment for lens i (CLOCK_LENSES_16[i] slice S, sections N) = the N boundary degrees k*S; per_degree at those. (5) bridge wiring in kernel_bridge_runtime.rs: KERNEL_BRIDGE_M3_LENS_CODON_BINARY const ~:39, typed_json_m3_lens_codon_binary ~:952, dispatch arm ~:550, capability_names() ~:749, resolver ~:1490. (6) test mod in aspect.rs: for all 16 lenses/boundary degrees round-trip charges+quaternion == bioquaternion_transcription(codon), elementCanonical in 0..=5, codon fields == LUT. SPEC BUG: 'round-trip all 18 apertures' is WRONG — the code is the 16+1 law (CLOCK_LENSES_16 + Fibonacci Ground, no 17th lens); build/test to 16. 37.9 (lens_orbiter_relations) is verify-first-ready once 37.8 lands."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "uc-3708",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T08:14:29.975Z",
+      "runId": "20260714T081429Z-37-T37.8",
       "worktree": null
     },
     "37.T37.9": {
@@ -11373,16 +11378,16 @@
       "worktree": null
     },
     "44.T44.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T08:15:21.107Z",
+      "claimedAt": "2026-07-14T08:15:21.107Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T10:15:21.107Z",
+      "heartbeatAt": "2026-07-14T08:15:21.107Z",
+      "runId": "20260714T081521Z-44-T44.4",
       "worktree": null
     },
     "44.T44.5": {
@@ -15762,6 +15767,25 @@
       "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
       "worktree": null,
       "completedAt": "2026-07-14T08:14:02.612Z"
+    },
+    {
+      "runId": "20260714T081429Z-37-T37.8",
+      "taskId": "37.T37.8",
+      "status": "pending",
+      "startedAt": "2026-07-14T08:14:29.975Z",
+      "owner": "uc-3708",
+      "leaseExpiresAt": "2026-07-14T10:14:29.975Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T08:26:53.439Z"
+    },
+    {
+      "runId": "20260714T081521Z-44-T44.4",
+      "taskId": "44.T44.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T08:15:21.107Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T10:15:21.107Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
