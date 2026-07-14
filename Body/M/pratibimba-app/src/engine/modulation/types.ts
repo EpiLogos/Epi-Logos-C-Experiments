@@ -55,6 +55,8 @@ export interface HarmonicSnapshot {
     lensModeIndex: number | null;
     planetDegrees: number[] | null;
     livePlanets: LivePlanet[] | null;
+    kairosMode: string | null;
+    kairosDecaysAtMs: number | null;
     modalResonator: ModalResonatorBoundary | null;
     phaseSpace: PhaseSpaceBoundary | null;
     quintessence: QuintessenceBoundary | null;
@@ -138,6 +140,15 @@ export interface KleinFrame {
 export interface KairosFrame {
     degrees: number[];
     livePlanets: LivePlanet[] | null;
+    /** Which tier the S3 heartbeat resolved (kernel m4_planet_degrees_live
+     *  precedence): 'kairotic' = a fresh oracle-consultation capture preempting
+     *  the daily transit; 'realtime' = the transit. null when the wire carries
+     *  no mode (legacy/pending). */
+    mode: string | null;
+    /** The kairotic capture's decay deadline (unix ms); null unless mode is
+     *  'kairotic'. Once the client clock passes it the tier reads as decayed
+     *  (the next heartbeat re-resolves to realtime). */
+    decaysAtMs: number | null;
 }
 
 export interface CymaticFrame {

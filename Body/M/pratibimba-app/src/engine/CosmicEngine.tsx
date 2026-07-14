@@ -39,7 +39,7 @@ import {
     ClockFieldOverlayState,
     updateClockFieldOverlay
 } from './clockFieldOverlay';
-import { harmonicSnapshot } from './modulation/modulators';
+import { harmonicSnapshot, kairosTierReadout } from './modulation/modulators';
 import { fibonacciGroundPoint } from './fibonacciGround';
 import { ModulationCarrier } from './modulation/types';
 import {
@@ -298,6 +298,10 @@ export function CosmicEngine() {
     clockFieldRef.current = clockField;
     const level = snapshot.degradation;
     const kairosLive = snapshot.planetDegrees !== null;
+    // the carrier endpoint of the kairos vertical (DR-FIB-3): which live-sky
+    // tier the heartbeat resolved + the 4h decay countdown; wall-clock so a
+    // kairotic window keeps decaying under pause/scrub (decay is real-time).
+    const kairosTier = kairosTierReadout(snapshot, Date.now());
 
     useEffect(() => {
         const host = hostRef.current;
@@ -1080,6 +1084,15 @@ export function CosmicEngine() {
                 >
                     {muted ? '𝄽 unmute' : '♪ sounding'}
                 </button>
+                {kairosTier.label ? (
+                    <span
+                        data-testid="engine-kairos-mode"
+                        data-mode={kairosTier.mode ?? 'pending'}
+                        title="the live-sky tier the S3 heartbeat resolved — kairotic > realtime precedence (kernel m4_planet_degrees_live). A kairotic oracle-consultation capture (epi nara kairos capture) preempts the daily transit for 4h, then decays back to realtime."
+                    >
+                        {kairosTier.label}
+                    </span>
+                ) : null}
                 {!kairosLive ? <span className="engine-degradation">kairos pending — orbits structural</span> : null}
                 {level !== 'ready_full' ? (
                     <span className="engine-degradation" data-testid="engine-degradation">

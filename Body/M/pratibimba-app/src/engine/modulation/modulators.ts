@@ -60,6 +60,8 @@ interface WireHp {
     lensMode?: { lens?: number; mode?: number };
     planetDegrees?: number[];
     livePlanets?: LivePlanet[];
+    kairosMode?: string;
+    kairosDecaysAtMs?: number;
     modalResonator?: ModalResonatorBoundary;
     phaseSpace?: unknown;
     quintessence?: unknown;
@@ -121,6 +123,8 @@ export function harmonicSnapshot(profile: unknown): HarmonicSnapshot {
                 : null,
         planetDegrees: Array.isArray(hp.planetDegrees) ? hp.planetDegrees : null,
         livePlanets: Array.isArray(hp.livePlanets) ? hp.livePlanets : null,
+        kairosMode: typeof hp.kairosMode === 'string' ? hp.kairosMode : null,
+        kairosDecaysAtMs: typeof hp.kairosDecaysAtMs === 'number' ? hp.kairosDecaysAtMs : null,
         modalResonator: hp.modalResonator ?? null,
         phaseSpace: extractPhaseSpace(hp.phaseSpace),
         quintessence: extractQuintessence(hp.quintessence),
@@ -228,7 +232,12 @@ export function deriveFrame(
           }
         : null;
     const kairos: KairosFrame | null = hp.planetDegrees
-        ? { degrees: hp.planetDegrees, livePlanets: hp.livePlanets }
+        ? {
+              degrees: hp.planetDegrees,
+              livePlanets: hp.livePlanets ?? null,
+              mode: typeof hp.kairosMode === 'string' ? hp.kairosMode : null,
+              decaysAtMs: typeof hp.kairosDecaysAtMs === 'number' ? hp.kairosDecaysAtMs : null
+          }
         : null;
     const silent = hp.modalResonator?.silentComplement;
     const cymatic: CymaticFrame | null =
@@ -287,4 +296,68 @@ export function availableInputs(frame: ModulationFrame): Set<ModulationInputKey>
         available.add('quintessence');
     }
     return available;
+}
+
+/** The resolved live-sky tier the carrier displays, after client-side decay. */
+export interface KairosTierReadout {
+    /** `'kairotic'` = a fresh oracle-consultation capture is preempting the
+     *  daily transit; `'realtime'` = the transit; `null` = no tier on the wire
+     *  (the strip's "kairos pending" state owns this). A kairotic capture whose
+     *  deadline has passed reads as `'realtime'` here — see below. */
+    mode: 'kairotic' | 'realtime' | null;
+    /** ms until the kairotic window decays; non-null only for a still-live
+     *  kairotic capture. */
+    remainingMs: number | null;
+    /** Compact strip label, or `null` when there is nothing to show. */
+    label: string | null;
+}
+
+/** Compact human countdown for the kairotic decay window: `3h05m`, `47m`,
+ *  `<1m`. Floors to whole minutes — the strip refreshes on the profile tick,
+ *  not per-second, so sub-minute precision would only flicker. */
+export function formatKairosCountdown(remainingMs: number): string {
+    const totalMin = Math.floor(remainingMs / 60_000);
+    if (totalMin <= 0) {
+        return '<1m';
+    }
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return h > 0 ? `${h}h${String(m).padStart(2, '0')}m` : `${m}m`;
+}
+
+/** The kairotic-tier strip readout — the carrier endpoint of the kairos
+ *  vertical (DR-FIB-3): show WHICH live-sky tier the S3 heartbeat resolved
+ *  (kairotic > realtime precedence, mirroring the kernel `m4_planet_degrees_live`)
+ *  and, in kairotic mode, the 4h decay countdown. Client-side decay honours the
+ *  kernel `m4_planet_degrees_live_at` rule: a kairotic frame whose `decaysAtMs`
+ *  has passed reads as realtime here, because the next heartbeat re-resolves the
+ *  tier on the wire — the carrier never renders a dead consultation window. */
+export function kairosTierReadout(
+    snapshot: Pick<HarmonicSnapshot, 'kairosMode' | 'kairosDecaysAtMs'>,
+    nowMs: number
+): KairosTierReadout {
+    const realtime: KairosTierReadout = {
+        mode: 'realtime',
+        remainingMs: null,
+        label: '○ realtime sky'
+    };
+    if (snapshot.kairosMode === 'kairotic') {
+        const remaining =
+            typeof snapshot.kairosDecaysAtMs === 'number'
+                ? snapshot.kairosDecaysAtMs - nowMs
+                : null;
+        if (remaining !== null && remaining > 0) {
+            return {
+                mode: 'kairotic',
+                remainingMs: remaining,
+                label: `◉ kairotic · decays ${formatKairosCountdown(remaining)}`
+            };
+        }
+        // decayed (or a kairotic tier with no deadline): the sky is realtime now
+        return realtime;
+    }
+    if (snapshot.kairosMode === 'realtime') {
+        return realtime;
+    }
+    return { mode: null, remainingMs: null, label: null };
 }

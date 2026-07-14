@@ -8,7 +8,9 @@ import {
     deriveDivision,
     deriveFrame,
     EngineControls,
+    formatKairosCountdown,
     harmonicSnapshot,
+    kairosTierReadout,
     rhythmicSubdivision
 } from './modulators';
 import { TickRecord } from './types';
@@ -360,5 +362,62 @@ describe('readiness (compositionMount checkReadiness mirror)', () => {
         expect([...availableInputs(full)].sort()).toEqual([
             'codon', 'cymatic', 'division', 'kairos', 'klein', 'oscillator', 'tonality'
         ]);
+    });
+});
+
+describe('kairos tier readout (DR-FIB-3 carrier endpoint / 25.17 kairotic-mode slice)', () => {
+    const HOUR = 3_600_000;
+
+    it('deriveFrame carries the resolved tier + decay deadline onto the kairos frame', () => {
+        // transport: the wire's kairosMode/kairosDecaysAtMs (camelCase per the
+        // MathemeHarmonicProfile serde rename) reach frame.kairos.mode/decaysAtMs
+        const frame = deriveFrame(
+            record(1, profileAt(120, {
+                planetDegrees: new Array(10).fill(42),
+                kairosMode: 'kairotic',
+                kairosDecaysAtMs: 4 * HOUR
+            })),
+            null, LIVE, 0, 0
+        );
+        expect(frame.kairos?.mode).toBe('kairotic');
+        expect(frame.kairos?.decaysAtMs).toBe(4 * HOUR);
+    });
+
+    it('renders an active kairotic capture with its live decay countdown', () => {
+        const readout = kairosTierReadout(
+            { kairosMode: 'kairotic', kairosDecaysAtMs: 10 * HOUR },
+            10 * HOUR - (3 * HOUR + 47 * 60_000) // 3h47m before decay
+        );
+        expect(readout.mode).toBe('kairotic');
+        expect(readout.remainingMs).toBe(3 * HOUR + 47 * 60_000);
+        expect(readout.label).toBe('◉ kairotic · decays 3h47m');
+    });
+
+    it('reverts a decayed kairotic capture to the realtime reading (kernel m4_planet_degrees_live_at rule)', () => {
+        // at OR past the deadline the client reads realtime — the next heartbeat
+        // re-resolves the tier on the wire; the carrier never shows a dead window
+        const readout = kairosTierReadout(
+            { kairosMode: 'kairotic', kairosDecaysAtMs: 5 * HOUR },
+            5 * HOUR
+        );
+        expect(readout.mode).toBe('realtime');
+        expect(readout.remainingMs).toBeNull();
+        expect(readout.label).toBe('○ realtime sky');
+    });
+
+    it('shows the realtime daily transit when no kairotic capture is armed', () => {
+        expect(kairosTierReadout({ kairosMode: 'realtime', kairosDecaysAtMs: null }, 0))
+            .toEqual({ mode: 'realtime', remainingMs: null, label: '○ realtime sky' });
+    });
+
+    it('is silent (null label) when the wire carries no tier — the strip shows kairos-pending instead', () => {
+        expect(kairosTierReadout({ kairosMode: null, kairosDecaysAtMs: null }, 0))
+            .toEqual({ mode: null, remainingMs: null, label: null });
+    });
+
+    it('formats the countdown compactly (h+padded-m, m-only, sub-minute floor)', () => {
+        expect(formatKairosCountdown(3 * HOUR + 5 * 60_000)).toBe('3h05m');
+        expect(formatKairosCountdown(47 * 60_000)).toBe('47m');
+        expect(formatKairosCountdown(30_000)).toBe('<1m');
     });
 });
