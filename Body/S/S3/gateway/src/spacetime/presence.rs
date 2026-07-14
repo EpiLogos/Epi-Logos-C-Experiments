@@ -652,6 +652,46 @@ impl SpacetimePresence {
         self.post_reducer("publish_module_version", json!([gateway_id]))
     }
 
+    /// 12.T12.19: persist one Aletheia facet veto so subsequent runs see
+    /// recurring gaps. Args mirror the module's `publish_aletheia_veto`
+    /// reducer in exact positional order; the required identity fields are
+    /// refused empty host-side exactly as the reducer's assert_nonempty set.
+    #[allow(clippy::too_many_arguments)]
+    pub fn publish_aletheia_veto(
+        &self,
+        veto_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        session_key: &str,
+        dispatch_id: &str,
+        facet: &str,
+        reason: &str,
+        what_is_missed: &str,
+        klein_weighting_prospective: f32,
+        disposition: &str,
+    ) -> Result<(), String> {
+        require_nonempty(veto_id, "veto_id")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(session_key, "session_key")?;
+        require_nonempty(facet, "facet")?;
+        self.post_reducer(
+            "publish_aletheia_veto",
+            json!([
+                veto_id,
+                installation_id,
+                gateway_id,
+                session_key,
+                dispatch_id,
+                facet,
+                reason,
+                what_is_missed,
+                klein_weighting_prospective,
+                disposition,
+            ]),
+        )
+    }
+
     pub fn publish_presence(&self, hash: &str, tick12: u8) -> Result<(), String> {
         require_nonempty(hash, "hash")?;
         self.publish_temporal_event(

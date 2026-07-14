@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T13:36:26.534Z",
+  "updatedAt": "2026-07-14T13:48:17.880Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4510,16 +4510,33 @@
       "worktree": null
     },
     "12.T12.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T13:48:17.862Z",
+      "claimedAt": "2026-07-14T13:46:56.273Z",
+      "completedAt": "2026-07-14T13:48:17.862Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T13:48:17.862Z",
+          "text": "Verify-first close, one leg built: FacetReturn (disclosure|veto) with full serde law, veto-blocks-synthesis, and the 3-vetoes-per-facet miscalibration event were pre-landed in gateway-contract aletheia.rs (7 law tests re-proven); the aletheia_veto_log table + publish_aletheia_veto reducer pre-landed in epi-spacetime-module (commented 12.T12.19); the orchestration SKILL.md carries the six-point contract (every facet discloses an angle never concludes, Anima sole synthesis authority, veto instead of disclosure, three-path handling re-dispatch/defer/escalate keyed to c_3_klein_weighting, persistence in CONTINUATION.md + aletheia_veto_log, miscalibration observability); subscription plans already carry the table (epi-cli bridge test). The MISSING leg was the gateway persistence seam: built publish_aletheia_veto on SpacetimePresence (host-side refusal mirroring the reducer assert_nonempty set) + aletheia_veto_contract.rs proving exact positional arg order on the wire via capture listener and refusal-before-wire, TDD red-green. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "cargo test --test aletheia_veto_contract (2 passed / 0 failed — aletheia_veto_log_persists: reducer path + ten args in module positional order captured on the wire; empty veto_id/facet/session_key refused host-side before any wire attempt) ; cargo test --lib facet_return|veto|miscalibration in gateway-contract (7 passed: serde round-trips, veto_blocks_synthesis, all_disclosures_allow_synthesis, miscalibration at 3 vetoes, none below threshold) ; node .codex/scripts/verify-tranche.mjs 12.T12.19 --owner fable-c-verify — class gate PASS (gateway 88, gateway-contract 86, ta-onta 451, live-wire spawned-gateway, spacetime 11, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 95,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/spacetime/presence.rs",
+              "Body/S/S3/gateway/tests/aletheia_veto_contract.rs",
+              "Body/S/S3/gateway-contract/src/aletheia.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.19.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T13:46:56.273Z",
+      "runId": "20260714T134656Z-12-T12.19",
       "worktree": null
     },
     "12.T12.20": {
@@ -16189,6 +16206,16 @@
       "leaseExpiresAt": "2026-07-14T14:35:04.799Z",
       "worktree": null,
       "completedAt": "2026-07-14T13:36:26.516Z"
+    },
+    {
+      "runId": "20260714T134656Z-12-T12.19",
+      "taskId": "12.T12.19",
+      "status": "done",
+      "startedAt": "2026-07-14T13:46:56.273Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T14:46:56.273Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T13:48:17.862Z"
     }
   ],
   "activeRoute": {
