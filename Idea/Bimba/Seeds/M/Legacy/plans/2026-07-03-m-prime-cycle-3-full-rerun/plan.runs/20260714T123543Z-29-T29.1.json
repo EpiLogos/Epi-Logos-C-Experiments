@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T123543Z-29-T29.1",
+  "taskId": "29.T29.1",
+  "startedAt": "2026-07-14T12:35:43.452Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T14:05:43.452Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.1",
+    "trackId": "29",
+    "tranche": "T29.1",
+    "title": "Composition slot taxonomy extension: `IntegratedGeometricSlot` enum + `GeometricCompositionCoordinator` *(spec-ahead-integration; DR-WC-IP-1 ratifying decision)",
+    "effort": "spec-ahead-integration; DR-WC-IP-1 ratifying decision",
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: composition geometric-slot registry (handle-class allow/forbid; compositionLoad hard-fails juxtaposition) + 14 composition events + one useCompositionProfile subscription in pratibimba-app. §2 track 29."
+  }
+}
