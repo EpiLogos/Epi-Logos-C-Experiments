@@ -19,6 +19,16 @@ verification_law: "TDD per tranche; real behavioural/live-wire proof per Track-0
 
 ---
 
+## Progress (live)
+
+- **P1.1 — DONE** (`9fa0961f`). `portal-core::environment` — `EnvironmentalCondition` / `ConditionSource` / `derive_env_quaternion` (conditions aspected against the natal invariant, gained by sensitivity). 8/8 green.
+- **P1.2 — DONE** (`601c87dd`). `identityFromKairos` → `identityFromNatal` (pi-agent `user-context/index.ts`): `q_identity` natal-anchored (byte-stable), `q_personal = base ⊗ environment`. `natal`/`kairos`/`environment` options separate the birth chart from the transit sky. 10 gate tests + 457/457 ta-onta green.
+- **P3.1 — DONE** (`2d5eba88`). Canonical composition site (`portal-core::state::recompute_composed_quaternion_state`): `composed = normalize(quintessence ⊗ environment ⊗ transit ⊗ live)`; `environment_quaternion` field (serde-default identity) + `update_environment_quaternion`. Absent env ⇒ prior law byte-for-byte. 4 state tests incl. the DR-ENV-1 gate + 107/107 portal-core green.
+- **P3.1b — DONE** (`adb9de11`). epi-cli duplicate `PortalClockState`/recompute mirrored (live gateway parity). 2 parity tests + 22/22 clock_state green.
+- **Open:** P3.2 (feed env → `m3_quat_active_state`, fix j/k asymmetry), three-site TS unification (`composeQComposed`) + delete the duplicate, then P2 richer natal reference / P4 rotational-3-matrix / P5 sequences / P6 carrier+sink. Phase 0 (cycle-3 track amendments) landed earlier this session (`8a2e1dab`).
+
+---
+
 ## Phase 0 — Cycle-3 track amendments (do FIRST; unblocks the ledger)
 
 **P0.1 — Amend track 37 (biological-quaternionic-cross-layer-integration).** Re-point the collapse tranches per spec §6, in BOTH `2026-06-02-m-prime-cycle-3-design-reconciliation/37-*.md` (spec source) and `2026-07-03-m-prime-cycle-3-full-rerun/37-*.md` (retarget stub):
