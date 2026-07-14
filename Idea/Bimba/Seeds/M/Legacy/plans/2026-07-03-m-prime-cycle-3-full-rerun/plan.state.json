@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T00:15:51.888Z",
+  "updatedAt": "2026-07-14T07:19:53.535Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11913,10 +11913,10 @@
       "worktree": null
     },
     "49.T49.6": {
-      "status": "pending",
-      "updatedAt": "2026-07-13T19:21:23.222Z",
-      "claimedAt": "2026-07-13T19:19:25.471Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-14T07:19:53.517Z",
+      "claimedAt": "2026-07-14T00:16:07.213Z",
+      "completedAt": "2026-07-14T07:19:53.517Z",
       "evidence": [
         {
           "at": "2026-07-13T18:59:17.959Z",
@@ -11925,13 +11925,29 @@
         {
           "at": "2026-07-13T19:21:23.222Z",
           "text": "Decision B locked (separate M123 contributor concern, own namespace integrated-123.pending:*, NOT extending the track-07 exactly-five Wave-A LAW). SCOPE FINDING: the Step-4 coherency core is already delivered — isChimeCoherent (T49.5: tick/degree/world-clock agreement) + strikeRouter generation-advance gating (instrument.ts:236) already block a non-agreeing/stale chime. Remaining = the marker surface (heterogeneous: modalResonator is a profile field; m123ChimeFrame is an EVENT not a field) in integratedReadiness.ts + Step-3 composition proof-handles (K2SurfaceHandle/M2CymaticTextureContribution/M3CodonRotationProjectionForLensRing) in the integrated-composition model. Multi-surface; fresh-session build with the decision made."
+        },
+        {
+          "at": "2026-07-14T07:19:53.517Z",
+          "text": "Verify-first close (retargeted): the Wave-A readiness markers landed natively in the carrier modulation graph — modalResonator is a first-class nullable ModulationFrame input (types.ts:58; pending never fabricated: m2MeaningPacket digest reports pending when the profile carries no modal contract), readiness gating via requiredInputs + onUnready(missing) carries the pending-marker blockers additively, and the m123 chime frame coherency law lives in the strike router (once-per-generation, incoherent chime blocks the strike instead of faking one — the generation-disagreement failure the spec demands; dead chime stream recovers via profile route). Existing proof objects untouched (additive per spec step 3). Fresh 58/58 across engine/modulators/meaning-packet/instrument. K gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/engine/modulation/engine.test.ts src/engine/modulation/modulators.test.ts src/engine/m2MeaningPacket.test.ts src/audio/instrument.test.ts (58 passed / 0 failed — modalResonator nullable frame input with pending digest, onUnready missing-input readiness gating, chime coherency: one strike per generation + incoherent chime BLOCKS the strike) ; node .codex/scripts/verify-tranche.mjs 49.T49.6 --owner fable-c-verify — K-scoped gate PASS (kernel-truth, epi-lib 8872, kernel-contract 37, schemas 108, portal-core 351, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 58,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/modulation/types.ts",
+              "Body/M/pratibimba-app/src/engine/m2MeaningPacket.test.ts",
+              "Body/M/pratibimba-app/src/audio/instrument.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/49.T49.6.md"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "uc-4906",
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-13T19:19:25.471Z",
-      "runId": "20260713T191925Z-49-T49.6",
+      "heartbeatAt": "2026-07-14T00:16:07.213Z",
+      "runId": "20260714T001607Z-49-T49.6",
       "worktree": null
     },
     "49.T49.7": {
@@ -15423,6 +15439,16 @@
       "leaseExpiresAt": "2026-07-14T01:43:01.979Z",
       "worktree": null,
       "completedAt": "2026-07-14T00:15:51.874Z"
+    },
+    {
+      "runId": "20260714T001607Z-49-T49.6",
+      "taskId": "49.T49.6",
+      "status": "done",
+      "startedAt": "2026-07-14T00:16:07.213Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T01:46:07.213Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:19:53.517Z"
     }
   ],
   "activeRoute": {
