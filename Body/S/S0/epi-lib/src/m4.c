@@ -316,6 +316,20 @@ void m4_temporal_now_set_planets(M4_Temporal_Now* now,
     now->planet_valid = (uint16_t)(planet_valid & M4_PLANET_VALID_ALL);
 }
 
+void m4_temporal_now_capture_kairotic(M4_Temporal_Now* now,
+                                      const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                      uint16_t planet_valid,
+                                      uint64_t captured_at_ns,
+                                      uint64_t ttl_ns) {
+    if (now == NULL || planet_degrees == NULL) return;
+    m4_kairos_frame_set_planets(&now->kairotic, planet_degrees, planet_valid);
+    now->kairotic.captured_at_ns = captured_at_ns;
+    now->kairotic.decays_at_ns =
+        captured_at_ns + (ttl_ns != 0 ? ttl_ns : M4_KAIROTIC_DEFAULT_TTL_NS);
+    now->kairotic_active = 1;
+    now->planet_valid = (uint16_t)(planet_valid & M4_PLANET_VALID_ALL);
+}
+
 const uint16_t* m4_planet_degrees_live(const M4_Temporal_Now* now) {
     if (now == NULL) return M4_EMPTY_PLANET_DEGREES;
     if (now->kairotic_active) return now->kairotic.planet_degrees;

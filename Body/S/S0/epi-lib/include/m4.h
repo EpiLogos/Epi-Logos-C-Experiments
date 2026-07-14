@@ -291,6 +291,10 @@ typedef struct {
 
 #define M4_PLANET_VALID_ALL ((uint16_t)((1u << M2_PLANET_COUNT) - 1u))
 
+/* Default kairotic decay: a captured oracle-consultation sky preempts realtime
+ * for 4 hours, after which m4_planet_degrees_live_at reverts to realtime. */
+#define M4_KAIROTIC_DEFAULT_TTL_NS ((uint64_t)4 * 3600ull * 1000000000ull)
+
 extern const uint16_t M4_EMPTY_PLANET_DEGREES[M2_PLANET_COUNT];
 
 static inline uint64_t m4_epoch_to_ns(uint32_t epoch) {
@@ -308,6 +312,18 @@ M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch);
 void m4_temporal_now_set_planets(M4_Temporal_Now* now,
                                  const uint16_t planet_degrees[M2_PLANET_COUNT],
                                  uint16_t planet_valid);
+
+/* Arm the kairotic tier: capture a live oracle-consultation sky, activate it
+ * (it now preempts realtime in m4_planet_degrees_live), and set its decay
+ * deadline to captured_at_ns + ttl_ns. ttl_ns == 0 uses M4_KAIROTIC_DEFAULT_TTL_NS
+ * (4h). After the deadline, m4_planet_degrees_live_at deactivates it and the
+ * live accessor reverts to realtime. This is the ONLY setter that arms the
+ * kairotic frame on a live path (m4_temporal_now_set_planets writes realtime). */
+void m4_temporal_now_capture_kairotic(M4_Temporal_Now* now,
+                                      const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                      uint16_t planet_valid,
+                                      uint64_t captured_at_ns,
+                                      uint64_t ttl_ns);
 
 const uint16_t* m4_planet_degrees_live(const M4_Temporal_Now* now);
 

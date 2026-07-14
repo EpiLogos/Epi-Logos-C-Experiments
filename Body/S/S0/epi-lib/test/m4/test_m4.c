@@ -233,6 +233,30 @@ static void test_planet_degrees_live_precedence(void) {
     TEST("live never null", m4_planet_degrees_live(&now) != NULL);
 }
 
+static void test_capture_kairotic_arms_and_decays(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    uint16_t kairotic[M2_PLANET_COUNT] = {211, 222, 233, 244, 255, 266, 277, 288, 299, 311};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    /* Explicit TTL: capture at 1000ns with 500ns TTL -> decays at 1500ns. */
+    m4_temporal_now_capture_kairotic(&now, kairotic, M4_PLANET_VALID_ALL, 1000u, 500u);
+
+    TEST("capture arms kairotic_active", now.kairotic_active == 1);
+    TEST("capture sets decay deadline = captured + ttl", now.kairotic.decays_at_ns == 1500u);
+    TEST("capture records captured_at", now.kairotic.captured_at_ns == 1000u);
+    TEST("capture writes kairotic degrees", now.kairotic.planet_degrees[0] == 211);
+    TEST("captured kairotic preempts realtime", m4_planet_degrees_live(&now) == now.kairotic.planet_degrees);
+    TEST("kairotic live before decay", m4_planet_degrees_live_at(&now, 1499u) == now.kairotic.planet_degrees);
+    TEST("kairotic reverts to realtime past decay", m4_planet_degrees_live_at(&now, 1501u) == now.realtime.planet_degrees);
+
+    /* Default TTL (0) arms captured_at + the 4-hour default (the DR-FIB-3 gap: the
+     * deadline is now populated on the live path, not left at 0/no-decay). */
+    M4_Temporal_Now now2 = m4_snapshot_now(0, 1000);
+    m4_temporal_now_capture_kairotic(&now2, kairotic, M4_PLANET_VALID_ALL, 2000u, 0u);
+    TEST("default ttl is the 4-hour deadline", now2.kairotic.decays_at_ns == 2000u + M4_KAIROTIC_DEFAULT_TTL_NS);
+}
+
 
 /* ===================================================================
  * FR 2.4.13: SACRED RANDOM — consent gating
@@ -706,6 +730,7 @@ int main(void) {
     test_kairos_frame_natal_persists_across_session();
     test_kairos_frame_kairotic_decays();
     test_planet_degrees_live_precedence();
+    test_capture_kairotic_arms_and_decays();
     test_sacred_random();
     test_iching_cast();
     test_tarot_draw();
