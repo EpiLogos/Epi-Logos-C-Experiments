@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T10:15:32.109Z",
+  "updatedAt": "2026-07-14T10:32:22.565Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7396,16 +7396,16 @@
       "worktree": null
     },
     "23.T23.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T10:32:22.546Z",
+      "claimedAt": "2026-07-14T10:32:22.546Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus-outer-planet",
+      "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
+      "heartbeatAt": "2026-07-14T10:32:22.546Z",
+      "runId": "20260714T103222Z-23-T23.10",
       "worktree": null
     },
     "23.T23.11": {
@@ -12784,16 +12784,16 @@
       "worktree": null
     },
     "20.T20.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T10:29:15.858Z",
+      "claimedAt": "2026-07-14T10:29:15.858Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T11:59:15.858Z",
+      "heartbeatAt": "2026-07-14T10:29:15.858Z",
+      "runId": "20260714T102915Z-20-T20.1",
       "worktree": null
     },
     "20.T20.2": {
@@ -15967,12 +15967,30 @@
       "leaseExpiresAt": "2026-07-14T11:03:51.241Z",
       "worktree": null,
       "completedAt": "2026-07-14T10:15:32.059Z"
+    },
+    {
+      "runId": "20260714T102915Z-20-T20.1",
+      "taskId": "20.T20.1",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T10:29:15.858Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T11:59:15.858Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260714T103222Z-23-T23.10",
+      "taskId": "23.T23.10",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T10:32:22.546Z",
+      "owner": "opus-outer-planet",
+      "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T09:32:02.634Z",
-    "updatedAt": "2026-07-14T09:32:02.634Z",
+    "createdAt": "2026-07-14T10:28:39.211Z",
+    "updatedAt": "2026-07-14T10:28:39.211Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",

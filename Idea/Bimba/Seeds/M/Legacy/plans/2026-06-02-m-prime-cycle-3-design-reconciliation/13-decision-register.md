@@ -2035,3 +2035,50 @@ The DMOA mechanic — "linearly sum expert ΔΘ onto frozen base weights, evalua
 **Status:** RESOLVED  ·  **Resolved:** 2026-07-12  ·  **By:** m-dev 28.T28.1 closure (rerun carrier; doc-ahead-landing per Tranche 28.1)  ·  **Source:** Tranche 28.1 ([28-ide-shell-chrome-deep.md](28-ide-shell-chrome-deep.md)); declared in `Body/M/pratibimba-app/CHROME-CONTRACT.md` §5.
 
 **Decision:** Omni border tabs are AGENTIC PRIMARY — abbreviated renders + CrossLayoutIntent click-through; deep render stays governance-side. Same MediatedRunEvidencePacket, two foldings. Declared `Body/M/pratibimba-app/CHROME-CONTRACT.md` §5.
+
+## DR-WC — Wave-C decision block (Track 20.1 landing, 2026-07-14)
+
+The wave-C decisions routed to user final-validation join the register here (source: [20-wave-c-frontend-deep-overview.md §Decisions](20-wave-c-frontend-deep-overview.md) :93-140; each row is fully developed in its source matrix under `plan.runs/wave-c-*-matrix.md`). **Count note (surfaced at landing):** the source prose says "36" but its table carries **40** rows (M0×3 M1×1 M2×2 M3×2 M4×5 M5×3 OP×3 IS×3 IP×5 DL×5 CC×3 OB×5) — all 40 are absorbed; the 36 is the source's arithmetic slip, flagged not normalized. Rows that have since gained full register sections defer to those sections; everything else is **ROUTED — user final-validation pending**. Landing rows here is absorption, not ratification.
+
+| ID | Subject | Domain | Status |
+|---|---|---|---|
+| DR-WC-M0-1 | Six-layer navigation grammar (tab-strip vs activity-bar vs dropdown) | M0' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m0-anuttara-frontend-matrix.md` |
+| DR-WC-M0-2 | Reading / Authoring mode default + visual register | M0' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m0-anuttara-frontend-matrix.md` |
+| DR-WC-M0-3 | CONTEMPLATION_PROMPT_LUT[12] surface placement (footer vs separate widget) | M0' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m0-anuttara-frontend-matrix.md` |
+| DR-WC-M1-1 | M1' standalone vs composed dispatch contract (`ide-deep` standalone surface vs `daily-0-1` composition role) | M1' | RATIFIED 2026-07-12 — full section in this register (22.T22.10 closure) |
+| DR-WC-M2-1 | Shem-Asma view collapse vs split (TS-16 downstream resolution at widget-UX level) | M2' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m2-parashakti-frontend-matrix.md` |
+| DR-WC-M2-2 | Vibrational ↔ Psychoid view-switcher default + persistence-class | M2' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m2-parashakti-frontend-matrix.md` |
+| DR-WC-M3-1 | TCT / Nine-of-Wands renderer-side cardinality surfacing rule | M3' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m3-mahamaya-frontend-matrix.md` |
+| DR-WC-M3-2 | M1_LENS vs M3_LENS_STACK namespace discipline at UI (16+1 visible vs collapsed) | M3' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m3-mahamaya-frontend-matrix.md` |
+| DR-WC-M4-1 | Three-mode time-axis switcher: distinct widget vs tuning-bar dropdown vs status-bar segmented | M4' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m4-nara-frontend-matrix.md` |
+| DR-WC-M4-2 | Personal cymatic field shader path (Bevy/wgpu reuse vs Three.js per-tile) | M4' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m4-nara-frontend-matrix.md` |
+| DR-WC-M4-3 | PASU identity wizard mount surface (m4-nara extension vs onboarding extension vs ide-shell) | M4' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m4-nara-frontend-matrix.md` |
+| DR-WC-M4-4 | Pratibimba personal-coordinate widget consent ceremony (modal-prohibited per 15.2 — landing surface required) | M4' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m4-nara-frontend-matrix.md` |
+| DR-WC-M4-5 | Privacy-class chrome visual register (border colour vs glyph vs both) | M4' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m4-nara-frontend-matrix.md` |
+| DR-WC-M5-1 | ACR substrate as ide-shell widget vs OmniPanel content (15.2 reframe resolution at widget level) | M5' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m5-epii-frontend-matrix.md` |
+| DR-WC-M5-2 | EBM resonance visualization fidelity (live 72-dim grid vs aggregated tritone-square indicator) | M5' | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-m5-epii-frontend-matrix.md` |
+| DR-WC-M5-3 | Constitutional-roster psyche-facet rendering (avatar vs glyph vs colour-coded badge) | M5' | register section landed — see §DR-WC-M5-3 |
+| DR-WC-OP-1 | OmniPanelTabId manifest collapse (current 4 + 8 deep → unified 8 + capability) | OmniPanel | ROUTED — landed law exists in practice (OMNIPANEL_TABS 8-fold manifest, 27.T27.0); user final-validation pending |
+| DR-WC-OP-2 | Pi vs Epii conversation surface attribution (Pi Chat is constitutional-membrane; Epii deep backend per Anima/Epii split) | OmniPanel | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-omnipanel-tabs-matrix.md` |
+| DR-WC-OP-3 | ACR `run-model.ts` → `omnipanel-runtime.ts` migration default-mode (additive vs replacement) | OmniPanel | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-omnipanel-tabs-matrix.md` |
+| DR-WC-IS-1 | ACR ide-shell widget retention vs full migration to OmniPanel (downstream of DR-WC-M5-1) | ide-shell | RESOLVED 2026-07-12 — full section in this register (28.T28.1; CHROME-CONTRACT.md §5) |
+| DR-WC-IS-2 | Evidence + Review pane deep-vs-abbreviated split between ide-shell and OmniPanel | ide-shell | RESOLVED — full section in this register (agentic-primary; CHROME-CONTRACT.md) |
+| DR-WC-IS-3 | Canon Studio Monaco upgrade vs Theia default editor reuse | ide-shell | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-ide-shell-chrome-matrix.md` |
+| DR-WC-IP-1 | `IntegratedGeometricSlot` enum design (named-slot taxonomy vs geometric-coord vector) | Integrated comp | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-integrated-plugins-composition-matrix.md` |
+| DR-WC-IP-2 | Cosmic 1-2-3 composition geometry (K²-surface + cymatic-texture + codon-cell-state vs three-stack overlay) | Integrated comp | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-integrated-plugins-composition-matrix.md` |
+| DR-WC-IP-3 | Personal 4-5-0 composition geometry (Nara-LEFT + cymatic-CENTER + Mahamaya-RIGHT + Anuttara-UNDER vs four-pane bento) | Integrated comp | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-integrated-plugins-composition-matrix.md` |
+| DR-WC-IP-4 | `ProfileTickSubscription` per-composition-singleton vs per-contributor-fanout | Integrated comp | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-integrated-plugins-composition-matrix.md` |
+| DR-WC-IP-5 | Composition-load juxtaposition rejection failure-mode (hard-fail vs degraded-mode) | Integrated comp | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-integrated-plugins-composition-matrix.md` |
+| DR-WC-DL-1 | Family-letter palette derivation (Cl(4,2)-signature-only vs family-tier-gradient + signature-modulation) | Design lang | ROUTED — explicitly OPEN Architect decision (CHARTER: Track 30.8 derivation-backed tiers are token law; family palette naming open) |
+| DR-WC-DL-2 | Highlight category register canonical count (10 from 11.11 vs extended set from stage-1 surfaces) | Design lang | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-design-language-matrix.md` |
+| DR-WC-DL-3 | Token emission format (single ui-design-tokens.json vs per-namespace files) | Design lang | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-design-language-matrix.md` |
+| DR-WC-DL-4 | Light/dark theme default (light vs dark vs system) | Design lang | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-design-language-matrix.md` |
+| DR-WC-DL-5 | Reduced-motion behavioural contract (animation-suppression vs static-state vs single-frame-jump) | Design lang | register section landed — see §DR-WC-DL-5 (visual-regression catalog) |
+| DR-WC-CC-1 | Status-bar entry ownership partition across extensions (single-extension vs per-domain) | Chrome | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-chrome-contributions-matrix.md` |
+| DR-WC-CC-2 | Keybinding chord prefix policy (`cmd-shift-{n}` per-Mn vs domain-grouped) | Chrome | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-chrome-contributions-matrix.md` |
+| DR-WC-CC-3 | Epi-Logos top-level menu vs Theia-default menu-nesting | Chrome | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-chrome-contributions-matrix.md` |
+| DR-WC-OB-1 | Per-readiness-state user-facing language (technical vs symbolic vs hybrid) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
+| DR-WC-OB-2 | First-run identity wizard required-vs-optional ordering | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
+| DR-WC-OB-3 | Day-not-yet-started default action (auto-start-session vs prompt vs idle) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
+| DR-WC-OB-4 | Settings UX surface mount (Theia preferences page vs custom IDE panel) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
+| DR-WC-OB-5 | Reset / clear-state UX availability in production builds (hidden vs gated vs disabled) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
