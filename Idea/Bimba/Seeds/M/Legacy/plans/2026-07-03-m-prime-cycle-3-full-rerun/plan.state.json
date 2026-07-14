@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T08:12:25.892Z",
+  "updatedAt": "2026-07-14T08:14:02.628Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10171,19 +10171,33 @@
       "worktree": null
     },
     "37.T37.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T08:07:17.435Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T08:14:02.612Z",
       "claimedAt": "2026-07-14T08:07:17.435Z",
-      "completedAt": null,
+      "completedAt": "2026-07-14T08:14:02.612Z",
       "evidence": [
         {
           "at": "2026-07-14T08:01:59.753Z",
           "text": "Released for a focused build. Kernel m3_codon_is_rna_capable flag LANDED (m3.c:321); the carrier deferral badges pending-rna-codon-family / pending-chromosome-graph are the GAP — add them to the codon surface (src/components/CodonWheel.tsx + src/panes/m3Inspectors.ts) where the U-codon family / chromosome nodes would render, following the carrier's existing pending-* badge vocabulary (pending-codon-rotation-projection etc.); confirm the 24-amino backbone + RNA-capable flag render fully (no pending badge). Bounded carrier-UI build; unblocks 37.8/37.9 (lensCodonBinary/lensOrbiterRelations substrate already in portal-core)."
+        },
+        {
+          "at": "2026-07-14T08:14:02.612Z",
+          "text": "Built honest RNA/chromosome deferral badges (37.7): M3InspectorsViewModel carries pending-rna-codon-family (the T->U U-codon family expansion / Track-24 RNA space, not yet built) + pending-chromosome-graph (descent-engine chromosome nodes / Track-23.18) chips, chromosome split from the major-arcana chip so they defer independently; the RNA-capable flag renders off the bus (mahamaya.codon nucleotides carrying the T that m3_codon_is_rna_capable keys on + dnaRnaPhase), never a pending badge; the 24-amino backbone carries no pending badge (renders fully). Kernel m3_codon_is_rna_capable landed (m3.c:321). m3Inspectors.test.ts 8/8; independent verify uc-3707-verify PASS + K gate. Unblocks 37.8/37.9.",
+          "receipt": {
+            "command": "sh -c \"cd Body/M/pratibimba-app && npx vitest run src/panes/m3Inspectors.test.ts\"",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m3Inspectors.ts",
+              "Body/M/pratibimba-app/src/panes/m3Inspectors.test.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "uc-3707",
-      "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T08:07:17.435Z",
       "runId": "20260714T080717Z-37-T37.7",
       "worktree": null
@@ -15742,11 +15756,12 @@
     {
       "runId": "20260714T080717Z-37-T37.7",
       "taskId": "37.T37.7",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T08:07:17.435Z",
       "owner": "uc-3707",
       "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T08:14:02.612Z"
     }
   ],
   "activeRoute": {

@@ -80,8 +80,18 @@ export interface M3InspectorsViewModel {
     readonly activeSpoke: number | null;
     readonly ringDepth: number | null;
     readonly ringHistory: 'pending-ring-history';
-    /** Major-Arcana/chromosome map is kernel-owned and not yet bussed. */
+    /** Major-Arcana map is kernel-owned and not yet bussed. */
     readonly majorArcana: 'pending-major-arcana-map';
+    /** 37.7 honest deferral: the RNA U-codon *family* — the T→U transcriptional
+     *  variant expansion (Track-24 RNA space) — is not yet built/bussed → a
+     *  pending chip. The per-codon RNA-capable flag itself renders off the bus
+     *  (mahamaya.codon carries the T that `m3_codon_is_rna_capable` keys on,
+     *  mahamaya.dnaRnaPhase the phase); only the family expansion defers. */
+    readonly rnaCodonFamily: 'pending-rna-codon-family';
+    /** 37.7 honest deferral: the chromosome graph (descent-engine chromosome
+     *  nodes, Track-23.18) is not yet built/bussed → a pending chip, split from
+     *  the Major-Arcana chip so the two defer independently. */
+    readonly chromosomeGraph: 'pending-chromosome-graph';
     /** lens-annulus depth view reads the 472-state projection. */
     readonly lensMode: { lens: number; mode: number; surfaceIndex: number } | null;
     readonly toroidal: { degree720: number; helixSheet: number } | null;
@@ -174,6 +184,8 @@ export function buildM3InspectorsView(input: {
         ringDepth: tick12,
         ringHistory: 'pending-ring-history' as const,
         majorArcana: 'pending-major-arcana-map' as const,
+        rnaCodonFamily: 'pending-rna-codon-family' as const,
+        chromosomeGraph: 'pending-chromosome-graph' as const,
         lensMode:
             lens !== null && mode !== null && surfaceIndex !== null
                 ? { lens, mode, surfaceIndex }

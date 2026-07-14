@@ -45,7 +45,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.7 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: honest RNA/chromosome deferral badges — `sh -c "cd Body/M/pratibimba-app && npx vitest run src/panes/m3Inspectors.test.ts"` green (M3InspectorsViewModel now carries pending-rna-codon-family + pending-chromosome-graph chips where the U-codon family / chromosome nodes would render, chromosome split from the major-arcana chip; the RNA-capable flag renders off the bus via mahamaya.codon nucleotides + dnaRnaPhase, never a pending badge; the 24-amino backbone carries no pending badge — renders fully); kernel m3_codon_is_rna_capable landed (m3.c:321). verifier != closer; evidence = fresh command output.
 
 8. **T37.8 — Ratify the lens→codon→binary projection**
 

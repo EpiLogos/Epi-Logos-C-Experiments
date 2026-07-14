@@ -77,6 +77,22 @@ describe('m3 inspectors view model (04.T4.2)', () => {
         expect(view.majorArcana).toBe('pending-major-arcana-map');
         expect(view.fourXAudit).toBe('pending-raw-charges');
         expect(view.ringHistory).toBe('pending-ring-history');
+        expect(view.rnaCodonFamily).toBe('pending-rna-codon-family');
+        expect(view.chromosomeGraph).toBe('pending-chromosome-graph');
+    });
+
+    it('37.7 honest deferral: RNA U-codon family + chromosome graph badge pending while the RNA-capable flag renders off the bus', () => {
+        const view = buildM3InspectorsView({ payload: PAYLOAD, generation: 1 });
+        // The not-yet-built expansions defer as explicit chips — no fabrication.
+        expect(view.rnaCodonFamily).toBe('pending-rna-codon-family');
+        expect(view.chromosomeGraph).toBe('pending-chromosome-graph');
+        // The chromosome chip is now independent of the Major-Arcana chip.
+        expect(view.chromosomeGraph).not.toBe(view.majorArcana);
+        // The RNA-capable flag renders fully: its bussed source (the codon
+        // nucleotides carrying the T that m3_codon_is_rna_capable keys on, plus
+        // the dna/rna phase) is present, never a pending badge.
+        expect(view.mahamaya?.nucleotideBits).toHaveLength(3);
+        expect(typeof view.mahamaya?.dnaRnaPhase).toBe('string');
     });
 
     it('depth-view sources: lens-annulus from the 472 projection; toroidal/hopf from the clock', () => {
