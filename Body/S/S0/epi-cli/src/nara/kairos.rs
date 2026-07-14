@@ -370,6 +370,96 @@ pub fn heartbeat_live_sky() -> Option<([f32; 10], [bool; 10])> {
     Some((degrees, retrograde))
 }
 
+/// Kairotic consultation window: 4 hours (mirrors the kernel
+/// `M4_KAIROTIC_DEFAULT_TTL_NS`). After it, a captured kairotic sky decays back
+/// to the daily realtime transit.
+pub const KAIROTIC_TTL_SECS: u64 = 4 * 3600;
+
+/// A captured oracle-consultation sky with its decay window. Distinct from the
+/// daily `current.json` transit: this is the real sky at the moment of a
+/// consultation, and it preempts realtime until it decays.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KairoticCapture {
+    pub result: KerykeionResult,
+    pub captured_at_epoch: u64, // unix seconds
+    pub decays_at_epoch: u64,   // captured_at + KAIROTIC_TTL_SECS
+}
+
+/// Pure decay check (server-side mirror of the kernel `m4_planet_degrees_live_at`
+/// deadline branch): a capture is live iff `now_epoch < decays_at_epoch`.
+pub fn kairotic_is_live(now_epoch: u64, decays_at_epoch: u64) -> bool {
+    now_epoch < decays_at_epoch
+}
+
+/// Capture the live sky at THIS moment as a kairotic (oracle-consultation) frame:
+/// run kerykeion for the current datetime, stamp `captured_at` + `decays_at`
+/// (=+4h), and persist to `kairotic.json`. This is what arms the kairotic tier
+/// the kernel (`m4_temporal_now_capture_kairotic`) and the heartbeat preempt
+/// realtime with. (Greenwich reference location as the daily transit uses;
+/// PASU-location refinement is a follow-up.)
+pub fn capture_kairotic() -> Result<String, String> {
+    let now = chrono::Utc::now();
+    let date = now.format("%Y-%m-%d").to_string();
+    let time = now.format("%H:%M").to_string();
+    let result = run_kerykeion_natal(&date, &time, 51.4772, 0.0)?;
+    let captured_at_epoch = now.timestamp().max(0) as u64;
+    let capture = KairoticCapture {
+        result,
+        captured_at_epoch,
+        decays_at_epoch: captured_at_epoch + KAIROTIC_TTL_SECS,
+    };
+    let dir = kairos_dir();
+    std::fs::create_dir_all(&dir).map_err(|e| format!("kairos: create dir error: {e}"))?;
+    let path = dir.join("kairotic.json");
+    let data =
+        serde_json::to_string_pretty(&capture).map_err(|e| format!("kairos: serialize error: {e}"))?;
+    std::fs::write(&path, data).map_err(|e| format!("kairos: write error: {e}"))?;
+    Ok(format!("kairotic frame captured at {date} {time}Z; decays in 4h"))
+}
+
+/// Read a non-decayed kairotic capture, if present. Returns canonical degrees +
+/// retrograde flags + the decay deadline (unix seconds). `None` when no capture
+/// exists or it has passed its 4h decay — the heartbeat then falls back to the
+/// realtime daily transit.
+pub fn kairotic_live_sky() -> Option<([f32; 10], [bool; 10], u64)> {
+    let path = kairos_dir().join("kairotic.json");
+    let data = std::fs::read_to_string(&path).ok()?;
+    let capture: KairoticCapture = serde_json::from_str(&data).ok()?;
+    let now_epoch = chrono::Utc::now().timestamp().max(0) as u64;
+    if !kairotic_is_live(now_epoch, capture.decays_at_epoch) {
+        return None; // decayed -> realtime takes over
+    }
+    let degrees = planet_degrees_from_result(&capture.result)?;
+    let mut retrograde = [false; 10];
+    for p in &capture.result.planets {
+        if let Some(slot) = retrograde.get_mut(p.planet_id as usize) {
+            *slot = p.retrograde;
+        }
+    }
+    Some((degrees, retrograde, capture.decays_at_epoch))
+}
+
+/// Which live-sky tier won, published on the heartbeat so the carrier can show
+/// `kairotic | realtime` and revert on decay.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KairosTier {
+    /// A non-decayed oracle-consultation capture; carries its decay deadline (unix s).
+    Kairotic { decays_at_epoch: u64 },
+    /// The daily transit (`heartbeat_live_sky`); no decay.
+    Realtime,
+}
+
+/// Resolve the live sky with kairotic-over-realtime precedence — the server-side
+/// mirror of the kernel `m4_planet_degrees_live`: a fresh kairotic capture wins
+/// until it decays (4h), else the daily transit. `None` = "kairos pending".
+pub fn heartbeat_live_sky_tiered() -> Option<([f32; 10], [bool; 10], KairosTier)> {
+    if let Some((degrees, retrograde, decays_at_epoch)) = kairotic_live_sky() {
+        return Some((degrees, retrograde, KairosTier::Kairotic { decays_at_epoch }));
+    }
+    let (degrees, retrograde) = heartbeat_live_sky()?;
+    Some((degrees, retrograde, KairosTier::Realtime))
+}
+
 /// Load natal kairos state from cache. Returns None if no natal chart cached.
 pub fn load_natal() -> Result<Option<KerykeionResult>, String> {
     let path = kairos_dir().join("natal.json");
@@ -386,6 +476,29 @@ pub fn load_natal() -> Result<Option<KerykeionResult>, String> {
 #[cfg(test)]
 mod kairos_parse_tests {
     use super::*;
+
+    #[test]
+    fn kairotic_ttl_is_four_hours() {
+        assert_eq!(KAIROTIC_TTL_SECS, 4 * 3600);
+    }
+
+    #[test]
+    fn kairotic_is_live_until_decay_boundary() {
+        // Server-side mirror of the kernel decay: live until now >= decays_at.
+        let captured = 1_700_000_000u64;
+        let decays = captured + KAIROTIC_TTL_SECS;
+        assert!(kairotic_is_live(captured, decays), "live at capture");
+        assert!(kairotic_is_live(decays - 1, decays), "live one sec before decay");
+        assert!(!kairotic_is_live(decays, decays), "decayed at the deadline");
+        assert!(!kairotic_is_live(decays + 1, decays), "decayed after");
+    }
+
+    #[test]
+    fn kairos_tier_carries_the_decay_deadline() {
+        let tier = KairosTier::Kairotic { decays_at_epoch: 42 };
+        assert_eq!(tier, KairosTier::Kairotic { decays_at_epoch: 42 });
+        assert_ne!(tier, KairosTier::Realtime);
+    }
 
     #[test]
     fn parse_kerykeion_places_sun_at_index_0() {

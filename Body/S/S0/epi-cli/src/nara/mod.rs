@@ -145,6 +145,9 @@ pub enum KairosCmd {
     },
     /// Fetch current transits (alias for sync)
     Fetch,
+    /// Capture the live sky NOW as a kairotic (oracle-consultation) frame that
+    /// preempts the daily transit for 4 hours, then decays back to realtime.
+    Capture,
 }
 
 #[derive(Subcommand)]
@@ -466,6 +469,7 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
         NaraCmd::Kairos { cmd: sub } => match sub {
             KairosCmd::Sync => kairos::sync_current(),
             KairosCmd::Fetch => kairos::sync_current(),
+            KairosCmd::Capture => kairos::capture_kairotic(),
             KairosCmd::Show { json: j, planets } => kairos::show(*j || json, *planets),
             KairosCmd::Status { json: j } => {
                 let fresh = kairos::is_current_fresh();
