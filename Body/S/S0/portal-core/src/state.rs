@@ -19,8 +19,16 @@ pub fn compute_orbital_position(degree: u16, tick12: u8) -> [f32; 3] {
 }
 
 fn recompute_composed_quaternion_state(state: &mut PortalClockState) {
+    // PASU base ⊗ ambient environment ⊗ transit ⊗ live (DR-ENV-1/8). The base
+    // (quintessence) leads and is never overwritten here — the environment factor
+    // TRANSFORMS it, it never becomes the base. With `environment_quaternion` at
+    // the identity rotation this reduces byte-for-byte to the prior
+    // quintessence ⊗ transit ⊗ live law (a ⊗ [1,0,0,0] === a).
     let composed = quat_normalize(quat_mul(
-        quat_mul(state.quintessence_quaternion, state.transit_quaternion),
+        quat_mul(
+            quat_mul(state.quintessence_quaternion, state.environment_quaternion),
+            state.transit_quaternion,
+        ),
         state.live_quaternion,
     ));
     state.composed_quaternion = composed;
@@ -196,6 +204,18 @@ pub fn update_quintessence_quaternion(state: &mut PortalClockState, profiles: &[
     sync_kernel_projection(state);
 }
 
+/// Set the ambient environmental transform factor and recompute the composed
+/// quaternion (DR-ENV-1/8). The `quintessence_quaternion` (PASU identity base) is
+/// deliberately left untouched — the environment transforms the base, it never
+/// becomes it. A near-zero env normalizes to the identity rotation, i.e. an honest
+/// "no ambient influence" that composes as a pass-through. Unlike a clock advance
+/// this does not bump `generation` — an ambient wind is a modulation, not a tick.
+pub fn update_environment_quaternion(state: &mut PortalClockState, environment: [f32; 4]) {
+    state.environment_quaternion = quat_normalize(environment);
+    recompute_composed_quaternion_state(state);
+    sync_kernel_projection(state);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -208,6 +228,74 @@ mod tests {
         assert_eq!(state.micro_orbit.len(), 1);
         assert_eq!(state.micro_orbit[0], 90);
         let _ = state.walk_mode.label();
+    }
+
+    // --- P3: q_environment composition onto the PASU base (DR-ENV-1/8) ---
+
+    fn seeded_state() -> PortalClockState {
+        let mut s = PortalClockState::default();
+        s.quintessence_quaternion = quat_normalize([0.5, 0.3, 0.6, 0.2]);
+        s.transit_quaternion = quat_normalize([0.9, 0.1, 0.2, 0.3]);
+        s.live_quaternion = quat_normalize([0.2, 0.8, 0.1, 0.5]);
+        s
+    }
+
+    #[test]
+    fn environment_absent_preserves_prior_composed_behaviour_byte_for_byte() {
+        // The default env is the identity rotation → composed must equal the prior
+        // quintessence ⊗ transit ⊗ live law exactly (no ambient influence).
+        let mut s = seeded_state();
+        recompute_composed_quaternion_state(&mut s);
+        let prior = quat_normalize(quat_mul(
+            quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+            s.live_quaternion,
+        ));
+        assert_eq!(s.composed_quaternion, prior);
+    }
+
+    #[test]
+    fn environment_transforms_composed_but_leaves_the_pasu_base_byte_stable() {
+        let mut s = seeded_state();
+        recompute_composed_quaternion_state(&mut s);
+        let base_before = s.quintessence_quaternion;
+        let composed_before = s.composed_quaternion;
+        update_environment_quaternion(&mut s, quat_normalize([0.1, 0.9, 0.2, 0.3]));
+        assert_eq!(
+            s.quintessence_quaternion, base_before,
+            "PASU base must not move under an ambient wind (DR-ENV-1)"
+        );
+        assert_ne!(
+            s.composed_quaternion, composed_before,
+            "composed must move under a real environment"
+        );
+    }
+
+    #[test]
+    fn dr_env_1_gate_fixed_base_changing_sky_moves_composed_not_identity() {
+        // The standing gate re-run at every phase: fixed PASU base + changing
+        // transit sky ⇒ q_identity (quintessence) byte-stable, Q_composed moves.
+        let mut a = seeded_state();
+        let mut b = seeded_state();
+        update_environment_quaternion(&mut a, quat_normalize([0.9, 0.1, 0.0, 0.0]));
+        update_environment_quaternion(&mut b, quat_normalize([0.0, 0.1, 0.9, 0.2]));
+        assert_eq!(
+            a.quintessence_quaternion, b.quintessence_quaternion,
+            "the base is invariant across two different skies"
+        );
+        assert_ne!(
+            a.composed_quaternion, b.composed_quaternion,
+            "two different skies compose to two different states"
+        );
+    }
+
+    #[test]
+    fn a_near_zero_environment_is_an_honest_no_ambient_pass_through() {
+        let mut with_zero = seeded_state();
+        recompute_composed_quaternion_state(&mut with_zero);
+        let prior = with_zero.composed_quaternion;
+        update_environment_quaternion(&mut with_zero, [0.0, 0.0, 0.0, 0.0]);
+        assert_eq!(with_zero.environment_quaternion, [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(with_zero.composed_quaternion, prior);
     }
 
     #[test]

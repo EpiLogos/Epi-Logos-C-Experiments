@@ -215,11 +215,24 @@ pub struct PortalClockState {
     pub resolution_level: u8,
     pub active_codon: ActiveCodon,
     pub transit_quaternion: [f32; 4],
+    /// Ambient environmental transform factor (DR-ENV-1/8) — the collective sky's
+    /// slow forces aspected against the natal invariant, composed onto the PASU
+    /// base in `recompute_composed_quaternion_state`. Defaults to the identity
+    /// rotation (no ambient influence); it TRANSFORMS the base, never becomes
+    /// `quintessence_quaternion`. Serde-default so pre-ambient states deserialize.
+    #[serde(default = "identity_quaternion")]
+    pub environment_quaternion: [f32; 4],
     pub aspects: Vec<PlanetaryAspect>,
     pub micro_orbit: Vec<u16>,
     pub natal_degrees: [u16; 10],
     pub generation: u64,
     pub zoom_level: f32,
+}
+
+/// The identity rotation `[1,0,0,0]` — serde default for `environment_quaternion`
+/// so pre-ambient serialized states deserialize as "no ambient influence".
+fn identity_quaternion() -> [f32; 4] {
+    [1.0, 0.0, 0.0, 0.0]
 }
 
 impl Default for PortalClockState {
@@ -246,6 +259,7 @@ impl Default for PortalClockState {
             resolution_level: 0,
             active_codon: ActiveCodon::default(),
             transit_quaternion: [1.0, 0.0, 0.0, 0.0],
+            environment_quaternion: [1.0, 0.0, 0.0, 0.0],
             aspects: Vec::new(),
             micro_orbit: Vec::new(),
             natal_degrees: [0xFFFF; 10],

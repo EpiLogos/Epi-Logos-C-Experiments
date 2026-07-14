@@ -79,8 +79,8 @@ pub use spanda::{
     superposition, tick12_readout, SpandaHkbParams, SpandaQuaternion,
 };
 pub use state::{
-    compute_orbital_position, sync_kernel_projection, update_from_cast, update_kairos_full,
-    update_quintessence_quaternion,
+    compute_orbital_position, sync_kernel_projection, update_environment_quaternion,
+    update_from_cast, update_kairos_full, update_quintessence_quaternion,
 };
 pub use tunable::*;
 pub use types::*;
