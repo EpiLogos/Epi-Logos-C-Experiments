@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T10:36:09.761Z",
+  "updatedAt": "2026-07-14T12:34:53.553Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8277,16 +8277,32 @@
       "worktree": null
     },
     "26.T26.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T12:34:53.538Z",
+      "claimedAt": "2026-07-14T10:36:40.153Z",
+      "completedAt": "2026-07-14T12:34:53.538Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T12:34:53.538Z",
+          "text": "LANDED (spec-exact, carrier retarget): the canonical MediatedRunEvidencePacket schema in the carrier omni home (evidenceShapes.ts) — ActorMediator (pi | anima | aletheia with canonical subagent ids), DispatchTraceNode as the ONE primitive for both Trace (recursive) and Stream (depth-first flat, flattenDispatchTrace) foldings per 15.11 / DR-WC-IS-2, ToolInvocationRef with input/output digests, GateLanding with IOD-17 parity faces, AxiomTranslationStep (DR-B-2 forms), full packet with session/dayNow/profileGeneration/readiness anchors + the 19.6 contemplationObjectRef link. Wire round-trip serialization + refusing validator. DRIFT RECORDED: the frozen integrated-composition evidence-shapes.ts carries a different simpler verdict-ledger shape — the 26.10 spec block is the law, landed shape-exact; frozen file is documented divergence, not ported. Consumers: 26.4/5/7 + the Evidence fold (27.5) import from this single home when they land. Fresh 3/3; app 585; UF gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/panes/omni/evidenceShapes.test.ts (3 passed / 0 failed — full packet round-trips through serialization exactly, validator refuses missing fields + unknown mediators + non-canonical aletheia subagents, depth-first flatten preserves every trace node exactly once per the 15.11 one-trace-two-foldings law) ; node .codex/scripts/verify-tranche.mjs 26.T26.10 --owner fable-c-verify — UF gate PASS (app-test 585 incl. the new suite, app-ui-flow playwright 26/26, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 86, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 588,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/evidenceShapes.ts",
+              "Body/M/pratibimba-app/src/panes/omni/evidenceShapes.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/26.T26.10.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T10:36:40.153Z",
+      "runId": "20260714T103640Z-26-T26.10",
       "worktree": null
     },
     "26.T26.11": {
@@ -16001,6 +16017,16 @@
       "owner": "opus-outer-planet",
       "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
       "worktree": null
+    },
+    {
+      "runId": "20260714T103640Z-26-T26.10",
+      "taskId": "26.T26.10",
+      "status": "done",
+      "startedAt": "2026-07-14T10:36:40.153Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T12:06:40.153Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T12:34:53.538Z"
     }
   ],
   "activeRoute": {
