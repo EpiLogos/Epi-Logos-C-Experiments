@@ -402,6 +402,37 @@ static void test_codon_quaternions(void) {
 
     uint8_t state = m3_quat_active_state(quat_from_ring_pos(3u), aaa);
     TEST("active state is in range", state < 8u);
+
+    /* P3.2 — j/k symmetry (DR-ENV; HMS Sec.V). The retired law read only the
+     * i-axis half-angle atan2(x, w), discarding the codon's Mod (k/z = sum%6)
+     * and any j environmental torque. The full-angle law folds all three axes in. */
+    Quaternion id_env = { .w = 1.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f };
+    bool mod_axis_now_matters = false;
+    for (uint8_t c = 0u; c < 64u; ++c) {
+        Quaternion base = m3_quat_from_codon(c);
+        float a = atan2f(base.x, base.w);           /* retired i-only reading */
+        if (a < 0.0f) a += 6.2831853071795865f;
+        uint8_t retired = (uint8_t)(a / 0.7853981633974483f) & 0x07u;
+        if (m3_quat_active_state(id_env, c) != retired) {
+            mod_axis_now_matters = true;
+            break;
+        }
+    }
+    TEST("Mod (k) axis now affects codon state (was discarded by the i-only law)",
+         mod_axis_now_matters);
+
+    /* Composite state 7 is reachable — construct env so composed = (-10, 1, 1, 1):
+     * angle = 2*atan2(sqrt(3), -10) ~= 340.3 deg -> bucket 7. Unreachable under the
+     * i-only law (which read x=1, w=-10 -> ~2*8.9 deg region, never the composite). */
+    uint8_t aca = encode_codon(M3_NUC_A, M3_NUC_C, M3_NUC_A);
+    Quaternion b = m3_quat_from_codon(aca);
+    float nsq = b.w * b.w + b.x * b.x + b.y * b.y + b.z * b.z;
+    Quaternion conj = { .w = b.w, .x = -b.x, .y = -b.y, .z = -b.z };
+    Quaternion desired = { .w = -10.0f, .x = 1.0f, .y = 1.0f, .z = 1.0f };
+    Quaternion num = quat_mul(desired, conj);       /* env = desired (X) base^-1 */
+    Quaternion env7 = { .w = num.w / nsq, .x = num.x / nsq, .y = num.y / nsq, .z = num.z / nsq };
+    TEST("composite state 7 is reachable in the w<0 hemisphere",
+         m3_quat_active_state(env7, aca) == 7u);
 }
 
 static void test_prime_attractors_and_eval_mapping(void) {

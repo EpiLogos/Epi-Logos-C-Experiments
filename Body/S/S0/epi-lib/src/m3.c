@@ -138,7 +138,17 @@ Quaternion m3_quat_codon_state(uint8_t codon_id, uint8_t state) {
 
 uint8_t m3_quat_active_state(Quaternion env, uint8_t codon_id) {
     Quaternion composed = quat_mul(env, m3_quat_from_codon(codon_id));
-    float angle = atan2f(composed.x, composed.w);
+    /* Full rotation angle about the composed axis: 2*atan2(|v|, w), with
+     * |v| = sqrt(x^2 + y^2 + z^2). All three matrix axes contribute — i
+     * (Complementary/x), j (Moving-Resting/y), k (Same-Quality/z) — not only i.
+     * The retired law read atan2(x, w), the i-only half-angle, so a codon's Mod
+     * (k/z = sum%6) and any j environmental torque were discarded (HMS Sec.V
+     * j/k-symmetry; DR-ENV). w < 0 (opposite hemisphere) reaches the composite
+     * state 7. angle in [0, 2*pi]; the &0x07 folds the 2*pi edge back to 0. */
+    float vmag = sqrtf(composed.x * composed.x
+                     + composed.y * composed.y
+                     + composed.z * composed.z);
+    float angle = 2.0f * atan2f(vmag, composed.w);
     if (angle < 0.0f) {
         angle += 6.2831853071795865f;
     }
