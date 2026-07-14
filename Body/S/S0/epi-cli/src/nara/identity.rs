@@ -500,14 +500,13 @@ pub fn heartbeat_environment(sky: &[f32; 10]) -> Option<[f32; 4]> {
     use portal_core::environment::{
         derive_env_quaternion, ConditionSource, EnvironmentalCondition, NatalReference,
     };
-    // Natal invariant: the PASU natal chart's Sun (ecliptic 0..360, planet index
-    // 0), from the persisted natal.json — the birth-time anchor the ambient
-    // conditions are aspected against. No cached natal chart → no env (honest).
+    // Natal invariant: the FULL PASU natal chart (all ten natal planets, ecliptic
+    // 0..360) from the persisted natal.json — the birth-time anchor the ambient
+    // conditions aspect against (DR-ENV-7, P2 richer reference: a transit engaging
+    // any natal point counts, not only the Sun). No cached natal → no env (honest).
     let natal_chart = crate::nara::kairos::load_natal().ok()??;
     let natal_degrees = crate::nara::kairos::planet_degrees_from_result(&natal_chart)?;
-    let natal_ref = NatalReference {
-        sun_degree: natal_degrees[0],
-    };
+    let natal_ref = NatalReference::from_points(natal_degrees.to_vec());
     // The transpersonal band (DR-ENV-2): Uranus/Neptune/Pluto are the ambient,
     // collective conditions — never a personal M2–M5 dataset.
     let conditions: [EnvironmentalCondition; 3] = [7u8, 8, 9].map(|planet| EnvironmentalCondition {
@@ -516,7 +515,7 @@ pub fn heartbeat_environment(sky: &[f32; 10]) -> Option<[f32; 4]> {
         magnitude: 1.0,
         sensitivity: 1.0,
     });
-    Some(derive_env_quaternion(&conditions, natal_ref))
+    Some(derive_env_quaternion(&conditions, &natal_ref))
 }
 
 // ─── Journal elemental weight stub ──────────────────────────────────────────

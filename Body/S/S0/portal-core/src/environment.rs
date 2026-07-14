@@ -48,23 +48,38 @@ pub struct EnvironmentalCondition {
 }
 
 /// The natal invariant a condition is aspected AGAINST — the birth-time anchor
-/// (a user's natal chart, or an entity's genesis constants). v1 anchor is the
-/// natal Sun degree; this struct is the seam where richer natal references land.
-#[derive(Clone, Copy, Debug, PartialEq)]
+/// (a user's natal chart, or an entity's genesis constants). Carries the full set
+/// of natal points (Sun, Moon, angles, planets — ecliptic 0..360): a condition
+/// engages insofar as it aspects ANY of them (DR-ENV-7), not only the Sun.
+/// `sun()` builds the v1 single-point anchor; `from_points()` the full chart.
+#[derive(Clone, Debug, PartialEq)]
 pub struct NatalReference {
-    pub sun_degree: f32,
+    pub points: Vec<f32>,
 }
 
-/// The Ptolemaic major aspects (degrees) an ambient condition can make to the
-/// natal anchor, and the orb within which they count.
+impl NatalReference {
+    /// The v1 single-point anchor — the natal Sun degree only.
+    pub fn sun(sun_degree: f32) -> Self {
+        Self {
+            points: vec![sun_degree],
+        }
+    }
+
+    /// The full natal chart — every point (ecliptic 0..360) an ambient condition
+    /// may aspect against. Empty means "no personal invariant" → nothing engages.
+    pub fn from_points(points: Vec<f32>) -> Self {
+        Self { points }
+    }
+}
+
+/// The Ptolemaic major aspects (degrees) an ambient condition can make to a natal
+/// point, and the orb within which they count.
 const MAJOR_ASPECTS: [f32; 5] = [0.0, 60.0, 90.0, 120.0, 180.0];
 const ASPECT_ORB: f32 = 8.0;
 
-/// Aspect strength (0..1) between a condition and the natal anchor: 1.0 at an
-/// exact major aspect, falling linearly to 0 at the orb edge, 0 out of aspect.
-/// This IS "computed against the personal invariants" (DR-ENV-7) — a condition
-/// only transforms insofar as it engages the natal pattern.
-fn aspect_strength(condition_degree: f32, natal_degree: f32) -> f32 {
+/// Aspect strength (0..1) between a condition and ONE natal point: 1.0 at an exact
+/// major aspect, falling linearly to 0 at the orb edge, 0 out of aspect.
+fn aspect_strength_to_point(condition_degree: f32, natal_degree: f32) -> f32 {
     let d = (condition_degree - natal_degree).rem_euclid(360.0);
     let sep = if d > 180.0 { 360.0 - d } else { d };
     MAJOR_ASPECTS
@@ -77,6 +92,18 @@ fn aspect_strength(condition_degree: f32, natal_degree: f32) -> f32 {
                 0.0
             }
         })
+        .fold(0.0, f32::max)
+}
+
+/// Aspect strength (0..1) of a condition against the WHOLE natal chart — the
+/// strongest aspect it makes to any natal point (DR-ENV-7). This IS "computed
+/// against the personal invariants": a condition transforms insofar as it engages
+/// the natal pattern ANYWHERE, not only at the Sun.
+fn aspect_strength(condition_degree: f32, natal: &NatalReference) -> f32 {
+    natal
+        .points
+        .iter()
+        .map(|&p| aspect_strength_to_point(condition_degree, p))
         .fold(0.0, f32::max)
 }
 
@@ -102,13 +129,13 @@ fn element_axis(degree: f32) -> usize {
 /// influence", transforming nothing, never a fabricated pull.
 pub fn derive_env_quaternion(
     conditions: &[EnvironmentalCondition],
-    natal: NatalReference,
+    natal: &NatalReference,
 ) -> [f32; 4] {
     // accumulate weighted element mass on [w, x, y, z]
     let mut elem = [0.0f32; 4];
     let mut total = 0.0f32;
     for c in conditions {
-        let weight = c.magnitude * c.sensitivity * aspect_strength(c.degree, natal.sun_degree);
+        let weight = c.magnitude * c.sensitivity * aspect_strength(c.degree, natal);
         if weight <= 0.0 {
             continue;
         }
@@ -139,30 +166,27 @@ mod tests {
 
     #[test]
     fn no_conditions_is_the_identity_rotation_never_a_fabricated_pull() {
-        assert_eq!(
-            derive_env_quaternion(&[], NatalReference { sun_degree: 0.0 }),
-            IDENTITY
-        );
+        assert_eq!(derive_env_quaternion(&[], &NatalReference::sun(0.0)), IDENTITY);
     }
 
     #[test]
     fn a_condition_in_conjunction_to_natal_transforms_on_its_element_axis() {
         // Pluto at 10° Aries (Fire → x), exact conjunction to a natal Sun at 10°
-        let env = derive_env_quaternion(&[planet(10.0)], NatalReference { sun_degree: 10.0 });
+        let env = derive_env_quaternion(&[planet(10.0)], &NatalReference::sun(10.0));
         assert_eq!(env, [0.0, 1.0, 0.0, 0.0]); // full weight on the x (Fire) axis
     }
 
     #[test]
     fn a_square_aspect_still_engages_the_natal_pattern() {
         // Pluto at 10°, natal Sun at 100° → separation 90° (a square) → in aspect
-        let env = derive_env_quaternion(&[planet(10.0)], NatalReference { sun_degree: 100.0 });
+        let env = derive_env_quaternion(&[planet(10.0)], &NatalReference::sun(100.0));
         assert_ne!(env, IDENTITY);
     }
 
     #[test]
     fn out_of_aspect_is_no_transform_the_condition_does_not_engage_natal() {
         // separation 35° — no major aspect within orb → no transform (DR-ENV-7)
-        let env = derive_env_quaternion(&[planet(10.0)], NatalReference { sun_degree: 45.0 });
+        let env = derive_env_quaternion(&[planet(10.0)], &NatalReference::sun(45.0));
         assert_eq!(env, IDENTITY);
     }
 
@@ -170,7 +194,7 @@ mod tests {
     fn zero_sensitivity_mutes_a_condition_entirely() {
         let mut c = planet(10.0);
         c.sensitivity = 0.0;
-        let env = derive_env_quaternion(&[c], NatalReference { sun_degree: 10.0 });
+        let env = derive_env_quaternion(&[c], &NatalReference::sun(10.0));
         assert_eq!(env, IDENTITY);
     }
 
@@ -183,10 +207,7 @@ mod tests {
             magnitude: 1.0,
             sensitivity: 1.0,
         };
-        let env = derive_env_quaternion(
-            &[planet(10.0), neptune],
-            NatalReference { sun_degree: 10.0 },
-        );
+        let env = derive_env_quaternion(&[planet(10.0), neptune], &NatalReference::sun(10.0));
         // natal Sun at 10°: Pluto conjunct (sep 0), Neptune at sep 90 (square) — both engage
         let mag = (env.iter().map(|v| v * v).sum::<f32>()).sqrt();
         assert!((mag - 1.0).abs() < 1e-5, "env must be unit, got mag {mag}");
@@ -195,10 +216,10 @@ mod tests {
     #[test]
     fn derivation_is_deterministic_under_the_same_conditions_and_natal() {
         let conds = [planet(10.0), planet(100.0)];
-        let natal = NatalReference { sun_degree: 10.0 };
+        let natal = NatalReference::sun(10.0);
         assert_eq!(
-            derive_env_quaternion(&conds, natal),
-            derive_env_quaternion(&conds, natal)
+            derive_env_quaternion(&conds, &natal),
+            derive_env_quaternion(&conds, &natal)
         );
     }
 
@@ -206,15 +227,44 @@ mod tests {
     fn sensitivity_gains_relative_presence_across_conditions() {
         // two conditions on different axes; raising one's sensitivity biases the
         // env toward its axis — proving sensitivity is a real gain (DR-ENV-7)
-        let natal = NatalReference { sun_degree: 10.0 };
+        let natal = NatalReference::sun(10.0);
         let fire = EnvironmentalCondition { source: ConditionSource::TranspersonalPlanet(9), degree: 10.0, magnitude: 1.0, sensitivity: 1.0 };
         let water = EnvironmentalCondition { source: ConditionSource::TranspersonalPlanet(8), degree: 100.0, magnitude: 1.0, sensitivity: 1.0 };
-        let balanced = derive_env_quaternion(&[fire, water], natal);
+        let balanced = derive_env_quaternion(&[fire, water], &natal);
         let fire_heavy = derive_env_quaternion(
             &[EnvironmentalCondition { sensitivity: 4.0, ..fire }, water],
-            natal,
+            &natal,
         );
         // x (Fire) share grows when Fire's sensitivity is raised
         assert!(fire_heavy[1] > balanced[1]);
+    }
+
+    // --- P2: the full natal chart, not only the Sun (DR-ENV-7 richer reference) ---
+
+    #[test]
+    fn a_condition_engages_a_non_sun_natal_point_the_sun_only_anchor_would_miss() {
+        // Pluto at 10° makes NO major aspect to a natal Sun at 45° (sep 35), but an
+        // exact conjunction to a natal Moon at 10°. The full chart engages it; the
+        // Sun-only anchor reads no transform — the P2 richer-reference payoff.
+        let sun_only = derive_env_quaternion(&[planet(10.0)], &NatalReference::sun(45.0));
+        assert_eq!(sun_only, IDENTITY, "Sun-only anchor: out of aspect");
+        let full_chart =
+            derive_env_quaternion(&[planet(10.0)], &NatalReference::from_points(vec![45.0, 10.0]));
+        assert_ne!(full_chart, IDENTITY, "full chart: the natal Moon conjunction engages");
+    }
+
+    #[test]
+    fn an_empty_natal_chart_has_no_invariant_so_nothing_engages() {
+        // no personal invariant to aspect against → honest no-transform (DR-ENV-7)
+        let env = derive_env_quaternion(&[planet(10.0)], &NatalReference::from_points(vec![]));
+        assert_eq!(env, IDENTITY);
+    }
+
+    #[test]
+    fn the_strongest_aspect_across_points_wins_not_an_inflated_sum() {
+        // a condition exactly conjunct one natal point and squaring another takes
+        // the STRONGEST engagement (the conjunction, 1.0), never an inflated total
+        let strength = aspect_strength(10.0, &NatalReference::from_points(vec![10.0, 100.0]));
+        assert!((strength - 1.0).abs() < 1e-6, "max aspect is the exact conjunction");
     }
 }
