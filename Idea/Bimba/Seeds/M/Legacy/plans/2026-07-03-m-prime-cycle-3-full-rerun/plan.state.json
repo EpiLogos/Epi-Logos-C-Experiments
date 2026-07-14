@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T09:56:20.763Z",
+  "updatedAt": "2026-07-14T10:02:17.541Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11527,16 +11527,33 @@
       "worktree": null
     },
     "44.T44.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T10:02:17.525Z",
+      "claimedAt": "2026-07-14T09:56:44.171Z",
+      "completedAt": "2026-07-14T10:02:17.525Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T10:02:17.525Z",
+          "text": "Verify-first + baseline gap-close: the Surface-Standard section is landed in the materialized contract (ui-foundation-principles.md:17 with the per-principle obligation table :33 mapping the standard onto the 9 Foundation Principles per M5-seed §IX) and both design-recon cross-refs exist (15-ui-design-foundations 3 refs, 30-design-language-layer 1 ref). Gap closed: the BlockHost visual-regression baseline (feeds G8) — new spec (e) boots the real face, opens the Review fold, and pins the fixture-blocks render (catalog chrome, owner attribution, affordance strips) to a committed darwin baseline via the suite stylePath mask; generated then re-verified stable without the update flag; 26/26 e2e in-gate. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/visual-regression.spec.ts (5 passed — NEW spec (e): the Review fold renders the fixture blocks through BlockHost to a committed darwin baseline, stable across generate + verify runs) ; node .codex/scripts/verify-tranche.mjs 44.T44.9 --owner fable-c-verify — UF gate PASS (app-ui-flow playwright 26/26 incl. the new baseline spec, app-test 570, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 86, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1354,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md",
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/block-host-review-fold-darwin.png",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.9.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T09:56:44.171Z",
+      "runId": "20260714T095644Z-44-T44.9",
       "worktree": null
     },
     "44.T44.10": {
@@ -15911,6 +15928,16 @@
       "leaseExpiresAt": "2026-07-14T10:37:15.039Z",
       "worktree": null,
       "completedAt": "2026-07-14T09:56:20.747Z"
+    },
+    {
+      "runId": "20260714T095644Z-44-T44.9",
+      "taskId": "44.T44.9",
+      "status": "done",
+      "startedAt": "2026-07-14T09:56:44.171Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T11:56:44.171Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T10:02:17.525Z"
     }
   ],
   "activeRoute": {

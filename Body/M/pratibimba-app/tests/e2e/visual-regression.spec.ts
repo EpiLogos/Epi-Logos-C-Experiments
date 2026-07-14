@@ -472,3 +472,24 @@ test('(d) integrated 4-5-0 personal composition: honest current surface baseline
         stylePath: HIDE_VOLATILE_CSS
     });
 });
+
+test('(e) block-host standard: the Review fold renders the fixture blocks to a stable baseline (44.T44.9, feeds G8)', async ({
+    page
+}) => {
+    // The Track-44 surface standard's visual baseline: the omni Review fold
+    // hosts the synthetic-fixture blocks (deterministic content by
+    // construction) through BlockHost — catalog acceptance chrome, owner
+    // attribution, affordance strips. Live-tick chrome rides the mask CSS.
+    await bootConnected(page);
+    await page
+        .locator('.face-active .flexlayout__border_button', { hasText: 'Review' })
+        .click();
+    const host = page.locator('.face-active [data-testid="block-host"]');
+    await expect(host).toBeVisible({ timeout: 15_000 });
+    await expect(
+        page.locator('.face-active [data-block-type="review-item"]').first()
+    ).toBeVisible();
+    await expect(host).toHaveScreenshot('block-host-review-fold.png', {
+        stylePath: HIDE_VOLATILE_CSS
+    });
+});
