@@ -71,6 +71,30 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
     const clockField = page.getByTestId('engine-clock-field');
     await expect(clockField).toHaveAttribute('data-hop', /\d+>\d+/, { timeout: 20_000 });
     await expect(clockField).toContainText(/hop \d+→\d+/);
+
+    // lens digit polish: the ground-gearing readout CONSUMES the kernel's
+    // Fibonacci-Ground Pisano digit off the live profile (phase_space.rs
+    // pisano60_digit, degree360/6) — phase-space always rides a live tick (the
+    // pentadic overlay above already proves it ready), so the digit is present
+    // and honest (data-pisano-digit is a real 0-9, never fabricated).
+    const ground = page.getByTestId('engine-ground-gearing');
+    await expect(ground).toHaveAttribute('data-pisano-digit', /^[0-9]$/, { timeout: 20_000 });
+    await expect(ground).toContainText('φ');
+
+    // kairos tier strip (DR-FIB-3 carrier endpoint): the strip is ALWAYS in one
+    // honest state — a resolved tier badge (realtime|kairotic) when a live sky
+    // rides the bus, else the "kairos pending" indicator. Never both, never a
+    // fabricated or dead decay window. (e2e kairos-cache freshness is not
+    // guaranteed, so the tier badge is asserted by CONTRACT when present.)
+    const kairosMode = page.getByTestId('engine-kairos-mode');
+    if ((await kairosMode.count()) > 0) {
+        await expect(kairosMode).toHaveAttribute('data-mode', /^(realtime|kairotic)$/);
+        await expect(kairosMode).toContainText(/realtime sky|kairotic · decays \d/);
+    } else {
+        await expect(
+            page.locator('.face-active .engine-degradation', { hasText: 'kairos pending' })
+        ).toBeVisible();
+    }
 });
 
 test('cosmic face: the M1 played-torus renders the ananda vortex live off the bus (T2.6)', async ({
