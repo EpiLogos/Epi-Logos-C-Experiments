@@ -83,6 +83,18 @@ Adjudication evidence (recorded, not ceremonial): Third Spanda five forms + exec
 
 ---
 
+## DR-M0-4 — Image-assets-on-nodes schema slot (`c_1_asset_uri` / `c_1_asset_kind`)
+
+**Status:** VALIDATED  ·  **Validated:** 2026-07-14  ·  **By:** user (session ruling: "clearly matter of design, not decision needed... just design properly")  ·  **Resolution:** DR-M0-4 resolves that the load-bearing asset schema slot is design work, not a gated architectural decision. `c_1_asset_uri` (StringList) + `c_1_asset_kind` land in graph-schema as designed; the dataset-import lift (`append_asset_field_mapping`) and the M0 inspector render slot (carrier `m0AssetHandles.ts`) proceed. Companion ruling (same session): cover imagery for Map nodes is **own-generated SVGs** — never fetched external assets — feeding the same `c_1_asset_uri` seam (48.T48.3 worked example).
+
+**Action:** None beyond the landed substrate — 09.T9.3 closes on it; 48.T48.3 consumes the seam for the M2-1 worked example.
+
+**Verification:** `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots` (the lift lives in dataset_import/property_mapping.rs; graph-services is workspace-excluded); carrier `npx vitest run src/panes/m0AssetHandles.test.ts` (4/4); slots in graph-schema properties.rs + coordinate_law.rs.
+
+**Depends:** Tranches **09.3**, **48.3**.
+
+---
+
 ## DR-M1-1 — Audit and downgrade residual `M0-Anuttara-witness` wording
 
 **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Standing invariant. The +1 parent of the matheme spine is **M1-5**, never M0. Substrate (`m1.h:526-551` with `TORUS_GENUS=1`, `DOUBLE_COVER_DEG=720`, `RING_QUATERNION_LUT[12]`) already carries this. Sweep doc.

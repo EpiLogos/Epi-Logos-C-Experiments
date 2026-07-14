@@ -1,0 +1,53 @@
+{
+  "runId": "20260714T152246Z-09-T9.3",
+  "taskId": "09.T9.3",
+  "startedAt": "2026-07-14T15:22:46.262Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T16:22:46.262Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T9.3",
+    "trackId": "09",
+    "tranche": "T9.3",
+    "title": "Image-assets-on-nodes schema slot + dataset-import path",
+    "effort": null,
+    "file": "09-integrated-bimba-graph-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
+    "dependsOn": [
+      "09.T9.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "Idea/Pratibimba/System/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-13T23:25:49.317Z",
+        "text": "PARTIAL (honest split, fable-c 2026-07-14): IMPLEMENTATION FULLY LANDED and behaviorally green — c_1_asset_uri (StringList) + c_1_asset_kind in graph-schema (properties.rs + coordinate_law.rs, committed at HEAD); dataset-import lift via append_asset_field_mapping with fresh proof lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots 1/1; M0 inspector render slot landed carrier-side (pratibimba-app m0AssetHandles.ts, fresh 4/4). OPEN LEG — the tranche gates this load-bearing schema slot behind candidate DR-M0-4 / explicit user final-validation, and DR-M0-4 is ABSENT from the decision register (never proposed or ratified). The substrate preceded its ratification. Needs Architect: ratify DR-M0-4 (or supersede) then this closes as done; the same asset seam feeds the 48.T48.3 M2-1 cover-image gap (cards view could key c_1_asset_uri instead of the producer-less c_1_symbol_image). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+      },
+      {
+        "at": "2026-07-14T13:15:23.204Z",
+        "text": "BLOCKED on Architect (flip from review, fable-c 2026-07-14): implementation fully landed + behaviorally green at HEAD (c_1_asset_uri/c_1_asset_kind schema slots, dataset-import lift 1/1, m0AssetHandles carrier slot 4/4) — the ONLY open leg is candidate DR-M0-4 which is absent from the decision register; the tranche gates the load-bearing schema slot behind explicit user sign-off. Needs Architect: propose/accept DR-M0-4 (or supersede); then this closes as done. Same asset seam feeds the 48.T48.3 M2-1 cover-image gap. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+      },
+      {
+        "at": "2026-07-14T15:22:46.069Z",
+        "text": "REQUEUE from blocked (fable-c 2026-07-14): the Architect gate cleared — user session ruling recorded as DR-M0-4 in the decision register (asset slot = design work; own-generated SVGs for Map imagery). Implementation was already landed and green; re-verify fresh and close."
+      }
+    ],
+    "claimedAt": "2026-07-13T23:23:55.351Z",
+    "completedAt": null,
+    "owner": "fable-c",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-13T23:25:49.317Z",
+    "runId": "20260713T232355Z-09-T9.3",
+    "worktree": null,
+    "carrier": "CARRIER: gnostic/graph panes + `epi know`/`epi canon` knowledge surfaces (none landed). SUBSTRATE: graph-services single :Bimba label + four namespaces, governed-route writes only. Zero done. §2 track 09."
+  }
+}

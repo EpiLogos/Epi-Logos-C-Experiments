@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T13:54:50.427Z",
+  "updatedAt": "2026-07-14T15:28:22.220Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -3159,10 +3159,10 @@
       "worktree": null
     },
     "09.T9.3": {
-      "status": "blocked",
-      "updatedAt": "2026-07-14T13:15:23.204Z",
-      "claimedAt": "2026-07-13T23:23:55.351Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-14T15:28:22.203Z",
+      "claimedAt": "2026-07-14T15:22:46.262Z",
+      "completedAt": "2026-07-14T15:28:22.203Z",
       "evidence": [
         {
           "at": "2026-07-13T23:25:49.317Z",
@@ -3171,13 +3171,33 @@
         {
           "at": "2026-07-14T13:15:23.204Z",
           "text": "BLOCKED on Architect (flip from review, fable-c 2026-07-14): implementation fully landed + behaviorally green at HEAD (c_1_asset_uri/c_1_asset_kind schema slots, dataset-import lift 1/1, m0AssetHandles carrier slot 4/4) — the ONLY open leg is candidate DR-M0-4 which is absent from the decision register; the tranche gates the load-bearing schema slot behind explicit user sign-off. Needs Architect: propose/accept DR-M0-4 (or supersede); then this closes as done. Same asset seam feeds the 48.T48.3 M2-1 cover-image gap. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T15:22:46.069Z",
+          "text": "REQUEUE from blocked (fable-c 2026-07-14): the Architect gate cleared — user session ruling recorded as DR-M0-4 in the decision register (asset slot = design work; own-generated SVGs for Map imagery). Implementation was already landed and green; re-verify fresh and close."
+        },
+        {
+          "at": "2026-07-14T15:28:22.203Z",
+          "text": "CLOSED on the user gate clearing: implementation was fully landed at HEAD (c_1_asset_uri StringList + c_1_asset_kind in graph-schema properties.rs:1285/1293 with the coordinate_law asset test :295; dataset-import lift via append_asset_field_mapping; carrier m0AssetHandles render slot) — the sole open leg was the missing decision gate, now recorded as DR-M0-4 VALIDATED in the register (user session ruling 2026-07-14: asset slot is design work; companion ruling: Map cover imagery = own-generated SVGs, never fetched). Fresh proofs: lift 1/1, carrier 4/4, class gate PASS incl graph-live by fable-c-verify. The same c_1_asset_uri seam now feeds the 48.T48.3 M2-1 worked example. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots (1 passed / 0 failed — dataset-import lift of seal/sigil/glyph keys into c_1_asset_uri/c_1_asset_kind slots) ; npx vitest run src/panes/m0AssetHandles.test.ts from Body/M/pratibimba-app (4 passed / 0 failed — M0 inspector render slot) ; node .codex/scripts/verify-tranche.mjs 09.T9.3 --owner fable-c-verify — class gate PASS incl graph-live (live Neo4j read via gateway), gateway 88, gateway-contract 86, ta-onta 451, live-wire spawned-gateway, honesty-lint clean",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-schema/src/properties.rs",
+              "Body/S/S2/graph-schema/src/coordinate_law.rs",
+              "Body/M/pratibimba-app/src/panes/m0AssetHandles.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-13T23:25:49.317Z",
-      "runId": "20260713T232355Z-09-T9.3",
+      "heartbeatAt": "2026-07-14T15:22:46.262Z",
+      "runId": "20260714T152246Z-09-T9.3",
       "worktree": null
     },
     "09.T9.4": {
@@ -16231,6 +16251,16 @@
       "leaseExpiresAt": "2026-07-14T15:49:46.802Z",
       "worktree": null,
       "completedAt": "2026-07-14T13:54:50.412Z"
+    },
+    {
+      "runId": "20260714T152246Z-09-T9.3",
+      "taskId": "09.T9.3",
+      "status": "done",
+      "startedAt": "2026-07-14T15:22:46.262Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T16:22:46.262Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T15:28:22.203Z"
     }
   ],
   "activeRoute": {
