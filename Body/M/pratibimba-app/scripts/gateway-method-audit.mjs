@@ -27,7 +27,7 @@ import WebSocket from 'ws';
 const appRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const repoRoot = resolve(appRoot, '..', '..', '..');
 const EPI_BIN =
-    process.env.EPI_BIN ?? join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+    process.env.EPI_BIN ?? join(repoRoot, 'target', 'debug', 'epi'); // shared-target pool (.cargo/config.toml)
 const PLAN_FOLDERS = [
     join(repoRoot, 'Idea', 'Bimba', 'Seeds', 'M', 'Legacy', 'plans', '2026-07-03-m-prime-cycle-3-full-rerun'),
     join(repoRoot, 'Idea', 'Bimba', 'Seeds', 'M', 'Legacy', 'plans', '2026-06-02-m-prime-cycle-3-design-reconciliation'),

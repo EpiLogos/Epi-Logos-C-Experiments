@@ -83,6 +83,7 @@ Cycle 3 died of tests that asserted contract strings instead of running systems.
 - **The mark path fails closed (2026-07-06 hardening).** `m-dev-plan-assess.mjs --mark <id> --status done` is REFUSED without: a structured `--receipt` (real command, exit 0, 0 failures); a fresh PASS verification record whose `verifier-owner` differs from the closing `--owner`; every cited `DR-*` id existing in the decision registers (VALIDATED claims machine-checked); no quarantined dependency; and class-appropriate proof per `plan.runs/verification-classes.json` — UF (UI-flow) tracks need playwright/`test:e2e`/boot-smoke proof, W (wire) tracks need live-wire/gateway proof. `--status quarantine` auto-propagates `audit_required` to every dependent that trusted the task; audit_required tasks are the claimable re-verification queue. Claims refuse on a stale NOW (another day) and on a dirty tree over the limit (`--allow-dirty` is recorded).
 - **Real-UI gate (macOS-shaped):** `tauri-driver` does not support macOS, so the UI truth layer is Playwright driving the Vite frontend in real Chromium against a REAL spawned gateway (`pnpm test:e2e` in `Body/M/pratibimba-app`, verify-all suite `app-ui-flow`), with Tauri IPC shimmed to a real-filesystem temp-vault sidecar; the Tauri shell itself is covered by `pnpm smoke` (suite `app-smoke`). Both run inside verify-all.
 - **Recon before build, now gated (T11):** `node .codex/scripts/gateway-method-gate.mjs` (the `gateway-methods` suite) regenerates `plan.runs/gateway-method-audit.json` against a REAL spawned gateway and holds it to the expected-present ratchet (`plan.runs/gateway-method-expected-present.json`): a method a track marks done is ratcheted and may never be absent again. A track landing a gateway method MUST add its ratchet entry (`claimedBy`). Consult the table, never a plan's claim.
+- **One shared cargo pool (2026-07-14, user-ratified after the ENOSPC postmortem):** the repo-root `.cargo/config.toml` points EVERY workspace at `REPO_ROOT/target` — the repo's 13+ cargo workspaces share one artifact pool instead of thirteen private ones (which grew to ~80G unswept and filled the disk mid-gate). The debug `epi` binary lives at `target/debug/epi` (live-wire, gateway-method-audit, and the verify-all orphan sweep all resolve it there; `EPI_BIN` overrides). Hygiene: `.codex/scripts/target-sweep.sh` (report / `--clean` / `--clean-over-gb N`; refuses while `.codex/verify.lock` is held).
 
 ## Child DOX Index
 
@@ -195,7 +196,7 @@ Spanda — the primordial vibration that is simultaneously the outward surge (ex
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (52159 symbols, 111330 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (53880 symbols, 115126 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

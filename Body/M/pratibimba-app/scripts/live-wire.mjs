@@ -37,7 +37,7 @@ const appRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const repoRoot = resolve(appRoot, '..', '..', '..');
 const SCHEMAS_ROOT = join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'schemas');
 const DEFAULT_EPI_BIN =
-    process.env.EPI_BIN ?? join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+    process.env.EPI_BIN ?? join(repoRoot, 'target', 'debug', 'epi'); // shared-target pool (.cargo/config.toml)
 const DEFAULT_CAPTURE_DIR = join(
     repoRoot,
     'Idea', 'Bimba', 'Seeds', 'M', 'Legacy', 'plans',

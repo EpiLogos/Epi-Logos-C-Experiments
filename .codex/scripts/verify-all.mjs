@@ -440,13 +440,18 @@ export function formatTable(results) {
  * Detect them from `ps` output; main() kills them loudly before suites run.
  */
 export function parseOrphanGateways(psOutput, repoRoot = REPO_ROOT) {
-  const needle = `${repoRoot}/Body/S/S0/epi-cli/target/debug/epi`;
+  // Both binary homes: the shared-target pool (repo-root .cargo/config.toml,
+  // 2026-07-14) and the legacy per-crate path (strays predating the switch).
+  const needles = [
+    `${repoRoot}/target/debug/epi`,
+    `${repoRoot}/Body/S/S0/epi-cli/target/debug/epi`,
+  ];
   const orphans = [];
   for (const line of psOutput.split("\n")) {
     const match = line.match(/^\s*(\d+)\s+1\s+(.*)$/);
     if (!match) continue;
     const command = match[2].trim();
-    if (command.startsWith(needle) && /\bgate\b.*\bstart\b/.test(command)) {
+    if (needles.some((needle) => command.startsWith(needle)) && /\bgate\b.*\bstart\b/.test(command)) {
       orphans.push({ pid: Number(match[1]), command });
     }
   }

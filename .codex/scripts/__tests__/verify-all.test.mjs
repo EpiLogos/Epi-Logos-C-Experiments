@@ -172,12 +172,17 @@ test("parseOrphanGateways finds orphaned debug-binary gateways only", async () =
   const psOutput = [
     "  PID  PPID COMMAND",
     "44237     1 /repo/Body/S/S0/epi-cli/target/debug/epi --json gate start --port 18832",
-    "50001   322 /repo/Body/S/S0/epi-cli/target/debug/epi gate start --port 18999",
+    "44300     1 /repo/target/debug/epi gate start --port 18832",
+    "50001   322 /repo/target/debug/epi gate start --port 18999",
     "50002     1 /usr/local/bin/epi gate start --port 18794",
-    "50003     1 /repo/Body/S/S0/epi-cli/target/debug/epi agent doctor",
+    "50003     1 /repo/target/debug/epi agent doctor",
   ].join("\n");
   const orphans = parseOrphanGateways(psOutput, "/repo");
-  assert.deepEqual(orphans, [{ pid: 44237, command: "/repo/Body/S/S0/epi-cli/target/debug/epi --json gate start --port 18832" }]);
+  // Both binary homes match: the shared-target pool and the legacy per-crate path.
+  assert.deepEqual(orphans, [
+    { pid: 44237, command: "/repo/Body/S/S0/epi-cli/target/debug/epi --json gate start --port 18832" },
+    { pid: 44300, command: "/repo/target/debug/epi gate start --port 18832" },
+  ]);
 });
 
 test("formatTable renders one row per suite with result column", () => {

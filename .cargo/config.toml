@@ -1,0 +1,17 @@
+# ONE shared cargo artifact pool for every workspace in the repo
+# (user-ratified 2026-07-14, ENOSPC postmortem).
+#
+# The repo holds 13+ independent cargo workspaces (epi-cli, graph-services,
+# gateway, gateway-contract, the S5 crates, ...). With per-workspace target/
+# dirs each compiled its own private copy of the dependency tree and cargo's
+# no-eviction policy grew the total to ~80G. Cargo resolves this config for
+# every invocation anywhere under the repo root, so all workspaces now share
+# REPO_ROOT/target — one dependency pool, one place to sweep
+# (.codex/scripts/target-sweep.sh).
+#
+# NOTE: paths in cargo config are resolved relative to the directory that
+# contains the `.cargo` directory — i.e. the repo root — regardless of the
+# cwd cargo is invoked from.
+
+[build]
+target-dir = "target"
