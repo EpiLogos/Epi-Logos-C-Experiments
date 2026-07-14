@@ -17,10 +17,12 @@ use epi_logos::gate::{
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
 use epi_logos::profile::{run as run_profile_command, ProfileCmd};
+use epi_s3_gateway_contract::{assert_being_pattern_public_safe, being_pattern_acceptance_replay};
 use portal_core::{
-    compute_aspects, kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, EventPrivacyClass,
-    KernelProfileObservationEvent, KleinFlipEvent, MPrimePerformanceEvent, MathemeHarmonicProfile,
-    PortalClockState, VakAddress, Valence,
+    compute_aspects, kernel_tick_from_epogdoon, CpfState, CsDirection, CsField,
+    ElementalWeightProjection, EventPrivacyClass, KernelProfileObservationEvent, KleinFlipEvent,
+    MPrimePerformanceEvent, MathemeHarmonicProfile, PlanetaryElementContribution, PortalClockState,
+    VakAddress, Valence,
 };
 use serde_json::{json, Value};
 
@@ -682,6 +684,100 @@ fn kernel_bridge_surfaces_m2_planetary_elemental_weights_for_fixed_kairos() {
     assert!((edge["weights"]["air"].as_f64().unwrap() - (14739.0 / total)).abs() < 1e-4);
     assert_eq!(edge["weights"]["fire"].as_f64().unwrap(), 0.0);
     assert_eq!(edge["weights"]["earth"].as_f64().unwrap(), 0.0);
+}
+
+/// 37.T37.4 — Export the M2 elemental + cymatic contributions so the kernel-bridge
+/// can route them to PASU `elemental_weights` / M4 `bioquaternion_handles`.
+///
+/// The export/routing leg adjacent to the elemental (37.2) and cymatic (37.3)
+/// projections. Retargeted to substrate (epi-theia frozen): epi-theia's
+/// `M2ElementalWeightContribution` composition export is homed in
+/// `portal_core::PlanetaryElementContribution` + the shared `ElementalWeightProjection`
+/// type. This pins the routing the design vision names — the bridge-exported
+/// elemental feed's `weights` IS the exact `ElementalWeightProjection` field type
+/// PASU `elemental_weights` requires (no reshape), each `perPlanet` entry is the
+/// contribution export, the cymatic MonoPoly state is co-exported, and the routed
+/// cosmic-public feed lands in a real being-pattern projection and stays public-safe
+/// (§7 scope discipline) — all bridge-mediated, never a direct composition import.
+#[test]
+fn m2_elemental_and_cymatic_contributions_export_and_route_to_pasu() {
+    // Fixed kairos (mirrors the 37.2 edge fixture): Moon@100 + Venus@100 share the
+    // water element and form an exact conjunction; Mercury@250 is air. Sun (0) is
+    // left unset — the excluded 9:8 epogdoon identity root.
+    let mut state = PortalClockState::default();
+    state.kairos.planets[1].degree = 100;
+    state.kairos.planets[3].degree = 100;
+    state.kairos.planets[2].degree = 250;
+
+    // --- Elemental contribution export at the bridge edge ---
+    let elemental_edge = typed_json_m2_planetary_elemental_weights(&state);
+    assert_eq!(
+        elemental_edge["contract"],
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS
+    );
+    assert_eq!(elemental_edge["source"], "kernel-bridge");
+
+    // The bridge `weights` object deserialises into the EXACT PASU field type: the
+    // elemental contribution routes to `elemental_weights` with no reshape, and
+    // re-serialises byte-identically to the wire the bridge emitted.
+    let routed_weights: ElementalWeightProjection =
+        serde_json::from_value(elemental_edge["weights"].clone())
+            .expect("bridge weights routes into the PASU ElementalWeightProjection field type");
+    assert_eq!(
+        serde_json::to_value(routed_weights).unwrap(),
+        elemental_edge["weights"],
+        "routed elemental weights round-trip byte-identically to the bridge export"
+    );
+
+    // Each `perPlanet` entry IS the contribution export (planetId / element /
+    // couEnergy) — the substrate home of epi-theia's frozen M2ElementalWeightContribution.
+    let contributions: Vec<PlanetaryElementContribution> =
+        serde_json::from_value(elemental_edge["perPlanet"].clone())
+            .expect("perPlanet routes into the PlanetaryElementContribution export");
+    assert!(!contributions.is_empty());
+    assert!(
+        contributions.iter().all(|c| c.planet_id != 0),
+        "Sun is excluded from the contribution export"
+    );
+
+    // --- Route the export into a REAL PASU being-pattern projection ---
+    // The M2 planetary-elemental feed is cosmic-public (§7 scope discipline), so it
+    // routes into `elemental_weights` and the projection stays public-safe.
+    let mut replay = being_pattern_acceptance_replay();
+    replay.user_projection.elemental_weights = routed_weights; // <-- the routing edge
+    let pasu_wire = serde_json::to_value(&replay.user_projection).unwrap();
+    assert_eq!(
+        pasu_wire["elementalWeights"], elemental_edge["weights"],
+        "the M2 elemental contribution routes through to PASU elemental_weights on the wire"
+    );
+    // Water-dominant kairos (Moon+Venus conjunction) survives into PASU.
+    let water = pasu_wire["elementalWeights"]["water"].as_f64().unwrap();
+    assert!(water > 0.5, "water-dominant M2 feed routes to PASU: {water}");
+    assert_eq!(pasu_wire["elementalWeights"]["fire"].as_f64().unwrap(), 0.0);
+    // The routed cosmic-public feed keeps the being-pattern projection public-safe.
+    assert_being_pattern_public_safe(&pasu_wire)
+        .expect("routed cosmic-public elemental feed keeps PASU public-safe");
+    // The M4 bioquaternion handle slot is the protected co-consumer the feed routes
+    // alongside — present as an opaque handle, never raw quaternion data.
+    assert!(
+        !replay.user_projection.bioquaternion_handles.is_empty(),
+        "PASU carries the M4 bioquaternion_handles the feed routes alongside"
+    );
+
+    // --- Cymatic contribution co-export at the bridge edge ---
+    let cymatic_edge = typed_json_m2_cymatic_monopoly_state(31);
+    assert_eq!(
+        cymatic_edge["contract"],
+        KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE
+    );
+    assert_eq!(cymatic_edge["source"], "kernel-bridge");
+    // The MonoPoly wave-behaviour is a routable signal co-exported with the feed.
+    assert_eq!(cymatic_edge["behaviourState"], "monopoly");
+
+    // --- Both contributions are dispatched THROUGH the bridge runtime (never a
+    // direct composition import): the capability registry names both edges. ---
+    assert!(capability_names().contains(&KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS));
+    assert!(capability_names().contains(&KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE));
 }
 
 /// INVERSION of the retired `..._uses_parashakti_deep_dataset` contract. That

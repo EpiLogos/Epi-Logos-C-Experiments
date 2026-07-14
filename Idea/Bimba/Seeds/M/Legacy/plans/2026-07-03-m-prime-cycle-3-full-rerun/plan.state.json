@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:33:25.406Z",
+  "updatedAt": "2026-07-14T07:38:54.940Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10056,14 +10056,29 @@
       "worktree": null
     },
     "37.T37.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T16:09:24.256Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:38:54.924Z",
       "claimedAt": "2026-07-13T16:09:24.256Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:38:54.924Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:38:54.924Z",
+          "text": "Closed uc-3704 abandoned-but-verified 37.T37.4 (export M2 elemental + cymatic contributions). M2 elemental/cymatic exports are committed in portal-core; uc-3704 contract test m2_elemental_and_cymatic_contributions_export_and_route_to_pasu (kernel_bridge_runtime_contract.rs) proves export homing + PASU routing. RE-VERIFIED FRESH on the current tree (not the stale record): 23/23 green. Independent PASS by fable-c-verifier != closer (16:47 batch, verify-all full gate which compiles+runs epi-cli). Landing uc-3704 uncommitted contract test.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract",
+            "exitCode": 0,
+            "testsPassed": 23,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs",
+              "Body/S/S0/portal-core/src/kernel.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-3704",
-      "leaseExpiresAt": "2026-07-13T20:09:24.256Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:09:24.256Z",
       "runId": "20260713T160924Z-37-T37.4",
       "worktree": null
@@ -15115,11 +15130,12 @@
     {
       "runId": "20260713T160924Z-37-T37.4",
       "taskId": "37.T37.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T16:09:24.256Z",
       "owner": "uc-3704",
       "leaseExpiresAt": "2026-07-13T20:09:24.256Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T07:38:54.924Z"
     },
     {
       "runId": "20260713T161055Z-17-T17.17",
