@@ -2,6 +2,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::codon::{classify_codon, codon_sequence};
 
+/// M2-1' chromatic MEF lens count (`M2_MEF_LENS` namespace: 12 Vimarśa
+/// anchors × `MODE_COUNT` CF-modes = 84). NOT the M3 lens-stack — the 16+1
+/// Mahāmāyā clock apertures (`M3_LENS_STACK`, `phase_space.rs`
+/// `CLOCK_LENSES_16` + the Level-0 growth aperture) are a distinct namespace
+/// that never merges with this one (DR-M3-3; M3'-SPEC §8.15 clock
+/// aperture namespaces).
 pub const LENS_COUNT: u8 = 12;
 pub const MODE_COUNT: u8 = 7;
 pub const LENS_MODE_COUNT: usize = 84;

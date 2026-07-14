@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T12:48:38.293Z",
+  "updatedAt": "2026-07-14T13:11:05.191Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7672,16 +7672,33 @@
       "worktree": null
     },
     "24.T24.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T13:11:05.156Z",
+      "claimedAt": "2026-07-14T12:50:16.741Z",
+      "completedAt": "2026-07-14T13:11:05.156Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T13:11:05.156Z",
+          "text": "Verify-first close, two gaps filled: the DR-M3-3 namespace split (register-confirmed 2026-06-02) is the carrier modulation contract itself — division IS the 16+1 M3_LENS_STACK aperture lane (CLOCK_LENSES 16 + kernel-only Fibonacci Level-0 per DR-FIB-1), tonality IS the 84-state M2_MEF chromatic lane (12x7), separate ModulationInputKeys/frames declared never-merge at types.ts:11-15; both lanes render as distinct count-labelled controls (engine-tonality '12 lens-anchorings x 7 CF-modes' CosmicEngine.tsx:1005; division cycler 'cycle the 16 clock division apertures' :1037); no silent 17-table (spec grep clean); M3'-SPEC §8.15 names M2_MEF_LENS/M3_LENS_STACK/M3_LENS_STACK_GROWTH distinctly. GAP 1 closed: LENS_COUNT=12 at codon_rotation_projection.rs:5 lacked the clarifying comment DR-M3-3 requires — added (M2-1' chromatic MEF count, cross-ref M3_LENS_STACK, DR-M3-3 + §8.15 citation), cargo check clean, GitNexus impact LOW/0 dependents. GAP 2 closed: refusal test existed one direction only — added converse test (lens/mode change leaves division frame untouched, DR-M3-3 dual refusal), modulators 26/26. DR-WC-M3-2 renderer rule applied in carrier form; its register row stays ROUTED (user decision still open, not claimed closed here). Fresh class-gate PASS by fable-c-verify. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/engine/modulation/modulators.test.ts src/panes/m3Inspectors.test.ts (34 passed / 0 failed — dual-direction non-merge refusal: division change leaves tonality untouched AND lens/mode change leaves division frame untouched; kernel labels verbatim, null-never-fabricated; lens-annulus pending chip) ; node .codex/scripts/verify-tranche.mjs 24.T24.10 --owner fable-c-verify — class gate PASS (app-test 586, app-ui-flow playwright 26/26, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 86, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 586,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/modulation/types.ts",
+              "Body/M/pratibimba-app/src/engine/modulation/modulators.test.ts",
+              "Body/S/S0/portal-core/src/codon_rotation_projection.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/24.T24.10.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T12:50:16.741Z",
+      "runId": "20260714T125016Z-24-T24.10",
       "worktree": null
     },
     "24.T24.11": {
@@ -16053,12 +16070,22 @@
       "leaseExpiresAt": "2026-07-14T14:05:43.452Z",
       "worktree": null,
       "completedAt": "2026-07-14T12:48:38.237Z"
+    },
+    {
+      "runId": "20260714T125016Z-24-T24.10",
+      "taskId": "24.T24.10",
+      "status": "done",
+      "startedAt": "2026-07-14T12:50:16.741Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T14:20:16.741Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T13:11:05.156Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T10:28:39.211Z",
-    "updatedAt": "2026-07-14T10:28:39.211Z",
+    "createdAt": "2026-07-14T12:57:01.515Z",
+    "updatedAt": "2026-07-14T12:57:01.515Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",

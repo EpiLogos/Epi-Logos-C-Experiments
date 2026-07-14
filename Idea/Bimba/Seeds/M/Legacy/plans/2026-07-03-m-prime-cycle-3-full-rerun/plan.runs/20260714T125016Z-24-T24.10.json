@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T125016Z-24-T24.10",
+  "taskId": "24.T24.10",
+  "startedAt": "2026-07-14T12:50:16.741Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T14:20:16.741Z",
+  "worktree": null,
+  "task": {
+    "id": "24.T24.10",
+    "trackId": "24",
+    "tranche": "T24.10",
+    "title": "`M1_LENS` vs `M3_LENS_STACK` namespace discipline *(contradiction-downstream; closes DR-WC-M3-2; cross-link DR-M3-3)",
+    "effort": "contradiction-downstream; closes DR-WC-M3-2; cross-link DR-M3-3",
+    "file": "24-m3-mahamaya-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
+    "dependsOn": [
+      "24.T24.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M3' inspectors in pratibimba-app (18-aperture switcher, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). NO Math.random — casts dispatch to the gateway. §2 track 24."
+  }
+}

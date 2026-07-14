@@ -173,6 +173,16 @@ describe('division modulator (the E2 engine half)', () => {
 });
 
 describe('tonality modulator (84-state namespace law)', () => {
+    it('never merges the other way: changing (lens, mode) leaves the division frame untouched (DR-M3-3 dual refusal)', () => {
+        const a = record(5, profileAt(144, { lensMode: { lens: 7, mode: 3 }, phaseSpace: kernelPhaseSpace(144) }));
+        const b = record(5, profileAt(144, { lensMode: { lens: 2, mode: 6 }, phaseSpace: kernelPhaseSpace(144) }));
+        const fa = deriveFrame(a, null, LIVE, 0, 0.5);
+        const fb = deriveFrame(b, null, LIVE, 0, 0.5);
+        expect(fb.division).toEqual(fa.division);
+        expect(fa.tonality).toMatchObject({ lens: 7, mode: 3 });
+        expect(fb.tonality).toMatchObject({ lens: 2, mode: 6 });
+    });
+
     it('never merges with the division aperture: changing the division leaves (lens, mode) untouched', () => {
         const rec = record(5, profileAt(144, { lensMode: { lens: 7, mode: 3 } }));
         const zodiacal = deriveFrame(rec, null, { ...LIVE, divisionIndex: 6 }, 0, 0.5);
