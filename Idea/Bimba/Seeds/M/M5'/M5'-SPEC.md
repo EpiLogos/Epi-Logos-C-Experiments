@@ -30,6 +30,8 @@ depends_on:
 
 It reads harmonic-profile evidence as review material, not as decorative status. It also treats the [[Epi-Logos]] corpus itself as an editable, inspectable workbench: the philosophy files at [[M5-1']], the deep [[Bimba]]/[[Gnosis]] library at [[M5-0']], the backend/frontend/agentic code surfaces at [[M5-2']] through [[M5-4']], and the [[M5-5']] [[Logos Atelier]] as the etymological archaeology engine.
 
+> **⚠ Pending canon update (2026-07-14) — harmonic-profile wire-contract field.** The `MathemeHarmonicProfile` served by the S3 gateway heartbeat gained an additive `environmentQuaternion: Option<[f32;4]>` field: the ambient environmental transform (the collective sky's transpersonal planets — Uranus/Neptune/Pluto — aspected against the PASU natal chart, composed onto the base). Attached by the heartbeat when a natal chart is cached (absent ⇒ honest "env pending") and consumed by the pratibimba-app carrier's `engine-environment` strip. Additive + `serde skip_serializing_if` — legacy payloads keep deserializing, no baseline re-bless. Governed by [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]] (P6.2, commit `a4bac986`); flagged for canon acknowledgement. **No collapse**: the env quaternion transforms the base, it is never `q_identity` (DR-ENV-1).
+
 ## Canonical Substrate Anchors
 
 M5' should expose its library and orchestration substrate directly inside the spec corpus: [[Body/S/S0/epi-lib/include/m5.h]], [[Body/S/S0/epi-lib/src/m5.c]], [[Body/S/S5/epi-gnostic/epi_gnostic/cli.py]], [[Body/S/S5/epi-kbase/src/index.ts]], [[Body/S/S5/epi-kbase-core/src/lib.rs]], [[Body/S/S5/epii-autoresearch-core/src/lib.rs]], [[Body/S/S5/epii-review-core/src/lib.rs]], and [[Body/S/S5/epii-agent-core/src/lib.rs]].
