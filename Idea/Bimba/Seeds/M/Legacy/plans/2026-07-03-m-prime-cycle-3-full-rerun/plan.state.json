@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:27:16.809Z",
+  "updatedAt": "2026-07-14T07:28:06.633Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1823,14 +1823,31 @@
       "worktree": null
     },
     "05.T5.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:22:08.261Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:28:06.618Z",
       "claimedAt": "2026-07-14T07:22:08.261Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:28:06.618Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:28:06.618Z",
+          "text": "Verify-first close, zero gap (doc-ahead path alignment): canonical day path Idea/Empty/Present/{day_id}/ is ratified in M4-SPEC (line 95 canonical store; line 423 records DR-M4-1 resolved in practice, day ids MONTH-first per Architect 2026-07-02, legacy DD-MM adopts, and the Theia-era Pratibimba/Nara path in nara-surface.ts:415-417 explicitly SUPERSEDED as frozen-warehouse reference). Carrier machine-enforces it: vault.rs WRITE_SCOPE_PREFIX = Empty/Present/ (:22) with write-scope tests, DayCalendarPane rides the same law (PRESENT const :25, DR-M4-1 header). Fresh proof: vault 4/4 + day panes 11/11. Round-trip law carried by the journal e2e (typed prose to real file bytes on the Present sidecar, standing app-ui-flow gate). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test vault (src-tauri, 4 passed / 0 failed — Empty/Present write-scope machine-enforcement incl. in_write_scope on day paths) ; npx vitest run src/panes/DayCalendarPane.test.tsx src/panes/NowPane.test.tsx (11 passed / 0 failed — day tree + NOW surface over the canonical path) ; node .codex/scripts/verify-tranche.mjs 05.T5.2 --owner fable-c-verify — gate PASS (kernel set green, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src-tauri/src/vault.rs",
+              "Idea/Bimba/Seeds/M/M4-prime/M4-prime-SPEC.md",
+              "Body/M/pratibimba-app/src/panes/DayCalendarPane.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/05.T5.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T08:52:08.261Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:22:08.261Z",
       "runId": "20260714T072208Z-05-T5.2",
       "worktree": null
@@ -15471,11 +15488,12 @@
     {
       "runId": "20260714T072208Z-05-T5.2",
       "taskId": "05.T5.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:22:08.261Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T08:52:08.261Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T07:28:06.618Z"
     },
     {
       "runId": "20260714T072410Z-43-T43.6",
