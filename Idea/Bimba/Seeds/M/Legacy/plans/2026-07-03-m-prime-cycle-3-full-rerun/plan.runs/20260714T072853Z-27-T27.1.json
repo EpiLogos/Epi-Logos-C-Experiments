@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T072853Z-27-T27.1",
+  "taskId": "27.T27.1",
+  "startedAt": "2026-07-14T07:28:53.807Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T08:58:53.807Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.1",
+    "trackId": "27",
+    "tranche": "T27.1",
+    "title": "Pi Chat tab — agentic conversational membrane with slash-command grammar",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.0"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: OmniPanel `/` membrane = EIGHT tabs = one substrate folded eight ways (has 3 of 8). Missing slash grammar + dispatch-trace/evidence/review/gateway/diagnostics + intent router + coordinate-tree left rail + governed-write path. §2 track 27."
+  }
+}

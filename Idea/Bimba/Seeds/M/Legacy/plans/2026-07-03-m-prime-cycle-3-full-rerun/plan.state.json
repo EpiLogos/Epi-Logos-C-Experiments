@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:38:54.940Z",
+  "updatedAt": "2026-07-14T07:42:14.078Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8370,14 +8370,31 @@
       "worktree": null
     },
     "27.T27.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:28:53.807Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:42:14.061Z",
       "claimedAt": "2026-07-14T07:28:53.807Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:42:14.061Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:42:14.061Z",
+          "text": "BUILT (carrier): the Pi Chat agentic membrane landed on the previously-minimal ChatPane — slash-command grammar ported from the frozen omnipanel-shell parser with provenance (pure law re-tested: verb/target/args, translate triple across arrow spellings, bare-slash null), DR-B-3 guard rejects direct /dispatch of every Aletheia subagent inline WITHOUT any wire call (test-pinned), DR-M5-1 identity narrative header + [[NOW-{session}]] anchor, actor badges, single-shot dispatch tagging (singleShot + slashVerb on chat.send), inline capability completions from the spec-named LOCAL_CAPABILITY_FALLBACK (12.10 live-capabilities seam named honestly), dispatch-genealogy + evidence chips render ONLY when history rows carry the refs (27.3/27.5 fold targets pending — never fabricated). Fresh 11/11 new; app suite 540; UF gate green incl. playwright 25/25. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/panes/ChatPane.test.tsx src/panes/omni/slashCommand.test.ts (11 passed / 0 failed — grammar law incl. DR-B-3 guard rejecting all 7 aletheia subagents with zero wire calls, translate triple across all arrow spellings, completion filtering; pane: DR-M5-1 identity header + NOW anchor, actor badges, single-shot slashVerb tagging, chips only when refs present) ; node .codex/scripts/verify-tranche.mjs 27.T27.1 --owner fable-c-verify — UF gate PASS auto-scoped (app-test 540 incl. both new suites, app-ui-flow playwright 25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1320,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/slashCommand.ts",
+              "Body/M/pratibimba-app/src/panes/ChatPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/slashCommand.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/27.T27.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T08:58:53.807Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:28:53.807Z",
       "runId": "20260714T072853Z-27-T27.1",
       "worktree": null
@@ -15539,11 +15556,12 @@
     {
       "runId": "20260714T072853Z-27-T27.1",
       "taskId": "27.T27.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:28:53.807Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T08:58:53.807Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T07:42:14.061Z"
     }
   ],
   "activeRoute": {

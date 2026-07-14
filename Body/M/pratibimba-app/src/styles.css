@@ -1271,3 +1271,44 @@ body,
   border: 1px solid #3a2c5c;
   border-radius: 6px;
 }
+
+/* ── Pi chat membrane surface (27.T27.1) ─────────────────────────── */
+
+.chat-pi-header {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid #2e2247;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.chat-pi-session {
+  margin-left: auto;
+  font-size: var(--type-micro);
+}
+
+.chat-chip {
+  display: inline-flex;
+  margin-left: 0.4rem;
+  padding: 0 0.4rem;
+  border: 1px solid #3a2c5c;
+  border-radius: 999px;
+  font-size: var(--type-micro);
+  color: var(--ink-dim);
+}
+
+.chat-completions {
+  list-style: none;
+  margin: 0 0.6rem 0.3rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-size: var(--type-body-small);
+}
+
+.chat-completion-hint {
+  color: var(--ink-dim);
+  margin-left: 0.4rem;
+}
