@@ -62,3 +62,24 @@ describe('44.3 review → blocks projection', () => {
         expect(document.querySelectorAll('[data-block-type="dispatch-genealogy"]')).toHaveLength(1);
     });
 });
+
+describe('44.4 vertical slice in the Review fold', () => {
+    it('a human verdict folds into the renderer state and dispatches the psyche update', async () => {
+        const { fireEvent } = await import('@testing-library/react');
+        const { vi } = await import('vitest');
+        const { setGateway } = await import('../../bridge/gatewayHolder');
+        const invoke = vi.fn().mockResolvedValue({ artifact: { ok: true } });
+        setGateway({ invoke } as never);
+        try {
+            render(<ReviewBlocksPane />);
+            fireEvent.click(screen.getByTestId('review-verdict-reject'));
+            expect(screen.getByTestId('review-pending-verdict').textContent).toContain('reject');
+            const updates = invoke.mock.calls.filter(([method]) => method === "s4'.psyche.update");
+            expect(updates).toHaveLength(1);
+            const params = updates[0][1] as { patch: { renderer: { pendingVerdict: { decision: string } } } };
+            expect(params.patch.renderer.pendingVerdict.decision).toBe('reject');
+        } finally {
+            setGateway(null);
+        }
+    });
+});
