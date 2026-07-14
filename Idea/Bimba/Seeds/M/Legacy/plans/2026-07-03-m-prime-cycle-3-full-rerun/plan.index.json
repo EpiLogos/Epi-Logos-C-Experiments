@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-14T10:02:17.539Z",
+  "generatedAt": "2026-07-14T10:15:32.105Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -9839,7 +9839,7 @@
       "file": "44-pratibimba-surface-standard.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
       "dependsOn": [
-        "44.T44.1"
+        "44.T44.10"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
@@ -9966,7 +9966,9 @@
       "effort": null,
       "file": "44-pratibimba-surface-standard.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "44.T44.1"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
       ],
