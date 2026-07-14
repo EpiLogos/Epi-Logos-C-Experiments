@@ -388,6 +388,25 @@ static void test_quaternion_overlay_foundations(void) {
     TEST("matrix i axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COMPLEMENTARY].x, 1.0f));
     TEST("matrix j axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_MOVING_RESTING].y, 1.0f));
     TEST("matrix k axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_SAME_QUALITY].z, 1.0f));
+
+    /* P4 (HMS Sec.V): the three matrices ARE the quaternion imaginary units, so
+     * they must compose as the group — i*j=k, j*k=i, k*i=j, i^2=-1 — for the
+     * codon<->hexagram translation to be a genuine rotation rather than three
+     * labelled axes. */
+    Quaternion mi = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COMPLEMENTARY];
+    Quaternion mj = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_MOVING_RESTING];
+    Quaternion mk = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_SAME_QUALITY];
+    Quaternion ij = quat_mul(mi, mj);
+    TEST("i*j = k (3-matrix composition)",
+         approxf(ij.w, 0.0f) && approxf(ij.x, 0.0f) && approxf(ij.y, 0.0f) && approxf(ij.z, 1.0f));
+    Quaternion jk = quat_mul(mj, mk);
+    TEST("j*k = i (3-matrix composition)",
+         approxf(jk.w, 0.0f) && approxf(jk.x, 1.0f) && approxf(jk.y, 0.0f) && approxf(jk.z, 0.0f));
+    Quaternion ki = quat_mul(mk, mi);
+    TEST("k*i = j (3-matrix composition)",
+         approxf(ki.w, 0.0f) && approxf(ki.x, 0.0f) && approxf(ki.y, 1.0f) && approxf(ki.z, 0.0f));
+    Quaternion ii = quat_mul(mi, mi);
+    TEST("i^2 = -1 (matrix squares to the negative real)", approxf(ii.w, -1.0f));
 }
 
 static void test_codon_quaternions(void) {
