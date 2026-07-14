@@ -24,7 +24,7 @@
  * changes. `syncMapIndex` only writes when the projected bytes differ from what is on disk.
  */
 
-import { readFile, writeFile, mkdir } from 'fs/promises';
+import { access, readFile, writeFile, mkdir } from 'fs/promises';
 import { dirname, join } from 'path';
 
 import { getNeo4jConnectionManager } from '../db/neo4j.js';
@@ -55,6 +55,10 @@ export interface MapNodeSnapshot {
   children: string[];
   ancestors: string[];
   childrenBeyondDepth?: number;
+  /** Basename of an own-generated cover asset under `<mapRoot>/assets/` —
+   *  resolved by syncMapIndex from file existence (48.3; DR-M0-4: generated,
+   *  never fetched). When set, the projection carries `c_1_symbol_image`. */
+  symbolImage?: string;
 }
 
 export interface ProjectedMapIndex {
@@ -262,6 +266,7 @@ export function projectMapNode(snapshot: MapNodeSnapshot): ProjectedMapIndex {
     `c_0_related_coordinates: [${relatedUniq.map(yaml).join(', ')}]`,
     `c_3_projected_from: "neo4j://Bimba"`,
     ...(projectedAt ? [`c_3_projected_at: ${yaml(projectedAt)}`] : []),
+    ...(snapshot.symbolImage ? [`c_1_symbol_image: ${yaml(`[[${snapshot.symbolImage}]]`)}`] : []),
     `c_4_graph_node: ${yaml(`neo4j://Bimba/${canonical}`)}`,
     '---',
   ];
@@ -312,6 +317,19 @@ function emptyStats(): SyncStats {
   return { processed: 0, created: 0, updated: 0, deleted: 0, failed: 0, skipped: 0 };
 }
 
+/** Assets are inputs to the projection: `<mapRoot>/assets/<fileId>.svg`
+ *  existing on disk is what puts `c_1_symbol_image` on the node (48.3). */
+async function withSymbolImage(snapshot: MapNodeSnapshot, mapRoot: string): Promise<MapNodeSnapshot> {
+  if (snapshot.symbolImage) return snapshot;
+  const asset = `${mapIndexFileId(canonicalMapCoordinate(snapshot.coordinate))}.svg`;
+  try {
+    await access(join(mapRoot, 'assets', asset));
+    return { ...snapshot, symbolImage: asset };
+  } catch {
+    return snapshot;
+  }
+}
+
 /**
  * The graduated `map-index` sync direction. `neo4j_to_obsidian` projects live-graph nodes into their
  * `/map` files idempotently. Any UPWARD direction is refused — map-index is reflection-only and the
@@ -354,7 +372,7 @@ export async function syncMapIndex(opts: {
     for (const snapshot of snapshots) {
       stats.processed += 1;
       try {
-        const projected = projectMapNode(snapshot);
+        const projected = projectMapNode(await withSymbolImage(snapshot, mapRoot));
         const absPath = join(mapRoot, projected.relPath);
 
         let existing: string | null = null;

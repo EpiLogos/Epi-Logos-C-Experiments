@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T15:28:22.220Z",
+  "updatedAt": "2026-07-14T15:41:25.001Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12168,10 +12168,10 @@
       "worktree": null
     },
     "48.T48.3": {
-      "status": "blocked",
-      "updatedAt": "2026-07-14T13:15:23.409Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T15:41:24.977Z",
       "claimedAt": "2026-07-13T23:16:24.282Z",
-      "completedAt": null,
+      "completedAt": "2026-07-14T15:41:24.977Z",
       "evidence": [
         {
           "at": "2026-07-13T23:17:45.299Z",
@@ -12180,6 +12180,23 @@
         {
           "at": "2026-07-14T13:15:23.409Z",
           "text": "BLOCKED on Architect (flip from review, fable-c 2026-07-14): zones leg done (five working bases in functional roles); M2-1 worked-example leg needs (1) Architect content decision on cover imagery for the 36x2 MEF lenses (generate vs fetch public-domain) and (2) a contract-surface change on the generated Map projection (graph property + projector emission seam) which an agent proposes, never lands unilaterally. Read side already law (cards view keyed to c_1_symbol_image; could re-key to c_1_asset_uri if DR-M0-4 on 09.T9.3 is accepted). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T15:41:24.977Z",
+          "text": "CLOSED on the user rulings (own-generated SVGs; seam is design work per DR-M0-4): zones leg stood from the prior partial (five working bases); the M2-1 worked-example leg is now LANDED end-to-end. Deterministic sigil generator map-symbol-svg.ts (43-node M2-1 family: root = six-hue spectrum aperture + golden vesica; group nodes = hue station + six-position orbit; lenses = active aperture blade at group station + Y-fold golden motif void/axis/dyad/triad/quaternity/pentad — pure function of the coordinate, non-family input refused). Projection seam: MapNodeSnapshot.symbolImage + c_1_symbol_image wikilink emission in projectMapNode; syncMapIndex resolves from mapRoot/assets/<coord>.svg existence, so assets are durable inputs and live re-projection is zero-diff (43 nodes stamped identically by the runner, idempotence proven by double-run). Map/M2/M2-1.base cards view keyed c_1_symbol_image per the spec yaml; visual check of rendered thumbnails confirms distinct legible sigils. Map/AGENTS.md DOX updated. FLAGGED pre-existing drift (not this lane): bimba-mcp tests/canon_parity.test.ts 18 red — shells installed epi canon --depth pithy whose value vocabulary is now token/frame/square/resolve/identity/surface; needs its own close. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/api/map-symbol-svg.test.ts src/api/map-index.test.ts from Body/S/S2/external/bimba-mcp (18 passed / 0 failed — 43-coordinate family enumeration, well-formed deterministic distinct SVGs, non-family refusal, c_1_symbol_image emission with-and-without asset, syncMapIndex asset-existence resolution) ; node scripts/generate-map-symbols.ts twice (run 1: 43 assets written + 43 nodes stamped; run 2: 0/0 — idempotent) ; node .codex/scripts/verify-tranche.mjs 48.T48.3 --owner fable-c-verify — class gate PASS incl graph-live",
+            "exitCode": 0,
+            "testsPassed": 18,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/external/bimba-mcp/src/api/map-symbol-svg.ts",
+              "Body/S/S2/external/bimba-mcp/src/api/map-index.ts",
+              "Body/S/S2/external/bimba-mcp/scripts/generate-map-symbols.ts",
+              "Idea/Bimba/Map/M2/M2-1.base",
+              "Idea/Bimba/Map/assets"
+            ]
+          }
         }
       ],
       "notes": null,

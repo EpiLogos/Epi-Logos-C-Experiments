@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { mkdtemp, readFile, rm } from 'fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -195,5 +195,32 @@ describe('sync() dispatch to the map-index scope', () => {
     const res = await sync('all', 'obsidian_to_neo4j', undefined, false, 'map-index');
     expect(res.success).toBe(false);
     expect(res.error_message).toMatch(/never re-promoted|reflection/i);
+  });
+});
+
+describe('c_1_symbol_image emission (48.3 worked example — assets are inputs to the projection)', () => {
+  it('projectMapNode emits the wikilinked cover image when the snapshot carries symbolImage', () => {
+    const projected = projectMapNode({ ...m25('essence'), symbolImage: 'M2-5.svg' });
+    expect(projected.markdown).toContain('c_1_symbol_image: "[[M2-5.svg]]"');
+  });
+
+  it('projectMapNode emits NO image key when the snapshot carries none (never a dangling link)', () => {
+    const projected = projectMapNode(m25('essence'));
+    expect(projected.markdown).not.toContain('c_1_symbol_image');
+  });
+
+  it('syncMapIndex resolves symbolImage from mapRoot/assets/<coordinate>.svg existence', async () => {
+    const mapRoot = await mkdtemp(join(tmpdir(), 'bimba-map-assets-'));
+    try {
+      await mkdir(join(mapRoot, 'assets'), { recursive: true });
+      await writeFile(join(mapRoot, 'assets', 'M2-5.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>', 'utf-8');
+      const source = new FixtureMapIndexSource([m25('sigil-backed essence')]);
+      const res = await syncMapIndex({ direction: 'neo4j_to_obsidian', mapRoot, source });
+      expect(res.success).toBe(true);
+      const written = await readFile(join(mapRoot, 'M2', 'M2-5', 'M2-5.md'), 'utf-8');
+      expect(written).toContain('c_1_symbol_image: "[[M2-5.svg]]"');
+    } finally {
+      await rm(mapRoot, { recursive: true, force: true });
+    }
   });
 });

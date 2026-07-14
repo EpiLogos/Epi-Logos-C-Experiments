@@ -26,6 +26,11 @@ Canon: [[World-Ontology]] -> [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M-SYSTEM-INDEX]]
 - `Map-Aggregate-Browser.base` — zone-level `base-view` reflection for coarse aggregate browsing and
   card/image entry over `map-index` frontmatter; it feeds curated canvas/Theia views and does not
   replace Neo4j typed-edge traversal.
+- `assets/` — own-generated cover sigils (DR-M0-4 companion ruling: generated, never fetched).
+  `<coordinate>.svg` existing here is what puts `c_1_symbol_image` on the projected node
+  (bimba-mcp `map-index.ts` resolves at projection time; `map-symbol-svg.ts` + its runner
+  `scripts/generate-map-symbols.ts` own the deterministic geometry). The M2-1 MEF-lens family
+  (43 sigils) is the 48.3 worked example; `M2/M2-1.base` is its cards entry.
 - Does NOT own canon meaning — that is each [[M0]]…[[M5]] World Form + its `Seeds/` specs. Domain
   law stays in the owning coordinate module, never relocated here.
 
