@@ -622,6 +622,19 @@ pub struct MathemeHarmonicProfile {
     /// kairos cache is fresh and complete; never fabricated kernel-side.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub live_planets: Option<[LivePlanetProjection; 10]>,
+    /// Which live-sky tier the S3 heartbeat resolved (kairotic > realtime),
+    /// mirroring the kernel `m4_planet_degrees_live` precedence: `"kairotic"`
+    /// when a fresh oracle-consultation capture preempts the daily transit,
+    /// `"realtime"` for the transit; absent (None) when no live sky is attached
+    /// (the "kairos pending" state). The carrier shows this so the user can tell
+    /// a kairotic reading from the realtime sky.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kairos_mode: Option<String>,
+    /// The kairotic frame's decay deadline (unix milliseconds). Present only in
+    /// `"kairotic"` mode; when the client clock passes it (or the next heartbeat
+    /// re-resolves) the tier reverts to realtime. Absent otherwise.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kairos_decays_at_ms: Option<u64>,
     /// The tick's address in the 720 possibility space (Sprint-8 E1): plane
     /// (codon vs hexagram valence), the full clock-degree node from the C
     /// `.rodata` LUT, and the tick carried across the 16+1 temporal apertures
@@ -762,6 +775,8 @@ impl MathemeHarmonicProfile {
             planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
             planet_degrees: None,
             live_planets: None,
+            kairos_mode: None,
+            kairos_decays_at_ms: None,
             phase_space: Some(PhaseSpaceAddress::from_degree720(degree720)),
             // never fabricated kernel-side — the gateway attaches identity
             quintessence: None,

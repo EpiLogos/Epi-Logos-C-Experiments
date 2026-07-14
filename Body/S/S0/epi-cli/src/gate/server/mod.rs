@@ -150,10 +150,24 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             // Live Kerykeion sky, attached only when the kairos cache is fresh
             // and complete (cosmic-clock §5.3 kairos_valid law) — the fields'
             // absence is the renderers' honest "kairos pending" state.
-            if let Some((degrees, retrograde)) = crate::nara::kairos::heartbeat_live_sky() {
+            if let Some((degrees, retrograde, tier)) =
+                crate::nara::kairos::heartbeat_live_sky_tiered()
+            {
                 projection.harmonic_profile.planet_degrees = Some(degrees);
                 projection.harmonic_profile.live_planets =
                     Some(portal_core::live_planets_from_sky(&degrees, &retrograde));
+                // Publish which tier won (kairotic > realtime) so the carrier can
+                // show the mode and revert when a kairotic capture decays.
+                match tier {
+                    crate::nara::kairos::KairosTier::Kairotic { decays_at_epoch } => {
+                        projection.harmonic_profile.kairos_mode = Some("kairotic".to_owned());
+                        projection.harmonic_profile.kairos_decays_at_ms =
+                            Some(decays_at_epoch.saturating_mul(1000));
+                    }
+                    crate::nara::kairos::KairosTier::Realtime => {
+                        projection.harmonic_profile.kairos_mode = Some("realtime".to_owned());
+                    }
+                }
             }
             // Handle-only PASU identity summary (Sprint-8 E6, DR-M4-3):
             // natal clock address + weight + preview + elemental quaternion.
