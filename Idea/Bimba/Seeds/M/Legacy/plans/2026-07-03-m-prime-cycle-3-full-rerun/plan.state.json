@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T08:59:58.358Z",
+  "updatedAt": "2026-07-14T09:06:57.424Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11468,16 +11468,32 @@
       "worktree": null
     },
     "44.T44.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T09:06:57.409Z",
+      "claimedAt": "2026-07-14T09:01:18.207Z",
+      "completedAt": "2026-07-14T09:06:57.409Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T09:06:57.409Z",
+          "text": "BUILT (port with re-anchored imports): blockDoc.ts lands toDoc/fromDoc in the carrier — Block[] to persisted block-doc with C-family frontmatter (coordinate, c_1_ct_type from the CTX ct, c_3_ctx_frame, privacyClass) + ordered block list, serialising as markdown (fenced block-kit JSON between doc markers) OR MDX (export const blocks + PratibimbaBlockDoc element) per DR-PSS-3; assertBlockDocWritablePath restricts writes to Idea/Empty/Present/{day_id}/ (DR-PSS-4) refusing traversal + non-md/mdx — double-walled with the vault machine write-scope (vault.rs WRITE_SCOPE_PREFIX). MDX is consumption-side serialisation; CTX-template authoring authority stays Hen per the tranche note. The Nara daily-briefing block-doc authoring rides 5.18's skill (already landed) + this law. Fresh 3/3 round-trip both formats; app 570; UF gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/blocks/blockDoc.test.ts (3 passed / 0 failed — Block[] round-trips byte-equal through BOTH markdown and MDX serialisations with C-family frontmatter coordinate/c_1_ct_type/c_3_ctx_frame/privacyClass; writes path-guarded to Idea/Empty/Present/{day_id}/ with traversal and non-md/mdx refused per DR-PSS-4) ; node .codex/scripts/verify-tranche.mjs 44.T44.7 --owner fable-c-verify — UF gate PASS (app-test 570 incl. the new suite, app-ui-flow playwright 25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1352,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/blocks/blockDoc.ts",
+              "Body/M/pratibimba-app/src/blocks/blockDoc.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.7.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T09:01:18.207Z",
+      "runId": "20260714T090118Z-44-T44.7",
       "worktree": null
     },
     "44.T44.8": {
@@ -15858,6 +15874,16 @@
       "leaseExpiresAt": "2026-07-14T10:22:11.263Z",
       "worktree": null,
       "completedAt": "2026-07-14T08:59:58.343Z"
+    },
+    {
+      "runId": "20260714T090118Z-44-T44.7",
+      "taskId": "44.T44.7",
+      "status": "done",
+      "startedAt": "2026-07-14T09:01:18.207Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T11:01:18.207Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T09:06:57.409Z"
     }
   ],
   "activeRoute": {
