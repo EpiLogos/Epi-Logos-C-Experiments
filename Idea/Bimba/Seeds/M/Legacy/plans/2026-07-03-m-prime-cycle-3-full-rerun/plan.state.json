@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T10:32:22.565Z",
+  "updatedAt": "2026-07-14T10:36:09.761Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12784,14 +12784,29 @@
       "worktree": null
     },
     "20.T20.1": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T10:29:15.858Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T10:36:09.745Z",
       "claimedAt": "2026-07-14T10:29:15.858Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T10:36:09.745Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T10:36:09.745Z",
+          "text": "LANDED: the wave-C decision block absorbed into the Track-13 register with per-row honest status — five rows defer to their existing full register sections, the OmniPanel manifest row carries its landed-law posture, the palette row carries its explicitly-OPEN posture, all remaining rows ROUTED user-final-validation-pending with source-matrix pointers. Absorption not ratification. COUNT DISCREPANCY SURFACED: the source prose claims 36 decisions but its table carries 40 rows — all 40 absorbed, slip flagged in the register block. Mechanical proof: 40/40 ids present zero missing; dr-gate-audit 32/32 green post-landing. UF gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/dr-gate-audit.mjs (32/32 rows pass the gate after the landing; all 40 wave-C ids present in the register, 0 missing) ; node .codex/scripts/verify-tranche.mjs 20.T20.1 --owner fable-c-verify — UF gate PASS (app-test 582, app-ui-flow playwright 26/26, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 86, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 72,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/20.T20.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T11:59:15.858Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T10:29:15.858Z",
       "runId": "20260714T102915Z-20-T20.1",
       "worktree": null
@@ -15971,11 +15986,12 @@
     {
       "runId": "20260714T102915Z-20-T20.1",
       "taskId": "20.T20.1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T10:29:15.858Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T11:59:15.858Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T10:36:09.745Z"
     },
     {
       "runId": "20260714T103222Z-23-T23.10",
