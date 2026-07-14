@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T13:48:17.880Z",
+  "updatedAt": "2026-07-14T13:54:50.427Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4155,16 +4155,21 @@
       "worktree": null
     },
     "12.T12.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T13:54:50.412Z",
+      "claimedAt": "2026-07-14T13:49:46.802Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T13:54:50.412Z",
+          "text": "PARTIAL (verify-first derivation complete, fable-c 2026-07-14) — full seam map recorded so the build starts cold. LANDED: (f) s0'.anuttara.trace (protocol.rs:54, dispatch_plan.rs:932); (g) GNOSTIC_LABEL + four sub-namespaces (graph-schema labels.rs:6 + gnostic_label_promotion.rs test); (b) khora session-workspace.ts + tests; 7 gnostic methods live end-to-end: contract (protocol.rs:169-175 + dispatch_plan.rs:707-743, authority Body/S/S5/epi-gnostic, kind S5GovernanceAdapter, contract test tests.rs:1695) -> epi-cli gate server match arms (gate/server/dispatch.rs:1373-1387) -> gate/gnostic.rs thin handlers shelling EPI_GNOSTIC_PYTHON -> production cli.py {status, models, notebook list/create/delete, ingest, ingest-text, query, enrich}. MISSING for the >=10 minimum: 6 methods (candidates, etymology, list_notebooks, episode_search, evidence_trace, query_with_layers). SIZED: list_notebooks = real backing NOW (notebook list); episode_search = partial (graphiti_service.py episodes() :1143 exists but no CLI command); candidates/etymology/evidence_trace/query_with_layers = NO Python backing — need production cli.py commands first (anti-greenfield: extend epi_gnostic, never mock; the S0 fallthrough arm returns 'unimplemented' which the method-probe correctly counts as ABSENT). Each new method needs: protocol.rs name + dispatch_plan.rs row + tests.rs required-list + gate/server/dispatch.rs arm + gate/gnostic.rs fn + gate/parity.rs match (:803-809) + epi techne gnosis CLI parity (ONE-substrate invariant). ALSO OPEN: (c) tmux terminal-lease at gnostic call sites (nothing in tmux.rs); (d) redis-context hierarchical {day}/{session}/{turn}/{coordinate} keys — coordinate_lookup_snapshot(redis_cache.rs:137) exists but flat, needs the day/session/turn extension; e2e s5_gnostic_one_substrate_round_trip test absent. Dependency chain CLEARED this session: 12.T12.17/18/19 all closed. 06.T6.1 stays blocked on this tranche. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T15:49:46.802Z",
+      "heartbeatAt": "2026-07-14T13:54:50.412Z",
+      "runId": "20260714T134946Z-12-T12.2",
       "worktree": null
     },
     "12.T12.3": {
@@ -16216,6 +16221,16 @@
       "leaseExpiresAt": "2026-07-14T14:46:56.273Z",
       "worktree": null,
       "completedAt": "2026-07-14T13:48:17.862Z"
+    },
+    {
+      "runId": "20260714T134946Z-12-T12.2",
+      "taskId": "12.T12.2",
+      "status": "review",
+      "startedAt": "2026-07-14T13:49:46.802Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T15:49:46.802Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T13:54:50.412Z"
     }
   ],
   "activeRoute": {
