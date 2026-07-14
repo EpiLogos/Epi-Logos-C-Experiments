@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T13:25:12.237Z",
+  "updatedAt": "2026-07-14T13:36:26.534Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4480,16 +4480,33 @@
       "worktree": null
     },
     "12.T12.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T13:36:26.516Z",
+      "claimedAt": "2026-07-14T13:35:04.799Z",
+      "completedAt": "2026-07-14T13:36:26.516Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T13:36:26.516Z",
+          "text": "Verify-first close, one leg built: the four Janus Klein tools (janus_track_spreads/janus_evaluate_aliveness/janus_spread_resolved/janus_weight_session at janus-doorway.ts:238-339) + the CF1 + CF(0/1) Klein-binary contract widening (janus.md:25-38) + state-machine (generating-muting-mute-reopen), Saturn-fixture weighting, and user-override-absolute tests were all pre-landed and re-proven green. The MISSING leg was the integration seam the consumers themselves documented as pending: Khora session-init never stamped c_3_klein_weighting onto NOW frontmatter. Built TDD: now-klein-weighting.ts (Janus computes via janus_weight_session with natal + live degrees from the kairos cache; Khora writes the nested block per the 5.19 hen validation shape; absent/malformed kairos = no stamp, never a fabricated split), wired session_start ONLY (user override absolute, flow events never re-stamp), 5/5 new tests. Consumers already keyed: nara-daily-briefing SKILL.md (seam text refreshed from stale pending to landed), carrier NaraKleinWeightingChip (05.T5.15), aletheia-orchestration. Khora AGENTS.md index updated. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-0p-khora/tests/*.test.ts Body/S/S4/ta-onta/S4-5p-aletheia/tests/janus_doorway.test.ts (45 passed / 0 failed incl. 5 new now_klein_weighting stamps: Saturn-return+New-Moon fixture 0.3/0.7 overwrite, balanced-kairos default, no-cache honest degrade, malformed-degrees degrade, nested upsert no-duplicate) ; node .codex/scripts/verify-tranche.mjs 12.T12.18 --owner fable-c-verify — class gate PASS (ta-onta 451, gateway 86, gateway-contract 86, gateway-methods, live-wire spawned-gateway, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 451,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/now-klein-weighting.ts",
+              "Body/S/S4/ta-onta/S4-0p-khora/extension.ts",
+              "Body/S/S4/ta-onta/S4-0p-khora/tests/now_klein_weighting.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.18.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T13:35:04.799Z",
+      "runId": "20260714T133504Z-12-T12.18",
       "worktree": null
     },
     "12.T12.19": {
@@ -16162,6 +16179,16 @@
       "leaseExpiresAt": "2026-07-14T14:22:08.291Z",
       "worktree": null,
       "completedAt": "2026-07-14T13:24:13.774Z"
+    },
+    {
+      "runId": "20260714T133504Z-12-T12.18",
+      "taskId": "12.T12.18",
+      "status": "done",
+      "startedAt": "2026-07-14T13:35:04.799Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T14:35:04.799Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T13:36:26.516Z"
     }
   ],
   "activeRoute": {

@@ -40,7 +40,7 @@ Today's prospective/retrospective weighting from [[Janus]], the driving aspect t
 
 > `<X>%` prospective / `<Y>%` retrospective. `<driving aspect named>`. `<primary lens-square — Square A / B / C — noted>`.
 
-**Honest-pending seam.** The weighting reaches the briefing only through the `c_3_klein_weighting` frontmatter key on the session NOW. When that key is absent or malformed — which it currently is at runtime: Khora session-init does not yet stamp it (the NOW template declares a `0.5 / 0.5` default per 5.19, but session-init does not write it; Track 11/12 seam) — Section 1 reads `pending-weighting` and omits the percentages. **Never fabricate a split.** Janus's §4.3 computation enters the briefing only via this frontmatter key, never by recompute here.
+**Honest-pending seam.** The weighting reaches the briefing only through the `c_3_klein_weighting` frontmatter key on the session NOW. Khora session-init stamps it via `now-klein-weighting.ts` (Janus computes, Khora writes — 12.18), overwriting the template's `0.5 / 0.5` default (5.19) with the kairos-computed split; when the kairos cache is absent or malformed, no stamp lands and Section 1 reads `pending-weighting`, omitting the percentages. **Never fabricate a split.** Janus's §4.3 computation enters the briefing only via this frontmatter key, never by recompute here.
 
 A heavy retrospective tilt licenses the Hegel/Aion/Whitehead-perishing band in Section 3; a heavy prospective tilt licenses the concrescent-desire / eternal-objects-ingression band (§4.3 → §6.5).
 

@@ -19,6 +19,7 @@ import {
   recordPendingSophia,
 } from "./modules/sophia-fire.ts";
 import { stampNowFibonacciGroundFrontmatter } from "./modules/now-fibonacci-ground.ts";
+import { stampNowKleinWeightingFrontmatter } from "./modules/now-klein-weighting.ts";
 import {
   bindHarnessToSessionWorkspace,
   parseSessionWorkspace,
@@ -569,6 +570,13 @@ export async function khoraExtension(api: ExtensionAPI) {
             stampNowFibonacciGroundFrontmatter(_nowPath);
           } catch (e) {
             console.warn(`[khora] NOW Fibonacci Ground stamp skipped: ${e}`);
+          }
+          // Session-start only: user override is absolute and the weighting
+          // persists for the session, so flow events never re-stamp it (12.18).
+          try {
+            stampNowKleinWeightingFrontmatter(_nowPath, _sessionId);
+          } catch (e) {
+            console.warn(`[khora] NOW Klein-weighting stamp skipped: ${e}`);
           }
         }
 

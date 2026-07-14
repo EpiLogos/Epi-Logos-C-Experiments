@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-14T13:25:12.234Z",
+  "generatedAt": "2026-07-14T13:36:26.532Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -176,7 +176,7 @@
       "file": "23-m2-parashakti-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
       "title": "Track 23 — M2' Paraśakti Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "a90ee70d4ada571a9d1ef40bc9ec1b3d650560805cb9a48049d1f6968125c7f3"
+      "checksum": "efbc30fcd5d90adc1de18c5b046469d3046ef06903a30ec84a1aea6a37f84bc3"
     },
     {
       "id": "24",
@@ -6081,7 +6081,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
       ],
-      "body": "10. **T23.10 — Three outer-planet (Uranus/Neptune/Pluto) stubs with pending-dataset badge**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.10 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "10. **T23.10 — Three outer-planet (Uranus/Neptune/Pluto) stubs with pending-dataset badge**\n\n   > **⚑ SUPERSEDED per DR-ENV-2 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** outer planets are ambient environmental conditions transforming the M4 PASU base quaternion, NOT a pending M2-5 personal-correspondence dataset. The M2 outer-planet rows keep only their harmonic footprint (Cousto Hz / element); the `pending-dataset-2-5-8-9-10` / `MEANING_ID_PREEMPTED` framing is retired.\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.10 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "23.T23.11",
@@ -6225,7 +6225,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
       ],
-      "body": "19. **T23.19 — Planetary-orbiter elemental-weight feed → bioquaternion / PASU `elemental_weights`**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "19. **T23.19 — Planetary-orbiter elemental-weight feed → bioquaternion / PASU `elemental_weights`**\n\n   > **⚑ AMENDED per DR-ENV-1/4 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** the live elemental-weight feed routes to `q_environment` (transform), not the PASU identity register; only natal weights source identity.\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "23.T23.20",
