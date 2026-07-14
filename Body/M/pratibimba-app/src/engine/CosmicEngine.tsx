@@ -39,7 +39,7 @@ import {
     ClockFieldOverlayState,
     updateClockFieldOverlay
 } from './clockFieldOverlay';
-import { harmonicSnapshot, kairosTierReadout } from './modulation/modulators';
+import { fibonacciGroundReadout, harmonicSnapshot, kairosTierReadout } from './modulation/modulators';
 import { fibonacciGroundPoint } from './fibonacciGround';
 import { ModulationCarrier } from './modulation/types';
 import {
@@ -302,6 +302,9 @@ export function CosmicEngine() {
     // tier the heartbeat resolved + the 4h decay countdown; wall-clock so a
     // kairotic window keeps decaying under pause/scrub (decay is real-time).
     const kairosTier = kairosTierReadout(snapshot, Date.now());
+    // the kernel's clock-tick Fibonacci-Ground reading (position + Pisano digit),
+    // consumed from the wire — never re-derived; null when phase-space is absent
+    const fibGround = fibonacciGroundReadout(snapshot);
 
     useEffect(() => {
         const host = hostRef.current;
@@ -1041,10 +1044,17 @@ export function CosmicEngine() {
                     type="button"
                     className="instrument-toggle"
                     data-testid="engine-ground-gearing"
-                    title="Fibonacci Ground gearing — the +1 Level-0 aperture as 60-fold rhythm (never a 17th lens)"
+                    data-pisano-digit={fibGround ? fibGround.digit : ''}
+                    data-ground-position={fibGround ? fibGround.position : ''}
+                    title={
+                        fibGround
+                            ? `Fibonacci Ground gearing — the +1 Level-0 aperture as 60-fold rhythm (never a 17th lens). Kernel tick ground: position ${fibGround.position}/60, Pisano digit φ${fibGround.digit} (phase_space.rs pisano60_digit, consumed off the wire).`
+                            : 'Fibonacci Ground gearing — the +1 Level-0 aperture as 60-fold rhythm (never a 17th lens)'
+                    }
                     onClick={() => void commands.execute('engine.toggleGroundGearing')}
                 >
                     {groundGearing ? '⌗ ground ×60' : '⌗ ground'}
+                    {fibGround ? ` · ${fibGround.label}` : ''}
                 </button>
                 <button
                     type="button"

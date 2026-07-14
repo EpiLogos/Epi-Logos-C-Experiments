@@ -361,3 +361,31 @@ export function kairosTierReadout(
     }
     return { mode: null, remainingMs: null, label: null };
 }
+
+/** The clock tick's Level-0 Fibonacci-Ground reading, straight off the kernel. */
+export interface FibonacciGroundReadout {
+    /** 0..59 — the tick's ground position (kernel `degree360 / 6`). */
+    position: number;
+    /** 0..9 — the Pisano-60 Fibonacci digit at that position (`pisano60_digit`). */
+    digit: number;
+    /** Compact strip label showing the Pisano digit, e.g. `φ3`. */
+    label: string;
+}
+
+/** Surface the kernel's clock-tick Fibonacci-Ground position + Pisano digit for
+ *  the carrier strip. This CONSUMES the bussed `phaseSpace.fibonacciGround` field
+ *  (`phase_space.rs`: `position = degree360/6`, `digit = pisano60_digit(position)`)
+ *  — it never re-derives the digit locally. `null` when the wire carries no
+ *  phase-space (a gateway predating E1); the strip then shows nothing rather than
+ *  a fabricated digit. NB the two Sun markers fold their OWN (Sun) degree via
+ *  `fibonacciGround.ts` — a distinct quantity from this clock-tick ground, so
+ *  they are correctly local, not a duplication of this field. */
+export function fibonacciGroundReadout(
+    snapshot: Pick<HarmonicSnapshot, 'phaseSpace'>
+): FibonacciGroundReadout | null {
+    const fib = snapshot.phaseSpace?.fibonacciGround;
+    if (!fib) {
+        return null;
+    }
+    return { position: fib.position, digit: fib.digit, label: `φ${fib.digit}` };
+}

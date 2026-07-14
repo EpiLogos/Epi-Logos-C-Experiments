@@ -8,6 +8,7 @@ import {
     deriveDivision,
     deriveFrame,
     EngineControls,
+    fibonacciGroundReadout,
     formatKairosCountdown,
     harmonicSnapshot,
     kairosTierReadout,
@@ -419,5 +420,17 @@ describe('kairos tier readout (DR-FIB-3 carrier endpoint / 25.17 kairotic-mode s
         expect(formatKairosCountdown(3 * HOUR + 5 * 60_000)).toBe('3h05m');
         expect(formatKairosCountdown(47 * 60_000)).toBe('47m');
         expect(formatKairosCountdown(30_000)).toBe('<1m');
+    });
+});
+
+describe('fibonacci ground readout (kernel Pisano digit — lens digit polish)', () => {
+    it('surfaces the kernel clock-tick ground position + Pisano digit — consumes the wire field, never re-derived locally', () => {
+        // degree360=144 → kernel position 144/6=24; the fixture pins Pisano digit 3.
+        const snap = harmonicSnapshot(profileAt(144, { phaseSpace: kernelPhaseSpace(144) }));
+        expect(fibonacciGroundReadout(snap)).toEqual({ position: 24, digit: 3, label: 'φ3' });
+    });
+
+    it('is null when the wire carries no phase-space — honest absence, never a fabricated digit', () => {
+        expect(fibonacciGroundReadout(harmonicSnapshot({ harmonicProfile: {} }))).toBeNull();
     });
 });
