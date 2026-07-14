@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T08:40:07.374Z",
+  "updatedAt": "2026-07-14T08:50:44.812Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11408,16 +11408,33 @@
       "worktree": null
     },
     "44.T44.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T08:50:44.794Z",
+      "claimedAt": "2026-07-14T08:41:03.938Z",
+      "completedAt": "2026-07-14T08:50:44.794Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T08:50:44.794Z",
+          "text": "Verify-first + consumer gap-close: the gateway side was landed and live — context_for_record carries the blocks projection on the Redis Hot tier (blocksKey s3:gateway:temporal:session:{id}:blocks, TTL-tiered) surfaced on the LIVE s3-prime temporal.context/subscribe protocol methods, sourced from s4-prime psyche.state.renderer (the exact patch the 44.4 loop writes; day/now runtime, not CTX, per DR-PSS-5; no new channel, no new store) — Rust contract fresh 2/2. Gap closed carrier-side: temporalBlocks.ts consumer normalizes the projection into contract-validated blocks (invalid dropped + counted, never rendered) and the Review fold hydrates from the live projection when the session carries blocks (data-block-source=live; fixture stays the acceptance baseline). Round-trip now closed: verdict click -> psyche patch -> Hot-tier projection -> fold hydration. Fresh 7/7 + 2/2; app 564; UF gate green 25/25 e2e. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test temporal_context_contract (2 passed / 0 failed incl. temporal_context_projects_blocks_from_existing_psyche_renderer_state — the Redis Hot-tier blocks projection off the renderer patch) ; npx vitest run src/blocks/temporalBlocks.test.ts src/panes/omni/reviewBlocks.test.tsx (7 passed / 0 failed — wire-shaped projection normalizes to contract-valid blocks with invalid items dropped+counted, renderer echoes survive, the Review fold hydrates live with data-block-source=live) ; node .codex/scripts/verify-tranche.mjs 44.T44.5 --owner fable-c-verify — UF gate PASS (app-test 564, app-ui-flow playwright 25/25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1346,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/temporal_context.rs",
+              "Body/M/pratibimba-app/src/blocks/temporalBlocks.ts",
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.5.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T08:41:03.938Z",
+      "runId": "20260714T084103Z-44-T44.5",
       "worktree": null
     },
     "44.T44.6": {
@@ -15804,6 +15821,16 @@
       "leaseExpiresAt": "2026-07-14T10:15:21.107Z",
       "worktree": null,
       "completedAt": "2026-07-14T08:40:07.353Z"
+    },
+    {
+      "runId": "20260714T084103Z-44-T44.5",
+      "taskId": "44.T44.5",
+      "status": "done",
+      "startedAt": "2026-07-14T08:41:03.938Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T10:41:03.938Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T08:50:44.794Z"
     }
   ],
   "activeRoute": {

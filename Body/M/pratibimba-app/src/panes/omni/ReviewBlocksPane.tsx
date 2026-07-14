@@ -12,9 +12,10 @@
  *   ws seam (dispatched honestly; refusals surface inline).
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
 import { BlockHost } from '../../blocks/BlockHost';
+import { TEMPORAL_CONTEXT_RPC, normalizeTemporalBlocksProjection } from '../../blocks/temporalBlocks';
 import {
     applyBlockSessionOperation,
     createBlockPsycheUpdateRequest,
@@ -24,7 +25,7 @@ import {
     type BlockVerdictDecision
 } from '../../blocks/verdictLoop';
 import { enforceHumanGate } from '../m5ReviewGate';
-import { useSessionStore } from '../../state/stores';
+import { useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
 
@@ -32,10 +33,33 @@ const VERDICTS: readonly BlockVerdictDecision[] = ['approve', 'reject', 'defer']
 
 export function ReviewBlocksPane() {
     const sessionKey = useSessionStore(s => s.sessionKey);
+    const connected = useProvenanceStore(s => s.connection.connected);
     const [state, setState] = useState<BlockRendererSessionState>(() =>
         createRendererSessionState([...genealogyToReviewBlocks(syntheticPiAnimaMoiraiDispatch())])
     );
     const [gateNotice, setGateNotice] = useState<string | null>(null);
+    const [blockSource, setBlockSource] = useState<'fixture' | 'live'>('fixture');
+
+    // 44.5: the day/now runtime serves the psyche renderer's blocks projection
+    // on the LIVE s3'.temporal.context method — hydrate from it when the
+    // session carries blocks; the fixture stays the acceptance baseline.
+    useEffect(() => {
+        if (!connected || !sessionKey) {
+            return;
+        }
+        gateway()
+            .invoke(TEMPORAL_CONTEXT_RPC, { sessionKey })
+            .then(receipt => {
+                const projection = normalizeTemporalBlocksProjection(receipt.artifact);
+                if (projection.blocks.length > 0) {
+                    setState(createRendererSessionState([...projection.blocks]));
+                    setBlockSource('live');
+                }
+            })
+            .catch(() => {
+                /* fixture remains the honest baseline */
+            });
+    }, [connected, sessionKey]);
 
     const reviewItems = state.blocks.filter(block => block.type === 'review-item');
     const selected = reviewItems.find(block => block.id === state.currentSelection) ?? reviewItems[0] ?? null;
@@ -71,7 +95,7 @@ export function ReviewBlocksPane() {
     };
 
     return (
-        <div className="review-blocks-pane" data-testid="review-blocks-pane">
+        <div className="review-blocks-pane" data-testid="review-blocks-pane" data-block-source={blockSource}>
             <p className="pane-message review-blocks-seam" data-testid="review-blocks-seam-note">
                 Review rows ride the synthetic acceptance fixture — the live wire→record producer is
                 track-12's seam; verdicts route to the s4-prime psyche.update seam under the m5 human gate.
