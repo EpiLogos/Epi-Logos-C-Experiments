@@ -54,7 +54,7 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'dispatch-trace', label: 'Dispatch', component: 'omniDispatchTrace', owningTranche: '27.3', landed: false },
     { id: 'tool-stream', label: 'Tools', component: 'omniLogs', owningTranche: '27.4', landed: true },
     { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: false },
-    { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: false },
+    { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true },
     { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: false },
     { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false }
 ] as const);

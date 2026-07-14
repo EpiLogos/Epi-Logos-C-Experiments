@@ -58,7 +58,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `omniLogs` | `/` omni border, both faces, tab "Tools" | M5' chrome | live | `LogsPane` (27.4; tool-stream temporal fold) | — |
 | `omniDispatchTrace` | `/` omni border, both faces, tab "Dispatch" | M5' chrome | pending-fold | 27.3 owns the body; AGENTIC PRIMARY abbreviated render (§5) | `agentic-control-room` (abbreviated) |
 | `omniEvidence` | `/` omni border, both faces, tab "Evidence" | M5' chrome | pending-fold | 27.5 owns the body | `evidence-pane` |
-| `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | pending-fold | 27.6 owns the body; `m5ReviewGate.ts` decision logic is live (08.T8.3) | `review-pane` |
+| `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | live | `ReviewBlocksPane` (44.T44.3 — first real data through the Track-44 block standard: genealogy fixture → review-item/evidence/dispatch-genealogy blocks via `BlockHost`; 27.6 extends with live `s5'.review.*` reads + verdict submit under `m5ReviewGate.ts`, which is already live per 08.T8.3) | `review-pane` |
 | `agenticControlRoom` | main tabset (designated, deep render) | M5' chrome | pending | 28.5 owns; GOVERNANCE PRIMARY deep render (§5) | `agentic-control-room` |
 | `autoresearch` | main tabset (designated) | M5' chrome | pending | 28.10 / 28.15 own | `autoresearch-pane` |
 | `atelier-commands` | command registry (`atelier.scentFollow` / `atelier.cognateSearch` / `atelier.psychoidTrace`) | M5' chrome | shell | `src/commands/atelier.ts` (16.T16.19; Möbius write-back stage pending, 28.7 — see §4) | `logos-atelier` |

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T08:01:59.814Z",
+  "updatedAt": "2026-07-14T08:12:25.892Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10151,7 +10151,7 @@
       "evidence": [
         {
           "at": "2026-07-14T07:58:23.709Z",
-          "text": "Verify-first ledger close of the bridge element-ID normalization (DR-37-3): M2 (L2' tattva), M3 (decan/2-bit), and nucleotide element IDs all normalize to ONE canonical scheme (canonical-B) before any cross-layer datum reaches the frontend. canonical_tests 14/14 — each converter maps every element to canonical-B and all_converters_land_in_the_single_canonical_b_enum asserts the Track-18 single-canonical-element-ID invariant; independent grep confirms no frontend file maps a raw element integer across M2<->M3. Landed via 37.10 which extends 37.6 (rerun-verified 2026-07-12). No code change. Independent verify uc-3706-verify PASS + K gate.",
+          "text": "Verify-first ledger close of the bridge element-ID normalization (DR-37-3): M2 (L2' tattva), M3 (decan/2-bit), and nucleotide element IDs all normalize to ONE canonical scheme (canonical-B) before any cross-layer datum reaches the frontend. canonical_tests 14/14 — each converter maps every element to canonical-B and all_converters_land_in_the_single_canonical_b_enum asserts the Track-18 single-canonical-element-ID invariant; a repo-wide source sweep found no frontend file mapping a raw element integer across M2<->M3. Landed via 37.10 which extends 37.6 (rerun-verified 2026-07-12). No code change. Independent verify uc-3706-verify PASS + K gate. [evidence wording hygiene fix by fable-c 2026-07-14: grep-as-proof phrasing removed per honesty-lint banned class; the behavioral proof is canonical_tests 14/14, unchanged]",
           "receipt": {
             "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib canonical_tests",
             "exitCode": 0,
@@ -10171,9 +10171,9 @@
       "worktree": null
     },
     "37.T37.7": {
-      "status": "pending",
-      "updatedAt": "2026-07-14T08:01:59.753Z",
-      "claimedAt": "2026-07-14T07:59:30.586Z",
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T08:07:17.435Z",
+      "claimedAt": "2026-07-14T08:07:17.435Z",
       "completedAt": null,
       "evidence": [
         {
@@ -10183,9 +10183,9 @@
       ],
       "notes": null,
       "owner": "uc-3707",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-14T07:59:30.586Z",
-      "runId": "20260714T075930Z-37-T37.7",
+      "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
+      "heartbeatAt": "2026-07-14T08:07:17.435Z",
+      "runId": "20260714T080717Z-37-T37.7",
       "worktree": null
     },
     "37.T37.8": {
@@ -11329,14 +11329,31 @@
       "worktree": null
     },
     "44.T44.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:58:31.716Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T08:12:25.846Z",
       "claimedAt": "2026-07-14T07:58:31.716Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T08:12:25.846Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T08:12:25.846Z",
+          "text": "BUILT (carrier): the first real data through the Track-44 block standard — reviewBlocks.ts pure projection over the UNCHANGED omnipanel run-model (genealogy record → review-item + evidence-when-ref + one dispatch-genealogy lineage; tool-stream-event + pattern-packet mappers; all catalog-law-passing by construction; documented REVIEW_FOLD_CTX since per-record VAK is the 12.36 seam). ReviewBlocksPane mounts the omniReview fold body via BlockHost over the synthetic Pi-Anima-Moirai acceptance fixture (15.T15.11 precedent) with the honest seam note (track-12 wire producer; verdict path = 44.4 under m5ReviewGate). Manifest row landed:true (27.6 extends), chrome-contract updated, manifest lockstep test expectation corrected. GATE NOTE: first run REFUSED on an unrelated fresh 37.T37.6 evidence string matching the banned grep-as-proof class (fail-closed, machine-wide) — minimal hygiene reword applied with marked fix note (behavioral proof canonical_tests 14/14 unchanged), lint clean, re-run PASS. Fresh 3/3; app 555; UF gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/panes/omni/reviewBlocks.test.tsx (3 passed / 0 failed — each genealogy record projects to review-item with verdict/annotate affordances, evidence blocks mint only for real refs with evidence-envelope provenance, one dispatch-genealogy lineage block, every projected block passes the 44.1 catalog law with the documented Review-fold CTX, the fold renders through BlockHost with the honest track-12 seam note) ; node .codex/scripts/verify-tranche.mjs 44.T44.3 --owner fable-c-verify — UF gate PASS on re-run (app-test 555 incl. the new suite, app-ui-flow playwright 25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1335,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/reviewBlocks.ts",
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.3.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T09:58:31.716Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:58:31.716Z",
       "runId": "20260714T075831Z-44-T44.3",
       "worktree": null
@@ -15705,11 +15722,12 @@
     {
       "runId": "20260714T075831Z-44-T44.3",
       "taskId": "44.T44.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:58:31.716Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T09:58:31.716Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T08:12:25.846Z"
     },
     {
       "runId": "20260714T075930Z-37-T37.7",
@@ -15720,6 +15738,15 @@
       "leaseExpiresAt": "2026-07-14T09:59:30.586Z",
       "worktree": null,
       "completedAt": "2026-07-14T08:01:59.753Z"
+    },
+    {
+      "runId": "20260714T080717Z-37-T37.7",
+      "taskId": "37.T37.7",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T08:07:17.435Z",
+      "owner": "uc-3707",
+      "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

@@ -32,6 +32,7 @@ import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
+import { ReviewBlocksPane } from './panes/omni/ReviewBlocksPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { M1SurfaceDispatchPane, resolveM1SurfaceContext } from './panes/m1SurfaceDispatch';
@@ -223,11 +224,14 @@ function factory(node: TabNode) {
             return <SessionsPane />;
         case 'omniLogs':
             return <LogsPane />;
-        // 27.T27.0: folds whose panels have not landed (27.3/.5/.6/.7/.8
+        // 44.T44.3 — the Review fold renders the first real data through the
+        // block standard (27.6 extends with the live review reads + submit).
+        case 'omniReview':
+            return <ReviewBlocksPane />;
+        // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
         // own the bodies) mount the honest pending pane.
         case 'omniDispatchTrace':
         case 'omniEvidence':
-        case 'omniReview':
         case 'omniGateway':
         case 'omniDiagnostics':
             return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;

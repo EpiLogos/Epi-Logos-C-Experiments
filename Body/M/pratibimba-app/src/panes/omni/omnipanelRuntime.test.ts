@@ -46,7 +46,6 @@ describe('OMNIPANEL_TABS manifest', () => {
         expect(pending.map(tab => tab.id)).toEqual([
             'dispatch-trace',
             'evidence',
-            'review',
             'gateway',
             'diagnostics'
         ]);
