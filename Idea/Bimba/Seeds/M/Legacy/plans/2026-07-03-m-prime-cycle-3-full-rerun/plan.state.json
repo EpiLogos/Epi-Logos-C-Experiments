@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:57:35.106Z",
+  "updatedAt": "2026-07-14T07:58:23.728Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10144,14 +10144,28 @@
       "worktree": null
     },
     "37.T37.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:52:51.157Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:58:23.709Z",
       "claimedAt": "2026-07-14T07:52:51.157Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:58:23.709Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:58:23.709Z",
+          "text": "Verify-first ledger close of the bridge element-ID normalization (DR-37-3): M2 (L2' tattva), M3 (decan/2-bit), and nucleotide element IDs all normalize to ONE canonical scheme (canonical-B) before any cross-layer datum reaches the frontend. canonical_tests 14/14 — each converter maps every element to canonical-B and all_converters_land_in_the_single_canonical_b_enum asserts the Track-18 single-canonical-element-ID invariant; independent grep confirms no frontend file maps a raw element integer across M2<->M3. Landed via 37.10 which extends 37.6 (rerun-verified 2026-07-12). No code change. Independent verify uc-3706-verify PASS + K gate.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib canonical_tests",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/medicine_frame.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-3706",
-      "leaseExpiresAt": "2026-07-14T09:52:51.157Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:52:51.157Z",
       "runId": "20260714T075251Z-37-T37.6",
       "worktree": null
@@ -15676,11 +15690,12 @@
     {
       "runId": "20260714T075251Z-37-T37.6",
       "taskId": "37.T37.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:52:51.157Z",
       "owner": "uc-3706",
       "leaseExpiresAt": "2026-07-14T09:52:51.157Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T07:58:23.709Z"
     }
   ],
   "activeRoute": {

@@ -39,7 +39,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.6 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: element-IDs normalize to ONE canonical scheme (canonical-B) before any cross-layer datum reaches the frontend — `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib canonical_tests` green (14/14: m2-tattva / m3-decan / nucleotide converters each map every element to canonical-B, asserted a member of the single 0..=5 enum — the Track-18 single-canonical-element-ID invariant; landed via 37.10 which extends 37.6); grep confirms no frontend file maps a raw element integer across the M2<->M3 boundary. verify-first ledger close (no code change); verifier != closer; evidence = fresh command output.
 
 7. **T37.7 — Honest RNA / chromosome deferral badges**
 
