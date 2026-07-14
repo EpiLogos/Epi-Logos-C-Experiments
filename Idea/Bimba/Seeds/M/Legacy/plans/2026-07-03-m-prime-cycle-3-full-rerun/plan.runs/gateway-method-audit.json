@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-12T18:45:21.724Z",
+ "generatedAt": "2026-07-14T16:21:09.133Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 215,
-  "present": 50,
-  "absent": 165,
+  "present": 57,
+  "absent": 158,
   "unknown": 0
  },
  "methods": [
@@ -1191,10 +1191,10 @@
   },
   {
    "method": "s5'.gnostic.candidates",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
   },
   {
    "method": "s5'.gnostic.comparative_retrieval",
@@ -1205,24 +1205,24 @@
   },
   {
    "method": "s5'.gnostic.episode_search",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
   },
   {
    "method": "s5'.gnostic.etymology",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, bimbaCoordinate"
   },
   {
    "method": "s5'.gnostic.evidence_trace",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required string parameter; expected one of passageId, passage_id, id"
   },
   {
    "method": "s5'.gnostic.ingest",
@@ -1233,10 +1233,10 @@
   },
   {
    "method": "s5'.gnostic.list_notebooks",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
   },
   {
    "method": "s5'.gnostic.musical_transcript",
@@ -1261,17 +1261,17 @@
   },
   {
    "method": "s5'.gnostic.query_with_layers",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
   },
   {
    "method": "s5'.gnostic.resolve",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, ref, passageId, passage_id, id"
   },
   {
    "method": "s5'.gnostic.seed_resolve",

@@ -543,7 +543,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.gnostic.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.gnostic.ingest / s5'.gnostic.query / s5'.gnostic.notebook / s5'.gnostic.status / s5'.gnostic.models"),
+        live_gateway_method: Some("s5'.gnostic.ingest / s5'.gnostic.query / s5'.gnostic.notebook / s5'.gnostic.status / s5'.gnostic.models / s5'.gnostic.candidates / s5'.gnostic.etymology / s5'.gnostic.list_notebooks / s5'.gnostic.episode_search / s5'.gnostic.evidence_trace / s5'.gnostic.query_with_layers"),
         cli_mirror: Some("epi techne gnosis ingest-gnostic/query-gnostic + epi-gnostic status"),
         body_path: "Body/S/S5/epi-gnostic",
         test_evidence: &["gate_epii_agent_access.rs", "gateway-contract/src/tests.rs"],
@@ -806,7 +806,13 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.gnostic.status"
         | "s5'.gnostic.models"
         | "s5'.gnostic.resolve"
-        | "s5'.gnostic.musical_transcript" => Some("s5'.gnostic.*"),
+        | "s5'.gnostic.musical_transcript"
+        | "s5'.gnostic.candidates"
+        | "s5'.gnostic.etymology"
+        | "s5'.gnostic.list_notebooks"
+        | "s5'.gnostic.episode_search"
+        | "s5'.gnostic.evidence_trace"
+        | "s5'.gnostic.query_with_layers" => Some("s5'.gnostic.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,

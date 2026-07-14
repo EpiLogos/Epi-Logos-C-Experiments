@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T15:41:25.001Z",
+  "updatedAt": "2026-07-14T16:21:39.860Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4176,19 +4176,23 @@
     },
     "12.T12.2": {
       "status": "review",
-      "updatedAt": "2026-07-14T13:54:50.412Z",
+      "updatedAt": "2026-07-14T16:21:39.846Z",
       "claimedAt": "2026-07-14T13:49:46.802Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-14T13:54:50.412Z",
           "text": "PARTIAL (verify-first derivation complete, fable-c 2026-07-14) — full seam map recorded so the build starts cold. LANDED: (f) s0'.anuttara.trace (protocol.rs:54, dispatch_plan.rs:932); (g) GNOSTIC_LABEL + four sub-namespaces (graph-schema labels.rs:6 + gnostic_label_promotion.rs test); (b) khora session-workspace.ts + tests; 7 gnostic methods live end-to-end: contract (protocol.rs:169-175 + dispatch_plan.rs:707-743, authority Body/S/S5/epi-gnostic, kind S5GovernanceAdapter, contract test tests.rs:1695) -> epi-cli gate server match arms (gate/server/dispatch.rs:1373-1387) -> gate/gnostic.rs thin handlers shelling EPI_GNOSTIC_PYTHON -> production cli.py {status, models, notebook list/create/delete, ingest, ingest-text, query, enrich}. MISSING for the >=10 minimum: 6 methods (candidates, etymology, list_notebooks, episode_search, evidence_trace, query_with_layers). SIZED: list_notebooks = real backing NOW (notebook list); episode_search = partial (graphiti_service.py episodes() :1143 exists but no CLI command); candidates/etymology/evidence_trace/query_with_layers = NO Python backing — need production cli.py commands first (anti-greenfield: extend epi_gnostic, never mock; the S0 fallthrough arm returns 'unimplemented' which the method-probe correctly counts as ABSENT). Each new method needs: protocol.rs name + dispatch_plan.rs row + tests.rs required-list + gate/server/dispatch.rs arm + gate/gnostic.rs fn + gate/parity.rs match (:803-809) + epi techne gnosis CLI parity (ONE-substrate invariant). ALSO OPEN: (c) tmux terminal-lease at gnostic call sites (nothing in tmux.rs); (d) redis-context hierarchical {day}/{session}/{turn}/{coordinate} keys — coordinate_lookup_snapshot(redis_cache.rs:137) exists but flat, needs the day/session/turn extension; e2e s5_gnostic_one_substrate_round_trip test absent. Dependency chain CLEARED this session: 12.T12.17/18/19 all closed. 06.T6.1 stays blocked on this tranche. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T16:21:39.846Z",
+          "text": "SLICE LANDED (fable-c 2026-07-14, second pass): the full 11-method named set is LIVE on the wire — fresh gateway-method probe shows every s5'.gnostic.{ingest,query,notebook,status,models,resolve,candidates,etymology,list_notebooks,episode_search,evidence_trace,query_with_layers} exists:true with honest domain answers (membrane field-name refusals on empty params). Built this pass: (1) production epi_gnostic/cli.py gained seven real commands — candidates (orphan/promotable/reviewed over bimba_coordinate/assignment_method), etymology (coordinate anchors + RESONATES_WITH scent cluster), list-notebooks (coordinate-filtered; notebook create stamps coordinate), episode-search (reads :Episodic, never writes), evidence-trace (source_id chunk chain), query-with-layers (per-mode RAG, refused before heavy init), resolve (consolidated handle by coordinate OR vector_id: entity + family + resonances + anchors) — spec-named tests/test_one_substrate_smoke.py 7/7 green on live Neo4j; (2) gateway-contract registration (protocol.rs + dispatch_plan rows + required-list test, 66/66); (3) epi-cli gate server arms + thin handlers (validation at membrane, execution delegated to EPI_GNOSTIC_PYTHON); (4) epi techne gnosis parity subcommands via shared passthrough (ONE-substrate invariant held); (5) parity records extended; (6) T9 route-ownership cross-walk bookkeeping: resolve retired from s3_only_methods with provenance comment — the REFUSED gate run that caught this stale book is the harness working as designed; 28/28 after. Class gate PASS twice (final tree). GOTCHA recorded: the method probe spawns target/debug/epi AS-BUILT — cargo check is not enough, cargo build before trusting a probe verdict. REMAINING LEGS (unchanged): (c) tmux terminal-lease at gnostic call sites; (d) redis-context hierarchical {day}/{session}/{turn}/{coordinate} keys + snapshot-helper extension; e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 Rust-module lane, separate scope). 06.T6.1 unblocks when those close. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T15:49:46.802Z",
-      "heartbeatAt": "2026-07-14T13:54:50.412Z",
+      "leaseExpiresAt": "2026-07-14T17:55:55.927Z",
+      "heartbeatAt": "2026-07-14T16:21:39.846Z",
       "runId": "20260714T134946Z-12-T12.2",
       "worktree": null
     },
@@ -16282,28 +16286,26 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T13:14:16.861Z",
-    "updatedAt": "2026-07-14T13:14:16.861Z",
+    "createdAt": "2026-07-14T15:55:16.891Z",
+    "updatedAt": "2026-07-14T15:55:16.891Z",
     "taskIds": [
-      "12.T12.17",
       "36.T36.5",
-      "06.T6.1",
-      "48.T48.3",
-      "09.T9.3"
+      "23.T23.10",
+      "12.T12.2",
+      "05.T5.20"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "06.T6.1": "in-session",
-      "48.T48.3": "in-session",
-      "09.T9.3": "in-session"
+      "23.T23.10": "in-session",
+      "12.T12.2": "in-session",
+      "05.T5.20": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

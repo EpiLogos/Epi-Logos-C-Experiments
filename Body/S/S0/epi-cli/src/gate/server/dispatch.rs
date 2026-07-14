@@ -1385,6 +1385,27 @@ pub(super) async fn dispatch_rpc(
         "s5'.gnostic.models" => gnostic::models()
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s5'.gnostic.resolve" => gnostic::resolve(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.candidates" => gnostic::candidates(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.etymology" => gnostic::etymology(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.list_notebooks" => gnostic::list_notebooks(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.episode_search" => gnostic::episode_search(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.evidence_trace" => gnostic::evidence_trace(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.query_with_layers" => gnostic::query_with_layers(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),

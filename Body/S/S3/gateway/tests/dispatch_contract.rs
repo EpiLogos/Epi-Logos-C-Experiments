@@ -619,8 +619,9 @@ mod t9_route_ownership_cross_walk {
             "s3'.being_pattern.review_candidate",
             "s3'.being_pattern.subscribe",
             // S5 governance routes mediated beyond the S0 gate host.
+            // (`s5'.gnostic.resolve` left this list at 12.T12.2 — it gained a
+            // real S0 adapter over the production epi-gnostic consolidated read.)
             "s5'.gnostic.musical_transcript",
-            "s5'.gnostic.resolve",
             // S2 / S2' graph law — S3 dispatches directly to graph-services.
             "s2'.constraint.list",
             "s2'.constraint.register",

@@ -69,6 +69,63 @@ pub fn notebook(params: &Value) -> Result<Value, String> {
     run_gnostic(args)
 }
 
+pub fn resolve(params: &Value) -> Result<Value, String> {
+    let reference = required_str_alias(params, &["coord", "coordinate", "ref", "passageId", "passage_id", "id"])?;
+    run_gnostic(["resolve".to_owned(), reference])
+}
+
+pub fn candidates(params: &Value) -> Result<Value, String> {
+    let mut args = vec!["candidates".to_owned()];
+    if let Some(filter) = optional_str_alias(params, &["filter", "candidateFilter", "candidate_filter"]) {
+        args.push("--filter".to_owned());
+        args.push(filter);
+    }
+    run_gnostic(args)
+}
+
+pub fn etymology(params: &Value) -> Result<Value, String> {
+    let coord = required_str_alias(params, &["coord", "coordinate", "bimbaCoordinate"])?;
+    run_gnostic(["etymology".to_owned(), coord])
+}
+
+pub fn list_notebooks(params: &Value) -> Result<Value, String> {
+    let mut args = vec!["list-notebooks".to_owned()];
+    if let Some(coord) = optional_str_alias(params, &["coordFilter", "coord_filter", "coordinate", "coord"]) {
+        args.push("--coordinate".to_owned());
+        args.push(coord);
+    }
+    run_gnostic(args)
+}
+
+pub fn episode_search(params: &Value) -> Result<Value, String> {
+    let query = required_str_alias(params, &["query", "question"])?;
+    let mut args = vec!["episode-search".to_owned(), query];
+    if let Some(vak) = optional_str_alias(params, &["vakFilter", "vak_filter", "vak"]) {
+        args.push("--vak".to_owned());
+        args.push(vak);
+    }
+    if let Some(group) = optional_str_alias(params, &["group", "groupId", "group_id"]) {
+        args.push("--group".to_owned());
+        args.push(group);
+    }
+    run_gnostic(args)
+}
+
+pub fn evidence_trace(params: &Value) -> Result<Value, String> {
+    let passage_id = required_str_alias(params, &["passageId", "passage_id", "id"])?;
+    run_gnostic(["evidence-trace".to_owned(), passage_id])
+}
+
+pub fn query_with_layers(params: &Value) -> Result<Value, String> {
+    let question = required_str_alias(params, &["query", "question"])?;
+    let mut args = vec!["query-with-layers".to_owned(), question];
+    if let Some(layers) = optional_str_alias(params, &["layers"]) {
+        args.push("--layers".to_owned());
+        args.push(layers);
+    }
+    run_gnostic(args)
+}
+
 fn run_gnostic<I>(args: I) -> Result<Value, String>
 where
     I: IntoIterator<Item = String>,

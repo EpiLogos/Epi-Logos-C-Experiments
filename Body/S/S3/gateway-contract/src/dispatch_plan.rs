@@ -746,6 +746,42 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: "s5'.gnostic.candidates",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.etymology",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.list_notebooks",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.episode_search",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.evidence_trace",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.query_with_layers",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: "s5.episodic.search",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S3/graphiti-runtime + Body/S/S5/epii-agent-core",

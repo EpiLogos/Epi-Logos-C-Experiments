@@ -58,6 +58,36 @@ pub enum GnosisCmd {
         #[arg(long)]
         family: Option<String>,
     },
+    /// Consolidated entity handle for a coordinate or passage id (s5'.gnostic.resolve parity)
+    Resolve { reference: String },
+    /// PASU orphan-candidate surface (s5'.gnostic.candidates parity)
+    Candidates {
+        #[arg(long)]
+        filter: Option<String>,
+    },
+    /// Etymology cluster around a coordinate (s5'.gnostic.etymology parity)
+    Etymology { coord: String },
+    /// Coordinate-filtered notebook listing (s5'.gnostic.list_notebooks parity)
+    ListNotebooks {
+        #[arg(long)]
+        coordinate: Option<String>,
+    },
+    /// Graphiti episode search (s5'.gnostic.episode_search parity)
+    EpisodeSearch {
+        query: String,
+        #[arg(long)]
+        vak: Option<String>,
+        #[arg(long)]
+        group: Option<String>,
+    },
+    /// Provenance pointer chain for a passage (s5'.gnostic.evidence_trace parity)
+    EvidenceTrace { passage_id: String },
+    /// Per-layer query across LightRAG modes (s5'.gnostic.query_with_layers parity)
+    QueryWithLayers {
+        question: String,
+        #[arg(long)]
+        layers: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -187,5 +217,45 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
             coordinate,
             family,
         } => ingest::ingest_gnostic(&config, entity_id, coordinate.as_deref(), family.as_deref()),
+        GnosisCmd::Resolve { reference } => {
+            query::run_gnostic_passthrough(&config, &["resolve", reference])
+        }
+        GnosisCmd::Candidates { filter } => {
+            let mut args = vec!["candidates"];
+            if let Some(f) = filter.as_deref() {
+                args.extend(["--filter", f]);
+            }
+            query::run_gnostic_passthrough(&config, &args)
+        }
+        GnosisCmd::Etymology { coord } => {
+            query::run_gnostic_passthrough(&config, &["etymology", coord])
+        }
+        GnosisCmd::ListNotebooks { coordinate } => {
+            let mut args = vec!["list-notebooks"];
+            if let Some(c) = coordinate.as_deref() {
+                args.extend(["--coordinate", c]);
+            }
+            query::run_gnostic_passthrough(&config, &args)
+        }
+        GnosisCmd::EpisodeSearch { query: q, vak, group } => {
+            let mut args = vec!["episode-search", q];
+            if let Some(v) = vak.as_deref() {
+                args.extend(["--vak", v]);
+            }
+            if let Some(g) = group.as_deref() {
+                args.extend(["--group", g]);
+            }
+            query::run_gnostic_passthrough(&config, &args)
+        }
+        GnosisCmd::EvidenceTrace { passage_id } => {
+            query::run_gnostic_passthrough(&config, &["evidence-trace", passage_id])
+        }
+        GnosisCmd::QueryWithLayers { question, layers } => {
+            let mut args = vec!["query-with-layers", question];
+            if let Some(l) = layers.as_deref() {
+                args.extend(["--layers", l]);
+            }
+            query::run_gnostic_passthrough(&config, &args)
+        }
     }
 }

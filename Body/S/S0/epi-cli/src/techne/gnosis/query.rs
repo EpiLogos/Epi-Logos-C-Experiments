@@ -192,3 +192,23 @@ pub fn query_gnostic(
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
+
+/// 12.T12.2 CLI parity: shell an arbitrary epi-gnostic subcommand (the same
+/// production Python the gateway routes dispatch to — ONE substrate, no
+/// duplicated logic host-side).
+pub fn run_gnostic_passthrough(config: &GnosisConfig, args: &[&str]) -> Result<String, String> {
+    let output = std::process::Command::new(&config.python_bin)
+        .args(args)
+        .output()
+        .map_err(|e| format!("Failed to run epi-gnostic: {e}"))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!(
+            "epi-gnostic {} failed: {stderr}",
+            args.first().unwrap_or(&"")
+        ));
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}

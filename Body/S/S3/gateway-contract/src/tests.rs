@@ -1699,6 +1699,14 @@ fn s5_prime_gnostic_methods_register_over_production_epi_gnostic() {
         "s5'.gnostic.notebook",
         "s5'.gnostic.status",
         "s5'.gnostic.models",
+        // 12.T12.2 ONE-substrate minimum (DR-S5-ONE-1): the six named reads
+        // over production epi-gnostic — dispatching, never duplicating.
+        "s5'.gnostic.candidates",
+        "s5'.gnostic.etymology",
+        "s5'.gnostic.list_notebooks",
+        "s5'.gnostic.episode_search",
+        "s5'.gnostic.evidence_trace",
+        "s5'.gnostic.query_with_layers",
     ];
 
     for method in required {

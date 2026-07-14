@@ -7,8 +7,14 @@ Usage:
     epi-gnostic ingest-text <text> [--source-id ID]
     epi-gnostic query <question> [--mode MODE]
     epi-gnostic notebook list
-    epi-gnostic notebook create <name>
+    epi-gnostic notebook create <name> [--coordinate COORD]
     epi-gnostic notebook delete <name>
+    epi-gnostic list-notebooks [--coordinate COORD]
+    epi-gnostic candidates [--filter orphan|promotable|reviewed]
+    epi-gnostic etymology <coord>
+    epi-gnostic episode-search <query> [--group GROUP] [--vak VAK]
+    epi-gnostic evidence-trace <passage_id>
+    epi-gnostic query-with-layers <question> [--layers local,global,hybrid]
     epi-gnostic enrich <entity_id> [--coordinate COORD] [--family FAM]
 
 All output is JSON on stdout for Rust to parse.
@@ -60,6 +66,28 @@ async def _run(args: list[str]):
         _json_out(_notebook(config, args[1:]))
         return
 
+    if cmd == "list-notebooks":
+        _json_out(_list_notebooks(config, _flag(args, "--coordinate")))
+        return
+
+    # 12.T12.2 graph-read commands: direct Neo4j reads over the enrichment
+    # vocabulary (label = workspace; bimba_coordinate / RESONATES_WITH /
+    # MAPS_TO_COORDINATE / :Episodic) — no RAG initialisation needed.
+    if cmd in {"candidates", "etymology", "episode-search", "evidence-trace", "resolve"}:
+        _json_out(await _graph_read(config, cmd, args[1:]))
+        return
+
+    if cmd == "query-with-layers":
+        # Refuse malformed input before the heavyweight RAG initialisation.
+        if len(args) < 2 or args[1].startswith("--"):
+            _json_out({"status": "error", "message": "query-with-layers requires a question argument"})
+            return
+        requested = (_flag(args, "--layers") or "local,global,hybrid").split(",")
+        unknown = [layer for layer in requested if layer not in {"naive", "local", "global", "hybrid"}]
+        if unknown:
+            _json_out({"status": "error", "message": f"unknown layers: {unknown}; valid: ['global', 'hybrid', 'local', 'naive']"})
+            return
+
     from epi_gnostic.wrapper import GnosticRAG
     from epi_gnostic.enrichment.coordinator import CoordinateEnricher
     from neo4j import AsyncGraphDatabase
@@ -108,6 +136,14 @@ async def _run(args: list[str]):
             answer = await rag.query(question, mode=mode)
             _json_out({"status": "ok", "answer": answer, "mode": mode})
 
+        elif cmd == "query-with-layers":
+            question = args[1]
+            layers = (_flag(args, "--layers") or "local,global,hybrid").split(",")
+            answers = {}
+            for layer in layers:
+                answers[layer] = await rag.query(question, mode=layer)
+            _json_out({"status": "ok", "question": question, "layers": answers})
+
         elif cmd == "enrich":
             entity_id = args[1]
             coordinate = _flag(args, "--coordinate")
@@ -148,6 +184,155 @@ def _flag(args: list[str], flag: str) -> str | None:
         return None
 
 
+async def _graph_read(config, cmd: str, args: list[str]) -> dict:
+    """12.T12.2: direct Neo4j reads over the enrichment vocabulary.
+
+    Every read is over what the graph really carries — label = workspace,
+    `bimba_coordinate`/`coordinate_family`/`assignment_method` from the
+    CoordinateEnricher, `RESONATES_WITH`/`MAPS_TO_COORDINATE` edges to
+    `:Bimba`, and Graphiti `:Episodic` nodes. Empty results are honest
+    empties, never invented.
+    """
+    from neo4j import AsyncGraphDatabase
+
+    ws = config.workspace
+    driver = AsyncGraphDatabase.driver(config.neo4j_uri)
+    try:
+        async with driver.session(database=config.neo4j_database) as session:
+            if cmd == "candidates":
+                candidate_filter = _flag(args, "--filter") or "orphan"
+                where = {
+                    "orphan": "n.bimba_coordinate IS NULL",
+                    "promotable": "n.bimba_coordinate IS NOT NULL AND n.review_state IS NULL",
+                    "reviewed": "n.review_state = 'reviewed'",
+                }.get(candidate_filter)
+                if where is None:
+                    return {"status": "error", "message": f"unknown filter {candidate_filter!r}; expected orphan, promotable, or reviewed"}
+                res = await session.run(
+                    f"MATCH (n:`{ws}`) WHERE {where} "
+                    f"RETURN n.vector_id AS entity_id, n.entity_name AS entity_name, "
+                    f"       n.bimba_coordinate AS coordinate, n.assignment_method AS assignment_method "
+                    f"ORDER BY entity_id LIMIT 200"
+                )
+                rows = await res.data()
+                return {"status": "ok", "filter": candidate_filter, "count": len(rows), "candidates": rows}
+
+            if cmd == "etymology":
+                if not args or args[0].startswith("--"):
+                    return {"status": "error", "message": "etymology requires a coordinate argument"}
+                coord = args[0]
+                res = await session.run(
+                    f"MATCH (n:`{ws}`) WHERE n.bimba_coordinate = $coord "
+                    f"RETURN n.vector_id AS entity_id, n.entity_name AS entity_name, "
+                    f"       n.assignment_method AS assignment_method",
+                    coord=coord,
+                )
+                anchors = await res.data()
+                res = await session.run(
+                    f"MATCH (n:`{ws}`)-[r:RESONATES_WITH]->(bc:Bimba {{coordinate: $coord}}) "
+                    f"RETURN n.vector_id AS entity_id, n.entity_name AS entity_name, "
+                    f"       n.bimba_coordinate AS home_coordinate, r.confidence AS confidence",
+                    coord=coord,
+                )
+                resonant = await res.data()
+                return {
+                    "status": "ok",
+                    "coordinate": coord,
+                    "cluster": {"anchors": anchors, "resonant": resonant},
+                    "count": len(anchors) + len(resonant),
+                }
+
+            if cmd == "episode-search":
+                if not args or args[0].startswith("--"):
+                    return {"status": "error", "message": "episode-search requires a query argument"}
+                query = args[0]
+                group = _flag(args, "--group")
+                vak = _flag(args, "--vak")
+                cypher = "MATCH (e:Episodic) WHERE toLower(coalesce(e.content, '')) CONTAINS toLower($q)"
+                params: dict = {"q": query}
+                if group:
+                    cypher += " AND e.group_id = $gid"
+                    params["gid"] = group
+                if vak:
+                    cypher += " AND toLower(coalesce(e.content, '')) CONTAINS toLower($vak)"
+                    params["vak"] = vak
+                cypher += (
+                    " RETURN e.uuid AS uuid, e.name AS name, e.group_id AS group_id, "
+                    "        e.created_at AS created_at, left(coalesce(e.content, ''), 400) AS excerpt "
+                    " ORDER BY e.created_at DESC LIMIT 25"
+                )
+                res = await session.run(cypher, **params)
+                rows = await res.data()
+                episodes = [
+                    {**row, "created_at": str(row["created_at"]) if row.get("created_at") is not None else None}
+                    for row in rows
+                ]
+                return {"status": "ok", "query": query, "count": len(episodes), "episodes": episodes}
+
+            if cmd == "resolve":
+                # Consolidated read (unified-memory layer 2, DR-WORLD-1): one
+                # handle for a coordinate or a vector_id — entities, their
+                # coordinate assignments, resonances, and provenance anchors.
+                if not args or args[0].startswith("--"):
+                    return {"status": "error", "message": "resolve requires a coordinate or passage id argument"}
+                ref = args[0]
+                res = await session.run(
+                    f"MATCH (n:`{ws}`) WHERE n.bimba_coordinate = $ref OR n.vector_id = $ref "
+                    f"OPTIONAL MATCH (n)-[:RESONATES_WITH]->(rc:Bimba) "
+                    f"RETURN n.vector_id AS entity_id, n.entity_name AS entity_name, "
+                    f"       n.bimba_coordinate AS coordinate, n.coordinate_family AS family, "
+                    f"       n.assignment_method AS assignment_method, n.source_id AS source_id, "
+                    f"       collect(rc.coordinate) AS resonances "
+                    f"LIMIT 50",
+                    ref=ref,
+                )
+                rows = await res.data()
+                entities = [
+                    {
+                        **{k: row.get(k) for k in ("entity_id", "entity_name", "coordinate", "family", "assignment_method")},
+                        "resonances": [r for r in (row.get("resonances") or []) if r],
+                        "anchors": [chunk for chunk in (row.get("source_id") or "").split("<SEP>") if chunk],
+                    }
+                    for row in rows
+                ]
+                return {"status": "ok", "ref": ref, "found": bool(entities), "entities": entities}
+
+            # evidence-trace
+            if not args or args[0].startswith("--"):
+                return {"status": "error", "message": "evidence-trace requires a passage id argument"}
+            passage_id = args[0]
+            res = await session.run(
+                f"MATCH (n:`{ws}` {{vector_id: $vid}}) "
+                f"RETURN n.entity_name AS entity_name, n.bimba_coordinate AS coordinate, "
+                f"       n.source_id AS source_id, n.file_path AS file_path",
+                vid=passage_id,
+            )
+            rows = await res.data()
+            if not rows:
+                return {"status": "ok", "passage_id": passage_id, "found": False, "anchors": []}
+            row = rows[0]
+            anchors = [chunk for chunk in (row.get("source_id") or "").split("<SEP>") if chunk]
+            return {
+                "status": "ok",
+                "passage_id": passage_id,
+                "found": True,
+                "entity_name": row.get("entity_name"),
+                "coordinate": row.get("coordinate"),
+                "file_path": row.get("file_path"),
+                "anchors": anchors,
+            }
+    finally:
+        await driver.close()
+
+
+def _list_notebooks(config, coordinate: str | None) -> dict:
+    path = Path(config.working_dir) / "notebooks.json"
+    notebooks = _read_notebooks(path)
+    if coordinate is not None:
+        notebooks = [entry for entry in notebooks if entry.get("coordinate") == coordinate]
+    return {"status": "ok", "coordinate_filter": coordinate, "count": len(notebooks), "notebooks": notebooks}
+
+
 def _notebook(config, args: list[str]) -> dict:
     action = args[0] if args else "list"
     path = Path(config.working_dir) / "notebooks.json"
@@ -161,12 +346,14 @@ def _notebook(config, args: list[str]) -> dict:
 
     if action == "create":
         name = args[1]
+        coordinate = _flag(args, "--coordinate")
         existing = next((entry for entry in notebooks if entry["name"] == name), None)
         if existing is None:
             existing = {
                 "name": name,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "workspace": config.workspace,
+                **({"coordinate": coordinate} if coordinate else {}),
             }
             notebooks.append(existing)
             _write_notebooks(path, notebooks)
