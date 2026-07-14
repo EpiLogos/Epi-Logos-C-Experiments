@@ -17,6 +17,11 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { spawnSync } from "node:child_process";
 import { buildQProposalGraphitiEpisode } from "../../modules/q-proposal-candidate.ts";
+import {
+  buildTranscriptPromotionEpisode,
+  readGatewayTranscript,
+  summariseTranscript,
+} from "../../modules/transcript-summariser.ts";
 import { isValidVakAddress } from "../../../shared/vak_address.ts";
 import type { QProposal } from "../../../S4-4p-anima/modules/sophia-hook.ts";
 
@@ -70,6 +75,11 @@ export function registerThoughtTools(api: ExtensionAPI) {
         source_artifacts: Type.Array(Type.String()),
       }), { description: "Sophia/pair-development q_ proposal candidates to promote as Graphiti candidate episodes." })),
       group_id: Type.Optional(Type.String({ description: "Graphiti group_id filter for q_proposal candidate episodes." })),
+      transcript_paths: Type.Optional(Type.Record(Type.String(), Type.String(), {
+        description: "42.9: per-session paths to the gateway's harness-neutral transcript jsonl " +
+          "({gate_state_root}/transcripts/{slug}.jsonl). When present, the session is promoted " +
+          "from the transcript (one reader, all harnesses); claude-mem stays an optional HOT-tier source.",
+      })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const types = params.promote_types ?? ["decision", "bugfix", "feature", "discovery"];
@@ -116,6 +126,34 @@ export function registerThoughtTools(api: ExtensionAPI) {
             promoted.push(`q_proposal:${proposal.target_coordinate}:${proposal.q_key}`);
           } catch (e) {
             failed.push(`${proposal.q_key}: graphiti sidecar unreachable (${e})`);
+          }
+        }
+
+        // 42.9: promote from the harness-neutral gateway transcript when a
+        // path is supplied — the one reader/one summariser path, harness-blind.
+        const transcriptPath = (params.transcript_paths ?? {})[sessionId];
+        if (transcriptPath) {
+          try {
+            const entries = readGatewayTranscript(transcriptPath);
+            const summary = summariseTranscript({
+              entries,
+              sessionKey: sessionId,
+              dayId: params.day_id ?? "",
+            });
+            const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
+            const resp = await fetch(`${graphitiBase}/episode`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(buildTranscriptPromotionEpisode(summary)),
+              signal: AbortSignal.timeout(10_000),
+            });
+            if (resp.ok) {
+              promoted.push(`transcript:${sessionId}:${summary.group_id}`);
+            } else {
+              failed.push(`${sessionId}: transcript episode rejected (${resp.status})`);
+            }
+          } catch (e) {
+            failed.push(`${sessionId}: transcript promotion failed (${e})`);
           }
         }
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-13T23:55:09.033Z",
+  "updatedAt": "2026-07-14T00:00:59.297Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10939,14 +10939,31 @@
       "worktree": null
     },
     "42.T42.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T23:52:07.335Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T00:00:59.282Z",
       "claimedAt": "2026-07-13T23:52:07.335Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T00:00:59.282Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T00:00:59.282Z",
+          "text": "BUILT (gap-close): the 42.5 producer existed but nothing consumed the harness-neutral transcript — the memory pipeline read Sophia jsonl + claude-mem HOT tier only. Landed: transcript-summariser.ts (ONE reader for the gateway jsonl, ONE pure summariser with zero harness branches — harness_id carried as provenance data; deriveVakGroupId keys episodes by day/session/VAK-path with phase preserved verbatim per 12.36; promote-episode builder matches the live Graphiti EpisodeRequest contract incl. required cpf) + aletheia_session_promote grafted with optional transcript_paths param — sessions promote FROM the harness-neutral transcript, claude-mem demoted to optional HOT-tier source per spec. Fresh 4/4 new + 11/11 touched suites; tool file parse-checked (typebox resolves only in PI runtime so the gate never loads it). W gate green at ta-onta 446. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/transcript_summariser.test.ts (4 passed / 0 failed — NEW: Pi-run + Codex-run transcripts through the IDENTICAL summariser path with structurally identical output, Night-prime phase marker survives verbatim into episode group_id, on-disk gateway jsonl to promote-episode round-trip, refusal on missing vak_address) ; node .codex/scripts/verify-tranche.mjs 42.T42.9 --owner fable-c-verify — W-scoped gate PASS (ta-onta 446 incl. both new suites, gateway 85, gateway-contract 86, gateway-methods, live-wire spawned-gateway, redis-context 10, spacetime 11, graphiti-runtime 14, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 758,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/modules/transcript-summariser.ts",
+              "Body/S/S4/ta-onta/S4-5p-aletheia/tests/transcript_summariser.test.ts",
+              "Body/S/S4/ta-onta/S4-5p-aletheia/S5-prime/tools/thought-tools.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/42.T42.9.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T01:22:07.335Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:52:07.335Z",
       "runId": "20260713T235207Z-42-T42.9",
       "worktree": null
@@ -15336,11 +15353,12 @@
     {
       "runId": "20260713T235207Z-42-T42.9",
       "taskId": "42.T42.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T23:52:07.335Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T01:22:07.335Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T00:00:59.282Z"
     },
     {
       "runId": "20260713T235222Z-43-T43.5",
