@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:42:14.078Z",
+  "updatedAt": "2026-07-14T07:42:17.997Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -6065,14 +6065,29 @@
       "worktree": null
     },
     "17.T17.17": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-13T16:10:55.622Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:42:17.979Z",
       "claimedAt": "2026-07-13T16:10:55.622Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:42:17.979Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:42:17.979Z",
+          "text": "Closed uc-1717 abandoned-but-verified 17.T17.17 (coordinate_home &static str -> typed CoordinateHome enum). Enum committed at portal-core/src/kernel/profile.rs:326 (typed field coordinate_home + CoordinateHome::from_anchor, ties to epi_s2_graph_schema::CoordinateHome). RE-VERIFIED FRESH via a full W-gate on the current tree (NOT the stale 16:47 record): fresh PASS record uc-1717-verify 07:40 today — real gateway spawned, live-wire + gateway(85) + gateway-contract(86) + ta-onta(446) + redis/spacetime/graphiti all green. verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 17.T17.17",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/profile.rs:326 CoordinateHome enum",
+              "W-gate fresh: real gateway spawned + live-wire PASS + gateway 85 + gateway-contract 86 green"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-1717",
-      "leaseExpiresAt": "2026-07-13T20:10:55.622Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:10:55.622Z",
       "runId": "20260713T161055Z-17-T17.17",
       "worktree": null
@@ -15157,11 +15172,12 @@
     {
       "runId": "20260713T161055Z-17-T17.17",
       "taskId": "17.T17.17",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-13T16:10:55.622Z",
       "owner": "uc-1717",
       "leaseExpiresAt": "2026-07-13T20:10:55.622Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T07:42:17.979Z"
     },
     {
       "runId": "20260713T165105Z-40-T40.2",
