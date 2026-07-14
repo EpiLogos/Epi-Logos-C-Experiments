@@ -168,6 +168,13 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                         projection.harmonic_profile.kairos_mode = Some("realtime".to_owned());
                     }
                 }
+                // The ambient epi-genetic transform (DR-ENV-1/2/7): the live sky's
+                // transpersonal planets aspected against the PASU natal → the
+                // environment quaternion the carrier composes onto the base. Reuses
+                // the degrees already fetched; None (honest "env pending") when no
+                // natal chart is anchored — never fabricated, never q_identity.
+                projection.harmonic_profile.environment_quaternion =
+                    crate::nara::identity::heartbeat_environment(&degrees);
             }
             // Handle-only PASU identity summary (Sprint-8 E6, DR-M4-3):
             // natal clock address + weight + preview + elemental quaternion.

@@ -649,6 +649,13 @@ pub struct MathemeHarmonicProfile {
     /// "no identity anchored" state.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub quintessence: Option<QuintessenceProjection>,
+    /// Ambient environmental transform quaternion (DR-ENV-1/8): the collective
+    /// sky's transpersonal planets aspected against the PASU natal, composed onto
+    /// the base. Attached by the S3 gateway heartbeat when a natal chart exists;
+    /// the kernel constructor never fabricates it. Absence IS the honest "env
+    /// pending" state; the identity rotation IS "no ambient influence" (calm).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub environment_quaternion: Option<[f32; 4]>,
     pub binary: MathemeBinaryProjection,
     pub mahamaya: MathemeBinaryProjection,
     pub codon_rotation_projection: CodonRotationProjection,
@@ -780,6 +787,7 @@ impl MathemeHarmonicProfile {
             phase_space: Some(PhaseSpaceAddress::from_degree720(degree720)),
             // never fabricated kernel-side — the gateway attaches identity
             quintessence: None,
+            environment_quaternion: None,
             binary: binary.clone(),
             mahamaya: binary,
             codon_rotation_projection,

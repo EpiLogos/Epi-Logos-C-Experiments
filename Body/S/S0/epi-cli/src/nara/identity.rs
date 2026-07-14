@@ -488,6 +488,37 @@ pub fn heartbeat_quintessence() -> Option<portal_core::QuintessenceProjection> {
     })
 }
 
+/// The ambient environmental transform (DR-ENV-1/2/7) for the live heartbeat:
+/// the transiting sky's transpersonal (outer) planets — Uranus(7)/Neptune(8)/
+/// Pluto(9), the collective band — each aspected against the PASU natal Sun and
+/// folded into the `environment_quaternion` the carrier composes onto the base.
+/// `sky` is the live ecliptic-degree tuple (0..360) the heartbeat already holds.
+/// Requires a natal chart (layer_1); absent it, `None` — the ambient wind is only
+/// ever computed AGAINST the personal invariant (DR-ENV-7), never fabricated. The
+/// result is a DISTINCT factor; it never becomes q_identity (DR-ENV-1).
+pub fn heartbeat_environment(sky: &[f32; 10]) -> Option<[f32; 4]> {
+    use portal_core::environment::{
+        derive_env_quaternion, ConditionSource, EnvironmentalCondition, NatalReference,
+    };
+    // Natal invariant: the PASU natal chart's Sun (ecliptic 0..360, planet index
+    // 0), from the persisted natal.json — the birth-time anchor the ambient
+    // conditions are aspected against. No cached natal chart → no env (honest).
+    let natal_chart = crate::nara::kairos::load_natal().ok()??;
+    let natal_degrees = crate::nara::kairos::planet_degrees_from_result(&natal_chart)?;
+    let natal_ref = NatalReference {
+        sun_degree: natal_degrees[0],
+    };
+    // The transpersonal band (DR-ENV-2): Uranus/Neptune/Pluto are the ambient,
+    // collective conditions — never a personal M2–M5 dataset.
+    let conditions: [EnvironmentalCondition; 3] = [7u8, 8, 9].map(|planet| EnvironmentalCondition {
+        source: ConditionSource::TranspersonalPlanet(planet),
+        degree: sky[planet as usize],
+        magnitude: 1.0,
+        sensitivity: 1.0,
+    });
+    Some(derive_env_quaternion(&conditions, natal_ref))
+}
+
 // ─── Journal elemental weight stub ──────────────────────────────────────────
 
 /// Stub: derive elemental weights [FIRE, WATER, EARTH, AIR] from journal text.
