@@ -1,5 +1,7 @@
 # Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body (RERUN — target: pratibimba-app + substrate)
 
+> ⚑ **SUPERSEDED-IN-PART — ratified ambient / epi-genetic architecture (2026-07-14).** This track's routing of the **live planetary / collective feed into the personal being-pattern (PASU) register** is **SUPERSEDED-IN-PART** by [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]. The live planetary / collective sky routes to the **`q_environment` transform factor** — an epi-genetic transform *onto* the M4 PASU base — **NOT the PASU personal identity register**. **Identity is the natal invariant** (birth place / time / natal chart), per **DR-ENV-1**; the transiting / collective sky **transforms, it never identifies**, and **planets must never collapse into `q_identity`**. Outer planets are the canonical ambient-condition band (**DR-ENV-2**), not a pending M2-5 personal-correspondence dataset; only natal-derived weights may source identity (**DR-ENV-4**). Tranche-level amendments below: **T37.2** (DR-ENV-1), **T37.4** (DR-ENV-4), **T37.9** (DR-ENV-2).
+
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 37). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
 **⚑ Carrier (track 37) — build/verify HERE, never epi-theia:** SUBSTRATE — bio-quaternionic projection backlog (m2.epogdoonProjection, planetaryElementalWeights, cymaticMonoPolyState, m3.lensCodonBinary, m2m3.lensOrbiterRelations, m3.bioquaternionTranscription) in portal-core/epi-lib. CARRIER: epogdoon gap-wheel, MonoPoly cymatic shader state, elemental-weights feed, 24-amino backbone ring. §2 track 37.
@@ -13,6 +15,8 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
 2. **T37.2 — Ratify the planetary-elemental projection**
 
+   > **AMENDED — [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]] (DR-ENV-1).** Split **natal** (identity, invariant — Sun-rooted, kept) from **live/transit** (environment): the transiting sky **transforms, it does not identify**. Identity is the natal invariant, never derived from the live planetary feed.
+
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.2 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
@@ -24,6 +28,8 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 4. **T37.4 — Export the M2 elemental + cymatic contributions**
+
+   > **AMENDED — [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]] (DR-ENV-4).** Core-collapse tranche. The **LIVE/collective** band routes to the **`q_environment` transform factor** (the epi-genetic transform *onto* the M4 PASU base), **NOT the PASU personal-identity register**. Only **natal-chart-derived** elemental weights (a birth-time invariant) may source identity; the live sky may only transform.
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.4 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
@@ -54,6 +60,8 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 9. **T37.9 — Ratify the planet↔aperture aspect projection (the missing 16/9 edge class)**
+
+   > **AMENDED — [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]] (DR-ENV-2).** Retire the **23.10 pending-dataset badge**: outer planets (Uranus/Neptune/Pluto) are the **canonical ambient-condition band**, not a pending M2-5 personal-correspondence dataset — aspected **against natal**.
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.9 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.

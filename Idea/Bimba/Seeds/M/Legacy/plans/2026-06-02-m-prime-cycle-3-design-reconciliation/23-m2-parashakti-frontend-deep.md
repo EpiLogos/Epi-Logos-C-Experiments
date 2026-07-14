@@ -210,6 +210,8 @@ Tranche 19.10 substrate bridges inherited:
 
 10. **23.10 — Three outer-planet (Uranus/Neptune/Pluto) stubs with pending-dataset badge** *(code-pending-closure; consumes M2-ARCHITECTURE §2.4 + DCC-03)*
 
+    > **⚑ SUPERSEDED per DR-ENV-2 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** outer planets are ambient environmental conditions transforming the M4 PASU base quaternion, NOT a pending M2-5 personal-correspondence dataset. The M2 outer-planet rows keep only their harmonic footprint (Cousto Hz / element); the `pending-dataset-2-5-8-9-10` / `MEANING_ID_PREEMPTED` framing is retired.
+
     On `PlanetaryChakralCard` (23.3), `CorrespondenceTreeWidget` planetary-keying side panel (23.5), and `SeventyTwoFoldBreadcrumb` step 4 (23.7): when the planet at index 7 (Uranus), 8 (Neptune), or 9 (Pluto) is selected or traversed, the surface honestly renders:
 
     - **Substrate-present data** from `M2_PLANET_LUT[10]` rows 7-9 via `kernelBridge.m2.planetLUT(idx)` — Cousto Hz, DR, chakra, element, phase, Ananda row.
@@ -361,6 +363,8 @@ Tranche 19.10 substrate bridges inherited:
     Verification: `test -f Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/EpogdoonBridgeEngine.tsx`; `pnpm --filter @pratibimba/m2-parashakti test:epogdoon-bridge-engine` asserts (a) the 72→64→56 three-band descent renders; (b) exactly nine fold-point glyphs appear (the `is_evolutionary_gap` set) — count-asserted against a kernel-bridge mock seeded from `apply_epogdoon_compression`; (c) exactly eight `0xFF` gap sentinels render in the 64→56 band; (d) the 56 floor shows the 4×16 tarot-codon lattice with per-suit integral tint; (e) the active-codon cell binds to live `address72` via profile-tick, with no local recomputation; (f) `! grep -rn "import.*m3-mahamaya\|\* 8 / 9\|\* 8u / 9u" Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/EpogdoonBridgeEngine.tsx` (no direct M3 import; no local compression arithmetic).
 
 19. **23.19 — Planetary-orbiter elemental-weight feed → bioquaternion / PASU `elemental_weights`** *(spec-ahead-integration; consumes m2.h `M2_PLANET_LUT[10]` + `ELEM_SIG_GET_ELEMENT`; aspect engine `Body/S/S0/portal-core/src/aspect.rs`; feeds Track 10.PASU / Track 18.10 — DO NOT edit those, feed only)*
+
+    > **⚑ AMENDED per DR-ENV-1/4 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** the live elemental-weight feed routes to `q_environment` (transform), not the PASU identity register; only natal weights source identity.
 
     Author `m2-parashakti/src/browser/components/PlanetaryElementalFeed.tsx` — a profile-tick-driven engine that computes (kernel-side) and renders (widget-side) the live elemental-weight vector that the nine planetary orbiters project, and surfaces the typed handle that the being-pattern / PASU layer consumes as `elemental_weights`. The being-pattern carriers `elemental_weights` and `bioquaternion_handles` are already specced in Track 10.PASU and Track 18.10; this tranche is the M2-side PRODUCER that feeds them — it never writes PASU, it exposes the typed contribution the kernel-bridge routes there.
 

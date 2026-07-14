@@ -120,7 +120,7 @@ Consume as-is — `m5_execute_mobius_return` (M5 Sacred Violation at tick 11), `
     [5] L0'-5 (Number 6, Perfect-Hexad)          → PLANET_JUPITER
     [6] L0' parent (7th-Boundary, lens itself)   → PLANET_SATURN
     ```
-    Outer planets (Uranus/Neptune/Pluto) belong to M2-5 transpersonal extension; not in this LUT.
+    Outer planets (Uranus/Neptune/Pluto) belong to M2-5 transpersonal extension; not in this LUT. **AMENDED per DR-ENV-2 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** the exclusion-from-the-personal-LUT is correct, but outer planets are ambient environmental conditions (transforming the PASU base), NOT a pending M2-5 *personal-correspondence* dataset.
 
     **(c) `ALCHEMICAL_TO_TATTVIC[6]`** in [`Body/S/S0/epi-lib/src/m0.c`](Body/S/S0/epi-lib/src/m0.c) — bridges L2' Alchemical-Elemental (Aether/Earth/Water/Air/Fire/**Salt**) to M2 tattvic (Akasha/Vayu/Agni/Apas/Prithvi). Aether and Salt both route to Akasha but at different cycle points — Aether is *prima materia*, Salt is *ultima materia* (the Möbius return of the elemental cycle, parallel to QL 5→0). **Naming canon: Salt, not Mineral** — per alchemical Three Principles (Mercury / Sulphur / Salt) with Salt as the fixed body. Cross-link Track 05.16 (L2' canonical element-ID harmonisation across the M-stack — establishes `M_ELEM_SALT=5` and renumbers all dependents).
 

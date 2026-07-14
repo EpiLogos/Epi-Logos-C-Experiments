@@ -61,6 +61,8 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
 10. **T23.10 — Three outer-planet (Uranus/Neptune/Pluto) stubs with pending-dataset badge**
 
+   > **⚑ SUPERSEDED per DR-ENV-2 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** outer planets are ambient environmental conditions transforming the M4 PASU base quaternion, NOT a pending M2-5 personal-correspondence dataset. The M2 outer-planet rows keep only their harmonic footprint (Cousto Hz / element); the `pending-dataset-2-5-8-9-10` / `MEANING_ID_PREEMPTED` framing is retired.
+
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.10 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
@@ -114,6 +116,8 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 19. **T23.19 — Planetary-orbiter elemental-weight feed → bioquaternion / PASU `elemental_weights`**
+
+   > **⚑ AMENDED per DR-ENV-1/4 ([[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]):** the live elemental-weight feed routes to `q_environment` (transform), not the PASU identity register; only natal weights source identity.
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.19 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.

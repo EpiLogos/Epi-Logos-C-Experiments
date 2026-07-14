@@ -276,6 +276,8 @@ Every declared onboarding step has both a completion criterion (what fact in the
 
     Per FR-3 `KAIROS_ENABLED=false` is the default. 32.10 lands the optional enablement step as the post-PASU branch in cold-start.
 
+    **RE-FRAMED per [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]]:** the live planet-degree feed this opens (`M4_Temporal_Now.planet_degrees[10]`) is the ambient-condition INGRESS to the environmental/epi-genetic layer, held distinct from natal identity (DR-ENV-1) — it transforms the PASU base, never sources q_identity.
+
     Cold-start orchestrator (32.1) stage 6 (optional kairos refresh): when reached, checks `epi-logos.privacy.kairos-enabled` preference. If true: proceed with refresh. If false (default): mount kairos enablement step UI (post-walkthrough or appended to walkthrough if user hasn't completed it).
 
     Kairos enablement step UI at `Body/M/epi-theia/extensions/m-extension-runtime/src/browser/onboarding/kairos-enablement-step.tsx` — three-card sequence:
