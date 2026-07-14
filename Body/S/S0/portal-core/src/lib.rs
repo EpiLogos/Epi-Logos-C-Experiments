@@ -4,6 +4,7 @@ pub mod codon_rotation_projection;
 pub mod coordinate_phase;
 pub mod environment;
 pub mod events;
+pub mod expression;
 pub mod harmonic_profile;
 pub mod hopf;
 pub mod kernel;
@@ -56,6 +57,9 @@ pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodo
 pub use codon_rotation_projection::*;
 pub use coordinate_phase::*;
 pub use events::*;
+pub use expression::{
+    codon_iching_sum, express_codon, is_prime_attractor, walk_expression, ExpressionStep,
+};
 pub use hopf::{hopf_fiber, hopf_project, validate_quaternion_unity};
 pub use kernel::*;
 pub use m3_transcription_bridge::*;
