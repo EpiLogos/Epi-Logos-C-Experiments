@@ -74,3 +74,37 @@ pin 144→24 and 66→11). Kernel side independently green: `cargo test -p porta
 2. **DR-FIB-2 stored-vs-derived nuance.** The source text "Every `Clock_Degree_Node` carries intrinsic `fibonacci_position`/`fibonacci_digit`" is satisfied by DERIVATION on the Rust projection (`PhaseSpaceAddress.fibonacci_ground`), not by fields on the C `Clock_Degree_Entry` (`m3.h:879`). Functionally equivalent for every consumer, but if the canon intends stored `.rodata` fields, that is a separate kernel-struct tranche + a `[[M3'-SPEC]]` §8.0 clarification. Flag for the owning spec, not a blocker.
 
 *Coherence test authored under T35.2: `Body/M/pratibimba-app/src/engine/fibonacciGround.coherence.test.ts` (7 pass). Verifier ≠ closer applies — this audit is authored by uc-3502; independent verification is the orchestrator's dispatch.*
+
+---
+
+## Update — DR-FIB-3 STILL-OPEN sub-claim CLOSED (2026-07-14, opus-kairos-carrier)
+
+The escalated DR-FIB-3 sub-claim above ("the 4h deadline is never populated on the
+live path … an oracle-cast populator that sets `decays_at_ns = captured_at_ns + 4h`
+is absent") is now **CLOSED**. The kairotic vertical landed end-to-end (finding #1
+below is superseded — it is no longer an escalation):
+
+- **Kernel arm** (`8c2de9e6`): `m4_temporal_now_capture_kairotic` (`m4.h`/`m4.c`) sets
+  `kairotic_active = 1` and `decays_at_ns = captured_at_ns + (ttl ? ttl : M4_KAIROTIC_DEFAULT_TTL_NS)`,
+  where `M4_KAIROTIC_DEFAULT_TTL_NS = 4·3600·1e9 ns` (4h) — the populator the audit
+  flagged as absent. C test in `test_m4.c`.
+- **Live path** (`c2cdba92`): `nara/kairos.rs::capture_kairotic()` writes `kairotic.json`
+  with `decays_at_epoch = captured_at + 4h`; `kairotic_live_sky()` reads it back only
+  while non-decayed; `heartbeat_live_sky_tiered()` resolves kairotic>realtime precedence
+  and carries the deadline; CLI `epi nara kairos capture` is the oracle-consultation
+  trigger. `nara::kairos::kairos_parse_tests` 9/9.
+- **Bus** (`e798e26e`): the S3 heartbeat stamps `kairos_mode` (kairotic|realtime) +
+  `kairos_decays_at_ms` onto `MathemeHarmonicProfile` (`gate/server/mod.rs`, `profile.rs`;
+  camelCase serde → `kairosMode`/`kairosDecaysAtMs` on the wire).
+- **Carrier** (`b9a7a973`): the cosmic-engine HUD renders the resolved tier + the live
+  4h decay countdown (`data-testid="engine-kairos-mode"`), reverting to realtime when the
+  client clock passes the deadline (`kairosTierReadout`; modulators 23/23, engine 162/162,
+  tsc clean). Independent verifier PASS (verifier-kairos-b ≠ implementer).
+
+So on the live path DR-FIB-3 is now **LANDED, not PARTIAL**: `decays_at_ns` /
+`decays_at_epoch` / `kairos_decays_at_ms` all carry the real `captured_at + 4h` deadline,
+and the carrier displays + decays it. The legacy zero-writer `kairos-python-adapter.ts:148`
+is superseded by the Rust `capture_kairotic` populator. **Remaining (separate tranche):**
+the interactive three-mode `natal|realtime|kairotic` time-axis switcher (25.T25.17) is still
+blocked on its own deps (25.6 renderer handle) — this closure covers the kairotic DISPLAY +
+decay, not the natal-mode selector.
