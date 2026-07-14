@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:51:48.048Z",
+  "updatedAt": "2026-07-14T07:57:35.106Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10144,16 +10144,16 @@
       "worktree": null
     },
     "37.T37.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T07:52:51.157Z",
+      "claimedAt": "2026-07-14T07:52:51.157Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-3706",
+      "leaseExpiresAt": "2026-07-14T09:52:51.157Z",
+      "heartbeatAt": "2026-07-14T07:52:51.157Z",
+      "runId": "20260714T075251Z-37-T37.6",
       "worktree": null
     },
     "37.T37.7": {
@@ -11280,14 +11280,31 @@
       "worktree": null
     },
     "44.T44.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:51:38.344Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:57:35.090Z",
       "claimedAt": "2026-07-14T07:51:38.344Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:57:35.090Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:57:35.090Z",
+          "text": "BUILT (carrier retarget): BlockRegistry + BlockHost native in pratibimba-app — registry ported from frozen block-kit with provenance (type→BlockSpec union IS the live catalog per 44.1 law; core specs for all 19 types; designed ownership map + BK-GW gateway-method contract rows carried as design law re-anchoring as 44.3+ land; noOrphanErrors() = Track-14 release-gate feed). BlockHost CORRECTED to spec vs the frozen original which dumped JSON without dispatching spec.Read or enforcing privacyGate: blocks render through Read, the privacyGate refuses BEFORE render (refused data never reaches the DOM — test-pinned via document.body assertion), per-block failure isolation (catalog-absent type renders inline rejection, host survives). No Builder.io runtime (DR-PSS-2 — plain React). Fresh 10/10; app 552; UF gate green. Unblocks 44.3 (first real data projection). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/blocks/ (10 passed / 0 failed — registry union IS the live catalog with all 19 types, no-orphan law holds + reports spec/owner gaps, host renders through spec.Read with owner/edit-surface attribution, catalog-absent type rejected per-block without crashing the host, privacyGate enforced BEFORE render with refused data never reaching the DOM) ; node .codex/scripts/verify-tranche.mjs 44.T44.2 --owner fable-c-verify — UF gate PASS (app-test 552 incl. the new suites, app-ui-flow playwright 25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1332,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/blocks/blockRegistry.ts",
+              "Body/M/pratibimba-app/src/blocks/BlockHost.tsx",
+              "Body/M/pratibimba-app/src/blocks/BlockHost.test.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T09:51:38.344Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:51:38.344Z",
       "runId": "20260714T075138Z-44-T44.2",
       "worktree": null
@@ -15649,10 +15666,20 @@
     {
       "runId": "20260714T075138Z-44-T44.2",
       "taskId": "44.T44.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:51:38.344Z",
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T09:51:38.344Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:57:35.090Z"
+    },
+    {
+      "runId": "20260714T075251Z-37-T37.6",
+      "taskId": "37.T37.6",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T07:52:51.157Z",
+      "owner": "uc-3706",
+      "leaseExpiresAt": "2026-07-14T09:52:51.157Z",
       "worktree": null
     }
   ],

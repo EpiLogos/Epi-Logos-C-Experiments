@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-14T07:51:48.047Z",
+  "generatedAt": "2026-07-14T07:57:35.104Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -274,7 +274,7 @@
       "file": "37-biological-quaternionic-cross-layer-integration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
       "title": "Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "786ab9d33fd0a333fdd01643ec2367f85038e5a4b8779f6df2de65d0a135e38a"
+      "checksum": "c5e594582912bc71d322968db88fc09e1183e243569460f12c7655e15b03b0c9"
     },
     {
       "id": "38",
@@ -9045,7 +9045,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md"
       ],
-      "body": "6. **T37.6 — Element-ID normalization in the bridge**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.6 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "6. **T37.6 — Element-ID normalization in the bridge**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.6 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: element-IDs normalize to ONE canonical scheme (canonical-B) before any cross-layer datum reaches the frontend — `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib canonical_tests` green (14/14: m2-tattva / m3-decan / nucleotide converters each map every element to canonical-B, asserted a member of the single 0..=5 enum — the Track-18 single-canonical-element-ID invariant; landed via 37.10 which extends 37.6); grep confirms no frontend file maps a raw element integer across the M2<->M3 boundary. verify-first ledger close (no code change); verifier != closer; evidence = fresh command output."
     },
     {
       "id": "37.T37.7",
