@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:42:17.997Z",
+  "updatedAt": "2026-07-14T07:48:42.119Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10116,16 +10116,16 @@
       "worktree": null
     },
     "37.T37.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T07:44:06.364Z",
+      "claimedAt": "2026-07-14T07:44:06.364Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "uc-3705",
+      "leaseExpiresAt": "2026-07-14T09:44:06.364Z",
+      "heartbeatAt": "2026-07-14T07:44:06.364Z",
+      "runId": "20260714T074406Z-37-T37.5",
       "worktree": null
     },
     "37.T37.6": {
@@ -11235,16 +11235,33 @@
       "worktree": null
     },
     "44.T44.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T07:48:42.104Z",
+      "claimedAt": "2026-07-14T07:43:03.285Z",
+      "completedAt": "2026-07-14T07:48:42.104Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:48:42.104Z",
+          "text": "BUILT (carrier retarget of the doc-ahead contract): the Track-44 block contract is now NATIVE in pratibimba-app — src/blocks/blockContract.ts ported from the frozen m-extension-runtime contract with provenance (pure TS re-tested): CTX-framed Block with mandatory ctx {cf, ct, cp, cpf?, cs?} per DR-PSS-1, closed 19-type core vocabulary, privacy classes (public/protected/protected-local), affordances (verdict/annotate/select/navigate), BlockSpec with editSurface + privacyGate, and the DR-PSS-3 catalog law (assertBlockAcceptedByCatalog rejects catalog-absent types + IOD-17 out-of-parity with disagreement detail). block-contract.schema.json is the Rust-emission mirror, lockstep pinned by test. blocks.catalog gateway method named as the seam; CORE_BLOCKS_CATALOG is the static union until the Techne-operated method lands. Unblocks 44.2-44.10 (the register largest structural gap now has its foundation). Fresh 5/5 new; app 545; UF gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "npx vitest run src/blocks/blockContract.test.ts (5 passed / 0 failed — mandatory-ctx DR-PSS-1 violations each caught, privacy/affordance/provenance/data law, closed 19-type vocabulary in the static catalog, catalog-absent + IOD-17 out-of-parity rejection with disagreement detail per DR-PSS-3, JSON-schema mirror lockstep with the TS vocabulary) ; node .codex/scripts/verify-tranche.mjs 44.T44.1 --owner fable-c-verify — UF gate PASS (app-test 545 incl. the new suite, app-ui-flow playwright 25, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 85, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1325,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/blocks/blockContract.ts",
+              "Body/M/pratibimba-app/src/blocks/block-contract.schema.json",
+              "Body/M/pratibimba-app/src/blocks/blockContract.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T07:43:03.285Z",
+      "runId": "20260714T074303Z-44-T44.1",
       "worktree": null
     },
     "44.T44.2": {
@@ -15578,6 +15595,25 @@
       "leaseExpiresAt": "2026-07-14T08:58:53.807Z",
       "worktree": null,
       "completedAt": "2026-07-14T07:42:14.061Z"
+    },
+    {
+      "runId": "20260714T074303Z-44-T44.1",
+      "taskId": "44.T44.1",
+      "status": "done",
+      "startedAt": "2026-07-14T07:43:03.285Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T09:43:03.285Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:48:42.104Z"
+    },
+    {
+      "runId": "20260714T074406Z-37-T37.5",
+      "taskId": "37.T37.5",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T07:44:06.364Z",
+      "owner": "uc-3705",
+      "leaseExpiresAt": "2026-07-14T09:44:06.364Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
