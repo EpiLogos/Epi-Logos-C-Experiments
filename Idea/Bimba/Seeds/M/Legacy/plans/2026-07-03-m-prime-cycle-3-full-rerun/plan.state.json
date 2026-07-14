@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T13:11:05.191Z",
+  "updatedAt": "2026-07-14T13:25:12.237Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2512,20 +2512,24 @@
       "worktree": null
     },
     "06.T6.1": {
-      "status": "review",
-      "updatedAt": "2026-07-13T18:51:43.206Z",
+      "status": "blocked",
+      "updatedAt": "2026-07-14T13:23:59.578Z",
       "claimedAt": "2026-07-13T18:51:43.014Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-13T18:51:43.206Z",
           "text": "PARTIAL (verify-first audit, fable-c 2026-07-13): LANDED on current substrate — 7 unique s5'.gnostic.* gateway methods (ingest/query/resolve/notebook/status/models/musical_transcript; gateway-contract protocol.rs:169-175) + s0'.anuttara.trace (protocol.rs:54, dispatch_plan.rs:932) + epi techne gnosis CLI family (8 subcommands incl. IngestGnostic/QueryGnostic/Enrich shelling to Python epi-gnostic). MISSING vs tranche minimum — 6 named methods (candidates, etymology, list_notebooks, episode_search, evidence_trace, query_with_layers), the s5_one_substrate_e2e_acceptance gateway test (absent), and epi-CLI parity for the missing methods. Canonical execution tranche for this EXPANDED scope is 12.T12.2 (pending) — track 12 is leased to session B2; building the missing routes here would invade that lane. Requeue for close after 12.T12.2 lands; then 6.1 closes as the M5'-side verification. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        },
+        {
+          "at": "2026-07-14T13:23:59.578Z",
+          "text": "BLOCKED on dependency chain (flip from review, fable-c 2026-07-14): substrate audit unchanged (7 gnostic methods + s0'.anuttara.trace + techne-gnosis CLI landed; 6 named methods + e2e acceptance test missing). Canonical execution tranche 12.T12.2 is dependency-gated 12.T12.2←12.T12.19←12.T12.18←12.T12.17; 12.T12.17 closed this session, 12.T12.18/12.T12.19 remain to build. 6.1 closes as the M5-prime-side verification once 12.T12.2 lands. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-13T19:21:43.014Z",
-      "heartbeatAt": "2026-07-13T18:51:43.206Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-14T13:15:45.949Z",
       "runId": "20260713T185143Z-06-T6.1",
       "worktree": null
     },
@@ -3155,19 +3159,23 @@
       "worktree": null
     },
     "09.T9.3": {
-      "status": "review",
-      "updatedAt": "2026-07-13T23:25:49.317Z",
+      "status": "blocked",
+      "updatedAt": "2026-07-14T13:15:23.204Z",
       "claimedAt": "2026-07-13T23:23:55.351Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-13T23:25:49.317Z",
           "text": "PARTIAL (honest split, fable-c 2026-07-14): IMPLEMENTATION FULLY LANDED and behaviorally green — c_1_asset_uri (StringList) + c_1_asset_kind in graph-schema (properties.rs + coordinate_law.rs, committed at HEAD); dataset-import lift via append_asset_field_mapping with fresh proof lifts_asset_seal_sigil_and_glyph_keys_to_c1_slots 1/1; M0 inspector render slot landed carrier-side (pratibimba-app m0AssetHandles.ts, fresh 4/4). OPEN LEG — the tranche gates this load-bearing schema slot behind candidate DR-M0-4 / explicit user final-validation, and DR-M0-4 is ABSENT from the decision register (never proposed or ratified). The substrate preceded its ratification. Needs Architect: ratify DR-M0-4 (or supersede) then this closes as done; the same asset seam feeds the 48.T48.3 M2-1 cover-image gap (cards view could key c_1_asset_uri instead of the producer-less c_1_symbol_image). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        },
+        {
+          "at": "2026-07-14T13:15:23.204Z",
+          "text": "BLOCKED on Architect (flip from review, fable-c 2026-07-14): implementation fully landed + behaviorally green at HEAD (c_1_asset_uri/c_1_asset_kind schema slots, dataset-import lift 1/1, m0AssetHandles carrier slot 4/4) — the ONLY open leg is candidate DR-M0-4 which is absent from the decision register; the tranche gates the load-bearing schema slot behind explicit user sign-off. Needs Architect: propose/accept DR-M0-4 (or supersede); then this closes as done. Same asset seam feeds the 48.T48.3 M2-1 cover-image gap. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-13T23:53:55.351Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:25:49.317Z",
       "runId": "20260713T232355Z-09-T9.3",
       "worktree": null
@@ -4400,16 +4408,75 @@
       "worktree": null
     },
     "12.T12.17": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-08T12:20:03.758Z",
-      "claimedAt": "2026-07-08T12:20:03.758Z",
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T13:25:12.213Z",
+      "claimedAt": "2026-07-14T13:22:08.291Z",
+      "completedAt": "2026-07-14T13:25:12.213Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T13:22:07.957Z",
+          "text": "DELIBERATE REQUEUE (fable-c 2026-07-14): opus-b2-resume lease expired 2026-07-08T14:20Z, six days stale, no evidence or run records beyond the claim + context pack. Requeued per the stale-lease protocol to unblock the 12.T12.17→12.T12.18→12.T12.19→12.T12.2 chain that gates the s5'.gnostic ONE-substrate scope and 06.T6.1."
+        },
+        {
+          "at": "2026-07-14T13:24:13.774Z",
+          "text": "test-run",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.17 --owner fable-c-verify — class gate PASS",
+            "exitCode": 0,
+            "testsPassed": 755,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T13:24:23.562Z",
+          "text": "test-run",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.17 --owner fable-c-verify — class gate PASS",
+            "exitCode": 0,
+            "testsPassed": 755,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T13:24:35.794Z",
+          "text": "test-run",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.17 --owner fable-c-verify — class gate PASS",
+            "exitCode": 0,
+            "testsPassed": 755,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T13:25:12.213Z",
+          "text": "SUPERSEDES the accidental 'test-run' placeholder entry (same close, real record): doc-confirmation verify-first close, zero build gap — the carrier-IS-the-contract invariant is landed as CONTRACT.md invariant 14 (Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md:265): no separate aletheia-agent/agent-contract.json exists anywhere in the tree; the six Aletheia subagent techne-guardians (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) are profiles under the carrier/mode dispatched by Anima; canon side states the same law at Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md:211. Fresh class-gate PASS by fable-c-verify (verifier distinct from closer). Taken over from opus-b2-resume after six-day-stale lease, deliberate requeue recorded in ledger. Unblocks 12.T12.18. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.17 --owner fable-c-verify — class gate PASS (harness-selftest 102, gateway 86, gateway-contract 86, gateway-methods, live-wire spawned-gateway, ta-onta 446, redis-context 10, spacetime 11, graphiti-runtime 14, honesty-lint clean) ; spec grep: aletheia-agent/agent-contract.json|carrier IS the contract|tool-guardian over Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md + Idea/Bimba/Seeds/S/S4 returns the invariant on both surfaces",
+            "exitCode": 0,
+            "testsPassed": 755,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md",
+              "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.17.md"
+            ]
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 246 dirty files.",
-      "owner": "opus-b2-resume",
-      "leaseExpiresAt": "2026-07-08T14:20:03.758Z",
-      "heartbeatAt": "2026-07-08T12:20:03.758Z",
-      "runId": "20260708T122003Z-12-T12.17",
+      "owner": "fable-c",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-14T13:22:08.291Z",
+      "runId": "20260714T132208Z-12-T12.17",
       "worktree": null
     },
     "12.T12.18": {
@@ -12042,19 +12109,23 @@
       "worktree": null
     },
     "48.T48.3": {
-      "status": "review",
-      "updatedAt": "2026-07-13T23:17:45.299Z",
+      "status": "blocked",
+      "updatedAt": "2026-07-14T13:15:23.409Z",
       "claimedAt": "2026-07-13T23:16:24.282Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-13T23:17:45.299Z",
           "text": "PARTIAL (honest split, fable-c 2026-07-14): ZONES LEG DONE — every zone has its working base in functional role: /World+/Types Crystallisation-Pipeline.base (groups by c_5_crystallisation_state per spec, filters non-null state), /Map Map-Aggregate-Browser.base (table + cards view + projection-provenance view), /Seeds Seeds-Provenance-Ledger.base, Empty/Present Present-Console.base, plus Entity-Candidate-Tracker.base. M2-1 WORKED-EXAMPLE LEG OPEN — the Map cards view declares image: c_1_symbol_image but NO producer emits that key (map-index.ts projector emits a fixed frontmatter set without it), no image assets exist in the vault (only .obsidian plugin internals), no graph property carries lens imagery, and M2-1 map nodes verify image-less. Closing needs: (1) Architect content decision on cover imagery for the 36x2 MEF lenses (generate vs fetch public-domain), (2) the graph property + projector emission seam (contract surface on the generated Map projection — propose, not land unilaterally). Read side is already law (cards view keyed to c_1_symbol_image). NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+        },
+        {
+          "at": "2026-07-14T13:15:23.409Z",
+          "text": "BLOCKED on Architect (flip from review, fable-c 2026-07-14): zones leg done (five working bases in functional roles); M2-1 worked-example leg needs (1) Architect content decision on cover imagery for the 36x2 MEF lenses (generate vs fetch public-domain) and (2) a contract-surface change on the generated Map projection (graph property + projector emission seam) which an agent proposes, never lands unilaterally. Read side already law (cards view keyed to c_1_symbol_image; could re-key to c_1_asset_uri if DR-M0-4 on 09.T9.3 is accepted). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T01:16:24.282Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:17:45.299Z",
       "runId": "20260713T231624Z-48-T48.3",
       "worktree": null
@@ -13941,11 +14012,12 @@
     {
       "runId": "20260708T122003Z-12-T12.17",
       "taskId": "12.T12.17",
-      "status": "in_progress",
+      "status": "pending",
       "startedAt": "2026-07-08T12:20:03.758Z",
       "owner": "opus-b2-resume",
       "leaseExpiresAt": "2026-07-08T14:20:03.758Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T13:22:07.957Z"
     },
     {
       "runId": "20260709T092617Z-02-T2.6",
@@ -16080,12 +16152,22 @@
       "leaseExpiresAt": "2026-07-14T14:20:16.741Z",
       "worktree": null,
       "completedAt": "2026-07-14T13:11:05.156Z"
+    },
+    {
+      "runId": "20260714T132208Z-12-T12.17",
+      "taskId": "12.T12.17",
+      "status": "done",
+      "startedAt": "2026-07-14T13:22:08.291Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T14:22:08.291Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T13:24:13.774Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T12:57:01.515Z",
-    "updatedAt": "2026-07-14T12:57:01.515Z",
+    "createdAt": "2026-07-14T13:14:16.861Z",
+    "updatedAt": "2026-07-14T13:14:16.861Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",

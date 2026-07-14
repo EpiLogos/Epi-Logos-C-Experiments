@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-14T13:11:05.187Z",
+  "generatedAt": "2026-07-14T13:25:12.234Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -2163,9 +2163,7 @@
       "effort": "Riemannian-quaternion gradient pipeline, per-element-tick invocation",
       "file": "06-m5-epii-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md",
-      "dependsOn": [
-        "06.T6.1"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
         "vendor/legacy/epi-tauri/**"
@@ -2560,9 +2558,7 @@
       "effort": null,
       "file": "09-integrated-bimba-graph-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
-      "dependsOn": [
-        "09.T9.2"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Body/M/epi-theia/extensions/**",
         "Body/S/S4/**",
@@ -2581,7 +2577,7 @@
       "file": "09-integrated-bimba-graph-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
       "dependsOn": [
-        "09.T9.3"
+        "09.T9.2"
       ],
       "writeScopes": [
         "Body/M/epi-theia/extensions/**",
@@ -10244,9 +10240,7 @@
       "effort": "L1; depends 48.1",
       "file": "48-bases-cs-reflection-layer.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
-      "dependsOn": [
-        "48.T48.2"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md"
       ],
@@ -10261,7 +10255,7 @@
       "file": "48-bases-cs-reflection-layer.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
       "dependsOn": [
-        "48.T48.3"
+        "48.T48.2"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md"
