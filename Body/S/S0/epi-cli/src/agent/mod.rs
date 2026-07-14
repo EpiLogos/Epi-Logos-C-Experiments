@@ -30,7 +30,9 @@ mod skills;
 pub mod spawn;
 mod subagents;
 mod team;
-mod tmux;
+// pub: gate/gnostic.rs consumes validate_lease at the gnostic-shell call
+// site (12.T12.2 c — TerminalBinding carried through gnostic dispatch).
+pub mod tmux;
 pub mod vak;
 
 use clap::{Args, Subcommand};

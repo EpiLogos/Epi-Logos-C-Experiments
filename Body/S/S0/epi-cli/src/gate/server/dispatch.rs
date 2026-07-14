@@ -1370,7 +1370,7 @@ pub(super) async fn dispatch_rpc(
         "s5'.gnosis.context.retrieve" => epii::gnosis_context_retrieve(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
-        "s5'.gnostic.ingest" => gnostic::ingest(&frame.params)
+        "s5'.gnostic.ingest" => gnostic::ingest(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5'.gnostic.query" => gnostic::query(&frame.params)

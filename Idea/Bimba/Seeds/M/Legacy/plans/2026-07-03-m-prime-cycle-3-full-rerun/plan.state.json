@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T16:27:13.256Z",
+  "updatedAt": "2026-07-14T16:35:43.079Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4176,7 +4176,7 @@
     },
     "12.T12.2": {
       "status": "review",
-      "updatedAt": "2026-07-14T16:27:13.242Z",
+      "updatedAt": "2026-07-14T16:35:43.058Z",
       "claimedAt": "2026-07-14T13:49:46.802Z",
       "completedAt": null,
       "evidence": [
@@ -4191,12 +4191,16 @@
         {
           "at": "2026-07-14T16:27:13.242Z",
           "text": "LEG (d) LANDED (fable-c 2026-07-14, third pass): redis-context hierarchical namespace per the spec-declared seam — GNOSTIC_SUBSTRATE_HIERARCHY = {day}:{session}:{turn}:{coordinate} (leads the key segments so session-start warming, turn-scoped evidence SCANs, and coordinate-conditional dispatch reads are all prefix reads; no gnostic-substrate key may be flat-namespaced), coordinate_lookup_snapshot(graph_revision, day, session, turn, coordinate) five-arg form exactly as the tranche names it, plus the generic gnostic_substrate(tier, day, session, turn, coordinate, leaf) builder under s5:gnostic. TDD red-green with exact key bytes pinned in redis_runtime_contract.rs; redis-context suite green; class gate PASS on the final tree. REMAINING LEGS: (c) tmux terminal-lease at gnostic-shell call sites; e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 Rust-module lane). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T16:35:43.058Z",
+          "text": "LEG (c) LANDED (fable-c 2026-07-14, fourth pass): tmux terminal-lease at the gnostic-shell call site — validate_lease(gate_root, session_key) public on agent::tmux returning Live{expires_in_ms}/Expired{expired_for_ms}/Missing over the persisted terminal-leases store (module made pub with provenance comment); gnostic ingest carries the TerminalBinding through dispatch params (terminalLeaseId/sessionKey aliases) and refuses recoverably BEFORE any shell when the named lease is expired or missing (re-acquire-and-retry wording), lease-less calls skip the gate (non-persistent). TDD: 3/3 (tmux Live/Expired/Missing over real lease files; gnostic missing-lease refusal; no-lease passthrough to ordinary param validation). Binary rebuilt before the gate (probe gotcha). Class gate PASS. REMAINING: e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 lane). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T17:55:55.927Z",
-      "heartbeatAt": "2026-07-14T16:27:13.242Z",
+      "heartbeatAt": "2026-07-14T16:35:43.058Z",
       "runId": "20260714T134946Z-12-T12.2",
       "worktree": null
     },

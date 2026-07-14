@@ -6,10 +6,12 @@
 //! command (`EPI_GNOSTIC_PYTHON`, default `epi-gnostic`). JSON emitted by the
 //! production CLI is preserved for Theia callers.
 
+use std::path::Path;
 use std::process::Command;
 
 use serde_json::{json, Value};
 
+use crate::agent::tmux::{validate_lease, TerminalLeaseStatus};
 use crate::techne::gnosis::config::GnosisConfig;
 
 pub fn status() -> Result<Value, String> {
@@ -20,7 +22,26 @@ pub fn models() -> Result<Value, String> {
     run_gnostic(["models".to_owned()])
 }
 
-pub fn ingest(params: &Value) -> Result<Value, String> {
+pub fn ingest(state_root: &Path, params: &Value) -> Result<Value, String> {
+    // 12.T12.2 (c): TerminalBinding carried through gnostic dispatch — a
+    // persistent ingest running under a terminal lease names it in the
+    // params; an expired/missing lease refuses recoverably BEFORE any shell.
+    if let Some(lease_id) = optional_str_alias(params, &["terminalLeaseId", "terminal_lease_id", "leaseId", "sessionKey", "session_key"]) {
+        match validate_lease(state_root, &lease_id) {
+            TerminalLeaseStatus::Live { .. } => {}
+            TerminalLeaseStatus::Expired { expired_for_ms } => {
+                return Err(format!(
+                    "terminal lease {lease_id} expired {expired_for_ms}ms ago — persistent gnostic ingest refused; re-acquire the lease and retry"
+                ));
+            }
+            TerminalLeaseStatus::Missing => {
+                return Err(format!(
+                    "terminal lease {lease_id} not found — persistent gnostic ingest refused; re-acquire the lease and retry"
+                ));
+            }
+        }
+    }
+
     if let Some(text) = optional_str_alias(params, &["text", "content", "body"]) {
         let mut args = vec!["ingest-text".to_owned(), text];
         if let Some(source_id) = optional_str_alias(params, &["sourceId", "source_id", "id"]) {
@@ -168,4 +189,40 @@ fn optional_str(params: &Value, key: &str) -> Option<String> {
         .get(key)
         .and_then(Value::as_str)
         .map(ToOwned::to_owned)
+}
+
+#[cfg(test)]
+mod lease_gate_tests {
+    use super::*;
+
+    #[test]
+    fn ingest_refuses_recoverably_when_the_named_lease_is_missing() {
+        let root = std::env::temp_dir().join(format!(
+            "epi-gnostic-lease-test-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&root).unwrap();
+        let err = ingest(
+            &root,
+            &json!({ "terminalLeaseId": "agent:ghost:main", "path": "/tmp/doc.md" }),
+        )
+        .expect_err("missing lease must refuse before any shell");
+        assert!(err.contains("agent:ghost:main"), "{err}");
+        assert!(err.contains("re-acquire"), "{err}");
+        std::fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn ingest_without_a_lease_param_skips_the_lease_gate() {
+        // No lease named → the gate does not apply (non-persistent call);
+        // the next refusal is the ordinary missing-source parameter error.
+        let root = std::env::temp_dir().join(format!(
+            "epi-gnostic-nolease-test-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&root).unwrap();
+        let err = ingest(&root, &json!({})).expect_err("missing source must refuse");
+        assert!(err.contains("missing required string parameter"), "{err}");
+        std::fs::remove_dir_all(&root).ok();
+    }
 }

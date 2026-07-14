@@ -511,6 +511,36 @@ fn lease_expires_at(lease: &TerminalLease) -> u128 {
     lease.created_at + u128::from(lease.lease_ttl_seconds) * 1000
 }
 
+/// 12.T12.2 (c): the lease verdict a gnostic-shell call site checks before a
+/// persistent operation — expired/missing leases refuse recoverably
+/// (re-acquire and retry) instead of surfacing as mystery shell failures.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase", tag = "state")]
+pub enum TerminalLeaseStatus {
+    Live { expires_in_ms: u128 },
+    Expired { expired_for_ms: u128 },
+    Missing,
+}
+
+pub fn validate_lease(gate_root: impl AsRef<Path>, session_key: &str) -> TerminalLeaseStatus {
+    let Ok(lease) = read_lease(&gate_root, session_key) else {
+        return TerminalLeaseStatus::Missing;
+    };
+    let Ok(now) = now_ms() else {
+        return TerminalLeaseStatus::Missing;
+    };
+    let expires = lease_expires_at(&lease);
+    if now < expires {
+        TerminalLeaseStatus::Live {
+            expires_in_ms: expires - now,
+        }
+    } else {
+        TerminalLeaseStatus::Expired {
+            expired_for_ms: now - expires,
+        }
+    }
+}
+
 fn now_ms() -> Result<u128, String> {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -548,4 +578,58 @@ fn shell_single_quote(value: &str) -> String {
     }
     quoted.push('\'');
     quoted
+}
+
+#[cfg(test)]
+mod lease_validation_tests {
+    use super::*;
+
+    fn temp_gate_root() -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!(
+            "epi-lease-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    fn lease_at(session_key: &str, created_at: u128, ttl: u64) -> TerminalLease {
+        TerminalLease {
+            session_key: session_key.to_owned(),
+            tmux_session_name: "epi-test".to_owned(),
+            tmux_window_id: "@1".to_owned(),
+            tmux_pane_id: "%1".to_owned(),
+            created_at,
+            lease_ttl_seconds: ttl,
+        }
+    }
+
+    #[test]
+    fn validate_lease_reports_live_expired_and_missing() {
+        let root = temp_gate_root();
+
+        assert_eq!(
+            validate_lease(&root, "agent:ghost:main"),
+            TerminalLeaseStatus::Missing
+        );
+
+        let now = now_ms().unwrap();
+        write_lease(&root, &lease_at("agent:live:main", now, 3600)).unwrap();
+        match validate_lease(&root, "agent:live:main") {
+            TerminalLeaseStatus::Live { expires_in_ms } => assert!(expires_in_ms > 0),
+            other => panic!("expected live lease, got {other:?}"),
+        }
+
+        write_lease(&root, &lease_at("agent:stale:main", now - 10_000, 1)).unwrap();
+        match validate_lease(&root, "agent:stale:main") {
+            TerminalLeaseStatus::Expired { expired_for_ms } => assert!(expired_for_ms > 0),
+            other => panic!("expected expired lease, got {other:?}"),
+        }
+
+        fs::remove_dir_all(&root).ok();
+    }
 }
