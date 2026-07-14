@@ -82,9 +82,34 @@ fn canonical_runtime_key_builders_make_tier_and_namespace_explicit() {
         RedisKey::source_pool_ref("sha256-deadbeef").as_str(),
         "cache:warm:s5:source-pool:ref:sha256-deadbeef"
     );
+    // 12.T12.2 (d): hierarchical {day}:{session}:{turn}:{coordinate} leads the
+    // key so turn-scoped SCANs and session-start cache warming stay prefix reads.
     assert_eq!(
-        RedisKey::coordinate_lookup_snapshot("graph-rev-17", "M4.4.4.4").as_str(),
-        "cache:cold:s2:coordinate:lookup:graph-rev-17:M4.4.4.4"
+        RedisKey::coordinate_lookup_snapshot(
+            "graph-rev-17",
+            "14-07-2026",
+            "20260714-001500-1a58f7",
+            "t3",
+            "M4.4.4.4"
+        )
+        .as_str(),
+        "cache:cold:s2:coordinate:14-07-2026:20260714-001500-1a58f7:t3:M4.4.4.4:lookup:graph-rev-17"
+    );
+    assert_eq!(
+        RedisKey::gnostic_substrate(
+            CacheTier::Warm,
+            "14-07-2026",
+            "20260714-001500-1a58f7",
+            "t3",
+            "M2-1",
+            "evidence"
+        )
+        .as_str(),
+        "cache:warm:s5:gnostic:14-07-2026:20260714-001500-1a58f7:t3:M2-1:evidence"
+    );
+    assert_eq!(
+        epi_s3_redis_context::GNOSTIC_SUBSTRATE_HIERARCHY,
+        "{day}:{session}:{turn}:{coordinate}"
     );
     assert_eq!(
         RedisKey::semantic_retrieval_ref("graph-rev-17", "query-sha").as_str(),

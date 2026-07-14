@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T16:21:39.860Z",
+  "updatedAt": "2026-07-14T16:27:13.256Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4176,7 +4176,7 @@
     },
     "12.T12.2": {
       "status": "review",
-      "updatedAt": "2026-07-14T16:21:39.846Z",
+      "updatedAt": "2026-07-14T16:27:13.242Z",
       "claimedAt": "2026-07-14T13:49:46.802Z",
       "completedAt": null,
       "evidence": [
@@ -4187,12 +4187,16 @@
         {
           "at": "2026-07-14T16:21:39.846Z",
           "text": "SLICE LANDED (fable-c 2026-07-14, second pass): the full 11-method named set is LIVE on the wire — fresh gateway-method probe shows every s5'.gnostic.{ingest,query,notebook,status,models,resolve,candidates,etymology,list_notebooks,episode_search,evidence_trace,query_with_layers} exists:true with honest domain answers (membrane field-name refusals on empty params). Built this pass: (1) production epi_gnostic/cli.py gained seven real commands — candidates (orphan/promotable/reviewed over bimba_coordinate/assignment_method), etymology (coordinate anchors + RESONATES_WITH scent cluster), list-notebooks (coordinate-filtered; notebook create stamps coordinate), episode-search (reads :Episodic, never writes), evidence-trace (source_id chunk chain), query-with-layers (per-mode RAG, refused before heavy init), resolve (consolidated handle by coordinate OR vector_id: entity + family + resonances + anchors) — spec-named tests/test_one_substrate_smoke.py 7/7 green on live Neo4j; (2) gateway-contract registration (protocol.rs + dispatch_plan rows + required-list test, 66/66); (3) epi-cli gate server arms + thin handlers (validation at membrane, execution delegated to EPI_GNOSTIC_PYTHON); (4) epi techne gnosis parity subcommands via shared passthrough (ONE-substrate invariant held); (5) parity records extended; (6) T9 route-ownership cross-walk bookkeeping: resolve retired from s3_only_methods with provenance comment — the REFUSED gate run that caught this stale book is the harness working as designed; 28/28 after. Class gate PASS twice (final tree). GOTCHA recorded: the method probe spawns target/debug/epi AS-BUILT — cargo check is not enough, cargo build before trusting a probe verdict. REMAINING LEGS (unchanged): (c) tmux terminal-lease at gnostic call sites; (d) redis-context hierarchical {day}/{session}/{turn}/{coordinate} keys + snapshot-helper extension; e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 Rust-module lane, separate scope). 06.T6.1 unblocks when those close. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T16:27:13.242Z",
+          "text": "LEG (d) LANDED (fable-c 2026-07-14, third pass): redis-context hierarchical namespace per the spec-declared seam — GNOSTIC_SUBSTRATE_HIERARCHY = {day}:{session}:{turn}:{coordinate} (leads the key segments so session-start warming, turn-scoped evidence SCANs, and coordinate-conditional dispatch reads are all prefix reads; no gnostic-substrate key may be flat-namespaced), coordinate_lookup_snapshot(graph_revision, day, session, turn, coordinate) five-arg form exactly as the tranche names it, plus the generic gnostic_substrate(tier, day, session, turn, coordinate, leaf) builder under s5:gnostic. TDD red-green with exact key bytes pinned in redis_runtime_contract.rs; redis-context suite green; class gate PASS on the final tree. REMAINING LEGS: (c) tmux terminal-lease at gnostic-shell call sites; e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 Rust-module lane). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
         }
       ],
       "notes": null,
       "owner": "fable-c",
       "leaseExpiresAt": "2026-07-14T17:55:55.927Z",
-      "heartbeatAt": "2026-07-14T16:21:39.846Z",
+      "heartbeatAt": "2026-07-14T16:27:13.242Z",
       "runId": "20260714T134946Z-12-T12.2",
       "worktree": null
     },

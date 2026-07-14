@@ -28,7 +28,7 @@ pub use aeon_eval::{
     aeon_eval_ledger_from_transcript, AeonEvalContext, AeonEvalGraphitiEpisode, AeonEvalLedger,
     AeonEvalMetrics, AeonEvalRedisRecord,
 };
-pub use redis_cache::{CacheTier, RedisCache, RedisConfig, RedisKey};
+pub use redis_cache::{CacheTier, RedisCache, RedisConfig, RedisKey, GNOSTIC_SUBSTRATE_HIERARCHY};
 
 pub const REDIS_RUNTIME_OWNER: &str = "S3";
 pub const REDISVL_BRIDGE_OWNER: &str = "S3 Redis runtime substrate";

@@ -1,5 +1,13 @@
 use redis::{aio::MultiplexedConnection, AsyncCommands, Client};
 
+/// 12.T12.2 (d), DR-S5-ONE-1: the mandated hierarchical layout for
+/// gnostic-substrate keys. `{day}:{session}:{turn}:{coordinate}` LEADS the
+/// key segments so session-start cache warming (`{day}:{session}:*`),
+/// turn-scoped evidence aggregation (`{day}:{session}:{turn}:*`), and
+/// coordinate-conditional dispatch reads all stay prefix SCANs. No
+/// gnostic-substrate key may be flat-namespaced.
+pub const GNOSTIC_SUBSTRATE_HIERARCHY: &str = "{day}:{session}:{turn}:{coordinate}";
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum CacheTier {
     Live,   // TTL 30s — process liveness and heartbeat facts
@@ -134,12 +142,33 @@ impl RedisKey {
         Self::from_segments(CacheTier::Warm, "s5:source-pool", &["ref", source_hash])
     }
 
-    pub fn coordinate_lookup_snapshot(graph_revision: &str, coordinate: &str) -> Self {
+    /// 12.T12.2 (d): coordinate snapshot under the mandated
+    /// [`GNOSTIC_SUBSTRATE_HIERARCHY`] — day/session/turn/coordinate lead
+    /// the key, the lookup leaf and graph revision trail it.
+    pub fn coordinate_lookup_snapshot(
+        graph_revision: &str,
+        day: &str,
+        session: &str,
+        turn: &str,
+        coordinate: &str,
+    ) -> Self {
         Self::from_segments(
             CacheTier::Cold,
             "s2:coordinate",
-            &["lookup", graph_revision, coordinate],
+            &[day, session, turn, coordinate, "lookup", graph_revision],
         )
+    }
+
+    /// Generic gnostic-substrate key under [`GNOSTIC_SUBSTRATE_HIERARCHY`].
+    pub fn gnostic_substrate(
+        tier: CacheTier,
+        day: &str,
+        session: &str,
+        turn: &str,
+        coordinate: &str,
+        leaf: &str,
+    ) -> Self {
+        Self::from_segments(tier, "s5:gnostic", &[day, session, turn, coordinate, leaf])
     }
 
     pub fn semantic_retrieval_ref(graph_revision: &str, query_hash: &str) -> Self {
