@@ -513,6 +513,13 @@ pub struct PortalClockState {
     /// Transit quaternion derived from planetary element distribution.
     pub transit_quaternion: [f32; 4],
 
+    /// Ambient environmental transform factor (DR-ENV-1/8) — the collective sky's
+    /// slow forces aspected against the natal invariant, composed onto the PASU
+    /// base in `recompute_composed_quaternion_state`. Defaults to the identity
+    /// rotation (no ambient influence); it TRANSFORMS the base, never becomes
+    /// `quintessence_quaternion`. Mirrors `portal_core::PortalClockState`.
+    pub environment_quaternion: [f32; 4],
+
     /// Currently active planetary aspects (Ptolemaic: conjunction/sextile/square/trine/opposition).
     pub aspects: Vec<PlanetaryAspect>,
 
@@ -555,6 +562,7 @@ impl Default for PortalClockState {
             resolution_level: 0,
             active_codon: ActiveCodon::default(),
             transit_quaternion: [1.0, 0.0, 0.0, 0.0],
+            environment_quaternion: [1.0, 0.0, 0.0, 0.0],
             aspects: Vec::new(),
             micro_orbit: Vec::new(),
             natal_degrees: [0xFFFF; 10],
@@ -567,8 +575,15 @@ impl Default for PortalClockState {
 pub type SharedClockState = Arc<Mutex<PortalClockState>>;
 
 fn recompute_composed_quaternion_state(s: &mut PortalClockState) {
+    // PASU base ⊗ ambient environment ⊗ transit ⊗ live (DR-ENV-1/8). Mirrors the
+    // canonical `portal_core::state::recompute_composed_quaternion_state`. With
+    // `environment_quaternion` at the identity rotation this reduces byte-for-byte
+    // to the prior quintessence ⊗ transit ⊗ live law (a ⊗ [1,0,0,0] === a).
     let composed = quat_normalize(quat_mul(
-        quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+        quat_mul(
+            quat_mul(s.quintessence_quaternion, s.environment_quaternion),
+            s.transit_quaternion,
+        ),
         s.live_quaternion,
     ));
     s.composed_quaternion = composed;
@@ -815,6 +830,18 @@ pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32
     }
 }
 
+/// Set the ambient environmental transform factor and recompute the composed
+/// quaternion (DR-ENV-1/8). Mirrors `portal_core::update_environment_quaternion`:
+/// the `quintessence_quaternion` (PASU base) is left untouched — the environment
+/// transforms the base, it never becomes it. A near-zero env normalizes to the
+/// identity rotation (honest "no ambient influence"). Does not bump `generation`.
+pub fn update_environment_quaternion(state: &SharedClockState, environment: [f32; 4]) {
+    let mut s = state.lock().unwrap();
+    s.environment_quaternion = quat_normalize(environment);
+    recompute_composed_quaternion_state(&mut s);
+    sync_kernel_projection(&mut s);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MICRO-ORBIT PERSISTENCE (Task 22)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -912,6 +939,51 @@ mod tests {
         assert!((result[1]).abs() < 1e-6, "x should be 0");
         assert!((result[2]).abs() < 1e-6, "y should be 0");
         assert!((result[3] - 1.0).abs() < 1e-6, "z should be 1");
+    }
+
+    // --- P3 parity: q_environment composition mirrors portal_core (DR-ENV-1/8) ---
+
+    #[test]
+    fn environment_transforms_composed_but_not_the_pasu_base_dr_env_1() {
+        let state: SharedClockState = Arc::new(Mutex::new(PortalClockState::default()));
+        {
+            let mut s = state.lock().unwrap();
+            s.quintessence_quaternion = quat_normalize([0.5, 0.3, 0.6, 0.2]);
+            s.transit_quaternion = quat_normalize([0.9, 0.1, 0.2, 0.3]);
+            s.live_quaternion = quat_normalize([0.2, 0.8, 0.1, 0.5]);
+            recompute_composed_quaternion_state(&mut s);
+        }
+        let (base_before, composed_before) = {
+            let s = state.lock().unwrap();
+            (s.quintessence_quaternion, s.composed_quaternion)
+        };
+        update_environment_quaternion(&state, quat_normalize([0.1, 0.9, 0.2, 0.3]));
+        let s = state.lock().unwrap();
+        assert_eq!(
+            s.quintessence_quaternion, base_before,
+            "PASU base must not move under an ambient wind (DR-ENV-1)"
+        );
+        assert_ne!(
+            s.composed_quaternion, composed_before,
+            "composed must move under a real environment"
+        );
+    }
+
+    #[test]
+    fn environment_default_identity_composes_as_prior_law_pass_through() {
+        let state: SharedClockState = Arc::new(Mutex::new(PortalClockState::default()));
+        let mut s = state.lock().unwrap();
+        s.quintessence_quaternion = quat_normalize([0.4, 0.2, 0.7, 0.1]);
+        s.transit_quaternion = quat_normalize([0.3, 0.6, 0.2, 0.5]);
+        s.live_quaternion = quat_normalize([0.5, 0.5, 0.5, 0.5]);
+        recompute_composed_quaternion_state(&mut s);
+        // the default env is the identity rotation → composed equals the prior law
+        let prior = quat_normalize(quat_mul(
+            quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+            s.live_quaternion,
+        ));
+        assert_eq!(s.environment_quaternion, [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(s.composed_quaternion, prior);
     }
 
     #[test]
