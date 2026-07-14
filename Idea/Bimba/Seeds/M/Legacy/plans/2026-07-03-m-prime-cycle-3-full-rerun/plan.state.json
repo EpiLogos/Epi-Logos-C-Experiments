@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T18:19:19.822Z",
+  "updatedAt": "2026-07-14T18:24:52.890Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2512,10 +2512,10 @@
       "worktree": null
     },
     "06.T6.1": {
-      "status": "blocked",
-      "updatedAt": "2026-07-14T13:23:59.578Z",
-      "claimedAt": "2026-07-13T18:51:43.014Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-14T18:24:52.875Z",
+      "claimedAt": "2026-07-14T18:21:35.772Z",
+      "completedAt": "2026-07-14T18:24:52.875Z",
       "evidence": [
         {
           "at": "2026-07-13T18:51:43.206Z",
@@ -2524,13 +2524,33 @@
         {
           "at": "2026-07-14T13:23:59.578Z",
           "text": "BLOCKED on dependency chain (flip from review, fable-c 2026-07-14): substrate audit unchanged (7 gnostic methods + s0'.anuttara.trace + techne-gnosis CLI landed; 6 named methods + e2e acceptance test missing). Canonical execution tranche 12.T12.2 is dependency-gated 12.T12.2←12.T12.19←12.T12.18←12.T12.17; 12.T12.17 closed this session, 12.T12.18/12.T12.19 remain to build. 6.1 closes as the M5-prime-side verification once 12.T12.2 lands. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T18:21:35.573Z",
+          "text": "REQUEUE from blocked (fable-c 2026-07-14): the dependency cleared — 12.T12.2 closed done this session (11 gnostic methods live, all five ONE-substrate surfaces, e2e round-trip with live Redis proof). 6.1 now closes as the M5-prime-side verification."
+        },
+        {
+          "at": "2026-07-14T18:24:52.875Z",
+          "text": "CLOSED as the M5-prime-side verification of the ONE-substrate expansion, exactly as this lane's original audit predicted: the canonical execution tranche 12.T12.2 landed done this session (11 named methods live end-to-end over production epi-gnostic, Khora session-workspace, tmux lease seam, redis hierarchical namespace, CLI parity, s0-prime.anuttara.trace, :Gnostic label, spec-named e2e with live Redis proof). Every 6.1 verification line re-run fresh from this claim: >=10 method registrations (12), the trace route, >=9 CLI subcommands (21 matches), cargo checks clean, acceptance e2e green, independent class-gate PASS by fable-c-verify. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "cargo check (gateway-contract 19.8s + gateway 35.6s clean on the shared pool) ; fresh greps: 12 s5-prime.gnostic registrations in protocol.rs (minimum 10), s0-prime.anuttara.trace present, 21 gnostic CLI subcommand matches in techne/gnosis (minimum 9) ; cargo test --test s5_gnostic_one_substrate (1 passed — the Track-39 acceptance shape, live Redis leg confirmed) ; node .codex/scripts/verify-tranche.mjs 06.T6.1 --owner fable-c-verify — class gate PASS (honesty-lint clean after evidence-vocabulary fix, live-wire spawned-gateway, gateway-methods probe, ta-onta 451)",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/protocol.rs",
+              "Body/S/S0/epi-cli/src/techne/gnosis/mod.rs",
+              "Body/S/S3/gateway/tests/s5_gnostic_one_substrate.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.1.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-14T13:15:45.949Z",
-      "runId": "20260713T185143Z-06-T6.1",
+      "heartbeatAt": "2026-07-14T18:21:35.772Z",
+      "runId": "20260714T182135Z-06-T6.1",
       "worktree": null
     },
     "06.T6.2": {
@@ -4198,7 +4218,7 @@
         },
         {
           "at": "2026-07-14T18:19:19.807Z",
-          "text": "DONE per the DR-S5-ONE-1 minimum scope, all surfaces live: (a) 11 named s5-prime gnostic methods end-to-end (contract + S0 arms + production Python, live method-probe exists:true for all); (b) Khora session-workspace pre-landed with tests; (c) tmux terminal-lease at the ingest call site (validate_lease + param-carried TerminalBinding, recoverable refusal); (d) redis hierarchical {day}:{session}:{turn}:{coordinate} (constant + five-arg snapshot + generic builder); (e) epi techne gnosis CLI parity for every route; (f) s0-prime anuttara.trace pre-landed; (g) :Gnostic label pre-landed. The spec-named e2e s5_gnostic_one_substrate_round_trip composes route law + lease-never-inherits + hierarchical key with a LIVE Redis SET/GET (key observed in the real store with warm TTL); pytest smoke 7/7 on live Neo4j. Closed across five verified slices this session (see evidence chain); the ENOSPC-refused run mid-chain was a full disk, not a red suite — fixed by the shared cargo pool + target-sweep hygiene per user session ruling (commit e054d1f2). DEFERRED to their owning lanes: seed_resolve/comparative_retrieval (CCT-22 Rust modules, Tranche 12.38). Unblocks 06.T6.1 and 12.T12.3. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "text": "DONE per the DR-S5-ONE-1 minimum scope, all surfaces live: (a) 11 named s5-prime gnostic methods end-to-end (contract + S0 arms + production Python, live method-probe exists:true for all); (b) Khora session-workspace pre-landed with tests; (c) tmux terminal-lease at the ingest call site (validate_lease + param-carried TerminalBinding, recoverable refusal); (d) redis hierarchical {day}:{session}:{turn}:{coordinate} (constant + five-arg snapshot + generic builder); (e) epi techne gnosis CLI parity for every route; (f) s0-prime anuttara.trace pre-landed; (g) :Gnostic label pre-landed. The spec-named e2e s5_gnostic_one_substrate_round_trip composes route law + lease-never-inherits + hierarchical key with a LIVE Redis SET/GET (key observed in the real store with warm TTL); pytest smoke 7/7 on live Neo4j. Closed across five verified slices this session (see evidence chain); the ENOSPC-refused run mid-chain was a full disk, not a red suite — fixed by the shared cargo pool + target-sweep hygiene per user session ruling (commit e054d1f2). OUT OF SCOPE here, owned by Tranche 12.38: seed_resolve/comparative_retrieval (CCT-22 Rust modules). Unblocks 06.T6.1 and 12.T12.3. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
           "receipt": {
             "command": "cargo test --test s5_gnostic_one_substrate (1 passed / 0 failed — spec-named s5_gnostic_one_substrate_round_trip: 11-method route law over production epi-gnostic, lease-never-inherits session authority, hierarchical redis key byte-pinned AND round-tripped against LIVE local Redis with warm TTL confirmed) ; pytest tests/test_one_substrate_smoke.py -q (7 passed — live Neo4j) ; node .codex/scripts/verify-tranche.mjs 12.T12.2 --owner fable-c-verify — class gate PASS on the shared-target pool (gateway incl new e2e, gateway-contract 66, gateway-methods live probe 11 gnostic methods present, live-wire spawned-gateway from target/debug/epi, ta-onta 451, redis-context, spacetime, graphiti-runtime, harness-selftest, honesty-lint clean)",
             "exitCode": 0,
@@ -16307,6 +16327,16 @@
       "leaseExpiresAt": "2026-07-14T16:22:46.262Z",
       "worktree": null,
       "completedAt": "2026-07-14T15:28:22.203Z"
+    },
+    {
+      "runId": "20260714T182135Z-06-T6.1",
+      "taskId": "06.T6.1",
+      "status": "done",
+      "startedAt": "2026-07-14T18:21:35.772Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T19:21:35.772Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T18:24:52.875Z"
     }
   ],
   "activeRoute": {
