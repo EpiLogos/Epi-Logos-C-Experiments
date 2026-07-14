@@ -18,13 +18,16 @@ import type { Block } from './blockContract';
 export interface BlockHostProps {
     readonly blocks: readonly Block[];
     readonly registry?: BlockRegistry;
+    /** 44.6 selection seam: fired when a hosted block is clicked (the
+     *  `select` affordance path — selection → context-xray + highlight-back). */
+    readonly onBlockSelect?: (block: Block) => void;
 }
 
-export function BlockHost({ blocks, registry = createDefaultBlockRegistry() }: BlockHostProps) {
+export function BlockHost({ blocks, registry = createDefaultBlockRegistry(), onBlockSelect }: BlockHostProps) {
     return (
         <div className="block-host" data-testid="block-host">
             {blocks.map(block => (
-                <HostedBlock key={block.id} block={block} registry={registry} />
+                <HostedBlock key={block.id} block={block} registry={registry} onSelect={onBlockSelect} />
             ))}
             {blocks.length === 0 ? (
                 <p className="pane-message" data-testid="block-host-empty">
@@ -35,7 +38,15 @@ export function BlockHost({ blocks, registry = createDefaultBlockRegistry() }: B
     );
 }
 
-function HostedBlock({ block, registry }: { readonly block: Block; readonly registry: BlockRegistry }) {
+function HostedBlock({
+    block,
+    registry,
+    onSelect
+}: {
+    readonly block: Block;
+    readonly registry: BlockRegistry;
+    readonly onSelect?: (block: Block) => void;
+}) {
     let entry;
     try {
         entry = registry.assertAccepted(block);
@@ -70,6 +81,7 @@ function HostedBlock({ block, registry }: { readonly block: Block; readonly regi
             data-owner-extension={owner?.ownerExtensionId ?? ''}
             data-edit-surface={entry.editSurface}
             data-privacy-class={block.privacyClass}
+            onClick={onSelect ? () => onSelect(block) : undefined}
         >
             <header className="block-header">
                 <strong>{block.type}</strong>

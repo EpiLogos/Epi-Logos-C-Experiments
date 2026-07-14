@@ -17,6 +17,12 @@ import { gateway } from '../../bridge/gatewayHolder';
 import { BlockHost } from '../../blocks/BlockHost';
 import { TEMPORAL_CONTEXT_RPC, normalizeTemporalBlocksProjection } from '../../blocks/temporalBlocks';
 import {
+    CONTEXT_XRAY_RPC,
+    normalizeContextXray,
+    pendingContextXray,
+    type ContextXrayHandle
+} from '../../blocks/contextXray';
+import {
     applyBlockSessionOperation,
     createBlockPsycheUpdateRequest,
     createRendererSessionState,
@@ -25,7 +31,7 @@ import {
     type BlockVerdictDecision
 } from '../../blocks/verdictLoop';
 import { enforceHumanGate } from '../m5ReviewGate';
-import { useProvenanceStore, useSessionStore } from '../../state/stores';
+import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
 
@@ -39,6 +45,20 @@ export function ReviewBlocksPane() {
     );
     const [gateNotice, setGateNotice] = useState<string | null>(null);
     const [blockSource, setBlockSource] = useState<'fixture' | 'live'>('fixture');
+    const [xray, setXray] = useState<ContextXrayHandle | null>(null);
+
+    // 44.6: block selection fires the context-xray seam and highlights back
+    // through the shared coordinate store (the carrier's cross-pane law).
+    const selectBlock = (block: { readonly id: string; readonly coordinate?: string }) => {
+        const coordinate = block.coordinate ?? null;
+        if (coordinate) {
+            useCoordinateStore.getState().setSelected(coordinate);
+        }
+        gateway()
+            .invoke(CONTEXT_XRAY_RPC, { coordinate, blockId: block.id })
+            .then(receipt => setXray(normalizeContextXray(receipt.artifact, coordinate)))
+            .catch(err => setXray(pendingContextXray(err, coordinate)));
+    };
 
     // 44.5: the day/now runtime serves the psyche renderer's blocks projection
     // on the LIVE s3'.temporal.context method — hydrate from it when the
@@ -124,7 +144,27 @@ export function ReviewBlocksPane() {
                     {gateNotice}
                 </p>
             ) : null}
-            <BlockHost blocks={state.blocks} />
+            {xray ? (
+                <aside className="review-xray-strip" data-testid="review-xray-strip" data-wire-state={xray.wireState}>
+                    {xray.wireState === 'live' ? (
+                        <>
+                            <span data-testid="review-xray-coordinates">
+                                related: {xray.relatedCoordinates.join(' · ') || 'none'}
+                            </span>
+                            {xray.episodeHandles.length > 0 ? (
+                                <span data-testid="review-xray-episodes">
+                                    episodes: {xray.episodeHandles.join(' · ')}
+                                </span>
+                            ) : null}
+                        </>
+                    ) : (
+                        <span data-testid="review-xray-pending">
+                            context-xray pending — the s2-prime coordinate.context_xray seam is not on the wire yet
+                        </span>
+                    )}
+                </aside>
+            ) : null}
+            <BlockHost blocks={state.blocks} onBlockSelect={selectBlock} />
         </div>
     );
 }
