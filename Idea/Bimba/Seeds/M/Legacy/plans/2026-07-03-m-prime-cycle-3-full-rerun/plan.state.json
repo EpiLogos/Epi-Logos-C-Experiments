@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:19:53.535Z",
+  "updatedAt": "2026-07-14T07:27:16.809Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1823,16 +1823,16 @@
       "worktree": null
     },
     "05.T5.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T07:22:08.261Z",
+      "claimedAt": "2026-07-14T07:22:08.261Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T08:52:08.261Z",
+      "heartbeatAt": "2026-07-14T07:22:08.261Z",
+      "runId": "20260714T072208Z-05-T5.2",
       "worktree": null
     },
     "05.T5.3": {
@@ -11140,16 +11140,34 @@
       "worktree": null
     },
     "43.T43.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T07:27:16.795Z",
+      "claimedAt": "2026-07-14T07:24:10.955Z",
+      "completedAt": "2026-07-14T07:27:16.795Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:27:16.795Z",
+          "text": "Verify-first close, zero gap (doc-ahead — the files ARE the work product): (a) the five-rule Code Navigability block landed in BOTH rails (CLAUDE.md §0 Code Navigability Rules + AGENTS.md — coordinate header declaration, headers/lib.rs declare vs .c/.rs define, forbidden-imports respect, read-types-before-implementation, taste-at-boundaries/no-interface-outsourcing); (b) the coordinate-header skill exists as the code-side sibling of bimba-vault-validate (.claude/skills/coordinate-header/SKILL.md, referenced by CLAUDE.md rule 1); (c) generated M-stack barrels carry the boundary cross-link verbatim (m4-nara src/common/index.ts header: Generated from contracts/07-t0-extension-contract-preflight.json / Boundary authority: forbiddenImports live in that JSON). K gate green. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 43.T43.6 --owner fable-c-verify — K-scoped gate PASS (kernel-truth, epi-lib 8872, kernel-contract 37, schemas 108, portal-core 351, harness-selftest 102, honesty-lint clean); deliverable files verified present: CLAUDE.md + AGENTS.md rule blocks, .claude/skills/coordinate-header/SKILL.md, generated-barrel contract cross-link",
+            "exitCode": 0,
+            "testsPassed": 9570,
+            "testsFailed": 0,
+            "keyPaths": [
+              "CLAUDE.md",
+              "AGENTS.md",
+              ".claude/skills/coordinate-header/SKILL.md",
+              "Body/M/epi-theia/extensions/m4-nara/src/common/index.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/43.T43.6.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T07:24:10.955Z",
+      "runId": "20260714T072410Z-43-T43.6",
       "worktree": null
     },
     "44.T44.1": {
@@ -15449,12 +15467,31 @@
       "leaseExpiresAt": "2026-07-14T01:46:07.213Z",
       "worktree": null,
       "completedAt": "2026-07-14T07:19:53.517Z"
+    },
+    {
+      "runId": "20260714T072208Z-05-T5.2",
+      "taskId": "05.T5.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T07:22:08.261Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T08:52:08.261Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260714T072410Z-43-T43.6",
+      "taskId": "43.T43.6",
+      "status": "done",
+      "startedAt": "2026-07-14T07:24:10.955Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T08:24:10.955Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:27:16.795Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-13T23:12:53.247Z",
-    "updatedAt": "2026-07-13T23:12:53.247Z",
+    "createdAt": "2026-07-14T07:20:15.788Z",
+    "updatedAt": "2026-07-14T07:20:15.788Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
