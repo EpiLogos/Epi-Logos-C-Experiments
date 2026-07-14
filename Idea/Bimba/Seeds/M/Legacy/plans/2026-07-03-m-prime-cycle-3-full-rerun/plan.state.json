@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T16:35:43.079Z",
+  "updatedAt": "2026-07-14T18:19:19.822Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4175,10 +4175,10 @@
       "worktree": null
     },
     "12.T12.2": {
-      "status": "review",
-      "updatedAt": "2026-07-14T16:35:43.058Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T18:19:19.807Z",
       "claimedAt": "2026-07-14T13:49:46.802Z",
-      "completedAt": null,
+      "completedAt": "2026-07-14T18:19:19.807Z",
       "evidence": [
         {
           "at": "2026-07-14T13:54:50.412Z",
@@ -4195,11 +4195,28 @@
         {
           "at": "2026-07-14T16:35:43.058Z",
           "text": "LEG (c) LANDED (fable-c 2026-07-14, fourth pass): tmux terminal-lease at the gnostic-shell call site — validate_lease(gate_root, session_key) public on agent::tmux returning Live{expires_in_ms}/Expired{expired_for_ms}/Missing over the persisted terminal-leases store (module made pub with provenance comment); gnostic ingest carries the TerminalBinding through dispatch params (terminalLeaseId/sessionKey aliases) and refuses recoverably BEFORE any shell when the named lease is expired or missing (re-acquire-and-retry wording), lease-less calls skip the gate (non-persistent). TDD: 3/3 (tmux Live/Expired/Missing over real lease files; gnostic missing-lease refusal; no-lease passthrough to ordinary param validation). Binary rebuilt before the gate (probe gotcha). Class gate PASS. REMAINING: e2e s5_gnostic_one_substrate_round_trip; seed_resolve/comparative_retrieval (CCT-22 lane). NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+        },
+        {
+          "at": "2026-07-14T18:19:19.807Z",
+          "text": "DONE per the DR-S5-ONE-1 minimum scope, all surfaces live: (a) 11 named s5-prime gnostic methods end-to-end (contract + S0 arms + production Python, live method-probe exists:true for all); (b) Khora session-workspace pre-landed with tests; (c) tmux terminal-lease at the ingest call site (validate_lease + param-carried TerminalBinding, recoverable refusal); (d) redis hierarchical {day}:{session}:{turn}:{coordinate} (constant + five-arg snapshot + generic builder); (e) epi techne gnosis CLI parity for every route; (f) s0-prime anuttara.trace pre-landed; (g) :Gnostic label pre-landed. The spec-named e2e s5_gnostic_one_substrate_round_trip composes route law + lease-never-inherits + hierarchical key with a LIVE Redis SET/GET (key observed in the real store with warm TTL); pytest smoke 7/7 on live Neo4j. Closed across five verified slices this session (see evidence chain); the ENOSPC-refused run mid-chain was a full disk, not a red suite — fixed by the shared cargo pool + target-sweep hygiene per user session ruling (commit e054d1f2). DEFERRED to their owning lanes: seed_resolve/comparative_retrieval (CCT-22 Rust modules, Tranche 12.38). Unblocks 06.T6.1 and 12.T12.3. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]",
+          "receipt": {
+            "command": "cargo test --test s5_gnostic_one_substrate (1 passed / 0 failed — spec-named s5_gnostic_one_substrate_round_trip: 11-method route law over production epi-gnostic, lease-never-inherits session authority, hierarchical redis key byte-pinned AND round-tripped against LIVE local Redis with warm TTL confirmed) ; pytest tests/test_one_substrate_smoke.py -q (7 passed — live Neo4j) ; node .codex/scripts/verify-tranche.mjs 12.T12.2 --owner fable-c-verify — class gate PASS on the shared-target pool (gateway incl new e2e, gateway-contract 66, gateway-methods live probe 11 gnostic methods present, live-wire spawned-gateway from target/debug/epi, ta-onta 451, redis-context, spacetime, graphiti-runtime, harness-selftest, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/tests/s5_gnostic_one_substrate.rs",
+              "Body/S/S5/epi-gnostic/epi_gnostic/cli.py",
+              "Body/S/S3/redis-context/src/redis_cache.rs",
+              "Body/S/S0/epi-cli/src/gate/gnostic.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.2.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "fable-c",
-      "leaseExpiresAt": "2026-07-14T17:55:55.927Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T16:35:43.058Z",
       "runId": "20260714T134946Z-12-T12.2",
       "worktree": null
