@@ -96,7 +96,12 @@ export interface BuildUserContextOptions {
   repoRoot?: string;
   pasuPath?: string;
   vakFrame: VakFrame;
+  /** Birth-chart frame → sources q_identity (DR-ENV-1 invariant). Distinct from the transit sky. */
+  natal?: KairosChannel;
+  /** Transit sky → feeds the environment transform, never q_identity. Today a natal snapshot until a live source lands (P6). */
   kairos?: KairosChannel;
+  /** Ambient transform factor (canonically `derive_env_quaternion`); defaults to the identity rotation (no ambient influence). */
+  environment?: readonly number[];
   identity?: IdentityChannel;
   recent_sessions?: Array<Record<string, unknown>>;
   active_dev_goals?: Array<Record<string, unknown>>;
@@ -201,8 +206,14 @@ export async function buildUserContextFrame(options: BuildUserContextOptions): P
   if (cached) return cached;
 
   const pasu = parsePasuMarkdown(await readFile(pasuPath, "utf8"));
-  const kairos = options.kairos ?? await fetchKairosFromChronos(repoRoot, pasu);
-  const identity = options.identity ?? identityFromKairos(kairos);
+  // DR-ENV-1: identity is anchored to the birth chart, NEVER the live sky. The
+  // `natal` frame sources q_identity; the `kairos` channel is the transit sky that
+  // feeds the environment transform. Today both fall back to the birth-chart fetch
+  // (no live transit source until P6), but q_identity derives from `natalFrame`, so
+  // a future live sky moves the environment/q_personal and leaves q_identity fixed.
+  const natalFrame = options.natal ?? options.kairos ?? await fetchKairosFromChronos(repoRoot, pasu);
+  const kairos = options.kairos ?? natalFrame;
+  const identity = options.identity ?? identityFromNatal(natalFrame.planet_degrees, options.environment);
   const frame: UserContextFrame = {
     pasu,
     kairos,
@@ -347,12 +358,55 @@ async function fetchKairosFromChronos(repoRoot: string, pasu: PasuChannel): Prom
   };
 }
 
-function identityFromKairos(kairos: KairosChannel): IdentityChannel {
-  const q = kairos.planet_degrees.slice(0, 4).map((degree) => Number((degree / 720).toFixed(6))) as [number, number, number, number];
-  const exact = kairos.planet_degrees[0];
+export type Quaternion = [number, number, number, number];
+
+const IDENTITY_ROTATION: Quaternion = [1, 0, 0, 0];
+
+/** Hamilton product a ⊗ b (both [w, x, y, z]). a ⊗ [1,0,0,0] === a exactly. */
+export function quatMul(a: readonly number[], b: readonly number[]): Quaternion {
+  const [aw, ax, ay, az] = a;
+  const [bw, bx, by, bz] = b;
+  return [
+    aw * bw - ax * bx - ay * by - az * bz,
+    aw * bx + ax * bw + ay * bz - az * by,
+    aw * by - ax * bz + ay * bw + az * bx,
+    aw * bz + ax * by - ay * bx + az * bw,
+  ];
+}
+
+/** Unit-normalize; a near-zero quaternion returns the identity rotation (honest, never NaN). */
+export function quatNormalize(q: readonly number[]): Quaternion {
+  const mag = Math.hypot(q[0], q[1], q[2], q[3]);
+  if (mag <= 1e-12) return [...IDENTITY_ROTATION];
+  return [q[0] / mag, q[1] / mag, q[2] / mag, q[3] / mag];
+}
+
+/**
+ * Derive the identity channel from the NATAL invariant (DR-ENV-1 — no collapse).
+ * See [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]].
+ *
+ * `q_identity` is the birth-anchored quaternion; it is byte-stable regardless of
+ * the live sky. `q_personal` is the PASU base TRANSFORMED by the ambient
+ * `environment` quaternion (the composed factor) — it moves with the transiting
+ * sky but never *becomes* it. With no ambient influence (`environment` = the
+ * identity rotation) the transform is an honest pass-through: q_personal === q_identity.
+ *
+ * The environment quaternion is derived upstream from live conditions aspected
+ * against the natal invariant — canonically `portal-core::environment::derive_env_quaternion`
+ * (DR-ENV-7/8). This layer never re-derives it; it only composes it onto the base.
+ */
+export function identityFromNatal(
+  natalDegrees: readonly number[],
+  environment: readonly number[] = IDENTITY_ROTATION,
+): IdentityChannel {
+  const q_identity = natalDegrees
+    .slice(0, 4)
+    .map((degree) => Number((degree / 720).toFixed(6))) as Quaternion;
+  const q_personal = quatMul(q_identity, environment);
+  const exact = natalDegrees[0];
   return {
-    q_identity: q,
-    q_personal: q,
+    q_identity,
+    q_personal,
     tick12: Math.min(11, Math.floor(exact / 60)),
     exact_degree_720: exact,
     phase: exact >= 360 ? 1 : 0,
