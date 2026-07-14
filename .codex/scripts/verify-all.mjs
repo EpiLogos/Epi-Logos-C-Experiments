@@ -374,7 +374,7 @@ export async function runSuite(suite, { quiet = false } = {}) {
         // Never hide a failure's identity: surface the failing suite's tail
         // even in quiet mode (flake chases died on --quiet swallowing names).
         const tail = output.split("\n").filter((line) =>
-          /FAILED|failures:|panicked at|error\[|error: test failed|✖|^not ok|\[live-wire\] FAIL|\[gateway-method-gate\] FAIL|\[graph-live\] FAIL/.test(line),
+          /FAILED|failures:|panicked at|error\[|error: test failed|✖|^not ok|\[live-wire\] FAIL|\[gateway-method-gate\] FAIL|\[graph-live\] FAIL|✘|AssertionError|Test Files.+failed|Tests.+failed/.test(line),
         );
         for (const line of tail.slice(0, 30)) console.error(`[verify-all] ${suite.id}> ${line}`);
       }

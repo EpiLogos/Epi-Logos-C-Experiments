@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T09:06:57.424Z",
+  "updatedAt": "2026-07-14T09:56:20.763Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11497,16 +11497,33 @@
       "worktree": null
     },
     "44.T44.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-14T09:56:20.747Z",
+      "claimedAt": "2026-07-14T09:07:15.039Z",
+      "completedAt": "2026-07-14T09:56:20.747Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T09:56:20.747Z",
+          "text": "Verify-first + pin gap-close: the A2A agent-card was landed (gateway/.well-known/agent-card.json — A2A-shaped, versioned 44.T44.8, DR-PSS-6 no-new-transport invariant stated in its own extension params, all five spec methods as five skills with dispatch authority paths in x-epiLogosGateway.methods) but NOTHING mechanically kept it honest. Landed the pin in dispatch_contract.rs: every advertised method must be served (METHOD_NAMES or the native route_anima_invoke entry, existence proven at compile time) and every method row must name a real skill — 1/1 green, joins the gateway suite (86). Gate journey: two REFUSED runs on app-ui-flow load-starvation flakes (named specs each green in isolation; visual-regression (b) resume-divergence poll starves under gate load) — landed the verify-all quiet-tail regex extension so Vitest/Playwright failure identities surface in REFUSED records (they did, run 2); third run PASS in a verified-quiet window. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract agent_card (1 passed / 0 failed — NEW parity pin: every advertised card method is genuinely served, a protocol METHOD_NAME or the native route_anima_invoke entry proven by compile-time function reference; every method row names a real skill; exactly 5 methods) ; node .codex/scripts/verify-tranche.mjs 44.T44.8 --owner fable-c-verify — UF gate PASS on third run (app-ui-flow playwright 25/25 in the clear window, app-test 570, app-smoke, app-build, app-typecheck, carrier-tokens, live-wire spawned-gateway, gateway 86 incl. the new pin, gateway-contract 86, ta-onta 446, spacetime 11, graphiti-runtime 14, redis-context 10, harness-selftest 102, honesty-lint clean)",
+            "exitCode": 0,
+            "testsPassed": 1353,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/.well-known/agent-card.json",
+              "Body/S/S3/gateway/tests/dispatch_contract.rs",
+              ".codex/scripts/verify-all.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/44.T44.8.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T09:07:15.039Z",
+      "runId": "20260714T090715Z-44-T44.8",
       "worktree": null
     },
     "44.T44.9": {
@@ -15884,18 +15901,28 @@
       "leaseExpiresAt": "2026-07-14T11:01:18.207Z",
       "worktree": null,
       "completedAt": "2026-07-14T09:06:57.409Z"
+    },
+    {
+      "runId": "20260714T090715Z-44-T44.8",
+      "taskId": "44.T44.8",
+      "status": "done",
+      "startedAt": "2026-07-14T09:07:15.039Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T10:37:15.039Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T09:56:20.747Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T07:20:15.788Z",
-    "updatedAt": "2026-07-14T07:20:15.788Z",
+    "createdAt": "2026-07-14T09:32:02.634Z",
+    "updatedAt": "2026-07-14T09:32:02.634Z",
     "taskIds": [
       "12.T12.17",
       "36.T36.5",
-      "35.T35.2",
-      "37.T37.4",
-      "17.T17.17"
+      "06.T6.1",
+      "48.T48.3",
+      "09.T9.3"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -15903,9 +15930,9 @@
     "modeHints": {
       "12.T12.17": "in-session",
       "36.T36.5": "in-session",
-      "35.T35.2": "in-session",
-      "37.T37.4": "in-session",
-      "17.T17.17": "in-session"
+      "06.T6.1": "in-session",
+      "48.T48.3": "in-session",
+      "09.T9.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

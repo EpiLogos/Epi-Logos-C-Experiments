@@ -1232,3 +1232,42 @@ mod t5_10_connectivity_vs_bounded_access {
         assert!(flip_state.last_flip_candidate);
     }
 }
+
+/// 44.T44.8 — the A2A agent-card (.well-known/agent-card.json) is a published
+/// DESCRIPTION of the existing gateway surface (DR-PSS-6: no new transport).
+/// This pin keeps the card honest: every method it advertises is really
+/// served (a protocol METHOD_NAME or the native anima-invoke entry point),
+/// and every advertised skill owns exactly one method row.
+#[test]
+fn agent_card_advertises_only_the_served_gateway_surface() {
+    let card: serde_json::Value =
+        serde_json::from_str(include_str!("../.well-known/agent-card.json"))
+            .expect("agent-card.json parses");
+
+    let methods = card["x-epiLogosGateway"]["methods"]
+        .as_array()
+        .expect("x-epiLogosGateway.methods is an array");
+    assert_eq!(methods.len(), 5, "the card describes exactly the five spec methods");
+
+    // Compile-time existence proof for the one native (non-METHOD_NAMES) entry.
+    let _native_entry = epi_s3_gateway::dispatch::route_anima_invoke;
+    const NATIVE_ENTRY_POINTS: &[&str] = &["route_anima_invoke"];
+
+    let skill_ids: Vec<&str> = card["skills"]
+        .as_array()
+        .expect("skills array")
+        .iter()
+        .map(|skill| skill["id"].as_str().expect("skill id"))
+        .collect();
+
+    for entry in methods {
+        let method = entry["method"].as_str().expect("method name");
+        let served = METHOD_NAMES.contains(&method) || NATIVE_ENTRY_POINTS.contains(&method);
+        assert!(served, "agent-card advertises unserved method `{method}`");
+        let skill_id = entry["skillId"].as_str().expect("skillId");
+        assert!(
+            skill_ids.contains(&skill_id),
+            "agent-card method `{method}` names unknown skill `{skill_id}`"
+        );
+    }
+}
