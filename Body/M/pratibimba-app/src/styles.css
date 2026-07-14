@@ -1215,3 +1215,59 @@ body,
   gap: 0.5rem;
   justify-content: flex-end;
 }
+
+/* ── CU ledger review (40.T40.5) ─────────────────────────────────── */
+
+.canon-ledger-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  font-size: var(--type-body-small);
+  color: var(--ink);
+}
+
+.canon-ledger-pending {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+
+.canon-ledger-table {
+  border-collapse: collapse;
+  margin: 0.4rem 0.6rem;
+}
+
+.canon-ledger-table th,
+.canon-ledger-table td {
+  text-align: left;
+  padding: 0.25rem 0.6rem;
+  border-bottom: 1px solid #241b38;
+}
+
+.canon-ledger-table tbody tr {
+  cursor: pointer;
+}
+
+.canon-ledger-status {
+  padding: 0.05rem 0.45rem;
+  border: 1px solid #3a2c5c;
+  border-radius: 999px;
+}
+
+.canon-ledger-status-landed { border-color: var(--accent); }
+.canon-ledger-status-refused { color: var(--ink-dim); text-decoration: line-through; }
+
+.canon-ledger-claim {
+  color: var(--ink-dim);
+  max-width: 32rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canon-ledger-inspect {
+  margin: 0.4rem 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #3a2c5c;
+  border-radius: 6px;
+}

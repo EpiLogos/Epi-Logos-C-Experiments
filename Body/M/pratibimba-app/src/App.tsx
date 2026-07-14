@@ -31,6 +31,7 @@ import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
+import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { M1SurfaceDispatchPane, resolveM1SurfaceContext } from './panes/m1SurfaceDispatch';
@@ -114,7 +115,8 @@ const PERSONAL_DEFAULT = {
                 children: [
                     { type: 'tab', name: 'Now', component: 'personalHome', enableClose: false },
                     { type: 'tab', name: 'M1 Deep', component: 'm1SurfaceDeep', enableClose: false },
-                    { type: 'tab', name: 'Arena', component: 'm4DialogicalArena', enableClose: false }
+                    { type: 'tab', name: 'Arena', component: 'm4DialogicalArena', enableClose: false },
+                    { type: 'tab', name: 'CU Ledger', component: 'canonUpdateLedger', enableClose: false }
                 ]
             }
         ]
@@ -150,7 +152,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 15;
+const LAYOUT_VERSION = 16;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -206,6 +208,9 @@ function factory(node: TabNode) {
         // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
         case 'm4DialogicalArena':
             return <M4DialogicalArenaPane />;
+        // 40.T40.5 — the Track-40 CU-ledger review surface (48 bases-view posture)
+        case 'canonUpdateLedger':
+            return <CanonUpdateLedgerPane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':
