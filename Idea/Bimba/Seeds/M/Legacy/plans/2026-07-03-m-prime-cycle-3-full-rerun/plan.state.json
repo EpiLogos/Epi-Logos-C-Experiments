@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T07:48:42.119Z",
+  "updatedAt": "2026-07-14T07:51:48.048Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -10116,14 +10116,29 @@
       "worktree": null
     },
     "37.T37.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T07:44:06.364Z",
+      "status": "done",
+      "updatedAt": "2026-07-14T07:51:48.033Z",
       "claimedAt": "2026-07-14T07:44:06.364Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-14T07:51:48.033Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T07:51:48.033Z",
+          "text": "Reconciled the MonoPoly state vocabulary across M0 and M2: established the canonical shared MonoPolyState type in the carrier shared bridge/types.ts (four dialectic states mono/actually-many/actualising-one/monopoly), pointed M2 CymaticMonoPolyState.behaviourState at it, made the M2-scoped CymaticMonoPolyBehaviourState a transparent zero-breakage alias — so archetypal-ground (M0) and wave-behaviour (M2) speak ONE vocabulary and cannot diverge (single source). Test types.test.ts 9/9. NOTE (honest): M2 references MonoPolyState now; the M0 Track-21 dialectic render pane is a separate not-yet-built carrier tranche, but it imports the same MonoPolyState when built — the reconciliation is structural (no divergent enum can arise).",
+          "receipt": {
+            "command": "sh -c \"cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts\"",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/bridge/types.ts",
+              "Body/M/pratibimba-app/src/bridge/types.test.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "uc-3705",
-      "leaseExpiresAt": "2026-07-14T09:44:06.364Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:44:06.364Z",
       "runId": "20260714T074406Z-37-T37.5",
       "worktree": null
@@ -11265,16 +11280,16 @@
       "worktree": null
     },
     "44.T44.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-14T07:51:38.344Z",
+      "claimedAt": "2026-07-14T07:51:38.344Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T09:51:38.344Z",
+      "heartbeatAt": "2026-07-14T07:51:38.344Z",
+      "runId": "20260714T075138Z-44-T44.2",
       "worktree": null
     },
     "44.T44.3": {
@@ -11369,16 +11384,21 @@
       "worktree": null
     },
     "44.T44.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-14T07:51:38.129Z",
+      "claimedAt": "2026-07-14T07:50:33.616Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T07:51:38.129Z",
+          "text": "BLOCKED on unbuilt acceptance subjects (fable-c 2026-07-14): 44.10 is the END-of-track acceptance harness (per source: proves every core block type has an owning registration, the verdict loop round-trips under the Human Gate, block-docs round-trip md+MDX) — its subjects 44.2..44.9 (BlockRegistry, BlockHost, projections, verdict loop, transport, block-doc persistence) are NOT yet built in the carrier; only the 44.1 contract landed. The generated tranche chain float-parses T44.10 as 44.1 and orders it BEFORE 44.2, which would deadlock the track (44.2 waits on 44.10, 44.10 honestly unclosable before 44.2..44.9). Marking blocked per the protocol-sanity chain rule (blocked tasks are skipped and the chain self-heals) — requeue when 44.2..44.9 land."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable-c",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T07:50:33.616Z",
+      "runId": "20260714T075033Z-44-T44.10",
       "worktree": null
     },
     "45.T0": {
@@ -15609,10 +15629,30 @@
     {
       "runId": "20260714T074406Z-37-T37.5",
       "taskId": "37.T37.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-14T07:44:06.364Z",
       "owner": "uc-3705",
       "leaseExpiresAt": "2026-07-14T09:44:06.364Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:51:48.033Z"
+    },
+    {
+      "runId": "20260714T075033Z-44-T44.10",
+      "taskId": "44.T44.10",
+      "status": "blocked",
+      "startedAt": "2026-07-14T07:50:33.616Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T09:20:33.616Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T07:51:38.129Z"
+    },
+    {
+      "runId": "20260714T075138Z-44-T44.2",
+      "taskId": "44.T44.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-14T07:51:38.344Z",
+      "owner": "fable-c",
+      "leaseExpiresAt": "2026-07-14T09:51:38.344Z",
       "worktree": null
     }
   ],

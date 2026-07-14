@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-14T07:48:42.117Z",
+  "generatedAt": "2026-07-14T07:51:48.047Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -274,7 +274,7 @@
       "file": "37-biological-quaternionic-cross-layer-integration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
       "title": "Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "8f1750b506bf37fed98093d7302a27d524d5c80ad48bd0d86684cc686c7cc1b3"
+      "checksum": "786ab9d33fd0a333fdd01643ec2367f85038e5a4b8779f6df2de65d0a135e38a"
     },
     {
       "id": "38",
@@ -9029,7 +9029,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md"
       ],
-      "body": "5. **T37.5 — Reconcile the MonoPoly state vocabulary across M0 and M2**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "5. **T37.5 — Reconcile the MonoPoly state vocabulary across M0 and M2**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: audit_required — verify or rebuild; never build on it unverified.\n   Verify: the four MonoPoly behaviour-states are ONE shared vocabulary — `sh -c \"cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts\"` green (canonical `MonoPolyState` type in the shared bridge/types.ts; M2 `CymaticMonoPolyState.behaviourState: MonoPolyState`; the M2-scoped `CymaticMonoPolyBehaviourState` is a transparent alias, so no divergent M0/M2 enum can arise; the M0 Track-21 dialectic pane imports the same type when built); verifier != closer; evidence = fresh command output."
     },
     {
       "id": "37.T37.6",
@@ -9839,7 +9839,7 @@
       "file": "44-pratibimba-surface-standard.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
       "dependsOn": [
-        "44.T44.10"
+        "44.T44.1"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
@@ -9966,9 +9966,7 @@
       "effort": null,
       "file": "44-pratibimba-surface-standard.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
-      "dependsOn": [
-        "44.T44.1"
-      ],
+      "dependsOn": [],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
       ],

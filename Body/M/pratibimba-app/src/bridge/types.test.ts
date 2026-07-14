@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
     isChimeCoherent,
+    type CymaticMonoPolyState,
     type M123ChimeFrameBoundary,
     type M123ChimeWorldClockBindingBoundary,
+    type MonoPolyState,
 } from './types';
 
 // isChimeCoherent reads exactly `frame.m3.worldClockBinding` — the same nested
@@ -72,5 +74,28 @@ describe('isChimeCoherent (bell-kernel spec §5 / T49.5 world-clock binding)', (
         expect(isChimeCoherent(frame(undefined))).toBe(false);
         expect(isChimeCoherent(null)).toBe(false);
         expect(isChimeCoherent(undefined)).toBe(false);
+    });
+});
+
+describe('MonoPolyState shared vocabulary (T37.5 M0↔M2 reconciliation)', () => {
+    // Typing this single source as readonly MonoPolyState[] is the compile-time
+    // guard that the four-state vocabulary has not drifted from the shared type.
+    const STATES: readonly MonoPolyState[] = ['mono', 'actually-many', 'actualising-one', 'monopoly'];
+
+    it('carries exactly the four canonical behaviour-states in dialectic order', () => {
+        expect(STATES).toEqual(['mono', 'actually-many', 'actualising-one', 'monopoly']);
+    });
+
+    it('the M2 cymatic state speaks the shared MonoPolyState vocabulary', () => {
+        // behaviourState is typed MonoPolyState — assignable only from the shared
+        // vocab, so the M2 (cymatic) surface and the M0 (dialectic) surface that
+        // import MonoPolyState cannot diverge.
+        const cymatic: CymaticMonoPolyState = {
+            behaviourState: 'actualising-one',
+            activeToneCount: 3,
+            mutualResonance: 0.5,
+            projection64: 12,
+        };
+        expect(STATES).toContain(cymatic.behaviourState);
     });
 });

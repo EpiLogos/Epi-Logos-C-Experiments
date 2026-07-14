@@ -664,14 +664,25 @@ export interface AnuttaraWitnessProjection {
     readonly coherenceScore: number;
 }
 
-export type CymaticMonoPolyBehaviourState =
+/** T37.5 — the ONE canonical MonoPoly behaviour vocabulary shared by the M0
+ *  dialectic render (Track 21's archetypal ground) and the M2 cymatic
+ *  wave-behaviour projection, so the two speak one vocabulary instead of two
+ *  divergent enums: `mono` (undifferentiated one) / `actually-many`
+ *  (differentiated) / `actualising-one` (cohering) / `monopoly` (the false one).
+ *  Both surfaces import THIS type. */
+export type MonoPolyState =
     | 'mono'
     | 'actually-many'
     | 'actualising-one'
     | 'monopoly';
 
+/** @deprecated M2-scoped historical name — kept as a transparent back-compat
+ *  alias of the shared {@link MonoPolyState} (T37.5 M0↔M2 vocabulary
+ *  reconciliation). New code imports `MonoPolyState`. */
+export type CymaticMonoPolyBehaviourState = MonoPolyState;
+
 export interface CymaticMonoPolyState {
-    readonly behaviourState: CymaticMonoPolyBehaviourState;
+    readonly behaviourState: MonoPolyState;
     readonly activeToneCount: number;
     readonly mutualResonance: number;
     readonly projection64: number;

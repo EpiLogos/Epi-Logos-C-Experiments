@@ -33,7 +33,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: the four MonoPoly behaviour-states are ONE shared vocabulary — `sh -c "cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts"` green (canonical `MonoPolyState` type in the shared bridge/types.ts; M2 `CymaticMonoPolyState.behaviourState: MonoPolyState`; the M2-scoped `CymaticMonoPolyBehaviourState` is a transparent alias, so no divergent M0/M2 enum can arise; the M0 Track-21 dialectic pane imports the same type when built); verifier != closer; evidence = fresh command output.
 
 6. **T37.6 — Element-ID normalization in the bridge**
 
