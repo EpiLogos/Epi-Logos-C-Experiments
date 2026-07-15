@@ -5,6 +5,15 @@ description: Mythos-owned in-session symbolic-protein narrative reader over the 
 
 # Symbolic Protein Reading
 
+## Coordinate Header
+- Coordinate: `S4-4'` / [[Mythos]]
+- Residency: `Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/symbolic-protein-reading/SKILL.md`
+- Position (#n): `#4` — Context / archetypal pattern naming
+- Actualises: [[S4-SPEC]], [[S4-ARCHITECTURE]], and M4 Tranche 5.27
+- Public surface: governed inputs and output law for `modules/symbolic-protein-reader.ts`
+- Does NOT own: protected M4 bodies, M3 card-label law, TOML parsing, or gateway persistence
+- Contract: `Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md`
+
 ## Owner
 [[Mythos]] owns this skill as the Paśyantī pattern-naming surface for [[M4_Symbolic_Protein]] in-session codon-chain reading.
 
@@ -16,6 +25,7 @@ Coordinate frame:
 
 ## Inputs
 - `symbolic_protein_handle`: read-only opaque handle for the current [[M4_Symbolic_Protein]] chain. Do not dereference protected bodies outside the governed [[M4']] surface.
+- `chain_projection`: governed `chain_position` plus `chain_fingerprint`; this is the only chain-derived input admitted into [[Anima]] and contains no codons or protein body.
 - `cosmic_weather_snapshot`: global 1-2-3 state from [[MathemeHarmonicProfile]]:
   - M1 spanda tick
   - M2 cymatic phase
@@ -43,6 +53,9 @@ interface MythosArchetypeReading {
 ```
 
 The read appends to `SymbolicProtein.mythosReadingHistory`. A session-close kairos pulse additionally populates `SymbolicProtein.mythosArchetypeReading` so the sealed [[PatternPacket]] carries the named archetype forward.
+
+## Runtime Surface
+The active implementation is `Body/S/S4/ta-onta/S4-4p-anima/modules/symbolic-protein-reader.ts`. It consumes values already parsed and validated by the portal-core tunable registry; TOML parsing and override precedence remain outside [[S4]]. The module is directly importable by governed [[Mythos]] carriers and deliberately does not add a new always-active Anima tool.
 
 ## Trigger Law
 Mercurius kairos ticks during a session may trigger a read according to `~/.epi-logos/config.toml`:

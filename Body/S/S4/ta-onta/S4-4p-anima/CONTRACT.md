@@ -24,6 +24,8 @@ Raw tools are always available at the extension level. Skills shape and constrai
 
 Anima is the **orchestration centre** — the lemniscate self-fold where the agent system manages itself. It owns VAK evaluation (task → 6-layer coordinate assignment), CF dispatch (CF code → constitutional agent routing), thread-type execution (CFP0-CFP5 via agent-team/chain/subagent primitives), and CS-phase management (Klein mode, Ouroboros, day/night configuration). All agent dispatch in the ta-onta system routes through Anima. No other extension spawns agents directly.
 
+Within that dispatch boundary, [[Mythos]] owns the in-session [[M4_Symbolic_Protein]] pattern-reading module. `modules/symbolic-protein-reader.ts` consumes only an opaque protein handle, governed chain fingerprint/position projection, current M1/M2/M3 weather, and four provenance wikilinks. It owns trigger state, reading history, voice/reification checks, and the final close reading. It does not dereference or persist the protected protein body, duplicate the [[M3]] Major Arcana table, parse TOML, or widen the Anima active-tool surface.
+
 **Canonical mental-pole dispatch (per DR-MP-1):** Anima IS still the `#` operator/dispatch — the orchestrating function that routes to constitutional agents. For the mental-pole triplet (4'-5'-0' = LLM/EBM/Verifier), the dispatch routes through **Pi-as-LLM-Nara at position 4'** — the traversal-voice that synthesizes EBM evaluation (position 5'/Epii) and Verifier report (position 0'/Anuttara) into user-articulable feedback. Pi-as-Nara IS the LLM the dispatch routes through; Anima IS the dispatch function that routes to it.
 
 **What Anima does NOT own:** vault writes (Khora), content structure (Hen), temporal scheduling (Chronos), knowledge crystallisation/retrieval tooling (Aletheia). Anima dispatches TO Aletheia's specialist subagents — it does not define them.
@@ -185,6 +187,7 @@ Day/Night' is a **CS (Context-System) runtime configuration**, not a hardwired a
 7. Psyche is the session subject — she is the agent who undergoes, not the orchestrator
 8. Nous prepares dis-closure (RAG context) before task execution — never routes tasks
 9. Skills gate tool use for subagents — raw tools are registered at the extension level and are always available; skills contextualise how subagents invoke them
+10. Mythos symbolic-protein reads consume governed projections only; raw codons/protein bodies never enter Anima state, and the session-close read is the sole final `mythosArchetypeReading` value.
 
 ---
 
@@ -195,6 +198,8 @@ Day/Night' is a **CS (Context-System) runtime configuration**, not a hardwired a
 - Hen: template invocation for task-spec + pattern-note artifacts
 - Pleroma: bounded primitive surfaces (tmux, cmux, worktrunk, etc.) for CFP execution
 - Chronos: Day lifecycle events, session temporal boundaries
+- M4/Nara: protected protein handle plus governed chain position/fingerprint projection
+- Matheme profile: current M1/M2/M3 cosmic-weather snapshot and its provenance handle
 
 **Provides to:**
 - Aletheia: Night' analysis triggers (Möbius pass start); `thoughts/` routing signal

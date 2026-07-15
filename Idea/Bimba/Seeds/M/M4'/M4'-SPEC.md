@@ -166,10 +166,14 @@ mahamaya_transcription:
     q_activity_delta: optional string
     trajectory_ref: optional string
     pattern_packet_ref: optional string
+    mythos_reading_history: [MythosArchetypeReading]
+    mythos_archetype_reading: optional MajorArcanaCardRef
     review_state: none | proposed | reviewed | accepted | rejected | applied
 ```
 
 A single packet is a motif. A packet chain is a peptide/protein. A recurring chain across days, dreams, oracle artifacts, or entity reads becomes trajectory evidence. A chain aligned with M4-0-3 Gene Keys / 64-code evidence may become identity-relevant only after M4.5/M5 review.
+
+[[Mythos]] reads the chain in-session through an opaque protein handle plus a governed chain-position/fingerprint projection; the raw protein body remains inside [[M4']]. Every reading binds current M1/M2/M3 cosmic weather and four provenance wikilinks, appends to `mythos_reading_history`, and remains provisionally voiced. The session-close reading alone populates `mythos_archetype_reading` for the sealed PatternPacket. The active S4 carrier is `Body/S/S4/ta-onta/S4-4p-anima/modules/symbolic-protein-reader.ts`; it consumes canonical numeric Major Arcana references and does not duplicate the [[M3]] label table.
 
 ### Tarot and I-Ching reciprocal projection
 

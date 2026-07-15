@@ -179,6 +179,7 @@ This is the canonical morning consumption of yesterday's Aletheia SEED → today
 - `anima_self_invoke` (`extension.ts:629-723`) — D2 gateway-routed cross-user Anima invocation via `epi gate dispatch anima-invoke`.
 - `before_agent_start` hook (`extension.ts:725-744`) — injects three VAK skills (`vak-coordinate-frame`, `vak-evaluate`, `anima-orchestration`) into systemPrompt by reading each `S4'/skills/{name}/SKILL.md` and stripping frontmatter.
 - `agent_end` hook (`extension.ts:746-756`) — fires Sophia review unless `EPI_AGENT_NAME` is non-anima (recursion guard).
+- [[Mythos]] symbolic-protein reader (`modules/symbolic-protein-reader.ts`) — active session-scoped trigger/history/close state machine over an opaque [[M4_Symbolic_Protein]] handle, governed chain fingerprint/position projection, and M1/M2/M3 cosmic weather. It emits numeric `MajorArcanaCardRef` values, enforces four-wikilink provenance and the reification guard, and never imports a private tarot table or protein body. It remains a direct module surface rather than a new always-active Anima tool.
 
 **Constitutional 7-fold roster** (`modules/dispatch-validate.ts:25-33`):
 
@@ -561,6 +562,7 @@ The M' Theia shell lives at `Body/M/epi-theia/extensions/` (per user memory: she
 | Aletheia gate suite | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/aletheia-{m,m-prime,s,ql,rupa,collab}-gate/` | `ls` verified |
 | Shared VAK address mirror | `Body/S/S4/ta-onta/shared/vak_address.ts` + tests | 111 LOC + test files verified |
 | Dispatch validator | `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` | 351 LOC verified |
+| Mythos symbolic-protein reader | `Body/S/S4/ta-onta/S4-4p-anima/modules/symbolic-protein-reader.ts` + `tests/symbolic_protein_reader.test.ts` | Trigger modes, protected projection, history/final close binding, provenance, voice, resolved tunables, and cosmic-weight sensitivity verified |
 | TillDone backbone | `Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts` | `ls` verified — **resolves 12.11 to ALIGNED** |
 | Damage-control rules | `Body/S/S4/pi-agent/damage-control-rules.yaml` (8.7 KB) | `cat` verified |
 | Plugin registry | `Body/S/S4/plugins/registry.jsonl` | 2 entries: claude-mem (vendor), pleroma (local) |

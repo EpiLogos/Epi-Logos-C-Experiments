@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T13:07:24.515Z",
+  "updatedAt": "2026-07-15T13:24:12.246Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2647,16 +2647,31 @@
       "worktree": null
     },
     "05.T5.27": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T13:24:12.358Z",
+      "claimedAt": "2026-07-15T13:09:02.541Z",
+      "completedAt": "2026-07-15T13:24:12.358Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T13:24:12.358Z",
+          "text": "Active S4 Mythos reader rebuilt over governed protected projections; class-K independent verification PASS.",
+          "receipt": {
+            "command": "node --test Body/S/S4/**/*.test.ts Body/S/S4/**/*.test.mjs",
+            "exitCode": 0,
+            "testsPassed": 481,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/symbolic-protein-reader.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/symbolic_protein_reader.test.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 17 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T13:09:02.541Z",
+      "runId": "20260715T130902Z-05-T5.27",
       "worktree": null
     },
     "06.T6.1": {
@@ -17391,6 +17406,16 @@
       "leaseExpiresAt": "2026-07-15T14:51:40.588Z",
       "worktree": null,
       "completedAt": "2026-07-15T13:07:24.498Z"
+    },
+    {
+      "runId": "20260715T130902Z-05-T5.27",
+      "taskId": "05.T5.27",
+      "status": "done",
+      "startedAt": "2026-07-15T13:09:02.541Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T16:09:02.541Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T13:24:12.358Z"
     }
   ],
   "activeRoute": {
