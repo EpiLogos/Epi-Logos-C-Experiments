@@ -55,6 +55,12 @@ const FORBIDDEN_PRIVATE_PAYLOAD_KEYS = [
   "identityHashPreview",
   "layerPresenceMask",
   "rawNaraBody",
+  "fieldBody",
+  "rawField",
+  "rawPersonalCymaticPayload",
+  "personalCymaticField",
+  "protectedM4Body",
+  "journalBody",
   "privateIdentityData",
   "bioquaternion",
   "resonanceSquareEmphasis",
@@ -69,9 +75,11 @@ export const KernelBridgeCapabilityName = z.enum([
   "depositKernelObservation",
   "requestReviewEvidence",
   "s2.parashaktiCorrespondences",
+  "kernelBridge.m2.epogdoonProjection(address72)",
   "kernelBridge.m2.planetaryElementalWeights()",
   "kernelBridge.m2.cymaticMonoPolyState(address72)",
   "kernelBridge.m3.bioquaternionTranscription(codon)",
+  "kernelBridge.m3.lensCodonBinary(lensId)",
 ]);
 export type KernelBridgeCapabilityName = z.infer<
   typeof KernelBridgeCapabilityName
@@ -80,6 +88,127 @@ export type KernelBridgeCapabilityName = z.infer<
 export const KERNEL_BRIDGE_CAPABILITY_NAMES = Object.freeze(
   KernelBridgeCapabilityName.options,
 );
+
+export const EpogdoonBridgeProjection = z
+  .object({
+    compressedCodon: z.number().int().min(0).max(63),
+    isEvolutionaryGap: z.boolean(),
+    expandedBack: z.number().int().min(0).max(71),
+  })
+  .strict();
+export type EpogdoonBridgeProjection = z.infer<
+  typeof EpogdoonBridgeProjection
+>;
+
+export const LensCodonBinaryDegree = z
+  .object({
+    degree360: z.number().int().min(0).max(359),
+    exactDegree720: z.number().min(0).max(718),
+    codonUpper: z.number().int().min(0).max(3),
+    codonLower: z.number().int().min(0).max(3),
+    codonClass: z.number().int().min(0).max(3),
+    charges: z
+      .object({
+        pp: z.number(),
+        nn: z.number(),
+        np: z.number(),
+        pn: z.number(),
+      })
+      .strict(),
+    quaternion: z.tuple([
+      z.number(),
+      z.number(),
+      z.number(),
+      z.number(),
+    ]),
+    elementCanonical: z.number().int().min(0).max(5),
+    hexagramId: z.number().int().min(0).max(63),
+    lineChangeOperator: z.number().int().min(0).max(5),
+    tick12: z.number().int().min(0).max(11),
+    fibonacciPosition: z.number().int().min(0).max(59),
+    fibonacciDigit: z.number().int().min(0).max(9),
+    fibonacciPhase01: z.number().min(0).max(1),
+  })
+  .strict();
+export type LensCodonBinaryDegree = z.infer<typeof LensCodonBinaryDegree>;
+
+const M3_I_CHING_VALUE = [6, 9, 7, 8] as const;
+
+export const LensCodonBinaryProjection = z
+  .object({
+    lensId: z.number().int().min(0).max(16),
+    lensRole: z.enum(["primary-ground", "derived-aperture"]),
+    groundingLensId: z.literal(16),
+    segment: z.array(z.number().int().min(0).max(359)).min(1).max(360),
+    perDegree: z.array(LensCodonBinaryDegree).min(1).max(360),
+    contract: z.literal("kernelBridge.m3.lensCodonBinary(lensId)"),
+    runtimeOwner: z.string().min(1),
+    source: z.string().min(1),
+  })
+  .strict()
+  .superRefine((projection, ctx) => {
+    const slices = [
+      1, 2, 4, 8, 9, 10, 12, 15, 24, 30, 36, 40, 45, 90, 180, 360,
+    ] as const;
+    const isGround = projection.lensId === 16;
+    const slice = isGround ? 6 : slices[projection.lensId];
+    const expectedSections = 360 / slice;
+    const expectedRole = isGround ? "primary-ground" : "derived-aperture";
+    if (projection.lensRole !== expectedRole) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `lensId ${projection.lensId} requires role ${expectedRole}`,
+        path: ["lensRole"],
+      });
+    }
+    if (
+      projection.segment.length !== expectedSections ||
+      projection.perDegree.length !== expectedSections
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `lensId ${projection.lensId} requires ${expectedSections} boundary records`,
+        path: ["segment"],
+      });
+    }
+
+    projection.perDegree.forEach((degree, index) => {
+      const expectedDegree = index * slice;
+      const expectedQuaternion = [
+        degree.charges.pp,
+        degree.charges.nn,
+        degree.charges.np,
+        degree.charges.pn,
+      ];
+      const chargeSum =
+        degree.charges.pp +
+        degree.charges.nn +
+        degree.charges.np +
+        degree.charges.pn;
+      const valid =
+        projection.segment[index] === expectedDegree &&
+        degree.degree360 === expectedDegree &&
+        degree.exactDegree720 === expectedDegree * 2 &&
+        degree.fibonacciPosition === Math.floor(expectedDegree / 6) &&
+        degree.fibonacciPhase01 === (expectedDegree % 6) / 6 &&
+        degree.quaternion.every(
+          (component, componentIndex) =>
+            component === expectedQuaternion[componentIndex],
+        ) &&
+        chargeSum ===
+          4 * M3_I_CHING_VALUE[(degree.hexagramId >> 4) & 0x03];
+      if (!valid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "degree record violates the C-authored codon projection law",
+          path: ["perDegree", index],
+        });
+      }
+    });
+  });
+export type LensCodonBinaryProjection = z.infer<
+  typeof LensCodonBinaryProjection
+>;
 
 export const CanonicalVakAddress = z
   .object({
@@ -807,9 +936,14 @@ export const PhaseSpaceValence = z.discriminatedUnion("kind", [
 ]);
 export type PhaseSpaceValence = z.infer<typeof PhaseSpaceValence>;
 
-/// The +1 Level-0 aperture (16+1 law — NEVER a 17th lens row).
+/// The +1 Level-0 aperture: functional lens 16 and the primary Ground through
+/// which the sixteen derived static division lenses are addressed.
 export const PhaseSpaceFibonacciGround = z
   .object({
+    lensId: z.literal(16),
+    role: z.literal("primary-ground"),
+    slice: z.literal(6),
+    sections: z.literal(60),
     position: z.number().int().min(0).max(59),
     digit: z.number().int().min(0).max(9),
     phase01: z.number().min(0).max(1),
@@ -1252,6 +1386,12 @@ export const MathemeHarmonicProfile = z
     harmonicGrammar: MathemeHarmonicGrammarProjection.optional(),
     pasuBeingPattern: PasuBeingPatternProjection.optional(),
     anuttaraWitness: AnuttaraWitnessProjection.optional(),
+    // Kairos tier (kernel/profile.rs kairos_mode/kairos_decays_at_ms, S3 gate
+    // server/mod.rs) — skip-serialized Options: absent = kairos-pending, else
+    // the tier that won (kairotic > realtime). decaysAtMs present only in
+    // kairotic mode. Pinned literals so a live capture strict-parses.
+    kairosMode: z.enum(["kairotic", "realtime"]).optional(),
+    kairosDecaysAtMs: z.number().int().nonnegative().optional(),
     // Composition projections (Rust optional, skip-serialized when absent) —
     // kept as unknown until their own schemas land; listed so a strict parse
     // of a live profile carrying them does not reject the whole payload.

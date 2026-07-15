@@ -117,6 +117,8 @@ export const EXEMPT_PROFILE_FIELDS = {
     nodalQuartet: 'length-4 law pinned in the strict parse; nodal role truth asserted through modalResonator.nodalQuartet in the schema',
     m1Topology: 'typed M1TopologyProjection pinned in the strict parse; the 720°/genus-1/Euler-0 double-cover + Hopf-fibration + Klein-flip topology law is asserted in portal-core + schemas tests (Track 02.T2.3)',
     inversionOperator: 'handle-only InversionOperatorHandle pinned in the strict parse (operator/handle/provenance); the single session-held # (0/1) identity — the same operator at every coordinate — is asserted in portal-core + schemas tests (Track 02.T2.5, M1\'-SPEC §14)',
+    kairosMode: 'pinned z.enum(["kairotic","realtime"]).optional() in the strict parse; absent = kairos-pending (S3 kairos tier, gate server/mod.rs)',
+    kairosDecaysAtMs: 'nonneg-int unix-ms pinned optional in the strict parse; present only in kairotic mode (Rust Option<u64>)',
 };
 
 /**
@@ -205,7 +207,7 @@ export const PROJECTION_MANIFEST = [
         name: 'phaseSpace',
         required: true,
         covers: ['phaseSpace', 'degree360', 'degree720'],
-        describe: 'Sprint-8 E1/E3 phase-space address carried and self-consistent',
+        describe: 'phase-space is self-consistent and identifies Ground as primary functional lens 16',
         assert(capture) {
             const carriers = profilesOf(capture).filter(p => p.phaseSpace);
             if (carriers.length === 0) return ['no profile frame carried phaseSpace'];
@@ -223,6 +225,23 @@ export const PROJECTION_MANIFEST = [
                 }
                 if (ps.node.shadowDegree !== ps.node.degree360 + 360) {
                     errors.push(`node.shadowDegree ${ps.node.shadowDegree} != degree360+360`);
+                }
+                const ground = ps.fibonacciGround;
+                if (
+                    ground.lensId !== 16 ||
+                    ground.role !== 'primary-ground' ||
+                    ground.slice !== 6 ||
+                    ground.sections !== 60
+                ) {
+                    errors.push(
+                        `fibonacciGround must be primary lens 16 at 60x6°, got ${JSON.stringify(ground)}`
+                    );
+                }
+                if (
+                    ps.lensCarrier.length !== 16 ||
+                    ps.lensCarrier.some((lens, index) => lens.lensIndex !== index)
+                ) {
+                    errors.push('lensCarrier must remain the sixteen ordered derived rows 0..15');
                 }
             }
             return errors;
