@@ -25,7 +25,11 @@ test('M0 Virtue Witness panel follows the real gateway profile (21.T21.10)', asy
     const graphExplorer = page.getByTestId('graph-explorer');
     const ready = graphExplorer.getByTestId('m0-virtue-witness-panel');
     const pending = graphExplorer.getByTestId('m0-virtue-witness-pending');
-    await expect(ready.or(pending)).toBeVisible({ timeout: 20_000 });
+    const resolved = ready.or(pending);
+    await expect(resolved).toBeVisible({ timeout: 20_000 });
+    // Connection precedes the first profile tick. Wait until the witness view
+    // binds a real generation before choosing its ready/pending branch.
+    await expect(resolved).toHaveAttribute('data-generation', /^\d+$/, { timeout: 20_000 });
 
     if (await ready.isVisible()) {
         await expect(ready.getByTestId('m0-virtue-witness-cell')).toHaveCount(9);
@@ -39,6 +43,5 @@ test('M0 Virtue Witness panel follows the real gateway profile (21.T21.10)', asy
         );
     } else {
         await expect(pending).toContainText('not emitted');
-        await expect(pending).toHaveAttribute('data-generation', /^\d+$/);
     }
 });

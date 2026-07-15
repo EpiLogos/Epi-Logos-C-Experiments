@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T10:26:16.662Z",
+  "updatedAt": "2026-07-15T11:51:19.076Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -9688,10 +9688,10 @@
       "worktree": null
     },
     "29.T29.10": {
-      "status": "review",
-      "updatedAt": "2026-07-15T10:26:16.647Z",
+      "status": "done",
+      "updatedAt": "2026-07-15T11:51:19.060Z",
       "claimedAt": "2026-07-14T22:19:31.073Z",
-      "completedAt": null,
+      "completedAt": "2026-07-15T11:51:19.060Z",
       "evidence": [
         {
           "at": "2026-07-14T22:21:23.376Z",
@@ -9700,11 +9700,27 @@
         {
           "at": "2026-07-15T10:26:16.647Z",
           "text": "29.T29.10 HELD review by opus-reviewer (independent verifier): the shared UF gate passes, but that gate does not exercise this tranche's specific deliverable. Composition-state persistence + cross-layout preservation is NOT landed in the active carrier — grep for selectedLensCell / activeCodonCell / timeAxisMode / senseOverride / qComposedSnapshotId / recognitionLayerView / anuttaraGroundingExpanded / miniInspectorActiveId returns zero hits in Body/M/pratibimba-app/src. The implementer's own last evidence (2026-07-14) concurs it needs a carrier retarget/contract update before it can close. A green shared gate is not proof of an absent feature; requeue for real carrier landing."
+        },
+        {
+          "at": "2026-07-15T11:51:19.060Z",
+          "text": "Active carrier now persists the strict 18-field integrated composition state atomically through Tauri, preserves it across face/layout replacement and restart, rejects raw quaternion material, and passed the independent UF app-ui-flow gate with 33 Playwright tests plus live-wire, smoke, build, typecheck, Rust, and honesty checks.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 29.T29.10 --owner codex-verifier-29-10 (includes app-ui-flow/playwright)",
+            "exitCode": 0,
+            "testsPassed": 1461,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/compositionState.tsx",
+              "Body/M/pratibimba-app/src-tauri/src/composition_state.rs",
+              "Body/M/pratibimba-app/tests/e2e/m0-virtue-witness.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 93 dirty files.",
       "owner": "anima",
-      "leaseExpiresAt": "2026-07-15T00:19:31.073Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T10:26:16.647Z",
       "runId": "20260714T221931Z-29-T29.10",
       "worktree": null
@@ -17247,28 +17263,26 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-15T09:53:18.554Z",
-    "updatedAt": "2026-07-15T09:53:18.554Z",
+    "createdAt": "2026-07-15T11:25:23.245Z",
+    "updatedAt": "2026-07-15T11:25:23.245Z",
     "taskIds": [
-      "36.T36.5",
-      "23.T23.10",
-      "11.T11.1",
-      "15.T15.4",
-      "21.T21.10"
+      "29.T29.10",
+      "05.T5.22",
+      "05.T5.23",
+      "05.T5.24"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "36.T36.5": "in-session",
-      "23.T23.10": "in-session",
-      "11.T11.1": "in-session",
-      "15.T15.4": "in-session",
-      "21.T21.10": "in-session"
+      "29.T29.10": "in-session",
+      "05.T5.22": "in-session",
+      "05.T5.23": "in-session",
+      "05.T5.24": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

@@ -12,6 +12,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { CompositionStateProvider } from './composition/compositionState';
 import 'flexlayout-react/style/dark.css';
 import './styles.css';
 
@@ -31,7 +32,9 @@ async function bootstrap(): Promise<void> {
     }
     createRoot(container!).render(
         <React.StrictMode>
-            <App />
+            <CompositionStateProvider>
+                <App />
+            </CompositionStateProvider>
         </React.StrictMode>
     );
 }

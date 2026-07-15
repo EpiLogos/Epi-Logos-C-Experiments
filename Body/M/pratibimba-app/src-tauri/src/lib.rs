@@ -1,11 +1,13 @@
 //! Coordinate: M'
 //! Residency: Body/M/pratibimba-app/src-tauri (active M' carrier per the
 //!   Carrier Decision 2026-07-02 in M'-SYSTEM-SPEC)
+//! Position (#n): #5 — assembly of the integrated M' carrier
 //! Actualises: the one-binary organism — window + supervised gateway +
 //!   vault workspace + face.
-//! Public surface: run().
+//! Public surface: run() and registered Tauri command modules.
 //! Does NOT own: kernel, gateway protocol, vault law (see module headers).
 
+pub mod composition_state;
 pub mod identity;
 pub mod oracle;
 pub mod supervisor;
@@ -28,6 +30,8 @@ pub fn run() {
             oracle::oracle_cast,
             vault::ui_state_load,
             vault::ui_state_save,
+            composition_state::composition_state_load,
+            composition_state::composition_state_save,
             identity::natal_sky
         ])
         .setup(|app| {

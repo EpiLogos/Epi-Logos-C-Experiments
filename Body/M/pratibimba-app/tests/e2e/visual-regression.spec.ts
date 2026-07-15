@@ -237,6 +237,24 @@ function engineCanvas(page: Page): Locator {
         .first();
 }
 
+async function fixedCanvasClip(canvas: Locator): Promise<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}> {
+    const box = await canvas.boundingBox();
+    if (!box || box.width < 1 || box.height < 1) {
+        throw new Error('engine canvas has no capturable geometry');
+    }
+    return {
+        x: Math.round(box.x),
+        y: Math.round(box.y),
+        width: Math.max(1, Math.floor(box.width)),
+        height: Math.max(1, Math.floor(box.height))
+    };
+}
+
 test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing baseline', async ({
     page
 }) => {
@@ -350,14 +368,19 @@ test('(b) tick choreography: pause/scrub freezes the matrices; same record ⇒ s
 
     const canvas = engineCanvas(page);
     await expect(canvas).toBeVisible();
+    // A locator screenshot follows live element geometry. The renderer may
+    // receive a resize while paused, producing different PNG dimensions and
+    // diffRatio's geometry-error sentinel (1) before pixels are compared.
+    // Keep one page clip for this whole pause/scrub/resume proof.
+    const canvasClip = await fixedCanvasClip(canvas);
 
     // Frozen-tick law: the choreography is pixel-static while the kernel
     // keeps ticking underneath (ingestion continues; the cursor stays put).
     // Ratio, not byte equality: the 4.3 clock-field live-bus window breathes
     // sub-pixel inside the same scene (header: measured floor 0.00018).
-    const frozenA = await canvas.screenshot();
+    const frozenA = await page.screenshot({ clip: canvasClip });
     await page.waitForTimeout(1_500); // > one live kernel tick recorded
-    const frozenB = await canvas.screenshot();
+    const frozenB = await page.screenshot({ clip: canvasClip });
     expect(
         await diffRatio(page, frozenA, frozenB),
         'paused choreography must be pixel-static across a live tick (E5 law: nothing advances under pause)'
@@ -367,7 +390,7 @@ test('(b) tick choreography: pause/scrub freezes the matrices; same record ⇒ s
     // renders visibly different pixels (measured: ~0.0096, 50× the floor)…
     await page.keyboard.press('ArrowLeft'); // engine.stepBack
     await page.waitForTimeout(400);
-    const stepped = await canvas.screenshot();
+    const stepped = await page.screenshot({ clip: canvasClip });
     expect(
         await diffRatio(page, frozenA, stepped),
         'step-back must show the previous tick record, not the frozen one'
@@ -377,7 +400,7 @@ test('(b) tick choreography: pause/scrub freezes the matrices; same record ⇒ s
     // (back inside the live-window noise floor).
     await page.keyboard.press('ArrowRight'); // engine.stepForward
     await page.waitForTimeout(400);
-    const returned = await canvas.screenshot();
+    const returned = await page.screenshot({ clip: canvasClip });
     expect(
         await diffRatio(page, frozenA, returned),
         'scrub is deterministic: same ring record ⇒ same choreography pixels'
@@ -388,7 +411,7 @@ test('(b) tick choreography: pause/scrub freezes the matrices; same record ⇒ s
     await page.keyboard.press(' ');
     await expect(page.getByTestId('engine-scrub')).toHaveCount(0);
     await expect
-        .poll(async () => diffRatio(page, frozenA, await canvas.screenshot()), {
+        .poll(async () => diffRatio(page, frozenA, await page.screenshot({ clip: canvasClip })), {
             message: 'resumed choreography must diverge from the frozen frame',
             timeout: 10_000
         })
