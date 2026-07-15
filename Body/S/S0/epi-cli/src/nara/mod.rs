@@ -1,8 +1,20 @@
 //! Nara — The Personal Dialogical Interface (#4)
 //!
-//! CLI scaffold for all M4 Nara sub-commands:
-//! wind, clock, kairos, identity, decan, resonance, project,
-//! oracle, medicine, transform, lens, pratibimba, logos, status.
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S0-0-4 |
+//! | Residency | Body/S/S0/epi-cli/src/nara/mod.rs (physically S0, actualises M4) |
+//! | Position | #4 - Lived context / personal substrate |
+//! | Actualises | [[M4'-SPEC]] and [[05-m4-nara-reconciliation]] |
+//!
+//! # Public surface
+//! * `NaraCmd` - typed Nara CLI grammar.
+//! * `dispatch` - routes Nara commands to their owning substrate modules.
+//!
+//! # Does NOT own
+//! * Nara domain computation, private journal bodies, or cloud model routing.
 
 pub mod arena;
 pub mod clock;
@@ -10,6 +22,7 @@ pub mod identity;
 pub mod kairos;
 pub mod lens;
 pub mod logos;
+pub mod lora;
 pub mod medicine;
 mod medicine_cast;
 mod medicine_frame;
@@ -118,6 +131,16 @@ pub enum NaraCmd {
     Weights {
         #[command(subcommand)]
         cmd: WeightsCmd,
+    },
+    /// Train the local-only Nara voice LoRA adapter
+    #[command(name = "train-lora")]
+    TrainLora {
+        /// Local JSON configuration naming corpus files and checkpoint destination
+        #[arg(long)]
+        config: std::path::PathBuf,
+        /// Validate and materialize the local corpus without invoking MLX
+        #[arg(long)]
+        dry_run: bool,
     },
     /// Composite Nara status
     Status {
@@ -617,6 +640,7 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
             WeightsCmd::Reset => weights::reset(),
             WeightsCmd::Calibrate => weights::calibrate(),
         },
+        NaraCmd::TrainLora { config, dry_run } => lora::train(config, *dry_run),
         NaraCmd::Status { json: j } => {
             let _ = *j || json;
             let mut out = "Nara Status\n".to_string();

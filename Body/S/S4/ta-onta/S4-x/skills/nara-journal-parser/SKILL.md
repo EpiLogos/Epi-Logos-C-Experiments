@@ -6,6 +6,15 @@ privacy_class: local-only
 
 # nara-journal-parser
 
+## Coordinate Header
+
+- **Coordinate:** `S4-4`
+- **Residency:** `Body/S/S4/ta-onta/S4-x/skills/nara-journal-parser/SKILL.md` (cross-carrier S4 residency, actualises [[M4']])
+- **Position (#4):** Lived context / personal substrate
+- **Actualises:** [[M'-ML-SKILL-SURFACE-SPEC]], [[M'-MODEL-SLOT-SPEC]], and [[05-m4-nara-reconciliation]] tranche 5.22
+- **Public surface:** `scripts/parse_journal.py` handle-safe local journal parser
+- **Does NOT own:** Journal storage, [[E_4]] energy math, or remote execution
+
 Use this skill when local journal entries need to be prepared for the Nara voice corpus or inspected as handle-safe summaries. The parser never emits raw private body text.
 
 ## Contract

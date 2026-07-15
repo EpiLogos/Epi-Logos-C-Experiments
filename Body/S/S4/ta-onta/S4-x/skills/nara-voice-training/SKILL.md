@@ -6,6 +6,15 @@ privacy_class: local-only
 
 # nara-voice-training
 
+## Coordinate Header
+
+- **Coordinate:** `S4-4`
+- **Residency:** `Body/S/S4/ta-onta/S4-x/skills/nara-voice-training/SKILL.md` (cross-carrier S4 residency, actualises [[M4']])
+- **Position (#4):** Lived context / personal substrate
+- **Actualises:** [[M'-ML-SKILL-SURFACE-SPEC]], [[M'-MODEL-SLOT-SPEC]], and [[05-m4-nara-reconciliation]] tranche 5.22
+- **Public surface:** `scripts/train_lora.py` local corpus preparation and LoRA training entrypoint
+- **Does NOT own:** [[E_4]] energy math, model weights, or remote execution
+
 Use this skill for `pi nara train-lora` training runs. It prepares the local Nara corpus and delegates to `mlx-lora` on Apple Silicon or the Rust-native local LoRA path once Stream B/D binds the kernel runtime.
 
 ## Contract

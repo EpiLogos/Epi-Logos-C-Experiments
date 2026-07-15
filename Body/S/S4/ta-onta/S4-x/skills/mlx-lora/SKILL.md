@@ -6,6 +6,15 @@ privacy_class: local-only
 
 # mlx-lora
 
+## Coordinate Header
+
+- **Coordinate:** `S4-4`
+- **Residency:** `Body/S/S4/ta-onta/S4-x/skills/mlx-lora/SKILL.md` (cross-carrier S4 residency, actualises [[M4']])
+- **Position (#4):** Lived context / personal substrate
+- **Actualises:** [[M'-ML-SKILL-SURFACE-SPEC]], [[M'-MODEL-SLOT-SPEC]], and [[05-m4-nara-reconciliation]] tranche 5.22
+- **Public surface:** local Apple-Silicon train, merge, quantize, and evaluation scripts
+- **Does NOT own:** Corpus selection, [[E_4]] energy math, or any cloud execution path
+
 Use this skill when the runtime target is Apple Silicon and a LoRA adapter must be trained or served locally. It implements the custom `mlx-lora` path named by [[M'-ML-SKILL-SURFACE-SPEC]] §3.1 and preserves the local-only privacy commitment in [[M'-MODEL-SLOT-SPEC]].
 
 ## Contract

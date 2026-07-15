@@ -53,6 +53,20 @@ class NaraVoiceTrainingPipelineTest(unittest.TestCase):
             self.assertEqual(len(payload["corpus"]["dream_hashes"]), 1)
             self.assertEqual(len(payload["corpus"]["phone_writing_hashes"]), 1)
             self.assertTrue((tmp / "checkpoints" / "voice-v2" / "corpus-manifest.json").exists())
+            corpus_rows = [
+                json.loads(line)
+                for line in (tmp / "checkpoints" / "voice-v2" / "corpus.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ]
+            self.assertEqual(
+                corpus_rows,
+                [
+                    {"kind": "journal", "text": "# Journal\nA local entry."},
+                    {"kind": "dream", "text": "# Dream\nA local dream."},
+                    {"kind": "phone_writing", "text": "Phone writing fragment."},
+                ],
+            )
 
     def test_refuses_cloud_training(self):
         with tempfile.TemporaryDirectory() as raw:
@@ -80,6 +94,33 @@ class NaraVoiceTrainingPipelineTest(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("local-only", result.stderr)
+
+    def test_refuses_empty_corpus_before_checkpoint_training(self):
+        with tempfile.TemporaryDirectory() as raw:
+            tmp = Path(raw)
+            config = tmp / "config.json"
+            config.write_text(
+                json.dumps(
+                    {
+                        "privacy_class": "local-only",
+                        "model_version_key": "gemma4-12b-q4",
+                        "checkpoint_version": "voice-empty",
+                        "checkpoint_dir": str(tmp / "checkpoints"),
+                        "corpus": {"journal": [], "dream": [], "phone_writings": []},
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                [sys.executable, str(TRAIN), "--config", str(config), "--dry-run"],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("corpus is empty", result.stderr)
 
 
 if __name__ == "__main__":

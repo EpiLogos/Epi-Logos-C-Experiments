@@ -11,8 +11,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 - `shared/` — `vak_address.ts` (VAK address mirror), `coordinate_phase.ts` (phase-preserving coordinate helper), `entitlement*.ts` (entitlement loader/model), `harness_registry.ts` (42.2 [[HarnessExecutor]] registry: harness_id → backing/launch-profile/model-families/subscription for pi / claude-native / codex-native / hermes-acp; `rosterPreflight` command-v availability set; `toGatewayRegistry()` projects the [[S3]] gateway-contract `harness.rs` wire shape — the registry is the single place a harness is added), and their `*.test.ts`.
 - `plugin-runtime-bridge.ts` — loads runtime plugins from the registry into the PI session.
 - `S4-{0..5}p-*` — the six carrier dirs (each with its own `CONTRACT.md`, `extension.ts`, `spine-contribution.ts`, `tests/`); also exposed via the lowercase symlinks `khora`/`hen`/`pleroma`/`chronos`/`anima`/`aletheia`.
-- `S4-x/` — cross-carrier S4 skill surface for local-only [[Nara]] LoRA/corpus skills (`nara-voice-training`, `nara-journal-parser`, `mlx-lora`) serving [[E_4]] personal-energy inputs.
-- `S4-x/` — custom ML skill carrier for local-only Nara LoRA skills (`mlx-lora`, `nara-voice-training`, `nara-journal-parser`) per [[M'-ML-SKILL-SURFACE-SPEC]].
+- `S4-x/` — cross-carrier custom ML skill surface for local-only [[Nara]] LoRA/corpus skills (`nara-voice-training`, `nara-journal-parser`, `mlx-lora`) serving [[E_4]] personal-energy inputs per [[M'-ML-SKILL-SURFACE-SPEC]].
 - Does NOT own per-carrier domain law — that lives in each `S4-Np-<carrier>/CONTRACT.md` and the owning [[S4-SPEC]], not here.
 
 ## Local Contracts
@@ -40,4 +39,3 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 - `S4-4p-anima/AGENTS.md` — anima carrier (#4); CONTRACT + spine-contribution + S4/S4' modules.
 - `S4-5p-aletheia/AGENTS.md` — aletheia carrier (#5); CONTRACT + spine-contribution + S5/S5'/clusters/skills.
 - `S4-x/AGENTS.md` — cross-carrier local-only [[Nara]] LoRA/corpus skill family for the [[E_4]] personal-energy substrate.
-- `S4-x/AGENTS.md` — custom ML skill carrier for local-only Nara LoRA skill family.

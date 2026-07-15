@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T11:51:19.076Z",
+  "updatedAt": "2026-07-15T12:14:43.500Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2500,55 +2500,119 @@
       "worktree": null
     },
     "05.T5.22": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T12:07:32.517Z",
+      "claimedAt": "2026-07-15T11:55:23.520Z",
+      "completedAt": "2026-07-15T12:07:32.517Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T12:07:32.517Z",
+          "text": "Real local corpus JSONL, epi nara train-lora CLI, E4 scalar/gradient/privacy tests, independent Track-00 PASS",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.22 --owner codex-verifier-05-22 (class-scoped harness-selftest,honesty-lint,kernel-truth,epi-lib,kernel-contract,schemas,portal-core)",
+            "exitCode": 0,
+            "testsPassed": 9512,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/lora.rs",
+              "Body/S/S4/ta-onta/S4-x/skills/nara-voice-training/scripts/train_lora.py",
+              "Body/S/S0/portal-core/src/kernel.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 17 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T11:55:23.520Z",
+      "runId": "20260715T115523Z-05-T5.22",
       "worktree": null
     },
     "05.T5.23": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T12:09:00.096Z",
+      "claimedAt": "2026-07-15T12:07:38.205Z",
+      "completedAt": "2026-07-15T12:09:00.096Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T12:09:00.096Z",
+          "text": "Existing open q-facet canon audited; locality expansion, q5 importer fallback, and malformed-key rejection behavioral tests pass; independent Track-00 PASS",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.23 --owner codex-verifier-05-23 (plus focused graph-schema, graph-services, hen-compiler-core behavioral tests)",
+            "exitCode": 0,
+            "testsPassed": 9517,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/q-vocabulary-canon.md",
+              "Body/S/S2/graph-services/src/semantic.rs",
+              "Body/S/S1/hen-compiler-core/src/frontmatter.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 29 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T12:07:38.205Z",
+      "runId": "20260715T120738Z-05-T5.23",
       "worktree": null
     },
     "05.T5.24": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T12:10:16.279Z",
+      "claimedAt": "2026-07-15T12:09:04.157Z",
+      "completedAt": "2026-07-15T12:10:16.279Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T12:10:16.279Z",
+          "text": "NOW template, Khora session/tranche write path, non-zero Sun-degree fixture, and Hen range law audited; independent Track-00 PASS",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.24 --owner codex-verifier-05-24 (plus real Khora NOW filesystem and Hen range tests)",
+            "exitCode": 0,
+            "testsPassed": 9515,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/World/NOW.md",
+              "Body/S/S4/ta-onta/S4-0p-khora/modules/now-fibonacci-ground.ts",
+              "Body/S/S1/hen-compiler-core/src/frontmatter.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 29 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T12:09:04.157Z",
+      "runId": "20260715T120904Z-05-T5.24",
       "worktree": null
     },
     "05.T5.25": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T12:13:25.353Z",
+      "claimedAt": "2026-07-15T12:10:21.349Z",
+      "completedAt": "2026-07-15T12:13:25.353Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T12:13:25.353Z",
+          "text": "HIGH-risk M4_Temporal_Now migration audited across direct callers; KairosFrame ABI, decay, precedence, Chronos and Janus tests pass; independent Track-00 PASS",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 05.T5.25 --owner codex-verifier-05-25 (plus make epi-lib test, Chronos KairosFrame, Janus consumer, and zero-flat-read audit)",
+            "exitCode": 0,
+            "testsPassed": 9530,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m4.h",
+              "Body/S/S0/epi-lib/src/m4.c",
+              "Body/S/S0/epi-lib/test/m4/test_m4.c"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 29 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T12:10:21.349Z",
+      "runId": "20260715T121021Z-05-T5.25",
       "worktree": null
     },
     "05.T5.26": {
@@ -17259,31 +17323,70 @@
       "leaseExpiresAt": "2026-07-15T02:24:04.072Z",
       "worktree": null,
       "completedAt": "2026-07-15T00:28:13.198Z"
+    },
+    {
+      "runId": "20260715T115523Z-05-T5.22",
+      "taskId": "05.T5.22",
+      "status": "done",
+      "startedAt": "2026-07-15T11:55:23.520Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T14:55:23.520Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T12:07:32.517Z"
+    },
+    {
+      "runId": "20260715T120738Z-05-T5.23",
+      "taskId": "05.T5.23",
+      "status": "done",
+      "startedAt": "2026-07-15T12:07:38.205Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T15:07:38.205Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T12:09:00.096Z"
+    },
+    {
+      "runId": "20260715T120904Z-05-T5.24",
+      "taskId": "05.T5.24",
+      "status": "done",
+      "startedAt": "2026-07-15T12:09:04.157Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T15:09:04.157Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T12:10:16.279Z"
+    },
+    {
+      "runId": "20260715T121021Z-05-T5.25",
+      "taskId": "05.T5.25",
+      "status": "done",
+      "startedAt": "2026-07-15T12:10:21.349Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T15:10:21.349Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T12:13:25.353Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-15T11:25:23.245Z",
-    "updatedAt": "2026-07-15T11:25:23.245Z",
+    "createdAt": "2026-07-15T12:14:43.482Z",
+    "updatedAt": "2026-07-15T12:14:43.482Z",
     "taskIds": [
-      "29.T29.10",
-      "05.T5.22",
-      "05.T5.23",
-      "05.T5.24"
+      "05.T5.26",
+      "05.T5.27",
+      "05.T5.3",
+      "05.T5.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "29.T29.10": "in-session",
-      "05.T5.22": "in-session",
-      "05.T5.23": "in-session",
-      "05.T5.24": "in-session"
+      "05.T5.26": "in-session",
+      "05.T5.27": "in-session",
+      "05.T5.3": "in-session",
+      "05.T5.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

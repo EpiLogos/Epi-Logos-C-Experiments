@@ -29,6 +29,7 @@ def main() -> int:
         checkpoint_path.mkdir(parents=True, exist_ok=True)
         (checkpoint_path / "corpus-manifest.json").write_text(json.dumps(payload["corpus"], indent=2) + "\n", encoding="utf-8")
         (checkpoint_path / "checkpoint-ref.json").write_text(json.dumps(payload["checkpoint"], indent=2) + "\n", encoding="utf-8")
+        write_corpus_jsonl(config.get("corpus"), checkpoint_path / "corpus.jsonl")
         if not args.dry_run:
             invoke_mlx_lora(config, checkpoint_path)
         print(json.dumps(payload, sort_keys=True))
@@ -81,9 +82,33 @@ def hash_files(raw: Any, field: str) -> list[str]:
     return hashes
 
 
+def write_corpus_jsonl(raw: Any, destination: Path) -> None:
+    if not isinstance(raw, dict):
+        raise ValueError("corpus must name journal, dream, and phone_writings lists.")
+    rows: list[dict[str, str]] = []
+    for field, kind in (
+        ("journal", "journal"),
+        ("dream", "dream"),
+        ("phone_writings", "phone_writing"),
+    ):
+        values = raw.get(field)
+        if not isinstance(values, list):
+            raise ValueError(f"corpus.{field} must be a list.")
+        for index, value in enumerate(values):
+            path = local_path(str(value), f"corpus.{field}[{index}]")
+            rows.append({"kind": kind, "text": path.read_text(encoding="utf-8")})
+    if not rows:
+        raise ValueError("Nara LoRA corpus is empty; refusing to train an ungrounded adapter.")
+    destination.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+
+
 def invoke_mlx_lora(config: dict[str, Any], checkpoint_path: Path) -> None:
     corpus_jsonl = checkpoint_path / "corpus.jsonl"
-    corpus_jsonl.write_text("", encoding="utf-8")
+    if not corpus_jsonl.is_file() or corpus_jsonl.stat().st_size == 0:
+        raise ValueError("Nara LoRA corpus is empty; refusing to train an ungrounded adapter.")
     mlx_config = checkpoint_path / "mlx-config.json"
     mlx_config.write_text(
         json.dumps(
