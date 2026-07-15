@@ -169,7 +169,10 @@ async fn s2_parashakti_planetary_mode_is_live_modal_signature() {
     );
     assert_eq!(artifact["planetaryChakral"]["provenance"], "live-graph");
     assert_eq!(artifact["planetaryChakral"]["planetaryRuler"], "Sun");
-    assert_eq!(artifact["planetaryChakral"]["planetCoordinate"], "M2-5-(0/1)");
+    assert_eq!(
+        artifact["planetaryChakral"]["planetCoordinate"],
+        "M2-5-(0/1)"
+    );
 
     // ── classical planet: adapter planetaryMode == INDEPENDENT modal-sig read ─
     let expected_mode = match planetary_scalar("M2-5-(0/1)", "c_0_modal_signature").await {
@@ -203,7 +206,10 @@ async fn s2_parashakti_planetary_mode_is_live_modal_signature() {
     //    per-planet honest-null is grounded in real graph absence, not invented.
     for stub in ["M2-5-8", "M2-5-9"] {
         assert!(
-            matches!(planetary_scalar(stub, "c_1_name").await, ScalarRead::Present(_)),
+            matches!(
+                planetary_scalar(stub, "c_1_name").await,
+                ScalarRead::Present(_)
+            ),
             "outer-planet stub {stub} must exist and be reachable on the live graph"
         );
         let modal = planetary_scalar(stub, "c_0_modal_signature").await;

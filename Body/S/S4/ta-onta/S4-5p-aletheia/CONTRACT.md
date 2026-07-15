@@ -69,6 +69,7 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | Module | Purpose |
 |--------|---------|
 | `modules/aeon-graduation.ts` | Consent-gated Z-thread -> [[Aeon]] accrual renderer: builds the Sophia/Aletheia improvement proposal, preserves eval/run history, and updates an [[Aeon]] form block for Anima's Night' dispatch seam |
+| `modules/janus-doorway.ts` | [[Janus]] temporal-envelope and oracle-spread state law, including read-only spread deltas consumed by Chronos rhythm re-entry |
 
 ---
 

@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 
 ## Ownership
 - `src/lib.rs` — crate root; declares modules + re-exports `SessionStore`, `GatewayRuntimeState`, transcript + subagent helpers.
-- `src/dispatch.rs` — RPC method dispatch (largest module), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles, headless contemplation close, and route metadata for S2 graph-service gateway exposure. Also owns the 05.T5.10 connectivity-vs-bounded-access discriminator (`nara_bounded_access` + `ConnectivityReport`/`BoundedAccessGrant`): a connectivity_check ping of Graphiti/Neo4j/Redis/SpaceTimeDB is never a grant of bounded access to the personal `nara.*` domains (jiva/jagrat/flow); pinned by `tests/dispatch_contract.rs::t5_10_connectivity_vs_bounded_access` against live pings.
+- `src/dispatch.rs` — RPC method dispatch (largest module), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles, headless contemplation close, route metadata for S2 graph-service gateway exposure, and the [[M3']] lens-codon-binary S0 product adapter. Also owns the 05.T5.10 connectivity-vs-bounded-access discriminator (`nara_bounded_access` + `ConnectivityReport`/`BoundedAccessGrant`): a connectivity_check ping of Graphiti/Neo4j/Redis/SpaceTimeDB is never a grant of bounded access to the personal `nara.*` domains (jiva/jagrat/flow); pinned by `tests/dispatch_contract.rs::t5_10_connectivity_vs_bounded_access` against live pings.
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
 - `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.

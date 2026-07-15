@@ -135,11 +135,7 @@ pub fn classify_c_layer(
             .next()
             .unwrap_or(&normalized)
             .trim_end_matches(".canvas");
-        let parent = normalized
-            .split('/')
-            .rev()
-            .nth(1)
-            .unwrap_or_default();
+        let parent = normalized.split('/').rev().nth(1).unwrap_or_default();
         let already_c4 = normalized.contains("/C/C4/");
         let is_moc_index = stem == parent || already_c4;
         let layer = if is_moc_index { "C4" } else { "C3" };
@@ -157,7 +153,8 @@ pub fn classify_c_layer(
             crystallisation_state: "incubating_type_index".to_owned(),
             c_layer_path: format!("Idea/Bimba/World/Types/Coordinates/C/{layer}"),
         };
-        let kind = c_layer_evidence_kind(&evidence.type_coordinate, &evidence.crystallisation_state);
+        let kind =
+            c_layer_evidence_kind(&evidence.type_coordinate, &evidence.crystallisation_state);
         return Ok(CLayerClassification {
             evidence,
             classification_source: "kind-routing",
@@ -173,8 +170,7 @@ pub fn classify_c_layer(
             .and_then(Value::as_mapping)
             .map(|map| map.contains_key(Value::String("type_coordinate".to_owned())))
             .unwrap_or(false);
-        let kind =
-            c_layer_evidence_kind(&c_layer.type_coordinate, &c_layer.crystallisation_state);
+        let kind = c_layer_evidence_kind(&c_layer.type_coordinate, &c_layer.crystallisation_state);
         return Ok(CLayerClassification {
             evidence: c_layer,
             classification_source: if from_frontmatter {
@@ -223,8 +219,8 @@ pub fn classify_c_layer(
             "no C-layer route for `{source_path}` — carries neither C frontmatter, World/Types ancestry, nor a template/entity/canvas/World kind marker"
         ));
     };
-    let segment = crate::entity_lifecycle::c_layer_segment(layer)
-        .expect("canonical C-layer segment exists");
+    let segment =
+        crate::entity_lifecycle::c_layer_segment(layer).expect("canonical C-layer segment exists");
     let crystallisation_state = match layer {
         "C2" => "entity_candidate",
         "C5" => "candidate",

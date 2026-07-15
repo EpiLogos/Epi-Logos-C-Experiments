@@ -927,9 +927,7 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             // — without it the Redis cold tier serves stale coordinate
             // lookups for up to the TTL after a manual Cypher write.
             if *write || *admin {
-                if let Err(error) =
-                    epi_s2_graph_services::meta::bump_graph_revision(&neo4j).await
-                {
+                if let Err(error) = epi_s2_graph_services::meta::bump_graph_revision(&neo4j).await {
                     eprintln!("[graph] graph_revision bump failed: {error}");
                 }
             }

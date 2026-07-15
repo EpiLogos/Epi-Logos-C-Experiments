@@ -17,7 +17,6 @@ use std::ffi::OsString;
 use std::fs;
 use std::path::PathBuf;
 
-
 /// The developer shell exports EPILOGOS_VAULT globally (points at the real
 /// vault); these cwd-bound-resolution tests must see a clean process env or
 /// resolution step 2 short-circuits step 3. Serialized so parallel tests

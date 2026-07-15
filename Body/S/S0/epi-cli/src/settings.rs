@@ -71,7 +71,10 @@ fn status(json_out: bool) -> Result<(), String> {
             serde_json::to_string_pretty(&payload).map_err(|error| error.to_string())?
         );
     } else {
-        println!("S0 settings — API key manifest ({})", store.path().display());
+        println!(
+            "S0 settings — API key manifest ({})",
+            store.path().display()
+        );
         for (entry, presence, opt_in) in &rows {
             let opt = if entry.privacy == PrivacyClass::CloudOptIn {
                 opt_in.as_str()
@@ -98,7 +101,10 @@ fn opt_in(key: &str, scope: &str, json_out: bool) -> Result<(), String> {
             .iter()
             .filter_map(|entry| entry.opt_in_key)
             .collect();
-        format!("unknown opt-in key `{key}`; valid keys: {}", valid.join(", "))
+        format!(
+            "unknown opt-in key `{key}`; valid keys: {}",
+            valid.join(", ")
+        )
     })?;
     if entry.privacy != PrivacyClass::CloudOptIn {
         return Err(format!(

@@ -1,3 +1,13 @@
+//! Coordinate: S0/M4' (local Kairos adapter)
+//! Residency: Body/S/S0/epi-cli/src/nara
+//! Position (#n): S0 process/filesystem membrane for M4' temporal ingress
+//! Actualises: local Kerykeion dependency probing, current-sky computation,
+//!   cache persistence, and canonical ten-planet Kairos projection.
+//! Public surface: KerykeionProbe, probe_kerykeion, sync/load/capture helpers.
+//! Does NOT own: onboarding preferences, gateway routing, natal identity law,
+//!   or the M4 temporal model.
+//! Contract: [[S0-SPEC]] / [[M4'-SPEC]] / [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]].
+
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::Command;
@@ -19,6 +29,88 @@ pub struct PlanetPosition {
     pub degree: f32,        // 0.0-360.0 ecliptic longitude
     pub degree_anchor: u16, // 0-719 SU(2) mapped
     pub retrograde: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KerykeionProbe {
+    pub dependency: String,
+    pub available: bool,
+    pub python_available: bool,
+    pub version: Option<String>,
+    pub reason: Option<String>,
+}
+
+/// Probe the local Python dependency only. This never reads PASU or computes a
+/// natal/current chart; onboarding can therefore ask for informed opt-in
+/// without crossing the M4 identity boundary.
+pub fn probe_kerykeion() -> KerykeionProbe {
+    let script = r#"
+import json
+try:
+    import kerykeion
+    try:
+        from importlib.metadata import version
+        package_version = version("kerykeion")
+    except Exception:
+        package_version = getattr(kerykeion, "__version__", None)
+    print(json.dumps({"available": True, "version": package_version, "reason": None}))
+except Exception as error:
+    print(json.dumps({"available": False, "version": None, "reason": str(error)}))
+"#;
+
+    let output = match Command::new("python3").args(["-c", script]).output() {
+        Ok(output) => output,
+        Err(error) => {
+            return KerykeionProbe {
+                dependency: "kerykeion".to_owned(),
+                available: false,
+                python_available: false,
+                version: None,
+                reason: Some(format!("python3 unavailable: {error}")),
+            };
+        }
+    };
+
+    if !output.status.success() {
+        return KerykeionProbe {
+            dependency: "kerykeion".to_owned(),
+            available: false,
+            python_available: true,
+            version: None,
+            reason: Some(String::from_utf8_lossy(&output.stderr).trim().to_owned()),
+        };
+    }
+
+    let raw: serde_json::Value = match serde_json::from_slice(&output.stdout) {
+        Ok(raw) => raw,
+        Err(error) => {
+            return KerykeionProbe {
+                dependency: "kerykeion".to_owned(),
+                available: false,
+                python_available: true,
+                version: None,
+                reason: Some(format!("invalid Kerykeion probe response: {error}")),
+            };
+        }
+    };
+
+    KerykeionProbe {
+        dependency: "kerykeion".to_owned(),
+        available: raw
+            .get("available")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+        python_available: true,
+        version: raw
+            .get("version")
+            .and_then(serde_json::Value::as_str)
+            .map(ToOwned::to_owned),
+        reason: raw
+            .get("reason")
+            .and_then(serde_json::Value::as_str)
+            .map(ToOwned::to_owned),
+    }
 }
 
 /// Natal chart computation via kerykeion
@@ -411,10 +503,12 @@ pub fn capture_kairotic() -> Result<String, String> {
     let dir = kairos_dir();
     std::fs::create_dir_all(&dir).map_err(|e| format!("kairos: create dir error: {e}"))?;
     let path = dir.join("kairotic.json");
-    let data =
-        serde_json::to_string_pretty(&capture).map_err(|e| format!("kairos: serialize error: {e}"))?;
+    let data = serde_json::to_string_pretty(&capture)
+        .map_err(|e| format!("kairos: serialize error: {e}"))?;
     std::fs::write(&path, data).map_err(|e| format!("kairos: write error: {e}"))?;
-    Ok(format!("kairotic frame captured at {date} {time}Z; decays in 4h"))
+    Ok(format!(
+        "kairotic frame captured at {date} {time}Z; decays in 4h"
+    ))
 }
 
 /// Read a non-decayed kairotic capture, if present. Returns canonical degrees +
@@ -454,7 +548,11 @@ pub enum KairosTier {
 /// until it decays (4h), else the daily transit. `None` = "kairos pending".
 pub fn heartbeat_live_sky_tiered() -> Option<([f32; 10], [bool; 10], KairosTier)> {
     if let Some((degrees, retrograde, decays_at_epoch)) = kairotic_live_sky() {
-        return Some((degrees, retrograde, KairosTier::Kairotic { decays_at_epoch }));
+        return Some((
+            degrees,
+            retrograde,
+            KairosTier::Kairotic { decays_at_epoch },
+        ));
     }
     let (degrees, retrograde) = heartbeat_live_sky()?;
     Some((degrees, retrograde, KairosTier::Realtime))
@@ -488,15 +586,25 @@ mod kairos_parse_tests {
         let captured = 1_700_000_000u64;
         let decays = captured + KAIROTIC_TTL_SECS;
         assert!(kairotic_is_live(captured, decays), "live at capture");
-        assert!(kairotic_is_live(decays - 1, decays), "live one sec before decay");
+        assert!(
+            kairotic_is_live(decays - 1, decays),
+            "live one sec before decay"
+        );
         assert!(!kairotic_is_live(decays, decays), "decayed at the deadline");
         assert!(!kairotic_is_live(decays + 1, decays), "decayed after");
     }
 
     #[test]
     fn kairos_tier_carries_the_decay_deadline() {
-        let tier = KairosTier::Kairotic { decays_at_epoch: 42 };
-        assert_eq!(tier, KairosTier::Kairotic { decays_at_epoch: 42 });
+        let tier = KairosTier::Kairotic {
+            decays_at_epoch: 42,
+        };
+        assert_eq!(
+            tier,
+            KairosTier::Kairotic {
+                decays_at_epoch: 42
+            }
+        );
         assert_ne!(tier, KairosTier::Realtime);
     }
 

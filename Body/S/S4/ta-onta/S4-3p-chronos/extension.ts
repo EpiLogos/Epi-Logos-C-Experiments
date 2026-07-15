@@ -11,11 +11,16 @@ import {
   type AeonFireInput,
   type AeonInvocationForm,
 } from "./modules/aeon-scheduling.ts";
-import { khora_write_highlighted_inscription } from "../S4-0p-khora/extension.ts";
 import {
   chronos_cron_fire,
   type ChronosCronFireInput,
 } from "./modules/cron-fire.ts";
+import {
+  chronos_reentry,
+  chronos_response_orbit,
+  responseOrbitFromFrontmatter,
+  type ChronosOrbitInput,
+} from "./modules/temporal-control-plane.ts";
 
 export {
   buildChronosCronFireVakAddress,
@@ -26,178 +31,15 @@ export {
   type ChronosCronWakeMode,
 } from "./modules/cron-fire.ts";
 
-export type ChronosResponseOrbit = "immediate" | `hours:${number}` | "next-morning" | "saturnine";
-
-export interface ChronosOrbitInput {
-  readonly session_id: string;
-  readonly trigger_event: Record<string, unknown>;
-  readonly orbit: ChronosResponseOrbit;
-}
-
-export interface ChronosOrbitResult {
-  readonly scheduled_at: string;
-  readonly response_token: string;
-}
-
-function responseToken(sessionId: string, triggerEvent: Record<string, unknown>, scheduledAt: Date): string {
-  const trigger = String(triggerEvent.kind ?? triggerEvent.type ?? "tranche.complete");
-  const stamp = scheduledAt.toISOString().replace(/[^0-9TZ]/g, "");
-  const suffix = Math.random().toString(36).slice(2, 8);
-  return `chronos_${sessionId}_${trigger.replace(/[^a-zA-Z0-9_-]/g, "_")}_${stamp}_${suffix}`;
-}
-
-function nextMorning(now = new Date()): Date {
-  const target = new Date(now);
-  target.setDate(target.getDate() + 1);
-  target.setHours(6, 0, 0, 0);
-  return target;
-}
-
-function hoursOrbit(orbit: string, now: Date): Date | null {
-  const match = /^hours:(\d+(?:\.\d+)?)$/.exec(orbit);
-  if (!match) return null;
-  const hours = Number.parseFloat(match[1]);
-  if (!Number.isFinite(hours) || hours < 0) return null;
-  return new Date(now.getTime() + hours * 60 * 60_000);
-}
-
-function collectSaturnCandidates(value: unknown, into: Date[] = []): Date[] {
-  if (!value || typeof value !== "object") return into;
-  if (Array.isArray(value)) {
-    for (const item of value) collectSaturnCandidates(item, into);
-    return into;
-  }
-  const record = value as Record<string, unknown>;
-  const haystack = JSON.stringify(record).toLowerCase();
-  if (haystack.includes("saturn")) {
-    for (const key of ["exact_at", "exactAt", "at", "starts_at", "startsAt", "scheduled_at", "scheduledAt"]) {
-      const raw = record[key];
-      if (typeof raw === "string") {
-        const date = new Date(raw);
-        if (!Number.isNaN(date.getTime())) into.push(date);
-      }
-      if (typeof raw === "number") {
-        const date = new Date(raw);
-        if (!Number.isNaN(date.getTime())) into.push(date);
-      }
-    }
-  }
-  for (const nested of Object.values(record)) collectSaturnCandidates(nested, into);
-  return into;
-}
-
-function nearestSaturnAspect(now: Date): Date | null {
-  const kairos = spawnSync("epi", ["vault", "kairos", "status", "--json"], { encoding: "utf8", timeout: 30_000 });
-  if (kairos.status !== 0 || !kairos.stdout.trim()) return null;
-  try {
-    const parsed = JSON.parse(kairos.stdout) as Record<string, unknown>;
-    const windowMs = 7 * 24 * 60 * 60_000;
-    return collectSaturnCandidates(parsed)
-      .filter((candidate) => Math.abs(candidate.getTime() - now.getTime()) <= windowMs)
-      .sort((a, b) => Math.abs(a.getTime() - now.getTime()) - Math.abs(b.getTime() - now.getTime()))[0] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export function resolveChronosOrbit(orbit: ChronosResponseOrbit, now = new Date()): Date {
-  if (orbit === "immediate") return now;
-  if (orbit === "next-morning") return nextMorning(now);
-  if (orbit === "saturnine") return nearestSaturnAspect(now) ?? nextMorning(now);
-  const hours = hoursOrbit(orbit, now);
-  if (hours) return hours;
-  throw new Error(`Unsupported Chronos orbit: ${orbit}`);
-}
-
-function registerOrbitCron(input: ChronosOrbitInput, scheduledAt: Date, token: string) {
-  const result = spawnSync("epi", [
-    "gate", "cron", "add",
-    "--name", `chronos-response-orbit-${token}`,
-    "--description", `Chronos response orbit for ${input.session_id}`,
-    "--schedule", JSON.stringify({ kind: "at", atMs: scheduledAt.getTime() }),
-    "--session-target", "main",
-    "--wake-mode", input.orbit === "immediate" ? "now" : "next-heartbeat",
-    "--payload", JSON.stringify({
-      kind: "systemEvent",
-      text: "chronos_response_orbit",
-      session_id: input.session_id,
-      trigger_event: input.trigger_event,
-      response_token: token,
-    }),
-  ], { encoding: "utf8" });
-  if (result.status !== 0) {
-    throw new Error(result.stderr || result.stdout || "chronos orbit cron registration failed");
-  }
-}
-
-export function chronos_response_orbit(input: ChronosOrbitInput, now = new Date()): ChronosOrbitResult {
-  const scheduledAt = resolveChronosOrbit(input.orbit, now);
-  const token = responseToken(input.session_id, input.trigger_event, scheduledAt);
-  registerOrbitCron(input, scheduledAt, token);
-  return { scheduled_at: scheduledAt.toISOString(), response_token: token };
-}
-
-function summarizeDelta(content: string, responseTokenValue?: string, since?: string): string {
-  const tokenIndex = responseTokenValue ? content.lastIndexOf(responseTokenValue) : -1;
-  const rawDelta = tokenIndex >= 0 ? content.slice(tokenIndex + responseTokenValue.length) : content;
-  const sinceLine = since ? ` since ${since}` : "";
-  const words = rawDelta.trim().replace(/\s+/g, " ").split(" ").filter(Boolean);
-  if (words.length === 0) return `No new body text detected${sinceLine}.`;
-  return `${words.slice(0, 48).join(" ")}${words.length > 48 ? " ..." : ""}`;
-}
-
-function liveSpreadState(content: string): { alive: string; mute: string } {
-  const lines = content.split(/\r?\n/);
-  const alive = lines.filter((line) => /live-spread|still alive|active spread/i.test(line)).slice(-5);
-  const mute = lines.filter((line) => /gone mute|resolved|closed spread|mute/i.test(line)).slice(-5);
-  return {
-    alive: alive.length ? alive.join(" / ") : "No live-spread references found in the current file.",
-    mute: mute.length ? mute.join(" / ") : "No muted or resolved spread positions found in the current file.",
-  };
-}
-
-function kairosUpdateSummary(): string {
-  const result = spawnSync("epi", ["vault", "kairos", "status", "--json"], { encoding: "utf8", timeout: 30_000 });
-  if (result.status !== 0) return `Kairos unavailable: ${result.stderr || result.stdout || "no status"}`;
-  try {
-    const parsed = JSON.parse(result.stdout) as Record<string, unknown>;
-    return [
-      `mode=${parsed.mode ?? "stub"}`,
-      `sun_decan=${parsed.sun_decan ?? "unknown"}`,
-      `moon_decan=${parsed.moon_decan ?? "unknown"}`,
-      `tick12=${parsed.tick12 ?? "unknown"}`,
-    ].join("; ");
-  } catch {
-    return result.stdout.trim() || "Kairos returned an empty status.";
-  }
-}
-
-export async function chronos_reentry(input: {
-  readonly session_id: string;
-  readonly path: string;
-  readonly response_token?: string;
-  readonly since?: string;
-}): Promise<{ path: string; response_token: string; category: "retrospective-surfacing" }> {
-  const content = readFileSync(input.path, "utf8");
-  const spread = liveSpreadState(content);
-  const token = input.response_token ?? `chronos_reentry_${input.session_id}_${Date.now()}`;
-  const block = [
-    `> [!retrospective-surfacing] Chronos re-entry`,
-    `> response_token: ${token}`,
-    `> what is new: ${summarizeDelta(content, input.response_token, input.since)}`,
-    `> what is still alive: ${spread.alive}`,
-    `> what has gone mute: ${spread.mute}`,
-    `> what kairos has activated: ${kairosUpdateSummary()}`,
-  ].join("\n");
-
-  return khora_write_highlighted_inscription({
-    path: input.path,
-    category: "retrospective-surfacing",
-    position: "top",
-    content: block,
-    response_token: token,
-  });
-}
+export {
+  chronos_reentry,
+  chronos_response_orbit,
+  resolveChronosOrbit,
+  responseOrbitFromFrontmatter,
+  type ChronosOrbitInput,
+  type ChronosOrbitResult,
+  type ChronosResponseOrbit,
+} from "./modules/temporal-control-plane.ts";
 
 function injectSeedIntoQuestion(content: string, seedContent: string) {
   const heading = "## #0 Question";
@@ -500,6 +342,24 @@ export async function chronosExtension(api: ExtensionAPI) {
     },
   });
 
+  (api.on as unknown as (event: string, handler: (payload: Record<string, unknown>) => Promise<void>) => void)(
+    "tranche.complete",
+    async (payload) => {
+      const path = String(payload.path ?? "");
+      const session_id = String(payload.session_id ?? process.env.EPI_SESSION_ID ?? "");
+      if (!path || !session_id) return;
+      try {
+        chronos_response_orbit({
+          session_id,
+          trigger_event: payload,
+          orbit: responseOrbitFromFrontmatter(path, path.endsWith("daily-note.md") ? "next-morning" : "immediate"),
+        });
+      } catch (error) {
+        console.warn(`[chronos] tranche completion could not schedule a response orbit: ${error}`);
+      }
+    },
+  );
+
   // ── Tool: chronos_reentry ────────────────────────────────────────
   api.registerTool({
     name: "chronos_reentry",
@@ -531,6 +391,7 @@ export async function chronosExtension(api: ExtensionAPI) {
         path,
         session_id,
         response_token: typeof payload.response_token === "string" ? payload.response_token : undefined,
+        since: typeof payload.detected_at === "string" ? payload.detected_at : undefined,
       });
     },
   );

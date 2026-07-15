@@ -99,7 +99,10 @@ async fn nara_oracle_payload_over_the_wire_obeys_four_faces_and_kernel_charge_la
     // pp is the full positive sum of the three nucleotide I-Ching values, so it
     // is strictly positive and dominates the sign-flipped charges.
     assert!(pp > 0.0, "pp = X+Y+Z of positive I-Ching values: {pp}");
-    assert!(pp >= nn && pp >= np && pp >= pn, "pp dominates the charge triple");
+    assert!(
+        pp >= nn && pp >= np && pp >= pn,
+        "pp dominates the charge triple"
+    );
 
     // The handler must NOT have leaked a deferred marker.
     assert!(
@@ -124,7 +127,11 @@ async fn nara_oracle_payload_defaults_to_zero_degree_explicate_faces() {
         payload.get("charges").is_some(),
         "default payload is live, not a deferred stub: {payload}"
     );
-    assert_eq!(num(&payload, "degree"), 0.0, "default explicate degree is 0");
+    assert_eq!(
+        num(&payload, "degree"),
+        0.0,
+        "default explicate degree is 0"
+    );
     assert_eq!(
         num(&payload, "deficient_degree"),
         180.0,

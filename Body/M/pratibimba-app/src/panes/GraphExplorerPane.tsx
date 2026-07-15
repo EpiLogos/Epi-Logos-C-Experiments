@@ -4,7 +4,8 @@
  *   `s2.graph.query` (read-only; canon mutation is Hen's, DR-M0-1), family
  *   hues per the UI-patterns discipline, click publishes to the shared
  *   coordinate store so the walk and every surface follow. force-graph per
- *   the spec's own renderer recommendation (DR-UI-1).
+ *   the spec's own renderer recommendation (DR-UI-1). Hosts the M0' in-widget
+ *   rail and the bussed 9-bit Virtue Witness panel (21.T21.10).
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +14,8 @@ import { gateway } from '../bridge/gatewayHolder';
 import { useCoordinateStore, useProvenanceStore } from '../state/stores';
 import { coerceLinks, coerceNodes, ExplorerNode, FAMILY_HUES } from './graphData';
 import { M0LayerRail } from './M0LayerRail';
+import { M0InspectorLayer } from './m0Layers';
+import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
 import { inkDim, ringLit } from '../ui/tokens';
 
 const NODES_CYPHER =
@@ -20,7 +23,18 @@ const NODES_CYPHER =
 const LINKS_CYPHER =
     'MATCH (a:Bimba)-[r]->(b:Bimba) RETURN a.coordinate AS source, type(r) AS type, b.coordinate AS target LIMIT 2500';
 
-export function GraphExplorerPane() {
+export interface GraphExplorerPaneProps {
+    requestedM0Contribution?: string | null;
+}
+
+const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.freeze({
+    language: 'lang',
+    'ql-structure': 'ql',
+    relations: 'rel',
+    'time-community': 'time'
+});
+
+export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplorerPaneProps = {}) {
     const hostRef = useRef<HTMLDivElement | null>(null);
     const graphRef = useRef<ForceGraph | null>(null);
     const connected = useProvenanceStore(s => s.connection.connected);
@@ -92,7 +106,8 @@ export function GraphExplorerPane() {
     }
     return (
         <div className="graph-explorer" data-testid="graph-explorer">
-            <M0LayerRail />
+            <M0LayerRail requestedLayer={requestedM0Contribution ? M0_INTENT_LAYERS[requestedM0Contribution] : null} />
+            <M0VirtueWitnessPanel />
             <div className="pane-toolbar" data-testid="graph-status">
                 {status === 'loading' ? 'reading the canonical map…' : detail}
             </div>

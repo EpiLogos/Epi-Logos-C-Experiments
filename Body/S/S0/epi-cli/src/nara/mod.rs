@@ -13,6 +13,7 @@ pub mod logos;
 pub mod medicine;
 mod medicine_cast;
 mod medicine_frame;
+pub(crate) use medicine_frame::canonical_from_m3_decan_element;
 mod medicine_route;
 pub mod oracle;
 mod oracle_cast;

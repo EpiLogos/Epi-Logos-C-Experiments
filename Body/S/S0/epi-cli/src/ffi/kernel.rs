@@ -166,7 +166,10 @@ mod tests {
             total += pp;
             per_suit[((codon >> 4) & 0x03) as usize] += pp;
         }
-        assert_eq!(total, 1440, "sum(pp) over 64 codons must be 1440 (= 360 × 4)");
+        assert_eq!(
+            total, 1440,
+            "sum(pp) over 64 codons must be 1440 (= 360 × 4)"
+        );
         assert_eq!(
             per_suit,
             [336, 384, 352, 368],

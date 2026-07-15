@@ -1,9 +1,15 @@
 // @vitest-environment node
 /**
+ * Coordinate: M' (live gateway client smoke, T1.9)
+ * Residency: Body/M/pratibimba-app/src/bridge
+ * Position (#n): shell-to-S3 verification boundary
  * Live integration: the REAL GatewayClient class against a REAL spawned
  * `epi gate start` (T1.9 second half — the fake-socket unit tests prove the
  * class, this proves the class against the living gateway).
  * Gated on EPI_LIVE_SMOKE=1 (needs the built epi binary); `pnpm smoke` runs it.
+ * Public surface: EPI_LIVE_SMOKE=1 Vitest suite; EPI_BIN override.
+ * Does NOT own: gateway behavior, Cargo output placement, or profile clocks.
+ * Contract: [[CHROME-CONTRACT]] / root [[AGENTS]] verification law.
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -21,8 +27,7 @@ import { deriveDivision, deriveFrame, harmonicSnapshot } from '../engine/modulat
 const LIVE = process.env.EPI_LIVE_SMOKE === '1';
 const PORT = 18798;
 const repoRoot = resolve(fileURLToPath(new URL('.', import.meta.url)), '..', '..', '..', '..', '..');
-const EPI_BIN =
-    process.env.EPI_BIN ?? join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+const EPI_BIN = process.env.EPI_BIN ?? join(repoRoot, 'target', 'debug', 'epi');
 
 function waitForPort(port: number, timeoutMs: number): Promise<void> {
     const deadline = Date.now() + timeoutMs;

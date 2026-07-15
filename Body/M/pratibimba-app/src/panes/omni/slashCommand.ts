@@ -8,8 +8,9 @@
  *   Body/M/epi-theia/extensions/omnipanel-shell/src/browser/services/slash-command-parser.ts
  *   (already Theia-free; re-tested here — cribbed code counts as new code).
  * Does NOT own: dispatch execution (gateway chat.send / anima seams), the
- *   live capability list (`s4'.mediation.capabilities.list`, gated on 12.10 —
- *   LOCAL_CAPABILITY_FALLBACK is the named interim registry per the spec).
+ *   live capability list (`s4'.mediation.capabilities.list`, consumed by
+ *   omnipanelCapabilities.ts); LOCAL_CAPABILITY_FALLBACK is offline command
+ *   grammar only and never an entitlement authority.
  */
 
 export interface SlashCommand {
@@ -126,9 +127,9 @@ export interface CapabilityCompletion {
 }
 
 /**
- * The local capability registry — the spec-named fallback until the live
- * `s4'.mediation.capabilities.list` seam lands (12.10). One row per
- * canonical verb form; the completion provider filters by prefix.
+ * Offline command-completion grammar. The live 12.10 capability seam is
+ * authoritative for dispatch membership/entitlement; these rows only let the
+ * user discover slash syntax while the gateway is unavailable.
  */
 export const LOCAL_CAPABILITY_FALLBACK: readonly CapabilityCompletion[] = Object.freeze([
     { command: '/dispatch <agent>', hint: 'Anima single sub-agent envelope' },

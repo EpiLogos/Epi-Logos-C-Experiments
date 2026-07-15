@@ -12,6 +12,8 @@ Alignment target: the Verifier raises questions, never passes-or-fails. This ski
 
 Primary contact: Anuttara Verifier (M0' 0'), with Eros (CT2) providing verification-route handoff.
 
+Runtime helper surface: `index.ts` carries the deterministic parser, articulation envelope builder, and no-bypass gate used by PI-agent contract tests. The markdown remains the agent-facing procedure; the helper exists so the contract can be exercised without pretending prose inspection is behavioral verification.
+
 ## Coordinate String Grammar
 
 The Verifier emits strings in the form:

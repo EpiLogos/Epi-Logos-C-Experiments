@@ -26,7 +26,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 - Treat this directory as production runtime configuration (README): review changes like CLI code. Edit the Body source tree, never the managed `~/.epi/agents/...` copies — `epi agent extensions sync` propagates from here.
 
 ## Verification
-- TS suites (node test runner): `node --test Body/S/S4/pi-agent/tests/entitlement.test.ts Body/S/S4/pi-agent/tests/epii-entitlement-activation.test.ts Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts Body/S/S4/pi-agent/tests/no-tool-bypass.test.ts Body/S/S4/pi-agent/tests/capability-parity.test.ts Body/S/S4/pi-agent/tests/axiom-translate.test.ts Body/S/S4/pi-agent/lib/review-gate.test.ts`.
+- TS suites (node test runner): `node --test Body/S/S4/pi-agent/tests/entitlement.test.ts Body/S/S4/pi-agent/tests/epii-entitlement-activation.test.ts Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts Body/S/S4/pi-agent/tests/no-tool-bypass.test.ts Body/S/S4/pi-agent/tests/capability-parity.test.ts Body/S/S4/pi-agent/tests/axiom-translate.test.ts Body/S/S4/pi-agent/tests/anuttara-symbolic-parse.test.ts Body/S/S4/pi-agent/lib/review-gate.test.ts`.
 - Skill lookup: `node --test Body/S/S4/pi-agent/skills/custom/skill-lookup/skill-lookup.test.ts`.
 - Python: `pytest Body/S/S4/pi-agent/tests/test_anima_registration.py`.
 - No crate/package manifest here; `make rust-test` does not cover this dir.

@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 /**
  * Coordinate: M' (Sprint-1 boot smoke, plan T1.9)
+ * Residency: Body/M/pratibimba-app/scripts
+ * Position (#n): shell verification boundary
  * Actualises: the behavioral launch gate the cycle-3 test corpus never had —
  *   spawns a REAL `epi gate start` on a test port, connects the REAL ported
  *   GatewayClient wire protocol, and fails unless a live profile tick arrives
  *   and advances. No manifest/string assertions.
+ * Public surface: `pnpm smoke` / EPI_BIN override.
+ * Does NOT own: gateway behavior, Cargo output placement, or profile clocks.
+ * Contract: [[CHROME-CONTRACT]] / root [[AGENTS]] verification law.
  * Run: pnpm smoke   (EPI_BIN overrides the gateway binary)
  */
 
@@ -19,8 +24,7 @@ import WebSocket from 'ws';
 const PORT = 18797;
 const appRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const repoRoot = resolve(appRoot, '..', '..', '..');
-const EPI_BIN =
-    process.env.EPI_BIN ?? join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+const EPI_BIN = process.env.EPI_BIN ?? join(repoRoot, 'target', 'debug', 'epi');
 
 const stateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-smoke-gate-'));
 const failures = [];

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
     S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
@@ -454,6 +455,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "m2.cymatic_invert",
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/portal-core::parashakti::cymatic_invert",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::lens_codon_binary_projection",
         needs_extraction_to: None,
     },
     // 02.T2.13 / DR-M1-5 — engine-walk transport on the kernel-owned anchor.

@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { renderTemplateWithVak } from "./modules/template-vak.ts";
 import { isValidVakAddress } from "../shared/vak_address.ts";
+import { hen_content_delta_since } from "./modules/hybrid-retrieve.ts";
 
 export async function henExtension(api: ExtensionAPI) {
   // ── Tool: hen_template_invoke ────────────────────────────────────
@@ -272,15 +273,21 @@ export async function henExtension(api: ExtensionAPI) {
     label: "Hen Hybrid Retrieve",
     description: "Coordinate-aware retrieval: obsidian search + Neo4j graph traversal.",
     parameters: Type.Object({
-      query: Type.String(),
+      query: Type.Optional(Type.String()),
       coordinate: Type.Optional(Type.String({ description: "Filter by coordinate for graph traversal" })),
       vault: Type.Optional(Type.String()),
       limit: Type.Optional(Type.Integer({ default: 10 })),
+      path: Type.Optional(Type.String({ description: "Exact note path for a temporal content-delta query" })),
+      since: Type.Optional(Type.String({ description: "ISO-8601 lower bound for changed content" })),
+      response_token: Type.Optional(Type.String({ description: "Khora response token establishing the content boundary" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const obsArgs = ["search", `query="${params.query}"`, `limit=${params.limit ?? 10}`];
-      const obsResult = spawnSync("obsidian-cli", obsArgs, { encoding: "utf8" });
-      const vaultHits = obsResult.stdout?.trim() || "(no vault results)";
+      if (!params.query && !params.path) {
+        return { content: [{ type: "text", text: "hen_hybrid_retrieve requires query or path" }], isError: true };
+      }
+      const vaultHits = params.query
+        ? spawnSync("obsidian-cli", ["search", `query="${params.query}"`, `limit=${params.limit ?? 10}`], { encoding: "utf8" }).stdout?.trim() || "(no vault results)"
+        : "";
 
       let graphHits = "";
       if (params.coordinate) {
@@ -288,12 +295,22 @@ export async function henExtension(api: ExtensionAPI) {
         graphHits = gResult.stdout?.trim() || "";
       }
 
+      const delta = params.path
+        ? hen_content_delta_since({
+            path: params.path,
+            since: params.since,
+            response_token: params.response_token,
+          })
+        : null;
+
       return {
         content: [{
           type: "text",
-          text: ["=== Vault (obsidian search) ===", vaultHits,
+          text: [vaultHits ? "=== Vault (obsidian search) ===" : "", vaultHits,
             graphHits ? "\n=== Graph (Neo4j coordinate) ===" : "",
             graphHits,
+            delta ? "\n=== Content delta (Hen) ===" : "",
+            delta ? JSON.stringify(delta) : "",
           ].filter(Boolean).join("\n"),
         }],
       };

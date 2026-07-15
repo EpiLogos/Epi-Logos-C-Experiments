@@ -346,7 +346,10 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
     // wall-clock lottery — assert the LAW: state matches the frame's own
     // evolutionaryGap flag.
     let binary = &context["temporal"]["kernel"]["harmonicProfile"]["binary"];
-    let expected_state = if binary["evolutionaryGap"].as_bool().expect("evolutionaryGap is a bool") {
+    let expected_state = if binary["evolutionaryGap"]
+        .as_bool()
+        .expect("evolutionaryGap is a bool")
+    {
         "provisional-gap"
     } else {
         "resolved"

@@ -343,7 +343,12 @@ pub fn entity_capture(params: &Value) -> Result<Value, String> {
         None
     };
 
-    let plan = plan_entity_capture(&source, &day_id, creator.as_deref(), existing_body.as_deref())?;
+    let plan = plan_entity_capture(
+        &source,
+        &day_id,
+        creator.as_deref(),
+        existing_body.as_deref(),
+    )?;
     refuse_if_protected_without_capability(&plan.candidate_path, params)?;
     let absolute = vault_root.join(&plan.candidate_path);
     if let Some(parent) = absolute.parent() {
@@ -534,7 +539,10 @@ pub fn entity_list(params: &Value) -> Result<Value, String> {
     let mut entries = Vec::new();
     let present = vault_root.join("Idea/Empty/Present");
     if present.is_dir() {
-        for day_dir in fs::read_dir(&present).map_err(|err| err.to_string())?.flatten() {
+        for day_dir in fs::read_dir(&present)
+            .map_err(|err| err.to_string())?
+            .flatten()
+        {
             let day_name = day_dir.file_name().to_string_lossy().to_string();
             if let Some(day) = &day_filter {
                 if *day != day_name {
@@ -551,7 +559,11 @@ pub fn entity_list(params: &Value) -> Result<Value, String> {
             collect_entity_entries_recursive(&types_root, &vault_root, &mut entries, 3);
         }
         if matches!(state_filter.as_deref(), Some("graduated")) {
-            collect_entity_entries(&vault_root.join("Idea/Bimba/World"), &vault_root, &mut entries);
+            collect_entity_entries(
+                &vault_root.join("Idea/Bimba/World"),
+                &vault_root,
+                &mut entries,
+            );
         }
     }
 
@@ -575,7 +587,11 @@ pub fn world_list_entities(params: &Value) -> Result<Value, String> {
         .map(str::to_owned);
 
     let mut entries = Vec::new();
-    collect_entity_entries(&vault_root.join("Idea/Bimba/World"), &vault_root, &mut entries);
+    collect_entity_entries(
+        &vault_root.join("Idea/Bimba/World"),
+        &vault_root,
+        &mut entries,
+    );
     entries.retain(|entry| entry.state == "graduated");
     if let Some(coordinate) = &coordinate_filter {
         entries.retain(|entry| {

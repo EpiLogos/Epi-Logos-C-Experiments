@@ -466,42 +466,64 @@ fn looks_like_coordinate(value: &str) -> bool {
 /// Rewrite every `[[from_title]]` occurrence to `[[to_title]]`, returning the
 /// rewritten body and the number of occurrences rewritten.
 ///
-/// Anchor and alias forms are preserved verbatim after the title:
+/// Path, extension, anchor, and alias forms are preserved around the title:
 /// `[[from_title|alias]]`, `[[from_title#heading]]`, and `[[from_title^block]]`
-/// all rewrite the title part while keeping `|alias`, `#heading`, `^block`
-/// intact. Only an exact title match (the portion before the first `#`, `^`, or
-/// `|`) is rewritten — partial matches are left untouched. UTF-8 bodies are
-/// handled char-safely (all slice boundaries fall on ASCII `[[`/`]]` markers).
+/// rewrite alongside `[[folder/from_title.md#heading|alias]]`. Fenced examples
+/// and escaped link starts are excluded by the same rules as `parse_wikilinks`.
+/// Partial stem matches are left untouched.
 pub fn rewrite_wikilink_titles(body: &str, from_title: &str, to_title: &str) -> (String, usize) {
     let mut out = String::with_capacity(body.len());
     let mut count = 0usize;
+    let mut fence = None;
+
+    for segment in body.split_inclusive('\n') {
+        let (line, newline) = match segment.strip_suffix('\n') {
+            Some(line) => (line, "\n"),
+            None => (segment, ""),
+        };
+        if update_fence_state(line, &mut fence) || fence.is_some() {
+            out.push_str(segment);
+            continue;
+        }
+
+        let (rewritten, line_count) = rewrite_line_wikilink_titles(line, from_title, to_title);
+        out.push_str(&rewritten);
+        out.push_str(newline);
+        count += line_count;
+    }
+
+    (out, count)
+}
+
+fn rewrite_line_wikilink_titles(line: &str, from_title: &str, to_title: &str) -> (String, usize) {
+    let mut out = String::with_capacity(line.len());
+    let mut count = 0usize;
     let mut cursor = 0usize;
 
-    while cursor < body.len() {
-        let Some(rel_open) = body[cursor..].find("[[") else {
-            out.push_str(&body[cursor..]);
+    while cursor < line.len() {
+        let Some(rel_open) = line[cursor..].find("[[") else {
+            out.push_str(&line[cursor..]);
             break;
         };
         let open = cursor + rel_open;
-        out.push_str(&body[cursor..open]);
+        out.push_str(&line[cursor..open]);
+        if is_escaped_link_start(line, open) {
+            out.push_str("[[");
+            cursor = open + 2;
+            continue;
+        }
 
         let inner_start = open + 2;
-        let Some(rel_close) = body[inner_start..].find("]]") else {
-            // Unterminated `[[` — copy the remainder verbatim.
-            out.push_str(&body[open..]);
+        let Some(rel_close) = line[inner_start..].find("]]") else {
+            out.push_str(&line[open..]);
             break;
         };
         let inner_end = inner_start + rel_close;
-        let inner = &body[inner_start..inner_end];
+        let inner = &line[inner_start..inner_end];
 
-        let (title_part, rest) = match inner.find(['#', '^', '|']) {
-            Some(idx) => (&inner[..idx], &inner[idx..]),
-            None => (inner, ""),
-        };
-        if title_part == from_title {
+        if let Some(rewritten_inner) = rewrite_wikilink_inner(inner, from_title, to_title) {
             out.push_str("[[");
-            out.push_str(to_title);
-            out.push_str(rest);
+            out.push_str(&rewritten_inner);
             out.push_str("]]");
             count += 1;
         } else {
@@ -513,6 +535,31 @@ pub fn rewrite_wikilink_titles(body: &str, from_title: &str, to_title: &str) -> 
     }
 
     (out, count)
+}
+
+fn rewrite_wikilink_inner(inner: &str, from_title: &str, to_title: &str) -> Option<String> {
+    let alias_start = inner.find('|').unwrap_or(inner.len());
+    let target = &inner[..alias_start];
+    let anchor_start = target.find(['#', '^']).unwrap_or(target.len());
+    let path = &target[..anchor_start];
+    if path.is_empty() || path.trim() != path {
+        return None;
+    }
+
+    let file_start = path.rfind('/').map_or(0, |index| index + 1);
+    let file = &path[file_start..];
+    let stem = Path::new(file).file_stem()?.to_str()?;
+    if stem != from_title {
+        return None;
+    }
+
+    let mut rewritten = String::with_capacity(inner.len() - from_title.len() + to_title.len());
+    rewritten.push_str(&path[..file_start]);
+    rewritten.push_str(to_title);
+    rewritten.push_str(&file[stem.len()..]);
+    rewritten.push_str(&target[anchor_start..]);
+    rewritten.push_str(&inner[alias_start..]);
+    Some(rewritten)
 }
 
 /// Recursively collect `.md` files under `dir`, skipping dot-directories

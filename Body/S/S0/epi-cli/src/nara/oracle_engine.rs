@@ -258,13 +258,30 @@ mod tests {
     fn canonical_element_ids_drive_ace_charge_faces() {
         // Guard the canonical IDs themselves (0=Akasha,1=Vayu,2=Agni,3=Apas,4=Prithvi).
         assert_eq!(
-            (element::AGNI, element::APAS, element::PRITHVI, element::VAYU),
+            (
+                element::AGNI,
+                element::APAS,
+                element::PRITHVI,
+                element::VAYU
+            ),
             (2, 3, 4, 1),
             "canonical §5.16 element IDs"
         );
-        assert_eq!(faces(36), (U, 0.0, 0.0, 0.0), "Ace of Wands → Agni/Fire → pp");
-        assert_eq!(faces(22), (0.0, -U, 0.0, 0.0), "Ace of Cups → Apas/Water → nn");
-        assert_eq!(faces(64), (0.0, 0.0, U, 0.0), "Ace of Swords → Vayu/Air → pn");
+        assert_eq!(
+            faces(36),
+            (U, 0.0, 0.0, 0.0),
+            "Ace of Wands → Agni/Fire → pp"
+        );
+        assert_eq!(
+            faces(22),
+            (0.0, -U, 0.0, 0.0),
+            "Ace of Cups → Apas/Water → nn"
+        );
+        assert_eq!(
+            faces(64),
+            (0.0, 0.0, U, 0.0),
+            "Ace of Swords → Vayu/Air → pn"
+        );
         assert_eq!(
             faces(50),
             (0.0, 0.0, 0.0, U),

@@ -1,11 +1,84 @@
 import { describe, expect, it } from 'vitest';
 import {
+    KERNEL_BRIDGE_CAPABILITIES,
+    parseLensCodonBinaryProjection,
+    isKernelBridgeCapability,
     isChimeCoherent,
     type CymaticMonoPolyState,
     type M123ChimeFrameBoundary,
     type M123ChimeWorldClockBindingBoundary,
     type MonoPolyState,
 } from './types';
+
+describe('kernel-bridge active-carrier capability preflight', () => {
+    it('registers the executable M2 epogdoon projection', () => {
+        const capability = 'kernelBridge.m2.epogdoonProjection(address72)';
+        expect(KERNEL_BRIDGE_CAPABILITIES).toContain(capability);
+        expect(isKernelBridgeCapability(capability)).toBe(true);
+    });
+
+    it('strict-parses the complete lens-codon-binary projection', () => {
+        const segment = Array.from({ length: 24 }, (_, section) => section * 15);
+        const perDegree = segment.map((degree360) => ({
+            degree360,
+            exactDegree720: degree360 * 2,
+            codonUpper: 0,
+            codonLower: 0,
+            codonClass: 0,
+            charges: { pp: 18, nn: -6, np: 6, pn: 6 },
+            quaternion: [18, -6, 6, 6],
+            elementCanonical: 4,
+            hexagramId: 0,
+            lineChangeOperator: 0,
+            tick12: Math.floor(degree360 / 30),
+            fibonacciPosition: Math.floor(degree360 / 6),
+            fibonacciDigit: 0,
+            fibonacciPhase01: (degree360 % 6) / 6
+        }));
+        const projection = parseLensCodonBinaryProjection({
+            lensId: 7,
+            lensRole: 'derived-aperture',
+            groundingLensId: 16,
+            segment,
+            perDegree
+        });
+
+        expect(projection.lensId).toBe(7);
+        expect(projection.segment).toHaveLength(24);
+        expect(projection.perDegree[0].charges).toEqual({ pp: 18, nn: -6, np: 6, pn: 6 });
+        expect(KERNEL_BRIDGE_CAPABILITIES).toContain('kernelBridge.m3.lensCodonBinary(lensId)');
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            perDegree: [
+                { ...projection.perDegree[0], charges: { pp: 1, mm: 2, mp: 3, pm: 4 } },
+                ...projection.perDegree.slice(1)
+            ]
+        })).toThrow(/pp\/nn\/np\/pn/);
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            segment: projection.segment.slice(0, 23),
+            perDegree: projection.perDegree.slice(0, 23)
+        })).toThrow(/24 canonical lens boundaries/);
+        const groundSegment = Array.from({ length: 60 }, (_, position) => position * 6);
+        const ground = parseLensCodonBinaryProjection({
+            ...projection,
+            lensId: 16,
+            lensRole: 'primary-ground',
+            segment: groundSegment,
+            perDegree: groundSegment.map((degree360, fibonacciPosition) => ({
+                ...projection.perDegree[0],
+                degree360,
+                exactDegree720: degree360 * 2,
+                tick12: Math.floor(degree360 / 30),
+                fibonacciPosition,
+                fibonacciDigit: 0,
+                fibonacciPhase01: 0
+            }))
+        });
+        expect(ground.perDegree).toHaveLength(60);
+        expect(() => parseLensCodonBinaryProjection({ ...ground, lensId: 17 })).toThrow(/0\.\.16/);
+    });
+});
 
 // isChimeCoherent reads exactly `frame.m3.worldClockBinding` — the same nested
 // path App.tsx feeds to strikeRouter.onChime — so a minimal frame carrying that

@@ -470,8 +470,7 @@ pub fn quintessence_weight(profiles: &[[f32; 4]; 5]) -> f32 {
 pub fn heartbeat_quintessence() -> Option<portal_core::QuintessenceProjection> {
     let profile = load_profile().ok()??;
     let profiles = compute_quintessence_profiles(&profile);
-    let quaternion =
-        crate::portal::clock_state::quintessence_quaternion_from_profiles(&profiles)?;
+    let quaternion = crate::portal::clock_state::quintessence_quaternion_from_profiles(&profiles)?;
     let hash = blake3_identity_hash(&profile);
     let (natal_degree, natal_tick12) = hash_to_clock_position(&hash);
     let layer_count = profile.layer_presence_mask.count_ones() as u8;
@@ -483,8 +482,9 @@ pub fn heartbeat_quintessence() -> Option<portal_core::QuintessenceProjection> {
         partial: layer_count < 5,
         hash_preview: hash[..4].iter().map(|b| format!("{b:02x}")).collect(),
         quintessence_quaternion: quaternion,
-        authority: "epi nara identity (BLAKE3 → hash_to_clock_position; clock_state quaternion law)"
-            .to_owned(),
+        authority:
+            "epi nara identity (BLAKE3 → hash_to_clock_position; clock_state quaternion law)"
+                .to_owned(),
     })
 }
 
@@ -509,12 +509,13 @@ pub fn heartbeat_environment(sky: &[f32; 10]) -> Option<[f32; 4]> {
     let natal_ref = NatalReference::from_points(natal_degrees.to_vec());
     // The transpersonal band (DR-ENV-2): Uranus/Neptune/Pluto are the ambient,
     // collective conditions — never a personal M2–M5 dataset.
-    let conditions: [EnvironmentalCondition; 3] = [7u8, 8, 9].map(|planet| EnvironmentalCondition {
-        source: ConditionSource::TranspersonalPlanet(planet),
-        degree: sky[planet as usize],
-        magnitude: 1.0,
-        sensitivity: 1.0,
-    });
+    let conditions: [EnvironmentalCondition; 3] =
+        [7u8, 8, 9].map(|planet| EnvironmentalCondition {
+            source: ConditionSource::TranspersonalPlanet(planet),
+            degree: sky[planet as usize],
+            magnitude: 1.0,
+            sensitivity: 1.0,
+        });
     Some(derive_env_quaternion(&conditions, &natal_ref))
 }
 

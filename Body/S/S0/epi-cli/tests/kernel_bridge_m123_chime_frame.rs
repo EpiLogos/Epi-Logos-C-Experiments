@@ -102,8 +102,8 @@ fn absent_world_clock_is_pending_not_fabricated() {
 fn chime_requires_the_modal_resonator() {
     let mut profile = profile();
     profile.modal_resonator = None;
-    let err = m123_chime_frame_from_profile(1, &profile, None)
-        .expect_err("no resonant body, no chime");
+    let err =
+        m123_chime_frame_from_profile(1, &profile, None).expect_err("no resonant body, no chime");
     assert!(err.contains("modalResonator"));
 }
 
@@ -118,10 +118,12 @@ fn cymatic_frame_handle_is_a_deterministic_digest_of_the_bus() {
     );
 
     let other_generation = m123_chime_frame_from_profile(2, &profile, None).unwrap();
-    assert_ne!(a.m2.cymatic_frame_handle, other_generation.m2.cymatic_frame_handle);
+    assert_ne!(
+        a.m2.cymatic_frame_handle,
+        other_generation.m2.cymatic_frame_handle
+    );
 
-    let other_tick =
-        MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(7, 10));
+    let other_tick = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(7, 10));
     let other = m123_chime_frame_from_profile(1, &other_tick, None).unwrap();
     assert_ne!(a.m2.cymatic_frame_handle, other.m2.cymatic_frame_handle);
 }
@@ -133,6 +135,12 @@ fn serialized_chime_never_carries_raw_protected_field_bodies() {
         .expect("privacy guard admits the public-current frame");
     let s = serde_json::to_string(&frame).unwrap();
     for forbidden in [
+        "fieldBody",
+        "rawField",
+        "rawPersonalCymaticPayload",
+        "personalCymaticField",
+        "protectedM4Body",
+        "journalBody",
         "natalChartHandle",
         "qPersonal",
         "qIdentity",

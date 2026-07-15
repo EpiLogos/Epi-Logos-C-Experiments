@@ -144,6 +144,11 @@ export interface SpreadResolution {
   resolved_at?: string;
 }
 
+export interface JanusSpreadDelta {
+  readonly still_alive: readonly string[];
+  readonly gone_mute: readonly string[];
+}
+
 export interface M4TemporalNow {
   /** Canonical mod-10 order: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9. */
   planet_degrees?: number[];
@@ -305,6 +310,18 @@ export function janus_spread_resolved(input: JanusEvaluateAlivenessInput): Sprea
     spread_id: input.spread_id,
     resolved,
     resolved_at: resolved ? input.now : undefined,
+  };
+}
+
+/** Read the user-authored spread-state delta returned by Hen at a re-entry boundary. */
+export function janus_spread_delta(contentDelta: string): JanusSpreadDelta {
+  const lines = contentDelta
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return {
+    still_alive: lines.filter((line) => /live-spread|still alive|active spread/i.test(line)).slice(-5),
+    gone_mute: lines.filter((line) => /gone mute|resolved|closed spread|\bmute\b/i.test(line)).slice(-5),
   };
 }
 

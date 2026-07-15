@@ -145,8 +145,8 @@ export interface ClockLens {
     sections: number;
     name: string;
     /** The Architect-named temporality structurers (the 24/12/4-section
-     *  divisions; the 60-fold Fibonacci Ground is the +1 aperture beside
-     *  them) — mirrors the kernel's `temporal_canon` flags in
+     *  derived divisions; the 60-fold Fibonacci Ground is primary lens 16
+     *  grounding them) — mirrors the kernel's `temporal_canon` flags in
      *  portal-core phase_space.rs `CLOCK_LENSES_16`, pinned by test. */
     temporalCanon: boolean;
 }

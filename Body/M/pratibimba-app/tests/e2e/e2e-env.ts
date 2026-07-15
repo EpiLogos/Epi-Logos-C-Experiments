@@ -20,7 +20,7 @@ export const APP_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url))
 export const REPO_ROOT = resolve(APP_ROOT, '..', '..', '..');
 
 export const EPI_BIN =
-    process.env.EPI_BIN ?? join(REPO_ROOT, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+    process.env.EPI_BIN ?? join(REPO_ROOT, 'target', 'debug', 'epi');
 
 /** Written by global-setup, read by teardown + specs (pids, temp roots). */
 export const RUN_STATE_FILE = join(APP_ROOT, 'test-results', 'e2e-run.json');

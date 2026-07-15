@@ -885,18 +885,24 @@ pub(super) fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()>
 
     let node_name = graph_node.as_ref().and_then(|node| node.name.clone());
     let node_essence = graph_node.as_ref().and_then(|node| node.essence.clone());
-    let node_core_nature = graph_node.as_ref().and_then(|node| node.core_nature.clone());
-    let node_description = graph_node.as_ref().and_then(|node| node.description.clone());
+    let node_core_nature = graph_node
+        .as_ref()
+        .and_then(|node| node.core_nature.clone());
+    let node_description = graph_node
+        .as_ref()
+        .and_then(|node| node.description.clone());
     let children: Vec<(String, String)> = graph_node
         .as_ref()
         .map(|node| node.children.clone())
         .unwrap_or_default();
 
-    let display_name = node_name.as_deref().unwrap_or(if graph_unavailable.is_some() {
-        "(graph unavailable)"
-    } else {
-        "(unknown)"
-    });
+    let display_name = node_name
+        .as_deref()
+        .unwrap_or(if graph_unavailable.is_some() {
+            "(graph unavailable)"
+        } else {
+            "(unknown)"
+        });
     let display_coord = graph_node
         .as_ref()
         .map(|node| node.coordinate.as_str())
@@ -992,9 +998,7 @@ pub(super) fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()>
             }
         }
         if let Some(ref status) = graph_unavailable {
-            println!(
-                "  (live graph unavailable — {status}; no static-file fallback)"
-            );
+            println!("  (live graph unavailable — {status}; no static-file fallback)");
         } else if node_name.is_none() {
             println!("  (no live :Bimba node for this coordinate)");
         } else if pithy.is_none() && !is_help_branch {

@@ -22,6 +22,9 @@ FORBIDDEN_SLOT_PAYLOAD_KEYS = {
     "raw_text",
     "text",
 }
+TUNING_DISPATCH_PURPOSE = "tuning-calibration"
+TUNING_PRIVACY_CLASSES = {"local-only", "vector-derived", "non-sensitive"}
+TUNING_RISK_CLASSES = {"A", "B", "C"}
 
 
 def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | None:
@@ -48,6 +51,10 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
         event.get("dispatch_purpose"),
         "dispatch_purpose",
     )
+    if dispatch_purpose != TUNING_DISPATCH_PURPOSE:
+        raise ValueError(
+            f"dispatch_purpose must be '{TUNING_DISPATCH_PURPOSE}' for Tier 3 tuning"
+        )
     source_agent = _require_non_blank(event.get("source_agent"), "source_agent")
     if source_agent != "mythos":
         raise ValueError("compose_tuning_proposal requires source_agent='mythos'")
@@ -60,6 +67,21 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
         event.get("integration_impact_uri"),
         "integration_impact_uri",
     )
+    target_knob = _validated_target_knob(event.get("target_knob"))
+    evidence_window = _require_mapping(event.get("evidence_window"), "evidence_window")
+    evidence_window_pasu_count = _require_non_negative_int(
+        evidence_window.get("pasu_count"),
+        "evidence_window.pasu_count",
+    )
+    actual_resolved_slot_state = _require_non_blank(
+        event.get("actual_resolved_slot_state"),
+        "actual_resolved_slot_state",
+    )
+    _enforce_tuning_privacy_boundary(
+        target_knob["privacy_class"],
+        actual_resolved_slot_state,
+        evidence_window_pasu_count,
+    )
 
     proposal_basis = {
         "source_agent": source_agent,
@@ -70,6 +92,9 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
         "evidence_refs": evidence_refs,
         "slot_refs": slot_refs,
         "target_surface": target_surface,
+        "target_knob": target_knob,
+        "evidence_window_pasu_count": evidence_window_pasu_count,
+        "actual_resolved_slot_state": actual_resolved_slot_state,
     }
     proposal_id = "aletheia-tuning-" + sha256(
         json.dumps(proposal_basis, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -91,10 +116,11 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
         "dispatch_path": _dispatch_path(dispatch_purpose),
         "drift_signal": deepcopy(signal),
         "target_surface": target_surface,
+        "target_knob": target_knob,
         "evidence_refs": evidence_refs,
         "slot_refs": slot_refs,
         "privacy": {
-            "class": "review_gate",
+            "class": target_knob["privacy_class"],
             "raw_slot_payloads_elided": True,
             "boundary": "anuttara_slot_handle_only",
         },
@@ -102,6 +128,9 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
             "slot_privacy_boundary_compliance": True,
             "checked_boundary": "slot_privacy_boundary_compliance",
             "allowed_slot_ref_count": len(slot_refs),
+            "tuning_target_knob_privacy_class": target_knob["privacy_class"],
+            "evidence_window_pasu_count": evidence_window_pasu_count,
+            "actual_resolved_slot_state": actual_resolved_slot_state,
         },
         "tuning_contract": {
             "tier": 3,
@@ -110,6 +139,15 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
             "auto_apply": False,
             "rollback_handle": rollback_handle,
             "integration_impact_uri": integration_impact_uri,
+        },
+        "dispatch": {
+            "queue": "anima",
+            "dispatch_purpose": TUNING_DISPATCH_PURPOSE,
+            "target_knob_key": target_knob["key"],
+            "tuning_target_knob_privacy_class": target_knob["privacy_class"],
+            "evidence_window_pasu_count": evidence_window_pasu_count,
+            "actual_resolved_slot_state": actual_resolved_slot_state,
+            "review_pipeline": "tuning_review",
         },
         "review_gate": {
             "tier": 2,
@@ -135,6 +173,9 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
                     "surface": target_surface,
                     "metric_name": metric_name,
                     "window_id": window_id,
+                    "knob_key": target_knob["key"],
+                    "privacy_class": target_knob["privacy_class"],
+                    "tuning_risk_class": target_knob["tuning_risk_class"],
                 },
                 "payload": {
                     "proposal_id": proposal_id,
@@ -262,6 +303,47 @@ def _validated_evidence_refs(value: Any) -> list[dict[str, str]]:
     return refs
 
 
+def _validated_target_knob(value: Any) -> dict[str, Any]:
+    knob = _require_mapping(value, "target_knob")
+    key = _require_non_blank(knob.get("key"), "target_knob.key")
+    privacy_class = _require_non_blank(
+        knob.get("privacy_class"),
+        "target_knob.privacy_class",
+    )
+    if privacy_class not in TUNING_PRIVACY_CLASSES:
+        raise ValueError(
+            "target_knob.privacy_class must be local-only, vector-derived, or non-sensitive"
+        )
+    risk_class = _require_non_blank(
+        knob.get("tuning_risk_class"),
+        "target_knob.tuning_risk_class",
+    )
+    if risk_class not in TUNING_RISK_CLASSES:
+        raise ValueError("target_knob.tuning_risk_class must be A, B, or C")
+    if knob.get("ml_trainable") is not True:
+        raise ValueError("target_knob.ml_trainable must be true for Tier 3 tuning")
+    return {
+        "key": key,
+        "privacy_class": privacy_class,
+        "tuning_risk_class": risk_class,
+        "ml_trainable": True,
+    }
+
+
+def _enforce_tuning_privacy_boundary(
+    privacy_class: str,
+    actual_resolved_slot_state: str,
+    evidence_window_pasu_count: int,
+) -> None:
+    if privacy_class != "local-only":
+        return
+    if actual_resolved_slot_state != "local-default" or evidence_window_pasu_count > 1:
+        raise ValueError(
+            "privacy-boundary-violation: local-only tuning requires local-default "
+            "slot resolution and evidence from at most one PASU"
+        )
+
+
 def _require_mapping(value: Any, field: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"{field} must be an object")
@@ -278,3 +360,9 @@ def _require_number(value: Any, field: str) -> float:
     if not isinstance(value, int | float):
         raise ValueError(f"{field} must be numeric")
     return float(value)
+
+
+def _require_non_negative_int(value: Any, field: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError(f"{field} must be a non-negative integer")
+    return value

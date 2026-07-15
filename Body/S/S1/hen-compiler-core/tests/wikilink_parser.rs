@@ -1,6 +1,6 @@
 use epi_s1_hen_compiler_core::wikilinks::{
-    coordinate_for_residency, coordinate_residency_refusal, parse_wikilinks, RenameRefusalReason,
-    WikilinkTarget,
+    coordinate_for_residency, coordinate_residency_refusal, parse_wikilinks,
+    rewrite_wikilink_titles, RenameRefusalReason, WikilinkTarget,
 };
 
 #[test]
@@ -194,4 +194,34 @@ title: S1 shard
             actual_coordinate: "S1.0".to_owned(),
         }
     );
+}
+
+#[test]
+fn rename_rewrite_preserves_paths_extensions_anchors_and_aliases() {
+    let body = "[[A]] [[folder/A]] [[folder/A.md#Section|alias]] [[A^block-id]] [[AB]]";
+    let (rewritten, count) = rewrite_wikilink_titles(body, "A", "B");
+
+    assert_eq!(count, 4);
+    assert_eq!(
+        rewritten,
+        "[[B]] [[folder/B]] [[folder/B.md#Section|alias]] [[B^block-id]] [[AB]]"
+    );
+}
+
+#[test]
+fn rename_rewrite_ignores_escaped_links_and_fenced_examples() {
+    let body = r#"Visible [[A]].
+Escaped \[[A]].
+```md
+Example [[A]].
+```
+Visible again [[A|alias]].
+"#;
+    let (rewritten, count) = rewrite_wikilink_titles(body, "A", "B");
+
+    assert_eq!(count, 2);
+    assert!(rewritten.contains("Visible [[B]]."));
+    assert!(rewritten.contains(r"Escaped \[[A]]."));
+    assert!(rewritten.contains("Example [[A]]."));
+    assert!(rewritten.contains("Visible again [[B|alias]]."));
 }

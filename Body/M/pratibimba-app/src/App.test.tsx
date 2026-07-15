@@ -1,6 +1,8 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
+import { commands } from './commands/registry';
+import { CROSS_LAYOUT_INTENT_COMMAND, CROSS_LAYOUT_INTENT_TARGETS } from './commands/crossLayoutIntent';
 import { useCoordinateStore } from './state/stores';
 
 class InertSocket {
@@ -108,5 +110,32 @@ describe('App shell', () => {
         await screen.findByTestId('command-palette');
         expect(screen.getByTestId('palette-item-face.toggle')).toBeTruthy();
         expect(screen.getByTestId('palette-item-gateway.restart')).toBeTruthy();
+    });
+
+    it('resolves every cross-layout ledger target through the mounted shell model', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+
+        for (const target of CROSS_LAYOUT_INTENT_TARGETS) {
+            await act(async () => {
+                await commands.execute(CROSS_LAYOUT_INTENT_COMMAND, {
+                    coordinate: `test:${target.extensionId}/${target.contributionId}`,
+                    artifactUri: null,
+                    reviewId: target.component === 'omniReview' ? 'review-ledger-proof' : null,
+                    dayNow: null,
+                    sessionKey: null,
+                    profileGeneration: null,
+                    privacyClass: null,
+                    requestedExtensionId: target.extensionId,
+                    requestedContributionId: target.contributionId
+                });
+            });
+            expect(shell.dataset.face).toBe(String(target.face));
+        }
+
+        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(45);
+        expect(useCoordinateStore.getState().selected).toBe(
+            `test:${CROSS_LAYOUT_INTENT_TARGETS.at(-1)?.extensionId}/${CROSS_LAYOUT_INTENT_TARGETS.at(-1)?.contributionId}`
+        );
     });
 });

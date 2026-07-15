@@ -37,7 +37,7 @@ import { genealogyToReviewBlocks } from './reviewBlocks';
 
 const VERDICTS: readonly BlockVerdictDecision[] = ['approve', 'reject', 'defer'];
 
-export function ReviewBlocksPane() {
+export function ReviewBlocksPane({ requestedReviewId = null }: { readonly requestedReviewId?: string | null }) {
     const sessionKey = useSessionStore(s => s.sessionKey);
     const connected = useProvenanceStore(s => s.connection.connected);
     const [state, setState] = useState<BlockRendererSessionState>(() =>
@@ -116,6 +116,11 @@ export function ReviewBlocksPane() {
 
     return (
         <div className="review-blocks-pane" data-testid="review-blocks-pane" data-block-source={blockSource}>
+            {requestedReviewId ? (
+                <p className="pane-message review-request-target" data-testid="review-request-target">
+                    Requested review: {requestedReviewId}
+                </p>
+            ) : null}
             <p className="pane-message review-blocks-seam" data-testid="review-blocks-seam-note">
                 Review rows ride the synthetic acceptance fixture — the live wire→record producer is
                 track-12's seam; verdicts route to the s4-prime psyche.update seam under the m5 human gate.

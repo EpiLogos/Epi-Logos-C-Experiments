@@ -14,6 +14,7 @@ import {
     buildM3WheelSurface,
     M3CosmicWheelRenderService
 } from './M3CosmicWheelRenderService';
+import { QuintessenceIndicator } from './QuintessenceIndicator';
 
 const WIRE_PAYLOAD = {
     harmonicProfile: {
@@ -33,6 +34,25 @@ const WIRE_PAYLOAD = {
         },
         tick12: 4,
         degree720: 415
+    }
+};
+
+const CHARGE_QUATERNION = {
+    pp: 1,
+    mm: 2,
+    mp: 3,
+    pm: 4,
+    chargeQuaternionInvariant: true,
+    fourX: 10
+};
+
+const WIRE_WITH_CHARGE = {
+    harmonicProfile: {
+        ...WIRE_PAYLOAD.harmonicProfile,
+        mahamaya: {
+            ...WIRE_PAYLOAD.harmonicProfile.mahamaya,
+            chargeQuaternion: CHARGE_QUATERNION
+        }
     }
 };
 
@@ -58,6 +78,36 @@ describe('buildM3WheelSurface', () => {
         expect(surface.readiness.reason).toBe('pending-codon-rotation-projection');
         expect(surface.activeProjection).toBeNull();
     });
+
+    it('reads the authority-provided charge quaternion without recomputing its invariant', () => {
+        const surface = buildM3WheelSurface({ payload: WIRE_WITH_CHARGE, generation: 10 });
+        expect(surface.chargeQuaternion).toEqual(CHARGE_QUATERNION);
+        expect(surface.quintessenceState).toBe('ready');
+        expect(surface.readiness.surfaceReady).toBe(true);
+
+        const authorityViolation = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_WITH_CHARGE.harmonicProfile,
+                    mahamaya: {
+                        ...WIRE_WITH_CHARGE.harmonicProfile.mahamaya,
+                        chargeQuaternion: {
+                            ...CHARGE_QUATERNION,
+                            chargeQuaternionInvariant: false
+                        }
+                    }
+                }
+            },
+            generation: 11
+        });
+        expect(authorityViolation.quintessenceState).toBe(
+            'authority_payload_invariant_violation'
+        );
+        expect(authorityViolation.readiness).toEqual({
+            surfaceReady: false,
+            reason: 'authority_payload_missing'
+        });
+    });
 });
 
 describe('M3CosmicWheelRenderService', () => {
@@ -78,6 +128,83 @@ describe('M3CosmicWheelRenderService', () => {
         expect(screen.getByTestId('m3-wheel-quintessence-pending')).toBeTruthy();
     });
 
+    it('renders the four-petal Quintessence balance and low-variance Akasha core', () => {
+        const charged = buildM3WheelSurface({ payload: WIRE_WITH_CHARGE, generation: 10 });
+        const balanced = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_WITH_CHARGE.harmonicProfile,
+                    mahamaya: {
+                        ...WIRE_WITH_CHARGE.harmonicProfile.mahamaya,
+                        chargeQuaternion: {
+                            pp: 2,
+                            mm: 2,
+                            mp: 2,
+                            pm: 2,
+                            chargeQuaternionInvariant: true,
+                            fourX: 8
+                        }
+                    }
+                }
+            },
+            generation: 11
+        });
+
+        const { rerender } = render(
+            <svg>
+                <QuintessenceIndicator surface={charged} cx={50} cy={50} radius={20} />
+            </svg>
+        );
+        expect(
+            screen
+                .getAllByTestId('m3-quintessence-petal')
+                .map(petal => petal.getAttribute('data-strength'))
+        ).toEqual(['0.25', '0.5', '0.75', '1']);
+        expect(
+            screen
+                .getAllByTestId('m3-quintessence-petal')
+                .map(petal => Number(petal.getAttribute('ry')))
+        ).toEqual([2.75, 5.5, 8.25, 11]);
+        const unbalancedCore = Number(
+            screen.getByTestId('m3-quintessence-core').getAttribute('data-balance')
+        );
+
+        rerender(
+            <svg>
+                <QuintessenceIndicator surface={balanced} cx={50} cy={50} radius={20} />
+            </svg>
+        );
+        expect(screen.getByTestId('m3-quintessence-core').getAttribute('data-balance')).toBe('1');
+        expect(
+            Number(screen.getByTestId('m3-quintessence-core').getAttribute('data-balance'))
+        ).toBeGreaterThan(unbalancedCore);
+    });
+
+    it('renders the authority invariant violation instead of a healthy Akasha core', () => {
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_WITH_CHARGE.harmonicProfile,
+                    mahamaya: {
+                        ...WIRE_WITH_CHARGE.harmonicProfile.mahamaya,
+                        chargeQuaternion: {
+                            ...CHARGE_QUATERNION,
+                            chargeQuaternionInvariant: false
+                        }
+                    }
+                }
+            },
+            generation: 12
+        });
+        render(<M3CosmicWheelRenderService surface={surface} mode="full" />);
+        expect(screen.getByTestId('m3-quintessence-invariant-violation').textContent).toContain(
+            'authority_payload_invariant_violation'
+        );
+        expect(screen.getByTestId('m3-cosmic-wheel').getAttribute('data-readiness')).toBe(
+            'authority_payload_missing'
+        );
+    });
+
     it('renders arcana SLOTS with the honest pending marker (no local arcana table)', () => {
         render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
         expect(screen.getByTestId('m3-wheel-arcana-ring').children.length).toBe(22);
@@ -92,7 +219,7 @@ describe('M3CosmicWheelRenderService', () => {
         expect(screen.getByTestId('m3-wheel-cell-0')).toBeTruthy();
         expect(screen.queryByTestId('m3-wheel-arcana-ring')).toBeNull();
         expect(screen.queryByTestId('m3-wheel-active-label')).toBeNull();
-        expect(screen.queryByTestId('m3-wheel-quintessence')).toBeNull();
+        expect(screen.getByTestId('m3-wheel-quintessence')).toBeTruthy();
         cleanup();
         render(<M3CosmicWheelRenderService surface={ready()} mode="mini-view" />);
         expect(screen.getByTestId('m3-wheel-arcana-ring')).toBeTruthy();

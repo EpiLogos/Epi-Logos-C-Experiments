@@ -77,7 +77,9 @@ pub fn oracle_eval4(result: &IChingResult, kairos_degree: f32, phase: u8) -> Ora
         .lines
         .iter()
         .enumerate()
-        .fold(0u8, |acc, (i, &line_val)| acc | (((line_val & 1) as u8) << i));
+        .fold(0u8, |acc, (i, &line_val)| {
+            acc | (((line_val & 1) as u8) << i)
+        });
     let kernel = compute_codon_charges(codon6);
     let pp = kernel.pp as f32;
     let nn = kernel.nn as f32;

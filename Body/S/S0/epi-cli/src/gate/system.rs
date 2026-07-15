@@ -384,7 +384,8 @@ fn collect_graph_report(repo_root: PathBuf) -> Result<Value, String> {
             .build()
             .map_err(|err| err.to_string())?;
         runtime.block_on(async move {
-            match tokio::time::timeout(GRAPH_PROBE_TIMEOUT, doctor::collect_report(&repo_root)).await
+            match tokio::time::timeout(GRAPH_PROBE_TIMEOUT, doctor::collect_report(&repo_root))
+                .await
             {
                 Ok(report) => serde_json::to_value(report).map_err(|err| err.to_string()),
                 Err(_) => Ok(json!({

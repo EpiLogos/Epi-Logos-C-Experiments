@@ -21,8 +21,12 @@ fn parse_json(output: &common::TestOutput) -> serde_json::Value {
         output.stdout,
         output.stderr
     );
-    serde_json::from_str(&output.stdout)
-        .unwrap_or_else(|err| panic!("knowing should emit valid json: {err}\nstdout:\n{}", output.stdout))
+    serde_json::from_str(&output.stdout).unwrap_or_else(|err| {
+        panic!(
+            "knowing should emit valid json: {err}\nstdout:\n{}",
+            output.stdout
+        )
+    })
 }
 
 #[test]
@@ -78,7 +82,10 @@ fn knowing_m2_3_surfaces_live_bimba_node() {
         "M2-3 must surface live q_3_four_three_three_two_nesting, got keys: {:?}",
         q_pairs
             .iter()
-            .filter_map(|p| p.as_array().and_then(|a| a.first()).and_then(|k| k.as_str()))
+            .filter_map(|p| p
+                .as_array()
+                .and_then(|a| a.first())
+                .and_then(|k| k.as_str()))
             .collect::<Vec<_>>()
     );
 

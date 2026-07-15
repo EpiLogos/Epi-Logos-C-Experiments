@@ -7,6 +7,7 @@ pub mod compile_plan;
 pub mod coordinate;
 pub mod entity_lifecycle;
 pub mod frontmatter;
+pub mod frontmatter_mutation;
 pub mod graph_promotion;
 pub mod graph_sync;
 pub mod l_alignments;
@@ -22,8 +23,7 @@ pub use artifact_evidence::{
 };
 pub use birth_codon::{
     derive_birth_codon, derive_birth_codon_with_composition, BirthCodonLedger, BirthCodonRecord,
-    BirthCodonSeed, BirthCodonState, CollisionOutcome, DerivationPolicy,
-    SEED_COMPOSITION_DEFAULT,
+    BirthCodonSeed, BirthCodonState, CollisionOutcome, DerivationPolicy, SEED_COMPOSITION_DEFAULT,
 };
 pub use compile_plan::{
     compiler_invocation, plan_compile, CompilePlanRequest, CompilePlanResponse, CompilerInvocation,
@@ -39,6 +39,7 @@ pub use entity_lifecycle::{
 pub use frontmatter::{
     validate_compile_artifact_frontmatter, validate_frontmatter, ValidationResult,
 };
+pub use frontmatter_mutation::append_frontmatter_string;
 pub use graph_sync::{graph_sync_intent, GraphSyncIntent, GraphSyncMode};
 pub use ledger::{ql_first_channels, LedgerChannel, ENVELOPE_LEDGER_CHANNELS};
 pub use residency::{resolve_compiler_residency, CompilerResidencyPlan, HenTimestamp};

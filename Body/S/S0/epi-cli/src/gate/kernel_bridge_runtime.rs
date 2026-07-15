@@ -7,14 +7,18 @@ use epi_s3_gateway_contract::{
 };
 use portal_core::{
     bioquaternion_transcription, cymatic_monopoly_state, epogdoon_bridge_lattice,
-    planetary_elemental_weights, DepositionAnchorProjection, EpogdoonBridgeProjection, KernelPhase,
+    lens_codon_binary_projection, planetary_elemental_weights, DepositionAnchorProjection,
+    EpogdoonBridgeProjection, KernelPhase,
     KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
     MathemeNodalConstraint, MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass,
     RelationDescriptor, RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
+    M3_PRIMARY_GROUND_LENS_ID,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+
+use crate::nara::canonical_from_m3_decan_element;
 
 use super::spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate};
 
@@ -37,6 +41,8 @@ pub const KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE: &str =
     "kernelBridge.m2.cymaticMonoPolyState(address72)";
 pub const KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION: &str =
     "kernelBridge.m3.bioquaternionTranscription(codon)";
+pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY: &str =
+    epi_s3_gateway_contract::KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -543,12 +549,18 @@ impl KernelBridgeRuntime {
 
         let gateway_method = gateway_method_for_capability(&request.method, &request.params)?;
         let artifact = match request.method.as_str() {
+            KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION => {
+                typed_json_m2_epogdoon_projection(address72_param(&request.params, "address72")?)
+            }
             KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE => {
                 typed_json_m2_cymatic_monopoly_state(address72_param(&request.params, "address72")?)
             }
             KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => {
                 typed_json_m3_bioquaternion_transcription(codon_param(&request.params, "codon")?)
             }
+            KERNEL_BRIDGE_M3_LENS_CODON_BINARY => typed_json_m3_lens_codon_binary(
+                lens_id_param(&request.params, "lensId")?,
+            )?,
             _ => {
                 json!({
                     "capability": request.method,
@@ -744,9 +756,11 @@ pub fn capability_names() -> &'static [&'static str] {
         "depositKernelObservation",
         "requestReviewEvidence",
         "s2.parashaktiCorrespondences",
+        KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION,
         KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
         KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
+        KERNEL_BRIDGE_M3_LENS_CODON_BINARY,
     ]
 }
 
@@ -967,6 +981,46 @@ pub fn typed_json_m3_bioquaternion_transcription(codon: u8) -> Value {
         );
     }
     value
+}
+
+/// Typed-JSON form of `kernelBridge.m3.lensCodonBinary(lensId)`.
+pub fn typed_json_m3_lens_codon_binary(lens_id: u8) -> Result<Value, String> {
+    let mut value = serde_json::to_value(
+        lens_codon_binary_projection(lens_id).map_err(|error| error.to_string())?,
+    )
+    .map_err(|error| error.to_string())?;
+    if let Value::Object(ref mut object) = value {
+        let per_degree = object
+            .get_mut("perDegree")
+            .and_then(Value::as_array_mut)
+            .ok_or_else(|| "lens-codon-binary projection omitted perDegree".to_owned())?;
+        for degree in per_degree {
+            let degree = degree
+                .as_object_mut()
+                .ok_or_else(|| "lens-codon-binary degree must be an object".to_owned())?;
+            let raw = degree
+                .remove("elementM3Decan")
+                .and_then(|raw| raw.as_u64())
+                .ok_or_else(|| "lens-codon-binary degree omitted M3 decan element".to_owned())?;
+            let canonical = canonical_from_m3_decan_element(raw as u8);
+            if canonical > 5 {
+                return Err(format!("invalid M3 decan element {raw}"));
+            }
+            degree.insert(
+                "elementCanonical".to_owned(),
+                Value::from(canonical),
+            );
+        }
+        object.insert(
+            "contract".to_owned(),
+            Value::String(KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned()),
+        );
+        object.insert(
+            "runtimeOwner".to_owned(),
+            Value::String(KERNEL_BRIDGE_RUNTIME_OWNER.to_owned()),
+        );
+    }
+    Ok(value)
 }
 
 pub fn m1_performance_event_from_profile(
@@ -1352,6 +1406,12 @@ fn forbid_private_payload_keys(value: &Value) -> Result<(), String> {
         "identityHashPreview",
         "layerPresenceMask",
         "rawNaraBody",
+        "fieldBody",
+        "rawField",
+        "rawPersonalCymaticPayload",
+        "personalCymaticField",
+        "protectedM4Body",
+        "journalBody",
         "privateIdentityData",
         "bioquaternion",
         "resonanceSquareEmphasis",
@@ -1481,6 +1541,9 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         )),
         "requestReviewEvidence" => Ok(Some("s5'.review.submit".to_owned())),
         "s2.parashaktiCorrespondences" => Ok(Some("s2.parashaktiCorrespondences".to_owned())),
+        KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION => {
+            Ok(Some(KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION.to_owned()))
+        }
         KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS => Ok(Some(
             KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS.to_owned(),
         )),
@@ -1490,6 +1553,9 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => Ok(Some(
             KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION.to_owned(),
         )),
+        KERNEL_BRIDGE_M3_LENS_CODON_BINARY => {
+            Ok(Some(KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned()))
+        }
         _ => Err(format!(
             "kernel-bridge rejected unsupported capability {method}"
         )),
@@ -1504,6 +1570,19 @@ fn address72_param(params: &Value, key: &str) -> Result<u8, String> {
     if value > 71 {
         return Err(format!(
             "{key} must be in M2 address space 0..71, got {value}"
+        ));
+    }
+    Ok(value as u8)
+}
+
+fn lens_id_param(params: &Value, key: &str) -> Result<u8, String> {
+    let value = params
+        .get(key)
+        .and_then(Value::as_u64)
+        .ok_or_else(|| format!("kernel-bridge capability requires integer {key}"))?;
+    if value > u64::from(M3_PRIMARY_GROUND_LENS_ID) {
+        return Err(format!(
+            "{key} {value} outside functional M3 lenses 0..{M3_PRIMARY_GROUND_LENS_ID}"
         ));
     }
     Ok(value as u8)

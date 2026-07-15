@@ -39,14 +39,17 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `m1SurfaceDeep` | face 1 `personal-main` tab "M1 Deep" | M0' chrome | live | `M1SurfaceDispatchPane` (22.T22.10 — `standalone-ide-deep` mode, DR-WC-M1-1) | — |
 | `m3PentadicInspector` | face 0 `cosmic-main` tab "Pentadic" | M0' chrome | live | `PentadicInspectorPane` | — |
 | `m3Inspectors` | face 0 `cosmic-main` tab "M3 Inspectors" | M0' chrome | live | `M3InspectorsPane` (hosts `M3CosmicWheelRenderService`, 24.T24.1) | — |
+| `mocBases` | face 0 `cosmic-main` tab "Bases" | M0' chrome | live | `MocBaseReflectionPane` (evaluated MOC membership + canvas-linked external Obsidian Base views, 48.T48.4) | — |
 | `m5Ebm` | face 0 `cosmic-main` tab "M5 EBM" | M0' chrome | live | `M5EbmObservatoryPane` (26.T26.1 — M5-domain content, READ role: "M5 does not talk. It scores.") | — |
 | `fileTree` | face 1 left border "Vault" | M0' chrome | live | `FileTreePane` | — |
 | `journalTimeline` | face 1 left border "Journal" | M0' chrome | live | `JournalTimelinePane` | — |
 | `dayCalendar` | face 1 left border "Calendar" | M0' chrome | live | `DayCalendarPane` | — |
 | `oracle` | face 1 left border "Oracle" | M0' chrome | live | `OraclePane` (real CLI cast via Tauri `oracle_cast`) | — |
 | `personalHome` | face 1 `personal-main` tab "Now" | M0' chrome | live | `NowPane` (M4' day surface) | — |
+| `medicineView` | face 1 `personal-main` tab "Medicine" | M0' chrome | live | `MedicineViewPane` (25.T25.10 — profile-tick `nara.medicine.snapshot`, eight canonical chakra rows, active Sun decan, botanical evidence, explicit S1-governed NOW pin; never prescription) | `m4.nara.medicine` |
 | `m4DialogicalArena` | face 1 `personal-main` tab "Arena" | M0' chrome | live | `M4DialogicalArenaPane` (41.T41.7 — M4' dia-logical arena; view id `m4.nara.dialogicalArena`; protected-local handle-only; CPF (00/00) wizard gate; renders `pending-wire` while the `m4.arena.*` ws seam is unimplemented) | `m4.nara.dialogicalArena` |
 | `canonUpdateLedger` | face 1 `personal-main` tab "CU Ledger" | M0' chrome | live | `CanonUpdateLedgerPane` (40.T40.5 — Track-40 CU-ledger review over `s5'.canon_update.list`, Track-48 query-view posture; renders `pending-wire` while the `s5'.canon_update.*` ws seam is unimplemented) | — |
+| `kairosEnablement` | face 1 `personal-main` tab "Kairos setup" | M0' chrome | live | `KairosEnablementPane` (32.T32.10 — FR-3 default-off, probe-before-persist onboarding; local dependency failure remains disabled and renders install guidance) | `m4.nara.kairosEnablement` |
 | `editor` | face 1 dynamic tabs (`vault.open`) | M0' chrome | live | `MarkdownEditorPane` (canonical READ half; S1 Present journal write scope only — see §4) | `canon-studio` (read half) |
 | `coordinateTree` | face 1 left border (designated) | M0' chrome | pending | 28.6 owns; navigation currently carried by `bimbaGraph` click-selection + `walk` traversal via the shared coordinate store | `coordinate-tree` |
 | `backendStudio` | face 0/1 (designated, deep-mode) | M0' chrome | pending | 28.13 owns (first-build allowance, §9) | `backend-studio` |
@@ -60,7 +63,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `omniEvidence` | `/` omni border, both faces, tab "Evidence" | M5' chrome | pending-fold | 27.5 owns the body | `evidence-pane` |
 | `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | live | `ReviewBlocksPane` (44.T44.3 — first real data through the Track-44 block standard: genealogy fixture → review-item/evidence/dispatch-genealogy blocks via `BlockHost`; 27.6 extends with live `s5'.review.*` reads + verdict submit under `m5ReviewGate.ts`, which is already live per 08.T8.3) | `review-pane` |
 | `agenticControlRoom` | main tabset (designated, deep render) | M5' chrome | pending | 28.5 owns; GOVERNANCE PRIMARY deep render (§5) | `agentic-control-room` |
-| `autoresearch` | main tabset (designated) | M5' chrome | pending | 28.10 / 28.15 own | `autoresearch-pane` |
+| `autoresearch` | personal main tabset | M5' chrome | live | `AutoresearchPane` (28.T28.10: real `s5'.improve.status/history` reads, profile-tick refresh, honest non-projected pass ordinal, six-capacity filter, dry-run/human-gate disclosure; 28.15 extends) | `autoresearch-pane` |
 | `atelier-commands` | command registry (`atelier.scentFollow` / `atelier.cognateSearch` / `atelier.psychoidTrace`) | M5' chrome | shell | `src/commands/atelier.ts` (16.T16.19; Möbius write-back stage pending, 28.7 — see §4) | `logos-atelier` |
 | `omniGateway` | `/` omni border, both faces, tab "Gateway" | shared infrastructure | pending-fold | 27.7 owns the body | — |
 | `omniDiagnostics` | `/` omni border, both faces, tab "Diagnostics" | shared infrastructure | pending-fold | 27.8 owns the body; `PrivacyDropFeed` destination (28.16) | — |
@@ -84,6 +87,8 @@ The `pending` rows are the doc-ahead half of this contract: when a designated su
 | `omniSessions` | `sessions.list` / `sessions.resolve` via `bridge/sessionClient.ts`. |
 | `atelier-commands` | `s1'.entity.capture` (scent-follow stages a Hen-promotion CANDIDATE — Atelier proposes, Hen reviews), `s1'.semantic.suggest_links`, `s0'.anuttara.trace`. |
 | `omniReview` (fold body, 27.6) | `s5'.review.*` reads; decisions gated by `m5ReviewGate.ts` BEFORE dispatching `s5'.review.submit`. |
+| `kairosEnablement` | `nara.kairos.probe_kerykeion` before preference persistence; `nara.kairos.sync` only after a successful local dependency probe. |
+| `medicineView` | `nara.medicine.snapshot` on shared profile generation; `nara.medicine.pin` only for the explicit NOW pin gesture. This surface never invokes the legacy balance/prescribe methods. |
 | `agenticControlRoom` / `omniDispatchTrace` / `omniEvidence` (bodies pending) | bridge-delivered run/evidence envelopes only, after privacy gating; capability parity via `isMediationCapabilityAllowed` (matrix arrives with 12.10). |
 | every surface | `profile.update` heartbeat + `m123.chime` arrive ONLY through the one `GatewayClient`; events enter the ring (`state/eventsStore.ts`), liveness pulses never do. |
 
@@ -108,7 +113,7 @@ Boundary note: the `editor`'s debounced write-back into `Idea/Empty/Present/...`
 
 **DR-WC-IS-2 — RESOLVED: AGENTIC PRIMARY for the `/` membrane.** The omni border tabs (`omniDispatchTrace`, `omniEvidence`, `omniReview`) render abbreviated, time-ordered, Pi-context state and route intent by click-through; the deep render and the governing action surface belong to the governance-primary panes. Same `MediatedRunEvidencePacket` data, two foldings.
 
-**DR-WC-IS-3 — cross-layout obligation.** Every intent target routes into the same surface id (§2) and preserves the envelope. The **CrossLayoutIntent envelope** field inventory is LAW (frozen `omnipanel-types.ts` lineage): `coordinate` / `artifactUri` / `reviewId` / `dayNow` / `sessionKey` / `profileGeneration` / `privacyClass` / `requestedExtensionId` / `requestedContributionId`. Carrier reading: `requestedExtensionId` addresses the face/border, `requestedContributionId` addresses the §2 surface id. Registration of intent targets is 28.14's lane; handlers route through `commands/registry.ts` (the single intent spine — `vault.open` is the live exemplar).
+**DR-WC-IS-3 — cross-layout obligation.** Every intent target routes into the same surface id (§2) and preserves the envelope. The **CrossLayoutIntent envelope** field inventory is LAW (frozen `omnipanel-types.ts` lineage): `coordinate` / `artifactUri` / `reviewId` / `dayNow` / `sessionKey` / `profileGeneration` / `privacyClass` / `requestedExtensionId` / `requestedContributionId`. Carrier reading: `requestedExtensionId` addresses the M-family receiver and `requestedContributionId` addresses its registered contribution. `src/commands/crossLayoutIntent.ts` is the live 31.T31.10 union ledger and `pratibimba.intent.dispatch` handler; it routes all 45 declared targets through mounted carrier hosts, preserves the nine fields, and carries the contribution id into the selected host rather than silently substituting another pane.
 
 ## 6. Readiness Primitive
 
@@ -154,7 +159,7 @@ Status-strip shared fields (15.10, exactly six): tick generation · day-now · s
 
 Allowed first-build work under this contract (everything else is audit-extend):
 
-- The designated `pending` surfaces of §2: `coordinateTree` (28.6), `agenticControlRoom` (28.5), `autoresearch` (28.10/28.15), `backendStudio` (28.13), `smartConnections` (28.12), `readiness-gate` (28.11).
+- The designated `pending` surfaces of §2: `coordinateTree` (28.6), `agenticControlRoom` (28.5), `backendStudio` (28.13), `smartConnections` (28.12), `readiness-gate` (28.11).
 - The pending omni fold bodies (27.3 / 27.5 / 27.6 / 27.7 / 27.8) inside their already-mounted tabs.
 - `PrivacyDropFeed`, fed only by privacy-safe events and dropped-count metadata (28.16).
 - `CHROME-CONTRACT.md` itself (this tranche, 28.T28.1).

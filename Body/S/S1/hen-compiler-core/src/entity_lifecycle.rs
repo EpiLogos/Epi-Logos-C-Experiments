@@ -348,11 +348,7 @@ fn entity_title_from_source(source: &str) -> Result<String, String> {
     Ok(stem.to_owned())
 }
 
-fn candidate_frontmatter(
-    title: &str,
-    c_layer: &str,
-    creator_identity: Option<&str>,
-) -> Mapping {
+fn candidate_frontmatter(title: &str, c_layer: &str, creator_identity: Option<&str>) -> Mapping {
     let segment = c_layer_segment(c_layer).unwrap_or("Entities-Properties-Tags");
     let mut map = Mapping::new();
     insert_str(&mut map, "coordinate", c_layer);

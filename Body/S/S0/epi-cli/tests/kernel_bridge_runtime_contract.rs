@@ -4,15 +4,17 @@ use epi_logos::gate::{
         capability_names, end_to_end_acceptance_report, extract_typed_json,
         m1_performance_event_from_profile, runtime_for_spacetimedb_plan,
         typed_json_m2_cymatic_monopoly_state, typed_json_m2_planetary_elemental_weights,
-        typed_json_m3_bioquaternion_transcription, typed_json_performance_event_from_profile,
-        typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
-        KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
-        KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
-        GovernanceRole, KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame, OracleSpreadScale,
-        OracleTraversalDirection, SymbolicProtein,
-        ReadingPosition, TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
-        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
-        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, M1_PROFILE_TO_PERFORMANCE_STREAM,
+        typed_json_m3_bioquaternion_transcription, typed_json_m3_lens_codon_binary,
+        typed_json_performance_event_from_profile,
+        typed_json_profile_event_payload, GovernanceRole, KernelBridgeCapabilityRequest,
+        KernelBridgeConsumerKind, KernelBridgePerformanceEventJsonShape,
+        KernelBridgeProfileJsonShape, KernelBridgeRuntimeEventKind, KernelBridgeSubscriber,
+        KernelBridgeSubscriptionProfile, KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame,
+        OracleSpreadScale, OracleTraversalDirection, ReadingPosition, SymbolicProtein,
+        TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
+        KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION, KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
+        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, KERNEL_BRIDGE_M3_LENS_CODON_BINARY,
+        M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
@@ -491,6 +493,31 @@ fn kernel_bridge_names_s2_parashakti_correspondence_capability() {
 }
 
 #[test]
+fn kernel_bridge_preflights_and_executes_m2_epogdoon_projection() {
+    assert!(capability_names().contains(&KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION));
+
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION.to_owned(),
+            session_key: "pratibimba:m2-parashakti".to_owned(),
+            params: json!({ "address72": 17 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("registered epogdoon capability executes through the guarded bridge");
+
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some(KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION)
+    );
+    assert_eq!(receipt.artifact["compressedCodon"], 15);
+    assert_eq!(receipt.artifact["isEvolutionaryGap"], true);
+    assert_eq!(receipt.artifact["expandedBack"], 16);
+}
+
+#[test]
 fn kernel_bridge_surfaces_m2_cymatic_monopoly_state() {
     let fixtures = [
         (1, "mono", 1, 1),
@@ -615,6 +642,79 @@ fn kernel_bridge_surfaces_m3_bioquaternion_transcription_as_one_object() {
         })
         .expect_err("codon outside 0..63 must be rejected by the bridge");
     assert!(err.contains("codon space 0..63"), "{err}");
+}
+
+#[test]
+fn kernel_bridge_surfaces_primary_ground_and_its_sixteen_derived_lenses() {
+    assert!(capability_names().contains(&KERNEL_BRIDGE_M3_LENS_CODON_BINARY));
+
+    let section_counts = [360, 180, 90, 45, 40, 36, 30, 24, 15, 12, 10, 9, 8, 4, 2, 1];
+    for (lens_id, sections) in section_counts.into_iter().enumerate() {
+        let direct = typed_json_m3_lens_codon_binary(lens_id as u8)
+            .expect("all sixteen clock lenses should project");
+        assert_eq!(direct["contract"], KERNEL_BRIDGE_M3_LENS_CODON_BINARY);
+        assert_eq!(direct["lensId"], lens_id);
+        assert_eq!(direct["segment"].as_array().map(Vec::len), Some(sections));
+        assert_eq!(direct["perDegree"].as_array().map(Vec::len), Some(sections));
+        for degree in direct["perDegree"]
+            .as_array()
+            .expect("perDegree boundary records")
+        {
+            assert!(degree.get("elementM3Decan").is_none());
+            assert!(degree["elementCanonical"].as_u64().unwrap() <= 5);
+            assert!(degree["lineChangeOperator"].as_u64().unwrap() <= 5);
+            let keys = degree["charges"]
+                .as_object()
+                .expect("charges object")
+                .keys()
+                .map(String::as_str)
+                .collect::<Vec<_>>();
+            assert_eq!(keys, vec!["nn", "np", "pn", "pp"]);
+        }
+    }
+
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned(),
+            session_key: "carrier:m3-mahamaya".to_owned(),
+            params: json!({ "lensId": 15 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("Unity clock lens should traverse the governed bridge");
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some(KERNEL_BRIDGE_M3_LENS_CODON_BINARY)
+    );
+    assert_eq!(receipt.artifact["segment"], json!([0]));
+
+    let ground = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned(),
+            session_key: "carrier:m3-mahamaya".to_owned(),
+            params: json!({ "lensId": 16 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("Fibonacci Ground is the primary functional lens");
+    assert_eq!(ground.artifact["lensRole"], "primary-ground");
+    assert_eq!(ground.artifact["groundingLensId"], 16);
+    assert_eq!(ground.artifact["segment"].as_array().map(Vec::len), Some(60));
+
+    let error = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned(),
+            session_key: "carrier:m3-mahamaya".to_owned(),
+            params: json!({ "lensId": 17 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect_err("the functional M3 lens namespace closes at Ground id 16");
+    assert!(error.contains("functional M3 lenses 0..16"), "{error}");
 }
 
 /// 37.T37.2 — Ratify `kernelBridge.m2.planetaryElementalWeights()` at the bridge
@@ -752,7 +852,10 @@ fn m2_elemental_and_cymatic_contributions_export_and_route_to_pasu() {
     );
     // Water-dominant kairos (Moon+Venus conjunction) survives into PASU.
     let water = pasu_wire["elementalWeights"]["water"].as_f64().unwrap();
-    assert!(water > 0.5, "water-dominant M2 feed routes to PASU: {water}");
+    assert!(
+        water > 0.5,
+        "water-dominant M2 feed routes to PASU: {water}"
+    );
     assert_eq!(pasu_wire["elementalWeights"]["fire"].as_f64().unwrap(), 0.0);
     // The routed cosmic-public feed keeps the being-pattern projection public-safe.
     assert_being_pattern_public_safe(&pasu_wire)
@@ -868,6 +971,32 @@ fn kernel_bridge_capability_invocation_rejects_missing_vak_and_unsafe_payloads()
         })
         .expect_err("protected private payloads are refused before gateway dispatch");
     assert!(unsafe_payload.contains("rawNaraBody"), "{unsafe_payload}");
+
+    for private_key in [
+        "fieldBody",
+        "rawField",
+        "rawPersonalCymaticPayload",
+        "personalCymaticField",
+        "protectedM4Body",
+        "journalBody",
+    ] {
+        let params = Value::Object(
+            [(private_key.to_owned(), json!("must remain local"))]
+                .into_iter()
+                .collect(),
+        );
+        let rejected = runtime
+            .invoke_capability(KernelBridgeCapabilityRequest {
+                method: "readCurrentProfile".to_owned(),
+                session_key: "agent:anima:main".to_owned(),
+                params,
+                profile_generation: Some(1),
+                provenance_handles: vec!["profile:1".to_owned()],
+                vak: Some(vak_context()),
+            })
+            .expect_err("raw body material must be refused before capability dispatch");
+        assert!(rejected.contains(private_key), "{rejected}");
+    }
 
     let shell_method = runtime
         .invoke_capability(KernelBridgeCapabilityRequest {
@@ -1463,9 +1592,10 @@ fn transcriptional_clock_packet_schema_additive() {
     populated.is_orf_seed = true;
     populated.chain_position = Some(0);
     populated.session_id_ref = Some("session:demo".to_owned());
-    let round =
-        serde_json::from_value::<TranscriptionalClockPacket>(serde_json::to_value(&populated).expect("ser"))
-            .expect("de");
+    let round = serde_json::from_value::<TranscriptionalClockPacket>(
+        serde_json::to_value(&populated).expect("ser"),
+    )
+    .expect("de");
     assert_eq!(round, populated);
 }
 
@@ -1495,25 +1625,33 @@ fn symbolic_protein_chain_invariants() {
 
     // chain positions monotone
     for pair in chain.windows(2) {
-        assert!(pair[0].chain_position < pair[1].chain_position, "chain_position monotone");
+        assert!(
+            pair[0].chain_position < pair[1].chain_position,
+            "chain_position monotone"
+        );
     }
     // ORF seed precedes ORF seal
-    let seed = chain.iter().position(|p| p.is_orf_seed).expect("seed present");
-    let seal = chain.iter().position(|p| p.is_orf_seal).expect("seal present");
+    let seed = chain
+        .iter()
+        .position(|p| p.is_orf_seed)
+        .expect("seed present");
+    let seal = chain
+        .iter()
+        .position(|p| p.is_orf_seal)
+        .expect("seal present");
     assert!(seed < seal, "ORF seed must precede the seal");
 
     // protein start/stop refs bind to the actual seed/seal packets + kairos +
     // mythos ref carry verbatim
     let mut protein = SymbolicProtein {
         protein_id: "protein:chain-demo".to_owned(),
-        sequence: chain[0]
-            .oracle_sequence
-            .clone()
-            .unwrap_or_else(|| epi_logos::gate::kernel_bridge_runtime::OracleSequence {
+        sequence: chain[0].oracle_sequence.clone().unwrap_or_else(|| {
+            epi_logos::gate::kernel_bridge_runtime::OracleSequence {
                 sequence_id: "seq:chain-demo".to_owned(),
                 frame_id: chain[0].oracle_frame.frame_id.clone(),
                 codons: Vec::new(),
-            }),
+            }
+        }),
         reading_frame: chain[0].oracle_frame.clone(),
         start_position_ref: None,
         stop_position_ref: None,
@@ -1534,12 +1672,14 @@ fn symbolic_protein_chain_invariants() {
         card_id: 13,
         label: Some("Death".to_owned()),
     });
-    let round = serde_json::from_value::<SymbolicProtein>(
-        serde_json::to_value(&protein).expect("ser"),
-    )
-    .expect("de");
+    let round =
+        serde_json::from_value::<SymbolicProtein>(serde_json::to_value(&protein).expect("ser"))
+            .expect("de");
     assert_eq!(round, protein);
     assert_eq!(round.start_packet_ref.as_deref(), Some("tcp:chain-0"));
     assert_eq!(round.stop_packet_ref.as_deref(), Some("tcp:chain-2"));
-    assert_eq!(round.mythos_archetype_reading.as_ref().map(|c| c.card_id), Some(13));
+    assert_eq!(
+        round.mythos_archetype_reading.as_ref().map(|c| c.card_id),
+        Some(13)
+    );
 }

@@ -237,7 +237,11 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
             }
             query::run_gnostic_passthrough(&config, &args)
         }
-        GnosisCmd::EpisodeSearch { query: q, vak, group } => {
+        GnosisCmd::EpisodeSearch {
+            query: q,
+            vak,
+            group,
+        } => {
             let mut args = vec!["episode-search", q];
             if let Some(v) = vak.as_deref() {
                 args.extend(["--vak", v]);

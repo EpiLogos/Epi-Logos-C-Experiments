@@ -38,7 +38,9 @@ fn epi_bimba_cli_drives_the_canon_update_runtime_end_to_end() {
         &BimbaCmd::Propose {
             category: "XREF".to_owned(),
             claim: "73 = 36 + 37 = 72 + 1 productive-asymmetry cross-reference".to_owned(),
-            target: Some("Idea/Bimba/Seeds/M/M3'/m3-prime-ql-transcriptional-bridge.md::§2 table".to_owned()),
+            target: Some(
+                "Idea/Bimba/Seeds/M/M3'/m3-prime-ql-transcriptional-bridge.md::§2 table".to_owned(),
+            ),
         },
         true,
     )
@@ -48,8 +50,13 @@ fn epi_bimba_cli_drives_the_canon_update_runtime_end_to_end() {
     assert_eq!(receipt["status"], "surfaced");
 
     // land it — a separate dispatch call re-loads the persisted ledger
-    let out = bimba::dispatch(&BimbaCmd::Land { id: "CU-XREF-1".to_owned() }, true)
-        .expect("epi bimba land");
+    let out = bimba::dispatch(
+        &BimbaCmd::Land {
+            id: "CU-XREF-1".to_owned(),
+        },
+        true,
+    )
+    .expect("epi bimba land");
     let landed: Value = serde_json::from_str(&out).unwrap();
     assert_eq!(landed["status"], "landed");
     assert_eq!(

@@ -6,6 +6,10 @@
   --ink-dim: #9a8fb8;
   --ring: #ebdca0;
   --accent: #7f6ab8;
+  --hairline: #3a2c5c;
+  --ready: #9fd0a8;
+  --danger: #e08a8a;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* ── T30.1 — the organism's one type voice (DR-FACE-7: spine law) ─────────
      Tier structure per design-recon 30.1 content-law (heading 1–4 / body /
@@ -346,6 +350,109 @@ body,
   height: 100%;
 }
 
+.personal-recognition-engine {
+  display: grid;
+  height: 100%;
+  overflow: auto;
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.personal-recognition-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--ground-line);
+}
+
+.personal-recognition-header h2,
+.personal-recognition-header p,
+.personal-recognition-leg h3,
+.personal-recognition-leg p {
+  margin: 0;
+}
+
+.personal-recognition-header p,
+.personal-recognition-leg p {
+  color: var(--ink-dim);
+}
+
+.personal-recognition-legs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--ground-line);
+}
+
+.personal-recognition-leg {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+}
+
+.personal-recognition-leg + .personal-recognition-leg {
+  border-left: 1px solid var(--ground-line);
+}
+
+.personal-recognition-now {
+  min-height: 0;
+}
+
+.m5-recognition-layer {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  column-gap: 0.6rem;
+  align-items: center;
+  margin-block: 0.6rem;
+  color: var(--ink-dim);
+}
+
+.m5-recognition-layer p {
+  margin: 0.1rem 0;
+}
+
+.m5-recognition-ring {
+  grid-row: span 4;
+  position: relative;
+  inline-size: 4.25rem;
+  block-size: 4.25rem;
+  border: 1px solid var(--ground-line);
+  border-radius: 50%;
+}
+
+.m5-recognition-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0.8rem;
+  border: 1px solid var(--ink-dim);
+  border-radius: 50%;
+}
+
+.m5-recognition-ring span {
+  position: absolute;
+  z-index: 1;
+  font-size: var(--type-micro);
+  line-height: 1;
+}
+
+.m5-recognition-ring span:first-child {
+  inset: 0.9rem auto auto 0.45rem;
+}
+
+.m5-recognition-ring span:last-child {
+  inset: auto 0.5rem 0.9rem auto;
+}
+
+@media (max-width: 760px) {
+  .personal-recognition-legs {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-recognition-leg + .personal-recognition-leg {
+    border-top: 1px solid var(--ground-line);
+    border-left: 0;
+  }
+}
+
 .pane-toolbar {
   display: flex;
   gap: 0.6rem;
@@ -533,6 +640,47 @@ body,
   font-size: var(--type-caption);
 }
 
+.coordinate-string {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono);
+}
+
+.provenance-border {
+  border-left: 2px solid var(--hairline);
+  padding-left: 0.5rem;
+}
+
+.provenance-border-pending,
+.provenance-border-review_pending {
+  border-left-color: var(--accent);
+}
+
+.provenance-border-blocked {
+  border-left-color: var(--danger);
+}
+
+.pending-badge,
+.readiness-indicator {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--hairline);
+  font-size: var(--type-caption);
+}
+
+.readiness-ready { color: var(--ready); }
+.readiness-pending { color: var(--accent); }
+.readiness-blocked { color: var(--danger); }
+
+.blocked-overlay {
+  padding: 0.75rem;
+  border: 1px solid var(--danger);
+  color: var(--ink);
+}
+
+.blocked-overlay p {
+  margin: 0 0 0.5rem;
+}
+
 .provenance-derived { color: #9fd0a8; }
 .provenance-inferred { color: #d0c69f; }
 .provenance-pending { color: #d0a89f; }
@@ -611,6 +759,107 @@ body,
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.m0-virtue-witness {
+  border-bottom: 1px solid #2e2247;
+  padding: 0.5rem 0.6rem;
+  background: var(--ground-raised);
+}
+
+.m0-virtue-witness-status {
+  display: flex;
+  align-items: center;
+  min-height: 2.2rem;
+  color: var(--ink-dim);
+  font-size: var(--type-body-small);
+}
+
+.m0-virtue-witness-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+
+.m0-virtue-witness-header h3 {
+  margin: 0;
+  font-size: var(--type-heading-4);
+  font-weight: 600;
+}
+
+.m0-virtue-coherence {
+  min-width: 3.2rem;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  padding: 0.12rem 0.35rem;
+  text-align: center;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: var(--type-caption);
+}
+
+.m0-virtue-coherence-green { color: #9fd0a8; }
+.m0-virtue-coherence-amber { color: #d0c69f; }
+.m0-virtue-coherence-red { color: #e08a8a; }
+
+.m0-virtue-witness-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.m0-virtue-witness-grid li {
+  display: grid;
+  grid-template-columns: 0.65rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m0-virtue-indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid var(--ink-dim);
+  border-radius: 50%;
+}
+
+.m0-virtue-witness-grid li[data-witnessed='true'] {
+  color: var(--ink);
+}
+
+.m0-virtue-witness-grid li[data-witnessed='true'] .m0-virtue-indicator {
+  border-color: var(--ring);
+  background: var(--ring);
+}
+
+.m0-virtue-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 5.5rem;
+  margin-top: 0.45rem;
+  overflow: auto;
+}
+
+.m0-virtue-questions button {
+  border: 0;
+  padding: 0.18rem 0;
+  background: transparent;
+  color: var(--ink-dim);
+  text-align: left;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: var(--type-caption);
+}
+
+.m0-virtue-questions button:not(:disabled) {
+  color: var(--ink);
+  cursor: pointer;
 }
 
 .graph-host {
@@ -1270,6 +1519,347 @@ body,
   padding: 0.4rem 0.6rem;
   border: 1px solid #3a2c5c;
   border-radius: 6px;
+}
+
+/* Autoresearch disclosure surface (28.T28.10) */
+.autoresearch-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  color: var(--ink);
+  font-size: var(--type-body-small);
+}
+
+.autoresearch-concept {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid var(--ring);
+  background: var(--ground-raised);
+}
+
+.autoresearch-concept span,
+.autoresearch-ribbon-counts,
+.autoresearch-tick {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.autoresearch-ribbon {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid #2e2247;
+}
+
+.autoresearch-ribbon-head,
+.autoresearch-candidate-main,
+.autoresearch-candidate-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.autoresearch-dry-run,
+.autoresearch-capacity-badge,
+.autoresearch-human-gate {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid #3a2c5c;
+  border-radius: 4px;
+  font-size: var(--type-caption);
+}
+
+.autoresearch-dry-run {
+  border-color: var(--accent);
+}
+
+.autoresearch-human-gate {
+  border-color: var(--ring);
+  color: var(--ring);
+}
+
+.autoresearch-stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  list-style: none;
+  padding: 0;
+  margin: 0.45rem 0;
+}
+
+.autoresearch-stages li {
+  padding: 0.3rem;
+  border-bottom: 2px solid #3a2c5c;
+  text-align: center;
+  color: var(--ink-dim);
+}
+
+.autoresearch-stages li[data-active='true'] {
+  border-color: var(--ring);
+  color: var(--ring);
+}
+
+.autoresearch-toolbar {
+  gap: 0.45rem;
+}
+
+.autoresearch-tick {
+  margin-left: auto;
+}
+
+.autoresearch-candidates {
+  display: flex;
+  flex-direction: column;
+}
+
+.autoresearch-candidate {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid #2e2247;
+}
+
+.autoresearch-candidate-main code {
+  color: var(--ring);
+}
+
+.autoresearch-candidate-main > span {
+  color: var(--ink-dim);
+}
+
+.autoresearch-error {
+  color: var(--ring);
+}
+
+/* ── Kairos enablement (32.T32.10) ─────────────────────────────── */
+
+.kairos-enablement-pane {
+  display: grid;
+  grid-template-rows: auto minmax(10rem, auto) auto auto;
+  align-content: start;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1rem;
+  background: var(--ground);
+}
+
+.kairos-enablement-header,
+.kairos-enablement-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.kairos-enablement-header {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.75rem;
+}
+
+.kairos-enablement-header > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.kairos-enablement-header span,
+.kairos-card-progress {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.kairos-enablement-card {
+  max-width: 46rem;
+  padding: 0.9rem;
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--ground-raised);
+}
+
+.kairos-enablement-card h2 {
+  margin: 0 0 0.55rem;
+  font-size: var(--type-heading-3);
+}
+
+.kairos-enablement-card p {
+  max-width: 68ch;
+  margin: 0;
+  color: var(--ink-dim);
+  line-height: 1.55;
+}
+
+.kairos-relay-indicator {
+  max-width: 46rem;
+  padding: 0.55rem 0.7rem;
+  border-left: 3px solid var(--hairline);
+  color: var(--ink-dim);
+}
+
+.kairos-relay-indicator[data-state='enabled'],
+.kairos-relay-indicator[data-state='unavailable'] {
+  border-left-color: var(--ring);
+  color: var(--ink);
+}
+
+.kairos-enablement-actions {
+  flex-wrap: wrap;
+}
+
+/* ── Medicine view (25.T25.10) ─────────────────────────────────── */
+
+.medicine-pane {
+  min-height: 100%;
+  padding: 1rem;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+.medicine-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.medicine-header > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.medicine-header span,
+.medicine-header p,
+.medicine-evidence-note {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.medicine-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 0.85rem;
+  border: 1px solid var(--hairline);
+}
+
+.medicine-panel {
+  min-width: 0;
+  padding: 0.85rem;
+}
+
+.medicine-panel + .medicine-panel {
+  border-top: 1px solid var(--hairline);
+}
+
+.medicine-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: var(--type-heading-3);
+}
+
+.medicine-chakras > ol,
+.medicine-zone-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.medicine-chakras > ol > li {
+  border-top: 1px solid var(--hairline);
+}
+
+.medicine-chakras > ol > li[data-active='true'] {
+  border-left: 3px solid #d6ad4a;
+  background: color-mix(in srgb, #d6ad4a 10%, transparent);
+}
+
+.medicine-chakra-toggle {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  width: 100%;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.55rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.medicine-chakra-toggle small {
+  color: var(--ink-dim);
+}
+
+.medicine-zone-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0 0.55rem 0.6rem 2.5rem;
+}
+
+.medicine-zone-list li {
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+}
+
+.medicine-decan-reading {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+}
+
+.medicine-decan-index {
+  color: #d6ad4a;
+  font-size: var(--type-caption);
+}
+
+.medicine-planet {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.medicine-planet b {
+  font-size: var(--type-glyph);
+}
+
+.medicine-herb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.medicine-herb > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.medicine-herb em {
+  color: var(--ink-dim);
+}
+
+.medicine-evidence-note {
+  margin-top: 1rem;
+  line-height: 1.45;
+}
+
+.medicine-error {
+  padding: 0.5rem 0;
+  color: var(--ring);
+}
+
+@media (max-width: 860px) {
+  .medicine-header {
+    align-items: start;
+    flex-direction: column;
+  }
+
 }
 
 /* ── Pi chat membrane surface (27.T27.1) ─────────────────────────── */

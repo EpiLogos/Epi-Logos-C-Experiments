@@ -38,6 +38,8 @@ Chronos is the **temporal authority** of the agent system. It owns the Day/NOW l
 | `chronos_aeon_fire` | Invoke a scheduled [[Aeon]] with bound [[VakAddress]] args and CPF consent enforcement |
 | `chronos_aeon_on_event_fire` | Invoke an [[Aeon]] when a matching Khora result-drop `on_event` wake lands |
 | `chronos_temporal_status` | Current Day, active NOWs, archive backlog |
+| `chronos_response_orbit` | Schedule `immediate`, `hours:N`, `next-morning`, or `saturnine` through the gateway cron store and return the binding response token |
+| `chronos_reentry` | On rhythm re-entry, join Hen content delta, Janus spread delta, and Mercurius kairos delta, then request a top `retrospective-surfacing` inscription from Khora |
 
 ---
 

@@ -205,10 +205,56 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
     // the four depth views switch and read bus-backed values
     await page.getByTestId('m3-depth-lens-annulus').click();
     await expect(page.getByTestId('m3-depth-readout')).toContainText(/lens \d+ · mode \d+ · 472:\d+/);
+
+    // 37.T37.8 correction: the +1 is the PRIMARY functional lens, not a
+    // decorative ring beside the sixteen. The pane requests it from the real
+    // gateway by default, then proves a derived aperture carries its Ground
+    // address rather than operating independently.
+    const functionalLens = page.getByTestId('m3-functional-lens-select');
+    await expect(functionalLens).toHaveValue('16');
+    await expect(page.getByTestId('m3-functional-lens-readout')).toContainText(
+        'Fibonacci Ground · primary · 60 positions',
+        { timeout: 20_000 }
+    );
+    await functionalLens.selectOption('7');
+    await expect(page.getByTestId('m3-functional-lens-readout')).toContainText(
+        'Hourly · derived through Ground 16 · 24 boundaries',
+        { timeout: 20_000 }
+    );
+    await expect(page.getByTestId('m3-functional-lens-readout')).toContainText(/fib \d+ · digit \d/);
+
     await page.getByTestId('m3-depth-toroidal-world').click();
     await expect(page.getByTestId('m3-depth-readout')).toContainText(/degree720 \d+ · sheet [01]/);
     await page.getByTestId('m3-depth-hopf-identity').click();
     await expect(page.getByTestId('m3-depth-readout')).toContainText(/identity returns at 720°/);
+});
+
+test('cosmic face: the Bases pane evaluates live S1 MOC membership through the vault sidecar (48.T48.4)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Bases' })
+        .click();
+
+    const pane = page.locator('.face-active [data-testid="moc-base-ready"]');
+    await expect(pane).toBeVisible({ timeout: 20_000 });
+
+    const membership = page.getByTestId('moc-base-section-what-belongs-here');
+    await expect(membership).toContainText('1 rows');
+    await expect(membership).toContainText('S1');
+    await expect(membership).toContainText('definition');
+    await expect(membership).toContainText('Bimba/World/Types/Coordinates/S/S1/S1.md');
+
+    const gaps = page.getByTestId('moc-base-section-open-gaps');
+    await expect(gaps).toContainText('0 rows');
+
+    const pipeline = page.getByTestId('moc-base-section-crystallisation-pipeline');
+    await expect(pipeline).toContainText('1 rows');
+    await expect(pipeline).toContainText('3 views');
+    await expect(pipeline).toContainText('Bimba/World/Types/Crystallisation-Pipeline.base');
 });
 
 test('cosmic face: the Walk pane walks the REAL graph and the # invert round-trips X → X′ → X', async ({

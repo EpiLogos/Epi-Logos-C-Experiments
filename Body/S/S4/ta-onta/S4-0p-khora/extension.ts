@@ -27,6 +27,18 @@ import {
   writeSessionWorkspaceAtomically,
   type GatewaySessionProjection,
 } from "./modules/session-workspace.ts";
+import {
+  AGENT_HIGHLIGHT_CATEGORIES,
+  enqueueKhoraSyncEvent,
+  khora_write_highlighted_inscription,
+  type KhoraHighlightedInscriptionInput,
+} from "./modules/highlighted-inscription.ts";
+
+export {
+  khora_write_highlighted_inscription,
+  type KhoraAgentHighlightCategory,
+  type KhoraHighlightedInscriptionInput,
+} from "./modules/highlighted-inscription.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
@@ -40,84 +52,6 @@ let _m4ProteinClosed = false;
 export function getSessionId() { return _sessionId ?? process.env.EPI_SESSION_ID ?? null; }
 export function getDayId()     { return _dayId     ?? process.env.EPI_DAY_ID     ?? null; }
 export function getNowPath()   { return _nowPath   ?? process.env.EPI_NOW_PATH   ?? null; }
-
-const AGENT_HIGHLIGHT_CATEGORIES = Object.freeze([
-  "recognition",
-  "prospective-surfacing",
-  "retrospective-surfacing",
-  "kairos-touch",
-  "somatic-mark",
-  "live-spread",
-] as const);
-
-export type KhoraAgentHighlightCategory = (typeof AGENT_HIGHLIGHT_CATEGORIES)[number];
-
-export interface KhoraHighlightedInscriptionInput {
-  readonly path: string;
-  readonly category: KhoraAgentHighlightCategory;
-  readonly position?: "top" | "bottom";
-  readonly content: string;
-  readonly response_token: string;
-  readonly coordinate?: string;
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function escapeAttribute(value: string): string {
-  return escapeHtml(value).replace(/"/g, "&quot;");
-}
-
-function highlightedInscriptionBlock(input: KhoraHighlightedInscriptionInput): string {
-  const timestamp = Date.now();
-  const highlightId = `agent_${input.response_token.replace(/[^a-zA-Z0-9_-]/g, "_")}_${timestamp}`;
-  const safeContent = escapeHtml(input.content.trim());
-  return [
-    `<mark class="m4-nara-highlight m4-nara-highlight-${input.category}" data-highlight-id="${highlightId}" data-category="${input.category}" data-timestamp="${timestamp}" data-original-text="${escapeAttribute(input.content.trim())}" data-highlight-label="${escapeAttribute(input.response_token)}">`,
-    safeContent,
-    "</mark>",
-    "",
-  ].join("\n");
-}
-
-export async function khora_write_highlighted_inscription(
-  input: KhoraHighlightedInscriptionInput,
-): Promise<{ path: string; response_token: string; category: KhoraAgentHighlightCategory }> {
-  if (!AGENT_HIGHLIGHT_CATEGORIES.includes(input.category)) {
-    throw new Error(`Unsupported agent highlight category: ${input.category}`);
-  }
-  if (!input.path.trim()) throw new Error("path is required");
-  if (!input.content.trim()) throw new Error("content is required");
-  if (!input.response_token.trim()) throw new Error("response_token is required");
-
-  mkdirSync(dirname(input.path), { recursive: true });
-  const existing = existsSync(input.path) ? readFileSync(input.path, "utf8") : "";
-  const block = highlightedInscriptionBlock(input);
-  const next =
-    input.position === "bottom"
-      ? `${existing.trimEnd()}\n\n${block}`
-      : `${block}${existing.replace(/^\s*/, "")}`;
-
-  writeFileSync(input.path, next, "utf8");
-  await enqueue_sync_event({
-    path: input.path,
-    coordinate: input.coordinate,
-    action: "write",
-  });
-  appendFileSync(join(process.env.EPI_REPO_ROOT || ".", ".khora-highlight-events.jsonl"), JSON.stringify({
-    ts: new Date().toISOString(),
-    path: input.path,
-    category: input.category,
-    response_token: input.response_token,
-    source: "khora_write_highlighted_inscription",
-  }) + "\n", "utf8");
-
-  return { path: input.path, response_token: input.response_token, category: input.category };
-}
 
 function dailyNotePath(dayId: string | null): string | null {
   if (!dayId) return null;
@@ -334,13 +268,13 @@ export async function khoraExtension(api: ExtensionAPI) {
           const workspace = parseSessionWorkspace(params.content);
           if (workspace.harness) {
             writeSessionWorkspaceAtomically(params.path, workspace, "khora_write");
-            await enqueue_sync_event({ path: params.path, coordinate: params.coordinate, action: "write" });
+            await enqueueKhoraSyncEvent({ path: params.path, coordinate: params.coordinate, action: "write" });
             return { content: [{ type: "text", text: `wrote ${params.path}` }] };
           }
         }
         writeFileSync(params.path, params.content, "utf8");
         // Enqueue graph sync event
-        await enqueue_sync_event({ path: params.path, coordinate: params.coordinate, action: "write" });
+        await enqueueKhoraSyncEvent({ path: params.path, coordinate: params.coordinate, action: "write" });
         // PASU.md writes trigger identity propagation: wind → Graphiti IdentityEvent
         if (params.path.endsWith("PASU.md")) {
           spawnSync("epi", ["nara", "wind", "--profile"], { encoding: "utf8" });
@@ -393,7 +327,7 @@ export async function khoraExtension(api: ExtensionAPI) {
       action: Type.Union([Type.Literal("write"), Type.Literal("delete"), Type.Literal("move")]),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      await enqueue_sync_event(params);
+      await enqueueKhoraSyncEvent(params);
       return { content: [{ type: "text", text: "queued" }] };
     },
   });
@@ -688,11 +622,4 @@ export async function khoraExtension(api: ExtensionAPI) {
       spawnSync("sh", [hookPath], { stdio: "inherit" });
     }
   });
-}
-
-// Internal helper
-async function enqueue_sync_event(event: { path: string; coordinate?: string; action: string }) {
-  const queuePath = join(process.env.EPI_REPO_ROOT || ".", ".khora-sync-queue.jsonl");
-  const line = JSON.stringify({ ...event, ts: new Date().toISOString() }) + "\n";
-  appendFileSync(queuePath, line, "utf8");
 }

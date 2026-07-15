@@ -26,7 +26,16 @@ pub fn ingest(state_root: &Path, params: &Value) -> Result<Value, String> {
     // 12.T12.2 (c): TerminalBinding carried through gnostic dispatch — a
     // persistent ingest running under a terminal lease names it in the
     // params; an expired/missing lease refuses recoverably BEFORE any shell.
-    if let Some(lease_id) = optional_str_alias(params, &["terminalLeaseId", "terminal_lease_id", "leaseId", "sessionKey", "session_key"]) {
+    if let Some(lease_id) = optional_str_alias(
+        params,
+        &[
+            "terminalLeaseId",
+            "terminal_lease_id",
+            "leaseId",
+            "sessionKey",
+            "session_key",
+        ],
+    ) {
         match validate_lease(state_root, &lease_id) {
             TerminalLeaseStatus::Live { .. } => {}
             TerminalLeaseStatus::Expired { expired_for_ms } => {
@@ -91,13 +100,25 @@ pub fn notebook(params: &Value) -> Result<Value, String> {
 }
 
 pub fn resolve(params: &Value) -> Result<Value, String> {
-    let reference = required_str_alias(params, &["coord", "coordinate", "ref", "passageId", "passage_id", "id"])?;
+    let reference = required_str_alias(
+        params,
+        &[
+            "coord",
+            "coordinate",
+            "ref",
+            "passageId",
+            "passage_id",
+            "id",
+        ],
+    )?;
     run_gnostic(["resolve".to_owned(), reference])
 }
 
 pub fn candidates(params: &Value) -> Result<Value, String> {
     let mut args = vec!["candidates".to_owned()];
-    if let Some(filter) = optional_str_alias(params, &["filter", "candidateFilter", "candidate_filter"]) {
+    if let Some(filter) =
+        optional_str_alias(params, &["filter", "candidateFilter", "candidate_filter"])
+    {
         args.push("--filter".to_owned());
         args.push(filter);
     }
@@ -111,7 +132,10 @@ pub fn etymology(params: &Value) -> Result<Value, String> {
 
 pub fn list_notebooks(params: &Value) -> Result<Value, String> {
     let mut args = vec!["list-notebooks".to_owned()];
-    if let Some(coord) = optional_str_alias(params, &["coordFilter", "coord_filter", "coordinate", "coord"]) {
+    if let Some(coord) = optional_str_alias(
+        params,
+        &["coordFilter", "coord_filter", "coordinate", "coord"],
+    ) {
         args.push("--coordinate".to_owned());
         args.push(coord);
     }
@@ -197,10 +221,8 @@ mod lease_gate_tests {
 
     #[test]
     fn ingest_refuses_recoverably_when_the_named_lease_is_missing() {
-        let root = std::env::temp_dir().join(format!(
-            "epi-gnostic-lease-test-{}",
-            std::process::id()
-        ));
+        let root =
+            std::env::temp_dir().join(format!("epi-gnostic-lease-test-{}", std::process::id()));
         std::fs::create_dir_all(&root).unwrap();
         let err = ingest(
             &root,
@@ -216,10 +238,8 @@ mod lease_gate_tests {
     fn ingest_without_a_lease_param_skips_the_lease_gate() {
         // No lease named → the gate does not apply (non-persistent call);
         // the next refusal is the ordinary missing-source parameter error.
-        let root = std::env::temp_dir().join(format!(
-            "epi-gnostic-nolease-test-{}",
-            std::process::id()
-        ));
+        let root =
+            std::env::temp_dir().join(format!("epi-gnostic-nolease-test-{}", std::process::id()));
         std::fs::create_dir_all(&root).unwrap();
         let err = ingest(&root, &json!({})).expect_err("missing source must refuse");
         assert!(err.contains("missing required string parameter"), "{err}");

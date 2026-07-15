@@ -94,7 +94,10 @@ fn pithy_carries_definition_and_integration_registers_from_live_node() {
         "pithy must only carry positions 1 and 5, got {regs:?}"
     );
     // canonical pithy order is q_5 then q_1 — the first register is position 5.
-    assert_eq!(regs[0].0, 5, "pithy must lead with the q_5 integration register");
+    assert_eq!(
+        regs[0].0, 5,
+        "pithy must lead with the q_5 integration register"
+    );
     // the live S3 q_5 prose (control-plane closure) must reach content.
     let content = json["content"].as_str().unwrap_or_default().to_lowercase();
     assert!(
@@ -148,7 +151,10 @@ fn qv_detail_is_a_superset_of_pithy_and_orders_all_registers() {
         "qv-detail content ({qv_len}) must be >= pithy content ({pithy_len})"
     );
     // provenance surface is present (may be empty when the node carries no qm_).
-    assert!(qv["provenance"].is_array(), "qv-detail must expose provenance");
+    assert!(
+        qv["provenance"].is_array(),
+        "qv-detail must expose provenance"
+    );
 }
 
 #[test]

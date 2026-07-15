@@ -8,7 +8,7 @@
  */
 
 import { execFileSync, spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { connect } from 'node:net';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -18,6 +18,7 @@ import {
     E2E_GATEWAY_PORT,
     E2E_SIDECAR_PORT,
     EPI_BIN,
+    REPO_ROOT,
     RUN_STATE_FILE,
     type E2eRunState
 } from './e2e-env';
@@ -95,7 +96,7 @@ function ensureChromium(): void {
 export default async function globalSetup(): Promise<void> {
     if (!existsSync(EPI_BIN)) {
         throw new Error(
-            `[e2e-setup] epi debug binary missing at ${EPI_BIN} — build it: cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml`
+            `[e2e-setup] epi debug binary missing at ${EPI_BIN} — build the shared target: cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml`
         );
     }
     ensureChromium();
@@ -126,6 +127,21 @@ export default async function globalSetup(): Promise<void> {
     // (c) the temp-vault sidecar over a REAL mkdtemp filesystem
     const vaultRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-vault-'));
     mkdirSync(join(vaultRoot, 'Empty', 'Present'), { recursive: true });
+
+    // Seed the S1 MOC, its canvas-hosted Base, and one real matching record
+    // from the repository vault. The browser still reads/evaluates them through
+    // the production vault sidecar; these are real artifacts, not test doubles.
+    const vaultArtifacts = [
+        'Bimba/World/Types/Coordinates/S/S1/S1.md',
+        'Bimba/World/Types/Coordinates/S/S1/S1.canvas',
+        'Bimba/World/Types/Crystallisation-Pipeline.base',
+        'Bimba/World/Types/Psychoids/Psychoids.md'
+    ];
+    for (const artifact of vaultArtifacts) {
+        const destination = join(vaultRoot, artifact);
+        mkdirSync(dirname(destination), { recursive: true });
+        copyFileSync(join(REPO_ROOT, 'Idea', artifact), destination);
+    }
 
     // (d) isolated nara home for the REAL `epi nara oracle cast` — the cast's
     // temporal-authority gate needs a fresh kairos cache (normally written by

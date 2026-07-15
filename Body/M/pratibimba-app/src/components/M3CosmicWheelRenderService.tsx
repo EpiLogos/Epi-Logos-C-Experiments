@@ -7,17 +7,21 @@
  *   coloured by the bussed codonClass, the active cell luminous with its
  *   rotation arrow, the 22 Major-Arcana inner-ring SLOTS (the arcana map
  *   itself is kernel-owned and not yet bussed — rendered honest-pending,
- *   never from a local table), and the Quintessence centre slot (the
- *   indicator body is Tranche 24.11's). Refuses to render when the surface
+ *   never from a local table), and the Quintessence centre audit over the
+ *   optional authority-provided charge quaternion (Tranche 24.11). Refuses to render when the surface
  *   is not ready and falls through to the pending banner.
  * Does NOT own: the profile cache or tick store (callers build the surface
  *   via `buildM3WheelSurface`), codon/arcana/hexagram tables (kernel via
- *   bus only), the QuintessenceIndicator body (24.11), depth views (24.2+).
+ *   bus only), charge-quaternion computation, depth views (24.2+).
  */
 
 import { useEffect } from 'react';
 import { CL42_PALETTE, ProvenanceBadge } from '../ui/primitives';
 import { ringLit, wheelUnlit } from '../ui/tokens';
+import {
+    ChargeQuaternionBoundary,
+    QuintessenceIndicator
+} from './QuintessenceIndicator';
 
 export interface M3WheelProjection {
     readonly codonId: number;
@@ -43,6 +47,12 @@ export interface M3WheelSurface {
     readonly tick12: number | null;
     readonly degree720: number | null;
     readonly generation: number;
+    readonly chargeQuaternion: ChargeQuaternionBoundary | null;
+    readonly quintessenceState:
+        | 'ready'
+        | 'pending-charge-quaternion'
+        | 'authority_payload_missing'
+        | 'authority_payload_invariant_violation';
 }
 
 export interface M3CosmicWheelRenderServiceProps {
@@ -65,6 +75,45 @@ function str(value: unknown): string | null {
     return typeof value === 'string' ? value : null;
 }
 
+function chargeQuaternionFromMahamaya(
+    mahamaya: Record<string, unknown> | null
+): { charge: ChargeQuaternionBoundary | null; present: boolean } {
+    const candidate = mahamaya?.chargeQuaternion;
+    if (candidate === undefined || candidate === null) {
+        return { charge: null, present: false };
+    }
+    const value = objectValue(candidate);
+    if (!value) {
+        return { charge: null, present: true };
+    }
+    const pp = num(value.pp);
+    const mm = num(value.mm);
+    const mp = num(value.mp);
+    const pm = num(value.pm);
+    const fourX = num(value.fourX);
+    if (
+        pp === null ||
+        mm === null ||
+        mp === null ||
+        pm === null ||
+        fourX === null ||
+        typeof value.chargeQuaternionInvariant !== 'boolean'
+    ) {
+        return { charge: null, present: true };
+    }
+    return {
+        charge: Object.freeze({
+            pp,
+            mm,
+            mp,
+            pm,
+            fourX,
+            chargeQuaternionInvariant: value.chargeQuaternionInvariant
+        }),
+        present: true
+    };
+}
+
 /** Pure builder: bussed profile payload → wheel surface. Reads the same
  *  windows as m3Inspectors.ts (codonRotationProjection + mahamaya + clock);
  *  absence is pending, never fabricated. */
@@ -77,6 +126,14 @@ export function buildM3WheelSurface(input: {
         input.payload;
     const crp = objectValue(root.codonRotationProjection);
     const mahamaya = objectValue(root.mahamaya);
+    const chargeRead = chargeQuaternionFromMahamaya(mahamaya);
+    const quintessenceState = !chargeRead.present
+        ? ('pending-charge-quaternion' as const)
+        : chargeRead.charge === null
+          ? ('authority_payload_missing' as const)
+          : chargeRead.charge.chargeQuaternionInvariant
+            ? ('ready' as const)
+            : ('authority_payload_invariant_violation' as const);
     const codonId = crp ? num(crp.codonId) : null;
 
     const activeProjection: M3WheelProjection | null =
@@ -97,14 +154,25 @@ export function buildM3WheelSurface(input: {
 
     return Object.freeze({
         readiness: Object.freeze({
-            surfaceReady: activeProjection !== null,
-            reason: activeProjection === null ? 'pending-codon-rotation-projection' : null
+            surfaceReady:
+                activeProjection !== null &&
+                quintessenceState !== 'authority_payload_missing' &&
+                quintessenceState !== 'authority_payload_invariant_violation',
+            reason:
+                activeProjection === null
+                    ? 'pending-codon-rotation-projection'
+                    : quintessenceState === 'authority_payload_missing' ||
+                        quintessenceState === 'authority_payload_invariant_violation'
+                      ? 'authority_payload_missing'
+                      : null
         }),
         activeProjection,
         majorArcana: 'pending-major-arcana-map' as const,
         tick12: num(root.tick12),
         degree720: num(root.degree720),
-        generation: input.generation
+        generation: input.generation,
+        chargeQuaternion: chargeRead.charge,
+        quintessenceState
     });
 }
 
@@ -136,7 +204,7 @@ export function M3CosmicWheelRenderService({
     }, [tickHandler, tick12, degree720]);
 
     // Composition guard: no ready surface, no wheel — honest pending only.
-    if (!surface.readiness.surfaceReady || surface.activeProjection === null) {
+    if (surface.activeProjection === null) {
         const reason = surface.readiness.reason ?? 'pending-codon-rotation-projection';
         return (
             <p className="mext-widget-empty" data-testid="m3-wheel-pending" data-reason={reason}>
@@ -221,6 +289,7 @@ export function M3CosmicWheelRenderService({
             data-mode={mode}
             data-codon-id={projection.codonId}
             data-generation={surface.generation}
+            data-readiness={surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason}
         >
             <svg
                 viewBox={`0 0 ${size} ${size}`}
@@ -260,25 +329,33 @@ export function M3CosmicWheelRenderService({
                         strokeWidth={mode === 'badge' ? 1 : 2}
                     />
                 ) : null}
-                {mode === 'full' ? (
-                    <circle
-                        data-testid="m3-wheel-quintessence"
-                        cx={c}
-                        cy={c}
-                        r={size * 0.03}
-                        fill={hex(CL42_PALETTE.implicateIndigo)}
-                        opacity={0.9}
-                    />
-                ) : null}
+                <QuintessenceIndicator
+                    surface={surface}
+                    cx={c}
+                    cy={c}
+                    radius={size * (mode === 'badge' ? 0.16 : 0.12)}
+                />
             </svg>
             {showArcana ? (
                 <figcaption data-testid="m3-wheel-arcana-pending">
                     <ProvenanceBadge state="pending" reason={surface.majorArcana} />
                     arcana ring: slots only — {surface.majorArcana} (WC-M3-SA-2)
-                    {mode === 'full' ? (
+                    {mode === 'full' && surface.quintessenceState === 'pending-charge-quaternion' ? (
                         <span data-testid="m3-wheel-quintessence-pending">
                             {' '}
                             · centre: pending-quintessence-indicator (24.11)
+                        </span>
+                    ) : null}
+                    {surface.quintessenceState === 'authority_payload_invariant_violation' ? (
+                        <span data-testid="m3-quintessence-invariant-violation">
+                            {' '}
+                            · authority_payload_invariant_violation
+                        </span>
+                    ) : null}
+                    {surface.quintessenceState === 'authority_payload_missing' ? (
+                        <span data-testid="m3-quintessence-authority-missing">
+                            {' '}
+                            · authority_payload_missing
                         </span>
                     ) : null}
                 </figcaption>

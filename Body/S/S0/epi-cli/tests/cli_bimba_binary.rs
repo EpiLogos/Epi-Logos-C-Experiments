@@ -69,7 +69,11 @@ fn epi_bimba_binary_drives_full_lifecycle_and_persists_to_disk() {
 
     // ── list (process #2 re-loads the persisted ledger) ─────────────────
     let out = run_epi(&["--json", "bimba", "list"], &env);
-    assert!(out.status.success(), "list must exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "list must exit 0; stderr={}",
+        out.stderr
+    );
     let rows: Value = serde_json::from_str(out.stdout.trim()).expect("list stdout must be JSON");
     let rows = rows.as_array().expect("list is a JSON array");
     assert_eq!(rows.len(), 1, "exactly the one surfaced row");
@@ -77,14 +81,22 @@ fn epi_bimba_binary_drives_full_lifecycle_and_persists_to_disk() {
 
     // ── show (process #3) — status is still surfaced ────────────────────
     let out = run_epi(&["--json", "bimba", "show", "CU-XREF-1"], &env);
-    assert!(out.status.success(), "show must exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "show must exit 0; stderr={}",
+        out.stderr
+    );
     let shown: Value = serde_json::from_str(out.stdout.trim()).expect("show stdout must be JSON");
     assert_eq!(shown["status"], "surfaced");
     assert_eq!(shown["category"], "xref");
 
     // ── land (process #4) — authors the canon-update marker ─────────────
     let out = run_epi(&["--json", "bimba", "land", "CU-XREF-1"], &env);
-    assert!(out.status.success(), "land must exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "land must exit 0; stderr={}",
+        out.stderr
+    );
     let landed: Value = serde_json::from_str(out.stdout.trim()).expect("land stdout must be JSON");
     assert_eq!(landed["status"], "landed");
     assert_eq!(
@@ -102,7 +114,11 @@ fn epi_bimba_binary_drives_full_lifecycle_and_persists_to_disk() {
 
     // ── list --status landed (process #5) filters to the landed row ─────
     let out = run_epi(&["--json", "bimba", "list", "--status", "landed"], &env);
-    assert!(out.status.success(), "filtered list exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "filtered list exit 0; stderr={}",
+        out.stderr
+    );
     let rows: Value =
         serde_json::from_str(out.stdout.trim()).expect("filtered list stdout must be JSON");
     let rows = rows.as_array().expect("list is a JSON array");
@@ -120,13 +136,23 @@ fn epi_bimba_binary_drives_full_lifecycle_and_persists_to_disk() {
         ],
         &env,
     );
-    assert!(out.status.success(), "second propose exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "second propose exit 0; stderr={}",
+        out.stderr
+    );
     let receipt: Value =
         serde_json::from_str(out.stdout.trim()).expect("second propose stdout JSON");
     assert_eq!(receipt["id"], "CU-FORM-1");
 
     let out = run_epi(
-        &["--json", "bimba", "refuse", "CU-FORM-1", "parked pending review"],
+        &[
+            "--json",
+            "bimba",
+            "refuse",
+            "CU-FORM-1",
+            "parked pending review",
+        ],
         &env,
     );
     assert!(out.status.success(), "refuse exit 0; stderr={}", out.stderr);
@@ -135,7 +161,11 @@ fn epi_bimba_binary_drives_full_lifecycle_and_persists_to_disk() {
 
     // A final show confirms the refused row survives across process boundaries.
     let out = run_epi(&["--json", "bimba", "show", "CU-FORM-1"], &env);
-    assert!(out.status.success(), "final show exit 0; stderr={}", out.stderr);
+    assert!(
+        out.status.success(),
+        "final show exit 0; stderr={}",
+        out.stderr
+    );
     let shown: Value = serde_json::from_str(out.stdout.trim()).expect("final show stdout JSON");
     assert_eq!(shown["status"], "refused");
 }
@@ -158,8 +188,7 @@ fn epi_bimba_binary_rejects_unknown_category_with_nonzero_exit() {
         out.stderr
     );
     assert!(
-        out.stderr.contains("bimba error")
-            && out.stderr.contains("unknown canon-update category"),
+        out.stderr.contains("bimba error") && out.stderr.contains("unknown canon-update category"),
         "stderr must name the unknown-category failure: {}",
         out.stderr
     );

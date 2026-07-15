@@ -1042,6 +1042,7 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
     } else if authority.contains("gate/")
         || authority.contains("src/gate ")
         || authority.contains("portal-core::parashakti::cymatic_invert")
+        || authority.contains("portal-core::lens_codon_binary_projection")
     {
         Some(RouteMetadata {
             owner: GatewayDispatchOwner::S0ProductAdapter,

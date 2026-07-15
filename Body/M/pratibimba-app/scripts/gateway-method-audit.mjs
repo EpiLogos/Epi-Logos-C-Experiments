@@ -42,19 +42,19 @@ const DEFAULT_PORT = 18923;
  */
 export const CYCLE3_FAMILY_PREFIXES = [
     "s0'.", "s0.", "s1'.", "s1.", "s2'.", "s2.", "s3'.", "s3.", "s4'.", "s4.",
-    "s5'.", "s5.", 'm4.arena.', 'm2.', 'm3.', 'contemplate_',
+    "s5'.", "s5.", 'm4.arena.', 'm2.', 'm3.', 'kernelBridge.', 'contemplate_',
     'sessions.', 'session.', 'cron.', 'chat.', 'channels.', 'config.',
     'skills.', 'models.', 'nara.', 'graph.', 'wizard.', 'tts.', 'voicewake.',
     'exec.', 'device.', 'node.', 'usage.',
 ];
 
-const METHOD_TOKEN_RE = /[a-zA-Z0-9_'.*-]+/g;
+const METHOD_TOKEN_RE = /[a-zA-Z0-9_'.*-]+(?:\([a-zA-Z0-9_,]*\))?/g;
 
 /** Extract cycle-3 method-name tokens from one plan document (quoted or bare). */
 export function extractMethodNames(text) {
     const names = new Set();
     for (const match of text.matchAll(METHOD_TOKEN_RE)) {
-        let token = match[0].replace(/^\.+|\.+$/g, '');
+        let token = match[0].replace(/^[.']+|[.']+$/g, '');
         if (/^\d/.test(token)) continue;
         if (token.includes('*') || token.includes('-') || token.includes('..')) continue;
         if (!token.includes('.') && !token.startsWith('contemplate_')) continue;

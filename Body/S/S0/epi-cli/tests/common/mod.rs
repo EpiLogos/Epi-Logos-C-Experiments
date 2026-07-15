@@ -40,10 +40,7 @@ impl TestEnv {
             // daemon (the agent-lane preflight does exactly that and leaked
             // orphan `epi gate start` processes that poisoned later runs).
             // Tests that want a real gateway spawn one explicitly and guard it.
-            extra_env: vec![(
-                "EPI_AGENT_GATEWAY_PREFLIGHT".to_owned(),
-                "skip".to_owned(),
-            )],
+            extra_env: vec![("EPI_AGENT_GATEWAY_PREFLIGHT".to_owned(), "skip".to_owned())],
             path_prefixes: Vec::new(),
         }
     }

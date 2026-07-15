@@ -33,10 +33,13 @@ Khora is the **bootstrap spine** of every agent session. It owns session identit
 | `khora_session_init` | Generate session ID, run bootstrap sequence, set env vars |
 | `khora_session_status` | Return current session identity and bootstrap state |
 | `khora_write` | **The canonical write primitive** — all vault filesystem writes route here; harness-bearing `session-workspace.json` writes are atomic tempfile + rename writes |
+| `khora_write_highlighted_inscription` | Write an agent-category highlight through Khora authority and persist the response-token content boundary used by Hen re-entry retrieval |
 | `khora_sync_queue_push` | Enqueue graph write to `.khora-sync-queue.jsonl` |
 | `khora_sync_queue_flush` | Flush sync queue to Neo4j (delegated to Hen/S2' for execution) |
 | `khora_continuation_write` | Write CONTINUATION.md pre-compaction state |
 | `khora_session_close` | Record rehear-phase Sophia disclosure and close the protected [[M4]] Nara session protein |
+
+The session flow watcher reads `c_3_tranche_mode` from NOW/daily-note frontmatter. `explicit`, `quiet:<duration>`, and `rhythm` are exclusive modes; it emits `tranche.complete.explicit`, `tranche.complete.quiet`, or `tranche.complete.rhythm` respectively and routes the event bus surface to Chronos.
 
 ---
 

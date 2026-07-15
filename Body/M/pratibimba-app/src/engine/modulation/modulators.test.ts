@@ -70,6 +70,10 @@ function kernelPhaseSpace(degree720: number): PhaseSpaceBoundary {
             phase01: (degree360 % lens.slice) / lens.slice
         })),
         fibonacciGround: {
+            lensId: 16,
+            role: 'primary-ground',
+            slice: 6,
+            sections: 60,
             position: Math.floor(degree360 / 6),
             digit: 3,
             phase01: (degree360 % 6) / 6,

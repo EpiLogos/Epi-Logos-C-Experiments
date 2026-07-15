@@ -203,8 +203,8 @@ fn ledger_path() -> Result<PathBuf, String> {
     if let Ok(path) = std::env::var("EPI_BIMBA_LEDGER_PATH") {
         return Ok(PathBuf::from(path));
     }
-    let home =
-        dirs::home_dir().ok_or_else(|| "HOME is required for the canon-update ledger".to_owned())?;
+    let home = dirs::home_dir()
+        .ok_or_else(|| "HOME is required for the canon-update ledger".to_owned())?;
     Ok(home
         .join(".epi-logos")
         .join("bimba")
@@ -247,7 +247,10 @@ mod tests {
             &BimbaCmd::Propose {
                 category: "identity".to_owned(),
                 claim: "36 - 27 = 9 = epogdoon, transcriptionally derived".to_owned(),
-                target: Some("Idea/Bimba/Seeds/M/ql_m0_m3_third_spanda_integral_quilting_v2.md::§ trace".to_owned()),
+                target: Some(
+                    "Idea/Bimba/Seeds/M/ql_m0_m3_third_spanda_integral_quilting_v2.md::§ trace"
+                        .to_owned(),
+                ),
             },
             true,
             &path,
@@ -258,15 +261,27 @@ mod tests {
         assert_eq!(receipt["status"], "surfaced");
 
         // a SECOND process-invocation (fresh runtime load from disk) sees the row
-        let out = dispatch_at(&BimbaCmd::Show { id: "CU-IDENTITY-1".to_owned() }, true, &path)
-            .expect("show");
+        let out = dispatch_at(
+            &BimbaCmd::Show {
+                id: "CU-IDENTITY-1".to_owned(),
+            },
+            true,
+            &path,
+        )
+        .expect("show");
         let shown: Value = serde_json::from_str(&out).unwrap();
         assert_eq!(shown["status"], "surfaced");
         assert_eq!(shown["category"], "identity");
 
         // land it — the ledger transitions to landed and authors the marker
-        let out = dispatch_at(&BimbaCmd::Land { id: "CU-IDENTITY-1".to_owned() }, true, &path)
-            .expect("land");
+        let out = dispatch_at(
+            &BimbaCmd::Land {
+                id: "CU-IDENTITY-1".to_owned(),
+            },
+            true,
+            &path,
+        )
+        .expect("land");
         let landed: Value = serde_json::from_str(&out).unwrap();
         assert_eq!(landed["status"], "landed");
         assert_eq!(
@@ -280,8 +295,14 @@ mod tests {
             .starts_with("CU-IDENTITY-1@"));
 
         // a fresh load reflects the landed status (persistence proven)
-        let out = dispatch_at(&BimbaCmd::Show { id: "CU-IDENTITY-1".to_owned() }, true, &path)
-            .expect("show after land");
+        let out = dispatch_at(
+            &BimbaCmd::Show {
+                id: "CU-IDENTITY-1".to_owned(),
+            },
+            true,
+            &path,
+        )
+        .expect("show after land");
         let shown: Value = serde_json::from_str(&out).unwrap();
         assert_eq!(shown["status"], "landed");
         assert!(shown["landedMarker"].is_object());

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync, watch, watchFile, unwatchFile, type FSWatcher } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync, watch, watchFile, unwatchFile, type FSWatcher } from "node:fs";
 import { basename, join } from "node:path";
 
 export const TRANCHE_COMPLETE_EXPLICIT = "tranche.complete.explicit" as const;
@@ -10,6 +10,8 @@ export type TrancheCompleteKind =
   | typeof TRANCHE_COMPLETE_EXPLICIT
   | typeof TRANCHE_COMPLETE_QUIET
   | typeof TRANCHE_COMPLETE_RHYTHM;
+
+export type TrancheMode = "explicit" | "quiet" | "rhythm";
 
 export interface TrancheCompleteEvent {
   readonly kind: TrancheCompleteKind;
@@ -99,6 +101,14 @@ export function quietDurationFromFrontmatter(content: string): number | null {
   return parseQuietDurationMs(match?.[1]);
 }
 
+export function trancheModeFromFrontmatter(content: string): TrancheMode {
+  const match = /^c_3_tranche_mode:\s*["']?([^"'\n]+)["']?/m.exec(content);
+  const value = match?.[1]?.trim() ?? "quiet:90m";
+  if (value === "explicit") return "explicit";
+  if (value === "rhythm") return "rhythm";
+  return value.startsWith("quiet:") ? "quiet" : "quiet";
+}
+
 export function fileState(path: string): WatchedFileState | null {
   if (!existsSync(path)) return null;
   const stat = statSync(path);
@@ -112,7 +122,7 @@ export function fileState(path: string): WatchedFileState | null {
 export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlowWatcher {
   const marker = config.trancheMarker ?? DEFAULT_MARKER;
   const debounceMs = config.debounceMs ?? DEFAULT_DEBOUNCE_MS;
-  let quietDurationMs = config.quietDurationMs ?? DEFAULT_QUIET_DURATION_MS;
+  const defaultQuietDurationMs = config.quietDurationMs ?? DEFAULT_QUIET_DURATION_MS;
   const watched = [config.nowPath, config.dailyNotePath]
     .filter((path): path is string => Boolean(path))
     .filter((path, index, all) => all.indexOf(path) === index);
@@ -125,6 +135,9 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
   const fsWatchers = new Map<string, FSWatcher>();
   const pollingPaths = new Set<string>();
   const states = new Map<string, WatchedFileState>();
+  const modes = new Map<string, TrancheMode>();
+  const quietDurations = new Map<string, number>();
+  const explicitMarkers = new Map<string, boolean>();
   const observedResultArtifacts = new Set<string>();
   const debounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
   let quietTimer: ReturnType<typeof setTimeout> | null = null;
@@ -160,14 +173,21 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
     if (state) states.set(path, state);
 
     const content = readFileSync(path, "utf8");
-    quietDurationMs = quietDurationFromFrontmatter(content) ?? quietDurationMs;
-    if (hasExplicitTrancheMarker(content, marker)) {
+    const mode = trancheModeFromFrontmatter(content);
+    modes.set(path, mode);
+    const markerPresent = hasExplicitTrancheMarker(content, marker);
+    const markerWasPresent = explicitMarkers.get(path) ?? false;
+    explicitMarkers.set(path, markerPresent);
+    if (mode === "explicit" && markerPresent && !markerWasPresent) {
       emit(buildEvent(TRANCHE_COMPLETE_EXPLICIT, path, "content-change", {
         marker,
         inode: state?.inode ?? null,
       }));
     }
-    resetQuietTimer(path);
+    if (mode === "quiet") {
+      quietDurations.set(path, quietDurationFromFrontmatter(content) ?? defaultQuietDurationMs);
+      resetQuietTimer(path);
+    }
   };
 
   const scheduleScan = (path: string) => {
@@ -197,6 +217,21 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
     });
   };
 
+  const scanResultDirectory = (dir: string, scope: ResultDropScope) => {
+    if (stopped || !existsSync(dir)) return;
+    for (const filename of readdirSync(dir)) inspectResultArtifact(dir, scope, filename);
+  };
+
+  const startResultPolling = (dir: string, scope: ResultDropScope) => {
+    if (pollingPaths.has(dir)) return;
+    pollingPaths.add(dir);
+    watchFile(dir, { persistent: false, interval: debounceMs }, (current, previous) => {
+      if (current.mtimeMs !== previous.mtimeMs || current.ino !== previous.ino) {
+        scanResultDirectory(dir, scope);
+      }
+    });
+  };
+
   function resetQuietTimer(path = lastTouchedPath) {
     if (quietTimer) clearTimeout(quietTimer);
     if (!path) return;
@@ -205,9 +240,9 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
       if (state) states.set(path, state);
       emit(buildEvent(TRANCHE_COMPLETE_QUIET, path, "quiet-timer", {
         inode: state?.inode ?? null,
-        quiet_duration_ms: quietDurationMs,
+        quiet_duration_ms: quietDurations.get(path) ?? defaultQuietDurationMs,
       }));
-    }, quietDurationMs);
+    }, quietDurations.get(path) ?? defaultQuietDurationMs);
   }
 
   return {
@@ -217,6 +252,12 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
         const state = fileState(path);
         if (state) states.set(path, state);
         if (!existsSync(path)) continue;
+        const content = readFileSync(path, "utf8");
+        modes.set(path, trancheModeFromFrontmatter(content));
+        explicitMarkers.set(path, hasExplicitTrancheMarker(content, marker));
+        if (modes.get(path) === "quiet") {
+          quietDurations.set(path, quietDurationFromFrontmatter(content) ?? defaultQuietDurationMs);
+        }
         if (!fsWatchers.has(path)) {
           fsWatchers.set(path, watch(path, { persistent: false }, () => scheduleScan(path)));
         }
@@ -232,13 +273,31 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
       for (const entry of resultDropDirs) {
         if (!existsSync(entry.path)) continue;
         const watcherKey = `result:${entry.scope}:${entry.path}`;
-        if (fsWatchers.has(watcherKey)) continue;
-        fsWatchers.set(watcherKey, watch(entry.path, { persistent: false }, (_event, filename) => {
-          if (typeof filename !== "string") return;
-          inspectResultArtifact(entry.path, entry.scope, filename);
-        }));
+        if (fsWatchers.has(watcherKey) || pollingPaths.has(entry.path)) continue;
+        for (const filename of readdirSync(entry.path)) {
+          if (filename.endsWith(".result.md")) observedResultArtifacts.add(join(entry.path, filename));
+        }
+        try {
+          const resultWatcher = watch(entry.path, { persistent: false }, (_event, filename) => {
+            if (typeof filename === "string") inspectResultArtifact(entry.path, entry.scope, filename);
+            else scanResultDirectory(entry.path, entry.scope);
+          });
+          fsWatchers.set(watcherKey, resultWatcher);
+          resultWatcher.on("error", (error: NodeJS.ErrnoException) => {
+            resultWatcher.close();
+            fsWatchers.delete(watcherKey);
+            if (error.code === "EMFILE") {
+              startResultPolling(entry.path, entry.scope);
+              return;
+            }
+            console.warn(`[khora] result-drop watcher failed for ${entry.path}: ${error.message}`);
+          });
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== "EMFILE") throw error;
+          startResultPolling(entry.path, entry.scope);
+        }
       }
-      resetQuietTimer(lastTouchedPath);
+      if (modes.get(lastTouchedPath) === "quiet") resetQuietTimer(lastTouchedPath);
     },
 
     stop() {
@@ -256,7 +315,7 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
     recordKeystroke(path = lastTouchedPath) {
       if (!path) return;
       lastTouchedPath = path;
-      resetQuietTimer(path);
+      if (modes.get(path) === "quiet") resetQuietTimer(path);
     },
 
     handleFileOpened(path: string) {
@@ -265,6 +324,10 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
       const state = fileState(watchedPath);
       const previous = states.get(watchedPath);
       if (state) states.set(watchedPath, state);
+      const content = existsSync(watchedPath) ? readFileSync(watchedPath, "utf8") : "";
+      const mode = trancheModeFromFrontmatter(content);
+      modes.set(watchedPath, mode);
+      if (mode !== "rhythm") return;
       emit(buildEvent(TRANCHE_COMPLETE_RHYTHM, watchedPath, "file-reentry", {
         inode: state?.inode ?? previous?.inode ?? null,
       }));

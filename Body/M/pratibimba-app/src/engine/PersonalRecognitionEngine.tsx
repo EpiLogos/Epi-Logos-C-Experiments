@@ -1,0 +1,158 @@
+/**
+ * Coordinate: M' M4' -> M5' (integrated personal recognition carrier)
+ * Residency: Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.tsx
+ * Position (#n): #4 — one personal-face composition across M0 grounding,
+ * M4 recognition, and M5 scoring.
+ * Actualises: Track 36.T36.5's public-safe recognition handoff.
+ * Public surface: PersonalRecognitionEngine, readPersonalRecognition.
+ * Does NOT own: virtue-witness computation, quaternion composition, EBM
+ * scoring, profile transport, or the daily-note editor.
+ */
+
+import { useMemo } from 'react';
+import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
+import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
+import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
+import { NowPane } from '../panes/NowPane';
+import { useTickStore } from '../state/stores';
+
+type RecordValue = Readonly<Record<string, unknown>>;
+
+export interface PersonalRecognitionReading {
+    readonly state: 'ready' | 'pending' | 'blocked';
+    readonly sourceBinaryState: string | null;
+    readonly codon: string | null;
+    readonly lineChangeOperator: number | null;
+    readonly qComposedTargetKind: string | null;
+    readonly qComposedHandle: string | null;
+    readonly checkpointRef: string | null;
+}
+
+function objectValue(value: unknown): RecordValue | null {
+    return value !== null && typeof value === 'object' && !Array.isArray(value)
+        ? (value as RecordValue)
+        : null;
+}
+
+function stringValue(value: unknown): string | null {
+    return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+function numberValue(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+/** Reads the one profile tick without deriving or opening any protected body. */
+export function readPersonalRecognition(payload: unknown): PersonalRecognitionReading {
+    const outer = objectValue(payload);
+    const root = objectValue(outer?.harmonicProfile) ?? outer;
+    const trace = objectValue(root?.anuttaraPentadicTrace);
+    const personalPole = objectValue(root?.personalPole);
+    const qComposed = objectValue(personalPole?.qComposedHandle);
+    const projection = objectValue(root?.mathemeResonance72Projection);
+
+    const qComposedHandle = stringValue(qComposed?.handle);
+    const traceHandle = stringValue(trace?.qComposedHandle);
+    const checkpointRef =
+        stringValue(trace?.learnedPredictorCheckpointRef) ??
+        stringValue(projection?.learnedPredictorCheckpointRef);
+    const tracePresent = trace !== null;
+    const m0WitnessPresent = objectValue(root?.anuttaraWitness) !== null;
+    const handlesDisagree =
+        qComposedHandle !== null && traceHandle !== null && qComposedHandle !== traceHandle;
+
+    return Object.freeze({
+        state: handlesDisagree
+            ? 'blocked'
+            : tracePresent && m0WitnessPresent && qComposedHandle !== null && checkpointRef !== null
+                ? 'ready'
+                : 'pending',
+        sourceBinaryState: stringValue(trace?.sourceBinaryState),
+        codon: stringValue(trace?.codon),
+        lineChangeOperator: numberValue(trace?.lineChangeOperator),
+        qComposedTargetKind: stringValue(qComposed?.targetKind),
+        qComposedHandle,
+        checkpointRef
+    });
+}
+
+export function PersonalRecognitionEngine() {
+    const cached = useTickStore(state => state.profile);
+    const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
+
+    return (
+        <section
+            className="personal-recognition-engine"
+            data-testid="personal-recognition-engine"
+            data-state={reading.state}
+            data-generation={cached?.generation ?? 'none'}
+        >
+            <header className="personal-recognition-header">
+                <div>
+                    <h2>Recognition</h2>
+                    <p>M0 grounds the hinge; M4 carries the protected recognition; M5 scores it.</p>
+                </div>
+                <span data-testid="personal-recognition-state" data-state={reading.state}>
+                    {reading.state}
+                </span>
+            </header>
+
+            <div className="personal-recognition-legs">
+                <div className="personal-recognition-leg" data-testid="personal-recognition-m0-ground">
+                    <h3>M0 ground</h3>
+                    <p>
+                        0/1 substrate:{' '}
+                        <strong data-testid="personal-recognition-substrate">
+                            {reading.sourceBinaryState ?? 'pending'}
+                        </strong>
+                    </p>
+                    <M0VirtueWitnessPanel />
+                </div>
+
+                <div
+                    className="personal-recognition-leg"
+                    data-testid="personal-recognition-m4-handoff"
+                    data-state={reading.qComposedHandle === null ? 'pending' : 'ready'}
+                >
+                    <h3>M4 recognition</h3>
+                    <p>
+                        codon{' '}
+                        <strong data-testid="personal-recognition-codon">
+                            {reading.codon ?? 'pending'}
+                        </strong>{' '}
+                        · line change{' '}
+                        <strong data-testid="personal-recognition-line-change">
+                            {reading.lineChangeOperator ?? 'pending'}
+                        </strong>
+                    </p>
+                    {reading.qComposedHandle === null ? (
+                        <p>protected composed handle pending</p>
+                    ) : (
+                        <span
+                            data-testid="personal-recognition-q-composed"
+                            title={reading.qComposedHandle}
+                        >
+                            {reading.qComposedTargetKind ?? 'QComposed'} handle attached
+                        </span>
+                    )}
+                </div>
+
+                <div className="personal-recognition-leg" data-testid="personal-recognition-m5-score">
+                    <h3>M5 score</h3>
+                    <p>
+                        checkpoint:{' '}
+                        <span data-testid="personal-recognition-checkpoint">
+                            {reading.checkpointRef ?? 'pending'}
+                        </span>
+                    </p>
+                    <M5RecognitionLayer />
+                    <M5EbmObservatoryPane />
+                </div>
+            </div>
+
+            <div className="personal-recognition-now">
+                <NowPane />
+            </div>
+        </section>
+    );
+}

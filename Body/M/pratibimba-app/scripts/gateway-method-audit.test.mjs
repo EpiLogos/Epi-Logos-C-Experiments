@@ -28,6 +28,27 @@ The tranche lands \`s5'.gnostic.query\` and "s1'.base.ensure" plus
         expect(names).not.toContain('4.5');
     });
 
+    it('normalizes quoted method names without emitting quote artifacts', () => {
+        const names = extractMethodNames(`
+Single quoted: 'nara.kairos.probe_kerykeion'.
+Call expression: SharedBridgeAdapter.invokeGatewayRpc('nara.lens.apply').
+Double quoted: "nara.oracle.cast".
+`);
+
+        expect(names).toContain('nara.kairos.probe_kerykeion');
+        expect(names).toContain('nara.lens.apply');
+        expect(names).toContain('nara.oracle.cast');
+        expect(names.every(name => !name.startsWith("'") && !name.endsWith("'"))).toBe(true);
+    });
+
+    it('preserves parameterized kernel-bridge RPC names for the live ratchet', () => {
+        const names = extractMethodNames(`
+The M3 bridge exposes \`kernelBridge.m3.lensCodonBinary(lensId)\`.
+`);
+
+        expect(names).toContain('kernelBridge.m3.lensCodonBinary(lensId)');
+    });
+
     it('covers every family the tranche names', () => {
         for (const prefix of [
             "s5'.gnostic.",
@@ -41,6 +62,7 @@ The tranche lands \`s5'.gnostic.query\` and "s1'.base.ensure" plus
             "s4'.mediation.",
             's3.world_clock.',
             's2.codon.',
+            'kernelBridge.m3.',
             'contemplate_',
             'sessions.',
             'cron.',

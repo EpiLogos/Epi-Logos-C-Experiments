@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 /**
  * Coordinate: M1-3' (spanda walk live-wire smoke — 02.T2.13 / DR-M1-5)
+ * Residency: Body/M/pratibimba-app/scripts
+ * Position (#n): M1 walk verification boundary
  * Actualises: the engine-walk round-trip against a REAL spawned gateway:
  *   flowing ticks → m1.spanda.hold → tick12 CONSTANT across advancing
  *   generations (the organism held, the portal still pulsing) →
  *   walk_to lands on the asked step → step{reflect} applies the NAMED
  *   reflection involution (11−n) → release → the flow resumes.
+ * Public surface: direct Node smoke command; EPI_BIN override.
+ * Does NOT own: gateway behavior, Cargo output placement, or M1 walk law.
+ * Contract: [[M1'-SPEC]] / root [[AGENTS]] verification law.
  * Run: node scripts/spanda-walk-smoke.mjs   (EPI_BIN overrides the binary)
  */
 
@@ -20,8 +25,7 @@ import WebSocket from 'ws';
 const PORT = 18798;
 const appRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const repoRoot = resolve(appRoot, '..', '..', '..');
-const EPI_BIN =
-    process.env.EPI_BIN ?? join(repoRoot, 'Body', 'S', 'S0', 'epi-cli', 'target', 'debug', 'epi');
+const EPI_BIN = process.env.EPI_BIN ?? join(repoRoot, 'target', 'debug', 'epi');
 
 const stateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-spanda-walk-'));
 const failures = [];

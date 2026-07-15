@@ -421,8 +421,7 @@ fn wait_for_pane_shell_ready(pane_id: &str) {
             .stdin(Stdio::null())
             .output();
         if let Ok(output) = output {
-            if output.status.success()
-                && !String::from_utf8_lossy(&output.stdout).trim().is_empty()
+            if output.status.success() && !String::from_utf8_lossy(&output.stdout).trim().is_empty()
             {
                 return;
             }

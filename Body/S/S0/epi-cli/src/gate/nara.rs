@@ -267,6 +267,8 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Kairos ──────────────────────────────────────────────────────
+        "nara.kairos.probe_kerykeion" => serde_json::to_value(kairos::probe_kerykeion())
+            .map_err(|error| ("nara-error".to_owned(), error.to_string())),
         "nara.kairos.current" => cli_to_rpc(kairos::show(true, false)),
         "nara.kairos.sync" => {
             let result = kairos::sync_current();
@@ -429,6 +431,29 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Medicine ────────────────────────────────────────────────────
+        "nara.medicine.snapshot" => {
+            let sun_degree = opt_f32(params, "sunDegree")
+                .or_else(|| opt_f32(params, "sun_degree"))
+                .ok_or_else(|| {
+                    (
+                        "invalid-params".to_owned(),
+                        "missing required numeric param 'sunDegree'".to_owned(),
+                    )
+                })?;
+            serde_json::to_value(
+                medicine::medicine_snapshot(sun_degree)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.medicine.pin" => {
+            let materia = required_param(params, "materia")?;
+            serde_json::to_value(
+                medicine::pin_materia(&materia)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
         "nara.medicine.balance" => cli_to_rpc(medicine::balance(true)),
         "nara.medicine.chakra" => cli_to_rpc(medicine::chakra(true)),
         "nara.medicine.materia" => cli_to_rpc(medicine::materia(true)),

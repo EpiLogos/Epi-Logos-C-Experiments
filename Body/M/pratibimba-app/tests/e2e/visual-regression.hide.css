@@ -23,6 +23,10 @@ canvas,
 .cosmic-engine-strip,
 [data-testid='status-strip'],
 [data-testid='vault-tree'],
-[data-testid='now-pane'] {
+[data-testid='now-pane'],
+[data-testid='personal-recognition-substrate'],
+[data-testid='personal-recognition-codon'],
+[data-testid='personal-recognition-line-change'],
+[data-testid='personal-recognition-checkpoint'] {
     visibility: hidden !important;
 }

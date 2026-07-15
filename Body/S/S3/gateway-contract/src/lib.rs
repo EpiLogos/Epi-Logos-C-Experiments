@@ -93,6 +93,8 @@ pub const S0_PRIME_SETTINGS_METHODS: &[&str] = &[
 ];
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
+pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD: &str =
+    "kernelBridge.m3.lensCodonBinary(lensId)";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
 pub const S2_GRAPH_ONTOLOGY_RELOAD_METHOD: &str = "s2.graph.ontology.reload";

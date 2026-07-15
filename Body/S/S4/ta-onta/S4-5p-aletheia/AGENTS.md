@@ -8,10 +8,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-5'-SPEC]] (actualises [[S5-SPEC]] /
 - `extension.ts` — PI extension entry/facade; composes Aletheia tool modules and owns session/cron hook wiring.
 - `CONTRACT.md` — binding extension contract (responsibility, hook seams, registered tools)
 - `spine-contribution.ts` — this carrier's spine contribution
-- `modules/` — implementation units (aeon-graduation, anansi-lineage, anansi-elo-index, moirai-rehear, moirai-fair-comparison, janus-doorway, janus-threshold, mercurius-translation, mercurius-elo, agora-staging, zeithoven-autoresearch, sophia-ingest, q-proposal-candidate, thought-vak, gate-trigger, chronos-integration, hen-integration, coordinate-loop)
+- `modules/` — implementation units; `janus-doorway.ts` owns temporal envelopes, oracle-spread aliveness, Klein weighting, and the read-only `janus_spread_delta` used by Chronos re-entry
 - `tests/` — `*.test.ts` per module + `z_cycle_smoke.test.ts`
 - `S5/tools.json` — S5 primitive tool descriptors; `S5'/` — QL augmentation: agents (anansi, moirai, janus, mercurius, agora, zeithoven, aletheia), skills, `tools/` (gnosis/thought/episodic/seed registrations), `janus-envelope.schema.json`
-- `skills/`, `clusters/`, `modules/` — workflow gates, per-subagent clusters
+- `skills/`, `clusters/`, `modules/` — workflow gates and per-subagent clusters; `skills/custom/drift-detection/` owns proposal-only Tier 3 `tuning-calibration` composition and its fail-closed handoff into Tier 2 `tuning_review`, including [[DR-TUNE-4]] local-only slot/PASU enforcement.
 - `M/README.md` — cross-cutting M-surface notes (M5 cycle echo, M2 GraphRAG)
 - Does NOT own: agent dispatch routing (Anima [[S4-4'-SPEC]]), vault CRUD (Hen), session identity (Khora), temporal scheduling (Chronos triggers, Aletheia runs). Domain law lives in this carrier + Canon, not in [[S0-SPEC]]/[[M'-SYSTEM-SPEC]] by convenience.
 
@@ -26,7 +26,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-5'-SPEC]] (actualises [[S5-SPEC]] /
 - Thoughts/T-bucket and frontmatter merging happen Rust-side via `epi vault thought-route --vak-address-json` (see `S5'/tools/thought-tools.ts`); the TS renderer in `modules/thought-vak.ts` is reference-only.
 
 ## Verification
-- `node --test` over `tests/*.test.ts` (per-module + `z_cycle_smoke.test.ts`); inherit ta-onta extension test harness from parent.
+- `node --test` over `tests/*.test.ts` (per-module + `z_cycle_smoke.test.ts`); inherit ta-onta extension test harness from parent. Drift/tuning hook: `python3 -m pytest -q skills/custom/drift-detection/tests/test_compose_tuning_proposal.py`.
 
 ## Child DOX Index
 - (leaf)

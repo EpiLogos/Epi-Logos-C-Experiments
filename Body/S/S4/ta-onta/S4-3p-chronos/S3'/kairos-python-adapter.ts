@@ -75,6 +75,91 @@ export interface M4_Temporal_Now {
   mode: "natal" | "realtime" | "kairotic";
 }
 
+export interface MercuriusPlanetSnapshot {
+  readonly planet_id: number;
+  readonly degree: number;
+  readonly retrograde: boolean;
+}
+
+export interface MercuriusKairosSnapshot {
+  readonly captured_at: string;
+  readonly planets: readonly MercuriusPlanetSnapshot[];
+  readonly active_decan: number | null;
+  readonly active_tattva: number | null;
+}
+
+export interface MercuriusKairosDelta {
+  readonly current: MercuriusKairosSnapshot | null;
+  readonly summary: string;
+}
+
+function epiBinary(): string {
+  return process.env.EPI_BIN || "epi";
+}
+
+export function mercurius_kairos_snapshot(): MercuriusKairosSnapshot | null {
+  const result = spawnSync(epiBinary(), ["--json", "nara", "kairos", "show"], {
+    encoding: "utf8",
+    timeout: 30_000,
+  });
+  if (result.status !== 0 || !result.stdout.trim()) return null;
+  try {
+    const parsed = JSON.parse(result.stdout) as Record<string, unknown>;
+    const planets = Array.isArray(parsed.planets)
+      ? parsed.planets.flatMap((value) => {
+          if (!value || typeof value !== "object") return [];
+          const row = value as Record<string, unknown>;
+          if (typeof row.planet_id !== "number" || typeof row.degree !== "number") return [];
+          return [{
+            planet_id: row.planet_id,
+            degree: row.degree,
+            retrograde: row.retrograde === true,
+          }];
+        })
+      : [];
+    if (planets.length === 0) return null;
+    return {
+      captured_at: new Date().toISOString(),
+      planets,
+      active_decan: typeof parsed.active_decan === "number" ? parsed.active_decan : null,
+      active_tattva: typeof parsed.active_tattva === "number" ? parsed.active_tattva : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function circularDegreeDelta(previous: number, current: number): number {
+  const raw = ((current - previous + 540) % 360) - 180;
+  return Math.round(raw * 100) / 100;
+}
+
+export function mercurius_kairos_delta(previous: MercuriusKairosSnapshot | null): MercuriusKairosDelta {
+  const current = mercurius_kairos_snapshot();
+  if (!current) return { current: null, summary: "Mercurius kairos query unavailable." };
+  if (!previous) {
+    return {
+      current,
+      summary: `current decan=${current.active_decan ?? "unknown"}; tattva=${current.active_tattva ?? "unknown"}`,
+    };
+  }
+  const movements = current.planets.flatMap((planet) => {
+    const before = previous.planets.find((candidate) => candidate.planet_id === planet.planet_id);
+    if (!before) return [`planet ${planet.planet_id} newly present at ${planet.degree.toFixed(2)} degrees`];
+    const delta = circularDegreeDelta(before.degree, planet.degree);
+    const retrogradeChanged = before.retrograde !== planet.retrograde;
+    if (Math.abs(delta) < 0.01 && !retrogradeChanged) return [];
+    return [`planet ${planet.planet_id} ${delta >= 0 ? "+" : ""}${delta} degrees${retrogradeChanged ? `; retrograde=${planet.retrograde}` : ""}`];
+  });
+  if (previous.active_decan !== current.active_decan) {
+    movements.push(`active decan ${previous.active_decan ?? "unknown"}->${current.active_decan ?? "unknown"}`);
+  }
+  return {
+    current,
+    summary: movements.length > 0 ? movements.join("; ") : "no material planetary movement since last contact",
+  };
+}
+
 export async function fetchKairosData(params: KairosNatalRef): Promise<KairosResult> {
   // 1. Check KAIROS_ENABLED env var — fail-fast if explicitly disabled
   if (process.env.KAIROS_ENABLED === "false") {

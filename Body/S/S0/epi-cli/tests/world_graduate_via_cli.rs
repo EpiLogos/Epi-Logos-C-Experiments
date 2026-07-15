@@ -58,10 +58,7 @@ fn world_graduate_via_cli() {
         promotion["birthCodonTransition"],
         "birth_codon_provisional_ratified"
     );
-    let type_path = format!(
-        "{}.md",
-        promotion["targetTypePath"].as_str().unwrap()
-    );
+    let type_path = format!("{}.md", promotion["targetTypePath"].as_str().unwrap());
     // Promotion moved the candidate out of the pool.
     assert!(!vault.join(&candidate_path).exists());
     assert!(vault.join(&type_path).exists());
@@ -75,7 +72,10 @@ fn world_graduate_via_cli() {
     )
     .expect("epi world graduate succeeds");
     let receipt: Value = serde_json::from_str(&out).unwrap();
-    assert_eq!(receipt["flatWorldTarget"], "Idea/Bimba/World/Kairos Bell.md");
+    assert_eq!(
+        receipt["flatWorldTarget"],
+        "Idea/Bimba/World/Kairos Bell.md"
+    );
     assert_eq!(receipt["crystallisationState"], "crystallised_world_form");
     assert_eq!(receipt["birthCodonState"], "ratified");
     // The territory archetype is invariant across the whole lifecycle.

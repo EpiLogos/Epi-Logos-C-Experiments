@@ -72,6 +72,14 @@ export interface ModalResonatorBoundary {
     lensMode?: { lens: number; mode: number; lensModeIndex?: number };
 }
 
+/** C-backed M2 72 -> M3 64 projection returned by the registered kernel
+ * bridge capability. The carrier consumes these values verbatim. */
+export interface EpogdoonBridgeProjectionBoundary {
+    readonly compressedCodon: number;
+    readonly isEvolutionaryGap: boolean;
+    readonly expandedBack: number;
+}
+
 // ---- M1-2 ananda vortex boundary (Tranche 10.10) ----
 // Mirrors portal-core kernel/projections/ananda_vortex.rs + the Zod
 // AnandaVortexProjection in epi-cli/schemas/src/kernel-bridge.ts.
@@ -220,7 +228,7 @@ export function extractQuintessence(value: unknown): QuintessenceBoundary | null
 // ---- Phase-space boundary (Sprint-8 E1 kernel projection) ----
 // Mirrors portal-core projections/phase_space.rs (`PhaseSpaceAddress`): the
 // tick's address in the 720 possibility space — plane, clock-degree node,
-// 16-lens carrier, Fibonacci Ground. Kernel-computed from the C .rodata
+// 16 derived-lens rows plus primary Ground lens 16. Kernel-computed from C .rodata
 // CLOCK_DEGREE_LUT; the app consumes it and never re-derives degree law.
 
 export interface PhaseSpaceLensPhaseBoundary {
@@ -229,7 +237,7 @@ export interface PhaseSpaceLensPhaseBoundary {
     sections: number;
     name: string;
     /** The temporality structurers — the 24/12/4-section divisions that gear
-     *  rhythm and time (Fibonacci Ground is the +1 beside them). */
+     *  rhythm and time through the primary Fibonacci Ground lens. */
     temporalCanon: boolean;
     segment: number;
     degreeInSegment: number;
@@ -237,6 +245,10 @@ export interface PhaseSpaceLensPhaseBoundary {
 }
 
 export interface PhaseSpaceFibonacciBoundary {
+    lensId: 16;
+    role: 'primary-ground';
+    slice: 6;
+    sections: 60;
     position: number;
     digit: number;
     phase01: number;
@@ -324,7 +336,15 @@ export function extractPhaseSpace(value: unknown): PhaseSpaceBoundary | null {
         }
     }
     const fib = ps.fibonacciGround;
-    if (!fib || typeof fib.position !== 'number' || typeof fib.digit !== 'number') {
+    if (
+        !fib ||
+        fib.lensId !== 16 ||
+        fib.role !== 'primary-ground' ||
+        fib.slice !== 6 ||
+        fib.sections !== 60 ||
+        typeof fib.position !== 'number' ||
+        typeof fib.digit !== 'number'
+    ) {
         return null;
     }
     return ps;
@@ -770,6 +790,155 @@ export interface AnuttaraPentadicRuntimeTrace {
     readonly provenance: readonly string[];
 }
 
+export interface LensCodonBinaryCharges {
+    readonly pp: number;
+    readonly nn: number;
+    readonly np: number;
+    readonly pn: number;
+}
+
+export interface LensCodonBinaryDegree {
+    readonly degree360: number;
+    readonly exactDegree720: number;
+    readonly codonUpper: number;
+    readonly codonLower: number;
+    readonly codonClass: number;
+    readonly charges: LensCodonBinaryCharges;
+    readonly quaternion: readonly [number, number, number, number];
+    readonly elementCanonical: number;
+    readonly hexagramId: number;
+    readonly lineChangeOperator: number;
+    readonly tick12: number;
+    readonly fibonacciPosition: number;
+    readonly fibonacciDigit: number;
+    readonly fibonacciPhase01: number;
+}
+
+export interface LensCodonBinaryProjection {
+    readonly lensId: number;
+    readonly lensRole: 'primary-ground' | 'derived-aperture';
+    readonly groundingLensId: 16;
+    readonly segment: readonly number[];
+    readonly perDegree: readonly LensCodonBinaryDegree[];
+}
+
+export function parseLensCodonBinaryProjection(value: unknown): LensCodonBinaryProjection {
+    const root = requiredObject(value, 'lensCodonBinary');
+    const lensId = requiredInteger(root.lensId, 'lensCodonBinary.lensId', 0, 16);
+    const slices = [1, 2, 4, 8, 9, 10, 12, 15, 24, 30, 36, 40, 45, 90, 180, 360] as const;
+    const isGround = lensId === 16;
+    const lensRole = root.lensRole;
+    if (typeof lensRole !== 'string') {
+        throw new Error('lensCodonBinary.lensRole must be a string');
+    }
+    const expectedRole = isGround ? 'primary-ground' : 'derived-aperture';
+    if (lensRole !== expectedRole) {
+        throw new Error(`lensCodonBinary.lensRole must be ${expectedRole} for lensId ${lensId}`);
+    }
+    const groundingLensId = requiredInteger(root.groundingLensId, 'lensCodonBinary.groundingLensId', 16, 16) as 16;
+    const slice = isGround ? 6 : slices[lensId];
+    const expectedSections = 360 / slice;
+    if (!Array.isArray(root.segment) || !root.segment.every(Number.isInteger)) {
+        throw new Error('lensCodonBinary.segment must contain integer boundary degrees');
+    }
+    const segment = root.segment as number[];
+    if (
+        segment.length !== expectedSections
+        || segment.some((degree, index) => degree !== index * slice)
+    ) {
+        throw new Error(`lensCodonBinary.segment must contain the ${expectedSections} canonical lens boundaries`);
+    }
+    if (!Array.isArray(root.perDegree) || root.perDegree.length !== expectedSections) {
+        throw new Error(`lensCodonBinary.perDegree must contain ${expectedSections} boundary records`);
+    }
+    const perDegree = root.perDegree.map((entry, index) =>
+        parseLensCodonBinaryDegree(entry, segment[index], index)
+    );
+    return { lensId, lensRole: expectedRole, groundingLensId, segment, perDegree };
+}
+
+function parseLensCodonBinaryDegree(
+    value: unknown,
+    expectedDegree: number,
+    index: number
+): LensCodonBinaryDegree {
+    const path = `lensCodonBinary.perDegree[${index}]`;
+    const entry = requiredObject(value, path);
+    const charges = requiredObject(entry.charges, `${path}.charges`);
+    const chargeKeys = Object.keys(charges).sort();
+    if (chargeKeys.join(',') !== 'nn,np,pn,pp') {
+        throw new Error(`${path}.charges must expose exactly pp/nn/np/pn`);
+    }
+    const quaternion = entry.quaternion;
+    if (!Array.isArray(quaternion) || quaternion.length !== 4 || !quaternion.every(isFiniteNumber)) {
+        throw new Error(`${path}.quaternion must contain four finite numbers`);
+    }
+    const degree360 = requiredInteger(entry.degree360, `${path}.degree360`, 0, 359);
+    const exactDegree720 = requiredNumber(entry.exactDegree720, `${path}.exactDegree720`);
+    const hexagramId = requiredInteger(entry.hexagramId, `${path}.hexagramId`, 0, 63);
+    const lineChangeOperator = requiredInteger(entry.lineChangeOperator, `${path}.lineChangeOperator`, 0, 5);
+    const fibonacciPosition = requiredInteger(entry.fibonacciPosition, `${path}.fibonacciPosition`, 0, 59);
+    const fibonacciPhase01 = requiredNumber(entry.fibonacciPhase01, `${path}.fibonacciPhase01`);
+    if (degree360 !== expectedDegree || exactDegree720 !== expectedDegree * 2) {
+        throw new Error(`${path} must preserve its C-authored lens boundary degree`);
+    }
+    if (fibonacciPosition !== Math.floor(expectedDegree / 6) || fibonacciPhase01 !== (expectedDegree % 6) / 6) {
+        throw new Error(`${path} must carry its primary Fibonacci Ground address`);
+    }
+    if (
+        quaternion[0] !== charges.pp
+        || quaternion[1] !== charges.nn
+        || quaternion[2] !== charges.np
+        || quaternion[3] !== charges.pn
+    ) {
+        throw new Error(`${path}.quaternion must preserve pp/nn/np/pn order`);
+    }
+    return {
+        degree360,
+        exactDegree720,
+        codonUpper: requiredInteger(entry.codonUpper, `${path}.codonUpper`, 0, 3),
+        codonLower: requiredInteger(entry.codonLower, `${path}.codonLower`, 0, 3),
+        codonClass: requiredInteger(entry.codonClass, `${path}.codonClass`, 0, 3),
+        charges: {
+            pp: requiredNumber(charges.pp, `${path}.charges.pp`),
+            nn: requiredNumber(charges.nn, `${path}.charges.nn`),
+            np: requiredNumber(charges.np, `${path}.charges.np`),
+            pn: requiredNumber(charges.pn, `${path}.charges.pn`)
+        },
+        quaternion: quaternion as [number, number, number, number],
+        elementCanonical: requiredInteger(entry.elementCanonical, `${path}.elementCanonical`, 0, 5),
+        hexagramId,
+        lineChangeOperator,
+        tick12: requiredInteger(entry.tick12, `${path}.tick12`, 0, 11),
+        fibonacciPosition,
+        fibonacciDigit: requiredInteger(entry.fibonacciDigit, `${path}.fibonacciDigit`, 0, 9),
+        fibonacciPhase01
+    };
+}
+
+function requiredObject(value: unknown, path: string): Record<string, unknown> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        throw new Error(`${path} must be an object`);
+    }
+    return value as Record<string, unknown>;
+}
+
+function isFiniteNumber(value: unknown): value is number {
+    return typeof value === 'number' && Number.isFinite(value);
+}
+
+function requiredNumber(value: unknown, path: string): number {
+    if (!isFiniteNumber(value)) throw new Error(`${path} must be a finite number`);
+    return value;
+}
+
+function requiredInteger(value: unknown, path: string, min: number, max: number): number {
+    if (!Number.isInteger(value) || (value as number) < min || (value as number) > max) {
+        throw new Error(`${path} must be an integer in ${min}..${max}`);
+    }
+    return value as number;
+}
+
 /** The trace now rides the bus first-class (Track 36/10.P5 —
  *  `profile.anuttaraPentadicTrace`, kernel-derived). The real reader is
  *  `panes/m3PentadicInspector.ts::pentadicTraceFromPayload`; the former
@@ -787,9 +956,11 @@ export const KERNEL_BRIDGE_CAPABILITIES = [
     'depositKernelObservation',
     'requestReviewEvidence',
     's2.parashaktiCorrespondences',
+    'kernelBridge.m2.epogdoonProjection(address72)',
     'kernelBridge.m2.planetaryElementalWeights()',
     'kernelBridge.m2.cymaticMonoPolyState(address72)',
-    'kernelBridge.m3.bioquaternionTranscription(codon)'
+    'kernelBridge.m3.bioquaternionTranscription(codon)',
+    'kernelBridge.m3.lensCodonBinary(lensId)'
 ] as const;
 
 export type KernelBridgeCapabilityName = (typeof KERNEL_BRIDGE_CAPABILITIES)[number];

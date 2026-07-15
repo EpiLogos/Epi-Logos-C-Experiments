@@ -65,8 +65,15 @@ fn bridge_edge_round_trips_against_c_for_all_72_indices() {
         let is_gap = object["isEvolutionaryGap"].as_bool().unwrap();
 
         // The C law (surfaced through FFI) equals the canonical integer 9:8 law.
-        assert_eq!(compressed, law_compress(address), "address {address}: compressedCodon = (i*8)/9");
-        assert!(compressed < M3_CODON_COUNT, "address {address}: codon stays in 0..63");
+        assert_eq!(
+            compressed,
+            law_compress(address),
+            "address {address}: compressedCodon = (i*8)/9"
+        );
+        assert!(
+            compressed < M3_CODON_COUNT,
+            "address {address}: codon stays in 0..63"
+        );
         assert_eq!(
             expanded,
             law_expand(compressed),
@@ -81,9 +88,13 @@ fn bridge_edge_round_trips_against_c_for_all_72_indices() {
 
         // The JSON edge equals the serialized portal-core projection byte-for-byte
         // (structurally): the edge does not recompute or reshape the C result.
-        let direct: Value = serde_json::to_value(EpogdoonBridgeProjection::from_address72(address72))
-            .expect("EpogdoonBridgeProjection serializes");
-        assert_eq!(edge, direct, "address {address}: bridge edge == portal-core projection");
+        let direct: Value =
+            serde_json::to_value(EpogdoonBridgeProjection::from_address72(address72))
+                .expect("EpogdoonBridgeProjection serializes");
+        assert_eq!(
+            edge, direct,
+            "address {address}: bridge edge == portal-core projection"
+        );
     }
 }
 
@@ -128,7 +139,10 @@ fn bridge_edge_lattice_carries_contract_identifier_and_all_72_cells() {
         lattice["contract"], KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION,
         "lattice carries the ratified bridge-contract id"
     );
-    assert_eq!(lattice["addressCount"], 72, "addressCount is the Parashakti 72-invariant");
+    assert_eq!(
+        lattice["addressCount"], 72,
+        "addressCount is the Parashakti 72-invariant"
+    );
 
     let cells = lattice["cells"].as_array().expect("cells is an array");
     assert_eq!(cells.len(), 72, "lattice carries all 72 address cells");

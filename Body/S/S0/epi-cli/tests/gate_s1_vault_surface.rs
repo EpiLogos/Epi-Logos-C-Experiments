@@ -6,12 +6,15 @@
 //! the protected-path privacy classifier and the semantic suggest_links
 //! happy-path (with NoIndex staleness when the vault has no smart_env).
 
+mod support;
+
 use std::fs;
 use std::path::PathBuf;
 
 use epi_logos::gate::s1_hen;
 use epi_s3_gateway_contract::{S1VaultRenameReceipt, S1VaultRenameRefusalReason};
 use serde_json::json;
+use support::TestGatewayClient;
 
 fn fixture_vault() -> PathBuf {
     let unique = format!(
@@ -55,6 +58,16 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
         "Two refs in one doc: [[A]] and again [[A|second]].\n",
     )
     .unwrap();
+    fs::write(
+        vault.join("Notes/Ref6.md"),
+        "Path refs: [[folder/A]] and [[folder/A.md#Section|aliased]].\n",
+    )
+    .unwrap();
+    fs::write(
+        vault.join("Notes/Fenced.md"),
+        "```md\nAn example that must stay literal: [[A]].\n```\n",
+    )
+    .unwrap();
     // Add a non-referring doc so the test confirms we didn't touch it.
     fs::write(
         vault.join("Notes/Unrelated.md"),
@@ -74,9 +87,10 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
 
     assert_eq!(receipt.from_path, "A.md");
     assert_eq!(receipt.to_path, "B.md");
-    // Ref5 has two `[[A]]` occurrences; total link count = 6 across 5 docs.
-    assert_eq!(receipt.reconciled_documents.len(), 5);
-    assert_eq!(receipt.reconciled_link_count, 6);
+    // Ref5 has two bare occurrences and Ref6 has two path-qualified forms:
+    // total link count = 8 across 6 documents. The fenced example is excluded.
+    assert_eq!(receipt.reconciled_documents.len(), 6);
+    assert_eq!(receipt.reconciled_link_count, 8);
     assert!(receipt.refusals.is_empty());
 
     // Verify the actual file contents — every `[[A]]` is now `[[B]]`,
@@ -123,6 +137,22 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
         "Ref5 must no longer reference [[A]]: {ref5:?}"
     );
 
+    let ref6 = fs::read_to_string(vault.join("Notes/Ref6.md")).unwrap();
+    assert!(
+        ref6.contains("[[folder/B]]"),
+        "path stem must rewrite: {ref6:?}"
+    );
+    assert!(
+        ref6.contains("[[folder/B.md#Section|aliased]]"),
+        "path extension, heading, and alias must survive: {ref6:?}"
+    );
+
+    let fenced = fs::read_to_string(vault.join("Notes/Fenced.md")).unwrap();
+    assert!(
+        fenced.contains("[[A]]"),
+        "fenced examples are not link-graph edges and must remain literal: {fenced:?}"
+    );
+
     let unrelated = fs::read_to_string(vault.join("Notes/Unrelated.md")).unwrap();
     assert!(
         unrelated.contains("[[OtherNote]]"),
@@ -130,6 +160,41 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
     );
 
     // Source file moved.
+    assert!(!vault.join("A.md").exists());
+    assert!(vault.join("B.md").exists());
+}
+
+#[tokio::test]
+async fn rename_reconciliation_round_trips_through_the_real_gateway() {
+    let vault = fixture_vault();
+    let _guard = scopeguard_remove(&vault);
+    fs::write(vault.join("A.md"), "# A\n").unwrap();
+    fs::write(
+        vault.join("Inbound.md"),
+        "Live [[folder/A.md#Section|alias]].\n```md\nLiteral [[A]].\n```\n",
+    )
+    .unwrap();
+
+    let mut client = TestGatewayClient::connected_with_temp_store(28918).await;
+    let result = client
+        .request(
+            "s1'.vault.rename_file",
+            json!({
+                "vaultRoot": vault.to_string_lossy(),
+                "fromPath": "A.md",
+                "toPath": "B.md",
+            }),
+        )
+        .await
+        .expect("real gateway dispatches the governed S1 rename");
+    let receipt: S1VaultRenameReceipt =
+        serde_json::from_value(result).expect("gateway returns the typed rename receipt");
+
+    assert_eq!(receipt.reconciled_link_count, 1);
+    assert!(receipt.refusals.is_empty());
+    let inbound = fs::read_to_string(vault.join("Inbound.md")).unwrap();
+    assert!(inbound.contains("[[folder/B.md#Section|alias]]"));
+    assert!(inbound.contains("Literal [[A]]."));
     assert!(!vault.join("A.md").exists());
     assert!(vault.join("B.md").exists());
 }

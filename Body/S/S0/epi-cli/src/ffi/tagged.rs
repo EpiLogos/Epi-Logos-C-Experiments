@@ -77,7 +77,6 @@ pub fn flags_description(flags: u8) -> String {
     }
 }
 
-
 #[cfg(test)]
 mod hash_flip_law {
     //! CCT-20 (a): `#` is the phase-flip act — a coordinate's ADDRESS

@@ -5,7 +5,7 @@ The Chronos ta-onta carrier (S4-3') — "Chronos carrier law for the temporal fr
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-3'-SPEC]] (carrier law) -> [[S3-3'-SPEC]] (S-layer temporal fold)
 
 ## Ownership
-- `extension.ts` — pi-coding-agent extension entry; registers Chronos tools, hooks, orbit scheduling
+- `extension.ts` — pi-coding-agent extension entry; registers Chronos tools and routes Khora completion events into orbit scheduling/re-entry
 - `CONTRACT.md` — binding responsibility/tool/lifecycle contract (the local interface of record)
 - `spine-contribution.ts` — `S3'/Temporal` spine injection slot, ledger channel, compiler pass, query handler
 - `modules/temporal-frame.ts` — temporal-frame law: `computeDayId`, `nowPath`, `directionForRun`
@@ -13,8 +13,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-3'-SPEC]] (carrier law) -> [[S3-3'-
 - `modules/aeon-task-source.ts` — 47.4 [[Aeon]] task-source binding: Ralph PRD markdown checkboxes → ordered tranches; JSON checkpoint (completed ids + fire history) persists across fires; `advanceAeonTaskSource` is the per-fire work-list cursor
 - `modules/graphiti-day-arc.ts` — seam to the Graphiti day-arc runtime (non-fatal when sidecar absent)
 - `modules/cron-fire.ts` — 47.2 fired-cron → [[Anima]] dispatch unit: `chronos_cron_fire` resolves payload → (agent, task, VakAddress) and routes through `dispatchTeamMember` (a scheduled fire is a normal VAK dispatch, not a side channel); `wake_mode` now/next-heartbeat shapes the address (CP4.2/CS2 vs CP4.4/CS4); re-exported by `extension.ts`, which keeps only the typebox tool registration
+- `modules/temporal-control-plane.ts` — 19.11 response-orbit scheduling and rhythm re-entry: real cron registration, response-token/kairos receipt, Hen content delta, Janus spread delta, Mercurius kairos delta, Khora top inscription
 - `S3'/kairos-python-adapter.ts` — kerykeion natal-chart provider (invoked by Janus within Chronos)
-- `tests/` — `node:test` suites: `temporal_frame`, `graphiti_day_arc`, `kairos_additive`, `aeon_scheduling`, `cron_fire_dispatch` (47.2 Anima-routing + wake_mode contract), `aeon_task_source` (47.4 PRD parse + per-fire advance + checkpoint persistence + exhaustion refusal)
+- `tests/` — `node:test` suites including `temporal_control_plane` (real filesystem + real `epi gate cron` round trip), `temporal_frame`, `graphiti_day_arc`, `kairos_additive`, `aeon_scheduling`, `cron_fire_dispatch`, and `aeon_task_source`
 - Does NOT own: NOW/Day structure definition + template instantiation (Hen), thought classification (Aletheia), agent dispatch (Anima), session identity + write primitive (Khora). Chronos TRIGGERS; siblings CREATE/EXECUTE.
 
 ## Local Contracts

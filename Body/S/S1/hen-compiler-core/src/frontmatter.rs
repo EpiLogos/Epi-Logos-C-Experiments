@@ -246,7 +246,8 @@ fn validate_klein_weighting(value: &Value, result: &mut ValidationResult) {
         return;
     };
     let weight = |name: &str| -> Option<f64> {
-        map.get(Value::String(name.to_owned())).and_then(Value::as_f64)
+        map.get(Value::String(name.to_owned()))
+            .and_then(Value::as_f64)
     };
     let (Some(prospective), Some(retrospective)) = (weight("prospective"), weight("retrospective"))
     else {
@@ -255,7 +256,10 @@ fn validate_klein_weighting(value: &Value, result: &mut ValidationResult) {
         );
         return;
     };
-    for (name, w) in [("prospective", prospective), ("retrospective", retrospective)] {
+    for (name, w) in [
+        ("prospective", prospective),
+        ("retrospective", retrospective),
+    ] {
         if !(0.0..=1.0).contains(&w) {
             result.errors.push(format!(
                 "Frontmatter key 'c_3_klein_weighting.{name}' value {w} is out of range (must be 0.0-1.0)"

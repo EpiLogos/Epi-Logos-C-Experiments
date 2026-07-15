@@ -57,8 +57,7 @@ async fn coord_name_map(client: &Neo4jClient, cypher: &str) -> HashMap<String, S
 /// Independent single-name read at a fixed coordinate (the `v` column). `None`
 /// when the node is absent or Neo4j is unreachable.
 async fn graph_name(client: &Neo4jClient, coordinate: &str) -> Option<String> {
-    let cypher =
-        format!("MATCH (n {{coordinate:'{coordinate}'}}) RETURN n.c_1_name AS v");
+    let cypher = format!("MATCH (n {{coordinate:'{coordinate}'}}) RETURN n.c_1_name AS v");
     let rows = client.run(&cypher).await.ok()?;
     rows.first().and_then(|row| row.get::<String>("v").ok())
 }
@@ -224,8 +223,7 @@ async fn asma_corpus_matches_live_divinename_nodes() {
 
         let sonic = &artifact["sacredSonic"];
         // Kernel routing: 99 names split three-by-three into groups of 33.
-        let expected_coord =
-            format!("M2-4.0-(0/1)-{}-{}", address72 / 33, address72 % 33);
+        let expected_coord = format!("M2-4.0-(0/1)-{}-{}", address72 / 33, address72 % 33);
         assert_eq!(
             sonic["coordinate"].as_str().unwrap(),
             expected_coord,
@@ -235,7 +233,9 @@ async fn asma_corpus_matches_live_divinename_nodes() {
 
         let independent = graph_name(&client, &expected_coord)
             .await
-            .unwrap_or_else(|| panic!("independent DivineName read at {expected_coord} must succeed"));
+            .unwrap_or_else(|| {
+                panic!("independent DivineName read at {expected_coord} must succeed")
+            });
         assert!(
             !independent.is_empty(),
             "the live graph must carry a non-empty asma name at {expected_coord}"

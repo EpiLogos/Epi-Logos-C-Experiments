@@ -75,6 +75,7 @@ pub const METHOD_NAMES: &[&str] = &[
     S2_GRAPH_RELATION_FAMILY_LIST_METHOD,
     "s2.parashaktiCorrespondences",
     "m2.cymatic_invert",
+    crate::KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
     M1_SPANDA_HOLD_METHOD,
     M1_SPANDA_RELEASE_METHOD,
     M1_SPANDA_WALK_TO_METHOD,

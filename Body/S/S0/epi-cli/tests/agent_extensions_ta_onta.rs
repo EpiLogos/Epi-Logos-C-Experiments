@@ -190,8 +190,7 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_team.contains("pi.registerCommand(\"agents-team\""));
     assert!(agent_team.contains("childPiRuntimeArgs"));
     // Child spawn-arg construction moved into the pi-pi dispatch seam.
-    let pi_pi =
-        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts")).unwrap();
+    let pi_pi = fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts")).unwrap();
     assert!(pi_pi.contains("\"--tools\", state.def.tools"));
     assert!(pi_pi.contains("spawn(\"pi\""));
 

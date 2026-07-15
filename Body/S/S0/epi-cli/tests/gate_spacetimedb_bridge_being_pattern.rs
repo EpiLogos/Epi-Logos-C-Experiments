@@ -15,9 +15,7 @@ fn s0_bridge_forwards_being_pattern_handles_only() {
     assert!(payload.pointer("/liveState/streamDelta").is_some());
     // LensOrbiterRelationProjection carries typed aspect edges now (the old
     // scalar planetaryLensAspect string was retired with the aspect upgrade).
-    assert!(payload
-        .pointer("/m2M3Relation/planetPlanetEdges")
-        .is_some());
+    assert!(payload.pointer("/m2M3Relation/planetPlanetEdges").is_some());
     assert!(payload
         .pointer("/m2M3Relation/planetApertureEdges")
         .is_some());

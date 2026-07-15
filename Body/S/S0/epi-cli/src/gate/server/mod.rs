@@ -144,8 +144,9 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                 .unwrap_or_default()
                 .as_millis() as u64;
             let anchor = runtime.spanda_anchor().unwrap_or(initial_anchor);
-            let mut projection =
-                portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, generation);
+            let mut projection = portal_core::KernelTemporalProjection::from_phase_anchor(
+                &anchor, now_ms, generation,
+            );
             let spanda_block = spanda_block_json(&anchor, now_ms);
             // Live Kerykeion sky, attached only when the kairos cache is fresh
             // and complete (cosmic-clock §5.3 kairos_valid law) — the fields'

@@ -4,6 +4,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   KERNEL_BRIDGE_CAPABILITY_NAMES,
+  EpogdoonBridgeProjection,
+  LensCodonBinaryProjection,
   KernelBridgeCachedProfile,
   KernelBridgeConnectionStatus,
   KernelBridgeEvent,
@@ -22,7 +24,7 @@ import {
   TranscriptionalClockPacket,
   validateKernelBridgeRpcEnvelope,
 } from "../src/kernel-bridge.js";
-import { KERNEL_BRIDGE_REQUIRED_CAPABILITIES } from "../../../../../../Body/M/epi-theia/extensions/m-extension-runtime/src/common/bridge-api.js";
+import { KERNEL_BRIDGE_CAPABILITIES } from "../../../../../../Body/M/pratibimba-app/src/bridge/types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../../../../..");
@@ -129,12 +131,16 @@ describe("Kernel bridge contract package", () => {
     }
     expect(ps!.lensCarrier).toHaveLength(16);
     // the temporal canon is exactly the 24/12/4-section rows (E2 law);
-    // Fibonacci Ground rides beside as the +1, never a 17th row
+    // Ground is functional lens 16 and the primary address of the 16 derived rows.
     const temporal = ps!.lensCarrier
       .filter((lens) => lens.temporalCanon)
       .map((lens) => lens.sections)
       .sort((a, b) => a - b);
     expect(temporal).toEqual([4, 12, 24]);
+    expect(ps!.fibonacciGround.lensId).toBe(16);
+    expect(ps!.fibonacciGround.role).toBe("primary-ground");
+    expect(ps!.fibonacciGround.slice).toBe(6);
+    expect(ps!.fibonacciGround.sections).toBe(60);
     expect(ps!.fibonacciGround.temporalCanon).toBe(true);
     // node/lensCarrier agree on the §4 formula at every aperture
     ps!.lensCarrier.forEach((lens, i) => {
@@ -486,13 +492,84 @@ describe("Kernel bridge contract package", () => {
       "depositKernelObservation",
       "requestReviewEvidence",
       "s2.parashaktiCorrespondences",
+      "kernelBridge.m2.epogdoonProjection(address72)",
       "kernelBridge.m2.planetaryElementalWeights()",
       "kernelBridge.m2.cymaticMonoPolyState(address72)",
       "kernelBridge.m3.bioquaternionTranscription(codon)",
+      "kernelBridge.m3.lensCodonBinary(lensId)",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([
-      ...KERNEL_BRIDGE_REQUIRED_CAPABILITIES,
+      ...KERNEL_BRIDGE_CAPABILITIES,
     ]);
+    expect(
+      EpogdoonBridgeProjection.parse({
+        compressedCodon: 15,
+        isEvolutionaryGap: true,
+        expandedBack: 16,
+      }),
+    ).toEqual({
+      compressedCodon: 15,
+      isEvolutionaryGap: true,
+      expandedBack: 16,
+    });
+    const segment = Array.from({ length: 24 }, (_, section) => section * 15);
+    const degreeRecords = segment.map((degree360) => ({
+      degree360,
+      exactDegree720: degree360 * 2,
+      codonUpper: 0,
+      codonLower: 0,
+      codonClass: 0,
+      charges: { pp: 18, nn: -6, np: 6, pn: 6 },
+      quaternion: [18, -6, 6, 6],
+      elementCanonical: 4,
+      hexagramId: 0,
+      lineChangeOperator: 0,
+      tick12: Math.floor(degree360 / 30),
+      fibonacciPosition: Math.floor(degree360 / 6),
+      fibonacciDigit: 0,
+      fibonacciPhase01: (degree360 % 6) / 6,
+    }));
+    const lensProjection = {
+      lensId: 7,
+      lensRole: "derived-aperture",
+      groundingLensId: 16,
+      segment,
+      perDegree: degreeRecords,
+      contract: "kernelBridge.m3.lensCodonBinary(lensId)",
+      runtimeOwner: "S0/portal-core + epi-cli",
+      source: "CLOCK_DEGREE_LUT",
+    };
+    expect(LensCodonBinaryProjection.parse(lensProjection).perDegree).toHaveLength(24);
+    expect(() =>
+      LensCodonBinaryProjection.parse({
+        ...lensProjection,
+        perDegree: [
+          {
+            ...degreeRecords[0],
+            charges: { pp: 18, mm: -6, mp: 6, pm: 6 },
+          },
+          ...degreeRecords.slice(1),
+        ],
+      }),
+    ).toThrow();
+    const groundSegment = Array.from({ length: 60 }, (_, position) => position * 6);
+    const groundProjection = LensCodonBinaryProjection.parse({
+      ...lensProjection,
+      lensId: 16,
+      lensRole: "primary-ground",
+      segment: groundSegment,
+      perDegree: groundSegment.map((degree360, fibonacciPosition) => ({
+        ...degreeRecords[0],
+        degree360,
+        exactDegree720: degree360 * 2,
+        tick12: Math.floor(degree360 / 30),
+        fibonacciPosition,
+        fibonacciDigit: 0,
+        fibonacciPhase01: 0,
+      })),
+    });
+    expect(groundProjection.perDegree).toHaveLength(60);
+    expect(() => LensCodonBinaryProjection.parse({ ...groundProjection, lensId: 17 })).toThrow();
     expect(
       KernelBridgeConnectionStatus.parse({
         connected: true,
@@ -576,20 +653,30 @@ describe("Kernel bridge contract package", () => {
   });
 
   it("rejects runtime cached profiles that leak protected private fields", () => {
-    expect(() =>
-      KernelBridgeCachedProfile.parse({
-        generation: 44,
-        cachedAtMs: 1,
-        stale: false,
-        stalenessMs: 0,
-        privacyClass: "safe-public-current-kernel-tick",
-        profile: {
+    for (const privateKey of [
+      "bioquaternion",
+      "fieldBody",
+      "rawField",
+      "rawPersonalCymaticPayload",
+      "personalCymaticField",
+      "protectedM4Body",
+      "journalBody",
+    ]) {
+      expect(() =>
+        KernelBridgeCachedProfile.parse({
           generation: 44,
-          privacy: "safe-public-current-kernel-tick",
-          bioquaternion: { q_b: [1, 0, 0, 0] },
-        },
-      }),
-    ).toThrow(/bioquaternion/);
+          cachedAtMs: 1,
+          stale: false,
+          stalenessMs: 0,
+          privacyClass: "safe-public-current-kernel-tick",
+          profile: {
+            generation: 44,
+            privacy: "safe-public-current-kernel-tick",
+            [privateKey]: { protected: true },
+          },
+        }),
+      ).toThrow(new RegExp(privateKey));
+    }
   });
 
   it("rejects unauthorized gateway method names before dispatch", () => {

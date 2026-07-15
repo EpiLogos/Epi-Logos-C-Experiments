@@ -61,9 +61,9 @@ async fn contemplation_close_over_live_gateway_has_no_executable_adapter_yet() {
         "live nara.session_open must return a real protein-handle envelope"
     );
     assert!(
-        opened["protein_handle"]
-            .as_str()
-            .is_some_and(|handle| handle.starts_with("m4-protein://session/contemplation-live-probe/")),
+        opened["protein_handle"].as_str().is_some_and(
+            |handle| handle.starts_with("m4-protein://session/contemplation-live-probe/")
+        ),
         "live nara.session_open must mint the real m4-protein handle, got {:?}",
         opened["protein_handle"]
     );

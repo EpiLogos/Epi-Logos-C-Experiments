@@ -22,16 +22,21 @@ import { invokeCommand } from './bridge/tauri';
 import { wireSupervisorEvents } from './bridge/tauriEvents';
 import { registerAtelierCommands } from './commands/atelier';
 import { commands, usePaletteStore } from './commands/registry';
+import { registerCrossLayoutIntentCommand } from './commands/crossLayoutIntent';
 import { useEventsStore } from './state/eventsStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
 import { StatusStrip } from './components/StatusStrip';
 import { CosmicEngine } from './engine/CosmicEngine';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
+import { PersonalRecognitionEngine } from './engine/PersonalRecognitionEngine';
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
+import { AutoresearchPane } from './panes/AutoresearchPane';
+import { KairosEnablementPane } from './panes/KairosEnablementPane';
+import { MedicineViewPane } from './panes/MedicineViewPane';
 import { ReviewBlocksPane } from './panes/omni/ReviewBlocksPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
@@ -45,7 +50,6 @@ import { FileTreePane } from './panes/FileTreePane';
 import { JournalTimelinePane } from './panes/JournalTimelinePane';
 import { LogsPane } from './panes/LogsPane';
 import { MarkdownEditorPane } from './panes/MarkdownEditorPane';
-import { NowPane } from './panes/NowPane';
 import { OraclePane } from './panes/OraclePane';
 import { DayCalendarPane } from './panes/DayCalendarPane';
 import { M2CorrespondencePane } from './panes/M2CorrespondencePane';
@@ -53,6 +57,7 @@ import { SessionsPane } from './panes/SessionsPane';
 import { OmniPendingPane } from './panes/omni/OmniPendingPane';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
 import { VaultEntry } from './panes/FileTreePane';
+import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 
 /** Month-first (Architect correction): sorts within the year in the vault. */
 function todayId(): string {
@@ -117,7 +122,10 @@ const PERSONAL_DEFAULT = {
                     { type: 'tab', name: 'Now', component: 'personalHome', enableClose: false },
                     { type: 'tab', name: 'M1 Deep', component: 'm1SurfaceDeep', enableClose: false },
                     { type: 'tab', name: 'Arena', component: 'm4DialogicalArena', enableClose: false },
-                    { type: 'tab', name: 'CU Ledger', component: 'canonUpdateLedger', enableClose: false }
+                    { type: 'tab', name: 'CU Ledger', component: 'canonUpdateLedger', enableClose: false },
+                    { type: 'tab', name: 'Autoresearch', component: 'autoresearch', enableClose: false },
+                    { type: 'tab', name: 'Medicine', component: 'medicineView', enableClose: false },
+                    { type: 'tab', name: 'Kairos setup', component: 'kairosEnablement', enableClose: false }
                 ]
             }
         ]
@@ -138,6 +146,7 @@ const COSMIC_DEFAULT = {
                     { type: 'tab', name: 'Spanda', component: 'spandaNavigator', enableClose: false },
                     { type: 'tab', name: 'Walk', component: 'walk', enableClose: false },
                     { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
+                    { type: 'tab', name: 'Bases', component: 'mocBases', enableClose: false },
                     { type: 'tab', name: 'Correspondence', component: 'm2Correspondence', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
                     { type: 'tab', name: 'Played Torus', component: 'm1PlayedTorus', enableClose: false },
@@ -153,7 +162,7 @@ const COSMIC_DEFAULT = {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 16;
+const LAYOUT_VERSION = 20;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -186,7 +195,19 @@ function factory(node: TabNode) {
         case 'spandaNavigator':
             return <SpandaNavigatorPane />;
         case 'bimbaGraph':
-            return <GraphExplorerPane />;
+            return (
+                <GraphExplorerPane
+                    requestedM0Contribution={
+                        ((node.getConfig() as { crossLayoutIntent?: { requestedExtensionId?: string; requestedContributionId?: string } })
+                            ?.crossLayoutIntent?.requestedExtensionId === 'm0-anuttara')
+                            ? (node.getConfig() as { crossLayoutIntent?: { requestedContributionId?: string } })
+                                .crossLayoutIntent?.requestedContributionId ?? null
+                            : null
+                    }
+                />
+            );
+        case 'mocBases':
+            return <MocBaseReflectionPane />;
         case 'm2Correspondence':
             return <M2CorrespondencePane />;
         case 'kleinTopology':
@@ -205,13 +226,22 @@ function factory(node: TabNode) {
         case 'm5Ebm':
             return <M5EbmObservatoryPane />;
         case 'personalHome':
-            return <NowPane />;
+            return <PersonalRecognitionEngine />;
         // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
         case 'm4DialogicalArena':
             return <M4DialogicalArenaPane />;
         // 40.T40.5 — the Track-40 CU-ledger review surface (48 bases-view posture)
         case 'canonUpdateLedger':
             return <CanonUpdateLedgerPane />;
+        // 28.T28.10 - real S5 autoresearch disclosure over status/history.
+        case 'autoresearch':
+            return <AutoresearchPane />;
+        // 32.T32.10 - FR-3 default-off, probe-first Kairos onboarding.
+        case 'kairosEnablement':
+            return <KairosEnablementPane />;
+        // 25.T25.10 - protected-local Medicine evidence and governed NOW pin.
+        case 'medicineView':
+            return <MedicineViewPane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':
@@ -227,7 +257,13 @@ function factory(node: TabNode) {
         // 44.T44.3 — the Review fold renders the first real data through the
         // block standard (27.6 extends with the live review reads + submit).
         case 'omniReview':
-            return <ReviewBlocksPane />;
+            return (
+                <ReviewBlocksPane
+                    requestedReviewId={
+                        ((node.getConfig() as { requestedReviewId?: unknown })?.requestedReviewId as string) ?? null
+                    }
+                />
+            );
         // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
         // own the bodies) mount the honest pending pane.
         case 'omniDispatchTrace':
@@ -425,6 +461,52 @@ export function App() {
         });
         const disposers = [
             ...atelierDisposers,
+            registerCrossLayoutIntentCommand({
+                setCoordinate: coordinate => useCoordinateStore.getState().setSelected(coordinate),
+                applySession: context =>
+                    useSessionStore.getState().setSession({
+                        ...(context.dayNow ? { dayNow: context.dayNow } : {}),
+                        ...(context.sessionKey ? { sessionKey: context.sessionKey } : {}),
+                        ...(context.privacyClass ? { privacyClass: context.privacyClass } : {})
+                    }),
+                navigate: (target, intent) => {
+                    const current = modelsRef.current;
+                    if (!current) {
+                        throw new Error('cross-layout intent: layouts are not ready');
+                    }
+                    const model = target.face === 0 ? current.cosmic : current.personal;
+                    if (faceRef.current !== target.face) {
+                        setFace(target.face);
+                    }
+                    let nodeId: string | null = null;
+                    let existingConfig: Record<string, unknown> = {};
+                    model.visitNodes(node => {
+                        if (node.getType() === 'tab' && (node as TabNode).getComponent() === target.component) {
+                            nodeId = node.getId();
+                            const config = (node as TabNode).getConfig();
+                            existingConfig = config && typeof config === 'object' && !Array.isArray(config)
+                                ? config as Record<string, unknown>
+                                : {};
+                        }
+                    });
+                    if (!nodeId) {
+                        throw new Error(`cross-layout intent: component ${target.component} is not mounted`);
+                    }
+                    model.doAction(
+                        Actions.updateNodeAttributes(nodeId, {
+                            config: {
+                                ...existingConfig,
+                                crossLayoutIntent: intent,
+                                ...(target.component === 'omniReview'
+                                    ? { requestedReviewId: intent.reviewId }
+                                    : {})
+                            }
+                        })
+                    );
+                    model.doAction(Actions.selectTab(nodeId));
+                    persist();
+                }
+            }),
             commands.register({
                 id: 'face.toggle',
                 title: 'Shell: Toggle 0/1 face (⌘.)',
@@ -526,6 +608,30 @@ export function App() {
                     const model = faceRef.current === 0 ? current.cosmic : current.personal;
                     if (model.getNodeById('omni-tab')) {
                         model.doAction(Actions.selectTab('omni-tab'));
+                        persist();
+                    }
+                }
+            }),
+            commands.register({
+                id: 'omnipanel.openReview',
+                title: 'Review: Open OmniPanel review fold',
+                run: arg => {
+                    const current = modelsRef.current;
+                    if (!current) {
+                        return;
+                    }
+                    if (faceRef.current !== 1) {
+                        setFace(1);
+                    }
+                    if (current.personal.getNodeById('omni-review')) {
+                        const requestedReviewId =
+                            arg && typeof arg === 'object' && 'reviewId' in arg && typeof arg.reviewId === 'string'
+                                ? arg.reviewId
+                                : null;
+                        current.personal.doAction(
+                            Actions.updateNodeAttributes('omni-review', { config: { requestedReviewId } })
+                        );
+                        current.personal.doAction(Actions.selectTab('omni-review'));
                         persist();
                     }
                 }

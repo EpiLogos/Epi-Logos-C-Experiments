@@ -10,12 +10,17 @@
  *   (components/M3CosmicWheelRenderService.tsx), the profile cache, flexlayout.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { gateway } from '../bridge/gatewayHolder';
+import {
+    LensCodonBinaryProjection,
+    parseLensCodonBinaryProjection
+} from '../bridge/types';
 import {
     buildM3WheelSurface,
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
-import { useTickStore } from '../state/stores';
+import { useProvenanceStore, useTickStore } from '../state/stores';
 import {
     buildM3InspectorsView,
     M3_DEPTH_VIEW_ORDER,
@@ -34,10 +39,41 @@ const INSPECTOR_LABELS: Record<M3InspectorId, string> = {
     'suit-integral': 'Per-suit integral'
 };
 
+const FUNCTIONAL_LENS_METHOD = 'kernelBridge.m3.lensCodonBinary(lensId)';
+const STATIC_LENS_NAMES = [
+    'Microscopic', 'Binary', 'Quaternary', 'Octagonal', 'Enneadic', 'Decan',
+    'Zodiacal', 'Hourly', 'Expanded Hours', 'Solar Month', 'Decadic',
+    'Greater Chamber', 'Octant', 'Quadrant', 'Hemisphere', 'Unity'
+] as const;
+
 export function M3InspectorsPane() {
     const cached = useTickStore(s => s.profile);
+    const connected = useProvenanceStore(s => s.connection.connected);
     const [open, setOpen] = useState<ReadonlySet<M3InspectorId>>(new Set());
     const [depthView, setDepthView] = useState<M3DepthView>('flat-clock-debug');
+    const [selectedLensId, setSelectedLensId] = useState(16);
+    const [functionalLens, setFunctionalLens] = useState<LensCodonBinaryProjection | null>(null);
+    const [functionalLensError, setFunctionalLensError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!connected) {
+            setFunctionalLens(null);
+            return;
+        }
+        let active = true;
+        setFunctionalLens(null);
+        setFunctionalLensError(null);
+        void gateway().invoke(FUNCTIONAL_LENS_METHOD, { lensId: selectedLensId })
+            .then(receipt => {
+                if (active) setFunctionalLens(parseLensCodonBinaryProjection(receipt.artifact));
+            })
+            .catch(cause => {
+                if (active) setFunctionalLensError(cause instanceof Error ? cause.message : String(cause));
+            });
+        return () => {
+            active = false;
+        };
+    }, [connected, selectedLensId]);
 
     const view = useMemo(() => {
         if (!cached) {
@@ -113,6 +149,29 @@ export function M3InspectorsPane() {
                         {mode}
                     </button>
                 ))}
+            </div>
+
+            <div className="m3-functional-lens" data-testid="m3-functional-lens">
+                <label>
+                    Functional lens
+                    <select
+                        data-testid="m3-functional-lens-select"
+                        value={selectedLensId}
+                        onChange={event => setSelectedLensId(Number(event.currentTarget.value))}
+                    >
+                        <option value={16}>Fibonacci Ground · primary</option>
+                        {STATIC_LENS_NAMES.map((name, lensId) => (
+                            <option key={name} value={lensId}>{name}</option>
+                        ))}
+                    </select>
+                </label>
+                <p data-testid="m3-functional-lens-readout">
+                    {functionalLens
+                        ? functionalLens.lensRole === 'primary-ground'
+                            ? `Fibonacci Ground · primary · ${functionalLens.perDegree.length} positions · ${groundAddress(functionalLens)}`
+                            : `${STATIC_LENS_NAMES[functionalLens.lensId]} · derived through Ground ${functionalLens.groundingLensId} · ${functionalLens.perDegree.length} boundaries · ${groundAddress(functionalLens)}`
+                        : functionalLensError ?? (connected ? 'loading lens projection' : 'gateway disconnected')}
+                </p>
             </div>
 
             {view && m ? (
@@ -196,4 +255,9 @@ export function M3InspectorsPane() {
             )}
         </section>
     );
+}
+
+function groundAddress(projection: LensCodonBinaryProjection): string {
+    const ground = projection.perDegree[0];
+    return ground ? `fib ${ground.fibonacciPosition} · digit ${ground.fibonacciDigit}` : 'ground unavailable';
 }

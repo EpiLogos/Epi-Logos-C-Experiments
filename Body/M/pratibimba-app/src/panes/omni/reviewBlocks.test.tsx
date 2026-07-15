@@ -61,6 +61,11 @@ describe('44.3 review → blocks projection', () => {
         expect(hosted.length).toBeGreaterThan(0);
         expect(document.querySelectorAll('[data-block-type="dispatch-genealogy"]')).toHaveLength(1);
     });
+
+    it('carries a cross-pane requested review id without claiming the live producer resolved it', () => {
+        render(<ReviewBlocksPane requestedReviewId="review-17" />);
+        expect(screen.getByTestId('review-request-target').textContent).toContain('review-17');
+    });
 });
 
 describe('44.4 vertical slice in the Review fold', () => {

@@ -272,7 +272,10 @@ pub fn coordinate_semantic_registry() -> CoordinateSemanticRegistry {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{label_spec, node_property_spec, relationship_spec};
+    use crate::{
+        label_spec, node_property_spec, relationship_spec, LABEL_SPECS, NODE_PROPERTY_SPECS,
+        RELATIONSHIP_PROPERTY_SPECS, RELATIONSHIP_TYPE_SPECS,
+    };
 
     #[test]
     fn coordinate_home_is_typed_but_preserves_legacy_string_surface() {
@@ -297,5 +300,44 @@ mod tests {
                 .coordinate_home,
             CoordinateHome::C1
         );
+    }
+
+    #[test]
+    fn every_spec_table_coordinate_home_round_trips_the_legacy_string_surface() {
+        // 17.17 behaviour-preservation proof. The typed `CoordinateHome` enum
+        // replaced a `&'static str` field repeated ~150 times across the S2
+        // spec tables. This walks EVERY coordinate_home usage site and asserts
+        // that all four legacy string surfaces agree and are non-empty:
+        //   as_str()  ·  Display/to_string()  ·  Deref<Target = str>  ·  PartialEq<&str>
+        // If any variant ever diverges from its string value, this fails closed.
+        let homes: Vec<CoordinateHome> = LABEL_SPECS
+            .iter()
+            .map(|s| s.coordinate_home)
+            .chain(RELATIONSHIP_TYPE_SPECS.iter().map(|s| s.coordinate_home))
+            .chain(NODE_PROPERTY_SPECS.iter().map(|s| s.coordinate_home))
+            .chain(RELATIONSHIP_PROPERTY_SPECS.iter().map(|s| s.coordinate_home))
+            .chain(COORDINATE_PREFIX_FAMILY_SPECS.iter().map(|s| s.coordinate_home))
+            .chain(COORDINATE_SEMANTIC_FAMILY_SPECS.iter().map(|s| s.coordinate_home))
+            .collect();
+
+        assert!(
+            homes.len() >= 150,
+            "expected ~150 coordinate_home usage sites across the spec tables, found {}",
+            homes.len()
+        );
+
+        for home in homes {
+            let s: &'static str = home.as_str();
+            assert!(!s.is_empty(), "coordinate_home {home:?} maps to an empty string");
+            assert_eq!(
+                home.to_string().as_str(),
+                s,
+                "Display diverged from as_str for {home:?}"
+            );
+            let derefed: &str = &home;
+            assert_eq!(derefed, s, "Deref<str> diverged from as_str for {home:?}");
+            assert!(home == s, "forward PartialEq<&str> failed for {home:?}");
+            assert!(s == home, "reverse PartialEq<&str> failed for {home:?}");
+        }
     }
 }

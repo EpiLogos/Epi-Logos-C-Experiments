@@ -6,7 +6,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]] (see also [[S-SYSTEM-INDEX]]
 
 ## Ownership
 - `CONTRACT.md` — binding responsibility/nesting/vault-intelligence contract for Hen
-- `extension.ts` — pi extension entry; registers `hen_template_invoke` (VAK-aware template rendering into the vault)
+- `extension.ts` — pi extension entry; registers `hen_template_invoke` and the temporal-delta-aware `hen_hybrid_retrieve`
+- `modules/hybrid-retrieve.ts` — exact-path content delta since a Khora response-token boundary; reads only, never writes
 - `modules/template-vak.ts` — VAK-address template rendering implementation
 - `S1'/frontmatter_schema.ts` — canonical `{family}_{n}_{semantic}` frontmatter schema enforcement
 - `S1'/templates/` — CT template archetypes (daily-note, now, prompt, task-spec, thought)

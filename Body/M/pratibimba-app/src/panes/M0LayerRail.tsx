@@ -31,6 +31,7 @@ import { bridgedLayerRoute, M0InspectorLayer, M0_LAYER_ROUTES } from './m0Layers
 
 export interface M0LayerRailProps {
     onLayerChange?: (layer: M0InspectorLayer) => void;
+    requestedLayer?: M0InspectorLayer | null;
 }
 
 /** The shared S2 node-read state the local layers project (21.1). `null` = no
@@ -41,11 +42,19 @@ interface S2ReadState {
     readonly reason?: string;
 }
 
-export function M0LayerRail({ onLayerChange }: M0LayerRailProps = {}) {
+export function M0LayerRail({ onLayerChange, requestedLayer = null }: M0LayerRailProps = {}) {
     const selected = useCoordinateStore(s => s.selected);
     const connected = useProvenanceStore(s => s.connection.connected);
     const [active, setActive] = useState<M0InspectorLayer>('lang');
     const [s2Read, setS2Read] = useState<S2ReadState | null>(null);
+
+    useEffect(() => {
+        if (!requestedLayer || requestedLayer === 'pers' || requestedLayer === 'pedag') {
+            return;
+        }
+        setActive(requestedLayer);
+        onLayerChange?.(requestedLayer);
+    }, [requestedLayer, onLayerChange]);
 
     useEffect(() => {
         const disposers = M0_LAYER_ROUTES.filter(
@@ -150,6 +159,17 @@ export function M0LayerRail({ onLayerChange }: M0LayerRailProps = {}) {
                     </a>
                 )
             )}
+            <a
+                data-testid="m0-governed-proposal"
+                href={
+                    selected
+                        ? `epi-logos://ide/m5-epii/review?coordinate=${encodeURIComponent(selected)}&intent=governed-promotion&source=m0-anuttara`
+                        : undefined
+                }
+                title="Propose a governed graph change through M5 review"
+            >
+                Propose via M5
+            </a>
         </div>
     );
 }

@@ -178,7 +178,11 @@ fn render_qv_detail(payload: &mut Value, node: Option<&CanonNode>) {
 fn render_relational(payload: &mut Value, node: Option<&CanonNode>, neighbours: &[CanonNeighbour]) {
     let all = node.map(|n| n.registers.as_slice()).unwrap_or_default();
     let pithy = pithy_registers(all);
-    let locality: Vec<QRegister> = all.iter().filter(|reg| reg.position == 4).cloned().collect();
+    let locality: Vec<QRegister> = all
+        .iter()
+        .filter(|reg| reg.position == 4)
+        .cloned()
+        .collect();
 
     let mut content_parts: Vec<String> = Vec::new();
     content_parts.push(concat_registers(&pithy));
@@ -310,8 +314,8 @@ fn fetch_canon(coordinate: &str, want_neighbours: bool) -> Result<CanonFetch, St
 
     let fetch = async move {
         let config = Neo4jConfig::from_env();
-        let client = Neo4jClient::connect(&config)
-            .map_err(|err| format!("Neo4j connect failed: {err}"))?;
+        let client =
+            Neo4jClient::connect(&config).map_err(|err| format!("Neo4j connect failed: {err}"))?;
 
         let rows = client
             .run(&node_cypher)
@@ -495,7 +499,10 @@ mod tests {
     fn parses_base_and_prime_register_keys() {
         assert_eq!(parse_register_key("q_5_consequence"), Some((5, false)));
         assert_eq!(parse_register_key("q_5_i_integration"), Some((5, true)));
-        assert_eq!(parse_register_key("q_1_gateway_control_plane"), Some((1, false)));
+        assert_eq!(
+            parse_register_key("q_1_gateway_control_plane"),
+            Some((1, false))
+        );
         assert_eq!(parse_register_key("q_2b_ethical"), Some((2, false)));
         assert_eq!(parse_register_key("qm_5_provenance"), None);
         assert_eq!(parse_register_key("c_1_name"), None);
@@ -504,10 +511,30 @@ mod tests {
     #[test]
     fn pithy_order_is_five_then_one_base_then_prime() {
         let registers = vec![
-            QRegister { key: "q_1_def".into(), position: 1, prime: false, text: "one".into() },
-            QRegister { key: "q_5_int".into(), position: 5, prime: false, text: "five".into() },
-            QRegister { key: "q_5_i_ret".into(), position: 5, prime: true, text: "five-prime".into() },
-            QRegister { key: "q_3_pat".into(), position: 3, prime: false, text: "three".into() },
+            QRegister {
+                key: "q_1_def".into(),
+                position: 1,
+                prime: false,
+                text: "one".into(),
+            },
+            QRegister {
+                key: "q_5_int".into(),
+                position: 5,
+                prime: false,
+                text: "five".into(),
+            },
+            QRegister {
+                key: "q_5_i_ret".into(),
+                position: 5,
+                prime: true,
+                text: "five-prime".into(),
+            },
+            QRegister {
+                key: "q_3_pat".into(),
+                position: 3,
+                prime: false,
+                text: "three".into(),
+            },
         ];
         let pithy = pithy_registers(&registers);
         let order: Vec<&str> = pithy.iter().map(|reg| reg.text.as_str()).collect();

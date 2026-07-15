@@ -45,6 +45,15 @@ describe('M0LayerRail', () => {
         expect(screen.getByTestId('m0-layer-language').getAttribute('data-active')).toBe('false');
     });
 
+    it('activates a local layer requested by a cross-layout intent after mount', () => {
+        const { rerender } = render(<M0LayerRail requestedLayer="ql" />);
+        expect(screen.getByTestId('m0-layer-ql-structure').getAttribute('data-active')).toBe('true');
+
+        rerender(<M0LayerRail requestedLayer="time" />);
+        expect(screen.getByTestId('m0-layer-time-community').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('m0-layer-ql-structure').getAttribute('data-active')).toBe('false');
+    });
+
     it('registers the m0.layer.* commands while mounted and switches tabs through them (09.T9.1)', async () => {
         const onLayerChange = vi.fn();
         const { unmount } = render(<M0LayerRail onLayerChange={onLayerChange} />);
@@ -92,6 +101,18 @@ describe('M0LayerRail', () => {
         expect(screen.getByTestId('m0-layer-personal').getAttribute('href')).toBe(
             "epi-logos://ide/m4-nara/artifact?coordinate=M0-1'&source=m0-anuttara"
         );
+    });
+
+    it('routes graph-change proposals through M5 review instead of exposing a graph write', () => {
+        useCoordinateStore.setState({ selected: 'M0-1' });
+        render(<M0LayerRail />);
+
+        const proposal = screen.getByTestId('m0-governed-proposal');
+        expect(proposal.tagName).toBe('A');
+        expect(proposal.getAttribute('href')).toBe(
+            'epi-logos://ide/m5-epii/review?coordinate=M0-1&intent=governed-promotion&source=m0-anuttara'
+        );
+        expect(proposal.getAttribute('href')).not.toContain('s2.graph');
     });
 
     /* 21.T21.1 (DR-FACE-7 fate A + small B) — the per-layer S2 read-state chip.

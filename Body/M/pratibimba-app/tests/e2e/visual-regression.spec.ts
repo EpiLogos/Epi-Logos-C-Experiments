@@ -437,12 +437,11 @@ test('(c) integrated 1-2-3 cosmic composition: full-face baseline at a frozen ti
 test('(d) integrated 4-5-0 personal composition: honest current surface baseline', async ({
     page
 }) => {
-    // GAP (named, per the rerun mission): the carrier has NO dedicated
-    // composed 4-5-0 layout — no personal-pole counterpart of the one-canvas
-    // CosmicEngine composition exists yet. The honest current 4-5-0 surface
-    // is the personal face default (Now + M1 Deep over the Vault/Journal/
-    // Calendar/Oracle border + the shared / membrane). This test baselines
-    // THAT; it does not fabricate a composition.
+    // Track 36.5's dedicated personal composition is the default carrier:
+    // M0 grounds the 0/1 hinge, M4 receives the protected composed handle and
+    // public trace scalars, and M5 scores the bussed checkpoint context.
+    // Missing emissions remain visibly pending; the carrier never fabricates
+    // a personal body, quaternion, or checkpoint.
     await bootConnected(page);
     await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '1');
 
@@ -452,8 +451,8 @@ test('(d) integrated 4-5-0 personal composition: honest current surface baseline
             page.locator('.face-active .flexlayout__border_button', { hasText: tab }).first()
         ).toBeVisible();
     }
-    // …the main tabset…
-    for (const tab of ['Now', 'M1 Deep']) {
+    // …the main tabset, including the legitimate M4' and review additions.
+    for (const tab of ['Now', 'M1 Deep', 'Arena', 'CU Ledger']) {
         await expect(
             page.locator('.face-active .flexlayout__tab_button', { hasText: tab }).first()
         ).toBeVisible();
@@ -467,6 +466,23 @@ test('(d) integrated 4-5-0 personal composition: honest current surface baseline
     // day binding, and selected tab are asserted here.
     await ensureTabSelected(page, 'Now');
     await ensureDayAnchored(page);
+    await expect(page.getByTestId('personal-recognition-engine')).toBeVisible();
+    await expect(page.getByTestId('personal-recognition-engine')).toHaveAttribute(
+        'data-state',
+        'pending'
+    );
+    await expect(page.getByTestId('personal-recognition-m0-ground')).toContainText(
+        /0\/1 substrate: (0|1|0\/1)/
+    );
+    await expect(page.getByTestId('m0-virtue-witness-panel')).toBeVisible();
+    await expect(page.getByTestId('m0-virtue-witness-grid')).toHaveAttribute('data-filled', '0');
+    await expect(page.getByTestId('m0-virtue-questions')).toContainText('unwitnessed');
+    const recognitionLayer = page.getByTestId('m5-recognition-layer');
+    await expect(recognitionLayer).toBeVisible();
+    await expect(recognitionLayer).toHaveAttribute('data-state', 'pending-handle');
+    await expect(page.getByTestId('personal-recognition-m5-score')).toContainText(
+        'Möbius return pending canonical close-path evidence'
+    );
 
     await expect(page).toHaveScreenshot('composition-4-5-0-personal.png', {
         stylePath: HIDE_VOLATILE_CSS
