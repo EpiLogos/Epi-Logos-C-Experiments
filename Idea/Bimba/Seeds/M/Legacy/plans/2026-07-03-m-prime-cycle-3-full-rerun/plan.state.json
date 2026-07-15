@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T14:25:42.997Z",
+  "updatedAt": "2026-07-15T14:28:43.786Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2032,16 +2032,32 @@
       "worktree": null
     },
     "05.T5.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T14:28:43.768Z",
+      "claimedAt": "2026-07-15T14:27:22.429Z",
+      "completedAt": "2026-07-15T14:28:43.768Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T14:28:43.768Z",
+          "text": null,
+          "receipt": {
+            "command": "cargo check --manifest-path Body/S/S0/portal-core/Cargo.toml; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml personal_identity::proposal_lifecycle; rg -n \"identity augment proposal through|Does NOT own: the review widget|proposal genesis\" Body/M/pratibimba-app/src/panes/m5ReviewGate.ts",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "evidence": "Verified IdentityAugmentProposalAdapter lifecycle proposed→reviewed→accepted|rejected→applied, read-only proposal views, and only Applied mutates Q_identity for 05.T5.9; carrier M5 review gate explicitly does not own proposal genesis/review widget.",
+            "paths": [
+              "Body/S/S0/portal-core/src/personal_identity.rs",
+              "Body/M/pratibimba-app/src/panes/m5ReviewGate.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T14:27:22.429Z",
+      "runId": "20260715T142722Z-05-T5.9",
       "worktree": null
     },
     "05.T5.10": {
@@ -17577,6 +17593,16 @@
       "leaseExpiresAt": "2026-07-15T16:24:27.568Z",
       "worktree": null,
       "completedAt": "2026-07-15T14:25:42.979Z"
+    },
+    {
+      "runId": "20260715T142722Z-05-T5.9",
+      "taskId": "05.T5.9",
+      "status": "done",
+      "startedAt": "2026-07-15T14:27:22.429Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T16:27:22.429Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T14:28:43.768Z"
     }
   ],
   "activeRoute": {
