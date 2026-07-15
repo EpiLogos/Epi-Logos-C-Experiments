@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T13:24:12.246Z",
+  "updatedAt": "2026-07-15T13:34:28.845Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1853,16 +1853,32 @@
       "worktree": null
     },
     "05.T5.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T13:34:28.828Z",
+      "claimedAt": "2026-07-15T13:25:59.914Z",
+      "completedAt": "2026-07-15T13:34:28.828Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T13:34:28.828Z",
+          "text": "Native S3 Graphiti insertion now writes and reads back all four governed Nara relation labels idempotently after protected-body validation.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml --test nara_relations",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/graphiti-runtime/src/lib.rs",
+              "Body/S/S3/graphiti-runtime/src/native.rs",
+              "Body/S/S3/graphiti-runtime/tests/nara_relations.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 17 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T13:25:59.914Z",
+      "runId": "20260715T132559Z-05-T5.3",
       "worktree": null
     },
     "05.T5.4": {
@@ -17416,6 +17432,16 @@
       "leaseExpiresAt": "2026-07-15T16:09:02.541Z",
       "worktree": null,
       "completedAt": "2026-07-15T13:24:12.358Z"
+    },
+    {
+      "runId": "20260715T132559Z-05-T5.3",
+      "taskId": "05.T5.3",
+      "status": "done",
+      "startedAt": "2026-07-15T13:25:59.914Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T15:25:59.914Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T13:34:28.828Z"
     }
   ],
   "activeRoute": {

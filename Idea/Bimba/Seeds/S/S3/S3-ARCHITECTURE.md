@@ -196,10 +196,11 @@ Cross-check surfaces: `methods_in_route_table_missing_from_dispatch_plan()` (`di
 | `session_memory_deposit_payload` | `graphiti-runtime/src/lib.rs:139-163` | Build deposit payload; refuses identity-mutating writes (line 150-152) |
 | `kernel_resonance_deposit_payload` | `graphiti-runtime/src/lib.rs:166-221` | The S5 episodic kernel-resonance deposit builder |
 | `kernel_profile_observation_deposit_payload` | `graphiti-runtime/src/lib.rs:223-332` | M1' Paramaśiva profile-to-performance stream deposit builder; validates `protected_kernel_state_key` denylist |
+| `nara_insert_relation`, `nara_relations_for_episode` | `graphiti-runtime/src/lib.rs` + `src/native.rs` | Native idempotent write/read-back for `HAS_DAY`, `CONTAINS_DAILY_NOTE`, `PART_OF_DAY`, and `NEXT_IN_ARC`; rejects protected body metadata before insertion |
 | `compose_file_path` | `graphiti-runtime/src/lib.rs:333-355` | Docker-compose path resolution (parity carry-over) |
 | `start(json_output)`, `stop(json_output)` | `graphiti-runtime/src/lib.rs:356-end` | Operator-side runtime lifecycle (parity carry-over) |
 
-**Architectural status** (per `gateway-contract/src/lib.rs:3513-3546`): the `GraphitiAdapterContract::native_library()` declares the target shape as `NativeLibrary` with `compatibility_mode: Some(HttpCompatibility)`. The HTTP FastAPI sidecar at port 37778 is the CURRENT compatibility mode; the architecture commitment is library-backed.
+**Architectural status** (per `gateway-contract/src/lib.rs:3513-3546`): the `GraphitiAdapterContract::native_library()` declares the target shape as `NativeLibrary` with `compatibility_mode: Some(HttpCompatibility)`. Tranche 05.3 closes native Nara relation insertion and read-back; the HTTP FastAPI sidecar at port 37778 remains compatibility mode for the deposit/search/provenance surfaces not yet migrated.
 
 ### 2.6 S3-5 / S3-5' — Runtime State, Subscription Registry, Kernel-Bridge Stream
 

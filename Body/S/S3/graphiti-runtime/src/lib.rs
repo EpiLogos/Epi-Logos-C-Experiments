@@ -12,7 +12,8 @@
 //! # Public surface
 //! * `GraphitiClient` / `NativeLibraryClient` — canonical native Graphiti runtime client.
 //! * `HttpCompatibilityClient` — deprecated HTTP compatibility client.
-//! * Episode, Nara relation, provenance, and kernel deposit payload helpers.
+//! * Episode, provenance, and kernel deposit payload helpers.
+//! * `nara_insert_relation` / `nara_relations_for_episode` — native idempotent Nara edge write/read-back.
 //!
 //! # Does NOT own
 //! * S2 graph storage law, S0 kernel state, or S5 identity promotion authority.
@@ -22,6 +23,7 @@ use portal_core::VakAddress;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
+use std::sync::{Mutex, OnceLock};
 
 #[path = "sidecar-compat/mod.rs"]
 pub mod http_compatibility;
@@ -40,6 +42,8 @@ pub const GRAPHITI_PORT: u16 = 37778;
 pub const GRAPHITI_BASE_URL: &str = "http://127.0.0.1:37778";
 pub const GRAPHITI_RUNTIME_AUTHORITY: &str = "S3 graphiti runtime adapter";
 pub const GRAPHITI_INVOCATION_OWNER: &str = "S5 episodic invocation and arc governance";
+
+static NARA_RELATION_STORE: OnceLock<Mutex<InMemoryGraphitiStore>> = OnceLock::new();
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProvenanceEvent {
@@ -1020,36 +1024,32 @@ pub async fn nara_insert_relation(
     envelope["episodeHandle"] = Value::String(episode_handle.to_owned());
     envelope["relation"] = payload.clone();
 
-    match reqwest::Client::new()
-        .post(format!("{GRAPHITI_BASE_URL}/relation"))
-        .json(&payload)
-        .timeout(graphiti_runtime_timeout())
-        .send()
-        .await
-    {
-        Ok(response) if response.status().is_success() => {
-            let body = response.json::<Value>().await.unwrap_or_else(|_| json!({}));
-            envelope["runtimeAvailable"] = Value::Bool(true);
-            envelope["write"] = body;
-        }
-        Ok(response) => {
-            envelope["runtimeAvailable"] = Value::Bool(false);
-            envelope["error"] = json!({
-                "kind": "graphiti-http-error",
-                "status": response.status().as_u16(),
-            });
-        }
-        Err(error) => {
-            envelope["runtimeAvailable"] = Value::Bool(false);
-            envelope["error"] = json!({
-                "kind": "graphiti-unavailable",
-                "message": error.to_string(),
-                "next": "Start the compatibility runtime with `epi gate graphiti start`, or replace it with the native S3 Graphiti runtime adapter."
-            });
-        }
-    }
+    let (edge, created) = nara_relation_store()?
+        .lock()
+        .map_err(|_| "native Graphiti Nara relation store lock poisoned".to_owned())?
+        .insert_nara_relation(day_id, episode_handle, &relation);
+    envelope["runtimeAvailable"] = Value::Bool(true);
+    envelope["write"] = json!({
+        "adapter": "native-library",
+        "created": created,
+        "edge": edge,
+    });
 
     Ok(envelope)
+}
+
+pub fn nara_relations_for_episode(episode_handle: &str) -> Result<Vec<RelationshipEdge>, String> {
+    if episode_handle.trim().is_empty() {
+        return Err("episode_handle is required".to_owned());
+    }
+    Ok(nara_relation_store()?
+        .lock()
+        .map_err(|_| "native Graphiti Nara relation store lock poisoned".to_owned())?
+        .nara_relations_for_episode(episode_handle))
+}
+
+fn nara_relation_store() -> Result<&'static Mutex<InMemoryGraphitiStore>, String> {
+    Ok(NARA_RELATION_STORE.get_or_init(|| Mutex::new(InMemoryGraphitiStore::default())))
 }
 
 fn iso8601_now() -> String {

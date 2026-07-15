@@ -3,6 +3,8 @@ use serde_json::Value;
 use std::collections::{hash_map::DefaultHasher, BTreeMap, BTreeSet};
 use std::hash::{Hash, Hasher};
 
+use crate::NaraRelation;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct TranscriptMessage {
     pub role: String,
@@ -186,6 +188,54 @@ pub struct InMemoryGraphitiStore {
 }
 
 impl InMemoryGraphitiStore {
+    pub fn insert_nara_relation(
+        &mut self,
+        day_id: &str,
+        episode_handle: &str,
+        relation: &NaraRelation,
+    ) -> (RelationshipEdge, bool) {
+        let predicate = relation.kind.edge_label();
+        let edge_uuid = stable_id(
+            "graphiti:nara-relation",
+            &[day_id, episode_handle, &relation.target_handle, predicate],
+        );
+        if let Some(edge) = self.relationships.get_mut(&edge_uuid) {
+            edge.last_seen_episode = episode_handle.to_owned();
+            return (edge.clone(), false);
+        }
+
+        let edge = RelationshipEdge {
+            uuid: edge_uuid.clone(),
+            source_uuid: episode_handle.to_owned(),
+            target_uuid: relation.target_handle.clone(),
+            predicate: predicate.to_owned(),
+            description: serde_json::json!({
+                "dayId": day_id,
+                "privacyClass": relation.privacy_class.as_str(),
+                "metadata": relation.metadata,
+            })
+            .to_string(),
+            first_seen_episode: episode_handle.to_owned(),
+            last_seen_episode: episode_handle.to_owned(),
+        };
+        self.relationships.insert(edge_uuid, edge.clone());
+        (edge, true)
+    }
+
+    pub fn nara_relations_for_episode(&self, episode_handle: &str) -> Vec<RelationshipEdge> {
+        self.relationships
+            .values()
+            .filter(|edge| {
+                edge.source_uuid == episode_handle
+                    && matches!(
+                        edge.predicate.as_str(),
+                        "HAS_DAY" | "CONTAINS_DAILY_NOTE" | "PART_OF_DAY" | "NEXT_IN_ARC"
+                    )
+            })
+            .cloned()
+            .collect()
+    }
+
     pub fn prepare_episode(
         &self,
         session_id: &str,
