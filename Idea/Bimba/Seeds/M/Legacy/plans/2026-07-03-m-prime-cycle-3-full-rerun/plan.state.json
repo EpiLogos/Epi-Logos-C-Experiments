@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-14T18:24:52.890Z",
+  "updatedAt": "2026-07-15T09:03:35.861Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2408,28 +2408,94 @@
       "worktree": null
     },
     "05.T5.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T09:03:35.651Z",
+      "claimedAt": "2026-07-14T19:53:40.956Z",
+      "completedAt": "2026-07-15T09:03:35.651Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T19:55:31.526Z",
+          "text": "Live substrate already satisfies T5.20: M4'-SPEC names Pi-as-LLM-Nara at position 4' with operational-capacity citations, Anima CONTRACT preserves Anima-as-dispatch while routing through Pi-as-Nara; grep checks green and Anima tests 156/156 passed.",
+          "receipt": {
+            "command": "grep contract checks for T5.20 + node --test tests/*.test.ts in Body/S/S4/ta-onta/S4-4p-anima",
+            "exitCode": 0,
+            "testsPassed": 156,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M4-prime/M4-prime-SPEC.md",
+              "Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 150000,
+              "output": 12000
+            }
+          }
+        },
+        {
+          "at": "2026-07-15T09:03:35.651Z",
+          "text": "Independent re-verify (opus-reviewer): Anima CONTRACT.md L27 carries Pi-as-LLM-Nara at position 4 prime per DR-MP-1 (VALIDATED, register line 11/833); anima suite 156/0; class-K gate PASS. Note: prior receipt cited nonexistent M4-prime-SPEC.md path — deliverable itself is real in CONTRACT.md.",
+          "receipt": {
+            "command": "node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.test.ts",
+            "exitCode": 0,
+            "testsPassed": 156,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "sol",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T19:55:31.526Z",
+      "runId": "20260714T195340Z-05-T5.20",
       "worktree": null
     },
     "05.T5.21": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T09:03:35.846Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-15T09:03:35.846Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T20:17:17.637Z",
+          "text": "Implemented the anuttara-symbolic-parse runtime parser/articulation/no-bypass gate with a real PI-agent contract test; PI-agent TS suite passed 82/82 and honesty lint passed.",
+          "receipt": {
+            "command": "node --test Body/S/S4/pi-agent/tests/entitlement.test.ts Body/S/S4/pi-agent/tests/epii-entitlement-activation.test.ts Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts Body/S/S4/pi-agent/tests/no-tool-bypass.test.ts Body/S/S4/pi-agent/tests/capability-parity.test.ts Body/S/S4/pi-agent/tests/axiom-translate.test.ts Body/S/S4/pi-agent/tests/anuttara-symbolic-parse.test.ts Body/S/S4/pi-agent/lib/review-gate.test.ts && node .codex/scripts/lint-test-honesty.mjs Body/S/S4/pi-agent/tests/anuttara-symbolic-parse.test.ts",
+            "exitCode": 0,
+            "testsPassed": 82,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/index.ts",
+              "Body/S/S4/pi-agent/tests/anuttara-symbolic-parse.test.ts",
+              "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/SKILL.md",
+              "Body/S/S4/pi-agent/AGENTS.md"
+            ],
+            "tokenUsage": {
+              "input": 220000,
+              "output": 18000
+            }
+          }
+        },
+        {
+          "at": "2026-07-15T09:03:35.846Z",
+          "text": "Independent re-verify (opus-reviewer): pi-agent anuttara-symbolic-parse contract suite 82/0 fresh; class-K gate PASS.",
+          "receipt": {
+            "command": "node --test Body/S/S4/pi-agent/tests/{entitlement,epii-entitlement-activation,vama-shakti-dialogue-only,no-tool-bypass,capability-parity,axiom-translate,anuttara-symbolic-parse}.test.ts Body/S/S4/pi-agent/lib/review-gate.test.ts",
+            "exitCode": 0,
+            "testsPassed": 82,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/index.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-07-14T20:17:17.637Z",
       "runId": null,
       "worktree": null
     },
@@ -2658,16 +2724,36 @@
       "worktree": null
     },
     "06.T6.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T20:39:05.965Z",
+      "claimedAt": "2026-07-14T20:36:26.834Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T20:39:05.965Z",
+          "text": "The live EBM runtime feeds the portal-core Riemannian Möbius descent with eight element-boundary calls per cycle and preserves the zero-checkpoint fallback.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --features resonance_ebm_runtime resonance_ebm_runtime_tests && cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm --test resonance_ebm_runtime",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S5/epii-autoresearch-core/src/resonance_ebm/gradient.rs",
+              "Body/S/S5/epii-autoresearch-core/tests/resonance_ebm_runtime.rs"
+            ],
+            "tokenUsage": {
+              "input": 45000,
+              "output": 10000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 12 dirty files.",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:36:26.834Z",
+      "heartbeatAt": "2026-07-14T20:39:05.965Z",
+      "runId": "20260714T203626Z-06-T6.10",
       "worktree": null
     },
     "06.T6.11": {
@@ -2789,16 +2875,57 @@
       "worktree": null
     },
     "07.T7.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T09:03:23.571Z",
+      "claimedAt": "2026-07-14T20:38:39.896Z",
+      "completedAt": "2026-07-15T09:03:23.571Z",
+      "evidence": [
+        {
+          "at": "2026-07-14T20:44:13.546Z",
+          "text": "07.T7.4 live substrate proof: portal-core exposes the canonical Quaternion carrier; the real M1 ring, M3 codon, and M4 composition audit passes (1/1). Carrier M1/M3/M4 projection suite also passed 593/593."
+        },
+        {
+          "at": "2026-07-14T20:48:28.325Z",
+          "text": "Landed the canonical zero-layout Cl(4,2) Quaternion carrier across real M1 ring, M3 codon-charge, and M4 personal-composition producers; the behavioral cross-pole test, byte-stable baseline, full portal-core suite, and honesty lint are green.",
+          "receipt": {
+            "command": "cargo test --quiet --manifest-path Body/S/S0/portal-core/Cargo.toml && node .codex/scripts/lint-test-honesty.mjs Body/S/S0/portal-core/tests/cl42_one_algebra.rs",
+            "exitCode": 0,
+            "testsPassed": 373,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/quaternion.rs",
+              "Body/S/S0/portal-core/src/codon_rotation_projection.rs",
+              "Body/S/S0/portal-core/src/kernel/projections/ananda_vortex.rs",
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/portal-core/src/personal_identity.rs",
+              "Body/S/S0/portal-core/tests/cl42_one_algebra.rs",
+              "Body/S/S0/portal-core/AGENTS.md"
+            ],
+            "tokenUsage": {
+              "input": 90000,
+              "output": 15000
+            }
+          }
+        },
+        {
+          "at": "2026-07-15T09:03:23.571Z",
+          "text": "Independent re-verify (opus-reviewer): full portal-core suite green after baseline-fixture re-bless (322/0); cl42_one_algebra honesty-lint clean; class-K gate PASS.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml && node .codex/scripts/lint-test-honesty.mjs Body/S/S0/portal-core/tests/cl42_one_algebra.rs",
+            "exitCode": 0,
+            "testsPassed": 322,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/cl42_one_algebra.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "sol",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-14T20:48:28.325Z",
+      "runId": "20260714T203839Z-07-T7.4",
       "worktree": null
     },
     "07.T7.5": {
@@ -3221,16 +3348,36 @@
       "worktree": null
     },
     "09.T9.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T20:41:16.493Z",
+      "claimedAt": "2026-07-14T20:39:17.159Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T20:41:16.493Z",
+          "text": "The M0 rail now sends graph-change proposals through the M5 governed-review deep link and exposes no direct S2 graph mutation route.",
+          "receipt": {
+            "command": "pnpm vitest run src/panes/M0LayerRail.test.tsx && pnpm typecheck",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0LayerRail.tsx",
+              "Body/M/pratibimba-app/src/panes/M0LayerRail.test.tsx",
+              "Body/M/pratibimba-app/AGENTS.md"
+            ],
+            "tokenUsage": {
+              "input": 35000,
+              "output": 8000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 12 dirty files.",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:39:17.159Z",
+      "heartbeatAt": "2026-07-14T20:41:16.493Z",
+      "runId": "20260714T203917Z-09-T9.4",
       "worktree": null
     },
     "09.T9.5": {
@@ -3746,16 +3893,35 @@
       "worktree": null
     },
     "11.T11.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T20:42:18.839Z",
+      "claimedAt": "2026-07-14T20:41:29.016Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T20:42:18.839Z",
+          "text": "The one-shell 0/1 face state and shared / membrane pass the carrier shell suite; the required real-gateway E2E was policy-blocked before execution and remains for independent verification.",
+          "receipt": {
+            "command": "pnpm vitest run src/App.test.tsx",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/App.test.tsx"
+            ],
+            "tokenUsage": {
+              "input": 25000,
+              "output": 6000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 16 dirty files.",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:41:29.016Z",
+      "heartbeatAt": "2026-07-14T20:42:18.839Z",
+      "runId": "20260714T204129Z-11-T11.1",
       "worktree": null
     },
     "11.T11.2": {
@@ -5011,16 +5177,21 @@
       "worktree": null
     },
     "15.T15.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T20:52:36.913Z",
+      "claimedAt": "2026-07-14T20:45:28.690Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T20:52:36.913Z",
+          "text": "Live carrier proof: the full 1-2-3 Cosmic Engine and honest current 4-5-0 personal-face Playwright baselines pass against a real spawned gateway (2/2). The personal baseline now asserts its four intentional tabs (Now, M1 Deep, Arena, CU Ledger) after the Track 40/41 additions. The named limitation remains explicit: no dedicated one-canvas 4-5-0 composition exists yet."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:45:28.690Z",
+      "heartbeatAt": "2026-07-14T20:52:36.913Z",
+      "runId": "20260714T204528Z-15-T15.4",
       "worktree": null
     },
     "15.T15.5": {
@@ -6268,16 +6439,21 @@
       "worktree": null
     },
     "17.T17.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T21:50:22.599Z",
+      "claimedAt": "2026-07-14T21:40:05.575Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T21:50:22.599Z",
+          "text": "Canonical S1 rename reconciliation now preserves paths, .md extensions, heading/block anchors, and aliases while excluding escaped/fenced parser examples. Full hen-compiler-core test suite passed; epi-cli gate_s1_vault_surface 7/7 and vault_hen_boundary_audit 2/2 passed, including a real spawned WebSocket gateway and temp-filesystem rename. rustfmt --check, git diff --check, and honesty lint passed with 0 violations. GitNexus detect_changes completed; repo-wide dirty scope is CRITICAL due to 57 shared-worktree files, while this tranche remains confined to the reviewed S1 core/adapter/tests/DOX paths."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 69 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:40:05.575Z",
+      "heartbeatAt": "2026-07-14T21:50:22.599Z",
+      "runId": "20260714T214005Z-17-T17.18",
       "worktree": null
     },
     "17.T17.19": {
@@ -6887,16 +7063,32 @@
       "worktree": null
     },
     "19.T19.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T21:28:02.262Z",
+      "claimedAt": "2026-07-14T21:08:00.374Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T21:28:02.262Z",
+          "text": "Real filesystem completion modes; real epi cron store; Hen/Janus/Mercurius/Khora re-entry; ta-onta 470/470; honesty clean; real-gateway Chromium 1/1. S1-SPEC canon update flagged for hen_hybrid_retrieve path/since/response_token.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only ta-onta && node .codex/scripts/lint-test-honesty.mjs && EPI_BIN=target/debug/epi pnpm playwright test tests/e2e/session-continuity.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 471,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-0p-khora/tests/flow_watcher.test.ts",
+              "Body/S/S4/ta-onta/S4-3p-chronos/tests/temporal_control_plane.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/session-continuity.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 40 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:08:00.374Z",
+      "heartbeatAt": "2026-07-14T21:28:02.262Z",
+      "runId": "20260714T210800Z-19-T19.11",
       "worktree": null
     },
     "19.T19.12": {
@@ -7073,16 +7265,32 @@
       "worktree": null
     },
     "21.T21.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T20:58:36.594Z",
+      "claimedAt": "2026-07-14T20:49:47.494Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T20:58:36.594Z",
+          "text": "The active carrier now strict-reads the optional bussed Anuttara witness, renders the canonical LSB-first 3x3 virtue grid and coherence bands, and proves honest live-gateway absence or real projection rendering in Chromium.",
+          "receipt": {
+            "command": "pnpm test; pnpm typecheck; pnpm build; EPI_BIN=/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi pnpm playwright test tests/e2e/m0-virtue-witness.spec.ts; node .codex/scripts/lint-carrier-tokens.mjs; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 595,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0VirtueWitness.ts",
+              "Body/M/pratibimba-app/src/panes/M0VirtueWitnessPanel.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m0-virtue-witness.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:49:47.494Z",
+      "heartbeatAt": "2026-07-14T20:58:36.594Z",
+      "runId": "20260714T204947Z-21-T21.10",
       "worktree": null
     },
     "21.T21.11": {
@@ -7399,16 +7607,21 @@
       "worktree": null
     },
     "22.T22.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:05:43.943Z",
+      "claimedAt": "2026-07-14T22:00:28.654Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:05:43.943Z",
+          "text": "Carrier contribution: Body/M/pratibimba-app/src/panes/m1CoordinateTreeContribution.ts; behavioral suite: 5/5 focused, 605 passed + 1 skipped full app; typecheck/build/honesty/diff-check PASS; generic tree host remains owned by 28.6 per CHROME-CONTRACT"
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 83 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:00:28.654Z",
+      "heartbeatAt": "2026-07-14T22:05:43.943Z",
+      "runId": "20260714T220028Z-22-T22.11",
       "worktree": null
     },
     "22.T22.12": {
@@ -7571,15 +7784,34 @@
       "worktree": null
     },
     "23.T23.10": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-14T10:32:22.546Z",
+      "status": "review",
+      "updatedAt": "2026-07-14T19:58:20.560Z",
       "claimedAt": "2026-07-14T10:32:22.546Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-14T19:58:20.560Z",
+          "text": "DR-ENV-2 supersedes the retired outer-planet pending badge; the active carrier's real-gateway Chromium proof confirms its ambient environmental endpoint.",
+          "receipt": {
+            "command": "EPI_BIN=target/debug/epi pnpm --dir Body/M/pratibimba-app test:e2e --grep cosmic-webgl-surface",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 27000,
+              "output": 6500
+            }
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 8 dirty files.",
       "owner": "opus-outer-planet",
       "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
-      "heartbeatAt": "2026-07-14T10:32:22.546Z",
+      "heartbeatAt": "2026-07-14T19:58:20.560Z",
       "runId": "20260714T103222Z-23-T23.10",
       "worktree": null
     },
@@ -7877,16 +8109,32 @@
       "worktree": null
     },
     "24.T24.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T21:06:59.119Z",
+      "claimedAt": "2026-07-14T20:59:17.171Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T21:06:59.119Z",
+          "text": "The active M3 wheel now strict-reads the optional authority charge quaternion, renders proportional elemental petals and low-variance Akasha core, surfaces authority invariant failure, and proves today's honest pending wire state in Chromium.",
+          "receipt": {
+            "command": "pnpm test; pnpm typecheck; pnpm build; EPI_BIN=/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi pnpm playwright test tests/e2e/m3-quintessence.spec.ts; node .codex/scripts/lint-carrier-tokens.mjs; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 599,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/QuintessenceIndicator.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-quintessence.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 31 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:59:17.171Z",
+      "heartbeatAt": "2026-07-14T21:06:59.119Z",
+      "runId": "20260714T205917Z-24-T24.11",
       "worktree": null
     },
     "24.T24.12": {
@@ -8153,16 +8401,21 @@
       "worktree": null
     },
     "25.T25.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T23:36:32.292Z",
+      "claimedAt": "2026-07-14T23:10:42.937Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T23:36:32.292Z",
+          "text": "Implemented m4.nara.medicine end-to-end: S1-governed idempotent/concurrent-safe NOW pins, canonical 8-row/75-zone snapshot with element/decan/planet/herb evidence, vertically stacked profile-tick carrier, and Kairos cross-link. S1 suite green; real gateway/filesystem 1/1; concurrent pin 1/1; app 636/3 intentional skips; typecheck/build green; Playwright 1/1; gateway audit 224 probed/0 ratcheted missing; honesty clean. Terra independently found and confirmed the concurrency correction with no remaining tranche code finding."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 124 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T01:10:42.937Z",
+      "heartbeatAt": "2026-07-14T23:36:32.292Z",
+      "runId": "20260714T231042Z-25-T25.10",
       "worktree": null
     },
     "25.T25.11": {
@@ -8498,16 +8751,21 @@
       "worktree": null
     },
     "26.T26.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:02:01.501Z",
+      "claimedAt": "2026-07-14T21:57:04.916Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:02:01.501Z",
+          "text": "Track 26.T26.11 landed: M5RecognitionLayer is mounted inside the personal composition M5 leg and reads only the protected-handle presence, bussed personalPole resonance, canonRecognitionStream anchor, and checkpoint-backed V4 coherence. It exposes return readiness only for an applied canonical close path and rejects raw qComposed DOM exposure. Passed: focused recognition + composition tests, app typecheck, full app suite (600 passed, 1 skipped), and real-gateway Playwright 4-5-0 composition baseline."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 79 dirty files.",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-14T23:57:04.916Z",
+      "heartbeatAt": "2026-07-14T22:02:01.501Z",
+      "runId": "20260714T215704Z-26-T26.11",
       "worktree": null
     },
     "26.T26.12": {
@@ -8727,16 +8985,21 @@
       "worktree": null
     },
     "27.T27.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:17:00.316Z",
+      "claimedAt": "2026-07-14T22:06:23.187Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:17:00.316Z",
+          "text": "Active ACR migration: omnipanelCapabilities.ts + ACR-MIGRATION-MAP.md; strict live s4'.mediation.capabilities.list consumer; 18/18 focused tests, real spawned-gateway live test PASS, full app 608 passed/2 skipped, typecheck/build/honesty/diff-check PASS; DR-M5-1 roster correction preserved"
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:06:23.187Z",
+      "heartbeatAt": "2026-07-14T22:17:00.316Z",
+      "runId": "20260714T220623Z-27-T27.10",
       "worktree": null
     },
     "27.T27.11": {
@@ -8930,16 +9193,21 @@
       "worktree": null
     },
     "28.T28.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:29:55.459Z",
+      "claimedAt": "2026-07-14T22:18:47.289Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:29:55.459Z",
+          "text": "Autoresearch pane landed in active carrier with strict real s5'.improve.status/history parsing, profile-tick refresh, honest non-projected Mobius pass, six-capacity filtering, dry-run/human governance disclosure, Review click-through, shared-target e2e harness correction, spawned-gateway integration proof, and real Chromium UI-flow proof."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:18:47.289Z",
+      "heartbeatAt": "2026-07-14T22:29:55.459Z",
+      "runId": "20260714T221847Z-28-T28.10",
       "worktree": null
     },
     "28.T28.11": {
@@ -9206,16 +9474,21 @@
       "worktree": null
     },
     "29.T29.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:21:23.376Z",
+      "claimedAt": "2026-07-14T22:19:31.073Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:21:23.376Z",
+          "text": "Reviewed against the current frozen-carrier contract: the legacy Theia implementation persists a different nine-field shape and lacks selectedLensCell, activeCodonCell, timeAxisMode, senseOverride, opaque qComposedSnapshotId, recognitionLayerView, anuttaraGroundingExpanded, and miniInspectorActiveIds. Body/M/epi-theia/AGENTS.md freezes that tree; the active carrier is Body/M/pratibimba-app, so this tranche needs a carrier retarget/contract update before it can close."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:19:31.073Z",
+      "heartbeatAt": "2026-07-14T22:21:23.376Z",
+      "runId": "20260714T221931Z-29-T29.10",
       "worktree": null
     },
     "29.T29.11": {
@@ -9430,16 +9703,21 @@
       "worktree": null
     },
     "30.T30.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:28:28.551Z",
+      "claimedAt": "2026-07-14T22:25:39.413Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:28:28.551Z",
+          "text": "Retargeted the frozen design-primitive shelf into the active carrier: src/ui/primitives.tsx now owns CoordinateString, ProvenanceBorder, PendingBadge, ReadinessIndicator, and BlockedOverlay alongside the existing provenance/motion/palette primitives; their jsdom tests exercise real rendering and recovery action dispatch. Added CSS token definitions and fixed the prior personal-recognition raw font-size to the micro token. Verified with focused primitives tests (5/5), full app suite (99 files passed, 3 skipped; 618 tests passed, 3 skipped), typecheck, build, carrier-token lint GREEN, honesty lint clean, and diff check clean. Independent verifier still required before done."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 102 dirty files.",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:25:39.413Z",
+      "heartbeatAt": "2026-07-14T22:28:28.551Z",
+      "runId": "20260714T222539Z-30-T30.10",
       "worktree": null
     },
     "30.T30.11": {
@@ -9628,16 +9906,21 @@
       "worktree": null
     },
     "31.T31.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:46:13.444Z",
+      "claimedAt": "2026-07-14T22:30:04.748Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:46:13.444Z",
+          "text": "Active-carrier cross-layout dispatcher: immutable 46-target M0-M5 ledger with explicit pending owners, strict nine-field envelope, App factory navigation/config preservation, deterministic M0 layer mode, and real Autoresearch-to-Review consumer. Verification: typecheck; focused 23/23; full app 624 pass/3 skip; production build; real Playwright 2/2 with spawned gateway and S5 records; pnpm smoke boot/profile/health PASS plus live GatewayClient 1/1; honesty and carrier-token lints green; scoped diff checks green. GitNexus shared-tree report high from 80 concurrent files; Sol scope affects App process only and pre-edit symbol impacts were LOW."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 107 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:30:04.748Z",
+      "heartbeatAt": "2026-07-14T22:46:13.444Z",
+      "runId": "20260714T223004Z-31-T31.10",
       "worktree": null
     },
     "31.T31.11": {
@@ -9811,16 +10094,21 @@
       "worktree": null
     },
     "32.T32.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T23:05:56.478Z",
+      "claimedAt": "2026-07-14T22:46:23.261Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T23:05:56.478Z",
+          "text": "Active pratibimba-app now carries FR-3 default-off Kairos onboarding: three-card informed opt-in, probe-before-persist nara.kairos.probe_kerykeion, real sync refresh, durable enable/skip ledger, inline relay state, CHROME/DOX contracts, and a real Python/WebSocket backend probe with no identity fields. Verification: Rust gateway suites 19/19; app 630 pass/3 intentional skip; focused 31/31; typecheck/build green; real Chromium 1/1; boot smoke and live GatewayClient green; gateway-method ratchet 224 probed/0 missing; honesty/carrier-token/scoped-diff gates green. Contract growth flags [[S0-SPEC]] and [[M4'-SPEC]] for canon harmonisation."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 113 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:46:23.261Z",
+      "heartbeatAt": "2026-07-14T23:05:56.478Z",
+      "runId": "20260714T224623Z-32-T32.10",
       "worktree": null
     },
     "32.T32.11": {
@@ -10147,19 +10435,27 @@
     },
     "36.T36.5": {
       "status": "review",
-      "updatedAt": "2026-07-10T13:01:14.944Z",
+      "updatedAt": "2026-07-14T22:13:15.245Z",
       "claimedAt": "2026-07-10T13:01:14.763Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-10T13:01:14.944Z",
           "text": "PARTIAL (honest split): the tranche's own core invariant LANDED - new portal-core tests pentadic_trace_is_public_safe_and_carries_no_protected_bodies (all 12 ticks: no natal/qPersonal/identityHash/journal/featureVector/modelWeights/bioquaternion bodies on the serialized trace; q_cosmic_ref is a handle not a vector; provenance present) + trace_pairs_with_checkpoint_ref_in_bootstrap_and_real_modes (zero-gradient bootstrap: absent ref ABSENT on wire, not null-faked; real mode: ebm-checkpoint:// + q_composed:// handles round-trip verbatim) - 11/11 suite green. The three consumption legs remain blocked on unlanded emissions: M4 (personalPole 10.M4 not emitted - DECLARED_NOT_EMITTED), M5 EBM feature context (Track 33/12.24 EBM path feature-gated dark, kernel_energy e5/e6 expected-red), M0 R-virtue witness display (anuttaraWitness not emitted). Requeue when 10.M4/10.M5 land their fields."
+        },
+        {
+          "at": "2026-07-14T21:16:48.086Z",
+          "text": "Track 36.T36.5 carrier landed: Now mounts PersonalRecognitionEngine as one M0/M4/M5 surface; portal-core binds the existing protected qComposedHandle into anuttaraPentadicTrace. Real tests passed: app typecheck, 598 app tests, portal-core full cargo test, live-wire capture, and paired Playwright composition baselines. Live-wire still reports anuttaraWitness, personalPole, and M5 checkpoint emissions as DECLARED_NOT_EMITTED on the generic profile, so ready remains unavailable rather than fabricated."
+        },
+        {
+          "at": "2026-07-14T22:13:15.245Z",
+          "text": "M0 closure advanced: portal-core now enables epi-lib m0_verifier and every generic from_tick profile emits the real neutral Anuttara witness (zero witnessed virtues plus symbolic open questions), proven by portal-core regression and live-wire capture 2026-07-14T22-11-59-711Z. Remaining readiness is genuinely downstream: M4 personalPole/qComposed requires the 05.T5.3→05.T5.7 identity chain, and M5 checkpoint-backed predictor work requires 06.T6.7→06.T6.9 plus 36.T36.6. The 4-5-0 carrier and M5 recognition layer render these states without fabrication."
         }
       ],
       "notes": null,
       "owner": "opus-a-m1",
       "leaseExpiresAt": "2026-07-10T15:01:14.763Z",
-      "heartbeatAt": "2026-07-10T13:01:14.944Z",
+      "heartbeatAt": "2026-07-14T22:13:15.245Z",
       "runId": "20260710T130114Z-36-T36.5",
       "worktree": null
     },
@@ -10427,21 +10723,29 @@
       "worktree": null
     },
     "37.T37.8": {
-      "status": "pending",
-      "updatedAt": "2026-07-14T08:26:53.439Z",
-      "claimedAt": "2026-07-14T08:14:29.975Z",
+      "status": "review",
+      "updatedAt": "2026-07-15T08:04:19.445Z",
+      "claimedAt": "2026-07-14T23:36:38.423Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-14T08:26:53.439Z",
           "text": "Released FULLY SCOPED (not a decision-defer). BUILD PLAN: (1) projection lens_codon_binary(lens_id) in portal-core/src/aspect.rs mirroring lens_orbiter_relations; struct LensCodonBinaryProjection{lens_id,source,segment:Vec<u16>,per_degree:Vec<LensCodonDegree>} in profile_projections.rs; kernel.rs wrapper kernel_bridge_m3_lens_codon_binary. (2) per degree: codon = raw_clock_degree_entry(deg).hexagram_id & 0x3F (m3_transcription_bridge.rs:332); charges{pp,nn,np,pn}+quaternion[4] REUSE bioquaternion_transcription(codon); codonUpper/Lower/class/hexagramId/lineChangeOperator(=hexagram_line_active)/tick12/exactDegree720 straight off the LUT entry. (3) element canonical: canonical_from_m3_decan_element is epi-cli-ONLY -> normalize at the epi-cli bridge layer typed_json_m3_lens_codon_binary, NOT portal-core. (4) segment for lens i (CLOCK_LENSES_16[i] slice S, sections N) = the N boundary degrees k*S; per_degree at those. (5) bridge wiring in kernel_bridge_runtime.rs: KERNEL_BRIDGE_M3_LENS_CODON_BINARY const ~:39, typed_json_m3_lens_codon_binary ~:952, dispatch arm ~:550, capability_names() ~:749, resolver ~:1490. (6) test mod in aspect.rs: for all 16 lenses/boundary degrees round-trip charges+quaternion == bioquaternion_transcription(codon), elementCanonical in 0..=5, codon fields == LUT. SPEC BUG: 'round-trip all 18 apertures' is WRONG — the code is the 16+1 law (CLOCK_LENSES_16 + Fibonacci Ground, no 17th lens); build/test to 16. 37.9 (lens_orbiter_relations) is verify-first-ready once 37.8 lands."
+        },
+        {
+          "at": "2026-07-15T00:22:58.433Z",
+          "text": "Implemented and independently audited kernelBridge.m3.lensCodonBinary over CLOCK_LENSES_16 only: all 16 boundary projections round-trip LUT fields and bioquaternion charges, lens 16 is refused because Fibonacci Ground is separate, canonical element normalization occurs only at the epi-cli bridge, strict Zod/app consumers pass, and the live binary audit reports the exact method advertised/exists/responds. Portal 2/2, runtime 1/1, spawned gateway 1/1, parity 9/9, gateway-contract 86/86, schemas 108/108, app 637 pass/3 intentional skip, typecheck/build/honesty/diff clean. Global gateway-method gate remains red only on pre-existing s5'.gnostic.notebook/status ratchets, so task is review rather than done."
+        },
+        {
+          "at": "2026-07-15T08:04:19.445Z",
+          "text": "Corrected executable 16+1 law: phaseSpace now identifies Fibonacci Ground as primary functional lens 16; governed runtime and real gateway address id 16, derived ids 0..15 carry groundingLensId 16 and Fibonacci address, id 17 is refused; strict Zod/app and Chromium carrier consume it. Portal 11/11, epi runtime+gateway 26/26, schemas 108/108, app 642 pass with 3 intentional skips, focused Chromium 2/2, typecheck/build/honesty/diff clean. Fresh live-wire phaseSpace assertion passed, but full live-wire remains red on unrelated uncovered kairosMode, so review not done."
         }
       ],
       "notes": null,
-      "owner": "uc-3708",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-14T08:14:29.975Z",
-      "runId": "20260714T081429Z-37-T37.8",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T01:36:38.423Z",
+      "heartbeatAt": "2026-07-15T08:04:19.445Z",
+      "runId": "20260714T233638Z-37-T37.8",
       "worktree": null
     },
     "37.T37.9": {
@@ -10594,16 +10898,21 @@
       "worktree": null
     },
     "38.T06.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T21:59:50.241Z",
+      "claimedAt": "2026-07-14T21:50:40.191Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T21:59:50.241Z",
+          "text": "Rebuilt Tier 3 tuning hook against its source contract: compose_tuning_proposal now requires schema-declared ml_trainable knob metadata, exact tuning-calibration purpose, and Tier 2 tuning_review routing; queue dispatch revalidates the boundary and preserves existing retrain tasks. DR-TUNE-4 dispatch metadata is emitted end-to-end and local-only tuning refuses cloud-opt-in slots or cross-PASU evidence in Python and C. Real JSONL queue integration and compatibility tests: 11/11 pytest pass. ASan/UBSan-backed full epi-lib make test passed all suites; focused tuning verifier passed. Honesty lint scanned 120 test files/856 polyglot files with 0 violations; git diff --check and GitNexus detect_changes passed. Public C surface is documented in DOX with an S0-ARCHITECTURE canon-harmonisation flag."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 73 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:50:40.191Z",
+      "heartbeatAt": "2026-07-14T21:59:50.241Z",
+      "runId": "20260714T215040Z-38-T06.10",
       "worktree": null
     },
     "38.T06.11": {
@@ -12256,16 +12565,25 @@
       "worktree": null
     },
     "48.T48.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-15T08:04:27.595Z",
+      "claimedAt": "2026-07-15T00:24:04.072Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-15T00:28:13.198Z",
+          "text": "Verify-first close of committed MOC↔Base collaboration: S1 authored MOC carries live What Belongs Here/Open Gaps Base blocks while retaining belonging-law authority; S1.canvas contains a real existing Crystallisation-Pipeline.base node with a direct MOC-to-Base edge; Map embeds Map-Aggregate-Browser.base and a live gap view while explicitly preserving authored branch indexes as navigation law. Target artifacts are clean in the working tree. Hen full suite 109 passed/1 reasoned live-provider ignore, focused base_view 3/3, JSON/YAML structural checks green, honesty lint clean. Terra independently found no defects. No new edit was required because the tranche artifacts were already committed."
+        },
+        {
+          "at": "2026-07-15T08:04:27.595Z",
+          "text": "Replaced artifact-existence evidence with functional carrier integration: structured YAML Base parser evaluates nested filters over recursive real-vault frontmatter; S1 MOC live membership and open gaps execute; canvas resolves the external Crystallisation-Pipeline.base; Map aggregate executes over more than 900 real map-index records; production Bases pane uses vault_read/vault_list and vault change refresh. Live repo-vault tests 4/4 and real Chromium filesystem-sidecar flow pass, full app 642 pass with 3 intentional skips, typecheck/build/honesty/diff clean. Full live-wire unrelated kairosMode red prevents done."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 193 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T02:24:04.072Z",
+      "heartbeatAt": "2026-07-15T08:04:27.595Z",
+      "runId": "20260715T002404Z-48-T48.4",
       "worktree": null
     },
     "48.T48.5": {
@@ -12507,16 +12825,21 @@
       "worktree": null
     },
     "49.T49.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T21:39:20.435Z",
+      "claimedAt": "2026-07-14T21:29:23.854Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T21:39:20.435Z",
+          "text": "Implemented real modal/chime privacy refusal and active-carrier epogdoon capability parity; verified 15 portal tests, 35 epi-cli bridge tests, 108 schemas tests, 599 app tests, typecheck, build, and honesty lint. Independent Terra verification dispatched."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 60 dirty files.",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:29:23.854Z",
+      "heartbeatAt": "2026-07-14T21:39:20.435Z",
+      "runId": "20260714T212923Z-49-T49.7",
       "worktree": null
     },
     "49.T49.8": {
@@ -13057,16 +13380,21 @@
       "worktree": null
     },
     "20.T20.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-14T22:24:58.663Z",
+      "claimedAt": "2026-07-14T22:21:55.037Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-14T22:24:58.663Z",
+          "text": "Landed the active-carrier Track-D source at Body/M/pratibimba-app/src/ui/waveCDesignSystem.ts: all ten Wave-C widget invariants carry consuming track/enforcement IDs and canonical source-line citations; validator rejects incomplete routes. Verified with pnpm vitest run src/ui/waveCDesignSystem.test.ts (3/3), pnpm typecheck, pnpm build, full pnpm test (99 files passed, 3 skipped; 615 tests passed, 3 skipped), and lint-test-honesty (0 findings). Independent verifier still required before done."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:21:55.037Z",
+      "heartbeatAt": "2026-07-14T22:24:58.663Z",
+      "runId": "20260714T222155Z-20-T20.2",
       "worktree": null
     },
     "20.T20.3": {
@@ -16242,11 +16570,12 @@
     {
       "runId": "20260714T103222Z-23-T23.10",
       "taskId": "23.T23.10",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-14T10:32:22.546Z",
       "owner": "opus-outer-planet",
       "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-14T19:58:20.560Z"
     },
     {
       "runId": "20260714T103640Z-26-T26.10",
@@ -16337,30 +16666,272 @@
       "leaseExpiresAt": "2026-07-14T19:21:35.772Z",
       "worktree": null,
       "completedAt": "2026-07-14T18:24:52.875Z"
+    },
+    {
+      "runId": "20260714T195340Z-05-T5.20",
+      "taskId": "05.T5.20",
+      "status": "review",
+      "startedAt": "2026-07-14T19:53:40.956Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T21:53:40.956Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T19:55:31.526Z"
+    },
+    {
+      "runId": "20260714T203626Z-06-T6.10",
+      "taskId": "06.T6.10",
+      "status": "review",
+      "startedAt": "2026-07-14T20:36:26.834Z",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:36:26.834Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:39:05.965Z"
+    },
+    {
+      "runId": "20260714T203839Z-07-T7.4",
+      "taskId": "07.T7.4",
+      "status": "review",
+      "startedAt": "2026-07-14T20:38:39.896Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:38:39.896Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:44:13.546Z"
+    },
+    {
+      "runId": "20260714T203917Z-09-T9.4",
+      "taskId": "09.T9.4",
+      "status": "review",
+      "startedAt": "2026-07-14T20:39:17.159Z",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:39:17.159Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:41:16.493Z"
+    },
+    {
+      "runId": "20260714T204129Z-11-T11.1",
+      "taskId": "11.T11.1",
+      "status": "review",
+      "startedAt": "2026-07-14T20:41:29.016Z",
+      "owner": "terra",
+      "leaseExpiresAt": "2026-07-14T22:41:29.016Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:42:18.839Z"
+    },
+    {
+      "runId": "20260714T204528Z-15-T15.4",
+      "taskId": "15.T15.4",
+      "status": "review",
+      "startedAt": "2026-07-14T20:45:28.690Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:45:28.690Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:52:36.913Z"
+    },
+    {
+      "runId": "20260714T204947Z-21-T21.10",
+      "taskId": "21.T21.10",
+      "status": "review",
+      "startedAt": "2026-07-14T20:49:47.494Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:49:47.494Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T20:58:36.594Z"
+    },
+    {
+      "runId": "20260714T205917Z-24-T24.11",
+      "taskId": "24.T24.11",
+      "status": "review",
+      "startedAt": "2026-07-14T20:59:17.171Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T22:59:17.171Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T21:06:59.119Z"
+    },
+    {
+      "runId": "20260714T210800Z-19-T19.11",
+      "taskId": "19.T19.11",
+      "status": "review",
+      "startedAt": "2026-07-14T21:08:00.374Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:08:00.374Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T21:28:02.262Z"
+    },
+    {
+      "runId": "20260714T212923Z-49-T49.7",
+      "taskId": "49.T49.7",
+      "status": "review",
+      "startedAt": "2026-07-14T21:29:23.854Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:29:23.854Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T21:39:20.435Z"
+    },
+    {
+      "runId": "20260714T214005Z-17-T17.18",
+      "taskId": "17.T17.18",
+      "status": "review",
+      "startedAt": "2026-07-14T21:40:05.575Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:40:05.575Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T21:50:22.599Z"
+    },
+    {
+      "runId": "20260714T215040Z-38-T06.10",
+      "taskId": "38.T06.10",
+      "status": "review",
+      "startedAt": "2026-07-14T21:50:40.191Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-14T23:50:40.191Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T21:59:50.241Z"
+    },
+    {
+      "runId": "20260714T215704Z-26-T26.11",
+      "taskId": "26.T26.11",
+      "status": "review",
+      "startedAt": "2026-07-14T21:57:04.916Z",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-14T23:57:04.916Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:02:01.501Z"
+    },
+    {
+      "runId": "20260714T220028Z-22-T22.11",
+      "taskId": "22.T22.11",
+      "status": "review",
+      "startedAt": "2026-07-14T22:00:28.654Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:00:28.654Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:05:43.943Z"
+    },
+    {
+      "runId": "20260714T220623Z-27-T27.10",
+      "taskId": "27.T27.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:06:23.187Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:06:23.187Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:17:00.316Z"
+    },
+    {
+      "runId": "20260714T221847Z-28-T28.10",
+      "taskId": "28.T28.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:18:47.289Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:18:47.289Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:29:55.459Z"
+    },
+    {
+      "runId": "20260714T221931Z-29-T29.10",
+      "taskId": "29.T29.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:19:31.073Z",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:19:31.073Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:21:23.376Z"
+    },
+    {
+      "runId": "20260714T222155Z-20-T20.2",
+      "taskId": "20.T20.2",
+      "status": "review",
+      "startedAt": "2026-07-14T22:21:55.037Z",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:21:55.037Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:24:58.663Z"
+    },
+    {
+      "runId": "20260714T222539Z-30-T30.10",
+      "taskId": "30.T30.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:25:39.413Z",
+      "owner": "anima",
+      "leaseExpiresAt": "2026-07-15T00:25:39.413Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:28:28.551Z"
+    },
+    {
+      "runId": "20260714T223004Z-31-T31.10",
+      "taskId": "31.T31.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:30:04.748Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:30:04.748Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T22:46:13.444Z"
+    },
+    {
+      "runId": "20260714T224623Z-32-T32.10",
+      "taskId": "32.T32.10",
+      "status": "review",
+      "startedAt": "2026-07-14T22:46:23.261Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T00:46:23.261Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T23:05:56.478Z"
+    },
+    {
+      "runId": "20260714T231042Z-25-T25.10",
+      "taskId": "25.T25.10",
+      "status": "review",
+      "startedAt": "2026-07-14T23:10:42.937Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T01:10:42.937Z",
+      "worktree": null,
+      "completedAt": "2026-07-14T23:36:32.292Z"
+    },
+    {
+      "runId": "20260714T233638Z-37-T37.8",
+      "taskId": "37.T37.8",
+      "status": "review",
+      "startedAt": "2026-07-14T23:36:38.423Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T01:36:38.423Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T00:22:58.433Z"
+    },
+    {
+      "runId": "20260715T002404Z-48-T48.4",
+      "taskId": "48.T48.4",
+      "status": "review",
+      "startedAt": "2026-07-15T00:24:04.072Z",
+      "owner": "sol",
+      "leaseExpiresAt": "2026-07-15T02:24:04.072Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T00:28:13.198Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-14T15:55:16.891Z",
-    "updatedAt": "2026-07-14T15:55:16.891Z",
+    "createdAt": "2026-07-15T08:56:01.935Z",
+    "updatedAt": "2026-07-15T08:56:01.935Z",
     "taskIds": [
+      "05.T5.21",
       "36.T36.5",
       "23.T23.10",
-      "12.T12.2",
-      "05.T5.20"
+      "05.T5.20",
+      "06.T6.10"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
+      "05.T5.21": "in-session",
       "36.T36.5": "in-session",
       "23.T23.10": "in-session",
-      "12.T12.2": "in-session",
-      "05.T5.20": "in-session"
+      "05.T5.20": "in-session",
+      "06.T6.10": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
