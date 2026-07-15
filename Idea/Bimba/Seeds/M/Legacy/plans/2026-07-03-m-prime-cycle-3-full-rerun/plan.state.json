@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T09:03:35.861Z",
+  "updatedAt": "2026-07-15T09:51:02.486Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2724,10 +2724,10 @@
       "worktree": null
     },
     "06.T6.10": {
-      "status": "review",
-      "updatedAt": "2026-07-14T20:39:05.965Z",
+      "status": "done",
+      "updatedAt": "2026-07-15T09:51:02.265Z",
       "claimedAt": "2026-07-14T20:36:26.834Z",
-      "completedAt": null,
+      "completedAt": "2026-07-15T09:51:02.265Z",
       "evidence": [
         {
           "at": "2026-07-14T20:39:05.965Z",
@@ -2747,11 +2747,24 @@
               "output": 10000
             }
           }
+        },
+        {
+          "at": "2026-07-15T09:51:02.265Z",
+          "text": "Independent re-verify (opus-reviewer): real EBM-runtime/Mobius-descent tests 17/0 (kernel_truth resonance_ebm_runtime feature). NOTE: original receipt filter resonance_ebm_runtime_tests matched 0 tests (hollow) — re-ran the actual cfg-gated suite. W gate PASS (live-wire 285 frames, gateway 28/0, gateway-methods 0 missing).",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --features resonance_ebm_runtime --test kernel_truth (17 EBM/Mobius-descent) + verify-tranche W gate: gateway+live-wire+gateway-methods green",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/kernel_truth.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 12 dirty files.",
       "owner": "terra",
-      "leaseExpiresAt": "2026-07-14T22:36:26.834Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:39:05.965Z",
       "runId": "20260714T203626Z-06-T6.10",
       "worktree": null
@@ -3348,10 +3361,10 @@
       "worktree": null
     },
     "09.T9.4": {
-      "status": "review",
-      "updatedAt": "2026-07-14T20:41:16.493Z",
+      "status": "done",
+      "updatedAt": "2026-07-15T09:51:02.470Z",
       "claimedAt": "2026-07-14T20:39:17.159Z",
-      "completedAt": null,
+      "completedAt": "2026-07-15T09:51:02.470Z",
       "evidence": [
         {
           "at": "2026-07-14T20:41:16.493Z",
@@ -3371,11 +3384,24 @@
               "output": 8000
             }
           }
+        },
+        {
+          "at": "2026-07-15T09:51:02.470Z",
+          "text": "Independent re-verify (opus-reviewer): M0LayerRail suite 10/0 fresh; W gate PASS (live-wire+gateway green).",
+          "receipt": {
+            "command": "npx vitest run src/panes/M0LayerRail.test.tsx (10) + verify-tranche W gate: gateway+live-wire green",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0LayerRail.test.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 12 dirty files.",
       "owner": "terra",
-      "leaseExpiresAt": "2026-07-14T22:39:17.159Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:41:16.493Z",
       "runId": "20260714T203917Z-09-T9.4",
       "worktree": null
