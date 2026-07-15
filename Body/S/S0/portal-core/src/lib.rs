@@ -8,6 +8,7 @@ pub mod expression;
 pub mod harmonic_profile;
 pub mod hopf;
 pub mod kernel;
+pub mod lens_codon_binary;
 pub mod luts;
 pub mod m3_transcription_bridge;
 pub mod music_tech;
@@ -62,6 +63,7 @@ pub use expression::{
 };
 pub use hopf::{hopf_fiber, hopf_project, validate_quaternion_unity};
 pub use kernel::*;
+pub use lens_codon_binary::*;
 pub use m3_transcription_bridge::*;
 pub use mahamaya::*;
 pub use nara::*;
@@ -70,7 +72,7 @@ pub use parashakti::*;
 pub use personal_identity::*;
 pub use profile_projections::*;
 pub use psychoid_cymatic::*;
-pub use quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
+pub use quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize, Quaternion};
 pub use rfactor::{
     parse_namespace, Band, Base, Chirality, RFactorPathStep, RParseError, RToken, Triad,
     R_FACTOR_DISTRIBUTION,

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::codon::{classify_codon, codon_sequence};
+use crate::quaternion::{quat_normalize_scaled, Quaternion};
 
 /// M2-1' chromatic MEF lens count (`M2_MEF_LENS` namespace: 12 Vimarśa
 /// anchors × `MODE_COUNT` CF-modes = 84). NOT the M3 lens-stack — the 16+1
@@ -120,7 +121,7 @@ pub fn lens_mode_from_codon_rotation(codon_id: u8, rotation: u8) -> Option<Mathe
     MathemeLensMode::new(lens, mode)
 }
 
-pub fn codon_charge_quaternion(codon_id: u8) -> [f32; 4] {
+pub fn codon_charge_quaternion(codon_id: u8) -> Quaternion {
     let outer = nucleotide_iching_value((codon_id >> 4) & 0x03);
     let middle = nucleotide_iching_value((codon_id >> 2) & 0x03);
     let inner = nucleotide_iching_value(codon_id & 0x03);
@@ -128,7 +129,7 @@ pub fn codon_charge_quaternion(codon_id: u8) -> [f32; 4] {
     let mm = outer - middle - inner;
     let mp = outer - middle + inner;
     let pm = outer + middle - inner;
-    normalize_quaternion([pp, mm, mp, pm])
+    quat_normalize_scaled([pp, mm, mp, pm])
 }
 
 fn projection_from_cell(
@@ -191,16 +192,6 @@ fn nucleotide_iching_value(nucleotide: u8) -> f32 {
         1 => 9.0,
         2 => 7.0,
         _ => 8.0,
-    }
-}
-
-fn normalize_quaternion(q: [f32; 4]) -> [f32; 4] {
-    let norm_sq = q.iter().map(|component| component * component).sum::<f32>();
-    if norm_sq <= 0.0 {
-        [1.0, 0.0, 0.0, 0.0]
-    } else {
-        let scale = 1.0 / norm_sq.sqrt();
-        [q[0] * scale, q[1] * scale, q[2] * scale, q[3] * scale]
     }
 }
 

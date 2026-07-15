@@ -16,15 +16,24 @@ fn raw_entry_layout_matches_the_c_struct() {
     // Field-offset pins (verifier note): a silent C-struct reorder must fail
     // here, not corrupt the view — including the currently-all-zero fields
     // the value sweeps cannot distinguish.
-    assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, exact_degree_720), 4);
+    assert_eq!(
+        std::mem::offset_of!(RawClockDegreeEntry, exact_degree_720),
+        4
+    );
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, zodiac_sign), 8);
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, hexagram_id), 13);
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, tarot_card_id), 19);
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, decan_planet), 20);
-    assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, m1_ananda_value), 26);
+    assert_eq!(
+        std::mem::offset_of!(RawClockDegreeEntry, m1_ananda_value),
+        26
+    );
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, m0_archetype), 27);
     assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, shadow_degree), 28);
-    assert_eq!(std::mem::offset_of!(RawClockDegreeEntry, chamber_day_night), 33);
+    assert_eq!(
+        std::mem::offset_of!(RawClockDegreeEntry, chamber_day_night),
+        33
+    );
 }
 
 #[test]
@@ -37,7 +46,10 @@ fn spot_entries_match_the_generated_table() {
     assert_eq!((d0.hexagram_id, d0.hexagram_line_active), (0, 0));
     assert_eq!(d0.is_non_dual_codon, 1);
     assert_eq!(d0.codon_class, 0); // perfect
-    assert_eq!((d0.decan_planet, d0.decan_element, d0.decan_chakra), (4, 0, 2));
+    assert_eq!(
+        (d0.decan_planet, d0.decan_element, d0.decan_chakra),
+        (4, 0, 2)
+    );
     assert_eq!((d0.shadow_degree, d0.polar_opposite), (360, 180));
 
     let d6 = raw_clock_degree_entry(6);
@@ -91,7 +103,11 @@ fn kernel_cross_lut_consistency_holds_for_all_degrees() {
         assert_eq!(raw.exact_degree_720, degree as f32 * 2.0);
         assert_eq!(raw.decan_idx as u16, degree / 10);
         assert_eq!(raw.decan_position as u16, degree % 10);
-        assert_eq!(raw.tick12 as u16, degree / 30, "degree tick12 is the 30° arc");
+        assert_eq!(
+            raw.tick12 as u16,
+            degree / 30,
+            "degree tick12 is the 30° arc"
+        );
         assert_eq!(raw.shadow_degree, degree + 360);
         assert_eq!(raw.polar_opposite, (degree + 180) % 360);
         assert_eq!(raw.enneadic_chamber as u16, degree / 40);
@@ -123,7 +139,12 @@ fn kernel_cross_lut_consistency_holds_for_all_degrees() {
 fn the_sixteen_lenses_tile_360_and_the_formula_matches_the_pinned_cases() {
     assert_eq!(CLOCK_LENSES_16.len(), 16);
     for lens in CLOCK_LENSES_16.iter() {
-        assert_eq!(lens.slice * lens.sections, 360, "{} must tile 360", lens.name);
+        assert_eq!(
+            lens.slice * lens.sections,
+            360,
+            "{} must tile 360",
+            lens.name
+        );
     }
     // The Architect's temporality structurers: 4-, 12-, 24-section divisions
     // (the 60-fold rides the Fibonacci Ground aperture, never a 17th lens).
@@ -151,7 +172,11 @@ fn the_two_planes_select_codon_and_hexagram_valence() {
     assert_eq!(primary.plane, PhasePlane::PrimaryCodon);
     assert_eq!(primary.degree360, 144);
     match &primary.active_valence {
-        PhaseValence::Codon { upper_pair, lower_pair, .. } => {
+        PhaseValence::Codon {
+            upper_pair,
+            lower_pair,
+            ..
+        } => {
             assert_eq!(*upper_pair, primary.node.codon_upper_pair);
             assert_eq!(*lower_pair, primary.node.codon_lower_pair);
         }
@@ -162,9 +187,15 @@ fn the_two_planes_select_codon_and_hexagram_valence() {
     let shadow = PhaseSpaceAddress::from_degree720(144 + 360);
     assert_eq!(shadow.plane, PhasePlane::ShadowHexagram);
     assert_eq!(shadow.degree360, 144);
-    assert_eq!(shadow.node, primary.node, "one degree node, two valence planes");
+    assert_eq!(
+        shadow.node, primary.node,
+        "one degree node, two valence planes"
+    );
     match &shadow.active_valence {
-        PhaseValence::Hexagram { hexagram_id, line_active } => {
+        PhaseValence::Hexagram {
+            hexagram_id,
+            line_active,
+        } => {
             assert_eq!(*hexagram_id, shadow.node.hexagram_id);
             assert_eq!(*line_active, shadow.node.hexagram_line_active);
         }
@@ -185,7 +216,11 @@ fn the_lens_carrier_carries_the_tick_across_all_sixteen_plus_one_apertures() {
         assert!(carried.phase01 >= 0.0 && carried.phase01 < 1.0);
         assert_eq!(carried.temporal_canon, lens.temporal_canon);
     }
-    // The +1: Fibonacci Ground Level-0 (60 positions, 6°/step, Pisano-60).
+    // The +1 is the primary functional lens: Fibonacci Ground at lens id 16.
+    assert_eq!(address.fibonacci_ground.lens_id, 16);
+    assert_eq!(address.fibonacci_ground.role, "primary-ground");
+    assert_eq!(address.fibonacci_ground.slice, 6);
+    assert_eq!(address.fibonacci_ground.sections, 60);
     assert_eq!(address.fibonacci_ground.position, 24); // 144 / 6
     assert!(address.fibonacci_ground.temporal_canon);
     // Pisano-60 digits: fib(0..)=0,1,1,2,3,5,8,13,21,34,55,89 → digit(11)=9.
@@ -242,12 +277,13 @@ fn serialization_is_camel_case_and_legacy_payloads_still_deserialize() {
     assert!(phase.pointer("/node/lensSegment").is_some());
     assert!(phase.pointer("/node/hexagramId").is_some());
     assert_eq!(
-        phase.pointer("/lensCarrier/0/name").and_then(|v| v.as_str()),
+        phase
+            .pointer("/lensCarrier/0/name")
+            .and_then(|v| v.as_str()),
         Some("Microscopic")
     );
 
-    let round: MathemeHarmonicProfile =
-        serde_json::from_value(json.clone()).expect("round-trips");
+    let round: MathemeHarmonicProfile = serde_json::from_value(json.clone()).expect("round-trips");
     assert_eq!(round.phase_space, profile.phase_space);
 
     let mut legacy = json;

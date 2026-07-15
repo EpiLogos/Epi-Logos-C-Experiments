@@ -449,3 +449,22 @@ fn kernel_harmonic_profile_exposes_canonical_m_prime_contract_fields() {
         portal_core::ProfilePrivacyClass::PublicCurrentContext
     );
 }
+
+#[test]
+fn generic_kernel_tick_emits_the_real_neutral_anuttara_witness() {
+    let projection = KernelTemporalProjection::from_clock_tick(12_000, 7);
+    let witness = projection
+        .harmonic_profile
+        .anuttara_witness
+        .expect("the generic gateway profile carries the verifier report");
+
+    assert_eq!(witness.virtue_witness_vector, 0);
+    assert_eq!(witness.coherence_score, 0.0);
+    assert!(
+        witness
+            .open_questions
+            .iter()
+            .any(|question| question.contains("unwitnessed")),
+        "the verifier must raise symbolic questions instead of fabricating witnessed virtues"
+    );
+}

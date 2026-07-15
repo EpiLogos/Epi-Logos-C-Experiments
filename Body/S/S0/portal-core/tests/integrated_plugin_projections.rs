@@ -239,6 +239,10 @@ fn integrated_plugin_projections_round_trip_and_keep_private_bodies_opaque() {
         "applied"
     );
     assert_eq!(json["canonRecognitionStream"][0]["bimbaCoordinate"], "M0-5");
+    assert_eq!(
+        json["anuttaraPentadicTrace"]["qComposedHandle"],
+        "protected://nara/q/composed"
+    );
     assert!(json["personalPole"].get("qPersonal").is_none());
     assert!(json["personalPole"].get("vamaRecognition").is_none());
     assert!(json["psychoidField"].get("fieldBody").is_none());

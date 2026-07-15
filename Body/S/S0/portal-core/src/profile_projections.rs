@@ -4,7 +4,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::events::KleinFlipEvent;
-use crate::quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
+use crate::quaternion::{
+    derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize, Quaternion,
+};
 use crate::vak_address::VakAddress;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -308,9 +310,9 @@ pub struct M1TopologyProjection {
     pub hopf_project_deg: u16,
     pub hopf_fiber: u8,
     pub hopf_identity: String,
-    pub ring_quaternion: [f32; 4],
+    pub ring_quaternion: Quaternion,
     pub element_count: u8,
-    pub composed_quaternion: [f32; 4],
+    pub composed_quaternion: Quaternion,
     pub walk_mode: String,
     pub bifurcation_lambda: f32,
     pub resolution_level: u8,
@@ -338,7 +340,7 @@ impl M1TopologyProjection {
     pub fn from_tick_parts(
         tick12: u8,
         degree720: u16,
-        ring_quaternion: [f32; 4],
+        ring_quaternion: Quaternion,
         klein_flip: Option<&KleinFlipEvent>,
     ) -> Self {
         let ring = quat_normalize(ring_quaternion);

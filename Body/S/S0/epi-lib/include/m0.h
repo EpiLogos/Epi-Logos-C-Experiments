@@ -1,6 +1,15 @@
 /**
  * m0.h — Anuttara: The Multi-Level Language Runtime (Subsystem #0)
  *
+ * Coordinate:   M0 | Anuttara
+ * Residency:    Body/S/S0/epi-lib/include/m0.h (physical S0; conceptually M0)
+ * Position:     #0 — Ontological Foundation / Verifier Ground
+ * Actualises:   [[S0-SPEC]], [[S0-ARCHITECTURE]], and [[M0-ARCHITECTURE]]
+ * Public surface:
+ *   M0 runtime types/functions and tuning structural/privacy verifier contracts
+ * Does NOT own:
+ *   Tuning schema, Aletheia proposal composition, dispatch transport, or review resolution
+ *
  * Implements: M0 (#0) = bare-metal VM of six nested micro-algebras
  * Context frame: (00/00) — CF_VOID (Receptive Dynamism)
  * Anchored to: Psychoid_0 in psychoid_numbers.c (Layer 1 .rodata)
@@ -165,6 +174,10 @@ extern const Virtue_Entry VIRTUE_LUT[9];
 typedef struct {
     char knob_key[128];
     int target_structural_invariant;
+    char dispatch_purpose[32];
+    char tuning_target_knob_privacy_class[32];
+    char actual_resolved_slot_state[32];
+    uint16_t evidence_window_pasu_count;
 } M0_TuneProposal;
 
 typedef struct {
@@ -173,6 +186,10 @@ typedef struct {
 } M0_VerifierVerdict;
 
 M0_VerifierVerdict m0_check_tune_structural_invariant_compliance(
+    const M0_TuneProposal* proposal
+);
+
+M0_VerifierVerdict m0_check_slot_privacy_boundary_compliance(
     const M0_TuneProposal* proposal
 );
 

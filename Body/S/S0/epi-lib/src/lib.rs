@@ -1,6 +1,16 @@
-#[cfg(all(test, feature = "m0_verifier"))]
-mod m0_verifier {
-    use std::ffi::{CStr, CString};
+//! Coordinate: S0 M0 -> M0'
+//! Residency: Body/S/S0/epi-lib/src/lib.rs
+//! Position (#n): #0' -- compiled Anuttara verifier bridge.
+//! Actualises: Track 01.T1.10 and the generic-profile M0 witness emission.
+//! Public surface: m0_verifier::bootstrap_witness_for_tick.
+//! Does NOT own: gateway transport, profile serialization, or session evidence.
+//! Contract: [[S0-SPEC]] -> [[M0'-SPEC]].
+
+#[cfg(feature = "m0_verifier")]
+pub mod m0_verifier {
+    use std::ffi::CStr;
+    #[cfg(test)]
+    use std::ffi::CString;
     use std::os::raw::{c_char, c_int};
 
     const M0_VERIFIER_VIRTUE_COUNT: usize = 9;
@@ -12,20 +22,32 @@ mod m0_verifier {
     const M0_VERIFIER_MAX_ROUTE_OUT: usize = 24;
     const M0_VERIFIER_MAX_ENGAGED_COORDS: usize = 8;
     const M0_VERIFIER_QUERY_KIND_MAX: usize = 32;
+    #[cfg(test)]
     const M0_VERIFIER_SYNTAX_SPEECH: u16 = 1 << 0;
+    #[cfg(test)]
     const M0_VERIFIER_SYNTAX_RELATIONSHIP: u16 = 1 << 1;
+    #[cfg(test)]
     const M0_VERIFIER_SYNTAX_ACTION: u16 = 1 << 2;
+    #[cfg(test)]
     const M0_VERIFIER_SYNTAX_COMPLETION: u16 = 1 << 3;
 
+    #[cfg(test)]
     const R_BAND_PRAVRITTI: u8 = 0;
+    #[cfg(test)]
     const R_BAND_NIVRITTI: u8 = 1;
+    #[cfg(test)]
     const R_BAND_TURN: u8 = 2;
 
+    #[cfg(test)]
     const M0_ANUTTARA_LAW_CONTAINMENT: u8 = 2;
+    #[cfg(test)]
     const M0_ANUTTARA_LAW_EIGHT_PLUS_ONE: u8 = 5;
+    #[cfg(test)]
     const M0_ANUTTARA_LAW_DERIVATION: u8 = 7;
 
+    #[cfg(test)]
     const M0_TRIAD_NOT_CLOSING: u8 = 0;
+    #[cfg(test)]
     const M0_TRIAD_COMPILES: u8 = 1;
 
     #[repr(C)]
@@ -70,6 +92,7 @@ mod m0_verifier {
     }
 
     #[repr(C)]
+    #[cfg(test)]
     struct M0BackingChain {
         depth: u8,
         grounded: u8,
@@ -130,19 +153,65 @@ mod m0_verifier {
 
     extern "C" {
         fn m0_verifier_check_state(state: *const KernelState, out: *mut M0VerifierReport) -> c_int;
+        #[cfg(test)]
         fn m0_verifier_emit_query(state: *const KernelState, out: *mut M0TypedQuery) -> c_int;
+        #[cfg(test)]
         fn m0_verifier_walk_backing(
             q: *const M0TypedQuery,
             anchor: *const M0CoordinateRef,
             depth: u8,
             out: *mut M0BackingChain,
         ) -> c_int;
+        #[cfg(test)]
         fn m0_verifier_emit_question(
             report: *const M0VerifierReport,
             out_buf: *mut c_char,
             buf_len: usize,
         ) -> c_int;
+        #[cfg(test)]
         fn anuttara_language_is_member(coordinate_or_symbol: *const c_char) -> bool;
+    }
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct M0VerifierBootstrapWitness {
+        pub virtue_witness_vector: u16,
+        pub syntax_witness_vector: u8,
+        pub open_questions: Vec<String>,
+        pub coherence_score: f32,
+    }
+
+    /// Runs the compiled C verifier over the information a generic public
+    /// kernel tick genuinely has: canonical relation coverage and its safe
+    /// boundary, but no user/session virtue evidence or syntax stamps.
+    pub fn bootstrap_witness_for_tick(
+        tick12: u8,
+        position6: u8,
+    ) -> M0VerifierBootstrapWitness {
+        let mut state: KernelState = unsafe { std::mem::zeroed() };
+        state.observed_core_relation_count = 65;
+        state.active_archetype = tick12 % 12;
+        state.active_tct_position = position6 % 6;
+        state.slot_privacy_boundary_compliance = 1;
+
+        let mut report = zeroed_report();
+        let status = unsafe { m0_verifier_check_state(&state, &mut report) };
+        assert_eq!(status, 0, "the compiled M0 verifier accepts its bootstrap state");
+
+        let open_questions = report
+            .typed_queries
+            .iter()
+            .take(report.typed_query_count as usize)
+            .map(|query| cstr(&query.symbolic_coordinate_string).to_owned())
+            .collect();
+        let coherence_score = report.virtue_witness_vector.count_ones() as f32
+            / M0_VERIFIER_VIRTUE_COUNT as f32;
+
+        M0VerifierBootstrapWitness {
+            virtue_witness_vector: report.virtue_witness_vector,
+            syntax_witness_vector: report.syntax_witness_vector,
+            open_questions,
+            coherence_score,
+        }
     }
 
     fn zeroed_report() -> M0VerifierReport {
@@ -158,6 +227,7 @@ mod m0_verifier {
     /// Closing act-route: an operative pravritti act (R1 at O#, fret 0 per
     /// the R-distribution matrix), a nivritti step (R4 at O#, fret 5), then
     /// the R5/Samavesa positionless return-to-matrix.
+    #[cfg(test)]
     fn closing_route() -> ([RFactorPathStep; M0_VERIFIER_MAX_ROUTE_IN], u8) {
         let mut steps = [RFactorPathStep::default(); M0_VERIFIER_MAX_ROUTE_IN];
         steps[0] = RFactorPathStep { r_factor: 1, base_route: 0, band: R_BAND_PRAVRITTI, position: 0 };
@@ -166,6 +236,7 @@ mod m0_verifier {
         (steps, 3)
     }
 
+    #[cfg(test)]
     fn fully_witnessed_state() -> KernelState {
         let (route_steps, route_step_count) = closing_route();
         let mut state: KernelState = unsafe { std::mem::zeroed() };
@@ -184,6 +255,7 @@ mod m0_verifier {
         state
     }
 
+    #[cfg(test)]
     fn set_engaged(state: &mut KernelState, index: usize, coordinate: &str) {
         let bytes = coordinate.as_bytes();
         for (i, b) in bytes.iter().enumerate() {
@@ -1236,7 +1308,6 @@ mod m0_symbolic_coordinate_string_round_trip {
     // --- The Verifier's live emissions stay inside the grammar ------------
 
     const M0_VERIFIER_VIRTUE_COUNT: usize = 9;
-    const M0_VERIFIER_MAX_UNSATISFIED: usize = 80;
     const M0_VERIFIER_COORDINATE_MAX: usize = 96;
 
     #[repr(C)]
@@ -1261,8 +1332,10 @@ mod m0_symbolic_coordinate_string_round_trip {
         symbolic_coordinate_string: [c_char; M0_VERIFIER_COORDINATE_MAX],
     }
 
+    #[allow(clashing_extern_declarations)]
     extern "C" {
-        fn m0_verifier_emit_query(
+        #[link_name = "m0_verifier_emit_query"]
+        fn m0_verifier_emit_query_probe(
             state: *const EmissionProbeState,
             out: *mut EmissionProbeQuery,
         ) -> i32;
@@ -1279,7 +1352,7 @@ mod m0_symbolic_coordinate_string_round_trip {
         state.slot_privacy_boundary_compliance = 1;
 
         let mut query: EmissionProbeQuery = unsafe { std::mem::zeroed() };
-        let status = unsafe { m0_verifier_emit_query(&state, &mut query) };
+        let status = unsafe { m0_verifier_emit_query_probe(&state, &mut query) };
         assert_eq!(status, 0);
 
         let emitted = unsafe { CStr::from_ptr(query.symbolic_coordinate_string.as_ptr()) }

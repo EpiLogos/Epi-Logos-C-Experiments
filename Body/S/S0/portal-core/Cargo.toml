@@ -6,7 +6,7 @@ description = "Pure math types and functions for the Epi-Logos portal clock — 
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-epi-lib = { path = "../epi-lib" }
+epi-lib = { path = "../epi-lib", features = ["m0_verifier"] }
 blake3 = "1"
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }

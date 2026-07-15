@@ -137,6 +137,37 @@ M0_VerifierVerdict m0_check_tune_structural_invariant_compliance(
     return verdict;
 }
 
+M0_VerifierVerdict m0_check_slot_privacy_boundary_compliance(
+    const M0_TuneProposal* proposal
+) {
+    M0_VerifierVerdict verdict;
+    memset(&verdict, 0, sizeof(verdict));
+
+    if (proposal == NULL) {
+        verdict.violation = 1;
+        strncpy(verdict.violation_name, "null-proposal", sizeof(verdict.violation_name) - 1u);
+        return verdict;
+    }
+
+    if (
+        strcmp(proposal->dispatch_purpose, "tuning-calibration") == 0
+        && strcmp(proposal->tuning_target_knob_privacy_class, "local-only") == 0
+        && (
+            strcmp(proposal->actual_resolved_slot_state, "local-default") != 0
+            || proposal->evidence_window_pasu_count > 1u
+        )
+    ) {
+        verdict.violation = 1;
+        strncpy(
+            verdict.violation_name,
+            "privacy-boundary-violation",
+            sizeof(verdict.violation_name) - 1u
+        );
+    }
+
+    return verdict;
+}
+
 /* =============================================================================
  * FR 2.0.3-H: ZODIACAL LUT — 12 entries (sub-table of Archetype 5 = Vak)
  * ============================================================================= */

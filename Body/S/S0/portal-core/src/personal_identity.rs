@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::kernel::{ConjugateFormCharacter, ProfilePrivacyClass};
 use crate::luts::planet_keplerian::{PLANET_COUNT, PLANET_KEPLERIAN_VELOCITY};
-use crate::quaternion::{quat_mul, quat_normalize};
+use crate::quaternion::{quat_mul, quat_normalize, Quaternion};
 
 pub const PERSONAL_RESONANCE_MAJOR_THRESHOLD: f32 = 2.0 / 3.0;
 
@@ -213,9 +213,9 @@ impl ElementalBalance {
 #[serde(rename_all = "camelCase")]
 pub struct PersonalIdentityProfile {
     /// q_personal is the integrated Nara quintessence output.
-    pub q_personal: [f32; 4],
+    pub q_personal: Quaternion,
     /// Q_identity is the Kerykeion natal baseline component integrated by q_personal.
-    pub q_identity: [f32; 4],
+    pub q_identity: Quaternion,
     pub natal_chart_handle: String,
     pub elemental_balance: ElementalBalance,
     pub identity_hash: String,
@@ -251,11 +251,11 @@ impl PersonalIdentityProfile {
         })
     }
 
-    pub fn composed_quaternion(&self, q_transit: [f32; 4], q_activity: [f32; 4]) -> [f32; 4] {
+    pub fn composed_quaternion(&self, q_transit: Quaternion, q_activity: Quaternion) -> Quaternion {
         compose_personal_quaternion(self.q_personal, q_transit, q_activity)
     }
 
-    pub fn apply_identity_augment(&mut self, q_identity: [f32; 4]) {
+    pub fn apply_identity_augment(&mut self, q_identity: Quaternion) {
         let q_identity = quat_normalize(q_identity);
         self.q_identity = q_identity;
         self.q_personal = integrate_nara_quintessence(q_identity, &[]);
@@ -289,7 +289,7 @@ pub struct IdentityAugmentProposal {
     pub reviewed_at: Option<String>,
     pub decided_at: Option<String>,
     pub applied_at: Option<String>,
-    q_identity_candidate: [f32; 4],
+    q_identity_candidate: Quaternion,
 }
 
 impl IdentityAugmentProposal {
@@ -298,7 +298,7 @@ impl IdentityAugmentProposal {
         summary: impl Into<String>,
         source_adapter_handle: impl Into<String>,
         created_at: impl Into<String>,
-        q_identity_candidate: [f32; 4],
+        q_identity_candidate: Quaternion,
     ) -> Result<Self, PersonalIdentityError> {
         Ok(Self {
             proposal_handle: required(proposal_handle.into(), "proposal_handle")?,
@@ -324,7 +324,7 @@ impl IdentityAugmentProposal {
         }
     }
 
-    pub fn q_identity_candidate(&self) -> [f32; 4] {
+    pub fn q_identity_candidate(&self) -> Quaternion {
         self.q_identity_candidate
     }
 }
@@ -468,9 +468,9 @@ fn transition_identity_proposal(
 }
 
 pub fn integrate_nara_quintessence(
-    q_identity: [f32; 4],
-    layer_quaternions: &[[f32; 4]],
-) -> [f32; 4] {
+    q_identity: Quaternion,
+    layer_quaternions: &[Quaternion],
+) -> Quaternion {
     let mut q_personal = quat_normalize(q_identity);
     for layer in layer_quaternions {
         q_personal = quat_normalize(quat_mul(q_personal, quat_normalize(*layer)));
@@ -487,7 +487,7 @@ pub struct PersonalResonance {
 }
 
 impl PersonalResonance {
-    pub fn from_quaternions(q_personal: [f32; 4], q_cosmic: [f32; 4]) -> Self {
+    pub fn from_quaternions(q_personal: Quaternion, q_cosmic: Quaternion) -> Self {
         let q_personal = quat_normalize(q_personal);
         let q_cosmic = quat_normalize(q_cosmic);
         let signed_dot = q_personal
@@ -513,17 +513,17 @@ impl PersonalResonance {
 }
 
 pub fn compose_personal_quaternion(
-    q_identity: [f32; 4],
-    q_transit: [f32; 4],
-    q_activity: [f32; 4],
-) -> [f32; 4] {
+    q_identity: Quaternion,
+    q_transit: Quaternion,
+    q_activity: Quaternion,
+) -> Quaternion {
     quat_normalize(quat_mul(
         quat_mul(quat_normalize(q_identity), quat_normalize(q_transit)),
         quat_normalize(q_activity),
     ))
 }
 
-pub fn decompose_bioquaternion(q_composed: [f32; 4]) -> ([f32; 4], [f32; 4]) {
+pub fn decompose_bioquaternion(q_composed: Quaternion) -> (Quaternion, Quaternion) {
     let q_b = quat_normalize(q_composed);
     let q_p = [q_b[0], -q_b[1], -q_b[2], -q_b[3]];
     (q_b, q_p)

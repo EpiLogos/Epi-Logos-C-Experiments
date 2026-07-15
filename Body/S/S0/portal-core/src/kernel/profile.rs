@@ -8,7 +8,8 @@ use crate::events::KleinFlipEvent;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
 use crate::profile_projections::{
-    AnuttaraWitnessProjection, CanonRecognitionEvent, CosmicCompositionState,
+    AnuttaraWitnessBandBalance, AnuttaraWitnessPalindromeState, AnuttaraWitnessProjection,
+    CanonRecognitionEvent, CosmicCompositionState,
     InversionOperatorHandle, M1TopologyProjection, PasuBeingPatternProjection, PersonalPoleProjection,
     PsychoidFieldProjection,
 };
@@ -21,6 +22,27 @@ use super::{
 };
 
 pub const CURRENT_PROFILE_SCHEMA_VERSION: u16 = 1;
+
+fn bootstrap_anuttara_witness(tick12: u8, position6: u8) -> AnuttaraWitnessProjection {
+    let witness = epi_lib::m0_verifier::bootstrap_witness_for_tick(tick12, position6);
+    AnuttaraWitnessProjection {
+        virtue_witness_vector: witness.virtue_witness_vector,
+        syntax_witness_vector: witness.syntax_witness_vector,
+        rfactor_path: Vec::new(),
+        band_balance: AnuttaraWitnessBandBalance {
+            pravritti_depth: 0,
+            nivritti_depth: 0,
+            reached_turn: false,
+            returned: false,
+        },
+        palindrome_state: AnuttaraWitnessPalindromeState {
+            normal_form_symmetric: false,
+            mirror_normal_form: format!("bootstrap-tick-{tick12}-position-{position6}"),
+        },
+        open_questions: witness.open_questions,
+        coherence_score: witness.coherence_score,
+    }
+}
 
 /// Handle-only quintessence identity summary (quintessence-hash architecture
 /// + DR-M4-3 opaque-handle law). What crosses the bus: the natal clock
@@ -806,7 +828,7 @@ impl MathemeHarmonicProfile {
             context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
             harmonic_grammar: MathemeHarmonicGrammarProjection::from_tick(tick12, position),
             pasu_being_pattern: None,
-            anuttara_witness: None,
+            anuttara_witness: Some(bootstrap_anuttara_witness(tick12, position)),
             cosmic_composition_state: None,
             personal_pole: None,
             psychoid_field: None,
@@ -873,10 +895,17 @@ impl MathemeHarmonicProfile {
         canon_recognition_stream: Vec<CanonRecognitionEvent>,
     ) -> Self {
         let mut profile = Self::from_tick(tick);
+        let q_composed_handle = personal_pole.q_composed_handle.handle.clone();
         profile.cosmic_composition_state = Some(cosmic_composition_state);
         profile.personal_pole = Some(personal_pole);
         profile.psychoid_field = Some(psychoid_field);
         profile.canon_recognition_stream = canon_recognition_stream;
+        if let Some(trace) = profile.anuttara_pentadic_trace.as_mut() {
+            trace.q_composed_handle = Some(q_composed_handle);
+            trace
+                .provenance
+                .push("kernel.profile::with_composition_projections::q_composed_handle".to_owned());
+        }
         profile
     }
 

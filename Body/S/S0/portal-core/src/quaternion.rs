@@ -1,7 +1,10 @@
 use crate::types::WalkMode;
 
+/// Canonical Cl(4,2) quaternion carrier used across the M-stack.
+pub type Quaternion = [f32; 4];
+
 /// Hamilton product of two quaternions [w, x, y, z].
-pub fn quat_mul(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
+pub fn quat_mul(a: Quaternion, b: Quaternion) -> Quaternion {
     let (aw, ax, ay, az) = (a[0], a[1], a[2], a[3]);
     let (bw, bx, by, bz) = (b[0], b[1], b[2], b[3]);
     [
@@ -13,7 +16,7 @@ pub fn quat_mul(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
 }
 
 /// Normalize a quaternion to unit length. Returns identity if magnitude is near zero.
-pub fn quat_normalize(q: [f32; 4]) -> [f32; 4] {
+pub fn quat_normalize(q: Quaternion) -> Quaternion {
     let mag = (q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]).sqrt();
     if mag < f32::EPSILON {
         [1.0, 0.0, 0.0, 0.0]
@@ -22,9 +25,20 @@ pub fn quat_normalize(q: [f32; 4]) -> [f32; 4] {
     }
 }
 
+/// Normalize by reciprocal scaling, preserving the established M3 codon-charge wire bytes.
+pub(crate) fn quat_normalize_scaled(q: Quaternion) -> Quaternion {
+    let norm_sq = q.iter().map(|component| component * component).sum::<f32>();
+    if norm_sq <= 0.0 {
+        [1.0, 0.0, 0.0, 0.0]
+    } else {
+        let scale = 1.0 / norm_sq.sqrt();
+        [q[0] * scale, q[1] * scale, q[2] * scale, q[3] * scale]
+    }
+}
+
 /// Derive walk mode from quaternion: argmax of |w|, |x|, |y|, |z|.
 /// Ground=|w| dominant, Torus=|x|, Fiber=|y|, Spanda=|z|.
-pub fn derive_walk_mode(q: [f32; 4]) -> WalkMode {
+pub fn derive_walk_mode(q: Quaternion) -> WalkMode {
     let abs = [q[0].abs(), q[1].abs(), q[2].abs(), q[3].abs()];
     let mut max_idx = 0usize;
     for i in 1..4 {
@@ -42,7 +56,7 @@ pub fn derive_walk_mode(q: [f32; 4]) -> WalkMode {
 
 /// Derive bifurcation parameter and resolution level from quaternion.
 /// Bifurcation parameter lambda = sqrt(x^2 + y^2 + z^2). Mirrors C walk_bifurcation_param().
-pub fn derive_bifurcation(q: [f32; 4]) -> (f32, u8) {
+pub fn derive_bifurcation(q: Quaternion) -> (f32, u8) {
     let lambda = (q[1] * q[1] + q[2] * q[2] + q[3] * q[3]).sqrt();
     let level = if lambda < 0.25 {
         0

@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::quaternion::Quaternion;
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AnandaVortexProjection {
@@ -8,7 +10,7 @@ pub struct AnandaVortexProjection {
     pub active_cell_value: AnandaVortexCell,
     pub dr_ring_phase: DrRingPhase,
     pub cl42_signature_at_position: i8,
-    pub ring_quaternion: [f32; 4],
+    pub ring_quaternion: Quaternion,
     pub helix_sheet: u8,
     pub klein_flip_at_this_tick: bool,
 }
@@ -194,8 +196,8 @@ fn cl42_signature(position6: u8) -> i8 {
     }
 }
 
-fn ring_quaternion(tick12: u8) -> [f32; 4] {
-    const RING_QUATERNION_LUT: [[f32; 4]; 12] = [
+fn ring_quaternion(tick12: u8) -> Quaternion {
+    const RING_QUATERNION_LUT: [Quaternion; 12] = [
         [1.0, 0.0, 0.0, 0.0],
         [0.8660254, 0.5, 0.0, 0.0],
         [0.5, 0.8660254, 0.0, 0.0],

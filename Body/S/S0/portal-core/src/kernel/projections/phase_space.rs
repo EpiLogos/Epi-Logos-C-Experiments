@@ -2,7 +2,8 @@
 // Actualises: the 720 phase-space law (Architect correction #3) — the clock's
 //   two planes (codon vs hexagram valence per degree) give every generated
 //   state a spot in the 720 possibility space, and the tick is CARRIED across
-//   the 16+1 lenses (the 4/12/24/60-based divisions structure temporality).
+//   the 16+1 functional lenses (the primary 60-position Fibonacci Ground and
+//   the 16 derived static divisions that structure temporality).
 //   Source of truth is the C substrate: `CLOCK_DEGREE_LUT[360]` (.rodata,
 //   epi-lib src/m3_clock_lut.c, 384 = 360 + 24 = 64×6 topology law) — this
 //   module BINDS it, it never re-derives degree/hexagram/codon law.
@@ -67,33 +68,115 @@ pub struct ClockLensDivision {
     pub sections: u16,
     pub name: &'static str,
     /// The Architect-named temporality structurers: the 4-, 12-, and
-    /// 24-section divisions (with the 60-fold Fibonacci Ground as the +1
-    /// aperture alongside them). These gear rhythm/time; the others remain
-    /// analytic divisions.
+    /// 24-section divisions. These gear rhythm/time through the primary
+    /// 60-position Fibonacci Ground lens; the others remain analytic divisions.
     pub temporal_canon: bool,
 }
 
-/// The 16 static apertures. The Fibonacci Ground (60 positions, 6°/step) is
-/// deliberately NOT a 17th row — it is the Level-0 growth aperture of the
-/// 16+1 law (M3'-SPEC; never a 17th lens) and is carried separately below.
+/// The 16 derived static apertures. The primary Fibonacci Ground is functional
+/// lens 16, but is not a seventeenth static division row in this homogeneous
+/// table because its 60 positions carry Fibonacci/Pisano growth semantics.
 pub const CLOCK_LENSES_16: [ClockLensDivision; 16] = [
-    ClockLensDivision { slice: 1, sections: 360, name: "Microscopic", temporal_canon: false },
-    ClockLensDivision { slice: 2, sections: 180, name: "Binary", temporal_canon: false },
-    ClockLensDivision { slice: 4, sections: 90, name: "Quaternary", temporal_canon: false },
-    ClockLensDivision { slice: 8, sections: 45, name: "Octagonal", temporal_canon: false },
-    ClockLensDivision { slice: 9, sections: 40, name: "Enneadic", temporal_canon: false },
-    ClockLensDivision { slice: 10, sections: 36, name: "Decan", temporal_canon: false },
-    ClockLensDivision { slice: 12, sections: 30, name: "Zodiacal", temporal_canon: false },
-    ClockLensDivision { slice: 15, sections: 24, name: "Hourly", temporal_canon: true },
-    ClockLensDivision { slice: 24, sections: 15, name: "Expanded Hours", temporal_canon: false },
-    ClockLensDivision { slice: 30, sections: 12, name: "Solar Month", temporal_canon: true },
-    ClockLensDivision { slice: 36, sections: 10, name: "Decadic", temporal_canon: false },
-    ClockLensDivision { slice: 40, sections: 9, name: "Greater Chamber", temporal_canon: false },
-    ClockLensDivision { slice: 45, sections: 8, name: "Octant", temporal_canon: false },
-    ClockLensDivision { slice: 90, sections: 4, name: "Quadrant", temporal_canon: true },
-    ClockLensDivision { slice: 180, sections: 2, name: "Hemisphere", temporal_canon: false },
-    ClockLensDivision { slice: 360, sections: 1, name: "Unity", temporal_canon: false },
+    ClockLensDivision {
+        slice: 1,
+        sections: 360,
+        name: "Microscopic",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 2,
+        sections: 180,
+        name: "Binary",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 4,
+        sections: 90,
+        name: "Quaternary",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 8,
+        sections: 45,
+        name: "Octagonal",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 9,
+        sections: 40,
+        name: "Enneadic",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 10,
+        sections: 36,
+        name: "Decan",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 12,
+        sections: 30,
+        name: "Zodiacal",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 15,
+        sections: 24,
+        name: "Hourly",
+        temporal_canon: true,
+    },
+    ClockLensDivision {
+        slice: 24,
+        sections: 15,
+        name: "Expanded Hours",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 30,
+        sections: 12,
+        name: "Solar Month",
+        temporal_canon: true,
+    },
+    ClockLensDivision {
+        slice: 36,
+        sections: 10,
+        name: "Decadic",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 40,
+        sections: 9,
+        name: "Greater Chamber",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 45,
+        sections: 8,
+        name: "Octant",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 90,
+        sections: 4,
+        name: "Quadrant",
+        temporal_canon: true,
+    },
+    ClockLensDivision {
+        slice: 180,
+        sections: 2,
+        name: "Hemisphere",
+        temporal_canon: false,
+    },
+    ClockLensDivision {
+        slice: 360,
+        sections: 1,
+        name: "Unity",
+        temporal_canon: false,
+    },
 ];
+
+/// The primary `+1` lens id following the sixteen derived division ids 0..15.
+pub const PRIMARY_GROUND_LENS_ID: u8 = CLOCK_LENSES_16.len() as u8;
 
 /// Pisano-60: fib(n) mod 10 over one full period — the Fibonacci Ground's
 /// digit at each of the 60 Level-0 positions (M3'-SPEC `fibonacci_digit`).
@@ -241,11 +324,17 @@ pub struct LensSegmentPhase {
     pub phase01: f32,
 }
 
-/// The Fibonacci Ground Level-0 aperture — the +1 of the 16+1 law, carried
-/// beside the lens ring, never inside it.
-#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+/// The Fibonacci Ground Level-0 aperture: primary functional lens 16 and the
+/// grounding address through which the sixteen static division lenses operate.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FibonacciGroundPhase {
+    /// Functionally the seventeenth lens; id 16 follows derived ids 0..15.
+    pub lens_id: u8,
+    /// Serialized role discriminator shared with the on-demand lens endpoint.
+    pub role: String,
+    pub slice: u16,
+    pub sections: u8,
     /// 0-59: which 6° Level-0 position.
     pub position: u8,
     /// fib(position) mod 10 (Pisano-60 digit law).
@@ -320,6 +409,10 @@ impl PhaseSpaceAddress {
             node,
             lens_carrier,
             fibonacci_ground: FibonacciGroundPhase {
+                lens_id: PRIMARY_GROUND_LENS_ID,
+                role: "primary-ground".to_owned(),
+                slice: 6,
+                sections: 60,
                 position: fib_position,
                 digit: pisano60_digit(fib_position),
                 phase01: (degree360 % 6) as f32 / 6.0,

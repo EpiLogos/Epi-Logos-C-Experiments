@@ -28,7 +28,10 @@ fn clock_backbone_node_contract_is_populated() {
         assert_eq!(CLOCK_BACKBONE.len(), 24);
 
         for (idx, node) in CLOCK_BACKBONE.iter().copied().enumerate() {
-            assert_eq!(node.degree, idx as u16);
+            // handoff §2.3 law (m3.c:408): 24 spokes × 15° = 360 — degree IS
+            // the spoke degree. The earlier `.degree = i` expectation was the
+            // defect fixed in Tranche 4.15; this FFI test was never updated.
+            assert_eq!(node.degree, (idx * 15) as u16);
             assert_eq!(node.backbone_index, idx as u8);
             assert_eq!(node.hour_of_day, idx as u8);
             assert_eq!(node.zodiac_sign, (idx / 2) as u8);
