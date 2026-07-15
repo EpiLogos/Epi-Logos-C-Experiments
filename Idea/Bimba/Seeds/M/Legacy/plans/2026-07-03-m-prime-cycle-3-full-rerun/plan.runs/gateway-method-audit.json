@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-14T18:17:31.267Z",
+ "generatedAt": "2026-07-15T10:40:26.140Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,9 +7,9 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 215,
-  "present": 57,
-  "absent": 158,
+  "probed": 264,
+  "present": 61,
+  "absent": 203,
   "unknown": 0
  },
  "methods": [
@@ -119,6 +119,27 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "contemplate_session_close()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "contemplate_session_close(ContemplationObject)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "contemplate_session_close(obj)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "cron.error",
    "advertised": false,
    "exists": false,
@@ -127,6 +148,167 @@
   },
   {
    "method": "cron.fired",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m0.alchemicalToTattvic()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m0.psychoidPlanetary(planet_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m0.zodiacalBridge(sign)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.asmaName(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.cymaticMonoPolyState(address72)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.decodeAxisAt",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.epogdoonProjection",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.epogdoonProjection(address72)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.mantraEntry(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.planetLUT(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.planetLUT(planet_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2.planetaryElementalWeights()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m2m3.lensOrbiterRelations()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m3.bioquaternionTranscription(codon)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m3.hexagram(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m3.lensCodonBinary(16)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m3.lensCodonBinary(lensId)",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: lensId must be an unsigned integer"
+  },
+  {
+   "method": "kernelBridge.m3.tarotReversedMeaning(decan_idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.m4.medicineChakraZones(chakra_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.profileAtLensMode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.s2.meaningIdResolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.s2.meaningIdResolve(meaning_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "kernelBridge.s2.parashaktiCorrespondences(address72)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -308,7 +490,7 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "nara.day.open'",
+   "method": "nara.field.handle",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -329,7 +511,7 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "nara.journal.timeline'",
+   "method": "nara.journal.timeline",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -341,6 +523,13 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.kairos.probe_kerykeion",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
   },
   {
    "method": "nara.kairos.snapshot",
@@ -371,13 +560,6 @@
    "errorClass": "domain-error: missing required param 'lenses'"
   },
   {
-   "method": "nara.lens.synthesize'",
-   "advertised": false,
-   "exists": false,
-   "responds": true,
-   "errorClass": "unimplemented"
-  },
-  {
    "method": "nara.logos.advance",
    "advertised": false,
    "exists": false,
@@ -394,9 +576,16 @@
   {
    "method": "nara.medicine.pin",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required param 'materia'"
+  },
+  {
+   "method": "nara.medicine.snapshot",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required numeric param 'sunDegree'"
   },
   {
    "method": "nara.oracle.cast",
@@ -406,11 +595,25 @@
    "errorClass": "domain-error: missing required param 'system'"
   },
   {
+   "method": "nara.oracle.cast_iching",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "nara.oracle.cast_tarot",
    "advertised": false,
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.oracle.history",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
   },
   {
    "method": "nara.oracle.hygiene",
@@ -462,14 +665,14 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "nara.pasu.show'",
+   "method": "nara.session",
    "advertised": false,
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
   },
   {
-   "method": "nara.session",
+   "method": "nara.session.close_summary",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -484,6 +687,20 @@
   },
   {
    "method": "nara.session.protein_capacity",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.psyche_anchor",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "nara.session.set_time_axis",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -560,7 +777,7 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "s0'.anuttara.compress_entity",
+   "method": "s0'.anuttara.compress_entity(coord)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -581,15 +798,15 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "s0'.settings.api_key_status",
-   "advertised": true,
+   "method": "s0'.settings.api_key_status(name)",
+   "advertised": false,
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
   },
   {
-   "method": "s0'.settings.opt_in",
-   "advertised": true,
+   "method": "s0'.settings.opt_in(name)",
+   "advertised": false,
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
@@ -637,6 +854,13 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "s1'.base.ensure(params)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s1'.canvas.create_or_update",
    "advertised": false,
    "exists": false,
@@ -651,6 +875,13 @@
    "errorClass": "domain-error: source is required"
   },
   {
+   "method": "s1'.entity.capture(path)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s1'.entity.classify",
    "advertised": true,
    "exists": true,
@@ -663,6 +894,13 @@
    "exists": true,
    "responds": true,
    "errorClass": "domain-error: candidatePath is required"
+  },
+  {
+   "method": "s1'.entity.promote_to_type(id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
   },
   {
    "method": "s1'.moc.ensure",
@@ -735,7 +973,21 @@
    "errorClass": "domain-error: typePath is required"
   },
   {
+   "method": "s1'.world.graduate(type_path)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s1'.world.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.world.resolve(coord)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -819,11 +1071,18 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "s2.graph.ananda_position(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s2.graph.core65.audit",
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: s2.graph.core65.audit failed: an IO error occurred: Connection refused (os error 61)"
+   "errorClass": null
   },
   {
    "method": "s2.graph.gds.tangent_overlay",
@@ -854,11 +1113,18 @@
    "errorClass": "domain-error: coordinate must be a string"
   },
   {
+   "method": "s2.graph.node(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s2.graph.ontology.reload",
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: n10s epi ontology import failed: an IO error occurred: Connection refused (os error 61)"
+   "errorClass": "domain-error: n10s epi ontology import failed: Neo4j error `Neo.ClientError.Procedure.ProcedureNotFound`: There is no procedure with t"
   },
   {
    "method": "s2.graph.promotion.commit",
@@ -924,6 +1190,13 @@
    "errorClass": "domain-error: address72 must be a positive integer"
   },
   {
+   "method": "s2.parashaktiCorrespondences(address72)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s2.pointer.walk.read",
    "advertised": false,
    "exists": false,
@@ -932,6 +1205,13 @@
   },
   {
    "method": "s2.provenanceHandle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s2.relation.dual_matrix_pair.read",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -1099,6 +1379,13 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "s4.vak.evaluate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s5'.canon_update",
    "advertised": false,
    "exists": false,
@@ -1106,7 +1393,7 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "s5'.canon_update.land",
+   "method": "s5'.canon_update.land(id)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -1114,6 +1401,13 @@
   },
   {
    "method": "s5'.canon_update.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.canon_update.list(filter)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -1134,7 +1428,7 @@
    "errorClass": "unimplemented"
   },
   {
-   "method": "s5'.canon_update.status",
+   "method": "s5'.canon_update.status(id)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -1197,6 +1491,13 @@
    "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
   },
   {
+   "method": "s5'.gnostic.candidates(filter)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s5'.gnostic.comparative_retrieval",
    "advertised": false,
    "exists": false,
@@ -1218,11 +1519,18 @@
    "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, bimbaCoordinate"
   },
   {
-   "method": "s5'.gnostic.evidence_trace",
-   "advertised": true,
-   "exists": true,
+   "method": "s5'.gnostic.etymology(coord)",
+   "advertised": false,
+   "exists": false,
    "responds": true,
-   "errorClass": "domain-error: missing required string parameter; expected one of passageId, passage_id, id"
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.evidence_trace(passage_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
   },
   {
    "method": "s5'.gnostic.ingest",
@@ -1237,6 +1545,20 @@
    "exists": true,
    "responds": true,
    "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks(coord_filter)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
   },
   {
    "method": "s5'.gnostic.musical_transcript",
@@ -1274,7 +1596,14 @@
    "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, ref, passageId, passage_id, id"
   },
   {
-   "method": "s5'.gnostic.seed_resolve",
+   "method": "s5'.gnostic.resolve(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5'.gnostic.seed_resolve(seed_query)",
    "advertised": false,
    "exists": false,
    "responds": true,
@@ -1428,6 +1757,13 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "s5.epii.deposit",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "s5.evidence.deposit",
    "advertised": false,
    "exists": false,
@@ -1450,6 +1786,13 @@
   },
   {
    "method": "s5.review.annotate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "s5.review.submit",
    "advertised": false,
    "exists": false,
    "responds": true,

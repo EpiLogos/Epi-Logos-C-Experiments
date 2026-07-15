@@ -2,7 +2,7 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 04). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
-**⚑ Carrier (track 04) — build/verify HERE, never epi-theia:** CARRIER: M3' inspectors (18-aperture switcher, tarot wheel, hexagram browser, transcription engine) in pratibimba-app. SUBSTRATE: epi-lib m3 + portal-core m3_transcription_bridge. §2 track 04/24.
+**⚑ Carrier (track 04) — build/verify HERE, never epi-theia:** CARRIER: M3' inspectors (primary [[Fibonacci Ground]] lens id 16 grounding the 16 derived divisions, tarot wheel, hexagram browser, transcription engine) in pratibimba-app. SUBSTRATE: epi-lib m3 + portal-core m3_transcription_bridge. §2 track 04/24. The superseded Frame/Operator 18-aperture branch MUST NOT be rebuilt.
 
 1. **T4.1 — Codon-rotation projection field contract audit**
 

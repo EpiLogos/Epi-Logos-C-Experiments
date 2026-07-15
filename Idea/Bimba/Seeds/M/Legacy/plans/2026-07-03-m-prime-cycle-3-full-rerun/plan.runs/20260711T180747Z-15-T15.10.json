@@ -1,0 +1,36 @@
+{
+  "runId": "20260711T180747Z-15-T15.10",
+  "taskId": "15.T15.10",
+  "startedAt": "2026-07-11T18:07:47.034Z",
+  "owner": "opus-f-faces",
+  "leaseExpiresAt": "2026-07-11T20:07:47.034Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.10",
+    "trackId": "15",
+    "tranche": "T15.10",
+    "title": "Status bar discipline",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app design foundations (nine principles + surface contracts §1). §2 track 15."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T074406Z-37-T37.5",
+  "taskId": "37.T37.5",
+  "startedAt": "2026-07-14T07:44:06.364Z",
+  "owner": "uc-3705",
+  "leaseExpiresAt": "2026-07-14T09:44:06.364Z",
+  "worktree": null,
+  "task": {
+    "id": "37.T37.5",
+    "trackId": "37",
+    "tranche": "T37.5",
+    "title": "Reconcile the MonoPoly state vocabulary across M0 and M2",
+    "effort": null,
+    "file": "37-biological-quaternionic-cross-layer-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
+    "dependsOn": [
+      "37.T37.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — bio-quaternionic projection backlog (m2.epogdoonProjection, planetaryElementalWeights, cymaticMonoPolyState, m3.lensCodonBinary, m2m3.lensOrbiterRelations, m3.bioquaternionTranscription) in portal-core/epi-lib. CARRIER: epogdoon gap-wheel, MonoPoly cymatic shader state, elemental-weights feed, 24-amino backbone ring. §2 track 37."
+  }
+}

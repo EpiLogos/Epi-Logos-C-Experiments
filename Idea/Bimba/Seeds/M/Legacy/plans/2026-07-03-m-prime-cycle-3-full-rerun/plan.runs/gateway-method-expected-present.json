@@ -6,6 +6,22 @@
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },
   {
+   "method": "kernelBridge.m3.lensCodonBinary(lensId)",
+   "claimedBy": "37.T37.8"
+  },
+  {
+   "method": "nara.kairos.probe_kerykeion",
+   "claimedBy": "32.T32.10"
+  },
+  {
+   "method": "nara.medicine.pin",
+   "claimedBy": "25.T25.10"
+  },
+  {
+   "method": "nara.medicine.snapshot",
+   "claimedBy": "25.T25.10"
+  },
+  {
    "method": "nara.lens.apply",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },

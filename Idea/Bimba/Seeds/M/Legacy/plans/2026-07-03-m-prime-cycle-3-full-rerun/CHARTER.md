@@ -21,7 +21,7 @@
 ## Resolved by plan authority (formerly "open decisions" — build them)
 
 - **S5.5b:** read-only `kernelBridge.profileAtLensMode(lens, mode)` over the pure `vimarsha_read_profile` seam (the corpus's own recommendation). Unblocks the playable-84 (Tracks 22/23/24).
-- **Lens stack:** DR-M3-LENS-18 is ratified — 16+2=18 (aperture 16 `()` Frame ≡ the Level-0/fibonacciGround "+1" already carried; aperture 17 `(-)` Operator no-frame). Update kernel lensCarrier, Zod pins, engine cycling to the 18-shape (Track 24/35 work).
+- **Lens stack (supersedes DR-M3-LENS-18, user correction 2026-07-15):** the executable law is **16 derived static clock apertures + 1 primary grounding lens**. [[Fibonacci Ground]] is functionally lens id 16, the Level-0 `+1` through which ids 0..15 are addressed; it is not a seventeenth homogeneous row in the derived `lensCarrier[16]` array. `phaseSpace.fibonacciGround` carries its primary lens identity, `kernelBridge.m3.lensCodonBinary(16)` addresses its 60 positions, and every derived projection points back with `groundingLensId: 16`. No Frame/Operator rows or parallel 18-stack exist.
 - **Motion:** DR-UI-4 ratified — lemniscate 0/1 400ms cubic-out · Klein 240ms linear · Möbius 320ms smoothstep. The 600/420ms texts are superseded.
 - **Palette:** Track 30.8 derivation-backed family tiers are the token law (UI-PATTERNS §1.3 flat hues superseded — earlier, underivated). Element palette = M2 canon. Engraved-atlas remains the rendering register. (Track 30.)
 - **Day path:** month-first `Idea/Empty/Present/{MM-DD-YYYY}/`, flat — Architect-ratified 2026-07-02, supersedes older DD-MM examples.

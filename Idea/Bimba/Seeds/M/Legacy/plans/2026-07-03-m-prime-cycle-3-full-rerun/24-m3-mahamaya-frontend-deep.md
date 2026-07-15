@@ -2,7 +2,7 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 24). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
-**⚑ Carrier (track 24) — build/verify HERE, never epi-theia:** CARRIER: M3' inspectors in pratibimba-app (18-aperture switcher, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). NO Math.random — casts dispatch to the gateway. §2 track 24.
+**⚑ Carrier (track 24) — build/verify HERE, never epi-theia:** CARRIER: M3' inspectors in pratibimba-app (primary [[Fibonacci Ground]] lens id 16 grounding the 16 derived divisions, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). The source plan's Frame/Operator 18-aperture clauses are superseded by the user correction of 2026-07-15 and MUST NOT be built. NO Math.random — casts dispatch to the gateway. §2 track 24.
 
 1. **T24.1 — `M3CosmicWheelRenderService`: the alive-and-tarot-like default surface *(doc-ahead-landing; first-build of named component, no new contract)***
 
@@ -17,7 +17,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
-3. **T24.3 — 18-fold lens aperture switcher (`M3LensApertureSwitcher`) *(spec-ahead-integration; corrects M3'-SPEC §8.10 cardinality 16+1 → 16+2; routes to DR-M3-LENS-18; depends on Wave-B kernel-bridge field WC-M3-SA-1)***
+3. **T24.3 — 16-division lens switcher over the landed 16+1 carrier (`M3LensApertureSwitcher`) *(corrected 2026-07-15; no Frame/Operator rows; depends on Wave-B kernel-bridge field WC-M3-SA-1)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md` — Tranche 24.3 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.

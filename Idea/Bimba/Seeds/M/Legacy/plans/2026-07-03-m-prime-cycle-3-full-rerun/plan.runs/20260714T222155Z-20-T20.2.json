@@ -1,0 +1,38 @@
+{
+  "runId": "20260714T222155Z-20-T20.2",
+  "taskId": "20.T20.2",
+  "startedAt": "2026-07-14T22:21:55.037Z",
+  "owner": "anima",
+  "leaseExpiresAt": "2026-07-15T00:21:55.037Z",
+  "worktree": null,
+  "task": {
+    "id": "20.T20.2",
+    "trackId": "20",
+    "tranche": "T20.2",
+    "title": "Wave-C cross-cutting design-system manifest (the Track-D source) on the carrier",
+    "effort": null,
+    "file": "20-wave-c-frontend-deep-overview.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/20-wave-c-frontend-deep-overview.md",
+    "dependsOn": [
+      "00.T3",
+      "20.T20.1"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app/src",
+      "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:113,122"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: Wave-C cross-cutting design system (the Track-D source) in pratibimba-app. 'the matheme is the architecture; the widgets are how the matheme shows up to a user.' §2 track 20."
+  }
+}

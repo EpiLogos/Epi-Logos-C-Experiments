@@ -1,0 +1,38 @@
+{
+  "runId": "20260714T204129Z-11-T11.1",
+  "taskId": "11.T11.1",
+  "startedAt": "2026-07-14T20:41:29.016Z",
+  "owner": "terra",
+  "leaseExpiresAt": "2026-07-14T22:41:29.016Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.1",
+    "trackId": "11",
+    "tranche": "T11.1",
+    "title": "Shell-0/Shell-1/4+2/`/` separation reading (clarification, not contradiction)",
+    "effort": "clarification, not contradiction",
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.0"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app IDE shell / face partition (the `/` membrane crosses both faces = `#` itself); 10 highlight categories, ambient strip + tuning bar -> NOW frontmatter via khora_write. §2 track 11."
+  }
+}

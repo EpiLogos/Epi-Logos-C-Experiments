@@ -15,7 +15,7 @@ Gate law: every row VALIDATED or explicitly DOWNGRADED. Exceptions: 0.
 | DR-M3-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Runtime law is author |
 | DR-M3-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The 72→64 fold is **t |
 | DR-M3-3 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** **Never a contradicti |
-| DR-M4-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The canonical day pat |
+| DR-M4-1 | VALIDATED | **Status:** DR-M4-1 VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The canonical |
 | DR-M4-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user |
 | DR-M5-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Cleanup 2026-06-03 (final per DR-S4 |
 | DR-M5-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Sibling of DR-M1-1. S |
@@ -31,9 +31,9 @@ Gate law: every row VALIDATED or explicitly DOWNGRADED. Exceptions: 0.
 | DR-IG-3 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
 | DR-IG-4 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
 | DR-IG-5 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
-| DR-IG-6 | VALIDATED | **Status:** VALIDATED with CORRECTED GEOMETRY · **Validated:** 2026-06-03 · **By:** user · **Resolution:** Ado |
+| DR-IG-6 | VALIDATED | **Status:** DR-IG-6 VALIDATED with CORRECTED GEOMETRY · **Validated:** 2026-06-03 · **By:** user · **Resolutio |
 | DR-M1-3 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Note:** `#` IS essentially (0/1) — the in |
 | DR-M1-4 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
 | DR-M2-3 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
-| DR-M4-3 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
+| DR-M4-3 | VALIDATED | **Status:** DR-M4-3 VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |
 | DR-M5-3 | VALIDATED | **Status:** VALIDATED · **Validated:** 2026-06-03 · **By:** user · **Resolution:** see below. |

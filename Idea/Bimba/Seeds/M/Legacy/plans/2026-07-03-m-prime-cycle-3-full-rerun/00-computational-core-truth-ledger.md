@@ -127,11 +127,11 @@ Division namespace vs tonality namespace — never merged. Coordinates: [[M3-2]]
 
 | Law (formula) | Spec | Engines | Status |
 |---|---|---|---|
-| Three lens namespaces never merge: M2_MEF_LENS (12 chromatic) ≠ M3_LENS_STACK (16 static clock apertures) ≠ Level-0 Fibonacci Ground (+1 meta, NOT a 17th aperture) | M3'-SPEC §8.15:535-543; §8.0; DR-M3-3 | Rust phaseSpace.lensCarrier[16] + fibonacciGround; APP modulation | GREEN — PC/phase_space_profile_field.rs (16 lenses tile 360; carrier + the +1); SCH (rejects a 17th row); APP modulators.test.ts (division change leaves tonality untouched) |
+| Three lens namespaces never merge: M2_MEF_LENS (12 chromatic) ≠ M3's sixteen derived static rows ≠ Level-0 Fibonacci Ground (primary functional lens 16) | M3'-SPEC §8.15:535-543; §8.0; DR-M3-3 | Rust `phaseSpace.lensCarrier[16]` + `fibonacciGround {lensId:16, role:primary-ground}`; APP modulation | GREEN — PC/phase_space_profile_field.rs (16 derived rows tile 360 and resolve through primary Ground); SCH exact Ground identity; APP modulators.test.ts (division change leaves tonality untouched) |
 | Tonality namespace: (lens, mode) = 12×7 = 84; lensModeIndex = lens·7 + mode; kept by constructor | kernel.rs:399-406; codon_rotation_projection.rs:5-7 | Rust + Zod | GREEN — PC/vimarsha_reading.rs (84 distinct); SCH lensMode bounds (lens 0..11 / mode 0..6, the bell-spec §6 drift fixed); GREEN-NEW resonance72_address_law.rs (84 ≠ 72 namespace distinctness) |
 | Kernel temporal canon [24,12,4]: exactly the temporal-canon rows of the lensCarrier; division re-gears rendering AND rhythmic subdivision | INTEGRATED-1-2-3 §7.3:600; kernel phase-space | Rust + APP | GREEN — SCH (temporal ≡ [4,12,24]); APP modulators/engine tests (subdivision gearing, kernel-carried tick `source:'kernel'` wins over local arithmetic) |
 | Each lens layer re-reads the SAME degree state: lensCarrier[i].segment == floor(degree360 / slice) at every aperture, same degree for all 16 | cosmic-clock §4 LUT formula | Rust + wire | GREEN — SCH §4-formula pin per aperture; LW `phaseSpace` (self-consistency on real frames) |
-| **DR-M3-LENS-18 (ratified): the M3 stack is 16+2 = 18 = 6g** — aperture 16 `()` Frame-unity, aperture 17 `(-)` Operator no-frame; carrier still pins 16+1 | recapture §1 Clock + §3.2 | kernel/Zod/engine carry 16+1 | OPEN-DR (Architect queue item 2) — the 18-shape update touches phase-space law the E1 verifier pinned; current 16+1 truth is what the GREEN pins above hold; re-point them when the 18-update proceeds |
+| **16+1 executable law (user correction 2026-07-15; DR-M3-LENS-18 superseded)** — ids 0..15 are the sixteen derived static divisions; id 16 is the primary Level-0 [[Fibonacci Ground]] lens (60 positions) and grounds every derived packet; no Operator/Frame lens exists | M3'-SPEC lens-transcription foothold; 37.T37.8 carry-forward | kernel/Zod/engine carry primary id/role + 16 derived rows | GREEN — phase-space exact Ground identity; portal/gateway/Zod/app/real-Chromium lens-16 route; id 17 and every 18-shape update refused |
 | lensCarrier is the carried-tick authority (source:'kernel'; local arithmetic = honest fallback) | INTEGRATED-1-2-3 §7.3:600 | APP | GREEN — APP doctored-segment test (kernel wins); LW all-16-divisions source:'kernel' |
 
 ## Stratum 6 — M4: the entity-computation path (the point of it all)
@@ -193,7 +193,7 @@ The VAK surface and the profile bus as the single place backend, app, and VAK sp
 ## Architect decision queue touched by this ledger
 
 1. ~~K² aspect 9/8 vs 16/9~~ **RESOLVED 2026-07-06 (Architect-directed, by derivation):** the aspect is 16/9 with R+r=1 per ql-musical-derivation-v3 register law; 9/8-as-aspect was a category error from an underived aside (physical-pole-stack:110). Canon + carrier + tests all corrected; no toggle needed — the mathematics is univocal.
-2. **DR-M3-LENS-18 16+2=18** vs carrier 16+1 — GREEN pins hold the current 16+1 truth; the 18-update re-points them (recapture §3.2).
+2. ~~**DR-M3-LENS-18 16+2=18** vs carrier 16+1~~ **CLOSED 2026-07-15 by user correction:** retain the GREEN 16+1 pins; no 18-update proceeds.
 3. **M3-ARCHITECTURE §2.1 "9 fold-points"** — drift vs the code law (8 resolved ⇔ i≡0 mod 9, 64 gaps); flag for canon correction.
 4. **Cosmic-clock §5.3 Venus/Mercury order comment** — erratum already flagged in M'-SYSTEM-SPEC:616; kernel canon is Mercury=2, Venus=3.
 

@@ -57,7 +57,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md` — Tranche 37.8 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test -p portal-core --test lens_codon_binary_projection` (primary Ground lens id 16 at all 60 positions + all 16 derived division tables at their C-backed boundary degrees + grounding pointer + exact charge/quaternion/4X law; id 17 refused), `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract kernel_bridge_surfaces_primary_ground_and_its_sixteen_derived_lenses`, `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_m3_lens_codon_binary` (real spawned gateway/WebSocket), and `sh -c 'cd Body/M/pratibimba-app && npx vitest run src/bridge/types.test.ts'` (strict active-carrier parser); gateway-method ratchet + honesty-lint clean; verifier ≠ closer; evidence = fresh command output.
 
 9. **T37.9 — Ratify the planet↔aperture aspect projection (the missing 16/9 edge class)**
 
