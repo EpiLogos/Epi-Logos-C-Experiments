@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T14:16:36.354Z",
+  "updatedAt": "2026-07-15T14:19:31.772Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1942,16 +1942,31 @@
       "worktree": null
     },
     "05.T5.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T14:19:31.753Z",
+      "claimedAt": "2026-07-15T14:18:23.589Z",
+      "completedAt": "2026-07-15T14:19:31.753Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T14:19:31.753Z",
+          "text": "Verified M4-0-0 birthdate encoding, MEF evidence paths, L2 elemental caps, and pending unsupplied identity layers for 05.T5.6.",
+          "receipt": {
+            "command": "cargo check --manifest-path Body/S/S0/portal-core/Cargo.toml; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml m4_0_0_birthdate_encoding; node .codex/scripts/verify-tranche.mjs 05.T5.6 --owner verifier-codex-05-route",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/birthdate_identity.rs",
+              "Body/S/S0/portal-core/tests/m4_0_0_birthdate_encoding.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T14:18:23.589Z",
+      "runId": "20260715T141823Z-05-T5.6",
       "worktree": null
     },
     "05.T5.7": {
@@ -17496,26 +17511,36 @@
       "leaseExpiresAt": "2026-07-15T16:10:37.679Z",
       "worktree": null,
       "completedAt": "2026-07-15T14:16:36.336Z"
+    },
+    {
+      "runId": "20260715T141823Z-05-T5.6",
+      "taskId": "05.T5.6",
+      "status": "done",
+      "startedAt": "2026-07-15T14:18:23.589Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T16:18:23.589Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T14:19:31.753Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-15T14:10:27.912Z",
-    "updatedAt": "2026-07-15T14:10:27.912Z",
+    "createdAt": "2026-07-15T14:18:18.290Z",
+    "updatedAt": "2026-07-15T14:18:18.290Z",
     "taskIds": [
-      "05.T5.5",
       "05.T5.6",
       "05.T5.7",
-      "05.T5.8"
+      "05.T5.8",
+      "05.T5.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.5": "in-session",
       "05.T5.6": "in-session",
       "05.T5.7": "in-session",
-      "05.T5.8": "in-session"
+      "05.T5.8": "in-session",
+      "05.T5.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
