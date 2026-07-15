@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T14:23:22.363Z",
+  "updatedAt": "2026-07-15T14:25:42.997Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2003,16 +2003,32 @@
       "worktree": null
     },
     "05.T5.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T14:25:42.979Z",
+      "claimedAt": "2026-07-15T14:24:27.568Z",
+      "completedAt": "2026-07-15T14:25:42.979Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T14:25:42.979Z",
+          "text": null,
+          "receipt": {
+            "command": "cargo check --manifest-path Body/S/S0/portal-core/Cargo.toml; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml period_reading; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test nara_journal_parser",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "evidence": "Verified period_reading reconstructs Hopf-projected Q_composed trajectory from Graphiti episodes, Chronos/Kairos/history handles, emits protected trajectory handle, and preserves no-raw-body privacy for 05.T5.8.",
+            "paths": [
+              "Body/S/S0/portal-core/src/nara_journal.rs",
+              "Body/S/S0/portal-core/tests/nara_journal_parser.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T14:24:27.568Z",
+      "runId": "20260715T142427Z-05-T5.8",
       "worktree": null
     },
     "05.T5.9": {
@@ -17551,6 +17567,16 @@
       "leaseExpiresAt": "2026-07-15T16:20:48.883Z",
       "worktree": null,
       "completedAt": "2026-07-15T14:23:22.347Z"
+    },
+    {
+      "runId": "20260715T142427Z-05-T5.8",
+      "taskId": "05.T5.8",
+      "status": "done",
+      "startedAt": "2026-07-15T14:24:27.568Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T16:24:27.568Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T14:25:42.979Z"
     }
   ],
   "activeRoute": {
