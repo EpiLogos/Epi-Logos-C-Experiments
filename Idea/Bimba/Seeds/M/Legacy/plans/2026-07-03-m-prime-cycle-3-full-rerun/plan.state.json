@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T12:14:43.500Z",
+  "updatedAt": "2026-07-15T13:07:24.515Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2616,16 +2616,34 @@
       "worktree": null
     },
     "05.T5.26": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T13:07:24.498Z",
+      "claimedAt": "2026-07-15T12:51:40.588Z",
+      "completedAt": "2026-07-15T13:07:24.498Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T13:07:24.498Z",
+          "text": "Fresh rerun proved the M4 START/STOP protein lifecycle, bounded tail marker, protected gateway/CLI round-trip, Khora lifecycle carrier suite, tunable registry, and class-K honesty/kernel gates.",
+          "receipt": {
+            "command": "make -C Body/S/S0/epi-lib test_m4",
+            "exitCode": 0,
+            "testsPassed": 458,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/include/m4.h",
+              "Body/S/S0/epi-lib/src/m4.c",
+              "Body/S/S3/gateway/src/dispatch.rs",
+              "Body/S/S0/epi-cli/src/gate/mod.rs",
+              "Body/S/S4/ta-onta/S4-0p-khora/extension.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T12:51:40.588Z",
+      "runId": "20260715T125140Z-05-T5.26",
       "worktree": null
     },
     "05.T5.27": {
@@ -17363,12 +17381,22 @@
       "leaseExpiresAt": "2026-07-15T15:10:21.349Z",
       "worktree": null,
       "completedAt": "2026-07-15T12:13:25.353Z"
+    },
+    {
+      "runId": "20260715T125140Z-05-T5.26",
+      "taskId": "05.T5.26",
+      "status": "done",
+      "startedAt": "2026-07-15T12:51:40.588Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T14:51:40.588Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T13:07:24.498Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-15T12:14:43.482Z",
-    "updatedAt": "2026-07-15T12:14:43.482Z",
+    "createdAt": "2026-07-15T12:51:30.549Z",
+    "updatedAt": "2026-07-15T12:51:30.549Z",
     "taskIds": [
       "05.T5.26",
       "05.T5.27",
