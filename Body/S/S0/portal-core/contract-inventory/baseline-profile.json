@@ -844,6 +844,10 @@
       }
     ],
     "fibonacciGround": {
+      "lensId": 16,
+      "role": "primary-ground",
+      "slice": 6,
+      "sections": 60,
       "position": 0,
       "digit": 0,
       "phase01": 0.0,
@@ -993,6 +997,37 @@
         "intervalSignature": "chromatic:whole-tone; fifths:perfect-fourth"
       }
     ]
+  },
+  "anuttaraWitness": {
+    "virtueWitnessVector": 0,
+    "syntaxWitnessVector": 0,
+    "rfactorPath": [],
+    "bandBalance": {
+      "pravrittiDepth": 0,
+      "nivrittiDepth": 0,
+      "reachedTurn": false,
+      "returned": false
+    },
+    "palindromeState": {
+      "normalFormSymmetric": false,
+      "mirrorNormalForm": "bootstrap-tick-0-position-0"
+    },
+    "openQuestions": [
+      "#R0-0/1/S-T3-unwitnessed?",
+      "#R1-0/1/S-T3-unwitnessed?",
+      "#R2-0/1/S-T3-unwitnessed?",
+      "#R0-0/1/R-T5-unwitnessed?",
+      "#R1-0/1/R-T5-unwitnessed?",
+      "#R2-0/1/A-T7-unwitnessed?",
+      "#R3-0/1/A-T7-unwitnessed?",
+      "#R4-0/1/A-T7-unwitnessed?",
+      "#R5-0/1/A-T9-unwitnessed?",
+      "#R0-0/1/S-T3-pending?",
+      "#R1-0/1/R-T5-pending?",
+      "#R2-0/1/A-T7-pending?",
+      "#R5-0/1/A-T9-pending?"
+    ],
+    "coherenceScore": 0.0
   },
   "s2Anchor": {
     "coordinate": "M0",
