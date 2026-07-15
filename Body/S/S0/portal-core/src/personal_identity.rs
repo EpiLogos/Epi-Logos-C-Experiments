@@ -1024,7 +1024,7 @@ mod bioquaternion_decomposition {
     }
 
     #[test]
-    fn reads_bimba_pratibimba_pair_from_q_composed() {
+    fn bioquaternion_decomposition_reads_from_q_composed() {
         let q_identity = [0.5, 0.5, 0.5, 0.5];
         let q_transit = [0.0, 1.0, 0.0, 0.0];
         let q_activity_a = [0.0, 0.0, 1.0, 0.0];

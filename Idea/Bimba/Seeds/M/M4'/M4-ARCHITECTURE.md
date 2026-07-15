@@ -162,7 +162,7 @@ impl BioQuaternionState {
 }
 ```
 
-**This corrects Wave-A row 8's claim that `(q_b, q_p)` has no substrate**: it IS landed in kernel.rs as `BioQuaternionState`, consumed by `KernelEvalState` (`kernel.rs:155, 164-170`), and read by `kernel_energy_evaluate` to compute `bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p)` (`kernel.rs:1095`). What is missing is the **decomposition function** `decompose_bioquaternion(Q_composed) -> (q_b, q_p)` per M4'-SPEC §7.3a — that is the genuine code-pending slot (Wave-A tranche 5.4), and what is missing is the **surfacing of `bioquaternion` on `MathemeHarmonicProfile` for the personal pole** (see §4 below).
+**Landed substrate:** `(q_b, q_p)` is represented by `BioQuaternionState`, consumed by `KernelEvalState`, and read by `kernel_energy_evaluate` as `bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p)`. `personal_identity.rs::decompose_bioquaternion(Q_composed)` now performs the load-bearing unary read: `q_b` is the normalised composed state and `q_p` is its quaternion conjugate. `personal_identity::bioquaternion_decomposition` proves that changing the composed state changes both outputs and that neither is accepted as an independent input. The protected active-carrier hook in `Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.tsx` derives `#q_b` and `#q_p` handles from the one `qComposedHandle`; raw bioquaternion bodies are ignored and never rendered.
 
 **Day-as-episode container** — Theia surface at `Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts`:
 
@@ -733,7 +733,6 @@ These five guards together enforce the §10.7 UX rule and M4'-SPEC §7.6 privacy
 ### §9.2 Pending (cycle-3 deliverables — code-pending closures, NOT greenfield rebuilds)
 
 - **Tranche 10.M4 — `personal_pole: Option<PersonalPoleProjection>` surfaced on `MathemeHarmonicProfile`** (§4.3). All substrate exists; this is a typed surfacing.
-- **Tranche 10.M4-b — `decompose_bioquaternion(q_composed) -> (q_b, q_p)`** on `personal_identity.rs` per M4'-SPEC §7.3a (Wave-A tranche 5.4). Extends existing `compose_personal_quaternion` + `BioQuaternionState`.
 - **Tranche 06.M4-a — Graphiti runtime Nara relations insertion** (`:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, `:NEXT_IN_ARC` as actual graph edges, not just Theia envelope) on `graphiti-runtime/src/lib.rs` (Wave-A tranche 5.3, CODE-PENDING row 7).
 - **Tranche 06.M4-b — M4-0 birthdate encoding + remaining identity layers (Jungian / Gene Keys / Human Design)** on `personal_identity.rs` per `nara-m4-0-0-birthdate-encoding-spec.md` (Wave-A tranche 5.6). C-side structs exist (`m4.h`); Rust-side computation missing.
 - **Tranche 06.M4-c — M4-3' PatternPacket substrate** — the `PatternPacket` struct + `LensPositionRouter`, `DialectResonanceMapper`, `MahamayaTranscriptionPacketIngestor`, `ContradictionDetector`, `BodyEvidenceCorrelator`, `DreamJournalRecurrenceTracker`, `TrajectoryBuilder`, `QActivityDeltaBuilder`, `TeachingThresholdDetector`, `ReviewProposalBuilder` services per UX §12.2 (Wave-A DOC-AHEAD row 8/15).

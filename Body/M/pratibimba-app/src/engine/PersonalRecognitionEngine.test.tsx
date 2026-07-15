@@ -66,7 +66,11 @@ describe('PersonalRecognitionEngine', () => {
                             predicted72: Array.from({ length: 72 }, (_, index) => index / 72),
                             target72: Array.from({ length: 72 }, (_, index) => (index + 1) / 72)
                         },
-                        qComposed: [0.1234, 0.5678, 0.9012, 0.3456]
+                        qComposed: [0.1234, 0.5678, 0.9012, 0.3456],
+                        bioquaternion: {
+                            q_b: [0.1111, 0.2222, 0.3333, 0.4444],
+                            q_p: [0.9999, 0.8888, 0.7777, 0.6666]
+                        }
                     }
                 }
             } as never
@@ -86,8 +90,16 @@ describe('PersonalRecognitionEngine', () => {
         expect(screen.getByTestId('personal-recognition-q-composed').getAttribute('title')).toBe(
             'q_composed://session/current'
         );
+        expect(screen.getByTestId('personal-recognition-q-b').getAttribute('title')).toBe(
+            'q_composed://session/current#q_b'
+        );
+        expect(screen.getByTestId('personal-recognition-q-p').getAttribute('title')).toBe(
+            'q_composed://session/current#q_p'
+        );
         expect(screen.getByTestId('m5-ebm-observatory').dataset.state).toBe('ready');
         expect(surface.textContent).not.toContain('0.1234');
         expect(surface.textContent).not.toContain('0.5678');
+        expect(surface.textContent).not.toContain('0.1111');
+        expect(surface.textContent).not.toContain('0.9999');
     });
 });

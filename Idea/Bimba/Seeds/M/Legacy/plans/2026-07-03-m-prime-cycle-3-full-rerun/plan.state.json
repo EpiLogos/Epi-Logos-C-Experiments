@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T13:34:28.845Z",
+  "updatedAt": "2026-07-15T13:49:22.668Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -1882,16 +1882,32 @@
       "worktree": null
     },
     "05.T5.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-15T13:49:22.652Z",
+      "claimedAt": "2026-07-15T13:35:58.829Z",
+      "completedAt": "2026-07-15T13:49:22.652Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T13:49:22.652Z",
+          "text": "The unary Q_composed decomposition is exercised by the canonical portal-core filter, while the active carrier derives q_b/q_p protected handles from the composed handle and ignores raw bodies.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml personal_identity::bioquaternion_decomposition",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/personal_identity.rs",
+              "Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.tsx",
+              "Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.test.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 17 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T13:35:58.829Z",
+      "runId": "20260715T133558Z-05-T5.4",
       "worktree": null
     },
     "05.T5.5": {
@@ -17442,6 +17458,16 @@
       "leaseExpiresAt": "2026-07-15T15:25:59.914Z",
       "worktree": null,
       "completedAt": "2026-07-15T13:34:28.828Z"
+    },
+    {
+      "runId": "20260715T133558Z-05-T5.4",
+      "taskId": "05.T5.4",
+      "status": "done",
+      "startedAt": "2026-07-15T13:35:58.829Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T15:35:58.829Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T13:49:22.652Z"
     }
   ],
   "activeRoute": {

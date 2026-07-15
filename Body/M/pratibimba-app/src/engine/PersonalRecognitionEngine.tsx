@@ -25,6 +25,8 @@ export interface PersonalRecognitionReading {
     readonly lineChangeOperator: number | null;
     readonly qComposedTargetKind: string | null;
     readonly qComposedHandle: string | null;
+    readonly qBHandle: string | null;
+    readonly qPHandle: string | null;
     readonly checkpointRef: string | null;
 }
 
@@ -53,6 +55,9 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
 
     const qComposedHandle = stringValue(qComposed?.handle);
     const traceHandle = stringValue(trace?.qComposedHandle);
+    // Ported contract: Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts.
+    const qBHandle = qComposedHandle === null ? null : `${qComposedHandle}#q_b`;
+    const qPHandle = qComposedHandle === null ? null : `${qComposedHandle}#q_p`;
     const checkpointRef =
         stringValue(trace?.learnedPredictorCheckpointRef) ??
         stringValue(projection?.learnedPredictorCheckpointRef);
@@ -72,6 +77,8 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
         lineChangeOperator: numberValue(trace?.lineChangeOperator),
         qComposedTargetKind: stringValue(qComposed?.targetKind),
         qComposedHandle,
+        qBHandle,
+        qPHandle,
         checkpointRef
     });
 }
@@ -135,6 +142,17 @@ export function PersonalRecognitionEngine() {
                             {reading.qComposedTargetKind ?? 'QComposed'} handle attached
                         </span>
                     )}
+                    {reading.qBHandle !== null && reading.qPHandle !== null ? (
+                        <p>
+                            <span data-testid="personal-recognition-q-b" title={reading.qBHandle}>
+                                Bimba handle
+                            </span>{' '}
+                            ·{' '}
+                            <span data-testid="personal-recognition-q-p" title={reading.qPHandle}>
+                                Pratibimba handle
+                            </span>
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="personal-recognition-leg" data-testid="personal-recognition-m5-score">
