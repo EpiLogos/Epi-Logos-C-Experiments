@@ -144,8 +144,8 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
    **(a) Gateway routes** — register **≥10 methods** in `Body/S/S3/gateway-contract/src/lib.rs` + `Body/S/S3/gateway/src/`:
    - `s5'.gnostic.query(coordinate, depth)` → `[GnosticChunk]`
    - `s5'.gnostic.ingest(path, namespace)` → `IngestionReceipt`
-   - `s5'.gnostic.notebook(coordinate)` → `NotebookSession`
-   - `s5'.gnostic.status()` → `GnosticNamespaceStatus`
+   - `s5'.gnostic.notebook` (params: coordinate) → `NotebookSession`
+   - `s5'.gnostic.status` → `GnosticNamespaceStatus`
    - `s5'.gnostic.candidates(filter)` → `[EntityCandidate]` (PASU orphan-candidate surface per CCT-14)
    - `s5'.gnostic.etymology(coord)` → `EtymologyCluster` (Atelier scent-following lens; sub-namespace per DR-WORLD-1)
    - `s5'.gnostic.resolve(coord)` → `GnosticEntityHandle` (consolidated read; unified-memory layer 2 per DR-WORLD-1)

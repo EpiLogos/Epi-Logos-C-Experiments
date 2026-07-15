@@ -54,8 +54,8 @@ The five access patterns below are read as "the Indras Net substrate exposed via
 |---|---|---|
 | `s5'.gnostic.query(coordinate, depth)` | `[GnosticChunk]` | `epi-gnostic/epi_gnostic/wrapper.py::query` |
 | `s5'.gnostic.ingest(path, namespace)` | `IngestionReceipt` | `epi-gnostic/epi_gnostic/cli.py::ingest` |
-| `s5'.gnostic.notebook(coordinate)` | `NotebookSession` | `epi-gnostic/epi_gnostic/graphiti_service.py::notebook` |
-| `s5'.gnostic.status()` | `GnosticNamespaceStatus` | `epi-gnostic/epi_gnostic/cli.py::status` |
+| `s5'.gnostic.notebook` (params: coordinate) | `NotebookSession` | `epi-gnostic/epi_gnostic/graphiti_service.py::notebook` |
+| `s5'.gnostic.status` | `GnosticNamespaceStatus` | `epi-gnostic/epi_gnostic/cli.py::status` |
 | `s5'.gnostic.candidates(filter)` | `[EntityCandidate]` | Hen-side via CCT-14 entity-candidate lifecycle |
 | `s5'.gnostic.etymology(coord)` | `EtymologyCluster` | Atelier scent-following lens; sub-namespace per DR-WORLD-1 |
 | `s5'.gnostic.resolve(coord)` | `GnosticEntityHandle` | Consolidated read; unified-memory layer 2 |
@@ -176,8 +176,8 @@ The `graph_revision` segment (per CCT-16) joins the key under `cold:` tier so co
 |---|---|---|
 | `epi gnostic query <coord> [--depth N]` | `s5'.gnostic.query(coord, depth)` | Coordinate-anchored RAG query |
 | `epi gnostic ingest <path> [--namespace gnostic\|world\|etymology\|skills]` | `s5'.gnostic.ingest(path, ns)` | Per DR-WORLD-1 four-sub-namespace plan |
-| `epi gnostic notebook <coord>` | `s5'.gnostic.notebook(coord)` | Opens per-session notebook |
-| `epi gnostic status` | `s5'.gnostic.status()` | Substrate health check |
+| `epi gnostic notebook <coord>` | `s5'.gnostic.notebook` | Opens per-session notebook |
+| `epi gnostic status` | `s5'.gnostic.status` | Substrate health check |
 | `epi gnostic candidates [--filter promotable\|orphan\|reviewed]` | `s5'.gnostic.candidates(filter)` | Per CCT-14 entity-candidate lifecycle |
 | `epi gnostic etymology <coord>` | `s5'.gnostic.etymology(coord)` | Atelier scent-following lens |
 | `epi gnostic resolve <coord>` | `s5'.gnostic.resolve(coord)` | Unified-memory layer 2 entry |
