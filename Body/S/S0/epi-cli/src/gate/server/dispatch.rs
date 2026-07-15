@@ -6,6 +6,7 @@ use epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry};
 use epi_s3_gateway_contract::TerminalBinding;
 use serde_json::{json, Value};
 
+use crate::gate::kernel_bridge_runtime::typed_json_m3_lens_codon_binary;
 use crate::gate::protocol::RequestFrame;
 use crate::gate::runs::{RunContext, RunSnapshot};
 use crate::gate::runtime::GatewayRuntimeState;
@@ -34,6 +35,27 @@ pub(super) async fn dispatch_rpc(
     let route = classify_method(&frame.method);
 
     match frame.method.as_str() {
+        // Method literal (not the const) so the S3 route-ownership cross-walk
+        // can grep the dispatched method name in S0's dispatch surface — the
+        // house convention every sibling arm follows (kept in sync with
+        // gateway-contract METHOD_NAMES by dispatch_contract::T9).
+        "kernelBridge.m3.lensCodonBinary(lensId)" => {
+            let lens_id = frame
+                .params
+                .get("lensId")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("lensId must be an unsigned integer".to_owned())
+                })?;
+            if lens_id > u8::MAX as u64 {
+                return Err(invalid_params_error(format!(
+                    "lensId {lens_id} outside functional M3 lenses 0..16"
+                )));
+            }
+            typed_json_m3_lens_codon_binary(lens_id as u8)
+                .map(DispatchResult::immediate)
+                .map_err(invalid_params_error)
+        }
         "sessions.list" => {
             let items = store
                 .list()
@@ -912,7 +934,10 @@ pub(super) async fn dispatch_rpc(
         // sampled by every emission). The response is the post-act anchor —
         // public-safe plain numbers; clients evaluate phase locally. A
         // missing anchor is the honest not-ready state, never fabricated.
-        "m1.spanda.hold" | "m1.spanda.release" | "m1.spanda.walk_to" | "m1.spanda.step"
+        "m1.spanda.hold"
+        | "m1.spanda.release"
+        | "m1.spanda.walk_to"
+        | "m1.spanda.step"
         | "m1.spanda.half_turn" => {
             let at_ms = now_ms() as u64;
             let walk_tick = if frame.method == "m1.spanda.walk_to" {
