@@ -11,7 +11,7 @@
  *   command semantics (owners register them).
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Actions, DockLocation, Layout, Model, TabNode } from 'flexlayout-react';
 import { createStrikeRouter, instrument, useInstrumentStore } from './audio/instrument';
 import { GatewayClient } from './bridge/gatewayClient';
@@ -71,8 +71,10 @@ import {
     OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY,
     OMNIPANEL_TABS,
     OmniPanelLayoutId,
+    omniPanelTabForComponent,
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
+import { readOmniPanelSessionState, useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import { VaultEntry } from './panes/FileTreePane';
 import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
@@ -214,7 +216,7 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 20;
+const LAYOUT_VERSION = 21;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -223,7 +225,24 @@ interface PersistedUiState {
     cosmic?: unknown;
     sessionKey?: string | null;
     coordinate?: string | null;
+    omniPanel?: unknown;
     [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]?: OmniPanelLayoutId;
+}
+
+/** The right border is the sole `/` membrane. FlexLayout owns selection;
+ * this adapter records the selected canonical fold in the shared 27.11 state
+ * so it survives either face re-mount and persistence. */
+function syncOmniPanelSelection(model: Model): void {
+    const selected = model
+        .getBorderSet()
+        .getBorders()
+        .find(border => border.getLocation() === DockLocation.RIGHT)
+        ?.getSelectedNode();
+    const component = selected?.getComponent();
+    const tab = component ? omniPanelTabForComponent(component) : undefined;
+    if (tab && useOmniPanelSessionStore.getState().session.activeTab !== tab.id) {
+        useOmniPanelSessionStore.getState().selectTab(tab.id);
+    }
 }
 
 function factory(node: TabNode) {
@@ -365,6 +384,7 @@ export function App() {
     const [face, setFace] = useState<Face>(1);
     const [activeLayout, setActiveLayout] = useState<OmniPanelLayoutId>('daily-0-1');
     const [routingRevision, setRoutingRevision] = useState(0);
+    const activeOmniTab = useOmniPanelSessionStore(state => state.session.activeTab);
     const [routedHost, setRoutedHost] = useState<{
         readonly face: Face;
         readonly extensionId: string;
@@ -389,6 +409,7 @@ export function App() {
                 const restoredLayout = parseOmniPanelLayoutPreference(
                     state[OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]
                 );
+                useOmniPanelSessionStore.getState().hydrate(state.omniPanel);
                 activeLayoutRef.current = restoredLayout;
                 setActiveLayout(restoredLayout);
                 const personalFallback = personalDefault(restoredLayout);
@@ -428,7 +449,7 @@ export function App() {
             .catch(() => undefined);
     }, []);
 
-    const persist = () => {
+    const persist = useCallback(() => {
         if (saveTimer.current) {
             clearTimeout(saveTimer.current);
         }
@@ -444,11 +465,21 @@ export function App() {
                 cosmic: current.cosmic.toJson(),
                 sessionKey: useSessionStore.getState().sessionKey,
                 coordinate: useCoordinateStore.getState().selected,
+                omniPanel: readOmniPanelSessionState(),
                 [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
             };
             void invokeCommand('ui_state_save', { json: JSON.stringify(state) }).catch(() => undefined);
         }, 800);
-    };
+    }, []);
+
+    useEffect(() => useOmniPanelSessionStore.subscribe(() => persist()), [persist]);
+
+    // 27.11 authority is the shared session store (activeTab + per-tab state,
+    // persisted) surfaced via `data-omnipanel-active-tab`; `syncOmniPanelSelection`
+    // records the user's fold choice INTO it. An imperative doAction that
+    // re-selected the destination face's fold on every face change hijacked the
+    // active tabset and raced in-face main-tab navigation (regressed ~19 e2e
+    // specs), so the fold-carry is store-authoritative, not a layout mutation.
 
     // gateway client + session binding + liveness watchdog
     useEffect(() => {
@@ -827,6 +858,7 @@ export function App() {
             data-face={face}
             data-active-layout={activeLayout}
             data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
+            data-omnipanel-active-tab={activeOmniTab}
             data-cross-layout-identity-receipt={
                 crossLayoutIdentityReceiptRef.current
                     ? JSON.stringify(crossLayoutIdentityReceiptRef.current)
@@ -844,7 +876,10 @@ export function App() {
                         key={`cosmic-${routingRevision}`}
                         model={models.cosmic}
                         factory={factory}
-                        onModelChange={persist}
+                        onModelChange={model => {
+                            syncOmniPanelSelection(model);
+                            persist();
+                        }}
                     />
                 </div>
                 <div
@@ -857,7 +892,10 @@ export function App() {
                         key={`personal-${routingRevision}`}
                         model={models.personal}
                         factory={factory}
-                        onModelChange={persist}
+                        onModelChange={model => {
+                            syncOmniPanelSelection(model);
+                            persist();
+                        }}
                     />
                 </div>
             </FaceToggleChrome>

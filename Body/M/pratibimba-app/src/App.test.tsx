@@ -5,6 +5,7 @@ import { commands } from './commands/registry';
 import { CROSS_LAYOUT_INTENT_COMMAND, CROSS_LAYOUT_INTENT_TARGETS } from './commands/crossLayoutIntent';
 import type { KernelBridgeCachedProfile } from './bridge/types';
 import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
+import { useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 
 class InertSocket {
     readyState = 0;
@@ -28,6 +29,7 @@ describe('App shell', () => {
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
         useTickStore.setState({ profile: null, generation: null });
+        useOmniPanelSessionStore.getState().hydrate(null);
     });
 
     afterEach(() => {
@@ -99,6 +101,30 @@ describe('App shell', () => {
         fireEvent.click(screen.getByTestId('face-toggle'));
         expect(shell.dataset.face).toBe('1');
         expect(six()).toEqual(before);
+    });
+
+    it('preserves the active OmniPanel fold and its typed state across both faces', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+
+        act(() => {
+            useOmniPanelSessionStore.getState().selectTab('evidence');
+            useOmniPanelSessionStore.getState().patchTab('evidence', {
+                selectedPacketId: 'pkt-across-the-fold',
+                depositFormOpen: true
+            });
+        });
+
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.face).toBe('0');
+        expect(useOmniPanelSessionStore.getState().session).toMatchObject({
+            activeTab: 'evidence',
+            perTabState: { evidence: { selectedPacketId: 'pkt-across-the-fold', depositFormOpen: true } }
+        });
+
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.face).toBe('1');
+        expect(shell.dataset.omnipanelActiveTab).toBe('evidence');
     });
 
     it('mounts both face layouts with their tab structure (Cosmic Engine / Now / Vault)', async () => {

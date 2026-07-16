@@ -34,18 +34,27 @@ import { enforceHumanGate } from '../m5ReviewGate';
 import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
+import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 
 const VERDICTS: readonly BlockVerdictDecision[] = ['approve', 'reject', 'defer'];
 
 export function ReviewBlocksPane({ requestedReviewId = null }: { readonly requestedReviewId?: string | null }) {
     const sessionKey = useSessionStore(s => s.sessionKey);
     const connected = useProvenanceStore(s => s.connection.connected);
+    const reviewTab = useOmniPanelTabState('review');
+    const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const [state, setState] = useState<BlockRendererSessionState>(() =>
         createRendererSessionState([...genealogyToReviewBlocks(syntheticPiAnimaMoiraiDispatch())])
     );
     const [gateNotice, setGateNotice] = useState<string | null>(null);
     const [blockSource, setBlockSource] = useState<'fixture' | 'live'>('fixture');
     const [xray, setXray] = useState<ContextXrayHandle | null>(null);
+
+    useEffect(() => {
+        if (requestedReviewId) {
+            patchTab('review', { selectedReviewId: requestedReviewId });
+        }
+    }, [patchTab, requestedReviewId]);
 
     // 44.6: block selection fires the context-xray seam and highlights back
     // through the shared coordinate store (the carrier's cross-pane law).
@@ -116,9 +125,9 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
 
     return (
         <div className="review-blocks-pane" data-testid="review-blocks-pane" data-block-source={blockSource}>
-            {requestedReviewId ? (
+            {(requestedReviewId ?? reviewTab.selectedReviewId) ? (
                 <p className="pane-message review-request-target" data-testid="review-request-target">
-                    Requested review: {requestedReviewId}
+                    Requested review: {requestedReviewId ?? reviewTab.selectedReviewId}
                 </p>
             ) : null}
             <p className="pane-message review-blocks-seam" data-testid="review-blocks-seam-note">
