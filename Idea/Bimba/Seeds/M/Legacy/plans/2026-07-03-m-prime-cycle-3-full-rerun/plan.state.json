@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-16T17:46:44.974Z",
+  "updatedAt": "2026-07-16T18:32:29.365Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8379,21 +8379,41 @@
       "worktree": null
     },
     "21.T21.12": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T17:46:44.959Z",
-      "claimedAt": "2026-07-16T17:44:10.229Z",
+      "status": "review",
+      "updatedAt": "2026-07-16T18:32:29.349Z",
+      "claimedAt": "2026-07-16T18:02:42.498Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T17:46:44.959Z",
           "text": "Blocked on unlanded carrier predecessors, not cleanly closable as 'extend existing'. (1) The M0 actions panel it extends (M0GatewayAction + the three M5-routed actions open-language-development-route / deposit-graph-readiness-evidence / request-anuttara-review) does NOT exist in the carrier — only the six-layer data rail (m0Layers.ts / M0LayerRail.tsx) is landed. (2) The authoring-mode deep-links target canonStudio + logosAtelier via ide-shell-m0-m5, but those intent targets are absent from the carrier's CROSS_LAYOUT_INTENT_TARGETS ledger — which is track-11's cross-layout-intent lane (codex-11-state-identity, actively claimed). Closing 21.12 requires building the M0 actions surface AND adding atelier intent targets in another agent's write scope. Needs: M0 actions-panel predecessor landed + the atelier contribution targets registered (coordinate with track 11)."
+        },
+        {
+          "at": "2026-07-16T18:02:42.257Z",
+          "text": "Reverting fabricated block: the prior 'blocked' was a wording-mismatch error (matched dead Theia names ide-shell-m0-m5/canonStudio/M0GatewayAction instead of the carrier surfaces). Ledger+carrier reality: M0 layer rail (21.1) + reader panels are landed (via 01/09 tracks); routed-write intent targets exist (m5-epii/evidence-deposit->omniEvidence, m5-epii/review->omniReview, m0-anuttara/*). Re-assessing for a real build."
+        },
+        {
+          "at": "2026-07-16T18:32:29.349Z",
+          "text": "BUILT + correct (prior blocked was a fabrication — matched dead Theia names). Reading/authoring mode toggle over real carrier surfaces: m0ModeActions (three M5-routed actions -> real intent targets m5-epii/evidence-deposit, m0-anuttara/language, m5-epii/review; SC-2 mutatesGraphCanon false, no canon-mutation symbol) + M0ModeActionsPanel (mounted in GraphExplorerPane; DR-M0-1 banner; both governance deep-links). 13 unit/component tests, app suite 790 green, tsc/build clean, my UF playwright test passes stably. verify-tranche verdict REFUSED but ISOLATED: every stage PASS (harness-selftest/gateway/gateway-contract/redis-context/graphiti-runtime/app-typecheck/app-test/app-build) EXCEPT app-ui-flow, which is GLOBALLY red (~19 e2e specs incl autoresearch which passed last turn) due to the UNCOMMITTED 27.11 OmniPanel-session-state change in App.tsx (LAYOUT_VERSION 20->21 + selectOmniPanelTab/syncOmniPanelSelection effects) — another lane's regression, told not to revert. DONE is blocked by that repo-wide e2e regression, not this tranche. Fixed the graph-explorer nav flake in my path (m0-virtue-witness stable).",
+          "receipt": {
+            "command": "vitest (13 tranche tests) + pnpm typecheck + pnpm build + playwright m0-virtue-witness (2/2 incl the 21.12 UF test, stable across runs)",
+            "exitCode": 0,
+            "testsPassed": 790,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0ModeActions.ts",
+              "Body/M/pratibimba-app/src/panes/M0ModeActionsPanel.tsx",
+              "Body/M/pratibimba-app/src/panes/GraphExplorerPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m0-virtue-witness.spec.ts"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 182 dirty files.",
       "owner": "claude-opus-m0-modetoggle",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T17:44:10.229Z",
-      "runId": "20260716T174410Z-21-T21.12",
+      "leaseExpiresAt": "2026-07-16T20:02:42.498Z",
+      "heartbeatAt": "2026-07-16T18:32:29.349Z",
+      "runId": "20260716T180242Z-21-T21.12",
       "worktree": null
     },
     "21.T21.13": {
@@ -19183,6 +19203,16 @@
       "leaseExpiresAt": "2026-07-16T19:44:10.229Z",
       "worktree": null,
       "completedAt": "2026-07-16T17:46:44.959Z"
+    },
+    {
+      "runId": "20260716T180242Z-21-T21.12",
+      "taskId": "21.T21.12",
+      "status": "review",
+      "startedAt": "2026-07-16T18:02:42.498Z",
+      "owner": "claude-opus-m0-modetoggle",
+      "leaseExpiresAt": "2026-07-16T20:02:42.498Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T18:32:29.349Z"
     }
   ],
   "activeRoute": {
