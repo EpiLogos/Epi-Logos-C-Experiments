@@ -20,6 +20,8 @@ import {
     buildM3WheelSurface,
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
+import { M3HexagramBrowser } from './M3HexagramBrowser';
+import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 import {
     buildM3InspectorsView,
@@ -52,6 +54,8 @@ export function M3InspectorsPane() {
     const [open, setOpen] = useState<ReadonlySet<M3InspectorId>>(new Set());
     const [depthView, setDepthView] = useState<M3DepthView>('flat-clock-debug');
     const [selectedLensId, setSelectedLensId] = useState(16);
+    const [showThirdSpanda, setShowThirdSpanda] = useState(false);
+    const [showHexagramBrowser, setShowHexagramBrowser] = useState(false);
     const [functionalLens, setFunctionalLens] = useState<LensCodonBinaryProjection | null>(null);
     const [functionalLensError, setFunctionalLensError] = useState<string | null>(null);
 
@@ -150,6 +154,30 @@ export function M3InspectorsPane() {
                     </button>
                 ))}
             </div>
+
+            <div className="m3-surface-summons" data-testid="m3-surface-summons">
+                <button
+                    type="button"
+                    className="instrument-toggle"
+                    data-testid="m3-summon-third-spanda"
+                    aria-pressed={showThirdSpanda}
+                    onClick={() => setShowThirdSpanda(v => !v)}
+                >
+                    Third-Spanda proof
+                </button>
+                <button
+                    type="button"
+                    className="instrument-toggle"
+                    data-testid="m3-summon-hexagram-browser"
+                    aria-pressed={showHexagramBrowser}
+                    onClick={() => setShowHexagramBrowser(v => !v)}
+                >
+                    64-hexagram browser
+                </button>
+            </div>
+
+            {showThirdSpanda ? <M3ThirdSpandaPanel /> : null}
+            {showHexagramBrowser ? <M3HexagramBrowser /> : null}
 
             <div className="m3-functional-lens" data-testid="m3-functional-lens">
                 <label>

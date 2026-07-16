@@ -89,12 +89,14 @@ describe('GatewayClient', () => {
     it('routes profile events to onProfile; bare tick liveness pulses do NOT feed the profile path', () => {
         client.start('lite');
         socket.open();
-        socket.receive({ event: 'profile', payload: { generation: 7, tick12: 3 } });
+        socket.receive({ event: 'profile', payload: { generation: 7, graphRevision: 19, tick12: 3 } });
         socket.receive({ event: 'profile.update', payload: { tick12: 4 } });
         socket.receive({ event: 'tick', payload: { seq: 9, ts: 123 } });
         expect(profiles).toHaveLength(2);
         expect(profiles[0].generation).toBe(7);
+        expect(profiles[0].graphRevision).toBe(19);
         expect(profiles[1].generation).toBe(8);
+        expect(profiles[1].graphRevision).toBeUndefined();
         expect((profiles[0].profile as { tick12: number }).tick12).toBe(3);
         expect(events.filter(e => e.kind === 'observability')).toHaveLength(1);
     });

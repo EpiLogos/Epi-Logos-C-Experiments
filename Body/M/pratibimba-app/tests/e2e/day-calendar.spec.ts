@@ -25,7 +25,7 @@ test('day calendar: today is marked the day-now anchor and month nav never owns 
     // anchor the day (idempotent: click begin if unanchored, else the app
     // already adopted today's folder from the real vault) — this creates a real
     // Present day folder and sets the session day-now thread.
-    const editor = page.locator('.face-active .cm-content');
+    const editor = page.locator('.face-active [data-testid="m4-nara-editor"]');
     const beginButton = page.getByTestId('now-begin-today');
     await expect(editor.or(beginButton).first()).toBeVisible({ timeout: 15_000 });
     if (await beginButton.isVisible().catch(() => false)) {

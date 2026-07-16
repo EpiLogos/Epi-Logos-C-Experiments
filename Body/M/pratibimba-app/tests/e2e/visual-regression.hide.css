@@ -16,13 +16,15 @@
  * - canvases + CSS2D layers: real kernel tick content, differs across runs
  * - engine strip: kernel readouts reflow at 1 Hz
  * - status strip: generation / day / session churn
- * - vault tree + now-pane: lived-vault content (day folders, typed prose)
+ * - vault tree + personal recognition engine: lived/profile-coupled content;
+ *   their real structure and state are asserted before pixel capture
  */
 .cosmic-engine-canvas,
 canvas,
 .cosmic-engine-strip,
 [data-testid='status-strip'],
 [data-testid='vault-tree'],
+[data-testid='personal-recognition-engine'],
 [data-testid='now-pane'],
 [data-testid='personal-recognition-substrate'],
 [data-testid='personal-recognition-codon'],

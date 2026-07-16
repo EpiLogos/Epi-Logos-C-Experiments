@@ -246,9 +246,14 @@ export class GatewayClient {
             typeof payload?.generation === 'number' ? payload.generation : (this.profileGeneration ?? 0) + 1;
         const privacyClass =
             typeof payload?.privacyClass === 'string' ? payload.privacyClass : KERNEL_BRIDGE_SAFE_PROFILE_PRIVACY;
+        const graphRevision =
+            Number.isSafeInteger(payload?.graphRevision) && payload.graphRevision >= 0
+                ? payload.graphRevision
+                : undefined;
         this.profileGeneration = generation;
         this.callbacks.onProfile?.({
             generation,
+            graphRevision,
             cachedAtMs: Date.now(),
             stale: false,
             stalenessMs: 0,

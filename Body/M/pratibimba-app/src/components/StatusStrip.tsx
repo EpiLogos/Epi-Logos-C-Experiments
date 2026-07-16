@@ -6,6 +6,7 @@
  */
 
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from '../state/stores';
+import { activeDailyClaimsForReceiver } from '../ui/dailySurfaceOwnership';
 
 export function StatusStrip() {
     const generation = useTickStore(s => s.generation);
@@ -17,7 +18,11 @@ export function StatusStrip() {
     const coordinate = useCoordinateStore(s => s.selected);
 
     return (
-        <footer className="status-strip" data-testid="status-strip">
+        <footer
+            className="status-strip"
+            data-testid="status-strip"
+            data-daily-claims={activeDailyClaimsForReceiver('statusStrip').join(' ')}
+        >
             <span data-testid="status-tick" title="profile generation (the kernel tick is the only clock)">
                 ⟳ {generation ?? '—'}
             </span>

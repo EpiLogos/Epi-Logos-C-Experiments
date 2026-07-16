@@ -2,7 +2,7 @@
  * Coordinate: M' M1' (Klein-topology instrument body — Track 02.T2.3)
  * Residency: Body/M/pratibimba-app/src/panes
  * Actualises: the `m1.paramasiva.kleinTopology` widget body — renders the M1-5
- *   single-torus invariants (DOUBLE_COVER_DEG / TORUS_GENUS / Hopf / K² tritone)
+ *   single-torus invariants (DOUBLE_COVER_DEG / TORUS_GENUS / Hopf / torus-knot `(p,q)` / K² tritone)
  *   sourced from the live bridge profile's `m1Topology`, plus the M1-origin
  *   Klein-flip signal. Fires the `m1.klein_flip.source` observability event on
  *   generation arrival when the profile carries `kleinFlip = Some(..)`. The
@@ -76,6 +76,12 @@ export function KleinTopologyPane(props: {
                 <dd data-testid="m1-klein-double-cover">
                     DOUBLE_COVER_DEG={display(view.topology.doubleCoverDeg)} · TORUS_GENUS=
                     {display(view.topology.torusGenus)}
+                </dd>
+                <dt>Torus-knot phase</dt>
+                <dd data-testid="m1-torus-knot-phase">
+                    {view.topology.torusKnotPhase
+                        ? `(p,q)=(${view.topology.torusKnotPhase.p},${view.topology.torusKnotPhase.q})`
+                        : 'pending-m1-topology'}
                 </dd>
                 <dt>Hopf / K²</dt>
                 <dd>

@@ -2,14 +2,19 @@
  * Coordinate: M' M5' (Autoresearch disclosure model - 28.T28.10)
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): M5-4' governed autoresearch surface
- * Actualises: strict `s5'.improve.status` / `.history` consumption, the six
- *   operational-capacity filters, and an honest Mobius lifecycle projection.
+ * Actualises: strict `s5'.improve.status` / `.history` / `.q_review.latest`
+ *   consumption, the six operational-capacity filters, and an honest Mobius
+ *   lifecycle projection.
  * Public surface: parsers, capacity vocabulary, AutoresearchSnapshot.
  * Does NOT own: S5 improvement law, promotion, review decisions, or a clock.
  */
 
 export const IMPROVE_STATUS_METHOD = "s5'.improve.status";
 export const IMPROVE_HISTORY_METHOD = "s5'.improve.history";
+export const Q_REVIEW_LATEST_METHOD = "s5'.improve.q_review.latest";
+export const REVIEW_SUBMIT_METHOD = "s5'.review.submit";
+export const REVIEW_RESOLVE_METHOD = "s5'.review.resolve";
+export const Q_ARTICULATION_ACCEPT_METHOD = "s1'.q_articulation.accept";
 
 export const M5_OPERATIONAL_CAPACITIES = [
     { id: 'anuttara-construction', label: 'M0 - Anuttara construction' },
@@ -52,9 +57,38 @@ export interface AutoresearchCandidate {
     readonly updatedAt: number;
 }
 
+export interface QReviewEntry {
+    readonly targetCoordinate: string;
+    readonly qKey: string;
+    readonly reasonClass: string;
+    readonly priority: number;
+    readonly sourceDetector: string;
+    readonly vakCf: string;
+    readonly vakCp: string;
+    readonly pairCompositionAction: string;
+    readonly evidenceCount: number;
+    readonly evidenceRefs: readonly QReviewEvidenceRef[];
+}
+
+export interface QReviewEvidenceRef {
+    readonly kind: string;
+    readonly uri: string;
+    readonly coordinate: string;
+    readonly summary: string;
+}
+
+export interface QReviewQueue {
+    readonly dayId: string;
+    readonly graphRevision: number;
+    readonly generatedBy: string;
+    readonly entries: readonly QReviewEntry[];
+}
+
 export interface AutoresearchSnapshot {
     readonly status: AutoresearchStatus;
     readonly candidates: readonly AutoresearchCandidate[];
+    readonly qReviewEntries: readonly QReviewEntry[];
+    readonly qReviewGraphRevision: number | null;
 }
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -62,6 +96,26 @@ function record(value: unknown, label: string): Record<string, unknown> {
         throw new Error(`${label} must be an object`);
     }
     return value as Record<string, unknown>;
+}
+
+/** Read the active CF from the profile wire without manufacturing one. */
+export function profileVakCf(value: unknown): string | null {
+    const root = value && typeof value === 'object' && !Array.isArray(value)
+        ? (value as Record<string, unknown>)
+        : null;
+    if (!root) {
+        return null;
+    }
+    const profile = root.harmonicProfile ?? root.harmonic_profile ?? root;
+    const profileRecord = profile && typeof profile === 'object' && !Array.isArray(profile)
+        ? (profile as Record<string, unknown>)
+        : null;
+    const vak = profileRecord?.vakAddress ?? profileRecord?.vak_address;
+    if (!vak || typeof vak !== 'object' || Array.isArray(vak)) {
+        return null;
+    }
+    const cf = (vak as Record<string, unknown>).cf;
+    return typeof cf === 'string' && cf.trim().length > 0 ? cf : null;
 }
 
 function finiteInteger(value: unknown, label: string): number {
@@ -199,4 +253,57 @@ export function parseImproveHistory(value: unknown): readonly AutoresearchCandid
             });
         })
     );
+}
+
+export function parseQReviewQueue(value: unknown): QReviewQueue {
+    const raw = record(value, 'QReview queue');
+    if (!Array.isArray(raw.entries)) {
+        throw new Error('QReview queue entries must be an array');
+    }
+    return Object.freeze({
+        dayId: nonBlank(raw.day_id, 'QReview queue day_id'),
+        graphRevision: finiteInteger(raw.graph_revision, 'QReview queue graph_revision'),
+        generatedBy: nonBlank(raw.generated_by, 'QReview queue generated_by'),
+        entries: Object.freeze(
+            raw.entries.map((value, index) => {
+                const entry = record(value, `QReview queue entry ${index}`);
+                if (!Array.isArray(entry.evidence_refs)) {
+                    throw new Error(`QReview queue entry ${index} evidence_refs must be an array`);
+                }
+                const surface = record(entry.review_surface, `QReview queue entry ${index} review_surface`);
+                const evidenceRefs = Object.freeze(
+                    entry.evidence_refs.map((evidence, evidenceIndex) => {
+                        const item = record(evidence, `QReview queue entry ${index} evidence ref ${evidenceIndex}`);
+                        return Object.freeze({
+                            kind: nonBlank(item.kind, `QReview queue entry ${index} evidence ref ${evidenceIndex} kind`),
+                            uri: nonBlank(item.uri, `QReview queue entry ${index} evidence ref ${evidenceIndex} uri`),
+                            coordinate: nonBlank(
+                                item.coordinate,
+                                `QReview queue entry ${index} evidence ref ${evidenceIndex} coordinate`
+                            ),
+                            summary: nonBlank(
+                                item.summary,
+                                `QReview queue entry ${index} evidence ref ${evidenceIndex} summary`
+                            )
+                        });
+                    })
+                );
+                return Object.freeze({
+                    targetCoordinate: nonBlank(entry.target_coordinate, `QReview queue entry ${index} target_coordinate`),
+                    qKey: nonBlank(entry.q_key, `QReview queue entry ${index} q_key`),
+                    reasonClass: nonBlank(entry.reason_class, `QReview queue entry ${index} reason_class`),
+                    priority: finiteInteger(entry.priority, `QReview queue entry ${index} priority`),
+                    sourceDetector: nonBlank(entry.source_detector, `QReview queue entry ${index} source_detector`),
+                    vakCf: nonBlank(surface.vak_cf, `QReview queue entry ${index} review_surface vak_cf`),
+                    vakCp: nonBlank(surface.vak_cp, `QReview queue entry ${index} review_surface vak_cp`),
+                    pairCompositionAction: nonBlank(
+                        surface.pair_composition_action,
+                        `QReview queue entry ${index} review_surface pair_composition_action`
+                    ),
+                    evidenceCount: evidenceRefs.length,
+                    evidenceRefs
+                });
+            })
+        )
+    });
 }

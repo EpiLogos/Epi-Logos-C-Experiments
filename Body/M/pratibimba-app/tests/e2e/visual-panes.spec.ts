@@ -65,6 +65,26 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
     await expect(overlay).toContainText(/64:\d+ [A-Z]{3}/);
     await expect(overlay).toContainText('9₂=8₃+1₁');
 
+    // 07.T7.8: the M1 topology producer owns the `(p,q)` torus-knot phase.
+    // This real gateway currently omits the optional topology projection, so
+    // the carrier must remain explicitly pending rather than manufacture a
+    // phase from the tick. Unit coverage exercises the exact portal-core shape
+    // when the projection becomes available on this stream.
+    await expect(cosmic).toHaveAttribute('data-torus-knot-phase-p', 'pending-m1-topology');
+    await expect(cosmic).toHaveAttribute('data-torus-knot-phase-q', 'pending-m1-topology');
+
+    // 07.T7.6: coupling-flow has no renderer-local physics lane. The current
+    // spawned gateway does not project this optional boundary on the normal
+    // profile stream, so the real surface must remain explicitly pending;
+    // unit coverage proves that the exact portal-core boundary opens the
+    // disclosure when the projection arrives.
+    const coupling = page.getByTestId('engine-coupling-flow-overlay');
+    await expect(coupling).toHaveAttribute('data-state', 'pending-coupling-flow-alignment', {
+        timeout: 20_000
+    });
+    await expect(coupling).toContainText('pending-coupling-flow-alignment');
+    await expect(page.getByTestId('engine-coupling-symbolic')).toHaveCount(0);
+
     // 4.3: the clock-field overlay reads the live bus — the hop edge (384
     // line-change) is always derivable from the bussed hexagram/line; aspect
     // edges appear when the kairos planet degrees ride the profile

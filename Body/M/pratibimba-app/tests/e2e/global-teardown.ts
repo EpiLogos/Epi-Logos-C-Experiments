@@ -22,7 +22,7 @@ export default async function globalTeardown(): Promise<void> {
             }
         }
     }
-    for (const dir of [state.vaultRoot, state.gatewayStateRoot, state.naraHome]) {
+    for (const dir of [state.vaultRoot, state.gatewayStateRoot, state.gatewayHome, state.naraHome]) {
         if (dir && dir.includes('pratibimba-e2e-')) {
             rmSync(dir, { recursive: true, force: true });
         }

@@ -41,7 +41,9 @@ describe('NowPane', () => {
         render(<NowPane />);
         const pane = await screen.findByTestId('now-pane');
         expect(pane.dataset.day).toBe('02-07-2026');
-        expect(await screen.findByTestId('editor-Empty/Present/02-07-2026/daily-note.md')).toBeTruthy();
+        const canvas = await screen.findByTestId('m4-nara-canvas');
+        expect(canvas.dataset.privacyClass).toBe('protected_local');
+        expect(await screen.findByTestId('m4-nara-editor')).toBeTruthy();
     });
 
     it('the anchored day carries the §6.5 day-resonance strip with the pending-resonance fallback (05.T5.1)', async () => {

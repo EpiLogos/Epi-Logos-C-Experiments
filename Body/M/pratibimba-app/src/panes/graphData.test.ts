@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { coerceLinks, coerceNodes, familyOf, queryRows } from './graphData';
+import { coerceLinks, coerceNodes, etymologicalClusterIds, familyOf, queryRows } from './graphData';
 
 describe('graph data coercion', () => {
     it('extracts rows from bare arrays and wrapped shapes', () => {
@@ -33,5 +33,15 @@ describe('graph data coercion', () => {
         );
         expect(links).toHaveLength(1);
         expect(links[0]).toMatchObject({ source: 'M1', target: 'M2', type: 'structural' });
+    });
+
+    it('groups only declared etymological and cognate relation components', () => {
+        const clusters = etymologicalClusterIds([
+            { source: 'M0', target: 'M1', type: 'ETYMOLOGICAL_COGNATE' },
+            { source: 'M1', target: 'M2', type: 'cognate' },
+            { source: 'M2', target: 'M3', type: 'STRUCTURAL' }
+        ]);
+        expect(clusters.get('M0')).toBe(clusters.get('M2'));
+        expect(clusters.has('M3')).toBe(false);
     });
 });

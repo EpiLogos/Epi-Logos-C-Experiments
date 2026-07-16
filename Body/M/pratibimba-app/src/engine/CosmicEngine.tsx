@@ -33,6 +33,7 @@ import {
 } from './cosmicMath';
 import { modulationEngine, useEngineStore } from './modulation/engine';
 import { buildPentadicOverlay } from './cosmicPentadicOverlay';
+import { buildCouplingFlowOverlay } from './couplingFlowOverlay';
 import {
     buildClockFieldOverlay,
     buildClockFieldOverlayState,
@@ -47,6 +48,7 @@ import {
 } from './modulation/modulators';
 import { fibonacciGroundPoint } from './fibonacciGround';
 import { ModulationCarrier } from './modulation/types';
+import { readTorusKnotPhase } from '../panes/m1KleinTopology';
 import {
     decanLabel,
     elementCssColour,
@@ -287,10 +289,25 @@ export function CosmicEngine() {
 
     // strip readouts derive from the same snapshot law the graph uses
     const snapshot = useMemo(() => harmonicSnapshot(cached?.profile ?? null), [cached]);
+    // 07.T7.8: M1's `(p,q)` phase is kernel-owned topology data. The engine
+    // exposes the received pair on its composed surface; it never generates one.
+    const torusKnotPhase = useMemo(() => {
+        const profile = cached?.profile as Record<string, unknown> | null;
+        const topology = profile?.m1Topology ?? profile?.m1_topology;
+        return topology && typeof topology === 'object' && !Array.isArray(topology)
+            ? readTorusKnotPhase(topology as Record<string, unknown>)
+            : null;
+    }, [cached]);
     // 36.4: the pentadic 1-2-3 overlay reads the SAME single cached profile
     // subscription — one ProfileTick source for all three slots.
     const pentadic = useMemo(
         () => buildPentadicOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
+        [cached]
+    );
+    // 07.T7.6: the coupling-flow disclosure shares the composition's one
+    // profile snapshot. It is a strict kernel window, never a fourth pole.
+    const couplingFlow = useMemo(
+        () => buildCouplingFlowOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
         [cached]
     );
     // 4.3: clock-field aspect/hop overlay — same single profile subscription;
@@ -959,7 +976,13 @@ export function CosmicEngine() {
         );
     }
     return (
-        <div className="cosmic-engine" data-testid="cosmic-engine" data-level={level}>
+        <div
+            className="cosmic-engine"
+            data-testid="cosmic-engine"
+            data-level={level}
+            data-torus-knot-phase-p={torusKnotPhase?.p ?? 'pending-m1-topology'}
+            data-torus-knot-phase-q={torusKnotPhase?.q ?? 'pending-m1-topology'}
+        >
             <div ref={hostRef} className="cosmic-engine-canvas" />
             {selectedPlanet ? (
                 <aside className="planet-panel" data-testid="planet-panel">
@@ -1039,6 +1062,38 @@ export function CosmicEngine() {
                           ? '⟠ stale trace generation — rejected'
                           : '⟠ pending-anuttara-pentadic-trace'}
                 </span>
+                <details
+                    className="engine-coupling-flow"
+                    data-testid="engine-coupling-flow-overlay"
+                    data-state={couplingFlow.state}
+                >
+                    <summary
+                        title="Source-warranted coupling-flow evidence carried by the profile bus; the renderer computes no physics constants."
+                    >
+                        {couplingFlow.state === 'ready'
+                            ? `⋈ ${couplingFlow.symbolicSkeletons[0]} · ${couplingFlow.measurementFaces[0]}`
+                            : '⋈ pending-coupling-flow-alignment'}
+                    </summary>
+                    {couplingFlow.state === 'ready' ? (
+                        <div className="engine-coupling-flow-detail">
+                            <span data-testid="engine-coupling-symbolic">
+                                symbolic skeleton: {couplingFlow.symbolicSkeletons.join(' · ')}
+                            </span>
+                            <span data-testid="engine-coupling-physics">
+                                physics reference: {couplingFlow.physicsDescent.join(' → ')}
+                            </span>
+                            <span data-testid="engine-coupling-measurement">
+                                measurement-face: {couplingFlow.measurementFaces.join(' · ')}
+                            </span>
+                            <span data-testid="engine-coupling-warrant">
+                                source-warrant: {couplingFlow.recognitionWarrant}
+                            </span>
+                            <span data-testid="engine-coupling-caveat">
+                                {couplingFlow.caveats.join(' · ')}
+                            </span>
+                        </div>
+                    ) : null}
+                </details>
                 <button
                     type="button"
                     className="instrument-toggle"

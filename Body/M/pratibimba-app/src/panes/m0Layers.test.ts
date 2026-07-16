@@ -43,6 +43,17 @@ describe('m0Layers — the six M0-X\' surface contract (M0\'-SPEC §The Six M0-X
         }
     });
 
+    it('reads Anuttara language through canonical c_1 properties, never alias keys (09.T9.8)', () => {
+        expect(M0_LAYER_FIELDS.lang.slice(0, 3)).toEqual([
+            'c_1_symbol',
+            'c_1_formulation_type',
+            'c_1_complete_formulation'
+        ]);
+        expect(M0_LAYER_FIELDS.lang).not.toContain('symbol');
+        expect(M0_LAYER_FIELDS.lang).not.toContain('formulation_type');
+        expect(M0_LAYER_FIELDS.lang).not.toContain('complete_formulation');
+    });
+
     it('emits the spec deep-link template for bridged layers, scoped to the coordinate', () => {
         const personal = M0_LAYER_VIEWS.find(v => v.key === 'personal')!;
         const pedagogy = M0_LAYER_VIEWS.find(v => v.key === 'pedagogy')!;

@@ -6,6 +6,8 @@
  *   rAF loop (the spec's every-frame cadence — this is choreography over the
  *   kernel tick, never a clock: every frame value derives from profile state
  *   + frame fraction), the klein fold state (atomic across carriers, §6.5),
+ *   strictly consumes the kernel's three-variant KleinFlipEvent discriminator
+ *   (DR-IG-2 — malformed or unknown payloads are non-events),
  *   the 720-tick scrub ring and pause/step (§8.8 — pause + scrub are
  *   load-bearing accessibility), and carrier readiness gating (§5.6).
  * Public surface: ModulationEngine, modulationEngine (singleton),
@@ -73,6 +75,67 @@ interface CarrierEntry {
 type RafImpl = (callback: (nowMs: number) => void) => number;
 type CafImpl = (handle: number) => void;
 
+type KernelKleinFlipEvent =
+    | { readonly kind: 'm1TritoneCrossing'; readonly tick12: number; readonly lensPair: readonly [number, number] }
+    | {
+          readonly kind: 'm2CymaticValenceInvert';
+          readonly valenceBefore: 'primary' | 'inverted';
+          readonly valenceAfter: 'primary' | 'inverted';
+      }
+    | { readonly kind: 'm3CodonRotationCross'; readonly codonBefore: number; readonly codonAfter: number };
+
+function record(value: unknown): Record<string, unknown> | null {
+    return value !== null && typeof value === 'object' && !Array.isArray(value)
+        ? (value as Record<string, unknown>)
+        : null;
+}
+
+function integerInRange(value: unknown, min: number, max: number): value is number {
+    return typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max;
+}
+
+/** Mirror the bridge schema's discriminated union at the subscriber boundary.
+ *  Every valid kernel variant causes the same atomic composition flip; an
+ *  unrecognised record must never become a renderer-local fourth event. */
+function parseKleinFlipEvent(profile: unknown): KernelKleinFlipEvent | null {
+    const root = record(profile);
+    const harmonic = record(root?.harmonicProfile) ?? root;
+    const event = record(harmonic?.kleinFlip ?? harmonic?.klein_flip);
+    if (!event) {
+        return null;
+    }
+    switch (event.kind) {
+        case 'm1TritoneCrossing': {
+            const lensPair = event.lensPair;
+            if (
+                integerInRange(event.tick12, 0, 11) &&
+                Array.isArray(lensPair) &&
+                lensPair.length === 2 &&
+                integerInRange(lensPair[0], 0, 11) &&
+                integerInRange(lensPair[1], 0, 11)
+            ) {
+                return { kind: event.kind, tick12: event.tick12, lensPair: [lensPair[0], lensPair[1]] };
+            }
+            return null;
+        }
+        case 'm2CymaticValenceInvert':
+            return (event.valenceBefore === 'primary' || event.valenceBefore === 'inverted') &&
+                (event.valenceAfter === 'primary' || event.valenceAfter === 'inverted')
+                ? {
+                      kind: event.kind,
+                      valenceBefore: event.valenceBefore,
+                      valenceAfter: event.valenceAfter
+                  }
+                : null;
+        case 'm3CodonRotationCross':
+            return integerInRange(event.codonBefore, 0, 63) && integerInRange(event.codonAfter, 0, 63)
+                ? { kind: event.kind, codonBefore: event.codonBefore, codonAfter: event.codonAfter }
+                : null;
+        default:
+            return null;
+    }
+}
+
 export class ModulationEngine {
     private records: TickRecord[] = [];
     private carriers = new Map<string, CarrierEntry>();
@@ -103,9 +166,10 @@ export class ModulationEngine {
             return;
         }
         const hp = harmonicSnapshot(cached.profile);
+        const kleinFlip = parseKleinFlipEvent(cached.profile);
         let valence: 1 | -1 = prev?.kleinValence ?? 1;
         let axisFlipped = prev?.axisFlipped ?? false;
-        if (hp.kleinFlip) {
+        if (kleinFlip) {
             valence = valence === 1 ? -1 : 1;
             axisFlipped = !axisFlipped;
             this.controls.flipAtMs = nowMs;
@@ -119,7 +183,7 @@ export class ModulationEngine {
             const frame = this.frame(nowMs, 0);
             if (frame) {
                 useEngineStore.getState().setDivisionSource(frame.division.source);
-                this.dispatch(frame, { tick: true, kleinFlip: hp.kleinFlip });
+                this.dispatch(frame, { tick: true, kleinFlip: kleinFlip !== null });
             }
         } else {
             // scrubbing: keep the cursor anchored to the VIEWED tick — the

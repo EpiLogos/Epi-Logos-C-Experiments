@@ -6,6 +6,7 @@
  */
 
 import { expect, test } from '@playwright/test';
+import { SIDECAR_URL, todayId } from './e2e-env';
 import { gatewayRpc } from './gateway-rpc';
 
 test('Autoresearch mounts over the real S5 wire with governed, honest state', async ({ page }) => {
@@ -22,6 +23,7 @@ test('Autoresearch mounts over the real S5 wire with governed, honest state', as
     await expect(page.getByTestId('autoresearch-recompose-pass')).toContainText('not projected');
     await expect(page.getByText('Surface', { exact: true })).toHaveAttribute('aria-current', 'step');
     await expect(page.getByTestId('autoresearch-capacity-filter').locator('option')).toHaveCount(7);
+    await expect(page.getByTestId('autoresearch-capacity-matrix').getByRole('button')).toHaveCount(6);
     await expect(page.getByTestId('autoresearch-empty')).toBeVisible();
     await expect(page.getByTestId('autoresearch-error')).toHaveCount(0);
 });
@@ -64,4 +66,54 @@ test('Autoresearch dispatches a linked review through the cross-layout intent sp
 
     await expect(page.getByTestId('review-blocks-pane')).toBeVisible();
     await expect(page.getByTestId('review-request-target')).toContainText(reviewId);
+});
+
+test('Autoresearch pair composition invokes Sophia over a real persisted Q-review queue', async ({ page, request }) => {
+    const beginToday = await request.post(`${SIDECAR_URL}/invoke`, {
+        data: { cmd: 'begin_today', args: {} }
+    });
+    expect(beginToday.ok()).toBeTruthy();
+    const embedding = Array.from({ length: 3072 }, () => 0.5);
+    await gatewayRpc("s5'.improve.q_review.run", {
+        corpus_snapshot: {
+            day_id: todayId(),
+            graph_revision: 7,
+            nodes: [
+                {
+                    coordinate: 'M5-0',
+                    namespace: 'bimba',
+                    c_4_family: 'M',
+                    c_4_ql_position: '5',
+                    c_4_lens: 'L5',
+                    q_values: { q_5_i0_integration_template: 'canonical return' },
+                    review_epochs: { qm_5_i0_review_epoch: 7 },
+                    embedding_3072: embedding
+                },
+                {
+                    coordinate: 'M5-1',
+                    namespace: 'bimba',
+                    c_4_family: 'M',
+                    c_4_ql_position: '5',
+                    c_4_lens: 'L5',
+                    q_values: {},
+                    review_epochs: { qm_5_i0_review_epoch: 7 },
+                    embedding_3072: embedding
+                }
+            ]
+        },
+        last_review_epoch: 7
+    });
+
+    await page.goto('/');
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+    await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Autoresearch' }).click();
+
+    await expect(page.getByTestId('autoresearch-q-review-entry')).toBeVisible({ timeout: 15_000 });
+    await page.getByTestId('autoresearch-open-pair-composition').click();
+    await page.getByLabel('Rationale').fill('integration gathers crossings and releases a governed return');
+    await page.getByLabel('Opening question').fill('Which crossing still lacks a return path?');
+    await page.getByTestId('q-pair-compose').click();
+    await expect(page.getByLabel('Candidate articulation')).toHaveValue(
+        'Like a river lock, integration gathers crossings and releases a governed return.'
+    );
 });

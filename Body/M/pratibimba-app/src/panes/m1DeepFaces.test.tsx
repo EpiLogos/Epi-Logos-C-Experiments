@@ -1,0 +1,257 @@
+/**
+ * 22.T22.3 / 22.4 / 22.8 / 22.9 — the four M1' deep inspector faces render REAL
+ * bridged data (Cl(4,2) signature, Klein-flip event-strip, vortex matrices
+ * browser, audio-bus inspector). Each asserts the rendered surface reads the
+ * already-present profile fields through the existing readers — no fabricated
+ * bodies, honest pending when a window is absent.
+ */
+import { beforeEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { useTickStore } from '../state/stores';
+import { M1Cl42SignatureInspector } from './m1Cl42SignatureInspector';
+import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
+import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
+import { M1AudioBusInspector } from './m1AudioBusInspector';
+
+/** The T2.6 CSV skeleton cell — accepted by the strict vortex reader. */
+const CELL_7X5 = {
+    family: 'pratibimba',
+    rowK: 7,
+    positionP: 5,
+    rawValue: 36,
+    rawBimba: 35,
+    rawPratibimba: 36,
+    rawSum: 71,
+    rawDelta: 1,
+    drValue: 9,
+    drBimba: 8,
+    drPratibimba: 9,
+    drSum: 8,
+    ruleValue: null,
+    skeletonEvent: 'Hit36'
+};
+
+const RING_Q = [0.5, -0.8660254, 0, 0];
+
+function vortex(overrides: Record<string, unknown> = {}) {
+    return {
+        activeMatrixOp: 'pratibimba',
+        activeCell: [7, 5],
+        activeCellValue: CELL_7X5,
+        drRingPhase: { mahamayaIdx: 2, parashaktiIdx: 6 },
+        cl42SignatureAtPosition: -1,
+        ringQuaternion: RING_Q,
+        helixSheet: 1,
+        kleinFlipAtThisTick: false,
+        ...overrides
+    };
+}
+
+const AUDIO_OCTET = [261.6, 294.3, 327, 348.8, 392.4, 436, 490.5, 523.2];
+const NODAL_QUARTET = [
+    { m: 1, n: 1 },
+    { m: 3, n: 2 },
+    { m: 4, n: 3 },
+    { m: 9, n: 8 }
+];
+
+function prime(harmonicProfile: Record<string, unknown>, generation = 41) {
+    useTickStore.setState({
+        generation,
+        profile: {
+            generation,
+            cachedAtMs: 1,
+            stale: false,
+            stalenessMs: 0,
+            privacyClass: 'safe-public-current-kernel-tick',
+            profile: { generation, harmonicProfile }
+        }
+    });
+}
+
+function clear() {
+    useTickStore.setState({ generation: null, profile: null });
+}
+
+describe('22.T22.3 Cl(4,2) signature inspector', () => {
+    beforeEach(() => {
+        cleanup();
+        clear();
+    });
+
+    it('honest pending when no profile is on the bus', () => {
+        render(<M1Cl42SignatureInspector />);
+        expect(screen.getByTestId('m1-cl42-pending')).toBeTruthy();
+    });
+
+    it('renders the six-position trig/signature matrix with the definitional Cl(4,2) signature', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1Cl42SignatureInspector />);
+        // implicate generators sin@P0 / cos@P5 carry −1
+        expect(screen.getByTestId('m1-cl42-position-0').getAttribute('data-signature')).toBe('-1');
+        expect(screen.getByTestId('m1-cl42-position-5').getAttribute('data-signature')).toBe('-1');
+        // explicate derivatives P1..P4 carry +1
+        for (const p of [1, 2, 3, 4]) {
+            expect(screen.getByTestId(`m1-cl42-position-${p}`).getAttribute('data-signature')).toBe('1');
+        }
+        expect(screen.getByTestId('m1-cl42-position-0').textContent).toContain('sin');
+        expect(screen.getByTestId('m1-cl42-position-1').textContent).toContain('tan');
+        // swatch tones from the CL42_PALETTE token
+        expect(screen.getByTestId('m1-cl42-swatch-0').getAttribute('data-tone')).toBe('implicate');
+        expect(screen.getByTestId('m1-cl42-swatch-1').getAttribute('data-tone')).toBe('explicate');
+    });
+
+    it('drives the active-position highlight from position6 and the signature readout from the bus', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1Cl42SignatureInspector />);
+        expect(screen.getByTestId('m1-cl42-position-1').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('m1-cl42-position-0').getAttribute('data-active')).toBe('false');
+        const active = screen.getByTestId('m1-cl42-active');
+        expect(active.getAttribute('data-position6')).toBe('1');
+        expect(active.getAttribute('data-bus-signature')).toBe('-1');
+    });
+
+    it('renders the 9/8 derivation chain with the current tick12 step highlighted', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1Cl42SignatureInspector />);
+        expect(screen.getByTestId('m1-cl42-98-octave').textContent).toContain('(4/3) × (3/2) = 2/1');
+        expect(screen.getByTestId('m1-cl42-98-epogdoon').textContent).toContain('(3/2) ÷ (4/3) = 9/8');
+        expect(screen.getByTestId('m1-cl42-98-step-7').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('m1-cl42-98-step-6').getAttribute('data-active')).toBe('false');
+    });
+});
+
+describe('22.T22.4 Klein-flip event-strip', () => {
+    beforeEach(() => {
+        cleanup();
+        clear();
+    });
+
+    it('honest pending when the vortex is absent', () => {
+        render(<M1KleinFlipEventStrip />);
+        expect(screen.getByTestId('m1-klein-flip-strip-pending')).toBeTruthy();
+    });
+
+    it('marks the canonical 5→6 tritone boundary on the tick axis', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1KleinFlipEventStrip />);
+        expect(screen.getByTestId('m1-klein-flip-axis-cell-6').getAttribute('data-canonical')).toBe('true');
+        expect(screen.getByTestId('m1-klein-flip-axis-cell-3').getAttribute('data-canonical')).toBe('false');
+    });
+
+    it('deposits a canonical glyph + inverts the Hopf flag on a flip at tick 6', () => {
+        prime({ tick12: 6, position6: 4, anandaVortex: vortex({ kleinFlipAtThisTick: true }) });
+        render(<M1KleinFlipEventStrip />);
+        const glyph = screen.getByTestId('m1-klein-flip-glyph-gen-41');
+        expect(glyph.getAttribute('data-canonical')).toBe('true');
+        expect(glyph.getAttribute('data-tick')).toBe('6');
+        expect(screen.queryByTestId('m1-klein-flip-unexpected')).toBeNull();
+        expect(screen.getByTestId('m1-klein-flip-hopf-flag').getAttribute('data-inverted')).toBe('true');
+    });
+
+    it('flags an unexpected-flip when the flip fires outside the tritone crossing', () => {
+        prime({ tick12: 3, position6: 2, anandaVortex: vortex({ kleinFlipAtThisTick: true }) });
+        render(<M1KleinFlipEventStrip />);
+        const glyph = screen.getByTestId('m1-klein-flip-glyph-gen-41');
+        expect(glyph.getAttribute('data-canonical')).toBe('false');
+        expect(screen.getByTestId('m1-klein-flip-unexpected')).toBeTruthy();
+    });
+
+    it('shows the empty log when the current tick carries no flip', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex({ kleinFlipAtThisTick: false }) });
+        render(<M1KleinFlipEventStrip />);
+        expect(screen.getByTestId('m1-klein-flip-log-empty')).toBeTruthy();
+        expect(screen.getByTestId('m1-klein-flip-this-tick').getAttribute('data-flip')).toBe('false');
+    });
+});
+
+describe('22.T22.8 vortex matrices browser', () => {
+    beforeEach(() => {
+        cleanup();
+        clear();
+    });
+
+    it('honest pending when the vortex is absent', () => {
+        render(<M1VortexMatricesBrowser />);
+        expect(screen.getByTestId('m1-vortex-browser-pending')).toBeTruthy();
+    });
+
+    it('renders six family tabs with the profile-active family marked', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1VortexMatricesBrowser />);
+        for (const op of ['bimba', 'pratibimba', 'sum', 'diff-a', 'diff-b', 'quintessence']) {
+            expect(screen.getByTestId(`m1-vortex-tab-${op}`)).toBeTruthy();
+        }
+        expect(screen.getByTestId('m1-vortex-tab-pratibimba').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('m1-vortex-tab-bimba').getAttribute('data-active')).toBe('false');
+    });
+
+    it('populates the active cell (7,5) with real raw + DR faces and lights the profile cell halo', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1VortexMatricesBrowser />);
+        // active cell carries the DR-face value by default (drValue = 9)
+        expect(screen.getByTestId('m1-vortex-cell-7-5').getAttribute('data-active-cell')).toBe('true');
+        expect(screen.getByTestId('m1-vortex-cell-7-5').textContent).toBe('9');
+        // the profile cell (tick12=7, position6=1) carries the Cl(4,2) halo
+        expect(screen.getByTestId('m1-vortex-cell-7-1').getAttribute('data-profile-cell')).toBe('true');
+        // the detail panel reads the verbatim faces
+        expect(screen.getByTestId('m1-vortex-cell-raw').textContent).toBe('35 / 36 / 71 / 1');
+        expect(screen.getByTestId('m1-vortex-cell-dr').textContent).toBe('8 / 9 / 8');
+    });
+
+    it('face-mode toggle switches the active cell to its raw face', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1VortexMatricesBrowser />);
+        fireEvent.click(screen.getByTestId('m1-vortex-facemode-raw'));
+        expect(screen.getByTestId('m1-vortex-facemode-raw').getAttribute('data-active')).toBe('true');
+        // raw face → rawValue = 36
+        expect(screen.getByTestId('m1-vortex-cell-7-5').textContent).toBe('36');
+        expect(screen.getByTestId('m1-vortex-cell-facemode').textContent).toBe('raw');
+    });
+
+    it('pinning a non-active family holds the selection and reports no live cell for it', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1VortexMatricesBrowser />);
+        fireEvent.click(screen.getByTestId('m1-vortex-tab-bimba'));
+        expect(screen.getByTestId('m1-vortex-tab-bimba').getAttribute('data-pinned')).toBe('true');
+        expect(screen.getByTestId('m1-vortex-displayed').getAttribute('data-displayed-op')).toBe('bimba');
+        expect(screen.getByTestId('m1-vortex-pinned-no-cell')).toBeTruthy();
+    });
+});
+
+describe('22.T22.9 audio-bus inspector', () => {
+    beforeEach(() => {
+        cleanup();
+        clear();
+    });
+
+    it('renders the reads-only M1↔M2 boundary banner verbatim', () => {
+        prime({ tick12: 7, audioOctet: AUDIO_OCTET, nodalQuartet: NODAL_QUARTET });
+        render(<M1AudioBusInspector />);
+        expect(screen.getByTestId('m1-audio-reads-only-banner').textContent).toBe(
+            "M1' is the consumer; M2-1' is the writer. To change a value, route through M2."
+        );
+    });
+
+    it('renders 8 audio_octet rows + 4 nodal_quartet rows with Vimarśa authority badges', () => {
+        prime({ tick12: 7, audioOctet: AUDIO_OCTET, nodalQuartet: NODAL_QUARTET });
+        render(<M1AudioBusInspector />);
+        expect(screen.getAllByTestId('m1-audio-octet-row')).toHaveLength(8);
+        expect(screen.getAllByTestId('m1-nodal-quartet-row')).toHaveLength(4);
+        expect(screen.getAllByTestId('m1-audio-vimarsha-badge')).toHaveLength(12);
+        // real bridged values, verbatim
+        expect(screen.getByTestId('m1-audio-octet-hz-0').textContent).toBe('261.6');
+        expect(screen.getByTestId('m1-audio-octet-hz-7').textContent).toBe('523.2');
+        expect(screen.getByTestId('m1-nodal-quartet-mn-3').textContent).toBe('9/8');
+        expect(screen.getAllByTestId('m1-audio-vimarsha-badge')[0].textContent).toContain(
+            'vimarsha_reading.rs:17-93'
+        );
+    });
+
+    it('honest pending when the octet / quartet windows are absent', () => {
+        prime({ tick12: 7 });
+        render(<M1AudioBusInspector />);
+        expect(screen.getByTestId('m1-audio-octet-pending')).toBeTruthy();
+        expect(screen.getByTestId('m1-nodal-quartet-pending')).toBeTruthy();
+    });
+});

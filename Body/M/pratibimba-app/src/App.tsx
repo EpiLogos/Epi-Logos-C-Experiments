@@ -22,10 +22,20 @@ import { invokeCommand } from './bridge/tauri';
 import { wireSupervisorEvents } from './bridge/tauriEvents';
 import { registerAtelierCommands } from './commands/atelier';
 import { commands, usePaletteStore } from './commands/registry';
-import { registerCrossLayoutIntentCommand } from './commands/crossLayoutIntent';
+import {
+    intentTarget,
+    parseCrossLayoutIntent,
+    registerCrossLayoutIntentCommand
+} from './commands/crossLayoutIntent';
 import { useEventsStore } from './state/eventsStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
+import {
+    createCrossLayoutIdentityReceipt,
+    CrossLayoutIdentityReceipt,
+    readCrossLayoutIdentity
+} from './state/crossLayoutIdentity';
 import { StatusStrip } from './components/StatusStrip';
+import { FaceToggleChrome } from './components/FaceToggleChrome';
 import { CosmicEngine } from './engine/CosmicEngine';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
 import { PersonalRecognitionEngine } from './engine/PersonalRecognitionEngine';
@@ -55,9 +65,24 @@ import { DayCalendarPane } from './panes/DayCalendarPane';
 import { M2CorrespondencePane } from './panes/M2CorrespondencePane';
 import { SessionsPane } from './panes/SessionsPane';
 import { OmniPendingPane } from './panes/omni/OmniPendingPane';
-import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
+import {
+    filterOmniPanelTabsForLayout,
+    OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY,
+    OMNIPANEL_TABS,
+    OmniPanelLayoutId,
+    parseOmniPanelLayoutPreference
+} from './panes/omni/omnipanelRuntime';
 import { VaultEntry } from './panes/FileTreePane';
 import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
+import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
+import { resolveLayoutClaims } from './ui/layoutClaims';
+
+assertDailyReceiverBindings({
+    'pratibimba.daily.journal': 'journalTimeline',
+    'pratibimba.daily.cymatic-placeholder': 'cosmic',
+    'pratibimba.daily.library-projection': 'fileTree',
+    'pratibimba.daily.atelier-cluster-lens': 'bimbaGraph'
+});
 
 /** Month-first (Architect correction): sorts within the year in the vault. */
 function todayId(): string {
@@ -82,20 +107,23 @@ const STALE_WINDOW_MS = 10_000;
 /** 27.T27.0: the `/` membrane derives its tabs from the canonical 8-fold
  *  manifest (DR-WC-OP-1 collapse: `/ chat` → Pi, `logs` → Tools); shared
  *  by BOTH faces per 15.2. Unlanded folds mount the honest pending pane. */
-const OMNI_BORDER = {
-    type: 'border',
-    location: 'right',
-    size: 380,
-    children: OMNIPANEL_TABS.map(tab => ({
-        type: 'tab',
-        id: tab.id === 'pi-chat' ? 'omni-tab' : `omni-${tab.id}`,
-        name: tab.label,
-        component: tab.component,
-        enableClose: false
-    }))
-};
+function omniBorder(activeLayout: OmniPanelLayoutId) {
+    return {
+        type: 'border',
+        location: 'right',
+        size: 380,
+        children: filterOmniPanelTabsForLayout(OMNIPANEL_TABS, activeLayout).map(tab => ({
+            type: 'tab',
+            id: tab.id === 'pi-chat' ? 'omni-tab' : `omni-${tab.id}`,
+            name: tab.label,
+            component: tab.component,
+            enableClose: false
+        }))
+    };
+}
 
-const PERSONAL_DEFAULT = {
+function personalDefault(activeLayout: OmniPanelLayoutId) {
+    return {
     global: { tabEnableRename: false },
     borders: [
         {
@@ -104,13 +132,23 @@ const PERSONAL_DEFAULT = {
             size: 260,
             selected: 0,
             children: [
-                { type: 'tab', name: 'Vault', component: 'fileTree', enableClose: false },
-                { type: 'tab', name: 'Journal', component: 'journalTimeline', enableClose: false },
+                {
+                    type: 'tab',
+                    name: 'Vault',
+                    component: 'fileTree',
+                    enableClose: false
+                },
+                {
+                    type: 'tab',
+                    name: 'Journal',
+                    component: 'journalTimeline',
+                    enableClose: false
+                },
                 { type: 'tab', name: 'Calendar', component: 'dayCalendar', enableClose: false },
                 { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false }
             ]
         },
-        OMNI_BORDER
+        omniBorder(activeLayout)
     ],
     layout: {
         type: 'row',
@@ -130,11 +168,13 @@ const PERSONAL_DEFAULT = {
             }
         ]
     }
-};
+    };
+}
 
-const COSMIC_DEFAULT = {
+function cosmicDefault(activeLayout: OmniPanelLayoutId) {
+    return {
     global: { tabEnableRename: false },
-    borders: [OMNI_BORDER],
+    borders: [omniBorder(activeLayout)],
     layout: {
         type: 'row',
         children: [
@@ -142,10 +182,20 @@ const COSMIC_DEFAULT = {
                 type: 'tabset',
                 id: 'cosmic-main',
                 children: [
-                    { type: 'tab', name: 'Cosmic Engine', component: 'cosmic', enableClose: false },
+                    {
+                        type: 'tab',
+                        name: 'Cosmic Engine',
+                        component: 'cosmic',
+                        enableClose: false
+                    },
                     { type: 'tab', name: 'Spanda', component: 'spandaNavigator', enableClose: false },
                     { type: 'tab', name: 'Walk', component: 'walk', enableClose: false },
-                    { type: 'tab', name: 'Bimba', component: 'bimbaGraph', enableClose: false },
+                    {
+                        type: 'tab',
+                        name: 'Bimba',
+                        component: 'bimbaGraph',
+                        enableClose: false
+                    },
                     { type: 'tab', name: 'Bases', component: 'mocBases', enableClose: false },
                     { type: 'tab', name: 'Correspondence', component: 'm2Correspondence', enableClose: false },
                     { type: 'tab', name: 'Klein', component: 'kleinTopology', enableClose: false },
@@ -158,7 +208,8 @@ const COSMIC_DEFAULT = {
             }
         ]
     }
-};
+    };
+}
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
@@ -171,10 +222,12 @@ interface PersistedUiState {
     cosmic?: unknown;
     sessionKey?: string | null;
     coordinate?: string | null;
+    [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]?: OmniPanelLayoutId;
 }
 
 function factory(node: TabNode) {
-    switch (node.getComponent()) {
+    const pane = (() => {
+        switch (node.getComponent()) {
         case 'fileTree':
             return <FileTreePane />;
         case 'editor':
@@ -271,9 +324,32 @@ function factory(node: TabNode) {
         case 'omniGateway':
         case 'omniDiagnostics':
             return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;
-        default:
-            return <div className="pane-message">unknown pane: {node.getComponent()}</div>;
+            default:
+                return <div className="pane-message">unknown pane: {node.getComponent()}</div>;
+        }
+    })();
+    const config = node.getConfig();
+    const rawIntent = config && typeof config === 'object' && !Array.isArray(config)
+        ? (config as { crossLayoutIntent?: unknown }).crossLayoutIntent
+        : undefined;
+    if (rawIntent === undefined) {
+        return pane;
     }
+    const routedIntent = parseCrossLayoutIntent(rawIntent);
+    const routedTarget = intentTarget(routedIntent);
+    if (!routedTarget || routedTarget.component !== node.getComponent()) {
+        throw new Error('cross-layout intent receiver does not match its mounted host');
+    }
+    return (
+        <div
+            className="cross-layout-intent-receiver"
+            data-testid="cross-layout-pane-receiver"
+            data-requested-extension-id={routedIntent.requestedExtensionId}
+            data-requested-contribution-id={routedIntent.requestedContributionId}
+        >
+            {pane}
+        </div>
+    );
 }
 
 function safeModel(json: unknown, fallback: object): Model {
@@ -286,6 +362,16 @@ function safeModel(json: unknown, fallback: object): Model {
 
 export function App() {
     const [face, setFace] = useState<Face>(1);
+    const [activeLayout, setActiveLayout] = useState<OmniPanelLayoutId>('daily-0-1');
+    const [routingRevision, setRoutingRevision] = useState(0);
+    const [routedHost, setRoutedHost] = useState<{
+        readonly face: Face;
+        readonly extensionId: string;
+        readonly contributionId: string;
+    } | null>(null);
+    const activeLayoutRef = useRef<OmniPanelLayoutId>('daily-0-1');
+    activeLayoutRef.current = activeLayout;
+    const crossLayoutIdentityReceiptRef = useRef<CrossLayoutIdentityReceipt | null>(null);
     const [models, setModels] = useState<{ personal: Model; cosmic: Model } | null>(null);
     const faceRef = useRef<Face>(1);
     faceRef.current = face;
@@ -299,15 +385,22 @@ export function App() {
             .then(raw => (raw ? (JSON.parse(raw) as PersistedUiState) : {}))
             .catch(() => ({}) as PersistedUiState)
             .then(state => {
+                const restoredLayout = parseOmniPanelLayoutPreference(
+                    state[OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]
+                );
+                activeLayoutRef.current = restoredLayout;
+                setActiveLayout(restoredLayout);
+                const personalFallback = personalDefault(restoredLayout);
+                const cosmicFallback = cosmicDefault(restoredLayout);
                 const layoutsCurrent = state.layoutVersion === LAYOUT_VERSION;
                 setModels({
                     personal: safeModel(
-                        layoutsCurrent ? (state.personal ?? PERSONAL_DEFAULT) : PERSONAL_DEFAULT,
-                        PERSONAL_DEFAULT
+                        layoutsCurrent ? (state.personal ?? personalFallback) : personalFallback,
+                        personalFallback
                     ),
                     cosmic: safeModel(
-                        layoutsCurrent ? (state.cosmic ?? COSMIC_DEFAULT) : COSMIC_DEFAULT,
-                        COSMIC_DEFAULT
+                        layoutsCurrent ? (state.cosmic ?? cosmicFallback) : cosmicFallback,
+                        cosmicFallback
                     )
                 });
                 if (state.face === 0 || state.face === 1) {
@@ -349,7 +442,8 @@ export function App() {
                 personal: current.personal.toJson(),
                 cosmic: current.cosmic.toJson(),
                 sessionKey: useSessionStore.getState().sessionKey,
-                coordinate: useCoordinateStore.getState().selected
+                coordinate: useCoordinateStore.getState().selected,
+                [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
             };
             void invokeCommand('ui_state_save', { json: JSON.stringify(state) }).catch(() => undefined);
         }, 800);
@@ -474,7 +568,14 @@ export function App() {
                     if (!current) {
                         throw new Error('cross-layout intent: layouts are not ready');
                     }
+                    const fromLayout = activeLayoutRef.current;
+                    const toLayout = target.preferredLayout ?? fromLayout;
+                    const identityBefore = readCrossLayoutIdentity();
                     const model = target.face === 0 ? current.cosmic : current.personal;
+                    if (target.preferredLayout && target.preferredLayout !== activeLayoutRef.current) {
+                        activeLayoutRef.current = target.preferredLayout;
+                        setActiveLayout(target.preferredLayout);
+                    }
                     if (faceRef.current !== target.face) {
                         setFace(target.face);
                     }
@@ -504,6 +605,20 @@ export function App() {
                         })
                     );
                     model.doAction(Actions.selectTab(nodeId));
+                    setRoutedHost({
+                        face: target.face,
+                        extensionId: intent.requestedExtensionId,
+                        contributionId: intent.requestedContributionId
+                    });
+                    crossLayoutIdentityReceiptRef.current = createCrossLayoutIdentityReceipt(
+                        fromLayout,
+                        toLayout,
+                        identityBefore,
+                        readCrossLayoutIdentity()
+                    );
+                    // FlexLayout caches factory output. Remount the view shell so
+                    // the selected host consumes its newly delivered node config.
+                    setRoutingRevision(revision => revision + 1);
                     persist();
                 }
             }),
@@ -681,16 +796,63 @@ export function App() {
         return <div className="boot-splash">pratibimba…</div>;
     }
 
+    const layoutClaims = resolveLayoutClaims(activeLayout, component => {
+        let receiverFound = false;
+        for (const model of [models.personal, models.cosmic]) {
+            model.visitNodes(node => {
+                if (node.getType() === 'tab' && (node as TabNode).getComponent() === component) {
+                    receiverFound = true;
+                }
+            });
+        }
+        return receiverFound;
+    });
+    const codePendingLayoutClaims = layoutClaims
+        .filter(claim => claim.status === 'code-pending')
+        .map(claim => claim.id)
+        .join(' ');
+
     return (
-        <div className="shell" data-testid="shell" data-face={face}>
-            <main className="faces">
-                <div className={`face-slot ${face === 0 ? 'face-active' : 'face-hidden'}`}>
-                    <Layout model={models.cosmic} factory={factory} onModelChange={persist} />
+        <div
+            className="shell"
+            data-testid="shell"
+            data-face={face}
+            data-active-layout={activeLayout}
+            data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
+            data-cross-layout-identity-receipt={
+                crossLayoutIdentityReceiptRef.current
+                    ? JSON.stringify(crossLayoutIdentityReceiptRef.current)
+                    : undefined
+            }
+        >
+            <FaceToggleChrome face={face} onToggle={() => void commands.execute('face.toggle')}>
+                <div
+                    className={`face-slot ${face === 0 ? 'face-active' : 'face-hidden'}`}
+                    data-testid={routedHost?.face === 0 ? 'cross-layout-intent-receiver' : undefined}
+                    data-requested-extension-id={routedHost?.face === 0 ? routedHost.extensionId : undefined}
+                    data-requested-contribution-id={routedHost?.face === 0 ? routedHost.contributionId : undefined}
+                >
+                    <Layout
+                        key={`cosmic-${routingRevision}`}
+                        model={models.cosmic}
+                        factory={factory}
+                        onModelChange={persist}
+                    />
                 </div>
-                <div className={`face-slot ${face === 1 ? 'face-active' : 'face-hidden'}`}>
-                    <Layout model={models.personal} factory={factory} onModelChange={persist} />
+                <div
+                    className={`face-slot ${face === 1 ? 'face-active' : 'face-hidden'}`}
+                    data-testid={routedHost?.face === 1 ? 'cross-layout-intent-receiver' : undefined}
+                    data-requested-extension-id={routedHost?.face === 1 ? routedHost.extensionId : undefined}
+                    data-requested-contribution-id={routedHost?.face === 1 ? routedHost.contributionId : undefined}
+                >
+                    <Layout
+                        key={`personal-${routingRevision}`}
+                        model={models.personal}
+                        factory={factory}
+                        onModelChange={persist}
+                    />
                 </div>
-            </main>
+            </FaceToggleChrome>
             <StatusStrip />
             <CommandPalette />
         </div>

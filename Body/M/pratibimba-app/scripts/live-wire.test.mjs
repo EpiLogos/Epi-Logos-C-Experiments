@@ -25,6 +25,7 @@ describe('live-wire projection manifest', () => {
         const names = PROJECTION_MANIFEST.map(entry => entry.name);
         for (const required of [
             'profile.strict-parse',
+            'profile.graph-revision',
             'phaseSpace',
             'modalResonator',
             'planetDegrees',
@@ -66,6 +67,16 @@ describe('live-wire projection manifest', () => {
         const report = await validateCapture(capture);
         expect(report.ok).toBe(false);
         expect(report.failures.map(f => f.name)).toContain('profile.strict-parse');
+    });
+
+    it('rejects profile ticks that omit the S2 graph revision', async () => {
+        const capture = loadFixture();
+        for (const frame of profileFrames(capture)) {
+            delete frame.payload.graphRevision;
+        }
+        const report = await validateCapture(capture);
+        expect(report.ok).toBe(false);
+        expect(report.failures.map(f => f.name)).toContain('profile.graph-revision');
     });
 
     it('rejects a capture whose frames never carry a declared projection', async () => {

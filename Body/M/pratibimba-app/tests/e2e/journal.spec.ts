@@ -17,7 +17,7 @@ test('begin today → type → real bytes in the vault → reload shows it', asy
     // real). Since T17 the integrated-loop spec runs first and may already
     // have anchored today — in that case the app adopts the existing day on
     // boot and the begin gesture (correctly) never renders.
-    const editor = page.locator('.face-active .cm-content');
+    const editor = page.locator('.face-active [data-testid="m4-nara-editor"]');
     const beginButton = page.getByTestId('now-begin-today');
     await expect(editor.or(beginButton).first()).toBeVisible({ timeout: 15_000 });
     if (await beginButton.isVisible().catch(() => false)) {
@@ -53,7 +53,7 @@ test('begin today → type → real bytes in the vault → reload shows it', asy
     // navigation race while still proving the vault-backed marker returns.
     await expect(async () => {
         await page.goto('/', { waitUntil: 'load' });
-        await expect(page.locator('.face-active .cm-content')).toContainText(marker, {
+        await expect(page.locator('.face-active [data-testid="m4-nara-editor"]')).toContainText(marker, {
             timeout: 15_000
         });
     }).toPass({ timeout: 45_000 });

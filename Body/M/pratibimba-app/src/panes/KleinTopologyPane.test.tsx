@@ -1,6 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { KleinTopologyPane } from './KleinTopologyPane';
+import { topologyFromPayload } from './m1KleinTopology';
 import { useTickStore } from '../state/stores';
 import { KernelBridgeCachedProfile } from '../bridge/types';
 
@@ -20,6 +21,7 @@ function profileFixture(kleinFlip: unknown, generation: number): KernelBridgeCac
             m1Topology: {
                 doubleCoverDeg: 720,
                 torusGenus: 1,
+                torusKnotPhase: { p: 0.25, q: 0.5 },
                 eulerCharacteristic: 0,
                 hopfIdentity: 'S3 -> S2 Hopf fibration',
                 k2TritoneCrossing: 'K² lens-tritone crossing at tick 6: lens pair (0, 6) (6-semitone fold)',
@@ -49,6 +51,15 @@ describe('KleinTopologyPane', () => {
         const invariants = screen.getByTestId('m1-klein-double-cover');
         expect(invariants.textContent).toContain('DOUBLE_COVER_DEG=720');
         expect(invariants.textContent).toContain('TORUS_GENUS=1');
+        expect(screen.getByTestId('m1-torus-knot-phase').textContent).toBe('(p,q)=(0.25,0.5)');
+    });
+
+    it('keeps a missing or malformed torus-knot pair pending instead of deriving a local phase', () => {
+        expect(topologyFromPayload({ m1Topology: { torusKnotPhase: { p: 0.25 } } }).torusKnotPhase).toBeNull();
+        expect(topologyFromPayload({ m1Topology: { torusKnotPhase: { p: 0.25, q: 0.5 } } }).torusKnotPhase).toEqual({
+            p: 0.25,
+            q: 0.5
+        });
     });
 
     it('fires an m1.klein_flip.source observability event when the profile carries klein_flip=Some(..)', () => {

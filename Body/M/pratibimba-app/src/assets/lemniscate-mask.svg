@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Filled Bernoulli-lemniscate mask: r^2 = a^2 cos(2 theta). -->
+  <path fill="white" d="M32 32C23 18 15 12 8 16C-1 21 3 38 14 42C21 45 27 39 32 32C37 39 43 45 50 42C61 38 65 21 56 16C49 12 41 18 32 32Z"/>
+</svg>

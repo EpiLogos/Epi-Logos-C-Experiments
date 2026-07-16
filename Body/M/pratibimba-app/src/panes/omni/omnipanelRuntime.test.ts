@@ -9,9 +9,12 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+    filterOmniPanelTabsForLayout,
     isMediationCapabilityAllowed,
+    OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY,
     OMNIPANEL_TABS,
     omniPanelTabForComponent,
+    parseOmniPanelLayoutPreference,
     toToolStreamEvents
 } from './omnipanelRuntime';
 
@@ -52,6 +55,23 @@ describe('OMNIPANEL_TABS manifest', () => {
         for (const tab of pending) {
             expect(tab.owningTranche).toMatch(/^27\.\d+$/);
         }
+    });
+
+    it('filters declared tabs against the epi-logos.layout.active preference', () => {
+        expect(OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY).toBe('epi-logos.layout.active');
+        expect(OMNIPANEL_TABS.every(tab =>
+            tab.availableInLayouts.includes('daily-0-1') && tab.availableInLayouts.includes('ide-deep')
+        )).toBe(true);
+
+        const withDeepOnlyPi = OMNIPANEL_TABS.map((tab, index) =>
+            index === 0 ? { ...tab, availableInLayouts: ['ide-deep'] as const } : tab
+        );
+        expect(filterOmniPanelTabsForLayout(withDeepOnlyPi, 'daily-0-1').map(tab => tab.id))
+            .not.toContain('pi-chat');
+        expect(filterOmniPanelTabsForLayout(withDeepOnlyPi, 'ide-deep').map(tab => tab.id))
+            .toContain('pi-chat');
+        expect(parseOmniPanelLayoutPreference('ide-deep')).toBe('ide-deep');
+        expect(parseOmniPanelLayoutPreference('unknown')).toBe('daily-0-1');
     });
 });
 

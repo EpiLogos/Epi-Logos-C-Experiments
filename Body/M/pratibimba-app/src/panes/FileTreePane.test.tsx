@@ -12,6 +12,11 @@ const EMPTY_DIR: VaultEntry[] = [{ name: 'Present', path: 'Empty/Present', isDir
 
 vi.mock('../bridge/tauri', () => ({
     invokeCommand: vi.fn(async (command: string, args?: Record<string, unknown>) => {
+        if (command === 'vault_read') {
+            return args?.path === 'note.md'
+                ? { content: '---\ncoordinate: "M4-4.2"\n---\nA lived note.' }
+                : { content: 'No frontmatter.' };
+        }
         if (command !== 'vault_list') {
             throw new Error(`unexpected ${command}`);
         }
@@ -30,6 +35,12 @@ describe('FileTreePane', () => {
 
         const dir = await screen.findByTestId('vault-dir-Empty');
         expect(screen.getByTestId('vault-file-note.md')).toBeTruthy();
+        const shelf = await screen.findByTestId('library-shelf-note.md');
+        expect(shelf.textContent).toBe('M4');
+        expect(shelf.getAttribute('data-coordinate')).toBe('M4-4.2');
+        expect(screen.getByTestId('vault-tree').getAttribute('data-projection-lens')).toBe(
+            'pratibimba.daily.library-projection'
+        );
 
         await act(async () => {
             dir.click();

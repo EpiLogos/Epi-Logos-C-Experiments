@@ -45,6 +45,21 @@ describe('cross-layout intent targets (31.T31.10)', () => {
         expect(CROSS_LAYOUT_INTENT_TARGETS.every(target => target.component.length > 0)).toBe(true);
     });
 
+    it('promotes deep M-family contributions while OmniPanel receivers preserve the current layout', () => {
+        expect(intentTarget({
+            requestedExtensionId: 'm3-mahamaya',
+            requestedContributionId: 'codon'
+        })?.preferredLayout).toBe('ide-deep');
+        expect(intentTarget({
+            requestedExtensionId: 'm3-mahamaya',
+            requestedContributionId: 'cosmicClock'
+        })?.preferredLayout).toBe('daily-0-1');
+        expect(intentTarget({
+            requestedExtensionId: 'm5-epii',
+            requestedContributionId: 'review'
+        })?.preferredLayout).toBeNull();
+    });
+
     it('preserves the complete envelope while applying real navigation dependencies', async () => {
         const setCoordinate = vi.fn();
         const applySession = vi.fn();

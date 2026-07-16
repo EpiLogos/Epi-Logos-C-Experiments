@@ -34,4 +34,8 @@ test('Medicine renders canonical evidence and crosses to Kairos on the real wire
 
     await page.getByRole('button', { name: 'Open Kairos' }).click();
     await expect(page.getByTestId('kairos-enablement-pane')).toBeVisible();
+    await expect(page.getByTestId('shell')).toHaveAttribute('data-active-layout', 'ide-deep');
+    const receiver = page.getByTestId('cross-layout-intent-receiver');
+    await expect(receiver).toHaveAttribute('data-requested-extension-id', 'm4-nara');
+    await expect(receiver).toHaveAttribute('data-requested-contribution-id', 'kairos');
 });

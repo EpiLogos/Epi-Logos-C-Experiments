@@ -204,6 +204,41 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'profile.graph-revision',
+        required: true,
+        covers: [],
+        describe: 'B-12: profile ticks carry a non-negative, monotone S2 GraphMeta revision once the live sampler resolves',
+        assert(capture) {
+            const frames = profileFrames(capture);
+            const observed = frames
+                .map((frame, index) => ({ index, revision: frame.payload?.graphRevision }))
+                .filter(entry => entry.revision !== undefined);
+            if (observed.length === 0) {
+                return ['no profile.update frame carried graphRevision'];
+            }
+            const errors = [];
+            let previous = null;
+            let firstObserved = observed[0].index;
+            frames.forEach((frame, index) => {
+                const revision = frame.payload?.graphRevision;
+                if (index >= firstObserved && revision === undefined) {
+                    errors.push(`frame[${index}]: graphRevision disappeared after first observation`);
+                    return;
+                }
+                if (revision === undefined) return;
+                if (!Number.isSafeInteger(revision) || revision < 0) {
+                    errors.push(`frame[${index}]: graphRevision '${revision}' is not a non-negative safe integer`);
+                    return;
+                }
+                if (previous !== null && revision < previous) {
+                    errors.push(`frame[${index}]: graphRevision regressed ${previous} -> ${revision}`);
+                }
+                previous = revision;
+            });
+            return errors;
+        }
+    },
+    {
         name: 'phaseSpace',
         required: true,
         covers: ['phaseSpace', 'degree360', 'degree720'],

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { KernelBridgeCachedProfile } from '../../bridge/types';
 import { useTickStore } from '../../state/stores';
+import { codonAngle } from '../cosmicMath';
 import { ModulationEngine, registerEngineCommands, useEngineStore } from './engine';
 import { ModulationCarrier, ModulationFrame, ModulationInputKey } from './types';
 
@@ -97,7 +98,7 @@ describe('modulation engine — carriers plug into ONE graph', () => {
         expect(torus.frames).toHaveLength(3);
     });
 
-    it('delivers the SAME frame object to every carrier on a klein flip — atomic across layers', () => {
+    it('delivers the SAME frame object for every kernel KleinFlipEvent variant — atomic across layers', () => {
         const { engine } = makeEngine();
         const a = new Probe('a', ['oscillator']);
         const b = new Probe('b', ['klein']);
@@ -105,7 +106,10 @@ describe('modulation engine — carriers plug into ONE graph', () => {
         engine.register(b);
 
         engine.ingestProfile(cached(1, {}), 0);
-        engine.ingestProfile(cached(2, { kleinFlip: { kind: 'TritoneMirror' } }), 1000);
+        engine.ingestProfile(
+            cached(2, { kleinFlip: { kind: 'm1TritoneCrossing', tick12: 6, lensPair: [0, 6] } }),
+            1000
+        );
 
         expect(a.flips).toHaveLength(1);
         expect(b.flips).toHaveLength(1);
@@ -113,8 +117,119 @@ describe('modulation engine — carriers plug into ONE graph', () => {
         expect(a.flips[0].klein.valence).toBe(-1);
         expect(a.flips[0].klein.axisFlipped).toBe(true);
 
-        engine.ingestProfile(cached(3, { kleinFlip: { kind: 'MobiusReturn' } }), 2000);
+        engine.ingestProfile(
+            cached(3, {
+                kleinFlip: {
+                    kind: 'm2CymaticValenceInvert',
+                    valenceBefore: 'primary',
+                    valenceAfter: 'inverted'
+                }
+            }),
+            2000
+        );
         expect(a.flips[1].klein.valence).toBe(1); // second flip inverts back
+
+        engine.ingestProfile(
+            cached(4, { kleinFlip: { kind: 'm3CodonRotationCross', codonBefore: 12, codonAfter: 13 } }),
+            3000
+        );
+        expect(a.flips).toHaveLength(3);
+        expect(a.flips[2]).toBe(b.flips[2]);
+        expect(a.flips[2].klein.valence).toBe(-1);
+    });
+
+    it('refuses unknown or malformed flip payloads instead of treating non-null data as a flip', () => {
+        const { engine } = makeEngine();
+        const probe = new Probe('p', ['klein']);
+        engine.register(probe);
+
+        engine.ingestProfile(cached(1, {}), 0);
+        engine.ingestProfile(cached(2, { kleinFlip: { kind: 'MobiusReturn' } }), 1000);
+        engine.ingestProfile(
+            cached(3, { kleinFlip: { kind: 'm1TritoneCrossing', tick12: 6, lensPair: [0] } }),
+            2000
+        );
+
+        expect(probe.flips).toHaveLength(0);
+        expect(engine.frame(2000)?.klein).toMatchObject({ valence: 1, axisFlipped: false });
+    });
+
+    it('replays the tick-5→6 kernel event as one 200ms M1 fold, M2 valence invert, and M3 axis flip', () => {
+        const { engine, fireFrame } = makeEngine();
+        const flips: {
+            m1: ModulationFrame | null;
+            m2: ModulationFrame | null;
+            m3: ModulationFrame | null;
+            m3Angle: number | null;
+        } = { m1: null, m2: null, m3: null, m3Angle: null };
+        const m1: ModulationCarrier = {
+            id: 'm1-k2-fold',
+            requiredInputs: ['klein'],
+            onFrame: () => undefined,
+            onKleinFlip: frame => {
+                flips.m1 = frame;
+            }
+        };
+        const m2: ModulationCarrier = {
+            id: 'm2-cymatic-valence',
+            surface: 'torus',
+            requiredInputs: ['cymatic', 'klein'],
+            onFrame: () => undefined,
+            onKleinFlip: frame => {
+                flips.m2 = frame;
+            }
+        };
+        const m3: ModulationCarrier = {
+            id: 'm3-codon-annulus',
+            requiredInputs: ['codon', 'klein'],
+            onFrame: frame => {
+                if (frame.codon) {
+                    flips.m3Angle = codonAngle(frame.codon.codonId, frame.klein.axisFlipped);
+                }
+            },
+            onKleinFlip: frame => {
+                flips.m3 = frame;
+            }
+        };
+        engine.register(m1);
+        engine.register(m2);
+        engine.register(m3);
+        engine.start();
+
+        const profileFields = {
+            audioOctet: [220, 247, 262, 294, 330, 349, 392, 440],
+            nodalQuartet: [
+                { m: 2, n: 3 },
+                { m: 3, n: 5 },
+                { m: 5, n: 8 },
+                { m: 8, n: 13 }
+            ],
+            codonRotationProjection: { codonId: 16, rotation: 90 }
+        };
+        engine.ingestProfile(cached(5, profileFields), 5000);
+        engine.ingestProfile(
+            cached(6, {
+                ...profileFields,
+                kleinFlip: { kind: 'm1TritoneCrossing', tick12: 6, lensPair: [0, 6] }
+            }),
+            6000
+        );
+
+        if (!flips.m1 || !flips.m2 || !flips.m3 || flips.m3Angle === null) {
+            throw new Error('tick-6 kernel event did not reach all integrated carriers');
+        }
+        expect(flips.m1).toBe(flips.m2);
+        expect(flips.m1).toBe(flips.m3); // one profile tick, never three animations
+        expect(flips.m1.klein.foldProgress).toBe(0);
+        expect(flips.m2.klein.valence).toBe(-1);
+        expect(flips.m3.klein.axisFlipped).toBe(true);
+        expect(flips.m3Angle).toBeCloseTo(-Math.PI / 2);
+
+        fireFrame(6100);
+        expect(engine.frame(6100)?.klein.foldProgress).toBeCloseTo(0.5);
+        fireFrame(6200);
+        expect(engine.frame(6200)?.klein.foldProgress).toBe(1);
+        engine.stop();
     });
 
     it('fires onTick exactly once per generation and ignores non-monotonic pushes', () => {

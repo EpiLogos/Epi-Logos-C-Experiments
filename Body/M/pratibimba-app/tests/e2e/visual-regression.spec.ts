@@ -80,11 +80,9 @@
  *     target tab explicitly (`ensureTabSelected`) so a future persisted-
  *     layout channel cannot silently rot the captures.
  * Does NOT own: the transition law itself (15.5/DR-UI-4, src/styles.css),
- *   the engine pause/scrub law (src/engine/modulation/engine.ts), the
- *   compositions (App.tsx). FINDING (not fixed here — src/** out of scope):
- *   DR-UI-4 ratifies "lemniscate 0/1 400ms cubic-out"; styles.css carries
- *   `transition: opacity 400ms ease` — duration conforms, easing is `ease`,
- *   not cubic-out. Flagged in the track-15 write-back.
+ *   the engine pause/scrub law (src/engine/modulation/engine.ts), or the
+ *   compositions (App.tsx). This suite proves the consumed 400ms cubic-out
+ *   animation and its non-empty lemniscate mask at the crossing.
  */
 
 import { fileURLToPath } from 'node:url';
@@ -266,24 +264,29 @@ test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing bas
     await ensureDayAnchored(page);
     await ensureTabSelected(page, 'Now');
 
-    // DR-UI-4 timing law on the real computed style: 400ms (0.4s). Easing is
-    // currently `ease` (finding: DR-UI-4 says cubic-out — see header).
-    const duration = await page
+    // DR-UI-4 timing and easing law on the real consumed animation.
+    const animation = await page
         .locator('.face-slot')
         .first()
-        .evaluate(el => getComputedStyle(el).transitionDuration);
-    expect(duration, 'DR-UI-4: lemniscate toggle transition is 400ms').toContain('0.4s');
+        .evaluate(el => {
+            const style = getComputedStyle(el);
+            return { duration: style.animationDuration, easing: style.animationTimingFunction };
+        });
+    expect(animation.duration, 'DR-UI-4: lemniscate toggle animation is 400ms').toContain('0.4s');
+    expect(animation.easing, 'DR-UI-4: lemniscate toggle consumes cubic-out').toContain(
+        'cubic-bezier(0.33, 1, 0.68, 1)'
+    );
 
     // Slow the SAME transition (same properties, same easing) so the
     // mid-crossing can be frozen at an exact fraction without racing 400ms.
     await page.evaluate(() => {
         const style = document.createElement('style');
         style.id = 'e2e-slow-face-transition';
-        style.textContent = '.face-slot { transition-duration: 12s !important; }';
+        style.textContent = '.face-slot { animation-duration: 12s !important; }';
         document.head.appendChild(style);
     });
 
-    await page.keyboard.press('Meta+.'); // 1 → 0, transitions start
+    await page.getByTestId('face-toggle').click(); // 1 -> 0, animation starts
     await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '0');
 
     // Freeze every face-slot animation at fraction 0.5 — same easing curve,
@@ -313,9 +316,14 @@ test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing bas
     // Both faces visibly in flight — the crossfade, not either end state.
     const slots = page.locator('.face-slot');
     for (const slot of await slots.all()) {
-        const opacity = Number(await slot.evaluate(el => getComputedStyle(el).opacity));
+        const computed = await slot.evaluate(el => {
+            const style = getComputedStyle(el);
+            return { opacity: Number(style.opacity), maskImage: style.maskImage };
+        });
+        const opacity = computed.opacity;
         expect(opacity).toBeGreaterThan(0.05);
         expect(opacity).toBeLessThan(0.95);
+        expect(computed.maskImage, 'the Bernoulli mask is consumed during the fold').not.toBe('none');
     }
 
     await expect(page).toHaveScreenshot('face-toggle-mid-crossing.png', {
@@ -334,9 +342,12 @@ test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing bas
     await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '0');
     await expect
         .poll(() =>
-            page.locator('.face-slot.face-active').evaluate(el => getComputedStyle(el).opacity)
+            page.locator('.face-slot.face-active').evaluate(el => {
+                const style = getComputedStyle(el);
+                return `${style.opacity}|${style.maskImage}`;
+            })
         )
-        .toBe('1');
+        .toBe('1|none');
 });
 
 test('(b) tick choreography: pause/scrub freezes the matrices; same record ⇒ same pixels', async ({
@@ -507,7 +518,16 @@ test('(d) integrated 4-5-0 personal composition: honest current surface baseline
         'Möbius return pending canonical close-path evidence'
     );
 
+    // Screenshot disabling can freeze a CSS mask at its penultimate keyframe.
+    // Prove the active face is at the real unmasked endpoint, then preserve it.
+    await expect
+        .poll(() =>
+            page.locator('.face-slot.face-active').evaluate(el => getComputedStyle(el).maskImage)
+        )
+        .toBe('none');
+
     await expect(page).toHaveScreenshot('composition-4-5-0-personal.png', {
+        animations: 'allow',
         stylePath: HIDE_VOLATILE_CSS
     });
 });

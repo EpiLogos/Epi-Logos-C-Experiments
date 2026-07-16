@@ -1,18 +1,18 @@
 /**
- * Coordinate: M' M0-3' (time / community overlay, rerun 01.T1.5)
+ * Coordinate: M' M0-3' (time / community overlay, 09.T9.6)
  * Residency: Body/M/pratibimba-app/src/panes
+ * Position (#n): M0-3' synchronic / diachronic projection boundary
  * Actualises: the M0-3' community + active-now clock overlay per M0'-SPEC
  *   §The Six M0-X' Data Layers — a READ-ONLY projection over the S2 GDS
- *   community payload + the S3 active-now tick. Provenance-stated; the overlay
- *   is `blocked` until the S2 GDS community payload is wired (Track 02 T7/T8
- *   coordinate-native graph API parity). There is NO renderer-local clock: the
- *   active-now tick is read from the S3 / kernel-bridge projection, never
- *   computed here (no Date, no wall-clock).
+ *   tangent-overlay payload + the S3 active-now tick and public Graphiti episode
+ *   handles. There is NO renderer-local clock: the active-now tick is read from
+ *   the S3 / kernel-bridge projection, never computed here (no Date, no wall-clock).
  * Public surface: M0_COMMUNITY_CLOCK_OVERLAY_VIEW_ID,
  *   M0_GDS_TANGENT_OVERLAY_METHOD, M0_COMMUNITY_CLOCK_PENDING_LABEL,
  *   M0CommunityClockProjection, buildM0CommunityClockOverlay.
  * Does NOT own: canon mutation (read-only), the S2 GDS computation
- *   (graph-services), the rendered React panel (Track 21.5 — M0LayerRail).
+ *   (graph-services), the world clock, or Graphiti episode bodies.
+ * Contract: [[M0'-SPEC]] + [[09-integrated-bimba-graph-reconciliation]] 09.T9.6.
  * Ported from: Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/
  *   community-clock-panel.tsx (frozen warehouse). Cribbed as NEW code, verified
  *   against M0'-SPEC + the carrier ProvenanceState taxonomy; the Theia React
@@ -24,9 +24,7 @@ import type { ProvenanceState } from '../ui/ProvenanceBadge';
 export const M0_COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay' as const;
 export const M0_GDS_TANGENT_OVERLAY_METHOD = 's2.graph.gds.tangent_overlay' as const;
 
-/** Blocker gating the overlay until the S2 GDS community payload is wired. */
-const M0_COMMUNITY_CLOCK_BLOCKER_ID = 'Track 02 T7/T8 coordinate-native graph API parity';
-export const M0_COMMUNITY_CLOCK_PENDING_LABEL = `pending: ${M0_COMMUNITY_CLOCK_BLOCKER_ID}` as const;
+export const M0_COMMUNITY_CLOCK_PENDING_LABEL = 'pending: no derived S2 GDS communities' as const;
 
 export interface M0CommunityIdEntry {
     readonly id: string;
@@ -87,11 +85,18 @@ function asString(value: unknown): string | null {
 function asInteger(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? Math.trunc(value) : null;
 }
-function asStringList(value: unknown): readonly string[] {
+function asBoundedInteger(value: unknown, min: number, maxExclusive: number): number | null {
+    const integer = asInteger(value);
+    return integer !== null && integer >= min && integer < maxExclusive ? integer : null;
+}
+function asHandleList(value: unknown): readonly string[] {
     return Object.freeze(
         asArray(value)
             .map(asString)
-            .filter((s): s is string => s !== null)
+            .filter(
+                (s): s is string =>
+                    s !== null && s.length <= 256 && /^[A-Za-z0-9][A-Za-z0-9._:/#-]*$/.test(s)
+            )
     );
 }
 
@@ -122,17 +127,19 @@ function communityIdEntries(raw: unknown): readonly M0CommunityIdEntry[] {
 
 function gdsTangentNodesFromOverlay(overlay: Record<string, unknown>): readonly M0GdsTangentNode[] {
     return Object.freeze(
-        asArray(overlay.nodes ?? overlay.tangentNodes).flatMap(item => {
+        asArray(overlay.derivedNodes ?? overlay.nodes ?? overlay.tangentNodes).flatMap(item => {
             const row = asRecord(item);
             const coordinate = asString(row.coordinate);
-            if (!coordinate) {
+            const score = typeof row.score === 'number' && Number.isFinite(row.score) ? row.score : null;
+            const sourceAlgorithm = asString(row.sourceAlgorithm ?? row.source_algorithm);
+            if (!coordinate || score === null || !sourceAlgorithm) {
                 return [];
             }
             return [
                 Object.freeze({
                     coordinate,
-                    score: typeof row.score === 'number' ? row.score : 0,
-                    sourceAlgorithm: asString(row.sourceAlgorithm ?? row.source_algorithm) ?? 'unknown'
+                    score,
+                    sourceAlgorithm
                 })
             ];
         })
@@ -141,9 +148,11 @@ function gdsTangentNodesFromOverlay(overlay: Record<string, unknown>): readonly 
 
 function activeNowClockProjection(raw: unknown): M0ActiveNowClock {
     const clock = asRecord(raw);
-    const tick12 = asInteger(clock.tick12 ?? clock.tick_12);
-    const degreeNode360 = asInteger(
-        clock.degreeNode360 ?? clock.degree_node_360 ?? clock.degree360 ?? clock.degree_360
+    const tick12 = asBoundedInteger(clock.tick12 ?? clock.tick_12, 0, 12);
+    const degreeNode360 = asBoundedInteger(
+        clock.degreeNode360 ?? clock.degree_node_360 ?? clock.degree360 ?? clock.degree_360,
+        0,
+        360
     );
     const present = tick12 !== null || degreeNode360 !== null;
     return Object.freeze({
@@ -173,7 +182,7 @@ export function buildM0CommunityClockOverlay(
     );
     const gdsTangentNodes = gdsTangentNodesFromOverlay(gdsOverlay);
     const activeNowClock = activeNowClockProjection(payload.active_now_clock ?? payload.activeNowClock);
-    const graphitiEpisodeRefs = asStringList(payload.graphiti_episode_refs ?? payload.graphitiEpisodeRefs);
+    const graphitiEpisodeRefs = asHandleList(payload.graphiti_episode_refs ?? payload.graphitiEpisodeRefs);
     const gdsOverlayStatus = asString(gdsOverlay.status);
     const gdsReason = input.gdsError ?? asString(gdsOverlay.reason);
     const privacyBoundary = asString(

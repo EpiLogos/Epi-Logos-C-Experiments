@@ -6,13 +6,15 @@
  *   remain Khora's law; this surface anchors and writes the day parent.
  *   The anchored day carries the §6.5 day-resonance strip (at-now indicator +
  *   Major/Minor/Shadow summary over the day's artifact envelopes,
- *   pending-resonance fallback) via M4NaraResonance (05.T5.1).
+ *   pending-resonance fallback) via M4NaraResonance (05.T5.1), followed by
+ *   the Markdown-preserving Tiptap canvas-as-input (rerun 11.T11.10).
  */
 
 import { useSessionStore } from '../state/stores';
 import { commands } from '../commands/registry';
-import { MarkdownEditorPane } from './MarkdownEditorPane';
 import { NaraDayResonanceStrip } from './M4NaraResonanceSurface';
+import { NaraCanvasEditor } from './NaraCanvasEditor';
+import { NaraAmbientStateStrip, NaraTuningBar } from './NaraAmbientTuning';
 
 export function NowPane() {
     const dayNow = useSessionStore(s => s.dayNow);
@@ -38,7 +40,9 @@ export function NowPane() {
     return (
         <div className="now-pane" data-testid="now-pane" data-day={dayNow}>
             <NaraDayResonanceStrip dayNow={dayNow} />
-            <MarkdownEditorPane path={`Empty/Present/${dayNow}/daily-note.md`} />
+            <NaraAmbientStateStrip />
+            <NaraTuningBar dayNow={dayNow} />
+            <NaraCanvasEditor path={`Empty/Present/${dayNow}/daily-note.md`} />
         </div>
     );
 }

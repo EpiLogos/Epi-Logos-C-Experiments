@@ -110,13 +110,15 @@ describe('left-sidebar mode registry — CHROME-CONTRACT §2 consistency duty', 
         }
     });
 
-    it('live modes map to §2 `live` rows; pending modes map to §2 `pending` rows owned by the marker', () => {
+    it('live modes map to live rows; pending modes map to their exact pending class', () => {
         for (const mode of LEFT_SIDEBAR_MODES) {
             const row = section2.get(mode.surfaceId)!;
             if (mode.pendingOwner === null) {
                 expect(row.status, `\`${mode.surfaceId}\` status`).toBe('live');
             } else {
-                expect(row.status, `\`${mode.surfaceId}\` status`).toBe('pending');
+                expect(row.status, `\`${mode.surfaceId}\` status`).toBe(
+                    mode.id === 'smart-connections' ? 'code-pending' : 'pending'
+                );
                 expect(row.owner, `\`${mode.surfaceId}\` owner cites ${mode.pendingOwner}`).toContain(
                     mode.pendingOwner
                 );

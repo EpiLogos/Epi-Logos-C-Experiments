@@ -80,7 +80,7 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
 
     // ── anchor the day (idempotent: click the gesture if the day is unanchored,
     // otherwise the app already adopted today's folder from the real vault)
-    const editor = page.locator('.face-active .cm-content');
+    const editor = page.locator('.face-active [data-testid="m4-nara-editor"]');
     const beginButton = page.getByTestId('now-begin-today');
     await expect(editor.or(beginButton).first()).toBeVisible({ timeout: 15_000 });
     if (await beginButton.isVisible().catch(() => false)) {

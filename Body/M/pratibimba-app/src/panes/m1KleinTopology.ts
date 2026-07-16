@@ -3,7 +3,7 @@
  * Residency: Body/M/pratibimba-app/src/panes
  * Actualises: the `m1.paramasiva.kleinTopology` view model — the M1-5
  *   single-torus invariants (DOUBLE_COVER_DEG / TORUS_GENUS / Hopf identity /
- *   K² tritone crossing / M1-origin Klein flip) sourced from the bridge
+ *   kernel-owned torus-knot `(p,q)` phase / K² tritone crossing / M1-origin Klein flip) sourced from the bridge
  *   profile payload's `m1Topology` (portal-core `M1TopologyProjection`), plus
  *   the live Klein-flip signal. When the profile carries `kleinFlip = Some(..)`
  *   the view yields an `m1.klein_flip.source` observability event for the
@@ -24,6 +24,8 @@ const PRIVACY_CLASS = 'public-current-context' as const;
 export interface M1KleinTopology {
     readonly doubleCoverDeg: number | null;
     readonly torusGenus: number | null;
+    /** Kernel-owned `(p,q)` phase of the M1 topology; never locally derived. */
+    readonly torusKnotPhase: Readonly<{ p: number; q: number }> | null;
     readonly hopfIdentity: string | null;
     readonly k2TritoneCrossing: string | null;
     readonly m1OriginKleinFlip: string | null;
@@ -64,6 +66,18 @@ function stringValue(value: unknown): string | null {
     return typeof value === 'string' && value.length > 0 ? value : null;
 }
 
+/** Strictly read the kernel's `M1TopologyProjection.torus_knot_phase` pair.
+ *  A malformed or absent pair remains pending; the carrier never synthesises
+ *  a local phase from tick or degree. */
+export function readTorusKnotPhase(
+    topology: Readonly<Record<string, unknown>> | null
+): Readonly<{ p: number; q: number }> | null {
+    const raw = objectValue(topology?.torusKnotPhase ?? topology?.torus_knot_phase);
+    const p = numberValue(raw?.p);
+    const q = numberValue(raw?.q);
+    return p === null || q === null ? null : Object.freeze({ p, q });
+}
+
 /** Read the M1-5 topology block from the profile payload's `m1Topology`
  *  (falling back to `topology`). The three attribution strings are canonical
  *  M1 law — read the live bridge value when present, else the canonical
@@ -74,6 +88,7 @@ export function topologyFromPayload(payload: Readonly<Record<string, unknown>>):
     return Object.freeze({
         doubleCoverDeg: numberValue(topology?.doubleCoverDeg ?? topology?.DOUBLE_COVER_DEG),
         torusGenus: numberValue(topology?.torusGenus ?? topology?.TORUS_GENUS),
+        torusKnotPhase: readTorusKnotPhase(topology),
         hopfIdentity: stringValue(topology?.hopfIdentity ?? topology?.hopfBundle),
         k2TritoneCrossing: stringValue(topology?.k2TritoneCrossing ?? topology?.tritoneCrossing),
         m1OriginKleinFlip: stringValue(topology?.m1OriginKleinFlip ?? topology?.kleinFlipSource),

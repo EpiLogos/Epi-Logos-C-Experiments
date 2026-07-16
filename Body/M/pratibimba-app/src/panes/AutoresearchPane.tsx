@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { commands } from '../commands/registry';
 import { CROSS_LAYOUT_INTENT_COMMAND, IntentPrivacyClass } from '../commands/crossLayoutIntent';
-import { useSessionStore } from '../state/stores';
+import { useSessionStore, useTickStore } from '../state/stores';
 import { useProfileTick } from '../state/useProfileTick';
 import {
     AutoresearchSnapshot,
@@ -23,8 +23,16 @@ import {
     M5OperationalCapacity,
     MOBIUS_STAGES,
     parseImproveHistory,
-    parseImproveStatus
+    parseImproveStatus,
+    parseQReviewQueue,
+    profileVakCf,
+    Q_ARTICULATION_ACCEPT_METHOD,
+    Q_REVIEW_LATEST_METHOD
+    , REVIEW_RESOLVE_METHOD,
+    REVIEW_SUBMIT_METHOD,
+    type QReviewEntry
 } from './autoresearchModel';
+import { composeQPairCandidate, validateQPairCandidate } from './qPairComposition';
 
 export const AUTORESEARCH_CONTRACT_TEXT =
     'Autoresearch is dry-run only. requires_human is non-bypassable, and forbidden_authority prevents direct canon mutation. Candidates route through M5 governance for human ratification.';
@@ -58,15 +66,35 @@ export function MobiusPassRibbon({ status }: Pick<AutoresearchSnapshot, 'status'
     );
 }
 
-async function loadSnapshot(): Promise<AutoresearchSnapshot> {
-    const [statusReceipt, historyReceipt] = await Promise.all([
+async function loadSnapshot(dayNow: string | null, cf: string | null): Promise<AutoresearchSnapshot> {
+    const [statusReceipt, historyReceipt, queueReceipt] = await Promise.all([
         gateway().invoke(IMPROVE_STATUS_METHOD, {}),
-        gateway().invoke(IMPROVE_HISTORY_METHOD, { limit: 100 })
+        gateway().invoke(IMPROVE_HISTORY_METHOD, { limit: 100 }),
+        dayNow
+            ? gateway().invoke(Q_REVIEW_LATEST_METHOD, { day_id: dayNow, ...(cf ? { cf } : {}) })
+            : Promise.resolve(null)
     ]);
+    const queue = queueReceipt?.artifact ? parseQReviewQueue(queueReceipt.artifact) : null;
     return Object.freeze({
         status: parseImproveStatus(statusReceipt.artifact),
-        candidates: parseImproveHistory(historyReceipt.artifact)
+        candidates: parseImproveHistory(historyReceipt.artifact),
+        qReviewEntries: queue?.entries ?? [],
+        qReviewGraphRevision: queue?.graphRevision ?? null
     });
+}
+
+function artifactRecord(value: unknown, label: string): Record<string, unknown> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        throw new Error(`${label} must be an object`);
+    }
+    return value as Record<string, unknown>;
+}
+
+function artifactString(value: unknown, label: string): string {
+    if (typeof value !== 'string' || value.trim().length === 0) {
+        throw new Error(`${label} must be a non-blank string`);
+    }
+    return value;
 }
 
 export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProps) {
@@ -74,10 +102,18 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
     const dayNow = useSessionStore(state => state.dayNow);
     const sessionKey = useSessionStore(state => state.sessionKey);
     const sessionPrivacy = useSessionStore(state => state.privacyClass);
+    const profile = useTickStore(state => state.profile?.profile ?? null);
+    const activeVakCf = useMemo(() => profileVakCf(profile), [profile]);
     const [snapshot, setSnapshot] = useState<AutoresearchSnapshot | null>(fixture ?? null);
     const [capacity, setCapacity] = useState<M5OperationalCapacity | 'all'>('all');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(!fixture);
+    const [activeQReview, setActiveQReview] = useState<QReviewEntry | null>(null);
+    const [pairRationale, setPairRationale] = useState('');
+    const [pairOpeningQuestion, setPairOpeningQuestion] = useState('');
+    const [pairCandidate, setPairCandidate] = useState('');
+    const [pairSubmitting, setPairSubmitting] = useState(false);
+    const [pairReceipt, setPairReceipt] = useState<string | null>(null);
 
     const refresh = useCallback(() => {
         if (fixture) {
@@ -89,20 +125,32 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
             return;
         }
         setLoading(true);
-        loadSnapshot()
+        loadSnapshot(dayNow, activeVakCf)
             .then(next => {
                 setSnapshot(next);
                 setError(null);
             })
             .catch(err => setError(err instanceof Error ? err.message : String(err)))
             .finally(() => setLoading(false));
-    }, [fixture]);
+    }, [fixture, dayNow, activeVakCf]);
 
     useEffect(refresh, [refresh, tick.generation]);
 
     const visible = useMemo(
         () => snapshot?.candidates.filter(candidate => capacity === 'all' || candidate.capacity === capacity) ?? [],
         [snapshot, capacity]
+    );
+    const capacityPanes = useMemo(
+        () =>
+            M5_OPERATIONAL_CAPACITIES.map(item => {
+                const candidates = snapshot?.candidates.filter(candidate => candidate.capacity === item.id) ?? [];
+                return {
+                    ...item,
+                    candidateCount: candidates.length,
+                    humanGateCount: candidates.filter(candidate => candidate.requiresHuman === true).length
+                };
+            }),
+        [snapshot]
     );
 
     const openReview = (candidate: AutoresearchSnapshot['candidates'][number]) => {
@@ -128,6 +176,118 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
                 requestedExtensionId: 'm5-epii',
                 requestedContributionId: 'review'
             });
+        }
+    };
+
+    const openPairComposition = (entry: QReviewEntry) => {
+        setActiveQReview(entry);
+        setPairRationale('');
+        setPairOpeningQuestion('');
+        setPairCandidate('');
+        setPairReceipt(null);
+        setError(null);
+    };
+
+    const composePairCandidate = async () => {
+        if (!activeQReview) {
+            return;
+        }
+        try {
+            const candidate = await composeQPairCandidate(activeQReview, pairRationale);
+            setPairCandidate(candidate);
+            setError(null);
+        } catch (compositionError) {
+            setError(compositionError instanceof Error ? compositionError.message : String(compositionError));
+        }
+    };
+
+    const acceptPairCandidate = async () => {
+        if (!activeQReview || !snapshot || snapshot.qReviewGraphRevision === null) {
+            setError('Q review queue revision is unavailable; refresh before accepting a proposal.');
+            return;
+        }
+        const validation = validateQPairCandidate(activeQReview, pairCandidate);
+        if (!validation.ok) {
+            setError(validation.error ?? 'Sophia refused the candidate articulation.');
+            return;
+        }
+        if (pairOpeningQuestion.trim().length === 0) {
+            setError('An opening question is required before a Sophia proposal can be accepted.');
+            return;
+        }
+        if (!gatewayReady()) {
+            setError('Gateway disconnected. Reconnect before submitting a Q articulation.');
+            return;
+        }
+
+        setPairSubmitting(true);
+        try {
+            const reviewReceipt = await gateway().invoke(REVIEW_SUBMIT_METHOD, {
+                source: 'human_gate',
+                title: `Accept ${activeQReview.qKey} at ${activeQReview.targetCoordinate}`,
+                body: pairRationale,
+                priority: 'blocking',
+                coordinate_context: {
+                    coordinate: activeQReview.targetCoordinate,
+                    vak_cf: activeQReview.vakCf,
+                    vak_cp: activeQReview.vakCp,
+                    pair_composition_action: activeQReview.pairCompositionAction
+                },
+                proposed_action: {
+                    kind: 'q_articulation_accept',
+                    target: { coordinate: activeQReview.targetCoordinate, q_key: activeQReview.qKey },
+                    destination: 'bimba',
+                    payload: {
+                        q_value_candidate: pairCandidate,
+                        opens_questions: [pairOpeningQuestion.trim()]
+                    }
+                },
+                requires_human: true,
+                governance_profile: {
+                    category: 'canon_recognition_publication_gate',
+                    gate_kind: 'publication_gate',
+                    governance_level: 'publication_blocking',
+                    required_actors: ['human'],
+                    source_artifact_refs: activeQReview.evidenceRefs.map(evidence => evidence.uri),
+                    target_subsystem: 'Bimba',
+                    promotion_destination: 'bimba'
+                }
+            });
+            const review = artifactRecord(reviewReceipt.artifact, 'Q articulation review receipt');
+            const reviewItem = artifactRecord(review.item, 'Q articulation review item');
+            const reviewId = artifactString(reviewItem.item_id, 'Q articulation review id');
+
+            await gateway().invoke(REVIEW_RESOLVE_METHOD, {
+                item_id: reviewId,
+                decision: 'approve',
+                rationale: pairRationale,
+                resolved_by: 'human',
+                promotion_destination: 'bimba',
+                promoted_artifact: {
+                    coordinate: activeQReview.targetCoordinate,
+                    q_key: activeQReview.qKey,
+                    q_value_candidate: pairCandidate
+                }
+            });
+            const acceptance = await gateway().invoke(Q_ARTICULATION_ACCEPT_METHOD, {
+                coordinate: activeQReview.targetCoordinate,
+                qKey: activeQReview.qKey,
+                qValueCandidate: pairCandidate,
+                expectedGraphRevision: snapshot.qReviewGraphRevision,
+                acceptedReviewRef: reviewId,
+                opensQuestions: [pairOpeningQuestion.trim()],
+                sourceArtifacts: activeQReview.evidenceRefs.map(evidence => evidence.uri)
+            });
+            const accepted = artifactRecord(acceptance.artifact, 'Q articulation acceptance receipt');
+            setPairReceipt(
+                `Hen promoted ${artifactString(accepted.q_key, 'accepted Q key')} at graph revision ${accepted.graph_revision}.`
+            );
+            setError(null);
+            refresh();
+        } catch (acceptanceError) {
+            setError(acceptanceError instanceof Error ? acceptanceError.message : String(acceptanceError));
+        } finally {
+            setPairSubmitting(false);
         }
     };
 
@@ -164,6 +324,26 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
             {error ? <p className="pane-message autoresearch-error" data-testid="autoresearch-error">{error}</p> : null}
             {loading ? <p className="pane-message" data-testid="autoresearch-loading">Loading autoresearch state...</p> : null}
 
+            <section className="autoresearch-capacity-matrix" data-testid="autoresearch-capacity-matrix">
+                <h2>Operational capacity runtime</h2>
+                <div className="autoresearch-capacity-panes">
+                    {capacityPanes.map(item => (
+                        <button
+                            type="button"
+                            className="autoresearch-capacity-pane"
+                            key={item.id}
+                            data-testid={`autoresearch-capacity-pane-${item.id}`}
+                            aria-pressed={capacity === item.id}
+                            onClick={() => setCapacity(item.id)}
+                        >
+                            <strong>{item.label}</strong>
+                            <span>{item.candidateCount} {item.candidateCount === 1 ? 'candidate' : 'candidates'}</span>
+                            <span>{item.humanGateCount} {item.humanGateCount === 1 ? 'human gate' : 'human gates'}</span>
+                        </button>
+                    ))}
+                </div>
+            </section>
+
             <div className="autoresearch-candidates" data-testid="autoresearch-candidates">
                 {!loading && visible.length === 0 ? (
                     <p className="pane-message" data-testid="autoresearch-empty">No candidates in this capacity.</p>
@@ -197,6 +377,88 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
                     </article>
                 ))}
             </div>
+
+            {snapshot && snapshot.qReviewEntries.length > 0 ? (
+                <section className="autoresearch-q-review" data-testid="autoresearch-q-review-queue">
+                    <h2>Q review queue</h2>
+                    {snapshot.qReviewEntries.map(entry => (
+                        <article
+                            className="autoresearch-q-review-entry"
+                            key={`${entry.targetCoordinate}:${entry.qKey}:${entry.sourceDetector}`}
+                            data-testid="autoresearch-q-review-entry"
+                            data-vak-cf={entry.vakCf}
+                            data-vak-cp={entry.vakCp}
+                        >
+                            <div>
+                                <strong>{entry.targetCoordinate}</strong>
+                                <code>{entry.qKey}</code>
+                                <span>{entry.reasonClass} / priority {entry.priority}</span>
+                            </div>
+                            <div>
+                                <span>{entry.vakCf} / {entry.vakCp}</span>
+                                <span>{entry.pairCompositionAction}</span>
+                                <span>{entry.evidenceCount} evidence refs</span>
+                                <button
+                                    type="button"
+                                    onClick={() => openPairComposition(entry)}
+                                    data-testid="autoresearch-open-pair-composition"
+                                >
+                                    Open pair composition
+                                </button>
+                            </div>
+                        </article>
+                    ))}
+                </section>
+            ) : null}
+
+            {activeQReview ? (
+                <section className="q-pair-workspace" data-testid="q-pair-workspace">
+                    <header>
+                        <div>
+                            <strong>Pair composition</strong>
+                            <code>{activeQReview.targetCoordinate} / {activeQReview.qKey}</code>
+                        </div>
+                        <span data-testid="q-pair-vak">{activeQReview.vakCf} / {activeQReview.vakCp}</span>
+                    </header>
+                    <label htmlFor="q-pair-rationale">Rationale</label>
+                    <textarea
+                        id="q-pair-rationale"
+                        value={pairRationale}
+                        onChange={event => setPairRationale(event.currentTarget.value)}
+                    />
+                    <label htmlFor="q-pair-opening-question">Opening question</label>
+                    <input
+                        id="q-pair-opening-question"
+                        value={pairOpeningQuestion}
+                        onChange={event => setPairOpeningQuestion(event.currentTarget.value)}
+                    />
+                    <div className="q-pair-actions">
+                        <button
+                            type="button"
+                            onClick={() => void composePairCandidate()}
+                            disabled={pairRationale.trim().length === 0 || pairSubmitting}
+                            data-testid="q-pair-compose"
+                        >
+                            Compose
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => void acceptPairCandidate()}
+                            disabled={pairCandidate.trim().length === 0 || pairOpeningQuestion.trim().length === 0 || pairSubmitting}
+                            data-testid="q-pair-accept"
+                        >
+                            {pairSubmitting ? 'Accepting...' : 'Accept and promote'}
+                        </button>
+                    </div>
+                    <label htmlFor="q-pair-candidate">Candidate articulation</label>
+                    <textarea
+                        id="q-pair-candidate"
+                        value={pairCandidate}
+                        onChange={event => setPairCandidate(event.currentTarget.value)}
+                    />
+                    {pairReceipt ? <p className="q-pair-receipt" data-testid="q-pair-receipt">{pairReceipt}</p> : null}
+                </section>
+            ) : null}
         </div>
     );
 }

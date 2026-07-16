@@ -53,7 +53,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `editor` | face 1 dynamic tabs (`vault.open`) | M0' chrome | live | `MarkdownEditorPane` (canonical READ half; S1 Present journal write scope only — see §4) | `canon-studio` (read half) |
 | `coordinateTree` | face 1 left border (designated) | M0' chrome | pending | 28.6 owns; navigation currently carried by `bimbaGraph` click-selection + `walk` traversal via the shared coordinate store | `coordinate-tree` |
 | `backendStudio` | face 0/1 (designated, deep-mode) | M0' chrome | pending | 28.13 owns (first-build allowance, §9) | `backend-studio` |
-| `smartConnections` | face 1 left border (designated, deep-mode) | M0' chrome | pending | 28.12 owns (first-build allowance, §9) | `smart-connections` |
+| `smartConnections` | face 1 left border (designated, deep-mode) | M0' chrome | code-pending | 03.T6.5 gate; 28.T28.12 delivery; receiver absent by design (`src/ui/layoutClaims.ts`, frozen provenance `Body/M/epi-theia/extensions/MIGRATION-SOURCES.md`) | `smart-connections` |
 | `cymatic` | legacy saved-layout redirect | M0' chrome | legacy | `App.tsx::factory` redirect message (surface is now a Cosmic Engine layer) | — |
 | `codon` | legacy saved-layout redirect | M0' chrome | legacy | `App.tsx::factory` redirect message (surface is now a Cosmic Engine layer) | — |
 | `omniChat` | `/` omni border, both faces, tab "Pi" | M5' chrome | live | `ChatPane` (27.1; Pi voice = agentic dispatch entry) | — |
@@ -63,17 +63,18 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `omniEvidence` | `/` omni border, both faces, tab "Evidence" | M5' chrome | pending-fold | 27.5 owns the body | `evidence-pane` |
 | `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | live | `ReviewBlocksPane` (44.T44.3 — first real data through the Track-44 block standard: genealogy fixture → review-item/evidence/dispatch-genealogy blocks via `BlockHost`; 27.6 extends with live `s5'.review.*` reads + verdict submit under `m5ReviewGate.ts`, which is already live per 08.T8.3) | `review-pane` |
 | `agenticControlRoom` | main tabset (designated, deep render) | M5' chrome | pending | 28.5 owns; GOVERNANCE PRIMARY deep render (§5) | `agentic-control-room` |
-| `autoresearch` | personal main tabset | M5' chrome | live | `AutoresearchPane` (28.T28.10: real `s5'.improve.status/history` reads, profile-tick refresh, honest non-projected pass ordinal, six-capacity filter, dry-run/human-gate disclosure; 28.15 extends) | `autoresearch-pane` |
+| `autoresearch` | personal main tabset | M5' chrome | live | `AutoresearchPane` (28.T28.10: real `s5'.improve.status/history` plus day-scoped `s5'.improve.q_review.latest` reads, profile-tick refresh, persisted VAK/pair-composition queue disclosure, honest non-projected pass ordinal, six-capacity filter, dry-run/human-gate disclosure; 28.15 extends) | `autoresearch-pane` |
 | `atelier-commands` | command registry (`atelier.scentFollow` / `atelier.cognateSearch` / `atelier.psychoidTrace`) | M5' chrome | shell | `src/commands/atelier.ts` (16.T16.19; Möbius write-back stage pending, 28.7 — see §4) | `logos-atelier` |
 | `omniGateway` | `/` omni border, both faces, tab "Gateway" | shared infrastructure | pending-fold | 27.7 owns the body | — |
 | `omniDiagnostics` | `/` omni border, both faces, tab "Diagnostics" | shared infrastructure | pending-fold | 27.8 owns the body; `PrivacyDropFeed` destination (28.16) | — |
 | `status-strip` | shell footer | shared infrastructure | shell | `StatusStrip` (15.10 — exactly six entries, all store-consumed, §7) | — |
 | `command-palette` | shell overlay (⌘⇧P) | shared infrastructure | shell | `CommandPalette` + `commands/registry.ts` (T2.4) | — |
+| `face-toggle` | shell title-bar, both faces | shared infrastructure | shell | `FaceToggleChrome` routes the coin control through `face.toggle`; DR-UI-4 lemniscate motion, no second state | — |
 | `provenance-badge` | per-binding inline | shared infrastructure | shell | `ProvenanceBadge` (`ProvenanceState` taxonomy — no widget invents its own provenance rendering) | — |
 | `profile-tick` | per-surface re-render seam | shared infrastructure | shell | `state/useProfileTick.ts` (27.T27.0 — the ONE 15.6 seam) | — |
 | `readiness-gate` | per-binding inline wrapper (designated) | shared infrastructure | pending | 28.11 owns: nine-id taxonomy module + per-binding inline rendering (§6) | `bridge-gate` |
 
-The `pending` rows are the doc-ahead half of this contract: when a designated surface lands it MUST take the surface id declared here and flip its row to `live`/`shell` — the validator fails a `pending` id found in the factory.
+The `pending` rows are the doc-ahead half of this contract: when a designated surface lands it MUST take the surface id declared here and flip its row to `live`/`shell` — the validator fails a `pending` id found in the factory. `code-pending` is stricter: the layout claim remains machine-visible, but its receiver component MUST remain absent until the named gate and delivery owner land it.
 
 ## 3. GatewayClient as Only Network
 
@@ -113,7 +114,7 @@ Boundary note: the `editor`'s debounced write-back into `Idea/Empty/Present/...`
 
 **DR-WC-IS-2 — RESOLVED: AGENTIC PRIMARY for the `/` membrane.** The omni border tabs (`omniDispatchTrace`, `omniEvidence`, `omniReview`) render abbreviated, time-ordered, Pi-context state and route intent by click-through; the deep render and the governing action surface belong to the governance-primary panes. Same `MediatedRunEvidencePacket` data, two foldings.
 
-**DR-WC-IS-3 — cross-layout obligation.** Every intent target routes into the same surface id (§2) and preserves the envelope. The **CrossLayoutIntent envelope** field inventory is LAW (frozen `omnipanel-types.ts` lineage): `coordinate` / `artifactUri` / `reviewId` / `dayNow` / `sessionKey` / `profileGeneration` / `privacyClass` / `requestedExtensionId` / `requestedContributionId`. Carrier reading: `requestedExtensionId` addresses the M-family receiver and `requestedContributionId` addresses its registered contribution. `src/commands/crossLayoutIntent.ts` is the live 31.T31.10 union ledger and `pratibimba.intent.dispatch` handler; it routes all 45 declared targets through mounted carrier hosts, preserves the nine fields, and carries the contribution id into the selected host rather than silently substituting another pane.
+**DR-WC-IS-3 — cross-layout obligation.** Every intent target routes into the same surface id (§2) and preserves the envelope. The **CrossLayoutIntent envelope** field inventory is LAW (frozen `omnipanel-types.ts` lineage): `coordinate` / `artifactUri` / `reviewId` / `dayNow` / `sessionKey` / `profileGeneration` / `privacyClass` / `requestedExtensionId` / `requestedContributionId`. Carrier reading: `requestedExtensionId` addresses the M-family receiver and `requestedContributionId` addresses its registered contribution. `src/commands/crossLayoutIntent.ts` is the live 31.T31.10 / 11.T11.2 union ledger and `pratibimba.intent.dispatch` handler; it routes all 45 declared targets through mounted carrier hosts, preserves the nine fields, and carries both requested ids into the selected host rather than silently substituting another pane. The resolved target, not a tenth envelope field, declares `daily-0-1`, `ide-deep`, or current-layout preservation; the shell persists that result under `epi-logos.layout.active`. `OMNIPANEL_TABS.availableInLayouts` is filtered against that preference when the carrier materialises its `/` border; all eight current folds explicitly inhabit both layouts.
 
 ## 6. Readiness Primitive
 

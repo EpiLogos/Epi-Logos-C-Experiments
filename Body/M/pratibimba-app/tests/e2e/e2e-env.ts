@@ -33,6 +33,7 @@ export interface E2eRunState {
     sidecarPid: number;
     vaultRoot: string;
     gatewayStateRoot: string;
+    gatewayHome: string;
     /** Isolated $HOME for the real epi oracle casts (fresh per run — the
      *  hygiene ledger and kairos cache never touch the developer's home). */
     naraHome: string;

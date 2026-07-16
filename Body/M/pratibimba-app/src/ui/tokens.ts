@@ -10,7 +10,7 @@
  *   values — the palette itself stays an OPEN Architect decision
  *   (DR-WC-DL-1); changing a value here is a design decision, not a refactor.
  * Public surface: inkBright, inkDim, ringLit, accent, accentShadow,
- *   wheelUnlit, FAMILY_HUES.
+ *   wheelUnlit, FAMILY_HUES, ATELIER_CLUSTER_HUES.
  * Does NOT own: the CSS custom-property vocabulary (src/styles.css); the
  *   kernel element scene colours (numeric ELEMENT_COLOURS in
  *   engine/cosmicMath.ts — kernel M2 identity, not a UI token). Values
@@ -56,3 +56,6 @@ export const FAMILY_HUES: Record<string, string> = {
     L: '#d48a9a', // Lens — rose
     C: '#8fd49a' // Category — mint
 };
+
+/** Etymological-cluster hues for the graph atelier overlay. */
+export const ATELIER_CLUSTER_HUES = ['#c784ff', '#4dc5c1', '#f0ae55', '#ef7391'] as const;

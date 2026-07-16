@@ -23,7 +23,7 @@ const CONTRACT_PATH = resolve(__dirname, '../CHROME-CONTRACT.md');
 const APP_PATH = resolve(__dirname, 'App.tsx');
 
 const PARTITIONS = ["M0' chrome", "M5' chrome", 'shared infrastructure'] as const;
-const STATUSES = ['live', 'pending-fold', 'pending', 'legacy', 'shell'] as const;
+const STATUSES = ['live', 'pending-fold', 'pending', 'code-pending', 'legacy', 'shell'] as const;
 
 /** The nine-id readiness taxonomy (07-t0 lineage) — LAW, verbatim. */
 const READINESS_IDS = [
@@ -194,12 +194,12 @@ describe('chrome contract ⇄ live registry lockstep', () => {
         }
     });
 
-    it('doc-ahead `pending` surfaces are NOT yet in the factory (landing one must flip its row)', () => {
+    it('doc-ahead pending surfaces are NOT yet in the factory (landing one must flip its row)', () => {
         for (const row of rows) {
-            if (row.status === 'pending') {
+            if (row.status === 'pending' || row.status === 'code-pending') {
                 expect(
                     factoryCases.has(row.id) || componentKeys.has(row.id),
-                    `\`${row.id}\` is marked pending but already lives in the shell — flip its contract row`
+                    `\`${row.id}\` is marked ${row.status} but already lives in the shell — flip its contract row`
                 ).toBe(false);
             }
         }

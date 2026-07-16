@@ -486,6 +486,11 @@ export interface KernelBridgeSubscriber {
 
 export interface KernelBridgeCachedProfile {
     generation: number;
+    /** B-12 (09.T9.5): the S2 `GraphMeta.graph_revision` this profile was
+     *  projected against, relayed by the kernel-bridge. A governed Bimba write
+     *  bumps it; carrying it on the tick is what lets the M1/M2/M3 renderings
+     *  see an edit crossed. Absent when the upstream context stamped none. */
+    graphRevision?: number;
     cachedAtMs: number;
     stale: boolean;
     stalenessMs: number;
@@ -496,6 +501,7 @@ export interface KernelBridgeCachedProfile {
 
 export interface KernelBridgeProfileJsonShape {
     generation: number;
+    graphRevision?: number;
     cachedAtMs: number;
     stale: boolean;
     stalenessMs: number;

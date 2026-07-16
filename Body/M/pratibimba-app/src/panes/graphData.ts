@@ -69,3 +69,30 @@ export function coerceLinks(artifact: unknown, nodeIds: ReadonlySet<string>): Ex
     }
     return links;
 }
+
+/** Read-only Atelier lens: components joined by declared etymological relations. */
+export function etymologicalClusterIds(links: readonly ExplorerLink[]): ReadonlyMap<string, number> {
+    const neighbours = new Map<string, Set<string>>();
+    for (const link of links) {
+        if (!/(etymolog|cognate)/i.test(link.type)) continue;
+        for (const [from, to] of [[link.source, link.target], [link.target, link.source]] as const) {
+            const members = neighbours.get(from) ?? new Set<string>();
+            members.add(to);
+            neighbours.set(from, members);
+        }
+    }
+    const clusters = new Map<string, number>();
+    let cluster = 0;
+    for (const start of neighbours.keys()) {
+        if (clusters.has(start)) continue;
+        const pending = [start];
+        while (pending.length) {
+            const node = pending.pop()!;
+            if (clusters.has(node)) continue;
+            clusters.set(node, cluster);
+            for (const neighbour of neighbours.get(node) ?? []) pending.push(neighbour);
+        }
+        cluster += 1;
+    }
+    return clusters;
+}

@@ -7,7 +7,8 @@
  *   `DispatchRoute`, `RunStatus`, `RunTreeNode`, `ToolStreamEvent`,
  *   `ReviewDecision`, `ReviewTransition`), the mediation-capability
  *   predicate, and the pure temporal fold from the gateway event ring to
- *   `ToolStreamEvent`s. Carrier translation of the frozen omnipanel-shell
+ *   `ToolStreamEvent`s, including layout filtering against the persisted
+ *   `epi-logos.layout.active` shell preference. Carrier translation of the frozen omnipanel-shell
  *   `omnipanel-runtime.ts` + `omnipanel-types.ts` rewrite: zustand stores
  *   replace Inversify services; the events ring IS `subscribeRunEvents`.
  * Does NOT own: the fold panels themselves (27.1..27.8 own each tab body),
@@ -28,6 +29,10 @@ export type OmniPanelTabId =
     | 'gateway'
     | 'diagnostics';
 
+export type OmniPanelLayoutId = 'daily-0-1' | 'ide-deep';
+
+export const OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY = 'epi-logos.layout.active';
+
 export interface OmniPanelTab {
     readonly id: OmniPanelTabId;
     readonly label: string;
@@ -37,6 +42,8 @@ export interface OmniPanelTab {
     readonly owningTranche: string;
     /** False = the fold renders the honest pending pane until its tranche lands. */
     readonly landed: boolean;
+    /** Shell layouts in which this fold is visible. Commands remain registered. */
+    readonly availableInLayouts: readonly OmniPanelLayoutId[];
 }
 
 /**
@@ -49,15 +56,26 @@ export interface OmniPanelTab {
  * six operational-capacity views and the M5' EBM observatory are NOT tabs.
  */
 export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
-    { id: 'pi-chat', label: 'Pi', component: 'omniChat', owningTranche: '27.1', landed: true },
-    { id: 'sessions', label: 'Sessions', component: 'omniSessions', owningTranche: '27.2', landed: true },
-    { id: 'dispatch-trace', label: 'Dispatch', component: 'omniDispatchTrace', owningTranche: '27.3', landed: false },
-    { id: 'tool-stream', label: 'Tools', component: 'omniLogs', owningTranche: '27.4', landed: true },
-    { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: false },
-    { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true },
-    { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: false },
-    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false }
+    { id: 'pi-chat', label: 'Pi', component: 'omniChat', owningTranche: '27.1', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'sessions', label: 'Sessions', component: 'omniSessions', owningTranche: '27.2', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'dispatch-trace', label: 'Dispatch', component: 'omniDispatchTrace', owningTranche: '27.3', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'tool-stream', label: 'Tools', component: 'omniLogs', owningTranche: '27.4', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] }
 ] as const);
+
+export function parseOmniPanelLayoutPreference(value: unknown): OmniPanelLayoutId {
+    return value === 'ide-deep' ? 'ide-deep' : 'daily-0-1';
+}
+
+export function filterOmniPanelTabsForLayout(
+    declaredTabs: readonly OmniPanelTab[],
+    activeLayout: OmniPanelLayoutId
+): readonly OmniPanelTab[] {
+    return Object.freeze(declaredTabs.filter(tab => tab.availableInLayouts.includes(activeLayout)));
+}
 
 export function omniPanelTabForComponent(componentKey: string): OmniPanelTab | undefined {
     return OMNIPANEL_TABS.find(tab => tab.component === componentKey);

@@ -32,9 +32,10 @@
  *   M1SurfaceContext discriminator, selectM1Body dispatch) as carrier faces
  *   per DR-FACE-7: `standalone-ide-deep` composes the landed M1' deep faces
  *   (SpandaNavigatorPane 22.1, WalkPane + # invert T2.5, KleinTopologyPane
- *   T2.3) with honest pending slots for the unlanded deep widgets
- *   (22.3 Cl(4,2) inspector / 22.4 event-strip / 22.8 vortex browser /
- *   22.9 audio-bus inspector); `composed-cosmic-1-2-3` renders the compact
+ *   T2.3) plus the landed deep inspector faces (22.3 Cl(4,2) signature
+ *   inspector / 22.4 Klein-flip event-strip / 22.8 vortex matrices browser /
+ *   22.9 audio-bus inspector — all pure views over the same bus fields via
+ *   `m1DeepFaceData.ts`); `composed-cosmic-1-2-3` renders the compact
  *   walk-strip + topology mini-view + the cosmic cross-pole contribution
  *   (overlays only — the played-torus centrepiece is the composition
  *   mount-point per 15.4, NOT rendered here); `compact-track-08` is the
@@ -58,6 +59,10 @@ import { topologyFromPayload } from './m1KleinTopology';
 import { SpandaNavigatorPane } from './SpandaNavigatorPane';
 import { WalkPane } from './WalkPane';
 import { KleinTopologyPane } from './KleinTopologyPane';
+import { M1Cl42SignatureInspector } from './m1Cl42SignatureInspector';
+import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
+import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
+import { M1AudioBusInspector } from './m1AudioBusInspector';
 
 // ---- The typed contract (frozen surface-dispatch.ts shape — LAW) ----
 
@@ -248,18 +253,6 @@ function M1CosmicCrossPoleContribution() {
 
 // ---- The three mode bodies (pure views over the singleton) ----
 
-function PendingDeepSlot(props: { readonly tranche: string; readonly label: string }) {
-    return (
-        <section
-            className="pane-message"
-            data-testid={`m1-slot-pending-${props.tranche}`}
-        >
-            pending-{props.tranche} — {props.label} has not landed in the carrier; this slot
-            renders when its tranche closes (honest absence, never a fabricated body).
-        </section>
-    );
-}
-
 function M1StandaloneIdeDeepBody(_props: M1ExtensionBodyProps) {
     return (
         <div
@@ -277,10 +270,18 @@ function M1StandaloneIdeDeepBody(_props: M1ExtensionBodyProps) {
             <section data-testid="m1-slot-klein-topology">
                 <KleinTopologyPane />
             </section>
-            <PendingDeepSlot tranche="22.3" label="the Cl(4,2) signature inspector" />
-            <PendingDeepSlot tranche="22.4" label="the Klein-flip event-strip" />
-            <PendingDeepSlot tranche="22.8" label="the vortex matrices browser" />
-            <PendingDeepSlot tranche="22.9" label="the audio-bus inspector" />
+            <section data-testid="m1-slot-cl42">
+                <M1Cl42SignatureInspector />
+            </section>
+            <section data-testid="m1-slot-klein-flip-strip">
+                <M1KleinFlipEventStrip />
+            </section>
+            <section data-testid="m1-slot-vortex-browser">
+                <M1VortexMatricesBrowser />
+            </section>
+            <section data-testid="m1-slot-audio-bus">
+                <M1AudioBusInspector />
+            </section>
         </div>
     );
 }

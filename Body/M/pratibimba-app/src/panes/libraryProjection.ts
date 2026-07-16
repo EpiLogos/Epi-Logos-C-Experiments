@@ -7,7 +7,12 @@
  *   from the frontmatter `coordinate:` key). Entries without a coordinate
  *   group under the honest `uncoordinated` shelf — nothing is invented.
  * Does NOT own: the file tree pane, vault IO, coordinate semantics.
+ * Public surface: LibraryEntry, LibraryShelf, coordinateFromMarkdown,
+ *   shelfFor, buildLibraryProjection.
+ * Contract: [[M5'-SPEC]] + CCT-19.
  */
+
+import { parseDocument } from 'yaml';
 
 export interface LibraryEntry {
     readonly path: string;
@@ -18,6 +23,26 @@ export interface LibraryShelf {
     /** Coordinate family root (e.g. `C2`, `M5`, `S3'`) or `uncoordinated`. */
     readonly shelf: string;
     readonly entries: readonly LibraryEntry[];
+}
+
+/** Parse only the YAML frontmatter envelope and return its coordinate. Invalid
+ *  YAML or a non-string coordinate is honest absence, never an inferred shelf. */
+export function coordinateFromMarkdown(content: string): string | null {
+    if (!content.startsWith('---\n')) {
+        return null;
+    }
+    const end = content.indexOf('\n---\n', 4);
+    if (end === -1) {
+        return null;
+    }
+    const document = parseDocument(content.slice(4, end));
+    if (document.errors.length > 0) {
+        return null;
+    }
+    const coordinate = document.get('coordinate');
+    return typeof coordinate === 'string' && coordinate.trim().length > 0
+        ? coordinate.trim()
+        : null;
 }
 
 /** The coordinate ancestry root an entry shelves under: the first

@@ -7,9 +7,16 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { buildLibraryProjection, shelfFor } from './libraryProjection';
+import { buildLibraryProjection, coordinateFromMarkdown, shelfFor } from './libraryProjection';
 
 describe('Library coordinate projection (CCT-19 activation)', () => {
+    it('reads the coordinate from real YAML frontmatter without inferring invalid metadata', () => {
+        expect(coordinateFromMarkdown('---\ncoordinate: "M5-0.2"\ntags:\n  - library\n---\nbody')).toBe('M5-0.2');
+        expect(coordinateFromMarkdown("---\ncoordinate: S3'\n---\nbody")).toBe("S3'");
+        expect(coordinateFromMarkdown('---\ncoordinate: [not, scalar]\n---\nbody')).toBeNull();
+        expect(coordinateFromMarkdown('plain markdown')).toBeNull();
+    });
+
     it('shelves by coordinate ancestry root, primes preserved', () => {
         expect(shelfFor('C2-1')).toBe('C2');
         expect(shelfFor('M5-4.2')).toBe('M5');

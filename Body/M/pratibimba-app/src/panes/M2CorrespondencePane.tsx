@@ -15,16 +15,23 @@
  *   kernel/S2 graph's verbatim write — no local correspondence table; absent
  *   fields render as canonical-absence (—), never fabricated.
  * Does NOT own: the correspondence dataset (S2 parashakti-deep graph), the
- *   72-address (the profile's pentadic trace), the cymatic surface or the asma
- *   overlay (their own faces), any clock (renders per profile tick).
+ *   72-address (the profile's pentadic trace), any clock (renders per profile
+ *   tick). The cymatic surface (CymaticField), the sonic/domain overlay
+ *   (AsmaMirrorOverlay), the modal digest (ModalDigestStrip) and the six-axis
+ *   decoder tree (SixAxisTree) are their OWN authored/tested faces — this pane
+ *   only mounts them and feeds them the active 72-address it already reads.
  */
 
 import { useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
+import { AsmaMirrorOverlay, type AsmaOverlayRecord } from '../components/AsmaMirrorOverlay';
+import { CymaticField } from '../components/CymaticField';
+import { ModalDigestStrip } from '../components/ModalDigestStrip';
+import { SixAxisTree } from '../components/SixAxisTree';
 import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 
-type CorrespondenceFace = 'decan' | 'sonic' | 'planetary';
+type CorrespondenceFace = 'decan' | 'sonic' | 'planetary' | 'cymatic' | 'axes';
 
 interface DecanFace {
     readonly name?: string | null;
@@ -62,6 +69,43 @@ function show(value: string | null | undefined): string {
     return value && value.length > 0 ? value : '—';
 }
 
+function numberOrNull(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+function stringOrNull(value: unknown): string | null {
+    return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+/**
+ * Map the fetched `sacredSonic.asma` overlay object (kernel M2_ASMA_LUT algebra,
+ * emitted snake_case by the s2.parashaktiCorrespondences gate — graph.rs
+ * `asma_overlay_record`) onto the `AsmaOverlayRecord` the overlay component
+ * consumes. The numeric asma identity (name/group/index) is the kernel LUT
+ * write; absent it we pass NO record (honest — the overlay still renders the
+ * conserved address + phase from the live tick), never a fabricated pair.
+ */
+function toAsmaOverlayRecord(asma: unknown): AsmaOverlayRecord | null {
+    if (!asma || typeof asma !== 'object') {
+        return null;
+    }
+    const raw = asma as Record<string, unknown>;
+    const nameIdx = numberOrNull(raw.name_idx);
+    const group = numberOrNull(raw.group);
+    const indexInGroup = numberOrNull(raw.index_in_group);
+    if (nameIdx === null || group === null || indexInGroup === null) {
+        return null;
+    }
+    return {
+        nameIdx,
+        group,
+        indexInGroup,
+        mirrorIdx: numberOrNull(raw.mirror_idx) ?? 0xff,
+        mirrorName: stringOrNull(raw.mirror_name),
+        mirrorRelation: stringOrNull(raw.mirror_relation) ?? '',
+        phaseLaw: stringOrNull(raw.phase_law) ?? ''
+    };
+}
+
 function Field({ label, value }: { label: string; value: string }) {
     return (
         <div className="corr-field">
@@ -74,7 +118,9 @@ function Field({ label, value }: { label: string; value: string }) {
 const FACES: readonly { key: CorrespondenceFace; label: string }[] = [
     { key: 'decan', label: 'Decan Face' },
     { key: 'sonic', label: 'Sacred Name' },
-    { key: 'planetary', label: 'Planetary-Chakral' }
+    { key: 'planetary', label: 'Planetary-Chakral' },
+    { key: 'cymatic', label: 'Cymatic Surface' },
+    { key: 'axes', label: 'Six Axes' }
 ];
 
 export function M2CorrespondencePane() {
@@ -91,6 +137,10 @@ export function M2CorrespondencePane() {
     );
     const address72 = overlay.state === 'ready' && overlay.m2 ? overlay.m2.resonance72Index : null;
     const shemQuantum = overlay.state === 'ready' && overlay.m2 ? overlay.m2.shemDegreeQuantum : null;
+
+    // the asma overlay strip rides the SAME fetched correspondence record the
+    // sonic face reads — the kernel M2_ASMA_LUT algebra beside the cymatic face.
+    const asmaRecord = useMemo(() => toAsmaOverlayRecord(record?.sacredSonic?.asma), [record]);
 
     useEffect(() => {
         if (address72 === null) {
@@ -157,7 +207,20 @@ export function M2CorrespondencePane() {
                     </button>
                 ))}
             </div>
-            {error ? (
+            {face === 'cymatic' ? (
+                <div className="corr-cymatic-face" data-testid="corr-cymatic">
+                    <div className="corr-cymatic-surface">
+                        {/* the Chladni field (own clock: kernel generation) with the
+                            asma domain-mirror strip overlaid on the SAME address */}
+                        <CymaticField />
+                        <AsmaMirrorOverlay record={asmaRecord} />
+                    </div>
+                    {/* the visual-only modal/audio-bus digest of the same bus */}
+                    <ModalDigestStrip />
+                </div>
+            ) : face === 'axes' ? (
+                <SixAxisTree address72={address72} />
+            ) : error ? (
                 <div className="chat-error" data-testid="corr-error">
                     correspondence unavailable: {error}
                 </div>

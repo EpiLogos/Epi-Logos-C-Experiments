@@ -1,10 +1,15 @@
 /**
  * Coordinate: M' (e2e global setup)
+ * Residency: Body/M/pratibimba-app/tests/e2e
+ * Position (#n): real-substrate suite bootstrap
  * Actualises: the real substrate under the drivable-loop specs —
  *   (a) chromium present, (b) a REAL `epi gate start` on the e2e port,
  *   (c) the temp-vault sidecar on a real mkdtemp filesystem. Orphans on the
  *   e2e ports are swept first (verify-all.mjs orphan-sweep law: strays from
  *   dead runs poison fixed-port suites).
+ * Public surface: Playwright globalSetup.
+ * Does NOT own: gateway behavior, Gnostic graph law, browser specs, or teardown.
+ * Contract: root [[AGENTS]] verification law + [[CHROME-CONTRACT]].
  */
 
 import { execFileSync, spawn } from 'node:child_process';
@@ -94,10 +99,23 @@ function ensureChromium(): void {
 }
 
 export default async function globalSetup(): Promise<void> {
+    const epiGnosticBin = join(
+        REPO_ROOT,
+        'Body',
+        'S',
+        'S5',
+        'epi-gnostic',
+        '.venv',
+        'bin',
+        'epi-gnostic'
+    );
     if (!existsSync(EPI_BIN)) {
         throw new Error(
             `[e2e-setup] epi debug binary missing at ${EPI_BIN} — build the shared target: cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml`
         );
+    }
+    if (!existsSync(epiGnosticBin)) {
+        throw new Error(`[e2e-setup] real epi-gnostic executable missing at ${epiGnosticBin}`);
     }
     ensureChromium();
     sweepPort(E2E_GATEWAY_PORT);
@@ -111,10 +129,19 @@ export default async function globalSetup(): Promise<void> {
     //     accident of the launching shell — and the M2 spec is a real live-graph
     //     gate that fails honestly when Neo4j is down.
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
+    const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
+    const autoresearchConfig = join(gatewayHome, '.epi-logos', 'config.toml');
+    mkdirSync(dirname(autoresearchConfig), { recursive: true });
+    writeFileSync(
+        autoresearchConfig,
+        `[autoresearch]\narticulation_gap_peer_ratio = 0.75\ncontradiction_vector_disagreement_threshold = 0.35\nresonance_promotion_confidence_threshold = 0.85\nstale_revision_threshold = 12\npriority_order = ["articulation_gap", "promotion_candidate", "contradiction_candidate", "stale_by_non_revisit"]\n`
+    );
     const gateway = spawn(EPI_BIN, ['gate', 'start', '--port', String(E2E_GATEWAY_PORT)], {
         env: {
             ...process.env,
+            HOME: gatewayHome,
             EPI_GATE_STATE_ROOT: gatewayStateRoot,
+            EPI_GNOSTIC_PYTHON: epiGnosticBin,
             EPILOGOS_NEO4J_URI: process.env.EPILOGOS_NEO4J_URI ?? 'bolt://localhost:7687',
             EPILOGOS_NEO4J_USER: process.env.EPILOGOS_NEO4J_USER ?? 'neo4j',
             EPILOGOS_NEO4J_PASSWORD: process.env.EPILOGOS_NEO4J_PASSWORD ?? ''
@@ -192,6 +219,7 @@ export default async function globalSetup(): Promise<void> {
         sidecarPid: sidecar.pid ?? -1,
         vaultRoot,
         gatewayStateRoot,
+        gatewayHome,
         naraHome
     };
     mkdirSync(dirname(RUN_STATE_FILE), { recursive: true });

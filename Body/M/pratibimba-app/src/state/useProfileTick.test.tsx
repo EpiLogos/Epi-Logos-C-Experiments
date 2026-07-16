@@ -10,10 +10,17 @@ import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { useTickStore } from './stores';
 import { useProfileTick } from './useProfileTick';
+import { crossSurfacePropagation } from '../composition/compositionContract';
 
-function cachedProfile(generation: number, tick12: number, degree720: number) {
+function cachedProfile(
+    generation: number,
+    tick12: number,
+    degree720: number,
+    graphRevision?: number
+) {
     return {
         generation,
+        graphRevision,
         cachedAtMs: generation * 1000,
         stale: false,
         stalenessMs: 0,
@@ -33,6 +40,7 @@ function TickProbe() {
             data-generation={tick.generation ?? 'none'}
             data-tick12={tick.tick12 ?? 'none'}
             data-degree720={tick.degree720 ?? 'none'}
+            data-graph-revision={tick.graphRevision ?? 'none'}
         />
     );
 }
@@ -77,5 +85,39 @@ describe('useProfileTick', () => {
         expect(probe.getAttribute('data-generation')).toBe('9');
         expect(probe.getAttribute('data-tick12')).toBe('6');
         expect(renderCount).toBe(rendersAfterAdvance);
+    });
+
+    it('B-12: surfaces the graph revision so a governed edit is visible on the next tick', () => {
+        render(<TickProbe />);
+        act(() => {
+            useTickStore.getState().setProfile(cachedProfile(10, 4, 415, 7));
+        });
+        const probe = screen.getByTestId('tick-probe');
+        expect(probe.getAttribute('data-graph-revision')).toBe('7');
+
+        // a governed Bimba write lands: generation advances AND revision bumps —
+        // crossSurfacePropagation reports the edit crossed to every rendering.
+        act(() => {
+            useTickStore.getState().setProfile(cachedProfile(11, 5, 445, 8));
+        });
+        expect(probe.getAttribute('data-graph-revision')).toBe('8');
+        const decision = crossSurfacePropagation(
+            { generation: 10, graphRevision: '7' },
+            { generation: 11, graphRevision: '8' }
+        );
+        expect(decision.reRead).toBe(true);
+        expect(decision.carriesEdit).toBe(true);
+
+        // a bare clock tick (revision unchanged) re-reads but carries no edit.
+        act(() => {
+            useTickStore.getState().setProfile(cachedProfile(12, 6, 475, 8));
+        });
+        expect(probe.getAttribute('data-graph-revision')).toBe('8');
+        expect(
+            crossSurfacePropagation(
+                { generation: 11, graphRevision: '8' },
+                { generation: 12, graphRevision: '8' }
+            ).carriesEdit
+        ).toBe(false);
     });
 });

@@ -208,15 +208,23 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
         expect(useTickStore.getState().generation).toBe(41);
     });
 
-    it('standalone-ide-deep composes the landed deep faces + honest pending slots', () => {
+    it('standalone-ide-deep composes the landed deep faces incl. the four inspector faces', () => {
         primeStore();
         render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1 })} />);
         expect(screen.getByTestId('m1-slot-spanda-navigator')).toBeTruthy();
         expect(screen.getByTestId('m1-slot-walk')).toBeTruthy();
         expect(screen.getByTestId('m1-slot-klein-topology')).toBeTruthy();
-        for (const tranche of ['22.3', '22.4', '22.8', '22.9']) {
-            expect(screen.getByTestId(`m1-slot-pending-${tranche}`)).toBeTruthy();
-        }
+        // the four M1 deep inspector faces (22.3 / 22.4 / 22.8 / 22.9) now mount
+        // as real bodies, not pending slots
+        expect(screen.getByTestId('m1-slot-cl42')).toBeTruthy();
+        expect(screen.getByTestId('m1-cl42-inspector')).toBeTruthy();
+        expect(screen.getByTestId('m1-slot-klein-flip-strip')).toBeTruthy();
+        expect(screen.getByTestId('m1-klein-flip-strip')).toBeTruthy();
+        expect(screen.getByTestId('m1-slot-vortex-browser')).toBeTruthy();
+        expect(screen.getByTestId('m1-vortex-browser')).toBeTruthy();
+        expect(screen.getByTestId('m1-slot-audio-bus')).toBeTruthy();
+        expect(screen.getByTestId('m1-audio-bus-inspector')).toBeTruthy();
+        expect(screen.queryByTestId('m1-slot-pending-22.3')).toBeNull();
         // compact exports belong to the composed/compact bodies only
         expect(screen.queryByTestId('m1-walk-strip')).toBeNull();
     });
