@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-16T15:39:00.518Z",
+  "updatedAt": "2026-07-16T17:46:44.974Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8379,16 +8379,21 @@
       "worktree": null
     },
     "21.T21.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T17:46:44.959Z",
+      "claimedAt": "2026-07-16T17:44:10.229Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T17:46:44.959Z",
+          "text": "Blocked on unlanded carrier predecessors, not cleanly closable as 'extend existing'. (1) The M0 actions panel it extends (M0GatewayAction + the three M5-routed actions open-language-development-route / deposit-graph-readiness-evidence / request-anuttara-review) does NOT exist in the carrier — only the six-layer data rail (m0Layers.ts / M0LayerRail.tsx) is landed. (2) The authoring-mode deep-links target canonStudio + logosAtelier via ide-shell-m0-m5, but those intent targets are absent from the carrier's CROSS_LAYOUT_INTENT_TARGETS ledger — which is track-11's cross-layout-intent lane (codex-11-state-identity, actively claimed). Closing 21.12 requires building the M0 actions surface AND adding atelier intent targets in another agent's write scope. Needs: M0 actions-panel predecessor landed + the atelier contribution targets registered (coordinate with track 11)."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "claude-opus-m0-modetoggle",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T17:44:10.229Z",
+      "runId": "20260716T174410Z-21-T21.12",
       "worktree": null
     },
     "21.T21.13": {
@@ -8915,16 +8920,21 @@
       "worktree": null
     },
     "23.T23.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:51:35.604Z",
+      "claimedAt": "2026-07-16T15:51:35.384Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:51:35.604Z",
+          "text": "Blocked: live s2.parashaktiCorrespondences exposes one 72-address decan record, not the required 36 primary + 36 light + 36 S2 #2-3 shadow descriptors or M3 reversed-meaning seam. No local 108-cell synthesis is permitted."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track23-shadow-decan",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:51:35.384Z",
+      "runId": "20260716T155135Z-23-T23.11",
       "worktree": null
     },
     "23.T23.12": {
@@ -9250,16 +9260,21 @@
       "worktree": null
     },
     "24.T24.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T15:50:23.386Z",
+      "claimedAt": "2026-07-16T15:50:01.765Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:50:23.386Z",
+          "text": "Carrier proof panel now consumes the strict complete coupling-flow projection for physics-descent and recognition-warrant lanes; absent/partial data remains pending. Added event-addressable form/trace highlights. Verified pnpm typecheck and pnpm test: 780 passed, 3 skipped; no automated verifier started (Claude review requested)."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track24-third-spanda",
+      "leaseExpiresAt": "2026-07-16T17:50:01.765Z",
+      "heartbeatAt": "2026-07-16T15:50:23.386Z",
+      "runId": "20260716T155001Z-24-T24.12",
       "worktree": null
     },
     "24.T24.13": {
@@ -9545,16 +9560,21 @@
       "worktree": null
     },
     "25.T25.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:51:36.039Z",
+      "claimedAt": "2026-07-16T15:51:35.823Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:51:36.039Z",
+          "text": "Blocked: required nara.transform.start and nara.transform.advance RPCs are absent. The carrier must not create contemplative artifacts or NOW frontmatter locally in lieu of governed backend transitions."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track25-transform",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:51:35.823Z",
+      "runId": "20260716T155135Z-25-T25.11",
       "worktree": null
     },
     "25.T25.12": {
@@ -9908,16 +9928,21 @@
       "worktree": null
     },
     "26.T26.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:51:36.480Z",
+      "claimedAt": "2026-07-16T15:51:36.261Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:51:36.480Z",
+          "text": "Blocked: gateway contains a close-of-session contemplation route but no PASU-scoped fetch/readback seam (s5'.epii.runtimeContext or contemplate.fetch_object) for a persisted ContemplationObject. A viewer without it would display invented or non-retrievable state."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track26-contemplation",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:51:36.261Z",
+      "runId": "20260716T155136Z-26-T26.12",
       "worktree": null
     },
     "26.T26.13": {
@@ -10155,15 +10180,33 @@
       "worktree": null
     },
     "27.T27.11": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-16T15:34:51.781Z",
+      "status": "review",
+      "updatedAt": "2026-07-16T15:43:21.752Z",
       "claimedAt": "2026-07-16T15:34:51.781Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-16T15:43:21.752Z",
+          "text": "Implemented the active-carrier OmniPanel session contract: eight typed fold records, persisted/hydrated snapshot, real right-border selection mirrored across both FlexLayout faces, and live Chat/Sessions/Review folds write their owned state. Safe carrier checks pass. The real Chromium cross-layout spec was not run because the workspace sandbox refused its localhost server bind; no review or independent verifier was auto-started.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck; pnpm --dir Body/M/pratibimba-app test; pnpm --dir Body/M/pratibimba-app build; node .codex/scripts/lint-test-honesty.mjs; git diff --check -- Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 778,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelSessionState.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/panes/ChatPane.tsx",
+              "Body/M/pratibimba-app/src/panes/SessionsPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx"
+            ]
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 172 dirty files.",
       "owner": "codex-mdev-track27-omnipanel-state",
       "leaseExpiresAt": "2026-07-16T18:34:51.781Z",
-      "heartbeatAt": "2026-07-16T15:34:51.781Z",
+      "heartbeatAt": "2026-07-16T15:43:21.752Z",
       "runId": "20260716T153451Z-27-T27.11",
       "worktree": null
     },
@@ -10423,16 +10466,21 @@
       "worktree": null
     },
     "28.T28.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:50:57.625Z",
+      "claimedAt": "2026-07-16T15:50:57.432Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:50:57.625Z",
+          "text": "Blocked deliberately: the tranche specifies only a disposable Smart-Connections placeholder while the real extension remains gated on 03.T6.5. Carrier policy forbids landing mock/demo/placeholder surfaces; existing s1'.semantic.suggest_links is a real command seam but is not yet the owned sidebar contract."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track28-smart-connections",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:50:57.432Z",
+      "runId": "20260716T155057Z-28-T28.12",
       "worktree": null
     },
     "28.T28.13": {
@@ -10711,16 +10759,21 @@
       "worktree": null
     },
     "29.T29.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:51:36.961Z",
+      "claimedAt": "2026-07-16T15:51:36.707Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:51:36.961Z",
+          "text": "Blocked: the active carrier has no live composition event producer or composition snapshot projection. Track 29's source targets frozen epi-theia and expects composition.* events from unlanded composition surfaces; Dispatch Trace cannot honestly manufacture them."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 182 dirty files.",
+      "owner": "codex-mdev-track29-composition-events",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:51:36.707Z",
+      "runId": "20260716T155136Z-29-T29.11",
       "worktree": null
     },
     "29.T29.12": {
@@ -11404,16 +11457,21 @@
       "worktree": null
     },
     "32.T32.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-16T15:43:56.867Z",
+      "claimedAt": "2026-07-16T15:43:38.788Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T15:43:56.867Z",
+          "text": "Blocked before implementation: the active carrier only exposes the narrower begin_today vault command. The specified first-day cold-start lifecycle requires real vault.day.ensure, khora.session_start, and first-session tarot/Mercurius orchestration RPC seams, none of which are present in the carrier/substrate source. No UI-only affordance was added because it could not execute the required lifecycle."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 179 dirty files.",
+      "owner": "codex-mdev-track32-day-orchestration",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T15:43:38.788Z",
+      "runId": "20260716T154338Z-32-T32.11",
       "worktree": null
     },
     "32.T32.12": {
@@ -19039,11 +19097,92 @@
     {
       "runId": "20260716T153451Z-27-T27.11",
       "taskId": "27.T27.11",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-16T15:34:51.781Z",
       "owner": "codex-mdev-track27-omnipanel-state",
       "leaseExpiresAt": "2026-07-16T18:34:51.781Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-16T15:43:21.752Z"
+    },
+    {
+      "runId": "20260716T154338Z-32-T32.11",
+      "taskId": "32.T32.11",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:43:38.788Z",
+      "owner": "codex-mdev-track32-day-orchestration",
+      "leaseExpiresAt": "2026-07-16T18:13:38.788Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:43:56.867Z"
+    },
+    {
+      "runId": "20260716T155001Z-24-T24.12",
+      "taskId": "24.T24.12",
+      "status": "review",
+      "startedAt": "2026-07-16T15:50:01.765Z",
+      "owner": "codex-mdev-track24-third-spanda",
+      "leaseExpiresAt": "2026-07-16T17:50:01.765Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:50:23.386Z"
+    },
+    {
+      "runId": "20260716T155057Z-28-T28.12",
+      "taskId": "28.T28.12",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:50:57.432Z",
+      "owner": "codex-mdev-track28-smart-connections",
+      "leaseExpiresAt": "2026-07-16T17:50:57.432Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:50:57.625Z"
+    },
+    {
+      "runId": "20260716T155135Z-23-T23.11",
+      "taskId": "23.T23.11",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:51:35.384Z",
+      "owner": "codex-mdev-track23-shadow-decan",
+      "leaseExpiresAt": "2026-07-16T17:51:35.384Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:51:35.604Z"
+    },
+    {
+      "runId": "20260716T155135Z-25-T25.11",
+      "taskId": "25.T25.11",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:51:35.823Z",
+      "owner": "codex-mdev-track25-transform",
+      "leaseExpiresAt": "2026-07-16T17:51:35.823Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:51:36.039Z"
+    },
+    {
+      "runId": "20260716T155136Z-26-T26.12",
+      "taskId": "26.T26.12",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:51:36.261Z",
+      "owner": "codex-mdev-track26-contemplation",
+      "leaseExpiresAt": "2026-07-16T17:51:36.261Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:51:36.480Z"
+    },
+    {
+      "runId": "20260716T155136Z-29-T29.11",
+      "taskId": "29.T29.11",
+      "status": "blocked",
+      "startedAt": "2026-07-16T15:51:36.707Z",
+      "owner": "codex-mdev-track29-composition-events",
+      "leaseExpiresAt": "2026-07-16T17:51:36.707Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T15:51:36.961Z"
+    },
+    {
+      "runId": "20260716T174410Z-21-T21.12",
+      "taskId": "21.T21.12",
+      "status": "blocked",
+      "startedAt": "2026-07-16T17:44:10.229Z",
+      "owner": "claude-opus-m0-modetoggle",
+      "leaseExpiresAt": "2026-07-16T19:44:10.229Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T17:46:44.959Z"
     }
   ],
   "activeRoute": {
