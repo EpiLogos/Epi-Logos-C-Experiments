@@ -24,14 +24,19 @@ test('ide-deep tolerates the Smart Connections code-pending claim without a rece
     await expect(shell).not.toHaveAttribute('data-code-pending-layout-claims');
 
     await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Medicine' }).click();
-    await page.getByRole('button', { name: 'Open Kairos' }).click();
+    // Wait for the Medicine pane's affordance before clicking it — under the
+    // full parallel gate the pane can mount a beat later than in isolation.
+    const openKairos = page.getByRole('button', { name: 'Open Kairos' });
+    await expect(openKairos).toBeVisible({ timeout: 20_000 });
+    await openKairos.click();
 
-    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep');
+    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep', { timeout: 20_000 });
     await expect(shell).toHaveAttribute(
         'data-code-pending-layout-claims',
-        'pratibimba.smart-connections-sidebar'
+        'pratibimba.smart-connections-sidebar',
+        { timeout: 20_000 }
     );
-    await expect(page.getByTestId('kairos-enablement-pane')).toBeVisible();
+    await expect(page.getByTestId('kairos-enablement-pane')).toBeVisible({ timeout: 20_000 });
     await expect(
         page.locator('.flexlayout__tab_button', { hasText: 'Smart Connections' })
     ).toHaveCount(0);
