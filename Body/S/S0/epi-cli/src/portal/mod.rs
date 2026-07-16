@@ -414,6 +414,15 @@ fn register_all_plugins(
         });
     }
     runtime.register_plugin_type("m5.fsm", || m5::M5FsmPlugin::new());
+    {
+        let temporal = runtime_state.clone().map(|state| state.temporal());
+        runtime.register_plugin_type("m5.q_review", move || {
+            temporal
+                .clone()
+                .map(m5::M5QReviewPlugin::new_with_temporal)
+                .unwrap_or_else(m5::M5QReviewPlugin::new)
+        });
+    }
 }
 
 /// Build a two-tab workspace with default pane layouts.
