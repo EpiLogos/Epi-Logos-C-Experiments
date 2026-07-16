@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-15T14:33:53.557Z",
+  "updatedAt": "2026-07-16T14:16:42.596Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -2834,107 +2834,248 @@
       "worktree": null
     },
     "06.T6.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:13:54.197Z",
+      "claimedAt": "2026-07-15T19:25:54.181Z",
+      "completedAt": "2026-07-16T00:13:54.197Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:13:54.197Z",
+          "text": "Carrier Atelier lens groups real etymological/cognate graph relations; governed commands remain registered, and independent gateway/live-wire proof passed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.2 --owner codex-06-verifier --only gateway,live-wire",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/GraphExplorerPane.tsx",
+              "Body/M/pratibimba-app/src/panes/graphData.ts",
+              "Body/M/pratibimba-app/src/panes/graphData.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.2.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 80 dirty files. claimed with --allow-dirty over 88 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:08:25.503Z",
+      "runId": "20260715T192554Z-06-T6.2",
       "worktree": null
     },
     "06.T6.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:24:20.370Z",
+      "claimedAt": "2026-07-16T00:20:42.848Z",
+      "completedAt": "2026-07-16T00:24:20.370Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:24:20.370Z",
+          "text": "Six live-snapshot capacity panes now select governed review workloads; real Chromium, S5 capacity tests, and independent gateway/live-wire proof passed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.3 --owner codex-06-verifier --only gateway,live-wire",
+            "exitCode": 0,
+            "testsPassed": 16,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/AutoresearchPane.tsx",
+              "Body/M/pratibimba-app/src/panes/AutoresearchPane.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/autoresearch.spec.ts",
+              "Body/S/S5/epii-autoresearch-core/tests/capacity_workflow_registry.rs",
+              "Body/S/S5/epii-autoresearch-core/tests/deterministic_capacity_slices.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.3.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:20:42.848Z",
+      "runId": "20260716T002042Z-06-T6.3",
       "worktree": null
     },
     "06.T6.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T01:46:17.846Z",
+      "claimedAt": "2026-07-16T00:24:27.220Z",
+      "completedAt": "2026-07-16T01:46:17.846Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:24:49.353Z",
+          "text": "Carrier audit: Canon Studio is live as the editor surface with governed Atelier/S1 routes; Backend Studio remains the explicitly pending 28.13 owner in CHROME-CONTRACT.md and must not be rebuilt from frozen Theia."
+        },
+        {
+          "at": "2026-07-16T01:46:17.846Z",
+          "text": "Canon Studio carrier live in pratibimba-app (leftSidebarModes canon-studio mode + blockRegistry governed s1'.vault append/read routes + Atelier commands via Hen/M5 per DR-M0-1); Backend Studio is contract-owned by pending 28.13 per CHROME-CONTRACT (first-build allowance §9), not scope loss. W-class gate green; honesty-lint clean; verifier opus-verify-16 != closer opus-review-16.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.4 --owner opus-verify-16 (W-class: harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime)",
+            "exitCode": 0,
+            "testsPassed": 796,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/blocks/blockRegistry.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:24:49.353Z",
+      "runId": "20260716T002427Z-06-T6.4",
       "worktree": null
     },
     "06.T6.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:41:11.043Z",
+      "claimedAt": "2026-07-16T03:35:48.207Z",
+      "completedAt": "2026-07-16T03:41:11.043Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T03:41:11.043Z",
+          "text": "DR-M5-1 and DR-M5-2 cleanup is landed: the matrix deprecates the executable constitutional roster, the active carrier proves Pi/Anima plus six Aletheia-mode guardian targets with separate Psyche facets, M5 architecture matches runtime, and the live M canon has no M0 witness-axis attribution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.5 --owner codex-verifier-batch10 (PASS including real gateway, gateway-contract, gateway-methods, and live-wire stages)",
+            "exitCode": 0,
+            "testsPassed": 39,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/scripts/live-wire.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/M5'/M5-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 147 dirty files.",
+      "owner": "codex-06-m5",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T03:35:48.207Z",
+      "runId": "20260716T033548Z-06-T6.5",
       "worktree": null
     },
     "06.T6.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:44:37.427Z",
+      "claimedAt": "2026-07-16T03:41:23.700Z",
+      "completedAt": "2026-07-16T03:44:37.427Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T03:44:37.427Z",
+          "text": "M0 substrate ownership is canonically established; the Tranche 14 no-orphan row binds the M5 claim to read-only contemplation, DR-M0-1 governed mutation, and no separate carrier, with stale pending-adjudication language removed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.6 --owner verifier-06-anuttara-20260716 (PASS including real gateway, gateway-contract, gateway-methods, and live-wire stages)",
+            "exitCode": 0,
+            "testsPassed": 799,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M5'/M5-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.6.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 149 dirty files.",
+      "owner": "codex-06-anuttara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T03:41:23.700Z",
+      "runId": "20260716T034123Z-06-T6.6",
       "worktree": null
     },
     "06.T6.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T09:18:54.472Z",
+      "claimedAt": "2026-07-16T03:44:43.200Z",
+      "completedAt": "2026-07-16T09:18:54.472Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T09:18:54.472Z",
+          "text": "The active carrier enforces Pi and Anima plus six Aletheia techne-guardian targets, keeps Psyche facets non-executable, deprecates the constitutional roster, and aligns the Pleroma Techne contract with the real eight-primitive registry.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.7 --owner verifier-06-agent-roster-20260716 (PASS including real gateway, gateway-contract, gateway-methods, and live-wire stages)",
+            "exitCode": 0,
+            "testsPassed": 834,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelCapabilities.ts",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/CONTRACT.md",
+              "Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts",
+              "Idea/Bimba/Seeds/S/S4/S4-SPEC.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.7.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 150 dirty files.",
+      "owner": "codex-06-agent-roster",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T03:44:43.200Z",
+      "runId": "20260716T034443Z-06-T6.7",
       "worktree": null
     },
     "06.T6.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T09:37:25.207Z",
+      "claimedAt": "2026-07-16T09:19:02.943Z",
+      "completedAt": "2026-07-16T09:37:25.207Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T09:37:25.207Z",
+          "text": "Candle-backed S5-4' EBM runtime now executes checkpointed tritone heads and learned bioquaternion projection, validates checkpoint architecture/channel metadata, exposes real q_p autograd, and passes independent class-W live-gateway verification.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.8 --owner verifier-06-ebm-runtime-20260716 (direct Candle runtime/autograd/checkpoint tests plus class-W gateway, gateway-methods, and live-wire gate)",
+            "exitCode": 0,
+            "testsPassed": 810,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/epii-autoresearch-core/src/resonance_ebm",
+              "Body/S/S5/epii-autoresearch-core/tests/resonance_ebm_runtime.rs",
+              "Idea/Bimba/Seeds/S/S5/S5-ARCHITECTURE.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 156 dirty files.",
+      "owner": "codex-06-ebm-runtime",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T09:19:02.943Z",
+      "runId": "20260716T091902Z-06-T6.8",
       "worktree": null
     },
     "06.T6.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T09:56:00.107Z",
+      "claimedAt": "2026-07-16T09:37:31.581Z",
+      "completedAt": "2026-07-16T09:56:00.107Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T09:56:00.107Z",
+          "text": "The real epi pi train-ebm/export-ebm-state paths now produce Candle-runtime-compatible artifacts; trained export preserves exact learned weights and the paired training-time corpus snapshot, with independent class-W live-gateway verification.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.9 --owner verifier-06-ebm-cli-20260716 (spawned CLI train/export, exact trained-state export, runtime reload, honesty, gateway-methods, and live-wire)",
+            "exitCode": 0,
+            "testsPassed": 806,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/pi_ebm_commands.rs",
+              "Body/S/S5/epii-autoresearch-core/src/resonance_corpus/mod.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.9.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 164 dirty files.",
+      "owner": "codex-06-ebm-cli",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T09:37:31.581Z",
+      "runId": "20260716T093731Z-06-T6.9",
       "worktree": null
     },
     "06.T6.10": {
@@ -3016,16 +3157,38 @@
       "worktree": null
     },
     "06.T6.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-15T19:25:24.067Z",
+      "claimedAt": "2026-07-15T14:38:38.290Z",
+      "completedAt": "2026-07-15T19:25:24.067Z",
+      "evidence": [
+        {
+          "at": "2026-07-15T14:42:23.461Z",
+          "text": "Verified q_review substrate: manifest-scoped cargo test passed (3/3), but no m5.q_review gateway method, live VAK-filtered queue projection, or real pair-composition/Hen acceptance route exists; the active carrier's Review pane remains fixture-backed."
+        },
+        {
+          "at": "2026-07-15T19:25:24.067Z",
+          "text": "Independent class-W verification PASS at 2026-07-15T19:24:09Z: harness self-tests 102, real gateway 89, gateway contract 87, Redis 10, Graphiti 14, Spacetime 11, Ta Onta 483; live-wire and gateway-method ratchet passed. The full Q curation path now uses persisted S5 human approval before S1 Hen amendment and S2 synchronization.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 06.T6.12 --owner codex-independent-verify (class-W gate includes live-wire and gateway-methods)",
+            "exitCode": 0,
+            "testsPassed": 796,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/AutoresearchPane.tsx",
+              "Body/M/pratibimba-app/src/panes/qPairComposition.ts",
+              "Body/S/S0/epi-cli/src/gate/s1_hen.rs",
+              "Body/S/S5/epii-review-core/src/lib.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/06.T6.12.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-05-route",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-15T14:42:23.461Z",
+      "runId": "20260715T143838Z-06-T6.12",
       "worktree": null
     },
     "07.T7.1": {
@@ -3175,68 +3338,152 @@
       "worktree": null
     },
     "07.T7.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:27:56.563Z",
+      "claimedAt": "2026-07-16T00:24:56.484Z",
+      "completedAt": "2026-07-16T00:27:56.563Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:27:56.563Z",
+          "text": "Carrier layout claim audited against DR-TS-1: daily-0-1 is one 0/1 shell (cosmic=0, personal=1); ide-deep remains the 4+2 depth surface; no third layout. Fresh mounted-shell, M1 dispatch, and sidebar contract tests passed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 07.T7.5 --owner codex-08-verifier --only gateway,live-wire",
+            "exitCode": 0,
+            "testsPassed": 31,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.test.tsx",
+              "Body/M/pratibimba-app/src/panes/m1SurfaceDispatch.test.tsx",
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.test.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-07-cosmic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:24:56.484Z",
+      "runId": "20260716T002456Z-07-T7.5",
       "worktree": null
     },
     "07.T7.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:33:19.691Z",
+      "claimedAt": "2026-07-16T00:28:03.857Z",
+      "completedAt": "2026-07-16T00:33:19.691Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:33:19.691Z",
+          "text": "Carrier coupling-flow overlay landed on the existing CosmicEngine profile snapshot. The live gateway currently omits couplingFlowAlignment, so real Chromium proves explicit pending behavior; the strict ready path consumes the exact portal-core serialized boundary without local physics or a fourth geometry layer.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/visual-panes.spec.ts --grep \"Cosmic Engine mounts\"",
+            "exitCode": 0,
+            "testsPassed": 19,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/couplingFlowOverlay.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-07-cosmic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:28:03.857Z",
+      "runId": "20260716T002803Z-07-T7.6",
       "worktree": null
     },
     "07.T7.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:37:32.467Z",
+      "claimedAt": "2026-07-16T00:33:25.002Z",
+      "completedAt": "2026-07-16T00:37:32.467Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:37:32.467Z",
+          "text": "Carrier replay test drives the real ModulationEngine from tick 5 to tick 6 with the kernel-shaped m1TritoneCrossing payload: one frame reaches M1/M2/M3, M2 valence inverts, M3 codon angle reverses, and the engine-derived fold progresses 0/100/200ms without a local timer. Independent gateway/live-wire verification passed as codex-08-verifier.",
+          "receipt": {
+            "command": "pnpm vitest run src/engine/modulation/engine.test.ts src/engine/modulation/modulators.test.ts src/engine/cosmicMath.test.ts && pnpm typecheck",
+            "exitCode": 0,
+            "testsPassed": 60,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/modulation/engine.test.ts",
+              "Body/M/pratibimba-app/src/engine/modulation/engine.ts",
+              "Body/M/pratibimba-app/src/engine/modulation/modulators.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 88 dirty files.",
+      "owner": "codex-07-cosmic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:33:25.002Z",
+      "runId": "20260716T003325Z-07-T7.7",
       "worktree": null
     },
     "07.T7.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:41:58.390Z",
+      "claimedAt": "2026-07-16T00:37:36.520Z",
+      "completedAt": "2026-07-16T00:41:58.390Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:41:58.390Z",
+          "text": "The active carrier now strictly reads portal-core M1TopologyProjection.torusKnotPhase (p,q), exposes it on the Klein pane and the composed Cosmic Engine root, and leaves malformed/absent values as pending-m1-topology. The real spawned gateway currently omits the optional projection and Chromium proves that pending state; kernel-shaped runtime coverage proves the exact ready path with no local phase derivation. Independent gateway/live-wire verification passed as codex-08-verifier.",
+          "receipt": {
+            "command": "pnpm vitest run src/panes/KleinTopologyPane.test.tsx src/engine/CosmicEngine.test.tsx src/engine/modulation/engine.test.ts src/engine/modulation/modulators.test.ts src/engine/cosmicMath.test.ts && pnpm typecheck && pnpm build && pnpm playwright test tests/e2e/visual-panes.spec.ts --grep 'Cosmic Engine mounts'",
+            "exitCode": 0,
+            "testsPassed": 68,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1KleinTopology.ts",
+              "Body/M/pratibimba-app/src/panes/KleinTopologyPane.tsx",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts",
+              "Body/S/S0/portal-core/src/profile_projections.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 89 dirty files.",
+      "owner": "codex-07-cosmic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:37:36.520Z",
+      "runId": "20260716T003736Z-07-T7.8",
       "worktree": null
     },
     "07.T7.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T00:44:56.515Z",
+      "claimedAt": "2026-07-16T00:42:16.922Z",
+      "completedAt": "2026-07-16T00:44:56.515Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:44:56.515Z",
+          "text": "ModulationEngine now strictly parses the portal-core/bridge KleinFlipEvent discriminated union at its sole profile subscription point. Exact M1 tritone, M2 valence, and M3 codon-cross variants fan one atomic frame to carriers; malformed/unknown records are non-events. Carrier and portal-core exhaustive union tests passed; independent gateway/live-wire verification passed as codex-08-verifier.",
+          "receipt": {
+            "command": "pnpm vitest run src/engine/modulation/engine.test.ts src/engine/modulation/modulators.test.ts src/engine/cosmicMath.test.ts src/panes/KleinTopologyPane.test.tsx src/engine/CosmicEngine.test.tsx && pnpm typecheck && pnpm build && cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test klein_flip_event_variants_exhaustive",
+            "exitCode": 0,
+            "testsPassed": 70,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/modulation/engine.ts",
+              "Body/M/pratibimba-app/src/engine/modulation/engine.test.ts",
+              "Body/S/S0/portal-core/src/events/flip_events.rs",
+              "Body/S/S0/portal-core/tests/klein_flip_event_variants_exhaustive.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 92 dirty files.",
+      "owner": "codex-07-cosmic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T00:42:16.922Z",
+      "runId": "20260716T004216Z-07-T7.9",
       "worktree": null
     },
     "08.T8.1": {
@@ -3640,68 +3887,167 @@
       "worktree": null
     },
     "09.T9.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:35:30.236Z",
+      "claimedAt": "2026-07-16T00:45:06.049Z",
+      "completedAt": "2026-07-16T03:35:30.236Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T00:46:00.946Z",
+          "text": "Carrier audit found partial inheritance only: CosmicEngine consumes the shared profile generation and renders solar/planetary placements from live data, but it has no active-carrier equivalent of the frozen B-12 normalized cross-surface propagation listener. The frozen B-8/B-9 contract also pins a different M3/M2 seam than the active carrier arrangement. Review required to ratify the carrier contract before landing a new public propagation surface; no frozen Theia code was ported."
+        },
+        {
+          "at": "2026-07-16T02:35:58.722Z",
+          "text": "Landed composition ownership contract Body/M/pratibimba-app/src/composition/compositionContract.ts (+test, 8/8 green): plugin-integrated-1-2-3 explicitly owns B-8/B-9/B-12; ratified seam recorded in plan (3 renderings = M1/M2/M3 body poles 137=64+72+1; M0' = structural graph view of same substrate, not a 4th pole; B-8 non-fork; governed-route DR-M0-1). B-12 propagation law grounded in the single monotonic generation gate. NOT wire-live yet: S2 bumps GraphMeta.graph_revision (meta.rs:230 CCT-16) but it does not ride the MathemeHarmonicProfile — remaining edge = stamp graph_revision onto kernel-bridge profile emission + carrier bridge/types.ts. Stays review, not false done."
+        },
+        {
+          "at": "2026-07-16T02:54:46.152Z",
+          "text": "B-12 wired 3 of 4 edges (tested green): (1) composition contract compositionContract.ts owns B-8/B-9/B-12 + ratified seam, 8 tests; (2) kernel-bridge relays graph_revision context->carrier (KernelBridgeCachedProfile/JsonShape, additive graphRevision), contract suite 26 pass incl new relay test; (3) carrier bridge/types.ts + useProfileTick().graphRevision surfaces it, crossSurfacePropagation fires on live data, 11 pass. honesty-lint clean. REMAINING 4th edge = S3 gateway stamps S2 GraphMeta.graph_revision into context['kernel']['graphRevision'] in the hydration path (async Neo4j read; hot shared gateway; needs live-wire verify). graphRevision relays absent until then; wired-but-dormant. Stays review, not false done."
+        },
+        {
+          "at": "2026-07-16T03:35:30.236Z",
+          "text": "B-12 is live end-to-end: temporal hydration equals the actual S2 GraphMeta revision; the shared profile heartbeat publishes non-regressing graphRevision; carrier/schema/composition consumers pass; independent class gate PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 09.T9.5 --owner codex-verifier-batch9",
+            "exitCode": 0,
+            "testsPassed": 162,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/temporal.rs",
+              "Body/S/S0/epi-cli/src/gate/server/mod.rs",
+              "Body/M/pratibimba-app/src/bridge/gatewayClient.ts",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "codex-09-gnostic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T02:54:46.152Z",
+      "runId": "20260716T004506Z-09-T9.5",
       "worktree": null
     },
     "09.T9.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:09:27.144Z",
+      "claimedAt": "2026-07-16T09:56:07.566Z",
+      "completedAt": "2026-07-16T10:09:27.144Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:09:27.144Z",
+          "text": "Active M0-3' panel now invokes the real S2 GDS tangent overlay, separates its fail-closed synchronic result from the kernel-profile world clock and handle-only Graphiti references, and passes 7 model tests plus a spawned-gateway Chromium comparison; independent class-W verification PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,graph-live",
+            "exitCode": 0,
+            "testsPassed": 798,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0CommunityClockPanel.tsx",
+              "Body/M/pratibimba-app/src/panes/m0CommunityClockOverlay.ts",
+              "Body/M/pratibimba-app/tests/e2e/m0-community-clock.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.6.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 167 dirty files.",
+      "owner": "codex-09-temporal-overlay",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T09:56:07.566Z",
+      "runId": "20260716T095607Z-09-T9.6",
       "worktree": null
     },
     "09.T9.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:12:01.029Z",
+      "claimedAt": "2026-07-16T10:09:36.955Z",
+      "completedAt": "2026-07-16T10:12:01.029Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:12:01.029Z",
+          "text": "B-8 is now cross-codified without runtime change across M0', M2', M3', and the active composition contract as one :Bimba label, one coordinate identity, one graph-schema authority, and one composition seam; 8 composition tests and independent class-W verification PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,graph-live",
+            "exitCode": 0,
+            "testsPassed": 798,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M0/M0-SPEC.md",
+              "Idea/Bimba/Seeds/M/M2/M2-SPEC.md",
+              "Idea/Bimba/Seeds/M/M3/M3-SPEC.md",
+              "Body/M/pratibimba-app/src/composition/compositionContract.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.7.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 172 dirty files.",
+      "owner": "codex-09-no-fork",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:09:36.955Z",
+      "runId": "20260716T100936Z-09-T9.7",
       "worktree": null
     },
     "09.T9.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:14:48.674Z",
+      "claimedAt": "2026-07-16T10:12:09.317Z",
+      "completedAt": "2026-07-16T10:14:48.674Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:14:48.674Z",
+          "text": "Verified S2 canonical Anuttara mappings and alias provenance with 3 Rust tests, and pinned the active M0-0' carrier to canonical c_1_* reads with 10 layer tests; independent class-W verification PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,graph-live",
+            "exitCode": 0,
+            "testsPassed": 798,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0Layers.test.ts",
+              "Body/S/S2/graph-services/src/ontology.rs",
+              "Body/S/S2/graph-services/src/graph_api.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 173 dirty files.",
+      "owner": "codex-09-anuttara-properties",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:12:09.317Z",
+      "runId": "20260716T101209Z-09-T9.8",
       "worktree": null
     },
     "09.T9.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:23:33.611Z",
+      "claimedAt": "2026-07-16T10:14:58.803Z",
+      "completedAt": "2026-07-16T10:23:33.611Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:23:33.611Z",
+          "text": "Mounted coordinate-scoped M0-prime to M5-0-prime Klein seam; strict direct/resonance projection, real epi-gnostic/Neo4j substrate, real gateway Chromium traversal, typecheck and honesty lint all green; independent verifier PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,graph-live",
+            "exitCode": 0,
+            "testsPassed": 798,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/epi-gnostic tests: 8 passed against local Neo4j",
+              "Body/M/pratibimba-app/src/panes/m0M5LibrarySeam.test.ts: 3 passed",
+              "Body/M/pratibimba-app/tests/e2e/m0-m5-library-seam.spec.ts: Playwright real gateway 1 passed",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/09.T9.9.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 174 dirty files.",
+      "owner": "codex-09-klein-chrome",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:14:58.803Z",
+      "runId": "20260716T101458Z-09-T9.9",
       "worktree": null
     },
     "09.T9.10": {
@@ -4212,68 +4558,213 @@
       "worktree": null
     },
     "11.T11.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T12:21:12.164Z",
+      "claimedAt": "2026-07-16T11:51:25.918Z",
+      "completedAt": "2026-07-16T12:21:12.164Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T12:07:28.926Z",
+          "text": "Active carrier routes all 45 M0'-M5' requested extension/contribution pairs into mounted receivers, persists daily/deep promotion as epi-logos.layout.active, filters OmniPanel tabs by availableInLayouts, and preserves the M3 identity tuple; focused 19/19, full app 684/684, typecheck/build, real Chromium 1/1, honesty lint, and carrier-token lint are green.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/medicine-view.spec.ts --reporter=line",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/medicine-view.spec.ts"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-16T12:21:12.164Z",
+          "text": "Independent UF verification passed: the active carrier delivers all 45 target pairs, persists layout promotion, filters OmniPanel tabs, and preserves the M3 identity tuple.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/medicine-view.spec.ts --reporter=line",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/medicine-view.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 196 dirty files.",
+      "owner": "codex-11-nara-continuation",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T12:07:28.926Z",
+      "runId": "20260716T115125Z-11-T11.2",
       "worktree": null
     },
     "11.T11.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T12:43:24.573Z",
+      "claimedAt": "2026-07-16T12:21:41.063Z",
+      "completedAt": "2026-07-16T12:43:24.573Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T12:38:56.294Z",
+          "text": "Active-carrier ownership audit: 5 retained/superseded claims have real receivers; legacy agent-checkin is explicitly retired because no active-run snapshot/control receiver exists. Focused Vitest 9/9, full app 689 passed/3 skipped, typecheck/build green, real Chromium ownership flow 1/1, honesty/token lints green, anti-rebuild assertions green.",
+          "receipt": {
+            "command": "pnpm exec playwright test tests/e2e/daily-surface-ownership.spec.ts --reporter=line",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/dailySurfaceOwnership.ts",
+              "Body/M/pratibimba-app/src/panes/FileTreePane.tsx",
+              "Body/M/pratibimba-app/src/panes/GraphExplorerPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/daily-surface-ownership.spec.ts"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-16T12:43:24.573Z",
+          "text": "Independent UF verification passed: each retained daily claim resolves to an active-carrier receiver, and the retired agent-checkin gap remains explicit.",
+          "receipt": {
+            "command": "pnpm exec playwright test tests/e2e/daily-surface-ownership.spec.ts --reporter=line",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/dailySurfaceOwnership.ts",
+              "Body/M/pratibimba-app/src/panes/FileTreePane.tsx",
+              "Body/M/pratibimba-app/src/panes/GraphExplorerPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/daily-surface-ownership.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 201 dirty files.",
+      "owner": "codex-11-widget-ownership",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T12:38:56.294Z",
+      "runId": "20260716T122141Z-11-T11.3",
       "worktree": null
     },
     "11.T11.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T12:56:56.134Z",
+      "claimedAt": "2026-07-16T12:43:40.082Z",
+      "completedAt": "2026-07-16T12:56:56.134Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T12:52:59.982Z",
+          "text": "Active pratibimba-app now records pratibimba.smart-connections-sidebar as ide-deep code-pending (03.T6.5, 28.T28.12, frozen MIGRATION-SOURCES provenance), App diagnoses and tolerates it without a receiver, falsely-landed missing receivers fail closed, and real Chromium proves ide-deep routing remains live with no Smart Connections tab.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck && pnpm --dir Body/M/pratibimba-app test && pnpm --dir Body/M/pratibimba-app build && pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/pending-layout-claim.spec.ts --reporter=line && node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 693,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/layoutClaims.ts",
+              "Body/M/pratibimba-app/tests/e2e/pending-layout-claim.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-16T12:56:56.134Z",
+          "text": "Independent UF verification passed: the active carrier exposes the code-pending layout claim without inventing a Smart Connections receiver.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck && pnpm --dir Body/M/pratibimba-app test && pnpm --dir Body/M/pratibimba-app build && pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/pending-layout-claim.spec.ts --reporter=line && node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 693,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/layoutClaims.ts",
+              "Body/M/pratibimba-app/tests/e2e/pending-layout-claim.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 209 dirty files.",
+      "owner": "codex-11-pending-marker",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T12:52:59.982Z",
+      "runId": "20260716T124340Z-11-T11.4",
       "worktree": null
     },
     "11.T11.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T13:08:21.367Z",
+      "claimedAt": "2026-07-16T12:57:02.399Z",
+      "completedAt": "2026-07-16T13:08:21.367Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T13:04:15.224Z",
+          "text": "Active pratibimba-app now AST-enforces the frozen 07-t0 forbiddenDirectImports authority across its unified 259-file source graph, covering static/re-export/import-equals/dynamic/require and resolved-relative edges; pnpm test runs the gate before Vitest, no frozen extension tree was modified or recreated, and real gateway smoke remained green.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app lint:imports && pnpm --dir Body/M/pratibimba-app exec vitest run scripts/import-boundaries.test.mjs && pnpm --dir Body/M/pratibimba-app typecheck && pnpm --dir Body/M/pratibimba-app test && pnpm --dir Body/M/pratibimba-app build && pnpm --dir Body/M/pratibimba-app smoke && node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 697,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/scripts/lint-import-boundaries.mjs",
+              "Body/M/pratibimba-app/scripts/import-boundaries.test.mjs",
+              "Body/M/pratibimba-app/package.json"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-16T13:08:21.367Z",
+          "text": "Independent verification passed: the active carrier enforces the frozen import authority across real source edges without rebuilding the frozen extension tree.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app lint:imports && pnpm --dir Body/M/pratibimba-app exec vitest run scripts/import-boundaries.test.mjs && pnpm --dir Body/M/pratibimba-app typecheck && pnpm --dir Body/M/pratibimba-app test && pnpm --dir Body/M/pratibimba-app build && pnpm --dir Body/M/pratibimba-app smoke && node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 697,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/scripts/lint-import-boundaries.mjs",
+              "Body/M/pratibimba-app/scripts/import-boundaries.test.mjs",
+              "Body/M/pratibimba-app/package.json"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 214 dirty files.",
+      "owner": "codex-11-import-boundary",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T13:04:15.224Z",
+      "runId": "20260716T125702Z-11-T11.5",
       "worktree": null
     },
     "11.T11.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T13:18:42.818Z",
+      "claimedAt": "2026-07-16T13:08:26.363Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T13:18:42.818Z",
+          "text": "Active carrier now fails closed on six-field cross-layout identity drift and exposes exact daily-to-deep and deep-to-daily receipts, proven in unit integration and real Chromium with spawned gateway/session plus filesystem DAY/NOW.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck; pnpm --dir Body/M/pratibimba-app test; pnpm --dir Body/M/pratibimba-app build; pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/cross-layout-state-identity.spec.ts --reporter=line; node .codex/scripts/lint-test-honesty.mjs; git diff --check -- <11.T11.6 scoped paths>",
+            "exitCode": 0,
+            "testsPassed": 742,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/state/crossLayoutIdentity.ts",
+              "Body/M/pratibimba-app/src/crossLayoutStateIdentity.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/cross-layout-state-identity.spec.ts",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 218 dirty files.",
+      "owner": "codex-11-state-identity",
+      "leaseExpiresAt": "2026-07-16T15:08:26.363Z",
+      "heartbeatAt": "2026-07-16T13:18:42.818Z",
+      "runId": "20260716T130826Z-11-T11.6",
       "worktree": null
     },
     "11.T11.7": {
@@ -4316,42 +4807,94 @@
       "worktree": null
     },
     "11.T11.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:44:41.666Z",
+      "claimedAt": "2026-07-16T10:24:13.543Z",
+      "completedAt": "2026-07-16T10:44:41.666Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:44:41.666Z",
+          "text": "Ported the M4-prime Tiptap 3 Markdown canvas into the active carrier with protected-local selection highlights, component-local service, byte-preserved frontmatter, real vault write-back, and Playwright filesystem/reload proof; independent UI-flow verifier PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1512,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/NaraCanvasEditor.tsx",
+              "Body/M/pratibimba-app/src/panes/m4NaraCanvas.test.tsx: Tiptap Markdown and floating-menu behavior",
+              "Body/M/pratibimba-app/tests/e2e/journal.spec.ts: Playwright real filesystem write/reload",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/11.T11.10.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 178 dirty files.",
+      "owner": "codex-11-nara-surface",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:24:13.543Z",
+      "runId": "20260716T102413Z-11-T11.10",
       "worktree": null
     },
     "11.T11.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T10:51:55.438Z",
+      "claimedAt": "2026-07-16T10:44:48.054Z",
+      "completedAt": "2026-07-16T10:51:55.438Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T10:51:55.438Z",
+          "text": "Completed the ten-category Nara visual register; agent inscriptions wrap existing Tiptap ranges without replacing user content and carry protected-local agent-chat provenance; portal-core category and file-cycle variants reverified; independent UI-flow verifier PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1513,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4NaraHighlightMark.ts",
+              "Body/M/pratibimba-app/src/panes/m4NaraHighlightService.ts",
+              "Body/M/pratibimba-app/src/panes/m4NaraCanvas.test.tsx: non-destructive prospective inscription",
+              "Body/S/S0/portal-core/tests/nara_journal_parser.rs: ten category parser proof",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/11.T11.11.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 193 dirty files.",
+      "owner": "codex-11-agent-highlights",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:44:48.054Z",
+      "runId": "20260716T104448Z-11-T11.11",
       "worktree": null
     },
     "11.T11.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T11:01:40.051Z",
+      "claimedAt": "2026-07-16T10:52:04.424Z",
+      "completedAt": "2026-07-16T11:01:40.051Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T11:01:40.051Z",
+          "text": "Mounted strict ambient and session tuning chrome above the Nara canvas; optional Medicine/spread producers remain explicitly pending, canonical tuning keys structured-write to the latest session NOW with body preservation, and real Chromium/filesystem proof plus independent UI-flow gate passed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1517,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/NaraAmbientTuning.tsx",
+              "Body/M/pratibimba-app/src/panes/NaraAmbientTuning.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/nara-tuning.spec.ts: Playwright real session NOW bytes",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/11.T11.12.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 193 dirty files.",
+      "owner": "codex-11-ambient-tuning",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T10:52:04.424Z",
+      "runId": "20260716T105204Z-11-T11.12",
       "worktree": null
     },
     "12.T12.01": {
@@ -4760,16 +5303,50 @@
       "worktree": null
     },
     "12.T12.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T02:17:45.882Z",
+      "claimedAt": "2026-07-16T01:38:09.173Z",
+      "completedAt": "2026-07-16T02:17:45.882Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:41:19.810Z",
+          "text": "DR-M5-1 is structurally parsed as VALIDATED; 12.T12.8 is DEPRECATED with zero dependencies and zero reverse dependents; no indexed task requires a separate Pi-as-ACR role implementation.",
+          "receipt": {
+            "command": "node --input-type=module -e structured DR-M5-1 and plan-graph audit",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.index.json"
+            ],
+            "tokenUsage": {
+              "input": 18000,
+              "output": 2600
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T02:17:45.882Z",
+          "text": "DR-M5-1 resolution is present in the decision register; 12.T12.8 is DEPRECATED with zero dependencies and zero reverse dependents; no indexed task requires a separate Pi-as-ACR role implementation.",
+          "receipt": {
+            "command": "node --input-type=module -e structured DR-M5-1 and plan-graph audit; node .codex/scripts/verify-tranche.mjs 12.T12.8 12.T12.12 17.T17.19 --owner codex-verifier-batch3 (W gate: live-wire and gateway PASS)",
+            "exitCode": 0,
+            "testsPassed": 805,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 95 dirty files.",
+      "owner": "codex-12-deprecated",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:41:19.810Z",
+      "runId": "20260716T013809Z-12-T12.8",
       "worktree": null
     },
     "12.T12.9": {
@@ -4843,16 +5420,50 @@
       "worktree": null
     },
     "12.T12.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T02:17:46.145Z",
+      "claimedAt": "2026-07-16T01:46:05.096Z",
+      "completedAt": "2026-07-16T02:17:46.145Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:49:11.700Z",
+          "text": "Structured decision-register and task-graph audit passed 15/15: DR-B-3, DR-M5-1, and DR-S4-TECHNE are parsed VALIDATED resolutions; 12.T12.12 is parsed DEPRECATED with zero dependencies and zero reverse dependents; Pi harness, Anima dispatch, six specialist traces, and Pleroma-Techne substrate ownership are coherent, so no first-class ACR actor implementation is required.",
+          "receipt": {
+            "command": "node --input-type=module structured-decision-register-and-buildIndex-task-graph-audit",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.state.json"
+            ],
+            "tokenUsage": {
+              "input": 30000,
+              "output": 3500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T02:17:46.145Z",
+          "text": "DR-B-3, DR-M5-1, and DR-S4-TECHNE resolutions are present in the decision register; 12.T12.12 is DEPRECATED with zero dependencies and zero reverse dependents; Pi harness, Anima dispatch, specialist traces, and Pleroma-Techne substrate ownership are coherent.",
+          "receipt": {
+            "command": "node --input-type=module structured-decision-register-and-buildIndex-task-graph-audit; node .codex/scripts/verify-tranche.mjs 12.T12.8 12.T12.12 17.T17.19 --owner codex-verifier-batch3 (W gate: live-wire and gateway PASS)",
+            "exitCode": 0,
+            "testsPassed": 811,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.12.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 96 dirty files.",
+      "owner": "codex-12-deprecated-2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:49:11.700Z",
+      "runId": "20260716T014605Z-12-T12.12",
       "worktree": null
     },
     "12.T12.13": {
@@ -5495,16 +6106,52 @@
       "worktree": null
     },
     "15.T15.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:18:02.607Z",
+      "claimedAt": "2026-07-16T01:33:42.521Z",
+      "completedAt": "2026-07-16T03:18:02.607Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:38:27.275Z",
+          "text": "PARTIAL audit: real cmd-period toggle, spawned-gateway Chromium transition/session continuity, and real-filesystem six-field persistence pass; title-bar coin control, consumed lemniscate mask/cubic-out rendering, and one integrated six-global toggle assertion are absent, documented in the owning tranche.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm vitest run src/App.test.tsx src/ui/primitives.test.tsx src/ui/leftSidebarModes.test.ts src/composition/compositionState.test.tsx && pnpm playwright test tests/e2e/session-continuity.spec.ts tests/e2e/visual-regression.spec.ts --output=/tmp/codex-15-toggle-playwright",
+            "exitCode": 0,
+            "testsPassed": 35,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/tests/e2e/session-continuity.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+            ],
+            "tokenUsage": {
+              "input": 14000,
+              "output": 2500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T03:18:02.607Z",
+          "text": "Coin title-bar control, consumed 400ms cubic-out lemniscate mask, reduced-motion snap, and six-field 1-to-0-to-1 continuity are implemented; focused Chromium visual proof and the independent class gate pass.",
+          "receipt": {
+            "command": "pnpm test:e2e (34 real Chromium UI-flow tests passed); node .codex/scripts/verify-tranche.mjs 15.T15.5 38.T06.11 48.T48.5 49.T49.8 --owner codex-verifier-batch8 (PASS incl. app-ui-flow, app-smoke, live-wire)",
+            "exitCode": 0,
+            "testsPassed": 10909,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/FaceToggleChrome.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "codex-15-toggle",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:38:27.275Z",
+      "runId": "20260716T013342Z-15-T15.5",
       "worktree": null
     },
     "15.T15.6": {
@@ -6783,16 +7430,51 @@
       "worktree": null
     },
     "17.T17.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T02:17:46.388Z",
+      "claimedAt": "2026-07-16T01:39:12.675Z",
+      "completedAt": "2026-07-16T02:17:46.388Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:43:05.434Z",
+          "text": "Live S1 parses PathBlock and PathHeadingBlock distinctly, preserves block anchors during rename, and re-renders exact anchored targets through relation-inference request construction; 13 real Rust tests passed.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test wikilink_parser && cargo test --manifest-path /tmp/codex-t17-19-render/Cargo.toml",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/wikilinks.rs",
+              "Body/S/S1/hen-compiler-core/src/relation_inference.rs",
+              "Body/S/S1/hen-compiler-core/tests/wikilink_parser.rs"
+            ],
+            "tokenUsage": {
+              "input": 18000,
+              "output": 3500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T02:17:46.388Z",
+          "text": "Live S1 parses PathBlock and PathHeadingBlock distinctly, preserves block anchors during rename, and re-renders exact anchored targets through relation-inference request construction; focused Rust behavior and the real W-class gateway/live-wire gate pass.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test wikilink_parser; cargo test --manifest-path /tmp/codex-t17-19-render/Cargo.toml; node .codex/scripts/verify-tranche.mjs 12.T12.8 12.T12.12 17.T17.19 --owner codex-verifier-batch3 (W gate: live-wire and gateway PASS)",
+            "exitCode": 0,
+            "testsPassed": 809,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/wikilinks.rs",
+              "Body/S/S1/hen-compiler-core/src/relation_inference.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.19.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 95 dirty files.",
+      "owner": "codex-17-wikilink",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:43:05.434Z",
+      "runId": "20260716T013912Z-17-T17.19",
       "worktree": null
     },
     "17.T17.20": {
@@ -7431,16 +8113,32 @@
       "worktree": null
     },
     "19.T19.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T13:30:26.174Z",
+      "claimedAt": "2026-07-16T13:28:20.076Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T13:30:26.174Z",
+          "text": "Verified the existing Mercurius-to-M4 projection end-to-end: disabled Kairos remains additive, complete canonical Sun-through-Pluto sky frames populate all 10 slots, the C temporal kernel accepts the relay through its injection seam, and a real epi cron/re-entry flow consumes Mercurius output.",
+          "receipt": {
+            "command": "make -C Body/S/S0/epi-lib test_m4; node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/kairos_additive.test.ts; node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/temporal_control_plane.test.ts; cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml nara::kairos::kairos_parse_tests::planet_degrees; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 465,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m4.c",
+              "Body/S/S0/epi-cli/src/nara/kairos.rs",
+              "Body/S/S4/ta-onta/S4-3p-chronos/S3'/kairos-python-adapter.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 129 dirty files.",
+      "owner": "codex-mdev-track19-kairos",
+      "leaseExpiresAt": "2026-07-16T15:28:20.076Z",
+      "heartbeatAt": "2026-07-16T13:30:26.174Z",
+      "runId": "20260716T132820Z-19-T19.12",
       "worktree": null
     },
     "20.T0": {
@@ -9658,16 +10356,33 @@
       "worktree": null
     },
     "28.T28.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T14:16:42.579Z",
+      "claimedAt": "2026-07-16T14:05:51.010Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T14:16:42.579Z",
+          "text": "Shared nine-id readiness seam landed as ONE owned module (resolves the 15.6/28.11 overlap): bridgeReadiness.ts (nine ids mirrored from S0 @epi-logos/ql-schema, readinessSeverity lockstep, 28.11c visual tier, classifyReadiness) + readinessStore (fed live from the single gateway readiness channel in App.tsx) + useBridgeReadiness (driven by the existing useProfileTick clock, 15.6) + BridgeReadinessBadge (wrapping shell ONLY for bridge_unavailable). 30 new unit/component tests; app suite 771 green, tsc clean, honesty-lint clean, build ok. REVIEW not done: track-28 is UF class — done needs playwright/app-flow proof + the (d) eight-widget per-binding mounts + (e) IntegratedBridgeGate consumer, which require an Architect UI-placement call.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test (lint:imports+vitest) && pnpm build",
+            "exitCode": 0,
+            "testsPassed": 771,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/bridgeReadiness.ts",
+              "Body/M/pratibimba-app/src/ui/BridgeReadinessBadge.tsx",
+              "Body/M/pratibimba-app/src/ui/useBridgeReadiness.ts",
+              "Body/M/pratibimba-app/src/state/readinessStore.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 136 dirty files.",
+      "owner": "claude-opus-readiness-seam",
+      "leaseExpiresAt": "2026-07-16T16:05:51.010Z",
+      "heartbeatAt": "2026-07-16T14:16:42.579Z",
+      "runId": "20260716T140551Z-28-T28.11",
       "worktree": null
     },
     "28.T28.12": {
@@ -10417,16 +11132,33 @@
       "worktree": null
     },
     "31.T31.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T13:35:48.972Z",
+      "claimedAt": "2026-07-16T13:32:53.230Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T13:35:48.972Z",
+          "text": "Implemented and exercised the active-carrier action-surface policy: the registry rejects scope/surface mismatches, bound toolbar/context-menu/inline actions stay on their honest rendered surface, and the global command palette cannot invoke an action that lacks its selection or artifact receiver.",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck; pnpm --dir Body/M/pratibimba-app test; pnpm --dir Body/M/pratibimba-app build; node .codex/scripts/lint-test-honesty.mjs; git diff --check -- Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 746,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/actionSurface.ts",
+              "Body/M/pratibimba-app/src/commands/registry.ts",
+              "Body/M/pratibimba-app/src/panes/CommandPalette.tsx",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 129 dirty files.",
+      "owner": "codex-mdev-track31-action-policy",
+      "leaseExpiresAt": "2026-07-16T15:32:53.230Z",
+      "heartbeatAt": "2026-07-16T13:35:48.972Z",
+      "runId": "20260716T133253Z-31-T31.11",
       "worktree": null
     },
     "31.T31.12": {
@@ -11393,16 +12125,34 @@
       "worktree": null
     },
     "38.T06.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T13:38:15.820Z",
+      "claimedAt": "2026-07-16T13:36:51.464Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-16T13:38:15.820Z",
+          "text": "Re-verified the shipped schema migration against real configuration behavior: legacy HOME-scoped nara weights load unchanged through TunableRegistry, the validated full registry contains Nara/Aletheia/slot/Kairos surfaces, and slot writes preserve round-trip, consent, and privacy constraints.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test nara_weights_schema_backed; cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test tunable_full_registry --test kairos_enabled_compat; cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib slot::tests; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/weights.rs",
+              "Body/S/S0/epi-cli/tests/nara_weights_schema_backed.rs",
+              "Body/S/S0/portal-core/tunable-schema/nara.tunable.toml",
+              "Body/S/S0/portal-core/tunable-schema/aletheia.tunable.toml",
+              "Body/S/S0/portal-core/tunable-schema/slot.tunable.toml"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 136 dirty files.",
+      "owner": "codex-mdev-track38-config-migration",
+      "leaseExpiresAt": "2026-07-16T15:36:51.464Z",
+      "heartbeatAt": "2026-07-16T13:38:15.820Z",
+      "runId": "20260716T133651Z-38-T06.12",
       "worktree": null
     },
     "38.T06.8": {
@@ -11463,16 +12213,50 @@
       "worktree": null
     },
     "38.T06.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:18:17.369Z",
+      "claimedAt": "2026-07-16T01:33:42.786Z",
+      "completedAt": "2026-07-16T03:18:17.369Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:37:13.180Z",
+          "text": "Real scanner compiled and ran over epi-lib src/include; 2 behavioral C tests passed and honesty-lint found 0 dishonest blocks. Review gaps at that point: scanner test was not wired into make test; the committed report was stale (1987 candidates versus 2327 regenerated, with shifted citations); required 15-25 candidate manual triage/schema authoring was still open in the report queue.",
+          "receipt": {
+            "command": "cc -std=c11 -Wall -Wextra -Werror -o /tmp/m0_anuttara_lint_test Body/S/S0/epi-lib/tests/m0_anuttara_lint.c && /tmp/m0_anuttara_lint_test; cc -std=c11 -Wall -Wextra -Werror -o /tmp/m0_anuttara_lint Body/S/S0/epi-lib/src/m0_anuttara_lint.c && /tmp/m0_anuttara_lint /tmp/tunable-audit-report.md Body/S/S0/epi-lib/src Body/S/S0/epi-lib/include; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/src/m0_anuttara_lint.c",
+              "Body/S/S0/epi-lib/tests/m0_anuttara_lint.c",
+              "Body/S/S0/epi-lib/tunable-audit-report.md"
+            ],
+            "tokenUsage": {
+              "input": 21000,
+              "output": 2500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T03:18:17.369Z",
+          "text": "Hardcoded-relation scanner is enforced by make test, the generated 2327-finding report is current, exactly 25 findings are adjudicated, and the supported Pleroma policy is registry-tested; independent gate passes.",
+          "receipt": {
+            "command": "pnpm test:e2e (34 real Chromium UI-flow tests passed); node .codex/scripts/verify-tranche.mjs 15.T15.5 38.T06.11 48.T48.5 49.T49.8 --owner codex-verifier-batch8 (PASS incl. app-ui-flow, app-smoke, gateway, gateway-methods, live-wire, portal-core, kernel-truth)",
+            "exitCode": 0,
+            "testsPassed": 10909,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-lib/tunable-audit-triage.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/38.T06.11.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "codex-38-tunability",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:37:13.180Z",
+      "runId": "20260716T013342Z-38-T06.11",
       "worktree": null
     },
     "39.T12.33": {
@@ -13147,16 +13931,51 @@
       "worktree": null
     },
     "48.T48.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:18:17.581Z",
+      "claimedAt": "2026-07-16T01:41:42.495Z",
+      "completedAt": "2026-07-16T03:18:17.581Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:45:38.149Z",
+          "text": "PARTIAL: Hen base-view filesystem behavior passes 3/3 for CT4b columns/filter, idempotence, and canon-residency refusal; live 268-method gateway audit reports s1'.base.ensure unadvertised/unimplemented, and schema columns remain duplicated in ct_contract_columns rather than derived from Hen's validated contract.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test base_view && node .codex/scripts/gateway-method-gate.mjs",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S1/hen-compiler-core/src/base_view.rs",
+              "Body/S/S1/hen-compiler-core/tests/base_view.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/gateway-method-audit.json"
+            ],
+            "tokenUsage": {
+              "input": 14000,
+              "output": 3500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T03:18:17.581Z",
+          "text": "Base schemas now derive from validated canonical frontmatter contracts; exact s1'.base.ensure advertisement, routing, traversal refusal, idempotence, and real WebSocket generation pass; independent wire gate passes.",
+          "receipt": {
+            "command": "pnpm test:e2e (34 real Chromium UI-flow tests passed); node .codex/scripts/verify-tranche.mjs 15.T15.5 38.T06.11 48.T48.5 49.T49.8 --owner codex-verifier-batch8 (PASS incl. app-ui-flow, app-smoke, gateway, gateway-methods, live-wire, portal-core, kernel-truth)",
+            "exitCode": 0,
+            "testsPassed": 10909,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/gate_s1_vault_surface.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/48.T48.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 95 dirty files.",
+      "owner": "codex-48-base",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:45:38.149Z",
+      "runId": "20260716T014142Z-48-T48.5",
       "worktree": null
     },
     "48.T48.6": {
@@ -13416,16 +14235,49 @@
       "worktree": null
     },
     "49.T49.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-16T03:18:17.783Z",
+      "claimedAt": "2026-07-16T01:33:43.032Z",
+      "completedAt": "2026-07-16T03:18:17.783Z",
+      "evidence": [
+        {
+          "at": "2026-07-16T01:40:50.503Z",
+          "text": "Retargeted all frozen Track 49 release commands to current substrate/pratibimba-app carriers; 140 focused behavioral tests pass, but release remains incomplete because live-wire could not open spawned gateway port 18922 and canon lacks explicit ModalResonatorProfile naming plus the M4' handle/digest-only bell note.",
+          "receipt": {
+            "command": "Track 49 focused Rust/Zod/carrier suites; node Body/M/pratibimba-app/scripts/live-wire.mjs",
+            "exitCode": 1,
+            "testsPassed": 140,
+            "testsFailed": 1,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs"
+            ],
+            "tokenUsage": {
+              "input": 22000,
+              "output": 6000
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T03:18:17.783Z",
+          "text": "All required M-prime canon surfaces explicitly name ModalResonatorProfile, M4-prime preserves handle/digest-only protected bell fields, 140 focused checks and the independent release gate pass.",
+          "receipt": {
+            "command": "pnpm test:e2e (34 real Chromium UI-flow tests passed); node .codex/scripts/verify-tranche.mjs 15.T15.5 38.T06.11 48.T48.5 49.T49.8 --owner codex-verifier-batch8 (PASS incl. app-ui-flow, app-smoke, gateway, gateway-methods, live-wire, portal-core, kernel-truth)",
+            "exitCode": 0,
+            "testsPassed": 10909,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/49.T49.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "codex-49-release",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-16T01:40:50.503Z",
+      "runId": "20260716T013343Z-49-T49.8",
       "worktree": null
     },
     "00.T1": {
@@ -13984,17 +14836,65 @@
       "worktree": null
     },
     "20.T20.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-16T13:02:22.457Z",
+      "claimedAt": "2026-07-16T09:19:01.727Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "evidence": [
+        {
+          "at": "2026-07-16T09:26:42.911Z",
+          "text": "Audited 246 status-bearing Wave-C claims; criteria 2-4 remain OPEN at exact matrix pointers, while matrix coverage, ownership, and routeability findings are recorded in the completion audit.",
+          "receipt": {
+            "command": "node .codex/scripts/m-dev-plan-assess.mjs --write --json --require-now; node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20-wave-c-completion-audit.md"
+            ],
+            "tokenUsage": {
+              "input": 16500,
+              "output": 8500
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T09:36:01.355Z",
+          "text": "Review correction: criterion 1 now uses a reproducible matrix-row rule; criteria 5 and 6 are OPEN because Track-14 scope and full routeability lack durable proof. The global diff-check failure is unrelated trailing whitespace outside this tranche.",
+          "receipt": {
+            "command": "node .codex/scripts/m-dev-plan-assess.mjs --write --json --require-now (exit 0); node .codex/scripts/lint-test-honesty.mjs (exit 0); git diff --check (exit 2: pre-existing trailing whitespace in 05.T5.22-05.T5.25 verification artifacts); git diff --check -- plan.runs/20-wave-c-completion-audit.md (exit 0)",
+            "exitCode": 2,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20-wave-c-completion-audit.md"
+            ],
+            "tokenUsage": {
+              "input": 10000,
+              "output": 4000
+            }
+          }
+        },
+        {
+          "at": "2026-07-16T13:02:22.457Z",
+          "text": "Rewrote the completion map to code-verified truth: prior 5-of-6-OPEN was bookkeeping over unverified ledger claims. Criteria 2/3/6 corrected (M3 contradictions are resolved data-driven/aperture facts; most CODE-PENDING is false-pending buildable substrate); only criterion 5 (Wave-C ownership sweep) genuinely open. Real remaining work reframed as Kind 1 wiring / Kind 2 faces-over-landed-LUTs / Kind 3 narrow-upstream.",
+          "receipt": {
+            "command": "code-verified review (7 parallel passes, file:line-cited) + honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20-wave-c-completion-audit.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 156 dirty files.",
+      "owner": "codex-20-wave-c-worker",
+      "leaseExpiresAt": "2026-07-16T11:19:01.727Z",
+      "heartbeatAt": "2026-07-16T13:02:22.457Z",
+      "runId": "20260716T091901Z-20-T20.3",
+      "worktree": "codex-20-wave-c-audit"
     },
     "33.T33.1": {
       "status": "blocked",
@@ -17632,30 +18532,422 @@
       "leaseExpiresAt": "2026-07-15T16:29:57.658Z",
       "worktree": null,
       "completedAt": "2026-07-15T14:33:53.539Z"
+    },
+    {
+      "runId": "20260715T143838Z-06-T6.12",
+      "taskId": "06.T6.12",
+      "status": "review",
+      "startedAt": "2026-07-15T14:38:38.290Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-15T16:38:38.290Z",
+      "worktree": null,
+      "completedAt": "2026-07-15T14:42:23.461Z"
+    },
+    {
+      "runId": "20260715T192554Z-06-T6.2",
+      "taskId": "06.T6.2",
+      "status": "done",
+      "startedAt": "2026-07-15T19:25:54.181Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-16T02:08:25.503Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-16T00:08:25.503Z",
+      "completedAt": "2026-07-16T00:13:54.197Z"
+    },
+    {
+      "runId": "20260716T002042Z-06-T6.3",
+      "taskId": "06.T6.3",
+      "status": "done",
+      "startedAt": "2026-07-16T00:20:42.848Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-16T02:20:42.848Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:24:20.370Z"
+    },
+    {
+      "runId": "20260716T002427Z-06-T6.4",
+      "taskId": "06.T6.4",
+      "status": "review",
+      "startedAt": "2026-07-16T00:24:27.220Z",
+      "owner": "codex-05-route",
+      "leaseExpiresAt": "2026-07-16T02:24:27.220Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:24:49.353Z"
+    },
+    {
+      "runId": "20260716T002456Z-07-T7.5",
+      "taskId": "07.T7.5",
+      "status": "done",
+      "startedAt": "2026-07-16T00:24:56.484Z",
+      "owner": "codex-07-cosmic",
+      "leaseExpiresAt": "2026-07-16T02:24:56.484Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:27:56.563Z"
+    },
+    {
+      "runId": "20260716T002803Z-07-T7.6",
+      "taskId": "07.T7.6",
+      "status": "done",
+      "startedAt": "2026-07-16T00:28:03.857Z",
+      "owner": "codex-07-cosmic",
+      "leaseExpiresAt": "2026-07-16T02:28:03.857Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:33:19.691Z"
+    },
+    {
+      "runId": "20260716T003325Z-07-T7.7",
+      "taskId": "07.T7.7",
+      "status": "done",
+      "startedAt": "2026-07-16T00:33:25.002Z",
+      "owner": "codex-07-cosmic",
+      "leaseExpiresAt": "2026-07-16T02:33:25.002Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:37:32.467Z"
+    },
+    {
+      "runId": "20260716T003736Z-07-T7.8",
+      "taskId": "07.T7.8",
+      "status": "done",
+      "startedAt": "2026-07-16T00:37:36.520Z",
+      "owner": "codex-07-cosmic",
+      "leaseExpiresAt": "2026-07-16T02:37:36.520Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:41:58.390Z"
+    },
+    {
+      "runId": "20260716T004216Z-07-T7.9",
+      "taskId": "07.T7.9",
+      "status": "done",
+      "startedAt": "2026-07-16T00:42:16.922Z",
+      "owner": "codex-07-cosmic",
+      "leaseExpiresAt": "2026-07-16T02:42:16.922Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:44:56.515Z"
+    },
+    {
+      "runId": "20260716T004506Z-09-T9.5",
+      "taskId": "09.T9.5",
+      "status": "review",
+      "startedAt": "2026-07-16T00:45:06.049Z",
+      "owner": "codex-09-gnostic",
+      "leaseExpiresAt": "2026-07-16T02:45:06.049Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T00:46:00.946Z"
+    },
+    {
+      "runId": "20260716T013342Z-15-T15.5",
+      "taskId": "15.T15.5",
+      "status": "review",
+      "startedAt": "2026-07-16T01:33:42.521Z",
+      "owner": "codex-15-toggle",
+      "leaseExpiresAt": "2026-07-16T03:33:42.521Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:38:27.275Z"
+    },
+    {
+      "runId": "20260716T013342Z-38-T06.11",
+      "taskId": "38.T06.11",
+      "status": "review",
+      "startedAt": "2026-07-16T01:33:42.786Z",
+      "owner": "codex-38-tunability",
+      "leaseExpiresAt": "2026-07-16T03:33:42.786Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:37:13.180Z"
+    },
+    {
+      "runId": "20260716T013343Z-49-T49.8",
+      "taskId": "49.T49.8",
+      "status": "review",
+      "startedAt": "2026-07-16T01:33:43.032Z",
+      "owner": "codex-49-release",
+      "leaseExpiresAt": "2026-07-16T03:33:43.032Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:40:50.503Z"
+    },
+    {
+      "runId": "20260716T013809Z-12-T12.8",
+      "taskId": "12.T12.8",
+      "status": "review",
+      "startedAt": "2026-07-16T01:38:09.173Z",
+      "owner": "codex-12-deprecated",
+      "leaseExpiresAt": "2026-07-16T03:38:09.173Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:41:19.810Z"
+    },
+    {
+      "runId": "20260716T013912Z-17-T17.19",
+      "taskId": "17.T17.19",
+      "status": "review",
+      "startedAt": "2026-07-16T01:39:12.675Z",
+      "owner": "codex-17-wikilink",
+      "leaseExpiresAt": "2026-07-16T03:39:12.675Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:43:05.434Z"
+    },
+    {
+      "runId": "20260716T014142Z-48-T48.5",
+      "taskId": "48.T48.5",
+      "status": "review",
+      "startedAt": "2026-07-16T01:41:42.495Z",
+      "owner": "codex-48-base",
+      "leaseExpiresAt": "2026-07-16T03:41:42.495Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:45:38.149Z"
+    },
+    {
+      "runId": "20260716T014605Z-12-T12.12",
+      "taskId": "12.T12.12",
+      "status": "review",
+      "startedAt": "2026-07-16T01:46:05.096Z",
+      "owner": "codex-12-deprecated-2",
+      "leaseExpiresAt": "2026-07-16T03:46:05.096Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T01:49:11.700Z"
+    },
+    {
+      "runId": "20260716T033548Z-06-T6.5",
+      "taskId": "06.T6.5",
+      "status": "done",
+      "startedAt": "2026-07-16T03:35:48.207Z",
+      "owner": "codex-06-m5",
+      "leaseExpiresAt": "2026-07-16T05:35:48.207Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T03:41:11.043Z"
+    },
+    {
+      "runId": "20260716T034123Z-06-T6.6",
+      "taskId": "06.T6.6",
+      "status": "done",
+      "startedAt": "2026-07-16T03:41:23.700Z",
+      "owner": "codex-06-anuttara",
+      "leaseExpiresAt": "2026-07-16T05:41:23.700Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T03:44:37.427Z"
+    },
+    {
+      "runId": "20260716T034443Z-06-T6.7",
+      "taskId": "06.T6.7",
+      "status": "done",
+      "startedAt": "2026-07-16T03:44:43.200Z",
+      "owner": "codex-06-agent-roster",
+      "leaseExpiresAt": "2026-07-16T05:44:43.200Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T09:18:54.472Z"
+    },
+    {
+      "runId": "20260716T091901Z-20-T20.3",
+      "taskId": "20.T20.3",
+      "status": "review",
+      "startedAt": "2026-07-16T09:19:01.727Z",
+      "owner": "codex-20-wave-c-worker",
+      "leaseExpiresAt": "2026-07-16T11:19:01.727Z",
+      "worktree": "codex-20-wave-c-audit",
+      "completedAt": "2026-07-16T09:26:42.911Z"
+    },
+    {
+      "runId": "20260716T091902Z-06-T6.8",
+      "taskId": "06.T6.8",
+      "status": "done",
+      "startedAt": "2026-07-16T09:19:02.943Z",
+      "owner": "codex-06-ebm-runtime",
+      "leaseExpiresAt": "2026-07-16T11:19:02.943Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T09:37:25.207Z"
+    },
+    {
+      "runId": "20260716T093731Z-06-T6.9",
+      "taskId": "06.T6.9",
+      "status": "done",
+      "startedAt": "2026-07-16T09:37:31.581Z",
+      "owner": "codex-06-ebm-cli",
+      "leaseExpiresAt": "2026-07-16T11:37:31.581Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T09:56:00.107Z"
+    },
+    {
+      "runId": "20260716T095607Z-09-T9.6",
+      "taskId": "09.T9.6",
+      "status": "done",
+      "startedAt": "2026-07-16T09:56:07.566Z",
+      "owner": "codex-09-temporal-overlay",
+      "leaseExpiresAt": "2026-07-16T11:56:07.566Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:09:27.144Z"
+    },
+    {
+      "runId": "20260716T100936Z-09-T9.7",
+      "taskId": "09.T9.7",
+      "status": "done",
+      "startedAt": "2026-07-16T10:09:36.955Z",
+      "owner": "codex-09-no-fork",
+      "leaseExpiresAt": "2026-07-16T12:09:36.955Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:12:01.029Z"
+    },
+    {
+      "runId": "20260716T101209Z-09-T9.8",
+      "taskId": "09.T9.8",
+      "status": "done",
+      "startedAt": "2026-07-16T10:12:09.317Z",
+      "owner": "codex-09-anuttara-properties",
+      "leaseExpiresAt": "2026-07-16T12:12:09.317Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:14:48.674Z"
+    },
+    {
+      "runId": "20260716T101458Z-09-T9.9",
+      "taskId": "09.T9.9",
+      "status": "done",
+      "startedAt": "2026-07-16T10:14:58.803Z",
+      "owner": "codex-09-klein-chrome",
+      "leaseExpiresAt": "2026-07-16T12:14:58.803Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:23:33.611Z"
+    },
+    {
+      "runId": "20260716T102413Z-11-T11.10",
+      "taskId": "11.T11.10",
+      "status": "done",
+      "startedAt": "2026-07-16T10:24:13.543Z",
+      "owner": "codex-11-nara-surface",
+      "leaseExpiresAt": "2026-07-16T13:24:13.543Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:44:41.666Z"
+    },
+    {
+      "runId": "20260716T104448Z-11-T11.11",
+      "taskId": "11.T11.11",
+      "status": "done",
+      "startedAt": "2026-07-16T10:44:48.054Z",
+      "owner": "codex-11-agent-highlights",
+      "leaseExpiresAt": "2026-07-16T13:44:48.054Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T10:51:55.438Z"
+    },
+    {
+      "runId": "20260716T105204Z-11-T11.12",
+      "taskId": "11.T11.12",
+      "status": "done",
+      "startedAt": "2026-07-16T10:52:04.424Z",
+      "owner": "codex-11-ambient-tuning",
+      "leaseExpiresAt": "2026-07-16T13:52:04.424Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T11:01:40.051Z"
+    },
+    {
+      "runId": "20260716T115125Z-11-T11.2",
+      "taskId": "11.T11.2",
+      "status": "review",
+      "startedAt": "2026-07-16T11:51:25.918Z",
+      "owner": "codex-11-nara-continuation",
+      "leaseExpiresAt": "2026-07-16T13:51:25.918Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T12:07:28.926Z"
+    },
+    {
+      "runId": "20260716T122141Z-11-T11.3",
+      "taskId": "11.T11.3",
+      "status": "review",
+      "startedAt": "2026-07-16T12:21:41.063Z",
+      "owner": "codex-11-widget-ownership",
+      "leaseExpiresAt": "2026-07-16T14:21:41.063Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T12:38:56.294Z"
+    },
+    {
+      "runId": "20260716T124340Z-11-T11.4",
+      "taskId": "11.T11.4",
+      "status": "review",
+      "startedAt": "2026-07-16T12:43:40.082Z",
+      "owner": "codex-11-pending-marker",
+      "leaseExpiresAt": "2026-07-16T14:43:40.082Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T12:52:59.982Z"
+    },
+    {
+      "runId": "20260716T125702Z-11-T11.5",
+      "taskId": "11.T11.5",
+      "status": "review",
+      "startedAt": "2026-07-16T12:57:02.399Z",
+      "owner": "codex-11-import-boundary",
+      "leaseExpiresAt": "2026-07-16T14:57:02.399Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T13:04:15.224Z"
+    },
+    {
+      "runId": "20260716T130826Z-11-T11.6",
+      "taskId": "11.T11.6",
+      "status": "review",
+      "startedAt": "2026-07-16T13:08:26.363Z",
+      "owner": "codex-11-state-identity",
+      "leaseExpiresAt": "2026-07-16T15:08:26.363Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T13:18:42.818Z"
+    },
+    {
+      "runId": "20260716T132820Z-19-T19.12",
+      "taskId": "19.T19.12",
+      "status": "review",
+      "startedAt": "2026-07-16T13:28:20.076Z",
+      "owner": "codex-mdev-track19-kairos",
+      "leaseExpiresAt": "2026-07-16T15:28:20.076Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T13:30:26.174Z"
+    },
+    {
+      "runId": "20260716T133253Z-31-T31.11",
+      "taskId": "31.T31.11",
+      "status": "review",
+      "startedAt": "2026-07-16T13:32:53.230Z",
+      "owner": "codex-mdev-track31-action-policy",
+      "leaseExpiresAt": "2026-07-16T15:32:53.230Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T13:35:48.972Z"
+    },
+    {
+      "runId": "20260716T133651Z-38-T06.12",
+      "taskId": "38.T06.12",
+      "status": "review",
+      "startedAt": "2026-07-16T13:36:51.464Z",
+      "owner": "codex-mdev-track38-config-migration",
+      "leaseExpiresAt": "2026-07-16T15:36:51.464Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T13:38:15.820Z"
+    },
+    {
+      "runId": "20260716T140551Z-28-T28.11",
+      "taskId": "28.T28.11",
+      "status": "review",
+      "startedAt": "2026-07-16T14:05:51.010Z",
+      "owner": "claude-opus-readiness-seam",
+      "leaseExpiresAt": "2026-07-16T16:05:51.010Z",
+      "worktree": null,
+      "completedAt": "2026-07-16T14:16:42.579Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-15T14:20:43.899Z",
-    "updatedAt": "2026-07-15T14:20:43.899Z",
+    "createdAt": "2026-07-16T13:36:20.017Z",
+    "updatedAt": "2026-07-16T13:36:20.017Z",
     "taskIds": [
-      "05.T5.7",
-      "05.T5.8",
-      "05.T5.9",
-      "06.T6.11"
+      "20.T20.3",
+      "11.T11.6",
+      "19.T19.12",
+      "31.T31.11"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T5.7": "in-session",
-      "05.T5.8": "in-session",
-      "05.T5.9": "in-session",
-      "06.T6.11": "in-session"
+      "20.T20.3": "in-session",
+      "11.T11.6": "in-session",
+      "19.T19.12": "in-session",
+      "31.T31.11": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

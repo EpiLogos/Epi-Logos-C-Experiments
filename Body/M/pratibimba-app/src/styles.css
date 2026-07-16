@@ -941,6 +941,24 @@ body,
 .provenance-review_pending { color: #b89fd0; }
 .provenance-blocked { color: #e08a8a; }
 
+/* 28.11c: per-binding bridge-readiness tier — inline border-colour at the
+   datum, never a separate errors panel (15.6). green readable, amber
+   recoverable, red hard refusal. */
+.bridge-readiness-border,
+.bridge-readiness-shell {
+  border-left: 2px solid var(--hairline);
+  padding-left: 0.5rem;
+}
+.bridge-readiness-tier-green { border-left-color: var(--ready); }
+.bridge-readiness-tier-amber { border-left-color: var(--accent); }
+.bridge-readiness-tier-red { border-left-color: var(--danger); }
+.bridge-readiness-blockers {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-size: var(--type-caption);
+  color: var(--danger);
+}
+
 .walk-pane {
   display: flex;
   flex-direction: column;

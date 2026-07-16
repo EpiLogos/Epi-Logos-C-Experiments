@@ -28,6 +28,7 @@ import {
     registerCrossLayoutIntentCommand
 } from './commands/crossLayoutIntent';
 import { useEventsStore } from './state/eventsStore';
+import { useReadinessStore } from './state/readinessStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
 import {
     createCrossLayoutIdentityReceipt,
@@ -485,7 +486,14 @@ export function App() {
                     isChimeCoherent(frame)
                 );
             },
-            onEvent: event => useEventsStore.getState().push(event),
+            onEvent: event => {
+                useEventsStore.getState().push(event);
+                // 28.11e: the shared readiness store is fed from the ONE gateway
+                // readiness channel, so every bridge-gate reads the same source.
+                if (event.kind === 'readiness') {
+                    useReadinessStore.getState().ingestReadinessEvent(event.payload);
+                }
+            },
             onStatus: status => {
                 useProvenanceStore.getState().setConnection(status);
                 if (status.connected && !bound) {
