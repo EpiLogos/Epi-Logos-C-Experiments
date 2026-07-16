@@ -33,6 +33,7 @@ import {
     type QReviewEntry
 } from './autoresearchModel';
 import { composeQPairCandidate, validateQPairCandidate } from './qPairComposition';
+import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 
 export const AUTORESEARCH_CONTRACT_TEXT =
     'Autoresearch is dry-run only. requires_human is non-bypassable, and forbidden_authority prevents direct canon mutation. Candidates route through M5 governance for human ratification.';
@@ -319,6 +320,7 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
                     Refresh
                 </button>
                 <span className="autoresearch-tick">profile generation {tick.generation ?? 'pending'}</span>
+                <BridgeReadinessBadge bindingKey="s5'.improve.history" />
             </div>
 
             {error ? <p className="pane-message autoresearch-error" data-testid="autoresearch-error">{error}</p> : null}

@@ -28,6 +28,7 @@ import { M0CommunityClockPanel } from './M0CommunityClockPanel';
 import { M0LanguageReaderPanel } from './M0LanguageReaderPanel';
 import { M0RelationsReaderPanel } from './M0RelationsReaderPanel';
 import { M0M5LibrarySeamPanel } from './M0M5LibrarySeamPanel';
+import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 import { ATELIER_CLUSTER_HUES, inkDim, ringLit } from '../ui/tokens';
 
 const NODES_CYPHER =
@@ -142,6 +143,7 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
             <M0M5LibrarySeamPanel />
             <M0VirtueWitnessPanel />
             <div className="pane-toolbar" data-testid="graph-status">
+                <BridgeReadinessBadge bindingKey="s2.graph.node" />
                 {status === 'loading' ? 'reading the canonical map…' : detail}
                 {status === 'ready' && atelierClusterCount !== null
                     ? ` · ${atelierClusterCount} etymology clusters`

@@ -26,6 +26,16 @@ test('Autoresearch mounts over the real S5 wire with governed, honest state', as
     await expect(page.getByTestId('autoresearch-capacity-matrix').getByRole('button')).toHaveCount(6);
     await expect(page.getByTestId('autoresearch-empty')).toBeVisible();
     await expect(page.getByTestId('autoresearch-error')).toHaveCount(0);
+
+    // 28.11d/15.6: the shared bridge-readiness badge is mounted inline at the
+    // pane's s5'.improve.history binding and renders a valid nine-id readiness
+    // in the real app flow (not a jsdom mount) — provenance lives at the datum.
+    const readinessBadge = page.locator(`[data-binding="s5'.improve.history"]`);
+    await expect(readinessBadge).toBeVisible();
+    await expect(readinessBadge).toHaveAttribute(
+        'data-readiness',
+        /^(bridge_unavailable|profile_missing_field|s2_graph_blocked|s3_subscription_blocked|s5_review_blocked|authority_payload_missing|privacy_blocked|degraded_but_readable|ready_public_current)$/
+    );
 });
 
 test('Autoresearch dispatches a linked review through the cross-layout intent spine', async ({ page }) => {

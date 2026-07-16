@@ -140,6 +140,15 @@ describe('AutoresearchPane', () => {
         expect(screen.getByTestId('autoresearch-q-review-queue').textContent).toContain('compose_return_with_next_cycle');
     });
 
+    it('mounts the shared bridge-readiness badge at its s5′.improve.history binding (28.11d)', () => {
+        render(<AutoresearchPane fixture={SNAPSHOT} />);
+        // No readiness reported for this binding → the honest bridge_unavailable
+        // wrapping shell (28.11a), rendered inline at the datum (15.6).
+        const badge = document.querySelector('[data-binding="s5\'.improve.history"]');
+        expect(badge).not.toBeNull();
+        expect(badge?.getAttribute('data-readiness')).toBe('bridge_unavailable');
+    });
+
     it('filters by all six-capacity vocabulary and discloses the non-bypassable human gate', () => {
         render(<AutoresearchPane fixture={SNAPSHOT} />);
         expect(screen.getAllByTestId('autoresearch-candidate')).toHaveLength(2);
