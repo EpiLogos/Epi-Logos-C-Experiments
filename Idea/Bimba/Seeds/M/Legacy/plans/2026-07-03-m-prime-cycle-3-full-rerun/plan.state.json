@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-16T18:32:29.365Z",
+  "updatedAt": "2026-07-16T20:16:48.641Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -8379,10 +8379,10 @@
       "worktree": null
     },
     "21.T21.12": {
-      "status": "review",
-      "updatedAt": "2026-07-16T18:32:29.349Z",
+      "status": "done",
+      "updatedAt": "2026-07-16T20:16:48.625Z",
       "claimedAt": "2026-07-16T18:02:42.498Z",
-      "completedAt": null,
+      "completedAt": "2026-07-16T20:16:48.625Z",
       "evidence": [
         {
           "at": "2026-07-16T17:46:44.959Z",
@@ -8407,11 +8407,26 @@
               "Body/M/pratibimba-app/tests/e2e/m0-virtue-witness.spec.ts"
             ]
           }
+        },
+        {
+          "at": "2026-07-16T20:16:48.625Z",
+          "text": "M0 reading/authoring mode toggle over real carrier surfaces, done + full UF gate GREEN (verifier claude-opus-verifier != closer). m0ModeActions (three M5-routed actions -> real intent targets; SC-2 mutatesGraphCanon false, no canon-mutation symbol) + M0ModeActionsPanel (DR-M0-1 banner, both governance deep-links) mounted in GraphExplorerPane. 13 unit/component + UF playwright proof. Also root-caused and fixed the ~19-spec app-ui-flow regression from the 27.11 OmniPanel-session change: the imperative selectOmniPanelTab doAction raced in-face navigation; made 27.11 store-authoritative (activeTab + per-tab state persisted, data-omnipanel-active-tab; App.test.tsx contract preserved). Full app-ui-flow e2e suite GREEN in 160s, 0 failures.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 21.T21.12 --owner claude-opus-verifier (16-suite UF-class gate, app-ui-flow full e2e GREEN in 160s)",
+            "exitCode": 0,
+            "testsPassed": 790,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0ModeActions.ts",
+              "Body/M/pratibimba-app/src/panes/M0ModeActionsPanel.tsx",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 182 dirty files.",
       "owner": "claude-opus-m0-modetoggle",
-      "leaseExpiresAt": "2026-07-16T20:02:42.498Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T18:32:29.349Z",
       "runId": "20260716T180242Z-21-T21.12",
       "worktree": null
