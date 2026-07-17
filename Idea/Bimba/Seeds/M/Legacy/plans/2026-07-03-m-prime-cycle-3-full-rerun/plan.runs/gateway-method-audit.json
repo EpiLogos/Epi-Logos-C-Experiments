@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-15T14:32:24.027Z",
+ "generatedAt": "2026-07-17T09:21:35.415Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,9 +7,9 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 264,
-  "present": 61,
-  "absent": 203,
+  "probed": 268,
+  "present": 66,
+  "absent": 202,
   "unknown": 0
  },
  "methods": [
@@ -848,10 +848,10 @@
   },
   {
    "method": "s1'.base.ensure",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing field `coordinate`"
   },
   {
    "method": "s1'.base.ensure(params)",
@@ -908,6 +908,13 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.q_articulation.accept",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `coordinate`"
   },
   {
    "method": "s1'.residency.resolve",
@@ -1636,6 +1643,27 @@
    "exists": true,
    "responds": true,
    "errorClass": "domain-error: missing field `target_family`"
+  },
+  {
+   "method": "s5'.improve.q_review.latest",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `day_id`"
+  },
+  {
+   "method": "s5'.improve.q_review.night_pass",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `day_id`"
+  },
+  {
+   "method": "s5'.improve.q_review.run",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `corpus_snapshot`"
   },
   {
    "method": "s5'.improve.status",
