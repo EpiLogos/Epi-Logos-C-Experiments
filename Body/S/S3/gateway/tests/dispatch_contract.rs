@@ -415,6 +415,7 @@ fn s1_hen_adapter_methods_route_through_dispatch_plan() {
     // S1HenAdapter kind must classify them in the dispatch-plan, even
     // though the original 13.T2 plan body listed only six kinds.
     for method in [
+        "s1'.base.ensure",
         "s1'.vault.read_file",
         "s1'.vault.write_file",
         "s1'.vault.rename_file",
@@ -591,11 +592,11 @@ mod t9_route_ownership_cross_walk {
             // not by S0 server.rs.
             "s0.command.completion",
             "s0.command.exec",
-            // S0' Anuttara verifier — routed by S3 metadata to epi-lib.
-            "s0'.verifier.check_state",
-            "s0'.verifier.emit_query",
-            "s0'.verifier.validate_membership",
-            "s0'.verifier.owl_query",
+            // S0' Anuttara verifier — the check_state/emit_query/
+            // validate_membership/owl_query family now carries real S0
+            // server dispatch arms (gate/server/dispatch.rs → verifier::*),
+            // so nothing from it remains in this exemption list (the arms
+            // landed; the cross-walk re-arms per the removal rule above).
             // S0' settings surface — contract-declared, routed by S3 metadata;
             // backed by the `epi settings` CLI + epi-s0-settings substrate, with
             // no S0 server.rs match arm (34.T34.1).
@@ -1248,7 +1249,11 @@ fn agent_card_advertises_only_the_served_gateway_surface() {
     let methods = card["x-epiLogosGateway"]["methods"]
         .as_array()
         .expect("x-epiLogosGateway.methods is an array");
-    assert_eq!(methods.len(), 5, "the card describes exactly the five spec methods");
+    assert_eq!(
+        methods.len(),
+        5,
+        "the card describes exactly the five spec methods"
+    );
 
     // Compile-time existence proof for the one native (non-METHOD_NAMES) entry.
     let _native_entry = epi_s3_gateway::dispatch::route_anima_invoke;
