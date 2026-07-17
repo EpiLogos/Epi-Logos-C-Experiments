@@ -181,6 +181,8 @@ Cross-check surfaces: `methods_in_route_table_missing_from_dispatch_plan()` (`di
 
 `METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry]` at `gateway-contract/src/lib.rs:895-1833` is the canonical 7-kind classification (S3NativeHandler, S2GraphServiceAdapter, S4OrchestrationAdapter, S5GovernanceAdapter, S0ProductAdapter, S1HenAdapter, Missing) of every method. Lookup `method_dispatch_plan_entry(method)` at `gateway-contract/src/lib.rs:1847-1851`.
 
+`s1'.base.ensure` is registered atomically in `METHOD_NAMES` and `METHOD_DISPATCH_PLAN` as `S1HenAdapter`, with typed DTOs in `gateway-contract/src/s1_vault.rs` and the executable live-host arm in `Body/S/S0/epi-cli/src/gate/server/dispatch.rs`. This addition does not widen or modify the generic S3 `classify_method` function.
+
 **Audit finding**: every method in `METHOD_NAMES` has a corresponding `MethodDispatchPlanEntry` with `kind != Missing`. There are no current `Missing` entries — the dispatch surface is closed at 134 methods, which is the integrity test that `gateway/tests/dispatch_contract.rs` enforces.
 
 #### 2.5.3 Graphiti runtime adapter

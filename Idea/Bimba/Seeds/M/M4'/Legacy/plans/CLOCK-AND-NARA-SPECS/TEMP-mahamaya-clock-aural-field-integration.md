@@ -347,7 +347,7 @@ None of these are written yet — this temp file holds the substance until the d
 The user's instruction was explicit: capture this before further digging. So flagging without yet resolving:
 
 - **MEF lens vs Mahāmāya-clock-lens priority** can now be assessed (per §0.C): they're orthogonal, not competing. MEF for epistemic-mode; Mahāmāya for clock-divisor-aperture. Both operative simultaneously.
-- **17th meta-lens speculation** was wrong; Fibonacci Ground at Level 0 is the meta-position (not a 17th lens).
+- **17th-lens wording is resolved:** Fibonacci Ground at Level 0 is functionally the primary seventeenth lens (id 16), not an additional static division row and never a Frame/Operator 18-stack.
 - **The session-thread's 384 = 24 × 16 reading** is correct and sharper than the existing 360 + 24 framing.
 - **The Pauli-clock-as-functional-grammar inheritance** is a real claim worth making explicit, but is decorative-pedagogical, not load-bearing-implementation. Brief mention in M'-SYSTEM-SPEC sufficient.
 - **The Diamond-QL aural-field Vitruvian rendering** is the most generative new idea and needs serious design work before any spec touch. §2 above captures the proposal.

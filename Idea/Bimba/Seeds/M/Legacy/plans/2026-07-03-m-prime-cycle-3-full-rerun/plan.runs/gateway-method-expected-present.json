@@ -50,6 +50,10 @@
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },
   {
+   "method": "s1'.base.ensure",
+   "claimedBy": "48.T48.5"
+  },
+  {
    "method": "s1'.vault.read_file",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },
@@ -152,6 +156,18 @@
   {
    "method": "s5'.improve.history",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.improve.q_review.latest",
+   "claimedBy": "06.T6.12"
+  },
+  {
+   "method": "s5'.improve.q_review.night_pass",
+   "claimedBy": "06.T6.12"
+  },
+  {
+   "method": "s5'.improve.q_review.run",
+   "claimedBy": "06.T6.12"
   },
   {
    "method": "s5'.improve.propose",

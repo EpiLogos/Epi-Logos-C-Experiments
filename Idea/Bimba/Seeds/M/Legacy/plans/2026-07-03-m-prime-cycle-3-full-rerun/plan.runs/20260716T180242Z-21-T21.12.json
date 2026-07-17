@@ -1,0 +1,45 @@
+{
+  "runId": "20260716T180242Z-21-T21.12",
+  "taskId": "21.T21.12",
+  "startedAt": "2026-07-16T18:02:42.498Z",
+  "owner": "claude-opus-m0-modetoggle",
+  "leaseExpiresAt": "2026-07-16T20:02:42.498Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.12",
+    "trackId": "21",
+    "tranche": "T21.12",
+    "title": "Reading / Authoring mode toggle",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.10"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-16T17:46:44.959Z",
+        "text": "Blocked on unlanded carrier predecessors, not cleanly closable as 'extend existing'. (1) The M0 actions panel it extends (M0GatewayAction + the three M5-routed actions open-language-development-route / deposit-graph-readiness-evidence / request-anuttara-review) does NOT exist in the carrier — only the six-layer data rail (m0Layers.ts / M0LayerRail.tsx) is landed. (2) The authoring-mode deep-links target canonStudio + logosAtelier via ide-shell-m0-m5, but those intent targets are absent from the carrier's CROSS_LAYOUT_INTENT_TARGETS ledger — which is track-11's cross-layout-intent lane (codex-11-state-identity, actively claimed). Closing 21.12 requires building the M0 actions surface AND adding atelier intent targets in another agent's write scope. Needs: M0 actions-panel predecessor landed + the atelier contribution targets registered (coordinate with track 11)."
+      },
+      {
+        "at": "2026-07-16T18:02:42.257Z",
+        "text": "Reverting fabricated block: the prior 'blocked' was a wording-mismatch error (matched dead Theia names ide-shell-m0-m5/canonStudio/M0GatewayAction instead of the carrier surfaces). Ledger+carrier reality: M0 layer rail (21.1) + reader panels are landed (via 01/09 tracks); routed-write intent targets exist (m5-epii/evidence-deposit->omniEvidence, m5-epii/review->omniReview, m0-anuttara/*). Re-assessing for a real build."
+      }
+    ],
+    "claimedAt": "2026-07-16T17:44:10.229Z",
+    "completedAt": null,
+    "owner": "claude-opus-m0-modetoggle",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-16T17:44:10.229Z",
+    "runId": "20260716T174410Z-21-T21.12",
+    "worktree": null,
+    "carrier": "CARRIER: M0' one-widget six-panels three-modes (implicate<->explicate one substrate; virtue witness 9-bit LSB-first; 16-fold void ring; DR-M0-1 banner verbatim) in pratibimba-app. §2 track 21."
+  }
+}

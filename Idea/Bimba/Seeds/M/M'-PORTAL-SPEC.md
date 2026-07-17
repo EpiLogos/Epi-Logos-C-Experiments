@@ -1,7 +1,7 @@
 ---
 coordinate: "M'"
 status: "active-spec"
-updated: "2026-05-31"
+updated: "2026-07-16"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
   - "[[M'-SYSTEM-SPEC]]"
@@ -277,6 +277,10 @@ The TUI and Tauri app should mirror each other at the logical-contract level, no
 
 ## Implementation Foothold — pratibimba-app carrier, 2026-07-02
 
+`ModalResonatorProfile` is the standing-body type carried by the optional-additive `modalResonator` profile field.
+
 The 0/1/`/` grammar is live in `Body/M/pratibimba-app` (per the [[M'-SYSTEM-SPEC]] Carrier Decision): `0` = cosmic face (clock wheel from the shared profile — tick12, degree720 double-cover — plus the instrument readout and 8-voice audible bus); `1` = personal face (day anchor, daily-note flow editor, vault tree, journal timeline, oracle); `/` = right-border pull-out membrane (⌘⇧O) carrying chat (`chat.send`/`chat.history` + live `chat` events), sessions (`sessions.list`/`sessions.resolve`, params standardised on `session` — the `{key}` drift is closed), and logs (gateway event ring). cmd-period inverts the faces over one state tree (four singleton stores). Correction (verifier, 2026-07-02): `s4'.mediation.route` and `s4'.mediation.capabilities.list` DO exist in the gateway (`dispatch.rs` → `anima::mediation_route`), as does a full `nara.*` method family (clock/container/cosmos/identity/kairos/lens/logos/medicine/oracle/pratibimba/session/transform/weights/wind) — mediated agent dispatch through the membrane is nearer than the carrier's chat-only v1 implies; wiring it is Phase-5 work over an existing method.
+
+Daily ownership reconciliation, 2026-07-16 ([[11-theia-shell-surface-hosting]] 11.T11.3): `Body/M/pratibimba-app/src/ui/dailySurfaceOwnership.ts` is the exhaustive active-carrier ledger. `pratibimba.daily.journal` resolves to the vault-backed journal timeline; `pratibimba.daily.cymatic-placeholder` is superseded by the real integrated `CosmicEngine`; `pratibimba.daily.status-display` resolves to the one cross-face status strip; `pratibimba.daily.library-projection` is a coordinate-ancestry overlay parsed from real YAML frontmatter on the existing file tree; `pratibimba.daily.atelier-cluster-lens` colours the existing M0' graph from real etymological/cognate S2 relations. The frozen `pratibimba.daily.agent-checkin` claim promised an active-run snapshot plus inspect control, for which the active carrier has no equivalent receiver. It is therefore retired as a mounted daily claim; Pi Chat dispatch chips and the real gateway event log remain successor observation surfaces but are not renamed into active-run control. Library and Atelier remain lenses, never standalone products.
 
 Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): the `0` parent face is the **visible chime surface** for [[M1']]/[[M2']]/[[M3']]. The bell is not audio alone — it is the chime event across topology, vibration, and temporal inscription, and the `0` face now renders it from kernel state: the shared profile carries `modalResonator` (the standing 12-slot resonant body over the 8+4 bus), and the gateway publishes `M123ChimeFrame` as a 1 Hz `m123.chime` sibling event whose world-clock coherence booleans gate the strike. The carrier's instrument consumes the kernel's bell-partial role labels (hum·prime·tierce·quint·nominal·upper·warble·residue) — renderer tables are explicit fallback only — and an incoherent chime blocks the strike rather than faking one. The chime stream is liveness-class: it never enters the `/` membrane's log ring.

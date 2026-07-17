@@ -1,0 +1,36 @@
+{
+  "runId": "20260716T014142Z-48-T48.5",
+  "taskId": "48.T48.5",
+  "startedAt": "2026-07-16T01:41:42.495Z",
+  "owner": "codex-48-base",
+  "leaseExpiresAt": "2026-07-16T03:41:42.495Z",
+  "worktree": null,
+  "task": {
+    "id": "48.T48.5",
+    "trackId": "48",
+    "tranche": "T48.5",
+    "title": "`s1'.base.ensure` + base-schema-from-CTx-contract *(L2; owning spec [[S1-SPEC]] / Hen)",
+    "effort": "L2; owning spec [[S1-SPEC]] / Hen",
+    "file": "48-bases-cs-reflection-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
+    "dependsOn": [
+      "48.T48.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Bases/CS reflection layer (C-ladder CT=C1' write-form -> MOC=C4 -> Base=C5/CS read-only -> Mobius to C0; s1'.base.ensure, s2.graph.list_by_filter, BaseViewConfig/BasesRecord). CARRIER: a coordinate-keyed query-view pane (table/cards/list) over the existing GatewayClient. §2 track 48."
+  }
+}

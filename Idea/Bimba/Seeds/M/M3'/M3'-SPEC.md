@@ -49,7 +49,7 @@ Six commitments hold this domain:
 3. **M3' is the codon-classifier downstream of [[M2]]'s DET projection.** [[M2-5']] projects 72-space vibration into a 64-bit symbolic signature; [[M3]] classifies that signature into the codon-and-rotation surface; M3' renders it.
 4. **[[M3-0]] is the reception/transduction threshold.** [[Paraśakti]]'s 72-fold vibration, including [[M2-5]] planetary/chakral evidence, compresses through the 9:8 DET into [[Mahāmāyā]]'s 64-bit binary substrate. M3' renders the transduction provenance and gap-state; it does not infer private chakral meaning locally.
 5. **[[M3-5]] is the co-foliated world-clock synthesis.** The double-torus [[K²]] × [[T²_Mahāmāyā]] lives at M3-5 as the visible cosmic-wheel rendering downstream of [[M1-5]]'s single-torus 4π recognition and [[M2]]'s 72-fold bridge. M3' must not relocate the +1 parent or collapse M3-5 back into M1-5.
-6. **M3' has three app placements over one substrate.** The default wheel, the standalone `m3-mahamaya` [[Theia]] extension, and the integrated 1-2-3 cosmic-engine plugin all consume the same kernel/profile/[[SpaceTimeDB]] stream via the kernel-bridge named in [[m5-prime-system-shape-and-tauri-ide-canon]].
+6. **M3' has three app placements over one substrate.** The default wheel, the standalone `m3-mahamaya` [[Theia]] extension, and the integrated 1-2-3 cosmic-engine plugin all consume the same kernel/profile/[[SpaceTimeDB]] stream via the kernel-bridge named in [[m5-prime-system-shape-and-tauri-ide-canon]]. Per the B-8 no-fork invariant shared with [[M0']] and [[M2']], all placements read one `:Bimba` label, one `coordinate` identity property, one [[Body/S/S2/graph-schema]] authority, and one [[plugin-integrated-1-2-3]] rendering-composition seam; no placement owns a graph, schema, or rendering fork.
 7. **The physics bridge is a register-disciplined inspector, not a claim engine.** Per [[full_theoretical_alignments_ql_physics]], M3' may show the shared skeletons `137 = 64 + 72 + 1 = 64 + 2(36) + 1 = 128 + 8 + 1`, `0,4,2,2,9`, and the Standard Model coupling-flow descent as a symbolic/physics alignment surface. It must always distinguish exact QL symbolic arithmetic from measured physics values such as `alpha_EM(0)^-1 ~= 137.036` and `alpha_EM(M_Z)^-1 ~= 128`.
 
 ## §1 — User-Facing Surface
@@ -188,11 +188,11 @@ This keeps M3' feeling alive and tarot-like in default use, with the multi-matri
 
 M3' renders far more than a codon-tarot wheel. The [[Bimba]] [[M3]] layer carries a multi-matrix symbolic-transcription engine that the M3' surface must expose faithfully. The colloquial reduction to "64 codons + 472 rotational states" understates the actual structure.
 
-### §8.0 — Level 0: The Fibonacci Ground (Meta-Lens, Pre-Lensic)
+### §8.0 — Level 0: The Fibonacci Ground (Primary Lens)
 
 *(Inserted 2026-06-09 per [[35-fibonacci-ground-level-0-temporal-substrate]] §1.1, ratified DR-FIB-1.)*
 
-The M3 Mahamaya lens architecture is a four-level hierarchy. **Level 0 is the Fibonacci Ground at `#2-0` (Parashakti Archetypal Numerical Ground)** — pre-lensic, pre-walk, pre-tick. The 16 simultaneous apertures of §8.10 (the "16-fold lens-stack") are Level 2 partitions OVER the Level 0 ground; they do not constitute the ground.
+The M3 Mahamaya lens architecture is a four-level hierarchy. **Level 0 is the Fibonacci Ground at `#2-0` (Parashakti Archetypal Numerical Ground)** — the primary lens, pre-walk and pre-tick. The 16 simultaneous apertures of §8.10 are Level 2 lenses derived OVER and addressed THROUGH this Ground; they do not constitute or operate independently of it.
 
 The Fibonacci Ground period is `LCM(6, 5, 12) = 60` — the synchronization period of QL(6) × pentad(5) × zodiacal(12). The Pisano period `π(10) = 60` is its digital unfolding in base-10. Laid over the clock face at 6° per step: **60 × 6° = 360°**. Structural law (companion to `_Static_assert(64 * 6 - 24 == 360)`):
 
@@ -206,12 +206,12 @@ Every `Clock_Degree_Node` carries intrinsic `fibonacci_position: u8` (0–59) an
 
 | Level | Name | Cardinality | Derivation | Subsystem |
 |---|---|---|---|---|
-| 0 | Fibonacci Ground | 60 | LCM(6,5,12), Pisano π(10) | M2 (`#2-0`) |
+| 0 | Fibonacci Ground (primary lens id 16) | 60 | LCM(6,5,12), Pisano π(10) | M2 (`#2-0`) |
 | 1 | tick12 (spanda) | 12 | 60 / 5 (pentadic quantization) | M1 |
-| 2 | 16 lenses | 16 | exhaustive factor-pairs of 360 | M3 |
+| 2 | 16 derived lenses | 16 | exhaustive factor-pairs of 360 | M3 |
 | 3 | 9 walks | 9 | sequential degree-space traversal | M1–M3 |
 
-The `+1` of the canonical `16+1` lens-stack count refers to Level 0 (this section). It is NOT a 17th aperture at Level 2. The 16-lens matrix is complete and exhaustive at its level.
+The `+1` of the canonical `16+1` count is Level 0: **functionally the seventeenth and primary lens, assigned id 16 after derived ids 0..15**. It is not a seventeenth *static division row* at Level 2; the homogeneous `lensCarrier[16]` matrix remains complete at that derived level while `fibonacciGround` carries the primary lens identity and address.
 
 The full hierarchy is specified in `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md` §0 and §"Lenses vs Walk Modes vs Tick vs Fibonacci Ground".
 
@@ -462,7 +462,7 @@ M3' should support four representational views as depth modes over the same data
 - **Toroidal / World Clock**: `K² × T²_Mahāmāyā` double-torus rendering, with the Várlaki/Rudas Pauli-Jung World Clock source available as provenance for the M3-5 rendering grammar.
 - **Hopf Identity**: identity trajectory projected through the SU(2) / Hopf surface into visible state.
 
-Open issue: the TEMP holding context is inconsistent about the "17th lens" language. Canonical M3' should not silently add a new lens. Treat the current law as **16 lens positions plus a Level-0 meta-position** until the companion spec normalises the terminology.
+Resolved 2026-07-15: the formerly inconsistent "17th lens" wording names the Level-0 primary [[Fibonacci Ground]], not an extra static division. Canonical M3' therefore exposes 17 functional lenses: Ground id 16 plus sixteen derived division ids 0..15. It must never infer Frame/Operator rows or an 18-fold model.
 
 ## §8.11 Janus Temporal Doorway
 
@@ -536,11 +536,11 @@ MathemeHarmonicProfile / kernel tick
 
 ### Clock aperture namespaces
 
-The chain keeps three "lens" surfaces separate:
+The chain keeps the M2 tonality namespace distinct from the M3 functional hierarchy:
 
 - **`M2_MEF_LENS`**: the 12 Vimarśa / chromatic MEF lens positions in the 72-fold M2 field. The `LENS_COUNT=12` constant in `codon_rotation_projection.rs` belongs here.
-- **`M3_LENS_STACK`**: the 16 static Mahāmāyā clock apertures over the 360° / 720° field. These are frequency-filter shells and reading apertures for M3-5, not replacements for the M2 MEF lenses.
-- **`M3_LENS_STACK_GROWTH`**: the +1 Fibonacci/Pisano dynamic-growth aperture. It is the Level-0/meta reading aperture over the 16 static apertures, not a seventeenth static lens silently merged into `LENS_COUNT`.
+- **`M3_LENS_STACK`**: the 16 derived static Mahāmāyā clock apertures over the 360° / 720° field. These are frequency-filter shells and reading apertures for M3-5, not replacements for the M2 MEF lenses.
+- **`M3_LENS_STACK_GROWTH`**: the +1 Fibonacci/Pisano dynamic-growth Ground, functionally primary lens id 16. It grounds and addresses the 16 static apertures; it is not inserted into their homogeneous static-division array.
 
 The Lens Annulus view must render this namespace split explicitly. A 12×7 `(lens, mode)` modal surface may project into the 472 codon-rotation surface, but it does not exhaust the 16+1 Mahāmāyā clock-aperture stack.
 
@@ -1002,15 +1002,19 @@ M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matr
 
 ## §10 — Implementation Notes
 
+`ModalResonatorProfile`, serialized as `MathemeHarmonicProfile.modalResonator`, is the standing resonant state that the M3 chime inscription binds to clock/codon proof.
+
 The harmonisation pass of 2026-05-22 added §7 to M3'-SPEC as load-bearing law: M3' is the codon-rotation modal-inversion surface, not merely a clock-and-wheel display. The `codonClass` / `rotationalStateCount` / `rotationalIndex` / `codonRotationProjection` profile fields are now required for full M3' rendering; before they exist in the backend, M3' renders the wheel with pending-LUT honest states.
 
 The `(lens, mode) ↔ (codon, rotation)` map specification is **the next concrete kernel/profile-contract work** that follows from this harmonisation pass. Until the LUT is materialised, the projection is a documentation contract; once materialised, it becomes the load-bearing surface that joins the shared 84-state playing landscape to M3's 472-state modal-inversion surface — and the instrument becomes capable of playing the full modal extension that dual codons unlock.
 
-The 2026-05-30 alpha-quaternionic pass adds that M3' is also the 0-side temporal rendering of [[Mahāmāyā]] alongside [[M0']] graph rendering. Future implementation must keep those as two views over the same canonical substrate, with the unresolved Level-0 / "17th lens" wording flagged for companion-spec normalisation rather than buried in UI code.
+The 2026-05-30 alpha-quaternionic pass adds that M3' is also the 0-side temporal rendering of [[Mahāmāyā]] alongside [[M0']] graph rendering. Implementation keeps those as two views over the same canonical substrate. The Level-0 wording is resolved: [[Fibonacci Ground]] is primary functional lens 16; the static division array remains sixteen rows.
 
 The 2026-05-31 canon update absorbs four additional M3' deltas: M3-0 as 72→64 reception/transduction provenance; M3-5 as the co-foliated double-torus world-clock view; `m3-mahamaya` / integrated 1-2-3 app placement through the kernel-bridge; and M5 pipeline overlays as read-only renderer evidence rather than local training logic.
 
 Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M3' is declared the **world-clock / codon INSCRIPTION of the chime event**. `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) carries in its `m3` section the profile's `codonRotationProjection` plus an explicit `worldClockBinding` with `tickMatchesProfile` / `degree720MatchesProfile` booleans — the temporal proof that the chime happened at this address. Any mismatch makes the frame incoherent and MUST block integrated readiness (the pratibimba-app carrier blocks the bell strike on it). The frame's `m2Address72` is the `resonance72.lensAnchorIndex` value (tick12·6+position) — the M2 72-address, distinct from and never conflated with the 84-state `(lens, mode)` landscape index.
+
+Lens-transcription foothold, 2026-07-15 (37.T37.8): `kernelBridge.m3.lensCodonBinary(lensId)` is a live on-demand gateway method over [[Body/S/S0/portal-core/src/lens_codon_binary.rs|portal-core::lens_codon_binary_projection]]. It accepts ids 0–15 for the derived static divisions and id 16 for the primary [[Fibonacci Ground]] lens. Ground returns its 60 positions at 6° steps; a division with slice `S` and `N` sections returns the `N` C-authored boundary degrees `k*S`. Every packet declares `lensRole` and `groundingLensId: 16`; every degree carries its Ground position/digit/phase along with exact 720° degree, codon, canonical `pp/nn/np/pn` charges, C quaternion, bridge-normalized canonical-B element, hexagram/active-line operator, and tick12. The on-demand projection stays off the 1 Hz profile bus, while the continuous profile carries the same primary identity in `phaseSpace.fibonacciGround`. Renderers never recompute biology.
 
 ### §10.1 Open Questions and Held Contradictions
 
@@ -1018,7 +1022,7 @@ Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] 
 - [[alpha_quaternionic_integration_across_M_stack]] consistently places the `+1` parent at M1 in §0, §1, and §6.1, and the §1.1 wording that could read as a prior-ground +1 was normalised 2026-07-07 (DR-M1-1 sweep, Tranche 02.T2.1). M3' follows the M1(+1) / M2(72) / M3(64) spine; the companion normalisation flag is closed.
 - **Superseded by DR-M3-2:** the former 72→64 uniqueness-scope question is resolved as the 9:8 epogdoon compression named in [[M2']] §9.5. M3' renders backend/profile-provided provenance, collisions, gaps, and provisional states honestly; UI and tests must not assume global injectivity and must not add a separate `det72to64Fold` / `DetFoldState` profile field.
 - [[m4-prime-psychoid-cymatic-field-engine]] §10.2 labels L3/L3' with causal-Aristotelian/process-causal language, while the current MEF table assigns causal law to L1, processual becoming to L3, and chronological arc to L3'. M3' keeps Janus as temporal-processual orientation without relocating causal law.
-- The "17th lens" / "16+1" wording remains unresolved. M3' treats the law as 16 lens positions plus a Level-0 / Fibonacci-Pisano meta-position until M0'/M3'/M4' companion specs converge.
+- **Resolved by 35.T35.1 / DR-FIB-1..2 and corrected 2026-07-15:** the clock law is primary Level-0 [[Fibonacci Ground]] lens id 16 grounding sixteen derived static divisions ids 0..15. Ground may surround the division ring visually, but functionally it is their primary lens and address. No Frame/Operator rows extend the namespace.
 - The exact kernel/profile home for `codonRotationProjection`, M3-0 provenance, kernel-trace handles, and Janus-bidirectional trace shape remains unapplied. Candidate homes remain `S0-HARMONIC-POINTER-WEB36-SPEC`, a dedicated S0 codon-rotation/provenance spec, or M3 codec data with S2 graph provenance.
 
 ## Canonical Source Lock - 2026-06-02
@@ -1033,6 +1037,6 @@ M3' is Mahamaya symbolic transcription: clock/cosmos/codon wheel, 64-address law
 | Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m3-mahamaya/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
 | sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/m3-prime-ql-transcriptional-bridge.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
 | nominal tracks | Track 07.T6 M3' extension; Track 08 integrated plugin; Track 01 codon/profile; Track 02 symbolic library; Track 03 world clock; Track 09 Mahamaya capacity |
-| open decisions | TCT/Nine of Wands mismatch, 17th lens wording, Janus/provenance home, codonRotationProjection ownership; DR-M3-2 ratifies the 72->64 bridge as the 9:8 epogdoon and leaves no extra fold-state profile field open |
+| open decisions | TCT/Nine of Wands mismatch, Janus/provenance home, codonRotationProjection ownership; the 17th-lens wording is resolved as primary Ground id 16, while DR-M3-2 ratifies the 72->64 bridge as the 9:8 epogdoon and leaves no extra fold-state profile field open |
 
 World coordinate note: M3' uses shared World `P/P'`, `CT`, and `L/L'` lens corpora through the umbrella specs; no M-specific World coordinate markdown exists yet.

@@ -1,5 +1,7 @@
 # OMX Pleroma Claw Authority Matrix
 
+> ⚑ **SUPERSEDED — 2026-07-16 (see [[DR-S4-CLAW-1]]).** The `claw-rust` native-harness direction this matrix froze is **abandoned**; [[PI Agent]] (TypeScript) is the canonical, terminal S4 runtime. The `claw-rust` rows below are retained as a dated historical record only.
+
 **Date:** 2026-04-03
 **Status:** Canonical
 **Purpose:** Freeze the semantic authority split for the Pleroma OMX/claw migration so that every

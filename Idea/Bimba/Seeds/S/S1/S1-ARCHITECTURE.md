@@ -112,6 +112,7 @@ The vendor `daily/{YYYY-MM-DD}.md` and `knowledge/concepts/{slug}.md` directorie
 |---|---:|---|---|
 | `read_file` | 89-105 | `s1'.vault.read_file` | public-safe read; refuses Protected without governed capability |
 | `write_file` | 106-130 | `s1'.vault.write_file` | atomic write + post-write `parse_wikilinks` integrity reporting |
+| `base_ensure` | current | `s1'.base.ensure` | discovers sorted canonical [[CT]] forms, validates them through `validate_frontmatter_contract`, rejects unsafe residency before path join, and delegates idempotent reflection emission to `ensure_base_view` |
 | `rename_or_move_file` | 138-222 | `s1'.vault.rename_file` / `move_file` | atomic rename + walk vault rewriting `[[from_title]]` → `[[to_title]]` across all `.md` files; returns `S1VaultRenameReceipt` |
 | `suggest_links` | 224-301 | `s1'.semantic.suggest_links` | wraps `suggest_link_candidates`, attaches per-candidate privacy class, rolls up staleness; falls back gracefully on no-index |
 

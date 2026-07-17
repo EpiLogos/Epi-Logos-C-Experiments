@@ -1,0 +1,34 @@
+{
+  "runId": "20260716T013809Z-12-T12.8",
+  "taskId": "12.T12.8",
+  "startedAt": "2026-07-16T01:38:09.173Z",
+  "owner": "codex-12-deprecated",
+  "leaseExpiresAt": "2026-07-16T03:38:09.173Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.8",
+    "trackId": "12",
+    "tranche": "T12.8",
+    "title": "DEPRECATED",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE-heavy — ta-onta agentic seams (s4'.mediation.* in dispatch.rs, gnostic routes, terminal-lease, Sophia/Moirai/Verify-phase machinery) + gateway. CARRIER: session/agent panes. WORST audit track (36 AR). §2 track 12. [Session B2 owns tracks 12/46/47 — coordinate, stay out.]"
+  }
+}

@@ -658,6 +658,8 @@ The integrated 1-2-3 plugin **MUST NOT**:
 
 ### 7.9 M123ChimeFrame — additive composition proof (2026-07-02 foothold)
 
+`ModalResonatorProfile`, serialized at `modalResonator`, is the standing M2 contribution referenced by this proof; it does not replace the 8+4 bus.
+
 Per [[m123-modal-resonator-bell-kernel-spec]] §5/§13, landed: `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) is an **additive composition proof object over the existing handles** — it references the K² surface handle slot (§7.3), the M2 cymatic contribution (as `modalResonator` + a deterministic `cymaticFrameHandle` digest), and the M3 `codonRotationProjection` + world-clock binding, without replacing any of them. Coherence law: the frame's `tickMatchesProfile` / `degree720MatchesProfile` booleans are explicit; any mismatch makes the chime incoherent and blocks integrated readiness (the pratibimba-app carrier blocks the bell strike on it — silence, never a faked chime). The chime is proof only when the same profile generation, tick, degree720, and M2 address are coherent across all three contributors — the §7.2 single-subscription atomicity, now attested kernel-side per tick.
 
 ---

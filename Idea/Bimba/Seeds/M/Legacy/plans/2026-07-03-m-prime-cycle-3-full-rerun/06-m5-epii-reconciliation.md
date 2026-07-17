@@ -33,31 +33,31 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/omni/omnipanelCapabilities.test.ts src/panes/omni/omnipanelCapabilities.live.test.ts src/engine/compositionMatheme.test.ts src/panes/KleinTopologyPane.test.tsx`; `node .codex/scripts/lint-test-honesty.mjs`; `node -e "const fs=require('fs'),p=require('path');const root='Idea/Bimba/Seeds/M';const bad=/M0.*witness-axis|M0 Anuttara witness/;const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()&&!['Legacy','plans'].includes(e.name)?walk(p.join(d,e.name)):e.isFile()&&e.name.endsWith('.md')?[p.join(d,e.name)]:[]);const hits=walk(root).filter(f=>bad.test(fs.readFileSync(f,'utf8')));if(hits.length){console.error(hits.join('\n'));process.exit(1)}"`. Verifier ≠ closer; evidence = fresh command output.
 
 6. **T6.6 — `anuttara_trace` orphan-fill referral**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.6 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: quarantine — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `node -e "const fs=require('fs');const s=fs.readFileSync('Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md','utf8');const row=s.split('\\n').find(l=>l.includes('anuttara_trace(output, sensitivity, depth)'));const required=['M5-claimed','M0-substrate-owner requirement','read-only contemplative-offering only','governed routed-write per DR-M0-1','no separate carrier lands','CLOSED / REVERIFIED 2026-07-16'];if(!row||required.some(x=>!row.includes(x))){console.error(row||'missing anuttara_trace row');process.exit(1)}"`; `node .codex/scripts/lint-test-honesty.mjs`; class-W verifier reruns gateway/live-wire proof per Track 00; verifier != closer; evidence = fresh command output.
 
 7. **T6.7 — DR-M5-1 implementation landing tranche**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.7 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/omni/omnipanelCapabilities.test.ts src/panes/omni/omnipanelCapabilities.live.test.ts src/panes/m5ReviewGate.test.ts`; `node --test Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts`; `node .codex/scripts/lint-test-honesty.mjs`; class-W verifier reruns gateway/live-wire proof per Track 00; verifier != closer; evidence = fresh command output.
 
 8. **T6.8 — EBM-Epii position 5' resonance-vector predictor module (72-dim N-channel head, Rust-native)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.8 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo check --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm`; `cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm --test resonance_ebm_runtime`; `cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm resonance_ebm::mirror_consistency_loss`; `cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm --test anuttara_pentadic_feature`; `node .codex/scripts/lint-test-honesty.mjs`; class-W verifier reruns gateway/live-wire proof per Track 00; verifier != closer; evidence = fresh command output.
 
 9. **T6.9 — `pi train-ebm` + `pi export-ebm-state` CLI commands**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md` — Tranche 6.9 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test pi_ebm_commands`; `cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm exported_checkpoint_round_trips_into_resonance_ebm_runtime --lib`; `cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml resonance_corpus --features resonance_ebm`; `node .codex/scripts/lint-test-honesty.mjs`; class-W verifier reruns gateway/live-wire proof per Track 00; verifier != closer; evidence = fresh command output.
 
 10. **T6.10 — EBM kernel-runtime integration + Möbius descent step (Riemannian-quaternion gradient pipeline, per-element-tick invocation)**
 

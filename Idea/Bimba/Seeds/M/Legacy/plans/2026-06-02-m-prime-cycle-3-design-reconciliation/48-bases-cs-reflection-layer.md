@@ -344,6 +344,15 @@ tests; no new package.
 + `c_3_*` columns filtered on `c_1_ct_type == "CT4b"`; re-running is idempotent; a base targeting
 canon residency is refused; `cargo test -p` Hen passes.
 
+**2026-07-16 rerun audit - PARTIAL:** Hen core is present: `src/base_view.rs` emits the CT4b
+base-view note, returns stable second-run output, and refuses canon residency. The focused real
+filesystem suite passes 3/3 via `cargo test --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml
+--test base_view`. Missing from the ratified surface:
+`s1'.base.ensure` is neither advertised nor dispatched by the live gateway (`exists: false`,
+`errorClass: unimplemented` in the fresh 268-method gateway audit), and the CTx columns are copied
+into a private `ct_contract_columns` table rather than derived from Hen's validated frontmatter
+contract. Status remains incomplete until both gaps land and receive independent verification.
+
 ### Tranche 48.6 — M-stack BasesView: render service + static/dynamic adapters *(L2; epi-theia; depends 48.2–48.3)*
 
 A new M-stack bases-view capability implementing the API in §13.D, modelled on `CosmicClockRenderService.tsx`: a `ReactWidget` +

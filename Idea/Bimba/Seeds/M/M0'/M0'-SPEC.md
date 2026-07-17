@@ -60,7 +60,9 @@ M0' must preserve compatibility with legacy `#` notation at search, selection, a
 
 ## The Six M0-X' Data Layers
 
-The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate — one substrate, three renderings (M0'/M1'/M2'/M3' via [[plugin-integrated-1-2-3]]), no-fork per B-8 invariant. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate — one substrate, three renderings (M0'/M1'/M2'/M3' via [[plugin-integrated-1-2-3]]), no-fork per B-8 invariant. B-8 means one `:Bimba` label, one `coordinate` identity property, one [[Body/S/S2/graph-schema]] authority, and one [[plugin-integrated-1-2-3]] rendering-composition seam across [[M0']], [[M2']], and [[M3']]; no surface or plugin creates a graph/schema/rendering fork. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+
+The [[M0']] graph chrome and [[M5-0']] Library chrome meet as one coordinate-scoped Klein seam: traversing the map selects the shared coordinate, and the Library surface beneath that map reads the production `s5'.gnostic.etymology` cluster for direct `bimba_coordinate` anchors and relationship-backed `bimba_resonances`. This is a summoned reading inside the existing graph host, not a standalone graph-viewer extension or a generic graph/file/agent view-mode ontology; entity bodies remain in [[Body/S/S5/epi-gnostic]].
 
 | Layer | Key | Surface role | Bridge |
 |---|---|---|---|

@@ -49,6 +49,7 @@ export function parseArgs(argv) {
     requireNow: false,
     receipt: null,
     allowDirty: false,
+    continueThroughReview: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -73,6 +74,7 @@ export function parseArgs(argv) {
     else if (arg === "--require-now") args.requireNow = true;
     else if (arg === "--receipt") args.receipt = argv[++i];
     else if (arg === "--allow-dirty") args.allowDirty = true;
+    else if (arg === "--continue-through-review") args.continueThroughReview = true;
     else if (!arg.startsWith("--") && !args.plan) args.plan = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -464,11 +466,11 @@ function inferPresentIdentity(path) {
   return { dayId: match[1], sessionId: match[2] };
 }
 
-export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true, requireNow = false } = {}) {
+export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true, requireNow = false, continueThroughReview = false } = {}) {
   const index = buildIndex(planFolder, cwd);
   const state = reconcileState(index, loadState(planFolder));
   const taskById = new Map(index.tasks.map((task) => [task.id, task]));
-  const enrichedTasks = index.tasks.map((task) => enrichTask(task, state, taskById));
+  const enrichedTasks = index.tasks.map((task) => enrichTask(task, state, taskById, { continueThroughReview }));
   const carrierContract = readCarrierContract(planFolder);
   if (carrierContract) {
     for (const task of enrichedTasks) {
@@ -514,7 +516,11 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true,
     );
   }
   if (reviewTasks.length > 0) {
-    softCautions.push(`${reviewTasks.length} task(s) in review; finish or requeue them before treating downstream work as done.`);
+    softCautions.push(
+      continueThroughReview
+        ? `${reviewTasks.length} task(s) remain in human review; their dependencies are provisionally schedulable, but no dependent may close as done until review resolves.`
+        : `${reviewTasks.length} task(s) in review; finish or requeue them before treating downstream work as done.`,
+    );
   }
   if (staleActiveTasks.length > 0) {
     softCautions.push(`${staleActiveTasks.length} active task lease(s) appear stale and can be renewed by the same owner or requeued deliberately.`);
@@ -534,7 +540,7 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true,
 
   const recommendedTask = readyTasks[0] ?? null;
   const parallelGroup = buildParallelGroup(readyTasks, dirtyFiles);
-  const recommendedRoute = buildRecommendedRoute(enrichedTasks);
+  const recommendedRoute = buildRecommendedRoute(enrichedTasks, { continueThroughReview });
   const workOrders = buildWorkOrders(recommendedRoute, dirtyOverlaps);
 
   if (carrierContract) {
@@ -715,12 +721,13 @@ function readOpenDecisionExcerpt(planFolder) {
   return [index, userFinal, prototype].filter(Boolean).join("\n\n").slice(0, 16000);
 }
 
-function enrichTask(task, state, taskById) {
+function enrichTask(task, state, taskById, { continueThroughReview = false } = {}) {
   const record = state.tasks[task.id] ?? { status: "pending", evidence: [] };
   const missingDeps = task.dependsOn.filter((dep) => !taskById.has(dep));
+  const provisionalReviewDeps = task.dependsOn.filter((dep) => state.tasks[dep]?.status === "review");
   const unmetDeps = task.dependsOn.filter((dep) => {
     const depStatus = state.tasks[dep]?.status;
-    return depStatus !== "done";
+    return depStatus !== "done" && !(continueThroughReview && depStatus === "review");
   });
   let computedStatus = record.status;
   if (record.status === "pending" || record.status === "ready") {
@@ -732,6 +739,7 @@ function enrichTask(task, state, taskById) {
     computedStatus,
     missingDeps,
     unmetDeps,
+    provisionalReviewDeps,
     evidence: record.evidence ?? [],
     claimedAt: record.claimedAt ?? null,
     completedAt: record.completedAt ?? null,
@@ -811,13 +819,17 @@ function workOrderAction(task) {
   return "skip";
 }
 
-function buildRecommendedRoute(tasks, { minTasks = 3, maxTasks = 5, weightBudget = 8 } = {}) {
-  const simulatedDone = new Set(tasks.filter((task) => task.status === "done").map((task) => task.id));
+function buildRecommendedRoute(tasks, { minTasks = 3, maxTasks = 5, weightBudget = 8, continueThroughReview = false } = {}) {
+  const simulatedDone = new Set(
+    tasks
+      .filter((task) => task.status === "done" || (continueThroughReview && task.status === "review"))
+      .map((task) => task.id),
+  );
   const selectedIds = new Set();
   const route = [];
   let totalWeight = 0;
 
-  for (const task of activeRoutePrefix(tasks)) {
+  for (const task of activeRoutePrefix(tasks, { continueThroughReview })) {
     if (route.length >= maxTasks) break;
     const weight = effortWeight(task);
     route.push(routeTaskSummary(task, weight));
@@ -849,13 +861,13 @@ function buildRecommendedRoute(tasks, { minTasks = 3, maxTasks = 5, weightBudget
     minTasks: Math.min(minTasks, tasks.filter((task) => task.status !== "done").length),
     weightBudget,
     taxingLevel: routeTaxingLevel(route, totalWeight),
-    rationale: routeRationale(route, totalWeight, weightBudget),
+    rationale: routeRationale(route, totalWeight, weightBudget, { continueThroughReview }),
   };
 }
 
-function activeRoutePrefix(tasks) {
+function activeRoutePrefix(tasks, { continueThroughReview = false } = {}) {
   return tasks
-    .filter((task) => task.status === "in_progress" || task.status === "review")
+    .filter((task) => task.status === "in_progress" || (!continueThroughReview && task.status === "review"))
     .sort((a, b) => {
       const aTime = a.claimedAt ?? a.completedAt ?? "";
       const bTime = b.claimedAt ?? b.completedAt ?? "";
@@ -917,14 +929,17 @@ function routeTaxingLevel(route, totalWeight) {
   return "balanced";
 }
 
-function routeRationale(route, totalWeight, weightBudget) {
+function routeRationale(route, totalWeight, weightBudget, { continueThroughReview = false } = {}) {
   if (route.length === 0) return ["No pending task is dependency-ready under the current ledger."];
   const rationale = [
     `Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.`,
     `Capped the route at ${route.length} task(s) with total effort weight ${totalWeight}/${weightBudget} unless fewer tasks were available.`,
   ];
-  if (route.some((task) => task.status === "in_progress" || task.status === "review")) {
+  if (route.some((task) => task.status === "in_progress" || (!continueThroughReview && task.status === "review"))) {
     rationale.push("Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.");
+  }
+  if (continueThroughReview) {
+    rationale.push("Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure.");
   }
   if (route.some((task) => task.modeHint !== "in-session")) {
     rationale.push("Marked heavier tasks for optional subagents or split-before-execution review; default execution remains in-session.");
@@ -1259,6 +1274,13 @@ export function doneMarkViolations({ planFolder, assessment, taskId, evidence, r
     ...drCitationViolations({ text: `${evidence ?? ""} ${receipt ? JSON.stringify(receipt) : ""}`, cwd, env }),
   );
   if (task) {
+    const incompleteDeps = task.dependsOn.filter((dep) => {
+      const status = assessment.state.tasks[dep]?.status;
+      return status !== "done" && status !== "quarantine";
+    });
+    if (incompleteDeps.length > 0) {
+      violations.push(`dependencies not done: ${incompleteDeps.join(", ")} — provisional review dependencies may be implemented against but cannot close a task`);
+    }
     const quarantinedDeps = task.dependsOn.filter((dep) => assessment.state.tasks[dep]?.status === "quarantine");
     if (quarantinedDeps.length > 0) {
       violations.push(`dependencies quarantined: ${quarantinedDeps.join(", ")} — nothing built on quarantined work may close`);
@@ -1443,7 +1465,14 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
     mkdirSync(join(planFolder, "plan.runs"), { recursive: true });
     writeFileSync(join(planFolder, "plan.state.json"), `${JSON.stringify(resetState(), null, 2)}\n`);
   }
-  const assess = () => assessPlan({ cwd, planFolder, includeGit: !args.noGit, requireNow: args.requireNow });
+  const assess = () =>
+    assessPlan({
+      cwd,
+      planFolder,
+      includeGit: !args.noGit,
+      requireNow: args.requireNow,
+      continueThroughReview: args.continueThroughReview,
+    });
   let assessment = assess();
 
   if (args.route) {

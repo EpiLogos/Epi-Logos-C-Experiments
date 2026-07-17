@@ -52,25 +52,33 @@ Consume as-is — `Body/S/S2/graph-schema/src/lib.rs` 65-relation registry + `an
 
    Wire `gds_tangent_overlay()` output through kernel-bridge into M0-3' panel distinguishing synchronic (community) vs diachronic (`world_clock` + Graphiti episode handles). Depends on M3 Track 04.3 (clock overlay rendering) + M5 episodic deposit.
 
-   Verification: `cargo check -p epi-s2-graph-services && cargo test -p epi-s2-graph-services gds::option1_projection_plan_present`; `grep -n 'M0-3' Body/M/epi-theia/extensions/m0-anuttara/src/browser/m0-anuttara-widget.tsx`.
+   **Landed in the active carrier (09.T9.6):** `M0CommunityClockPanel` mounts from the `time-community` rail and invokes `s2.graph.gds.tangent_overlay` for the shared selected coordinate. Its synchronic half renders the real S2 status, `derivedNodes`, reason, and public-topology privacy boundary; its diachronic half reads `tick12`/`degree360` only from the kernel profile and projects only handle-shaped [[Graphiti]] references. The current S2 runner remains honestly fail-closed when GDS is unavailable or its algorithm runner is gated; the carrier renders that state and never fabricates communities.
+
+   Verification: `cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml gds`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/m0CommunityClockOverlay.test.ts`; `pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/m0-community-clock.spec.ts --reporter=line`; `node .codex/scripts/lint-test-honesty.mjs`.
 
 7. **9.7 — One-substrate / no-fork invariant codification** *(aligned-only-note)*
 
    Codify the **B-8 non-fork invariant** as a cross-referenced note in `M0'-SPEC`, `M2'-SPEC`, `M3'-SPEC`, and the `plugin-integrated-1-2-3` contract. Single `:Bimba` label + `coordinate` property + one schema crate + one rendering composition seam. No code change.
 
-   Verification: `grep -n 'one substrate' Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`.
+   **Landed (09.T9.7):** the three owning specs and active-carrier composition contract now cross-codify the same four-part B-8 law: one `:Bimba` label, one `coordinate` identity property, one [[Body/S/S2/graph-schema]] authority, and one [[plugin-integrated-1-2-3]] rendering-composition seam. This is a documentation/comment-only alignment; no executable contract shape or runtime behavior changed.
+
+   Verification: `for file in "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md" "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md" "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md" Body/M/pratibimba-app/src/composition/compositionContract.ts; do rg -q ':Bimba' "$file" && rg -q 'coordinate' "$file" && rg -q 'graph-schema' "$file" && rg -q 'plugin-integrated-1-2-3' "$file" || exit 1; done`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/composition/compositionContract.test.ts`; `node .codex/scripts/lint-test-honesty.mjs`.
 
 8. **9.8 — Anuttara property naming round-trip** *(spec-ahead-integration; DR-M0-2 VALIDATED)*
 
    Owns DR-M0-2 graph-services side. Canonical source properties are coordinate-prefixed `c_1_*`; unprefixed `symbol` / `formulation_type` are alias-only via `OntologyPropertyMapping` and inspector provenance. No either/or remains open.
 
-   Verification: `cargo test -p epi-s2-graph-services ontology::anuttara_property_mappings_round_trip`; `grep -nE 'c_1_(symbol|complete_formulation|form)' Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts`.
+   **Landed (09.T9.8):** S2's `OntologyPropertyMapping` maps the three public aliases to `c_1_symbol`, `c_1_formulation_type`, and `c_1_complete_formulation`; the node API reads those source properties and returns aliases only with canonical-property provenance. The active M0-0' carrier field list requests only the canonical names, now pinned by a no-alias regression test.
+
+   Verification: `cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml anuttara_property_mappings_round_trip`; `cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test ontology_bridge_contract`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/m0Layers.test.ts`; `node .codex/scripts/lint-test-honesty.mjs`.
 
 9. **9.9 — M0' graph chrome ↔ M5-0' library chrome Klein seam** *(spec-ahead-integration; DR-TUI-1 VALIDATED)*
 
    Wire the existing M0' graph chrome and M5-0' Library/Gnostic Namespace as one Klein surface joined by coordinate tagging: direct `bimba_coordinate` plus LLM-classified `bimba_resonances`. No standalone `bimba-graph-viewer` extension and no generic graph/file/agent "view mode" ontology. The user path is map traversal; the library surfaces under the traversed coordinate.
 
-   Verification: `grep -rn "bimba_coordinate\|bimba_resonances" Body/S/S5/epi-gnostic/ Body/M/epi-theia/extensions/ide-shell-m0-m5`; map-walk → library-surface test passes without adding a new graph-viewer package.
+   **Landed (09.T9.9):** `M0M5LibrarySeamPanel` is embedded beneath the existing Bimba map and follows the shared coordinate store. It invokes the production `s5'.gnostic.etymology` method and strictly projects direct `bimba_coordinate` anchors plus relationship-backed `bimba_resonances`; content bodies are discarded. The e2e harness points the real gateway at the repository `epi-gnostic` executable, and the map-walk test traverses to M1 before comparing the mounted Library state with a separate live RPC. No new viewer package or view-mode ontology was added.
+
+   Verification: `Body/S/S5/epi-gnostic/.venv/bin/python -m pytest Body/S/S5/epi-gnostic/tests/test_coordinate_tags.py Body/S/S5/epi-gnostic/tests/test_one_substrate_smoke.py -q`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/m0M5LibrarySeam.test.ts`; `pnpm --dir Body/M/pratibimba-app exec playwright test tests/e2e/m0-m5-library-seam.spec.ts --reporter=line`; `test ! -d Body/M/pratibimba-app/src/bimba-graph-viewer`; `node .codex/scripts/lint-test-honesty.mjs`.
 
 10. **9.10 — S2 gateway exposure of graph methods** *(spec-ahead-integration; S2-ARCHITECTURE §10.2 S2.D)*
 

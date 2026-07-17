@@ -15,7 +15,7 @@ c_0_source_coordinates:
 
 ## Canonical Role
 
-[[S4.0]] is the [[P0]] / [[CT0]] ground of [[S4]]: the runtime bootstrap, session identity, hook seam, and observability base that lets [[PI Agent]], [[Codex]], or any later [[claw-rust]] harness begin from a known state. It is the base-runtime analogue of [[S4.0']] [[Khora]], but it does not own [[Khora]]'s vault write law; it owns the harness boot surface that Khora inhabits.
+[[S4.0]] is the [[P0]] / [[CT0]] ground of [[S4]]: the runtime bootstrap, session identity, hook seam, and observability base that lets [[PI Agent]] or [[Codex]] begin from a known state. It is the base-runtime analogue of [[S4.0']] [[Khora]], but it does not own [[Khora]]'s vault write law; it owns the harness boot surface that Khora inhabits.
 
 ## Source And Diagram Anchors
 

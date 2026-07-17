@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-17T11:31:53.385Z",
+ "generatedAt": "2026-07-17T12:54:40.444Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 268,
-  "present": 66,
-  "absent": 202,
+  "present": 67,
+  "absent": 201,
   "unknown": 0
  },
  "methods": [
@@ -821,9 +821,9 @@
   {
    "method": "s0'.verifier.check_state",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: invalid verifier state: missing field `committedVirtueMask`"
   },
   {
    "method": "s0'.verifier.emit_question",

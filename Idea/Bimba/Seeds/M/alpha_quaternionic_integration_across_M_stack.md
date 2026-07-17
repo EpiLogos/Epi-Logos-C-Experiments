@@ -849,7 +849,7 @@ The Epi-Logos repo already commits to SpaceTimeDB at S3':
 
 - **`Body/S/S3/epi-spacetime-module/src/lib.rs`** — live WASM module pinning `spacetimedb = "=2.2.0"`, with `KairosSurface`, `SessionSurface`, `GlobalTemporalSurface` tables and reducers already defined
 - **`Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`** — Rust gateway client (REST + partially-built native WebSocket subscription stub gated behind `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket`)
-- **`Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`** — Tauri-side handle with `ClockPresenceRow` and `KairosSnapshot` shapes
+- **`Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`** — deprecated migration-source handle with `ClockPresenceRow` and `KairosSnapshot` shapes; it is not an active carrier boundary
 - **`Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`** §III — canonical two-plane decision: **Plane A (Gateway)** = imperative RPC ("do X now"); **Plane B (Universal NOW)** = SpaceTimeDB declarative subscriptions ("show what is true for all participants right now")
 
 The work that remains is **completing the bridge** (REST → native WebSocket subscriptions), **adding the shared-cosmos tables** (world_clock, pratibimba_presence, shared_archetype_event, coincidence), and **reframing identity signatures as quaternionic** (per §11.4 below).
@@ -1130,7 +1130,7 @@ Concrete sizing for Epi-Logos at 1,000 users:
 
 ### §11.7 Three milestones to prove the model end-to-end
 
-1. **Complete native-WebSocket subscriptions** in the Rust gateway — finish the stubbed `subscribe_projection` path (`spacetimedb_bridge.rs:603-641`) and the Tauri-side `SpacetimeMode::NativeWebSocket`. Verify Tauri frontend receives a `KairosSurface` row update within 100 ms of the gateway calling `bind_kairos_surface`.
+1. **Complete native-WebSocket subscriptions** in the Rust gateway — finish the stubbed `subscribe_projection` path (`spacetimedb_bridge.rs:603-641`) and replace the deprecated `epi-tauri` `SpacetimeMode::NativeWebSocket` path with the active carrier consumer. Verify the active frontend receives a `KairosSurface` row update within 100 ms of the gateway calling `bind_kairos_surface`.
 
 2. **Add `world_clock` singleton + scheduled `advance_world_clock` reducer at 1 Hz**. Verify 10 simultaneous Tauri clients see the same tick within ±30 ms. This proves the shared-cosmos hosting end-to-end.
 
@@ -1168,7 +1168,7 @@ Past those three milestones, the architecture has been proved at the layer that 
 - `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`: canonical S3/S3' two-plane spec (gateway imperative + SpaceTimeDB declarative)
 - `Body/S/S3/epi-spacetime-module/src/lib.rs`: live SpaceTimeDB module with KairosSurface / SessionSurface / GlobalTemporalSurface and bind_* reducers
 - `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`: Rust gateway client (REST + native WebSocket stub)
-- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`: Tauri-side handle with ClockPresenceRow / KairosSnapshot
+- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`: deprecated migration-source handle with ClockPresenceRow / KairosSnapshot
 - `epi-lib/include/m2.h`, `m3.h`, `m1.h`: C-level operative substrate
 
 ## Physics and external references

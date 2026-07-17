@@ -253,17 +253,18 @@ For Tarot/QL reading frames, `reading_frame.positions[]` / `OracleFrame.vak_addr
 
 ## DR-M5-1 / DR-B-1 — Pi as agent harness; ACR repurpose
 
-**Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Cleanup 2026-06-03 (final per DR-S4-TECHNE reframe):** Subagent roster corrected to **6 Aletheia subagent techne-guardians** (NOT 7 — Techne moves to Pleroma as atomic-skills substrate, not a 7th agent); dispatcher attribution corrected (Anima dispatches during the crystallisation mode; Aletheia-the-carrier hosts the mode).  ·  **Resolution:** Pi is the **underlying agent harness** (single). **Anima is the main dispatching agent**. Anima dispatches the **6 Aletheia subagent techne-guardians** (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven, each stewarding specific techne classes within Pleroma-Techne per DR-S4-TECHNE) during the Aletheia-crystallisation-mode for skill usage, system management, and service routing. The six **ta-onta carriers** (Khora=S4-0', Hen=S4-1', Pleroma=S4-2', Chronos=S4-3', Anima-carrier=S4-4', Aletheia-carrier=S4-5') are system/service routing infrastructure — NOT agents. **Pleroma (S4-2') has two faces**: VAK capability membrane (canonical) + Techne atomic-skills repository (Pleroma's second face per DR-S4-TECHNE). Aletheia is the **tool-guardian carrier AND the crystallisation-mode host**; Anima is the dispatcher operating inside that mode. Per S4 canon: Aletheia itself is a MODE of Sophia/Psyche/Anima, NOT its own subagent.
+**Status:** VALIDATED / CLEANUP LANDED  ·  **Validated:** 2026-06-02  ·  **Cleanup verified:** 2026-07-16 (Tranche 06.T6.5)  ·  **By:** user  ·  **Cleanup 2026-06-03 (final per DR-S4-TECHNE reframe):** Subagent roster corrected to **6 Aletheia subagent techne-guardians** (NOT 7 — Techne moves to Pleroma as atomic-skills substrate, not a 7th agent); dispatcher attribution corrected (Anima dispatches during the crystallisation mode; Aletheia-the-carrier hosts the mode).  ·  **Resolution:** Pi is the **underlying agent harness** (single). **Anima is the main dispatching agent**. Anima dispatches the **6 Aletheia subagent techne-guardians** (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven, each stewarding specific techne classes within Pleroma-Techne per DR-S4-TECHNE) during the Aletheia-crystallisation-mode for skill usage, system management, and service routing. The six **ta-onta carriers** (Khora=S4-0', Hen=S4-1', Pleroma=S4-2', Chronos=S4-3', Anima-carrier=S4-4', Aletheia-carrier=S4-5') are system/service routing infrastructure — NOT agents. **Pleroma (S4-2') has two faces**: VAK capability membrane (canonical) + Techne atomic-skills repository (Pleroma's second face per DR-S4-TECHNE). Aletheia is the **tool-guardian carrier AND the crystallisation-mode host**; Anima is the dispatcher operating inside that mode. Per S4 canon: Aletheia itself is a MODE of Sophia/Psyche/Anima, NOT its own subagent.
 
-The **"Agentic Control Room" (ACR)** development in `Body/M/epi-theia/extensions/agentic-control-room/` and the `constitutional_agents=[anima, eros, logos, mythos, nous, psyche, sophia]` array in `capability-matrix.json` are **tangent-development drift**, not canonical architecture. Cycle 3 unwinds:
+The **"Agentic Control Room" (ACR)** development in frozen `Body/M/epi-theia/extensions/agentic-control-room/` and the former `constitutional_agents=[anima, eros, logos, mythos, nous, psyche, sophia]` array were **tangent-development drift**, not canonical architecture. The active carrier has completed the unwind:
 
-- The ACR extension is repurposed as a **Pi runtime monitoring surface** (dispatch tracing, run-evidence display, capability-parity check) — NOT a "constitutional-agents review panel".
-- The `constitutional_agents` array is either documented as **psyche-aspect rendering material** (Jungian functions surfaced through Anima for meditation/recognition, NOT separate agents) or deprecated outright if the audit finds no canonical use.
-- M5'-SPEC §M5-4' (Agentic Control Room) is rewritten around Pi+Anima+subagents.
+- The standalone ACR package is retired; [[Pratibimba]] `src/panes/omni/` owns the **Pi runtime monitoring surface** over the shared gateway and event stores, not a constitutional-agents review panel.
+- `capability-matrix.json constitutional_agents` is `[]` and explicitly deprecated. Anima is the dispatcher; Nous/Logos/Eros/Mythos/Psyche/Sophia remain non-dispatch authorial/Psyche aspect registers.
+- The executable roster is represented as Pi, Anima, and six Aletheia-mode dispatch targets. The carrier encodes each guardian as `actor: 'aletheia'` plus its required `techneClass`; this is six targets without inventing six peer actor ontologies.
+- [[M5'-SPEC]] §M5-4' and [[M5-ARCHITECTURE]] describe the active OmniPanel boundary.
 
-**Action:** See Tranche 12 rewrite — every 12.x tranche reframed around the Pi+Anima+subagents canonical architecture. No separate "constitutional vs ACR-governance" ontology.
+**Action:** LANDED. Tranche 12 and active-carrier migration surfaces are framed around Pi + Anima + Aletheia-mode guardian dispatch. No separate "constitutional vs ACR-governance" ontology remains.
 
-**Verification:** `grep -n "constitutional_agents\|review_surface_roles" Body/S/S4/plugins/pleroma/capability-matrix.json` reflects audit outcome (documented or deprecated); ACR extension's `AgenticActor` union collapses to `pi` + `anima` + the 6 Aletheia subagent techne-guardians (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven, each guarding specific techne classes in Pleroma-Techne) per DR-S4-TECHNE; M5'-SPEC §M5-4' rewritten.
+**Verification:** `python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py`; `pnpm --dir Body/M/pratibimba-app exec vitest run src/panes/omni/omnipanelCapabilities.test.ts src/panes/omni/omnipanelCapabilities.live.test.ts`; matrix tests require `constitutional_agents == []`, carrier tests require the exact six guardian `techneClass` values and refuse malformed live capability projections; [[M5'-SPEC]] §M5-4' names the actor-plus-discriminator representation.
 
 **Depends:** Tranches **06.5**, **12.1** (Pi+Anima+subagents audit), **12.14 NEW** (ACR repurpose).
 
@@ -283,11 +284,11 @@ The **"Agentic Control Room" (ACR)** development in `Body/M/epi-theia/extensions
 
 ## DR-M5-2 — Enforce +1 = M1-5 corpus-wide
 
-**Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Sibling of DR-M1-1. Sweep corpus-wide.
+**Status:** VALIDATED / SWEEP LANDED  ·  **Validated:** 2026-06-02  ·  **Sweep verified:** 2026-07-16 (Tranche 06.T6.5; original landing 2026-07-07 under 02.T2.1)  ·  **By:** user  ·  **Resolution:** Sibling of DR-M1-1. Sweep corpus-wide.
 
-**Action:** Single sweep with DR-M1-1.
+**Action:** LANDED with DR-M1-1. Live M-stack canon attributes the `+1` parent to [[M1-5]]; active carrier profile/composition tests consume that attribution.
 
-**Verification:** `grep -rn "M0.*witness-axis" Idea/Bimba/Seeds/M/` returns no live-attribution matches.
+**Verification:** `rg -n "M0.*witness-axis|M0 Anuttara witness" Idea/Bimba/Seeds/M -g '*.md' -g '!**/Legacy/**' -g '!**/plans/**'` returns no live-attribution matches; `pnpm --dir Body/M/pratibimba-app exec vitest run src/engine/compositionMatheme.test.ts src/panes/KleinTopologyPane.test.tsx` proves the carrier consumes `M1-5 is the +1 parent`.
 
 **Depends:** Tranches **02.1** + **06.5**.
 
@@ -1108,7 +1109,7 @@ These five rows land the `dev_decisions` block of [[35-fibonacci-ground-level-0-
 
 ## DR-FIB-1 — Fibonacci Ground is Level 0 of the temporal substrate; the `16+1` "+1" IS Level 0
 
-**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 dev_decisions "Final"; delegated confirmation 2026-06-09) · **Resolution:** Fibonacci Ground (`#2-0` Parashakti Archetypal Numerical Ground, 60-fold, `LCM(6,5,12)=60`, Pisano `π(10)=60`, `60×6°=360°`) is canonically **Level 0** of the temporal substrate — pre-lensic, pre-walk, pre-tick; the `(00/00)` context frame of the clock. The 4-level stack is canonical reading order: Level 0 Fibonacci Ground (60) → Level 1 tick12 (M1 spanda, 60/5 pentadic quantization) → Level 2 16 lenses (M3 simultaneous apertures) → Level 3 9 walks (M1–M3 diachronic). tick12 is NOT a peer of the lenses. **The `+1` of the `16+1` Mahamaya lens-stack refers to Level 0 (meta-lens), NOT a 17th aperture at Level 2** — the 16-lens matrix is complete and exhaustive at its level. Companion to DR-M3-3 (namespace split): DR-M3-3 settled WHERE the 12 and 16+1 live; DR-FIB-1 settles WHAT the +1 is. **Depends:** M3'-SPEC §8.0 (landed this pass), Tranches 4.15, 5.24, 5.25, 24.19.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **Corrected:** 2026-07-15 by user · **Resolution:** Fibonacci Ground (`#2-0` Parashakti Archetypal Numerical Ground, 60-fold, `LCM(6,5,12)=60`, Pisano `π(10)=60`, `60×6°=360°`) is canonically **Level 0 and the primary functional lens** — pre-walk and pre-tick; the `(00/00)` context frame of the clock. The 4-level reading order is Level 0 Fibonacci Ground (60) → Level 1 tick12 → Level 2 sixteen derived lenses → Level 3 nine walks. **The `+1` of `16+1` is functionally lens id 16, grounding derived ids 0..15.** It is not a seventeenth homogeneous static row at Level 2; `lensCarrier[16]` remains complete at that derived level. Companion to DR-M3-3 (namespace split): DR-M3-3 settled WHERE the 12 and 16+1 live; DR-FIB-1 settles WHAT the +1 is. **Depends:** M3'-SPEC §8.0, Tranches 4.15, 5.24, 5.25, 24.19.
 
 ## DR-FIB-2 — `fibonacci_position`/`fibonacci_digit` intrinsic to degree nodes; NOW.md inscribes ground coordinates
 
@@ -1128,7 +1129,9 @@ These five rows land the `dev_decisions` block of [[35-fibonacci-ground-level-0-
 
 ## DR-M3-LENS-18 — Lens-stack cardinality 16+1 → 16+2 = 18 = 6g (g=3); the second meta-aperture is the `(-)` Operator/no-frame view
 
-**Status:** VALIDATED · **Validated:** 2026-06-12 · **By:** user (direct instruction, session 2026-06-12: "it's 16+2, the +1 as currently given, and then a +1 for a no-frame view of the map") · **Resolution:** The Mahāmāyā lens-stack carries **two** meta-apertures, not one, for a total of **18 = 16+2 = 12+4+2 = 6g for g=3** — the genus-3 signature of the M0-3 Anuttara number-language (12 grammatical components + 4 zero-elements + 2 pre-numerical constituents, per `anuttara-language-map.md` and the Anuttara complete explication §5 "The 18-fold and the genus-ladder"). The two meta-apertures ARE the two Mirror children (M0-3-(0/1)-0/1):
+**Status:** SUPERSEDED · **Superseded:** 2026-07-15 · **By:** user (current instruction) · **Operative resolution:** The executable model is primary [[Fibonacci Ground]] lens id 16 grounding sixteen derived static divisions ids 0..15. Ground is not a seventeenth homogeneous row in the derived `lensCarrier[16]` array, but it is the seventeenth functional and primary lens. No `()` Frame or `(-)` Operator lens exists. The historical 2026-06-12 rationale below is retained for provenance only and MUST NOT route implementation.
+
+**Historical resolution (non-operative):** The Mahāmāyā lens-stack was proposed with **two** meta-apertures, for a total of **18 = 16+2 = 12+4+2 = 6g for g=3** — the genus-3 signature of the M0-3 Anuttara number-language (12 grammatical components + 4 zero-elements + 2 pre-numerical constituents, per `anuttara-language-map.md` and the Anuttara complete explication §5 "The 18-fold and the genus-ladder"). The two proposed meta-apertures were the two Mirror children (M0-3-(0/1)-0/1):
 - **Aperture 16 — `()` Frame** (0D, Actuality, containment): the whole circle held as one bounded unity. This IS the existing +1; **DR-FIB-1's reading survives intact** — the Frame-aperture is the Level-0 (Fibonacci Ground) meta-lens, NOT a 17th division at Level 2.
 - **Aperture 17 — `(-)` Operator** (1D, Potential, transcendence/withholding): the **no-frame view** — the Bimba relational topology read with the 360°-container withheld. Also NOT a Level-2 division; it is the withholding of the frame itself.
 
@@ -2094,3 +2097,15 @@ The wave-C decisions routed to user final-validation join the register here (sou
 | DR-WC-OB-3 | Day-not-yet-started default action (auto-start-session vs prompt vs idle) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
 | DR-WC-OB-4 | Settings UX surface mount (Theia preferences page vs custom IDE panel) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
 | DR-WC-OB-5 | Reset / clear-state UX availability in production builds (hidden vs gated vs disabled) | Onboarding | ROUTED — user final-validation pending; developed in `plan.runs/wave-c-onboarding-settings-matrix.md` |
+
+## DR-S4-CLAW-1 — claw-rust native-harness migration abandoned; PI (TypeScript) is the terminal S4 runtime
+
+**Status:** VALIDATED · **Validated:** 2026-07-16 · **By:** user (direct instruction) · **Domain:** S4
+
+**Decision:** The OMX → Pleroma → `claw-rust` native-harness migration (planned 2026-03/04) is **abandoned**. The [[PI Agent]] runtime is TypeScript and is the **canonical, terminal S4 agent runtime**; there is no planned harness replacement. The local [[Codex]]/OMX lane remains as the one alternative runtime surface. Design must not plan around a future harness refactor.
+
+**Actions taken (2026-07-16):**
+- **Live code lane removed** from `Body/S/S0/epi-cli`: deleted `src/agent/claw_runtime.rs` and the `Claw`/`ClawCmd` subcommand + dispatch arm in `src/agent/mod.rs` (the `epi agent claw doctor/verify-runtime` lane); deleted `tests/agent_claw_runtime.rs`. `cargo check` green. The unrelated `~/.epi-claw` skill-home fallback paths were left intact.
+- **Live canon/specs de-laned:** `CLAUDE.md`, `[[S4]]` + `[[S4']]` World canon, `[[S4-SPEC]]` (harness-alternatives table, command table, invariants), `[[S4-ARCHITECTURE]]` frontmatter, `[[S4-0-SPEC]]`, `[[S4-TRACEABILITY-INDEX]]` future-work.
+- **Legacy archive kept** (per cycle-3 KEEP-list): the dated migration plan, operator protocol, and authority matrix are retained as historical records with a `SUPERSEDED — see [[DR-S4-CLAW-1]]` banner; their `claw-rust` content is not rewritten (also preserves the `agent_docs.rs` archive-integrity assertions).
+- The vendored `vendors/claw-code-parity/` submodule is left declared (KEEP-list protects declared `.gitmodules` vendors); only the CLI lane that referenced it was removed.

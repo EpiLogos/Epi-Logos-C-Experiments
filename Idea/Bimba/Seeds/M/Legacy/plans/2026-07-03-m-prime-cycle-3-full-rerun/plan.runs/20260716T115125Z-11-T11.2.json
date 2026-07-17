@@ -1,0 +1,38 @@
+{
+  "runId": "20260716T115125Z-11-T11.2",
+  "taskId": "11.T11.2",
+  "startedAt": "2026-07-16T11:51:25.918Z",
+  "owner": "codex-11-nara-continuation",
+  "leaseExpiresAt": "2026-07-16T13:51:25.918Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.2",
+    "trackId": "11",
+    "tranche": "T11.2",
+    "title": "Cross-layout intent routing T5 promotion",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.12"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app IDE shell / face partition (the `/` membrane crosses both faces = `#` itself); 10 highlight categories, ambient strip + tuning bar -> NOW frontmatter via khora_write. §2 track 11."
+  }
+}

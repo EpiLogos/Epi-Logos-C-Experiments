@@ -1,0 +1,38 @@
+{
+  "runId": "20260716T122141Z-11-T11.3",
+  "taskId": "11.T11.3",
+  "startedAt": "2026-07-16T12:21:41.063Z",
+  "owner": "codex-11-widget-ownership",
+  "leaseExpiresAt": "2026-07-16T14:21:41.063Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.3",
+    "trackId": "11",
+    "tranche": "T11.3",
+    "title": "Daily-layer widget ownership trace + ORPHAN closure",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.2"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app IDE shell / face partition (the `/` membrane crosses both faces = `#` itself); 10 highlight categories, ambient strip + tuning bar -> NOW frontmatter via khora_write. §2 track 11."
+  }
+}

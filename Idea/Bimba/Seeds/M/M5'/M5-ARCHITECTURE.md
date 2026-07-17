@@ -153,7 +153,7 @@ The **complete S-family stack** is the substrate; M5-2 surfaces it. Citations to
 | S5 review/autoresearch | `Body/S/S5/{epii-autoresearch-core (2049 LOC lib.rs + 2584 LOC capacity_workflows.rs + 651 LOC spine.rs), epii-review-core, epii-agent-core, epii-agent}` |
 | S5 library | `Body/S/S5/{epi-gnostic, epi-kbase, epi-kbase-core}` |
 
-**Anuttara grammatical-tracing API claim** (`anuttara_trace(output, sensitivity, depth)`, `epii-ux-full-m5-branch.md §2.3`): currently has no canonical gateway-method route and no implementing carrier. Per Wave-A M5 Anomaly `O-M5-1`, this is M0-substrate-owner territory (referred to Wave-A-M0 / Wave-B agentic-layer for adjudication; M5 records as a contemplative-offering claim, never as a pass/fail verdict).
+**Anuttara grammatical-tracing API claim** (`anuttara_trace(output, sensitivity, depth)`, `epii-ux-full-m5-branch.md §2.3`): deliberately has no canonical gateway-method route and no implementing carrier. The closed Wave-A M5 Anomaly `O-M5-1` referral assigns the graph-language substrate to [[M0]] / [[S2]], keeps M5's surface a read-only contemplative offering, and routes any substrate mutation through [[DR-M0-1]]. M5 records the claim but never produces a pass/fail verdict or a separate carrier.
 
 ### 2.4 M5-3' Theia shell substrate
 
@@ -191,9 +191,9 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 | Pi-agent | `Body/S/S4/pi-agent/{composite-entry.ts, lib/, prompts/, extensions/, agents/{anima.md, agent-chain.yaml, teams.yaml}}` | Pi harness (DR-M5-1: singular); dispatch chains |
 | Ta-onta carriers | `Body/S/S4/ta-onta/{khora, hen, pleroma, chronos, anima, aletheia}/{CONTRACT.md, extension.ts, spine-contribution.ts, modules/, S{n}/, S{n}'/, tests/}` | The six carriers — service routing infrastructure, NOT agents (DR-M5-1 ratified) |
 | `S4-5p-aletheia/CONTRACT.md` | `Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md` (261 LOC) | Aletheia = tool-guardian; six tools registered; six PI-native subagents; `cron_evening` Möbius hook; Janus envelope schema |
-| `plugins/pleroma/capability-matrix.json` | `Body/S/S4/plugins/pleroma/capability-matrix.json` | Canonical agent-tool governance (IOD-17 parity-locked); `constitutional_agents` array; `m5_4_governance.review_surface_roles` (lines 486+); `capacity_governance` lanes (line 583); `mediated_run_evidence_bridge` (16 required packet fields) |
-| ACR extension (to be repurposed) | `Body/M/epi-theia/extensions/agentic-control-room/{src/common/{index.ts, run-model.ts, parity.ts}, src/browser/{acr-runtime-service.ts, frontend-module.ts, run-flow-widget.tsx}}` | `ACR_WIDGET_IDS = {RUN_TREE, TOOL_STREAM, DIAGNOSTICS, EVIDENCE_DEPOSITION, REVIEW_DECISION}` — the five widgets that become OmniPanel tabs per 15.2 |
-| OmniPanel shell | `Body/M/epi-theia/extensions/omnipanel-shell/` | Target of 15.2 reframe; agentic membrane housing |
+| `plugins/pleroma/capability-matrix.json` | `Body/S/S4/plugins/pleroma/capability-matrix.json` | Canonical agent-tool governance (IOD-17 parity-locked); deprecated empty `constitutional_agents`; authorial-register disposition; `m5_4_governance.review_surface_roles`; `capacity_governance` lanes; `mediated_run_evidence_bridge` packet fields |
+| Retired ACR provenance | frozen `Body/M/epi-theia/extensions/agentic-control-room/` | Migration source only; no runtime ownership in the active carrier |
+| Active OmniPanel runtime | `Body/M/pratibimba-app/src/panes/omni/` | Eight-fold agentic membrane over one gateway/event substrate; Pi + Anima + six Aletheia-mode guardian targets remain distinct from non-dispatch Psyche aspect registers |
 | Pi-runtime axiom-translation tool (DR-B-2 land) | `Body/S/S4/pi-agent/lib/axiom-translate.ts` (proposed) | Philosophical-English ↔ formal-notation ↔ OWL ↔ SHACL — routes between M5-1 and M5-2 |
 
 **Existing `m5-epii` extension contract** (`Body/M/epi-theia/extensions/m5-epii/src/common/{epii-surface.ts (523 LOC), index.ts (101 LOC)}`):
@@ -245,11 +245,14 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 
 ### 3.3 Capability matrix dataset
 
-`Body/S/S4/plugins/pleroma/capability-matrix.json` — canonical agent-tool governance authority per IOD-17. Three-way parity-locked with `Body/S/S4/pi-agent/agents/anima.md` and runtime. Sections:
-- `constitutional_agents` (line 7): `[anima, eros, logos, mythos, nous, psyche, sophia]` — seven leaf constitutionals
-- `m5_4_governance.review_surface_roles` (line 486): `{sophia, anima, pi, aletheia, epii_review}` — five roles; **Pi appears here but NOT in constitutional_agents** (the DR-M5-1 contradiction now ratified: Pi is the agent harness, not a constitutional)
-- `m5_4_governance.capacity_governance` (line 583): six operational-capacity lanes with leads (Sophia × 5, Anima × 1 for Nara)
+`Body/S/S4/plugins/pleroma/capability-matrix.json` — canonical agent-tool governance authority per IOD-17. Three-way parity-locked with the Anima profile and runtime. Sections:
+- `constitutional_agents`: `[]` — deprecated per DR-M5-1; the former seven-name tuple is authorial/Psyche-register metadata, never an executable roster
+- `constitutional_agent_audit`: records Anima as dispatcher and the six other names as non-dispatch registers
+- `m5_4_governance.review_surface_roles`: governance roles, not agent identities
+- `m5_4_governance.capacity_governance`: six operational-capacity lanes
 - `mediated_run_evidence_bridge.packet_required_fields`: 16 fields; `capability_allowlists` per actor; `privacy_guards`
+
+The active roster projection lives in `Body/M/pratibimba-app/src/panes/omni/omnipanelCapabilities.ts`: Pi, Anima, and six Aletheia-mode targets represented by `actor: 'aletheia'` plus the exact guardian `techneClass`. `PSYCHE_ASPECT_REGISTERS` is a separate non-dispatch set.
 
 ### 3.4 S5 review/autoresearch persistence
 
@@ -777,7 +780,7 @@ Beyond the M5'-SPEC `Readiness / Test Criteria` list (lines 168-184), this archi
 14. Anti-treat-constitutional-as-subagent test: `agent-contract.json:53` `treat_anima_constitutional_agents_as_epii_subagents` enforcement — no M5 surface lists constitutionals as Epii-internal
 15. Day-path test: M5 inbox surfaces respect `Idea/Empty/Present/{day-date}/` (`agent-contract.json:57`); no NOW-folder writes for review items
 16. Canon-recognition test: `137 = 64+72+1` review surfaces trace to M1-5 (+1) NOT M0; residual M0-witness wording downgraded (DR-M5-2 RATIFIED audit)
-17. Pi-singular-harness test: capability-matrix `constitutional_agents` array does NOT list `pi`; ACR/OmniPanel `AgenticActor` includes Pi as harness label not constitutional peer (DR-M5-1 RATIFIED audit)
+17. Pi-singular-harness test: capability-matrix `constitutional_agents` is empty; active OmniPanel dispatch targets are Pi, Anima, and six `aletheia` + `techneClass` guardian entries, while Psyche aspect registers are separate and non-dispatch (DR-M5-1 cleanup landed)
 18. Recursive-self-review test: `enforceHumanGate({recursiveSelfReview: true, actor: 'sophia', humanRequired: false, actorIsHuman: false})` returns blocked (Tranche 12.4)
 19. Field-parity test: `RunEvidenceEnvelope` keys = `capability-matrix.json mediated_run_evidence_bridge.packet_required_fields` set-equality (Tranche 12.6)
 20. Möbius-night-pass routing test: `grep -rn "dispatch_moirai_night_pass" Body/S/S3/gateway/src/ Body/S/S4/ta-onta/anima/modules/` returns hits in BOTH (Tranche 12.9)

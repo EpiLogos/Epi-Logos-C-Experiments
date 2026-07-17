@@ -261,7 +261,7 @@ CLOCK_LENS rendering mode. Lens inversion = switching to the reciprocal partner.
 **These four concepts are not peers — they form a hierarchy. The Fibonacci Ground (Level 0) is prior
 to and generative of the other three. See §0 above and `fibonacci-60-pisano-integration.md §4`.**
 
-**Fibonacci Ground (Level 0, pre-lensic)** = the 60-fold synchronization period LCM(6,5,12)=60.
+**Fibonacci Ground (Level 0, primary lens id 16)** = the 60-fold synchronization period LCM(6,5,12)=60, grounding the sixteen derived static lenses.
 Stored as intrinsic node properties (`fibonacci_position`, `fibonacci_digit`) on every degree node.
 Not a mode, not an aperture — a fundamental coordinate of the clock space itself.
 

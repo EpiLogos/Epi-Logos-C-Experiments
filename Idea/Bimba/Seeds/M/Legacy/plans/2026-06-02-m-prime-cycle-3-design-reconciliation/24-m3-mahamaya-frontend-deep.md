@@ -1,5 +1,7 @@
 # Track 24 — M3' Mahāmāyā Frontend Deep Design
 
+> **OPERATIVE CARDINALITY CORRECTION — 2026-07-15.** The 18-aperture / `operator-no-frame` branch is deleted and superseded. Build 17 functional lenses: primary [[Fibonacci Ground]] id 16, plus the sixteen derived static divisions ids 0..15. Ground is not a homogeneous seventeenth row in `lensCarrier[16]`, but it is the operative primary lens and every derived packet resolves through it. No Frame/Operator rows or 18-stack may be introduced.
+
 > **⚑ ONTOLOGY SUPERSEDED (2026-07-11, DR-FACE-7)** — The widget/registration framing
 > below is the dead Theia paradigm. Before executing ANY tranche in this file, read
 > [[M'-ENGINE-FACES-ONTOLOGY-2026-07-11]] and enter its frame: the carrier is one
@@ -156,49 +158,17 @@ Land the 360-degree + 24-amino + 1-Axis Mundi cosmic clock as a depth-overlay co
   - Component render test: degree-tick advance redraws node positions; aspect-edge layer renders honest-pending when `payload.cosmicClock.aspectEdges` absent.
   - `grep -rn "import.*portal-core\|Body/S/S0" Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns nothing.
 
-### Tranche 24.3 — 18-fold lens aperture switcher (`M3LensApertureSwitcher`) *(spec-ahead-integration; corrects M3'-SPEC §8.10 cardinality 16+1 → 16+2; routes to DR-M3-LENS-18; depends on Wave-B kernel-bridge field WC-M3-SA-1)*
+### Tranche 24.3 — 16+1 functional lens switcher (`M3LensApertureSwitcher`) *(corrected 2026-07-15; depends on `kernelBridge.m3.lensCodonBinary(lensId)`)*
 
-Land the **16+2 = 18-fold** Lens Annulus aperture switcher. The 16 sacred-circle divisions are simultaneous static apertures over the 360° clock (per CLAUDE.md MEMORY: "16 lenses = 16 sacred circle divisions (NOT pair matrix) mirroring Anuttara 16-fold void") — every degree occupies a segment in all 16 at once (`lens_segment[16]` pre-bakes the lookups; the lens stack is the *reading-grammar* of the clock, layered meaning around the central unity). **Canon correction (DR-M3-LENS-18):** M3'-SPEC §8.10 currently names "16+1" (16 divisions + 1 Level-0 meta). The true cardinality is **16+2 = 18 = 6g for g=3 — the genus-3 signature of the M0-3 Anuttara number-language itself** (`anuttara-language-map.md`: 12 grammar-forms + 4 zero-elements + 2 pre-numerical = 18). The two meta-apertures ARE the two pre-numerical constituents of the Vimarśa apparatus (M0-3-(0/1)-0 and M0-3-(0/1)-1):
+Land the **primary Ground + sixteen derived apertures** Lens Annulus switcher in `Body/M/pratibimba-app`. The 16 sacred-circle divisions are simultaneous derived readings over the 360° clock. [[Fibonacci Ground]] is functionally lens id 16: the 60-position, 6° primary lens that grounds them. It may render as the outer/underlying ring, but it is selected and queried through the same functional lens control; every derived projection declares `groundingLensId: 16` and carries its Fibonacci address.
 
-- **Aperture 16 — the `()` Frame** (Archetype-0 Frame, 0D containment): the whole circle held as **one bounded unity** (the existing Axis-Mundi / Level-0 meta-position).
-- **Aperture 17 — the `(-)` Operator** (Archetype-1 Operator, 1D transcendence/withholding): the **no-frame view** — the Bimba graph topology read **without** the 360°-container, pure relations with the degree-frame withheld. This is the aperture canon was missing; it is not "the clock off" but the `(-)` transcendence-read of the same map.
-
-So the lens stack, fully counted, is the M0-3 archetypal number-language projected as apertures: 16 divisions (= the 12 grammar-forms + 4 zero-elements) + Frame `()` + Operator `(-)`.
-
-- **File:** `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx`
-- **Widget id:** `pratibimba.m3-mahamaya:m3-lens-stack-aperture`.
-- **Type signature:**
-  ```ts
-  export type LensMetaKind = 'division' | 'frame-unity' | 'operator-no-frame';
-  export interface MahamayaLensStackBoundary {
-      readonly activeLensId: number;                      // 0..17 (16 = () Frame/unity-meta, 17 = (-) Operator/no-frame)
-      readonly lenses: readonly MahamayaLensApertureDescriptor[];  // length === 18
-  }
-  export interface MahamayaLensApertureDescriptor {
-      readonly id: number;
-      readonly label: string;
-      readonly degreeSpan: readonly [number, number];     // start, end (mod 360); ignored for operator-no-frame
-      readonly sacredDivisionIndex: number;               // 0..15 for divisions; 16/17 for the two meta-apertures
-      readonly metaKind: LensMetaKind;                    // 'operator-no-frame' renders the graph un-framed
-  }
-  export interface M3LensApertureSwitcherProps {
-      readonly surface: M3ProjectionSurface;
-      readonly lensStack?: MahamayaLensStackBoundary;     // from payload.mahamayaLensStack
-      readonly onActivate: (lensId: number) => void;      // dispatched via SharedBridgeAdapter
-  }
-  ```
-- **Visual contract:** 18 concentric annular sectors — 16 sacred-circle divisions as the outer ring; the `()` Frame-unity meta as an inner ring (whole circle as one); the `(-)` Operator/no-frame as a distinct inner toggle that, when active, drops the 360° ring entirely and renders the **un-framed Bimba relational topology** (the map as pure graph). Active aperture luminous; non-active dimmed; hover surfaces `degreeSpan` (or "no-frame / pure relation" for the operator aperture). Clicking dispatches `bridge.invokeGatewayRpc('s3.world_clock.aperture.activate', { lensId })` (named Wave-B method-family addition WC-M3-SA-6 sibling) — renderer never mutates locally.
-- **Namespace discipline (DR-WC-M3-2):** this switcher's data binding is `payload.mahamayaLensStack` (the M3 aperture lane); MUST NOT be conflated with `payload.codonRotationProjection.lens` (the M1' chromatic-lens lane, count 12). The component refuses to render if `lensStack === undefined` — falls through to a `pending-profile-field:mahamayaLensStack` badge. See 24.10 for the dual-lane discipline.
-- **Data bindings:** `payload.mahamayaLensStack.activeLensId`, `payload.mahamayaLensStack.lenses[].id`, `.label`, `.degreeSpan`, `.sacredDivisionIndex`, `.metaKind`.
-- **Wave-B handoff:** WC-M3-SA-1 names `mahamayaLensStack` as a required profile-field; DR-M3-LENS-18 extends its declared length from 17 to 18 and adds `metaKind`. Until it lands, the switcher renders honest-pending badge with the kernel-bridge readiness ledger surfacing the gap.
-- **Cross-link:** the 16/9 second-spanda kinematics (9 Paraśakti planetary orbiters reading these apertures, aspects via `portal-core/src/aspect.rs`) bind through `payload.pasuBeingPattern.m2_m3_relation` (Track 10.PASU §`m2_m3_relation`) — no renderer-local 16/9 table. The 16/9 = 4²/3² torus aspect ratio (§24.1 / spec §15.2) is the same ratio the orbiter-aperture reading traces.
-- **Verification:**
-  - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx`
-  - `grep -n 'M3LensApertureSwitcher\|mahamayaLensStack\|operator-no-frame\|metaKind' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns matches.
-  - Render test: **18** apertures render when `lensStack` provided; the `(-)` operator aperture drops the 360° ring and renders the un-framed graph; honest-pending badge when absent.
-  - Cardinality test asserts `lenses.length === 18` and exactly one `frame-unity` + one `operator-no-frame` metaKind.
-  - DR-M3-LENS-18 entry lands in [13-decision-register.md](13-decision-register.md) recording the 16+1 → 16+2 = 18 = 6g(g=3) correction and the M0-3 genus-3 grounding.
-  - Namespace test: component never reads `payload.codonRotationProjection.lens` (the M1' chromatic-lens lane).
+- **Functional ids:** derived divisions `0..15`; primary Ground `16`; reject `17+`.
+- **Carrier binding:** call `kernelBridge.m3.lensCodonBinary(lensId)` through the real gateway. Ground returns 60 positions; derived divisions return their canonical C-backed boundary count. Do not invent a profile field, local division table, Frame lens, Operator lens, or 18-fold namespace.
+- **Default:** select Ground id 16 so the operative basis is visible before any derived aperture.
+- **Readout:** show `lensRole`, `groundingLensId`, boundary/position count, and per-degree Fibonacci position/digit from the strict packet.
+- **Namespace discipline:** M3's 16+1 functional hierarchy is distinct from the M1' 12×7 `(lens, mode)` tonality namespace. Neither may be inferred from the other.
+- **Cross-link:** the 16/9 second-spanda kinematics bind through `payload.pasuBeingPattern.m2_m3_relation`; no renderer-local 16/9 table.
+- **Verification:** portal-core exact Ground/derived projection tests; strict Zod and active-carrier parser tests; real spawned gateway test for ids 7, 16, and rejected 17; real Chromium test proving Ground is default and a derived aperture resolves through Ground 16. Any Frame/Operator or 18-cardinality assertion is a failure.
 
 ### Tranche 24.4 — 9-walk traversal navigator (`M3WalkNavigator`) *(spec-ahead-integration; depends on Wave-B kernel-bridge field WC-M3-SA-4)*
 
@@ -594,7 +564,7 @@ Verification:
 
 ### Tranche 24.19 — Fibonacci Ground (Level 0) outermost ring of the cosmic clock *(spec-ahead-integration; lands [[35-fibonacci-ground-level-0-temporal-substrate]] §2.4; routes to DR-FIB-1; depends on Tranches 4.15 + 5.25)*
 
-Add the Level 0 render layer to the M3 cosmic-clock surface (`Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` — extend the wheel render service named by 24.1; the handoff's `cosmic-clock-plugin.tsx` filename resolves to whatever component 24.1 landed as the wheel host). The Fibonacci Ground sits OUTSIDE the 16-lens annular sectors, framing them as the substrate they partition.
+Add the Level 0 render layer to the M3 cosmic-clock surface. The [[Fibonacci Ground]] may sit visually outside the 16 derived annular sectors, but functionally it is primary lens id 16: the substrate and address through which they are partitioned and read.
 
 **Render contract:**
 

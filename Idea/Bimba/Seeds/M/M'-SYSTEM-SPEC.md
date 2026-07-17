@@ -1,7 +1,7 @@
 ---
 coordinate: "M'"
 status: "active-system-spec"
-updated: "2026-05-31"
+updated: "2026-07-17"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -137,7 +137,7 @@ The alpha-quaternionic / psychoid-cymatic pass makes the parent-shell law more e
 - **1 side** = [[psychoid cymatic field]] + flow surface: [[M4']] protected personal field and [[Nara]] flow as the lived [[Pratibimba]] return, with [[M5']] review/pedagogy available without making the field public.
 - **4+2 depth** = both together with canonical [[Bimba]] map as architectural-knowledge backdrop, enabling [[Jiva-is-Śiva]] recognition at the full subsystem layer.
 
-This is system law, not a decorative UI preference. The open UX question is how the 0-side graph + clock affordance composes in the actual [[Tauri]] surface: co-resident, toggled, or graph-overlaying-clock. Until the UX pass decides, specs should preserve all three possibilities and avoid wording that makes one implementation mandatory.
+This is system law, not a decorative UI preference. The open UX question is how the 0-side graph + clock affordance composes in the active `Body/M/pratibimba-app` carrier: co-resident, toggled, or graph-overlaying-clock. Until the UX pass decides, specs should preserve all three possibilities and avoid wording that makes one implementation mandatory.
 
 ### The Shell 0/1 Split IS the (0/1) Inversionary Parent
 
@@ -170,13 +170,13 @@ This means:
 
 The same single [[Inversion_Operator]] that lives at `Coordinate->invert` in the C code's [[pointer web]] is what the Shell 0 ↔ Shell 1 toggle invokes at the user-surface level. Toggling between the cosmic and personal shells IS `#` applied to the user's current context. Opening a subsystem page from a shell IS the `.` nesting operator (the [[lemniscate]] at [[M4|#4]]) firing the deeper context-frame into execution.
 
-This is load-bearing for the Theia shell (formerly the Tauri implementation — downgraded per Tranche 11.7 audit):
+This is load-bearing for the active `Body/M/pratibimba-app` shell. The legacy `Body/M/epi-tauri` implementation and frozen `Body/M/epi-theia` reference are not active carriers:
 
 1. The Shell 0 / Shell 1 split must be a true matheme-toggle — same coordinate state held from two conjugate faces — not two unrelated home screens. State carried across the toggle: same active coordinate, same tick, same [[MathemeHarmonicProfile]]; what changes is which face of that state is foregrounded.
 2. The subsystem pages must be reachable from either shell with full state-continuity — the user's current `(lens, mode)`, selected coordinate, and tick context follow them into the deep workspace.
 3. The [[OmniPanel]] must always be able to show the current (0/1) state — which shell-face is active, which subsystem (if any) is open, which agent invocations are in flight — because it is the [[S0']] command surface over the entire (0/1) inversionary field.
 
-If the Theia app does not feel like Shell 0 and Shell 1 are *the same state seen from opposite faces*, the (0/1) wiring is broken and the UI has reverted to two-screens-side-by-side. The toggle is the spanda-pulse at the user-experience scale; it must carry the matheme's structural identity.
+If the active carrier does not make Shell 0 and Shell 1 feel like *the same state seen from opposite faces*, the (0/1) wiring is broken and the UI has reverted to two-screens-side-by-side. The toggle is the spanda-pulse at the user-experience scale; it must carry the matheme's structural identity.
 
 ## Domain Spec Set
 
@@ -191,11 +191,11 @@ The build-facing domain contracts are now split into six spec files:
 | [[M4']] | [[M4'-SPEC]] |
 | [[M5']] | [[M5'-SPEC]] |
 
-These files are the domain-level authority for user-facing surface, consumed backend contract, required [[MathemeHarmonicProfile]] fields, privacy boundary, readiness/test criteria, and visual/audio interaction model. [[M'-TAURI-PORT-SPEC]] remains the desktop integration authority across those domains.
+These files are the domain-level authority for user-facing surface, consumed backend contract, required [[MathemeHarmonicProfile]] fields, privacy boundary, readiness/test criteria, and visual/audio interaction model. [[M'-TAURI-PORT-SPEC]] is a historical migration reference; the current cross-domain carrier law lives here and in [[2026-07-02-pratibimba-app-phase-1]].
 
-Current traversal orientation: read [[M'-SYSTEM-SPEC]] as the umbrella law for the absorbed M-level deltas, then descend into [[M0'-SPEC]] through [[M5'-SPEC]] for domain authority. The 2026-05-31 cross-cutting set is [[m5-prime-system-shape-and-tauri-ide-canon]] for [[Theia]]/[[Tauri]] IDE shape and M-extension placement; [[m4-prime-nara-day-episodes-and-oracle-artifacts]] plus [[2026-04-04-graphiti-unified-temporal-context-service]] for [[Nara]], DAY/NOW, oracle artifacts, and [[Graphiti]] memory law; and [[S0-HARMONIC-POINTER-WEB36-SPEC]] plus [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] for the shared harmonic profile substrate.
+Current traversal orientation: read [[M'-SYSTEM-SPEC]] as the umbrella law for the absorbed M-level deltas, then descend into [[M0'-SPEC]] through [[M5'-SPEC]] for domain authority. The 2026-05-31 cross-cutting set is [[m5-prime-system-shape-and-tauri-ide-canon]] for historical [[Theia]]/legacy [[Tauri]] IDE shape and M-extension placement; [[m4-prime-nara-day-episodes-and-oracle-artifacts]] plus [[2026-04-04-graphiti-unified-temporal-context-service]] for [[Nara]], DAY/NOW, oracle artifacts, and [[Graphiti]] memory law; and [[S0-HARMONIC-POINTER-WEB36-SPEC]] plus [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] for the shared harmonic profile substrate.
 
-[[mprime-tauri-gap-table]] provides the current-state assessment of `Body/M/epi-tauri` against these specs and the harmonic clock integration plan. The primary bottleneck is kernel profile enrichment (tranches 1-4 from [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]) — the renderer type foundation and service client layer are substantially complete.
+[[mprime-tauri-gap-table]] preserves the 2026-05-19 assessment of deprecated `Body/M/epi-tauri` against these specs and the historical harmonic-clock integration plan. Its bottleneck and renderer-readiness claims are genealogy, not current carrier status; live status belongs to `Body/M/pratibimba-app` verification and [[2026-07-02-pratibimba-app-phase-1]].
 
 ## Musical Instrument Ramification
 
@@ -446,13 +446,13 @@ M' must consume a shared [[MathemeHarmonicProfile]] rather than inferring from u
 - [[Paramaśiva]] tick projection: `tick12`, 720-degree address, cycle/sub-tick, safe clock state handle, and oracle/cast payload handle where applicable;
 - source anchors into [[S0]] kernel, [[S2]] pointer web, [[qvdata]], and graph node.
 
-This profile is the bridge between planned system vision and actual code implementation. It should be visible in specs, graph nodes, [[qvdata]], semantic documents, gateway responses, portal readiness, and [[Tauri]] render clients.
+This profile is the bridge between planned system vision and actual code implementation. It should be visible in specs, graph nodes, [[qvdata]], semantic documents, gateway responses, readiness surfaces, and the active `Body/M/pratibimba-app` carrier.
 
-Implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` now serializes a public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, `su2Layer`, helix, ratio role, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/[[VAK]] context, 72-fold resonance address, elemental projection, initial planetary-chakral projection, and an [[M3]]/[[Mahāmāyā]] address-law projection. `Body/M/epi-tauri/src/services/kernelProjection.ts` consumes the same shape for renderer readiness. The remaining work is to enrich this profile with coordinate-specific [[S2]] pointer relation metadata, [[S3]] deposition anchors, and dataset-backed Tarot/amino/correspondence LUT provenance where the address law currently reports `pending-dataset-lut`.
+Historical implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` serialized a public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, `su2Layer`, helix, ratio role, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/[[VAK]] context, 72-fold resonance address, elemental projection, initial planetary-chakral projection, and an [[M3]]/[[Mahāmāyā]] address-law projection. The deprecated `Body/M/epi-tauri/src/services/kernelProjection.ts` was an early consumer of that shape. The active `Body/M/pratibimba-app` carrier consumes the evolved profile through the typed gateway/bridge contract described under [[M'-SYSTEM-SPEC#Carrier Decision - 2026-07-02]]; legacy renderer paths are genealogy, not implementation targets.
 
-## Harmonic Clock Integration Plan
+## Historical Harmonic Clock Integration Plan
 
-Planning foothold, 2026-05-19: [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] is the current execution map for turning this spec into the minimum integrated kernel/M' basis.
+Planning foothold, 2026-05-19: [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] recorded the original execution map for turning this spec into the minimum integrated kernel/M' basis. Its substrate sequence remains useful genealogy; live carrier work follows [[M'-SYSTEM-SPEC#Carrier Decision - 2026-07-02]] and [[2026-07-02-pratibimba-app-phase-1]].
 
 It makes four corrections explicit:
 
@@ -476,13 +476,13 @@ absolute tick n
 
 The planetary-chakral-musical correspondences are part of [[M2']] and [[M3']] rendering. They should be stored and refreshed through [[S2]] graph law and consumed through [[MathemeHarmonicProfile]], with exact tradition-sensitive mappings treated as canonical data rather than renderer constants.
 
-The next runtime tranche should therefore proceed in this order:
+The historical runtime sequence was:
 
 1. Enrich [[MathemeHarmonicProfile]] in [[S0]]/[[S0']] with the full tick, harmonic, diatonic, 72-fold, elemental, planetary-chakral, and [[M3]] symbolic address fields.
 2. Add the [[M3]] codec foothold as real integer address law with honest `pending-dataset-lut` state for unmaterialized LUTs.
 3. Make [[S2]] the pointer/harmonic law of record for coordinate relations and configurable correspondences.
 4. Wire [[S3]] [[Graphiti]]/[[Nara]]-clock deposition around the shared profile.
-5. Let M' [[Tauri]] consume the contract as the live instrument surface.
+5. Expose the contract to the M' desktop surface. In current law, that surface is `Body/M/pratibimba-app`; `Body/M/epi-tauri` is deprecated genealogy and `Body/M/epi-theia` contributes frozen carrier-independent contracts only.
 
 ## Development Memory Protocol
 
@@ -491,7 +491,7 @@ M' development should be live with graph and episodic memory as soon as the subs
 Before a development run:
 
 1. Read [[ARCHITECTURE-DIAGRAM-PACK]] for the top-layer map, cross-cutting seams, privacy gates, method ownership, and [[M']] / [[S]] / [[S']] coupling.
-2. Read this [[M'-SYSTEM-SPEC]] for umbrella [[Theia]], [[KernelBridge]], layout, and profile/current-state law.
+2. Read this [[M'-SYSTEM-SPEC]] for active `Body/M/pratibimba-app` composition, frozen [[Theia]] contract law, [[KernelBridge]], layout, and profile/current-state law.
 3. Resolve the active coordinate(s) through [[epi core knowing]] and [[S2]] coordinate resolution.
 4. Read the relevant layer seed/spec nodes and source traceability: [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], or [[M5'-SPEC]].
 5. Query [[S2]] graph for current canonical node state and pointer-web profile.
@@ -548,32 +548,33 @@ At that point the system can begin evolving itself coherently: not by magic auto
 
 ## Top-Layer Crystal - M' Umbrella Canon - 2026-06-02
 
-This file is the canonical umbrella seed for [[M']]. It owns the shared Pratibimba/Theia/kernel-bridge architecture that spans [[M0']] through [[M5']]. No individual M' layer may absorb these shared obligations just because it is the nearest visible coordinate.
+This file is the canonical umbrella seed for [[M']]. It owns the shared [[Pratibimba]] shell and [[KernelBridge]] law that spans [[M0']] through [[M5']], including carrier-independent contracts inherited from the frozen [[Theia]] reference. No individual M' layer may absorb these shared obligations just because it is the nearest visible coordinate.
 
 ### Umbrella Authority Boundary
 
 | Shared surface | Canonical owner | Layer guard |
 |---|---|---|
-| Theia-only Pratibimba System | this file plus `Idea/Pratibimba/System/**` | `Body/M/epi-tauri` is migration-source-only under PRD-01 |
-| one shell / two layouts | `ide-shell-m0-m5`, `pratibimba-layouts`, this umbrella | M0' and M5' may consume shell state but do not own the shell |
-| KernelBridge singleton | `extensions/kernel-bridge`, `extensions/m-extension-runtime`, this umbrella | bridge/profile/current state is top-layer M' infrastructure, not M0' graph UI |
+| active Pratibimba carrier | `Body/M/pratibimba-app`, this umbrella | `Body/M/epi-tauri` is deprecated genealogy; `Body/M/epi-theia` and `Idea/Pratibimba/System/**` are frozen references |
+| one shell / two layouts | `Body/M/pratibimba-app`, with `ide-shell-m0-m5` and `pratibimba-layouts` as frozen contract sources | M0' and M5' may consume shell state but do not own the shell |
+| KernelBridge singleton | active typed gateway/bridge seam, with `extensions/kernel-bridge` and `extensions/m-extension-runtime` as frozen contract sources | bridge/profile/current state is top-layer M' infrastructure, not M0' graph UI |
 | shared profile/current projections | [[S0']], [[S3']], [[S5']], this umbrella | M' panels consume safe projections and may deposit observations; they do not expose raw protected data |
 | M0'..M5' extension contracts | layer specs plus `extensions/m0-anuttara`..`m5-epii` | layer specs own domain law; umbrella owns composition and cross-layer seams |
 | integrated plugin surfaces | `plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`, `integrated-composition` | plugins compose layers; they do not rewrite layer canon |
 | Agentic Control Room | [[M5']] plus [[S4']] capability governance | agent mediation remains governed by S4/S5 review law |
 
-### Top-Layer Source Coverage
+### Top-Layer Source Coverage And Genealogy
 
 | Source | mtime | Canonical role |
 |---|---:|---|
-| `Idea/Pratibimba/System/package.json` | 2026-06-02 11:14 | current Theia workspace/package surface |
-| `Idea/Pratibimba/System/pnpm-workspace.yaml` | 2026-06-01 19:36 | extension workspace membership |
-| `Idea/Pratibimba/System/extensions/kernel-bridge` | current Theia source | first-loaded bridge, singleton API, connection/profile/current events |
-| `Idea/Pratibimba/System/extensions/m-extension-runtime` | current Theia source | common runtime bridge API, extension event contracts, protected-field rules |
-| `Idea/Pratibimba/System/extensions/m0-anuttara`..`m5-epii` | current Theia source | six M' layer implementation surfaces |
-| `Idea/Pratibimba/System/extensions/ide-shell-m0-m5` | current Theia source | shell topology and M0-M5 layout composition |
-| `Idea/Pratibimba/System/extensions/agentic-control-room` | current Theia source | M5-4 / S4 mediation window |
-| `Idea/Pratibimba/System/extensions/acceptance-harness` | current Theia source | top-layer readiness and layout acceptance substrate |
+| `Body/M/pratibimba-app` | active carrier | live shell, profile consumer, layout host, and native boundary |
+| `Idea/Pratibimba/System/package.json` | 2026-06-02 11:14 | frozen Theia workspace genealogy |
+| `Idea/Pratibimba/System/pnpm-workspace.yaml` | 2026-06-01 19:36 | frozen extension-membership genealogy |
+| `Idea/Pratibimba/System/extensions/kernel-bridge` | frozen Theia source | carrier-independent singleton API and connection/profile/current event law |
+| `Idea/Pratibimba/System/extensions/m-extension-runtime` | frozen Theia source | carrier-independent runtime event and protected-field law |
+| `Idea/Pratibimba/System/extensions/m0-anuttara`..`m5-epii` | frozen Theia source | six M' layer contract references, not live implementation surfaces |
+| `Idea/Pratibimba/System/extensions/ide-shell-m0-m5` | frozen Theia source | shell topology and M0-M5 composition contract reference |
+| `Idea/Pratibimba/System/extensions/agentic-control-room` | frozen Theia source | M5-4 / S4 mediation contract reference |
+| `Idea/Pratibimba/System/extensions/acceptance-harness` | frozen Theia source | historical readiness and layout acceptance reference |
 | `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` | 2026-04-04 13:46:16 | historical M0 language canon, crystallised into [[M0'-SPEC]] |
 | `Idea/Bimba/Seeds/M/M1'/Legacy/specs/M/M1-paramasiva-mathematical-dna.md` | 2026-03-05 14:45:32 | historical M1 math/DNA canon, crystallised into [[M1'-SPEC]] |
 | `Idea/Bimba/Seeds/M/M2'/Legacy/specs/M/M2-parashakti-vibrational-architecture.md` | 2026-03-05 14:45:32 | historical M2 vibrational canon, crystallised into [[M2'-SPEC]] |
@@ -601,7 +602,7 @@ The umbrella profile bridge is therefore cross-cutting infrastructure. [[M0']] m
 Before any implementation orchestrator scopes [[M']] work, it must read:
 
 1. [[ARCHITECTURE-DIAGRAM-PACK]] for the full [[S]] / [[S']] / [[M']] map, [[KernelBridge]] seams, gateway methods, and cross-cutting privacy/consent concerns.
-2. This [[M'-SYSTEM-SPEC]] for top-layer Theia composition, one-shell/two-layout law, shared profile bridge, and PRD-01 `Body/M/epi-tauri` deprecation.
+2. This [[M'-SYSTEM-SPEC]] for active `Body/M/pratibimba-app` composition, one-shell/two-layout law, shared profile bridge, deprecated `Body/M/epi-tauri` genealogy, and frozen [[Theia]] contract sources.
 3. The exact layer seed: [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], or [[M5'-SPEC]].
 4. The related sibling research specs and operational-capacity specs only after the layer seed fixes the internal M'/QL breakdown.
 
@@ -609,15 +610,23 @@ The [[M']] specs already carry their detailed internal breakdowns. This umbrella
 
 ## Carrier Decision - 2026-07-02
 
-Per [[M'-SURFACE-REENVISIONING-2026-07-01]] (ratified by the Architect, DR-FACE-1..6): the M' carrier is a **single Tauri v2 binary** at `Body/M/pratibimba-app/` that supervises the `epi` gateway on boot (boot = supervise; the face cannot open without the organism). `Body/M/epi-theia` is **frozen as a parts warehouse** (supersedes Tranche 11.7's Theia-only recast; the Theia shell/UI-patterns architecture documents remain canonical for their carrier-independent contracts — state persistence set, lemniscate primitive, provenance overlay, forbidden patterns). The "Theia-only Pratibimba System" rows in the Umbrella Authority Boundary above are historical as of this date. The one-shell / two-faces / `/` membrane / shared-profile law of this spec is unchanged — it is the contract the new carrier exists to finally satisfy. Active plan: [[2026-07-02-pratibimba-app-phase-1]].
+Per [[M'-SURFACE-REENVISIONING-2026-07-01]] (ratified by the Architect, DR-FACE-1..6): the M' carrier is a **single Tauri v2 binary** at `Body/M/pratibimba-app/` that supervises the `epi` gateway on boot (boot = supervise; the face cannot open without the organism). `Body/M/epi-theia` is **frozen as a parts warehouse** (superseding the historical Theia-only recast); its shell/UI-patterns architecture remains law only where carrier-independent, including the state-persistence set, lemniscate primitive, provenance overlay, and forbidden patterns. The one-shell / two-faces / `/` membrane / shared-profile law of this spec is unchanged: the active carrier must satisfy it without reviving Theia plumbing. Active plan: [[2026-07-02-pratibimba-app-phase-1]].
+
+Cross-layout intent law in the active carrier: the nine-field `CrossLayoutIntent` envelope remains stable; `requestedExtensionId` selects one of the six M-family receivers and `requestedContributionId` selects its registered contribution. The resolved carrier target declares promotion into `daily-0-1` or `ide-deep`, while `/`-membrane receivers preserve the current layout. The result is persisted as `epi-logos.layout.active`, and [[OmniPanel]] folds are filtered by their declared `availableInLayouts`. Routing must preserve selected coordinate, `(lens, mode)`, profile generation, session key, and DAY/NOW while delivering both requested ids to the mounted host; no layout route may create a second state container or substitute a different contribution.
+
+State-identity foothold, 2026-07-16 ([[11-theia-shell-surface-hosting]] 11.T11.6): `Body/M/pratibimba-app/src/state/crossLayoutIdentity.ts` atomically reads that six-field tuple from the existing coordinate/tick/session singletons immediately before and after each production layout mutation. Drift fails the route; a successful immutable receipt is exposed by `App.tsx` at the rendered shell boundary for behavioral observation and carries no authority of its own. Unit integration drives `daily-0-1` → `ide-deep` → `daily-0-1`; Playwright repeats both crossings in real Chromium with a spawned gateway profile/session and filesystem-backed DAY/NOW.
+
+Import-boundary foothold, 2026-07-16 ([[11-theia-shell-surface-hosting]] 11.T11.5): the six frozen Theia M-extension package trees are not recreated in the active carrier. Their carrier-independent `forbiddenDirectImports` authority remains the read-only `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json`; `Body/M/pratibimba-app/scripts/lint-import-boundaries.mjs` validates all six rows and applies the union plus the shared-bridge prohibition to the real unified `src` graph. The gate parses executable module edges, resolves relative imports into repository paths, and fails any direct S0/S2/S3/S5, SpaceTimeDB, Neo4j, Redis, portal-core, or Epii-core dependency. `pnpm test` runs it before carrier tests. This enforces the live architectural law: M' consumes those owners through the typed bridge/gateway seam, never by source-tree reach-through.
 
 Minimum Live Loop status, 2026-07-02: **DEMONSTRATED** — Architect-observed live run in the pratibimba-app carrier (tick → day anchor → journal write-back → oracle cast deposited as day artifact → timeline → relaunch persistence), every stage behaviorally tested and independently verified. This spec's minimum evolutionary basis is no longer aspiration; deepening proceeds per [[M'-SURFACE-REENVISIONING-2026-07-01]] §9 (Phases 2–5).
 
-Implementation footholds, 2026-07-02: (1) the S3 gateway now broadcasts the shared profile as a 1 Hz `profile.update` event carrying `portal-core::KernelTemporalProjection` (`epi-cli src/gate/server/mod.rs::spawn_profile_heartbeat`) — the S0→S3'→M' chain of this spec is live end-to-end for the first time; the bare gateway `tick` event is a liveness pulse, NOT a profile carrier. (1b) The shared profile now carries the live [[Kerykeion]] sky: `MathemeHarmonicProfile.planetDegrees` (optional `[f32; 10]`, canonical mod-10 Sun(0)..Pluto(9), ecliptic degrees with fractional precision per the cosmic-clock percentile law §13.4.4). The kernel constructor never fabricates it; the gateway heartbeat attaches it from the `epi nara kairos` cache only when fresh (<24h) AND complete — absence of the field IS the honest `kairos_valid = false` state (cosmic-clock §5.3), rendered as "kairos pending", never invented positions. Earth is the observer-centre and is never in the array. The companion `MathemeHarmonicProfile.livePlanets` (optional, same gating) carries the full per-planet projection — fractional degree, retrograde, transiting decan, Chaldean decan-ruler, the §5.2 resonance-event flag (`isResonance`, computed KERNEL-side from `DECAN_RULERS_36`), element identity and Keplerian velocity (both mirroring `M2_PLANET_LUT`) — so renderers give planets bodies without ever carrying their own correspondence tables. Canonical mod-10 order per the kernel (kairos.rs / aspect.rs): Sun 0, Moon 1, **Mercury 2, Venus 3**, Mars 4 … Pluto 9 — the legacy cosmic-clock §5.3 comment that swaps Venus/Mercury is a flagged erratum. (Whole-derivation session, Architect-directed surface addition; live-verified on the wire same day.) (2) The carrier's application foundation is landed: supervised singleton gateway (adopt/spawn/record-respecting restart), vault workspace under S1 scope law (writes only under `Empty/Present/` until Hen routes exist), command registry + palette, flexlayout pane system as the one-shell/two-layouts substrate, UI-state persistence, four-store state law (tick/coordinate/session/provenance).
+Implementation footholds, 2026-07-02: (1) the S3 gateway now broadcasts the shared profile as a 1 Hz `profile.update` event carrying `portal-core::KernelTemporalProjection` (`epi-cli src/gate/server/mod.rs::spawn_profile_heartbeat`) — the S0→S3'→M' chain of this spec is live end-to-end for the first time; the bare gateway `tick` event is a liveness pulse, NOT a profile carrier. (1b) The shared profile now carries the live [[Kerykeion]] sky: `MathemeHarmonicProfile.planetDegrees` (optional `[f32; 10]`, canonical mod-10 Sun(0)..Pluto(9), ecliptic degrees with fractional precision per the cosmic-clock percentile law §13.4.4). The kernel constructor never fabricates it; the gateway heartbeat attaches it from the `epi nara kairos` cache only when fresh (<24h) AND complete — absence of the field IS the honest `kairos_valid = false` state (cosmic-clock §5.3), rendered as "kairos pending", never invented positions. Earth is the observer-centre and is never in the array. The companion `MathemeHarmonicProfile.livePlanets` (optional, same gating) carries the full per-planet projection — fractional degree, retrograde, transiting decan, Chaldean decan-ruler, the §5.2 resonance-event flag (`isResonance`, computed KERNEL-side from `DECAN_RULERS_36`), element identity and Keplerian velocity (both mirroring `M2_PLANET_LUT`) — so renderers give planets bodies without ever carrying their own correspondence tables. Canonical mod-10 order per the kernel (kairos.rs / aspect.rs): Sun 0, Moon 1, **Mercury 2, Venus 3**, Mars 4 … Pluto 9 — the legacy cosmic-clock §5.3 comment that swaps Venus/Mercury is a flagged erratum. (1c) B-12 cross-surface propagation rides the same heartbeat: [[S3]] reads the canonical [[S2]] `GraphMeta.graph_revision` through a bounded background sampler, publishes it additively as `graphRevision`, and the carrier lifts it onto `KernelBridgeCachedProfile`; renderings compare revision only on the one profile-generation seam and never maintain private graph clocks. Session hydration stamps the same revision under `kernel.graphRevision`. Absence remains honest while graph metadata is unavailable; no renderer derives or increments it. (2) The carrier's application foundation is landed: supervised singleton gateway (adopt/spawn/record-respecting restart), vault workspace under S1 scope law (writes only under `Empty/Present/` until Hen routes exist), command registry + palette, flexlayout pane system as the one-shell/two-layouts substrate, UI-state persistence, four-store state law (tick/coordinate/session/provenance).
 
 Implementation foothold, 2026-07-15 (integrated composition state, [[29-integrated-plugins-composition-deep]] tranche `29.T29.10`): `Body/M/pratibimba-app/src/composition/compositionState.tsx` and the native `src-tauri/src/composition_state.rs` persist the strict 18-field [[M5']] integrated-plugin composition contract across face changes, layout remounts, and process restarts. The native boundary accepts only the two canonical composition identities, validates every enum/range, writes atomically beneath `~/.epi-logos/composition/`, and permits only opaque `q-composed://` snapshot handles; raw q payloads never enter persisted UI state. This extends the carrier's UI-state persistence surface without creating a fifth store or moving composition law out of [[M5']].
 
 Implementation foothold, 2026-07-02 (bell kernel, per [[m123-modal-resonator-bell-kernel-spec]] §13): the shared harmonic/musical surface law now carries the explicit modal/bell contract over the existing 8+4 bus. (a) `MathemeHarmonicProfile.modalResonator` (`portal-core/src/kernel/projections/modal_resonator.rs`, optional-additive on profile schema v1) is the standing resonant body: 12-slot `chromaticBody` with COMPOSABLE labels, `liveOctet[8]` whose `hz` equals `audio_octet[i]` exactly (the bus stays the only pitch authority), `nodalQuartet[4]` boundary anchors (never oscillators), the 7+5 `diatonicSet`/`silentComplement` partition, `bellPartials[8]` role labels (hum·prime·tierce·quint·nominal·upper·warble·residue), and `m2Address72` pinned to `resonance72.lensAnchorIndex` (= tick12·6+position, NEVER lens·7+mode). (b) `M123ChimeFrame` (`epi-cli src/gate/kernel_bridge_runtime.rs`, contract `S0.kernel-bridge.m123-chime-frame`) is the tick EVENT — published by the gateway heartbeat as a 1 Hz `m123.chime` SIBLING of `profile.update` — proving [[M1']]/[[M2']]/[[M3']] resolved the same resonant state at one tick, with explicit world-clock coherence booleans (any tick/degree720 mismatch → incoherent → consumers block readiness/strike). (c) Zod contracts mirror both shapes (`epi-cli/schemas/src/kernel-bridge.ts`); the historic lensMode bounds swap (lens 0..6/mode 0..11) is corrected to the Rust law (lens 0..11, mode 0..6), `diatonic` is nullable and `resonance` scalar-nullable per the Rust profile, and the real wire-captured profile + chime parse under the schemas (transport `seq`/`runId`/`sessionKey` keys are gateway envelope metadata, stripped before contract validation). (d) The pratibimba-app carrier consumes the kernel's bell-partial role labels (profile + chime) — the renderer's local role table is an explicit FALLBACK only, reported via `bellSource`; an incoherent chime blocks the strike instead of faking one. Live-verified on the wire same day (profile `modalResonator` schema v1, chime coherent, liveOctet byte-equal to the bus).
+
+`ModalResonatorProfile` is the canonical type serialized as optional-additive `MathemeHarmonicProfile.modalResonator` on profile schema v1.
 
 ## Wikilink And Source Discipline - M'
 

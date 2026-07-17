@@ -376,6 +376,46 @@ test("the CLI runner REFUSES a bare done mark (no receipt, no verification recor
   assert.equal(reviewed.state.tasks[taskId].evidence.at(-1).text, "partial work");
 });
 
+test("continue-through-review unblocks claims but never closes through provisional dependencies", () => {
+  const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--write", "--no-git"], root);
+  setTaskStatus(planFolder, "01.T0", "done");
+  setTaskStatus(planFolder, "02.T0", "review");
+  setTaskStatus(planFolder, "02.T1", "review");
+
+  const defaultAssessment = assessPlan({ cwd: root, planFolder, includeGit: false });
+  assert.equal(defaultAssessment.tasks.find((task) => task.id === "01.T1").computedStatus, "waiting");
+
+  const continued = run(
+    ["--plan", planFolder, "--claim", "01.T1", "--owner", "impl-1", "--continue-through-review", "--no-git"],
+    root,
+  );
+  assert.equal(continued.state.tasks["01.T1"].status, "in_progress");
+
+  writeVerificationRecord(planFolder, "01.T1", { verifierOwner: "verifier-2" });
+  assert.throws(
+    () =>
+      run(
+        [
+          "--plan",
+          planFolder,
+          "--mark",
+          "01.T1",
+          "--status",
+          "done",
+          "--owner",
+          "impl-1",
+          "--receipt",
+          VALID_RECEIPT,
+          "--continue-through-review",
+          "--no-git",
+        ],
+        root,
+      ),
+    /dependencies not done: 02\.T0, 02\.T1/,
+  );
+});
+
 test("context pack includes task body, source specs, dependencies, and decision context", () => {
   const { root, planFolder } = makePlanSet();
   const nowPath = join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-140000-pack01", "now.md");

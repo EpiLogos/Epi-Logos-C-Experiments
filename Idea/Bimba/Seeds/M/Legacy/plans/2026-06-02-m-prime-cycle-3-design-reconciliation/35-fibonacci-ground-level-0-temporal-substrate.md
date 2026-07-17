@@ -20,7 +20,7 @@ c_0_related_coordinates:
   - "S3'"
   - "S4'"
 dev_decisions:
-  - "Fibonacci Ground (`#2-0` Parashakti Archetypal Numerical Ground, 60-fold, LCM(6,5,12)) is canonically Level 0 of the temporal substrate — pre-lensic, pre-walk, pre-tick. It is the (00/00) context frame of the clock and the substrate generator for everything else. Final."
+  - "Fibonacci Ground (`#2-0` Parashakti Archetypal Numerical Ground, 60-fold, LCM(6,5,12)) is canonically Level 0 and the primary functional lens — pre-walk and pre-tick. It is lens id 16, the (00/00) context frame of the clock, and the substrate generator grounding derived lens ids 0..15. Final."
   - "The 4-level substrate stack — Level 0 Fibonacci Ground (60-fold) → Level 1 tick12 (M1 spanda, derived 60/5) → Level 2 16 lenses (M3 simultaneous apertures) → Level 3 9 walks (M1–M3 diachronic) — is the canonical reading order. tick12 is NOT a peer of the 16 lenses; it is the pentadic quantization of the same ground the lenses partition. Final."
   - "The `+1` of the `16+1` Mahamaya lens-stack is the Level 0 Fibonacci Ground (meta-lens), NOT a 17th aperture at Level 2. The 16-lens matrix at Level 2 is complete and exhaustive at its level. Final."
   - "Every `Clock_Degree_Node` carries intrinsic `fibonacci_position: u8` (0–59) and `fibonacci_digit: u8` (0–9) fields. These are properties of the ground, not derived from a walk or lens. Final."
@@ -49,7 +49,7 @@ dev_changed_paths: []
 > ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
 
 
-This tranche is a **planning + canon-amendment handoff** following the substrate-clarity session of 2026-06-08. It resolves a single architectural-clarity question (how the 12-fold tick, live Kerykeion time, Nara user-tracking, the Mahamaya 60×6 meta-lens, and the day/NOW context cohere into a single firm temporal substrate) by promoting the **Fibonacci Ground** (`#2-0` Parashakti, 60-fold, LCM(6,5,12)) to its canonical position as **Level 0** of the substrate stack — pre-lensic, pre-walk, pre-tick, intrinsic to every degree node.
+This tranche is a **planning + canon-amendment handoff** following the substrate-clarity session of 2026-06-08. It resolves a single architectural-clarity question by promoting the **Fibonacci Ground** (`#2-0` Parashakti, 60-fold, LCM(6,5,12)) to its canonical position as **Level 0 and the primary functional lens** — pre-walk, pre-tick, intrinsic to every degree node, and grounding the sixteen derived static lenses.
 
 The architecture is not new. It is specified in [[02-16-lenses-backbone-temporal]] §0 ("The Fibonacci Ground: Level 0 (Meta-Lens, Pre-Lensic)") under `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/`. What this handoff does is propagate the Level 0 framing into cycle-3 reconciliation tranches, into the canonical kernel header files (`m3.h`, `m4.h`), into the NOW.md frontmatter schema, and into the M3 Mahamaya portal plugin render. After these amendments, every cycle-3 surface that touches temporality reads from a single named substrate.
 
@@ -84,7 +84,7 @@ These edits happen NOW, independent of cycle-3 timing. They make the Level 0 Fib
 
 > ### §8.0 — Level 0: The Fibonacci Ground (Meta-Lens, Pre-Lensic)
 >
-> The M3 Mahamaya lens architecture is a four-level hierarchy. **Level 0 is the Fibonacci Ground at `#2-0` (Parashakti Archetypal Numerical Ground)** — pre-lensic, pre-walk, pre-tick. The 16 simultaneous apertures of §8.1 (the "16-fold lens-stack") are Level 2 partitions OVER the Level 0 ground; they do not constitute the ground.
+> The M3 Mahamaya lens architecture is a four-level hierarchy. **Level 0 is the Fibonacci Ground at `#2-0` (Parashakti Archetypal Numerical Ground)** — primary functional lens id 16, pre-walk and pre-tick. The 16 simultaneous apertures of §8.1 are Level 2 partitions OVER and THROUGH the Level 0 Ground; they do not constitute or operate independently of it.
 >
 > The Fibonacci Ground period is `LCM(6, 5, 12) = 60` — the synchronization period of QL(6) × pentad(5) × zodiacal(12). The Pisano period `π(10) = 60` is its digital unfolding in base-10. Laid over the clock face at 6° per step: **60 × 6° = 360°**. Structural law (companion to `_Static_assert(64 * 6 - 24 == 360)`):
 >
@@ -446,7 +446,7 @@ T19.12 (§2.2) is unchanged from existing cycle-3 schedule.
 
 To be appended to [[13-decision-register]] when this handoff is accepted:
 
-- **DR-FIB-1** — Fibonacci Ground (`#2-0` Parashakti, 60-fold, LCM(6,5,12)) is canonically Level 0 of the temporal substrate. The `+1` of the `16+1` Mahamaya lens-stack refers to Level 0, not a 17th aperture at Level 2.
+- **DR-FIB-1** — Fibonacci Ground (`#2-0` Parashakti, 60-fold, LCM(6,5,12)) is canonically Level 0 and primary functional lens id 16. The `+1` grounds derived ids 0..15; it is not an additional homogeneous static row at Level 2.
 - **DR-FIB-2** — Every `Clock_Degree_Node` carries intrinsic `fibonacci_position: u8` (0–59) and `fibonacci_digit: u8` (0–9). NOW.md frontmatter inscribes `c_3_fibonacci_position` + `c_3_fibonacci_digit` + `c_3_tick12` + `c_3_backbone_index` on every Khora write.
 - **DR-FIB-3** — Kerykeion temporal modes (Natal, RealTime, Kairotic) coexist as a typed `KairosFrame` discriminated union inside `M4_Temporal_Now`. They do not swap; they layer. `m4_planet_degrees_live()` accessor returns kairotic-if-active else realtime; explicit-frame access is required for mode-specific reads.
 - **DR-FIB-4** — The 24-fold backbone (Lens 7) is a typed primitive (`Clock_Backbone_Node`) and an extern table (`CLOCK_BACKBONE[24]`), built at M3 boot.

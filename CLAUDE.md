@@ -100,7 +100,7 @@ Every family manifests the #0-#5 archetypes through its specific domain:
 - **S1 Obsidian / Material Container** — vault, markdown, frontmatter, wikilinks; `World/Types/Empty/Pratibimba` residency law; `Body/S/S1/hen-compiler-core`
 - **S2 GraphDB Substrate** — raw Neo4j + Redis as shared infrastructure (no coordinate semantics; semantics route through S2'); `Body/S/S2/{graph-schema, graph-services}`
 - **S3 Gateway Control Plane** — gateway RPC + session authority + runtime control + OmniPanel parity; `Body/S/S3/{gateway, gateway-contract}`; also hosts spacetime + redis-context at S3'. **PAI is retired genealogy** per S3 canon ("Older PAI, plugin, and harness readings remain part of the genealogy of the coordinate, but they are no longer the target shape").
-- **S4 Agent Runtime** — PI Agent (migrating to claw-rust); ta-onta carriers at S4'; 14-agent roster (Anima 7 constitutional + Aletheia 7 specialist subagents); VAK execution language; `Body/S/S4/{pi-agent, ta-onta, plugins}`. **"Claude" is retired label** — the substrate is harness-agnostic agent runtime.
+- **S4 Agent Runtime** — PI Agent (TypeScript); ta-onta carriers at S4'; 14-agent roster (Anima 7 constitutional + Aletheia 7 specialist subagents); VAK execution language; `Body/S/S4/{pi-agent, ta-onta, plugins}`. **"Claude" is retired label** — the substrate is harness-agnostic agent runtime.
 - **S5 Integral World Boundary** — world-exchange and world-return: external connectors (Notion/n8n/Telegram/webhooks — currently outward, partially implemented) + knowledge-return (Gnostic via RAG-Anything + Graphiti as episodic memory — currently most landed). **Notion is one optional manifestation, not the whole layer.** Aletheia (S4-5') actualises S5 via Gnostic + Graphiti.
 
 **Ta-onta carrier ↔ S-layer actualisation map** (per S4-SPEC + S0/S1/S3/S5 canonical):
@@ -471,7 +471,7 @@ Möbius return (#5 → #0) is the garbage collector.
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (52159 symbols, 111330 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (55174 symbols, 118407 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

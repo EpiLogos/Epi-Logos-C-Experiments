@@ -63,34 +63,26 @@ Within this S4' body, [[Pleroma]] must be treated as [[Anima]]'s executive capab
 
 S4/S4' is consumed most directly by [[M5'-SPEC]] and the cross-cutting agent membrane in [[M'-SYSTEM-SPEC]]. The operative anchors for that surface are [[Body/S/S4/plugins/registry.jsonl]] and [[Body/S/S4/plugins/pleroma/capability-matrix.json]].
 
-### M' Shell Consumed Contract Closure - Cycle 2 T12.T1
+### M' Shell Consumed Contract Closure - DR-M5-1 Rerun
 
-This closure narrows the M' surface to **only what M5-4 (Agentic Control Room), the constitutional actor set, and the integrated review surfaces actually consume** from S4/S4'. It is not a re-statement of the full S4 ta-onta API; it pins the consumed boundary so cycle 2 M' work stays subordinate to substrate already landed in `Body/S/S4`.
+This closure narrows the M' surface to **only what the active [[OmniPanel]], executable dispatch roster, and integrated review surfaces consume** from S4/S4'. It is not a re-statement of the full S4 ta-onta API; it pins the consumed boundary so M' work stays subordinate to substrate already landed in `Body/S/S4`.
 
-**Consumption pattern.** M5-4 consumption flows through the same `KernelBridgeAPI.invokeCapability` channel as every other M-extension - the Agentic Control Room (M5-4) does **not** open private agent sockets. The IOD-17 capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the single source of truth for the dispatch tree the ide-shell-m0-m5 VAK selector renders and the ACR run-flow widget actuates. No M-extension imports raw S4 plugin internals.
+**Consumption pattern.** M5-4 consumption flows through the same gateway bridge as every other M' surface; [[OmniPanel]] does **not** open private agent sockets. The IOD-17 capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the S4 source of truth, and `Body/M/pratibimba-app/src/panes/omni/omnipanelCapabilities.ts` projects its gateway-mediated capability view and executable roster. No M' consumer imports raw S4 plugin internals.
 
 **Closed S4/S4' surfaces.**
 
-| Surface | M5-4 / constitutional consumer | S4/S4' authority | Verification |
+| Surface | M5-4 consumer | S4/S4' authority | Verification |
 |---|---|---|---|
-| Capability matrix tree | `@pratibimba/ide-shell-m0-m5::parseCapabilityMatrix` reads the matrix file and projects dispatch tools / skills / VAK threads into the run-flow widget actor + route selector | `Body/S/S4/plugins/pleroma/capability-matrix.json` (IOD-17 authority; owner agent: `anima`; package role: `anima_executive_capability_membrane`) - constitutional agents `anima`, `eros`, `logos`, `mythos`, `nous`, `psyche`, `sophia`; dispatch tools `dispatch_agent`, `dispatch_parallel_agents`, etc. | `extensions/test/agentic-mediation-e2e/e2e.test.mjs` harness loads the real matrix through `PATHS.capabilityMatrix` and asserts `matrixDispatchTools` / `matrixSkills` parity against ACR run-model |
-| Mediation routing | ACR `acr-runtime-service` dispatches `invokeCapability({method: 'invokeGatewayRpc', params: {gatewayMethod: "s4'.mediation.route"}})`; never a direct fetch / WebSocket | S4' `s4'.mediation.route` (capability dispatch through gateway) backed by Pleroma capability-matrix + Anima VAK evaluation | `extensions/agentic-control-room/tests/run-flow.test.mjs` (run-tree state machine + tool stream + actor/route enforcement) |
-| Mediation capability listing | ACR may probe `s4'.mediation.capabilities.list` for actor/route options | S4' lists capabilities authorised by `s_4_permission_boundary` (S4.4' capability governance) per matrix | covered by `run-flow.test.mjs` capability-list path |
-| Constitutional actor set | Run-model enforces `actor in {anima, aletheia, pi, sophia, epii, human}` at dispatch and review boundaries | S4 spine division: Anima = dispatch spine; Epii = S5' return spine (separate PI agents); Aletheia, Pi, Sophia as ta-onta articulations | `evidence-envelope.test.mjs` + `human-gate.test.mjs` (actor normalization, human-required transition, evidence envelope shape) |
-| Human-required gate | `enforceHumanGate` ensures `humanRequired` candidates cannot auto-resolve at any non-human actor | S4'.capability_governance + S5 review governance (`Body/S/S5/epii-review-core/src/lib.rs::requires_human_resolution`) mirrored gateway-side by harness `GatewayDispatchContract` | `human-gate.test.mjs` (5/5) |
-| Evidence envelope to S5 review | `buildEvidenceEnvelope` produces the envelope ACR submits via `gatewayMethod: "s5'.review.submit"` | S5 review surface owns receipt verification; S4 produces the envelope shape | `evidence-envelope.test.mjs` |
+| Capability matrix tree | [[OmniPanel]] consumes the gateway-derived mediation snapshot and projects capabilities into dispatch/tool-stream folds | `Body/S/S4/plugins/pleroma/capability-matrix.json` (IOD-17 authority; owner `anima`; deprecated empty `constitutional_agents`) | `test_capability_matrix.py` plus `omnipanelCapabilities.test.ts` |
+| Mediation routing | [[OmniPanel]] dispatches through `s4'.mediation.route`; never a direct S4 import or private socket | S4' gateway route backed by the [[Pleroma]] matrix and [[Anima]] VAK evaluation | gateway, gateway-contract, and live-wire class-W gates |
+| Mediation capability listing | [[OmniPanel]] strictly parses `s4'.mediation.capabilities.list` | S4' lists capabilities authorised by `s_4_permission_boundary` | `omnipanelCapabilities.test.ts` and its live gateway test |
+| Executable actor set | `ANIMA_DISPATCH_TARGETS` exposes Pi, Anima, and six Aletheia guardian targets; guardian identity is `actor: 'aletheia'` plus `techneClass` | [[Anima]] is the dispatcher; [[Aletheia]] supplies six subagent techne-guardian classes; [[Techne]] is [[Pleroma]]'s atomic-skills substrate, never an actor | `omnipanelCapabilities.test.ts` asserts all eight targets and excludes Psyche aspect registers |
+| Human-required gate | `enforceHumanGate` prevents recursive agent review from resolving human-required decisions | S4 capability governance plus [[S5]] review governance | `m5ReviewGate.test.ts` |
+| Evidence envelope to S5 review | M5 review submits through `s5'.review.submit` | S5 review owns receipt verification; S4 supplies dispatch identity | class-W gateway/live-wire gate |
 
-**Constitutional surface boundary.** Anima and Epii are distinct spine-bearing PI agents, not Anima-and-subagent. The ACR run-flow never resolves Epii review decisions through `s4'.mediation.route`; review/improvement decisions cross the boundary to S5 via `s5'.review.submit`. The constitutional actor set surfaced to M' is the canonical Pleroma membrane (`anima`, `aletheia`, `pi`, `sophia`, `epii`, `human`); other agent identities in registry.jsonl are not exposed to the M5-4 actor selector.
+**Constitutional surface boundary.** [[Anima]] and [[Epii]] are distinct spine-bearing PI agents, not Anima-and-subagent. The M5 run-flow never resolves Epii review decisions through `s4'.mediation.route`; review/improvement decisions cross to [[S5]] through `s5'.review.submit`. [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], and [[Sophia]] remain authorial/Psyche aspect registers composed by Anima, not peer dispatch targets. No Techne profile or seventh Aletheia member lands.
 
-**Verification evidence (2026-06-02).** ACR contract suite passes 8/8 (run-flow + evidence-envelope + human-gate). Capability-matrix parity (matrix file → dispatch-tools list → ide-shell render → ACR run-model actor enumeration) is closed via the e2e harness. 18/19 mediation tests pass at `node --test extensions/test/agentic-mediation-e2e/e2e.test.mjs extensions/agentic-control-room/tests/*.test.mjs`.
-
-**Recorded provider-backed / capability-gated gaps.**
-
-| Gap | Status | Owner |
-|---|---|---|
-| `extensions/test/agentic-mediation-e2e/harness.mjs:43-47` references the S5 review baseline fixture at `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/10-t2-s5-review-baseline-20260602T000502Z.json` but the file moved to `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/` during the seed-legacy migration; e2e test currently fails with ENOENT, breaking 1/19 in the mediation-e2e suite | substrate path stale - **out of 12.T1 spec write scope**; needs a Pratibimba-side test-harness path rebase (write scope `Idea/Pratibimba/System/extensions/test/agentic-mediation-e2e/harness.mjs`) | Track 13 substrate cleanup or a dedicated rebase tranche |
-| Live `s4'.mediation.capabilities.list` gateway exposure status | declared in IOD-17 and consumed by ACR if available; current run-flow falls through to matrix-static dispatch when gateway probe returns empty | S4 dispatch home extraction (Track 13) and S3 gateway routing |
-| Plugin registry visibility scope (Pleroma vs constitutional surface vs operator-only) | matrix authority is canonical; registry.jsonl exposure to OmniPanel is governed by `s_4_permission_boundary` | S4'.capability_governance + S3' channel layer |
+**Verification evidence (2026-07-16).** The matrix contract, active [[OmniPanel]] projection, live mediation snapshot, M5 review gate, and class-W gateway/live-wire suites are the closure evidence. Frozen [[Theia]] ACR tests are historical reference only and are not a verification target.
 
 ## VAK Gate
 
@@ -135,7 +127,7 @@ The old prime sequence survives as an API pressure:
 
 The older files over-bind S4 to a particular harness: first [[Claude Code]], then [[Moltbot]]. Current architecture corrects that:
 
-- [[S4]] is harness-agnostic agent runtime. Current implementation uses managed PI plus local [[Codex]]/OMX and experimental [[claw-rust]] lanes; the coordinate is not reducible to any one vendor CLI.
+- [[S4]] is harness-agnostic agent runtime. Current implementation uses managed PI plus a local [[Codex]]/OMX lane; the coordinate is not reducible to any one vendor CLI.
 - [[S4']] is not a generic plugin host. It is the agentic inhabitation law that makes the runtime coordinate-aware.
 - [[S3]] / [[S3']] owns gateway transport, sessions, temporal context, [[SpacetimeDB]], Redis live-context law, and [[Graphiti]] temporal episodic architecture.
 - [[S4]] consumes S3/S3' session and temporal state but does not own gateway persistence or Graphiti architecture.
@@ -147,7 +139,7 @@ The older files over-bind S4 to a particular harness: first [[Claude Code]], the
 
 The live S4 implementation is broad and uneven:
 
-- `epi-cli/src/agent/` implements managed agent install/doctor/spawn/attach/run/chat/verify-runtime, extension sync, agent registry, model registry, auth profiles, plugin/skill/subagent validation, hooks, team dispatch, chain runs, session lifecycle, [[Codex]] runtime install/doctor, experimental [[claw-rust]] doctor/verify, and deterministic `epi agent vak evaluate`.
+- `epi-cli/src/agent/` implements managed agent install/doctor/spawn/attach/run/chat/verify-runtime, extension sync, agent registry, model registry, auth profiles, plugin/skill/subagent validation, hooks, team dispatch, chain runs, session lifecycle, [[Codex]] runtime install/doctor, and deterministic `epi agent vak evaluate`.
 - `.pi/extensions/ta-onta/composite-entry.ts` registers all six spine contributions and loads [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], and [[Aletheia]] extension tools into PI.
 - `.pi/extensions/ta-onta/anima/extension.ts` registers `vak_evaluate`, `anima_orchestrate`, `nous_disclose`, parallel/fusion dispatch tools, and injects the VAK skill stack at `before_agent_start`.
 - `.pi/extensions/ta-onta/anima/S4/` contains `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, and related execution primitives.
@@ -204,7 +196,7 @@ Current canonical S4 base technology:
 - Skill, plugin, hook, and subagent validation.
 - Durable team records and subagent sessions coordinated through the gateway state root.
 - PI-native extension package `.pi/extensions/ta-onta/`.
-- Local [[Codex]] / OMX runtime lane and experimental [[claw-rust]] lane as harness alternatives.
+- Local [[Codex]] / OMX runtime lane as a harness alternative.
 
 ### Services, Binaries, Processes
 
@@ -219,7 +211,6 @@ Current canonical S4 base technology:
 | Provider/model/auth registry | [[S4.1]] | Rust + JSON | Managed agent dir | Model/provider identity and credential profile state |
 | VAK CLI baseline | [[S4.4']] | Rust | `epi agent vak evaluate` | Deterministic fallback evaluator; not canonical semantic evaluation |
 | Codex/OMX lane | [[S4]] | Node/Rust/CLI | `.codex/`, `.omx/` | Alternative local runtime surface managed by `epi agent codex` |
-| claw-rust lane | [[S4]] | Rust | vendored experimental runtime | Future harness-native substrate under `epi agent claw` |
 
 S4 itself does not own the vault, graph, gateway, temporal runtime, or world-return knowledge systems. It owns the agent's execution body and the interfaces by which those systems are inhabited.
 
@@ -342,7 +333,6 @@ S4 is surfaced through `epi agent`:
 | `epi agent subagent run/continue/list/stop` | [[S4.5]] | Managed subagent sessions with lineage |
 | `epi agent vak evaluate` | [[S4.4']] | Deterministic VAK baseline |
 | `epi agent codex install/doctor` | [[S4]] | Repo-local [[Codex]] runtime lane |
-| `epi agent claw doctor/verify-runtime` | [[S4]] | Experimental [[claw-rust]] runtime lane |
 | `epi agent pipi` | [[S4.5]] | Pi-Pi meta-agent launch mode |
 
 CLI parity law: `epi agent` commands are real execution evidence, but the canonical target is the coordinate-native `s4.*` / `s4'.*` API surface.
@@ -681,7 +671,7 @@ S4/S4' serves:
 
 ## D. Key Architectural Decisions
 
-1. [[S4]] is harness-agnostic. [[PI Agent]] is the current primary runtime, while [[Codex]]/OMX and [[claw-rust]] are runtime lanes, not coordinate replacements.
+1. [[S4]] is harness-agnostic. [[PI Agent]] is the current primary runtime, while [[Codex]]/OMX is a runtime lane, not a coordinate replacement.
 
 2. [[S4']] is the [[ta-onta]] API/base surface, not merely a plugin host and not only the Anima extension. Plugin mechanics are S4 base technology; VAK/CF/CPF/CFP/CS law is S4'.
 

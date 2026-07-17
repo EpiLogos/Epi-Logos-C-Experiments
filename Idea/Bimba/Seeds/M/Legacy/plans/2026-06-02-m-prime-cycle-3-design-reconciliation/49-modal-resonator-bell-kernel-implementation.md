@@ -598,20 +598,20 @@ If `bimba-vault-validate` is available as a runnable skill/command in the implem
 Run the full modal/chime verification set:
 
 ```bash
-cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test modal_resonator_profile
+cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test modal_resonator_profile_field
 cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test modal_resonator_privacy
 cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test psychoid_cymatic_handle
-cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_modal_chime
-pnpm --dir Body/S/S0/epi-cli/schemas vitest run tests/kernel-bridge.test.ts
-pnpm --dir Body/M/epi-theia --filter @pratibimba/kernel-bridge test
-pnpm --dir Body/M/epi-theia --filter @pratibimba/m-extension-runtime test
-pnpm --dir Body/M/epi-theia --filter @pratibimba/m2-parashakti test
-pnpm --dir Body/M/epi-theia --filter @pratibimba/m3-mahamaya test
-pnpm --dir Body/M/epi-theia --filter @pratibimba/plugin-integrated-1-2-3 test
-node Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs
+cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_m123_chime_frame
+cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_epogdoon_projection
+pnpm --dir=Body/S/S0/epi-cli/schemas exec vitest run tests/kernel-bridge.test.ts
+pnpm --dir=Body/M/pratibimba-app exec vitest run src/bridge/types.test.ts src/bridge/gatewayClient.test.ts src/audio/instrument.test.ts src/engine/m2MeaningPacket.test.ts src/engine/integratedReadiness.test.ts src/engine/modulation/modulators.test.ts
+node Body/M/pratibimba-app/scripts/live-wire.mjs
+node .codex/scripts/verify-all.mjs --only portal-core,epi-cli,schemas,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,live-wire,honesty-lint,kernel-truth
 ```
 
 Expected: PASS. Any failing command blocks marking Track 49 done.
+
+Scoped canon audit, 2026-07-16: the eight Step-1 specs now name `ModalResonatorProfile`, and `M4'-SPEC.md` preserves protected bell-field bodies as opaque-handle/digest-only. Focused modal/chime verification is green (140 passed, 0 failed), frontmatter parses for all eight specs, and the plan index parses. Release closure remains blocked outside Track 49 canon scope: the fresh K-class verifier is red because `portal-core/tests/tunable_full_registry.rs::full_registry_loads_migrated_config_surfaces` expected `Some(U32(60))` and received `None`; verification record: `plan.runs/verifications/49.T49.8.md`. Keep `49.T49.8` in review until that shared gate is green and independently re-run.
 
 ---
 

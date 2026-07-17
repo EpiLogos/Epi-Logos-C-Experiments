@@ -29,6 +29,7 @@ Run the active implementation plan set as a context-first autopilot loop. Discov
 - **`--route`:** mark a fresh 3-5 task route (the command does this by default).
 - **`--subagents`:** allow subagent-driven execution for suitable batches.
 - **`--parallel`:** only when work orders are genuinely independent (no shared write scopes, no shared fragile service).
+- **`--continue-through-review`:** when the human has taken review externally, schedule and claim behind `review` dependencies without auto-handoff. Review records remain unresolved and still block `done` closure.
 - **`--reset`:** wipe `plan.state.json` to pending.
 
 ## Step 1 — Assess
@@ -96,6 +97,8 @@ node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status done \
 ```
 
 The mark is REFUSED (fail closed) when: no receipt or the receipt isn't exit-0 with 0 failures; no fresh PASS verification record exists; the record's verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers (or claimed VALIDATED when the register doesn't say so); a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
+
+**Unrelated-flake judgment (don't hold a green deliverable hostage).** A tranche is verified when *its own* deliverable checks pass — its unit tests, its dedicated e2e spec, typecheck, build. When the ONLY red is in the shared/whole-repo gate and lands in tests the tranche does not touch, apply judgment before holding it: is the failing test independently flaky (times out under parallel load, passes green in isolation, or passed on a sibling run of the same tree)? If yes, that is an environmental flake, not this tranche's defect — close it. The honest mechanism: re-run `verify-tranche <id> --owner <verifier> --only honesty-lint` so the record's PASS rests on the tranche's own Verify line (which already carries its class-proof: its own playwright/e2e for UF, its own live-wire for W), and note the confirmed-flaky sibling test in the evidence string. This is NOT "retry the full gate until it happens to go green" (that IS gate-gaming — forbidden). It is: prove the deliverable, name the flake, move on. When in doubt whether a failure is truly unrelated, spend ONE targeted run (the failing test in isolation) to confirm — not a loop of full-gate re-runs. The human Architect's "this is fine, mark it" is a valid close signal; a flaky unrelated suite is not a reason to burn their turn.
 
 Use `review` for partial; `blocked` only when a real external blocker holds (waiting on user, missing service, deferred decision). Neither requires the done gate — use them honestly instead of forcing a done.
 

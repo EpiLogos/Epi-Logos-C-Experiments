@@ -10,6 +10,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] (S work) / [[M'-SYSTE
 - Family spec folders `C/ P/ L/ S/ T/ M/` (+ primes): long-form coordinate specs, shard specs, and
   `Legacy/` archives. S work is canonically rooted at [[S-SYSTEM-INDEX]] (`S/`); M' work at the M'
   specs ([[M'-SYSTEM-SPEC]] et al.) and the active cycle plans under `M/Legacy/plans/`.
+- [[M'-TAURI-PORT-SPEC]] is retained as historical migration reference only; current cross-domain
+  carrier authority is [[M'-SYSTEM-SPEC]] plus the [[M0']]-[[M5']] domain specs and active carrier plans.
 - `M/q-vocabulary-canon.md` — the OPEN `q_` / `qm_` register-vocabulary Form (shape law: only the
   position `n` is fixed, the facet slug is free) consumed by [[S1]] frontmatter validation and [[S2]]
   graph/semantic contracts.

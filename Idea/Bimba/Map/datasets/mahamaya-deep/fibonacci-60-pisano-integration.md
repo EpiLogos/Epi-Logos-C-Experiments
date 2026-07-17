@@ -1,6 +1,6 @@
 # Fibonacci 60-Digit Pisano Integration — Mahamaya Clock Bridge
 
-**Status:** Proposed (2026-04-11) — Awaiting dataset reconciliation. Onto-architectural placement RESOLVED: Fibonacci Ground = Level 0 (meta-lens, pre-lensic). See §6 and companion specs.
+**Status:** Proposed (2026-04-11) — Awaiting dataset reconciliation. Onto-architectural placement RESOLVED: Fibonacci Ground = Level 0 and primary functional lens id 16, grounding derived ids 0..15. See §6 and companion specs.
 **Author:** Session synthesis — Epi-Logos C Experiments
 **Coordinate placement:** Root at `#2-0` | Expression at `#3-5` | Completion at `Clock_Central_Node`
 **Companion specs:** `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md`,

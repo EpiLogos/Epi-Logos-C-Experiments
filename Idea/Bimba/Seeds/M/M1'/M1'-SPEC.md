@@ -330,6 +330,8 @@ The [[m1-paramasiva]] IDE extension described in [[m5-prime-system-shape-and-tau
 
 ### §13.7 — Bell-Kernel Foothold (2026-07-02)
 
+`ModalResonatorProfile`, serialized as `MathemeHarmonicProfile.modalResonator`, is the standing-body contract M1' consumes.
+
 Per [[m123-modal-resonator-bell-kernel-spec]] §13: M1' is declared the **resonant body / strike-topology CONSUMER** of the landed bell contract. The standing body is `MathemeHarmonicProfile.modalResonator` (S0-derived in `portal-core/src/kernel/projections/modal_resonator.rs`, additive on profile schema v1); the strike proof is `M123ChimeFrame` (1 Hz `m123.chime` gateway event, `strikeRoute: "profile-bus"`), whose `m1` section carries the K² surface-handle slot (null until a composition mount registers one; `playedTorusHandle` remains a retiring-surface slot). M1' reads both; it writes neither pitch nor nodal truth. The pratibimba-app carrier's instrument strikes on the chime when that stream is live and BLOCKS the strike on an incoherent world-clock binding — silence, never a faked chime.
 
 ## §14 — Readiness / Test Criteria

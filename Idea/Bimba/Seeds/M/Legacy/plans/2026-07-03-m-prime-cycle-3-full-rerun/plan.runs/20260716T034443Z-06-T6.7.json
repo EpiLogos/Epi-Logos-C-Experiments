@@ -1,0 +1,37 @@
+{
+  "runId": "20260716T034443Z-06-T6.7",
+  "taskId": "06.T6.7",
+  "startedAt": "2026-07-16T03:44:43.200Z",
+  "owner": "codex-06-agent-roster",
+  "leaseExpiresAt": "2026-07-16T05:44:43.200Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T6.7",
+    "trackId": "06",
+    "tranche": "T6.7",
+    "title": "DR-M5-1 implementation landing tranche",
+    "effort": null,
+    "file": "06-m5-epii-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md",
+    "dependsOn": [
+      "06.T6.6"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M5' EBM observatory (72-grid, Klein-V4 tritone squares, Logos Atelier) in pratibimba-app. SUBSTRATE: epii-autoresearch-core resonance_ebm + portal-core. §2 track 06/26."
+  }
+}

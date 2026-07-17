@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-17T11:32:08.636Z",
+  "updatedAt": "2026-07-17T18:58:41.544Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -6218,81 +6218,176 @@
       "worktree": null
     },
     "12.T12.32": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-17T11:27:06.676Z",
+      "status": "done",
+      "updatedAt": "2026-07-17T12:55:00.216Z",
       "claimedAt": "2026-07-17T11:27:06.676Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-17T12:55:00.216Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:36:33.947Z",
+          "text": "Live s4'.mediation.route now reads S4 capability-matrix aletheia-mode-internal class and rejects missing effective tool, anima.dispatcher, or aletheia.mode.active; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_mediation_route (8/8); node --test Body/S/S4/pi-agent/tests/no-tool-bypass.test.ts Body/S/S4/ta-onta/shared/entitlement_contract.test.ts Body/S/S4/ta-onta/shared/entitlement_universe.test.ts (17/17); lint-test-honesty clean; git diff --check clean"
+        },
+        {
+          "at": "2026-07-17T12:55:00.216Z",
+          "text": "Independent verification (12.T12.32, W): fresh full W gate GREEN this session after reconciling the S0' verifier dispatch-contract bookkeeping (4 verifier arms removed from s3_only exemption); gateway 49, live-wire, gateway-methods, ta-onta all pass. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "gateway 49 PASS (dispatch_contract 28/28), live-wire + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 303 dirty files.",
       "owner": "codex-mdev-continuous",
-      "leaseExpiresAt": "2026-07-17T13:27:06.676Z",
-      "heartbeatAt": "2026-07-17T11:27:06.676Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-17T11:36:33.947Z",
       "runId": "20260717T112706Z-12-T12.32",
       "worktree": null
     },
     "12.T12.33": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T12:55:00.468Z",
+      "claimedAt": "2026-07-17T11:36:40.227Z",
+      "completedAt": "2026-07-17T12:55:00.468Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:38:56.538Z",
+          "text": "Collapsed-orchestrator audit: renamed active S5 default helper compress_through_VAK to coordinate_tag_arena_transcript and added a real default arena->Graphiti packet test proving existing VAK address preservation; python3 -m pytest Body/S/S5/epi-gnostic/tests/test_arena_distillation.py (3/3); cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test vak_envelope_required_on_emissions (3/3); cargo test --offline --manifest-path Body/S/S0/portal-core/Cargo.toml --test vak_resolve_preserves_prime_phase (4/4); node --test Body/S/S4/ta-onta/tests/spine_phase_overflow.test.ts (1/1); no Body/S/S4/compress and no prohibited identifiers under Body; lint-test-honesty and git diff --check clean"
+        },
+        {
+          "at": "2026-07-17T12:55:00.468Z",
+          "text": "Independent verification (12.T12.33, W): fresh full W gate GREEN this session after reconciling the S0' verifier dispatch-contract bookkeeping (4 verifier arms removed from s3_only exemption); gateway 49, live-wire, gateway-methods, ta-onta all pass. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "gateway 49 PASS (dispatch_contract 28/28), live-wire + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 305 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:38:56.538Z",
+      "runId": "20260717T113640Z-12-T12.33",
       "worktree": null
     },
     "12.T12.34": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T12:55:00.719Z",
+      "claimedAt": "2026-07-17T11:39:03.184Z",
+      "completedAt": "2026-07-17T12:55:00.719Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:48:26.808Z",
+          "text": "Closed contract-only verifier gap: live S0 gateway adapter runs compiled M0 verifier for s0'.verifier.check_state / emit_query and compiled 128-entry registry for validate_membership; owl_query fails closed without a configured S2 ontology adapter. cargo test --offline --manifest-path Body/S/S0/epi-lib/Cargo.toml --features m0_verifier m0_verifier (6/6); cargo test --offline --manifest-path Body/S/S3/gateway-contract/Cargo.toml anuttara_verifier (3/3); node --test Body/S/S4/ta-onta/S4-4p-anima/tests/dispatch_policy_anuttara_pi.test.ts (4/4); cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_anuttara_verifier (1/1 live WebSocket); lint-test-honesty and git diff --check clean. Canon flag recorded in epi-lib AGENTS for S0-ARCHITECTURE."
+        },
+        {
+          "at": "2026-07-17T12:55:00.719Z",
+          "text": "Independent verification (12.T12.34, W): fresh full W gate GREEN this session after reconciling the S0' verifier dispatch-contract bookkeeping (4 verifier arms removed from s3_only exemption); gateway 49, live-wire, gateway-methods, ta-onta all pass. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "gateway 49 PASS (dispatch_contract 28/28), live-wire + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 308 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:48:26.808Z",
+      "runId": "20260717T113903Z-12-T12.34",
       "worktree": null
     },
     "12.T12.35": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T12:55:00.974Z",
+      "claimedAt": "2026-07-17T11:48:34.901Z",
+      "completedAt": "2026-07-17T12:55:00.974Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T12:31:44.199Z",
+          "text": "Implemented and tested the adversarial Verify gate: typed judge-role resolution, structured questions, three-cycle human escalation, and Z-thread Rehear/Recompose only after clearance. Targeted Anima, assessor, and gateway contract suites are green; human review remains externally owned."
+        },
+        {
+          "at": "2026-07-17T12:55:00.974Z",
+          "text": "Independent verification (12.T12.35, W): fresh full W gate GREEN this session after reconciling the S0' verifier dispatch-contract bookkeeping (4 verifier arms removed from s3_only exemption); gateway 49, live-wire, gateway-methods, ta-onta all pass. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "gateway 49 PASS (dispatch_contract 28/28), live-wire + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 313 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T12:31:44.199Z",
+      "runId": "20260717T114834Z-12-T12.35",
       "worktree": null
     },
     "12.T12.36": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T12:55:01.228Z",
+      "claimedAt": "2026-07-17T12:31:50.557Z",
+      "completedAt": "2026-07-17T12:55:01.228Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T12:33:20.709Z",
+          "text": "Verified the existing phase-preserving substrate across S0/S2/S3/S4: 4 portal-core, 3 graph emission, 4 S2 property, 3 gateway-contract, 2 Anima dispatch, and 1 spine-overflow behavioral tests passed. Prime and property-level inverse phases remain distinct through resolve, emission, and dereference; human review remains externally owned."
+        },
+        {
+          "at": "2026-07-17T12:55:01.228Z",
+          "text": "Independent verification (12.T12.36, W): fresh full W gate GREEN this session after reconciling the S0' verifier dispatch-contract bookkeeping (4 verifier arms removed from s3_only exemption); gateway 49, live-wire, gateway-methods, ta-onta all pass. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "gateway 49 PASS (dispatch_contract 28/28), live-wire + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 314 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T12:33:20.709Z",
+      "runId": "20260717T123150Z-12-T12.36",
       "worktree": null
     },
     "12.T12.37": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-17T12:33:20.917Z",
+      "claimedAt": "2026-07-17T12:33:20.917Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 314 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T14:33:20.917Z",
+      "heartbeatAt": "2026-07-17T12:33:20.917Z",
+      "runId": "20260717T123320Z-12-T12.37",
       "worktree": null
     },
     "12.T12.38": {
@@ -20704,35 +20799,86 @@
     {
       "runId": "20260717T112706Z-12-T12.32",
       "taskId": "12.T12.32",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-17T11:27:06.676Z",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": "2026-07-17T13:27:06.676Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:36:33.947Z"
+    },
+    {
+      "runId": "20260717T113640Z-12-T12.33",
+      "taskId": "12.T12.33",
+      "status": "review",
+      "startedAt": "2026-07-17T11:36:40.227Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:36:40.227Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:38:56.538Z"
+    },
+    {
+      "runId": "20260717T113903Z-12-T12.34",
+      "taskId": "12.T12.34",
+      "status": "review",
+      "startedAt": "2026-07-17T11:39:03.184Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:39:03.184Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:48:26.808Z"
+    },
+    {
+      "runId": "20260717T114834Z-12-T12.35",
+      "taskId": "12.T12.35",
+      "status": "review",
+      "startedAt": "2026-07-17T11:48:34.901Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:48:34.901Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T12:31:44.199Z"
+    },
+    {
+      "runId": "20260717T123150Z-12-T12.36",
+      "taskId": "12.T12.36",
+      "status": "review",
+      "startedAt": "2026-07-17T12:31:50.557Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T14:31:50.557Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T12:33:20.709Z"
+    },
+    {
+      "runId": "20260717T123320Z-12-T12.37",
+      "taskId": "12.T12.37",
+      "status": "in_progress",
+      "startedAt": "2026-07-17T12:33:20.917Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T14:33:20.917Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-17T09:22:02.860Z",
-    "updatedAt": "2026-07-17T09:22:02.860Z",
+    "createdAt": "2026-07-17T18:58:41.526Z",
+    "updatedAt": "2026-07-17T18:58:41.526Z",
     "taskIds": [
-      "11.T11.8",
-      "11.T11.9",
-      "12.T12.24",
-      "12.T12.25"
+      "12.T12.37",
+      "12.T12.38",
+      "12.T12.4",
+      "12.T12.5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "11.T11.8": "in-session",
-      "11.T11.9": "in-session",
-      "12.T12.24": "in-session",
-      "12.T12.25": "in-session"
+      "12.T12.37": "in-session",
+      "12.T12.38": "in-session",
+      "12.T12.4": "in-session",
+      "12.T12.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
       "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
       "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
     ]
   }

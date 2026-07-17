@@ -36,6 +36,8 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    Pass a plan folder if the user supplied one. Use `--reset --write --json` without `--route` only when asked to reset.
 
+   When the user has explicitly taken review outside m-dev, add `--continue-through-review`. It permits scheduling and claims behind `review` dependencies without any automatic verifier handoff. It never marks review work `done`, and any dependent remains barred from `done` closure until its direct dependencies are `done`.
+
    Discovery is Seed-first: active implementation plans live under `Idea/Bimba/Seeds/M/Legacy/plans/**` or `Idea/Bimba/Seeds/S/Legacy/plans/**`. The old `docs/plans/**` path is legacy fallback only.
 
    Read `hardStops`, `softCautions`, `carryForwardRisks`, and `workOrders`. Stop only for `hardStops`. Cautions and risks are guidance, not blockers. `workOrders` is the queue; `recommendedRoute` is the strategic path. Resume active first, then claim ready, skip `wait`.

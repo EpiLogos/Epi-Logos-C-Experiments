@@ -59,8 +59,8 @@ This spec fills the consolidation slot. It is M-side (M5'-level) because the spi
 - `EvaluationEvidence` with `dimensions × baseline/challenger scores × weights × notes × source_refs × optional kernel_evidence`
 - `KernelEvidence` carries privacy-class, computation-source, advisory-only flag, interpretation-boundary, and a `KernelTrajectoryRef` (session_key, day_id, now_path, spacetimedb surfaces, graphiti arc)
 - Persistence: JSON-on-disk at `${root}/s5-improvement-state.json`
-- `InboxStore` (in `src/inbox.rs`): receives Aletheia's JSONL handoff per the wire format mirrored from `Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts`; storage at `${VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl`
-- `recompose_pass()` (in `src/recompose.rs`): the Möbius seam closure (C6); for each pending inbox entry emits `NextComposeHint { session_seed, proposed_p0_questions, challenger_artifacts }` + `RecomposeDecision`; **first-pass policy is universal `HumanReview`** — no autonomous keep/discard allowed at the recompose seam
+- `InboxStore` (in `src/inbox.rs`): receives Aletheia's JSONL handoff per the wire format mirrored from `Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts`; storage at `${VAULT}/Empty/Present/{day_id}/${session_id}.jsonl`; preserves Sophia `q_proposals` as pair-development candidates
+- `recompose_pass()` (in `src/recompose.rs`): the Möbius seam closure (C6); for each pending inbox entry emits `NextComposeHint { session_seed, proposed_p0_questions, challenger_artifacts }` + `RecomposeDecision`; it carries each q_ proposal's `opens_questions` into `proposed_p0_questions`; **first-pass policy is universal `HumanReview`** — no autonomous keep/discard allowed at the recompose seam
 
 **`epii-review-core/`** (~420 LOC):
 
