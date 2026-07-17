@@ -299,7 +299,7 @@ fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_bod
 }
 
 #[tokio::test]
-#[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d redis
+#[ignore] // requires the live Redis + Neo4j services from docker-compose.epi-s2.yml
 async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
     let (env, _, session_id) = env_with_now_file();
     let mut client = TestGatewayClient::connect(env, 18794).await;
@@ -318,6 +318,19 @@ async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
         .unwrap();
 
     assert_eq!(value["redis"]["hydrated"], true);
+    let graph = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    )
+    .unwrap();
+    let graph_meta = epi_s2_graph_services::read_graph_meta(&graph)
+        .await
+        .unwrap()
+        .expect("live graph must carry GraphMeta");
+    assert_eq!(
+        value["kernel"]["graphRevision"].as_i64(),
+        Some(graph_meta.graph_revision),
+        "temporal hydration must stamp the actual S2 GraphMeta revision"
+    );
     let key = value["redis"]["sessionNowKey"]
         .as_str()
         .unwrap()

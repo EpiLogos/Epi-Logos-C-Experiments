@@ -72,6 +72,10 @@ The [[S4-4'-SPEC]] Z-thread cycle is Compose -> Perform -> Verify -> Rehear -> R
 | `subagent_remove` | Terminate and clean up subagent |
 | `tilldone` | Continue a bounded agent loop until a terminal condition |
 
+### Dispatch Topology Handoff
+
+`modules/dispatch-policy.ts` emits one typed `tmux_topology_decision` envelope for each selected `CFP0`/`CFP1`/`CFP3` child dispatch. Each carries the complete VAK address and the learned selection's per-day tmux session, role window, and child-task pane names. When a dispatch has a [[ConversationSliceHandle]], Anima redacts it before adding the exact child command; the same `EPI_PARENT_SLICE_HANDLE` reaches a headless tmux pane or a cmux-attached pane. A successful native child report publishes `agent:team:dispatch:complete` with the task, VAK, slice, evidence, and c=1/c=0 outcome for [[Chronos]]. [[Pleroma]] consumes topology envelopes exclusively through `techne_tmux_topology_apply`; [[Anima]] does not allocate multiplexer resources itself. `CFP2` remains a sequential policy path and emits no topology envelope because it is outside Pleroma's accepted layouts.
+
 ---
 
 ## CLI Bridge

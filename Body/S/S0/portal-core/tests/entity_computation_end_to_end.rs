@@ -33,38 +33,62 @@ fn a_fixture_identity_computes_end_to_end_to_its_archetypal_reading() {
     let identity =
         PersonalIdentityProfile::from_kerykeion_json(NATAL_HANDLE, IDENTITY_HASH, COMPLETE_NATAL)
             .expect("complete natal fixture derives an identity profile");
-    assert!((norm4(identity.q_identity) - 1.0).abs() < 1e-4, "Q_identity must live on S³");
-    assert!((norm4(identity.q_personal) - 1.0).abs() < 1e-4, "q_personal must live on S³");
+    assert!(
+        (norm4(identity.q_identity) - 1.0).abs() < 1e-4,
+        "Q_identity must live on S³"
+    );
+    assert!(
+        (norm4(identity.q_personal) - 1.0).abs() < 1e-4,
+        "q_personal must live on S³"
+    );
     let balance = &identity.elemental_balance;
     let balance_sum = balance.earth + balance.fire + balance.water + balance.air;
-    assert!((balance_sum - 1.0).abs() < 1e-4, "elemental weights must normalise to 100%");
+    assert!(
+        (balance_sum - 1.0).abs() < 1e-4,
+        "elemental weights must normalise to 100%"
+    );
     for (name, weight) in [
         ("earth", balance.earth),
         ("fire", balance.fire),
         ("water", balance.water),
         ("air", balance.air),
     ] {
-        assert!((0.0..=1.0).contains(&weight), "{name} weight {weight} escapes [0,1]");
+        assert!(
+            (0.0..=1.0).contains(&weight),
+            "{name} weight {weight} escapes [0,1]"
+        );
     }
 
     // 2. The cosmic side at a real tick: the archetypal state the entity is
     //    read against (Q_transit = q_cosmic(t) per alpha §5).
     let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(21, 8));
     let q_cosmic = profile.q_cosmic;
-    assert!((norm4(q_cosmic) - 1.0).abs() < 1e-4, "q_cosmic must live on S³");
+    assert!(
+        (norm4(q_cosmic) - 1.0).abs() < 1e-4,
+        "q_cosmic must live on S³"
+    );
 
     // 3. Q_composed = (Q_identity · Q_transit) · Q_activity ∈ S³ — identity
     //    the stable left operand; a live activity perturbation on the right.
     let q_activity = [0.9848f32, 0.0, 0.1736, 0.0]; // ~20° rotation about j
     let q_composed = compose_personal_quaternion(identity.q_personal, q_cosmic, q_activity);
-    assert!((norm4(q_composed) - 1.0).abs() < 1e-4, "Q_composed must live on S³");
+    assert!(
+        (norm4(q_composed) - 1.0).abs() < 1e-4,
+        "Q_composed must live on S³"
+    );
 
     // 4. Bioquaternion decomposition: q_b the composed state, q_p its
     //    conjugate reading (slash-flip law: scalar preserved, vector negated).
     let (q_b, q_p) = decompose_bioquaternion(q_composed);
-    assert_eq!(q_p[0], q_b[0], "conjugation preserves the scalar (the 0/1 slash)");
+    assert_eq!(
+        q_p[0], q_b[0],
+        "conjugation preserves the scalar (the 0/1 slash)"
+    );
     for axis in 1..4 {
-        assert_eq!(q_p[axis], -q_b[axis], "conjugation flips vector axis {axis}");
+        assert_eq!(
+            q_p[axis], -q_b[axis],
+            "conjugation flips vector axis {axis}"
+        );
     }
 
     // 5. Hopf projection — the visible identity-form: base degree from the
@@ -105,7 +129,10 @@ fn a_fixture_identity_computes_end_to_end_to_its_archetypal_reading() {
         Some(expected_addr64),
         "64-address (codon/hexagram cell) must follow floor(deg·64/360)"
     );
-    assert_eq!(profile.mahamaya.hexagram_id, expected_addr64, "hexagram = the 64-address");
+    assert_eq!(
+        profile.mahamaya.hexagram_id, expected_addr64,
+        "hexagram = the 64-address"
+    );
     assert!(
         profile.codon_rotation_projection.surface_index < 472,
         "codon-rotation address escapes the 472-state surface"

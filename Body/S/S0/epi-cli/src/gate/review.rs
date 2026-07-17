@@ -64,6 +64,14 @@ pub fn resolve(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, St
     Ok(json!({ "resolution": resolution }))
 }
 
+/// Refuse a canonical mutation unless the S5 store records an explicit human
+/// approval for this human-gated review item.
+pub fn require_human_approval(state_root: impl AsRef<Path>, item_id: &str) -> Result<(), String> {
+    store(state_root)
+        .approved_human_resolution(item_id)
+        .map(|_| ())
+}
+
 pub fn history(state_root: impl AsRef<Path>, limit: Option<usize>) -> Result<Value, String> {
     let history = store(state_root).history(limit)?;
     serde_json::to_value(history).map_err(|err| err.to_string())

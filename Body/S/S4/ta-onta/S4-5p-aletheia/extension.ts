@@ -18,6 +18,7 @@ import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
 import { validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
+import { runQReviewNightPass } from "./modules/q-review-night-pass.ts";
 import { registerEpisodicTools } from "./S5'/tools/episodic-tools.ts";
 import { registerGnosisTools } from "./S5'/tools/gnosis-tools.ts";
 import { registerSeedTools } from "./S5'/tools/seed-tools.ts";
@@ -71,6 +72,19 @@ export async function aletheiaExtension(api: ExtensionAPI) {
         insight: envelope?.mobius_insight,
         recommendation: envelope?.coordinate_recommendation,
       });
+
+      if (envelope?.day_id) {
+        try {
+          const receipt = await runQReviewNightPass(envelope.day_id);
+          console.info(
+            `[aletheia] Q-review night pass queued ${receipt.entryCount} entries at graph revision ${receipt.graphRevision} for ${receipt.dayId}`,
+          );
+        } catch (error) {
+          console.warn(
+            `[aletheia] Q-review night pass did not complete for ${envelope.day_id}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
 
       const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
       fetch(`${graphitiBase}/communities/build`, {

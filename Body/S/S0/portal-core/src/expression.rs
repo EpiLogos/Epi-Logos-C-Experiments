@@ -126,7 +126,10 @@ mod tests {
         // as its own stage and is the reverse-complement of the codon.
         let step = express_codon(ACA, 3);
         assert_eq!(step.rna_anticodon, wc_anticodon(ACA));
-        assert_ne!(step.rna_anticodon, step.codon, "ACA is non-palindromic → RNA differs");
+        assert_ne!(
+            step.rna_anticodon, step.codon,
+            "ACA is non-palindromic → RNA differs"
+        );
         assert_eq!(step.amino_acid, codon_to_amino_acid(ACA));
     }
 
@@ -140,9 +143,18 @@ mod tests {
         for state in 0u8..8 {
             let s = express_codon(ACA, state);
             assert_eq!(s.codon, baseline.codon, "genome must not mutate");
-            assert_eq!(s.rna_anticodon, baseline.rna_anticodon, "RNA must not mutate");
-            assert_eq!(s.amino_acid, baseline.amino_acid, "amino-acid must not mutate");
-            assert_eq!(s.major_arcana, baseline.major_arcana, "arcana pathway must not mutate");
+            assert_eq!(
+                s.rna_anticodon, baseline.rna_anticodon,
+                "RNA must not mutate"
+            );
+            assert_eq!(
+                s.amino_acid, baseline.amino_acid,
+                "amino-acid must not mutate"
+            );
+            assert_eq!(
+                s.major_arcana, baseline.major_arcana,
+                "arcana pathway must not mutate"
+            );
             assert_eq!(s.active_state, state, "only the expressed state moves");
         }
     }
@@ -160,8 +172,14 @@ mod tests {
             assert_eq!(step.rna_anticodon, wc_anticodon(codons[i]));
         }
         assert!(!seq[0].checkpoint, "first step has no preceding codon");
-        assert!(seq[1].checkpoint, "ACA→ACT is an Euler-prime (41) checkpoint");
-        assert!(seq[2].checkpoint, "ACT→ACG is an Euler-prime (43) checkpoint");
+        assert!(
+            seq[1].checkpoint,
+            "ACA→ACT is an Euler-prime (41) checkpoint"
+        );
+        assert!(
+            seq[2].checkpoint,
+            "ACT→ACG is an Euler-prime (43) checkpoint"
+        );
     }
 
     #[test]

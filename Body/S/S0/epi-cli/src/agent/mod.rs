@@ -10,7 +10,6 @@ mod agents;
 mod auth;
 mod capabilities;
 mod chain;
-pub mod claw_runtime;
 pub mod codex_runtime;
 mod doctor;
 mod extensions;
@@ -218,27 +217,6 @@ pub enum AgentCmd {
         #[command(subcommand)]
         cmd: CodexCmd,
     },
-    /// Experimental claw-rust native substrate lane
-    Claw {
-        #[command(subcommand)]
-        cmd: ClawCmd,
-    },
-}
-
-#[derive(Subcommand)]
-pub enum ClawCmd {
-    /// Report health of the vendored claw runtime
-    Doctor {
-        /// Output as JSON
-        #[arg(long)]
-        json: bool,
-    },
-    /// Non-destructive smoke path through claw runtime
-    VerifyRuntime {
-        /// Output as JSON
-        #[arg(long)]
-        json: bool,
-    },
 }
 
 #[derive(Subcommand)]
@@ -375,12 +353,6 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
         AgentCmd::Codex { cmd } => match cmd {
             CodexCmd::Install { json: as_json } => codex_runtime::run_install(*as_json || json),
             CodexCmd::Doctor { json: as_json } => codex_runtime::run_doctor(*as_json || json),
-        },
-        AgentCmd::Claw { cmd } => match cmd {
-            ClawCmd::Doctor { json: as_json } => claw_runtime::run_doctor(*as_json || json),
-            ClawCmd::VerifyRuntime { json: as_json } => {
-                claw_runtime::run_verify_runtime(*as_json || json)
-            }
         },
         AgentCmd::Vak { cmd } => match cmd {
             VakCmd::Evaluate {
@@ -599,6 +571,42 @@ pub enum TmuxCmd {
         /// Override the derived tmux session name
         #[arg(long)]
         name: Option<String>,
+    },
+    /// Materialise an Anima topology decision in the gateway-governed tmux substrate
+    Topology {
+        /// Gateway session key to bind to the allocated pane
+        #[arg(long)]
+        session_key: String,
+        /// Durable tmux session for the current dispatch day (for example `epi-2026-07-17`)
+        #[arg(long)]
+        day_session: String,
+        /// Role-scoped tmux window emitted by Anima (for example `w-nous`)
+        #[arg(long)]
+        window: String,
+        /// Child-task pane title emitted by Anima (for example `p-nous-task-1`)
+        #[arg(long)]
+        pane: String,
+        /// CFP layout: CFP0 (single), CFP1 (parallel), or CFP3 (tiled fusion)
+        #[arg(long)]
+        cfp_layout: String,
+        /// Full CF identity for the child task
+        #[arg(long)]
+        cf: String,
+        /// CP coordinate for the dispatch window
+        #[arg(long)]
+        cp: String,
+        /// Constitutional or guardian role persisted with the terminal lease
+        #[arg(long)]
+        role: Option<String>,
+        /// Agent runtime label persisted with the terminal lease
+        #[arg(long)]
+        agent: Option<String>,
+        /// Literal child command to launch in a newly allocated pane
+        #[arg(long)]
+        child_dispatch_command: Option<String>,
+        /// Open cmux as a visible attachment to the same tmux session after allocation
+        #[arg(long)]
+        visible: bool,
     },
 }
 

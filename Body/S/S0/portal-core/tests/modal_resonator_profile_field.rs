@@ -180,15 +180,17 @@ fn bell_partial_roles_and_octet_offsets_carry_the_spec_table() {
             .iter()
             .map(|partial| partial.role.as_str())
             .collect();
-        assert_eq!(roles, SPEC_PARTIAL_ROLES, "bell partial roles drifted from spec §2");
+        assert_eq!(
+            roles, SPEC_PARTIAL_ROLES,
+            "bell partial roles drifted from spec §2"
+        );
 
         // The offsets asserted BEHAVIORALLY through the computed body: the
         // chromatic interval between carrier i and carrier 0 must equal the
         // spec offset delta (mod 12) — a wrong offset table cannot pass.
         for (i, carrier) in modal.live_octet.iter().enumerate() {
             let expected_delta = (SPEC_OCTET_OFFSETS[i] + 12 - SPEC_OCTET_OFFSETS[0]) % 12;
-            let actual_delta =
-                (carrier.pitch_class + 12 - modal.live_octet[0].pitch_class) % 12;
+            let actual_delta = (carrier.pitch_class + 12 - modal.live_octet[0].pitch_class) % 12;
             assert_eq!(
                 actual_delta, expected_delta,
                 "carrier {i} does not sit on spec offset {} at tick {}",
@@ -282,16 +284,13 @@ fn serialization_is_camel_case_and_survives_json_round_trip() {
         Some("public-current-context")
     );
     assert_eq!(
-        modal
-            .pointer("/authority/pitch")
-            .and_then(|v| v.as_str()),
+        modal.pointer("/authority/pitch").and_then(|v| v.as_str()),
         Some("MathemeHarmonicProfile.audio_octet")
     );
 
     // Byte-compatibility after JSON numeric round-trip (§5 rule): the octet
     // values re-read from JSON must equal the source bus exactly.
-    let round: MathemeHarmonicProfile =
-        serde_json::from_value(json).expect("round-trips");
+    let round: MathemeHarmonicProfile = serde_json::from_value(json).expect("round-trips");
     let round_modal = round.modal_resonator.as_ref().unwrap();
     for (i, carrier) in round_modal.live_octet.iter().enumerate() {
         assert_eq!(carrier.hz, profile.audio_octet[i]);

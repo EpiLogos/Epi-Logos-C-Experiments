@@ -252,7 +252,9 @@ pub fn capacity_workflow_registry() -> Vec<CapacityWorkflowRegistryEntry> {
     ]
 }
 
-pub(super) fn capacity_entry(capacity_id: CapacityId) -> Result<CapacityWorkflowRegistryEntry, String> {
+pub(super) fn capacity_entry(
+    capacity_id: CapacityId,
+) -> Result<CapacityWorkflowRegistryEntry, String> {
     capacity_workflow_registry()
         .into_iter()
         .find(|entry| entry.capacity_id == capacity_id)

@@ -605,6 +605,7 @@ describe("Kernel bridge contract package", () => {
   it("parses the runtime MVP singleton snapshot for Theia and /body adapters", () => {
     const cachedProfile = KernelBridgeCachedProfile.parse({
       generation: 44,
+      graphRevision: 19,
       cachedAtMs: 1,
       stale: false,
       stalenessMs: 0,
@@ -649,6 +650,7 @@ describe("Kernel bridge contract package", () => {
 
     expect(snapshot.upstreamSubscriptionCount).toBe(1);
     expect(snapshot.currentProfileGeneration).toBe(44);
+    expect(snapshot.cachedProfile?.graphRevision).toBe(19);
     expect(snapshot.cachedProfile?.profile.generation).toBe(44);
   });
 

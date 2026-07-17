@@ -10,6 +10,10 @@ import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
 
 export { TECHNE_TERMINAL_CAPABILITY_MATRIX } from "./S2/terminal-tools.ts";
 
+function epiBinary(): string {
+  return process.env.EPI_BIN || "epi";
+}
+
 const Type = {
   String: (options: Record<string, unknown> = {}) => ({ type: "string", ...options }),
   Integer: (options: Record<string, unknown> = {}) => ({ type: "integer", ...options }),
@@ -93,7 +97,7 @@ export function vamaShaktiRefusalLaw(req: Partial<VamaShaktiSummonRequest>) {
 // "nesting is genuinely in execution"). Anima reads VAK state at dispatch
 // time, computes a (team, guardian-subset), and emits a
 // `tmux_topology_decision` event (Tranche 12.23, dispatch-policy.ts) carrying
-// a CmuxTopologyMap. Pleroma is the consuming seat: it allocates the
+// a tmux topology map. Pleroma is the consuming seat: it allocates the
 // session/window/pane/layout that mirrors that decision.
 //
 // Level mapping (per scout 6 + user direction):
@@ -154,48 +158,58 @@ export function tmuxTopologyKeepWindow(): boolean {
   return true; // default: keep window for session lifetime so trace remains visible
 }
 
-// Pane environment mirroring `agent --persist`: the child pane inherits the
-// gateway session key, agent identity, the CF as constitutional identity, and
-// the VAK CP/CFP frame so downstream Khora/gnostic writes carry authority.
-export function topologyPaneEnv(decision: TmuxTopologyDecisionEvent): string[] {
+// The S0 CLI is the only process authority. Pleroma sends the typed decision
+// across that membrane; it never shells tmux or cmux itself.
+export function topologyCommandArgs(
+  decision: TmuxTopologyDecisionEvent,
+  openVisibleProjection: boolean,
+): string[] {
   const { topology } = decision;
-  const env: Array<[string, string]> = [
-    ["CF_IDENTITY", topology.vak_address.cf],
-    ["CMUX_CP", topology.vak_address.cp],
-    ["CMUX_CFP", topology.vak_address.cfp],
-    ["EPI_TMUX_TOPOLOGY_WINDOW", topology.anima_dispatch_window],
-    ["EPI_TMUX_TOPOLOGY_PANE", topology.child_task_pane],
+  if (!decision.session_key?.trim()) {
+    throw new Error("tmux_topology_decision requires session_key so the pane receives a gateway terminal lease");
+  }
+  const args = [
+    "agent", "tmux", "topology",
+    "--session-key", decision.session_key,
+    "--day-session", topology.day_session,
+    "--window", topology.anima_dispatch_window,
+    "--pane", topology.child_task_pane,
+    "--cfp-layout", topology.cfp_layout,
+    "--cf", topology.vak_address.cf,
+    "--cp", topology.vak_address.cp,
   ];
-  if (decision.session_key) env.push(["EPI_GATE_SESSION_KEY", decision.session_key]);
-  if (decision.role) env.push(["EPI_AGENT_NAME", decision.role]);
-  if (decision.role) env.push(["EPI_AGENT_MODE", "dispatch"]);
-  return env.flatMap(([k, v]) => ["--env", `${k}=${v}`]);
+  if (decision.role) args.push("--role", decision.role);
+  if (decision.agent) args.push("--agent", decision.agent);
+  if (decision.child_dispatch_command) args.push("--child-dispatch-command", decision.child_dispatch_command);
+  if (openVisibleProjection) args.push("--visible");
+  args.push("--json");
+  return args;
 }
 
-// Accept either a bare CmuxTopologyMap or a full tmux_topology_decision
+// Accept either a bare tmux topology map or a full tmux_topology_decision
 // envelope; normalise to the envelope shape. Returns a refusal string when
 // the map / VAK frame is malformed (so the tool can fail loud, not silent).
 export function normalizeTopologyDecision(input: unknown): TmuxTopologyDecisionEvent | string {
   if (!input || typeof input !== "object") {
-    return "Refused: tmux_topology_decision payload must be an object carrying a CmuxTopologyMap.";
+    return "Refused: tmux_topology_decision payload must be an object carrying a tmux topology map.";
   }
   const record = input as Record<string, unknown>;
   const topology = (record.event === "tmux_topology_decision" ? record.topology : record) as
     | Record<string, unknown>
     | undefined;
   if (!topology || typeof topology !== "object") {
-    return "Refused: CmuxTopologyMap missing from tmux_topology_decision payload.";
+    return "Refused: tmux topology map missing from tmux_topology_decision payload.";
   }
   for (const key of ["day_session", "anima_dispatch_window", "child_task_pane", "cfp_layout"]) {
     if (typeof topology[key] !== "string" || !(topology[key] as string).trim()) {
-      return `Refused: CmuxTopologyMap.${key} must be a non-empty string mirroring the Anima dispatch decision.`;
+      return `Refused: tmux topology map.${key} must be a non-empty string mirroring the Anima dispatch decision.`;
     }
   }
   if (!cfpLayoutMode(topology.cfp_layout as string)) {
-    return `Refused: CmuxTopologyMap.cfp_layout must be one of CFP0/CFP1/CFP3 (single/split-h/grid); got '${String(topology.cfp_layout)}'.`;
+    return `Refused: tmux topology map.cfp_layout must be one of CFP0/CFP1/CFP3 (single/split-h/grid); got '${String(topology.cfp_layout)}'.`;
   }
   if (!isValidVakAddress(topology.vak_address)) {
-    return "Refused: CmuxTopologyMap.vak_address must be a valid VakAddress (the dispatch's full VAK context).";
+    return "Refused: tmux topology map.vak_address must be a valid VakAddress (the dispatch's full VAK context).";
   }
   const envelope = record.event === "tmux_topology_decision" ? record : {};
   return {
@@ -219,7 +233,7 @@ export async function pleromaExtension(api: ExtensionAPI) {
     registerTilldone(api);
   }
 
-  // Register all 7 bounded primitives as PI tools
+  // Register every bounded primitive as a PI tool.
   for (const primitive of PRIMITIVE_REGISTRY) {
     registerPrimitiveTool(api, primitive);
   }
@@ -402,142 +416,15 @@ export async function pleromaExtension(api: ExtensionAPI) {
     },
   });
 
-  // ── Techne cmux surface/pane management (VAK-coordinate-aware) ────
-  // These augment the cmux SKILL.md command surface with PI tool bindings.
-  // Tools that place panes write cmux_workspace/cmux_surface/cmux_pane_id
-  // back to the gateway team store so placement survives cmux being closed.
-
-  api.registerTool({
-    name: "techne_cmux_surface_create",
-    label: "Techne Cmux Surface Create",
-    description: "Create a named cmux surface (tmux window) with a CP coordinate tag. Writes cmux_workspace and cmux_surface to the gateway session record. Topology-aware (Tranche 12.30): when `day_session` is supplied the window is created INSIDE the per-day tmux session (`epi-{day-date}`) — the level that mirrors one Anima dispatch decision — and that day session is persisted as cmux_workspace instead of the hardcoded 'main'.",
-    parameters: Type.Object({
-      name: Type.String({ description: "Surface name (e.g. 'ground', 'operation', or an Anima dispatch window 'w-nous')" }),
-      cp: Type.String({ description: "Context Position coordinate (e.g. '4.0', '4.2', '4.4')" }),
-      day_session: Type.Optional(Type.String({ description: "Per-day tmux session 'epi-{day-date}' to create the window inside (Tranche 12.30 topology level). Defaults to cmux workspace 'main'." })),
-      session_key: Type.Optional(Type.String({ description: "Gateway session key to update with cmux placement (optional)" })),
-    }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const args = ["surface-create", "--name", params.name, "--cp", params.cp];
-      if (params.day_session) args.push("--session", params.day_session);
-      const result = spawnSync("cmux", args, { encoding: "utf8" });
-      if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
-      }
-      // Write cmux placement back to gateway session record. The workspace is
-      // the day session when topology-mapped, else the default 'main'.
-      const workspace = params.day_session ?? "main";
-      if (params.session_key) {
-        spawnSync("epi", ["gate", "sessions", "patch", params.session_key,
-          "--cmux-workspace", workspace, "--cmux-surface", params.name], { encoding: "utf8" });
-      }
-      return { content: [{ type: "text", text: `surface '${params.name}' created at CP ${params.cp} in workspace '${workspace}'\n${result.stdout}` }] };
-    },
-  });
-
-  api.registerTool({
-    name: "techne_cmux_pane_assign",
-    label: "Techne Cmux Pane Assign",
-    description: "Assign a pane on a cmux surface by CF identity. Sets CF_IDENTITY env in the pane so spawned agents inherit constitutional type. Topology-aware (Tranche 12.30): an optional `pane_name` (`p-{role}-{task_id}`) names the per-child-task pane, and `role` injects EPI_AGENT_NAME so the pane carries the same identity surface as `agent --persist`. When session_key is given, the resulting cmux_pane_id is written through gateway SESSION state (sessions.patch, a real session-level cmux field) and the write is proven before success is reported. The legacy ungoverned team-patch path (a CLI surface that never existed) has been removed.",
-    parameters: Type.Object({
-      surface: Type.String({ description: "Target surface name" }),
-      cf: Type.String({ description: "CF identity code (e.g. '(0/1/2)', '(4.0-4.4/5)')" }),
-      agent: Type.Optional(Type.String({ description: "Agent type to launch in the pane (e.g. 'claude-code')" })),
-      pane_name: Type.Optional(Type.String({ description: "Child-task pane name 'p-{role}-{task_id}' (Tranche 12.30 topology level)" })),
-      role: Type.Optional(Type.String({ description: "Constitutional/guardian role for this pane; injected as EPI_AGENT_NAME so the child inherits dispatch identity" })),
-      session_key: Type.Optional(Type.String({ description: "Gateway session key to write cmux_pane_id through sessions.patch (optional; required to persist placement)" })),
-    }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const args = ["pane-assign", "--surface", params.surface, "--cf", params.cf];
-      if (params.agent) args.push("--agent", params.agent);
-      if (params.pane_name) args.push("--pane", params.pane_name);
-      if (params.role) {
-        args.push("--env", `EPI_AGENT_NAME=${params.role}`, "--env", "EPI_AGENT_MODE=dispatch");
-      }
-      const result = spawnSync("cmux", args, { encoding: "utf8" });
-      if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
-      }
-      // Persist cmux_pane_id through GATEWAY SESSION state (not the stale
-      // team-patch surface). Prove the write succeeded before reporting OK.
-      const paneMatch = result.stdout.match(/pane[_-]?id[:\s]+(\S+)/i);
-      if (paneMatch && params.session_key) {
-        const patch = spawnSync("epi", ["gate", "sessions", "patch",
-          "--session-id", params.session_key, "--cmux-pane-id", paneMatch[1], "--json"], { encoding: "utf8" });
-        if (patch.status !== 0) {
-          return {
-            content: [{ type: "text", text: `pane assigned on surface '${params.surface}' but gateway sessions.patch FAILED — placement not persisted\n${patch.stderr || patch.stdout}` }],
-            isError: true,
-          };
-        }
-        return { content: [{ type: "text", text: `pane assigned CF=${params.cf} on surface '${params.surface}', cmux_pane_id=${paneMatch[1]} persisted via sessions.patch\n${patch.stdout}` }] };
-      }
-      return { content: [{ type: "text", text: `pane assigned CF=${params.cf} on surface '${params.surface}'\n${result.stdout}` }] };
-    },
-  });
-
-  api.registerTool({
-    name: "techne_cmux_layout_set",
-    label: "Techne Cmux Layout Set",
-    description: "Set the visual layout mode for a cmux surface by CFP thread type. This is a NON-AUTHORITATIVE cmux projection: CFP thread type is ephemeral pane geometry, not gateway session state, so nothing is persisted. (The stale team-patch write — which targeted a CLI surface that does not exist — has been removed; there is no session-level cmux_cfp field to route through. If durable CFP persistence is needed, land `epi agent team patch` with tests.)",
-    parameters: Type.Object({
-      surface: Type.String({ description: "Target surface name" }),
-      cfp: Type.String({ description: "CFP thread type (CFP0–CFP5, e.g. 'CFP1' for P-Thread tiled)" }),
-    }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const result = spawnSync("cmux", ["layout-set", "--surface", params.surface, "--cfp", params.cfp], { encoding: "utf8" });
-      if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
-      }
-      return { content: [{ type: "text", text: `layout set to ${params.cfp} on surface '${params.surface}' (ephemeral cmux projection — not persisted to gateway)\n${result.stdout}` }] };
-    },
-  });
-
-  api.registerTool({
-    name: "techne_cmux_focus",
-    label: "Techne Cmux Focus",
-    description: "Route focus to the pane with the given CF identity code. No state write needed — purely navigational.",
-    parameters: Type.Object({
-      cf: Type.String({ description: "CF identity code of the target pane (e.g. '(0/1/2)')" }),
-    }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const result = spawnSync("cmux", ["focus", "--cf", params.cf], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
-    },
-  });
-
-  api.registerTool({
-    name: "techne_cmux_surface_destroy",
-    label: "Techne Cmux Surface Destroy",
-    description: "Destroy a named cmux surface (closes all panes, removes window). Clears cmux fields on gateway session record.",
-    parameters: Type.Object({
-      name: Type.String({ description: "Surface name to destroy" }),
-      session_key: Type.Optional(Type.String({ description: "Gateway session key to clear cmux fields from (optional)" })),
-    }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const result = spawnSync("cmux", ["surface-destroy", "--name", params.name], { encoding: "utf8" });
-      if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
-      }
-      if (params.session_key) {
-        spawnSync("epi", ["gate", "sessions", "patch", params.session_key,
-          "--clear-cmux"], { encoding: "utf8" });
-      }
-      return { content: [{ type: "text", text: `surface '${params.name}' destroyed\n${result.stdout}` }] };
-    },
-  });
-
   // ── Tranche 12.30 — topology apply (consumes tmux_topology_decision) ──
-  // The single seat where a runtime Anima dispatch decision becomes a real
-  // tmux session/window/pane/layout. Anima (dispatch-policy.ts, Tranche 12.23)
-  // emits a `tmux_topology_decision` event carrying a CmuxTopologyMap after it
-  // has read VAK state and computed the (team, guardian-subset) per CF gate.
-  // Pleroma allocates exactly that — nothing static, nothing inferred — so the
-  // topology mirrors the decision and is observably learned via Mercurius Elo.
+  // The single Pleroma entry point where an Anima decision crosses into the
+  // gateway-governed S0 tmux allocator. cmux is deliberately absent from the
+  // lifecycle: an optional visible projection merely attaches cmux to the
+  // same tmux socket after the lease-backed pane already exists.
   api.registerTool({
-    name: "techne_cmux_topology_apply",
-    label: "Techne Cmux Topology Apply",
-    description: "Consume a `tmux_topology_decision` event (carrying a CmuxTopologyMap) emitted by Anima at dispatch time and allocate the mirroring tmux topology: ensure the per-day session (`epi-{day-date}`), open the Anima dispatch window (`w-{role}`), assign the child-task pane (`p-{role}-{task_id}`), set the CFP layout (CFP0 single / CFP1 split-h / CFP3 grid), inject the same EPI_GATE_SESSION_KEY / EPI_AGENT_* identity surface as `agent --persist`, and optionally inject the Pi child-dispatch command. Panes are NOT auto-destroyed on completion (trace stays observable); the window survives for the session lifetime unless `[pleroma.tmux_topology] keep_window_for_session_lifetime` is disabled. The map is the runtime reflection of the dispatch decision, not a static YAML topology.",
+    name: "techne_tmux_topology_apply",
+    label: "Techne Tmux Topology Apply",
+    description: "Consume one Anima `tmux_topology_decision` through `epi agent tmux topology`. tmux owns the durable day session, role window, child pane, layout, gateway terminal lease, and child command. `open_visible_projection` only opens cmux as an interactive attachment to that same tmux session; it never creates a second session or a headless/visible branch.",
     parameters: Type.Object({
       decision: Type.Object({
         event: Type.Optional(Type.Literal("tmux_topology_decision")),
@@ -552,12 +439,13 @@ export async function pleromaExtension(api: ExtensionAPI) {
         }, { additionalProperties: true })),
       }, {
         additionalProperties: true,
-        description: "A tmux_topology_decision envelope, or a bare CmuxTopologyMap, mirroring one Anima dispatch decision.",
+        description: "A tmux_topology_decision envelope, or a bare tmux topology map, mirroring one Anima dispatch decision.",
       }),
-      session_key: Type.Optional(Type.String({ description: "Gateway session key → EPI_GATE_SESSION_KEY in the pane; also persists cmux placement (DR-S5-ONE-1 authority)" })),
+      session_key: Type.String({ description: "Gateway session key required for the tmux terminal lease and EPI_GATE_SESSION_KEY in the pane." }),
       role: Type.Optional(Type.String({ description: "Constitutional/guardian role → EPI_AGENT_NAME (overrides any role on the envelope)" })),
       agent: Type.Optional(Type.String({ description: "Agent runtime to launch in the pane (e.g. 'claude-code')" })),
       child_dispatch_command: Type.Optional(Type.String({ description: "Pi child-dispatch command injected into the pane after allocation" })),
+      open_visible_projection: Type.Optional(Type.Boolean({ default: false, description: "Open cmux as an interactive attachment to the already-live tmux session. This does not change process lifecycle." })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const envelope = {
@@ -575,82 +463,14 @@ export async function pleromaExtension(api: ExtensionAPI) {
       if (typeof normalized === "string") {
         return { content: [{ type: "text", text: normalized }], isError: true };
       }
-      const { topology } = normalized;
-      const steps: string[] = [];
-
-      // 1. Ensure the per-day tmux session exists (idempotent).
-      const sess = spawnSync("cmux", ["session-ensure", "--name", topology.day_session], { encoding: "utf8" });
-      if (sess.status !== 0) {
-        return { content: [{ type: "text", text: `session-ensure '${topology.day_session}' FAILED\n${sess.stderr || sess.stdout}` }], isError: true };
+      try {
+        const command = topologyCommandArgs(normalized, params.open_visible_projection === true);
+        const result = spawnSync(epiBinary(), command, { encoding: "utf8" });
+        const text = result.stdout || result.stderr || "epi agent tmux topology returned no output";
+        return { content: [{ type: "text", text }], isError: result.status !== 0 };
+      } catch (error) {
+        return { content: [{ type: "text", text: error instanceof Error ? error.message : String(error) }], isError: true };
       }
-      steps.push(`session '${topology.day_session}' ready`);
-
-      // 2. Open the window mirroring this Anima dispatch decision.
-      const win = spawnSync("cmux", ["surface-create",
-        "--name", topology.anima_dispatch_window,
-        "--cp", topology.vak_address.cp,
-        "--session", topology.day_session], { encoding: "utf8" });
-      if (win.status !== 0) {
-        return { content: [{ type: "text", text: `window '${topology.anima_dispatch_window}' FAILED\n${win.stderr || win.stdout}` }], isError: true };
-      }
-      steps.push(`window '${topology.anima_dispatch_window}' opened`);
-
-      // 3. Assign the child-task pane with the full agent identity surface.
-      const paneArgs = ["pane-assign",
-        "--surface", topology.anima_dispatch_window,
-        "--cf", topology.vak_address.cf,
-        "--pane", topology.child_task_pane,
-        ...topologyPaneEnv(normalized)];
-      if (normalized.agent) paneArgs.push("--agent", normalized.agent);
-      const pane = spawnSync("cmux", paneArgs, { encoding: "utf8" });
-      if (pane.status !== 0) {
-        return { content: [{ type: "text", text: `pane '${topology.child_task_pane}' FAILED\n${pane.stderr || pane.stdout}` }], isError: true };
-      }
-      steps.push(`pane '${topology.child_task_pane}' assigned (CF=${topology.vak_address.cf})`);
-
-      // 4. Set the CFP layout (single / split-h / grid).
-      const mode = cfpLayoutMode(topology.cfp_layout);
-      const layout = spawnSync("cmux", ["layout-set",
-        "--surface", topology.anima_dispatch_window,
-        "--cfp", topology.cfp_layout], { encoding: "utf8" });
-      if (layout.status !== 0) {
-        return { content: [{ type: "text", text: `layout ${topology.cfp_layout} FAILED\n${layout.stderr || layout.stdout}` }], isError: true };
-      }
-      steps.push(`layout ${topology.cfp_layout}→${mode} applied`);
-
-      // 5. Inject the Pi child-dispatch command into the pane (if provided).
-      if (normalized.child_dispatch_command) {
-        const inject = spawnSync("cmux", ["focus", "--cf", topology.vak_address.cf], { encoding: "utf8" });
-        if (inject.status !== 0) {
-          steps.push(`WARN: focus on '${topology.child_task_pane}' failed; child-dispatch command not injected`);
-        } else {
-          const send = spawnSync("cmux", ["pane-send",
-            "--surface", topology.anima_dispatch_window,
-            "--pane", topology.child_task_pane,
-            "--text", normalized.child_dispatch_command], { encoding: "utf8" });
-          steps.push(send.status === 0
-            ? "child-dispatch command injected into pane"
-            : `WARN: child-dispatch injection failed\n${send.stderr || send.stdout}`);
-        }
-      }
-
-      // 6. Persist placement back to the gateway session record (authoritative).
-      if (normalized.session_key) {
-        const patch = spawnSync("epi", ["gate", "sessions", "patch", normalized.session_key,
-          "--cmux-workspace", topology.day_session,
-          "--cmux-surface", topology.anima_dispatch_window], { encoding: "utf8" });
-        steps.push(patch.status === 0
-          ? `placement persisted to gateway session '${normalized.session_key}'`
-          : `WARN: gateway sessions.patch failed — placement not persisted\n${patch.stderr || patch.stdout}`);
-      }
-
-      const keep = tmuxTopologyKeepWindow();
-      return {
-        content: [{
-          type: "text",
-          text: `tmux_topology_decision applied (window kept for session lifetime: ${keep}):\n  - ${steps.join("\n  - ")}`,
-        }],
-      };
     },
   });
 

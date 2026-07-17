@@ -1508,6 +1508,7 @@ export type KernelBridgeConnectionStatus = z.infer<
 export const KernelBridgeCachedProfile = z
   .object({
     generation: z.number().int().nonnegative(),
+    graphRevision: z.number().int().nonnegative().optional(),
     cachedAtMs: z.number().int().nonnegative(),
     stale: z.boolean(),
     stalenessMs: z.number().int().nonnegative(),

@@ -37,9 +37,13 @@ pub use entity_lifecycle::{
     C_LAYER_SEGMENTS,
 };
 pub use frontmatter::{
-    validate_compile_artifact_frontmatter, validate_frontmatter, ValidationResult,
+    validate_compile_artifact_frontmatter, validate_frontmatter, validate_frontmatter_contract,
+    ValidatedFrontmatterContract, ValidationResult,
 };
-pub use frontmatter_mutation::append_frontmatter_string;
+pub use frontmatter_mutation::{
+    append_frontmatter_string, plan_q_articulation_amendment, q_articulation_review_epoch_key,
+    QArticulationAmendmentPlan, QArticulationAmendmentRequest,
+};
 pub use graph_sync::{graph_sync_intent, GraphSyncIntent, GraphSyncMode};
 pub use ledger::{ql_first_channels, LedgerChannel, ENVELOPE_LEDGER_CHANNELS};
 pub use residency::{resolve_compiler_residency, CompilerResidencyPlan, HenTimestamp};

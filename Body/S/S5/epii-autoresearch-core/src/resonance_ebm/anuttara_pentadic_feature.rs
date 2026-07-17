@@ -38,16 +38,14 @@ use super::inference::ResonanceEbmRuntime;
 use super::kernel_invocation::ElementTickInvocation;
 
 /// Stable feature-family id registered into the autoresearch loop.
-pub const ANUTTARA_PENTADIC_RUNTIME_TRACE_FEATURE_FAMILY: &str =
-    "anuttara_pentadic_runtime_trace";
+pub const ANUTTARA_PENTADIC_RUNTIME_TRACE_FEATURE_FAMILY: &str = "anuttara_pentadic_runtime_trace";
 
 /// The canonical backbone / line-graph identities the hinge must satisfy.
 pub const PENTADIC_BACKBONE_IDENTITY: &str = "24x15=360";
 pub const PENTADIC_LINE_GRAPH_IDENTITY: &str = "360+24=384";
 
 /// The seven addressing modes whose mutual coherence the feature family scores.
-pub const PENTADIC_HINGE_LABELS: [&str; 7] =
-    ["0/1", "5", "6", "72", "64", "360", "384"];
+pub const PENTADIC_HINGE_LABELS: [&str; 7] = ["0/1", "5", "6", "72", "64", "360", "384"];
 
 /// The public-safe pentadic trace payload — the seven hinge fields lifted off a
 /// `MathemeHarmonicProfile`, matching the `AnuttaraPentadicRuntimeTrace`
@@ -217,8 +215,7 @@ pub fn evaluate_anuttara_pentadic_runtime_trace(
     // M3 codon charge tuple feeds the process pole of the bioquaternion; the
     // base pole stays at canonical identity so the gradient surface perturbs the
     // codon-charge axis the recognition event actually carries.
-    let bioquaternion =
-        BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], input.codon_charge);
+    let bioquaternion = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], input.codon_charge);
     let invocation =
         ElementTickInvocation::new(element_tick, input.profile.clone(), bioquaternion)?;
 
@@ -254,9 +251,7 @@ pub fn evaluate_anuttara_pentadic_runtime_trace(
 }
 
 /// Score the seven hinges against the trace payload — deterministic, no model.
-pub fn score_pentadic_hinges(
-    trace: &PentadicRuntimeTracePayload,
-) -> Vec<PentadicHingeCoherence> {
+pub fn score_pentadic_hinges(trace: &PentadicRuntimeTracePayload) -> Vec<PentadicHingeCoherence> {
     let [left, right] = trace.family_b_complement;
     let complement_in_space = left <= 5 && right <= 5;
     let genuine_complement = (u32::from(left) + u32::from(right)) % 6 != 0;

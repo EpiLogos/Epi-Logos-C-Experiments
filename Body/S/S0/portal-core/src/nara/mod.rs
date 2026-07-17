@@ -154,7 +154,10 @@ pub struct NaraArtifactEnvelope {
 pub enum NaraEnvelopeError {
     EmptyField(&'static str),
     /// DR-VAK-1: `vak_address.cp` must equal the joined `cp_position_refs`.
-    VakCpMismatch { vak_cp: String, joined: String },
+    VakCpMismatch {
+        vak_cp: String,
+        joined: String,
+    },
     /// Positions are the cardinality authority — an envelope with none is unreadable.
     NoReadingPositions,
     Io(String),
@@ -218,7 +221,10 @@ impl NaraArtifactEnvelope {
             ("artifact_id", &self.artifact_id),
             ("day_id", &self.day_id),
             ("created_at", &self.created_at),
-            ("deck_context.deck_order_hash", &self.deck_context.deck_order_hash),
+            (
+                "deck_context.deck_order_hash",
+                &self.deck_context.deck_order_hash,
+            ),
             ("deck_context.entropy_mode", &self.deck_context.entropy_mode),
             ("interpretation.handle", &self.interpretation.handle),
         ] {

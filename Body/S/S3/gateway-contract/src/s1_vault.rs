@@ -1,5 +1,56 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum S1BaseScope {
+    Ctx,
+    Zone,
+    Moc,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1BaseSortSpec {
+    pub property: String,
+    pub direction: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1BaseViewSpec {
+    #[serde(rename = "type")]
+    pub view_type: String,
+    pub name: String,
+    #[serde(default)]
+    pub filters: Vec<String>,
+    pub group_by: Option<String>,
+    #[serde(default)]
+    pub order: Vec<String>,
+    #[serde(default)]
+    pub sort: Vec<S1BaseSortSpec>,
+    pub image: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1BaseEnsureRequest {
+    pub coordinate: String,
+    pub ct_type: Option<String>,
+    pub scope: S1BaseScope,
+    pub residency: String,
+    pub views: Option<Vec<S1BaseViewSpec>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1BaseEnsureReceipt {
+    pub path: String,
+    pub derived_columns: Vec<String>,
+    pub ok: bool,
+    pub existed: bool,
+    pub changed: bool,
+}
+
 // ============= 03.T6.5 S1 vault gateway surface =============
 //
 // The gateway is the canonical write gatekeeper for the Obsidian vault per

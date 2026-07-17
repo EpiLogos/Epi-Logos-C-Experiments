@@ -9,9 +9,8 @@ use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
 use crate::profile_projections::{
     AnuttaraWitnessBandBalance, AnuttaraWitnessPalindromeState, AnuttaraWitnessProjection,
-    CanonRecognitionEvent, CosmicCompositionState,
-    InversionOperatorHandle, M1TopologyProjection, PasuBeingPatternProjection, PersonalPoleProjection,
-    PsychoidFieldProjection,
+    CanonRecognitionEvent, CosmicCompositionState, InversionOperatorHandle, M1TopologyProjection,
+    PasuBeingPatternProjection, PersonalPoleProjection, PsychoidFieldProjection,
 };
 use crate::vak_address::{CpfState, VakAddress};
 
@@ -137,9 +136,7 @@ pub fn live_planets_from_sky(
     degrees: &[f32; 10],
     retrograde: &[bool; 10],
 ) -> [LivePlanetProjection; 10] {
-    std::array::from_fn(|i| {
-        LivePlanetProjection::from_degree(i as u8, degrees[i], retrograde[i])
-    })
+    std::array::from_fn(|i| LivePlanetProjection::from_degree(i as u8, degrees[i], retrograde[i]))
 }
 
 fn default_profile_schema_version() -> u16 {

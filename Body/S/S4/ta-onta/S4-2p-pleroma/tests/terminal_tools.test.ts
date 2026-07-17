@@ -8,6 +8,8 @@ import {
   buildTerminalArgv,
   TECHNE_TERMINAL_CAPABILITY_MATRIX,
 } from "../S2/terminal-tools.ts";
+import { PRIMITIVE_REGISTRY } from "../S2/pleroma-primitives.ts";
+import { normalizeTopologyDecision, topologyCommandArgs } from "../extension.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const EXTENSION_SRC = readFileSync(resolve(here, "../extension.ts"), "utf8");
@@ -21,6 +23,23 @@ const EXPECTED_TOOLS = [
 ];
 
 describe("Techne terminal tools (12.06)", () => {
+  it("registers the eight bounded primitives with explicit execution modes", () => {
+    assert.deepEqual(
+      PRIMITIVE_REGISTRY.map(({ name, executionMode }) => [name, executionMode]),
+      [
+        ["tmux", "interactive"],
+        ["cmux", "interactive"],
+        ["bkmr_kbase", "bounded"],
+        ["onecontext", "bounded"],
+        ["ralph_tui", "interactive"],
+        ["worktrunk", "bounded"],
+        ["epi_cli", "bounded"],
+        ["context7", "bounded"],
+      ],
+    );
+    assert.equal(new Set(PRIMITIVE_REGISTRY.map(({ name }) => name)).size, 8);
+  });
+
   it("registers exactly the five techne_terminal_* tools", () => {
     const names = TECHNE_TERMINAL_TOOLS.map((t) => t.name).sort();
     assert.deepEqual(names, [...EXPECTED_TOOLS].sort());
@@ -111,7 +130,39 @@ describe("Techne terminal tools (12.06)", () => {
     // Mirrors: rg -n "gate teams patch|tmux send-keys" extension.ts
     assert.ok(!/gate teams patch/.test(EXTENSION_SRC), "stale `gate teams patch` must be gone");
     assert.ok(!/tmux send-keys/.test(EXTENSION_SRC), "no `tmux send-keys` live path allowed");
-    // The repaired pane-assign routes through the real sessions.patch surface.
-    assert.match(EXTENSION_SRC, /gate", "sessions", "patch"/);
+    assert.match(EXTENSION_SRC, /techne_tmux_topology_apply/);
+  });
+
+  it("routes an Anima topology decision through the S0 tmux authority", () => {
+    const normalized = normalizeTopologyDecision({
+      event: "tmux_topology_decision",
+      topology: {
+        day_session: "epi-2026-07-17",
+        anima_dispatch_window: "w-nous",
+        child_task_pane: "p-nous-task-1",
+        cfp_layout: "CFP0",
+        vak_address: {
+          cpf: "(00/00)",
+          ct: ["CT0"],
+          cp: "CP4.0",
+          cf: "(00/00)",
+          cfp: "CFP0",
+          cs: { code: "CS0", direction: "Day" },
+        },
+      },
+      session_key: "agent:anima:main",
+      role: "nous",
+      agent: "codex",
+      child_dispatch_command: "pi --prompt 'clear the ground'",
+    });
+    assert.notEqual(typeof normalized, "string");
+    const argv = topologyCommandArgs(normalized as Exclude<typeof normalized, string>, true);
+    assert.deepEqual(argv.slice(0, 3), ["agent", "tmux", "topology"]);
+    assert.equal(argv[argv.indexOf("--session-key") + 1], "agent:anima:main");
+    assert.equal(argv[argv.indexOf("--day-session") + 1], "epi-2026-07-17");
+    assert.equal(argv[argv.indexOf("--window") + 1], "w-nous");
+    assert.equal(argv[argv.indexOf("--pane") + 1], "p-nous-task-1");
+    assert.ok(argv.includes("--visible"));
+    assert.ok(!argv.includes("cmux"));
   });
 });

@@ -12,6 +12,13 @@ pub struct ValidationResult {
     pub errors: Vec<String>,
     pub warnings: Vec<String>,
 }
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ValidatedFrontmatterContract {
+    pub ct_type: String,
+    pub columns: Vec<String>,
+    pub source_kind: String,
+}
 const CANONICAL_METADATA_KEYS: &[&str] = &[
     "coordinate",
     "family",
@@ -66,6 +73,68 @@ pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {
     validate_temporal_requirements(map, &mut result.errors);
 
     result
+}
+
+pub fn validate_frontmatter_contract(
+    yaml: &Value,
+) -> Result<ValidatedFrontmatterContract, ValidationResult> {
+    let map = match yaml.as_mapping() {
+        Some(map) => map,
+        None => {
+            return Err(ValidationResult {
+                errors: vec!["Frontmatter contract is not a YAML mapping".to_owned()],
+                warnings: Vec::new(),
+            });
+        }
+    };
+
+    let mut validation = ValidationResult::default();
+    validate_keys_for_contract(map, &mut validation);
+    let canonical_key = Value::String("c_1_ct_type".to_owned());
+    let legacy_key = Value::String("ctx_type".to_owned());
+    let ct_type = match map.get(&canonical_key) {
+        Some(value) => match value.as_str().filter(|value| !value.trim().is_empty()) {
+            Some(value) => Some(value),
+            None => {
+                validation
+                    .errors
+                    .push("Frontmatter contract c_1_ct_type must be a non-empty string".to_owned());
+                None
+            }
+        },
+        None => map
+            .get(&legacy_key)
+            .and_then(Value::as_str)
+            .filter(|value| !value.trim().is_empty()),
+    };
+    if ct_type.is_none() && validation.errors.is_empty() {
+        validation.errors.push(
+            "Frontmatter contract requires string c_1_ct_type (ctx_type is legacy fallback)"
+                .to_owned(),
+        );
+    }
+    if !validation.errors.is_empty() {
+        return Err(validation);
+    }
+
+    let columns = map
+        .keys()
+        .filter_map(Value::as_str)
+        .map(str::to_owned)
+        .collect();
+    let source_kind = map
+        .get(Value::String("c_4_artifact_role".to_owned()))
+        .or_else(|| map.get(Value::String("artifact_role".to_owned())))
+        .and_then(Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .unwrap_or("contract")
+        .to_owned();
+
+    Ok(ValidatedFrontmatterContract {
+        ct_type: ct_type.expect("validated CT type").to_owned(),
+        columns,
+        source_kind,
+    })
 }
 
 pub fn validate_compile_artifact_frontmatter(
@@ -145,6 +214,14 @@ fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
 }
 
 fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
+    validate_key_names(map, result, true);
+}
+
+fn validate_keys_for_contract(map: &Mapping, result: &mut ValidationResult) {
+    validate_key_names(map, result, false);
+}
+
+fn validate_key_names(map: &Mapping, result: &mut ValidationResult, validate_values: bool) {
     for (key, value) in map {
         let Some(key_str) = key.as_str() else {
             result
@@ -161,7 +238,9 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
         }
 
         if key_str == "l_alignments" {
-            validate_l_alignments(value, result);
+            if validate_values {
+                validate_l_alignments(value, result);
+            }
             continue;
         }
 
@@ -169,18 +248,24 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             .iter()
             .find(|(registered_key, _, _)| *registered_key == key_str)
         {
-            validate_integer_range_key(key_str, value, *min, *max, result);
+            if validate_values {
+                validate_integer_range_key(key_str, value, *min, *max, result);
+            }
             continue;
         }
 
         if key_str == "c_3_klein_weighting" {
-            validate_klein_weighting(value, result);
+            if validate_values {
+                validate_klein_weighting(value, result);
+            }
             continue;
         }
 
         if is_coordinate_key(key_str) {
-            if let Some(error) = validate_coordinate_key(key_str, value) {
-                result.errors.push(error);
+            if validate_values {
+                if let Some(error) = validate_coordinate_key(key_str, value) {
+                    result.errors.push(error);
+                }
             }
             continue;
         }
@@ -282,7 +367,7 @@ fn is_q_vocabulary_family_key(key: &str) -> bool {
 // free. A key is well formed iff it is `q_<0-5>['][_<slot>]_<lower_snake_case>`
 // (or the `qm_` quickview family). There is no closed vocabulary — see
 // Idea/Bimba/Seeds/M/q-vocabulary-canon.md.
-fn is_wellformed_q_vocabulary_key(key: &str) -> bool {
+pub fn is_wellformed_q_vocabulary_key(key: &str) -> bool {
     let Some(rest) = key.strip_prefix("q_").or_else(|| key.strip_prefix("qm_")) else {
         return false;
     };

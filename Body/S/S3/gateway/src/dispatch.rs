@@ -1214,9 +1214,7 @@ impl ConnectivityReport {
     /// Build a report by running one connectivity_check per substrate, in
     /// [`ExternalSubstrate::ALL`] order. The caller supplies the live probe;
     /// this crate supplies the law that its result grants nothing.
-    pub fn from_reachability(
-        reach: impl Fn(ExternalSubstrate) -> SubstrateReachability,
-    ) -> Self {
+    pub fn from_reachability(reach: impl Fn(ExternalSubstrate) -> SubstrateReachability) -> Self {
         Self {
             checks: ExternalSubstrate::ALL.map(|substrate| ConnectivityCheck {
                 substrate,

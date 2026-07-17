@@ -7,8 +7,8 @@ use portal_core::{
     AnuttaraWitnessProjection, AnuttaraWitnessRFactorBand, AnuttaraWitnessRFactorPathStep,
     BeingEntityRef, BeingObserverAnchor, BeingPatternClockAddress, BioQuaternionHandle,
     ElementalWeightProjection, M2M3RelationProjection, MathemeHarmonicProfile, MonoPolyOperator,
-    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PendingPlanetDatasetBadge,
-    PerspectiveRole, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, StableIdentityHandle,
+    PasuBeingPatternProjection, PasuLiveStateHandle, PasuReviewRisk, PerspectiveRole,
+    PlanetApertureAspectEdge, PlanetPlanetAspectEdge, StableIdentityHandle,
 };
 use std::collections::BTreeMap;
 
@@ -69,10 +69,7 @@ fn pasu_projection() -> PasuBeingPatternProjection {
                 aspect_type: 120,
                 orb: 1.5,
             }],
-            pending_dataset_badges: vec![PendingPlanetDatasetBadge {
-                planet: 7,
-                badge: "track-23.10-pending".to_owned(),
-            }],
+            pending_dataset_badges: vec![],
         },
         bioquaternion_handles: vec![BioQuaternionHandle {
             handle: "protected://bio/q_identity".to_owned(),
@@ -142,6 +139,7 @@ fn typed_json_profile_event_carries_pasu_being_pattern_edge() {
     let profile_value = serde_json::to_value(profile).expect("profile serializes");
     let cached = KernelBridgeCachedProfile {
         generation: 77,
+        graph_revision: None,
         cached_at_ms: 1234,
         stale: false,
         staleness_ms: 0,
@@ -189,6 +187,7 @@ fn typed_json_profile_event_carries_anuttara_witness_without_gate_semantics() {
     let profile_value = serde_json::to_value(profile).expect("profile serializes");
     let cached = KernelBridgeCachedProfile {
         generation: 88,
+        graph_revision: None,
         cached_at_ms: 1234,
         stale: false,
         staleness_ms: 0,

@@ -26,7 +26,11 @@ fn chi(audio_octet: &[f32; 8], modes: &[(u8, u8); 4], x: f64, y: f64) -> f64 {
             let (m, n) = (m as f64, n as f64);
             // Spec: per-channel amplitude/phase split across the sin·sin and
             // cos·cos terms — the bimba four drive a_i, the pratibimba four b_i.
-            let (a, b) = if i < 4 { (amplitude, 0.0) } else { (0.0, amplitude) };
+            let (a, b) = if i < 4 {
+                (amplitude, 0.0)
+            } else {
+                (0.0, amplitude)
+            };
             a * (m * std::f64::consts::PI * x / L).sin() * (n * std::f64::consts::PI * y / L).sin()
                 + b * (m * std::f64::consts::PI * x / L).cos()
                     * (n * std::f64::consts::PI * y / L).cos()
@@ -53,7 +57,10 @@ fn octet_drives_the_field_and_zero_octet_is_stillness() {
         .flat_map(|i| (1..10).map(move |j| (i, j)))
         .map(|(i, j)| chi(&octet, &modes, i as f64 / 10.0, j as f64 / 10.0).abs())
         .sum();
-    assert!(field_energy > 0.0, "a live audio bus must drive a nonzero field");
+    assert!(
+        field_energy > 0.0,
+        "a live audio bus must drive a nonzero field"
+    );
 
     // Octet-drives: silencing the bus stills the field everywhere.
     let silent = [0.0f32; 8];
@@ -100,7 +107,10 @@ fn quartet_constrains_the_nodal_structure() {
             }
         }
     }
-    assert!(moved, "changing a nodal constraint must relocate the standing wave");
+    assert!(
+        moved,
+        "changing a nodal constraint must relocate the standing wave"
+    );
 
     // Node-line law: for the pure a-term of channel 0 with modes (m,n), the
     // sin factor vanishes at x = k/m — assert the k=1 node of the first
@@ -123,7 +133,10 @@ fn chi_is_deterministic_under_the_same_bus() {
     // Determinism idiom: the same call twice (allowed self-equal CALL).
     let (octet_a, modes_a) = bus_at(11, 9);
     let (octet_b, modes_b) = bus_at(11, 9);
-    assert_eq!(octet_a, octet_b, "the bus itself must be deterministic per tick");
+    assert_eq!(
+        octet_a, octet_b,
+        "the bus itself must be deterministic per tick"
+    );
     assert_eq!(modes_a, modes_b);
     for i in 0..8 {
         for j in 0..8 {

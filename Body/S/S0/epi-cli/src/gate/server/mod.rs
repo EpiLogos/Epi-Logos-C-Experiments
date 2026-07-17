@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tokio::net::TcpListener;
 use tokio::sync::oneshot;
+use tokio::sync::watch;
 use tokio::task::JoinHandle;
 
 mod dispatch;
@@ -22,6 +23,50 @@ use super::runtime::GatewayRuntimeState;
 use super::sessions::{self, SessionPatch, SessionRecord, SessionStore};
 use super::spacetimedb_bridge::SpacetimeBridge;
 use super::tls::GatewayTlsRuntime;
+
+struct AbortTaskOnDrop(JoinHandle<()>);
+
+impl Drop for AbortTaskOnDrop {
+    fn drop(&mut self) {
+        self.0.abort();
+    }
+}
+
+fn spawn_graph_revision_sampler() -> (watch::Receiver<Option<u64>>, AbortTaskOnDrop) {
+    let (sender, receiver) = watch::channel(None);
+    let task = tokio::spawn(async move {
+        let mut ticker = tokio::time::interval(std::time::Duration::from_secs(1));
+        let mut client = None;
+        loop {
+            ticker.tick().await;
+            if client.is_none() {
+                match epi_s2_graph_services::Neo4jClient::connect(
+                    &epi_s2_graph_services::Neo4jConfig::from_env(),
+                ) {
+                    Ok(connected) => client = Some(connected),
+                    Err(error) => {
+                        eprintln!("[gate] graph revision sampler connection unavailable: {error}");
+                        continue;
+                    }
+                }
+            }
+            let Some(connected) = client.as_ref() else {
+                continue;
+            };
+            match super::temporal::graph_revision_from_client(connected).await {
+                Ok(Some(revision)) => {
+                    sender.send_replace(Some(revision));
+                }
+                Ok(None) => {}
+                Err(error) => {
+                    eprintln!("[gate] graph revision sampler unavailable: {error}");
+                    client = None;
+                }
+            }
+        }
+    });
+    (receiver, AbortTaskOnDrop(task))
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GatewayStatus {
@@ -106,6 +151,7 @@ pub(super) fn spanda_block_json(
 
 fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
     tokio::spawn(async move {
+        let (graph_revision, _graph_revision_task) = spawn_graph_revision_sampler();
         let mut generation: u64 = 0;
         let mut ticker = tokio::time::interval(std::time::Duration::from_secs(1));
         let epoch_ms = SystemTime::now()
@@ -193,6 +239,9 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             // never emitted; it dissolved into local anchor evaluation.
             if let Some(object) = payload.as_object_mut() {
                 object.insert("spanda".to_owned(), spanda_block.clone());
+                if let Some(revision) = *graph_revision.borrow() {
+                    object.insert("graphRevision".to_owned(), json!(revision));
+                }
             }
             runtime.broadcast(GatewayEvent::new(
                 "profile.update",

@@ -352,7 +352,10 @@ impl M1TopologyProjection {
         let degree = f64::from(degree720);
 
         let k2_tritone_crossing = match klein_flip {
-            Some(KleinFlipEvent::M1TritoneCrossing { tick12: t, lens_pair }) => format!(
+            Some(KleinFlipEvent::M1TritoneCrossing {
+                tick12: t,
+                lens_pair,
+            }) => format!(
                 "K² lens-tritone crossing at tick {t}: lens pair {lens_pair:?} (6-semitone fold)"
             ),
             _ => format!("no K² tritone crossing at tick {tick12}"),
@@ -382,7 +385,8 @@ impl M1TopologyProjection {
             torus_knot_phase: TorusKnotPhase {
                 p: f32::from(tick12) / f32::from(crate::hopf::DOUBLE_COVER_STEPS),
                 q: f32::from(degree720)
-                    / (f32::from(crate::hopf::DOUBLE_COVER_STEPS) * crate::hopf::TRIG_STEP_DEG as f32),
+                    / (f32::from(crate::hopf::DOUBLE_COVER_STEPS)
+                        * crate::hopf::TRIG_STEP_DEG as f32),
             },
             parent_attribution: "M1-5 is the +1 parent".to_owned(),
             prior_ground: "M0 is the prior 0/1 ground".to_owned(),

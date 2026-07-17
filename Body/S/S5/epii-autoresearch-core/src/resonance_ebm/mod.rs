@@ -1,9 +1,18 @@
-//! Position 5' [[Epii]] resonance-vector EBM runtime surface.
+//! Coordinate: S5 M5' (Epii resonance-energy prediction)
+//! Residency: Body/S/S5/epii-autoresearch-core/src/resonance_ebm
+//! Position (#n): M5-4' self-referential autoresearch
+//! Actualises: checkpoint-backed N-channel resonance inference and differentiable
+//!   E5 energy evaluation over the canonical harmonic profile.
+//! Public surface: EBM config/checkpoint types, element-tick invocation,
+//!   72-vector inference, mirror report, and q_p energy gradient.
+//! Does NOT own: corpus assembly/training policy, Riemannian projection,
+//!   kernel total-energy weighting, or CLI command dispatch.
+//! Contract: [[S5-SPEC]] / [[S5-ARCHITECTURE]] / [[M5'-SPEC]]
 //!
 //! This module owns the runtime half of the `parashakti-ebm-head` contract:
 //! checkpoint loading, canonical [[MathemeHarmonicProfile]] channel encoding,
-//! tritone-symmetric 72-vector inference, zero-checkpoint fallback, and the
-//! gradient surface consumed by the later Riemannian projection wrapper.
+//! Candle-backed tritone-symmetric 72-vector inference, zero-checkpoint
+//! fallback, and autograd consumed by the later Riemannian projection wrapper.
 
 pub mod anuttara_pentadic_feature;
 pub mod attention;

@@ -120,8 +120,16 @@ describe("46.1 Z-thread runtime primitive", () => {
     assert.equal(snapshot.outputs[0]?.tool, zThreadToolForMove("CFP1"));
   });
 
-  it("does not close while the Verify gate is open: loops, then fails to human escalation after max cycles", async () => {
+  it("does not rehear before clearance: loops through revision, then fails to human escalation", async () => {
     const adapter = adapterStub(["questions", "questions", "questions"]);
+    let rehearCalls = 0;
+    let recomposeCalls = 0;
+    adapter.rehear = async () => {
+      rehearCalls += 1;
+    };
+    adapter.recompose = async () => {
+      recomposeCalls += 1;
+    };
     const snapshot = await dispatchZThread({
       id: "z-never-clears",
       task: "loop until escalation",
@@ -135,6 +143,9 @@ describe("46.1 Z-thread runtime primitive", () => {
     assert.equal(snapshot.cycle, 3);
     assert.equal(adapter.verifyCalls, 3);
     assert.equal(snapshot.verify_gate?.transition, "human_escalation");
+    assert.equal(rehearCalls, 0);
+    assert.equal(recomposeCalls, 0);
+    assert.equal(adapter.performed.length, fanOutThenChainThenFuse.length * 3);
     assert.match(snapshot.failure_reason ?? "", /No judge clearance|Verify gate did not clear/);
     assert.notEqual(snapshot.history.at(-1), "done");
   });

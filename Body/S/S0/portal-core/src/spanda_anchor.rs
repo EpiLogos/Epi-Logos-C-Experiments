@@ -109,7 +109,11 @@ impl SpandaPhaseAnchor {
     pub fn projection_inputs(&self, now_ms: u64) -> (u64, u8) {
         let phase = self.phase_at(now_ms);
         let cycles = (phase / std::f64::consts::TAU).floor();
-        let cycle = if cycles.is_sign_negative() { 0 } else { cycles as u64 };
+        let cycle = if cycles.is_sign_negative() {
+            0
+        } else {
+            cycles as u64
+        };
         (cycle, spanda::tick12_readout(phase))
     }
 

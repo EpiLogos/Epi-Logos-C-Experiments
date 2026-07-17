@@ -29,8 +29,8 @@
 //! * Envelope/artifact law — `portal_core::nara` (M4).
 //! * Q_activity evolution — `portal_core::nara::apply_pattern_packet_chain`.
 
-pub use portal_core::{NaraDeckContext, NaraReviewState};
 use portal_core::VakAddress;
+pub use portal_core::{NaraDeckContext, NaraReviewState};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 

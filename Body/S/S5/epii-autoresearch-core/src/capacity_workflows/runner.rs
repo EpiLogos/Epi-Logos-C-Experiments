@@ -33,8 +33,8 @@ use crate::{
 
 use super::registry::capacity_entry;
 use super::{
-    capacity_workflow_registry, sanitize_id_component, stable_uri_suffix,
-    CapacityWorkflowRegistryEntry, CapacityId,
+    capacity_workflow_registry, sanitize_id_component, stable_uri_suffix, CapacityId,
+    CapacityWorkflowRegistryEntry,
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -143,7 +143,6 @@ pub struct DeterministicCapacitySliceReceipt {
     pub evidence_deposits: Vec<EvidenceDeposit>,
     pub promotion_plan: Option<PromotionPlan>,
 }
-
 
 pub fn route_capacity_workflow(
     autoresearch: &ImprovementStore,
@@ -1102,7 +1101,6 @@ fn governance_for_slice(
     }
 }
 
-
 fn required_actors_for_slice(
     target: TargetSubsystem,
     governance_class: SliceGovernanceClass,
@@ -1161,7 +1159,6 @@ fn destination_legacy_label_for_slice(destination: &PromotionDestination) -> &'s
         _ => "capacity:slice",
     }
 }
-
 
 fn candidate_for_entry(
     entry: &CapacityWorkflowRegistryEntry,
@@ -1341,4 +1338,3 @@ fn reject_placeholder(value: &str, field: &str) -> Result<(), String> {
     }
     Ok(())
 }
-

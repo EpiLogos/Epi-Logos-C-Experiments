@@ -1,6 +1,8 @@
 source: hermes-priority-13
 name: huggingface-hub
-upstream_commit: local-catalog-12.24
-vendored_at: 2026-06-18T10:35:36.094323+00:00
-vendor_agent: codex-m-dev-12-t12-24
-network_fetch: unavailable-in-sandbox
+upstream_repository: https://github.com/NousResearch/hermes-agent.git
+upstream_path: skills/mlops/huggingface-hub
+upstream_commit: 0f102fa4dc04b7dfdab048169aaaa640d09d7523
+vendored_at: 2026-07-17T09:22:00Z
+vendor_agent: codex-mdev-continuous
+vendoring_mode: source-tree-copy

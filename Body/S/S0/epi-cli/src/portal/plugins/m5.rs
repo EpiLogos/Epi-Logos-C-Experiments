@@ -762,10 +762,7 @@ impl HypertilePlugin for M5QReviewPlugin {
                     Style::default().fg(accent),
                 ),
             ]),
-            None => Line::from(Span::styled(
-                " no Q-review queue for this day ",
-                dim,
-            )),
+            None => Line::from(Span::styled(" no Q-review queue for this day ", dim)),
         };
         let header = Paragraph::new(header_line).block(
             Block::default()
@@ -795,15 +792,18 @@ impl HypertilePlugin for M5QReviewPlugin {
                     .bg(Color::Magenta)
                     .add_modifier(Modifier::BOLD)
             } else {
-                Style::default().fg(Color::White).add_modifier(Modifier::BOLD)
+                Style::default()
+                    .fg(Color::White)
+                    .add_modifier(Modifier::BOLD)
             };
             lines.push(Line::from(vec![
+                Span::styled(format!("{marker}{}", entry.target_coordinate), title_style),
                 Span::styled(
-                    format!("{marker}{}", entry.target_coordinate),
-                    title_style,
-                ),
-                Span::styled(
-                    format!("  [{}]  p{}", reason_label(&entry.reason_class), entry.priority),
+                    format!(
+                        "  [{}]  p{}",
+                        reason_label(&entry.reason_class),
+                        entry.priority
+                    ),
                     Style::default().fg(accent),
                 ),
             ]));
@@ -830,7 +830,9 @@ impl HypertilePlugin for M5QReviewPlugin {
 
         let filter_label = self.active_cf.as_deref().unwrap_or("all");
         let footer = Paragraph::new(Span::styled(
-            format!("  [j/k] navigate  [Enter] open in pair-composition  cf-filter: {filter_label}"),
+            format!(
+                "  [j/k] navigate  [Enter] open in pair-composition  cf-filter: {filter_label}"
+            ),
             dim,
         ));
         Widget::render(footer, chunks[2], buf);

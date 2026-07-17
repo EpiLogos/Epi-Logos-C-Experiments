@@ -115,6 +115,9 @@ pub struct InboxEntry {
     pub moirai_summary: BTreeMap<String, String>,
     #[serde(default)]
     pub artifacts: Vec<String>,
+    /// Candidate q_ refinements from Sophia, held for pair-development review.
+    #[serde(default)]
+    pub q_proposals: Vec<QProposal>,
     /// Discriminator propagated from Sophia disclosure through Aletheia.
     /// "rehear" = `khora_session_close` tool was invoked (deliberate Möbius
     /// return synthesis). "force_closed" = lifecycle event fired without the
@@ -126,6 +129,23 @@ pub struct InboxEntry {
     pub closure_kind: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub disclosure_lineage: Option<DisclosureLineage>,
+}
+
+/// A q_ refinement proposed during Sophia's session-close disclosure.
+///
+/// These are candidates only: the C6 recompose pass carries their opening
+/// questions forward while its decision remains explicitly human-gated.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct QProposal {
+    pub target_coordinate: String,
+    pub q_key: String,
+    pub q_value_candidate: String,
+    pub qm_witness_session: String,
+    pub qm_witness_vak: VakAddress,
+    pub qm_witness_agent: String,
+    pub rationale: String,
+    pub opens_questions: Vec<String>,
+    pub source_artifacts: Vec<String>,
 }
 
 fn default_closure_kind() -> String {

@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
+use crate::frontmatter::ValidatedFrontmatterContract;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum BaseScope {
     Ctx,
@@ -42,6 +44,7 @@ pub struct BaseEnsureParams {
     pub scope: BaseScope,
     pub residency: PathBuf,
     pub views: Option<Vec<BaseViewSpec>>,
+    pub contracts: Vec<ValidatedFrontmatterContract>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -60,7 +63,7 @@ pub fn ensure_base_view(params: &BaseEnsureParams) -> Result<BaseEnsureResult, S
     validate_reflection_residency(&params.residency)?;
 
     let mut schema = match &params.ct_type {
-        Some(ct_type) => derive_base_schema_from_ct_contract(ct_type)?,
+        Some(ct_type) => derive_base_schema_from_ct_contract(ct_type, &params.contracts)?,
         None => derive_coordinate_base_schema(&params.coordinate, params.scope),
     };
     if let Some(views) = &params.views {
@@ -96,12 +99,38 @@ pub fn ensure_base_view(params: &BaseEnsureParams) -> Result<BaseEnsureResult, S
     })
 }
 
-pub fn derive_base_schema_from_ct_contract(ct_type: &str) -> Result<BaseSchema, String> {
-    let columns = ct_contract_columns(ct_type)
-        .ok_or_else(|| format!("unsupported CTx contract: {ct_type}"))?
+pub fn derive_base_schema_from_ct_contract(
+    ct_type: &str,
+    contracts: &[ValidatedFrontmatterContract],
+) -> Result<BaseSchema, String> {
+    let matching = contracts
         .iter()
-        .map(|column| (*column).to_owned())
+        .filter(|contract| contract.ct_type == ct_type)
         .collect::<Vec<_>>();
+    if matching.is_empty() {
+        return Err(format!(
+            "no validated frontmatter contract for CTx type: {ct_type}"
+        ));
+    }
+
+    let mut columns = vec!["coordinate".to_owned()];
+    for contract in &matching {
+        for column in &contract.columns {
+            if column != "coordinate" && !is_position_column(column) && !columns.contains(column) {
+                columns.push(column.clone());
+            }
+        }
+    }
+    for position in 0..=5 {
+        let prefix = format!("p{position}_");
+        for contract in &matching {
+            for column in &contract.columns {
+                if column.starts_with(&prefix) && !columns.contains(column) {
+                    columns.push(column.clone());
+                }
+            }
+        }
+    }
     let group_by = match ct_type {
         "CT4b" => Some("c_3_day_id".to_owned()),
         "CT5" => Some("t_0_thought_type".to_owned()),
@@ -139,6 +168,10 @@ pub fn derive_base_schema_from_ct_contract(ct_type: &str) -> Result<BaseSchema, 
     })
 }
 
+fn is_position_column(column: &str) -> bool {
+    matches!(column.as_bytes(), [b'p', b'0'..=b'5', b'_', ..])
+}
+
 fn derive_coordinate_base_schema(coordinate: &str, scope: BaseScope) -> BaseSchema {
     let filter = match scope {
         BaseScope::Ctx => format!(r#"coordinate == "{coordinate}""#),
@@ -171,122 +204,6 @@ fn derive_coordinate_base_schema(coordinate: &str, scope: BaseScope) -> BaseSche
             sort,
             image: None,
         }],
-    }
-}
-
-fn ct_contract_columns(ct_type: &str) -> Option<&'static [&'static str]> {
-    match ct_type {
-        "CT0" => Some(&[
-            "coordinate",
-            "c_4_artifact_role",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-        ]),
-        "CT1" => Some(&[
-            "coordinate",
-            "c_4_artifact_role",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_3_updated_at",
-            "c_5_crystallisation_state",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-        ]),
-        "CT2" => Some(&[
-            "coordinate",
-            "title",
-            "c_4_artifact_role",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-            "p2_operations",
-        ]),
-        "CT3" => Some(&[
-            "coordinate",
-            "title",
-            "c_4_artifact_role",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-            "p2_operations",
-            "p3_patterns",
-        ]),
-        "CT4a" => Some(&[
-            "coordinate",
-            "title",
-            "c_4_artifact_role",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-            "p2_operations",
-            "p3_patterns",
-            "p4_context",
-        ]),
-        "CT4b" => Some(&[
-            "coordinate",
-            "c_4_artifact_role",
-            "c_2_session_id",
-            "session_id",
-            "c_3_day_id",
-            "day_id",
-            "c_3_ctx_frame",
-            "c_3_created_at",
-            "c_3_tranche_mode",
-            "c_3_response_orbit",
-            "c_3_klein_weighting",
-            "c_4_cf_code",
-            "c_4_cp_position",
-            "c_4_cs_depth",
-            "c_5_reflection_complete",
-            "p0_grounds",
-            "p0_adjacencies",
-            "p1_tasks_defined",
-            "p1_intentions",
-            "p2_sessions",
-            "p2_operations",
-            "p2_outputs",
-            "p2_manual_activity",
-            "p3_patterns",
-            "p3_observations",
-            "p3_connections",
-            "p3_decisions",
-            "p4_temporals",
-            "p4_files_touched",
-            "p4_people_mentioned",
-            "p4_concepts_engaged",
-            "p5_learnings",
-            "p5_synthesis",
-            "p5_tomorrow_focus",
-        ]),
-        "CT5" => Some(&[
-            "coordinate",
-            "title",
-            "c_4_artifact_role",
-            "t_0_thought_type",
-            "ql_position",
-            "c_3_created_at",
-            "c_5_crystallisation_state",
-            "c_5_reflection_complete",
-            "c_0_source_coordinates",
-            "p0_grounds",
-            "p1_definitions",
-            "p2_operations",
-            "p3_patterns",
-            "p4_concepts_engaged",
-            "p5_integrations",
-            "p5_synthesis",
-        ]),
-        _ => None,
     }
 }
 

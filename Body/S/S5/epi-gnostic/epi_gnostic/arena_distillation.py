@@ -89,7 +89,7 @@ def moirai_arena_distill(
     ]
     graphiti_service = graphiti_service or HttpGraphitiEpisodeService()
     edge_writer = edge_writer or Neo4jArenaEdgeWriter.from_env()
-    compressor = compressor or compress_through_VAK
+    compressor = compressor or coordinate_tag_arena_transcript
 
     compressed = compressor(scene, resolved_lines, turns)
     class_distribution = _class_distribution(resolved_lines)
@@ -131,12 +131,12 @@ def moirai_arena_distill(
     )
 
 
-def compress_through_VAK(
+def coordinate_tag_arena_transcript(
     scene: Mapping[str, Any],
     lines: list[Mapping[str, Any]],
     turns: list[Mapping[str, Any]],
 ) -> str:
-    """Coordinate-tag the closure transcript per CCT-17/DR-COMP-1."""
+    """Serialize the closure's existing coordinate addresses for later resolve."""
 
     transcript = []
     for line in lines:

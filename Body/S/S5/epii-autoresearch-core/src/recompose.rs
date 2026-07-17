@@ -57,12 +57,19 @@ pub fn recompose_pass(store: &InboxStore) -> Result<Vec<RecomposeOutput>, String
     let mut out = Vec::with_capacity(entries.len());
     for stored in entries {
         let entry_id = stored.id.clone();
-        let proposed_p0_questions: Vec<String> = stored
+        let mut proposed_p0_questions: Vec<String> = stored
             .entry
             .improvement_vectors
             .iter()
             .map(|v| format!("What if we {v}?"))
             .collect();
+        proposed_p0_questions.extend(
+            stored
+                .entry
+                .q_proposals
+                .iter()
+                .flat_map(|proposal| proposal.opens_questions.iter().cloned()),
+        );
         out.push(RecomposeOutput {
             entry_id,
             next_compose_hint: NextComposeHint {

@@ -87,9 +87,9 @@ fn replay_emits_ordered_stream_and_projection_payload() {
     assert_eq!(relation_projection.planet_planet_edges.len(), 1);
     assert_eq!(relation_projection.planet_planet_edges[0].aspect_type, 120);
     assert_eq!(relation_projection.planet_aperture_edges.len(), 1);
-    assert_eq!(
-        relation_projection.pending_dataset_badges[0].badge,
-        "track-23.10-pending"
+    assert!(
+        relation_projection.pending_dataset_badges.is_empty(),
+        "DR-ENV-2 retires the outer-planet pending badge; outer planets are canonical ambient-condition edges"
     );
 }
 

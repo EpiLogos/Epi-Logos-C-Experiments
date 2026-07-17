@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -161,6 +162,26 @@ def test_moirai_arena_distill_writes_episode_and_classifier_modulated_edges():
         "egregore<->mantra",
         "daemon<->egregore",
         "mantra<->sprite",
+    }
+
+
+def test_moirai_arena_distill_default_preserves_existing_vak_addresses_for_resolve():
+    graphiti = RecordingGraphitiService()
+    edge_writer = RecordingEdgeWriter()
+
+    moirai_arena_distill(
+        "arena:scene-41-9",
+        payload=fixture_payload(),
+        graphiti_service=graphiti,
+        edge_writer=edge_writer,
+    )
+
+    episode_packet = json.loads(graphiti.episodes[0]["episode_body"])
+    assert episode_packet["compression"] == "coordinate-tagging-is-compression"
+    assert episode_packet["scene_key"] == "arena:scene-41-9"
+    assert episode_packet["transcript"][0]["vak_address"] == {
+        "cfp": "m4.arena.dialogue",
+        "cp": "C5",
     }
 
 

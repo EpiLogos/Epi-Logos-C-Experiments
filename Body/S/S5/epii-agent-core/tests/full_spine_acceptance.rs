@@ -449,6 +449,7 @@ fn aletheia_entry(session_id: &str) -> InboxEntry {
             "Aletheia disclosed a production-shaped S5 acceptance seam".to_owned(),
         )]),
         artifacts: vec!["vault://Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned()],
+        q_proposals: vec![],
         closure_kind: "rehear".to_owned(),
         disclosure_lineage: None,
     }

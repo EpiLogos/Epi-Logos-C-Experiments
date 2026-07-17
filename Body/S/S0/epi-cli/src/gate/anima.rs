@@ -199,6 +199,8 @@ pub fn mediation_route(state_root: impl AsRef<Path>, params: &Value) -> Result<V
                 "{tool} requires upstreamRequired/upstreamEvidence containing vak-evaluate"
             ));
         }
+
+        validate_mediation_entitlement(envelope, tool)?;
     }
 
     let outcome = route_outcome(cpf, cf, cfp, cs_direction, dispatch_tool.as_deref())?;
@@ -234,6 +236,77 @@ pub fn mediation_route(state_root: impl AsRef<Path>, params: &Value) -> Result<V
 
     append_mediation_decision(state_root, &result)?;
     Ok(result)
+}
+
+/// Keeps the gateway adapter aligned with the S4-owned capability matrix.
+/// The adapter enforces the declared class at the live mediation boundary; it
+/// does not define a second capability universe.
+fn validate_mediation_entitlement(envelope: &Value, dispatch_tool: &str) -> Result<(), String> {
+    let matrix = read_capability_matrix()?;
+    let is_aletheia_internal = matrix
+        .get("aletheia_mode_internal")
+        .and_then(|section| section.get("tools"))
+        .and_then(Value::as_array)
+        .is_some_and(|tools| {
+            tools
+                .iter()
+                .any(|tool| tool.get("name").and_then(Value::as_str) == Some(dispatch_tool))
+        });
+
+    if !is_aletheia_internal {
+        return Ok(());
+    }
+
+    let context = envelope
+        .get("entitlementContext")
+        .and_then(Value::as_object)
+        .ok_or_else(|| {
+            format!(
+                "{dispatch_tool} requires aletheia-mode-internal entitlementContext with \
+                 effectiveTools, anima.dispatcher, and aletheia.mode.active"
+            )
+        })?;
+
+    let has_effective_tool = context
+        .get("effectiveTools")
+        .and_then(Value::as_array)
+        .is_some_and(|tools| {
+            tools
+                .iter()
+                .any(|tool| tool.as_str() == Some(dispatch_tool))
+        });
+    if !has_effective_tool {
+        return Err(format!(
+            "{dispatch_tool} entitlement denied: effectiveTools does not include the requested tool"
+        ));
+    }
+
+    let has_dispatcher_role = context
+        .get("roles")
+        .and_then(Value::as_array)
+        .is_some_and(|roles| {
+            roles
+                .iter()
+                .any(|role| role.as_str() == Some("anima.dispatcher"))
+        });
+    if !has_dispatcher_role {
+        return Err(format!(
+            "{dispatch_tool} entitlement denied: aletheia-mode-internal requires anima.dispatcher"
+        ));
+    }
+
+    let aletheia_mode_active = context
+        .get("session")
+        .and_then(|session| session.get("aletheiaModeActive"))
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    if !aletheia_mode_active {
+        return Err(format!(
+            "{dispatch_tool} entitlement denied: aletheia.mode.active is required"
+        ));
+    }
+
+    Ok(())
 }
 
 /// 12.T12.10 — capability-parity surface (`s4'.mediation.capabilities.list`).

@@ -1,6 +1,7 @@
 use crate::agent::launch;
 use crate::agent::runtime::PiLaunchPlan;
 use crate::agent::{AgentLayout, TmuxCmd, DEFAULT_PI_AGENT_ID};
+use crate::gate::config;
 use crate::gate::session_store::slug as session_slug;
 use crate::gate::sessions::{SessionPatch, SessionStore};
 use epi_s3_gateway_contract::{
@@ -47,6 +48,23 @@ struct TerminalBindingReport {
     tmux_window_id: String,
     tmux_pane_id: String,
     terminal_lease: TerminalLease,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct TopologyReport {
+    status: String,
+    session_key: String,
+    tmux_socket: String,
+    tmux_session_name: String,
+    tmux_window_name: String,
+    tmux_window_id: String,
+    tmux_pane_id: String,
+    pane_created: bool,
+    cfp_layout: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    visible_projection: Option<String>,
+    terminal_binding: TerminalBindingReport,
 }
 
 pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
@@ -110,6 +128,490 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
                 json,
             )
         }
+        TmuxCmd::Topology {
+            session_key,
+            day_session,
+            window,
+            pane,
+            cfp_layout,
+            cf,
+            cp,
+            role,
+            agent,
+            child_dispatch_command,
+            visible,
+        } => apply_topology(
+            TopologyRequest {
+                session_key,
+                day_session,
+                window,
+                pane,
+                cfp_layout,
+                cf,
+                cp,
+                role: role.as_deref(),
+                agent: agent.as_deref(),
+                child_dispatch_command: child_dispatch_command.as_deref(),
+                visible: *visible,
+            },
+            json,
+        ),
+    }
+}
+
+struct TopologyRequest<'a> {
+    session_key: &'a str,
+    day_session: &'a str,
+    window: &'a str,
+    pane: &'a str,
+    cfp_layout: &'a str,
+    cf: &'a str,
+    cp: &'a str,
+    role: Option<&'a str>,
+    agent: Option<&'a str>,
+    child_dispatch_command: Option<&'a str>,
+    visible: bool,
+}
+
+/// The only topology allocator.  Tmux owns the durable process substrate;
+/// cmux may attach to this session after allocation but never owns a second
+/// session, window, pane, or process lifecycle.
+fn apply_topology(request: TopologyRequest<'_>, json: bool) -> Result<String, String> {
+    validate_topology_request(&request)?;
+
+    let gate_root = config::gate_root_from_env()?;
+    let store = SessionStore::new(&gate_root)?;
+    store.ensure(request.session_key)?;
+
+    let socket = topology_socket_path(&gate_root)?;
+    let cwd = std::env::current_dir().map_err(|err| err.to_string())?;
+    let pane_env = topology_pane_env(&request);
+
+    if !topology_has_session(&socket, request.day_session)? {
+        topology_command(&socket)
+            .arg("new-session")
+            .arg("-d")
+            .arg("-s")
+            .arg(request.day_session)
+            .arg("-n")
+            .arg(request.window)
+            .arg("-c")
+            .arg(&cwd)
+            .args(topology_env_args(&pane_env))
+            .args(request.child_dispatch_command)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .map_err(|err| format!("failed to run tmux: {err}"))
+            .and_then(success_status)?;
+        topology_select_pane_title(&socket, request.day_session, request.window, request.pane)?;
+        let report = finish_topology(&store, &gate_root, &socket, &request, true, json)?;
+        return Ok(report);
+    }
+
+    if !topology_has_window(&socket, request.day_session, request.window)? {
+        topology_command(&socket)
+            .arg("new-window")
+            .arg("-d")
+            .arg("-t")
+            .arg(request.day_session)
+            .arg("-n")
+            .arg(request.window)
+            .arg("-c")
+            .arg(&cwd)
+            .args(topology_env_args(&pane_env))
+            .args(request.child_dispatch_command)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .map_err(|err| format!("failed to run tmux: {err}"))
+            .and_then(success_status)?;
+        topology_select_pane_title(&socket, request.day_session, request.window, request.pane)?;
+        let report = finish_topology(&store, &gate_root, &socket, &request, true, json)?;
+        return Ok(report);
+    }
+
+    let existing = topology_find_pane(&socket, request.day_session, request.window, request.pane)?;
+    let (pane_id, pane_created) = match existing {
+        Some(pane_id) => (pane_id, false),
+        None => {
+            let output = topology_command(&socket)
+                .arg("split-window")
+                .arg("-d")
+                .arg("-P")
+                .arg("-F")
+                .arg("#{pane_id}")
+                .arg("-t")
+                .arg(format!("{}:{}", request.day_session, request.window))
+                .arg("-c")
+                .arg(&cwd)
+                .args(topology_env_args(&pane_env))
+                .args(request.child_dispatch_command)
+                .output()
+                .map_err(|err| format!("failed to run tmux: {err}"))?;
+            if !output.status.success() {
+                return Err(format!(
+                    "tmux split-window exited with status {}: {}",
+                    output.status,
+                    String::from_utf8_lossy(&output.stderr).trim(),
+                ));
+            }
+            let pane_id = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+            if pane_id.is_empty() {
+                return Err("tmux split-window returned no pane id".to_owned());
+            }
+            topology_set_pane_title(&socket, &pane_id, request.pane)?;
+            (pane_id, true)
+        }
+    };
+
+    let _ = pane_id;
+    finish_topology(&store, &gate_root, &socket, &request, pane_created, json)
+}
+
+fn finish_topology(
+    store: &SessionStore,
+    gate_root: &Path,
+    socket: &Path,
+    request: &TopologyRequest<'_>,
+    pane_created: bool,
+    json: bool,
+) -> Result<String, String> {
+    let window_target = format!("{}:{}", request.day_session, request.window);
+    let pane_id = topology_find_pane(socket, request.day_session, request.window, request.pane)?
+        .ok_or_else(|| "allocated topology pane was not discoverable".to_owned())?;
+    topology_apply_layout(socket, &window_target, request.cfp_layout)?;
+    let window_id = topology_display_message(socket, &window_target, "#{window_id}")?;
+    let lease = TerminalLease {
+        session_key: request.session_key.to_owned(),
+        tmux_session_name: request.day_session.to_owned(),
+        tmux_window_id: window_id.clone(),
+        tmux_pane_id: pane_id.clone(),
+        created_at: now_ms()?,
+        lease_ttl_seconds: DEFAULT_LEASE_TTL_SECONDS,
+    };
+    write_lease(gate_root, &lease)?;
+    patch_topology_gateway_session(store, request, &lease)?;
+
+    let visible_projection = if request.visible {
+        Some(open_cmux_projection(
+            socket,
+            request.day_session,
+            request.window,
+            &std::env::current_dir()
+                .map_err(|err| err.to_string())?
+                .display()
+                .to_string(),
+        ))
+    } else {
+        None
+    };
+    let report = TopologyReport {
+        status: "allocated".to_owned(),
+        session_key: request.session_key.to_owned(),
+        tmux_socket: socket.display().to_string(),
+        tmux_session_name: request.day_session.to_owned(),
+        tmux_window_name: request.window.to_owned(),
+        tmux_window_id: window_id,
+        tmux_pane_id: pane_id,
+        pane_created,
+        cfp_layout: request.cfp_layout.to_owned(),
+        visible_projection,
+        terminal_binding: TerminalBindingReport {
+            session_key: request.session_key.to_owned(),
+            tmux_session_name: lease.tmux_session_name.clone(),
+            tmux_window_id: lease.tmux_window_id.clone(),
+            tmux_pane_id: lease.tmux_pane_id.clone(),
+            terminal_lease: lease,
+        },
+    };
+    if json {
+        serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+    } else {
+        Ok(format!(
+            "allocated {}:{} {} ({})",
+            request.day_session, request.window, request.pane, report.tmux_socket
+        ))
+    }
+}
+
+fn validate_topology_request(request: &TopologyRequest<'_>) -> Result<(), String> {
+    for (label, value) in [
+        ("session_key", request.session_key),
+        ("day_session", request.day_session),
+        ("window", request.window),
+        ("pane", request.pane),
+    ] {
+        if value.trim().is_empty() {
+            return Err(format!("{label} must not be empty"));
+        }
+    }
+    for (label, value) in [
+        ("day_session", request.day_session),
+        ("window", request.window),
+        ("pane", request.pane),
+    ] {
+        if !value
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_'))
+        {
+            return Err(format!(
+                "{label} may contain only ASCII letters, digits, '-' and '_'"
+            ));
+        }
+    }
+    if !matches!(request.cfp_layout, "CFP0" | "CFP1" | "CFP3") {
+        return Err("cfp_layout must be CFP0, CFP1, or CFP3".to_owned());
+    }
+    if request.cf.trim().is_empty() || request.cp.trim().is_empty() {
+        return Err("cf and cp must not be empty".to_owned());
+    }
+    Ok(())
+}
+
+fn topology_socket_path(gate_root: &Path) -> Result<PathBuf, String> {
+    let socket = std::env::var_os("EPI_AGENT_TMUX_SOCKET")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| gate_root.join("tmux").join("anima.sock"));
+    let parent = socket
+        .parent()
+        .ok_or_else(|| "EPI_AGENT_TMUX_SOCKET must include a parent directory".to_owned())?;
+    fs::create_dir_all(parent).map_err(|err| err.to_string())?;
+    Ok(socket)
+}
+
+fn topology_command(socket: &Path) -> Command {
+    let mut command = tmux_command();
+    command.arg("-S").arg(socket);
+    command
+}
+
+fn topology_has_session(socket: &Path, session: &str) -> Result<bool, String> {
+    let status = topology_command(socket)
+        .args(["has-session", "-t", session])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    Ok(status.success())
+}
+
+fn topology_has_window(socket: &Path, session: &str, window: &str) -> Result<bool, String> {
+    let output = topology_command(socket)
+        .args(["list-windows", "-t", session, "-F", "#{window_name}"])
+        .output()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "tmux list-windows exited with status {}",
+            output.status
+        ));
+    }
+    Ok(String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .any(|candidate| candidate.trim() == window))
+}
+
+fn topology_find_pane(
+    socket: &Path,
+    session: &str,
+    window: &str,
+    title: &str,
+) -> Result<Option<String>, String> {
+    let output = topology_command(socket)
+        .args([
+            "list-panes",
+            "-t",
+            &format!("{session}:{window}"),
+            "-F",
+            "#{pane_id}\t#{pane_title}",
+        ])
+        .output()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "tmux list-panes exited with status {}",
+            output.status
+        ));
+    }
+    Ok(String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .find_map(|line| {
+            let (pane_id, pane_title) = line.split_once('\t')?;
+            (pane_title == title).then(|| pane_id.to_owned())
+        }))
+}
+
+fn topology_select_pane_title(
+    socket: &Path,
+    session: &str,
+    window: &str,
+    title: &str,
+) -> Result<(), String> {
+    let pane_id = topology_display_message(socket, &format!("{session}:{window}"), "#{pane_id}")?;
+    topology_set_pane_title(socket, &pane_id, title)
+}
+
+fn topology_set_pane_title(socket: &Path, pane_id: &str, title: &str) -> Result<(), String> {
+    topology_command(socket)
+        .args(["select-pane", "-t", pane_id, "-T", title])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map_err(|err| format!("failed to run tmux: {err}"))
+        .and_then(success_status)
+}
+
+fn topology_display_message(socket: &Path, target: &str, format: &str) -> Result<String, String> {
+    let output = topology_command(socket)
+        .args(["display-message", "-p", "-t", target, format])
+        .stdin(Stdio::null())
+        .output()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "tmux display-message exited with status {}",
+            output.status
+        ));
+    }
+    let value = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+    if value.is_empty() {
+        Err(format!("tmux returned empty value for {format}"))
+    } else {
+        Ok(value)
+    }
+}
+
+fn topology_env_args(env: &[(String, String)]) -> Vec<String> {
+    env.iter()
+        .flat_map(|(key, value)| ["-e".to_owned(), format!("{key}={value}")])
+        .collect()
+}
+
+fn topology_pane_env(request: &TopologyRequest<'_>) -> Vec<(String, String)> {
+    let mut env = vec![
+        (
+            "EPI_GATE_SESSION_KEY".to_owned(),
+            request.session_key.to_owned(),
+        ),
+        (
+            "EPI_TERMINAL_LEASE_ID".to_owned(),
+            request.session_key.to_owned(),
+        ),
+        ("CF_IDENTITY".to_owned(), request.cf.to_owned()),
+        ("CMUX_CP".to_owned(), request.cp.to_owned()),
+        ("CMUX_CFP".to_owned(), request.cfp_layout.to_owned()),
+        (
+            "EPI_TMUX_TOPOLOGY_WINDOW".to_owned(),
+            request.window.to_owned(),
+        ),
+        ("EPI_TMUX_TOPOLOGY_PANE".to_owned(), request.pane.to_owned()),
+    ];
+    if let Some(role) = request.role.filter(|role| !role.trim().is_empty()) {
+        env.push(("EPI_AGENT_NAME".to_owned(), role.to_owned()));
+        env.push(("EPI_AGENT_MODE".to_owned(), "dispatch".to_owned()));
+    }
+    if let Some(agent) = request.agent.filter(|agent| !agent.trim().is_empty()) {
+        env.push(("EPI_AGENT_RUNTIME".to_owned(), agent.to_owned()));
+    }
+    env
+}
+
+fn topology_apply_layout(socket: &Path, target: &str, cfp_layout: &str) -> Result<(), String> {
+    let layout = match cfp_layout {
+        "CFP0" => "even-horizontal",
+        "CFP1" => "even-horizontal",
+        "CFP3" => "tiled",
+        _ => return Err("cfp_layout must be CFP0, CFP1, or CFP3".to_owned()),
+    };
+    topology_command(socket)
+        .args(["select-layout", "-t", target, layout])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map_err(|err| format!("failed to run tmux: {err}"))
+        .and_then(success_status)
+}
+
+fn patch_topology_gateway_session(
+    store: &SessionStore,
+    request: &TopologyRequest<'_>,
+    lease: &TerminalLease,
+) -> Result<(), String> {
+    let lease_owner = request.agent.or(request.role).unwrap_or("anima");
+    store.patch(
+        request.session_key,
+        SessionPatch {
+            active_agent_id: Some(lease_owner.to_owned()),
+            runtime_cwd: Some(Some(
+                std::env::current_dir()
+                    .map_err(|err| err.to_string())?
+                    .display()
+                    .to_string(),
+            )),
+            terminal_binding: Some(Some(TerminalBinding {
+                terminal_identifier: Some(format!(
+                    "tmux:{}:{}",
+                    lease.tmux_session_name, lease.tmux_pane_id
+                )),
+                session_anchor: Some(lease.tmux_session_name.clone()),
+                tmux_pane_id: Some(lease.tmux_pane_id.clone()),
+                attached_session_key: Some(lease.session_key.clone()),
+                terminal_status: Some(TerminalStatus::Attached),
+                lease: Some(GatewayTerminalLease {
+                    lease_owner: Some(format!("pi.{lease_owner}")),
+                    lease_purpose: Some("anima-topology".to_owned()),
+                    lease_expires_at_ms: Some(lease_expires_at(lease)),
+                }),
+                capture_policy: None,
+            })),
+            ..Default::default()
+        },
+    )?;
+    Ok(())
+}
+
+/// cmux has no authority over process state.  A successful call merely opens a
+/// terminal workspace whose first command attaches to the already-live tmux
+/// session on the exact isolated socket above.
+fn open_cmux_projection(socket: &Path, session: &str, window: &str, cwd: &str) -> String {
+    let command = format!(
+        "tmux -S {} attach-session -t {}",
+        shell_single_quote(&socket.display().to_string()),
+        shell_single_quote(session),
+    );
+    match Command::new("cmux")
+        .args([
+            "new-workspace",
+            "--name",
+            &format!("{session}-{window}"),
+            "--cwd",
+            cwd,
+            "--command",
+            &command,
+        ])
+        .stdin(Stdio::null())
+        .output()
+    {
+        Ok(output) if output.status.success() => "opened".to_owned(),
+        Ok(output) => format!(
+            "unavailable: {}",
+            String::from_utf8_lossy(&output.stderr).trim()
+        ),
+        Err(err) => format!("unavailable: {err}"),
+    }
+}
+
+fn success_status(status: std::process::ExitStatus) -> Result<(), String> {
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!("tmux exited with status {status}"))
     }
 }
 

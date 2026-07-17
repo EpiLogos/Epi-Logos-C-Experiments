@@ -1,9 +1,10 @@
 //! S0 gate adapter for the S5 autoresearch (improvement) surface.
 //!
 //! 13.T7 audit (2026-06-02): `status`, `propose`, `evaluate`, `promote`,
-//! `history` are **thin adapters** over `epi_s5_epii_autoresearch_core::
-//! ImprovementStore`. No improvement DTOs are constructed in S0; gateway JSON
-//! is deserialised directly into S5 request structs.
+//! `history`, and `q_review.{run,latest}` are **thin adapters** over
+//! `epi_s5_epii_autoresearch_core`. No improvement DTOs or detector policy is
+//! constructed in S0; gateway JSON is deserialised directly into S5 request
+//! structs and Q-review policy is loaded by S5 from `[autoresearch]` config.
 //!
 //! Governance ownership:
 //! - The S5 core's `ImprovementStore::promote` already calls
@@ -27,8 +28,10 @@
 
 use std::path::{Path, PathBuf};
 
+use epi_s2_graph_services::{Neo4jClient, Neo4jConfig};
 use epi_s5_epii_autoresearch_core::{
-    EvaluationEvidence, ImprovementStore, PromoteRequest, ProposeRequest,
+    CorpusSnapshot, EvaluationEvidence, ImprovementStore, PromoteRequest, ProposeRequest,
+    QDetectorConfig, QReviewStore,
 };
 use epi_s5_epii_review_core::{ReviewDecision, ReviewStore};
 use serde::Deserialize;
@@ -53,6 +56,26 @@ pub fn improvement_store_path(state_root: impl AsRef<Path>) -> PathBuf {
 struct EvaluateParams {
     run_id: String,
     evidence: Vec<EvaluationEvidence>,
+}
+
+#[derive(Debug, Deserialize)]
+struct QReviewRunParams {
+    corpus_snapshot: CorpusSnapshot,
+    last_review_epoch: u64,
+}
+
+#[derive(Debug, Deserialize)]
+struct QReviewLatestParams {
+    day_id: String,
+    #[serde(default)]
+    cf: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct QReviewNightPassParams {
+    day_id: String,
+    #[serde(default)]
+    last_review_epoch: u64,
 }
 
 pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
@@ -85,8 +108,51 @@ pub fn history(state_root: impl AsRef<Path>, limit: Option<usize>) -> Result<Val
     serde_json::to_value(store(state_root).history(limit)?).map_err(|err| err.to_string())
 }
 
+pub fn q_review_run(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
+    let request: QReviewRunParams =
+        serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
+    serde_json::to_value(q_review_store(state_root).run(
+        request.corpus_snapshot,
+        request.last_review_epoch,
+        &QDetectorConfig::load_from_default_path()?,
+    )?)
+    .map_err(|err| err.to_string())
+}
+
+pub fn q_review_latest(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
+    let request: QReviewLatestParams =
+        serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
+    serde_json::to_value(q_review_store(state_root).latest(&request.day_id, request.cf.as_deref())?)
+        .map_err(|err| err.to_string())
+}
+
+pub async fn q_review_night_pass(
+    state_root: impl AsRef<Path>,
+    params: &Value,
+) -> Result<Value, String> {
+    let request: QReviewNightPassParams =
+        serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
+    let client = Neo4jClient::connect(&Neo4jConfig::from_env())
+        .map_err(|err| format!("Q-review night pass graph connection failed: {err}"))?;
+    serde_json::to_value(
+        q_review_store(state_root)
+            .run_night_pass(
+                &client,
+                &request.day_id,
+                request.last_review_epoch,
+                &QDetectorConfig::load_from_default_path()?,
+            )
+            .await?,
+    )
+    .map_err(|err| err.to_string())
+}
+
 fn store(state_root: impl AsRef<Path>) -> ImprovementStore {
     ImprovementStore::new(improvement_store_path(state_root))
+}
+
+fn q_review_store(state_root: impl AsRef<Path>) -> QReviewStore {
+    QReviewStore::new(improvement_store_path(state_root))
 }
 
 fn review_store(state_root: impl AsRef<Path>) -> ReviewStore {

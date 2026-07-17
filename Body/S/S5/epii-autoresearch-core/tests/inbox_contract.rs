@@ -28,6 +28,7 @@ fn sample_entry(session_id: &str) -> InboxEntry {
         improvement_vectors: vec!["consider X".into()],
         moirai_summary: BTreeMap::from([("klotho".into(), "traces".into())]),
         artifacts: vec!["/vault/note.md".into()],
+        q_proposals: vec![],
         closure_kind: "rehear".into(),
         disclosure_lineage: None,
     }

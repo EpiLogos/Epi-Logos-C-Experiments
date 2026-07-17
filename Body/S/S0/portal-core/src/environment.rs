@@ -166,7 +166,10 @@ mod tests {
 
     #[test]
     fn no_conditions_is_the_identity_rotation_never_a_fabricated_pull() {
-        assert_eq!(derive_env_quaternion(&[], &NatalReference::sun(0.0)), IDENTITY);
+        assert_eq!(
+            derive_env_quaternion(&[], &NatalReference::sun(0.0)),
+            IDENTITY
+        );
     }
 
     #[test]
@@ -228,11 +231,27 @@ mod tests {
         // two conditions on different axes; raising one's sensitivity biases the
         // env toward its axis — proving sensitivity is a real gain (DR-ENV-7)
         let natal = NatalReference::sun(10.0);
-        let fire = EnvironmentalCondition { source: ConditionSource::TranspersonalPlanet(9), degree: 10.0, magnitude: 1.0, sensitivity: 1.0 };
-        let water = EnvironmentalCondition { source: ConditionSource::TranspersonalPlanet(8), degree: 100.0, magnitude: 1.0, sensitivity: 1.0 };
+        let fire = EnvironmentalCondition {
+            source: ConditionSource::TranspersonalPlanet(9),
+            degree: 10.0,
+            magnitude: 1.0,
+            sensitivity: 1.0,
+        };
+        let water = EnvironmentalCondition {
+            source: ConditionSource::TranspersonalPlanet(8),
+            degree: 100.0,
+            magnitude: 1.0,
+            sensitivity: 1.0,
+        };
         let balanced = derive_env_quaternion(&[fire, water], &natal);
         let fire_heavy = derive_env_quaternion(
-            &[EnvironmentalCondition { sensitivity: 4.0, ..fire }, water],
+            &[
+                EnvironmentalCondition {
+                    sensitivity: 4.0,
+                    ..fire
+                },
+                water,
+            ],
             &natal,
         );
         // x (Fire) share grows when Fire's sensitivity is raised
@@ -248,9 +267,14 @@ mod tests {
         // Sun-only anchor reads no transform — the P2 richer-reference payoff.
         let sun_only = derive_env_quaternion(&[planet(10.0)], &NatalReference::sun(45.0));
         assert_eq!(sun_only, IDENTITY, "Sun-only anchor: out of aspect");
-        let full_chart =
-            derive_env_quaternion(&[planet(10.0)], &NatalReference::from_points(vec![45.0, 10.0]));
-        assert_ne!(full_chart, IDENTITY, "full chart: the natal Moon conjunction engages");
+        let full_chart = derive_env_quaternion(
+            &[planet(10.0)],
+            &NatalReference::from_points(vec![45.0, 10.0]),
+        );
+        assert_ne!(
+            full_chart, IDENTITY,
+            "full chart: the natal Moon conjunction engages"
+        );
     }
 
     #[test]
@@ -265,6 +289,9 @@ mod tests {
         // a condition exactly conjunct one natal point and squaring another takes
         // the STRONGEST engagement (the conjunction, 1.0), never an inflated total
         let strength = aspect_strength(10.0, &NatalReference::from_points(vec![10.0, 100.0]));
-        assert!((strength - 1.0).abs() < 1e-6, "max aspect is the exact conjunction");
+        assert!(
+            (strength - 1.0).abs() < 1e-6,
+            "max aspect is the exact conjunction"
+        );
     }
 }

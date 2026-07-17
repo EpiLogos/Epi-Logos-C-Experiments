@@ -40,7 +40,10 @@ fn profile_serializes_inversion_operator_under_the_carrier_key() {
     let op = &wire["inversionOperator"];
     assert_eq!(op["operator"], "matheme-shell-toggle");
     assert_eq!(op["handle"], "m1://inversion/operator");
-    assert!(op["provenance"].is_string(), "carrier reads the operator provenance");
+    assert!(
+        op["provenance"].is_string(),
+        "carrier reads the operator provenance"
+    );
 
     // Survives the wire round-trip alongside the rest of the profile.
     let decoded: MathemeHarmonicProfile =

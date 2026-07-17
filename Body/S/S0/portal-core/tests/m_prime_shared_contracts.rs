@@ -118,8 +118,8 @@ fn codon_rotation_representative_cells_pin_the_materialized_map() {
         (11, 6, 467, 63, "GGG", "non-dual", 2),
     ];
     for (lens, mode, surface_index, codon_id, codon, class, rotation) in pins {
-        let p = codon_rotation_from_lens_mode(lens, mode)
-            .expect("pinned lens-mode cell materializes");
+        let p =
+            codon_rotation_from_lens_mode(lens, mode).expect("pinned lens-mode cell materializes");
         assert_eq!(
             (
                 p.surface_index,

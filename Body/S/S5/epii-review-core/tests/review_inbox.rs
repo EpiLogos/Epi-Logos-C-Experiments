@@ -101,6 +101,49 @@ fn human_required_review_cannot_be_resolved_by_agent() {
 }
 
 #[test]
+fn approved_human_resolution_is_a_specific_canon_write_authority() {
+    let root = temp_store_root("approved_human_resolution_is_a_specific_canon_write_authority");
+    let store = ReviewStore::new(&root);
+    let item = store
+        .submit(ReviewSubmission {
+            source: ReviewSource::HumanGate,
+            title: "Promote a Q articulation".to_owned(),
+            body: "The proposed articulation requires an explicit human decision before Hen may write canon."
+                .to_owned(),
+            priority: ReviewPriority::Blocking,
+            coordinate_context: json!({"coordinate": "M5-5"}),
+            proposed_action: None,
+            requires_human: true,
+            kernel_visibility: None,
+            governance_profile: None,
+        })
+        .expect("human-gated Q review should submit");
+
+    let unresolved = store
+        .approved_human_resolution(&item.item_id)
+        .expect_err("an open review must not authorize a canon write");
+    assert!(unresolved.contains("approved human resolution"));
+
+    store
+        .resolve(ReviewResolveRequest {
+            item_id: item.item_id.clone(),
+            decision: ReviewDecision::Approve,
+            rationale: "The user accepts the proposed Q articulation.".to_owned(),
+            resolved_by: ResolutionActor::Human,
+            promotion_destination: Some("bimba".to_owned()),
+            promoted_artifact: None,
+        })
+        .expect("human approval should resolve the review");
+
+    let approved = store
+        .approved_human_resolution(&item.item_id)
+        .expect("the human approval must become the canon-write authority");
+    assert_eq!(approved.item_id, item.item_id);
+    assert_eq!(approved.decision, ReviewDecision::Approve);
+    assert_eq!(approved.resolved_by, ResolutionActor::Human);
+}
+
+#[test]
 fn resolved_review_moves_to_history_with_resolution_record() {
     let root = temp_store_root("resolved_review_moves_to_history_with_resolution_record");
     let store = ReviewStore::new(&root);

@@ -194,12 +194,7 @@ impl CanonUpdateRuntime {
         self.rows
             .values()
             .filter(|row| filter.status.map(|s| row.status == s).unwrap_or(true))
-            .filter(|row| {
-                filter
-                    .category
-                    .map(|c| row.category == c)
-                    .unwrap_or(true)
-            })
+            .filter(|row| filter.category.map(|c| row.category == c).unwrap_or(true))
             .map(RowState::to_row)
             .collect()
     }
@@ -324,10 +319,7 @@ fn split_landing_hint(hint: Option<&str>, id: &str) -> (String, String) {
                 format!("§ target paragraph for {id}"),
             ),
         },
-        None => (
-            DEFAULT_LEDGER_PATH.to_owned(),
-            format!("§ {id} row"),
-        ),
+        None => (DEFAULT_LEDGER_PATH.to_owned(), format!("§ {id} row")),
     }
 }
 
@@ -376,7 +368,10 @@ mod tests {
             .expect("propose an identity row");
         assert_eq!(receipt.id, "CU-IDENTITY-1");
         assert_eq!(receipt.status, CanonUpdateState::Surfaced);
-        assert_eq!(receipt.ratification_path, "XREF paragraph (doc-ahead-landing)");
+        assert_eq!(
+            receipt.ratification_path,
+            "XREF paragraph (doc-ahead-landing)"
+        );
         assert!(!receipt.escalates_to_dr);
 
         // sequential ids are per-category
@@ -432,7 +427,10 @@ mod tests {
         // status now reflects landed + carries the recorded marker
         let after = rt.status(&receipt.id).unwrap();
         assert_eq!(after.status, CanonUpdateState::Landed);
-        assert_eq!(after.landed_marker.as_ref().unwrap().file, landed.marker.file);
+        assert_eq!(
+            after.landed_marker.as_ref().unwrap().file,
+            landed.marker.file
+        );
 
         // landing a closed row is refused
         let relanded = rt

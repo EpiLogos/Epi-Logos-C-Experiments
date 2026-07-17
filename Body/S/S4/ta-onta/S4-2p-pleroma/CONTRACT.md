@@ -1,5 +1,12 @@
 # Pleroma Contract — Bounded Primitives & Tool Registration
 
+**Coordinate:** S4-2'
+**Residency:** `Body/S/S4/ta-onta/S4-2p-pleroma/CONTRACT.md`
+**Position (#2):** Operation / entity capability membrane
+**Actualises:** [[S4-2-SPEC]] within [[S4-SPEC]]
+**Public surface:** Eight-entry bounded primitive registry, PI tool registration seams, execution-mode law, and Pleroma-Techne atomic-skills contract
+**Does NOT own:** Agent orchestration ([[Anima]]), vault law ([[Hen]]), evidence acquisition/crystallisation ([[Aletheia]]), or constitutional identity
+
 **Extension class:** S4-2' within ta-onta
 **S-Layer fold:** S2 (Graph/Neo4j) — entity layer, where operations are typed and bounded
 **Position:** #2 (Parashakti — operation, dynamic process, entity)
@@ -8,7 +15,7 @@
 
 ## Responsibility
 
-Pleroma is the **execution substrate registry** — it owns the 7 bounded primitives (external tools that agents can invoke), the PI tool registration surface, execution mode enforcement, and visual theme identity per extension context. Pleroma does NOT orchestrate agents (Anima), does NOT own vault content (Hen), and does NOT provide knowledge retrieval (Aletheia). It provides the typed, bounded execution surfaces that Anima dispatches into.
+Pleroma is the **execution substrate registry** — it owns the 8 bounded primitives (external tools that agents can invoke), the PI tool registration surface, execution mode enforcement, and visual theme identity per extension context. Pleroma does NOT orchestrate agents (Anima), does NOT own vault content (Hen), and does NOT provide knowledge retrieval (Aletheia). It provides the typed, bounded execution surfaces that Anima dispatches into.
 
 **What Pleroma does NOT own:** orchestration skills (→ Anima), evidence-acquisition skills (→ Aletheia), constitutional agents (→ Anima), Moirai agents (→ Aletheia).
 
@@ -18,6 +25,23 @@ Pleroma has two faces:
 - **Techne atomic-skills repository** — the atomic skills substrate stewarded by the six Aletheia techne-guardian subagents (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven).
 
 Techne is not a separate agent, constitutional authority, or dispatch actor. It is the second face of Pleroma: the skills substrate beneath Aletheia's guardian profiles.
+
+## Tmux Topology, cmux Projection
+
+Anima emits a typed `tmux_topology_decision`; Pleroma's
+`techne_tmux_topology_apply` passes it to `epi agent tmux topology`. The S0
+CLI is the only lifecycle authority: it creates or reuses the isolated-socket
+tmux day session, role window, child-task pane, CFP layout, and gateway
+terminal lease. The session/window/pane mapping is `epi-YYYY-MM-DD` /
+`w-<role>` / `p-<role>-<task>`.
+
+cmux is an optional visible and interactive projection over that same session.
+After tmux allocation, it may run `tmux -S <socket> attach-session -t
+<session>` inside a cmux workspace. Closing or not opening that workspace does
+not alter the process, lease, or topology. Pleroma never creates a separate
+headless/visible session branch and never invokes unsupported cmux lifecycle
+verbs (`session-ensure`, `surface-create`, `pane-assign`, `layout-set`,
+`focus`, or `pane-send`).
 
 Pleroma must nevertheless make the vault-intelligence primitives available to agents. The `epi_cli` primitive is the bounded route for:
 
@@ -34,12 +58,12 @@ The primitive rule is: Pleroma exposes the executable route; Hen owns vault law;
 
 | Hook | Purpose |
 |------|---------|
-| `extension_init` | Register all 9 bounded primitives as PI tools |
+| `extension_init` | Register all 8 bounded primitives as PI tools |
 | `command_register` | Register primitive invocation commands |
 
 ---
 
-## 7 Bounded Primitives
+## 8 Bounded Primitives
 
 | Primitive | Mode | Description |
 |-----------|------|-------------|
@@ -50,6 +74,7 @@ The primitive rule is: Pleroma exposes the executable route; Hen owns vault law;
 | `ralph_tui` | interactive | TUI task management (beads, bead-rust) |
 | `worktrunk` | bounded | Working tree / worktree management |
 | `epi_cli` | bounded | Epi CLI pullthrough — all epi subcommands |
+| `context7` | bounded | Version-specific live library documentation lookup |
 
 **Removed:** `mprocs` (→ cmux), `gitbutler` (→ worktrunk), `notebooklm` (→ aletheia_gnosis_query)
 
@@ -127,8 +152,8 @@ Items in `_staging/` require reassignment before Pleroma plugin creation:
 
 1. Execution mode is always declared: bounded / interactive / background — no implicit execution
 2. Each primitive is isolated — no primitive can directly call another primitive
-3. All 9 primitives are registered at extension init — no lazy registration
-4. `notebooklm` primitive is explicitly temporary — retire when Gnosis quality benchmark passes
+3. All 8 primitives are registered at extension init — no lazy registration
+4. Removed primitives remain absent from the registry; Gnosis owns NotebookLM access
 5. Orchestration skills do not belong here — they belong in Anima
 6. Darshana REPL is owned by Anansi (Aletheia mode-function), staged in Pleroma only
 7. Vault-aware agents should prefer bounded `epi_cli` discovery (`epi core knowing`, `epi vault read/search/search-content/link-suggest`) before raw filesystem search for architecture/spec context

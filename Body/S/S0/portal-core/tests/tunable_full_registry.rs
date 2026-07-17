@@ -24,9 +24,14 @@ fn full_registry_loads_migrated_config_surfaces() {
         Some(TunableValue::Enum("cloud-opt-in".to_string()))
     );
     assert_eq!(reg.value("kairos.enabled"), Some(TunableValue::Bool(false)));
+    assert_eq!(
+        reg.value("pleroma.session_active_window_minutes"),
+        Some(TunableValue::U32(60))
+    );
 
     let counts = [
         ("cross.", 1usize),
+        ("pleroma.", 1usize),
         ("nara.session.", 4usize),
         ("mythos.symbolic_protein_reading.", 9usize),
         ("hen.birth_codon.", 7usize),

@@ -152,6 +152,7 @@ fn lineage_entry(session_id: &str, lineage: DisclosureLineage) -> InboxEntry {
             "Aletheia disclosed a reviewable lineage seam".to_owned(),
         )]),
         artifacts: vec!["vault://Pratibimba/Epii/lineage-safe-handle.md".to_owned()],
+        q_proposals: vec![],
         closure_kind: "rehear".to_owned(),
         disclosure_lineage: Some(lineage),
     }

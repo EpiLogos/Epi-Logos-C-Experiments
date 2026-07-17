@@ -1,0 +1,16 @@
+# Track 38 Pleroma session-lifecycle policy surfaced from the existing active-minutes default.
+
+[[tunable]]
+key = "pleroma.session_active_window_minutes"
+type = "u32"
+default = 60
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+structural_invariant = false
+owning_subsystem = "M2"
+owning_carrier = "pleroma"
+authoritative_doc = "Track 38 §7.3"
+description = "Default active-session window in minutes for Pleroma session policy."

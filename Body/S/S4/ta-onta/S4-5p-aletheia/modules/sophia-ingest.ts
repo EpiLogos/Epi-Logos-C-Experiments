@@ -33,7 +33,7 @@
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { SophiaDisclosure } from "../../S4-4p-anima/modules/sophia-hook.ts";
+import type { QProposal, SophiaDisclosure } from "../../S4-4p-anima/modules/sophia-hook.ts";
 
 export interface EpiiInboxEntry {
   kind: "epii_autoresearch_inbox_entry";
@@ -44,6 +44,8 @@ export interface EpiiInboxEntry {
   improvement_vectors: string[];
   moirai_summary: { klotho?: string; lachesis?: string; atropos?: string };
   artifacts: string[];
+  /** Candidate proposals for the pair-development review queue, never canon writes. */
+  q_proposals: QProposal[];
   /**
    * Propagated through from the Sophia disclosure. Distinguishes deliberate
    * close via `khora_session_close` ("rehear" — Möbius return synthesis) from
@@ -77,6 +79,7 @@ export function routeToEpiiInbox(input: {
     improvement_vectors: input.sophia_disclosure.improvement_vectors,
     moirai_summary: input.moirai_outputs,
     artifacts: input.sophia_disclosure.artifacts,
+    q_proposals: input.sophia_disclosure.q_proposals ?? [],
     // Older Sophia disclosures (pre-closure_kind) default to "rehear" — the
     // historical assumption was that any disclosure represented deliberate
     // synthesis. New disclosures carry the discriminator explicitly.

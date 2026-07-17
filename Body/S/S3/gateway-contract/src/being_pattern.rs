@@ -4,9 +4,8 @@ pub use portal_core::{
     BeingEntityRef, BeingObserverAnchor, BeingPatternClockAddress, BeingPatternProtectedRef,
     BeingPatternRelationEdge as BeingPatternRelationEdgeProjection, BioQuaternionHandle,
     ElementalWeightProjection, M2M3RelationProjection, MonoPolyOperator,
-    PasuBeingPatternProjection, PasuLiveStateHandle as LiveStateHandle,
-    PendingPlanetDatasetBadge, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, PasuReviewRisk,
-    PerspectiveRole, StableIdentityHandle,
+    PasuBeingPatternProjection, PasuLiveStateHandle as LiveStateHandle, PasuReviewRisk,
+    PerspectiveRole, PlanetApertureAspectEdge, PlanetPlanetAspectEdge, StableIdentityHandle,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -128,10 +127,7 @@ pub fn being_pattern_acceptance_replay() -> BeingPatternReplay {
                 aspect_type: 120,
                 orb: 1.5,
             }],
-            pending_dataset_badges: vec![PendingPlanetDatasetBadge {
-                planet: 7,
-                badge: "track-23.10-pending".to_owned(),
-            }],
+            pending_dataset_badges: vec![],
         },
         elemental_delta: ElementalWeightProjection {
             fire: 0.10,

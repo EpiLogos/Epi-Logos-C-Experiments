@@ -9,12 +9,18 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { VakAddress } from "../../shared/vak_address.ts";
+import { constitutionalTeamForCf } from "../extension/capabilities.ts";
 import type {
   EloChannel,
   EloContextTuple,
   EloRatingRecord,
 } from "../../S4-5p-aletheia/modules/anansi-elo-index.ts";
 import type { AletheiaEloConfig } from "../../S4-5p-aletheia/modules/mercurius-elo.ts";
+import {
+  parentSliceChildDispatchCommand,
+  redactParentSliceForChild,
+  type ConversationSliceHandle,
+} from "./parent-slice.ts";
 
 export type DispatchPurpose =
   | "task"
@@ -86,6 +92,7 @@ export interface HarnessRouterRequest {
   model_slot_by_family: Record<string, string>;
   implementer_model_family?: string;
   parent_session_key?: string;
+  parent_slice?: ConversationSliceHandle;
   worktree?: string;
 }
 
@@ -100,6 +107,7 @@ export interface HarnessDispatch {
   model_slot: string;
   purpose: HarnessDispatchPurpose;
   parent_session_key?: string;
+  parent_slice?: ConversationSliceHandle;
   worktree?: string;
   vak_address: VakAddress;
   cost_class: string;
@@ -192,10 +200,32 @@ export interface DispatchTrace {
   fallback_applications: string[];
   scores: CandidateScore[];
   selected_candidate_ids: string[];
+  constitutional_team?: string[];
+  tmux_topology_decisions: TmuxTopologyDecisionEvent[];
   selection_rationale: string;
   anuttara_verification?: AnuttaraVerificationPlan;
   veto_handling?: VetoHandlingPlan;
   harness_dispatch?: HarnessDispatch;
+}
+
+export type CmuxTopologyLayout = "CFP0" | "CFP1" | "CFP3";
+
+export interface CmuxTopologyMap {
+  day_session: string;
+  anima_dispatch_window: string;
+  child_task_pane: string;
+  cfp_layout: CmuxTopologyLayout;
+  vak_address: VakAddress;
+}
+
+export interface TmuxTopologyDecisionEvent {
+  event: "tmux_topology_decision";
+  topology: CmuxTopologyMap;
+  session_key?: string;
+  role: string;
+  agent: string;
+  parent_slice?: ConversationSliceHandle;
+  child_dispatch_command?: string;
 }
 
 export const ANUTTARA_FULL_LANGUAGE_LAWS = [
@@ -373,6 +403,7 @@ export function resolveHarnessDispatch(input: HarnessDispatchRequest): HarnessDi
     model_slot,
     purpose: input.purpose,
     parent_session_key: input.parent_session_key,
+    parent_slice: input.parent_slice ? redactParentSliceForChild(input.parent_slice) : undefined,
     worktree: input.worktree,
     vak_address: input.vak_frame,
     cost_class,
@@ -653,11 +684,58 @@ function buildTrace(input: {
     fallback_applications: input.fallback_applications,
     scores: input.scores,
     selected_candidate_ids: input.selected.map((score) => score.candidate_id),
+    constitutional_team: constitutionalTeamForCf(input.input.vak_frame.cf),
+    tmux_topology_decisions: buildTmuxTopologyDecisions(input.input, input.selected, input.harness_dispatch),
     selection_rationale: input.selection_rationale,
     anuttara_verification: input.anuttara_verification,
     veto_handling: input.veto_handling,
     harness_dispatch: input.harness_dispatch,
   };
+}
+
+function buildTmuxTopologyDecisions(
+  input: DispatchPolicyRequest,
+  selected: CandidateScore[],
+  harness_dispatch?: HarnessDispatch,
+): TmuxTopologyDecisionEvent[] {
+  if (!isCmuxTopologyLayout(input.vak_frame.cfp)) return [];
+
+  const day = new Date(input.now_ms).toISOString().slice(0, 10);
+  return selected.map((candidate) => {
+    const role = topologyToken(candidate.agent);
+    const task_id = topologyToken(candidate.candidate_id);
+    return {
+      event: "tmux_topology_decision",
+      topology: {
+        day_session: `epi-${day}`,
+        anima_dispatch_window: `w-${role}`,
+        child_task_pane: `p-${role}-${task_id}`,
+        cfp_layout: input.vak_frame.cfp,
+        vak_address: input.vak_frame,
+      },
+      session_key: harness_dispatch?.parent_session_key,
+      role,
+      agent: candidate.agent,
+      parent_slice: harness_dispatch?.parent_slice,
+      child_dispatch_command: harness_dispatch?.parent_slice
+        ? parentSliceChildDispatchCommand({
+          target_agent: candidate.agent,
+          task_spec: input.task,
+          vak_frame: input.vak_frame,
+          parent_slice: harness_dispatch.parent_slice,
+        })
+        : undefined,
+    };
+  });
+}
+
+function isCmuxTopologyLayout(cfp: VakAddress["cfp"]): cfp is CmuxTopologyLayout {
+  return cfp === "CFP0" || cfp === "CFP1" || cfp === "CFP3";
+}
+
+function topologyToken(value: string): string {
+  const normalized = value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return normalized || "unnamed";
 }
 
 function selectModelFamily(input: HarnessDispatchRequest): string {

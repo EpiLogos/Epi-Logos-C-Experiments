@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 - `epi_gnostic/cli.py` — CLI entry (status/models/ingest/query/notebook/enrich), JSON stdout for Rust.
 - `epi_gnostic/{config.py, wrapper.py, arena_promotion.py, storage/, enrichment/}` — config, RAG wrapper, arena-promotion proposal generation, Neo4j vector storage, cross-namespace enrichment.
 - `epi_gnostic/{graphiti_service.py, graphiti_config.py}` — deprecated Graphiti episodic-memory HTTP compatibility wrapper, including the former harness-blind `s2'.memory.ingest_transcript` / `s2'.memory.query_graphiti` transcript-to-episodic-graph pipeline now lifted into `Body/S/S3/graphiti-runtime`; `Dockerfile.graphiti`.
-- `epi_gnostic/arena_distillation.py` — Moirai arena closure-distillation: Graphiti episode writes plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` edge planning/writes.
+- `epi_gnostic/arena_distillation.py` — Moirai arena closure-distillation: Graphiti episode writes plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` edge planning/writes. `coordinate_tag_arena_transcript` serializes existing VAK addresses for later resolve; it is not a compression orchestrator.
 - `scripts/` — `enrich.py`, `migrate_bimba_embeddings.py` (768→3072 migration).
 - `cypher/` — bootstrap/relations/pointer Cypher; `tests/` — pytest suite; `schema-context.md` — graph schema notes.
 - Does NOT own coordinate semantics, kbase scoping, or the Epii agent contract — those live in sibling S5 cores (`epi-kbase-core`, `epii-agent-core`) and their specs.

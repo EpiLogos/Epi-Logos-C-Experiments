@@ -48,7 +48,7 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | Hook | Purpose |
 |------|---------|
 | `session_end` | Triggered by Sophia: route `thoughts/` to T-buckets; promote Gnosis chunks |
-| `cron_evening` | Night' Möbius engine: extract → verify → crystallise → refresh SEED.md |
+| `cron_evening` | Night' Möbius engine: extract → verify → crystallise → persist the S5 live-Bimba Q-review queue → refresh SEED.md |
 
 ---
 
@@ -62,6 +62,7 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | `aletheia_thought_route` | Classify thought artifact → route to T{n} bucket in Pratibimba |
 | `aletheia_crystallise` | Distill patterns from T-bucket contents into Bimba canonical form |
 | `aletheia_seed_refresh` | Generate SEED.md morning-context package from evening crystallisation |
+| `aletheia_ingest` | Route a Sophia disclosure into the Epii inbox, preserving q_ proposal candidates for pair-development review |
 | `moirai_arena_distill` | Closure-distill an arena scene into a Graphiti episode plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` graph edges |
 
 ## Module Surfaces
@@ -70,6 +71,8 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 |--------|---------|
 | `modules/aeon-graduation.ts` | Consent-gated Z-thread -> [[Aeon]] accrual renderer: builds the Sophia/Aletheia improvement proposal, preserves eval/run history, and updates an [[Aeon]] form block for Anima's Night' dispatch seam |
 | `modules/janus-doorway.ts` | [[Janus]] temporal-envelope and oracle-spread state law, including read-only spread deltas consumed by Chronos rhythm re-entry |
+| `modules/sophia-ingest.ts` | C4 handoff from the single-writer Sophia disclosure to the Epii JSONL inbox; preserves `q_proposals` as candidates and never writes canon |
+| `modules/q-review-night-pass.ts` | One-shot gateway handshake for `s5'.improve.q_review.night_pass`; carries temporal context only, while [[S2]] reads Bimba and [[S5]] curates/persists the queue |
 
 ---
 

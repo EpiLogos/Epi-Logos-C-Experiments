@@ -86,8 +86,7 @@ fn tarot_envelope() -> NaraArtifactEnvelope {
             scalar(NaraScalarRefKind::Kairos, "kairos://window/20260712-1200"),
         ],
         interpretation: NaraProtectedInterpretation {
-            handle: "protected-local://nara/interpretation/oracle-20260712-120000-tarot"
-                .to_owned(),
+            handle: "protected-local://nara/interpretation/oracle-20260712-120000-tarot".to_owned(),
             local_body: Some(
                 "The Magician over Peace: private reading body — never leaves the day scope."
                     .to_owned(),
@@ -137,14 +136,24 @@ fn iching_envelope() -> NaraArtifactEnvelope {
 fn tarot_artifact_write_read_round_trips_vak_deck_refs_and_review_state() {
     let dir = scratch_dir("tarot");
     let envelope = tarot_envelope();
-    let body = envelope.interpretation.local_body.clone().expect("fixture body");
+    let body = envelope
+        .interpretation
+        .local_body
+        .clone()
+        .expect("fixture body");
 
     let paths = write_nara_artifact(&dir, &envelope, &body).expect("artifact writes");
     let read_back = read_nara_envelope(&paths.envelope_path).expect("envelope reads");
 
     // Every §5.11 preserved field survives the real write/read cycle.
-    assert_eq!(read_back.oracle_frame_ref.as_deref(), Some("oracle-frame-sixfold"));
-    assert_eq!(read_back.symbolic_protein_ref.as_deref(), Some("symbolic-protein-1"));
+    assert_eq!(
+        read_back.oracle_frame_ref.as_deref(),
+        Some("oracle-frame-sixfold")
+    );
+    assert_eq!(
+        read_back.symbolic_protein_ref.as_deref(),
+        Some("symbolic-protein-1")
+    );
     assert_eq!(read_back.vak_address, envelope.vak_address);
     assert_eq!(
         read_back.deck_context.macro_deck_ref.as_deref(),
@@ -154,7 +163,10 @@ fn tarot_artifact_write_read_round_trips_vak_deck_refs_and_review_state() {
         read_back.deck_context.session_deck_ref.as_deref(),
         Some("protected://nara/deck/session-20260712")
     );
-    assert_eq!(read_back.deck_context.deck_order_hash, "blake3:deck-order-fixture");
+    assert_eq!(
+        read_back.deck_context.deck_order_hash,
+        "blake3:deck-order-fixture"
+    );
     assert_eq!(read_back.deck_context.entropy_mode, "seeded_replay");
     assert_eq!(read_back.sequence_mode.as_deref(), Some("sixfold_ql"));
     assert_eq!(read_back.packet_refs, vec!["packet-1", "packet-2"]);
@@ -170,15 +182,21 @@ fn iching_artifact_carries_tarot_decan_codon_refs_and_round_trips() {
     let dir = scratch_dir("iching");
     let envelope = iching_envelope();
 
-    let paths =
-        write_nara_artifact(&dir, &envelope, "Hexagram 11 private commentary — protected-local.")
-            .expect("artifact writes");
+    let paths = write_nara_artifact(
+        &dir,
+        &envelope,
+        "Hexagram 11 private commentary — protected-local.",
+    )
+    .expect("artifact writes");
     let read_back = read_nara_envelope(&paths.envelope_path).expect("envelope reads");
 
     assert_eq!(read_back.system, NaraOracleSystem::IChing);
     // §5.11: an I-Ching artifact may carry Tarot/decan/codon refs.
-    let kinds: Vec<NaraScalarRefKind> =
-        read_back.scalar_refs.iter().map(|scalar| scalar.ref_kind).collect();
+    let kinds: Vec<NaraScalarRefKind> = read_back
+        .scalar_refs
+        .iter()
+        .map(|scalar| scalar.ref_kind)
+        .collect();
     assert!(kinds.contains(&NaraScalarRefKind::Tarot));
     assert!(kinds.contains(&NaraScalarRefKind::Decan));
     assert!(kinds.contains(&NaraScalarRefKind::M3Codon));
@@ -195,7 +213,11 @@ fn iching_artifact_carries_tarot_decan_codon_refs_and_round_trips() {
 fn protected_interpretation_body_stays_local_and_out_of_the_envelope() {
     let dir = scratch_dir("protected-body");
     let envelope = tarot_envelope();
-    let body = envelope.interpretation.local_body.clone().expect("fixture body");
+    let body = envelope
+        .interpretation
+        .local_body
+        .clone()
+        .expect("fixture body");
 
     let paths = write_nara_artifact(&dir, &envelope, &body).expect("artifact writes");
 
@@ -212,7 +234,10 @@ fn protected_interpretation_body_stays_local_and_out_of_the_envelope() {
     // Reading the envelope never loads the body.
     let read_back = read_nara_envelope(&paths.envelope_path).expect("envelope reads");
     assert_eq!(read_back.interpretation.local_body, None);
-    assert_eq!(read_back.interpretation.handle, envelope.interpretation.handle);
+    assert_eq!(
+        read_back.interpretation.handle,
+        envelope.interpretation.handle
+    );
 
     let _ = fs::remove_dir_all(&dir);
 }
@@ -221,7 +246,11 @@ fn protected_interpretation_body_stays_local_and_out_of_the_envelope() {
 fn scalar_m3_refs_resolve_without_loading_private_bodies() {
     let dir = scratch_dir("projection");
     let envelope = tarot_envelope();
-    let body = envelope.interpretation.local_body.clone().expect("fixture body");
+    let body = envelope
+        .interpretation
+        .local_body
+        .clone()
+        .expect("fixture body");
     let paths = write_nara_artifact(&dir, &envelope, &body).expect("artifact writes");
 
     // Envelope read back with local_body == None — the private body is untouched.
@@ -243,8 +272,10 @@ fn scalar_m3_refs_resolve_without_loading_private_bodies() {
     let projected_back = iching_envelope()
         .project_scalar_refs(NaraOracleSystem::Tarot)
         .expect("M3 provenance exists");
-    let kinds_back: Vec<NaraScalarRefKind> =
-        projected_back.iter().map(|scalar| scalar.ref_kind).collect();
+    let kinds_back: Vec<NaraScalarRefKind> = projected_back
+        .iter()
+        .map(|scalar| scalar.ref_kind)
+        .collect();
     assert!(kinds_back.contains(&NaraScalarRefKind::Tarot));
     assert!(kinds_back.contains(&NaraScalarRefKind::Decan));
     assert!(kinds_back.contains(&NaraScalarRefKind::M3Codon));
@@ -280,7 +311,9 @@ fn reading_cardinality_authority_is_positions_never_spread_label() {
     envelope.cp_position_refs = cp_refs.iter().map(|s| s.to_string()).collect();
     envelope.spread_label = Some("sixfold-ql-traverse".to_owned());
 
-    envelope.validate().expect("label mismatch is NOT a validation error");
+    envelope
+        .validate()
+        .expect("label mismatch is NOT a validation error");
     assert_eq!(envelope.reading_cardinality(), 2);
 
     // Changing the label never changes the cardinality.
@@ -295,7 +328,10 @@ fn reading_cardinality_authority_is_positions_never_spread_label() {
     ));
     envelope.vak_address.cp = String::new();
     envelope.cp_position_refs.clear();
-    assert_eq!(envelope.validate(), Err(NaraEnvelopeError::NoReadingPositions));
+    assert_eq!(
+        envelope.validate(),
+        Err(NaraEnvelopeError::NoReadingPositions)
+    );
 }
 
 #[test]
@@ -402,7 +438,10 @@ fn pattern_packet_chain_updates_only_q_activity_and_trajectory() {
     // Q_activity moved …
     assert_ne!(trajectory.q_activity, q_activity_start);
     // … the trajectory is exactly the packet chain …
-    assert_eq!(trajectory.packet_refs, vec!["packet-1", "packet-2", "packet-3"]);
+    assert_eq!(
+        trajectory.packet_refs,
+        vec!["packet-1", "packet-2", "packet-3"]
+    );
     // … and Q_identity + M4-0 branch evidence are bit-identical to before.
     assert_eq!(identity, identity_snapshot);
     assert_eq!(identity.q_identity, [1.0, 0.0, 0.0, 0.0]);

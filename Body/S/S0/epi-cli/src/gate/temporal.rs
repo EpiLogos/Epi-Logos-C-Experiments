@@ -106,6 +106,7 @@ fn hydrate_redis_context_on_new_runtime(mut context: Value) -> Result<Value, Str
         .build()
         .map_err(|err| err.to_string())?;
     runtime.block_on(async {
+        stamp_graph_revision_best_effort(&mut context).await;
         s3_temporal_context::hydrate_redis_from_context(&mut context).await?;
         hydrate_terminal_metadata_from_context(&mut context).await
     })?;
@@ -113,8 +114,45 @@ fn hydrate_redis_context_on_new_runtime(mut context: Value) -> Result<Value, Str
 }
 
 pub async fn hydrate_redis_from_context(context: &mut Value) -> Result<(), String> {
+    stamp_graph_revision_best_effort(context).await;
     s3_temporal_context::hydrate_redis_from_context(context).await?;
     hydrate_terminal_metadata_from_context(context).await
+}
+
+pub async fn current_graph_revision() -> Result<Option<u64>, String> {
+    let client = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    )
+    .map_err(|err| format!("graph metadata connection failed: {err}"))?;
+    graph_revision_from_client(&client).await
+}
+
+pub(super) async fn graph_revision_from_client(
+    client: &epi_s2_graph_services::Neo4jClient,
+) -> Result<Option<u64>, String> {
+    let meta = tokio::time::timeout(
+        std::time::Duration::from_millis(750),
+        epi_s2_graph_services::read_graph_meta(client),
+    )
+    .await
+    .map_err(|_| "graph metadata read timed out".to_owned())??;
+    meta.map(|meta| {
+        u64::try_from(meta.graph_revision).map_err(|_| {
+            format!(
+                "graph revision must be non-negative, got {}",
+                meta.graph_revision
+            )
+        })
+    })
+    .transpose()
+}
+
+async fn stamp_graph_revision_best_effort(context: &mut Value) {
+    match current_graph_revision().await {
+        Ok(Some(revision)) => context["kernel"]["graphRevision"] = json!(revision),
+        Ok(None) => {}
+        Err(error) => eprintln!("[gate] graph revision unavailable during hydration: {error}"),
+    }
 }
 
 pub fn terminal_redis_payload_from_context(context: &Value) -> Option<Value> {

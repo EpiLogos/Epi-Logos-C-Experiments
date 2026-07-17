@@ -13,6 +13,7 @@ pub mod constraint;
 pub mod consumption;
 mod coordinate;
 pub mod core65_audit;
+pub mod curation_snapshot;
 pub mod cypher;
 pub mod dataset_import;
 pub mod doctor;
@@ -25,6 +26,7 @@ pub mod link_enforcement;
 pub mod meta;
 pub mod ontology;
 pub mod pointers;
+pub mod q_articulation;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
@@ -50,6 +52,10 @@ pub use core65_audit::{
     core_65_audit_payload, core_65_audit_plan, kernel_core_readiness_fact,
     kernel_declared_core_relation_count, Core65AuditPlan, Core65AuditSummary, M0GraphReadinessFact,
     CORE65_AUDIT_METHOD, KERNEL_CORE_RELATION_FAMILY,
+};
+pub use curation_snapshot::{
+    read_bimba_curation_snapshot, BimbaCurationNode, BimbaCurationRelation, BimbaCurationResonance,
+    BimbaCurationSnapshot,
 };
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
@@ -95,6 +101,10 @@ pub use pointers::{
 };
 #[allow(deprecated)]
 pub use pointers::{compute_pointer_web, PointerWeb};
+pub use q_articulation::{
+    q_articulation_review_epoch_key, validate_q_articulation_key, verify_bimba_q_articulation,
+    QArticulationVerification,
+};
 pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{

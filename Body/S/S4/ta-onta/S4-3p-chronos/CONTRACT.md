@@ -93,6 +93,8 @@ Week directory (`W{WW}`) is canonical. Archive blocked unless `reflection_comple
 
 ## Temporal Lifecycle Events
 
+- `agent:team:dispatch:complete` with `{ agentId, taskId, c, evidence, task_spec, vak_frame, parent_slice }` is Chronos's 12.T12.31 c=1/c=0 bifurcation channel. [[Anima]] emits it only after a successful native `epi --json agent team dispatch` report; a child may declare `EPI_SUBGOAL_STATUS={"c":0,"evidence":"..."}` for continuation. `c=1` folds the child evidence into the existing parent-session continuation; `c=0` continues the same agent through Anima with the same redaction-governed parent slice and appended micro-history.
+
 | Event | Trigger | Action |
 |-------|---------|--------|
 | 6 AM (Möbius window) | Cron `0 6 * * *` | Create Day folder; read SEED.md; clear yesterday's `thoughts/` |

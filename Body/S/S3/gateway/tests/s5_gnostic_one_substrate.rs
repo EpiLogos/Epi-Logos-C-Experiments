@@ -75,7 +75,10 @@ async fn s5_gnostic_one_substrate_round_trip() {
         }),
         capture_policy: None,
     };
-    assert!(binding.lease.is_some(), "persistent ingest runs under a lease");
+    assert!(
+        binding.lease.is_some(),
+        "persistent ingest runs under a lease"
+    );
 
     let inherited = binding.safe_inherited_metadata();
     assert!(
@@ -91,9 +94,18 @@ async fn s5_gnostic_one_substrate_round_trip() {
     );
 
     // ── (d) hierarchical Redis: same tuple, mandated layout, byte-pinned ──
-    assert_eq!(GNOSTIC_SUBSTRATE_HIERARCHY, "{day}:{session}:{turn}:{coordinate}");
-    let receipt_key =
-        RedisKey::gnostic_substrate(CacheTier::Warm, DAY, SESSION, TURN, COORDINATE, "ingest-receipt");
+    assert_eq!(
+        GNOSTIC_SUBSTRATE_HIERARCHY,
+        "{day}:{session}:{turn}:{coordinate}"
+    );
+    let receipt_key = RedisKey::gnostic_substrate(
+        CacheTier::Warm,
+        DAY,
+        SESSION,
+        TURN,
+        COORDINATE,
+        "ingest-receipt",
+    );
     assert_eq!(
         receipt_key.as_str(),
         "cache:warm:s5:gnostic:14-07-2026:20260714-001500-1a58f7:t7:M2-1:ingest-receipt"

@@ -145,7 +145,7 @@ fn trained_checkpoint_path_emits_a_real_energy_delta() {
     assert_eq!(trained, delta.energy_scalar);
     assert_eq!(
         delta.gradient_provenance,
-        "resonance_ebm::finite_difference_q_p"
+        "resonance_ebm::candle_autograd_q_p"
     );
     assert!(delta.hinge_coherent);
     assert!(!delta.rewrites_canon);

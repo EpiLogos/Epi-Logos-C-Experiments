@@ -75,7 +75,15 @@ pub const PORTAL_EVENT_CONTRACTS: &[PortalEventContract] = &[
         event_name: "portal.spanda_transport",
         coordinate_owner: "S0/M1-3'",
         projection_source: "gateway spanda phase anchor",
-        payload_keys: &["act", "epochMs", "phase0", "rateHz", "mode", "direction", "tick12"],
+        payload_keys: &[
+            "act",
+            "epochMs",
+            "phase0",
+            "rateHz",
+            "mode",
+            "direction",
+            "tick12",
+        ],
         consumer_surfaces: &["Tauri M1' navigator", "OmniPanel /", "epi portal 0"],
     },
 ];

@@ -17,7 +17,7 @@ pub struct KnowCmd {
     /// Coordinate to know through the unified VAK act.
     pub coord: String,
 
-    /// Named thread-type; Z wraps the read in compose/perform/rehear/recompose.
+    /// Named thread-type; Z wraps the read in compose/perform/verify/rehear/recompose.
     #[arg(long, value_enum, default_value_t = ThreadType::Cfp0)]
     pub thread: ThreadType,
 
@@ -650,7 +650,7 @@ fn dispatch_pattern(thread: ThreadType) -> &'static str {
 
 fn z_thread_cycle(thread: ThreadType) -> Option<ZThreadCycle> {
     (thread == ThreadType::Z).then(|| ZThreadCycle {
-        phases: ["compose", "perform", "rehear", "recompose"]
+        phases: ["compose", "perform", "verify", "rehear", "recompose"]
             .into_iter()
             .map(ToOwned::to_owned)
             .collect(),
@@ -773,7 +773,7 @@ mod tests {
         assert_eq!(packet.dispatch_pattern, "z-thread-cycle");
         assert_eq!(
             cycle.phases,
-            vec!["compose", "perform", "rehear", "recompose"]
+            vec!["compose", "perform", "verify", "rehear", "recompose"]
         );
         assert_eq!(cycle.autonomy_mode, "Z-thread autonomy");
     }

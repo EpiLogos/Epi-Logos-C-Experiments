@@ -6,8 +6,8 @@
 //! changes shape, this test is the tripwire.
 
 use epi_s3_gateway_contract::{
-    assert_pattern_packet_identity_safe, MahamayaTranscription, NaraDeckContext,
-    NaraPatternPacket, NaraReviewState, NARA_PATTERN_PACKET_TYPE,
+    assert_pattern_packet_identity_safe, MahamayaTranscription, NaraDeckContext, NaraPatternPacket,
+    NaraReviewState, NARA_PATTERN_PACKET_TYPE,
 };
 use portal_core::{CpfState, CsDirection, CsField, VakAddress};
 use serde_json::{json, Value};
@@ -62,7 +62,10 @@ fn live_unstamped_edge_parses_with_honest_absent_refs() {
     assert_eq!(packet.mahamaya_transcription.deck_context, None);
     assert_eq!(packet.mahamaya_transcription.sequence_mode, None);
     assert!(packet.mahamaya_transcription.packet_refs.is_empty());
-    assert!(packet.mahamaya_transcription.graph_provenance_handles.is_empty());
+    assert!(packet
+        .mahamaya_transcription
+        .graph_provenance_handles
+        .is_empty());
     assert_eq!(packet.mahamaya_transcription.review_state, None);
 }
 
@@ -96,19 +99,28 @@ fn fully_stamped_packet_round_trips_every_preserved_ref() {
 
     let wire = serde_json::to_value(&packet).expect("packet serializes");
     // Snake_case wire, matching the live edge vocabulary.
-    assert_eq!(wire["mahamaya_transcription"]["oracle_frame_ref"], "oracle-frame-four-five");
+    assert_eq!(
+        wire["mahamaya_transcription"]["oracle_frame_ref"],
+        "oracle-frame-four-five"
+    );
     assert_eq!(
         wire["mahamaya_transcription"]["deck_context"]["deck_order_hash"],
         "blake3:deck-order-fixture"
     );
-    assert_eq!(wire["mahamaya_transcription"]["deck_context"]["entropy_mode"], "seeded_replay");
+    assert_eq!(
+        wire["mahamaya_transcription"]["deck_context"]["entropy_mode"],
+        "seeded_replay"
+    );
     assert_eq!(wire["mahamaya_transcription"]["review_state"], "live-only");
     // Inverse-pass law survives the wire: CS.direction = Night', CP4.4/CP4.5 foregrounded.
     assert_eq!(
         wire["mahamaya_transcription"]["vak_address"]["cs"]["direction"],
         "Night'"
     );
-    assert_eq!(wire["mahamaya_transcription"]["vak_address"]["cp"], "CP4.4,CP4.5");
+    assert_eq!(
+        wire["mahamaya_transcription"]["vak_address"]["cp"],
+        "CP4.4,CP4.5"
+    );
 
     let decoded = NaraPatternPacket::parse(&wire).expect("stamped packet parses");
     assert_eq!(decoded, packet);

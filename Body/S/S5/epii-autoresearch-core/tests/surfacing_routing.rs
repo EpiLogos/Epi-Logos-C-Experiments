@@ -40,6 +40,7 @@ fn inbox_entry(session_id: &str, vectors: Vec<&str>) -> InboxEntry {
             "Aletheia disclosed a reviewable seam in the S5 surface".to_owned(),
         )]),
         artifacts: vec!["vault://Pratibimba/Epii/session-arc.md".to_owned()],
+        q_proposals: vec![],
         closure_kind: "rehear".to_owned(),
         disclosure_lineage: None,
     }

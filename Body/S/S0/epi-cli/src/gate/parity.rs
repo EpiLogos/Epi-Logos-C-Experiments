@@ -473,7 +473,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.improve.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.improve.status / s5'.improve.propose / s5'.improve.evaluate / s5'.improve.promote / s5'.improve.history"),
+        live_gateway_method: Some("s5'.improve.status / s5'.improve.propose / s5'.improve.evaluate / s5'.improve.promote / s5'.improve.history / s5'.improve.q_review.run / s5'.improve.q_review.latest / s5'.improve.q_review.night_pass"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-autoresearch-core",
         test_evidence: &[
@@ -702,6 +702,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s1'.vault.write_file"
         | "s1'.vault.rename_file"
         | "s1'.vault.move_file"
+        | "s1'.base.ensure"
         | "s1'.semantic.suggest_links"
         | "s1'.type.classify_c_layer"
         | "s1'.entity.promote_to_type"
@@ -786,7 +787,10 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.improve.propose"
         | "s5'.improve.evaluate"
         | "s5'.improve.promote"
-        | "s5'.improve.history" => Some("s5'.improve.*"),
+        | "s5'.improve.history"
+        | "s5'.improve.q_review.run"
+        | "s5'.improve.q_review.latest"
+        | "s5'.improve.q_review.night_pass" => Some("s5'.improve.*"),
         "s5'.epii.status"
         | "s5'.epii.deposit"
         | "s5'.epii.runtime.context"

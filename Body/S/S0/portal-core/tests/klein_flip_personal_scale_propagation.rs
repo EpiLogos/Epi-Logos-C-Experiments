@@ -54,7 +54,11 @@ fn klein_flip_fires_at_the_5_to_6_boundary_and_clears_after() {
         "the flag clears once the fold completes"
     );
     assert_eq!(profile_at(5).helix, "bimba");
-    assert_eq!(profile_at(6).helix, "pratibimba", "the helix crosses WITH the flip");
+    assert_eq!(
+        profile_at(6).helix,
+        "pratibimba",
+        "the helix crosses WITH the flip"
+    );
 }
 
 /// (a)+(b)+(c) retune within ONE generation — the post-flip profile carries
@@ -97,9 +101,18 @@ fn all_three_personal_scale_faces_retune_in_the_same_generation() {
 
     // (c) the 4-5-0 lemniscate sweep re-anchors: the phase-space address
     // moves and both faces agree on the SAME degree720 (one clock, one frame)
-    let ps_before = before.phase_space.as_ref().expect("phase space rides the profile");
-    let ps_after = after.phase_space.as_ref().expect("phase space rides the profile");
-    assert_ne!(ps_before.degree720, ps_after.degree720, "lemniscate anchor re-anchors");
+    let ps_before = before
+        .phase_space
+        .as_ref()
+        .expect("phase space rides the profile");
+    let ps_after = after
+        .phase_space
+        .as_ref()
+        .expect("phase space rides the profile");
+    assert_ne!(
+        ps_before.degree720, ps_after.degree720,
+        "lemniscate anchor re-anchors"
+    );
     assert_eq!(
         ps_after.degree720, after.degree720,
         "the lemniscate anchor and the profile clock are the same frame"
@@ -122,8 +135,20 @@ fn single_profile_tick_replay_is_deterministic_at_all_three_faces() {
         let q2 = q_composed_read(&two);
         assert_eq!(q1, q2, "M4 face replay-deterministic at tick {tick12}");
         assert_eq!(
-            perturb_q_activity(q1, &vak("replay"), f32::from(tick12), &[], VamaShaktiClass::Daemon),
-            perturb_q_activity(q2, &vak("replay"), f32::from(tick12), &[], VamaShaktiClass::Daemon),
+            perturb_q_activity(
+                q1,
+                &vak("replay"),
+                f32::from(tick12),
+                &[],
+                VamaShaktiClass::Daemon
+            ),
+            perturb_q_activity(
+                q2,
+                &vak("replay"),
+                f32::from(tick12),
+                &[],
+                VamaShaktiClass::Daemon
+            ),
             "Vāma re-read replay-deterministic at tick {tick12}"
         );
         assert_eq!(

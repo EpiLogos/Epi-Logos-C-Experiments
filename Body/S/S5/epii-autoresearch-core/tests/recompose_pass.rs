@@ -32,6 +32,7 @@ fn sample_entry(session_id: &str, vectors: Vec<&str>, artifacts: Vec<&str>) -> I
         improvement_vectors: vectors.into_iter().map(String::from).collect(),
         moirai_summary: BTreeMap::new(),
         artifacts: artifacts.into_iter().map(String::from).collect(),
+        q_proposals: vec![],
         closure_kind: "rehear".into(),
         disclosure_lineage: None,
     }
@@ -57,6 +58,30 @@ fn recompose_pass_produces_next_compose_hint_per_entry() {
         outputs[0].next_compose_hint.continuity_hints[0].kind,
         "aletheia_next_compose"
     );
+}
+
+#[test]
+fn recompose_pass_carries_q_proposal_opening_questions_to_human_review() {
+    let tmp = tempdir().unwrap();
+    let store = InboxStore::new(tmp.path()).unwrap();
+    let wire_entry = r#"{"kind":"epii_autoresearch_inbox_entry","source":"aletheia_sophia_ingest","session_id":"agent:q-proposal:queue","day_id":"22-05-2026","final_vak":{"cpf":"(4.0/1-4.4/5)","ct":["CT5"],"cp":"CP4.5","cf":"(5/0)","cfp":"CFP0","cs":{"code":"CS0","direction":"Night'"}},"improvement_vectors":[],"moirai_summary":{},"artifacts":["/vault/Idea/Bimba/Seeds/S/S3.md"],"q_proposals":[{"target_coordinate":"S3","q_key":"q_5_integration_template","q_value_candidate":"Like a river lock, the gateway returns its evidence as an opening.","qm_witness_session":"agent:q-proposal:queue","qm_witness_vak":{"cpf":"(4.0/1-4.4/5)","ct":["CT5"],"cp":"CP4.5","cf":"(5/0)","cfp":"CFP0","cs":{"code":"CS0","direction":"Night'"}},"qm_witness_agent":"sophia","rationale":"The session exposed a gateway integration refinement.","opens_questions":["What evidence would let this gateway refinement remain open?"],"source_artifacts":["/vault/Idea/Bimba/Seeds/S/S3.md"]}]}"#;
+    std::fs::write(
+        tmp.path().join("agent:q-proposal:queue.jsonl"),
+        format!("{wire_entry}\n"),
+    )
+    .unwrap();
+
+    let outputs = recompose_pass(&store).unwrap();
+
+    assert_eq!(outputs.len(), 1);
+    assert!(outputs[0]
+        .next_compose_hint
+        .proposed_p0_questions
+        .contains(&"What evidence would let this gateway refinement remain open?".to_owned()));
+    assert!(matches!(
+        outputs[0].decision,
+        RecomposeDecision::HumanReview(_)
+    ));
 }
 
 #[test]

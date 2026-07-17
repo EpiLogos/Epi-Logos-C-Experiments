@@ -81,8 +81,8 @@ pub use rotational::{generate_rotational_states, RotationalState};
 pub use spanda::{
     codon_advance, delta_band_hz, frequency_citation, hkb_curvature, hkb_drift, hkb_potential,
     hkb_settle, intrinsic_twelvefold, pole_rms, pole_wave, ql_positions_derived,
-    quantize_to_spanda_substage, spanda_half_turn, spanda_invert, standing_envelope,
-    superposition, tick12_readout, SpandaHkbParams, SpandaQuaternion,
+    quantize_to_spanda_substage, spanda_half_turn, spanda_invert, standing_envelope, superposition,
+    tick12_readout, SpandaHkbParams, SpandaQuaternion,
 };
 pub use state::{
     compute_orbital_position, sync_kernel_projection, update_environment_quaternion,

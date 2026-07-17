@@ -47,11 +47,7 @@ fn capture_one_request(listener: TcpListener) -> thread::JoinHandle<(String, Str
             .expect("write response");
         let text = String::from_utf8_lossy(&buf).to_string();
         let request_line = text.lines().next().unwrap_or_default().to_owned();
-        let body = text
-            .split("\r\n\r\n")
-            .nth(1)
-            .unwrap_or_default()
-            .to_owned();
+        let body = text.split("\r\n\r\n").nth(1).unwrap_or_default().to_owned();
         (request_line, body)
     })
 }

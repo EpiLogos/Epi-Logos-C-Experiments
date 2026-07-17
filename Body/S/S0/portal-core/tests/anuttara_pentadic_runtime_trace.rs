@@ -1,5 +1,7 @@
 use portal_core::m3_transcription_bridge::{M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_NODE_COUNT};
-use portal_core::{kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile};
+use portal_core::{
+    kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile,
+};
 
 // The canonical complement-family law from the statically-linked C substrate
 // (pointer_web.c: mirror = 5 − position, the pentadic-hinge involution) — the
@@ -108,7 +110,8 @@ fn pentadic_trace_rides_the_profile_bus_first_class() {
         );
         let wire = serde_json::to_value(&profile).expect("profile serializes");
         assert!(
-            wire.get("anuttaraPentadicTrace").is_some_and(|v| !v.is_null()),
+            wire.get("anuttaraPentadicTrace")
+                .is_some_and(|v| !v.is_null()),
             "serialized profile must emit anuttaraPentadicTrace"
         );
     }
@@ -291,7 +294,9 @@ fn mahamaya_backbone_paired_fifteens_are_sourced_from_m3_helpers() {
 fn pentadic_trace_is_public_safe_and_carries_no_protected_bodies() {
     for tick12 in 0..12u8 {
         let trace = real_trace(3, tick12);
-        let s = serde_json::to_value(&trace).expect("trace serializes").to_string();
+        let s = serde_json::to_value(&trace)
+            .expect("trace serializes")
+            .to_string();
         for forbidden in [
             "natalChart",
             "natal_chart",
@@ -318,7 +323,10 @@ fn pentadic_trace_is_public_safe_and_carries_no_protected_bodies() {
             "q_cosmic_ref must be a reference, not a serialized vector: {}",
             trace.q_cosmic_ref
         );
-        assert!(!trace.provenance.is_empty(), "provenance handles must be present");
+        assert!(
+            !trace.provenance.is_empty(),
+            "provenance handles must be present"
+        );
     }
 }
 
@@ -344,8 +352,7 @@ fn trace_pairs_with_checkpoint_ref_in_bootstrap_and_real_modes() {
     with_ref.learned_predictor_checkpoint_ref = Some("ebm-checkpoint://v0.3".to_owned());
     with_ref.q_composed_handle = Some("q_composed://session/demo".to_owned());
     let wire = serde_json::to_value(&with_ref).expect("serializes");
-    let decoded: AnuttaraPentadicRuntimeTrace =
-        serde_json::from_value(wire).expect("deserializes");
+    let decoded: AnuttaraPentadicRuntimeTrace = serde_json::from_value(wire).expect("deserializes");
     assert_eq!(decoded, with_ref);
     assert_eq!(
         decoded.learned_predictor_checkpoint_ref.as_deref(),

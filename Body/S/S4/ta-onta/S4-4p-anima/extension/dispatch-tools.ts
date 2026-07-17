@@ -32,7 +32,11 @@ import {
 } from "../../S4-5p-aletheia/modules/aeon-graduation.ts";
 import { isValidVakAddress, type VakAddress } from "../../shared/vak_address.ts";
 import { suggestedSkillsForVak, validCfCodes } from "./capabilities.ts";
-import { dispatchTeamMember } from "./dispatch.ts";
+import {
+  configureParentSliceCompletionEmitter,
+  dispatchTeamMember,
+  type ParentSliceCompletionEvent,
+} from "./dispatch.ts";
 import {
   ArenaOrchestrationRefused,
   loadArenaClassifierConfigFromHome,
@@ -47,6 +51,13 @@ const arenaKairosStates = new Map<string, ArenaKairosRoutingState>();
 const arenaMercuriusSubscriptions = new Map<string, () => void>();
 
 export function registerAnimaDispatchTools(api: ExtensionAPI) {
+  const emit = (api as unknown as {
+    emit?: (event: string, payload: ParentSliceCompletionEvent) => void | Promise<void>;
+  }).emit;
+  if (emit) {
+    configureParentSliceCompletionEmitter((payload) => emit("agent:team:dispatch:complete", payload));
+  }
+
   api.registerTool({
     name: "anima_orchestrate",
     label: "Anima Orchestrate",

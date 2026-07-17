@@ -5,10 +5,10 @@ The Aletheia ta-onta carrier extension (S4-5'): a Theia/PI extension that is the
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-5'-SPEC]] (actualises [[S5-SPEC]] / [[S5-ARCHITECTURE]])
 
 ## Ownership
-- `extension.ts` — PI extension entry/facade; composes Aletheia tool modules and owns session/cron hook wiring.
+- `extension.ts` — PI extension entry/facade; composes Aletheia tool modules and owns session/cron hook wiring, including the post-crystallisation S5 Q-review night pass.
 - `CONTRACT.md` — binding extension contract (responsibility, hook seams, registered tools)
 - `spine-contribution.ts` — this carrier's spine contribution
-- `modules/` — implementation units; `janus-doorway.ts` owns temporal envelopes, oracle-spread aliveness, Klein weighting, and the read-only `janus_spread_delta` used by Chronos re-entry
+- `modules/` — implementation units; `janus-doorway.ts` owns temporal envelopes, oracle-spread aliveness, Klein weighting, and the read-only `janus_spread_delta` used by Chronos re-entry; `sophia-ingest.ts` owns the C4 Sophia-disclosure to Epii-inbox handoff, preserving `q_proposals` as pair-development candidates; `q-review-night-pass.ts` owns the one-shot S3 gateway handshake that forwards only day/review-epoch context to the S5-owned live-graph queue pass.
 - `tests/` — `*.test.ts` per module + `z_cycle_smoke.test.ts`
 - `S5/tools.json` — S5 primitive tool descriptors; `S5'/` — QL augmentation: agents (anansi, moirai, janus, mercurius, agora, zeithoven, aletheia), skills, `tools/` (gnosis/thought/episodic/seed registrations), `janus-envelope.schema.json`
 - `skills/`, `clusters/`, `modules/` — workflow gates and per-subagent clusters; `skills/custom/drift-detection/` owns proposal-only Tier 3 `tuning-calibration` composition and its fail-closed handoff into Tier 2 `tuning_review`, including [[DR-TUNE-4]] local-only slot/PASU enforcement.

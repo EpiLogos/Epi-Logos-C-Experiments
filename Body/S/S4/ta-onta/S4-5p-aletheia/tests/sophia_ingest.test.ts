@@ -162,6 +162,55 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
     });
     assert.equal(payload.final_vak.cs.direction, "Night'");
   });
+
+  it("carries q_proposals into the human-gated Epii inbox queue", () => {
+    const payload = routeToEpiiInbox({
+      session_id: "agent:q-proposal:queue",
+      day_id: "22-05-2026",
+      sophia_disclosure: {
+        kind: "sophia_session_end_disclosure",
+        session_id: "agent:q-proposal:queue",
+        day_id: "22-05-2026",
+        final_vak: {
+          cpf: "(4.0/1-4.4/5)",
+          ct: ["CT5"],
+          cp: "CP4.5",
+          cf: "(5/0)",
+          cfp: "CFP0",
+          cs: { code: "CS0", direction: "Night'" },
+        },
+        artifacts: ["/vault/Idea/Bimba/Seeds/S/S3.md"],
+        improvement_vectors: [],
+        q_proposals: [{
+          target_coordinate: "S3",
+          q_key: "q_5_integration_template",
+          q_value_candidate: "Like a river lock, the gateway returns its evidence as an opening.",
+          qm_witness_session: "agent:q-proposal:queue",
+          qm_witness_vak: {
+            cpf: "(4.0/1-4.4/5)",
+            ct: ["CT5"],
+            cp: "CP4.5",
+            cf: "(5/0)",
+            cfp: "CFP0",
+            cs: { code: "CS0", direction: "Night'" },
+          },
+          qm_witness_agent: "sophia",
+          rationale: "The session exposed a gateway integration refinement.",
+          opens_questions: ["What evidence would let this gateway refinement remain open?"],
+          source_artifacts: ["/vault/Idea/Bimba/Seeds/S/S3.md"],
+        }],
+        handoff_target: "aletheia_ingest",
+        closure_kind: "rehear",
+      },
+      moirai_outputs: {},
+    });
+
+    assert.equal(payload.q_proposals.length, 1);
+    assert.equal(payload.q_proposals[0].q_key, "q_5_integration_template");
+    assert.deepEqual(payload.q_proposals[0].opens_questions, [
+      "What evidence would let this gateway refinement remain open?",
+    ]);
+  });
 });
 
 describe("aletheiaIngestSophia (end-to-end file I/O)", () => {

@@ -1,148 +1,89 @@
 ---
 name: cmux
-description: "Claude-managed terminal multiplexer. Extends tmux with semantic window naming, automatic layout, and coordinate-aware pane assignment. Fresh design."
-port_type: fresh-design
-ct: CT2, CT4
+description: "Visible, interactive projection for the gateway-governed tmux agent substrate."
+port_type: port-and-refine
+ct: CT4
 cp: "4.4"
 agent_affinity: psyche
 requires:
-  bins: ["tmux"]
-  os: ["darwin", "linux"]
+  bins: ["cmux", "tmux"]
+  os: ["darwin"]
 ---
 
-# cmux -- Claude-Managed Terminal Multiplexer
+# cmux -- Visible Projection of tmux Agent Sessions
 
-Extends the base tmux skill with semantic awareness: windows are named by coordinate, panes are assigned by CF identity, and layouts adapt to the current work topology.
+cmux is the visible, interactive terminal surface. It does not create or own
+agent processes, tmux sessions, task windows, pane identity, or gateway state.
+Those are allocated once by `epi agent tmux topology` on tmux's isolated
+socket and recorded as the gateway terminal lease.
 
-## Purpose
-
-While tmux provides raw session management, cmux adds a semantic layer:
-
-- **Coordinate-aware naming**: windows are named by their VAK coordinate context, not arbitrary slugs
-- **Automatic layout**: pane arrangements adapt to the thread type (P-Thread, F-Thread, etc.)
-- **Focus routing**: the active pane follows the current CF dispatch target
-- **Surface management**: named surfaces group related panes into logical workspaces
-
-## Workspace Topology
-
-A cmux workspace maps directly to the VAK coordinate space:
+## Authority
 
 ```
-aletheia-workshop (tmux session)
-  |
-  +-- surface:ground    (CP 4.0 context)
-  |     +-- pane:nous     CF (0000)
-  |     +-- pane:logos    CF (0/1)
-  |
-  +-- surface:operation (CP 4.2 context)
-  |     +-- pane:eros     CF (0/1/2)
-  |     +-- pane:mythos   CF (0/1/2/3)
-  |
-  +-- surface:context   (CP 4.4 context)
-  |     +-- pane:psyche   CF (4.0-4.4/5)
-  |
-  +-- surface:synthesis (CP 4.5 context)
-        +-- pane:sophia   CF (5/0)
+Anima dispatch decision
+  -> epi agent tmux topology
+  -> tmux isolated socket (session / window / pane / process / lease)
+  -> optional cmux workspace running `tmux -S <socket> attach-session -t <session>`
 ```
 
-## Surface Management
+Opening or closing cmux never starts, stops, duplicates, or changes the tmux
+agent session. The same tmux session remains active with no cmux workspace
+open, so there is no separate "headless" agent mode.
 
-### Create Surface
+## Open a Projection
+
+Ask the topology allocator for a visible projection when an operator needs an
+interactive surface:
 
 ```bash
-cmux surface-create --name <surface-name> --cp <context-position>
+epi agent tmux topology \
+  --session-key agent:anima:main \
+  --day-session epi-2026-07-17 \
+  --window w-nous \
+  --pane p-nous-task-1 \
+  --cfp-layout CFP0 \
+  --cf '(0000)' \
+  --cp 4.0 \
+  --visible
 ```
 
-Creates a new tmux window named `s:{surface-name}` with the CP coordinate tag stored as a tmux environment variable.
-
-### List Surfaces
+The command first allocates or reuses the tmux topology and terminal lease.
+Only then it invokes the real cmux command:
 
 ```bash
-cmux surface-list
+cmux new-workspace \
+  --name 'epi-2026-07-17-w-nous' \
+  --cwd <repo-root> \
+  --command 'tmux -S <isolated-socket> attach-session -t epi-2026-07-17'
 ```
 
-Returns all surfaces with their CP assignment, pane count, and active status.
+If cmux is not running, the tmux allocation still succeeds and reports the
+projection as unavailable. Start cmux later and attach to the same socket;
+there is no migration step.
 
-### Destroy Surface
+## Inspection
+
+Use the real cmux CLI only for its supported visible-surface operations:
 
 ```bash
-cmux surface-destroy --name <surface-name>
+epi techne cmux list-workspaces --projected
+epi techne cmux identify --projected
+cmux tree
+cmux new-workspace --name <name> --cwd <repo-root> --command 'tmux -S <socket> attach-session -t <session>'
 ```
 
-Closes all panes on the surface and removes the window. Captures final state before destruction.
+Do not use or document invented lifecycle commands such as `session-ensure`,
+`surface-create`, `pane-assign`, `layout-set`, `focus`, or `pane-send`.
 
-## Pane Assignment
+## Session Shape
 
-### Assign Pane by CF
+| Logical level | Authoritative tmux resource |
+|---|---|
+| Day | session: `epi-YYYY-MM-DD` |
+| Anima dispatch role | window: `w-<role>` |
+| Child task | titled pane: `p-<role>-<task>` |
+| CFP0 / CFP1 / CFP3 | single / even-horizontal / tiled layout |
 
-```bash
-cmux pane-assign --surface <surface-name> --cf <cf-code> --agent <agent-type>
-```
-
-Creates a new pane on the named surface, sets `CF_IDENTITY` in the pane environment, and optionally launches the specified agent.
-
-### Layout Modes
-
-| CFP Thread | Layout | Description |
-|------------|--------|-------------|
-| CFP0 Base | single | One pane, full surface |
-| CFP1 P-Thread | tiled | N panes tiled evenly |
-| CFP2 C-Thread | stacked | Panes stacked vertically, one active at a time |
-| CFP3 F-Thread | columns | N panes in equal columns for comparison |
-| CFP4 L-Thread | single | One pane, full surface (long-running) |
-| CFP5 B-Thread | nested | Main pane large, sub-panes in sidebar |
-
-```bash
-cmux layout-set --surface <surface-name> --cfp <thread-type>
-```
-
-## Focus Routing
-
-When a CF dispatch occurs via anima-orchestration, cmux can automatically route focus to the target pane:
-
-```bash
-cmux focus --cf <cf-code>
-```
-
-This finds the pane with matching `CF_IDENTITY` and selects it, bringing the correct surface and pane into view.
-
-## Coordinate Tag Protocol
-
-Every cmux window and pane carries coordinate metadata in tmux environment variables:
-
-| Variable | Scope | Description |
-|----------|-------|-------------|
-| `CMUX_CP` | window | Context Position (4.0-4.5) |
-| `CMUX_CF` | pane | Context Frame code |
-| `CMUX_CFP` | window | Thread type for layout |
-| `CMUX_SURFACE` | window | Surface name |
-| `CF_IDENTITY` | pane | Constitutional agent identity |
-
-## Integration with tmux Skill
-
-cmux builds on top of the base tmux skill. All raw tmux commands remain available. cmux adds:
-
-1. Semantic naming layer (surfaces, coordinate tags)
-2. Automatic layout management
-3. Focus routing by CF code
-4. Coordinate-aware pane environment setup
-
-Use tmux directly for raw session management. Use cmux when coordinate-aware workspace topology is needed.
-
-## Example: Set Up P-Thread Workspace
-
-```bash
-# Create a surface for parallel work
-cmux surface-create --name parallel-tasks --cp 4.2
-
-# Set tiled layout for P-Thread
-cmux layout-set --surface parallel-tasks --cfp CFP1
-
-# Assign agent panes
-cmux pane-assign --surface parallel-tasks --cf "(0/1/2)" --agent claude-code
-cmux pane-assign --surface parallel-tasks --cf "(0/1/2/3)" --agent gemini-cli
-cmux pane-assign --surface parallel-tasks --cf "(0/1)" --agent codex
-
-# Focus on Eros pane
-cmux focus --cf "(0/1/2)"
-```
+The Pleroma tool `techne_tmux_topology_apply` is the PI-facing route. It
+passes Anima's typed decision to `epi agent tmux topology`; it does not shell
+either multiplexer directly.

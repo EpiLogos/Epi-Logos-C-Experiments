@@ -249,26 +249,35 @@ mod tests {
     fn derived_defaults_hold_both_wells_and_the_cited_band() {
         let p = SpandaHkbParams::default_derived();
         assert!((p.b / p.a - 9.0 / 16.0).abs() < 1e-12);
-        assert!(p.b / p.a > 0.25, "default coupling must hold the antiphase well");
+        assert!(
+            p.b / p.a > 0.25,
+            "default coupling must hold the antiphase well"
+        );
         let (lo, hi) = delta_band_hz();
         assert!(lo < p.base_freq_hz && p.base_freq_hz < hi);
         assert!((p.base_freq_hz - 2.0).abs() > 1e-9, "never fake-2.0");
         let citation = frequency_citation();
-        assert!(citation.contains("Buzsaki"), "band must stay cited: {citation}");
+        assert!(
+            citation.contains("Buzsaki"),
+            "band must stay cited: {citation}"
+        );
     }
 
     #[test]
     fn ml_config_section_overrides_and_band_is_enforced() {
-        let params = SpandaHkbParams::from_ml_config(
-            "[ml.m1_paramasiva]\nbase_freq_hz = 2.7\nb = 0.5\n",
-        )
-        .expect("in-band config loads");
+        let params =
+            SpandaHkbParams::from_ml_config("[ml.m1_paramasiva]\nbase_freq_hz = 2.7\nb = 0.5\n")
+                .expect("in-band config loads");
         assert!((params.base_freq_hz - 2.7).abs() < 1e-12);
         assert!((params.b - 0.5).abs() < 1e-12);
-        assert!((params.a - 1.0).abs() < 1e-12, "missing keys fall to derived defaults");
-        let refused = SpandaHkbParams::from_ml_config(
-            "[ml.m1_paramasiva]\nbase_freq_hz = 12.0\n",
+        assert!(
+            (params.a - 1.0).abs() < 1e-12,
+            "missing keys fall to derived defaults"
         );
-        assert!(refused.is_err(), "12 Hz is a display framerate, not the beat — must refuse");
+        let refused = SpandaHkbParams::from_ml_config("[ml.m1_paramasiva]\nbase_freq_hz = 12.0\n");
+        assert!(
+            refused.is_err(),
+            "12 Hz is a display framerate, not the beat — must refuse"
+        );
     }
 }

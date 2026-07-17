@@ -2,15 +2,13 @@
 //! Residency: Body/S/S0/epi-lib/src/lib.rs
 //! Position (#n): #0' -- compiled Anuttara verifier bridge.
 //! Actualises: Track 01.T1.10 and the generic-profile M0 witness emission.
-//! Public surface: m0_verifier::bootstrap_witness_for_tick.
+//! Public surface: m0_verifier::{bootstrap_witness_for_tick, evaluate_state, is_language_member}.
 //! Does NOT own: gateway transport, profile serialization, or session evidence.
 //! Contract: [[S0-SPEC]] -> [[M0'-SPEC]].
 
 #[cfg(feature = "m0_verifier")]
 pub mod m0_verifier {
-    use std::ffi::CStr;
-    #[cfg(test)]
-    use std::ffi::CString;
+    use std::ffi::{CStr, CString};
     use std::os::raw::{c_char, c_int};
 
     const M0_VERIFIER_VIRTUE_COUNT: usize = 9;
@@ -72,8 +70,7 @@ pub mod m0_verifier {
         route_step_count: u8,
         route_steps: [RFactorPathStep; M0_VERIFIER_MAX_ROUTE_IN],
         engaged_coordinate_count: u8,
-        engaged_coordinates:
-            [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_ENGAGED_COORDS],
+        engaged_coordinates: [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_ENGAGED_COORDS],
     }
 
     #[repr(C)]
@@ -168,7 +165,6 @@ pub mod m0_verifier {
             out_buf: *mut c_char,
             buf_len: usize,
         ) -> c_int;
-        #[cfg(test)]
         fn anuttara_language_is_member(coordinate_or_symbol: *const c_char) -> bool;
     }
 
@@ -180,13 +176,92 @@ pub mod m0_verifier {
         pub coherence_score: f32,
     }
 
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct M0VerifierStateInput {
+        pub committed_virtue_mask: u16,
+        pub virtue_evidence: [f32; M0_VERIFIER_VIRTUE_COUNT],
+        pub observed_core_relation_count: u16,
+        pub syntax_layer_mask: u16,
+        pub active_archetype: u8,
+        pub active_tct_position: u8,
+        pub slot_privacy_boundary_compliance: bool,
+    }
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct M0VerifierEvaluation {
+        pub virtue_witness_vector: u16,
+        pub virtue_scores: [f32; M0_VERIFIER_VIRTUE_COUNT],
+        pub unsatisfied_constraints: Vec<String>,
+        pub typed_queries: Vec<M0VerifierTypedQueryResult>,
+        pub coherence_score: f32,
+        pub slot_privacy_boundary_compliance: bool,
+    }
+
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct M0VerifierTypedQueryResult {
+        pub law_family: u8,
+        pub query_kind: String,
+        pub symbolic_coordinate_string: String,
+    }
+
+    /// Evaluates caller-supplied public verifier state through the compiled C
+    /// substrate. Transport and request validation remain outside this crate.
+    pub fn evaluate_state(input: &M0VerifierStateInput) -> Result<M0VerifierEvaluation, String> {
+        let mut state: KernelState = unsafe { std::mem::zeroed() };
+        state.committed_virtue_mask = input.committed_virtue_mask;
+        state.virtue_evidence = input.virtue_evidence;
+        state.observed_core_relation_count = input.observed_core_relation_count;
+        state.syntax_layer_mask = input.syntax_layer_mask;
+        state.active_archetype = input.active_archetype;
+        state.active_tct_position = input.active_tct_position;
+        state.slot_privacy_boundary_compliance = u8::from(input.slot_privacy_boundary_compliance);
+
+        let mut report = zeroed_report();
+        let status = unsafe { m0_verifier_check_state(&state, &mut report) };
+        if status != 0 {
+            return Err(format!("compiled M0 verifier failed with status {status}"));
+        }
+
+        let unsatisfied_constraints = report
+            .unsatisfied_constraints
+            .iter()
+            .take(report.unsatisfied_count as usize)
+            .map(|constraint| cstr(constraint).to_owned())
+            .collect();
+        let typed_queries = report
+            .typed_queries
+            .iter()
+            .take(report.typed_query_count as usize)
+            .map(|query| M0VerifierTypedQueryResult {
+                law_family: query.law_family,
+                query_kind: cstr(&query.query_kind).to_owned(),
+                symbolic_coordinate_string: cstr(&query.symbolic_coordinate_string).to_owned(),
+            })
+            .collect();
+
+        Ok(M0VerifierEvaluation {
+            virtue_witness_vector: report.virtue_witness_vector,
+            virtue_scores: report.virtue_scores,
+            unsatisfied_constraints,
+            typed_queries,
+            coherence_score: report.virtue_witness_vector.count_ones() as f32
+                / M0_VERIFIER_VIRTUE_COUNT as f32,
+            slot_privacy_boundary_compliance: report.slot_privacy_boundary_compliance != 0,
+        })
+    }
+
+    /// Uses the compiled 128-entry Anuttara registry; this does not infer
+    /// membership from string shape.
+    pub fn is_language_member(element: &str) -> Result<bool, String> {
+        let element = CString::new(element)
+            .map_err(|_| "language element must not contain a NUL byte".to_owned())?;
+        Ok(unsafe { anuttara_language_is_member(element.as_ptr()) })
+    }
+
     /// Runs the compiled C verifier over the information a generic public
     /// kernel tick genuinely has: canonical relation coverage and its safe
     /// boundary, but no user/session virtue evidence or syntax stamps.
-    pub fn bootstrap_witness_for_tick(
-        tick12: u8,
-        position6: u8,
-    ) -> M0VerifierBootstrapWitness {
+    pub fn bootstrap_witness_for_tick(tick12: u8, position6: u8) -> M0VerifierBootstrapWitness {
         let mut state: KernelState = unsafe { std::mem::zeroed() };
         state.observed_core_relation_count = 65;
         state.active_archetype = tick12 % 12;
@@ -195,7 +270,10 @@ pub mod m0_verifier {
 
         let mut report = zeroed_report();
         let status = unsafe { m0_verifier_check_state(&state, &mut report) };
-        assert_eq!(status, 0, "the compiled M0 verifier accepts its bootstrap state");
+        assert_eq!(
+            status, 0,
+            "the compiled M0 verifier accepts its bootstrap state"
+        );
 
         let open_questions = report
             .typed_queries
@@ -203,8 +281,8 @@ pub mod m0_verifier {
             .take(report.typed_query_count as usize)
             .map(|query| cstr(&query.symbolic_coordinate_string).to_owned())
             .collect();
-        let coherence_score = report.virtue_witness_vector.count_ones() as f32
-            / M0_VERIFIER_VIRTUE_COUNT as f32;
+        let coherence_score =
+            report.virtue_witness_vector.count_ones() as f32 / M0_VERIFIER_VIRTUE_COUNT as f32;
 
         M0VerifierBootstrapWitness {
             virtue_witness_vector: report.virtue_witness_vector,
@@ -230,9 +308,24 @@ pub mod m0_verifier {
     #[cfg(test)]
     fn closing_route() -> ([RFactorPathStep; M0_VERIFIER_MAX_ROUTE_IN], u8) {
         let mut steps = [RFactorPathStep::default(); M0_VERIFIER_MAX_ROUTE_IN];
-        steps[0] = RFactorPathStep { r_factor: 1, base_route: 0, band: R_BAND_PRAVRITTI, position: 0 };
-        steps[1] = RFactorPathStep { r_factor: 4, base_route: 0, band: R_BAND_NIVRITTI, position: 5 };
-        steps[2] = RFactorPathStep { r_factor: 5, base_route: 6, band: R_BAND_NIVRITTI, position: 7 };
+        steps[0] = RFactorPathStep {
+            r_factor: 1,
+            base_route: 0,
+            band: R_BAND_PRAVRITTI,
+            position: 0,
+        };
+        steps[1] = RFactorPathStep {
+            r_factor: 4,
+            base_route: 0,
+            band: R_BAND_NIVRITTI,
+            position: 5,
+        };
+        steps[2] = RFactorPathStep {
+            r_factor: 5,
+            base_route: 6,
+            band: R_BAND_NIVRITTI,
+            position: 7,
+        };
         (steps, 3)
     }
 
@@ -300,7 +393,10 @@ pub mod m0_verifier {
         assert_eq!(report.closure_marker.status, M0_TRIAD_COMPILES);
         assert_eq!(report.closure_marker.triad_bits, 0b111);
         assert_ne!(report.band_turn_index, 0xff);
-        assert_eq!(report.r_factor_route[report.band_turn_index as usize].band, R_BAND_TURN);
+        assert_eq!(
+            report.r_factor_route[report.band_turn_index as usize].band,
+            R_BAND_TURN
+        );
     }
 
     #[test]
@@ -319,7 +415,10 @@ pub mod m0_verifier {
         assert_eq!(report.typed_query_count, 1);
         // Law 2 — the slot privacy boundary is a Frame; breaching it is a
         // containment breach, not a generic Law-6 interrogative.
-        assert_eq!(report.typed_queries[0].law_family, M0_ANUTTARA_LAW_CONTAINMENT);
+        assert_eq!(
+            report.typed_queries[0].law_family,
+            M0_ANUTTARA_LAW_CONTAINMENT
+        );
         let first_query = cstr(&report.typed_queries[0].symbolic_coordinate_string);
         assert_eq!(first_query, first_constraint);
     }
@@ -357,9 +456,18 @@ pub mod m0_verifier {
         assert_eq!(status, 0);
         assert_eq!(query.law_family, M0_ANUTTARA_LAW_EIGHT_PLUS_ONE);
         let symbolic = cstr(&query.symbolic_coordinate_string);
-        assert!(symbolic.starts_with('#'), "EBNF: coordinate-string starts with #");
-        assert!(symbolic.ends_with('?'), "DR-MP-3: the verifier raises questions");
-        assert!(symbolic.contains("T9"), "Archetype-9 wholeness address: {symbolic}");
+        assert!(
+            symbolic.starts_with('#'),
+            "EBNF: coordinate-string starts with #"
+        );
+        assert!(
+            symbolic.ends_with('?'),
+            "DR-MP-3: the verifier raises questions"
+        );
+        assert!(
+            symbolic.contains("T9"),
+            "Archetype-9 wholeness address: {symbolic}"
+        );
         assert!(symbolic.contains("unwitnessed"), "state-marker: {symbolic}");
 
         let mut anchor: M0CoordinateRef = unsafe { std::mem::zeroed() };
@@ -392,8 +500,18 @@ pub mod m0_verifier {
         // marker at the flip position (Beauty -> Life pivot).
         let mut state = fully_witnessed_state();
         let mut steps = [RFactorPathStep::default(); M0_VERIFIER_MAX_ROUTE_IN];
-        steps[0] = RFactorPathStep { r_factor: 2, base_route: 1, band: R_BAND_PRAVRITTI, position: 0 };
-        steps[1] = RFactorPathStep { r_factor: 3, base_route: 1, band: R_BAND_NIVRITTI, position: 5 };
+        steps[0] = RFactorPathStep {
+            r_factor: 2,
+            base_route: 1,
+            band: R_BAND_PRAVRITTI,
+            position: 0,
+        };
+        steps[1] = RFactorPathStep {
+            r_factor: 3,
+            base_route: 1,
+            band: R_BAND_NIVRITTI,
+            position: 5,
+        };
         state.route_steps = steps;
         state.route_step_count = 2;
 
@@ -403,7 +521,10 @@ pub mod m0_verifier {
         assert_eq!(report.route_step_count, 3, "marker step inserted");
         assert_eq!(report.band_turn_index, 1);
         assert_eq!(report.r_factor_route[1].band, R_BAND_TURN);
-        assert_eq!(report.r_factor_route[1].position, 0, "Siva-instruction-0 seed");
+        assert_eq!(
+            report.r_factor_route[1].position, 0,
+            "Siva-instruction-0 seed"
+        );
         // No R5 return-to-matrix: the trajectory does not close (None).
         assert_eq!(report.closure_marker.status, M0_TRIAD_NOT_CLOSING);
         assert_eq!(report.closure_marker.triad_bits, 0);
@@ -420,7 +541,10 @@ pub mod m0_verifier {
 
         assert_eq!(report.canonical_membership, 0);
         assert_eq!(report.typed_query_count, 1);
-        assert_eq!(report.typed_queries[0].law_family, M0_ANUTTARA_LAW_DERIVATION);
+        assert_eq!(
+            report.typed_queries[0].law_family,
+            M0_ANUTTARA_LAW_DERIVATION
+        );
         let symbolic = cstr(&report.typed_queries[0].symbolic_coordinate_string);
         assert!(symbolic.contains("violated"), "{symbolic}");
     }
@@ -634,9 +758,7 @@ mod m0_m2_parity {
 
             let planets = entry.decan_planets;
             assert!(
-                planets[0] != planets[1]
-                    && planets[1] != planets[2]
-                    && planets[0] != planets[2],
+                planets[0] != planets[1] && planets[1] != planets[2] && planets[0] != planets[2],
                 "sign {sign} must carry 3 distinct decan planets"
             );
 
@@ -1127,8 +1249,7 @@ mod m0_symbolic_coordinate_string_round_trip {
     use std::ffi::CStr;
     use std::os::raw::c_char;
 
-    const STATE_MARKERS: [&str; 5] =
-        ["pending", "unwitnessed", "drift", "incoherent", "violated"];
+    const STATE_MARKERS: [&str; 5] = ["pending", "unwitnessed", "drift", "incoherent", "violated"];
 
     #[derive(Debug, PartialEq)]
     struct CoordinateString {
@@ -1279,8 +1400,7 @@ mod m0_symbolic_coordinate_string_round_trip {
     fn corpus_of_twelve_plus_distinct_forms_parses_round_trip() {
         let mut distinct = std::collections::BTreeSet::new();
         for member in CORPUS {
-            let parsed =
-                parse(member).unwrap_or_else(|err| panic!("`{member}` must parse: {err}"));
+            let parsed = parse(member).unwrap_or_else(|err| panic!("`{member}` must parse: {err}"));
             assert_eq!(
                 render(&parsed),
                 member,
@@ -1301,7 +1421,10 @@ mod m0_symbolic_coordinate_string_round_trip {
         assert_eq!(parse("###-0/1?").unwrap().namespace, "##");
         assert_eq!(parse("##R-0/1?").unwrap().namespace, "#R");
         assert_eq!(parse("#nR3-0/1?").unwrap().namespace, "nR3");
-        assert!(parse("#Q9-0/1-pending?").is_err(), "unknown namespace rejected");
+        assert!(
+            parse("#Q9-0/1-pending?").is_err(),
+            "unknown namespace rejected"
+        );
         assert!(parse("#R0-0/1-pending").is_err(), "questions end with ?");
     }
 
@@ -1358,8 +1481,7 @@ mod m0_symbolic_coordinate_string_round_trip {
         let emitted = unsafe { CStr::from_ptr(query.symbolic_coordinate_string.as_ptr()) }
             .to_str()
             .expect("emission must be UTF-8");
-        let parsed =
-            parse(emitted).unwrap_or_else(|err| panic!("`{emitted}` must parse: {err}"));
+        let parsed = parse(emitted).unwrap_or_else(|err| panic!("`{emitted}` must parse: {err}"));
         assert_eq!(render(&parsed), emitted, "emission round-trips");
         assert_eq!(parsed.state_marker.as_deref(), Some("unwitnessed"));
         assert_eq!(parsed.archetype.as_deref(), Some("T9"));
@@ -1529,7 +1651,10 @@ mod m0_calc_corpus {
             .strip_prefix("((x)x(x))")
             .unwrap_or_else(|| panic!("X formulation carries the product dyad: {formulation}"));
         let s2 = rest2.chars().next().expect("sign after product dyad");
-        assert!(rest2[1..].starts_with("((x)/(x))"), "quotient dyad closes: {formulation}");
+        assert!(
+            rest2[1..].starts_with("((x)/(x))"),
+            "quotient dyad closes: {formulation}"
+        );
         let sign = |c: char| if c == '+' { 1.0 } else { -1.0 };
         2.0 * x + sign(s1) * (x * x) + sign(s2) * (x / x)
     }
@@ -1555,14 +1680,23 @@ mod m0_calc_x_logic_sums {
         let formulations: Vec<String> = X_COORDS.iter().map(|c| registry_symbol(c)).collect();
         for x in [1.0, 2.0, 3.5] {
             let sum: f64 = formulations.iter().map(|f| eval_x_formulation(f, x)).sum();
-            assert!((sum - 8.0 * x).abs() < 1e-9, "ΣX1–4({x}) = {sum} must be 8x");
+            assert!(
+                (sum - 8.0 * x).abs() < 1e-9,
+                "ΣX1–4({x}) = {sum} must be 8x"
+            );
             // X5: the dataset's own closure — explicate eight plus the
             // implicate (x) equals ninefold wholeness.
             assert!((sum + x - 9.0 * x).abs() < 1e-9, "ΣX1–4 + x = 9x at {x}");
         }
         let x5 = registry_symbol("M0-(4.0/1/2)-5");
-        assert!(x5.ends_with("= 9(x)"), "X5 states its own 9(x) identity: {x5}");
-        assert!(x5.contains("+/-"), "X5 retains the superposed ± branches (Law 4): {x5}");
+        assert!(
+            x5.ends_with("= 9(x)"),
+            "X5 states its own 9(x) identity: {x5}"
+        );
+        assert!(
+            x5.contains("+/-"),
+            "X5 retains the superposed ± branches (Law 4): {x5}"
+        );
     }
 
     #[test]
@@ -1602,7 +1736,10 @@ mod m0_calc_n_logic {
             let sum: f64 = (1..=4)
                 .map(|i| eval_n(&format!("M0-(4.0/1/2/3)-{i}"), n))
                 .sum();
-            assert!((sum - 8.0 * n).abs() < 1e-9, "ΣN1–4({n}) = {sum} must be 8n");
+            assert!(
+                (sum - 8.0 * n).abs() < 1e-9,
+                "ΣN1–4({n}) = {sum} must be 8n"
+            );
             assert_eq!(sum + n, 9.0 * n, "N5 upper branch 9n at {n}");
             assert_eq!(sum - n, 7.0 * n, "N5 lower branch 7n at {n}");
         }
@@ -1760,7 +1897,10 @@ mod m2_asma_mirror_idx_round_trip {
                 assert!(desc.index_in_group <= 32, "name {i}: index_in_group bound");
             }
         }
-        assert!(mirrored > 0, "the mirror corpus is populated, not vestigial");
+        assert!(
+            mirrored > 0,
+            "the mirror corpus is populated, not vestigial"
+        );
 
         // The hidden 100th name (Al-Ism al-A'zham, index 99) stands beyond
         // the three groups — 0xFF sentinels on group, index_in_group, and
@@ -1790,7 +1930,8 @@ mod m2_asma_mirror_idx_round_trip {
             );
             if partner.mirror_idx != 0xFF {
                 assert_eq!(
-                    partner.mirror_idx as usize, i,
+                    partner.mirror_idx as usize,
+                    i,
                     "name {i} ↔ {m}: double-declared mirrors must be reciprocal",
                     m = desc.mirror_idx
                 );
@@ -1830,12 +1971,13 @@ mod m0_calc_modulo_identity_chains {
         // "## = @ = (0/1)-(00)-00" — the Truth chain (M0-2-9-1): the long
         // member resolves to a class whose canonical head is the glyph.
         let class_id = class_of("(0/1)-(00)-00");
-        assert!(class_id >= 0, "the Truth chain tail is an unambiguous member");
-        let canonical = unsafe {
-            std::ffi::CStr::from_ptr(m0_identity_class_canonical(class_id))
-        }
-        .to_str()
-        .unwrap();
+        assert!(
+            class_id >= 0,
+            "the Truth chain tail is an unambiguous member"
+        );
+        let canonical = unsafe { std::ffi::CStr::from_ptr(m0_identity_class_canonical(class_id)) }
+            .to_str()
+            .unwrap();
         assert_eq!(canonical, "##", "the chain head is the canonical member");
         // `@` rides most virtue chains — ambiguous, so it NEVER rewrites.
         assert_eq!(class_of("@"), -1, "ambiguous members are excluded");

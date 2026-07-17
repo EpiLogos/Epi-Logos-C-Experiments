@@ -65,7 +65,10 @@ fn codon_annulus_has_64_cells_of_width_2pi_over_64() {
         counts[addr as usize] += 1;
     }
     let total: u16 = counts.iter().sum();
-    assert_eq!(total, 360, "annulus cells must cover the wheel exactly once");
+    assert_eq!(
+        total, 360,
+        "annulus cells must cover the wheel exactly once"
+    );
     for (cell, count) in counts.iter().enumerate() {
         assert!(
             *count == 5 || *count == 6,
@@ -94,8 +97,13 @@ fn hopf_bundle_laws_mirror_across_rust_and_c() {
         assert_eq!(portal_core::hopf::hopf_fiber(f64::from(degree)), fiber);
 
         // C engine (m1.c), via FFI.
-        let (c_project, c_fiber, c_tick12) =
-            unsafe { (hopf_project(degree), hopf_fiber(degree), hopf_tick12(degree)) };
+        let (c_project, c_fiber, c_tick12) = unsafe {
+            (
+                hopf_project(degree),
+                hopf_fiber(degree),
+                hopf_tick12(degree),
+            )
+        };
         assert_eq!(c_project, project, "C hopf_project diverges at {degree}");
         assert_eq!(c_fiber, fiber, "C hopf_fiber diverges at {degree}");
         assert_eq!(c_tick12, tick12, "C hopf_tick12 diverges at {degree}");

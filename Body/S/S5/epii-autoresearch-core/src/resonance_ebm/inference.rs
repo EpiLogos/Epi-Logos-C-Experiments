@@ -69,4 +69,14 @@ impl ResonanceEbmRuntime {
     pub fn gradient(&self, invocation: &ElementTickInvocation) -> Result<GradientEstimate, String> {
         ResonanceGradientSurface::new(self).estimate(invocation)
     }
+
+    pub(crate) fn candle_gradient(
+        &self,
+        invocation: &ElementTickInvocation,
+    ) -> Result<Option<[f32; 4]>, String> {
+        self.model
+            .as_ref()
+            .map(|model| model.gradient_q_p(invocation))
+            .transpose()
+    }
 }

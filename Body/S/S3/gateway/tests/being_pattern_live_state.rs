@@ -65,8 +65,9 @@ fn bridge_payload_forwards_handles_without_reconstructing_stream() {
     assert_eq!(relation["planetPlanetEdges"][0]["aspectType"], 120);
     assert_eq!(relation["planetApertureEdges"][0]["aspectType"], 120);
     assert_eq!(
-        relation["pendingDatasetBadges"][0]["badge"],
-        "track-23.10-pending"
+        relation["pendingDatasetBadges"].as_array().unwrap().len(),
+        0,
+        "DR-ENV-2 retires the outer-planet pending badge; bridge must forward the empty canonical list"
     );
     assert_eq!(relation["source"], "CCT-21 SpaceTimeDB replay");
     assert!(

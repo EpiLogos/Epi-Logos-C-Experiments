@@ -12,8 +12,8 @@ use portal_core::transcription::{
     codon_governance_role, codon_transcript_class, is_start_codon, STOP_CODONS,
 };
 use portal_core::{
-    bioquaternion_transcription, kernel_energy_evaluate, BioQuaternionState,
-    BioquaternionElement, E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs,
+    bioquaternion_transcription, kernel_energy_evaluate, BioQuaternionState, BioquaternionElement,
+    E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs,
 };
 use std::path::PathBuf;
 
@@ -63,7 +63,11 @@ fn route_words_dr_r0_family_pinned() {
             let low = (word >> (r * 3)) & 0x7;
             let high = (word >> ((5 - r) * 3)) & 0x7;
             if low != 7 && high != 7 {
-                assert_eq!(low + high, 5, "complementarity broken in {word:#06x} at R{r}");
+                assert_eq!(
+                    low + high,
+                    5,
+                    "complementarity broken in {word:#06x} at R{r}"
+                );
             }
         }
     }
@@ -93,7 +97,11 @@ fn transcription_constants_27_shared_37_transcribable_1_start_3_stop() {
     assert_eq!(starts, 1, "exactly one START codon (ATG)");
     assert_eq!(STOP_CODONS.len(), 3, "exactly three STOP codons");
     for stop in STOP_CODONS {
-        assert_eq!(codon_governance_role(stop), 2, "stop codon {stop} governance role");
+        assert_eq!(
+            codon_governance_role(stop),
+            2,
+            "stop codon {stop} governance role"
+        );
     }
 }
 
@@ -151,8 +159,15 @@ fn m3_charges_sum_pp_360_boot_assert() {
     let raw_sum: i32 = (0u8..64)
         .map(|codon| bioquaternion_transcription(codon).charges.pp as i32)
         .sum();
-    assert_eq!(raw_sum, 1440, "raw sum(pp) over the codon space is 1440 (= 4 × 360)");
-    assert_eq!(raw_sum / 4, 360, "the /4 suit-level integral projection is the spec's 360");
+    assert_eq!(
+        raw_sum, 1440,
+        "raw sum(pp) over the codon space is 1440 (= 4 × 360)"
+    );
+    assert_eq!(
+        raw_sum / 4,
+        360,
+        "the /4 suit-level integral projection is the spec's 360"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -191,8 +206,9 @@ fn m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv() {
     // matrix 0 = Bimba = rX + 0 rows; matrix 1 = Pratibimba = rX + 1 rows.
     for (matrix, b) in [(0u8, 0u8), (1u8, 1u8)] {
         for r in 0u8..12 {
-            let expected = csv_vortex_row(&text, r, b)
-                .unwrap_or_else(|| panic!("CSV row {r}X + {b} not parseable — canonical 12-fold row missing"));
+            let expected = csv_vortex_row(&text, r, b).unwrap_or_else(|| {
+                panic!("CSV row {r}X + {b} not parseable — canonical 12-fold row missing")
+            });
             for c in 0u8..12 {
                 let actual = unsafe { m1_ananda_get(matrix, r, c) } as i32;
                 assert_eq!(
@@ -250,8 +266,8 @@ fn mobius_descent_operator_compiled_into_gate_build() {
 mod mobius_descent_law {
     use super::SPEC_MOBIUS_STEP_LOG_9_8;
     use portal_core::{
-        kernel_resonance_ebm_runtime_step, kernel_tangent_projection_s3,
-        kernel_tick_from_epogdoon, BioQuaternionState, KernelElement, ResonanceEbmRuntime,
+        kernel_resonance_ebm_runtime_step, kernel_tangent_projection_s3, kernel_tick_from_epogdoon,
+        BioQuaternionState, KernelElement, ResonanceEbmRuntime,
     };
 
     fn dot4(a: [f64; 4], b: [f64; 4]) -> f64 {
@@ -418,8 +434,7 @@ fn c_engine_kernel_energy_total_carries_456_weighted_channels() {
     // does not exist in the C decomposition → 0): with lens=1 and r=1 the
     // canonical total is (4·0 + 5·1 + 6·1)/15 = 11/15 ≈ 0.7333; the plain
     // sum yields 2.0.
-    let expected_total =
-        (4.0 * 0.0 + 5.0 * energy.lens_energy + 6.0 * energy.r_energy) / 15.0;
+    let expected_total = (4.0 * 0.0 + 5.0 * energy.lens_energy + 6.0 * energy.r_energy) / 15.0;
     assert!(
         (energy.total_energy - expected_total).abs() < 1e-6,
         "C engine total_energy must be the 4:5:6/15 weighted combination \
@@ -530,7 +545,10 @@ fn bell_octet_offsets_and_8_plus_4_tiling_pinned() {
         seen[*offset as usize] += 1;
     }
     for (slot, count) in seen.iter().enumerate() {
-        assert_eq!(*count, 1, "chromatic slot {slot} covered {count} times — 12=8+4 tiling broken");
+        assert_eq!(
+            *count, 1,
+            "chromatic slot {slot} covered {count} times — 12=8+4 tiling broken"
+        );
     }
 }
 
@@ -555,7 +573,10 @@ fn q_composed_carries_identity_transit_activity_order() {
     let composed = compose_personal_quaternion(q_identity, q_transit, q_activity);
     let expected = [-1.0f32, 0.0, 0.0, 0.0];
     for (got, want) in composed.iter().zip(expected.iter()) {
-        assert!((got - want).abs() < 1e-6, "Q_composed {composed:?} != spec order result {expected:?}");
+        assert!(
+            (got - want).abs() < 1e-6,
+            "Q_composed {composed:?} != spec order result {expected:?}"
+        );
     }
 
     // A transit-first reordering yields (j·i)·k = (−k)·k = +1 → [1, 0, 0, 0]:
@@ -636,7 +657,10 @@ fn spanda_standing_identity_superposition() {
             "the node must be silent at every t"
         );
     }
-    assert!((peak - 2.0).abs() < 1e-3, "antinode peak must be 2x constructive, got {peak}");
+    assert!(
+        (peak - 2.0).abs() < 1e-3,
+        "antinode peak must be 2x constructive, got {peak}"
+    );
     assert!((portal_core::standing_envelope(0.0, false) - 2.0).abs() < 1e-12);
     assert!(portal_core::standing_envelope(std::f64::consts::FRAC_PI_2, false) < 1e-12);
 }
@@ -708,14 +732,23 @@ fn codon_advances_on_rotational_state_not_tick12() {
         );
     }
     assert!(
-        codons.iter().collect::<std::collections::HashSet<_>>().len() > 1,
+        codons
+            .iter()
+            .collect::<std::collections::HashSet<_>>()
+            .len()
+            > 1,
         "the codon must actually advance with the rotational state"
     );
     // (2) The SU(2) sign is read: antipodal states q and −q are the SAME
     // SO(3) face — a face-level (tick12-style) clock cannot tell them apart —
     // yet the codon differs, because the double cover is load-bearing.
     let q2 = ring_quaternion_spec(2);
-    let q2_antipode = portal_core::SpandaQuaternion { w: -q2.w, x: -q2.x, y: -q2.y, z: -q2.z };
+    let q2_antipode = portal_core::SpandaQuaternion {
+        w: -q2.w,
+        x: -q2.x,
+        y: -q2.y,
+        z: -q2.z,
+    };
     assert_ne!(
         portal_core::codon_advance(q2, 0),
         portal_core::codon_advance(q2_antipode, 0),
@@ -780,7 +813,10 @@ fn spanda_bistability_threshold_asymmetry() {
             assert!((fresh.abs() - pi).abs() < 1e-3);
         }
         if ratio < 0.20 {
-            assert!(!anti_holds, "antiphase basin must have collapsed at b/a={ratio}");
+            assert!(
+                !anti_holds,
+                "antiphase basin must have collapsed at b/a={ratio}"
+            );
             collapsed = true;
         }
     }
@@ -800,9 +836,15 @@ fn spanda_two_involutions_distinct() {
     // 11−n and half-turn n+6 are each order-2, never coincide, and compose
     // to 5−n — Klein four-group closure on the ring.
     for n in 0..12u8 {
-        assert_eq!(portal_core::spanda_half_turn(portal_core::spanda_half_turn(n)), n);
+        assert_eq!(
+            portal_core::spanda_half_turn(portal_core::spanda_half_turn(n)),
+            n
+        );
         assert_eq!(portal_core::spanda_invert(portal_core::spanda_invert(n)), n);
-        assert_ne!(portal_core::spanda_half_turn(n), portal_core::spanda_invert(n));
+        assert_ne!(
+            portal_core::spanda_half_turn(n),
+            portal_core::spanda_invert(n)
+        );
         assert_eq!(
             portal_core::spanda_half_turn(portal_core::spanda_invert(n)),
             (5 + 12 - n) % 12,
@@ -875,13 +917,18 @@ fn cl42_signature_on_bus_matches_c_basis_for_all_six_positions() {
     for position6 in 0u8..6 {
         let bus = AnandaVortexProjection::from_tick(0, position6, 0).cl42_signature_at_position;
         let c_entry = unsafe { &CL42_BASIS[position6 as usize] };
-        assert_eq!(c_entry.position, position6, "CL42_BASIS[{position6}] position field");
+        assert_eq!(
+            c_entry.position, position6,
+            "CL42_BASIS[{position6}] position field"
+        );
         assert_eq!(
             bus, c_entry.signature,
             "position {position6}: bus cl42 signature must equal the C CL42_BASIS law"
         );
         // net +2 signature is implied: P0/P5 = −1, P1–P4 = +1
     }
-    let net: i32 = (0..6).map(|p| unsafe { CL42_BASIS[p].signature } as i32).sum();
+    let net: i32 = (0..6)
+        .map(|p| unsafe { CL42_BASIS[p].signature } as i32)
+        .sum();
     assert_eq!(net, 2, "Cl(4,2) net signature must be +2");
 }

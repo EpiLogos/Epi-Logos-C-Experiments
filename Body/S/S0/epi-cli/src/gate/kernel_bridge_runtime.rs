@@ -8,11 +8,10 @@ use epi_s3_gateway_contract::{
 use portal_core::{
     bioquaternion_transcription, cymatic_monopoly_state, epogdoon_bridge_lattice,
     lens_codon_binary_projection, planetary_elemental_weights, DepositionAnchorProjection,
-    EpogdoonBridgeProjection, KernelPhase,
-    KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext, MathemeHarmonicProfile,
-    MathemeNodalConstraint, MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass,
-    RelationDescriptor, RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT,
-    M3_PRIMARY_GROUND_LENS_ID,
+    EpogdoonBridgeProjection, KernelPhase, KleinFlipEvent, MPrimePerformanceEvent,
+    MathemeDiatonicContext, MathemeHarmonicProfile, MathemeNodalConstraint,
+    MathemePointerAnchorProjection, PortalClockState, ProfilePrivacyClass, RelationDescriptor,
+    RelationFamily, VakAddress, EPOGDOON_M2_ADDRESS_COUNT, M3_PRIMARY_GROUND_LENS_ID,
 };
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -81,6 +80,14 @@ pub struct KernelBridgeSubscriber {
 #[serde(rename_all = "camelCase")]
 pub struct KernelBridgeCachedProfile {
     pub generation: u64,
+    /// B-12 (09.T9.5): the S2 `GraphMeta.graph_revision` this profile was
+    /// projected against, relayed verbatim from the projection context. A
+    /// governed Bimba write bumps it (`graph-services/src/meta.rs`
+    /// `bump_graph_revision`); carrying it on the profile is what lets the
+    /// M1/M2/M3 renderings see that an edit crossed on the next tick. `None`
+    /// when the upstream context does not stamp a revision.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub graph_revision: Option<u64>,
     pub cached_at_ms: u128,
     pub stale: bool,
     pub staleness_ms: u128,
@@ -92,6 +99,9 @@ pub struct KernelBridgeCachedProfile {
 #[serde(rename_all = "camelCase")]
 pub struct KernelBridgeProfileJsonShape {
     pub generation: u64,
+    /// B-12: relayed `GraphMeta.graph_revision` (`graphRevision` on the wire).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub graph_revision: Option<u64>,
     pub cached_at_ms: u128,
     pub stale: bool,
     pub staleness_ms: u128,
@@ -103,6 +113,7 @@ impl From<&KernelBridgeCachedProfile> for KernelBridgeProfileJsonShape {
     fn from(profile: &KernelBridgeCachedProfile) -> Self {
         Self {
             generation: profile.generation,
+            graph_revision: profile.graph_revision,
             cached_at_ms: profile.cached_at_ms,
             stale: profile.stale,
             staleness_ms: profile.staleness_ms,
@@ -558,9 +569,9 @@ impl KernelBridgeRuntime {
             KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION => {
                 typed_json_m3_bioquaternion_transcription(codon_param(&request.params, "codon")?)
             }
-            KERNEL_BRIDGE_M3_LENS_CODON_BINARY => typed_json_m3_lens_codon_binary(
-                lens_id_param(&request.params, "lensId")?,
-            )?,
+            KERNEL_BRIDGE_M3_LENS_CODON_BINARY => {
+                typed_json_m3_lens_codon_binary(lens_id_param(&request.params, "lensId")?)?
+            }
             _ => {
                 json!({
                     "capability": request.method,
@@ -1006,10 +1017,7 @@ pub fn typed_json_m3_lens_codon_binary(lens_id: u8) -> Result<Value, String> {
             if canonical > 5 {
                 return Err(format!("invalid M3 decan element {raw}"));
             }
-            degree.insert(
-                "elementCanonical".to_owned(),
-                Value::from(canonical),
-            );
+            degree.insert("elementCanonical".to_owned(), Value::from(canonical));
         }
         object.insert(
             "contract".to_owned(),
@@ -1388,10 +1396,14 @@ fn safe_cached_profile_from_context(
     let Some(generation) = kernel.get("generation").and_then(Value::as_u64) else {
         return Ok(None);
     };
+    // B-12: relay the S2 graph revision the projection was taken against, when
+    // the upstream context stamps it. Read verbatim, exactly like `generation`.
+    let graph_revision = kernel.get("graphRevision").and_then(Value::as_u64);
     let cached_at_ms = now_ms()?;
     let stale = state == SpacetimeProjectionConnectionState::StaleProfile;
     Ok(Some(KernelBridgeCachedProfile {
         generation,
+        graph_revision,
         cached_at_ms,
         stale,
         staleness_ms: 0,

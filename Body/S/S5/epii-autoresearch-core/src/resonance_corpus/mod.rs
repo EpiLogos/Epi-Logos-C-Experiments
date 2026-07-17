@@ -16,7 +16,7 @@ use serde_json::Value;
 pub const RESONANCE_VECTOR_DIMENSIONS: usize = 72;
 pub const EBM_CHECKPOINT_SCHEMA_VERSION: u16 = 1;
 pub const EBM_ARCHITECTURE: &str =
-    "parallel-channel-encoders/cross-channel-attention/tritone-three-sub-head/sigmoid-72";
+    "candle/parallel-channel-encoders/cross-channel-attention/tritone-three-sub-head/sigmoid-72";
 pub const DEFAULT_VARIANT_ID: &str = "pi-resonance-corpus-gated-fusion";
 
 const STORE_FILE: &str = "resonance-corpus-store.json";
@@ -404,20 +404,45 @@ impl ResonanceCorpusStore {
             )
         })?;
 
-        let checkpoint_id = state
-            .latest_checkpoint_id
-            .clone()
-            .unwrap_or_else(|| checkpoint_id("bootstrap", &snapshot.corpus_snapshot_id));
         let checkpoint_path = destination.join(CHECKPOINT_FILE);
         let metadata_path = destination.join(EXPORT_METADATA_FILE);
         let corpus_snapshot_path = destination.join(CORPUS_SNAPSHOT_FILE);
+
+        if let Some(checkpoint_id) = state.latest_checkpoint_id.clone() {
+            let source_dir = self.root.join("checkpoints").join(&checkpoint_id);
+            let checkpoint: RuntimeCheckpoint =
+                read_json(source_dir.join(CHECKPOINT_FILE), "trained checkpoint")?;
+            let trained_snapshot: CorpusSnapshot = read_json(
+                source_dir.join(CORPUS_SNAPSHOT_FILE),
+                "trained corpus snapshot",
+            )?;
+            let mut metadata: Value = read_json(
+                source_dir.join(EXPORT_METADATA_FILE),
+                "trained checkpoint metadata",
+            )?;
+            let expected_uri = corpus_snapshot_uri(&trained_snapshot.corpus_snapshot_id);
+            if checkpoint.corpus_snapshot_uri != expected_uri {
+                return Err(
+                    "trained checkpoint does not match its paired corpus snapshot".to_owned(),
+                );
+            }
+            metadata["checkpointPath"] = Value::String(checkpoint_path.display().to_string());
+            write_json(&checkpoint_path, &checkpoint)?;
+            write_json(&corpus_snapshot_path, &trained_snapshot)?;
+            write_json(&metadata_path, &metadata)?;
+            return Ok(ExportedEbmState {
+                checkpoint_id,
+                corpus_snapshot_id: trained_snapshot.corpus_snapshot_id,
+                checkpoint_path,
+                metadata_path,
+                corpus_snapshot_path,
+            });
+        }
+
+        let checkpoint_id = checkpoint_id("bootstrap", &snapshot.corpus_snapshot_id);
         write_json(&corpus_snapshot_path, &snapshot)?;
 
-        let training_state = if state.latest_checkpoint_id.is_some() {
-            TrainingState::Trained
-        } else {
-            TrainingState::BootstrapUntrained
-        };
+        let training_state = TrainingState::BootstrapUntrained;
         let checkpoint = build_checkpoint(&config, &snapshot, training_state, None)?;
         write_json(&checkpoint_path, &checkpoint)?;
         write_json(
@@ -888,6 +913,24 @@ fn write_json(path: impl AsRef<Path>, value: &impl Serialize) -> Result<(), Stri
         .map_err(|err| format!("failed to write {}: {err}", path.as_ref().display()))
 }
 
+fn read_json<T: for<'de> Deserialize<'de>>(
+    path: impl AsRef<Path>,
+    artifact: &str,
+) -> Result<T, String> {
+    let file = File::open(path.as_ref()).map_err(|err| {
+        format!(
+            "failed to open {artifact} {}: {err}",
+            path.as_ref().display()
+        )
+    })?;
+    serde_json::from_reader(file).map_err(|err| {
+        format!(
+            "failed to parse {artifact} {}: {err}",
+            path.as_ref().display()
+        )
+    })
+}
+
 fn now_ms() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1044,5 +1087,71 @@ mod tests {
             ResonanceEbmConfig::from_checkpoint(&exported.checkpoint_path).expect("config load");
         ResonanceEbmRuntime::load(config, CheckpointLoadPolicy::RequireCheckpoint)
             .expect("runtime load");
+    }
+
+    #[test]
+    fn trained_export_preserves_exact_checkpoint_and_paired_snapshot() {
+        let temp = tempfile::tempdir().expect("tempdir");
+        let store = ResonanceCorpusStore::new(temp.path().join("corpus"));
+        for seed in [1.0, 5.0] {
+            store
+                .record_training_pair(TrainingPairInput {
+                    document_id: format!("doc-{seed}"),
+                    document_path: format!("corpus/doc-{seed}.md"),
+                    bimba_coordinate: format!("#2-1-{}", seed as usize),
+                    content_hash: format!("hash-{seed}"),
+                    resonance_vector: vector(seed),
+                    profile_snapshot: serde_json::json!({"tick": seed}),
+                })
+                .expect("record training pair");
+        }
+        let trained = store
+            .train_ebm(TrainEbmRequest {
+                dry_run: false,
+                config: EbmTrainingConfig::default(),
+            })
+            .expect("train checkpoint");
+        let trained_path = trained.checkpoint_path.expect("trained path");
+        let trained_checkpoint: Value =
+            read_json(&trained_path, "trained checkpoint").expect("read trained checkpoint");
+        let trained_snapshot_path = trained_path
+            .parent()
+            .expect("checkpoint dir")
+            .join(CORPUS_SNAPSHOT_FILE);
+        let trained_snapshot: Value =
+            read_json(&trained_snapshot_path, "trained snapshot").expect("read trained snapshot");
+
+        store
+            .record_training_pair(TrainingPairInput {
+                document_id: "doc-after-training".to_owned(),
+                document_path: "corpus/doc-after-training.md".to_owned(),
+                bimba_coordinate: "#2-1-3".to_owned(),
+                content_hash: "hash-after-training".to_owned(),
+                resonance_vector: vector(3.0),
+                profile_snapshot: serde_json::json!({"tick": 3}),
+            })
+            .expect("mutate corpus after training");
+
+        let export_dir = temp.path().join("export");
+        let exported = store
+            .export_ebm_state(&export_dir, EbmTrainingConfig::default())
+            .expect("export trained state");
+        let exported_checkpoint: Value =
+            read_json(&exported.checkpoint_path, "exported checkpoint")
+                .expect("read exported checkpoint");
+        let exported_snapshot: Value =
+            read_json(&exported.corpus_snapshot_path, "exported snapshot")
+                .expect("read exported snapshot");
+        let exported_metadata: Value = read_json(&exported.metadata_path, "exported metadata")
+            .expect("read exported metadata");
+
+        assert_eq!(exported_checkpoint, trained_checkpoint);
+        assert_eq!(exported_snapshot, trained_snapshot);
+        assert_eq!(exported.corpus_snapshot_id, trained.corpus_snapshot_id);
+        assert_eq!(exported_metadata["trainingState"], "trained");
+        assert_eq!(
+            exported_metadata["checkpointPath"],
+            exported.checkpoint_path.display().to_string()
+        );
     }
 }

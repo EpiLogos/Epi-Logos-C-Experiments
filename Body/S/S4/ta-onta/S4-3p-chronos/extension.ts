@@ -21,6 +21,10 @@ import {
   responseOrbitFromFrontmatter,
   type ChronosOrbitInput,
 } from "./modules/temporal-control-plane.ts";
+import {
+  parseParentSliceCompletion,
+  routeParentSliceCompletion,
+} from "./modules/parent-slice-bifurcation.ts";
 
 export {
   buildChronosCronFireVakAddress,
@@ -393,6 +397,22 @@ export async function chronosExtension(api: ExtensionAPI) {
         response_token: typeof payload.response_token === "string" ? payload.response_token : undefined,
         since: typeof payload.detected_at === "string" ? payload.detected_at : undefined,
       });
+    },
+  );
+
+  // 12.T12.31: Chronos owns c=1/c=0 temporal bifurcation after a child that
+  // inherited a parent DAY/NOW slice. The handler has no alternate dispatch
+  // path: c=0 returns through Anima, c=1 uses the existing session continuation.
+  (api.on as unknown as (event: string, handler: (payload: Record<string, unknown>) => Promise<void>) => void)(
+    "agent:team:dispatch:complete",
+    async (payload) => {
+      const completion = parseParentSliceCompletion(payload);
+      if (!completion) return;
+      try {
+        await routeParentSliceCompletion(completion);
+      } catch (error) {
+        console.warn(`[chronos] parent-slice bifurcation failed: ${error}`);
+      }
     },
   );
 

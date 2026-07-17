@@ -492,8 +492,7 @@ mod tests {
     /// fails here first.
     #[test]
     fn equivalence_class_closure() {
-        const KERNEL_SOURCE: &str =
-            include_str!("../../../S0/epi-lib/src/anuttara_language.c");
+        const KERNEL_SOURCE: &str = include_str!("../../../S0/epi-lib/src/anuttara_language.c");
 
         // Parse the kernel chain anchors out of the M0_IDENTITY_CHAINS
         // initializer: `.coordinate = "M0-2-9-N"`.
@@ -548,9 +547,7 @@ mod tests {
         for chain in &chains {
             for (a, b) in chain.same_as_pairs() {
                 assert!(
-                    closure
-                        .iter()
-                        .any(|set| set.contains(a) && set.contains(b)),
+                    closure.iter().any(|set| set.contains(a) && set.contains(b)),
                     "seeded pair ({a}, {b}) must land inside one closure set"
                 );
             }
@@ -558,7 +555,14 @@ mod tests {
 
         // And the chain-membership property rides every chain.
         let membership = in_identity_chain_cypher(&chains);
-        assert_eq!(membership.iter().filter(|c| c.contains("inIdentityChainWith")).count() > 0, true);
+        assert_eq!(
+            membership
+                .iter()
+                .filter(|c| c.contains("inIdentityChainWith"))
+                .count()
+                > 0,
+            true
+        );
     }
 
     #[test]

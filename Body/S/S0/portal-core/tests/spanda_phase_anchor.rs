@@ -3,9 +3,9 @@
 //! at the band-cited STEP rate; same anchor + same instant ⇒ identical derived
 //! profile content (determinism pinned); the two involutions are named acts.
 
+use portal_core::kernel::KernelTemporalProjection;
 use portal_core::spanda;
 use portal_core::spanda_anchor::{SpandaDirection, SpandaPhaseAnchor, SpandaTransportMode};
-use portal_core::kernel::KernelTemporalProjection;
 
 const RATE_HZ: f64 = 2.5; // inside the cited conserved-delta band
 const STEP_MS: u64 = 400; // one epogdoon-step at 2.5 steps/sec
@@ -32,7 +32,10 @@ fn held_anchor_reads_constant_at_any_instant() {
     let held_tick = anchor.tick12_at(3 * STEP_MS + STEP_MS / 2);
     assert_eq!(held_tick, 3);
     for later in [1_000u64, 60_000, 3_600_000, 86_400_000] {
-        assert_eq!(anchor.tick12_at(3 * STEP_MS + STEP_MS / 2 + later), held_tick);
+        assert_eq!(
+            anchor.tick12_at(3 * STEP_MS + STEP_MS / 2 + later),
+            held_tick
+        );
     }
     assert_eq!(anchor.mode, SpandaTransportMode::Held);
 }
@@ -69,7 +72,10 @@ fn generations_advance_while_held_with_identical_phase_content() {
     let g6 = KernelTemporalProjection::from_phase_anchor(&anchor, 11_000, 6);
     assert_eq!(g5.harmonic_profile.tick12, g6.harmonic_profile.tick12);
     assert_eq!(g5.harmonic_profile.degree720, g6.harmonic_profile.degree720);
-    assert_ne!(g5.generation, g6.generation, "the portal's emission counter keeps counting");
+    assert_ne!(
+        g5.generation, g6.generation,
+        "the portal's emission counter keeps counting"
+    );
 }
 
 #[test]
@@ -78,7 +84,11 @@ fn walk_to_tick_lands_mid_step_and_parks_held() {
     anchor.walk_to_tick(2 * STEP_MS, 9);
     assert_eq!(anchor.mode, SpandaTransportMode::Held);
     assert_eq!(anchor.tick12_at(2 * STEP_MS), 9);
-    assert_eq!(anchor.tick12_at(2 * STEP_MS + 500_000), 9, "walked phase holds");
+    assert_eq!(
+        anchor.tick12_at(2 * STEP_MS + 500_000),
+        9,
+        "walked phase holds"
+    );
 }
 
 #[test]
@@ -124,7 +134,11 @@ fn reflected_flow_descends_the_ring() {
     anchor.release(0);
     anchor.set_direction(0, SpandaDirection::Reflected);
     assert_eq!(anchor.tick12_at(0), 6);
-    assert_eq!(anchor.tick12_at(STEP_MS), 5, "reflected traversal reads backwards");
+    assert_eq!(
+        anchor.tick12_at(STEP_MS),
+        5,
+        "reflected traversal reads backwards"
+    );
     assert_eq!(anchor.tick12_at(2 * STEP_MS), 4);
 }
 

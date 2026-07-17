@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::profile_projections::{
     ElementalWeightProjection, LensOrbiterRelationProjection, MahamayaLensStack,
-    PendingPlanetDatasetBadge, PlanetApertureAspectEdge, PlanetPlanetAspectEdge,
+    PlanetApertureAspectEdge, PlanetPlanetAspectEdge,
 };
 use crate::types::{PlanetaryAspect, PortalClockState};
 
@@ -12,9 +12,6 @@ pub const ASPECT_ANGLES: [(u16, u8); 5] = [(0, 10), (60, 6), (90, 8), (120, 8), 
 
 /// Human-readable label for each aspect index, ordered to match `ASPECT_ANGLES`.
 pub const ASPECT_LABELS: [&str; 5] = ["conjunction", "sextile", "square", "trine", "opposition"];
-
-/// Track 23.10 readiness marker for the outer-planet data substrate.
-pub const OUTER_PLANET_PENDING_DATASET_BADGE: &str = "pending-dataset:23.10";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Planetary elemental-weight feed (23.19)
@@ -281,15 +278,12 @@ pub fn lens_orbiter_relations(
         .map(planet_planet_edge)
         .collect::<Vec<_>>();
 
-    let planet_aperture_edges = planet_aperture_edges(state, lens_stack);
-    let pending_dataset_badges = outer_planet_pending_dataset_badges(state);
-
     LensOrbiterRelationProjection {
         relation_handle: format!("m2m3://lens-orbiter/{}", lens_stack.stack_id),
         source: "portal-core::aspect::lens_orbiter_relations".to_owned(),
         planet_planet_edges,
-        planet_aperture_edges,
-        pending_dataset_badges,
+        planet_aperture_edges: planet_aperture_edges(state, lens_stack),
+        pending_dataset_badges: Vec::new(),
     }
 }
 
@@ -346,16 +340,6 @@ fn aperture_boundary_degree(lens_id: u8, aperture_count: u8) -> u16 {
 fn angular_difference(a: u16, b: u16) -> u16 {
     let diff = ((a % 360) as i32 - (b % 360) as i32).unsigned_abs() as u16;
     diff.min(360 - diff)
-}
-
-fn outer_planet_pending_dataset_badges(state: &PortalClockState) -> Vec<PendingPlanetDatasetBadge> {
-    (7u8..=9)
-        .filter(|planet| state.kairos.planets[*planet as usize].degree != 0xFFFF)
-        .map(|planet| PendingPlanetDatasetBadge {
-            planet,
-            badge: OUTER_PLANET_PENDING_DATASET_BADGE.to_owned(),
-        })
-        .collect()
 }
 
 #[cfg(test)]
@@ -452,21 +436,13 @@ mod lens_orbiter_relation_tests {
     }
 
     #[test]
-    fn outer_planets_carry_track_23_10_pending_dataset_badges() {
+    fn outer_planets_are_canonical_ambient_condition_edges_not_pending_datasets() {
         let projection = lens_orbiter_relations(&fixed_state(), &lens_stack());
-        let badges = projection
-            .pending_dataset_badges
-            .iter()
-            .map(|badge| (badge.planet, badge.badge.as_str()))
-            .collect::<Vec<_>>();
 
         assert_eq!(
-            badges,
-            vec![
-                (7, "pending-dataset:23.10"),
-                (8, "pending-dataset:23.10"),
-                (9, "pending-dataset:23.10"),
-            ]
+            projection.pending_dataset_badges,
+            Vec::new(),
+            "DR-ENV-2 retires the 23.10 pending-dataset badge: Uranus/Neptune/Pluto are canonical ambient-condition edges"
         );
     }
 }

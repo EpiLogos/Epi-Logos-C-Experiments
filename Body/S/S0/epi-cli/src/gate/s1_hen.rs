@@ -29,25 +29,41 @@
 //! - Direct-FS-write audit (Track 10 integration concern)
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
+use epi_s1_hen_compiler_core::base_view::{
+    ensure_base_view, BaseEnsureParams, BaseScope, BaseSortSpec, BaseViewSpec,
+};
 use epi_s1_hen_compiler_core::wikilinks::{
     coordinate_residency_refusal, parse_wikilinks, reconcile_rename, wikilink_title_from_path,
     RenameRefusal, RenameRefusalReason,
 };
 use epi_s1_hen_compiler_core::{
     classify_c_layer, entity_list_entry, plan_entity_capture, plan_entity_classify,
-    plan_entity_promote_to_type, plan_world_graduate, suggest_link_candidates, EntityListEntry,
-    LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
+    plan_entity_promote_to_type, plan_q_articulation_amendment, plan_world_graduate,
+    suggest_link_candidates, validate_frontmatter_contract, EntityListEntry, LinkCandidate,
+    LinkCandidateKind, LinkCandidateRequest, QArticulationAmendmentRequest,
 };
 use epi_s3_gateway_contract::{
-    classify_vault_path_privacy, S1CFirstTypologyReceipt, S1EntityCaptureReceipt,
-    S1EntityClassifyReceipt, S1EntityListEntry, S1EntityListReceipt, S1EntityPromoteToTypeReceipt,
-    S1SemanticCandidate, S1SemanticCandidateKind, S1SemanticResponse, S1SemanticStaleness,
-    S1VaultPathPrivacyClass, S1VaultRenameReceipt, S1VaultRenameRefusal,
+    classify_vault_path_privacy, S1BaseEnsureRequest, S1BaseScope, S1CFirstTypologyReceipt,
+    S1EntityCaptureReceipt, S1EntityClassifyReceipt, S1EntityListEntry, S1EntityListReceipt,
+    S1EntityPromoteToTypeReceipt, S1SemanticCandidate, S1SemanticCandidateKind, S1SemanticResponse,
+    S1SemanticStaleness, S1VaultPathPrivacyClass, S1VaultRenameReceipt, S1VaultRenameRefusal,
     S1VaultRenameRefusalReason, S1WorldGraduateReceipt,
 };
 use serde_json::{json, Value};
+
+#[derive(Debug, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct QArticulationAcceptParams {
+    coordinate: String,
+    q_key: String,
+    q_value_candidate: String,
+    expected_graph_revision: u64,
+    accepted_review_ref: String,
+    opens_questions: Vec<String>,
+    source_artifacts: Vec<String>,
+}
 
 /// Resolve the vault root from request params, falling back to the
 /// `EPILOGOS_VAULT` env var. Returns `Err` when neither is set so the
@@ -130,6 +146,278 @@ pub fn write_file(params: &Value) -> Result<Value, String> {
             S1VaultPathPrivacyClass::Public => "public",
         },
     }))
+}
+
+/// `s1'.base.ensure` — derive a reflection base from validated canonical CT
+/// forms and emit it through Hen's idempotent base-view writer.
+pub fn base_ensure(params: &Value) -> Result<Value, String> {
+    let request: S1BaseEnsureRequest =
+        serde_json::from_value(params.clone()).map_err(|error| error.to_string())?;
+    let vault_root = resolve_vault_root(params)?;
+    let residency = validated_residency_relative(&request.residency)?;
+    let contracts = match request.ct_type.as_deref() {
+        Some(ct_type) => discover_frontmatter_contracts(&vault_root, ct_type)?,
+        None => Vec::new(),
+    };
+    let views = request.views.map(|views| {
+        views
+            .into_iter()
+            .map(|view| BaseViewSpec {
+                view_type: view.view_type,
+                name: view.name,
+                filters: view.filters,
+                group_by: view.group_by,
+                order: view.order,
+                sort: view
+                    .sort
+                    .into_iter()
+                    .map(|sort| BaseSortSpec {
+                        property: sort.property,
+                        direction: sort.direction,
+                    })
+                    .collect(),
+                image: view.image,
+            })
+            .collect()
+    });
+    let result = ensure_base_view(&BaseEnsureParams {
+        coordinate: request.coordinate,
+        ct_type: request.ct_type,
+        scope: match request.scope {
+            S1BaseScope::Ctx => BaseScope::Ctx,
+            S1BaseScope::Zone => BaseScope::Zone,
+            S1BaseScope::Moc => BaseScope::Moc,
+        },
+        residency: vault_root.join(&residency),
+        views,
+        contracts,
+    })?;
+    let receipt_path = result
+        .path
+        .strip_prefix(&vault_root)
+        .unwrap_or(&result.path)
+        .to_string_lossy()
+        .to_string();
+    Ok(json!({
+        "path": receipt_path,
+        "derivedColumns": result.derived_columns,
+        "ok": result.ok,
+        "existed": result.existed,
+        "changed": result.changed,
+    }))
+}
+
+fn validated_residency_relative(residency: &str) -> Result<PathBuf, String> {
+    let path = Path::new(residency);
+    if path.as_os_str().is_empty()
+        || path.is_absolute()
+        || path
+            .components()
+            .any(|component| !matches!(component, Component::Normal(_)))
+    {
+        return Err(format!(
+            "base-view residency `{residency}` must be a relative path without parent traversal"
+        ));
+    }
+    Ok(path.to_path_buf())
+}
+
+fn discover_frontmatter_contracts(
+    vault_root: &Path,
+    ct_type: &str,
+) -> Result<Vec<epi_s1_hen_compiler_core::ValidatedFrontmatterContract>, String> {
+    let world_root = vault_root.join("Idea/Bimba/World");
+    let mut paths = Vec::new();
+    collect_markdown_paths(&world_root, &mut paths)?;
+    paths.sort();
+
+    let mut canonical = Vec::new();
+    let mut legacy = Vec::new();
+    for path in paths {
+        let source = fs::read_to_string(&path)
+            .map_err(|error| format!("read canonical form `{}` failed: {error}", path.display()))?;
+        let Some(frontmatter) = markdown_frontmatter(&source)? else {
+            continue;
+        };
+        let Some(map) = frontmatter.as_mapping() else {
+            continue;
+        };
+        let canonical_match = map
+            .get(serde_yaml::Value::String("c_1_ct_type".to_owned()))
+            .and_then(serde_yaml::Value::as_str)
+            == Some(ct_type);
+        let legacy_match = map
+            .get(serde_yaml::Value::String("ctx_type".to_owned()))
+            .and_then(serde_yaml::Value::as_str)
+            == Some(ct_type);
+        if !canonical_match && !legacy_match {
+            continue;
+        }
+        let contract = validate_frontmatter_contract(&frontmatter).map_err(|validation| {
+            format!(
+                "canonical frontmatter contract `{}` is invalid: {}",
+                path.display(),
+                validation.errors.join("; ")
+            )
+        })?;
+        if canonical_match {
+            canonical.push(contract);
+        } else {
+            legacy.push(contract);
+        }
+    }
+    let contracts = if canonical.is_empty() {
+        legacy
+    } else {
+        canonical
+    };
+    if contracts.is_empty() {
+        return Err(format!(
+            "no validated canonical frontmatter forms found for CTx type: {ct_type}"
+        ));
+    }
+    Ok(contracts)
+}
+
+fn collect_markdown_paths(root: &Path, paths: &mut Vec<PathBuf>) -> Result<(), String> {
+    let entries = fs::read_dir(root)
+        .map_err(|error| format!("read canonical forms `{}` failed: {error}", root.display()))?;
+    for entry in entries {
+        let entry = entry.map_err(|error| format!("read canonical form entry failed: {error}"))?;
+        let path = entry.path();
+        if path.is_dir() {
+            collect_markdown_paths(&path, paths)?;
+        } else if path.extension().and_then(|extension| extension.to_str()) == Some("md") {
+            paths.push(path);
+        }
+    }
+    Ok(())
+}
+
+fn markdown_frontmatter(source: &str) -> Result<Option<serde_yaml::Value>, String> {
+    let Some(rest) = source.strip_prefix("---\n") else {
+        return Ok(None);
+    };
+    let Some((yaml, _body)) = rest.split_once("\n---") else {
+        return Err("canonical form has an unterminated YAML frontmatter block".to_owned());
+    };
+    serde_yaml::from_str(yaml)
+        .map(Some)
+        .map_err(|error| format!("canonical form YAML failed to parse: {error}"))
+}
+
+/// `s1'.q_articulation.accept` — persist an accepted Sophia proposal only
+/// after S2 has read and diagnosed the reviewed canonical Bimba target.
+pub async fn q_articulation_accept(
+    state_root: impl AsRef<Path>,
+    params: &Value,
+) -> Result<Value, String> {
+    let request: QArticulationAcceptParams =
+        serde_json::from_value(params.clone()).map_err(|error| error.to_string())?;
+    crate::gate::review::require_human_approval(state_root, &request.accepted_review_ref)?;
+    let vault_root = resolve_vault_root(params)?;
+    let client = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    )
+    .map_err(|error| format!("Q articulation graph connection failed: {error}"))?;
+    let verification = epi_s2_graph_services::verify_bimba_q_articulation(
+        &client,
+        &request.coordinate,
+        &request.q_key,
+        request.expected_graph_revision,
+    )
+    .await?;
+    let relative_path = canonical_bimba_relative_path(&verification.vault_path)?;
+    let absolute_path = vault_root.join(&relative_path);
+    let source = fs::read_to_string(&absolute_path).map_err(|error| {
+        format!(
+            "Q articulation canonical note `{}` could not be read: {error}",
+            relative_path.display()
+        )
+    })?;
+    let review_epoch = verification
+        .graph_revision
+        .checked_add(1)
+        .ok_or_else(|| "Q articulation review epoch overflow".to_owned())?;
+    let plan = plan_q_articulation_amendment(
+        &source,
+        QArticulationAmendmentRequest {
+            q_key: request.q_key,
+            q_value: request.q_value_candidate,
+            review_epoch,
+            accepted_review_ref: request.accepted_review_ref,
+            opens_questions: request.opens_questions,
+            source_artifacts: request.source_artifacts,
+        },
+    )?;
+    atomic_replace(&absolute_path, plan.markdown.as_bytes())?;
+    let frontmatter = epi_s2_graph_services::parse_yaml_frontmatter(&plan.markdown)
+        .ok_or_else(|| "Hen Q amendment produced no YAML frontmatter".to_owned())?;
+    epi_s2_graph_services::SyncCoordinator::new(&client)
+        .sync_from_vault(&verification.vault_path, &frontmatter, &plan.markdown)
+        .await?;
+    let actual_revision = u64::try_from(
+        epi_s2_graph_services::read_graph_meta(&client)
+            .await?
+            .ok_or_else(|| "Q articulation sync removed graph metadata".to_owned())?
+            .graph_revision,
+    )
+    .map_err(|_| "Q articulation sync returned a negative graph revision".to_owned())?;
+    if actual_revision != review_epoch {
+        return Err(format!(
+            "Q articulation sync revision changed concurrently: stamped {review_epoch}, graph is now {actual_revision}; review must be re-run"
+        ));
+    }
+    Ok(json!({
+        "coordinate": verification.coordinate,
+        "q_key": plan.q_key,
+        "review_epoch_key": plan.review_epoch_key,
+        "review_epoch": review_epoch,
+        "accepted_review_ref": plan.accepted_review_ref,
+        "source_artifacts": plan.source_artifacts,
+        "anuttara_diagnostic": verification.anuttara_diagnostic,
+        "graph_revision": actual_revision,
+        "canonical_path": relative_path,
+    }))
+}
+
+fn canonical_bimba_relative_path(path: &str) -> Result<PathBuf, String> {
+    let candidate = Path::new(path);
+    if candidate
+        .extension()
+        .and_then(|extension| extension.to_str())
+        != Some("md")
+    {
+        return Err("Q articulation canonical target must be a Markdown note".to_owned());
+    }
+    let components = candidate.components().collect::<Vec<_>>();
+    if components.len() < 3
+        || !matches!(components.first(), Some(Component::Normal(root)) if *root == "Idea")
+        || !matches!(components.get(1), Some(Component::Normal(root)) if *root == "Bimba")
+        || components
+            .iter()
+            .any(|component| !matches!(component, Component::Normal(_)))
+    {
+        return Err(format!(
+            "Q articulation canonical target `{path}` must be a relative Idea/Bimba Markdown path"
+        ));
+    }
+    Ok(candidate.to_path_buf())
+}
+
+fn atomic_replace(path: &Path, content: &[u8]) -> Result<(), String> {
+    let parent = path
+        .parent()
+        .ok_or_else(|| "Q articulation canonical note has no parent directory".to_owned())?;
+    let file_name = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| "Q articulation canonical note has no UTF-8 filename".to_owned())?;
+    let temporary = parent.join(format!(".{file_name}.q-articulation.tmp"));
+    fs::write(&temporary, content)
+        .map_err(|error| format!("write temporary Q articulation note failed: {error}"))?;
+    fs::rename(&temporary, path)
+        .map_err(|error| format!("replace Q articulation canonical note failed: {error}"))
 }
 
 /// `s1'.vault.rename_file` / `s1'.vault.move_file` — atomic rename with

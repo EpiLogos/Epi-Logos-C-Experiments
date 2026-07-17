@@ -45,6 +45,7 @@ rpassword = "7"
 zeroize = { version = "1", features = ["zeroize_derive"] }
 static_assertions = "1"
 portal-core = { path = "../portal-core" }
+epi-lib = { path = "../epi-lib", features = ["m0_verifier"] }
 epi-kernel-contract = { path = "../../epi-kernel-contract" }
 epi-s2-graph-schema = { path = "../../S2/graph-schema" }
 epi-s2-graph-services = { path = "../../S2/graph-services" }
@@ -88,6 +89,9 @@ chrono = { version = "0.4", features = ["serde"] }
 
 [build-dependencies]
 cc = "1"
+
+[dev-dependencies]
+epi-s5-epii-autoresearch-core = { path = "../../S5/epii-autoresearch-core", features = ["resonance_ebm"] }
 
 [patch.crates-io]
 # quantette 0.5.1 currently declares rust-version = 1.90, but the epi-cli

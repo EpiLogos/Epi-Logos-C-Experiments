@@ -158,8 +158,9 @@ pub fn plan_frontmatter_properties(
         let target = match resolve_frontmatter_key(raw_key) {
             FrontmatterKeyResolution::Alias(alias) => alias.to_owned(),
             FrontmatterKeyResolution::Canonical(canonical) => canonical,
-            FrontmatterKeyResolution::RejectedPrivacy
-            | FrontmatterKeyResolution::NotCoordinate => continue,
+            FrontmatterKeyResolution::RejectedPrivacy | FrontmatterKeyResolution::NotCoordinate => {
+                continue
+            }
             FrontmatterKeyResolution::UnknownFamily(error) => return Err(error),
         };
         if let Some(value) = yaml_scalar_or_first_sequence_value(value) {

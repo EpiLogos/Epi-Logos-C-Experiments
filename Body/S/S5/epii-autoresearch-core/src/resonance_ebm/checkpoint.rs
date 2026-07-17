@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use super::model::{EbmWeights, ResonanceEbmConfig};
 
 pub const EBM_CHECKPOINT_SCHEMA_VERSION: u16 = 1;
+pub const EBM_CHECKPOINT_ARCHITECTURE: &str = crate::resonance_corpus::EBM_ARCHITECTURE;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CheckpointLoadPolicy {
@@ -44,7 +45,7 @@ impl EbmCheckpoint {
         Ok(Self {
             metadata: EbmCheckpointMetadata {
                 schema_version: EBM_CHECKPOINT_SCHEMA_VERSION,
-                architecture: "parallel-channel-encoders/cross-channel-attention/tritone-three-sub-head/sigmoid-72".to_owned(),
+                architecture: EBM_CHECKPOINT_ARCHITECTURE.to_owned(),
                 variant_id: config.variant_id.clone(),
                 channel_set: super::channels::CANONICAL_CHANNEL_SET
                     .iter()
@@ -101,8 +102,24 @@ impl EbmCheckpoint {
                 self.metadata.schema_version
             ));
         }
+        if self.metadata.architecture != EBM_CHECKPOINT_ARCHITECTURE {
+            return Err(format!(
+                "unsupported EBM checkpoint architecture {}",
+                self.metadata.architecture
+            ));
+        }
         if self.metadata.variant_id != self.config.variant_id {
             return Err("checkpoint metadata variant_id must match config variant_id".to_owned());
+        }
+        let expected_channels = super::channels::CANONICAL_CHANNEL_SET
+            .iter()
+            .map(|channel| (*channel).to_owned())
+            .collect::<Vec<_>>();
+        if self.metadata.channel_set != expected_channels {
+            return Err(
+                "checkpoint metadata channel_set must match the canonical ordered channel set"
+                    .to_owned(),
+            );
         }
         if self.corpus_snapshot_uri.trim().is_empty() {
             return Err("corpus_snapshot_uri is required".to_owned());

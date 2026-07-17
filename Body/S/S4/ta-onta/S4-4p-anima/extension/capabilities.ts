@@ -54,6 +54,27 @@ export function suggestedSkillsForVak(vakAddress: unknown): string[] | undefined
   return findSkillsForVak(matrix, vakAddress as VakAddress).map((s) => s.name);
 }
 
+export function constitutionalTeamForCf(cf: string): string[] | undefined {
+  const matrix = loadCapabilityMatrix() as (CapabilityMatrix & Record<string, unknown>) | null;
+  const gates = matrix?.cf_team_composition_gates;
+  const registers = matrix?.constitutional_ct_mapping;
+  if (!isRecord(gates) || !isRecord(registers)) return undefined;
+
+  for (const gate of Object.values(gates)) {
+    if (!isRecord(gate) || gate.positions !== cf || !Array.isArray(gate.team)) continue;
+    const team = gate.team.filter((member): member is string => typeof member === "string");
+    if (team.length !== gate.team.length || !team.every((member) => isRecord(registers[member]))) {
+      return undefined;
+    }
+    return team;
+  }
+  return undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 export const validCfCodes = [
   "(0/1)",
   "(0/1/2)",

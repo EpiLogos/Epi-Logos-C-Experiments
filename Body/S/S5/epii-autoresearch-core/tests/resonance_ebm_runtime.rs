@@ -65,6 +65,51 @@ fn checkpoint_roundtrip_reuses_snapshot_deterministically() {
 }
 
 #[test]
+fn checkpoint_rejects_incompatible_architecture_and_channel_metadata() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let checkpoint_path = temp.path().join("incompatible-checkpoint.json");
+    let config = ResonanceEbmConfig {
+        latent_dim: 6,
+        channel_encoder_width: 4,
+        attention_width: 3,
+        mirror_tolerance: 0.0001,
+        energy_weight: 5.0,
+        checkpoint_path: Some(checkpoint_path.clone()),
+        variant_id: "metadata-validation".to_owned(),
+    };
+    let mut checkpoint = EbmCheckpoint::seeded_for_config(
+        config,
+        "corpus://snapshot/metadata-validation".to_owned(),
+    )
+    .expect("seeded checkpoint");
+
+    checkpoint.metadata.architecture = "legacy/pseudo-tensor-runtime".to_owned();
+    assert!(checkpoint.persist(&checkpoint_path).is_err());
+
+    checkpoint = EbmCheckpoint::seeded_for_config(
+        checkpoint.config.clone(),
+        checkpoint.corpus_snapshot_uri.clone(),
+    )
+    .expect("replacement checkpoint");
+    checkpoint
+        .persist(&checkpoint_path)
+        .expect("persist valid checkpoint");
+
+    let mut json: serde_json::Value =
+        serde_json::from_reader(std::fs::File::open(&checkpoint_path).expect("open checkpoint"))
+            .expect("parse checkpoint json");
+    json["metadata"]["channelSet"] = serde_json::json!(["lens_resonance_72"]);
+    serde_json::to_writer_pretty(
+        std::fs::File::create(&checkpoint_path).expect("rewrite checkpoint"),
+        &json,
+    )
+    .expect("write incompatible checkpoint");
+
+    let error = EbmCheckpoint::load(&checkpoint_path).expect_err("reject channel mismatch");
+    assert!(error.contains("canonical ordered channel set"), "{error}");
+}
+
+#[test]
 fn runtime_invocation_reads_full_harmonic_profile_and_returns_energy() {
     let temp = tempfile::tempdir().expect("tempdir");
     let checkpoint_path = temp.path().join("runtime-checkpoint.json");
@@ -102,6 +147,56 @@ fn runtime_invocation_reads_full_harmonic_profile_and_returns_energy() {
     assert!(output.energy_scalar >= 0.0);
     assert_eq!(output.channel_set.len(), 7);
     assert_eq!(output.checkpoint_variant_id, "runtime-gated-fusion");
+}
+
+#[test]
+fn candle_autograd_matches_an_independent_energy_derivative() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let checkpoint_path = temp.path().join("autograd-checkpoint.json");
+    let config = ResonanceEbmConfig {
+        latent_dim: 8,
+        channel_encoder_width: 5,
+        attention_width: 4,
+        mirror_tolerance: 0.0001,
+        energy_weight: 5.0,
+        checkpoint_path: Some(checkpoint_path.clone()),
+        variant_id: "autograd-gated-fusion".to_owned(),
+    };
+    EbmCheckpoint::seeded_for_config(config, "corpus://snapshot/autograd-fixture".to_owned())
+        .expect("checkpoint")
+        .persist(&checkpoint_path)
+        .expect("persist");
+    let runtime = ResonanceEbmRuntime::load(
+        ResonanceEbmConfig::from_checkpoint(&checkpoint_path).expect("config"),
+        CheckpointLoadPolicy::RequireCheckpoint,
+    )
+    .expect("runtime");
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(4, 7));
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.21, 0.68, -0.31, 0.19]);
+    let invocation = ElementTickInvocation::new(7, profile, state.clone()).expect("invocation");
+
+    let gradient = runtime.gradient(&invocation).expect("autograd");
+    assert_eq!(gradient.provenance, "resonance_ebm::candle_autograd_q_p");
+
+    let epsilon = 0.0005f32;
+    for idx in 0..4 {
+        let mut plus_state = state.clone();
+        plus_state.q_p[idx] += epsilon;
+        let plus = ElementTickInvocation::new(7, invocation.profile.clone(), plus_state)
+            .expect("plus invocation");
+        let mut minus_state = state.clone();
+        minus_state.q_p[idx] -= epsilon;
+        let minus = ElementTickInvocation::new(7, invocation.profile.clone(), minus_state)
+            .expect("minus invocation");
+        let numerical = (runtime.evaluate(&plus).expect("plus").energy_scalar
+            - runtime.evaluate(&minus).expect("minus").energy_scalar)
+            / (2.0 * epsilon);
+        assert!(
+            (gradient.d_energy_d_q_p[idx] - numerical).abs() < 0.002,
+            "component {idx}: autograd={} numerical={numerical}",
+            gradient.d_energy_d_q_p[idx],
+        );
+    }
 }
 
 #[test]

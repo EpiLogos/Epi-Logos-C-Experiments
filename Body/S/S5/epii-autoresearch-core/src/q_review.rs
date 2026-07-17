@@ -1,8 +1,22 @@
+//! Coordinate: S5 M5' (Epii Q-review curation)
+//! Residency: Body/S/S5/epii-autoresearch-core/src
+//! Position (#n): M5-4' self-referential autoresearch
+//! Actualises: detector-configured corpus reads and durable QReviewQueue JSONL
+//!   persistence for governed pair-development routing.
+//! Public surface: CorpusSnapshot, QDetectorConfig, QReviewStore, queue DTOs,
+//!   detector functions, and JSONL writer.
+//! Does NOT own: corpus mutation, review decisions, proposal composition, Hen
+//!   promotion, or gateway dispatch.
+//! Contract: [[S5-SPEC]] / [[S5-ARCHITECTURE]] / [[M5'-SPEC]]
+
 use std::collections::{BTreeMap, BTreeSet};
+use std::env;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+
+use epi_s2_graph_services::{read_bimba_curation_snapshot, Neo4jClient};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CorpusSnapshot {
@@ -46,7 +60,8 @@ pub struct ResonanceEdgeSnapshot {
     pub target_namespace: String,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct QDetectorConfig {
     pub articulation_gap_peer_ratio: f64,
     pub contradiction_vector_disagreement_threshold: f64,
@@ -55,20 +70,27 @@ pub struct QDetectorConfig {
     pub priority_order: Vec<QReviewReasonClass>,
 }
 
-impl Default for QDetectorConfig {
-    fn default() -> Self {
-        Self {
-            articulation_gap_peer_ratio: 0.75,
-            contradiction_vector_disagreement_threshold: 0.35,
-            resonance_promotion_confidence_threshold: 0.85,
-            stale_revision_threshold: 12,
-            priority_order: vec![
-                QReviewReasonClass::ArticulationGap,
-                QReviewReasonClass::PromotionCandidate,
-                QReviewReasonClass::ContradictionCandidate,
-                QReviewReasonClass::StaleByNonRevisit,
-            ],
-        }
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct AutoresearchConfigFile {
+    autoresearch: QDetectorConfig,
+}
+
+impl QDetectorConfig {
+    pub fn load_from_default_path() -> Result<Self, String> {
+        let home = env::var("HOME")
+            .map_err(|_| "HOME is required to locate ~/.epi-logos/config.toml".to_owned())?;
+        Self::load_from_path(Path::new(&home).join(".epi-logos/config.toml"))
+    }
+
+    pub fn load_from_path(path: impl AsRef<Path>) -> Result<Self, String> {
+        let path = path.as_ref();
+        let content = fs::read_to_string(path)
+            .map_err(|err| format!("failed to read {}: {err}", path.display()))?;
+        let config: AutoresearchConfigFile = toml::from_str(&content)
+            .map_err(|err| format!("failed to parse {}: {err}", path.display()))?;
+        validate_config(&config.autoresearch)?;
+        Ok(config.autoresearch)
     }
 }
 
@@ -127,6 +149,189 @@ pub struct QReviewQueue {
     pub graph_revision: u64,
     pub generated_by: String,
     pub entries: Vec<QReviewQueueEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+struct QReviewQueueMetadata {
+    day_id: String,
+    graph_revision: u64,
+    generated_by: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct QReviewStore {
+    root: PathBuf,
+}
+
+impl QReviewStore {
+    pub fn new(root: impl AsRef<Path>) -> Self {
+        Self {
+            root: root.as_ref().to_path_buf(),
+        }
+    }
+
+    pub fn run(
+        &self,
+        corpus_snapshot: CorpusSnapshot,
+        last_review_epoch: u64,
+        config: &QDetectorConfig,
+    ) -> Result<QReviewQueue, String> {
+        let queue = epii_self_referential_read(corpus_snapshot, last_review_epoch, config)?;
+        validate_day_id(&queue.day_id)?;
+        write_q_review_jsonl(&queue, self.queue_path(&queue.day_id))?;
+        self.write_metadata(&queue)?;
+        Ok(queue)
+    }
+
+    /// Build and curate the live S2 Bimba projection for a night pass.
+    ///
+    /// The caller supplies temporal context only. S2 remains the sole source
+    /// of graph facts, and S5 remains the sole owner of detector execution
+    /// and queue persistence.
+    pub async fn run_night_pass(
+        &self,
+        client: &Neo4jClient,
+        day_id: &str,
+        last_review_epoch: u64,
+        config: &QDetectorConfig,
+    ) -> Result<QReviewQueue, String> {
+        validate_day_id(day_id)?;
+        let snapshot = read_bimba_curation_snapshot(client).await?;
+        self.run(
+            CorpusSnapshot {
+                day_id: day_id.to_owned(),
+                graph_revision: snapshot.graph_revision,
+                nodes: snapshot
+                    .nodes
+                    .into_iter()
+                    .map(|node| BimbaNodeSnapshot {
+                        coordinate: node.coordinate,
+                        namespace: node.namespace,
+                        c_4_family: node.c_4_family,
+                        c_4_ql_position: node.c_4_ql_position,
+                        c_4_lens: node.c_4_lens,
+                        q_values: node.q_values,
+                        review_epochs: node.review_epochs,
+                        embedding_3072: node.embedding_3072,
+                    })
+                    .collect(),
+                canonical_relations: snapshot
+                    .canonical_relations
+                    .into_iter()
+                    .map(|relation| CanonicalRelationSnapshot {
+                        source_coordinate: relation.source_coordinate,
+                        target_coordinate: relation.target_coordinate,
+                        relation_family: relation.relation_family,
+                    })
+                    .collect(),
+                resonance_edges: snapshot
+                    .resonance_edges
+                    .into_iter()
+                    .map(|edge| ResonanceEdgeSnapshot {
+                        source_coordinate: edge.source_coordinate,
+                        target_coordinate: edge.target_coordinate,
+                        confidence: edge.confidence,
+                        has_canonical_bimba_relation: edge.has_canonical_bimba_relation,
+                        source_namespace: edge.source_namespace,
+                        target_namespace: edge.target_namespace,
+                    })
+                    .collect(),
+            },
+            last_review_epoch,
+            config,
+        )
+    }
+
+    pub fn latest(&self, day_id: &str, cf: Option<&str>) -> Result<Option<QReviewQueue>, String> {
+        validate_day_id(day_id)?;
+        let path = self.queue_path(day_id);
+        if !path.exists() {
+            return Ok(None);
+        }
+        let contents = fs::read_to_string(&path)
+            .map_err(|err| format!("failed to read QReviewQueue {}: {err}", path.display()))?;
+        let metadata_path = self.metadata_path(day_id);
+        let metadata: QReviewQueueMetadata =
+            serde_json::from_str(&fs::read_to_string(&metadata_path).map_err(|err| {
+                format!(
+                    "failed to read QReviewQueue metadata {}: {err}",
+                    metadata_path.display()
+                )
+            })?)
+            .map_err(|err| {
+                format!(
+                    "invalid QReviewQueue metadata {}: {err}",
+                    metadata_path.display()
+                )
+            })?;
+        if metadata.day_id != day_id {
+            return Err(format!(
+                "QReviewQueue metadata day_id {} does not match requested day_id {day_id}",
+                metadata.day_id
+            ));
+        }
+        let mut entries = Vec::new();
+        for (index, line) in contents
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .enumerate()
+        {
+            let entry = serde_json::from_str::<QReviewQueueEntry>(line).map_err(|err| {
+                format!(
+                    "invalid QReviewQueue JSONL {} line {}: {err}",
+                    path.display(),
+                    index + 1
+                )
+            })?;
+            if cf.is_none_or(|expected| entry.review_surface.vak_cf == expected) {
+                entries.push(entry);
+            }
+        }
+        Ok(Some(QReviewQueue {
+            day_id: metadata.day_id,
+            graph_revision: metadata.graph_revision,
+            generated_by: metadata.generated_by,
+            entries,
+        }))
+    }
+
+    fn write_metadata(&self, queue: &QReviewQueue) -> Result<(), String> {
+        let path = self.metadata_path(&queue.day_id);
+        let metadata = QReviewQueueMetadata {
+            day_id: queue.day_id.clone(),
+            graph_revision: queue.graph_revision,
+            generated_by: queue.generated_by.clone(),
+        };
+        let encoded = serde_json::to_vec(&metadata).map_err(|err| err.to_string())?;
+        fs::write(&path, encoded).map_err(|err| {
+            format!(
+                "failed to write QReviewQueue metadata {}: {err}",
+                path.display()
+            )
+        })
+    }
+
+    fn queue_path(&self, day_id: &str) -> PathBuf {
+        self.root
+            .join("queues")
+            .join(format!("q_review_{day_id}.jsonl"))
+    }
+
+    fn metadata_path(&self, day_id: &str) -> PathBuf {
+        self.root
+            .join("queues")
+            .join(format!("q_review_{day_id}.meta.json"))
+    }
+}
+
+fn validate_day_id(day_id: &str) -> Result<(), String> {
+    if day_id.trim().is_empty() {
+        return Err("day_id is required".to_owned());
+    }
+    if day_id.contains(['/', '\\']) {
+        return Err("day_id must not contain a path separator".to_owned());
+    }
+    Ok(())
 }
 
 impl QReviewQueue {
@@ -338,14 +543,15 @@ pub fn detect_stale_by_non_revisit(
     for node in &snapshot.nodes {
         let latest_epoch = node.review_epochs.values().copied().max().unwrap_or(0);
         if current_revision.saturating_sub(latest_epoch) > config.stale_revision_threshold {
+            let Some(q_key) = node.q_values.keys().find(|key| is_q_key(key)).cloned() else {
+                // A review-epoch key identifies the node, not an editable Q
+                // articulation. Missing articulations are owned by the gap
+                // detector; never send Q-metadata into pair composition.
+                continue;
+            };
             entries.push(QReviewQueueEntry {
                 target_coordinate: node.coordinate.clone(),
-                q_key: node
-                    .review_epochs
-                    .keys()
-                    .next()
-                    .cloned()
-                    .unwrap_or_else(|| "qm_0_i0_review_epoch".to_owned()),
+                q_key,
                 reason_class: QReviewReasonClass::StaleByNonRevisit,
                 evidence_refs: vec![QReviewEvidenceRef {
                     kind: "graph_revision_staleness".to_owned(),
@@ -435,7 +641,15 @@ fn validate_config(config: &QDetectorConfig) -> Result<(), String> {
 }
 
 fn is_q_key(key: &str) -> bool {
-    key.starts_with("q_") && key.contains("_i") && key.matches('_').count() >= 3
+    let Some(rest) = key.strip_prefix("q_") else {
+        return false;
+    };
+    let mut segments = rest.split('_');
+    let Some(position) = segments.next() else {
+        return false;
+    };
+    matches!(position.trim_end_matches('\'').as_bytes(), [b'0'..=b'5'])
+        && segments.any(|segment| !segment.is_empty())
 }
 
 fn priority_for(reason_class: QReviewReasonClass, config: &QDetectorConfig) -> u32 {

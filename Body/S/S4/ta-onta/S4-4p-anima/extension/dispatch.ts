@@ -21,9 +21,32 @@ import {
   evaluateVerifyGate,
   type VerifyEvidence,
 } from "../modules/judge-role.ts";
+import {
+  parentSliceChildEnvironment,
+  type ConversationSliceHandle,
+} from "../modules/parent-slice.ts";
 
 export type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 export type CSDirectionality = "day" | "night_prime";
+
+export interface ParentSliceCompletionEvent {
+  readonly agentId: string;
+  readonly taskId: string;
+  readonly c: 0 | 1;
+  readonly evidence: string;
+  readonly task_spec: string;
+  readonly vak_frame: VakAddress;
+  readonly parent_slice: ConversationSliceHandle;
+}
+
+type ParentSliceCompletionEmitter = (event: ParentSliceCompletionEvent) => void | Promise<void>;
+
+let parentSliceCompletionEmitter: ParentSliceCompletionEmitter | undefined;
+
+/** Bind the extension event bus once Anima's runtime registration is live. */
+export function configureParentSliceCompletionEmitter(emitter: ParentSliceCompletionEmitter | undefined): void {
+  parentSliceCompletionEmitter = emitter;
+}
 
 export type CSState = {
   value: CS;
@@ -172,8 +195,6 @@ export async function dispatchZThread(input: DispatchZThreadInput): Promise<ZThr
         transitionZThread(snapshot, "failed");
         return snapshot;
       }
-
-      await rehearAndRecompose(input.adapter, snapshot);
     }
 
     snapshot.failure_reason =
@@ -227,7 +248,7 @@ function normalizeZThreadMoveResult(
 }
 
 export function runEpi(args: string[], timeout = 120_000) {
-  return spawnSync("epi", args, {
+  return spawnSync(process.env.EPI_BIN || "epi", args, {
     encoding: "utf8",
     timeout,
     cwd: process.env.EPI_REPO_ROOT || process.cwd(),
@@ -278,6 +299,96 @@ export function vakAddressForTeamDispatch(input: TeamDispatchVakAddressDefaults)
 // The address is forwarded to the child via EPI_SESSION_VAK_ADDRESS so downstream
 // tools (Hen template render, future VAK-aware tools) can read it.
 export function dispatchTeamMember(agentName: string, task: string, vakAddress?: VakAddress): Promise<string> {
+  return dispatchTeamMemberWithEnvironment(agentName, task, vakAddress);
+}
+
+/**
+ * Additive 12.T12.31 route: child execution receives a redacted parent slice
+ * in its process environment while retaining the same native `epi agent team
+ * dispatch` launch path as every ordinary Anima dispatch.
+ */
+export async function dispatchWithParentSlice(input: {
+  readonly target_agent: string;
+  readonly task_spec: string;
+  readonly vak_frame: VakAddress;
+  readonly parent_slice: ConversationSliceHandle;
+}): Promise<string> {
+  const output = await dispatchTeamMemberWithEnvironment(
+    input.target_agent,
+    input.task_spec,
+    input.vak_frame,
+    parentSliceChildEnvironment(input.parent_slice),
+  );
+  const completion = parentSliceCompletionFromDispatchOutput(input, output);
+  if (completion) await publishParentSliceCompletion(completion);
+  return output;
+}
+
+export async function publishParentSliceCompletion(event: ParentSliceCompletionEvent): Promise<void> {
+  if (parentSliceCompletionEmitter) await parentSliceCompletionEmitter(event);
+}
+
+/**
+ * Native `epi agent team dispatch --json` is the authoritative completion
+ * report. A child may set `EPI_SUBGOAL_STATUS={"c":0,"evidence":"..."}`
+ * in its final output to continue its micro-history; an ordinary successful
+ * process completion is a c=1 fold.
+ */
+export function parentSliceCompletionFromDispatchOutput(input: {
+  readonly target_agent: string;
+  readonly task_spec: string;
+  readonly vak_frame: VakAddress;
+  readonly parent_slice: ConversationSliceHandle;
+}, output: string): ParentSliceCompletionEvent | null {
+  const report = jsonRecord(output);
+  if (!report || report.ok !== true) return null;
+  const rawEvidence = typeof report?.output === "string" ? report.output : output;
+  const signal = subgoalSignal(rawEvidence);
+  return {
+    agentId: input.target_agent,
+    taskId: stringField(report, "team_id") ?? stringField(report, "teamId")
+      ?? `${input.parent_slice.provenance_audit_id}:${input.target_agent}`,
+    c: signal?.c ?? 1,
+    evidence: signal?.evidence ?? rawEvidence,
+    task_spec: input.task_spec,
+    vak_frame: input.vak_frame,
+    parent_slice: input.parent_slice,
+  };
+}
+
+function subgoalSignal(output: string): { c: 0 | 1; evidence?: string } | null {
+  const line = output.split("\n").find((entry) => entry.startsWith("EPI_SUBGOAL_STATUS="));
+  if (!line) return null;
+  const parsed = jsonRecord(line.slice("EPI_SUBGOAL_STATUS=".length));
+  if (!parsed || (parsed.c !== 0 && parsed.c !== 1)) return null;
+  return {
+    c: parsed.c,
+    evidence: typeof parsed.evidence === "string" ? parsed.evidence : undefined,
+  };
+}
+
+function jsonRecord(value: string): Record<string, unknown> | null {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
+      ? parsed as Record<string, unknown>
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function stringField(record: Record<string, unknown> | null, key: string): string | null {
+  const value = record?.[key];
+  return typeof value === "string" && value.length > 0 ? value : null;
+}
+
+function dispatchTeamMemberWithEnvironment(
+  agentName: string,
+  task: string,
+  vakAddress?: VakAddress,
+  parentSliceEnvironment?: NodeJS.ProcessEnv,
+): Promise<string> {
   const parentSession = process.env.EPI_PARENT_SESSION || "agent:main:main";
   const args = [
     "--json", "agent", "team", "dispatch",
@@ -285,12 +396,14 @@ export function dispatchTeamMember(agentName: string, task: string, vakAddress?:
     "--agent", agentName,
     "--task", task,
   ];
-  const childEnv: NodeJS.ProcessEnv = { ...process.env };
+  const childEnv: NodeJS.ProcessEnv = { ...process.env, ...parentSliceEnvironment };
+  const parentSessionForChild = parentSliceEnvironment?.EPI_PARENT_SESSION ?? parentSession;
+  args[5] = parentSessionForChild;
   if (vakAddress) {
     childEnv.EPI_SESSION_VAK_ADDRESS = JSON.stringify(vakAddress);
   }
   return new Promise((resolve) => {
-    const proc = spawn("epi", args, {
+    const proc = spawn(process.env.EPI_BIN || "epi", args, {
       stdio: ["ignore", "pipe", "pipe"],
       env: childEnv,
       cwd: process.env.EPI_REPO_ROOT || process.cwd(),

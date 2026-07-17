@@ -353,7 +353,8 @@ impl<'a> GraphMethodService<'a> {
             // CCT-13 / DR-IG-1: the family literal is the TYPED canonical
             // constant (kernel_core) — the 'kernel-resonance' hyphen literal
             // was the Phase-C drift, corrected 2026-07-10.
-            relation_family_kernel_core = epi_s2_graph_schema::relationships::RELATION_FAMILY_KERNEL_CORE,
+            relation_family_kernel_core =
+                epi_s2_graph_schema::relationships::RELATION_FAMILY_KERNEL_CORE,
             resonance_index_property = KERNEL_RESONANCE_INDEX_PROPERTY,
             resonance_score_property = KERNEL_RESONANCE_SCORE_PROPERTY,
             resonance_square_property = KERNEL_RESONANCE_SQUARE_PROPERTY,

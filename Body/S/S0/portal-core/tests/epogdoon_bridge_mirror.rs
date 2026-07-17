@@ -37,7 +37,10 @@ fn rust_and_c_epogdoon_compression_mirror_the_floor_8_over_9_law() {
             "Rust compression diverges from floor({index}·8/9)"
         );
         let c_value = unsafe { m2_epogdoon_compress(index as u8) };
-        assert_eq!(c_value, expected, "C m2_epogdoon_compress diverges at {index}");
+        assert_eq!(
+            c_value, expected,
+            "C m2_epogdoon_compress diverges at {index}"
+        );
 
         // Gap law: the fold round-trips exactly on multiples of 9 —
         // 8 resolved slots, 64 provisional gaps across the 72-space.
@@ -57,7 +60,10 @@ fn rust_and_c_epogdoon_compression_mirror_the_floor_8_over_9_law() {
             );
         }
     }
-    assert_eq!(resolved, 8, "exactly 8 of 72 slots round-trip through 8/9·9/8");
+    assert_eq!(
+        resolved, 8,
+        "exactly 8 of 72 slots round-trip through 8/9·9/8"
+    );
 }
 
 #[test]
@@ -76,11 +82,19 @@ fn det_transduction_is_the_or_superposition_of_the_72_masks() {
             | M2_TO_M3_CYMATIC_PROJECTION[71]
     };
     let combined = unsafe { transduce_vibration_to_symbol(active.as_ptr(), 3) };
-    assert_eq!(combined, expected, "superposition must be the OR of the masks");
+    assert_eq!(
+        combined, expected,
+        "superposition must be the OR of the masks"
+    );
     // Empty superposition is silence.
-    assert_eq!(unsafe { transduce_vibration_to_symbol(std::ptr::null(), 0) }, 0);
+    assert_eq!(
+        unsafe { transduce_vibration_to_symbol(std::ptr::null(), 0) },
+        0
+    );
     // Full-union coverage: the 72 masks together light all 64 codon bits
     // (the C-side test_det_coverage law, mirrored from Rust).
-    let union = (0usize..72).fold(0u64, |acc, i| acc | unsafe { M2_TO_M3_CYMATIC_PROJECTION[i] });
+    let union = (0usize..72).fold(0u64, |acc, i| {
+        acc | unsafe { M2_TO_M3_CYMATIC_PROJECTION[i] }
+    });
     assert_eq!(union, u64::MAX, "the 72 DET masks must cover the 64-space");
 }

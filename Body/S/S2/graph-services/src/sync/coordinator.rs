@@ -398,7 +398,9 @@ impl<'a> SyncCoordinator<'a> {
         // revision so the Redis cold-tier namespace flips atomically. A
         // bump failure must be observable, never fatal to the sync itself.
         if let Err(error) = crate::meta::bump_graph_revision(self.client).await {
-            eprintln!("[sync] graph_revision bump failed (cold-tier cache may serve stale hits): {error}");
+            eprintln!(
+                "[sync] graph_revision bump failed (cold-tier cache may serve stale hits): {error}"
+            );
         }
 
         Ok(SyncResult {

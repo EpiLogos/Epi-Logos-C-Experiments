@@ -185,7 +185,11 @@ fn nara_trigram_bridge_maps_family_roles() {
         assert_eq!(daughter.trigram_seed, daughter.trigram_ids[0]);
         for &id in &daughter.trigram_ids {
             let t = &M3_TRIGRAM_LUT[id as usize];
-            assert_eq!(t.binary.count_ones(), 2, "daughter trigram {id} has 1 yin line");
+            assert_eq!(
+                t.binary.count_ones(),
+                2,
+                "daughter trigram {id} has 1 yin line"
+            );
             assert!(
                 t.family_role >= 3 && t.family_role % 2 == 1,
                 "trigram {id} family_role {} is a daughter role",

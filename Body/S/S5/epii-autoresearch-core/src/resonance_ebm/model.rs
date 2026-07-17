@@ -1,7 +1,8 @@
 //! Rust-native EBM architecture for the 72-dimensional resonance head.
 //!
-//! The runtime uses deterministic Rust tensor math so the module can load and
-//! invoke checkpoints without a Python sidecar. The public shape mirrors the
+//! The runtime executes checkpoint weights with Candle tensors so the module
+//! can load, invoke, and differentiate checkpoints without a Python sidecar.
+//! The public shape mirrors the
 //! locked architecture: parallel channel encoders, swappable cross-channel
 //! attention, tritone-symmetric three-sub-head output, sigmoid-normalised
 //! 72-vector projection, and a learned bioquaternion embedding projection.
@@ -10,7 +11,8 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use portal_core::BioQuaternionState;
+use candle_core::{Device, Tensor, Var};
+use candle_nn::ops::sigmoid;
 use serde::{Deserialize, Serialize};
 
 use super::attention::{CrossChannelAttention, WeightedMeanAttention};
@@ -189,34 +191,15 @@ impl ResonanceEbmModel {
         let fused = self
             .attention
             .fuse(&channels, self.config.attention_width)?;
-        let bio = project_bioquaternion(&invocation.bioquaternion, &self.weights);
-        let mut latent = fused;
-        for (slot, bio_value) in latent.iter_mut().zip(bio.iter()) {
-            *slot = (*slot + *bio_value) * 0.5;
-        }
-
-        let mut vector = vec![0.0f32; 72];
-        for lens_anchor in 0..12 {
-            for pair in 0..3 {
-                let left_position = pair;
-                let right_position = 5 - pair;
-                let score = sub_head_score(
-                    &latent,
-                    &self.weights.head_weights[pair],
-                    self.weights.head_bias[pair],
-                    lens_anchor,
-                    invocation.element_tick,
-                );
-                vector[lens_anchor * 6 + left_position] = score;
-                vector[lens_anchor * 6 + right_position] = score;
-            }
-        }
+        let q_p = Tensor::from_slice(&invocation.bioquaternion.q_p, 4, &Device::Cpu)
+            .map_err(candle_error)?;
+        let (vector_tensor, energy_tensor) =
+            self.forward_tensors(&fused, &q_p, invocation.element_tick)?;
+        let vector = vector_tensor.to_vec1::<f32>().map_err(candle_error)?;
         let mirror_report =
             MirrorConsistencyReport::evaluate(&vector, self.config.mirror_tolerance);
         mirror_report.assert_invariant()?;
-        let mean_square =
-            vector.iter().map(|value| value * value).sum::<f32>() / vector.len() as f32;
-        let energy_scalar = mean_square * self.config.energy_weight;
+        let energy_scalar = energy_tensor.to_scalar::<f32>().map_err(candle_error)?;
         Ok(ResonanceEbmOutput {
             resonance_vector: vector,
             energy_scalar,
@@ -226,33 +209,96 @@ impl ResonanceEbmModel {
             checkpoint_loaded: true,
         })
     }
-}
 
-fn project_bioquaternion(state: &BioQuaternionState, weights: &EbmWeights) -> Vec<f32> {
-    let mut output = vec![0.0f32; weights.bio_projection[0].len()];
-    for (component, row) in state.q_p.iter().zip(weights.bio_projection.iter()) {
-        for (slot, weight) in output.iter_mut().zip(row.iter()) {
-            *slot += *component * *weight;
-        }
+    pub fn gradient_q_p(&self, invocation: &ElementTickInvocation) -> Result<[f32; 4], String> {
+        let channels = encode_profile_channels(&invocation.profile, &self.config)?;
+        let fused = self
+            .attention
+            .fuse(&channels, self.config.attention_width)?;
+        let q_p = Var::from_slice(&invocation.bioquaternion.q_p, 4, &Device::Cpu)
+            .map_err(candle_error)?;
+        let (_, energy) = self.forward_tensors(&fused, q_p.as_tensor(), invocation.element_tick)?;
+        let gradients = energy.backward().map_err(candle_error)?;
+        let values = gradients
+            .get(q_p.as_tensor())
+            .ok_or_else(|| "Candle backward graph omitted q_p".to_owned())?
+            .to_vec1::<f32>()
+            .map_err(candle_error)?;
+        values
+            .try_into()
+            .map_err(|_| "Candle q_p gradient must have four components".to_owned())
     }
-    output.into_iter().map(sigmoid).collect()
+
+    fn forward_tensors(
+        &self,
+        fused: &[f32],
+        q_p: &Tensor,
+        element_tick: u8,
+    ) -> Result<(Tensor, Tensor), String> {
+        let device = q_p.device();
+        let fused =
+            Tensor::from_slice(fused, self.config.latent_dim, device).map_err(candle_error)?;
+        let projection = Tensor::from_vec(
+            self.weights
+                .bio_projection
+                .iter()
+                .flatten()
+                .copied()
+                .collect::<Vec<_>>(),
+            (4, self.config.latent_dim),
+            device,
+        )
+        .map_err(candle_error)?;
+        let bio = q_p
+            .unsqueeze(0)
+            .and_then(|q| q.matmul(&projection))
+            .and_then(|value| value.squeeze(0))
+            .and_then(|value| sigmoid(&value))
+            .map_err(candle_error)?;
+        let latent = (&fused + &bio)
+            .and_then(|value| value.affine(0.5, 0.0))
+            .map_err(candle_error)?;
+
+        let mut cells = Vec::with_capacity(72);
+        for lens_anchor in 0..12 {
+            let mut left = Vec::with_capacity(3);
+            for pair in 0..3 {
+                let weights = Tensor::from_slice(
+                    &self.weights.head_weights[pair],
+                    self.config.latent_dim,
+                    device,
+                )
+                .map_err(candle_error)?;
+                let phase = ((lens_anchor + 1) as f64 * (element_tick as f64 + 1.0)).sin() * 0.1;
+                let score = latent
+                    .broadcast_mul(&weights)
+                    .and_then(|value| value.sum_all())
+                    .and_then(|value| {
+                        value.affine(
+                            1.0 / self.config.latent_dim as f64,
+                            self.weights.head_bias[pair] as f64 + phase,
+                        )
+                    })
+                    .and_then(|value| sigmoid(&value))
+                    .map_err(candle_error)?;
+                left.push(score);
+            }
+            cells.extend(left.iter().cloned());
+            cells.extend(left.into_iter().rev());
+        }
+        let refs = cells.iter().collect::<Vec<_>>();
+        let vector = Tensor::stack(&refs, 0).map_err(candle_error)?;
+        let energy = vector
+            .sqr()
+            .and_then(|value| value.mean_all())
+            .and_then(|value| value.affine(self.config.energy_weight as f64, 0.0))
+            .map_err(candle_error)?;
+        Ok((vector, energy))
+    }
 }
 
-fn sub_head_score(
-    latent: &[f32],
-    weights: &[f32],
-    bias: f32,
-    lens_anchor: usize,
-    element_tick: u8,
-) -> f32 {
-    let weighted = latent
-        .iter()
-        .zip(weights.iter())
-        .map(|(value, weight)| value * weight)
-        .sum::<f32>()
-        / latent.len() as f32;
-    let phase = ((lens_anchor + 1) as f32 * (element_tick as f32 + 1.0)).sin() * 0.1;
-    sigmoid(weighted + bias + phase)
+fn candle_error(error: candle_core::Error) -> String {
+    format!("Candle EBM backend: {error}")
 }
 
 fn parse_config_section(
@@ -342,8 +388,4 @@ impl DeterministicGenerator {
     fn next_signed(&mut self) -> f32 {
         self.next_unit() * 2.0 - 1.0
     }
-}
-
-fn sigmoid(value: f32) -> f32 {
-    1.0 / (1.0 + (-value).exp())
 }

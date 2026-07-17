@@ -1,15 +1,14 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
+    KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD, M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD,
+    M1_SPANDA_RELEASE_METHOD, M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
     S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
-    M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD, M1_SPANDA_RELEASE_METHOD,
-    M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
-    S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD,
-    S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
-    S1_WORLD_LIST_ENTITIES_METHOD,
+    S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD,
+    S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_Q_ARTICULATION_ACCEPT_METHOD,
+    S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD, S1_WORLD_LIST_ENTITIES_METHOD,
     S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -687,6 +686,24 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: "s5'.improve.q_review.run",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.q_review.latest",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.q_review.night_pass",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: "s5'.epii.status",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S5/epii-agent-core",
@@ -859,6 +876,18 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s1'.vault.move_file",
         kind: MethodDispatchKind::S1HenAdapter,
         authority_path: "Body/S/S1/hen-compiler-core (vault gatekeeper)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_BASE_ENSURE_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::base_view",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_Q_ARTICULATION_ACCEPT_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::frontmatter_mutation + Body/S/S2/graph-services::q_articulation",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

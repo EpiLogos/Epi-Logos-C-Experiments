@@ -3,6 +3,28 @@ mod support;
 use serde_json::json;
 use support::TestGatewayClient;
 
+use epi_s2_graph_services::{
+    parse_yaml_frontmatter, read_graph_meta, Neo4jClient, Neo4jConfig, SyncCoordinator,
+};
+
+fn write_q_review_config() {
+    let home = std::env::var("HOME").expect("test gateway supplies HOME");
+    let path = std::path::Path::new(&home).join(".epi-logos/config.toml");
+    std::fs::create_dir_all(path.parent().expect("config parent")).expect("create config parent");
+    std::fs::write(
+        path,
+        r#"
+[autoresearch]
+articulation_gap_peer_ratio = 0.75
+contradiction_vector_disagreement_threshold = 0.35
+resonance_promotion_confidence_threshold = 0.85
+stale_revision_threshold = 12
+priority_order = ["articulation_gap", "promotion_candidate", "contradiction_candidate", "stale_by_non_revisit"]
+"#,
+    )
+    .expect("write autoresearch config");
+}
+
 /// 13.T7 store-location guard: the S0 autoresearch gate adapter must persist
 /// the S5 `ImprovementStore` under `<state_root>/s5/epii-autoresearch` and
 /// read the linked review store at `<state_root>/s5/epii-review`. Pins the
@@ -157,6 +179,217 @@ async fn s5_improve_gateway_runs_generalized_autoresearch_loop() {
         .expect("improvement history should load");
 
     assert_eq!(history["runs"].as_array().unwrap().len(), 1);
+}
+
+#[tokio::test]
+async fn s5_improve_gateway_persists_and_filters_q_review_queue() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18912).await;
+    write_q_review_config();
+    let embedding = vec![0.5_f64; 3072];
+    let queue = client
+        .request(
+            "s5'.improve.q_review.run",
+            json!({
+                "corpus_snapshot": {
+                    "day_id": "2026-07-15",
+                    "graph_revision": 7,
+                    "nodes": [
+                        {
+                            "coordinate": "M5-0",
+                            "namespace": "bimba",
+                            "c_4_family": "M",
+                            "c_4_ql_position": "5",
+                            "c_4_lens": "L5",
+                            "q_values": { "q_5_i0_integration_template": "canonical return" },
+                            "review_epochs": { "qm_5_i0_review_epoch": 7 },
+                            "embedding_3072": embedding
+                        },
+                        {
+                            "coordinate": "M5-1",
+                            "namespace": "bimba",
+                            "c_4_family": "M",
+                            "c_4_ql_position": "5",
+                            "c_4_lens": "L5",
+                            "q_values": {},
+                            "review_epochs": { "qm_5_i0_review_epoch": 7 },
+                            "embedding_3072": vec![0.5_f64; 3072]
+                        }
+                    ]
+                },
+                "last_review_epoch": 7
+            }),
+        )
+        .await
+        .expect("q-review run should persist a queue");
+    assert!(queue["entries"]
+        .as_array()
+        .is_some_and(|entries| !entries.is_empty()));
+
+    let filtered = client
+        .request(
+            "s5'.improve.q_review.latest",
+            json!({ "day_id": "2026-07-15", "cf": "(4.5/0)" }),
+        )
+        .await
+        .expect("q-review latest should read the persisted queue");
+    assert_eq!(filtered["day_id"], "2026-07-15");
+    assert!(filtered["entries"].as_array().is_some_and(|entries| {
+        entries
+            .iter()
+            .all(|entry| entry["review_surface"]["vak_cf"] == "(4.5/0)")
+    }));
+}
+
+#[tokio::test]
+#[ignore] // requires the local Neo4j corpus: `epi graph doctor` must report graph.ok=true
+async fn s5_improve_gateway_builds_and_persists_q_review_from_live_bimba() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18917).await;
+    write_q_review_config();
+
+    let queue = client
+        .request(
+            "s5'.improve.q_review.night_pass",
+            json!({
+                "day_id": "2026-07-15-live",
+                "last_review_epoch": 0
+            }),
+        )
+        .await
+        .expect("night pass should read the live Bimba graph without a caller corpus");
+
+    assert!(queue["graph_revision"]
+        .as_u64()
+        .is_some_and(|revision| revision > 0));
+    assert!(queue["entries"]
+        .as_array()
+        .is_some_and(|entries| !entries.is_empty()));
+
+    let persisted = client
+        .request(
+            "s5'.improve.q_review.latest",
+            json!({ "day_id": "2026-07-15-live" }),
+        )
+        .await
+        .expect("persisted night-pass queue should be readable");
+    assert_eq!(persisted["day_id"], "2026-07-15-live");
+    assert_eq!(persisted["graph_revision"], queue["graph_revision"]);
+    assert_eq!(persisted["entries"], queue["entries"]);
+}
+
+#[tokio::test]
+#[ignore] // requires local Neo4j; creates then removes one disposable :Bimba fixture
+async fn accepted_q_articulation_amendment_writes_hen_then_syncs_through_live_gateway() {
+    let mut gateway = TestGatewayClient::connected_with_temp_store(18918).await;
+    let vault_root = gateway.gate_root().join("q-articulation-live-vault");
+    let relative_path = "Idea/Bimba/World/Q-Articulation-Live-Proof.md";
+    let absolute_path = vault_root.join(relative_path);
+    std::fs::create_dir_all(absolute_path.parent().expect("fixture parent"))
+        .expect("create fixture Bimba directory");
+    std::fs::write(
+        &absolute_path,
+        "---\ncoordinate: M5-5-9876\nq_5_return: old articulation\n---\n\n# Q Articulation Live Proof\n",
+    )
+    .expect("write disposable Bimba fixture");
+
+    let graph = Neo4jClient::connect(&Neo4jConfig::from_env()).expect("connect live Neo4j");
+    let source = std::fs::read_to_string(&absolute_path).expect("read fixture");
+    let frontmatter = parse_yaml_frontmatter(&source).expect("fixture frontmatter");
+    SyncCoordinator::new(&graph)
+        .sync_from_vault(relative_path, &frontmatter, &source)
+        .await
+        .expect("seed fixture into live Bimba graph");
+    let expected_revision = u64::try_from(
+        read_graph_meta(&graph)
+            .await
+            .expect("read graph metadata")
+            .expect("graph metadata exists")
+            .graph_revision,
+    )
+    .expect("non-negative graph revision");
+
+    let review = gateway
+        .request(
+            "s5'.review.submit",
+            json!({
+                "source": "human_gate",
+                "title": "Accept Q articulation live proof",
+                "body": "The user accepts the proposed Q articulation before Hen writes canon.",
+                "priority": "blocking",
+                "coordinate_context": {"coordinate": "M5-5-9876"},
+                "requires_human": true
+            }),
+        )
+        .await
+        .expect("Q articulation review should persist");
+    let review_id = review["item"]["item_id"]
+        .as_str()
+        .expect("Q articulation review id")
+        .to_owned();
+    gateway
+        .request(
+            "s5'.review.resolve",
+            json!({
+                "item_id": review_id,
+                "decision": "approve",
+                "rationale": "Human approval for the live Q articulation proof.",
+                "resolved_by": "human",
+                "promotion_destination": "bimba"
+            }),
+        )
+        .await
+        .expect("human Q articulation review should resolve");
+
+    let receipt = gateway
+        .request(
+            "s1'.q_articulation.accept",
+            json!({
+                "vaultRoot": vault_root,
+                "coordinate": "M5-5-9876",
+                "qKey": "q_5_return",
+                "qValueCandidate": "A return remains open to its next question.",
+                "expectedGraphRevision": expected_revision,
+                "acceptedReviewRef": review_id,
+                "opensQuestions": ["What remains unarticulated?"],
+                "sourceArtifacts": ["Idea/Empty/Present/15-07-2026/live-proof.md"]
+            }),
+        )
+        .await
+        .expect("accepted Q articulation should traverse the real gateway");
+
+    let rewritten = std::fs::read_to_string(&absolute_path).expect("read Hen amendment");
+    assert!(rewritten.contains("q_5_return: A return remains open"));
+    assert!(rewritten.contains("qm_5_review_epoch_return:"));
+    assert_eq!(receipt["q_key"], "q_5_return");
+    assert_eq!(receipt["graph_revision"], expected_revision + 1);
+    assert_eq!(
+        receipt["anuttara_diagnostic"]["source_constraint"],
+        "bimba_q_articulation:M5-5-9876:q_5_return"
+    );
+
+    let rows = graph
+        .run("MATCH (n:Bimba {coordinate: 'M5-5-9876'}) RETURN n.q_5_return AS q_value, n.qm_5_review_epoch_return AS review_epoch")
+        .await
+        .expect("read synced Bimba fixture");
+    assert_eq!(rows.len(), 1);
+    assert_eq!(
+        rows[0].get::<String>("q_value").expect("synced Q value"),
+        "A return remains open to its next question."
+    );
+    assert_eq!(
+        rows[0]
+            .get::<String>("review_epoch")
+            .expect("synced review epoch"),
+        (expected_revision + 1).to_string()
+    );
+
+    graph
+        .run("MATCH (n:Bimba {coordinate: 'M5-5-9876'}) DETACH DELETE n")
+        .await
+        .expect("remove disposable Bimba fixture");
+    epi_s2_graph_services::meta::bump_graph_revision(&graph)
+        .await
+        .expect("record disposable fixture cleanup in graph revision");
+    let _ = std::fs::remove_file(absolute_path);
 }
 
 #[tokio::test]

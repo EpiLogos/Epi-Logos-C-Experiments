@@ -82,7 +82,14 @@ fn seeded_queue() -> QReviewQueue {
             ),
             // Same cluster, strict subset of the peer's keys -> exactly one
             // articulation gap (missing q_5_i0_integration_template).
-            node("M0-1", "M", "0", "L0", &[("q_2_i0_operational_logic", "held")], 20),
+            node(
+                "M0-1",
+                "M",
+                "0",
+                "L0",
+                &[("q_2_i0_operational_logic", "held")],
+                20,
+            ),
         ],
         canonical_relations: vec![],
         resonance_edges: vec![ResonanceEdgeSnapshot {
@@ -132,19 +139,34 @@ fn m5_q_review_pane_renders_queue_as_card_stack() {
     // Header + day binding.
     assert!(content.contains("Q-Review Queue"), "pane title present");
     assert!(content.contains("07-05-2026"), "day binding rendered");
-    assert!(content.contains("2 candidate(s)"), "candidate count rendered");
+    assert!(
+        content.contains("2 candidate(s)"),
+        "candidate count rendered"
+    );
 
     // Both candidate cards: target coordinate + reason_class + action.
-    assert!(content.contains("M0-1"), "articulation-gap target coordinate");
-    assert!(content.contains("articulation_gap"), "articulation reason class");
+    assert!(
+        content.contains("M0-1"),
+        "articulation-gap target coordinate"
+    );
+    assert!(
+        content.contains("articulation_gap"),
+        "articulation reason class"
+    );
     assert!(content.contains("M2-3"), "promotion target coordinate");
-    assert!(content.contains("promotion_candidate"), "promotion reason class");
+    assert!(
+        content.contains("promotion_candidate"),
+        "promotion reason class"
+    );
     assert!(
         content.contains("open_in_pair_composition"),
         "pair-composition action offered on the card"
     );
     // The existing q_* articulation is surfaced for editing.
-    assert!(content.contains("q_5_i0_integration_template"), "q key surfaced");
+    assert!(
+        content.contains("q_5_i0_integration_template"),
+        "q key surfaced"
+    );
 }
 
 #[test]
@@ -154,9 +176,18 @@ fn m5_q_review_pane_filters_by_active_context_frame() {
     let plugin = M5QReviewPlugin::with_queue_filtered(seeded_queue(), "(5/0)");
     let content = render_to_string(&plugin, 100, 24);
 
-    assert!(content.contains("1 candidate(s)"), "cf filter narrows the stack");
-    assert!(content.contains("M2-3"), "promotion candidate on (5/0) visible");
-    assert!(content.contains("cf-filter: (5/0)"), "active cf reported in footer");
+    assert!(
+        content.contains("1 candidate(s)"),
+        "cf filter narrows the stack"
+    );
+    assert!(
+        content.contains("M2-3"),
+        "promotion candidate on (5/0) visible"
+    );
+    assert!(
+        content.contains("cf-filter: (5/0)"),
+        "active cf reported in footer"
+    );
     assert!(
         !content.contains("articulation_gap"),
         "articulation gap on (4.5/0) is filtered out"

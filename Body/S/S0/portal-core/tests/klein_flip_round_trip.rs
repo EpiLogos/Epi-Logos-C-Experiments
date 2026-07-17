@@ -1,4 +1,6 @@
-use portal_core::{kernel_tick_from_epogdoon, KernelTemporalProjection, MathemeHarmonicProfile, Valence};
+use portal_core::{
+    kernel_tick_from_epogdoon, KernelTemporalProjection, MathemeHarmonicProfile, Valence,
+};
 use serde_json::Value;
 
 const M2_MEANING_PACKET_SOURCE: &str =
@@ -60,8 +62,7 @@ fn kernel_temporal_projection_latches_klein_flip_state_across_the_cycle() {
         (7, "inverted"),
         (11, "inverted"),
     ] {
-        let projection =
-            KernelTemporalProjection::from_clock_tick((4 * 12 + tick12) * 1_000, 1);
+        let projection = KernelTemporalProjection::from_clock_tick((4 * 12 + tick12) * 1_000, 1);
         let wire = serde_json::to_value(&projection).expect("projection serializes");
         assert_eq!(wire["kleinFlipState"], expected, "tick12 {tick12}");
         assert_eq!(

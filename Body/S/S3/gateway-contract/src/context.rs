@@ -249,7 +249,7 @@ impl DispatchWithParentSliceContract {
 pub const CHRONOS_BIFURCATION_ROUTER_SEAT: &str = "S4-3'/chronos";
 
 /// The dispatch-complete event channel the router subscribes to. Payload:
-/// `{ agentId, taskId, c, evidence }`.
+/// `{ agentId, taskId, c, evidence, task_spec, vak_frame, parent_slice }`.
 pub const CHRONOS_BIFURCATION_EVENT_CHANNEL: &str = "agent:team:dispatch:complete";
 
 /// The route a completion indicator takes through the [[chronos]] bifurcation

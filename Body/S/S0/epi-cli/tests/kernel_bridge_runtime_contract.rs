@@ -5,16 +5,15 @@ use epi_logos::gate::{
         m1_performance_event_from_profile, runtime_for_spacetimedb_plan,
         typed_json_m2_cymatic_monopoly_state, typed_json_m2_planetary_elemental_weights,
         typed_json_m3_bioquaternion_transcription, typed_json_m3_lens_codon_binary,
-        typed_json_performance_event_from_profile,
-        typed_json_profile_event_payload, GovernanceRole, KernelBridgeCapabilityRequest,
-        KernelBridgeConsumerKind, KernelBridgePerformanceEventJsonShape,
-        KernelBridgeProfileJsonShape, KernelBridgeRuntimeEventKind, KernelBridgeSubscriber,
-        KernelBridgeSubscriptionProfile, KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame,
-        OracleSpreadScale, OracleTraversalDirection, ReadingPosition, SymbolicProtein,
-        TranscriptionalClockPacket, KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
-        KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION, KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS,
-        KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION, KERNEL_BRIDGE_M3_LENS_CODON_BINARY,
-        M1_PROFILE_TO_PERFORMANCE_STREAM,
+        typed_json_performance_event_from_profile, typed_json_profile_event_payload,
+        GovernanceRole, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
+        KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
+        KernelBridgeVakContext, MajorArcanaCardRef, OracleFrame, OracleSpreadScale,
+        OracleTraversalDirection, ReadingPosition, SymbolicProtein, TranscriptionalClockPacket,
+        KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE, KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION,
+        KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS, KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
+        KERNEL_BRIDGE_M3_LENS_CODON_BINARY, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
@@ -81,6 +80,67 @@ fn kernel_bridge_runtime_fans_one_projection_source_to_ide_and_body_consumers() 
         event.kind == KernelBridgeRuntimeEventKind::ConnectionStatus
             && event.payload["connected"] == true
     }));
+}
+
+#[test]
+fn kernel_bridge_relays_graph_revision_from_context_for_b12_propagation() {
+    // B-12 (09.T9.5): a governed Bimba write bumps GraphMeta.graph_revision;
+    // the kernel-bridge relays that revision onto the profile so the M1/M2/M3
+    // renderings see an edit crossed on the next tick. Absent in the context
+    // → omitted on the wire (additive, never null-forged, no schema churn).
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "body:/body-b12".to_owned(),
+            kind: KernelBridgeConsumerKind::BodySurface,
+            requested_profile: KernelBridgeSubscriptionProfile::Lite,
+        })
+        .expect("body subscribes");
+
+    let stamped = |generation: u64, graph_revision: Option<u64>| {
+        let mut kernel = json!({
+            "coordinateOwner": "S0/QL-meta",
+            "projectionOwner": "S3'",
+            "privacy": "safe-public-current-kernel-tick",
+            "computationSource": "portal-core::KernelProjection",
+            "generation": generation,
+        });
+        if let Some(rev) = graph_revision {
+            kernel["graphRevision"] = json!(rev);
+        }
+        SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Connected,
+            source: "native-websocket".to_owned(),
+            profile_generation: Some(generation),
+            stale_profile_generation: None,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: Some(json!({ "kernel": kernel })),
+        }
+    };
+
+    runtime
+        .observe_projection_update(stamped(10, Some(7)))
+        .expect("rev-stamped projection");
+    let events = runtime.drain_consumer("body:/body-b12");
+    let profile = events
+        .iter()
+        .find(|event| event.kind == KernelBridgeRuntimeEventKind::Profile)
+        .expect("profile event carries the stamped revision");
+    assert_eq!(profile.payload["graphRevision"], 7);
+    assert_eq!(profile.payload["generation"], 10);
+
+    // next tick, no revision stamped → key omitted, never a forged null
+    runtime
+        .observe_projection_update(stamped(11, None))
+        .expect("bare tick without revision");
+    let events = runtime.drain_consumer("body:/body-b12");
+    let profile = events
+        .iter()
+        .find(|event| event.kind == KernelBridgeRuntimeEventKind::Profile)
+        .expect("profile event on the bare tick");
+    assert_eq!(profile.payload["generation"], 11);
+    assert!(profile.payload.get("graphRevision").is_none());
 }
 
 #[test]
@@ -702,7 +762,10 @@ fn kernel_bridge_surfaces_primary_ground_and_its_sixteen_derived_lenses() {
         .expect("Fibonacci Ground is the primary functional lens");
     assert_eq!(ground.artifact["lensRole"], "primary-ground");
     assert_eq!(ground.artifact["groundingLensId"], 16);
-    assert_eq!(ground.artifact["segment"].as_array().map(Vec::len), Some(60));
+    assert_eq!(
+        ground.artifact["segment"].as_array().map(Vec::len),
+        Some(60)
+    );
 
     let error = runtime
         .invoke_capability(KernelBridgeCapabilityRequest {

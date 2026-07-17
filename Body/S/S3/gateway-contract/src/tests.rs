@@ -1378,6 +1378,28 @@ fn cct_14_entity_lifecycle_methods_are_registered_with_dispatch_entries() {
 }
 
 #[test]
+fn accepted_q_articulation_amendment_is_registered_with_hen_dispatch() {
+    assert_eq!(
+        S1_Q_ARTICULATION_METHODS,
+        &[S1_Q_ARTICULATION_ACCEPT_METHOD]
+    );
+    assert!(METHOD_NAMES.contains(&S1_Q_ARTICULATION_ACCEPT_METHOD));
+    let entry = method_dispatch_plan_entry(S1_Q_ARTICULATION_ACCEPT_METHOD)
+        .expect("Q articulation acceptance needs an S1 Hen dispatch entry");
+    assert_eq!(entry.kind, MethodDispatchKind::S1HenAdapter);
+}
+
+#[test]
+fn base_ensure_is_registered_with_hen_dispatch() {
+    let method = S1_BASE_ENSURE_METHOD;
+    assert_eq!(S1_BASE_METHODS, &[S1_BASE_ENSURE_METHOD]);
+    assert!(METHOD_NAMES.contains(&method));
+    let entry =
+        method_dispatch_plan_entry(method).expect("base ensure needs an S1 Hen dispatch entry");
+    assert_eq!(entry.kind, MethodDispatchKind::S1HenAdapter);
+}
+
+#[test]
 fn cct_14_capture_classify_and_list_payloads_round_trip() {
     let capture_request = S1EntityCaptureRequest {
         source: "Loose Root Note".to_owned(),
@@ -1655,9 +1677,10 @@ fn dispatch_plan_carries_all_six_canonical_kinds_or_extensions() {
     assert!(s5 > 0, "expected at least one S5 governance row");
     assert!(s0 > 0, "expected at least one S0 product adapter row");
     // S1 Hen adapter is a 13.T2 plan extension: five 03.T6.5
-    // vault/semantic methods, three C-first type lifecycle receipts, plus
-    // the four CCT-14 entity-candidate lifecycle/review surfaces.
-    assert_eq!(s1, 12, "expected exactly twelve s1' Hen rows");
+    // vault/semantic methods, the accepted-Q amendment, three C-first type
+    // lifecycle receipts, plus the four CCT-14 entity-candidate lifecycle/
+    // review surfaces.
+    assert_eq!(s1, 14, "expected exactly fourteen s1' Hen rows");
     // Missing is currently 0 because no Missing-status methods appear
     // in METHOD_NAMES (parity.rs Missing records all live outside the
     // shipped manifest). The variant must still be expressible.

@@ -123,6 +123,8 @@ pub const S1_ENTITY_CAPTURE_METHOD: &str = "s1'.entity.capture";
 pub const S1_ENTITY_CLASSIFY_METHOD: &str = "s1'.entity.classify";
 pub const S1_ENTITY_LIST_METHOD: &str = "s1'.entity.list";
 pub const S1_WORLD_LIST_ENTITIES_METHOD: &str = "s1'.world.list_entities";
+pub const S1_Q_ARTICULATION_ACCEPT_METHOD: &str = "s1'.q_articulation.accept";
+pub const S1_BASE_ENSURE_METHOD: &str = "s1'.base.ensure";
 pub const S1_ENTITY_LIFECYCLE_METHODS: &[&str] = &[
     S1_ENTITY_CAPTURE_METHOD,
     S1_ENTITY_CLASSIFY_METHOD,
@@ -131,6 +133,8 @@ pub const S1_ENTITY_LIFECYCLE_METHODS: &[&str] = &[
     S1_ENTITY_LIST_METHOD,
     S1_WORLD_LIST_ENTITIES_METHOD,
 ];
+pub const S1_Q_ARTICULATION_METHODS: &[&str] = &[S1_Q_ARTICULATION_ACCEPT_METHOD];
+pub const S1_BASE_METHODS: &[&str] = &[S1_BASE_ENSURE_METHOD];
 
 pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,

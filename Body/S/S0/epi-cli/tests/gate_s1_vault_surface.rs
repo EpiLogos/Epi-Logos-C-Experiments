@@ -13,8 +13,10 @@ use std::path::PathBuf;
 
 use epi_logos::gate::s1_hen;
 use epi_s3_gateway_contract::{S1VaultRenameReceipt, S1VaultRenameRefusalReason};
+use futures_util::StreamExt;
 use serde_json::json;
 use support::TestGatewayClient;
+use tokio_tungstenite::connect_async;
 
 fn fixture_vault() -> PathBuf {
     let unique = format!(
@@ -197,6 +199,178 @@ async fn rename_reconciliation_round_trips_through_the_real_gateway() {
     assert!(inbound.contains("Literal [[A]]."));
     assert!(!vault.join("A.md").exists());
     assert!(vault.join("B.md").exists());
+}
+
+#[tokio::test]
+async fn base_ensure_derives_ct4b_from_canonical_forms_over_the_real_gateway() {
+    let vault = fixture_vault();
+    let _guard = scopeguard_remove(&vault);
+    let world = vault.join("Idea/Bimba/World");
+    fs::create_dir_all(&world).unwrap();
+    fs::write(
+        world.join("Daily-Note.md"),
+        r#"---
+coordinate: ""
+c_4_artifact_role: "daily-note"
+c_1_ct_type: "CT4b"
+c_3_day_id: "{{day_id}}"
+c_3_created_at: "{{created_at}}"
+c_0_source_coordinates: []
+c_5_reflection_complete: false
+p0_grounds:
+p1_tasks_defined:
+p2_sessions: []
+p3_patterns:
+p4_files_touched: []
+p5_synthesis:
+---
+# Daily
+"#,
+    )
+    .unwrap();
+    fs::write(
+        world.join("NOW.md"),
+        r#"---
+coordinate: "M4-{{session_id}}"
+c_4_artifact_role: "now"
+c_1_ct_type: "CT4b"
+c_2_session_id: "{{session_id}}"
+c_3_day_id: "{{day_id}}"
+c_3_created_at: "{{created_at}}"
+c_3_fibonacci_position: 0
+c_0_source_coordinates: []
+c_5_reflection_complete: false
+p0_adjacencies:
+p1_intentions:
+p2_operations:
+p3_decisions:
+p4_concepts_engaged:
+p5_learnings:
+---
+# NOW
+"#,
+    )
+    .unwrap();
+
+    let port = 28919;
+    let mut client = TestGatewayClient::connected_with_temp_store(port).await;
+    let (mut hello_socket, _) = connect_async(format!("ws://127.0.0.1:{port}"))
+        .await
+        .expect("second websocket should connect for hello inspection");
+    let hello = hello_socket
+        .next()
+        .await
+        .expect("gateway sends hello")
+        .expect("hello frame decodes");
+    let hello: serde_json::Value =
+        serde_json::from_str(hello.to_text().expect("hello is text")).expect("hello is JSON");
+    assert!(hello["features"]["methods"]
+        .as_array()
+        .expect("hello methods")
+        .iter()
+        .any(|method| method == "s1'.base.ensure"));
+
+    let params = json!({
+        "vaultRoot": vault.to_string_lossy(),
+        "coordinate": "CT4b",
+        "ctType": "CT4b",
+        "scope": "ctx",
+        "residency": "Idea/Empty/Present/16-07-2026",
+    });
+    let first = client
+        .request("s1'.base.ensure", params.clone())
+        .await
+        .expect("real gateway should emit a contract-derived base view");
+    let path = vault.join(first["path"].as_str().expect("receipt path"));
+    let first_bytes = fs::read(&path).expect("base view was written");
+    let columns = first["derivedColumns"].as_array().expect("derived columns");
+    for required in [
+        "c_3_fibonacci_position",
+        "p0_grounds",
+        "p1_tasks_defined",
+        "p2_operations",
+        "p3_decisions",
+        "p4_concepts_engaged",
+        "p5_synthesis",
+    ] {
+        assert!(
+            columns.iter().any(|column| column == required),
+            "missing {required}"
+        );
+    }
+    assert!(!columns.iter().any(|column| column == "session_id"));
+    assert!(!columns.iter().any(|column| column == "day_id"));
+
+    let second = client
+        .request("s1'.base.ensure", params)
+        .await
+        .expect("second ensure should succeed");
+    assert_eq!(second["existed"], true);
+    assert_eq!(second["changed"], false);
+    assert_eq!(fs::read(&path).unwrap(), first_bytes);
+
+    let absolute_outside =
+        std::env::temp_dir().join(format!("epi-base-ensure-outside-{}", std::process::id()));
+    let refused_residencies = [
+        (
+            "Idea/Bimba/World".to_owned(),
+            vault.join("Idea/Bimba/World/CT4b.base-view.md"),
+        ),
+        (
+            "../outside".to_owned(),
+            vault.join("../outside/CT4b.base-view.md"),
+        ),
+        (
+            absolute_outside.to_string_lossy().to_string(),
+            absolute_outside.join("CT4b.base-view.md"),
+        ),
+    ];
+    for (residency, refused_path) in refused_residencies {
+        let refused = client
+            .request(
+                "s1'.base.ensure",
+                json!({
+                    "vaultRoot": vault.to_string_lossy(),
+                    "coordinate": "CT4b",
+                    "ctType": "CT4b",
+                    "scope": "ctx",
+                    "residency": residency,
+                }),
+            )
+            .await;
+        assert!(refused.is_err(), "residency {residency} must be refused");
+        assert!(
+            !refused_path.exists(),
+            "refused residency {residency} must not write a base view"
+        );
+    }
+
+    fs::write(
+        world.join("NOW.md"),
+        r#"---
+coordinate: "M4-{{session_id}}"
+c_1_ct_type: "CT4b"
+invented_contract_key: true
+---
+"#,
+    )
+    .unwrap();
+    let invalid = client
+        .request(
+            "s1'.base.ensure",
+            json!({
+                "vaultRoot": vault.to_string_lossy(),
+                "coordinate": "CT4b",
+                "ctType": "CT4b",
+                "scope": "ctx",
+                "residency": "Idea/Empty/Present/16-07-2026-invalid",
+            }),
+        )
+        .await;
+    assert!(invalid.is_err(), "unknown template keys must fail closed");
+    assert!(!vault
+        .join("Idea/Empty/Present/16-07-2026-invalid/CT4b.base-view.md")
+        .exists());
 }
 
 #[test]

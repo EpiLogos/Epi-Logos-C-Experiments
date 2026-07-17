@@ -29,7 +29,11 @@ fn spanda_invert_is_the_reflection_with_involution_and_complement_laws() {
         // The reflection law: #(n) = 11 − n.
         assert_eq!(spanda_invert(n), 11 - n, "spanda_invert({n}) != 11−{n}");
         // Involution: #(#(n)) = n.
-        assert_eq!(spanda_invert(spanda_invert(n)), n, "reflection not order-2 at {n}");
+        assert_eq!(
+            spanda_invert(spanda_invert(n)),
+            n,
+            "reflection not order-2 at {n}"
+        );
         // Complement: n + #(n) = 11.
         assert_eq!(n + spanda_invert(n), 11, "complement law broken at {n}");
     }
@@ -82,7 +86,15 @@ fn reflection_and_half_turn_compose_to_5_minus_n_closing_the_klein_four_group() 
     // back in {id, s, r, sr}. With s=half-turn, r=reflection, sr=composite:
     // s·r = sr (asserted above), s·sr = r, r·sr = s.
     for n in 0u8..12 {
-        assert_eq!(half_turn(composite(n)), spanda_invert(n), "s·sr != r at {n}");
-        assert_eq!(spanda_invert(composite(n)) % 12, half_turn(n), "r·sr != s at {n}");
+        assert_eq!(
+            half_turn(composite(n)),
+            spanda_invert(n),
+            "s·sr != r at {n}"
+        );
+        assert_eq!(
+            spanda_invert(composite(n)) % 12,
+            half_turn(n),
+            "r·sr != s at {n}"
+        );
     }
 }

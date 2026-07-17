@@ -88,9 +88,7 @@ fn attached_identity_serializes_camel_case_handles_only() {
 fn legacy_payloads_without_the_field_still_deserialize() {
     let profile = MathemeHarmonicProfile::from_tick(tick());
     let mut json = serde_json::to_value(&profile).expect("serializes");
-    json.as_object_mut()
-        .expect("object")
-        .remove("quintessence");
+    json.as_object_mut().expect("object").remove("quintessence");
     let back: MathemeHarmonicProfile =
         serde_json::from_value(json).expect("legacy payload deserializes");
     assert_eq!(back.quintessence, None);

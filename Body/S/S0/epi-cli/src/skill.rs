@@ -160,26 +160,27 @@ fn show_skill(name: &str) -> Result<String, String> {
 
 fn vendor_skill(name: &str, json_output: bool) -> Result<String, String> {
     let catalog = hermes_catalog();
-    let Some(description) = catalog.get(name) else {
+    if !catalog.contains_key(name) {
         return Err(format!("unknown priority-13 Hermes skill `{name}`"));
-    };
-    let root = repo_root()?
-        .join("Body/S/S4/pi-agent/skills/hermes")
-        .join(name);
-    fs::create_dir_all(&root)
-        .map_err(|err| format!("failed to create {}: {err}", root.display()))?;
-    let skill_path = root.join("SKILL.md");
-    let provenance_path = root.join("provenance.yaml");
-    if !skill_path.exists() {
-        fs::write(&skill_path, hermes_skill_doc(name, description))
-            .map_err(|err| format!("failed to write {}: {err}", skill_path.display()))?;
     }
-    fs::write(&provenance_path, hermes_provenance(name))
-        .map_err(|err| format!("failed to write {}: {err}", provenance_path.display()))?;
     let entry = find_skill(name)?;
+    let skill_root = Path::new(&entry.path)
+        .parent()
+        .ok_or("skill path has no parent")?;
+    let provenance_path = skill_root.join("provenance.yaml");
+    let provenance = fs::read_to_string(&provenance_path).map_err(|_| {
+        format!(
+            "`{name}` is not locally vendored with upstream provenance; use Agora vendoring with an official Hermes checkout first"
+        )
+    })?;
+    for field in ["upstream_repository:", "upstream_path:", "upstream_commit:"] {
+        if !provenance.lines().any(|line| line.starts_with(field)) {
+            return Err(format!("`{name}` provenance is missing `{field}`; refusing to register an unverifiable vendor copy"));
+        }
+    }
     write_registry_entry(&entry)?;
     render_value(
-        json!({"vendored": name, "skillPath": skill_path, "provenancePath": provenance_path}),
+        json!({"vendored": name, "skillPath": entry.path, "provenancePath": provenance_path, "status": "registered-existing-vendored-copy"}),
         json_output,
     )
 }
@@ -311,16 +312,7 @@ fn parse_skill_entry(path: &Path) -> Result<SkillEntry, String> {
         source: infer_source(&path_string),
         subsystem: infer_subsystem(&path_string, &name),
         residency: infer_residency(&path_string),
-        dependencies: frontmatter
-            .get("dependencies")
-            .map(|value| {
-                value
-                    .split(',')
-                    .map(|item| item.trim().to_owned())
-                    .filter(|item| !item.is_empty())
-                    .collect()
-            })
-            .unwrap_or_default(),
+        dependencies: parse_frontmatter_dependencies(&text)?,
         current_rating: None,
         name,
         description,
@@ -346,6 +338,33 @@ fn parse_frontmatter(text: &str) -> BTreeMap<String, String> {
         );
     }
     out
+}
+
+fn parse_frontmatter_dependencies(text: &str) -> Result<Vec<String>, String> {
+    let Some(rest) = text.strip_prefix("---\n") else {
+        return Ok(Vec::new());
+    };
+    let Some(end) = rest.find("\n---") else {
+        return Ok(Vec::new());
+    };
+    let frontmatter: serde_yaml::Mapping = serde_yaml::from_str(&rest[..end])
+        .map_err(|err| format!("invalid skill frontmatter: {err}"))?;
+    let key = serde_yaml::Value::String("dependencies".to_owned());
+    let Some(value) = frontmatter.get(&key) else {
+        return Ok(Vec::new());
+    };
+    let dependencies = value
+        .as_sequence()
+        .ok_or("skill frontmatter dependencies must be a YAML sequence")?;
+    dependencies
+        .iter()
+        .map(|value| {
+            value
+                .as_str()
+                .map(str::to_owned)
+                .ok_or("skill frontmatter dependencies must contain only strings".to_owned())
+        })
+        .collect()
 }
 
 fn first_body_line(text: &str) -> Option<String> {
@@ -576,19 +595,6 @@ fn hermes_catalog() -> BTreeMap<&'static str, &'static str> {
     ])
 }
 
-fn hermes_skill_doc(name: &str, description: &str) -> String {
-    format!(
-        "---\nname: {name}\ndescription: {description}\nversion: 0.1.0\ntags: [hermes, ml, vendored]\nplatforms: [darwin, linux]\nsource: hermes\n---\n\n# {name}\n\nUse this vendored Hermes skill when the Epi-Logos ML skill surface needs: {description}\n\n## Contract\n\n- Keep runtime credentials in the owning model-slot or deployment config.\n- Record artifacts in the Agora skill index before Anima dispatch.\n- Preserve downstream skill residency; this vendored skill supplies method capability, not subsystem law.\n\n## Verification\n\nRun `epi skill show {name}` and `epi skill register {name}` after vendoring.\n"
-    )
-}
-
-fn hermes_provenance(name: &str) -> String {
-    format!(
-        "source: hermes-priority-13\nname: {name}\nupstream_commit: local-catalog-12.24\nvendored_at: {}\nvendor_agent: codex-m-dev-12-t12-24\nnetwork_fetch: unavailable-in-sandbox\n",
-        Utc::now().to_rfc3339()
-    )
-}
-
 fn custom_skill_doc(name: &str, subsystem: Subsystem) -> String {
     format!(
         "---\nname: {name}\ndescription: Custom {subsystem:?} ML skill scaffold generated by the Agora/Zeithoven skill surface.\nversion: 0.1.0\ntags: [custom, ml, {subsystem:?}]\n---\n\n# {name}\n\nThis skill is scaffolded for the {subsystem:?} ML surface. Implementations must load thresholds and training hyperparameters from `~/.epi-logos/config.toml`; code must refuse missing required keys rather than pinning defaults.\n"
@@ -609,5 +615,20 @@ fn slugify(value: &str) -> Result<String, String> {
         Err("description did not contain a usable skill name".to_owned())
     } else {
         Ok(slug)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_frontmatter_dependencies;
+
+    #[test]
+    fn parses_yaml_dependency_sequences_without_list_artifacts() {
+        let dependencies = parse_frontmatter_dependencies(
+            "---\nname: dspy\ndependencies: [dspy, openai, anthropic]\n---\n\n# DSPy\n",
+        )
+        .expect("frontmatter parses");
+
+        assert_eq!(dependencies, ["dspy", "openai", "anthropic"]);
     }
 }

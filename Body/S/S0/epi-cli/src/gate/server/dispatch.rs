@@ -14,7 +14,7 @@ use crate::gate::sessions::{SessionPatch, SessionStore};
 use crate::gate::{
     anima, approvals, browser, channels, chat, config, cron, devices, epii, gnostic, graph,
     graphiti, improve, logs, models, nodes, review, sessions, skills, subagents, system,
-    transcripts, update, wizard,
+    transcripts, update, verifier, wizard,
 };
 
 use super::method_envelope::{DispatchResult, PostResponseAction};
@@ -56,6 +56,18 @@ pub(super) async fn dispatch_rpc(
                 .map(DispatchResult::immediate)
                 .map_err(invalid_params_error)
         }
+        "s0'.verifier.check_state" => verifier::check_state(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s0'.verifier.emit_query" => verifier::emit_query(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s0'.verifier.validate_membership" => verifier::validate_membership(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s0'.verifier.owl_query" => verifier::owl_query(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         "sessions.list" => {
             let items = store
                 .list()
@@ -1268,6 +1280,15 @@ pub(super) async fn dispatch_rpc(
         "s1'.vault.write_file" => crate::gate::s1_hen::write_file(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s1'.base.ensure" => crate::gate::s1_hen::base_ensure(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s1'.q_articulation.accept" => {
+            crate::gate::s1_hen::q_articulation_accept(state_root, &frame.params)
+                .await
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
         "s1'.vault.rename_file" | "s1'.vault.move_file" => {
             crate::gate::s1_hen::rename_or_move_file(&frame.params)
                 .map(DispatchResult::immediate)
@@ -1364,6 +1385,18 @@ pub(super) async fn dispatch_rpc(
                 .and_then(|value| value.as_u64())
                 .map(|value| value as usize);
             improve::history(state_root, limit)
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
+        "s5'.improve.q_review.run" => improve::q_review_run(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.improve.q_review.latest" => improve::q_review_latest(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.improve.q_review.night_pass" => {
+            improve::q_review_night_pass(state_root, &frame.params)
+                .await
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }

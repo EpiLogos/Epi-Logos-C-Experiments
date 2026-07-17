@@ -5,7 +5,7 @@ Rust crate `epi-s5-epii-review-core` — the `ReviewStore` review-inbox / govern
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 
 ## Ownership
-- `src/lib.rs` — crate root / entire public surface: `ReviewStore` (`submit` / `inbox` / `resolve` / `history`) over `ReviewSubmission`, `ReviewInboxItem`, `ReviewInbox`, `GovernanceProfile`, `ReviewResolveRequest`, `ReviewResolution`, `ReviewHistory`, plus enums `ReviewSource` / `ReviewStatus` / `ReviewDecision` / `ReviewPriority` / `ReviewCategory` / `GateKind`.
+- `src/lib.rs` — crate root / entire public surface: `ReviewStore` (`submit` / `inbox` / `resolve` / `history` / `approved_human_resolution`) over `ReviewSubmission`, `ReviewInboxItem`, `ReviewInbox`, `GovernanceProfile`, `ReviewResolveRequest`, `ReviewResolution`, `ReviewHistory`, plus enums `ReviewSource` / `ReviewStatus` / `ReviewDecision` / `ReviewPriority` / `ReviewCategory` / `GateKind`. `approved_human_resolution` is the narrow S5 authority query used before a canonical Q articulation can mutate.
 - `tests/baseline_state_fixture.rs`, `tests/review_governance.rs`, `tests/review_inbox.rs`, `tests/personal_field_composition.rs` — contract / governance / inbox / DR-M4-3 composition tests.
 - `Cargo.toml`, `Cargo.lock` — crate manifest (serde, serde_json, uuid).
 - Does NOT own coordinate semantics, kernel shapes, or the S5/S5' agent contract — those live in their owning specs, `Body/S/epi-kernel-contract`, and `epii-agent/agent-contract.json` (sibling), not here.

@@ -383,6 +383,40 @@ impl ReviewStore {
         Ok(ReviewHistory { items, resolutions })
     }
 
+    /// Return the latest approval only when it is an explicit human decision
+    /// over a human-gated review item. Canon-write adapters use this as their
+    /// narrow authority check; all review policy remains in S5.
+    pub fn approved_human_resolution(&self, item_id: &str) -> Result<ReviewResolution, String> {
+        if item_id.trim().is_empty() {
+            return Err("review item id is required for canon-write authority".to_owned());
+        }
+        let state = self.load_state()?;
+        let item = state
+            .items
+            .iter()
+            .find(|item| item.item_id == item_id)
+            .ok_or_else(|| format!("review item not found: {item_id}"))?;
+        if !item.requires_human {
+            return Err(format!(
+                "review item {item_id} is not human-gated and cannot authorize a canon write"
+            ));
+        }
+        let resolution = state
+            .resolutions
+            .iter()
+            .rev()
+            .find(|resolution| resolution.item_id == item_id)
+            .ok_or_else(|| format!("review item {item_id} has no approved human resolution"))?;
+        if resolution.decision != ReviewDecision::Approve
+            || resolution.resolved_by != ResolutionActor::Human
+        {
+            return Err(format!(
+                "review item {item_id} has no approved human resolution"
+            ));
+        }
+        Ok(resolution.clone())
+    }
+
     fn state_path(&self) -> PathBuf {
         self.root.join("s5-review-state.json")
     }

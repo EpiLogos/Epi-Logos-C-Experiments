@@ -15,8 +15,9 @@ use std::collections::HashSet;
 #[test]
 fn every_sub_tick_ratio_is_drawn_from_the_matheme_ratio_set() {
     // Spec Table D: unison, fourths both ways, fifths both ways, epogdoon.
-    let lawful: HashSet<(u16, u16)> =
-        [(1, 1), (4, 3), (3, 4), (2, 3), (3, 2), (9, 8)].into_iter().collect();
+    let lawful: HashSet<(u16, u16)> = [(1, 1), (4, 3), (3, 4), (2, 3), (3, 2), (9, 8)]
+        .into_iter()
+        .collect();
     let mut seen = HashSet::new();
     for sub_tick in 0u8..12 {
         let ratio = harmonic_ratio_fraction_for_sub_tick(sub_tick);
@@ -52,5 +53,9 @@ fn mode_intervals_carry_the_diatonic_seven() {
     // The diatonic law: seven intervals [0,2,4,5,7,9,11] spanning the octave —
     // the modal half of the 12×7 = 84 (lens, mode) landscape.
     assert_eq!(MODE_INTERVALS, [0, 2, 4, 5, 7, 9, 11]);
-    assert_eq!(MODE_INTERVALS.len() * 12, 84, "12 lenses × 7 modes = 84 states");
+    assert_eq!(
+        MODE_INTERVALS.len() * 12,
+        84,
+        "12 lenses × 7 modes = 84 states"
+    );
 }

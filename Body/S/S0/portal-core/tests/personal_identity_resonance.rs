@@ -189,8 +189,7 @@ fn q_composed_order_is_identity_then_transit_then_activity() {
     let q_activity = [0.6, 0.8, 0.0, 0.0];
     let expected = [0.0, 0.0, 0.8, 0.6];
 
-    let composed =
-        portal_core::compose_personal_quaternion(q_identity, q_transit, q_activity);
+    let composed = portal_core::compose_personal_quaternion(q_identity, q_transit, q_activity);
     assert_approx_quat(composed, expected);
     assert_unit(composed);
 

@@ -4,6 +4,8 @@ use std::path::{Path, PathBuf};
 use epi_s1_hen_compiler_core::base_view::{
     derive_base_schema_from_ct_contract, ensure_base_view, BaseEnsureParams, BaseScope,
 };
+use epi_s1_hen_compiler_core::{validate_frontmatter_contract, ValidatedFrontmatterContract};
+use serde_yaml::Value;
 
 fn temp_root(name: &str) -> PathBuf {
     let mut root = std::env::temp_dir();
@@ -17,9 +19,100 @@ fn read(path: &Path) -> String {
     fs::read_to_string(path).expect("base-view note")
 }
 
+fn ct4b_contracts() -> Vec<ValidatedFrontmatterContract> {
+    [
+        r#"coordinate: ""
+c_4_artifact_role: "daily-note"
+c_1_ct_type: "CT4b"
+c_3_day_id: "{{day_id}}"
+c_3_created_at: "{{created_at}}"
+c_0_source_coordinates: []
+c_5_reflection_complete: false
+p0_grounds:
+p1_tasks_defined:
+p2_sessions: []
+p3_patterns:
+p4_files_touched: []
+p5_synthesis:
+"#,
+        r#"coordinate: "M4-{{session_id}}"
+c_4_artifact_role: "now"
+c_1_ct_type: "CT4b"
+c_2_session_id: "{{session_id}}"
+c_3_day_id: "{{day_id}}"
+c_3_created_at: "{{created_at}}"
+c_3_fibonacci_position: 0
+c_0_source_coordinates: []
+c_5_reflection_complete: false
+p0_adjacencies:
+p1_intentions:
+p2_operations:
+p3_decisions:
+p4_concepts_engaged:
+p5_learnings:
+"#,
+    ]
+    .into_iter()
+    .map(|source| {
+        let yaml: Value = serde_yaml::from_str(source).unwrap();
+        validate_frontmatter_contract(&yaml).expect("CT4b contract")
+    })
+    .collect()
+}
+
+#[test]
+fn frontmatter_contract_validation_accepts_templates_and_rejects_unknown_keys() {
+    let canonical: Value = serde_yaml::from_str(
+        r#"coordinate: "M4-{{session_id}}"
+c_1_ct_type: "CT4b"
+c_2_session_id: "{{session_id}}"
+p0_grounds:
+"#,
+    )
+    .unwrap();
+    let contract = validate_frontmatter_contract(&canonical).expect("template contract");
+    assert_eq!(contract.ct_type, "CT4b");
+    assert_eq!(contract.source_kind, "contract");
+    assert_eq!(contract.columns[0], "coordinate");
+
+    let legacy: Value = serde_yaml::from_str(
+        r#"coordinate: ""
+ctx_type: "CT4b"
+p5_synthesis:
+"#,
+    )
+    .unwrap();
+    assert_eq!(
+        validate_frontmatter_contract(&legacy)
+            .expect("legacy contract")
+            .ct_type,
+        "CT4b"
+    );
+
+    let invalid: Value = serde_yaml::from_str(
+        r#"coordinate: ""
+c_1_ct_type: "CT4b"
+invented_contract_key: true
+"#,
+    )
+    .unwrap();
+    assert!(validate_frontmatter_contract(&invalid).is_err());
+
+    let malformed_canonical: Value = serde_yaml::from_str(
+        r#"coordinate: ""
+c_1_ct_type: 4
+ctx_type: "CT4b"
+p0_grounds:
+"#,
+    )
+    .unwrap();
+    assert!(validate_frontmatter_contract(&malformed_canonical).is_err());
+}
+
 #[test]
 fn ct4b_contract_schema_derives_period_console_columns() {
-    let schema = derive_base_schema_from_ct_contract("CT4b").expect("CT4b schema");
+    let schema =
+        derive_base_schema_from_ct_contract("CT4b", &ct4b_contracts()).expect("CT4b schema");
 
     assert_eq!(schema.filter, r#"c_1_ct_type == "CT4b""#);
     assert_eq!(schema.group_by.as_deref(), Some("c_3_day_id"));
@@ -43,6 +136,12 @@ fn ct4b_contract_schema_derives_period_console_columns() {
         .iter()
         .any(|column| column == "p4_files_touched"));
     assert!(schema.columns.iter().any(|column| column == "p5_synthesis"));
+    assert!(schema
+        .columns
+        .iter()
+        .any(|column| column == "c_3_fibonacci_position"));
+    assert!(!schema.columns.iter().any(|column| column == "session_id"));
+    assert!(!schema.columns.iter().any(|column| column == "day_id"));
 }
 
 #[test]
@@ -55,6 +154,7 @@ fn ensure_base_view_emits_ct4b_markdown_note_and_is_idempotent() {
         scope: BaseScope::Ctx,
         residency: residency.clone(),
         views: None,
+        contracts: ct4b_contracts(),
     };
 
     let first = ensure_base_view(&params).expect("first ensure");
@@ -88,6 +188,7 @@ fn ensure_base_view_refuses_canon_residency() {
         scope: BaseScope::Ctx,
         residency: root.join("Idea/Bimba/World"),
         views: None,
+        contracts: ct4b_contracts(),
     };
 
     let error = ensure_base_view(&params).expect_err("canon residency refused");
