@@ -11,6 +11,7 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::{Duration, Instant};
 
 use crate::portal::clock_state::{KairosState, PlanetState};
 
@@ -41,6 +42,42 @@ pub struct KerykeionProbe {
     pub reason: Option<String>,
 }
 
+/// Upper bound on the local dependency probe. The probe normally returns in
+/// well under 100ms, but a broken native dependency (e.g. a `swisseph` that
+/// hangs on load) could otherwise block the gateway dispatch thread until the
+/// caller's own timeout fires. Bounding here keeps the gateway responsive and
+/// reports `available: false` instead of starving the runtime. Kept safely
+/// under the gateway-method probe's per-call timeout so the method answers
+/// before the caller gives up.
+const KERYKEION_PROBE_TIMEOUT: Duration = Duration::from_millis(2500);
+
+/// Run a child to completion but never longer than `timeout`. On timeout the
+/// child is killed and `Ok(None)` is returned, so a hung subprocess can never
+/// block the calling (dispatch) thread indefinitely. `Err` means the child
+/// could not be spawned or waited on at all.
+fn bounded_output(
+    command: &mut Command,
+    timeout: Duration,
+) -> std::io::Result<Option<std::process::Output>> {
+    let mut child = command
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()?;
+
+    let start = Instant::now();
+    loop {
+        if start.elapsed() >= timeout {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Ok(None);
+        }
+        match child.try_wait()? {
+            Some(_status) => return child.wait_with_output().map(Some),
+            None => std::thread::sleep(Duration::from_millis(25)),
+        }
+    }
+}
+
 /// Probe the local Python dependency only. This never reads PASU or computes a
 /// natal/current chart; onboarding can therefore ask for informed opt-in
 /// without crossing the M4 identity boundary.
@@ -59,8 +96,23 @@ except Exception as error:
     print(json.dumps({"available": False, "version": None, "reason": str(error)}))
 "#;
 
-    let output = match Command::new("python3").args(["-c", script]).output() {
-        Ok(output) => output,
+    let output = match bounded_output(
+        Command::new("python3").args(["-c", script]),
+        KERYKEION_PROBE_TIMEOUT,
+    ) {
+        Ok(Some(output)) => output,
+        Ok(None) => {
+            return KerykeionProbe {
+                dependency: "kerykeion".to_owned(),
+                available: false,
+                python_available: true,
+                version: None,
+                reason: Some(format!(
+                    "kerykeion probe timed out after {}ms",
+                    KERYKEION_PROBE_TIMEOUT.as_millis()
+                )),
+            };
+        }
         Err(error) => {
             return KerykeionProbe {
                 dependency: "kerykeion".to_owned(),
@@ -574,6 +626,51 @@ pub fn load_natal() -> Result<Option<KerykeionResult>, String> {
 #[cfg(test)]
 mod kairos_parse_tests {
     use super::*;
+
+    #[test]
+    fn bounded_output_kills_a_slow_child_and_returns_promptly() {
+        // A hung subprocess must not block the caller for its full lifetime:
+        // the bound fires, the child is killed, and control returns near the
+        // timeout — never after the child's own 5s sleep.
+        let start = Instant::now();
+        let result = bounded_output(
+            Command::new("sh").args(["-c", "sleep 5"]),
+            Duration::from_millis(200),
+        );
+        assert!(
+            matches!(result, Ok(None)),
+            "a child exceeding the bound must return Ok(None), got {result:?}"
+        );
+        assert!(
+            start.elapsed() < Duration::from_secs(2),
+            "must return promptly after the bound, not wait out the child"
+        );
+    }
+
+    #[test]
+    fn bounded_output_returns_a_fast_child_output() {
+        let output = bounded_output(
+            Command::new("sh").args(["-c", "printf hi"]),
+            Duration::from_millis(2000),
+        )
+        .expect("spawn should succeed")
+        .expect("a fast child should complete before the bound");
+        assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "hi");
+    }
+
+    #[test]
+    fn probe_kerykeion_is_bounded_and_well_formed() {
+        // The probe never blocks the dispatch thread beyond its bound, and
+        // always yields a well-formed KerykeionProbe regardless of whether the
+        // local dependency is present, broken, or slow.
+        let start = Instant::now();
+        let probe = probe_kerykeion();
+        assert_eq!(probe.dependency, "kerykeion");
+        assert!(
+            start.elapsed() < KERYKEION_PROBE_TIMEOUT + Duration::from_secs(1),
+            "probe must return within its bound plus spawn slack"
+        );
+    }
 
     #[test]
     fn kairotic_ttl_is_four_hours() {
