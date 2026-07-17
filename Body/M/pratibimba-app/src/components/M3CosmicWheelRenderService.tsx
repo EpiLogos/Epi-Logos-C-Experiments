@@ -24,6 +24,7 @@ import {
 } from './QuintessenceIndicator';
 
 export interface M3WheelProjection {
+    readonly surfaceIndex: number | null;
     readonly codonId: number;
     readonly codon: string | null;
     /** Wire label from portal-core codon_rotation_projection ('dual' |
@@ -35,6 +36,7 @@ export interface M3WheelProjection {
     readonly hexagramId: number | null;
     readonly tarotMinorId: number | null;
     readonly tarotShadowCodon: number | null;
+    readonly lineChangeOperator: string | null;
     readonly datasetLutState: string | null;
 }
 
@@ -44,6 +46,7 @@ export interface M3WheelSurface {
     /** WC-M3-SA-2: the codon → Major-Arcana card id is kernel-owned and not
      *  yet bussed; the inner ring renders slots + this pending marker. */
     readonly majorArcana: 'pending-major-arcana-map';
+    readonly tick: number | null;
     readonly tick12: number | null;
     readonly degree720: number | null;
     readonly generation: number;
@@ -139,6 +142,7 @@ export function buildM3WheelSurface(input: {
     const activeProjection: M3WheelProjection | null =
         crp && codonId !== null && codonId >= 0 && codonId < 64
             ? Object.freeze({
+                  surfaceIndex: num(crp.surfaceIndex),
                   codonId,
                   codon: str(crp.codon),
                   codonClass: str(crp.codonClass),
@@ -148,6 +152,12 @@ export function buildM3WheelSurface(input: {
                   hexagramId: mahamaya ? num(mahamaya.hexagramId) : null,
                   tarotMinorId: mahamaya ? num(mahamaya.tarotMinorId) : null,
                   tarotShadowCodon: mahamaya ? num(mahamaya.tarotShadowCodon) : null,
+                  lineChangeOperator: mahamaya
+                      ? str(mahamaya.lineChangeOperator) ??
+                        (num(mahamaya.lineChangeOperatorAddress) === null
+                            ? null
+                            : String(num(mahamaya.lineChangeOperatorAddress)))
+                      : null,
                   datasetLutState: str(crp.datasetLutState)
               })
             : null;
@@ -168,6 +178,7 @@ export function buildM3WheelSurface(input: {
         }),
         activeProjection,
         majorArcana: 'pending-major-arcana-map' as const,
+        tick: num(root.tick),
         tick12: num(root.tick12),
         degree720: num(root.degree720),
         generation: input.generation,

@@ -14,7 +14,10 @@
  *   the profile transport (bridge/gatewayClient); kernel-side derivations.
  */
 
-import type { MathemeHarmonicProfileBoundary } from '../bridge/types';
+import type {
+    KernelBridgeCachedProfile,
+    MathemeHarmonicProfileBoundary
+} from '../bridge/types';
 
 /** LAW: stable blocker-id namespace so Wave-A blockers stay greppable across tracks. */
 export const WAVE_A_BLOCKER_ID_PREFIX = 'wave-a.pending' as const;
@@ -211,6 +214,44 @@ export function evaluateIntegratedReadiness(
 }
 
 /**
+ * Adapt the actual profile cache emitted by the gateway to the readiness
+ * boundary. The bridge normally stores the raw harmonic payload, but accepts
+ * an already-boundary-shaped payload too so the carrier never needs a second
+ * profile store or an invented transport wrapper.
+ */
+export function evaluateCachedProfileIntegratedReadiness(
+    cached: KernelBridgeCachedProfile | null,
+    opts?: { readonly performanceEvent?: PerformanceEventSlice | null }
+): IntegratedReadinessResult {
+    const rawProfile = recordValue(cached?.profile);
+    if (cached === null || rawProfile === null) {
+        return evaluateIntegratedReadiness(null, opts);
+    }
+    const boundaryPayload = recordValue(rawProfile.payload);
+    const capabilities = Array.isArray(rawProfile.capabilities)
+        ? rawProfile.capabilities.filter((capability): capability is string => typeof capability === 'string')
+        : [];
+    const boundary: MathemeHarmonicProfileBoundary = {
+        generation: numberValue(rawProfile.generation) ?? cached.generation,
+        pointerAnchor: stringValue(rawProfile.pointerAnchor),
+        capabilities,
+        payload: boundaryPayload ?? rawProfile
+    };
+    return evaluateIntegratedReadiness(boundary, opts);
+}
+
+/** Human-readable status for both integrated faces; marker ids remain in data attributes. */
+export function formatIntegratedReadiness(result: IntegratedReadinessResult): string {
+    if (result.state === 'profile_missing_field') {
+        return `Wave A blocked: ${result.blockingMarkers.map(marker => marker.marker).join(', ')}`;
+    }
+    if (result.conditionalPending.length > 0) {
+        return `Wave A ready; event pending: ${result.conditionalPending.map(marker => marker.marker).join(', ')}`;
+    }
+    return 'Wave A ready';
+}
+
+/**
  * Carrier two-level resolution: every pane resolves fields under
  * `payload.harmonicProfile` falling back to the payload root — the gate does
  * the same at both levels so a field is found wherever the bridge nests it.
@@ -249,4 +290,18 @@ function readPath(root: Readonly<Record<string, unknown>>, path: string): unknow
         current = (current as Readonly<Record<string, unknown>>)[segment];
     }
     return current;
+}
+
+function recordValue(value: unknown): Readonly<Record<string, unknown>> | null {
+    return value !== null && typeof value === 'object' && !Array.isArray(value)
+        ? value as Readonly<Record<string, unknown>>
+        : null;
+}
+
+function stringValue(value: unknown): string | null {
+    return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+function numberValue(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }

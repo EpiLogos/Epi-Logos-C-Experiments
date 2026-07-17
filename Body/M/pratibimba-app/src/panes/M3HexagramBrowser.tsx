@@ -102,7 +102,7 @@ export function M3HexagramBrowser() {
                     background: active ? wheelUnlit : 'transparent',
                     padding: '2px',
                     textAlign: 'center',
-                    fontSize: '11px'
+                    fontSize: 'var(--type-micro)'
                 }}
             >
                 {kingWen}

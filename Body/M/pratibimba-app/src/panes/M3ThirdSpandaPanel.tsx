@@ -26,6 +26,7 @@ import {
     TRANSLATION_RULE,
     assertParentAttribution
 } from '../engine/compositionMatheme';
+import type { CouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { ProvenanceBadge } from '../ui/primitives';
 
 /** The QCD colour analogue of the translation rule — a labelled reference
@@ -45,7 +46,27 @@ function executionTrace(): string {
     );
 }
 
-export function M3ThirdSpandaPanel() {
+export type ThirdSpandaSkeletonEvent =
+    | 'Additive137'
+    | 'MersenneM7Ground'
+    | 'SpandaCrownBifurcation';
+
+export interface M3ThirdSpandaPanelProps {
+    readonly couplingFlow?: CouplingFlowOverlay;
+    readonly skeletonEventsActive?: readonly ThirdSpandaSkeletonEvent[];
+}
+
+function isActive(
+    event: ThirdSpandaSkeletonEvent,
+    activeEvents: readonly ThirdSpandaSkeletonEvent[]
+): boolean {
+    return activeEvents.includes(event);
+}
+
+export function M3ThirdSpandaPanel({
+    couplingFlow,
+    skeletonEventsActive = []
+}: M3ThirdSpandaPanelProps) {
     // Contract guard: the rendered +1 parent MUST resolve to M1-5 (DR-M1-1 /
     // DR-M5-2). The constant is safe; the guard keeps the invariant honest if
     // the source is ever edited to the forbidden M0-Anuttara-witness value.
@@ -65,7 +86,15 @@ export function M3ThirdSpandaPanel() {
                 co-canonical QCD octet/singlet face, each an evaluable identity. */}
             <dl className="m3-spanda-forms" data-testid="m3-spanda-forms">
                 {forms.map(form => (
-                    <div key={form.id}>
+                    <div
+                        key={form.id}
+                        data-active={
+                            (form.id === 'spanda-bridge' && isActive('Additive137', skeletonEventsActive)) ||
+                            (form.id === 'mersenne' && isActive('MersenneM7Ground', skeletonEventsActive))
+                                ? 'true'
+                                : 'false'
+                        }
+                    >
                         <dt data-testid={`m3-spanda-form-label-${form.id}`}>{form.label}</dt>
                         <dd data-testid={`m3-spanda-form-${form.id}`}>
                             {form.symbol} = {form.evaluate()}
@@ -74,7 +103,10 @@ export function M3ThirdSpandaPanel() {
                 ))}
             </dl>
 
-            <p data-testid="m3-spanda-execution-trace">
+            <p
+                data-testid="m3-spanda-execution-trace"
+                data-active={isActive('SpandaCrownBifurcation', skeletonEventsActive) ? 'true' : 'false'}
+            >
                 Execution-order trace (symbolic skeleton): {executionTrace()}
             </p>
 
@@ -102,13 +134,24 @@ export function M3ThirdSpandaPanel() {
                 symbolic skeleton — it renders the reference measurement-face, it does not compute it.
             </p>
 
-            {/* Lane 4 — Recognition Context: the warrant text rides
-                payload.couplingFlowAlignment, which is not bussed → honest-pending. */}
-            <p className="mext-widget-empty" data-testid="m3-spanda-recognition-warrant">
-                <ProvenanceBadge state="pending" reason="pending-recognition-context-warrant" />
-                recognition-context warrant: pending-recognition-context-warrant — the
-                couplingFlowAlignment boundary (WC-M3-SA-5) is not yet on the bus.
-            </p>
+            {/* Lanes 2 and 4 consume the full kernel alignment as one record.
+                Partial fields remain pending in the shared parser. */}
+            {couplingFlow?.state === 'ready' ? (
+                <>
+                    <ol data-testid="m3-spanda-physics-descent">
+                        {couplingFlow.physicsDescent.map(step => <li key={step}>{step}</li>)}
+                    </ol>
+                    <p data-testid="m3-spanda-recognition-warrant">
+                        recognition-context warrant: {couplingFlow.recognitionWarrant}
+                    </p>
+                </>
+            ) : (
+                <p className="mext-widget-empty" data-testid="m3-spanda-recognition-warrant">
+                    <ProvenanceBadge state="pending" reason="pending-recognition-context-warrant" />
+                    recognition-context warrant: pending-recognition-context-warrant — the
+                    couplingFlowAlignment boundary (WC-M3-SA-5) is not yet on the bus.
+                </p>
+            )}
         </section>
     );
 }

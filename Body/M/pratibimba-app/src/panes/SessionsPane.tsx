@@ -8,10 +8,13 @@ import { useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { SessionClient, SessionRecord } from '../bridge/sessionClient';
 import { useProvenanceStore, useSessionStore } from '../state/stores';
+import { useOmniPanelSessionStore, useOmniPanelTabState } from './omni/omnipanelSessionState';
 
 export function SessionsPane() {
     const bound = useSessionStore(s => s.sessionKey);
     const connected = useProvenanceStore(s => s.connection.connected);
+    const sessionTab = useOmniPanelTabState('sessions');
+    const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -40,9 +43,11 @@ export function SessionsPane() {
                 <button
                     type="button"
                     data-testid="session-new"
-                    onClick={() =>
-                        useSessionStore.getState().setSession({ sessionKey: `app-${Date.now().toString(36)}` })
-                    }
+                    onClick={() => {
+                        const sessionKey = `app-${Date.now().toString(36)}`;
+                        useSessionStore.getState().setSession({ sessionKey });
+                        patchTab('sessions', { selectedSessionId: sessionKey });
+                    }}
                 >
                     new session
                 </button>
@@ -54,7 +59,10 @@ export function SessionsPane() {
                             type="button"
                             data-testid={`session-${record.sessionKey}`}
                             className={record.sessionKey === bound ? 'session-item session-bound' : 'session-item'}
-                            onClick={() => useSessionStore.getState().setSession({ sessionKey: record.sessionKey })}
+                            onClick={() => {
+                                useSessionStore.getState().setSession({ sessionKey: record.sessionKey });
+                                patchTab('sessions', { selectedSessionId: record.sessionKey });
+                            }}
                         >
                             {record.sessionKey === bound ? '◈ ' : ''}
                             {record.label ?? record.sessionKey}
@@ -65,6 +73,11 @@ export function SessionsPane() {
                     <li className="pane-message">no sessions yet — the first chat message creates one</li>
                 ) : null}
             </ul>
+            {sessionTab.selectedSessionId && sessionTab.selectedSessionId !== bound ? (
+                <p className="pane-message" data-testid="sessions-persisted-selection">
+                    Restored session selection: {sessionTab.selectedSessionId}
+                </p>
+            ) : null}
         </div>
     );
 }

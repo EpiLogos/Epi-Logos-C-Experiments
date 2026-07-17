@@ -29,6 +29,10 @@ describe('PersonalRecognitionEngine', () => {
                 privacyClass: 'public-current-context',
                 profile: {
                     harmonicProfile: {
+                        kleinFlip: false,
+                        resonance72Index: 36,
+                        audioOctet: [220, 247, 262, 294, 330, 349, 392, 440],
+                        nodalQuartet: [{ qlPosition: 0, helix: 'a', m: 1, n: 2 }],
                         anuttaraPentadicTrace: {
                             sourceBinaryState: '0/1',
                             codon: 'GCU',
@@ -80,6 +84,7 @@ describe('PersonalRecognitionEngine', () => {
 
         const surface = screen.getByTestId('personal-recognition-engine');
         expect(surface.dataset.state).toBe('ready');
+        expect(screen.getByTestId('personal-recognition-integrated-readiness').dataset.state).toBe('ready');
         expect(screen.getByTestId('m0-virtue-witness-panel')).toBeTruthy();
         expect(screen.getByTestId('personal-recognition-m4-handoff').textContent).toContain(
             'GCU'

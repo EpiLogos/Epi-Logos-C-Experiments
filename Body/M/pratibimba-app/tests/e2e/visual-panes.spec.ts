@@ -277,6 +277,41 @@ test('cosmic face: the Bases pane evaluates live S1 MOC membership through the v
     await expect(pipeline).toContainText('Bimba/World/Types/Crystallisation-Pipeline.base');
 });
 
+test('cosmic face: BasesView reads snapshot and graph sources and cross-filters shared coordinate context (48.T48.6)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Bases' })
+        .click();
+
+    const ready = page.getByTestId('bases-projection-ready');
+    await expect(ready).toBeVisible({ timeout: 20_000 });
+    await expect(ready).toHaveAttribute('data-source', 'static');
+
+    const primary = page.locator('.face-active .bases-primary-panel');
+    await expect(primary.getByTestId('bases-row-M2-1')).toBeVisible();
+    await primary.getByTestId('bases-row-M2-1').click();
+
+    const context = page.getByTestId('bases-context-panel');
+    await expect(context.locator('header code')).toHaveText('M2-1');
+    await expect(context.getByTestId('bases-view-list')).toHaveAttribute('data-row-count', /[1-9][0-9]*/);
+    await expect(context).toContainText('M2-1-0');
+
+    await ready.getByRole('button', { name: 'live' }).click();
+    await expect(page.getByTestId('bases-projection-ready')).toHaveAttribute('data-source', 'dynamic', {
+        timeout: 20_000
+    });
+    await expect(primary.locator('header code')).toHaveText('s2.graph.query');
+    await expect(primary.getByTestId('bases-row-M2-1')).toBeVisible();
+
+    await ready.getByLabel('view').selectOption('cards');
+    await expect(primary.getByTestId('bases-view-cards')).toBeVisible();
+    await expect(primary.getByText('M2-1', { exact: true }).first()).toBeVisible();
+});
+
 test('cosmic face: the Walk pane walks the REAL graph and the # invert round-trips X → X′ → X', async ({
     page
 }) => {

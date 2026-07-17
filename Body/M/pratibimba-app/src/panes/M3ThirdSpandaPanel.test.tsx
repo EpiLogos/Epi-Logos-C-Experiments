@@ -5,6 +5,7 @@ import {
     QCD_OCTET_SINGLET_FORM,
     THIRD_SPANDA_FORMS
 } from '../engine/compositionMatheme';
+import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 
 afterEach(cleanup);
 
@@ -64,5 +65,36 @@ describe('M3ThirdSpandaPanel', () => {
         expect(screen.getByTestId('m3-spanda-recognition-warrant').textContent).toContain(
             'pending-recognition-context-warrant'
         );
+    });
+
+    it('renders the kernel-provided physics descent and recognition warrant without deriving either lane', () => {
+        const couplingFlow = buildCouplingFlowOverlay({
+            couplingFlowAlignment: {
+                symbolicSkeletons: ['137 = 64 + 72 + 1'],
+                physicsDescent: ['G_SM', 'D_mu', 'alpha_EM(0)'],
+                measurementFaces: ['137.035999... dressed low-energy measurement-face'],
+                recognitionContext: { warrant: 'source-warrant symbolic skeleton, not renderer computation' },
+                caveats: ['137 is the integer skeleton; 137.035999... is the dressed low-energy measurement-face']
+            }
+        });
+        render(<M3ThirdSpandaPanel couplingFlow={couplingFlow} />);
+
+        expect(screen.getByTestId('m3-spanda-physics-descent').textContent).toContain('G_SM');
+        expect(screen.getByTestId('m3-spanda-physics-descent').textContent).toContain('alpha_EM(0)');
+        expect(screen.getByTestId('m3-spanda-recognition-warrant').textContent).toContain(
+            'source-warrant symbolic skeleton, not renderer computation'
+        );
+    });
+
+    it('marks only the canonical form or trace named by a live skeleton event', () => {
+        render(
+            <M3ThirdSpandaPanel
+                skeletonEventsActive={['Additive137', 'SpandaCrownBifurcation']}
+            />
+        );
+
+        expect(screen.getByTestId('m3-spanda-form-spanda-bridge').parentElement?.dataset.active).toBe('true');
+        expect(screen.getByTestId('m3-spanda-form-mersenne').parentElement?.dataset.active).toBe('false');
+        expect(screen.getByTestId('m3-spanda-execution-trace').dataset.active).toBe('true');
     });
 });

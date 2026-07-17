@@ -15,6 +15,10 @@ import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
 import { NowPane } from '../panes/NowPane';
 import { useTickStore } from '../state/stores';
+import {
+    evaluateCachedProfileIntegratedReadiness,
+    formatIntegratedReadiness
+} from './integratedReadiness';
 
 type RecordValue = Readonly<Record<string, unknown>>;
 
@@ -86,6 +90,10 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
 export function PersonalRecognitionEngine() {
     const cached = useTickStore(state => state.profile);
     const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
+    const integratedReadiness = useMemo(
+        () => evaluateCachedProfileIntegratedReadiness(cached),
+        [cached]
+    );
 
     return (
         <section
@@ -101,6 +109,15 @@ export function PersonalRecognitionEngine() {
                 </div>
                 <span data-testid="personal-recognition-state" data-state={reading.state}>
                     {reading.state}
+                </span>
+                <span
+                    data-testid="personal-recognition-integrated-readiness"
+                    data-state={integratedReadiness.state}
+                    data-blockers={integratedReadiness.blockerIds.join(',')}
+                    data-conditional={integratedReadiness.conditionalPending.map(marker => marker.marker).join(',')}
+                    title="Shared Wave-A readiness from the live cached kernel profile"
+                >
+                    {formatIntegratedReadiness(integratedReadiness)}
                 </span>
             </header>
 

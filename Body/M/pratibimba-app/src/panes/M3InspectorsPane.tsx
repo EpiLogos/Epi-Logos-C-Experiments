@@ -20,6 +20,7 @@ import {
     buildM3WheelSurface,
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
+import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
 import { useProvenanceStore, useTickStore } from '../state/stores';
@@ -99,6 +100,10 @@ export function M3InspectorsPane() {
             }),
         [cached]
     );
+    const couplingFlow = useMemo(
+        () => buildCouplingFlowOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
+        [cached]
+    );
 
     const toggle = (id: M3InspectorId) => {
         setOpen(previous => {
@@ -176,7 +181,7 @@ export function M3InspectorsPane() {
                 </button>
             </div>
 
-            {showThirdSpanda ? <M3ThirdSpandaPanel /> : null}
+            {showThirdSpanda ? <M3ThirdSpandaPanel couplingFlow={couplingFlow} /> : null}
             {showHexagramBrowser ? <M3HexagramBrowser /> : null}
 
             <div className="m3-functional-lens" data-testid="m3-functional-lens">

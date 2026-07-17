@@ -6,7 +6,9 @@
 import { describe, expect, it } from 'vitest';
 import type { MathemeHarmonicProfileBoundary } from '../bridge/types';
 import {
+    evaluateCachedProfileIntegratedReadiness,
     evaluateIntegratedReadiness,
+    formatIntegratedReadiness,
     integratedReadinessBlockedBy,
     WAVE_A_BLOCKER_ID_PREFIX,
     WAVE_A_PENDING_MARKERS,
@@ -57,6 +59,26 @@ describe('Wave-A marker table (LAW)', () => {
 });
 
 describe('evaluateIntegratedReadiness', () => {
+    it('adapts the live gateway cache shape without introducing a second profile transport', () => {
+        const result = evaluateCachedProfileIntegratedReadiness({
+            generation: 31,
+            cachedAtMs: 31_000,
+            stale: false,
+            stalenessMs: 0,
+            privacyClass: 'public-current-context',
+            profile: {
+                harmonicProfile: {
+                    kleinFlip: false,
+                    resonance72Index: 21,
+                    audioOctet: [220, 247, 262, 294, 330, 349, 392, 440],
+                    nodalQuartet: [{ qlPosition: 0, helix: 'a', m: 1, n: 2 }]
+                }
+            }
+        });
+        expect(result.state).toBe('ready');
+        expect(formatIntegratedReadiness(result)).toBe('Wave A ready');
+    });
+
     it('blocks on the unconditional markers when no profile exists at all', () => {
         const result = evaluateIntegratedReadiness(null);
         expect(result.state).toBe('profile_missing_field');

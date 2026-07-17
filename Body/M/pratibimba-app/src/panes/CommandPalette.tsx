@@ -1,7 +1,12 @@
 /**
- * Coordinate: M' (command palette, plan T2.4)
- * Actualises: cmd-shift-P — the keyboard face of the command registry.
+ * Coordinate: M' (command palette, plan T2.4; rerun 31.T31.11)
+ * Residency: Body/M/pratibimba-app/src/panes
+ * Position (#n): #4 -- Context/Type
+ * Actualises: cmd-shift-P -- the keyboard face of the global command registry.
  *   An overlay, not a modal gate: escape closes, nothing blocks.
+ * Public surface: CommandPalette.
+ * Does NOT own: action-surface placement, command semantics, or palette state.
+ * Contract: [[CHROME-CONTRACT]] sections 2 and 10.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -16,7 +21,9 @@ export function CommandPalette() {
 
     const matches = useMemo(() => {
         const q = query.toLowerCase();
-        return commands.list().filter(c => c.title.toLowerCase().includes(q) || c.id.includes(q));
+        return commands
+            .listPalette()
+            .filter(c => c.title.toLowerCase().includes(q) || c.id.includes(q));
     }, [query, open]);
 
     useEffect(() => {

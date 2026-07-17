@@ -15,6 +15,7 @@ import {
     loadCanvasBaseReflections,
     loadMocBaseSections
 } from './mocBaseRuntime';
+import { BasesViewPane } from './BasesViewPane';
 
 const DEFAULT_MOC = 'Bimba/World/Types/Coordinates/S/S1/S1.md';
 const DEFAULT_CANVAS = 'Bimba/World/Types/Coordinates/S/S1/S1.canvas';
@@ -77,6 +78,7 @@ export function MocBaseReflectionPane({
                 <code>{mocPath}</code>
                 <button type="button" onClick={() => void refresh()}>refresh</button>
             </div>
+            <BasesViewPane />
             {error ? <p className="pane-message">{error}</p> : null}
             {sections.map(section => (
                 <section

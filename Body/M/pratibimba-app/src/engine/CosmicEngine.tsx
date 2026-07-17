@@ -21,6 +21,8 @@ import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRe
 import { useInstrumentStore } from '../audio/instrument';
 import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
+import { buildM3WheelSurface } from '../components/M3CosmicWheelRenderService';
+import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3CodonRotationProjectionForLensRing';
 import { useCoordinateStore, useTickStore } from '../state/stores';
 import {
     CLOCK_LENSES,
@@ -34,6 +36,10 @@ import {
 import { modulationEngine, useEngineStore } from './modulation/engine';
 import { buildPentadicOverlay } from './cosmicPentadicOverlay';
 import { buildCouplingFlowOverlay } from './couplingFlowOverlay';
+import {
+    evaluateCachedProfileIntegratedReadiness,
+    formatIntegratedReadiness
+} from './integratedReadiness';
 import {
     buildClockFieldOverlay,
     buildClockFieldOverlayState,
@@ -289,6 +295,17 @@ export function CosmicEngine() {
 
     // strip readouts derive from the same snapshot law the graph uses
     const snapshot = useMemo(() => harmonicSnapshot(cached?.profile ?? null), [cached]);
+    const m3LensRingProjection = useMemo(() => {
+        const surface = buildM3WheelSurface({
+            payload: (cached?.profile as Record<string, unknown> | null) ?? {},
+            generation: cached?.generation ?? 0
+        });
+        try {
+            return buildM3CodonRotationProjectionForLensRing(surface);
+        } catch {
+            return null;
+        }
+    }, [cached]);
     // 07.T7.8: M1's `(p,q)` phase is kernel-owned topology data. The engine
     // exposes the received pair on its composed surface; it never generates one.
     const torusKnotPhase = useMemo(() => {
@@ -308,6 +325,10 @@ export function CosmicEngine() {
     // profile snapshot. It is a strict kernel window, never a fourth pole.
     const couplingFlow = useMemo(
         () => buildCouplingFlowOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
+        [cached]
+    );
+    const integratedReadiness = useMemo(
+        () => evaluateCachedProfileIntegratedReadiness(cached),
         [cached]
     );
     // 4.3: clock-field aspect/hop overlay — same single profile subscription;
@@ -972,6 +993,14 @@ export function CosmicEngine() {
         return (
             <div className="pane-message" data-testid="cosmic-engine-fallback">
                 WebGL unavailable — the cosmic clock needs a GPU surface.
+                <span
+                    data-testid="engine-integrated-readiness"
+                    data-state={integratedReadiness.state}
+                    data-blockers={integratedReadiness.blockerIds.join(',')}
+                    data-conditional={integratedReadiness.conditionalPending.map(marker => marker.marker).join(',')}
+                >
+                    {formatIntegratedReadiness(integratedReadiness)}
+                </span>
             </div>
         );
     }
@@ -980,6 +1009,9 @@ export function CosmicEngine() {
             className="cosmic-engine"
             data-testid="cosmic-engine"
             data-level={level}
+            data-m3-lens-ring-contract={m3LensRingProjection?.contractVersion ?? 'pending'}
+            data-m3-lens-ring-generation={m3LensRingProjection?.profileGeneration ?? 'pending'}
+            data-m3-lens-ring-cell={m3LensRingProjection?.cells[0]?.cellIndex ?? 'pending'}
             data-torus-knot-phase-p={torusKnotPhase?.p ?? 'pending-m1-topology'}
             data-torus-knot-phase-q={torusKnotPhase?.q ?? 'pending-m1-topology'}
         >
@@ -1029,6 +1061,15 @@ export function CosmicEngine() {
             ) : null}
             <div className="cosmic-engine-strip">
                 <span data-testid="engine-generation">⟳ {generation ?? '—'}</span>
+                <span
+                    data-testid="engine-integrated-readiness"
+                    data-state={integratedReadiness.state}
+                    data-blockers={integratedReadiness.blockerIds.join(',')}
+                    data-conditional={integratedReadiness.conditionalPending.map(marker => marker.marker).join(',')}
+                    title="Wave-A readiness against the live cached kernel profile; performance-event markers remain conditional until that stream is present"
+                >
+                    {formatIntegratedReadiness(integratedReadiness)}
+                </span>
                 <span>
                     {snapshot.chromatic?.note ?? '—'} · {snapshot.chromatic?.xPrimeNote ?? '—'} ·{' '}
                     {snapshot.chromatic?.mirrorNote ?? '—'}

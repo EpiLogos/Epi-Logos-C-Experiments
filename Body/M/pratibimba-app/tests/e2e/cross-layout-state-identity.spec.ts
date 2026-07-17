@@ -2,7 +2,7 @@
  * Coordinate: M' shell acceptance
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): #0/1 cross-layout carrier boundary
- * Actualises: real Chromium proof that daily-0-1 <-> ide-deep preserves the shared identity tuple
+ * Actualises: real Chromium proof that daily-0-1 <-> ide-deep preserves the seven-field shared identity tuple (the OmniPanel fold is panel state, not identity)
  * Public surface: Playwright test over the spawned gateway and filesystem vault sidecar
  * Does NOT own: gateway profile production, session storage, day anchoring, or route target law
  * Contract: [[M'-SYSTEM-SPEC]] and rerun tranche [[11.T11.6]]
@@ -19,6 +19,7 @@ interface IdentityTuple {
     profileGeneration: number | null;
     sessionKey: string | null;
     dayNow: string | null;
+    activityBarMode: string;
 }
 
 interface IdentityReceipt {
@@ -117,6 +118,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
     expect(intoDeep).toMatchObject({ fromLayout: 'daily-0-1', toLayout: 'ide-deep' });
     expect(intoDeep.after).toEqual(intoDeep.before);
     expect(intoDeep.after).toMatchObject({ coordinate: 'M3-3', sessionKey, dayNow: day });
+    expect(intoDeep.after.activityBarMode).toBe('coordinate-tree');
     expect(Number.isInteger(intoDeep.after.lens)).toBeTruthy();
     expect(Number.isInteger(intoDeep.after.mode)).toBeTruthy();
     expect(Number.isInteger(intoDeep.after.profileGeneration)).toBeTruthy();
@@ -132,6 +134,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
     expect(backToDaily).toMatchObject({ fromLayout: 'ide-deep', toLayout: 'daily-0-1' });
     expect(backToDaily.after).toEqual(backToDaily.before);
     expect(backToDaily.after).toMatchObject({ coordinate: 'M3-3', sessionKey, dayNow: day });
+    expect(backToDaily.after.activityBarMode).toBe('coordinate-tree');
     expect(Number.isInteger(backToDaily.after.lens)).toBeTruthy();
     expect(Number.isInteger(backToDaily.after.mode)).toBeTruthy();
     expect(Number.isInteger(backToDaily.after.profileGeneration)).toBeTruthy();

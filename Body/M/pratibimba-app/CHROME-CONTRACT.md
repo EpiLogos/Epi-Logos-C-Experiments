@@ -4,7 +4,7 @@
 **Residency:** `Body/M/pratibimba-app/CHROME-CONTRACT.md`
 **Position:** #4 — Context/Type (the chrome partition IS the type law of the carrier's surfaces)
 **Actualises:** SC-I-1 + SC-I-2 + SC-I-4 of `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md`, remapped from the frozen Theia contract `Body/M/epi-theia/extensions/ide-shell-m0-m5/CHROME-CONTRACT.md` (structure + capability inventory are LAW; Theia plumbing is dead) onto the carrier's real chrome.
-**Public surface:** the §2 surface table (machine-parsed by `src/chromeContract.test.ts`), the §6 nine-id readiness taxonomy, the §5 CrossLayoutIntent envelope field list.
+**Public surface:** the §2 surface table (machine-parsed by `src/chromeContract.test.ts`), the §6 nine-id readiness taxonomy, the §5 CrossLayoutIntent envelope field list, and the §10 action-surface policy.
 **Does NOT own:** pane bodies (their tranches), gateway protocol (`Body/S/S3/gateway-contract`), vault law (S1/Hen), kernel computation (`Body/S/S0/portal-core`), the OmniPanel tab manifest values (`src/panes/omni/omnipanelRuntime.ts` owns `OMNIPANEL_TABS`; this contract must stay in parity with it, not the reverse).
 **Contract:** this file. Validator: `src/chromeContract.test.ts` (vitest; parses this file against the live registry in `src/App.tsx` + `OMNIPANEL_TABS`).
 
@@ -166,3 +166,15 @@ Allowed first-build work under this contract (everything else is audit-extend):
 - `CHROME-CONTRACT.md` itself (this tranche, 28.T28.1).
 
 Anti-greenfield rule: audit-extend, never rebuild. New chrome work must cite the relevant section here, take its declared §2 surface id, preserve `GatewayClient` as the only network primitive, preserve the readiness primitive of §6, and preserve the M0'/M5'/shared partition unless a later decision record explicitly changes it. The validator `src/chromeContract.test.ts` holds this file and the live registry in lockstep.
+
+## 10. Action Surface Contribution Policy
+
+The command registry distinguishes global commands from actions contributed to a concrete rendered surface. A bound contribution declares exactly one `surface` and its matching subject. `src/commands/actionSurface.ts` validates the pairing at registry registration, so a contribution that would misstate its scope fails before it can reach a user.
+
+| Surface | Required subject | Contribution law |
+| --- | --- | --- |
+| `toolbar` | `active-widget` | Persistent action for the currently active pane/widget only. It must not pretend to act on an arbitrary selection or artifact. |
+| `context-menu` | `selection` | Selection-bound, target-specific action. It belongs in the menu produced for that selected target. |
+| `inline` | `artifact` | Artifact-level action rendered beside the artifact it changes or opens. |
+
+The command palette remains the global command membrane. Surface-bound actions are deliberately excluded from it: the palette has neither a selected target nor an artifact receiver, so surfacing them there would bypass the policy. A command that needs both a global invocation and a rendered action must register those as distinct contributions with their own honest scopes. This policy owns no pane selection state, artifact identity, or button rendering.

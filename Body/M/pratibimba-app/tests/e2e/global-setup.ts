@@ -121,6 +121,24 @@ export default async function globalSetup(): Promise<void> {
     sweepPort(E2E_GATEWAY_PORT);
     sweepPort(E2E_SIDECAR_PORT);
 
+    // One real temp vault is shared by both read paths: the browser-sidecar
+    // commands and the gateway's governed s1'.vault.* methods. Keeping these
+    // roots identical is what makes cross-carrier filesystem assertions real.
+    const vaultRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-vault-'));
+    mkdirSync(join(vaultRoot, 'Empty', 'Present'), { recursive: true });
+    const vaultArtifacts = [
+        'Bimba/World/Types/Coordinates/S/S1/S1.md',
+        'Bimba/World/Types/Coordinates/S/S1/S1.canvas',
+        'Bimba/World/Types/Crystallisation-Pipeline.base',
+        'Bimba/World/Types/Psychoids/Psychoids.md',
+        'Bimba/Map/snapshots/M2.base.json'
+    ];
+    for (const artifact of vaultArtifacts) {
+        const destination = join(vaultRoot, artifact);
+        mkdirSync(dirname(destination), { recursive: true });
+        copyFileSync(join(REPO_ROOT, 'Idea', artifact), destination);
+    }
+
     // (b) the REAL gateway on the dedicated e2e port, isolated state root.
     //     s2.parashaktiCorrespondences (the M2 correspondence face) reads the
     //     live Neo4j parashakti-deep graph via Neo4jConfig::from_env. Pass the
@@ -142,6 +160,7 @@ export default async function globalSetup(): Promise<void> {
             HOME: gatewayHome,
             EPI_GATE_STATE_ROOT: gatewayStateRoot,
             EPI_GNOSTIC_PYTHON: epiGnosticBin,
+            EPILOGOS_VAULT: vaultRoot,
             EPILOGOS_NEO4J_URI: process.env.EPILOGOS_NEO4J_URI ?? 'bolt://localhost:7687',
             EPILOGOS_NEO4J_USER: process.env.EPILOGOS_NEO4J_USER ?? 'neo4j',
             EPILOGOS_NEO4J_PASSWORD: process.env.EPILOGOS_NEO4J_PASSWORD ?? ''
@@ -151,24 +170,7 @@ export default async function globalSetup(): Promise<void> {
     });
     gateway.unref();
 
-    // (c) the temp-vault sidecar over a REAL mkdtemp filesystem
-    const vaultRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-vault-'));
-    mkdirSync(join(vaultRoot, 'Empty', 'Present'), { recursive: true });
-
-    // Seed the S1 MOC, its canvas-hosted Base, and one real matching record
-    // from the repository vault. The browser still reads/evaluates them through
-    // the production vault sidecar; these are real artifacts, not test doubles.
-    const vaultArtifacts = [
-        'Bimba/World/Types/Coordinates/S/S1/S1.md',
-        'Bimba/World/Types/Coordinates/S/S1/S1.canvas',
-        'Bimba/World/Types/Crystallisation-Pipeline.base',
-        'Bimba/World/Types/Psychoids/Psychoids.md'
-    ];
-    for (const artifact of vaultArtifacts) {
-        const destination = join(vaultRoot, artifact);
-        mkdirSync(dirname(destination), { recursive: true });
-        copyFileSync(join(REPO_ROOT, 'Idea', artifact), destination);
-    }
+    // (c) the temp-vault sidecar over the same real mkdtemp filesystem.
 
     // (d) isolated nara home for the REAL `epi nara oracle cast` — the cast's
     // temporal-authority gate needs a fresh kairos cache (normally written by

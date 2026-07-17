@@ -18,6 +18,7 @@ import { gateway } from '../bridge/gatewayHolder';
 import { useEventsStore } from '../state/eventsStore';
 import { useProvenanceStore, useSessionStore } from '../state/stores';
 import { completionsFor, dispatchGuard, isSlashCommandLine, parseSlashCommand } from './omni/slashCommand';
+import { useOmniPanelSessionStore, useOmniPanelTabState } from './omni/omnipanelSessionState';
 
 interface ChatMessage {
     role: string;
@@ -71,8 +72,10 @@ export function ChatPane() {
     const sessionKey = useSessionStore(s => s.sessionKey);
     const connected = useProvenanceStore(s => s.connection.connected);
     const events = useEventsStore(s => s.events);
+    const persisted = useOmniPanelTabState('pi-chat');
+    const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const [history, setHistory] = useState<ChatMessage[]>([]);
-    const [draft, setDraft] = useState('');
+    const [draft, setDraft] = useState(persisted.draftMessage);
     const [sendError, setSendError] = useState<string | null>(null);
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -85,6 +88,14 @@ export function ChatPane() {
             .then(receipt => setHistory(coerceMessages(receipt.artifact)))
             .catch(() => setHistory([]));
     }, [sessionKey, connected]);
+
+    useEffect(() => {
+        setDraft(persisted.draftMessage);
+    }, [persisted.draftMessage]);
+
+    useEffect(() => {
+        patchTab('pi-chat', { conversationId: sessionKey });
+    }, [patchTab, sessionKey]);
 
     const live = events.filter(e => e.channel === 'chat');
     useEffect(() => {
@@ -116,6 +127,7 @@ export function ChatPane() {
             useSessionStore.getState().setSession({ sessionKey: key });
         }
         setDraft('');
+        patchTab('pi-chat', { draftMessage: '' });
         setSendError(null);
         setHistory(h => [...h, { role: 'user', text: message }]);
         try {
@@ -154,7 +166,11 @@ export function ChatPane() {
                     </span>
                 ) : null}
             </header>
-            <div className="chat-scroll" ref={scrollRef}>
+            <div
+                className="chat-scroll"
+                ref={scrollRef}
+                onScroll={event => patchTab('pi-chat', { scrollOffset: event.currentTarget.scrollTop })}
+            >
                 {history.map((m, i) => (
                     <div key={`h-${i}`} className={`chat-msg chat-${m.role}`} data-testid="chat-msg">
                         <span className="chat-role" data-testid="chat-actor-badge">{actorBadge(m.role)}</span>
@@ -203,7 +219,10 @@ export function ChatPane() {
                     value={draft}
                     disabled={!connected}
                     placeholder={connected ? 'Message the organism…' : 'gateway disconnected'}
-                    onChange={evt => setDraft(evt.target.value)}
+                    onChange={evt => {
+                        setDraft(evt.target.value);
+                        patchTab('pi-chat', { draftMessage: evt.target.value });
+                    }}
                     onKeyDown={evt => {
                         if (evt.key === 'Enter' && !evt.shiftKey) {
                             evt.preventDefault();
