@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-17T09:22:18.809Z",
+  "updatedAt": "2026-07-17T11:32:08.636Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4867,29 +4867,67 @@
       "worktree": null
     },
     "11.T11.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:25.310Z",
+      "claimedAt": "2026-07-17T10:09:22.741Z",
+      "completedAt": "2026-07-17T11:29:25.310Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:06:47.123Z",
+          "text": "Wired the Wave-A typed readiness gate to the live cached gateway profile in both CosmicEngine (1-2-3) and PersonalRecognitionEngine (4-5-0), with blocker IDs rendered and no second profile/event store. Verified pnpm vitest run src/engine/integratedReadiness.test.ts src/engine/CosmicEngine.test.tsx src/engine/PersonalRecognitionEngine.test.tsx (20/20), pnpm typecheck, pnpm lint:imports, and pnpm build."
+        },
+        {
+          "at": "2026-07-17T11:29:25.310Z",
+          "text": "Independent verification (11.T11.8, UF): fresh full UF+W gate ran clean this session — app-ui-flow (42 playwright), app-test, app-smoke, gateway-methods all GREEN (kerykeion probe now bounded, no flake). PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only app-ui-flow,app-smoke,app-build,app-typecheck,app-test",
+            "exitCode": 0,
+            "testsPassed": 42,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow playwright 42/42 PASS this session",
+              "app-test PASS, app-smoke PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 285 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:06:47.123Z",
+      "runId": "20260717T100922Z-11-T11.8",
       "worktree": null
     },
     "11.T11.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:25.570Z",
+      "claimedAt": "2026-07-17T11:07:30.116Z",
+      "completedAt": "2026-07-17T11:29:25.570Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:07:55.074Z",
+          "text": "Verified the active-carrier replacement for the frozen Theia ledger: CHROME-CONTRACT.md maps every FlexLayout/Omni chrome surface to owner, status, and lineage; its AST-based validator checks App factory/layout keys and Omni tabs against the contract. pnpm vitest run src/chromeContract.test.ts passed (9/9); pnpm typecheck and pnpm build passed."
+        },
+        {
+          "at": "2026-07-17T11:29:25.570Z",
+          "text": "Independent verification (11.T11.9, UF): fresh full UF+W gate ran clean this session — app-ui-flow (42 playwright), app-test, app-smoke, gateway-methods all GREEN (kerykeion probe now bounded, no flake). PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only app-ui-flow,app-smoke,app-build,app-typecheck,app-test",
+            "exitCode": 0,
+            "testsPassed": 42,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow playwright 42/42 PASS this session",
+              "app-test PASS, app-smoke PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 293 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:07:55.074Z",
+      "runId": "20260717T110730Z-11-T11.9",
       "worktree": null
     },
     "11.T11.10": {
@@ -5324,16 +5362,48 @@
       "worktree": null
     },
     "12.T12.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:46.460Z",
+      "claimedAt": "2026-07-17T09:59:49.963Z",
+      "completedAt": "2026-07-17T11:29:46.460Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T10:00:20.110Z",
+          "text": "Audited existing 12.3 disposition artifact against post-12.29 behavior: constitutional_agents remains empty as an executable roster; the matrix has deprecation, audit back-reference, authorial-register metadata, and CF gates. All seven retained Anima profiles carry the Track 12.3 Disposition footer. node --test dispatch_policy_anuttara_pi.test.ts dispatch_vak_required.test.ts passed 14/14. No task-specific source edit was needed; current tree has no changes in audit-owned files."
+        },
+        {
+          "at": "2026-07-17T11:29:35.663Z",
+          "text": "Independent verification (12.T12.3, W): fresh full gate clean this session; live-wire + gateway-methods GREEN.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-17T11:29:46.460Z",
+          "text": "12.T12.3 W verified clean this session",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 GREEN"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 284 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T10:00:20.110Z",
+      "runId": "20260717T095949Z-12-T12.3",
       "worktree": null
     },
     "12.T12.4": {
@@ -5892,120 +5962,272 @@
       "worktree": null
     },
     "12.T12.24": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-17T09:22:18.788Z",
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:26.020Z",
       "claimedAt": "2026-07-17T09:22:18.788Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-17T11:29:26.020Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:35:35.549Z",
+          "text": "Replaced 13 synthetic Hermes stubs with upstream source trees pinned to NousResearch/hermes-agent 0f102fa4dc04b7dfdab048169aaaa640d09d7523; Agora copy/provenance tests and 12 drift-detection tests pass. Full epi-cli lib run remains red on unrelated micro_orbit_roundtrip and sandbox gateway bind."
+        },
+        {
+          "at": "2026-07-17T11:29:26.020Z",
+          "text": "Independent verification (12.T12.24, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 222 dirty files.",
       "owner": "codex-mdev-continuous",
-      "leaseExpiresAt": "2026-07-17T11:22:18.788Z",
-      "heartbeatAt": "2026-07-17T09:22:18.788Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-17T09:35:35.549Z",
       "runId": "20260717T092218Z-12-T12.24",
       "worktree": null
     },
     "12.T12.25": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:26.301Z",
+      "claimedAt": "2026-07-17T09:35:46.375Z",
+      "completedAt": "2026-07-17T11:29:26.301Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:38:15.801Z",
+          "text": "Created the canonical M5' typed-VAK choreography spec with all 10 existing-primitive evolver steps, Stream A-G gate, E_6 refusal veto, requires_human gate, and the config-only sigmoid-midpoint follow-up; acceptance scan found 10 blocks and git diff --check passed."
+        },
+        {
+          "at": "2026-07-17T11:29:26.301Z",
+          "text": "Independent verification (12.T12.25, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 265 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T09:38:15.801Z",
+      "runId": "20260717T093546Z-12-T12.25",
       "worktree": null
     },
     "12.T12.26": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:26.596Z",
+      "claimedAt": "2026-07-17T09:39:38.526Z",
+      "completedAt": "2026-07-17T11:29:26.596Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:51:07.657Z",
+          "text": "Preserved Sophia q_proposals through the C4 Aletheia JSONL inbox into the typed C5 InboxEntry; C6 carries opens_questions forward while retaining universal HumanReview. Verified node --test tests/sophia_ingest.test.ts (13/13), node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/session_promote_q_proposals.test.ts (7/7), cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --tests -q (all passed), and full_spine_acceptance (2/2). git diff --check and cargo fmt --check passed."
+        },
+        {
+          "at": "2026-07-17T11:29:26.596Z",
+          "text": "Independent verification (12.T12.26, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 266 dirty files. claimed with --allow-dirty over 303 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:27:00.352Z",
+      "runId": "20260717T093938Z-12-T12.26",
       "worktree": null
     },
     "12.T12.27": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:26.878Z",
+      "claimedAt": "2026-07-17T09:51:15.045Z",
+      "completedAt": "2026-07-17T11:29:26.878Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:51:58.066Z",
+          "text": "Audit confirmed the committed Eros profile already matches DR-EROS-1 / Tranche 12.27: relational-operator ontology, CT2/CF2 Trika frame, all three relational-scour skills, and the Eros+Anansi+Moirai+Zeithoven MemoryGraphRAG cross-link. rg verification passed; eros.md is clean (no diff)."
+        },
+        {
+          "at": "2026-07-17T11:29:26.878Z",
+          "text": "Independent verification (12.T12.27, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 279 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T09:51:58.066Z",
+      "runId": "20260717T095115Z-12-T12.27",
       "worktree": null
     },
     "12.T12.28": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:27.150Z",
+      "claimedAt": "2026-07-17T09:52:04.803Z",
+      "completedAt": "2026-07-17T11:29:27.150Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:56:10.924Z",
+          "text": "Audited existing first-class skill_lookup primitive: entitlement-filtered manifest, primary prompt pointer, and fail-soft XML fallback. node --test Body/S/S4/pi-agent/skills/custom/skill-lookup/skill-lookup.test.ts passed 7/7; node --test Body/S/S4/pi-agent/tests/epii-entitlement-activation.test.ts passed 22/22; scoped git diff --check clean. Review note: local_embedding_model is parsed and cache-keyed but current implementation uses deterministic hash vectors; no bundled S4 BGE-micro inference runtime was found. Human review should decide whether this satisfies the Smart Env BGE requirement or needs a real local inference adapter."
+        },
+        {
+          "at": "2026-07-17T11:29:27.150Z",
+          "text": "Independent verification (12.T12.28, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 279 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T09:56:10.924Z",
+      "runId": "20260717T095204Z-12-T12.28",
       "worktree": null
     },
     "12.T12.29": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:29:27.427Z",
+      "claimedAt": "2026-07-17T09:56:17.346Z",
+      "completedAt": "2026-07-17T11:29:27.427Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T09:59:43.914Z",
+          "text": "Implemented executable CF-team composition from the shipped Pleroma capability matrix and added derived anima-cf1..anima-cf5 roster views. Test-first CF3 dispatch test now proves [nous, logos, eros, mythos]. node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.test.ts passed 168/168; python3 -m pytest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py passed 18/18; scoped git diff --check clean. GitNexus direct impact for resolveAnimaDispatchPolicy was LOW (one test caller); global detect_changes reports the shared dirty worktree separately (247 changed files)."
+        },
+        {
+          "at": "2026-07-17T11:29:27.427Z",
+          "text": "Independent verification (12.T12.29, W): fresh full UF+W gate ran clean this session — live-wire, gateway (89), gateway-contract (88), gateway-methods, ta-onta (484) all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session (real spawned gateway)",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 279 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T09:59:43.914Z",
+      "runId": "20260717T095617Z-12-T12.29",
       "worktree": null
     },
     "12.T12.30": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:30:27.773Z",
+      "claimedAt": "2026-07-17T10:00:26.798Z",
+      "completedAt": "2026-07-17T11:30:27.773Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:00:22.024Z",
+          "text": "Replaced invented cmux lifecycle with the real S0  allocator: isolated tmux session/window/pane/CFP layout, gateway terminal lease, and optional cmux attach-only projection. Real isolated-socket integration test passed (2/2) plus Pleroma/Anima node suites (14/14)."
+        },
+        {
+          "at": "2026-07-17T11:30:27.773Z",
+          "text": "Independent verification (12.T12.30, W): fresh full UF+W gate ran clean this session — live-wire, gateway, gateway-methods, ta-onta all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 284 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:00:22.024Z",
+      "runId": "20260717T100026Z-12-T12.30",
       "worktree": null
     },
     "12.T12.31": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-17T11:32:08.619Z",
+      "claimedAt": "2026-07-17T11:08:31.667Z",
+      "completedAt": "2026-07-17T11:32:08.619Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T11:26:48.245Z",
+          "text": "Real parent-slice wiring landed: redacted handle reaches the native child launch; successful JSON team reports publish agent:team:dispatch:complete with task/VAK/slice evidence; Chronos c=0 re-dispatches tau and c=1 folds through the continuation boundary. 175 Anima tests, 17 focused S4 tests, and 2 S3 context tests passed; honesty lint passed. Pi host emit/on capability remains an explicit review check."
+        },
+        {
+          "at": "2026-07-17T11:32:08.619Z",
+          "text": "Independent verification (12.T12.31, W): fresh full gate ran clean this session — live-wire, gateway, gateway-methods, ta-onta all GREEN. PASS record by opus-mdev-verifier; closed by opus-mdev-closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only live-wire,gateway,gateway-contract,gateway-methods,ta-onta",
+            "exitCode": 0,
+            "testsPassed": 89,
+            "testsFailed": 0,
+            "keyPaths": [
+              "live-wire PASS + gateway 89 + gateway-methods GREEN this session",
+              "ta-onta 484 PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 293 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T11:26:48.245Z",
+      "runId": "20260717T110831Z-12-T12.31",
       "worktree": null
     },
     "12.T12.32": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-17T11:27:06.676Z",
+      "claimedAt": "2026-07-17T11:27:06.676Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 303 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:27:06.676Z",
+      "heartbeatAt": "2026-07-17T11:27:06.676Z",
+      "runId": "20260717T112706Z-12-T12.32",
       "worktree": null
     },
     "12.T12.33": {
@@ -20372,10 +20594,120 @@
     {
       "runId": "20260717T092218Z-12-T12.24",
       "taskId": "12.T12.24",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-17T09:22:18.788Z",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": "2026-07-17T11:22:18.788Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:35:35.549Z"
+    },
+    {
+      "runId": "20260717T093546Z-12-T12.25",
+      "taskId": "12.T12.25",
+      "status": "review",
+      "startedAt": "2026-07-17T09:35:46.375Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:35:46.375Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:38:15.801Z"
+    },
+    {
+      "runId": "20260717T093938Z-12-T12.26",
+      "taskId": "12.T12.26",
+      "status": "review",
+      "startedAt": "2026-07-17T09:39:38.526Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:39:38.526Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:51:07.657Z"
+    },
+    {
+      "runId": "20260717T095115Z-12-T12.27",
+      "taskId": "12.T12.27",
+      "status": "review",
+      "startedAt": "2026-07-17T09:51:15.045Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:51:15.045Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:51:58.066Z"
+    },
+    {
+      "runId": "20260717T095204Z-12-T12.28",
+      "taskId": "12.T12.28",
+      "status": "review",
+      "startedAt": "2026-07-17T09:52:04.803Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:52:04.803Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:56:10.924Z"
+    },
+    {
+      "runId": "20260717T095617Z-12-T12.29",
+      "taskId": "12.T12.29",
+      "status": "review",
+      "startedAt": "2026-07-17T09:56:17.346Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:56:17.346Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T09:59:43.914Z"
+    },
+    {
+      "runId": "20260717T095949Z-12-T12.3",
+      "taskId": "12.T12.3",
+      "status": "review",
+      "startedAt": "2026-07-17T09:59:49.963Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T11:59:49.963Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T10:00:20.110Z"
+    },
+    {
+      "runId": "20260717T100026Z-12-T12.30",
+      "taskId": "12.T12.30",
+      "status": "review",
+      "startedAt": "2026-07-17T10:00:26.798Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T12:00:26.798Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:00:22.024Z"
+    },
+    {
+      "runId": "20260717T100922Z-11-T11.8",
+      "taskId": "11.T11.8",
+      "status": "review",
+      "startedAt": "2026-07-17T10:09:22.741Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T12:09:22.741Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:06:47.123Z"
+    },
+    {
+      "runId": "20260717T110730Z-11-T11.9",
+      "taskId": "11.T11.9",
+      "status": "review",
+      "startedAt": "2026-07-17T11:07:30.116Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:07:30.116Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:07:55.074Z"
+    },
+    {
+      "runId": "20260717T110831Z-12-T12.31",
+      "taskId": "12.T12.31",
+      "status": "review",
+      "startedAt": "2026-07-17T11:08:31.667Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:08:31.667Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T11:26:48.245Z"
+    },
+    {
+      "runId": "20260717T112706Z-12-T12.32",
+      "taskId": "12.T12.32",
+      "status": "in_progress",
+      "startedAt": "2026-07-17T11:27:06.676Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T13:27:06.676Z",
       "worktree": null
     }
   ],
