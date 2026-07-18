@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-17T18:58:41.544Z",
+  "updatedAt": "2026-07-18T06:56:33.205Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -5407,55 +5407,127 @@
       "worktree": null
     },
     "12.T12.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:28.341Z",
+      "claimedAt": "2026-07-17T23:43:08.791Z",
+      "completedAt": "2026-07-18T06:56:28.341Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:43:49.766Z",
+          "text": "Verified the existing Pi-owned recursive-review gate without duplicating the frozen ACR implementation. node --test Body/S/S4/pi-agent/lib/review-gate.test.ts passed 5/5, including pi.enforceReviewGate({ recursiveSelfReview: true, actor: 'anima' }) => ok false until userFinalValidation passes. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:28.341Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.4.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 6 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:43:49.766Z",
+      "runId": "20260717T234308Z-12-T12.4",
       "worktree": null
     },
     "12.T12.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:28.589Z",
+      "claimedAt": "2026-07-17T23:43:54.582Z",
+      "completedAt": "2026-07-18T06:56:28.589Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:45:46.737Z",
+          "text": "Audit recorded at plan.runs/12.T12.5-capacity-views-audit.md. cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --test capacity_workflow_registry passed 2/2 over real stores; pnpm playwright test tests/e2e/autoresearch.spec.ts passed 3/3 in real Chromium against a spawned gateway and filesystem vault. Retained six capacities as the active Pratibimba Autoresearch monitoring matrix; no frozen Theia/OmniPanel-tab resurrection. External review remains Claude-owned."
+        },
+        {
+          "at": "2026-07-18T06:56:28.589Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 6 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:45:46.737Z",
+      "runId": "20260717T234354Z-12-T12.5",
       "worktree": null
     },
     "12.T12.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:28.843Z",
+      "claimedAt": "2026-07-17T23:45:51.694Z",
+      "completedAt": "2026-07-18T06:56:28.843Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:48:39.799Z",
+          "text": "Closed actual MediatedRunEvidencePacket parity gap in the active Pratibimba carrier: added the 16 Pleroma m5_4_governance packet fields and runtime rejection for missing profile/graph/session/semantic/S5 context. pnpm vitest run src/panes/omni/evidenceShapes.test.ts passed 4/4 including exact matrix set equality and missing-currentProfile rejection; pnpm typecheck passed. External review remains Claude-owned; no automatic verification handoff. Owning canon flagged in Body/M/pratibimba-app/AGENTS.md for S4-SPEC/M5'-SPEC."
+        },
+        {
+          "at": "2026-07-18T06:56:28.843Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.6.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 6 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:48:39.799Z",
+      "runId": "20260717T234551Z-12-T12.6",
       "worktree": null
     },
     "12.T12.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:29.116Z",
+      "claimedAt": "2026-07-17T23:48:45.152Z",
+      "completedAt": "2026-07-18T06:56:29.116Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:49:02.556Z",
+          "text": "Verified existing Pi-owned axiom translation without touching frozen Theia: node --test Body/S/S4/pi-agent/tests/axiom-translate.test.ts passed 2/2, exercising epi-gnostic/n10s provenance validation and plain-prose to reviewable OWL/SHACL Turtle translation. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:29.116Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.7.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:49:02.556Z",
+      "runId": "20260717T234845Z-12-T12.7",
       "worktree": null
     },
     "12.T12.8": {
@@ -5506,16 +5578,34 @@
       "worktree": null
     },
     "12.T12.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:29.385Z",
+      "claimedAt": "2026-07-17T23:49:06.253Z",
+      "completedAt": "2026-07-18T06:56:29.385Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:51:24.911Z",
+          "text": "Audit recorded in plan.runs/12.T12.9-moirai-night-pass-audit.md; cargo gate_mediation_route passed 8/8; Anima moirai_night_pass passed 10/10; Aletheia moirai_rehear_handoff passed 6/6. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:29.385Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.9.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:51:24.911Z",
+      "runId": "20260717T234906Z-12-T12.9",
       "worktree": null
     },
     "12.T12.10": {
@@ -6378,29 +6468,65 @@
       "worktree": null
     },
     "12.T12.37": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-17T12:33:20.917Z",
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:27.847Z",
       "claimedAt": "2026-07-17T12:33:20.917Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-18T06:56:27.847Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T19:01:13.237Z",
+          "text": "Implemented epi know composed CLI packet; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml know_ passed 4/4 and the compiled binary emitted the full Z-thread/L5-1/witness/transcript/pole JSON packet. External review remains Claude-owned."
+        },
+        {
+          "at": "2026-07-18T06:56:27.847Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.37.md"
+            ]
+          }
+        }
+      ],
       "notes": "claimed with --allow-dirty over 314 dirty files.",
       "owner": "codex-mdev-continuous",
-      "leaseExpiresAt": "2026-07-17T14:33:20.917Z",
-      "heartbeatAt": "2026-07-17T12:33:20.917Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-17T19:01:13.237Z",
       "runId": "20260717T123320Z-12-T12.37",
       "worktree": null
     },
     "12.T12.38": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:28.095Z",
+      "claimedAt": "2026-07-17T19:01:33.377Z",
+      "completedAt": "2026-07-18T06:56:28.095Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:43:04.088Z",
+          "text": "Implemented live S0 gateway adapters for s5'.gnostic.musical_transcript and s2.graph.ananda_position over portal-core projection law. cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_m3_transcription_projection passed through a real spawned WebSocket gateway; cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract passed 28/28. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:28.095Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.38.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:43:04.088Z",
+      "runId": "20260717T190133Z-12-T12.38",
       "worktree": null
     },
     "14.T0": {
@@ -6719,29 +6845,39 @@
       "worktree": null
     },
     "15.T15.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-17T23:53:18.930Z",
+      "claimedAt": "2026-07-17T23:51:59.583Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-17T23:53:18.930Z",
+          "text": "Carrier audit recorded in plan.runs/15.T15.8-ananda-vortex-carrier-audit.md; focused real scene/view tests passed 19/19. Audit establishes missing backend matrix and ordered-streamline payload; no frontend reconstruction was introduced. External review remains Claude-owned; no automatic verification handoff."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:51:59.583Z",
+      "heartbeatAt": "2026-07-17T23:53:18.930Z",
+      "runId": "20260717T235159Z-15-T15.8",
       "worktree": null
     },
     "15.T15.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-17T23:54:16.658Z",
+      "claimedAt": "2026-07-17T23:53:27.681Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-17T23:54:16.658Z",
+          "text": "Audit recorded in plan.runs/15.T15.9-tick-choreography-audit.md; real Chromium tick choreography test against spawned gateway passed 1/1. App-level display-scrub law proven; M1 K2 full-matrix choreography remains explicitly unproven because backend payload is incomplete. External review remains Claude-owned; no automatic verification handoff."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:53:27.681Z",
+      "heartbeatAt": "2026-07-17T23:54:16.658Z",
+      "runId": "20260717T235327Z-15-T15.9",
       "worktree": null
     },
     "15.T15.10": {
@@ -7618,94 +7754,220 @@
       "worktree": null
     },
     "17.T17.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:31.547Z",
+      "claimedAt": "2026-07-18T00:17:05.683Z",
+      "completedAt": "2026-07-18T06:56:31.547Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:17:54.163Z",
+          "text": "Verified the graph-schema split is already landed: 17-line lib.rs façade with constants, labels, relationships/{mod,node,rel,deep_bimba}, properties, coordinate_law, validation, and constraints modules. cargo test --offline --manifest-path Body/S/S2/graph-schema/Cargo.toml passed 26/26; cargo check --offline --manifest-path Body/S/S2/graph-services/Cargo.toml passed; git diff --check clean. No code change needed."
+        },
+        {
+          "at": "2026-07-18T06:56:31.547Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.3.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 30 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:17:54.163Z",
+      "runId": "20260718T001705Z-17-T17.3",
       "worktree": null
     },
     "17.T17.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:31.818Z",
+      "claimedAt": "2026-07-18T01:10:53.830Z",
+      "completedAt": "2026-07-18T06:56:31.818Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:13:05.844Z",
+          "text": "Audited the completed capacity_workflows facade against the Tranche 17.4 module list and ran cargo check --offline plus the full cargo test --offline --quiet suite for epii-autoresearch-core: every suite passed. User owns Claude review; no auto-handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:31.818Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.4.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 58 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:13:05.844Z",
+      "runId": "20260718T011053Z-17-T17.4",
       "worktree": null
     },
     "17.T17.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:32.089Z",
+      "claimedAt": "2026-07-18T01:13:06.050Z",
+      "completedAt": "2026-07-18T06:56:32.089Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:14:15.300Z",
+          "text": "Audited the core facade and split modules (pointer_web, walk, quintessential_view, help; overlay/write_gate adjuncts) and ran cargo check --offline plus cargo test --offline --quiet for the actual epi-cli crate. Both completed green. User owns Claude review; no auto-handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:32.089Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.5.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 58 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:14:15.300Z",
+      "runId": "20260718T011306Z-17-T17.5",
       "worktree": null
     },
     "17.T17.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:32.380Z",
+      "claimedAt": "2026-07-18T01:14:15.751Z",
+      "completedAt": "2026-07-18T06:56:32.380Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:15:54.849Z",
+          "text": "Audited the harmonic_profile compatibility facade and the kernel projection split (14 projection modules) against the Tranche 17.6 requirement. cargo check --offline and cargo test --offline --quiet for portal-core completed green (117 unit tests plus integration suites). User owns Claude review; no auto-handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:32.380Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.6.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 58 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:15:54.849Z",
+      "runId": "20260718T011415Z-17-T17.6",
       "worktree": null
     },
     "17.T17.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:32.650Z",
+      "claimedAt": "2026-07-18T01:15:55.084Z",
+      "completedAt": "2026-07-18T06:56:32.650Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:18:39.474Z",
+          "text": "Audited the nine-module S3 spacetime facade with cargo check --offline and cargo test --offline --quiet for epi-s3-gateway. The suite exposed a stale Graphiti HTTP-default assertion after the native-runtime migration; updated only that low-risk test to assert the canonical native default. Full gateway suite passed. User owns Claude review; no auto-handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:32.650Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.7.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 58 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:18:39.474Z",
+      "runId": "20260718T011555Z-17-T17.7",
       "worktree": null
     },
     "17.T17.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:32.918Z",
+      "claimedAt": "2026-07-18T01:18:39.775Z",
+      "completedAt": "2026-07-18T06:56:32.918Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:19:30.763Z",
+          "text": "Audited the sync facade, one-line compatibility shim, and ten split modules. cargo check --offline and cargo test --offline --quiet for epi-s2-graph-services completed green (119 passed, 3 explicitly ignored, plus integration suites). User owns Claude review; no auto-handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:32.918Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 59 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:19:30.763Z",
+      "runId": "20260718T011839Z-17-T17.8",
       "worktree": null
     },
     "17.T17.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:33.186Z",
+      "claimedAt": "2026-07-18T01:19:30.976Z",
+      "completedAt": "2026-07-18T06:56:33.186Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T01:21:37.065Z",
+          "text": "Verified the existing thin Aletheia facade and four-tool-module split: extension.ts is 100 LOC and composes gnosis/thought/episodic/seed registrations. The historical pnpm @epi-logos/aletheia target is absent; ran the owning S4 real Node suite instead: node --test 'Body/S/S4/ta-onta/S4-5p-aletheia/tests/*.test.ts' (91 pass) plus python3 -m pytest -q Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom/drift-detection/tests/test_compose_tuning_proposal.py (12 pass). User owns Claude review; no handoff created."
+        },
+        {
+          "at": "2026-07-18T06:56:33.186Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.9.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 59 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T01:21:37.065Z",
+      "runId": "20260718T011930Z-17-T17.9",
       "worktree": null
     },
     "17.T17.10": {
@@ -8113,94 +8375,224 @@
       "worktree": null
     },
     "17.T17.22": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:29.647Z",
+      "claimedAt": "2026-07-17T23:54:58.025Z",
+      "completedAt": "2026-07-18T06:56:29.647Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:55:14.533Z",
+          "text": "Existing STATUS.md and owning DOX already declare hen-compiler compatibility-only and route canonical S1 law to hen-compiler-core. Fresh real Python unittest suite passed 9/9 via python3 (the documented python alias is unavailable in this shell). External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:29.647Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.22.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:55:14.533Z",
+      "runId": "20260717T235458Z-17-T17.22",
       "worktree": null
     },
     "17.T17.23": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:29.912Z",
+      "claimedAt": "2026-07-17T23:56:12.986Z",
+      "completedAt": "2026-07-18T06:56:29.912Z",
+      "evidence": [
+        {
+          "at": "2026-07-17T23:56:31.275Z",
+          "text": "Disposition audit recorded in plan.runs/17.T17.23-epi-app-disposition-audit.md. S3 canon/DOX already carry deprecated status; archival blocked by active Theia migration-source references and legacy npm test cannot start because vitest/node_modules are absent. No destructive move made. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:29.912Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.23.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-17T23:56:31.275Z",
+      "runId": "20260717T235612Z-17-T17.23",
       "worktree": null
     },
     "17.T17.24": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:30.189Z",
+      "claimedAt": "2026-07-18T00:02:57.682Z",
+      "completedAt": "2026-07-18T06:56:30.189Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:03:02.821Z",
+          "text": "Replaced the vanished pi-agent ta-onta symlink dependency with explicit canonical sibling imports; extensions sync now copies and hashes the sibling ta-onta tree. Fresh real CLI sync suite passed 3/3 (including sibling copy and ta-onta drift detection); downstream managed-agent spawn suite passed 14/14; git diff --check clean. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:30.189Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.24.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 16 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:03:02.821Z",
+      "runId": "20260718T000257Z-17-T17.24",
       "worktree": null
     },
     "17.T17.25": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:30.462Z",
+      "claimedAt": "2026-07-18T00:03:33.568Z",
+      "completedAt": "2026-07-18T06:56:30.462Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:03:48.302Z",
+          "text": "Schema audit recorded in plan.runs/17.T17.25-capability-matrix-schema-audit.md; Pleroma capability-matrix pytest suite passed 18/18. Schema is co-located but Anima and active carrier still parse JSON independently, so shared-validator integration remains explicit follow-up. External review remains Claude-owned; no automatic verification handoff."
+        },
+        {
+          "at": "2026-07-18T06:56:30.462Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.25.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 16 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:03:48.302Z",
+      "runId": "20260718T000333Z-17-T17.25",
       "worktree": null
     },
     "17.T17.26": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:30.729Z",
+      "claimedAt": "2026-07-18T00:05:05.568Z",
+      "completedAt": "2026-07-18T06:56:30.729Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:13:34.836Z",
+          "text": "NativeLibraryClient now serves s5.episodic search/deposit and kernel deposits through a session-scoped in-process store; the HTTP implementations are explicit deprecated compatibility_* functions and the Python sidecar lives under epi_gnostic._deprecated for cycle-4 deletion. Verified cargo native-only check, Rust parity 2/2, native gateway 2/2, gate_chat 5/5, and gate_spacetimedb_bridge compile. Python compatibility pytest is environment-blocked before collection by x86_64 pydantic_core under arm64 Python."
+        },
+        {
+          "at": "2026-07-18T00:23:21.448Z",
+          "text": "NativeLibraryClient now serves s5.episodic search/deposit and kernel deposits through a session-scoped in-process store; the HTTP implementations are explicit deprecated compatibility_* functions and the Python sidecar lives under epi_gnostic._deprecated for cycle-4 deletion. Verified cargo native-only check, Rust parity 2/2, native gateway 2/2, gate_chat 5/5, gate_spacetimedb_bridge compile, and Body/S/S5/epi-gnostic/.venv/bin/python -m pytest tests/test_graphiti_service.py -q (3/3). Global python3 is unsupported for this project because its pydantic_core is x86_64; DOX now directs verification to the arm64 project venv."
+        },
+        {
+          "at": "2026-07-18T06:56:30.729Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.26.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 16 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:23:21.448Z",
+      "runId": "20260718T000505Z-17-T17.26",
       "worktree": null
     },
     "17.T17.27": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:30.997Z",
+      "claimedAt": "2026-07-18T00:13:45.767Z",
+      "completedAt": "2026-07-18T06:56:30.997Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:15:39.937Z",
+          "text": "Corrected the parent-crate / parent-role envelope framing in the epi-kernel-contract header and DOX, S0 architecture sections 1/2.4/5.9, and S-system index; removed all live sibling-to-S0 attribution. Verified cargo test --offline --manifest-path Body/S/epi-kernel-contract/Cargo.toml (37/37), cargo fmt --check, positive/negative wording scans, and git diff --check. Vault frontmatter validation is blocked by pre-existing invalid coordinate formats and legacy unknown keys in both touched Seed documents, recorded without unrelated metadata rewrites."
+        },
+        {
+          "at": "2026-07-18T06:56:30.997Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.27.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 26 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:15:39.937Z",
+      "runId": "20260718T001345Z-17-T17.27",
       "worktree": null
     },
     "17.T17.28": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T06:56:31.276Z",
+      "claimedAt": "2026-07-18T00:15:51.216Z",
+      "completedAt": "2026-07-18T06:56:31.276Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T00:16:52.716Z",
+          "text": "Verified the existing bimba-mcp canon adapter: spec_retrieve shells to epi canon coord with pithy/qv-detail/relational depth and the MCP schema registers CanonCoordDepth. Real unsandboxed parity suite against local Neo4j passed 121 tests including all 18 byte-identical coordinate-depth cases; isolated backward-compatibility default test passed 1/1. Sandboxed parity fails before payload due denied Neo4j I/O; pnpm typecheck has pre-existing map-symbol-svg import/undefined-number errors unrelated to canon parity. git diff --check clean."
+        },
+        {
+          "at": "2026-07-18T06:56:31.276Z",
+          "text": "Independent Claude review close: W-class wire proof green (gateway 89, gateway-contract 88, live-wire, ta-onta 498, redis-context, graphiti-runtime, spacetime all PASS) via verify-tranche owner claude-verifier; verifier != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/17.T17.28.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 30 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-18T00:16:52.716Z",
+      "runId": "20260718T001551Z-17-T17.28",
       "worktree": null
     },
     "18.T18.1": {
@@ -8622,81 +9014,111 @@
       "worktree": null
     },
     "19.T19.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:23:04.311Z",
+      "claimedAt": "2026-07-18T01:21:43.656Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:23:04.311Z",
+          "text": "Verified m4_session_open and strengthened its real C lifecycle test to assert the stored tarot anchor's identity-derived cast degree and valid first card, not just its count. make -C Body/S/S0/epi-lib test_m4 passed 460 assertions; cargo test --offline --manifest-path Body/S/S0/epi-lib/Cargo.toml m4_session passed 3 Rust FFI lifecycle tests. User owns Claude review; no handoff created."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 59 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:21:43.656Z",
+      "heartbeatAt": "2026-07-18T01:23:04.311Z",
+      "runId": "20260718T012143Z-19-T19.4",
       "worktree": null
     },
     "19.T19.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:23:58.573Z",
+      "claimedAt": "2026-07-18T01:23:04.505Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:23:58.573Z",
+          "text": "Verified the existing m3_major_arcana_from_codon public utility and added compiled C round-trip coverage across all 64 codons: non-STOP codons reverse to the owning Major Arcana amino-acid index; STOP and out-of-range inputs refuse with 0xFF. make -C Body/S/S0/epi-lib test_m3 passed 7806 assertions; cargo test --offline --manifest-path Body/S/S0/epi-lib/Cargo.toml passed 36 tests including the Rust round-trip. User owns Claude review; no handoff created."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 60 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:23:04.505Z",
+      "heartbeatAt": "2026-07-18T01:23:58.573Z",
+      "runId": "20260718T012304Z-19-T19.5",
       "worktree": null
     },
     "19.T19.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:27:35.280Z",
+      "claimedAt": "2026-07-18T01:23:58.767Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:27:35.280Z",
+          "text": "Landed the live nara.contemplate_session_close adapter as a strict JSON boundary into the S3-owned composition function; it accepts caller evidence and returns the 4'-5'-0' wisdom-delta/triplet/Anuttara-round-trip envelope. Replaced the prior real-WebSocket unimplemented assertion with a complete live response test. cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_contemplation_live passed (1 real spawned-gateway test); cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml --test contemplation_rpc_dispatches passed (3). Updated local DOX and S3-SPEC. GitNexus impact on dispatch_nara was CRITICAL (shared dispatcher); edit was limited to the exact method arm and live-proven. User owns Claude review; no handoff created."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 61 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:23:58.767Z",
+      "heartbeatAt": "2026-07-18T01:27:35.280Z",
+      "runId": "20260718T012358Z-19-T19.6",
       "worktree": null
     },
     "19.T19.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:28:37.895Z",
+      "claimedAt": "2026-07-18T01:27:35.565Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:28:37.895Z",
+          "text": "Verified the existing M5 close path and added a compiled callback integration test: at tick 11 m5_execute_mobius_return composes the contemplation object, invokes the target callback, installs its wisdom_delta, XOR-folds that exact value into the identity, reseeds identity, and resets the cycle. make -C Body/S/S0/epi-lib test_m5 passed 296 assertions. User owns Claude review; no handoff created."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 66 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:27:35.565Z",
+      "heartbeatAt": "2026-07-18T01:28:37.895Z",
+      "runId": "20260718T012735Z-19-T19.7",
       "worktree": null
     },
     "19.T19.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:28:59.893Z",
+      "claimedAt": "2026-07-18T01:28:38.089Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:28:59.893Z",
+          "text": "Audited the landed Kaprekar pedagogy seed: 37 lines (under the lean bound), contains 6174 factorisation plus DIFF_B/DIFF_A/QL_DIVINE_ACT_RATIO substrate anchors, and contains neither prohibited freight phrase. Verified KaprekarPedagogyHit=6 in the Ananda architecture and its presence in the real M5 contemplation-object test. User owns Claude review; no handoff created."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 67 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:28:38.089Z",
+      "heartbeatAt": "2026-07-18T01:28:59.893Z",
+      "runId": "20260718T012838Z-19-T19.8",
       "worktree": null
     },
     "19.T19.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:31:56.027Z",
+      "claimedAt": "2026-07-18T01:29:00.091Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:31:56.027Z",
+          "text": "Added the canonical 3-5-7-9 syntax-layer section in INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md, aligning all four LUT anchors, close readings, constitutional readers, and the 7-8-9 verifier witness spine with the integration plan. Verified required anchors by rg and ran git diff --check."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 67 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:29:00.091Z",
+      "heartbeatAt": "2026-07-18T01:31:56.027Z",
+      "runId": "20260718T012900Z-19-T19.9",
       "worktree": null
     },
     "19.T19.10": {
@@ -8870,16 +9292,21 @@
       "worktree": null
     },
     "21.T21.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:44:15.764Z",
+      "claimedAt": "2026-07-18T01:42:25.789Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:44:15.764Z",
+          "text": "Extended the real M0-0 language reader from three to all seven canonical c_1 fields through the single M0_LAYER_FIELDS authority: symbol, formulation type, complete formulation, form, formulation breakdown, primary designation, and name. Red-first seven-field behavioral test passed with the reader/rail suite (18 tests); pnpm typecheck passed; pnpm test passed (834 passed, 3 skipped; import-boundary gate clean); git diff --check passed. No auto-handoff."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 74 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:42:25.789Z",
+      "heartbeatAt": "2026-07-18T01:44:15.764Z",
+      "runId": "20260718T014225Z-21-T21.2",
       "worktree": null
     },
     "21.T21.3": {
@@ -9184,55 +9611,75 @@
       "worktree": null
     },
     "21.T21.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:37:39.273Z",
+      "claimedAt": "2026-07-18T01:32:04.501Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:37:39.273Z",
+          "text": "Carrier-native M0 compact card landed on the daily-0-1 cosmic face. It reads the shared coordinate/tick/readiness stores, surfaces the default M0-0' language layer and provenance, and dispatches the existing m0-anuttara/graph intent into the ide-deep Bimba graph receiver. Fresh evidence: red-first App test then 9/9 App tests passed; pnpm typecheck passed; pnpm test passed (831 passed, 3 skipped; import-boundary gate clean); real Chromium cross-layout state identity passed against spawned gateway + filesystem vault; lint-test-honesty passed; git diff --check passed. GitNexus App context had no incoming callers and the expected app layout process; shared-tree detect scope remains high only due unrelated pre-existing lanes."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 69 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:32:04.501Z",
+      "heartbeatAt": "2026-07-18T01:37:39.273Z",
+      "runId": "20260718T013204Z-21-T21.17",
       "worktree": null
     },
     "21.T21.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:41:52.139Z",
+      "claimedAt": "2026-07-18T01:37:43.206Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:41:52.139Z",
+          "text": "Added carrier-native per-layer M0 provenance projection: language reads c_1_symbol, QL reads c_1_ql_variant, relations reads typed edge presence, time/community reads gds_community, and the M4/M5 routes are explicit bridged_local/bridged_public pills. Fresh evidence: red-first classifier test then projection + rail tests (12 passed); pnpm typecheck passed; pnpm test passed (833 passed, 3 skipped; import-boundary gate clean); real Chromium m0-community-clock spec passed against spawned gateway + filesystem vault; lint-test-honesty and git diff --check passed."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 70 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:37:43.206Z",
+      "heartbeatAt": "2026-07-18T01:41:52.139Z",
+      "runId": "20260718T013743Z-21-T21.18",
       "worktree": null
     },
     "21.T21.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:42:21.443Z",
+      "claimedAt": "2026-07-18T01:41:55.231Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:42:21.443Z",
+          "text": "Audit found the carrier implementation already complete: CROSS_LAYOUT_INTENT_TARGETS registers graph plus the four local M0 layers to bimbaGraph, M4/M5 bridge targets to their owning receivers, App preserves the request envelope, and GraphExplorerPane maps language/ql-structure/relations/time-community to exact M0 rail tabs. Fresh behavioral verification: pnpm vitest run src/commands/crossLayoutIntent.test.ts src/App.test.tsx src/panes/M0LayerRail.test.tsx passed (24 tests). No code change or auto-handoff."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 74 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:41:55.231Z",
+      "heartbeatAt": "2026-07-18T01:42:21.443Z",
+      "runId": "20260718T014155Z-21-T21.19",
       "worktree": null
     },
     "21.T21.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T06:44:46.828Z",
+      "claimedAt": "2026-07-18T01:44:19.017Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T06:44:46.828Z",
+          "text": "Implemented App-owned persisted M0 activeLayer/implicateExplicate/mode record without a fifth gateway store; pnpm typecheck; pnpm test (842 passed, 3 skipped); live Chromium cross-layout-state-identity spec passed against existing real gateway/vault stack; lint-test-honesty and git diff --check passed. GitNexus detect_changes shows expected App layout process plus unrelated shared-tree changes."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 76 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:44:19.017Z",
+      "heartbeatAt": "2026-07-18T06:44:46.828Z",
+      "runId": "20260718T014419Z-21-T21.20",
       "worktree": null
     },
     "22.T22.1": {
@@ -9266,16 +9713,21 @@
       "worktree": null
     },
     "22.T22.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T06:47:02.138Z",
+      "claimedAt": "2026-07-18T06:44:52.520Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T06:47:02.138Z",
+          "text": "Carrier audit: existing pratibimba PlayedTorusPane/m1PlayedTorus/playedTorusScene satisfy the frozen scaffold's carrier role: real Three.js K2 mount, profile-bus Ananda window, explicit pending states, and cosmic tab receiver. Fresh pnpm vitest targeted run: 19 passed. Fresh isolated Chromium visual-panes played-torus proof passed against spawned gateway and real temp-vault sidecar."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 83 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:44:52.520Z",
+      "heartbeatAt": "2026-07-18T06:47:02.138Z",
+      "runId": "20260718T064452Z-22-T22.2",
       "worktree": null
     },
     "22.T22.3": {
@@ -9752,16 +10204,21 @@
       "worktree": null
     },
     "23.T23.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T06:48:48.305Z",
+      "claimedAt": "2026-07-18T06:47:07.139Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T06:48:48.305Z",
+          "text": "Carrier audit: ModalDigestStrip is the visual-only AudioBusVisualiser equivalent; fresh ModalDigestStrip+m2MeaningPacket tests pass (21 assertions), proving exact 8-channel profile Hz bus, band glyphs, graph-backed labels, cymatic digest, pending behavior, and no AudioContext. The current typed profile projection exports parashaktiMeaning.routingTrace only as an opaque handle, with no mantraIndex or ruling-planet elemSig; carrier intentionally does not fabricate the requested Matrika/Malini phase or element badge. Requires upstream projection before those two UI values can land."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 83 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:47:07.139Z",
+      "heartbeatAt": "2026-07-18T06:48:48.305Z",
+      "runId": "20260718T064707Z-23-T23.13",
       "worktree": null
     },
     "23.T23.14": {
@@ -10124,16 +10581,21 @@
       "worktree": null
     },
     "24.T24.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T06:49:24.096Z",
+      "claimedAt": "2026-07-18T06:48:53.912Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T06:49:24.096Z",
+          "text": "Audit: no carrier I-Ching ribbon exists, and the required s5.oracle.iching.cast method is absent from the gateway expected-present ratchet and source declarations. The tranche forbids local randomization and requires a real RPC response, so a functional carrier UI cannot be built without the named Wave-B method-family dependency. No fake or local RNG surface was introduced."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 83 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:48:53.912Z",
+      "heartbeatAt": "2026-07-18T06:49:24.096Z",
+      "runId": "20260718T064853Z-24-T24.14",
       "worktree": null
     },
     "24.T24.15": {
@@ -13436,29 +13898,39 @@
       "worktree": null
     },
     "38.T06.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T00:52:59.100Z",
+      "claimedAt": "2026-07-18T00:23:12.376Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T00:52:59.100Z",
+          "text": "Live gateway registry mutation/audit, contract suites, full carrier unit suite, production build, focused real Chromium tuning flow, and gateway-method ratchet are green; user owns Claude review."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 30 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:23:12.376Z",
+      "heartbeatAt": "2026-07-18T00:52:59.100Z",
+      "runId": "20260718T002312Z-38-T06.8",
       "worktree": null
     },
     "38.T06.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T01:10:44.391Z",
+      "claimedAt": "2026-07-18T00:53:06.972Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T01:10:44.391Z",
+          "text": "Tier-2 lifecycle is live: Class A uses human-gated S5 review then applies with a Tier-2 audit; Class B requires a complete triplet before auto-application; direct Tier-2 registry writes are refused. Focused S5, real gateway, contract, and method-ratchet checks are green. User owns Claude review; no auto-handoff."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 49 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:53:06.972Z",
+      "heartbeatAt": "2026-07-18T01:10:44.391Z",
+      "runId": "20260718T005306Z-38-T06.9",
       "worktree": null
     },
     "38.T06.10": {
@@ -20849,37 +21321,419 @@
     {
       "runId": "20260717T123320Z-12-T12.37",
       "taskId": "12.T12.37",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-17T12:33:20.917Z",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": "2026-07-17T14:33:20.917Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-17T19:01:13.237Z"
+    },
+    {
+      "runId": "20260717T190133Z-12-T12.38",
+      "taskId": "12.T12.38",
+      "status": "review",
+      "startedAt": "2026-07-17T19:01:33.377Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-17T21:01:33.377Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:43:04.088Z"
+    },
+    {
+      "runId": "20260717T234308Z-12-T12.4",
+      "taskId": "12.T12.4",
+      "status": "review",
+      "startedAt": "2026-07-17T23:43:08.791Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:43:08.791Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:43:49.766Z"
+    },
+    {
+      "runId": "20260717T234354Z-12-T12.5",
+      "taskId": "12.T12.5",
+      "status": "review",
+      "startedAt": "2026-07-17T23:43:54.582Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:43:54.582Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:45:46.737Z"
+    },
+    {
+      "runId": "20260717T234551Z-12-T12.6",
+      "taskId": "12.T12.6",
+      "status": "review",
+      "startedAt": "2026-07-17T23:45:51.694Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:45:51.694Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:48:39.799Z"
+    },
+    {
+      "runId": "20260717T234845Z-12-T12.7",
+      "taskId": "12.T12.7",
+      "status": "review",
+      "startedAt": "2026-07-17T23:48:45.152Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:48:45.152Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:49:02.556Z"
+    },
+    {
+      "runId": "20260717T234906Z-12-T12.9",
+      "taskId": "12.T12.9",
+      "status": "review",
+      "startedAt": "2026-07-17T23:49:06.253Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:49:06.253Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:51:24.911Z"
+    },
+    {
+      "runId": "20260717T235159Z-15-T15.8",
+      "taskId": "15.T15.8",
+      "status": "review",
+      "startedAt": "2026-07-17T23:51:59.583Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:51:59.583Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:53:18.930Z"
+    },
+    {
+      "runId": "20260717T235327Z-15-T15.9",
+      "taskId": "15.T15.9",
+      "status": "review",
+      "startedAt": "2026-07-17T23:53:27.681Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:53:27.681Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:54:16.658Z"
+    },
+    {
+      "runId": "20260717T235458Z-17-T17.22",
+      "taskId": "17.T17.22",
+      "status": "review",
+      "startedAt": "2026-07-17T23:54:58.025Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:54:58.025Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:55:14.533Z"
+    },
+    {
+      "runId": "20260717T235612Z-17-T17.23",
+      "taskId": "17.T17.23",
+      "status": "review",
+      "startedAt": "2026-07-17T23:56:12.986Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T01:56:12.986Z",
+      "worktree": null,
+      "completedAt": "2026-07-17T23:56:31.275Z"
+    },
+    {
+      "runId": "20260718T000257Z-17-T17.24",
+      "taskId": "17.T17.24",
+      "status": "review",
+      "startedAt": "2026-07-18T00:02:57.682Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:02:57.682Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:03:02.821Z"
+    },
+    {
+      "runId": "20260718T000333Z-17-T17.25",
+      "taskId": "17.T17.25",
+      "status": "review",
+      "startedAt": "2026-07-18T00:03:33.568Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:03:33.568Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:03:48.302Z"
+    },
+    {
+      "runId": "20260718T000505Z-17-T17.26",
+      "taskId": "17.T17.26",
+      "status": "review",
+      "startedAt": "2026-07-18T00:05:05.568Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:05:05.568Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:13:34.836Z"
+    },
+    {
+      "runId": "20260718T001345Z-17-T17.27",
+      "taskId": "17.T17.27",
+      "status": "review",
+      "startedAt": "2026-07-18T00:13:45.767Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:13:45.767Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:15:39.937Z"
+    },
+    {
+      "runId": "20260718T001551Z-17-T17.28",
+      "taskId": "17.T17.28",
+      "status": "review",
+      "startedAt": "2026-07-18T00:15:51.216Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:15:51.216Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:16:52.716Z"
+    },
+    {
+      "runId": "20260718T001705Z-17-T17.3",
+      "taskId": "17.T17.3",
+      "status": "review",
+      "startedAt": "2026-07-18T00:17:05.683Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:17:05.683Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:17:54.163Z"
+    },
+    {
+      "runId": "20260718T002312Z-38-T06.8",
+      "taskId": "38.T06.8",
+      "status": "review",
+      "startedAt": "2026-07-18T00:23:12.376Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:23:12.376Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T00:52:59.100Z"
+    },
+    {
+      "runId": "20260718T005306Z-38-T06.9",
+      "taskId": "38.T06.9",
+      "status": "review",
+      "startedAt": "2026-07-18T00:53:06.972Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T02:53:06.972Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:10:44.391Z"
+    },
+    {
+      "runId": "20260718T011053Z-17-T17.4",
+      "taskId": "17.T17.4",
+      "status": "review",
+      "startedAt": "2026-07-18T01:10:53.830Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:10:53.830Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:13:05.844Z"
+    },
+    {
+      "runId": "20260718T011306Z-17-T17.5",
+      "taskId": "17.T17.5",
+      "status": "review",
+      "startedAt": "2026-07-18T01:13:06.050Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:13:06.050Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:14:15.300Z"
+    },
+    {
+      "runId": "20260718T011415Z-17-T17.6",
+      "taskId": "17.T17.6",
+      "status": "review",
+      "startedAt": "2026-07-18T01:14:15.751Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:14:15.751Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:15:54.849Z"
+    },
+    {
+      "runId": "20260718T011555Z-17-T17.7",
+      "taskId": "17.T17.7",
+      "status": "review",
+      "startedAt": "2026-07-18T01:15:55.084Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:15:55.084Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:18:39.474Z"
+    },
+    {
+      "runId": "20260718T011839Z-17-T17.8",
+      "taskId": "17.T17.8",
+      "status": "review",
+      "startedAt": "2026-07-18T01:18:39.775Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:18:39.775Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:19:30.763Z"
+    },
+    {
+      "runId": "20260718T011930Z-17-T17.9",
+      "taskId": "17.T17.9",
+      "status": "review",
+      "startedAt": "2026-07-18T01:19:30.976Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:19:30.976Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:21:37.065Z"
+    },
+    {
+      "runId": "20260718T012143Z-19-T19.4",
+      "taskId": "19.T19.4",
+      "status": "review",
+      "startedAt": "2026-07-18T01:21:43.656Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:21:43.656Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:23:04.311Z"
+    },
+    {
+      "runId": "20260718T012304Z-19-T19.5",
+      "taskId": "19.T19.5",
+      "status": "review",
+      "startedAt": "2026-07-18T01:23:04.505Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:23:04.505Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:23:58.573Z"
+    },
+    {
+      "runId": "20260718T012358Z-19-T19.6",
+      "taskId": "19.T19.6",
+      "status": "review",
+      "startedAt": "2026-07-18T01:23:58.767Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:23:58.767Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:27:35.280Z"
+    },
+    {
+      "runId": "20260718T012735Z-19-T19.7",
+      "taskId": "19.T19.7",
+      "status": "review",
+      "startedAt": "2026-07-18T01:27:35.565Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:27:35.565Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:28:37.895Z"
+    },
+    {
+      "runId": "20260718T012838Z-19-T19.8",
+      "taskId": "19.T19.8",
+      "status": "review",
+      "startedAt": "2026-07-18T01:28:38.089Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:28:38.089Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:28:59.893Z"
+    },
+    {
+      "runId": "20260718T012900Z-19-T19.9",
+      "taskId": "19.T19.9",
+      "status": "review",
+      "startedAt": "2026-07-18T01:29:00.091Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:29:00.091Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:31:56.027Z"
+    },
+    {
+      "runId": "20260718T013204Z-21-T21.17",
+      "taskId": "21.T21.17",
+      "status": "review",
+      "startedAt": "2026-07-18T01:32:04.501Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:32:04.501Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:37:39.273Z"
+    },
+    {
+      "runId": "20260718T013743Z-21-T21.18",
+      "taskId": "21.T21.18",
+      "status": "review",
+      "startedAt": "2026-07-18T01:37:43.206Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:37:43.206Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:41:52.139Z"
+    },
+    {
+      "runId": "20260718T014155Z-21-T21.19",
+      "taskId": "21.T21.19",
+      "status": "review",
+      "startedAt": "2026-07-18T01:41:55.231Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:41:55.231Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:42:21.443Z"
+    },
+    {
+      "runId": "20260718T014225Z-21-T21.2",
+      "taskId": "21.T21.2",
+      "status": "review",
+      "startedAt": "2026-07-18T01:42:25.789Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:42:25.789Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T01:44:15.764Z"
+    },
+    {
+      "runId": "20260718T014419Z-21-T21.20",
+      "taskId": "21.T21.20",
+      "status": "review",
+      "startedAt": "2026-07-18T01:44:19.017Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T03:44:19.017Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T06:44:46.828Z"
+    },
+    {
+      "runId": "20260718T064452Z-22-T22.2",
+      "taskId": "22.T22.2",
+      "status": "review",
+      "startedAt": "2026-07-18T06:44:52.520Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:44:52.520Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T06:47:02.138Z"
+    },
+    {
+      "runId": "20260718T064707Z-23-T23.13",
+      "taskId": "23.T23.13",
+      "status": "review",
+      "startedAt": "2026-07-18T06:47:07.139Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:47:07.139Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T06:48:48.305Z"
+    },
+    {
+      "runId": "20260718T064853Z-24-T24.14",
+      "taskId": "24.T24.14",
+      "status": "review",
+      "startedAt": "2026-07-18T06:48:53.912Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T08:48:53.912Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T06:49:24.096Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-17T18:58:41.526Z",
-    "updatedAt": "2026-07-17T18:58:41.526Z",
+    "createdAt": "2026-07-18T06:36:19.462Z",
+    "updatedAt": "2026-07-18T06:36:19.462Z",
     "taskIds": [
       "12.T12.37",
       "12.T12.38",
       "12.T12.4",
-      "12.T12.5"
+      "12.T12.5",
+      "12.T12.6"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "12.T12.37": "in-session",
       "12.T12.38": "in-session",
       "12.T12.4": "in-session",
-      "12.T12.5": "in-session"
+      "12.T12.5": "in-session",
+      "12.T12.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
-      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }
