@@ -2,7 +2,7 @@
 //! Residency: Body/S/S0/epi-lib/src/lib.rs
 //! Position (#n): #0' -- compiled Anuttara verifier bridge.
 //! Actualises: Track 01.T1.10 and the generic-profile M0 witness emission.
-//! Public surface: m0_verifier::{bootstrap_witness_for_tick, evaluate_state, is_language_member}.
+//! Public surface: m0_verifier::{bootstrap_witness_for_tick, contemplation_prompt_lut, evaluate_state, is_language_member}.
 //! Does NOT own: gateway transport, profile serialization, or session evidence.
 //! Contract: [[S0-SPEC]] -> [[M0'-SPEC]].
 
@@ -166,6 +166,7 @@ pub mod m0_verifier {
             buf_len: usize,
         ) -> c_int;
         fn anuttara_language_is_member(coordinate_or_symbol: *const c_char) -> bool;
+        static CONTEMPLATION_PROMPT_LUT: [*const c_char; 12];
     }
 
     #[derive(Clone, Debug, PartialEq)]
@@ -256,6 +257,24 @@ pub mod m0_verifier {
         let element = CString::new(element)
             .map_err(|_| "language element must not contain a NUL byte".to_owned())?;
         Ok(unsafe { anuttara_language_is_member(element.as_ptr()) })
+    }
+
+    /// Projects the compiled C prompt authority without recreating its
+    /// contents in Rust. Empty entries are intentional canonical absences.
+    pub fn contemplation_prompt_lut() -> Vec<String> {
+        unsafe { &CONTEMPLATION_PROMPT_LUT }
+            .iter()
+            .map(|prompt| {
+                assert!(
+                    !prompt.is_null(),
+                    "compiled contemplation prompt pointers must not be null"
+                );
+                unsafe { CStr::from_ptr(*prompt) }
+                    .to_str()
+                    .expect("contemplation prompt must be UTF-8 compatible")
+                    .to_owned()
+            })
+            .collect()
     }
 
     /// Runs the compiled C verifier over the information a generic public

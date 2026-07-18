@@ -347,6 +347,8 @@ Tranche 19.10 substrate bridges inherited:
 
 18. **23.18 — 72→64 epogdoon-bridge engine: M2 vibrational state read into M3 codon space** *(spec-ahead-integration; consumes m2.h `m2_epogdoon_compress` + m3.h `apply_epogdoon_compression` / `is_evolutionary_gap`; cross-link Track 24, Track 37)*
 
+    > **⚑ AMENDED per DR-M2-1 (VALIDATED 2026-06-02) + kernel authority:** the "nine fold-point" wording in the draft criteria below is a stale transcription. The canonical `9:8` is **nine non-Earth planets : eight chakral reception points** (DR-M2-1; M2'-SPEC §9.5), NOT a count of round-tripping indices. Kernel ground truth over `is_evolutionary_gap` on `[0,71]` (m3.c:172-176) = **64 non-round-tripping gaps + 8 clean anchors** (the multiples of 9). The engine renders kernel truth (64 gaps / 8 anchors + 8 chakral gap-sentinel codons in the 64→56 band); the owning SPEC is law above this plan section. Criterion (b) below is superseded: assert the kernel-truthful 8-anchor / 64-gap set, not "nine glyphs".
+
     Author `m2-parashakti/src/browser/components/EpogdoonBridgeEngine.tsx` — an interactive, profile-tick-driven engine (NOT a static overlay) that renders the live 72→64 compression as the M2-vibrational address descends into the M3 codon lattice. This is the frontend surface of the substrate identity `72 × (8/9) = 64` (verified m2.h:527, m2.h:544-547 `m2_epogdoon_compress(val) = val * 8 / 9`; m3.h:339, m3.h:350-353 `apply_epogdoon_compression(idx) = idx * 8u / 9u`). The engine reads ONLY typed projections through the kernel-bridge; it never recomputes the compression locally (renderers never compute biology/constants — they consume typed projections per Track 18 / DR-KB-1).
 
     Bridge-projection consumption (typed, kernel-bridge):

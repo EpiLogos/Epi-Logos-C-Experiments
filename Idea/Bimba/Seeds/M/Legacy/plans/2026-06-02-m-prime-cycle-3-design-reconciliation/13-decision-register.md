@@ -121,7 +121,7 @@ Adjudication evidence (recorded, not ceremonial): Third Spanda five forms + exec
 
 ## DR-M2-1 (DCC-03) — Planet-count + Earth-observer semantics
 
-**Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** 10 planets total including Earth-as-centre. Earth IS the 10th planet — the centre of the map and centre of the clock. The 9:8 epogdoon is 9 non-Earth planets to 8 chakras; Earth as observer-centre is structurally the 10th. Already resolved at the C/Rust substrate level — `M2_PLANET_LUT[10]` is canon.
+**Status:** DR-M2-1 VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** 10 planets total including Earth-as-centre. Earth IS the 10th planet — the centre of the map and centre of the clock. The 9:8 epogdoon is 9 non-Earth planets to 8 chakras; Earth as observer-centre is structurally the 10th. Already resolved at the C/Rust substrate level — `M2_PLANET_LUT[10]` is canon.
 
 **Action:** Strip `planetCountDecision: 'pending-DCC-03'` from `meaning-packet.ts:145`; document Earth-at-centre semantics in `M2'-SPEC §9.5` + the cymatic-engine companion. NO kernel-bridge field changes (consolidated **DR-KB-1** also VALIDATED).
 

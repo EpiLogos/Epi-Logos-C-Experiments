@@ -692,6 +692,10 @@ pub struct MathemeHarmonicProfile {
     pub pasu_being_pattern: Option<PasuBeingPatternProjection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub anuttara_witness: Option<AnuttaraWitnessProjection>,
+    /// Track 21.T21.9 — the compiled [[M0]] contemplation authority projected
+    /// verbatim from `epi-lib`; renderers select by canonical archetype index.
+    #[serde(default)]
+    pub contemplation_prompt_lut: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub cosmic_composition_state: Option<CosmicCompositionState>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -826,6 +830,7 @@ impl MathemeHarmonicProfile {
             harmonic_grammar: MathemeHarmonicGrammarProjection::from_tick(tick12, position),
             pasu_being_pattern: None,
             anuttara_witness: Some(bootstrap_anuttara_witness(tick12, position)),
+            contemplation_prompt_lut: epi_lib::m0_verifier::contemplation_prompt_lut(),
             cosmic_composition_state: None,
             personal_pole: None,
             psychoid_field: None,

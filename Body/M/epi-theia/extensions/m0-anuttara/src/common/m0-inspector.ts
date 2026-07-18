@@ -509,7 +509,9 @@ export function readM0ContemplationProjection(
             profile?.payload?.c_1_archetype_index
     );
     const payload = objectValue(profile?.payload);
-    const promptLut = arrayValue(payload?.contemplation_prompt_lut);
+    const promptLut = arrayValue(
+        payload?.contemplationPromptLut ?? payload?.contemplation_prompt_lut
+    );
     const promptEntry = archetypeIndex === null ? undefined : promptLut[archetypeIndex];
     const prompt =
         stringValue(promptEntry) ??

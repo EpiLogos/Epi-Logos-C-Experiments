@@ -477,9 +477,26 @@ describe("Kernel bridge contract package", () => {
     const parsedProfile = MathemeHarmonicProfile.parse({
       ...baselineProfile,
       anuttaraWitness,
+      contemplationPromptLut: [
+        "",
+        "",
+        "",
+        "Did your speech articulate identity or just signal?",
+        "",
+        "Did unity-multiplicity hold?",
+        "",
+        "Did the four causes integrate?",
+        "",
+        "Did the cycle complete in wholeness?",
+        "",
+        "",
+      ],
     });
     expect(parsedProfile.anuttaraWitness?.rfactorPath[3].rFactor).toBe(0xff);
     expect(parsedProfile.anuttaraWitness?.bandBalance.returned).toBe(true);
+    expect(parsedProfile.contemplationPromptLut?.[7]).toBe(
+      "Did the four causes integrate?",
+    );
   });
 
   it("defines connection, readiness, events, and capability names used by bridge consumers", () => {

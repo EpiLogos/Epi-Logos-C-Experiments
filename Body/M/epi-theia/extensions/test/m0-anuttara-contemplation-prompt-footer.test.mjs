@@ -107,6 +107,34 @@ test('model projects prompt from profile.payload.contemplation_prompt_lut', () =
     assert.equal(model.contemplation.state, 'canonical');
 });
 
+test('model projects the live Rust camelCase contemplationPromptLut field', () => {
+    const prompts = Array.from({ length: 12 }, () => '');
+    prompts[7] = 'Did the four causes integrate or did one dominate? Which act was missing?';
+    const model = buildM0InspectorModel({
+        selectedInput: '#0-4-7',
+        graphNode: Object.freeze({
+            coordinate: '#0-4-7',
+            properties: Object.freeze({ c_1_archetype_index: 7 })
+        }),
+        profile: Object.freeze({
+            generation: 78,
+            pointerAnchor: 'pointer://m0/anuttara/7',
+            capabilities: Object.freeze([]),
+            payload: Object.freeze({
+                contemplationPromptLut: Object.freeze(prompts)
+            })
+        }),
+        readiness,
+        context
+    });
+
+    assert.equal(
+        model.contemplation.prompt,
+        'Did the four causes integrate or did one dominate? Which act was missing?'
+    );
+    assert.equal(model.contemplation.state, 'canonical');
+});
+
 test('blocked footer renders Track 19.3 pending label until LUT arrives', () => {
     const markup = ReactDOMServer.renderToStaticMarkup(
         React.createElement(M0ContemplationPromptFooter, {
