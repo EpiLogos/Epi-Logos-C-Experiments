@@ -30,6 +30,10 @@ describe('OmniPanelSessionState', () => {
         store.patchTab('sessions', { selectedSessionId: 'session-7', filterPredicate: 'this-week' });
         store.patchTab('evidence', { selectedPacketId: 'pkt-xyz', depositFormOpen: true });
         store.patchTab('review', { selectedReviewId: 'review-4', annotateFormOpen: true });
+        store.patchTab('tuning', {
+            selectedKnobKey: 'nara.weights.body_natal',
+            subsystemFilter: 'M4'
+        });
 
         const snapshot = JSON.parse(JSON.stringify(readOmniPanelSessionState()));
         useOmniPanelSessionStore.getState().hydrate(null);
@@ -54,6 +58,10 @@ describe('OmniPanelSessionState', () => {
             selectedReviewId: 'review-4',
             annotateFormOpen: true
         });
+        expect(restored.perTabState.tuning).toEqual({
+            selectedKnobKey: 'nara.weights.body_natal',
+            subsystemFilter: 'M4'
+        });
     });
 
     it('rejects malformed persisted values while retaining every canonical tab record', () => {
@@ -70,6 +78,6 @@ describe('OmniPanelSessionState', () => {
         expect(hydrated.omniState).toBe('minimal');
         expect(hydrated.perTabState['pi-chat'].draftMessage).toBe('');
         expect(hydrated.perTabState.review.selectedReviewId).toBe('review-9');
-        expect(Object.keys(hydrated.perTabState)).toHaveLength(8);
+        expect(Object.keys(hydrated.perTabState)).toHaveLength(9);
     });
 });

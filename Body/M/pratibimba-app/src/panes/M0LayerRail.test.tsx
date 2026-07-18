@@ -45,6 +45,18 @@ describe('M0LayerRail', () => {
         expect(screen.getByTestId('m0-layer-language').getAttribute('data-active')).toBe('false');
     });
 
+    it('uses the carrier-owned active layer and reports changes without keeping a duplicate selection', async () => {
+        const onLayerChange = vi.fn();
+        render(<M0LayerRail activeLayer="rel" onLayerChange={onLayerChange} />);
+
+        expect(screen.getByTestId('m0-layer-relations').getAttribute('data-active')).toBe('true');
+        await act(async () => {
+            screen.getByTestId('m0-layer-time-community').click();
+        });
+        expect(onLayerChange).toHaveBeenCalledWith('time');
+        expect(screen.getByTestId('m0-layer-relations').getAttribute('data-active')).toBe('true');
+    });
+
     it('activates a local layer requested by a cross-layout intent after mount', () => {
         const { rerender } = render(<M0LayerRail requestedLayer="ql" />);
         expect(screen.getByTestId('m0-layer-ql-structure').getAttribute('data-active')).toBe('true');
@@ -115,16 +127,16 @@ describe('M0LayerRail', () => {
         expect(proposal.getAttribute('href')).not.toContain('s2.graph');
     });
 
-    /* 21.T21.1 (DR-FACE-7 fate A + small B) — the per-layer S2 read-state chip.
-     * The chip is the EXISTING ProvenanceBadge/ProvenanceState over the shared
-     * s2.graph.node read; bridged layers carry no chip (placement ≠ provenance). */
+    /* 21.T21.18 — each local layer reads its own evidence from the shared
+     * s2.graph.node response; the two bridges are explicit dispositions. */
 
     const connectGateway = (
-        node: { coordinate: string; label: string | null } | null
+        node: { coordinate: string; label: string | null; properties?: Record<string, unknown> } | null,
+        relations: readonly Record<string, unknown>[] = []
     ) => {
         const invoke = vi.fn(async (method: string) =>
             method === 's2.graph.node'
-                ? ({ artifact: { contract: 's2.graph.node', node, relations: [] } } as never)
+                ? ({ artifact: { contract: 's2.graph.node', node, relations } } as never)
                 : ({ artifact: {} } as never)
         );
         setGateway({ invoke } as never);
@@ -142,23 +154,35 @@ describe('M0LayerRail', () => {
         expect(screen.queryByTestId('provenance-pending')).toBeNull();
     });
 
-    it('shows the canonical S2 read state on every local layer when the coordinate has a :Bimba node (21.1)', async () => {
-        connectGateway({ coordinate: 'M1', label: 'Paramasiva' });
+    it('shows distinct per-layer evidence pills and explicit bridge dispositions (21.18)', async () => {
+        connectGateway(
+            {
+                coordinate: 'M1',
+                label: 'Paramasiva',
+                properties: {
+                    c_1_symbol: 'Paramasiva',
+                    c_1_ql_variant: 'quaternal',
+                    gds_community: 'source-cluster'
+                }
+            },
+            [{ coordinate: 'M0', type: 'CONTAINS', direction: 'outbound' }]
+        );
         useCoordinateStore.setState({ selected: 'M1' });
         render(<M0LayerRail />);
 
-        for (const key of ['language', 'ql-structure', 'relations', 'time-community']) {
+        const expected = {
+            language: 'canonical',
+            'ql-structure': 'canonical',
+            relations: 'canonical',
+            'time-community': 'derived'
+        } as const;
+        for (const [key, state] of Object.entries(expected)) {
             await waitFor(() =>
-                expect(screen.getByTestId(`m0-layer-${key}`).getAttribute('data-s2-read')).toBe(
-                    'canonical'
-                )
+                expect(screen.getByTestId(`m0-layer-${key}`).getAttribute('data-s2-read')).toBe(state)
             );
         }
-        // canonical is clean — the ProvenanceBadge renders no glyph (no clutter)
-        expect(screen.queryByTestId('provenance-canonical')).toBeNull();
-        // bridged layers perform no S2 read, so they carry no chip attribute at all
-        expect(screen.getByTestId('m0-layer-personal').getAttribute('data-s2-read')).toBeNull();
-        expect(screen.getByTestId('m0-layer-pedagogy').getAttribute('data-s2-read')).toBeNull();
+        expect(screen.getByTestId('m0-layer-personal').getAttribute('data-m0-provenance')).toBe('bridged_local');
+        expect(screen.getByTestId('m0-layer-pedagogy').getAttribute('data-m0-provenance')).toBe('bridged_public');
     });
 
     it('shows canonical_absent when the selected coordinate has no canonical node (never inferred)', async () => {
@@ -171,7 +195,7 @@ describe('M0LayerRail', () => {
                 screen.getByTestId('m0-layer-language').getAttribute('data-s2-read')
             ).toBe('canonical_absent')
         );
-        // the ∅ glyph surfaces exactly once per local layer (four local layers)
-        expect(screen.getAllByTestId('provenance-canonical_absent')).toHaveLength(4);
+        expect(screen.getAllByTestId('m0-layer-provenance-canonical_absent')).toHaveLength(3);
+        expect(screen.getAllByTestId('m0-layer-provenance-blocked')).toHaveLength(1);
     });
 });

@@ -81,6 +81,67 @@ describe('M0LanguageReaderPanel', () => {
         ).toBe('canonical');
     });
 
+    it('projects all seven canonical M0 language fields without inventing absent values', async () => {
+        connectGateway({
+            coordinate: 'M0-0',
+            properties: {
+                c_1_symbol: '#',
+                c_1_formulation_type: 'ground',
+                c_1_complete_formulation: 'complete',
+                c_1_form: 'void',
+                c_1_formulation_breakdown: '0 / 0',
+                c_1_primary_designation: 'Anuttara',
+                c_1_name: 'Ground'
+            }
+        });
+        useCoordinateStore.setState({ selected: 'M0-0' });
+        render(<M0LanguageReaderPanel />);
+
+        for (const field of [
+            'c_1_symbol',
+            'c_1_formulation_type',
+            'c_1_complete_formulation',
+            'c_1_form',
+            'c_1_formulation_breakdown',
+            'c_1_primary_designation',
+            'c_1_name'
+        ]) {
+            await waitFor(() =>
+                expect(screen.getByTestId(`m0-language-field-${field}`).getAttribute('data-provenance')).toBe(
+                    'canonical'
+                )
+            );
+        }
+    });
+
+    it('prioritises the phase-specific language field over the same S2 payload', async () => {
+        connectGateway({
+            coordinate: 'M0-0',
+            properties: {
+                c_1_form: 'ground-state form',
+                c_1_complete_formulation: 'articulated return'
+            }
+        });
+        useCoordinateStore.setState({ selected: 'M0-0' });
+        const { rerender } = render(<M0LanguageReaderPanel phase="implicate" />);
+
+        await waitFor(() =>
+            expect(screen.getByTestId('m0-language-reader').getAttribute('data-state')).toBe('ready')
+        );
+        const fieldOrder = () =>
+            Array.from(screen.getByTestId('m0-language-fields').children).map(field =>
+                field.getAttribute('data-testid')
+            );
+
+        expect(screen.getByTestId('m0-language-reader').getAttribute('data-phase')).toBe('implicate');
+        expect(fieldOrder()[0]).toBe('m0-language-field-c_1_form');
+
+        rerender(<M0LanguageReaderPanel phase="explicate" />);
+
+        expect(screen.getByTestId('m0-language-reader').getAttribute('data-phase')).toBe('explicate');
+        expect(fieldOrder()[0]).toBe('m0-language-field-c_1_complete_formulation');
+    });
+
     it('accepts an unprefixed alias as a derived reading (DR-M0-2 naming canon)', async () => {
         connectGateway({
             coordinate: 'M0-1',

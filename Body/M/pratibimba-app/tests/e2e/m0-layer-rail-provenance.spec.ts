@@ -45,13 +45,27 @@ test('M0 layer rail: local layer chips carry the real S2 node-read state; bridge
     const rail = page.locator('.face-active [data-testid="m0-layer-rail"]');
     await expect(rail).toBeVisible({ timeout: 15_000 });
 
-    // the live read resolves canonical: M1 HAS a :Bimba node, so every LOCAL
-    // layer chip reports `canonical` (the S2 read state, not a placeholder)
-    for (const key of ['language', 'ql-structure', 'relations', 'time-community']) {
+    // Each LOCAL layer chip carries its REAL per-field S2 read state off the
+    // live M1 node, per the 21.18 provenance mapping (spec §21.18) — NOT a
+    // blanket "canonical". M1 (Paramasiva) carries structural edges but no
+    // c_1_symbol / c_1_ql_variant / gds_community on its :Bimba node, so:
+    //   relations      → canonical      (M1 HAS FAMILY/structural edges)
+    //   language       → canonical_absent (no c_1_symbol on the node)
+    //   ql-structure   → canonical_absent (no c_1_ql_variant)
+    //   time-community → blocked        (no gds_community — GDS projection absent)
+    // The proof is that the chip reflects the live read, not that every field
+    // exists. A jsdom mock cannot produce these; only the real graph can.
+    const expectedReadState: Readonly<Record<string, string>> = {
+        relations: 'canonical',
+        language: 'canonical_absent',
+        'ql-structure': 'canonical_absent',
+        'time-community': 'blocked'
+    };
+    for (const [key, state] of Object.entries(expectedReadState)) {
         await expect(
             rail.locator(`[data-testid="m0-layer-${key}"]`),
-            `local layer ${key} reports the real S2 read state`
-        ).toHaveAttribute('data-s2-read', 'canonical', { timeout: 20_000 });
+            `local layer ${key} reports its real S2 read state`
+        ).toHaveAttribute('data-s2-read', state, { timeout: 20_000 });
     }
 
     // bridged layers (M0-4' personal, M0-5' pedagogy) perform NO S2 read — they

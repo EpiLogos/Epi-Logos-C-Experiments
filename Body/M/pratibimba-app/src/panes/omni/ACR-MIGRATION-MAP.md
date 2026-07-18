@@ -17,7 +17,7 @@ Task: `27.T27.10`. Active carrier: `Body/M/pratibimba-app`. The frozen
 | `assertCapabilityParity` | `omnipanelCapabilities.ts::parseMediationCapabilitySnapshot` | Replaced by strict gateway projection validation; Pi startup retains local-matrix parity authority |
 | `ACRRuntimeService` | carrier `GatewayClient` + `eventsStore` + Omni fold modules | Decomposed; no second socket/service store |
 | `run-flow-widget.tsx` | `dispatchGenealogy.ts`, `DispatchGenealogyTree.tsx`, `DispatchGenealogyStream.tsx`, review block surfaces | Decomposed into tab fold primitives |
-| `ACR_WIDGET_IDS` | `omnipanelRuntime.ts::OMNIPANEL_TABS` | Replaced by the eight-tab `/` manifest |
+| `ACR_WIDGET_IDS` | `omnipanelRuntime.ts::OMNIPANEL_TABS` | Replaced by the nine-tab `/` manifest; the governed `omniTuning` fold is carrier-native (38.T06.8), not an ACR migration |
 
 ## Evidence And Review Symbols
 

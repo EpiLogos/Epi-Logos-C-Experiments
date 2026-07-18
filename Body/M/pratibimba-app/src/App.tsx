@@ -4,8 +4,8 @@
  * Actualises: the (0/1) shell as two flexlayout root layouts over one state
  *   tree, with the application foundations underneath: command registry,
  *   palette, vault panes, session binding, layout persistence, gateway
- *   liveness. cmd-period IS the # inversion; the four stores are singletons
- *   so the faces cannot desynchronise.
+ *   liveness, and the persisted M0 surface record. cmd-period IS the #
+ *   inversion; the four stores are singletons so the faces cannot desynchronise.
  * Public surface: <App/>.
  * Does NOT own: gateway I/O (bridge/), vault law (src-tauri/vault.rs),
  *   command semantics (owners register them).
@@ -23,6 +23,7 @@ import { wireSupervisorEvents } from './bridge/tauriEvents';
 import { registerAtelierCommands } from './commands/atelier';
 import { commands, usePaletteStore } from './commands/registry';
 import {
+    CROSS_LAYOUT_INTENT_COMMAND,
     intentTarget,
     parseCrossLayoutIntent,
     registerCrossLayoutIntentCommand
@@ -48,7 +49,16 @@ import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
+import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
+import { M0SurfaceProvider } from './panes/M0SurfaceContext';
+import {
+    DEFAULT_M0_SURFACE_STATE,
+    deserializeM0SurfaceState,
+    serializeM0SurfaceState,
+    type M0SurfaceState
+} from './panes/m0SurfaceState';
 import { ReviewBlocksPane } from './panes/omni/ReviewBlocksPane';
+import { TuningPane } from './panes/TuningPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
 import { PlayedTorusPane } from './panes/PlayedTorusPane';
 import { M1SurfaceDispatchPane, resolveM1SurfaceContext } from './panes/m1SurfaceDispatch';
@@ -107,7 +117,7 @@ export type Face = 0 | 1;
 
 const STALE_WINDOW_MS = 10_000;
 
-/** 27.T27.0: the `/` membrane derives its tabs from the canonical 8-fold
+/** 27.T27.0 / 38.T06.8: the `/` membrane derives its tabs from the canonical 9-fold
  *  manifest (DR-WC-OP-1 collapse: `/ chat` → Pi, `logs` → Tools); shared
  *  by BOTH faces per 15.2. Unlanded folds mount the honest pending pane. */
 function omniBorder(activeLayout: OmniPanelLayoutId) {
@@ -225,6 +235,7 @@ interface PersistedUiState {
     cosmic?: unknown;
     sessionKey?: string | null;
     coordinate?: string | null;
+    m0Surface?: unknown;
     omniPanel?: unknown;
     [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]?: OmniPanelLayoutId;
 }
@@ -337,6 +348,8 @@ function factory(node: TabNode) {
                     }
                 />
             );
+        case 'omniTuning':
+            return <TuningPane />;
         // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
         // own the bodies) mount the honest pending pane.
         case 'omniDispatchTrace':
@@ -384,6 +397,7 @@ export function App() {
     const [face, setFace] = useState<Face>(1);
     const [activeLayout, setActiveLayout] = useState<OmniPanelLayoutId>('daily-0-1');
     const [routingRevision, setRoutingRevision] = useState(0);
+    const [m0Surface, setM0Surface] = useState<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
     const activeOmniTab = useOmniPanelSessionStore(state => state.session.activeTab);
     const [routedHost, setRoutedHost] = useState<{
         readonly face: Face;
@@ -399,6 +413,7 @@ export function App() {
     const modelsRef = useRef<typeof models>(null);
     modelsRef.current = models;
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const m0SurfaceRef = useRef<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
 
     // boot: restore persisted UI state (or defaults outside tauri)
     useEffect(() => {
@@ -431,6 +446,9 @@ export function App() {
                 if (state.coordinate) {
                     useCoordinateStore.getState().setSelected(state.coordinate);
                 }
+                const restoredM0Surface = deserializeM0SurfaceState(state.m0Surface);
+                m0SurfaceRef.current = restoredM0Surface;
+                setM0Surface(restoredM0Surface);
                 if (state.sessionKey) {
                     useSessionStore.getState().setSession({ sessionKey: state.sessionKey });
                 }
@@ -465,12 +483,20 @@ export function App() {
                 cosmic: current.cosmic.toJson(),
                 sessionKey: useSessionStore.getState().sessionKey,
                 coordinate: useCoordinateStore.getState().selected,
+                m0Surface: serializeM0SurfaceState(m0SurfaceRef.current),
                 omniPanel: readOmniPanelSessionState(),
                 [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
             };
             void invokeCommand('ui_state_save', { json: JSON.stringify(state) }).catch(() => undefined);
         }, 800);
     }, []);
+
+    const updateM0Surface = useCallback((patch: Partial<M0SurfaceState>) => {
+        const next = { ...m0SurfaceRef.current, ...patch };
+        m0SurfaceRef.current = next;
+        setM0Surface(next);
+        persist();
+    }, [persist]);
 
     useEffect(() => useOmniPanelSessionStore.subscribe(() => persist()), [persist]);
 
@@ -852,11 +878,13 @@ export function App() {
         .join(' ');
 
     return (
-        <div
+        <M0SurfaceProvider state={m0Surface} update={updateM0Surface}>
+            <div
             className="shell"
             data-testid="shell"
             data-face={face}
             data-active-layout={activeLayout}
+            data-m0-surface-state={JSON.stringify(m0Surface)}
             data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
             data-omnipanel-active-tab={activeOmniTab}
             data-cross-layout-identity-receipt={
@@ -898,9 +926,31 @@ export function App() {
                         }}
                     />
                 </div>
+                {face === 0 && activeLayout === 'daily-0-1' ? (
+                    <M0CoordinateSummaryCard
+                        onOpenFullView={() => {
+                            const privacyClass = useSessionStore.getState().privacyClass;
+                            void commands.execute(CROSS_LAYOUT_INTENT_COMMAND, {
+                                coordinate: useCoordinateStore.getState().selected,
+                                artifactUri: null,
+                                reviewId: null,
+                                dayNow: useSessionStore.getState().dayNow,
+                                sessionKey: useSessionStore.getState().sessionKey,
+                                profileGeneration: useTickStore.getState().generation,
+                                privacyClass:
+                                    privacyClass === 'public' || privacyClass === 'protected' || privacyClass === 'private'
+                                        ? privacyClass
+                                        : null,
+                                requestedExtensionId: 'm0-anuttara',
+                                requestedContributionId: 'graph'
+                            });
+                        }}
+                    />
+                ) : null}
             </FaceToggleChrome>
-            <StatusStrip />
-            <CommandPalette />
-        </div>
+                <StatusStrip />
+                <CommandPalette />
+            </div>
+        </M0SurfaceProvider>
     );
 }

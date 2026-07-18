@@ -2,7 +2,9 @@
  * Coordinate: M' shell acceptance
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): #0/1 cross-layout carrier boundary
- * Actualises: real Chromium proof that daily-0-1 <-> ide-deep preserves the seven-field shared identity tuple (the OmniPanel fold is panel state, not identity)
+ * Actualises: real Chromium proof that daily-0-1 <-> ide-deep preserves the
+ *   seven-field shared identity tuple and the persisted M0 layer/phase/mode
+ *   record (the OmniPanel fold is panel state, not identity).
  * Public surface: Playwright test over the spawned gateway and filesystem vault sidecar
  * Does NOT own: gateway profile production, session storage, day anchoring, or route target law
  * Contract: [[M'-SYSTEM-SPEC]] and rerun tranche [[11.T11.6]]
@@ -142,4 +144,41 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
     await expect(page.getByTestId('status-coordinate')).toContainText('M3-3');
     await expect(page.getByTestId('status-session')).toContainText(sessionKey);
     await expect(page.getByTestId('status-daynow')).toContainText(day);
+
+    await dispatchIntent(page, {
+        ...common,
+        profileGeneration: backToDaily.after.profileGeneration as number,
+        requestedExtensionId: 'm0-anuttara',
+        requestedContributionId: 'relations'
+    });
+    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep');
+    const m0Surface = page.getByTestId('m0-surface-state');
+    await expect(m0Surface).toHaveAttribute('data-active-layer', 'rel');
+    await page.getByTestId('m0-phase-explicate').click();
+    await page.getByTestId('m0-mode-switch-authoring').click();
+    await expect(m0Surface).toHaveAttribute('data-implicate-explicate', 'explicate');
+    await expect(m0Surface).toHaveAttribute('data-mode', 'authoring');
+
+    await dispatchIntent(page, {
+        ...common,
+        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/\d+/)?.[0]),
+        requestedExtensionId: 'm0-anuttara',
+        requestedContributionId: 'personal'
+    });
+    await expect(shell).toHaveAttribute('data-active-layout', 'daily-0-1');
+    await expect(shell).toHaveAttribute(
+        'data-m0-surface-state',
+        JSON.stringify({ activeLayer: 'rel', implicateExplicate: 'explicate', mode: 'authoring' })
+    );
+
+    await dispatchIntent(page, {
+        ...common,
+        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/\d+/)?.[0]),
+        requestedExtensionId: 'm0-anuttara',
+        requestedContributionId: 'graph'
+    });
+    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep');
+    await expect(page.getByTestId('m0-surface-state')).toHaveAttribute('data-active-layer', 'rel');
+    await expect(page.getByTestId('m0-surface-state')).toHaveAttribute('data-implicate-explicate', 'explicate');
+    await expect(page.getByTestId('m0-surface-state')).toHaveAttribute('data-mode', 'authoring');
 });

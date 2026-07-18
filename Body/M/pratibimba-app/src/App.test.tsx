@@ -1,5 +1,11 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const invokeCommand = vi.fn();
+vi.mock('./bridge/tauri', () => ({
+    invokeCommand: (command: string, args?: Record<string, unknown>) => invokeCommand(command, args)
+}));
+
 import { App } from './App';
 import { commands } from './commands/registry';
 import { CROSS_LAYOUT_INTENT_COMMAND, CROSS_LAYOUT_INTENT_TARGETS } from './commands/crossLayoutIntent';
@@ -22,6 +28,15 @@ class InertResizeObserver {
 
 describe('App shell', () => {
     beforeEach(() => {
+        invokeCommand.mockImplementation(async (command: string) => {
+            if (command === 'ui_state_load') {
+                return null;
+            }
+            if (command === 'vault_list') {
+                return [];
+            }
+            return undefined;
+        });
         vi.stubGlobal('WebSocket', InertSocket);
         if (!('ResizeObserver' in globalThis)) {
             vi.stubGlobal('ResizeObserver', InertResizeObserver);
@@ -34,6 +49,7 @@ describe('App shell', () => {
 
     afterEach(() => {
         cleanup();
+        invokeCommand.mockReset();
         vi.unstubAllGlobals();
     });
 
@@ -137,6 +153,59 @@ describe('App shell', () => {
         expect((await screen.findAllByText('Vault')).length).toBeGreaterThan(0);
     });
 
+    it('opens the M0 compact card from the daily cosmic face into the ide-deep Bimba graph', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        act(() => {
+            useCoordinateStore.getState().setSelected('M0-2');
+        });
+
+        expect(screen.queryByTestId('m0-coordinate-summary-card')).toBeNull();
+        fireEvent.click(screen.getByTestId('face-toggle'));
+
+        const card = await screen.findByTestId('m0-coordinate-summary-card');
+        expect(card.dataset.coordinate).toBe('M0-2');
+        expect(card.dataset.activeLayer).toBe('language');
+        fireEvent.click(screen.getByTestId('m0-summary-open-full-view'));
+
+        const receiver = await screen.findByTestId('cross-layout-intent-receiver');
+        expect(shell.dataset.activeLayout).toBe('ide-deep');
+        expect(receiver.dataset.requestedExtensionId).toBe('m0-anuttara');
+        expect(receiver.dataset.requestedContributionId).toBe('graph');
+    });
+
+    it('restores the M0 layer, phase, and mode record and carries it through both face toggles', async () => {
+        invokeCommand.mockImplementation(async (command: string) => {
+            if (command === 'ui_state_load') {
+                return JSON.stringify({
+                    layoutVersion: 21,
+                    m0Surface: {
+                        activeLayer: 'rel',
+                        implicateExplicate: 'explicate',
+                        mode: 'authoring'
+                    }
+                });
+            }
+            if (command === 'vault_list') {
+                return [];
+            }
+            return undefined;
+        });
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        const expected = JSON.stringify({
+            activeLayer: 'rel',
+            implicateExplicate: 'explicate',
+            mode: 'authoring'
+        });
+
+        await waitFor(() => expect(shell.dataset.m0SurfaceState).toBe(expected));
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.m0SurfaceState).toBe(expected);
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.m0SurfaceState).toBe(expected);
+    });
+
     it('layout claim (08.T8.5 / DR-TS-1): ONE 0/1 shell — two faces, no third layout, the / OmniPanel membrane on BOTH', async () => {
         render(<App />);
         const shell = await screen.findByTestId('shell');
@@ -149,7 +218,7 @@ describe('App shell', () => {
         });
         expect(shell.dataset.face).toBe('0'); // cosmic = the 0-side
         // the / OmniPanel operator membrane overlays BOTH faces (cross-layout
-        // availability): the canonical 8-fold manifest (27.T27.0, DR-WC-OP-1
+        // availability): the canonical 9-fold manifest (27.T27.0 / 38.T06.8, DR-WC-OP-1
         // collapse — `/ chat` → Pi) renders in each face layout (flexlayout
         // may render a tab's text twice per layout — button + panel)
         for (const label of [
@@ -160,7 +229,8 @@ describe('App shell', () => {
             'Evidence',
             'Review',
             'Gateway',
-            'Diagnostics'
+            'Diagnostics',
+            'Tuning'
         ]) {
             expect((await screen.findAllByText(label)).length).toBeGreaterThanOrEqual(2);
         }

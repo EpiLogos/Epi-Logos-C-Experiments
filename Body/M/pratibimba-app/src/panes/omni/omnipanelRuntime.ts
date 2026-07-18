@@ -2,7 +2,7 @@
  * Coordinate: M' `/` membrane (omnipanel runtime foundation — Track 27.T27.0)
  * Residency: Body/M/pratibimba-app/src/panes/omni
  * Actualises: the canonical OmniPanel runtime type-graph — the EIGHT-tab
- *   manifest (one substrate folded eight ways, DR-WC-OP-1 collapse map),
+ *   manifest (one substrate folded nine ways, DR-WC-OP-1 collapse map),
  *   the run-model types the fold panels share (`ActorIdentity`,
  *   `DispatchRoute`, `RunStatus`, `RunTreeNode`, `ToolStreamEvent`,
  *   `ReviewDecision`, `ReviewTransition`), the mediation-capability
@@ -27,7 +27,8 @@ export type OmniPanelTabId =
     | 'evidence'
     | 'review'
     | 'gateway'
-    | 'diagnostics';
+    | 'diagnostics'
+    | 'tuning';
 
 export type OmniPanelLayoutId = 'daily-0-1' | 'ide-deep';
 
@@ -47,8 +48,8 @@ export interface OmniPanelTab {
 }
 
 /**
- * The canonical 8-tab manifest (DR-WC-OP-1 collapse map, Tranche 27.0
- * type-level rewrite). One substrate folded eight ways; all eight visible
+ * The canonical 9-tab manifest (DR-WC-OP-1 collapse map, Tranche 27.0
+ * type-level rewrite, extended by 38.T06.8). One substrate folded nine ways; all nine visible
  * in BOTH faces per 15.2 (the OmniPanel border is shared by the personal
  * and cosmic layouts). Legacy carrier tabs collapse as: `/ chat` →
  * `pi-chat`, `sessions` → `sessions`, `logs` → `tool-stream` (the logs
@@ -63,7 +64,8 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] }
+    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'tuning', label: 'Tuning', component: 'omniTuning', owningTranche: '38.T06.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] }
 ] as const);
 
 export function parseOmniPanelLayoutPreference(value: unknown): OmniPanelLayoutId {

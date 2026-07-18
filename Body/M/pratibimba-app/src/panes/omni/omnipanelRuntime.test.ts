@@ -26,13 +26,14 @@ const CANONICAL_IDS = [
     'evidence',
     'review',
     'gateway',
-    'diagnostics'
+    'diagnostics',
+    'tuning'
 ] as const;
 
 describe('OMNIPANEL_TABS manifest', () => {
-    it('carries exactly the 8 canonical distinct tab ids in order', () => {
+    it('carries exactly the 9 canonical distinct tab ids in order', () => {
         expect(OMNIPANEL_TABS.map(tab => tab.id)).toEqual([...CANONICAL_IDS]);
-        expect(new Set(OMNIPANEL_TABS.map(tab => tab.id)).size).toBe(8);
+        expect(new Set(OMNIPANEL_TABS.map(tab => tab.id)).size).toBe(9);
     });
 
     it('collapses the legacy carrier folds onto their landed panels (DR-WC-OP-1)', () => {
@@ -42,6 +43,8 @@ describe('OMNIPANEL_TABS manifest', () => {
         for (const key of ['omniChat', 'omniSessions', 'omniLogs']) {
             expect(omniPanelTabForComponent(key)?.landed).toBe(true);
         }
+        expect(omniPanelTabForComponent('omniTuning')?.id).toBe('tuning');
+        expect(omniPanelTabForComponent('omniTuning')?.landed).toBe(true);
     });
 
     it('names the owning tranche for every unlanded fold — pending, never hidden', () => {

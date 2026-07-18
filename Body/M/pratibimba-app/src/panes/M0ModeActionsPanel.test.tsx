@@ -74,4 +74,14 @@ describe('M0ModeActionsPanel — reading/authoring mode toggle (21.T21.12)', () 
         expect(screen.queryByTestId('m0-action-request-anuttara-review')).toBeNull();
         expect(screen.queryByTestId('m0-dr-m0-1-banner')).toBeNull();
     });
+
+    it('uses the carrier-owned mode and reports a user mode change without holding a second mode state', () => {
+        const onModeChange = vi.fn();
+        render(<M0ModeActionsPanel mode="authoring" onModeChange={onModeChange} />);
+
+        expect(screen.getByTestId('m0-mode-actions').getAttribute('data-mode')).toBe('authoring');
+        fireEvent.click(screen.getByTestId('m0-mode-switch-reading'));
+        expect(onModeChange).toHaveBeenCalledWith('reading');
+        expect(screen.getByTestId('m0-mode-actions').getAttribute('data-mode')).toBe('authoring');
+    });
 });

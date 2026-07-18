@@ -3,7 +3,8 @@
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): M0-0' pre-math node-language read surface
  * Actualises: the M0-0' language layer as a real read of the selected
- *   coordinate's canonical c_1_* language fields (m0Layers.ts M0_LAYER_FIELDS.lang)
+ *   coordinate's canonical c_1_* language fields (m0Layers.ts M0_LAYER_FIELDS.lang),
+ *   ordered by the App-owned implicate/explicate phase without forking the S2 payload,
  *   over the shared s2.graph.node channel, plus the candidate-DR-M0-4 image-asset
  *   handle row (m0AssetHandles.ts). Missing fields are canonical-absence, never a
  *   placeholder; an unprefixed alias is surfaced as a `derived` reading (DR-M0-2);
@@ -20,9 +21,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { GraphClient } from '../bridge/graphClient';
 import { ProvenanceBadge, ProvenanceState } from '../ui/ProvenanceBadge';
-import { useCoordinateStore, useProvenanceStore } from '../state/stores';
+import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
 import { M0_LAYER_FIELDS } from './m0Layers';
+import type { M0Phase } from './m0SurfaceState';
 import { M0_ASSET_KIND_FIELD, M0_ASSET_URI_FIELD, buildM0AssetHandles } from './m0AssetHandles';
+import { M0ArchetypeRoutingPanel } from './M0ArchetypeRoutingPanel';
+import { readM0ArchetypeRouting } from './m0ArchetypeRouting';
 import { inkDim } from '../ui/tokens';
 
 /** The canonical language text fields — M0_LAYER_FIELDS.lang minus the asset
@@ -31,6 +35,11 @@ import { inkDim } from '../ui/tokens';
 const LANGUAGE_TEXT_FIELDS = M0_LAYER_FIELDS.lang.filter(
     field => field !== M0_ASSET_URI_FIELD && field !== M0_ASSET_KIND_FIELD
 );
+
+const PHASE_PRIORITY_FIELD: Readonly<Record<M0Phase, string>> = Object.freeze({
+    implicate: 'c_1_form',
+    explicate: 'c_1_complete_formulation'
+});
 
 interface FieldReading {
     readonly field: string;
@@ -83,9 +92,10 @@ function readField(field: string, properties: Record<string, unknown>): FieldRea
     return { field, value: null, state: 'canonical_absent' };
 }
 
-export function M0LanguageReaderPanel() {
+export function M0LanguageReaderPanel({ phase = 'implicate' }: { readonly phase?: M0Phase }) {
     const selected = useCoordinateStore(s => s.selected);
     const connected = useProvenanceStore(s => s.connection.connected);
+    const cachedProfile = useTickStore(s => s.profile);
     const [read, setRead] = useState<ReadState>({ status: 'idle' });
 
     useEffect(() => {
@@ -133,13 +143,20 @@ export function M0LanguageReaderPanel() {
     const fields = useMemo<readonly FieldReading[]>(
         () =>
             read.status === 'ready'
-                ? LANGUAGE_TEXT_FIELDS.map(field => readField(field, read.properties))
+                ? [
+                      PHASE_PRIORITY_FIELD[phase],
+                      ...LANGUAGE_TEXT_FIELDS.filter(field => field !== PHASE_PRIORITY_FIELD[phase])
+                  ].map(field => readField(field, read.properties))
                 : [],
-        [read]
+        [phase, read]
     );
     const assets = useMemo(
         () => buildM0AssetHandles(read.status === 'ready' ? { payload: read.properties } : null),
         [read]
+    );
+    const archetypeRouting = useMemo(
+        () => readM0ArchetypeRouting(read.status === 'ready' ? read.properties : null, cachedProfile),
+        [cachedProfile, read]
     );
 
     if (read.status !== 'ready') {
@@ -171,6 +188,7 @@ export function M0LanguageReaderPanel() {
             className="m0-language-reader"
             data-testid="m0-language-reader"
             data-state="ready"
+            data-phase={phase}
         >
             <header className="m0-language-reader-header">
                 <span className="m0-language-reader-kicker">M0-0′</span>
@@ -201,6 +219,7 @@ export function M0LanguageReaderPanel() {
                     </div>
                 ))}
             </dl>
+            <M0ArchetypeRoutingPanel projection={archetypeRouting} />
             <div
                 className="m0-language-asset-row"
                 data-testid="m0-language-asset-row"

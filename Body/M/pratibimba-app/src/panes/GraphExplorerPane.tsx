@@ -26,9 +26,11 @@ import { M0InspectorLayer } from './m0Layers';
 import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
 import { M0CommunityClockPanel } from './M0CommunityClockPanel';
 import { M0LanguageReaderPanel } from './M0LanguageReaderPanel';
+import { M0QlStructureReaderPanel } from './M0QlStructureReaderPanel';
 import { M0RelationsReaderPanel } from './M0RelationsReaderPanel';
 import { M0M5LibrarySeamPanel } from './M0M5LibrarySeamPanel';
 import { M0ModeActionsPanel } from './M0ModeActionsPanel';
+import { useM0Surface } from './M0SurfaceContext';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 import { ATELIER_CLUSTER_HUES, inkDim, ringLit } from '../ui/tokens';
 
@@ -54,8 +56,11 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
     const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error'>('loading');
     const [detail, setDetail] = useState('');
     const [atelierClusterCount, setAtelierClusterCount] = useState<number | null>(null);
-    const [activeLayer, setActiveLayer] = useState<M0InspectorLayer>('lang');
-    const handleLayerChange = useCallback((layer: M0InspectorLayer) => setActiveLayer(layer), []);
+    const { state: m0Surface, update: updateM0Surface } = useM0Surface();
+    const handleLayerChange = useCallback(
+        (layer: M0InspectorLayer) => updateM0Surface({ activeLayer: layer }),
+        [updateM0Surface]
+    );
 
     useEffect(() => {
         if (!connected || !hostRef.current) {
@@ -135,15 +140,43 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
             data-atelier-clusters={atelierClusterCount ?? undefined}
         >
             <M0LayerRail
+                activeLayer={m0Surface.activeLayer}
                 requestedLayer={requestedM0Contribution ? M0_INTENT_LAYERS[requestedM0Contribution] : null}
                 onLayerChange={handleLayerChange}
             />
-            {activeLayer === 'lang' ? <M0LanguageReaderPanel /> : null}
-            {activeLayer === 'rel' ? <M0RelationsReaderPanel /> : null}
-            {activeLayer === 'time' ? <M0CommunityClockPanel /> : null}
+            <div
+                className="m0-surface-controls"
+                data-testid="m0-surface-state"
+                data-active-layer={m0Surface.activeLayer}
+                data-implicate-explicate={m0Surface.implicateExplicate}
+                data-mode={m0Surface.mode}
+            >
+                <button
+                    type="button"
+                    data-testid="m0-phase-implicate"
+                    aria-pressed={m0Surface.implicateExplicate === 'implicate'}
+                    onClick={() => updateM0Surface({ implicateExplicate: 'implicate' })}
+                >
+                    Implicate
+                </button>
+                <button
+                    type="button"
+                    data-testid="m0-phase-explicate"
+                    aria-pressed={m0Surface.implicateExplicate === 'explicate'}
+                    onClick={() => updateM0Surface({ implicateExplicate: 'explicate' })}
+                >
+                    Explicate
+                </button>
+            </div>
+            {m0Surface.activeLayer === 'lang' ? (
+                <M0LanguageReaderPanel phase={m0Surface.implicateExplicate} />
+            ) : null}
+            {m0Surface.activeLayer === 'ql' ? <M0QlStructureReaderPanel /> : null}
+            {m0Surface.activeLayer === 'rel' ? <M0RelationsReaderPanel /> : null}
+            {m0Surface.activeLayer === 'time' ? <M0CommunityClockPanel /> : null}
             <M0M5LibrarySeamPanel />
             <M0VirtueWitnessPanel />
-            <M0ModeActionsPanel />
+            <M0ModeActionsPanel mode={m0Surface.mode} onModeChange={mode => updateM0Surface({ mode })} />
             <div className="pane-toolbar" data-testid="graph-status">
                 <BridgeReadinessBadge bindingKey="s2.graph.node" />
                 {status === 'loading' ? 'reading the canonical map…' : detail}

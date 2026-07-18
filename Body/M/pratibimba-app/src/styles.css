@@ -60,6 +60,25 @@ body,
   color: var(--ink);
 }
 
+/* ── T30.1 base voice: bare semantic elements ride the --type-* scale ───────
+   The one-type-voice invariant (type-voice.spec / DR-FACE-7) requires EVERY
+   rendered element's font-size to resolve to a named scale step — but panes
+   author bare <h2>/<h3>/<input> freely, and UA defaults (20.4px h2, 15.91px
+   h3, 13.33px input) fall outside the scale. These element-specificity
+   rules (0-0-1) put unclassed elements on the scale while every classed
+   `font-size: var(--type-*)` selector still overrides them. */
+h1 { font-size: var(--type-heading-1); }
+h2 { font-size: var(--type-heading-2); }
+h3 { font-size: var(--type-heading-3); }
+h4 { font-size: var(--type-heading-4); }
+h5,
+h6 { font-size: var(--type-heading-4); }
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 .shell {
   display: flex;
   flex-direction: column;
@@ -139,6 +158,95 @@ body,
 .face-toggle-button:focus-visible {
   border-color: var(--ring);
   outline: none;
+}
+
+.m0-coordinate-summary-card {
+  /* Compact daily-0-1 slot (21.T21.17): a bottom-right HUD on the cosmic
+     face. It must NOT sit over the flexlayout tab strip at the top — the
+     cosmic tabset carries M3 Inspectors / Pentadic / M5 EBM at its right
+     edge, and an absolute top overlay made those tabs unclickable. Anchored
+     to the bottom, it rides the 3D content and leaves all tab chrome live. */
+  position: absolute;
+  z-index: 11;
+  bottom: 0;
+  right: 40px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.2rem 0.45rem;
+  width: min(22rem, calc(100% - 4rem));
+  padding: 0.35rem 0.5rem;
+  background: var(--ground-raised);
+  border-bottom: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  color: var(--ink);
+}
+
+.m0-coordinate-summary-card-kicker,
+.m0-coordinate-summary-card-layer,
+.m0-coordinate-summary-card-provenance,
+.m0-coordinate-summary-card-generation {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m0-coordinate-summary-card-coordinate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--type-caption);
+}
+
+.m0-coordinate-summary-card-layer {
+  justify-self: end;
+}
+
+.m0-coordinate-summary-card-provenance,
+.m0-coordinate-summary-card-generation {
+  grid-column: span 1;
+}
+
+.m0-coordinate-summary-card-open {
+  grid-column: 3;
+  grid-row: 2;
+  padding: 0.15rem 0.35rem;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--type-caption);
+  cursor: pointer;
+}
+
+.m0-coordinate-summary-card-open:hover,
+.m0-coordinate-summary-card-open:focus-visible {
+  border-color: var(--ring);
+  outline: none;
+}
+
+.m0-layer-provenance {
+  margin-left: 0.3rem;
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+  white-space: nowrap;
+}
+
+.m0-layer-provenance-canonical { color: var(--ring); }
+.m0-layer-provenance-derived,
+.m0-layer-provenance-inferred,
+.m0-layer-provenance-review_pending { color: var(--accent); }
+.m0-layer-provenance-blocked { color: var(--danger); }
+.m0-layer-provenance-bridged_local { color: var(--accent); }
+.m0-layer-provenance-bridged_public { color: var(--ring); }
+
+.m0-surface-controls {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin: 0.35rem 0;
+}
+
+.m0-surface-controls button[aria-pressed='true'] {
+  border-color: var(--ring);
+  color: var(--ring);
 }
 
 .face-toggle-icon {
@@ -1286,6 +1394,169 @@ body,
   font-size: var(--type-caption);
 }
 
+.m0-language-reader {
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0.65rem 0.65rem;
+  background: var(--ground-raised);
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m0-language-reader-header,
+.m0-archetype-routing-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.m0-language-reader-header h3,
+.m0-archetype-routing-header h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--type-heading-4);
+}
+
+.m0-language-reader-kicker {
+  color: var(--ring);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+.m0-language-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 0.65rem;
+  margin: 0.55rem 0;
+}
+
+.m0-language-field {
+  min-width: 0;
+}
+
+.m0-language-field dt {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.m0-language-field dd {
+  margin: 0.15rem 0 0;
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.m0-archetype-routing-reader {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.6rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0;
+}
+
+.m0-archetype-routing-header p,
+.m0-archetype-routing-reader > p {
+  margin: 0.2rem 0 0;
+}
+
+.m0-archetype-routing-syntax {
+  width: fit-content;
+  border: 1px solid var(--ring);
+  padding: 0.1rem 0.35rem;
+  color: var(--ring);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+.m0-archetype-routing-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: var(--ink-dim);
+}
+
+.m0-archetype-routing-rows {
+  display: grid;
+  gap: 0.35rem;
+  max-height: 13rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.m0-archetype-routing-rows li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: start;
+  border-top: 1px solid var(--line);
+  padding-top: 0.35rem;
+}
+
+.m0-archetype-routing-rows code {
+  min-width: 0;
+  color: var(--ring);
+  overflow-wrap: anywhere;
+}
+
+.m0-ql-structure-reader {
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0.65rem 0.65rem;
+  background: var(--ground-raised);
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m0-ql-structure-reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.m0-ql-structure-reader-header h3,
+.m0-ql-structure-reader-header span {
+  margin: 0;
+  font-size: var(--type-heading-4);
+}
+
+.m0-ql-structure-reader-header span {
+  color: var(--ring);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+.m0-ql-coordinate-tree-link {
+  color: var(--ring);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: var(--type-caption);
+}
+
+.m0-ql-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem 0.65rem;
+  margin: 0;
+}
+
+.m0-ql-field {
+  min-width: 0;
+}
+
+.m0-ql-field dt {
+  color: var(--ink-dim);
+}
+
+.m0-ql-field dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
 .m0-community-clock-header,
 .m0-community-clock-columns,
 .m0-community-list li {
@@ -1404,6 +1675,10 @@ body,
 }
 
 @media (max-width: 720px) {
+  .m0-ql-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .m0-community-clock-columns {
     display: block;
   }
@@ -2860,4 +3135,157 @@ body,
 /* The intent receiver carries routing identity without adding a layout box. */
 .cross-layout-intent-receiver {
   display: contents;
+}
+
+/* ── Governed tuning surface (38.T06.8) ─────────────────────────── */
+
+.tuning-pane {
+  display: grid;
+  min-height: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.tuning-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.tuning-toolbar span {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.tuning-toolbar button {
+  margin-left: auto;
+}
+
+.tuning-grid {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.7fr);
+}
+
+.tuning-list {
+  overflow: auto;
+  border-right: 1px solid var(--hairline);
+}
+
+.tuning-list button {
+  display: grid;
+  width: 100%;
+  gap: 0.2rem;
+  padding: 0.55rem 0.6rem;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.tuning-list button[data-selected='true'] {
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.tuning-list small,
+.tuning-detail p,
+.tuning-detail dd,
+.tuning-audit {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.tuning-detail {
+  overflow: auto;
+  padding: 0.75rem;
+}
+
+.tuning-detail h2,
+.tuning-audit h3 {
+  margin: 0;
+  font-size: var(--type-heading-3);
+}
+
+.tuning-detail header p {
+  margin: 0.35rem 0 0.8rem;
+}
+
+.tuning-detail dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0 0 0.8rem;
+}
+
+.tuning-detail dl div {
+  min-width: 0;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.3rem;
+}
+
+.tuning-detail dt {
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+}
+
+.tuning-detail dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.tuning-value {
+  display: grid;
+  gap: 0.3rem;
+  font-size: var(--type-caption);
+}
+
+.tuning-value input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tuning-actions {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+.tuning-note,
+.tuning-status {
+  margin: 0.6rem 0 0;
+}
+
+.tuning-audit {
+  margin-top: 1rem;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.65rem;
+}
+
+.tuning-audit ol {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.tuning-audit li + li {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 680px) {
+  .tuning-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tuning-list {
+    max-height: 11rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .tuning-detail dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

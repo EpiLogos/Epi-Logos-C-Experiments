@@ -74,11 +74,36 @@ export interface AxiomTranslationStep {
     readonly verifiedBy?: 'pi' | 'human';
 }
 
+/** Pleroma's `m5_4_governance.mediated_run_evidence_bridge` contract fields. */
+export const MEDIATED_RUN_EVIDENCE_PACKET_REQUIRED_FIELDS = Object.freeze([
+    'candidateId',
+    'coordinate',
+    'sourceAnchor',
+    'graphAnchor',
+    'reviewId',
+    'testAnchor',
+    'profileGeneration',
+    'bridgeReadinessHandle',
+    'sessionKey',
+    'dayNowContext',
+    'currentProfile',
+    'graphContext',
+    'sessionRuntime',
+    'semanticCandidates',
+    's5Refs',
+    'privacyClass'
+] as const);
+
 export interface MediatedRunEvidencePacket {
     readonly id: string;
     readonly title: string;
     readonly mediatedBy: ActorMediator;
+    readonly candidateId: string;
     readonly coordinate: string;
+    readonly sourceAnchor: string;
+    readonly graphAnchor: string;
+    readonly reviewId: string;
+    readonly testAnchor: string;
     readonly privacyClass: string;
     readonly dispatchTrace: DispatchTraceNode;
     readonly toolStream: readonly ToolInvocationRef[];
@@ -88,6 +113,14 @@ export interface MediatedRunEvidencePacket {
     readonly dayNowContext: string;
     readonly profileGeneration: number;
     readonly bridgeReadinessHandle: string;
+    /** Opaque public-current projection from the S0 profile boundary. */
+    readonly currentProfile: Readonly<Record<string, unknown>>;
+    /** Opaque S2 provenance projection supplied by the gateway. */
+    readonly graphContext: Readonly<Record<string, unknown>>;
+    /** Opaque S3 session/runtime projection supplied by the gateway. */
+    readonly sessionRuntime: Readonly<Record<string, unknown>>;
+    readonly semanticCandidates: readonly string[];
+    readonly s5Refs: readonly string[];
     /** 19.6 close-path link. */
     readonly contemplationObjectRef?: string;
 }
@@ -127,13 +160,36 @@ export function validateEvidencePacket(value: unknown): string[] {
         return ['packet must be an object'];
     }
     const packet = value as Record<string, unknown>;
-    for (const field of ['id', 'title', 'coordinate', 'privacyClass', 'sessionKey', 'dayNowContext', 'bridgeReadinessHandle']) {
+    for (const field of [
+        'id',
+        'title',
+        'candidateId',
+        'coordinate',
+        'sourceAnchor',
+        'graphAnchor',
+        'reviewId',
+        'testAnchor',
+        'privacyClass',
+        'sessionKey',
+        'dayNowContext',
+        'bridgeReadinessHandle'
+    ]) {
         if (typeof packet[field] !== 'string' || (packet[field] as string).length === 0) {
             errors.push(`${field} is required`);
         }
     }
     if (typeof packet.profileGeneration !== 'number') {
         errors.push('profileGeneration is required');
+    }
+    for (const field of ['currentProfile', 'graphContext', 'sessionRuntime']) {
+        if (typeof packet[field] !== 'object' || packet[field] === null || Array.isArray(packet[field])) {
+            errors.push(`${field} is required`);
+        }
+    }
+    for (const field of ['semanticCandidates', 's5Refs']) {
+        if (!Array.isArray(packet[field]) || !packet[field].every(value => typeof value === 'string')) {
+            errors.push(`${field} must be a string array`);
+        }
     }
     const mediator = packet.mediatedBy as Record<string, unknown> | undefined;
     if (!mediator || !['pi', 'anima', 'aletheia'].includes(String(mediator.kind))) {

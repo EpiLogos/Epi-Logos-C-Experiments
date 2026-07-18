@@ -7,10 +7,11 @@
  *   routed-write deep-links, and the DR-M0-1 provenance banner. Every affordance
  *   routes via the real carrier cross-layout intent spine — M0' NEVER mutates
  *   canon (SC-2: no direct canon-mutation path; routed-write via M5 only).
- * Public surface: M0ModeActionsPanel.
+ * Public surface: M0ModeActionsPanel, M0ModeActionsPanelProps.
  * Does NOT own: the intent transport (commands/crossLayoutIntent), canon
  *   mutation (routed-write via M5 governance only), the action model
- *   (m0ModeActions), the layer rail / reader panels.
+ *   (m0ModeActions), the layer rail / reader panels. The App can control this
+ *   mode through its persisted M0 surface record.
  */
 
 import { useCallback, useState } from 'react';
@@ -25,8 +26,20 @@ import {
     type M0SurfaceMode
 } from './m0ModeActions';
 
-export function M0ModeActionsPanel() {
-    const [mode, setMode] = useState<M0SurfaceMode>('reading');
+export interface M0ModeActionsPanelProps {
+    readonly mode?: M0SurfaceMode;
+    readonly onModeChange?: (mode: M0SurfaceMode) => void;
+}
+
+export function M0ModeActionsPanel({ mode: controlledMode, onModeChange }: M0ModeActionsPanelProps = {}) {
+    const [uncontrolledMode, setUncontrolledMode] = useState<M0SurfaceMode>('reading');
+    const mode = controlledMode ?? uncontrolledMode;
+    const setMode = (nextMode: M0SurfaceMode) => {
+        if (controlledMode === undefined) {
+            setUncontrolledMode(nextMode);
+        }
+        onModeChange?.(nextMode);
+    };
     const coordinate = useCoordinateStore(state => state.selected);
     const sessionKey = useSessionStore(state => state.sessionKey);
     const dayNow = useSessionStore(state => state.dayNow);

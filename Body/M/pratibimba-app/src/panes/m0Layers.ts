@@ -213,6 +213,10 @@ export const M0_LAYER_FIELDS: Readonly<Record<M0InspectorLayer, readonly string[
             'c_1_symbol',
             'c_1_formulation_type',
             'c_1_complete_formulation',
+            'c_1_form',
+            'c_1_formulation_breakdown',
+            'c_1_primary_designation',
+            'c_1_name',
             // M0-0' image-asset handles (rerun 01.T1.6 / 09.3, candidate DR-M0-4):
             // rendered review_pending until user validation promotes DR-M0-4; the
             // renderer never infers/backfills. Projection: m0AssetHandles.ts.

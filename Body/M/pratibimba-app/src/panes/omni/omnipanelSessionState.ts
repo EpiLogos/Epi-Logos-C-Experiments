@@ -3,14 +3,14 @@
  * Residency: Body/M/pratibimba-app/src/panes/omni
  * Position (#n): `/` state-persistence boundary
  * Actualises: one typed, serialisable OmniPanel state record shared by both
- *   FlexLayout faces: active tab, eight fold-local state records, and the
+ *   FlexLayout faces: active tab, nine fold-local state records, and the
  *   membrane presentation state.
  * Public surface: OmniPanelSessionState, tab-state types,
  *   createOmniPanelSessionState, readOmniPanelSessionState,
  *   hydrateOmniPanelSessionState, useOmniPanelSessionStore,
  *   useOmniPanelTabState.
  * Does NOT own: FlexLayout model persistence, gateway transport, or the
- *   semantics/rendering of the eight fold bodies.
+ *   semantics/rendering of the nine fold bodies.
  * Contract: [[M'-SYSTEM-SPEC]] + [[27-omnipanel-tabs-deep]] 27.11.
  */
 
@@ -87,6 +87,11 @@ export interface DiagnosticsTabState {
     readonly intentLogScrollOffset: number;
 }
 
+export interface TuningTabState {
+    readonly selectedKnobKey: string | null;
+    readonly subsystemFilter: string | null;
+}
+
 export interface OmniPanelPerTabState {
     readonly 'pi-chat': PiChatTabState;
     readonly sessions: SessionsTabState;
@@ -96,6 +101,7 @@ export interface OmniPanelPerTabState {
     readonly review: ReviewTabState;
     readonly gateway: GatewayTabState;
     readonly diagnostics: DiagnosticsTabState;
+    readonly tuning: TuningTabState;
 }
 
 export interface OmniPanelSessionState {
@@ -112,7 +118,8 @@ const TAB_IDS: readonly OmniPanelTabId[] = Object.freeze([
     'evidence',
     'review',
     'gateway',
-    'diagnostics'
+    'diagnostics',
+    'tuning'
 ]);
 
 function record(value: unknown): Readonly<Record<string, unknown>> {
@@ -155,6 +162,7 @@ function createPerTabState(candidate: unknown): OmniPanelPerTabState {
     const review = record(source.review);
     const gateway = record(source.gateway);
     const diagnostics = record(source.diagnostics);
+    const tuning = record(source.tuning);
     const toolFilters = record(tools.filters);
     const evidenceFilters = record(evidence.filters);
     const reviewFilters = record(review.filters);
@@ -225,6 +233,10 @@ function createPerTabState(candidate: unknown): OmniPanelPerTabState {
                 ? null
                 : oneOf(diagnostics.activeSubSection, ['overview', 'kernel-bridge', 'profile', 's2-graph', 'gateway-ws', 'intent-log'] as const, 'overview'),
             intentLogScrollOffset: finite(diagnostics.intentLogScrollOffset)
+        }),
+        tuning: Object.freeze({
+            selectedKnobKey: stringOrNull(tuning.selectedKnobKey),
+            subsystemFilter: stringOrNull(tuning.subsystemFilter)
         })
     });
 }
