@@ -5,8 +5,8 @@
 
 use chrono::Utc;
 use epi_s3_gateway::dispatch::{
-    route_nara_session_close, route_nara_session_open, NaraSessionCloseRequest, NaraSessionConfig,
-    NaraSessionOpenRequest,
+    contemplate_session_close, route_nara_session_close, route_nara_session_open,
+    ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
 };
 use serde_json::{json, Value};
 
@@ -256,6 +256,18 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
                 config: nara_session_config_from_params(params),
             })
             .map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+        }
+        "nara.contemplate_session_close" => {
+            let object: ContemplationObject =
+                serde_json::from_value(params.clone()).map_err(|err| {
+                    (
+                        "invalid-params".to_owned(),
+                        format!("invalid contemplation object: {err}"),
+                    )
+                })?;
+            let response =
+                contemplate_session_close(object).map_err(|err| ("nara-error".to_owned(), err))?;
             serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
         }
 

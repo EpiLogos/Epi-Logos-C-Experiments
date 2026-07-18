@@ -20,18 +20,28 @@
  *   (AsmaMirrorOverlay), the modal digest (ModalDigestStrip) and the six-axis
  *   decoder tree (SixAxisTree) are their OWN authored/tested faces — this pane
  *   only mounts them and feeds them the active 72-address it already reads.
+ * Position (#n): M2' correspondence face.
+ * Public surface: M2CorrespondencePane.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { AsmaMirrorOverlay, type AsmaOverlayRecord } from '../components/AsmaMirrorOverlay';
 import { CymaticField } from '../components/CymaticField';
+import { CymaticTransport } from '../components/CymaticTransport';
+import { EpogdoonBridgeEngine } from '../components/EpogdoonBridgeEngine';
 import { ModalDigestStrip } from '../components/ModalDigestStrip';
 import { SixAxisTree } from '../components/SixAxisTree';
 import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
 import { useProvenanceStore, useTickStore } from '../state/stores';
+import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
+import { ProvenanceBadge } from '../ui/ProvenanceBadge';
+import { useM2Surface } from './M2SurfaceContext';
+import type { M2CorrespondenceFace } from './m2SurfaceState';
 
-type CorrespondenceFace = 'decan' | 'sonic' | 'planetary' | 'cymatic' | 'axes';
+type CorrespondenceFace = M2CorrespondenceFace;
+
+const CORRESPONDENCE_BINDING = 's2.parashaktiCorrespondences';
 
 interface DecanFace {
     readonly name?: string | null;
@@ -115,6 +125,40 @@ function Field({ label, value }: { label: string; value: string }) {
     );
 }
 
+/**
+ * The active carrier has five rendered correspondence cards/faces. Each names
+ * the S2 source at the datum and reads the shared per-binding readiness state;
+ * the fetch result never promotes itself to "ready".
+ */
+function CorrespondenceCard({
+    face,
+    label,
+    children
+}: {
+    readonly face: CorrespondenceFace;
+    readonly label: string;
+    readonly children: ReactNode;
+}) {
+    return (
+        <section
+            className="corr-card"
+            data-testid={`corr-card-${face}`}
+            data-provenance={CORRESPONDENCE_BINDING}
+        >
+            <BridgeReadinessBadge bindingKey={CORRESPONDENCE_BINDING}>
+                <header className="corr-card-header">
+                    <span>{label}</span>
+                    <ProvenanceBadge
+                        state="canonical"
+                        reason="S2 parashakti correspondence projection"
+                    />
+                </header>
+                {children}
+            </BridgeReadinessBadge>
+        </section>
+    );
+}
+
 const FACES: readonly { key: CorrespondenceFace; label: string }[] = [
     { key: 'decan', label: 'Decan Face' },
     { key: 'sonic', label: 'Sacred Name' },
@@ -128,7 +172,8 @@ export function M2CorrespondencePane() {
     const connected = useProvenanceStore(s => s.connection.connected);
     const [record, setRecord] = useState<CorrespondenceRecord | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [face, setFace] = useState<CorrespondenceFace>('decan');
+    const { state: m2Surface, update: updateM2Surface } = useM2Surface();
+    const face = m2Surface.activeFace;
 
     // the active 72-address rides the live pentadic trace, kernel-verbatim
     const overlay = useMemo(
@@ -201,25 +246,46 @@ export function M2CorrespondencePane() {
                         data-testid={`corr-nav-${f.key}`}
                         data-active={face === f.key ? 'true' : 'false'}
                         aria-selected={face === f.key}
-                        onClick={() => setFace(f.key)}
+                        onClick={() => updateM2Surface({ activeFace: f.key })}
                     >
                         {f.label}
                     </button>
                 ))}
             </div>
             {face === 'cymatic' ? (
-                <div className="corr-cymatic-face" data-testid="corr-cymatic">
-                    <div className="corr-cymatic-surface">
-                        {/* the Chladni field (own clock: kernel generation) with the
-                            asma domain-mirror strip overlaid on the SAME address */}
-                        <CymaticField />
-                        <AsmaMirrorOverlay record={asmaRecord} />
+                <CorrespondenceCard face="cymatic" label="Cymatic surface">
+                    <div className="corr-cymatic-face" data-testid="corr-cymatic">
+                        <div className="corr-cymatic-surface">
+                            {/* the Chladni field (own clock: kernel generation) with the
+                                asma domain-mirror strip overlaid on the SAME address */}
+                            <CymaticTransport liveProfile={cached}>
+                                {snapshot => <CymaticField profile={snapshot.profile} />}
+                            </CymaticTransport>
+                            <AsmaMirrorOverlay record={asmaRecord} />
+                        </div>
+                        <EpogdoonBridgeEngine
+                            activeAddress72={address72}
+                            generation={cached?.generation ?? null}
+                            connected={connected}
+                        />
+                        {/* the visual-only modal/audio-bus digest of the same bus */}
+                        <ModalDigestStrip />
                     </div>
-                    {/* the visual-only modal/audio-bus digest of the same bus */}
-                    <ModalDigestStrip />
-                </div>
+                </CorrespondenceCard>
             ) : face === 'axes' ? (
-                <SixAxisTree address72={address72} />
+                <CorrespondenceCard face="axes" label="Six axes">
+                    <SixAxisTree
+                        address72={address72}
+                        axis={m2Surface.correspondenceTreeAxisFilter}
+                        overlay={m2Surface.correspondenceTreeSonicOverlay}
+                        onAxisChange={correspondenceTreeAxisFilter =>
+                            updateM2Surface({ correspondenceTreeAxisFilter })
+                        }
+                        onOverlayChange={correspondenceTreeSonicOverlay =>
+                            updateM2Surface({ correspondenceTreeSonicOverlay })
+                        }
+                    />
+                </CorrespondenceCard>
             ) : error ? (
                 <div className="chat-error" data-testid="corr-error">
                     correspondence unavailable: {error}
@@ -227,48 +293,54 @@ export function M2CorrespondencePane() {
             ) : !record ? (
                 <div className="pane-message">reading the parashakti correspondence…</div>
             ) : face === 'decan' ? (
-                <div className="corr-body" data-testid="corr-decan">
-                    <Field label="name" value={show(record.decanFace?.name)} />
-                    <Field label="zodiac" value={show(record.decanFace?.zodiacSign)} />
-                    <Field label="degrees" value={show(record.decanFace?.degreesRange)} />
-                    <Field label="Chaldean ruler" value={show(record.decanFace?.planetaryRuler)} />
-                    <Field label="body part" value={show(record.decanFace?.bodyPart)} />
-                    <Field label="tarot" value={show(record.decanFace?.tarotCard)} />
-                    <Field
-                        label="herbs"
-                        value={
-                            record.decanFace?.herbalismHerbs && record.decanFace.herbalismHerbs.length > 0
-                                ? record.decanFace.herbalismHerbs.join(', ')
-                                : '—'
-                        }
-                    />
-                </div>
+                <CorrespondenceCard face="decan" label="Decan face">
+                    <div className="corr-body" data-testid="corr-decan">
+                        <Field label="name" value={show(record.decanFace?.name)} />
+                        <Field label="zodiac" value={show(record.decanFace?.zodiacSign)} />
+                        <Field label="degrees" value={show(record.decanFace?.degreesRange)} />
+                        <Field label="Chaldean ruler" value={show(record.decanFace?.planetaryRuler)} />
+                        <Field label="body part" value={show(record.decanFace?.bodyPart)} />
+                        <Field label="tarot" value={show(record.decanFace?.tarotCard)} />
+                        <Field
+                            label="herbs"
+                            value={
+                                record.decanFace?.herbalismHerbs && record.decanFace.herbalismHerbs.length > 0
+                                    ? record.decanFace.herbalismHerbs.join(', ')
+                                    : '—'
+                            }
+                        />
+                    </div>
+                </CorrespondenceCard>
             ) : face === 'sonic' ? (
-                <div className="corr-body" data-testid="corr-sonic">
-                    <Field label="name" value={show(record.sacredSonic?.name)} />
-                    <Field label="Arabic" value={show(record.sacredSonic?.arabicText)} />
-                    <Field label="translation" value={show(record.sacredSonic?.englishTranslation)} />
-                    <Field label="chakra" value={show(record.sacredSonic?.chakraCorrespondence)} />
-                    <Field label="maqam" value={show(record.sacredSonic?.maqam?.name)} />
-                    <Field label="function" value={show(record.sacredSonic?.maqam?.spiritualFunction)} />
-                    <Field label="asma group" value={show(record.sacredSonic?.asma?.group_name)} />
-                    <Field
-                        label="asma mirror"
-                        value={
-                            record.sacredSonic?.asma?.has_mirror
-                                ? show(record.sacredSonic?.asma?.mirror_name)
-                                : 'no domain mirror'
-                        }
-                    />
-                </div>
+                <CorrespondenceCard face="sonic" label="Sacred name">
+                    <div className="corr-body" data-testid="corr-sonic">
+                        <Field label="name" value={show(record.sacredSonic?.name)} />
+                        <Field label="Arabic" value={show(record.sacredSonic?.arabicText)} />
+                        <Field label="translation" value={show(record.sacredSonic?.englishTranslation)} />
+                        <Field label="chakra" value={show(record.sacredSonic?.chakraCorrespondence)} />
+                        <Field label="maqam" value={show(record.sacredSonic?.maqam?.name)} />
+                        <Field label="function" value={show(record.sacredSonic?.maqam?.spiritualFunction)} />
+                        <Field label="asma group" value={show(record.sacredSonic?.asma?.group_name)} />
+                        <Field
+                            label="asma mirror"
+                            value={
+                                record.sacredSonic?.asma?.has_mirror
+                                    ? show(record.sacredSonic?.asma?.mirror_name)
+                                    : 'no domain mirror'
+                            }
+                        />
+                    </div>
+                </CorrespondenceCard>
             ) : (
-                <div className="corr-body" data-testid="corr-planetary">
-                    <Field label="ruler" value={show(record.planetaryChakral?.planetaryRuler)} />
-                    <Field label="mode" value={show(record.planetaryChakral?.planetaryMode)} />
-                    <Field label="vedic mantra" value={show(record.planetaryChakral?.vedicMantra)} />
-                    <Field label="chakra" value={show(record.planetaryChakral?.chakraName)} />
-                    <Field label="chakra role" value={show(record.planetaryChakral?.chakraRole)} />
-                </div>
+                <CorrespondenceCard face="planetary" label="Planetary-chakral">
+                    <div className="corr-body" data-testid="corr-planetary">
+                        <Field label="ruler" value={show(record.planetaryChakral?.planetaryRuler)} />
+                        <Field label="mode" value={show(record.planetaryChakral?.planetaryMode)} />
+                        <Field label="vedic mantra" value={show(record.planetaryChakral?.vedicMantra)} />
+                        <Field label="chakra" value={show(record.planetaryChakral?.chakraName)} />
+                        <Field label="chakra role" value={show(record.planetaryChakral?.chakraRole)} />
+                    </div>
+                </CorrespondenceCard>
             )}
         </div>
     );

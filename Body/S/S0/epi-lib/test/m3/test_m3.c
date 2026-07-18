@@ -894,6 +894,22 @@ static void test_tarot(void) {
 #undef COD
 }
 
+static void test_major_arcana_from_codon(void) {
+    for (uint8_t codon = 0u; codon < 64u; ++codon) {
+        uint8_t card = m3_major_arcana_from_codon(codon);
+        if (M3_CODON_TO_AA[codon] == M3_STOP_CODON_AA) {
+            TEST("major arcana refuses STOP codon", card == 0xFFu);
+        } else {
+            TEST("major arcana maps non-STOP codon", card < M3_MAJOR_ARCANA_COUNT);
+            if (card < M3_MAJOR_ARCANA_COUNT) {
+                TEST("major arcana reverses amino-acid mapping",
+                     M3_MAJOR_ARCANA[card].amino_acid_index == M3_CODON_TO_AA[codon]);
+            }
+        }
+    }
+    TEST("major arcana refuses out-of-range codon", m3_major_arcana_from_codon(64u) == 0xFFu);
+}
+
 /* ===================================================================
  * M3 API Tests (init/teardown/verify)
  * =================================================================== */
@@ -1035,6 +1051,7 @@ int main(void) {
     test_rna();
     test_transcript_surface_contract();
     test_tarot();
+    test_major_arcana_from_codon();
     test_m3_api();
     test_det_coverage();
     test_backbone_table_contract();

@@ -29,11 +29,18 @@ export interface M1FaceState {
     readonly position6: number | null;
     /** The strict T2.6 vortex projection, or null (pending-ananda-vortex). */
     readonly vortex: AnandaVortexProjectionBoundary | null;
+    /** The shared kernel Klein-flip event union, or null when this tick has no event. */
+    readonly kleinFlip: M1KleinFlipEvent | null;
     /** Vimarśa M2-1' window: the eight cymatic Hz partials, or null (pending). */
     readonly audioOctet: readonly number[] | null;
     /** Vimarśa M2-1' window: the four nodal m/n constraints, or null (pending). */
     readonly nodalQuartet: readonly NodalMN[] | null;
 }
+
+export type M1KleinFlipEvent =
+    | Readonly<{ kind: 'm1TritoneCrossing'; tick12: number; lensPair: readonly [number, number] }>
+    | Readonly<{ kind: 'm2CymaticValenceInvert'; valenceBefore: string; valenceAfter: string }>
+    | Readonly<{ kind: 'm3CodonRotationCross'; codonBefore: number; codonAfter: number }>;
 
 function objectValue(value: unknown): Record<string, unknown> | null {
     return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -45,10 +52,50 @@ function num(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function text(value: unknown): string | null {
+    return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
 /** The bus may nest the profile under `harmonicProfile` (wire shape) or hand it
  *  directly — the same unwrap the sibling readers apply. */
 function profileRoot(payload: Record<string, unknown>): Record<string, unknown> {
     return objectValue(payload.harmonicProfile) ?? payload;
+}
+
+function pair(value: unknown): readonly [number, number] | null {
+    if (!Array.isArray(value) || value.length !== 2) return null;
+    const first = num(value[0]);
+    const second = num(value[1]);
+    return first !== null && second !== null ? [first, second] : null;
+}
+
+/** Strict read of portal-core's tagged KleinFlipEvent union from the profile bus. */
+function kleinFlipFromProfile(root: Record<string, unknown> | null): M1KleinFlipEvent | null {
+    const value = objectValue(root?.kleinFlip ?? root?.klein_flip ?? null);
+    if (!value) return null;
+
+    if (value.kind === 'm1TritoneCrossing') {
+        const tick12 = num(value.tick12);
+        const lensPair = pair(value.lensPair ?? value.lens_pair);
+        return tick12 !== null && lensPair !== null
+            ? Object.freeze({ kind: 'm1TritoneCrossing', tick12, lensPair })
+            : null;
+    }
+    if (value.kind === 'm2CymaticValenceInvert') {
+        const valenceBefore = text(value.valenceBefore ?? value.valence_before);
+        const valenceAfter = text(value.valenceAfter ?? value.valence_after);
+        return valenceBefore && valenceAfter
+            ? Object.freeze({ kind: 'm2CymaticValenceInvert', valenceBefore, valenceAfter })
+            : null;
+    }
+    if (value.kind === 'm3CodonRotationCross') {
+        const codonBefore = num(value.codonBefore ?? value.codon_before);
+        const codonAfter = num(value.codonAfter ?? value.codon_after);
+        return codonBefore !== null && codonAfter !== null
+            ? Object.freeze({ kind: 'm3CodonRotationCross', codonBefore, codonAfter })
+            : null;
+    }
+    return null;
 }
 
 /** Pure reader — testable off a raw cached-profile payload without React. */
@@ -62,6 +109,7 @@ export function readM1FaceState(cached: { generation: number; profile: unknown }
         tick12: num(root?.tick12),
         position6: num(root?.position6),
         vortex,
+        kleinFlip: kleinFlipFromProfile(root),
         audioOctet: snapshot?.audioOctet ?? null,
         nodalQuartet: snapshot?.nodalQuartet ?? null
     });

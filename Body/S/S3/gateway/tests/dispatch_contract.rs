@@ -387,6 +387,21 @@ fn dispatch_kind_resolves_concrete_examples() {
 }
 
 #[test]
+fn m2_kernel_bridge_methods_route_through_the_s0_product_adapter() {
+    for method in [
+        "kernelBridge.m2.epogdoonProjection(address72)",
+        "kernelBridge.m2.planetaryElementalWeights()",
+    ] {
+        let route = classify_method(method)
+            .unwrap_or_else(|| panic!("M2 kernel-bridge method lacks S3 route metadata: {method}"));
+        assert_eq!(route.owner, GatewayDispatchOwner::S0ProductAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::SystemSurface);
+        assert_eq!(route.coordinate_owner, "S0");
+        assert_eq!(route.route_id, "s0.product-kernel-bridge");
+    }
+}
+
+#[test]
 fn s0_only_method_injected_into_route_table_would_be_rejected_by_dispatch_plan_guard() {
     // Regression guard: this test simulates the failure that occurs when S0
     // tries to dispatch a method that S3's dispatch-plan doesn't recognise.
@@ -605,7 +620,6 @@ mod t9_route_ownership_cross_walk {
             // S0'/S2 projection helpers with contract rows but no S0 host match arm.
             "m2.cymatic_invert",
             "s0'.anuttara.trace",
-            "s2.graph.ananda_position",
             // S1' canon-promotion family — contract-declared, dispatch NOT YET
             // BUILT anywhere (tracked absent by the T11 gateway-method gate;
             // NOT in the expected-present ratchet). Owning tracks: 40/48
@@ -622,7 +636,6 @@ mod t9_route_ownership_cross_walk {
             // S5 governance routes mediated beyond the S0 gate host.
             // (`s5'.gnostic.resolve` left this list at 12.T12.2 — it gained a
             // real S0 adapter over the production epi-gnostic consolidated read.)
-            "s5'.gnostic.musical_transcript",
             // S2 / S2' graph law — S3 dispatches directly to graph-services.
             "s2'.constraint.list",
             "s2'.constraint.register",

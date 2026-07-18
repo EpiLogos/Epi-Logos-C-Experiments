@@ -1,0 +1,39 @@
+{
+  "runId": "20260717T234354Z-12-T12.5",
+  "taskId": "12.T12.5",
+  "startedAt": "2026-07-17T23:43:54.582Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T01:43:54.582Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.5",
+    "trackId": "12",
+    "tranche": "T12.5",
+    "title": "Six operational-capacity views (audit; possibly Pi-monitoring repurpose)",
+    "effort": "audit; possibly Pi-monitoring repurpose",
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "12.T12.4"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE-heavy — ta-onta agentic seams (s4'.mediation.* in dispatch.rs, gnostic routes, terminal-lease, Sophia/Moirai/Verify-phase machinery) + gateway. CARRIER: session/agent panes. WORST audit track (36 AR). §2 track 12."
+  }
+}

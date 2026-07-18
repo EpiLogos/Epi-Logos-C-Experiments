@@ -9,12 +9,12 @@ use epi_s3_graphiti_runtime::{
 use serde_json::json;
 
 #[test]
-fn graphiti_runtime_config_is_s3_owned_and_http_adapter_is_compatibility_mode() {
+fn graphiti_runtime_config_is_s3_owned_and_native_runtime_is_the_default() {
     let config = GraphitiRuntimeConfig::default();
     assert_eq!(config.base_url, GRAPHITI_BASE_URL);
     assert_eq!(config.runtime_authority, GRAPHITI_RUNTIME_AUTHORITY);
     assert_eq!(config.invocation_owner, GRAPHITI_INVOCATION_OWNER);
-    assert!(config.compatibility_http_adapter);
+    assert!(!config.compatibility_http_adapter);
 }
 
 #[test]

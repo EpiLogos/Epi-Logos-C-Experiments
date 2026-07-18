@@ -457,6 +457,59 @@ static void test_m5_mobius_return(void) {
     teardown_test_arena();
 }
 
+typedef struct {
+    bool called;
+    const char* session_id;
+    uint32_t trajectory_count;
+    uint32_t codon_count;
+    uint8_t tarot_draw_count;
+} M5_Contemplation_Callback_Capture;
+
+static uint64_t capture_m5_contemplation(const M5_ContemplationObject* object,
+                                         void* user_data) {
+    M5_Contemplation_Callback_Capture* capture =
+        (M5_Contemplation_Callback_Capture*)user_data;
+    capture->called = true;
+    capture->session_id = object->session_id;
+    capture->trajectory_count = object->q_composed_trajectory_count;
+    capture->codon_count = object->codon_trace_count;
+    capture->tarot_draw_count = object->tarot_psyche_anchor.draw_count;
+    return 0x0000000000000042ULL;
+}
+
+static void test_m5_mobius_return_composes_through_callback(void) {
+    setup_test_arena();
+    M5_Root* m5 = m5_init(&test_arena, test_mirrors[5]);
+    M4_Identity_Matrix identity = {0};
+    M4_Epii_Integration epii = {0};
+    M5_Contemplation_Callback_Capture capture = {0};
+    uint64_t initial_hash = 0x0123456789ABCDEFULL;
+    memcpy(identity.quintessence_hash, &initial_hash, sizeof(initial_hash));
+    identity.computed = true;
+    epii.return_ready = true;
+
+    M5_Mobius_Return_Target target = m5_mobius_return_target(
+        &epii, &identity, capture_m5_contemplation, &capture);
+    for (int i = 0; i < 11; i++) m5_advance_logos(m5);
+
+    TEST("mobius callback accepted at tick 11", m5_execute_mobius_return(m5, &target) == 0);
+    TEST("mobius callback receives composed object", capture.called);
+    TEST("mobius callback receives session id", capture.session_id != NULL && capture.session_id[0] != '\0');
+    TEST("mobius callback receives trajectory", capture.trajectory_count == 2u);
+    TEST("mobius callback receives codon trace", capture.codon_count == 2u);
+    TEST("mobius callback receives tarot anchor", capture.tarot_draw_count == 1u);
+    TEST("mobius callback delta installed", epii.wisdom_delta == 0x0000000000000042ULL);
+
+    uint64_t actual_hash = 0;
+    memcpy(&actual_hash, identity.quintessence_hash, sizeof(actual_hash));
+    TEST("mobius callback delta XORs identity", actual_hash == (initial_hash ^ epii.wisdom_delta));
+    TEST("mobius callback reseeds identity", !identity.computed);
+    TEST("mobius callback resets tick", m5->logos.pipeline_tick == 0u);
+
+    m5_teardown(m5);
+    teardown_test_arena();
+}
+
 
 /* ===================================================================
  * M5_LOOKUP (Quintessential View Self-API)
@@ -624,6 +677,7 @@ int main(void) {
     test_m5_init_teardown();
     test_m5_advance_logos();
     test_m5_mobius_return();
+    test_m5_mobius_return_composes_through_callback();
     test_m5_lookup();
     test_m5_verify();
     test_m5_cli_dispatch();

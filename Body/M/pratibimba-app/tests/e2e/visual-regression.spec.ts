@@ -228,6 +228,12 @@ async function readGeneration(page: Page): Promise<number> {
     return Number.isFinite(value) ? value : -1;
 }
 
+async function readStatusGeneration(page: Page): Promise<number> {
+    const text = (await page.getByTestId('status-tick').textContent()) ?? '';
+    const value = Number(text.replace(/[^0-9]/g, ''));
+    return Number.isFinite(value) ? value : -1;
+}
+
 /** The live three.js drawing surface of the cosmic engine composition. */
 function engineCanvas(page: Page): Locator {
     return page
@@ -466,6 +472,44 @@ test('(c) integrated 1-2-3 cosmic composition: full-face baseline at a frozen ti
     await expect(page).toHaveScreenshot('composition-1-2-3-cosmic.png', {
         stylePath: HIDE_VOLATILE_CSS
     });
+});
+
+test('(c.1) M2 cymatic transport: a held profile frame is pixel-static while the real gateway advances', async ({
+    page
+}) => {
+    await bootConnected(page);
+    await switchToCosmicFace(page);
+    await ensureTabSelected(page, 'Correspondence');
+
+    const pane = page.locator('.face-active [data-testid="m2-correspondence"]');
+    await expect(pane).toHaveAttribute('data-state', 'ready', { timeout: 25_000 });
+    await page.getByTestId('corr-nav-cymatic').click();
+
+    const transport = page.getByTestId('cymatic-transport');
+    const field = page.getByTestId('cymatic-field');
+    await expect(transport).toBeVisible();
+    await expect(field).toBeVisible();
+    await expect
+        .poll(() => field.getAttribute('data-generation'), { timeout: 15_000 })
+        .not.toBeNull();
+
+    const heldGeneration = await field.getAttribute('data-generation');
+    await page.getByRole('button', { name: 'Pause' }).click();
+    await expect(transport).toHaveAttribute('data-cache-state', 'pending-tick-snapshot-cache');
+    await expect(transport).toHaveAttribute('data-active-tick', heldGeneration ?? '');
+
+    const beforeLiveGeneration = await readStatusGeneration(page);
+    const frozenA = await field.screenshot();
+    await expect
+        .poll(() => readStatusGeneration(page), { timeout: 15_000 })
+        .toBeGreaterThan(beforeLiveGeneration);
+    const frozenB = await field.screenshot();
+
+    expect(await field.getAttribute('data-generation')).toBe(heldGeneration);
+    expect(
+        await diffRatio(page, frozenA, frozenB),
+        'the M2 held profile frame must stay pixel-static while the real profile stream advances'
+    ).toBeLessThan(FROZEN_MAX_RATIO);
 });
 
 test('(d) integrated 4-5-0 personal composition: honest current surface baseline', async ({

@@ -1,7 +1,7 @@
 # AGENTS.md — epi-kernel-contract
 
 ## Purpose
-"Parent-role kernel-aligned contract layer for Epi-Logos: KernelTickEnvelope, TrajectoryDeposit, AnuttaraDiagnostic, PhysicalPoleState, MentalPoleState" (Cargo.toml `description`). This crate is the **S-stack root contract** at `Body/S/` — sibling to S0..S5, not an S0 member (per DR-S0-1).
+"Parent-role kernel-aligned contract layer for Epi-Logos: KernelTickEnvelope, TrajectoryDeposit, AnuttaraDiagnostic, PhysicalPoleState, MentalPoleState" (Cargo.toml `description`). This crate is the **parent crate and parent-role envelope of the S-stack** at `Body/S/`; it is not an S0 member (per DR-S0-1).
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]]
 
 ## Ownership

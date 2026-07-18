@@ -3,7 +3,7 @@
 This directory is the repo-native PI surface for Epi-Logos.
 Its source residency is `Body/S/S4/pi-agent`; the root `.pi` path is now a compatibility shim for PI tooling that still resolves project-local `.pi`.
 
-`Body/S/S4/ta-onta` is the canonical S4' ta-onta source home. `extensions/ta-onta` is a symlink back to that source so managed PI agents still receive the expected extension tree during sync.
+`Body/S/S4/ta-onta` is the canonical S4' ta-onta source home. Managed PI sync copies it as a sibling of `agent/`, so `composite-entry.ts` and extension shims use explicit sibling imports rather than a symlink.
 
 ## What lives here
 
@@ -27,9 +27,10 @@ Its source residency is `Body/S/S4/pi-agent`; the root `.pi` path is now a compa
         prompts/
         extensions/
         extensions-sync-state.json
+      ta-onta/
 ```
 
-The Body source tree is never edited in place by PI. Instead, `epi agent extensions sync` copies this directory into the selected managed agent and records the sync hash in `extensions-sync-state.json`.
+The Body source tree is never edited in place by PI. Instead, `epi agent extensions sync` copies this directory and the canonical sibling `ta-onta/` carrier into the selected managed agent and records the combined sync hash in `extensions-sync-state.json`.
 
 ## Primary commands
 

@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 
 ## Ownership
 - `src/lib.rs` — crate root; declares modules + re-exports `SessionStore`, `GatewayRuntimeState`, transcript + subagent helpers.
-- `src/dispatch.rs` — RPC method dispatch (largest module), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles, headless contemplation close, route metadata for S2 graph-service gateway exposure, and the [[M3']] lens-codon-binary S0 product adapter. Also owns the 05.T5.10 connectivity-vs-bounded-access discriminator (`nara_bounded_access` + `ConnectivityReport`/`BoundedAccessGrant`): a connectivity_check ping of Graphiti/Neo4j/Redis/SpaceTimeDB is never a grant of bounded access to the personal `nara.*` domains (jiva/jagrat/flow); pinned by `tests/dispatch_contract.rs::t5_10_connectivity_vs_bounded_access` against live pings.
+- `src/dispatch.rs` — RPC method dispatch (largest module), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles and `nara.contemplate_session_close`: it accepts the caller's complete [[ContemplationObject]] evidence and returns the S3-owned 4'-5'-0' contemplation envelope (wisdom delta, triplet readings, and Anuttara round trips) through the S0 gateway adapter. It never fabricates a contemplation object. Also owns the 05.T5.10 connectivity-vs-bounded-access discriminator (`nara_bounded_access` + `ConnectivityReport`/`BoundedAccessGrant`): a connectivity_check ping of Graphiti/Neo4j/Redis/SpaceTimeDB is never a grant of bounded access to the personal `nara.*` domains (jiva/jagrat/flow); pinned by `tests/dispatch_contract.rs::t5_10_connectivity_vs_bounded_access` against live pings.
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
 - `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.
@@ -29,7 +29,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - Vault writes use coordinate-prefixed `c_n_*` frontmatter.
 
 ## Verification
-- `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml nara_session` for the Nara protected-handle session routes; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test contemplation_rpc_dispatches` for the headless contemplation close; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test being_pattern_live_state` for CCT-21; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml mercurius_elo_round_trip` / `moirai_refuses_uncalibrated_update` for the Aletheia Elo shim; `cargo test -p epi-s3-gateway` only in a workspace that includes this excluded crate; or `make rust-test` from repo root.
+- `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml nara_session` for the Nara protected-handle session routes; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test contemplation_rpc_dispatches` for the pure 4'-5'-0' composition contract, paired with `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_contemplation_live` for the real WebSocket adapter; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test being_pattern_live_state` for CCT-21; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml mercurius_elo_round_trip` / `moirai_refuses_uncalibrated_update` for the Aletheia Elo shim; `cargo test -p epi-s3-gateway` only in a workspace that includes this excluded crate; or `make rust-test` from repo root.
 
 ## Child DOX Index
 - (leaf)

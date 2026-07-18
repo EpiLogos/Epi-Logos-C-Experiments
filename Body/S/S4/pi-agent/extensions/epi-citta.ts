@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { epiRoutes, registerTool as getRoute } from "./ta-onta/anima/S4/epi-citta.ts";
+import { epiRoutes, registerTool as getRoute } from "../../ta-onta/S4-4p-anima/S4/epi-citta.ts";
 
 type EpiRouteName =
   | "epi_core_inspect"

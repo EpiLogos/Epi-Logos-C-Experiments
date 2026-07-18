@@ -1,15 +1,16 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD, M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD,
-    M1_SPANDA_RELEASE_METHOD, M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
-    S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
-    S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
-    S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
-    S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD,
-    S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_Q_ARTICULATION_ACCEPT_METHOD,
-    S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD, S1_WORLD_LIST_ENTITIES_METHOD,
-    S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
+    KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD,
+    KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD, KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
+    M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD, M1_SPANDA_RELEASE_METHOD,
+    M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD, S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD,
+    S0_PRIME_SETTINGS_OPT_IN_METHOD, S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
+    S0_PRIME_VERIFIER_EMIT_QUERY_METHOD, S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
+    S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD, S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD,
+    S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
+    S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
     S2_GRAPH_RELATION_FAMILY_LIST_METHOD, S2_GRAPH_SEED_SNAPSHOT_METHOD,
@@ -457,6 +458,19 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli::gate::kernel_bridge_runtime::m2_epogdoon_projection",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path:
+            "Body/S/S0/epi-cli::gate::server::live_portal_clock_state + gate::kernel_bridge_runtime::typed_json_m2_planetary_elemental_weights",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/portal-core::lens_codon_binary_projection",
@@ -851,6 +865,56 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s5'.review.history",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S5/epii-review-core",
+        needs_extraction_to: None,
+    },
+    // 38.T06.8: portal-core owns tunable metadata, validation, and audit
+    // shape; S0 only adapts that existing law to the gateway boundary.
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_REGISTRY_LIST_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/tuning.rs + Body/S/S0/portal-core/src/tunable",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_REGISTRY_GET_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/tuning.rs + Body/S/S0/portal-core/src/tunable",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_REGISTRY_SET_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/tuning.rs + Body/S/S0/portal-core/src/tunable",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_AUDIT_READ_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/tuning.rs + Body/S/S0/portal-core/src/tunable",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_LOCK_TOGGLE_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/tuning.rs + Body/S/S0/portal-core/src/tunable",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_PROPOSE_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core/src/tuning_review.rs + Body/S/S0/epi-cli/src/gate/tuning.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_PROPOSALS_LIST_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core + Body/S/S0/epi-cli/src/gate/tuning.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: crate::S5_TUNE_PROPOSALS_RESOLVE_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core + Body/S/S5/epii-autoresearch-core/src/tuning_review.rs + Body/S/S0/epi-cli/src/gate/tuning.rs",
         needs_extraction_to: None,
     },
     // ----- S1 Hen vault adapter (plan extension; see module-level comment) -----

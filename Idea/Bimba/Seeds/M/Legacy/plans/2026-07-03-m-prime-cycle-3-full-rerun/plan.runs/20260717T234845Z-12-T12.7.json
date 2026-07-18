@@ -1,0 +1,39 @@
+{
+  "runId": "20260717T234845Z-12-T12.7",
+  "taskId": "12.T12.7",
+  "startedAt": "2026-07-17T23:48:45.152Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T01:48:45.152Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.7",
+    "trackId": "12",
+    "tranche": "T12.7",
+    "title": "Pi axiom-translation tooling (DR-B-2 land)",
+    "effort": "DR-B-2 land",
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.6"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "12.T12.6"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE-heavy — ta-onta agentic seams (s4'.mediation.* in dispatch.rs, gnostic routes, terminal-lease, Sophia/Moirai/Verify-phase machinery) + gateway. CARRIER: session/agent panes. WORST audit track (36 AR). §2 track 12."
+  }
+}

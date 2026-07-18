@@ -4,9 +4,16 @@ use std::time::Duration;
 
 use epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry};
 use epi_s3_gateway_contract::TerminalBinding;
+use portal_core::{
+    ananda_projection, kernel_tick_from_epogdoon, m3_transcription_projection, PortalClockState,
+    VakAddress,
+};
 use serde_json::{json, Value};
 
-use crate::gate::kernel_bridge_runtime::typed_json_m3_lens_codon_binary;
+use crate::gate::kernel_bridge_runtime::{
+    typed_json_m2_epogdoon_projection, typed_json_m2_planetary_elemental_weights,
+    typed_json_m3_lens_codon_binary,
+};
 use crate::gate::protocol::RequestFrame;
 use crate::gate::runs::{RunContext, RunSnapshot};
 use crate::gate::runtime::GatewayRuntimeState;
@@ -14,7 +21,7 @@ use crate::gate::sessions::{SessionPatch, SessionStore};
 use crate::gate::{
     anima, approvals, browser, channels, chat, config, cron, devices, epii, gnostic, graph,
     graphiti, improve, logs, models, nodes, review, sessions, skills, subagents, system,
-    transcripts, update, verifier, wizard,
+    transcripts, tuning, update, verifier, wizard,
 };
 
 use super::method_envelope::{DispatchResult, PostResponseAction};
@@ -55,6 +62,92 @@ pub(super) async fn dispatch_rpc(
             typed_json_m3_lens_codon_binary(lens_id as u8)
                 .map(DispatchResult::immediate)
                 .map_err(invalid_params_error)
+        }
+        "kernelBridge.m2.epogdoonProjection(address72)" => {
+            let address72 = frame
+                .params
+                .get("address72")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("address72 must be an unsigned integer".to_owned())
+                })?;
+            if address72 > u8::MAX as u64 {
+                return Err(invalid_params_error(format!(
+                    "address72 {address72} exceeds the kernel's u8 range"
+                )));
+            }
+            Ok(DispatchResult::immediate(
+                typed_json_m2_epogdoon_projection(address72 as u8),
+            ))
+        }
+        "kernelBridge.m2.planetaryElementalWeights()" => {
+            let state = live_portal_clock_state()?;
+            Ok(DispatchResult::immediate(
+                typed_json_m2_planetary_elemental_weights(&state),
+            ))
+        }
+        "s5'.gnostic.musical_transcript" => {
+            let vak_address = frame.params.get("vakAddress").ok_or_else(|| {
+                invalid_params_error("vakAddress is required for M3 transcription".to_owned())
+            })?;
+            let vak_address =
+                serde_json::from_value::<VakAddress>(vak_address.clone()).map_err(|err| {
+                    invalid_params_error(format!("invalid vakAddress for M3 transcription: {err}"))
+                })?;
+            let cycle = frame
+                .params
+                .get("cycle")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("cycle must be an unsigned integer".to_owned())
+                })?;
+            let sub_tick = frame
+                .params
+                .get("subTick")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("subTick must be an unsigned integer".to_owned())
+                })?;
+            if sub_tick > u8::MAX as u64 {
+                return Err(invalid_params_error(format!(
+                    "subTick {sub_tick} exceeds the kernel's u8 range"
+                )));
+            }
+            let clock_degree = frame
+                .params
+                .get("clockDegree")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("clockDegree must be an unsigned integer".to_owned())
+                })?;
+            if clock_degree > u16::MAX as u64 {
+                return Err(invalid_params_error(format!(
+                    "clockDegree {clock_degree} exceeds the clock's u16 range"
+                )));
+            }
+            let packet = m3_transcription_projection(
+                &vak_address,
+                kernel_tick_from_epogdoon(cycle, sub_tick as u8),
+                clock_degree as u16,
+            )
+            .map_err(|err| invalid_params_error(err.to_string()))?;
+            serde_json::to_value(packet)
+                .map(DispatchResult::immediate)
+                .map_err(|err| internal_error(err.to_string()))
+        }
+        "s2.graph.ananda_position" => {
+            let vak_address = frame.params.get("vakAddress").ok_or_else(|| {
+                invalid_params_error("vakAddress is required for Ananda projection".to_owned())
+            })?;
+            let vak_address =
+                serde_json::from_value::<VakAddress>(vak_address.clone()).map_err(|err| {
+                    invalid_params_error(format!("invalid vakAddress for Ananda projection: {err}"))
+                })?;
+            let projection = ananda_projection(&vak_address)
+                .map_err(|err| invalid_params_error(err.to_string()))?;
+            serde_json::to_value(projection)
+                .map(DispatchResult::immediate)
+                .map_err(|err| internal_error(err.to_string()))
         }
         "s0'.verifier.check_state" => verifier::check_state(&frame.params)
             .map(DispatchResult::immediate)
@@ -1366,6 +1459,30 @@ pub(super) async fn dispatch_rpc(
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }
+        "s5'.tune.registry.list" => tuning::list(state_root)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.tune.registry.get" => tuning::get(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s5'.tune.registry.set" => tuning::set(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s5'.tune.audit.read" => tuning::audit_read(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s5'.tune.lock.toggle" => tuning::lock_toggle(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s5'.tune.propose" => tuning::propose(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "s5'.tune.proposals.list" => tuning::proposals_list(state_root)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.tune.proposals.resolve" => tuning::proposals_resolve(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         "s5'.improve.status" => improve::status(state_root)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
@@ -1493,6 +1610,23 @@ pub(super) async fn dispatch_rpc(
             Err(("unimplemented".to_owned(), message))
         }
     }
+}
+
+fn live_portal_clock_state() -> Result<PortalClockState, (String, String)> {
+    let (degrees, retrograde, _) =
+        crate::nara::kairos::heartbeat_live_sky_tiered().ok_or_else(|| {
+            invalid_params_error(
+                "live Kairos state unavailable: run 'epi nara kairos sync' first".to_owned(),
+            )
+        })?;
+    let mut state = PortalClockState::default();
+    for (index, degree) in degrees.into_iter().enumerate() {
+        state.kairos.planets[index].degree = degree.rem_euclid(360.0) as u16;
+        state.kairos.planets[index].is_retrograde = retrograde[index];
+    }
+    state.kairos.valid = true;
+    state.kairos.timestamp = (now_ms() / 1000) as u64;
+    Ok(state)
 }
 
 async fn start_agent_run(

@@ -93,6 +93,10 @@ pub const S0_PRIME_SETTINGS_METHODS: &[&str] = &[
 ];
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
+pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD: &str =
+    "kernelBridge.m2.epogdoonProjection(address72)";
+pub const KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD: &str =
+    "kernelBridge.m2.planetaryElementalWeights()";
 pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD: &str =
     "kernelBridge.m3.lensCodonBinary(lensId)";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
@@ -442,6 +446,34 @@ pub const S5_CANON_UPDATE_METHODS: &[&str] = &[
 
 pub fn s5_canon_update_methods() -> &'static [&'static str] {
     S5_CANON_UPDATE_METHODS
+}
+
+// ===================== 38.T06.8 tunability gateway route family =====================
+
+/// Stable M5-3' tunability routes. The schema and validation authority stay
+/// in portal-core; S0 only adapts the registry to the live gateway boundary.
+pub const S5_TUNE_REGISTRY_LIST_METHOD: &str = "s5'.tune.registry.list";
+pub const S5_TUNE_REGISTRY_GET_METHOD: &str = "s5'.tune.registry.get";
+pub const S5_TUNE_REGISTRY_SET_METHOD: &str = "s5'.tune.registry.set";
+pub const S5_TUNE_AUDIT_READ_METHOD: &str = "s5'.tune.audit.read";
+pub const S5_TUNE_LOCK_TOGGLE_METHOD: &str = "s5'.tune.lock.toggle";
+pub const S5_TUNE_PROPOSE_METHOD: &str = "s5'.tune.propose";
+pub const S5_TUNE_PROPOSALS_LIST_METHOD: &str = "s5'.tune.proposals.list";
+pub const S5_TUNE_PROPOSALS_RESOLVE_METHOD: &str = "s5'.tune.proposals.resolve";
+
+pub const S5_TUNE_METHODS: &[&str] = &[
+    S5_TUNE_REGISTRY_LIST_METHOD,
+    S5_TUNE_REGISTRY_GET_METHOD,
+    S5_TUNE_REGISTRY_SET_METHOD,
+    S5_TUNE_AUDIT_READ_METHOD,
+    S5_TUNE_LOCK_TOGGLE_METHOD,
+    S5_TUNE_PROPOSE_METHOD,
+    S5_TUNE_PROPOSALS_LIST_METHOD,
+    S5_TUNE_PROPOSALS_RESOLVE_METHOD,
+];
+
+pub fn s5_tune_methods() -> &'static [&'static str] {
+    S5_TUNE_METHODS
 }
 
 /// The Track 40 §Categories enum. A ledger row is one of these seven kinds.

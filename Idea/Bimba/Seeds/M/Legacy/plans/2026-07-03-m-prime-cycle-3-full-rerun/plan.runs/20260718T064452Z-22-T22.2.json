@@ -1,0 +1,37 @@
+{
+  "runId": "20260718T064452Z-22-T22.2",
+  "taskId": "22.T22.2",
+  "startedAt": "2026-07-18T06:44:52.520Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T08:44:52.520Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.2",
+    "trackId": "22",
+    "tranche": "T22.2",
+    "title": "`m1-paramasiva-played-torus` extension scaffold first-build",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.13"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M1' instrument strata in pratibimba-app (see track 02) — raw 12x12 vortex face must come from the Vortex Modulae CSV before Ananda is complete. §2 track 22."
+  }
+}

@@ -1,4 +1,4 @@
-//! Capacity-workflow registry — the six operational-capacity profiles and the
+//! Capacity-workflow registry — the seven operational-capacity profiles and the
 //! lookup that resolves a `CapacityId` to its registry entry.
 
 use serde::{Deserialize, Serialize};
@@ -19,6 +19,7 @@ pub enum CapacityId {
     Mahamaya,
     Nara,
     EpiiOnEpii,
+    TuningReview,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -247,6 +248,42 @@ pub fn capacity_workflow_registry() -> Vec<CapacityWorkflowRegistryEntry> {
             governance_level: GovernanceLevel::RecursiveLoadBearing,
             promotion_destination: PromotionDestination::EpiiSpineMechanismUpdate {
                 spine_component: "recursive-review".to_owned(),
+            },
+        },
+        CapacityWorkflowRegistryEntry {
+            capacity_id: CapacityId::TuningReview,
+            target_subsystem: TargetSubsystem::Epii,
+            governance_lead: "sophia".to_owned(),
+            evidence_requirements: vec![
+                "tunable registry metadata and current value".to_owned(),
+                "Anamnesis evidence window with dereferenceable source refs".to_owned(),
+                "constitutional triplet verdict for Class B proposals".to_owned(),
+            ],
+            first_trigger_types: vec![
+                "anamnesis_tuning_proposal".to_owned(),
+                "aletheia_tier_three_tuning_proposal".to_owned(),
+            ],
+            review_category: ReviewCategory::UserFinalValidation,
+            required_agents: vec!["sophia".to_owned(), "epii".to_owned(), "anima".to_owned()],
+            user_final_gate_conditions: vec![
+                "Class A tuning proposal".to_owned(),
+                "Class B proposal without a complete constitutional triplet verdict".to_owned(),
+            ],
+            promotion_destination_family: "m5-prime://tuning/governed-lifecycle".to_owned(),
+            ide_surface_anchor: "pratibimba://system/omni/tuning/review".to_owned(),
+            source_spec_anchors: vec![
+                "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md#tunable-runtime-lifecycle".to_owned(),
+                "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-implementation-plan.md#tranche-069--tier-2-self-awareness-lifecycle".to_owned(),
+            ],
+            vector_kind: ImprovementVectorKind::EpiiSpineMechanismRefinement {
+                spine_phase: "governed-tuning-review".to_owned(),
+            },
+            surfacing_pipeline: SurfacingPipelineId::EpiiOnEpiiMeta,
+            initial_orchestration_state: OrchestrationState::Queued,
+            gate_kind: GateKind::HumanFinal,
+            governance_level: GovernanceLevel::HumanRequired,
+            promotion_destination: PromotionDestination::EpiiSpineMechanismUpdate {
+                spine_component: "governed-tuning-review".to_owned(),
             },
         },
     ]

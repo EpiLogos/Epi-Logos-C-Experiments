@@ -669,6 +669,8 @@ static void test_m4_session_open_emits_start_codon(void) {
     TEST("session_open opened", frame.opened);
     TEST("session_open protein handle", frame.protein == &frame.protein_storage);
     TEST("session_open tarot context preserved", frame.tarot_psyche_anchor.draw_count == 3);
+    TEST("session_open tarot cast degree preserved", frame.tarot_psyche_anchor.cast_degree == 42u);
+    TEST("session_open tarot anchor contains a card", frame.tarot_psyche_anchor.drawn[0] < 78u);
     TEST("session_open protein has one seed step", frame.protein->step_count == 1u);
     TEST("session_open start codon header", frame.protein->start_codon == M3_CODON_ATG_AUG);
     TEST("session_open ATG step", frame.protein->steps[0].codon == M3_CODON_ATG_AUG);

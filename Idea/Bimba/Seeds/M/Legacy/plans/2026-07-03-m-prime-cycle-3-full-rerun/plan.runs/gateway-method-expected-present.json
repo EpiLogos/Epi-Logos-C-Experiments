@@ -6,6 +6,14 @@
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },
   {
+   "method": "kernelBridge.m2.epogdoonProjection(address72)",
+   "claimedBy": "23.T23.18"
+  },
+  {
+   "method": "kernelBridge.m2.planetaryElementalWeights()",
+   "claimedBy": "23.T23.19"
+  },
+  {
    "method": "kernelBridge.m3.lensCodonBinary(lensId)",
    "claimedBy": "37.T37.8"
   },
@@ -188,6 +196,38 @@
   {
    "method": "s5'.review.submit",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5'.tune.registry.list",
+   "claimedBy": "38.T06.8"
+  },
+  {
+   "method": "s5'.tune.registry.get",
+   "claimedBy": "38.T06.8"
+  },
+  {
+   "method": "s5'.tune.registry.set",
+   "claimedBy": "38.T06.8"
+  },
+  {
+   "method": "s5'.tune.audit.read",
+   "claimedBy": "38.T06.8"
+  },
+  {
+   "method": "s5'.tune.lock.toggle",
+   "claimedBy": "38.T06.8"
+  },
+  {
+   "method": "s5'.tune.propose",
+   "claimedBy": "38.T06.9"
+  },
+  {
+   "method": "s5'.tune.proposals.list",
+   "claimedBy": "38.T06.9"
+  },
+  {
+   "method": "s5'.tune.proposals.resolve",
+   "claimedBy": "38.T06.9"
   },
   {
    "method": "sessions.fork",

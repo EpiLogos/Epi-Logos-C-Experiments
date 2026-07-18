@@ -376,6 +376,57 @@ test("the CLI runner REFUSES a bare done mark (no receipt, no verification recor
   assert.equal(reviewed.state.tasks[taskId].evidence.at(-1).text, "partial work");
 });
 
+test("the CLI runner refuses blocked without a classified external dependency", () => {
+  const { root, planFolder } = makePlanSet();
+  const initial = run(["--plan", planFolder, "--write", "--no-git"], root);
+  const taskId = initial.recommendedTask.id;
+  run(["--plan", planFolder, "--claim", taskId, "--no-git"], root);
+
+  assert.throws(
+    () =>
+      run(
+        [
+          "--plan",
+          planFolder,
+          "--mark",
+          taskId,
+          "--status",
+          "blocked",
+          "--evidence",
+          "gateway method is not implemented yet",
+          "--no-git",
+        ],
+        root,
+      ),
+    /blocked.*external dependency/i,
+  );
+  assert.equal(readTask(planFolder, taskId).status, "in_progress");
+
+  const blocked = run(
+    [
+      "--plan",
+      planFolder,
+      "--mark",
+      taskId,
+      "--status",
+      "blocked",
+      "--blocker-kind",
+      "human",
+      "--blocked-by",
+      "Architect decision DR-TEST-1",
+      "--evidence",
+      "Public contract shape needs an Architect ruling",
+      "--no-git",
+    ],
+    root,
+  );
+  assert.equal(blocked.state.tasks[taskId].status, "blocked");
+  assert.deepEqual(blocked.state.tasks[taskId].blocker, {
+    kind: "human",
+    dependency: "Architect decision DR-TEST-1",
+  });
+});
+
 test("continue-through-review unblocks claims but never closes through provisional dependencies", () => {
   const { root, planFolder } = makePlanSet();
   run(["--plan", planFolder, "--write", "--no-git"], root);
@@ -628,6 +679,68 @@ test("a blocked task does not wall its chain successors; authored deps still hol
   assert.equal(bridge.computedStatus, "waiting");
   const claimed = run(["--plan", planFolder, "--claim", "02.T1", "--owner", "impl-1", "--write", "--no-git"], root);
   assert.equal(claimed.state.tasks["02.T1"].status, "in_progress");
+});
+
+test("a blocked task keeps its incoming sequence edge while successors bypass it", () => {
+  const { root, planFolder } = makePlanSet();
+  const surfacePlan = join(planFolder, "02-surface.md");
+  writeFileSync(
+    surfacePlan,
+    `${readFileSync(surfacePlan, "utf8")}
+3. **Tranche 2 - Surface Follow-through (S, 1 day).**
+
+   Deliverables:
+
+   - Update \`Body/M/follow-through.ts\`.
+`,
+  );
+  run(["--plan", planFolder, "--write", "--no-git"], root);
+  setTaskStatus(planFolder, "02.T1", "blocked");
+
+  const assessment = run(["--plan", planFolder, "--write", "--no-git"], root);
+  const blocked = assessment.tasks.find((task) => task.id === "02.T1");
+  const successor = assessment.tasks.find((task) => task.id === "02.T2");
+
+  assert.ok(blocked.dependsOn.includes("02.T0"));
+  assert.ok(successor.dependsOn.includes("02.T0"));
+  assert.ok(!successor.dependsOn.includes("02.T1"));
+});
+
+test("an unclassified legacy block is routed as repair work while a classified external block is bypassed", () => {
+  const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--write", "--no-git"], root);
+  setTaskStatus(planFolder, "02.T0", "blocked");
+
+  let assessment = run(["--plan", planFolder, "--write", "--no-git"], root);
+  const repair = assessment.tasks.find((task) => task.id === "02.T0");
+  assert.equal(repair.computedStatus, "ready");
+  assert.ok(assessment.recommendedRoute.taskIds.includes("02.T0"));
+  assert.ok(assessment.softCautions.some((caution) => caution.includes("unclassified")));
+  const claimed = run(["--plan", planFolder, "--claim", "02.T0", "--owner", "repair-1", "--no-git"], root);
+  assert.equal(claimed.state.tasks["02.T0"].status, "in_progress");
+
+  run(
+    [
+      "--plan",
+      planFolder,
+      "--mark",
+      "02.T0",
+      "--status",
+      "blocked",
+      "--blocker-kind",
+      "environment",
+      "--blocked-by",
+      "Neo4j service outside this process",
+      "--evidence",
+      "Connection refused after the bounded readiness probe",
+      "--no-git",
+    ],
+    root,
+  );
+  assessment = run(["--plan", planFolder, "--write", "--no-git"], root);
+  const external = assessment.tasks.find((task) => task.id === "02.T0");
+  assert.equal(external.computedStatus, "blocked");
+  assert.ok(!assessment.recommendedRoute.taskIds.includes("02.T0"));
 });
 
 test("a quarantined task cannot be claimed; an audit_required task can (it IS the re-verification queue)", () => {

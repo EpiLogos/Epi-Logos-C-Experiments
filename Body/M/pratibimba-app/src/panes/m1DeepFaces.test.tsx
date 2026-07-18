@@ -6,7 +6,7 @@
  * bodies, honest pending when a window is absent.
  */
 import { beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useTickStore } from '../state/stores';
 import { M1Cl42SignatureInspector } from './m1Cl42SignatureInspector';
 import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
@@ -55,6 +55,12 @@ const NODAL_QUARTET = [
     { m: 9, n: 8 }
 ];
 
+const M1_TRITONE_FLIP = {
+    kind: 'm1TritoneCrossing',
+    tick12: 6,
+    lensPair: [2, 5]
+};
+
 function prime(harmonicProfile: Record<string, unknown>, generation = 41) {
     useTickStore.setState({
         generation,
@@ -96,6 +102,10 @@ describe('22.T22.3 Cl(4,2) signature inspector', () => {
         }
         expect(screen.getByTestId('m1-cl42-position-0').textContent).toContain('sin');
         expect(screen.getByTestId('m1-cl42-position-1').textContent).toContain('tan');
+        expect(screen.getByTestId('m1-cl42-position-1').textContent).toContain('[0]/[5]');
+        expect(screen.getByTestId('m1-cl42-position-2').textContent).toContain('1/[5]');
+        expect(screen.getByTestId('m1-cl42-position-3').textContent).toContain('[5]/[0]');
+        expect(screen.getByTestId('m1-cl42-position-4').textContent).toContain('1/[0]');
         // swatch tones from the CL42_PALETTE token
         expect(screen.getByTestId('m1-cl42-swatch-0').getAttribute('data-tone')).toBe('implicate');
         expect(screen.getByTestId('m1-cl42-swatch-1').getAttribute('data-tone')).toBe('explicate');
@@ -140,17 +150,29 @@ describe('22.T22.4 Klein-flip event-strip', () => {
     });
 
     it('deposits a canonical glyph + inverts the Hopf flag on a flip at tick 6', () => {
-        prime({ tick12: 6, position6: 4, anandaVortex: vortex({ kleinFlipAtThisTick: true }) });
+        prime({
+            tick12: 6,
+            position6: 4,
+            kleinFlip: M1_TRITONE_FLIP,
+            anandaVortex: vortex({ kleinFlipAtThisTick: true })
+        });
         render(<M1KleinFlipEventStrip />);
         const glyph = screen.getByTestId('m1-klein-flip-glyph-gen-41');
         expect(glyph.getAttribute('data-canonical')).toBe('true');
         expect(glyph.getAttribute('data-tick')).toBe('6');
+        expect(glyph.getAttribute('data-variant')).toBe('m1TritoneCrossing');
+        expect(glyph.textContent).toContain('Lens 2 → Lens 5');
         expect(screen.queryByTestId('m1-klein-flip-unexpected')).toBeNull();
         expect(screen.getByTestId('m1-klein-flip-hopf-flag').getAttribute('data-inverted')).toBe('true');
     });
 
     it('flags an unexpected-flip when the flip fires outside the tritone crossing', () => {
-        prime({ tick12: 3, position6: 2, anandaVortex: vortex({ kleinFlipAtThisTick: true }) });
+        prime({
+            tick12: 3,
+            position6: 2,
+            kleinFlip: { ...M1_TRITONE_FLIP, tick12: 3 },
+            anandaVortex: vortex({ kleinFlipAtThisTick: true })
+        });
         render(<M1KleinFlipEventStrip />);
         const glyph = screen.getByTestId('m1-klein-flip-glyph-gen-41');
         expect(glyph.getAttribute('data-canonical')).toBe('false');
@@ -162,6 +184,60 @@ describe('22.T22.4 Klein-flip event-strip', () => {
         render(<M1KleinFlipEventStrip />);
         expect(screen.getByTestId('m1-klein-flip-log-empty')).toBeTruthy();
         expect(screen.getByTestId('m1-klein-flip-this-tick').getAttribute('data-flip')).toBe('false');
+    });
+
+    it('records the shared M2 variant and filters the accumulated event trail by source layer', async () => {
+        prime({
+            tick12: 7,
+            position6: 1,
+            kleinFlip: {
+                kind: 'm2CymaticValenceInvert',
+                valenceBefore: 'primary',
+                valenceAfter: 'inverted'
+            },
+            anandaVortex: vortex({ kleinFlipAtThisTick: true })
+        });
+        render(<M1KleinFlipEventStrip />);
+        expect(screen.getByTestId('m1-klein-flip-glyph-gen-41').getAttribute('data-variant')).toBe(
+            'm2CymaticValenceInvert'
+        );
+
+        prime(
+            {
+                tick12: 6,
+                position6: 4,
+                kleinFlip: M1_TRITONE_FLIP,
+                anandaVortex: vortex({ kleinFlipAtThisTick: true })
+            },
+            42
+        );
+        await waitFor(() => expect(screen.getByTestId('m1-klein-flip-glyph-gen-42')).toBeTruthy());
+        fireEvent.change(screen.getByLabelText('Klein-flip variants'), {
+            target: { value: 'm1-only' }
+        });
+        expect(screen.getByTestId('m1-klein-flip-glyph-gen-42')).toBeTruthy();
+        expect(screen.queryByTestId('m1-klein-flip-glyph-gen-41')).toBeNull();
+
+        fireEvent.change(screen.getByLabelText('Klein-flip variants'), {
+            target: { value: 'all' }
+        });
+        prime(
+            {
+                tick12: 8,
+                position6: 2,
+                kleinFlip: {
+                    kind: 'm3CodonRotationCross',
+                    codonBefore: 17,
+                    codonAfter: 41
+                },
+                anandaVortex: vortex({ kleinFlipAtThisTick: true })
+            },
+            43
+        );
+        await waitFor(() => expect(screen.getByTestId('m1-klein-flip-glyph-gen-43')).toBeTruthy());
+        expect(screen.getByTestId('m1-klein-flip-glyph-gen-43').getAttribute('data-tone')).toBe(
+            'm3-emerald'
+        );
     });
 });
 

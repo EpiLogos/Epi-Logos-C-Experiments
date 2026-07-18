@@ -4,18 +4,33 @@
  *   boundaries + audio_octet drivers. Redraws ONLY on generation advance —
  *   the kernel tick is the clock. Contemplative pacing: one figure per tick,
  *   no animation between.
+ * Position (#n): M2' cymatic surface renderer.
+ * Public surface: CymaticField.
+ * Does NOT own: profile retention, transport controls, audio output, or
+ *   kernel cymatic law.
+ * Contract: [[M2'-SPEC]].
  */
 
 import { useEffect, useRef } from 'react';
 import { chladniField, NodalConstraint } from '../audio/chladni';
+import type { KernelBridgeCachedProfile } from '../bridge/types';
 import { useTickStore } from '../state/stores';
 
 const RES = 128;
 
-export function CymaticField({ size = 320 }: { size?: number }) {
+export function CymaticField({
+    size = 320,
+    profile: heldProfile
+}: {
+    size?: number;
+    /** When the M2 transport is paused or scrubbed, render its exact received
+     * profile frame instead of following the live tick store. */
+    profile?: KernelBridgeCachedProfile | null;
+}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const generation = useTickStore(s => s.generation);
-    const cached = useTickStore(s => s.profile);
+    const liveProfile = useTickStore(s => s.profile);
+    const cached = heldProfile === undefined ? liveProfile : heldProfile;
+    const generation = cached?.generation ?? null;
 
     useEffect(() => {
         const canvas = canvasRef.current;

@@ -54,6 +54,10 @@ impl TestEnv {
             "# PI Agent Foundation\n",
         )
         .unwrap();
+        write_file(
+            env.repo_root.join("Body/S/S4/ta-onta/composite-entry.ts"),
+            "export default async function taOntaCompositeEntry() {}\n",
+        );
         fs::write(
             env.repo_root.join("Body/S/S4/pi-agent/composite-entry.ts"),
             "export async function main() {\n  await import(\"./extensions/epi-citta.ts\");\n  await import(\"./extensions/cross-agent.ts\");\n  await import(\"./extensions/subagent-widget.ts\");\n  await import(\"./extensions/agent-team.ts\");\n  await import(\"./extensions/agent-chain.ts\");\n  await import(\"./extensions/child-extension-propagation.ts\");\n  await import(\"./extensions/prompt-url-widget.ts\");\n  await import(\"./extensions/redraws.ts\");\n  await import(\"./extensions/themeMap.ts\");\n}\n",

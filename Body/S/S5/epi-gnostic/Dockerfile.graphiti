@@ -16,4 +16,4 @@ RUN uv sync --frozen --no-dev
 
 EXPOSE 37778
 
-CMD ["uv", "run", "python", "-m", "epi_gnostic.graphiti_service"]
+CMD ["uv", "run", "python", "-m", "epi_gnostic._deprecated.graphiti_service"]

@@ -66,9 +66,40 @@ function leafGlyph(address72: number, axis: Axis72): string {
     }
 }
 
-export function SixAxisTree({ address72 }: { address72: number | null }) {
-    const [axis, setAxis] = useState<Axis72>('mef');
-    const [overlay, setOverlay] = useState<SonicOverlay | null>(null);
+export function SixAxisTree({
+    address72,
+    axis: controlledAxis,
+    overlay: controlledOverlay,
+    onAxisChange,
+    onOverlayChange
+}: {
+    readonly address72: number | null;
+    readonly axis?: Axis72;
+    readonly overlay?: SonicOverlay | null;
+    readonly onAxisChange?: (axis: Axis72) => void;
+    readonly onOverlayChange?: (overlay: SonicOverlay | null) => void;
+}) {
+    const [uncontrolledAxis, setUncontrolledAxis] = useState<Axis72>('mef');
+    const [uncontrolledOverlay, setUncontrolledOverlay] = useState<SonicOverlay | null>(null);
+    const axis = controlledAxis ?? uncontrolledAxis;
+    const overlay = controlledOverlay === undefined ? uncontrolledOverlay : controlledOverlay;
+
+    const selectAxis = (next: Axis72) => {
+        if (controlledAxis === undefined) {
+            setUncontrolledAxis(next);
+        }
+        if (controlledOverlay === undefined) {
+            setUncontrolledOverlay(null);
+        }
+        onAxisChange?.(next);
+        onOverlayChange?.(null);
+    };
+    const selectOverlay = (next: SonicOverlay | null) => {
+        if (controlledOverlay === undefined) {
+            setUncontrolledOverlay(next);
+        }
+        onOverlayChange?.(next);
+    };
 
     const active =
         address72 !== null &&
@@ -98,10 +129,7 @@ export function SixAxisTree({ address72 }: { address72: number | null }) {
                         data-greyed={overlay !== null ? 'true' : 'false'}
                         aria-selected={overlay === null && axis === a}
                         disabled={overlay !== null}
-                        onClick={() => {
-                            setOverlay(null);
-                            setAxis(a);
-                        }}
+                        onClick={() => selectAxis(a)}
                     >
                         {AXIS_LABELS[a]}
                     </button>
@@ -118,7 +146,7 @@ export function SixAxisTree({ address72 }: { address72: number | null }) {
                         data-testid={`overlay-tab-${o}`}
                         data-active={overlay === o ? 'true' : 'false'}
                         aria-selected={overlay === o}
-                        onClick={() => setOverlay(overlay === o ? null : o)}
+                        onClick={() => selectOverlay(overlay === o ? null : o)}
                     >
                         {`${OVERLAY_LABELS[o]} (${OVERLAY_CARDINALITY[o]})`}
                     </button>

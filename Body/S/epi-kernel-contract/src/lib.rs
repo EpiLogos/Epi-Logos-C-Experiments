@@ -1,7 +1,8 @@
 //! Parent-role kernel-aligned contract layer for Epi-Logos.
 //!
-//! This crate sits at `Body/S/` (sibling to S0..S5) and provides the
-//! cross-stack typed shapes the kernel specification names load-bearing:
+//! This crate sits at `Body/S/` as the parent crate and parent-role envelope
+//! of the S-stack. It provides the cross-stack typed shapes the kernel
+//! specification names load-bearing:
 //!
 //! - [`BioQuaternionState`], [`ResonanceVector72`], [`EnergyDecomposition`],
 //!   [`KernelTick`], [`HarmonicPulse`], [`KernelProjection`],

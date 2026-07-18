@@ -50,6 +50,23 @@ This document gives the **total shape** for that surface: substrate map, dataset
 
 ---
 
+## 0.1 The 3-5-7-9 Syntax-Layer Reading
+
+Every close reads the session through four distinct syntax layers. They are a diagnostic sequence, not four interchangeable scores: [[Nous]] reads whether speech articulated what was present; [[Moirai]] reads whether relation stayed open to its terms; [[Psyche]] with [[Eros]] reads whether that relation became action; [[Sophia]] reads whether the return became a witnessed completion.
+
+| Archetype | Syntax layer | Kernel anchor | Close reading | Constitutional reader |
+|---|---|---|---|---|
+| 3 | syntax-of-speech | `ZODIACAL_LUT[12]` | Did naming articulate identity, or only signal it? | [[Nous]] |
+| 5 | syntax-of-relationship | `MONOPOLY_LUT[7]` | Did unity and multiplicity remain in relation at the crossroads? | [[Moirai]] |
+| 7 | syntax-of-action | `DIVINE_ACT_LUT[7]` | Did the needed action occur, including its causes and consequences? | [[Psyche]] + [[Eros]] |
+| 9 | syntax-of-completion | `VIRTUE_LUT[9]` | Did the cycle close with a witness for each virtue, rather than merely stop? | [[Sophia]] |
+
+The close also traverses the **7-8-9 spine**: 7 is the action generator (`8n - n`, with `127 = 2^7 - 1` as its [[Mersenne]] ground); 8 is octave-field return (`128 = 2^7`); 9 is recognition and wholeness (`9/8`) through the nine [[Parameśvara]] virtues. The verifier projects this last reading as a 9-bit virtue witness vector, so any unwitnessed virtue remains a named question rather than an invented completion.
+
+The four-layer sequence is speech (3) -> relationship (5) -> action (7) -> completion (9). Its symbolic, personal, physical, and temporal readings remain evidence within the [[ContemplationObject]] and feed the 4'-5'-0' response; no layer writes canon or reseeds identity on its own.
+
+---
+
 ## 1. The Six Sub-Coordinates of the 4-5-0 Recognition Surface
 
 The integrated 4-5-0 plugin is not a single M-coordinate. It is a **composition of three M-domains**, each contributing a defined sub-coordinate slot. Following the M1-2 pattern of one bimba sub-coordinate carrying multiple manifestation layers, we structure the 4-5-0 surface as **six sub-coordinates** — two per contributing M-domain — that name how each M' lands in the composition.

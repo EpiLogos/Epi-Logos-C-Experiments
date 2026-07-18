@@ -1039,6 +1039,16 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
             agent_access_owner: "S4/S5",
             route_id: "s0-prime.anuttara-trace",
         })
+    } else if authority.contains("::gate::kernel_bridge_runtime")
+        || authority.contains("::gate::server::live_portal_clock_state")
+    {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::SystemSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0.product-kernel-bridge",
+        })
     } else if authority.contains("gate/")
         || authority.contains("src/gate ")
         || authority.contains("portal-core::parashakti::cymatic_invert")

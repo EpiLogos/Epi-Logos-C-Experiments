@@ -1308,6 +1308,7 @@ fn capacity_id_wire(capacity_id: CapacityId) -> &'static str {
         CapacityId::Mahamaya => "mahamaya",
         CapacityId::Nara => "nara",
         CapacityId::EpiiOnEpii => "epii_on_epii",
+        CapacityId::TuningReview => "tuning_review",
     }
 }
 
@@ -1319,6 +1320,7 @@ fn parse_capacity_id(value: &Value) -> Result<CapacityId, String> {
         Some("mahamaya") => Ok(CapacityId::Mahamaya),
         Some("nara") => Ok(CapacityId::Nara),
         Some("epii_on_epii") => Ok(CapacityId::EpiiOnEpii),
+        Some("tuning_review") => Ok(CapacityId::TuningReview),
         Some(other) => Err(format!("unsupported capacity_id: {other}")),
         None => Err("capacity_id must be a string".to_owned()),
     }

@@ -40,7 +40,7 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    Discovery is Seed-first: active implementation plans live under `Idea/Bimba/Seeds/M/Legacy/plans/**` or `Idea/Bimba/Seeds/S/Legacy/plans/**`. The old `docs/plans/**` path is legacy fallback only.
 
-   Read `hardStops`, `softCautions`, `carryForwardRisks`, and `workOrders`. Stop only for `hardStops`. Cautions and risks are guidance, not blockers. `workOrders` is the queue; `recommendedRoute` is the strategic path. Resume active first, then claim ready, skip `wait`.
+   Read `hardStops`, `softCautions`, `carryForwardRisks`, and `workOrders`. Stop only for `hardStops`. Cautions and risks are guidance, not blockers. `workOrders` is the queue; `recommendedRoute` is the strategic path. Resume active first, then claim ready, skip `wait`. Historical `blocked` records without structured external provenance are dependency-repair work: the assessor routes them as ready when their prerequisites permit instead of silently swerving them.
 
    Active development must be NOW-bound. The assessor reports `activeDevelopmentContext` from `.epi/session.json` or `EPI_NOW_PATH`; if `--require-now` hard-stops, run `epi agent session init` and, when the daily scaffold is missing, `epi vault day-init`, then reassess. Do not create an ad-hoc note path outside `Idea/Empty/Present/{DD-MM-YYYY}/{sessionId}/now.md`.
 
@@ -70,6 +70,8 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
 4. **Execute.** Read the tranche body (one section of the plan markdown) and the substrate files you'll actually touch. Skip required-reading rituals unless the body itself names specific files. TDD when reasonable. Real verification (no mocks/fakes/placeholders).
 
+   A repository-owned missing capability discovered during execution is a dependency to repair, not permission to stop. Keep the failing behavioral test. If the repair is inside the tranche's write scope, implement it before resuming the surface task. If it crosses the assigned scope or ownership boundary, mark the current work `review` with the exact missing method/adapter/service and reorder or create the dependency work order ahead of it. Never replace the missing capability with a renderer-local substitute.
+
 5. **Verify, then Mark.** The close path is two commands, two identities — the implementer never closes alone.
 
    Independent verification first (a different owner re-runs the tranche's checks fresh, plus honesty-lint and verify-all; writes `plan.runs/verifications/<TASK_ID>.md`):
@@ -88,7 +90,15 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    The mark is REFUSED (fail closed) when: no green receipt; no fresh PASS verification record; verifier-owner equals the closing owner; a cited `DR-*` id is absent from the decision registers; a dependency is quarantined; or the track's verification class (`plan.runs/verification-classes.json`) demands UI-flow (UF: playwright/test:e2e/boot-smoke) or live-wire (W: spawned gateway) proof the receipt doesn't carry.
 
-   Use `review` for partial; `blocked` only for real external blockers. Neither needs the done gate — use them honestly instead of forcing a done. `--status quarantine` marks fraud; dependents that trusted the task flip to `audit_required` automatically.
+   Use `review` for partial or repository-owned dependency repair. `blocked` is reserved for external dependencies and is fail-closed:
+
+   ```bash
+   node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status blocked \
+     --blocker-kind human|environment|third-party --blocked-by "<external dependency>" \
+     --evidence "<observed external condition>" --owner <IMPLEMENTER_ID> --write --json --require-now
+   ```
+
+   Missing repository methods, adapters, services, producers, receivers, routes, and harnesses do not qualify as external. `--status quarantine` marks fraud; dependents that trusted the task flip to `audit_required` automatically.
 
 6. **Evidence is the string in the ledger, not a separate file.** Do NOT write `*-evidence.md` / `*-summary.md` / `*-report.md` that restate the ledger entry.
 

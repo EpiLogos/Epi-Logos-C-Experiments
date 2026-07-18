@@ -95,3 +95,29 @@ test('M2 correspondence face: the live 72-address resolves its decan/sacred/plan
     // when the graph is down (planetaryMode → em-dash, no "octave").
     await expect(planetary).toContainText(/octave/);
 });
+
+test('M2 epogdoon bridge: the real C projection renders the complete 72-to-64-to-56 descent (23.18)', async ({
+    page
+}) => {
+    await page.goto('/');
+    await switchToCosmicFace(page);
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Correspondence' })
+        .click();
+    await page.getByTestId('corr-nav-cymatic').click();
+
+    const bridge = page.getByTestId('m2-epogdoon-bridge');
+    await expect(bridge).toHaveAttribute('data-bridge-state', 'ready', { timeout: 30_000 });
+    await expect(bridge).toHaveAttribute('data-source', 'kernelBridge.m2.epogdoonProjection(address72)');
+    await expect(bridge.locator('[data-epogdoon-cell]')).toHaveCount(72);
+    await expect(bridge.locator('[data-epogdoon-codon]')).toHaveCount(64);
+    await expect(bridge.locator('[data-epogdoon-sentinel="true"]')).toHaveCount(8);
+    await expect(bridge.locator('[data-epogdoon-tarot-cell][data-padding="false"]')).toHaveCount(56);
+
+    // The renderer never decides the active codon: this exact source/target pair
+    // is an observed receipt from the spawned C-backed gateway.
+    const activeCell = bridge.locator('[data-epogdoon-cell][data-active="true"]');
+    await expect(activeCell).toHaveCount(1);
+    await expect(activeCell).toHaveAttribute('data-compressed-codon', /\d+/);
+    await expect(bridge.getByTestId('m2-epogdoon-inspector')).toContainText('kernelBridge.m2.epogdoonProjection(address72)');
+});

@@ -1,0 +1,39 @@
+{
+  "runId": "20260718T012304Z-19-T19.5",
+  "taskId": "19.T19.5",
+  "startedAt": "2026-07-18T01:23:04.505Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T03:23:04.505Z",
+  "worktree": null,
+  "task": {
+    "id": "19.T19.5",
+    "trackId": "19",
+    "tranche": "T19.5",
+    "title": "Expose `m3_major_arcana_from_codon` utility",
+    "effort": null,
+    "file": "19-contemplation-surface-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/19-contemplation-surface-integration.md",
+    "dependsOn": [
+      "19.T19.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "19.T19.4"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: contemplation pane. SUBSTRATE: portal-core contemplate_session_close(ContemplationObject)->wisdom_delta, chronos_response_orbit. §2 track 19."
+  }
+}

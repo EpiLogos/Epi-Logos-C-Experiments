@@ -5,8 +5,8 @@
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]], [[S-SYSTEM-INDEX]])
 
 ## Ownership
-- `src/lib.rs` — crate root; declares + re-exports every contract module, typed [[S0]] bridge packet/projection surfaces, named S1 C-first type lifecycle methods, and named S2 graph gateway-exposure constants. Carries the 43.2 `//!` Coordinate Header (17.T17.1); the `m4.arena.` method literals stay in this file per the 41.T41.6 verification grep.
-- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, the live `kernelBridge.m3.lensCodonBinary(lensId)` S0-product adapter, `s2.graph.ananda_position`, the S1 C-first type lifecycle methods, and the S2 graph exposure family (`gds.tangent_overlay`, `ontology.reload`, `seed.snapshot`, `core65.audit`, `promotion.*`, `relation_family.list`).
+- `src/lib.rs` — crate root; declares + re-exports every contract module, typed [[S0]] bridge packet/projection surfaces, named S1 C-first type lifecycle methods, named S2 graph gateway-exposure constants, and the `s5'.tune.*` / `s5'.tune.proposals.*` contract constants. Carries the 43.2 `//!` Coordinate Header (17.T17.1); the `m4.arena.` method literals stay in this file per the 41.T41.6 verification grep.
+- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, `s5'.tune.proposals.{list,resolve}`, the live `kernelBridge.m2.epogdoonProjection(address72)`, `kernelBridge.m2.planetaryElementalWeights()`, and `kernelBridge.m3.lensCodonBinary(lensId)` S0-product adapters, `s2.graph.ananda_position`, the S1 C-first type lifecycle methods, and the S2 graph exposure family (`gds.tangent_overlay`, `ontology.reload`, `seed.snapshot`, `core65.audit`, `promotion.*`, `relation_family.list`).
 - `src/session.rs` — session authority types/methods.
 - `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle (`ConversationSliceHandle`/`VakAddressFilter` defined here so they ride the dispatch envelope), and tool-call enforcement hook contract.
 - `src/context.rs` — canonical contextual-slice surface (12.T12.31): re-exports `ConversationSliceHandle`/`VakAddressFilter`, adds the [[SessionRecord]]-derived builder, the three `SliceRedactionPolicy` levels, the `dispatch_with_parent_slice` contract row, and the [[chronos]] `c=1`/`c=0` bifurcation-router seat.
@@ -24,6 +24,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 ## Local Contracts
 - Code Coordinate Header: `src/lib.rs` `//!` module-doc (43.2 convention); Cargo.toml `description` mirrors the one-liner (no CONTRACT.md / README.md here).
 - Owning specs: [[S3-SPEC]], [[S3-ARCHITECTURE]].
+- Canon update flag: [[S3-SPEC]], [[S0-SPEC]], and [[M2'-SPEC]] should record the admitted public `kernelBridge.m2.epogdoonProjection(address72)` and `kernelBridge.m2.planetaryElementalWeights()` routes, their S0-product adapter ownership, and the latter's fresh-complete-Kairos requirement.
 - Deps (Cargo.toml): `epi-kernel-contract`, `portal-core`.
 
 ## Work Guidance

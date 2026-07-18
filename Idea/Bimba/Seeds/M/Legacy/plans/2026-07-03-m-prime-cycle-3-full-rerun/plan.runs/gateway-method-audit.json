@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-17T12:54:40.444Z",
+ "generatedAt": "2026-07-18T20:18:06.311Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 268,
-  "present": 67,
-  "absent": 201,
+  "present": 79,
+  "absent": 189,
   "unknown": 0
  },
  "methods": [
@@ -204,10 +204,10 @@
   },
   {
    "method": "kernelBridge.m2.epogdoonProjection(address72)",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: address72 must be an unsigned integer"
   },
   {
    "method": "kernelBridge.m2.mantraEntry(idx)",
@@ -232,10 +232,10 @@
   },
   {
    "method": "kernelBridge.m2.planetaryElementalWeights()",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: live Kairos state unavailable: run 'epi nara kairos sync' first"
   },
   {
    "method": "kernelBridge.m2m3.lensOrbiterRelations()",
@@ -1073,9 +1073,9 @@
   {
    "method": "s2.graph.ananda_position",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: vakAddress is required for Ananda projection"
   },
   {
    "method": "s2.graph.ananda_position(coord)",
@@ -1570,9 +1570,9 @@
   {
    "method": "s5'.gnostic.musical_transcript",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: vakAddress is required for M3 transcription"
   },
   {
    "method": "s5'.gnostic.notebook",
@@ -1716,10 +1716,10 @@
   },
   {
    "method": "s5'.tune.audit.read",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: key must be a non-empty string"
   },
   {
    "method": "s5'.tune.get",
@@ -1730,10 +1730,10 @@
   },
   {
    "method": "s5'.tune.lock.toggle",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: key must be a non-empty string"
   },
   {
    "method": "s5'.tune.proposals",
@@ -1744,45 +1744,45 @@
   },
   {
    "method": "s5'.tune.proposals.list",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "s5'.tune.proposals.resolve",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing field `item_id`"
   },
   {
    "method": "s5'.tune.propose",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: key must be a non-empty string"
   },
   {
    "method": "s5'.tune.registry.get",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: key must be a non-empty string"
   },
   {
    "method": "s5'.tune.registry.list",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "s5'.tune.registry.set",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: key must be a non-empty string"
   },
   {
    "method": "s5.epii.deposit",

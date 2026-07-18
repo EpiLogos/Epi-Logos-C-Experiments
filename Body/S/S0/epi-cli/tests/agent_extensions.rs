@@ -15,6 +15,22 @@ fn sync_copies_repo_pi_assets_into_agent_dir() {
             .join(".epi/agents/anima/agent/extensions/epi-citta.ts")
     )
     .contains("registerTool"));
+    assert!(env
+        .repo_root
+        .join(".epi/agents/anima/ta-onta/composite-entry.ts")
+        .exists());
+
+    std::fs::write(
+        env.repo_root.join("Body/S/S4/ta-onta/composite-entry.ts"),
+        "export default async function changedTaOntaEntry() {}\n",
+    )
+    .unwrap();
+    let status = run_epi(
+        ["agent", "extensions", "status", "--agent", "anima"].as_slice(),
+        &env,
+    );
+    assert!(status.status.success(), "stderr: {}", status.stderr);
+    assert!(status.stdout.contains("drifted"));
 }
 
 #[test]

@@ -46,7 +46,7 @@ related_tranches:
 The substrate has three physical roots under `Body/S/S4/`:
 
 - **`ta-onta/`** — the six S4'-carrier extensions (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) wired through the spine compositor at [`Body/S/S4/ta-onta/composite-entry.ts:1-58`](Body/S/S4/ta-onta/composite-entry.ts) and the four-seam contract at [`Body/S/S4/ta-onta/spine/types.ts:1-51`](Body/S/S4/ta-onta/spine/types.ts) and [`Body/S/S4/ta-onta/spine/compositor.ts:1-99`](Body/S/S4/ta-onta/spine/compositor.ts).
-- **`pi-agent/`** — the harness foundation that managed PI runtimes mirror. Entrypoint [`Body/S/S4/pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts). Source residency for `Body/S/S4/ta-onta` is reached through the symlink `Body/S/S4/pi-agent/extensions/ta-onta -> ../../ta-onta`.
+- **`pi-agent/`** — the harness foundation that managed PI runtimes mirror. Entrypoint [`Body/S/S4/pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts). The sync projection copies `Body/S/S4/ta-onta` beside the managed `agent/` directory, and the entrypoint uses an explicit sibling import.
 - **`plugins/`** — body-native plugin registry. The canonical capability membrane is at `Body/S/S4/plugins/pleroma/` with the IOD-17 authority file `Body/S/S4/plugins/pleroma/capability-matrix.json` (23 KB). Source registry at `Body/S/S4/plugins/registry.jsonl` lists `claude-mem` (vendor) and `pleroma` (local).
 
 The single most load-bearing architectural fact: **the ta-onta package is the operational body of the S4' inhabitation law**. Each of the six carriers carries an S-family analogy (Khora=S0, Hen=S1, Pleroma=S2, Chronos=S3, Anima=S4, Aletheia=S5) but its implementation residency IS S4'. The carriers are the horizontal S-folds, VAK is the vertical dispatch grammar; they are coupled but not interchangeable ([`S4-SPEC.md:45-56`](Idea/Bimba/Seeds/S/S4/S4-SPEC.md)).
@@ -215,7 +215,7 @@ The Aletheia **gate suite** at `aletheia/S5'/skills/` carries `aletheia-m-gate`,
 
 [`pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts) is the curated entrypoint that ta-onta-composite-entry rides on top of. It runs `taOntaCompositeEntry(api)` first, then opportunistically loads `epii-entitlement-activation.ts` on `session_start` for the epii persona only (`composite-entry.ts:19-25`). The activation module gates epii-side tool entitlements based on `agent-contract.json`.
 
-`pi-agent/lib/` carries the entitlement plumbing (`entitlement-loader.ts`, `entitlement.ts`). `pi-agent/extensions/` carries `epi-citta.ts`, `epii-entitlement-activation.ts`, `skill-entitlement.ts`, plus the `ta-onta` symlink. `pi-agent/agents/` carries the team-dispatch primitives: `anima.md` (the orchestrator profile), `teams.yaml`, `agent-chain.yaml`, plus `pi-pi/` (the Pi-Pi meta-mode agent). `pi-agent/prompts/` carries `epi-agent-help.md` and `epi-system.md` (injected system prompts).
+`pi-agent/lib/` carries the entitlement plumbing (`entitlement-loader.ts`, `entitlement.ts`). `pi-agent/extensions/` carries `epi-citta.ts`, `epii-entitlement-activation.ts`, and `skill-entitlement.ts`; the canonical `ta-onta/` carrier is synced as the managed agent directory's sibling. `pi-agent/agents/` carries the team-dispatch primitives: `anima.md` (the orchestrator profile), `teams.yaml`, `agent-chain.yaml`, plus `pi-pi/` (the Pi-Pi meta-mode agent). `pi-agent/prompts/` carries `epi-agent-help.md` and `epi-system.md` (injected system prompts).
 
 `pi-agent/damage-control-rules.yaml` (8.7 KB) is the regex bank consumed by `pleroma/S2/damage-control.ts` — destructive bash patterns (rm -rf, sudo rm, chmod 777, git reset --hard, git push --force, git stash clear).
 
@@ -425,11 +425,11 @@ Concrete proposals, ordered by priority. Each names scope, current shape, propos
 
 ### 5.8 Crate-level: pi-agent vs ta-onta residency boundary
 
-**Location:** Documented at [`pi-agent/README.md`](Body/S/S4/pi-agent/README.md): "`Body/S/S4/ta-onta` is the canonical S4' ta-onta source home. `extensions/ta-onta` is a symlink back to that source so managed PI agents still receive the expected extension tree during sync."
+**Location:** Documented at [`pi-agent/README.md`](Body/S/S4/pi-agent/README.md): `Body/S/S4/ta-onta` is the canonical S4' source home and sync projects it as the managed agent directory's sibling.
 
-**Current shape:** ALIGNED but fragile — the symlink pattern at `Body/S/S4/pi-agent/extensions/ta-onta -> ../../ta-onta` is correct per the documented intent (Body source tree is never edited by PI). However, the symlink dependency is implicit; any cross-machine clone or backup that flattens symlinks would silently break ta-onta loading.
+**Current shape:** ALIGNED — `pi-agent/composite-entry.ts` imports the canonical sibling source explicitly, and `epi agent extensions sync` copies the same `ta-onta/` tree beside each managed `agent/` directory. The Body source tree is never edited by PI and no filesystem symlink participates in loading.
 
-**Proposed refactor:** Replace the symlink with an explicit path-reference in `pi-agent/composite-entry.ts:4`. Currently: `import { default as taOntaCompositeEntry } from "./extensions/ta-onta/composite-entry.ts"`. After: `import { default as taOntaCompositeEntry } from "../ta-onta/composite-entry.ts"`. The symlink is retired; `epi agent extensions sync` is updated to copy from `Body/S/S4/ta-onta/` directly.
+**Implemented refactor:** `pi-agent/composite-entry.ts` imports `../ta-onta/composite-entry.ts`; `epi-citta.ts` imports its canonical Anima route module directly; `epi agent extensions sync` copies `Body/S/S4/ta-onta/` to the sibling runtime location and includes both trees in its sync hash.
 
 **Benefit:** Cross-platform robustness (Windows, restrictive backup tools); explicit path is what's documented.
 
@@ -661,7 +661,7 @@ The mediation e2e harness references a moved fixture (`docs/plans/...` → `Idea
 
 ## 11. Closing — Why S4 Carries the Agentic Layer
 
-The substrate verifies the spec. The six ta-onta carriers (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) cover the S0-S5 fold from inside the agent runtime. The pi-agent harness mirrors them into managed PI runtimes through the symlink + composite-entry pattern. The pleroma capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the IOD-17 single source of truth that ACR, Anima, and the e2e parity harness all read.
+The substrate verifies the spec. The six ta-onta carriers (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) cover the S0-S5 fold from inside the agent runtime. The pi-agent harness mirrors them into managed PI runtimes through explicit sibling imports and the composite-entry pattern. The pleroma capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the IOD-17 single source of truth that ACR, Anima, and the e2e parity harness all read.
 
 The two big files (anima/extension.ts at 761 LOC, aletheia/extension.ts at 1114 LOC) carry the dispatch spine and synthesis spine respectively. They are big because they ARE the operative content of the carrier contract — every other carrier is a bounded-primitive shell. The right refactor is internal organisation (split into `S4'/tools/*`, `S5'/tools/*`) not splitting the carrier itself.
 

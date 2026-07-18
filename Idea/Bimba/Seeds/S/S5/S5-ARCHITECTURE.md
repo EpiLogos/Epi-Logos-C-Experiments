@@ -105,7 +105,7 @@ The S5/S5' branch decomposes into six sub-coordinates per `S5'-SPEC.md` lines 22
 
 **`Body/S/S5/epi-gnostic/`**:
 
-- `pyproject.toml` declares two binaries: `epi-gnostic` → `epi_gnostic.cli:main` and `epi-graphiti` → `epi_gnostic.graphiti_service:main`. Production deps: `raganything>=1.2.0`, `lightrag-hku>=1.0.0`, `neo4j>=5.0.0`, `google-genai>=1.0.0`, `graphiti-core>=0.3.0`, `fastapi>=0.110.0`, `redis>=5.0.0`.
+- `pyproject.toml` declares two binaries: `epi-gnostic` → `epi_gnostic.cli:main` and deprecated `epi-graphiti` → `epi_gnostic._deprecated.graphiti_service:main`. Production deps: `raganything>=1.2.0`, `lightrag-hku>=1.0.0`, `neo4j>=5.0.0`, `google-genai>=1.0.0`, `graphiti-core>=0.3.0`, `fastapi>=0.110.0`, `redis>=5.0.0`.
 - `epi_gnostic/cli.py` (137 LOC): CLI dispatcher for the Rust subprocess-bridge pattern. Commands: `status | ingest | ingest-text | query | enrich`. Output is JSON-on-stdout (line 20 `_json_out`) consumed by `Body/S/S0/epi-cli/src/techne/gnosis/`.
 - `epi_gnostic/wrapper.py` (155 LOC): `GnosticRAG` class wrapping `RAGAnything` + `LightRAG` with `Neo4jVectorStorage`. **Embedding contract:** `embedding_dim: int` from `GnosticConfig` (default `3072` per `Aletheia CONTRACT §"Gnosis RAG Pipeline"`). `vector_storage="Neo4jVectorStorage"` registered via monkey-patch at lines 17-50 (`_register_neo4j_vector_storage`).
 - `epi_gnostic/graphiti_service.py` (534 LOC): FastAPI HTTP wrapper at port 37778. The **temporary** Graphiti compatibility adapter — `S5-SPEC.md:104-105` explicitly names this as transitional and the target as `Body/S/S3/graphiti-runtime`. The wrapper monkey-patches `graphiti_core.graphiti.Graphiti.add_episode` to suppress `group_id → database` switching (lines 105-130) — all data stays in the single Neo4j database "neo4j", with `group_id` becoming a property filter only.
@@ -351,7 +351,7 @@ The S5 substrate is functionally complete. Findings below are quality-of-life re
 - Current shape: single Python package under `epi_gnostic/` with submodules `enrichment/`, `storage/`. Tests at `tests/`. Scripts at `scripts/`. The `graphiti_service.py` (534 LOC FastAPI wrapper) lives at the top level alongside the LightRAG wrapper (`wrapper.py`).
 - Proposed refactor: extract `graphiti_service.py` into a sub-package `epi_gnostic/graphiti/` (with `service.py`, `monkeypatches.py` for the `_patch_graphiti_group_id` logic at lines 105-130, `config.py` for graphiti-specific config). The temporary HTTP-wrapper status per `S5-SPEC.md:104-105` ("not canonical architecture") makes this isolation valuable for the future migration to `Body/S/S3/graphiti-runtime`.
 - Benefit: marks the transitional code as transitional; eases the S3' migration.
-- Blast radius: **LOW** — `pyproject.toml` script entry `epi-graphiti = "epi_gnostic.graphiti_service:main"` needs updating to `epi_gnostic.graphiti.service:main`.
+- Blast radius: **LOW** — compatibility callers may still import `epi_gnostic.graphiti_service`; the executable `epi-graphiti` entry now points at `epi_gnostic._deprecated.graphiti_service:main` until cycle-4 deletion.
 
 ### 5.6 Test surface — gaps
 

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-17T18:58:41.542Z",
+  "generatedAt": "2026-07-18T20:20:45.097Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -943,7 +943,9 @@
       "effort": null,
       "file": "02-m1-paramasiva-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "02.T2.1"
+      ],
       "writeScopes": [
         "Body/S/S2/**",
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
@@ -1138,7 +1140,9 @@
       "effort": null,
       "file": "03-m2-parashakti-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/03-m2-parashakti-reconciliation.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "03.T3.6"
+      ],
       "writeScopes": [
         "Body/S/S0/epi-cli/src/gate/**",
         "Body/S/S3/**",
@@ -2782,7 +2786,9 @@
       "effort": null,
       "file": "09-integrated-bimba-graph-reconciliation.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "09.T9.13"
+      ],
       "writeScopes": [
         "Body/M/epi-theia/extensions/**",
         "Body/S/S4/**",
@@ -3545,7 +3551,9 @@
       "effort": null,
       "file": "12-agentic-layer-s4-s5.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "12.T12.11"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
       ],
@@ -4004,7 +4012,9 @@
       "effort": "the closing gate",
       "file": "14-no-orphan-audit-and-release-gates.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "14.T14.3"
+      ],
       "writeScopes": [],
       "body": "5. **T14.4 — Cycle-close no-orphan audit re-run (the closing gate)**\n\n   Brief: original §Closing the Cycle + the audit-targets list. The FINAL gate: re-run the full no-orphan audit (M' product surfaces, ta-onta carriers, constitutional agents, 6 techne-guardians per DR-S4-TECHNE, profile fields, integration plugins, UX load-bearing claims) once Tracks 36.7 and the release gates land. BLOCKED until the dependency order in §Closing the Cycle reaches the final step — this tranche IS \"cycle-3 closed\".\n   Depends on 14.T14.3.\n   Verify: all release gates report CLOSED; the re-audit shows zero ownerless surfaces; verifier ≠ closer."
     },
@@ -5574,7 +5584,9 @@
       "effort": null,
       "file": "21-m0-anuttara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "21.T21.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
       ],
@@ -5604,7 +5616,9 @@
       "effort": "Arch 3 speech / 5 relationship / 7 action / 9 completion",
       "file": "21-m0-anuttara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "21.T21.12"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
       ],
@@ -5618,7 +5632,9 @@
       "effort": null,
       "file": "21-m0-anuttara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "21.T21.12"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
       ],
@@ -5632,7 +5648,9 @@
       "effort": null,
       "file": "21-m0-anuttara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "21.T21.12"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
       ],
@@ -5807,7 +5825,7 @@
       "file": "22-m1-paramasiva-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
       "dependsOn": [
-        "22.T22.5"
+        "22.T22.4"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md"
@@ -5902,7 +5920,9 @@
       "effort": null,
       "file": "22-m1-paramasiva-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "22.T22.11"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md"
       ],
@@ -6092,7 +6112,9 @@
       "effort": null,
       "file": "23-m2-parashakti-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "23.T23.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
       ],
@@ -6475,7 +6497,7 @@
       "file": "24-m3-mahamaya-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
       "dependsOn": [
-        "24.T24.14"
+        "24.T24.13"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md"
@@ -6746,7 +6768,9 @@
       "effort": "spec-ahead-integration",
       "file": "25-m4-nara-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "25.T25.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md"
       ],
@@ -7144,7 +7168,9 @@
       "effort": null,
       "file": "26-m5-epii-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "26.T26.11"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md"
       ],
@@ -7608,7 +7634,9 @@
       "effort": null,
       "file": "28-ide-shell-chrome-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "28.T28.11"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md"
       ],
@@ -7910,7 +7938,9 @@
       "effort": "spec-ahead-integration; closes OW-WC-IP-1; cross-link 15.11",
       "file": "29-integrated-plugins-composition-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "29.T29.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md"
       ],
@@ -7924,7 +7954,9 @@
       "effort": "spec-ahead-integration; closes OW-WC-IP-2; cross-link 15.12",
       "file": "29-integrated-plugins-composition-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "29.T29.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md"
       ],
@@ -8594,7 +8626,9 @@
       "effort": null,
       "file": "32-onboarding-settings-empty-states.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
-      "dependsOn": [],
+      "dependsOn": [
+        "32.T32.10"
+      ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md"
       ],
@@ -8674,7 +8708,8 @@
       "file": "33-harmonic-energy-channel-handoff.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
       "dependsOn": [
-        "00.T3"
+        "00.T3",
+        "33.T0"
       ],
       "writeScopes": [
         "Body/S/S0/portal-core/src/kernel.rs:352-353,653-670"

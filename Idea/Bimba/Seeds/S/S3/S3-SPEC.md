@@ -57,6 +57,8 @@ Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs a
 
 S3/S3' is the temporal/runtime substrate behind [[M'-SYSTEM-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The most direct anchors back into those consumers are [[Body/S/S3/gateway/src/lib.rs]], [[Body/S/S3/gateway/src/session_store.rs]], [[Body/S/S3/gateway-contract/src/lib.rs]], [[Body/S/S3/epi-spacetime-module/src/lib.rs]], [[Body/S/S3/graphiti-runtime/src/lib.rs]], and [[Body/S/S3/redis-context/src/lib.rs]].
 
+**Contemplation close contract (19.T19.6).** `nara.contemplate_session_close` is a live gateway route through the S0 host into the S3-owned composition law. It accepts a complete [[ContemplationObject]] supplied by the caller and returns the 4'-5'-0' reading (LLM/EBM/Verifier), [[wisdom_delta]], and symbolic-question round trips. The host adapter validates and delegates; it does not mint session evidence, substitute a mock reading, or bypass [[Anima]] re-verification metadata.
+
 ### M' Shell Consumed Contract Closure - Cycle 2 T12.T0
 
 This closure narrows the M' surface to **only what the M'-Theia shell, `/body` lite-surface, OmniPanel, and M3/M4/M5 extensions actually consume** from S3/S3'. It is not a re-statement of the full S3 method manifest; it pins the consumed boundary so cycle 2 work stays subordinate to substrate already landed in `Body/S/S3` (and the live S0-hosted gateway dispatch that consults S3 route ownership).

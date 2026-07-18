@@ -22,7 +22,8 @@ If `activeDevelopmentContext.nowExists` is false, do not improvise a note path. 
 
 - TDD when reasonable; real verification (no mocks/fakes/placeholders).
 - Stay in the write scope the orchestrator named.
-- If the ledger marks a dep as `done` but the substrate disagrees when you read it, surface as a finding in your return — don't try to fix it inline.
+- A repository-owned missing method, adapter, service, producer, receiver, route, or test harness is dependency work, not an external blocker. Preserve the failing behavioral test. Repair it in-scope; when it falls outside the assigned write scope, mark `review` and return the exact dependency so the orchestrator can promote that repair ahead of the current tranche.
+- If the ledger marks a dep as `done` but the substrate disagrees, do not build around it. Repair it when it is in-scope; otherwise mark `review` with the mismatch so the orchestrator requeues the dependency first.
 
 ## Mark
 
@@ -38,14 +39,15 @@ Include `tokenUsage` (your session's approximate input/output tokens) — the da
 
 If you were dispatched AS the verifier for someone else's tranche, run verify-tranche with your own `--owner` and mark done with their receipt only when the record says PASS.
 
-Use `review` for partial too; `blocked` only when a real external blocker holds. Cited `DR-*` ids are machine-checked against the decision registers and fail closed. UF-class tracks need playwright/test:e2e/boot-smoke proof; W-class tracks need live-wire/gateway proof — jsdom or manifest strings will be refused.
+Use `review` for partial or repo-owned dependency repair. `blocked` is accepted only for a classified external dependency and requires `--blocker-kind human|environment|third-party`, `--blocked-by "<dependency>"`, and evidence. "Not implemented yet" inside this repository never qualifies. Cited `DR-*` ids are machine-checked against the decision registers and fail closed. UF-class tracks need playwright/test:e2e/boot-smoke proof; W-class tracks need live-wire/gateway proof — jsdom or manifest strings will be refused.
 
 ## Don't
 
 - Write `*-evidence.md`, `*-summary.md`, `*-report.md` files that restate your ledger string. The ledger IS the record.
 - Re-run the assessor as verification before/after marking — once is enough at the end if at all.
 - Re-walk substrate paths another thread already verified during the same session — verify before trusting. If a dependency's substrate doesn't match its ledger evidence when you check it, surface as a finding and DO NOT build on it.
-- Auto-retry if a tranche fails partway — mark `review` with the failure mode and return.
+- Delete a red behavioral test because it exposed missing infrastructure. Keep it and drive the dependency repair.
+- Auto-retry if a tranche fails partway — diagnose, then mark `review` with the dependency or failure mode and return.
 
 ## Allowed deliverable files
 

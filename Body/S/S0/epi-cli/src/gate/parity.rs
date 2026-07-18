@@ -659,6 +659,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s0'.settings.opt_in"
         // portal-core parashakti adapter — dispatch classifies it S0 product
         | "m2.cymatic_invert"
+        | "kernelBridge.m2.epogdoonProjection(address72)"
         | "kernelBridge.m3.lensCodonBinary(lensId)"
         // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
         | "m1.spanda.hold"
@@ -779,6 +780,14 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
+        "s5'.tune.registry.list"
+        | "s5'.tune.registry.get"
+        | "s5'.tune.registry.set"
+        | "s5'.tune.audit.read"
+        | "s5'.tune.lock.toggle"
+        | "s5'.tune.propose"
+        | "s5'.tune.proposals.list"
+        | "s5'.tune.proposals.resolve" => Some("s5'.tune.*"),
         "s5.episodic.search"
         | "s5.episodic.deposit"
         | "s5.episodic.kernel_resonance.deposit"

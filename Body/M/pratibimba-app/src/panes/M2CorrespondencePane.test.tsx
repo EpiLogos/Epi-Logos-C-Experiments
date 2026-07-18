@@ -1,10 +1,14 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { M2CorrespondencePane } from './M2CorrespondencePane';
 import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
+import { useReadinessStore } from '../state/readinessStore';
 import { useProvenanceStore, useTickStore } from '../state/stores';
+import { M2SurfaceProvider } from './M2SurfaceContext';
+import { DEFAULT_M2_SURFACE_STATE, type M2SurfaceState } from './m2SurfaceState';
 
 vi.mock('../engine/cosmicPentadicOverlay', () => ({
     buildPentadicOverlay: vi.fn()
@@ -85,6 +89,19 @@ const HARMONIC_PROFILE = {
     kleinFlip: null
 };
 
+function M2PaneHarness() {
+    const [state, setState] = useState<M2SurfaceState>(DEFAULT_M2_SURFACE_STATE);
+    return (
+        <M2SurfaceProvider state={state} update={patch => setState(current => ({ ...current, ...patch }))}>
+            <M2CorrespondencePane />
+        </M2SurfaceProvider>
+    );
+}
+
+function renderPane() {
+    return render(<M2PaneHarness />);
+}
+
 describe('M2CorrespondencePane', () => {
     beforeEach(() => {
         vi.mocked(buildPentadicOverlay).mockReturnValue(READY_OVERLAY);
@@ -97,16 +114,22 @@ describe('M2CorrespondencePane', () => {
             profile: { generation: 1, profile: { harmonicProfile: HARMONIC_PROFILE } } as never,
             generation: 1
         });
+        useReadinessStore.setState({
+            bindings: {
+                's2.parashaktiCorrespondences': { state: 'ready_public_current' }
+            }
+        });
     });
 
     afterEach(() => {
         cleanup();
         setGateway(null);
         useProvenanceStore.setState({ connection: { ...DEFAULT_CONNECTION_STATUS } });
+        useReadinessStore.getState().clear();
     });
 
     it('reads the live 72-address off the trace and shows its decan correspondence', async () => {
-        render(<M2CorrespondencePane />);
+        renderPane();
         expect(screen.getByTestId('corr-address').textContent).toBe('72:17');
         await waitFor(() => expect(screen.getByTestId('corr-decan')).toBeTruthy());
         expect(invoke).toHaveBeenCalledWith('s2.parashaktiCorrespondences', { address72: 17 });
@@ -118,7 +141,7 @@ describe('M2CorrespondencePane', () => {
     });
 
     it('navigates between the three correspondence faces of the conserved address', async () => {
-        render(<M2CorrespondencePane />);
+        renderPane();
         await screen.findByTestId('corr-decan');
 
         fireEvent.click(screen.getByTestId('corr-nav-sonic'));
@@ -134,8 +157,38 @@ describe('M2CorrespondencePane', () => {
         expect(planetary.textContent).toContain('Manipura');
     });
 
+    it('keeps S2 provenance and live readiness at every rendered correspondence card', async () => {
+        renderPane();
+        await screen.findByTestId('corr-decan');
+
+        const assertCardBinding = (face: string, readiness: string) => {
+            const card = screen.getByTestId(`corr-card-${face}`);
+            expect(card.getAttribute('data-provenance')).toBe('s2.parashaktiCorrespondences');
+            expect(card.querySelector('[data-binding="s2.parashaktiCorrespondences"]')?.getAttribute('data-readiness')).toBe(
+                readiness
+            );
+        };
+
+        assertCardBinding('decan', 'ready_public_current');
+        fireEvent.click(screen.getByTestId('corr-nav-sonic'));
+        await screen.findByTestId('corr-sonic');
+        assertCardBinding('sonic', 'ready_public_current');
+        fireEvent.click(screen.getByTestId('corr-nav-planetary'));
+        await screen.findByTestId('corr-planetary');
+        assertCardBinding('planetary', 'ready_public_current');
+
+        useReadinessStore.getState().reportBinding('s2.parashaktiCorrespondences', {
+            state: 's2_graph_blocked',
+            reason: 'S2 graph projection is temporarily unavailable'
+        });
+        await waitFor(() => assertCardBinding('planetary', 's2_graph_blocked'));
+        expect(screen.getByTestId('corr-card-planetary').textContent).toContain(
+            'S2 graph projection is temporarily unavailable'
+        );
+    });
+
     it('mounts the cymatic surface, asma overlay, and modal digest as the cymatic face', async () => {
-        render(<M2CorrespondencePane />);
+        renderPane();
         await screen.findByTestId('corr-decan');
 
         fireEvent.click(screen.getByTestId('corr-nav-cymatic'));
@@ -153,8 +206,30 @@ describe('M2CorrespondencePane', () => {
         expect(screen.getByTestId('asma-name').textContent).toContain('Jamal');
     });
 
+    it('holds the M2 cymatic field at its paused profile frame while the live tick advances', async () => {
+        renderPane();
+        await screen.findByTestId('corr-decan');
+        fireEvent.click(screen.getByTestId('corr-nav-cymatic'));
+        const field = await screen.findByTestId('cymatic-field');
+        expect(field.getAttribute('data-generation')).toBe('1');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
+        act(() => {
+            useTickStore.setState({
+                profile: { generation: 2, profile: { harmonicProfile: HARMONIC_PROFILE } } as never,
+                generation: 2
+            });
+        });
+
+        expect(screen.getByTestId('cymatic-paused-tick').textContent).toContain('1');
+        expect(screen.getByTestId('cymatic-field').getAttribute('data-generation')).toBe('1');
+        expect(screen.getByTestId('cymatic-transport').getAttribute('data-cache-state')).toBe(
+            'pending-tick-snapshot-cache'
+        );
+    });
+
     it('mounts the six-axis decoder tree and decodes the live address', async () => {
-        render(<M2CorrespondencePane />);
+        renderPane();
         await screen.findByTestId('corr-decan');
 
         fireEvent.click(screen.getByTestId('corr-nav-axes'));
@@ -180,7 +255,7 @@ describe('M2CorrespondencePane', () => {
             m3: null,
             joinLine: null
         });
-        render(<M2CorrespondencePane />);
+        renderPane();
         expect(screen.getByTestId('m2-correspondence').getAttribute('data-state')).toBe('pending');
         expect(invoke).not.toHaveBeenCalled();
         expect(screen.queryByTestId('corr-decan')).toBeNull();

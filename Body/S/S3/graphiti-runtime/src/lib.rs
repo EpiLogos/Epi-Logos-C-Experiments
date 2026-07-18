@@ -28,6 +28,7 @@ use std::sync::{Mutex, OnceLock};
 #[path = "sidecar-compat/mod.rs"]
 pub mod http_compatibility;
 pub mod native;
+mod native_gateway;
 
 #[allow(deprecated)]
 pub use http_compatibility::HttpCompatibilityClient;
@@ -36,6 +37,10 @@ pub use native::{
     ExtractedRelationship, GraphitiClient, InMemoryGraphitiStore, IngestReceipt, MemoryQueryResult,
     NativeLibraryClient, NeutralTranscript, RelationshipEdge, SophiaExtraction,
     SophiaExtractionService, TranscriptMessage,
+};
+pub use native_gateway::{
+    kernel_profile_observation_deposit, kernel_resonance_deposit, session_memory_deposit,
+    session_memory_search,
 };
 
 pub const GRAPHITI_PORT: u16 = 37778;
@@ -171,7 +176,7 @@ impl Default for GraphitiRuntimeConfig {
             port: GRAPHITI_PORT,
             runtime_authority: GRAPHITI_RUNTIME_AUTHORITY,
             invocation_owner: GRAPHITI_INVOCATION_OWNER,
-            compatibility_http_adapter: true,
+            compatibility_http_adapter: false,
         }
     }
 }
@@ -714,7 +719,11 @@ pub async fn status_value() -> GraphitiStatus {
     }
 }
 
-pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native session_memory_search"
+)]
+pub async fn compatibility_session_memory_search(params: &Value) -> Result<Value, String> {
     let query = required_str(params, "query")?;
     let agent_id = optional_str(params, "agentId").unwrap_or("epii");
     let session_key = required_str(params, "sessionKey")?;
@@ -778,7 +787,11 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native session_memory_deposit"
+)]
+pub async fn compatibility_session_memory_deposit(params: &Value) -> Result<Value, String> {
     let content = required_str(params, "content")?;
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("epii");
     let session_key = required_str(params, "sessionKey")?;
@@ -848,7 +861,11 @@ pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native kernel_resonance_deposit"
+)]
+pub async fn compatibility_kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
     let session_key = required_str(params, "sessionKey")?;
     let namespace_ref = required_str(params, "namespaceRef")?;
@@ -924,7 +941,13 @@ pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn kernel_profile_observation_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native kernel_profile_observation_deposit"
+)]
+pub async fn compatibility_kernel_profile_observation_deposit(
+    params: &Value,
+) -> Result<Value, String> {
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
     let session_key = required_str(params, "sessionKey")?;
     let namespace_ref = required_str(params, "namespaceRef")?;

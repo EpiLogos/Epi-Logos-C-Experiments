@@ -46,7 +46,7 @@ Current residency correction: the first Body-native move has happened. Active pa
 
 The canonical source-routing map is [[S-SOURCE-TRACEABILITY-INDEX]]. It links the current S/S' specs to older `/docs` plans, resources, and specs so implementation agents can recover deeper planning detail without treating current code drift as authority.
 
-The current whole-system diagram pack is [[ARCHITECTURE-DIAGRAM-PACK]]. Use it before implementation planning when work crosses S/S', M', `/pratibimba/system`, or the M-dev track set. It records the current architecture invariant that [[S0]] is the command membrane and return surface, while coordinate-domain law belongs in the owning [[S1]]-[[S5]] modules.
+The current whole-system diagram pack is [[ARCHITECTURE-DIAGRAM-PACK]]. Use it before implementation planning when work crosses S/S', M', `/pratibimba/system`, or the M-dev track set. It records the current architecture invariant that [[S0]] is the command membrane and return surface, while coordinate-domain law belongs in the owning [[S1]]-[[S5]] modules. `Body/S/epi-kernel-contract/` is the parent crate and parent-role envelope of that S-stack, not an [[S0]] sibling or member.
 
 The flat [[World]] nexus for this architecture is [[World-Ontology]]. It should be read before treating any seed spec as a standalone plan, because it records the central distinction between [[World]] crystallisations, [[World/Types]] MOC/canvas surfaces, and [[Seeds]] planning/spec/source artifacts.
 

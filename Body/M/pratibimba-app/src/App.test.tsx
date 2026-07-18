@@ -206,6 +206,39 @@ describe('App shell', () => {
         expect(shell.dataset.m0SurfaceState).toBe(expected);
     });
 
+    it('restores the M2 interaction record and keeps it through both face toggles', async () => {
+        const m2Surface = {
+            activeFace: 'axes',
+            layerAActiveCell: { lens: 7, position: 4 },
+            layerBCardScroll: 240,
+            layerCSurfaceVariant: 'torus',
+            layerCZoom: 1.6,
+            lastRoutingTrace: 'f-routing://profile/72/17',
+            correspondenceTreeAxisFilter: 'decan',
+            correspondenceTreeSonicOverlay: 'asma',
+            planetaryViewMode: 'psychoid',
+            epogdoonProofMode: true
+        };
+        invokeCommand.mockImplementation(async (command: string) => {
+            if (command === 'ui_state_load') {
+                return JSON.stringify({ layoutVersion: 21, m2Surface });
+            }
+            if (command === 'vault_list') {
+                return [];
+            }
+            return undefined;
+        });
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        const expected = JSON.stringify(m2Surface);
+
+        await waitFor(() => expect(shell.dataset.m2SurfaceState).toBe(expected));
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.m2SurfaceState).toBe(expected);
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(shell.dataset.m2SurfaceState).toBe(expected);
+    });
+
     it('layout claim (08.T8.5 / DR-TS-1): ONE 0/1 shell — two faces, no third layout, the / OmniPanel membrane on BOTH', async () => {
         render(<App />);
         const shell = await screen.findByTestId('shell');

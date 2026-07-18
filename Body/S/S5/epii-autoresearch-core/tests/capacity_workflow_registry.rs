@@ -12,7 +12,7 @@ fn capacity_registry_routes_every_profile_through_real_stores_and_reloads_surfac
     let review = ReviewStore::new(temp.path().join("review"));
     let registry = capacity_workflow_registry();
 
-    assert_eq!(registry.len(), 6);
+    assert_eq!(registry.len(), 7);
     assert!(registry
         .iter()
         .all(|entry| entry.source_spec_anchors.len() >= 2));
@@ -74,10 +74,10 @@ fn capacity_registry_routes_every_profile_through_real_stores_and_reloads_surfac
     let snapshot = build_capacity_workflow_snapshot(&reopened_autoresearch, &reopened_review)
         .expect("snapshot reloads from real stores");
 
-    assert_eq!(snapshot.body_alerts.len(), 6);
-    assert_eq!(snapshot.control_room_panels.len(), 6);
-    assert_eq!(snapshot.real_candidate_count, 6);
-    assert_eq!(snapshot.real_review_item_count, 6);
+    assert_eq!(snapshot.body_alerts.len(), 7);
+    assert_eq!(snapshot.control_room_panels.len(), 7);
+    assert_eq!(snapshot.real_candidate_count, 7);
+    assert_eq!(snapshot.real_review_item_count, 7);
     assert!(snapshot.body_alerts.iter().all(|alert| {
         alert.candidate_id.starts_with("candidate:")
             && alert.review_item_id.len() > 16

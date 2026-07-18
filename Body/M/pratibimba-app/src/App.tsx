@@ -4,7 +4,7 @@
  * Actualises: the (0/1) shell as two flexlayout root layouts over one state
  *   tree, with the application foundations underneath: command registry,
  *   palette, vault panes, session binding, layout persistence, gateway
- *   liveness, and the persisted M0 surface record. cmd-period IS the #
+ *   liveness, and the persisted M0/M2 surface records. cmd-period IS the #
  *   inversion; the four stores are singletons so the faces cannot desynchronise.
  * Public surface: <App/>.
  * Does NOT own: gateway I/O (bridge/), vault law (src-tauri/vault.rs),
@@ -51,12 +51,19 @@ import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
+import { M2SurfaceProvider } from './panes/M2SurfaceContext';
 import {
     DEFAULT_M0_SURFACE_STATE,
     deserializeM0SurfaceState,
     serializeM0SurfaceState,
     type M0SurfaceState
 } from './panes/m0SurfaceState';
+import {
+    DEFAULT_M2_SURFACE_STATE,
+    deserializeM2SurfaceState,
+    serializeM2SurfaceState,
+    type M2SurfaceState
+} from './panes/m2SurfaceState';
 import { ReviewBlocksPane } from './panes/omni/ReviewBlocksPane';
 import { TuningPane } from './panes/TuningPane';
 import { KleinTopologyPane } from './panes/KleinTopologyPane';
@@ -236,6 +243,7 @@ interface PersistedUiState {
     sessionKey?: string | null;
     coordinate?: string | null;
     m0Surface?: unknown;
+    m2Surface?: unknown;
     omniPanel?: unknown;
     [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]?: OmniPanelLayoutId;
 }
@@ -398,6 +406,7 @@ export function App() {
     const [activeLayout, setActiveLayout] = useState<OmniPanelLayoutId>('daily-0-1');
     const [routingRevision, setRoutingRevision] = useState(0);
     const [m0Surface, setM0Surface] = useState<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
+    const [m2Surface, setM2Surface] = useState<M2SurfaceState>(DEFAULT_M2_SURFACE_STATE);
     const activeOmniTab = useOmniPanelSessionStore(state => state.session.activeTab);
     const [routedHost, setRoutedHost] = useState<{
         readonly face: Face;
@@ -414,6 +423,7 @@ export function App() {
     modelsRef.current = models;
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const m0SurfaceRef = useRef<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
+    const m2SurfaceRef = useRef<M2SurfaceState>(DEFAULT_M2_SURFACE_STATE);
 
     // boot: restore persisted UI state (or defaults outside tauri)
     useEffect(() => {
@@ -449,6 +459,9 @@ export function App() {
                 const restoredM0Surface = deserializeM0SurfaceState(state.m0Surface);
                 m0SurfaceRef.current = restoredM0Surface;
                 setM0Surface(restoredM0Surface);
+                const restoredM2Surface = deserializeM2SurfaceState(state.m2Surface);
+                m2SurfaceRef.current = restoredM2Surface;
+                setM2Surface(restoredM2Surface);
                 if (state.sessionKey) {
                     useSessionStore.getState().setSession({ sessionKey: state.sessionKey });
                 }
@@ -484,6 +497,7 @@ export function App() {
                 sessionKey: useSessionStore.getState().sessionKey,
                 coordinate: useCoordinateStore.getState().selected,
                 m0Surface: serializeM0SurfaceState(m0SurfaceRef.current),
+                m2Surface: serializeM2SurfaceState(m2SurfaceRef.current),
                 omniPanel: readOmniPanelSessionState(),
                 [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
             };
@@ -495,6 +509,13 @@ export function App() {
         const next = { ...m0SurfaceRef.current, ...patch };
         m0SurfaceRef.current = next;
         setM0Surface(next);
+        persist();
+    }, [persist]);
+
+    const updateM2Surface = useCallback((patch: Partial<M2SurfaceState>) => {
+        const next = { ...m2SurfaceRef.current, ...patch };
+        m2SurfaceRef.current = next;
+        setM2Surface(next);
         persist();
     }, [persist]);
 
@@ -879,12 +900,14 @@ export function App() {
 
     return (
         <M0SurfaceProvider state={m0Surface} update={updateM0Surface}>
+            <M2SurfaceProvider state={m2Surface} update={updateM2Surface}>
             <div
             className="shell"
             data-testid="shell"
             data-face={face}
             data-active-layout={activeLayout}
             data-m0-surface-state={JSON.stringify(m0Surface)}
+            data-m2-surface-state={JSON.stringify(m2Surface)}
             data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
             data-omnipanel-active-tab={activeOmniTab}
             data-cross-layout-identity-receipt={
@@ -951,6 +974,7 @@ export function App() {
                 <StatusStrip />
                 <CommandPalette />
             </div>
+            </M2SurfaceProvider>
         </M0SurfaceProvider>
     );
 }

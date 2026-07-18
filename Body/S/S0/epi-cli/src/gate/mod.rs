@@ -44,6 +44,7 @@ pub mod team_store;
 pub mod temporal;
 pub mod tls;
 pub mod transcripts;
+pub mod tuning;
 pub mod update;
 pub mod verifier;
 pub mod wizard;

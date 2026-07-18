@@ -19,6 +19,7 @@ pub mod resonance_corpus;
 #[cfg(feature = "resonance_ebm")]
 pub mod resonance_ebm;
 pub mod spine;
+pub mod tuning_review;
 // inbox + recompose intentionally not re-exported — callers namespace via
 // `inbox::` / `recompose::` to keep the seam topology visible at import sites.
 pub use spine::{

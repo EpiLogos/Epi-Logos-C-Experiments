@@ -9,6 +9,7 @@ const STATE_VERSION = 1;
 const STATUSES = new Set(["pending", "ready", "in_progress", "blocked", "review", "done", "quarantine", "audit_required"]);
 const DEFAULT_LEASE_MINUTES = 120;
 const DEFAULT_DIRTY_LIMIT = 25;
+const BLOCKER_KINDS = new Set(["human", "environment", "third-party"]);
 // Statuses that mean "someone treated this as real work" — a quarantined
 // dependency compromises their trust foundation, so propagation flips them.
 const TRUSTING_STATUSES = new Set(["done", "review", "in_progress", "ready"]);
@@ -50,6 +51,8 @@ export function parseArgs(argv) {
     receipt: null,
     allowDirty: false,
     continueThroughReview: false,
+    blockerKind: null,
+    blockedBy: null,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -75,6 +78,8 @@ export function parseArgs(argv) {
     else if (arg === "--receipt") args.receipt = argv[++i];
     else if (arg === "--allow-dirty") args.allowDirty = true;
     else if (arg === "--continue-through-review") args.continueThroughReview = true;
+    else if (arg === "--blocker-kind") args.blockerKind = argv[++i];
+    else if (arg === "--blocked-by") args.blockedBy = argv[++i];
     else if (!arg.startsWith("--") && !args.plan) args.plan = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -84,6 +89,11 @@ export function parseArgs(argv) {
   }
   if (args.mark && !args.status) {
     throw new Error("--mark requires --status");
+  }
+  if (args.blockerKind && !BLOCKER_KINDS.has(args.blockerKind)) {
+    throw new Error(
+      `Invalid --blocker-kind "${args.blockerKind}". Expected one of: ${Array.from(BLOCKER_KINDS).join(", ")}`,
+    );
   }
   if (!Number.isFinite(args.leaseMinutes) || args.leaseMinutes <= 0) {
     throw new Error("--lease-minutes must be a positive integer");
@@ -340,17 +350,17 @@ function addSequentialDependencies(tasks, blockedIds = new Set()) {
     // Chain each tranche on its predecessor — but skip DEPRECATED/absorbed
     // stubs: they can never reach `done`, so chaining through them walls every
     // successor in the track forever (protocol sanity ruling, 2026-07-07).
-    // Likewise skip ledger-`blocked` tasks: the chain is a sequencing
-    // heuristic, not authored law, and chaining through an externally-walled
-    // task walls the whole track on another lane's blocker (ruling
-    // 2026-07-08). Authored deps in tranche bodies still hold. Self-healing:
-    // when the task unblocks, the next assess re-forms the chain through it.
+    // A ledger-`blocked` task keeps its incoming edge so its own prerequisite
+    // truth is not erased, but it is not used as the predecessor for later
+    // tranches. The mechanical chain may bypass a classified external wall;
+    // authored deps in tranche bodies still hold.
     const isDeadStub = (task) => /^\s*DEPRECATED\b/i.test(task.title ?? "");
     let previous = null;
     for (const task of list) {
-      if (isDeadStub(task) || blockedIds.has(task.id)) continue;
+      if (isDeadStub(task)) continue;
       if (previous && !task.dependsOn.includes(previous)) task.dependsOn.push(previous);
       task.dependsOn.sort();
+      if (blockedIds.has(task.id)) continue;
       previous = task.id;
     }
   }
@@ -408,6 +418,7 @@ function reconcileState(index, state) {
       heartbeatAt: existing.heartbeatAt ?? null,
       runId: existing.runId ?? null,
       worktree: existing.worktree ?? null,
+      blocker: status === "blocked" ? existing.blocker ?? null : null,
     };
   }
 
@@ -530,8 +541,17 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true,
   }
 
   const blockedTasks = enrichedTasks.filter((task) => task.status === "blocked");
-  if (blockedTasks.length > 0) {
-    carryForwardRisks.push(`${blockedTasks.length} task(s) are blocked; keep building other lanes unless a dependency edge requires them.`);
+  const externallyBlockedTasks = blockedTasks.filter((task) => task.blocker);
+  const unclassifiedBlockedTasks = blockedTasks.filter((task) => !task.blocker);
+  if (unclassifiedBlockedTasks.length > 0) {
+    softCautions.push(
+      `${unclassifiedBlockedTasks.length} blocked task(s) are unclassified legacy entries; they are routed as dependency-repair work when their prerequisites are ready.`,
+    );
+  }
+  if (externallyBlockedTasks.length > 0) {
+    carryForwardRisks.push(
+      `${externallyBlockedTasks.length} task(s) have classified external blockers; keep building other lanes unless an authored dependency requires them.`,
+    );
   }
   const waitingTasks = enrichedTasks.filter((task) => task.computedStatus === "waiting");
   if (waitingTasks.length > 0) {
@@ -730,7 +750,8 @@ function enrichTask(task, state, taskById, { continueThroughReview = false } = {
     return depStatus !== "done" && !(continueThroughReview && depStatus === "review");
   });
   let computedStatus = record.status;
-  if (record.status === "pending" || record.status === "ready") {
+  const externalBlocker = record.status === "blocked" ? record.blocker ?? null : null;
+  if (record.status === "pending" || record.status === "ready" || (record.status === "blocked" && !externalBlocker)) {
     computedStatus = unmetDeps.length === 0 && missingDeps.length === 0 ? "ready" : "waiting";
   }
   return {
@@ -748,6 +769,7 @@ function enrichTask(task, state, taskById, { continueThroughReview = false } = {
     heartbeatAt: record.heartbeatAt ?? null,
     runId: record.runId ?? null,
     worktree: record.worktree ?? null,
+    blocker: externalBlocker,
   };
 }
 
@@ -878,7 +900,14 @@ function activeRoutePrefix(tasks, { continueThroughReview = false } = {}) {
 function simulatedReadyTasks(tasks, simulatedDone, selectedIds) {
   return tasks.filter((task) => {
     if (selectedIds.has(task.id)) return false;
-    if (task.status === "done" || task.status === "blocked" || task.status === "in_progress" || task.status === "review") return false;
+    if (
+      task.status === "done" ||
+      (task.status === "blocked" && task.blocker) ||
+      task.status === "in_progress" ||
+      task.status === "review"
+    ) {
+      return false;
+    }
     if (task.status === "quarantine" || task.status === "audit_required") return false;
     if (task.missingDeps.length > 0) return false;
     return task.dependsOn.every((depId) => simulatedDone.has(depId));
@@ -1060,6 +1089,7 @@ function claimTask(planFolder, assessment, taskId, { owner = defaultOwner(), lea
     worktree,
     runId,
     evidence: state.tasks[taskId]?.evidence ?? [],
+    blocker: null,
   };
   state.runs.push({ runId, taskId, status: "in_progress", startedAt: now, owner, leaseExpiresAt, worktree });
   mkdirSync(join(planFolder, "plan.runs"), { recursive: true });
@@ -1345,7 +1375,7 @@ function propagateQuarantine(assessment, rootId) {
   return flagged;
 }
 
-function markTask(assessment, taskId, status, evidence, receipt = null) {
+function markTask(assessment, taskId, status, evidence, receipt = null, blocker = null) {
   const task = assessment.tasks.find((entry) => entry.id === taskId);
   if (!task) throw new Error(`Cannot mark unknown task: ${taskId}`);
   const state = assessment.state;
@@ -1361,6 +1391,7 @@ function markTask(assessment, taskId, status, evidence, receipt = null) {
     leaseExpiresAt: status === "in_progress" || status === "review" ? existing.leaseExpiresAt ?? null : null,
     heartbeatAt: status === "in_progress" || status === "review" ? now : existing.heartbeatAt ?? null,
     evidence: evidenceList,
+    blocker: status === "blocked" ? blocker : null,
   };
   state.runs = (state.runs ?? []).map((run) =>
     run.taskId === taskId && !run.completedAt ? { ...run, status, completedAt: now } : run,
@@ -1512,6 +1543,28 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
 
   if (args.mark) {
     const receipt = parseReceipt(args.receipt, cwd);
+    let blocker = null;
+    if (args.status === "blocked") {
+      const violations = [];
+      if (!args.blockerKind || !BLOCKER_KINDS.has(args.blockerKind)) {
+        violations.push(
+          `blocked requires a classified external dependency via --blocker-kind ${Array.from(BLOCKER_KINDS).join("|")}`,
+        );
+      }
+      if (!args.blockedBy?.trim()) {
+        violations.push("blocked requires --blocked-by naming the external dependency");
+      }
+      if (!args.evidence?.trim()) {
+        violations.push("blocked requires --evidence describing the observed external condition");
+      }
+      if (violations.length > 0) {
+        throw new Error(`REFUSED --mark ${args.mark} blocked:\n- ${violations.join("\n- ")}`);
+      }
+      blocker = {
+        kind: args.blockerKind,
+        dependency: args.blockedBy.trim(),
+      };
+    }
     if (args.status === "done") {
       const violations = doneMarkViolations({
         planFolder,
@@ -1526,7 +1579,7 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
         throw new Error(`REFUSED --mark ${args.mark} done (the ledger records verified truth or nothing):\n- ${violations.join("\n- ")}`);
       }
     }
-    assessment.state = markTask(assessment, args.mark, args.status, args.evidence, receipt);
+    assessment.state = markTask(assessment, args.mark, args.status, args.evidence, receipt, blocker);
     writeAssessmentFiles(planFolder, assessment);
     assessment = assess();
   }

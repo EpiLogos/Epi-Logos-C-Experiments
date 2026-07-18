@@ -49,6 +49,8 @@ M5' should expose its library and orchestration substrate directly inside the sp
 
 The six surfaces should feel like one IDE, not six unrelated apps. The user may read a philosophy file, inspect its [[Bimba]]/[[Gnosis]] graph context, ask [[Epii]] to trace a term etymologically, fork an implementation task, watch the bounded agent run, review tests and evidence, then promote the result back into canon.
 
+38.T06.8/38.T06.9 add the active-carrier `omniTuning` fold to this [[M5-3']] surface: it is a gateway projection over the [[portal-core]] tunable registry (`s5'.tune.registry.*`, audit, local lock routes, and `s5'.tune.proposals.{list,resolve}`). Tier-1 developer writes remain direct; Tier-2 proposals are governed in [[S5]]: Class A stays unchanged until a human resolution, while Class B requires a complete constitutional triplet before bounded auto-application. Registry schema, validation, audit law, and Tier-3 [[Aletheia]] dispatch remain outside the carrier.
+
 This table absorbs the system-shape correction from [[m5-prime-system-shape-and-tauri-ide-canon]]: M5-2' is the S-family stack itself, M5-3' is the M'-Tauri/Theia application surface, and M5-4' is the operational-capacity and agentic-mediation layer described by the six Epii capacity papers.
 
 ## Graph Namespace Model

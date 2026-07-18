@@ -1,6 +1,7 @@
 /**
  * Coordinate: M' M1' (Cl(4,2) signature inspector — Track 22.T22.3 per DR-FACE-7)
  * Residency: Body/M/pratibimba-app/src/panes
+ * Position (#n): #3 Pattern — analytic reading of the played K² profile face.
  * Actualises: the `m1.paramasiva.cl42SignatureInspector` view body — the 2D
  *   analytical surface beneath the played-K² halo colour-binary (15.8 renders
  *   the halo on the 3D torus; THIS reads the per-position breakdown). Six-column
@@ -11,6 +12,7 @@
  *   `cl42SignatureAtPosition` bus readout, and the static 9/8 self-derivation
  *   chain with the current `tick12` epogdoon-step highlighted. Structural text is
  *   static matheme pedagogy (sanctioned per 22.3); every live value is a bus read.
+ * Public surface: M1Cl42SignatureInspector.
  * Does NOT own: the halo genesis (portal-core cl42), the vortex parser
  *   (m1PlayedTorus.ts), the palette (ui/primitives.tsx). No CL42_BASIS /
  *   QL_TRIG_TABLE runtime-value fork lives here — the live signature rides the bus.
@@ -23,12 +25,12 @@ import { useM1FaceState, cl42SignatureColour } from './m1DeepFaceData';
  *  Cl(4,2) metric signature (−,+,+,+,+,−). The generators sin@P0 / cos@P5 are the
  *  two implicate poles; the live per-tick signature rides the bus. */
 const QL_POSITION_STRUCTURE = [
-    { p: 0, trig: 'sin', signature: -1, generator: true },
-    { p: 1, trig: 'tan', signature: 1, generator: false },
-    { p: 2, trig: 'sec', signature: 1, generator: false },
-    { p: 3, trig: 'cot', signature: 1, generator: false },
-    { p: 4, trig: 'csc', signature: 1, generator: false },
-    { p: 5, trig: 'cos', signature: -1, generator: true }
+    { p: 0, trig: 'sin', formula: 'sinθ', pair: '[0]/1', signature: -1, generator: true },
+    { p: 1, trig: 'tan', formula: 'sinθ/cosθ', pair: '[0]/[5]', signature: 1, generator: false },
+    { p: 2, trig: 'sec', formula: '1/cosθ', pair: '1/[5]', signature: 1, generator: false },
+    { p: 3, trig: 'cot', formula: 'cosθ/sinθ', pair: '[5]/[0]', signature: 1, generator: false },
+    { p: 4, trig: 'csc', formula: '1/sinθ', pair: '1/[0]', signature: 1, generator: false },
+    { p: 5, trig: 'cos', formula: 'cosθ', pair: '[5]/1', signature: -1, generator: true }
 ] as const;
 
 const TWELVEFOLD = 12;
@@ -72,6 +74,7 @@ export function M1Cl42SignatureInspector() {
                     <tr>
                         <th scope="col">P</th>
                         <th scope="col">trig</th>
+                        <th scope="col">QL pair</th>
                         <th scope="col">sig</th>
                         <th scope="col">halo</th>
                         <th scope="col">role</th>
@@ -87,6 +90,7 @@ export function M1Cl42SignatureInspector() {
                         >
                             <td>P{cell.p}</td>
                             <td>{cell.trig}</td>
+                            <td title={cell.formula}>{cell.pair}</td>
                             <td>{signatureGlyph(cell.signature)}</td>
                             <td>
                                 <span

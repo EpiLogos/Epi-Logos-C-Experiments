@@ -2229,6 +2229,17 @@ textarea {
   padding: 0.3rem 0.2rem;
 }
 
+.corr-card > .bridge-readiness-border,
+.corr-card > .bridge-readiness-shell {
+  display: block;
+}
+
+.corr-card-header {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+  padding: 0.15rem 0.2rem 0;
+}
+
 .corr-field {
   display: contents;
 }
@@ -2258,6 +2269,36 @@ textarea {
   justify-content: center;
 }
 
+.m2-cymatic-transport {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+}
+
+.m2-cymatic-transport-toolbar,
+.m2-cymatic-transport-scrubber {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.m2-cymatic-transport-scrubber input {
+  max-width: 12rem;
+}
+
+.m2-cymatic-transport-markers {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+
+.m2-cymatic-transport-klein-marker {
+  min-height: 0.75rem;
+  min-width: 0.35rem;
+  padding: 0;
+}
+
 .corr-cymatic-surface .asma-mirror-overlay {
   position: absolute;
   left: 0;
@@ -2278,6 +2319,91 @@ textarea {
 .corr-cymatic-surface .asma-mirror-overlay.phase-inverted {
   border-left-color: var(--accent);
 }
+
+/* 23.18 - a receipt-only M2 to M3 epogdoon descent, with fixed lattice tracks. */
+.m2-epogdoon-bridge {
+  display: grid;
+  gap: 0.45rem;
+  width: min(100%, 46rem);
+}
+
+.m2-epogdoon-header {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.m2-epogdoon-header span {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-epogdoon-bands {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.m2-epogdoon-address-band,
+.m2-epogdoon-codon-band,
+.m2-epogdoon-tarot-floor {
+  display: grid;
+  gap: 0.18rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.m2-epogdoon-address-band {
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+}
+
+.m2-epogdoon-codon-band,
+.m2-epogdoon-tarot-floor {
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+}
+
+.m2-epogdoon-address-band li,
+.m2-epogdoon-codon-band li,
+.m2-epogdoon-tarot-floor span {
+  align-items: center;
+  background: var(--ground-raised);
+  color: var(--ink-dim);
+  display: flex;
+  font-size: var(--type-caption);
+  justify-content: center;
+  min-height: 1.35rem;
+}
+
+.m2-epogdoon-address-band li[data-gap="true"],
+.m2-epogdoon-codon-band li[data-epogdoon-sentinel="true"] {
+  color: var(--accent);
+}
+
+.m2-epogdoon-address-band li[data-active="true"],
+.m2-epogdoon-codon-band li[data-active="true"] {
+  background: var(--ring);
+  color: var(--ground);
+}
+
+.m2-epogdoon-tarot-floor span[data-padding="true"] {
+  color: var(--ink-dim);
+}
+
+.m2-epogdoon-tarot-floor span[data-suit="cups"] { border-top: 2px solid var(--accent); }
+.m2-epogdoon-tarot-floor span[data-suit="wands"] { border-top: 2px solid var(--ring); }
+.m2-epogdoon-tarot-floor span[data-suit="pentacles"] { border-top: 2px solid var(--ready); }
+.m2-epogdoon-tarot-floor span[data-suit="swords"] { border-top: 2px solid var(--danger); }
+
+.m2-epogdoon-inspector {
+  display: grid;
+  gap: 0.15rem 0.5rem;
+  grid-template-columns: max-content 1fr;
+  margin: 0;
+}
+
+.m2-epogdoon-inspector dt { color: var(--ink-dim); }
+.m2-epogdoon-inspector dd { margin: 0; }
 
 /* 23.5 — six-axis correspondence tree/chips */
 .six-axis-tree {

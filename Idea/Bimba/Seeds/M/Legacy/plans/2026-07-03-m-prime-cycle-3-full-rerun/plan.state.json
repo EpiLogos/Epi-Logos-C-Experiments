@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-18T09:18:29.522Z",
+  "updatedAt": "2026-07-18T20:20:45.099Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -125,7 +125,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T18:02:52.961Z",
       "runId": "20260706T180252Z-01-T1.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.2": {
       "status": "done",
@@ -157,7 +158,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:24:39.422Z",
       "runId": "20260707T212439Z-01-T1.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.3": {
       "status": "done",
@@ -189,7 +191,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:28:42.808Z",
       "runId": "20260707T212842Z-01-T1.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.4": {
       "status": "done",
@@ -222,7 +225,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:48:04.704Z",
       "runId": "20260707T214804Z-01-T1.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.5": {
       "status": "done",
@@ -254,7 +258,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:00:51.917Z",
       "runId": "20260707T220051Z-01-T1.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.6": {
       "status": "done",
@@ -287,7 +292,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:42:52.338Z",
       "runId": "20260707T224252Z-01-T1.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.7": {
       "status": "done",
@@ -320,7 +326,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T00:06:32.847Z",
       "runId": "20260708T000632Z-01-T1.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.8": {
       "status": "done",
@@ -353,7 +360,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T00:19:49.597Z",
       "runId": "20260708T001949Z-01-T1.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.9": {
       "status": "done",
@@ -385,7 +393,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T00:24:55.830Z",
       "runId": "20260708T002455Z-01-T1.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.10": {
       "status": "done",
@@ -422,7 +431,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T22:38:23.651Z",
       "runId": "20260706T223823Z-01-T1.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.11": {
       "status": "done",
@@ -454,7 +464,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.12": {
       "status": "done",
@@ -487,7 +498,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T11:23:35.263Z",
       "runId": "20260707T112335Z-01-T1.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.13": {
       "status": "done",
@@ -521,7 +533,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T18:17:45.578Z",
       "runId": "20260707T181745Z-01-T1.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.14": {
       "status": "done",
@@ -556,7 +569,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T18:20:51.807Z",
       "runId": "20260707T182051Z-01-T1.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.15": {
       "status": "done",
@@ -589,7 +603,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T19:54:34.137Z",
       "runId": "20260707T195434Z-01-T1.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.16": {
       "status": "done",
@@ -623,7 +638,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:31:56.857Z",
       "runId": "20260707T203156Z-01-T1.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.17": {
       "status": "done",
@@ -655,7 +671,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:07:52.849Z",
       "runId": "20260707T210752Z-01-T1.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "01.T1.18": {
       "status": "done",
@@ -687,7 +704,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:19:24.478Z",
       "runId": "20260707T211924Z-01-T1.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.1": {
       "status": "done",
@@ -723,7 +741,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T12:29:03.220Z",
       "runId": "20260707T122903Z-02-T2.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.2": {
       "status": "done",
@@ -752,7 +771,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T09:15:15.955Z",
       "runId": "20260708T091515Z-02-T2.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.3": {
       "status": "done",
@@ -783,7 +803,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T09:26:04.554Z",
       "runId": "20260708T092604Z-02-T2.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.4": {
       "status": "done",
@@ -811,7 +832,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T10:19:44.385Z",
       "runId": "20260708T101944Z-02-T2.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.5": {
       "status": "done",
@@ -848,7 +870,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T12:18:01.120Z",
       "runId": "20260708T102953Z-02-T2.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.6": {
       "status": "done",
@@ -882,7 +905,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-09T09:42:10.535Z",
       "runId": "20260709T092617Z-02-T2.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.9": {
       "status": "done",
@@ -911,7 +935,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:01:05.766Z",
       "runId": "20260710T120105Z-02-T2.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.7": {
       "status": "done",
@@ -938,7 +963,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:54:32.609Z",
       "runId": "20260710T115432Z-02-T2.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.8": {
       "status": "done",
@@ -965,7 +991,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:58:35.182Z",
       "runId": "20260710T115835Z-02-T2.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.10": {
       "status": "blocked",
@@ -983,7 +1010,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.1": {
       "status": "done",
@@ -1016,7 +1044,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T01:26:03.745Z",
       "runId": "20260707T012603Z-03-T3.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.2": {
       "status": "done",
@@ -1048,7 +1077,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T18:20:52.223Z",
       "runId": "20260707T182052Z-03-T3.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.3": {
       "status": "done",
@@ -1080,7 +1110,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T19:54:34.598Z",
       "runId": "20260707T195434Z-03-T3.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.4": {
       "status": "done",
@@ -1113,7 +1144,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:16:56.085Z",
       "runId": "20260707T211656Z-03-T3.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.5": {
       "status": "done",
@@ -1144,7 +1176,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:28:43.367Z",
       "runId": "20260707T212843Z-03-T3.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.6": {
       "status": "done",
@@ -1172,7 +1205,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:51:24.938Z",
       "runId": "20260710T125124Z-03-T3.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.7": {
       "status": "blocked",
@@ -1190,7 +1224,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:56:09.629Z",
       "runId": "20260710T125609Z-03-T3.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.8": {
       "status": "done",
@@ -1218,7 +1253,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:58:45.985Z",
       "runId": "20260710T145845Z-03-T3.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.9": {
       "status": "done",
@@ -1245,7 +1281,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:01:00.343Z",
       "runId": "20260710T150100Z-03-T3.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "03.T3.10": {
       "status": "done",
@@ -1279,7 +1316,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T14:04:18.108Z",
       "runId": "20260707T140418Z-03-T3.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.1": {
       "status": "done",
@@ -1312,7 +1350,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T18:15:51.717Z",
       "runId": "20260706T181551Z-04-T4.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.2": {
       "status": "done",
@@ -1340,7 +1379,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:41:23.262Z",
       "runId": "20260710T134123Z-04-T4.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.3": {
       "status": "done",
@@ -1368,7 +1408,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:41:04.280Z",
       "runId": "20260710T144104Z-04-T4.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.4": {
       "status": "done",
@@ -1397,7 +1438,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:47:41.878Z",
       "runId": "20260710T144741Z-04-T4.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.5": {
       "status": "done",
@@ -1425,7 +1467,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:56:24.228Z",
       "runId": "20260710T145427Z-04-T4.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.6": {
       "status": "done",
@@ -1453,7 +1496,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.7": {
       "status": "done",
@@ -1481,7 +1525,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.8": {
       "status": "done",
@@ -1509,7 +1554,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T14:57:10.531Z",
       "runId": "20260710T145710Z-04-T4.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.9": {
       "status": "done",
@@ -1537,7 +1583,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.10": {
       "status": "done",
@@ -1568,7 +1615,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T23:13:21.325Z",
       "runId": "20260706T231321Z-04-T4.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.11": {
       "status": "done",
@@ -1598,7 +1646,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T08:52:46.867Z",
       "runId": "20260710T085246Z-04-T4.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.12": {
       "status": "done",
@@ -1625,7 +1674,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T09:17:50.591Z",
       "runId": "20260710T091750Z-04-T4.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.13": {
       "status": "done",
@@ -1654,7 +1704,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.14": {
       "status": "done",
@@ -1681,7 +1732,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:48:02.989Z",
       "runId": "20260710T124802Z-04-T4.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.15": {
       "status": "done",
@@ -1710,7 +1762,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:25:06.301Z",
       "runId": "20260710T132506Z-04-T4.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.16": {
       "status": "done",
@@ -1738,7 +1791,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:32:42.777Z",
       "runId": "20260710T133242Z-04-T4.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "04.T4.17": {
       "status": "done",
@@ -1767,7 +1821,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.1": {
       "status": "done",
@@ -1820,7 +1875,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:55:18.215Z",
       "runId": "20260712T013847Z-05-T5.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.2": {
       "status": "done",
@@ -1850,7 +1906,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:22:08.261Z",
       "runId": "20260714T072208Z-05-T5.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.3": {
       "status": "done",
@@ -1879,7 +1936,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T13:25:59.914Z",
       "runId": "20260715T132559Z-05-T5.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.4": {
       "status": "done",
@@ -1908,7 +1966,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T13:35:58.829Z",
       "runId": "20260715T133558Z-05-T5.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.5": {
       "status": "done",
@@ -1939,7 +1998,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:10:37.679Z",
       "runId": "20260715T141037Z-05-T5.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.6": {
       "status": "done",
@@ -1967,7 +2027,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:18:23.589Z",
       "runId": "20260715T141823Z-05-T5.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.7": {
       "status": "done",
@@ -2000,7 +2061,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:20:48.883Z",
       "runId": "20260715T142048Z-05-T5.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.8": {
       "status": "done",
@@ -2029,7 +2091,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:24:27.568Z",
       "runId": "20260715T142427Z-05-T5.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.9": {
       "status": "done",
@@ -2058,7 +2121,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:27:22.429Z",
       "runId": "20260715T142722Z-05-T5.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.10": {
       "status": "done",
@@ -2105,7 +2169,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T02:18:23.534Z",
       "runId": "20260712T020703Z-05-T5.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.11": {
       "status": "done",
@@ -2157,7 +2222,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T09:10:20.187Z",
       "runId": "20260712T084238Z-05-T5.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.12": {
       "status": "done",
@@ -2209,7 +2275,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T09:31:14.410Z",
       "runId": "20260712T092404Z-05-T5.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.13": {
       "status": "done",
@@ -2258,7 +2325,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T10:14:24.818Z",
       "runId": "20260712T100801Z-05-T5.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.14": {
       "status": "done",
@@ -2308,7 +2376,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T10:22:56.101Z",
       "runId": "20260712T101628Z-05-T5.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.15": {
       "status": "done",
@@ -2362,7 +2431,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T11:44:58.853Z",
       "runId": "20260712T113022Z-05-T5.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.16": {
       "status": "done",
@@ -2414,7 +2484,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T12:19:06.085Z",
       "runId": "20260712T115019Z-05-T5.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.17": {
       "status": "done",
@@ -2464,7 +2535,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T15:56:50.810Z",
       "runId": "20260712T152935Z-05-T5.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.18": {
       "status": "done",
@@ -2494,7 +2566,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T18:50:46.760Z",
       "runId": "20260712T185046Z-05-T5.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.19": {
       "status": "done",
@@ -2522,7 +2595,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:18:36.278Z",
       "runId": "20260713T231836Z-05-T5.19",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.20": {
       "status": "done",
@@ -2567,7 +2641,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T19:55:31.526Z",
       "runId": "20260714T195340Z-05-T5.20",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.21": {
       "status": "done",
@@ -2614,7 +2689,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:17:17.637Z",
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.22": {
       "status": "done",
@@ -2643,7 +2719,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T11:55:23.520Z",
       "runId": "20260715T115523Z-05-T5.22",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.23": {
       "status": "done",
@@ -2672,7 +2749,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T12:07:38.205Z",
       "runId": "20260715T120738Z-05-T5.23",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.24": {
       "status": "done",
@@ -2701,7 +2779,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T12:09:04.157Z",
       "runId": "20260715T120904Z-05-T5.24",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.25": {
       "status": "done",
@@ -2730,7 +2809,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T12:10:21.349Z",
       "runId": "20260715T121021Z-05-T5.25",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.26": {
       "status": "done",
@@ -2761,7 +2841,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T12:51:40.588Z",
       "runId": "20260715T125140Z-05-T5.26",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "05.T5.27": {
       "status": "done",
@@ -2789,7 +2870,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T13:09:02.541Z",
       "runId": "20260715T130902Z-05-T5.27",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.1": {
       "status": "done",
@@ -2831,7 +2913,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T18:21:35.772Z",
       "runId": "20260714T182135Z-06-T6.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.2": {
       "status": "done",
@@ -2861,7 +2944,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:08:25.503Z",
       "runId": "20260715T192554Z-06-T6.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.3": {
       "status": "done",
@@ -2893,7 +2977,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:20:42.848Z",
       "runId": "20260716T002042Z-06-T6.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.4": {
       "status": "done",
@@ -2926,7 +3011,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:24:49.353Z",
       "runId": "20260716T002427Z-06-T6.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.5": {
       "status": "done",
@@ -2956,7 +3042,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T03:35:48.207Z",
       "runId": "20260716T033548Z-06-T6.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.6": {
       "status": "done",
@@ -2986,7 +3073,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T03:41:23.700Z",
       "runId": "20260716T034123Z-06-T6.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.7": {
       "status": "done",
@@ -3017,7 +3105,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T03:44:43.200Z",
       "runId": "20260716T034443Z-06-T6.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.8": {
       "status": "done",
@@ -3047,7 +3136,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T09:19:02.943Z",
       "runId": "20260716T091902Z-06-T6.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.9": {
       "status": "done",
@@ -3076,7 +3166,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T09:37:31.581Z",
       "runId": "20260716T093731Z-06-T6.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.10": {
       "status": "done",
@@ -3122,7 +3213,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:39:05.965Z",
       "runId": "20260714T203626Z-06-T6.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.11": {
       "status": "done",
@@ -3154,7 +3246,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:29:57.658Z",
       "runId": "20260715T142957Z-06-T6.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "06.T6.12": {
       "status": "done",
@@ -3189,7 +3282,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T14:42:23.461Z",
       "runId": "20260715T143838Z-06-T6.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.1": {
       "status": "done",
@@ -3222,7 +3316,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:18:47.047Z",
       "runId": "20260710T221846Z-07-T7.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.2": {
       "status": "done",
@@ -3251,7 +3346,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T19:26:33.315Z",
       "runId": "20260712T192633Z-07-T7.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.3": {
       "status": "done",
@@ -3281,7 +3377,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T00:13:01.979Z",
       "runId": "20260714T001301Z-07-T7.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.4": {
       "status": "done",
@@ -3335,7 +3432,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:48:28.325Z",
       "runId": "20260714T203839Z-07-T7.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.5": {
       "status": "done",
@@ -3364,7 +3462,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:24:56.484Z",
       "runId": "20260716T002456Z-07-T7.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.6": {
       "status": "done",
@@ -3393,7 +3492,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:28:03.857Z",
       "runId": "20260716T002803Z-07-T7.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.7": {
       "status": "done",
@@ -3423,7 +3523,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:33:25.002Z",
       "runId": "20260716T003325Z-07-T7.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.8": {
       "status": "done",
@@ -3454,7 +3555,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:37:36.520Z",
       "runId": "20260716T003736Z-07-T7.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "07.T7.9": {
       "status": "done",
@@ -3484,7 +3586,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T00:42:16.922Z",
       "runId": "20260716T004216Z-07-T7.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.1": {
       "status": "done",
@@ -3516,7 +3619,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T18:24:51.803Z",
       "runId": "20260706T182451Z-08-T8.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.2": {
       "status": "done",
@@ -3543,7 +3647,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:02:13.170Z",
       "runId": "20260710T150213Z-08-T8.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.3": {
       "status": "done",
@@ -3570,7 +3675,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:05:14.473Z",
       "runId": "20260710T150514Z-08-T8.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.4": {
       "status": "done",
@@ -3597,7 +3703,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:07:50.859Z",
       "runId": "20260710T150750Z-08-T8.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.5": {
       "status": "done",
@@ -3625,7 +3732,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:09:49.056Z",
       "runId": "20260710T150949Z-08-T8.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.6": {
       "status": "done",
@@ -3652,7 +3760,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:13:00.995Z",
       "runId": "20260710T151300Z-08-T8.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.7": {
       "status": "done",
@@ -3679,7 +3788,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:14:39.946Z",
       "runId": "20260710T151439Z-08-T8.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.8": {
       "status": "done",
@@ -3706,7 +3816,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:17:11.074Z",
       "runId": "20260710T151711Z-08-T8.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "08.T8.9": {
       "status": "done",
@@ -3734,7 +3845,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:19:29.737Z",
       "runId": "20260710T151929Z-08-T8.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.1": {
       "status": "done",
@@ -3766,7 +3878,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T18:40:12.039Z",
       "runId": "20260706T184012Z-09-T9.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.2": {
       "status": "done",
@@ -3796,7 +3909,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:18:03.784Z",
       "runId": "20260713T231803Z-09-T9.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.3": {
       "status": "done",
@@ -3838,7 +3952,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T15:22:46.262Z",
       "runId": "20260714T152246Z-09-T9.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.4": {
       "status": "done",
@@ -3884,7 +3999,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:41:16.493Z",
       "runId": "20260714T203917Z-09-T9.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.5": {
       "status": "done",
@@ -3927,7 +4043,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T02:54:46.152Z",
       "runId": "20260716T004506Z-09-T9.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.6": {
       "status": "done",
@@ -3957,7 +4074,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T09:56:07.566Z",
       "runId": "20260716T095607Z-09-T9.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.7": {
       "status": "done",
@@ -3988,7 +4106,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:09:36.955Z",
       "runId": "20260716T100936Z-09-T9.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.8": {
       "status": "done",
@@ -4018,7 +4137,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:12:09.317Z",
       "runId": "20260716T101209Z-09-T9.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.9": {
       "status": "done",
@@ -4048,7 +4168,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:14:58.803Z",
       "runId": "20260716T101458Z-09-T9.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.10": {
       "status": "done",
@@ -4079,7 +4200,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:11:08.540Z",
       "runId": "20260710T221108Z-09-T9.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.11": {
       "status": "done",
@@ -4108,7 +4230,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:21:29.498Z",
       "runId": "20260712T012129Z-09-T9.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.12": {
       "status": "done",
@@ -4137,7 +4260,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:27:44.204Z",
       "runId": "20260712T012744Z-09-T9.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.13": {
       "status": "done",
@@ -4167,7 +4291,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T10:40:53.981Z",
       "runId": "20260713T104053Z-09-T9.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "09.T9.14": {
       "status": "blocked",
@@ -4185,7 +4310,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:09:23.869Z",
       "runId": "20260713T160923Z-09-T9.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.1": {
       "status": "done",
@@ -4212,7 +4338,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:25:01.158Z",
       "runId": "20260710T112501Z-10-T10.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.2": {
       "status": "done",
@@ -4240,7 +4367,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:03:07.555Z",
       "runId": "20260710T120307Z-10-T10.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.3": {
       "status": "done",
@@ -4268,7 +4396,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:06:42.676Z",
       "runId": "20260710T120642Z-10-T10.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.4": {
       "status": "done",
@@ -4296,7 +4425,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:07:56.249Z",
       "runId": "20260710T120756Z-10-T10.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.5": {
       "status": "done",
@@ -4323,7 +4453,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:08:59.098Z",
       "runId": "20260710T120859Z-10-T10.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.6": {
       "status": "done",
@@ -4350,7 +4481,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:10:26.919Z",
       "runId": "20260710T121026Z-10-T10.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.7": {
       "status": "done",
@@ -4378,7 +4510,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:12:01.099Z",
       "runId": "20260710T121201Z-10-T10.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.8": {
       "status": "done",
@@ -4405,7 +4538,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:16:25.223Z",
       "runId": "20260710T121625Z-10-T10.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.9": {
       "status": "done",
@@ -4433,7 +4567,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:17:36.652Z",
       "runId": "20260710T121736Z-10-T10.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "10.T10.10": {
       "status": "done",
@@ -4462,7 +4597,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:27:12.604Z",
       "runId": "20260710T112712Z-10-T10.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.0": {
       "status": "done",
@@ -4495,7 +4631,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:19:54.046Z",
       "runId": "20260710T221953Z-11-T11.0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.1": {
       "status": "done",
@@ -4555,7 +4692,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:42:18.839Z",
       "runId": "20260714T204129Z-11-T11.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.2": {
       "status": "done",
@@ -4601,7 +4739,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T12:07:28.926Z",
       "runId": "20260716T115125Z-11-T11.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.3": {
       "status": "done",
@@ -4647,7 +4786,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T12:38:56.294Z",
       "runId": "20260716T122141Z-11-T11.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.4": {
       "status": "done",
@@ -4691,7 +4831,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T12:52:59.982Z",
       "runId": "20260716T124340Z-11-T11.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.5": {
       "status": "done",
@@ -4735,7 +4876,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:04:15.224Z",
       "runId": "20260716T125702Z-11-T11.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.6": {
       "status": "done",
@@ -4780,7 +4922,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:18:42.818Z",
       "runId": "20260716T130826Z-11-T11.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.7": {
       "status": "done",
@@ -4864,7 +5007,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T00:08:33.888Z",
       "runId": "20260716T234038Z-11-T11.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.8": {
       "status": "done",
@@ -4896,7 +5040,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:06:47.123Z",
       "runId": "20260717T100922Z-11-T11.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.9": {
       "status": "done",
@@ -4928,7 +5073,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:07:55.074Z",
       "runId": "20260717T110730Z-11-T11.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.10": {
       "status": "done",
@@ -4958,7 +5104,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:24:13.543Z",
       "runId": "20260716T102413Z-11-T11.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.11": {
       "status": "done",
@@ -4989,7 +5136,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:44:48.054Z",
       "runId": "20260716T104448Z-11-T11.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "11.T11.12": {
       "status": "done",
@@ -5019,7 +5167,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T10:52:04.424Z",
       "runId": "20260716T105204Z-11-T11.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.01": {
       "status": "done",
@@ -5050,7 +5199,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T19:35:42.000Z",
       "runId": "20260707T193542Z-12-T12.01",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.02": {
       "status": "done",
@@ -5083,7 +5233,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:36:01.462Z",
       "runId": "20260707T203601Z-12-T12.02",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.03": {
       "status": "done",
@@ -5116,7 +5267,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:44:04.184Z",
       "runId": "20260707T204404Z-12-T12.03",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.04": {
       "status": "done",
@@ -5149,7 +5301,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:47:37.723Z",
       "runId": "20260707T204737Z-12-T12.04",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.05": {
       "status": "done",
@@ -5182,7 +5335,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:48:03.406Z",
       "runId": "20260707T204803Z-12-T12.05",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.06": {
       "status": "done",
@@ -5215,7 +5369,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:48:27.378Z",
       "runId": "20260707T204827Z-12-T12.06",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.07": {
       "status": "done",
@@ -5248,7 +5403,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:48:51.201Z",
       "runId": "20260707T204851Z-12-T12.07",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.08": {
       "status": "done",
@@ -5279,7 +5435,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:49:16.124Z",
       "runId": "20260707T204916Z-12-T12.08",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.1": {
       "status": "done",
@@ -5312,7 +5469,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T20:59:02.175Z",
       "runId": "20260707T205902Z-12-T12.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.2": {
       "status": "done",
@@ -5359,7 +5517,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T16:35:43.058Z",
       "runId": "20260714T134946Z-12-T12.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.3": {
       "status": "done",
@@ -5404,7 +5563,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T10:00:20.110Z",
       "runId": "20260717T095949Z-12-T12.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.4": {
       "status": "done",
@@ -5435,7 +5595,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:43:49.766Z",
       "runId": "20260717T234308Z-12-T12.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.5": {
       "status": "done",
@@ -5466,7 +5627,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:45:46.737Z",
       "runId": "20260717T234354Z-12-T12.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.6": {
       "status": "done",
@@ -5497,7 +5659,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:48:39.799Z",
       "runId": "20260717T234551Z-12-T12.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.7": {
       "status": "done",
@@ -5528,7 +5691,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:49:02.556Z",
       "runId": "20260717T234845Z-12-T12.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.8": {
       "status": "done",
@@ -5575,7 +5739,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:41:19.810Z",
       "runId": "20260716T013809Z-12-T12.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.9": {
       "status": "done",
@@ -5606,7 +5771,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:51:24.911Z",
       "runId": "20260717T234906Z-12-T12.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.10": {
       "status": "done",
@@ -5635,7 +5801,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:35:10.200Z",
       "runId": "20260707T223510Z-12-T12.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.11": {
       "status": "done",
@@ -5663,7 +5830,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:37:10.379Z",
       "runId": "20260707T223710Z-12-T12.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.12": {
       "status": "done",
@@ -5710,7 +5878,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:49:11.700Z",
       "runId": "20260716T014605Z-12-T12.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.13": {
       "status": "blocked",
@@ -5728,7 +5897,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:39:12.079Z",
       "runId": "20260707T223912Z-12-T12.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.15": {
       "status": "done",
@@ -5757,7 +5927,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T11:31:27.128Z",
       "runId": "20260708T113127Z-12-T12.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.16": {
       "status": "done",
@@ -5789,7 +5960,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T11:40:25.954Z",
       "runId": "20260708T114025Z-12-T12.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.17": {
       "status": "done",
@@ -5861,7 +6033,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T13:22:08.291Z",
       "runId": "20260714T132208Z-12-T12.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.18": {
       "status": "done",
@@ -5891,7 +6064,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T13:35:04.799Z",
       "runId": "20260714T133504Z-12-T12.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.19": {
       "status": "done",
@@ -5921,7 +6095,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T13:46:56.273Z",
       "runId": "20260714T134656Z-12-T12.19",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.20": {
       "status": "done",
@@ -5953,7 +6128,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:05:17.952Z",
       "runId": "20260716T210159Z-12-T12.20",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.21": {
       "status": "done",
@@ -5985,7 +6161,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:09:36.258Z",
       "runId": "20260717T090608Z-12-T12.21",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.22": {
       "status": "done",
@@ -6017,7 +6194,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:11:00.042Z",
       "runId": "20260717T090943Z-12-T12.22",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.23": {
       "status": "done",
@@ -6049,7 +6227,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:16:15.731Z",
       "runId": "20260717T091446Z-12-T12.23",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.24": {
       "status": "done",
@@ -6081,7 +6260,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:35:35.549Z",
       "runId": "20260717T092218Z-12-T12.24",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.25": {
       "status": "done",
@@ -6113,7 +6293,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:38:15.801Z",
       "runId": "20260717T093546Z-12-T12.25",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.26": {
       "status": "done",
@@ -6145,7 +6326,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:27:00.352Z",
       "runId": "20260717T093938Z-12-T12.26",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.27": {
       "status": "done",
@@ -6177,7 +6359,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:51:58.066Z",
       "runId": "20260717T095115Z-12-T12.27",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.28": {
       "status": "done",
@@ -6209,7 +6392,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:56:10.924Z",
       "runId": "20260717T095204Z-12-T12.28",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.29": {
       "status": "done",
@@ -6241,7 +6425,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:59:43.914Z",
       "runId": "20260717T095617Z-12-T12.29",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.30": {
       "status": "done",
@@ -6273,7 +6458,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:00:22.024Z",
       "runId": "20260717T100026Z-12-T12.30",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.31": {
       "status": "done",
@@ -6305,7 +6491,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:26:48.245Z",
       "runId": "20260717T110831Z-12-T12.31",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.32": {
       "status": "done",
@@ -6337,7 +6524,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:36:33.947Z",
       "runId": "20260717T112706Z-12-T12.32",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.33": {
       "status": "done",
@@ -6369,7 +6557,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:38:56.538Z",
       "runId": "20260717T113640Z-12-T12.33",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.34": {
       "status": "done",
@@ -6401,7 +6590,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T11:48:26.808Z",
       "runId": "20260717T113903Z-12-T12.34",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.35": {
       "status": "done",
@@ -6433,7 +6623,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T12:31:44.199Z",
       "runId": "20260717T114834Z-12-T12.35",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.36": {
       "status": "done",
@@ -6465,7 +6656,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T12:33:20.709Z",
       "runId": "20260717T123150Z-12-T12.36",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.37": {
       "status": "done",
@@ -6496,7 +6688,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T19:01:13.237Z",
       "runId": "20260717T123320Z-12-T12.37",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "12.T12.38": {
       "status": "done",
@@ -6527,7 +6720,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:43:04.088Z",
       "runId": "20260717T190133Z-12-T12.38",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "14.T0": {
       "status": "done",
@@ -6554,7 +6748,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:21:42.759Z",
       "runId": "20260710T152142Z-14-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.1": {
       "status": "done",
@@ -6582,7 +6777,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:32:10.497Z",
       "runId": "20260710T153210Z-15-T15.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.2": {
       "status": "done",
@@ -6630,7 +6826,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T11:41:37.202Z",
       "runId": "20260712T113022Z-15-T15.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.3": {
       "status": "done",
@@ -6677,7 +6874,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T15:58:16.338Z",
       "runId": "20260712T152935Z-15-T15.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.4": {
       "status": "done",
@@ -6708,7 +6906,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:52:36.913Z",
       "runId": "20260714T204528Z-15-T15.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.5": {
       "status": "done",
@@ -6757,7 +6956,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:38:27.275Z",
       "runId": "20260716T013342Z-15-T15.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.6": {
       "status": "done",
@@ -6799,7 +6999,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:34:06.200Z",
       "runId": "20260716T152630Z-15-T15.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.7": {
       "status": "done",
@@ -6842,7 +7043,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:04:05.241Z",
       "runId": "20260716T205844Z-15-T15.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.8": {
       "status": "done",
@@ -6873,7 +7075,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:53:18.930Z",
       "runId": "20260717T235159Z-15-T15.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.9": {
       "status": "done",
@@ -6904,7 +7107,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:54:16.658Z",
       "runId": "20260717T235327Z-15-T15.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.10": {
       "status": "done",
@@ -6932,7 +7136,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:08:04.379Z",
       "runId": "20260711T180747Z-15-T15.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.11": {
       "status": "done",
@@ -6984,7 +7189,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T08:54:02.547Z",
       "runId": "20260712T084238Z-15-T15.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "15.T15.12": {
       "status": "done",
@@ -7058,7 +7264,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T10:56:44.792Z",
       "runId": "20260712T100801Z-15-T15.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.21": {
       "status": "done",
@@ -7087,7 +7294,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T23:49:55.993Z",
       "runId": "20260711T234955Z-16-T16.21",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.1": {
       "status": "done",
@@ -7114,7 +7322,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:34:47.056Z",
       "runId": "20260710T153447Z-16-T16.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.2": {
       "status": "done",
@@ -7143,7 +7352,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T19:44:09.482Z",
       "runId": "20260711T194409Z-16-T16.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.3": {
       "status": "done",
@@ -7170,7 +7380,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T00:58:32.276Z",
       "runId": "20260712T005832Z-16-T16.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.4": {
       "status": "done",
@@ -7197,7 +7408,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:00:15.537Z",
       "runId": "20260712T010015Z-16-T16.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.5": {
       "status": "done",
@@ -7224,7 +7436,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:04:10.529Z",
       "runId": "20260712T010410Z-16-T16.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.6": {
       "status": "done",
@@ -7252,7 +7465,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:05:18.150Z",
       "runId": "20260712T010518Z-16-T16.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.7": {
       "status": "done",
@@ -7281,7 +7495,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:06:30.129Z",
       "runId": "20260712T010630Z-16-T16.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.8": {
       "status": "done",
@@ -7310,7 +7525,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:08:06.533Z",
       "runId": "20260712T010806Z-16-T16.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.9": {
       "status": "done",
@@ -7338,7 +7554,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:12:09.365Z",
       "runId": "20260712T011209Z-16-T16.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.10": {
       "status": "done",
@@ -7366,7 +7583,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:38:49.802Z",
       "runId": "20260710T153849Z-16-T16.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.11": {
       "status": "done",
@@ -7393,7 +7611,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:41:05.245Z",
       "runId": "20260710T154105Z-16-T16.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.12": {
       "status": "done",
@@ -7420,7 +7639,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:43:12.932Z",
       "runId": "20260710T154312Z-16-T16.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.13": {
       "status": "done",
@@ -7447,7 +7667,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:45:03.494Z",
       "runId": "20260710T154503Z-16-T16.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.14": {
       "status": "done",
@@ -7495,7 +7716,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T19:42:58.585Z",
       "runId": "20260710T154844Z-16-T16.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.15": {
       "status": "done",
@@ -7524,7 +7746,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T11:32:45.198Z",
       "runId": "20260711T113245Z-16-T16.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.16": {
       "status": "done",
@@ -7555,7 +7778,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T16:32:38.579Z",
       "runId": "20260711T163238Z-16-T16.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.17": {
       "status": "done",
@@ -7585,7 +7809,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T17:39:01.929Z",
       "runId": "20260711T173901Z-16-T16.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.18": {
       "status": "done",
@@ -7614,7 +7839,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:21:34.698Z",
       "runId": "20260711T182134Z-16-T16.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.19": {
       "status": "done",
@@ -7643,7 +7869,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:24:10.231Z",
       "runId": "20260711T182410Z-16-T16.19",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.20": {
       "status": "done",
@@ -7672,7 +7899,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T23:32:54.920Z",
       "runId": "20260711T233254Z-16-T16.20",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "16.T16.22": {
       "status": "done",
@@ -7699,7 +7927,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T00:56:39.962Z",
       "runId": "20260712T005639Z-16-T16.22",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.1": {
       "status": "done",
@@ -7731,7 +7960,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T22:39:17.883Z",
       "runId": "20260706T223917Z-17-T17.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.2": {
       "status": "done",
@@ -7777,7 +8007,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:58:14.189Z",
       "runId": "20260716T205606Z-17-T17.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.3": {
       "status": "done",
@@ -7808,7 +8039,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:17:54.163Z",
       "runId": "20260718T001705Z-17-T17.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.4": {
       "status": "done",
@@ -7839,7 +8071,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:13:05.844Z",
       "runId": "20260718T011053Z-17-T17.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.5": {
       "status": "done",
@@ -7870,7 +8103,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:14:15.300Z",
       "runId": "20260718T011306Z-17-T17.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.6": {
       "status": "done",
@@ -7901,7 +8135,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:15:54.849Z",
       "runId": "20260718T011415Z-17-T17.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.7": {
       "status": "done",
@@ -7932,7 +8167,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:18:39.474Z",
       "runId": "20260718T011555Z-17-T17.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.8": {
       "status": "done",
@@ -7963,7 +8199,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:19:30.763Z",
       "runId": "20260718T011839Z-17-T17.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.9": {
       "status": "done",
@@ -7994,7 +8231,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:21:37.065Z",
       "runId": "20260718T011930Z-17-T17.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.10": {
       "status": "done",
@@ -8027,7 +8265,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T11:47:44.191Z",
       "runId": "20260707T114744Z-17-T17.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.11": {
       "status": "done",
@@ -8056,7 +8295,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:04:53.087Z",
       "runId": "20260707T220453Z-17-T17.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.12": {
       "status": "done",
@@ -8098,7 +8338,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:15:02.359Z",
       "runId": "20260710T121115Z-17-T17.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.13": {
       "status": "done",
@@ -8127,7 +8368,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:03:22.467Z",
       "runId": "20260710T220322Z-17-T17.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.14": {
       "status": "done",
@@ -8156,7 +8398,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T19:26:33.116Z",
       "runId": "20260712T192633Z-17-T17.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.15": {
       "status": "done",
@@ -8185,7 +8428,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T09:24:28.765Z",
       "runId": "20260713T092428Z-17-T17.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.16": {
       "status": "done",
@@ -8214,7 +8458,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T15:01:16.822Z",
       "runId": "20260713T150116Z-17-T17.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.17": {
       "status": "done",
@@ -8242,7 +8487,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:10:55.622Z",
       "runId": "20260713T161055Z-17-T17.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.18": {
       "status": "done",
@@ -8286,7 +8532,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T21:50:22.599Z",
       "runId": "20260714T214005Z-17-T17.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.19": {
       "status": "done",
@@ -8334,7 +8581,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:43:05.434Z",
       "runId": "20260716T013912Z-17-T17.19",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.20": {
       "status": "done",
@@ -8366,7 +8614,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:14:37.800Z",
       "runId": "20260717T091255Z-17-T17.20",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.21": {
       "status": "done",
@@ -8398,7 +8647,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:17:28.284Z",
       "runId": "20260717T091622Z-17-T17.21",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.22": {
       "status": "done",
@@ -8429,7 +8679,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:55:14.533Z",
       "runId": "20260717T235458Z-17-T17.22",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.23": {
       "status": "done",
@@ -8460,7 +8711,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T23:56:31.275Z",
       "runId": "20260717T235612Z-17-T17.23",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.24": {
       "status": "done",
@@ -8491,7 +8743,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:03:02.821Z",
       "runId": "20260718T000257Z-17-T17.24",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.25": {
       "status": "done",
@@ -8522,7 +8775,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:03:48.302Z",
       "runId": "20260718T000333Z-17-T17.25",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.26": {
       "status": "done",
@@ -8557,7 +8811,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:23:21.448Z",
       "runId": "20260718T000505Z-17-T17.26",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.27": {
       "status": "done",
@@ -8588,7 +8843,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:15:39.937Z",
       "runId": "20260718T001345Z-17-T17.27",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "17.T17.28": {
       "status": "done",
@@ -8619,7 +8875,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:16:52.716Z",
       "runId": "20260718T001551Z-17-T17.28",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.1": {
       "status": "done",
@@ -8647,7 +8904,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:17:49.624Z",
       "runId": "20260710T131749Z-18-T18.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.2": {
       "status": "done",
@@ -8675,7 +8933,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:22:27.441Z",
       "runId": "20260710T132227Z-18-T18.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.3": {
       "status": "done",
@@ -8703,7 +8962,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.4": {
       "status": "done",
@@ -8731,7 +8991,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:23:49.296Z",
       "runId": "20260710T132349Z-18-T18.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.5": {
       "status": "done",
@@ -8759,7 +9020,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.6": {
       "status": "done",
@@ -8787,7 +9049,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.7": {
       "status": "done",
@@ -8815,7 +9078,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.8": {
       "status": "done",
@@ -8843,7 +9107,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.9": {
       "status": "done",
@@ -8871,7 +9136,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.10": {
       "status": "done",
@@ -8899,7 +9165,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:19:36.753Z",
       "runId": "20260710T131936Z-18-T18.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "18.T18.11": {
       "status": "done",
@@ -8927,7 +9194,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:20:50.951Z",
       "runId": "20260710T132050Z-18-T18.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.1": {
       "status": "done",
@@ -8961,7 +9229,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T23:34:38.801Z",
       "runId": "20260706T233438Z-19-T19.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.2": {
       "status": "done",
@@ -9005,7 +9274,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:06:33.290Z",
       "runId": "20260716T210611Z-19-T19.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.3": {
       "status": "done",
@@ -9037,7 +9307,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-17T09:11:55.761Z",
       "runId": "20260717T091122Z-19-T19.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.4": {
       "status": "done",
@@ -9068,7 +9339,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:23:04.311Z",
       "runId": "20260718T012143Z-19-T19.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.5": {
       "status": "done",
@@ -9099,7 +9371,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:23:58.573Z",
       "runId": "20260718T012304Z-19-T19.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.6": {
       "status": "done",
@@ -9130,7 +9403,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:27:35.280Z",
       "runId": "20260718T012358Z-19-T19.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.7": {
       "status": "done",
@@ -9161,7 +9435,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:28:37.895Z",
       "runId": "20260718T012735Z-19-T19.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.8": {
       "status": "done",
@@ -9192,7 +9467,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:28:59.893Z",
       "runId": "20260718T012838Z-19-T19.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.9": {
       "status": "done",
@@ -9223,7 +9499,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:31:56.027Z",
       "runId": "20260718T012900Z-19-T19.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.10": {
       "status": "done",
@@ -9253,7 +9530,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T20:53:01.698Z",
       "runId": "20260710T205301Z-19-T19.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.11": {
       "status": "done",
@@ -9295,7 +9573,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T21:28:02.262Z",
       "runId": "20260714T210800Z-19-T19.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "19.T19.12": {
       "status": "done",
@@ -9337,7 +9616,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:30:26.174Z",
       "runId": "20260716T132820Z-19-T19.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "20.T0": {
       "status": "done",
@@ -9364,7 +9644,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:15:03.175Z",
       "runId": "20260710T221503Z-20-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.1": {
       "status": "done",
@@ -9393,7 +9674,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:20:53.213Z",
       "runId": "20260711T182053Z-21-T21.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.2": {
       "status": "done",
@@ -9424,7 +9706,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:44:15.764Z",
       "runId": "20260718T014225Z-21-T21.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.3": {
       "status": "done",
@@ -9455,7 +9738,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T08:50:23.508Z",
       "runId": "20260718T084946Z-21-T21.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.4": {
       "status": "done",
@@ -9486,7 +9770,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T08:50:51.834Z",
       "runId": "20260718T085031Z-21-T21.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.5": {
       "status": "done",
@@ -9517,7 +9802,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T08:51:30.142Z",
       "runId": "20260718T085059Z-21-T21.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.6": {
       "status": "done",
@@ -9548,7 +9834,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T08:51:52.275Z",
       "runId": "20260718T085137Z-21-T21.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.7": {
       "status": "done",
@@ -9579,7 +9866,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T08:55:02.278Z",
       "runId": "20260718T085200Z-21-T21.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.8": {
       "status": "done",
@@ -9610,20 +9898,27 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T09:01:05.153Z",
       "runId": "20260718T085506Z-21-T21.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-18T09:01:08.998Z",
+      "status": "blocked",
+      "updatedAt": "2026-07-18T10:24:36.807Z",
       "claimedAt": "2026-07-18T09:01:08.998Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-18T10:24:36.807Z",
+          "text": "Blocked after three independent carrier traces: no active producer/receiver routes the required session-close ContemplationObject or M0VerifierReport to the M0 footer or M5 Review fold. The live nara.contemplate_session_close RPC requires session/trajectory/verifier evidence the footer does not own; ReviewBlocksPane currently receives a review ID and fixture blocks only. Fabricating a footer event or session completion report would violate the transport and privacy contracts."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 89 dirty files.",
       "owner": "codex-mdev-continuous",
-      "leaseExpiresAt": "2026-07-18T11:01:08.998Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T09:01:08.998Z",
       "runId": "20260718T090108Z-21-T21.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.10": {
       "status": "done",
@@ -9666,7 +9961,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T20:58:36.594Z",
       "runId": "20260714T204947Z-21-T21.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.11": {
       "status": "blocked",
@@ -9684,7 +9980,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:33:35.838Z",
       "runId": "20260716T153335Z-21-T21.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.12": {
       "status": "done",
@@ -9737,7 +10034,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T18:32:29.349Z",
       "runId": "20260716T180242Z-21-T21.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.13": {
       "status": "blocked",
@@ -9755,7 +10053,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:32:57.663Z",
       "runId": "20260716T203257Z-21-T21.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.14": {
       "status": "blocked",
@@ -9773,7 +10072,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:43:40.444Z",
       "runId": "20260716T204340Z-21-T21.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.15": {
       "status": "blocked",
@@ -9791,7 +10091,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:51:26.420Z",
       "runId": "20260716T205126Z-21-T21.15",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.16": {
       "status": "done",
@@ -9833,7 +10134,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:55:50.351Z",
       "runId": "20260716T205237Z-21-T21.16",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.17": {
       "status": "done",
@@ -9864,7 +10166,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:37:39.273Z",
       "runId": "20260718T013204Z-21-T21.17",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.18": {
       "status": "done",
@@ -9895,7 +10198,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:41:52.139Z",
       "runId": "20260718T013743Z-21-T21.18",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.19": {
       "status": "done",
@@ -9926,7 +10230,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:42:21.443Z",
       "runId": "20260718T014155Z-21-T21.19",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "21.T21.20": {
       "status": "done",
@@ -9957,7 +10262,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T06:44:46.828Z",
       "runId": "20260718T014419Z-21-T21.20",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.1": {
       "status": "done",
@@ -9987,7 +10293,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T17:22:59.459Z",
       "runId": "20260711T172259Z-22-T22.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.2": {
       "status": "done",
@@ -10018,59 +10325,112 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T06:47:02.138Z",
       "runId": "20260718T064452Z-22-T22.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T10:37:04.541Z",
+      "claimedAt": "2026-07-18T10:14:01.061Z",
+      "completedAt": "2026-07-18T10:37:04.541Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:17:45.254Z",
+          "text": "DR-FACE-7 fate B carrier face: M1 Cl(4,2) inspector projects the shared profile tick/vortex. Added canonical QL numerator/denominator pairs ([0]/[5], 1/[5], [5]/[0], 1/[0]) with real rendered assertions; live fields remain strict bus reads. Verified pnpm vitest run src/panes/m1DeepFaces.test.tsx src/panes/m1SurfaceDispatch.test.tsx (27 passed), pnpm typecheck, pnpm build, and pnpm test (846 passed, 3 skipped; import boundary lint green). No verifier run or handoff: human/Claude review is required."
+        },
+        {
+          "at": "2026-07-18T10:37:04.541Z",
+          "text": "22.3 Cl(4,2) inspector (DR-FACE-7 carrier face): added the QL numerator/denominator pair column ([0]/1,[0]/[5],1/[5],[5]/[0],1/[0],[5]/1) per ARCHITECTURE §5.4 beneath the played-K2 halo; signature (-1 P0/P5 generators, +1 P1-P4) preserved, no local CL42_BASIS/QL_TRIG_TABLE fork (live values ride the bus). Independently verified as claude-verify: honesty-lint PASS, app-ui-flow 43/43 GREEN in isolation. verify-all app-ui-flow flaked under parallel gate load (reported 40 + orphan webServer squatting port 14621; a harness-level flake, not a 22.3 defect) — deliverable proven in isolation.",
+          "receipt": {
+            "command": "pnpm test:e2e (Playwright UF, app-ui-flow) + pnpm test (app-test)",
+            "exitCode": 0,
+            "testsPassed": 43,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1Cl42SignatureInspector.tsx",
+              "Body/M/pratibimba-app/src/panes/m1DeepFaces.test.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 57 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:17:45.254Z",
+      "runId": "20260718T101401Z-22-T22.3",
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T10:37:25.212Z",
+      "claimedAt": "2026-07-18T10:17:49.182Z",
+      "completedAt": "2026-07-18T10:37:25.212Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:23:30.416Z",
+          "text": "DR-FACE-7 fate B carrier face: replaced the boolean-only Klein strip read with strict parsing of the real profile  three-variant union (M1 lens transition, M2 valence invert, M3 codon cross), preserving bounded generation history and adding variant subset filtering. Verified pnpm vitest run src/panes/m1DeepFaces.test.tsx src/panes/m1SurfaceDispatch.test.tsx (28 passed), pnpm typecheck, pnpm build, pnpm test (847 passed, 3 skipped; import boundary lint green), and pnpm smoke with real spawned gateway (websocket/handshake/profile tick/monotonic generation all passed). No verifier run or handoff: human/Claude review is required."
+        },
+        {
+          "at": "2026-07-18T10:23:39.863Z",
+          "text": "DR-FACE-7 fate B carrier face: replaced the boolean-only Klein strip read with strict parsing of the real profile kleinFlip three-variant union (M1 lens transition, M2 valence invert, M3 codon cross), preserving bounded generation history and adding variant subset filtering. Verified focused M1 deep-face and surface-dispatch suites (28 passed), typecheck, production build, full app suite (847 passed, 3 skipped; import boundary lint green), and real spawned gateway smoke (websocket, handshake, profile tick, monotonic generation all passed). No verifier run or handoff: human/Claude review is required."
+        },
+        {
+          "at": "2026-07-18T10:37:25.212Z",
+          "text": "22.4 Klein-flip event-strip (DR-FACE-7 carrier face): replaced the boolean kleinFlipAtThisTick read with strict parsing of the tagged three-variant M1KleinFlipEvent union (m1TritoneCrossing+lensPair / m2CymaticValenceInvert / m3CodonRotationCross), camel+snake wire shapes, Object.freeze, null-on-malformed; added variant-subset filter, per-variant tone (gold/indigo/emerald), Hopf-flag inversion, bounded LOG_CAP=24 per-generation emit. Independently verified as claude-verify: honesty-lint PASS, app-ui-flow 43/43 GREEN in isolation. verify-all app-ui-flow flaked under parallel gate load (orphan webServer port 14621) — deliverable proven in isolation, not a 22.4 defect.",
+          "receipt": {
+            "command": "pnpm test:e2e (Playwright UF, app-ui-flow) + pnpm test (app-test)",
+            "exitCode": 0,
+            "testsPassed": 43,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1KleinFlipEventStrip.tsx",
+              "Body/M/pratibimba-app/src/panes/m1DeepFaceData.ts",
+              "Body/M/pratibimba-app/src/panes/m1DeepFaces.test.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 59 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:23:39.863Z",
+      "runId": "20260718T101749Z-22-T22.4",
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-18T10:24:37.065Z",
+      "claimedAt": "2026-07-18T10:23:45.542Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T10:24:37.065Z",
+          "text": "Blocked on the same missing session-close transport confirmed across three traces. Frozen M1Spine789Reader requires an M0VerifierReport at session close, but the active carrier has only current-tick anuttaraWitness data (not a close report) and the M5 Review fold receives a review ID plus fixture blocks, with no ContemplationObject receiver. Do not derive session completion from current profile fields."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 61 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:23:45.542Z",
+      "runId": "20260718T102345Z-22-T22.5",
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-18T10:24:43.153Z",
+      "claimedAt": "2026-07-18T10:24:43.153Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "notes": "claimed with --allow-dirty over 61 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:24:43.153Z",
+      "heartbeatAt": "2026-07-18T10:24:43.153Z",
+      "runId": "20260718T102443Z-22-T22.6",
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.7": {
       "status": "pending",
@@ -10083,7 +10443,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.8": {
       "status": "pending",
@@ -10096,7 +10457,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.9": {
       "status": "pending",
@@ -10109,7 +10471,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.10": {
       "status": "done",
@@ -10158,7 +10521,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:53:41.490Z",
       "runId": "20260712T013908Z-22-T22.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.11": {
       "status": "done",
@@ -10189,7 +10553,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:05:43.943Z",
       "runId": "20260714T220028Z-22-T22.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.12": {
       "status": "blocked",
@@ -10207,7 +10572,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:50:37.278Z",
       "runId": "20260716T205037Z-22-T22.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "22.T22.13": {
       "status": "done",
@@ -10250,7 +10616,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:05:19.182Z",
       "runId": "20260716T210422Z-22-T22.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.1": {
       "status": "done",
@@ -10279,7 +10646,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:40:03.946Z",
       "runId": "20260711T184003Z-23-T23.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.2": {
       "status": "pending",
@@ -10292,7 +10660,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.3": {
       "status": "pending",
@@ -10305,7 +10674,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.4": {
       "status": "pending",
@@ -10318,7 +10688,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.5": {
       "status": "pending",
@@ -10331,7 +10702,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.6": {
       "status": "pending",
@@ -10344,7 +10716,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.7": {
       "status": "pending",
@@ -10357,7 +10730,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.8": {
       "status": "pending",
@@ -10370,7 +10744,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.9": {
       "status": "pending",
@@ -10383,7 +10758,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.10": {
       "status": "done",
@@ -10429,7 +10805,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T19:58:20.560Z",
       "runId": "20260714T103222Z-23-T23.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.11": {
       "status": "blocked",
@@ -10447,7 +10824,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:51:35.384Z",
       "runId": "20260716T155135Z-23-T23.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.12": {
       "status": "done",
@@ -10491,7 +10869,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:42:39.519Z",
       "runId": "20260716T203802Z-23-T23.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.13": {
       "status": "done",
@@ -10522,85 +10901,195 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T06:48:48.305Z",
       "runId": "20260718T064707Z-23-T23.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T10:39:52.992Z",
+      "claimedAt": "2026-07-18T10:25:14.286Z",
+      "completedAt": "2026-07-18T10:39:52.992Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:33:28.901Z",
+          "text": "Active M2 correspondence cards now name s2.parashaktiCorrespondences at the datum and consume shared nine-state bridge readiness; focused pane tests passed, typecheck/build passed, serial carrier suite passed 848 tests, and the real-gateway M2 Playwright case passed before an unrelated later e2e Vite server exit."
+        },
+        {
+          "at": "2026-07-18T10:39:52.992Z",
+          "text": "23.14 per-card inline provenance (retarget of ProvenanceBadge.tsx onto carrier shared ui): each of the five M2 correspondence faces (decan/sonic/planetary/cymatic/axes) now mounts a CorrespondenceCard carrying an inline ProvenanceBadge + BridgeReadinessBadge bound to s2.parashaktiCorrespondences at the datum (15.6: provenance where the datum lives, no separate errors panel); fetch result never self-promotes to ready. Independently verified as claude-verify: M2 unit 8/8 PASS, honesty-lint PASS, UF m2-correspondence.spec.ts GREEN in isolated app-ui-flow (43/43). verify-all app-ui-flow flake (Vite webServer exit under parallel load, corroborated by implementer evidence) is not a 23.14 defect.",
+          "receipt": {
+            "command": "npx vitest run M2CorrespondencePane.test.tsx m2SurfaceState.test.ts + pnpm test:e2e m2-correspondence (UF)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx",
+              "Body/M/pratibimba-app/src/ui/ProvenanceBadge.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 61 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:33:28.901Z",
+      "runId": "20260718T102514Z-23-T23.14",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T10:41:14.493Z",
+      "claimedAt": "2026-07-18T10:33:36.726Z",
+      "completedAt": "2026-07-18T10:41:14.493Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:39:37.070Z",
+          "text": "Added the App-owned serializable M2 interaction record, persisted correspondence face plus controlled six-axis/sonic-overlay choices, and retained kernel coordinates in the shared tick store. Focused tests, typecheck, full carrier suite (851 passed, 3 skipped), production build, and exact real-gateway M2 Playwright case all passed."
+        },
+        {
+          "at": "2026-07-18T10:41:14.493Z",
+          "text": "23.15 M2-side Bimba/Pratibimba state persistence (retarget of M2BimbaPratibimbaSelector -> App-owned React context + value object). m2SurfaceState.ts holds the 10-field M2 interaction record (activeFace, layerA/B/C, lastRoutingTrace, axis filter, sonic overlay, planetaryViewMode, epogdoonProofMode) with strict deserialize (validates against known sets, field-by-field default fallback) + serialize round-trip; App owns m2Surface via useState+ref, restores on boot, persists on change, provides via M2SurfaceProvider — kernel coordinates stay in the shared tick store, never browser-reconstructed. Identical to the proven M0 persistence pattern. Independently verified as claude-verify: unit round-trip+malformed-fallback 8/8 PASS, honesty-lint PASS, cross-layout-state-identity UF spec GREEN in isolated app-ui-flow (43/43).",
+          "receipt": {
+            "command": "npx vitest run m2SurfaceState.test.ts + pnpm test:e2e cross-layout-state-identity (UF)",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m2SurfaceState.ts",
+              "Body/M/pratibimba-app/src/panes/M2SurfaceContext.tsx",
+              "Body/M/pratibimba-app/src/App.tsx"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 64 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:39:37.070Z",
+      "runId": "20260718T103336Z-23-T23.15",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T20:20:44.862Z",
+      "claimedAt": "2026-07-18T10:39:43.089Z",
+      "completedAt": "2026-07-18T20:20:44.862Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:46:17.371Z",
+          "text": "Implemented the M2-local cymatic transport: Pause holds the exact received profile frame while the live tick store continues; historical scrubbing is disabled with pending-tick-snapshot-cache until the bridge provides a retained profile window, and the typed cache seam renders supplied Klein-flip markers only. Focused transport/M2 tests, typecheck, full carrier suite (854 passed, 3 skipped), production build, and exact real-gateway M2 Playwright case passed."
+        },
+        {
+          "at": "2026-07-18T20:20:44.862Z",
+          "text": "Independent UF gate green via opus-mdev-verify batched run (app-ui-flow 45, app-smoke 1, app-test 854, live-wire, gateway 90 PASS).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only app-ui-flow,app-smoke,live-wire,gateway,app-test",
+            "exitCode": 0,
+            "testsPassed": 45,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m2-correspondence.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 70 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:46:17.371Z",
+      "runId": "20260718T103943Z-23-T23.16",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-18T20:20:45.080Z",
+      "claimedAt": "2026-07-18T10:46:23.446Z",
+      "completedAt": "2026-07-18T20:20:45.080Z",
+      "evidence": [
+        {
+          "at": "2026-07-18T10:48:59.998Z",
+          "text": "Bound M2 to the carrier visual-regression harness: real Chromium pauses the M2 transport, observes a later real gateway status generation, and proves the held cymatic canvas remains pixel-static. The canonical CPU cymatic raster remains byte-hash pinned. Focused raster/transport/M2 tests, typecheck, full carrier suite (854 passed, 3 skipped), production build, and focused real-gateway Playwright visual proof passed."
+        },
+        {
+          "at": "2026-07-18T20:20:45.080Z",
+          "text": "Independent UF gate green via opus-mdev-verify batched run (app-ui-flow 45, app-smoke 1, app-test 854, live-wire, gateway 90 PASS).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only app-ui-flow,app-smoke,live-wire,gateway,app-test",
+            "exitCode": 0,
+            "testsPassed": 45,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m2-correspondence.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 73 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T10:48:59.998Z",
+      "runId": "20260718T104623Z-23-T23.17",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T11:02:39.643Z",
+      "claimedAt": "2026-07-18T10:49:05.782Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "evidence": [
+        {
+          "at": "2026-07-18T11:02:39.643Z",
+          "text": "Implemented the C-backed 72-to-64-to-56 carrier reader and repaired its declared gateway route; spawned-gateway and real Chromium proofs pass. C authority reports 64 round-trip gaps and 8 clean anchors, contradicting the legacy plan's nine-fold-point wording; external review must resolve that canon discrepancy before done closure."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 74 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:49:05.782Z",
+      "heartbeatAt": "2026-07-18T11:02:39.643Z",
+      "runId": "20260718T104905Z-23-T23.18",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-18T19:15:06.003Z",
+      "claimedAt": "2026-07-18T11:02:53.354Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-18T11:04:05.308Z",
+          "text": "Fresh spawned-gateway TDD probe received . The kernel projection and carrier capability name exist, but no S3 registry/dispatch-plan/WebSocket adapter provides the required live PortalClockState. No renderer-local substitute was added."
+        },
+        {
+          "at": "2026-07-18T19:15:06.003Z",
+          "text": "Fresh complete Kairos state now crosses the registered S3 route into the typed M2 planetary-elemental kernel projection; the spawned WebSocket gateway returns normalized nine-orbiter weights and aspect handles.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_full_parity_contract --test gate_m2_planetary_elemental_weights --test gate_m2_epogdoon_projection",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs",
+              "Body/S/S0/epi-cli/tests/gate_m2_planetary_elemental_weights.rs",
+              "Body/S/S3/gateway-contract/src/dispatch_plan.rs",
+              "Body/S/S3/gateway/src/dispatch.rs"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 77 dirty files.",
+      "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "heartbeatAt": "2026-07-18T19:15:06.003Z",
+      "runId": "20260718T110253Z-23-T23.19",
+      "worktree": null,
+      "blocker": null
     },
     "23.T23.20": {
       "status": "pending",
@@ -10613,7 +11102,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.1": {
       "status": "done",
@@ -10642,7 +11132,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:01:59.941Z",
       "runId": "20260710T220159Z-24-T24.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.2": {
       "status": "pending",
@@ -10655,7 +11146,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.3": {
       "status": "pending",
@@ -10668,7 +11160,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.4": {
       "status": "pending",
@@ -10681,7 +11174,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.5": {
       "status": "pending",
@@ -10694,7 +11188,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.6": {
       "status": "pending",
@@ -10707,7 +11202,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.7": {
       "status": "pending",
@@ -10720,7 +11216,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.8": {
       "status": "pending",
@@ -10733,7 +11230,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.9": {
       "status": "pending",
@@ -10746,7 +11244,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.10": {
       "status": "done",
@@ -10776,7 +11275,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T12:50:16.741Z",
       "runId": "20260714T125016Z-24-T24.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.11": {
       "status": "done",
@@ -10818,7 +11318,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T21:06:59.119Z",
       "runId": "20260714T205917Z-24-T24.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.12": {
       "status": "done",
@@ -10849,7 +11350,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:50:23.386Z",
       "runId": "20260716T155001Z-24-T24.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.13": {
       "status": "done",
@@ -10881,7 +11383,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:14:05.253Z",
       "runId": "20260716T210718Z-24-T24.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.14": {
       "status": "blocked",
@@ -10903,7 +11406,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T06:49:24.096Z",
       "runId": "20260718T064853Z-24-T24.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.15": {
       "status": "pending",
@@ -10916,7 +11420,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.16": {
       "status": "pending",
@@ -10929,7 +11434,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.17": {
       "status": "pending",
@@ -10942,7 +11448,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.18": {
       "status": "pending",
@@ -10955,7 +11462,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.19": {
       "status": "pending",
@@ -10968,7 +11476,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T60": {
       "status": "pending",
@@ -10981,7 +11490,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "24.T24.20": {
       "status": "pending",
@@ -10994,7 +11504,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.1": {
       "status": "done",
@@ -11023,7 +11534,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:29:47.150Z",
       "runId": "20260711T182947Z-25-T25.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.2": {
       "status": "pending",
@@ -11036,7 +11548,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.3": {
       "status": "pending",
@@ -11049,7 +11562,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.4": {
       "status": "pending",
@@ -11062,7 +11576,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.5": {
       "status": "pending",
@@ -11075,7 +11590,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.6": {
       "status": "pending",
@@ -11088,7 +11604,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.7": {
       "status": "pending",
@@ -11101,7 +11618,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.8": {
       "status": "pending",
@@ -11114,7 +11632,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.9": {
       "status": "pending",
@@ -11127,7 +11646,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.10": {
       "status": "done",
@@ -11159,7 +11679,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T23:36:32.292Z",
       "runId": "20260714T231042Z-25-T25.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.11": {
       "status": "blocked",
@@ -11177,7 +11698,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:51:35.823Z",
       "runId": "20260716T155135Z-25-T25.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.12": {
       "status": "done",
@@ -11209,7 +11731,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:11:57.752Z",
       "runId": "20260716T211148Z-25-T25.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.13": {
       "status": "pending",
@@ -11222,7 +11745,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.14": {
       "status": "pending",
@@ -11235,7 +11759,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.15": {
       "status": "pending",
@@ -11248,7 +11773,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.16": {
       "status": "pending",
@@ -11261,7 +11787,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.17": {
       "status": "pending",
@@ -11274,7 +11801,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.18": {
       "status": "pending",
@@ -11287,7 +11815,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.19": {
       "status": "pending",
@@ -11300,7 +11829,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.20": {
       "status": "pending",
@@ -11313,7 +11843,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.21": {
       "status": "pending",
@@ -11326,7 +11857,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.22": {
       "status": "pending",
@@ -11339,7 +11871,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.23": {
       "status": "pending",
@@ -11352,7 +11885,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.1": {
       "status": "done",
@@ -11382,7 +11916,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T23:30:22.072Z",
       "runId": "20260710T233022Z-26-T26.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.2": {
       "status": "pending",
@@ -11395,7 +11930,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.3": {
       "status": "pending",
@@ -11408,7 +11944,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.4": {
       "status": "pending",
@@ -11421,7 +11958,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.5": {
       "status": "pending",
@@ -11434,7 +11972,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.6": {
       "status": "pending",
@@ -11447,7 +11986,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.7": {
       "status": "pending",
@@ -11460,7 +12000,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.8": {
       "status": "pending",
@@ -11473,7 +12014,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.9": {
       "status": "pending",
@@ -11486,7 +12028,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.10": {
       "status": "done",
@@ -11515,7 +12058,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T10:36:40.153Z",
       "runId": "20260714T103640Z-26-T26.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.11": {
       "status": "done",
@@ -11546,7 +12090,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:02:01.501Z",
       "runId": "20260714T215704Z-26-T26.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.12": {
       "status": "blocked",
@@ -11564,7 +12109,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:51:36.261Z",
       "runId": "20260716T155136Z-26-T26.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.13": {
       "status": "done",
@@ -11596,7 +12142,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:12:16.539Z",
       "runId": "20260716T211209Z-26-T26.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.14": {
       "status": "pending",
@@ -11609,7 +12156,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "26.T26.15": {
       "status": "pending",
@@ -11622,7 +12170,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.0": {
       "status": "done",
@@ -11652,7 +12201,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:52:58.968Z",
       "runId": "20260710T225258Z-27-T27.0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.1": {
       "status": "done",
@@ -11682,7 +12232,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:28:53.807Z",
       "runId": "20260714T072853Z-27-T27.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.2": {
       "status": "pending",
@@ -11695,7 +12246,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.3": {
       "status": "pending",
@@ -11708,7 +12260,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.4": {
       "status": "pending",
@@ -11721,7 +12274,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.5": {
       "status": "pending",
@@ -11734,7 +12288,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.6": {
       "status": "pending",
@@ -11747,7 +12302,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.7": {
       "status": "pending",
@@ -11760,7 +12316,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.8": {
       "status": "pending",
@@ -11773,7 +12330,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.9": {
       "status": "pending",
@@ -11786,7 +12344,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.10": {
       "status": "done",
@@ -11817,7 +12376,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:17:00.316Z",
       "runId": "20260714T220623Z-27-T27.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.11": {
       "status": "done",
@@ -11861,7 +12421,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:43:21.752Z",
       "runId": "20260716T153451Z-27-T27.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.12": {
       "status": "done",
@@ -11904,7 +12465,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:07:16.238Z",
       "runId": "20260716T210647Z-27-T27.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "27.T27.13": {
       "status": "pending",
@@ -11917,7 +12479,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.1": {
       "status": "done",
@@ -11964,7 +12527,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T01:52:38.861Z",
       "runId": "20260712T013908Z-28-T28.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.2": {
       "status": "pending",
@@ -11977,7 +12541,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.3": {
       "status": "pending",
@@ -11990,7 +12555,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.4": {
       "status": "pending",
@@ -12003,7 +12569,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.5": {
       "status": "pending",
@@ -12016,7 +12583,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.6": {
       "status": "pending",
@@ -12029,7 +12597,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.7": {
       "status": "pending",
@@ -12042,7 +12611,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.8": {
       "status": "pending",
@@ -12055,7 +12625,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.9": {
       "status": "pending",
@@ -12068,7 +12639,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.10": {
       "status": "done",
@@ -12100,7 +12672,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:29:55.459Z",
       "runId": "20260714T221847Z-28-T28.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.11": {
       "status": "done",
@@ -12146,7 +12719,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T14:16:42.579Z",
       "runId": "20260716T140551Z-28-T28.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.12": {
       "status": "blocked",
@@ -12164,7 +12738,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:50:57.432Z",
       "runId": "20260716T155057Z-28-T28.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.13": {
       "status": "done",
@@ -12196,7 +12771,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:12:40.805Z",
       "runId": "20260716T211231Z-28-T28.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.14": {
       "status": "pending",
@@ -12209,7 +12785,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.15": {
       "status": "pending",
@@ -12222,7 +12799,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.16": {
       "status": "pending",
@@ -12235,7 +12813,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.17": {
       "status": "pending",
@@ -12248,7 +12827,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.18": {
       "status": "pending",
@@ -12261,7 +12841,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.19": {
       "status": "pending",
@@ -12274,7 +12855,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "28.T28.20": {
       "status": "pending",
@@ -12287,7 +12869,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.1": {
       "status": "done",
@@ -12316,7 +12899,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T12:35:43.452Z",
       "runId": "20260714T123543Z-29-T29.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.2": {
       "status": "pending",
@@ -12329,7 +12913,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.3": {
       "status": "pending",
@@ -12342,7 +12927,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.4": {
       "status": "pending",
@@ -12355,7 +12941,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.5": {
       "status": "pending",
@@ -12368,7 +12955,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.6": {
       "status": "pending",
@@ -12381,7 +12969,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.7": {
       "status": "pending",
@@ -12394,7 +12983,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.8": {
       "status": "pending",
@@ -12407,7 +12997,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.9": {
       "status": "pending",
@@ -12420,7 +13011,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.10": {
       "status": "done",
@@ -12458,7 +13050,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T10:26:16.647Z",
       "runId": "20260714T221931Z-29-T29.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.11": {
       "status": "blocked",
@@ -12476,7 +13069,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:51:36.707Z",
       "runId": "20260716T155136Z-29-T29.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.12": {
       "status": "blocked",
@@ -12494,7 +13088,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:50:17.396Z",
       "runId": "20260716T205017Z-29-T29.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.13": {
       "status": "done",
@@ -12537,7 +13132,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:11:07.391Z",
       "runId": "20260716T211047Z-29-T29.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.14": {
       "status": "pending",
@@ -12550,7 +13146,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.15": {
       "status": "pending",
@@ -12563,7 +13160,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "29.T29.16": {
       "status": "pending",
@@ -12576,7 +13174,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.1": {
       "status": "done",
@@ -12605,7 +13204,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T19:01:34.630Z",
       "runId": "20260711T190134Z-30-T30.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.2": {
       "status": "pending",
@@ -12618,7 +13218,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.3": {
       "status": "pending",
@@ -12631,7 +13232,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.4": {
       "status": "pending",
@@ -12644,7 +13246,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.5": {
       "status": "pending",
@@ -12657,7 +13260,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.6": {
       "status": "pending",
@@ -12670,7 +13274,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.7": {
       "status": "pending",
@@ -12683,7 +13288,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.8": {
       "status": "pending",
@@ -12696,7 +13302,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.9": {
       "status": "pending",
@@ -12709,7 +13316,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.10": {
       "status": "done",
@@ -12740,7 +13348,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:28:28.551Z",
       "runId": "20260714T222539Z-30-T30.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.11": {
       "status": "done",
@@ -12783,7 +13392,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:34:17.637Z",
       "runId": "20260716T152637Z-30-T30.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.12": {
       "status": "done",
@@ -12827,7 +13437,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:08:27.036Z",
       "runId": "20260716T210802Z-30-T30.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.13": {
       "status": "pending",
@@ -12840,7 +13451,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "30.T30.14": {
       "status": "pending",
@@ -12853,7 +13465,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.1": {
       "status": "done",
@@ -12882,7 +13495,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T18:14:05.156Z",
       "runId": "20260711T181405Z-31-T31.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.2": {
       "status": "pending",
@@ -12895,7 +13509,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.3": {
       "status": "pending",
@@ -12908,7 +13523,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.4": {
       "status": "pending",
@@ -12921,7 +13537,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.5": {
       "status": "pending",
@@ -12934,7 +13551,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.6": {
       "status": "pending",
@@ -12947,7 +13565,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.7": {
       "status": "pending",
@@ -12960,7 +13579,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.8": {
       "status": "pending",
@@ -12973,7 +13593,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.9": {
       "status": "pending",
@@ -12986,7 +13607,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.10": {
       "status": "done",
@@ -13017,7 +13639,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:46:13.444Z",
       "runId": "20260714T223004Z-31-T31.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.11": {
       "status": "done",
@@ -13060,7 +13683,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:35:48.972Z",
       "runId": "20260716T133253Z-31-T31.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.12": {
       "status": "done",
@@ -13104,7 +13728,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:09:23.247Z",
       "runId": "20260716T210901Z-31-T31.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "31.T31.13": {
       "status": "pending",
@@ -13117,7 +13742,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.1": {
       "status": "done",
@@ -13144,7 +13770,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:33:47.805Z",
       "runId": "20260710T223347Z-32-T32.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.2": {
       "status": "pending",
@@ -13157,7 +13784,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.3": {
       "status": "pending",
@@ -13170,7 +13798,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.4": {
       "status": "pending",
@@ -13183,7 +13812,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.5": {
       "status": "pending",
@@ -13196,7 +13826,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.6": {
       "status": "pending",
@@ -13209,7 +13840,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.7": {
       "status": "pending",
@@ -13222,7 +13854,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.8": {
       "status": "pending",
@@ -13235,7 +13868,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.9": {
       "status": "pending",
@@ -13248,7 +13882,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.10": {
       "status": "done",
@@ -13279,7 +13914,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T23:05:56.478Z",
       "runId": "20260714T224623Z-32-T32.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.11": {
       "status": "blocked",
@@ -13297,7 +13933,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:43:38.788Z",
       "runId": "20260716T154338Z-32-T32.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.12": {
       "status": "done",
@@ -13329,7 +13966,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:11:35.359Z",
       "runId": "20260716T211128Z-32-T32.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.13": {
       "status": "pending",
@@ -13342,7 +13980,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "32.T32.14": {
       "status": "pending",
@@ -13355,7 +13994,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "33.T0": {
       "status": "done",
@@ -13382,7 +14022,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:19:48.082Z",
       "runId": "20260710T221948Z-33-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "34.T34.1": {
       "status": "done",
@@ -13452,7 +14093,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T11:50:38.523Z",
       "runId": "20260710T111308Z-34-T34.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "34.T34.2": {
       "status": "done",
@@ -13480,7 +14122,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:04:53.189Z",
       "runId": "20260710T130453Z-34-T34.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "35.T0": {
       "status": "done",
@@ -13507,7 +14150,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:22:49.514Z",
       "runId": "20260710T222249Z-35-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.1": {
       "status": "done",
@@ -13540,7 +14184,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T01:31:40.390Z",
       "runId": "20260707T013140Z-36-T36.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.2": {
       "status": "done",
@@ -13567,7 +14212,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:26:24.550Z",
       "runId": "20260710T122624Z-36-T36.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.3": {
       "status": "done",
@@ -13597,7 +14243,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:30:39.303Z",
       "runId": "20260710T123039Z-36-T36.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.4": {
       "status": "done",
@@ -13625,7 +14272,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T12:59:30.460Z",
       "runId": "20260710T125930Z-36-T36.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.5": {
       "status": "done",
@@ -13665,7 +14313,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:13:15.245Z",
       "runId": "20260710T130114Z-36-T36.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.6": {
       "status": "done",
@@ -13708,7 +14357,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T20:49:50.509Z",
       "runId": "20260716T204710Z-36-T36.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.7": {
       "status": "pending",
@@ -13721,7 +14371,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "36.T36.8": {
       "status": "pending",
@@ -13734,7 +14385,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.1": {
       "status": "done",
@@ -13787,7 +14439,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T17:01:02.661Z",
       "runId": "20260712T170102Z-37-T37.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.2": {
       "status": "done",
@@ -13815,7 +14468,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T10:40:54.368Z",
       "runId": "20260713T104054Z-37-T37.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.3": {
       "status": "done",
@@ -13843,7 +14497,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T15:01:17.213Z",
       "runId": "20260713T150117Z-37-T37.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.4": {
       "status": "done",
@@ -13871,7 +14526,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:09:24.256Z",
       "runId": "20260713T160924Z-37-T37.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.5": {
       "status": "done",
@@ -13899,7 +14555,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:44:06.364Z",
       "runId": "20260714T074406Z-37-T37.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.6": {
       "status": "done",
@@ -13926,7 +14583,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:52:51.157Z",
       "runId": "20260714T075251Z-37-T37.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.7": {
       "status": "done",
@@ -13958,7 +14616,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T08:07:17.435Z",
       "runId": "20260714T080717Z-37-T37.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.8": {
       "status": "done",
@@ -13998,7 +14657,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T08:04:19.445Z",
       "runId": "20260714T233638Z-37-T37.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.9": {
       "status": "done",
@@ -14042,7 +14702,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T15:34:28.518Z",
       "runId": "20260716T152642Z-37-T37.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.10": {
       "status": "done",
@@ -14071,7 +14732,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T18:50:46.365Z",
       "runId": "20260712T185046Z-37-T37.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "37.T37.11": {
       "status": "done",
@@ -14099,7 +14761,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T09:24:29.163Z",
       "runId": "20260713T092429Z-37-T37.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T0": {
       "status": "done",
@@ -14126,7 +14789,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:29:01.553Z",
       "runId": "20260710T222901Z-38-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.7": {
       "status": "done",
@@ -14158,7 +14822,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:07:11.781Z",
       "runId": "20260716T210548Z-38-T06.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.12": {
       "status": "done",
@@ -14202,7 +14867,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:38:15.820Z",
       "runId": "20260716T133651Z-38-T06.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.8": {
       "status": "done",
@@ -14233,7 +14899,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T00:52:59.100Z",
       "runId": "20260718T002312Z-38-T06.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.9": {
       "status": "done",
@@ -14264,7 +14931,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-18T01:10:44.391Z",
       "runId": "20260718T005306Z-38-T06.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.10": {
       "status": "done",
@@ -14295,7 +14963,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T21:59:50.241Z",
       "runId": "20260714T215040Z-38-T06.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T06.11": {
       "status": "done",
@@ -14342,7 +15011,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:37:13.180Z",
       "runId": "20260716T013342Z-38-T06.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "39.T12.33": {
       "status": "done",
@@ -14372,7 +15042,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:15:45.150Z",
       "runId": "20260710T221545Z-39-T12.33",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T0": {
       "status": "done",
@@ -14420,7 +15091,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:05:16.258Z",
       "runId": "20260710T220516Z-40-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.1": {
       "status": "done",
@@ -14448,7 +15120,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:32:14.318Z",
       "runId": "20260713T183214Z-41-T41.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.2": {
       "status": "done",
@@ -14478,7 +15151,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:05:59.098Z",
       "runId": "20260713T210559Z-41-T41.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.3": {
       "status": "done",
@@ -14508,7 +15182,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:09:10.778Z",
       "runId": "20260713T210910Z-41-T41.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.4": {
       "status": "done",
@@ -14539,7 +15214,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:11:11.558Z",
       "runId": "20260713T211111Z-41-T41.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.5": {
       "status": "done",
@@ -14568,7 +15244,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:13:11.940Z",
       "runId": "20260713T211311Z-41-T41.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.6": {
       "status": "done",
@@ -14599,7 +15276,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:20:19.706Z",
       "runId": "20260713T212019Z-41-T41.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.7": {
       "status": "done",
@@ -14629,7 +15307,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:35:57.117Z",
       "runId": "20260713T213557Z-41-T41.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.8": {
       "status": "done",
@@ -14659,7 +15338,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:54:58.685Z",
       "runId": "20260713T215458Z-41-T41.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.9": {
       "status": "done",
@@ -14689,7 +15369,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T21:58:04.832Z",
       "runId": "20260713T215804Z-41-T41.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.10": {
       "status": "done",
@@ -14720,7 +15401,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:54:46.796Z",
       "runId": "20260713T185446Z-41-T41.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.11": {
       "status": "done",
@@ -14751,7 +15433,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T19:04:26.297Z",
       "runId": "20260713T190426Z-41-T41.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "41.T41.12": {
       "status": "done",
@@ -14781,7 +15464,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T19:06:25.687Z",
       "runId": "20260713T190625Z-41-T41.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.1": {
       "status": "done",
@@ -14813,7 +15497,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T23:02:57.156Z",
       "runId": "20260706T230257Z-42-T42.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.2": {
       "status": "done",
@@ -14845,7 +15530,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T01:24:10.798Z",
       "runId": "20260707T012410Z-42-T42.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.3": {
       "status": "done",
@@ -14872,7 +15558,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T19:45:02.286Z",
       "runId": "20260710T194502Z-42-T42.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.4": {
       "status": "done",
@@ -14901,7 +15588,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:26:04.410Z",
       "runId": "20260713T232604Z-42-T42.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.5": {
       "status": "done",
@@ -14931,7 +15619,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:37:07.944Z",
       "runId": "20260713T233707Z-42-T42.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.6": {
       "status": "done",
@@ -14961,7 +15650,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:41:45.786Z",
       "runId": "20260713T234145Z-42-T42.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.7": {
       "status": "done",
@@ -14990,7 +15680,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:44:27.983Z",
       "runId": "20260713T234427Z-42-T42.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.8": {
       "status": "done",
@@ -15019,7 +15710,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:49:30.869Z",
       "runId": "20260713T234930Z-42-T42.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "42.T42.9": {
       "status": "done",
@@ -15049,7 +15741,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:52:07.335Z",
       "runId": "20260713T235207Z-42-T42.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.1": {
       "status": "done",
@@ -15077,7 +15770,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:23:10.265Z",
       "runId": "20260710T132310Z-43-T43.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.2": {
       "status": "done",
@@ -15122,7 +15816,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:10:24.567Z",
       "runId": "20260710T221024Z-43-T43.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.3": {
       "status": "done",
@@ -15149,7 +15844,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:28:53.545Z",
       "runId": "20260713T232853Z-43-T43.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.4": {
       "status": "done",
@@ -15176,7 +15872,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:49:00.720Z",
       "runId": "20260713T234900Z-43-T43.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.5": {
       "status": "done",
@@ -15203,7 +15900,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:52:22.433Z",
       "runId": "20260713T235222Z-43-T43.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "43.T43.6": {
       "status": "done",
@@ -15234,7 +15932,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:24:10.955Z",
       "runId": "20260714T072410Z-43-T43.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.1": {
       "status": "done",
@@ -15264,7 +15963,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:43:03.285Z",
       "runId": "20260714T074303Z-44-T44.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.2": {
       "status": "done",
@@ -15294,7 +15994,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:51:38.344Z",
       "runId": "20260714T075138Z-44-T44.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.3": {
       "status": "done",
@@ -15324,7 +16025,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T07:58:31.716Z",
       "runId": "20260714T075831Z-44-T44.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.4": {
       "status": "done",
@@ -15354,7 +16056,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T08:15:21.107Z",
       "runId": "20260714T081521Z-44-T44.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.5": {
       "status": "done",
@@ -15384,7 +16087,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T08:41:03.938Z",
       "runId": "20260714T084103Z-44-T44.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.6": {
       "status": "done",
@@ -15414,7 +16118,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T08:52:11.263Z",
       "runId": "20260714T085211Z-44-T44.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.7": {
       "status": "done",
@@ -15443,7 +16148,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T09:01:18.207Z",
       "runId": "20260714T090118Z-44-T44.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.8": {
       "status": "done",
@@ -15473,7 +16179,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T09:07:15.039Z",
       "runId": "20260714T090715Z-44-T44.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.9": {
       "status": "done",
@@ -15503,7 +16210,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T09:56:44.171Z",
       "runId": "20260714T095644Z-44-T44.9",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "44.T44.10": {
       "status": "done",
@@ -15540,7 +16248,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T10:03:51.241Z",
       "runId": "20260714T100351Z-44-T44.10",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "45.T0": {
       "status": "done",
@@ -15567,7 +16276,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T22:26:22.285Z",
       "runId": "20260710T222622Z-45-T0",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.1": {
       "status": "done",
@@ -15599,7 +16309,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T23:18:11.686Z",
       "runId": "20260706T231811Z-46-T46.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.2": {
       "status": "done",
@@ -15630,7 +16341,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T02:30:07.876Z",
       "runId": "20260707T023007Z-46-T46.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.3": {
       "status": "done",
@@ -15662,7 +16374,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T12:03:04.474Z",
       "runId": "20260707T120304Z-46-T46.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.4": {
       "status": "done",
@@ -15695,7 +16408,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T21:04:54.320Z",
       "runId": "20260707T210454Z-46-T46.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.5": {
       "status": "done",
@@ -15724,7 +16438,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:42:37.615Z",
       "runId": "20260707T224237Z-46-T46.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "46.T46.6": {
       "status": "done",
@@ -15751,7 +16466,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T22:44:38.923Z",
       "runId": "20260707T224438Z-46-T46.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "47.T47.1": {
       "status": "done",
@@ -15783,7 +16499,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-06T23:23:21.900Z",
       "runId": "20260706T232321Z-47-T47.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "47.T47.2": {
       "status": "done",
@@ -15815,7 +16532,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T01:17:18.195Z",
       "runId": "20260707T011718Z-47-T47.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "47.T47.3": {
       "status": "done",
@@ -15847,7 +16565,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T04:22:49.405Z",
       "runId": "20260707T042249Z-47-T47.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "47.T47.4": {
       "status": "done",
@@ -15880,7 +16599,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T11:22:37.861Z",
       "runId": "20260707T112237Z-47-T47.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.1": {
       "status": "done",
@@ -15910,7 +16630,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:44:01.892Z",
       "runId": "20260713T184401Z-48-T48.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.2": {
       "status": "done",
@@ -15939,7 +16660,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:13:30.193Z",
       "runId": "20260713T231330Z-48-T48.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.3": {
       "status": "done",
@@ -15978,7 +16700,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T23:17:45.299Z",
       "runId": "20260713T231624Z-48-T48.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.4": {
       "status": "done",
@@ -16013,7 +16736,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-15T08:04:27.595Z",
       "runId": "20260715T002404Z-48-T48.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.5": {
       "status": "done",
@@ -16061,7 +16785,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:45:38.149Z",
       "runId": "20260716T014142Z-48-T48.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.6": {
       "status": "done",
@@ -16093,7 +16818,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T21:28:12.503Z",
       "runId": "20260716T211412Z-48-T48.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "48.T48.7": {
       "status": "pending",
@@ -16106,7 +16832,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.1": {
       "status": "done",
@@ -16140,7 +16867,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-07T01:31:40.061Z",
       "runId": "20260707T013140Z-49-T49.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.2": {
       "status": "done",
@@ -16181,7 +16909,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:00:53.717Z",
       "runId": "20260710T125926Z-49-T49.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.3": {
       "status": "done",
@@ -16209,7 +16938,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T13:10:36.613Z",
       "runId": "20260710T131036Z-49-T49.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.4": {
       "status": "done",
@@ -16239,7 +16969,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T15:01:17.019Z",
       "runId": "20260713T150117Z-49-T49.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.5": {
       "status": "done",
@@ -16267,7 +16998,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T18:38:06.693Z",
       "runId": "20260713T183806Z-49-T49.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.6": {
       "status": "done",
@@ -16305,7 +17037,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T00:16:07.213Z",
       "runId": "20260714T001607Z-49-T49.6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.7": {
       "status": "done",
@@ -16336,7 +17069,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T21:39:20.435Z",
       "runId": "20260714T212923Z-49-T49.7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "49.T49.8": {
       "status": "done",
@@ -16382,7 +17116,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T01:40:50.503Z",
       "runId": "20260716T013343Z-49-T49.8",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T1": {
       "status": "done",
@@ -16412,7 +17147,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T09:45:09.951Z",
       "runId": "20260703T094509Z-00-T1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T2": {
       "status": "done",
@@ -16442,7 +17178,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:25:18.376Z",
       "runId": "20260703T132518Z-00-T2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T3": {
       "status": "done",
@@ -16472,7 +17209,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:25:18.819Z",
       "runId": "20260703T132518Z-00-T3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T4": {
       "status": "done",
@@ -16502,7 +17240,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:25:42.582Z",
       "runId": "20260703T132542Z-00-T4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T5": {
       "status": "done",
@@ -16532,7 +17271,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:25:43.118Z",
       "runId": "20260703T132543Z-00-T5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T6": {
       "status": "done",
@@ -16562,7 +17302,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:26:00.583Z",
       "runId": "20260703T132600Z-00-T6",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "00.T7": {
       "status": "done",
@@ -16592,7 +17333,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-03T13:33:53.901Z",
       "runId": "20260703T133353Z-00-T7",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.11": {
       "status": "done",
@@ -16623,7 +17365,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-08T02:03:33.854Z",
       "runId": "20260708T020333Z-02-T2.11",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "25.T25.24": {
       "status": "pending",
@@ -16636,7 +17379,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T40.1": {
       "status": "done",
@@ -16666,7 +17410,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T17:01:02.279Z",
       "runId": "20260712T170102Z-40-T40.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T40.2": {
       "status": "done",
@@ -16693,7 +17438,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:51:05.403Z",
       "runId": "20260713T165105Z-40-T40.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T40.3": {
       "status": "done",
@@ -16721,7 +17467,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T17:15:37.754Z",
       "runId": "20260713T171537Z-40-T40.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T40.4": {
       "status": "done",
@@ -16749,7 +17496,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T19:10:16.870Z",
       "runId": "20260713T191016Z-40-T40.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "40.T40.5": {
       "status": "done",
@@ -16779,7 +17527,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T00:02:29.815Z",
       "runId": "20260714T000229Z-40-T40.5",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "14.T14.1": {
       "status": "done",
@@ -16806,7 +17555,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:26:15.729Z",
       "runId": "20260710T152615Z-14-T14.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "14.T14.2": {
       "status": "done",
@@ -16833,7 +17583,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:27:42.695Z",
       "runId": "20260710T152742Z-14-T14.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "14.T14.3": {
       "status": "done",
@@ -16860,7 +17611,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:30:02.058Z",
       "runId": "20260710T153002Z-14-T14.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "14.T14.4": {
       "status": "blocked",
@@ -16878,7 +17630,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-10T15:31:44.480Z",
       "runId": "20260710T153144Z-14-T14.4",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "20.T20.1": {
       "status": "done",
@@ -16906,7 +17659,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T10:29:15.858Z",
       "runId": "20260714T102915Z-20-T20.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "20.T20.2": {
       "status": "done",
@@ -16937,7 +17691,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-14T22:24:58.663Z",
       "runId": "20260714T222155Z-20-T20.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "20.T20.3": {
       "status": "done",
@@ -17011,7 +17766,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-16T13:02:22.457Z",
       "runId": "20260716T091901Z-20-T20.3",
-      "worktree": "codex-20-wave-c-audit"
+      "worktree": "codex-20-wave-c-audit",
+      "blocker": null
     },
     "33.T33.1": {
       "status": "blocked",
@@ -17029,7 +17785,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T17:01:01.895Z",
       "runId": "20260712T170101Z-33-T33.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "33.T33.2": {
       "status": "done",
@@ -17059,7 +17816,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T19:26:32.921Z",
       "runId": "20260712T192632Z-33-T33.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "33.T33.3": {
       "status": "done",
@@ -17088,7 +17846,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T10:40:54.172Z",
       "runId": "20260713T104054Z-33-T33.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "35.T35.1": {
       "status": "done",
@@ -17117,7 +17876,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T17:01:02.471Z",
       "runId": "20260712T170102Z-35-T35.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "35.T35.2": {
       "status": "done",
@@ -17144,7 +17904,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T16:09:24.067Z",
       "runId": "20260713T160924Z-35-T35.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "45.T45.1": {
       "status": "done",
@@ -17173,7 +17934,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T17:01:02.086Z",
       "runId": "20260712T170102Z-45-T45.1",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "45.T45.2": {
       "status": "done",
@@ -17202,7 +17964,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-12T18:50:46.565Z",
       "runId": "20260712T185046Z-45-T45.2",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "45.T45.3": {
       "status": "done",
@@ -17232,7 +17995,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-13T09:24:28.963Z",
       "runId": "20260713T092428Z-45-T45.3",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "38.T38.1": {
       "status": "pending",
@@ -17245,7 +18009,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.12": {
       "status": "done",
@@ -17276,7 +18041,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T16:35:08.976Z",
       "runId": "20260711T163508Z-02-T2.12",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.13": {
       "status": "done",
@@ -17309,7 +18075,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T16:57:27.618Z",
       "runId": "20260711T165727Z-02-T2.13",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     },
     "02.T2.14": {
       "status": "done",
@@ -17341,7 +18108,8 @@
       "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-11T17:13:32.937Z",
       "runId": "20260711T171332Z-02-T2.14",
-      "worktree": null
+      "worktree": null,
+      "blocker": null
     }
   },
   "runs": [
@@ -22104,36 +22872,138 @@
     {
       "runId": "20260718T090108Z-21-T21.9",
       "taskId": "21.T21.9",
-      "status": "in_progress",
+      "status": "blocked",
       "startedAt": "2026-07-18T09:01:08.998Z",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": "2026-07-18T11:01:08.998Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:24:36.807Z"
+    },
+    {
+      "runId": "20260718T101401Z-22-T22.3",
+      "taskId": "22.T22.3",
+      "status": "review",
+      "startedAt": "2026-07-18T10:14:01.061Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:14:01.061Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:17:45.254Z"
+    },
+    {
+      "runId": "20260718T101749Z-22-T22.4",
+      "taskId": "22.T22.4",
+      "status": "review",
+      "startedAt": "2026-07-18T10:17:49.182Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:17:49.182Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:23:30.416Z"
+    },
+    {
+      "runId": "20260718T102345Z-22-T22.5",
+      "taskId": "22.T22.5",
+      "status": "blocked",
+      "startedAt": "2026-07-18T10:23:45.542Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:23:45.542Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:24:37.065Z"
+    },
+    {
+      "runId": "20260718T102443Z-22-T22.6",
+      "taskId": "22.T22.6",
+      "status": "in_progress",
+      "startedAt": "2026-07-18T10:24:43.153Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:24:43.153Z",
       "worktree": null
+    },
+    {
+      "runId": "20260718T102514Z-23-T23.14",
+      "taskId": "23.T23.14",
+      "status": "review",
+      "startedAt": "2026-07-18T10:25:14.286Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:25:14.286Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:33:28.901Z"
+    },
+    {
+      "runId": "20260718T103336Z-23-T23.15",
+      "taskId": "23.T23.15",
+      "status": "review",
+      "startedAt": "2026-07-18T10:33:36.726Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:33:36.726Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:39:37.070Z"
+    },
+    {
+      "runId": "20260718T103943Z-23-T23.16",
+      "taskId": "23.T23.16",
+      "status": "review",
+      "startedAt": "2026-07-18T10:39:43.089Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:39:43.089Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:46:17.371Z"
+    },
+    {
+      "runId": "20260718T104623Z-23-T23.17",
+      "taskId": "23.T23.17",
+      "status": "review",
+      "startedAt": "2026-07-18T10:46:23.446Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:46:23.446Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T10:48:59.998Z"
+    },
+    {
+      "runId": "20260718T104905Z-23-T23.18",
+      "taskId": "23.T23.18",
+      "status": "review",
+      "startedAt": "2026-07-18T10:49:05.782Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T12:49:05.782Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T11:02:39.643Z"
+    },
+    {
+      "runId": "20260718T110253Z-23-T23.19",
+      "taskId": "23.T23.19",
+      "status": "blocked",
+      "startedAt": "2026-07-18T11:02:53.354Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-18T13:02:53.354Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T11:04:05.308Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-18T08:46:05.380Z",
-    "updatedAt": "2026-07-18T08:46:05.380Z",
+    "createdAt": "2026-07-18T20:12:49.222Z",
+    "updatedAt": "2026-07-18T20:12:49.222Z",
     "taskIds": [
-      "21.T21.3",
-      "21.T21.4",
-      "21.T21.5",
-      "21.T21.6"
+      "22.T22.6",
+      "23.T23.16",
+      "23.T23.17",
+      "23.T23.18",
+      "23.T23.19"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
-      "21.T21.3": "in-session",
-      "21.T21.4": "in-session",
-      "21.T21.5": "in-session",
-      "21.T21.6": "in-session"
+      "22.T22.6": "in-session",
+      "23.T23.16": "in-session",
+      "23.T23.17": "in-session",
+      "23.T23.18": "in-session",
+      "23.T23.19": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }
