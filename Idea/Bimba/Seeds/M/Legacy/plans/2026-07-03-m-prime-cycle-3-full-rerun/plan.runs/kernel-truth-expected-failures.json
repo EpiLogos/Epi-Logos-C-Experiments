@@ -4,13 +4,6 @@
   "recordedBy": "claude-track00 (Track 00.T4)",
   "expectedFailures": [
     {
-      "suite": "portal-core",
-      "test": "kernel_energy_carries_e5_e6_with_456_weighting",
-      "owningTrack": "33",
-      "registerRow": "§4.7 / §5.3",
-      "reason": "kernel_energy_evaluate hardcodes e_5_harmonic_energy = 0.0 and e_6_verifier_energy = 0.0 (inputs unused). The 4:5:6 canonical_total_energy law is in place but two of its three channels are dead."
-    },
-    {
       "suite": "epi-cli-clock",
       "test": "cli_portal_clock_uses_real_kernel_projection_after_cast",
       "owningTrack": "33",

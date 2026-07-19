@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T21:36:55.915Z",
+  "updatedAt": "2026-07-19T22:55:23.172Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11182,19 +11182,35 @@
       "blocker": null
     },
     "23.T23.8": {
-      "status": "review",
-      "updatedAt": "2026-07-19T15:11:38.609Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T22:55:08.298Z",
       "claimedAt": "2026-07-19T15:08:06.794Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T22:55:08.298Z",
       "evidence": [
         {
           "at": "2026-07-19T15:11:38.609Z",
           "text": "Rebuilt and reverified in active Body/M/pratibimba-app carrier: EpogdoonProofOverlay renders the cited 7/4 identity and live address decomposition only under the debug query or persisted M2 preference; bloom is profile-generation keyed at 0/9/18 with no local timer. Passed focused component and mounted-pane Vitest, typecheck, carrier token lint, honesty lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
+        },
+        {
+          "at": "2026-07-19T22:55:08.298Z",
+          "text": "The profile-generation-keyed Epogdoon proof overlay passed fresh independent gateway, live-wire, application, smoke, and UI-flow verification.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.12 23.T23.8 --owner codex-verifier-batch-20260719",
+            "exitCode": 0,
+            "testsPassed": 1796,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 52/52",
+              "app-smoke 1/1",
+              "Body/M/pratibimba-app/src/components/EpogdoonProofOverlay.tsx",
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 111 dirty files.",
       "owner": "codex-mdev-2308-epogdoon-proof",
-      "leaseExpiresAt": "2026-07-19T17:08:06.794Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-19T15:11:38.609Z",
       "runId": "20260719T150806Z-23-T23.8",
       "worktree": null,
@@ -12162,16 +12178,16 @@
       "blocker": null
     },
     "24.T24.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-19T21:39:01.191Z",
+      "claimedAt": "2026-07-19T21:39:01.191Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "codex-mdev-2420-transcription",
+      "leaseExpiresAt": "2026-07-20T00:39:01.191Z",
+      "heartbeatAt": "2026-07-19T21:39:01.191Z",
+      "runId": "20260719T213901Z-24-T24.20",
       "worktree": null,
       "blocker": null
     },
@@ -12351,9 +12367,9 @@
       "blocker": null
     },
     "25.T25.11": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:21.218Z",
-      "claimedAt": "2026-07-16T15:51:35.823Z",
+      "status": "in_progress",
+      "updatedAt": "2026-07-19T22:52:57.077Z",
+      "claimedAt": "2026-07-19T22:52:57.077Z",
       "completedAt": null,
       "evidence": [
         {
@@ -12365,11 +12381,11 @@
           "text": "Reopened with nara.transform.start/advance and durable NOW transitions made implementation scope."
         }
       ],
-      "notes": "claimed with --allow-dirty over 182 dirty files.",
-      "owner": "codex-mdev-track25-transform",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T15:51:35.823Z",
-      "runId": "20260716T155135Z-25-T25.11",
+      "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 24 dirty files.",
+      "owner": "codex-mdev-2511-transform",
+      "leaseExpiresAt": "2026-07-20T01:52:57.077Z",
+      "heartbeatAt": "2026-07-19T22:52:57.077Z",
+      "runId": "20260719T225257Z-25-T25.11",
       "worktree": null,
       "blocker": null
     },
@@ -12766,10 +12782,10 @@
       "blocker": null
     },
     "26.T26.12": {
-      "status": "review",
-      "updatedAt": "2026-07-19T15:01:45.678Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T22:55:08.022Z",
       "claimedAt": "2026-07-19T10:46:05.883Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T22:55:08.022Z",
       "evidence": [
         {
           "at": "2026-07-16T15:51:36.480Z",
@@ -12786,11 +12802,28 @@
         {
           "at": "2026-07-19T15:01:45.678Z",
           "text": "Implemented durable protected-local ContemplationObject aggregate projection and the loopback/PASU/exact-session nara.session_close.contemplation.read route; raw q_nara, trajectory, protein, Graphiti, constraints, recognition text, and wisdom delta are excluded. Added strict M5 carrier viewer and Review-fold mounted readback. Proof: cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_session_close_live (2 passed); cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract nara_session_open_close_round_trip (1 passed); pnpm exec vitest run src/panes/contemplationObjectViewer.test.tsx src/panes/omni/reviewBlocks.test.tsx (10 passed); pnpm typecheck; pnpm build; node .codex/scripts/lint-test-honesty.mjs; node .codex/scripts/gateway-method-gate.mjs (272 probed, 86 present, 67 ratcheted, 0 missing, GREEN). No auto-verifier or review handoff per user direction. Contract canon flags: [[S0-SPEC]], [[S3-SPEC]], [[M5'-SPEC]]."
+        },
+        {
+          "at": "2026-07-19T22:55:08.022Z",
+          "text": "The PASU-scoped contemplation readback and active M5 viewer passed fresh independent gateway, live-wire, application, smoke, and UI-flow verification.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.12 23.T23.8 --owner codex-verifier-batch-20260719",
+            "exitCode": 0,
+            "testsPassed": 1796,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 52/52",
+              "app-smoke 1/1",
+              "Body/S/S0/epi-cli",
+              "Body/S/S3/gateway",
+              "Body/M/pratibimba-app/src/panes/contemplationObjectViewer.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 84 dirty files.",
       "owner": "codex-mdev-2612-contemplation",
-      "leaseExpiresAt": "2026-07-19T12:46:05.883Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-19T15:01:45.678Z",
       "runId": "20260719T104605Z-26-T26.12",
       "worktree": null,
@@ -18498,9 +18531,9 @@
       "blocker": null
     },
     "33.T33.1": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:22.494Z",
-      "claimedAt": "2026-07-12T17:01:01.895Z",
+      "status": "review",
+      "updatedAt": "2026-07-19T22:55:23.151Z",
+      "claimedAt": "2026-07-19T22:32:01.360Z",
       "completedAt": null,
       "evidence": [
         {
@@ -18510,13 +18543,28 @@
         {
           "at": "2026-07-18T20:46:22.494Z",
           "text": "Reopened: Stream C 12.T12.24 and Stream F 05.T5.22 are both done and now encoded as dependencies."
+        },
+        {
+          "at": "2026-07-19T22:55:23.151Z",
+          "text": "E5/E6 energy channels wired beyond stub-zero: kernel_energy_evaluate now threads a tick-derived MathemeHarmonicProfile and computes E5 = channel-activation(channel_set) x spectral-flatness(audio_octet) [personal data structurally excluded, asserted] and E6 = R-virtue verifier scalar over invariant_set. Flipped expected-red kernel_energy_carries_e5_e6_with_456_weighting (un-ignored + removed from expected-failures manifest); kernel-truth gate GREEN with the other 4 reds still standing; portal-core 415 passed/0 failed; honesty-lint clean. REVIEW not done: adds a public &MathemeHarmonicProfile param to kernel_energy_evaluate/_unified_act (contract-surface move) and uses analytic E5/E6 defaults pending the trained N-channel EBM head (Stream C, feature-gated) + live R-virtue verifier. Flag [[S0-SPEC]] Stream B for canon ratification of the signature + formulas. Ran parallel to in-flight track 24 (M3 UF); zero write-scope/gateway overlap.",
+          "receipt": {
+            "command": "cargo test -p portal-core --offline (target: kernel_energy_carries_e5_e6_with_456_weighting) + node .codex/scripts/kernel-truth.mjs + node .codex/scripts/lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 415,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S0/portal-core/tests/kernel_truth.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/kernel-truth-expected-failures.json"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "uc-t33",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-12T17:01:01.895Z",
-      "runId": "20260712T170101Z-33-T33.1",
+      "owner": "opus-mdev-3301-e56",
+      "leaseExpiresAt": "2026-07-20T00:32:06.670Z",
+      "heartbeatAt": "2026-07-19T22:55:23.151Z",
+      "runId": "20260719T223201Z-33-T33.1",
       "worktree": null,
       "blocker": null
     },
@@ -24038,12 +24086,41 @@
       "leaseExpiresAt": "2026-07-20T00:18:13.340Z",
       "worktree": null,
       "completedAt": "2026-07-19T21:36:56.006Z"
+    },
+    {
+      "runId": "20260719T213901Z-24-T24.20",
+      "taskId": "24.T24.20",
+      "status": "in_progress",
+      "startedAt": "2026-07-19T21:39:01.191Z",
+      "owner": "codex-mdev-2420-transcription",
+      "leaseExpiresAt": "2026-07-20T00:39:01.191Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260719T223201Z-33-T33.1",
+      "taskId": "33.T33.1",
+      "status": "review",
+      "startedAt": "2026-07-19T22:32:01.360Z",
+      "owner": "opus-mdev-3301-e56",
+      "leaseExpiresAt": "2026-07-20T00:32:06.670Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-19T22:32:06.670Z",
+      "completedAt": "2026-07-19T22:55:23.151Z"
+    },
+    {
+      "runId": "20260719T225257Z-25-T25.11",
+      "taskId": "25.T25.11",
+      "status": "in_progress",
+      "startedAt": "2026-07-19T22:52:57.077Z",
+      "owner": "codex-mdev-2511-transform",
+      "leaseExpiresAt": "2026-07-20T01:52:57.077Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T20:13:44.542Z",
-    "updatedAt": "2026-07-19T20:13:44.542Z",
+    "createdAt": "2026-07-19T22:51:53.298Z",
+    "updatedAt": "2026-07-19T22:51:53.298Z",
     "taskIds": [
       "48.T48.7",
       "02.T2.10",

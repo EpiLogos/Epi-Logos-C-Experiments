@@ -12,8 +12,9 @@ use portal_core::transcription::{
     codon_governance_role, codon_transcript_class, is_start_codon, STOP_CODONS,
 };
 use portal_core::{
-    bioquaternion_transcription, kernel_energy_evaluate, BioQuaternionState, BioquaternionElement,
-    E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs,
+    bioquaternion_transcription, kernel_energy_evaluate, kernel_tick_from_epogdoon,
+    BioQuaternionState, BioquaternionElement, E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs,
+    MathemeHarmonicProfile,
 };
 use std::path::PathBuf;
 
@@ -585,27 +586,40 @@ fn c_engine_kernel_energy_total_carries_456_weighted_channels() {
 }
 
 // ---------------------------------------------------------------------------
-// (f) kernel_energy_evaluate carries E4/E5/E6 with 4:5:6 — EXPECTED RED (Track 33)
+// (f) kernel_energy_evaluate carries E4/E5/E6 with 4:5:6 — Track 33 (E5/E6 landed)
 // ---------------------------------------------------------------------------
 
 #[test]
-#[ignore = "expected-red: Track 33 — kernel_energy_evaluate hardcodes e_5_harmonic_energy = 0.0 and e_6_verifier_energy = 0.0 (inputs unused); the 4:5:6 law is dead weight until the E5/E6 channels land"]
 fn kernel_energy_carries_e5_e6_with_456_weighting() {
     let state = BioQuaternionState {
         q_b: [1.0, 0.0, 0.0, 0.0],
         q_p: [0.0, 1.0, 0.0, 0.0],
     };
-    // Default (empty) inputs → all channels zero.
+    // The E5 harmonic substrate is a real tick-derived harmonic profile —
+    // harmonic data only, never personal.
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 2));
+
+    // Default (empty) inputs → both engaged channels dormant → zero.
     let baseline = kernel_energy_evaluate(
         &state,
+        &profile,
         &E4PersonalInputs::default(),
         &E5HarmonicInputs::default(),
         &E6VerifierInputs::default(),
     );
-    // Non-default harmonic/verifier inputs MUST move their channels; while the
-    // E5/E6 stubs stand these stay 0.0 and this test is red.
+    assert_eq!(
+        baseline.e_5_harmonic_energy, 0.0,
+        "empty channel_set must leave E5 dormant"
+    );
+    assert_eq!(
+        baseline.e_6_verifier_energy, 0.0,
+        "empty invariant_set must leave E6 dormant"
+    );
+
+    // Non-default harmonic/verifier inputs MUST move their channels off zero.
     let energised = kernel_energy_evaluate(
         &state,
+        &profile,
         &E4PersonalInputs::default(),
         &E5HarmonicInputs {
             channel_set: vec!["m123.chime".to_owned(), "profile.update".to_owned()],
@@ -616,14 +630,39 @@ fn kernel_energy_carries_e5_e6_with_456_weighting() {
         },
     );
     assert!(
-        energised.e_5_harmonic_energy != 0.0 || baseline.e_5_harmonic_energy != 0.0,
-        "E5 harmonic channel is a hardcoded zero — inputs cannot move it"
+        energised.e_5_harmonic_energy > 0.0,
+        "E5 harmonic channel must respond to a non-empty channel_set over a live profile"
     );
     assert!(
-        energised.e_6_verifier_energy != 0.0 || baseline.e_6_verifier_energy != 0.0,
-        "E6 verifier channel is a hardcoded zero — inputs cannot move it"
+        energised.e_6_verifier_energy > 0.0,
+        "E6 verifier channel must respond to a non-empty invariant_set"
     );
-    // 4:5:6 weighting law over the decomposition (holds once channels live).
+
+    // Structural law (§1.1): user-personal data NEVER enters E5. Feeding a
+    // populated E4PersonalInputs must leave E5 bit-identical — E5 reads only
+    // (channel_set, harmonic profile).
+    let with_personal = kernel_energy_evaluate(
+        &state,
+        &profile,
+        &E4PersonalInputs {
+            pasu_handle: Some("pasu://test-subject".to_owned()),
+            kairos_handle: Some("kairos://now".to_owned()),
+            ..E4PersonalInputs::default()
+        },
+        &E5HarmonicInputs {
+            channel_set: vec!["m123.chime".to_owned(), "profile.update".to_owned()],
+        },
+        &E6VerifierInputs {
+            invariant_set: vec!["sum-pp-360".to_owned()],
+            severity_weights_handle: Some("default".to_owned()),
+        },
+    );
+    assert_eq!(
+        with_personal.e_5_harmonic_energy, energised.e_5_harmonic_energy,
+        "personal (E4) inputs must not move the E5 harmonic channel"
+    );
+
+    // 4:5:6 weighting law over the decomposition.
     let expected_total = (4.0 * energised.e_4_personal_energy
         + 5.0 * energised.e_5_harmonic_energy
         + 6.0 * energised.e_6_verifier_energy)

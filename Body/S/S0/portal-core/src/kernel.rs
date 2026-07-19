@@ -660,7 +660,17 @@ impl KernelProjection {
         let resonance_square_emphasis = observed
             .map(kernel_resonance_square_emphasis)
             .unwrap_or([0.0; TRITONE_SQUARES]);
-        let energy = kernel_energy_evaluate(&bioquaternion, e_4_inputs, e_5_inputs, e_6_inputs);
+        // The E₅ harmonic substrate is the tick's own harmonic profile — the
+        // same projection `KernelTemporalProjection::from_kernel_projection`
+        // derives from this tick (harmonic data, never personal).
+        let harmonic_profile = MathemeHarmonicProfile::from_tick(tick);
+        let energy = kernel_energy_evaluate(
+            &bioquaternion,
+            &harmonic_profile,
+            e_4_inputs,
+            e_5_inputs,
+            e_6_inputs,
+        );
         Self {
             tick,
             harmonic_pulse: HarmonicPulse::from_tick(tick),
@@ -985,18 +995,106 @@ pub fn kernel_resonance_square_emphasis(vector: &ResonanceVector72) -> [f32; 3] 
     sums
 }
 
+/// Canonical harmonic-substrate channels the E₅ decomposition spans
+/// (`lens_resonance_72`, `audio_octet`, `nodal_quartet`, `planetary_chakral`,
+/// `mahamaya`, `codon_rotation_projection`, `q_cosmic` — cycle-3 §1.1
+/// kernel-spec amendment). `channel_set` selects which are engaged; the count
+/// is the system's experimentation degree of freedom, not user data.
+const E5_CANONICAL_CHANNELS: usize = 7;
+
+/// Fraction of the canonical harmonic channels engaged by `channel_set`.
+/// Empty set → 0.0 (dormant: no harmonic reading requested), saturating at 1.0.
+/// Reads only channel identifiers — structurally free of personal data.
+fn e5_channel_activation(channel_set: &[String]) -> f32 {
+    let active = channel_set
+        .iter()
+        .filter(|channel| !channel.trim().is_empty())
+        .count();
+    (active as f32 / E5_CANONICAL_CHANNELS as f32).min(1.0)
+}
+
+/// Analytic harmonic-substrate magnitude of the profile's standing resonant
+/// body (`audio_octet`): the spectral flatness (geometric ÷ arithmetic mean of
+/// the partials), scale-free in `(0, 1]` and 0.0 only for a silent octet.
+/// Reads ONLY the harmonic profile — personal/PASU data never enters E₅ (that
+/// is E₄'s channel; the separation is structural, §1.1). This is the analytic
+/// default that stands in for the trained N-channel EBM head (Stream C) until a
+/// checkpoint is loaded under the `resonance_ebm_runtime` feature.
+fn e5_harmonic_substrate_magnitude(profile: &MathemeHarmonicProfile) -> f32 {
+    let mut arithmetic_sum = 0.0f64;
+    let mut log_sum = 0.0f64;
+    let mut partials = 0u32;
+    for &hz in profile.audio_octet.iter() {
+        let value = hz as f64;
+        if value > 0.0 {
+            arithmetic_sum += value;
+            log_sum += value.ln();
+            partials += 1;
+        }
+    }
+    if partials == 0 {
+        return 0.0;
+    }
+    let arithmetic = arithmetic_sum / partials as f64;
+    if arithmetic <= 0.0 {
+        return 0.0;
+    }
+    let geometric = (log_sum / partials as f64).exp();
+    (geometric / arithmetic).clamp(0.0, 1.0) as f32
+}
+
+/// R-virtue verifier scalar: the mean severity weight of the declared
+/// invariants. Empty set → 0.0 (nothing to verify). `severity_weights_handle`
+/// names the weight table (`strict` → 1.0, `lenient` → 0.5, `default`/unknown/
+/// absent → 1.0). Deterministic and personal-data-free — the verifier reads
+/// only declared invariants (§1.1 E₆). Analytic default pending the live
+/// R-virtue verifier: every declared invariant is scored at its severity.
+fn e6_verifier_scalar(invariant_set: &[String], severity_weights_handle: Option<&str>) -> f32 {
+    let declared = invariant_set
+        .iter()
+        .filter(|invariant| !invariant.trim().is_empty())
+        .count();
+    if declared == 0 {
+        return 0.0;
+    }
+    match severity_weights_handle {
+        Some("lenient") => 0.5,
+        Some("strict") => 1.0,
+        _ => 1.0,
+    }
+}
+
 pub fn kernel_energy_evaluate(
     state: &BioQuaternionState,
+    harmonic_profile: &MathemeHarmonicProfile,
     e_4_inputs: &E4PersonalInputs,
-    _e_5_inputs: &E5HarmonicInputs,
-    _e_6_inputs: &E6VerifierInputs,
+    e_5_inputs: &E5HarmonicInputs,
+    e_6_inputs: &E6VerifierInputs,
 ) -> EnergyDecomposition {
     let bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p);
     let e_4_personal_energy = try_compute_e_4_personal_energy(state, e_4_inputs)
         .map(|evaluation| evaluation.scalar)
         .unwrap_or(0.0);
-    let e_5_harmonic_energy = 0.0;
-    let e_6_verifier_energy = 0.0;
+
+    // E₅ — Epii harmonic-substrate energy (§1.1). Multi-channel activation over
+    // the harmonic profile; personal data NEVER enters (that is E₄). The trained
+    // N-channel EBM head (Stream C) supplies the substrate magnitude when a
+    // checkpoint is loaded; otherwise the analytic spectral-flatness default
+    // reads the profile's standing resonant body.
+    let e5_activation = e5_channel_activation(&e_5_inputs.channel_set);
+    let e5_substrate = e5_harmonic_substrate_magnitude(harmonic_profile);
+    #[cfg(feature = "resonance_ebm_runtime")]
+    let e5_substrate = kernel_default_resonance_ebm_runtime()
+        .map(|runtime| runtime.forward(state).e_5_harmonic_energy)
+        .unwrap_or(e5_substrate);
+    let e_5_harmonic_energy = e5_activation * e5_substrate;
+
+    // E₆ — R-virtue verifier scalar (§1.1) over the declared invariant set.
+    let e_6_verifier_energy = e6_verifier_scalar(
+        &e_6_inputs.invariant_set,
+        e_6_inputs.severity_weights_handle.as_deref(),
+    );
+
     EnergyDecomposition {
         bimba_pratibimba_energy,
         e_4_personal_energy,
@@ -1013,13 +1111,18 @@ pub fn kernel_energy_evaluate(
 pub fn kernel_energy_evaluate_unified_act(
     act: &UnifiedVakActTuple,
     state: &BioQuaternionState,
+    harmonic_profile: &MathemeHarmonicProfile,
     e_4_inputs: &E4PersonalInputs,
     e_5_inputs: &E5HarmonicInputs,
     e_6_inputs: &E6VerifierInputs,
 ) -> Result<EnergyDecomposition, UnifiedVakActError> {
     act.validate()?;
     Ok(kernel_energy_evaluate(
-        state, e_4_inputs, e_5_inputs, e_6_inputs,
+        state,
+        harmonic_profile,
+        e_4_inputs,
+        e_5_inputs,
+        e_6_inputs,
     ))
 }
 
@@ -1914,8 +2017,10 @@ fn total_energy_4_5_6_weighting() {
 #[test]
 fn bimba_pratibimba_is_diagnostic_only() {
     let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(0, 0));
     let energy = kernel_energy_evaluate(
         &state,
+        &profile,
         &E4PersonalInputs::default(),
         &E5HarmonicInputs::default(),
         &E6VerifierInputs::default(),
@@ -1951,8 +2056,10 @@ mod energy_decomposition_tests {
     #[test]
     fn bimba_pratibimba_is_diagnostic_only() {
         let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(0, 0));
         let energy = kernel_energy_evaluate(
             &state,
+            &profile,
             &E4PersonalInputs::default(),
             &E5HarmonicInputs::default(),
             &E6VerifierInputs::default(),

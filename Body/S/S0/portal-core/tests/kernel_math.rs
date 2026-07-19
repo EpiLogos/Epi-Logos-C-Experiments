@@ -5,8 +5,8 @@ use portal_core::{
     try_compute_e_4_personal_energy, BioQuaternionState, E4CorpusDigest, E4KairosState,
     E4LoraCheckpointRef, E4OracleCharges, E4PasuSnapshot, E4PersonalEnergyError, E4PersonalInputs,
     E4PrivacyClass, E5HarmonicInputs, E6VerifierInputs, HarmonicPulse, KernelElement, KernelPhase,
-    KernelProjection, KernelResonanceObservation, NaraLoraRuntime, ResonanceVector72,
-    UnifiedVakActFace, UnifiedVakActTuple, EPOGDOON_DEN, EPOGDOON_NUM,
+    KernelProjection, KernelResonanceObservation, MathemeHarmonicProfile, NaraLoraRuntime,
+    ResonanceVector72, UnifiedVakActFace, UnifiedVakActTuple, EPOGDOON_DEN, EPOGDOON_NUM,
 };
 use std::collections::BTreeSet;
 
@@ -133,7 +133,8 @@ fn rust_energy_and_tick_contract_are_computable() {
     let e_5_inputs = E5HarmonicInputs::default();
     let e_6_inputs = E6VerifierInputs::default();
 
-    let energy = kernel_energy_evaluate(&state, &e_4_inputs, &e_5_inputs, &e_6_inputs);
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 0));
+    let energy = kernel_energy_evaluate(&state, &profile, &e_4_inputs, &e_5_inputs, &e_6_inputs);
     assert!(near(energy.bimba_pratibimba_energy, 2.0));
     assert!(near(energy.e_4_personal_energy, 0.0));
     assert!(near(energy.e_5_harmonic_energy, 0.0));
@@ -208,8 +209,10 @@ fn rust_e4_scalar_feeds_kernel_total_energy_with_4_5_6_weighting() {
     let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.25, 0.75, 0.25, 0.5]);
     let inputs = full_e4_inputs();
     let e4 = try_compute_e_4_personal_energy(&state, &inputs).expect("full E4 inputs evaluate");
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 0));
     let energy = kernel_energy_evaluate(
         &state,
+        &profile,
         &inputs,
         &E5HarmonicInputs::default(),
         &E6VerifierInputs::default(),
@@ -257,10 +260,12 @@ fn rust_unified_vak_act_evaluates_once_with_six_faces() {
         ]
     );
 
-    let unified =
-        kernel_energy_evaluate_unified_act(&act, &state, &e4_inputs, &e5_inputs, &e6_inputs)
-            .expect("complete unified VAK act tuple evaluates");
-    let direct = kernel_energy_evaluate(&state, &e4_inputs, &e5_inputs, &e6_inputs);
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 0));
+    let unified = kernel_energy_evaluate_unified_act(
+        &act, &state, &profile, &e4_inputs, &e5_inputs, &e6_inputs,
+    )
+    .expect("complete unified VAK act tuple evaluates");
+    let direct = kernel_energy_evaluate(&state, &profile, &e4_inputs, &e5_inputs, &e6_inputs);
 
     assert_eq!(unified, direct);
     assert!(near(
