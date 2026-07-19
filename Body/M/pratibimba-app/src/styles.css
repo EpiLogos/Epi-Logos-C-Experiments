@@ -330,6 +330,7 @@ textarea {
 
 .status-strip {
   display: flex;
+  align-items: center;
   gap: 1.75rem;
   padding: 0.4rem 1rem;
   font-family: 'SF Mono', ui-monospace, monospace;
@@ -338,6 +339,81 @@ textarea {
   background: var(--ground-raised);
   border-top: 1px solid #2e2247;
   user-select: none;
+}
+
+.status-strip > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.m3-cosmic-wheel {
+  margin: 0;
+}
+
+.m3-cosmic-wheel-badge {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  min-width: 0;
+  color: var(--ink);
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: var(--type-mono);
+}
+
+.m3-wheel-badge-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+}
+
+.m3-wheel-quintessence-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-left: 0.15rem;
+  border: 1px solid var(--ring);
+  border-radius: 50%;
+  background: var(--ground-raised);
+}
+
+.m3-wheel-quintessence-dot.state-ready {
+  background: var(--ready);
+}
+
+.m3-wheel-quintessence-dot.state-authority_payload_invariant_violation,
+.m3-wheel-quintessence-dot.state-authority_payload_missing {
+  background: var(--danger);
+}
+
+.m3-daily-wheel-mini-view {
+  position: absolute;
+  z-index: 10;
+  top: 2.25rem;
+  right: 3.25rem;
+  width: 8.5rem;
+  pointer-events: none;
+}
+
+.m3-wheel-mini-view,
+.m3-wheel-mini-view svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 620px) {
+  .m3-daily-wheel-mini-view {
+    top: 2rem;
+    right: 2rem;
+    width: 6.5rem;
+  }
+
+  .status-strip {
+    gap: 0.6rem;
+    overflow-x: auto;
+  }
 }
 
 .boot-splash {

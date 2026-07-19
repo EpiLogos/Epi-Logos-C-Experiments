@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T18:35:44.754Z",
+  "updatedAt": "2026-07-19T20:02:58.703Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12042,16 +12042,31 @@
       "blocker": null
     },
     "24.T24.17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-19T20:02:58.677Z",
+      "claimedAt": "2026-07-19T18:37:44.378Z",
+      "completedAt": "2026-07-19T20:02:58.677Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T20:02:58.677Z",
+          "text": "One M3 renderer now supplies badge, mini-view, and full modes with live gateway identity parity, pause retention, and desktop/mobile UI proof.",
+          "receipt": {
+            "command": "pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 52,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/m3-renderer-modes.spec.ts",
+              "Body/M/pratibimba-app/src/components/M3CompactViews.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-mdev-2417-renderer-modes",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T18:37:44.378Z",
+      "runId": "20260719T183744Z-24-T24.17",
       "worktree": null,
       "blocker": null
     },
@@ -23934,33 +23949,42 @@
       "leaseExpiresAt": "2026-07-19T20:22:17.664Z",
       "worktree": null,
       "completedAt": "2026-07-19T18:35:44.734Z"
+    },
+    {
+      "runId": "20260719T183744Z-24-T24.17",
+      "taskId": "24.T24.17",
+      "status": "done",
+      "startedAt": "2026-07-19T18:37:44.378Z",
+      "owner": "codex-mdev-2417-renderer-modes",
+      "leaseExpiresAt": "2026-07-19T20:37:44.378Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T20:02:58.677Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T18:21:51.964Z",
-    "updatedAt": "2026-07-19T18:21:51.964Z",
+    "createdAt": "2026-07-19T19:04:53.716Z",
+    "updatedAt": "2026-07-19T19:04:53.716Z",
     "taskIds": [
-      "48.T48.7",
-      "02.T2.10",
-      "26.T26.12",
-      "23.T23.8",
-      "23.T23.9"
+      "24.T24.17",
+      "14.T14.4",
+      "24.T24.18",
+      "24.T24.19"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "48.T48.7": "in-session",
-      "02.T2.10": "in-session",
-      "26.T26.12": "in-session",
-      "23.T23.8": "in-session",
-      "23.T23.9": "in-session"
+      "24.T24.17": "in-session",
+      "14.T14.4": "in-session",
+      "24.T24.18": "in-session",
+      "24.T24.19": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
+      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
     ]
   }
 }

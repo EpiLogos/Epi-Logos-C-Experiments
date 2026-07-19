@@ -212,6 +212,12 @@ test('23.T23.9: real profile generation drives the eight-sphere solar anchor on 
     ]) {
         await page.setViewportSize(viewport);
         await expect(surface).toBeVisible();
+        await expect
+            .poll(async () => {
+                const bounds = await surface.boundingBox();
+                return bounds ? bounds.x + bounds.width : Number.POSITIVE_INFINITY;
+            })
+            .toBeLessThanOrEqual(viewport.width + 1);
         const layout = await surface.evaluate(root => {
             const scene = root.querySelector<HTMLElement>(
                 '[data-testid="cymatic-spheres-canvas"]'

@@ -1,12 +1,17 @@
 /**
  * Coordinate: M' (status strip)
+ * Residency: Body/M/pratibimba-app/src/components
+ * Position (#n): shared six-thread context strip.
  * Actualises: the six status entries of Tranche 15.10 — tick generation,
  *   day-now, session, gateway state, supervisor state, active coordinate.
  *   Exactly six; no widget owns its own day-now or clock.
+ * Public surface: StatusStrip.
+ * Does NOT own: profile production, M3 rendering law, or application state.
  */
 
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from '../state/stores';
 import { activeDailyClaimsForReceiver } from '../ui/dailySurfaceOwnership';
+import { M3ContextCodonChip } from './M3CompactViews';
 
 export function StatusStrip() {
     const generation = useTickStore(s => s.generation);
@@ -41,6 +46,7 @@ export function StatusStrip() {
             </span>
             <span data-testid="status-coordinate" title="active coordinate">
                 # {coordinate ?? '—'}
+                <M3ContextCodonChip />
             </span>
         </footer>
     );

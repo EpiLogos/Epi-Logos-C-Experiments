@@ -213,17 +213,41 @@ describe('M3CosmicWheelRenderService', () => {
         );
     });
 
-    it('scales down by mode: badge drops labels and the arcana ring', () => {
+    it('renders one semantic surface at three fidelities', () => {
         render(<M3CosmicWheelRenderService surface={ready()} mode="badge" />);
-        expect(screen.getByTestId('m3-cosmic-wheel').getAttribute('data-mode')).toBe('badge');
-        expect(screen.getByTestId('m3-wheel-cell-0')).toBeTruthy();
+        const badge = screen.getByTestId('m3-cosmic-wheel');
+        expect(badge.getAttribute('data-mode')).toBe('badge');
+        expect(badge.getAttribute('data-codon-id')).toBe('38');
+        expect(badge.getAttribute('data-rotation')).toBe('2');
+        expect(badge.getAttribute('data-rotation-states')).toBe('7');
+        expect(screen.getByTestId('m3-wheel-badge-line').textContent).toContain('38 · 2/7');
+        expect(screen.getByTestId('m3-wheel-quintessence-dot')).toBeTruthy();
+        expect(screen.queryByTestId('m3-wheel-cell-0')).toBeNull();
         expect(screen.queryByTestId('m3-wheel-arcana-ring')).toBeNull();
         expect(screen.queryByTestId('m3-wheel-active-label')).toBeNull();
-        expect(screen.getByTestId('m3-wheel-quintessence')).toBeTruthy();
+
         cleanup();
         render(<M3CosmicWheelRenderService surface={ready()} mode="mini-view" />);
-        expect(screen.getByTestId('m3-wheel-arcana-ring')).toBeTruthy();
+        const mini = screen.getByTestId('m3-cosmic-wheel');
+        expect(mini.getAttribute('data-codon-id')).toBe('38');
+        expect(mini.getAttribute('data-rotation')).toBe('2');
+        expect(mini.getAttribute('data-rotation-states')).toBe('7');
+        expect(screen.getAllByTestId(/m3-wheel-cell-/)).toHaveLength(64);
+        expect(screen.getByTestId('m3-wheel-cell-38').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('m3-wheel-arcana-slot-0').textContent).toContain(
+            'Major Arcana slot 1'
+        );
         expect(screen.queryByTestId('m3-wheel-active-label')).toBeNull();
+        expect(screen.queryByTestId('m3-wheel-arcana-pending')).toBeNull();
+
+        cleanup();
+        render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
+        const full = screen.getByTestId('m3-cosmic-wheel');
+        expect(full.getAttribute('data-codon-id')).toBe('38');
+        expect(full.getAttribute('data-rotation')).toBe('2');
+        expect(full.getAttribute('data-rotation-states')).toBe('7');
+        expect(screen.getByTestId('m3-wheel-active-label').textContent).toBe('CTC');
+        expect(screen.getByTestId('m3-wheel-arcana-pending')).toBeTruthy();
     });
 
     it('refuses to render when the surface is not ready — pending banner only', () => {

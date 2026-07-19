@@ -202,7 +202,7 @@ function classColour(codonClass: string | null): string {
         : hex(CL42_PALETTE.implicateIndigo);
 }
 
-const MODE_SIZE = { badge: 48, 'mini-view': 160, full: 340 } as const;
+const MODE_SIZE = { badge: 20, 'mini-view': 160, full: 340 } as const;
 
 export function M3CosmicWheelRenderService({
     surface,
@@ -246,6 +246,54 @@ export function M3CosmicWheelRenderService({
         projection.rotation !== null && projection.rotationalStateCount !== null
             ? { rotation: projection.rotation, states: projection.rotationalStateCount }
             : null;
+
+    if (mode === 'badge') {
+        return (
+            <M3ReadinessBoundary
+                bindingKey="m3.cosmic-wheel"
+                fallback={{
+                    state: surface.readiness.surfaceReady ? 'ready' : 'blocked',
+                    reason: surface.readiness.reason ?? 'profile-current'
+                }}
+            >
+                <figure
+                    className="m3-cosmic-wheel m3-cosmic-wheel-badge"
+                    data-testid="m3-cosmic-wheel"
+                    data-mode="badge"
+                    data-codon-id={projection.codonId}
+                    data-rotation={projection.rotation ?? 'pending'}
+                    data-rotation-states={projection.rotationalStateCount ?? 'pending'}
+                    data-hexagram-id={projection.hexagramId ?? 'pending'}
+                    data-tarot-minor-id={projection.tarotMinorId ?? 'pending'}
+                    data-generation={surface.generation}
+                    data-readiness={
+                        surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason
+                    }
+                    aria-label={`M3 codon ${projection.codonId}, rotation ${
+                        rotationArrow
+                            ? `${rotationArrow.rotation} of ${rotationArrow.states}`
+                            : 'pending'
+                    }`}
+                >
+                    <span data-testid="m3-wheel-badge-line">
+                        <span>{projection.codonId}</span>
+                        <span aria-hidden="true"> · </span>
+                        <span>
+                            {rotationArrow
+                                ? `${rotationArrow.rotation}/${rotationArrow.states}`
+                                : '—/—'}
+                        </span>
+                        <span
+                            className={`m3-wheel-quintessence-dot state-${surface.quintessenceState}`}
+                            data-testid="m3-wheel-quintessence-dot"
+                            data-state={surface.quintessenceState}
+                            title={surface.quintessenceState}
+                        />
+                    </span>
+                </figure>
+            </M3ReadinessBoundary>
+        );
+    }
 
     const cells = [];
     for (let i = 0; i < 64; i++) {
@@ -295,7 +343,9 @@ export function M3CosmicWheelRenderService({
                     stroke={hex(CL42_PALETTE.implicateIndigo)}
                     strokeWidth={1}
                     opacity={0.7}
-                />
+                >
+                    <title>{`Major Arcana slot ${card + 1} · ${surface.majorArcana}`}</title>
+                </circle>
             );
         }
     }
@@ -313,6 +363,10 @@ export function M3CosmicWheelRenderService({
                 data-testid="m3-cosmic-wheel"
                 data-mode={mode}
                 data-codon-id={projection.codonId}
+                data-rotation={projection.rotation ?? 'pending'}
+                data-rotation-states={projection.rotationalStateCount ?? 'pending'}
+                data-hexagram-id={projection.hexagramId ?? 'pending'}
+                data-tarot-minor-id={projection.tarotMinorId ?? 'pending'}
                 data-generation={surface.generation}
                 data-readiness={surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason}
             >
@@ -351,17 +405,17 @@ export function M3CosmicWheelRenderService({
                                     0.42
                             }
                             stroke={ringLit}
-                            strokeWidth={mode === 'badge' ? 1 : 2}
+                            strokeWidth={2}
                         />
                     ) : null}
                     <QuintessenceIndicator
                         surface={surface}
                         cx={c}
                         cy={c}
-                        radius={size * (mode === 'badge' ? 0.16 : 0.12)}
+                        radius={size * 0.12}
                     />
                 </svg>
-                {showArcana ? (
+                {mode === 'full' ? (
                     <figcaption data-testid="m3-wheel-arcana-pending">
                         <ProvenanceBadge state="pending" reason={surface.majorArcana} />
                         arcana ring: slots only — {surface.majorArcana} (WC-M3-SA-2)

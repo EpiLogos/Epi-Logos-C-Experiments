@@ -174,6 +174,46 @@ describe('App shell', () => {
         expect(receiver.dataset.requestedContributionId).toBe('graph');
     });
 
+    it('mounts the M3 mini-view on the daily cosmic face and the badge in the context strip', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+        act(() => {
+            useTickStore.getState().setProfile({
+                generation: 73,
+                cachedAtMs: 1,
+                stale: false,
+                stalenessMs: 0,
+                privacyClass: 'safe-public-current-kernel-tick',
+                profile: {
+                    harmonicProfile: {
+                        codonRotationProjection: {
+                            codon: 'CTC',
+                            codonClass: 'non-dual',
+                            codonId: 38,
+                            rotation: 2,
+                            rotationDegrees: 90,
+                            rotationalStateCount: 7
+                        },
+                        mahamaya: {
+                            hexagramId: 10,
+                            tarotMinorId: 22,
+                            tarotShadowCodon: 7
+                        },
+                        tick12: 4,
+                        degree720: 415
+                    }
+                }
+            } as unknown as KernelBridgeCachedProfile);
+        });
+
+        expect(screen.getByTestId('m3-codon-chip')).toBeTruthy();
+        expect(screen.queryByTestId('m3-daily-wheel-mini-view')).toBeNull();
+        fireEvent.click(screen.getByTestId('face-toggle'));
+        expect(screen.getByTestId('m3-daily-wheel-mini-view')).toBeTruthy();
+        expect(screen.getAllByTestId('m3-cosmic-wheel').map(node => node.dataset.codonId))
+            .toEqual(['38', '38']);
+    });
+
     it('restores the M0 layer, phase, and mode record and carries it through both face toggles', async () => {
         invokeCommand.mockImplementation(async (command: string) => {
             if (command === 'ui_state_load') {

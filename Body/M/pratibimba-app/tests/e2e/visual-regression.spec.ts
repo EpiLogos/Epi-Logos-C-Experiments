@@ -56,6 +56,9 @@
  *       0 px on this darwin/swiftshader rig, so 400 is headroom, while the
  *       smallest guarded chrome unit (a border tab / tabstrip button ≥
  *       ~1200 px) cannot hide inside it.
+ *     · mid-transition mask exception: 600 px. Cross-run rasterisation of the
+ *       frozen Bernoulli edge measured 446 px over top/right chrome; 600 stays
+ *       below half the smallest guarded chrome unit while absorbing that edge.
  *     · in-run canvas proofs: FROZEN_MAX_RATIO 0.002 / STEPPED_MIN_RATIO
  *       0.004 (fraction of pixels with any channel delta > 8). Measured on
  *       this rig: frozen pairs 0.00018 (the clock-field window's sub-pixel
@@ -334,7 +337,8 @@ test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing bas
 
     await expect(page).toHaveScreenshot('face-toggle-mid-crossing.png', {
         animations: 'allow', // the WAAPI pause above IS the freeze
-        stylePath: HIDE_VOLATILE_CSS // hits BOTH faces — both visible here
+        stylePath: HIDE_VOLATILE_CSS, // hits BOTH faces — both visible here
+        maxDiffPixels: 600
     });
 
     // Release: finish the crossing, drop the slow-motion override, and the
@@ -584,9 +588,21 @@ test('(e) block-host standard: the Review fold renders the fixture blocks to a s
     // construction) through BlockHost — catalog acceptance chrome, owner
     // attribution, affordance strips. Live-tick chrome rides the mask CSS.
     await bootConnected(page);
+    await page.evaluate(async () => {
+        const stores = await import('/src/state/stores.ts');
+        stores.useSessionStore.getState().setSession({
+            sessionKey: null,
+            dayNow: null,
+            privacyClass: null
+        });
+    });
     await page
         .locator('.face-active .flexlayout__border_button', { hasText: 'Review' })
         .click();
+    await expect(page.getByTestId('review-blocks-pane')).toHaveAttribute(
+        'data-block-source',
+        'fixture'
+    );
     const host = page.locator('.face-active [data-testid="block-host"]');
     await expect(host).toBeVisible({ timeout: 15_000 });
     await expect(

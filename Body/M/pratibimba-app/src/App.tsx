@@ -1,6 +1,7 @@
 /**
  * Coordinate: M' (one shell, two faces — now over a real pane system)
  * Residency: Body/M/pratibimba-app/src
+ * Position (#n): active-carrier 0/1 shell composition root.
  * Actualises: the (0/1) shell as two flexlayout root layouts over one state
  *   tree, with the application foundations underneath: command registry,
  *   palette, vault panes, session binding, layout persistence, gateway
@@ -38,6 +39,7 @@ import {
 } from './state/crossLayoutIdentity';
 import { StatusStrip } from './components/StatusStrip';
 import { FaceToggleChrome } from './components/FaceToggleChrome';
+import { M3DailyWheelMiniView } from './components/M3CompactViews';
 import { CosmicEngine } from './engine/CosmicEngine';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
 import { PersonalRecognitionEngine } from './engine/PersonalRecognitionEngine';
@@ -949,6 +951,9 @@ export function App() {
                         }}
                     />
                 </div>
+                {face === 0 && activeLayout === 'daily-0-1' ? (
+                    <M3DailyWheelMiniView />
+                ) : null}
                 {face === 0 && activeLayout === 'daily-0-1' ? (
                     <M0CoordinateSummaryCard
                         onOpenFullView={() => {
