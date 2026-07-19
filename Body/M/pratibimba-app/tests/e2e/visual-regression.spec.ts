@@ -497,10 +497,11 @@ test('(c.1) M2 cymatic transport: a held profile frame is pixel-static while the
         .poll(() => field.getAttribute('data-generation'), { timeout: 15_000 })
         .not.toBeNull();
 
-    const heldGeneration = await field.getAttribute('data-generation');
     await page.getByRole('button', { name: 'Pause' }).click();
     await expect(transport).toHaveAttribute('data-cache-state', 'pending-tick-snapshot-cache');
-    await expect(transport).toHaveAttribute('data-active-tick', heldGeneration ?? '');
+    const heldGeneration = await transport.getAttribute('data-active-tick');
+    expect(heldGeneration).not.toBeNull();
+    await expect(field).toHaveAttribute('data-generation', heldGeneration ?? '');
 
     const beforeLiveGeneration = await readStatusGeneration(page);
     const frozenA = await field.screenshot();

@@ -12,8 +12,14 @@ import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useEngineStore } from '../engine/modulation/engine';
 import { useTickStore } from '../state/stores';
+import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { buildM3WheelSurface } from './M3CosmicWheelRenderService';
-import { M3CodonChip, M3ContextCodonChip, M3WheelMiniView } from './M3CompactViews';
+import {
+    M3CodonChip,
+    M3ContextCodonChip,
+    M3DailyWheelMiniView,
+    M3WheelMiniView
+} from './M3CompactViews';
 
 const profilePayload = (codonId: number) => ({
     harmonicProfile: {
@@ -31,7 +37,14 @@ const profilePayload = (codonId: number) => ({
             tarotShadowCodon: 7
         },
         tick12: 4,
-        degree720: 415
+        degree720: 415,
+        anuttaraPentadicTrace: {
+            ...PENTADIC_TRACE_FIXTURE,
+            codonId,
+            mahamayaAddress64: codonId,
+            codon: 'CTC',
+            qCosmicRef: `q_cosmic://tick/${codonId}`
+        }
     }
 });
 
@@ -85,5 +98,30 @@ describe('M3 compact renderer wrappers', () => {
 
         act(() => useEngineStore.setState({ paused: false }));
         expect(screen.getByTestId('m3-cosmic-wheel').getAttribute('data-codon-id')).toBe('39');
+    });
+
+    it('mounts the pentadic hinge badge from the same held mini-view generation', () => {
+        useTickStore.setState({
+            profile: { generation: 73, profile: profilePayload(38) } as never,
+            generation: 73
+        });
+        render(<M3DailyWheelMiniView />);
+
+        const badge = screen.getByTestId('m3-pentadic-hinge-badge');
+        expect(badge.getAttribute('data-generation')).toBe('73');
+        expect(badge.getAttribute('data-trace-state')).toBe('ready');
+        expect(badge.textContent).toContain('0/1→5');
+
+        act(() => useEngineStore.setState({ paused: true }));
+        act(() =>
+            useTickStore.setState({
+                profile: { generation: 74, profile: profilePayload(39) } as never,
+                generation: 74
+            })
+        );
+        expect(badge.getAttribute('data-generation')).toBe('73');
+
+        act(() => useEngineStore.setState({ paused: false }));
+        expect(screen.getByTestId('m3-pentadic-hinge-badge').getAttribute('data-generation')).toBe('74');
     });
 });

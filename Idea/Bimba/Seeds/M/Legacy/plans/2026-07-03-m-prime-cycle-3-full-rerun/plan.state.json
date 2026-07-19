@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T20:02:58.703Z",
+  "updatedAt": "2026-07-19T20:32:25.779Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12071,16 +12071,31 @@
       "blocker": null
     },
     "24.T24.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-19T20:32:25.754Z",
+      "claimedAt": "2026-07-19T20:06:50.985Z",
+      "completedAt": "2026-07-19T20:32:25.754Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T20:32:25.754Z",
+          "text": "Landed the named M3 pentadic relation inspector as a strict service-backed full surface and pause-consistent mini hinge badge, with live gateway proof and no renderer-local derivation.",
+          "receipt": {
+            "command": "pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 52,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3PentadicRelationInspector.tsx",
+              "Body/M/pratibimba-app/src/services/m3/M3PentadicTraceService.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-mdev-2418-pentadic-overlay",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T20:06:50.985Z",
+      "runId": "20260719T200650Z-24-T24.18",
       "worktree": null,
       "blocker": null
     },
@@ -23959,32 +23974,43 @@
       "leaseExpiresAt": "2026-07-19T20:37:44.378Z",
       "worktree": null,
       "completedAt": "2026-07-19T20:02:58.677Z"
+    },
+    {
+      "runId": "20260719T200650Z-24-T24.18",
+      "taskId": "24.T24.18",
+      "status": "done",
+      "startedAt": "2026-07-19T20:06:50.985Z",
+      "owner": "codex-mdev-2418-pentadic-overlay",
+      "leaseExpiresAt": "2026-07-19T22:06:50.985Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T20:32:25.754Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T19:04:53.716Z",
-    "updatedAt": "2026-07-19T19:04:53.716Z",
+    "createdAt": "2026-07-19T20:13:44.542Z",
+    "updatedAt": "2026-07-19T20:13:44.542Z",
     "taskIds": [
-      "24.T24.17",
-      "14.T14.4",
-      "24.T24.18",
-      "24.T24.19"
+      "48.T48.7",
+      "02.T2.10",
+      "26.T26.12",
+      "23.T23.8",
+      "23.T23.9"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
-      "24.T24.17": "in-session",
-      "14.T14.4": "in-session",
-      "24.T24.18": "in-session",
-      "24.T24.19": "in-session"
+      "48.T48.7": "in-session",
+      "02.T2.10": "in-session",
+      "26.T26.12": "in-session",
+      "23.T23.8": "in-session",
+      "23.T23.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
-      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

@@ -403,11 +403,60 @@ textarea {
   height: auto;
 }
 
+.m3-pentadic-hinge-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+  padding: 0.18rem 0.28rem;
+  border: 1px solid var(--ring);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ground-raised) 90%, transparent);
+  color: var(--ink);
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: var(--type-micro);
+  line-height: 1.2;
+}
+
+.m3-pentadic-relation-inspector {
+  margin-block: 0.75rem;
+  border-block: 1px solid var(--ring);
+  padding-block: 0.65rem;
+}
+
+.m3-pentadic-relation-inspector h4 {
+  margin: 0 0 0.5rem;
+  font-size: var(--type-body);
+}
+
+.m3-pentadic-relation-inspector dl {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 0.3fr) minmax(0, 1fr);
+  gap: 0.35rem 0.8rem;
+  margin: 0;
+}
+
+.m3-pentadic-relation-inspector dt {
+  color: var(--ink-dim);
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: var(--type-mono);
+}
+
+.m3-pentadic-relation-inspector dd {
+  min-width: 0;
+  margin: 0;
+}
+
 @media (max-width: 620px) {
   .m3-daily-wheel-mini-view {
     top: 2rem;
     right: 2rem;
     width: 6.5rem;
+  }
+
+  .m3-pentadic-relation-inspector dl {
+    grid-template-columns: 1fr;
   }
 
   .status-strip {

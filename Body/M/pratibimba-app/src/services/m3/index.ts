@@ -12,6 +12,7 @@ export { CosmicClockRenderService } from './CosmicClockRenderService';
 export { HexagramBodyDynamicsService } from './HexagramBodyDynamicsService';
 export { M3LensApertureService } from './M3LensApertureService';
 export { M3OracleCastService } from './M3OracleCastService';
+export { M3PentadicTraceService } from './M3PentadicTraceService';
 export { M3WalkNavigationService } from './M3WalkNavigationService';
 export { TarotDecanService } from './TarotDecanService';
 export type { M3GatewayPort } from './m3GatewayPort';
@@ -20,6 +21,7 @@ import { CosmicClockRenderService } from './CosmicClockRenderService';
 import { HexagramBodyDynamicsService } from './HexagramBodyDynamicsService';
 import { M3LensApertureService } from './M3LensApertureService';
 import { M3OracleCastService } from './M3OracleCastService';
+import { M3PentadicTraceService } from './M3PentadicTraceService';
 import { M3WalkNavigationService } from './M3WalkNavigationService';
 import { TarotDecanService } from './TarotDecanService';
 import type { M3GatewayPort } from './m3GatewayPort';
@@ -30,7 +32,8 @@ export const M3_SERVICE_TOKENS = Object.freeze({
     hexagramBodyDynamics: Symbol('M3HexagramBodyDynamicsService'),
     lensAperture: Symbol('M3LensApertureService'),
     walkNavigation: Symbol('M3WalkNavigationService'),
-    oracleCast: Symbol('M3OracleCastService')
+    oracleCast: Symbol('M3OracleCastService'),
+    pentadicTrace: Symbol('M3PentadicTraceService')
 });
 
 export type M3Service =
@@ -39,7 +42,8 @@ export type M3Service =
     | HexagramBodyDynamicsService
     | M3LensApertureService
     | M3WalkNavigationService
-    | M3OracleCastService;
+    | M3OracleCastService
+    | M3PentadicTraceService;
 
 export class M3ServiceRegistry {
     readonly cosmicClock: CosmicClockRenderService;
@@ -48,6 +52,7 @@ export class M3ServiceRegistry {
     readonly lensAperture: M3LensApertureService;
     readonly walkNavigation: M3WalkNavigationService;
     readonly oracleCast: M3OracleCastService;
+    readonly pentadicTrace: M3PentadicTraceService;
 
     constructor(bridge: M3GatewayPort) {
         this.cosmicClock = new CosmicClockRenderService(bridge);
@@ -56,6 +61,7 @@ export class M3ServiceRegistry {
         this.lensAperture = new M3LensApertureService(bridge);
         this.walkNavigation = new M3WalkNavigationService(bridge);
         this.oracleCast = new M3OracleCastService(bridge);
+        this.pentadicTrace = new M3PentadicTraceService(bridge);
         Object.freeze(this);
     }
 
@@ -68,6 +74,7 @@ export class M3ServiceRegistry {
         if (token === M3_SERVICE_TOKENS.lensAperture) return this.lensAperture;
         if (token === M3_SERVICE_TOKENS.walkNavigation) return this.walkNavigation;
         if (token === M3_SERVICE_TOKENS.oracleCast) return this.oracleCast;
+        if (token === M3_SERVICE_TOKENS.pentadicTrace) return this.pentadicTrace;
         throw new Error('unknown M3 service token');
     }
 }

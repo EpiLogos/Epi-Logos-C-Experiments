@@ -22,11 +22,11 @@ import {
 import {
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
+import { M3PentadicRelationInspector } from '../components/M3PentadicRelationInspector';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { M3IChingCastRibbon, parseIChingCastRibbonReceipt, type IChingCastRibbonReceipt } from './m3IChingCastRibbon';
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
-import { pentadicTraceFromPayload } from './m3PentadicInspector';
 import { useProvenanceStore } from '../state/stores';
 import {
     M3ProfileTickProvider,
@@ -164,9 +164,11 @@ function M3InspectorsSurface() {
     };
 
     const m = view?.mahamaya ?? null;
-    const pentadicTrace = pentadicTraceFromPayload(
-        (cached?.profile as Record<string, unknown> | null) ?? {}
-    );
+    const pentadicView = services.pentadicTrace.render({
+        payload: (cached?.profile as Record<string, unknown> | null) ?? {},
+        generation: cached?.generation ?? 0
+    });
+    const pentadicTrace = pentadicView.trace;
     const readinessBindings: M3ReadinessBindings = {
         'm3.inspectors': view
             ? { state: 'ready', reason: 'profile-current' }
@@ -219,6 +221,7 @@ function M3InspectorsSurface() {
             <h3>M3′ inspectors</h3>
 
             <M3CosmicWheelRenderService mode="full" surface={wheelSurface} />
+            <M3PentadicRelationInspector mode="full" view={pentadicView} />
             <M3IChingCastRibbon receipt={ichingReceipt} pending={ichingPending} error={ichingError} onCast={castIChing} />
 
             <div className="m3-inspector-summons" data-testid="m3-inspector-summons">

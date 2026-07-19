@@ -10,6 +10,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { KernelBridgeCapabilityReceipt } from '../../bridge/types';
+import { PENTADIC_TRACE_FIXTURE } from '../../test/pentadicTraceFixture';
 import {
     createM3ServiceRegistry,
     M3_SERVICE_TOKENS,
@@ -54,7 +55,7 @@ function receipt(method: string, params: Record<string, unknown>): KernelBridgeC
 }
 
 describe('M3 renderer-service registry', () => {
-    it('resolves all six symbols through one injected gateway port without global instances', () => {
+    it('resolves all seven symbols through one injected gateway port without global instances', () => {
         const port: M3GatewayPort = {
             invoke: async (method, params = {}) => receipt(method, params)
         };
@@ -131,8 +132,15 @@ describe('M3 renderer-service registry', () => {
             payload: WIRE_PAYLOAD,
             generation: 9
         });
+        const pentadic = services.pentadicTrace.render({
+            payload: { anuttaraPentadicTrace: PENTADIC_TRACE_FIXTURE },
+            generation: 9
+        });
         expect(surface.activeProjection?.codonId).toBe(38);
         expect(surface.generation).toBe(9);
+        expect(pentadic.state).toBe('ready');
+        expect(pentadic.trace?.backboneIdentity).toBe('24x15=360');
+        expect(pentadic.generation).toBe(9);
         expect(invocationCount).toBe(0);
     });
 });

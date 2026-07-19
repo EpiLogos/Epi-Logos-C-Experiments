@@ -1,12 +1,13 @@
 /**
- * Coordinate: M' M3' (renderer-mode identity proof, rerun 24.T24.17)
+ * Coordinate: M' M3' (renderer-mode identity proof, rerun 24.T24.17/18)
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): #0 cosmic face compact/full renderer boundary
  * Actualises: real Chromium proof that badge, mini-view, and full modes retain
- *   one authority-provided M3 surface while daily/deep routing changes mounts.
+ *   one authority-provided M3 surface while daily/deep routing changes mounts,
+ *   including the pentadic hinge badge/full relation inspector projection.
  * Public surface: Playwright test over the spawned gateway.
  * Does NOT own: profile production, wheel geometry, routing law, or layout state.
- * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.17.
+ * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.17/18.
  */
 
 import { expect, Locator, Page, test } from '@playwright/test';
@@ -73,6 +74,17 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
     await expect(mini).toHaveAttribute('data-mode', 'mini-view');
     await expect(mini.getByTestId(/^m3-wheel-cell-\d+$/)).toHaveCount(64);
     await expectSameSurface(badge, mini);
+    const hingeBadge = page
+        .getByTestId('m3-daily-wheel-mini-view')
+        .getByTestId('m3-pentadic-hinge-badge');
+    await expect(hingeBadge).toHaveAttribute('data-trace-state', 'ready', {
+        timeout: 20_000
+    });
+    await expect(hingeBadge).toContainText('0/1→5');
+    await expect(hingeBadge).toHaveAttribute(
+        'data-generation',
+        await mini.getAttribute('data-generation')
+    );
 
     const dailyScreenshot = testInfo.outputPath('daily-m3-renderer-modes.png');
     await page.screenshot({ path: dailyScreenshot });
@@ -90,6 +102,24 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
     await expect(full).toHaveAttribute('data-mode', 'full');
     await expect(full.getByTestId(/^m3-wheel-cell-\d+$/)).toHaveCount(64);
     await expectSameSurface(badge, full);
+    const relationInspector = page
+        .locator('.face-active [data-testid="m3-inspectors"]')
+        .getByTestId('m3-pentadic-relation-inspector');
+    await expect(relationInspector).toHaveAttribute('data-trace-state', 'ready', {
+        timeout: 20_000
+    });
+    await expect(relationInspector.getByTestId('m3-pentadic-maxwell')).toContainText(
+        '15 = 10 + 4 + 1'
+    );
+    await expect(relationInspector.getByTestId('m3-pentadic-fifteens')).toContainText(
+        '24x15=360'
+    );
+    await expect(relationInspector.getByTestId('m3-pentadic-fifteens')).toContainText(
+        '360+24=384'
+    );
+    await expect(relationInspector.getByTestId('m3-pentadic-hinge')).toContainText(
+        'whole 0→5 · natural 1→6'
+    );
 
     const deepScreenshot = testInfo.outputPath('deep-m3-renderer-mode.png');
     await page.screenshot({ path: deepScreenshot });
