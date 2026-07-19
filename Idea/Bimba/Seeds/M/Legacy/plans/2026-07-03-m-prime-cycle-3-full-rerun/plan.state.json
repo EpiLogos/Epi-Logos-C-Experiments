@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T18:20:12.883Z",
+  "updatedAt": "2026-07-19T18:35:44.754Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12012,16 +12012,32 @@
       "blocker": null
     },
     "24.T24.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-19T18:35:44.734Z",
+      "claimedAt": "2026-07-19T18:22:17.664Z",
+      "completedAt": "2026-07-19T18:35:44.734Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T18:35:44.734Z",
+          "text": "Landed six symbol-addressed constructor-injected M3 carrier services; Chromium exercised the I-Ching service through a real spawned gateway and received six governed lines.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/visual-panes.spec.ts --grep M3.inspectors.summon",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/services/m3/index.ts",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-mdev-2416-renderer-services",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T18:22:17.664Z",
+      "runId": "20260719T182217Z-24-T24.16",
       "worktree": null,
       "blocker": null
     },
@@ -23908,31 +23924,43 @@
       "leaseExpiresAt": "2026-07-19T19:16:16.755Z",
       "worktree": null,
       "completedAt": "2026-07-19T17:51:20.373Z"
+    },
+    {
+      "runId": "20260719T182217Z-24-T24.16",
+      "taskId": "24.T24.16",
+      "status": "done",
+      "startedAt": "2026-07-19T18:22:17.664Z",
+      "owner": "codex-mdev-2416-renderer-services",
+      "leaseExpiresAt": "2026-07-19T20:22:17.664Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T18:35:44.734Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T16:05:32.486Z",
-    "updatedAt": "2026-07-19T16:05:32.486Z",
+    "createdAt": "2026-07-19T18:21:51.964Z",
+    "updatedAt": "2026-07-19T18:21:51.964Z",
     "taskIds": [
-      "14.T14.4",
-      "24.T24.15",
-      "24.T24.16",
-      "24.T24.17"
+      "48.T48.7",
+      "02.T2.10",
+      "26.T26.12",
+      "23.T23.8",
+      "23.T23.9"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
-      "14.T14.4": "in-session",
-      "24.T24.15": "in-session",
-      "24.T24.16": "in-session",
-      "24.T24.17": "in-session"
+      "48.T48.7": "in-session",
+      "02.T2.10": "in-session",
+      "26.T26.12": "in-session",
+      "23.T23.8": "in-session",
+      "23.T23.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

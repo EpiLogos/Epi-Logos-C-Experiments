@@ -1,13 +1,16 @@
 /**
  * Coordinate: M' M3' (inspectors pane body — Tracks 04.T4.2 + 24.T24.1)
  * Residency: Body/M/pratibimba-app/src/panes
+ * Position (#n): active-carrier M3 inspector composition surface.
  * Actualises: the `m3.mahamaya.inspectors` surface — the cosmic wheel as the
  *   alive default dominant zone (M3CosmicWheelRenderService, mode="full"),
  *   six SUMMONABLE inspectors (toggle chips; none open by default) + the
  *   four depth-view mode switch, every value verbatim from the view model's
  *   bus windows (m3Inspectors.ts). Pending chips are rendered, never hidden.
+ * Public surface: M3InspectorsPane.
  * Does NOT own: inspector law (m3Inspectors.ts), wheel rendering law
- *   (components/M3CosmicWheelRenderService.tsx), the profile cache, flexlayout.
+ *   (components/M3CosmicWheelRenderService.tsx), service transport
+ *   (services/m3), the profile cache, or flexlayout.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -17,7 +20,6 @@ import {
     parseLensCodonBinaryProjection
 } from '../bridge/types';
 import {
-    buildM3WheelSurface,
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
@@ -41,6 +43,10 @@ import {
     M3InspectorId,
     SUIT_INTEGRAL_CITATION
 } from './m3Inspectors';
+import {
+    createM3ServiceRegistry,
+    type M3GatewayPort
+} from '../services/m3';
 
 const INSPECTOR_LABELS: Record<M3InspectorId, string> = {
     'dinucleotide-matrix': 'Dinucleotide matrix',
@@ -80,6 +86,16 @@ function M3InspectorsSurface() {
     const [ichingReceipt, setIChingReceipt] = useState<IChingCastRibbonReceipt | null>(null);
     const [ichingPending, setIChingPending] = useState(false);
     const [ichingError, setIChingError] = useState<string | null>(null);
+    const servicePort = useMemo<M3GatewayPort>(
+        () => ({
+            invoke: (method, params = {}) => gateway().invoke(method, params)
+        }),
+        []
+    );
+    const services = useMemo(
+        () => createM3ServiceRegistry(servicePort),
+        [servicePort]
+    );
 
     useEffect(() => {
         if (!connected) {
@@ -89,7 +105,7 @@ function M3InspectorsSurface() {
         let active = true;
         setFunctionalLens(null);
         setFunctionalLensError(null);
-        void gateway().invoke(FUNCTIONAL_LENS_METHOD, { lensId: selectedLensId })
+        void servicePort.invoke(FUNCTIONAL_LENS_METHOD, { lensId: selectedLensId })
             .then(receipt => {
                 if (active) setFunctionalLens(parseLensCodonBinaryProjection(receipt.artifact));
             })
@@ -99,7 +115,7 @@ function M3InspectorsSurface() {
         return () => {
             active = false;
         };
-    }, [connected, selectedLensId]);
+    }, [connected, selectedLensId, servicePort]);
 
     const view = useMemo(() => {
         if (!cached) {
@@ -115,11 +131,11 @@ function M3InspectorsSurface() {
     // inspectors below stay summonable. Same payload, separate pure builder.
     const wheelSurface = useMemo(
         () =>
-            buildM3WheelSurface({
+            services.cosmicClock.render({
                 payload: (cached?.profile as Record<string, unknown> | null) ?? {},
                 generation: cached?.generation ?? 0
             }),
-        [cached]
+        [cached, services]
     );
     const couplingFlow = useMemo(
         () => buildCouplingFlowOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
@@ -141,7 +157,7 @@ function M3InspectorsSurface() {
     const castIChing = () => {
         setIChingPending(true);
         setIChingError(null);
-        void gateway().invoke('s5.oracle.iching.cast', { castMethod: 'three-coin' })
+        void services.oracleCast.castIChing()
             .then(receipt => setIChingReceipt(parseIChingCastRibbonReceipt(receipt.artifact)))
             .catch(cause => setIChingError(cause instanceof Error ? cause.message : String(cause)))
             .finally(() => setIChingPending(false));

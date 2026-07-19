@@ -230,6 +230,13 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
         page.locator('.face-active [data-binding="m3.iching-cast"]')
     ).toHaveAttribute('data-readiness', 'ready');
     await expect(page.getByTestId('m3-iching-error')).toHaveCount(0);
+    await page.getByTestId('m3-iching-cast').click();
+    const castRibbon = page.getByTestId('m3-iching-cast-ribbon');
+    await expect(castRibbon).toHaveAttribute('data-state', 'received', {
+        timeout: 20_000
+    });
+    await expect(page.getByTestId('m3-iching-lines').locator('[data-line]')).toHaveCount(6);
+    await expect(page.getByTestId('m3-iching-lines')).toContainText(/Hex \d+/);
 
     await page.getByTestId('m3-summon-third-spanda').click();
     const thirdSpanda = page.getByTestId('m3-spanda-runtime');
