@@ -32,6 +32,22 @@ const WIRE_PAYLOAD = {
             tarotMinorId: null,
             tarotShadowCodon: null
         },
+        phaseSpace: {
+            fibonacciGround: {
+                digitLut: [
+                    0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9, 4, 3, 7, 0, 7, 7, 4, 1,
+                    5, 6, 1, 7, 8, 5, 3, 8, 1, 9, 0, 9, 9, 8, 7, 5, 2, 7, 9, 6,
+                    5, 1, 6, 7, 3, 0, 3, 3, 6, 9, 5, 4, 9, 3, 2, 5, 7, 2, 9, 1
+                ],
+                backboneDegrees: Array.from({ length: 24 }, (_, index) => index * 15)
+            }
+        },
+        livePlanets: [
+            { planetId: 0, fibonacciPosition: 16 }
+        ],
+        quintessence: {
+            natalFibonacciPosition: 36
+        },
         tick12: 4,
         degree720: 415
     }
@@ -70,6 +86,10 @@ describe('buildM3WheelSurface', () => {
         expect(surface.tick12).toBe(4);
         expect(surface.degree720).toBe(415);
         expect(surface.generation).toBe(9);
+        expect(surface.fibonacciGround?.wedges).toHaveLength(60);
+        expect(surface.fibonacciGround?.backboneDegrees).toHaveLength(24);
+        expect(surface.fibonacciGround?.natalSunPosition).toBe(36);
+        expect(surface.fibonacciGround?.liveSunPosition).toBe(16);
     });
 
     it('is pending when the codon-rotation projection is absent — never fabricated', () => {
@@ -126,6 +146,42 @@ describe('M3CosmicWheelRenderService', () => {
         expect(arrow.getAttribute('data-rotation-states')).toBe('7');
         expect(screen.getByTestId('m3-wheel-quintessence')).toBeTruthy();
         expect(screen.getByTestId('m3-wheel-quintessence-pending')).toBeTruthy();
+    });
+
+    it('renders the backend-authored Level-0 ground outside the wheel', () => {
+        render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
+        expect(screen.getAllByTestId(/m3-fibonacci-wedge-/)).toHaveLength(60);
+        expect(screen.getAllByTestId(/m3-fibonacci-cardinal-/)).toHaveLength(4);
+        expect(screen.getAllByTestId(/m3-fibonacci-zodiacal-/)).toHaveLength(8);
+        expect(screen.getAllByTestId(/m3-fibonacci-backbone-/)).toHaveLength(24);
+        expect(screen.getByTestId('m3-fibonacci-natal-sun').getAttribute('data-position')).toBe(
+            '36'
+        );
+        expect(screen.getByTestId('m3-fibonacci-live-sun').getAttribute('data-position')).toBe(
+            '16'
+        );
+        expect(screen.getByTestId('m3-fibonacci-ground-ring').getAttribute('data-layer-order')).toBe(
+            'fibonacci-ground,backbone,lens-annulus,walk,torus-core'
+        );
+    });
+
+    it('renders honest pending ground when the backend lane is absent', () => {
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    phaseSpace: undefined,
+                    livePlanets: undefined,
+                    quintessence: undefined
+                }
+            },
+            generation: 13
+        });
+        render(<M3CosmicWheelRenderService surface={surface} mode="full" />);
+        expect(screen.getByTestId('m3-fibonacci-ground-pending').textContent).toContain(
+            'pending-profile-field:phaseSpace.fibonacciGround'
+        );
+        expect(screen.queryByTestId('m3-fibonacci-wedge-0')).toBeNull();
     });
 
     it('renders the four-petal Quintessence balance and low-variance Akasha core', () => {

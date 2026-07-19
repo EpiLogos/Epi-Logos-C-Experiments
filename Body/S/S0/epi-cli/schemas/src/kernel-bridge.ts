@@ -1178,6 +1178,7 @@ export const LivePlanetProjection = z
   .object({
     planetId: z.number().int().min(0).max(9),
     degree: z.number().min(0).max(360),
+    fibonacciPosition: z.number().int().min(0).max(59).optional(),
     retrograde: z.boolean(),
     decan36: z.number().int().min(0).max(35),
     decanRuler: z.number().int().min(0).max(9),
@@ -1271,6 +1272,7 @@ export const QuintessenceProjection = z
   .object({
     natalDegree: z.number().int().min(0).max(359),
     natalTick12: z.number().int().min(0).max(11),
+    natalFibonacciPosition: z.number().int().min(0).max(59).optional(),
     quintessenceWeight: z.number().min(0).max(1),
     layerCount: z.number().int().min(0).max(5),
     partial: z.boolean(),
@@ -1375,6 +1377,11 @@ export const PhaseSpaceFibonacciGround = z
     sections: z.literal(60),
     position: z.number().int().min(0).max(59),
     digit: z.number().int().min(0).max(9),
+    digitLut: z.array(z.number().int().min(0).max(9)).length(60).optional(),
+    backboneDegrees: z
+      .array(z.number().int().min(0).max(359))
+      .length(24)
+      .optional(),
     phase01: z.number().min(0).max(1),
     temporalCanon: z.boolean(),
   })

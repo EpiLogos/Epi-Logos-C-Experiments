@@ -157,6 +157,7 @@ const EVENT_CHANNEL_CONTRACTS = {
 const QUINTESSENCE_ALLOWED_KEYS = [
     'natalDegree',
     'natalTick12',
+    'natalFibonacciPosition',
     'quintessenceWeight', // the ONE permitted resonance scalar (q_personal_resonance surface)
     'layerCount',
     'partial',
@@ -287,6 +288,22 @@ export const PROJECTION_MANIFEST = [
                     errors.push(
                         `fibonacciGround must be primary lens 16 at 60x6°, got ${JSON.stringify(ground)}`
                     );
+                }
+                if (
+                    ground.digitLut !== undefined &&
+                    (ground.digitLut.length !== 60 ||
+                    ground.digitLut.some(digit => !Number.isInteger(digit) || digit < 0 || digit > 9)
+                    )
+                ) {
+                    errors.push('fibonacciGround.digitLut must carry exactly 60 kernel digits');
+                }
+                if (
+                    ground.backboneDegrees !== undefined &&
+                    (ground.backboneDegrees.length !== 24 ||
+                    ground.backboneDegrees.some((degree, index) => degree !== index * 15)
+                    )
+                ) {
+                    errors.push('fibonacciGround.backboneDegrees must mirror CLOCK_BACKBONE[24]');
                 }
                 if (
                     ps.lensCarrier.length !== 16 ||
@@ -489,6 +506,9 @@ export const PROJECTION_MANIFEST = [
                     if (planet.decan36 !== Math.floor(planet.degree / 10) % 36) {
                         errors.push(`livePlanets[planet ${planet.planetId}].decan36 ${planet.decan36} not derived from degree ${planet.degree}`);
                     }
+                    if (planet.fibonacciPosition !== Math.floor(planet.degree / 6) % 60) {
+                        errors.push(`livePlanets[planet ${planet.planetId}].fibonacciPosition ${planet.fibonacciPosition} does not match the backend ground projection`);
+                    }
                 }
             }
             return errors;
@@ -576,6 +596,12 @@ export const PROJECTION_MANIFEST = [
                 }
                 if (parsed.quintessenceQuaternion.some(c => c < -1 || c > 1)) {
                     errors.push('quintessenceQuaternion component out of [-1,1]');
+                }
+                if (
+                    parsed.natalFibonacciPosition !== undefined &&
+                    parsed.natalFibonacciPosition !== Math.floor(parsed.natalDegree / 6)
+                ) {
+                    errors.push('quintessence natalFibonacciPosition does not match the backend ground projection');
                 }
             }
             return errors;

@@ -5,6 +5,9 @@
   --ink: #e8e2f4;
   --ink-dim: #9a8fb8;
   --ring: #ebdca0;
+  --epi-cardinal-anchor: #d9a441;
+  --epi-zodiacal-anchor: #77b8c8;
+  --epi-live-sun: #d6dae4;
   --accent: #7f6ab8;
   --hairline: #3a2c5c;
   --ready: #9fd0a8;
@@ -446,6 +449,58 @@ textarea {
 .m3-pentadic-relation-inspector dd {
   min-width: 0;
   margin: 0;
+}
+
+.m3-fibonacci-wedge {
+  fill: color-mix(in srgb, var(--ground-raised) 72%, transparent);
+  stroke: var(--hairline);
+  stroke-width: 0.5;
+}
+
+.m3-fibonacci-digit {
+  fill: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+}
+
+.m3-fibonacci-cardinal {
+  fill: var(--epi-cardinal-anchor);
+}
+
+.m3-fibonacci-zodiacal {
+  fill: none;
+  stroke: var(--epi-zodiacal-anchor);
+  stroke-width: 1.5;
+}
+
+.m3-fibonacci-backbone {
+  stroke: var(--ink-dim);
+  stroke-width: 1;
+}
+
+.m3-fibonacci-backbone-origin {
+  stroke: var(--ring);
+  stroke-width: 2.5;
+}
+
+.m3-fibonacci-natal-sun {
+  fill: none;
+  stroke: var(--ring);
+  stroke-width: 2.5;
+}
+
+.m3-fibonacci-live-sun {
+  fill: var(--epi-live-sun);
+  stroke: var(--ground);
+  stroke-width: 1;
+}
+
+.m3-fibonacci-readiness {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: var(--type-caption);
 }
 
 @media (max-width: 620px) {

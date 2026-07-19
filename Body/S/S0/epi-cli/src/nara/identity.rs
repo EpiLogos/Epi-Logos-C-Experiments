@@ -482,6 +482,7 @@ pub fn heartbeat_quintessence() -> Option<portal_core::QuintessenceProjection> {
     Some(portal_core::QuintessenceProjection {
         natal_degree,
         natal_tick12,
+        natal_fibonacci_position: Some((natal_degree / 6) as u8),
         quintessence_weight: quintessence_weight(&profiles),
         layer_count,
         partial: layer_count < 5,

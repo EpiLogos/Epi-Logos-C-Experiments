@@ -162,6 +162,13 @@ describe("Kernel bridge contract package", () => {
     expect(ps!.fibonacciGround.slice).toBe(6);
     expect(ps!.fibonacciGround.sections).toBe(60);
     expect(ps!.fibonacciGround.temporalCanon).toBe(true);
+    expect(ps!.fibonacciGround.digitLut).toHaveLength(60);
+    expect(ps!.fibonacciGround.digitLut?.slice(0, 12)).toEqual(
+      [0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9],
+    );
+    expect(ps!.fibonacciGround.backboneDegrees).toEqual(
+      Array.from({ length: 24 }, (_, i) => i * 15),
+    );
     // node/lensCarrier agree on the §4 formula at every aperture
     ps!.lensCarrier.forEach((lens, i) => {
       expect(lens.segment).toBe(ps!.node.lensSegment[i]);
@@ -173,6 +180,7 @@ describe("Kernel bridge contract package", () => {
     const quintessence = {
       natalDegree: 217,
       natalTick12: 7,
+      natalFibonacciPosition: 36,
       quintessenceWeight: 0.62,
       layerCount: 5,
       partial: false,
@@ -257,6 +265,7 @@ describe("Kernel bridge contract package", () => {
         isResonance: i === 4,
         elementId: 0,
         keplerianVel: 100,
+        fibonacciPosition: Math.floor(degree / 6),
       })),
     });
     expect(parsed.planetDegrees).toHaveLength(10);

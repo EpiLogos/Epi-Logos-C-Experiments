@@ -55,6 +55,7 @@ fn live_planets_carry_kernel_decan_rulers_and_resonance_events() {
     // Sun (id 0) in Aries II (10-20°): ruler is the Sun — resonance fires.
     let sun_home = LivePlanetProjection::from_degree(0, 15.0, false);
     assert_eq!(sun_home.decan36, 1);
+    assert_eq!(sun_home.fibonacci_position, Some(2));
     assert!(sun_home.is_resonance);
 
     // Moon (id 1) in Aries I: ruled by Mars — no resonance, honest false.
@@ -113,6 +114,11 @@ fn live_planets_serialize_camel_case_and_stay_absent_by_default() {
     assert!(first.get("isResonance").is_some());
     assert!(first.get("decanRuler").is_some());
     assert!(first.get("elementId").is_some());
+    assert_eq!(
+        first.get("fibonacciPosition").and_then(|v| v.as_u64()),
+        Some(16),
+        "the live Sun marker position must be projected backend-side"
+    );
 }
 
 #[test]

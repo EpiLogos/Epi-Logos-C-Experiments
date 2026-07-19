@@ -797,9 +797,14 @@ export function CosmicEngine() {
                 // its degree is quantised to the 60-fold ground and placed on
                 // the same R_DEGREE ring the natal gold ring rides — advancing
                 // as the live Sun crosses each 6° wedge (dual of the gold ring).
-                const sunDegree = degrees[0];
-                if (typeof sunDegree === 'number' && Number.isFinite(sunDegree)) {
-                    const p = fibonacciGroundPoint(sunDegree, R_DEGREE);
+                const sunGroundPosition = livePlanets?.find(
+                    planet => planet.planetId === 0
+                )?.fibonacciPosition;
+                if (
+                    typeof sunGroundPosition === 'number' &&
+                    Number.isInteger(sunGroundPosition)
+                ) {
+                    const p = fibonacciGroundPoint(sunGroundPosition, R_DEGREE);
                     liveSunMarker.position.set(p.x, 0.08, p.z);
                     liveSunMarker.visible = true;
                 } else {
@@ -896,6 +901,15 @@ export function CosmicEngine() {
                     return;
                 }
                 const identity = frame.quintessence.identity;
+                const natalGroundPosition = identity.natalFibonacciPosition;
+                if (
+                    typeof natalGroundPosition !== 'number' ||
+                    !Number.isInteger(natalGroundPosition)
+                ) {
+                    natalMarker.visible = false;
+                    natalChip.visible = false;
+                    return;
+                }
                 natalMarker.visible = true;
                 natalChip.visible = true;
                 // Track 35.T35.1: the natal gold ring reads its STRUCTURAL
@@ -904,9 +918,12 @@ export function CosmicEngine() {
                 // projection the live-Sun silver dot rides (source §2.4 point 4).
                 // Both Suns sit at their Fibonacci-positions; they coincide when
                 // they share a 6° ground wedge — the distance is the reading.
-                const natalPoint = fibonacciGroundPoint(identity.natalDegree, R_DEGREE);
+                const natalPoint = fibonacciGroundPoint(natalGroundPosition, R_DEGREE);
                 natalMarker.position.set(natalPoint.x, 0.05, natalPoint.z);
-                const natalChipPoint = fibonacciGroundPoint(identity.natalDegree, R_DEGREE + 0.42);
+                const natalChipPoint = fibonacciGroundPoint(
+                    natalGroundPosition,
+                    R_DEGREE + 0.42
+                );
                 natalChip.position.set(natalChipPoint.x, 0.2, natalChipPoint.z);
                 // engraved, not repainted: reading refreshes only when the
                 // identity or the kernel resonance scalar moves

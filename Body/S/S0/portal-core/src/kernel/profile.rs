@@ -63,6 +63,10 @@ pub struct QuintessenceProjection {
     pub natal_degree: u16,
     /// tick12 arc of the natal degree (0-11).
     pub natal_tick12: u8,
+    /// Backend-projected Level-0 ground position for the natal gold marker.
+    /// Absent only on legacy handle payloads.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub natal_fibonacci_position: Option<u8>,
     /// 1.0 − variance across the present identity-layer profiles.
     pub quintessence_weight: f32,
     /// How many of the 5 identity layers are present (0-5).
@@ -92,6 +96,9 @@ pub struct LivePlanetProjection {
     /// Ecliptic longitude 0.0-360.0, fractional precision preserved
     /// (cosmic-clock §13.4.4 percentile law).
     pub degree: f32,
+    /// Backend-projected Level-0 ground position for clock renderers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fibonacci_position: Option<u8>,
     pub retrograde: bool,
     /// Decan the planet transits: `floor(degree / 10)`, 0-35.
     pub decan36: u8,
@@ -119,6 +126,7 @@ impl LivePlanetProjection {
         Self {
             planet_id,
             degree: normalized,
+            fibonacci_position: Some(((normalized / 6.0).floor() as u8).min(59)),
             retrograde,
             decan36,
             decan_ruler,

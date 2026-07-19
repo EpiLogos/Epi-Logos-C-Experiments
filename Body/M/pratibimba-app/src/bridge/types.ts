@@ -259,6 +259,7 @@ export function extractBellRoles(
 export interface QuintessenceBoundary {
     natalDegree: number;
     natalTick12: number;
+    natalFibonacciPosition?: number;
     quintessenceWeight: number;
     layerCount: number;
     partial: boolean;
@@ -275,6 +276,11 @@ export function extractQuintessence(value: unknown): QuintessenceBoundary | null
     if (
         !q ||
         typeof q.natalDegree !== 'number' ||
+        (q.natalFibonacciPosition !== undefined &&
+            (typeof q.natalFibonacciPosition !== 'number' ||
+                !Number.isInteger(q.natalFibonacciPosition) ||
+                q.natalFibonacciPosition < 0 ||
+                q.natalFibonacciPosition > 59)) ||
         typeof q.quintessenceWeight !== 'number' ||
         typeof q.layerCount !== 'number' ||
         typeof q.partial !== 'boolean' ||
@@ -313,6 +319,8 @@ export interface PhaseSpaceFibonacciBoundary {
     sections: 60;
     position: number;
     digit: number;
+    digitLut?: readonly number[];
+    backboneDegrees?: readonly number[];
     phase01: number;
     temporalCanon: boolean;
 }
@@ -406,6 +414,26 @@ export function extractPhaseSpace(value: unknown): PhaseSpaceBoundary | null {
         fib.sections !== 60 ||
         typeof fib.position !== 'number' ||
         typeof fib.digit !== 'number'
+    ) {
+        return null;
+    }
+    if (
+        fib.digitLut !== undefined &&
+        (!Array.isArray(fib.digitLut) ||
+            fib.digitLut.length !== 60 ||
+            fib.digitLut.some(
+                digit => !Number.isInteger(digit) || digit < 0 || digit > 9
+            ))
+    ) {
+        return null;
+    }
+    if (
+        fib.backboneDegrees !== undefined &&
+        (!Array.isArray(fib.backboneDegrees) ||
+            fib.backboneDegrees.length !== 24 ||
+            fib.backboneDegrees.some(
+                degree => !Number.isInteger(degree) || degree < 0 || degree > 359
+            ))
     ) {
         return null;
     }

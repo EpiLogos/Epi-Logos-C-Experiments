@@ -11,6 +11,7 @@
 //   §4 division table, renderer choreography, personal identity.
 
 use serde::{Deserialize, Serialize};
+use std::sync::Once;
 
 /// Raw FFI mirror of `Clock_Degree_Entry` (epi-lib include/m3.h). Field order
 /// and types MUST match the C struct exactly — the layout test pins sizeof
@@ -48,6 +49,40 @@ pub struct RawClockDegreeEntry {
 
 extern "C" {
     static CLOCK_DEGREE_LUT: [RawClockDegreeEntry; 360];
+    static pisano_digit_lut: [u8; 60];
+    static CLOCK_BACKBONE: [RawClockBackboneNode; 24];
+    fn m3_build_backbone();
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug)]
+struct RawClockBackboneNode {
+    degree: u16,
+    backbone_index: u8,
+    hour_of_day: u8,
+    zodiac_sign: u8,
+    is_cusp: u8,
+    amino_acid_idx: u8,
+    is_palindromic: u8,
+    _pad: [u8; 4],
+}
+
+static BACKBONE_INIT: Once = Once::new();
+
+fn fibonacci_digit_lut() -> Vec<u8> {
+    // SAFETY: `pisano_digit_lut` is the immutable 60-byte C .rodata table
+    // declared by epi-lib's public m3.h contract.
+    unsafe { pisano_digit_lut.to_vec() }
+}
+
+fn clock_backbone_degrees() -> Vec<u16> {
+    BACKBONE_INIT.call_once(|| {
+        // SAFETY: the C populator is idempotent and owns the exact 24-entry
+        // CLOCK_BACKBONE allocation declared in m3.h.
+        unsafe { m3_build_backbone() };
+    });
+    // SAFETY: initialization above populated every one of the fixed 24 rows.
+    unsafe { CLOCK_BACKBONE.iter().map(|node| node.degree).collect() }
 }
 
 /// Safe view into the C `.rodata` table.
@@ -185,14 +220,8 @@ pub const PRIMARY_GROUND_LENS_ID: u8 = CLOCK_LENSES_16.len() as u8;
 /// Pisano-60: fib(n) mod 10 over one full period — the Fibonacci Ground's
 /// digit at each of the 60 Level-0 positions (M3'-SPEC `fibonacci_digit`).
 fn pisano60_digit(position: u8) -> u8 {
-    let mut a: u8 = 0;
-    let mut b: u8 = 1;
-    for _ in 0..(position % 60) {
-        let next = (a + b) % 10;
-        a = b;
-        b = next;
-    }
-    a
+    // SAFETY: modulo 60 bounds the immutable C table access.
+    unsafe { pisano_digit_lut[(position % 60) as usize] }
 }
 
 /// Typed kernel view of one clock degree — the C entry made profile-safe,
@@ -343,6 +372,13 @@ pub struct FibonacciGroundPhase {
     pub position: u8,
     /// fib(position) mod 10 (Pisano-60 digit law).
     pub digit: u8,
+    /// Full C-authored Pisano-60 digit table for read-only renderers. `None`
+    /// represents a legacy profile and must render pending, never a fallback.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub digit_lut: Option<Vec<u8>>,
+    /// The 24 C-authored CLOCK_BACKBONE degree positions.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub backbone_degrees: Option<Vec<u16>>,
     pub phase01: f32,
     pub temporal_canon: bool,
 }
@@ -419,6 +455,8 @@ impl PhaseSpaceAddress {
                 sections: 60,
                 position: fib_position,
                 digit: pisano60_digit(fib_position),
+                digit_lut: Some(fibonacci_digit_lut()),
+                backbone_degrees: Some(clock_backbone_degrees()),
                 phase01: (degree360 % 6) as f32 / 6.0,
                 temporal_canon: true,
             },

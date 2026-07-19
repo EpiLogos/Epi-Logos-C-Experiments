@@ -16,6 +16,7 @@ fn sample_projection() -> QuintessenceProjection {
     QuintessenceProjection {
         natal_degree: 217,
         natal_tick12: 7,
+        natal_fibonacci_position: Some(36),
         quintessence_weight: 0.62,
         layer_count: 5,
         partial: false,
@@ -46,6 +47,10 @@ fn attached_identity_serializes_camel_case_handles_only() {
     let q = json.get("quintessence").expect("quintessence present");
     assert_eq!(q.get("natalDegree").and_then(|v| v.as_u64()), Some(217));
     assert_eq!(q.get("natalTick12").and_then(|v| v.as_u64()), Some(7));
+    assert_eq!(
+        q.get("natalFibonacciPosition").and_then(|v| v.as_u64()),
+        Some(36)
+    );
     assert_eq!(q.get("layerCount").and_then(|v| v.as_u64()), Some(5));
     assert_eq!(q.get("partial").and_then(|v| v.as_bool()), Some(false));
     assert_eq!(
@@ -75,6 +80,7 @@ fn attached_identity_serializes_camel_case_handles_only() {
             "hashPreview",
             "layerCount",
             "natalDegree",
+            "natalFibonacciPosition",
             "natalTick12",
             "partial",
             "quintessenceQuaternion",

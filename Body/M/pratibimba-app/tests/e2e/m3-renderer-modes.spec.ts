@@ -4,10 +4,10 @@
  * Position (#n): #0 cosmic face compact/full renderer boundary
  * Actualises: real Chromium proof that badge, mini-view, and full modes retain
  *   one authority-provided M3 surface while daily/deep routing changes mounts,
- *   including the pentadic hinge badge/full relation inspector projection.
+ *   including the pentadic hinge and Level-0 Fibonacci Ground projections.
  * Public surface: Playwright test over the spawned gateway.
  * Does NOT own: profile production, wheel geometry, routing law, or layout state.
- * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.17/18.
+ * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.17-19.
  */
 
 import { expect, Locator, Page, test } from '@playwright/test';
@@ -73,6 +73,8 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
     await expect(badge).toHaveAttribute('data-mode', 'badge');
     await expect(mini).toHaveAttribute('data-mode', 'mini-view');
     await expect(mini.getByTestId(/^m3-wheel-cell-\d+$/)).toHaveCount(64);
+    await expect(mini.getByTestId(/^m3-fibonacci-wedge-\d+$/)).toHaveCount(60);
+    await expect(mini.getByTestId(/^m3-fibonacci-backbone-\d+$/)).toHaveCount(24);
     await expectSameSurface(badge, mini);
     const hingeBadge = page
         .getByTestId('m3-daily-wheel-mini-view')
@@ -101,6 +103,22 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
         .getByTestId('m3-cosmic-wheel');
     await expect(full).toHaveAttribute('data-mode', 'full');
     await expect(full.getByTestId(/^m3-wheel-cell-\d+$/)).toHaveCount(64);
+    await expect(full.getByTestId(/^m3-fibonacci-wedge-\d+$/)).toHaveCount(60);
+    await expect(full.getByTestId(/^m3-fibonacci-cardinal-\d+$/)).toHaveCount(4);
+    await expect(full.getByTestId(/^m3-fibonacci-zodiacal-\d+$/)).toHaveCount(8);
+    await expect(full.getByTestId(/^m3-fibonacci-backbone-\d+$/)).toHaveCount(24);
+    await expect(full.getByTestId('m3-fibonacci-live-sun')).toHaveAttribute(
+        'data-position',
+        /^\d+$/
+    );
+    await expect(
+        full
+            .getByTestId('m3-fibonacci-natal-pending')
+            .getByTestId('provenance-pending')
+    ).toHaveAttribute(
+        'title',
+        'pending-profile-field:quintessence.natalFibonacciPosition'
+    );
     await expectSameSurface(badge, full);
     const relationInspector = page
         .locator('.face-active [data-testid="m3-inspectors"]')

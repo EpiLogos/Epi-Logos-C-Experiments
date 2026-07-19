@@ -96,6 +96,33 @@ fn topology_law_384_equals_360_plus_24_backbone() {
 }
 
 #[test]
+fn fibonacci_ground_carries_the_c_lut_and_backbone_for_renderers() {
+    let address = PhaseSpaceAddress::from_degree720(144);
+    let ground = &address.fibonacci_ground;
+    assert_eq!(
+        ground.digit_lut.as_deref(),
+        Some(
+            &[
+                0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9, 4, 3, 7, 0, 7, 7, 4, 1, 5, 6, 1, 7, 8, 5, 3, 8,
+                1, 9, 0, 9, 9, 8, 7, 5, 2, 7, 9, 6, 5, 1, 6, 7, 3, 0, 3, 3, 6, 9, 5, 4, 9, 3, 2, 5,
+                7, 2, 9, 1,
+            ][..]
+        ),
+        "the profile must carry the compiled C Pisano LUT verbatim"
+    );
+    assert_eq!(
+        ground.backbone_degrees.as_deref(),
+        Some(
+            &[
+                0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255,
+                270, 285, 300, 315, 330, 345,
+            ][..]
+        ),
+        "the profile must carry CLOCK_BACKBONE degree positions verbatim"
+    );
+}
+
+#[test]
 fn kernel_cross_lut_consistency_holds_for_all_degrees() {
     for degree in 0u16..360 {
         let raw = raw_clock_degree_entry(degree);

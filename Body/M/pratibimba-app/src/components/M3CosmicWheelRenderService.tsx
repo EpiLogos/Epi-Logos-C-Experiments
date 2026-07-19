@@ -24,6 +24,10 @@ import {
     QuintessenceIndicator
 } from './QuintessenceIndicator';
 import { M3ReadinessBoundary } from '../panes/m3SurfaceContext';
+import {
+    M3FibonacciGroundRing,
+    type M3FibonacciGroundViewModel
+} from './M3FibonacciGroundRing';
 
 export interface M3WheelProjection {
     readonly surfaceIndex: number | null;
@@ -58,6 +62,7 @@ export interface M3WheelSurface {
         | 'pending-charge-quaternion'
         | 'authority_payload_missing'
         | 'authority_payload_invariant_violation';
+    readonly fibonacciGround: M3FibonacciGroundViewModel | null;
 }
 
 export interface M3CosmicWheelRenderServiceProps {
@@ -78,6 +83,61 @@ function num(value: unknown): number | null {
 
 function str(value: unknown): string | null {
     return typeof value === 'string' ? value : null;
+}
+
+function integerInRange(value: unknown, min: number, max: number): number | null {
+    return typeof value === 'number' &&
+        Number.isInteger(value) &&
+        value >= min &&
+        value <= max
+        ? value
+        : null;
+}
+
+function integerArray(
+    value: unknown,
+    length: number,
+    min: number,
+    max: number
+): readonly number[] | null {
+    if (!Array.isArray(value) || value.length !== length) {
+        return null;
+    }
+    const parsed = value.map(item => integerInRange(item, min, max));
+    return parsed.every((item): item is number => item !== null)
+        ? Object.freeze(parsed)
+        : null;
+}
+
+function fibonacciGroundFromProfile(
+    root: Record<string, unknown>
+): M3FibonacciGroundViewModel | null {
+    const phaseSpace = objectValue(root.phaseSpace);
+    const ground = objectValue(phaseSpace?.fibonacciGround);
+    const digitLut = integerArray(ground?.digitLut, 60, 0, 9);
+    const backboneDegrees = integerArray(ground?.backboneDegrees, 24, 0, 359);
+    if (digitLut === null || backboneDegrees === null) {
+        return null;
+    }
+
+    const livePlanets = Array.isArray(root.livePlanets) ? root.livePlanets : [];
+    const liveSun = livePlanets
+        .map(objectValue)
+        .find(planet => integerInRange(planet?.planetId, 0, 9) === 0);
+    const quintessence = objectValue(root.quintessence);
+
+    return Object.freeze({
+        wedges: Object.freeze(
+            digitLut.map((digit, position) => Object.freeze({ position, digit }))
+        ),
+        backboneDegrees,
+        natalSunPosition: integerInRange(
+            quintessence?.natalFibonacciPosition,
+            0,
+            59
+        ),
+        liveSunPosition: integerInRange(liveSun?.fibonacciPosition, 0, 59)
+    });
 }
 
 function chargeQuaternionFromMahamaya(
@@ -140,6 +200,7 @@ export function buildM3WheelSurface(input: {
             ? ('ready' as const)
             : ('authority_payload_invariant_violation' as const);
     const codonId = crp ? num(crp.codonId) : null;
+    const fibonacciGround = fibonacciGroundFromProfile(root);
 
     const activeProjection: M3WheelProjection | null =
         crp && codonId !== null && codonId >= 0 && codonId < 64
@@ -185,7 +246,8 @@ export function buildM3WheelSurface(input: {
         degree720: num(root.degree720),
         generation: input.generation,
         chargeQuaternion: chargeRead.charge,
-        quintessenceState
+        quintessenceState,
+        fibonacciGround
     });
 }
 
@@ -236,7 +298,7 @@ export function M3CosmicWheelRenderService({
     const projection = surface.activeProjection;
     const size = MODE_SIZE[mode];
     const c = size / 2;
-    const outerR = c * 0.88;
+    const outerR = c * 0.7;
     const cellR = mode === 'badge' ? size * 0.028 : size * 0.022;
     const arcanaR = c * 0.58;
     const showLabels = mode === 'full';
@@ -377,6 +439,14 @@ export function M3CosmicWheelRenderService({
                     role="img"
                     aria-label={`M3 cosmic wheel — codon ${projection.codon ?? projection.codonId}`}
                 >
+                    {surface.fibonacciGround ? (
+                        <M3FibonacciGroundRing
+                            ground={surface.fibonacciGround}
+                            center={c}
+                            size={size}
+                            showDigits={mode === 'full'}
+                        />
+                    ) : null}
                     {cells}
                     {showArcana ? <g data-testid="m3-wheel-arcana-ring">{arcanaSlots}</g> : null}
                     {rotationArrow ? (
@@ -415,6 +485,36 @@ export function M3CosmicWheelRenderService({
                         radius={size * 0.12}
                     />
                 </svg>
+                <div className="m3-fibonacci-readiness">
+                    {surface.fibonacciGround === null ? (
+                        <span data-testid="m3-fibonacci-ground-pending">
+                            <ProvenanceBadge
+                                state="pending"
+                                reason="pending-profile-field:phaseSpace.fibonacciGround"
+                            />
+                            pending-profile-field:phaseSpace.fibonacciGround
+                        </span>
+                    ) : (
+                        <>
+                            {surface.fibonacciGround.natalSunPosition === null ? (
+                                <span data-testid="m3-fibonacci-natal-pending">
+                                    <ProvenanceBadge
+                                        state="pending"
+                                        reason="pending-profile-field:quintessence.natalFibonacciPosition"
+                                    />
+                                </span>
+                            ) : null}
+                            {surface.fibonacciGround.liveSunPosition === null ? (
+                                <span data-testid="m3-fibonacci-live-pending">
+                                    <ProvenanceBadge
+                                        state="pending"
+                                        reason="pending-profile-field:livePlanets.sun.fibonacciPosition"
+                                    />
+                                </span>
+                            ) : null}
+                        </>
+                    )}
+                </div>
                 {mode === 'full' ? (
                     <figcaption data-testid="m3-wheel-arcana-pending">
                         <ProvenanceBadge state="pending" reason={surface.majorArcana} />

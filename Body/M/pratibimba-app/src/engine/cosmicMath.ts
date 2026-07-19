@@ -190,6 +190,7 @@ export const PLANET_ORDER: readonly string[] = [
 export interface LivePlanet {
     planetId?: number;
     degree?: number;
+    fibonacciPosition?: number;
     retrograde?: boolean;
     decan36?: number;
     decanRuler?: number;
