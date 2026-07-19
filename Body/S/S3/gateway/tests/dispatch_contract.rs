@@ -76,7 +76,11 @@ fn nara_lens_widget_rpcs_route_as_m4_extension_methods() {
 fn nara_session_open_close_round_trip() {
     assert_eq!(
         NARA_SESSION_RPC_METHODS,
-        ["nara.session_open", "nara.session_close"]
+        [
+            "nara.session_open",
+            "nara.session_close",
+            "nara.session_close.read"
+        ]
     );
 
     for method in NARA_SESSION_RPC_METHODS {
@@ -221,6 +225,7 @@ fn s2_graph_methods_route_to_graph_service_authority() {
     for method in [
         "s2.graph.query",
         "s2.graph.node",
+        "s2.graph.list",
         "s2.graph.traverse",
         "s2.graph.harmonic_relations.materialize",
         "s2.graph.pointer_web.compute",

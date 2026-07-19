@@ -18,7 +18,7 @@ pub struct MahamayaCodecProjection {
     pub line_change_operator: u16,
     pub m2_vibration_index: usize,
     pub m2_to_m3_symbol: u8,
-    pub evolutionary_gap: bool,
+    pub round_trip_loss: bool,
     pub transcription_state: String,
 }
 
@@ -32,7 +32,7 @@ impl MahamayaCodecProjection {
         let address64 = mahamaya_address64_from_degree(degree360);
         let nucleotide_bits = nucleotide_bits_for_address(address64, rna_phase);
         let m2_to_m3_symbol = apply_epogdoon_compression(m2_vibration_index);
-        let evolutionary_gap = is_evolutionary_gap(m2_vibration_index);
+        let round_trip_loss = epogdoon_has_round_trip_loss(m2_vibration_index);
         Self {
             address64,
             hexagram_id: address64,
@@ -46,11 +46,11 @@ impl MahamayaCodecProjection {
             line_change_operator: address64 as u16 * I_CHING_LINE_COUNT + (line_index % 6) as u16,
             m2_vibration_index,
             m2_to_m3_symbol,
-            evolutionary_gap,
-            transcription_state: if evolutionary_gap {
-                "provisional-gap"
+            round_trip_loss,
+            transcription_state: if round_trip_loss {
+                "compressed-nonexact-round-trip"
             } else {
-                "resolved"
+                "round-trip-anchor"
             }
             .to_owned(),
         }
@@ -65,7 +65,7 @@ pub fn apply_epogdoon_compression(m2_vibration_index: usize) -> u8 {
     ((m2_vibration_index * 8) / 9).min(63) as u8
 }
 
-pub fn is_evolutionary_gap(m2_vibration_index: usize) -> bool {
+pub fn epogdoon_has_round_trip_loss(m2_vibration_index: usize) -> bool {
     let compressed = apply_epogdoon_compression(m2_vibration_index) as usize;
     ((compressed * 9) / 8) != m2_vibration_index
 }
@@ -112,7 +112,7 @@ fn nucleotide_for_bits(bits: u8, rna_phase: bool) -> char {
 #[cfg(test)]
 mod tests {
     use super::{
-        apply_epogdoon_compression, is_evolutionary_gap, line_change_operator,
+        apply_epogdoon_compression, epogdoon_has_round_trip_loss, line_change_operator,
         mahamaya_address64_from_degree, MahamayaCodecProjection,
     };
 
@@ -140,8 +140,8 @@ mod tests {
         assert_eq!(apply_epogdoon_compression(8), 7);
         assert_eq!(apply_epogdoon_compression(9), 8);
         assert_eq!(apply_epogdoon_compression(71), 63);
-        assert!(!is_evolutionary_gap(0));
-        assert!(is_evolutionary_gap(8));
+        assert!(!epogdoon_has_round_trip_loss(0));
+        assert!(epogdoon_has_round_trip_loss(8));
     }
 
     #[test]
@@ -155,6 +155,6 @@ mod tests {
         assert_eq!(dna.codon, "CCC");
         assert_eq!(rna.codon, "GGG");
         assert_eq!(rna.line_change_operator, 256);
-        assert_eq!(rna.transcription_state, "provisional-gap");
+        assert_eq!(rna.transcription_state, "compressed-nonexact-round-trip");
     }
 }

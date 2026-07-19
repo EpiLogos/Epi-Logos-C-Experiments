@@ -31,5 +31,5 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 5. **T14.4 — Cycle-close no-orphan audit re-run (the closing gate)**
 
    Brief: original §Closing the Cycle + the audit-targets list. The FINAL gate: re-run the full no-orphan audit (M' product surfaces, ta-onta carriers, constitutional agents, 6 techne-guardians per DR-S4-TECHNE, profile fields, integration plugins, UX load-bearing claims) once Tracks 36.7 and the release gates land. BLOCKED until the dependency order in §Closing the Cycle reaches the final step — this tranche IS "cycle-3 closed".
-   Depends on 14.T14.3.
+   Depends on 14.T14.3 and 36.T36.7.
    Verify: all release gates report CLOSED; the re-audit shows zero ownerless surfaces; verifier ≠ closer.

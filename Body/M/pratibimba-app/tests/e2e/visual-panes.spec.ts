@@ -60,10 +60,10 @@ test('cosmic face: the Cosmic Engine mounts a live three.js WebGL surface (playe
     // (one trace generation across M1/M2/M3 slots), never pending or stale
     const overlay = page.getByTestId('engine-pentadic-overlay');
     await expect(overlay).toHaveAttribute('data-state', 'ready', { timeout: 20_000 });
-    await expect(overlay).toContainText(/t12 \d+\/p\d+/);
-    await expect(overlay).toContainText(/72:\d+ q5°/);
-    await expect(overlay).toContainText(/64:\d+ [A-Z]{3}/);
-    await expect(overlay).toContainText('9₂=8₃+1₁');
+    await expect(overlay).toContainText(/M1 \d+°→\d+/);
+    await expect(overlay).toContainText(/M2 72:\d+ phase \d\/9/);
+    await expect(overlay).toContainText(/M3 DET \d+ clock \d+ [A-Z]{3}/);
+    await expect(overlay).toContainText(/loss [01]/);
 
     // 07.T7.8: the M1 topology producer owns the `(p,q)` torus-knot phase.
     // This real gateway currently omits the optional topology projection, so
@@ -212,6 +212,17 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
     await expect(pane).toBeVisible({ timeout: 15_000 });
     // mahamaya rides every live profile — ready, never the pending body
     await expect(pane).toHaveAttribute('data-state', 'ready', { timeout: 20_000 });
+
+    await page.getByTestId('m3-summon-third-spanda').click();
+    const thirdSpanda = page.getByTestId('m3-spanda-runtime');
+    await expect(thirdSpanda).toContainText(/M1 \d+° · Hopf fiber \d+ · advance \d+/);
+    await expect(thirdSpanda).toContainText(/M2 72:\d+ · Shem choir \d+ · phase \d\/9/);
+    await expect(thirdSpanda).toContainText(/M3 DET \d+ · clock \d+ · [A-Z]{3} · rotation \d+°\/[78] · round-trip loss [01]/);
+    await expect(thirdSpanda).toContainText('9-address source block · 8 collision pairs · 64 non-exact round trips');
+    const m2Axes = page.getByTestId('m3-spanda-m2-axes');
+    for (const axis of ['MEF', 'Tattva', 'Decan', 'Shem', 'Maqam', 'DET']) {
+        await expect(m2Axes).toContainText(axis);
+    }
 
     // summon two inspectors and assert LIVE kernel values (no local tables)
     await page.getByTestId('m3-summon-dna-rna-phase').click();

@@ -30,6 +30,39 @@ pub struct M0VerifierQuestion {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct M0VerifierRespondQuestionRequest {
+    pub coordinate_string: String,
+    pub response_text: String,
+    pub source_extension_id: String,
+    pub session_key: String,
+    pub profile_generation: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M0VerifierSymbolicParse {
+    pub namespace: String,
+    pub coordinate: Vec<String>,
+    pub archetype_index: Option<u8>,
+    pub state_marker: String,
+    pub entry_state: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M0VerifierRespondQuestionReceipt {
+    pub accepted: bool,
+    pub response_id: String,
+    pub response_status: String,
+    pub reverified: bool,
+    pub privacy_class: String,
+    pub parse: M0VerifierSymbolicParse,
+    pub profile_generation: Option<u64>,
+    pub persisted_at: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct M0VerifierTypedQuery {
     pub surface: String,
     pub law_family: String,

@@ -30,7 +30,7 @@ async fn live_gateway_exposes_the_c_backed_epogdoon_projection() {
     assert_eq!(object.len(), 3, "the bridge must not leak renderer fields");
     assert!(projection["compressedCodon"].as_u64().is_some());
     assert!(projection["compressedCodon"].as_u64().unwrap() < 64);
-    assert!(projection["isEvolutionaryGap"].is_boolean());
+    assert!(projection["roundTripLoss"].is_boolean());
     assert!(projection["expandedBack"].as_u64().is_some());
     assert!(projection["expandedBack"].as_u64().unwrap() < 72);
 }

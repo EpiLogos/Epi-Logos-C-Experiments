@@ -9,10 +9,13 @@
 //!   SpandaHkbParams (config-driven via [ml.m1_paramasiva], derived defaults),
 //!   hkb_{drift,potential,curvature,settle}, pole_wave, superposition,
 //!   standing_envelope, pole_rms, intrinsic_twelvefold, ql_positions_derived,
-//!   tick12_readout, codon_advance, delta_band_hz, frequency_citation.
+//!   tick12_readout, ring_quaternion, ring_codon_advance, codon_advance,
+//!   delta_band_hz, frequency_citation.
 //! Does NOT own: the oscillation reality (epi-lib m1.c owns it); the codon
 //!   space (M3 owns it — this surface only carries the advancement clock);
 //!   the 720° double cover (M1-5 quaternionic layer, hopf.rs/quaternion.rs).
+
+use crate::quaternion::Quaternion;
 
 use std::ffi::CStr;
 use std::os::raw::c_char;
@@ -61,6 +64,7 @@ extern "C" {
     fn spanda_intrinsic_twelvefold() -> u8;
     fn spanda_ql_positions_derived() -> u8;
     fn spanda_tick12_readout(cycle_phase: f64) -> u8;
+    fn quat_from_ring_pos(tick: u8) -> SpandaQuaternion;
     fn spanda_codon_advance(rot: SpandaQuaternion, cycle: u64) -> u8;
 }
 
@@ -179,10 +183,25 @@ pub fn tick12_readout(cycle_phase: f64) -> u8 {
     unsafe { spanda_tick12_readout(cycle_phase) }
 }
 
+/// Canonical M1 ring quaternion authored by epi-lib's
+/// `RING_QUATERNION_LUT`. This is the live M1 rotational source; M3 codon
+/// charge quaternions classify transcription and must never substitute for it.
+pub fn ring_quaternion(tick12: u8) -> Quaternion {
+    let q = unsafe { quat_from_ring_pos(tick12 % 12) };
+    [q.w, q.x, q.y, q.z]
+}
+
 /// Codon advancement from the REAL quaternionic-rotational state + clock
 /// cycle + epogdoon compression — never from a bare tick12 integer.
 pub fn codon_advance(rot: SpandaQuaternion, cycle: u64) -> u8 {
     unsafe { spanda_codon_advance(rot, cycle) }
+}
+
+/// M1's advancement clock for one generation, sourced from the canonical C
+/// ring state and carried forward into the integrated M1→M2→M3 trace.
+pub fn ring_codon_advance(tick12: u8, cycle: u64) -> u8 {
+    let q = unsafe { quat_from_ring_pos(tick12 % 12) };
+    codon_advance(q, cycle)
 }
 
 /// Apply the # REFLECTION involution to a Spanda substage index.

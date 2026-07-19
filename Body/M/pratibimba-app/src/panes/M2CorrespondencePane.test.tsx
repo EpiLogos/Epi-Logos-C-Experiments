@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { M2CorrespondencePane } from './M2CorrespondencePane';
 import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
+import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
 import { useReadinessStore } from '../state/readinessStore';
@@ -104,7 +105,20 @@ function renderPane() {
 
 describe('M2CorrespondencePane', () => {
     beforeEach(() => {
-        vi.mocked(buildPentadicOverlay).mockReturnValue(READY_OVERLAY);
+        vi.mocked(buildPentadicOverlay).mockReturnValue({
+            ...READY_OVERLAY,
+            m2: {
+                ...READY_OVERLAY.m2!,
+                address72: PENTADIC_TRACE_FIXTURE.thirdSpanda.m2.address72,
+                axisViews: PENTADIC_TRACE_FIXTURE.thirdSpanda.m2.axisViews
+            },
+            epogdoon: {
+                blockPhase: 6,
+                collisionPair: null,
+                roundTripLoss: 1,
+                roundTripExact: false
+            }
+        });
         invoke.mockClear();
         setGateway({ invoke } as never);
         useProvenanceStore.setState({
@@ -253,6 +267,7 @@ describe('M2CorrespondencePane', () => {
             m1: null,
             m2: null,
             m3: null,
+            epogdoon: null,
             joinLine: null
         });
         renderPane();

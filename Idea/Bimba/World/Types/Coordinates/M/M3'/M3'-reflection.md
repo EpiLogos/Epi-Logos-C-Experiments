@@ -4,7 +4,7 @@ c_4_artifact_role: "coordinate-reflection"
 c_1_ct_type: "CT4a"
 c_5_crystallisation_state: "active-reflection"
 created: "2026-06-13"
-updated: "2026-06-13"
+updated: "2026-07-18"
 source_spec: "[[M3'-SPEC]]"
 source_architecture: "[[M3-ARCHITECTURE]]"
 ---
@@ -30,7 +30,7 @@ M3' is Mahamaya's symbolic transcription engine — the 64-address binary field 
 - **M3_MAJOR_ARCANA[22]** — 22 cards mapped to autosomal chromosome pairs 1-22 via amino_acid_index
 - **472 rotational codon states** — 40×7 + 24×8 partition, per the rotational_state_protocol.txt
 - **384 line-change operators** — I Ching hexagram transition graph, 360+24 partition
-- **M3_RES_MATRIX[64]** — 8 evolutionary gaps at epogdoon compression boundary
+- **M3_RES_MATRIX[64]** — partial resonance operator with 56 resolved targets and 8 provisional sentinels; distinct from the total 72→64 epogdoon map
 - **Third Spanda Equation** — 137=64+72+1, canonical matheme spine per DR-M3-6
 - **m3_major_arcana_from_codon()** — codon→amino acid→chromosome→Major Arcana card lookup
 - **T→U transcriptional bridge** — 37 T-containing codons undergo transcription; Minor Arcana rotational state engine reads transcriptional charge

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-18T20:18:06.311Z",
+ "generatedAt": "2026-07-19T08:30:58.446Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,9 +7,9 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 268,
-  "present": 79,
-  "absent": 189,
+  "probed": 270,
+  "present": 83,
+  "absent": 187,
   "unknown": 0
  },
  "methods": [
@@ -728,6 +728,13 @@
    "errorClass": "domain-error: missing required param 'sessionId'"
   },
   {
+   "method": "nara.session_close.read",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: nara.session_close.read requires session_id"
+  },
+  {
    "method": "nara.session_open",
    "advertised": false,
    "exists": true,
@@ -834,10 +841,10 @@
   },
   {
    "method": "s0'.verifier.respond_question",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: invalid verifier response request: missing field `coordinateString`"
   },
   {
    "method": "s0.current_profile",
@@ -943,6 +950,13 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
+  },
+  {
+   "method": "s1'.semantic.suggest_links",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: vault root missing: provide `vaultRoot` param or set EPILOGOS_VAULT"
   },
   {
    "method": "s1'.type.classify_c_layer",
@@ -1100,10 +1114,10 @@
   },
   {
    "method": "s2.graph.list",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: coordinatePrefix must be a string"
   },
   {
    "method": "s2.graph.list_by_filter",

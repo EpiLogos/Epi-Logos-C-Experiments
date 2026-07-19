@@ -235,6 +235,7 @@ typedef struct {
 } Archetype_Entry;
 
 extern const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE];
+extern const char* const ARCHETYPE_COORDINATE_LUT[ARCHETYPE_LUT_SIZE];
 
 /* Resolve an archetypal NUMBER (0-9) to its LUT entry. Index = number + 2
  * because (-) and 0/1 occupy slots 0-1 (dataset law: numbers 0-9 map to

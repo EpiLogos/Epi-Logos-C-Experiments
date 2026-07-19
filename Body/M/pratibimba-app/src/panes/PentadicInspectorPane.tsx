@@ -73,7 +73,8 @@ export function PentadicInspectorPane() {
                         <dd data-testid="m3-pentadic-hinge">
                             whole 0→{trace.wholeNumberEndpoint} · natural 1→{trace.naturalNumberEndpoint} ·
                             complement [{trace.familyBComplement[0]},{trace.familyBComplement[1]}] ·{' '}
-                            {trace.evolutionaryGap}
+                            epogdoon phase {trace.thirdSpanda.epogdoon.blockPhase}/9 ·
+                            round-trip loss {trace.thirdSpanda.epogdoon.roundTripLoss}
                         </dd>
 
                         <dt>Q reference</dt>

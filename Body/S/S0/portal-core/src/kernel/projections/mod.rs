@@ -6,6 +6,7 @@ pub mod context_frame_web;
 pub mod diatonic;
 pub mod elemental;
 pub mod harmonic_grammar;
+pub mod m0_void_structure;
 pub mod modal_resonator;
 pub mod pentadic_trace;
 pub mod phase_space;
@@ -23,6 +24,7 @@ pub use context_frame_web::MathemeContextFrameWebProjection;
 pub use diatonic::MathemeDiatonicContext;
 pub use elemental::MathemeElementalProjection;
 pub use harmonic_grammar::{MathemeHarmonicFamilyProjection, MathemeHarmonicGrammarProjection};
+pub use m0_void_structure::{m0_void_structure_ring, M0VoidLensProjection, M0VoidLensState};
 pub use modal_resonator::{
     BellPartialRole, ModalChromaticSlot, ModalCymaticMaterialProfile, ModalDiatonicRole,
     ModalLensMode, ModalM2Address72, ModalNodalAnchor, ModalOctetCarrier, ModalResonatorProfile,

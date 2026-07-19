@@ -54,8 +54,16 @@
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
   },
   {
+   "method": "nara.session_close.read",
+   "claimedBy": "22.T22.5"
+  },
+  {
    "method": "nara.session_open",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s0'.verifier.respond_question",
+   "claimedBy": "21.T21.11"
   },
   {
    "method": "s1'.base.ensure",
@@ -84,6 +92,10 @@
   {
    "method": "s2.graph.node",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s2.graph.list",
+   "claimedBy": "21.T21.14"
   },
   {
    "method": "s2.graph.ontology.reload",

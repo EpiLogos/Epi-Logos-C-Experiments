@@ -34,7 +34,7 @@ pub fn kernel_bridge_m2m3_lens_orbiter_relations(
 //
 // The 9:8 compression as the M2 vibrational address (0..71) descends into the
 // M3 codon space (0..63). The compression law lives in C — m3.h
-// `apply_epogdoon_compression` / `is_evolutionary_gap` and m2.h
+// `apply_epogdoon_compression` / `epogdoon_has_round_trip_loss` and m2.h
 // `m3_epogdoon_expand` — and is surfaced here verbatim through FFI so the
 // kernel-bridge and the Theia EpogdoonBridgeEngine read ONE authority and never
 // recompute the fold locally. (epi-lib is linked crate-wide via `use epi_lib as
@@ -44,16 +44,15 @@ pub fn kernel_bridge_m2m3_lens_orbiter_relations(
 pub const EPOGDOON_M2_ADDRESS_COUNT: u8 = 72;
 /// The Mahamaya 64-Invariant — the codon space (0..63).
 pub const EPOGDOON_M3_CODON_COUNT: u8 = 64;
-/// TSX-mirrored *expected* fold-point count (`EpogdoonBridgeEngine`
-/// `EPOGDOON_FOLD_POINT_COUNT`). Documentation-only parity constant — the live
-/// fold count is whatever the C `is_evolutionary_gap` law actually reports, not
-/// this value. The canonical structure is 8 9:8 collisions (the M3 "8 missing
-/// states"); this 9 is an off-by-one flagged for the owning M3 / Track-37 spec.
-pub const EPOGDOON_FOLD_POINT_COUNT: u8 = 9;
+pub const EPOGDOON_BLOCK_SIZE: u8 = 9;
+pub const EPOGDOON_BLOCK_COUNT: u8 = 8;
+pub const EPOGDOON_COLLISION_PAIR_COUNT: u8 = 8;
+pub const EPOGDOON_EXACT_ROUND_TRIP_COUNT: u8 = 8;
+pub const EPOGDOON_NON_EXACT_ROUND_TRIP_COUNT: u8 = 64;
 
 extern "C" {
     fn apply_epogdoon_compression(m2_idx_0_to_71: u8) -> u8;
-    fn is_evolutionary_gap(m2_vibration_index: u8) -> bool;
+    fn epogdoon_has_round_trip_loss(m2_vibration_index: u8) -> bool;
     fn m3_epogdoon_expand(val_64: u8) -> u8;
     static M2_TO_M3_CYMATIC_PROJECTION: [u64; 72];
     static M2_CAUSAL_RESONANCE_MASKS: [u64; 36];
@@ -62,16 +61,17 @@ extern "C" {
 /// The typed projection returned by `kernelBridge.m2.epogdoonProjection(address72)`.
 ///
 /// Mirrors the Theia `EpogdoonBridgeProjection` contract (camelCase fields):
-/// `apply_epogdoon_compression` (descending M2→M3), `is_evolutionary_gap` (the
-/// 9:8 fold detector), and the `m3_epogdoon_expand` round-trip back into the
+/// `apply_epogdoon_compression` (descending M2→M3),
+/// `epogdoon_has_round_trip_loss` (the non-exact round-trip detector), and the
+/// `m3_epogdoon_expand` round-trip back into the
 /// 72-space — all run from the C epogdoon law, never recomputed in Rust.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EpogdoonBridgeProjection {
     /// Compressed M3 codon index (0..63) — C `apply_epogdoon_compression(address72)`.
     pub compressed_codon: u8,
-    /// True at the nine fold-points — C `is_evolutionary_gap(address72)`.
-    pub is_evolutionary_gap: bool,
+    /// True when the 9:8 compression/expansion does not return to address72.
+    pub round_trip_loss: bool,
     /// Round-trip back into the 72-space — C `m3_epogdoon_expand(compressedCodon)`.
     pub expanded_back: u8,
 }
@@ -85,11 +85,11 @@ impl EpogdoonBridgeProjection {
         // SAFETY: the three epogdoon functions (epi-lib m2.c/m3.c) are pure
         // integer transforms with no global state; every u8 is a valid input.
         let compressed_codon = unsafe { apply_epogdoon_compression(address72) };
-        let folds = unsafe { is_evolutionary_gap(address72) };
+        let round_trip_loss = unsafe { epogdoon_has_round_trip_loss(address72) };
         let expanded_back = unsafe { m3_epogdoon_expand(compressed_codon) };
         Self {
             compressed_codon,
-            is_evolutionary_gap: folds,
+            round_trip_loss,
             expanded_back,
         }
     }
@@ -185,7 +185,7 @@ mod epogdoon_bridge_tests {
     use std::collections::HashSet;
 
     /// The projection faithfully surfaces the C epogdoon law for every M2
-    /// address (0..71): compression, the `is_evolutionary_gap` flag, and the
+    /// address (0..71): compression, the round-trip-loss flag, and the
     /// round-trip expansion all equal what the C functions compute. This is the
     /// "round-trips against C functions for all 72 indices" verification — the
     /// kernel never recomputes the fold in Rust.
@@ -203,30 +203,23 @@ mod epogdoon_bridge_tests {
                 cell.expanded_back,
                 (cell.compressed_codon as u16 * 9 / 8) as u8
             );
-            // C is_evolutionary_gap(i) ⇔ the round-trip does not return to i.
-            assert_eq!(cell.is_evolutionary_gap, cell.expanded_back != address72);
+            assert_eq!(cell.round_trip_loss, cell.expanded_back != address72);
         }
     }
 
     /// Documents the canonical C numbers the bridge surfaces. The literal C
-    /// `is_evolutionary_gap` (round-trip failure) flags 64 of the 72 addresses;
+    /// round-trip loss flags 64 of the 72 addresses;
     /// only the eight multiples of nine round-trip cleanly. The eight 9:8
     /// collisions are the "8 missing states" the M3 header (FR 2.3.6) names as
     /// driving the evolutionary spiral, and excluding them leaves exactly 64
     /// distinct codons — the count the Theia EpogdoonBridgeEngine expects.
     ///
     /// NOTE: this differs from the plan's "exactly 9" and the TSX
-    /// `EPOGDOON_FOLD_POINT_COUNT = 9`; that 9 is an off-by-one of the canonical
-    /// 8 collisions and is flagged for the owning M3 / Track-37 spec rather than
-    /// re-derived in Rust (the C law is the single authority).
     #[test]
     fn epogdoon_fold_structure_matches_canonical_c() {
         let lattice = epogdoon_bridge_lattice();
-        let c_gap_count = lattice
-            .iter()
-            .filter(|cell| cell.is_evolutionary_gap)
-            .count();
-        assert_eq!(c_gap_count, 64, "literal C is_evolutionary_gap flags 64/72");
+        let c_gap_count = lattice.iter().filter(|cell| cell.round_trip_loss).count();
+        assert_eq!(c_gap_count, 64, "C round-trip loss flags 64/72");
 
         let mut collisions = 0usize;
         let mut distinct_non_collision = HashSet::new();

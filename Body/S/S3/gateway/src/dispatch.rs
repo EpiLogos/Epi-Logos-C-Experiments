@@ -145,7 +145,12 @@ pub const NARA_LENS_RPC_METHODS: [&str; 3] =
 
 /// M4 session lifecycle RPCs. Route ownership stays under the S4/S5 Nara
 /// domain adapter; the profile bus receives protected handles only.
-pub const NARA_SESSION_RPC_METHODS: [&str; 2] = ["nara.session_open", "nara.session_close"];
+pub const NARA_SESSION_CLOSE_READ_METHOD: &str = "nara.session_close.read";
+pub const NARA_SESSION_RPC_METHODS: [&str; 3] = [
+    "nara.session_open",
+    "nara.session_close",
+    NARA_SESSION_CLOSE_READ_METHOD,
+];
 
 /// M4 PASU identity-setup RPCs consumed by the `m4.nara.pasuWizard` widget
 /// (Tranche 25.4, DR-WC-M4-3). Like the lens + session surfaces these resolve
@@ -635,6 +640,18 @@ pub fn route_nara_session_close(
     }
     if req.protein_handle.trim().is_empty() {
         return Err("nara.session_close requires protein_handle".to_owned());
+    }
+    let handle_session = req
+        .protein_handle
+        .strip_prefix("m4-protein://session/")
+        .and_then(|value| value.rsplit_once('/'))
+        .filter(|(_, opened_at)| opened_at.parse::<u64>().is_ok())
+        .map(|(session_id, _)| session_id)
+        .ok_or_else(|| {
+            "nara.session_close requires a canonical session protein_handle".to_owned()
+        })?;
+    if handle_session != req.session_id {
+        return Err("nara.session_close protein_handle does not belong to session_id".to_owned());
     }
     let start_codon = portal_core::transcription::c_start_codon();
     let stop_codon =

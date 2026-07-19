@@ -1,4 +1,5 @@
 use portal_core::m3_transcription_bridge::{M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_NODE_COUNT};
+use portal_core::pentadic_trace::EpogdoonRuntimeEvidence;
 use portal_core::{
     kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile,
 };
@@ -46,7 +47,7 @@ fn trace_for(cycle: u64, tick12: u8) -> AnuttaraPentadicRuntimeTraceProbe {
 
 fn kernel_bridge_types_source() -> String {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../M/epi-theia/extensions/kernel-bridge/src/common/types.ts");
+        .join("../../../M/pratibimba-app/src/bridge/types.ts");
     std::fs::read_to_string(&path)
         .unwrap_or_else(|err| panic!("failed to read {}: {err}", path.display()))
 }
@@ -225,10 +226,11 @@ fn pentadic_trace_round_trips_json_against_the_kernel_bridge_interface() {
     assert_eq!(decoded, trace);
     assert_eq!(decoded.whole_number_endpoint, 5);
     assert_eq!(decoded.natural_number_endpoint, 6);
-    assert!(matches!(
-        decoded.evolutionary_gap.as_str(),
-        "m2-wholeness-gap" | "m3-transcription-gap" | "m1-parent-restored"
-    ));
+    assert_eq!(
+        decoded.third_spanda.epogdoon.round_trip_loss,
+        decoded.third_spanda.epogdoon.source_address72
+            - decoded.third_spanda.epogdoon.expanded_address72
+    );
 }
 
 /// Tranche 36.T36.1 bullet 3 — the 72-sample grid: 72 x 5 = 360, the
@@ -261,6 +263,120 @@ fn seventy_two_sample_grid_holds_the_epogdoon_and_mahamaya_floor_laws() {
             );
         }
     }
+}
+
+#[test]
+fn third_spanda_trace_carries_one_live_m1_m2_m3_generation() {
+    for cycle in 0..6u64 {
+        for tick12 in 0..12u8 {
+            let profile =
+                MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+            let trace = profile
+                .anuttara_pentadic_trace
+                .as_ref()
+                .expect("profile carries the runtime trace");
+            let third = &trace.third_spanda;
+
+            assert_eq!(
+                third.m1.ring_quaternion, profile.ananda_vortex.ring_quaternion,
+                "M1 activity must use the real ring state, never the M3 codon-charge quaternion"
+            );
+            assert_eq!(third.m1.degree720, profile.degree720);
+            assert_eq!(
+                third.m1.parent_attribution,
+                profile.m1_topology.parent_attribution
+            );
+
+            assert_eq!(
+                third.m2.address72 as usize,
+                profile.resonance72.lens_anchor_index
+            );
+            assert_eq!(
+                third.m2.axis_views.index72(),
+                Some(third.m2.address72),
+                "all six M2 axes must decode and re-encode the same live address"
+            );
+
+            assert_eq!(
+                third.epogdoon.source_address72, third.m2.address72,
+                "the bridge evidence must describe this generation's M2 state"
+            );
+            assert_eq!(
+                third.epogdoon.compressed_address64,
+                profile.binary.m2_to_m3_symbol
+            );
+
+            assert_eq!(
+                third.m3.det_reception_address64,
+                profile.binary.m2_to_m3_symbol
+            );
+            assert_eq!(
+                third.m3.world_clock_address64,
+                profile
+                    .binary
+                    .mahamaya_address64
+                    .expect("clock address is live")
+            );
+            assert_eq!(third.m3.codon_rotation, profile.codon_rotation_projection);
+        }
+    }
+}
+
+#[test]
+fn epogdoon_evidence_separates_nine_eight_and_sixty_four() {
+    let mut collision_pairs = std::collections::BTreeSet::new();
+    let mut exact_round_trips = 0usize;
+    let mut non_exact_round_trips = 0usize;
+
+    for source_address72 in 0..72u8 {
+        let evidence = EpogdoonRuntimeEvidence::from_address72(source_address72);
+        let source = evidence.source_address72;
+
+        assert_eq!(evidence.ratio_numerator, 9);
+        assert_eq!(evidence.ratio_denominator, 8);
+        assert_eq!(evidence.block_index, source / 9);
+        assert_eq!(evidence.block_phase, source % 9);
+        assert_eq!(
+            evidence.compressed_address64 as u16,
+            u16::from(source) * 8 / 9
+        );
+        assert_eq!(
+            evidence.expanded_address72 as u16,
+            u16::from(evidence.compressed_address64) * 9 / 8
+        );
+        assert_eq!(
+            evidence.round_trip_loss,
+            source - evidence.expanded_address72
+        );
+        assert_eq!(evidence.round_trip_exact, evidence.round_trip_loss == 0);
+
+        if evidence.round_trip_exact {
+            exact_round_trips += 1;
+        } else {
+            non_exact_round_trips += 1;
+        }
+        if let Some(collision) = &evidence.collision {
+            assert_eq!(
+                collision.source_pair72,
+                [collision.ordinal * 9, collision.ordinal * 9 + 1]
+            );
+            assert!(collision.source_pair72.contains(&source));
+            collision_pairs.insert(collision.source_pair72);
+        }
+
+        assert_eq!(evidence.cardinality.block_size, 9);
+        assert_eq!(evidence.cardinality.block_count, 8);
+        assert_eq!(evidence.cardinality.collision_pair_count, 8);
+        assert_eq!(evidence.cardinality.exact_round_trip_count, 8);
+        assert_eq!(evidence.cardinality.non_exact_round_trip_count, 64);
+    }
+
+    assert_eq!(collision_pairs.len(), 8, "72→64 has eight collision pairs");
+    assert_eq!(exact_round_trips, 8, "only the eight block anchors close");
+    assert_eq!(
+        non_exact_round_trips, 64,
+        "the other 64 source addresses lose one step on round trip"
+    );
 }
 
 /// Tranche 36.T36.1 bullet 4 — the paired fifteens and both identity

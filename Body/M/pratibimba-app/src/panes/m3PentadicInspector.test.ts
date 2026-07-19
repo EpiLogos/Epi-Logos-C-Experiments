@@ -7,31 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { buildPentadicInspectorView, pentadicTraceFromPayload } from './m3PentadicInspector';
-
-const TRACE = {
-    tick: 31,
-    tick12: 7,
-    helix: 1,
-    position6: 1,
-    sourceBinaryState: '0/1',
-    wholeNumberEndpoint: 5,
-    naturalNumberEndpoint: 6,
-    familyBComplement: [1, 4],
-    shemDegreeQuantum: 5,
-    resonance72Index: 42,
-    degree360: 210,
-    m2ToM3Symbol: 37,
-    mahamayaAddress64: 37,
-    evolutionaryGap: 'm2-wholeness-gap',
-    codonId: 37,
-    codon: 'GTC',
-    lineChangeOperator: 251,
-    pairedMahamayaFifteens: [15, 15],
-    backboneIdentity: '24x15=360',
-    lineGraphIdentity: '360+24=384',
-    qCosmicRef: 'q_cosmic://tick/31',
-    provenance: ['portal_core::kernel/projections/pentadic_trace.rs::from_profile']
-};
+import { PENTADIC_TRACE_FIXTURE as TRACE } from '../test/pentadicTraceFixture';
 
 describe('m3 pentadic inspector view model (36.3 / 4.14)', () => {
     it('goes pending when the bus does not carry the trace — no sentinel fabrication', () => {

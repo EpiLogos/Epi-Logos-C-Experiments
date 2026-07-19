@@ -101,7 +101,7 @@ fn mahamaya_features(profile: &MathemeHarmonicProfile) -> Vec<f32> {
         binary.line_change_operator_address as f32 / 4095.0,
         binary.m2_vibration_index as f32 / 71.0,
         binary.m2_to_m3_symbol as f32 / 255.0,
-        if binary.evolutionary_gap { 1.0 } else { 0.0 },
+        if binary.round_trip_loss { 1.0 } else { 0.0 },
     ];
     values.extend(binary.nucleotide_bits.iter().map(|bit| *bit as f32 / 3.0));
     values

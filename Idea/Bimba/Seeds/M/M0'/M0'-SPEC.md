@@ -1,7 +1,7 @@
 ---
 coordinate: "M0'"
 status: "active-domain-spec"
-updated: "2026-06-13"
+updated: "2026-07-19"
 cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
@@ -77,6 +77,8 @@ M0-4' and M0-5' are **bridged routes only**: M0' emits an `epi-logos://ide/{exte
 
 ## Backend Contract Consumed
 
+- The lazy language browser consumes `s2.graph.list` with one of `#0-0` through `#0-5`, a non-negative 20-row offset, and `limit: 20`. The response is valid only when [[S2]] reports the live [[M0]] set as 108 rows and the compiled twelve-slot archetype projection as a 96-row residual set. The six subbranches contain 95 residual descendants; the `M0` root is returned and rendered explicitly as the 96th row. Node selection updates the carrier's shared coordinate state and never mutates graph canon.
+- The `#0-4` Holographic Matrix branch consumes the exact public-current profile key `m0_void_structure_ring`. [[Body/S/S0/portal-core]] derives its 16 ordered rows from the existing `CLOCK_LENSES_16` authority: `lensIndex` 0–15, coordinate `#0-4-{lensIndex}`, kernel label, and provenance state `canonical | canonical_absent | blocked`. The active carrier renders each row as one 22.5-degree arc in a fixed 240×240 sacred-circle ring; conjugate pairs 0/8 through 7/15 share an axis. Missing or malformed payloads block the ring, and lens selection updates shared coordinate state without creating graph canon or a renderer-local lens table.
 - [[S2]] graph services are the graph authority: canonical nodes, typed relations, pointer web, graph geometry, and source traceability.
 - [[S2]] / [[S1]] also own the diagram/MOC residency chain that backs map-to-source navigation: the [[ARCHITECTURE-DIAGRAM-PACK]] resolves through flat `Idea/Bimba/World/{Name}.md` forms and `Idea/Bimba/World/Types/{Type}/{Type}.canvas` type indexes (with `Idea/Bimba/World/Types/Coordinates` as the coordinate-semantic authority path). M0' surfaces these only as provenanced node `anchors` read from the graph node — never as a renderer-local registry or a hardcoded UI path. Where an M-family world corpus does not yet exist, the missing residency anchor is a canonical-absence/provenance state, not an invented path.
 - [[S2]] treats every legacy `#` coordinate as an M-family coordinate projection. The bimba map is the graph of M coordinates, including fully populated sub-coordinate nesting, not a parallel coordinate namespace. M' specs describe how those branches are reflected, rendered, queried, and protected; they must not redefine the underlying Bimba branch law.
@@ -367,6 +369,7 @@ The M0→M1 boundary is not a gap but a **seam** with five inheritance joints (c
 - `resonance72`: both `legacyResonanceIndex` and `lensAnchorIndex`.
 - `pointerAnchor`: selected coordinate, QL position, relation descriptors, source/spec/code/test anchors, and graph-law provenance.
 - `depositionAnchor`: safe DAY/NOW/session and episode handle references only.
+- `m0_void_structure_ring`: exactly 16 ordered kernel-authored Void-Structure lens rows under the literal snake-case wire key; every row carries `lensIndex`, `#0-4-{n}` coordinate, non-empty label, and explicit provenance state.
 
 ## Privacy Boundary
 
@@ -382,6 +385,7 @@ M0' may show public-current graph topology and safe profile facts. It must not e
 
 - Selecting a coordinate fetches canonical S2 node data and safe profile data from real services.
 - Tests prove all legacy `#` coordinates resolve as M-family coordinate projections and never fork into a second coordinate namespace.
+- Tests prove the lazy browser renders the real 108→96 residual invariant, fixed 20-row pages, non-overlapping coordinate order, explicit `M0` root, and shared-coordinate selection through a spawned gateway and live [[Neo4j]].
 - Tests prove M0' graph view renders within 100ms of a `selectCoordinate` action against a populated local S2 graph seeded from canonical exports or a real local S2 service.
 - Tests prove [[Graph Data Science|GDS]] overlay rings render from [[S2]]-provided [[FastRP]]/[[PageRank]]/similarity/community metadata and disappear cleanly when GDS is unavailable.
 - Tests prove the Anuttara inspector renders `symbol`, `formulation_type`, and `complete_formulation` only from S2 node properties, ontology-derived fields, or documented raw export aliases with provenance.

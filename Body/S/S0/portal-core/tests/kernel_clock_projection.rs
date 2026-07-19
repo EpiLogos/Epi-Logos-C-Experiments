@@ -177,7 +177,7 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     );
     assert_eq!(
         public_json["harmonicProfile"]["binary"]["transcriptionState"],
-        "provisional-gap"
+        "compressed-nonexact-round-trip"
     );
     assert_eq!(
         public_json["harmonicProfile"]["binary"]["datasetLutState"],
@@ -308,10 +308,10 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
     );
     assert_eq!(json["harmonicProfile"]["binary"]["m2VibrationIndex"], 64);
     assert_eq!(json["harmonicProfile"]["binary"]["m2ToM3Symbol"], 56);
-    assert_eq!(json["harmonicProfile"]["binary"]["evolutionaryGap"], true);
+    assert_eq!(json["harmonicProfile"]["binary"]["roundTripLoss"], true);
     assert_eq!(
         json["harmonicProfile"]["binary"]["transcriptionState"],
-        "provisional-gap"
+        "compressed-nonexact-round-trip"
     );
     assert_eq!(json["harmonicProfile"]["bedrock"]["psychoidNumber"], "#4");
     assert_eq!(

@@ -71,11 +71,13 @@ pub use gds::{
     GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY,
 };
 pub use graph_api::{
-    graph_contract, source_traceability_anchors, CoordinateResolution, GraphMethodParams,
-    GraphMethodService, GraphNodeRequest, GraphParamValue, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, HarmonicRelationMaterializationPlan,
+    graph_contract, m0_archetype_lut_coordinates, m0_residual_list_plan,
+    source_traceability_anchors, CoordinateResolution, GraphMethodParams, GraphMethodService,
+    GraphNodeRequest, GraphParamValue, GraphQueryRequest, GraphTraverseDirection,
+    GraphTraverseRequest, HarmonicRelationMaterializationPlan,
     HarmonicRelationMaterializationRequest, KernelResonanceObservationPlan,
-    KernelResonanceObservationRequest, PointerWebRefreshPlan, PointerWebRefreshRequest,
+    KernelResonanceObservationRequest, M0ResidualListPlan, M0ResidualListRequest,
+    PointerWebRefreshPlan, PointerWebRefreshRequest,
 };
 pub use lifecycle::{
     live_graph_backed_evidence, maybe_refresh_semantic_embeddings, LiveGraphBackedEvidence,

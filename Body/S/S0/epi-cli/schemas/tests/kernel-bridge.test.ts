@@ -14,6 +14,7 @@ import {
   KernelBridgeRuntimeSnapshot,
   KleinFlipEvent,
   M123ChimeFrame,
+  M0VoidStructureRing,
   MathemeHarmonicProfile,
   MonoPolyOperator,
   isM123ChimeCoherent,
@@ -46,6 +47,25 @@ describe("Kernel bridge contract package", () => {
     expect(parsed.audioOctet).toHaveLength(8);
     expect(parsed.nodalQuartet).toHaveLength(4);
     expect(parsed.binary).toEqual(parsed.mahamaya);
+    expect(parsed.m0_void_structure_ring).toHaveLength(16);
+    expect(parsed.m0_void_structure_ring[0]).toMatchObject({
+      lensIndex: 0,
+      coordinate: "#0-4-0",
+      label: "Microscopic",
+      state: "canonical",
+    });
+    expect(parsed.m0_void_structure_ring[15].label).toBe("Unity");
+  });
+
+  it("rejects reordered or renderer-authored M0 void-structure lenses", () => {
+    const ring = structuredClone(baselineProfile.m0_void_structure_ring);
+    expect(M0VoidStructureRing.parse(ring)).toHaveLength(16);
+
+    ring[8].coordinate = "#0-4-renderer-authored";
+    expect(() => M0VoidStructureRing.parse(ring)).toThrow();
+    ring[8].coordinate = "#0-4-8";
+    ring[8].lensIndex = 7;
+    expect(() => M0VoidStructureRing.parse(ring)).toThrow();
   });
 
   it("round-trips VakLanguificationTrace and omits absent optional fields", () => {
@@ -521,12 +541,12 @@ describe("Kernel bridge contract package", () => {
     expect(
       EpogdoonBridgeProjection.parse({
         compressedCodon: 15,
-        isEvolutionaryGap: true,
+        roundTripLoss: true,
         expandedBack: 16,
       }),
     ).toEqual({
       compressedCodon: 15,
-      isEvolutionaryGap: true,
+      roundTripLoss: true,
       expandedBack: 16,
     });
     const segment = Array.from({ length: 24 }, (_, section) => section * 15);

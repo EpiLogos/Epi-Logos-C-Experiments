@@ -17,6 +17,10 @@
  */
 
 import { pentadicTraceFromPayload } from '../panes/m3PentadicInspector';
+import type {
+    ThirdSpandaCodonRotation,
+    ThirdSpandaRoutingAxisViews
+} from '../bridge/types';
 
 export type PentadicOverlayState =
     | 'ready'
@@ -26,11 +30,37 @@ export type PentadicOverlayState =
 export interface PentadicOverlayModel {
     readonly state: PentadicOverlayState;
     /** M1 K² slot: the hinge + the 0/1 substrate marker. */
-    readonly m1: { tick12: number; position6: number; sourceBinaryState: string } | null;
+    readonly m1: {
+        tick12: number;
+        position6: number;
+        sourceBinaryState: string;
+        degree720: number;
+        ringQuaternion: readonly [number, number, number, number];
+        advancementAddress64: number;
+        parentAttribution: string;
+    } | null;
     /** M2 texture slot: resonance index + Shem degree quantum. */
-    readonly m2: { resonance72Index: number; shemDegreeQuantum: number } | null;
+    readonly m2: {
+        resonance72Index: number;
+        shemDegreeQuantum: number;
+        address72: number;
+        axisViews: ThirdSpandaRoutingAxisViews;
+    } | null;
     /** M3 lens-ring slot: Mahāmāyā address + codon cell. */
-    readonly m3: { mahamayaAddress64: number; codon: string; codonId: number } | null;
+    readonly m3: {
+        mahamayaAddress64: number;
+        codon: string;
+        codonId: number;
+        detReceptionAddress64: number;
+        worldClockAddress64: number;
+        codonRotation: ThirdSpandaCodonRotation;
+    } | null;
+    readonly epogdoon: {
+        blockPhase: number;
+        collisionPair: readonly [number, number] | null;
+        roundTripLoss: number;
+        roundTripExact: boolean;
+    } | null;
     /** The translation rule joined to the live hinge — one line, not a proof label. */
     readonly joinLine: string | null;
 }
@@ -40,6 +70,7 @@ const PENDING: PentadicOverlayModel = Object.freeze({
     m1: null,
     m2: null,
     m3: null,
+    epogdoon: null,
     joinLine: null
 });
 
@@ -70,6 +101,7 @@ export function buildPentadicOverlay(
             m1: null,
             m2: null,
             m3: null,
+            epogdoon: null,
             joinLine: null
         });
     }
@@ -78,16 +110,31 @@ export function buildPentadicOverlay(
         m1: Object.freeze({
             tick12: trace.tick12,
             position6: trace.position6,
-            sourceBinaryState: trace.sourceBinaryState
+            sourceBinaryState: trace.sourceBinaryState,
+            degree720: trace.thirdSpanda.m1.degree720,
+            ringQuaternion: trace.thirdSpanda.m1.ringQuaternion,
+            advancementAddress64: trace.thirdSpanda.m1.advancementAddress64,
+            parentAttribution: trace.thirdSpanda.m1.parentAttribution
         }),
         m2: Object.freeze({
             resonance72Index: trace.resonance72Index,
-            shemDegreeQuantum: trace.shemDegreeQuantum
+            shemDegreeQuantum: trace.shemDegreeQuantum,
+            address72: trace.thirdSpanda.m2.address72,
+            axisViews: trace.thirdSpanda.m2.axisViews
         }),
         m3: Object.freeze({
             mahamayaAddress64: trace.mahamayaAddress64,
             codon: trace.codon,
-            codonId: trace.codonId
+            codonId: trace.codonId,
+            detReceptionAddress64: trace.thirdSpanda.m3.detReceptionAddress64,
+            worldClockAddress64: trace.thirdSpanda.m3.worldClockAddress64,
+            codonRotation: trace.thirdSpanda.m3.codonRotation
+        }),
+        epogdoon: Object.freeze({
+            blockPhase: trace.thirdSpanda.epogdoon.blockPhase,
+            collisionPair: trace.thirdSpanda.epogdoon.collision?.sourcePair72 ?? null,
+            roundTripLoss: trace.thirdSpanda.epogdoon.roundTripLoss,
+            roundTripExact: trace.thirdSpanda.epogdoon.roundTripExact
         }),
         // The rule is joined to the LIVE hinge (whole 0→5 / natural 1→6 from
         // the trace itself), not floated as a standalone identity.

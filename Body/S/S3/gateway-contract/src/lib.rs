@@ -76,11 +76,13 @@ pub use portal_core::{AnandaProjection, M3TranscriptionPacket};
 
 pub const S0_PRIME_VERIFIER_CHECK_STATE_METHOD: &str = "s0'.verifier.check_state";
 pub const S0_PRIME_VERIFIER_EMIT_QUERY_METHOD: &str = "s0'.verifier.emit_query";
+pub const S0_PRIME_VERIFIER_RESPOND_QUESTION_METHOD: &str = "s0'.verifier.respond_question";
 pub const S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD: &str = "s0'.verifier.validate_membership";
 pub const S0_PRIME_VERIFIER_OWL_QUERY_METHOD: &str = "s0'.verifier.owl_query";
 pub const S0_PRIME_VERIFIER_METHODS: &[&str] = &[
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
     S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
+    S0_PRIME_VERIFIER_RESPOND_QUESTION_METHOD,
     S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
 ];
@@ -99,6 +101,7 @@ pub const KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD: &str =
     "kernelBridge.m2.planetaryElementalWeights()";
 pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD: &str =
     "kernelBridge.m3.lensCodonBinary(lensId)";
+pub const S2_GRAPH_LIST_METHOD: &str = "s2.graph.list";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
 pub const S2_GRAPH_ONTOLOGY_RELOAD_METHOD: &str = "s2.graph.ontology.reload";
@@ -141,6 +144,7 @@ pub const S1_Q_ARTICULATION_METHODS: &[&str] = &[S1_Q_ARTICULATION_ACCEPT_METHOD
 pub const S1_BASE_METHODS: &[&str] = &[S1_BASE_ENSURE_METHOD];
 
 pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
+    S2_GRAPH_LIST_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
     S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_SEED_SNAPSHOT_METHOD,

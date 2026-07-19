@@ -7,7 +7,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 1. **T0 — Absorb and retarget: 33-harmonic-energy-channel-handoff.md (law-only source)**
 
    Brief: read `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff.md` IN FULL. It carries binding law/design with no tranche list. Enumerate its unbuilt commitments against the current carrier (register §2 track 33 lists known gaps) as new numbered tranches appended to THIS file, then close this task with the enumeration as evidence.
-   Depends on Track 00 Tranche 3.
+   Depends on Track 00 Tranche 3, 12.T12.24 (Stream C), and 05.T5.22 (Stream F).
    Verify: new tranches parse into the ledger (re-run the assess script and show the new task ids); each cites its original section.
 
 ---

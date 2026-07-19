@@ -3,7 +3,7 @@ title: "M3' Mahāmāyā Architecture — Total Shape, Substrate Map, Profile-Bus
 coordinate: "M3 / M3'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
-updated: "2026-06-09"
+updated: "2026-07-18"
 cycle-3: reconciled
 authority_relation: "Domain authority for the total shape of the M3' surface. M3'-SPEC §§7-9 are pre-existing law that this document organises into a buildable whole. Where they disagree, M3'-SPEC remains authoritative for substrate contracts; this document is authoritative for the surface-build, sub-coordinate layout, and tick choreography. Companion doc to M3'-SPEC, not a replacement."
 depends_on:
@@ -81,7 +81,7 @@ C law in `Body/S/S0/epi-lib/include/m3.h`:
 | Symbol | Decl | Role |
 |---|---|---|
 | `apply_epogdoon_compression(m2_idx_0_to_71)` | `m3.h:351-353` | `(m2_idx * 8) / 9` — the integer DET reduction |
-| `is_evolutionary_gap(m2_vibration_index)` | `m3.h:356-360` | Returns true when round-trip `(idx×8/9)×9/8` does not recover input — the **9 fold-points** that don't close |
+| `epogdoon_has_round_trip_loss(m2_vibration_index)` | `m3.h` | Returns true when `expand(compress(idx)) != idx`: 64 non-exact round trips, distinct from eight collision pairs and block size nine |
 | `get_parashakti_frequency(rot_state, is_shadow)` | `m3.h:344-348` | Ascending M3→M2 mirror; +36 for shadow phase |
 
 Rust mirror in `Body/S/S0/portal-core/src/kernel.rs:366` — `pub resonance72: MathemeResonance72Projection` carries the M2-side index that DET reduces. The reduction is integer-deterministic but **many-to-one**: 9 of the 72 fold (DR-M3-2 pending).
@@ -133,7 +133,7 @@ Materialised at `Body/S/S0/portal-core/src/codon_rotation_projection.rs`:
 |---|---|---|
 | `CLOCK_DEGREE_LUT[360]` | `m3.h:980` + `Body/S/S0/epi-lib/src/m3_clock_lut.c` (auto-generated, 749 LOC) | One entry per degree node, 27 fields per `Clock_Degree_Entry` (`m3.h:936-978`): `degree_node_360`, `exact_degree_720`, `zodiac_sign`, `zodiac_degree`, `decan_idx`, `decan_position`, `is_backbone_node`, `hexagram_id`, `hexagram_line_active`, `is_non_dual_codon`, `codon_class`, `codon_upper_pair`, `codon_lower_pair`, `tarot_card_id`, `decan_planet`, `decan_element`, `decan_chakra`, `tick12`, `strand`, `dr_ring`, `m1_ananda_value`, `m0_archetype`, `shadow_degree`, `polar_opposite`, `enneadic_chamber`, `chamber_day_night` |
 | `_Static_assert(360 + 24 == 64 * 6)` | `m3.h:933-934` | The 384 line-change topology law — compile-time enforced |
-| `M3_RES_MATRIX[64]` + `m3_resonance_lookup(...)` | `m3.h:386-396` | The 56+8 resonance structure; 8 gaps at `0xFF` → `STATUS_PROVISIONAL_BIT` |
+| `M3_RES_MATRIX[64]` + `m3_resonance_lookup(...)` | `m3.h:386-396` | Partial 64-address resonance operator: 56 resolved targets + 8 `0xFF` sentinels → `STATUS_PROVISIONAL_BIT`; independent of the total 72→64 epogdoon map |
 | `M3_COMP_MATRIX[64]` | `m3.h:403` | `comp[i] = i ^ 0x3F` — 180° I-Ching rotation |
 | `M3_MOVE_MATRIX[64]` | `m3.h:404` | Trigram swap |
 | `M3_Wheel_State` struct | `m3.h:442-448` | `current_degree (0-719)`, `layer (primary/shadow)`, `active_sectors` bitboard, `season`, `heaven_mode` |
@@ -238,7 +238,7 @@ Three gaps, four DR decisions:
 
 **Gap 2: The 16+1 Mahāmāyā lens stack (DR-M3-3).** The 12-count `MathemeLensMode.lens` field is the M1' chromatic-anchor, NOT the §8.10 M3-aperture stack. No `M3_LENS_STACK` field exists on the profile. The Lens Annulus depth view (§5.4 below) cannot render until DR-M3-3 closes the namespace and a field lands.
 
-**Gap 3: The DET fold / gap-marker (DR-M3-2, VALIDATED).** DR-M3-2 ratified the 72→64 fold as the **9:8 epogdoon** (structural harmonic, cross-referenced to [[M2']] §9.5) — **not** a uniqueness/partitioning question, and **no new profile field**. The 9-of-72 indices that don't round-trip stay surfaced by the existing boolean `is_evolutionary_gap(address72)` (C law at `m3.h:356-360`, mirrored as `is_evolutionary_gap: bool` in `portal-core/src/kernel.rs` and `evolutionary_gap: bool` in `portal-core/src/luts/mahamaya.rs`); UI must not assume bijectivity. The earlier "typed fold-state" reading (a `DetFoldState` enum) is **superseded** — see §4.5.
+**Gap 3: The DET evidence conflation (DR-M3-2 amended 2026-07-18).** The no-new-top-level-field decision remains valid, but its boolean wording was not. The 9:8 law has a nine-address block, eight compression collision pairs, eight exact anchors, and 64 non-exact round trips. C now names the scalar predicate `epogdoon_has_round_trip_loss`; the profile names it `roundTripLoss`; the full block/collision/round-trip evidence lives inside `anuttaraPentadicTrace.thirdSpanda.epogdoon`. UI must not assume bijectivity or call any one of these counts “the fold points.”
 
 ### §4.3 The `transcription_packet` projection (per Tranche 4.8 / DR-M3-4)
 
@@ -357,7 +357,7 @@ pub struct MahamayaLensSegment {
 
 **Superseded design (do not build).** An earlier reading proposed replacing `evolutionaryGap: bool` with a typed `pub det_fold_state: DetFoldState { Closed, GapFolded { upper_index }, ProvisionalDataset }` enum. **DR-M3-2 ratified against this** (VALIDATED 2026-06-02): the 72→64 fold is the **9:8 epogdoon** structural identity (cross-referenced to [[M2']] §9.5), not a slots-to-codons partition needing a gap-marker contract. **No new profile field is added.**
 
-**Live surface.** The nine fold-points are the existing boolean `is_evolutionary_gap(address72)` (C law at `m3.h:356-360`), already carried as `evolutionary_gap: bool` (`portal-core/src/luts/mahamaya.rs`) and `is_evolutionary_gap: bool` (`portal-core/src/kernel.rs`) and reachable over FFI — there is no `det_fold_state` / `DetFoldState` / `det72to64Fold` type anywhere in the substrate. Provisional-vs-materialised provenance is the separate, existing `dataset_lut_state` (§5.9 provenance-state row). The renderer reads the boolean + dataset-state honestly and must not assert injectivity.
+**Live surface.** `thirdSpanda.epogdoon` carries ratio, source, block index/phase, compression, expansion, exactness/loss, optional collision pair, and cardinalities. `mahamaya.roundTripLoss` is the compact scalar mirror. There is no top-level `det_fold_state` / `DetFoldState` / `det72to64Fold`. Dataset materialisation remains the separate `dataset_lut_state`; the renderer reads both without asserting injectivity.
 
 ### §4.6 The `coupling_flow_alignment` inspector projection (per full theoretical alignments)
 
@@ -465,9 +465,9 @@ A horizontal strip below the wheel renders the transduction chain (SPEC §8.12):
 [ M2-5 source: 72-idx=N ] → [ DET ÷9×8: idx=M ] → [ 64-address: addr ] → [ codon: ATG ] → [ q_cosmic: pp,mm,mp,pm ]
 ```
 
-- **Fold/gap visibility:** when `is_evolutionary_gap(address72)` is true (a fold-point), the DET arrow flashes red; otherwise blue (DR-M3-2 — the existing boolean is the surface, no typed fold-state field).
+- **Epogdoon visibility:** the DET arrow is amber for a non-exact round trip; collision membership and the active 0..8 block phase are rendered separately.
 - **Public-current only:** never the user's private bioquaternion. Per SPEC §4 and UX §8.
-- Read from `profile.resonance72`, `profile.mahamaya` (carries the `is_evolutionary_gap` boolean), `profile.codon_rotation_projection`, `profile.q_cosmic` (DR-M3-2 — no separate `det_fold_state` field).
+- Read from `profile.anuttaraPentadicTrace.thirdSpanda`, with `profile.mahamaya.roundTripLoss` as compact mirror and `profile.codonRotationProjection` as the independent projection authority.
 
 ### §5.7 M3-5' Four depth-view modes — the double-torus
 
@@ -514,7 +514,7 @@ A summonable side-panel renders the chain of `TranscriptionalClockPacket`s as a 
 | Spoke colour | DR ring | Gold (Mahāmāyā) / emerald (Paraśakti) — **same as M1-2** |
 | Halo colour | Cl(4,2) signature at active codon's matrix-path | indigo for COMPLEMENTARY (i-axis), warm for MOVING_RESTING (j-axis), green for SAME_QUALITY (k-axis) — **using `M3_MATRIX_QUATERNION_AXIS` at `m3.h:166-170`** |
 | Provenance state | `dataset_lut_state` | Materialised = solid; pending = dashed; provisional-gap = dotted |
-| Fold-state marker | `is_evolutionary_gap` (bool) + `dataset_lut_state` | closed = blue; fold-point = amber; provisional dataset = grey via `dataset_lut_state` (DR-M3-2 — no `det_fold_state` field) |
+| Epogdoon marker | `thirdSpanda.epogdoon` + `dataset_lut_state` | exact anchor = blue; non-exact = amber; collision pair labelled separately; provisional dataset = grey |
 
 ### §5.10 Coupling-flow / measurement-face inspector
 
@@ -526,6 +526,8 @@ This summonable technical panel sits beside the Transcription Clock Chain panel.
 4. **Recognition/Nara lane** — shows whether the active packet-chain has been handed to Nara as oracle, identity, journal/body, or experiment-analogue evidence. This lane reads protected handles only; it never loads private artifact bodies.
 
 #### §5.10.1 Third Spanda Equation — the five canonical forms (required skeleton display)
+
+The forms below are the reference register, not the runtime implementation. The panel first renders `anuttaraPentadicTrace.thirdSpanda`: M1's C-authored ring/Hopf/advancement state, M2's active 72-address decoded through all six routing axes, the typed epogdoon transition, and M3's DET-reception/world-clock/codon-rotation state. Only then may it render Mersenne, 128, 137, QCD, or measured-physics alignments.
 
 The symbolic-skeleton lane anchors on the **Third Spanda Equation** in its five canonical forms per [[ql_m0_m3_third_spanda_integral_quilting_v2]] (kernel-canon per DR-M3-6; the transcriptional sixth form per CU-FORM-1 may be shown in expanded mode):
 
@@ -549,13 +551,13 @@ and the **translation rule**:
 9_M2 = 8_M3 + 1_M1
 ```
 
-(the 9-gap at M2's 72-fold = 8 evolutionary-discontinuity markers at M3's RES_MATRIX + the M1 parent unit; the same shape recurs as QCD `3 ⊗ 3̄ = 8 ⊕ 1` in the physics-descent lane).
+This is a symbolic translation rule, not the integer compression algorithm. Runtime evidence keeps three cardinalities distinct: `9` is epogdoon block size, `8` is compression collision-pair count, and `64` is non-exact round-trip count. The M1 parent term belongs to the symbolic 137 register; it is not an extra address inserted by `floor(8i/9)`. The QCD `3 ⊗ 3̄ = 8 ⊕ 1` form remains a labelled physics analogue.
 
 The **7-8-9 spine** is displayed as a labelled triad anchoring the lane: `7 = action/generator (127 = M_7)`, `8 = octave-field (128 = 2^7)`, `9 = wholeness/recognition (137 − 128)`. This triad is the operational reading of `N_5 = 8n ± n → {7n, 9n}` per M0-4 N# at [m0.h](Body/S/S0/epi-lib/include/m0.h).
 
 **Provenance highlighting:** the lane may highlight current packet links to Ananda/Mahāmāyā skeleton events — `36/64`, `64/72`, `Additive137`, `MersenneM7Ground`, `SpandaCrownBifurcation` — and the current Nara handoff state (recognition lane). These names are the live `skeletonEventsActive` vocabulary consumed by the Theia `ThirdSpandaMathemeProofPanel`.
 
-**Register discipline (unchanged):** this subsection adds displayed skeletons only. The inspector remains source-warrant/provenance UI — it must not compute RG flow, electroweak mixing, QCD corrections, or experimental constants in the renderer, and it never claims a QL derivation of the fine-structure constant. The caveat stands: `137 is the integer skeleton; 137.035999... is the dressed low-energy measurement-face`.
+**Register discipline:** the typed M1→M2→M3 generation is operational evidence. The canonical forms in this subsection remain source-warrant/reference UI. The renderer must not compute RG flow, electroweak mixing, QCD corrections, or experimental constants, and it never claims a QL derivation of the fine-structure constant. `128` is the doubled-phase/high-energy reference face, `137` the integer skeleton, and `137.035999...` the dressed low-energy measurement-face.
 
 The panel's default state is compact: one line per register with the caveat visible. It expands only in developer/pedagogical mode. Its value is not spectacle; it is preventing the system from sliding between symbolic mathematics, physics, and psychoid bridge without saying which register is speaking.
 
@@ -598,7 +600,7 @@ on tick_advance(t, t+1, dt):
 | Tarot card glow | Re-targets if codon-suit-rank changed | `profile.mahamaya.codonId` → suit, rank | Tick-quantised |
 | Cl(4,2) halo colour | Recolours per matrix-path axis | `profile.transcription_packet.generation.matrix_path` (post-DR-M3-4) | Tick-quantised |
 | M3-0 provenance strip | Re-renders entire chain | `profile.{resonance72, mahamaya, codon_rotation_projection, q_cosmic}` | Tick-quantised |
-| DET arrow flash | Red flash if `is_evolutionary_gap` (fold-point) | `profile.mahamaya` `is_evolutionary_gap` (DR-M3-2 — no `det_fold_state` field) | Tick-quantised |
+| DET arrow flash | Amber when the active 9:8 round trip is non-exact; collision pair shown separately | `profile.anuttaraPentadicTrace.thirdSpanda.epogdoon` | Tick-quantised |
 | Audio pulse (M2-1' window) | 8 emitters at `audio_octet` frequencies | `profile.audio_octet[8]` | Every frame (envelope) |
 | Nodal-quartet glyphs | 4 boundary markers at `nodal_quartet` | `profile.nodal_quartet[4]` | Tick-quantised |
 | Transcription chain lane | Scrolls horizontally one slot left | `profile.transcription_packet` history | Tick-quantised |
@@ -795,7 +797,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 | `polar_opposite_su2` (SU(2)-preserving) | `m3.h:370-374` |
 | `identity_returned` (720° return check) | `m3.h:458-460` |
 | `read_cosmic_clock` (Unified_Clock_State alias) | `m3.h:331-333` |
-| `apply_epogdoon_compression` / `is_evolutionary_gap` / `get_parashakti_frequency` | `m3.h:351-360, 344-348` |
+| `apply_epogdoon_compression` / `epogdoon_has_round_trip_loss` / `get_parashakti_frequency` | `m3.h` |
 | Algorithmic codon classifier + sequence/anticodon | `Body/S/S0/portal-core/src/codon.rs:19-52` |
 | `CODON_TO_AA[64]` + `AA_STOP=10` + `codon_to_amino_acid` | `codon.rs:3-16` |
 | `LENS_COUNT=12`, `MODE_COUNT=7`, `LENS_MODE_COUNT=84` | `Body/S/S0/portal-core/src/codon_rotation_projection.rs:5-7` |
@@ -821,7 +823,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 |---|---|---|
 | `transcription_packet: TranscriptionalClockPacket` on profile | 4.8 / 10.x / DR-M3-4 | profile-bus addition |
 | `m3_lens_stack: MahamayaLensStack` on profile | 10.x post-DR-M3-3 | profile-bus addition |
-| ~~`det_fold_state: DetFoldState` typed~~ — **ratified out (DR-M3-2)**: no new field; the existing `is_evolutionary_gap: bool` stays the surface | — | superseded — no change |
+| ~~`det_fold_state: DetFoldState` top-level field~~ — **ratified out (DR-M3-2), amended 2026-07-18**: typed block/collision/round-trip evidence lives inside `anuttaraPentadicTrace.thirdSpanda.epogdoon`; scalar projection uses `roundTripLoss` | — | landed |
 | `coupling_flow_alignment: CouplingFlowAlignment` inspector projection | 4.10 / 10.M3 optional | profile-bus or spec-backed inspector addition |
 | Six summonable inspectors implementation | 4.2 | extension build |
 | Four depth-view-mode rendering implementation | 4.2 / 4.3 | extension build |
@@ -838,7 +840,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 - **The Tarot-suit-quadrant chord-thickness encoding** of per-suit integrals (84/96/88/92) — substrate provides the integers; the visual encoding is renderer-side.
 - **The 12-deep ring-buffer trail rendering** — substrate provides the `M3_Ring_Buffer` data; the visual trail is renderer-side.
 - **The `K² × T²_Mahāmāyā` concentric-torus animation** in Toroidal depth mode — K² mesh is borrowed; T²_Mahāmāyā is rendered as a second torus parameterised from `CLOCK_DEGREE_LUT`; the co-foliation animation is renderer-side.
-- **The Pauli-Jung Várlaki/Rudas `137` skeleton overlay** in Toroidal pedagogical mode — labels and arrows over the geometry; pedagogy, not substrate.
+- **The Pauli-Jung Várlaki/Rudas `137` reference layer** in Toroidal pedagogical mode — labels and arrows follow the live Third-Spanda process; pedagogy, not substrate.
 - **The coupling-flow / measurement-face inspector** — source-warrant labels over active M3 packet and integrated 1-2-3 state. It is a register-discipline surface, not a physics engine.
 
 ### §9.4 Forbidden (do not invent)
@@ -848,7 +850,7 @@ The widget accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing replay
 - Local clock — consume `tick`, `tick12`, `degree720`, `degree360` only (SPEC §1 commitment 1)
 - Local Tarot/I-Ching/codon mapping tables — `M3_TAROT_CODON_MAP`, `M3_TAROT_QUATERNION_*`, `M3_MAJOR_ARCANA`, `CODON_TO_AA` are kernel-side (SPEC §4)
 - Local fork of `m3.h` constants into TS — all constants live in the codec (SPEC §6 readiness; cycle-2 enforces forbidden-imports in `index.ts:95`)
-- Local DET fold computation — consume the existing `is_evolutionary_gap` flag via FFI / profile (DR-M3-2 — no local recompute, no typed `det_fold_state` field)
+- Local DET computation — consume `thirdSpanda.epogdoon` and `mahamaya.roundTripLoss`; no renderer recompute and no second top-level fold field
 - Local Cl(4,2) algebra — the one quaternion type lives at `portal-core/src/quaternion.rs` (cycle-3 4.7 audit)
 - Local M0' graph fork — render the codon-wheel; address bimba nodes via S2 (SPEC §1 commitment 6, §8.13)
 - Local M5 reward/training logic — read-only kernel-trace overlays only (`rewardTrainingAuthority: 'outside-renderer'`)
@@ -877,7 +879,7 @@ The M3' surface is acceptance-ready when:
 13. Identity-return test: 12-tick × 60° cycle (720° total) ends with whole-surface bloom + centre pulse.
 14. Provenance test: when `transcription_packet` missing, transcription chain lane renders header + empty rows + `pending-transcription-packet` badge (post-DR-M3-4 / Tranche 4.8).
 15. Provenance test: when `m3_lens_stack.namespace_resolved == false`, Lens Annulus renders 16 grey segments + `pending-m3-lens-stack-namespace` banner (post-DR-M3-3).
-16. Provenance test: when `is_evolutionary_gap(address72)` is true (a fold-point), the M3-0 strip DET arrow renders red; closed addresses render blue (DR-M3-2 — boolean surface, no `det_fold_state` field).
+16. Provenance test: all 72 addresses prove nine-address blocks, eight collision pairs, eight exact anchors, and 64 non-exact round trips; the M3-0 strip renders active block phase, collision membership, and loss without local recomputation.
 17. Round-trip test: `lens_mode_from_codon_rotation(codon_rotation_from_lens_mode(lens, mode))` is single-valued for representative cells from SPEC §7 (Tranche 4.1).
 18. Vimarśa-window audit: `audio_octet` / `nodal_quartet` consumed via `payload.audioOctet` / `payload.nodalQuartet`; no local indexing of `m2.h` LUTs in extension `src/`.
 19. Boundary test: no K² mesh primitive or `RING_QUATERNION_LUT` fork in `m3-mahamaya/src/` — Toroidal mode borrows via FFI / shared geometry handle from M1-5 ARCHITECTURE.md scaffold.

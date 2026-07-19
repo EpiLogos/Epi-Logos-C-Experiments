@@ -27,10 +27,10 @@
 
 pub use portal_core::{
     apply_epogdoon_compression, codon_rotation_from_lens_mode, codon_rotation_surface,
-    epogdoon_log, epogdoon_ratio, harmonic_ratio_fraction_for_sub_tick, is_evolutionary_gap,
-    kernel_energy_evaluate, kernel_resonance_index, kernel_resonance_square_emphasis,
-    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, line_change_operator,
-    mahamaya_address64_from_degree, quat_distance_sq, slash_flip_bimba_prime,
+    epogdoon_has_round_trip_loss, epogdoon_log, epogdoon_ratio,
+    harmonic_ratio_fraction_for_sub_tick, kernel_energy_evaluate, kernel_resonance_index,
+    kernel_resonance_square_emphasis, kernel_tick_from_epogdoon, lens_mode_from_codon_rotation,
+    line_change_operator, mahamaya_address64_from_degree, quat_distance_sq, slash_flip_bimba_prime,
     tritone_square_for_lens, vimarsha_read_profile, ActivityStateEffect, BioQuaternionState,
     CodonRotationProjection, CodonRotationSurfaceCell, ConjugateFormCharacter, ElementalBalance,
     EnergyDecomposition, EventPrivacyClass, HarmonicPulse, KernelElement, KernelPhase,

@@ -611,6 +611,12 @@ pub struct MathemeHarmonicProfile {
     pub deposition_anchor: DepositionAnchorProjection,
     #[serde(default)]
     pub graph_handle: GraphAnchorProjection,
+    /// Track 21.T21.15 — exact 16-fold [[M0]] Void-Structure carrier, derived
+    /// from the existing kernel `CLOCK_LENSES_16` authority. The explicit
+    /// snake-case key preserves the frozen M0 contract while every lens body
+    /// remains camelCase. Legacy profiles default to the same kernel projection.
+    #[serde(rename = "m0_void_structure_ring", default = "m0_void_structure_ring")]
+    pub m0_void_structure_ring: [M0VoidLensProjection; 16],
     pub audio_octet: [f32; 8],
     pub nodal_quartet: [MathemeNodalConstraint; 4],
     /// Modal/bell interpretation of the 8+4 bus (bell-kernel spec §4): the
@@ -760,10 +766,11 @@ impl MathemeHarmonicProfile {
             &vimarsha_reading.audio_octet,
             &vimarsha_reading.nodal_quartet,
         );
+        let m1_ring_quaternion = crate::spanda::ring_quaternion(tick12);
         let m1_topology = M1TopologyProjection::from_tick_parts(
             tick12,
             degree720,
-            q_cosmic,
+            m1_ring_quaternion,
             vimarsha_reading.klein_flip.as_ref(),
         );
         // Two-phase: the pentadic trace is a pure derivation OVER the finished
@@ -798,6 +805,7 @@ impl MathemeHarmonicProfile {
             resonance72,
             deposition_anchor,
             graph_handle,
+            m0_void_structure_ring: m0_void_structure_ring(),
             audio_octet: vimarsha_reading.audio_octet,
             nodal_quartet: vimarsha_reading.nodal_quartet,
             modal_resonator: Some(modal_resonator),

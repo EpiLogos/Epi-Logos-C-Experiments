@@ -94,3 +94,9 @@ pub use vak_address::{
     canonical_cf_position, CfPosition, CpfState, CsDirection, CsField, VakAddress,
 };
 pub use vama_shakti::*;
+
+/// S0 projection of the compiled M0 ARCHETYPE_LUT graph identities. Consumers
+/// receive owned strings; the C table remains the single slot authority.
+pub fn m0_archetype_lut_coordinates() -> Vec<String> {
+    epi_lib::m0_verifier::archetype_coordinate_lut()
+}

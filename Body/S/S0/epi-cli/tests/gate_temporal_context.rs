@@ -393,7 +393,7 @@ fn assert_safe_kernel_projection(value: &serde_json::Value) {
     assert_eq!(profile["profileSchemaVersion"], 1);
     assert_eq!(profile["binary"], profile["mahamaya"]);
     assert!(
-        ["provisional-gap", "resolved"]
+        ["compressed-nonexact-round-trip", "round-trip-anchor"]
             .contains(&profile["binary"]["transcriptionState"].as_str().unwrap()),
         "live kernel projection must expose a recognized Mahamaya transcription state"
     );

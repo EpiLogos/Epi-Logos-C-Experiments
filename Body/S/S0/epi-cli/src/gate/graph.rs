@@ -8,6 +8,7 @@ use crate::graph::{
     HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
     PointerWebRefreshRequest, RetrievalResult,
 };
+use epi_s2_graph_services::M0ResidualListRequest;
 
 const ASMA_MIRROR_ABSENT: u8 = 0xFF;
 const RELATION_FAMILY_VALUES: &[&str] = &[
@@ -94,6 +95,21 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
         "s2.graph.node" => {
             let coordinate = required_string(params, "coordinate")?;
             service.node(GraphNodeRequest { coordinate }).await
+        }
+        "s2.graph.list" => {
+            let coordinate_prefix = required_string(params, "coordinatePrefix")?;
+            let offset = params
+                .get("offset")
+                .and_then(Value::as_i64)
+                .unwrap_or_default();
+            let limit = params.get("limit").and_then(Value::as_i64).unwrap_or(20);
+            service
+                .list_m0_residual(M0ResidualListRequest {
+                    coordinate_prefix,
+                    offset,
+                    limit,
+                })
+                .await
         }
         "s2.graph.traverse" => {
             let from = required_string(params, "from")?;

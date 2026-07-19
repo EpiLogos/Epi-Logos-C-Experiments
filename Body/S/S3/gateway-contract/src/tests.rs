@@ -37,6 +37,7 @@ fn anuttara_verifier_contract_exposes_s0_prime_methods() {
         &[
             "s0'.verifier.check_state",
             "s0'.verifier.emit_query",
+            "s0'.verifier.respond_question",
             "s0'.verifier.validate_membership",
             "s0'.verifier.owl_query",
         ]
@@ -59,6 +60,18 @@ fn settings_contract_exposes_s0_prime_methods() {
         assert!(METHOD_NAMES.contains(method));
         assert!(method_dispatch_plan_entry(method).is_some());
     }
+}
+
+#[test]
+fn m0_residual_browser_contract_exposes_s2_graph_list() {
+    assert_eq!(S2_GRAPH_LIST_METHOD, "s2.graph.list");
+    assert!(METHOD_NAMES.contains(&S2_GRAPH_LIST_METHOD));
+    assert!(S2_GRAPH_GATEWAY_EXPOSED_METHODS.contains(&S2_GRAPH_LIST_METHOD));
+
+    let entry =
+        method_dispatch_plan_entry(S2_GRAPH_LIST_METHOD).expect("S2 graph list dispatch row");
+    assert_eq!(entry.kind, MethodDispatchKind::S2GraphServiceAdapter);
+    assert_eq!(entry.authority_path, "Body/S/S2/graph-services");
 }
 
 #[test]

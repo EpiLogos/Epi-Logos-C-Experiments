@@ -31,6 +31,8 @@ describe('live-wire projection manifest', () => {
             'planetDegrees',
             'livePlanets',
             'quintessence',
+            'contemplationPromptLut',
+            'm0VoidStructureRing',
             'event:m123.chime'
         ]) {
             expect(names, `manifest must declare ${required}`).toContain(required);
@@ -87,6 +89,24 @@ describe('live-wire projection manifest', () => {
         const report = await validateCapture(capture);
         expect(report.ok).toBe(false);
         expect(report.failures.map(f => f.name)).toContain('phaseSpace');
+    });
+
+    it('rejects contemplation prompt drift from the compiled M0 authority', async () => {
+        const capture = loadFixture();
+        const frame = profileFrames(capture)[0];
+        frame.payload.harmonicProfile.contemplationPromptLut[7] = 'renderer-authored prompt';
+        const report = await validateCapture(capture);
+        expect(report.ok).toBe(false);
+        expect(report.failures.map(f => f.name)).toContain('contemplationPromptLut');
+    });
+
+    it('rejects M0 void-structure coordinates that drift from the kernel lens order', async () => {
+        const capture = loadFixture();
+        const frame = profileFrames(capture)[0];
+        frame.payload.harmonicProfile.m0_void_structure_ring[6].coordinate = '#0-4-local';
+        const report = await validateCapture(capture);
+        expect(report.ok).toBe(false);
+        expect(report.failures.map(f => f.name)).toContain('m0VoidStructureRing');
     });
 
     it('rejects a capture with no m123.chime events on the named channel', async () => {

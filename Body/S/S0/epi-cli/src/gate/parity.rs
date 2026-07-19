@@ -210,7 +210,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s2.graph.*",
         owner: "S2",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.traverse / s2.graph.harmonic_relations.materialize / s2.graph.pointer_web.compute(deprecated) / s2.graph.pointer_web.refresh(deprecated) / s2.graph.kernel_resonance.record"),
+        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.list / s2.graph.traverse / s2.graph.harmonic_relations.materialize / s2.graph.pointer_web.compute(deprecated) / s2.graph.pointer_web.refresh(deprecated) / s2.graph.kernel_resonance.record"),
         cli_mirror: Some("epi graph"),
         body_path: "Body/S/S0/epi-cli/src/graph",
         test_evidence: &[
@@ -650,6 +650,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s0.command.completion"
         | "s0'.verifier.check_state"
         | "s0'.verifier.emit_query"
+        | "s0'.verifier.respond_question"
         | "s0'.verifier.validate_membership"
         | "s0'.verifier.owl_query"
         | "s0'.anuttara.trace"
@@ -660,6 +661,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         // portal-core parashakti adapter — dispatch classifies it S0 product
         | "m2.cymatic_invert"
         | "kernelBridge.m2.epogdoonProjection(address72)"
+        | "kernelBridge.m2.planetaryElementalWeights()"
         | "kernelBridge.m3.lensCodonBinary(lensId)"
         // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
         | "m1.spanda.hold"
@@ -669,6 +671,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "m1.spanda.half_turn" => Some("s0.*"),
         "s2.graph.query"
         | "s2.graph.node"
+        | "s2.graph.list"
         | "s2.graph.traverse"
         | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
@@ -704,6 +707,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s1'.vault.rename_file"
         | "s1'.vault.move_file"
         | "s1'.base.ensure"
+        | "s1'.q_articulation.accept"
         | "s1'.semantic.suggest_links"
         | "s1'.type.classify_c_layer"
         | "s1'.entity.promote_to_type"

@@ -355,10 +355,14 @@ function addSequentialDependencies(tasks, blockedIds = new Set()) {
     // tranches. The mechanical chain may bypass a classified external wall;
     // authored deps in tranche bodies still hold.
     const isDeadStub = (task) => /^\s*DEPRECATED\b/i.test(task.title ?? "");
+    const isIndependentlyScheduled = (task) =>
+      /^\s*Scheduling:\s*independent\b/im.test(task.body ?? "");
     let previous = null;
     for (const task of list) {
       if (isDeadStub(task)) continue;
-      if (previous && !task.dependsOn.includes(previous)) task.dependsOn.push(previous);
+      if (previous && !isIndependentlyScheduled(task) && !task.dependsOn.includes(previous)) {
+        task.dependsOn.push(previous);
+      }
       task.dependsOn.sort();
       if (blockedIds.has(task.id)) continue;
       previous = task.id;

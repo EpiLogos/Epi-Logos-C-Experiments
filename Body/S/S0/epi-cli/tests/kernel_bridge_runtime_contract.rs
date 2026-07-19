@@ -573,7 +573,7 @@ fn kernel_bridge_preflights_and_executes_m2_epogdoon_projection() {
         Some(KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION)
     );
     assert_eq!(receipt.artifact["compressedCodon"], 15);
-    assert_eq!(receipt.artifact["isEvolutionaryGap"], true);
+    assert_eq!(receipt.artifact["roundTripLoss"], true);
     assert_eq!(receipt.artifact["expandedBack"], 16);
 }
 

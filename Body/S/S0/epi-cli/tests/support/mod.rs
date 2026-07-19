@@ -159,6 +159,32 @@ impl TestGatewayClient {
         })
     }
 
+    pub async fn next_event(&mut self, event_name: &str) -> Value {
+        let deadline = tokio::time::sleep(Duration::from_secs(5));
+        tokio::pin!(deadline);
+
+        loop {
+            let message = tokio::select! {
+                message = self.socket.next() => message,
+                _ = &mut deadline => panic!("timed out waiting for gateway event {event_name}"),
+            };
+            let message = message
+                .expect("gateway should stay connected")
+                .expect("event frame should decode");
+            if !message.is_text() {
+                continue;
+            }
+            let frame: Value =
+                serde_json::from_str(message.to_text().expect("gateway event should be text"))
+                    .expect("gateway event should be valid json");
+            if frame.get("type").and_then(Value::as_str) == Some("event")
+                && frame.get("event").and_then(Value::as_str) == Some(event_name)
+            {
+                return frame;
+            }
+        }
+    }
+
     pub fn gate_root(&self) -> std::path::PathBuf {
         self.env.home.join(".epi").join("gate")
     }

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::quaternion::Quaternion;
+use crate::spanda::ring_quaternion;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -194,22 +195,4 @@ fn cl42_signature(position6: u8) -> i8 {
         0 | 5 => -1,
         _ => 1,
     }
-}
-
-fn ring_quaternion(tick12: u8) -> Quaternion {
-    const RING_QUATERNION_LUT: [Quaternion; 12] = [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.8660254, 0.5, 0.0, 0.0],
-        [0.5, 0.8660254, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [-0.5, 0.8660254, 0.0, 0.0],
-        [-0.8660254, 0.5, 0.0, 0.0],
-        [0.8660254, -0.5, 0.0, 0.0],
-        [0.5, -0.8660254, 0.0, 0.0],
-        [0.0, -1.0, 0.0, 0.0],
-        [-0.5, -0.8660254, 0.0, 0.0],
-        [-0.8660254, -0.5, 0.0, 0.0],
-        [-1.0, 0.0, 0.0, 0.0],
-    ];
-    RING_QUATERNION_LUT[(tick12 % 12) as usize]
 }

@@ -1,10 +1,11 @@
 use epi_s2_graph_services::{
     core_65_audit_payload, core_65_audit_plan, graph_contract, kernel_core_readiness_fact,
-    kernel_declared_core_relation_count, schema, source_traceability_anchors, Core65AuditSummary,
-    GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, HarmonicRelationMaterializationRequest,
-    KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
-    CORE65_AUDIT_METHOD, KERNEL_CORE_RELATION_FAMILY,
+    kernel_declared_core_relation_count, m0_archetype_lut_coordinates, m0_residual_list_plan,
+    schema, source_traceability_anchors, Core65AuditSummary, GraphMethodParams, GraphMethodService,
+    GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HarmonicRelationMaterializationRequest, KernelResonanceObservationRequest,
+    M0ResidualListRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest, CORE65_AUDIT_METHOD,
+    KERNEL_CORE_RELATION_FAMILY,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -53,6 +54,76 @@ fn coordinate_resolution_canonicalizes_hash_without_legacy_property() {
     let resolved = GraphMethodService::resolve_coordinate_string("M4").unwrap();
     assert_eq!(resolved.canonical, "M4");
     assert!(resolved.compatibility_property.is_none());
+}
+
+#[test]
+fn m0_residual_list_plan_normalizes_hash_prefix_and_excludes_exact_lut_rows() {
+    let plan = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#0-3".into(),
+        offset: 20,
+        limit: 20,
+    })
+    .expect("valid M0 residual-list plan");
+
+    assert_eq!(plan.requested_prefix, "#0-3");
+    assert_eq!(plan.canonical_prefix, "M0-3");
+    assert_eq!(plan.offset, 20);
+    assert_eq!(plan.limit, 20);
+    let excluded = m0_archetype_lut_coordinates();
+    assert_eq!(excluded.len(), 12);
+    assert_eq!(
+        excluded,
+        vec![
+            "M0-3-(0/1)",
+            "M0-3-4",
+            "M0-3-2",
+            "M0-3-3",
+            "M0-3-5",
+            "M0-3-6",
+            "M0-3-7",
+            "M0-3-8",
+            "M0-3-9",
+            "M0-3-10",
+            "M0-3-11",
+            "M0-2-9",
+        ]
+    );
+    assert_eq!(
+        plan.page_params.get_string("coordinate_prefix"),
+        Some("M0-3")
+    );
+    assert_eq!(plan.page_params.get_integer("offset"), Some(20));
+    assert_eq!(plan.page_params.get_integer("limit"), Some(20));
+    assert_eq!(
+        plan.page_params.get_string_list("excluded_lut_coordinates"),
+        Some(excluded.as_slice())
+    );
+    assert!(plan
+        .page_cypher
+        .contains("NOT n.coordinate IN $excluded_lut_coordinates"));
+    assert!(plan.page_cypher.contains("SKIP $offset LIMIT $limit"));
+    assert!(plan.count_cypher.contains("dataset_total"));
+    assert!(plan.count_cypher.contains("residual_total"));
+    assert!(plan.count_cypher.contains("branch_total"));
+}
+
+#[test]
+fn m0_residual_list_plan_rejects_non_m0_branches_and_bounds_pages() {
+    let wrong_branch = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#1-3".into(),
+        offset: 0,
+        limit: 20,
+    })
+    .unwrap_err();
+    assert!(wrong_branch.contains("one of #0-0 through #0-5"));
+
+    let oversized = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#0-4".into(),
+        offset: 0,
+        limit: 21,
+    })
+    .unwrap_err();
+    assert!(oversized.contains("limit must be 20"));
 }
 
 #[test]

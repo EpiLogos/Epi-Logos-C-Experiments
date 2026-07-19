@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
@@ -22,6 +22,7 @@ struct GatewayRuntimeInner {
     chat_processes: Mutex<HashMap<String, Arc<AsyncMutex<tokio::process::Child>>>>,
     aborted_chat_runs: Mutex<HashSet<String>>,
     subscriptions: Mutex<HashMap<String, GatewaySubscriptionRecord>>,
+    verifier_questions: Mutex<VecDeque<(u64, HashSet<String>)>>,
     /// 02.T2.13 / DR-M1-5 — the ONE engine-owned spanda phase anchor this
     /// gateway process hosts. The heartbeat samples it; the `m1.spanda.*`
     /// walk family mutates it; every subscriber sees the same organism.
@@ -78,6 +79,8 @@ impl GatewayEventSubscription {
 }
 
 impl GatewayRuntimeState {
+    const VERIFIER_QUESTION_GENERATIONS: usize = 16;
+
     /// Install the process's ONE spanda phase anchor (heartbeat spawn,
     /// config-anchored rate). Idempotent by intent: later installs replace,
     /// but only the heartbeat calls this.
@@ -118,6 +121,29 @@ impl GatewayRuntimeState {
             }
             None => None,
         }
+    }
+
+    pub fn cache_verifier_questions(&self, generation: u64, questions: &[String]) {
+        let mut snapshots = self
+            .inner
+            .verifier_questions
+            .lock()
+            .expect("gateway verifier-question lock should not poison");
+        snapshots.push_back((generation, questions.iter().cloned().collect()));
+        while snapshots.len() > Self::VERIFIER_QUESTION_GENERATIONS {
+            snapshots.pop_front();
+        }
+    }
+
+    pub fn is_recent_verifier_question(&self, generation: u64, question: &str) -> bool {
+        self.inner
+            .verifier_questions
+            .lock()
+            .expect("gateway verifier-question lock should not poison")
+            .iter()
+            .any(|(candidate_generation, questions)| {
+                *candidate_generation == generation && questions.contains(question)
+            })
     }
 
     pub fn register_run(&self, context: RunContext) {
@@ -359,5 +385,27 @@ impl GatewayRuntimeState {
             .collect::<Vec<_>>();
         records.sort_by(|left, right| left.opened_at_ms.cmp(&right.opened_at_ms));
         records
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::GatewayRuntimeState;
+
+    #[test]
+    fn verifier_questions_are_generation_bound_and_bounded() {
+        let runtime = GatewayRuntimeState::default();
+        let canonical = "#R0-0/1/A-T7-pending?".to_owned();
+        runtime.cache_verifier_questions(1, std::slice::from_ref(&canonical));
+
+        assert!(runtime.is_recent_verifier_question(1, &canonical));
+        assert!(!runtime.is_recent_verifier_question(1, "#R0-0/1/A-T9-pending?"));
+        assert!(!runtime.is_recent_verifier_question(2, &canonical));
+
+        for generation in 2..=18 {
+            runtime.cache_verifier_questions(generation, std::slice::from_ref(&canonical));
+        }
+        assert!(!runtime.is_recent_verifier_question(1, &canonical));
+        assert!(runtime.is_recent_verifier_question(18, &canonical));
     }
 }

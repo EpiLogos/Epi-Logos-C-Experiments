@@ -9,7 +9,7 @@
 //! Does NOT own: the 12×12 raw Ananda core (expected-red, Track 10.10) or the
 //! wire-side mirror (live-wire `mahamayaBridgeLaws` manifest entry).
 
-use portal_core::mahamaya::{apply_epogdoon_compression, is_evolutionary_gap};
+use portal_core::mahamaya::{apply_epogdoon_compression, epogdoon_has_round_trip_loss};
 
 // Non-inline C symbols from the statically-linked epi-lib (m2.c).
 extern "C" {
@@ -44,11 +44,11 @@ fn rust_and_c_epogdoon_compression_mirror_the_floor_8_over_9_law() {
 
         // Gap law: the fold round-trips exactly on multiples of 9 —
         // 8 resolved slots, 64 provisional gaps across the 72-space.
-        let gap = is_evolutionary_gap(index);
+        let gap = epogdoon_has_round_trip_loss(index);
         assert_eq!(
             gap,
             index % 9 != 0,
-            "evolutionary-gap law: resolved ⇔ index ≡ 0 (mod 9), broken at {index}"
+            "round-trip law: exact ⇔ index ≡ 0 (mod 9), broken at {index}"
         );
         if !gap {
             resolved += 1;

@@ -35,8 +35,20 @@ import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../s
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
+import { M1SessionCloseReader, readM1SessionCloseBundle } from '../m1SessionCloseReader';
 
 const VERDICTS: readonly BlockVerdictDecision[] = ['approve', 'reject', 'defer'];
+const M1_SESSION_CLOSE_READ_METHOD = 'nara.session_close.read';
+
+type SessionCloseState =
+    | { readonly state: 'pending'; readonly reason: string }
+    | { readonly state: 'absent'; readonly reason: string }
+    | { readonly state: 'error'; readonly reason: string }
+    | { readonly state: 'blocked'; readonly reason: string }
+    | {
+          readonly state: 'ready';
+          readonly close: Extract<ReturnType<typeof readM1SessionCloseBundle>, { readonly state: 'ready' }>;
+      };
 
 export function ReviewBlocksPane({ requestedReviewId = null }: { readonly requestedReviewId?: string | null }) {
     const sessionKey = useSessionStore(s => s.sessionKey);
@@ -49,6 +61,10 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
     const [gateNotice, setGateNotice] = useState<string | null>(null);
     const [blockSource, setBlockSource] = useState<'fixture' | 'live'>('fixture');
     const [xray, setXray] = useState<ContextXrayHandle | null>(null);
+    const [sessionClose, setSessionClose] = useState<SessionCloseState>({
+        state: 'pending',
+        reason: 'exact session key required before close aggregates can be read'
+    });
 
     useEffect(() => {
         if (requestedReviewId) {
@@ -74,6 +90,10 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
     // session carries blocks; the fixture stays the acceptance baseline.
     useEffect(() => {
         if (!connected || !sessionKey) {
+            setSessionClose({
+                state: 'pending',
+                reason: 'connect the gateway and bind an exact session key to load close aggregates'
+            });
             return;
         }
         gateway()
@@ -88,6 +108,51 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
             .catch(() => {
                 /* fixture remains the honest baseline */
             });
+    }, [connected, sessionKey]);
+
+    useEffect(() => {
+        if (!connected || !sessionKey) {
+            return;
+        }
+        let cancelled = false;
+        setSessionClose({
+            state: 'pending',
+            reason: 'loading latest persisted close bundle for the exact session key'
+        });
+        gateway()
+            .invoke(M1_SESSION_CLOSE_READ_METHOD, { sessionKey, latest: true })
+            .then(receipt => {
+                if (cancelled) {
+                    return;
+                }
+                const parsed = readM1SessionCloseBundle(receipt.artifact);
+                if (parsed.state === 'ready') {
+                    if (parsed.sessionId !== sessionKey) {
+                        setSessionClose({
+                            state: 'blocked',
+                            reason: 'returned close bundle does not match the exact bound session'
+                        });
+                        return;
+                    }
+                    setSessionClose({ state: 'ready', close: parsed });
+                    return;
+                }
+                setSessionClose(parsed);
+            })
+            .catch(err => {
+                if (cancelled) {
+                    return;
+                }
+                const message = err instanceof Error ? err.message : String(err);
+                if (message.includes('no persisted session-close bundle')) {
+                    setSessionClose({ state: 'absent', reason: message });
+                    return;
+                }
+                setSessionClose({ state: 'error', reason: message });
+            });
+        return () => {
+            cancelled = true;
+        };
     }, [connected, sessionKey]);
 
     const reviewItems = state.blocks.filter(block => block.type === 'review-item');
@@ -134,6 +199,25 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                 Review rows ride the synthetic acceptance fixture — the live wire→record producer is
                 track-12's seam; verdicts route to the s4-prime psyche.update seam under the m5 human gate.
             </p>
+            <section className="review-session-close" data-testid="review-session-close">
+                {sessionClose.state === 'ready' ? (
+                    <M1SessionCloseReader close={sessionClose.close} />
+                ) : sessionClose.state === 'absent' ? (
+                    <p data-testid="review-session-close-absent">
+                        No persisted 7-8-9 close bundle exists for this exact session yet.
+                    </p>
+                ) : sessionClose.state === 'error' ? (
+                    <p data-testid="review-session-close-error">
+                        Close-bundle read failed: {sessionClose.reason}
+                    </p>
+                ) : sessionClose.state === 'blocked' ? (
+                    <p data-testid="review-session-close-blocked">
+                        Close-bundle parse blocked: {sessionClose.reason}
+                    </p>
+                ) : (
+                    <p data-testid="review-session-close-pending">{sessionClose.reason}</p>
+                )}
+            </section>
             {selected ? (
                 <div className="review-verdict-strip" data-testid="review-verdict-strip" data-selected={selected.id}>
                     {VERDICTS.map(decision => (

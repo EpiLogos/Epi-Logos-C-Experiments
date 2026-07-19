@@ -174,6 +174,22 @@ const QUINTESSENCE_ALLOWED_KEYS = [
  */
 export const PROJECTION_MANIFEST = [
     {
+        name: 'gateway.s2-graph-list',
+        required: true,
+        covers: [],
+        describe: '21.T21.14: the live gateway advertises the S2-owned M0 residual-list method',
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return methods.includes('s2.graph.list')
+                ? []
+                : ['live gateway does not advertise s2.graph.list'];
+        }
+    },
+    {
         name: 'profile.strict-parse',
         required: true,
         covers: [],
@@ -283,6 +299,60 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'm0VoidStructureRing',
+        required: true,
+        covers: ['m0_void_structure_ring'],
+        describe: '21.T21.15: exact ordered #0-4 kernel projection of CLOCK_LENSES_16',
+        assert(capture, contracts) {
+            const labels = [
+                'Microscopic',
+                'Binary',
+                'Quaternary',
+                'Octagonal',
+                'Enneadic',
+                'Decan',
+                'Zodiacal',
+                'Hourly',
+                'Expanded Hours',
+                'Solar Month',
+                'Decadic',
+                'Greater Chamber',
+                'Octant',
+                'Quadrant',
+                'Hemisphere',
+                'Unity'
+            ];
+            const errors = [];
+            for (const [profileIndex, profile] of profilesOf(capture).entries()) {
+                const parsed = contracts.M0VoidStructureRing.safeParse(
+                    profile.m0_void_structure_ring
+                );
+                if (!parsed.success) {
+                    errors.push(
+                        `profile[${profileIndex}] ring contract: ${zodIssues(parsed.error).join('; ')}`
+                    );
+                    continue;
+                }
+                parsed.data.forEach((lens, lensIndex) => {
+                    if (lens.label !== labels[lensIndex]) {
+                        errors.push(
+                            `profile[${profileIndex}] lens[${lensIndex}] label '${lens.label}' != '${labels[lensIndex]}'`
+                        );
+                    }
+                    if (lens.state !== 'canonical') {
+                        errors.push(
+                            `profile[${profileIndex}] lens[${lensIndex}] state '${lens.state}' != canonical`
+                        );
+                    }
+                });
+            }
+            if (profilesOf(capture).length === 0) {
+                errors.push('no profile frame carried m0_void_structure_ring');
+            }
+            return errors;
+        }
+    },
+    {
         name: 'modalResonator',
         required: true,
         covers: ['modalResonator', 'audioOctet', 'tick'],
@@ -310,7 +380,7 @@ export const PROJECTION_MANIFEST = [
         name: 'mahamayaBridgeLaws',
         required: true,
         covers: ['mahamaya'],
-        describe: 'the 72→64 bridge on the wire (2026-07-06 truth session): m2ToM3Symbol == floor(idx·8/9), address64 == floor(deg·64/360), lineChangeOperatorAddress == hexagramId·6 + lineIndex, evolutionaryGap ⇔ idx ≢ 0 (mod 9)',
+        describe: 'the 72→64 bridge on the wire: 9 is block size, 8 is collision-pair count, and roundTripLoss reports the 64 non-exact round trips',
         assert(capture) {
             const errors = [];
             for (const profile of profilesOf(capture)) {
@@ -321,9 +391,9 @@ export const PROJECTION_MANIFEST = [
                 if (m.m2ToM3Symbol !== expectedSymbol) {
                     errors.push(`m2ToM3Symbol ${m.m2ToM3Symbol} != floor(${idx}·8/9) = ${expectedSymbol}`);
                 }
-                const expectedGap = idx % 9 !== 0;
-                if (m.evolutionaryGap !== expectedGap) {
-                    errors.push(`evolutionaryGap ${m.evolutionaryGap} != (idx ${idx} ≢ 0 mod 9)`);
+                const expectedLoss = idx % 9 !== 0;
+                if (m.roundTripLoss !== expectedLoss) {
+                    errors.push(`roundTripLoss ${m.roundTripLoss} != (idx ${idx} ≢ 0 mod 9)`);
                 }
                 if (m.mahamayaAddress64 != null) {
                     const expectedAddr = Math.floor(((profile.degree360 % 360) * 64) / 360);
@@ -590,7 +660,7 @@ export const PROJECTION_MANIFEST = [
         name: 'anuttaraPentadicTrace',
         required: true,
         covers: ['anuttaraPentadicTrace'],
-        describe: 'Track 36/10.P5 pentadic runtime hinge: trace rides every frame; complement closes on 5; epogdoon 8/9 + mahamaya 64/360 laws; identity strings kernel-sourced',
+        describe: 'one live M1→M2→M3 generation: C M1 ring, six-axis M2 address, typed 9/8 epogdoon evidence, DET reception and world-clock M3 addresses',
         assert(capture, contracts) {
             const errors = [];
             for (const profile of profilesOf(capture)) {
@@ -608,6 +678,54 @@ export const PROJECTION_MANIFEST = [
                 }
                 if (parsed.mahamayaAddress64 !== Math.floor((parsed.degree360 % 360) * 64 / 360)) {
                     errors.push(`mahamayaAddress64 ${parsed.mahamayaAddress64} breaks the 64/360 address law for degree360 ${parsed.degree360}`);
+                }
+                const third = parsed.thirdSpanda;
+                if (third.m1.degree720 !== profile.degree720) {
+                    errors.push(`thirdSpanda.m1.degree720 ${third.m1.degree720} != profile degree720 ${profile.degree720}`);
+                }
+                if (third.m1.parentAttribution !== 'M1-5 is the +1 parent') {
+                    errors.push(`thirdSpanda.m1.parentAttribution ${third.m1.parentAttribution} is not M1-5`);
+                }
+                if (third.m2.address72 !== parsed.resonance72Index) {
+                    errors.push(`thirdSpanda.m2.address72 ${third.m2.address72} != resonance72Index ${parsed.resonance72Index}`);
+                }
+                if (
+                    third.m2.axisViews.det.index72 !== third.m2.address72 ||
+                    third.m2.axisViews.det.compressed64 !== third.epogdoon.compressedAddress64
+                ) {
+                    errors.push('thirdSpanda M2 DET view does not carry the same 72→64 generation');
+                }
+                const e = third.epogdoon;
+                const expectedCompressed = Math.floor((e.sourceAddress72 * 8) / 9);
+                const expectedExpanded = Math.floor((expectedCompressed * 9) / 8);
+                if (
+                    e.ratioNumerator !== 9 ||
+                    e.ratioDenominator !== 8 ||
+                    e.blockIndex !== Math.floor(e.sourceAddress72 / 9) ||
+                    e.blockPhase !== e.sourceAddress72 % 9 ||
+                    e.compressedAddress64 !== expectedCompressed ||
+                    e.expandedAddress72 !== expectedExpanded ||
+                    e.roundTripLoss !== e.sourceAddress72 - expectedExpanded ||
+                    e.roundTripExact !== (e.roundTripLoss === 0)
+                ) {
+                    errors.push('thirdSpanda epogdoon evidence breaks the 9:8 compression/round-trip law');
+                }
+                if (
+                    e.cardinality.blockSize !== 9 ||
+                    e.cardinality.blockCount !== 8 ||
+                    e.cardinality.collisionPairCount !== 8 ||
+                    e.cardinality.exactRoundTripCount !== 8 ||
+                    e.cardinality.nonExactRoundTripCount !== 64
+                ) {
+                    errors.push('thirdSpanda epogdoon cardinalities must remain block 9 / collisions 8 / exact 8 / non-exact 64');
+                }
+                if (
+                    third.m3.detReceptionAddress64 !== e.compressedAddress64 ||
+                    third.m3.worldClockAddress64 !== parsed.mahamayaAddress64 ||
+                    third.m3.codonId !== parsed.codonId ||
+                    third.m3.lineChangeOperator !== parsed.lineChangeOperator
+                ) {
+                    errors.push('thirdSpanda M3 state does not mirror this trace generation');
                 }
             }
             return errors;
@@ -651,6 +769,44 @@ export const PROJECTION_MANIFEST = [
                 const expectedFamilies = FAMILY_TABLE[`${p},${second}`] ?? [];
                 if (parsed.families.map(f => f.family).join('') !== expectedFamilies.join('')) {
                     errors.push(`harmonicGrammar.families [${parsed.families.map(f => f.family)}] != table [${expectedFamilies}] for pair (${p},${second})`);
+                }
+            }
+            return errors;
+        }
+    },
+    {
+        name: 'contemplationPromptLut',
+        required: true,
+        covers: ['contemplationPromptLut'],
+        describe: 'compiled M0 CONTEMPLATION_PROMPT_LUT[12] crosses the public-current profile bus verbatim',
+        assert(capture) {
+            const errors = [];
+            const expected = {
+                3: 'Did your speech articulate identity or just signal? Where did naming become performance?',
+                5: 'Did unity-multiplicity hold or did one side eat the other? Where was the mercurial crossroads refused?',
+                7: 'Did the four causes integrate or did one dominate? Which act was missing?',
+                9: 'Did the cycle complete in wholeness or close prematurely? Which virtue went unwitnessed?',
+            };
+            for (const profile of profilesOf(capture)) {
+                const prompts = profile.contemplationPromptLut;
+                if (!Array.isArray(prompts) || prompts.length !== 12) {
+                    errors.push('contemplationPromptLut must contain exactly 12 strings');
+                    continue;
+                }
+                prompts.forEach((prompt, index) => {
+                    if (typeof prompt !== 'string') {
+                        errors.push(`contemplationPromptLut[${index}] must be a string`);
+                    }
+                });
+                for (const [index, prompt] of Object.entries(expected)) {
+                    if (prompts[Number(index)] !== prompt) {
+                        errors.push(`contemplationPromptLut[${index}] diverges from compiled M0 authority`);
+                    }
+                }
+                for (const index of [0, 1, 2, 4, 6, 8, 10, 11]) {
+                    if (prompts[index] !== '') {
+                        errors.push(`contemplationPromptLut[${index}] must preserve canonical empty-slot absence`);
+                    }
                 }
             }
             return errors;

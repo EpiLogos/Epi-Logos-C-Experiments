@@ -70,6 +70,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 11. **T23.11 — Shadow-decan surface (108 = 36 × 3)**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md` — Tranche 23.11 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the S2-owned typed 108-decan aggregate (36 primary + 36 light + 36 shadow descriptors) and its M3 reversed-meaning provenance seam before wiring the carrier surface. The existing one-address projection is a starting point, not a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 

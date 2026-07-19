@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-18T20:24:52.640Z",
+  "updatedAt": "2026-07-19T08:31:48.241Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -995,14 +995,18 @@
       "blocker": null
     },
     "02.T2.10": {
-      "status": "blocked",
-      "updatedAt": "2026-07-08T00:31:55.502Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:18.875Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-08T00:31:55.502Z",
           "text": "Blocked on unmet cross-track dependencies: Tranche 12.24 (Phase-2 epii-distillation skill) and 12.22 (slot CLI) are BOTH pending in the ledger, and Track 12 is owned by Session B2 (Session A stays out per coordination). The M1' CPT-trainer greenfield cannot honestly build on unlanded distillation/slot substrate — this is a real external blocker, not deferrable work. Unblock when B2 lands 12.22 + 12.24; then verify their deliverables before building on them."
+        },
+        {
+          "at": "2026-07-18T20:46:18.875Z",
+          "text": "Reopened: declared Stream/slot dependencies 12.T12.22 and 12.T12.24 are done; the prior block is stale."
         }
       ],
       "notes": null,
@@ -1209,14 +1213,18 @@
       "blocker": null
     },
     "03.T3.7": {
-      "status": "blocked",
-      "updatedAt": "2026-07-10T12:56:09.866Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:19.079Z",
       "claimedAt": "2026-07-10T12:56:09.629Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-10T12:56:09.866Z",
           "text": "Deferred by its own brief: named integration blocker (music_tech.rs MPE/MTS-ESP/Scala emitter over M2_MAQAM_DESC[72]) flagged NOT executed in cycle-3 unless promoted by the user. Substrate note: the 24-TET interval patterns are already in .rodata (m2.h); when promoted this is an emitter build, not greenfield. Blocked = waiting on user promotion, per the tranche text."
+        },
+        {
+          "at": "2026-07-18T20:46:19.079Z",
+          "text": "Reopened by the user on 2026-07-18 as part of the explicit promotion of all 21 blocked tasks."
         }
       ],
       "notes": null,
@@ -4296,13 +4304,17 @@
     },
     "09.T9.14": {
       "status": "blocked",
-      "updatedAt": "2026-07-13T16:10:43.110Z",
+      "updatedAt": "2026-07-18T20:46:36.523Z",
       "claimedAt": "2026-07-13T16:09:23.869Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-13T16:10:43.110Z",
           "text": "BLOCKED on an Architect canonical-write decision: 9.14 mints :World/:Archetypal/:Gnostic graph LABELS + WORLD_FORM_OF/WORLD_ONTOLOGY_OF relations, but the live Neo4j baseline graph currently carries NONE of them (db.labels() has no World/Gnostic/Archetypal; World-count=0, Gnostic-count=0). The schema CONSTANTS (graph-schema/src/lib.rs WORLD_LABEL etc.) are pure code and landable, but promoting labels + adding relations onto existing live :Bimba nodes is a mutation of the baseline ontology — per the standing law the live graph is the authority and canonical writes route through Hen/the Architect, not an autonomous agent. Needs the Architect to decide whether/how the label promotion migration runs against the live graph before this can close green (a graph-live test would otherwise be red — labels absent). Reopen with that decision."
+        },
+        {
+          "at": "2026-07-18T20:46:36.523Z",
+          "text": "Classified human gate: this task mutates the authoritative live baseline ontology by promoting World/Gnostic/Archetypal labels and relations. Code preparation may proceed, but applying the canonical graph migration requires the Architect decision named in the task evidence."
         }
       ],
       "notes": null,
@@ -4311,7 +4323,10 @@
       "heartbeatAt": "2026-07-13T16:09:23.869Z",
       "runId": "20260713T160923Z-09-T9.14",
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "human",
+        "dependency": "Architect decision and governed migration for live baseline graph label/relationship promotion"
+      }
     },
     "10.T10.1": {
       "status": "done",
@@ -5883,13 +5898,17 @@
     },
     "12.T12.13": {
       "status": "blocked",
-      "updatedAt": "2026-07-07T22:41:50.269Z",
+      "updatedAt": "2026-07-18T20:46:36.717Z",
       "claimedAt": "2026-07-07T22:39:12.079Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-07T22:41:50.269Z",
           "text": "Substrate landed and partially verified: test_enrichment.py + test_cross_namespace_edge_created present, offline pytest lane green (1 passed/2 skipped under SKIP_NEO4J), and the EMBEDDING_DIM=3072 clause is satisfied (single VALID value, default in config.py + graphiti_config.py). BLOCKED on the live cross-namespace-edge acceptance: it needs a no-auth Neo4j on localhost:7687 (test does driver(uri, auth=None)), but the only running dev Neo4j is antichrist-neo4j — auth'd (neo4j/antichrist-dev-pw) on bolt 17687. Cannot honestly close without a wired no-auth 7687 instance; standing up a second Neo4j risks colliding with the parallel session's graph. Needs an env decision (which Neo4j is canonical for gnostic integration tests). Numeric chain 12.15+ waits on this."
+        },
+        {
+          "at": "2026-07-18T20:46:36.717Z",
+          "text": "Classified environment gate: offline substrate tests pass, but the live acceptance currently assumes unauthenticated localhost:7687 while the available canonical dev Neo4j is authenticated on 17687. Resume when the canonical integration target/config is selected; do not start a competing graph implicitly."
         }
       ],
       "notes": "claimed with --allow-dirty over 215 dirty files.",
@@ -5898,7 +5917,10 @@
       "heartbeatAt": "2026-07-07T22:39:12.079Z",
       "runId": "20260707T223912Z-12-T12.13",
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "environment",
+        "dependency": "Canonical Neo4j target/configuration for live S4-S5 cross-namespace acceptance"
+      }
     },
     "12.T12.15": {
       "status": "done",
@@ -9902,20 +9924,38 @@
       "blocker": null
     },
     "21.T21.9": {
-      "status": "blocked",
-      "updatedAt": "2026-07-18T10:24:36.807Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T08:31:38.973Z",
       "claimedAt": "2026-07-18T09:01:08.998Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T08:31:38.973Z",
       "evidence": [
         {
           "at": "2026-07-18T10:24:36.807Z",
           "text": "Blocked after three independent carrier traces: no active producer/receiver routes the required session-close ContemplationObject or M0VerifierReport to the M0 footer or M5 Review fold. The live nara.contemplate_session_close RPC requires session/trajectory/verifier evidence the footer does not own; ReviewBlocksPane currently receives a review ID and fixture blocks only. Fabricating a footer event or session completion report would violate the transport and privacy contracts."
+        },
+        {
+          "at": "2026-07-18T20:43:13.545Z",
+          "text": "Implemented the compiled 12-slot M0 contemplation prompt projection end to end: C LUT -> Rust FFI -> portal profile -> strict Zod/TS bridge -> persistent active-carrier footer. Footer selects by kernel tick12, submits through the real s5'.review.submit route, and renders the persisted review-item id. Verified by portal baseline and field tests, 858-test app suite, typecheck/build, live-wire PASS over 85 real gateway frames with exact LUT assertion, honesty lint, and Chromium e2e against a real spawned gateway and filesystem-backed sidecar."
+        },
+        {
+          "at": "2026-07-19T08:31:38.973Z",
+          "text": "Independent PASS record 21.T21.9.md (verifier claude-verifier-review-drain): UF gate GREEN — app-ui-flow 50 playwright, app-test 872, live-wire, gateway 95, honesty-lint all pass. Prior REFUSED was unrelated concurrent-session churn (track-22 m1SessionCloseReader scratch), now settled.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 21.T21.9 (UF gate incl app-ui-flow 50 playwright + live-wire + gateway)",
+            "exitCode": 0,
+            "testsPassed": 872,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m0Contemplation.ts",
+              "Body/M/pratibimba-app/tests/e2e/"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 89 dirty files.",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-18T09:01:08.998Z",
+      "heartbeatAt": "2026-07-18T20:43:13.545Z",
       "runId": "20260718T090108Z-21-T21.9",
       "worktree": null,
       "blocker": null
@@ -9965,20 +10005,47 @@
       "blocker": null
     },
     "21.T21.11": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:34:20.363Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T08:31:48.220Z",
       "claimedAt": "2026-07-16T15:33:35.838Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T08:31:48.220Z",
       "evidence": [
         {
           "at": "2026-07-16T15:34:20.363Z",
           "text": "Blocked before implementation: the required real gateway RPC s0'.verifier.respond_question is absent from the active substrate/carrier source search, so the specified submit path cannot function. No UI-only console was added; it would create a dead command surface. Requires the missing verifier response capability and its live contract before this tranche can resume."
+        },
+        {
+          "at": "2026-07-18T20:46:19.495Z",
+          "text": "Reopened with substrate ownership clarified: this tranche must implement s0-prime verifier respond_question plus its carrier, rather than treating the absent method as external."
+        },
+        {
+          "at": "2026-07-18T21:04:44.244Z",
+          "text": "Implemented s0'.verifier.respond_question end to end: S3 contract + dispatch plan + parser-skill-shaped Rust runtime (including live compiled S/R/A tags) + narrow S0 gateway arm + atomic protected-local persistence + strict receipt + active M0 question console. Blank/malformed responses fail closed; successful responses remain honestly responded, not reverified. Verification: gateway-contract 68 unit + 20 integration tests green; S3 parser tests green; live WebSocket persistence/invalid-input test green; parity tests green; gateway-method gate GREEN with advertised/exists/responds and expected-present ratchet; app typecheck/build green; app suite 861 pass; real Chromium console flow green; honesty lint green."
+        },
+        {
+          "at": "2026-07-18T21:44:01.553Z",
+          "text": "Security hardening landed after independent review: respond_question is loopback-only, binds submissions to one of the latest 16 actually emitted profile generations/questions, rejects A-T indices above 11, records source/session only as loopback-client-claim provenance, and enforces Unix 0700/0600 persistence. Fresh green proof: full epi-s3-gateway suite, live gate_anuttara_verifier WebSocket persistence/permissions/stale-input test, non-loopback unit test, rebuilt epi binary, gateway-method gate GREEN, live-wire PASS over 83 real frames, honesty lint, typecheck, six focused carrier tests, and two real Chromium flows. Official verify-tranche record remains absent because repeated verifier-agent handoffs failed to acquire/start the singleton lane reliably; retained in review rather than falsely closed."
+        },
+        {
+          "at": "2026-07-19T08:31:48.220Z",
+          "text": "Independent PASS record 21.T21.11.md (verifier claude-verifier-review-drain): UF gate GREEN — app-ui-flow 50 playwright, app-test 872, live-wire, gateway 95 (s0'.verifier.respond_question end-to-end), honesty-lint all pass. Prior REFUSED reds were concurrent-session in-flight churn (tracks 22/21.14/44/48), now landed and green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 21.T21.11 (UF gate incl app-ui-flow 50 playwright + live-wire + gateway respond_question)",
+            "exitCode": 0,
+            "testsPassed": 872,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0SymbolicQuestionConsole.tsx",
+              "Body/S/S3/gateway/src/dispatch.rs",
+              "Body/S/S0/epi-cli/src/gate/verifier.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 172 dirty files.",
       "owner": "codex-mdev-track21-question-console",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T15:33:35.838Z",
+      "heartbeatAt": "2026-07-18T21:44:01.553Z",
       "runId": "20260716T153335Z-21-T21.11",
       "worktree": null,
       "blocker": null
@@ -10038,14 +10105,18 @@
       "blocker": null
     },
     "21.T21.13": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T20:33:52.836Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:19.742Z",
       "claimedAt": "2026-07-16T20:32:57.663Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T20:33:52.836Z",
           "text": "Route dependency defect: tranche contract requires 21.T21.8 Archetype Routing Reader and 21.T21.9 Contemplation Prompt, but both remain pending/waiting; the active carrier and fresh wire captures expose neither m0_routing_lut_snapshot nor contemplation_prompt_lut. Implementing 21.13 now would violate its no-orphan-fill and real-substrate requirements."
+        },
+        {
+          "at": "2026-07-18T20:46:19.742Z",
+          "text": "Requeued behind explicit 21.T21.8, 21.T21.9, and 21.T21.12 predecessors; 21.T21.9 is now in review with live-wire proof."
         }
       ],
       "notes": "claimed with --allow-dirty over 187 dirty files.",
@@ -10057,40 +10128,86 @@
       "blocker": null
     },
     "21.T21.14": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T20:45:43.785Z",
-      "claimedAt": "2026-07-16T20:43:40.444Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T00:02:20.904Z",
+      "claimedAt": "2026-07-18T21:58:46.693Z",
+      "completedAt": "2026-07-19T00:02:20.904Z",
       "evidence": [
         {
           "at": "2026-07-16T20:45:43.785Z",
           "text": "Blocked by a verified gateway/data-contract gap: the tranche mandates s2.graph.list pagination over the named m0-96-node residual set, but the current gateway-method audit reports s2.graph.list and s2.graph.list_by_filter as advertised=false, exists=false, unimplemented. The available s2.graph.query cannot identify the residual 96 because neither the live graph nor dataset exposes a kernel-represented/LUT-lifted discriminator; hardcoding the 12 exclusions in the renderer would fork M0/S2 law and violate M0'-SPEC's no renderer-local LUT rule. Requires an S2-owned typed residual-set query/list method before the UI can be production-honest."
+        },
+        {
+          "at": "2026-07-18T20:46:19.934Z",
+          "text": "Reopened with substrate ownership clarified: the typed S2 residual-set contract and gateway method are deliverables of this tranche."
+        },
+        {
+          "at": "2026-07-18T22:33:23.429Z",
+          "text": "Landed the active-carrier M0 lazy browser over production s2.graph.list: compiled C ARCHETYPE_COORDINATE_LUT projection, S2-owned live 108-minus-12 paging, S3/S0 dispatch, explicit root, shared selection, method ratchet, and real Neo4j/Chromium proof. Focused and broad owned suites pass; independent closure remains gated by unrelated live-wire thirdSpanda/evolutionaryGap fixture drift."
+        },
+        {
+          "at": "2026-07-19T00:02:20.904Z",
+          "text": "Independent machine verifier PASS recorded by verifier-machine-21-t21-14-post-baseline-20260719 after the full UF gate: live s2.graph.list/Neo4j residual proof, gateway and contract suites, live-wire, app smoke, 872-test carrier suite, build/typecheck, and all Chromium UI flows green.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/m0-lazy-node-browser.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/m0-lazy-node-browser.spec.ts",
+              "Body/S/S0/epi-cli/tests/gate_m0_residual_list_live.rs",
+              "Body/S/S2/graph-services/src/m0_residual.rs"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 187 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "notes": "claimed with --allow-dirty over 187 dirty files. claimed with --allow-dirty over 49 dirty files.",
+      "owner": "codex-mdev-2114",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T20:43:40.444Z",
-      "runId": "20260716T204340Z-21-T21.14",
+      "heartbeatAt": "2026-07-18T22:33:23.429Z",
+      "runId": "20260718T215846Z-21-T21.14",
       "worktree": null,
       "blocker": null
     },
     "21.T21.15": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T20:51:33.453Z",
-      "claimedAt": "2026-07-16T20:51:26.420Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T00:10:04.601Z",
+      "claimedAt": "2026-07-19T00:02:26.975Z",
+      "completedAt": "2026-07-19T00:10:04.601Z",
       "evidence": [
         {
           "at": "2026-07-16T20:51:33.453Z",
           "text": "Route dependency defect: the void-structure ring explicitly mounts from the active sub-branch supplied by 21.T21.14, which is blocked on the missing S2 residual-list contract, yet 21.T21.15 does not depend on it. Its second required input, profile.payload.m0_void_structure_ring, is also absent from pratibimba-app, portal-core, and gateway-contract. Building the SVG alone would be a detached demo with fabricated lens data. Add 21.T21.14 plus the owning kernel projection tranche as dependencies and land those carriers first."
+        },
+        {
+          "at": "2026-07-18T20:46:20.156Z",
+          "text": "Requeued behind 21.T21.14; the kernel/portal void-ring projection is explicitly owned by this tranche."
+        },
+        {
+          "at": "2026-07-19T00:03:52.121Z",
+          "text": "Implemented the dependency chain instead of swerving it: CLOCK_LENSES_16 now projects through portal-core as the exact 16-entry m0_void_structure_ring, strict Zod and live-wire validation cover the real gateway payload, and the active #0-4 carrier renders and navigates through shared selection. Portal/schema/app suites, typecheck/build, honesty lint, real live-wire capture, and real Chromium interaction are green."
+        },
+        {
+          "at": "2026-07-19T00:10:04.601Z",
+          "text": "Independent verifier-machine-21-t21-15-20260719 PASS: Track 00 UF/W class gate green across 107 harness self-tests, 95 gateway tests, 89 gateway-contract tests, 872 carrier tests, app typecheck/build/smoke, 50 real Chromium UI flows, gateway-method audit, live-wire, carrier tokens, and honesty lint. The closure receipt is the focused real Chromium #0-4 ring navigation flow; the kernel projection and strict live gateway carrier are recorded in the cited paths.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/m0-void-structure-ring.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/m0_void_structure_ring_profile.rs",
+              "Body/M/pratibimba-app/tests/e2e/m0-void-structure-ring.spec.ts",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 187 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "notes": "claimed with --allow-dirty over 187 dirty files. claimed with --allow-dirty over 144 dirty files.",
+      "owner": "codex-mdev-2115",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T20:51:26.420Z",
-      "runId": "20260716T205126Z-21-T21.15",
+      "heartbeatAt": "2026-07-19T00:03:52.121Z",
+      "runId": "20260719T000226Z-21-T21.15",
       "worktree": null,
       "blocker": null
     },
@@ -10400,33 +10517,68 @@
       "blocker": null
     },
     "22.T22.5": {
-      "status": "blocked",
-      "updatedAt": "2026-07-18T10:24:37.065Z",
-      "claimedAt": "2026-07-18T10:23:45.542Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T00:06:21.434Z",
+      "claimedAt": "2026-07-18T23:05:31.100Z",
+      "completedAt": "2026-07-19T00:06:21.434Z",
       "evidence": [
         {
           "at": "2026-07-18T10:24:37.065Z",
           "text": "Blocked on the same missing session-close transport confirmed across three traces. Frozen M1Spine789Reader requires an M0VerifierReport at session close, but the active carrier has only current-tick anuttaraWitness data (not a close report) and the M5 Review fold receives a review ID plus fixture blocks, with no ContemplationObject receiver. Do not derive session completion from current profile fields."
+        },
+        {
+          "at": "2026-07-18T20:46:20.366Z",
+          "text": "Reopened with the persisted PASU-scoped nara.session_close bundle, opaque ref, and governed readback made implementation scope."
+        },
+        {
+          "at": "2026-07-19T00:06:21.434Z",
+          "text": "Implemented the real 7-8-9 session-close seam end to end: canonical session-protein binding, server-derived +7 mod 12 and octave-return aggregates, exact nine-bit verifier reduction, full locally-derived active-PASU scope, atomic 0700/0600 symlink-refusing persistence, opaque exact/latest readback, and exact-session Review rendering. Corrected canon so this close-evidence reading is not conflated with the cumulative M1→M2→M3 Third-Spanda 137 runtime. Focused proof: 6 Rust persistence/derivation tests, 2 live WebSocket tests, 11 reader/Review tests, 872-test carrier suite, production build, real Chromium flow, and gateway-method ratchet GREEN. Independent UF verification PASS is recorded under verifier-owner codex-t225-independent-verifier-r3.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/m1-session-close-reader.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/tests/gate_nara_session_close_live.rs",
+              "Body/M/pratibimba-app/tests/e2e/m1-session-close-reader.spec.ts",
+              "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 61 dirty files. claimed with --allow-dirty over 124 dirty files.",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-18T23:05:31.100Z",
+      "runId": "20260718T230531Z-22-T22.5",
+      "worktree": null,
+      "blocker": null
+    },
+    "22.T22.6": {
+      "status": "done",
+      "updatedAt": "2026-07-19T00:22:06.173Z",
+      "claimedAt": "2026-07-18T10:24:43.153Z",
+      "completedAt": "2026-07-19T00:22:06.173Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T00:22:06.173Z",
+          "text": "Completed the corrected integrated M1→M2→M3 Third-Spanda runtime after closing 22.T22.5. One typed anuttaraPentadicTrace.thirdSpanda generation carries C-authored M1 ring/Hopf/advancement, the M2 72-address and six routing axes with explicit epogdoon block/compression/round-trip/collision cardinalities, and M3 DET/world-clock/codon reception. Static Mersenne/128/137 and physics references are subordinate readings, not a proof overlay; M0 remains prior ground. Fresh independent post-prerequisite UF verification PASS under codex-t226-post-prereq-verifier-r3: 107 harness self-tests, 95 gateway tests, 89 gateway-contract tests, 498 ta-onta tests, 872 carrier tests, typecheck/build/smoke, live-wire, gateway ratchet, honesty/token gates, and all 50 zero-retry Chromium flows.",
+          "receipt": {
+            "command": "pnpm test:e2e (via verify-tranche 22.T22.6 class UF)",
+            "exitCode": 0,
+            "testsPassed": 50,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/visual-panes.spec.ts",
+              "Body/M/pratibimba-app/src/panes/M3ThirdSpandaPanel.tsx",
+              "Body/S/S0/portal-core/src/harmonic_profile.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 61 dirty files.",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-18T10:23:45.542Z",
-      "runId": "20260718T102345Z-22-T22.5",
-      "worktree": null,
-      "blocker": null
-    },
-    "22.T22.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-18T10:24:43.153Z",
-      "claimedAt": "2026-07-18T10:24:43.153Z",
-      "completedAt": null,
-      "evidence": [],
-      "notes": "claimed with --allow-dirty over 61 dirty files.",
-      "owner": "codex-mdev-continuous",
-      "leaseExpiresAt": "2026-07-18T12:24:43.153Z",
       "heartbeatAt": "2026-07-18T10:24:43.153Z",
       "runId": "20260718T102443Z-22-T22.6",
       "worktree": null,
@@ -10557,14 +10709,18 @@
       "blocker": null
     },
     "22.T22.12": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T20:50:46.322Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:20.580Z",
       "claimedAt": "2026-07-16T20:50:37.278Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T20:50:46.322Z",
           "text": "Route dependency defect: the Backend Studio M1 pack manifest requires the Backend Studio/LSP host owned by 28.T28.13, but 28.T28.13 is still pending and the active carrier explicitly records backend-studio as pending in src/ui/leftSidebarModes.ts and CHROME-CONTRACT.md. The carrier has no source-reader/LSP slot in which the manifest's eight paths, language IDs, and readOnly policy can execute. A manifest without a consuming production surface would be dead metadata; add 28.T28.13 as a dependency and land the real host first."
+        },
+        {
+          "at": "2026-07-18T20:46:20.580Z",
+          "text": "Reopened: the previously absent 28.T28.13 Backend Studio host is now done and is encoded as a dependency."
         }
       ],
       "notes": "claimed with --allow-dirty over 187 dirty files.",
@@ -10809,14 +10965,18 @@
       "blocker": null
     },
     "23.T23.11": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:51:35.604Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:20.786Z",
       "claimedAt": "2026-07-16T15:51:35.384Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:51:35.604Z",
           "text": "Blocked: live s2.parashaktiCorrespondences exposes one 72-address decan record, not the required 36 primary + 36 light + 36 S2 #2-3 shadow descriptors or M3 reversed-meaning seam. No local 108-cell synthesis is permitted."
+        },
+        {
+          "at": "2026-07-18T20:46:20.786Z",
+          "text": "Reopened with the typed S2 108-decan aggregate and M3 provenance seam made implementation scope."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
@@ -11416,8 +11576,8 @@
       "blocker": null
     },
     "24.T24.14": {
-      "status": "blocked",
-      "updatedAt": "2026-07-18T09:18:29.504Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:20.992Z",
       "claimedAt": "2026-07-18T06:48:53.912Z",
       "completedAt": null,
       "evidence": [
@@ -11428,6 +11588,10 @@
         {
           "at": "2026-07-18T09:18:29.504Z",
           "text": "Held blocked (not done): the I-Ching cast ribbon deliverable does not exist and the required s5.oracle.iching.cast gateway method is absent (doc-ahead-landing per tranche title, depends on unlanded Wave-B method-family WC-M3-SA-6). Green UF gate passes only because there is nothing to render/fail — closing done would be fraud. Only 24.T24.15 (not in review set) depends on it."
+        },
+        {
+          "at": "2026-07-18T20:46:20.992Z",
+          "text": "Reopened with s5.oracle.iching.cast, persistence, contract, and expected-present ratchet made implementation scope."
         }
       ],
       "notes": "claimed with --allow-dirty over 83 dirty files.",
@@ -11712,14 +11876,18 @@
       "blocker": null
     },
     "25.T25.11": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:51:36.039Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:21.218Z",
       "claimedAt": "2026-07-16T15:51:35.823Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:51:36.039Z",
           "text": "Blocked: required nara.transform.start and nara.transform.advance RPCs are absent. The carrier must not create contemplative artifacts or NOW frontmatter locally in lieu of governed backend transitions."
+        },
+        {
+          "at": "2026-07-18T20:46:21.218Z",
+          "text": "Reopened with nara.transform.start/advance and durable NOW transitions made implementation scope."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
@@ -12123,14 +12291,18 @@
       "blocker": null
     },
     "26.T26.12": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:51:36.480Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:21.447Z",
       "claimedAt": "2026-07-16T15:51:36.261Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:51:36.480Z",
           "text": "Blocked: gateway contains a close-of-session contemplation route but no PASU-scoped fetch/readback seam (s5'.epii.runtimeContext or contemplate.fetch_object) for a persisted ContemplationObject. A viewer without it would display invented or non-retrievable state."
+        },
+        {
+          "at": "2026-07-18T20:46:21.447Z",
+          "text": "Reopened with durable PASU-scoped contemplation persistence and governed opaque-ref readback made implementation scope."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
@@ -12752,14 +12924,18 @@
       "blocker": null
     },
     "28.T28.12": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:50:57.625Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:21.649Z",
       "claimedAt": "2026-07-16T15:50:57.432Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:50:57.625Z",
           "text": "Blocked deliberately: the tranche specifies only a disposable Smart-Connections placeholder while the real extension remains gated on 03.T6.5. Carrier policy forbids landing mock/demo/placeholder surfaces; existing s1'.semantic.suggest_links is a real command seam but is not yet the owned sidebar contract."
+        },
+        {
+          "at": "2026-07-18T20:46:21.649Z",
+          "text": "Reopened and production-retargeted from a forbidden placeholder to a real semantic sidebar over s1-prime semantic suggest_links."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
@@ -13083,14 +13259,18 @@
       "blocker": null
     },
     "29.T29.11": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:51:36.961Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:21.852Z",
       "claimedAt": "2026-07-16T15:51:36.707Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:51:36.961Z",
           "text": "Blocked: the active carrier has no live composition event producer or composition snapshot projection. Track 29's source targets frozen epi-theia and expects composition.* events from unlanded composition surfaces; Dispatch Trace cannot honestly manufacture them."
+        },
+        {
+          "at": "2026-07-18T20:46:21.852Z",
+          "text": "Reopened with composition event producers, bounded snapshots, and Dispatch Trace consumption owned together by this tranche."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
@@ -13102,14 +13282,18 @@
       "blocker": null
     },
     "29.T29.12": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T20:50:28.027Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:22.057Z",
       "claimedAt": "2026-07-16T20:50:17.396Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T20:50:28.027Z",
           "text": "Route dependency defect: 29.T29.12 is computed ready from only 29.T29.10, but its own fixture matrix requires executable states owned by 29.T29.7 (Klein-flip choreography), 29.T29.8 (137 overlay), 29.T29.9 (contemplation completion), and 29.T29.11 (composition observability, currently blocked), plus the cross-linked per-pole visual scopes 22.T22.13, 23.T23.16, 24.T24.16, 25.T25.20, and 26.T26.16, which are not closed. Committing PNG baselines before those render states exist would produce placeholder fixtures and violate the real-UI verification law. Add the missing dependency edges and unblock the render-state producers first."
+        },
+        {
+          "at": "2026-07-18T20:46:22.057Z",
+          "text": "Requeued behind the explicit real render-state producers; the nonexistent 26.16 link was removed and M5 fixture ownership made local."
         }
       ],
       "notes": "claimed with --allow-dirty over 187 dirty files.",
@@ -13947,14 +14131,18 @@
       "blocker": null
     },
     "32.T32.11": {
-      "status": "blocked",
-      "updatedAt": "2026-07-16T15:43:56.867Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:22.283Z",
       "claimedAt": "2026-07-16T15:43:38.788Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-16T15:43:56.867Z",
           "text": "Blocked before implementation: the active carrier only exposes the narrower begin_today vault command. The specified first-day cold-start lifecycle requires real vault.day.ensure, khora.session_start, and first-session tarot/Mercurius orchestration RPC seams, none of which are present in the carrier/substrate source. No UI-only affordance was added because it could not execute the required lifecycle."
+        },
+        {
+          "at": "2026-07-18T20:46:22.283Z",
+          "text": "Reopened with vault.day.ensure, khora.session_start, and first-session oracle orchestration made substrate scope."
         }
       ],
       "notes": "claimed with --allow-dirty over 179 dirty files.",
@@ -14390,16 +14578,21 @@
       "blocker": null
     },
     "36.T36.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T08:31:42.193Z",
+      "claimedAt": "2026-07-19T08:28:35.174Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-19T08:31:42.193Z",
+          "text": "Fresh routeability proof: portal-core anuttara_pentadic_runtime_trace 13/13 validates first-class public-safe profile transport and all 0/1→5, paired-15, 24x15=360, 384 hinge laws; epii-autoresearch-core resonance_ebm anuttara_pentadic_feature 4/4 consumes real portal profiles in zero-fallback and trained-checkpoint paths without canon rewrite; honesty lint clean. External review is owned by Claude per user instruction."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 144 dirty files.",
+      "owner": "codex-mdev-367-routeability",
+      "leaseExpiresAt": "2026-07-19T10:28:35.174Z",
+      "heartbeatAt": "2026-07-19T08:31:42.193Z",
+      "runId": "20260719T082835Z-36-T36.7",
       "worktree": null,
       "blocker": null
     },
@@ -17644,14 +17837,18 @@
       "blocker": null
     },
     "14.T14.4": {
-      "status": "blocked",
-      "updatedAt": "2026-07-10T15:31:44.665Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:19.268Z",
       "claimedAt": "2026-07-10T15:31:44.480Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-10T15:31:44.665Z",
           "text": "The cycle-close gate itself - BLOCKED by design per its own brief until the dependency order in the original Closing-the-Cycle section reaches the final step: needs 36.T36.7 (no-orphan closure seal, currently waiting on 36.5/36.6) + the open release gates (G7 15.T15.1, G8 15.T15.12, G10 track-16 CCTs - live per release-gates.mjs). The machinery to run it is landed and green: release-gates.mjs (mechanised G1/G2/G4/G6 + honest checklist), dr-gate-audit.mjs (32/32), the orphan re-audit generator (0 still-orphan). Unblock when the checklist reads 12/12."
+        },
+        {
+          "at": "2026-07-18T20:46:19.268Z",
+          "text": "Requeued behind the now-explicit 36.T36.7 dependency; this is a dependency wait, not an unclassified block."
         }
       ],
       "notes": null,
@@ -17799,14 +17996,18 @@
       "blocker": null
     },
     "33.T33.1": {
-      "status": "blocked",
-      "updatedAt": "2026-07-12T18:12:55.207Z",
+      "status": "pending",
+      "updatedAt": "2026-07-18T20:46:22.494Z",
       "claimedAt": "2026-07-12T17:01:01.895Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-12T18:12:55.207Z",
           "text": "BLOCKED (mis-scoped at dispatch; adversarial review refuted a stub-zero close): the rerun body demands E5/E6 BEYOND stub-zero — wire the real E5 channel consuming Stream C's N-channel EBM head + the E6 verifier scalar, flip the expected-red kernel_energy_carries_e5_e6_with_456_weighting to green with E5/E6 non-zero for non-default inputs. That physics depends on Stream C (EBM head at Body/S/S5/epii-autoresearch-core) and Stream F (Nara forward), neither landed. The E4/E5/E6 struct scaffolding + three-input signature is already pre-landed (08.T8.9) and green; the expected-red E5/E6 test is correctly preserved red. Reopen when Streams C/F land. Working-tree stub-pin test reverted so nothing falsely locks e5=0."
+        },
+        {
+          "at": "2026-07-18T20:46:22.494Z",
+          "text": "Reopened: Stream C 12.T12.24 and Stream F 05.T5.22 are both done and now encoded as dependencies."
         }
       ],
       "notes": null,
@@ -22941,11 +23142,12 @@
     {
       "runId": "20260718T102443Z-22-T22.6",
       "taskId": "22.T22.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-18T10:24:43.153Z",
       "owner": "codex-mdev-continuous",
       "leaseExpiresAt": "2026-07-18T12:24:43.153Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-19T00:22:06.173Z"
     },
     {
       "runId": "20260718T102514Z-23-T23.14",
@@ -23006,33 +23208,71 @@
       "leaseExpiresAt": "2026-07-18T13:02:53.354Z",
       "worktree": null,
       "completedAt": "2026-07-18T11:04:05.308Z"
+    },
+    {
+      "runId": "20260718T215846Z-21-T21.14",
+      "taskId": "21.T21.14",
+      "status": "review",
+      "startedAt": "2026-07-18T21:58:46.693Z",
+      "owner": "codex-mdev-2114",
+      "leaseExpiresAt": "2026-07-19T00:58:46.693Z",
+      "worktree": null,
+      "completedAt": "2026-07-18T22:33:23.429Z"
+    },
+    {
+      "runId": "20260718T230531Z-22-T22.5",
+      "taskId": "22.T22.5",
+      "status": "done",
+      "startedAt": "2026-07-18T23:05:31.100Z",
+      "owner": "codex-mdev-continuous",
+      "leaseExpiresAt": "2026-07-19T01:05:31.100Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T00:06:21.434Z"
+    },
+    {
+      "runId": "20260719T000226Z-21-T21.15",
+      "taskId": "21.T21.15",
+      "status": "review",
+      "startedAt": "2026-07-19T00:02:26.975Z",
+      "owner": "codex-mdev-2115",
+      "leaseExpiresAt": "2026-07-19T03:02:26.975Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T00:03:52.121Z"
+    },
+    {
+      "runId": "20260719T082835Z-36-T36.7",
+      "taskId": "36.T36.7",
+      "status": "review",
+      "startedAt": "2026-07-19T08:28:35.174Z",
+      "owner": "codex-mdev-367-routeability",
+      "leaseExpiresAt": "2026-07-19T10:28:35.174Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T08:31:42.193Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-18T20:12:49.222Z",
-    "updatedAt": "2026-07-18T20:12:49.222Z",
+    "createdAt": "2026-07-19T08:25:49.743Z",
+    "updatedAt": "2026-07-19T08:25:49.743Z",
     "taskIds": [
-      "22.T22.6",
-      "23.T23.16",
-      "23.T23.17",
-      "23.T23.18",
-      "23.T23.19"
+      "02.T2.10",
+      "03.T3.7",
+      "14.T14.4",
+      "21.T21.13"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "22.T22.6": "in-session",
-      "23.T23.16": "in-session",
-      "23.T23.17": "in-session",
-      "23.T23.18": "in-session",
-      "23.T23.19": "in-session"
+      "02.T2.10": "in-session",
+      "03.T3.7": "in-session",
+      "14.T14.4": "in-session",
+      "21.T21.13": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Treats review dependencies as provisional for scheduling only; review remains externally owned and blocks done closure."
     ]
   }
 }

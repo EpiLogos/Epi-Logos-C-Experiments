@@ -169,7 +169,7 @@ uint8_t apply_epogdoon_compression(uint8_t m2_idx_0_to_71) {
     return (uint8_t)((m2_idx_0_to_71 * 8u) / 9u);
 }
 
-bool is_evolutionary_gap(uint8_t m2_vibration_index) {
+bool epogdoon_has_round_trip_loss(uint8_t m2_vibration_index) {
     uint8_t compressed = apply_epogdoon_compression(m2_vibration_index);
     uint8_t expanded   = (uint8_t)((compressed * 9u) / 8u);
     return (expanded != m2_vibration_index);
@@ -600,11 +600,13 @@ const uint8_t M3_MOVE_MATRIX[64] = {
     #undef MOVE
 };
 
-/* Resonance — 56 valid entries + 8 evolutionary gaps (0xFF)
- * The 8 gaps correspond to M2 frequencies that cannot manifest.
+/* Resonance — 56 resolved entries + 8 unresolved sentinels (0xFF).
  * Gap positions: the 8 hexagrams where both trigrams are complementary
  * AND form a non-trivial crossing (Kan/Li variants).
- * Exact positions calibrated to the epogdoon compression boundary. */
+ *
+ * This is a codon-indexed partial resonance operator. It is not the 72→64
+ * epogdoon map: every M2 address is accepted by that total compression, while
+ * these sentinels only mark codons without a materialised resonance target. */
 const uint8_t M3_RES_MATRIX[64] = {
     /* Row 0 (upper=Kun=000):    gap at 0x05 (Kun/Li) */
     0x00, 0x01, 0x02, 0x03, 0x04, 0xFF, 0x06, 0x07,
@@ -1350,7 +1352,7 @@ static void m3_print_info(const M3_Root* root) {
     printf("  Hexagrams:     64 (.rodata)\n");
     printf("  Non-dual:      16 palindromic codons (XyX)\n");
     printf("  Tarot:         4 suits × 16 = 64 codons\n");
-    printf("  Resonance:     56 valid + 8 evolutionary gaps\n");
+    printf("  Resonance:     56 resolved + 8 unresolved sentinels\n");
     printf("  360 Integral:  Cups=%u Wands=%u Pent=%u Swords=%u = %u\n",
            M3_SUIT_A_INTEGRAL, M3_SUIT_T_INTEGRAL,
            M3_SUIT_C_INTEGRAL, M3_SUIT_G_INTEGRAL,
@@ -1512,7 +1514,7 @@ static void m3_print_hexagram(int argc, char** argv) {
     uint32_t flags = 0;
     uint8_t res = m3_resonance_lookup((uint8_t)id, &flags);
     if (flags & STATUS_PROVISIONAL_BIT) {
-        printf("  Resonance:      EVOLUTIONARY GAP (STATUS_PROVISIONAL)\n");
+        printf("  Resonance:      UNRESOLVED TARGET (STATUS_PROVISIONAL)\n");
     } else {
         printf("  Resonance:      %u\n", res);
     }

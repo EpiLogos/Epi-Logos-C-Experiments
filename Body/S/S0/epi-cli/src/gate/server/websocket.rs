@@ -91,6 +91,11 @@ async fn handle_connection(
     state_root: PathBuf,
     runtime: GatewayRuntimeState,
 ) -> Result<(), String> {
+    let peer_is_loopback = stream
+        .peer_addr()
+        .map_err(|err| err.to_string())?
+        .ip()
+        .is_loopback();
     let socket = accept_async(stream).await.map_err(|err| err.to_string())?;
     let (write, mut read) = socket.split();
     let writer = Arc::new(AsyncMutex::new(write));
@@ -177,7 +182,9 @@ async fn handle_connection(
                 Err(err) => (protocol::error(frame.id, err.code, err.message), None),
             }
         } else {
-            match super::dispatch::dispatch_rpc(&state_root, &runtime, &frame).await {
+            match super::dispatch::dispatch_rpc(&state_root, &runtime, &frame, peer_is_loopback)
+                .await
+            {
                 Ok(result) => (
                     protocol::success(frame.id, result.result),
                     result.post_response,

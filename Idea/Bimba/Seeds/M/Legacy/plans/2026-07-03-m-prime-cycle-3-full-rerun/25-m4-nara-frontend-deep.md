@@ -68,6 +68,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 11. **T25.11 — Transform container widget *(spec-ahead-integration)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.11 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the governed `nara.transform.start` / `nara.transform.advance` lifecycle, durable NOW transition records, strict gateway contracts, and then the carrier container. Missing lifecycle RPCs are implementation scope, not a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 

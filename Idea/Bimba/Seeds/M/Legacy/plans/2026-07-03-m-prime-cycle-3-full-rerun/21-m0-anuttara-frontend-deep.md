@@ -68,6 +68,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 11. **T21.11 — Symbolic-Coordinate Question Console**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md` — Tranche 21.11 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the real `s0'.verifier.respond_question` gateway method, strict request/response contract, and verifier persistence/response projection before wiring the carrier console. A missing method is work for this tranche, not a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
@@ -81,18 +82,23 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md` — Tranche 21.13 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Depends on 21.T21.8, 21.T21.9, and 21.T21.12.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 14. **T21.14 — Lazy 96-Node Browser panel**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md` — Tranche 21.14 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Scheduling: independent. This S2-owned residual-set substrate and its carrier do not consume the 21.T21.13 syntax-layer panels; the mechanical track-order edge must not delay the dependency repair.
+   Substrate ownership: this tranche lands the S2-owned typed residual-set query/list contract and its real gateway method before wiring pagination. The renderer must never hardcode the 12 exclusions, and absence of the S2 method is implementation scope rather than a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 15. **T21.15 — 16-Fold Void-Structure ring renderer**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md` — Tranche 21.15 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the kernel/portal `m0_void_structure_ring` projection and strict wire contract before mounting the ring renderer. A missing projection is implementation scope rather than permission to fabricate renderer-local lens data.
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Depends on 21.T21.14.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 16. **T21.16 — M0/M2 Parity Bridge Reader**

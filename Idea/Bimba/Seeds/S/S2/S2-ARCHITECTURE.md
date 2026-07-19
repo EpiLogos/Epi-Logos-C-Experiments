@@ -303,6 +303,7 @@ S2 currently has **one profile-bus surface** — kernel resonance, written throu
 
 | Gap | Surface | Tranche |
 |---|---|---|
+| Lazy [[M0]] residual browse | Gateway method `s2.graph.list`: six `M0-0`..`M0-5` branches, fixed 20-row pages, live 108-row count, compiled `ARCHETYPE_COORDINATE_LUT[12]` subtraction, and explicit `M0` root | 21.T21.14 — landed |
 | `gds_tangent_overlay` to M0-3' | Gateway method `s2.graph.gds.tangent_overlay` | 09.5 |
 | `c_1_relation_family` enum | Schema constant `RELATION_FAMILY_VALUES: &[&str]` + property spec entry | 09.1 (DR-IG-1) |
 | `c_1_asset_uri` / `c_1_asset_kind` on Anuttara | `node_spec` entries at `lib.rs:1408-1431` | 1.5 |
@@ -589,6 +590,7 @@ The `epi-s2-graph-schema` crate has only `serde` — minimal, correct.
 ### 7.1 Existing kernel-bridge methods
 
 Per `Body/S/S3/gateway-contract/src/lib.rs:139-144`:
+- `s2.graph.list` — typed lazy browse of the live [[M0]] residual set; constrained to the six M0 subbranches rather than arbitrary query passthrough.
 - `s2.graph.query` — browser extensions call this for read-mostly queries.
 - `s2.graph.node` — single-node lookup.
 - `s2.graph.traverse` — bounded traversal for M0' relation rendering.

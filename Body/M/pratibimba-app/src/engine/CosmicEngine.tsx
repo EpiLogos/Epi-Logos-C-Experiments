@@ -1098,7 +1098,7 @@ export function CosmicEngine() {
                     title="pentadic 0/1→5 hinge riding the 1-2-3 composition: M1 K² hinge+substrate · M2 72-index+5° quantum · M3 64-address+codon · 9₍M2₎=8₍M3₎+1₍M1₎ (Tranche 36.4; kernel trace, one generation, no local 72/64 conversion)"
                 >
                     {pentadic.state === 'ready' && pentadic.m1 && pentadic.m2 && pentadic.m3
-                        ? `⟠ t12 ${pentadic.m1.tick12}/p${pentadic.m1.position6} ${pentadic.m1.sourceBinaryState} · 72:${pentadic.m2.resonance72Index} q${pentadic.m2.shemDegreeQuantum}° · 64:${pentadic.m3.mahamayaAddress64} ${pentadic.m3.codon} · 9₂=8₃+1₁`
+                        ? `⟠ M1 ${pentadic.m1.degree720}°→${pentadic.m1.advancementAddress64} · M2 72:${pentadic.m2.address72} phase ${pentadic.epogdoon?.blockPhase}/9 · M3 DET ${pentadic.m3.detReceptionAddress64} clock ${pentadic.m3.worldClockAddress64} ${pentadic.m3.codon} · loss ${pentadic.epogdoon?.roundTripLoss}`
                         : pentadic.state === 'stale-trace-generation'
                           ? '⟠ stale trace generation — rejected'
                           : '⟠ pending-anuttara-pentadic-trace'}

@@ -68,6 +68,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md` — Tranche 2.10 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Depends on 02.T2.1, 12.T12.22, and 12.T12.24.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 11. **T2.11 — Spanda dual-oscillator primitive (the tick floor)** *(2026-07-06: the six acceptance reds are AUTHORED and manifested in portal-core `tests/kernel_truth.rs` + `kernel-truth-expected-failures.json` — red stands as this tranche's work order; see [[00-computational-core-truth-ledger]])* *(NEW 2026-07-04 — decided design, ratified in-session; substrate build, execute as written per CHARTER "Resolved by plan authority")*

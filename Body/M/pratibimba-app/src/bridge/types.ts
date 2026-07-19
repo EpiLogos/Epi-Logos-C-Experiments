@@ -76,7 +76,7 @@ export interface ModalResonatorBoundary {
  * bridge capability. The carrier consumes these values verbatim. */
 export interface EpogdoonBridgeProjectionBoundary {
     readonly compressedCodon: number;
-    readonly isEvolutionaryGap: boolean;
+    readonly roundTripLoss: boolean;
     readonly expandedBack: number;
 }
 
@@ -763,8 +763,110 @@ export interface VakLanguificationTrace {
     readonly provenance: readonly string[];
 }
 
-/** Cross-cutting profile projection — pentadic trace from M0 Anuttara through
- *  the M2/M3 resonance bridge. Every field derives from existing
+export interface ThirdSpandaRoutingAxisViews {
+    readonly mef: {
+        readonly lens: number;
+        readonly position: number;
+        readonly isInverted: boolean;
+        readonly lFamilyLink: number;
+    };
+    readonly tattva: { readonly tattvaIndex: number; readonly phase: number };
+    readonly decan: {
+        readonly elementId: number;
+        readonly sign: number;
+        readonly decan: number;
+        readonly face: number;
+        readonly rulingPlanet: number;
+    };
+    readonly shem: {
+        readonly shemIdx: number;
+        readonly choir: number;
+        readonly position: number;
+        readonly elementId: number;
+        readonly decanLink: number;
+    };
+    readonly maqam: {
+        readonly index72: number;
+        readonly family: number;
+        readonly modeInFamily: number;
+        readonly planetRuler: number;
+    };
+    readonly det: {
+        readonly index72: number;
+        readonly compressed64: number;
+        readonly det64: number;
+    };
+}
+
+export interface ThirdSpandaCodonRotation {
+    readonly lens: number;
+    readonly mode: number;
+    readonly lensLabel: string;
+    readonly modeName: string;
+    readonly surfaceIndex: number;
+    readonly codonId: number;
+    readonly codon: string;
+    readonly codonClass: string;
+    readonly rotation: number;
+    readonly rotationalStateCount: number;
+    readonly rotationDegrees: number;
+    readonly reverseLens: number;
+    readonly reverseMode: number;
+    readonly datasetLutState: string;
+    readonly provenance: string;
+}
+
+export interface ThirdSpandaRuntimeTrace {
+    readonly m1: {
+        readonly priorGround: string;
+        readonly parentAttribution: string;
+        readonly degree720: number;
+        readonly hopfFiber: number;
+        readonly ringQuaternion: readonly [number, number, number, number];
+        readonly advancementAddress64: number;
+    };
+    readonly m2: {
+        readonly address72: number;
+        readonly axisViews: ThirdSpandaRoutingAxisViews;
+    };
+    readonly epogdoon: {
+        readonly ratioNumerator: 9;
+        readonly ratioDenominator: 8;
+        readonly sourceAddress72: number;
+        readonly blockIndex: number;
+        readonly blockPhase: number;
+        readonly compressedAddress64: number;
+        readonly expandedAddress72: number;
+        readonly roundTripExact: boolean;
+        readonly roundTripLoss: number;
+        readonly collision: {
+            readonly ordinal: number;
+            readonly sourcePair72: readonly [number, number];
+            readonly activeRole: 'first-source' | 'second-source';
+        } | null;
+        readonly cardinality: {
+            readonly blockSize: 9;
+            readonly blockCount: 8;
+            readonly collisionPairCount: 8;
+            readonly exactRoundTripCount: 8;
+            readonly nonExactRoundTripCount: 64;
+        };
+    };
+    readonly m3: {
+        readonly detReceptionAddress64: number;
+        readonly worldClockAddress64: number;
+        readonly codonId: number;
+        readonly codon: string;
+        readonly codonRotation: ThirdSpandaCodonRotation;
+        readonly transcriptionState:
+            | 'round-trip-anchor'
+            | 'compressed-nonexact-round-trip';
+        readonly lineChangeOperator: number;
+    };
+}
+
+/** Cross-cutting profile projection — cumulative M1→M2→M3 process with M0
+ *  retained as prior 0/1 ground. Every field derives from existing
  *  MathemeHarmonicProfile fields and Mahamaya/M2/M3 helpers.
  *  Anti-greenfield: no renderer-local tables; no standalone numerology module.
  *  Fields that cannot be derived from current kernel payloads land as
@@ -783,7 +885,6 @@ export interface AnuttaraPentadicRuntimeTrace {
     readonly degree360: number;
     readonly m2ToM3Symbol: number;
     readonly mahamayaAddress64: number;
-    readonly evolutionaryGap: 'm2-wholeness-gap' | 'm3-transcription-gap' | 'm1-parent-restored';
     readonly codonId: number;
     readonly codon: string;
     readonly lineChangeOperator: number;
@@ -793,6 +894,7 @@ export interface AnuttaraPentadicRuntimeTrace {
     readonly qCosmicRef: string;
     readonly qComposedHandle?: string;
     readonly learnedPredictorCheckpointRef?: string;
+    readonly thirdSpanda: ThirdSpandaRuntimeTrace;
     readonly provenance: readonly string[];
 }
 

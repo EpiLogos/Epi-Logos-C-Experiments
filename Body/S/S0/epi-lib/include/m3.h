@@ -155,7 +155,9 @@ extern const Quaternion M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COUNT];
  * FR 2.3.3: Rotational_State — Dynamic 8-Fold Computation
  *
  * Computed from M3_PAIR_MATRIX in O(1). No pre-stored tables.
- * 0xFF = evolutionary gap → STATUS_PROVISIONAL.
+ * 0xFF = unresolved resonance target → STATUS_PROVISIONAL.
+ * This codon-indexed partial operator is independent of the total 72→64
+ * epogdoon compression.
  * =================================================================== */
 
 typedef struct {
@@ -165,12 +167,12 @@ typedef struct {
 
 #define M3_RESONANCE_GAP  0xFF
 
-/* STATUS_PROVISIONAL: system has reached an evolutionary gap */
+/* STATUS_PROVISIONAL: the selected resonance target is unresolved */
 #define STATUS_PROVISIONAL_BIT  (1u << 4)
 
 Rotational_State compute_rotational_state(uint8_t p1_idx, uint8_t p2_idx);
 
-/* Safe version: handles evolutionary gap (0xFF sentinel) */
+/* Safe version: handles an unresolved resonance target (0xFF sentinel) */
 bool compute_rotational_state_safe(
     uint8_t p1_idx, uint8_t p2_idx,
     Rotational_State* out, uint32_t* coord_flags);
@@ -279,8 +281,11 @@ uint8_t get_parashakti_frequency(Rotational_State m3_state,
 /* DESCENDING: M2 → M3 (epogdoon 9:8 compression) */
 uint8_t apply_epogdoon_compression(uint8_t m2_idx_0_to_71);
 
-/* EVOLUTIONARY GAP DETECTION */
-bool is_evolutionary_gap(uint8_t m2_vibration_index);
+/* 9:8 ROUND-TRIP LOSS DETECTION
+ * True when expand(compress(address72)) does not return to address72.
+ * This reports 64 non-exact round trips; it is distinct from the eight
+ * compression collision pairs and the denominator block size nine. */
+bool epogdoon_has_round_trip_loss(uint8_t m2_vibration_index);
 
 
 /* ===================================================================

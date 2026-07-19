@@ -85,12 +85,103 @@ const NUMBER_KEYS = [
 
 const STRING_KEYS = [
     'sourceBinaryState',
-    'evolutionaryGap',
     'codon',
     'backboneIdentity',
     'lineGraphIdentity',
     'qCosmicRef'
 ] as const;
+
+function isInteger(value: unknown): value is number {
+    return Number.isInteger(value);
+}
+
+function hasFields(
+    value: Record<string, unknown>,
+    numeric: readonly string[],
+    strings: readonly string[] = []
+): boolean {
+    return numeric.every(key => isInteger(value[key]))
+        && strings.every(key => isNonEmptyString(value[key]));
+}
+
+function hasThirdSpanda(value: unknown): boolean {
+    const third = objectValue(value);
+    const m1 = objectValue(third?.m1);
+    const m2 = objectValue(third?.m2);
+    const axes = objectValue(m2?.axisViews);
+    const epogdoon = objectValue(third?.epogdoon);
+    const cardinality = objectValue(epogdoon?.cardinality);
+    const m3 = objectValue(third?.m3);
+    const rotation = objectValue(m3?.codonRotation);
+    if (!third || !m1 || !m2 || !axes || !epogdoon || !cardinality || !m3 || !rotation) {
+        return false;
+    }
+    const quaternion = m1.ringQuaternion;
+    if (
+        !hasFields(m1, ['degree720', 'hopfFiber', 'advancementAddress64'], ['priorGround', 'parentAttribution'])
+        || !Array.isArray(quaternion)
+        || quaternion.length !== 4
+        || !quaternion.every(isFiniteNumber)
+        || !hasFields(m2, ['address72'])
+        || !['mef', 'tattva', 'decan', 'shem', 'maqam', 'det'].every(key => objectValue(axes[key]))
+        || !hasFields(
+            epogdoon,
+            [
+                'ratioNumerator',
+                'ratioDenominator',
+                'sourceAddress72',
+                'blockIndex',
+                'blockPhase',
+                'compressedAddress64',
+                'expandedAddress72',
+                'roundTripLoss'
+            ]
+        )
+        || typeof epogdoon.roundTripExact !== 'boolean'
+        || !hasFields(
+            cardinality,
+            [
+                'blockSize',
+                'blockCount',
+                'collisionPairCount',
+                'exactRoundTripCount',
+                'nonExactRoundTripCount'
+            ]
+        )
+        || !hasFields(
+            m3,
+            ['detReceptionAddress64', 'worldClockAddress64', 'codonId', 'lineChangeOperator'],
+            ['codon', 'transcriptionState']
+        )
+        || !hasFields(
+            rotation,
+            [
+                'lens',
+                'mode',
+                'surfaceIndex',
+                'codonId',
+                'rotation',
+                'rotationalStateCount',
+                'rotationDegrees',
+                'reverseLens',
+                'reverseMode'
+            ],
+            ['lensLabel', 'modeName', 'codon', 'codonClass', 'datasetLutState', 'provenance']
+        )
+    ) {
+        return false;
+    }
+    const collision = epogdoon.collision;
+    if (collision === null) {
+        return true;
+    }
+    const collisionRecord = objectValue(collision);
+    return collisionRecord !== null
+        && hasFields(collisionRecord, ['ordinal'], ['activeRole'])
+        && Array.isArray(collisionRecord.sourcePair72)
+        && collisionRecord.sourcePair72.length === 2
+        && collisionRecord.sourcePair72.every(isInteger);
+}
 
 /** Strict structural read of `anuttaraPentadicTrace` off the profile payload —
  *  the REAL `buildPentadicTrace`: a window onto the kernel derivation, never a
@@ -123,7 +214,8 @@ export function pentadicTraceFromPayload(
         fifteens.length !== 2 ||
         !fifteens.every(isFiniteNumber) ||
         !Array.isArray(provenance) ||
-        !provenance.every(isNonEmptyString)
+        !provenance.every(isNonEmptyString) ||
+        !hasThirdSpanda(trace.thirdSpanda)
     ) {
         return null;
     }

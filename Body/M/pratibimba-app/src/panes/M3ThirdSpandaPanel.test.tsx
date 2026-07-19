@@ -6,10 +6,124 @@ import {
     THIRD_SPANDA_FORMS
 } from '../engine/compositionMatheme';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
+import type { AnuttaraPentadicRuntimeTrace } from '../bridge/types';
 
 afterEach(cleanup);
 
 describe('M3ThirdSpandaPanel', () => {
+    it('renders the live M1→M2→M3 process before the static reference forms', () => {
+        const trace = {
+            tick: 31,
+            tick12: 7,
+            helix: 1,
+            position6: 1,
+            sourceBinaryState: '0/1',
+            wholeNumberEndpoint: 5,
+            naturalNumberEndpoint: 6,
+            familyBComplement: [1, 4],
+            shemDegreeQuantum: 5,
+            resonance72Index: 42,
+            degree360: 210,
+            m2ToM3Symbol: 37,
+            mahamayaAddress64: 37,
+            codonId: 37,
+            codon: 'GTC',
+            lineChangeOperator: 251,
+            pairedMahamayaFifteens: [15, 15],
+            backboneIdentity: '24x15=360',
+            lineGraphIdentity: '360+24=384',
+            qCosmicRef: 'q_cosmic://tick/31',
+            thirdSpanda: {
+                m1: {
+                    priorGround: 'M0 is the prior 0/1 ground',
+                    parentAttribution: 'M1-5 is the +1 parent',
+                    degree720: 420,
+                    hopfFiber: 1,
+                    ringQuaternion: [-0.8660254, -0.5, 0, 0],
+                    advancementAddress64: 35
+                },
+                m2: {
+                    address72: 42,
+                    axisViews: {
+                        mef: { lens: 7, position: 0, isInverted: true, lFamilyLink: 1 },
+                        tattva: { tattvaIndex: 21, phase: 0 },
+                        decan: { elementId: 0, sign: 1, decan: 0, face: 0, rulingPlanet: 3 },
+                        shem: { shemIdx: 42, choir: 4, position: 6, elementId: 2, decanLink: 42 },
+                        maqam: { index72: 42, family: 5, modeInFamily: 5, planetRuler: 3 },
+                        det: { index72: 42, compressed64: 37, det64: 137438953472 }
+                    }
+                },
+                epogdoon: {
+                    ratioNumerator: 9,
+                    ratioDenominator: 8,
+                    sourceAddress72: 42,
+                    blockIndex: 4,
+                    blockPhase: 6,
+                    compressedAddress64: 37,
+                    expandedAddress72: 41,
+                    roundTripExact: false,
+                    roundTripLoss: 1,
+                    collision: null,
+                    cardinality: {
+                        blockSize: 9,
+                        blockCount: 8,
+                        collisionPairCount: 8,
+                        exactRoundTripCount: 8,
+                        nonExactRoundTripCount: 64
+                    }
+                },
+                m3: {
+                    detReceptionAddress64: 37,
+                    worldClockAddress64: 37,
+                    codonId: 37,
+                    codon: 'GTC',
+                    codonRotation: {
+                        lens: 7,
+                        mode: 0,
+                        lensLabel: "L1'",
+                        modeName: 'Ionian',
+                        surfaceIndex: 394,
+                        codonId: 53,
+                        codon: 'TCC',
+                        codonClass: 'non-dual',
+                        rotation: 2,
+                        rotationalStateCount: 7,
+                        rotationDegrees: 90,
+                        reverseLens: 7,
+                        reverseMode: 0,
+                        datasetLutState: 'materialized-kernel-lut',
+                        provenance: 'portal-core::codon_rotation_projection 84↔472 surface LUT'
+                    },
+                    transcriptionState: 'compressed-nonexact-round-trip',
+                    lineChangeOperator: 251
+                }
+            },
+            provenance: ['portal_core::pentadic_trace::from_profile']
+        } as const satisfies AnuttaraPentadicRuntimeTrace;
+
+        render(<M3ThirdSpandaPanel trace={trace} />);
+
+        const runtime = screen.getByTestId('m3-spanda-runtime');
+        expect(runtime.textContent).toContain('420°');
+        expect(runtime.textContent).toContain('72:42');
+        expect(runtime.textContent).toContain('DET 37');
+        expect(runtime.textContent).toContain('clock 37');
+        expect(runtime.textContent).toContain('phase 6/9');
+        expect(runtime.textContent).toContain('round-trip loss 1');
+        expect(runtime.textContent).toContain('q [-0.866, -0.500, 0.000, 0.000]');
+        expect(runtime.textContent).toContain('rotation 90°/7');
+        const axes = screen.getByTestId('m3-spanda-m2-axes');
+        for (const axis of ['MEF', 'Tattva', 'Decan', 'Shem', 'Maqam', 'DET']) {
+            expect(axes.textContent).toContain(axis);
+        }
+        expect(axes.textContent).toContain('L7 · P0 · inverted · family 1');
+        expect(axes.textContent).toContain('42 → 37');
+        expect(
+            runtime.compareDocumentPosition(screen.getByTestId('m3-spanda-forms')) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+    });
+
     it('renders every canonical form (five + QCD) and each evaluates to 137', () => {
         render(<M3ThirdSpandaPanel />);
         const allForms = [...THIRD_SPANDA_FORMS, QCD_OCTET_SINGLET_FORM];

@@ -42,6 +42,8 @@ Default to autonomous work-order execution. Verify, don't trust. Cut ceremony.
 
    Read `hardStops`, `softCautions`, `carryForwardRisks`, and `workOrders`. Stop only for `hardStops`. Cautions and risks are guidance, not blockers. `workOrders` is the queue; `recommendedRoute` is the strategic path. Resume active first, then claim ready, skip `wait`. Historical `blocked` records without structured external provenance are dependency-repair work: the assessor routes them as ready when their prerequisites permit instead of silently swerving them.
 
+   Plan sections are sequential by default. A tranche whose section contains the exact line `Scheduling: independent` opts out of only the mechanically inferred immediately preceding tranche; every explicit `Depends on:` edge still binds. Use this marker only when the tranche is genuinely order-independent, never to route around a real substrate dependency.
+
    Active development must be NOW-bound. The assessor reports `activeDevelopmentContext` from `.epi/session.json` or `EPI_NOW_PATH`; if `--require-now` hard-stops, run `epi agent session init` and, when the daily scaffold is missing, `epi vault day-init`, then reassess. Do not create an ad-hoc note path outside `Idea/Empty/Present/{DD-MM-YYYY}/{sessionId}/now.md`.
 
 2. **Substrate-truth spot-check (once per session, not per tranche).**

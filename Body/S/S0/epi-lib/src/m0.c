@@ -413,6 +413,23 @@ const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE] = {
     },
 };
 
+/* Canonical graph identities for the same twelve compiled slots. This is the
+ * machine-readable M0 authority consumed by S2 residual-set projections. */
+const char* const ARCHETYPE_COORDINATE_LUT[ARCHETYPE_LUT_SIZE] = {
+    "M0-3-(0/1)",
+    "M0-3-4",
+    "M0-3-2",
+    "M0-3-3",
+    "M0-3-5",
+    "M0-3-6",
+    "M0-3-7",
+    "M0-3-8",
+    "M0-3-9",
+    "M0-3-10",
+    "M0-3-11",
+    "M0-2-9",
+};
+
 const Archetype_Entry* m0_resolve_archetypal_number(uint8_t number) {
     if (number > 9u) return NULL;
     return &ARCHETYPE_LUT[number + 2u];

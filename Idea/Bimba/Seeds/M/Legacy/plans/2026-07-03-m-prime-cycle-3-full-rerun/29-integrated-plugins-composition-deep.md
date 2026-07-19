@@ -68,6 +68,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 11. **T29.11 — Composition observability event vocabulary + OmniPanel Dispatch Trace wiring *(spec-ahead-integration; closes OW-WC-IP-1; cross-link 15.11)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md` — Tranche 29.11 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Carrier ownership: this tranche lands the live composition event producers, bounded profile-generation snapshot projection, and Dispatch Trace consumer together. Absence of producers/snapshots is implementation scope, not a blocker or permission to manufacture events.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
@@ -75,6 +76,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md` — Tranche 29.12 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Depends on 29.T29.7, 29.T29.8, 29.T29.9, 29.T29.11, 22.T22.13, 23.T23.16, 24.T24.16, and 25.T25.20. The source's `26.16` cross-link has no ledger tranche; the required M5 recognition-state fixture is owned directly by this tranche over the landed 26.T26.11 recognition layer.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 13. **T29.13 — M4 protected-local boundary enforcement extended to geometric slots *(spec-ahead-integration; closes IP-15 + DR-M4-3 geometric enforcement)***

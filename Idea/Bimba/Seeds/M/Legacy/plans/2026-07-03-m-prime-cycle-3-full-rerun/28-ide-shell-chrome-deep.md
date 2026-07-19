@@ -72,10 +72,12 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
-12. **T28.12 — Smart-Connections sidebar code-pending stub**
+12. **T28.12 — Smart-Connections semantic sidebar carrier**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md` — Tranche 28.12 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Production retarget: replace the obsolete placeholder-only scope with a real `pratibimba-app` sidebar over the existing `s1'.semantic.suggest_links` governed command, strict suggestion/provenance parsing, current-note/selection binding, and honest unavailable/empty states. No dependency on nonexistent `03.T6.5`, no mock suggestions, and no frozen-Theia receiver.
    Original ledger status: done — verify or rebuild; never build on it unverified.
+   Depends on 28.T28.11 and 28.T28.13.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 
 13. **T28.13 — Backend Studio: LSP slot + coordinate-aware navigation**

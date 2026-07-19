@@ -26,34 +26,11 @@ import {
 } from './compositionMatheme';
 import { topologyFromPayload } from '../panes/m1KleinTopology';
 import { buildPentadicOverlay } from './cosmicPentadicOverlay';
+import { PENTADIC_TRACE_FIXTURE as PENTADIC_TRACE } from '../test/pentadicTraceFixture';
 
 // A real, spec-consistent pentadic trace (matching the 36.T36.4 fixture the
 // kernel producer emits) so the overlay's translation-rule join line is the
 // live carrier render, not a hand-built string.
-const PENTADIC_TRACE = {
-    tick: 31,
-    tick12: 7,
-    helix: 1,
-    position6: 1,
-    sourceBinaryState: '0/1',
-    wholeNumberEndpoint: 5,
-    naturalNumberEndpoint: 6,
-    familyBComplement: [1, 4],
-    shemDegreeQuantum: 5,
-    resonance72Index: 42,
-    degree360: 210,
-    m2ToM3Symbol: 37,
-    mahamayaAddress64: 37,
-    evolutionaryGap: 'm2-wholeness-gap',
-    codonId: 37,
-    codon: 'GTC',
-    lineChangeOperator: 251,
-    pairedMahamayaFifteens: [15, 15],
-    backboneIdentity: '24x15=360',
-    lineGraphIdentity: '360+24=384',
-    qCosmicRef: 'q_cosmic://tick/31',
-    provenance: ['portal_core::pentadic_trace::from_profile']
-} as const;
 
 describe('07.T7.2 — 137 = 64 + 72 + 1 composition-contract matheme spine', () => {
     describe('matheme spine preservation', () => {

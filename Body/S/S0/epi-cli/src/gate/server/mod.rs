@@ -229,6 +229,13 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             // BODIES (natal chart, per-layer profiles) never cross this bus.
             projection.harmonic_profile.quintessence =
                 crate::nara::identity::heartbeat_quintessence();
+            let verifier_questions = projection
+                .harmonic_profile
+                .anuttara_witness
+                .as_ref()
+                .map(|witness| witness.open_questions.as_slice())
+                .unwrap_or_default();
+            runtime.cache_verifier_questions(generation, verifier_questions);
             let mut payload = match serde_json::to_value(&projection) {
                 Ok(value) => value,
                 Err(_) => continue,
@@ -393,10 +400,12 @@ pub async fn spawn_test_server_with_state_root(
     observability::register_gateway_with_spacetimedb(port, &state_root).await?;
     let (shutdown_tx, shutdown_rx) = oneshot::channel();
     let runtime = GatewayRuntimeState::default();
+    let heartbeat = spawn_profile_heartbeat(runtime.clone());
 
     let task = tokio::spawn(async move {
         let _ =
             websocket::run_listener_loop(listener, state_root, runtime, Some(shutdown_rx)).await;
+        heartbeat.abort();
     });
 
     Ok(TestServerHandle {

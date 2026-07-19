@@ -92,7 +92,7 @@ export const KERNEL_BRIDGE_CAPABILITY_NAMES = Object.freeze(
 export const EpogdoonBridgeProjection = z
   .object({
     compressedCodon: z.number().int().min(0).max(63),
-    isEvolutionaryGap: z.boolean(),
+    roundTripLoss: z.boolean(),
     expandedBack: z.number().int().min(0).max(71),
   })
   .strict();
@@ -586,6 +586,151 @@ export type AnuttaraWitnessProjection = z.infer<
  *  Mirror of portal-core `kernel/projections/pentadic_trace.rs`. Every field
  *  is a kernel derivation (`from_profile`); renderers never recompute 72→64,
  *  24×15, codon, or line-change values. */
+const ThirdSpandaRoutingAxisViews = z
+  .object({
+    mef: z
+      .object({
+        lens: z.number().int().min(0).max(11),
+        position: z.number().int().min(0).max(5),
+        isInverted: z.boolean(),
+        lFamilyLink: z.number().int().min(0).max(5),
+      })
+      .strict(),
+    tattva: z
+      .object({
+        tattvaIndex: z.number().int().min(0).max(35),
+        phase: z.number().int().min(0).max(1),
+      })
+      .strict(),
+    decan: z
+      .object({
+        elementId: z.number().int().nonnegative(),
+        sign: z.number().int().min(0).max(2),
+        decan: z.number().int().min(0).max(2),
+        face: z.number().int().min(0).max(1),
+        rulingPlanet: z.number().int().nonnegative(),
+      })
+      .strict(),
+    shem: z
+      .object({
+        shemIdx: z.number().int().min(0).max(71),
+        choir: z.number().int().min(0).max(7),
+        position: z.number().int().min(0).max(8),
+        elementId: z.number().int().nonnegative(),
+        decanLink: z.number().int().min(0).max(71),
+      })
+      .strict(),
+    maqam: z
+      .object({
+        index72: z.number().int().min(0).max(71),
+        family: z.number().int().nonnegative(),
+        modeInFamily: z.number().int().nonnegative(),
+        planetRuler: z.number().int().nonnegative(),
+      })
+      .strict(),
+    det: z
+      .object({
+        index72: z.number().int().min(0).max(71),
+        compressed64: z.number().int().min(0).max(63),
+        det64: z.number().int().nonnegative(),
+      })
+      .strict(),
+  })
+  .strict();
+
+const ThirdSpandaCodonRotation = z
+  .object({
+    lens: z.number().int().min(0).max(11),
+    mode: z.number().int().min(0).max(6),
+    lensLabel: z.string().min(1),
+    modeName: z.string().min(1),
+    surfaceIndex: z.number().int().nonnegative(),
+    codonId: z.number().int().min(0).max(63),
+    codon: z.string().min(1),
+    codonClass: z.string().min(1),
+    rotation: z.number().int().nonnegative(),
+    rotationalStateCount: z.number().int().positive(),
+    rotationDegrees: z.number().int().nonnegative(),
+    reverseLens: z.number().int().min(0).max(11),
+    reverseMode: z.number().int().min(0).max(6),
+    datasetLutState: z.string().min(1),
+    provenance: z.string().min(1),
+  })
+  .strict();
+
+const ThirdSpandaRuntimeTrace = z
+  .object({
+    m1: z
+      .object({
+        priorGround: z.string().min(1),
+        parentAttribution: z.literal("M1-5 is the +1 parent"),
+        degree720: z.number().int().min(0).max(719),
+        hopfFiber: z.number().int().nonnegative(),
+        ringQuaternion: z.tuple([
+          z.number(),
+          z.number(),
+          z.number(),
+          z.number(),
+        ]),
+        advancementAddress64: z.number().int().min(0).max(63),
+      })
+      .strict(),
+    m2: z
+      .object({
+        address72: z.number().int().min(0).max(71),
+        axisViews: ThirdSpandaRoutingAxisViews,
+      })
+      .strict(),
+    epogdoon: z
+      .object({
+        ratioNumerator: z.literal(9),
+        ratioDenominator: z.literal(8),
+        sourceAddress72: z.number().int().min(0).max(71),
+        blockIndex: z.number().int().min(0).max(7),
+        blockPhase: z.number().int().min(0).max(8),
+        compressedAddress64: z.number().int().min(0).max(63),
+        expandedAddress72: z.number().int().min(0).max(70),
+        roundTripExact: z.boolean(),
+        roundTripLoss: z.number().int().min(0).max(1),
+        collision: z
+          .object({
+            ordinal: z.number().int().min(0).max(7),
+            sourcePair72: z.tuple([
+              z.number().int().min(0).max(63),
+              z.number().int().min(1).max(64),
+            ]),
+            activeRole: z.enum(["first-source", "second-source"]),
+          })
+          .strict()
+          .nullable(),
+        cardinality: z
+          .object({
+            blockSize: z.literal(9),
+            blockCount: z.literal(8),
+            collisionPairCount: z.literal(8),
+            exactRoundTripCount: z.literal(8),
+            nonExactRoundTripCount: z.literal(64),
+          })
+          .strict(),
+      })
+      .strict(),
+    m3: z
+      .object({
+        detReceptionAddress64: z.number().int().min(0).max(63),
+        worldClockAddress64: z.number().int().min(0).max(63),
+        codonId: z.number().int().min(0).max(63),
+        codon: z.string().min(1),
+        codonRotation: ThirdSpandaCodonRotation,
+        transcriptionState: z.enum([
+          "round-trip-anchor",
+          "compressed-nonexact-round-trip",
+        ]),
+        lineChangeOperator: z.number().int().min(0).max(383),
+      })
+      .strict(),
+  })
+  .strict();
+
 export const AnuttaraPentadicRuntimeTrace = z
   .object({
     tick: z.number().int().nonnegative(),
@@ -604,11 +749,6 @@ export const AnuttaraPentadicRuntimeTrace = z
     degree360: z.number().int().min(0).max(359),
     m2ToM3Symbol: z.number().int().min(0).max(63),
     mahamayaAddress64: z.number().int().min(0).max(63),
-    evolutionaryGap: z.enum([
-      "m2-wholeness-gap",
-      "m3-transcription-gap",
-      "m1-parent-restored",
-    ]),
     codonId: z.number().int().min(0).max(63),
     codon: z.string().min(1),
     lineChangeOperator: z.number().int().min(0).max(383),
@@ -618,6 +758,7 @@ export const AnuttaraPentadicRuntimeTrace = z
     qCosmicRef: z.string().min(1),
     qComposedHandle: z.string().min(1).optional(),
     learnedPredictorCheckpointRef: z.string().min(1).optional(),
+    thirdSpanda: ThirdSpandaRuntimeTrace,
     provenance: z.array(z.string().min(1)),
   })
   .strict();
@@ -1304,6 +1445,47 @@ export const InversionOperatorHandle = z
   .strict();
 export type InversionOperatorHandle = z.infer<typeof InversionOperatorHandle>;
 
+export const M0VoidLensState = z.enum([
+  "canonical",
+  "canonical_absent",
+  "blocked",
+]);
+export type M0VoidLensState = z.infer<typeof M0VoidLensState>;
+
+export const M0VoidLensProjection = z
+  .object({
+    lensIndex: z.number().int().min(0).max(15),
+    coordinate: z.string().min(1),
+    label: z.string().trim().min(1),
+    state: M0VoidLensState,
+  })
+  .strict();
+export type M0VoidLensProjection = z.infer<typeof M0VoidLensProjection>;
+
+export const M0VoidStructureRing = z
+  .array(M0VoidLensProjection)
+  .length(16)
+  .superRefine((lenses, ctx) => {
+    lenses.forEach((lens, index) => {
+      if (lens.lensIndex !== index) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `lens row ${index} must carry lensIndex ${index}`,
+          path: [index, "lensIndex"],
+        });
+      }
+      const expectedCoordinate = `#0-4-${index}`;
+      if (lens.coordinate !== expectedCoordinate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `lens row ${index} must carry coordinate ${expectedCoordinate}`,
+          path: [index, "coordinate"],
+        });
+      }
+    });
+  });
+export type M0VoidStructureRing = z.infer<typeof M0VoidStructureRing>;
+
 export const MathemeHarmonicProfile = z
   .object({
     profileSchemaVersion: z.literal(1),
@@ -1337,6 +1519,7 @@ export const MathemeHarmonicProfile = z
     resonance72: z.record(z.unknown()),
     depositionAnchor: DepositionAnchorProjection,
     graphHandle: GraphAnchorProjection,
+    m0_void_structure_ring: M0VoidStructureRing,
     audioOctet: z.array(z.number()).length(8),
     nodalQuartet: z.array(z.record(z.unknown())).length(4),
     modalResonator: ModalResonatorProfile.optional(),

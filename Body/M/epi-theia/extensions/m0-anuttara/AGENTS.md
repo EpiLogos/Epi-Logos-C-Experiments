@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M0'-SPEC]] (arch
 
 ## Ownership
 - `src/common/index.ts` — public surface / Track-08 contribution contract (`EXTENSION_ID`, view ids, `TRACK_08_CONTRIBUTION`); generated from the parent `contracts/07-t0-extension-contract-preflight.json`.
-- `src/common/cross-layout-intent.ts`, `src/common/m0-inspector.ts`, `src/common/m0-layers.ts` — cross-layout intent payload, inspector layer model (including `MONOPOLY_LUT` rows typed by shared `MonoPolyState`), and `s2.graph.query` route types.
+- `src/common/cross-layout-intent.ts`, `src/common/m0-inspector.ts`, `src/common/m0-layers.ts` — cross-layout intent payload, inspector layer model (including `MONOPOLY_LUT` rows typed by shared `MonoPolyState` and contemplation prompts read from the live Rust `contemplationPromptLut` field with legacy snake-case compatibility), and `s2.graph.query` route types.
 - `src/browser/frontend-module.ts` — Theia frontend module (widget factory, commands, empty-state registration).
 - `src/browser/m0-anuttara-widget.tsx`, `src/browser/empty-state.tsx` — root widget and first-render empty-state surface.
 - `src/browser/components/`, `src/browser/panels/` (incl. `panels/syntax-layers/`), `src/browser/state/` — React UI (layer-selector, mode-toggle, void-structure-ring, contemplation-prompt footer, lazy-node-browser, parity-bridge-reader, ql-structure-layer (M0-1' QL reader), virtue-witness, syntax-layer panels) and M0' surface-state codecs persisted through the shared bridge.
@@ -25,7 +25,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M0'-SPEC]] (arch
 - Respect `forbiddenImports`: no direct `Body/S/*` or `neo4j-driver` imports — graph access goes through the shared bridge adapter.
 
 ## Verification
-`pnpm test` in this dir (builds, then runs the five `../test/m0-anuttara-*.test.mjs` node suites), or `pnpm test:contracts` from `Body/M/epi-theia` for the full suite.
+`pnpm test` in this dir (builds, then runs every `../test/m0-anuttara-*.test.mjs` node suite, including contemplation and symbolic-question contracts), or `pnpm test:contracts` from `Body/M/epi-theia` for the full suite.
 
 ## Child DOX Index
 - (leaf)

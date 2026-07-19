@@ -68,6 +68,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 11. **T32.11 — Day-not-yet-started orchestration**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md` — Tranche 32.11 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the idempotent `vault.day.ensure`, `khora.session_start`, and first-session oracle/Mercurius orchestration contracts before wiring the cold-start carrier flow. The narrower existing `begin_today` command is a starting point; absent lifecycle methods are implementation scope rather than blockers.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 

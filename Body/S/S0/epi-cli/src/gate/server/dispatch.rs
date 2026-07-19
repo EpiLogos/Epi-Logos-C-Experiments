@@ -37,6 +37,7 @@ pub(super) async fn dispatch_rpc(
     state_root: &PathBuf,
     runtime: &GatewayRuntimeState,
     frame: &RequestFrame,
+    peer_is_loopback: bool,
 ) -> Result<DispatchResult, (String, String)> {
     let store = SessionStore::new(state_root).map_err(internal_error)?;
     let route = classify_method(&frame.method);
@@ -155,6 +156,11 @@ pub(super) async fn dispatch_rpc(
         "s0'.verifier.emit_query" => verifier::emit_query(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(invalid_params_error),
+        "s0'.verifier.respond_question" => {
+            verifier::respond_question(state_root, runtime, peer_is_loopback, &frame.params)
+                .map(DispatchResult::immediate)
+                .map_err(invalid_params_error)
+        }
         "s0'.verifier.validate_membership" => verifier::validate_membership(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(invalid_params_error),
@@ -1118,6 +1124,7 @@ pub(super) async fn dispatch_rpc(
         }
         "s2.graph.query"
         | "s2.graph.node"
+        | "s2.graph.list"
         | "s2.graph.traverse"
         | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
@@ -1587,9 +1594,13 @@ pub(super) async fn dispatch_rpc(
         "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {
             Ok(DispatchResult::immediate(epii::user_orientation()))
         }
-        method if method.starts_with("nara.") => {
-            crate::gate::nara::dispatch_nara(method, &frame.params).map(DispatchResult::immediate)
-        }
+        method if method.starts_with("nara.") => crate::gate::nara::dispatch_nara_with_state_root(
+            state_root,
+            peer_is_loopback,
+            method,
+            &frame.params,
+        )
+        .map(DispatchResult::immediate),
         _ => {
             // Route ownership AND dispatch-kind both come from S3 — S0 never
             // synthesises either. If a method lands here, S3's route table

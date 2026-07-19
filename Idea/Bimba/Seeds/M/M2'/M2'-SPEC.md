@@ -1,7 +1,7 @@
 ---
 coordinate: "M2'"
 status: "active-domain-spec"
-updated: "2026-06-10"
+updated: "2026-07-18"
 cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
@@ -41,6 +41,7 @@ Three commitments hold this domain:
 1. **[[M2']] preserves the 72-invariant.** Every M2' surface (lens material, chakra sphere, decan face, cymatic Chladni pattern) is addressable in canonical 72-space: `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. This is the **72** in the system's `137 = 64 + 72 + 1` architecture, the [[Paraśakti]] bridge between [[M1]]'s +1 parent and [[M3]]'s 64-fold binary substrate. The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] and [[Body/S/S0/epi-lib/src/m2.c]] enforce this at compile time via `_Static_assert`s; M2' inherits the invariant.
 2. **M2' is the L ↔ L' meaning-translator surface.** When the walk crosses a tritone-mirror lens-pair boundary (Lens N ↔ Lens N+3, signalled by [[M1']] per [[M1'-SPEC]] §6), M2' enacts the **[[Klein bottle|Klein-bottle]] enharmonic flip**: same struck pitch, opposite emotional valence, opposite surface colour, opposite material response. This is the structural mechanism by which the instrument plays *meanings* and not just tones. See §7 below.
 3. **M2' is the bridge surface toward [[M3]]/[[M3']], but not the codon classifier.** The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] defines the [[Discrete Epistemic Transform]] (DET): `M2_TO_M3_CYMATIC_PROJECTION[72]`, `transduce_vibration_to_symbol`, and the 72 → 64 epogdoon compression `72 × 8 / 9 = 64`. M2' renders the 72-correspondential profile and produces the standing-wave signature that M3/M3' projects into 64-bit codon-rotation. M2' does not classify codons; M3'/[[M3'-SPEC]] §7 owns that surface.
+4. **The Third-Spanda runtime carries M2 as a whole addressed field, not as the scalar 72.** `anuttaraPentadicTrace.thirdSpanda.m2` carries the active `address72` and the six mutually coherent `RoutingAxisViews` for MEF, tattva, decan, Shem, maqam, and DET. Every view must re-encode the same address. The adjoining epogdoon record describes that active transition; static `64+72+1` arithmetic does not replace this functional evidence.
 
 ## §1 — The Six M2-0' to M2-5' Strata (1:1 with M2 bimba)
 
@@ -363,6 +364,16 @@ The active routing-state is **always visible** in the M2' surface: the user can 
 [[M2-5']] carries the planetary-chakral bridge where the `9:8` epogdoon is enacted as [[M2]]-[[M3]] conjugation: nine planetary bodies / rulership handles compress across eight chakral or nodal reception points, matching the [[Discrete Epistemic Transform|DET]] identity `72 × 8 / 9 = 64`. This is the same beauty-operator that lets [[Paraśakti]]'s 72-fold vibrational bridge become [[Mahāmāyā]]'s 64-fold binary substrate.
 
 `M2_PLANET_LUT[10]` is canon. Earth is the 10th planet in that table as observer-centre: the clock/map centre from which the planetary-chakral coupling is read, not a separate handle added on top of a 10-planet list. The `9:8` epogdoon is therefore nine non-Earth planets to eight chakral or nodal reception points, while Earth holds the embodied centre of observation. An `earthObserverHandle` may carry provenance for that centre, but no new bridge field is required to make the planet count valid.
+
+The integer runtime law has three different cardinalities and they must never share one "gap" or "fold-point" name:
+
+| Quantity | Runtime meaning |
+|---|---|
+| `9` | source-block size; `blockIndex = address72 / 9`, `blockPhase = address72 % 9` |
+| `8` | number of 9-address blocks and number of adjacent source pairs that collide under `floor(address72 × 8 / 9)` |
+| `64` | number of source addresses whose compress/expand round trip is non-exact; the eight block anchors `0,9,...,63` round-trip exactly |
+
+For each source address `i`, the trace carries `compressed64=floor(8i/9)`, `expanded72=floor(9·compressed64/8)`, `roundTripExact`, and `roundTripLoss=i-expanded72` (`0` or `1`). A collision record exists only for the two sources `[9b,9b+1]` that share the first compressed address in block `b`. This evidence sits inside the existing cumulative trace, not in a second top-level fold-state field.
 
 ### §9.6 Routing Traces as Epii Learning Evidence
 

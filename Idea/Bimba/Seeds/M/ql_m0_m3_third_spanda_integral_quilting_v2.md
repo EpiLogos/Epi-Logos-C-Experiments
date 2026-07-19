@@ -1,9 +1,9 @@
 ---
-coordinate: "M0/M3"
+coordinate: "M1/M2/M3 (M0 prior ground)"
 status: "kernel-canon"
-updated: "2026-06-04"
-domain: "matheme-spine / Third Spanda Equation / M0-M3 integral quilting"
-authority: "Promoted to kernel-canon 2026-06-04 per DR-M3-6 (cycle-3 design-reconciliation register). The Third Spanda Equation in its five canonical forms (Mersenne / Binary / Octave-field / Spanda-bridge / M-stack) is the matheme-spine of cycle-3 work, alongside the First Spanda (0/1 + 1/0 = 1/1 = 100%) and Second Spanda (100% = 64 + 36 → 16/9 = (4/3)²). Execution-order trace `64+72=136 → −9 → 127=M_7 → +1 → 128=2^7 → +9 → 137 → +δ → 137.035999…` and translation rule `9_M2 = 8_M3 + 1_M1` are co-canonical."
+updated: "2026-07-18"
+domain: "matheme-spine / Third Spanda Equation / cumulative M1-M2-M3 operation with M0 prior ground"
+authority: "Promoted to kernel-canon 2026-06-04 per DR-M3-6 and functionally amended 2026-07-18. The Third Spanda Equation's reference forms remain canonical, but runtime ownership is the cumulative M1→M2→M3 generation inside `anuttaraPentadicTrace.thirdSpanda`; M0 supplies prior 0/1 syntax and is neither the +1 parent nor the runtime carrier. The translation rule is symbolic and must not conflate epogdoon block size 9, collision-pair count 8, and non-exact-round-trip count 64."
 depends_on:
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[full_theoretical_alignments_ql_physics]]"
@@ -24,10 +24,10 @@ canon_updates_landed:
   - "CU-FORM-1@2026-06-15"
 ---
 
-# QL M0-M3 Integral Quilting: Third Spanda, Mahamaya Binary Valuation, and Physics/Chemistry Bridge
+# QL M1-M3 Integral Quilting: Third Spanda, Mahamaya Binary Valuation, and Physics/Chemistry Bridge
 
 **Status:** kernel-canon (promoted 2026-06-04 per DR-M3-6).  
-**Version:** 2026-06-04 v2  
+**Version:** 2026-07-18 v2.1
 **Scope:** M0/M1 framing, M0-M3 execution stack, Third Spanda Equation, Mahamaya DNA/I-Ching/Tarot/codon matrix, yin-yang binary arithmetic, quaternionic evaluation packets, and disciplined physics/chemistry integration.
 
 **v2 enrichment:** integrates the deeper OG Yin/Yang coin-value layer (`Yin=2`, `Yang=3`), the Janus polarity distinction for `7` and `8`, the line-level and codon-quaternion `360` invariants, the pair-matrix valuation metrics, the explicit physics bridge through gauge/Lagrangian/Noether grammar, the Mersenne-prime substrate (`127 = 2^7 - 1 = M_7` with prime-index `31 = M_5 = 2^5 - 1`, giving `M_5 → M_7` hierarchy at the actional-Archetype-7 layer), and the execution-order trace exposing the 9-gap as withdrawal-then-restoration around the M_7 → 2^7 binary closure.
@@ -153,10 +153,36 @@ Examples:
 ```text
 137               = integer / psychoid / world-clock skeleton
 137.035999...     = measured, dressed, low-energy electromagnetic value
-8                 = QCD octet skeleton / M3 gap skeleton / octave field
+8                 = QCD octet skeleton / M3 resonance-sentinel cardinality / octave field
 alpha_s(M_Z)^-1   = measured strong-coupling value at a specific scale
 4l+2              = exact shell-capacity law in chemistry
 ```
+
+---
+
+## 1.1 Functional runtime law: M0 ground, M1-M2-M3 operation
+
+The Third Spanda is not implemented by placing `137` over an M1 display. Its live unit is one cumulative generation:
+
+```text
+M0 prior 0/1 syntax
+  -> M1 C-authored ring quaternion / Hopf fiber / advancement clock
+  -> M2 active 72-address decoded through MEF+tattva+decan+Shem+maqam+DET
+  -> 9:8 epogdoon compression with explicit block/collision/round-trip evidence
+  -> M3 DET reception + independent world-clock address + codon rotation
+```
+
+This generation is produced at [[S0]] in `MathemeHarmonicProfile.anuttaraPentadicTrace.thirdSpanda` and consumed by the active [[M']] carrier. It does not create another top-level profile field. M1's ring quaternion comes from C `RING_QUATERNION_LUT`; M3's codon-charge quaternion is downstream and cannot source M1 topology.
+
+The epogdoon evidence has three non-interchangeable counts:
+
+- `9`: source-block size and phase modulus.
+- `8`: number of blocks and adjacent source-pair collisions in 72→64.
+- `64`: source addresses with non-exact compress/expand round trips; eight anchors close exactly.
+
+M3 then carries two 64-addresses with different provenance: `detReceptionAddress64` from M2 compression and `worldClockAddress64` from degree360. Equality on a tick does not erase the distinction.
+
+Only after this operational record is visible do the reference registers apply: `127` as Mersenne ground, `128` as doubled-phase/high-energy closure, `137` as integer skeleton, and `137.035999...` as measured dressed low-energy face. The reference forms interpret the process; they do not execute it.
 
 ---
 
@@ -957,11 +983,17 @@ because 48 cards cover one codon each and 8 dual-codon courts cover two codons e
 48 + 16 = 64
 ```
 
-This is the same 56+8 partition as the M3 resonance structure:
+The M3 resonance operator also has a 56+8 cardinality:
 
 ```text
-56 resonant addresses + 8 transitional-shadow addresses = 64
+56 resolved resonance targets + 8 unresolved sentinels = 64
 ```
+
+These are not the same partition. Tarot maps 56 cards onto 64 codons through
+48 single-codon cards and eight dual-codon courts. `M3_RES_MATRIX` is a partial
+operator from 64 codon addresses to resonance targets. The epogdoon is a third
+mechanism again: a total 72→64 map with eight collision pairs. Shared
+cardinalities are cross-register alignments, not executable identity.
 
 A single card is not the whole reading. It is one packet. A sequence of packets forms a symbolic protein:
 
@@ -1204,4 +1236,3 @@ M0 gives the psychoid source syntax; M1 seals it as a parent tick; M2 vibrates i
 - `anuttara-language-map.md`: M0 root, M0-3 number-language, M0-4 source-code matrix, O#/X#/N#/M#/#, and M0-5 Siva/Shakti runtime.
 - `M3'-SPEC.md`: 2-bit nucleotide logic, 16-pair dinucleotide matrix, codon quaternion, 384 line-change graph, 472 rotational states, 56+8 tarot compression, 360/720 wheel, M3 register discipline, M3 transcription packet chain, and the explicit rule that 6/9/7/8 values are the operative arithmetic for codon rotation, charge computation, and DET projection.
 - Previous working papers in the project: `full_theoretical_alignments_ql_physics`, `alpha_rasa_bridge_ql`, `ql_physics_anthropic_chemistry_alignment_v2`, and the Paramasiva vortex integrations.
-

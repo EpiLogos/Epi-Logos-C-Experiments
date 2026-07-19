@@ -3,13 +3,20 @@
 //! Bridges the CLI nara module into the gateway's JSON-RPC dispatch.
 //! Every method returns JSON (json=true) since the gateway is a structured transport.
 
+use std::path::Path;
+
 use chrono::Utc;
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
     ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
+    NARA_SESSION_CLOSE_READ_METHOD,
 };
 use serde_json::{json, Value};
 
+use crate::gate::nara_close_bundle::{
+    aggregate_audio_octet, aggregate_m1_closure, persist_close_bundle, read_close_bundle,
+    read_request_from_params, AudioOctetTraversalEvidence, M1SessionClosureEvidence,
+};
 use crate::nara::{
     clock, identity, kairos, lens, logos, medicine, oracle, pratibimba, transform, weights, wind,
 };
@@ -630,4 +637,158 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             format!("{} is not a known nara method", method),
         )),
     }
+}
+
+pub fn dispatch_nara_with_state_root(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    method: &str,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    match method {
+        "nara.session_close" => close_with_persisted_bundle(state_root, peer_is_loopback, params),
+        NARA_SESSION_CLOSE_READ_METHOD => {
+            read_persisted_bundle(state_root, peer_is_loopback, params)
+        }
+        _ => dispatch_nara(method, params),
+    }
+}
+
+fn close_with_persisted_bundle(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close requires a loopback peer".to_owned(),
+        ));
+    }
+    let session_id =
+        required_param(params, "session_id").or_else(|_| required_param(params, "sessionId"))?;
+    let contemplation_object =
+        required_object_param(params, &["contemplation_object", "contemplationObject"]).and_then(
+            |value| {
+                serde_json::from_value::<ContemplationObject>(value).map_err(|err| {
+                    (
+                        "invalid-params".to_owned(),
+                        format!("invalid contemplation_object: {err}"),
+                    )
+                })
+            },
+        )?;
+    if contemplation_object.session_id != session_id {
+        return Err((
+            "invalid-params".to_owned(),
+            "contemplation_object.session_id must exactly match session_id".to_owned(),
+        ));
+    }
+    let m1_evidence =
+        required_object_param(params, &["m1_closure", "m1Closure"]).and_then(|value| {
+            serde_json::from_value::<M1SessionClosureEvidence>(value).map_err(|err| {
+                (
+                    "invalid-params".to_owned(),
+                    format!("invalid m1_closure: {err}"),
+                )
+            })
+        })?;
+    let audio_evidence =
+        required_object_param(params, &["audio_octet", "audioOctet"]).and_then(|value| {
+            serde_json::from_value::<AudioOctetTraversalEvidence>(value).map_err(|err| {
+                (
+                    "invalid-params".to_owned(),
+                    format!("invalid audio_octet: {err}"),
+                )
+            })
+        })?;
+    let m1_closure =
+        aggregate_m1_closure(&m1_evidence).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let audio_octet =
+        aggregate_audio_octet(&audio_evidence).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let protein_handle = required_param(params, "protein_handle")
+        .or_else(|_| required_param(params, "proteinHandle"))?;
+    let kairos_close = opt_u64(params, "kairos_close")
+        .or_else(|| opt_u64(params, "kairosClose"))
+        .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+    let response = route_nara_session_close(NaraSessionCloseRequest {
+        session_id: session_id.clone(),
+        protein_handle,
+        kairos_close,
+        config: nara_session_config_from_params(params),
+    })
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    let contemplation = contemplate_session_close(contemplation_object)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    let pasu_scope = active_pasu_scope("nara.session_close")?;
+    let bundle = persist_close_bundle(
+        state_root,
+        &pasu_scope,
+        &session_id,
+        &m1_closure,
+        &audio_octet,
+        &contemplation,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    let mut value =
+        serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("close_ref".to_owned(), json!(bundle.close_ref));
+    }
+    Ok(value)
+}
+
+fn read_persisted_bundle(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close.read requires a loopback peer".to_owned(),
+        ));
+    }
+    let pasu_scope = active_pasu_scope("nara.session_close.read")?;
+    let request =
+        read_request_from_params(params).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let bundle = read_close_bundle(state_root, &pasu_scope, &request)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(bundle).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+fn required_object_param(params: &Value, keys: &[&str]) -> Result<Value, (String, String)> {
+    for key in keys {
+        if let Some(value) = params.get(*key) {
+            if value.is_object() {
+                return Ok(value.clone());
+            }
+            return Err((
+                "invalid-params".to_owned(),
+                format!("{key} must be an object"),
+            ));
+        }
+    }
+    Err((
+        "invalid-params".to_owned(),
+        format!("missing required param '{}'", keys[0]),
+    ))
+}
+
+fn active_pasu_scope(method: &str) -> Result<String, (String, String)> {
+    let profile = identity::load_profile()
+        .map_err(|err| {
+            (
+                "nara-error".to_owned(),
+                format!("{method} cannot load active PASU: {err}"),
+            )
+        })?
+        .ok_or_else(|| {
+            (
+                "nara-error".to_owned(),
+                format!("{method} requires an active local PASU identity"),
+            )
+        })?;
+    let hash = identity::blake3_identity_hash(&profile);
+    Ok(hash.iter().map(|byte| format!("{byte:02x}")).collect())
 }

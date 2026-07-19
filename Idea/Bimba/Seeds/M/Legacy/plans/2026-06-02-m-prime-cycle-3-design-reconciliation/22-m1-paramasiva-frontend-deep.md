@@ -174,26 +174,26 @@ The played-torus extension `m1-paramasiva-played-torus` is the 3D Bevy/wgpu rend
 
    **Privacy contract:** reads aggregate witness-vector ONLY — no per-event journal correlation, no Graphiti episode reads, no protected-local journal payload. The widget's data binding is restricted to `M0VerifierReport.virtue_witness_vector` (9-bit) + `M0VerifierReport.coherence_score` (single scalar). The 19.6 contemplation flow handles the protected-local Q_composed trajectory upstream; 22.5 only reads the aggregate output.
 
-   Verification: `test -f Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-spine-789-reader.tsx`; widget test asserts the three rows render with correct canonical questions per 19.9; mock contemplation `virtue_witness_vector = 0b101101011` renders 6 lit + 3 dark pips with correct virtue labels (from the substrate `VIRTUE_LUT[9]` lifted via bridge); privacy audit asserts the widget never reads `journal_payload`, `graphiti_episode`, `q_composed_trajectory`, or any protected-local field (`! grep -n 'journal_payload\|graphiti_episode\|q_composed_trajectory\|protected_local' Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-spine-789-reader.tsx` passes); Review-tab mount integration test (via 19.7 contemplation flow) asserts the widget renders at session close in the OmniPanel Review tab, NOT in `m1-paramasiva` editor-area body.
+   **Functional close/read contract (corrected 2026-07-19):** the active carrier extends `nara.session_close` and adds governed `nara.session_close.read`. Close accepts the canonical session protein handle only when its embedded session matches the request, derives the full active-PASU scope locally, derives row 7 from the supplied `+7 mod 12` traversal sequence and row 8 from the supplied octave-return sequence, and reduces the contemplation verifier output to exactly nine witness bits plus coherence. It atomically persists one opaque-ref protected-local aggregate with private filesystem modes and symlink refusal. Exact/latest readback is confined to the active PASU and requested session. No trajectory, journal, raw contemplation, protein body, pattern packet, or Graphiti relation body is persisted or returned.
 
-6. **22.6 — Mersenne / 137 additive proof overlay** *(doc-ahead-landing; consumes 02.1 + 15.8; gated ide-deep + developer-mode)*
+   **Conflation guard:** the `7`, `8`, and `9` rows are a close-evidence reading, not three quantities to add into an engine proof. They neither define nor replace the cumulative [[M1]]→[[M2]]→[[M3]] Third-Spanda 137 process in 22.6.
 
-   Extend the 22.3 Cl(4,2) signature inspector body with a developer-mode `MersenneProofOverlay` sub-component (lives in same `.tsx` file or split as `src/browser/m1-mersenne-proof-overlay.tsx`). The overlay shows the additive proof structure per Tranche 02.1 synthesis paragraph and `alpha_quaternionic_integration_across_M_stack.md` execution-order:
+   Verification: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_session_close_live` drives open→close→persist→read through the real WebSocket gateway and proves handle/session binding, active-PASU confinement, aggregate-only output, and exact/latest readback. `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml gate::nara_close_bundle::tests --lib` proves canonical and malformed +7 traversal behavior, incomplete octave return, private modes, and symlink refusal. `pnpm playwright test tests/e2e/m1-session-close-reader.spec.ts` in `Body/M/pratibimba-app` drives the real active Review fold in Chromium against a spawned gateway, proving all three rows bind to the exact selected session. The frozen `Body/M/epi-theia` carrier is not edited.
 
-   - Line 1: `M_5 = 2^5 − 1 = 31` (the prime-index of M_7) — annotation: *"prime-index of M_7 is itself a Mersenne prime; actional-Archetype-7 grounding at the Mersenne layer"*
-   - Line 2: `M_7 = 2^7 − 1 = 127` (Mersenne ground exposed by 9-gap withdrawal `136 − 9 = 127`) — annotation: *"the additive substrate `64 + 72 = 136` minus 9-gap = 127 exposes the Mersenne prime"*
-   - Line 3: `+1 → 128 = 2^7` (the parent-seal effecting binary closure of 127 into 128) — annotation: *"the M1-5 +1 parent — this is the +1 attribution operationally decisive per Tranche 02.1"*
-   - Line 4: `+9 → 137` (atomic dressing; wholeness restored) — annotation: *"+9 restores wholeness — 137 is the atomically-dressed return"*
+6. **22.6 — Integrated M1→M2→M3 Third-Spanda runtime** *(supersedes the developer-only proof-overlay brief, 2026-07-18)*
 
-   Active line highlights based on which `AnandaSkeletonEvent` last fired on the profile bus (read via `bridge.onObservabilityEvent` filtered on event-kind):
-   - `Additive137 = 4` lights line 4
-   - `IdentityReturn4Plus2 = 5` lights line 3 (the `+1 → 128 = 2^7` parent-seal is the identity-return)
-   - `KaprekarPedagogyHit = 6` lights line 2 (Kaprekar's archetype-7 binding sits at the Mersenne-7 row)
-   - `Hit36`, `Hit64`, `Hit72`, `Ratio64Over36` (events 0–3) light the additive substrate sub-line above line 2
+   The earlier brief below treated the Mersenne/137 material as an M1-only, developer-gated proof overlay. That ownership is superseded. M0 supplies the prior `0/1` ground; the operative Third-Spanda seam is cumulative M1→M2→M3 and lives inside the existing `anuttaraPentadicTrace` transport, not in a new top-level profile field.
 
-   **Gating:** the overlay renders ONLY when the active layout is `ide-deep` AND the preference `epi-logos.ui.developerMode` is true. On `daily-0-1` (lay-mode) the overlay is hidden — the matheme proof is developer-only and stays out of the user's primary surface. The preference is consumed through `@theia/core/lib/browser/preferences` PreferenceService.
+   Each generation must carry:
 
-   Verification: developer-mode toggle test asserts the overlay only renders when both `ide-deep` and `developerMode` are true; skeleton-event filter test asserts `Additive137` event lights line 4; `IdentityReturn4Plus2` lights line 3; `KaprekarPedagogyHit` lights line 2; line-by-line text content matches Tranche 02.1 synthesis paragraph verbatim (`grep -n "M_5 = 2\\^5\\|M_7 = 2\\^7\\|+1 → 128\\|+9 → 137" Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-mersenne-proof-overlay.tsx` matches all four).
+   - **M1 activity:** the C-authored `RING_QUATERNION_LUT` state, degree720/Hopf fiber, M1-5 parent attribution, and `spanda_codon_advance` result. An M3 codon-charge quaternion must never source M1 topology.
+   - **M2 activity:** one active address72 with all six `RoutingAxisViews` (MEF, tattva, decan, Shem, maqam, DET), preserving one re-encodable address.
+   - **Epogdoon evidence:** `9:8`, source address, block index/phase, compressed64, expanded72, exactness and one-step loss, optional collision pair, and cardinalities `blockSize=9`, `blockCount=8`, `collisionPairCount=8`, `exactRoundTripCount=8`, `nonExactRoundTripCount=64`.
+   - **M3 activity:** DET reception address64, independently clocked Mahāmāyā address64, codon/line operator, and the kernel `codonRotationProjection`.
+
+   The active carrier renders this live generation before the static Third-Spanda forms. The Mersenne `127`, doubled-phase `128`, integer skeleton `137`, and measured `137.035999...` remain separate reference registers. They may explain the process but cannot substitute for runtime evidence.
+
+   Verification: Rust drives the production epogdoon evidence across all 72 inputs and proves 9/8/64/8 separately; strict Zod parses the real generated profile; live-wire checks one-generation cross-field equality; carrier tests prove the process precedes static reference forms. The frozen `epi-theia` warehouse is not edited.
 
 7. **22.7 — Kaprekar 6174 inspector** *(doc-ahead-landing; cross-links 19.8 LEAN seed; does NOT reproduce)*
 

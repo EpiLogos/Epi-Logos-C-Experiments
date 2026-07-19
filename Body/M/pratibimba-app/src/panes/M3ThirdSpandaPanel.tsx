@@ -1,19 +1,22 @@
 /**
  * Coordinate: M' M3' (Third-Spanda matheme proof panel — Track 24.T24.12)
  * Residency: Body/M/pratibimba-app/src/panes
- * Actualises: `M3ThirdSpandaPanel` — the source-warrant render of the Third
- *   Spanda Equation's five canonical forms (+ the co-canonical QCD
+ * Actualises: `M3ThirdSpandaPanel` — the live cumulative M1→M2→M3 generation
+ *   from `anuttaraPentadicTrace.thirdSpanda`, followed by the source-warrant
+ *   reference render of the Third Spanda Equation's five canonical forms
+ *   (+ the co-canonical QCD
  *   octet/singlet face), the execution-order trace (64+72=136 → −9 → 127=M₇
  *   → +1 → 128=2⁷ → +9 → 137), the translation rule 9₍M2₎ = 8₍M3₎ + 1₍M1₎
  *   with its QCD analogue 3 ⊗ 3̄ = 8 ⊕ 1, and the 7-8-9 crown spine — every
- *   value read verbatim from the landed matheme data model
+ *   reference value read verbatim from the landed matheme data model
  *   (engine/compositionMatheme.ts). Register-disciplined: the panel formats
  *   and labels the symbolic skeleton and the measurement-face caveat only; it
  *   NEVER computes α_EM or RG flow (Tranche 4.10). The +1 parent attribution
  *   is asserted M1-5 (never M0-Anuttara-witness). The recognition-context
  *   warrant (payload.couplingFlowAlignment) is not bussed → honest-pending.
- * Does NOT own: the matheme identities (engine/compositionMatheme.ts —
- *   arithmetic authority), any physics computation, the wheel/inspectors.
+ * Does NOT own: trace genesis, the matheme identities
+ *   (engine/compositionMatheme.ts — reference authority), any physics
+ *   computation, the wheel/inspectors.
  */
 
 import {
@@ -27,6 +30,7 @@ import {
     assertParentAttribution
 } from '../engine/compositionMatheme';
 import type { CouplingFlowOverlay } from '../engine/couplingFlowOverlay';
+import type { AnuttaraPentadicRuntimeTrace } from '../bridge/types';
 import { ProvenanceBadge } from '../ui/primitives';
 
 /** The QCD colour analogue of the translation rule — a labelled reference
@@ -54,6 +58,7 @@ export type ThirdSpandaSkeletonEvent =
 export interface M3ThirdSpandaPanelProps {
     readonly couplingFlow?: CouplingFlowOverlay;
     readonly skeletonEventsActive?: readonly ThirdSpandaSkeletonEvent[];
+    readonly trace?: AnuttaraPentadicRuntimeTrace;
 }
 
 function isActive(
@@ -65,7 +70,8 @@ function isActive(
 
 export function M3ThirdSpandaPanel({
     couplingFlow,
-    skeletonEventsActive = []
+    skeletonEventsActive = [],
+    trace
 }: M3ThirdSpandaPanelProps) {
     // Contract guard: the rendered +1 parent MUST resolve to M1-5 (DR-M1-1 /
     // DR-M5-2). The constant is safe; the guard keeps the invariant honest if
@@ -75,7 +81,91 @@ export function M3ThirdSpandaPanel({
 
     return (
         <section className="mext-widget-detail" data-testid="m3-third-spanda" data-total={MATHEME_SPINE.total}>
-            <h3>Third-Spanda matheme proof</h3>
+            <h3>Third-Spanda runtime and reference registers</h3>
+
+            {trace ? (
+                <div className="m3-spanda-runtime" data-testid="m3-spanda-runtime">
+                    <p>
+                        M1 {trace.thirdSpanda.m1.degree720}° · Hopf fiber {trace.thirdSpanda.m1.hopfFiber}
+                        {' · '}advance {trace.thirdSpanda.m1.advancementAddress64}
+                        {' · '}q [{trace.thirdSpanda.m1.ringQuaternion.map(value => value.toFixed(3)).join(', ')}]
+                    </p>
+                    <p>
+                        M2 72:{trace.thirdSpanda.m2.address72}
+                        {' · '}Shem choir {trace.thirdSpanda.m2.axisViews.shem.choir}
+                        {' · '}phase {trace.thirdSpanda.epogdoon.blockPhase}/9
+                    </p>
+                    <p>
+                        M3 DET {trace.thirdSpanda.m3.detReceptionAddress64}
+                        {' · '}clock {trace.thirdSpanda.m3.worldClockAddress64}
+                        {' · '}{trace.thirdSpanda.m3.codon}
+                        {' · '}rotation {trace.thirdSpanda.m3.codonRotation.rotationDegrees}°/
+                        {trace.thirdSpanda.m3.codonRotation.rotationalStateCount}
+                        {' · '}round-trip loss {trace.thirdSpanda.epogdoon.roundTripLoss}
+                    </p>
+                    <p>
+                        9-address source block · 8 collision pairs · 64 non-exact round trips
+                    </p>
+                    <dl className="m3-spanda-axes" data-testid="m3-spanda-m2-axes">
+                        <div>
+                            <dt>MEF</dt>
+                            <dd>
+                                L{trace.thirdSpanda.m2.axisViews.mef.lens} · P
+                                {trace.thirdSpanda.m2.axisViews.mef.position} ·{' '}
+                                {trace.thirdSpanda.m2.axisViews.mef.isInverted ? 'inverted' : 'direct'} · family{' '}
+                                {trace.thirdSpanda.m2.axisViews.mef.lFamilyLink}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Tattva</dt>
+                            <dd>
+                                {trace.thirdSpanda.m2.axisViews.tattva.tattvaIndex} · phase{' '}
+                                {trace.thirdSpanda.m2.axisViews.tattva.phase}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Decan</dt>
+                            <dd>
+                                sign {trace.thirdSpanda.m2.axisViews.decan.sign} · decan{' '}
+                                {trace.thirdSpanda.m2.axisViews.decan.decan} · face{' '}
+                                {trace.thirdSpanda.m2.axisViews.decan.face} · planet{' '}
+                                {trace.thirdSpanda.m2.axisViews.decan.rulingPlanet}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Shem</dt>
+                            <dd>
+                                {trace.thirdSpanda.m2.axisViews.shem.shemIdx} · choir{' '}
+                                {trace.thirdSpanda.m2.axisViews.shem.choir} · position{' '}
+                                {trace.thirdSpanda.m2.axisViews.shem.position} · decan{' '}
+                                {trace.thirdSpanda.m2.axisViews.shem.decanLink}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Maqam</dt>
+                            <dd>
+                                {trace.thirdSpanda.m2.axisViews.maqam.index72} · family{' '}
+                                {trace.thirdSpanda.m2.axisViews.maqam.family} · mode{' '}
+                                {trace.thirdSpanda.m2.axisViews.maqam.modeInFamily} · ruler{' '}
+                                {trace.thirdSpanda.m2.axisViews.maqam.planetRuler}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>DET</dt>
+                            <dd>
+                                {trace.thirdSpanda.m2.axisViews.det.index72} →{' '}
+                                {trace.thirdSpanda.m2.axisViews.det.compressed64} · bitboard{' '}
+                                {trace.thirdSpanda.m2.axisViews.det.det64}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            ) : (
+                <p className="mext-widget-empty" data-testid="m3-spanda-runtime">
+                    <ProvenanceBadge state="pending" reason="pending-anuttara-pentadic-trace" />
+                    live M1→M2→M3 generation pending
+                </p>
+            )}
 
             <p data-testid="m3-spanda-spine">
                 {MATHEME_SPINE.total} = M₃({MATHEME_SPINE.m3Codon}) + M₂({MATHEME_SPINE.m2Invariant}) +

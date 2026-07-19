@@ -340,19 +340,19 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
         context["temporal"]["kernel"]["harmonicProfile"]["binary"],
         context["temporal"]["kernel"]["harmonicProfile"]["mahamaya"]
     );
-    // transcriptionState is tick-derived: "provisional-gap" on the 64 epogdoon
-    // compression-gap indices, "resolved" on the 8 exact multiples of 9
-    // (luts/mahamaya.rs is_evolutionary_gap). Hard-pinning one value is a
+    // transcriptionState is tick-derived: non-exact on 64 epogdoon
+    // round trips, anchored on the 8 exact multiples of 9
+    // (luts/mahamaya.rs epogdoon_has_round_trip_loss). Hard-pinning one value is a
     // wall-clock lottery — assert the LAW: state matches the frame's own
-    // evolutionaryGap flag.
+    // roundTripLoss flag.
     let binary = &context["temporal"]["kernel"]["harmonicProfile"]["binary"];
-    let expected_state = if binary["evolutionaryGap"]
+    let expected_state = if binary["roundTripLoss"]
         .as_bool()
-        .expect("evolutionaryGap is a bool")
+        .expect("roundTripLoss is a bool")
     {
-        "provisional-gap"
+        "compressed-nonexact-round-trip"
     } else {
-        "resolved"
+        "round-trip-anchor"
     };
     assert_eq!(binary["transcriptionState"], expected_state);
     assert!(

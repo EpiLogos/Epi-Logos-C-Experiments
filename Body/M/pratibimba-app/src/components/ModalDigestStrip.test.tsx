@@ -2,6 +2,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ModalDigestStrip } from './ModalDigestStrip';
 import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
+import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
 import { useProvenanceStore, useTickStore } from '../state/stores';
@@ -61,7 +62,20 @@ const invoke = vi.fn(async (method: string) =>
 
 describe('ModalDigestStrip (49.4 — modal labels + cymatic digest, visual only)', () => {
     beforeEach(() => {
-        vi.mocked(buildPentadicOverlay).mockReturnValue(READY_OVERLAY);
+        vi.mocked(buildPentadicOverlay).mockReturnValue({
+            ...READY_OVERLAY,
+            m2: {
+                ...READY_OVERLAY.m2!,
+                address72: PENTADIC_TRACE_FIXTURE.thirdSpanda.m2.address72,
+                axisViews: PENTADIC_TRACE_FIXTURE.thirdSpanda.m2.axisViews
+            },
+            epogdoon: {
+                blockPhase: 6,
+                collisionPair: null,
+                roundTripLoss: 1,
+                roundTripExact: false
+            }
+        });
         invoke.mockClear();
         setGateway({ invoke } as never);
         useProvenanceStore.setState({

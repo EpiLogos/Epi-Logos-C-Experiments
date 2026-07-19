@@ -19,7 +19,7 @@ const MAHAMAYA = {
     dnaRnaPhase: 'dna',
     lineIndex: 3,
     lineChangeOperatorAddress: 251,
-    evolutionaryGap: true,
+    roundTripLoss: true,
     datasetLutState: 'pending-dataset-lut'
 };
 
@@ -58,7 +58,7 @@ describe('m3 inspectors view model (04.T4.2)', () => {
         expect(view.mahamaya?.nucleotideBits).toEqual([2, 1, 3]);
         expect(view.mahamaya?.dnaRnaPhase).toBe('dna');
         expect(view.mahamaya?.lineChangeOperatorAddress).toBe(251);
-        expect(view.mahamaya?.evolutionaryGap).toBe(true);
+        expect(view.mahamaya?.roundTripLoss).toBe(true);
     });
 
     it('kernel-inconsistent bus values flow untouched — proof of zero local tables', () => {

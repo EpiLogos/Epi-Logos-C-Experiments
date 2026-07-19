@@ -28,7 +28,7 @@ function profileFixture(hexagramId: number, generation: number): KernelBridgeCac
                 dnaRnaPhase: 'dna',
                 lineIndex: 2,
                 lineChangeOperatorAddress: 42,
-                evolutionaryGap: false,
+                roundTripLoss: false,
                 datasetLutState: 'ok'
             }
         }

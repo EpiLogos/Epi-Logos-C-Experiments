@@ -174,7 +174,8 @@ pub const MOVE_MATRIX: [u8; 64] = [
     14, 22, 30, 38, 46, 54, 62, 7, 15, 23, 31, 39, 47, 55, 63,
 ];
 
-/// Resonance matrix: 56 valid entries + 8 evolutionary gaps (0xFF sentinel).
+/// Partial resonance operator: 56 resolved targets + 8 unresolved 0xFF sentinels.
+/// This codon-indexed table is independent of the total 72→64 epogdoon map.
 /// Exact port of C M3_RES_MATRIX[64].
 pub const RES_MATRIX: [u8; 64] = [
     // Row 0 (Kun=000):    gap at 0x05
@@ -189,7 +190,7 @@ pub const RES_MATRIX: [u8; 64] = [
     0x38, 0x39, 0xFF, 0x3B, 0x3C, 0xFF, 0x3E, 0x3F,
 ];
 
-/// Sentinel value for resonance evolutionary gaps.
+/// Sentinel value for unresolved resonance targets.
 pub const RESONANCE_GAP: u8 = 0xFF;
 
 /// Matrix quaternion axes: [Complementary, Moving/Resting, SameQuality].

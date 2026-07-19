@@ -333,8 +333,10 @@ impl M1TopologyProjection {
     /// values, killing the orphan (defined + fixture-tested, never produced).
     /// The invariants (double-cover 720°, genus-1 torus, χ=0, S3->S2 Hopf) come
     /// from `hopf.rs` constants + the fibration; the quaternion fields from the
-    /// tick's real codon-charge ring quaternion via `quaternion.rs` (mirroring
-    /// the C walk in `state.rs`: compose → walk-mode → bifurcation); the
+    /// tick's real M1 `RING_QUATERNION_LUT` state via the C-backed
+    /// `spanda::ring_quaternion` surface (compose → walk-mode → bifurcation);
+    /// M3 codon-charge quaternions are a downstream classifier and never
+    /// source this projection. The
     /// Klein-flip descriptors from the live event. No fabricated constants —
     /// every field traces to a kernel source.
     pub fn from_tick_parts(

@@ -149,10 +149,31 @@ export default async function globalSetup(): Promise<void> {
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
     const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
     const autoresearchConfig = join(gatewayHome, '.epi-logos', 'config.toml');
+    const gatewayIdentity = join(gatewayHome, '.epi-logos', 'nara', 'profile.json');
     mkdirSync(dirname(autoresearchConfig), { recursive: true });
     writeFileSync(
         autoresearchConfig,
         `[autoresearch]\narticulation_gap_peer_ratio = 0.75\ncontradiction_vector_disagreement_threshold = 0.35\nresonance_promotion_confidence_threshold = 0.85\nstale_revision_threshold = 12\npriority_order = ["articulation_gap", "promotion_candidate", "contradiction_candidate", "stale_by_non_revisit"]\n`
+    );
+    mkdirSync(dirname(gatewayIdentity), { recursive: true });
+    writeFileSync(
+        gatewayIdentity,
+        JSON.stringify({
+            version: 1,
+            layers: {
+                numerological: {
+                    present: true,
+                    source: 'pratibimba-e2e-active-pasu',
+                    completeness: 100,
+                    set_at: 1_700_000_000_000,
+                    elemental_profile: [0.25, 0.25, 0.25, 0.25]
+                }
+            },
+            layer_presence_mask: 1,
+            hash_preview: 'derived-at-runtime',
+            last_wound: null,
+            kerykeion_version: null
+        })
     );
     const gateway = spawn(EPI_BIN, ['gate', 'start', '--port', String(E2E_GATEWAY_PORT)], {
         env: {

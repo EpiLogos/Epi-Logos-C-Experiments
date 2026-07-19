@@ -86,6 +86,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 14. **T24.14 — 3-coin I-Ching cast ribbon (`M3IChingCastRibbon`) *(doc-ahead-landing; depends on Wave-B method-family addition WC-M3-SA-6)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md` — Tranche 24.14 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Substrate ownership: this tranche lands the governed `s5.oracle.iching.cast` method family, strict cast envelope, persistence/provenance path, expected-present ratchet, and then the carrier ribbon. The absent Wave-B method is the first implementation step, not a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 

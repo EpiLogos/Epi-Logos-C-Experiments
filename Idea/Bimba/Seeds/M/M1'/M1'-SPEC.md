@@ -1,7 +1,7 @@
 ---
 coordinate: "M1'"
 status: "active-domain-spec"
-updated: "2026-06-09"
+updated: "2026-07-18"
 cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
@@ -64,6 +64,8 @@ M1' is the same six positions re-read as how-it-walks rather than what-it-is. Th
 
 This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recognition site. The double-torus formalism belongs downstream at [[M3-5]], where [[Mahāmāyā]]'s wheel is read as `K² × T²_Mahāmāya`. [[M0]] is the prior ground M1 receives from; M0 is not the +1 term.
 
+The runtime consequence is explicit. `MathemeHarmonicProfile.m1Topology.ringQuaternion` and `anuttaraPentadicTrace.thirdSpanda.m1.ringQuaternion` are sourced from epi-lib's C-authored `RING_QUATERNION_LUT[12]` through `portal-core::spanda::ring_quaternion`. The M3 codon-charge quaternion (`q_cosmic`) remains a downstream transcription classifier and must never source M1 topology. The same Third-Spanda M1 record carries `degree720`, Hopf fiber, the M1-5 parent attribution, and the C `spanda_codon_advance` result for that generation. This is M1's operative contribution to the cumulative [[M1]]→[[M2]]→[[M3]] process; the `127/128/137` equations are reference forms over that process, not a substitute for it.
+
 ## §2 — User-Facing Surface
 
 - **Torus/path workspace** for walking from the selected [[M0']] coordinate through [[S2]] relation families. The walk is the audible-and-visible expression of the matheme.
@@ -72,6 +74,7 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - **Route preview** before stepping: which relations are live from the current coordinate, what (lens, mode) the next step would inherit, what interval the step would sound as.
 - **(lens, mode) selector** — the 84-state playing surface exposed as the matheme-navigation panel. Changing lens transposes the chromatic substrate (which note is the matheme-tonic); changing mode rotates the CF-progression (which relational-grammar colours the walk).
 - **Möbius-return indicator** at the moment of P5 → P0' rollover — the visible enharmonic-flip when the walk crosses the matheme's totalisation point.
+- **Session-close 7-8-9 Review reading** — a lean reading of one persisted close bundle for the exact selected session: row 7 reports whether supplied M1 traversal evidence completed the twelve-position `+7 mod 12` generator orbit; row 8 reports whether supplied audio traversal evidence completed the canonical eight-position octave and returned to its origin; row 9 decodes the verifier's exact nine-bit virtue witness aggregate and keeps completion distinct from coherence. The renderer reads these server-derived aggregates and never infers them from UI state.
 - **IDE clock-instrument surface** — per [[m5-prime-system-shape-and-tauri-ide-canon]], the future [[m1-paramasiva]] IDE extension renders the clock instrument, 84-state landscape, [[K²]] topology, and M1-5 [[Hopf bundle|Hopf]] inspector through the shared [[kernel-bridge]]. "Audio controls" on that surface mean controls over profile requests, route rendering, replay, and external encodings; they do not make M1' the owner of audio-genesis.
 
 ## §3 — Backend Contract Consumed
@@ -80,8 +83,11 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - [[S0]] kernel profile ([[MathemeHarmonicProfile]] at [[Body/S/S0/portal-core/src/harmonic_profile.rs]]) provides tick12, degree720, [[SU(2)]] layer, phase, position6, chromatic substrate, ratio role, square mirror law, diatonic [[CF]]/[[VAK]] projection, and resonance72. The 8+4 `audio_octet`/`nodal_quartet` bus is written into the shared profile by [[M2-1']] [[Vimarśa]] reading at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]]. **M1' uses `audio_octet` to sound the current coordinate; it never computes pitch locally and never owns or re-synthesizes the bus.**
 - [[S0]] publishes the deterministic profile-to-performance bridge event as `S0.kernel-bridge.m1-profile-to-performance` through [[Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs|kernel_bridge_runtime::m1_performance_event_from_profile]]. This event is the public-current handoff from `MathemeHarmonicProfile` into M1' performance state; renderers consume it and must not replace it with renderer-local pitch, tempo, or nodal derivation.
 - [[S3]] temporal projection provides session/DAY/NOW context for traversal records and optional deposition.
+- [[S3]] `nara.session_open` / `nara.session_close` binds a canonical protected protein handle to one exact session. At close, the S0 host derives row-7 and row-8 aggregates from bounded traversal sequences, composes the existing 4'-5'-0' contemplation result, reduces the verifier evidence to exactly nine witness bits plus coherence, and persists one opaque-ref bundle beneath a server-derived full active-[[PASU]] scope. `nara.session_close.read` is loopback-only and confines exact/latest reads to that active PASU and requested session. The bundle is protected-local (`0700` directory / `0600` file on Unix), atomic, symlink-refusing, and contains no trajectory, journal, raw contemplation, protein body, pattern packet, or [[Graphiti]] relation body.
 - [[S3]] kernel-profile observation deposits preserve the same handoff as `metadata.profile_to_performance_stream`, naming M1'/Paramasiva as consumer, the six required profile fields, kernel-tick tempo authority, and `renderer_derivation_allowed = false`.
 - M1' never uses animation frame count as clock authority. The walk-tempo is settable but always references the kernel-tick rate, not wall-clock frames.
+
+**No 137 conflation.** The close bundle's `7-8-9` rows are an evidence-reading register for a completed session; they do not define `137`, add three local counts, or prove the engine merely by being displayed. The cumulative [[M1]]→[[M2]]→[[M3]] Third-Spanda runtime remains the operative 137-bearing process: one profile generation carries M1's C-authored ring/advancement, M2's six-axis/epogdoon transformation evidence, and M3's DET/world-clock/codon reception. The `127`, `128`, and `137` equations remain interpretive reference forms over that runtime process.
 
 ## §4 — Required [[MathemeHarmonicProfile]] Fields
 
@@ -90,6 +96,7 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - `pointerAnchor`: current coordinate, relation descriptors, mirror refs, family refs, lens refs, inversion refs, CF/VAK refs.
 - `diatonic`: context-frame projection for mode-aware movement labels; lens-anchor identifier; mode-anchor CF.
 - `depositionAnchor`: traversal record handles when movement is deposited.
+- `anuttaraPentadicTrace.thirdSpanda.m1`: C ring quaternion, degree720, Hopf fiber, M1-5 parent attribution, and M1 advancement address for the same profile generation consumed by M2/M3.
 - `lensMode`: explicit `(lens, mode)` pair identifying the active 84-state cell.
 
 ## §5 — Privacy Boundary

@@ -101,6 +101,13 @@ impl GraphMethodParams {
         }
     }
 
+    pub fn get_string_list(&self, key: &str) -> Option<&[String]> {
+        match self.values.get(key) {
+            Some(GraphParamValue::StringList(value)) => Some(value),
+            _ => None,
+        }
+    }
+
     fn apply_to_query(&self, mut q: Query) -> Query {
         for (key, value) in &self.values {
             q = match value {
@@ -147,6 +154,104 @@ impl GraphNodeRequest {
         GraphMethodService::resolve_coordinate_string(&self.coordinate)
             .map(|resolved| resolved.canonical)
     }
+}
+
+pub fn m0_archetype_lut_coordinates() -> Vec<String> {
+    portal_core::m0_archetype_lut_coordinates()
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M0ResidualListRequest {
+    pub coordinate_prefix: String,
+    pub offset: i64,
+    pub limit: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct M0ResidualListPlan {
+    pub requested_prefix: String,
+    pub canonical_prefix: String,
+    pub offset: i64,
+    pub limit: i64,
+    pub page_cypher: String,
+    pub count_cypher: String,
+    pub page_params: GraphMethodParams,
+    pub count_params: GraphMethodParams,
+}
+
+/// Build the S2-owned query plan for the M0 residual data set: all 108 live
+/// M0 graph rows minus the exact twelve rows projected by ARCHETYPE_LUT.
+pub fn m0_residual_list_plan(
+    request: &M0ResidualListRequest,
+) -> Result<M0ResidualListPlan, String> {
+    let requested_prefix = request.coordinate_prefix.trim().to_owned();
+    let canonical_prefix = crate::convert_hash_to_m_family(&requested_prefix);
+    let valid_prefixes = ["M0-0", "M0-1", "M0-2", "M0-3", "M0-4", "M0-5"];
+    if !valid_prefixes.contains(&canonical_prefix.as_str()) {
+        return Err("coordinatePrefix must be one of #0-0 through #0-5".into());
+    }
+    if request.offset < 0 || request.offset % 20 != 0 {
+        return Err("offset must be a non-negative multiple of 20".into());
+    }
+    if request.limit != 20 {
+        return Err("limit must be 20 for the M0 residual browser".into());
+    }
+
+    let excluded = m0_archetype_lut_coordinates();
+    let page_params = GraphMethodParams::from_json(json!({
+        "coordinate_prefix": canonical_prefix,
+        "excluded_lut_coordinates": excluded,
+        "offset": request.offset,
+        "limit": request.limit,
+    }))?;
+    let count_params = GraphMethodParams::from_json(json!({
+        "coordinate_prefix": canonical_prefix,
+        "excluded_lut_coordinates": excluded,
+    }))?;
+    let page_cypher = "\
+MATCH (n:Bimba)
+WHERE n.coordinate STARTS WITH $coordinate_prefix
+  AND NOT n.coordinate IN $excluded_lut_coordinates
+RETURN n.coordinate AS coordinate,
+       coalesce(n.c_1_name, n.name, n.title, n.coordinate) AS name,
+       n.c_1_symbol AS symbol,
+       n.c_1_form AS form
+ORDER BY n.coordinate ASC
+SKIP $offset LIMIT $limit"
+        .to_owned();
+    let count_cypher = "\
+MATCH (dataset:Bimba)
+WHERE dataset.coordinate = 'M0' OR dataset.coordinate STARTS WITH 'M0-'
+WITH count(dataset) AS dataset_total
+MATCH (residual:Bimba)
+WHERE (residual.coordinate = 'M0' OR residual.coordinate STARTS WITH 'M0-')
+  AND NOT residual.coordinate IN $excluded_lut_coordinates
+WITH dataset_total, count(residual) AS residual_total
+OPTIONAL MATCH (branch:Bimba)
+WHERE branch.coordinate STARTS WITH $coordinate_prefix
+  AND NOT branch.coordinate IN $excluded_lut_coordinates
+WITH dataset_total, residual_total, count(branch) AS branch_total
+OPTIONAL MATCH (root:Bimba {coordinate: 'M0'})
+RETURN dataset_total,
+       residual_total,
+       branch_total,
+       root.coordinate AS root_coordinate,
+       coalesce(root.c_1_name, root.name, root.title, root.coordinate) AS root_name,
+       root.c_1_symbol AS root_symbol,
+       root.c_1_form AS root_form"
+        .to_owned();
+
+    Ok(M0ResidualListPlan {
+        requested_prefix,
+        canonical_prefix,
+        offset: request.offset,
+        limit: request.limit,
+        page_cypher,
+        count_cypher,
+        page_params,
+        count_params,
+    })
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -535,6 +640,60 @@ impl<'a> GraphMethodService<'a> {
         }))
     }
 
+    pub async fn list_m0_residual(&self, request: M0ResidualListRequest) -> Result<Value, String> {
+        let plan = m0_residual_list_plan(&request)?;
+        let count_rows = self
+            .client
+            .run_query(plan.count_params.apply_to_query(query(&plan.count_cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.list count failed: {err}"))?;
+        let count_row = count_rows
+            .first()
+            .ok_or_else(|| "s2.graph.list count returned no row".to_owned())?;
+        let dataset_total = count_row.get::<i64>("dataset_total").unwrap_or_default();
+        let residual_total = count_row.get::<i64>("residual_total").unwrap_or_default();
+        let branch_total = count_row.get::<i64>("branch_total").unwrap_or_default();
+        let root_entry = count_row
+            .get::<String>("root_coordinate")
+            .ok()
+            .filter(|coordinate| !coordinate.is_empty())
+            .map(|coordinate| {
+                json!({
+                    "coordinate": coordinate,
+                    "name": count_row.get::<String>("root_name").unwrap_or_else(|_| "M0".to_owned()),
+                    "symbol": count_row.get::<String>("root_symbol").ok(),
+                    "form": count_row.get::<String>("root_form").ok(),
+                    "state": "canonical",
+                })
+            });
+
+        let page_rows = self
+            .client
+            .run_query(plan.page_params.apply_to_query(query(&plan.page_cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.list page failed: {err}"))?;
+        let invariant_holds = dataset_total == 108 && residual_total == 96;
+        Ok(json!({
+            "contract": graph_contract("s2.graph.list", None),
+            "coordinatePrefix": plan.requested_prefix,
+            "canonicalPrefix": plan.canonical_prefix,
+            "offset": plan.offset,
+            "limit": plan.limit,
+            "entries": page_rows.iter().map(m0_residual_row_json).collect::<Vec<_>>(),
+            "rootEntry": root_entry,
+            "total": branch_total,
+            "residualTotal": residual_total,
+            "datasetTotal": dataset_total,
+            "state": if invariant_holds { "canonical" } else { "blocked" },
+            "invariant": {
+                "expectedDatasetTotal": 108,
+                "expectedResidualTotal": 96,
+                "holds": invariant_holds,
+                "source": "Body/S/S0/epi-lib/docs/m0-dataset-audit.md + ARCHETYPE_LUT[12]"
+            }
+        }))
+    }
+
     pub async fn traverse(&self, request: GraphTraverseRequest) -> Result<Value, String> {
         let resolved = Self::resolve_coordinate_string(&request.from)?;
         let depth = request.bounded_depth();
@@ -837,6 +996,16 @@ fn known_row_json(row: &neo4rs::Row) -> Value {
         "depth": row.get::<i64>("depth").ok(),
         "anchors": source_traceability_anchors(&coordinate),
         "anuttara": anuttara_fields_json(row),
+    })
+}
+
+fn m0_residual_row_json(row: &neo4rs::Row) -> Value {
+    json!({
+        "coordinate": row.get::<String>("coordinate").unwrap_or_default(),
+        "name": row.get::<String>("name").unwrap_or_default(),
+        "symbol": row.get::<String>("symbol").ok(),
+        "form": row.get::<String>("form").ok(),
+        "state": "canonical",
     })
 }
 

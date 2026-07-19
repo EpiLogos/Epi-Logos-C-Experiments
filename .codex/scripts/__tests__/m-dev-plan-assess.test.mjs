@@ -246,6 +246,25 @@ test("builds index and adds sequential dependencies within each track", () => {
   assert.ok(firstTrackSecondTask.dependsOn.includes("02.T1"));
 });
 
+test("explicit independent scheduling skips only the mechanical predecessor edge", () => {
+  const { root, planFolder } = makePlanSet();
+  const trackPath = join(planFolder, "01-foundation.md");
+  const content = readFileSync(trackPath, "utf8");
+  writeFileSync(
+    trackPath,
+    content.replace(
+      "   Deliverables:\n\n   - Update `Body/S/S0/bridge.rs`.",
+      "   Scheduling: independent.\n\n   Deliverables:\n\n   - Update `Body/S/S0/bridge.rs`.",
+    ),
+  );
+
+  const index = buildIndex(planFolder, root);
+  const independent = index.tasks.find((task) => task.id === "01.T1");
+  assert.ok(!independent.dependsOn.includes("01.T0"));
+  assert.ok(independent.dependsOn.includes("02.T0"));
+  assert.ok(independent.dependsOn.includes("02.T1"));
+});
+
 test("assesses ready tasks and recommends a ready tranche before later tranches", () => {
   const { root, planFolder } = makePlanSet();
   const assessment = assessPlan({ cwd: root, planFolder, includeGit: false });

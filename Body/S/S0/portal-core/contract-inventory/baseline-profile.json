@@ -40,21 +40,21 @@
     "hopfFiber": 0,
     "hopfIdentity": "S3 -> S2 Hopf fibration",
     "ringQuaternion": [
-      0.86602545,
-      -0.28867516,
-      0.28867516,
-      0.28867516
+      1.0,
+      0.0,
+      0.0,
+      0.0
     ],
     "elementCount": 1,
     "composedQuaternion": [
-      0.49999997,
-      -0.50000006,
-      0.5,
-      0.50000006
+      1.0,
+      0.0,
+      0.0,
+      0.0
     ],
-    "walkMode": "torus",
-    "bifurcationLambda": 0.86602545,
-    "resolutionLevel": 3,
+    "walkMode": "ground",
+    "bifurcationLambda": 0.0,
+    "resolutionLevel": 0,
     "torusKnotPhase": {
       "p": 0.0,
       "q": 0.0
@@ -123,7 +123,6 @@
     "degree360": 0,
     "m2ToM3Symbol": 0,
     "mahamayaAddress64": 0,
-    "evolutionaryGap": "m1-parent-restored",
     "codonId": 0,
     "codon": "AAA",
     "lineChangeOperator": 0,
@@ -134,6 +133,112 @@
     "backboneIdentity": "24x15=360",
     "lineGraphIdentity": "360+24=384",
     "qCosmicRef": "M0",
+    "thirdSpanda": {
+      "m1": {
+        "priorGround": "M0 is the prior 0/1 ground",
+        "parentAttribution": "M1-5 is the +1 parent",
+        "degree720": 0,
+        "hopfFiber": 0,
+        "ringQuaternion": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "advancementAddress64": 0
+      },
+      "m2": {
+        "address72": 0,
+        "axisViews": {
+          "mef": {
+            "lens": 0,
+            "position": 0,
+            "isInverted": false,
+            "lFamilyLink": 0
+          },
+          "tattva": {
+            "tattvaIndex": 0,
+            "phase": 0
+          },
+          "decan": {
+            "elementId": 2,
+            "sign": 0,
+            "decan": 0,
+            "face": 0,
+            "rulingPlanet": 4
+          },
+          "shem": {
+            "shemIdx": 0,
+            "choir": 0,
+            "position": 0,
+            "elementId": 2,
+            "decanLink": 0
+          },
+          "maqam": {
+            "index72": 0,
+            "family": 0,
+            "modeInFamily": 0,
+            "planetRuler": 0
+          },
+          "det": {
+            "index72": 0,
+            "compressed64": 0,
+            "det64": 1
+          }
+        }
+      },
+      "epogdoon": {
+        "ratioNumerator": 9,
+        "ratioDenominator": 8,
+        "sourceAddress72": 0,
+        "blockIndex": 0,
+        "blockPhase": 0,
+        "compressedAddress64": 0,
+        "expandedAddress72": 0,
+        "roundTripExact": true,
+        "roundTripLoss": 0,
+        "collision": {
+          "ordinal": 0,
+          "sourcePair72": [
+            0,
+            1
+          ],
+          "activeRole": "first-source"
+        },
+        "cardinality": {
+          "blockSize": 9,
+          "blockCount": 8,
+          "collisionPairCount": 8,
+          "exactRoundTripCount": 8,
+          "nonExactRoundTripCount": 64
+        }
+      },
+      "m3": {
+        "detReceptionAddress64": 0,
+        "worldClockAddress64": 0,
+        "codonId": 0,
+        "codon": "AAA",
+        "codonRotation": {
+          "lens": 0,
+          "mode": 0,
+          "lensLabel": "L0",
+          "modeName": "Ionian",
+          "surfaceIndex": 0,
+          "codonId": 0,
+          "codon": "AAA",
+          "codonClass": "non-dual",
+          "rotation": 0,
+          "rotationalStateCount": 7,
+          "rotationDegrees": 0,
+          "reverseLens": 0,
+          "reverseMode": 0,
+          "datasetLutState": "materialized-kernel-lut",
+          "provenance": "portal-core::codon_rotation_projection 84↔472 surface LUT"
+        },
+        "transcriptionState": "round-trip-anchor",
+        "lineChangeOperator": 0
+      }
+    },
     "provenance": [
       "portal-core::MathemeHarmonicProfile::from_tick",
       "kernel.binary::MahamayaCodecProjection",
@@ -187,6 +292,104 @@
     "gdsOverlayState": "blocked",
     "resolverProvenance": "Body/S/S2/graph-services/src/coordinate.rs::CoordinateArrayParser (pre-resolved at the S0 profile bus to avoid per-tick re-parse)"
   },
+  "m0_void_structure_ring": [
+    {
+      "lensIndex": 0,
+      "coordinate": "#0-4-0",
+      "label": "Microscopic",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 1,
+      "coordinate": "#0-4-1",
+      "label": "Binary",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 2,
+      "coordinate": "#0-4-2",
+      "label": "Quaternary",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 3,
+      "coordinate": "#0-4-3",
+      "label": "Octagonal",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 4,
+      "coordinate": "#0-4-4",
+      "label": "Enneadic",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 5,
+      "coordinate": "#0-4-5",
+      "label": "Decan",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 6,
+      "coordinate": "#0-4-6",
+      "label": "Zodiacal",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 7,
+      "coordinate": "#0-4-7",
+      "label": "Hourly",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 8,
+      "coordinate": "#0-4-8",
+      "label": "Expanded Hours",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 9,
+      "coordinate": "#0-4-9",
+      "label": "Solar Month",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 10,
+      "coordinate": "#0-4-10",
+      "label": "Decadic",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 11,
+      "coordinate": "#0-4-11",
+      "label": "Greater Chamber",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 12,
+      "coordinate": "#0-4-12",
+      "label": "Octant",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 13,
+      "coordinate": "#0-4-13",
+      "label": "Quadrant",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 14,
+      "coordinate": "#0-4-14",
+      "label": "Hemisphere",
+      "state": "canonical"
+    },
+    {
+      "lensIndex": 15,
+      "coordinate": "#0-4-15",
+      "label": "Unity",
+      "state": "canonical"
+    }
+  ],
   "audioOctet": [
     146.8324,
     167.55635,
@@ -874,12 +1077,12 @@
     "lineChangeOperatorAddress": 0,
     "m2VibrationIndex": 0,
     "m2ToM3Symbol": 0,
-    "evolutionaryGap": false,
+    "roundTripLoss": false,
     "tarotMinorId": null,
     "tarotShadowCodon": null,
     "aminoAcidCode": null,
     "datasetLutState": "pending-dataset-lut",
-    "transcriptionState": "resolved",
+    "transcriptionState": "round-trip-anchor",
     "frameBreathingRole": "sq1-boundary-totality",
     "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
   },
@@ -902,12 +1105,12 @@
     "lineChangeOperatorAddress": 0,
     "m2VibrationIndex": 0,
     "m2ToM3Symbol": 0,
-    "evolutionaryGap": false,
+    "roundTripLoss": false,
     "tarotMinorId": null,
     "tarotShadowCodon": null,
     "aminoAcidCode": null,
     "datasetLutState": "pending-dataset-lut",
-    "transcriptionState": "resolved",
+    "transcriptionState": "round-trip-anchor",
     "frameBreathingRole": "sq1-boundary-totality",
     "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
   },
@@ -1029,6 +1232,20 @@
     ],
     "coherenceScore": 0.0
   },
+  "contemplationPromptLut": [
+    "",
+    "",
+    "",
+    "Did your speech articulate identity or just signal? Where did naming become performance?",
+    "",
+    "Did unity-multiplicity hold or did one side eat the other? Where was the mercurial crossroads refused?",
+    "",
+    "Did the four causes integrate or did one dominate? Which act was missing?",
+    "",
+    "Did the cycle complete in wholeness or close prematurely? Which virtue went unwitnessed?",
+    "",
+    ""
+  ],
   "s2Anchor": {
     "coordinate": "M0",
     "readiness": "cycle-2-s2-coordinate-anchor",

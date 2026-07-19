@@ -29,7 +29,7 @@ const TAROT_SUITS = [
 interface EpogdoonCell {
     readonly address72: number;
     readonly compressedCodon: number;
-    readonly isEvolutionaryGap: boolean;
+    readonly roundTripLoss: boolean;
     readonly expandedBack: number;
 }
 
@@ -51,13 +51,13 @@ function readProjection(address72: number, artifact: unknown): EpogdoonCell {
         throw new Error(`address ${address72}: projection artifact is not an object`);
     }
     const record = artifact as Record<string, unknown>;
-    if (typeof record.isEvolutionaryGap !== 'boolean') {
-        throw new Error(`address ${address72}: isEvolutionaryGap must be boolean`);
+    if (typeof record.roundTripLoss !== 'boolean') {
+        throw new Error(`address ${address72}: roundTripLoss must be boolean`);
     }
     return Object.freeze({
         address72,
         compressedCodon: boundedInteger(record.compressedCodon, 'compressedCodon', CODON_COUNT - 1),
-        isEvolutionaryGap: record.isEvolutionaryGap,
+        roundTripLoss: record.roundTripLoss,
         expandedBack: boundedInteger(record.expandedBack, 'expandedBack', ADDRESS_COUNT - 1)
     });
 }
@@ -130,8 +130,8 @@ export function EpogdoonBridgeEngine({
 
     const codonBand = useMemo(() => (cells ? buildCodonBand(cells) : []), [cells]);
     const activeCell = cells?.find(cell => cell.address72 === activeAddress72) ?? null;
-    const roundTripGaps = cells?.filter(cell => cell.isEvolutionaryGap).length ?? 0;
-    const anchors = cells?.filter(cell => !cell.isEvolutionaryGap).length ?? 0;
+    const nonExactRoundTrips = cells?.filter(cell => cell.roundTripLoss).length ?? 0;
+    const anchors = cells?.filter(cell => !cell.roundTripLoss).length ?? 0;
     const state = error ? 'error' : !connected ? 'pending-connection' : cells ? 'ready' : 'loading';
 
     return (
@@ -146,7 +146,7 @@ export function EpogdoonBridgeEngine({
                 <strong>Epogdoon descent</strong>
                 <span>72 to 64 to 56</span>
                 <span data-testid="m2-epogdoon-tally">
-                    {cells ? `${roundTripGaps} round-trip gaps, ${anchors} anchors` : 'reading kernel lattice'}
+                    {cells ? `${nonExactRoundTrips} non-exact round trips, ${anchors} anchors` : 'reading kernel lattice'}
                 </span>
             </header>
             {error ? <p className="chat-error">epogdoon projection unavailable: {error}</p> : null}
@@ -160,7 +160,7 @@ export function EpogdoonBridgeEngine({
                                     key={cell.address72}
                                     data-epogdoon-cell
                                     data-active={cell.address72 === activeAddress72 ? 'true' : 'false'}
-                                    data-gap={cell.isEvolutionaryGap ? 'true' : 'false'}
+                                    data-round-trip-loss={cell.roundTripLoss ? 'true' : 'false'}
                                     data-compressed-codon={cell.compressedCodon}
                                     title={`M2 ${cell.address72} to M3 ${cell.compressedCodon}`}
                                 >

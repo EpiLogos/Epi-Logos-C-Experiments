@@ -896,7 +896,7 @@ pub fn end_to_end_acceptance_report(
 
 /// `kernelBridge.m2.epogdoonProjection(address72)` — project one M2 vibrational
 /// address (0..71) into the M3 codon lattice. Runs the C epogdoon law through
-/// portal-core (`apply_epogdoon_compression` / `is_evolutionary_gap` /
+/// portal-core (`apply_epogdoon_compression` / `epogdoon_has_round_trip_loss` /
 /// `m3_epogdoon_expand`); the address is taken modulo 72 so the projector is
 /// total. Mirrors the Theia `M2EpogdoonProjector` contract exactly.
 pub fn m2_epogdoon_projection(address72: u8) -> EpogdoonBridgeProjection {
@@ -909,7 +909,7 @@ pub fn m2_epogdoon_projection_lattice() -> Vec<EpogdoonBridgeProjection> {
 }
 
 /// Typed-JSON form of `kernelBridge.m2.epogdoonProjection(address72)` —
-/// `{ compressedCodon, isEvolutionaryGap, expandedBack }` for the Theia adapter.
+/// `{ compressedCodon, roundTripLoss, expandedBack }` for the active carrier.
 pub fn typed_json_m2_epogdoon_projection(address72: u8) -> Value {
     serde_json::to_value(m2_epogdoon_projection(address72))
         .expect("EpogdoonBridgeProjection serializes")

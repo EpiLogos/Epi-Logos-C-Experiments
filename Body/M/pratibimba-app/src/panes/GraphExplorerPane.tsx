@@ -9,7 +9,10 @@
  *   the spec's own renderer recommendation (DR-UI-1). Hosts the M0' in-widget
  *   rail, M0-3' community/clock panel (09.T9.6), coordinate-scoped M5-0'
  *   Gnostic Library seam (09.T9.9), and bussed 9-bit Virtue Witness panel
- *   (21.T21.10).
+ *   (21.T21.10), persistent contemplation footer (21.T21.9), and symbolic
+ *   verifier-response console (21.T21.11). The M0-0' Language layer carries
+ *   reader/browser sub-tabs; the browser pages the live S2 residual set
+ *   (21.T21.14).
  * Public surface: GraphExplorerPane, GraphExplorerPaneProps.
  * Does NOT own: S2 graph law, world-clock computation, canon mutation, or
  *   protected Graphiti episode bodies.
@@ -26,10 +29,13 @@ import { M0InspectorLayer } from './m0Layers';
 import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
 import { M0CommunityClockPanel } from './M0CommunityClockPanel';
 import { M0LanguageReaderPanel } from './M0LanguageReaderPanel';
+import { M0LazyNodeBrowser } from './M0LazyNodeBrowser';
 import { M0QlStructureReaderPanel } from './M0QlStructureReaderPanel';
 import { M0RelationsReaderPanel } from './M0RelationsReaderPanel';
 import { M0M5LibrarySeamPanel } from './M0M5LibrarySeamPanel';
 import { M0ModeActionsPanel } from './M0ModeActionsPanel';
+import { M0ContemplationPromptFooter } from './M0ContemplationPromptFooter';
+import { M0SymbolicQuestionConsole } from './M0SymbolicQuestionConsole';
 import { useM0Surface } from './M0SurfaceContext';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 import { ATELIER_CLUSTER_HUES, inkDim, ringLit } from '../ui/tokens';
@@ -56,6 +62,9 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
     const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error'>('loading');
     const [detail, setDetail] = useState('');
     const [atelierClusterCount, setAtelierClusterCount] = useState<number | null>(null);
+    const [selectedSymbolicQuestion, setSelectedSymbolicQuestion] = useState<string | null>(null);
+    const [languageSubtab, setLanguageSubtab] = useState<'reader' | 'browser'>('reader');
+    const selectedCoordinate = useCoordinateStore(state => state.selected);
     const { state: m0Surface, update: updateM0Surface } = useM0Surface();
     const handleLayerChange = useCallback(
         (layer: M0InspectorLayer) => updateM0Surface({ activeLayer: layer }),
@@ -150,6 +159,7 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
                 data-active-layer={m0Surface.activeLayer}
                 data-implicate-explicate={m0Surface.implicateExplicate}
                 data-mode={m0Surface.mode}
+                data-selected-coordinate={selectedCoordinate ?? ''}
             >
                 <button
                     type="button"
@@ -169,13 +179,43 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
                 </button>
             </div>
             {m0Surface.activeLayer === 'lang' ? (
-                <M0LanguageReaderPanel phase={m0Surface.implicateExplicate} />
+                <>
+                    <div className="m0-language-subtabs" role="tablist" aria-label="M0 language views">
+                        <button
+                            type="button"
+                            role="tab"
+                            data-testid="m0-language-subtab-reader"
+                            aria-selected={languageSubtab === 'reader'}
+                            onClick={() => setLanguageSubtab('reader')}
+                        >
+                            Language
+                        </button>
+                        <button
+                            type="button"
+                            role="tab"
+                            data-testid="m0-language-subtab-browser"
+                            aria-selected={languageSubtab === 'browser'}
+                            onClick={() => setLanguageSubtab('browser')}
+                        >
+                            96-node browser
+                        </button>
+                    </div>
+                    {languageSubtab === 'reader' ? (
+                        <M0LanguageReaderPanel phase={m0Surface.implicateExplicate} />
+                    ) : (
+                        <M0LazyNodeBrowser />
+                    )}
+                </>
             ) : null}
             {m0Surface.activeLayer === 'ql' ? <M0QlStructureReaderPanel /> : null}
             {m0Surface.activeLayer === 'rel' ? <M0RelationsReaderPanel /> : null}
             {m0Surface.activeLayer === 'time' ? <M0CommunityClockPanel /> : null}
             <M0M5LibrarySeamPanel />
-            <M0VirtueWitnessPanel />
+            <M0VirtueWitnessPanel onQuestionSelect={setSelectedSymbolicQuestion} />
+            <M0SymbolicQuestionConsole
+                selectedQuestion={selectedSymbolicQuestion}
+                onSelectedQuestionChange={setSelectedSymbolicQuestion}
+            />
             <M0ModeActionsPanel mode={m0Surface.mode} onModeChange={mode => updateM0Surface({ mode })} />
             <div className="pane-toolbar" data-testid="graph-status">
                 <BridgeReadinessBadge bindingKey="s2.graph.node" />
@@ -190,6 +230,7 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
                 </div>
             ) : null}
             <div ref={hostRef} className="graph-host" />
+            <M0ContemplationPromptFooter />
         </div>
     );
 }

@@ -23,6 +23,7 @@ import {
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
+import { pentadicTraceFromPayload } from './m3PentadicInspector';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 import {
     buildM3InspectorsView,
@@ -168,7 +169,7 @@ export function M3InspectorsPane() {
                     aria-pressed={showThirdSpanda}
                     onClick={() => setShowThirdSpanda(v => !v)}
                 >
-                    Third-Spanda proof
+                    Third-Spanda runtime
                 </button>
                 <button
                     type="button"
@@ -181,7 +182,12 @@ export function M3InspectorsPane() {
                 </button>
             </div>
 
-            {showThirdSpanda ? <M3ThirdSpandaPanel couplingFlow={couplingFlow} /> : null}
+            {showThirdSpanda ? (
+                <M3ThirdSpandaPanel
+                    couplingFlow={couplingFlow}
+                    trace={pentadicTraceFromPayload((cached?.profile as Record<string, unknown> | null) ?? {}) ?? undefined}
+                />
+            ) : null}
             {showHexagramBrowser ? <M3HexagramBrowser /> : null}
 
             <div className="m3-functional-lens" data-testid="m3-functional-lens">
@@ -249,7 +255,7 @@ export function M3InspectorsPane() {
                             <dd data-testid="m3-dna-rna">
                                 phase {m.dnaRnaPhase} · codon {m.codon ?? '—'} · line {m.lineIndex} ·
                                 line-op {m.lineChangeOperatorAddress}
-                                {m.evolutionaryGap ? ' · evolutionary-gap' : ''}
+                                {m.roundTripLoss ? ' · non-exact round trip' : ' · round-trip anchor'}
                             </dd>
                         </>
                     ) : null}

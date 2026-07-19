@@ -4,12 +4,12 @@
 //! These tests drive the *epi-cli bridge edge* — the typed-JSON functions that
 //! the Theia / pratibimba-app `EpogdoonBridgeEngine` consumes — and prove the
 //! edge surfaces the C epogdoon law (`apply_epogdoon_compression` /
-//! `is_evolutionary_gap` / `m3_epogdoon_expand` in epi-lib m2.c/m3.c) *verbatim*
+//! `epogdoon_has_round_trip_loss` / `m3_epogdoon_expand` in epi-lib) *verbatim*
 //! through portal-core FFI. Nothing is recomputed at the edge: the projection
 //! JSON must equal the serialized portal-core projection (which runs the C
 //! functions), and the C result must equal the canonical integer 9:8 law.
 //!
-//! Contract shape (DR-KB-1 typed edge): `{ compressedCodon, isEvolutionaryGap,
+//! Contract shape (DR-KB-1 typed edge): `{ compressedCodon, roundTripLoss,
 //! expandedBack }`, camelCase at the JSON boundary.
 
 use epi_logos::gate::kernel_bridge_runtime::{
@@ -34,7 +34,7 @@ fn law_expand(codon: u16) -> u16 {
 }
 
 /// The bridge edge surfaces the C epogdoon law for every M2 vibrational address
-/// (0..71): each JSON cell carries exactly `{ compressedCodon, isEvolutionaryGap,
+/// (0..71): each JSON cell carries exactly `{ compressedCodon, roundTripLoss,
 /// expandedBack }`, and every value equals what the C functions compute (which
 /// in turn equals the canonical integer 9:8 law). This is the tranche's
 /// "projection round-trips against the C functions for all 72 indices" edge
@@ -55,14 +55,14 @@ fn bridge_edge_round_trips_against_c_for_all_72_indices() {
             vec![
                 &"compressedCodon".to_owned(),
                 &"expandedBack".to_owned(),
-                &"isEvolutionaryGap".to_owned()
+                &"roundTripLoss".to_owned()
             ],
-            "address {address}: contract fields are exactly compressedCodon/isEvolutionaryGap/expandedBack"
+            "address {address}: contract fields are exactly compressedCodon/roundTripLoss/expandedBack"
         );
 
         let compressed = object["compressedCodon"].as_u64().unwrap() as u16;
         let expanded = object["expandedBack"].as_u64().unwrap() as u16;
-        let is_gap = object["isEvolutionaryGap"].as_bool().unwrap();
+        let round_trip_loss = object["roundTripLoss"].as_bool().unwrap();
 
         // The C law (surfaced through FFI) equals the canonical integer 9:8 law.
         assert_eq!(
@@ -79,11 +79,10 @@ fn bridge_edge_round_trips_against_c_for_all_72_indices() {
             law_expand(compressed),
             "address {address}: expandedBack = (codon*9)/8"
         );
-        // is_evolutionary_gap ⇔ the 9:8 round-trip does not return to i.
         assert_eq!(
-            is_gap,
+            round_trip_loss,
             expanded != address,
-            "address {address}: isEvolutionaryGap ⇔ round-trip failure"
+            "address {address}: roundTripLoss ⇔ non-exact round-trip"
         );
 
         // The JSON edge equals the serialized portal-core projection byte-for-byte
@@ -99,7 +98,7 @@ fn bridge_edge_round_trips_against_c_for_all_72_indices() {
 }
 
 /// The gap count the C authority actually reports is 64, not the tranche's
-/// "exactly 9". `is_evolutionary_gap(i)` flags every address whose 9:8 round-trip
+/// "exactly 9". The loss predicate flags every address whose 9:8 round-trip
 /// fails; only the 8 multiples of nine (0,9,18,27,36,45,54,63) round-trip cleanly.
 /// The structurally meaningful "missing states" count is 8 (matching the M3
 /// `M3_RES_MATRIX` 8-gap invariant and the 72→64 collision count), and 9 is the
@@ -112,7 +111,7 @@ fn bridge_edge_gap_count_is_c_authoritative_64_not_9() {
     let mut clean_round_trip: Vec<u16> = Vec::new();
     for address in 0..M2_ADDRESS_COUNT {
         let projection = m2_epogdoon_projection(address as u8);
-        if projection.is_evolutionary_gap {
+        if projection.round_trip_loss {
             gap_count += 1;
         } else {
             clean_round_trip.push(address);
@@ -120,7 +119,7 @@ fn bridge_edge_gap_count_is_c_authoritative_64_not_9() {
     }
     assert_eq!(
         gap_count, 64,
-        "C is_evolutionary_gap flags 64/72 addresses (round-trip failures) — not 9"
+        "C round-trip loss flags 64/72 addresses — not 9"
     );
     assert_eq!(
         clean_round_trip,

@@ -135,11 +135,16 @@ The M3 system has **three matrices, full stop**. The pair-level naming (`M3_MATR
 |---|---|---|---|---|
 | **Matrix 1** `COMPLEMENTARY` / `COMP` | i-axis | Watson-Crick pairs (AT, TA, GC, CG): sum = 15, diff = ±3 / ±1 | `comp[i] = i ^ 0x3F` — all 6 lines flipped | Polarity-complementarity at both scales: the base-pairing axis |
 | **Matrix 2** `MOVING_RESTING` / `MOVE` | j-axis | Cross-complementary pairs (AG, GA, TC, CT): sum = 14 / 16, diff = ±2 | `move[i] = ((i & 0x07) << 3) | ((i >> 3) & 0x07)` — upper↔lower trigram swap | Mobility-flip at both scales: the orthogonal-axis swap |
-| **Matrix 3** `SAME_QUALITY` / `RES` | k-axis | Cross-diagonal pairs (AC, CA, TG, GT): sum = 13 / 17, diff = ±1 | 56 valid + 8 evolutionary-gap entries (0xFF) — the 9:8-epogdoon slack-points | Doubled-flip at both scales: where the closure carries the slack-residue |
+| **Matrix 3** `SAME_QUALITY` / `RES` | k-axis | Cross-diagonal pairs (AC, CA, TG, GT): sum = 13 / 17, diff = ±1 | Partial resonance operator: 56 resolved targets + 8 unresolved entries (`0xFF`) | Doubled-flip at both scales; unresolved resonance remains provisional |
 
 The kernel-level `M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COUNT]` literally assigns these as `{x=1,0,0}`, `{0,y=1,0}`, `{0,0,z=1}` — i, j, k of the quaternion algebra. The same three matrices act on dinucleotide-pairs as their signature operation and on the full 64-codon-hexagram space as their derived involution.
 
-The 8 evolutionary-gap entries in Matrix 3 are not separate "stubs of broken symmetry" — they are **the structural-mathematical slack** that the cross-diagonal axis (the doubled-flip axis) carries because that's where the 9:8 epogdoon compression from M2's 72-fold can't quite close into the 64. The gaps mark where Paraśakti's vibrational play exceeds Mahāmāyā's binary substrate's capacity to receive without remainder.
+The eight unresolved entries in Matrix 3 must remain distinct from the eight
+collision pairs of the 9:8 epogdoon. `M3_RES_MATRIX` is indexed by the 64-codon
+domain and may return a provisional sentinel; epogdoon compression is indexed
+by the 72-address M2 domain and always returns an M3 address. Their matching
+cardinality supports a labelled structural comparison, not a shared runtime
+identity.
 
 ### §2.2 The 64 × 3 × 2 = 384 architecture
 

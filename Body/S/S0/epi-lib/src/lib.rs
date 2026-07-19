@@ -166,6 +166,7 @@ pub mod m0_verifier {
             buf_len: usize,
         ) -> c_int;
         fn anuttara_language_is_member(coordinate_or_symbol: *const c_char) -> bool;
+        static ARCHETYPE_COORDINATE_LUT: [*const c_char; 12];
         static CONTEMPLATION_PROMPT_LUT: [*const c_char; 12];
     }
 
@@ -272,6 +273,25 @@ pub mod m0_verifier {
                 unsafe { CStr::from_ptr(*prompt) }
                     .to_str()
                     .expect("contemplation prompt must be UTF-8 compatible")
+                    .to_owned()
+            })
+            .collect()
+    }
+
+    /// Projects the canonical graph identity of every compiled ARCHETYPE_LUT
+    /// slot. S2 uses this to subtract kernel-lifted rows from the M0 graph
+    /// browser without maintaining a second twelve-entry mapping.
+    pub fn archetype_coordinate_lut() -> Vec<String> {
+        unsafe { &ARCHETYPE_COORDINATE_LUT }
+            .iter()
+            .map(|coordinate| {
+                assert!(
+                    !coordinate.is_null(),
+                    "compiled archetype coordinate pointers must not be null"
+                );
+                unsafe { CStr::from_ptr(*coordinate) }
+                    .to_str()
+                    .expect("archetype coordinate must be UTF-8 compatible")
                     .to_owned()
             })
             .collect()
@@ -566,6 +586,27 @@ pub mod m0_verifier {
         );
         let symbolic = cstr(&report.typed_queries[0].symbolic_coordinate_string);
         assert!(symbolic.contains("violated"), "{symbolic}");
+    }
+
+    #[test]
+    fn archetype_coordinate_lut_projects_the_compiled_twelve_slot_authority() {
+        assert_eq!(
+            archetype_coordinate_lut(),
+            vec![
+                "M0-3-(0/1)",
+                "M0-3-4",
+                "M0-3-2",
+                "M0-3-3",
+                "M0-3-5",
+                "M0-3-6",
+                "M0-3-7",
+                "M0-3-8",
+                "M0-3-9",
+                "M0-3-10",
+                "M0-3-11",
+                "M0-2-9",
+            ]
+        );
     }
 }
 

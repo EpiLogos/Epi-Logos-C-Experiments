@@ -23,6 +23,7 @@ pub mod lock;
 pub mod logs;
 pub mod models;
 pub mod nara;
+pub mod nara_close_bundle;
 pub mod nodes;
 pub mod omnipanel;
 pub mod parity;

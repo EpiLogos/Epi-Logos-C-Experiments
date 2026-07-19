@@ -64,7 +64,7 @@ interface MahamayaSlice {
     readonly dnaRnaPhase: string;
     readonly lineIndex: number;
     readonly lineChangeOperatorAddress: number;
-    readonly evolutionaryGap: boolean;
+    readonly roundTripLoss: boolean;
     readonly datasetLutState: string | null;
 }
 
@@ -150,7 +150,7 @@ function mahamayaFromPayload(root: Record<string, unknown>): MahamayaSlice | nul
         dnaRnaPhase: m.dnaRnaPhase,
         lineIndex,
         lineChangeOperatorAddress: lineChange,
-        evolutionaryGap: m.evolutionaryGap === true,
+        roundTripLoss: m.roundTripLoss === true,
         datasetLutState: typeof m.datasetLutState === 'string' ? m.datasetLutState : null
     };
 }

@@ -56,6 +56,7 @@ describe('44.3 review → blocks projection', () => {
     it('the Review fold renders the projected blocks through BlockHost with the honest seam note', () => {
         render(<ReviewBlocksPane />);
         expect(screen.getByTestId('review-blocks-seam-note').textContent).toMatch(/track-12/);
+        expect(screen.getByTestId('review-session-close-pending').textContent).toMatch(/session key/i);
         expect(screen.getByTestId('block-host')).toBeTruthy();
         const hosted = document.querySelectorAll('[data-block-type="review-item"]');
         expect(hosted.length).toBeGreaterThan(0);
@@ -106,6 +107,31 @@ describe('44.5 live transport hydration', () => {
         const invoke = vi.fn().mockImplementation(async (method: string) =>
             method === "s3'.temporal.context"
                 ? ({ artifact: { blocks: { source: "s4'.psyche.state.renderer", items: [liveBlock] } } } as never)
+                : method === 'nara.session_close.read'
+                    ? ({
+                          artifact: {
+                              session_id: 'sess-live',
+                              close_ref: 'close-live',
+                              m1_closure: {
+                                  closed: true,
+                                  generator_step: 7,
+                                  positions_traversed: [true, true, true, true, true, true, true, true, true, true, true, true]
+                              },
+                              audio_octet: {
+                                  octave_returned: true,
+                                  traversed: [true, true, true, true, true, true, true, true]
+                              },
+                              virtue_witness_vector: 0b101101011,
+                              coherence_score: 0.82,
+                              provenance: {
+                                  privacy_class: 'protected_local',
+                                  source_method: 'nara.session_close',
+                                  persisted_at: '2026-07-18T12:00:00Z',
+                                  persisted_at_ms: 1_752_840_000_000,
+                                  pasu_scoped: true
+                              }
+                          }
+                      } as never)
                 : ({ artifact: { ok: true } } as never)
         );
         setGateway({ invoke } as never);
@@ -119,8 +145,63 @@ describe('44.5 live transport hydration', () => {
             await vi.waitFor(() => {
                 expect(pane.getAttribute('data-block-source')).toBe('live');
             });
+            expect(screen.getByTestId('m1-session-close-reader')).toBeTruthy();
             expect(document.querySelectorAll('[data-block-type="review-item"]')).toHaveLength(1);
             expect(screen.getByTestId('block-review-item:live-9')).toBeTruthy();
+            const closeReads = invoke.mock.calls.filter(([method]) => method === 'nara.session_close.read');
+            expect(closeReads).toHaveLength(1);
+            expect(closeReads[0][1]).toEqual({ sessionKey: 'sess-live', latest: true });
+        } finally {
+            setGateway(null);
+            useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+        }
+    });
+
+    it('keeps requested review ids separate from the close-bundle readback and renders the honest absent state', async () => {
+        const { vi } = await import('vitest');
+        const { setGateway } = await import('../../bridge/gatewayHolder');
+        const { DEFAULT_CONNECTION_STATUS } = await import('../../bridge/types');
+        const { useProvenanceStore, useSessionStore } = await import('../../state/stores');
+        const invoke = vi.fn().mockImplementation(async (method: string) =>
+            method === 'nara.session_close.read'
+                ? Promise.reject(new Error('no persisted session-close bundle for the requested session'))
+                : ({ artifact: { ok: true } } as never)
+        );
+        setGateway({ invoke } as never);
+        useSessionStore.setState({ sessionKey: 'sess-latest', dayNow: null, privacyClass: null });
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        try {
+            render(<ReviewBlocksPane requestedReviewId="review-17" />);
+            expect(await screen.findByTestId('review-session-close-absent')).toBeTruthy();
+            const closeReads = invoke.mock.calls.filter(([method]) => method === 'nara.session_close.read');
+            expect(closeReads).toHaveLength(1);
+            expect(closeReads[0][1]).toEqual({ sessionKey: 'sess-latest', latest: true });
+        } finally {
+            setGateway(null);
+            useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+        }
+    });
+
+    it('renders the honest error state when the close-bundle readback fails unexpectedly', async () => {
+        const { vi } = await import('vitest');
+        const { setGateway } = await import('../../bridge/gatewayHolder');
+        const { DEFAULT_CONNECTION_STATUS } = await import('../../bridge/types');
+        const { useProvenanceStore, useSessionStore } = await import('../../state/stores');
+        const invoke = vi.fn().mockImplementation(async (method: string) =>
+            method === 'nara.session_close.read'
+                ? Promise.reject(new Error('gateway refused close read'))
+                : ({ artifact: { ok: true } } as never)
+        );
+        setGateway({ invoke } as never);
+        useSessionStore.setState({ sessionKey: 'sess-error', dayNow: null, privacyClass: null });
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        try {
+            render(<ReviewBlocksPane />);
+            expect(await screen.findByTestId('review-session-close-error')).toBeTruthy();
         } finally {
             setGateway(null);
             useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
