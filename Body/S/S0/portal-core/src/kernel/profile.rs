@@ -647,6 +647,11 @@ pub struct MathemeHarmonicProfile {
     /// kairos cache is fresh and complete; never fabricated kernel-side.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub live_planets: Option<[LivePlanetProjection; 10]>,
+    /// Daily-0-1 M2 solar-chakral anchor. The S3 heartbeat attaches this only
+    /// with a complete live sky and a canonical F_routing ruler; absence is
+    /// the carrier's provenance-aware pending state.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cymatic_spheres: Option<CymaticSpheresProjection>,
     /// Which live-sky tier the S3 heartbeat resolved (kairotic > realtime),
     /// mirroring the kernel `m4_planet_degrees_live` precedence: `"kairotic"`
     /// when a fresh oracle-consultation capture preempts the daily transit,
@@ -813,6 +818,7 @@ impl MathemeHarmonicProfile {
             planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
             planet_degrees: None,
             live_planets: None,
+            cymatic_spheres: None,
             kairos_mode: None,
             kairos_decays_at_ms: None,
             phase_space: Some(PhaseSpaceAddress::from_degree720(degree720)),

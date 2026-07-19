@@ -76,6 +76,22 @@ pub struct IChingResult {
     pub torus_pos: u8,
 }
 
+/// The strict three-coin receipt consumed by the M3' cast ribbon.
+///
+/// This is deliberately derived from the same kernel-authoritative coin throw
+/// that is persisted to Nara history; the browser never supplies or derives a
+/// line value.
+#[derive(Debug, Serialize)]
+pub struct IChingRibbonReceipt {
+    pub cast_method: &'static str,
+    pub lines: [u8; 6],
+    pub primary_hexagram_id: u8,
+    pub derived_hexagram_id: Option<u8>,
+    pub changing_line_indices: Vec<u8>,
+    pub cast_id: u32,
+    pub provenance: &'static str,
+}
+
 pub fn cast_iching_coins() -> IChingResult {
     let mut rand_buf = [0u8; 18]; // 3 bytes per line x 6 lines
     getrandom(&mut rand_buf);
@@ -125,6 +141,32 @@ pub fn cast_iching_coins() -> IChingResult {
         changing_mask,
         torus_pos,
     }
+}
+
+/// Cast and persist one governed three-coin I-Ching receipt for the M3 ribbon.
+pub fn cast_iching_ribbon() -> Result<IChingRibbonReceipt, String> {
+    let result = cast_iching_coins();
+    let cast_id = next_cast_id();
+    append_history(&HistoryEntry {
+        cast_id,
+        system: "iching".to_owned(),
+        question: "M3 I-Ching cast ribbon".to_owned(),
+        draw: serde_json::to_value(&result).unwrap_or_default(),
+        cast_at: current_epoch(),
+        hygiene: "governed-ribbon".to_owned(),
+    })?;
+
+    Ok(IChingRibbonReceipt {
+        cast_method: "three-coin",
+        lines: result.lines,
+        primary_hexagram_id: result.primary_hexagram + 1,
+        derived_hexagram_id: result.relating_hexagram.map(|hexagram| hexagram + 1),
+        changing_line_indices: (0..6)
+            .filter(|index| result.changing_mask & (1 << index) != 0)
+            .collect(),
+        cast_id,
+        provenance: "epi-cli.nara.oracle.iching.three-coin",
+    })
 }
 
 pub fn hexagram_to_torus_pos(h: u8) -> u8 {

@@ -162,7 +162,7 @@ fn the_sixteen_lenses_tile_360_and_the_formula_matches_the_pinned_cases() {
     assert_eq!(node.lens_segment[9], 4); // Solar Month 30°
     assert_eq!(node.lens_segment[7], 9); // Hourly 15°
     assert_eq!(node.lens_segment[11], 3); // Greater Chamber 40°
-    assert_eq!(node.lens_segment[6], 12); // Zodiacal LUT row (12°×30)
+    assert_eq!(node.lens_segment[6], 12); // Pleromatic LUT row (12°×30)
 }
 
 #[test]

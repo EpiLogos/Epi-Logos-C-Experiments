@@ -55,7 +55,7 @@ export interface EngineUiState {
 /** React mirror of the engine's control state (the engine is the authority;
  *  the store exists so strips/buttons re-render). */
 export const useEngineStore = create<EngineUiState>(set => ({
-    divisionIndex: 6, // Zodiacal default
+    divisionIndex: 6, // Pleromatic default (lens 6)
     groundGearing: false,
     paused: false,
     scrubGeneration: null,

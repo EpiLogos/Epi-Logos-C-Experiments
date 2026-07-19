@@ -22,9 +22,17 @@ import {
 } from '../components/M3CosmicWheelRenderService';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
+import { M3IChingCastRibbon, parseIChingCastRibbonReceipt, type IChingCastRibbonReceipt } from './m3IChingCastRibbon';
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
 import { pentadicTraceFromPayload } from './m3PentadicInspector';
-import { useProvenanceStore, useTickStore } from '../state/stores';
+import { useProvenanceStore } from '../state/stores';
+import {
+    M3ProfileTickProvider,
+    M3ReadinessBoundary,
+    M3ReadinessProvider,
+    useM3ProfileTick,
+    type M3ReadinessBindings
+} from './m3SurfaceContext';
 import {
     buildM3InspectorsView,
     M3_DEPTH_VIEW_ORDER,
@@ -46,12 +54,21 @@ const INSPECTOR_LABELS: Record<M3InspectorId, string> = {
 const FUNCTIONAL_LENS_METHOD = 'kernelBridge.m3.lensCodonBinary(lensId)';
 const STATIC_LENS_NAMES = [
     'Microscopic', 'Binary', 'Quaternary', 'Octagonal', 'Enneadic', 'Decan',
-    'Zodiacal', 'Hourly', 'Expanded Hours', 'Solar Month', 'Decadic',
+    'Pleromatic', 'Hourly', 'Expanded Hours', 'Solar Month', 'Decadic',
     'Greater Chamber', 'Octant', 'Quadrant', 'Hemisphere', 'Unity'
 ] as const;
 
 export function M3InspectorsPane() {
-    const cached = useTickStore(s => s.profile);
+    return (
+        <M3ProfileTickProvider>
+            <M3InspectorsSurface />
+        </M3ProfileTickProvider>
+    );
+}
+
+function M3InspectorsSurface() {
+    const tick = useM3ProfileTick();
+    const cached = tick.cachedProfile;
     const connected = useProvenanceStore(s => s.connection.connected);
     const [open, setOpen] = useState<ReadonlySet<M3InspectorId>>(new Set());
     const [depthView, setDepthView] = useState<M3DepthView>('flat-clock-debug');
@@ -60,6 +77,9 @@ export function M3InspectorsPane() {
     const [showHexagramBrowser, setShowHexagramBrowser] = useState(false);
     const [functionalLens, setFunctionalLens] = useState<LensCodonBinaryProjection | null>(null);
     const [functionalLensError, setFunctionalLensError] = useState<string | null>(null);
+    const [ichingReceipt, setIChingReceipt] = useState<IChingCastRibbonReceipt | null>(null);
+    const [ichingPending, setIChingPending] = useState(false);
+    const [ichingError, setIChingError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!connected) {
@@ -118,9 +138,62 @@ export function M3InspectorsPane() {
         });
     };
 
+    const castIChing = () => {
+        setIChingPending(true);
+        setIChingError(null);
+        void gateway().invoke('s5.oracle.iching.cast', { castMethod: 'three-coin' })
+            .then(receipt => setIChingReceipt(parseIChingCastRibbonReceipt(receipt.artifact)))
+            .catch(cause => setIChingError(cause instanceof Error ? cause.message : String(cause)))
+            .finally(() => setIChingPending(false));
+    };
+
     const m = view?.mahamaya ?? null;
+    const pentadicTrace = pentadicTraceFromPayload(
+        (cached?.profile as Record<string, unknown> | null) ?? {}
+    );
+    const readinessBindings: M3ReadinessBindings = {
+        'm3.inspectors': view
+            ? { state: 'ready', reason: 'profile-current' }
+            : { state: 'pending', reason: 'pending-mahamaya' },
+        'm3.cosmic-wheel': wheelSurface.activeProjection === null
+            ? { state: 'pending', reason: wheelSurface.readiness.reason ?? 'pending-codon-rotation-projection' }
+            : wheelSurface.readiness.surfaceReady
+              ? { state: 'ready', reason: 'profile-current' }
+              : { state: 'blocked', reason: wheelSurface.readiness.reason ?? 'wheel-authority-blocked' },
+        'm3.quintessence': wheelSurface.quintessenceState === 'ready'
+            ? { state: 'ready', reason: 'charge-quaternion-current' }
+            : wheelSurface.quintessenceState === 'authority_payload_missing' ||
+                wheelSurface.quintessenceState === 'authority_payload_invariant_violation'
+              ? { state: 'blocked', reason: wheelSurface.quintessenceState }
+              : { state: 'pending', reason: 'pending-charge-quaternion' },
+        'm3.iching-cast': ichingError
+            ? { state: 'blocked', reason: ichingError }
+            : ichingPending
+              ? { state: 'pending', reason: 'cast-pending' }
+              : connected
+                ? { state: 'ready', reason: ichingReceipt ? 'receipt-current' : 'cast-ready' }
+                : { state: 'blocked', reason: 'gateway-disconnected' },
+        'm3.third-spanda': pentadicTrace
+            ? { state: 'ready', reason: 'profile-current' }
+            : { state: 'pending', reason: 'pending-anuttara-pentadic-trace' },
+        'm3.hexagram-browser': m?.hexagramId !== null && m?.hexagramId !== undefined
+            ? { state: 'ready', reason: 'profile-current' }
+            : { state: 'pending', reason: 'pending-mahamaya' },
+        'm3.functional-lens': functionalLensError
+            ? { state: 'blocked', reason: functionalLensError }
+            : functionalLens
+              ? { state: 'ready', reason: 'projection-current' }
+              : connected
+                ? { state: 'pending', reason: 'loading-lens-projection' }
+                : { state: 'blocked', reason: 'gateway-disconnected' }
+    };
 
     return (
+        <M3ReadinessProvider bindings={readinessBindings}>
+        <M3ReadinessBoundary
+            bindingKey="m3.inspectors"
+            fallback={{ state: 'pending', reason: 'pending-mahamaya' }}
+        >
         <section
             className="mext-widget-detail"
             data-testid="m3-inspectors"
@@ -130,6 +203,7 @@ export function M3InspectorsPane() {
             <h3>M3′ inspectors</h3>
 
             <M3CosmicWheelRenderService mode="full" surface={wheelSurface} />
+            <M3IChingCastRibbon receipt={ichingReceipt} pending={ichingPending} error={ichingError} onCast={castIChing} />
 
             <div className="m3-inspector-summons" data-testid="m3-inspector-summons">
                 {M3_INSPECTOR_ORDER.map(id => (
@@ -185,11 +259,15 @@ export function M3InspectorsPane() {
             {showThirdSpanda ? (
                 <M3ThirdSpandaPanel
                     couplingFlow={couplingFlow}
-                    trace={pentadicTraceFromPayload((cached?.profile as Record<string, unknown> | null) ?? {}) ?? undefined}
+                    trace={pentadicTrace ?? undefined}
                 />
             ) : null}
             {showHexagramBrowser ? <M3HexagramBrowser /> : null}
 
+            <M3ReadinessBoundary
+                bindingKey="m3.functional-lens"
+                fallback={{ state: 'pending', reason: 'loading-lens-projection' }}
+            >
             <div className="m3-functional-lens" data-testid="m3-functional-lens">
                 <label>
                     Functional lens
@@ -212,6 +290,7 @@ export function M3InspectorsPane() {
                         : functionalLensError ?? (connected ? 'loading lens projection' : 'gateway disconnected')}
                 </p>
             </div>
+            </M3ReadinessBoundary>
 
             {view && m ? (
                 <dl>
@@ -293,6 +372,8 @@ export function M3InspectorsPane() {
                 </p>
             )}
         </section>
+        </M3ReadinessBoundary>
+        </M3ReadinessProvider>
     );
 }
 

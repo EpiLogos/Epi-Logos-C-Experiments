@@ -185,6 +185,8 @@ Cross-check surfaces: `methods_in_route_table_missing_from_dispatch_plan()` (`di
 
 **Audit finding**: every method in `METHOD_NAMES` has a corresponding `MethodDispatchPlanEntry` with `kind != Missing`. There are no current `Missing` entries — the dispatch surface is closed at 134 methods, which is the integrity test that `gateway/tests/dispatch_contract.rs` enforces.
 
+The governed [[M3']] I-Ching carrier adds `s5.oracle.iching.cast` atomically to `METHOD_NAMES` and `METHOD_DISPATCH_PLAN` as an `S5GovernanceAdapter`. [[S3]] owns advertisement and route metadata; the thin executable adapter invokes the [[S5]]/[[Nara]] oracle, persists the exact OS-random three-coin cast, and returns only the strict provenance-bearing receipt consumed by the carrier.
+
 #### 2.5.3 Graphiti runtime adapter
 
 `graphiti-runtime/src/lib.rs:1-788`. Structure:

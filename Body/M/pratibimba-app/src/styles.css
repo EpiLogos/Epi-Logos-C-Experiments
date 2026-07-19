@@ -43,6 +43,8 @@
      content-law until a live face consumes it. */
   --type-matheme-block: var(--type-heading-2);
   --type-matheme-inline: var(--type-body);
+  --m2-mef-flip-duration: 200ms;
+  --m2-epogdoon-bloom-duration: 250ms;
 
   font-family: -apple-system, 'SF Pro Text', 'Segoe UI', sans-serif;
 }
@@ -833,6 +835,36 @@ textarea {
   padding: 0.2rem 0.6rem;
   cursor: pointer;
   font: inherit;
+}
+
+.m1-kaprekar-inspector {
+  border-bottom: 1px solid var(--ground-line);
+  color: var(--ink);
+  font-size: var(--type-body-small);
+  padding: 0.5rem 0.6rem;
+}
+
+.m1-kaprekar-inspector summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.m1-kaprekar-inspector ol {
+  display: grid;
+  gap: 0.35rem;
+  line-height: 1.45;
+  margin: 0.55rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.m1-kaprekar-inspector button {
+  background: var(--ground-raised);
+  border: 1px solid #3a2c5c;
+  border-radius: 5px;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.2rem 0.6rem;
 }
 
 /* Track 48 BasesView: one read carrier, two unframed comparison panels. */
@@ -1767,8 +1799,31 @@ textarea {
 .m0-archetype-routing-links {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
   color: var(--ink-dim);
+}
+
+.m0-archetype-routing-links button,
+.m0-syntax-contemplation-link {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.18rem 0.4rem;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.m0-archetype-routing-links button[aria-expanded='true'] {
+  border-color: var(--ring);
+  color: var(--ring);
+}
+
+.m0-archetype-routing-links button:disabled,
+.m0-syntax-contemplation-link:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .m0-archetype-routing-rows {
@@ -1794,6 +1849,74 @@ textarea {
   min-width: 0;
   color: var(--ring);
   overflow-wrap: anywhere;
+}
+
+.m0-syntax-layer-reader {
+  display: grid;
+  gap: 0.45rem;
+  border-left: 2px solid var(--ring);
+  padding: 0.5rem 0 0.5rem 0.55rem;
+}
+
+.m0-syntax-layer-reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+}
+
+.m0-syntax-layer-reader-header h5,
+.m0-syntax-layer-status {
+  margin: 0;
+}
+
+.m0-syntax-layer-reader-header h5 {
+  color: var(--ink);
+  font-size: var(--type-body-small);
+}
+
+.m0-syntax-layer-status {
+  color: var(--danger);
+}
+
+.m0-syntax-layer-rows {
+  display: grid;
+  gap: 0.3rem;
+  max-height: 11rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.m0-syntax-layer-rows li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.3rem;
+  color: var(--ink);
+}
+
+.m0-syntax-layer-rows code {
+  color: var(--ring);
+}
+
+.m0-syntax-layer-witness ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.m0-syntax-layer-witness li {
+  color: var(--ink-dim);
+}
+
+.m0-syntax-layer-witness li[data-witnessed='true'] {
+  color: var(--ink);
 }
 
 .m0-ql-structure-reader {
@@ -2635,6 +2758,27 @@ textarea {
   padding: 0.3rem 0.2rem;
 }
 
+.corr-sonic-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.55rem;
+  padding: 0.45rem 0.2rem;
+}
+
+.corr-sonic-card {
+  border: 1px solid var(--ring);
+  border-radius: 4px;
+  min-width: 0;
+  padding: 0.45rem;
+}
+
+.corr-sonic-card h3 {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
 .corr-card > .bridge-readiness-border,
 .corr-card > .bridge-readiness-shell {
   display: block;
@@ -2644,6 +2788,51 @@ textarea {
   color: var(--ink-dim);
   font-size: var(--type-caption);
   padding: 0.15rem 0.2rem 0;
+}
+
+.seventy-two-fold-breadcrumb {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.seventy-two-fold-breadcrumb header,
+.seventy-two-fold-breadcrumb ol,
+.seventy-two-fold-breadcrumb li {
+  align-items: center;
+  display: flex;
+}
+
+.seventy-two-fold-breadcrumb header {
+  gap: 0.5rem;
+}
+
+.seventy-two-fold-breadcrumb header span,
+.seventy-two-fold-step > span,
+.seventy-two-fold-step small {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.seventy-two-fold-breadcrumb ol {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.seventy-two-fold-breadcrumb li {
+  gap: 0.35rem;
+}
+
+.seventy-two-fold-arrow[data-signature='negative'] { color: var(--ring); }
+.seventy-two-fold-arrow[data-signature='positive'] { color: var(--accent); }
+.seventy-two-fold-arrow[data-signature='pending'] { color: var(--ink-dim); }
+
+.seventy-two-fold-step {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 7rem;
 }
 
 .corr-field {
@@ -2659,6 +2848,202 @@ textarea {
 .corr-field-value {
   color: var(--ink);
   font-size: var(--type-body-small);
+}
+
+/* 23.T23.11 — The S2/M3-backed 36 x 3 decan reveal stays compact enough for
+   the correspondence pane; the third column only mounts on a complete graph face. */
+.corr-shadow-decan-toggle {
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ring);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--type-caption);
+  padding: 0.25rem 0.45rem;
+}
+
+.corr-shadow-decan-toggle[aria-expanded='true'] {
+  border-color: var(--ring);
+  color: var(--ink);
+}
+
+.m2-shadow-decan-surface {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+}
+
+.m2-shadow-decan-header,
+.m2-shadow-decan-pending {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.m2-shadow-decan-header h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--type-body-small);
+}
+
+.m2-shadow-decan-header span,
+.m2-shadow-decan-pending {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-shadow-decan-pending span {
+  border-left: 2px solid var(--danger);
+  padding-left: 0.35rem;
+}
+
+.m2-shadow-decan-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.5rem;
+}
+
+.m2-shadow-decan-column {
+  min-width: 0;
+}
+
+.m2-shadow-decan-column h5 {
+  margin: 0 0 0.25rem;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-shadow-decan-column ol {
+  display: grid;
+  gap: 0.2rem;
+  max-height: 15rem;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.m2-shadow-decan-column li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 0.4rem;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.2rem;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-shadow-decan-column li[data-selected='true'] {
+  color: var(--ink);
+}
+
+.m2-shadow-decan-column code,
+.m2-shadow-decan-column [data-tarot-reversed-meaning] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.m2-shadow-decan-column code {
+  color: var(--ring);
+}
+
+.m2-shadow-decan-column [data-tarot-reversed-meaning] {
+  grid-column: 1 / -1;
+  color: var(--ink);
+}
+
+/* 23.T23.2 — M2' profile-tick MEF matrix; the 12x7 scaffold contains a 12x6
+   active address overlay. The seventh mode column remains visibly inactive. */
+.m2-mef-grid {
+  display: grid;
+  gap: 0.35rem;
+  position: relative;
+}
+
+.m2-mef-grid-header {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.m2-mef-grid-header h4 {
+  margin: 0;
+}
+
+.m2-mef-grid-header span {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-mef-grid-arcs {
+  inset: 2rem 0 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.m2-mef-grid-arcs path {
+  fill: none;
+  stroke: var(--hairline);
+  stroke-width: 0.1;
+  transition: stroke var(--m2-mef-flip-duration) ease;
+}
+
+.m2-mef-grid-arcs path[data-bright='true'] {
+  stroke: var(--ring);
+}
+
+.m2-mef-grid-cells {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.m2-mef-grid-cell {
+  align-items: center;
+  background: var(--ground-raised);
+  border: 1px solid var(--hairline);
+  color: var(--ink-dim);
+  display: grid;
+  font-size: var(--type-micro);
+  gap: 0.1rem;
+  min-height: 2.2rem;
+  padding: 0.15rem;
+  position: relative;
+  transition: border-color var(--m2-mef-flip-duration) ease, box-shadow var(--m2-mef-flip-duration) ease;
+}
+
+.m2-mef-grid-cell[data-active-mef='false'] {
+  opacity: 0.35;
+}
+
+.m2-mef-grid-cell[data-halo='warm'] {
+  border-top-color: var(--ring);
+}
+
+.m2-mef-grid-cell[data-halo='cool'] {
+  border-top-color: var(--accent);
+}
+
+.m2-mef-grid-cell[data-current='true'] {
+  border-color: var(--ink);
+}
+
+.m2-mef-grid-cell[data-current='true'][data-halo-hz]:not([data-halo-hz='']) {
+  box-shadow: 0 0 0.45rem var(--ring);
+}
+
+.m2-mef-grid-cell-address {
+  color: var(--ink);
+}
+
+.m2-mef-grid-cell-mode {
+  color: var(--ink-dim);
 }
 
 /* 23.4 / 03.T3.10 / 49.4 — cymatic surface + asma overlay + modal digest face */
@@ -2679,6 +3064,15 @@ textarea {
   display: grid;
   gap: 0.35rem;
   justify-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.m2-cymatic-transport-surface {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  width: 100%;
 }
 
 .m2-cymatic-transport-toolbar,
@@ -2724,6 +3118,69 @@ textarea {
 
 .corr-cymatic-surface .asma-mirror-overlay.phase-inverted {
   border-left-color: var(--accent);
+}
+
+.cymatic-field {
+  transition: box-shadow 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+/* A held/scrubbed transport frame carries no live behaviour state
+ * (data-behaviour-state='pending'): it must be pixel-static, so no monopoly
+ * filter transition or infinite pulse may outlive the pause. */
+.cymatic-field[data-behaviour-state='pending'] {
+  animation: none;
+  transition: none;
+}
+
+.cymatic-field[data-behaviour-state='actually-many'] {
+  filter: saturate(1.25) contrast(1.08);
+}
+
+.cymatic-field[data-behaviour-state='actualising-one'] {
+  animation: cymatic-forced-lock 700ms steps(2, end) infinite;
+  box-shadow: 0 0 0.55rem var(--accent);
+}
+
+.cymatic-field[data-behaviour-state='monopoly'] {
+  box-shadow: 0 0 0.8rem var(--ring), 0 0 1.4rem var(--accent);
+  filter: saturate(1.35) brightness(1.12);
+}
+
+@keyframes cymatic-forced-lock {
+  50% {
+    opacity: 0.62;
+  }
+}
+
+.cymatic-monopoly-state {
+  align-items: center;
+  border-left: 2px solid var(--hairline);
+  color: var(--ink-dim);
+  display: flex;
+  font-size: var(--type-caption);
+  gap: 0.45rem;
+  min-height: 1.5rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.cymatic-monopoly-state[data-behaviour-state='actually-many'] {
+  border-left-color: var(--accent);
+}
+
+.cymatic-monopoly-state[data-behaviour-state='actualising-one'] {
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+
+.cymatic-monopoly-state[data-behaviour-state='monopoly'] {
+  border-left-color: var(--ring);
+  color: var(--ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cymatic-field[data-behaviour-state='actualising-one'] {
+    animation: none;
+  }
 }
 
 /* 23.18 - a receipt-only M2 to M3 epogdoon descent, with fixed lattice tracks. */
@@ -2810,6 +3267,187 @@ textarea {
 
 .m2-epogdoon-inspector dt { color: var(--ink-dim); }
 .m2-epogdoon-inspector dd { margin: 0; }
+
+/* 23.T23.8 - profile-tick-only 9:8 proof reader and ninth-tick DET bloom. */
+.m2-epogdoon-proof-overlay {
+  position: relative;
+  min-height: 0;
+}
+
+.m2-epogdoon-compression-bloom {
+  position: absolute;
+  inset: -0.2rem;
+  pointer-events: none;
+  border: 1px solid var(--ring);
+  opacity: 0;
+}
+
+.m2-epogdoon-compression-bloom[data-firing='true'] {
+  animation: m2-epogdoon-compression-bloom var(--m2-epogdoon-bloom-duration) ease-out both;
+}
+
+@keyframes m2-epogdoon-compression-bloom {
+  0% { opacity: 0; transform: scale(0.97); }
+  35% { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+
+.m2-epogdoon-proof-panel {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  border-left: 2px solid var(--ring);
+  padding: 0.35rem 0.45rem;
+}
+
+.m2-epogdoon-proof-panel code,
+.m2-epogdoon-proof-panel span {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--type-body-small);
+}
+
+.m2-epogdoon-proof-panel small {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-cymatic-variant-switcher {
+  align-self: start;
+}
+
+.m2-cymatic-variant-switcher button {
+  text-transform: capitalize;
+}
+
+.m2-cymatic-spheres {
+  box-sizing: border-box;
+  display: grid;
+  grid-template:
+    "scene readout" auto
+    "scene legend" minmax(0, 1fr) / minmax(20rem, 1fr) minmax(10rem, 12rem);
+  min-height: 23rem;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background: #090a0d;
+  color: var(--ink);
+  width: 32rem;
+}
+
+.m2-cymatic-spheres-canvas {
+  position: relative;
+  grid-area: scene;
+  min-width: 0;
+  min-height: 23rem;
+  overflow: hidden;
+}
+
+.m2-cymatic-spheres-canvas canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.m2-cymatic-spheres-readout {
+  grid-area: readout;
+  display: grid;
+  gap: 0.15rem;
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.65rem;
+}
+
+.m2-cymatic-spheres-readout strong {
+  color: var(--ring);
+  font-size: var(--type-body-small);
+}
+
+.m2-cymatic-spheres-readout span,
+.m2-cymatic-spheres-legend small,
+.m2-cymatic-spheres-state span,
+.m2-cymatic-spheres-webgl {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.m2-cymatic-spheres-legend {
+  grid-area: legend;
+  display: grid;
+  align-content: start;
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0.65rem 0.65rem;
+  overflow: auto;
+  list-style: none;
+}
+
+.m2-cymatic-spheres-legend li {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.32rem 0;
+}
+
+.m2-cymatic-spheres-legend span,
+.m2-cymatic-spheres-legend small {
+  overflow-wrap: anywhere;
+}
+
+.m2-cymatic-spheres-state {
+  display: grid;
+  align-content: center;
+  gap: 0.3rem;
+  min-height: 12rem;
+  border: 1px solid var(--danger);
+  color: var(--ink-dim);
+  padding: 0.75rem;
+}
+
+.m2-cymatic-spheres-state strong {
+  color: var(--danger);
+  font-size: var(--type-body-small);
+}
+
+.m2-cymatic-spheres-webgl {
+  grid-area: scene;
+  align-self: end;
+  margin: 0.65rem;
+  border-left: 2px solid var(--danger);
+  padding-left: 0.45rem;
+}
+
+@media (max-width: 720px) {
+  .m2-cymatic-spheres {
+    grid-template:
+      "scene" minmax(17rem, 52vh)
+      "readout" auto
+      "legend" auto / minmax(0, 1fr);
+    max-width: calc(100vw - 3rem);
+    width: calc(100vw - 3rem);
+    min-height: 0;
+  }
+
+  .m2-cymatic-spheres-canvas {
+    min-height: 17rem;
+  }
+
+  .m2-cymatic-spheres-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m2-epogdoon-compression-bloom[data-firing='true'] {
+    animation: none;
+    opacity: 0.45;
+  }
+}
 
 /* 23.5 — six-axis correspondence tree/chips */
 .six-axis-tree {
@@ -2935,6 +3573,40 @@ textarea {
 
 .axis-leaf-glyph {
   color: var(--ink);
+}
+
+.axis-overlay-leaves {
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+}
+
+.axis-overlay-leaves .axis-leaf {
+  align-items: flex-start;
+  min-width: 0;
+  padding: 0.25rem;
+}
+
+.axis-overlay-leaves .axis-leaf-glyph {
+  overflow-wrap: anywhere;
+}
+
+.planetary-keying {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.planetary-key {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--hairline);
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.planetary-key[data-outer='true'] {
+  border-color: var(--ring);
 }
 
 /* ── M4' dialogical arena (41.T41.7) ─────────────────────────────── */
@@ -3876,6 +4548,52 @@ textarea {
   border-block: 1px solid var(--hairline);
 }
 
+.review-contemplation-object {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.contemplation-object-viewer > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.contemplation-object-viewer h3,
+.contemplation-object-viewer h4,
+.contemplation-object-viewer p {
+  margin: 0;
+}
+
+.contemplation-object-viewer > header h3 {
+  font-size: var(--type-heading-4);
+}
+
+.contemplation-object-viewer p {
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+  overflow-wrap: anywhere;
+}
+
+.contemplation-object-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--hairline);
+}
+
+.contemplation-object-grid article {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.65rem;
+}
+
+.contemplation-object-grid article + article {
+  border-left: 1px solid var(--hairline);
+}
+
 .m1-session-close-reader > header {
   display: flex;
   align-items: baseline;
@@ -3938,6 +4656,20 @@ textarea {
 
   .m1-session-close-reader > div {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contemplation-object-viewer > header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .contemplation-object-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contemplation-object-grid article + article {
+    border-top: 1px solid var(--hairline);
+    border-left: 0;
   }
 
   .m1-session-close-reader article + article {

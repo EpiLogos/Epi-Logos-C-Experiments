@@ -153,6 +153,48 @@ async fn nara_session_close_persists_aggregate_bundle_and_reads_it_back() {
         "stored/read-back close bundle must not expose raw protein bodies"
     );
 
+    let contemplation = client
+        .request(
+            "nara.session_close.contemplation.read",
+            json!({
+                "session_id": session_id,
+                "pasu_hash_preview": "feedface",
+                "latest": true
+            }),
+        )
+        .await
+        .expect("contemplation readback must return its guarded projection");
+
+    assert_eq!(contemplation["session_id"], session_id);
+    assert_eq!(contemplation["close_ref"], close_ref);
+    assert!(
+        contemplation["contemplation_ref"]
+            .as_str()
+            .is_some_and(|reference| reference.starts_with("contemplation-")),
+        "viewer readback must use an opaque contemplation reference"
+    );
+    assert_eq!(contemplation["triplet"]["llm"]["loaded_agent_count"], 4);
+    assert_eq!(contemplation["triplet"]["ebm"]["gauge_trio_coherent"], true);
+    assert_eq!(
+        contemplation["triplet"]["verifier"]["arch9_wholeness"],
+        true
+    );
+    for forbidden in [
+        "q_nara",
+        "trajectory",
+        "actual_resonance",
+        "unsatisfied_constraints",
+        "recognition_state",
+        "wisdom_delta",
+        "raw",
+        "body",
+    ] {
+        assert!(
+            contemplation.get(forbidden).is_none(),
+            "contemplation projection must not expose `{forbidden}`"
+        );
+    }
+
     let read_by_ref = client
         .request(
             "nara.session_close.read",
@@ -166,6 +208,20 @@ async fn nara_session_close_persists_aggregate_bundle_and_reads_it_back() {
         .expect("nara.session_close.read exact ref lookup must round-trip");
 
     assert_eq!(read_by_ref, read_latest);
+
+    let contemplation_by_ref = client
+        .request(
+            "nara.session_close.contemplation.read",
+            json!({
+                "session_id": session_id,
+                "pasu_hash_preview": "deadbeef",
+                "close_ref": close_ref
+            }),
+        )
+        .await
+        .expect("contemplation readback must round-trip by exact opaque close ref");
+
+    assert_eq!(contemplation_by_ref, contemplation);
 }
 
 #[tokio::test]
@@ -252,4 +308,17 @@ async fn nara_session_close_read_refuses_cross_session_and_path_shaped_input() {
         "path refusal should mention path-shaped input, got {:?}",
         path_shaped
     );
+
+    let contemplation_cross_session = client
+        .request(
+            "nara.session_close.contemplation.read",
+            json!({
+                "session_id": "other-session",
+                "pasu_hash_preview": "deadbeef",
+                "close_ref": close_ref
+            }),
+        )
+        .await
+        .expect_err("contemplation projection must retain exact-session confinement");
+    assert!(contemplation_cross_session.message.contains("session"));
 }

@@ -1,0 +1,45 @@
+{
+  "runId": "20260719T150157Z-23-T23.7",
+  "taskId": "23.T23.7",
+  "startedAt": "2026-07-19T15:01:57.303Z",
+  "owner": "codex-mdev-2307-next",
+  "leaseExpiresAt": "2026-07-19T17:01:57.303Z",
+  "worktree": null,
+  "task": {
+    "id": "23.T23.7",
+    "trackId": "23",
+    "tranche": "T23.7",
+    "title": "72-fold bridge inspector (hexagram → half-decan → decan → planet → chakra → body-zone)",
+    "effort": "hexagram → half-decan → decan → planet → chakra → body-zone",
+    "file": "23-m2-parashakti-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
+    "dependsOn": [
+      "23.T23.6"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "23.T23.6"
+    ],
+    "evidence": [
+      {
+        "at": "2026-07-19T14:54:12.627Z",
+        "text": "Released without implementation at the user request; leave open for a different session."
+      }
+    ],
+    "claimedAt": "2026-07-19T14:49:36.385Z",
+    "completedAt": null,
+    "owner": "codex-mdev-237-bridge-inspector",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-19T14:49:36.385Z",
+    "runId": "20260719T144936Z-23-T23.7",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23."
+  }
+}

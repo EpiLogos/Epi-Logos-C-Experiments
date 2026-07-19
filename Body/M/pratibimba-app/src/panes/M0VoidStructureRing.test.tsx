@@ -23,7 +23,7 @@ const LABELS = [
     'Octagonal',
     'Enneadic',
     'Decan',
-    'Zodiacal',
+    'Pleromatic',
     'Hourly',
     'Expanded Hours',
     'Solar Month',

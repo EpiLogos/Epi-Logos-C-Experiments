@@ -10,6 +10,10 @@
    "claimedBy": "23.T23.18"
   },
   {
+   "method": "kernelBridge.m2.cymaticMonoPolyState(address72)",
+   "claimedBy": "23.T23.20"
+  },
+  {
    "method": "kernelBridge.m2.planetaryElementalWeights()",
    "claimedBy": "23.T23.19"
   },
@@ -56,6 +60,10 @@
   {
    "method": "nara.session_close.read",
    "claimedBy": "22.T22.5"
+  },
+  {
+   "method": "nara.session_close.contemplation.read",
+   "claimedBy": "26.T26.12"
   },
   {
    "method": "nara.session_open",
@@ -260,6 +268,10 @@
   {
    "method": "sessions.resume",
    "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+  },
+  {
+   "method": "s5.oracle.iching.cast",
+   "claimedBy": "24.T24.14"
   }
  ]
 }

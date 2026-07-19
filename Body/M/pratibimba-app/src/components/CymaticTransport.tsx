@@ -45,7 +45,7 @@ export interface CymaticTransportProps {
     /** The bridge does not currently expose this cache. This optional input
      * keeps the transport ready to consume a real retained window when it does. */
     readonly tickSnapshots?: readonly CymaticTickSnapshot[] | null;
-    readonly children: (snapshot: CymaticTickSnapshot) => ReactNode;
+    readonly children: (snapshot: CymaticTickSnapshot, held: boolean) => ReactNode;
 }
 
 interface TransportInteractionState {
@@ -142,7 +142,9 @@ export function CymaticTransport(props: CymaticTransportProps) {
                 </span>
             </label>
             <div className="m2-cymatic-transport-surface" data-cymatic-surface-held-tick={model.activeSnapshot?.tick ?? ''}>
-                {model.activeSnapshot ? props.children(model.activeSnapshot) : null}
+                {model.activeSnapshot
+                    ? props.children(model.activeSnapshot, model.paused || model.selectedTick !== null)
+                    : null}
             </div>
         </section>
     );
@@ -152,12 +154,13 @@ export function buildCymaticTickSnapshot(
     profile: KernelBridgeCachedProfile,
     source: CymaticTickSnapshotSource = 'kernel-bridge-profile-cache'
 ): CymaticTickSnapshot {
+    const capturedProfile = structuredClone(profile);
     return Object.freeze({
-        tick: profile.generation,
-        profile,
-        capturedAtMs: profile.cachedAtMs,
+        tick: capturedProfile.generation,
+        profile: capturedProfile,
+        capturedAtMs: capturedProfile.cachedAtMs,
         source,
-        kleinFlip: profileHasKleinFlip(profile)
+        kleinFlip: profileHasKleinFlip(capturedProfile)
     });
 }
 

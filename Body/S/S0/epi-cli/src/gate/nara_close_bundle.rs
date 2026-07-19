@@ -2,9 +2,11 @@
 //! Residency: Body/S/S0/epi-cli/src/gate/nara_close_bundle.rs
 //! Position (#n): #0' -- protected-local Nara session-close persistence adapter.
 //! Actualises: the live `nara.session_close` aggregate bundle store/readback
-//!   beneath the gateway state root for the M1 7-8-9 Review reader.
+//!   plus a strictly projected contemplation read model beneath the gateway
+//!   state root for the M1 7-8-9 and M5 Review readers.
 //! Public surface: NaraSessionCloseBundle, NaraSessionCloseReadRequest,
-//!   persist_close_bundle, read_close_bundle, read_request_from_params.
+//!   NaraContemplationObjectProjection, persist_close_bundle,
+//!   read_close_bundle, read_contemplation_object, read_request_from_params.
 //! Does NOT own: S3 close-route law, contemplation composition, or frontend
 //!   rendering.
 //! Contract: [[S0-SPEC]] -> [[S3-SPEC]] -> [[M1'-SPEC]].
@@ -58,7 +60,7 @@ pub struct AudioOctetTraversalAggregate {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub struct NaraSessionCloseBundleProvenance {
     pub privacy_class: String,
     pub source_method: String,
@@ -68,7 +70,7 @@ pub struct NaraSessionCloseBundleProvenance {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub struct NaraSessionCloseBundle {
     pub session_id: String,
     pub close_ref: String,
@@ -77,6 +79,90 @@ pub struct NaraSessionCloseBundle {
     pub virtue_witness_vector: u16,
     pub coherence_score: f64,
     pub provenance: NaraSessionCloseBundleProvenance,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationLlmProjection {
+    pub position: String,
+    pub loaded_agent_count: u16,
+    pub psyche_anchor_coherent: bool,
+    pub matched_anchor_codon_count: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationEbmProjection {
+    pub position: String,
+    pub gradient_magnitude: f64,
+    pub gauge_trio_coherent: bool,
+    pub coherence_scores: NaraContemplationCoherenceProjection,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationCoherenceProjection {
+    pub square_0_5: f64,
+    pub square_1_4: f64,
+    pub square_2_3: f64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationVerifierProjection {
+    pub position: String,
+    pub virtue_witness_vector: [bool; 9],
+    pub coherence_score: f64,
+    pub arch9_wholeness: bool,
+    pub syntax_layers_witnessed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationTripletProjection {
+    pub llm: NaraContemplationLlmProjection,
+    pub ebm: NaraContemplationEbmProjection,
+    pub verifier: NaraContemplationVerifierProjection,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraContemplationObjectProjection {
+    pub session_id: String,
+    pub close_ref: String,
+    pub contemplation_ref: String,
+    pub triplet: NaraContemplationTripletProjection,
+    pub provenance: NaraSessionCloseBundleProvenance,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+struct NaraSessionCloseStoredBundle {
+    bundle: NaraSessionCloseBundle,
+    contemplation_object: NaraContemplationObjectProjection,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[serde(untagged)]
+enum NaraSessionCloseStoredRecord {
+    Current(NaraSessionCloseStoredBundle),
+    Legacy(NaraSessionCloseBundle),
+}
+
+impl NaraSessionCloseStoredRecord {
+    fn bundle(&self) -> &NaraSessionCloseBundle {
+        match self {
+            Self::Current(record) => &record.bundle,
+            Self::Legacy(bundle) => bundle,
+        }
+    }
+
+    fn contemplation_object(&self) -> Option<&NaraContemplationObjectProjection> {
+        match self {
+            Self::Current(record) => Some(&record.contemplation_object),
+            Self::Legacy(_) => None,
+        }
+    }
 }
 
 pub fn aggregate_m1_closure(
@@ -145,6 +231,9 @@ pub fn persist_close_bundle(
 ) -> Result<NaraSessionCloseBundle, String> {
     validate_pasu_scope(pasu_scope)?;
     validate_session_id(session_id)?;
+    if contemplation.session_id != session_id {
+        return Err("session-close contemplation response must match session_id".to_owned());
+    }
     if contemplation.triplet.verifier.virtue_witness_vector.len() != 9 {
         return Err(
             "session-close verifier evidence must contain exactly nine virtue witnesses".to_owned(),
@@ -174,8 +263,12 @@ pub fn persist_close_bundle(
             pasu_scoped: true,
         },
     };
+    let stored = NaraSessionCloseStoredBundle {
+        contemplation_object: contemplation_projection(&bundle, contemplation)?,
+        bundle: bundle.clone(),
+    };
     let destination = close_ref_path(state_root, pasu_scope, session_id, &close_ref);
-    persist_bundle_file(state_root, &destination, &bundle)?;
+    persist_bundle_file(state_root, &destination, &stored)?;
     Ok(bundle)
 }
 
@@ -195,12 +288,24 @@ pub fn read_close_bundle(
         .ok_or_else(|| "nara.session_close.read requires close_ref or latest=true".to_owned())?;
     validate_close_ref(close_ref)?;
     let path = close_ref_path(state_root, pasu_scope, &request.session_id, close_ref);
-    let bundle = read_bundle_file(state_root, &path)
+    let record = read_bundle_file(state_root, &path)
         .map_err(|_| "close_ref not found for the requested session".to_owned())?;
+    let bundle = record.bundle();
     if bundle.session_id != request.session_id || bundle.close_ref != close_ref {
         return Err("session-close bundle identity does not match its governed path".to_owned());
     }
-    Ok(bundle)
+    Ok(bundle.clone())
+}
+
+pub fn read_contemplation_object(
+    state_root: &Path,
+    pasu_scope: &str,
+    request: &NaraSessionCloseReadRequest,
+) -> Result<NaraContemplationObjectProjection, String> {
+    let record = read_stored_close_bundle(state_root, pasu_scope, request)?;
+    record.contemplation_object().cloned().ok_or_else(|| {
+        "no persisted contemplation projection for the requested session-close bundle".to_owned()
+    })
 }
 
 pub fn read_request_from_params(params: &Value) -> Result<NaraSessionCloseReadRequest, String> {
@@ -223,17 +328,52 @@ fn latest_close_bundle(
     pasu_scope: &str,
     session_id: &str,
 ) -> Result<NaraSessionCloseBundle, String> {
+    let record = latest_stored_close_bundle(state_root, pasu_scope, session_id)?;
+    Ok(record.bundle().clone())
+}
+
+fn read_stored_close_bundle(
+    state_root: &Path,
+    pasu_scope: &str,
+    request: &NaraSessionCloseReadRequest,
+) -> Result<NaraSessionCloseStoredRecord, String> {
+    validate_pasu_scope(pasu_scope)?;
+    validate_session_id(&request.session_id)?;
+    if request.latest {
+        return latest_stored_close_bundle(state_root, pasu_scope, &request.session_id);
+    }
+    let close_ref = request
+        .close_ref
+        .as_deref()
+        .ok_or_else(|| "nara.session_close.read requires close_ref or latest=true".to_owned())?;
+    validate_close_ref(close_ref)?;
+    let path = close_ref_path(state_root, pasu_scope, &request.session_id, close_ref);
+    let record = read_bundle_file(state_root, &path)
+        .map_err(|_| "close_ref not found for the requested session".to_owned())?;
+    let bundle = record.bundle();
+    if bundle.session_id != request.session_id || bundle.close_ref != close_ref {
+        return Err("session-close bundle identity does not match its governed path".to_owned());
+    }
+    Ok(record)
+}
+
+fn latest_stored_close_bundle(
+    state_root: &Path,
+    pasu_scope: &str,
+    session_id: &str,
+) -> Result<NaraSessionCloseStoredRecord, String> {
     let session_root = session_root(state_root, pasu_scope, session_id);
     let entries = fs::read_dir(&session_root)
         .map_err(|_| "no persisted session-close bundle for the requested session".to_owned())?;
-    let mut latest: Option<NaraSessionCloseBundle> = None;
+    let mut latest: Option<NaraSessionCloseStoredRecord> = None;
     for entry in entries {
         let entry = entry.map_err(|err| format!("read session-close directory: {err}"))?;
         let path = entry.path();
         if !path.is_file() {
             continue;
         }
-        let bundle = read_bundle_file(state_root, &path)?;
+        let record = read_bundle_file(state_root, &path)?;
+        let bundle = record.bundle();
         if bundle.session_id != session_id
             || path.file_stem().and_then(|value| value.to_str()) != Some(bundle.close_ref.as_str())
         {
@@ -242,19 +382,23 @@ fn latest_close_bundle(
         let should_replace = latest
             .as_ref()
             .map(|current| {
+                let current = current.bundle();
                 bundle.provenance.persisted_at_ms > current.provenance.persisted_at_ms
                     || (bundle.provenance.persisted_at_ms == current.provenance.persisted_at_ms
                         && bundle.close_ref > current.close_ref)
             })
             .unwrap_or(true);
         if should_replace {
-            latest = Some(bundle);
+            latest = Some(record);
         }
     }
     latest.ok_or_else(|| "no persisted session-close bundle for the requested session".to_owned())
 }
 
-fn read_bundle_file(state_root: &Path, path: &Path) -> Result<NaraSessionCloseBundle, String> {
+fn read_bundle_file(
+    state_root: &Path,
+    path: &Path,
+) -> Result<NaraSessionCloseStoredRecord, String> {
     reject_symlinks_below(state_root, path)?;
     let metadata =
         fs::symlink_metadata(path).map_err(|err| format!("inspect session-close bundle: {err}"))?;
@@ -268,7 +412,7 @@ fn read_bundle_file(state_root: &Path, path: &Path) -> Result<NaraSessionCloseBu
 fn persist_bundle_file(
     state_root: &Path,
     path: &Path,
-    bundle: &NaraSessionCloseBundle,
+    bundle: &NaraSessionCloseStoredBundle,
 ) -> Result<(), String> {
     let parent = path
         .parent()
@@ -276,7 +420,7 @@ fn persist_bundle_file(
     reject_symlinks_below(state_root, parent)?;
     ensure_private_directory(parent)?;
     reject_symlinks_below(state_root, parent)?;
-    let temporary = parent.join(format!(".{}.tmp", bundle.close_ref));
+    let temporary = parent.join(format!(".{}.tmp", bundle.bundle.close_ref));
     let bytes = serde_json::to_vec_pretty(bundle)
         .map_err(|err| format!("serialize session-close bundle: {err}"))?;
     let mut options = OpenOptions::new();
@@ -314,6 +458,72 @@ fn persist_bundle_file(
         }
     }
     Ok(())
+}
+
+fn contemplation_projection(
+    bundle: &NaraSessionCloseBundle,
+    contemplation: &ContemplateSessionCloseResponse,
+) -> Result<NaraContemplationObjectProjection, String> {
+    let llm = &contemplation.triplet.llm;
+    let ebm = &contemplation.triplet.ebm;
+    let verifier = &contemplation.triplet.verifier;
+    if verifier.virtue_witness_vector.len() != 9 {
+        return Err("contemplation verifier projection requires nine virtue witnesses".to_owned());
+    }
+    if !ebm.gradient_magnitude.is_finite() || ebm.gradient_magnitude < 0.0 {
+        return Err("contemplation gradient magnitude must be finite and non-negative".to_owned());
+    }
+    for (label, score) in [
+        ("square_0_5", ebm.coherence_scores.square_0_5),
+        ("square_1_4", ebm.coherence_scores.square_1_4),
+        ("square_2_3", ebm.coherence_scores.square_2_3),
+    ] {
+        if !score.is_finite() || !(0.0..=1.0).contains(&score) {
+            return Err(format!(
+                "contemplation {label} coherence must be within 0..=1"
+            ));
+        }
+    }
+    let virtue_witness_vector: [bool; 9] = verifier
+        .virtue_witness_vector
+        .clone()
+        .try_into()
+        .map_err(|_| {
+            "contemplation verifier projection requires nine virtue witnesses".to_owned()
+        })?;
+    Ok(NaraContemplationObjectProjection {
+        session_id: bundle.session_id.clone(),
+        close_ref: bundle.close_ref.clone(),
+        contemplation_ref: format!("contemplation-{}", Uuid::new_v4()),
+        triplet: NaraContemplationTripletProjection {
+            llm: NaraContemplationLlmProjection {
+                position: llm.position.clone(),
+                loaded_agent_count: u16::try_from(llm.loaded_agents.len())
+                    .map_err(|_| "contemplation loaded agent count exceeds u16".to_owned())?,
+                psyche_anchor_coherent: llm.psyche_anchor_coherent,
+                matched_anchor_codon_count: u16::try_from(llm.matched_anchor_codons.len())
+                    .map_err(|_| "contemplation anchor codon count exceeds u16".to_owned())?,
+            },
+            ebm: NaraContemplationEbmProjection {
+                position: ebm.position.clone(),
+                gradient_magnitude: ebm.gradient_magnitude,
+                gauge_trio_coherent: ebm.gauge_trio_coherent,
+                coherence_scores: NaraContemplationCoherenceProjection {
+                    square_0_5: ebm.coherence_scores.square_0_5,
+                    square_1_4: ebm.coherence_scores.square_1_4,
+                    square_2_3: ebm.coherence_scores.square_2_3,
+                },
+            },
+            verifier: NaraContemplationVerifierProjection {
+                position: verifier.position.clone(),
+                virtue_witness_vector,
+                coherence_score: verifier.coherence_score,
+                arch9_wholeness: verifier.arch9_wholeness,
+                syntax_layers_witnessed: verifier.syntax_layers_witnessed,
+            },
+        },
+        provenance: bundle.provenance.clone(),
+    })
 }
 
 fn reject_symlinks_below(root: &Path, path: &Path) -> Result<(), String> {
@@ -611,11 +821,20 @@ mod tests {
         let raw: serde_json::Value =
             serde_json::from_slice(&fs::read(&files[0]).expect("read bundle file"))
                 .expect("parse bundle json");
-        assert_eq!(raw["close_ref"], bundle.close_ref);
+        assert_eq!(raw["bundle"]["close_ref"], bundle.close_ref);
+        assert_eq!(
+            raw["contemplation_object"]["session_id"], "session:one",
+            "the persisted record must retain the safe contemplation projection"
+        );
         assert!(raw.get("trajectory").is_none());
         assert!(raw.get("pattern_packet").is_none());
         assert!(raw.get("graphiti_relation").is_none());
         assert!(raw.get("body").is_none());
+        assert!(raw["contemplation_object"].get("trajectory").is_none());
+        assert!(raw["contemplation_object"].get("q_nara").is_none());
+        assert!(raw["contemplation_object"]
+            .get("unsatisfied_constraints")
+            .is_none());
 
         #[cfg(unix)]
         {

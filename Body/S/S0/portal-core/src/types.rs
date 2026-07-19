@@ -227,6 +227,17 @@ pub struct PortalClockState {
     pub natal_degrees: [u16; 10],
     pub generation: u64,
     pub zoom_level: f32,
+    /// Tunable `m3.lens_field.akasha_balance_epsilon` (Track 38 surface),
+    /// injected at the boundary (registry read); 0.0 = unset → the kernel
+    /// falls back to `lens_field::AKASHA_BALANCE_EPSILON_DEFAULT`. Kernel
+    /// stays registry-free (pure math); the value freezes on session start.
+    #[serde(default)]
+    pub akasha_balance_epsilon: f32,
+    /// Bounded oracle-cast lens reading (Architect 2026-07-19: cast-time,
+    /// never tick-time) — recorded by `update_from_cast`, sky-at-cast through
+    /// the pleromatic lens. Serde-default so pre-reading states deserialize.
+    #[serde(default)]
+    pub last_cast_lens_reading: Option<crate::lens_field::CastLensReading>,
 }
 
 /// The identity rotation `[1,0,0,0]` — serde default for `environment_quaternion`
@@ -246,6 +257,8 @@ impl Default for PortalClockState {
             tick12: 0,
             last_cast: None,
             last_cast_timestamp: 0,
+            akasha_balance_epsilon: 0.0,
+            last_cast_lens_reading: None,
             chakra_levels: [0.0; 8],
             active_branch_lens: 0,
             transform_stage: 0,

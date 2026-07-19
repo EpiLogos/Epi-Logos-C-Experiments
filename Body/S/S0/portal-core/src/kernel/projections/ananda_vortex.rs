@@ -9,6 +9,16 @@ pub struct AnandaVortexProjection {
     pub active_matrix_op: AnandaMatrixOp,
     pub active_cell: (u8, u8),
     pub active_cell_value: AnandaVortexCell,
+    /// Complete six-family 12×12 Vortex Modulae transport. Consumers render
+    /// these kernel-authored cells directly; no renderer reconstructs a face.
+    pub matrix_cells: Vec<AnandaVortexCell>,
+    /// FR 2.1.10 seat semantics — the M0-3 number-dozen binding, once per
+    /// projection (column semantics, not per-cell payload). Positions 0-9
+    /// are the archetypal numbers; 10 = (0/1) Non-Dual Binary (M0-3-4);
+    /// 11 = (-) Mirror (M0-3-(0/1)). Mirror of the C authority
+    /// (`m1_ananda_seat_*`, epi-lib m1.h FR 2.1.10) pinned by kernel-truth.
+    #[serde(default)]
+    pub seat_semantics: Vec<AnandaSeatBinding>,
     pub dr_ring_phase: DrRingPhase,
     pub cl42_signature_at_position: i8,
     pub ring_quaternion: Quaternion,
@@ -31,6 +41,18 @@ impl AnandaVortexProjection {
             active_matrix_op,
             active_cell: (row, position),
             active_cell_value: AnandaVortexCell::from_address(active_matrix_op, row, position),
+            matrix_cells: AnandaMatrixOp::ALL
+                .iter()
+                .copied()
+                .flat_map(|family| {
+                    (0..12).flat_map(move |row_k| {
+                        (0..12).map(move |position_p| {
+                            AnandaVortexCell::from_address(family, row_k, position_p)
+                        })
+                    })
+                })
+                .collect(),
+            seat_semantics: AnandaSeatBinding::number_dozen(),
             dr_ring_phase: DrRingPhase::from_tick12(row),
             cl42_signature_at_position: cl42_signature(position),
             ring_quaternion: ring_quaternion(row),
@@ -76,10 +98,17 @@ impl AnandaVortexCell {
             AnandaMatrixOp::Sum => (Some(raw_sum), Some(dr_sum), None),
             AnandaMatrixOp::DiffA => (Some(-1), Some(9), None),
             AnandaMatrixOp::DiffB => (Some(1), Some(1), None),
+            // Rule face, CSV verbatim ("Rule; 0/1 != 0/1"): the tetralemmic
+            // seed cell "-1/0/1" wherever k·p == 0, else the {DiffA, DiffB,
+            // Sum} tuple "-1/1/{2kp+1}". Mirror of C m1_ananda_rule_face.
             AnandaMatrixOp::Quintessence => (
                 None,
                 None,
-                Some(format!("{raw_bimba}/{raw_pratibimba}/{raw_sum}")),
+                Some(if raw_bimba == 0 {
+                    "-1/0/1".to_string()
+                } else {
+                    format!("-1/1/{raw_sum}")
+                }),
             ),
         };
 
@@ -111,6 +140,80 @@ pub enum AnandaSkeletonEvent {
     Ratio64Over36 = 3,
     Additive137 = 4,
     IdentityReturn4Plus2 = 5,
+}
+
+/// One seat of the M0-3 number-dozen as bound to a matrix column/row
+/// position. The coordinate strings mirror the compiled C authority
+/// (`ARCHETYPE_COORDINATE_LUT` via `ANANDA_SEAT_TO_ARCHETYPE_IDX`); the
+/// number seats skip M0-3-4 because that seat belongs to (0/1) itself
+/// (0,1 at M0-3-2/3; 2-8 at M0-3-5..M0-3-11; 9 at M0-2-9).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AnandaSeatBinding {
+    pub position: u8,
+    pub seat_kind: AnandaSeatKind,
+    /// The archetypal number 0-9 for number seats; None for (0/1) and (-).
+    pub archetype_number: Option<u8>,
+    pub coordinate: String,
+    pub symbol: String,
+    pub bus_role: AnandaBusRole,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[repr(u8)]
+pub enum AnandaSeatKind {
+    Number = 0,
+    NonDualBinary = 1,
+    Mirror = 2,
+}
+
+/// 8+4 bus partition (M0-3 hidden formula "4/(8)/3/(4)"): masculine octet
+/// = 4 zero-elements {0,1,(0/1),(-)} + 4 Adam evens {2,4,6,8}; feminine
+/// quartet = 3 Eve odds {3,5,7} + Wholeness {9}. The archetypal ground of
+/// the M2-1' 8+4 bus CARDINALITY (audio_octet[8] / nodal_quartet[4]) —
+/// binding by cardinality+role, never pitch-class index equality (the 7+5
+/// diatonic/silent partition of modal_resonator.rs is a sibling law).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[repr(u8)]
+pub enum AnandaBusRole {
+    Octet = 0,
+    Quartet = 1,
+}
+
+const SEAT_COORDINATES: [&str; 12] = [
+    "M0-3-2", "M0-3-3", "M0-3-5", "M0-3-6", "M0-3-7", "M0-3-8", "M0-3-9",
+    "M0-3-10", "M0-3-11", "M0-2-9", "M0-3-4", "M0-3-(0/1)",
+];
+const SEAT_SYMBOLS: [&str; 12] =
+    ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(0/1)", "(-)"];
+
+impl AnandaSeatBinding {
+    /// The canonical twelve seats in matrix-position order.
+    pub fn number_dozen() -> Vec<AnandaSeatBinding> {
+        (0u8..12)
+            .map(|position| {
+                let seat_kind = match position {
+                    10 => AnandaSeatKind::NonDualBinary,
+                    11 => AnandaSeatKind::Mirror,
+                    _ => AnandaSeatKind::Number,
+                };
+                let bus_role = match position {
+                    3 | 5 | 7 | 9 => AnandaBusRole::Quartet,
+                    _ => AnandaBusRole::Octet,
+                };
+                AnandaSeatBinding {
+                    position,
+                    seat_kind,
+                    archetype_number: (position <= 9).then_some(position),
+                    coordinate: SEAT_COORDINATES[position as usize].to_string(),
+                    symbol: SEAT_SYMBOLS[position as usize].to_string(),
+                    bus_role,
+                }
+            })
+            .collect()
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -145,6 +248,15 @@ pub enum AnandaMatrixOp {
 }
 
 impl AnandaMatrixOp {
+    pub const ALL: [Self; 6] = [
+        Self::Bimba,
+        Self::Pratibimba,
+        Self::Sum,
+        Self::DiffA,
+        Self::DiffB,
+        Self::Quintessence,
+    ];
+
     fn from_position(position6: u8) -> Self {
         match position6 % 6 {
             0 => Self::Bimba,

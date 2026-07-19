@@ -306,39 +306,29 @@ pub fn compute_aspects(state: &SharedClockState) {
 /// Full kairos update: set kairos state, compute transit quaternion from element distribution,
 /// and compute aspects. Alternative entry point that does not break existing `update_kairos`.
 pub fn update_kairos_full(state: &SharedClockState, kairos: KairosState) {
-    // Compute transit quaternion from element distribution (sign % 4 -> element bucket)
-    let mut elem_counts = [0.0f32; 4]; // w=EARTH, x=FIRE, y=WATER, z=AIR
-    let mut valid_count = 0.0f32;
-    for ps in &kairos.planets {
-        if ps.degree == 0xFFFF {
-            continue;
-        }
-        let sign = (ps.degree / 30) as usize % 12;
-        // sign -> element: Fire(0,4,8), Earth(1,5,9), Air(2,6,10), Water(3,7,11)
-        let elem = sign % 4; // 0=Fire, 1=Earth, 2=Air, 3=Water
-                             // Remap to quaternion: w=EARTH(1), x=FIRE(0), y=WATER(3), z=AIR(2)
-        let qi = match elem {
-            0 => 1, // Fire -> x
-            1 => 0, // Earth -> w
-            2 => 3, // Air -> z
-            3 => 2, // Water -> y
-            _ => 0,
-        };
-        elem_counts[qi] += 1.0;
-        valid_count += 1.0;
-    }
-
-    let transit_q = if valid_count > 0.0 {
-        let raw = [
-            elem_counts[0] / valid_count,
-            elem_counts[1] / valid_count,
-            elem_counts[2] / valid_count,
-            elem_counts[3] / valid_count,
-        ];
-        quat_normalize(raw)
-    } else {
-        [1.0, 0.0, 0.0, 0.0]
+    // POSITION register — delegates to the ONE elemental law in
+    // portal-core aspect.rs (drift retired 2026-07-19; the former inline
+    // copy of the sign-occupancy fold lives there as
+    // `position_transit_quaternion`, shared with portal-core state.rs).
+    let transit_kairos = portal_core::KairosState {
+        planets: std::array::from_fn(|index| {
+            let planet = &kairos.planets[index];
+            portal_core::PlanetState {
+                degree: planet.degree,
+                is_retrograde: planet.is_retrograde,
+                is_resonance: planet.is_resonance,
+                transiting_hex: planet.transiting_hex,
+                transiting_tarot: planet.transiting_tarot,
+                transiting_chakra: planet.transiting_chakra,
+            }
+        }),
+        current_hour: kairos.current_hour,
+        hour_planet: kairos.hour_planet,
+        active_chakra: kairos.active_chakra,
+        timestamp: kairos.timestamp,
+        valid: kairos.valid,
     };
+    let transit_q = portal_core::aspect::position_transit_quaternion(&transit_kairos);
 
     {
         let mut s = state.lock().unwrap();

@@ -982,6 +982,82 @@ async fn s2_parashakti_correspondences_decan_chain_is_kernel_lut_sourced() {
     assert!(!json_contains_string(&artifact, "filteredProps"));
 }
 
+/// The correspondence receipt carries the complete kernel-authored sonic card
+/// projection. The graph may enrich Shem names, but every structural datum must
+/// remain available when the graph is unavailable.
+#[tokio::test]
+async fn s2_parashakti_correspondences_projects_six_sonic_cards_from_kernel_luts() {
+    let artifact =
+        dispatch_graph_method("s2.parashaktiCorrespondences", &json!({ "address72": 17 }))
+            .await
+            .expect("parashakti adapter resolves the kernel sonic projection");
+
+    assert_eq!(artifact["sixSonicCards"]["decanFace"]["address72"], 17);
+    assert_eq!(
+        artifact["sixSonicCards"]["decanFace"]["tattvicThroughline"][0]["alchemical"],
+        "Aether"
+    );
+    assert_eq!(
+        artifact["sixSonicCards"]["decanFace"]["tattvicThroughline"][5]["alchemical"],
+        "Salt"
+    );
+    assert_eq!(artifact["sixSonicCards"]["shemPair"]["light"]["index"], 16);
+    assert_eq!(artifact["sixSonicCards"]["shemPair"]["shadow"]["index"], 17);
+    assert_eq!(
+        artifact["sixSonicCards"]["maqam"]["intervals"]
+            .as_array()
+            .map(Vec::len),
+        Some(7)
+    );
+    assert_eq!(artifact["sixSonicCards"]["mantra"]["index"], 17);
+    assert_eq!(artifact["sixSonicCards"]["mantra"]["phase"], "Matrika");
+    assert_eq!(
+        artifact["sixSonicCards"]["asma"]["maskRouting"]["internal"].is_boolean(),
+        true
+    );
+    assert_eq!(
+        artifact["sixSonicCards"]["planetaryChakral"]["keplerianVelocity"].is_number(),
+        true
+    );
+    assert_eq!(
+        artifact["sixSonicCards"]["provenance"],
+        "kernel-lut + live-graph-enrichment"
+    );
+}
+
+/// The 108-cell extension is additive: existing callers retain the small
+/// correspondence projection, while an explicit request reaches the real S2
+/// dispatch path and carries kernel faces plus honest S2/M3 readiness.
+#[tokio::test]
+async fn s2_parashakti_shadow_decan_projection_is_opt_in_over_public_dispatch() {
+    let artifact = dispatch_graph_method(
+        "s2.parashaktiCorrespondences",
+        &json!({ "address72": 17, "includeShadowDecans": true }),
+    )
+    .await
+    .expect("public graph dispatch should serve the shadow-decan aggregate");
+    let surface = &artifact["shadowDecanSurface"];
+
+    assert_eq!(surface["primaryDecans"].as_array().map(Vec::len), Some(36));
+    assert_eq!(surface["lightDecans"].as_array().map(Vec::len), Some(36));
+    assert_eq!(surface["tarotReversedMeaning"]["coordinate"], "#3-4");
+    assert_eq!(
+        surface["tarotReversedMeaning"]["requiredGatewayMethod"],
+        "kernelBridge.m3.tarotReversedMeaning"
+    );
+
+    let shadow_count = surface["shadowProperDescriptors"]
+        .as_array()
+        .map(Vec::len)
+        .expect("shadow descriptors must be an array");
+    assert!(shadow_count == 0 || shadow_count == 36);
+    assert_eq!(
+        surface["visibleCellCount"],
+        if shadow_count == 36 { 108 } else { 72 }
+    );
+    assert_eq!(surface["pending"]["shadowDecanGraph"], shadow_count != 36);
+}
+
 /// The adapter source itself must not reference the parashakti-deep dataset file
 /// or the deleted `read_parashakti_deep_nodes` reader — the JSON seam is gone.
 #[test]

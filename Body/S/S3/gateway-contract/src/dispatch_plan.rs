@@ -1,21 +1,21 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD,
+    KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD, KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD,
     KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD, KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
-    M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD, M1_SPANDA_RELEASE_METHOD,
-    M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD, S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD,
-    S0_PRIME_SETTINGS_OPT_IN_METHOD, S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
-    S0_PRIME_VERIFIER_EMIT_QUERY_METHOD, S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
-    S0_PRIME_VERIFIER_RESPOND_QUESTION_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
-    S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD, S1_ENTITY_CLASSIFY_METHOD,
-    S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_Q_ARTICULATION_ACCEPT_METHOD,
-    S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD, S1_WORLD_LIST_ENTITIES_METHOD,
-    S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
+    KERNEL_BRIDGE_M3_LENS_FIELD_METHOD, M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD,
+    M1_SPANDA_RELEASE_METHOD, M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
+    S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
+    S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
+    S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_RESPOND_QUESTION_METHOD,
+    S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD, S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD,
+    S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
+    S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_LIST_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
     S2_GRAPH_RELATION_FAMILY_LIST_METHOD, S2_GRAPH_SEED_SNAPSHOT_METHOD,
-    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD,
+    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD, S5_ORACLE_ICHING_CAST_METHOD,
 };
 
 // =================== 13.T2 executable dispatch-plan contract ===================
@@ -471,6 +471,13 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path:
+            "Body/S/S0/portal-core::kernel::cymatic_monopoly_state + Body/S/S0/epi-cli::gate::kernel_bridge_runtime::typed_json_m2_cymatic_monopoly_state",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path:
@@ -481,6 +488,15 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/portal-core::lens_codon_binary_projection",
+        needs_extraction_to: None,
+    },
+    // Generic lens-field dynamic — structure + live activation for any of the
+    // 16+1 functional lenses; the pleromatic symbolic system decorates lens 6.
+    MethodDispatchPlanEntry {
+        method: KERNEL_BRIDGE_M3_LENS_FIELD_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path:
+            "Body/S/S0/portal-core::lens_field + pleroma_lens + Body/S/S0/epi-cli::gate::kernel_bridge_runtime::typed_json_m3_lens_field",
         needs_extraction_to: None,
     },
     // 02.T2.13 / DR-M1-5 — engine-walk transport on the kernel-owned anchor.
@@ -668,6 +684,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s5.ebm.export_state",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S5_ORACLE_ICHING_CAST_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S0/epi-cli::nara::oracle (S5 Nara oracle adapter)",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

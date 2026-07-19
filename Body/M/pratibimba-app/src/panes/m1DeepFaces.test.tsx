@@ -33,6 +33,61 @@ const CELL_7X5 = {
 
 const RING_Q = [0.5, -0.8660254, 0, 0];
 
+const MATRIX_FAMILIES = ['bimba', 'pratibimba', 'sum', 'diff-a', 'diff-b', 'quintessence'] as const;
+
+function digitRoot(value: number): number {
+    if (value === 0) return 0;
+    const reduced = Math.abs(value) % 9;
+    return reduced === 0 ? 9 : reduced;
+}
+
+function fullMatrixCells() {
+    return MATRIX_FAMILIES.flatMap(family =>
+        Array.from({ length: 12 }, (_, rowK) => rowK).flatMap(rowK =>
+            Array.from({ length: 12 }, (_, positionP) => {
+                const rawBimba = rowK * positionP;
+                const rawPratibimba = rawBimba + 1;
+                const rawSum = rawBimba + rawPratibimba;
+                const rawValue =
+                    family === 'bimba'
+                        ? rawBimba
+                        : family === 'pratibimba'
+                          ? rawPratibimba
+                          : family === 'sum'
+                            ? rawSum
+                            : family === 'diff-a'
+                              ? -1
+                              : family === 'diff-b'
+                                ? 1
+                                : null;
+                return {
+                    family,
+                    rowK,
+                    positionP,
+                    rawValue,
+                    rawBimba,
+                    rawPratibimba,
+                    rawSum,
+                    rawDelta: 1,
+                    drValue: rawValue === null ? null : digitRoot(rawValue),
+                    drBimba: digitRoot(rawBimba),
+                    drPratibimba: digitRoot(rawPratibimba),
+                    drSum: digitRoot(rawSum),
+                    // Rule face is CSV verbatim ("Rule; 0/1 != 0/1"): the
+                    // tetralemma "-1/0/1" at kp==0, else {DiffA,DiffB,Sum}.
+                    ruleValue:
+                        family === 'quintessence'
+                            ? rawBimba === 0
+                                ? '-1/0/1'
+                                : `-1/1/${rawSum}`
+                            : null,
+                    skeletonEvent: null
+                };
+            })
+        )
+    );
+}
+
 function vortex(overrides: Record<string, unknown> = {}) {
     return {
         activeMatrixOp: 'pratibimba',
@@ -43,6 +98,7 @@ function vortex(overrides: Record<string, unknown> = {}) {
         ringQuaternion: RING_Q,
         helixSheet: 1,
         kleinFlipAtThisTick: false,
+        matrixCells: fullMatrixCells(),
         ...overrides
     };
 }
@@ -285,13 +341,30 @@ describe('22.T22.8 vortex matrices browser', () => {
         expect(screen.getByTestId('m1-vortex-cell-facemode').textContent).toBe('raw');
     });
 
-    it('pinning a non-active family holds the selection and reports no live cell for it', () => {
+    it('pinning a non-active family holds the selection while retaining its bussed cells', () => {
         prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
         render(<M1VortexMatricesBrowser />);
         fireEvent.click(screen.getByTestId('m1-vortex-tab-bimba'));
         expect(screen.getByTestId('m1-vortex-tab-bimba').getAttribute('data-pinned')).toBe('true');
         expect(screen.getByTestId('m1-vortex-displayed').getAttribute('data-displayed-op')).toBe('bimba');
-        expect(screen.getByTestId('m1-vortex-pinned-no-cell')).toBeTruthy();
+        expect(screen.queryByTestId('m1-vortex-pinned-no-cell')).toBeNull();
+        expect(screen.getByTestId('m1-vortex-cell-8-8').getAttribute('data-source')).toBe(
+            'kernel-projection'
+        );
+    });
+
+    it('renders every selected-family cell from the complete bussed matrix projection', () => {
+        prime({ tick12: 7, position6: 1, anandaVortex: vortex() });
+        render(<M1VortexMatricesBrowser />);
+
+        fireEvent.click(screen.getByTestId('m1-vortex-tab-bimba'));
+        fireEvent.click(screen.getByTestId('m1-vortex-facemode-raw'));
+        expect(screen.getByTestId('m1-vortex-cell-8-8').textContent).toBe('64');
+        expect(screen.getByTestId('m1-vortex-cell-8-9').textContent).toBe('72');
+
+        fireEvent.click(screen.getByTestId('m1-vortex-facemode-dr'));
+        expect(screen.getByTestId('m1-vortex-cell-8-8').textContent).toBe('1');
+        expect(screen.getByTestId('m1-vortex-cell-8-9').textContent).toBe('9');
     });
 });
 
@@ -321,6 +394,47 @@ describe('22.T22.9 audio-bus inspector', () => {
         expect(screen.getByTestId('m1-nodal-quartet-mn-3').textContent).toBe('9/8');
         expect(screen.getAllByTestId('m1-audio-vimarsha-badge')[0].textContent).toContain(
             'vimarsha_reading.rs:17-93'
+        );
+    });
+
+    it('sorts the bussed octet by Hz while retaining profile ratio and nodal boundary roles', () => {
+        prime({
+            tick12: 7,
+            audioOctet: [392.4, 261.6, 523.2, 294.3, 436, 327, 490.5, 348.8],
+            ratioRoles: [
+                '3/2 fifth',
+                '1/1 prime',
+                '2/1 octave',
+                '9/8 epogdoon',
+                '5/3 sixth',
+                '5/4 third',
+                '15/8 seventh',
+                '4/3 fourth'
+            ],
+            nodalQuartet: [
+                { helix: 'bimba', m: 9, n: 5, qlPosition: 0 },
+                { helix: 'bimba', m: 2, n: 5, qlPosition: 5, constraintKind: 'cymatic_boundary' },
+                { helix: 'pratibimba', m: 10, n: 9, qlPosition: 0 },
+                { helix: 'pratibimba', m: 3, n: 11, qlPosition: 5 }
+            ]
+        });
+        render(<M1AudioBusInspector />);
+
+        fireEvent.click(screen.getByTestId('m1-audio-sort-hz'));
+        expect(screen.getAllByTestId('m1-audio-octet-row').map(row => row.getAttribute('data-position'))).toEqual([
+            '1',
+            '3',
+            '5',
+            '7',
+            '0',
+            '4',
+            '6',
+            '2'
+        ]);
+        expect(screen.getByTestId('m1-audio-octet-ratio-1').textContent).toBe('1/1 prime');
+        expect(screen.getByTestId('m1-nodal-quartet-constraint-0').textContent).toBe('cymatic_boundary');
+        expect(screen.getByTestId('m1-nodal-quartet-boundary-0').textContent).toBe(
+            'bimba QL position 0 cymatic boundary condition'
         );
     });
 

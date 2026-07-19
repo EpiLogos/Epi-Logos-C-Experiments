@@ -311,7 +311,10 @@ export const PROJECTION_MANIFEST = [
                 'Octagonal',
                 'Enneadic',
                 'Decan',
-                'Zodiacal',
+                // Lens 6 renamed Zodiacal -> Pleromatic (pleroma_lens.rs /
+                // CLOCK_LENSES_16 phase_space.rs:123; the 12-fold zodiac is
+                // Lens 9 "Solar Month", a distinct lens).
+                'Pleromatic',
                 'Hourly',
                 'Expanded Hours',
                 'Solar Month',
@@ -492,6 +495,50 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'cymaticSpheres',
+        required: true,
+        covers: ['cymaticSpheres'],
+        describe: 'M2 daily-0-1 solar-chakral anchor: eight canonical chakra rows, Earth ordinal 10 at the observer centre, Sun id 0, and the F_routing active planet matching the same live sky',
+        assert(capture, contracts) {
+            const errors = [];
+            for (const profile of profilesOf(capture)) {
+                const hasLive = profile.livePlanets != null;
+                const hasSpheres = profile.cymaticSpheres != null;
+                if (hasLive !== hasSpheres) {
+                    errors.push(
+                        `solar-chakral pair split: livePlanets ${hasLive ? 'present' : 'absent'} but cymaticSpheres ${hasSpheres ? 'present' : 'absent'}`,
+                    );
+                    continue;
+                }
+                if (!hasSpheres) continue;
+                const parsed = parseInto(
+                    errors,
+                    contracts.CymaticSpheresProjection,
+                    profile.cymaticSpheres,
+                    'cymaticSpheres',
+                );
+                if (!parsed) continue;
+                const ids = parsed.chakras.map(row => row.chakraId).join(',');
+                if (ids !== '0,1,2,3,4,5,6,7') {
+                    errors.push(`cymaticSpheres chakra ids are ${ids}, expected 0..7`);
+                }
+                const active = profile.livePlanets?.find(
+                    planet => planet.planetId === parsed.activePlanet.planetId,
+                );
+                if (!active) {
+                    errors.push(
+                        `active planet ${parsed.activePlanet.planetId} is absent from livePlanets`,
+                    );
+                } else if (active.degree !== parsed.activePlanet.degree) {
+                    errors.push(
+                        `active planet degree ${parsed.activePlanet.degree} != livePlanets ${active.degree}`,
+                    );
+                }
+            }
+            return errors;
+        }
+    },
+    {
         name: 'quintessence',
         required: true,
         covers: ['quintessence'],
@@ -628,7 +675,7 @@ export const PROJECTION_MANIFEST = [
         name: 'anandaVortex',
         required: true,
         covers: ['anandaVortex', 'tick12'],
-        describe: 'M1 vortex walk: activeCell=(tick12,position6), flip flag at tick12==5, helixSheet from degree720, Vedic dr-ring phases',
+        describe: 'M1 vortex walk: activeCell=(tick12,position6), complete six-family 12×12 matrix projection, flip flag at tick12==5, helixSheet from degree720, Vedic dr-ring phases',
         assert(capture, contracts) {
             const errors = [];
             const MAHAMAYA_RING = [1, 2, 4, 8, 7, 5];
@@ -638,6 +685,15 @@ export const PROJECTION_MANIFEST = [
                 if (!parsed) continue;
                 if (parsed.activeCell[0] !== profile.tick12 || parsed.activeCell[1] !== profile.position6) {
                     errors.push(`anandaVortex.activeCell [${parsed.activeCell}] != (tick12 ${profile.tick12}, position6 ${profile.position6})`);
+                }
+                if (!parsed.matrixCells || parsed.matrixCells.length !== 6 * 12 * 12) {
+                    errors.push('anandaVortex.matrixCells must carry all six 12×12 kernel matrix families');
+                } else if (!parsed.matrixCells.some(cell =>
+                    cell.family === parsed.activeMatrixOp &&
+                    cell.rowK === parsed.activeCell[0] &&
+                    cell.positionP === parsed.activeCell[1]
+                )) {
+                    errors.push('anandaVortex.matrixCells must include the active profile cell');
                 }
                 if (parsed.kleinFlipAtThisTick !== (profile.tick12 === 5)) {
                     errors.push(`anandaVortex.kleinFlipAtThisTick ${parsed.kleinFlipAtThisTick} != (tick12==5) at tick12 ${profile.tick12}`);
@@ -1094,7 +1150,7 @@ function computeDeclaredNotEmitted(capture, contracts) {
             silentFields.push(field);
         }
     }
-    for (const field of ['planetDegrees', 'livePlanets', 'quintessence', 'modalResonator', 'phaseSpace']) {
+    for (const field of ['planetDegrees', 'livePlanets', 'cymaticSpheres', 'quintessence', 'modalResonator', 'phaseSpace']) {
         if (profiles.length > 0 && !profiles.some(p => p[field] != null)) {
             silentFields.push(field);
         }
@@ -1163,8 +1219,49 @@ export async function captureLive({
     timeoutMs = 45000
 } = {}) {
     const stateRoot = mkdtempSync(join(tmpdir(), 'live-wire-gate-'));
+    const naraHome = mkdtempSync(join(tmpdir(), 'live-wire-nara-'));
+    const kairosPath = join(naraHome, 'kairos', 'current.json');
+    writeFileSync(
+        join(naraHome, 'profile.json'),
+        JSON.stringify({
+            version: 1,
+            layers: {
+                0: {
+                    present: true,
+                    source: 'live-wire-active-pasu',
+                    completeness: 100,
+                    set_at: 1_700_000_000_000,
+                    elemental_profile: [0.25, 0.25, 0.25, 0.25]
+                }
+            },
+            layer_presence_mask: 1,
+            hash_preview: 'derived-at-runtime',
+            last_wound: null,
+            kerykeion_version: null
+        })
+    );
+    mkdirSync(join(naraHome, 'kairos'), { recursive: true });
+    writeFileSync(
+        kairosPath,
+        JSON.stringify({
+            planets: Array.from({ length: 10 }, (_, planetId) => ({
+                planet_id: planetId,
+                degree: (15 + planetId * 31.75) % 360,
+                degree_anchor: Math.round((15 + planetId * 31.75) % 360),
+                retrograde: planetId === 2 || planetId === 7
+            })),
+            dominant_sign: 0,
+            dominant_element: 2,
+            active_decan: 1,
+            active_tattva: 0
+        })
+    );
     const gateway = spawn(epiBin, ['gate', 'start', '--port', String(port)], {
-        env: { ...process.env, EPI_GATE_STATE_ROOT: stateRoot },
+        env: {
+            ...process.env,
+            EPI_GATE_STATE_ROOT: stateRoot,
+            EPI_NARA_HOME: naraHome
+        },
         stdio: ['ignore', 'pipe', 'pipe']
     });
     const frames = [];
@@ -1212,6 +1309,7 @@ export async function captureLive({
     } finally {
         if (gateway.exitCode === null) gateway.kill();
         rmSync(stateRoot, { recursive: true, force: true });
+        rmSync(naraHome, { recursive: true, force: true });
     }
     return {
         capturedAt: new Date().toISOString(),

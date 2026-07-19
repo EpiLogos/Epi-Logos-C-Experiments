@@ -3,8 +3,9 @@
  * Residency: Body/M/pratibimba-app/src/components
  * Actualises: `M3CosmicWheelRenderService` — the single source of wheel
  *   rendering for all three composition modes (`badge` | `mini-view` |
- *   `full`). A PURE function of its `surface` prop: the 64-cell codon ring
- *   coloured by the bussed codonClass, the active cell luminous with its
+ *   `full`). Its geometry and values are a pure function of `surface`; the
+ *   shared M3 contexts contribute only profile-generation/readiness stamps.
+ *   The 64-cell codon ring is coloured by the bussed codonClass, with the active cell luminous and its
  *   rotation arrow, the 22 Major-Arcana inner-ring SLOTS (the arcana map
  *   itself is kernel-owned and not yet bussed — rendered honest-pending,
  *   never from a local table), and the Quintessence centre audit over the
@@ -22,6 +23,7 @@ import {
     ChargeQuaternionBoundary,
     QuintessenceIndicator
 } from './QuintessenceIndicator';
+import { M3ReadinessBoundary } from '../panes/m3SurfaceContext';
 
 export interface M3WheelProjection {
     readonly surfaceIndex: number | null;
@@ -218,11 +220,16 @@ export function M3CosmicWheelRenderService({
     if (surface.activeProjection === null) {
         const reason = surface.readiness.reason ?? 'pending-codon-rotation-projection';
         return (
-            <p className="mext-widget-empty" data-testid="m3-wheel-pending" data-reason={reason}>
-                <ProvenanceBadge state="pending" reason={reason} />
-                cosmic wheel {reason} — the 64-cell ring renders when the bus carries
-                the codon-rotation projection; no local codon table exists here.
-            </p>
+            <M3ReadinessBoundary
+                bindingKey="m3.cosmic-wheel"
+                fallback={{ state: 'pending', reason }}
+            >
+                <p className="mext-widget-empty" data-testid="m3-wheel-pending" data-reason={reason}>
+                    <ProvenanceBadge state="pending" reason={reason} />
+                    cosmic wheel {reason} — the 64-cell ring renders when the bus carries
+                    the codon-rotation projection; no local codon table exists here.
+                </p>
+            </M3ReadinessBoundary>
         );
     }
 
@@ -294,83 +301,91 @@ export function M3CosmicWheelRenderService({
     }
 
     return (
-        <figure
-            className="m3-cosmic-wheel"
-            data-testid="m3-cosmic-wheel"
-            data-mode={mode}
-            data-codon-id={projection.codonId}
-            data-generation={surface.generation}
-            data-readiness={surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason}
+        <M3ReadinessBoundary
+            bindingKey="m3.cosmic-wheel"
+            fallback={{
+                state: surface.readiness.surfaceReady ? 'ready' : 'blocked',
+                reason: surface.readiness.reason ?? 'profile-current'
+            }}
         >
-            <svg
-                viewBox={`0 0 ${size} ${size}`}
-                width={size}
-                height={size}
-                role="img"
-                aria-label={`M3 cosmic wheel — codon ${projection.codon ?? projection.codonId}`}
+            <figure
+                className="m3-cosmic-wheel"
+                data-testid="m3-cosmic-wheel"
+                data-mode={mode}
+                data-codon-id={projection.codonId}
+                data-generation={surface.generation}
+                data-readiness={surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason}
             >
-                {cells}
-                {showArcana ? <g data-testid="m3-wheel-arcana-ring">{arcanaSlots}</g> : null}
-                {rotationArrow ? (
-                    <line
-                        data-testid="m3-wheel-rotation-arrow"
-                        data-rotation={rotationArrow.rotation}
-                        data-rotation-states={rotationArrow.states}
-                        x1={c}
-                        y1={c}
-                        x2={
-                            c +
-                            Math.cos(
-                                -Math.PI / 2 +
-                                    ((projection.rotationDegrees ?? 0) / 360) * Math.PI * 2
-                            ) *
-                                outerR *
-                                0.42
-                        }
-                        y2={
-                            c +
-                            Math.sin(
-                                -Math.PI / 2 +
-                                    ((projection.rotationDegrees ?? 0) / 360) * Math.PI * 2
-                            ) *
-                                outerR *
-                                0.42
-                        }
-                        stroke={ringLit}
-                        strokeWidth={mode === 'badge' ? 1 : 2}
+                <svg
+                    viewBox={`0 0 ${size} ${size}`}
+                    width={size}
+                    height={size}
+                    role="img"
+                    aria-label={`M3 cosmic wheel — codon ${projection.codon ?? projection.codonId}`}
+                >
+                    {cells}
+                    {showArcana ? <g data-testid="m3-wheel-arcana-ring">{arcanaSlots}</g> : null}
+                    {rotationArrow ? (
+                        <line
+                            data-testid="m3-wheel-rotation-arrow"
+                            data-rotation={rotationArrow.rotation}
+                            data-rotation-states={rotationArrow.states}
+                            x1={c}
+                            y1={c}
+                            x2={
+                                c +
+                                Math.cos(
+                                    -Math.PI / 2 +
+                                        ((projection.rotationDegrees ?? 0) / 360) * Math.PI * 2
+                                ) *
+                                    outerR *
+                                    0.42
+                            }
+                            y2={
+                                c +
+                                Math.sin(
+                                    -Math.PI / 2 +
+                                        ((projection.rotationDegrees ?? 0) / 360) * Math.PI * 2
+                                ) *
+                                    outerR *
+                                    0.42
+                            }
+                            stroke={ringLit}
+                            strokeWidth={mode === 'badge' ? 1 : 2}
+                        />
+                    ) : null}
+                    <QuintessenceIndicator
+                        surface={surface}
+                        cx={c}
+                        cy={c}
+                        radius={size * (mode === 'badge' ? 0.16 : 0.12)}
                     />
+                </svg>
+                {showArcana ? (
+                    <figcaption data-testid="m3-wheel-arcana-pending">
+                        <ProvenanceBadge state="pending" reason={surface.majorArcana} />
+                        arcana ring: slots only — {surface.majorArcana} (WC-M3-SA-2)
+                        {mode === 'full' && surface.quintessenceState === 'pending-charge-quaternion' ? (
+                            <span data-testid="m3-wheel-quintessence-pending">
+                                {' '}
+                                · centre: pending-quintessence-indicator (24.11)
+                            </span>
+                        ) : null}
+                        {surface.quintessenceState === 'authority_payload_invariant_violation' ? (
+                            <span data-testid="m3-quintessence-invariant-violation">
+                                {' '}
+                                · authority_payload_invariant_violation
+                            </span>
+                        ) : null}
+                        {surface.quintessenceState === 'authority_payload_missing' ? (
+                            <span data-testid="m3-quintessence-authority-missing">
+                                {' '}
+                                · authority_payload_missing
+                            </span>
+                        ) : null}
+                    </figcaption>
                 ) : null}
-                <QuintessenceIndicator
-                    surface={surface}
-                    cx={c}
-                    cy={c}
-                    radius={size * (mode === 'badge' ? 0.16 : 0.12)}
-                />
-            </svg>
-            {showArcana ? (
-                <figcaption data-testid="m3-wheel-arcana-pending">
-                    <ProvenanceBadge state="pending" reason={surface.majorArcana} />
-                    arcana ring: slots only — {surface.majorArcana} (WC-M3-SA-2)
-                    {mode === 'full' && surface.quintessenceState === 'pending-charge-quaternion' ? (
-                        <span data-testid="m3-wheel-quintessence-pending">
-                            {' '}
-                            · centre: pending-quintessence-indicator (24.11)
-                        </span>
-                    ) : null}
-                    {surface.quintessenceState === 'authority_payload_invariant_violation' ? (
-                        <span data-testid="m3-quintessence-invariant-violation">
-                            {' '}
-                            · authority_payload_invariant_violation
-                        </span>
-                    ) : null}
-                    {surface.quintessenceState === 'authority_payload_missing' ? (
-                        <span data-testid="m3-quintessence-authority-missing">
-                            {' '}
-                            · authority_payload_missing
-                        </span>
-                    ) : null}
-                </figcaption>
-            ) : null}
-        </figure>
+            </figure>
+        </M3ReadinessBoundary>
     );
 }

@@ -1,0 +1,47 @@
+{
+  "runId": "20260719T095420Z-23-T23.11",
+  "taskId": "23.T23.11",
+  "startedAt": "2026-07-19T09:54:20.757Z",
+  "owner": "codex-mdev-2311-shadow-decan",
+  "leaseExpiresAt": "2026-07-19T11:54:20.757Z",
+  "worktree": null,
+  "task": {
+    "id": "23.T23.11",
+    "trackId": "23",
+    "tranche": "T23.11",
+    "title": "Shadow-decan surface (108 = 36 × 3)",
+    "effort": null,
+    "file": "23-m2-parashakti-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
+    "dependsOn": [
+      "23.T23.10"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-16T15:51:35.604Z",
+        "text": "Blocked: live s2.parashaktiCorrespondences exposes one 72-address decan record, not the required 36 primary + 36 light + 36 S2 #2-3 shadow descriptors or M3 reversed-meaning seam. No local 108-cell synthesis is permitted."
+      },
+      {
+        "at": "2026-07-18T20:46:20.786Z",
+        "text": "Reopened with the typed S2 108-decan aggregate and M3 provenance seam made implementation scope."
+      }
+    ],
+    "claimedAt": "2026-07-16T15:51:35.384Z",
+    "completedAt": null,
+    "owner": "codex-mdev-track23-shadow-decan",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-16T15:51:35.384Z",
+    "runId": "20260716T155135Z-23-T23.11",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23."
+  }
+}

@@ -77,7 +77,7 @@ The bare-metal VM of six nested micro-algebras lives at `Body/S/S0/epi-lib/inclu
 | Symbol | Header decl | Definition | Shape | Semantic |
 |---|---|---|---|---|
 | `VIMARSA_TABLE[7]` | `m0.h:89` | `m0.c` | 7 ops: `?!`, `!?`, `(-)`, `+@`, `(@)`, `=`, `!=` | The 3-bit bytecode ISA (FR 2.0.0) |
-| `ARCHETYPE_LUT[12]` | `m0.h:208` | `m0.c` | 12 entries: `(-)` mirror, `0/1`, `0-9` | The 12-fold archetypal number language (FR 2.0.3) |
+| `ARCHETYPE_LUT[12]` | `m0.h:208` | `m0.c` | 12 entries: `(-)` mirror, `0/1`, `0-9` | The 12-fold archetypal number language (FR 2.0.3). Consumed by [[M1-2]] as the vortex-matrix seat authority via `ANANDA_SEAT_TO_ARCHETYPE_IDX[12]` (m1.h FR 2.1.10 — matrix positions 0-9 = numbers, 10 = (0/1), 11 = (-); polarity field grounds the 8+4 bus partition per the hidden formula `4/(8)/3/(4)`; see [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §2.1b) |
 | `MIRROR_CHILDREN[2]` | `m0.h:229` | `m0.c` | Frame `()` + Operator `-` | The two pre-numerical meta-elements (M1 `EMBODIES_FRAME_PRINCIPLE` / `EMBODIES_OPERATOR_PRINCIPLE` reach here) |
 | `ZODIACAL_LUT[12]` | `m0.h:248` | `m0.c` | 12 Vāk operators × element/modality | Sub-table of `ARCHETYPE_LUT` #0-3-6 |
 | `MONOPOLY_LUT[7]` | `m0.h:259` | `m0.c` | 7 monopoly entries | Sub-table of `ARCHETYPE_LUT` #0-3-7 |

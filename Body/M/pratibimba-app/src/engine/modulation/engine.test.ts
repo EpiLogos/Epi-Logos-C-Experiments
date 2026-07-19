@@ -337,10 +337,10 @@ describe('pause + scrub (§8.8 — load-bearing accessibility)', () => {
 });
 
 describe('division gearing (E2 engine half at the engine surface)', () => {
-    it('re-gears the instrument subdivision when the division changes: Zodiacal 1 → Quadrant 4 → Hourly 24', () => {
+    it('re-gears the instrument subdivision when the division changes: Pleromatic 1 → Quadrant 4 → Hourly 24', () => {
         const { engine } = makeEngine();
         engine.ingestProfile(cached(1, {}), 0);
-        expect(engine.divisionIndex).toBe(6); // Zodiacal — analytic, no gearing
+        expect(engine.divisionIndex).toBe(6); // Pleromatic — analytic, no gearing
         expect(engine.currentSubdivision()).toBe(1);
         engine.setDivisionIndex(13); // Quadrant — temporal canon
         expect(engine.currentSubdivision()).toBe(4);

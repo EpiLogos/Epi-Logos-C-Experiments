@@ -1,8 +1,19 @@
-//! Music-tech bridge — MPE / MTS-ESP / Scala emission from maqam interval patterns.
+//! Coordinate: S0 M2' (music-tech emitter -- Track 03.T3.7)
+//! Residency: Body/S/S0/portal-core/src
+//! Position (#n): #2 -- operation: compiled maqam interval patterns become
+//!   interoperable MPE, MIDI Tuning Standard, and Scala representations.
+//! Actualises: deterministic M2 maqam emission over the 72 compiled 24-TET
+//!   interval patterns mirrored from [[M2_MAQAM_DESC]].
+//! Public surface: MAQAM_*, MpeNote, quarter_tone_to_mpe,
+//!   mts_single_note_tuning, mts_bulk_tuning_dump, scala_scl,
+//!   maqam_family_for_mode, mode_in_family.
+//! Does NOT own: maqam interval genesis ([[epi-lib]] `M2_MAQAM_DESC`), MIDI
+//!   device I/O, gateway dispatch, renderer audio, or personal tuning policy.
+//! Contract: [[M2'-SPEC]] + [[M2-ARCHITECTURE]] + 03.T3.7.
 //!
-//! M2_MAQAM_DESC[72] interval patterns (24-TET quarter-tone units) live in epi-lib's
-//! `m2.c` as .rodata.  This module mirrors them into Rust const tables and emits
-//! them in three standard music-technology interchange formats.
+//! M2_MAQAM_DESC[72] interval patterns (24-TET quarter-tone units) live in
+//! epi-lib's `m2.c` as .rodata. This module mirrors the compiled patterns and
+//! emits them in three standard music-technology interchange formats.
 //!
 //! ## Formats
 //!
@@ -166,13 +177,12 @@ pub fn cumulative_positions(mode: &[u8; MAQAM_STEPS]) -> [u16; MAQAM_STEPS + 1] 
 /// within that semitone (8192 = centre, 0 = flat, 16383 = sharp).
 pub fn quarter_tone_to_mpe(root_midi: u8, qt_position: u16) -> (u8, u16) {
     let semitone_offset = (qt_position / 2) as u8;
-    let is_quarter_flat = (qt_position % 2) != 0;
-
-    let bend = if is_quarter_flat {
-        // Quarter-tone flat of the next semitone = half a semitone down
-        8192u16.saturating_sub(4096)
+    let bend = if qt_position % 2 == 0 {
+        MIDI_PITCH_BEND_CENTER
     } else {
-        8192 // centre — no bend
+        // A quarter-tone is +0.5 semitones from the lower chromatic key. MPE
+        // member channels default to a +/-48-semitone bend range.
+        MIDI_PITCH_BEND_CENTER + MIDI_PITCH_BEND_CENTER / (2 * MPE_BEND_RANGE_SEMITONES as u16)
     };
 
     (root_midi.saturating_add(semitone_offset), bend)
@@ -198,11 +208,17 @@ pub struct MpeNote {
 /// MPE pitch-bend range in semitones (±48 is the MPE spec default).
 pub const MPE_BEND_RANGE_SEMITONES: u8 = 48;
 
+const MIDI_PITCH_BEND_CENTER: u16 = 8_192;
+
+fn normalized_mode_index(mode_index: usize) -> usize {
+    mode_index % MAQAM_COUNT
+}
+
 impl MpeNote {
     /// Generate MPE note-on + pitch-bend messages for an entire maqam mode
     /// rooted at `root_midi`, cycling up the octave.
     pub fn maqam_octave(root_midi: u8, mode_index: usize, velocity: u8) -> Vec<MpeNote> {
-        let mode = &MAQAM_MODES[mode_index % MAQAM_COUNT];
+        let mode = &MAQAM_MODES[normalized_mode_index(mode_index)];
         let cumulative = cumulative_positions(mode);
 
         let mut notes = Vec::with_capacity(MAQAM_STEPS + 1);
@@ -210,7 +226,9 @@ impl MpeNote {
             let qt = cumulative[step];
             let (note, bend) = quarter_tone_to_mpe(root_midi, qt);
             notes.push(MpeNote {
-                channel: 0,
+                // Channel 0 is the MPE manager; every note occupies a member
+                // channel so its pitch bend remains independently addressable.
+                channel: (step + 1) as u8,
                 note,
                 pitch_bend: bend,
                 velocity,
@@ -281,51 +299,15 @@ pub fn mts_bulk_tuning_dump(
     root_freq_hz: f64,
     mode_index: usize,
 ) -> Vec<u8> {
-    let mode = &MAQAM_MODES[mode_index % MAQAM_COUNT];
+    let mode = &MAQAM_MODES[normalized_mode_index(mode_index)];
     let cumulative = cumulative_positions(mode);
 
     // Build a 128-entry frequency table
     let mut freq_table: [f64; 128] = [0.0; 128];
     for midi_note in 0u8..128 {
-        if midi_note < root_midi {
-            // Below root — default to 12-TET
-            let semitones = (root_midi - midi_note) as f64;
-            freq_table[midi_note as usize] = root_freq_hz / 2f64.powf(semitones / 12.0);
-        } else {
-            let offset = midi_note - root_midi;
-            let offset_qt = offset as u16 * 2; // 12-TET baseline in quarter-tones
-
-            // Find nearest cumulative position
-            let mut best_qt = offset_qt;
-            let mut best_diff = 24u16;
-            for &cum in &cumulative {
-                let diff = if cum > offset_qt {
-                    cum - offset_qt
-                } else {
-                    offset_qt - cum
-                };
-                if diff < best_diff {
-                    best_diff = diff;
-                    best_qt = cum;
-                }
-            }
-            // Also check octave above
-            for &cum in &cumulative {
-                let cum_octave = cum + 24;
-                let diff = if cum_octave > offset_qt {
-                    cum_octave - offset_qt
-                } else {
-                    offset_qt - cum_octave
-                };
-                if diff < best_diff {
-                    best_diff = diff;
-                    best_qt = cum_octave;
-                }
-            }
-
-            let ratio = 2f64.powf(best_qt as f64 / 24.0);
-            freq_table[midi_note as usize] = root_freq_hz * ratio;
-        }
+        let requested_qt = (i32::from(midi_note) - i32::from(root_midi)) * 2;
+        let scale_qt = nearest_scale_position(&cumulative, requested_qt);
+        freq_table[midi_note as usize] = root_freq_hz * 2f64.powf(scale_qt as f64 / 24.0);
     }
 
     let mut msg = vec![
@@ -341,7 +323,7 @@ pub fn mts_bulk_tuning_dump(
     let name_bytes: Vec<u8> = tuning_name
         .chars()
         .take(MTS_PROGRAM_NAME_MAX)
-        .map(|c| c as u8)
+        .map(|c| if c.is_ascii() { c as u8 } else { b'?' })
         .collect();
     let name_padded = {
         let mut n = name_bytes;
@@ -350,16 +332,12 @@ pub fn mts_bulk_tuning_dump(
     };
     msg.extend_from_slice(&name_padded);
 
-    // 128 frequency entries (3 bytes each, per RP-018)
+    // 128 key-based tuning values (3 bytes each). The key index is implicit
+    // in table order for an MTS bulk dump.
     for midi_note in 0u8..128 {
         let freq_encoded = mts_encode_frequency(freq_table[midi_note as usize]);
-        msg.push(midi_note & 0x7F);
         msg.extend_from_slice(&freq_encoded);
     }
-
-    // Checksum (XOR of all bytes after F0 and before F7)
-    let checksum = msg[1..].iter().fold(0u8, |acc, b| acc ^ b);
-    msg.push(checksum & 0x7F);
     msg.push(0xF7);
 
     msg
@@ -389,9 +367,10 @@ fn mts_encode_frequency(freq_hz: f64) -> [u8; 3] {
 /// Produce the text content of a Scala `.scl` file for a maqam mode.
 ///
 /// Scala format: first line is a description, second line is the number of notes,
-/// then each line is a ratio or cents value.  The octave (2/1 or 1200.0) is implicit.
+/// then each line is a ratio or cents value, including the octave entry.
 pub fn scala_scl(mode_index: usize) -> String {
-    let mode = &MAQAM_MODES[mode_index % MAQAM_COUNT];
+    let mode_index = normalized_mode_index(mode_index);
+    let mode = &MAQAM_MODES[mode_index];
     let cumulative = cumulative_positions(mode);
     let family_index = maqam_family_for_mode(mode_index);
     let family_name = MAQAM_FAMILY_NAMES[family_index];
@@ -405,8 +384,8 @@ pub fn scala_scl(mode_index: usize) -> String {
         MAQAM_STEPS,
     );
 
-    // Notes 1 through 7 (note 0 = 1/1 root, implied in Scala)
-    for i in 1..MAQAM_STEPS {
+    // Scala lists every non-unison scale degree, including the octave.
+    for i in 1..=MAQAM_STEPS {
         let qt = cumulative[i];
         let cents = (qt as f64 * 100.0) / 2.0; // 24-TET: each quarter-tone = 50 cents
         scl.push_str(&format!("  {:.6}\n", cents));
@@ -417,6 +396,7 @@ pub fn scala_scl(mode_index: usize) -> String {
 
 /// Return the maqam family index (0–9) for a given mode index (0–71).
 pub fn maqam_family_for_mode(mode_index: usize) -> usize {
+    let mode_index = normalized_mode_index(mode_index);
     for (i, &start) in MAQAM_FAMILY_STARTS.iter().enumerate().rev() {
         if mode_index >= start {
             return i;
@@ -427,8 +407,20 @@ pub fn maqam_family_for_mode(mode_index: usize) -> usize {
 
 /// Return the mode-within-family index (0-based).
 pub fn mode_in_family(mode_index: usize) -> usize {
+    let mode_index = normalized_mode_index(mode_index);
     let family = maqam_family_for_mode(mode_index);
     mode_index - MAQAM_FAMILY_STARTS[family]
+}
+
+fn nearest_scale_position(cumulative: &[u16; MAQAM_STEPS + 1], requested_qt: i32) -> i32 {
+    let octave = requested_qt.div_euclid(i32::from(QUARTER_TONES_PER_OCTAVE));
+    let within_octave = requested_qt.rem_euclid(i32::from(QUARTER_TONES_PER_OCTAVE));
+    let nearest = cumulative
+        .iter()
+        .copied()
+        .min_by_key(|position| (i32::from(*position) - within_octave).abs())
+        .expect("a maqam octave always has its root");
+    octave * i32::from(QUARTER_TONES_PER_OCTAVE) + i32::from(nearest)
 }
 
 // ──────────────────────────────────────────────
@@ -482,8 +474,8 @@ mod tests {
     #[test]
     fn mts_bulk_contains_all_128_notes() {
         let dump = mts_bulk_tuning_dump(0, 0, "Rast", 60, 261.63, 9);
-        // Should be: F0 7E 00 08 01 00 [16-byte name] [128×4 bytes] [checksum] F7
-        let expected_len = 1 + 1 + 1 + 1 + 1 + 1 + 16 + 128 * 4 + 1 + 1;
+        // F0 7E 00 08 01 00 [16-byte name] [128×3 tuning values] F7.
+        let expected_len = 1 + 1 + 1 + 1 + 1 + 1 + 16 + 128 * 3 + 1;
         assert_eq!(dump.len(), expected_len);
         assert_eq!(dump[0], 0xF0);
         // The last byte before F7 is checksum

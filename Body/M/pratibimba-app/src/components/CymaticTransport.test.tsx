@@ -35,11 +35,16 @@ describe('CymaticTransport', () => {
         const second = profile(42);
         const view = render(
             <CymaticTransport liveProfile={first}>
-                {snapshot => <output data-testid="held-frame">{snapshot.profile.generation}</output>}
+                {(snapshot, held) => (
+                    <output data-testid="held-frame" data-held={held}>
+                        {snapshot.profile.generation}
+                    </output>
+                )}
             </CymaticTransport>
         );
 
         expect(screen.getByTestId('held-frame').textContent).toBe('41');
+        expect(screen.getByTestId('held-frame').getAttribute('data-held')).toBe('false');
         expect((screen.getByLabelText('Scrub cymatic surface to tick') as HTMLInputElement).disabled).toBe(true);
         expect(screen.getByTestId('cymatic-transport').getAttribute('data-cache-state')).toBe(
             'pending-tick-snapshot-cache'
@@ -48,14 +53,20 @@ describe('CymaticTransport', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
         view.rerender(
             <CymaticTransport liveProfile={second}>
-                {snapshot => <output data-testid="held-frame">{snapshot.profile.generation}</output>}
+                {(snapshot, held) => (
+                    <output data-testid="held-frame" data-held={held}>
+                        {snapshot.profile.generation}
+                    </output>
+                )}
             </CymaticTransport>
         );
 
         expect(screen.getByTestId('cymatic-paused-tick').textContent).toContain('41');
         expect(screen.getByTestId('held-frame').textContent).toBe('41');
+        expect(screen.getByTestId('held-frame').getAttribute('data-held')).toBe('true');
         fireEvent.click(screen.getByRole('button', { name: 'Resume' }));
         expect(screen.getByTestId('held-frame').textContent).toBe('42');
+        expect(screen.getByTestId('held-frame').getAttribute('data-held')).toBe('false');
     });
 
     it('uses only supplied profile snapshots for scrub and Klein-flip markers', () => {
@@ -73,5 +84,23 @@ describe('CymaticTransport', () => {
         expect(model.activeSnapshot?.tick).toBe(8);
         expect(model.kleinFlipTicks).toEqual([8]);
         expect(model.scrubberDisabled).toBe(false);
+    });
+
+    it('captures the nested profile payload by value', () => {
+        const received = profile(41);
+        const snapshot = buildCymaticTickSnapshot(received, 'live-profile');
+        const harmonicProfile = (
+            received.profile as { harmonicProfile: { kleinFlip: unknown } }
+        ).harmonicProfile;
+
+        harmonicProfile.kleinFlip = { flipAtThisTick: true };
+
+        expect(
+            (
+                snapshot.profile.profile as {
+                    harmonicProfile: { kleinFlip: unknown };
+                }
+            ).harmonicProfile.kleinFlip
+        ).toBeNull();
     });
 });

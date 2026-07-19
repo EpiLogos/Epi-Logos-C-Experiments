@@ -18,10 +18,10 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useTickStore } from '../state/stores';
 import { inkBright, inkDim, ringLit, wheelUnlit } from '../ui/tokens';
 import { ProvenanceBadge } from '../ui/primitives';
 import { buildM3InspectorsView } from './m3Inspectors';
+import { M3ReadinessBoundary, useM3ProfileTick } from './m3SurfaceContext';
 
 const KING_WEN_COUNT = 64;
 const GRID = 8;
@@ -33,16 +33,16 @@ function trigramLines(trigram: number): readonly number[] {
 }
 
 export function M3HexagramBrowser() {
-    const cached = useTickStore(s => s.profile);
+    const tick = useM3ProfileTick();
     const view = useMemo(() => {
-        if (!cached) {
+        if (!tick.payload) {
             return null;
         }
         return buildM3InspectorsView({
-            payload: (cached.profile as Record<string, unknown> | null) ?? {},
-            generation: cached.generation ?? 0
+            payload: tick.payload,
+            generation: tick.generation ?? 0
         });
-    }, [cached]);
+    }, [tick.payload, tick.generation]);
 
     const m = view?.mahamaya ?? null;
     const activeHexagramId = m?.hexagramId ?? null;
@@ -57,14 +57,19 @@ export function M3HexagramBrowser() {
 
     if (!m || activeHexagramId === null) {
         return (
-            <section className="mext-widget-detail" data-testid="m3-hexagram-browser" data-state="pending-mahamaya">
-                <h3>64-hexagram browser</h3>
-                <p className="mext-widget-empty" data-testid="m3-hexagram-browser-pending">
-                    <ProvenanceBadge state="pending" reason="pending-mahamaya" />
-                    pending-mahamaya — the King Wen grid activates when the bus carries
-                    the M3 mahamaya projection (hexagramId); no local hexagram table here.
-                </p>
-            </section>
+            <M3ReadinessBoundary
+                bindingKey="m3.hexagram-browser"
+                fallback={{ state: 'pending', reason: 'pending-mahamaya' }}
+            >
+                <section className="mext-widget-detail" data-testid="m3-hexagram-browser" data-state="pending-mahamaya">
+                    <h3>64-hexagram browser</h3>
+                    <p className="mext-widget-empty" data-testid="m3-hexagram-browser-pending">
+                        <ProvenanceBadge state="pending" reason="pending-mahamaya" />
+                        pending-mahamaya — the King Wen grid activates when the bus carries
+                        the M3 mahamaya projection (hexagramId); no local hexagram table here.
+                    </p>
+                </section>
+            </M3ReadinessBoundary>
         );
     }
 
@@ -111,6 +116,10 @@ export function M3HexagramBrowser() {
     }
 
     return (
+        <M3ReadinessBoundary
+            bindingKey="m3.hexagram-browser"
+            fallback={{ state: 'ready', reason: 'profile-current' }}
+        >
         <section className="mext-widget-detail" data-testid="m3-hexagram-browser" data-state="ready" data-active-hexagram={activeHexagramId}>
             <h3>64-hexagram browser · King Wen</h3>
 
@@ -166,5 +175,6 @@ export function M3HexagramBrowser() {
                 ) : null}
             </div>
         </section>
+        </M3ReadinessBoundary>
     );
 }

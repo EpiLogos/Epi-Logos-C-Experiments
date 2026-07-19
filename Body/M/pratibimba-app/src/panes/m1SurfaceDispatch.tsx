@@ -61,6 +61,7 @@ import { WalkPane } from './WalkPane';
 import { KleinTopologyPane } from './KleinTopologyPane';
 import { M1Cl42SignatureInspector } from './m1Cl42SignatureInspector';
 import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
+import { M1KaprekarInspector } from './m1KaprekarInspector';
 import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
 import { M1AudioBusInspector } from './m1AudioBusInspector';
 
@@ -253,7 +254,7 @@ function M1CosmicCrossPoleContribution() {
 
 // ---- The three mode bodies (pure views over the singleton) ----
 
-function M1StandaloneIdeDeepBody(_props: M1ExtensionBodyProps) {
+function M1StandaloneIdeDeepBody(props: M1ExtensionBodyProps) {
     return (
         <div
             className="m1-surface-body"
@@ -263,6 +264,9 @@ function M1StandaloneIdeDeepBody(_props: M1ExtensionBodyProps) {
             <M1SharedStateStrip />
             <section data-testid="m1-slot-spanda-navigator">
                 <SpandaNavigatorPane />
+            </section>
+            <section data-testid="m1-slot-kaprekar">
+                <M1KaprekarInspector layoutId={props.surfaceContext.layoutId} />
             </section>
             <section data-testid="m1-slot-walk">
                 <WalkPane />

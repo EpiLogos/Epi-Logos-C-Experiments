@@ -6,7 +6,8 @@
 //! redefining renderer-local copies.
 
 pub use crate::kernel::{
-    AnandaMatrixOp, AnandaSkeletonEvent, AnandaVortexCell, AnandaVortexProjection,
+    AnandaBusRole, AnandaMatrixOp, AnandaSeatBinding, AnandaSeatKind, AnandaSkeletonEvent,
+    AnandaVortexCell, AnandaVortexProjection,
     ConjugateFormCharacter, DrRingPhase, MathemeBedrockProjection, MathemeBinaryProjection,
     MathemeChromaticProfile, MathemeContextFrameWebProjection, MathemeDiatonicContext,
     MathemeElementalProjection, MathemeHarmonicFamilyProjection, MathemeHarmonicGrammarProjection,

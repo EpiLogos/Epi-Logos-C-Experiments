@@ -64,7 +64,7 @@ describe('cosmic engine math', () => {
         expect(lensSegment(9, 144)).toBe(4); // Solar Month 30°: Leo arc
         expect(lensSegment(7, 144)).toBe(9); // Hourly 15°: 10th node
         expect(lensSegment(11, 144)).toBe(3); // Greater Chamber 40°: 4th
-        expect(lensSegment(6, 144)).toBe(12); // Zodiacal LUT row (12°×30)
+        expect(lensSegment(6, 144)).toBe(12); // Pleromatic LUT row (12°×30)
     });
 
     it('bell strike tables cover exactly the eight octet roles', () => {

@@ -9,13 +9,14 @@ use chrono::Utc;
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
     ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
-    NARA_SESSION_CLOSE_READ_METHOD,
+    NARA_CONTEMPLATION_OBJECT_READ_METHOD, NARA_SESSION_CLOSE_READ_METHOD,
 };
 use serde_json::{json, Value};
 
 use crate::gate::nara_close_bundle::{
     aggregate_audio_octet, aggregate_m1_closure, persist_close_bundle, read_close_bundle,
-    read_request_from_params, AudioOctetTraversalEvidence, M1SessionClosureEvidence,
+    read_contemplation_object, read_request_from_params, AudioOctetTraversalEvidence,
+    M1SessionClosureEvidence,
 };
 use crate::nara::{
     clock, identity, kairos, lens, logos, medicine, oracle, pratibimba, transform, weights, wind,
@@ -650,6 +651,9 @@ pub fn dispatch_nara_with_state_root(
         NARA_SESSION_CLOSE_READ_METHOD => {
             read_persisted_bundle(state_root, peer_is_loopback, params)
         }
+        NARA_CONTEMPLATION_OBJECT_READ_METHOD => {
+            read_persisted_contemplation_object(state_root, peer_is_loopback, params)
+        }
         _ => dispatch_nara(method, params),
     }
 }
@@ -755,6 +759,26 @@ fn read_persisted_bundle(
     let bundle = read_close_bundle(state_root, &pasu_scope, &request)
         .map_err(|err| ("nara-error".to_owned(), err))?;
     serde_json::to_value(bundle).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+fn read_persisted_contemplation_object(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close.contemplation.read requires a loopback peer"
+                .to_owned(),
+        ));
+    }
+    let pasu_scope = active_pasu_scope("nara.session_close.contemplation.read")?;
+    let request =
+        read_request_from_params(params).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let contemplation = read_contemplation_object(state_root, &pasu_scope, &request)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(contemplation).map_err(|err| ("nara-error".to_owned(), err.to_string()))
 }
 
 fn required_object_param(params: &Value, keys: &[&str]) -> Result<Value, (String, String)> {

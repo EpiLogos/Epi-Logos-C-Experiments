@@ -220,6 +220,119 @@ fn m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv() {
     }
 }
 
+/// FR 2.1.10 truth pin — the M0-3 number-dozen seat binding, the dual-base
+/// (+1-base) accounting law, and the CSV-verbatim rule face. The Rust
+/// projection mirror (`AnandaSeatBinding::number_dozen`, `AnandaVortexCell`
+/// rule face) is held against the compiled C authority AND the canonical
+/// CSV's own per-row sum columns (core = positions 0-9, frame = 0-11).
+#[test]
+fn m1_ananda_seat_dual_base_and_rule_face_fidelity_vs_c_authority() {
+    use portal_core::{AnandaBusRole, AnandaSeatBinding, AnandaSeatKind};
+    use std::ffi::CStr;
+    use std::os::raw::c_char;
+    extern "C" {
+        fn m1_ananda_seat_coordinate(position12: u8) -> *const c_char;
+        fn m1_ananda_seat_symbol(position12: u8) -> *const c_char;
+        fn m1_ananda_seat_kind(position12: u8) -> i32;
+        fn m1_ananda_seat_bus_role(position12: u8) -> i32;
+        fn m1_ananda_row_sum(matrix_idx: u8, row: u8, frame12: u8) -> i16;
+        fn m1_ananda_verify_dual_base() -> i32;
+        fn m1_ananda_rule_face(
+            row: u8,
+            col: u8,
+            dr_face: i32,
+            buf: *mut c_char,
+            buflen: u32,
+        ) -> i32;
+    }
+
+    // (a) Seat bindings: Rust mirror == compiled C authority, all 12 seats.
+    let seats = AnandaSeatBinding::number_dozen();
+    assert_eq!(seats.len(), 12);
+    for seat in &seats {
+        let p = seat.position;
+        let c_coord =
+            unsafe { CStr::from_ptr(m1_ananda_seat_coordinate(p)) }.to_str().unwrap();
+        let c_symbol =
+            unsafe { CStr::from_ptr(m1_ananda_seat_symbol(p)) }.to_str().unwrap();
+        assert_eq!(seat.coordinate, c_coord, "seat {p} coordinate");
+        assert_eq!(seat.symbol, c_symbol, "seat {p} symbol");
+        assert_eq!(seat.seat_kind as i32, unsafe { m1_ananda_seat_kind(p) }, "seat {p} kind");
+        assert_eq!(
+            seat.bus_role as i32,
+            unsafe { m1_ananda_seat_bus_role(p) },
+            "seat {p} bus role"
+        );
+    }
+    // 8+4 partition (M0-3 hidden formula "4/(8)/3/(4)"): masculine octet =
+    // zero-elements + Adam evens; feminine quartet = Eve odds {3,5,7} + 9.
+    assert_eq!(seats.iter().filter(|s| s.bus_role == AnandaBusRole::Quartet).count(), 4);
+    assert_eq!(seats.iter().filter(|s| s.bus_role == AnandaBusRole::Octet).count(), 8);
+    assert_eq!(seats[10].seat_kind, AnandaSeatKind::NonDualBinary);
+    assert_eq!(seats[10].coordinate, "M0-3-4");
+    assert_eq!(seats[11].seat_kind, AnandaSeatKind::Mirror);
+    assert_eq!(seats[11].coordinate, "M0-3-(0/1)");
+
+    // (b) Dual-base accounting: full C audit, then the CSV's own row sums.
+    assert_eq!(unsafe { m1_ananda_verify_dual_base() }, 1, "C dual-base audit");
+    let csv_path = repo_root().join(
+        "Idea/Bimba/Map/datasets/(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number Identities - Sheet1.csv",
+    );
+    let text = std::fs::read_to_string(&csv_path).expect("canonical CSV readable");
+    for (matrix, b) in [(0u8, 0u8), (1u8, 1u8)] {
+        for r in 0u8..12 {
+            let row = csv_vortex_row(&text, r, b).expect("vortex row parseable");
+            let core: i32 = row[..10].iter().sum();
+            let frame: i32 = row.iter().sum();
+            assert_eq!(
+                i32::from(unsafe { m1_ananda_row_sum(matrix, r, 0) }),
+                core,
+                "core sum, matrix {matrix} row {r}"
+            );
+            assert_eq!(
+                i32::from(unsafe { m1_ananda_row_sum(matrix, r, 1) }),
+                frame,
+                "frame sum, matrix {matrix} row {r}"
+            );
+        }
+    }
+    // Identity-row triangulars: T9/T11 unshifted, T10/T12 shifted —
+    // consecutive-triangular closure 45+55 = 10², 66+78 = 12².
+    assert_eq!(unsafe { m1_ananda_row_sum(0, 1, 0) }, 45);
+    assert_eq!(unsafe { m1_ananda_row_sum(0, 1, 1) }, 66);
+    assert_eq!(unsafe { m1_ananda_row_sum(1, 1, 0) }, 55);
+    assert_eq!(unsafe { m1_ananda_row_sum(1, 1, 1) }, 78);
+
+    // (c) Rule face parity C == Rust at spot cells, including the corners
+    // that speak: 127 = M_7 at (7,9); 243 = 3^5 at (11,11).
+    let mut buf = [0 as c_char; 16];
+    for (k, p, expected) in [
+        (0u8, 5u8, "-1/0/1"),
+        (1, 1, "-1/1/3"),
+        (5, 5, "-1/1/51"),
+        (7, 9, "-1/1/127"),
+        (11, 11, "-1/1/243"),
+    ] {
+        let n = unsafe { m1_ananda_rule_face(k, p, 0, buf.as_mut_ptr(), buf.len() as u32) };
+        assert!(n > 0, "rule face write ({k},{p})");
+        let c_str = unsafe { CStr::from_ptr(buf.as_ptr()) }.to_str().unwrap();
+        assert_eq!(c_str, expected, "C rule face ({k},{p})");
+        let cell = portal_core::AnandaVortexCell::from_address(
+            portal_core::AnandaMatrixOp::Quintessence,
+            k,
+            p,
+        );
+        assert_eq!(cell.rule_value.as_deref(), Some(expected), "Rust rule face ({k},{p})");
+    }
+    // DR rule face: "0/1" at the zero-ground, "1/{dr(2kp+1)}" elsewhere.
+    let n = unsafe { m1_ananda_rule_face(1, 1, 1, buf.as_mut_ptr(), buf.len() as u32) };
+    assert!(n > 0);
+    assert_eq!(unsafe { CStr::from_ptr(buf.as_ptr()) }.to_str().unwrap(), "1/3");
+    let n = unsafe { m1_ananda_rule_face(0, 7, 1, buf.as_mut_ptr(), buf.len() as u32) };
+    assert!(n > 0);
+    assert_eq!(unsafe { CStr::from_ptr(buf.as_ptr()) }.to_str().unwrap(), "0/1");
+}
+
 // ---------------------------------------------------------------------------
 // (g) Möbius descent step size log(9/8) — truth pin (T14.C1, default build)
 // ---------------------------------------------------------------------------

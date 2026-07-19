@@ -146,10 +146,12 @@ pub const NARA_LENS_RPC_METHODS: [&str; 3] =
 /// M4 session lifecycle RPCs. Route ownership stays under the S4/S5 Nara
 /// domain adapter; the profile bus receives protected handles only.
 pub const NARA_SESSION_CLOSE_READ_METHOD: &str = "nara.session_close.read";
-pub const NARA_SESSION_RPC_METHODS: [&str; 3] = [
+pub const NARA_CONTEMPLATION_OBJECT_READ_METHOD: &str = "nara.session_close.contemplation.read";
+pub const NARA_SESSION_RPC_METHODS: [&str; 4] = [
     "nara.session_open",
     "nara.session_close",
     NARA_SESSION_CLOSE_READ_METHOD,
+    NARA_CONTEMPLATION_OBJECT_READ_METHOD,
 ];
 
 /// M4 PASU identity-setup RPCs consumed by the `m4.nara.pasuWizard` widget
@@ -914,7 +916,15 @@ fn s3_native_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMeta
 
 fn s5_governance_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
     let authority = entry.authority_path;
-    if authority.contains("graphiti-runtime") {
+    if authority.contains("nara::oracle") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S4S5DomainAdapter,
+            class: GatewayDispatchClass::NaraExtension,
+            coordinate_owner: "S5/M3'",
+            agent_access_owner: "S4/S5",
+            route_id: "s5.nara-oracle",
+        })
+    } else if authority.contains("graphiti-runtime") {
         Some(RouteMetadata {
             owner: GatewayDispatchOwner::S3GraphitiRuntime,
             class: GatewayDispatchClass::GraphitiInvocation,

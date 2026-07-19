@@ -33,8 +33,19 @@ export interface M1FaceState {
     readonly kleinFlip: M1KleinFlipEvent | null;
     /** Vimarśa M2-1' window: the eight cymatic Hz partials, or null (pending). */
     readonly audioOctet: readonly number[] | null;
+    /** Profile-supplied per-position ratio roles, if the writer emitted them. */
+    readonly audioRatioRoles: readonly (string | null)[] | null;
+    /** Profile-supplied shared ratio role for legacy/current scalar profiles. */
+    readonly audioRatioRole: string | null;
     /** Vimarśa M2-1' window: the four nodal m/n constraints, or null (pending). */
-    readonly nodalQuartet: readonly NodalMN[] | null;
+    readonly nodalQuartet: readonly M1NodalBoundary[] | null;
+}
+
+/** The optional writer metadata carried alongside the canonical M2-1' m/n pair. */
+export interface M1NodalBoundary extends NodalMN {
+    readonly helix: string | null;
+    readonly qlPosition: number | null;
+    readonly constraintKind: string | null;
 }
 
 export type M1KleinFlipEvent =
@@ -54,6 +65,10 @@ function num(value: unknown): number | null {
 
 function text(value: unknown): string | null {
     return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+function textArray(value: unknown): readonly (string | null)[] | null {
+    return Array.isArray(value) ? Object.freeze(value.map(text)) : null;
 }
 
 /** The bus may nest the profile under `harmonicProfile` (wire shape) or hand it
@@ -98,6 +113,23 @@ function kleinFlipFromProfile(root: Record<string, unknown> | null): M1KleinFlip
     return null;
 }
 
+/** Keeps M2-1' node provenance beside the already-validated m/n snapshot. */
+function nodalBoundaries(snapshot: readonly NodalMN[] | null): readonly M1NodalBoundary[] | null {
+    if (!snapshot) return null;
+    return Object.freeze(
+        snapshot.map(node => {
+            const source = objectValue(node);
+            return Object.freeze({
+                m: node.m,
+                n: node.n,
+                helix: text(source?.helix),
+                qlPosition: num(source?.qlPosition ?? source?.ql_position),
+                constraintKind: text(source?.constraintKind ?? source?.constraint_kind)
+            });
+        })
+    );
+}
+
 /** Pure reader — testable off a raw cached-profile payload without React. */
 export function readM1FaceState(cached: { generation: number; profile: unknown } | null): M1FaceState {
     const payload = objectValue(cached?.profile ?? null);
@@ -111,7 +143,9 @@ export function readM1FaceState(cached: { generation: number; profile: unknown }
         vortex,
         kleinFlip: kleinFlipFromProfile(root),
         audioOctet: snapshot?.audioOctet ?? null,
-        nodalQuartet: snapshot?.nodalQuartet ?? null
+        audioRatioRoles: textArray(root?.ratioRoles ?? root?.ratio_roles),
+        audioRatioRole: text(root?.ratioRole ?? root?.ratio_role),
+        nodalQuartet: nodalBoundaries(snapshot?.nodalQuartet ?? null)
     });
 }
 

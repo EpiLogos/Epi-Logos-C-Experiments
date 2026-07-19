@@ -3,7 +3,8 @@
  * Residency: Body/M/pratibimba-app/src/components
  * Position (#n): M3' cosmic-wheel centre
  * Actualises: the authority-provided charge quaternion as four proportional
- *   elemental petals and a low-variance Akasha core.
+ *   elemental petals and a low-variance Akasha core, stamped by the shared
+ *   M3 profile-tick/readiness contexts.
  * Public surface: ChargeQuaternionBoundary, QuintessenceIndicatorProps,
  *   QuintessenceIndicator.
  * Does NOT own: charge-quaternion computation, the 4X invariant decision,
@@ -21,6 +22,7 @@ import {
     tritoneSquareB,
     tritoneSquareC
 } from '../ui/tokens';
+import { useM3ProfileTick, useM3Readiness } from '../panes/m3SurfaceContext';
 
 export interface ChargeQuaternionBoundary {
     readonly pp: number;
@@ -49,16 +51,26 @@ export function QuintessenceIndicator({
     radius
 }: QuintessenceIndicatorProps) {
     const charge = chargeQuaternion ?? surface.chargeQuaternion ?? undefined;
+    const tick = useM3ProfileTick();
+    const fallbackReadiness = surface.quintessenceState === 'ready'
+        ? { state: 'ready' as const, reason: 'charge-quaternion-current' }
+        : surface.quintessenceState === 'authority_payload_missing' ||
+            surface.quintessenceState === 'authority_payload_invariant_violation'
+          ? { state: 'blocked' as const, reason: surface.quintessenceState }
+          : { state: 'pending' as const, reason: 'pending-charge-quaternion' };
+    const readiness = useM3Readiness('m3.quintessence', fallbackReadiness);
     if (!charge) {
         const missingAuthority = surface.quintessenceState === 'authority_payload_missing';
         return (
             <g
                 data-testid="m3-wheel-quintessence"
+                data-readiness={readiness.state}
+                data-generation={tick.generation ?? 'none'}
                 data-state={
                     missingAuthority ? 'authority_payload_missing' : 'pending-charge-quaternion'
                 }
             >
-                {missingAuthority ? <title>authority_payload_missing</title> : null}
+                <title>{readiness.reason}</title>
                 <circle
                     cx={cx}
                     cy={cy}
@@ -90,9 +102,12 @@ export function QuintessenceIndicator({
     return (
         <g
             data-testid="m3-wheel-quintessence"
+            data-readiness={readiness.state}
+            data-generation={tick.generation ?? 'none'}
             data-state={surface.quintessenceState}
             data-four-x={charge.fourX}
         >
+            <title>{readiness.reason}</title>
             {values.map((value, index) => {
                 const strength = value / maximum;
                 return (

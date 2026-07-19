@@ -4,24 +4,46 @@
  * Position (#n): M0 language-panel routing sub-section
  * Actualises: the selected coordinate's bussed archetype sub-table read with
  *   syntax-layer and provenance disclosure.
- * Public surface: M0ArchetypeRoutingPanel.
+ * Public surface: M0ArchetypeRoutingPanel, M0ArchetypeRoutingPanelProps.
  * Does NOT own: kernel LUT data, route derivation, profile transport, or graph reads.
  * Contract: [[M0'-SPEC]] + rerun [[21-m0-anuttara-frontend-deep]] 21.8.
  */
 
+import { useEffect, useState } from 'react';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge';
 import {
     m0ArchetypeRoutingLutLabel,
     type M0ArchetypeRoutingProjection
 } from './m0ArchetypeRouting';
+import type { M0VirtueWitnessRead } from './m0VirtueWitness';
+import { Arch3SpeechPanel } from './arch3SpeechPanel';
+import { Arch5RelationshipPanel } from './arch5RelationshipPanel';
+import { Arch7ActionPanel } from './arch7ActionPanel';
+import { Arch9CompletionPanel } from './arch9CompletionPanel';
+
+export interface M0ArchetypeRoutingPanelProps {
+    readonly projection: M0ArchetypeRoutingProjection;
+    readonly contemplationPrompt?: string | null;
+    readonly virtueWitness?: M0VirtueWitnessRead | null;
+    readonly onSeekContemplation?: () => void;
+}
 
 export function M0ArchetypeRoutingPanel({
-    projection
-}: {
-    readonly projection: M0ArchetypeRoutingProjection;
-}) {
+    projection,
+    contemplationPrompt = null,
+    virtueWitness = null,
+    onSeekContemplation = () => undefined
+}: M0ArchetypeRoutingPanelProps) {
     const lutLabel = m0ArchetypeRoutingLutLabel(projection);
     const routed = projection.routedSubTable !== 'NONE' && projection.syntaxLayer !== null;
+    const [syntaxLayerOpen, setSyntaxLayerOpen] = useState(false);
+    useEffect(() => setSyntaxLayerOpen(false), [projection.archetypeIndex]);
+    const syntaxProps = {
+        subTableRows: projection.subTableRows,
+        contemplationPrompt,
+        virtueWitness,
+        onSeekContemplation
+    };
 
     return (
         <section
@@ -57,7 +79,14 @@ export function M0ArchetypeRoutingPanel({
                         {projection.syntaxLayer}
                     </span>
                     <div className="m0-archetype-routing-links">
-                        <span>Syntax-layer reader</span>
+                        <button
+                            type="button"
+                            aria-expanded={syntaxLayerOpen}
+                            disabled={projection.subTableRows.length === 0}
+                            onClick={() => setSyntaxLayerOpen(open => !open)}
+                        >
+                            Syntax layer
+                        </button>
                         <span>Parity bridge reader</span>
                     </div>
                 </>
@@ -78,6 +107,14 @@ export function M0ArchetypeRoutingPanel({
                         ? 'Routing snapshot unavailable for this archetype.'
                         : 'No routed rows are present for this archetype.'}
                 </p>
+            ) : null}
+            {routed && syntaxLayerOpen ? (
+                <>
+                    {projection.archetypeIndex === 3 ? <Arch3SpeechPanel {...syntaxProps} /> : null}
+                    {projection.archetypeIndex === 5 ? <Arch5RelationshipPanel {...syntaxProps} /> : null}
+                    {projection.archetypeIndex === 7 ? <Arch7ActionPanel {...syntaxProps} /> : null}
+                    {projection.archetypeIndex === 9 ? <Arch9CompletionPanel {...syntaxProps} /> : null}
+                </>
             ) : null}
         </section>
     );

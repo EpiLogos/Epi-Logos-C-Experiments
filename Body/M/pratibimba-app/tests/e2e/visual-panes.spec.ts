@@ -212,6 +212,24 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
     await expect(pane).toBeVisible({ timeout: 15_000 });
     // mahamaya rides every live profile — ready, never the pending body
     await expect(pane).toHaveAttribute('data-state', 'ready', { timeout: 20_000 });
+    const inspectorReadiness = page.locator(
+        '.face-active [data-binding="m3.inspectors"]'
+    );
+    await expect(inspectorReadiness).toHaveAttribute('data-readiness', 'ready');
+    const firstGeneration = Number(
+        await inspectorReadiness.getAttribute('data-generation')
+    );
+    await expect
+        .poll(
+            async () =>
+                Number(await inspectorReadiness.getAttribute('data-generation')),
+            { timeout: 20_000 }
+        )
+        .toBeGreaterThan(firstGeneration);
+    await expect(
+        page.locator('.face-active [data-binding="m3.iching-cast"]')
+    ).toHaveAttribute('data-readiness', 'ready');
+    await expect(page.getByTestId('m3-iching-error')).toHaveCount(0);
 
     await page.getByTestId('m3-summon-third-spanda').click();
     const thirdSpanda = page.getByTestId('m3-spanda-runtime');

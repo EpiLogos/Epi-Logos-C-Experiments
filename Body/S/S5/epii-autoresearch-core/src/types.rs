@@ -46,6 +46,45 @@ pub enum ImprovementDecision {
     Discard,
 }
 
+/// Classifies the terminal mechanism observed across a verified CPT failure
+/// cluster. The values are intentionally stable because Aletheia and
+/// Mercurius consume them as structured routing input rather than log text.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum TerminalAgentMechanism {
+    EksftMaskOverfit,
+    EpistemicLeakage,
+    EvalCorpusUnderRepresented,
+    RegisterDrift,
+    OtherKnown(String),
+    Unknown(String),
+}
+
+/// The next intervention class proposed from a verified CPT failure cluster.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ActionabilityClass {
+    PromptTune,
+    MaskRetune,
+    EvalCorpusExpand,
+    TeacherSwap,
+    UserIntervention,
+}
+
+/// Verifier-grounded CPT failure evidence for the autoresearch feedback loop.
+///
+/// This remains separate from `ImprovementRun`: a signature explains why a
+/// training attempt failed, while an improvement run owns the candidate's
+/// lifecycle and promotion decision.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FailureSignature {
+    pub cluster_size: usize,
+    pub shared_trace_symptom: String,
+    pub verifier_evidence: Vec<String>,
+    pub terminal_agent_mechanism: TerminalAgentMechanism,
+    pub estimated_actionability: ActionabilityClass,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ProposeRequest {
     pub target_family: String,

@@ -54,7 +54,9 @@ function waitForPort(port: number, timeoutMs: number): Promise<void> {
 function sweepPort(port: number): void {
     let pids: string[] = [];
     try {
-        pids = execFileSync('lsof', ['-ti', `tcp:${port}`], { encoding: 'utf8' })
+        pids = execFileSync('lsof', ['-tiTCP:' + port, '-sTCP:LISTEN'], {
+            encoding: 'utf8'
+        })
             .split('\n')
             .filter(Boolean);
     } catch {
@@ -150,6 +152,13 @@ export default async function globalSetup(): Promise<void> {
     const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
     const autoresearchConfig = join(gatewayHome, '.epi-logos', 'config.toml');
     const gatewayIdentity = join(gatewayHome, '.epi-logos', 'nara', 'profile.json');
+    const gatewayKairos = join(
+        gatewayHome,
+        '.epi-logos',
+        'nara',
+        'kairos',
+        'current.json'
+    );
     mkdirSync(dirname(autoresearchConfig), { recursive: true });
     writeFileSync(
         autoresearchConfig,
@@ -175,10 +184,32 @@ export default async function globalSetup(): Promise<void> {
             kerykeion_version: null
         })
     );
+    // Seed the real persisted Kerykeion ingress consumed by
+    // nara::kairos::heartbeat_live_sky_tiered. The gateway still performs the
+    // freshness/completeness checks, live-planet derivation, F_routing, typed
+    // profile serialization, and WebSocket broadcast; the browser receives no
+    // fixture injection.
+    mkdirSync(dirname(gatewayKairos), { recursive: true });
+    writeFileSync(
+        gatewayKairos,
+        JSON.stringify({
+            planets: Array.from({ length: 10 }, (_, planetId) => ({
+                planet_id: planetId,
+                degree: (15 + planetId * 31.75) % 360,
+                degree_anchor: Math.round((15 + planetId * 31.75) % 360),
+                retrograde: planetId === 2 || planetId === 7
+            })),
+            dominant_sign: 0,
+            dominant_element: 2,
+            active_decan: 1,
+            active_tattva: 0
+        })
+    );
     const gateway = spawn(EPI_BIN, ['gate', 'start', '--port', String(E2E_GATEWAY_PORT)], {
         env: {
             ...process.env,
             HOME: gatewayHome,
+            EPI_NARA_HOME: join(gatewayHome, '.epi-logos', 'nara'),
             EPI_GATE_STATE_ROOT: gatewayStateRoot,
             EPI_GNOSTIC_PYTHON: epiGnosticBin,
             EPILOGOS_VAULT: vaultRoot,

@@ -17,7 +17,7 @@
  * Contract: [[M0'-SPEC]] + rerun [[21-m0-anuttara-frontend-deep]] 21.2.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { GraphClient } from '../bridge/graphClient';
 import { ProvenanceBadge, ProvenanceState } from '../ui/ProvenanceBadge';
@@ -27,6 +27,8 @@ import type { M0Phase } from './m0SurfaceState';
 import { M0_ASSET_KIND_FIELD, M0_ASSET_URI_FIELD, buildM0AssetHandles } from './m0AssetHandles';
 import { M0ArchetypeRoutingPanel } from './M0ArchetypeRoutingPanel';
 import { readM0ArchetypeRouting } from './m0ArchetypeRouting';
+import { contemplationFromProfile } from './m0Contemplation';
+import { readM0VirtueWitness } from './m0VirtueWitness';
 import { inkDim } from '../ui/tokens';
 
 /** The canonical language text fields — M0_LAYER_FIELDS.lang minus the asset
@@ -158,6 +160,11 @@ export function M0LanguageReaderPanel({ phase = 'implicate' }: { readonly phase?
         () => readM0ArchetypeRouting(read.status === 'ready' ? read.properties : null, cachedProfile),
         [cachedProfile, read]
     );
+    const contemplation = useMemo(() => contemplationFromProfile(cachedProfile), [cachedProfile]);
+    const virtueWitness = useMemo(() => readM0VirtueWitness(cachedProfile), [cachedProfile]);
+    const seekContemplation = useCallback(() => {
+        document.getElementById('m0-contemplation-footer')?.scrollIntoView({ block: 'nearest' });
+    }, []);
 
     if (read.status !== 'ready') {
         const reason = read.status === 'idle' ? undefined : read.reason;
@@ -219,7 +226,12 @@ export function M0LanguageReaderPanel({ phase = 'implicate' }: { readonly phase?
                     </div>
                 ))}
             </dl>
-            <M0ArchetypeRoutingPanel projection={archetypeRouting} />
+            <M0ArchetypeRoutingPanel
+                projection={archetypeRouting}
+                contemplationPrompt={contemplation.prompt}
+                virtueWitness={virtueWitness}
+                onSeekContemplation={seekContemplation}
+            />
             <div
                 className="m0-language-asset-row"
                 data-testid="m0-language-asset-row"

@@ -32,6 +32,7 @@ import {
 import type { CouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import type { AnuttaraPentadicRuntimeTrace } from '../bridge/types';
 import { ProvenanceBadge } from '../ui/primitives';
+import { M3ReadinessBoundary } from './m3SurfaceContext';
 
 /** The QCD colour analogue of the translation rule — a labelled reference
  *  face named by design-recon 7.2, not a QL-derived value. */
@@ -80,6 +81,13 @@ export function M3ThirdSpandaPanel({
     const forms = [...THIRD_SPANDA_FORMS, QCD_OCTET_SINGLET_FORM];
 
     return (
+        <M3ReadinessBoundary
+            bindingKey="m3.third-spanda"
+            fallback={{
+                state: trace ? 'ready' : 'pending',
+                reason: trace ? 'profile-current' : 'pending-anuttara-pentadic-trace'
+            }}
+        >
         <section className="mext-widget-detail" data-testid="m3-third-spanda" data-total={MATHEME_SPINE.total}>
             <h3>Third-Spanda runtime and reference registers</h3>
 
@@ -243,5 +251,6 @@ export function M3ThirdSpandaPanel({
                 </p>
             )}
         </section>
+        </M3ReadinessBoundary>
     );
 }

@@ -1,0 +1,48 @@
+{
+  "runId": "20260719T084615Z-02-T2.10",
+  "taskId": "02.T2.10",
+  "startedAt": "2026-07-19T08:46:15.569Z",
+  "owner": "codex-mdev-0210-cpt",
+  "leaseExpiresAt": "2026-07-19T10:46:15.569Z",
+  "worktree": null,
+  "task": {
+    "id": "02.T2.10",
+    "trackId": "02",
+    "tranche": "T2.10",
+    "title": "M1' CPT trainer + EKSFT loss + epistemic-blindfolded teacher + held-out canonical-derivation eval corpus *(spec-ahead-integration; the one greenfield build piece from the DiscoverAI research synthesis; depends on Tranche 12.24 Phase 2 epii-distillation skill, Tranche 12.22 slot CLI; cross-link [`m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md`](../../M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md); routes to the Phase-I DiscoverAI research roster at [`state/notebooklm-research-2026-06-15/ROSTER.md`](../../../../../../state/notebooklm-research-2026-06-15/ROSTER.md))",
+    "effort": null,
+    "file": "02-m1-paramasiva-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
+    "dependsOn": [
+      "02.T2.1"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-08T00:31:55.502Z",
+        "text": "Blocked on unmet cross-track dependencies: Tranche 12.24 (Phase-2 epii-distillation skill) and 12.22 (slot CLI) are BOTH pending in the ledger, and Track 12 is owned by Session B2 (Session A stays out per coordination). The M1' CPT-trainer greenfield cannot honestly build on unlanded distillation/slot substrate — this is a real external blocker, not deferrable work. Unblock when B2 lands 12.22 + 12.24; then verify their deliverables before building on them."
+      },
+      {
+        "at": "2026-07-18T20:46:18.875Z",
+        "text": "Reopened: declared Stream/slot dependencies 12.T12.22 and 12.T12.24 are done; the prior block is stale."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M1' instrument strata (Spanda walk navigator, Cl(4,2) inspector, klein-flip chronograph, vortex-matrix browser) in pratibimba-app engine/panes. SUBSTRATE: epi-lib m1 + portal-core spanda.rs. §2 track 02/22."
+  }
+}

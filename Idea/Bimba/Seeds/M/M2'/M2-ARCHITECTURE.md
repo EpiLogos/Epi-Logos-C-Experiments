@@ -718,6 +718,7 @@ The M2' surface is acceptance-ready when:
 16. **Composition mount-point**: M2 extension exposes `composition-mount-point` for integrated-1-2-3 plugin (Tranche 07.3 / 15.4). Verification: `grep -n "compositionMountPoint\|cymatic-mount" Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/`.
 17. **Forbidden-imports audit**: `! grep -rn "Body/S/S0\|Body/S/S2\|Body/S/S3\|@clockworklabs/spacetimedb-sdk\|neo4j-driver" Body/M/epi-theia/extensions/m2-parashakti/src/`.
 18. **Privacy test**: no protected M4 private journal payload appears in the M2' cosmic-public packet; verify `payload.bodyAllowed` for non-profile handles is `false` for protected-local data.
+19. **Third Layer-C surface** (23.T23.9): `Body/M/pratibimba-app` renders eight concentric chakra spheres from the typed `harmonicProfile.cymaticSpheres` projection. The projection carries Earth ordinal 10 as observer-centre, Sun, the canonical [[F_routing]] planetary-hour ruler, and eight backend-authored chakra/harmonic rows; malformed or unavailable projection data blocks with provenance and never falls back to the plate. Profile generation is the only update clock. Verification spans the portal-core projection test, strict schema/live-wire manifest, component behavior, and spawned-real-gateway Playwright pixels/framing on desktop and mobile. Contract-surface flag: [[S0-SPEC]] and [[S3-SPEC]] must retain this additive profile transport in their next full harmonisation.
 
 ---
 

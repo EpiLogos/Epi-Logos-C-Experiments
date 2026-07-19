@@ -45,6 +45,12 @@ export const tritoneSquareB = '#e0b45f';
 /** Klein V₄ Square C `[2+3]` Logic-Process — emerald. */
 export const tritoneSquareC = '#3fa66f';
 
+// ── Cymatic plate — M2' Chladni active-cell overlay (23.T23.4) ──────────────
+/** Cymatic 72-cell active-address stroke (gold), Klein-normal valence. */
+export const cymaticActiveCell = '#f1d06f';
+/** Cymatic active-address stroke under Klein flip (white). */
+export const cymaticActiveCellFlip = '#ffffff';
+
 // ── Family hues — graph surfaces ────────────────────────────────────────────
 /** Coordinate-family hues for graph nodes (THEIA-UI-PATTERNS §1.3 discipline;
  *  the palette is an OPEN Architect decision, DR-WC-DL-1 — named as-is). */

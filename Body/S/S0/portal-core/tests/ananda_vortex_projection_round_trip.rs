@@ -25,6 +25,20 @@ fn profile_exposes_ananda_vortex_dual_register_cell_and_round_trips_json() {
     assert_eq!(profile.ananda_vortex.cl42_signature_at_position, -1);
     assert_eq!(profile.ananda_vortex.helix_sheet, 0);
     assert!(profile.ananda_vortex.klein_flip_at_this_tick);
+    assert_eq!(profile.ananda_vortex.matrix_cells.len(), 6 * 12 * 12);
+
+    let bimba_8x8 = profile
+        .ananda_vortex
+        .matrix_cells
+        .iter()
+        .find(|candidate| {
+            candidate.family == AnandaMatrixOp::Bimba
+                && candidate.row_k == 8
+                && candidate.position_p == 8
+        })
+        .expect("the full profile projection carries the Bimba 8x8 cell");
+    assert_eq!(bimba_8x8.raw_value, Some(64));
+    assert_eq!(bimba_8x8.dr_value, Some(1));
 
     let cell = &profile.ananda_vortex.active_cell_value;
     assert_eq!(cell.family, AnandaMatrixOp::Quintessence);
@@ -39,7 +53,9 @@ fn profile_exposes_ananda_vortex_dual_register_cell_and_round_trips_json() {
     assert_eq!(cell.dr_pratibimba, 8);
     assert_eq!(cell.dr_sum, 6);
     assert_eq!(cell.dr_value, None);
-    assert_eq!(cell.rule_value.as_deref(), Some("25/26/51"));
+    // Rule face is CSV verbatim ("Rule; 0/1 != 0/1"): {DiffA, DiffB, Sum}
+    // = "-1/1/{2kp+1}" off the zero-ground (tetralemma "-1/0/1" at kp==0).
+    assert_eq!(cell.rule_value.as_deref(), Some("-1/1/51"));
 
     let json = serde_json::to_value(&profile).expect("profile serializes");
     assert_eq!(json["anandaVortex"]["activeMatrixOp"], "quintessence");
@@ -49,6 +65,10 @@ fn profile_exposes_ananda_vortex_dual_register_cell_and_round_trips_json() {
     );
     assert_eq!(json["anandaVortex"]["activeCellValue"]["rawBimba"], 25);
     assert_eq!(json["anandaVortex"]["activeCellValue"]["drPratibimba"], 8);
+    assert_eq!(
+        json["anandaVortex"]["matrixCells"].as_array().map(Vec::len),
+        Some(864)
+    );
 
     let wire = serde_json::to_string(&profile).expect("profile serializes to string");
     let decoded: MathemeHarmonicProfile =

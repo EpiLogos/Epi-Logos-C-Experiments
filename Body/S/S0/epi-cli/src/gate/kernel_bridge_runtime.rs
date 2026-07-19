@@ -42,6 +42,8 @@ pub const KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION: &str =
     "kernelBridge.m3.bioquaternionTranscription(codon)";
 pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY: &str =
     epi_s3_gateway_contract::KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD;
+pub const KERNEL_BRIDGE_M3_LENS_FIELD: &str =
+    epi_s3_gateway_contract::KERNEL_BRIDGE_M3_LENS_FIELD_METHOD;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -772,6 +774,7 @@ pub fn capability_names() -> &'static [&'static str] {
         KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE,
         KERNEL_BRIDGE_M3_BIOQUATERNION_TRANSCRIPTION,
         KERNEL_BRIDGE_M3_LENS_CODON_BINARY,
+        KERNEL_BRIDGE_M3_LENS_FIELD,
     ]
 }
 
@@ -1029,6 +1032,54 @@ pub fn typed_json_m3_lens_codon_binary(lens_id: u8) -> Result<Value, String> {
         );
     }
     Ok(value)
+}
+
+/// Typed-JSON form of `kernelBridge.m3.lensField(lensId)` — the generic
+/// lens-field dynamic: static structure + live activation for any functional
+/// lens 0..=16, plus the symbolic-system decoration where one is seated
+/// (pleroma at lens 6). `layout` applies only to the pleromatic lens.
+pub fn typed_json_m3_lens_field(
+    state: &PortalClockState,
+    lens_id: u8,
+    layout: Option<&str>,
+    akasha_epsilon: f32,
+) -> Result<Value, String> {
+    use portal_core::lens_field::{balance_quaternion, lens_field_activation, lens_field_structure};
+    use portal_core::pleroma_lens::{
+        layout_from_wire_name, pleroma_instance_packet, PleromaLayout, PLEROMA_LENS_ID,
+    };
+
+    let structure = lens_field_structure(lens_id).map_err(|error| error.to_string())?;
+    let activation = lens_field_activation(state, lens_id, akasha_epsilon)
+        .map_err(|error| error.to_string())?;
+    let symbolic_system = if lens_id == PLEROMA_LENS_ID {
+        let layout = match layout {
+            None => PleromaLayout::default(),
+            Some(name) => layout_from_wire_name(name)
+                .ok_or_else(|| format!("unknown pleroma layout {name}"))?,
+        };
+        Some(pleroma_instance_packet(layout))
+    } else {
+        if layout.is_some() {
+            return Err("layout applies only to the pleromatic lens 6".to_owned());
+        }
+        None
+    };
+    let balance = balance_quaternion(&activation.weights_total);
+
+    Ok(json!({
+        "contract": KERNEL_BRIDGE_M3_LENS_FIELD,
+        "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+        "source": KERNEL_BRIDGE_SOURCE,
+        "lensId": lens_id,
+        "structure": serde_json::to_value(&structure).map_err(|error| error.to_string())?,
+        "activation": serde_json::to_value(&activation).map_err(|error| error.to_string())?,
+        "balanceQuaternion": balance,
+        "symbolicSystem": match symbolic_system {
+            Some(packet) => serde_json::to_value(&packet).map_err(|error| error.to_string())?,
+            None => Value::Null,
+        },
+    }))
 }
 
 pub fn m1_performance_event_from_profile(
@@ -1568,6 +1619,7 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
         KERNEL_BRIDGE_M3_LENS_CODON_BINARY => {
             Ok(Some(KERNEL_BRIDGE_M3_LENS_CODON_BINARY.to_owned()))
         }
+        KERNEL_BRIDGE_M3_LENS_FIELD => Ok(Some(KERNEL_BRIDGE_M3_LENS_FIELD.to_owned())),
         _ => Err(format!(
             "kernel-bridge rejected unsupported capability {method}"
         )),

@@ -201,8 +201,32 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                 crate::nara::kairos::heartbeat_live_sky_tiered()
             {
                 projection.harmonic_profile.planet_degrees = Some(degrees);
-                projection.harmonic_profile.live_planets =
-                    Some(portal_core::live_planets_from_sky(&degrees, &retrograde));
+                let live_planets = portal_core::live_planets_from_sky(&degrees, &retrograde);
+                let routing_state = portal_core::KerykeionRoutingState {
+                    planets: std::array::from_fn(|planet_id| {
+                        portal_core::RoutingPlanetPosition {
+                            planet_id: planet_id as u8,
+                            degree: degrees[planet_id],
+                            retrograde: retrograde[planet_id],
+                        }
+                    }),
+                    planetary_hour: None,
+                    planetary_hour_ruler: None,
+                };
+                let routing_tick = portal_core::kernel_tick_from_epogdoon(
+                    projection.tick.cycle,
+                    projection.tick.sub_tick,
+                );
+                let routing_trace =
+                    portal_core::f_routing("daily-0-1-cymatic-spheres", &routing_state, routing_tick);
+                projection.harmonic_profile.cymatic_spheres =
+                    portal_core::cymatic_spheres_from_routing(
+                        &live_planets,
+                        routing_trace.planetary_hour_ruler,
+                        &projection.harmonic_profile.audio_octet,
+                        &projection.harmonic_profile.nodal_quartet,
+                    );
+                projection.harmonic_profile.live_planets = Some(live_planets);
                 // Publish which tier won (kairotic > realtime) so the carrier can
                 // show the mode and revert when a kairotic capture decays.
                 match tier {

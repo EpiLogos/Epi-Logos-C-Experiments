@@ -33,10 +33,15 @@ and the reflection/crystallisation law in [[45-bimba-map-indexing-and-dox-okf-un
 2. **The Vortex Modulae CSV is separately sanctioned spec-law.**
    `(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number
    Identities - Sheet1.csv` is the canonical 12×12 archetypal-number authority read by the kernel
-   truth suite `m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv`
-   (`Body/S/S0/portal-core/tests/kernel_truth.rs`) — the expected-RED fidelity test for
-   `m1_ananda_get` per the 00-verification-harness register §T4(e) / Track 10.10. This CSV is spec
-   authority, not seed provenance, and is exempt from the no-read rule.
+   truth suites `m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv` (GREEN since Tranche 10.10)
+   and `m1_ananda_seat_dual_base_and_rule_face_fidelity_vs_c_authority` (FR 2.1.10: seat binding,
+   dual-base sum columns, rule face) in `Body/S/S0/portal-core/tests/kernel_truth.rs`, plus the C
+   suite `test_m1_ananda.c`. The CSV's laws are fully compiled into epi-lib/portal-core — consult
+   the code authority first; the CSV remains spec authority for fidelity testing, not seed
+   provenance, and is exempt from the no-read rule. (The "8_9fold" annex rows 52-71 — grand-total
+   quartets, cumulative DR traces, 11-mirror pairs — are encoded per
+   [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §2.1b: `m1_ananda_grand_total` /
+   `m1_ananda_cumulative_dr_trace` / `m1_ananda_mirror_pair`.)
 
 ## Local Contracts
 - No `CONTRACT.md` / crate here — frozen provenance + spec CSV.

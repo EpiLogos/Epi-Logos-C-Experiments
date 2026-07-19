@@ -1,19 +1,11 @@
 /**
  * Coordinate: M' M2' (six-axis correspondence tree/chips — Tranche 23.5)
  * Residency: Body/M/pratibimba-app/src/components
- * Actualises: the correspondence-tree surface that finally SURFACES the
- *   `engine/axisViews` decoder (Tranche 03.T3.3). ONE tree over the 72-invariant
- *   (TS-16 resolution — not six trees); six axis-filter chips (MEF·QL,
- *   tattva-phase, decan-face, Shem, maqam, DET-projection) each read their OWN
- *   wire field (`AXIS_SOURCE_FIELDS`) and decode the ACTIVE address through the
- *   portal-core-verbatim `decodeAxisAt`; two sonic-overlay tabs (Mantra 100,
- *   Asma 99+1) grey the axis chips because overlays are NOT a seventh axis
- *   (DR-M2-2). Arithmetic decode parts render verbatim from the decoder;
- *   LUT-owned fields render as kernel-sourced canonical-absence (—) — there is
- *   no renderer-local correspondence table, ever.
- * Does NOT own: the axis laws / LUTs (`engine/axisViews`, epi-lib m2, portal-core
- *   f_routing), the active 72-address (the pane's live pentadic trace), the S2
- *   overlay corpus (kernel payloads via s2.parashaktiCorrespondences).
+ * Actualises: one tree over the 72-invariant, a reader-selectable intersection
+ * of six decoded axes, and the two 100-entry kernel sonic overlays.
+ * Public surface: SixAxisTree, CorrespondenceTreeProjection.
+ * Does NOT own: axis law, sonic/planet LUTs, the active address, or S2 data.
+ * Contract: [[M2'-SPEC]]; `s2.parashaktiCorrespondences.correspondenceTree`.
  */
 
 import { useState } from 'react';
@@ -42,181 +34,146 @@ const OVERLAY_LABELS: Readonly<Record<SonicOverlay, string>> = {
     asma: 'Asma'
 };
 
-/** The compact leaf glyph for an axis at one address — the axis's most
- *  identifying decoded parts (real `decodeAxisAt` arithmetic, no local table). */
-function leafGlyph(address72: number, axis: Axis72): string {
-    const decode = decodeAxisAt(address72, axis);
-    if (!decode) {
-        return '—';
-    }
-    const p = decode.parts;
-    switch (axis) {
-        case 'mef':
-            return `L${p.lens}·${p.position}`;
-        case 'tattva':
-            return `t${p.tattvaIndex}·${p.phase}`;
-        case 'decan':
-            return `d${p.decan36}·${p.face}`;
-        case 'shem':
-            return `c${p.choir}·${p.position}`;
-        case 'maqam':
-            return `m${p.index72}`;
-        case 'det':
-            return `${p.compressed64}`;
-    }
+export interface CorrespondenceTreeProjection {
+    readonly mantraOverlay?: readonly {
+        readonly index: number;
+        readonly frequencyHz: number;
+        readonly phase: string;
+        readonly element: string;
+    }[];
+    readonly asmaOverlay?: readonly {
+        readonly index: number;
+        readonly group: string;
+        readonly maskRouting: { readonly internal: boolean; readonly projective: boolean };
+    }[];
+    readonly planetaryKeying?: readonly {
+        readonly index: number;
+        readonly name: string;
+        readonly coustoHz: number;
+        readonly element: string;
+        readonly chakra: number;
+        readonly isOuter: boolean;
+    }[];
+    readonly psychoidPlanetary?: readonly {
+        readonly planetId: number;
+        readonly planet: string;
+        readonly l0PrimePosition: number;
+        readonly archetypalNumber: number;
+        readonly archetypalRole: string;
+    }[];
+}
+
+function leafGlyph(address72: number, axes: readonly Axis72[]): string {
+    return axes
+        .map(axis => {
+            const decode = decodeAxisAt(address72, axis);
+            if (!decode) return '—';
+            const p = decode.parts;
+            switch (axis) {
+                case 'mef': return `L${p.lens}·${p.position}`;
+                case 'tattva': return `t${p.tattvaIndex}·${p.phase}`;
+                case 'decan': return `d${p.decan36}·${p.face}`;
+                case 'shem': return `c${p.choir}·${p.position}`;
+                case 'maqam': return `m${p.index72}`;
+                case 'det': return `${p.compressed64}`;
+            }
+        })
+        .join(' · ');
 }
 
 export function SixAxisTree({
     address72,
-    axis: controlledAxis,
+    axes: controlledAxes,
     overlay: controlledOverlay,
-    onAxisChange,
+    correspondenceTree,
+    onAxesChange,
     onOverlayChange
 }: {
     readonly address72: number | null;
-    readonly axis?: Axis72;
+    readonly axes?: readonly Axis72[];
     readonly overlay?: SonicOverlay | null;
-    readonly onAxisChange?: (axis: Axis72) => void;
+    readonly correspondenceTree?: CorrespondenceTreeProjection | null;
+    readonly onAxesChange?: (axes: readonly Axis72[]) => void;
     readonly onOverlayChange?: (overlay: SonicOverlay | null) => void;
 }) {
-    const [uncontrolledAxis, setUncontrolledAxis] = useState<Axis72>('mef');
+    const [uncontrolledAxes, setUncontrolledAxes] = useState<readonly Axis72[]>(['mef']);
     const [uncontrolledOverlay, setUncontrolledOverlay] = useState<SonicOverlay | null>(null);
-    const axis = controlledAxis ?? uncontrolledAxis;
+    const axes = controlledAxes && controlledAxes.length > 0 ? controlledAxes : uncontrolledAxes;
     const overlay = controlledOverlay === undefined ? uncontrolledOverlay : controlledOverlay;
+    const active = address72 !== null && Number.isInteger(address72) && address72 >= 0 && address72 < AXIS_CARDINALITY
+        ? address72
+        : null;
 
     const selectAxis = (next: Axis72) => {
-        if (controlledAxis === undefined) {
-            setUncontrolledAxis(next);
-        }
-        if (controlledOverlay === undefined) {
-            setUncontrolledOverlay(null);
-        }
-        onAxisChange?.(next);
+        const nextAxes = axes.includes(next)
+            ? axes.length === 1 ? axes : axes.filter(axis => axis !== next)
+            : [...axes, next];
+        if (controlledAxes === undefined) setUncontrolledAxes(nextAxes);
+        if (controlledOverlay === undefined) setUncontrolledOverlay(null);
+        onAxesChange?.(nextAxes);
         onOverlayChange?.(null);
     };
     const selectOverlay = (next: SonicOverlay | null) => {
-        if (controlledOverlay === undefined) {
-            setUncontrolledOverlay(next);
-        }
+        if (controlledOverlay === undefined) setUncontrolledOverlay(next);
         onOverlayChange?.(next);
     };
-
-    const active =
-        address72 !== null &&
-        Number.isInteger(address72) &&
-        address72 >= 0 &&
-        address72 < AXIS_CARDINALITY
-            ? address72
-            : null;
-    const decode = active !== null && overlay === null ? decodeAxisAt(active, axis) : null;
+    const overlayEntries = overlay === 'mantra' ? correspondenceTree?.mantraOverlay : correspondenceTree?.asmaOverlay;
 
     return (
-        <div
-            className="six-axis-tree"
-            data-testid="six-axis-tree"
-            data-mode={overlay ? `overlay-${overlay}` : `axis-${axis}`}
-            data-active-address={active ?? ''}
-        >
+        <div className="six-axis-tree" data-testid="six-axis-tree" data-mode={overlay ? `overlay-${overlay}` : `axes-${axes.join('-')}`} data-active-address={active ?? ''}>
             <div className="axis-chip-row" role="tablist" aria-label="six correspondence axes">
-                {AXIS_ORDER.map(a => (
-                    <button
-                        key={a}
-                        type="button"
-                        role="tab"
-                        className="axis-chip"
-                        data-testid={`axis-chip-${a}`}
-                        data-active={overlay === null && axis === a ? 'true' : 'false'}
-                        data-greyed={overlay !== null ? 'true' : 'false'}
-                        aria-selected={overlay === null && axis === a}
-                        disabled={overlay !== null}
-                        onClick={() => selectAxis(a)}
-                    >
-                        {AXIS_LABELS[a]}
+                {AXIS_ORDER.map(axis => (
+                    <button key={axis} type="button" role="tab" className="axis-chip" data-testid={`axis-chip-${axis}`}
+                        data-active={overlay === null && axes.includes(axis) ? 'true' : 'false'} data-greyed={overlay !== null ? 'true' : 'false'}
+                        aria-selected={overlay === null && axes.includes(axis)} disabled={overlay !== null} onClick={() => selectAxis(axis)}>
+                        {AXIS_LABELS[axis]}
                     </button>
                 ))}
             </div>
-
             <div className="overlay-tab-row" role="tablist" aria-label="sonic overlays">
-                {OVERLAY_ORDER.map(o => (
-                    <button
-                        key={o}
-                        type="button"
-                        role="tab"
-                        className="overlay-tab"
-                        data-testid={`overlay-tab-${o}`}
-                        data-active={overlay === o ? 'true' : 'false'}
-                        aria-selected={overlay === o}
-                        onClick={() => selectOverlay(overlay === o ? null : o)}
-                    >
-                        {`${OVERLAY_LABELS[o]} (${OVERLAY_CARDINALITY[o]})`}
+                {OVERLAY_ORDER.map(item => (
+                    <button key={item} type="button" role="tab" className="overlay-tab" data-testid={`overlay-tab-${item}`}
+                        data-active={overlay === item ? 'true' : 'false'} aria-selected={overlay === item}
+                        onClick={() => selectOverlay(overlay === item ? null : item)}>
+                        {`${OVERLAY_LABELS[item]} (${OVERLAY_CARDINALITY[item]})`}
                     </button>
                 ))}
             </div>
-
             {overlay !== null ? (
-                <div className="axis-overlay-note" data-testid="axis-overlay-note">
-                    <span className="axis-overlay-card" data-testid="overlay-cardinality">
-                        {OVERLAY_CARDINALITY[overlay]}
-                    </span>
-                    <span className="axis-overlay-text">
-                        {OVERLAY_LABELS[overlay]} is a sonic overlay routed onto the 72-invariant —
-                        not a seventh axis (DR-M2-2); its {OVERLAY_CARDINALITY[overlay]}-corpus values
-                        route through kernel payloads, never a renderer-local table.
-                    </span>
-                </div>
-            ) : (
-                <div className="axis-view" data-testid="axis-view">
-                    <div className="axis-source" data-testid="axis-source">
-                        {AXIS_SOURCE_FIELDS[axis]}
+                <>
+                    <div className="axis-overlay-note" data-testid="axis-overlay-note">
+                        <span className="axis-overlay-card" data-testid="overlay-cardinality">{OVERLAY_CARDINALITY[overlay]}</span>
+                        <span className="axis-overlay-text">{OVERLAY_LABELS[overlay]} is a sonic overlay, not a seventh axis.</span>
                     </div>
-                    {active === null ? (
-                        <div className="pane-message">
-                            awaiting the pentadic trace — no active 72-address to decode
-                        </div>
-                    ) : decode ? (
-                        <>
-                            <div className="axis-parts" data-testid="axis-parts">
-                                {Object.entries(decode.parts).map(([key, value]) => (
-                                    <div key={key} className="axis-part">
-                                        <span className="axis-part-label">{key}</span>
-                                        <span className="axis-part-value">{String(value)}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            {decode.kernelSourced.length > 0 ? (
-                                <div className="axis-kernel" data-testid="axis-kernel-sourced">
-                                    {decode.kernelSourced.map(field => (
-                                        <div key={field} className="axis-part axis-part-kernel">
-                                            <span className="axis-part-label">{field}</span>
-                                            {/* LUT-owned — canonical-absence until the
-                                                kernel payload carries it (never fabricated). */}
-                                            <span className="axis-part-value">—</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : null}
-                        </>
-                    ) : null}
-                </div>
+                    <ol className="axis-leaves" data-testid="axis-overlay-leaves" aria-label={`${overlay} overlay leaves`}>
+                        {(overlayEntries ?? []).map(entry => (
+                            <li key={entry.index} className="axis-leaf" data-testid={`axis-overlay-leaf-${entry.index}`} data-active={active === entry.index ? 'true' : 'false'}>
+                                <span className="axis-leaf-idx">{entry.index}</span>
+                                {'phase' in entry ? <span className="axis-leaf-glyph">{entry.phase} · {entry.frequencyHz} Hz · {entry.element}</span> :
+                                    <span className="axis-leaf-glyph">{entry.group} · {entry.maskRouting.internal ? 'internal' : 'projective'}</span>}
+                            </li>
+                        ))}
+                    </ol>
+                    {!overlayEntries ? <div className="pane-message">awaiting the kernel overlay projection</div> : null}
+                </>
+            ) : (
+                <>
+                    {axes.map(axis => {
+                        const decode = active === null ? null : decodeAxisAt(active, axis);
+                        return <div className="axis-view" data-testid="axis-view" key={axis}>
+                            <div className="axis-source" data-testid="axis-source">{AXIS_SOURCE_FIELDS[axis]}</div>
+                            {active === null ? <div className="pane-message">awaiting the pentadic trace — no active 72-address to decode</div> : decode ? <>
+                                <div className="axis-parts" data-testid="axis-parts">{Object.entries(decode.parts).map(([key, value]) => <div key={key} className="axis-part"><span className="axis-part-label">{key}</span><span className="axis-part-value">{String(value)}</span></div>)}</div>
+                                {decode.kernelSourced.length > 0 ? <div className="axis-kernel" data-testid="axis-kernel-sourced">{decode.kernelSourced.map(field => <div key={field} className="axis-part axis-part-kernel"><span className="axis-part-label">{field}</span><span className="axis-part-value">—</span></div>)}</div> : null}
+                            </> : null}
+                        </div>;
+                    })}
+                    <ol className="axis-leaves" data-testid="axis-leaves" aria-label="72-address leaves">
+                        {Array.from({ length: AXIS_CARDINALITY }, (_, index) => <li key={index} className="axis-leaf" data-testid={`axis-leaf-${index}`} data-active={active === index ? 'true' : 'false'} data-address72={index}><span className="axis-leaf-idx">{index}</span><span className="axis-leaf-glyph">{leafGlyph(index, axes)}</span></li>)}
+                    </ol>
+                </>
             )}
-
-            <ol className="axis-leaves" data-testid="axis-leaves" aria-label="72-address leaves">
-                {Array.from({ length: AXIS_CARDINALITY }, (_, i) => (
-                    <li
-                        key={i}
-                        className="axis-leaf"
-                        data-testid={`axis-leaf-${i}`}
-                        data-active={active === i ? 'true' : 'false'}
-                        data-greyed={overlay !== null ? 'true' : 'false'}
-                        data-address72={i}
-                    >
-                        <span className="axis-leaf-idx">{i}</span>
-                        <span className="axis-leaf-glyph">
-                            {overlay === null ? leafGlyph(i, axis) : '·'}
-                        </span>
-                    </li>
-                ))}
-            </ol>
+            {correspondenceTree?.planetaryKeying ? <div className="planetary-keying" data-testid="planetary-keying">{correspondenceTree.planetaryKeying.map(planet => <div key={planet.index} className="planetary-key" data-testid={`planetary-key-${planet.index}`} data-outer={planet.isOuter ? 'true' : 'false'}><span>{planet.name}</span><span>{planet.coustoHz} Hz</span><span>{planet.element}</span><span>chakra {planet.chakra}</span></div>)}</div> : null}
         </div>
     );
 }

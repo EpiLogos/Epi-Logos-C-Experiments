@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { useTickStore } from '../state/stores';
 import { KernelBridgeCachedProfile } from '../bridge/types';
+import { M3ProfileTickProvider } from './m3SurfaceContext';
 
 // A real-shaped bridge profile carrying the mahamaya window that
 // buildM3InspectorsView reads: hexagramId (King Wen), upper/lower trigrams,
@@ -35,6 +36,14 @@ function profileFixture(hexagramId: number, generation: number): KernelBridgeCac
     } as unknown as KernelBridgeCachedProfile;
 }
 
+function renderBrowser() {
+    return render(
+        <M3ProfileTickProvider>
+            <M3HexagramBrowser />
+        </M3ProfileTickProvider>
+    );
+}
+
 afterEach(() => {
     cleanup();
     useTickStore.setState({ profile: null, generation: null });
@@ -42,13 +51,13 @@ afterEach(() => {
 
 describe('M3HexagramBrowser', () => {
     it('renders the pending state until the bus carries a mahamaya projection', () => {
-        render(<M3HexagramBrowser />);
+        renderBrowser();
         expect(screen.getByTestId('m3-hexagram-browser-pending').textContent).toContain('pending-mahamaya');
     });
 
     it('renders all 64 King Wen cells and lights the active hexagramId', () => {
         useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
-        render(<M3HexagramBrowser />);
+        renderBrowser();
 
         for (let kw = 1; kw <= 64; kw++) {
             expect(screen.getByTestId(`m3-hexagram-cell-${kw}`)).toBeTruthy();
@@ -60,7 +69,7 @@ describe('M3HexagramBrowser', () => {
 
     it('renders the active glyph 6 lines from the bussed trigrams and keeps non-active glyphs pending', () => {
         useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
-        render(<M3HexagramBrowser />);
+        renderBrowser();
         for (let i = 0; i < 6; i++) {
             expect(screen.getByTestId(`m3-hexagram-line-${i}`)).toBeTruthy();
         }
@@ -74,7 +83,7 @@ describe('M3HexagramBrowser', () => {
 
     it('toggles a changing line and renders the derived-hexagram resolution as honest-pending', () => {
         useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
-        render(<M3HexagramBrowser />);
+        renderBrowser();
 
         // No changing line → no derived-pending panel yet.
         expect(screen.queryByTestId('m3-hexagram-derived-pending')).toBeNull();

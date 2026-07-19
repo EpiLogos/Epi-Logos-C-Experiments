@@ -33,6 +33,7 @@ describe('live-wire projection manifest', () => {
             'quintessence',
             'contemplationPromptLut',
             'm0VoidStructureRing',
+            'anandaVortex',
             'event:m123.chime'
         ]) {
             expect(names, `manifest must declare ${required}`).toContain(required);

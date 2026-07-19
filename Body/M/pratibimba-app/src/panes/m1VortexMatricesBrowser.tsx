@@ -5,19 +5,19 @@
  *   selector that pairs with the played-torus 3D perspex cross-fade. Six-family
  *   tab strip (bimba / pratibimba / sum / diff-a / diff-b / quintessence) with the
  *   active tab following the profile-tick-driven `activeMatrixOp`; a user tab
- *   click PINS a family (view-local selection, small pin marker). A 12×12 cell
- *   grid (rows = tick12, cols = positionP incl. shadow 10-11) lights the vortex's
- *   `activeCell` with its real values and highlights the profile cell
- *   (tick12, position6) with the Cl(4,2) signature halo. A face-mode toggle
- *   (digit-root / raw) switches which face of the active cell the detail panel
- *   reads. Only the active cell rides the bus, so only it is populated — the rest
- *   of the grid is honestly empty, never back-filled from a local substrate LUT.
+ *   click PINS a family (view-local selection, small pin marker). The complete
+ *   six-family `matrixCells` kernel projection supplies every 12×12 cell
+ *   (rows = tick12, cols = positionP incl. shadow 10-11); the profile cell
+ *   (tick12, position6) carries the Cl(4,2) signature halo. A face-mode toggle
+ *   (digit-root / raw) selects the verbatim dual face. Legacy active-cell-only
+ *   frames remain explicitly pending, never back-filled from a local LUT.
  * Does NOT own: the vortex genesis (portal-core ananda_vortex.rs), any
  *   ANANDA_BIMBA / DR_RING fork (the cell values are kernel writes read verbatim),
  *   the played-torus visual (15.4 mount-point), the palette (ui/primitives.tsx).
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { AnandaVortexCellBoundary } from '../bridge/types';
 import { useM1FaceState, cl42SignatureColour } from './m1DeepFaceData';
 
 /** The six AnandaMatrixOp families in serde order (kebab-case on the wire). */
@@ -44,6 +44,14 @@ export function M1VortexMatricesBrowser() {
     const activeOp = vortex?.activeMatrixOp ?? null;
     // The displayed family follows the profile-tick op unless the user pinned one.
     const displayedOp = pinned ?? activeOp;
+
+    const matrixCells = useMemo(() => {
+        const cells = new Map<string, AnandaVortexCellBoundary>();
+        for (const candidate of vortex?.matrixCells ?? []) {
+            cells.set(`${candidate.family}:${candidate.rowK}:${candidate.positionP}`, candidate);
+        }
+        return cells;
+    }, [vortex]);
 
     if (!vortex) {
         return (
@@ -125,14 +133,12 @@ export function M1VortexMatricesBrowser() {
                 showing {displayedOp ?? 'pending'} · profile-active {activeOp ?? 'pending'}
                 {pinned ? ' · pinned (user-selection)' : ' · auto-following'}
             </div>
-            {pinned && pinned !== activeOp ? (
-                <p className="mext-widget-empty" data-testid="m1-vortex-pinned-no-cell">
-                    no live cell for the pinned family — the bus carries only the active family's
-                    cell; the pinned tab holds the selection until a flip crosses to it.
+            {vortex.matrixCells === null ? (
+                <p className="mext-widget-empty" data-testid="m1-vortex-matrix-pending">
+                    pending-complete-vortex-matrix — this legacy profile carries only its active cell.
                 </p>
             ) : null}
-            {/* 12×12 grid: only the vortex activeCell is populated (bus truth);
-                the profile cell (tick12, position6) carries the Cl(4,2) halo. */}
+            {/* Every populated cell is a kernel projection. The browser never computes a vortex face. */}
             <div
                 className="m1-vortex-grid"
                 data-testid="m1-vortex-grid"
@@ -145,12 +151,16 @@ export function M1VortexMatricesBrowser() {
                 {Array.from({ length: GRID_ROWS * GRID_COLS }, (_, index) => {
                     const rowK = Math.floor(index / GRID_COLS);
                     const positionP = index % GRID_COLS;
-                    const isActiveCell = rowK === activeRowK && positionP === activePositionP;
+                    const isActiveCell =
+                        displayedOp === activeOp && rowK === activeRowK && positionP === activePositionP;
                     const isProfileCell = rowK === face.tick12 && positionP === face.position6;
-                    const value = isActiveCell
+                    const matrixCell = displayedOp
+                        ? matrixCells.get(`${displayedOp}:${rowK}:${positionP}`) ?? null
+                        : null;
+                    const value = matrixCell
                         ? showRaw
-                            ? cell.rawValue ?? cell.rawSum
-                            : cell.drValue ?? cell.drSum
+                            ? matrixCell.rawValue ?? matrixCell.ruleValue
+                            : matrixCell.drValue
                         : null;
                     return (
                         <span
@@ -160,6 +170,7 @@ export function M1VortexMatricesBrowser() {
                             data-active-cell={isActiveCell ? 'true' : 'false'}
                             data-profile-cell={isProfileCell ? 'true' : 'false'}
                             data-shadow={positionP >= 10 ? 'true' : 'false'}
+                            data-source={matrixCell ? 'kernel-projection' : 'pending'}
                             style={
                                 isProfileCell
                                     ? { outline: `2px solid ${haloColour}` }

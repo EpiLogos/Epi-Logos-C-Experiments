@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-19T08:38:30.955Z",
+  "generatedAt": "2026-07-19T18:06:59.657Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -8,7 +8,7 @@
       "file": "00-computational-core-truth-ledger.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-computational-core-truth-ledger.md",
       "title": "The Computational-Core Truth Ledger",
-      "checksum": "06c7a56b17ddba9eabe7be0a03c7ed3feae2c7b687192c251634ee2ed901d279"
+      "checksum": "7475ae5878b5b62c226f8620890c6316716c17a473d771c713b05237576c4e9f"
     },
     {
       "id": "00",
@@ -197,7 +197,7 @@
       "file": "26-m5-epii-frontend-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
       "title": "Track 26 — M5' Epii Frontend Deep Design (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "2327d3dd262f8b4d7a7ccd59e6f7e7b28fc38c3e476b5266cf28bba11144db92"
+      "checksum": "b4df18c2172848144b7aef0fdbe087d38c2ff37d4cce705140151f1b049a0f17"
     },
     {
       "id": "27",
@@ -7172,7 +7172,7 @@
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md"
       ],
-      "body": "12. **T26.12 — `ContemplationObjectViewer` widget service inside m5-epii**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md` — Tranche 26.12 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Substrate ownership: extend the authoritative session-close path with durable PASU-scoped `ContemplationObject` persistence plus governed opaque-reference readback (`s5'.epii.runtimeContext` or `contemplate.fetch_object`) before wiring the viewer. Missing readback is implementation scope, not a blocker.\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+      "body": "12. **T26.12 — `ContemplationObjectViewer` widget service inside m5-epii**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md` — Tranche 26.12 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Substrate ownership: extend the authoritative session-close path with durable PASU-scoped `ContemplationObject` persistence plus governed opaque-reference readback (`s5'.epii.runtimeContext` or `contemplate.fetch_object`) before wiring the viewer. Active-carrier concrete route: `nara.session_close.contemplation.read`; it is loopback/PASU/exact-session confined and returns only the strict aggregate projection, never raw contemplation evidence. Missing readback is implementation scope, not a blocker.\n   Original ledger status: done — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "26.T26.13",

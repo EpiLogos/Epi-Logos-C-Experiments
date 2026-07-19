@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T08:38:30.958Z",
+  "updatedAt": "2026-07-19T18:06:59.660Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -995,9 +995,9 @@
       "blocker": null
     },
     "02.T2.10": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:18.875Z",
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T08:51:32.889Z",
+      "claimedAt": "2026-07-19T08:46:15.569Z",
       "completedAt": null,
       "evidence": [
         {
@@ -1007,13 +1007,17 @@
         {
           "at": "2026-07-18T20:46:18.875Z",
           "text": "Reopened: declared Stream/slot dependencies 12.T12.22 and 12.T12.24 are done; the prior block is stale."
+        },
+        {
+          "at": "2026-07-19T08:51:32.889Z",
+          "text": "Added the specified verifier-grounded FailureSignature contract (terminal mechanisms plus actionability classes) with a real serde round-trip test. Fresh cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml passed all owning crate tests; cargo run --manifest-path Body/S/S2/m1-cpt-trainer/Cargo.toml -- --help compiled and exposed the CPT CLI; honesty lint is clean. The tranche remains incomplete for live CPT: eval_m1_canonical_derivation.py still uses an explicit synthetic perplexity stub, and the delivered slot CLI resolves model policy but exposes no teacher invocation endpoint. No fabricated scoring or teacher execution was accepted. External review is owned by Claude per user instruction."
         }
       ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-mdev-0210-cpt",
+      "leaseExpiresAt": "2026-07-19T10:46:15.569Z",
+      "heartbeatAt": "2026-07-19T08:51:32.889Z",
+      "runId": "20260719T084615Z-02-T2.10",
       "worktree": null,
       "blocker": null
     },
@@ -1213,10 +1217,10 @@
       "blocker": null
     },
     "03.T3.7": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:19.079Z",
-      "claimedAt": "2026-07-10T12:56:09.629Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:59.632Z",
+      "claimedAt": "2026-07-19T09:00:43.176Z",
+      "completedAt": "2026-07-19T18:06:59.632Z",
       "evidence": [
         {
           "at": "2026-07-10T12:56:09.866Z",
@@ -1225,13 +1229,31 @@
         {
           "at": "2026-07-18T20:46:19.079Z",
           "text": "Reopened by the user on 2026-07-18 as part of the explicit promotion of all 21 blocked tasks."
+        },
+        {
+          "at": "2026-07-19T09:11:48.630Z",
+          "text": "Hardened the existing portal-core M2 music-tech bridge over all 72 compiled maqam modes: MPE now assigns distinct member channels and calculates quarter-tone pitch bends against the declared +/-48-semitone member range; MTS bulk dumps are 128 implicit-key 3-byte tuning values with the selected scale repeated across octaves; Scala output includes its explicit octave entry. Added portal-core/tests/music_tech_emitters.rs exercising every mode, member-channel allocation, bend range, complete Scala octave, MTS framing, root frequency, and octave repetition. Verification: cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml (full suite green; existing expected-red ignores only), cargo fmt --check, lint-test-honesty, git diff --check; GitNexus impact/detect-changes low with no affected processes. No gateway/device-I/O surface was invented: this is the owning pure emitter layer named by the tranche."
+        },
+        {
+          "at": "2026-07-19T18:06:59.632Z",
+          "text": "M2 music-tech bridge (MPE member-channel/quarter-tone bend, MTS 128-key bulk dump, Scala octave) hardened over all 72 compiled maqam modes; portal-core music_tech_emitters.rs tests + full K gate (portal-core 412, kernel-truth) verified green by a separate owner.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml (portal-core 412 PASS + kernel-truth GREEN + epi-lib/schemas/kernel-contract green via verify-tranche 03.T3.7 K gate)",
+            "exitCode": 0,
+            "testsPassed": 412,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/music_tech.rs",
+              "Body/S/S0/portal-core/tests/music_tech_emitters.rs"
+            ]
+          }
         }
       ],
-      "notes": null,
-      "owner": "opus-a-m1",
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "codex-mdev-037-music-tech",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-10T12:56:09.629Z",
-      "runId": "20260710T125609Z-03-T3.7",
+      "heartbeatAt": "2026-07-19T09:11:48.630Z",
+      "runId": "20260719T090043Z-03-T3.7",
       "worktree": null,
       "blocker": null
     },
@@ -10105,10 +10127,10 @@
       "blocker": null
     },
     "21.T21.13": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:19.742Z",
-      "claimedAt": "2026-07-16T20:32:57.663Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:31.659Z",
+      "claimedAt": "2026-07-19T09:12:57.298Z",
+      "completedAt": "2026-07-19T18:06:31.659Z",
       "evidence": [
         {
           "at": "2026-07-16T20:33:52.836Z",
@@ -10117,13 +10139,30 @@
         {
           "at": "2026-07-18T20:46:19.742Z",
           "text": "Requeued behind explicit 21.T21.8, 21.T21.9, and 21.T21.12 predecessors; 21.T21.9 is now in review with live-wire proof."
+        },
+        {
+          "at": "2026-07-19T09:23:18.353Z",
+          "text": "Implemented the active Pratibimba M0 syntax-layer reader: four lazy Arch 3/5/7/9 specialisations consume only the bussed m0_routing_lut_snapshot rows, existing contemplationPromptLut, and (Arch 9) existing anuttaraWitness; the prompt affordance scrolls to the persistent governed-review footer. No LUT, witness, prompt, gateway method, or local navigation store was added. TDD: the new lazy Arch 9 behavioral test was red before implementation and green after. Verification: pnpm typecheck; pnpm test (880 passed, 3 skipped; import-boundary green); pnpm build; lint-test-honesty; lint-carrier-tokens; git diff --check. GitNexus impact was LOW with no app processes affected; index refreshed before editing. External review is explicitly owned by Claude per user instruction; no reviewer handoff was dispatched."
+        },
+        {
+          "at": "2026-07-19T18:06:31.659Z",
+          "text": "M0' syntax-layer reader (Arch 3/5/7/9) verified: lazy sub-panels read bussed m0_routing_lut_snapshot + contemplationPromptLut + anuttaraWitness; independent full UF gate green (app-ui-flow 51).",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 21.T21.13 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 187 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "notes": "claimed with --allow-dirty over 187 dirty files. claimed with --allow-dirty over 11 dirty files.",
+      "owner": "codex-mdev-2113",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T20:32:57.663Z",
-      "runId": "20260716T203257Z-21-T21.13",
+      "heartbeatAt": "2026-07-19T09:23:18.353Z",
+      "runId": "20260719T091257Z-21-T21.13",
       "worktree": null,
       "blocker": null
     },
@@ -10585,44 +10624,98 @@
       "blocker": null
     },
     "22.T22.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:31.985Z",
+      "claimedAt": "2026-07-19T08:54:08.478Z",
+      "completedAt": "2026-07-19T18:06:31.985Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T09:00:33.585Z",
+          "text": "Implemented active Pratibimba M1 Kaprekar inspector: strict cached-profile reads of position6 and anandaVortex.activeCellValue.skeletonEvent; renders only at position6=4 or KaprekarPedagogyHit/6; ide-deep opens Idea/Bimba/Seeds/M/M1'/m1-prime-kaprekar-pedagogy.md through the carrier vault.open command; daily reference remains tooltip-only. Verification: pnpm typecheck; pnpm test (879 passed, 3 skipped); focused 14 tests; lint-test-honesty clean; lean audit clean; git diff --check clean. Source-side boundary: active portal-core/schema enum currently declares events 0..5, so this consumer is forward-compatible with the canonical KaprekarPedagogyHit=6 event but does not fabricate it."
+        },
+        {
+          "at": "2026-07-19T18:06:31.985Z",
+          "text": "M1' Kaprekar 6174 inspector verified: strict cached-profile position6/skeletonEvent reads, ide-deep vault.open; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 22.T22.7 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 3 dirty files.",
+      "owner": "codex-mdev-227-kaprekar",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T09:00:33.585Z",
+      "runId": "20260719T085408Z-22-T22.7",
       "worktree": null,
       "blocker": null
     },
     "22.T22.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:32.325Z",
+      "claimedAt": "2026-07-19T09:28:19.571Z",
+      "completedAt": "2026-07-19T18:06:32.325Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T09:41:03.069Z",
+          "text": "Carrier 22.T22.8: portal-core projects all 864 kernel-authored Ananda cells; Zod/lite parser/browser strict-read the payload; live-wire real gateway capture validates matrixCells; portal-core cargo test, schemas pnpm test/build/typecheck, pratibimba pnpm test/build/typecheck, honesty/token/import gates passed. External review is user-owned in Claude; no auto-handoff or verifier dispatch."
+        },
+        {
+          "at": "2026-07-19T18:06:32.325Z",
+          "text": "M1' Ananda 864-cell vortex browser verified: portal-core kernel projection + strict schema read, live-wire matrixCells; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 22.T22.8 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 24 dirty files.",
+      "owner": "codex-mdev-228-vortex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T09:41:03.069Z",
+      "runId": "20260719T092819Z-22-T22.8",
       "worktree": null,
       "blocker": null
     },
     "22.T22.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:32.675Z",
+      "claimedAt": "2026-07-19T09:41:17.973Z",
+      "completedAt": "2026-07-19T18:06:32.675Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T09:46:19.189Z",
+          "text": "Carrier 22.T22.9: M1 audio inspector now strictly reads profile ratioRole/ratioRoles plus nodal helix/QL metadata, supports position/Hz/ratio-role ordering, and preserves the M1-reader/M2-1'-writer boundary with Vimarsha citations. Real captured gateway profile confirmed the scalar ratio role and bimba/pratibimba QL node shape. Behavioral red-to-green mounted sort/provenance test added; pratibimba pnpm typecheck, pnpm test (145 files, 883 tests), pnpm build, import boundary gate, and git diff --check passed. External review is user-owned in Claude; no auto-handoff or verifier dispatch."
+        },
+        {
+          "at": "2026-07-19T18:06:32.675Z",
+          "text": "M1' audio inspector verified: ratioRole/nodal-helix reads, M1-reader/M2-1'-writer boundary preserved; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 22.T22.9 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 36 dirty files.",
+      "owner": "codex-mdev-229-audio",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T09:46:19.189Z",
+      "runId": "20260719T094117Z-22-T22.9",
       "worktree": null,
       "blocker": null
     },
@@ -10709,10 +10802,10 @@
       "blocker": null
     },
     "22.T22.12": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:20.580Z",
-      "claimedAt": "2026-07-16T20:50:37.278Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:33.021Z",
+      "claimedAt": "2026-07-19T09:23:24.535Z",
+      "completedAt": "2026-07-19T18:06:33.021Z",
       "evidence": [
         {
           "at": "2026-07-16T20:50:46.322Z",
@@ -10721,13 +10814,30 @@
         {
           "at": "2026-07-18T20:46:20.580Z",
           "text": "Reopened: the previously absent 28.T28.13 Backend Studio host is now done and is encoded as a dependency."
+        },
+        {
+          "at": "2026-07-19T09:26:36.142Z",
+          "text": "Added active-carrier m1BackendStudioPack as a typed, immutable, eight-anchor M1 source-navigation manifest. It validates actual epi-lib and portal-core files with clangd/rust-analyzer assignments and is explicitly gated on the existing 28.T28.13 Backend Studio owner; it adds no LSP process, source opener, editor navigation, or placeholder pane. Verification: focused manifest + M1 Coordinate Tree tests (6 passed); pnpm typecheck; pnpm test (881 passed, 3 skipped; import-boundary green); pnpm build; lint-test-honesty; lint-carrier-tokens; git diff --check. External review is owned by Claude per user instruction; no reviewer handoff was dispatched."
+        },
+        {
+          "at": "2026-07-19T18:06:33.021Z",
+          "text": "M1' Backend Studio manifest (m1BackendStudioPack) verified: 8-anchor typed source-nav gated on 28.T28.13, no LSP/opener invented; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 22.T22.12 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 187 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "notes": "claimed with --allow-dirty over 187 dirty files. claimed with --allow-dirty over 22 dirty files.",
+      "owner": "codex-mdev-2212",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T20:50:37.278Z",
-      "runId": "20260716T205037Z-22-T22.12",
+      "heartbeatAt": "2026-07-19T09:26:36.142Z",
+      "runId": "20260719T092324Z-22-T22.12",
       "worktree": null,
       "blocker": null
     },
@@ -10806,114 +10916,226 @@
       "blocker": null
     },
     "23.T23.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:33.354Z",
+      "claimedAt": "2026-07-19T09:46:58.142Z",
+      "completedAt": "2026-07-19T18:06:33.354Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T09:54:11.034Z",
+          "text": "Carrier 23.T23.2: added the mounted M2 MEF 12x7 scaffold with its 12x6 / 72-address overlay, arithmetic decoder glyphs from the existing portal-core-parity axis reader, six tritone pair arcs, profile audioOctet[0] halo source, and profile-driven Klein warm/cool inversion. The component uses no local clock, gateway call, or correspondence LUT. Behavioral component tests prove 84 scaffold cells, 72 active cells, active bus-Hz binding, arc activation, and flip-only polarity swap; M2 pane test proves it mounts on the Six Axes face. undefined\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command \"vitest\" not found focused passed 9 tests; undefined\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command \"typecheck\" not found, undefined\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command \"build\" not found, full  (146 files, 885 tests), import-boundary gate, and  passed. Existing M2 pane fixture combines shell address 17 with a third-Spanda axis view for 42; real portal-core contract asserts equality and the grid intentionally follows the actual axis payload. External review is user-owned in Claude; no auto-handoff or verifier dispatch."
+        },
+        {
+          "at": "2026-07-19T17:49:13.236Z",
+          "text": "Fresh independent UF verification passed the live 72-cell MEF carrier and the full real-gateway browser sweep.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 23.T23.2 23.T23.3 23.T23.4 24.T24.15 --owner codex-verifier-m2-m3-foundation-20260719-r8",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 51/51",
+              "app-test 910/910",
+              "live-wire PASS",
+              "gateway-methods PASS"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-19T18:06:33.354Z",
+          "text": "M2' MEF 12x7 scaffold + 72-address overlay verified: decoder glyphs, six tritone arcs, audioOctet halo, Klein flip polarity; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.2 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-mdev-232-mef",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T09:54:11.034Z",
+      "runId": "20260719T094658Z-23-T23.2",
       "worktree": null,
       "blocker": null
     },
     "23.T23.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:33.655Z",
+      "claimedAt": "2026-07-19T10:49:04.437Z",
+      "completedAt": "2026-07-19T18:06:33.655Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T11:01:44.044Z",
+          "text": "Additive s2.parashaktiCorrespondences sixSonicCards receipt from compiled M0/M2 tables plus live Shem enrichment; real WebSocket gateway test, Rust receipt contract, M2 pane Vitest, and TypeScript typecheck pass."
+        },
+        {
+          "at": "2026-07-19T18:06:33.655Z",
+          "text": "M2' six sacred-sonic cards + alchemical-tattvic surface verified: additive s2.parashaktiCorrespondences sixSonicCards + Shem enrichment; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.3 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-mdev-233-sonic-tattvic",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T11:01:44.044Z",
+      "runId": "20260719T104904Z-23-T23.3",
       "worktree": null,
       "blocker": null
     },
     "23.T23.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:33.993Z",
+      "claimedAt": "2026-07-19T11:01:55.516Z",
+      "completedAt": "2026-07-19T18:06:33.993Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T11:04:07.557Z",
+          "text": "CymaticField now consumes the hash-pinned M2 seed raster, conserved address phase, 72-cell plate overlay, kernel-returned element colour-binary, and Klein surface valence. M2 pane plus cymatic engine tests and TypeScript typecheck pass."
+        },
+        {
+          "at": "2026-07-19T18:06:33.993Z",
+          "text": "M2' CymaticChladniSurface (plate) verified: hash-pinned seed raster, 72-cell overlay, element colour-binary, Klein valence; full UF gate green. Reviewer fixed carrier-tokens raw-hex + the held-frame pixel-static defect.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.4 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 85 dirty files.",
+      "owner": "codex-mdev-234-chladni-plate",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T11:04:07.557Z",
+      "runId": "20260719T110155Z-23-T23.4",
       "worktree": null,
       "blocker": null
     },
     "23.T23.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:34.369Z",
+      "claimedAt": "2026-07-19T11:05:12.279Z",
+      "completedAt": "2026-07-19T18:06:34.369Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T11:16:08.344Z",
+          "text": "Delivered additive s2.parashaktiCorrespondences.correspondenceTree projection from compiled M2_MANTRA_LUT/M2_ASMA_LUT/M2_PLANET_LUT; SixAxisTree persists a non-empty multi-axis selection, swaps to selected 100-entry overlays, and renders all ten planet rows without a renderer LUT. Verified: pnpm vitest run src/components/SixAxisTree.test.tsx src/panes/m2SurfaceState.test.ts src/panes/M2CorrespondencePane.test.tsx (17 passed); pnpm typecheck; pnpm build; cargo test --test gate_m2_sonic_cards (real WebSocket gateway pass); cargo test --test kernel_bridge_runtime_contract s2_parashakti_correspondences_projects_six_sonic_cards_from_kernel_luts (pass); git diff --check."
+        },
+        {
+          "at": "2026-07-19T18:06:34.369Z",
+          "text": "M2' CorrespondenceTree six-axis filter + two sonic overlays verified: multi-axis persistence, 100-entry overlays, 10 planet rows; full UF gate green. Reviewer fixed stale App.test correspondenceTreeAxisFilter fixture (single to array shape).",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.5 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 85 dirty files.",
+      "owner": "codex-mdev-235-correspondence-tree",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T11:16:08.344Z",
+      "runId": "20260719T110512Z-23-T23.5",
       "worktree": null,
       "blocker": null
     },
     "23.T23.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T14:49:31.437Z",
+      "claimedAt": "2026-07-19T11:16:14.348Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-19T14:49:31.437Z",
+          "text": "Added kernel-backed psychoid projection from PSYCHOID_PLANETARY_CORRESPONDENCE[7] to the additive s2.parashaktiCorrespondences receipt; planetary face persists the vibrational/psychoid selector and renders explicit absence outside the seven-entry authority. Verified: pnpm vitest run src/panes/M2CorrespondencePane.test.tsx src/panes/m2SurfaceState.test.ts (12 passed); pnpm typecheck; cargo test --test gate_m2_sonic_cards (real WebSocket gateway pass); git diff --check."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 93 dirty files.",
+      "owner": "codex-mdev-236-planetary-switcher",
+      "leaseExpiresAt": "2026-07-19T13:16:14.348Z",
+      "heartbeatAt": "2026-07-19T14:49:31.437Z",
+      "runId": "20260719T111614Z-23-T23.6",
       "worktree": null,
       "blocker": null
     },
     "23.T23.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T15:04:06.782Z",
+      "claimedAt": "2026-07-19T15:01:57.303Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-19T14:54:12.627Z",
+          "text": "Released without implementation at the user request; leave open for a different session."
+        },
+        {
+          "at": "2026-07-19T15:04:06.782Z",
+          "text": "Recaptured shared-worktree implementation during this claim: active carrier now exposes the 72-fold bridge tab and strict SeventyTwoFoldBreadcrumb over the S0 bridge72 receipt (hexagram -> half-decan -> decan -> planet -> chakra -> body-zone, 9:8 marker, signature state). Focused proof: pnpm exec vitest run src/panes/M2CorrespondencePane.test.tsx -t '72-fold bridge' (1 passed); pnpm typecheck (pass). S0 projection observed in Body/S/S0/epi-cli/src/gate/graph.rs. Implementation arrived concurrently in the shared worktree; no auto-verifier or review handoff per user direction."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 98 dirty files. claimed with --allow-dirty over 107 dirty files.",
+      "owner": "codex-mdev-2307-next",
+      "leaseExpiresAt": "2026-07-19T17:01:57.303Z",
+      "heartbeatAt": "2026-07-19T15:04:06.782Z",
+      "runId": "20260719T150157Z-23-T23.7",
       "worktree": null,
       "blocker": null
     },
     "23.T23.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T15:11:38.609Z",
+      "claimedAt": "2026-07-19T15:08:06.794Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-19T15:11:38.609Z",
+          "text": "Rebuilt and reverified in active Body/M/pratibimba-app carrier: EpogdoonProofOverlay renders the cited 7/4 identity and live address decomposition only under the debug query or persisted M2 preference; bloom is profile-generation keyed at 0/9/18 with no local timer. Passed focused component and mounted-pane Vitest, typecheck, carrier token lint, honesty lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 111 dirty files.",
+      "owner": "codex-mdev-2308-epogdoon-proof",
+      "leaseExpiresAt": "2026-07-19T17:08:06.794Z",
+      "heartbeatAt": "2026-07-19T15:11:38.609Z",
+      "runId": "20260719T150806Z-23-T23.8",
       "worktree": null,
       "blocker": null
     },
     "23.T23.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-19T15:50:27.946Z",
+      "claimedAt": "2026-07-19T15:11:59.341Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-19T15:13:54.115Z",
+          "text": "Reverified in the active Body/M/pratibimba-app carrier: the persisted M2 spheres selection renders a named deferred-23.9 surface over the received address/tick, rather than falling back to the plate or inventing sphere geometry. Passed M2 pane Vitest (13), typecheck, carrier token lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 115 dirty files. claimed with --allow-dirty over 114 dirty files.",
+      "owner": "codex-mdev-2309-spheres-deferred",
+      "leaseExpiresAt": "2026-07-19T17:50:27.946Z",
+      "heartbeatAt": "2026-07-19T15:50:27.946Z",
+      "runId": "20260719T151159Z-23-T23.9",
       "worktree": null,
       "blocker": null
     },
@@ -10965,10 +11187,10 @@
       "blocker": null
     },
     "23.T23.11": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:20.786Z",
-      "claimedAt": "2026-07-16T15:51:35.384Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:34.796Z",
+      "claimedAt": "2026-07-19T09:54:20.757Z",
+      "completedAt": "2026-07-19T18:06:34.796Z",
       "evidence": [
         {
           "at": "2026-07-16T15:51:35.604Z",
@@ -10977,13 +11199,30 @@
         {
           "at": "2026-07-18T20:46:20.786Z",
           "text": "Reopened with the typed S2 108-decan aggregate and M3 provenance seam made implementation scope."
+        },
+        {
+          "at": "2026-07-19T10:45:31.180Z",
+          "text": "Implemented the opt-in real s2.parashaktiCorrespondences 36-primary + 36-light + conditional-36-shadow aggregate and active-carrier reveal; cargo lib (2) plus public dispatch (1), focused UI (3), typecheck, and build pass. Full pnpm test reached 885 passing and is blocked only by unrelated live-wire fixture lens-6 Zodiacal/Pleromatic drift."
+        },
+        {
+          "at": "2026-07-19T18:06:34.796Z",
+          "text": "M2' shadow-decan 36-primary+36-light+conditional-36-shadow aggregate + reveal verified: opt-in real s2 projection; full UF gate green.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.11 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files.",
-      "owner": "codex-mdev-track23-shadow-decan",
+      "owner": "codex-mdev-2311-shadow-decan",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T15:51:35.384Z",
-      "runId": "20260716T155135Z-23-T23.11",
+      "heartbeatAt": "2026-07-19T10:45:31.180Z",
+      "runId": "20260719T095420Z-23-T23.11",
       "worktree": null,
       "blocker": null
     },
@@ -11281,16 +11520,50 @@
       "blocker": null
     },
     "23.T23.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T18:06:35.224Z",
+      "claimedAt": "2026-07-19T10:30:08.218Z",
+      "completedAt": "2026-07-19T18:06:35.224Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T10:48:56.541Z",
+          "text": "Live gateway: cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_m2_cymatic_monopoly_state (1 passed); S3 parity: cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract (29 passed); UI: pnpm vitest run src/panes/M2CorrespondencePane.test.tsx (9 passed); pnpm typecheck; node .codex/scripts/gateway-method-gate.mjs (GREEN, 0 missing)."
+        },
+        {
+          "at": "2026-07-19T17:59:48.847Z",
+          "text": "The real C-backed cymatic MonoPoly route and active M2 reader passed the fresh independent UF gate, including the full spawned-gateway Chromium sweep.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 23.T23.20 --owner codex-verifier-monopoly-20260719-r9",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 51/51",
+              "app-test 910/910",
+              "live-wire PASS",
+              "gateway-methods PASS"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-19T18:06:35.224Z",
+          "text": "M2' Cymatic MonoPoly engine (Archetype-5 wave-behaviour states) verified: C-backed state, S3 dispatch parity, gateway-method-gate green; full UF gate green. Reviewer fixed the behaviour-state infinite animation breaking held-frame pixel-static.",
+          "receipt": {
+            "command": "pnpm test:e2e (app-ui-flow 51 PASS via verify-tranche 23.T23.20 full UF gate: gateway 95, live-wire, app-test 910, kernel-truth all green)",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 70 dirty files.",
+      "owner": "codex-mdev-2320-monopoly",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T10:48:56.541Z",
+      "runId": "20260719T103008Z-23-T23.20",
       "worktree": null,
       "blocker": null
     },
@@ -11576,10 +11849,10 @@
       "blocker": null
     },
     "24.T24.14": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:20.992Z",
-      "claimedAt": "2026-07-18T06:48:53.912Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T17:15:39.200Z",
+      "claimedAt": "2026-07-19T15:06:00.761Z",
+      "completedAt": "2026-07-19T17:15:39.200Z",
       "evidence": [
         {
           "at": "2026-07-18T06:49:24.096Z",
@@ -11592,27 +11865,69 @@
         {
           "at": "2026-07-18T20:46:20.992Z",
           "text": "Reopened with s5.oracle.iching.cast, persistence, contract, and expected-present ratchet made implementation scope."
+        },
+        {
+          "at": "2026-07-19T14:54:11.971Z",
+          "text": "Released without implementation at the user request; leave open for a different session."
+        },
+        {
+          "at": "2026-07-19T15:09:31.644Z",
+          "text": "Added the governed s5.oracle.iching.cast receipt route, Nara-history persistence, expected-present ratchet, and strict M3 ribbon consumer. Focused ribbon test passes (2/2) and git diff --check passes. Full carrier typecheck is presently blocked by concurrent shared M2 missing EpogdoonProofOverlay; epi-cli compilation is blocked by concurrent graph.rs moved kernel_chakra_name error, outside this tranche."
+        },
+        {
+          "at": "2026-07-19T17:15:39.200Z",
+          "text": "Governed three-coin I-Ching route, strict receipt, persistence/provenance, expected-present ratchet, and carrier ribbon verified by real gateway integration and the fresh class-scoped gate; all 51 Playwright flows pass.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 23.T23.7 24.T24.14 --owner codex-verifier-pair-20260719-r5",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 51/51 PASS",
+              "live-wire PASS",
+              "gateway-methods PASS",
+              "gateway and gateway-contract PASS",
+              "honesty-lint PASS"
+            ]
+          }
         }
       ],
-      "notes": "claimed with --allow-dirty over 83 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "notes": "claimed with --allow-dirty over 83 dirty files. claimed with --allow-dirty over 98 dirty files. claimed with --allow-dirty over 108 dirty files.",
+      "owner": "codex-mdev-2414-iching-ribbon",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-18T06:49:24.096Z",
-      "runId": "20260718T064853Z-24-T24.14",
+      "heartbeatAt": "2026-07-19T15:09:31.644Z",
+      "runId": "20260719T150600Z-24-T24.14",
       "worktree": null,
       "blocker": null
     },
     "24.T24.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T17:51:20.373Z",
+      "claimedAt": "2026-07-19T17:16:16.755Z",
+      "completedAt": "2026-07-19T17:51:20.373Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T17:51:20.373Z",
+          "text": "One shared M3 profile-tick context and per-binding inline readiness now drive every landed Wave-C widget; real Chromium observed generation advance with no local timer or error panel.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 23.T23.2 23.T23.3 23.T23.4 24.T24.15 --owner codex-verifier-m2-m3-foundation-20260719-r8",
+            "exitCode": 0,
+            "testsPassed": 51,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 51/51",
+              "app-test 910/910",
+              "M3 live generation advance",
+              "honesty-lint PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 144 dirty files.",
+      "owner": "codex-mdev-2415-profile-spine-audit",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T17:16:16.755Z",
+      "runId": "20260719T171616Z-24-T24.15",
       "worktree": null,
       "blocker": null
     },
@@ -12291,9 +12606,9 @@
       "blocker": null
     },
     "26.T26.12": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:21.447Z",
-      "claimedAt": "2026-07-16T15:51:36.261Z",
+      "status": "review",
+      "updatedAt": "2026-07-19T15:01:45.678Z",
+      "claimedAt": "2026-07-19T10:46:05.883Z",
       "completedAt": null,
       "evidence": [
         {
@@ -12303,13 +12618,21 @@
         {
           "at": "2026-07-18T20:46:21.447Z",
           "text": "Reopened with durable PASU-scoped contemplation persistence and governed opaque-ref readback made implementation scope."
+        },
+        {
+          "at": "2026-07-19T14:58:51.834Z",
+          "text": "Implemented and locally verified the active carrier ContemplationObjectViewer against the real PASU-scoped nara.session_close.contemplation.read gateway projection; targeted UI, Review-fold, typecheck, and live gateway tests are green. External review is user-owned via Claude; no Codex verifier was dispatched."
+        },
+        {
+          "at": "2026-07-19T15:01:45.678Z",
+          "text": "Implemented durable protected-local ContemplationObject aggregate projection and the loopback/PASU/exact-session nara.session_close.contemplation.read route; raw q_nara, trajectory, protein, Graphiti, constraints, recognition text, and wisdom delta are excluded. Added strict M5 carrier viewer and Review-fold mounted readback. Proof: cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_session_close_live (2 passed); cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract nara_session_open_close_round_trip (1 passed); pnpm exec vitest run src/panes/contemplationObjectViewer.test.tsx src/panes/omni/reviewBlocks.test.tsx (10 passed); pnpm typecheck; pnpm build; node .codex/scripts/lint-test-honesty.mjs; node .codex/scripts/gateway-method-gate.mjs (272 probed, 86 present, 67 ratcheted, 0 missing, GREEN). No auto-verifier or review handoff per user direction. Contract canon flags: [[S0-SPEC]], [[S3-SPEC]], [[M5'-SPEC]]."
         }
       ],
-      "notes": "claimed with --allow-dirty over 182 dirty files.",
-      "owner": "codex-mdev-track26-contemplation",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T15:51:36.261Z",
-      "runId": "20260716T155136Z-26-T26.12",
+      "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 84 dirty files.",
+      "owner": "codex-mdev-2612-contemplation",
+      "leaseExpiresAt": "2026-07-19T12:46:05.883Z",
+      "heartbeatAt": "2026-07-19T15:01:45.678Z",
+      "runId": "20260719T104605Z-26-T26.12",
       "worktree": null,
       "blocker": null
     },
@@ -17058,15 +17381,20 @@
       "blocker": null
     },
     "48.T48.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-19T08:33:00.125Z",
+      "status": "review",
+      "updatedAt": "2026-07-19T08:43:52.964Z",
       "claimedAt": "2026-07-19T08:33:00.125Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-19T08:43:52.964Z",
+          "text": "Verified the existing graph-services list_by_filter builder: 11 real contract tests pass, and app typecheck/test/build plus honesty lint are green. The tranche cannot land honestly because no active S0/S3 gateway dispatch or gateway-contract registration exposes s2.graph.list_by_filter; the current carrier correctly uses only s2.graph.query/s2'.retrieve. Implement the typed gateway method and its live receipt test before wiring the carrier. No adapter code was retained."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 144 dirty files.",
       "owner": "codex-mdev-487-data-layer",
       "leaseExpiresAt": "2026-07-19T10:33:00.125Z",
-      "heartbeatAt": "2026-07-19T08:33:00.125Z",
+      "heartbeatAt": "2026-07-19T08:43:52.964Z",
       "runId": "20260719T083300Z-48-T48.7",
       "worktree": null,
       "blocker": null
@@ -18243,18 +18571,26 @@
       "blocker": null
     },
     "38.T38.1": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-19T08:53:45.891Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-19T08:53:45.891Z",
+          "text": "Fresh carrier audit: Body/M/pratibimba-app/src/panes/TuningPane.tsx and its App registration already implement the no-modal Tuning pane over s5'.tune.{registry.list,get,set,audit.read,lock.toggle}; gateway-contract declares the full method family. The tranche cannot advance because its explicit authority gate remains unmet: 2026-07-03-cycle-3-recapture-register.md records DR-TUNE-1..4 as PROPOSED, and 2026-07-03-pratibimba-app-phase-2.md keeps tunability UI out of scope until DR-TUNE ratification. No implementation was changed."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "human",
+        "dependency": "DR-TUNE-1..4 ratification"
+      }
     },
     "02.T2.12": {
       "status": "done",
@@ -23266,31 +23602,252 @@
     {
       "runId": "20260719T083300Z-48-T48.7",
       "taskId": "48.T48.7",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-19T08:33:00.125Z",
       "owner": "codex-mdev-487-data-layer",
       "leaseExpiresAt": "2026-07-19T10:33:00.125Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-19T08:43:52.964Z"
+    },
+    {
+      "runId": "20260719T084615Z-02-T2.10",
+      "taskId": "02.T2.10",
+      "status": "review",
+      "startedAt": "2026-07-19T08:46:15.569Z",
+      "owner": "codex-mdev-0210-cpt",
+      "leaseExpiresAt": "2026-07-19T10:46:15.569Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T08:51:32.889Z"
+    },
+    {
+      "runId": "20260719T085408Z-22-T22.7",
+      "taskId": "22.T22.7",
+      "status": "review",
+      "startedAt": "2026-07-19T08:54:08.478Z",
+      "owner": "codex-mdev-227-kaprekar",
+      "leaseExpiresAt": "2026-07-19T10:54:08.478Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:00:33.585Z"
+    },
+    {
+      "runId": "20260719T090043Z-03-T3.7",
+      "taskId": "03.T3.7",
+      "status": "review",
+      "startedAt": "2026-07-19T09:00:43.176Z",
+      "owner": "codex-mdev-037-music-tech",
+      "leaseExpiresAt": "2026-07-19T11:00:43.176Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:11:48.630Z"
+    },
+    {
+      "runId": "20260719T091257Z-21-T21.13",
+      "taskId": "21.T21.13",
+      "status": "review",
+      "startedAt": "2026-07-19T09:12:57.298Z",
+      "owner": "codex-mdev-2113",
+      "leaseExpiresAt": "2026-07-19T11:12:57.298Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:23:18.353Z"
+    },
+    {
+      "runId": "20260719T092324Z-22-T22.12",
+      "taskId": "22.T22.12",
+      "status": "review",
+      "startedAt": "2026-07-19T09:23:24.535Z",
+      "owner": "codex-mdev-2212",
+      "leaseExpiresAt": "2026-07-19T11:23:24.535Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:26:36.142Z"
+    },
+    {
+      "runId": "20260719T092819Z-22-T22.8",
+      "taskId": "22.T22.8",
+      "status": "review",
+      "startedAt": "2026-07-19T09:28:19.571Z",
+      "owner": "codex-mdev-228-vortex",
+      "leaseExpiresAt": "2026-07-19T11:28:19.571Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:41:03.069Z"
+    },
+    {
+      "runId": "20260719T094117Z-22-T22.9",
+      "taskId": "22.T22.9",
+      "status": "review",
+      "startedAt": "2026-07-19T09:41:17.973Z",
+      "owner": "codex-mdev-229-audio",
+      "leaseExpiresAt": "2026-07-19T11:41:17.973Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:46:19.189Z"
+    },
+    {
+      "runId": "20260719T094658Z-23-T23.2",
+      "taskId": "23.T23.2",
+      "status": "review",
+      "startedAt": "2026-07-19T09:46:58.142Z",
+      "owner": "codex-mdev-232-mef",
+      "leaseExpiresAt": "2026-07-19T11:46:58.142Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T09:54:11.034Z"
+    },
+    {
+      "runId": "20260719T095420Z-23-T23.11",
+      "taskId": "23.T23.11",
+      "status": "review",
+      "startedAt": "2026-07-19T09:54:20.757Z",
+      "owner": "codex-mdev-2311-shadow-decan",
+      "leaseExpiresAt": "2026-07-19T11:54:20.757Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T10:45:31.180Z"
+    },
+    {
+      "runId": "20260719T103008Z-23-T23.20",
+      "taskId": "23.T23.20",
+      "status": "review",
+      "startedAt": "2026-07-19T10:30:08.218Z",
+      "owner": "codex-mdev-2320-monopoly",
+      "leaseExpiresAt": "2026-07-19T12:30:08.218Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T10:48:56.541Z"
+    },
+    {
+      "runId": "20260719T104605Z-26-T26.12",
+      "taskId": "26.T26.12",
+      "status": "review",
+      "startedAt": "2026-07-19T10:46:05.883Z",
+      "owner": "codex-mdev-2612-contemplation",
+      "leaseExpiresAt": "2026-07-19T12:46:05.883Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T14:58:51.834Z"
+    },
+    {
+      "runId": "20260719T104904Z-23-T23.3",
+      "taskId": "23.T23.3",
+      "status": "review",
+      "startedAt": "2026-07-19T10:49:04.437Z",
+      "owner": "codex-mdev-233-sonic-tattvic",
+      "leaseExpiresAt": "2026-07-19T12:49:04.437Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T11:01:44.044Z"
+    },
+    {
+      "runId": "20260719T110155Z-23-T23.4",
+      "taskId": "23.T23.4",
+      "status": "review",
+      "startedAt": "2026-07-19T11:01:55.516Z",
+      "owner": "codex-mdev-234-chladni-plate",
+      "leaseExpiresAt": "2026-07-19T13:01:55.516Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T11:04:07.557Z"
+    },
+    {
+      "runId": "20260719T110512Z-23-T23.5",
+      "taskId": "23.T23.5",
+      "status": "review",
+      "startedAt": "2026-07-19T11:05:12.279Z",
+      "owner": "codex-mdev-235-correspondence-tree",
+      "leaseExpiresAt": "2026-07-19T13:05:12.279Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T11:16:08.344Z"
+    },
+    {
+      "runId": "20260719T111614Z-23-T23.6",
+      "taskId": "23.T23.6",
+      "status": "review",
+      "startedAt": "2026-07-19T11:16:14.348Z",
+      "owner": "codex-mdev-236-planetary-switcher",
+      "leaseExpiresAt": "2026-07-19T13:16:14.348Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T14:49:31.437Z"
+    },
+    {
+      "runId": "20260719T144936Z-23-T23.7",
+      "taskId": "23.T23.7",
+      "status": "pending",
+      "startedAt": "2026-07-19T14:49:36.385Z",
+      "owner": "codex-mdev-237-bridge-inspector",
+      "leaseExpiresAt": "2026-07-19T16:49:36.385Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T14:54:12.627Z"
+    },
+    {
+      "runId": "20260719T145108Z-24-T24.14",
+      "taskId": "24.T24.14",
+      "status": "pending",
+      "startedAt": "2026-07-19T14:51:08.976Z",
+      "owner": "codex-mdev-2414-iching-ribbon",
+      "leaseExpiresAt": "2026-07-19T16:51:08.976Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T14:54:11.971Z"
+    },
+    {
+      "runId": "20260719T150157Z-23-T23.7",
+      "taskId": "23.T23.7",
+      "status": "review",
+      "startedAt": "2026-07-19T15:01:57.303Z",
+      "owner": "codex-mdev-2307-next",
+      "leaseExpiresAt": "2026-07-19T17:01:57.303Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T15:04:06.782Z"
+    },
+    {
+      "runId": "20260719T150600Z-24-T24.14",
+      "taskId": "24.T24.14",
+      "status": "review",
+      "startedAt": "2026-07-19T15:06:00.761Z",
+      "owner": "codex-mdev-2414-iching-ribbon",
+      "leaseExpiresAt": "2026-07-19T17:06:00.761Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T15:09:31.644Z"
+    },
+    {
+      "runId": "20260719T150806Z-23-T23.8",
+      "taskId": "23.T23.8",
+      "status": "review",
+      "startedAt": "2026-07-19T15:08:06.794Z",
+      "owner": "codex-mdev-2308-epogdoon-proof",
+      "leaseExpiresAt": "2026-07-19T17:08:06.794Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T15:11:38.609Z"
+    },
+    {
+      "runId": "20260719T151159Z-23-T23.9",
+      "taskId": "23.T23.9",
+      "status": "review",
+      "startedAt": "2026-07-19T15:11:59.341Z",
+      "owner": "codex-mdev-2309-spheres-deferred",
+      "leaseExpiresAt": "2026-07-19T17:11:59.341Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T15:13:54.115Z"
+    },
+    {
+      "runId": "20260719T171616Z-24-T24.15",
+      "taskId": "24.T24.15",
+      "status": "done",
+      "startedAt": "2026-07-19T17:16:16.755Z",
+      "owner": "codex-mdev-2415-profile-spine-audit",
+      "leaseExpiresAt": "2026-07-19T19:16:16.755Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T17:51:20.373Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T08:25:49.743Z",
-    "updatedAt": "2026-07-19T08:25:49.743Z",
+    "createdAt": "2026-07-19T16:05:32.486Z",
+    "updatedAt": "2026-07-19T16:05:32.486Z",
     "taskIds": [
-      "02.T2.10",
-      "03.T3.7",
       "14.T14.4",
-      "21.T21.13"
+      "24.T24.15",
+      "24.T24.16",
+      "24.T24.17"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "02.T2.10": "in-session",
-      "03.T3.7": "in-session",
       "14.T14.4": "in-session",
-      "21.T21.13": "in-session"
+      "24.T24.15": "in-session",
+      "24.T24.16": "in-session",
+      "24.T24.17": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

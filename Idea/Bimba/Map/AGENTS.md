@@ -78,7 +78,8 @@ views:
 - `[[wikilink]]` is the navigation contract: every projected coordinate is a resolvable page, so
   the `S/S'`↔`M/M'` reflective web is navigable in-repo (the point — see Track 45 §1, §6).
 - Enrichment docs in `datasets/*-deep/` (e.g. [[anuttara-language-map]],
-  [[fibonacci-60-pisano-integration]], [[Spanda_Genesis_100_Percent]]) are **canonical overrides** —
+  [[fibonacci-60-pisano-integration]], [[pleroma-30-syzygy-lens6-integration]],
+  [[Spanda_Genesis_100_Percent]]) are **canonical overrides** —
   linked as "See also", never overwritten by the projector.
 
 ## Verification

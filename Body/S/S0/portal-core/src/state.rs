@@ -125,6 +125,24 @@ pub fn update_from_cast(
         rotation_count_a: class_a.rotational_state_count(),
     };
 
+    // Bounded cast-time lens reading (Architect 2026-07-19): the sky-at-cast
+    // read through the pleromatic lens — cast-scoped record, composed law
+    // untouched, nothing rides the tick. TWIN NOTE: the epi-cli TUI twin
+    // (`portal::clock_state::update_from_cast`, its own local ClockState)
+    // does NOT yet record this reading — flagged seam, lands with the
+    // clock-state unification rather than as a half-port.
+    let epsilon = if state.akasha_balance_epsilon > 0.0 {
+        state.akasha_balance_epsilon
+    } else {
+        crate::lens_field::AKASHA_BALANCE_EPSILON_DEFAULT
+    };
+    state.last_cast_lens_reading = crate::lens_field::oracle_cast_reading(
+        state,
+        crate::pleroma_lens::PLEROMA_LENS_ID,
+        epsilon,
+    )
+    .ok();
+
     state.generation += 1;
     sync_kernel_projection(state);
 }
@@ -132,36 +150,9 @@ pub fn update_from_cast(
 /// Full kairos update: set kairos, compute transit quaternion from element distribution,
 /// and compute aspects.
 pub fn update_kairos_full(state: &mut PortalClockState, kairos: KairosState) {
-    let mut elem_counts = [0.0f32; 4];
-    let mut valid_count = 0.0f32;
-    for ps in &kairos.planets {
-        if ps.degree == 0xFFFF {
-            continue;
-        }
-        let sign = (ps.degree / 30) as usize % 12;
-        let elem = sign % 4;
-        let qi = match elem {
-            0 => 1, // Fire -> x
-            1 => 0, // Earth -> w
-            2 => 3, // Air -> z
-            3 => 2, // Water -> y
-            _ => 0,
-        };
-        elem_counts[qi] += 1.0;
-        valid_count += 1.0;
-    }
-
-    state.transit_quaternion = if valid_count > 0.0 {
-        let raw = [
-            elem_counts[0] / valid_count,
-            elem_counts[1] / valid_count,
-            elem_counts[2] / valid_count,
-            elem_counts[3] / valid_count,
-        ];
-        quat_normalize(raw)
-    } else {
-        [1.0, 0.0, 0.0, 0.0]
-    };
+    // POSITION register (the ONE law, aspect.rs): the transit pole is the
+    // sky's elemental posture — where the planets STAND, not what they are.
+    state.transit_quaternion = crate::aspect::position_transit_quaternion(&kairos);
 
     state.kairos = kairos;
     compute_aspects(state);

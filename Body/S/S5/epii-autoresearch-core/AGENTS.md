@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 
 ## Ownership
 - `src/lib.rs` — crate root / public surface (`ImprovementStore`, validators; re-exports submodules via `pub use`).
-- `src/types.rs` — core value types (improvement runs, candidates, routes, receipts).
+- `src/types.rs` — core value types (improvement runs, candidates, routes, receipts, and verifier-grounded CPT failure signatures).
 - `src/spine.rs` — recursive-spine types (candidate, meaning packet, promotion destination, surfacing pipeline).
 - `src/inbox.rs` — `InboxStore`: Rust-side consumer of Aletheia's JSONL handoff (day/session inbox seam).
 - `src/recompose.rs` — recompose pass → next-cycle compose hints (Möbius return through the seam).

@@ -33,6 +33,14 @@ pub const NODAL_ANCHOR_ROLES: [&str; 4] = [
 ];
 
 /// The seven absolute diatonic pitch classes (spec §3; diatonic.rs law).
+///
+/// Sibling-law note (FR 2.1.10): the M1-2 seat semantics
+/// (`ananda_vortex::AnandaSeatBinding`) carry the 8+4 partition of the
+/// same twelve — masculine octet / feminine quartet, M0-3 hidden formula
+/// "4/(8)/3/(4)" — which grounds the audio_octet[8]/nodal_quartet[4] bus
+/// CARDINALITY. This module's 7+5 diatonic/silent partition is a
+/// DIFFERENT cut of the twelve. Never conflate the two partitions, and
+/// never bind either to seats by pitch-class index equality.
 const DIATONIC_PITCH_CLASSES: [u8; 7] = [0, 2, 4, 5, 7, 9, 11];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]

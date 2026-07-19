@@ -9,10 +9,14 @@
  * Contract: [[M0'-SPEC]] + rerun [[21-m0-anuttara-frontend-deep]] 21.8.
  */
 
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
-import { M0ArchetypeRoutingPanel } from './M0ArchetypeRoutingPanel';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    M0ArchetypeRoutingPanel,
+    type M0ArchetypeRoutingPanelProps
+} from './M0ArchetypeRoutingPanel';
 import { readM0ArchetypeRouting } from './m0ArchetypeRouting';
+import { M0_VIRTUE_LABELS } from './m0VirtueWitness';
 
 function cachedProfile(snapshot: unknown) {
     return {
@@ -92,6 +96,60 @@ describe('M0ArchetypeRoutingPanel', () => {
         );
         expect(screen.getByText('Love/Peace')).toBeTruthy();
         expect(screen.getByText('Reality')).toBeTruthy();
+    });
+
+    it('lazily opens the completion syntax reader with source-ordered virtue rows and witness state', () => {
+        const archetypeLut = Array.from({ length: 10 }, () => [] as unknown[]);
+        const virtues = [
+            'Love/Peace',
+            'Truth',
+            'Openness/Creativity',
+            'Joy/Play',
+            'Goodness',
+            'Beauty',
+            'Life/Nature',
+            'Wisdom',
+            'Reality'
+        ];
+        archetypeLut[9] = virtues.map((label, id) => ({
+            id,
+            label,
+            symbol: null,
+            provenance: 'VIRTUE_LUT projected through m0_routing_lut_snapshot'
+        }));
+        const projection = readM0ArchetypeRouting(
+            { c_1_archetype_index: 9 },
+            cachedProfile({ archetype_lut: archetypeLut })
+        );
+        const onSeekContemplation = vi.fn();
+
+        const props: M0ArchetypeRoutingPanelProps = {
+            projection,
+            contemplationPrompt: 'What is completion asking of this reading?',
+            virtueWitness: {
+                state: 'ready',
+                generation: 41,
+                witnessBits: [true, false, true, true, false, true, true, true, false],
+                virtueLabels: M0_VIRTUE_LABELS,
+                coherenceScore: 0.72,
+                unsatisfiedConstraints: []
+            },
+            onSeekContemplation
+        };
+
+        render(<M0ArchetypeRoutingPanel {...props} />);
+
+        expect(screen.queryByTestId('m0-syntax-layer-reader')).toBeNull();
+        fireEvent.click(screen.getByRole('button', { name: 'Syntax layer' }));
+
+        const reader = screen.getByTestId('m0-syntax-layer-reader');
+        expect(reader.getAttribute('data-syntax-layer')).toBe('completion');
+        expect(
+            Array.from(screen.getByTestId('m0-syntax-layer-rows').children).map(row => row.textContent)
+        ).toEqual(virtues);
+        expect(screen.getByTestId('m0-syntax-layer-witness').getAttribute('data-witnessed')).toBe('6');
+        fireEvent.click(screen.getByRole('button', { name: 'Why this question right now?' }));
+        expect(onSeekContemplation).toHaveBeenCalledOnce();
     });
 
     it('blocks an eligible archetype when the profile has not emitted its routing snapshot', () => {

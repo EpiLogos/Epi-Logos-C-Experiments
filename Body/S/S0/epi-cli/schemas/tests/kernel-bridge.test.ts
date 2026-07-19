@@ -269,6 +269,62 @@ describe("Kernel bridge contract package", () => {
     ).toThrow();
   });
 
+  it("strictly carries the M2 spheres projection through the profile boundary", () => {
+    const planet = (planetId: number, name: string, degree: number) => ({
+      planetId,
+      name,
+      degree,
+      retrograde: false,
+      elementId: 2,
+      provenance: "M2_PLANET_LUT[10] + Kerykeion live sky",
+    });
+    const cymaticSpheres = {
+      chakras: Array.from({ length: 8 }, (_, chakraId) => ({
+        chakraId,
+        name: chakraId === 0 ? "Earth/Ground" : `chakra-${chakraId}`,
+        elementId: chakraId === 0 || chakraId > 5 ? null : chakraId % 5,
+        tattvaIndex: chakraId > 0 && chakraId < 6 ? 36 - chakraId : null,
+        meaningId: 0x0380 + chakraId,
+        harmonic: {
+          degree: 2,
+          order: 1,
+          amplitudeHz: 144 + chakraId,
+          qlPosition: chakraId % 6,
+          helix: chakraId % 2 === 0 ? "bimba" : "pratibimba",
+        },
+        provenance: "M2_CHAKRA_LUT[8] + profile audioOctet/nodalQuartet",
+      })),
+      earthObserver: {
+        ordinal: 10,
+        name: "Earth",
+        role: "observer-centre",
+        position: [0, 0, 0],
+        provenance: "EarthBodyState + DR-M2-1/DCC-03",
+      },
+      sun: planet(0, "Sun", 15),
+      activePlanet: planet(4, "Mars", 95),
+      epogdoonRatio: "9:8",
+      provenance: "portal-core::f_routing + M2 substrate projection",
+    };
+
+    const parsed = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      cymaticSpheres,
+    });
+    expect(parsed.cymaticSpheres?.chakras).toHaveLength(8);
+    expect(parsed.cymaticSpheres?.earthObserver.ordinal).toBe(10);
+    expect(parsed.cymaticSpheres?.activePlanet.name).toBe("Mars");
+    expect(() =>
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        cymaticSpheres: {
+          ...cymaticSpheres,
+          chakras: cymaticSpheres.chakras.slice(0, 7),
+        },
+      }),
+    ).toThrow();
+  });
+
   it("parses an m123 chime frame and blocks readiness on world-clock mismatch", () => {
     const modal = (baselineProfile as Record<string, any>).modalResonator;
     const frame = {
@@ -534,6 +590,7 @@ describe("Kernel bridge contract package", () => {
       "kernelBridge.m2.cymaticMonoPolyState(address72)",
       "kernelBridge.m3.bioquaternionTranscription(codon)",
       "kernelBridge.m3.lensCodonBinary(lensId)",
+      "kernelBridge.m3.lensField(lensId)",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([
       ...KERNEL_BRIDGE_CAPABILITIES,

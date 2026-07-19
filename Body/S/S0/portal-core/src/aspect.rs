@@ -25,6 +25,28 @@ pub const ASPECT_LABELS: [&str; 5] = ["conjunction", "sextile", "square", "trine
 // fifth element — it informs balance but never lands in the four-element bar.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// THE TWO ELEMENTAL REGISTERS — one system, harmonized (Architect ruling
+// 2026-07-19). Both live HERE so the law is navigable in one file:
+//
+//   NATURE register  — what each planet IS (intrinsic Mahabhuta via
+//     `PLANET_ELEMENT_ID`), Keplerian-weighted, Sun excluded (9:8), AKASHA
+//     out of the bar, aspect-amplified. Authority for the four-element BAR
+//     (`planetary_elemental_weights`, 23.19) and every lens-field aggregate.
+//   POSITION register — where each planet STANDS (the sign it occupies,
+//     `degree/30 % 4` element cycle), equal-count, all positioned bodies.
+//     Authority for the portal TRANSIT POSE (`position_transit_quaternion`),
+//     i.e. the sky's elemental posture as a quaternion.
+//
+// They interoperate but never substitute: nature weights feed magnitude
+// surfaces; position counts feed the transit pole of the composed state.
+// Both fold into the ONE canonical quaternion basis [w=EARTH, x=FIRE,
+// y=WATER, z=AIR]. The former inline copies of the position law in
+// portal-core `state.rs::update_kairos_full` and epi-cli
+// `portal/clock_state.rs::update_kairos_full` now DELEGATE here — the
+// duplicate-law drift is retired at this seam.
+// ─────────────────────────────────────────────────────────────────────────────
+
 /// Element_Id per planet, mirroring `ELEM_SIG_GET_ELEMENT(M2_PLANET_LUT[i].elem_sig)`.
 /// AKASHA=0, VAYU=1 (air), AGNI=2 (fire), APAS=3 (water), PRITHVI=4 (earth).
 pub const PLANET_ELEMENT_ID: [u8; 10] = [
@@ -46,6 +68,44 @@ pub const PLANET_KEPLERIAN_VEL: [u16; 10] = [35999, 47270, 14739, 3600, 1886, 29
 
 /// First orbiter included in the feed — Sun (0) is the excluded identity root.
 const FIRST_ORBITER: usize = 1;
+
+/// POSITION register: fold the positioned sky into the transit-pose
+/// quaternion. Every positioned body (Sun included — the pose reads the WHOLE
+/// sky, unlike the nature bar) contributes 1.0 to the element of the SIGN it
+/// occupies; counts normalize into the canonical basis [w=EARTH, x=FIRE,
+/// y=WATER, z=AIR]. Empty sky → identity rotation (honest no-pose).
+pub fn position_transit_quaternion(kairos: &crate::types::KairosState) -> [f32; 4] {
+    let mut elem_counts = [0.0f32; 4]; // [w=EARTH, x=FIRE, y=WATER, z=AIR]
+    let mut valid_count = 0.0f32;
+    for ps in &kairos.planets {
+        if ps.degree == 0xFFFF {
+            continue;
+        }
+        let sign = (ps.degree / 30) as usize % 12;
+        // Sign cycle Fire, Earth, Air, Water → canonical slots x, w, z, y.
+        let qi = match sign % 4 {
+            0 => 1, // Fire -> x
+            1 => 0, // Earth -> w
+            2 => 3, // Air -> z
+            _ => 2, // Water -> y
+        };
+        elem_counts[qi] += 1.0;
+        valid_count += 1.0;
+    }
+    if valid_count > 0.0 {
+        let raw = [
+            elem_counts[0] / valid_count,
+            elem_counts[1] / valid_count,
+            elem_counts[2] / valid_count,
+            elem_counts[3] / valid_count,
+        ];
+        let mag = raw.iter().map(|v| v * v).sum::<f32>().sqrt();
+        if mag > f32::EPSILON {
+            return [raw[0] / mag, raw[1] / mag, raw[2] / mag, raw[3] / mag];
+        }
+    }
+    [1.0, 0.0, 0.0, 0.0]
+}
 
 /// Canonical lowercase element name for an `Element_Id` (mirrors the C enum order).
 pub fn element_name(element_id: u8) -> &'static str {

@@ -7,6 +7,7 @@
 #include "../../include/m1.h"
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 /* ------------------------------------------------------------------ *
  * Minimal test harness — standalone (no test_framework.h dependency)
@@ -149,6 +150,133 @@ static void test_bounds_are_12x12(void) {
     TEST_ASSERT_EQUAL_UINT8(0, m1_ananda_get(6, 0, 0));
 }
 
+/* FR 2.1.10 — seat semantics: positions 0-9 are the archetypal numbers.
+ * Number seats skip M0-3-4 (that seat belongs to 0/1 itself): 0,1 at
+ * M0-3-2/3; 2-8 at M0-3-5..M0-3-11; 9 at M0-2-9. Position 10 = (0/1)
+ * Rosetta Stone (M0-3-4); 11 = (-) Mirror (M0-3-(0/1)). The bridge is
+ * the single M1-2<->M0-3 seam. */
+static void test_seat_bridge_binds_m0_number_dozen(void) {
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(0),  "M0-3-2"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(2),  "M0-3-5"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(8),  "M0-3-11"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(9),  "M0-2-9"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(10), "M0-3-4"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_coordinate(11), "M0-3-(0/1)"));
+    TEST_ASSERT_EQUAL_INT(ANANDA_SEAT_NUMBER,         m1_ananda_seat_kind(9));
+    TEST_ASSERT_EQUAL_INT(ANANDA_SEAT_NONDUAL_BINARY, m1_ananda_seat_kind(10));
+    TEST_ASSERT_EQUAL_INT(ANANDA_SEAT_MIRROR,         m1_ananda_seat_kind(11));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_symbol(10), "(0/1)"));
+    TEST_ASSERT_EQUAL_INT(0, strcmp(m1_ananda_seat_symbol(11), "(-)"));
+    TEST_ASSERT_EQUAL_INT(1, m1_ananda_seat_coordinate(12) == NULL);
+}
+
+/* M0-3 hidden formula "4/(8)/3/(4)": masculine 8 = zero-elements + Adam
+ * evens; feminine 4 = Eve odds {3,5,7} + Wholeness 9. Derived from the
+ * compiled ARCHETYPE_LUT polarity — the archetypal ground of the 8+4 bus. */
+static void test_bus_partition_masculine8_feminine4_from_polarity(void) {
+    int octet_n = 0, quartet_n = 0;
+    for (uint8_t p = 0; p < 12; p++) {
+        if (m1_ananda_seat_bus_role(p) == ANANDA_BUS_QUARTET) quartet_n++;
+        else octet_n++;
+    }
+    TEST_ASSERT_EQUAL_INT(8, octet_n);
+    TEST_ASSERT_EQUAL_INT(4, quartet_n);
+    for (uint8_t i = 0; i < 4; i++)
+        TEST_ASSERT_EQUAL_INT(ANANDA_BUS_QUARTET,
+                              m1_ananda_seat_bus_role(ANANDA_FEMININE_QUARTET[i]));
+    for (uint8_t i = 0; i < 8; i++)
+        TEST_ASSERT_EQUAL_INT(ANANDA_BUS_OCTET,
+                              m1_ananda_seat_bus_role(ANANDA_MASCULINE_OCTET[i]));
+}
+
+/* CSV per-row sum columns: identity row 45/66 (base 0) and 55/78 (base 1);
+ * sum family row 1 = 100/144 (the squares are literally in the CSV);
+ * DiffA -10/-12; full audit incl. Bimba grand total 66^2 = 4356. */
+static void test_dual_base_accounting_matches_csv_sum_columns(void) {
+    TEST_ASSERT_EQUAL_INT(45,  m1_ananda_row_sum(0, 1, 0));
+    TEST_ASSERT_EQUAL_INT(66,  m1_ananda_row_sum(0, 1, 1));
+    TEST_ASSERT_EQUAL_INT(55,  m1_ananda_row_sum(1, 1, 0));
+    TEST_ASSERT_EQUAL_INT(78,  m1_ananda_row_sum(1, 1, 1));
+    TEST_ASSERT_EQUAL_INT(100, m1_ananda_row_sum(2, 1, 0));
+    TEST_ASSERT_EQUAL_INT(144, m1_ananda_row_sum(2, 1, 1));
+    TEST_ASSERT_EQUAL_INT(-10, m1_ananda_row_sum(3, 4, 0));
+    TEST_ASSERT_EQUAL_INT(-12, m1_ananda_row_sum(3, 4, 1));
+    TEST_ASSERT_EQUAL_INT(1,   m1_ananda_verify_dual_base());
+}
+
+/* Rule face (family 5) CSV verbatim: tetralemma at kp==0, else
+ * {DiffA, DiffB, Sum}; corners speak: (7,9) -> 127, (11,11) -> 243. */
+static void test_rule_face_csv_verbatim_cells(void) {
+    char buf[16];
+    m1_ananda_rule_face(0, 5, 0, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "-1/0/1"));
+    m1_ananda_rule_face(1, 1, 0, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "-1/1/3"));
+    m1_ananda_rule_face(7, 9, 0, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "-1/1/127"));
+    m1_ananda_rule_face(11, 11, 0, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "-1/1/243"));
+    m1_ananda_rule_face(1, 1, 1, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "1/3"));
+    m1_ananda_rule_face(0, 7, 1, buf, sizeof buf);
+    TEST_ASSERT_EQUAL_INT(0, strcmp(buf, "0/1"));
+    TEST_ASSERT_EQUAL_INT(-1, m1_ananda_rule_face(12, 0, 0, buf, sizeof buf));
+}
+
+/* Annex accounting (CSV rows 52-71): grand-total quartets, cumulative DR
+ * traces, 11-mirror pairs — every value pinned to the CSV's own numbers. */
+static void test_annex_grand_totals_match_csv_annotations(void) {
+    /* Bimba 45²/66²; Pratibimba +100/+144; Sum family 4150/8856. */
+    TEST_ASSERT_EQUAL_INT(2025, m1_ananda_grand_total(0, 0, 0));
+    TEST_ASSERT_EQUAL_INT(4356, m1_ananda_grand_total(0, 1, 0));
+    TEST_ASSERT_EQUAL_INT(2125, m1_ananda_grand_total(1, 0, 0));
+    TEST_ASSERT_EQUAL_INT(4500, m1_ananda_grand_total(1, 1, 0));
+    TEST_ASSERT_EQUAL_INT(4150, m1_ananda_grand_total(2, 0, 0));
+    TEST_ASSERT_EQUAL_INT(8856, m1_ananda_grand_total(2, 1, 0));
+    /* Seed-row-excluded (CSV row 71): 2115/4488 and 4140/8844 — 8844 is
+     * the header's "Root of Doubling Motif" total, 8844/12 = 737 = 11*67. */
+    TEST_ASSERT_EQUAL_INT(2115, m1_ananda_grand_total(1, 0, 1));
+    TEST_ASSERT_EQUAL_INT(4488, m1_ananda_grand_total(1, 1, 1));
+    TEST_ASSERT_EQUAL_INT(4140, m1_ananda_grand_total(2, 0, 1));
+    TEST_ASSERT_EQUAL_INT(8844, m1_ananda_grand_total(2, 1, 1));
+    TEST_ASSERT_EQUAL_INT(-144, m1_ananda_grand_total(3, 1, 0));
+    TEST_ASSERT_EQUAL_INT(144,  m1_ananda_grand_total(4, 1, 0));
+}
+
+static void test_annex_cumulative_dr_traces_match_csv_columns(void) {
+    /* CSV annex trace columns, verified cell-for-cell against the sheet:
+     * Bimba fwd col37 / rev col38; Pratibimba fwd col18 / rev col19. */
+    static const uint8_t bimba_fwd[12] = {0,3,9,9,3,9,9,3,9,9,3,9};
+    static const uint8_t bimba_rev[12] = {9,9,6,9,9,6,9,9,6,9,9,6};
+    static const uint8_t prat_fwd[12]  = {3,9,9,3,9,9,3,9,9,3,9,9};
+    static const uint8_t prat_rev[12]  = {9,6,9,9,6,9,9,6,9,9,6,9};
+    uint8_t trace[12];
+    TEST_ASSERT_EQUAL_INT(1, m1_ananda_cumulative_dr_trace(0, 0, trace));
+    for (int k = 0; k < 12; k++) TEST_ASSERT_EQUAL_UINT8(bimba_fwd[k], trace[k]);
+    TEST_ASSERT_EQUAL_INT(1, m1_ananda_cumulative_dr_trace(0, 1, trace));
+    for (int k = 0; k < 12; k++) TEST_ASSERT_EQUAL_UINT8(bimba_rev[k], trace[k]);
+    TEST_ASSERT_EQUAL_INT(1, m1_ananda_cumulative_dr_trace(1, 0, trace));
+    for (int k = 0; k < 12; k++) TEST_ASSERT_EQUAL_UINT8(prat_fwd[k], trace[k]);
+    TEST_ASSERT_EQUAL_INT(1, m1_ananda_cumulative_dr_trace(1, 1, trace));
+    for (int k = 0; k < 12; k++) TEST_ASSERT_EQUAL_UINT8(prat_rev[k], trace[k]);
+}
+
+static void test_annex_11_mirror_pairs_match_csv_rows(void) {
+    /* CSV rows 54-61: (3,8),(4,7),(5,6),(6,5),(7,4),(8,3),(9,2),(1,1). */
+    static const uint8_t expected[8][2] = {
+        {3,8},{4,7},{5,6},{6,5},{7,4},{8,3},{9,2},{1,1}
+    };
+    for (uint8_t n = 3; n <= 10; n++) {
+        uint8_t dr_n = 0, comp = 0;
+        TEST_ASSERT_EQUAL_INT(1, m1_ananda_mirror_pair(n, &dr_n, &comp));
+        TEST_ASSERT_EQUAL_UINT8(expected[n - 3][0], dr_n);
+        TEST_ASSERT_EQUAL_UINT8(expected[n - 3][1], comp);
+    }
+    uint8_t a, b;
+    TEST_ASSERT_EQUAL_INT(0, m1_ananda_mirror_pair(2, &a, &b));
+    TEST_ASSERT_EQUAL_INT(0, m1_ananda_mirror_pair(11, &a, &b));
+}
+
 int main(void) {
     TEST_SUITE_BEGIN("M1 Ananda #1-2 Matrices — 12x12 Vortex Modulae");
     RUN_TEST(test_raw_face_matches_csv_closed_form_all_144_cells);
@@ -157,6 +285,13 @@ int main(void) {
     RUN_TEST(test_dr_mirror_csv_spot_checks);
     RUN_TEST(test_diff_families_dr_constants);
     RUN_TEST(test_bounds_are_12x12);
+    RUN_TEST(test_seat_bridge_binds_m0_number_dozen);
+    RUN_TEST(test_bus_partition_masculine8_feminine4_from_polarity);
+    RUN_TEST(test_dual_base_accounting_matches_csv_sum_columns);
+    RUN_TEST(test_rule_face_csv_verbatim_cells);
+    RUN_TEST(test_annex_grand_totals_match_csv_annotations);
+    RUN_TEST(test_annex_cumulative_dr_traces_match_csv_columns);
+    RUN_TEST(test_annex_11_mirror_pairs_match_csv_rows);
     TEST_SUITE_END();
     return (_suite_fail > 0) ? 1 : 0;
 }

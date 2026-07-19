@@ -8,6 +8,7 @@
 #include "m1.h"
 #include "kernel.h"  /* kernel_resonance_index — the 72-space address (T2.11) */
 #include "m3.h"      /* apply_epogdoon_compression — the 9:8 72→64 transduction (T2.11) */
+#include "m0.h"      /* ARCHETYPE_LUT / ARCHETYPE_COORDINATE_LUT — seat binding (FR 2.1.10) */
 #include "psychoid_numbers.h"
 #include <math.h>
 #include <stdio.h>
@@ -722,6 +723,146 @@ int m1_ananda_verify_axiom(void) {
         for (uint8_t j = 0; j < 12; j++)
             if ((int)m1_ananda_get(1, i, j) - (int)m1_ananda_get(0, i, j) != 1)
                 return 0;
+    return 1;
+}
+
+/* ===================================================================
+ * FR 2.1.10 — ANANDA SEAT SEMANTICS + DUAL-BASE ACCOUNTING
+ * The M0-3 number-dozen binding: matrix positions 0-9 are the
+ * archetypal numbers; 10 = (0/1) Non-Dual Binary; 11 = (-) Mirror.
+ * Coordinate/symbol/polarity delegate to the compiled m0 authority.
+ * =================================================================== */
+
+const uint8_t ANANDA_SEAT_TO_ARCHETYPE_IDX[12] =
+    { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 0 };
+
+const uint8_t ANANDA_MASCULINE_OCTET[8]  = { 0, 1, 2, 4, 6, 8, 10, 11 };
+const uint8_t ANANDA_FEMININE_QUARTET[4] = { 3, 5, 7, 9 };
+_Static_assert(sizeof(ANANDA_MASCULINE_OCTET) + sizeof(ANANDA_FEMININE_QUARTET) == 12,
+               "masculine octet + feminine quartet must partition the dozen");
+
+Ananda_Seat_Kind m1_ananda_seat_kind(uint8_t position12) {
+    if (position12 == 10u) return ANANDA_SEAT_NONDUAL_BINARY;
+    if (position12 == 11u) return ANANDA_SEAT_MIRROR;
+    return ANANDA_SEAT_NUMBER;
+}
+
+const char* m1_ananda_seat_coordinate(uint8_t position12) {
+    if (position12 >= 12u) return NULL;
+    return ARCHETYPE_COORDINATE_LUT[ANANDA_SEAT_TO_ARCHETYPE_IDX[position12]];
+}
+
+const char* m1_ananda_seat_symbol(uint8_t position12) {
+    if (position12 >= 12u) return NULL;
+    return ARCHETYPE_LUT[ANANDA_SEAT_TO_ARCHETYPE_IDX[position12]].symbol;
+}
+
+/* EVE polarity (odd archetypal numbers 3,5,7,9) -> feminine quartet;
+ * ADAM + NEUTRAL (evens + the four-fold zero) -> masculine octet.
+ * Single source: the m0 ARCHETYPE_LUT polarity field. */
+Ananda_Bus_Role m1_ananda_seat_bus_role(uint8_t position12) {
+    if (position12 >= 12u) return ANANDA_BUS_OCTET;
+    const uint8_t polarity =
+        ARCHETYPE_LUT[ANANDA_SEAT_TO_ARCHETYPE_IDX[position12]].polarity;
+    return (polarity == 1u) ? ANANDA_BUS_QUARTET : ANANDA_BUS_OCTET;
+}
+
+int16_t m1_ananda_row_sum(uint8_t matrix_idx, uint8_t row, uint8_t frame12) {
+    if (matrix_idx >= 5u || row >= 12u) return 0;
+    const uint8_t limit = frame12 ? 12u : 10u;
+    int16_t acc = 0;
+    for (uint8_t p = 0; p < limit; p++) {
+        const int16_t kp = (int16_t)((int16_t)row * (int16_t)p);
+        switch (matrix_idx) {
+            case 0: acc = (int16_t)(acc + kp);                      break;
+            case 1: acc = (int16_t)(acc + kp + 1);                  break;
+            case 2: acc = (int16_t)(acc + (int16_t)(2 * kp) + 1);   break;
+            case 3: acc = (int16_t)(acc - 1);                       break;
+            case 4: acc = (int16_t)(acc + 1);                       break;
+            default: break;
+        }
+    }
+    return acc;
+}
+
+int m1_ananda_verify_dual_base(void) {
+    int32_t bimba_total = 0, pratibimba_total = 0;
+    for (uint8_t k = 0; k < 12u; k++) {
+        const int16_t bc = m1_ananda_row_sum(0, k, 0);
+        const int16_t bf = m1_ananda_row_sum(0, k, 1);
+        if (bc != (int16_t)(ANANDA_CORE_SUM_UNSHIFTED * k)) return 0;
+        if (bf != (int16_t)(ANANDA_FRAME_SUM_UNSHIFTED * k)) return 0;
+        if (m1_ananda_row_sum(1, k, 0) != (int16_t)(bc + 10)) return 0;
+        if (m1_ananda_row_sum(1, k, 1) != (int16_t)(bf + 12)) return 0;
+        if (m1_ananda_row_sum(3, k, 0) != -10 || m1_ananda_row_sum(3, k, 1) != -12) return 0;
+        if (m1_ananda_row_sum(4, k, 0) !=  10 || m1_ananda_row_sum(4, k, 1) !=  12) return 0;
+        bimba_total      += bf;
+        pratibimba_total += m1_ananda_row_sum(1, k, 1);
+    }
+    if (bimba_total != 66 * 66) return 0;            /* 4356 = (Σk)(Σp)    */
+    if (pratibimba_total != 66 * 66 + 144) return 0; /* +1 per frame cell  */
+    if (m1_ananda_row_sum(1, 1, 0) != ANANDA_CORE_SUM_SHIFTED) return 0;
+    if (m1_ananda_row_sum(1, 1, 1) != ANANDA_FRAME_SUM_SHIFTED) return 0;
+    return 1;
+}
+
+static uint8_t ananda_digit_root_u16(uint16_t v) {
+    if (v == 0u) return 0u;
+    const uint16_t m = v % 9u;
+    return (uint8_t)(m == 0u ? 9u : m);
+}
+
+int m1_ananda_rule_face(uint8_t row, uint8_t col, int dr_face,
+                        char* buf, uint32_t buflen) {
+    if (row >= 12u || col >= 12u || buf == NULL || buflen == 0u) return -1;
+    const uint16_t kp = (uint16_t)row * (uint16_t)col;
+    if (dr_face) {
+        if (kp == 0u) return snprintf(buf, (size_t)buflen, "0/1");
+        return snprintf(buf, (size_t)buflen, "1/%u",
+                        (unsigned)ananda_digit_root_u16((uint16_t)(2u * kp + 1u)));
+    }
+    if (kp == 0u) return snprintf(buf, (size_t)buflen, "-1/0/1");
+    return snprintf(buf, (size_t)buflen, "-1/1/%u", (unsigned)(2u * kp + 1u));
+}
+
+/* ---- Annex accounting (CSV rows 52-71, "8_9fold" grids) ---- */
+
+int32_t m1_ananda_grand_total(uint8_t matrix_idx, uint8_t frame12,
+                              uint8_t exclude_seed_row) {
+    if (matrix_idx >= 5u) return 0;
+    /* The core total is the true 10×10 SQUARE (rows 0-9 × cols 0-9 —
+     * Bimba 45² = 2025); the frame total is the full 12×12 (66² = 4356). */
+    const uint8_t row_limit = frame12 ? 12u : 10u;
+    int32_t total = 0;
+    for (uint8_t k = exclude_seed_row ? 1u : 0u; k < row_limit; k++)
+        total += (int32_t)m1_ananda_row_sum(matrix_idx, k, frame12);
+    return total;
+}
+
+int m1_ananda_cumulative_dr_trace(uint8_t matrix_idx, uint8_t reverse,
+                                  uint8_t trace[12]) {
+    if (matrix_idx >= 5u || trace == NULL) return 0;
+    const int32_t grand = m1_ananda_grand_total(matrix_idx, 1u, 0u);
+    int32_t running = 0;
+    for (uint8_t k = 0; k < 12u; k++) {
+        const int32_t before = running;
+        running += (int32_t)m1_ananda_row_sum(matrix_idx, k, 1u);
+        /* forward: DR of the partial through row k;
+         * reverse: DR of the remaining total from row k inclusive. */
+        const int32_t partial = reverse ? (grand - before) : running;
+        const uint32_t mag = (uint32_t)(partial < 0 ? -partial : partial);
+        trace[k] = (mag == 0u) ? 0u
+                                : (uint8_t)((mag % 9u == 0u) ? 9u : (mag % 9u));
+    }
+    return 1;
+}
+
+int m1_ananda_mirror_pair(uint8_t n_3_to_10, uint8_t* dr_n,
+                          uint8_t* complement11) {
+    if (n_3_to_10 < 3u || n_3_to_10 > 10u || dr_n == NULL || complement11 == NULL)
+        return 0;
+    *dr_n = ananda_digit_root_u16(n_3_to_10);
+    *complement11 = (uint8_t)(11u - n_3_to_10);
     return 1;
 }
 

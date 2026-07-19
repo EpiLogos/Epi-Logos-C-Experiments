@@ -187,8 +187,13 @@ pub struct LayerMeta {
 
 // ─── Filesystem I/O ─────────────────────────────────────────────────────────
 
-/// Returns ~/.epi-logos/nara
+/// Returns the Nara state root. `EPI_NARA_HOME` is the explicit process-level
+/// isolation seam used by supervised/test gateways; ordinary CLI processes
+/// retain the canonical `~/.epi-logos/nara` default.
 pub fn nara_home() -> PathBuf {
+    if let Some(root) = std::env::var_os("EPI_NARA_HOME").filter(|root| !root.is_empty()) {
+        return PathBuf::from(root);
+    }
     dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
         .join(".epi-logos")

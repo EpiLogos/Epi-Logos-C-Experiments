@@ -1,0 +1,95 @@
+# M4 resonance / identity behavioral knobs — Track 38 unified surface drain
+# (2026-07-19 audit): formerly hardcoded consts, now schema-declared. Defaults
+# EQUAL the former consts (zero behavior change on landing). Consumption is
+# parameter-injection at boundaries; sites not yet wired are flagged per the
+# Track 38 §8 / DR-TUNE-1..4 gating (schema-complete first).
+
+[[tunable]]
+key = "m4.resonance.major_threshold"
+type = "f32"
+default = 0.6666667
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "personal_identity.rs PERSONAL_RESONANCE_MAJOR_THRESHOLD (2/3); M4-ARCH resonance law"
+[tunable.range]
+min = 0.5
+max = 0.95
+
+[[tunable]]
+key = "m4.dignity.domicile"
+type = "f32"
+default = 1.20
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "personal_identity.rs dignity ladder; M4-ARCH §2.2"
+[tunable.range]
+min = 1.0
+max = 1.5
+
+[[tunable]]
+key = "m4.dignity.exaltation"
+type = "f32"
+default = 1.10
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "personal_identity.rs dignity ladder; M4-ARCH §2.2"
+[tunable.range]
+min = 1.0
+max = 1.5
+
+[[tunable]]
+key = "m4.dignity.detriment"
+type = "f32"
+default = 0.90
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "personal_identity.rs dignity ladder; M4-ARCH §2.2"
+[tunable.range]
+min = 0.5
+max = 1.0
+
+[[tunable]]
+key = "m4.dignity.fall"
+type = "f32"
+default = 0.85
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "personal_identity.rs dignity ladder; M4-ARCH §2.2"
+[tunable.range]
+min = 0.5
+max = 1.0
+
+[[tunable]]
+key = "m4.oracle.decay_secs"
+type = "f32"
+default = 14400.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "spine.rs ORACLE_DECAY_SECS (4h fade-to-neutral); kairos.rs KAIROTIC_TTL_SECS mirror"
+[tunable.range]
+min = 600.0
+max = 86400.0

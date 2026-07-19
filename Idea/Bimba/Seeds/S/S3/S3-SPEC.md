@@ -725,6 +725,10 @@ S3/S3' serves these [[Envelope]] layers:
 6. [[Graphiti]] is architecturally S3/S3' temporal episodic memory; S5/S5' owns invocation, usage, search, governance, and reflective meaning.
 7. Session identity is a gateway authority, while session inhabitation and reasoning are S4/S4'.
 
+## Contract-Surface Flag — 23.T23.9
+
+The existing `profile.update` heartbeat now transports the optional typed `harmonicProfile.cymaticSpheres` public-current projection for [[M2-5']]. The [[S3]] membrane does not compute chakra identities or planetary correspondence: it samples a fresh complete [[Kerykeion]] sky, invokes canonical [[F_routing]] through [[S0]], and carries the resulting Earth/Sun/active-ruler plus eight-row projection on the existing profile-generation clock. Absence is meaningful and must remain absent on stale, partial, or malformed provenance. No RPC method or gateway method-registry entry was added. The next full S3 parity harmonisation must include strict schema/live-wire coverage for this additive event field.
+
 ## Canonical Source Lock - 2026-06-02
 
 S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairos projections, SpaceTimeDB subscription law, and Graphiti runtime boundary. Product RPC names may remain live, but coordinate ownership is canonical here and in [[ARCHITECTURE-DIAGRAM-PACK]].

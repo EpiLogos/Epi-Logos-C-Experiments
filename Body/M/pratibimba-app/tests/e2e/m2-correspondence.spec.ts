@@ -121,3 +121,146 @@ test('M2 epogdoon bridge: the real C projection renders the complete 72-to-64-to
     await expect(activeCell).toHaveAttribute('data-compressed-codon', /\d+/);
     await expect(bridge.getByTestId('m2-epogdoon-inspector')).toContainText('kernelBridge.m2.epogdoonProjection(address72)');
 });
+
+async function canvasPixelInventory(
+    page: Page,
+    image: Buffer
+): Promise<{ nonBlackRatio: number; colourBuckets: number }> {
+    return page.evaluate(async base64 => {
+        const source = await new Promise<HTMLImageElement>((resolve, reject) => {
+            const element = new Image();
+            element.onload = () => resolve(element);
+            element.onerror = reject;
+            element.src = `data:image/png;base64,${base64}`;
+        });
+        const canvas = document.createElement('canvas');
+        canvas.width = source.width;
+        canvas.height = source.height;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        if (!context) {
+            return { nonBlackRatio: 0, colourBuckets: 0 };
+        }
+        context.drawImage(source, 0, 0);
+        const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        let nonBlack = 0;
+        const buckets = new Set<number>();
+        for (let offset = 0; offset < data.length; offset += 16) {
+            const red = data[offset] ?? 0;
+            const green = data[offset + 1] ?? 0;
+            const blue = data[offset + 2] ?? 0;
+            if (red + green + blue > 24) {
+                nonBlack += 1;
+            }
+            buckets.add(
+                (Math.floor(red / 32) << 6) |
+                    (Math.floor(green / 32) << 3) |
+                    Math.floor(blue / 32)
+            );
+        }
+        const sampled = Math.ceil(data.length / 16);
+        return {
+            nonBlackRatio: nonBlack / sampled,
+            colourBuckets: buckets.size
+        };
+    }, image.toString('base64'));
+}
+
+test('23.T23.9: real profile generation drives the eight-sphere solar anchor on desktop and mobile', async ({
+    page
+}) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+    await switchToCosmicFace(page);
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: 'Correspondence' })
+        .click();
+    await page.getByTestId('corr-nav-cymatic').click();
+    await page.getByTestId('cymatic-variant-spheres').click();
+
+    const surface = page.getByTestId('cymatic-spheres');
+    await expect(surface).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
+    await expect(surface.getByTestId('cymatic-chakra-sphere')).toHaveCount(8);
+    await expect(surface).toHaveAttribute(
+        'data-provenance',
+        'portal-core::f_routing + M2 substrate projection'
+    );
+    await expect(surface).toHaveAttribute('data-active-planet-id', /^[0-6]$/);
+    await expect(surface).toContainText('active planetary hour');
+
+    const canvas = surface.getByTestId('cymatic-spheres-canvas').locator('canvas');
+    await expect(canvas).toBeVisible();
+    const desktopBox = await canvas.boundingBox();
+    expect(desktopBox?.width ?? 0).toBeGreaterThan(300);
+    expect(desktopBox?.height ?? 0).toBeGreaterThan(300);
+    const desktopPixels = await canvasPixelInventory(page, await canvas.screenshot());
+    expect(desktopPixels.nonBlackRatio).toBeGreaterThan(0.08);
+    expect(desktopPixels.colourBuckets).toBeGreaterThan(8);
+
+    const firstGeneration = Number(await surface.getAttribute('data-generation'));
+    await expect
+        .poll(
+            async () => Number(await surface.getAttribute('data-generation')),
+            { timeout: 15_000 }
+        )
+        .toBeGreaterThan(firstGeneration);
+    await expect(surface).toHaveAttribute('data-state', 'ready');
+
+    for (const viewport of [
+        { width: 1280, height: 800 },
+        { width: 390, height: 844 }
+    ]) {
+        await page.setViewportSize(viewport);
+        await expect(surface).toBeVisible();
+        const layout = await surface.evaluate(root => {
+            const scene = root.querySelector<HTMLElement>(
+                '[data-testid="cymatic-spheres-canvas"]'
+            );
+            const readout = root.querySelector<HTMLElement>(
+                '.m2-cymatic-spheres-readout'
+            );
+            const rootBox = root.getBoundingClientRect();
+            const sceneBox = scene?.getBoundingClientRect();
+            const readoutBox = readout?.getBoundingClientRect();
+            return {
+                root: {
+                    left: rootBox.left,
+                    right: rootBox.right,
+                    width: rootBox.width,
+                    scrollWidth: root.scrollWidth
+                },
+                scene: sceneBox
+                    ? {
+                          left: sceneBox.left,
+                          right: sceneBox.right,
+                          top: sceneBox.top,
+                          bottom: sceneBox.bottom
+                      }
+                    : null,
+                readout: readoutBox
+                    ? {
+                          left: readoutBox.left,
+                          right: readoutBox.right,
+                          top: readoutBox.top,
+                          bottom: readoutBox.bottom
+                      }
+                    : null
+            };
+        });
+        expect(layout.root.left).toBeGreaterThanOrEqual(-1);
+        expect(layout.root.right).toBeLessThanOrEqual(viewport.width + 1);
+        expect(layout.root.scrollWidth).toBeLessThanOrEqual(
+            Math.ceil(layout.root.width) + 1
+        );
+        expect(layout.scene).not.toBeNull();
+        expect(layout.readout).not.toBeNull();
+        if (viewport.width <= 720) {
+            expect(layout.scene!.bottom).toBeLessThanOrEqual(layout.readout!.top + 1);
+        } else {
+            expect(layout.scene!.right).toBeLessThanOrEqual(layout.readout!.left + 1);
+        }
+        const pixels = await canvasPixelInventory(page, await canvas.screenshot());
+        expect(pixels.nonBlackRatio).toBeGreaterThan(0.08);
+        expect(pixels.colourBuckets).toBeGreaterThan(8);
+    }
+});

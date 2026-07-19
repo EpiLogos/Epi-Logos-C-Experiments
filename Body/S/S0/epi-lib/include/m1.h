@@ -150,6 +150,119 @@ int m1_ananda_verify_axiom(void);
 
 
 /* ===================================================================
+ * FR 2.1.10: ANANDA SEAT SEMANTICS — the [[M0-3]] number-dozen binding
+ *
+ * The 12 matrix positions ARE the M0-3 archetypal number language's
+ * substance-dozen. Positions 0-9 carry the archetypal numbers 0-9;
+ * the two frame positions carry the two meta-elements added to the
+ * digits (M0-3 q_1/q_3; Vortex Modulae CSV "Position 0-9 | 10,11"):
+ *   position 10 = (0/1) Non-Dual Binary — Rosetta Stone   (M0-3-4)
+ *   position 11 = (-)   Mirror / Vimarsa apparatus        (M0-3-(0/1))
+ * Matrix order is positional (digits first, meta-elements last); the
+ * m0 ARCHETYPE_LUT order is genealogical ((-) and (0/1) at slots 0-1).
+ * The bridge below is the single seam between the two orderings —
+ * consumers read THIS authority, never a local copy.
+ * =================================================================== */
+
+typedef enum {
+    ANANDA_SEAT_NUMBER         = 0,  /* archetypal number 0-9 (positions 0-9) */
+    ANANDA_SEAT_NONDUAL_BINARY = 1,  /* (0/1) Rosetta Stone   (position 10)   */
+    ANANDA_SEAT_MIRROR         = 2   /* (-)  Mirror / Vimarsa (position 11)   */
+} Ananda_Seat_Kind;
+
+/* Matrix position (0-11) -> m0 ARCHETYPE_LUT slot:
+ * {2..11, 1, 0} — digits 0-9 -> slots 2-11; (0/1) -> 1; (-) -> 0. */
+extern const uint8_t ANANDA_SEAT_TO_ARCHETYPE_IDX[12];
+
+Ananda_Seat_Kind m1_ananda_seat_kind(uint8_t position12);
+
+/* Canonical Bimba coordinate of the seat (delegates to the compiled m0
+ * ARCHETYPE_COORDINATE_LUT — pos 0 -> "M0-3-2", pos 9 -> "M0-2-9",
+ * pos 10 -> "M0-3-4", pos 11 -> "M0-3-(0/1)"). NULL if position12 > 11. */
+const char* m1_ananda_seat_coordinate(uint8_t position12);
+
+/* Short mathematical symbol of the seat ("0".."9", "(0/1)", "(-)"). */
+const char* m1_ananda_seat_symbol(uint8_t position12);
+
+/* ---- 8+4 bus partition (M0-3 hidden formula "4/(8)/3/(4)"):
+ * masculine (8) = 4 zero-elements {0,1,(0/1),(-)} + 4 Adam evens {2,4,6,8}
+ * feminine  (4) = 3 Eve odds {3,5,7} + Wholeness {9}
+ * Derived from ARCHETYPE_LUT polarity (EVE -> quartet; ADAM|NEUTRAL ->
+ * octet). This is the archetypal ground of the M2-1' 8+4 bus CARDINALITY
+ * (audio_octet[8] motion carriers / nodal_quartet[4] stillness anchors);
+ * binding is by cardinality+role — no pitch-class index equality is
+ * implied (the 7+5 diatonic/silent partition is a sibling, distinct law). */
+typedef enum { ANANDA_BUS_OCTET = 0, ANANDA_BUS_QUARTET = 1 } Ananda_Bus_Role;
+extern const uint8_t ANANDA_MASCULINE_OCTET[8];    /* {0,1,2,4,6,8,10,11} */
+extern const uint8_t ANANDA_FEMININE_QUARTET[4];   /* {3,5,7,9}           */
+Ananda_Bus_Role m1_ananda_seat_bus_role(uint8_t position12);
+
+/* ---- Dual-base accounting (the +1-base law; CSV per-row sum columns).
+ * Every row is accounted twice: core (positions 0-9, the digit decad)
+ * and frame (positions 0-11, decad + the two meta-elements).
+ * Unshifted identity row sums T9=45 / T11=66; shifted (+1) row sums
+ * T10=55 / T12=78. Consecutive-triangular closure: the 0-based and
+ * 1-based readings of one row fuse into the core and frame squares. */
+#define ANANDA_CORE_SUM_UNSHIFTED   45   /* T9  — identity row, base 0 */
+#define ANANDA_CORE_SUM_SHIFTED     55   /* T10 — identity row, base 1 */
+#define ANANDA_FRAME_SUM_UNSHIFTED  66   /* T11 */
+#define ANANDA_FRAME_SUM_SHIFTED    78   /* T12 */
+_Static_assert(ANANDA_CORE_SUM_UNSHIFTED + ANANDA_CORE_SUM_SHIFTED == 10 * 10,
+               "T9+T10 must fuse to the 10x10 core square");
+_Static_assert(ANANDA_FRAME_SUM_UNSHIFTED + ANANDA_FRAME_SUM_SHIFTED == 12 * 12,
+               "T11+T12 must fuse to the 12x12 frame square");
+
+/* RAW-face row sum over the core (frame12=0: cols 0-9) or the frame
+ * (frame12=1: cols 0-11). Scalar families 0-4 only (family 3 sums are
+ * negative; family 5 is a rule face and returns 0). */
+int16_t m1_ananda_row_sum(uint8_t matrix_idx, uint8_t row, uint8_t frame12);
+
+/* Full dual-base audit: per-row sums (45k/66k Bimba; +10/+12 Pratibimba;
+ * -10/-12 DiffA; +10/+12 DiffB), grand totals (Bimba = 66^2 = 4356,
+ * Pratibimba = 4500). Returns 1 when every identity holds. */
+int m1_ananda_verify_dual_base(void);
+
+/* ---- Rule face (family 5), CSV verbatim ("Rule; 0/1 != 0/1"):
+ * RAW: kp == 0 -> "-1/0/1" (tetralemmic seed cell)
+ *      kp != 0 -> "-1/1/{2kp+1}"  ({DiffA, DiffB, Sum} of the cell)
+ * DR:  kp == 0 -> "0/1", else "1/{dr(2kp+1)}".
+ * Returns chars written (snprintf semantics), or -1 on bad args. */
+int m1_ananda_rule_face(uint8_t row, uint8_t col, int dr_face,
+                        char* buf, uint32_t buflen);
+
+/* ---- DIFF faces, named by register (do not conflate):
+ * raw = -1 / +1 (the Ananda Axiom pair); mod-10 face of DiffA = 9
+ * (-1 ≡ 9 mod 10 — Paramesvara wholeness, the HELD canonical face that
+ * m1_ananda_dr_get exposes per FR 2.1.9); arithmetic digit-root of |−1|
+ * = 1 (CSV Digi-rooting block: orientation is erased in DR — DiffA and
+ * DiffB both root to 1; only the mod-10 face keeps the ± distinction). */
+#define ANANDA_DIFF_A_MOD10_FACE    9u
+#define ANANDA_DIFF_DR_ARITHMETIC   1u
+
+/* ---- Annex accounting (CSV rows 52-71 — the "8_9fold" grids).
+ * Grand totals per scalar family over both bases, with/without the k=0
+ * seed row. Closed forms, CSV-annotated: Bimba 2025/4356 (= 45²/66²),
+ * Pratibimba 2125/4500 (seedless 2115/4488), Sum 4150/8856 (seedless
+ * 4140/8844 = 12·11·67, the header's "Root of Doubling Motif" total). */
+int32_t m1_ananda_grand_total(uint8_t matrix_idx, uint8_t frame12,
+                              uint8_t exclude_seed_row);
+
+/* Cumulative DR traces of the frame row-sums (annex trace columns):
+ * reverse=0 -> forward partial-sum DR trace (Bimba: 0,3,9,9,3,9,9,…);
+ * reverse=1 -> remaining-total DR trace (Bimba: 9,9,6,9,9,6,…).
+ * The ascending/descending accumulation faces of one motion.
+ * Fills trace[12]; returns 1 on success, 0 on bad args. */
+int m1_ananda_cumulative_dr_trace(uint8_t matrix_idx, uint8_t reverse,
+                                  uint8_t trace[12]);
+
+/* 11-mirror pair table (annex rows 54-61): for n = 3..10 the pair
+ * (DR(n), 11-n) — the symmetric reversal channel of the decad; the
+ * n = 10 row degenerates to (1, 1). Returns 1 on success. */
+int m1_ananda_mirror_pair(uint8_t n_3_to_10, uint8_t* dr_n,
+                          uint8_t* complement11);
+
+
+/* ===================================================================
  * FR 2.1.2: #1-3 — SPANDA (The Dynamic Intelligence Engine)
  *
  * 6-stage topological concrescence state machine.

@@ -120,6 +120,19 @@ fn schema_dir() -> PathBuf {
 }
 
 /// Load NaraWeights from config.toml, returning defaults if absent.
+/// Generic Track-38 boundary read: one f32 knob from the unified tunable
+/// surface, falling back to the schema/kernel default when the registry or
+/// key is unavailable. Kernel crates stay registry-free; boundaries inject.
+pub fn tunable_f32(key: &str, fallback: f32) -> f32 {
+    TunableRegistry::load_with_overrides(&schema_dir(), Some(&config_path()))
+        .ok()
+        .and_then(|registry| match registry.value(key) {
+            Some(portal_core::tunable::TunableValue::F32(v)) => Some(v),
+            _ => None,
+        })
+        .unwrap_or(fallback)
+}
+
 pub fn load_weights() -> Result<NaraWeights, String> {
     let registry = TunableRegistry::load_with_overrides(&schema_dir(), Some(&config_path()))
         .map_err(|e| e.to_string())?;

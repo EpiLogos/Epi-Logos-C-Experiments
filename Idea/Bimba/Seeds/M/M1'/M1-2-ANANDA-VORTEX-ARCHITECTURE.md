@@ -69,15 +69,28 @@ C declarations in `Body/S/S0/epi-lib/include/m1.h` and `Body/S/S0/epi-lib/src/m1
 
 **Current stored DR total: 432 bytes of `.rodata`.** Accessor: `get_ananda_harmonic(mat, row, col)` at `m1.h:60-68` (O(1) bitwise nibble extraction). Runtime API: `m1_ananda_get(matrix_idx, row, col)`, `m1_ananda_dr_get(...)`, `m1_ananda_verify_axiom()` at `m1.h:145-151`, implementation at `m1.c:297-345`.
 
-**Correction / implementation gap:** the runtime API currently builds a separate 10×10 `%10` core at `m1.c:297-345`, while the canonical CSV is 12×12 and carries raw/no-digi-root and digit-root sections. `gen_ananda_luts.py` likewise generates `%mod` fixtures rather than compiling the CSV's affine raw face plus digit-root face. Future C work must replace this drift with a single canonical Ananda source path:
+**RESOLVED (Tranche 10.10 + FR 2.1.10, 2026-07-19):** the former 10×10 `%10` core drift is retired. `m1_ananda_get` is the canonical 12×12 RAW closed form (un-modded), `m1_ananda_dr_get` routes to the nibble-packed `.rodata` DR mirrors, and the single source path now runs:
 
 ```text
-Vortex Modulae CSV or exact formula
-  -> six 12×12 raw/no-DR family faces
-  -> six 12×12 digit-root family faces
-  -> typed C accessors + tests against CSV spot rows
-  -> Rust/profile `AnandaVortexProjection`
+Vortex Modulae CSV (two-register authority)
+  -> six 12×12 raw/no-DR family faces (closed form, un-modded)
+  -> six 12×12 digit-root family faces (.rodata mirrors)
+  -> FR 2.1.10 seat semantics + dual-base accounting + rule face (below)
+  -> typed C accessors + C/kernel-truth fidelity tests against the CSV
+  -> Rust/profile `AnandaVortexProjection` (incl. `seat_semantics`)
 ```
+
+### 2.1b Seat semantics, dual-base accounting, rule face (FR 2.1.10 — landed)
+
+The 12 matrix positions ARE the [[M0-3]] archetypal number language's substance-dozen; the structure `Position 0-9 | gap | 10,11` is baked into every family block of the CSV. Landed C authority (`m1.h` FR 2.1.10, `m1.c`), mirrored in Rust (`kernel/projections/ananda_vortex.rs`) and pinned by `test_m1_ananda.c` + `kernel_truth.rs::m1_ananda_seat_dual_base_and_rule_face_fidelity_vs_c_authority`:
+
+- **Seat binding** — positions 0-9 = archetypal numbers 0-9 (number seats skip `M0-3-4`, which belongs to 0/1 itself: 0,1 at `M0-3-2/3`; 2-8 at `M0-3-5..M0-3-11`; 9 at `M0-2-9`); position 10 = **(0/1) Non-Dual Binary / Rosetta Stone** (`M0-3-4`); position 11 = **(-) Mirror / Vimarśa apparatus** (`M0-3-(0/1)`). Bridge LUT `ANANDA_SEAT_TO_ARCHETYPE_IDX[12] = {2..11, 1, 0}` into the compiled m0 `ARCHETYPE_LUT` — the single M1-2↔M0-3 seam; matrix order is positional, m0 order genealogical.
+- **8+4 bus partition** (M0-3 hidden formula `4/(8)/3/(4)`) — masculine octet = 4 zero-elements {0, 1, (0/1), (-)} + 4 Adam evens {2,4,6,8}; feminine quartet = 3 Eve odds {3,5,7} + Wholeness {9}. Derived from `ARCHETYPE_LUT` polarity (EVE → quartet). This is the archetypal ground of the M2-1' 8+4 bus **cardinality** (`audio_octet[8]` motion / `nodal_quartet[4]` stillness); binding is by cardinality+role, never pitch-class index equality — the 7+5 diatonic/silent partition ([[M2'-SPEC]] modal resonator) is a sibling, distinct cut of the same twelve.
+- **Dual-base accounting** (the +1-base law; the CSV carries per-row core AND frame sum columns) — identity row: 45/66 unshifted (T9/T11), 55/78 shifted (T10/T12); consecutive-triangular closure 45+55 = 10², 66+78 = 12² (`_Static_assert`ed); DiffA sums −10/−12; Bimba grand total = 66² = 4356. `m1_ananda_row_sum` + `m1_ananda_verify_dual_base`.
+- **Rule face** (family 5, CSV verbatim "Rule; 0/1 ≠ 0/1") — the tetralemmic seed cell `-1/0/1` wherever k·p = 0, else `-1/1/{2kp+1}` ({DiffA, DiffB, Sum}); DR face `0/1` / `1/{dr(2kp+1)}`. Corner cells speak: (7,9) → 127 = M₇, (11,11) → 243 = 3⁵. `m1_ananda_rule_face`; Rust `rule_value` matches (the former `{bimba}/{prat}/{sum}` tuple was divergent and is corrected).
+- **DIFF faces named by register** — raw −1/+1; mod-10 face of DiffA = 9 (−1 ≡ 9 mod 10, Parameśvara wholeness — the HELD face `m1_ananda_dr_get` exposes per FR 2.1.9); arithmetic digit-root = 1 for BOTH diffs (CSV Digi-rooting block: DR erases orientation; only the mod-10 face keeps the ± distinction). `ANANDA_DIFF_A_MOD10_FACE` / `ANANDA_DIFF_DR_ARITHMETIC`.
+- **CSV row-side structure** — rows carry the same 10+2 gap; row fraction identities are ninths (`kX+0 ↔ k/9`, `kX+1 ↔ (9+k)/9`) for the decad and /99 forms for the shadow rows (`10X+1 = 109/99`; the (-) row's `11/99` cancels to `1/9`).
+- **Annex accounting** (CSV rows 52-71, the title's "8_9fold" grids — **encoded**): (i) **grand-total quartets** per scalar family — core = the true 10×10 square (Bimba 45² = 2025, Pratibimba 2125, Sum 4150), frame = 12×12 (66² = 4356, 4500, 8856), each also seed-row-excluded (2115/4488, 4140/**8844** — the header's "Root of Doubling Motif" total, 8844 = 12·11·67; CSV also notes 4140 = Bell number B₈); `m1_ananda_grand_total`. (ii) **cumulative DR traces** of the frame row-sums, forward partial and remaining-total — the ascending/descending accumulation faces (Bimba `0,3,9,9,…`/`9,9,6,…`, Pratibimba `3,9,9,…`/`9,6,9,…`, verified cell-for-cell); `m1_ananda_cumulative_dr_trace`. (iii) the **11-mirror pair table** (rows 54-61): n = 3..10 → (DR(n), 11−n), the symmetric reversal channel of the decad, degenerating to (1,1) at n = 10; `m1_ananda_mirror_pair`. The annex label cells "Sum"/"sum of dif" at the three block heads are partially decoded (the trace columns and totals account for most cells); any residue is noted here rather than invented.
 
 ### 2.2 The 12-element Ananda ring (the vortex as cyclical structure)
 
@@ -211,6 +224,13 @@ pub struct AnandaVortexProjection {
     /// correction: every Ananda family has a raw/no-digi-root face and a digit-root
     /// face. Renderers may emphasize one face, but the profile bus must carry both.
     pub active_cell_value: AnandaVortexCell,
+
+    /// FR 2.1.10 seat semantics — the twelve M0-3 seat bindings, once per
+    /// projection (column semantics, not per-cell payload): position,
+    /// seat kind (number | non-dual-binary | mirror), archetype number,
+    /// canonical coordinate, symbol, and 8+4 bus role. Mirror of the C
+    /// authority (m1_ananda_seat_*), pinned by kernel-truth.
+    pub seat_semantics: Vec<AnandaSeatBinding>,
 
     /// Phase indices into the two DR rings (m1.c:122-123).
     /// mahamaya_idx = DR_RING_MAHAMAYA[tick12 % 6]
@@ -488,7 +508,8 @@ The played-torus accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing 
 | Asset | Location |
 |---|---|
 | Digit-root Ananda `.rodata` face (432 bytes) | `Body/S/S0/epi-lib/src/m1.c:22-114` |
-| Current Ananda runtime API (`m1_ananda_get`, `_dr_get`, `_verify_axiom`) | `m1.c:297-345`, `m1.h:145-151` — drift noted: 10×10 `%10` core, not full CSV raw+DR 12×12 authority |
+| Ananda runtime API (`m1_ananda_get` RAW closed form, `_dr_get` .rodata mirrors, `_verify_axiom`) | `m1.c`, `m1.h` — canonical 12×12 dual-face; former 10×10 `%10` drift retired (Tranche 10.10) |
+| FR 2.1.10 seat semantics + dual-base + rule face (`m1_ananda_seat_*`, `m1_ananda_row_sum`, `m1_ananda_verify_dual_base`, `m1_ananda_rule_face`, partition LUTs) | `m1.h` FR 2.1.10 section, `m1.c`; Rust mirror `kernel/projections/ananda_vortex.rs` (`AnandaSeatBinding`); pinned by `test_m1_ananda.c` + `kernel_truth.rs` |
 | DR rings (Mahāmāyā + Paraśakti) | `m1.c:122-123` |
 | Ring quaternion LUT (12 unit quaternions, 30° spacing) | `m1.h:551-564` |
 | Cl(4,2) basis + trig table | `m1.h:629-661` |
@@ -504,8 +525,8 @@ The played-torus accepts a `pause` and `scrub_to_tick(t)` affordance. Scrubbing 
 
 ### 9.2 Pending (cycle-3 deliverables)
 
-- **Tranche 10.10** — `ananda_vortex: AnandaVortexProjection` field on `MathemeHarmonicProfile`
-- **Tranche 10.10a** — align C generator/API with Vortex Modulae CSV raw/no-DR + digit-root 12×12 faces before exposing the profile field
+- ~~**Tranche 10.10** — `ananda_vortex: AnandaVortexProjection` field on `MathemeHarmonicProfile`~~ **LANDED** (incl. FR 2.1.10 `seat_semantics`; schema chain: kernel-bridge.ts Zod `AnandaSeatBinding`, pratibimba-app boundary, baseline fixture re-blessed)
+- ~~**Tranche 10.10a** — align C generator/API with Vortex Modulae CSV raw/no-DR + digit-root 12×12 faces~~ **LANDED** (§2.1/§2.1b)
 - **Tranche 02.6** — `Body/M/epi-theia/extensions/m1-paramasiva-played-torus/` directory + Bevy/wgpu toolchain
 - **Tranche 15.8** — concrete K² + matrix-heatmap + DR-streamlines + Cl(4,2) colour-binary visual implementation
 - **Tranche 15.9** — `quat_slerp` tick choreography + Klein-flip + Möbius-return events

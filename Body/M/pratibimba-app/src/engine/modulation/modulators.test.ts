@@ -153,7 +153,7 @@ describe('division modulator (the E2 engine half)', () => {
 
     it('falls back to local arithmetic (§4 formula, honest source) when phaseSpace is absent', () => {
         const hp = harmonicSnapshot(profileAt(144));
-        const division = deriveDivision(hp, 6); // Zodiacal, slice 12
+        const division = deriveDivision(hp, 6); // Pleromatic, slice 12
         expect(division.source).toBe('local');
         expect(division.segment).toBe(12); // the app-pinned 144° case: 144/12
         expect(division.degreeInSegment).toBe(0);
@@ -190,11 +190,11 @@ describe('tonality modulator (84-state namespace law)', () => {
 
     it('never merges with the division aperture: changing the division leaves (lens, mode) untouched', () => {
         const rec = record(5, profileAt(144, { lensMode: { lens: 7, mode: 3 } }));
-        const zodiacal = deriveFrame(rec, null, { ...LIVE, divisionIndex: 6 }, 0, 0.5);
+        const pleromatic = deriveFrame(rec, null, { ...LIVE, divisionIndex: 6 }, 0, 0.5);
         const quadrant = deriveFrame(rec, null, { ...LIVE, divisionIndex: 13 }, 0, 0.5);
-        expect(zodiacal.tonality).toMatchObject({ lens: 7, mode: 3 });
-        expect(quadrant.tonality).toEqual(zodiacal.tonality);
-        expect(zodiacal.division.name).toBe('Zodiacal');
+        expect(pleromatic.tonality).toMatchObject({ lens: 7, mode: 3 });
+        expect(quadrant.tonality).toEqual(pleromatic.tonality);
+        expect(pleromatic.division.name).toBe('Pleromatic');
         expect(quadrant.division.name).toBe('Quadrant');
     });
 

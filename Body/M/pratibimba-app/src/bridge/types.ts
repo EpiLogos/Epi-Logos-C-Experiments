@@ -22,6 +22,48 @@ export interface MathemeHarmonicProfileBoundary {
     readonly payload: Readonly<Record<string, unknown>>;
 }
 
+export interface CymaticSphereHarmonicBoundary {
+    readonly degree: number;
+    readonly order: number;
+    readonly amplitudeHz: number;
+    readonly qlPosition: number;
+    readonly helix: 'bimba' | 'pratibimba';
+}
+
+export interface CymaticSphereChakraBoundary {
+    readonly chakraId: number;
+    readonly name: string;
+    readonly elementId: number | null;
+    readonly tattvaIndex: number | null;
+    readonly meaningId: number;
+    readonly harmonic: CymaticSphereHarmonicBoundary;
+    readonly provenance: string;
+}
+
+export interface CymaticPlanetAnchorBoundary {
+    readonly planetId: number;
+    readonly name: string;
+    readonly degree: number;
+    readonly retrograde: boolean;
+    readonly elementId: number;
+    readonly provenance: string;
+}
+
+export interface CymaticSpheresProjectionBoundary {
+    readonly chakras: readonly CymaticSphereChakraBoundary[];
+    readonly earthObserver: {
+        readonly ordinal: 10;
+        readonly name: 'Earth';
+        readonly role: 'observer-centre';
+        readonly position: readonly [0, 0, 0];
+        readonly provenance: string;
+    };
+    readonly sun: CymaticPlanetAnchorBoundary;
+    readonly activePlanet: CymaticPlanetAnchorBoundary;
+    readonly epogdoonRatio: '9:8';
+    readonly provenance: string;
+}
+
 // ---- Protocol constants (mirror gateway-contract) ----
 
 export const PROTOCOL_VERSION = 3;
@@ -107,10 +149,30 @@ export interface AnandaVortexCellBoundary {
     skeletonEvent?: unknown;
 }
 
+/** FR 2.1.10 seat semantics — the M0-3 number-dozen binding, once per
+ *  projection. Positions 0-9 = archetypal numbers (seats skip M0-3-4,
+ *  which belongs to 0/1 itself); 10 = (0/1) Non-Dual Binary (M0-3-4);
+ *  11 = (-) Mirror (M0-3-(0/1)). busRole is the 8+4 partition (masculine
+ *  octet = zero-elements + Adam evens; feminine quartet = Eve odds + 9),
+ *  the archetypal ground of the audio_octet[8]/nodal_quartet[4] bus
+ *  cardinality. seatKind/busRole cross the wire as kebab-case strings. */
+export interface AnandaSeatBindingBoundary {
+    position: number;
+    seatKind: 'number' | 'non-dual-binary' | 'mirror' | string;
+    archetypeNumber: number | null;
+    coordinate: string;
+    symbol: string;
+    busRole: 'octet' | 'quartet' | string;
+}
+
 export interface AnandaVortexProjectionBoundary {
     activeMatrixOp: string;
     activeCell: readonly [number, number];
     activeCellValue: AnandaVortexCellBoundary;
+    /** Complete six-family 12×12 kernel projection; null for legacy frames. */
+    matrixCells: readonly AnandaVortexCellBoundary[] | null;
+    /** Twelve M0-3 seat bindings; null for pre-FR-2.1.10 legacy frames. */
+    seatSemantics?: readonly AnandaSeatBindingBoundary[] | null;
     drRingPhase: { mahamayaIdx: number; parashaktiIdx: number };
     cl42SignatureAtPosition: number;
     ringQuaternion: readonly number[];
@@ -1024,6 +1086,173 @@ function parseLensCodonBinaryDegree(
     };
 }
 
+// ---- kernelBridge.m3.lensField(lensId) boundary (generic lens-field dynamic) ----
+// Mirrors portal-core lens_field.rs + pleroma_lens.rs and the Zod
+// LensFieldProjection. The carrier consumes structure/activation verbatim;
+// symbolic systems (pleroma at lens 6) are instance decorations of the ONE
+// generic field — never a parallel lens namespace.
+
+export type LensFieldElementBoundary = 'fire' | 'earth' | 'air' | 'water';
+
+export interface LensFieldSegmentBoundary {
+    readonly segment: number;
+    readonly startDegree: number;
+    readonly midpoint720: number;
+    readonly element: LensFieldElementBoundary;
+}
+
+export interface LensFieldChannelBalanceBoundary {
+    readonly channel: number;
+    readonly priorSegment: number;
+    readonly consortSegment: number;
+    readonly priorElement: LensFieldElementBoundary;
+    readonly consortElement: LensFieldElementBoundary;
+    readonly signedBalance: number;
+}
+
+export interface PleromaSeatBoundary {
+    readonly segment: number;
+    readonly aeon: string;
+    readonly arc: 'ogdoad' | 'decad' | 'dodecad';
+    readonly syzygy: number;
+    readonly prior: boolean;
+    readonly element: LensFieldElementBoundary;
+}
+
+export interface LensFieldProjectionBoundary {
+    readonly lensId: number;
+    readonly slice: number;
+    readonly sections: number;
+    readonly topologyKind: 'diameter-paired' | 'boundary-opposed' | 'self-opposed';
+    readonly segments: readonly LensFieldSegmentBoundary[];
+    readonly positionedOrbiters: number;
+    readonly channelBalances: readonly LensFieldChannelBalanceBoundary[];
+    readonly akashaCondition: boolean | null;
+    readonly balanceQuaternion: readonly [number, number, number, number];
+    readonly pleromaSeats: readonly PleromaSeatBoundary[] | null;
+    readonly pleromaLayout: string | null;
+}
+
+const LENS_FIELD_ELEMENTS: readonly string[] = ['fire', 'earth', 'air', 'water'];
+
+export function parseLensFieldProjection(value: unknown): LensFieldProjectionBoundary {
+    const root = requiredObject(value, 'lensField');
+    const lensId = requiredInteger(root.lensId, 'lensField.lensId', 0, 16);
+    const structure = requiredObject(root.structure, 'lensField.structure');
+    const slice = requiredInteger(structure.slice, 'lensField.structure.slice', 1, 360);
+    const sections = requiredInteger(structure.sections, 'lensField.structure.sections', 1, 360);
+    if (slice * sections !== 360) {
+        throw new Error('lensField.structure must tile the 360');
+    }
+    const topology = requiredObject(structure.topology, 'lensField.structure.topology');
+    const topologyKind = topology.kind;
+    const expectedTopology = sections === 1
+        ? 'self-opposed'
+        : sections % 2 === 0 ? 'diameter-paired' : 'boundary-opposed';
+    if (topologyKind !== expectedTopology) {
+        throw new Error(`lensField.structure.topology must be ${expectedTopology} for ${sections} sections`);
+    }
+    if (!Array.isArray(structure.segments) || structure.segments.length !== sections) {
+        throw new Error('lensField.structure.segments must carry one record per section');
+    }
+    const segments = structure.segments.map((entry, index) => {
+        const path = `lensField.structure.segments[${index}]`;
+        const record = requiredObject(entry, path);
+        const element = record.element;
+        if (typeof element !== 'string' || !LENS_FIELD_ELEMENTS.includes(element)) {
+            throw new Error(`${path}.element must be a Ring-1 element`);
+        }
+        return {
+            segment: requiredInteger(record.segment, `${path}.segment`, 0, 359),
+            startDegree: requiredInteger(record.startDegree, `${path}.startDegree`, 0, 359),
+            midpoint720: requiredInteger(record.midpoint720, `${path}.midpoint720`, 0, 719),
+            element: element as LensFieldElementBoundary
+        };
+    });
+    const activation = requiredObject(root.activation, 'lensField.activation');
+    const positionedOrbiters = requiredInteger(activation.positionedOrbiters, 'lensField.activation.positionedOrbiters', 0, 9);
+    const akashaCondition = activation.akashaCondition;
+    if (akashaCondition !== null && typeof akashaCondition !== 'boolean') {
+        throw new Error('lensField.activation.akashaCondition must be boolean or an honest null');
+    }
+    if (positionedOrbiters === 0 && akashaCondition !== null) {
+        throw new Error('lensField.activation must not fabricate an Akasha verdict without positioned orbiters');
+    }
+    const rawBalances = Array.isArray(activation.channelBalances) ? activation.channelBalances : [];
+    const channelBalances = rawBalances.map((entry, index) => {
+        const path = `lensField.activation.channelBalances[${index}]`;
+        const record = requiredObject(entry, path);
+        return {
+            channel: requiredInteger(record.channel, `${path}.channel`, 0, 179),
+            priorSegment: requiredInteger(record.priorSegment, `${path}.priorSegment`, 0, 359),
+            consortSegment: requiredInteger(record.consortSegment, `${path}.consortSegment`, 0, 359),
+            priorElement: record.priorElement as LensFieldElementBoundary,
+            consortElement: record.consortElement as LensFieldElementBoundary,
+            signedBalance: requiredNumber(record.signedBalance, `${path}.signedBalance`)
+        };
+    });
+    const quaternion = root.balanceQuaternion;
+    if (!Array.isArray(quaternion) || quaternion.length !== 4 || !quaternion.every(isFiniteNumber)) {
+        throw new Error('lensField.balanceQuaternion must contain four finite numbers');
+    }
+    const symbolic = root.symbolicSystem;
+    let pleromaSeats: PleromaSeatBoundary[] | null = null;
+    let pleromaLayout: string | null = null;
+    if (lensId === 6) {
+        const system = requiredObject(symbolic, 'lensField.symbolicSystem');
+        if (system.kind !== 'pleroma') {
+            throw new Error('lensField.symbolicSystem at lens 6 must be the pleroma');
+        }
+        pleromaLayout = typeof system.layout === 'string' ? system.layout : null;
+        if (!Array.isArray(system.seats) || system.seats.length !== 30) {
+            throw new Error('lensField.symbolicSystem.seats must carry the 30 aeons');
+        }
+        if (!Array.isArray(system.syzygies) || system.syzygies.length !== 15) {
+            throw new Error('lensField.symbolicSystem.syzygies must carry the 15 channels');
+        }
+        const digitTotal = system.syzygies.reduce((sum: number, entry) => {
+            const record = requiredObject(entry, 'lensField.symbolicSystem.syzygies[]');
+            return sum + requiredInteger(record.digitSum, 'lensField.symbolicSystem.syzygies[].digitSum', 0, 40);
+        }, 0);
+        if (digitTotal !== 280) {
+            throw new Error('lensField.symbolicSystem syzygy digit sums must decompose the full Pisano 280');
+        }
+        pleromaSeats = system.seats.map((entry, index) => {
+            const path = `lensField.symbolicSystem.seats[${index}]`;
+            const record = requiredObject(entry, path);
+            const arc = record.arc;
+            if (arc !== 'ogdoad' && arc !== 'decad' && arc !== 'dodecad') {
+                throw new Error(`${path}.arc must be a pleromatic arc`);
+            }
+            return {
+                segment: requiredInteger(record.segment, `${path}.segment`, 0, 29),
+                aeon: typeof record.aeon === 'string' && record.aeon ? record.aeon : (() => {
+                    throw new Error(`${path}.aeon must be a named aeon`);
+                })(),
+                arc,
+                syzygy: requiredInteger(record.syzygy, `${path}.syzygy`, 0, 14),
+                prior: record.prior === true,
+                element: record.element as LensFieldElementBoundary
+            };
+        });
+    } else if (symbolic !== null && symbolic !== undefined) {
+        throw new Error('lensField.symbolicSystem is seated only at the pleromatic lens 6');
+    }
+    return {
+        lensId,
+        slice,
+        sections,
+        topologyKind: topologyKind as LensFieldProjectionBoundary['topologyKind'],
+        segments,
+        positionedOrbiters,
+        channelBalances,
+        akashaCondition: akashaCondition as boolean | null,
+        balanceQuaternion: quaternion as [number, number, number, number],
+        pleromaSeats,
+        pleromaLayout
+    };
+}
+
 function requiredObject(value: unknown, path: string): Record<string, unknown> {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
         throw new Error(`${path} must be an object`);
@@ -1068,7 +1297,8 @@ export const KERNEL_BRIDGE_CAPABILITIES = [
     'kernelBridge.m2.planetaryElementalWeights()',
     'kernelBridge.m2.cymaticMonoPolyState(address72)',
     'kernelBridge.m3.bioquaternionTranscription(codon)',
-    'kernelBridge.m3.lensCodonBinary(lensId)'
+    'kernelBridge.m3.lensCodonBinary(lensId)',
+    'kernelBridge.m3.lensField(lensId)'
 ] as const;
 
 export type KernelBridgeCapabilityName = (typeof KERNEL_BRIDGE_CAPABILITIES)[number];

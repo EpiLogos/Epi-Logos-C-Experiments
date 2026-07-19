@@ -44,6 +44,50 @@ describe('SixAxisTree (23.5 — six-axis correspondence tree surfaces the decode
         expect(screen.queryByTestId('axis-view')).toBeNull();
     });
 
+    it('keeps a multi-axis intersection and swaps the invariant tree for the selected 100-entry overlay', () => {
+        render(
+            <SixAxisTree
+                address72={17}
+                correspondenceTree={{
+                    mantraOverlay: Array.from({ length: 100 }, (_, index) => ({
+                        index,
+                        frequencyHz: 144 + index,
+                        phase: index < 50 ? 'Matrika' : 'Malini',
+                        element: 'Akasha'
+                    })),
+                    asmaOverlay: Array.from({ length: 100 }, (_, index) => ({
+                        index,
+                        group: index === 99 ? 'Hidden' : 'Jalal',
+                        maskRouting: { internal: index < 36, projective: index >= 36 }
+                    })),
+                    planetaryKeying: Array.from({ length: 10 }, (_, index) => ({
+                        index,
+                        name: `planet-${index}`,
+                        coustoHz: 100 + index,
+                        element: 'Akasha',
+                        chakra: index % 8,
+                        isOuter: index >= 7
+                    }))
+                }}
+            />
+        );
+
+        fireEvent.click(screen.getByTestId('axis-chip-tattva'));
+        expect(screen.getByTestId('axis-chip-mef').getAttribute('data-active')).toBe('true');
+        expect(screen.getByTestId('axis-chip-tattva').getAttribute('data-active')).toBe('true');
+        expect(screen.getAllByTestId('axis-view')).toHaveLength(2);
+
+        fireEvent.click(screen.getByTestId('overlay-tab-mantra'));
+        expect(screen.getByTestId('axis-overlay-leaves').querySelectorAll('.axis-leaf')).toHaveLength(100);
+        expect(screen.getByTestId('axis-overlay-leaf-99').textContent).toContain('Malini');
+
+        fireEvent.click(screen.getByTestId('overlay-tab-asma'));
+        expect(screen.getByTestId('axis-overlay-leaf-0').textContent).toContain('internal');
+        expect(screen.getByTestId('axis-overlay-leaf-99').textContent).toContain('projective');
+        expect(screen.getByTestId('planetary-keying').querySelectorAll('[data-testid^="planetary-key-"]')).toHaveLength(10);
+        expect(screen.getByTestId('planetary-key-7').getAttribute('data-outer')).toBe('true');
+    });
+
     it('renders honest absence when no active address rides the bus', () => {
         render(<SixAxisTree address72={null} />);
         expect(screen.getByTestId('axis-view').textContent).toContain('awaiting the pentadic trace');

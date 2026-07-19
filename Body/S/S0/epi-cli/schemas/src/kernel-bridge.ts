@@ -80,6 +80,7 @@ export const KernelBridgeCapabilityName = z.enum([
   "kernelBridge.m2.cymaticMonoPolyState(address72)",
   "kernelBridge.m3.bioquaternionTranscription(codon)",
   "kernelBridge.m3.lensCodonBinary(lensId)",
+  "kernelBridge.m3.lensField(lensId)",
 ]);
 export type KernelBridgeCapabilityName = z.infer<
   typeof KernelBridgeCapabilityName
@@ -209,6 +210,220 @@ export const LensCodonBinaryProjection = z
 export type LensCodonBinaryProjection = z.infer<
   typeof LensCodonBinaryProjection
 >;
+
+// ---- kernelBridge.m3.lensField(lensId) — the generic lens-field dynamic ----
+// Mirrors portal-core src/lens_field.rs (+ pleroma_lens.rs instance packet).
+// Structure + live activation for any functional lens 0..16; the pleromatic
+// symbolic system decorates lens 6 ONLY. Laws are proven kernel-side
+// (lens_field_generic_laws.rs); this schema is the wire contract.
+
+export const LensFieldElement = z.enum(["fire", "earth", "air", "water"]);
+export type LensFieldElement = z.infer<typeof LensFieldElement>;
+
+export const LensFieldTopology = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("diameter-paired"),
+      channels: z.number().int().min(1).max(180),
+    })
+    .strict(),
+  z.object({ kind: z.literal("boundary-opposed") }).strict(),
+  z.object({ kind: z.literal("self-opposed") }).strict(),
+]);
+
+export const LensFieldGroundQuantization = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("integral"),
+      stepsPerSegment: z.number().int().min(1).max(60),
+    })
+    .strict(),
+  z.object({ kind: z.literal("fractional") }).strict(),
+]);
+
+export const LensFieldSegment = z
+  .object({
+    segment: z.number().int().min(0).max(359),
+    startDegree: z.number().int().min(0).max(359),
+    midpoint720: z.number().int().min(0).max(719),
+    element: LensFieldElement,
+  })
+  .strict();
+
+export const LensFieldStructure = z
+  .object({
+    lensId: z.number().int().min(0).max(16),
+    groundingLensId: z.literal(16),
+    slice: z.number().int().min(1).max(360),
+    sections: z.number().int().min(1).max(360),
+    topology: LensFieldTopology,
+    groundQuantization: LensFieldGroundQuantization,
+    segments: z.array(LensFieldSegment).min(1).max(360),
+  })
+  .strict();
+
+export const LensFieldPlanetLanding = z
+  .object({
+    planetId: z.number().int().min(1).max(9),
+    segment: z.number().int().min(0).max(359),
+    element: z.enum(["aether", "air", "fire", "water", "earth"]),
+    couEnergy: z.number().nonnegative(),
+    akashaCarrier: z.boolean(),
+  })
+  .strict();
+
+export const LensFieldChannelBalance = z
+  .object({
+    channel: z.number().int().min(0).max(179),
+    priorSegment: z.number().int().min(0).max(359),
+    consortSegment: z.number().int().min(0).max(359),
+    priorElement: LensFieldElement,
+    consortElement: LensFieldElement,
+    signedBalance: z.number(),
+  })
+  .strict();
+
+export const LensFieldActivation = z
+  .object({
+    lensId: z.number().int().min(0).max(16),
+    positionedOrbiters: z.number().int().min(0).max(9),
+    weightsTotal: z
+      .object({
+        fire: z.number(),
+        water: z.number(),
+        air: z.number(),
+        earth: z.number(),
+      })
+      .strict(),
+    landings: z.array(LensFieldPlanetLanding).max(9),
+    channelBalances: z.array(LensFieldChannelBalance).max(180),
+    akashaPresence: z.number().nonnegative(),
+    akashaEpsilon: z.number().positive(),
+    akashaCondition: z.boolean().nullable(),
+  })
+  .strict();
+
+export const PleromaSeat = z
+  .object({
+    segment: z.number().int().min(0).max(29),
+    aeon: z.string().min(1),
+    meaning: z.string().min(1),
+    emanationIndex: z.number().int().min(1).max(30),
+    arc: z.enum(["ogdoad", "decad", "dodecad"]),
+    syzygy: z.number().int().min(0).max(14),
+    prior: z.boolean(),
+    element: LensFieldElement,
+    fibonacciPositions: z.tuple([
+      z.number().int().min(0).max(59),
+      z.number().int().min(0).max(59),
+    ]),
+    fibonacciDigits: z.tuple([
+      z.number().int().min(0).max(9),
+      z.number().int().min(0).max(9),
+    ]),
+  })
+  .strict();
+
+export const PleromaSyzygy = z
+  .object({
+    syzygy: z.number().int().min(0).max(14),
+    diameter: z.number().int().min(0).max(14),
+    arc: z.enum(["ogdoad", "decad", "dodecad"]),
+    priorAeon: z.string().min(1),
+    consortAeon: z.string().min(1),
+    priorElement: LensFieldElement,
+    consortElement: LensFieldElement,
+    digitSum: z.number().int().min(0).max(40),
+    threshold: z.boolean(),
+  })
+  .strict();
+
+export const PleromaSymbolicSystem = z
+  .object({
+    kind: z.literal("pleroma"),
+    layout: z.enum(["interleaved456", "emanation"]),
+    seats: z.array(PleromaSeat).length(30),
+    syzygies: z.array(PleromaSyzygy).length(15),
+  })
+  .strict();
+
+export const LensFieldProjection = z
+  .object({
+    contract: z.literal("kernelBridge.m3.lensField(lensId)"),
+    runtimeOwner: z.string().min(1),
+    source: z.string().min(1),
+    lensId: z.number().int().min(0).max(16),
+    structure: LensFieldStructure,
+    activation: LensFieldActivation,
+    balanceQuaternion: z.tuple([z.number(), z.number(), z.number(), z.number()]),
+    symbolicSystem: PleromaSymbolicSystem.nullable(),
+  })
+  .strict()
+  .superRefine((projection, ctx) => {
+    const { structure, activation, symbolicSystem, lensId } = projection;
+    if (structure.lensId !== lensId || activation.lensId !== lensId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "structure/activation lensId must match the projection lensId",
+        path: ["lensId"],
+      });
+    }
+    if (structure.slice * structure.sections !== 360) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "slice x sections must tile the 360",
+        path: ["structure", "slice"],
+      });
+    }
+    if (structure.segments.length !== structure.sections) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "one segment record per section",
+        path: ["structure", "segments"],
+      });
+    }
+    const expectedTopology =
+      structure.sections === 1
+        ? "self-opposed"
+        : structure.sections % 2 === 0
+          ? "diameter-paired"
+          : "boundary-opposed";
+    if (structure.topology.kind !== expectedTopology) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `sections ${structure.sections} requires ${expectedTopology} topology`,
+        path: ["structure", "topology"],
+      });
+    }
+    if (lensId === 6) {
+      if (!symbolicSystem) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "the pleromatic symbolic system is seated at lens 6",
+          path: ["symbolicSystem"],
+        });
+      } else {
+        const digitTotal = symbolicSystem.syzygies.reduce(
+          (sum, syzygy) => sum + syzygy.digitSum,
+          0,
+        );
+        if (digitTotal !== 280) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "syzygy digit sums must decompose the full Pisano 280",
+            path: ["symbolicSystem", "syzygies"],
+          });
+        }
+      }
+    } else if (symbolicSystem) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "no symbolic system is seated at this lens",
+        path: ["symbolicSystem"],
+      });
+    }
+  });
+export type LensFieldProjection = z.infer<typeof LensFieldProjection>;
 
 export const CanonicalVakAddress = z
   .object({
@@ -973,6 +1188,79 @@ export const LivePlanetProjection = z
   .strict();
 export type LivePlanetProjection = z.infer<typeof LivePlanetProjection>;
 
+export const CymaticSphereChakraProjection = z
+  .object({
+    chakraId: z.number().int().min(0).max(7),
+    name: z.string().min(1),
+    elementId: z.number().int().min(0).max(4).nullable(),
+    tattvaIndex: z.number().int().min(0).max(35).nullable(),
+    meaningId: z.number().int().min(0x0380).max(0x0387),
+    harmonic: z
+      .object({
+        degree: z.number().int().min(1),
+        order: z.number().int().min(1),
+        amplitudeHz: z.number().positive(),
+        qlPosition: z.number().int().min(0).max(5),
+        helix: z.enum(["bimba", "pratibimba"]),
+      })
+      .strict(),
+    provenance: z.literal(
+      "M2_CHAKRA_LUT[8] + profile audioOctet/nodalQuartet",
+    ),
+  })
+  .strict();
+
+export const CymaticPlanetAnchorProjection = z
+  .object({
+    planetId: z.number().int().min(0).max(9),
+    name: z.string().min(1),
+    degree: z.number().min(0).max(360),
+    retrograde: z.boolean(),
+    elementId: z.number().int().min(0).max(4),
+    provenance: z.literal("M2_PLANET_LUT[10] + Kerykeion live sky"),
+  })
+  .strict();
+
+export const CymaticSpheresProjection = z
+  .object({
+    chakras: z.array(CymaticSphereChakraProjection).length(8),
+    earthObserver: z
+      .object({
+        ordinal: z.literal(10),
+        name: z.literal("Earth"),
+        role: z.literal("observer-centre"),
+        position: z.tuple([z.literal(0), z.literal(0), z.literal(0)]),
+        provenance: z.literal("EarthBodyState + DR-M2-1/DCC-03"),
+      })
+      .strict(),
+    sun: CymaticPlanetAnchorProjection,
+    activePlanet: CymaticPlanetAnchorProjection,
+    epogdoonRatio: z.literal("9:8"),
+    provenance: z.literal("portal-core::f_routing + M2 substrate projection"),
+  })
+  .strict()
+  .superRefine((projection, ctx) => {
+    projection.chakras.forEach((chakra, index) => {
+      if (chakra.chakraId !== index) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `chakra row ${index} must carry chakraId ${index}`,
+          path: ["chakras", index, "chakraId"],
+        });
+      }
+    });
+    if (projection.sun.planetId !== 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "sun anchor must carry canonical planetId 0",
+        path: ["sun", "planetId"],
+      });
+    }
+  });
+export type CymaticSpheresProjection = z.infer<
+  typeof CymaticSpheresProjection
+>;
+
 /// Handle-only quintessence identity summary (Sprint-8 E6, DR-M4-3; mirrors
 /// portal-core kernel/profile.rs QuintessenceProjection). Only handles cross:
 /// the natal clock address (hash-derived), weight, enrichment honesty, an
@@ -1184,7 +1472,7 @@ export const AnandaVortexCell = z
   .object({
     family: AnandaMatrixOp,
     rowK: z.number().int().min(0).max(11),
-    positionP: z.number().int().min(0).max(5),
+    positionP: z.number().int().min(0).max(11),
     rawValue: z.number().int().nullable(),
     rawBimba: z.number().int(),
     rawPratibimba: z.number().int(),
@@ -1209,6 +1497,32 @@ export const DrRingPhase = z
   .strict();
 export type DrRingPhase = z.infer<typeof DrRingPhase>;
 
+// FR 2.1.10 seat semantics — the M0-3 number-dozen binding, carried once
+// per projection (column semantics, not per-cell payload). Positions 0-9
+// are the archetypal numbers (seats skip M0-3-4, which belongs to 0/1
+// itself); 10 = (0/1) Non-Dual Binary (M0-3-4); 11 = (-) Mirror
+// (M0-3-(0/1)). Bus role is the 8+4 partition (M0-3 hidden formula
+// "4/(8)/3/(4)"): octet = zero-elements + Adam evens; quartet = Eve odds
+// {3,5,7} + Wholeness 9 — the archetypal ground of the audio_octet[8] /
+// nodal_quartet[4] bus cardinality.
+export const AnandaSeatKind = z.enum(["number", "non-dual-binary", "mirror"]);
+export type AnandaSeatKind = z.infer<typeof AnandaSeatKind>;
+
+export const AnandaBusRole = z.enum(["octet", "quartet"]);
+export type AnandaBusRole = z.infer<typeof AnandaBusRole>;
+
+export const AnandaSeatBinding = z
+  .object({
+    position: z.number().int().min(0).max(11),
+    seatKind: AnandaSeatKind,
+    archetypeNumber: z.number().int().min(0).max(9).nullable(),
+    coordinate: z.string().min(1),
+    symbol: z.string().min(1),
+    busRole: AnandaBusRole,
+  })
+  .strict();
+export type AnandaSeatBinding = z.infer<typeof AnandaSeatBinding>;
+
 export const AnandaVortexProjection = z
   .object({
     activeMatrixOp: AnandaMatrixOp,
@@ -1217,6 +1531,12 @@ export const AnandaVortexProjection = z
       z.number().int().min(0).max(5),
     ]),
     activeCellValue: AnandaVortexCell,
+    // Current profiles carry all six 12×12 families from portal-core. It is
+    // optional only so captured pre-22.T22.8 frames remain parseable.
+    matrixCells: z.array(AnandaVortexCell).length(6 * 12 * 12).optional(),
+    // Optional only so pre-FR-2.1.10 captures remain parseable; current
+    // profiles always carry the twelve M0-3 seat bindings.
+    seatSemantics: z.array(AnandaSeatBinding).length(12).optional(),
     drRingPhase: DrRingPhase,
     cl42SignatureAtPosition: z.number().int().min(-128).max(127),
     ringQuaternion: z.array(z.number()).length(4),
@@ -1229,6 +1549,13 @@ export const AnandaVortexProjection = z
       value.activeCellValue.rowK === value.activeCell[0] &&
       value.activeCellValue.positionP === value.activeCell[1],
     { message: "activeCellValue (rowK, positionP) must equal activeCell" },
+  )
+  .refine(
+    (value) =>
+      value.matrixCells === undefined ||
+      new Set(value.matrixCells.map((cell) => `${cell.family}:${cell.rowK}:${cell.positionP}`)).size ===
+        6 * 12 * 12,
+    { message: "matrixCells must contain one unique cell for every family/address" },
   );
 export type AnandaVortexProjection = z.infer<typeof AnandaVortexProjection>;
 
@@ -1525,6 +1852,7 @@ export const MathemeHarmonicProfile = z
     modalResonator: ModalResonatorProfile.optional(),
     planetDegrees: z.array(z.number()).length(10).optional(),
     livePlanets: z.array(LivePlanetProjection).length(10).optional(),
+    cymaticSpheres: CymaticSpheresProjection.optional(),
     // Sprint-8 E1: the tick's address in the 720 possibility space (plane,
     // clock-degree node, 16+1 lens carrier). Hardened with E3 (the app-side
     // modulation-graph consumer): full field law mirrored from portal-core

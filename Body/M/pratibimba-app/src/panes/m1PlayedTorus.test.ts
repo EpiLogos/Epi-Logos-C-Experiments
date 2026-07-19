@@ -60,7 +60,7 @@ describe('m1 played-torus view model (T2.6)', () => {
             generation: 11
         });
         expect(view.vortexState).toBe('ready');
-        expect(view.vortex).toEqual(VALID_VORTEX);
+        expect(view.vortex).toEqual({ ...VALID_VORTEX, matrixCells: null });
     });
 
     it('Ananda source-fidelity: the 7X+1 raw+DR faces arrive through activeCellValue, not local math', () => {

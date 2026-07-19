@@ -559,6 +559,10 @@ When sharding this consolidated spec into executable sub-level build docs, use t
 
 Cross-level shard guard: use [[S-SYSTEM-INDEX]] beside every shard so local S0 implementation work does not accidentally override ownership decisions made in [[S1-SPEC]], [[S2-SPEC]], [[S3-SPEC]], [[S4-SPEC]], or [[S5-SPEC]].
 
+## Contract-Surface Flag — 23.T23.9
+
+`Body/S/S0/portal-core` now exposes additive `MathemeHarmonicProfile.cymaticSpheres` as the executable [[M2-5']] projection: eight owning chakra rows with profile-resolved spherical modes, Earth ordinal 10 as observer-centre, Sun, and a canonical [[F_routing]] active ruler. `Body/S/S0/epi-cli` attaches it only when the live [[Kerykeion]] sky is fresh and complete. This is public-current projection law, not S0 semantic ownership; [[M2'-SPEC]] remains the domain authority and [[S3-SPEC]] owns heartbeat transport. The next full S0 profile-parity harmonisation must include the Rust field, strict TypeScript schema, live-wire manifest assertion, and malformed-input refusal.
+
 ## Canonical Source Lock - 2026-06-02
 
 S0 is the executable command membrane and local return surface. It is not the top-layer kernel owner. Kernel/profile bridge facts that span S0, S3, S5, and M' are owned by [[S-SYSTEM-INDEX]], [[S0'-SPEC]], [[S3'-SPEC]], [[S5'-SPEC]], and [[M'-SYSTEM-SPEC]] together.

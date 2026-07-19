@@ -86,6 +86,7 @@ export function M0ContemplationPromptFooter() {
 
     return (
         <footer
+            id="m0-contemplation-footer"
             className="m0-contemplation-footer"
             data-testid="m0-contemplation-footer"
             data-archetype-index={contemplation.archetypeIndex ?? undefined}

@@ -158,7 +158,7 @@ export const CLOCK_LENSES: readonly ClockLens[] = [
     { slice: 8, sections: 45, name: 'Octagonal', temporalCanon: false },
     { slice: 9, sections: 40, name: 'Enneadic', temporalCanon: false },
     { slice: 10, sections: 36, name: 'Decan', temporalCanon: false },
-    { slice: 12, sections: 30, name: 'Zodiacal', temporalCanon: false },
+    { slice: 12, sections: 30, name: 'Pleromatic', temporalCanon: false },
     { slice: 15, sections: 24, name: 'Hourly', temporalCanon: true },
     { slice: 24, sections: 15, name: 'Expanded Hours', temporalCanon: false },
     { slice: 30, sections: 12, name: 'Solar Month', temporalCanon: true },

@@ -3,8 +3,9 @@
  * Residency: Body/M/pratibimba-app/src/panes
  * Actualises: the `m1.paramasiva.playedTorus` view model — the M1-2 ananda
  *   vortex riding the single K², sourced ONLY from the profile bus:
- *   `anandaVortex` (Tranche 10.10 projection, dual raw/no-digi-root + digit-root
- *   faces), the M1-5 topology invariants (`m1Topology`), and the M2-1' Vimarśa
+ *   `anandaVortex` (Tranche 10.10 projection: active cell plus the complete
+ *   six-family 12×12 `matrixCells` dual raw/no-digi-root + digit-root faces),
+ *   the M1-5 topology invariants (`m1Topology`), and the M2-1' Vimarśa
  *   windows (`audioOctet[8]` / `nodalQuartet[4]` — windows onto Vimarśa's
  *   writes, never re-derived; `vimarsha_reading.rs` is the single source).
  *   Readiness is explicit: a missing/malformed field is a `pending-*` state,
@@ -111,6 +112,22 @@ function cellFromValue(value: unknown): AnandaVortexCellBoundary | null {
     };
 }
 
+function matrixCellsFromValue(value: unknown): readonly AnandaVortexCellBoundary[] | null {
+    if (!Array.isArray(value) || value.length !== 6 * 12 * 12) {
+        return null;
+    }
+    const cells: AnandaVortexCellBoundary[] = [];
+    for (const valueCell of value) {
+        const cell = cellFromValue(valueCell);
+        if (cell === null) {
+            return null;
+        }
+        cells.push(cell);
+    }
+    const addresses = new Set(cells.map(cell => `${cell.family}:${cell.rowK}:${cell.positionP}`));
+    return addresses.size === cells.length ? Object.freeze(cells) : null;
+}
+
 /** Strict structural read of `anandaVortex` off the profile payload. A missing
  *  or malformed projection yields null — the surface goes `pending-ananda-vortex`
  *  with a blocked overlay; it NEVER back-fills from local math (the raw and DR
@@ -124,6 +141,8 @@ export function vortexFromPayload(
     }
     const activeCell = Array.isArray(vortex.activeCell) ? vortex.activeCell : null;
     const cellValue = cellFromValue(vortex.activeCellValue);
+    const matrixCells =
+        vortex.matrixCells === undefined ? null : matrixCellsFromValue(vortex.matrixCells);
     const phase = objectValue(vortex.drRingPhase);
     const quaternion = Array.isArray(vortex.ringQuaternion) ? vortex.ringQuaternion : null;
     if (
@@ -142,6 +161,7 @@ export function vortexFromPayload(
         !quaternion.every(isFiniteNumber) ||
         !isFiniteNumber(vortex.helixSheet) ||
         typeof vortex.kleinFlipAtThisTick !== 'boolean'
+        || (vortex.matrixCells !== undefined && matrixCells === null)
     ) {
         return null;
     }
@@ -149,6 +169,7 @@ export function vortexFromPayload(
         activeMatrixOp: vortex.activeMatrixOp,
         activeCell: [activeCell[0], activeCell[1]] as const,
         activeCellValue: cellValue,
+        matrixCells,
         drRingPhase: { mahamayaIdx: phase.mahamayaIdx, parashaktiIdx: phase.parashaktiIdx },
         cl42SignatureAtPosition: vortex.cl42SignatureAtPosition,
         ringQuaternion: quaternion as number[],

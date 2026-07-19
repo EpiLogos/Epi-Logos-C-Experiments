@@ -11,8 +11,9 @@ use portal_core::{
 use serde_json::{json, Value};
 
 use crate::gate::kernel_bridge_runtime::{
-    typed_json_m2_epogdoon_projection, typed_json_m2_planetary_elemental_weights,
-    typed_json_m3_lens_codon_binary,
+    typed_json_m2_cymatic_monopoly_state, typed_json_m2_epogdoon_projection,
+    typed_json_m2_planetary_elemental_weights, typed_json_m3_lens_codon_binary,
+    typed_json_m3_lens_field,
 };
 use crate::gate::protocol::RequestFrame;
 use crate::gate::runs::{RunContext, RunSnapshot};
@@ -81,12 +82,58 @@ pub(super) async fn dispatch_rpc(
                 typed_json_m2_epogdoon_projection(address72 as u8),
             ))
         }
+        "kernelBridge.m2.cymaticMonoPolyState(address72)" => {
+            let address72 = frame
+                .params
+                .get("address72")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("address72 must be an unsigned integer".to_owned())
+                })?;
+            if address72 > u8::MAX as u64 {
+                return Err(invalid_params_error(format!(
+                    "address72 {address72} exceeds the kernel's u8 range"
+                )));
+            }
+            Ok(DispatchResult::immediate(
+                typed_json_m2_cymatic_monopoly_state(address72 as u8),
+            ))
+        }
         "kernelBridge.m2.planetaryElementalWeights()" => {
             let state = live_portal_clock_state()?;
             Ok(DispatchResult::immediate(
                 typed_json_m2_planetary_elemental_weights(&state),
             ))
         }
+        "kernelBridge.m3.lensField(lensId)" => {
+            let lens_id = frame
+                .params
+                .get("lensId")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| {
+                    invalid_params_error("lensId must be an unsigned integer".to_owned())
+                })?;
+            if lens_id > 16 {
+                return Err(invalid_params_error(format!(
+                    "lensId {lens_id} outside functional M3 lenses 0..16"
+                )));
+            }
+            let layout = frame.params.get("layout").and_then(Value::as_str);
+            let state = live_portal_clock_state()?;
+            // Track 38 surface: epsilon injected from the tunable registry
+            // (schema default 0.05); the kernel stays registry-free.
+            let akasha_epsilon = crate::nara::weights::tunable_f32(
+                "m3.lens_field.akasha_balance_epsilon",
+                portal_core::lens_field::AKASHA_BALANCE_EPSILON_DEFAULT,
+            );
+            Ok(DispatchResult::immediate(
+                typed_json_m3_lens_field(&state, lens_id as u8, layout, akasha_epsilon)
+                    .map_err(invalid_params_error)?,
+            ))
+        }
+        "s5.oracle.iching.cast" => crate::nara::oracle::cast_iching_ribbon()
+            .map(|receipt| DispatchResult::immediate(serde_json::to_value(receipt).unwrap_or_default()))
+            .map_err(invalid_params_error),
         "s5'.gnostic.musical_transcript" => {
             let vak_address = frame.params.get("vakAddress").ok_or_else(|| {
                 invalid_params_error("vakAddress is required for M3 transcription".to_owned())

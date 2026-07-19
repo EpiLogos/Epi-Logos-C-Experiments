@@ -4,8 +4,8 @@
 // fabricates the field; absence is the renderers' honest "kairos pending".
 
 use portal_core::{
-    kernel_tick_from_epogdoon, live_planets_from_sky, KernelTick, LivePlanetProjection,
-    MathemeHarmonicProfile,
+    cymatic_spheres_from_routing, kernel_tick_from_epogdoon, live_planets_from_sky, KernelTick,
+    LivePlanetProjection, MathemeHarmonicProfile, MathemeNodalConstraint,
 };
 
 fn tick() -> KernelTick {
@@ -123,4 +123,69 @@ fn legacy_profiles_without_the_field_still_deserialize() {
     let round: MathemeHarmonicProfile =
         serde_json::from_value(json).expect("legacy payload deserializes");
     assert_eq!(round.planet_degrees, None);
+}
+
+#[test]
+fn cymatic_spheres_projection_carries_eight_kernel_chakras_and_routed_anchors() {
+    let degrees = [
+        15.0, 32.0, 48.0, 77.0, 95.0, 124.0, 161.0, 208.0, 251.0, 301.0,
+    ];
+    let live_planets = live_planets_from_sky(&degrees, &[false; 10]);
+    let audio_octet = [144.0, 156.0, 168.0, 180.0, 192.0, 204.0, 216.0, 228.0];
+    let nodal_quartet = [
+        MathemeNodalConstraint {
+            ql_position: 0,
+            helix: "bimba".to_owned(),
+            m: 1,
+            n: 1,
+        },
+        MathemeNodalConstraint {
+            ql_position: 1,
+            helix: "bimba".to_owned(),
+            m: 2,
+            n: 1,
+        },
+        MathemeNodalConstraint {
+            ql_position: 2,
+            helix: "pratibimba".to_owned(),
+            m: 3,
+            n: 2,
+        },
+        MathemeNodalConstraint {
+            ql_position: 3,
+            helix: "pratibimba".to_owned(),
+            m: 1,
+            n: 3,
+        },
+    ];
+
+    let projection = cymatic_spheres_from_routing(&live_planets, 4, &audio_octet, &nodal_quartet)
+        .expect("a canonical active ruler yields the spheres projection");
+    assert_eq!(projection.chakras.len(), 8);
+    assert_eq!(projection.chakras[0].name, "Earth/Ground");
+    assert_eq!(projection.chakras[7].name, "Sahasrara");
+    assert_eq!(projection.chakras[3].harmonic.degree, 3);
+    assert_eq!(projection.chakras[3].harmonic.order, 1);
+    assert_eq!(projection.chakras[3].harmonic.amplitude_hz, 180.0);
+    assert_eq!(projection.earth_observer.ordinal, 10);
+    assert_eq!(projection.earth_observer.position, [0.0, 0.0, 0.0]);
+    assert_eq!(projection.sun.planet_id, 0);
+    assert_eq!(projection.sun.degree, 15.0);
+    assert_eq!(projection.active_planet.planet_id, 4);
+    assert_eq!(projection.active_planet.degree, 95.0);
+    assert_eq!(projection.epogdoon_ratio, "9:8");
+}
+
+#[test]
+fn cymatic_spheres_projection_refuses_an_invalid_active_planet() {
+    let live_planets = live_planets_from_sky(&[0.0; 10], &[false; 10]);
+    let profile = MathemeHarmonicProfile::from_tick(tick());
+
+    assert!(cymatic_spheres_from_routing(
+        &live_planets,
+        10,
+        &profile.audio_octet,
+        &profile.nodal_quartet,
+    )
+    .is_none());
 }

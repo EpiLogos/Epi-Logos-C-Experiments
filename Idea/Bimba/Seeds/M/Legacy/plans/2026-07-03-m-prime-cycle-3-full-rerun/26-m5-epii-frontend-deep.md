@@ -74,7 +74,7 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 12. **T26.12 — `ContemplationObjectViewer` widget service inside m5-epii**
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md` — Tranche 26.12 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
-   Substrate ownership: extend the authoritative session-close path with durable PASU-scoped `ContemplationObject` persistence plus governed opaque-reference readback (`s5'.epii.runtimeContext` or `contemplate.fetch_object`) before wiring the viewer. Missing readback is implementation scope, not a blocker.
+   Substrate ownership: extend the authoritative session-close path with durable PASU-scoped `ContemplationObject` persistence plus governed opaque-reference readback (`s5'.epii.runtimeContext` or `contemplate.fetch_object`) before wiring the viewer. Active-carrier concrete route: `nara.session_close.contemplation.read`; it is loopback/PASU/exact-session confined and returns only the strict aggregate projection, never raw contemplation evidence. Missing readback is implementation scope, not a blocker.
    Original ledger status: done — verify or rebuild; never build on it unverified.
    Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
 

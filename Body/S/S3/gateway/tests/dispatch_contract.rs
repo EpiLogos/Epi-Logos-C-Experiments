@@ -79,7 +79,8 @@ fn nara_session_open_close_round_trip() {
         [
             "nara.session_open",
             "nara.session_close",
-            "nara.session_close.read"
+            "nara.session_close.read",
+            "nara.session_close.contemplation.read"
         ]
     );
 

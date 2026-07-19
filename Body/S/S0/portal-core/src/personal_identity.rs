@@ -487,6 +487,25 @@ pub struct PersonalResonance {
 }
 
 impl PersonalResonance {
+    /// Tunable-threshold variant (`m4.resonance.major_threshold`, Track 38
+    /// surface): boundary consumers inject the registry value; the const
+    /// remains the schema default.
+    pub fn from_quaternions_with_threshold(
+        q_personal: Quaternion,
+        q_cosmic: Quaternion,
+        major_threshold: f32,
+    ) -> Self {
+        let mut resonance = Self::from_quaternions(q_personal, q_cosmic);
+        if resonance.conjugate_form_character != ConjugateFormCharacter::ShadowInversion {
+            resonance.conjugate_form_character = if resonance.score >= major_threshold {
+                ConjugateFormCharacter::Major
+            } else {
+                ConjugateFormCharacter::Minor
+            };
+        }
+        resonance
+    }
+
     pub fn from_quaternions(q_personal: Quaternion, q_cosmic: Quaternion) -> Self {
         let q_personal = quat_normalize(q_personal);
         let q_cosmic = quat_normalize(q_cosmic);

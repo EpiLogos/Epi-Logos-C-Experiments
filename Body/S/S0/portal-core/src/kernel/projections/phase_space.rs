@@ -113,10 +113,14 @@ pub const CLOCK_LENSES_16: [ClockLensDivision; 16] = [
         name: "Decan",
         temporal_canon: false,
     },
+    // Lens 6 drift correction (2026-07-19): a 30-fold division cannot carry the
+    // 12-fold zodiac (that is Lens 9 "Solar Month"). Lens 6 is the Pleromatic
+    // lens — 30 aeons in 15 opposition syzygies; law and table in
+    // `crate::pleroma_lens` + `pleroma-30-syzygy-lens6-integration.md`.
     ClockLensDivision {
         slice: 12,
         sections: 30,
-        name: "Zodiacal",
+        name: "Pleromatic",
         temporal_canon: false,
     },
     ClockLensDivision {

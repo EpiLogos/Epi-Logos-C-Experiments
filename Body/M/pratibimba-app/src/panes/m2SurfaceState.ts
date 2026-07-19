@@ -15,7 +15,7 @@
 
 import { AXIS_ORDER, type Axis72, type SonicOverlay } from '../engine/axisViews';
 
-export type M2CorrespondenceFace = 'decan' | 'sonic' | 'planetary' | 'cymatic' | 'axes';
+export type M2CorrespondenceFace = 'decan' | 'sonic' | 'planetary' | 'cymatic' | 'axes' | 'bridge';
 export type M2CymaticSurfaceVariant = 'plate' | 'torus' | 'spheres';
 export type M2PlanetaryViewMode = 'vibrational' | 'psychoid';
 
@@ -26,7 +26,7 @@ export interface M2SurfaceState {
     readonly layerCSurfaceVariant: M2CymaticSurfaceVariant;
     readonly layerCZoom: number;
     readonly lastRoutingTrace: string | null;
-    readonly correspondenceTreeAxisFilter: Axis72;
+    readonly correspondenceTreeAxisFilter: readonly Axis72[];
     readonly correspondenceTreeSonicOverlay: SonicOverlay | null;
     readonly planetaryViewMode: M2PlanetaryViewMode;
     readonly epogdoonProofMode: boolean;
@@ -39,13 +39,13 @@ export const DEFAULT_M2_SURFACE_STATE: M2SurfaceState = Object.freeze({
     layerCSurfaceVariant: 'plate',
     layerCZoom: 1,
     lastRoutingTrace: null,
-    correspondenceTreeAxisFilter: 'mef',
+    correspondenceTreeAxisFilter: ['mef'] as const,
     correspondenceTreeSonicOverlay: null,
     planetaryViewMode: 'vibrational',
     epogdoonProofMode: false
 });
 
-const FACES = new Set<M2CorrespondenceFace>(['decan', 'sonic', 'planetary', 'cymatic', 'axes']);
+const FACES = new Set<M2CorrespondenceFace>(['decan', 'sonic', 'planetary', 'cymatic', 'axes', 'bridge']);
 const SURFACE_VARIANTS = new Set<M2CymaticSurfaceVariant>(['plate', 'torus', 'spheres']);
 const PLANETARY_VIEW_MODES = new Set<M2PlanetaryViewMode>(['vibrational', 'psychoid']);
 const AXES = new Set<Axis72>(AXIS_ORDER);
@@ -89,8 +89,10 @@ export function deserializeM2SurfaceState(payload: unknown): M2SurfaceState {
                 ? payload.lastRoutingTrace
                 : null,
         correspondenceTreeAxisFilter:
-            typeof payload.correspondenceTreeAxisFilter === 'string' && AXES.has(payload.correspondenceTreeAxisFilter as Axis72)
-                ? payload.correspondenceTreeAxisFilter as Axis72
+            Array.isArray(payload.correspondenceTreeAxisFilter) &&
+            payload.correspondenceTreeAxisFilter.length > 0 &&
+            payload.correspondenceTreeAxisFilter.every(axis => typeof axis === 'string' && AXES.has(axis as Axis72))
+                ? [...new Set(payload.correspondenceTreeAxisFilter as Axis72[])]
                 : DEFAULT_M2_SURFACE_STATE.correspondenceTreeAxisFilter,
         correspondenceTreeSonicOverlay:
             payload.correspondenceTreeSonicOverlay === 'mantra' || payload.correspondenceTreeSonicOverlay === 'asma'

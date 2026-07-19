@@ -14,7 +14,7 @@ describe('m2SurfaceState', () => {
             layerCSurfaceVariant: 'torus' as const,
             layerCZoom: 1.6,
             lastRoutingTrace: 'f-routing://profile/72/17',
-            correspondenceTreeAxisFilter: 'decan' as const,
+            correspondenceTreeAxisFilter: ['decan', 'shem'] as const,
             correspondenceTreeSonicOverlay: 'asma' as const,
             planetaryViewMode: 'psychoid' as const,
             epogdoonProofMode: true
@@ -33,11 +33,22 @@ describe('m2SurfaceState', () => {
                 layerCSurfaceVariant: 'webgl',
                 layerCZoom: 0,
                 lastRoutingTrace: '',
-                correspondenceTreeAxisFilter: 'not-an-axis',
+                correspondenceTreeAxisFilter: ['not-an-axis'],
                 correspondenceTreeSonicOverlay: 'not-an-overlay',
                 planetaryViewMode: 'not-a-view',
                 epogdoonProofMode: 'true'
             })
         ).toEqual(DEFAULT_M2_SURFACE_STATE);
+    });
+
+    it('persists the spheres selection as a first-class Layer C variant', () => {
+        const spheres = {
+            ...DEFAULT_M2_SURFACE_STATE,
+            layerCSurfaceVariant: 'spheres' as const
+        };
+        expect(
+            deserializeM2SurfaceState(serializeM2SurfaceState(spheres))
+                .layerCSurfaceVariant
+        ).toBe('spheres');
     });
 });

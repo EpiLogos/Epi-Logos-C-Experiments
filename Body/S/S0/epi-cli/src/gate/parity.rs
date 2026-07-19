@@ -661,6 +661,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         // portal-core parashakti adapter — dispatch classifies it S0 product
         | "m2.cymatic_invert"
         | "kernelBridge.m2.epogdoonProjection(address72)"
+        | "kernelBridge.m2.cymaticMonoPolyState(address72)"
         | "kernelBridge.m2.planetaryElementalWeights()"
         | "kernelBridge.m3.lensCodonBinary(lensId)"
         // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)

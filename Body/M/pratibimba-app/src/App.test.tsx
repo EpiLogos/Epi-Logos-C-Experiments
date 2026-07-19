@@ -214,7 +214,7 @@ describe('App shell', () => {
             layerCSurfaceVariant: 'torus',
             layerCZoom: 1.6,
             lastRoutingTrace: 'f-routing://profile/72/17',
-            correspondenceTreeAxisFilter: 'decan',
+            correspondenceTreeAxisFilter: ['decan'],
             correspondenceTreeSonicOverlay: 'asma',
             planetaryViewMode: 'psychoid',
             epogdoonProofMode: true

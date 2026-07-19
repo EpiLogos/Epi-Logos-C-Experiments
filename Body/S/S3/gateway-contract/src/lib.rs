@@ -95,12 +95,16 @@ pub const S0_PRIME_SETTINGS_METHODS: &[&str] = &[
 ];
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
+pub const S5_ORACLE_ICHING_CAST_METHOD: &str = "s5.oracle.iching.cast";
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
+pub const KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD: &str =
+    "kernelBridge.m2.cymaticMonoPolyState(address72)";
 pub const KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD: &str =
     "kernelBridge.m2.planetaryElementalWeights()";
 pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD: &str =
     "kernelBridge.m3.lensCodonBinary(lensId)";
+pub const KERNEL_BRIDGE_M3_LENS_FIELD_METHOD: &str = "kernelBridge.m3.lensField(lensId)";
 pub const S2_GRAPH_LIST_METHOD: &str = "s2.graph.list";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
