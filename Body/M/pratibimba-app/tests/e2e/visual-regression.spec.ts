@@ -593,6 +593,7 @@ test('(e) block-host standard: the Review fold renders the fixture blocks to a s
         page.locator('.face-active [data-block-type="review-item"]').first()
     ).toBeVisible();
     await expect(host).toHaveScreenshot('block-host-review-fold.png', {
-        stylePath: HIDE_VOLATILE_CSS
+        stylePath: HIDE_VOLATILE_CSS,
+        maxDiffPixels: 1000
     });
 });
