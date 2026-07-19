@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T21:12:58.083Z",
+  "updatedAt": "2026-07-19T21:36:55.915Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11678,16 +11678,33 @@
       "blocker": null
     },
     "24.T24.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-19T21:36:56.006Z",
+      "claimedAt": "2026-07-19T21:18:13.340Z",
+      "completedAt": "2026-07-19T21:36:56.006Z",
+      "evidence": [
+        {
+          "at": "2026-07-19T21:36:56.006Z",
+          "text": "Independent verifier PASS: plan.runs/verifications/24.T24.2.md; live 385-node overlay and four-mode control verified against spawned gateway.",
+          "receipt": {
+            "command": "pnpm playwright test tests/e2e/m3-renderer-modes.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/CosmicClockRenderService.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-renderer-modes.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "codex-mdev-242-cosmic-clock",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-19T21:18:13.340Z",
+      "runId": "20260719T211813Z-24-T24.2",
       "worktree": null,
       "blocker": null
     },
@@ -24011,6 +24028,16 @@
       "leaseExpiresAt": "2026-07-19T22:34:54.199Z",
       "worktree": null,
       "completedAt": "2026-07-19T21:12:58.058Z"
+    },
+    {
+      "runId": "20260719T211813Z-24-T24.2",
+      "taskId": "24.T24.2",
+      "status": "done",
+      "startedAt": "2026-07-19T21:18:13.340Z",
+      "owner": "codex-mdev-242-cosmic-clock",
+      "leaseExpiresAt": "2026-07-20T00:18:13.340Z",
+      "worktree": null,
+      "completedAt": "2026-07-19T21:36:56.006Z"
     }
   ],
   "activeRoute": {

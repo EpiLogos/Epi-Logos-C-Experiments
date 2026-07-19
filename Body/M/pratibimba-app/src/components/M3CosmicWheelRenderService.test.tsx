@@ -165,6 +165,35 @@ describe('M3CosmicWheelRenderService', () => {
         );
     });
 
+    it('layers the 385-node cosmic clock over the full wheel with honest edge provenance', () => {
+        render(
+            <M3CosmicWheelRenderService
+                surface={ready()}
+                mode="full"
+                clockMode="flat-clock-debug"
+            />
+        );
+
+        expect(screen.getAllByTestId(/^m3-clock-degree-\d+$/)).toHaveLength(360);
+        expect(screen.getAllByTestId(/^m3-clock-amino-\d+$/)).toHaveLength(24);
+        expect(screen.getByTestId('m3-clock-axis-mundi')).toBeTruthy();
+        expect(
+            screen.getByTestId('m3-cosmic-clock-depth-overlay').getAttribute('data-node-count')
+        ).toBe('385');
+        expect(
+            screen
+                .getByTestId('m3-clock-aspect-pending')
+                .querySelector('[data-testid="provenance-pending"]')
+                ?.getAttribute('title')
+        ).toBe('pending-profile-field:cosmicClock.aspectEdges');
+        expect(
+            screen
+                .getByTestId('m3-clock-hop-pending')
+                .querySelector('[data-testid="provenance-pending"]')
+                ?.getAttribute('title')
+        ).toBe('pending-profile-field:cosmicClock.hopEdges');
+    });
+
     it('renders honest pending ground when the backend lane is absent', () => {
         const surface = buildM3WheelSurface({
             payload: {

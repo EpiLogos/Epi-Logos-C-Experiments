@@ -9,11 +9,12 @@
  *   rotation arrow, the 22 Major-Arcana inner-ring SLOTS (the arcana map
  *   itself is kernel-owned and not yet bussed — rendered honest-pending,
  *   never from a local table), and the Quintessence centre audit over the
- *   optional authority-provided charge quaternion (Tranche 24.11). Refuses to render when the surface
- *   is not ready and falls through to the pending banner.
+ *   optional authority-provided charge quaternion (Tranche 24.11), and the
+ *   385-node cosmic-clock depth overlay (Tranche 24.2). Refuses to render when
+ *   the surface is not ready and falls through to the pending banner.
  * Does NOT own: the profile cache or tick store (callers build the surface
  *   via `buildM3WheelSurface`), codon/arcana/hexagram tables (kernel via
- *   bus only), charge-quaternion computation, depth views (24.2+).
+ *   bus only), charge-quaternion computation, or depth-view authority data.
  */
 
 import { useEffect } from 'react';
@@ -28,6 +29,11 @@ import {
     M3FibonacciGroundRing,
     type M3FibonacciGroundViewModel
 } from './M3FibonacciGroundRing';
+import {
+    buildCosmicClockRenderModel,
+    CosmicClockRenderService,
+    type CosmicClockMode
+} from './CosmicClockRenderService';
 
 export interface M3WheelProjection {
     readonly surfaceIndex: number | null;
@@ -68,6 +74,7 @@ export interface M3WheelSurface {
 export interface M3CosmicWheelRenderServiceProps {
     readonly surface: M3WheelSurface;
     readonly mode: 'badge' | 'mini-view' | 'full';
+    readonly clockMode?: CosmicClockMode;
     readonly tickHandler?: (tick: number, degree720: number) => void;
 }
 
@@ -269,6 +276,7 @@ const MODE_SIZE = { badge: 20, 'mini-view': 160, full: 340 } as const;
 export function M3CosmicWheelRenderService({
     surface,
     mode,
+    clockMode = 'flat-clock-debug',
     tickHandler
 }: M3CosmicWheelRenderServiceProps) {
     const { tick12, degree720 } = surface;
@@ -303,6 +311,15 @@ export function M3CosmicWheelRenderService({
     const arcanaR = c * 0.58;
     const showLabels = mode === 'full';
     const showArcana = mode !== 'badge';
+    const cosmicClockModel =
+        mode === 'full' && surface.fibonacciGround !== null
+            ? buildCosmicClockRenderModel({
+                  tick12: surface.tick12,
+                  degree720: surface.degree720,
+                  backboneDegrees: surface.fibonacciGround.backboneDegrees,
+                  mode: clockMode
+              })
+            : null;
 
     const rotationArrow =
         projection.rotation !== null && projection.rotationalStateCount !== null
@@ -447,6 +464,13 @@ export function M3CosmicWheelRenderService({
                             showDigits={mode === 'full'}
                         />
                     ) : null}
+                    {cosmicClockModel ? (
+                        <CosmicClockRenderService
+                            model={cosmicClockModel}
+                            center={c}
+                            size={size}
+                        />
+                    ) : null}
                     {cells}
                     {showArcana ? <g data-testid="m3-wheel-arcana-ring">{arcanaSlots}</g> : null}
                     {rotationArrow ? (
@@ -514,6 +538,22 @@ export function M3CosmicWheelRenderService({
                             ) : null}
                         </>
                     )}
+                    {cosmicClockModel?.aspectEdges.length === 0 ? (
+                        <span data-testid="m3-clock-aspect-pending">
+                            <ProvenanceBadge
+                                state="pending"
+                                reason="pending-profile-field:cosmicClock.aspectEdges"
+                            />
+                        </span>
+                    ) : null}
+                    {cosmicClockModel?.hopEdges.length === 0 ? (
+                        <span data-testid="m3-clock-hop-pending">
+                            <ProvenanceBadge
+                                state="pending"
+                                reason="pending-profile-field:cosmicClock.hopEdges"
+                            />
+                        </span>
+                    ) : null}
                 </div>
                 {mode === 'full' ? (
                     <figcaption data-testid="m3-wheel-arcana-pending">

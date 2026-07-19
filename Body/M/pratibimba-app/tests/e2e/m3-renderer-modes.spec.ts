@@ -1,13 +1,14 @@
 /**
- * Coordinate: M' M3' (renderer-mode identity proof, rerun 24.T24.17/18)
+ * Coordinate: M' M3' (renderer/depth identity proof, rerun 24.T24.2/17/18)
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): #0 cosmic face compact/full renderer boundary
  * Actualises: real Chromium proof that badge, mini-view, and full modes retain
  *   one authority-provided M3 surface while daily/deep routing changes mounts,
- *   including the pentadic hinge and Level-0 Fibonacci Ground projections.
+ *   including the pentadic hinge, Level-0 Fibonacci Ground, and 385-node
+ *   cosmic-clock depth projections.
  * Public surface: Playwright test over the spawned gateway.
  * Does NOT own: profile production, wheel geometry, routing law, or layout state.
- * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.17-19.
+ * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.2/17-19.
  */
 
 import { expect, Locator, Page, test } from '@playwright/test';
@@ -119,6 +120,22 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
         'title',
         'pending-profile-field:quintessence.natalFibonacciPosition'
     );
+    const clockDepth = full.getByTestId('m3-cosmic-clock-depth-overlay');
+    await expect(clockDepth).toHaveAttribute('data-node-count', '385');
+    await expect(clockDepth).toHaveAttribute('data-mode', 'flat-clock-debug');
+    await expect(clockDepth.getByTestId(/^m3-clock-degree-\d+$/)).toHaveCount(360);
+    await expect(clockDepth.getByTestId(/^m3-clock-amino-\d+$/)).toHaveCount(24);
+    await expect(clockDepth.getByTestId('m3-clock-axis-mundi')).toHaveCount(1);
+    await expect(
+        full.getByTestId('m3-clock-aspect-pending').getByTestId('provenance-pending')
+    ).toHaveAttribute('title', 'pending-profile-field:cosmicClock.aspectEdges');
+    await expect(
+        full.getByTestId('m3-clock-hop-pending').getByTestId('provenance-pending')
+    ).toHaveAttribute('title', 'pending-profile-field:cosmicClock.hopEdges');
+    await page.getByTestId('m3-depth-toroidal-world').click();
+    await expect(clockDepth).toHaveAttribute('data-mode', 'toroidal-world');
+    await page.getByTestId('m3-depth-hopf-identity').click();
+    await expect(clockDepth).toHaveAttribute('data-mode', 'hopf-identity');
     await expectSameSurface(badge, full);
     const relationInspector = page
         .locator('.face-active [data-testid="m3-inspectors"]')

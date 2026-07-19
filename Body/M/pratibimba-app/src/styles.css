@@ -503,6 +503,39 @@ textarea {
   font-size: var(--type-caption);
 }
 
+.m3-clock-degree-node {
+  fill: var(--hairline);
+}
+
+.m3-clock-degree-node-active {
+  fill: var(--ready);
+  stroke: var(--ground);
+  stroke-width: 1;
+}
+
+.m3-clock-amino-node {
+  fill: var(--ink-dim);
+  stroke: var(--ground);
+  stroke-width: 0.5;
+}
+
+.m3-clock-axis-mundi {
+  fill: color-mix(in srgb, var(--ground-raised) 82%, transparent);
+  stroke: var(--ring);
+  stroke-width: 1.5;
+}
+
+.m3-clock-aspect-edge {
+  stroke: var(--epi-zodiacal-anchor);
+  stroke-width: 0.8;
+}
+
+.m3-clock-hop-edge {
+  stroke: var(--epi-cardinal-anchor);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 2;
+}
+
 @media (max-width: 620px) {
   .m3-daily-wheel-mini-view {
     top: 2rem;
