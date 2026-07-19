@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T08:31:48.241Z",
+  "updatedAt": "2026-07-19T08:38:30.958Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14578,19 +14578,33 @@
       "blocker": null
     },
     "36.T36.7": {
-      "status": "review",
-      "updatedAt": "2026-07-19T08:31:42.193Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T08:38:30.936Z",
       "claimedAt": "2026-07-19T08:28:35.174Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T08:38:30.936Z",
       "evidence": [
         {
           "at": "2026-07-19T08:31:42.193Z",
           "text": "Fresh routeability proof: portal-core anuttara_pentadic_runtime_trace 13/13 validates first-class public-safe profile transport and all 0/1→5, paired-15, 24x15=360, 384 hinge laws; epii-autoresearch-core resonance_ebm anuttara_pentadic_feature 4/4 consumes real portal profiles in zero-fallback and trained-checkpoint paths without canon rewrite; honesty lint clean. External review is owned by Claude per user instruction."
+        },
+        {
+          "at": "2026-07-19T08:38:30.936Z",
+          "text": "Independent PASS record 36.T36.7.md (verifier claude-verifier-review-drain): W gate GREEN — live-wire, gateway 95, gateway-contract 89, ta-onta 498, honesty-lint pass. Cited deliverables re-run fresh and confirmed: portal-core anuttara_pentadic_runtime_trace 13/13 (0/1->5, paired-15, 24x15=360, 384 hinge laws); epii-autoresearch-core resonance_ebm anuttara_pentadic_feature 4/4 (real portal profiles, zero-fallback + trained-checkpoint).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 36.T36.7 (W gate: live-wire+gateway) + cargo test portal-core anuttara_pentadic_runtime_trace + epii-autoresearch-core --features resonance_ebm anuttara_pentadic_feature",
+            "exitCode": 0,
+            "testsPassed": 95,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/tests/anuttara_pentadic_runtime_trace.rs",
+              "Body/S/S5/epii-autoresearch-core/tests/anuttara_pentadic_feature.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 144 dirty files.",
       "owner": "codex-mdev-367-routeability",
-      "leaseExpiresAt": "2026-07-19T10:28:35.174Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-19T08:31:42.193Z",
       "runId": "20260719T082835Z-36-T36.7",
       "worktree": null,
@@ -17044,16 +17058,16 @@
       "blocker": null
     },
     "48.T48.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-19T08:33:00.125Z",
+      "claimedAt": "2026-07-19T08:33:00.125Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 144 dirty files.",
+      "owner": "codex-mdev-487-data-layer",
+      "leaseExpiresAt": "2026-07-19T10:33:00.125Z",
+      "heartbeatAt": "2026-07-19T08:33:00.125Z",
+      "runId": "20260719T083300Z-48-T48.7",
       "worktree": null,
       "blocker": null
     },
@@ -23248,6 +23262,15 @@
       "leaseExpiresAt": "2026-07-19T10:28:35.174Z",
       "worktree": null,
       "completedAt": "2026-07-19T08:31:42.193Z"
+    },
+    {
+      "runId": "20260719T083300Z-48-T48.7",
+      "taskId": "48.T48.7",
+      "status": "in_progress",
+      "startedAt": "2026-07-19T08:33:00.125Z",
+      "owner": "codex-mdev-487-data-layer",
+      "leaseExpiresAt": "2026-07-19T10:33:00.125Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
