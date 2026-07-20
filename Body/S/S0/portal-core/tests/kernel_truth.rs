@@ -517,7 +517,6 @@ mod c_engine {
 }
 
 #[test]
-#[ignore = "expected-red: Track 33 — epi-lib src/kernel.c kernel_energy_evaluate computes total_energy = bimba_pratibimba + lens + r as a plain unweighted sum (and leaks the diagnostic latent misalignment into the total); the spec law is E_total = (4·E4+5·E5+6·E6)/15 with the latent term diagnostic-only"]
 fn c_engine_kernel_energy_total_carries_456_weighted_channels() {
     use c_engine::{CKernelBioquaternion, CKernelResonanceVector, CQuaternion};
 

@@ -19,13 +19,6 @@
     },
     {
       "suite": "portal-core",
-      "test": "c_engine_kernel_energy_total_carries_456_weighted_channels",
-      "owningTrack": "33",
-      "registerRow": "hardening §5 C2",
-      "reason": "epi-lib src/kernel.c kernel_energy_evaluate computes total_energy as a plain unweighted bimba_pratibimba + lens + r sum (and leaks the diagnostic latent misalignment into the total); the spec law is E_total = (4·E4+5·E5+6·E6)/15 with the latent term diagnostic-only. The C engine must converge on the canonical law the Rust projection already carries."
-    },
-    {
-      "suite": "portal-core",
       "test": "psychoid_field_projection_carries_cymatic_signature_64_as_8x8_spectrum",
       "owningTrack": "08 (integrated 4-5-0 §4.3.1)",
       "registerRow": "hardening §5 C8 / Wave-A M4 row 8",
