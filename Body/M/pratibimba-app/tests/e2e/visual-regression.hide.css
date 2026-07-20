@@ -27,9 +27,18 @@ canvas,
 [data-testid='personal-recognition-engine'],
 [data-testid='now-pane'],
 [data-testid='m3-daily-wheel-mini-view'],
+[data-testid='m0-coordinate-summary-card'],
 [data-testid='personal-recognition-substrate'],
 [data-testid='personal-recognition-codon'],
 [data-testid='personal-recognition-line-change'],
 [data-testid='personal-recognition-checkpoint'] {
     visibility: hidden !important;
+}
+
+/* The Review-fold baseline proves the synthetic BlockHost fixture. These
+ * asynchronous live readers have dedicated real-UI coverage and would make
+ * the fixture capture's height depend on gateway response timing. */
+[data-testid='review-session-close'],
+[data-testid='review-contemplation-object'] {
+    display: none !important;
 }

@@ -44,8 +44,14 @@ async fn live_gateway_projects_all_six_kernel_authored_sonic_cards() {
     assert_eq!(tree["planetaryKeying"].as_array().map(Vec::len), Some(10));
     assert_eq!(tree["planetaryKeying"][7]["isOuter"], true);
     assert_eq!(tree["psychoidPlanetary"].as_array().map(Vec::len), Some(7));
-    assert_eq!(tree["psychoidPlanetary"][0]["archetypalRole"], "Unity-Monad");
-    assert_eq!(tree["psychoidPlanetary"][6]["archetypalRole"], "7th-Boundary");
+    assert_eq!(
+        tree["psychoidPlanetary"][0]["archetypalRole"],
+        "Unity-Monad"
+    );
+    assert_eq!(
+        tree["psychoidPlanetary"][6]["archetypalRole"],
+        "7th-Boundary"
+    );
 
     let bridge = &receipt["bridge72"];
     assert_eq!(bridge["address72"], 17);

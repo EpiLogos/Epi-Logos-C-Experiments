@@ -49,6 +49,27 @@ function waitForPort(port: number, timeoutMs: number): Promise<void> {
     });
 }
 
+function waitForPortToClose(port: number, timeoutMs: number): Promise<void> {
+    const deadline = Date.now() + timeoutMs;
+    return new Promise((resolveClose, rejectClose) => {
+        const attempt = () => {
+            const socket = connect({ port, host: '127.0.0.1' }, () => {
+                socket.destroy();
+                if (Date.now() > deadline) {
+                    rejectClose(new Error(`port ${port} did not close within ${timeoutMs}ms`));
+                } else {
+                    setTimeout(attempt, 100);
+                }
+            });
+            socket.on('error', () => {
+                socket.destroy();
+                resolveClose();
+            });
+        };
+        attempt();
+    });
+}
+
 /** Kill leftover listeners on the dedicated e2e ports — but only processes
  *  that are recognisably ours (epi gateway / node sidecar / vite). */
 function sweepPort(port: number): void {
@@ -122,6 +143,8 @@ export default async function globalSetup(): Promise<void> {
     ensureChromium();
     sweepPort(E2E_GATEWAY_PORT);
     sweepPort(E2E_SIDECAR_PORT);
+    await waitForPortToClose(E2E_GATEWAY_PORT, 5_000);
+    await waitForPortToClose(E2E_SIDECAR_PORT, 5_000);
 
     // One real temp vault is shared by both read paths: the browser-sidecar
     // commands and the gateway's governed s1'.vault.* methods. Keeping these
@@ -150,6 +173,7 @@ export default async function globalSetup(): Promise<void> {
     //     gate that fails honestly when Neo4j is down.
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
     const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
+    const gatewayNow = join(vaultRoot, 'Empty', 'Present', 'e2e', 'now.md');
     const autoresearchConfig = join(gatewayHome, '.epi-logos', 'config.toml');
     const gatewayIdentity = join(gatewayHome, '.epi-logos', 'nara', 'profile.json');
     const gatewayKairos = join(
@@ -160,6 +184,11 @@ export default async function globalSetup(): Promise<void> {
         'current.json'
     );
     mkdirSync(dirname(autoresearchConfig), { recursive: true });
+    mkdirSync(dirname(gatewayNow), { recursive: true });
+    writeFileSync(
+        gatewayNow,
+        '---\ncoordinate: M4\nc_4_artifact_role: now\n---\n\n# E2E NOW\n'
+    );
     writeFileSync(
         autoresearchConfig,
         `[autoresearch]\narticulation_gap_peer_ratio = 0.75\ncontradiction_vector_disagreement_threshold = 0.35\nresonance_promotion_confidence_threshold = 0.85\nstale_revision_threshold = 12\npriority_order = ["articulation_gap", "promotion_candidate", "contradiction_candidate", "stale_by_non_revisit"]\n`
@@ -210,6 +239,7 @@ export default async function globalSetup(): Promise<void> {
             ...process.env,
             HOME: gatewayHome,
             EPI_NARA_HOME: join(gatewayHome, '.epi-logos', 'nara'),
+            EPI_NOW_PATH: gatewayNow,
             EPI_GATE_STATE_ROOT: gatewayStateRoot,
             EPI_GNOSTIC_PYTHON: epiGnosticBin,
             EPILOGOS_VAULT: vaultRoot,

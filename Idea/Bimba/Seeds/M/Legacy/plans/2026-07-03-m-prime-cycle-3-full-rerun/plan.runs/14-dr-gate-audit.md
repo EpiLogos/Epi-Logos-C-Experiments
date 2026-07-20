@@ -10,15 +10,15 @@ Gate law: every row VALIDATED or explicitly DOWNGRADED. Exceptions: 0.
 | DR-M0-3 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** M0' has six M0-X' dat |
 | DR-M1-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Standing invariant. T |
 | DR-M1-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** **Full 3D Bevy/wgpu r |
-| DR-M2-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** 10 planets total incl |
+| DR-M2-1 | VALIDATED | **Status:** DR-M2-1 VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** 10 planets to |
 | DR-M2-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Six 72-axes (MEF / ta |
 | DR-M3-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Runtime law is author |
 | DR-M3-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The 72→64 fold is **t |
 | DR-M3-3 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** **Never a contradicti |
 | DR-M4-1 | VALIDATED | **Status:** DR-M4-1 VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** The canonical |
 | DR-M4-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user |
-| DR-M5-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Cleanup 2026-06-03 (final per DR-S4 |
-| DR-M5-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Sibling of DR-M1-1. S |
+| DR-M5-1 | VALIDATED | **Status:** VALIDATED / CLEANUP LANDED  ·  **Validated:** 2026-06-02  ·  **Cleanup verified:** 2026-07-16 (Tra |
+| DR-M5-2 | VALIDATED | **Status:** VALIDATED / SWEEP LANDED  ·  **Validated:** 2026-06-02  ·  **Sweep verified:** 2026-07-16 (Tranche |
 | DR-B-2 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Land it. `Body/S/S4/p |
 | DR-B-3 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Cleanup 2026-06-03 (final per DR-S4 |
 | DR-KB-1 | VALIDATED | **Status:** VALIDATED  ·  **Validated:** 2026-06-02  ·  **By:** user  ·  **Resolution:** Already resolved at C |

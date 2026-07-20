@@ -137,7 +137,7 @@ export const DECLARED_OPTIONAL_PROJECTIONS = [
     { field: 'personalPole', schema: null },
     { field: 'psychoidField', schema: null },
     { field: 'canonRecognitionStream', schema: null },
-    { field: 'vakAddress', schema: null },
+    { field: 'vakAddress', schema: 'ProfileVakAddress' },
 ];
 
 /**
@@ -174,6 +174,38 @@ const QUINTESSENCE_ALLOWED_KEYS = [
  * union(covers) ∪ EXEMPT_PROFILE_FIELDS and FAILS on any gap.
  */
 export const PROJECTION_MANIFEST = [
+    {
+        name: 'gateway.nara-transform-lifecycle',
+        required: true,
+        covers: [],
+        describe: '25.T25.11: the live gateway advertises the governed M4 transform lifecycle',
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return ['nara.transform.start', 'nara.transform.advance']
+                .filter(method => !methods.includes(method))
+                .map(method => `live gateway does not advertise ${method}`);
+        }
+    },
+    {
+        name: 'gateway.s2-codon-aa-lookup',
+        required: true,
+        covers: [],
+        describe: '30.T30.13: the live gateway advertises the C-backed codon label method',
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return methods.includes('s2.codon.aa_lookup')
+                ? []
+                : ['live gateway does not advertise s2.codon.aa_lookup'];
+        }
+    },
     {
         name: 'gateway.s2-graph-list',
         required: true,
@@ -215,6 +247,62 @@ export const PROJECTION_MANIFEST = [
                 const parsed = contracts.MathemeHarmonicProfile.safeParse(payload.harmonicProfile);
                 if (!parsed.success) {
                     errors.push(`frame[${index}] generation=${payload.generation}: ${zodIssues(parsed.error).join('; ')}`);
+                }
+            });
+            return errors;
+        }
+    },
+    {
+        name: 'vakLanguificationTrace',
+        required: true,
+        covers: ['vakLanguificationTrace', 'vakAddress'],
+        describe: '36.T36.8: live VAK evaluation descends through one coherent Para-to-Vaikhari profile trace',
+        assert(capture, contracts) {
+            const addressByCf = {
+                '(00/00)': 'M0-2:00/00',
+                '(0/1)': 'M0-1/M0-3/M0-4/M0-5:(0/1)',
+                '(0/1/2)': 'M0-4.0/1/2',
+                '(0/1/2/3)': 'M0-4.0/1/2/3',
+                '(4.0/1-4.4/5)': 'M0-4',
+                '(4.5/0)': 'M0-4.5/0',
+                '(5/0)': 'M0-5'
+            };
+            const tonicByMode = [
+                undefined,
+                '(0/1)',
+                '(0/1/2)',
+                '(0/1/2/3)',
+                '(4.0/1-4.4/5)',
+                '(4.5/0)',
+                '(5/0)'
+            ];
+            const carriers = profilesOf(capture)
+                .filter(profile => profile.vakLanguificationTrace);
+            if (carriers.length === 0) {
+                return ['no profile frame carried vakLanguificationTrace'];
+            }
+            const errors = [];
+            carriers.forEach((profile, index) => {
+                const trace = profile.vakLanguificationTrace;
+                const parsed = contracts.VakLanguificationTrace.safeParse(trace);
+                if (!parsed.success) {
+                    errors.push(`trace[${index}]: ${zodIssues(parsed.error).join('; ')}`);
+                    return;
+                }
+                if (trace.m0Address !== addressByCf[trace.cfNotation]) {
+                    errors.push(`trace[${index}]: CF ${trace.cfNotation} has address ${trace.m0Address}`);
+                }
+                if (trace.resonance72Index !== profile.resonance72?.lensAnchorIndex) {
+                    errors.push(`trace[${index}]: resonance72Index diverges from the profile authority`);
+                }
+                if (
+                    trace.halfDecanIndex !== undefined &&
+                    trace.halfDecanIndex !== Math.floor(trace.resonance72Index / 2)
+                ) {
+                    errors.push(`trace[${index}]: halfDecanIndex diverges from resonance72Index`);
+                }
+                if (trace.modeTonicCf !== tonicByMode[profile.lensMode?.mode]) {
+                    errors.push(`trace[${index}]: modeTonicCf diverges from lensMode.mode`);
                 }
             });
             return errors;
@@ -1292,6 +1380,8 @@ export async function captureLive({
     });
     const frames = [];
     const count = name => frames.filter(f => frameName(f) === name).length;
+    const traceCount = () => profileFrames({ frames })
+        .filter(frame => frame.payload?.harmonicProfile?.vakLanguificationTrace).length;
     try {
         await waitForPort(port, 20000);
         const ws = new WebSocket(`ws://127.0.0.1:${port}`);
@@ -1301,7 +1391,8 @@ export async function captureLive({
                     `capture incomplete after ${timeoutMs}ms: ` +
                     `${count('profile.update')}/${profiles} profiles, ` +
                     `${count('m123.chime')} chimes, ${count('tick')} ticks, ` +
-                    `${count('health')} health, ${count('heartbeat')} heartbeats`
+                    `${count('health')} health, ${count('heartbeat')} heartbeats, ` +
+                    `${traceCount()} VAK traces`
                 ));
             }, timeoutMs);
             ws.on('open', () => {
@@ -1315,12 +1406,58 @@ export async function captureLive({
                     return;
                 }
                 frames.push(frame);
+                if (frame.type === 'res' && frame.id === 1 && !frame.error) {
+                    ws.send(JSON.stringify({
+                        type: 'req',
+                        id: 2,
+                        method: 'sessions.import',
+                        params: {
+                            targetSessionKey: 'agent:live-wire:main',
+                            sourceSessionKey: 'live-wire:profile-bus',
+                            label: 'Live Wire VAK Profile'
+                        }
+                    }));
+                }
+                if (frame.type === 'res' && frame.id === 2 && !frame.error) {
+                    ws.send(JSON.stringify({
+                        type: 'req',
+                        id: 3,
+                        method: 'sessions.patch',
+                        params: {
+                            sessionKey: 'agent:live-wire:main',
+                            vakAddress: {
+                                cpf: '(4.0/1-4.4/5)',
+                                ct: ['CT5'],
+                                cp: 'CP4.5',
+                                cf: '(5/0)',
+                                cfp: 'CFP5',
+                                cs: {
+                                    code: 'CS5',
+                                    direction: "Night'",
+                                    recognized: true
+                                }
+                            }
+                        }
+                    }));
+                }
+                if (
+                    frame.type === 'res' &&
+                    (frame.id === 2 || frame.id === 3) &&
+                    frame.error
+                ) {
+                    clearTimeout(timeout);
+                    rejectDone(new Error(
+                        `live VAK capture request ${frame.id} failed: ${frame.error.message ?? 'unknown error'}`
+                    ));
+                    return;
+                }
                 if (
                     count('profile.update') >= profiles &&
                     count('m123.chime') >= 1 &&
                     count('tick') >= 3 &&
                     count('health') >= 1 &&
-                    count('heartbeat') >= 1
+                    count('heartbeat') >= 1 &&
+                    traceCount() >= 1
                 ) {
                     clearTimeout(timeout);
                     ws.close();

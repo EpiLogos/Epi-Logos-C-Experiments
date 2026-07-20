@@ -1,0 +1,38 @@
+{
+  "runId": "20260720T170307Z-29-T29.14",
+  "taskId": "29.T29.14",
+  "startedAt": "2026-07-20T17:03:07.949Z",
+  "owner": "codex-mdev-2914-deep-links",
+  "leaseExpiresAt": "2026-07-20T21:03:07.949Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.14",
+    "trackId": "29",
+    "tranche": "T29.14",
+    "title": "Composition deep-link routes + cross-layout intent integration *(spec-ahead-integration; closes OW-WC-IP-3; cross-link 11.2 / TS-11)",
+    "effort": "spec-ahead-integration; closes OW-WC-IP-3; cross-link 11.2 / TS-11",
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.13"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: composition geometric-slot registry (handle-class allow/forbid; compositionLoad hard-fails juxtaposition) + 14 composition events + one useCompositionProfile subscription in pratibimba-app. §2 track 29."
+  }
+}

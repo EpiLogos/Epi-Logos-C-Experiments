@@ -487,6 +487,37 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Transform ───────────────────────────────────────────────────
+        "nara.transform.start" => {
+            let container = required_param(params, "container")?;
+            serde_json::to_value(
+                transform::start_container(&container)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.transform.advance" => {
+            let container = required_param(params, "container")?;
+            let expected_stage = required_param(params, "expectedStage")
+                .or_else(|_| required_param(params, "expected_stage"))?;
+            let direction =
+                transform::TransformDirection::parse(opt_str(params, "direction").as_deref())
+                    .map_err(|error| ("invalid-params".to_owned(), error))?;
+            let confirmed_backstep = params
+                .get("confirmedBackstep")
+                .or_else(|| params.get("confirmed_backstep"))
+                .and_then(Value::as_bool)
+                .unwrap_or(false);
+            serde_json::to_value(
+                transform::advance_container(
+                    &container,
+                    &expected_stage,
+                    direction,
+                    confirmed_backstep,
+                )
+                .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
         "nara.transform.status" => cli_to_rpc(transform::status(true)),
         "nara.transform.cycle.open" => {
             let note = opt_str(params, "note");

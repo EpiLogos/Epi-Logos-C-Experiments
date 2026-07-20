@@ -1,3 +1,13 @@
+/**
+ * Coordinate: M' bridge contract verification.
+ * Residency: Body/M/pratibimba-app/src/bridge.
+ * Position (#n): active-carrier ingress test boundary.
+ * Actualises: strict parser and capability proofs, including 24.T24.20.
+ * Public surface: Vitest assertions over bridge types.
+ * Does NOT own: gateway production or kernel projection law.
+ * Contract: [[M'-SYSTEM-SPEC]] / [[S3-SPEC]] / [[M3'-SPEC]].
+ */
+
 import { describe, expect, it } from 'vitest';
 import {
     KERNEL_BRIDGE_CAPABILITIES,
@@ -23,13 +33,33 @@ describe('kernel-bridge active-carrier capability preflight', () => {
             degree360,
             exactDegree720: degree360 * 2,
             codonUpper: 0,
+            codonMiddle: 0,
             codonLower: 0,
+            codonPairs: [0, 0, 0],
+            codonPairBits: ['00', '00', '00'],
+            codon6Bit: 0,
             codonClass: 0,
+            codonClassLabel: 'perfect-palindromic',
             charges: { pp: 18, nn: -6, np: 6, pn: 6 },
             quaternion: [18, -6, 6, 6],
+            chargeIdentity: [
+                { charge: 'pp', xPermutation: 'X2', element: 'earth', quaternionComponent: 'w' },
+                { charge: 'nn', xPermutation: 'X1', element: 'fire', quaternionComponent: 'x' },
+                { charge: 'np', xPermutation: 'X4', element: 'water', quaternionComponent: 'y' },
+                { charge: 'pn', xPermutation: 'X3', element: 'air', quaternionComponent: 'z' }
+            ],
+            fourX: 24,
+            xLogicInvariant: true,
             elementCanonical: 4,
             hexagramId: 0,
             lineChangeOperator: 0,
+            lineChangeHops: Array.from({ length: 6 }, (_, line) => ({
+                line,
+                operatorAddress: line,
+                fromHexagramId: 0,
+                toHexagramId: 1 << line
+            })),
+            rnaCapable: false,
             tick12: Math.floor(degree360 / 30),
             fibonacciPosition: Math.floor(degree360 / 6),
             fibonacciDigit: 0,
@@ -46,6 +76,12 @@ describe('kernel-bridge active-carrier capability preflight', () => {
         expect(projection.lensId).toBe(7);
         expect(projection.segment).toHaveLength(24);
         expect(projection.perDegree[0].charges).toEqual({ pp: 18, nn: -6, np: 6, pn: 6 });
+        expect(projection.perDegree[0].codonPairs).toEqual([0, 0, 0]);
+        expect(projection.perDegree[0].codonPairBits).toEqual(['00', '00', '00']);
+        expect(projection.perDegree[0].lineChangeHops).toHaveLength(6);
+        expect(projection.perDegree[0].chargeIdentity.map(identity => identity.xPermutation))
+            .toEqual(['X2', 'X1', 'X4', 'X3']);
+        expect(projection.perDegree[0].xLogicInvariant).toBe(true);
         expect(KERNEL_BRIDGE_CAPABILITIES).toContain('kernelBridge.m3.lensCodonBinary(lensId)');
         expect(() => parseLensCodonBinaryProjection({
             ...projection,
@@ -59,6 +95,34 @@ describe('kernel-bridge active-carrier capability preflight', () => {
             segment: projection.segment.slice(0, 23),
             perDegree: projection.perDegree.slice(0, 23)
         })).toThrow(/24 canonical lens boundaries/);
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            perDegree: [
+                { ...projection.perDegree[0], codonPairBits: ['11', '00', '00'] },
+                ...projection.perDegree.slice(1)
+            ]
+        })).toThrow(/authority bit readout/);
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            perDegree: [
+                { ...projection.perDegree[0], codonClassLabel: 'dual' },
+                ...projection.perDegree.slice(1)
+            ]
+        })).toThrow(/codonClassLabel must match/);
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            perDegree: [
+                { ...projection.perDegree[0], lineChangeHops: projection.perDegree[0].lineChangeHops.slice(0, 5) },
+                ...projection.perDegree.slice(1)
+            ]
+        })).toThrow(/all six line changes/);
+        expect(() => parseLensCodonBinaryProjection({
+            ...projection,
+            perDegree: [
+                { ...projection.perDegree[0], xLogicInvariant: false },
+                ...projection.perDegree.slice(1)
+            ]
+        })).toThrow(/authority-true/);
         const groundSegment = Array.from({ length: 60 }, (_, position) => position * 6);
         const ground = parseLensCodonBinaryProjection({
             ...projection,

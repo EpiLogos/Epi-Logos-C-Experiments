@@ -5,7 +5,7 @@ S1 Obsidian / Material Container layer: the Hen (S1') compiler tree that carries
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 
 ## Ownership
-- `hen-compiler-core/` — Rust contract crate (`epi-s1-hen-compiler-core`); its own DOX node. Public surface in `src/lib.rs`: artifact_evidence, base_view, compile_plan, coordinate, frontmatter, graph_promotion, graph_sync, ledger, residency, wikilinks, smart_env, l_alignments, property_intelligence, relation_inference; contract tests in `tests/`.
+- `hen-compiler-core/` — Rust contract crate (`epi-s1-hen-compiler-core`); its own DOX node. Public surface in `src/lib.rs`: artifact_evidence, base_view, compile_plan, coordinate, frontmatter, typed sequence/scalar frontmatter mutation, graph_promotion, graph_sync, ledger, residency, wikilinks, smart_env, l_alignments, property_intelligence, relation_inference; contract tests in `tests/`.
 - `hen-compiler/` — Python personal-KB compiler (`llm-personal-kb`); its own DOX node. Compiles `daily/` conversations into `knowledge/`; holds `ledger/`, `hooks/`, `reports/`, `scripts/`, `tests/`.
 - Does NOT own coordinate semantics or canon-write authority beyond Hen's mandate: domain law for other layers lives in those layers' owning modules/specs, not here. Canon (`Idea/Bimba|Pratibimba|Empty`) is written only through Hen with explicit review — SwarmVault and other agents never write `Idea/` directly.
 

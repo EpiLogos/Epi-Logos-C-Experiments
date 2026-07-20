@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-19T21:36:19.987Z",
+ "generatedAt": "2026-07-20T22:10:09.187Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,9 +7,9 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 272,
-  "present": 87,
-  "absent": 185,
+  "probed": 276,
+  "present": 93,
+  "absent": 183,
   "unknown": 0
  },
  "methods": [
@@ -320,6 +320,27 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented"
+  },
+  {
+   "method": "khora.result.wake",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "khora.session_id.hash_composition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
+   "method": "khora.session_start",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: dayId must be a non-blank DD-MM-YYYY or YYYY-MM-DD string"
   },
   {
    "method": "m2.cymatic.valence.invert",
@@ -757,17 +778,17 @@
   },
   {
    "method": "nara.transform.advance",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required param 'container'"
   },
   {
    "method": "nara.transform.start",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required param 'container'"
   },
   {
    "method": "nara.weights",
@@ -970,7 +991,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: vault root missing: provide `vaultRoot` param or set EPILOGOS_VAULT"
+   "errorClass": "domain-error: notePath is required"
   },
   {
    "method": "s1'.type.classify_c_layer",
@@ -1065,10 +1086,10 @@
   },
   {
    "method": "s2.codon.aa_lookup",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: codon is required"
   },
   {
    "method": "s2.codon.scalar_ref.read",
@@ -1135,10 +1156,10 @@
   },
   {
    "method": "s2.graph.list_by_filter",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "s2.graph.node",
@@ -1916,6 +1937,13 @@
    "exists": true,
    "responds": true,
    "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "vault.day.ensure",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: dayId must be a non-blank DD-MM-YYYY or YYYY-MM-DD string"
   }
  ]
 }

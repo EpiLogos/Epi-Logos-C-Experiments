@@ -36,9 +36,15 @@ import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 import { M1SessionCloseReader, readM1SessionCloseBundle } from '../m1SessionCloseReader';
+import {
+    ContemplationObjectViewer,
+    readContemplationObjectProjection,
+    type ContemplationObjectProjectionRead
+} from '../contemplationObjectViewer';
 
 const VERDICTS: readonly BlockVerdictDecision[] = ['approve', 'reject', 'defer'];
 const M1_SESSION_CLOSE_READ_METHOD = 'nara.session_close.read';
+const CONTEMPLATION_OBJECT_READ_METHOD = 'nara.session_close.contemplation.read';
 
 type SessionCloseState =
     | { readonly state: 'pending'; readonly reason: string }
@@ -48,6 +54,16 @@ type SessionCloseState =
     | {
           readonly state: 'ready';
           readonly close: Extract<ReturnType<typeof readM1SessionCloseBundle>, { readonly state: 'ready' }>;
+      };
+
+type ContemplationObjectState =
+    | { readonly state: 'pending'; readonly reason: string }
+    | { readonly state: 'absent'; readonly reason: string }
+    | { readonly state: 'error'; readonly reason: string }
+    | { readonly state: 'blocked'; readonly reason: string }
+    | {
+          readonly state: 'ready';
+          readonly contemplation: Extract<ContemplationObjectProjectionRead, { readonly state: 'ready' }>;
       };
 
 export function ReviewBlocksPane({ requestedReviewId = null }: { readonly requestedReviewId?: string | null }) {
@@ -64,6 +80,10 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
     const [sessionClose, setSessionClose] = useState<SessionCloseState>({
         state: 'pending',
         reason: 'exact session key required before close aggregates can be read'
+    });
+    const [contemplationObject, setContemplationObject] = useState<ContemplationObjectState>({
+        state: 'pending',
+        reason: 'exact session key required before contemplation aggregates can be read'
     });
 
     useEffect(() => {
@@ -108,6 +128,51 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
             .catch(() => {
                 /* fixture remains the honest baseline */
             });
+    }, [connected, sessionKey]);
+
+    useEffect(() => {
+        if (!connected || !sessionKey) {
+            setContemplationObject({
+                state: 'pending',
+                reason: 'connect the gateway and bind an exact session key to load contemplation aggregates'
+            });
+            return;
+        }
+        let cancelled = false;
+        setContemplationObject({
+            state: 'pending',
+            reason: 'loading latest protected contemplation projection for the exact session key'
+        });
+        gateway()
+            .invoke(CONTEMPLATION_OBJECT_READ_METHOD, { sessionKey, latest: true })
+            .then(receipt => {
+                if (cancelled) return;
+                const parsed = readContemplationObjectProjection(receipt.artifact);
+                if (parsed.state === 'ready' && parsed.sessionId !== sessionKey) {
+                    setContemplationObject({
+                        state: 'blocked',
+                        reason: 'returned contemplation projection does not match the exact bound session'
+                    });
+                    return;
+                }
+                if (parsed.state === 'ready') {
+                    setContemplationObject({ state: 'ready', contemplation: parsed });
+                    return;
+                }
+                setContemplationObject(parsed);
+            })
+            .catch(err => {
+                if (cancelled) return;
+                const message = err instanceof Error ? err.message : String(err);
+                if (message.includes('no persisted contemplation projection')) {
+                    setContemplationObject({ state: 'absent', reason: message });
+                    return;
+                }
+                setContemplationObject({ state: 'error', reason: message });
+            });
+        return () => {
+            cancelled = true;
+        };
     }, [connected, sessionKey]);
 
     useEffect(() => {
@@ -216,6 +281,25 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                     </p>
                 ) : (
                     <p data-testid="review-session-close-pending">{sessionClose.reason}</p>
+                )}
+            </section>
+            <section className="review-contemplation-object" data-testid="review-contemplation-object">
+                {contemplationObject.state === 'ready' ? (
+                    <ContemplationObjectViewer contemplation={contemplationObject.contemplation} />
+                ) : contemplationObject.state === 'absent' ? (
+                    <p data-testid="review-contemplation-object-absent">
+                        No persisted contemplation projection exists for this exact session yet.
+                    </p>
+                ) : contemplationObject.state === 'error' ? (
+                    <p data-testid="review-contemplation-object-error">
+                        Contemplation read failed: {contemplationObject.reason}
+                    </p>
+                ) : contemplationObject.state === 'blocked' ? (
+                    <p data-testid="review-contemplation-object-blocked">
+                        Contemplation parse blocked: {contemplationObject.reason}
+                    </p>
+                ) : (
+                    <p data-testid="review-contemplation-object-pending">{contemplationObject.reason}</p>
                 )}
             </section>
             {selected ? (

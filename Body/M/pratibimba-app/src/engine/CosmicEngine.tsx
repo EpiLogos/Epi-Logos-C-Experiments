@@ -71,6 +71,7 @@ import {
 } from './solarSystem';
 import { PLANET_ORDER } from './cosmicMath';
 import { accent } from '../ui/tokens';
+import { useCompositionLifecycleEvents } from '../composition/compositionEvents';
 
 // clock-plane radii (torus ≈ 1.5 outer)
 const R_LENS = 2.6;
@@ -281,6 +282,7 @@ export function buildPlanetChip(planetId: number, onSelect: () => void): PlanetC
 export function CosmicEngine() {
     const hostRef = useRef<HTMLDivElement | null>(null);
     const generation = useTickStore(s => s.generation);
+    useCompositionLifecycleEvents('cosmic-engine.integrated', generation);
     const cached = useTickStore(s => s.profile);
     const muted = useInstrumentStore(s => s.muted);
     const divisionIndex = useEngineStore(s => s.divisionIndex);

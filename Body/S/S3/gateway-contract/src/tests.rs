@@ -42,6 +42,15 @@ fn nara_transform_lifecycle_is_advertised_and_classified() {
 }
 
 #[test]
+fn codon_amino_acid_lookup_is_advertised_and_classified() {
+    assert!(crate::METHOD_NAMES.contains(&crate::S2_CODON_AA_LOOKUP_METHOD));
+    let plan = crate::method_dispatch_plan_entry(crate::S2_CODON_AA_LOOKUP_METHOD)
+        .expect("codon lookup dispatch plan");
+    assert_eq!(plan.kind, crate::MethodDispatchKind::S0ProductAdapter);
+    assert!(plan.authority_path.contains("portal-core::transcription"));
+}
+
+#[test]
 fn anuttara_verifier_contract_exposes_s0_prime_methods() {
     let methods = s0_prime_verifier_methods();
 
@@ -1717,9 +1726,9 @@ fn dispatch_plan_carries_all_six_canonical_kinds_or_extensions() {
     assert!(s0 > 0, "expected at least one S0 product adapter row");
     // S1 Hen adapter is a 13.T2 plan extension: five 03.T6.5
     // vault/semantic methods, the accepted-Q amendment, three C-first type
-    // lifecycle receipts, plus the four CCT-14 entity-candidate lifecycle/
-    // review surfaces.
-    assert_eq!(s1, 14, "expected exactly fourteen s1' Hen rows");
+    // lifecycle receipts, the four CCT-14 entity-candidate lifecycle/review
+    // surfaces, plus Track 32's idempotent day scaffold.
+    assert_eq!(s1, 15, "expected exactly fifteen s1' Hen rows");
     // Missing is currently 0 because no Missing-status methods appear
     // in METHOD_NAMES (parity.rs Missing records all live outside the
     // shipped manifest). The variant must still be expressible.

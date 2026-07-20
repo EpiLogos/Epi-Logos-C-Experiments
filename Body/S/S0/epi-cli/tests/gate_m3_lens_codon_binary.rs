@@ -1,7 +1,8 @@
-//! Coordinate: S0/S3'/M3' lens-codon-binary live edge (37.T37.8).
+//! Coordinate: S0/S3'/M3' lens-codon-binary live edge (37.T37.8 / 24.T24.20).
 //! Residency: Body/S/S0/epi-cli/tests.
 //! Position (#n): real gateway verification boundary.
-//! Actualises: the governed projection over the existing 16 clock lenses.
+//! Actualises: the governed complete transcription packet over functional
+//! lenses 0..16 through a real spawned WebSocket gateway.
 //! Public surface: `cargo test --test gate_m3_lens_codon_binary`.
 //! Does NOT own: C clock/codon law or renderer choreography.
 //! Contract: [[S0-SPEC]] / [[S3-SPEC]] / [[M3'-SPEC]].
@@ -41,6 +42,33 @@ async fn live_gateway_projects_the_hourly_lens_through_the_primary_fibonacci_gro
     assert_eq!(projection["perDegree"][0]["charges"]["nn"], -6);
     assert_eq!(projection["perDegree"][0]["charges"]["np"], 6);
     assert_eq!(projection["perDegree"][0]["charges"]["pn"], 6);
+    assert_eq!(projection["perDegree"][0]["codonPairs"], json!([0, 0, 0]));
+    assert_eq!(
+        projection["perDegree"][0]["codonPairBits"],
+        json!(["00", "00", "00"])
+    );
+    assert_eq!(projection["perDegree"][0]["codon6Bit"], 0);
+    assert_eq!(
+        projection["perDegree"][0]["codonClassLabel"],
+        "perfect-palindromic"
+    );
+    assert_eq!(
+        projection["perDegree"][0]["chargeIdentity"][0]["xPermutation"],
+        "X2"
+    );
+    assert_eq!(projection["perDegree"][0]["fourX"], 24);
+    assert_eq!(projection["perDegree"][0]["xLogicInvariant"], true);
+    assert_eq!(
+        projection["perDegree"][0]["lineChangeHops"]
+            .as_array()
+            .map(Vec::len),
+        Some(6)
+    );
+    assert_eq!(
+        projection["perDegree"][0]["lineChangeHops"][5]["toHexagramId"],
+        32
+    );
+    assert_eq!(projection["perDegree"][0]["rnaCapable"], false);
     assert_eq!(projection["lensRole"], "derived-aperture");
     assert_eq!(projection["groundingLensId"], 16);
     assert_eq!(projection["perDegree"][1]["fibonacciPosition"], 2);

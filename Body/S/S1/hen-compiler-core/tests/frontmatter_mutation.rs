@@ -1,5 +1,6 @@
 use epi_s1_hen_compiler_core::{
-    append_frontmatter_string, plan_q_articulation_amendment, QArticulationAmendmentRequest,
+    append_frontmatter_string, plan_q_articulation_amendment, set_frontmatter_string,
+    QArticulationAmendmentRequest,
 };
 
 #[test]
@@ -20,6 +21,19 @@ fn appends_and_deduplicates_a_coordinate_prefixed_string_sequence() {
 fn refuses_missing_frontmatter_and_non_coordinate_keys() {
     assert!(append_frontmatter_string("# NOW\n", "c_4_pinned_materia", "Nettle").is_err());
     assert!(append_frontmatter_string("---\ncoordinate: M4\n---\n", "pinned", "Nettle").is_err());
+}
+
+#[test]
+fn replaces_a_coordinate_prefixed_scalar_without_touching_the_body() {
+    let source =
+        "---\ncoordinate: M4\nc_4_active_alchemical_op: nigredo\n---\n\n# NOW\nExact body.\n";
+    let updated = set_frontmatter_string(source, "c_4_active_alchemical_op", "solutio")
+        .expect("valid scalar replacement");
+
+    assert!(updated.contains("c_4_active_alchemical_op: solutio"));
+    assert!(!updated.contains("c_4_active_alchemical_op: nigredo"));
+    assert!(updated.ends_with("# NOW\nExact body.\n"));
+    assert!(set_frontmatter_string(source, "active_op", "solutio").is_err());
 }
 
 #[test]

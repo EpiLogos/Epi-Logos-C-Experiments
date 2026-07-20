@@ -96,7 +96,7 @@ describe('left-sidebar mode registry — inventory (15.T15.3)', () => {
             'bimba-graph': null,
             'canon-studio': null,
             'backend-studio': '28.13',
-            'smart-connections': '28.12'
+            'smart-connections': null
         });
     });
 });
@@ -116,9 +116,7 @@ describe('left-sidebar mode registry — CHROME-CONTRACT §2 consistency duty', 
             if (mode.pendingOwner === null) {
                 expect(row.status, `\`${mode.surfaceId}\` status`).toBe('live');
             } else {
-                expect(row.status, `\`${mode.surfaceId}\` status`).toBe(
-                    mode.id === 'smart-connections' ? 'code-pending' : 'pending'
-                );
+                expect(row.status, `\`${mode.surfaceId}\` status`).toBe('pending');
                 expect(row.owner, `\`${mode.surfaceId}\` owner cites ${mode.pendingOwner}`).toContain(
                     mode.pendingOwner
                 );

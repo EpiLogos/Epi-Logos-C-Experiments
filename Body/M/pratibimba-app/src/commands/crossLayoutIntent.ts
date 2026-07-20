@@ -62,6 +62,18 @@ const target = (
  * host's mode even where a deeper body remains owned by a later tranche.
  */
 export const CROSS_LAYOUT_INTENT_TARGETS: readonly CrossLayoutIntentTarget[] = Object.freeze([
+    target('ide-shell-m0-m5', 'canon-studio', 'Canon Studio', 0, 'bimbaGraph'),
+    target('ide-shell-m0-m5', 'bimba-graph', 'Bimba graph', 0, 'bimbaGraph'),
+    target('ide-shell-m0-m5', 'agentic-control-room', 'Agentic control room', 1, 'omniDispatchTrace', null),
+    target('ide-shell-m0-m5', 'evidence-panel', 'Evidence panel', 1, 'omniEvidence', null),
+    target('ide-shell-m0-m5', 'coordinate-tree', 'Coordinate tree', 0, 'bimbaGraph'),
+    target('ide-shell-m0-m5', 'logos-atelier', 'Logos Atelier', 0, 'bimbaGraph'),
+    target('ide-shell-m0-m5', 'review-pane', 'Review pane', 1, 'omniReview', null),
+    target('ide-shell-m0-m5', 'autoresearch-pane', 'Autoresearch pane', 1, 'autoresearch'),
+
+    target('plugin-integrated-1-2-3', 'cosmic-composition', 'Cosmic composition', 0, 'cosmic', 'daily-0-1'),
+    target('plugin-integrated-4-5-0', 'personal-composition', 'Personal composition', 1, 'personalHome', 'daily-0-1'),
+
     target('m0-anuttara', 'graph', 'M0 Bimba graph', 0, 'bimbaGraph'),
     target('m0-anuttara', 'language', 'M0 language layer', 0, 'bimbaGraph'),
     target('m0-anuttara', 'ql-structure', 'M0 QL structure layer', 0, 'bimbaGraph'),
@@ -162,7 +174,18 @@ export function parseCrossLayoutIntent(value: unknown): CrossLayoutIntent {
 }
 
 export function intentTarget(intent: Pick<CrossLayoutIntent, 'requestedExtensionId' | 'requestedContributionId'>) {
-    return TARGETS.get(`${intent.requestedExtensionId}\u0000${intent.requestedContributionId}`) ?? null;
+    const exact = TARGETS.get(`${intent.requestedExtensionId}\u0000${intent.requestedContributionId}`);
+    if (exact) return exact;
+    if (intent.requestedExtensionId !== 'ide-shell-m0-m5') return null;
+    const alias = intent.requestedContributionId === 'highlight-coordinate'
+        ? 'coordinate-tree'
+        : intent.requestedContributionId.startsWith('term:') && intent.requestedContributionId.length > 'term:'.length
+            ? 'logos-atelier'
+            : intent.requestedContributionId.startsWith('capacity:')
+                && intent.requestedContributionId.length > 'capacity:'.length
+                ? 'autoresearch-pane'
+                : null;
+    return alias ? TARGETS.get(`ide-shell-m0-m5\u0000${alias}`) ?? null : null;
 }
 
 export async function dispatchCrossLayoutIntent(

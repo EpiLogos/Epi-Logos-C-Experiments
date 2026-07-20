@@ -528,7 +528,7 @@ impl VakLanguificationTrace {
                     .map(|context| context.degree)
                     .unwrap_or(0)
             },
-            mode_tonic_cf: None,
+            mode_tonic_cf: mode_tonic_cf(profile.lens_mode.mode).map(str::to_owned),
             resonance72_index,
             half_decan_index,
             bias_weights_empty,
@@ -540,6 +540,19 @@ impl VakLanguificationTrace {
                 "kernel.resonance72_projection".to_owned(),
             ],
         })
+    }
+}
+
+fn mode_tonic_cf(mode: u8) -> Option<&'static str> {
+    match mode {
+        0 => None,
+        1 => Some("(0/1)"),
+        2 => Some("(0/1/2)"),
+        3 => Some("(0/1/2/3)"),
+        4 => Some("(4.0/1-4.4/5)"),
+        5 => Some("(4.5/0)"),
+        6 => Some("(5/0)"),
+        _ => None,
     }
 }
 

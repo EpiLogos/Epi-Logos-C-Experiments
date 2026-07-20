@@ -475,9 +475,8 @@ async fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
         .iter()
         .copied()
         .collect::<Vec<_>>();
-    let epogdoon = crate::gate::kernel_bridge_runtime::typed_json_m2_epogdoon_projection(
-        address72 as u8,
-    );
+    let epogdoon =
+        crate::gate::kernel_bridge_runtime::typed_json_m2_epogdoon_projection(address72 as u8);
 
     // kernel asma mirror algebra (M2_ASMA_LUT); the mirror *name* is filled from
     // the graph below — the algebra itself is kernel law.

@@ -28,6 +28,11 @@ struct GatewayRuntimeInner {
     /// walk family mutates it; every subscriber sees the same organism.
     /// `None` until the heartbeat installs the config-anchored instance.
     spanda_anchor: Mutex<Option<portal_core::spanda_anchor::SpandaPhaseAnchor>>,
+    /// Latest VAK evaluation admitted through the session transport, paired
+    /// with the S2 retrieval policy's observed empty-bias state. The shared
+    /// profile heartbeat samples this correlate; absence means no evaluation
+    /// has crossed this gateway process yet.
+    vak_profile_state: Mutex<Option<(portal_core::VakAddress, bool)>>,
 }
 
 /// Per-gateway record of an active live subscription (s3'.temporal.subscribe or
@@ -121,6 +126,27 @@ impl GatewayRuntimeState {
             }
             None => None,
         }
+    }
+
+    pub fn install_vak_profile_state(
+        &self,
+        vak_address: portal_core::VakAddress,
+        bias_weights_empty: bool,
+    ) {
+        *self
+            .inner
+            .vak_profile_state
+            .lock()
+            .expect("gateway runtime VAK profile lock should not poison") =
+            Some((vak_address, bias_weights_empty));
+    }
+
+    pub fn vak_profile_state(&self) -> Option<(portal_core::VakAddress, bool)> {
+        self.inner
+            .vak_profile_state
+            .lock()
+            .expect("gateway runtime VAK profile lock should not poison")
+            .clone()
     }
 
     pub fn cache_verifier_questions(&self, generation: u64, questions: &[String]) {

@@ -1004,12 +1004,85 @@ export const VakLanguificationTrace = z
     halfDecanIndex: z.number().int().min(0).max(35).optional(),
     biasWeightsEmpty: z.boolean(),
     recognitionClosed: z.boolean(),
-    provenance: z.array(z.string().min(1)),
+    provenance: z.array(z.string().min(1)).min(1),
   })
-  .strict();
+  .strict()
+  .superRefine((trace, ctx) => {
+    const addresses: Record<CfNotation, string> = {
+      "(00/00)": "M0-2:00/00",
+      "(0/1)": "M0-1/M0-3/M0-4/M0-5:(0/1)",
+      "(0/1/2)": "M0-4.0/1/2",
+      "(0/1/2/3)": "M0-4.0/1/2/3",
+      "(4.0/1-4.4/5)": "M0-4",
+      "(4.5/0)": "M0-4.5/0",
+      "(5/0)": "M0-5",
+    };
+    const dialogical = trace.cpfNotation === "(00/00)";
+    const expectedLevel = dialogical
+      ? "para"
+      : trace.cfNotation === "(5/0)" && trace.recognitionClosed
+        ? "vaikhari"
+        : ["(0/1)", "(0/1/2)", "(0/1/2/3)"].includes(trace.cfNotation)
+          ? "pashyanti"
+          : "madhyama";
+    const issue = (path: string, message: string) =>
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
+
+    if (trace.m0Address !== addresses[trace.cfNotation]) {
+      issue("m0Address", "m0Address must match the canonical CF address");
+    }
+    if (trace.biasWeightsEmpty !== dialogical) {
+      issue(
+        "biasWeightsEmpty",
+        "biasWeightsEmpty must reflect the dialogical S2 retrieval policy",
+      );
+    }
+    if (trace.vakLevel !== expectedLevel) {
+      issue("vakLevel", `vakLevel must be ${expectedLevel} for this descent state`);
+    }
+    if (
+      trace.vakLevel === "vaikhari" &&
+      (!trace.recognitionClosed ||
+        trace.cfNotation !== "(5/0)" ||
+        trace.diatonicDegree !== 0)
+    ) {
+      issue(
+        "recognitionClosed",
+        "Vaikhari requires recognized (5/0) closure at octave-return degree 0",
+      );
+    }
+    if (
+      trace.halfDecanIndex !== undefined &&
+      (trace.resonance72Index === undefined ||
+        trace.halfDecanIndex !== Math.floor(trace.resonance72Index / 2))
+    ) {
+      issue(
+        "halfDecanIndex",
+        "halfDecanIndex must be floor(resonance72Index / 2)",
+      );
+    }
+  });
 export type VakLanguificationTrace = z.infer<
   typeof VakLanguificationTrace
 >;
+
+export const ProfileVakAddress = z
+  .object({
+    cpf: z.enum(["(00/00)", "(4.0/1-4.4/5)"]),
+    ct: z.array(z.string().min(1)),
+    cp: z.string().min(1),
+    cf: CfNotation,
+    cfp: z.string().min(1),
+    cs: z
+      .object({
+        code: z.string().min(1),
+        direction: z.enum(["Day", "Night'"]),
+        recognized: z.boolean().optional(),
+      })
+      .strict(),
+  })
+  .strict();
+export type ProfileVakAddress = z.infer<typeof ProfileVakAddress>;
 
 // --- Modal resonator / bell kernel (bell-kernel spec §4) -------------------
 // The modal/bell interpretation of the 8+4 bus. Mirrors
@@ -1923,7 +1996,7 @@ export const MathemeHarmonicProfile = z
     vakLanguificationTrace: VakLanguificationTrace.optional(),
     s2Anchor: MathemeFutureAnchor.nullable(),
     s3Anchor: MathemeFutureAnchor.nullable(),
-    vakAddress: z.unknown().nullable().optional(),
+    vakAddress: ProfileVakAddress.nullable().optional(),
   })
   .strict();
 export type MathemeHarmonicProfile = z.infer<typeof MathemeHarmonicProfile>;

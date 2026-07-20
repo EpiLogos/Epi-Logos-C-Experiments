@@ -1,13 +1,13 @@
 /**
- * Coordinate: M' M3' (inspectors pane body — Tracks 04.T4.2 + 24.T24.1/2)
+ * Coordinate: M' M3' (inspectors pane body — Tracks 04.T4.2 + 24.T24.1/2/20)
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): active-carrier M3 inspector composition surface.
  * Actualises: the `m3.mahamaya.inspectors` surface — the cosmic wheel as the
  *   alive default dominant zone (M3CosmicWheelRenderService, mode="full"),
  *   six SUMMONABLE inspectors (toggle chips; none open by default) + the
- *   four-mode cosmic-clock depth switch, every value verbatim from the view
- *   model's bus windows (m3Inspectors.ts). Pending chips are rendered, never
- *   hidden.
+ *   four-mode cosmic-clock depth switch and authority-backed active-lens
+ *   transcription engine, every value verbatim from the bridge or view
+ *   model's bus windows (m3Inspectors.ts). Pending chips are rendered, never hidden.
  * Public surface: M3InspectorsPane.
  * Does NOT own: inspector law (m3Inspectors.ts), wheel rendering law
  *   (components/M3CosmicWheelRenderService.tsx), service transport
@@ -24,6 +24,7 @@ import {
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
 import { M3PentadicRelationInspector } from '../components/M3PentadicRelationInspector';
+import { M3TranscriptionEngine } from '../components/M3TranscriptionEngine';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { M3IChingCastRibbon, parseIChingCastRibbonReceipt, type IChingCastRibbonReceipt } from './m3IChingCastRibbon';
@@ -314,6 +315,11 @@ function M3InspectorsSurface() {
                         : functionalLensError ?? (connected ? 'loading lens projection' : 'gateway disconnected')}
                 </p>
             </div>
+            <M3TranscriptionEngine
+                activeLensId={selectedLensId}
+                profileTick12={wheelSurface.tick12}
+                projection={functionalLens}
+            />
             </M3ReadinessBoundary>
 
             {view && m ? (

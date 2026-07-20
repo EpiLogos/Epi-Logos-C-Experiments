@@ -13,6 +13,8 @@
  *        invert round-trips X → X′ → X.
  *   A mounted mock cannot pass either: only the spawned `epi gate start`
  *   produces the graph topology and the profile that carries the # handle.
+ *   The M3 path also proves 24.T24.20's authority-backed transcription rows,
+ *   profile-tick activation, and corrected 0..16 functional-lens boundary.
  * Does NOT own: the gateway protocol (S3), the Tauri host (src-tauri).
  */
 
@@ -242,7 +244,7 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
     const thirdSpanda = page.getByTestId('m3-spanda-runtime');
     await expect(thirdSpanda).toContainText(/M1 \d+° · Hopf fiber \d+ · advance \d+/);
     await expect(thirdSpanda).toContainText(/M2 72:\d+ · Shem choir \d+ · phase \d\/9/);
-    await expect(thirdSpanda).toContainText(/M3 DET \d+ · clock \d+ · [A-Z]{3} · rotation \d+°\/[78] · round-trip loss [01]/);
+    await expect(thirdSpanda).toContainText(/M3 DET \d+ · clock \d+ · [ACGU]{3}[A-Za-z*]{3} · rotation \d+°\/[78] · round-trip loss [01]/);
     await expect(thirdSpanda).toContainText('9-address source block · 8 collision pairs · 64 non-exact round trips');
     const m2Axes = page.getByTestId('m3-spanda-m2-axes');
     for (const axis of ['MEF', 'Tattva', 'Decan', 'Shem', 'Maqam', 'DET']) {
@@ -272,12 +274,46 @@ test('cosmic face: the M3 inspectors summon live off the bus and the depth views
         'Fibonacci Ground · primary · 60 positions',
         { timeout: 20_000 }
     );
+    const transcription = page.getByTestId('m3-transcription-engine');
+    await expect(transcription).toHaveAttribute('data-state', 'ready');
+    await expect(transcription).toHaveAttribute('data-active-lens-id', '16');
+    await expect(transcription).toHaveAttribute('data-projection-lens-id', '16');
+    await expect(transcription).toHaveAttribute('data-degree-count', '60');
+    await expect(transcription.getByTestId(/^m3-transcription-row-\d+$/)).toHaveCount(60);
+    await expect(transcription.getByTestId('m3-transcription-bits-0')).toHaveText(
+        /^[01]{2} [01]{2} [01]{2}$/
+    );
+    await expect(
+        transcription
+            .getByTestId('m3-transcription-hops-0')
+            .locator('[data-line-hop]')
+    ).toHaveCount(6);
+    await expect(
+        transcription
+            .getByTestId('m3-transcription-rna-family-pending')
+            .getByTestId('provenance-pending')
+    ).toHaveAttribute('title', 'pending-rna-codon-family');
+    await expect(
+        transcription
+            .getByTestId('m3-transcription-chromosome-pending')
+            .getByTestId('provenance-pending')
+    ).toHaveAttribute('title', 'pending-chromosome-graph');
+    const firstTranscriptionTick = await transcription.getAttribute('data-profile-tick');
+    await expect
+        .poll(() => transcription.getAttribute('data-profile-tick'), { timeout: 20_000 })
+        .not.toBe(firstTranscriptionTick);
+
     await functionalLens.selectOption('7');
     await expect(page.getByTestId('m3-functional-lens-readout')).toContainText(
         'Hourly · derived through Ground 16 · 24 boundaries',
         { timeout: 20_000 }
     );
     await expect(page.getByTestId('m3-functional-lens-readout')).toContainText(/fib \d+ · digit \d/);
+    await expect(transcription).toHaveAttribute('data-active-lens-id', '7');
+    await expect(transcription).toHaveAttribute('data-projection-lens-id', '7');
+    await expect(transcription).toHaveAttribute('data-degree-count', '24');
+    await expect(transcription.getByTestId(/^m3-transcription-row-\d+$/)).toHaveCount(24);
+    await expect(functionalLens.locator('option[value="17"]')).toHaveCount(0);
 
     await page.getByTestId('m3-depth-toroidal-world').click();
     await expect(page.getByTestId('m3-depth-readout')).toContainText(/degree720 \d+ · sheet [01]/);

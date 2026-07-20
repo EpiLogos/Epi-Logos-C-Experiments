@@ -47,19 +47,20 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `oracle` | face 1 left border "Oracle" | M0' chrome | live | `OraclePane` (real CLI cast via Tauri `oracle_cast`) | — |
 | `personalHome` | face 1 `personal-main` tab "Now" | M0' chrome | live | `NowPane` (M4' day surface) | — |
 | `medicineView` | face 1 `personal-main` tab "Medicine" | M0' chrome | live | `MedicineViewPane` (25.T25.10 — profile-tick `nara.medicine.snapshot`, eight canonical chakra rows, active Sun decan, botanical evidence, explicit S1-governed NOW pin; never prescription) | `m4.nara.medicine` |
+| `transformContainers` | face 1 `personal-main` tab "Transform" | M0' chrome | live | `TransformContainersPane` (25.T25.11; governed `nara.transform.start/advance` lifecycle over protected-local NOW state) | `m4.nara.transform` |
 | `m4DialogicalArena` | face 1 `personal-main` tab "Arena" | M0' chrome | live | `M4DialogicalArenaPane` (41.T41.7 — M4' dia-logical arena; view id `m4.nara.dialogicalArena`; protected-local handle-only; CPF (00/00) wizard gate; renders `pending-wire` while the `m4.arena.*` ws seam is unimplemented) | `m4.nara.dialogicalArena` |
 | `canonUpdateLedger` | face 1 `personal-main` tab "CU Ledger" | M0' chrome | live | `CanonUpdateLedgerPane` (40.T40.5 — Track-40 CU-ledger review over `s5'.canon_update.list`, Track-48 query-view posture; renders `pending-wire` while the `s5'.canon_update.*` ws seam is unimplemented) | — |
 | `kairosEnablement` | face 1 `personal-main` tab "Kairos setup" | M0' chrome | live | `KairosEnablementPane` (32.T32.10 — FR-3 default-off, probe-before-persist onboarding; local dependency failure remains disabled and renders install guidance) | `m4.nara.kairosEnablement` |
 | `editor` | face 1 dynamic tabs (`vault.open`) | M0' chrome | live | `MarkdownEditorPane` (canonical READ half; S1 Present journal write scope only — see §4) | `canon-studio` (read half) |
 | `coordinateTree` | face 1 left border (designated) | M0' chrome | pending | 28.6 owns; navigation currently carried by `bimbaGraph` click-selection + `walk` traversal via the shared coordinate store | `coordinate-tree` |
 | `backendStudio` | face 0/1 (designated, deep-mode) | M0' chrome | pending | 28.13 owns (first-build allowance, §9) | `backend-studio` |
-| `smartConnections` | face 1 left border (designated, deep-mode) | M0' chrome | code-pending | 03.T6.5 gate; 28.T28.12 delivery; receiver absent by design (`src/ui/layoutClaims.ts`, frozen provenance `Body/M/epi-theia/extensions/MIGRATION-SOURCES.md`) | `smart-connections` |
+| `semanticConnections` | face 1 left border "Connections" | M0' chrome | live | `SemanticConnectionsPane` (28.T28.12; real `s1'.semantic.suggest_links`, shared vault selection, no local index) | `smart-connections` |
 | `cymatic` | legacy saved-layout redirect | M0' chrome | legacy | `App.tsx::factory` redirect message (surface is now a Cosmic Engine layer) | — |
 | `codon` | legacy saved-layout redirect | M0' chrome | legacy | `App.tsx::factory` redirect message (surface is now a Cosmic Engine layer) | — |
 | `omniChat` | `/` omni border, both faces, tab "Pi" | M5' chrome | live | `ChatPane` (27.1; Pi voice = agentic dispatch entry) | — |
 | `omniSessions` | `/` omni border, both faces, tab "Sessions" | M5' chrome | live | `SessionsPane` (27.2) | — |
 | `omniLogs` | `/` omni border, both faces, tab "Tools" | M5' chrome | live | `LogsPane` (27.4; tool-stream temporal fold) | — |
-| `omniDispatchTrace` | `/` omni border, both faces, tab "Dispatch" | M5' chrome | pending-fold | 27.3 owns the body; AGENTIC PRIMARY abbreviated render (§5) | `agentic-control-room` (abbreviated) |
+| `omniDispatchTrace` | `/` omni border, both faces, tab "Dispatch" | M5' chrome | live | `CompositionDispatchTracePane` (29.T29.11; bounded existing observability ring, no fifth store) | `agentic-control-room` (abbreviated) |
 | `omniEvidence` | `/` omni border, both faces, tab "Evidence" | M5' chrome | pending-fold | 27.5 owns the body | `evidence-pane` |
 | `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | live | `ReviewBlocksPane` (44.T44.3 — first real data through the Track-44 block standard: genealogy fixture → review-item/evidence/dispatch-genealogy blocks via `BlockHost`; 27.6 extends with live `s5'.review.*` reads + verdict submit under `m5ReviewGate.ts`, which is already live per 08.T8.3) | `review-pane` |
 | `omniTuning` | `/` omni border, both faces, tab "Tuning" | M5' chrome | live | `TuningPane` (38.T06.8 — live registry read, Tier-1 developer write, local lock, and append-only audit view through `s5'.tune.*`; Tier-2 proposal remains unavailable until 38.T06.9) | — |
@@ -91,6 +92,7 @@ The `pending` rows are the doc-ahead half of this contract: when a designated su
 | `omniReview` (fold body, 27.6) | `s5'.review.*` reads; decisions gated by `m5ReviewGate.ts` BEFORE dispatching `s5'.review.submit`. |
 | `omniTuning` (fold body, 38.T06.8) | `s5'.tune.registry.list/get/set`, `s5'.tune.audit.read`, and `s5'.tune.lock.toggle`; no local schema, validation, audit, or proposal lifecycle. |
 | `kairosEnablement` | `nara.kairos.probe_kerykeion` before preference persistence; `nara.kairos.sync` only after a successful local dependency probe. |
+| `journalTimeline` first-day affordance | `vault.day.ensure` -> `khora.session_start`; optional `nara.kairos.sync`; then `nara.session_open`. The carrier records `first-session.start` only after all required calls succeed. |
 | `medicineView` | `nara.medicine.snapshot` on shared profile generation; `nara.medicine.pin` only for the explicit NOW pin gesture. This surface never invokes the legacy balance/prescribe methods. |
 | `agenticControlRoom` / `omniDispatchTrace` / `omniEvidence` (bodies pending) | bridge-delivered run/evidence envelopes only, after privacy gating; capability parity via `isMediationCapabilityAllowed` (matrix arrives with 12.10). |
 | every surface | `profile.update` heartbeat + `m123.chime` arrive ONLY through the one `GatewayClient`; events enter the ring (`state/eventsStore.ts`), liveness pulses never do. |
@@ -162,7 +164,7 @@ Status-strip shared fields (15.10, exactly six): tick generation · day-now · s
 
 Allowed first-build work under this contract (everything else is audit-extend):
 
-- The designated `pending` surfaces of §2: `coordinateTree` (28.6), `agenticControlRoom` (28.5), `backendStudio` (28.13), `smartConnections` (28.12), `readiness-gate` (28.11).
+- The designated `pending` surfaces of §2: `coordinateTree` (28.6), `agenticControlRoom` (28.5), `backendStudio` (28.13), `readiness-gate` (28.11).
 - The pending omni fold bodies (27.3 / 27.5 / 27.6 / 27.7 / 27.8) inside their already-mounted tabs.
 - `PrivacyDropFeed`, fed only by privacy-safe events and dropped-count metadata (28.16).
 - `CHROME-CONTRACT.md` itself (this tranche, 28.T28.1).

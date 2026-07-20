@@ -3,7 +3,7 @@ use epi_s3_gateway::dispatch::{
     dispatch_route_for_plan_entry, methods_in_dispatch_plan_missing_from_route_table,
     methods_in_route_table_missing_from_dispatch_plan, GatewayDispatchClass, GatewayDispatchOwner,
     NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest, NARA_LENS_RPC_METHODS,
-    NARA_SESSION_RPC_METHODS,
+    NARA_SESSION_RPC_METHODS, NARA_TRANSFORM_RPC_METHODS,
 };
 use epi_s3_gateway_contract::{MethodDispatchKind, METHOD_NAMES, S2_GRAPH_GATEWAY_EXPOSED_METHODS};
 
@@ -65,6 +65,22 @@ fn nara_lens_widget_rpcs_route_as_m4_extension_methods() {
 
     for method in NARA_LENS_RPC_METHODS {
         let route = classify_method(method).expect("nara lens RPC should route");
+        assert_eq!(route.owner, GatewayDispatchOwner::S4S5DomainAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::NaraExtension);
+        assert_eq!(route.coordinate_owner, "M4'/S4");
+        assert_eq!(route.agent_access_owner, "S4/S5");
+    }
+}
+
+#[test]
+fn nara_transform_rpcs_route_as_m4_extension_methods() {
+    assert_eq!(
+        NARA_TRANSFORM_RPC_METHODS,
+        ["nara.transform.start", "nara.transform.advance"]
+    );
+
+    for method in NARA_TRANSFORM_RPC_METHODS {
+        let route = classify_method(method).expect("nara transform RPC should route");
         assert_eq!(route.owner, GatewayDispatchOwner::S4S5DomainAdapter);
         assert_eq!(route.class, GatewayDispatchClass::NaraExtension);
         assert_eq!(route.coordinate_owner, "M4'/S4");
@@ -227,6 +243,7 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         "s2.graph.query",
         "s2.graph.node",
         "s2.graph.list",
+        "s2.graph.list_by_filter",
         "s2.graph.traverse",
         "s2.graph.harmonic_relations.materialize",
         "s2.graph.pointer_web.compute",
@@ -665,6 +682,15 @@ mod t9_route_ownership_cross_walk {
     /// extension patterns (nara.*, s5'.epii.*) and that are intentionally
     /// not listed in METHOD_NAMES.
     fn is_route_extension(method: &str) -> bool {
+        // 25.T25.11 — nara.transform.start/advance are FIRST-CLASS METHOD_NAMES
+        // entries (governed lifecycle RPCs with durable NOW transitions), not
+        // generic nara.* route extensions. They are dispatched by S0 and
+        // classified by S3 like any first-class method, so they must NOT be
+        // counted here (the (D) partition requires METHOD_NAMES ∩ route-
+        // extensions = ∅).
+        if matches!(method, "nara.transform.start" | "nara.transform.advance") {
+            return false;
+        }
         method.starts_with("nara.")
             || matches!(
                 method,

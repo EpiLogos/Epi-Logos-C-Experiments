@@ -21,13 +21,34 @@ const INTENT = {
 } as const;
 
 describe('cross-layout intent targets (31.T31.10)', () => {
-    it('catalogues the 45 declared targets across all six M families', () => {
-        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(45);
+    it('catalogues the M-family, ide-shell, and composition targets without collisions', () => {
+        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(55);
         expect(new Set(CROSS_LAYOUT_INTENT_TARGETS.map(t => `${t.extensionId}/${t.contributionId}`)).size)
             .toBe(CROSS_LAYOUT_INTENT_TARGETS.length);
-        expect(new Set(CROSS_LAYOUT_INTENT_TARGETS.map(t => t.extensionId))).toEqual(
-            new Set(['m0-anuttara', 'm1-paramasiva', 'm2-parashakti', 'm3-mahamaya', 'm4-nara', 'm5-epii'])
-        );
+        expect(CROSS_LAYOUT_INTENT_TARGETS.filter(t => t.extensionId === 'ide-shell-m0-m5')).toHaveLength(8);
+    });
+
+    it('resolves ide-shell handler patterns without weakening unknown-target refusal', () => {
+        expect(intentTarget({
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'term:anuttara'
+        })?.contributionId).toBe('logos-atelier');
+        expect(intentTarget({
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'capacity:epii-self-referential'
+        })?.contributionId).toBe('autoresearch-pane');
+        expect(intentTarget({
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'highlight-coordinate'
+        })?.contributionId).toBe('coordinate-tree');
+        expect(intentTarget({
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'term:'
+        })).toBeNull();
+        expect(intentTarget({
+            requestedExtensionId: 'm5-epii',
+            requestedContributionId: 'capacity:epii-self-referential'
+        })).toBeNull();
     });
 
     it('contains every explicitly named Stage-1 target with a mounted host', () => {

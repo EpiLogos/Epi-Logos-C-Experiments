@@ -272,6 +272,26 @@
   {
    "method": "s5.oracle.iching.cast",
    "claimedBy": "24.T24.14"
+  },
+  {
+   "method": "nara.transform.start",
+   "claimedBy": "25.T25.11"
+  },
+  {
+   "method": "nara.transform.advance",
+   "claimedBy": "25.T25.11"
+  },
+  {
+   "method": "s2.codon.aa_lookup",
+   "claimedBy": "30.T30.13"
+  },
+  {
+   "method": "vault.day.ensure",
+   "claimedBy": "32.T32.11"
+  },
+  {
+   "method": "khora.session_start",
+   "claimedBy": "32.T32.11"
   }
  ]
 }

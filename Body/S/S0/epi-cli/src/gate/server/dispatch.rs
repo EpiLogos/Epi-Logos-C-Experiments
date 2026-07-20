@@ -44,6 +44,14 @@ pub(super) async fn dispatch_rpc(
     let route = classify_method(&frame.method);
 
     match frame.method.as_str() {
+        "vault.day.ensure" => crate::gate::day_start::ensure_day(&frame.params)
+            .and_then(|receipt| serde_json::to_value(receipt).map_err(|err| err.to_string()))
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
+        "khora.session_start" => crate::gate::day_start::start_session(&frame.params)
+            .and_then(|receipt| serde_json::to_value(receipt).map_err(|err| err.to_string()))
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         // Method literal (not the const) so the S3 route-ownership cross-walk
         // can grep the dispatched method name in S0's dispatch surface — the
         // house convention every sibling arm follows (kept in sync with
@@ -132,7 +140,9 @@ pub(super) async fn dispatch_rpc(
             ))
         }
         "s5.oracle.iching.cast" => crate::nara::oracle::cast_iching_ribbon()
-            .map(|receipt| DispatchResult::immediate(serde_json::to_value(receipt).unwrap_or_default()))
+            .map(|receipt| {
+                DispatchResult::immediate(serde_json::to_value(receipt).unwrap_or_default())
+            })
             .map_err(invalid_params_error),
         "s5'.gnostic.musical_transcript" => {
             let vak_address = frame.params.get("vakAddress").ok_or_else(|| {
@@ -243,6 +253,15 @@ pub(super) async fn dispatch_rpc(
             let identifier = session_identifier(&frame.params)?;
             // Snapshot before-state for provenance diff
             let before = store.resolve(&identifier).ok();
+            let vak_address = frame
+                .params
+                .get("vakAddress")
+                .filter(|value| !value.is_null())
+                .map(|value| {
+                    serde_json::from_value::<portal_core::VakAddress>(value.clone())
+                        .map_err(|err| invalid_params_error(format!("invalid vakAddress: {err}")))
+                })
+                .transpose()?;
             let terminal_binding = frame
                 .params
                 .get("terminalBinding")
@@ -418,15 +437,15 @@ pub(super) async fn dispatch_rpc(
                 // Option, unlike the double-Option string fields above —
                 // VakAddress doesn't support an explicit clear-to-None over
                 // the wire today; that's a separate sentinel design).
-                vak_address: frame
-                    .params
-                    .get("vakAddress")
-                    .filter(|value| !value.is_null())
-                    .and_then(|value| {
-                        serde_json::from_value::<portal_core::VakAddress>(value.clone()).ok()
-                    }),
+                vak_address: vak_address.clone(),
             };
             let record = store.patch(&identifier, patch).map_err(not_found_error)?;
+            if let Some(vak_address) = vak_address {
+                let bias_weights_empty =
+                    epi_s2_graph_services::HybridRetriever::vak_bias_weights(&vak_address)
+                        .is_empty();
+                runtime.install_vak_profile_state(vak_address, bias_weights_empty);
+            }
             // Provenance: session_open when vault_now_path first set
             let had_now_path = before
                 .as_ref()
@@ -1445,6 +1464,9 @@ pub(super) async fn dispatch_rpc(
         "s1'.semantic.suggest_links" => crate::gate::s1_hen::suggest_links(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s2.codon.aa_lookup" => crate::gate::codon::aa_lookup(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         // CCT-15: C-layer semantic typology classification.
         "s1'.type.classify_c_layer" => crate::gate::s1_hen::type_classify_c_layer(&frame.params)
             .map(DispatchResult::immediate)
@@ -1641,6 +1663,21 @@ pub(super) async fn dispatch_rpc(
             .map_err(internal_error),
         "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {
             Ok(DispatchResult::immediate(epii::user_orientation()))
+        }
+        // 25.T25.11 — nara.transform.* are first-class METHOD_NAMES entries
+        // (unlike the other nara.* route extensions, which are intentionally
+        // absent from METHOD_NAMES), so the S3 T9 cross-walk requires them to
+        // appear explicitly in the S0 dispatch surface. They forward to the
+        // same nara dispatcher as the prefix arm below — identical runtime
+        // behaviour, mirroring how s5'.epii.* is handled just above.
+        method @ "nara.transform.start" | method @ "nara.transform.advance" => {
+            crate::gate::nara::dispatch_nara_with_state_root(
+                state_root,
+                peer_is_loopback,
+                method,
+                &frame.params,
+            )
+            .map(DispatchResult::immediate)
         }
         method if method.starts_with("nara.") => crate::gate::nara::dispatch_nara_with_state_root(
             state_root,

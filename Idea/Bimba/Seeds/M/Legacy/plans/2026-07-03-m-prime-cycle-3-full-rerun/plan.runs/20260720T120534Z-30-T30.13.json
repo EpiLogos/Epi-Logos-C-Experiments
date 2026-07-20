@@ -1,0 +1,38 @@
+{
+  "runId": "20260720T120534Z-30-T30.13",
+  "taskId": "30.T30.13",
+  "startedAt": "2026-07-20T12:05:34.185Z",
+  "owner": "codex-mdev-3013-coordinate-string",
+  "leaseExpiresAt": "2026-07-20T15:05:34.185Z",
+  "worktree": null,
+  "task": {
+    "id": "30.T30.13",
+    "trackId": "30",
+    "tranche": "T30.13",
+    "title": "Coordinate-string rendering convention",
+    "effort": null,
+    "file": "30-design-language-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/30-design-language-layer.md",
+    "dependsOn": [
+      "30.T30.12"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: the ENTIRE design-token bundle + 15-primitive shelf + consumption lint, re-homed to CSS vars/TS for React/Tauri. Token law = 30.8 derivation-backed tiers; motion = ratified DR-UI-4 (400/240/320). DR-WC-DL-1 (family palette) still open — re-decide for carrier. §2 track 30."
+  }
+}

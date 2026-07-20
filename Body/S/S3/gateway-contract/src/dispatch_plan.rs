@@ -3,21 +3,21 @@ use serde::{Deserialize, Serialize};
 use crate::{
     KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD, KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD,
     KERNEL_BRIDGE_M2_PLANETARY_ELEMENTAL_WEIGHTS_METHOD, KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD,
-    KERNEL_BRIDGE_M3_LENS_FIELD_METHOD, M1_SPANDA_HALF_TURN_METHOD, M1_SPANDA_HOLD_METHOD,
-    M1_SPANDA_RELEASE_METHOD, M1_SPANDA_STEP_METHOD, M1_SPANDA_WALK_TO_METHOD,
+    KERNEL_BRIDGE_M3_LENS_FIELD_METHOD, KHORA_SESSION_START_METHOD, M1_SPANDA_HALF_TURN_METHOD,
+    M1_SPANDA_HOLD_METHOD, M1_SPANDA_RELEASE_METHOD, M1_SPANDA_STEP_METHOD,
+    M1_SPANDA_WALK_TO_METHOD, NARA_TRANSFORM_ADVANCE_METHOD, NARA_TRANSFORM_START_METHOD,
     S0_PRIME_SETTINGS_API_KEY_STATUS_METHOD, S0_PRIME_SETTINGS_OPT_IN_METHOD,
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_RESPOND_QUESTION_METHOD,
     S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD, S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD,
     S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
     S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
-    S1_WORLD_LIST_ENTITIES_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
-    S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_LIST_BY_FILTER_METHOD, S2_GRAPH_LIST_METHOD,
-    S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD, S2_CODON_AA_LOOKUP_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD,
+    S2_GRAPH_CORE65_AUDIT_METHOD, S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
+    S2_GRAPH_LIST_BY_FILTER_METHOD, S2_GRAPH_LIST_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
     S2_GRAPH_RELATION_FAMILY_LIST_METHOD, S2_GRAPH_SEED_SNAPSHOT_METHOD,
-    NARA_TRANSFORM_ADVANCE_METHOD, NARA_TRANSFORM_START_METHOD,
-    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD, S5_ORACLE_ICHING_CAST_METHOD,
+    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD, S5_ORACLE_ICHING_CAST_METHOD, VAULT_DAY_ENSURE_METHOD,
 };
 
 // =================== 13.T2 executable dispatch-plan contract ===================
@@ -1108,6 +1108,18 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: VAULT_DAY_ENSURE_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1 day scaffolding via Body/S/S0/epi-cli::gate::day_start",
+        needs_extraction_to: Some("Body/S/S1/hen-compiler-core"),
+    },
+    MethodDispatchPlanEntry {
+        method: KHORA_SESSION_START_METHOD,
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4 Khora lifecycle via Body/S/S0/epi-cli::gate::day_start",
+        needs_extraction_to: Some("Body/S/S4/ta-onta/S4-0p-khora"),
+    },
+    MethodDispatchPlanEntry {
         method: S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
@@ -1159,6 +1171,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: NARA_TRANSFORM_ADVANCE_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-cli::nara::transform::lifecycle",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_CODON_AA_LOOKUP_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::transcription via Body/S/S0/epi-cli::gate::codon",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

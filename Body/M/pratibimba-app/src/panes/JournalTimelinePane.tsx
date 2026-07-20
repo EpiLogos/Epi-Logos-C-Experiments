@@ -113,7 +113,18 @@ export function JournalTimelinePane() {
                         ) : null}
                     </li>
                 ))}
-                {days && days.length === 0 ? <li className="pane-message">no days yet — begin today</li> : null}
+                {days && days.length === 0 ? (
+                    <li className="pane-message">
+                        <span>Day not yet begun</span>
+                        <button
+                            type="button"
+                            data-testid="start-first-session"
+                            onClick={() => void commands.execute('journal.startFirstSession')}
+                        >
+                            Start session
+                        </button>
+                    </li>
+                ) : null}
             </ul>
         </div>
     );

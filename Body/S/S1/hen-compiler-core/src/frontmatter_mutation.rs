@@ -2,7 +2,7 @@
 //! Residency: Body/S/S1/hen-compiler-core
 //! Position (#n): governed artifact mutation primitive
 //! Actualises: typed, idempotent append operations for coordinate-owned YAML fields.
-//! Public surface: `append_frontmatter_string`.
+//! Public surface: `append_frontmatter_string`, `set_frontmatter_string`.
 //! Does NOT own: filesystem path selection, persistence, or domain-specific values.
 //! Contract: [[S1-SPEC]] / [[S1-ARCHITECTURE]].
 
@@ -64,11 +64,16 @@ pub fn append_frontmatter_string(markdown: &str, key: &str, value: &str) -> Resu
     Ok(format!("---\n{}---\n{}", serialized, body))
 }
 
-/// A reviewed Q articulation is a scalar replacement, never a list append.
+/// Set one coordinate-owned scalar string while preserving the markdown body.
 ///
-/// This stays private to the Q amendment plan: generic callers must not gain a
-/// bypass around the existing typed mutation surfaces.
-fn set_frontmatter_string(markdown: &str, key: &str, value: &str) -> Result<String, String> {
+/// Domain adapters still own path selection and value validation. This
+/// primitive owns only the frontmatter shape and coordinate-key boundary.
+pub fn set_frontmatter_string(markdown: &str, key: &str, value: &str) -> Result<String, String> {
+    validate_coordinate_key(key)?;
+    set_frontmatter_scalar(markdown, key, value)
+}
+
+fn set_frontmatter_scalar(markdown: &str, key: &str, value: &str) -> Result<String, String> {
     if value.trim().is_empty() {
         return Err("frontmatter scalar values must not be empty".to_owned());
     }
@@ -146,8 +151,8 @@ pub fn plan_q_articulation_amendment(
     }
 
     let review_epoch_key = q_articulation_review_epoch_key(&request.q_key)?;
-    let markdown = set_frontmatter_string(markdown, &request.q_key, &request.q_value)?;
-    let markdown = set_frontmatter_string(
+    let markdown = set_frontmatter_scalar(markdown, &request.q_key, &request.q_value)?;
+    let markdown = set_frontmatter_scalar(
         &markdown,
         &review_epoch_key,
         &request.review_epoch.to_string(),

@@ -1,0 +1,85 @@
+/**
+ * Coordinate: M' `/` membrane (OmniPanel traversal acceptance - 27.T27.13)
+ * Residency: Body/M/pratibimba-app/tests/e2e
+ * Position (#n): real Chromium / gateway carrier proof
+ * Actualises: every declared OmniPanel fold is reachable in both layouts and
+ *   the selected fold survives the real cross-layout route.
+ * Public surface: Playwright traversal acceptance test.
+ * Does NOT own: tab body semantics, profile production, or route targeting.
+ * Contract: [[M'-SYSTEM-SPEC]] / [[27-omnipanel-tabs-deep]].
+ */
+
+import { expect, Page, test } from '@playwright/test';
+
+const OMNI_TABS = [
+    ['Pi', 'pi-chat'],
+    ['Sessions', 'sessions'],
+    ['Dispatch', 'dispatch-trace'],
+    ['Tools', 'tool-stream'],
+    ['Evidence', 'evidence'],
+    ['Review', 'review'],
+    ['Gateway', 'gateway'],
+    ['Diagnostics', 'diagnostics'],
+    ['Tuning', 'tuning']
+] as const;
+
+async function activateEveryOmniTab(page: Page): Promise<void> {
+    const shell = page.getByTestId('shell');
+    for (const [label, id] of OMNI_TABS) {
+        const tab = page.locator('.face-active .flexlayout__border_button', {
+            hasText: label
+        }).first();
+        await expect(tab).toBeVisible();
+        const box = await tab.boundingBox();
+        expect(box).not.toBeNull();
+        await tab.click({
+            position: {
+                x: Math.min(24, box!.width - 1),
+                y: Math.max(1, box!.height - 3)
+            }
+        });
+        await expect(tab).toHaveClass(/--selected/);
+        await expect(shell).toHaveAttribute('data-omnipanel-active-tab', id);
+    }
+}
+
+async function routeToIdeDeep(page: Page): Promise<void> {
+    const generationText = await page.getByTestId('status-tick').textContent();
+    const generation = Number(generationText?.match(/\d+/)?.[0]);
+    expect(Number.isInteger(generation)).toBeTruthy();
+
+    await page.evaluate(async profileGeneration => {
+        const registry = await import('/src/commands/registry.ts');
+        const crossLayout = await import('/src/commands/crossLayoutIntent.ts');
+        await registry.commands.execute(crossLayout.CROSS_LAYOUT_INTENT_COMMAND, {
+            coordinate: 'M3-3',
+            artifactUri: "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+            reviewId: null,
+            dayNow: '20-07-2026',
+            sessionKey: 'e2e-omnipanel-traversal',
+            profileGeneration,
+            privacyClass: 'protected',
+            requestedExtensionId: 'm3-mahamaya',
+            requestedContributionId: 'codon'
+        });
+    }, generation);
+}
+
+test('27.T27.13: every OmniPanel fold is traversable in both layouts and selection persists', async ({ page }) => {
+    await page.goto('/');
+    const shell = page.getByTestId('shell');
+    await expect(shell).toBeVisible();
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+    await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
+
+    await activateEveryOmniTab(page);
+    const evidence = page.locator('.face-active .flexlayout__border_button', { hasText: 'Evidence' }).first();
+    await evidence.click();
+    await expect(shell).toHaveAttribute('data-omnipanel-active-tab', 'evidence');
+
+    await routeToIdeDeep(page);
+    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep');
+    await expect(shell).toHaveAttribute('data-omnipanel-active-tab', 'evidence');
+
+    await activateEveryOmniTab(page);
+});

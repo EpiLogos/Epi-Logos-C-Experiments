@@ -41,6 +41,7 @@ export const AUTORESEARCH_CONTRACT_TEXT =
 export interface AutoresearchPaneProps {
     readonly fixture?: AutoresearchSnapshot;
     readonly onOpenReview?: (reviewId: string) => void;
+    readonly requestedCapacity?: M5OperationalCapacity | null;
 }
 
 export function MobiusPassRibbon({ status }: Pick<AutoresearchSnapshot, 'status'>) {
@@ -98,7 +99,7 @@ function artifactString(value: unknown, label: string): string {
     return value;
 }
 
-export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProps) {
+export function AutoresearchPane({ fixture, onOpenReview, requestedCapacity = null }: AutoresearchPaneProps) {
     const tick = useProfileTick();
     const dayNow = useSessionStore(state => state.dayNow);
     const sessionKey = useSessionStore(state => state.sessionKey);
@@ -106,7 +107,7 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
     const profile = useTickStore(state => state.profile?.profile ?? null);
     const activeVakCf = useMemo(() => profileVakCf(profile), [profile]);
     const [snapshot, setSnapshot] = useState<AutoresearchSnapshot | null>(fixture ?? null);
-    const [capacity, setCapacity] = useState<M5OperationalCapacity | 'all'>('all');
+    const [capacity, setCapacity] = useState<M5OperationalCapacity | 'all'>(requestedCapacity ?? 'all');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(!fixture);
     const [activeQReview, setActiveQReview] = useState<QReviewEntry | null>(null);
@@ -136,6 +137,9 @@ export function AutoresearchPane({ fixture, onOpenReview }: AutoresearchPaneProp
     }, [fixture, dayNow, activeVakCf]);
 
     useEffect(refresh, [refresh, tick.generation]);
+    useEffect(() => {
+        if (requestedCapacity) setCapacity(requestedCapacity);
+    }, [requestedCapacity]);
 
     const visible = useMemo(
         () => snapshot?.candidates.filter(candidate => capacity === 'all' || candidate.capacity === capacity) ?? [],

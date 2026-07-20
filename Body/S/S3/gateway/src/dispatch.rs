@@ -143,6 +143,11 @@ pub const ALETHEIA_MODE_INTERNAL_CLASS: &str = "aletheia-mode-internal";
 pub const NARA_LENS_RPC_METHODS: [&str; 3] =
     ["nara.lens.list", "nara.lens.apply", "nara.lens.synthesize"];
 
+/// Governed M4' transform-container lifecycle consumed by the protected-local
+/// carrier. Both methods dispatch through the existing `nara.*` route.
+pub const NARA_TRANSFORM_RPC_METHODS: [&str; 2] =
+    ["nara.transform.start", "nara.transform.advance"];
+
 /// M4 session lifecycle RPCs. Route ownership stays under the S4/S5 Nara
 /// domain adapter; the profile bus receives protected handles only.
 pub const NARA_SESSION_CLOSE_READ_METHOD: &str = "nara.session_close.read";
@@ -1080,6 +1085,7 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
         || authority.contains("src/gate ")
         || authority.contains("portal-core::parashakti::cymatic_invert")
         || authority.contains("portal-core::lens_codon_binary_projection")
+        || authority.contains("gate::codon")
     {
         Some(RouteMetadata {
             owner: GatewayDispatchOwner::S0ProductAdapter,
@@ -1097,6 +1103,19 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
             coordinate_owner: "S0",
             agent_access_owner: "S0/S4/S5",
             route_id: "s0.product-spanda-transport",
+        })
+    } else if authority.contains("nara::transform") {
+        // 25.T25.11 — the nara.transform.* lifecycle logic lives in S0
+        // (epi-cli gate::nara::transform::lifecycle), but the RPC surfaces as
+        // an M4' nara extension. It therefore carries the SAME route metadata
+        // that extension_route gives every nara.* method, so the dispatch-plan-
+        // derived route equals classify_method for these entries.
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S4S5DomainAdapter,
+            class: GatewayDispatchClass::NaraExtension,
+            coordinate_owner: "M4'/S4",
+            agent_access_owner: "S4/S5",
+            route_id: "m4-prime.nara-extension",
         })
     } else {
         None

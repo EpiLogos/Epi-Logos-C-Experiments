@@ -42,7 +42,7 @@ pub use frontmatter::{
 };
 pub use frontmatter_mutation::{
     append_frontmatter_string, plan_q_articulation_amendment, q_articulation_review_epoch_key,
-    QArticulationAmendmentPlan, QArticulationAmendmentRequest,
+    set_frontmatter_string, QArticulationAmendmentPlan, QArticulationAmendmentRequest,
 };
 pub use graph_sync::{graph_sync_intent, GraphSyncIntent, GraphSyncMode};
 pub use ledger::{ql_first_channels, LedgerChannel, ENVELOPE_LEDGER_CHANNELS};

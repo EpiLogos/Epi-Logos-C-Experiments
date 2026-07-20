@@ -10,6 +10,7 @@
  */
 
 import { useMemo } from 'react';
+import { useCompositionLifecycleEvents } from '../composition/compositionEvents';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
@@ -89,6 +90,7 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
 
 export function PersonalRecognitionEngine() {
     const cached = useTickStore(state => state.profile);
+    useCompositionLifecycleEvents('jiva-siva.integrated', cached?.generation ?? null);
     const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
     const integratedReadiness = useMemo(
         () => evaluateCachedProfileIntegratedReadiness(cached),

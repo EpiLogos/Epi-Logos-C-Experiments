@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "preferenceKey": "epi-logos.onboarding.completed-steps",
+  "ledger": [
+    {
+      "stepId": "cold-start.bridge",
+      "domain": "cold-start",
+      "owner": "32.1",
+      "completionCriterion": { "type": "readiness-state", "stateOf": "bridge", "readinessStateMin": "ready_public_current" },
+      "skipPath": null,
+      "skipReason": "The carrier cannot start without the bridge."
+    },
+    {
+      "stepId": "cold-start.portal-core",
+      "domain": "cold-start",
+      "owner": "32.1",
+      "completionCriterion": { "type": "readiness-state", "stateOf": "portal-core", "readinessStateMin": "ready_public_current" },
+      "skipPath": null,
+      "skipReason": "The profile clock cannot run without portal-core."
+    },
+    {
+      "stepId": "cold-start.s2-s3",
+      "domain": "cold-start",
+      "owner": "32.1",
+      "completionCriterion": { "type": "readiness-state", "stateOf": "s2-s3", "readinessStateMin": "ready_public_current" },
+      "skipPath": null,
+      "skipReason": "The gateway and graph substrate are mandatory readiness stages."
+    },
+    {
+      "stepId": "cold-start.first-tick",
+      "domain": "cold-start",
+      "owner": "32.1",
+      "completionCriterion": { "type": "profile-tick-fired", "minTick": 1 },
+      "skipPath": null,
+      "skipReason": "A real profile tick is the carrier liveness proof."
+    },
+    {
+      "stepId": "cold-start.day-now",
+      "domain": "cold-start",
+      "owner": "32.11",
+      "completionCriterion": { "type": "day-anchor-present", "source": "vault.day.ensure" },
+      "skipPath": null,
+      "skipReason": "All first-day writes require an anchored day."
+    },
+    {
+      "stepId": "cold-start.kairos-optional",
+      "domain": "cold-start",
+      "owner": "32.10",
+      "completionCriterion": { "type": "branch-resolved", "branch": "kairos-enabled-or-skipped" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "cold-start.kairos-optional" }
+    },
+    {
+      "stepId": "walkthrough.0-1-toggle",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.0-1-toggle" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.0-1-toggle" }
+    },
+    {
+      "stepId": "walkthrough.omnipanel",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.omnipanel" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.omnipanel" }
+    },
+    {
+      "stepId": "walkthrough.activity-bar",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.activity-bar" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.activity-bar" }
+    },
+    {
+      "stepId": "walkthrough.status-bar",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.status-bar" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.status-bar" }
+    },
+    {
+      "stepId": "walkthrough.day-now-anchor",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.day-now-anchor" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.day-now-anchor" }
+    },
+    {
+      "stepId": "walkthrough.cosmic-personal",
+      "domain": "walkthrough",
+      "owner": "32.3",
+      "completionCriterion": { "type": "user-accepted", "stepLabel": "walkthrough.cosmic-personal" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "walkthrough.cosmic-personal" }
+    },
+    {
+      "stepId": "identity.pasu-birth-date",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_birth_date" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "birth-date" }
+    },
+    {
+      "stepId": "identity.pasu-birth-location",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_birth_location" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "birth-location" }
+    },
+    {
+      "stepId": "identity.pasu-natal-chart",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_natal_chart" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "natal-chart" }
+    },
+    {
+      "stepId": "identity.pasu-jungian",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_jungian_type" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "jungian" }
+    },
+    {
+      "stepId": "identity.pasu-gene-keys",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_gene_keys" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "gene-keys" }
+    },
+    {
+      "stepId": "identity.pasu-human-design",
+      "domain": "identity",
+      "owner": "32.2",
+      "completionCriterion": { "type": "pasu-field-set", "frontmatterKey": "c_0_human_design" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.pasu-skipped", "arrayEntry": "human-design" }
+    },
+    {
+      "stepId": "kairos.enable",
+      "domain": "kairos",
+      "owner": "32.10",
+      "completionCriterion": { "type": "preference-resolved", "preferenceKey": "epi-logos.privacy.kairos-enabled" },
+      "skipPath": { "preferenceKey": "epi-logos.onboarding.skipped-steps", "arrayEntry": "kairos.enable" }
+    },
+    {
+      "stepId": "first-session.start",
+      "domain": "first-session",
+      "owner": "32.11",
+      "completionCriterion": { "type": "gateway-receipt", "method": "khora.session_start", "field": "nowPath" },
+      "skipPath": null,
+      "skipReason": "Completion means the user explicitly started the first session."
+    }
+  ]
+}

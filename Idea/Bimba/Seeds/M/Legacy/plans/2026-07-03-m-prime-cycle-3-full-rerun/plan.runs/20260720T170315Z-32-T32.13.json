@@ -1,0 +1,38 @@
+{
+  "runId": "20260720T170315Z-32-T32.13",
+  "taskId": "32.T32.13",
+  "startedAt": "2026-07-20T17:03:15.829Z",
+  "owner": "codex-mdev-3213-onboarding-ledger",
+  "leaseExpiresAt": "2026-07-20T21:03:15.829Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.13",
+    "trackId": "32",
+    "tranche": "T32.13",
+    "title": "Onboarding completion ledger",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.12"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: onboarding/settings/empty-states — six-stage cold-start (non-modal splash 'Profile-tick 1 — system alive'), 9-id+5-flavour readiness via flavourOf(), per-Mn empty copy, typed-confirmation reset, per-artifact privacy opt-in. §2 track 32."
+  }
+}

@@ -45,7 +45,7 @@ export const CYCLE3_FAMILY_PREFIXES = [
     "s5'.", "s5.", 'm4.arena.', 'm2.', 'm3.', 'kernelBridge.', 'contemplate_',
     'sessions.', 'session.', 'cron.', 'chat.', 'channels.', 'config.',
     'skills.', 'models.', 'nara.', 'graph.', 'wizard.', 'tts.', 'voicewake.',
-    'exec.', 'device.', 'node.', 'usage.',
+    'exec.', 'device.', 'node.', 'usage.', 'vault.', 'khora.',
 ];
 
 const METHOD_TOKEN_RE = /[a-zA-Z0-9_'.*-]+(?:\([a-zA-Z0-9_,]*\))?/g;

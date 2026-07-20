@@ -31,7 +31,7 @@ import {
 } from '../engine/compositionMatheme';
 import type { CouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import type { AnuttaraPentadicRuntimeTrace } from '../bridge/types';
-import { ProvenanceBadge } from '../ui/primitives';
+import { CodonString, ProvenanceBadge } from '../ui/primitives';
 import { M3ReadinessBoundary } from './m3SurfaceContext';
 
 /** The QCD colour analogue of the translation rule — a labelled reference
@@ -106,7 +106,7 @@ export function M3ThirdSpandaPanel({
                     <p>
                         M3 DET {trace.thirdSpanda.m3.detReceptionAddress64}
                         {' · '}clock {trace.thirdSpanda.m3.worldClockAddress64}
-                        {' · '}{trace.thirdSpanda.m3.codon}
+                        {' · '}<CodonString value={trace.thirdSpanda.m3.codon} />
                         {' · '}rotation {trace.thirdSpanda.m3.codonRotation.rotationDegrees}°/
                         {trace.thirdSpanda.m3.codonRotation.rotationalStateCount}
                         {' · '}round-trip loss {trace.thirdSpanda.epogdoon.roundTripLoss}

@@ -7,18 +7,21 @@
  */
 
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { CL42_INDIGO, CL42_WARM } from '../panes/playedTorusScene';
 import {
     BedrockLinkTooltip,
     BlockedOverlay,
     CL42_PALETTE,
+    CodonString,
     CoordinateString,
+    HexagramString,
     LEMNISCATE_MASK_LAW,
     PendingBadge,
     ProvenanceBorder,
     ReadinessIndicator,
+    SymbolicCoordinateString,
     TRANSITIONS
 } from './primitives';
 
@@ -56,10 +59,49 @@ describe('shared ui primitives (CCT-10)', () => {
             'derived'
         );
         expect(screen.getByTestId('coordinate-string').getAttribute('data-family')).toBe('M');
+        expect(screen.getByTestId('coordinate-string').textContent).toBe('M4-3');
         expect(screen.getByTestId('pending-badge').textContent).toContain('pending-dataset');
         expect(screen.getByTestId('readiness-indicator').getAttribute('data-readiness')).toBe(
             'pending'
         );
+    });
+
+    it('Track 30 coordinate primitives preserve authority strings and expose accessible structure', () => {
+        const view = render(
+            <>
+                <CoordinateString value="[[S2-3]]" />
+                <HexagramString value={1} changingLines={[0, 5]} />
+                <SymbolicCoordinateString value="[[#R0-0/1:A-T7?]]" />
+            </>
+        );
+        expect(within(view.container).getByTestId('coordinate-string').textContent).toBe('S2-3');
+        expect(within(view.container).getByTestId('coordinate-string').getAttribute('aria-label')).toContain('family S');
+        expect(within(view.container).getByTestId('hexagram-string').getAttribute('aria-label')).toContain(
+            'changing lines 1, 6'
+        );
+        expect(within(view.container).getByTestId('symbolic-coordinate-string').textContent).toBe('#R0-0/1:A-T7?');
+    });
+
+    it('Track 30 codon primitive renders the real adapter shape without a browser codon table', async () => {
+        render(
+            <CodonString
+                value="AUG"
+                resolve={async () => ({
+                    codon: 'AUG',
+                    encoded: 14,
+                    aminoAcidIndex: 12,
+                    aminoAcid: 'Cys',
+                    isStart: true,
+                    isStop: false,
+                    authority: 'portal-core::transcription'
+                })}
+            />
+        );
+        expect(await screen.findByText('Cys')).toBeTruthy();
+        expect(screen.getByTestId('codon-string').getAttribute('aria-label')).toContain(
+            'amino acid Cys, start'
+        );
+        expect(screen.getByText('START')).toBeTruthy();
     });
 
     it('Track 30 blocked overlay exposes and executes its recovery action', () => {

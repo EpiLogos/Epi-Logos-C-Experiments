@@ -16,7 +16,10 @@ use portal_core::types::PortalClockState;
 
 #[test]
 fn lens_field_capability_contract_is_the_gateway_method() {
-    assert_eq!(KERNEL_BRIDGE_M3_LENS_FIELD, "kernelBridge.m3.lensField(lensId)");
+    assert_eq!(
+        KERNEL_BRIDGE_M3_LENS_FIELD,
+        "kernelBridge.m3.lensField(lensId)"
+    );
 }
 
 #[test]
@@ -62,7 +65,10 @@ fn every_functional_lens_projects_and_id_17_is_refused() {
         let norm: f64 = q.iter().map(|v| v * v).sum();
         assert!((norm - 1.0).abs() < 1e-5);
     }
-    assert!(typed_json_m3_lens_field(&state, 17, None, 0.05).is_err(), "16+1 sealed");
+    assert!(
+        typed_json_m3_lens_field(&state, 17, None, 0.05).is_err(),
+        "16+1 sealed"
+    );
 }
 
 #[test]

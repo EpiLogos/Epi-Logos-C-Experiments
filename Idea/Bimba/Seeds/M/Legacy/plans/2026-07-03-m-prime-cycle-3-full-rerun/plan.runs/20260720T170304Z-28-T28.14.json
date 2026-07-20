@@ -1,0 +1,38 @@
+{
+  "runId": "20260720T170304Z-28-T28.14",
+  "taskId": "28.T28.14",
+  "startedAt": "2026-07-20T17:03:04.377Z",
+  "owner": "codex-mdev-2814-intents",
+  "leaseExpiresAt": "2026-07-20T21:03:04.377Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.14",
+    "trackId": "28",
+    "tranche": "T28.14",
+    "title": "Cross-layout intent target registration for the four un-registered widgets",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.13"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> aletheia_crystallise -> Canon Studio); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28."
+  }
+}

@@ -59,7 +59,7 @@ export interface OmniPanelTab {
 export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'pi-chat', label: 'Pi', component: 'omniChat', owningTranche: '27.1', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'sessions', label: 'Sessions', component: 'omniSessions', owningTranche: '27.2', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'dispatch-trace', label: 'Dispatch', component: 'omniDispatchTrace', owningTranche: '27.3', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'dispatch-trace', label: 'Dispatch', component: 'omniDispatchTrace', owningTranche: '29.T29.11', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'tool-stream', label: 'Tools', component: 'omniLogs', owningTranche: '27.4', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },

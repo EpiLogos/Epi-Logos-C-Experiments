@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-20T20:53:04.456Z",
+  "updatedAt": "2026-07-20T22:11:38.211Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12206,19 +12206,34 @@
       "blocker": null
     },
     "24.T24.20": {
-      "status": "review",
-      "updatedAt": "2026-07-20T20:51:08.624Z",
+      "status": "done",
+      "updatedAt": "2026-07-20T22:11:38.188Z",
       "claimedAt": "2026-07-19T21:39:01.191Z",
-      "completedAt": null,
+      "completedAt": "2026-07-20T22:11:38.188Z",
       "evidence": [
         {
           "at": "2026-07-20T20:51:08.624Z",
           "text": "Deliverable PROVEN: M3TranscriptionEngine (lens->codon->binary readback) landed as an honest pure-consumer (every value from kernelBridge.m3.lensCodonBinary via servicePort.invoke; no Math.random/local biology). Added the missing UF app-flow proof: tests/e2e/m3-transcription.spec.ts drives the real spawned gateway, routes to ide-deep, and asserts the transcription engine reaches data-state=ready for the primary Fibonacci Ground lens (16) with real per-degree bits/charges/quaternion/class/hops + honest pending badges — PASSED in isolation (1 passed, 7.4s). The aperture-17 no-frame-graph 'gap' is NOT a gap: the 18-aperture Frame/Operator branch is explicitly superseded by the rerun carrier contract; the impl correctly refuses it and a unit test canonises the supersession. BLOCKED from ledger-done: 24 is UF-class and the combined app-ui-flow gate is currently RED on UNRELATED sibling WIP in the uncommitted tree (32.T32.11 gateway route-table gap: vault.day.ensure/khora.session_start in dispatch-plan but not classify_method; Track-30 carrier-tokens: 10 raw font-sizes in styles.css; visual-panes:203 + visual-regression:520 baselines). 24's own specs are green (app-test 936, app-typecheck, its e2e)."
+        },
+        {
+          "at": "2026-07-20T22:11:38.188Z",
+          "text": "M3TranscriptionEngine lens->codon->binary readback (honest pure-consumer of kernelBridge.m3.lensCodonBinary; no Math.random/local biology; superseded 18-aperture Frame/Operator branch correctly NOT rebuilt per rerun carrier). Added the missing UF app-flow proof tests/e2e/m3-transcription.spec.ts (routes ide-deep; asserts data-state=ready for Fibonacci Ground lens 16 with real per-degree bits/charges/quaternion/class/hops + honest pending badges). Independent full UF verify-tranche PASS (verifier opus-verify-2524c != closer opus-mdev-ctrl-0720): app-ui-flow 59/0 incl the new transcription spec, app-test 936/0, gateway 96/0. Unblocked by greening the shared UF gate: 25 nara.transform gateway route-metadata + explicit S0 arm + s2.codon.aa_lookup classification (dispatch_contract 30/0); tokenized 10 carrier-tokens font-sizes; vault./khora. probe prefixes (gateway-methods GREEN); stale spanda codon+amino regex + regenerated composition-4-5-0 baseline.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 59,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3TranscriptionEngine.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-transcription.spec.ts",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 8 dirty files.",
       "owner": "codex-mdev-2420-transcription",
-      "leaseExpiresAt": "2026-07-20T00:39:01.191Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-20T20:51:08.624Z",
       "runId": "20260719T213901Z-24-T24.20",
       "worktree": null,
@@ -12400,10 +12415,10 @@
       "blocker": null
     },
     "25.T25.11": {
-      "status": "review",
-      "updatedAt": "2026-07-20T20:51:31.153Z",
+      "status": "done",
+      "updatedAt": "2026-07-20T22:11:23.402Z",
       "claimedAt": "2026-07-19T22:52:57.077Z",
-      "completedAt": null,
+      "completedAt": "2026-07-20T22:11:23.402Z",
       "evidence": [
         {
           "at": "2026-07-16T15:51:36.039Z",
@@ -12420,11 +12435,26 @@
         {
           "at": "2026-07-20T20:51:31.153Z",
           "text": "Independent spec-vs-built review (subagent) verdict: closeable=yes. Three-container transform lifecycle (Bohm 5-stage / Talking Circle 4-stage / Diamond 4-stage) genuinely implemented across TransformContainersPane + parser + S0 Rust lifecycle; durable NOW c_4_active_alchemical_op mutation; nara.transform.start/advance exist in gateway+contract+dispatch; transform-containers.spec.ts exercises real gateway progression+regression. In the combined app-ui-flow gate run its own e2e PASSED (not among the failures). BLOCKED from ledger-done ONLY by unrelated sibling WIP reds in the shared UF gate (32.T32.11 gateway route-table gap; Track-30 carrier-tokens 10 raw font-sizes; visual-panes:203 + visual-regression:520 baselines). Awaits tree-greening; deliverable itself is proven."
+        },
+        {
+          "at": "2026-07-20T22:11:23.402Z",
+          "text": "Durable three-container Nara transform lifecycle (Bohm/Talking-Circle/Diamond) with governed nara.transform.start/advance RPCs + durable NOW c_4_active_alchemical_op transitions; TransformContainersPane carrier + real Playwright progression/regression proof. Independent full UF verify-tranche PASS (verifier opus-verify-2524c != closer opus-mdev-ctrl-0720): app-ui-flow 59/0, app-test 936/0, gateway 96/0, gateway-methods/live-wire/carrier-tokens green. M4 PROTECTED-LOCAL honored. Closed after greening the shared UF gate (sibling WIP reds fixed).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 59,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/TransformContainersPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/transform-containers.spec.ts",
+              "Body/S/S0/epi-cli/src/nara/transform/lifecycle.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 24 dirty files.",
       "owner": "codex-mdev-2511-transform",
-      "leaseExpiresAt": "2026-07-20T01:52:57.077Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-20T20:51:31.153Z",
       "runId": "20260719T225257Z-25-T25.11",
       "worktree": null,

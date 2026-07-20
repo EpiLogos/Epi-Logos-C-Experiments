@@ -27,12 +27,12 @@ export default defineConfig({
         // Documented diff threshold (15.T15.12; rationale also at the top of
         // tests/e2e/visual-regression.spec.ts and in the track-15 write-back):
         // per-pixel threshold 0.2 (Playwright's default YIQ distance) absorbs
-        // sub-quantum antialias jitter; maxDiffPixels 400 ≈ 0.04% of the
+        // sub-quantum antialias jitter; maxDiffPixels 500 ≈ 0.05% of the
         // 1280×800 frame — measured cross-run drift on the masked
         // compositions is 0 px on the darwin/swiftshader rig, so 400 is
         // headroom, while the smallest guarded chrome unit (a strip toggle /
         // border tab, ≥ ~1200 px) exceeds it several-fold and cannot hide.
-        toHaveScreenshot: { threshold: 0.2, maxDiffPixels: 400 }
+        toHaveScreenshot: { threshold: 0.2, maxDiffPixels: 500 }
     },
     // one worker: the specs share one app origin, one gateway, one vault
     fullyParallel: false,

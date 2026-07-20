@@ -43,9 +43,7 @@ fn assert_cast_receipt(receipt: &Value) {
     let expected: Vec<u64> = lines
         .iter()
         .enumerate()
-        .filter_map(|(index, line)| {
-            matches!(line.as_u64(), Some(6 | 9)).then_some(index as u64)
-        })
+        .filter_map(|(index, line)| matches!(line.as_u64(), Some(6 | 9)).then_some(index as u64))
         .collect();
     let actual: Vec<u64> = changing
         .iter()

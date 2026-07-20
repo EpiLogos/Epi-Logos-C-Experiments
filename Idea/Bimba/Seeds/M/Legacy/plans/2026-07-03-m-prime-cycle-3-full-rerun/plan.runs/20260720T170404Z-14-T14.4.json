@@ -1,0 +1,45 @@
+{
+  "runId": "20260720T170404Z-14-T14.4",
+  "taskId": "14.T14.4",
+  "startedAt": "2026-07-20T17:04:04.021Z",
+  "owner": "codex-mdev-144-cycle-audit",
+  "leaseExpiresAt": "2026-07-20T19:04:04.021Z",
+  "worktree": null,
+  "task": {
+    "id": "14.T14.4",
+    "trackId": "14",
+    "tranche": "T14.4",
+    "title": "Cycle-close no-orphan audit re-run (the closing gate)",
+    "effort": "the closing gate",
+    "file": "14-no-orphan-audit-and-release-gates.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
+    "dependsOn": [
+      "14.T14.3"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-10T15:31:44.665Z",
+        "text": "The cycle-close gate itself - BLOCKED by design per its own brief until the dependency order in the original Closing-the-Cycle section reaches the final step: needs 36.T36.7 (no-orphan closure seal, currently waiting on 36.5/36.6) + the open release gates (G7 15.T15.1, G8 15.T15.12, G10 track-16 CCTs - live per release-gates.mjs). The machinery to run it is landed and green: release-gates.mjs (mechanised G1/G2/G4/G6 + honest checklist), dr-gate-audit.mjs (32/32), the orphan re-audit generator (0 still-orphan). Unblock when the checklist reads 12/12."
+      },
+      {
+        "at": "2026-07-18T20:46:19.268Z",
+        "text": "Requeued behind the now-explicit 36.T36.7 dependency; this is a dependency wait, not an unclassified block."
+      }
+    ],
+    "claimedAt": "2026-07-10T15:31:44.480Z",
+    "completedAt": null,
+    "owner": "opus-a-m3",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-10T15:31:44.480Z",
+    "runId": "20260710T153144Z-14-T14.4",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "AUDIT — gates G1-G14 (never truly passed; the gate list IS the recapture checklist) + open-orphan table. CARRIER: phase-2 no-orphan registry. §2 track 14."
+  }
+}

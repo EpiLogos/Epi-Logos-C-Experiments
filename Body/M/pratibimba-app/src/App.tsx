@@ -51,6 +51,9 @@ import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
+import { TransformContainersPane } from './panes/TransformContainersPane';
+import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
+import { CompositionDispatchTracePane } from './panes/omni/CompositionDispatchTracePane';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -98,6 +101,8 @@ import { VaultEntry } from './panes/FileTreePane';
 import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
 import { resolveLayoutClaims } from './ui/layoutClaims';
+import { startFirstSession } from './onboarding/firstSessionOrchestration';
+import { browserKairosPreferences } from './panes/kairosEnablement';
 
 assertDailyReceiverBindings({
     'pratibimba.daily.journal': 'journalTimeline',
@@ -167,7 +172,8 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                     enableClose: false
                 },
                 { type: 'tab', name: 'Calendar', component: 'dayCalendar', enableClose: false },
-                { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false }
+                { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false },
+                { type: 'tab', name: 'Connections', component: 'semanticConnections', enableClose: false }
             ]
         },
         omniBorder(activeLayout)
@@ -185,6 +191,7 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                     { type: 'tab', name: 'CU Ledger', component: 'canonUpdateLedger', enableClose: false },
                     { type: 'tab', name: 'Autoresearch', component: 'autoresearch', enableClose: false },
                     { type: 'tab', name: 'Medicine', component: 'medicineView', enableClose: false },
+                    { type: 'tab', name: 'Transform', component: 'transformContainers', enableClose: false },
                     { type: 'tab', name: 'Kairos setup', component: 'kairosEnablement', enableClose: false }
                 ]
             }
@@ -235,7 +242,7 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 21;
+const LAYOUT_VERSION = 22;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -271,6 +278,8 @@ function factory(node: TabNode) {
         switch (node.getComponent()) {
         case 'fileTree':
             return <FileTreePane />;
+        case 'semanticConnections':
+            return <SemanticConnectionsPane />;
         case 'editor':
             return <MarkdownEditorPane path={(node.getConfig() as { path: string }).path} />;
         case 'cosmic':
@@ -289,6 +298,14 @@ function factory(node: TabNode) {
         case 'spandaNavigator':
             return <SpandaNavigatorPane />;
         case 'bimbaGraph':
+            {
+                const routed = (node.getConfig() as {
+                    crossLayoutIntent?: { requestedExtensionId?: string; requestedContributionId?: string };
+                })?.crossLayoutIntent;
+                const atelierTerm = routed?.requestedExtensionId === 'ide-shell-m0-m5'
+                    && routed.requestedContributionId?.startsWith('term:')
+                    ? routed.requestedContributionId.slice('term:'.length)
+                    : null;
             return (
                 <GraphExplorerPane
                     requestedM0Contribution={
@@ -298,8 +315,10 @@ function factory(node: TabNode) {
                                 .crossLayoutIntent?.requestedContributionId ?? null
                             : null
                     }
+                    requestedAtelierTerm={atelierTerm}
                 />
             );
+            }
         case 'mocBases':
             return <MocBaseReflectionPane />;
         case 'm2Correspondence':
@@ -329,13 +348,39 @@ function factory(node: TabNode) {
             return <CanonUpdateLedgerPane />;
         // 28.T28.10 - real S5 autoresearch disclosure over status/history.
         case 'autoresearch':
-            return <AutoresearchPane />;
+            {
+                const requestedContributionId = (node.getConfig() as {
+                    crossLayoutIntent?: { requestedExtensionId?: string; requestedContributionId?: string };
+                })?.crossLayoutIntent?.requestedContributionId;
+                const requestedCapacity = requestedContributionId?.startsWith('capacity:')
+                    ? requestedContributionId.slice('capacity:'.length)
+                    : null;
+                return (
+                    <AutoresearchPane
+                        requestedCapacity={
+                            requestedCapacity && [
+                                'anuttara-construction',
+                                'paramasiva-cpt-rag',
+                                'parashakti-graph-relational-ml',
+                                'mahamaya-process-reward-rl',
+                                'nara-anima-dialogic',
+                                'epii-self-referential'
+                            ].includes(requestedCapacity)
+                                ? requestedCapacity as import('./panes/autoresearchModel').M5OperationalCapacity
+                                : null
+                        }
+                    />
+                );
+            }
         // 32.T32.10 - FR-3 default-off, probe-first Kairos onboarding.
         case 'kairosEnablement':
             return <KairosEnablementPane />;
         // 25.T25.10 - protected-local Medicine evidence and governed NOW pin.
         case 'medicineView':
             return <MedicineViewPane />;
+        // 25.T25.11 - governed transform lifecycle and protected-local carrier.
+        case 'transformContainers':
+            return <TransformContainersPane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':
@@ -360,9 +405,10 @@ function factory(node: TabNode) {
             );
         case 'omniTuning':
             return <TuningPane />;
+        case 'omniDispatchTrace':
+            return <CompositionDispatchTracePane />;
         // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
         // own the bodies) mount the honest pending pane.
-        case 'omniDispatchTrace':
         case 'omniEvidence':
         case 'omniGateway':
         case 'omniDiagnostics':
@@ -503,7 +549,9 @@ export function App() {
                 omniPanel: readOmniPanelSessionState(),
                 [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
             };
-            void invokeCommand('ui_state_save', { json: JSON.stringify(state) }).catch(() => undefined);
+            void Promise.resolve(
+                invokeCommand('ui_state_save', { json: JSON.stringify(state) })
+            ).catch(() => undefined);
         }, 800);
     }, []);
 
@@ -797,6 +845,25 @@ export function App() {
                     if (faceRef.current !== 1) {
                         setFace(1);
                     }
+                    persist();
+                }
+            }),
+            commands.register({
+                id: 'journal.startFirstSession',
+                title: 'Journal: Start first session',
+                enabled: () => gatewayReady(),
+                run: async () => {
+                    const preferences = browserKairosPreferences(window.localStorage);
+                    const receipt = await startFirstSession(todayIdLegacy(), {
+                        preferences,
+                        invoke: async (method, params) => (await gateway().invoke(method, params)).artifact
+                    });
+                    useSessionStore.getState().setSession({
+                        dayNow: receipt.dayId,
+                        sessionKey: receipt.sessionId,
+                        privacyClass: 'protected'
+                    });
+                    if (faceRef.current !== 1) setFace(1);
                     persist();
                 }
             }),

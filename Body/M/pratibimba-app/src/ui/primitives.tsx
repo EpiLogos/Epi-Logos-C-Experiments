@@ -15,7 +15,8 @@
  *   (Track 15 baselines), bedrock chain genesis (portal-core CCT-6).
  */
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { FAMILY_HUES } from './tokens';
 
 export { ProvenanceBadge } from './ProvenanceBadge';
@@ -53,18 +54,163 @@ export function BedrockLinkTooltip(props: {
     );
 }
 
+function unwrapWikilink(value: string): string {
+    const trimmed = value.trim();
+    return trimmed.startsWith('[[') && trimmed.endsWith(']]')
+        ? trimmed.slice(2, -2)
+        : trimmed;
+}
+
 /** Renders a coordinate with the shared family-tier tint, never a local hue. */
 export function CoordinateString({ value }: { readonly value: string }) {
-    const family = value.charAt(0).toUpperCase();
+    const coordinate = unwrapWikilink(value);
+    const family = coordinate.charAt(0).toUpperCase();
     const colour = FAMILY_HUES[family] ?? 'var(--ink-dim)';
     return (
         <span
             className="coordinate-string"
             data-family={family || 'unknown'}
             data-testid="coordinate-string"
+            aria-label={`Coordinate ${coordinate}, family ${family || 'unknown'}`}
             style={{ color: colour }}
         >
-            {value}
+            <span className="coordinate-family" aria-hidden="true">{family || '?'}</span>
+            {coordinate.slice(family ? 1 : 0)}
+        </span>
+    );
+}
+
+export interface CodonLookup {
+    readonly codon: string;
+    readonly encoded: number;
+    readonly aminoAcidIndex: number;
+    readonly aminoAcid: string;
+    readonly isStart: boolean;
+    readonly isStop: boolean;
+    readonly authority: 'portal-core::transcription';
+}
+
+export function parseCodonLookup(value: unknown): CodonLookup {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        throw new Error('codon lookup must be an object');
+    }
+    const root = value as Record<string, unknown>;
+    if (
+        typeof root.codon !== 'string'
+        || !/^[AUCG]{3}$/.test(root.codon)
+        || !Number.isInteger(root.encoded)
+        || (root.encoded as number) < 0
+        || (root.encoded as number) > 63
+        || !Number.isInteger(root.aminoAcidIndex)
+        || typeof root.aminoAcid !== 'string'
+        || typeof root.isStart !== 'boolean'
+        || typeof root.isStop !== 'boolean'
+        || root.authority !== 'portal-core::transcription'
+    ) {
+        throw new Error('codon lookup response is malformed');
+    }
+    return root as unknown as CodonLookup;
+}
+
+async function lookupCodon(codon: string): Promise<CodonLookup> {
+    const receipt = await gateway().invoke('s2.codon.aa_lookup', { codon });
+    return parseCodonLookup(receipt.artifact);
+}
+
+/** Resolves amino-acid identity through the S2 gateway adapter, never a browser LUT. */
+export function CodonString(props: {
+    readonly value: string;
+    readonly resolve?: (codon: string) => Promise<CodonLookup>;
+}) {
+    const [lookup, setLookup] = useState<CodonLookup | null>(null);
+    const [failure, setFailure] = useState<string | null>(null);
+    const canResolve = props.resolve !== undefined || gatewayReady();
+
+    useEffect(() => {
+        if (!canResolve) return;
+        let current = true;
+        setLookup(null);
+        setFailure(null);
+        void (props.resolve ?? lookupCodon)(props.value)
+            .then(result => {
+                if (current) setLookup(result);
+            })
+            .catch(error => {
+                if (current) setFailure(error instanceof Error ? error.message : String(error));
+            });
+        return () => {
+            current = false;
+        };
+    }, [canResolve, props.resolve, props.value]);
+
+    const state = failure ? 'blocked' : lookup ? 'ready' : 'pending';
+    const label = lookup
+        ? `Codon ${lookup.codon}, amino acid ${lookup.aminoAcid}${lookup.isStart ? ', start' : ''}${lookup.isStop ? ', stop' : ''}`
+        : `Codon ${props.value}, amino acid ${state}`;
+    return (
+        <span
+            className="codon-string"
+            data-state={state}
+            data-testid="codon-string"
+            aria-label={label}
+            title={failure ?? undefined}
+        >
+            <span className="codon-bases">{lookup?.codon ?? props.value}</span>
+            <span className="amino-acid-badge">{lookup?.aminoAcid ?? state}</span>
+            {lookup?.isStart ? <span className="codon-signal codon-start">START</span> : null}
+            {lookup?.isStop ? <span className="codon-signal codon-stop">STOP</span> : null}
+        </span>
+    );
+}
+
+/** Unicode I-Ching face with a six-line changing-line witness. */
+export function HexagramString(props: {
+    readonly value: number;
+    readonly changingLines?: readonly number[];
+}) {
+    if (!Number.isInteger(props.value) || props.value < 1 || props.value > 64) {
+        throw new Error('hexagram value must be an integer from 1 to 64');
+    }
+    const changing = new Set(props.changingLines ?? []);
+    const glyph = String.fromCodePoint(0x4dc0 + props.value - 1);
+    const lineDescription = [...changing].map(line => line + 1).join(', ');
+    return (
+        <span
+            className="hexagram-string"
+            data-testid="hexagram-string"
+            aria-label={`Hexagram ${props.value}${lineDescription ? `, changing lines ${lineDescription}` : ''}`}
+        >
+            <span className="hexagram-glyph" aria-hidden="true">{glyph}</span>
+            <span className="hexagram-lines" aria-hidden="true">
+                {[0, 1, 2, 3, 4, 5].map(line => (
+                    <span key={line} data-changing={changing.has(line)} />
+                ))}
+            </span>
+            <span className="hexagram-number">{props.value}</span>
+        </span>
+    );
+}
+
+/** Preserves a verifier-authored symbolic address while exposing its structural parts. */
+export function SymbolicCoordinateString({ value }: { readonly value: string }) {
+    const coordinate = unwrapWikilink(value);
+    const parts = coordinate.split(/([:/-])/);
+    const family = coordinate.charAt(0).toUpperCase();
+    return (
+        <span
+            className="symbolic-coordinate-string"
+            data-family={family || 'unknown'}
+            data-testid="symbolic-coordinate-string"
+            aria-label={`Symbolic coordinate ${coordinate}`}
+        >
+            {parts.map((part, index) => (
+                <span
+                    key={`${index}:${part}`}
+                    data-symbolic-part={/^[A-Za-z0-9#'.?]+$/.test(part) ? 'term' : 'operator'}
+                >
+                    {part}
+                </span>
+            ))}
         </span>
     );
 }

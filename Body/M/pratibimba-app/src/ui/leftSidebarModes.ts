@@ -95,9 +95,9 @@ export const LEFT_SIDEBAR_MODES: readonly LeftSidebarMode[] = Object.freeze([
     {
         id: 'smart-connections',
         label: 'Smart Connections',
-        surfaceId: 'smartConnections',
+        surfaceId: 'semanticConnections',
         availableInLayouts: ['ide-deep'],
-        pendingOwner: '28.12'
+        pendingOwner: null
     }
 ] as const);
 

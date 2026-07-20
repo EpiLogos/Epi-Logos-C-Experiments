@@ -132,6 +132,46 @@ describe('44.5 live transport hydration', () => {
                               }
                           }
                       } as never)
+                    : method === 'nara.session_close.contemplation.read'
+                        ? ({
+                              artifact: {
+                                  session_id: 'sess-live',
+                                  close_ref: 'close-live',
+                                  contemplation_ref: 'contemplation-live',
+                                  triplet: {
+                                      llm: {
+                                          position: "4'",
+                                          loaded_agent_count: 4,
+                                          psyche_anchor_coherent: true,
+                                          matched_anchor_codon_count: 1
+                                      },
+                                      ebm: {
+                                          position: "5'",
+                                          gradient_magnitude: 0.18,
+                                          gauge_trio_coherent: true,
+                                          coherence_scores: {
+                                              square_0_5: 0.9,
+                                              square_1_4: 0.8,
+                                              square_2_3: 0.7
+                                          }
+                                      },
+                                      verifier: {
+                                          position: "0'",
+                                          virtue_witness_vector: [true, true, false, true, false, true, true, false, true],
+                                          coherence_score: 0.82,
+                                          arch9_wholeness: false,
+                                          syntax_layers_witnessed: true
+                                      }
+                                  },
+                                  provenance: {
+                                      privacy_class: 'protected_local',
+                                      source_method: 'nara.session_close',
+                                      persisted_at: '2026-07-19T12:00:00Z',
+                                      persisted_at_ms: 1_752_940_800_000,
+                                      pasu_scoped: true
+                                  }
+                              }
+                          } as never)
                 : ({ artifact: { ok: true } } as never)
         );
         setGateway({ invoke } as never);
@@ -146,11 +186,17 @@ describe('44.5 live transport hydration', () => {
                 expect(pane.getAttribute('data-block-source')).toBe('live');
             });
             expect(screen.getByTestId('m1-session-close-reader')).toBeTruthy();
+            expect(await screen.findByTestId('contemplation-object-viewer')).toBeTruthy();
             expect(document.querySelectorAll('[data-block-type="review-item"]')).toHaveLength(1);
             expect(screen.getByTestId('block-review-item:live-9')).toBeTruthy();
             const closeReads = invoke.mock.calls.filter(([method]) => method === 'nara.session_close.read');
             expect(closeReads).toHaveLength(1);
             expect(closeReads[0][1]).toEqual({ sessionKey: 'sess-live', latest: true });
+            const contemplationReads = invoke.mock.calls.filter(
+                ([method]) => method === 'nara.session_close.contemplation.read'
+            );
+            expect(contemplationReads).toHaveLength(1);
+            expect(contemplationReads[0][1]).toEqual({ sessionKey: 'sess-live', latest: true });
         } finally {
             setGateway(null);
             useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });

@@ -46,6 +46,7 @@ const LINKS_CYPHER =
     'MATCH (a:Bimba)-[r]->(b:Bimba) RETURN a.coordinate AS source, type(r) AS type, b.coordinate AS target LIMIT 2500';
 export interface GraphExplorerPaneProps {
     requestedM0Contribution?: string | null;
+    requestedAtelierTerm?: string | null;
 }
 
 const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.freeze({
@@ -55,7 +56,10 @@ const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.free
     'time-community': 'time'
 });
 
-export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplorerPaneProps = {}) {
+export function GraphExplorerPane({
+    requestedM0Contribution = null,
+    requestedAtelierTerm = null
+}: GraphExplorerPaneProps = {}) {
     const hostRef = useRef<HTMLDivElement | null>(null);
     const graphRef = useRef<ForceGraph | null>(null);
     const connected = useProvenanceStore(s => s.connection.connected);
@@ -122,6 +126,14 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
                         useCoordinateStore.getState().setSelected((node as ExplorerNode).id);
                         graph.nodeColor(graph.nodeColor());
                     });
+                if (requestedAtelierTerm) {
+                    const needle = requestedAtelierTerm.trim().toLocaleLowerCase();
+                    graph.nodeVisibility((node: unknown) => {
+                        const candidate = node as ExplorerNode;
+                        return candidate.id.toLocaleLowerCase().includes(needle)
+                            || (candidate.label ?? '').toLocaleLowerCase().includes(needle);
+                    });
+                }
                 graphRef.current = graph;
             })
             .catch(err => {
@@ -136,7 +148,7 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
             graphRef.current?._destructor?.();
             graphRef.current = null;
         };
-    }, [connected]);
+    }, [connected, requestedAtelierTerm]);
 
     if (!connected) {
         return <div className="pane-message">Gateway disconnected — the map needs S2.</div>;
@@ -147,6 +159,7 @@ export function GraphExplorerPane({ requestedM0Contribution = null }: GraphExplo
             data-testid="graph-explorer"
             data-projection-lens="pratibimba.daily.atelier-cluster-lens"
             data-atelier-clusters={atelierClusterCount ?? undefined}
+            data-atelier-term={requestedAtelierTerm ?? undefined}
         >
             <M0LayerRail
                 activeLayer={m0Surface.activeLayer}

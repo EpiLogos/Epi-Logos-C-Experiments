@@ -203,12 +203,10 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                 projection.harmonic_profile.planet_degrees = Some(degrees);
                 let live_planets = portal_core::live_planets_from_sky(&degrees, &retrograde);
                 let routing_state = portal_core::KerykeionRoutingState {
-                    planets: std::array::from_fn(|planet_id| {
-                        portal_core::RoutingPlanetPosition {
-                            planet_id: planet_id as u8,
-                            degree: degrees[planet_id],
-                            retrograde: retrograde[planet_id],
-                        }
+                    planets: std::array::from_fn(|planet_id| portal_core::RoutingPlanetPosition {
+                        planet_id: planet_id as u8,
+                        degree: degrees[planet_id],
+                        retrograde: retrograde[planet_id],
                     }),
                     planetary_hour: None,
                     planetary_hour_ruler: None,
@@ -217,8 +215,11 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
                     projection.tick.cycle,
                     projection.tick.sub_tick,
                 );
-                let routing_trace =
-                    portal_core::f_routing("daily-0-1-cymatic-spheres", &routing_state, routing_tick);
+                let routing_trace = portal_core::f_routing(
+                    "daily-0-1-cymatic-spheres",
+                    &routing_state,
+                    routing_tick,
+                );
                 projection.harmonic_profile.cymatic_spheres =
                     portal_core::cymatic_spheres_from_routing(
                         &live_planets,
@@ -253,6 +254,14 @@ fn spawn_profile_heartbeat(runtime: GatewayRuntimeState) -> JoinHandle<()> {
             // BODIES (natal chart, per-layer profiles) never cross this bus.
             projection.harmonic_profile.quintessence =
                 crate::nara::identity::heartbeat_quintessence();
+            if let Some((vak_address, bias_weights_empty)) = runtime.vak_profile_state() {
+                projection.harmonic_profile.vak_address = Some(vak_address);
+                projection.harmonic_profile.vak_languification_trace =
+                    portal_core::VakLanguificationTrace::from_profile(
+                        &projection.harmonic_profile,
+                        bias_weights_empty,
+                    );
+            }
             let verifier_questions = projection
                 .harmonic_profile
                 .anuttara_witness

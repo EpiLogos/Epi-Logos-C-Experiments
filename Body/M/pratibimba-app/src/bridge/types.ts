@@ -1,14 +1,17 @@
 /**
- * TypeScript mirror of `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs` —
- * Track 01 T5 deliverable. Drift between this file and the Rust source breaks
- * the bridge contract; the Track-01 contract tests assert structural parity.
+ * Coordinate: M' bridge boundary over S0/S3 kernel contracts.
+ * Residency: Body/M/pratibimba-app/src/bridge.
+ * Position (#n): active-carrier typed ingress.
+ * Actualises: the TypeScript mirror of gateway runtime event, profile, and
+ *   capability shapes, including 24.T24.20's strict M3 transcription packet.
+ * Public surface: exported bridge interfaces, guards, and strict parsers.
+ * Does NOT own: gateway protocol, kernel projection law, or renderer behavior.
+ * Contract: [[M'-SYSTEM-SPEC]] / [[S0-SPEC]] / [[S3-SPEC]] / [[M3'-SPEC]].
  *
- * Shape rationale: every interface uses `camelCase` keys because the Rust
- * structs declare `#[serde(rename_all = "camelCase")]`.
- *
- * Source authority: `Body/S/S3/gateway-contract/src/lib.rs` for protocol
- * constants, `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs` for the
- * runtime event/capability shapes.
+ * Every interface uses `camelCase` because the Rust structs declare
+ * `#[serde(rename_all = "camelCase")]`. Source authority is
+ * `Body/S/S3/gateway-contract/src/lib.rs` plus
+ * `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs`.
  */
 
 // Ported 2026-07-02 from Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts
@@ -995,17 +998,50 @@ export interface LensCodonBinaryCharges {
     readonly pn: number;
 }
 
+export interface LensCodonBinaryChargeIdentity {
+    readonly charge: 'pp' | 'nn' | 'np' | 'pn';
+    readonly xPermutation: 'X2' | 'X1' | 'X4' | 'X3';
+    readonly element: 'earth' | 'fire' | 'water' | 'air';
+    readonly quaternionComponent: 'w' | 'x' | 'y' | 'z';
+}
+
+export interface LensCodonBinaryLineHop {
+    readonly line: number;
+    readonly operatorAddress: number;
+    readonly fromHexagramId: number;
+    readonly toHexagramId: number;
+}
+
 export interface LensCodonBinaryDegree {
     readonly degree360: number;
     readonly exactDegree720: number;
     readonly codonUpper: number;
+    readonly codonMiddle: number;
     readonly codonLower: number;
+    readonly codonPairs: readonly [number, number, number];
+    readonly codonPairBits: readonly [string, string, string];
+    readonly codon6Bit: number;
     readonly codonClass: number;
+    readonly codonClassLabel:
+        | 'perfect-palindromic'
+        | 'imperfect-palindromic'
+        | 'non-palindromic-non-dual'
+        | 'dual';
     readonly charges: LensCodonBinaryCharges;
     readonly quaternion: readonly [number, number, number, number];
+    readonly chargeIdentity: readonly [
+        LensCodonBinaryChargeIdentity,
+        LensCodonBinaryChargeIdentity,
+        LensCodonBinaryChargeIdentity,
+        LensCodonBinaryChargeIdentity
+    ];
+    readonly fourX: number;
+    readonly xLogicInvariant: boolean;
     readonly elementCanonical: number;
     readonly hexagramId: number;
     readonly lineChangeOperator: number;
+    readonly lineChangeHops: readonly LensCodonBinaryLineHop[];
+    readonly rnaCapable: boolean;
     readonly tick12: number;
     readonly fibonacciPosition: number;
     readonly fibonacciDigit: number;
@@ -1067,6 +1103,12 @@ function parseLensCodonBinaryDegree(
     if (chargeKeys.join(',') !== 'nn,np,pn,pp') {
         throw new Error(`${path}.charges must expose exactly pp/nn/np/pn`);
     }
+    const parsedCharges = {
+        pp: requiredNumber(charges.pp, `${path}.charges.pp`),
+        nn: requiredNumber(charges.nn, `${path}.charges.nn`),
+        np: requiredNumber(charges.np, `${path}.charges.np`),
+        pn: requiredNumber(charges.pn, `${path}.charges.pn`)
+    };
     const quaternion = entry.quaternion;
     if (!Array.isArray(quaternion) || quaternion.length !== 4 || !quaternion.every(isFiniteNumber)) {
         throw new Error(`${path}.quaternion must contain four finite numbers`);
@@ -1074,7 +1116,131 @@ function parseLensCodonBinaryDegree(
     const degree360 = requiredInteger(entry.degree360, `${path}.degree360`, 0, 359);
     const exactDegree720 = requiredNumber(entry.exactDegree720, `${path}.exactDegree720`);
     const hexagramId = requiredInteger(entry.hexagramId, `${path}.hexagramId`, 0, 63);
+    const codonUpper = requiredInteger(entry.codonUpper, `${path}.codonUpper`, 0, 3);
+    const codonMiddle = requiredInteger(entry.codonMiddle, `${path}.codonMiddle`, 0, 3);
+    const codonLower = requiredInteger(entry.codonLower, `${path}.codonLower`, 0, 3);
+    const codon6Bit = requiredInteger(entry.codon6Bit, `${path}.codon6Bit`, 0, 63);
+    const codonPairs = entry.codonPairs;
+    const codonPairBits = entry.codonPairBits;
+    const pairBitWitness = ['00', '01', '10', '11'] as const;
+    if (
+        !Array.isArray(codonPairs)
+        || codonPairs.length !== 3
+        || !codonPairs.every(
+            pair => Number.isInteger(pair) && pair >= 0 && pair <= 3
+        )
+        || codonPairs[0] !== codonUpper
+        || codonPairs[1] !== codonMiddle
+        || codonPairs[2] !== codonLower
+        || codon6Bit !== codonUpper * 16 + codonMiddle * 4 + codonLower
+        || codon6Bit !== hexagramId
+    ) {
+        throw new Error(`${path} must preserve its authority-provided 3x2-bit codon`);
+    }
+    if (
+        !Array.isArray(codonPairBits)
+        || codonPairBits.length !== 3
+        || codonPairBits.some(
+            (bits, pairIndex) => bits !== pairBitWitness[codonPairs[pairIndex]]
+        )
+    ) {
+        throw new Error(`${path}.codonPairBits must preserve the authority bit readout`);
+    }
+    const codonClass = requiredInteger(entry.codonClass, `${path}.codonClass`, 0, 3);
+    const codonClassLabels = [
+        'perfect-palindromic',
+        'imperfect-palindromic',
+        'non-palindromic-non-dual',
+        'dual'
+    ] as const;
+    const expectedCodonClassLabel = codonClassLabels[codonClass];
+    if (entry.codonClassLabel !== expectedCodonClassLabel) {
+        throw new Error(`${path}.codonClassLabel must match codonClass`);
+    }
     const lineChangeOperator = requiredInteger(entry.lineChangeOperator, `${path}.lineChangeOperator`, 0, 5);
+    const lineChangeHops = entry.lineChangeHops;
+    if (!Array.isArray(lineChangeHops) || lineChangeHops.length !== 6) {
+        throw new Error(`${path}.lineChangeHops must contain all six line changes`);
+    }
+    const parsedLineChangeHops = lineChangeHops.map((value, line) => {
+        const hop = requiredObject(value, `${path}.lineChangeHops[${line}]`);
+        const parsed = {
+            line: requiredInteger(hop.line, `${path}.lineChangeHops[${line}].line`, 0, 5),
+            operatorAddress: requiredInteger(
+                hop.operatorAddress,
+                `${path}.lineChangeHops[${line}].operatorAddress`,
+                0,
+                383
+            ),
+            fromHexagramId: requiredInteger(
+                hop.fromHexagramId,
+                `${path}.lineChangeHops[${line}].fromHexagramId`,
+                0,
+                63
+            ),
+            toHexagramId: requiredInteger(
+                hop.toHexagramId,
+                `${path}.lineChangeHops[${line}].toHexagramId`,
+                0,
+                63
+            )
+        };
+        if (
+            parsed.line !== line
+            || parsed.operatorAddress !== hexagramId * 6 + line
+            || parsed.fromHexagramId !== hexagramId
+            || parsed.toHexagramId !== (hexagramId ^ (1 << line))
+        ) {
+            throw new Error(`${path}.lineChangeHops[${line}] violates the 64x6 authority witness`);
+        }
+        return parsed;
+    });
+    const identityWitness = [
+        ['pp', 'X2', 'earth', 'w'],
+        ['nn', 'X1', 'fire', 'x'],
+        ['np', 'X4', 'water', 'y'],
+        ['pn', 'X3', 'air', 'z']
+    ] as const;
+    if (!Array.isArray(entry.chargeIdentity) || entry.chargeIdentity.length !== 4) {
+        throw new Error(`${path}.chargeIdentity must contain pp/nn/np/pn identities`);
+    }
+    const parsedChargeIdentity = entry.chargeIdentity.map((value, identityIndex) => {
+        const identity = requiredObject(
+            value,
+            `${path}.chargeIdentity[${identityIndex}]`
+        );
+        const expected = identityWitness[identityIndex];
+        if (
+            identity.charge !== expected[0]
+            || identity.xPermutation !== expected[1]
+            || identity.element !== expected[2]
+            || identity.quaternionComponent !== expected[3]
+        ) {
+            throw new Error(`${path}.chargeIdentity[${identityIndex}] violates the canonical X identity`);
+        }
+        return {
+            charge: expected[0],
+            xPermutation: expected[1],
+            element: expected[2],
+            quaternionComponent: expected[3]
+        };
+    }) as unknown as LensCodonBinaryDegree['chargeIdentity'];
+    const fourX = requiredInteger(entry.fourX, `${path}.fourX`, 0, 64);
+    if (entry.xLogicInvariant !== true) {
+        throw new Error(`${path}.xLogicInvariant must be authority-true`);
+    }
+    if (
+        parsedCharges.pp
+        + parsedCharges.nn
+        + parsedCharges.np
+        + parsedCharges.pn
+        !== fourX
+    ) {
+        throw new Error(`${path}.fourX must equal the authority charge sum`);
+    }
+    if (typeof entry.rnaCapable !== 'boolean') {
+        throw new Error(`${path}.rnaCapable must be a boolean`);
+    }
     const fibonacciPosition = requiredInteger(entry.fibonacciPosition, `${path}.fibonacciPosition`, 0, 59);
     const fibonacciPhase01 = requiredNumber(entry.fibonacciPhase01, `${path}.fibonacciPhase01`);
     if (degree360 !== expectedDegree || exactDegree720 !== expectedDegree * 2) {
@@ -1084,29 +1250,34 @@ function parseLensCodonBinaryDegree(
         throw new Error(`${path} must carry its primary Fibonacci Ground address`);
     }
     if (
-        quaternion[0] !== charges.pp
-        || quaternion[1] !== charges.nn
-        || quaternion[2] !== charges.np
-        || quaternion[3] !== charges.pn
+        quaternion[0] !== parsedCharges.pp
+        || quaternion[1] !== parsedCharges.nn
+        || quaternion[2] !== parsedCharges.np
+        || quaternion[3] !== parsedCharges.pn
     ) {
         throw new Error(`${path}.quaternion must preserve pp/nn/np/pn order`);
     }
     return {
         degree360,
         exactDegree720,
-        codonUpper: requiredInteger(entry.codonUpper, `${path}.codonUpper`, 0, 3),
-        codonLower: requiredInteger(entry.codonLower, `${path}.codonLower`, 0, 3),
-        codonClass: requiredInteger(entry.codonClass, `${path}.codonClass`, 0, 3),
-        charges: {
-            pp: requiredNumber(charges.pp, `${path}.charges.pp`),
-            nn: requiredNumber(charges.nn, `${path}.charges.nn`),
-            np: requiredNumber(charges.np, `${path}.charges.np`),
-            pn: requiredNumber(charges.pn, `${path}.charges.pn`)
-        },
+        codonUpper,
+        codonMiddle,
+        codonLower,
+        codonPairs: codonPairs as [number, number, number],
+        codonPairBits: codonPairBits as [string, string, string],
+        codon6Bit,
+        codonClass,
+        codonClassLabel: expectedCodonClassLabel,
+        charges: parsedCharges,
         quaternion: quaternion as [number, number, number, number],
+        chargeIdentity: parsedChargeIdentity,
+        fourX,
+        xLogicInvariant: true,
         elementCanonical: requiredInteger(entry.elementCanonical, `${path}.elementCanonical`, 0, 5),
         hexagramId,
         lineChangeOperator,
+        lineChangeHops: parsedLineChangeHops,
+        rnaCapable: entry.rnaCapable,
         tick12: requiredInteger(entry.tick12, `${path}.tick12`, 0, 11),
         fibonacciPosition,
         fibonacciDigit: requiredInteger(entry.fibonacciDigit, `${path}.fibonacciDigit`, 0, 9),

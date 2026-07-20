@@ -101,6 +101,9 @@ pub const NARA_TRANSFORM_START_METHOD: &str = "nara.transform.start";
 pub const NARA_TRANSFORM_ADVANCE_METHOD: &str = "nara.transform.advance";
 pub const NARA_TRANSFORM_METHODS: &[&str] =
     &[NARA_TRANSFORM_START_METHOD, NARA_TRANSFORM_ADVANCE_METHOD];
+pub const S2_CODON_AA_LOOKUP_METHOD: &str = "s2.codon.aa_lookup";
+pub const VAULT_DAY_ENSURE_METHOD: &str = "vault.day.ensure";
+pub const KHORA_SESSION_START_METHOD: &str = "khora.session_start";
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
 pub const KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD: &str =

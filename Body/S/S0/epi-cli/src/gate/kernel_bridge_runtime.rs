@@ -1044,14 +1044,16 @@ pub fn typed_json_m3_lens_field(
     layout: Option<&str>,
     akasha_epsilon: f32,
 ) -> Result<Value, String> {
-    use portal_core::lens_field::{balance_quaternion, lens_field_activation, lens_field_structure};
+    use portal_core::lens_field::{
+        balance_quaternion, lens_field_activation, lens_field_structure,
+    };
     use portal_core::pleroma_lens::{
         layout_from_wire_name, pleroma_instance_packet, PleromaLayout, PLEROMA_LENS_ID,
     };
 
     let structure = lens_field_structure(lens_id).map_err(|error| error.to_string())?;
-    let activation = lens_field_activation(state, lens_id, akasha_epsilon)
-        .map_err(|error| error.to_string())?;
+    let activation =
+        lens_field_activation(state, lens_id, akasha_epsilon).map_err(|error| error.to_string())?;
     let symbolic_system = if lens_id == PLEROMA_LENS_ID {
         let layout = match layout {
             None => PleromaLayout::default(),
