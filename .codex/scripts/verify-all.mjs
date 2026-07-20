@@ -51,7 +51,10 @@ export const SUITES = [
     id: "portal-core",
     label: "portal-core cargo test",
     cwd: join(REPO_ROOT, "Body", "S", "S0", "portal-core"),
-    commands: [["cargo", "test"]],
+    // `--features resonance_ebm_runtime` builds the Möbius/Riemannian descent
+    // operator into the gate so its learning-law tests run (Track 33, 2026-07-20);
+    // the feature adds no dependencies, only compiles the gated kernel surface.
+    commands: [["cargo", "test", "--features", "resonance_ebm_runtime"]],
   },
   {
     id: "epi-cli",

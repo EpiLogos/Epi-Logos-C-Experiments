@@ -33,7 +33,20 @@ export const SUITES = [
   {
     id: "portal-core",
     cwd: join(REPO_ROOT, "Body", "S", "S0", "portal-core"),
-    command: ["cargo", "test", "--test", "kernel_truth", "--", "--ignored"],
+    // `resonance_ebm_runtime` compiles the Möbius/Riemannian descent operator
+    // so its real law tests (`mobius_descent_law`) are observable instead of
+    // dark behind the gate (Track 33 decision 2026-07-20). The `#[cfg(not(
+    // feature))]` compile-absence probe is cfg'd out under this build.
+    command: [
+      "cargo",
+      "test",
+      "--features",
+      "resonance_ebm_runtime",
+      "--test",
+      "kernel_truth",
+      "--",
+      "--ignored",
+    ],
   },
   {
     id: "epi-cli-oracle",
