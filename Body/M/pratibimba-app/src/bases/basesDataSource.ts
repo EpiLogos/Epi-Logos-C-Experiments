@@ -8,7 +8,7 @@
  * Contract: no Body/S import; all production reads use GatewayClient.invoke.
  */
 
-import { BaseViewConfig, BasesRecord } from './basesViewModel';
+import { BaseViewConfig, BasesRecord, PropPredicate } from './basesViewModel';
 
 export interface BasesGatewayReceipt {
     readonly artifact: unknown;
@@ -26,6 +26,7 @@ const SNAPSHOT_ROOT = 'Bimba/Map/snapshots';
 const STATIC_READ_METHOD = "s1'.vault.read_file";
 const DYNAMIC_QUERY_METHOD = 's2.graph.query';
 const DYNAMIC_RETRIEVE_METHOD = "s2'.retrieve";
+const DYNAMIC_LIST_BY_FILTER_METHOD = 's2.graph.list_by_filter';
 
 export const BASES_DYNAMIC_CYPHER = [
     'MATCH (n:Bimba)',
@@ -50,26 +51,60 @@ export class DynamicBasesSource implements BasesDataSource {
 
     async fetch(config: BaseViewConfig): Promise<readonly BasesRecord[]> {
         const limit = Math.max(1, Math.min(1000, Math.trunc(config.limit ?? 300)));
+        // Spec 13.D primary RPC: the typed, injection-safe list_by_filter pushes
+        // BOTH the coordinate scope AND the property predicates server-side (into
+        // the Neo4j WHERE), rather than dropping config.filter and post-filtering
+        // every row client-side in basesViewModel.
         try {
-            const receipt = await this.gateway.invoke(DYNAMIC_QUERY_METHOD, {
-                cypher: BASES_DYNAMIC_CYPHER,
-                params: { scope: config.coordinateScope, limit }
+            const receipt = await this.gateway.invoke(DYNAMIC_LIST_BY_FILTER_METHOD, {
+                coordinateScope: config.coordinateScope,
+                propertyFilters: toPropertyFilters(config.filter),
+                limit
             });
             return coerceBasesRows(receipt.artifact);
-        } catch (queryError) {
+        } catch (listError) {
+            // Fallback 1: raw coordinate-scoped cypher (predicates applied client-side).
             try {
-                const receipt = await this.gateway.invoke(DYNAMIC_RETRIEVE_METHOD, {
-                    query: config.coordinateScope || 'Bimba coordinate map',
-                    depth: 2
+                const receipt = await this.gateway.invoke(DYNAMIC_QUERY_METHOD, {
+                    cypher: BASES_DYNAMIC_CYPHER,
+                    params: { scope: config.coordinateScope, limit }
                 });
                 return coerceBasesRows(receipt.artifact);
-            } catch (retrieveError) {
-                const first = queryError instanceof Error ? queryError.message : String(queryError);
-                const second = retrieveError instanceof Error ? retrieveError.message : String(retrieveError);
-                throw new Error(`dynamic Bases read failed via query (${first}) and retrieve (${second})`);
+            } catch (queryError) {
+                // Fallback 2: semantic retrieve.
+                try {
+                    const receipt = await this.gateway.invoke(DYNAMIC_RETRIEVE_METHOD, {
+                        query: config.coordinateScope || 'Bimba coordinate map',
+                        depth: 2
+                    });
+                    return coerceBasesRows(receipt.artifact);
+                } catch (retrieveError) {
+                    const first = listError instanceof Error ? listError.message : String(listError);
+                    const second = queryError instanceof Error ? queryError.message : String(queryError);
+                    const third = retrieveError instanceof Error ? retrieveError.message : String(retrieveError);
+                    throw new Error(
+                        `dynamic Bases read failed via list_by_filter (${first}), query (${second}) and retrieve (${third})`
+                    );
+                }
             }
         }
     }
+}
+
+/**
+ * Map the view-model's PropPredicate[] to the gateway `propertyFilters` envelope.
+ * The op vocabulary is 1:1 with the S2 builder (eq/neq/startsWith/lt/gt/exists/
+ * missing); `value` is always present (null for exists/missing) so the Rust
+ * PropPredicate deserialises without a missing-field error.
+ */
+export function toPropertyFilters(
+    filter: readonly PropPredicate[] | undefined
+): ReadonlyArray<{ property: string; op: string; value: unknown }> {
+    return (filter ?? []).map(predicate => ({
+        property: predicate.property,
+        op: predicate.op,
+        value: predicate.value ?? null
+    }));
 }
 
 export function createBasesDataSource(gateway: BasesGateway, source: BaseViewConfig['source']): BasesDataSource {

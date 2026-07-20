@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-20T22:11:38.211Z",
+  "updatedAt": "2026-07-20T22:19:08.188Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -17723,10 +17723,10 @@
       "blocker": null
     },
     "48.T48.7": {
-      "status": "review",
-      "updatedAt": "2026-07-20T12:08:42.624Z",
+      "status": "done",
+      "updatedAt": "2026-07-20T22:19:08.139Z",
       "claimedAt": "2026-07-19T08:33:00.125Z",
-      "completedAt": null,
+      "completedAt": "2026-07-20T22:19:08.139Z",
       "evidence": [
         {
           "at": "2026-07-19T08:43:52.964Z",
@@ -17735,11 +17735,26 @@
         {
           "at": "2026-07-20T12:08:42.624Z",
           "text": "Underlying out-of-scope capability LANDED + live-verified (commit 17a2b3cf): s2.graph.list_by_filter gateway method now registered — gateway-contract S2_GRAPH_LIST_BY_FILTER_METHOD const + METHOD_NAMES + dispatch_plan(S2GraphServiceAdapter) + S2_GRAPH_GATEWAY_EXPOSED_METHODS + receipt test; dispatched via S0 gate::graph::dispatch_graph_method arm over the pre-existing CoordinateRetrieval::list_by_filter. G-class live receipt list_by_filter_live_graph.rs PASSES vs real Neo4j (adapter rows cross-checked against independent :Bimba coordinate read + predicate discrimination). Reviewer blocker ('no gateway dispatch exposes s2.graph.list_by_filter; implement the typed gateway method and its live receipt test before wiring the carrier') is CLEARED. Remaining IN-SCOPE track-48 work (the .base snapshot emitter over fetch_bimba.py + carrier BasesView wiring) is separate and now unblocked."
+        },
+        {
+          "at": "2026-07-20T22:19:08.139Z",
+          "text": "Data-layer completion: carrier DynamicBasesSource now dispatches the spec-13.D primary RPC s2.graph.list_by_filter (server-side coordinate scope + property predicates via toPropertyFilters; op vocab 1:1 with the S2 builder eq/neq/startsWith/lt/gt/exists/missing), with graceful fallback to s2.graph.query then s2'.retrieve. Closes the reviewer-flagged wiring gap (list_by_filter had ZERO carrier callers). Underlying halves already landed: .base emitter (fetch_bimba.py) + s2.graph.list_by_filter gateway method (17a2b3cf) + BasesView pane. Proof: basesDataSource unit 4/4 (list_by_filter primary + query fallback), app-typecheck clean, live BasesView e2e visual-panes:352 passes vs real gateway+Neo4j, and independent W+G verify-tranche PASS (verifier opus-verify-4807 != closer): graph-live 65.3s real Neo4j M2-3 read, gateway 96/0, gateway-methods/live-wire green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,graph-live",
+            "exitCode": 0,
+            "testsPassed": 96,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/bases/basesDataSource.ts",
+              "Body/S/S2/graph-services/src/retrieval/coordinate.rs",
+              "Body/S/S0/epi-cli/tests/list_by_filter_live_graph.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 144 dirty files.",
       "owner": "codex-mdev-487-data-layer",
-      "leaseExpiresAt": "2026-07-19T10:33:00.125Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-20T12:08:42.624Z",
       "runId": "20260719T083300Z-48-T48.7",
       "worktree": null,
