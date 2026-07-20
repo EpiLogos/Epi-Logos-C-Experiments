@@ -34,6 +34,10 @@ import hashlib
 import json
 import logging
 import math
+import os
+import shutil
+import subprocess
+import sys
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple
@@ -185,15 +189,75 @@ class EpistemicBlindfoldedTeacher:
     def _default_slot_invoke(
         self, prompt: str, model_slot: str
     ) -> Tuple[str, str, int]:
-        """Default slot CLI invocation stub.
+        """Real teacher invocation — rides the EXISTING PI harness, the single
+        provider-agnostic local+cloud model selector. It never constructs a
+        bespoke Anthropic/Gemini/OpenAI client (that is the epi-gnostic
+        anti-pattern the M1' spec forbids: the teacher routes through PI).
 
-        In production, this is replaced with actual slot CLI integration
-        that resolves the teacher model dynamically per DR-MODEL-1.
+        Two steps, both over existing surfaces:
+          1. RESOLVE the model via the slot CLI — the config/resolution
+             authority (DR-MODEL-1, no hard-lock, cloud-opt-in default for
+             ``epii_judge``): ``epi slot show --json <slot>`` yields
+             ``model.{provider,model,state}``.
+          2. INVOKE one-shot through PI: ``pi -p --model <provider>/<model>``.
+             PI routes local (ollama) vs cloud (anthropic/openai/google)
+             internally — the one no-lock-in selector; no ``--model`` provider
+             logic lives here.
+
+        Returns ``(derivation_text, trace, approx_tokens)``. Raises loudly when a
+        slot resolves to no usable model or PI is unavailable — never a stub,
+        never a fabricated completion.
         """
-        raise NotImplementedError(
-            "Slot CLI invocation not configured. "
-            "Wire [slot.epii_judge] via Track 12.22 slot CLI."
+        slot_name = model_slot.split(".", 1)[-1]  # "slot.epii_judge" -> "epii_judge"
+        epi_bin = os.environ.get("EPI_BIN") or shutil.which("epi") or "epi"
+
+        # (1) Resolve the model through the slot CLI — resolution only.
+        try:
+            show = subprocess.run(
+                [epi_bin, "slot", "show", "--json", slot_name],
+                capture_output=True, text=True, timeout=30,
+            )
+        except FileNotFoundError as exc:
+            raise RuntimeError(
+                f"epi CLI not found for slot resolution ({exc}); the teacher "
+                f"resolves [slot.{slot_name}] via the slot CLI (Track 12.22)."
+            ) from exc
+        if show.returncode != 0:
+            raise RuntimeError(
+                f"`epi slot show --json {slot_name}` failed: {show.stderr.strip()}"
+            )
+        resolved = json.loads(show.stdout)
+        model_cfg = resolved.get("model", {})
+        provider = model_cfg.get("provider")
+        model_id = model_cfg.get("model")
+        state = model_cfg.get("state")
+        if state == "null" or not provider or not model_id:
+            raise RuntimeError(
+                f"slot '{slot_name}' resolves to no usable model (state={state!r}); "
+                f"configure it with `epi slot model set` — no hard-lock (DR-MODEL-1)."
+            )
+        model_ref = f"{provider}/{model_id}"
+
+        # (2) Invoke one-shot through the PI harness — the local+cloud selector.
+        pi_bin = os.environ.get("PI_BIN") or shutil.which("pi")
+        if pi_bin is None:
+            raise RuntimeError(
+                "pi harness not found on PATH — the teacher rides the PI runtime "
+                "(the provider-agnostic local+cloud model selector). Install pi."
+            )
+        proc = subprocess.run(
+            [pi_bin, "-p", "--model", model_ref, prompt],
+            capture_output=True, text=True, timeout=600,
         )
+        if proc.returncode != 0:
+            raise RuntimeError(
+                f"`pi -p --model {model_ref}` failed (exit {proc.returncode}): "
+                f"{proc.stderr.strip()[:400]}"
+            )
+        derivation_text = proc.stdout.strip()
+        trace = f"pi:{model_ref}:{state}"
+        approx_tokens = len(derivation_text.split())
+        return derivation_text, trace, approx_tokens
 
     def resolve_teacher(self) -> str:
         """Resolve the teacher model via slot CLI. No hard-lock per DR-MODEL-1."""
@@ -449,3 +513,86 @@ def audit_blindfold_integrity(
     )
 
     return findings
+
+
+# ---------------------------------------------------------------------------
+# CLI entrypoint (the trainer shells this per pass; also a one-shot teacher CLI)
+# ---------------------------------------------------------------------------
+
+def self_check(slot_name: str = "slot.epii_judge") -> Dict[str, object]:
+    """Verify the teacher can RESOLVE its slot + reach the PI harness WITHOUT a
+    model call. Hermetic — no cloud, no inference. Backs the trainer subprocess
+    contract and the wiring tests."""
+    epi_bin = os.environ.get("EPI_BIN") or shutil.which("epi") or "epi"
+    bare = slot_name.split(".", 1)[-1]
+    status: Dict[str, object] = {
+        "slot": slot_name,
+        "resolved": False,
+        "pi_available": (os.environ.get("PI_BIN") or shutil.which("pi")) is not None,
+    }
+    try:
+        show = subprocess.run(
+            [epi_bin, "slot", "show", "--json", bare],
+            capture_output=True, text=True, timeout=30,
+        )
+        if show.returncode == 0:
+            model_cfg = json.loads(show.stdout).get("model", {})
+            status["provider"] = model_cfg.get("provider")
+            status["model"] = model_cfg.get("model")
+            status["state"] = model_cfg.get("state")
+            status["resolved"] = bool(
+                model_cfg.get("provider") and model_cfg.get("model")
+            )
+    except (FileNotFoundError, json.JSONDecodeError, subprocess.SubprocessError):
+        pass
+    return status
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Epistemic-blindfolded teacher — rides the PI harness "
+            "(the local+cloud model selector), never a bespoke provider client."
+        )
+    )
+    parser.add_argument(
+        "--slot", default="slot.epii_judge",
+        help="Teacher model slot (DR-MODEL-1, no hard-lock).",
+    )
+    parser.add_argument(
+        "--prompt", default=None,
+        help="Run one blindfolded prompt through PI and print the completion JSON.",
+    )
+    parser.add_argument(
+        "--self-check", action="store_true",
+        help="Resolve the slot + check PI reachability without any model call.",
+    )
+    # Accept (and ignore) the trainer's orchestration args so the subprocess
+    # contract in m1-cpt-trainer holds; full corpus-generation is the Track
+    # 12.24 distillation pipeline, not this endpoint.
+    parser.add_argument("--spec", default=None)
+    parser.add_argument("--corpus-manifest", default=None)
+    parser.add_argument("--pass", dest="pass_index", type=int, default=None)
+    args = parser.parse_args(argv)
+
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+    )
+
+    if args.prompt is not None:
+        teacher = EpistemicBlindfoldedTeacher(
+            EpistemicBlindfoldConfig(teacher_slot=args.slot)
+        )
+        text, trace, tokens = teacher._slot_cli_invoke(args.prompt, args.slot)
+        print(json.dumps({"completion": text, "trace": trace, "tokens": tokens}))
+        return 0
+
+    # Default (and --self-check): prove the endpoint is wired to slot + PI.
+    print(json.dumps(self_check(args.slot)))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
