@@ -616,26 +616,56 @@ fn kernel_energy_carries_e5_e6_with_456_weighting() {
         "empty invariant_set must leave E6 dormant"
     );
 
-    // Non-default harmonic/verifier inputs MUST move their channels off zero.
+    // Non-default inputs MUST move the channels off zero. With no trained EBM
+    // injected, E5 is the kernel's deterministic reading over all seven
+    // canonical harmonic channels — non-zero for a live profile.
+    let engaged_channels = E5HarmonicInputs {
+        channel_set: vec!["m123.chime".to_owned(), "profile.update".to_owned()],
+        ebm_energy_scalar: None,
+    };
+    let engaged_invariants = E6VerifierInputs {
+        invariant_set: vec!["sum-pp-360".to_owned()],
+        severity_weights_handle: Some("default".to_owned()),
+    };
     let energised = kernel_energy_evaluate(
+        &state,
+        &profile,
+        &E4PersonalInputs::default(),
+        &engaged_channels,
+        &engaged_invariants,
+    );
+    assert!(
+        energised.e_5_harmonic_energy > 0.0,
+        "E5 must read the live harmonic substrate (all 7 channels) for a non-empty channel_set"
+    );
+    assert!(
+        energised.e_6_verifier_energy > 0.0,
+        "E6 verifier channel must respond to a non-empty invariant_set"
+    );
+
+    // The trained N-channel EBM (Stream C, S5) is consumed via injection: when a
+    // composition root supplies its energy_scalar, E5 uses THAT (scaled by
+    // channel activation) instead of the deterministic reading. Proves the
+    // learned score is wired through, not bypassed.
+    let injected = kernel_energy_evaluate(
         &state,
         &profile,
         &E4PersonalInputs::default(),
         &E5HarmonicInputs {
             channel_set: vec!["m123.chime".to_owned(), "profile.update".to_owned()],
+            ebm_energy_scalar: Some(0.875),
         },
-        &E6VerifierInputs {
-            invariant_set: vec!["sum-pp-360".to_owned()],
-            severity_weights_handle: Some("default".to_owned()),
-        },
+        &engaged_invariants,
     );
+    // activation = 2 engaged / 7 canonical channels.
+    let expected_injected_e5 = (2.0 / 7.0) * 0.875;
     assert!(
-        energised.e_5_harmonic_energy > 0.0,
-        "E5 harmonic channel must respond to a non-empty channel_set over a live profile"
+        (injected.e_5_harmonic_energy - expected_injected_e5).abs() < 1e-6,
+        "an injected trained-EBM energy_scalar must flow through E5"
     );
-    assert!(
-        energised.e_6_verifier_energy > 0.0,
-        "E6 verifier channel must respond to a non-empty invariant_set"
+    assert_ne!(
+        injected.e_5_harmonic_energy, energised.e_5_harmonic_energy,
+        "the injected EBM score must override the deterministic reading"
     );
 
     // Structural law (§1.1): user-personal data NEVER enters E5. Feeding a
@@ -649,13 +679,8 @@ fn kernel_energy_carries_e5_e6_with_456_weighting() {
             kairos_handle: Some("kairos://now".to_owned()),
             ..E4PersonalInputs::default()
         },
-        &E5HarmonicInputs {
-            channel_set: vec!["m123.chime".to_owned(), "profile.update".to_owned()],
-        },
-        &E6VerifierInputs {
-            invariant_set: vec!["sum-pp-360".to_owned()],
-            severity_weights_handle: Some("default".to_owned()),
-        },
+        &engaged_channels,
+        &engaged_invariants,
     );
     assert_eq!(
         with_personal.e_5_harmonic_energy, energised.e_5_harmonic_energy,

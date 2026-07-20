@@ -575,10 +575,19 @@ pub enum E4PersonalEnergyError {
     InvalidInput(String),
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct E5HarmonicInputs {
+    /// Which of the canonical harmonic channels are engaged (the system's
+    /// experimentation degree of freedom, §1.1). Gates E₅ activation.
     pub channel_set: Vec<String>,
+    /// The trained N-channel EBM (`epii-autoresearch-core::resonance_ebm`, S5)
+    /// `energy_scalar`, injected by a composition root that ran the EBM over
+    /// this profile (the kernel is S0 and cannot call the EBM directly). `None`
+    /// while no checkpoint is trained — the kernel then reads its deterministic
+    /// seven-channel substrate. Harmonic only; never carries personal data.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ebm_energy_scalar: Option<f32>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -1013,34 +1022,156 @@ fn e5_channel_activation(channel_set: &[String]) -> f32 {
     (active as f32 / E5_CANONICAL_CHANNELS as f32).min(1.0)
 }
 
-/// Analytic harmonic-substrate magnitude of the profile's standing resonant
-/// body (`audio_octet`): the spectral flatness (geometric ÷ arithmetic mean of
-/// the partials), scale-free in `(0, 1]` and 0.0 only for a silent octet.
-/// Reads ONLY the harmonic profile — personal/PASU data never enters E₅ (that
-/// is E₄'s channel; the separation is structural, §1.1). This is the analytic
-/// default that stands in for the trained N-channel EBM head (Stream C) until a
-/// checkpoint is loaded under the `resonance_ebm_runtime` feature.
-fn e5_harmonic_substrate_magnitude(profile: &MathemeHarmonicProfile) -> f32 {
-    let mut arithmetic_sum = 0.0f64;
-    let mut log_sum = 0.0f64;
-    let mut partials = 0u32;
-    for &hz in profile.audio_octet.iter() {
-        let value = hz as f64;
-        if value > 0.0 {
-            arithmetic_sum += value;
-            log_sum += value.ln();
-            partials += 1;
-        }
+// --- E₅ harmonic-channel feature extractors ------------------------------
+// The per-channel feature vectors over `MathemeHarmonicProfile`, ONE PER
+// canonical channel. These mirror the canonical encoders in
+// `epii-autoresearch-core::resonance_ebm::channels` (S5) field-for-field: the
+// same feature layout and normalisation, so the kernel's deterministic reading
+// and the trained N-channel EBM score the identical substrate. The extractors
+// are pure functions of the S0-owned profile and logically belong in S0;
+// hoisting them into a shared portal-core module that S5 imports (to retire
+// this duplication) is flagged for canon — see [[S0-SPEC]] Stream B / DR-EBM.
+// Personal/PASU data never enters any of these — E₅ is harmonic substrate only
+// (the E₄ separation is structural, §1.1).
+
+/// Stable byte-hash of a categorical field to a unit scalar — mirrors
+/// `resonance_ebm::channels::stable_string_unit`.
+fn e5_stable_string_unit(value: &str) -> f32 {
+    let mut hash = 0u32;
+    for byte in value.bytes() {
+        hash = hash.wrapping_mul(16_777_619) ^ byte as u32;
     }
-    if partials == 0 {
+    (hash % 10_000) as f32 / 9_999.0
+}
+
+/// Scale a channel's raw features into `[-1, 1]` by its own peak magnitude —
+/// mirrors `resonance_ebm::channels::normalize_raw`.
+fn e5_normalise_channel(raw: &[f32]) -> Vec<f32> {
+    if raw.is_empty() {
+        return vec![0.0];
+    }
+    let max_abs = raw
+        .iter()
+        .copied()
+        .filter(|value| value.is_finite())
+        .map(f32::abs)
+        .fold(0.0f32, f32::max)
+        .max(1.0);
+    raw.iter()
+        .map(|value| {
+            if value.is_finite() {
+                (*value / max_abs).clamp(-1.0, 1.0)
+            } else {
+                0.0
+            }
+        })
+        .collect()
+}
+
+/// Root-mean-square magnitude of a normalised channel — the channel's scalar
+/// contribution to the deterministic harmonic energy.
+fn e5_channel_rms(raw: &[f32]) -> f32 {
+    let normalised = e5_normalise_channel(raw);
+    if normalised.is_empty() {
         return 0.0;
     }
-    let arithmetic = arithmetic_sum / partials as f64;
-    if arithmetic <= 0.0 {
-        return 0.0;
+    (normalised.iter().map(|value| value * value).sum::<f32>() / normalised.len() as f32).sqrt()
+}
+
+/// Per-channel magnitudes over all seven canonical harmonic channels, in
+/// `CANONICAL_CHANNEL_SET` order (lens_resonance_72, audio_octet, nodal_quartet,
+/// planetary_chakral, mahamaya, codon_rotation_projection, q_cosmic).
+fn e5_harmonic_channel_magnitudes(
+    profile: &MathemeHarmonicProfile,
+) -> [f32; E5_CANONICAL_CHANNELS] {
+    let resonance = profile.resonance72;
+    let lens_resonance = [
+        resonance.legacy_resonance_index as f32 / 71.0,
+        resonance.lens_anchor_index as f32 / 71.0,
+        resonance.base_lens as f32 / 11.0,
+        resonance.helix_bit as f32,
+        resonance.lens_anchor as f32 / 11.0,
+        resonance.position as f32 / 5.0,
+    ];
+
+    let mut nodal = Vec::with_capacity(16);
+    for node in profile.nodal_quartet.iter() {
+        nodal.push(node.ql_position as f32 / 5.0);
+        nodal.push(e5_stable_string_unit(&node.helix));
+        nodal.push(node.m as f32 / 11.0);
+        nodal.push(node.n as f32 / 11.0);
     }
-    let geometric = (log_sum / partials as f64).exp();
-    (geometric / arithmetic).clamp(0.0, 1.0) as f32
+
+    let planetary = &profile.planetary_chakral;
+    let planetary_features = [
+        e5_stable_string_unit(&planetary.body),
+        e5_stable_string_unit(&planetary.chakra_role),
+        e5_stable_string_unit(&planetary.element),
+        e5_stable_string_unit(&planetary.musical_role),
+        e5_stable_string_unit(&planetary.modal_color),
+    ];
+
+    let binary = &profile.mahamaya;
+    let mut mahamaya = vec![
+        binary.mahamaya_address64.unwrap_or(0) as f32 / 63.0,
+        binary.hexagram_id as f32 / 63.0,
+        binary.upper_trigram as f32 / 7.0,
+        binary.lower_trigram as f32 / 7.0,
+        binary.codon_id as f32 / 63.0,
+        binary.line_index as f32 / 5.0,
+        binary.line_change_operator_address as f32 / 4095.0,
+        binary.m2_vibration_index as f32 / 71.0,
+        binary.m2_to_m3_symbol as f32 / 255.0,
+        if binary.round_trip_loss { 1.0 } else { 0.0 },
+    ];
+    mahamaya.extend(binary.nucleotide_bits.iter().map(|bit| *bit as f32 / 3.0));
+
+    let codon = &profile.codon_rotation_projection;
+    let codon_features = [
+        codon.lens as f32 / 11.0,
+        codon.mode as f32 / 6.0,
+        codon.surface_index as f32 / 471.0,
+        codon.codon_id as f32 / 63.0,
+        codon.rotation as f32 / 7.0,
+        codon.rotational_state_count as f32 / 8.0,
+        codon.rotation_degrees as f32 / 360.0,
+        codon.reverse_lens as f32 / 11.0,
+        codon.reverse_mode as f32 / 6.0,
+        e5_stable_string_unit(&codon.codon_class),
+    ];
+
+    [
+        e5_channel_rms(&lens_resonance),
+        e5_channel_rms(&profile.audio_octet),
+        e5_channel_rms(&nodal),
+        e5_channel_rms(&planetary_features),
+        e5_channel_rms(&mahamaya),
+        e5_channel_rms(&codon_features),
+        e5_channel_rms(&profile.q_cosmic),
+    ]
+}
+
+/// Kernel-native deterministic E₅ magnitude: the mean harmonic magnitude across
+/// ALL seven canonical channels of the profile. This is a genuine reading of
+/// the whole harmonic substrate (not a single-channel proxy) — the untrained
+/// analytic prior. It is NOT the learned score: the trained N-channel EBM
+/// (Stream C, S5 `resonance_ebm`) refines this and, when a checkpoint exists, a
+/// composition root injects its `energy_scalar` via `E5HarmonicInputs`
+/// (`e5_harmonic_substrate` prefers the injected value). Zero only for an
+/// all-zero profile.
+fn e5_deterministic_substrate_magnitude(profile: &MathemeHarmonicProfile) -> f32 {
+    let magnitudes = e5_harmonic_channel_magnitudes(profile);
+    magnitudes.iter().sum::<f32>() / E5_CANONICAL_CHANNELS as f32
+}
+
+/// The E₅ harmonic-substrate magnitude the kernel scores: the injected trained
+/// N-channel EBM `energy_scalar` when a composition root has run the S5 EBM,
+/// else the kernel's deterministic seven-channel reading. The kernel (S0) cannot
+/// call the EBM (S5) directly — the injection seam is the layer-correct bridge.
+fn e5_harmonic_substrate(profile: &MathemeHarmonicProfile, e_5_inputs: &E5HarmonicInputs) -> f32 {
+    e_5_inputs
+        .ebm_energy_scalar
+        .unwrap_or_else(|| e5_deterministic_substrate_magnitude(profile))
 }
 
 /// R-virtue verifier scalar: the mean severity weight of the declared
@@ -1076,17 +1207,14 @@ pub fn kernel_energy_evaluate(
         .map(|evaluation| evaluation.scalar)
         .unwrap_or(0.0);
 
-    // E₅ — Epii harmonic-substrate energy (§1.1). Multi-channel activation over
-    // the harmonic profile; personal data NEVER enters (that is E₄). The trained
-    // N-channel EBM head (Stream C) supplies the substrate magnitude when a
-    // checkpoint is loaded; otherwise the analytic spectral-flatness default
-    // reads the profile's standing resonant body.
+    // E₅ — Epii harmonic-substrate energy (§1.1), a multi-channel reading over
+    // ALL seven canonical harmonic channels of the profile; personal data NEVER
+    // enters (that is E₄). The substrate magnitude is the trained N-channel EBM
+    // score when a composition root injects it, else the kernel's deterministic
+    // seven-channel reading. `channel_set` gates how much of the substrate is
+    // engaged (empty → dormant zero).
     let e5_activation = e5_channel_activation(&e_5_inputs.channel_set);
-    let e5_substrate = e5_harmonic_substrate_magnitude(harmonic_profile);
-    #[cfg(feature = "resonance_ebm_runtime")]
-    let e5_substrate = kernel_default_resonance_ebm_runtime()
-        .map(|runtime| runtime.forward(state).e_5_harmonic_energy)
-        .unwrap_or(e5_substrate);
+    let e5_substrate = e5_harmonic_substrate(harmonic_profile, e_5_inputs);
     let e_5_harmonic_energy = e5_activation * e5_substrate;
 
     // E₆ — R-virtue verifier scalar (§1.1) over the declared invariant set.

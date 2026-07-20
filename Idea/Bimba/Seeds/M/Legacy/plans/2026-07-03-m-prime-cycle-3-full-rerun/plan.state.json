@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-19T22:55:23.172Z",
+  "updatedAt": "2026-07-20T09:35:55.965Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11217,19 +11217,35 @@
       "blocker": null
     },
     "23.T23.9": {
-      "status": "review",
-      "updatedAt": "2026-07-19T15:50:27.946Z",
+      "status": "done",
+      "updatedAt": "2026-07-19T23:02:44.755Z",
       "claimedAt": "2026-07-19T15:11:59.341Z",
-      "completedAt": null,
+      "completedAt": "2026-07-19T23:02:44.755Z",
       "evidence": [
         {
           "at": "2026-07-19T15:13:54.115Z",
           "text": "Reverified in the active Body/M/pratibimba-app carrier: the persisted M2 spheres selection renders a named deferred-23.9 surface over the received address/tick, rather than falling back to the plate or inventing sphere geometry. Passed M2 pane Vitest (13), typecheck, carrier token lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
+        },
+        {
+          "at": "2026-07-19T23:02:44.755Z",
+          "text": "The persisted M2 CymaticSpheresSurface passed fresh independent live gateway, application, smoke, and Playwright UI-flow verification.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 23.T23.9 --owner codex-verifier-batch-20260719-b",
+            "exitCode": 0,
+            "testsPassed": 1796,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow Playwright 52/52",
+              "app-smoke 1/1",
+              "Body/M/pratibimba-app/src/components/CymaticSpheresSurface.tsx",
+              "Body/M/pratibimba-app/src/panes/M2CorrespondencePane.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 115 dirty files. claimed with --allow-dirty over 114 dirty files.",
       "owner": "codex-mdev-2309-spheres-deferred",
-      "leaseExpiresAt": "2026-07-19T17:50:27.946Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-19T15:50:27.946Z",
       "runId": "20260719T151159Z-23-T23.9",
       "worktree": null,
@@ -18532,7 +18548,7 @@
     },
     "33.T33.1": {
       "status": "review",
-      "updatedAt": "2026-07-19T22:55:23.151Z",
+      "updatedAt": "2026-07-20T09:35:55.940Z",
       "claimedAt": "2026-07-19T22:32:01.360Z",
       "completedAt": null,
       "evidence": [
@@ -18558,12 +18574,27 @@
               "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/kernel-truth-expected-failures.json"
             ]
           }
+        },
+        {
+          "at": "2026-07-20T09:35:55.940Z",
+          "text": "CORRECTED after review: prior E5 read ONLY audio_octet (1 of 7 canonical channels) and mislabelled the gap as a placeholder for the trained EBM. Ground truth established: the N-channel EBM head IS built (epii-autoresearch-core::resonance_ebm, S5, real channels.rs/attention.rs/inference.rs) but has NO trained checkpoint, so even its own evaluate() honestly returns energy_scalar 0.0; S0 cannot import S5. Fix: (1) kernel E5 now reads ALL 7 canonical channels (lens_resonance_72, audio_octet, nodal_quartet, planetary_chakral, mahamaya, codon_rotation_projection, q_cosmic) from the profile via extractors that mirror resonance_ebm::channels field-for-field, combined into a deterministic seven-channel magnitude; (2) real EBM consumption seam added: E5HarmonicInputs.ebm_energy_scalar Option<f32>, so a composition root that ran the S5 EBM (as epi-cli already does per pi_ebm_commands.rs) injects the trained energy_scalar and the kernel uses it (test proves override); deterministic reading is the untrained default, never claimed to be the learned score. E6 deterministic verifier over invariant_set. Personal data structurally excluded (asserted). Contract-surface update LANDED in epi-logos-kernel-spec.md Kernel-surface note (profile-threaded signature + injection seam). cargo test portal-core 415/0; kernel-truth gate GREEN (4 reds stand); honesty-lint clean; epi-cli compiles. Remaining real work, owner-named not hand-waved: the trained checkpoint (Stream C training pipeline, needs corpus/Gemini) and the composition-root injection wiring; extractor duplication to be retired by hoisting resonance_ebm::channels into portal-core (DR-EBM-CHANNELS, flag [[S0-SPEC]]).",
+          "receipt": {
+            "command": "cargo test -p portal-core --offline (kernel_energy_carries_e5_e6_with_456_weighting + full suite) + kernel-truth.mjs + lint-test-honesty.mjs + cargo check --manifest-path Body/S/S0/epi-cli/Cargo.toml",
+            "exitCode": 0,
+            "testsPassed": 415,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S0/portal-core/tests/kernel_truth.rs",
+              "Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-3301-e56",
       "leaseExpiresAt": "2026-07-20T00:32:06.670Z",
-      "heartbeatAt": "2026-07-19T22:55:23.151Z",
+      "heartbeatAt": "2026-07-20T09:35:55.940Z",
       "runId": "20260719T223201Z-33-T33.1",
       "worktree": null,
       "blocker": null
@@ -24119,14 +24150,14 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-19T22:51:53.298Z",
-    "updatedAt": "2026-07-19T22:51:53.298Z",
+    "createdAt": "2026-07-20T09:15:49.104Z",
+    "updatedAt": "2026-07-20T09:15:49.104Z",
     "taskIds": [
       "48.T48.7",
       "02.T2.10",
-      "26.T26.12",
-      "23.T23.8",
-      "23.T23.9"
+      "24.T24.20",
+      "33.T33.1",
+      "25.T25.11"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -24134,9 +24165,9 @@
     "modeHints": {
       "48.T48.7": "in-session",
       "02.T2.10": "in-session",
-      "26.T26.12": "in-session",
-      "23.T23.8": "in-session",
-      "23.T23.9": "in-session"
+      "24.T24.20": "in-session",
+      "33.T33.1": "in-session",
+      "25.T25.11": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
