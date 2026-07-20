@@ -393,8 +393,8 @@ class EpistemicBlindfoldedTeacher:
 
     # ---- Student-aware CoT selection ----
 
-    @staticmethod
     def score_trajectories(
+        self,
         trajectories: List[CoTTrajectory],
         student_model_nll=None,  # callable: (step_text) -> float (NLL)
     ) -> CoTTrajectory:
@@ -422,8 +422,9 @@ class EpistemicBlindfoldedTeacher:
                         traj.step_difficulties
                     )
 
-            # Compute smoothness (cosine-like alignment between consecutive steps)
-            if len(traj.steps) >= 2:
+            # Compute smoothness only when the caller left it at the default (0.0).
+            # A caller-supplied smoothness score is authoritative and is never clobbered.
+            if traj.smoothness_score == 0.0 and len(traj.steps) >= 2:
                 # Simple heuristic: penalty for length differences
                 # In production: use embedding cosine similarity
                 diffs = [
@@ -441,10 +442,10 @@ class EpistemicBlindfoldedTeacher:
                 ) / len(traj.step_difficulties)
                 traj.total_difficulty_variance = var_d
 
-        # Filter by minimum smoothness
+        # Filter by the configured minimum smoothness threshold (cot_min_smoothness).
         valid = [
             t for t in trajectories
-            if t.smoothness_score >= 0.0  # configurable threshold applied
+            if t.smoothness_score >= self.cfg.cot_min_smoothness
         ]
         if not valid:
             valid = trajectories

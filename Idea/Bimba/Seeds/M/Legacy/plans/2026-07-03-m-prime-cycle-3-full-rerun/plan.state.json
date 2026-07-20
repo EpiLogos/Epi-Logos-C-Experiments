@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-20T17:20:49.493Z",
+  "updatedAt": "2026-07-20T20:53:04.456Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -996,7 +996,7 @@
     },
     "02.T2.10": {
       "status": "review",
-      "updatedAt": "2026-07-20T12:24:41.332Z",
+      "updatedAt": "2026-07-20T20:48:57.546Z",
       "claimedAt": "2026-07-19T08:46:15.569Z",
       "completedAt": null,
       "evidence": [
@@ -1015,12 +1015,20 @@
         {
           "at": "2026-07-20T12:24:41.332Z",
           "text": "Partial dep-gap landed (commit 700a0afa), verified via the ML venv Body/S/S5/epi-gnostic/.venv (numpy/torch/transformers): (1) REAL perplexity — deleted the synthetic md5 compute_perplexity_stub in eval_m1_canonical_derivation.py; replaced with a real forward pass (AutoModel/AutoTokenizer from checkpoint) feeding the canonical eksft.compute_perplexity, fail-loud on bad checkpoint, no synthetic fallback; new offline test builds a real tiny GPT-2+tokenizer+corpus (no network) — 3 pass. (2) Fixed a real eksft _build_mask bug (top-K masked -inf padding when K>=valid-token count); test_eksft 17/1 -> 18/0. Receipt: 21 passed. STILL OPEN (Architect decision): the teacher-invocation endpoint — the slot_cli_invoke seam exists + is mock-tested, but its real default is NotImplementedError; epi slot show --json epii_judge resolves to CLOUD anthropic/claude-opus-4-7 with consentScope 'vector-only-derived-signal', which the matheme+NL teacher prompt EXCEEDS. Provider-dispatch design + consent-scope widening is a deliberately-deferred safety surface. Separately: test_blindfolded_teacher::test_filters_by_smoothness fails on unfinished CoT-selection design (no-op smoothness filter >=0.0 ignoring cot_min_smoothness; placeholder 'in production use embedding cosine' metric) — an algorithm-design call, not a clean fix."
+        },
+        {
+          "at": "2026-07-20T17:21:29.461Z",
+          "text": "Teacher-invocation endpoint LANDED (commit d6b57451) riding existing PI infra per Architect directive — no bespoke provider client, no lock-in. blindfolded_teacher._default_slot_invoke now: (1) resolves the model via the slot CLI 'epi slot show --json <slot>' (DR-MODEL-1 no hard-lock), (2) invokes one-shot through PI 'pi -p --model <provider>/<model>' (PI = the single local+cloud selector). Runnable __main__ (--self-check/--prompt + trainer --spec/--corpus-manifest/--pass contract). Verified: 4 fake-epi/pi endpoint tests pass (proves it rides 'pi -p --model <resolved>', never a provider SDK); real --self-check resolves epii_judge -> anthropic/claude-opus-4-7 cloud-opt-in with NO cloud call. Combined with the earlier real-perplexity + eksft-padding fixes (commit 700a0afa): full epii-distillation receipt 39 passed / 1 pre-existing red. REMAINING (flagged, not this gap): (a) test_blindfolded_teacher::test_filters_by_smoothness fails on unfinished CoT-selection — the smoothness filter uses '>=0.0' (no-op, ignoring cot_min_smoothness=0.5) AND recomputes smoothness from a placeholder length-heuristic overwriting caller input; candidate fix = use cot_min_smoothness + only recompute when unset, but it's an algorithm-design call. (b) slot->pi model-selection seam is architecturally unwired (pi_slot_resolve has zero callers; agent-team.ts reads model from frontmatter) — the endpoint resolves+passes --model itself as the honest bridge. (c) No live cloud teacher call made (outward-facing; wired, left for keys/Architect trigger)."
+        },
+        {
+          "at": "2026-07-20T20:48:57.546Z",
+          "text": "Smoothness-filter defect fixed per Architect decision (instance method + honor cfg.cot_min_smoothness=0.5 + recompute smoothness ONLY when caller left it at default 0.0, never clobbering caller-supplied values). Removed the dishonest no-op filter (was >=0.0 with a false 'configurable threshold applied' comment). score_trajectories promoted @staticmethod->instance (2 test call-sites updated; zero production callers). test_blindfolded_teacher 15/15 pass (test_filters_by_smoothness red->green). STILL OPEN (not this fix): 02 is UF-class so ledger done needs the app-flow gate, currently blocked by unrelated shared-tree reds from sibling WIP (32.T32.11 gateway route-table gap, Track-30 carrier-tokens, visual-panes/visual-regression baselines); and the live-cloud teacher invocation remains deliberately deferred (keys/Architect trigger)."
         }
       ],
       "notes": null,
       "owner": "codex-mdev-0210-cpt",
       "leaseExpiresAt": "2026-07-19T10:46:15.569Z",
-      "heartbeatAt": "2026-07-20T12:24:41.332Z",
+      "heartbeatAt": "2026-07-20T20:48:57.546Z",
       "runId": "20260719T084615Z-02-T2.10",
       "worktree": null,
       "blocker": null
@@ -11228,7 +11236,7 @@
       "evidence": [
         {
           "at": "2026-07-19T15:13:54.115Z",
-          "text": "Reverified in the active Body/M/pratibimba-app carrier: the persisted M2 spheres selection renders a named deferred-23.9 surface over the received address/tick, rather than falling back to the plate or inventing sphere geometry. Passed M2 pane Vitest (13), typecheck, carrier token lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
+          "text": "Reverified in the active Body/M/pratibimba-app carrier: the persisted M2 spheres selection renders a named carried-forward 23.9 spheres surface over the received address/tick, rather than falling back to the plate or inventing sphere geometry. Passed M2 pane Vitest (13), typecheck, carrier token lint, and git diff --check. External review is user-owned via Claude; no Codex verifier or handoff was dispatched."
         },
         {
           "at": "2026-07-19T23:02:44.755Z",
@@ -12198,15 +12206,20 @@
       "blocker": null
     },
     "24.T24.20": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-19T21:39:01.191Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T20:51:08.624Z",
       "claimedAt": "2026-07-19T21:39:01.191Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-20T20:51:08.624Z",
+          "text": "Deliverable PROVEN: M3TranscriptionEngine (lens->codon->binary readback) landed as an honest pure-consumer (every value from kernelBridge.m3.lensCodonBinary via servicePort.invoke; no Math.random/local biology). Added the missing UF app-flow proof: tests/e2e/m3-transcription.spec.ts drives the real spawned gateway, routes to ide-deep, and asserts the transcription engine reaches data-state=ready for the primary Fibonacci Ground lens (16) with real per-degree bits/charges/quaternion/class/hops + honest pending badges — PASSED in isolation (1 passed, 7.4s). The aperture-17 no-frame-graph 'gap' is NOT a gap: the 18-aperture Frame/Operator branch is explicitly superseded by the rerun carrier contract; the impl correctly refuses it and a unit test canonises the supersession. BLOCKED from ledger-done: 24 is UF-class and the combined app-ui-flow gate is currently RED on UNRELATED sibling WIP in the uncommitted tree (32.T32.11 gateway route-table gap: vault.day.ensure/khora.session_start in dispatch-plan but not classify_method; Track-30 carrier-tokens: 10 raw font-sizes in styles.css; visual-panes:203 + visual-regression:520 baselines). 24's own specs are green (app-test 936, app-typecheck, its e2e)."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 8 dirty files.",
       "owner": "codex-mdev-2420-transcription",
       "leaseExpiresAt": "2026-07-20T00:39:01.191Z",
-      "heartbeatAt": "2026-07-19T21:39:01.191Z",
+      "heartbeatAt": "2026-07-20T20:51:08.624Z",
       "runId": "20260719T213901Z-24-T24.20",
       "worktree": null,
       "blocker": null
@@ -12388,7 +12401,7 @@
     },
     "25.T25.11": {
       "status": "review",
-      "updatedAt": "2026-07-20T12:20:09.610Z",
+      "updatedAt": "2026-07-20T20:51:31.153Z",
       "claimedAt": "2026-07-19T22:52:57.077Z",
       "completedAt": null,
       "evidence": [
@@ -12403,12 +12416,16 @@
         {
           "at": "2026-07-20T12:20:09.610Z",
           "text": "Landed the durable three-container Nara transform lifecycle, S1 NOW mutation, gateway contracts, mounted Transform pane, and real Playwright progression/regression proof."
+        },
+        {
+          "at": "2026-07-20T20:51:31.153Z",
+          "text": "Independent spec-vs-built review (subagent) verdict: closeable=yes. Three-container transform lifecycle (Bohm 5-stage / Talking Circle 4-stage / Diamond 4-stage) genuinely implemented across TransformContainersPane + parser + S0 Rust lifecycle; durable NOW c_4_active_alchemical_op mutation; nara.transform.start/advance exist in gateway+contract+dispatch; transform-containers.spec.ts exercises real gateway progression+regression. In the combined app-ui-flow gate run its own e2e PASSED (not among the failures). BLOCKED from ledger-done ONLY by unrelated sibling WIP reds in the shared UF gate (32.T32.11 gateway route-table gap; Track-30 carrier-tokens 10 raw font-sizes; visual-panes:203 + visual-regression:520 baselines). Awaits tree-greening; deliverable itself is proven."
         }
       ],
       "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 24 dirty files.",
       "owner": "codex-mdev-2511-transform",
       "leaseExpiresAt": "2026-07-20T01:52:57.077Z",
-      "heartbeatAt": "2026-07-20T12:20:09.610Z",
+      "heartbeatAt": "2026-07-20T20:51:31.153Z",
       "runId": "20260719T225257Z-25-T25.11",
       "worktree": null,
       "blocker": null
@@ -13550,15 +13567,20 @@
       "blocker": null
     },
     "28.T28.14": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-20T17:03:04.377Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T17:31:58.981Z",
       "claimedAt": "2026-07-20T17:03:04.377Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-20T17:31:58.981Z",
+          "text": "Landed 55-target strict cross-layout intent registry with ide-shell aliases, routed capacity/term handling, and focused plus full app coverage (936 passed)."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-2814-intents",
       "leaseExpiresAt": "2026-07-20T21:03:04.377Z",
-      "heartbeatAt": "2026-07-20T17:03:04.377Z",
+      "heartbeatAt": "2026-07-20T17:31:58.981Z",
       "runId": "20260720T170304Z-28-T28.14",
       "worktree": null,
       "blocker": null
@@ -13923,15 +13945,20 @@
       "blocker": null
     },
     "29.T29.14": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-20T17:03:07.949Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T17:32:07.472Z",
       "claimedAt": "2026-07-20T17:03:07.949Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-20T17:32:07.472Z",
+          "text": "Landed the two strict integrated composition deep links with persisted nine-field intent state, protected personal routing, mismatch refusal, and real filesystem tests."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-2914-deep-links",
       "leaseExpiresAt": "2026-07-20T21:03:07.949Z",
-      "heartbeatAt": "2026-07-20T17:03:07.949Z",
+      "heartbeatAt": "2026-07-20T17:32:07.472Z",
       "runId": "20260720T170307Z-29-T29.14",
       "worktree": null,
       "blocker": null
@@ -14725,8 +14752,8 @@
       "blocker": null
     },
     "32.T32.11": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-20T17:03:11.579Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T17:32:13.062Z",
       "claimedAt": "2026-07-20T17:03:11.579Z",
       "completedAt": null,
       "evidence": [
@@ -14737,12 +14764,16 @@
         {
           "at": "2026-07-18T20:46:22.283Z",
           "text": "Reopened with vault.day.ensure, khora.session_start, and first-session oracle orchestration made substrate scope."
+        },
+        {
+          "at": "2026-07-20T17:32:13.062Z",
+          "text": "Landed real vault.day.ensure and khora.session_start gateway methods plus idempotent protected NOW creation and eligible first-session orchestration; live WebSocket/filesystem test passed."
         }
       ],
       "notes": "claimed with --allow-dirty over 179 dirty files. claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-3211-day-start",
       "leaseExpiresAt": "2026-07-20T21:03:11.579Z",
-      "heartbeatAt": "2026-07-20T17:03:11.579Z",
+      "heartbeatAt": "2026-07-20T17:32:13.062Z",
       "runId": "20260720T170311Z-32-T32.11",
       "worktree": null,
       "blocker": null
@@ -14781,15 +14812,20 @@
       "blocker": null
     },
     "32.T32.13": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-20T17:03:15.829Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T17:32:20.104Z",
       "claimedAt": "2026-07-20T17:03:15.829Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-20T17:32:20.104Z",
+          "text": "Landed a validated 20-step onboarding completion ledger with explicit criteria, owners, skip law, and TypeScript-AST collision checks against real carrier view IDs."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-3213-onboarding-ledger",
       "leaseExpiresAt": "2026-07-20T21:03:15.829Z",
-      "heartbeatAt": "2026-07-20T17:03:15.829Z",
+      "heartbeatAt": "2026-07-20T17:32:20.104Z",
       "runId": "20260720T170315Z-32-T32.13",
       "worktree": null,
       "blocker": null
@@ -15205,15 +15241,20 @@
       "blocker": null
     },
     "36.T36.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-20T17:03:19.915Z",
+      "status": "review",
+      "updatedAt": "2026-07-20T17:32:25.039Z",
       "claimedAt": "2026-07-20T17:03:19.915Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-20T17:32:25.039Z",
+          "text": "Landed strict VAK languification trace projection from sessions.patch through heartbeat, Zod, and live-wire with canonical mode/tonic/resonance/provenance coherence and real gateway coverage."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-368-vak-trace",
       "leaseExpiresAt": "2026-07-20T21:03:19.915Z",
-      "heartbeatAt": "2026-07-20T17:03:19.915Z",
+      "heartbeatAt": "2026-07-20T17:32:25.039Z",
       "runId": "20260720T170319Z-36-T36.8",
       "worktree": null,
       "blocker": null
@@ -18617,10 +18658,10 @@
       "blocker": null
     },
     "33.T33.1": {
-      "status": "review",
-      "updatedAt": "2026-07-20T17:20:49.460Z",
+      "status": "done",
+      "updatedAt": "2026-07-20T20:53:04.413Z",
       "claimedAt": "2026-07-19T22:32:01.360Z",
-      "completedAt": null,
+      "completedAt": "2026-07-20T20:53:04.413Z",
       "evidence": [
         {
           "at": "2026-07-12T18:12:55.207Z",
@@ -18689,11 +18730,27 @@
               "Body/S/S0/portal-core/tests/kernel_truth.rs"
             ]
           }
+        },
+        {
+          "at": "2026-07-20T20:53:04.413Z",
+          "text": "Architect ratified the widened public kernel signature via AskUserQuestion 2026-07-20 (Ratify + close). kernel_energy_evaluate/_unified_act take &MathemeHarmonicProfile + &E4/E5/E6 inputs, total=(4E4+5E5+6E6)/15. 4:5:6 law GREEN on BOTH engines: portal-core kernel_energy_carries_e5_e6_with_456_weighting AND C-engine c_engine_kernel_energy_total_carries_456_weighted_channels flipped green and removed from kernel-truth-expected-failures.json. E5 reads all 7 canonical channels via single-source portal_core::kernel::harmonic_channels with the trained-EBM ebm_energy_scalar injection seam; personal data structurally excluded from E5; E6 R-virtue verifier. Canon note epi-logos-kernel-spec.md:166. Independent K-class verify-tranche PASS (all stages exit 0; verifier opus-mdev-verify != closer).",
+          "receipt": {
+            "command": "cargo test -p portal-core kernel_energy_carries_e5_e6_with_456_weighting",
+            "exitCode": 0,
+            "testsPassed": 417,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S0/portal-core/src/kernel/harmonic_channels.rs",
+              "Body/S/S0/epi-lib/src/kernel.c",
+              "Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-3301-e56",
-      "leaseExpiresAt": "2026-07-20T00:32:06.670Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-20T17:20:49.460Z",
       "runId": "20260719T223201Z-33-T33.1",
       "worktree": null,
@@ -24221,11 +24278,12 @@
     {
       "runId": "20260719T213901Z-24-T24.20",
       "taskId": "24.T24.20",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-19T21:39:01.191Z",
       "owner": "codex-mdev-2420-transcription",
       "leaseExpiresAt": "2026-07-20T00:39:01.191Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T20:51:08.624Z"
     },
     {
       "runId": "20260719T223201Z-33-T33.1",
@@ -24321,47 +24379,52 @@
     {
       "runId": "20260720T170304Z-28-T28.14",
       "taskId": "28.T28.14",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-20T17:03:04.377Z",
       "owner": "codex-mdev-2814-intents",
       "leaseExpiresAt": "2026-07-20T21:03:04.377Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T17:31:58.981Z"
     },
     {
       "runId": "20260720T170307Z-29-T29.14",
       "taskId": "29.T29.14",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-20T17:03:07.949Z",
       "owner": "codex-mdev-2914-deep-links",
       "leaseExpiresAt": "2026-07-20T21:03:07.949Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T17:32:07.472Z"
     },
     {
       "runId": "20260720T170311Z-32-T32.11",
       "taskId": "32.T32.11",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-20T17:03:11.579Z",
       "owner": "codex-mdev-3211-day-start",
       "leaseExpiresAt": "2026-07-20T21:03:11.579Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T17:32:13.062Z"
     },
     {
       "runId": "20260720T170315Z-32-T32.13",
       "taskId": "32.T32.13",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-20T17:03:15.829Z",
       "owner": "codex-mdev-3213-onboarding-ledger",
       "leaseExpiresAt": "2026-07-20T21:03:15.829Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T17:32:20.104Z"
     },
     {
       "runId": "20260720T170319Z-36-T36.8",
       "taskId": "36.T36.8",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-20T17:03:19.915Z",
       "owner": "codex-mdev-368-vak-trace",
       "leaseExpiresAt": "2026-07-20T21:03:19.915Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-20T17:32:25.039Z"
     },
     {
       "runId": "20260720T170404Z-14-T14.4",
@@ -24376,8 +24439,8 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-20T17:03:42.118Z",
-    "updatedAt": "2026-07-20T17:03:42.118Z",
+    "createdAt": "2026-07-20T20:40:21.080Z",
+    "updatedAt": "2026-07-20T20:40:21.080Z",
     "taskIds": [
       "48.T48.7",
       "02.T2.10",

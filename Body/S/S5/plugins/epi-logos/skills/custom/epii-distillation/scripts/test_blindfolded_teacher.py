@@ -320,7 +320,7 @@ class TestCoTSelection:
         for t in trajectories:
             t.smoothness_score = 0.8  # above threshold
 
-        best = EpistemicBlindfoldedTeacher.score_trajectories(trajectories)
+        best = EpistemicBlindfoldedTeacher(EpistemicBlindfoldConfig()).score_trajectories(trajectories)
         # Should select trajectory with zero variance (second one)
         assert best.total_difficulty_variance == 0.0
 
@@ -341,7 +341,7 @@ class TestCoTSelection:
             ),
         ]
 
-        best = EpistemicBlindfoldedTeacher.score_trajectories(trajectories)
+        best = EpistemicBlindfoldedTeacher(EpistemicBlindfoldConfig()).score_trajectories(trajectories)
         # High-smoothness trajectory selected even though it has some variance
         assert best.smoothness_score == 0.9
 
