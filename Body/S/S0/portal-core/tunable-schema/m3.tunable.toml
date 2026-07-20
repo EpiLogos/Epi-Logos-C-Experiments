@@ -21,3 +21,22 @@ description = "Maximum deviation of any normalized element weight from the balan
 [tunable.range]
 min = 0.005
 max = 0.25
+
+[[tunable]]
+key = "m3.energy.e5_cast_engagement"
+type = "f32"
+default = 1.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+structural_invariant = false
+owning_subsystem = "M3"
+owning_carrier = "anima"
+authoritative_doc = "epi-logos-kernel-spec.md §3 (E₅ multi-channel harmonic substrate) + Track 33 cast-ratio E₅ channel"
+warrant_constants = []
+description = "Fraction of the seven canonical harmonic channels (mahamaya included) a live/cast portal-clock projection engages into E₅. 1.0 reads the full harmonic substrate; 0.0 leaves E₅ dormant. The E₅ channel-set is the system's harmonic experimentation degree of freedom (kernel-spec §3); the 4:5:6 weighting stays structural and is NOT tunable."
+[tunable.range]
+min = 0.0
+max = 1.0

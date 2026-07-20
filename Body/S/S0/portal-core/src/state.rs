@@ -38,9 +38,35 @@ fn recompute_composed_quaternion_state(state: &mut PortalClockState) {
     state.resolution_level = res;
 }
 
+/// Default fraction of the seven canonical harmonic channels a live/cast
+/// projection engages when `PortalClockState::cast_e5_engagement` is unset
+/// (0.0). 1.0 = the full harmonic substrate reads into E₅. Tunable via
+/// `m3.energy.e5_cast_engagement` (registry value injected at the boundary).
+pub const E5_CAST_ENGAGEMENT_DEFAULT: f32 = 1.0;
+
 pub fn sync_kernel_projection(state: &mut PortalClockState) {
     let e_4_inputs = E4PersonalInputs::default();
-    let e_5_inputs = E5HarmonicInputs::default();
+    // A cast/live projection sounds the harmonic substrate — the tick's
+    // `MathemeHarmonicProfile` (mahamaya channel included) is live — so E₅
+    // engages the canonical harmonic channels. The engaged fraction is the
+    // tunable `m3.energy.e5_cast_engagement` (0.0 = unset → the default),
+    // making the harmonic ratio playable. E₄ (no personal inputs) and E₆ (no
+    // declared verifier invariants) stay dormant for a bare clock sync.
+    let engagement = if state.cast_e5_engagement > 0.0 {
+        state.cast_e5_engagement
+    } else {
+        E5_CAST_ENGAGEMENT_DEFAULT
+    }
+    .clamp(0.0, 1.0);
+    let engaged = (engagement * crate::kernel::harmonic_channels::HARMONIC_CHANNEL_COUNT as f32)
+        .round() as usize;
+    let e_5_inputs = E5HarmonicInputs {
+        channel_set: crate::kernel::harmonic_channels::CANONICAL_CHANNEL_SET[..engaged]
+            .iter()
+            .map(|channel| (*channel).to_owned())
+            .collect(),
+        ebm_energy_scalar: None,
+    };
     let e_6_inputs = E6VerifierInputs::default();
     state.kernel_projection = KernelProjection::from_clock_state(
         state.generation / 12,

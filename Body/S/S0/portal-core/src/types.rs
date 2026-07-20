@@ -233,6 +233,14 @@ pub struct PortalClockState {
     /// stays registry-free (pure math); the value freezes on session start.
     #[serde(default)]
     pub akasha_balance_epsilon: f32,
+    /// Tunable `m3.energy.e5_cast_engagement` (Track 33 surface), injected at
+    /// the boundary; 0.0 = unset → the kernel falls back to
+    /// `state::E5_CAST_ENGAGEMENT_DEFAULT`. The fraction of the seven canonical
+    /// harmonic channels (mahamaya included) a live/cast projection engages, so
+    /// the portal clock carries real E₅ harmonic energy once a cast has sounded
+    /// the substrate. Kernel stays registry-free; freezes on session start.
+    #[serde(default)]
+    pub cast_e5_engagement: f32,
     /// Bounded oracle-cast lens reading (Architect 2026-07-19: cast-time,
     /// never tick-time) — recorded by `update_from_cast`, sky-at-cast through
     /// the pleromatic lens. Serde-default so pre-reading states deserialize.
@@ -258,6 +266,7 @@ impl Default for PortalClockState {
             last_cast: None,
             last_cast_timestamp: 0,
             akasha_balance_epsilon: 0.0,
+            cast_e5_engagement: 0.0,
             last_cast_lens_reading: None,
             chakra_levels: [0.0; 8],
             active_branch_lens: 0,

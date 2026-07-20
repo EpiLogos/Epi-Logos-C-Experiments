@@ -584,6 +584,22 @@ fn recompute_composed_quaternion_state(s: &mut PortalClockState) {
 }
 
 pub fn sync_kernel_projection(s: &mut PortalClockState) {
+    // TWIN of `portal_core::state::sync_kernel_projection`: a cast/live
+    // projection sounds the harmonic substrate, so E₅ engages the canonical
+    // channels (mahamaya included). This twin reads the default engagement
+    // (`E5_CAST_ENGAGEMENT_DEFAULT`); per-state tunable parity for
+    // `m3.energy.e5_cast_engagement` lands with the flagged clock-state
+    // unification. E₄/E₆ stay dormant for a bare clock sync.
+    let engaged = (portal_core::state::E5_CAST_ENGAGEMENT_DEFAULT
+        * portal_core::kernel::harmonic_channels::HARMONIC_CHANNEL_COUNT as f32)
+        .round() as usize;
+    let e_5_inputs = E5HarmonicInputs {
+        channel_set: portal_core::kernel::harmonic_channels::CANONICAL_CHANNEL_SET[..engaged]
+            .iter()
+            .map(|channel| (*channel).to_owned())
+            .collect(),
+        ebm_energy_scalar: None,
+    };
     s.kernel_projection = KernelProjection::from_clock_state(
         s.generation / 12,
         s.tick12,
@@ -591,7 +607,7 @@ pub fn sync_kernel_projection(s: &mut PortalClockState) {
         s.composed_quaternion,
         None,
         &E4PersonalInputs::default(),
-        &E5HarmonicInputs::default(),
+        &e_5_inputs,
         &E6VerifierInputs::default(),
     );
 }

@@ -37,7 +37,14 @@ fn oracle_cast_refreshes_kernel_projection_from_clock_state() {
     assert_eq!(kernel.bioquaternion.q_b, state.quintessence_quaternion);
     assert_eq!(kernel.bioquaternion.q_p, state.composed_quaternion);
     assert!(kernel.energy.bimba_pratibimba_energy > 0.0);
-    assert!(near(kernel.energy.total_energy, 0.0));
+    // A cast sounds the harmonic substrate: E₅ reads the engaged canonical
+    // channels (E₄/E₆ dormant), so total = (5·E₅)/15 > 0 — bimba–pratibimba
+    // stays diagnostic-only and is not summed.
+    assert!(kernel.energy.e_5_harmonic_energy > 0.0);
+    assert!(near(
+        kernel.energy.total_energy,
+        (5.0 * kernel.energy.e_5_harmonic_energy) / 15.0
+    ));
 }
 
 #[test]
@@ -75,7 +82,11 @@ fn kairos_and_quintessence_updates_recompose_kernel_projection() {
         state.quintessence_quaternion
     ));
     assert!(state.kernel_projection.energy.bimba_pratibimba_energy > 0.0);
-    assert!(near(state.kernel_projection.energy.total_energy, 0.0));
+    assert!(state.kernel_projection.energy.e_5_harmonic_energy > 0.0);
+    assert!(near(
+        state.kernel_projection.energy.total_energy,
+        (5.0 * state.kernel_projection.energy.e_5_harmonic_energy) / 15.0
+    ));
 }
 
 #[test]
@@ -100,7 +111,14 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
             .unwrap()
             > 0.0
     );
-    assert_eq!(json["kernel_projection"]["energy"]["total_energy"], 0.0);
+    let total = json["kernel_projection"]["energy"]["total_energy"]
+        .as_f64()
+        .unwrap();
+    let e5 = json["kernel_projection"]["energy"]["e_5_harmonic_energy"]
+        .as_f64()
+        .unwrap();
+    assert!(total > 0.0);
+    assert!((total - (5.0 * e5) / 15.0).abs() < 1e-6);
 
     let decoded: PortalClockState =
         serde_json::from_value(json).expect("PortalClockState should deserialize from IPC JSON");
