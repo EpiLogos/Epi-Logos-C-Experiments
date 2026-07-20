@@ -162,6 +162,14 @@ class EksftLoss(nn.Module):
             mask[b, ent_topk_indices[b]] = True
             mask[b, kl_topk_indices[b]] = True
 
+        # Guard: top-K selects padding positions whenever K >= the number of
+        # valid tokens in a row (topk over a length-K row returns every index,
+        # including the -inf padding slots). AND with valid_mask so padding is
+        # NEVER in the returned mask — the invariant test_padding_is_not_masked
+        # asserts, and the docstring above ("Only consider non-padding positions")
+        # requires.
+        mask = mask & valid_mask
+
         return mask  # True = high-entropy/KL (masked for special treatment)
 
     def forward(

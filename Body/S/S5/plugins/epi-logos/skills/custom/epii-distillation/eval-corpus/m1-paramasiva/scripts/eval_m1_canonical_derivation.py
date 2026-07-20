@@ -134,39 +134,76 @@ def load_eval_corpus(corpus_dir: str) -> Tuple[List[EvalPassage], EvalCorpusMani
 
 
 # ---------------------------------------------------------------------------
-# Perplexity computation
+# Perplexity computation (real forward pass — no synthetic values)
 # ---------------------------------------------------------------------------
 
-def compute_perplexity_stub(
-    checkpoint_path: str, passage: EvalPassage
-) -> Tuple[float, int]:
-    """Compute perplexity for a single passage against a checkpoint.
+_EKSFT_MODULE = None
 
-    STUB IMPLEMENTATION: In production, this loads the checkpoint (vLLM,
-    llama.cpp, or PyTorch) and computes cross-entropy loss over the passage
-    tokens, then exponentiates to get perplexity. The stub returns a reasonable
-    synthetic value for integration testing.
 
-    Replace with actual model loading when the CPT pipeline is operational.
+def _load_eksft():
+    """Import the sibling ``eksft`` module — the canonical, unit-tested
+    ``compute_perplexity`` (cross-entropy → perplexity) routine lives there."""
+    global _EKSFT_MODULE
+    if _EKSFT_MODULE is None:
+        scripts_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "scripts")
+        )
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import eksft  # noqa: E402  (path-injected sibling module)
+
+        _EKSFT_MODULE = eksft
+    return _EKSFT_MODULE
+
+
+def load_eval_model(checkpoint_path: str):
+    """Load a causal-LM checkpoint + tokenizer for real perplexity eval.
+
+    Raises loudly if the checkpoint cannot be loaded — this eval NEVER falls
+    back to a synthetic score. In production ``checkpoint_path`` is the CPT'd
+    M1' checkpoint (or a slot-resolved eval model); any HF-format directory
+    works.
     """
-    # Token-count heuristic: ~1.3 tokens per word for QL-derivational text
-    words = len(passage.text.split())
-    estimated_tokens = int(words * 1.3)
+    import torch  # noqa: F401  (ensures the backend is present; fail loud if not)
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    # Synthetic perplexity: baseline around 8-14 for QL-derivational text
-    # with variance based on passage length and register features
-    import hashlib
-    h = hashlib.md5(passage.passage_id.encode()).digest()
-    seed = int.from_bytes(h[:4], "big") / (2**32)
+    tokenizer = AutoTokenizer.from_pretrained(checkpoint_path)
+    model = AutoModelForCausalLM.from_pretrained(checkpoint_path)
+    model.eval()
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token or tokenizer.unk_token
+    return model, tokenizer
 
-    # Make the seed deterministic per passage (reproducible across runs)
-    base_ppl = 10.0 + (seed - 0.5) * 4.0  # range ~8-12
 
-    # Longer passages are slightly harder
-    length_factor = 1.0 + (estimated_tokens / 1000.0) * 0.5
+def compute_perplexity_real(
+    model, tokenizer, passage: EvalPassage, max_length: int = 1024
+) -> Tuple[float, int]:
+    """Real per-passage perplexity: tokenize the passage, teacher-force it, and
+    feed the logits into ``eksft.compute_perplexity`` (the canonical, already
+    unit-tested cross-entropy → perplexity routine). No synthetic values, no
+    hashing — the number comes from a real forward pass.
 
-    perplexity = base_ppl * length_factor
-    return perplexity, estimated_tokens
+    Returns ``(perplexity, non_pad_token_count)``. A passage shorter than two
+    tokens has no next-token target and yields ``(nan, tokens)``; callers skip
+    such degenerate passages from the aggregate.
+    """
+    import torch
+
+    eksft = _load_eksft()
+    enc = tokenizer(
+        passage.text, return_tensors="pt", truncation=True, max_length=max_length
+    )
+    input_ids = enc["input_ids"]
+    attention_mask = enc.get("attention_mask")
+    if attention_mask is None:
+        attention_mask = torch.ones_like(input_ids)
+    token_count = int(attention_mask.sum().item())
+    if input_ids.shape[-1] < 2:
+        return float("nan"), token_count
+    with torch.no_grad():
+        logits = model(input_ids=input_ids, attention_mask=attention_mask).logits
+    perplexity = eksft.compute_perplexity(logits, input_ids, attention_mask)
+    return perplexity, token_count
 
 
 # ---------------------------------------------------------------------------
@@ -177,14 +214,19 @@ def run_evaluation(
     checkpoint_path: str,
     corpus_dir: str,
     baseline_perplexity: Optional[float] = None,
+    model_and_tokenizer=None,
 ) -> EvalResult:
-    """Run perplexity evaluation on the held-out corpus.
+    """Run real perplexity evaluation on the held-out corpus.
 
     Args:
-        checkpoint_path: Path to the CPT'd checkpoint to evaluate.
+        checkpoint_path: Path to the CPT'd checkpoint to evaluate (loaded via
+            ``load_eval_model`` unless ``model_and_tokenizer`` is injected).
         corpus_dir: Path to the eval-corpus/m1-paramasiva directory.
         baseline_perplexity: Previous checkpoint's perplexity for drift computation.
             If None, this is a baseline evaluation (no drift check).
+        model_and_tokenizer: Optional pre-loaded ``(model, tokenizer)`` pair — a
+            dependency-injection seam for tests; production loads from the
+            checkpoint path. A load failure raises loudly (no synthetic fallback).
 
     Returns:
         EvalResult with full evaluation data.
@@ -194,14 +236,26 @@ def run_evaluation(
     if not passages:
         raise ValueError(f"No passages found in {corpus_dir}")
 
+    # Load the eval model ONCE. Injectable for tests; production loads the real
+    # checkpoint. Loading raises loudly rather than fabricating a score.
+    if model_and_tokenizer is None:
+        model, tokenizer = load_eval_model(checkpoint_path)
+    else:
+        model, tokenizer = model_and_tokenizer
+
     # Group passages by source file for per-file metrics
     per_file: Dict[str, List[float]] = {}
     per_file_tokens: Dict[str, int] = {}
     total_ppl = 0.0
     total_tokens = 0
+    evaluated_passages = 0
 
     for passage in passages:
-        ppl, tokens = compute_perplexity_stub(checkpoint_path, passage)
+        ppl, tokens = compute_perplexity_real(model, tokenizer, passage)
+        if not math.isfinite(ppl):
+            # Degenerate (sub-two-token) passage — no next-token target.
+            continue
+        evaluated_passages += 1
         total_ppl += ppl * tokens
         total_tokens += tokens
 
@@ -257,7 +311,7 @@ def run_evaluation(
         drift_pct=drift_pct,
         halt=halt,
         per_file_results=per_file_results,
-        total_passages=len(passages),
+        total_passages=evaluated_passages,
         total_tokens=total_tokens,
     )
 
