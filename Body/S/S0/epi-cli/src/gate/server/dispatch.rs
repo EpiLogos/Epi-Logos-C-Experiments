@@ -1172,6 +1172,7 @@ pub(super) async fn dispatch_rpc(
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.list"
+        | "s2.graph.list_by_filter"
         | "s2.graph.traverse"
         | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"

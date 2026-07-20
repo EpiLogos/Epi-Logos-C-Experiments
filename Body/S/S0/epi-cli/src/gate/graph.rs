@@ -10,6 +10,7 @@ use crate::graph::{
     HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
     PointerWebRefreshRequest, RetrievalResult,
 };
+use epi_s2_graph_services::retrieval::{CoordinateRetrieval, PropPredicate};
 use epi_s2_graph_services::M0ResidualListRequest;
 
 const ASMA_MIRROR_ABSENT: u8 = 0xFF;
@@ -155,6 +156,24 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                     offset,
                     limit,
                 })
+                .await
+        }
+        "s2.graph.list_by_filter" => {
+            // Track 48 §13.E — coordinate-scoped base-view list-by-filter. The
+            // async row-returning `list_by_filter` on CoordinateRetrieval already
+            // yields `{ "rows": [...] }`; the handler just marshals params.
+            let coordinate_scope = params
+                .get("coordinateScope")
+                .and_then(Value::as_str)
+                .unwrap_or("");
+            let predicates: Vec<PropPredicate> = match params.get("propertyFilters") {
+                Some(value) => serde_json::from_value(value.clone())
+                    .map_err(|err| format!("invalid propertyFilters: {err}"))?,
+                None => Vec::new(),
+            };
+            let limit = params.get("limit").and_then(Value::as_i64);
+            CoordinateRetrieval::new(&client)
+                .list_by_filter(coordinate_scope, &predicates, limit)
                 .await
         }
         "s2.graph.traverse" => {

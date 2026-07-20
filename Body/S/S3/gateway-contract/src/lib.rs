@@ -26,8 +26,9 @@
 //! * `s1_vault` / `graphiti` / `temporal` / `privacy` / `portal_events` / `release` — per-domain method contracts.
 //! * `aletheia` / `verifier` — S4-5' crystallisation and `s0'.verifier.*` contracts.
 //! * Crate-root constants: `S0_PRIME_VERIFIER_METHODS`, `S2_GRAPH_GATEWAY_EXPOSED_METHODS`,
-//!   S1 C-first type lifecycle method names, and the `M4_ARENA_*` route family
-//!   (41.T41.6 — the `m4.arena.` literals stay in this file; its verification greps here).
+//!   the governed `NARA_TRANSFORM_*` lifecycle, S1 C-first type lifecycle method
+//!   names, and the `M4_ARENA_*` route family (41.T41.6 — the `m4.arena.` literals
+//!   stay in this file; its verification greps here).
 //!
 //! # Does NOT own
 //! * Runtime behaviour — sibling `gateway/` (`epi-s3-gateway`) executes these contracts.
@@ -96,6 +97,10 @@ pub const S0_PRIME_SETTINGS_METHODS: &[&str] = &[
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
 pub const S5_ORACLE_ICHING_CAST_METHOD: &str = "s5.oracle.iching.cast";
+pub const NARA_TRANSFORM_START_METHOD: &str = "nara.transform.start";
+pub const NARA_TRANSFORM_ADVANCE_METHOD: &str = "nara.transform.advance";
+pub const NARA_TRANSFORM_METHODS: &[&str] =
+    &[NARA_TRANSFORM_START_METHOD, NARA_TRANSFORM_ADVANCE_METHOD];
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD: &str =
     "kernelBridge.m2.epogdoonProjection(address72)";
 pub const KERNEL_BRIDGE_M2_CYMATIC_MONOPOLY_STATE_METHOD: &str =
@@ -106,6 +111,10 @@ pub const KERNEL_BRIDGE_M3_LENS_CODON_BINARY_METHOD: &str =
     "kernelBridge.m3.lensCodonBinary(lensId)";
 pub const KERNEL_BRIDGE_M3_LENS_FIELD_METHOD: &str = "kernelBridge.m3.lensField(lensId)";
 pub const S2_GRAPH_LIST_METHOD: &str = "s2.graph.list";
+// Track 48 §13.E — the base-view data layer: coordinate-scoped list-by-filter
+// over `CoordinateRetrieval` (Body/S/S2/graph-services). Sibling of
+// `s2.graph.list`; additive gateway surface for the BasesView dynamic adapter.
+pub const S2_GRAPH_LIST_BY_FILTER_METHOD: &str = "s2.graph.list_by_filter";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
 pub const S2_GRAPH_ONTOLOGY_RELOAD_METHOD: &str = "s2.graph.ontology.reload";
@@ -149,6 +158,7 @@ pub const S1_BASE_METHODS: &[&str] = &[S1_BASE_ENSURE_METHOD];
 
 pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
     S2_GRAPH_LIST_METHOD,
+    S2_GRAPH_LIST_BY_FILTER_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
     S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_SEED_SNAPSHOT_METHOD,

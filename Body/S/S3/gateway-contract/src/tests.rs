@@ -29,6 +29,19 @@ fn product_method_manifest_keeps_execution_spine() {
 }
 
 #[test]
+fn nara_transform_lifecycle_is_advertised_and_classified() {
+    for method in crate::NARA_TRANSFORM_METHODS {
+        assert!(crate::METHOD_NAMES.contains(method));
+        let plan = crate::method_dispatch_plan_entry(method).expect("transform dispatch plan");
+        assert_eq!(plan.kind, crate::MethodDispatchKind::S0ProductAdapter);
+        assert_eq!(
+            plan.authority_path,
+            "Body/S/S0/epi-cli::nara::transform::lifecycle"
+        );
+    }
+}
+
+#[test]
 fn anuttara_verifier_contract_exposes_s0_prime_methods() {
     let methods = s0_prime_verifier_methods();
 
@@ -70,6 +83,19 @@ fn m0_residual_browser_contract_exposes_s2_graph_list() {
 
     let entry =
         method_dispatch_plan_entry(S2_GRAPH_LIST_METHOD).expect("S2 graph list dispatch row");
+    assert_eq!(entry.kind, MethodDispatchKind::S2GraphServiceAdapter);
+    assert_eq!(entry.authority_path, "Body/S/S2/graph-services");
+}
+
+#[test]
+fn base_view_contract_exposes_s2_graph_list_by_filter() {
+    // Track 48 §13.E — the additive BasesView data-layer gateway surface.
+    assert_eq!(S2_GRAPH_LIST_BY_FILTER_METHOD, "s2.graph.list_by_filter");
+    assert!(METHOD_NAMES.contains(&S2_GRAPH_LIST_BY_FILTER_METHOD));
+    assert!(S2_GRAPH_GATEWAY_EXPOSED_METHODS.contains(&S2_GRAPH_LIST_BY_FILTER_METHOD));
+
+    let entry = method_dispatch_plan_entry(S2_GRAPH_LIST_BY_FILTER_METHOD)
+        .expect("S2 graph list_by_filter dispatch row");
     assert_eq!(entry.kind, MethodDispatchKind::S2GraphServiceAdapter);
     assert_eq!(entry.authority_path, "Body/S/S2/graph-services");
 }

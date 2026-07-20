@@ -12,9 +12,11 @@ use crate::{
     S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
     S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
     S1_WORLD_LIST_ENTITIES_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
-    S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_LIST_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
+    S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_LIST_BY_FILTER_METHOD, S2_GRAPH_LIST_METHOD,
+    S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
     S2_GRAPH_RELATION_FAMILY_LIST_METHOD, S2_GRAPH_SEED_SNAPSHOT_METHOD,
+    NARA_TRANSFORM_ADVANCE_METHOD, NARA_TRANSFORM_START_METHOD,
     S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD, S5_ORACLE_ICHING_CAST_METHOD,
 };
 
@@ -369,6 +371,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
     },
     MethodDispatchPlanEntry {
         method: S2_GRAPH_LIST_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_LIST_BY_FILTER_METHOD,
         kind: MethodDispatchKind::S2GraphServiceAdapter,
         authority_path: "Body/S/S2/graph-services",
         needs_extraction_to: None,
@@ -1139,6 +1147,18 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: S0_PRIME_SETTINGS_OPT_IN_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/settings + Body/S/S3/gateway::settings",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: NARA_TRANSFORM_START_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli::nara::transform::lifecycle",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: NARA_TRANSFORM_ADVANCE_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli::nara::transform::lifecycle",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
