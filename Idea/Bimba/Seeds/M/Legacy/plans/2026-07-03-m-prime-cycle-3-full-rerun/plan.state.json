@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-20T09:35:55.965Z",
+  "updatedAt": "2026-07-20T11:57:06.543Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12439,16 +12439,21 @@
       "blocker": null
     },
     "25.T25.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-20T11:43:37.644Z",
+      "claimedAt": "2026-07-20T11:40:43.923Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-20T11:43:37.644Z",
+          "text": "Verified live substrate: nara.logos.status/stage/run exist, but nara.logos.advance/regress do not; run writes an explicit deferred agent-pipeline placeholder, so it cannot be presented as the required contemplative artifact. Add a typed transition adapter with real artifact persistence plus a loopback gateway receipt test before the carrier can land."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 42 dirty files.",
+      "owner": "codex-mdev-2513-logos-cycle",
+      "leaseExpiresAt": "2026-07-20T13:40:43.923Z",
+      "heartbeatAt": "2026-07-20T11:43:37.644Z",
+      "runId": "20260720T114043Z-25-T25.13",
       "worktree": null,
       "blocker": null
     },
@@ -12879,16 +12884,21 @@
       "blocker": null
     },
     "26.T26.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-20T11:43:55.352Z",
+      "claimedAt": "2026-07-20T11:40:51.992Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-20T11:43:55.352Z",
+          "text": "Blocked in carrier scope: the required live gateway read s5'.epii.axiom_translation_history has no registration, handler, or expected-present ratchet entry under Body; no real PiAxiomTranslationInspector may be implemented without that producer."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 42 dirty files.",
+      "owner": "codex-mdev-2614-axiom",
+      "leaseExpiresAt": "2026-07-20T13:40:51.992Z",
+      "heartbeatAt": "2026-07-20T11:43:55.352Z",
+      "runId": "20260720T114051Z-26-T26.14",
       "worktree": null,
       "blocker": null
     },
@@ -13202,16 +13212,16 @@
       "blocker": null
     },
     "27.T27.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-20T11:41:18.968Z",
+      "claimedAt": "2026-07-20T11:41:18.968Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 42 dirty files.",
+      "owner": "codex-mdev-2713-omni-acceptance",
+      "leaseExpiresAt": "2026-07-20T13:41:18.968Z",
+      "heartbeatAt": "2026-07-20T11:41:18.968Z",
+      "runId": "20260720T114118Z-27-T27.13",
       "worktree": null,
       "blocker": null
     },
@@ -13456,9 +13466,9 @@
       "blocker": null
     },
     "28.T28.12": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:21.649Z",
-      "claimedAt": "2026-07-16T15:50:57.432Z",
+      "status": "in_progress",
+      "updatedAt": "2026-07-20T11:56:31.109Z",
+      "claimedAt": "2026-07-20T11:56:31.109Z",
       "completedAt": null,
       "evidence": [
         {
@@ -13470,11 +13480,11 @@
           "text": "Reopened and production-retargeted from a forbidden placeholder to a real semantic sidebar over s1-prime semantic suggest_links."
         }
       ],
-      "notes": "claimed with --allow-dirty over 182 dirty files.",
-      "owner": "codex-mdev-track28-smart-connections",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T15:50:57.432Z",
-      "runId": "20260716T155057Z-28-T28.12",
+      "notes": "claimed with --allow-dirty over 182 dirty files. claimed with --allow-dirty over 55 dirty files.",
+      "owner": "codex-mdev-2812-smart-connections",
+      "leaseExpiresAt": "2026-07-20T14:56:31.109Z",
+      "heartbeatAt": "2026-07-20T11:56:31.109Z",
+      "runId": "20260720T115631Z-28-T28.12",
       "worktree": null,
       "blocker": null
     },
@@ -14477,16 +14487,16 @@
       "blocker": null
     },
     "31.T31.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-20T11:41:27.285Z",
+      "claimedAt": "2026-07-20T11:41:27.285Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 42 dirty files.",
+      "owner": "codex-mdev-3113-validation",
+      "leaseExpiresAt": "2026-07-20T13:41:27.285Z",
+      "heartbeatAt": "2026-07-20T11:41:27.285Z",
+      "runId": "20260720T114127Z-31-T31.13",
       "worktree": null,
       "blocker": null
     },
@@ -18548,7 +18558,7 @@
     },
     "33.T33.1": {
       "status": "review",
-      "updatedAt": "2026-07-20T09:35:55.940Z",
+      "updatedAt": "2026-07-20T11:57:06.509Z",
       "claimedAt": "2026-07-19T22:32:01.360Z",
       "completedAt": null,
       "evidence": [
@@ -18589,12 +18599,27 @@
               "Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md"
             ]
           }
+        },
+        {
+          "at": "2026-07-20T11:57:06.509Z",
+          "text": "Duplication eliminated (my own error, not a DR): hoisted the canonical channel set + 7 per-channel feature extractors into a single S0-owned module portal_core::kernel::harmonic_channels. The S0 kernel deterministic E5 reading AND the S5 trained EBM (resonance_ebm::channels, now imports them down) score the identical substrate; S5's channels.rs keeps only its learned encoding. Verified across ALL layers: portal-core 415/0; epii-autoresearch-core --features resonance_ebm all binaries pass 0-failed (checkpoint round-trip + channel-encode tests confirm the extractors are byte-identical to pre-hoist, i.e. no behaviour drift); epi-cli compiles; kernel-truth gate GREEN (4 reds stand); honesty-lint 0 dishonest in these files. E5 now reads all 7 channels (lens_resonance_72, audio_octet, nodal_quartet, planetary_chakral, mahamaya, codon_rotation_projection, q_cosmic); E5HarmonicInputs.ebm_energy_scalar injection seam consumes the trained EBM score when a composition root supplies it. Contract-surface note in epi-logos-kernel-spec.md updated to the landed single-source shape. Status review (not done): the change moves a public kernel API + an M-Seed canon note that the Architect ratifies, and verifier must differ from closer. The only genuinely separate remaining item is the trained EBM checkpoint (Stream C training pipeline), which even S5's own evaluate() returns 0.0 without.",
+          "receipt": {
+            "command": "cargo test -p portal-core (415) + cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm + cargo check epi-cli + kernel-truth.mjs + lint-test-honesty.mjs",
+            "exitCode": 0,
+            "testsPassed": 415,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/harmonic_channels.rs",
+              "Body/S/S0/portal-core/src/kernel.rs",
+              "Body/S/S5/epii-autoresearch-core/src/resonance_ebm/channels.rs"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-3301-e56",
       "leaseExpiresAt": "2026-07-20T00:32:06.670Z",
-      "heartbeatAt": "2026-07-20T09:35:55.940Z",
+      "heartbeatAt": "2026-07-20T11:57:06.509Z",
       "runId": "20260719T223201Z-33-T33.1",
       "worktree": null,
       "blocker": null
@@ -24146,12 +24171,59 @@
       "owner": "codex-mdev-2511-transform",
       "leaseExpiresAt": "2026-07-20T01:52:57.077Z",
       "worktree": null
+    },
+    {
+      "runId": "20260720T114043Z-25-T25.13",
+      "taskId": "25.T25.13",
+      "status": "review",
+      "startedAt": "2026-07-20T11:40:43.923Z",
+      "owner": "codex-mdev-2513-logos-cycle",
+      "leaseExpiresAt": "2026-07-20T13:40:43.923Z",
+      "worktree": null,
+      "completedAt": "2026-07-20T11:43:37.644Z"
+    },
+    {
+      "runId": "20260720T114051Z-26-T26.14",
+      "taskId": "26.T26.14",
+      "status": "review",
+      "startedAt": "2026-07-20T11:40:51.992Z",
+      "owner": "codex-mdev-2614-axiom",
+      "leaseExpiresAt": "2026-07-20T13:40:51.992Z",
+      "worktree": null,
+      "completedAt": "2026-07-20T11:43:55.352Z"
+    },
+    {
+      "runId": "20260720T114118Z-27-T27.13",
+      "taskId": "27.T27.13",
+      "status": "in_progress",
+      "startedAt": "2026-07-20T11:41:18.968Z",
+      "owner": "codex-mdev-2713-omni-acceptance",
+      "leaseExpiresAt": "2026-07-20T13:41:18.968Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260720T114127Z-31-T31.13",
+      "taskId": "31.T31.13",
+      "status": "in_progress",
+      "startedAt": "2026-07-20T11:41:27.285Z",
+      "owner": "codex-mdev-3113-validation",
+      "leaseExpiresAt": "2026-07-20T13:41:27.285Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260720T115631Z-28-T28.12",
+      "taskId": "28.T28.12",
+      "status": "in_progress",
+      "startedAt": "2026-07-20T11:56:31.109Z",
+      "owner": "codex-mdev-2812-smart-connections",
+      "leaseExpiresAt": "2026-07-20T14:56:31.109Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-20T09:15:49.104Z",
-    "updatedAt": "2026-07-20T09:15:49.104Z",
+    "createdAt": "2026-07-20T11:39:27.911Z",
+    "updatedAt": "2026-07-20T11:39:27.911Z",
     "taskIds": [
       "48.T48.7",
       "02.T2.10",
