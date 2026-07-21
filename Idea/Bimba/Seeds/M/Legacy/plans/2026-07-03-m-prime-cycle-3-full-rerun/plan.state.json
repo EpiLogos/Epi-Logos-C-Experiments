@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-21T13:33:17.792Z",
+  "updatedAt": "2026-07-21T13:57:22.624Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11780,16 +11780,31 @@
       "blocker": null
     },
     "24.T24.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-21T13:57:22.602Z",
+      "claimedAt": "2026-07-21T13:43:16.364Z",
+      "completedAt": "2026-07-21T13:57:22.602Z",
+      "evidence": [
+        {
+          "at": "2026-07-21T13:57:22.602Z",
+          "text": "The 16+1 functional lens switcher (m3-functional-lens in M3InspectorsPane) was already landed with substrate (portal-core lens_codon_binary), parser (types.test.ts incl reject-17), and spawned-gateway ids 7/16/17 (gate_m3_lens_codon_binary.rs) tests; its Ground-default + Hourly-derived-through-Ground-16 resolution was already proven by visual-panes.spec.ts:271-309 as part of 24.T24.20. Added tests/e2e/m3-lens-switcher.spec.ts as the dedicated 24.3 UI-flow proof that additionally guards the exact 16+1 cardinality (17 options, no 18-fold/Frame/Operator) and bidirectional switch-back to Ground. Independent full UF gate PASS (verifier opus-verify-2403 != closer): app-ui-flow 60/0 incl the new spec, app-test 944/0, honesty-lint clean.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/m3-lens-switcher.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/m3-lens-switcher.spec.ts",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-ctrl-0721",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-21T13:43:16.364Z",
+      "runId": "20260721T134316Z-24-T24.3",
       "worktree": null,
       "blocker": null
     },
@@ -24716,6 +24731,16 @@
       "leaseExpiresAt": "2026-07-20T19:04:04.021Z",
       "worktree": null,
       "completedAt": "2026-07-20T17:09:05.762Z"
+    },
+    {
+      "runId": "20260721T134316Z-24-T24.3",
+      "taskId": "24.T24.3",
+      "status": "done",
+      "startedAt": "2026-07-21T13:43:16.364Z",
+      "owner": "opus-mdev-ctrl-0721",
+      "leaseExpiresAt": "2026-07-21T15:43:16.364Z",
+      "worktree": null,
+      "completedAt": "2026-07-21T13:57:22.602Z"
     }
   ],
   "activeRoute": {
