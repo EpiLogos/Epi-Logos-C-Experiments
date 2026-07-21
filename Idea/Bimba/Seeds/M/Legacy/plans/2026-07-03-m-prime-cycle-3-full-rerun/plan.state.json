@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-21T13:57:22.624Z",
+  "updatedAt": "2026-07-21T22:26:03.013Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11810,15 +11810,20 @@
     },
     "24.T24.4": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-21T21:37:37.022Z",
+      "claimedAt": "2026-07-21T13:58:01.233Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-21T21:37:37.022Z",
+          "text": "Unclaimed: pivoting to a ledger integrity audit of the batch-close commits per Architect direction; 24.4 remains a spec-ahead honest-pending build pending Wave-B WC-M3-SA-4 (cosmicClock.walks) + WC-M3-SA-6 (s3.world_clock.walk.advance)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-ctrl-0721",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-21T13:58:01.233Z",
+      "runId": "20260721T135801Z-24-T24.4",
       "worktree": null,
       "blocker": null
     },
@@ -12536,10 +12541,10 @@
       "blocker": null
     },
     "25.T25.13": {
-      "status": "review",
-      "updatedAt": "2026-07-21T13:12:17.258Z",
+      "status": "done",
+      "updatedAt": "2026-07-21T22:26:02.991Z",
       "claimedAt": "2026-07-20T11:40:43.923Z",
-      "completedAt": "2026-07-21T12:51:47.525Z",
+      "completedAt": "2026-07-21T22:26:02.991Z",
       "evidence": [
         {
           "at": "2026-07-20T11:43:37.644Z",
@@ -12562,6 +12567,20 @@
         {
           "at": "2026-07-21T13:12:17.258Z",
           "text": "Reopened false close: tranche acceptance requires nara.logos.advance/regress RPCs writing contemplative artifacts plus an M4LogosChip 6-stage progression widget. The gateway exposes only nara.logos.run/status/stage (gate/nara.rs:608-614); no advance/regress RPC and no logos-cycle widget landed in the pratibimba-app carrier; no UF proof. Prior done mark cited the shared UF gate, not this deliverable. Returns to review until the advance/regress substrate + widget land."
+        },
+        {
+          "at": "2026-07-21T22:26:02.991Z",
+          "text": "Built the real 25.T25.13 vertical slice (reopened false close — the RPCs+widget did not exist). S0: nara.logos.advance writes the next stage as a contemplative artifact with c_3_stage_from/to; nara.logos.regress writes a separate c_4_regression artifact and steps the cursor back (4 hermetic Rust unit tests green + CLI-verified). Gateway dispatch + LogosCmd wired via the nara.* catch-all. Carrier: strict logosCycle.ts parser + M4LogosCyclePane 6-stage ring (advance/regress) + M4LogosChip, mounted as the Personal Logos tab, registered in CHROME-CONTRACT. UF proof tests/e2e/m4-logos-cycle.spec.ts drives advance->regress over a spawned gateway with isolated EPI_NARA_HOME; regenerated the composition-4-5-0-personal baseline for the intentional new tab. Independent full UF verify-tranche PASS (verifier opus-verify-2513b != closer): app-ui-flow 60/0, app-test 956/0, honesty-lint clean, Rust logos 4/0.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/m4-logos-cycle.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/nara/logos.rs",
+              "Body/M/pratibimba-app/src/panes/M4LogosCyclePane.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 42 dirty files.",
@@ -24741,6 +24760,16 @@
       "leaseExpiresAt": "2026-07-21T15:43:16.364Z",
       "worktree": null,
       "completedAt": "2026-07-21T13:57:22.602Z"
+    },
+    {
+      "runId": "20260721T135801Z-24-T24.4",
+      "taskId": "24.T24.4",
+      "status": "pending",
+      "startedAt": "2026-07-21T13:58:01.233Z",
+      "owner": "opus-mdev-ctrl-0721",
+      "leaseExpiresAt": "2026-07-21T15:58:01.233Z",
+      "worktree": null,
+      "completedAt": "2026-07-21T21:37:37.022Z"
     }
   ],
   "activeRoute": {

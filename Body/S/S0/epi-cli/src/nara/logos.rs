@@ -1,5 +1,5 @@
 use serde::Serialize;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Serialize)]
 pub struct LogosStage {
@@ -186,6 +186,122 @@ pub fn run(date: Option<&str>, stage_override: Option<u8>, json: bool) -> Result
     }
 }
 
+/// The cursor position for a date's cycle: the sorted list of completed stage
+/// indices and the next incomplete stage (6 when all six are complete).
+fn cursor(dir: &Path, date: &str) -> (Vec<u8>, u8) {
+    let mut completed = Vec::new();
+    for i in 0..6u8 {
+        if dir.join(format!("{}-stage-{}.md", date, i)).exists() {
+            completed.push(i);
+        }
+    }
+    let next = (0..6u8)
+        .find(|i| !completed.contains(i))
+        .unwrap_or(6);
+    (completed, next)
+}
+
+/// Render one contemplative transition artifact for a logos stage. `stage_from`
+/// / `stage_to` record the cursor movement (-1 = the pre-cycle ground); a
+/// regression additionally carries the explicit `c_4_regression: true` flag so a
+/// backward move is never mistaken for forward integration.
+fn stage_artifact(stage_idx: u8, stage_from: i16, stage_to: i16, created: &str, regression: bool) -> String {
+    let stage_def = &LOGOS_STAGES[stage_idx as usize];
+    let mut front = format!(
+        "---\nc_3_created_at: \"{}\"\nc_3_stage_from: {}\nc_3_stage_to: {}\nc_4_artifact_role: \"logos-transition\"\n",
+        created, stage_from, stage_to
+    );
+    if regression {
+        front.push_str("c_4_regression: true\n");
+    }
+    front.push_str("---\n\n");
+    format!(
+        "{}# {} (Stage {})\n\n**Input:** {}\n\n**Task:** {}\n\n**Output contract:** {}\n\n---\n\n*(Agent pipeline required for full synthesis)*\n",
+        front, stage_def.name, stage_def.index, stage_def.input_sources, stage_def.task, stage_def.output_contract
+    )
+}
+
+fn transition_json(date: &str, dir: &Path, transitioned: u8, direction: &str, regression: bool, artifact: &Path) -> String {
+    let (completed, next) = cursor(dir, date);
+    serde_json::json!({
+        "date": date,
+        "completed_stages": completed,
+        "next_stage": next,
+        "total": 6,
+        "transitioned_stage": transitioned,
+        "direction": direction,
+        "regression": regression,
+        "artifact_path": artifact.display().to_string(),
+    })
+    .to_string()
+}
+
+fn advance_in(dir: &Path, date: &str, created: &str, json: bool) -> Result<String, String> {
+    std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    let (_, next) = cursor(dir, date);
+    if next > 5 {
+        return Err(format!("All 6 logos stages already complete for {}.", date));
+    }
+    let stage_from = next as i16 - 1; // -1 = pre-cycle ground when entering stage 0
+    let artifact = dir.join(format!("{}-stage-{}.md", date, next));
+    std::fs::write(&artifact, stage_artifact(next, stage_from, next as i16, created, false))
+        .map_err(|e| e.to_string())?;
+    if json {
+        Ok(transition_json(date, dir, next, "advance", false, &artifact))
+    } else {
+        Ok(format!(
+            "Logos advanced to stage {} ({}) — {}",
+            next,
+            LOGOS_STAGES[next as usize].name,
+            artifact.display()
+        ))
+    }
+}
+
+fn regress_in(dir: &Path, date: &str, created: &str, json: bool) -> Result<String, String> {
+    std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    let (completed, _) = cursor(dir, date);
+    let Some(&last) = completed.last() else {
+        return Err(format!("No completed logos stage to regress for {}.", date));
+    };
+    // Record the regression as its own contemplative artifact, then step the
+    // cursor back by removing the highest completed stage file.
+    let artifact = dir.join(format!("{}-regress-{}.md", date, last));
+    std::fs::write(
+        &artifact,
+        stage_artifact(last, last as i16, last as i16 - 1, created, true),
+    )
+    .map_err(|e| e.to_string())?;
+    std::fs::remove_file(dir.join(format!("{}-stage-{}.md", date, last)))
+        .map_err(|e| e.to_string())?;
+    if json {
+        Ok(transition_json(date, dir, last, "regress", true, &artifact))
+    } else {
+        Ok(format!(
+            "Logos regressed from stage {} ({}) — {}",
+            last,
+            LOGOS_STAGES[last as usize].name,
+            artifact.display()
+        ))
+    }
+}
+
+/// epi nara logos advance — forward transition; writes the next stage as a
+/// contemplative artifact carrying its `c_3_stage_from`/`c_3_stage_to`.
+pub fn advance(date: Option<&str>, json: bool) -> Result<String, String> {
+    let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+    let created = chrono::Utc::now().to_rfc3339();
+    advance_in(&logos_dir(), date.unwrap_or(&today), &created, json)
+}
+
+/// epi nara logos regress — backward transition; writes a regression artifact
+/// (`c_4_regression: true`) and steps the cursor back one stage.
+pub fn regress(date: Option<&str>, json: bool) -> Result<String, String> {
+    let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
+    let created = chrono::Utc::now().to_rfc3339();
+    regress_in(&logos_dir(), date.unwrap_or(&today), &created, json)
+}
+
 /// epi nara logos curriculum
 pub fn curriculum(json: bool) -> Result<String, String> {
     if json {
@@ -225,5 +341,80 @@ pub fn weekly(json: bool) -> Result<String, String> {
         .to_string())
     } else {
         Ok("Logos Weekly Synthesis\n  (Requires agent pipeline for weekly analysis)".to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const CREATED: &str = "2026-07-21T00:00:00Z";
+    const DATE: &str = "2026-07-21";
+
+    fn test_dir(tag: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("epi-logos-test-{}-{}", tag, std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        dir
+    }
+
+    #[test]
+    fn advance_cycles_through_six_stages_then_refuses() {
+        let dir = test_dir("advance-cycle");
+        for expected in 0..6u8 {
+            let out = advance_in(&dir, DATE, CREATED, true).unwrap();
+            let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+            assert_eq!(v["transitioned_stage"].as_u64().unwrap(), expected as u64);
+            assert_eq!(v["direction"].as_str().unwrap(), "advance");
+            assert!(!v["regression"].as_bool().unwrap());
+            assert!(dir.join(format!("{}-stage-{}.md", DATE, expected)).exists());
+        }
+        assert_eq!(cursor(&dir, DATE).1, 6, "all six stages complete");
+        // A seventh advance has nowhere to go and refuses.
+        assert!(advance_in(&dir, DATE, CREATED, true).is_err());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn advance_artifact_carries_stage_from_to_and_never_the_regression_flag() {
+        let dir = test_dir("advance-artifact");
+        advance_in(&dir, DATE, CREATED, true).unwrap(); // stage 0
+        advance_in(&dir, DATE, CREATED, true).unwrap(); // stage 1
+        let stage0 = std::fs::read_to_string(dir.join(format!("{}-stage-0.md", DATE))).unwrap();
+        assert!(stage0.contains("c_3_stage_from: -1"), "stage 0 comes from the pre-cycle ground");
+        assert!(stage0.contains("c_3_stage_to: 0"));
+        let stage1 = std::fs::read_to_string(dir.join(format!("{}-stage-1.md", DATE))).unwrap();
+        assert!(stage1.contains("c_3_stage_from: 0"));
+        assert!(stage1.contains("c_3_stage_to: 1"));
+        assert!(!stage0.contains("c_4_regression"), "advance never writes the regression flag");
+        assert!(!stage1.contains("c_4_regression"), "advance never writes the regression flag");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn regress_steps_the_cursor_back_and_writes_a_regression_artifact() {
+        let dir = test_dir("regress");
+        for _ in 0..3 {
+            advance_in(&dir, DATE, CREATED, true).unwrap(); // stages 0, 1, 2
+        }
+        assert_eq!(cursor(&dir, DATE).1, 3);
+        let out = regress_in(&dir, DATE, CREATED, true).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(v["direction"].as_str().unwrap(), "regress");
+        assert!(v["regression"].as_bool().unwrap());
+        assert_eq!(v["transitioned_stage"].as_u64().unwrap(), 2);
+        assert_eq!(v["next_stage"].as_u64().unwrap(), 2, "cursor stepped back to 2");
+        assert!(!dir.join(format!("{}-stage-2.md", DATE)).exists(), "the top stage file is removed");
+        let regressed = std::fs::read_to_string(dir.join(format!("{}-regress-2.md", DATE))).unwrap();
+        assert!(regressed.contains("c_4_regression: true"), "regress writes the explicit flag");
+        assert!(regressed.contains("c_3_stage_from: 2"));
+        assert!(regressed.contains("c_3_stage_to: 1"));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn regress_with_no_completed_stage_refuses() {
+        let dir = test_dir("regress-empty");
+        assert!(regress_in(&dir, DATE, CREATED, true).is_err());
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

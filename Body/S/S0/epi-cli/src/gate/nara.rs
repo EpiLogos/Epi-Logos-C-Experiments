@@ -611,6 +611,14 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             cli_to_rpc(logos::run(date.as_deref(), stage, true))
         }
         "nara.logos.status" => cli_to_rpc(logos::status(true)),
+        "nara.logos.advance" => {
+            let date = opt_str(params, "date");
+            cli_to_rpc(logos::advance(date.as_deref(), true))
+        }
+        "nara.logos.regress" => {
+            let date = opt_str(params, "date");
+            cli_to_rpc(logos::regress(date.as_deref(), true))
+        }
         "nara.logos.stage" => {
             let stage = params
                 .get("stage")

@@ -450,6 +450,20 @@ pub enum LogosCmd {
         #[arg(long)]
         json: bool,
     },
+    /// Advance the cycle forward one stage (writes a contemplative artifact)
+    Advance {
+        #[arg(long)]
+        date: Option<String>,
+        #[arg(long)]
+        json: bool,
+    },
+    /// Regress the cycle back one stage (writes a c_4_regression artifact)
+    Regress {
+        #[arg(long)]
+        date: Option<String>,
+        #[arg(long)]
+        json: bool,
+    },
     /// Show curriculum
     Curriculum {
         #[arg(long)]
@@ -629,6 +643,8 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
                 date,
                 json: j,
             } => logos::stage(*stage, date.as_deref(), *j || json),
+            LogosCmd::Advance { date, json: j } => logos::advance(date.as_deref(), *j || json),
+            LogosCmd::Regress { date, json: j } => logos::regress(date.as_deref(), *j || json),
             LogosCmd::Curriculum { json: j } => logos::curriculum(*j || json),
             LogosCmd::Export { date, yes } => logos::export(date.as_deref(), *yes),
             LogosCmd::Weekly { json: j } => logos::weekly(*j || json),

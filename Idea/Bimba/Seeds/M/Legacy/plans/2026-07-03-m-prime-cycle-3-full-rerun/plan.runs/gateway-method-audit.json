@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-21T13:53:13.329Z",
+ "generatedAt": "2026-07-21T22:25:31.556Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 276,
-  "present": 93,
-  "absent": 183,
+  "present": 95,
+  "absent": 181,
   "unknown": 0
  },
  "methods": [
@@ -590,16 +590,16 @@
   {
    "method": "nara.logos.advance",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "nara.logos.regress",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "nara.medicine.pin",

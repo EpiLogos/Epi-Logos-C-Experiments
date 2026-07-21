@@ -52,6 +52,7 @@ import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
 import { TransformContainersPane } from './panes/TransformContainersPane';
+import { M4LogosCyclePane } from './panes/M4LogosCyclePane';
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
 import { CompositionDispatchTracePane } from './panes/omni/CompositionDispatchTracePane';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
@@ -192,6 +193,7 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                     { type: 'tab', name: 'Autoresearch', component: 'autoresearch', enableClose: false },
                     { type: 'tab', name: 'Medicine', component: 'medicineView', enableClose: false },
                     { type: 'tab', name: 'Transform', component: 'transformContainers', enableClose: false },
+                    { type: 'tab', name: 'Logos', component: 'logosCycle', enableClose: false },
                     { type: 'tab', name: 'Kairos setup', component: 'kairosEnablement', enableClose: false }
                 ]
             }
@@ -381,6 +383,8 @@ function factory(node: TabNode) {
         // 25.T25.11 - governed transform lifecycle and protected-local carrier.
         case 'transformContainers':
             return <TransformContainersPane />;
+        case 'logosCycle':
+            return <M4LogosCyclePane />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':
