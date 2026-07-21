@@ -84,10 +84,28 @@ test('24.T24.17: badge, mini-view, and full wheel preserve one live M3 surface',
         timeout: 20_000
     });
     await expect(hingeBadge).toContainText('0/1→5');
-    await expect(hingeBadge).toHaveAttribute(
-        'data-generation',
-        await mini.getAttribute('data-generation')
-    );
+    // The hinge badge and the mini-view wheel ride ONE live surface, so they
+    // report the SAME generation at any instant — but that generation ticks
+    // ~1 Hz, so a frozen snapshot of one value compared against a poll of the
+    // other races the counter (mini captured at gen N, hinge polled at N+k).
+    // Read both in a single synchronous browser evaluate — no tick can land
+    // between two synchronous getAttribute reads — and poll until they agree.
+    await expect
+        .poll(() =>
+            page.evaluate(() => {
+                const scope = document.querySelector(
+                    '[data-testid="m3-daily-wheel-mini-view"]'
+                );
+                const hinge = scope?.querySelector(
+                    '[data-testid="m3-pentadic-hinge-badge"]'
+                );
+                const wheel = scope?.querySelector('[data-testid="m3-cosmic-wheel"]');
+                const hingeGeneration = hinge?.getAttribute('data-generation') ?? null;
+                const wheelGeneration = wheel?.getAttribute('data-generation') ?? null;
+                return hingeGeneration !== null && hingeGeneration === wheelGeneration;
+            })
+        )
+        .toBe(true);
 
     const dailyScreenshot = testInfo.outputPath('daily-m3-renderer-modes.png');
     await page.screenshot({ path: dailyScreenshot });
