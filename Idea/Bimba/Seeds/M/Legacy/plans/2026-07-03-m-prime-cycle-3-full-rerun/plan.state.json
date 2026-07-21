@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-20T22:19:08.188Z",
+  "updatedAt": "2026-07-21T11:02:44.495Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -995,10 +995,10 @@
       "blocker": null
     },
     "02.T2.10": {
-      "status": "review",
-      "updatedAt": "2026-07-20T20:48:57.546Z",
+      "status": "done",
+      "updatedAt": "2026-07-21T11:02:44.474Z",
       "claimedAt": "2026-07-19T08:46:15.569Z",
-      "completedAt": null,
+      "completedAt": "2026-07-21T11:02:44.474Z",
       "evidence": [
         {
           "at": "2026-07-08T00:31:55.502Z",
@@ -1023,12 +1023,39 @@
         {
           "at": "2026-07-20T20:48:57.546Z",
           "text": "Smoothness-filter defect fixed per Architect decision (instance method + honor cfg.cot_min_smoothness=0.5 + recompute smoothness ONLY when caller left it at default 0.0, never clobbering caller-supplied values). Removed the dishonest no-op filter (was >=0.0 with a false 'configurable threshold applied' comment). score_trajectories promoted @staticmethod->instance (2 test call-sites updated; zero production callers). test_blindfolded_teacher 15/15 pass (test_filters_by_smoothness red->green). STILL OPEN (not this fix): 02 is UF-class so ledger done needs the app-flow gate, currently blocked by unrelated shared-tree reds from sibling WIP (32.T32.11 gateway route-table gap, Track-30 carrier-tokens, visual-panes/visual-regression baselines); and the live-cloud teacher invocation remains deliberately deferred (keys/Architect trigger)."
+        },
+        {
+          "at": "2026-07-20T22:25:22.771Z",
+          "text": "CORRECTION to prior evidence: the 'live cloud teacher call deliberately deferred for consent-scope' framing was UNFOUNDED and is retracted. Ground-truthed 2026-07-20: (1) NO consent-scope gate exists anywhere in blindfolded_teacher.py — grep for consent/consentScope/EXCEEDS is empty; _default_slot_invoke resolves the slot and calls pi, never reading consentScope (it is inert metadata). The 'matheme+NL prompt exceeds vector-only-derived-signal' claim was narrative, not code. (2) The endpoint is fully wired + correct: pi IS on PATH (/Users/admin/.local/bin/pi); epi slot show --json epii_judge resolves to anthropic/claude-opus-4-7 (cloud-opt-in). (3) The ONE real precondition for a live call is a credential: 'pi -p --model anthropic/claude-opus-4-7' returns 'No API key found for anthropic. Use /login to log into a provider via OAuth or API key.' No ANTHROPIC_API_KEY in env and pi is not logged in. This is an environment/config matter (needs pi Anthropic login OR repoint the epii_judge slot to a local ollama model per DR-MODEL-1 no-hard-lock), NOT a deferral and NOT requested by the Architect. Once a model is reachable, a real end-to-end teacher call can run and 02 can close on real evidence."
+        },
+        {
+          "at": "2026-07-21T10:42:22.378Z",
+          "text": "Live teacher call PROVEN end-to-end (2026-07-21, Architect-authorized 'any pi model for testing'): repointed epii_judge slot -> google/gemini-2.5-pro (DR-MODEL-1 no hard-lock; pi already authed for google). Ran the real invocation: blindfolded_teacher.py --prompt <M1' QL mod-6 4+2 derivation> -> _default_slot_invoke -> epi slot show resolves google/gemini-2.5-pro -> pi -p --model google/gemini-2.5-pro -> LIVE completion returned (173 tokens; trace 'pi:google/gemini-2.5-pro:cloud-opt-in'; a coherent step-by-step M1' derivation). Confirms the endpoint makes real cloud calls through the single PI selector, no bespoke provider client. The prior 'deferred for consent-scope' claim is RETRACTED (grep confirms NO consent gate in the code). Deliverable now substantively complete AND live-proven: eksft loss + blindfolded teacher (smoothness fix, 15/15) + eval corpus + FailureSignature all landed/tested + real teacher invocation demonstrated. Only a formal UF-class done-gate re-run remains (green on current tree; note that UF gate exercises track-02's carrier panes, not the Python ML deliverable — a class/deliverable mismatch)."
+        },
+        {
+          "at": "2026-07-21T10:42:47.862Z",
+          "text": "Live teacher call PROVEN end-to-end (2026-07-21, Architect-authorized 'any pi model for testing'): repointed epii_judge slot -> google/gemini-2.5-pro (DR-MODEL-1 no hard-lock; pi already authed for google). Ran the real invocation: blindfolded_teacher.py --prompt <M1' QL mod-6 4+2 derivation> -> _default_slot_invoke -> epi slot show resolves google/gemini-2.5-pro -> pi -p --model google/gemini-2.5-pro -> LIVE completion returned (173 tokens; trace 'pi:google/gemini-2.5-pro:cloud-opt-in'; coherent step-by-step M1' derivation). Confirms the endpoint makes real cloud calls through the single PI selector, no bespoke provider client. Prior 'deferred for consent-scope' claim RETRACTED (grep confirms NO consent gate in code). Deliverable substantively complete AND live-proven: eksft loss + blindfolded teacher (smoothness fix 15/15) + eval corpus + FailureSignature all landed/tested + real teacher invocation demonstrated. Only a formal UF-class done-gate re-run remains (green on current tree; that gate exercises track-02 carrier panes, not the Python ML deliverable — class/deliverable mismatch)."
+        },
+        {
+          "at": "2026-07-21T11:02:44.474Z",
+          "text": "M1 CPT trainer + EKSFT loss + epistemic-blindfolded teacher + eval corpus: deliverable complete + live-proven. Substantive proof: full epii-distillation Python suite 37 passed/0 (incl the fixed smoothness filter, test_filters_by_smoothness green) + REAL live teacher call end-to-end (blindfolded_teacher.py --prompt -> _default_slot_invoke -> epi slot show resolves google/gemini-2.5-pro -> pi -p --model -> live derivation, trace 'pi:google/gemini-2.5-pro:cloud-opt-in', 173 tokens). The endpoint rides the single PI selector (no bespoke provider client). Prior 'deferred for consent-scope' claim was fabricated + is RETRACTED (no consent gate in code). Formal UF class gate PASS (verifier opus-verify-0210 != closer): app-ui-flow 59/0, app-test 938/0, gateway 96/0 — NOTE the UF class fits track-02 carrier panes, not this Python-ML tranche; the ML deliverable proof is the pytest suite + live call above. Slot temporarily on google/gemini-2.5-pro (testing, DR-MODEL-1); revertible to anthropic once pi is logged in.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 59,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/blindfolded_teacher.py",
+              "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/eksft.py",
+              "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/eval-corpus/m1-paramasiva/manifest.json"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "codex-mdev-0210-cpt",
-      "leaseExpiresAt": "2026-07-19T10:46:15.569Z",
-      "heartbeatAt": "2026-07-20T20:48:57.546Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-21T10:42:47.862Z",
       "runId": "20260719T084615Z-02-T2.10",
       "worktree": null,
       "blocker": null
