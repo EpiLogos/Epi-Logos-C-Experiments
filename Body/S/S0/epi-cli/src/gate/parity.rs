@@ -810,7 +810,9 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.epii.runtime.context"
         | "s5'.epii.user.orientation"
         | "s5'.epii.pratibimba.status"
-        | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
+        | "s5'.epii.kairos.context"
+        | "s5'.epii.axiom_translate"
+        | "s5'.epii.axiom_translation_history" => Some("s5'.epii.*"),
         "s5'.gnosis.context.retrieve" => Some("s5'.gnosis.*"),
         // 40.T40.1 canon-update ledger family (parity-visible; not in
         // METHOD_NAMES — driven by the gateway runtime + `epi bimba` CLI).

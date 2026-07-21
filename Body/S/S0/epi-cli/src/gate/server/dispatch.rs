@@ -20,7 +20,8 @@ use crate::gate::runs::{RunContext, RunSnapshot};
 use crate::gate::runtime::GatewayRuntimeState;
 use crate::gate::sessions::{SessionPatch, SessionStore};
 use crate::gate::{
-    anima, approvals, browser, channels, chat, config, cron, devices, epii, gnostic, graph,
+    anima, approvals, browser, channels, chat, config, cron, devices, epii, epii_axiom, gnostic,
+    graph,
     graphiti, improve, logs, models, nodes, review, sessions, skills, subagents, system,
     transcripts, tuning, update, verifier, wizard,
 };
@@ -1664,6 +1665,12 @@ pub(super) async fn dispatch_rpc(
         "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {
             Ok(DispatchResult::immediate(epii::user_orientation()))
         }
+        "s5'.epii.axiom_translation_history" => epii_axiom::history_value(state_root)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.epii.axiom_translate" => epii_axiom::translate_and_persist(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         // 25.T25.11 — nara.transform.* are first-class METHOD_NAMES entries
         // (unlike the other nara.* route extensions, which are intentionally
         // absent from METHOD_NAMES), so the S3 T9 cross-walk requires them to

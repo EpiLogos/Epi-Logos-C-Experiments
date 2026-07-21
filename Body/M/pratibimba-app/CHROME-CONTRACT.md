@@ -41,6 +41,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `m3Inspectors` | face 0 `cosmic-main` tab "M3 Inspectors" | M0' chrome | live | `M3InspectorsPane` (hosts `M3CosmicWheelRenderService`, 24.T24.1) | — |
 | `mocBases` | face 0 `cosmic-main` tab "Bases" | M0' chrome | live | `MocBaseReflectionPane` (evaluated MOC membership + canvas-linked external Obsidian Base views, 48.T48.4) | — |
 | `m5Ebm` | face 0 `cosmic-main` tab "M5 EBM" | M0' chrome | live | `M5EbmObservatoryPane` (26.T26.1 — M5-domain content, READ role: "M5 does not talk. It scores.") | — |
+| `piAxiomTranslation` | face 0 `cosmic-main` tab "Axiom" | M0' chrome | live | `PiAxiomTranslationInspector` (26.T26.14 — DR-B-2 four-column English→Formal→OWL→SHACL chain; strict read of `s5'.epii.axiom_translation_history`; producer is epi-cli `gate::epii_axiom` over the PI harness) | `m5.epii.axiomTranslation` |
 | `fileTree` | face 1 left border "Vault" | M0' chrome | live | `FileTreePane` | — |
 | `journalTimeline` | face 1 left border "Journal" | M0' chrome | live | `JournalTimelinePane` | — |
 | `dayCalendar` | face 1 left border "Calendar" | M0' chrome | live | `DayCalendarPane` | — |

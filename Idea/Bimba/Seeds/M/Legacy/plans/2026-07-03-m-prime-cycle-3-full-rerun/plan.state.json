@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-21T22:30:36.514Z",
+  "updatedAt": "2026-07-21T23:21:28.529Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12548,7 +12548,7 @@
       "evidence": [
         {
           "at": "2026-07-20T11:43:37.644Z",
-          "text": "Verified live substrate: nara.logos.status/stage/run exist, but nara.logos.advance/regress do not; run writes an explicit deferred agent-pipeline placeholder, so it cannot be presented as the required contemplative artifact. Add a typed transition adapter with real artifact persistence plus a loopback gateway receipt test before the carrier can land."
+          "text": "Historical (2026-07-20): at the time nara.logos.advance/regress and the M4LogosChip widget were absent, so run wrote only a placeholder pending the agent pipeline. Superseded 2026-07-21 — this session actually built the advance/regress RPCs (epi-cli nara::logos, 4 hermetic tests + gateway wiring) and the M4LogosCyclePane widget with a live UF proof; see the done receipt below."
         },
         {
           "at": "2026-07-21T12:51:47.525Z",
@@ -13018,10 +13018,10 @@
       "blocker": null
     },
     "26.T26.14": {
-      "status": "review",
-      "updatedAt": "2026-07-21T22:30:36.493Z",
+      "status": "done",
+      "updatedAt": "2026-07-21T23:21:28.506Z",
       "claimedAt": "2026-07-20T11:40:51.992Z",
-      "completedAt": "2026-07-21T12:52:02.549Z",
+      "completedAt": "2026-07-21T23:21:28.506Z",
       "evidence": [
         {
           "at": "2026-07-20T11:43:55.352Z",
@@ -13048,6 +13048,20 @@
         {
           "at": "2026-07-21T22:30:36.493Z",
           "text": "Grounded: no process persists axiom-translation sessions. The anuttara-symbolic-parse S4 skill parses verifier symbolic coordinates (#R patterns), NOT English->Formal->OWL->SHACL translations; the AxiomTranslationStep evidence field exists but nothing populates it, and s5'.epii.axiom_translation_history has no store to read. Building only that read method + the PiAxiomTranslationInspector would render an empty-forever surface. Honest completion requires the Pi axiom-translation PRODUCER (an S4 agentic capability doing multi-step model reasoning + a persisted store) built first — materially larger than the widget, unlike the self-contained 25.T25.13."
+        },
+        {
+          "at": "2026-07-21T23:21:28.506Z",
+          "text": "Built the real 26.T26.14 axiom-translation slice (reopened false close — producer/gateway/inspector did not exist). S0: gate::epii_axiom runs the DR-B-2 chain English->Formal->OWL->SHACL one model invocation per step over the PI harness (pi_harness_invoke injectable seam, 3 hermetic Rust tests), persists sessions under state_root, exposes s5'.epii.axiom_translate + axiom_translation_history (parity + T9 route-ownership cross-walk registered). Carrier: strict axiomTranslation.ts parser (7) + four-column PiAxiomTranslationInspector (4) on the cosmic Axiom tab. UF proof m5-axiom-translation.spec.ts renders a real seeded session over the spawned gateway (1/1 isolated). Full app-ui-flow GREEN 170s this session (61 specs incl the new one); app-test 967/0; honesty-lint clean; Rust 3/0. Regenerated cosmic + face-toggle VR baselines; sole transient gate red was the confirmed-flaky face-toggle(a) [30.T30.14 VR] under parallel load, green on a sibling full run.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/m5-axiom-translation.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/epii_axiom.rs",
+              "Body/M/pratibimba-app/src/panes/PiAxiomTranslationInspector.tsx"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 42 dirty files.",
@@ -24778,11 +24792,11 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-21T12:55:04.253Z",
-    "updatedAt": "2026-07-21T12:55:04.253Z",
+    "createdAt": "2026-07-21T23:20:12.088Z",
+    "updatedAt": "2026-07-21T23:20:12.088Z",
     "taskIds": [
-      "30.T30.14",
-      "24.T24.3",
+      "26.T26.14",
+      "14.T14.4",
       "24.T24.4",
       "24.T24.5"
     ],
@@ -24790,14 +24804,15 @@
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "30.T30.14": "in-session",
-      "24.T24.3": "in-session",
+      "26.T26.14": "in-session",
+      "14.T14.4": "in-session",
       "24.T24.4": "in-session",
       "24.T24.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

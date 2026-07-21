@@ -173,6 +173,32 @@ export default async function globalSetup(): Promise<void> {
     //     gate that fails honestly when Neo4j is down.
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
     const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
+
+    // 26.T26.14 — seed one real axiom-translation session into the epii store
+    // (the exact shape `gate::epii_axiom` persists) so the inspector's read path
+    // (s5'.epii.axiom_translation_history) has genuine data to render. The
+    // producer's model logic is proven separately by the Rust unit tests; this
+    // seed proves the read + four-column render honestly, without a live model.
+    const axiomStore = join(gatewayStateRoot, 'epii', 'axiom-translations');
+    mkdirSync(axiomStore, { recursive: true });
+    writeFileSync(
+        join(axiomStore, 'axiom-e2e-seed.json'),
+        JSON.stringify(
+            {
+                id: 'axiom-e2e-seed',
+                initiatingDispatchNodeId: 'e2e-dispatch',
+                steps: [
+                    { id: 'axiom-e2e-seed-step-0', fromForm: 'philosophical-english', toForm: 'formal-notation', inputText: 'All beings return to the ground.', outputText: '∀x (Being(x) → Returns(x, ground))', reasoningTrace: 'universally quantify the subject and name the return relation', verifiedBy: 'pi' },
+                    { id: 'axiom-e2e-seed-step-1', fromForm: 'formal-notation', toForm: 'owl', inputText: '∀x (Being(x) → Returns(x, ground))', outputText: '<owl:Class rdf:about="#Being"><rdfs:subClassOf><owl:Restriction owl:onProperty="#returnsTo" owl:someValuesFrom="#Ground"/></rdfs:subClassOf></owl:Class>', reasoningTrace: 'map the predicate to an OWL class restriction on returnsTo', verifiedBy: 'pi' },
+                    { id: 'axiom-e2e-seed-step-2', fromForm: 'owl', toForm: 'shacl', inputText: '<owl:Class rdf:about="#Being"/>', outputText: '<sh:NodeShape sh:targetClass="#Being"><sh:property><sh:path>#returnsTo</sh:path><sh:minCount>1</sh:minCount></sh:property></sh:NodeShape>', reasoningTrace: 'derive a SHACL shape enforcing the return constraint', verifiedBy: 'pi' }
+                ],
+                verifiedBy: 'pending'
+            },
+            null,
+            2
+        )
+    );
+
     const gatewayNow = join(vaultRoot, 'Empty', 'Present', 'e2e', 'now.md');
     const autoresearchConfig = join(gatewayHome, '.epi-logos', 'config.toml');
     const gatewayIdentity = join(gatewayHome, '.epi-logos', 'nara', 'profile.json');

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-21T22:25:31.556Z",
+ "generatedAt": "2026-07-21T23:13:38.253Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 276,
-  "present": 95,
-  "absent": 181,
+  "present": 96,
+  "absent": 180,
   "unknown": 0
  },
  "methods": [
@@ -1500,9 +1500,9 @@
   {
    "method": "s5'.epii.axiom_translation_history",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "s5'.epii.deposit",

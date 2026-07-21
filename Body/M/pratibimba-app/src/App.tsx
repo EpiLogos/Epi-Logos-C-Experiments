@@ -53,6 +53,7 @@ import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
 import { TransformContainersPane } from './panes/TransformContainersPane';
 import { M4LogosCyclePane } from './panes/M4LogosCyclePane';
+import { PiAxiomTranslationInspector } from './panes/PiAxiomTranslationInspector';
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
 import { CompositionDispatchTracePane } from './panes/omni/CompositionDispatchTracePane';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
@@ -234,7 +235,8 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
                     { type: 'tab', name: 'M1 Surface', component: 'm1SurfaceComposed', enableClose: false },
                     { type: 'tab', name: 'Pentadic', component: 'm3PentadicInspector', enableClose: false },
                     { type: 'tab', name: 'M3 Inspectors', component: 'm3Inspectors', enableClose: false },
-                    { type: 'tab', name: 'M5 EBM', component: 'm5Ebm', enableClose: false }
+                    { type: 'tab', name: 'M5 EBM', component: 'm5Ebm', enableClose: false },
+                    { type: 'tab', name: 'Axiom', component: 'piAxiomTranslation', enableClose: false }
                 ]
             }
         ]
@@ -385,6 +387,8 @@ function factory(node: TabNode) {
             return <TransformContainersPane />;
         case 'logosCycle':
             return <M4LogosCyclePane />;
+        case 'piAxiomTranslation':
+            return <PiAxiomTranslationInspector />;
         case 'journalTimeline':
             return <JournalTimelinePane />;
         case 'dayCalendar':

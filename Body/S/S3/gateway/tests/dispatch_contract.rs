@@ -697,6 +697,12 @@ mod t9_route_ownership_cross_walk {
                 "s5'.epii.kairos.context"
                     | "s5'.epii.user.orientation"
                     | "s5'.epii.pratibimba.status"
+                    // 26.T26.14 — the Pi axiom-translation producer + history read
+                    // route through the same s5'.epii.* dispatch/parity family
+                    // (not core-protocol first-class); the producer authority is
+                    // epi-cli gate::epii_axiom over the PI harness.
+                    | "s5'.epii.axiom_translate"
+                    | "s5'.epii.axiom_translation_history"
             )
     }
 

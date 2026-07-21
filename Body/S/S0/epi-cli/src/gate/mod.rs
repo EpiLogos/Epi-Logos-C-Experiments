@@ -15,6 +15,7 @@ pub mod cron;
 pub mod day_start;
 pub mod devices;
 pub mod epii;
+pub mod epii_axiom;
 pub mod events;
 pub mod gnostic;
 pub mod graph;
