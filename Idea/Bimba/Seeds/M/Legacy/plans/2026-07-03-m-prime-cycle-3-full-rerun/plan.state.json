@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-21T12:52:05.589Z",
+  "updatedAt": "2026-07-21T13:33:17.792Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12521,8 +12521,8 @@
       "blocker": null
     },
     "25.T25.13": {
-      "status": "done",
-      "updatedAt": "2026-07-21T12:51:47.525Z",
+      "status": "review",
+      "updatedAt": "2026-07-21T13:12:17.258Z",
       "claimedAt": "2026-07-20T11:40:43.923Z",
       "completedAt": "2026-07-21T12:51:47.525Z",
       "evidence": [
@@ -12543,12 +12543,16 @@
               "verify-all gate GREEN: app-ui-flow(59)+app-smoke+live-wire+gateway(96)+gateway-methods"
             ]
           }
+        },
+        {
+          "at": "2026-07-21T13:12:17.258Z",
+          "text": "Reopened false close: tranche acceptance requires nara.logos.advance/regress RPCs writing contemplative artifacts plus an M4LogosChip 6-stage progression widget. The gateway exposes only nara.logos.run/status/stage (gate/nara.rs:608-614); no advance/regress RPC and no logos-cycle widget landed in the pratibimba-app carrier; no UF proof. Prior done mark cited the shared UF gate, not this deliverable. Returns to review until the advance/regress substrate + widget land."
         }
       ],
       "notes": "claimed with --allow-dirty over 42 dirty files.",
       "owner": "codex-mdev-2513-logos-cycle",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-20T11:43:37.644Z",
+      "heartbeatAt": "2026-07-21T13:12:17.258Z",
       "runId": "20260720T114043Z-25-T25.13",
       "worktree": null,
       "blocker": null
@@ -12980,8 +12984,8 @@
       "blocker": null
     },
     "26.T26.14": {
-      "status": "done",
-      "updatedAt": "2026-07-21T12:52:02.549Z",
+      "status": "review",
+      "updatedAt": "2026-07-21T13:33:17.768Z",
       "claimedAt": "2026-07-20T11:40:51.992Z",
       "completedAt": "2026-07-21T12:52:02.549Z",
       "evidence": [
@@ -13002,12 +13006,16 @@
               "verify-all gate GREEN: app-ui-flow(59)+app-smoke+live-wire+gateway(96)+gateway-methods"
             ]
           }
+        },
+        {
+          "at": "2026-07-21T13:33:17.768Z",
+          "text": "Reopened false close: tranche requires a live gateway read s5'.epii.axiom_translation_history feeding a PiAxiomTranslationInspector, but no such gateway method is registered under Body/S (only an unrelated axiom_translation_gap capacity string exists) and no inspector landed in the pratibimba-app carrier. Prior done mark cited the shared UF gate, not this deliverable. Returns to review until the axiom_translation_history producer + inspector land."
         }
       ],
       "notes": "claimed with --allow-dirty over 42 dirty files.",
       "owner": "codex-mdev-2614-axiom",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-20T11:43:55.352Z",
+      "heartbeatAt": "2026-07-21T13:33:17.768Z",
       "runId": "20260720T114051Z-26-T26.14",
       "worktree": null,
       "blocker": null
@@ -14443,11 +14451,26 @@
       "blocker": null
     },
     "30.T30.14": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-21T13:32:54.866Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-21T13:32:54.866Z",
+      "evidence": [
+        {
+          "at": "2026-07-21T13:32:54.866Z",
+          "text": "Authored the carrier visual-regression baseline CATALOG.md (4 committed chrome baselines + 2 in-run frozen-tick proofs) plus its fixture-presence/catalog-completeness correspondence gate (src/ui/visualRegressionCatalog.test.ts asserting exact catalog<->PNG bijection and snapshot<->toHaveScreenshot binding), honestly recording DR-WC-DL-5 as PROPOSED and the carrier divergence from its 30-raw-baseline design. Own UF proof visual-regression.spec.ts 6/6 green in isolation; app-test 944/0; honesty-lint clean. The sole shared app-ui-flow red was the unrelated 24.T24.17 m3-renderer-modes generation-counter race, shown flaky by a clean isolated pass (7.4s).",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/visual-regression.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/fixtures/visual-regression/CATALOG.md",
+              "Body/M/pratibimba-app/src/ui/visualRegressionCatalog.test.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -18735,8 +18758,8 @@
       "blocker": null
     },
     "14.T14.4": {
-      "status": "done",
-      "updatedAt": "2026-07-21T12:52:05.567Z",
+      "status": "review",
+      "updatedAt": "2026-07-21T13:12:17.029Z",
       "claimedAt": "2026-07-20T17:04:04.021Z",
       "completedAt": "2026-07-21T12:52:05.567Z",
       "evidence": [
@@ -18765,12 +18788,16 @@
               "verify-all gate GREEN: app-ui-flow(59)+app-smoke+live-wire+gateway(96)+gateway-methods"
             ]
           }
+        },
+        {
+          "at": "2026-07-21T13:12:17.029Z",
+          "text": "Reopened false close: cycle-close SEAL closes only at 0 open release gates, but release-gates.mjs reports 10/12 CLOSED with G3 (UX-claim classification) + G5 (CODE-PENDING closing tranches) still OPEN. The prior done mark cited the shared UF gate, not the seal's own 0-open acceptance. Returns to review until 12/12."
         }
       ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-144-cycle-audit",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-20T17:09:05.762Z",
+      "heartbeatAt": "2026-07-21T13:12:17.029Z",
       "runId": "20260720T170404Z-14-T14.4",
       "worktree": null,
       "blocker": null
@@ -24693,29 +24720,26 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-20T20:40:21.080Z",
-    "updatedAt": "2026-07-20T20:40:21.080Z",
+    "createdAt": "2026-07-21T12:55:04.253Z",
+    "updatedAt": "2026-07-21T12:55:04.253Z",
     "taskIds": [
-      "48.T48.7",
-      "02.T2.10",
-      "24.T24.20",
-      "33.T33.1",
-      "25.T25.11"
+      "30.T30.14",
+      "24.T24.3",
+      "24.T24.4",
+      "24.T24.5"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "48.T48.7": "in-session",
-      "02.T2.10": "in-session",
-      "24.T24.20": "in-session",
-      "33.T33.1": "in-session",
-      "25.T25.11": "in-session"
+      "30.T30.14": "in-session",
+      "24.T24.3": "in-session",
+      "24.T24.4": "in-session",
+      "24.T24.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }
