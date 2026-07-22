@@ -227,6 +227,15 @@ export default async function globalSetup(): Promise<void> {
         'kairos',
         'current.json'
     );
+    // 25.T25.14 — the personal-coordinate identity-augment PRODUCER
+    // (`nara.identity.proposals.detect`) measures accumulated Q_activity drift
+    // against the #4.0 natal baseline, so it needs a persisted natal chart to
+    // build the real `PersonalIdentityProfile`. Seed a full 10-planet natal.json
+    // (the shape `from_kerykeion_json` consumes). This is honest environment
+    // setup — a real user HAS a natal chart — analogous to the profile.json /
+    // kairos current.json seeds above; with it present the ambient env badge
+    // reads calm/active (visual-panes asserts either state).
+    const gatewayNatal = join(gatewayHome, '.epi-logos', 'nara', 'kairos', 'natal.json');
     mkdirSync(dirname(autoresearchConfig), { recursive: true });
     mkdirSync(dirname(gatewayNow), { recursive: true });
     writeFileSync(
@@ -276,6 +285,21 @@ export default async function globalSetup(): Promise<void> {
             dominant_element: 2,
             active_decan: 1,
             active_tattva: 0
+        })
+    );
+    writeFileSync(
+        gatewayNatal,
+        JSON.stringify({
+            planets: Array.from({ length: 10 }, (_, planetId) => ({
+                planet_id: planetId,
+                degree: (12 + planetId * 27.5) % 360,
+                degree_anchor: Math.round((12 + planetId * 27.5) % 360),
+                retrograde: planetId === 3 || planetId === 6
+            })),
+            dominant_sign: 4,
+            dominant_element: 1,
+            active_decan: 2,
+            active_tattva: 1
         })
     );
     const gateway = spawn(EPI_BIN, ['gate', 'start', '--port', String(E2E_GATEWAY_PORT)], {

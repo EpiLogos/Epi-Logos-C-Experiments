@@ -175,17 +175,22 @@ pub const NARA_PASU_RPC_METHODS: [&str; 2] = ["nara.pasu.set", "nara.pasu.show"]
 /// rather than overloading the six-scalar `nara.pasu.set` key setter: that
 /// setter keeps its error-on-unknown-key contract, and a typed record array does
 /// not fit a `{key,value}` scalar shape. `nara.identity.proposals.*` wrap the
-/// portal-core `IdentityAugmentProposalAdapter` review state machine: `submit`
+/// portal-core `IdentityAugmentProposalAdapter` review state machine: `detect`
+/// is the REAL producer seam — it measures accumulated Q_activity drift against
+/// the natal identity via `PersonalResonance` and, only on drift below the
+/// tunable floor (`IDENTITY_AUGMENT_DRIFT_THRESHOLD`), SUBMITS a `Proposed`
+/// proposal; `submit`
 /// opens the lifecycle by creating a proposal at state `Proposed` (never touching
 /// Q_identity), `list` surfaces the pending views, and `decide` (accept|reject)
 /// moves it to a terminal review state. Only a separate, governed `applied`
-/// verdict mutates Q_identity, so NONE of `submit`/`list`/`decide` mutate identity
+/// verdict mutates Q_identity, so NONE of `detect`/`submit`/`list`/`decide` mutate identity
 /// — the apply step stays a separate governed path (UX 10.1).
 /// Like the other nara.* surfaces these resolve through the existing `nara.*`
 /// extension route → `S4S5DomainAdapter` (`extension_route`); declared here so
 /// gateway audits can assert the concrete write surface.
 pub const NARA_PASU_CONSENT_APPEND_METHOD: &str = "nara.pasu.consents.append";
-pub const NARA_IDENTITY_PROPOSAL_RPC_METHODS: [&str; 3] = [
+pub const NARA_IDENTITY_PROPOSAL_RPC_METHODS: [&str; 4] = [
+    "nara.identity.proposals.detect",
     "nara.identity.proposals.submit",
     "nara.identity.proposals.list",
     "nara.identity.proposals.decide",

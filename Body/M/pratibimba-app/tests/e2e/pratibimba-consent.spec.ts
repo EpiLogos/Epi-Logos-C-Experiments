@@ -9,7 +9,11 @@
  *   submitted over the wire via `nara.identity.proposals.submit` surfaces in the
  *   pane's pending list, is accepted through the M5' gate, and transitions to a
  *   terminal 'accepted' state (NEVER 'applied' — Q_identity untouched), proven by
- *   reading the persisted review-ledger bytes.
+ *   reading the persisted review-ledger bytes. A second test proves panel (c)
+ *   goes LIVE via the REAL producer: `nara.identity.proposals.detect` measures a
+ *   drifted accumulated Q_activity against the seeded natal identity and submits
+ *   a real Proposed proposal, which then surfaces in the pane and accepts to
+ *   terminal 'accepted' (never 'applied').
  * Public surface: Playwright personal-coordinate flow.
  * Does NOT own: the PASU write law (S0 pasu.rs), the proposal state machine
  *   (portal-core), the gateway dispatch (S3).
@@ -121,6 +125,66 @@ test('personal-coordinate pane persists a consent to PASU and round-trips an ide
     const persisted = JSON.parse(readFileSync(storePath, 'utf8')) as PersistedProposal[];
     const record = persisted.find(p => p.proposal_handle === proposalHandle);
     expect(record?.state, 'accepted proposal must be terminal-accepted').toBe('accepted');
+    expect(record?.applied_at, 'accept must NEVER apply — applied_at stays null').toBeNull();
+    expect(persisted.some(p => p.state === 'applied')).toBe(false);
+});
+
+test('detect PRODUCER surfaces a real drift proposal in panel (c) over the live wire', async ({
+    page
+}) => {
+    const state = runState();
+    const proposalHandle = `augment-detect-e2e-${Date.now().toString(36)}`;
+
+    // ── The REAL producer seam (over the wire) ───────────────────────────────
+    // Drive `nara.identity.proposals.detect` with an accumulated Q_activity that
+    // has DRIFTED from the natal identity: [0,1,0,0] has a zero scalar component,
+    // so the activity-composed candidate resonates ≈ 0 with the natal q_identity
+    // — well below the drift floor. The gateway loads the SEEDED natal baseline
+    // (global-setup's natal.json), measures the drift via PersonalResonance, and
+    // SUBMITS a real Proposed proposal. THIS is the producer that makes panel (c)
+    // live in a live system (before this, the adapter had zero callers). Submit
+    // creates a Proposed proposal only — it never mutates Q_identity.
+    const detected = (await gatewayRpc('nara.identity.proposals.detect', {
+        q_activity: [0, 1, 0, 0],
+        proposal_handle: proposalHandle,
+        source_adapter_handle: 'adapter://m4/activity-drift-detector'
+    })) as { produced?: boolean; proposal?: ProposalView };
+    expect(detected?.produced, 'detect must produce a proposal on real drift').toBe(true);
+    expect(detected?.proposal?.proposalHandle, 'detect returned no proposalHandle').toBe(
+        proposalHandle
+    );
+    expect(detected?.proposal?.state, 'the produced proposal must be Proposed only').toBe('proposed');
+
+    // ── Mount the pane; panel (c) surfaces the PRODUCED proposal ─────────────
+    await page.goto('/');
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+
+    const activeFace = page.locator('.face-active');
+    await activeFace.locator('.flexlayout__tab_button', { hasText: 'Coordinate' }).click();
+
+    const pane = activeFace.getByTestId('pratibimba-coordinate-pane');
+    await expect(pane).toBeVisible();
+
+    const proposalsPanel = pane.getByTestId('identity-proposals-panel');
+    const row = proposalsPanel.getByTestId(`proposal-row-${proposalHandle}`);
+    await expect(row, 'the produced proposal did not surface in panel (c)').toBeVisible({
+        timeout: 15_000
+    });
+    await expect(row).toHaveAttribute('data-state', 'proposed');
+
+    // ── Accept through the M5' gate → terminal 'accepted', NEVER 'applied' ────
+    await row.getByTestId(`proposal-accept-${proposalHandle}`).click();
+    await expect(row).toBeHidden({ timeout: 15_000 });
+    await expect(proposalsPanel.getByTestId('proposals-notice')).toContainText(
+        `accepted ${proposalHandle}`
+    );
+
+    // Q_identity untouched: the produced proposal moved to 'accepted' (terminal
+    // review), NEVER 'applied' — apply is a separate governed path.
+    const storePath = join(state.gatewayStateRoot, 'nara', 'identity-proposals.json');
+    const persisted = JSON.parse(readFileSync(storePath, 'utf8')) as PersistedProposal[];
+    const record = persisted.find(p => p.proposal_handle === proposalHandle);
+    expect(record?.state, 'accepted produced proposal must be terminal-accepted').toBe('accepted');
     expect(record?.applied_at, 'accept must NEVER apply — applied_at stays null').toBeNull();
     expect(persisted.some(p => p.state === 'applied')).toBe(false);
 });

@@ -9,6 +9,22 @@ use crate::quaternion::{quat_mul, quat_normalize, Quaternion};
 
 pub const PERSONAL_RESONANCE_MAJOR_THRESHOLD: f32 = 2.0 / 3.0;
 
+/// Drift-detection alignment floor for identity-augment proposal production
+/// (M4' seed §2.M4-0' / §9: "Nara can learn from activity immediately, but it
+/// may only become identity through reviewed recognition"). Grounded in the
+/// `m4.resonance.major_threshold` pattern ([`PERSONAL_RESONANCE_MAJOR_THRESHOLD`],
+/// 2/3): when accumulated Q_activity resonates BELOW the major-resonance floor
+/// with the natal `q_identity`, the drift is significant enough to surface a
+/// *Proposed* identity augment (never a mutation) for M4-5' review.
+///
+/// ARCHITECT-TUNABLE: this is the schema default. A boundary consumer may inject
+/// the registry value (`m4.resonance.major_threshold`) — the detect producer
+/// accepts an optional `drift_threshold` override exactly as
+/// [`PersonalResonance::from_quaternions_with_threshold`] injects the registry
+/// value. Flagged for Architect tuning: the exact drift floor is a product/taste
+/// decision at the M4' review boundary, not a derived constant.
+pub const IDENTITY_AUGMENT_DRIFT_THRESHOLD: f32 = PERSONAL_RESONANCE_MAJOR_THRESHOLD;
+
 /// DR-M4-2 axis_order = [w=Earth, x=Fire, y=Water, z=Air].
 pub const CL42_PERSONAL_AXIS_ORDER: [Cl42AxisBinding; 4] = [
     Cl42AxisBinding {
@@ -542,6 +558,58 @@ pub fn compose_personal_quaternion(
     ))
 }
 
+/// Pure identity-augment PRODUCER: measure accumulated Q_activity drift against
+/// the natal `q_identity` and, ONLY when the drift exceeds the threshold
+/// (resonance BELOW `drift_threshold`), return a `Proposed` proposal whose
+/// candidate is the activity-composed quaternion. Returns `None` when the
+/// activity is still aligned.
+///
+/// The candidate is `profile.composed_quaternion(q_transit, q_activity)` — the
+/// existing read-only composition law (`q_personal · q_transit · q_activity`),
+/// NOT a q_identity write. Drift is `PersonalResonance::score` (the quaternion
+/// double-cover-invariant `|signed_dot|`, so a shadow inversion `q ~ -q` reads as
+/// aligned, correctly): low score = high drift.
+///
+/// INVARIANT (structural): takes `&PersonalIdentityProfile` (shared ref) and
+/// NEVER calls [`PersonalIdentityProfile::apply_identity_augment`] — it cannot
+/// mutate `q_identity`. Emitting a `Proposed` proposal is the ONLY effect;
+/// identity changes only through the governed
+/// [`IdentityAugmentProposalAdapter::apply`] (`applied` verdict) downstream of a
+/// human accept. `created_at` is caller-supplied because a pure producer holds
+/// no clock. An empty handle/summary/source yields `None` (the producer never
+/// emits a malformed proposal).
+#[allow(clippy::too_many_arguments)]
+pub fn detect_identity_augment_from_activity(
+    profile: &PersonalIdentityProfile,
+    q_activity: Quaternion,
+    q_transit: Quaternion,
+    drift_threshold: f32,
+    proposal_handle: impl Into<String>,
+    source_adapter_handle: impl Into<String>,
+    created_at: impl Into<String>,
+) -> Option<IdentityAugmentProposal> {
+    // The activity candidate: q_personal · q_transit · q_activity (read-only).
+    let candidate = profile.composed_quaternion(q_transit, q_activity);
+    // Drift = resonance BELOW the alignment floor vs the stable natal identity.
+    let resonance = PersonalResonance::from_quaternions(candidate, profile.q_identity);
+    if resonance.score >= drift_threshold {
+        // Still aligned — activity has not drifted enough to propose an augment.
+        return None;
+    }
+    let summary = format!(
+        "Accumulated Q_activity drifted from the natal identity: resonance {:.3} below the drift floor {:.3}. Proposing a #4.0 identity augment for M4-5' review (proposed -> reviewed -> accepted|rejected -> applied).",
+        resonance.score, drift_threshold
+    );
+    IdentityAugmentProposal::proposed(
+        proposal_handle,
+        summary,
+        source_adapter_handle,
+        created_at,
+        candidate,
+    )
+    .ok()
+}
+
 pub fn decompose_bioquaternion(q_composed: Quaternion) -> (Quaternion, Quaternion) {
     let q_b = quat_normalize(q_composed);
     let q_p = [q_b[0], -q_b[1], -q_b[2], -q_b[3]];
@@ -966,6 +1034,107 @@ mod proposal_lifecycle {
         for (actual, expected) in actual.iter().zip(expected.iter()) {
             assert!((actual - expected).abs() < 1e-6, "{actual} != {expected}");
         }
+    }
+}
+
+#[cfg(test)]
+mod identity_augment_detection {
+    use super::*;
+
+    const COMPLETE_NATAL: &str = include_str!("../tests/fixtures/kerykeion_natal_complete.json");
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    const NATAL_HANDLE: &str = "protected://nara/kairos/natal/detect";
+    const IDENTITY_TRANSIT: Quaternion = [1.0, 0.0, 0.0, 0.0];
+
+    fn profile() -> PersonalIdentityProfile {
+        PersonalIdentityProfile::from_kerykeion_json(NATAL_HANDLE, IDENTITY_HASH, COMPLETE_NATAL)
+            .expect("fixture derives a protected identity")
+    }
+
+    fn assert_approx_quat(actual: [f32; 4], expected: [f32; 4]) {
+        for (actual, expected) in actual.iter().zip(expected.iter()) {
+            assert!((actual - expected).abs() < 1e-6, "{actual} != {expected}");
+        }
+    }
+
+    #[test]
+    fn drift_threshold_default_is_the_major_resonance_floor() {
+        assert_eq!(
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            PERSONAL_RESONANCE_MAJOR_THRESHOLD
+        );
+    }
+
+    #[test]
+    fn drifted_activity_produces_a_proposed_proposal_without_mutating_identity() {
+        let profile = profile();
+        let before_identity = profile.q_identity;
+        let before_personal = profile.q_personal;
+
+        // A zero-scalar q_activity drives the composed candidate to near-
+        // orthogonal resonance with the natal identity (score approx 0), well
+        // below the drift floor (2/3). Property: with identity transit and
+        // q_personal == normalize(q_identity), score == |q_activity[0]|.
+        let q_activity = [0.0, 1.0, 0.0, 0.0];
+        let proposal = detect_identity_augment_from_activity(
+            &profile,
+            q_activity,
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "identity-proposal://activity-drift",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:00:00.000Z",
+        )
+        .expect("drifted activity must produce a proposal");
+
+        assert_eq!(proposal.state, IdentityAugmentProposalState::Proposed);
+        assert_eq!(
+            proposal.source_adapter_handle,
+            "adapter://m4/activity-drift-detector"
+        );
+        // The candidate IS the activity-composed quaternion, never the identity.
+        let expected_candidate = profile.composed_quaternion(IDENTITY_TRANSIT, q_activity);
+        assert_approx_quat(proposal.q_identity_candidate(), expected_candidate);
+        assert_ne!(proposal.q_identity_candidate(), profile.q_identity);
+
+        // The detector NEVER mutates q_identity / q_personal (structural: &self).
+        assert_eq!(profile.q_identity, before_identity);
+        assert_eq!(profile.q_personal, before_personal);
+    }
+
+    #[test]
+    fn aligned_activity_produces_no_proposal() {
+        let profile = profile();
+        let before_identity = profile.q_identity;
+
+        // Identity activity + identity transit → composed == q_personal ==
+        // q_identity; resonance approx 1.0 >= drift floor → no proposal.
+        let none = detect_identity_augment_from_activity(
+            &profile,
+            IDENTITY_TRANSIT,
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "identity-proposal://aligned",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:01:00.000Z",
+        );
+        assert!(none.is_none(), "aligned activity must not propose an augment");
+        assert_eq!(profile.q_identity, before_identity);
+    }
+
+    #[test]
+    fn empty_handle_yields_none_never_a_malformed_proposal() {
+        let profile = profile();
+        let none = detect_identity_augment_from_activity(
+            &profile,
+            [0.0, 1.0, 0.0, 0.0],
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "   ",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:02:00.000Z",
+        );
+        assert!(none.is_none());
     }
 }
 

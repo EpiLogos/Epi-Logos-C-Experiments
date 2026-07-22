@@ -10,10 +10,15 @@ use support::TestGatewayClient;
 async fn chat_send_inject_abort_and_history_use_real_transcript() {
     let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
+    // `__FAKE_PI_SLOW__` makes the fake-pi run sleep (common/mod.rs) so the run
+    // is still ACTIVE when chat.abort fires — abort_chat_run only writes the
+    // abort transcript entry for a live run, so a fast-completing default run
+    // raced the abort and flaked this assertion. chat.abort kills the run before
+    // the sleep elapses, so there is no time penalty.
     let send = client
         .request(
             "chat.send",
-            json!({"sessionKey":"agent:main:main","message":"hello from chat.send"}),
+            json!({"sessionKey":"agent:main:main","message":"hello from chat.send __FAKE_PI_SLOW__"}),
         )
         .await
         .unwrap();
@@ -394,6 +399,22 @@ async fn sessions_compact_deposits_session_summary_evidence_for_epii_review() {
         .await
         .unwrap();
 
+    // The async fake-pi run spawned by chat.send appends its response entry to
+    // the transcript AFTER chat.send returns; without settling it here that
+    // append races sessions.compact and the count is nondeterministic (the same
+    // race sessions_rpc_lifecycle guards). Wait for the run to go idle so the
+    // transcript is complete before compacting.
+    for _ in 0..100 {
+        let state = client
+            .request("sessions.resolve", json!({"session":"agent:main:main"}))
+            .await
+            .unwrap();
+        if state["runState"]["idleState"] == "idle" {
+            break;
+        }
+        tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+    }
+
     let compact = client
         .request("sessions.compact", json!({"sessionKey":"agent:main:main"}))
         .await
@@ -414,9 +435,13 @@ async fn sessions_compact_deposits_session_summary_evidence_for_epii_review() {
         compact["summary"]["evidence"]["session"]["canonicalKey"],
         "agent:main:main"
     );
+    // chat.send seeds the user message AND its fake-pi run appends one response
+    // entry (2), plus the injected assistant message = 3. messageCount counts
+    // every transcript entry (preview/compact convention; sessions_rpc_lifecycle
+    // likewise expects 2 for one settled chat.send).
     assert_eq!(
         compact["summary"]["evidence"]["transcript"]["messageCount"],
-        2
+        3
     );
     assert!(compact["summary"]["evidence"]["sessionTree"]["sessions"]
         .as_array()

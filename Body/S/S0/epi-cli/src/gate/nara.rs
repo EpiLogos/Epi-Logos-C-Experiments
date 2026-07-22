@@ -7,7 +7,8 @@ use std::path::{Path, PathBuf};
 
 use chrono::Utc;
 use portal_core::personal_identity::{
-    IdentityAugmentProposal, IdentityAugmentProposalState, IdentityAugmentReviewVerdict,
+    detect_identity_augment_from_activity, IdentityAugmentProposal, IdentityAugmentProposalState,
+    IdentityAugmentReviewVerdict, PersonalIdentityProfile, IDENTITY_AUGMENT_DRIFT_THRESHOLD,
 };
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
@@ -702,6 +703,9 @@ pub fn dispatch_nara_with_state_root(
         // (the natal-chart raw body never transits — only its path string).
         "nara.pasu.show" => show_pasu_record(peer_is_loopback),
         "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
+        "nara.identity.proposals.detect" => {
+            detect_identity_proposal(state_root, peer_is_loopback, params)
+        }
         "nara.identity.proposals.submit" => {
             submit_identity_proposal(state_root, peer_is_loopback, params)
         }
@@ -788,6 +792,25 @@ fn parse_quaternion_candidate(params: &Value) -> [f32; 4] {
     out
 }
 
+/// Parse a REQUIRED-shaped `[f32; 4]` quaternion param under any of `keys`,
+/// returning `None` when absent or malformed (unlike [`parse_quaternion_candidate`]
+/// which defaults to identity). The detect producer uses this to distinguish
+/// "no accumulated q_activity supplied" (honest degradation) from a real value.
+fn parse_quaternion_param(params: &Value, keys: &[&str]) -> Option<[f32; 4]> {
+    let raw = keys
+        .iter()
+        .find_map(|key| params.get(*key))
+        .and_then(|value| value.as_array())?;
+    if raw.len() != 4 {
+        return None;
+    }
+    let mut out = [0.0f32; 4];
+    for (index, item) in raw.iter().enumerate() {
+        out[index] = item.as_f64()? as f32;
+    }
+    Some(out)
+}
+
 /// `nara.identity.proposals.submit` (25.T25.14): open the identity-augment
 /// lifecycle by creating a NEW proposal in the review store at state `Proposed`.
 /// This is the SUBMISSION SEAM a producer/agent (or the e2e loop) drives so that
@@ -856,6 +879,157 @@ fn submit_identity_proposal(
     .map_err(|err| ("nara-error".to_owned(), err))?;
 
     serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+/// Load the current PROTECTED-LOCAL personal identity profile — the #4.0 natal
+/// baseline the drift detector measures accumulated activity against. This is the
+/// canonical construction path (per M4-ARCHITECTURE §7.5: PASU natal chart →
+/// `KerykeionResult` → `PersonalIdentityProfile::from_kerykeion_json`). Honest
+/// degradation: `Ok(None)` when either the persisted natal chart or the local
+/// PASU identity is absent — the producer then emits nothing rather than
+/// fabricating a baseline.
+fn load_personal_identity_profile() -> Result<Option<PersonalIdentityProfile>, String> {
+    let Some(natal) = crate::nara::kairos::load_natal()? else {
+        return Ok(None);
+    };
+    let Some(profile_json) = identity::load_profile()? else {
+        return Ok(None);
+    };
+    let hash = identity::blake3_identity_hash(&profile_json);
+    let identity_hash: String = hash.iter().map(|byte| format!("{byte:02x}")).collect();
+    let natal_json =
+        serde_json::to_string(&natal).map_err(|err| format!("re-serialize natal chart: {err}"))?;
+    PersonalIdentityProfile::from_kerykeion_json(
+        "protected://nara/kairos/natal/identity-augment-detect",
+        identity_hash,
+        &natal_json,
+    )
+    .map(Some)
+    .map_err(|err| err.to_string())
+}
+
+/// `nara.identity.proposals.detect` (25.T25.14): the REAL identity-augment
+/// PRODUCER seam that makes panel (c) live in a live system. Given accumulated
+/// Q_activity (the honest driver = the `apply_pattern_packet_chain` /
+/// vama-shakti `QActivityAccumulator` output, supplied as a param because no
+/// per-user Q_activity is persisted for the personal profile), it loads the natal
+/// identity baseline, measures drift via `PersonalResonance`, and — ONLY when the
+/// accumulated activity has drifted below the tunable alignment floor — SUBMITS a
+/// `Proposed` identity-augment proposal into the SAME review store that
+/// `list`/`decide` read. It NEVER mutates Q_identity (the detector holds a shared
+/// profile ref; only the governed `applied` verdict mutates identity, downstream
+/// of a human accept). Aligned activity produces nothing (`produced:false`).
+///
+/// AUTO-TRIGGER (flagged for the Architect): the intended AUTOMATIC firing point
+/// is the personal activity checkpoint — when `apply_pattern_packet_chain` yields
+/// a fresh accumulated Q_activity at session-activity close. That hook is NOT
+/// wired here on purpose: no existing per-user Q_activity accumulator is threaded
+/// through `nara.session_close` today (session-close carries the protein/codon
+/// PatternPacket, not the personal q_activity trajectory), and fabricating one
+/// would invent drift signal. This RPC is the genuine producer; wiring the
+/// auto-trigger is a separate, Architect-owned contract change on the
+/// session-close seam.
+fn detect_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.detect requires a loopback peer".to_owned(),
+        ));
+    }
+    let profile = match load_personal_identity_profile() {
+        Ok(Some(profile)) => profile,
+        Ok(None) => {
+            return Ok(json!({
+                "produced": false,
+                "reason": "no protected-local identity baseline (natal chart + PASU identity) available"
+            }));
+        }
+        Err(err) => return Err(("nara-error".to_owned(), err)),
+    };
+    detect_identity_proposal_core(&identity_proposal_store_path(state_root), &profile, params)
+}
+
+/// The env-free core of [`detect_identity_proposal`]: given a loaded profile +
+/// review store, measure drift and submit a `Proposed` proposal on drift. Split
+/// out so the produces/submits/lists/identity-untouched invariants are unit
+/// testable without seeding process-global env (`EPI_NARA_HOME`, natal.json).
+fn detect_identity_proposal_core(
+    store_path: &Path,
+    profile: &PersonalIdentityProfile,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    // Accumulated Q_activity is REQUIRED — without it there is no drift to
+    // measure and the producer degrades honestly.
+    let Some(q_activity) = parse_quaternion_param(params, &["q_activity", "qActivity"]) else {
+        return Ok(json!({
+            "produced": false,
+            "reason": "no accumulated q_activity supplied (expected [w,x,y,z]); nothing to measure drift against"
+        }));
+    };
+    // q_transit is optional — default identity (no transit perturbation).
+    let q_transit =
+        parse_quaternion_param(params, &["q_transit", "qTransit"]).unwrap_or([1.0, 0.0, 0.0, 0.0]);
+    // Tunable drift floor (mirrors the resonance-threshold injection pattern);
+    // defaults to the schema constant flagged for Architect tuning.
+    let drift_threshold = opt_f32(params, "drift_threshold")
+        .or_else(|| opt_f32(params, "driftThreshold"))
+        .unwrap_or(IDENTITY_AUGMENT_DRIFT_THRESHOLD);
+
+    let created_at = opt_str(params, "created_at")
+        .or_else(|| opt_str(params, "createdAt"))
+        .unwrap_or_else(|| Utc::now().to_rfc3339());
+    let source_adapter_handle = opt_str(params, "source_adapter_handle")
+        .or_else(|| opt_str(params, "sourceAdapterHandle"))
+        .unwrap_or_else(|| "adapter://m4/activity-drift-detector".to_owned());
+    let proposal_handle = opt_str(params, "proposal_handle")
+        .or_else(|| opt_str(params, "proposalHandle"))
+        .unwrap_or_else(|| {
+            format!(
+                "identity-proposal://activity-drift/{}",
+                Utc::now().timestamp_millis()
+            )
+        });
+
+    let Some(proposal) = detect_identity_augment_from_activity(
+        profile,
+        q_activity,
+        q_transit,
+        drift_threshold,
+        proposal_handle,
+        source_adapter_handle,
+        created_at,
+    ) else {
+        return Ok(json!({
+            "produced": false,
+            "reason": "accumulated activity is still aligned with the natal identity; no drift proposal"
+        }));
+    };
+
+    let view = proposal.view();
+    // Persist into the SAME review store `list`/`decide` read, so the produced
+    // proposal surfaces in panel (c). Candidate = the activity-composed
+    // quaternion (never a q_identity write).
+    let persisted = crate::nara::identity_proposals::PersistedProposal {
+        proposal_handle: proposal.proposal_handle.clone(),
+        state: IdentityAugmentProposalState::Proposed,
+        summary: proposal.summary.clone(),
+        source_adapter_handle: proposal.source_adapter_handle.clone(),
+        created_at: proposal.created_at.clone(),
+        reviewed_at: None,
+        decided_at: None,
+        applied_at: None,
+        q_identity_candidate: proposal.q_identity_candidate(),
+    };
+    crate::nara::identity_proposals::submit_proposal(store_path, persisted)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    let view_value =
+        serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    Ok(json!({ "produced": true, "proposal": view_value }))
 }
 
 /// `nara.identity.proposals.list`: the pending (proposed|reviewed) review views.
@@ -1070,4 +1244,100 @@ fn active_pasu_scope(method: &str) -> Result<String, (String, String)> {
         })?;
     let hash = identity::blake3_identity_hash(&profile);
     Ok(hash.iter().map(|byte| format!("{byte:02x}")).collect())
+}
+
+#[cfg(test)]
+mod identity_augment_detect_tests {
+    use super::*;
+    use portal_core::personal_identity::PersonalIdentityProfile;
+
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+
+    /// A complete 10-planet natal chart JSON (the shape `from_kerykeion_json`
+    /// consumes). The specific degrees do not matter to the drift proof: with an
+    /// identity transit, resonance score == |q_activity[0]| for ANY unit natal
+    /// identity, so [0,1,0,0] always drifts and [1,0,0,0] always aligns.
+    fn natal_json() -> String {
+        let planets: Vec<String> = (0..10)
+            .map(|id| {
+                format!(
+                    r#"{{"planet_id":{id},"name":"P{id}","degree":{deg},"retrograde":false}}"#,
+                    deg = (15.0 + id as f32 * 31.5) % 360.0
+                )
+            })
+            .collect();
+        format!(r#"{{"planets":[{}]}}"#, planets.join(","))
+    }
+
+    fn fixture_profile() -> PersonalIdentityProfile {
+        PersonalIdentityProfile::from_kerykeion_json(
+            "protected://nara/kairos/natal/test",
+            IDENTITY_HASH,
+            &natal_json(),
+        )
+        .expect("fixture natal derives a protected identity")
+    }
+
+    fn temp_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-store-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
+    #[test]
+    fn detect_produces_submits_on_drift_and_appears_in_list_without_touching_identity() {
+        let profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        let store = temp_store();
+        let params = json!({
+            "q_activity": [0.0, 1.0, 0.0, 0.0],
+            "proposal_handle": "identity-proposal://drift-test"
+        });
+
+        let out = detect_identity_proposal_core(&store, &profile, &params).expect("detect ok");
+        assert_eq!(out["produced"], json!(true));
+        assert_eq!(
+            out["proposal"]["proposalHandle"],
+            json!("identity-proposal://drift-test")
+        );
+        assert_eq!(out["proposal"]["state"], json!("proposed"));
+
+        // It surfaces in the SAME store `list` reads (panel c).
+        let pending = crate::nara::identity_proposals::list_pending(&store).expect("list pending");
+        assert!(pending
+            .iter()
+            .any(|view| view.proposal_handle == "identity-proposal://drift-test"));
+
+        // Identity is untouched by the producer.
+        assert_eq!(profile.q_identity, before_identity);
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_produces_nothing_when_activity_is_aligned() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        let params = json!({ "q_activity": [1.0, 0.0, 0.0, 0.0] });
+
+        let out = detect_identity_proposal_core(&store, &profile, &params).expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        assert!(crate::nara::identity_proposals::list_pending(&store)
+            .unwrap_or_default()
+            .is_empty());
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_degrades_honestly_when_no_activity_supplied() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        let out = detect_identity_proposal_core(&store, &profile, &json!({})).expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        assert!(out["reason"].is_string());
+        std::fs::remove_file(&store).ok();
+    }
 }
