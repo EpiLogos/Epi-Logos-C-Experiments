@@ -29,6 +29,7 @@ import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 import { M3IChingCastRibbon, parseIChingCastRibbonReceipt, type IChingCastRibbonReceipt } from './m3IChingCastRibbon';
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
+import { M3WalkNavigator } from './M3WalkNavigator';
 import { useProvenanceStore } from '../state/stores';
 import {
     M3ProfileTickProvider,
@@ -229,6 +230,9 @@ function M3InspectorsSurface() {
             />
             <M3PentadicRelationInspector mode="full" view={pentadicView} />
             <M3IChingCastRibbon receipt={ichingReceipt} pending={ichingPending} error={ichingError} onCast={castIChing} />
+            <M3WalkNavigator
+                onAdvance={(walkId, direction) => services.walkNavigation.advance(walkId, direction)}
+            />
 
             <div className="m3-inspector-summons" data-testid="m3-inspector-summons">
                 {M3_INSPECTOR_ORDER.map(id => (

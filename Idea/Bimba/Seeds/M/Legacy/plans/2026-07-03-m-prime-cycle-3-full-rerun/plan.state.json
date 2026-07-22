@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T01:05:56.357Z",
+  "updatedAt": "2026-07-22T01:27:03.632Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11809,21 +11809,37 @@
       "blocker": null
     },
     "24.T24.4": {
-      "status": "pending",
-      "updatedAt": "2026-07-21T21:37:37.022Z",
-      "claimedAt": "2026-07-21T13:58:01.233Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-22T01:27:03.609Z",
+      "claimedAt": "2026-07-22T01:09:41.475Z",
+      "completedAt": "2026-07-22T01:27:03.609Z",
       "evidence": [
         {
           "at": "2026-07-21T21:37:37.022Z",
           "text": "Unclaimed: pivoting to a ledger integrity audit of the batch-close commits per Architect direction; 24.4 remains a spec-ahead honest-pending build pending Wave-B WC-M3-SA-4 (cosmicClock.walks) + WC-M3-SA-6 (s3.world_clock.walk.advance)."
+        },
+        {
+          "at": "2026-07-22T01:27:03.609Z",
+          "text": "M3WalkNavigator landed spec-ahead: 9 lanes from a provenance-stated TS mirror of kernel portal-core WalkType (labels + step_count [360,24,12,12,36,64,9,4,384]), guarded by a cross-check test that reads types.rs and red-proofs on any drift. Live currentStep + advance are Wave-B substrate owned elsewhere (cosmicClock.walks=WC-M3-SA-4 and s3.world_clock.walk.advance=WC-M3-SA-6, both absent): rendered honest-pending via BridgeReadinessBadge (bridge_unavailable) + per-lane pending-profile-field:cosmicClock.walks; advance against the unimplemented RPC surfaces unavailable/'not yet implemented' with the e2e asserting NO fake success. No Math.random, no fabricated steps, no Frame/Operator 18-aperture branch. UF proof m3-walk-navigator.spec.ts + 24.T24.3 lens-switcher regression green in isolation over the real gateway; scoped node gate PASS.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/m3-walk-navigator.spec.ts (1 pass, real gateway) + m3-lens-switcher regression (1 pass) + vitest src/panes/m3WalkTypes.test.ts (7 pass, kernel cross-check red-proofed)",
+            "exitCode": 0,
+            "testsPassed": 9,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M3WalkNavigator.tsx",
+              "Body/M/pratibimba-app/src/panes/m3WalkTypes.ts",
+              "Body/M/pratibimba-app/src/panes/m3WalkTypes.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/m3-walk-navigator.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "opus-mdev-ctrl-0721",
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-21T13:58:01.233Z",
-      "runId": "20260721T135801Z-24-T24.4",
+      "heartbeatAt": "2026-07-22T01:09:41.475Z",
+      "runId": "20260722T010941Z-24-T24.4",
       "worktree": null,
       "blocker": null
     },
@@ -14203,7 +14219,7 @@
       "evidence": [
         {
           "at": "2026-07-22T01:05:56.333Z",
-          "text": "Composition pentadic-trace wiring landed: composition.pentadic_trace.advance (15th event) + useCompositionPentadicTraceEvents (fires only on real trace-tick change, red-proofed) + aggregatePentadicTraceReadiness across both slots (reuses PentadicOverlayState, no forked taxonomy) + IntegratedPentadicTraceOverlay envelope. UF proof composition-dispatch-trace.spec.ts asserts the event fires on a real live-gateway generation advance (status-tick strictly increases) — defeats carried-by-36 since the 36.x overlay emits nothing to the event ring. 27 unit tests + boot regression green on combined tree. Scoped gate PASS; full app-ui-flow deferred: OOM-killed + unrelated flaky visual-regression:265.",
+          "text": "Composition pentadic-trace wiring landed: composition.pentadic_trace.advance (15th event) + useCompositionPentadicTraceEvents (fires only on real trace-tick change, red-proofed) + aggregatePentadicTraceReadiness across both slots (reuses PentadicOverlayState, no forked taxonomy) + IntegratedPentadicTraceOverlay envelope. UF proof composition-dispatch-trace.spec.ts asserts the event fires on a real live-gateway generation advance (status-tick strictly increases) — defeats carried-by-36 since the 36.x overlay emits nothing to the event ring. 27 unit tests + boot regression green on combined tree. Scoped gate PASS; full app-ui-flow sweep did not complete this run (OOM-killed) and is separately flaky on the unrelated visual-regression:265 — this tranche's own e2e proven green in isolation over the real gateway instead.",
           "receipt": {
             "command": "npx playwright test tests/e2e/composition-dispatch-trace.spec.ts (2 pass, real gateway, event fires on real generation advance) + vitest (27 pass, red-proofed)",
             "exitCode": 0,
@@ -14603,7 +14619,7 @@
       "evidence": [
         {
           "at": "2026-07-22T01:05:43.732Z",
-          "text": "Command-catalog completeness gate landed: COMMAND_CATALOG (22 real commands) in both-directions lockstep vs a TS AST walk of real register sites + M0_LAYER_ROUTES; catalog.test.ts red-proofed both ways (bogus row fails NO-DRIFT, removed row fails NO-ORPHAN) + anti-escape guard for unreconciled dynamic register sites. CHROME-CONTRACT §11 + live-UI no-orphan e2e green over real gateway (isolation). Scoped gate (harness-selftest/honesty-lint/app-typecheck/app-test/app-build) PASS on combined tree; full app-ui-flow deferred: OOM-killed on this run + known-flaky unrelated visual-regression:265.",
+          "text": "Command-catalog completeness gate landed: COMMAND_CATALOG (22 real commands) in both-directions lockstep vs a TS AST walk of real register sites + M0_LAYER_ROUTES; catalog.test.ts red-proofed both ways (bogus row fails NO-DRIFT, removed row fails NO-ORPHAN) + anti-escape guard for unreconciled dynamic register sites. CHROME-CONTRACT §11 + live-UI no-orphan e2e green over real gateway (isolation). Scoped gate (harness-selftest/honesty-lint/app-typecheck/app-test/app-build) PASS on combined tree; full app-ui-flow sweep did not complete this run (OOM-killed) and is separately flaky on the unrelated visual-regression:265 — this tranche's own e2e proven green in isolation over the real gateway instead.",
           "receipt": {
             "command": "npx playwright test tests/e2e/chrome-command-routing.spec.ts (2 pass, real gateway) + vitest src/commands/catalog.test.ts (10 pass, both-direction AST lockstep, red-proofed)",
             "exitCode": 0,
@@ -24869,6 +24885,16 @@
       "leaseExpiresAt": "2026-07-22T03:23:44.565Z",
       "worktree": null,
       "completedAt": "2026-07-22T01:05:56.333Z"
+    },
+    {
+      "runId": "20260722T010941Z-24-T24.4",
+      "taskId": "24.T24.4",
+      "status": "done",
+      "startedAt": "2026-07-22T01:09:41.475Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T04:09:41.475Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T01:27:03.609Z"
     }
   ],
   "activeRoute": {
