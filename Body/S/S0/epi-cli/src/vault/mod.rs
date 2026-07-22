@@ -593,6 +593,13 @@ fn parse_now(raw: Option<&str>) -> Result<DateTime<Utc>, String> {
     }
 }
 
+/// Public accessor for the resolved vault root (EPILOGOS_VAULT → repo `Idea/`
+/// → home fallback). Exposed for gateway RPC handlers outside the `epi vault`
+/// command surface — e.g. the 25.T25.14 `nara.pasu.consents.append` write.
+pub fn resolve_vault_root() -> PathBuf {
+    vault_root()
+}
+
 fn vault_root() -> PathBuf {
     // 1. Explicit env var (base.env or test override) — trusted when non-empty
     if let Ok(v) = std::env::var("EPILOGOS_VAULT") {

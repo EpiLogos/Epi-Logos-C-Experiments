@@ -19,6 +19,7 @@
 pub mod arena;
 pub mod clock;
 pub mod identity;
+pub mod identity_proposals;
 pub mod kairos;
 pub mod lens;
 pub mod logos;

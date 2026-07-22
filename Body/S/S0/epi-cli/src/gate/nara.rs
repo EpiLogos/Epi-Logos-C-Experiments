@@ -3,9 +3,10 @@
 //! Bridges the CLI nara module into the gateway's JSON-RPC dispatch.
 //! Every method returns JSON (json=true) since the gateway is a structured transport.
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use chrono::Utc;
+use portal_core::personal_identity::IdentityAugmentReviewVerdict;
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
     ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
@@ -693,8 +694,122 @@ pub fn dispatch_nara_with_state_root(
         NARA_CONTEMPLATION_OBJECT_READ_METHOD => {
             read_persisted_contemplation_object(state_root, peer_is_loopback, params)
         }
+        // 25.T25.14 (DR-WC-M4-4) — the personal-coordinate surface. All are
+        // protected-local: they require a loopback peer, exactly like the
+        // session-close bundle above. `nara.pasu.show` is the handle-only read
+        // (the natal-chart raw body never transits — only its path string).
+        "nara.pasu.show" => show_pasu_record(peer_is_loopback),
+        "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
+        "nara.identity.proposals.list" => list_identity_proposals(state_root, peer_is_loopback),
+        "nara.identity.proposals.decide" => {
+            decide_identity_proposal(state_root, peer_is_loopback, params)
+        }
         _ => dispatch_nara(method, params),
     }
+}
+
+/// Store path for the M5' identity-augment review ledger — protected-local,
+/// under the gateway state root (loopback-gated like the close bundle).
+fn identity_proposal_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("identity-proposals.json")
+}
+
+/// `nara.pasu.show`: the handle-only PASU record (birth handles, natal-chart
+/// PATH string only, derived quintessence reflections, and the atlas-sync
+/// consent ledger). Protected-local — loopback peer required.
+fn show_pasu_record(peer_is_loopback: bool) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.show requires a loopback peer".to_owned(),
+        ));
+    }
+    let vault_root = crate::vault::resolve_vault_root();
+    let record = crate::vault::pasu::pasu_record(&vault_root);
+    serde_json::to_value(record).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+/// `nara.pasu.consents.append` (DR-WC-M4-4): append a typed ConsentRecord to the
+/// PASU `c_4_atlas_sync_consents` array. Accepts the record either at the params
+/// root or under a `consent` key. Returns the full updated ledger.
+fn append_pasu_consent(
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.consents.append requires a loopback peer".to_owned(),
+        ));
+    }
+    let consent_value = params.get("consent").cloned().unwrap_or_else(|| params.clone());
+    let consent: crate::vault::pasu::ConsentRecord = serde_json::from_value(consent_value)
+        .map_err(|err| {
+            (
+                "invalid-params".to_owned(),
+                format!("invalid consent record: {err}"),
+            )
+        })?;
+    let vault_root = crate::vault::resolve_vault_root();
+    let consents = crate::vault::pasu::pasu_append_consent(&vault_root, consent)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    let count = consents.len();
+    Ok(json!({ "consents": consents, "count": count }))
+}
+
+/// `nara.identity.proposals.list`: the pending (proposed|reviewed) review views.
+fn list_identity_proposals(
+    state_root: &Path,
+    peer_is_loopback: bool,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.list requires a loopback peer".to_owned(),
+        ));
+    }
+    let views = crate::nara::identity_proposals::list_pending(&identity_proposal_store_path(
+        state_root,
+    ))
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    Ok(json!({ "proposals": views }))
+}
+
+/// `nara.identity.proposals.decide`: accept|reject through the M5' review gate.
+/// Never mutates Q_identity (no `apply`) — accept only moves the proposal to
+/// Accepted; the identity mutation stays a separate governed path.
+fn decide_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.decide requires a loopback peer".to_owned(),
+        ));
+    }
+    let handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let verdict = match required_param(params, "verdict")?.as_str() {
+        "accept" => IdentityAugmentReviewVerdict::Accept,
+        "reject" => IdentityAugmentReviewVerdict::Reject,
+        other => {
+            return Err((
+                "invalid-params".to_owned(),
+                format!("verdict must be accept|reject, got `{other}`"),
+            ))
+        }
+    };
+    let now = Utc::now().to_rfc3339();
+    let view = crate::nara::identity_proposals::decide(
+        &identity_proposal_store_path(state_root),
+        &handle,
+        verdict,
+        &now,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
 }
 
 fn close_with_persisted_bundle(

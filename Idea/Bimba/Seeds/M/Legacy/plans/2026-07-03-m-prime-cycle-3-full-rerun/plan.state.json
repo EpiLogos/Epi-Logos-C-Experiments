@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T13:22:55.416Z",
+  "updatedAt": "2026-07-22T13:56:51.067Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12628,16 +12628,21 @@
       "blocker": null
     },
     "25.T25.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-22T13:56:51.044Z",
+      "claimedAt": "2026-07-22T13:24:35.387Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-22T13:56:51.044Z",
+          "text": "Built per Architect decision (do whatever extensions needed; carrier-native pane, not a widget). SUBSTRATE: dedicated new gateway RPC nara.pasu.consents.append (chosen over overloading nara.pasu.set — the scalar {key,value} setter cannot carry a typed record array and overloading would break its error-on-unknown-key contract; flagged DR-WC-M4-4) + nara.identity.proposals.list/decide wrapping the EXISTING portal-core IdentityAugmentProposalAdapter (decide moves state via the adapter accept/reject only and NEVER calls apply_identity_augment — Q_identity untouched, the sanctioned governed path per UX 10.1, test-confirmed) + nara.pasu.show wired; PASU gains c_4_atlas_sync_consents: Vec<ConsentRecord> with a format-preserving array-append (pasu_append_consent, validated). CARRIER: PratibimbaCoordinatePane (carrier-native pane on the modulation graph, App.tsx factory case + default personal-main Coordinate tab) with 3 panels; handle-only privacy structurally enforced (extractPersonalHandles reads only PERSONAL_HANDLE_KEYS; RAW_PERSONAL_FIELD_KEYS q_composed/q_personal/q_b/q_p are never read) + carrier port of ConsentRecord/evaluateVoiceCorpusAdmission (frozen shapes = LAW). VERIFIED (my review + subagent runs): epi-cli 303 passed, gateway 17 suites 0 failed, carrier tsc 0, PratibimbaCoordinatePane.test.tsx 9 passed (handle-only+no-body privacy law, consent write routes through the new RPC as array-append 1->2, proposals read-only for proposed|reviewed writing only on accept/reject), chromeContract+crossLayoutIntent+catalog+App 40 passed. gitnexus_impact(PasuRecord)=LOW/0 callers (additive serde-default field). REMAINING FOR DONE (why review, not done): (1) UF/live-wire e2e proof absent — the spawned-gateway proof that the consent append persists to PASU c_4_atlas_sync_consents and proposals.list round-trips is not yet written (UF-class needs it; also requires rebuilding target/debug/epi since substrate changed — the stale-binary UF gap); (2) DR-WC-M4-4 (dedicated consent-write RPC widening the PASU write surface) is user-approved verbally but not yet ratified in a decision register — flagged for S0-SPEC/M4'-SPEC canon update per rule 5; (3) NO identity-augment proposal PRODUCER exists in-repo (adapter has 0 callers) so panel (c) is empty in a live system until an upstream producer submits — out of tranche scope, flagged for Architect. crossLayoutIntent m4-nara/personalCoordinate repointed to the new pane (revertable)."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T18:24:35.387Z",
+      "heartbeatAt": "2026-07-22T13:56:51.044Z",
+      "runId": "20260722T132435Z-25-T25.14",
       "worktree": null,
       "blocker": null
     },
@@ -25043,6 +25048,16 @@
       "leaseExpiresAt": "2026-07-22T15:43:56.922Z",
       "worktree": null,
       "completedAt": "2026-07-22T12:56:59.642Z"
+    },
+    {
+      "runId": "20260722T132435Z-25-T25.14",
+      "taskId": "25.T25.14",
+      "status": "review",
+      "startedAt": "2026-07-22T13:24:35.387Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T18:24:35.387Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T13:56:51.044Z"
     }
   ],
   "activeRoute": {

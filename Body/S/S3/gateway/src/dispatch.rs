@@ -169,6 +169,22 @@ pub const NARA_SESSION_RPC_METHODS: [&str; 4] = [
 /// the natal-chart raw body stays local, only its path string is surfaced.
 pub const NARA_PASU_RPC_METHODS: [&str; 2] = ["nara.pasu.set", "nara.pasu.show"];
 
+/// M4 personal-coordinate consent + identity-augment review write-surface
+/// (Tranche 25.T25.14, **DR-WC-M4-4**). The Architect approved a DEDICATED
+/// consent-append RPC — it owns the `ConsentRecord` array-append + validation —
+/// rather than overloading the six-scalar `nara.pasu.set` key setter: that
+/// setter keeps its error-on-unknown-key contract, and a typed record array does
+/// not fit a `{key,value}` scalar shape. `nara.identity.proposals.*` wrap the
+/// portal-core `IdentityAugmentProposalAdapter` review state machine; only an
+/// `applied` verdict mutates Q_identity, so `list`/`decide` (accept|reject) NEVER
+/// mutate identity — the apply step stays a separate governed path (UX 10.1).
+/// Like the other nara.* surfaces these resolve through the existing `nara.*`
+/// extension route → `S4S5DomainAdapter` (`extension_route`); declared here so
+/// gateway audits can assert the concrete write surface.
+pub const NARA_PASU_CONSENT_APPEND_METHOD: &str = "nara.pasu.consents.append";
+pub const NARA_IDENTITY_PROPOSAL_RPC_METHODS: [&str; 2] =
+    ["nara.identity.proposals.list", "nara.identity.proposals.decide"];
+
 /// Headless close-of-session contemplation RPC. It remains a Nara extension
 /// route, so the gateway can expose the surface without expanding the product
 /// method table before the upstream S0/S4/S5 executors land their live adapters.

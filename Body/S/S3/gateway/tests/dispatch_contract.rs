@@ -2,7 +2,8 @@ use epi_s3_gateway::dispatch::{
     classify_method, dispatch_kind, dispatch_plan, dispatch_plan_entry,
     dispatch_route_for_plan_entry, methods_in_dispatch_plan_missing_from_route_table,
     methods_in_route_table_missing_from_dispatch_plan, GatewayDispatchClass, GatewayDispatchOwner,
-    NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest, NARA_LENS_RPC_METHODS,
+    NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
+    NARA_IDENTITY_PROPOSAL_RPC_METHODS, NARA_LENS_RPC_METHODS, NARA_PASU_CONSENT_APPEND_METHOD,
     NARA_SESSION_RPC_METHODS, NARA_TRANSFORM_RPC_METHODS,
 };
 use epi_s3_gateway_contract::{MethodDispatchKind, METHOD_NAMES, S2_GRAPH_GATEWAY_EXPOSED_METHODS};
@@ -81,6 +82,31 @@ fn nara_transform_rpcs_route_as_m4_extension_methods() {
 
     for method in NARA_TRANSFORM_RPC_METHODS {
         let route = classify_method(method).expect("nara transform RPC should route");
+        assert_eq!(route.owner, GatewayDispatchOwner::S4S5DomainAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::NaraExtension);
+        assert_eq!(route.coordinate_owner, "M4'/S4");
+        assert_eq!(route.agent_access_owner, "S4/S5");
+    }
+}
+
+#[test]
+fn nara_personal_coordinate_write_surface_routes_as_m4_extension_methods() {
+    // 25.T25.14 / DR-WC-M4-4 — the consent-append + identity-augment review
+    // RPCs are dedicated method names that resolve through the same nara.*
+    // extension route as every other personal M4' surface.
+    assert_eq!(
+        NARA_PASU_CONSENT_APPEND_METHOD,
+        "nara.pasu.consents.append"
+    );
+    assert_eq!(
+        NARA_IDENTITY_PROPOSAL_RPC_METHODS,
+        ["nara.identity.proposals.list", "nara.identity.proposals.decide"]
+    );
+
+    let mut methods = vec![NARA_PASU_CONSENT_APPEND_METHOD];
+    methods.extend(NARA_IDENTITY_PROPOSAL_RPC_METHODS);
+    for method in methods {
+        let route = classify_method(method).expect("personal-coordinate RPC should route");
         assert_eq!(route.owner, GatewayDispatchOwner::S4S5DomainAdapter);
         assert_eq!(route.class, GatewayDispatchClass::NaraExtension);
         assert_eq!(route.coordinate_owner, "M4'/S4");

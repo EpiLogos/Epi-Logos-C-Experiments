@@ -109,7 +109,7 @@ export const CROSS_LAYOUT_INTENT_TARGETS: readonly CrossLayoutIntentTarget[] = O
     target('m4-nara', 'journal', 'M4 journal', 1, 'journalTimeline', 'daily-0-1'),
     target('m4-nara', 'dayCalendar', 'M4 day calendar', 1, 'dayCalendar', 'daily-0-1'),
     target('m4-nara', 'journalEntries', 'M4 journal entries', 1, 'journalTimeline', 'daily-0-1'),
-    target('m4-nara', 'personalCoordinate', 'M4 personal coordinate', 1, 'personalHome', 'daily-0-1'),
+    target('m4-nara', 'personalCoordinate', 'M4 personal coordinate', 1, 'pratibimbaCoordinate', 'daily-0-1'),
     target('m4-nara', 'oracle', 'M4 oracle', 1, 'oracle', 'daily-0-1'),
     target('m4-nara', 'medicine', 'M4 medicine', 1, 'medicineView'),
     target('m4-nara', 'transform', 'M4 transform', 1, 'personalHome', 'daily-0-1'),
