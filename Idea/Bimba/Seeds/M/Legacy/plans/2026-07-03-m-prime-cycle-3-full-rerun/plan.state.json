@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T01:27:03.632Z",
+  "updatedAt": "2026-07-22T01:41:42.863Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11844,16 +11844,21 @@
       "blocker": null
     },
     "24.T24.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-22T01:41:42.841Z",
+      "claimedAt": "2026-07-22T01:30:49.554Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-22T01:41:42.841Z",
+          "text": "UF gap closed with a real-gateway e2e (tests/e2e/m3-hexagram-browser.spec.ts, 3/3 stable, no flake): browser reaches data-state=ready with a live-bussed hexagramId, renders 64 cells + lights the active cell, derives the 6-line glyph from the bussed trigrams (upper*8+lower===hexagramId), and holds the 384-graph line-change derivation honest-pending (pending-line-change-graph, anti-fabrication guard asserts NO local derived number). HELD AT REVIEW (not done) by a real correctness finding the UF proof exposed that the jsdom unit test had masked: live mahamaya.hexagramId domain is 0..63 (portal-core mahamaya.rs hexagram_id=address64=upper<<3|lower), but the pane labels cells King Wen 1..64 and lights kingWen===hexagramId — so hexagramId=0 lights NO cell (while state=ready) and cell 64 is never lit. Deeper: address64 is binary/Fu-Xi ordering, not King Wen (which needs a lookup table), contradicting the pane header LAW 'King Wen ordering IS 1..64, no local table'. Needs an Architect interface decision (map address64->King Wen via LUT, or restate header to 0..63 address + fix off-by-one); not landed unilaterally per taste-at-boundaries."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T03:30:49.554Z",
+      "heartbeatAt": "2026-07-22T01:41:42.841Z",
+      "runId": "20260722T013049Z-24-T24.5",
       "worktree": null,
       "blocker": null
     },
@@ -24895,6 +24900,16 @@
       "leaseExpiresAt": "2026-07-22T04:09:41.475Z",
       "worktree": null,
       "completedAt": "2026-07-22T01:27:03.609Z"
+    },
+    {
+      "runId": "20260722T013049Z-24-T24.5",
+      "taskId": "24.T24.5",
+      "status": "review",
+      "startedAt": "2026-07-22T01:30:49.554Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T03:30:49.554Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T01:41:42.841Z"
     }
   ],
   "activeRoute": {
