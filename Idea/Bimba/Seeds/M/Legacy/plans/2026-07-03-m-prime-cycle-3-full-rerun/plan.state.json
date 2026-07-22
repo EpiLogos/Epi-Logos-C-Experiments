@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-21T23:21:28.529Z",
+  "updatedAt": "2026-07-22T00:21:05.443Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13773,16 +13773,33 @@
       "blocker": null
     },
     "28.T28.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T00:21:05.421Z",
+      "claimedAt": "2026-07-22T00:11:36.224Z",
+      "completedAt": "2026-07-22T00:21:05.421Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T00:21:05.421Z",
+          "text": "28.T28.15 already-landed & verified: autoresearch-pane non-orphan in ide-deep face (App.tsx:354 factory + chromeContract lockstep + CHROME-CONTRACT.md:70). UF proof autoresearch.spec.ts 3/3 green in isolation over real spawned gateway. Full UF gate green on all 15 suites (gateway 96, app-test 967, live-wire, gateway-methods, carrier-tokens); ONLY red = unrelated flaky visual-regression.spec.ts:265 (0/1 lemniscate 400ms mid-animation screenshot), confirmed green in isolation 3.5s — not 28's surface.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/autoresearch.spec.ts (UF class-proof, isolation) + verify-tranche --only honesty-lint (PASS record)",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/AutoresearchPane.tsx",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/autoresearch.spec.ts",
+              "Body/M/pratibimba-app/src/chromeContract.test.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T00:11:36.224Z",
+      "runId": "20260722T001136Z-28-T28.15",
       "worktree": null,
       "blocker": null
     },
@@ -24788,26 +24805,36 @@
       "leaseExpiresAt": "2026-07-21T15:58:01.233Z",
       "worktree": null,
       "completedAt": "2026-07-21T21:37:37.022Z"
+    },
+    {
+      "runId": "20260722T001136Z-28-T28.15",
+      "taskId": "28.T28.15",
+      "status": "done",
+      "startedAt": "2026-07-22T00:11:36.224Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T02:11:36.224Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T00:21:05.421Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-21T23:20:12.088Z",
-    "updatedAt": "2026-07-21T23:20:12.088Z",
+    "createdAt": "2026-07-21T23:40:54.530Z",
+    "updatedAt": "2026-07-21T23:40:54.530Z",
     "taskIds": [
-      "26.T26.14",
       "14.T14.4",
       "24.T24.4",
-      "24.T24.5"
+      "24.T24.5",
+      "24.T24.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "26.T26.14": "in-session",
       "14.T14.4": "in-session",
       "24.T24.4": "in-session",
-      "24.T24.5": "in-session"
+      "24.T24.5": "in-session",
+      "24.T24.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
