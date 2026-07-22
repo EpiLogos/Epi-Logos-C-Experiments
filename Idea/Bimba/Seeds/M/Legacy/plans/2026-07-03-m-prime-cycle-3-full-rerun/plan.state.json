@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T00:21:05.443Z",
+  "updatedAt": "2026-07-22T01:05:56.357Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14196,16 +14196,33 @@
       "blocker": null
     },
     "29.T29.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T01:05:56.333Z",
+      "claimedAt": "2026-07-22T00:23:44.565Z",
+      "completedAt": "2026-07-22T01:05:56.333Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T01:05:56.333Z",
+          "text": "Composition pentadic-trace wiring landed: composition.pentadic_trace.advance (15th event) + useCompositionPentadicTraceEvents (fires only on real trace-tick change, red-proofed) + aggregatePentadicTraceReadiness across both slots (reuses PentadicOverlayState, no forked taxonomy) + IntegratedPentadicTraceOverlay envelope. UF proof composition-dispatch-trace.spec.ts asserts the event fires on a real live-gateway generation advance (status-tick strictly increases) — defeats carried-by-36 since the 36.x overlay emits nothing to the event ring. 27 unit tests + boot regression green on combined tree. Scoped gate PASS; full app-ui-flow deferred: OOM-killed + unrelated flaky visual-regression:265.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/composition-dispatch-trace.spec.ts (2 pass, real gateway, event fires on real generation advance) + vitest (27 pass, red-proofed)",
+            "exitCode": 0,
+            "testsPassed": 29,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/compositionEvents.ts",
+              "Body/M/pratibimba-app/src/composition/integratedPentadicTrace.ts",
+              "Body/M/pratibimba-app/src/engine/integratedReadiness.ts",
+              "Body/M/pratibimba-app/tests/e2e/composition-dispatch-trace.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T00:23:44.565Z",
+      "runId": "20260722T002344Z-29-T29.15",
       "worktree": null,
       "blocker": null
     },
@@ -14579,16 +14596,33 @@
       "blocker": null
     },
     "31.T31.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T01:05:43.732Z",
+      "claimedAt": "2026-07-22T00:23:44.286Z",
+      "completedAt": "2026-07-22T01:05:43.732Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T01:05:43.732Z",
+          "text": "Command-catalog completeness gate landed: COMMAND_CATALOG (22 real commands) in both-directions lockstep vs a TS AST walk of real register sites + M0_LAYER_ROUTES; catalog.test.ts red-proofed both ways (bogus row fails NO-DRIFT, removed row fails NO-ORPHAN) + anti-escape guard for unreconciled dynamic register sites. CHROME-CONTRACT §11 + live-UI no-orphan e2e green over real gateway (isolation). Scoped gate (harness-selftest/honesty-lint/app-typecheck/app-test/app-build) PASS on combined tree; full app-ui-flow deferred: OOM-killed on this run + known-flaky unrelated visual-regression:265.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/chrome-command-routing.spec.ts (2 pass, real gateway) + vitest src/commands/catalog.test.ts (10 pass, both-direction AST lockstep, red-proofed)",
+            "exitCode": 0,
+            "testsPassed": 12,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/catalog.ts",
+              "Body/M/pratibimba-app/src/commands/catalog.test.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/chrome-command-routing.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T00:23:44.286Z",
+      "runId": "20260722T002344Z-31-T31.2",
       "worktree": null,
       "blocker": null
     },
@@ -24815,6 +24849,26 @@
       "leaseExpiresAt": "2026-07-22T02:11:36.224Z",
       "worktree": null,
       "completedAt": "2026-07-22T00:21:05.421Z"
+    },
+    {
+      "runId": "20260722T002344Z-31-T31.2",
+      "taskId": "31.T31.2",
+      "status": "done",
+      "startedAt": "2026-07-22T00:23:44.286Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T03:23:44.286Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T01:05:43.732Z"
+    },
+    {
+      "runId": "20260722T002344Z-29-T29.15",
+      "taskId": "29.T29.15",
+      "status": "done",
+      "startedAt": "2026-07-22T00:23:44.565Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T03:23:44.565Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T01:05:56.333Z"
     }
   ],
   "activeRoute": {

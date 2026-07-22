@@ -1,0 +1,38 @@
+{
+  "runId": "20260722T002344Z-31-T31.2",
+  "taskId": "31.T31.2",
+  "startedAt": "2026-07-22T00:23:44.286Z",
+  "owner": "opus-mdev-impl-0722",
+  "leaseExpiresAt": "2026-07-22T03:23:44.286Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.2",
+    "trackId": "31",
+    "tranche": "T31.2",
+    "title": "Command palette catalog per extension",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.13"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: chrome contributions — six-entry strip ids, chord grammar (cmd-period face toggle, cmd-shift-{0..5} Mn, cmd-1..8 tabs), slot policy (no three-pane main), family->archetype->position breadcrumbs, no-modal. §2 track 31."
+  }
+}

@@ -10,7 +10,11 @@
  */
 
 import { useMemo } from 'react';
-import { useCompositionLifecycleEvents } from '../composition/compositionEvents';
+import {
+    useCompositionLifecycleEvents,
+    useCompositionPentadicTraceEvents
+} from '../composition/compositionEvents';
+import { buildIntegratedPentadicTraceOverlay } from '../composition/integratedPentadicTrace';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
@@ -91,6 +95,18 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
 export function PersonalRecognitionEngine() {
     const cached = useTickStore(state => state.profile);
     useCompositionLifecycleEvents('jiva-siva.integrated', cached?.generation ?? null);
+    // 29.15: the 4-5-0 slot of the shared pentadic-trace envelope, built off the
+    // same single profile subscription; its advance event fires on trace-tick
+    // change just as the cosmic slot's does.
+    const pentadicTraceOverlay = useMemo(
+        () => buildIntegratedPentadicTraceOverlay((cached?.profile as Record<string, unknown> | null) ?? null),
+        [cached]
+    );
+    useCompositionPentadicTraceEvents(
+        'jiva-siva.integrated',
+        pentadicTraceOverlay,
+        cached?.generation ?? null
+    );
     const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
     const integratedReadiness = useMemo(
         () => evaluateCachedProfileIntegratedReadiness(cached),

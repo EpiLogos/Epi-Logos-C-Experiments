@@ -18,6 +18,8 @@ import type {
     KernelBridgeCachedProfile,
     MathemeHarmonicProfileBoundary
 } from '../bridge/types';
+import { buildPentadicOverlay, type PentadicOverlayState } from './cosmicPentadicOverlay';
+import { pentadicTraceFromPayload } from '../panes/m3PentadicInspector';
 
 /** LAW: stable blocker-id namespace so Wave-A blockers stay greppable across tracks. */
 export const WAVE_A_BLOCKER_ID_PREFIX = 'wave-a.pending' as const;
@@ -296,6 +298,95 @@ function recordValue(value: unknown): Readonly<Record<string, unknown>> | null {
     return value !== null && typeof value === 'object' && !Array.isArray(value)
         ? value as Readonly<Record<string, unknown>>
         : null;
+}
+
+// ============================================================================
+// 29.T29.15 — composition-level pentadic-trace readiness aggregation.
+//
+// A SECOND, orthogonal concern to the Wave-A marker gate above: whether the
+// kernel `AnuttaraPentadicRuntimeTrace` is live, absent, or stale across BOTH
+// composition slots (cosmic 1-2-3 + personal 4-5-0). It reuses the existing
+// `PentadicOverlayState` taxonomy (`ready | pending-anuttara-pentadic-trace |
+// stale-trace-generation`, defined in cosmicPentadicOverlay) and the same
+// `buildPentadicOverlay` reader — no forked taxonomy, no second trace parser.
+// ============================================================================
+
+/** LAW: the pentadic-trace readiness states are exactly the overlay states —
+ *  one taxonomy shared with the 36.4 render overlay, never a fork. */
+export type IntegratedPentadicReadinessState = PentadicOverlayState;
+
+/** Per-slot readiness: the overlay state + the kernel trace generation
+ *  (`trace.tick`) that slot read (null when the trace is absent — never
+ *  fabricated). */
+export interface IntegratedPentadicSlotReadiness {
+    readonly state: IntegratedPentadicReadinessState;
+    readonly traceGeneration: number | null;
+}
+
+/**
+ * The composition-level aggregate across both slots. `state` is `ready` only
+ * when both slots are `ready` AND agree on the trace generation; any per-slot
+ * `stale-trace-generation` OR a cross-slot generation disagreement (mixed
+ * generations — exactly the failure the 36.4 cosmic rule guards) reports
+ * `stale-trace-generation`; otherwise `pending-anuttara-pentadic-trace`.
+ */
+export interface IntegratedReadinessAggregate {
+    readonly state: IntegratedPentadicReadinessState;
+    readonly cosmic: IntegratedPentadicSlotReadiness;
+    readonly personal: IntegratedPentadicSlotReadiness;
+    readonly generationsAgree: boolean;
+}
+
+function pentadicSlotReadiness(
+    payload: Readonly<Record<string, unknown>> | null
+): IntegratedPentadicSlotReadiness {
+    if (payload === null) {
+        return Object.freeze({
+            state: 'pending-anuttara-pentadic-trace' as const,
+            traceGeneration: null
+        });
+    }
+    // Reuse the real overlay reader for the state (incl. its stale guard) and
+    // the same strict trace reader for the generation — one parser, no fork.
+    const state = buildPentadicOverlay(payload).state;
+    const trace = pentadicTraceFromPayload(payload);
+    return Object.freeze({
+        state,
+        traceGeneration: trace ? trace.tick : null
+    });
+}
+
+/**
+ * Aggregate the pentadic-trace readiness across the cosmic (1-2-3) and personal
+ * (4-5-0) slots. Both slots read from the SAME cached profile in the running
+ * app; the two payload params keep the "across BOTH slots" contract honest and
+ * let the aggregate catch a mixed-generation split if one ever occurs. Keyed to
+ * the real `profile.anuttaraPentadicTrace` field via the shared trace reader.
+ */
+export function aggregatePentadicTraceReadiness(
+    cosmicPayload: Readonly<Record<string, unknown>> | null,
+    personalPayload: Readonly<Record<string, unknown>> | null
+): IntegratedReadinessAggregate {
+    const cosmic = pentadicSlotReadiness(cosmicPayload);
+    const personal = pentadicSlotReadiness(personalPayload);
+    const bothReady = cosmic.state === 'ready' && personal.state === 'ready';
+    const generationsAgree =
+        bothReady &&
+        cosmic.traceGeneration !== null &&
+        cosmic.traceGeneration === personal.traceGeneration;
+    let state: IntegratedPentadicReadinessState;
+    if (bothReady && generationsAgree) {
+        state = 'ready';
+    } else if (
+        cosmic.state === 'stale-trace-generation' ||
+        personal.state === 'stale-trace-generation' ||
+        (bothReady && !generationsAgree)
+    ) {
+        state = 'stale-trace-generation';
+    } else {
+        state = 'pending-anuttara-pentadic-trace';
+    }
+    return Object.freeze({ state, cosmic, personal, generationsAgree });
 }
 
 function stringValue(value: unknown): string | null {

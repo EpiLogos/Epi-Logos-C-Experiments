@@ -71,7 +71,11 @@ import {
 } from './solarSystem';
 import { PLANET_ORDER } from './cosmicMath';
 import { accent } from '../ui/tokens';
-import { useCompositionLifecycleEvents } from '../composition/compositionEvents';
+import {
+    useCompositionLifecycleEvents,
+    useCompositionPentadicTraceEvents
+} from '../composition/compositionEvents';
+import { buildIntegratedPentadicTraceOverlay } from '../composition/integratedPentadicTrace';
 
 // clock-plane radii (torus ≈ 1.5 outer)
 const R_LENS = 2.6;
@@ -323,6 +327,14 @@ export function CosmicEngine() {
         () => buildPentadicOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
         [cached]
     );
+    // 29.15: the typed pentadic-trace envelope (trace + generation + readiness +
+    // slots) built off that SAME single subscription. The advance event derives
+    // its generation from this envelope, never a parallel hardcode.
+    const pentadicTraceOverlay = useMemo(
+        () => buildIntegratedPentadicTraceOverlay((cached?.profile as Record<string, unknown> | null) ?? null),
+        [cached]
+    );
+    useCompositionPentadicTraceEvents('cosmic-engine.integrated', pentadicTraceOverlay, generation);
     // 07.T7.6: the coupling-flow disclosure shares the composition's one
     // profile snapshot. It is a strict kernel window, never a fourth pole.
     const couplingFlow = useMemo(
