@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T10:25:37.764Z",
+  "updatedAt": "2026-07-22T10:56:39.438Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13185,16 +13185,32 @@
       "blocker": null
     },
     "27.T27.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T10:56:26.890Z",
+      "claimedAt": "2026-07-22T10:27:30.090Z",
+      "completedAt": "2026-07-22T10:56:26.890Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T10:56:26.890Z",
+          "text": "Reframed src/panes/SessionsPane.tsx (T3.3 lister) into the T27.2 SessionManager continuity fold mapped to agent:epii:main: SessionManagerHeader (day-now anchor + real khora.session_start with the returned sessionId, replacing the app-Date.now local-key fabrication; disabled without a day anchor), pure orderSessionsForContinuity (active -> main -> kairos_at_open desc, nulls last stable, unit-tested), SessionDetailPane with KairosAtOpenStrip + TarotPsycheAnchorStrip that honestly degrade to a shared ReadinessBanner when their producers are absent (kairos snapshot / 19.6 contemplate.fetch_object), ActiveCoordinateDisplay, dispatch/evidence/review summaries with real selectTab click-through, resume via sessions.resume with inline refusal, archive rendered disabled (no sessions.archive RPC exists), PrivacyClassBadge. Every existing e2e testid preserved. New shared src/ui/ReadinessBanner.tsx + PrivacyClassBadge.tsx. Proof: full UF gate ran sessions.spec.ts + session-continuity.spec.ts green (app-ui-flow 64/65) and local vitest 1011 passed; the sole gate red was the known-flaky visual-regression:265 lemniscate 400ms mid-crossing baseline (unrelated to this pane), which passed green in a playwright isolation run (1 passed) and was green on the sibling 26.15/28.16 gate; fresh honesty-lint PASS record, verifier opus-mdev-verify-0722 != closer. Flagged to Architect (not landed): OmniPanelPerTabState has no per-tab sessionKey filter field, so summary click-through uses selectTab navigation with the bound session as implicit filter.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 27.T27.2 29.T29.12 --owner opus-mdev-verify-0722 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 64,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/SessionsPane.tsx",
+              "app-ui-flow full UF run: sessions.spec.ts + session-continuity.spec.ts PASS (64/65 app-ui-flow); local vitest 1011 passed",
+              "sole red = flaky visual-regression:265 lemniscate baseline, confirmed green in a playwright isolation run (1 passed) and green on the sibling 26.15/28.16 gate"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T10:27:30.090Z",
+      "runId": "20260722T102730Z-27-T27.2",
       "worktree": null,
       "blocker": null
     },
@@ -14148,10 +14164,10 @@
       "blocker": null
     },
     "29.T29.12": {
-      "status": "pending",
-      "updatedAt": "2026-07-18T20:46:22.057Z",
-      "claimedAt": "2026-07-16T20:50:17.396Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-22T10:56:39.414Z",
+      "claimedAt": "2026-07-22T10:43:50.202Z",
+      "completedAt": "2026-07-22T10:56:39.414Z",
       "evidence": [
         {
           "at": "2026-07-16T20:50:28.027Z",
@@ -14160,13 +14176,28 @@
         {
           "at": "2026-07-18T20:46:22.057Z",
           "text": "Requeued behind the explicit real render-state producers; the nonexistent 26.16 link was removed and M5 fixture ownership made local."
+        },
+        {
+          "at": "2026-07-22T10:56:39.414Z",
+          "text": "29.T29.12 visual-regression fixtures for both integrated compositions verified as already-landed (carried under 15.12/23.16-17/30.14, not a distinct build): the two committed masked-chrome baselines composition-1-2-3-cosmic-darwin.png + composition-4-5-0-personal-darwin.png, the proving tests (c) cosmic + (d) personal (toHaveScreenshot) in tests/e2e/visual-regression.spec.ts, the CATALOG.md coverage rationale, and the src/ui/visualRegressionCatalog.test.ts catalog<->baseline<->test correspondence gate. Proof: the full UF gate ran tests (c) and (d) against a real spawned gateway green + the correspondence gate 6/6 green; the sole gate red was the known-flaky visual-regression:265 lemniscate mid-crossing baseline (a 15.12/DR-UI-4 motion artifact, NOT this deliverable), which passed green in a playwright isolation run (1 passed) and was green on the sibling 26.15/28.16 gate. The extended per-state frames from the epi-theia design are intentionally not reproduced (CATALOG documents the absent producers + the fraudulent-raw-pixel reasoning per DR-WC-DL-5). Fresh honesty-lint PASS record; verifier opus-mdev-verify-0722 != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 27.T27.2 29.T29.12 --owner opus-mdev-verify-0722 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/visual-regression.spec.ts",
+              "app-ui-flow full UF run: composition (c) 1-2-3-cosmic + (d) 4-5-0-personal toHaveScreenshot PASS + visualRegressionCatalog.test.ts 6/6 correspondence gate PASS",
+              "sole red = flaky visual-regression:265 lemniscate baseline (a 15.12/DR-UI-4 motion artifact, not this deliverable), green in playwright isolation"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 187 dirty files.",
-      "owner": "codex-mdev-continuous",
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-16T20:50:17.396Z",
-      "runId": "20260716T205017Z-29-T29.12",
+      "heartbeatAt": "2026-07-22T10:43:50.202Z",
+      "runId": "20260722T104350Z-29-T29.12",
       "worktree": null,
       "blocker": null
     },
@@ -24962,6 +24993,26 @@
       "leaseExpiresAt": "2026-07-22T13:11:31.565Z",
       "worktree": null,
       "completedAt": "2026-07-22T10:25:37.741Z"
+    },
+    {
+      "runId": "20260722T102730Z-27-T27.2",
+      "taskId": "27.T27.2",
+      "status": "done",
+      "startedAt": "2026-07-22T10:27:30.090Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T14:27:30.090Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T10:56:26.890Z"
+    },
+    {
+      "runId": "20260722T104350Z-29-T29.12",
+      "taskId": "29.T29.12",
+      "status": "done",
+      "startedAt": "2026-07-22T10:43:50.202Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T12:43:50.202Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T10:56:39.414Z"
     }
   ],
   "activeRoute": {
