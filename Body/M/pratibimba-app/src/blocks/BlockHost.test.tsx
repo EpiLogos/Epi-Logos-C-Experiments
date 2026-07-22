@@ -13,6 +13,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { CORE_BLOCK_TYPES, type Block, type BlockSpec } from './blockContract';
 import { BlockRegistry, createCoreBlockSpecs, createDefaultBlockRegistry } from './blockRegistry';
 import { BlockHost } from './BlockHost';
+import { PrivacyDropFeed } from '../services/privacyDropFeed';
 
 afterEach(cleanup);
 
@@ -79,5 +80,30 @@ describe('44.2 BlockHost', () => {
         expect(screen.getByTestId('block-privacy-refused')).toBeTruthy();
         expect(screen.queryByTestId('block-read-model')).toBeNull();
         expect(document.body.textContent).not.toContain('review me');
+    });
+
+    it('28.16: a privacy-refused block records exactly one drop into the injected feed', () => {
+        const closedGate: BlockSpec = {
+            ...createCoreBlockSpecs().find(spec => spec.type === 'review-item')!,
+            privacyGate: { requiredPrivacyClass: 'public', accepts: block => block.privacyClass === 'public' }
+        };
+        const registry = createDefaultBlockRegistry();
+        registry.register(closedGate);
+        const feed = new PrivacyDropFeed();
+
+        render(<BlockHost blocks={[BLOCK]} registry={registry} privacyDropFeed={feed} />);
+
+        expect(screen.getByTestId('block-privacy-refused')).toBeTruthy();
+        const aggregate = feed.aggregate;
+        expect(aggregate.total).toBe(1);
+        expect(aggregate.byWidget).toEqual({ 'review-item': 1 });
+        expect(aggregate.byClass).toEqual({ protected: 1 });
+    });
+
+    it('28.16: an accepted (non-refused) block records no drop', () => {
+        const feed = new PrivacyDropFeed();
+        render(<BlockHost blocks={[BLOCK]} privacyDropFeed={feed} />);
+        expect(screen.getByTestId('block-b-1')).toBeTruthy();
+        expect(feed.aggregate.total).toBe(0);
     });
 });

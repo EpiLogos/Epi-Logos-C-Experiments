@@ -11,6 +11,9 @@
  *   narrative + pending banner only; grid/energy/gradient suppressed.
  * Does NOT own: EBM law (m5Ebm.ts view model + kernel/S5 substrate), the
  *   profile cache, the six operational-capacity views (26.2's lane).
+ * Composition role: Surface 1 (standalone EBM observatory) of the three M5'
+ *   surfaces — see contracts/m5-prime-surface-composition.md §1/§3 (why the
+ *   scoring face is never conflated with the OmniPanel M4' Pi voice).
  */
 
 import { useMemo } from 'react';

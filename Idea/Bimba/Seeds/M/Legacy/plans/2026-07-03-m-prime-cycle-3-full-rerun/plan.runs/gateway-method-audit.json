@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-22T00:16:51.005Z",
+ "generatedAt": "2026-07-22T10:24:14.338Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -991,7 +991,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: notePath is required"
+   "errorClass": "domain-error: vault root missing: provide `vaultRoot` param or set EPILOGOS_VAULT"
   },
   {
    "method": "s1'.type.classify_c_layer",

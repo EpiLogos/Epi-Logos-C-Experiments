@@ -12,8 +12,10 @@
  *   transport (44.5).
  */
 
+import { useEffect } from 'react';
 import { createDefaultBlockRegistry, type BlockRegistry } from './blockRegistry';
 import type { Block } from './blockContract';
+import { PrivacyDropFeed, privacyDropFeed as sharedPrivacyDropFeed } from '../services/privacyDropFeed';
 
 export interface BlockHostProps {
     readonly blocks: readonly Block[];
@@ -21,13 +23,28 @@ export interface BlockHostProps {
     /** 44.6 selection seam: fired when a hosted block is clicked (the
      *  `select` affordance path — selection → context-xray + highlight-back). */
     readonly onBlockSelect?: (block: Block) => void;
+    /** 28.16 federated privacy-drop sink — every block whose privacy gate
+     *  refuses before render records one drop here. Defaults to the shared
+     *  carrier singleton; tests inject a fresh feed. */
+    readonly privacyDropFeed?: PrivacyDropFeed;
 }
 
-export function BlockHost({ blocks, registry = createDefaultBlockRegistry(), onBlockSelect }: BlockHostProps) {
+export function BlockHost({
+    blocks,
+    registry = createDefaultBlockRegistry(),
+    onBlockSelect,
+    privacyDropFeed = sharedPrivacyDropFeed
+}: BlockHostProps) {
     return (
         <div className="block-host" data-testid="block-host">
             {blocks.map(block => (
-                <HostedBlock key={block.id} block={block} registry={registry} onSelect={onBlockSelect} />
+                <HostedBlock
+                    key={block.id}
+                    block={block}
+                    registry={registry}
+                    onSelect={onBlockSelect}
+                    feed={privacyDropFeed}
+                />
             ))}
             {blocks.length === 0 ? (
                 <p className="pane-message" data-testid="block-host-empty">
@@ -41,25 +58,41 @@ export function BlockHost({ blocks, registry = createDefaultBlockRegistry(), onB
 function HostedBlock({
     block,
     registry,
-    onSelect
+    onSelect,
+    feed
 }: {
     readonly block: Block;
     readonly registry: BlockRegistry;
     readonly onSelect?: (block: Block) => void;
+    readonly feed: PrivacyDropFeed;
 }) {
     let entry;
+    let rejectionMessage: string | null = null;
     try {
         entry = registry.assertAccepted(block);
     } catch (err) {
+        rejectionMessage = err instanceof Error ? err.message : String(err);
+    }
+    const spec = entry ? registry.spec(block.type) : null;
+    // Privacy law: the gate refuses BEFORE render — data never reaches the DOM.
+    const privacyRefused = Boolean(entry && spec && !spec.privacyGate.accepts(block));
+
+    // 28.16: record the drop as a side effect (once per refused mount), never
+    // during render — a render-time record() would double-count on re-render.
+    useEffect(() => {
+        if (privacyRefused) {
+            feed.record(block.type, block.privacyClass);
+        }
+    }, [privacyRefused, feed, block.type, block.privacyClass]);
+
+    if (rejectionMessage !== null) {
         return (
             <article className="block-rejected" data-testid="block-rejected" data-block-id={block.id}>
-                {err instanceof Error ? err.message : String(err)}
+                {rejectionMessage}
             </article>
         );
     }
-    const spec = registry.spec(block.type);
-    if (spec && !spec.privacyGate.accepts(block)) {
-        // Privacy law: the gate refuses BEFORE render — data never reaches the DOM.
+    if (privacyRefused) {
         return (
             <article
                 className="block-privacy-refused"
@@ -79,7 +112,7 @@ function HostedBlock({
             data-testid={`block-${block.id}`}
             data-block-type={block.type}
             data-owner-extension={owner?.ownerExtensionId ?? ''}
-            data-edit-surface={entry.editSurface}
+            data-edit-surface={entry!.editSurface}
             data-privacy-class={block.privacyClass}
             onClick={onSelect ? () => onSelect(block) : undefined}
         >

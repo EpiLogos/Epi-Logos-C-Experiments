@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T01:41:42.863Z",
+  "updatedAt": "2026-07-22T10:25:37.764Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13094,16 +13094,31 @@
       "blocker": null
     },
     "26.T26.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T10:25:24.605Z",
+      "claimedAt": "2026-07-22T10:07:58.562Z",
+      "completedAt": "2026-07-22T10:25:24.605Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T10:25:24.605Z",
+          "text": "Authored Body/M/pratibimba-app/contracts/m5-prime-surface-composition.md — the five-section M5' surface-composition pattern (three surfaces: M5EbmObservatoryPane standalone / omni governed folds / M5RecognitionLayer slot; SharedBridgeAdapter capabilities retargeted per CHARTER rule 2 to the GatewayClient bus + s5'.* method routes; why-not-conflate DR-MP-1 mental-pole triplet; composition-over-juxtaposition; DR cross-ref) plus back-pointer headers in the two M5' panes. UF gate green (app-ui-flow + app-smoke + live-wire + gateway + carrier-tokens), honesty-lint clean; verifier opus-mdev-verify-0722 != closer.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.15 28.T28.16 --owner opus-mdev-verify-0722",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/contracts/m5-prime-surface-composition.md",
+              "UF gate green: app-ui-flow + app-smoke + live-wire + gateway + carrier-tokens"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T10:07:58.820Z",
+      "runId": "20260722T100758Z-26-T26.15",
       "worktree": null,
       "blocker": null
     },
@@ -13825,16 +13840,32 @@
       "blocker": null
     },
     "28.T28.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-22T10:25:37.741Z",
+      "claimedAt": "2026-07-22T10:11:31.565Z",
+      "completedAt": "2026-07-22T10:25:37.741Z",
+      "evidence": [
+        {
+          "at": "2026-07-22T10:25:37.741Z",
+          "text": "Ported PrivacyDropFeed to Body/M/pratibimba-app/src/services/privacyDropFeed.ts as plain TS (record/onDrop/aggregate:{byWidget,byClass,total}; frozen Theia Emitter/injectable stripped, widgetId retargeted to the carrier block surface per CHROME-CONTRACT). Wired the carrier producer in BlockHost.tsx: the privacy-refused branch records exactly one drop per refused mount via useEffect (not during render, which would double-count). Tests: privacyDropFeed.test.ts (aggregate by-surface/by-class/total, onDrop fan-out + unsubscribe) + BlockHost.test.tsx (refused block records one drop into an injected feed; accepted block records none). UF gate green (app-test incl the new suites + app-ui-flow + live-wire + gateway), honesty-lint clean; verifier opus-mdev-verify-0722 != closer. Diagnostics render body remains 27.8 scope (cross-linked, not built here).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.15 28.T28.16 --owner opus-mdev-verify-0722",
+            "exitCode": 0,
+            "testsPassed": 16,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/services/privacyDropFeed.ts",
+              "Body/M/pratibimba-app/src/blocks/BlockHost.tsx",
+              "UF gate green: app-test + app-ui-flow + live-wire + gateway"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-impl-0722",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T10:11:31.565Z",
+      "runId": "20260722T101131Z-28-T28.16",
       "worktree": null,
       "blocker": null
     },
@@ -24910,26 +24941,47 @@
       "leaseExpiresAt": "2026-07-22T03:30:49.554Z",
       "worktree": null,
       "completedAt": "2026-07-22T01:41:42.841Z"
+    },
+    {
+      "runId": "20260722T100758Z-26-T26.15",
+      "taskId": "26.T26.15",
+      "status": "done",
+      "startedAt": "2026-07-22T10:07:58.562Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T13:07:58.820Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-22T10:07:58.820Z",
+      "completedAt": "2026-07-22T10:25:24.605Z"
+    },
+    {
+      "runId": "20260722T101131Z-28-T28.16",
+      "taskId": "28.T28.16",
+      "status": "done",
+      "startedAt": "2026-07-22T10:11:31.565Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T13:11:31.565Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T10:25:37.741Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-21T23:40:54.530Z",
-    "updatedAt": "2026-07-21T23:40:54.530Z",
+    "createdAt": "2026-07-22T09:15:51.734Z",
+    "updatedAt": "2026-07-22T09:15:51.734Z",
     "taskIds": [
       "14.T14.4",
-      "24.T24.4",
       "24.T24.5",
-      "24.T24.6"
+      "24.T24.6",
+      "24.T24.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "24.T24.4": "in-session",
       "24.T24.5": "in-session",
-      "24.T24.6": "in-session"
+      "24.T24.6": "in-session",
+      "24.T24.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

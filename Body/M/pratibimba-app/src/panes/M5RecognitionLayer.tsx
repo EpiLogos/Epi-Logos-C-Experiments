@@ -6,6 +6,9 @@
  * Public surface: M5RecognitionLayer, readM5RecognitionLayer.
  * Does NOT own: canonical recognition production, quaternion composition,
  * EBM scoring, or session-close dispatch.
+ * Composition role: Surface 3 (recognition-layer slot) of the three M5'
+ *   surfaces — composes with the M4 journal + M0 cymatic into one personal
+ *   face per contracts/m5-prime-surface-composition.md §1/§4.
  */
 
 import { useMemo } from 'react';
