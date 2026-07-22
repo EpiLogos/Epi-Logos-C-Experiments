@@ -100,7 +100,11 @@ fn nara_personal_coordinate_write_surface_routes_as_m4_extension_methods() {
     );
     assert_eq!(
         NARA_IDENTITY_PROPOSAL_RPC_METHODS,
-        ["nara.identity.proposals.list", "nara.identity.proposals.decide"]
+        [
+            "nara.identity.proposals.submit",
+            "nara.identity.proposals.list",
+            "nara.identity.proposals.decide"
+        ]
     );
 
     let mut methods = vec![NARA_PASU_CONSENT_APPEND_METHOD];

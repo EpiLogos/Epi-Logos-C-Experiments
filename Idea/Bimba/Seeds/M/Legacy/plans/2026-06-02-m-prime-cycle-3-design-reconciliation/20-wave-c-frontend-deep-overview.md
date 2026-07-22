@@ -107,7 +107,7 @@ The 36 `DR-WC-*` entries below join the cycle-3 register. Each is developed in i
 | DR-WC-M4-1 | Three-mode time-axis switcher: distinct widget vs tuning-bar dropdown vs status-bar segmented | M4' | wave-c-m4-nara-frontend-matrix |
 | DR-WC-M4-2 | Personal cymatic field shader path (Bevy/wgpu reuse vs Three.js per-tile) | M4' | wave-c-m4-nara-frontend-matrix |
 | DR-WC-M4-3 | PASU identity wizard mount surface (m4-nara extension vs onboarding extension vs ide-shell) | M4' | wave-c-m4-nara-frontend-matrix |
-| DR-WC-M4-4 | Pratibimba personal-coordinate widget consent ceremony (modal-prohibited per 15.2 — landing surface required) | M4' | wave-c-m4-nara-frontend-matrix |
+| DR-WC-M4-4 | Pratibimba personal-coordinate consent surface (carrier pane, non-modal per 15.2) — write-surface **RATIFIED 2026-07-22**: dedicated `nara.pasu.consents.append` RPC, not `nara.pasu.set` overload (see 13-decision-register) | M4' | wave-c-m4-nara-frontend-matrix |
 | DR-WC-M4-5 | Privacy-class chrome visual register (border colour vs glyph vs both) | M4' | wave-c-m4-nara-frontend-matrix |
 | DR-WC-M5-1 | ACR substrate as ide-shell widget vs OmniPanel content (15.2 reframe resolution at widget level) | M5' | wave-c-m5-epii-frontend-matrix |
 | DR-WC-M5-2 | EBM resonance visualization fidelity (live 72-dim grid vs aggregated tritone-square indicator) | M5' | wave-c-m5-epii-frontend-matrix |

@@ -18,7 +18,14 @@ import { invokeCommand } from '../bridge/tauri';
 import { createDebouncedSaver, type DebouncedSaver } from './debouncedSaver';
 import { splitFrontmatter } from './MarkdownEditorPane';
 import { NaraFloatingMenu, type AgentSelectionAction, type FloatingMenuState } from './NaraFloatingMenu';
-import { HighlightMark, NARA_PRIVACY_CLASS, extractHighlights } from './m4NaraHighlightMark';
+import {
+    HighlightMark,
+    NARA_PRIVACY_CLASS,
+    USER_HIGHLIGHT_CATEGORIES,
+    applyUserHighlight,
+    extractHighlights,
+    type UserHighlightCategory
+} from './m4NaraHighlightMark';
 import { HighlightService } from './m4NaraHighlightService';
 
 interface VaultFile {
@@ -82,6 +89,30 @@ export function NaraCanvasEditor({
             .unsetHighlight()
             .run();
     }), [editor, service]);
+
+    // CCT-5: the cmd-H two-stroke chord (App keydown spine) fires a user-side
+    // highlight over the current selection by dispatching `m4.nara.user-highlight`
+    // — the sibling of the `m4.nara.agent-selection` window event this pane
+    // already emits. It runs the SAME `applyUserHighlight` path the FloatingMenu
+    // buttons use; a category must be a known user category and there must be a
+    // non-empty selection, or it no-ops.
+    useEffect(() => {
+        if (!editor) return;
+        const onUserHighlight = (event: Event) => {
+            const category = (event as CustomEvent<{ category?: string }>).detail?.category;
+            if (!category || !(USER_HIGHLIGHT_CATEGORIES as readonly string[]).includes(category)) {
+                return;
+            }
+            if (editor.state.selection.empty) {
+                return;
+            }
+            const { from, to } = editor.state.selection;
+            const selectedText = editor.state.doc.textBetween(from, to).trim();
+            applyUserHighlight(editor, service, category as UserHighlightCategory, selectedText);
+        };
+        window.addEventListener('m4.nara.user-highlight', onUserHighlight as EventListener);
+        return () => window.removeEventListener('m4.nara.user-highlight', onUserHighlight as EventListener);
+    }, [editor, service]);
 
     useEffect(() => {
         let cancelled = false;

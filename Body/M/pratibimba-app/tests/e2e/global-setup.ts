@@ -132,9 +132,22 @@ export default async function globalSetup(): Promise<void> {
         'bin',
         'epi-gnostic'
     );
+    // Rebuild the gateway binary from current substrate source before spawning.
+    // A kernel/portal-core/gateway change (e.g. a new bussed profile field or a
+    // new gateway RPC) is INVISIBLE to the spawned e2e gateway until epi-cli is
+    // rebuilt, and the UF class scope deliberately EXCLUDES epi-cli — so without
+    // this the e2e would silently verify a STALE binary (the 24.T24.5 stale-binary
+    // gap). cargo's own incremental staleness check makes this a fast no-op when
+    // the binary is already current.
+    console.log('[e2e-setup] rebuilding epi to reflect current substrate (cargo build epi-cli)…');
+    execFileSync(
+        'cargo',
+        ['build', '--offline', '--manifest-path', join(REPO_ROOT, 'Body', 'S', 'S0', 'epi-cli', 'Cargo.toml')],
+        { cwd: REPO_ROOT, stdio: 'inherit' }
+    );
     if (!existsSync(EPI_BIN)) {
         throw new Error(
-            `[e2e-setup] epi debug binary missing at ${EPI_BIN} — build the shared target: cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml`
+            `[e2e-setup] epi debug binary missing at ${EPI_BIN} after cargo build — check the epi-cli build`
         );
     }
     if (!existsSync(epiGnosticBin)) {
@@ -156,7 +169,12 @@ export default async function globalSetup(): Promise<void> {
         'Bimba/World/Types/Coordinates/S/S1/S1.canvas',
         'Bimba/World/Types/Crystallisation-Pipeline.base',
         'Bimba/World/Types/Psychoids/Psychoids.md',
-        'Bimba/Map/snapshots/M2.base.json'
+        'Bimba/Map/snapshots/M2.base.json',
+        // 25.T25.14 — the personal-coordinate consent surface writes real bytes
+        // to Pratibimba/Self/PASU.md `c_4_atlas_sync_consents` via the loopback
+        // `nara.pasu.consents.append` RPC. Seed the canonical (empty-consent)
+        // PASU.md so the pratibimba-consent spec drives a real array-append.
+        'Pratibimba/Self/PASU.md'
     ];
     for (const artifact of vaultArtifacts) {
         const destination = join(vaultRoot, artifact);

@@ -6,7 +6,9 @@
 use std::path::{Path, PathBuf};
 
 use chrono::Utc;
-use portal_core::personal_identity::IdentityAugmentReviewVerdict;
+use portal_core::personal_identity::{
+    IdentityAugmentProposal, IdentityAugmentProposalState, IdentityAugmentReviewVerdict,
+};
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
     ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
@@ -700,6 +702,9 @@ pub fn dispatch_nara_with_state_root(
         // (the natal-chart raw body never transits — only its path string).
         "nara.pasu.show" => show_pasu_record(peer_is_loopback),
         "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
+        "nara.identity.proposals.submit" => {
+            submit_identity_proposal(state_root, peer_is_loopback, params)
+        }
         "nara.identity.proposals.list" => list_identity_proposals(state_root, peer_is_loopback),
         "nara.identity.proposals.decide" => {
             decide_identity_proposal(state_root, peer_is_loopback, params)
@@ -755,6 +760,102 @@ fn append_pasu_consent(
         .map_err(|err| ("nara-error".to_owned(), err))?;
     let count = consents.len();
     Ok(json!({ "consents": consents, "count": count }))
+}
+
+/// Parse an optional `q_identity_candidate` (a `[f32; 4]`) from params, falling
+/// back to the identity quaternion `[1, 0, 0, 0]`. The candidate is NEVER
+/// surfaced (the review view is handle-only) — it exists only so the persisted
+/// record can be reconstructed against the canonical state machine.
+fn parse_quaternion_candidate(params: &Value) -> [f32; 4] {
+    let default = [1.0, 0.0, 0.0, 0.0];
+    let Some(raw) = params
+        .get("q_identity_candidate")
+        .or_else(|| params.get("qIdentityCandidate"))
+        .and_then(|value| value.as_array())
+    else {
+        return default;
+    };
+    if raw.len() != 4 {
+        return default;
+    }
+    let mut out = [0.0f32; 4];
+    for (index, item) in raw.iter().enumerate() {
+        match item.as_f64() {
+            Some(number) => out[index] = number as f32,
+            None => return default,
+        }
+    }
+    out
+}
+
+/// `nara.identity.proposals.submit` (25.T25.14): open the identity-augment
+/// lifecycle by creating a NEW proposal in the review store at state `Proposed`.
+/// This is the SUBMISSION SEAM a producer/agent (or the e2e loop) drives so that
+/// `list` can then surface the proposal and the user can `decide` (accept|reject).
+/// The upstream PRODUCER that DECIDES whether to propose an identity augment is
+/// genuinely separate/future — this lands the seam and proves the loop, it is not
+/// itself a proposal generator.
+///
+/// INVARIANT: submit creates a `Proposed` proposal ONLY. It NEVER mutates
+/// Q_identity — `apply` stays a separate governed path (UX 10.1), exactly as
+/// `decide` (accept|reject) never applies. Duplicate handles are refused by the
+/// underlying `submit_proposal` seam.
+fn submit_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.submit requires a loopback peer".to_owned(),
+        ));
+    }
+    let proposal_handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let summary = required_param(params, "summary")?;
+    let source_adapter_handle = required_param(params, "source_adapter_handle")
+        .or_else(|_| required_param(params, "sourceAdapterHandle"))?;
+    let created_at = opt_str(params, "created_at")
+        .or_else(|| opt_str(params, "createdAt"))
+        .unwrap_or_else(|| Utc::now().to_rfc3339());
+    let q_identity_candidate = parse_quaternion_candidate(params);
+
+    // Validate the (non-empty) fields and derive the canonical handle-only view
+    // via the portal-core constructor. It is BORN `Proposed` and normalises the
+    // candidate; constructing it NEVER applies — mirroring the decide path's
+    // no-apply invariant. The view is what `list` would later surface.
+    let proposal = IdentityAugmentProposal::proposed(
+        proposal_handle.clone(),
+        summary.clone(),
+        source_adapter_handle.clone(),
+        created_at.clone(),
+        q_identity_candidate,
+    )
+    .map_err(|err| ("invalid-params".to_owned(), err.to_string()))?;
+    let view = proposal.view();
+
+    // Persist the parallel review-ledger record at `Proposed` — the persistence
+    // seam the `list`/`decide` RPCs read and advance. Duplicate handles fail
+    // closed inside `submit_proposal`.
+    let persisted = crate::nara::identity_proposals::PersistedProposal {
+        proposal_handle,
+        state: IdentityAugmentProposalState::Proposed,
+        summary,
+        source_adapter_handle,
+        created_at,
+        reviewed_at: None,
+        decided_at: None,
+        applied_at: None,
+        q_identity_candidate,
+    };
+    crate::nara::identity_proposals::submit_proposal(
+        &identity_proposal_store_path(state_root),
+        persisted,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
 }
 
 /// `nara.identity.proposals.list`: the pending (proposed|reviewed) review views.

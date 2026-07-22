@@ -500,4 +500,118 @@ describe('App shell', () => {
         });
         expect(useOmniPanelSessionStore.getState().session.activeTab).toBe(before);
     });
+
+    it('cmd-shift-3 selects the M3 family root and surfaces it in the active-coordinate readout (CCT-3)', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+
+        act(() => {
+            // Shift+3 yields evt.key '#' but evt.code stays 'Digit3' — the chord
+            // reads the physical code, so the family root really lands on M3.
+            window.dispatchEvent(
+                new KeyboardEvent('keydown', { code: 'Digit3', key: '#', shiftKey: true, metaKey: true })
+            );
+        });
+
+        expect(useCoordinateStore.getState().selected).toBe('M3');
+        // the always-mounted status-strip readout is the observable surface
+        expect(screen.getByTestId('active-coordinate').textContent).toBe('M3');
+        // family-root select is a pure coordinate move — the face never toggled
+        expect(shell.dataset.face).toBe('1');
+    });
+
+    it('cmd-shift-{0..5} maps to six distinct M-family roots (CCT-3, chord uniqueness)', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+
+        const selected: (string | null)[] = [];
+        for (let n = 0; n <= 5; n += 1) {
+            act(() => {
+                window.dispatchEvent(
+                    new KeyboardEvent('keydown', {
+                        code: `Digit${n}`,
+                        key: [')', '!', '@', '#', '$', '%'][n],
+                        shiftKey: true,
+                        metaKey: true
+                    })
+                );
+            });
+            selected.push(useCoordinateStore.getState().selected);
+        }
+
+        expect(selected).toEqual(['M0', 'M1', 'M2', 'M3', 'M4', 'M5']);
+        // injective — no two chords collide onto the same coordinate
+        expect(new Set(selected).size).toBe(6);
+    });
+
+    it('cmd-H then a user-side letter fires that highlight category over the live canvas (CCT-5)', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+
+        const fired: string[] = [];
+        const handler = (event: Event) => fired.push((event as CustomEvent<{ category: string }>).detail.category);
+        window.addEventListener('m4.nara.user-highlight', handler as EventListener);
+
+        // cmd-H arms; the next letter selects the user-side category.
+        for (const [letter, category] of [
+            ['o', 'oracle'],
+            ['d', 'daily-note'],
+            ['e', 'expand'],
+            ['m', 'dream']
+        ] as const) {
+            act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'h', metaKey: true })));
+            act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: letter })));
+            expect(fired.at(-1)).toBe(category);
+        }
+
+        // the four user-side chords are distinct
+        expect(new Set(fired).size).toBe(4);
+        window.removeEventListener('m4.nara.user-highlight', handler as EventListener);
+    });
+
+    it('cmd-H does NOT bind agent-side highlight categories (CCT-5 user-side only)', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+
+        const fired: string[] = [];
+        const handler = (event: Event) => fired.push((event as CustomEvent<{ category: string }>).detail.category);
+        window.addEventListener('m4.nara.user-highlight', handler as EventListener);
+
+        // r/p/s/k/b/l are agent-inscribed only — pressing them after cmd-H
+        // must NOT fire (and must disarm the prefix).
+        for (const letter of ['r', 'p', 's', 'k', 'b', 'l'] as const) {
+            act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'h', metaKey: true })));
+            act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: letter })));
+        }
+
+        expect(fired).toEqual([]);
+        window.removeEventListener('m4.nara.user-highlight', handler as EventListener);
+    });
+
+    it('the cmd-H prefix disarms on Escape and on a non-matching key (CCT-5)', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+
+        const fired: string[] = [];
+        const handler = (event: Event) => fired.push((event as CustomEvent<{ category: string }>).detail.category);
+        window.addEventListener('m4.nara.user-highlight', handler as EventListener);
+
+        // Escape disarms: a subsequent 'o' is a bare key, not a category fire.
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'h', metaKey: true })));
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })));
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'o' })));
+        expect(fired).toEqual([]);
+
+        // a non-matching key ('x') also disarms without firing.
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'h', metaKey: true })));
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'x' })));
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'o' })));
+        expect(fired).toEqual([]);
+
+        // sanity: after disarm, a fresh cmd-H + 'o' still fires.
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'h', metaKey: true })));
+        act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'o' })));
+        expect(fired).toEqual(['oracle']);
+        window.removeEventListener('m4.nara.user-highlight', handler as EventListener);
+    });
 });

@@ -970,8 +970,46 @@ export function App() {
                 requestedContributionId: 'bimba-graph'
             });
         };
+        // CCT-5 two-stroke highlight prefix: cmd-H arms; the next user-side
+        // category letter fires it. Held as effect-local state (like the gateway
+        // watchdog's locals) — it persists across keydowns for this one listener.
+        let highlightPrefixArmed = false;
+        let highlightPrefixTimer: ReturnType<typeof setTimeout> | null = null;
+        const disarmHighlightPrefix = () => {
+            highlightPrefixArmed = false;
+            if (highlightPrefixTimer) {
+                clearTimeout(highlightPrefixTimer);
+                highlightPrefixTimer = null;
+            }
+        };
+        // User-side highlight categories ONLY (CCT-5): agent-side categories
+        // (recognition/prospective/retrospective/kairos/somatic/live-spread →
+        // r/p/s/k/b/l) are deliberately NOT keyboard-bindable — those are
+        // inscribed by agents, never by a user chord.
+        const USER_HIGHLIGHT_CHORDS: Readonly<Record<string, string>> = {
+            d: 'daily-note',
+            o: 'oracle',
+            e: 'expand',
+            m: 'dream'
+        };
         const onKeyDown = (evt: KeyboardEvent) => {
             const meta = evt.metaKey || evt.ctrlKey;
+            // CCT-5: when the cmd-H prefix is armed, the NEXT keystroke selects
+            // the user-side highlight category and fires it over the live Nara
+            // canvas; Escape or any non-matching key just disarms.
+            if (highlightPrefixArmed) {
+                const category = !meta ? USER_HIGHLIGHT_CHORDS[evt.key.toLowerCase()] : undefined;
+                disarmHighlightPrefix();
+                if (category) {
+                    evt.preventDefault();
+                    window.dispatchEvent(
+                        new CustomEvent('m4.nara.user-highlight', { detail: { category } })
+                    );
+                } else if (evt.key === 'Escape') {
+                    evt.preventDefault();
+                }
+                return;
+            }
             if (meta && evt.key === '.') {
                 evt.preventDefault();
                 void commands.execute('face.toggle');
@@ -985,15 +1023,38 @@ export function App() {
                 // CCT-4 cross-layout-intent shortcut — dispatch the active envelope.
                 evt.preventDefault();
                 void dispatchActiveCrossLayoutIntent();
+            } else if (meta && evt.shiftKey && /^Digit[0-5]$/.test(evt.code)) {
+                // CCT-3 cmd-shift-{0..5} → Mn family-root navigation. Architect
+                // decision: select the family root through the existing coordinate
+                // seam (`setSelected('M'+n)`), no face change — the minimal
+                // existing-seam default. Matches on evt.code, not evt.key, because
+                // Shift+digit yields a symbol ('#') in evt.key. The selection is
+                // OBSERVABLE in the always-mounted status-strip `active-coordinate`
+                // readout so an e2e can assert the family root really changed.
+                evt.preventDefault();
+                useCoordinateStore.getState().setSelected(`M${evt.code.slice(-1)}`);
+                persist();
             } else if (meta && !evt.shiftKey && !evt.altKey && /^[1-8]$/.test(evt.key)) {
                 // CCT-4 cmd-1..cmd-8 → OmniPanel tab activation by declared index
                 // (cmd-1 → index 0 … cmd-8 → index 7). The 9th tab ('tuning',
                 // index 8) is intentionally UNBOUND — CCT-4 names exactly eight.
-                // DEFERRED (Architect, pending a coordinate/face-mapping
-                // decision): cmd-shift-{0..5} Mn navigation (CCT-3) and the
-                // cmd-H canvas-highlight two-stroke chord (CCT-5) are NOT bound.
+                // The two remaining 31.T31.3 chord families are now bound: CCT-3
+                // cmd-shift-{0..5} (Mn family-root nav, above) and CCT-5 cmd-H
+                // (two-stroke user-highlight prefix, below). Both drive the
+                // existing coordinate-store / Nara highlight-service seams
+                // directly (no registry command, so no catalog row).
                 evt.preventDefault();
                 void commands.execute(`omnipanel.tab.activate.${Number(evt.key) - 1}`);
+            } else if (meta && !evt.shiftKey && !evt.altKey && evt.key.toLowerCase() === 'h' && !inEditable(evt)) {
+                // CCT-5 cmd-H arms the two-stroke user-highlight prefix; the next
+                // user-side category letter (d/o/e/m) fires it over the live Nara
+                // canvas. A 2s timeout or Escape disarms.
+                evt.preventDefault();
+                highlightPrefixArmed = true;
+                if (highlightPrefixTimer) {
+                    clearTimeout(highlightPrefixTimer);
+                }
+                highlightPrefixTimer = setTimeout(disarmHighlightPrefix, 2000);
             } else if (evt.key === ' ' && !meta && !evt.altKey && !inEditable(evt)) {
                 evt.preventDefault();
                 void commands.execute('engine.pauseToggle');
@@ -1007,7 +1068,10 @@ export function App() {
             }
         };
         window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            disarmHighlightPrefix();
+        };
     }, []);
 
     if (!models) {

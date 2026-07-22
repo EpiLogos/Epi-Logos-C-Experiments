@@ -46,8 +46,16 @@ export interface IdentityProposalView {
 
 const PASU_SHOW_RPC = 'nara.pasu.show';
 const CONSENT_APPEND_RPC = 'nara.pasu.consents.append';
+const PROPOSALS_SUBMIT_RPC = 'nara.identity.proposals.submit';
 const PROPOSALS_LIST_RPC = 'nara.identity.proposals.list';
 const PROPOSALS_DECIDE_RPC = 'nara.identity.proposals.decide';
+
+/** The producer-seam input to open an identity-augment proposal. */
+export interface IdentityProposalSubmission {
+    readonly proposalHandle: string;
+    readonly summary: string;
+    readonly sourceAdapterHandle: string;
+}
 
 // ---------------------------------------------------------------------------
 // Typed gateway client (the SessionClient idiom — one `invoke` seam, testable)
@@ -87,6 +95,22 @@ export class PratibimbaCoordinateClient {
     async appendConsent(record: ConsentRecord): Promise<ConsentRecord[]> {
         const receipt = await this.gateway.invoke(CONSENT_APPEND_RPC, { consent: record });
         return coerceConsents(artifact(receipt).consents);
+    }
+
+    /** Open the identity-augment lifecycle: submit a NEW proposal, created at
+     *  'proposed'. This is the PRODUCER seam (an agent/producer or the e2e loop
+     *  drives it) — the pane itself is a consumer and never calls this from
+     *  render. Submit creates a Proposed proposal ONLY; it never mutates
+     *  Q_identity (apply stays a separate governed path). Returns the created
+     *  view (or null if the substrate returned no view). */
+    async submitProposal(input: IdentityProposalSubmission): Promise<IdentityProposalView | null> {
+        const receipt = await this.gateway.invoke(PROPOSALS_SUBMIT_RPC, {
+            proposal_handle: input.proposalHandle,
+            summary: input.summary,
+            source_adapter_handle: input.sourceAdapterHandle
+        });
+        const view = artifact(receipt);
+        return typeof view.proposalHandle === 'string' ? (view as unknown as IdentityProposalView) : null;
     }
 
     /** The pending (proposed|reviewed) identity-augment proposal views. */

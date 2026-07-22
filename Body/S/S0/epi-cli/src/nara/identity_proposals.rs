@@ -186,9 +186,17 @@ mod tests {
     use super::*;
 
     fn store() -> std::path::PathBuf {
+        // A process-unique path per call. The `{pid}-{nanos}` scheme alone
+        // collided under parallel `cargo test` (all tests share one pid and the
+        // clock resolution is coarse), so two tests could land on ONE file and a
+        // sibling's `remove_file` cleanup would delete a store mid-run. An atomic
+        // sequence guarantees uniqueness regardless of clock granularity.
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
         std::env::temp_dir().join(format!(
-            "identity-proposals-{}-{:?}.json",
+            "identity-proposals-{}-{}-{}.json",
             std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()

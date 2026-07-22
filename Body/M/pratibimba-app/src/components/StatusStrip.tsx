@@ -44,8 +44,12 @@ export function StatusStrip() {
             <span data-testid="status-supervisor" title={supervisor.detail}>
                 ♼ {supervisor.state}
             </span>
-            <span data-testid="status-coordinate" title="active coordinate">
-                # {coordinate ?? '—'}
+            <span
+                data-testid="status-coordinate"
+                data-active-coordinate={coordinate ?? ''}
+                title="active coordinate"
+            >
+                # <span data-testid="active-coordinate">{coordinate ?? '—'}</span>
                 <M3ContextCodonChip />
             </span>
         </footer>

@@ -11,7 +11,7 @@
 // Ported from frozen Body/M/epi-theia/extensions/m4-nara/src/browser/editor/components/floating-menu.tsx.
 import type { Editor } from '@tiptap/core';
 import type { UserHighlightCategory } from './m4NaraHighlightMark';
-import { USER_HIGHLIGHT_CATEGORIES, buildHighlightAttributes, extractHighlights } from './m4NaraHighlightMark';
+import { USER_HIGHLIGHT_CATEGORIES, applyUserHighlight } from './m4NaraHighlightMark';
 import type { HighlightService } from './m4NaraHighlightService';
 
 export type AgentSelectionAction = 'chat' | 'oracle' | 'dream' | 'expand';
@@ -44,12 +44,7 @@ export function NaraFloatingMenu({
     if (!state.isOpen || !editor) return null;
 
     const apply = (category: UserHighlightCategory) => {
-        const end = editor.state.selection.to;
-        editor.chain().focus().setHighlight(buildHighlightAttributes({
-            category,
-            originalText: state.selectedText
-        })).setTextSelection(end).unsetHighlight().run();
-        service.recordHighlights(extractHighlights(editor.state.doc));
+        applyUserHighlight(editor, service, category, state.selectedText);
         onClose();
     };
 

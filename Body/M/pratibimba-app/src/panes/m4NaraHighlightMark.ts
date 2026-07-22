@@ -3,7 +3,8 @@
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): M4-0' canvas input
  * Actualises: the protected-local Tiptap highlight contract and Markdown round-trip.
- * Public surface: HighlightMark, four user categories, extraction/build helpers.
+ * Public surface: HighlightMark, four user categories, extraction/build helpers,
+ *   applyUserHighlight (the shared FloatingMenu + cmd-H chord apply path).
  * Does NOT own: agent-category semantics, vault persistence, or public/S2 projection.
  * Contract: [[M4'-SPEC]]; [[2026-06-04-prospective-retrospective-canvas-spec]] §2.2.
  */
@@ -165,6 +166,31 @@ export function createHighlightEditor(markdown: string): Editor {
         content: markdown,
         contentType: 'markdown'
     });
+}
+
+/**
+ * The one shared user-side highlight apply path (CCT-5): mark the current
+ * selection with a user category, collapse the selection past it, and record
+ * the resulting document highlights into the service. Both the NaraFloatingMenu
+ * category buttons and the cmd-H two-stroke keyboard chord call THIS function,
+ * so the pointer path and the keyboard path can never diverge. The service is
+ * typed structurally (only `recordHighlights`) to avoid a mark↔service cycle.
+ */
+export function applyUserHighlight(
+    editor: Editor,
+    service: { recordHighlights(highlights: readonly ExtractedHighlight[]): void },
+    category: UserHighlightCategory,
+    selectedText: string
+): void {
+    const end = editor.state.selection.to;
+    editor
+        .chain()
+        .focus()
+        .setHighlight(buildHighlightAttributes({ category, originalText: selectedText }))
+        .setTextSelection(end)
+        .unsetHighlight()
+        .run();
+    service.recordHighlights(extractHighlights(editor.state.doc));
 }
 
 export function extractHighlights(doc: HighlightDocumentLike): ExtractedHighlight[] {

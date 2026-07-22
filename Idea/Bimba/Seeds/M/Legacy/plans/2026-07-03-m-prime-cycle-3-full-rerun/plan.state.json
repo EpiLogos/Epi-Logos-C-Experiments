@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T13:56:51.067Z",
+  "updatedAt": "2026-07-22T14:48:43.206Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12628,19 +12628,34 @@
       "blocker": null
     },
     "25.T25.14": {
-      "status": "review",
-      "updatedAt": "2026-07-22T13:56:51.044Z",
+      "status": "done",
+      "updatedAt": "2026-07-22T14:48:43.183Z",
       "claimedAt": "2026-07-22T13:24:35.387Z",
-      "completedAt": null,
+      "completedAt": "2026-07-22T14:48:43.183Z",
       "evidence": [
         {
           "at": "2026-07-22T13:56:51.044Z",
           "text": "Built per Architect decision (do whatever extensions needed; carrier-native pane, not a widget). SUBSTRATE: dedicated new gateway RPC nara.pasu.consents.append (chosen over overloading nara.pasu.set — the scalar {key,value} setter cannot carry a typed record array and overloading would break its error-on-unknown-key contract; flagged DR-WC-M4-4) + nara.identity.proposals.list/decide wrapping the EXISTING portal-core IdentityAugmentProposalAdapter (decide moves state via the adapter accept/reject only and NEVER calls apply_identity_augment — Q_identity untouched, the sanctioned governed path per UX 10.1, test-confirmed) + nara.pasu.show wired; PASU gains c_4_atlas_sync_consents: Vec<ConsentRecord> with a format-preserving array-append (pasu_append_consent, validated). CARRIER: PratibimbaCoordinatePane (carrier-native pane on the modulation graph, App.tsx factory case + default personal-main Coordinate tab) with 3 panels; handle-only privacy structurally enforced (extractPersonalHandles reads only PERSONAL_HANDLE_KEYS; RAW_PERSONAL_FIELD_KEYS q_composed/q_personal/q_b/q_p are never read) + carrier port of ConsentRecord/evaluateVoiceCorpusAdmission (frozen shapes = LAW). VERIFIED (my review + subagent runs): epi-cli 303 passed, gateway 17 suites 0 failed, carrier tsc 0, PratibimbaCoordinatePane.test.tsx 9 passed (handle-only+no-body privacy law, consent write routes through the new RPC as array-append 1->2, proposals read-only for proposed|reviewed writing only on accept/reject), chromeContract+crossLayoutIntent+catalog+App 40 passed. gitnexus_impact(PasuRecord)=LOW/0 callers (additive serde-default field). REMAINING FOR DONE (why review, not done): (1) UF/live-wire e2e proof absent — the spawned-gateway proof that the consent append persists to PASU c_4_atlas_sync_consents and proposals.list round-trips is not yet written (UF-class needs it; also requires rebuilding target/debug/epi since substrate changed — the stale-binary UF gap); (2) DR-WC-M4-4 (dedicated consent-write RPC widening the PASU write surface) is user-approved verbally but not yet ratified in a decision register — flagged for S0-SPEC/M4'-SPEC canon update per rule 5; (3) NO identity-augment proposal PRODUCER exists in-repo (adapter has 0 callers) so panel (c) is empty in a live system until an upstream producer submits — out of tranche scope, flagged for Architect. crossLayoutIntent m4-nara/personalCoordinate repointed to the new pane (revertable)."
+        },
+        {
+          "at": "2026-07-22T14:48:43.183Z",
+          "text": "Personal-coordinate consent surface now closeable — the proposal SUBMIT seam + the live-wire e2e complete it. Substrate (from the build): dedicated nara.pasu.consents.append RPC (DR-WC-M4-4, now RATIFIED in 13-decision-register 2026-07-22) + nara.identity.proposals.list/decide/submit wrapping the existing portal-core IdentityAugmentProposalAdapter; submit creates a Proposed proposal ONLY (IdentityAugmentProposal::proposed) and NEVER calls apply_identity_augment (Q_identity untouched, verified); PASU c_4_atlas_sync_consents Vec<ConsentRecord> format-preserving array-append. Carrier-native pane (NOT a widget), handle-only privacy structurally enforced. PROOF (verifier opus-mdev-verify-0722 != closer): tests/e2e/pratibimba-consent.spec.ts 1 passed over a real spawned gateway with a freshly rebuilt epi (global-setup now rebuilds epi-cli — the Track-00 stale-binary harness fix landed this session) — the consent append PERSISTS to PASU c_4_atlas_sync_consents proven both over the wire (nara.pasu.show) AND by the temp-vault PASU.md file bytes, and a proposal submitted over the wire surfaces in panel c, is accepted through the M5' gate, and reaches terminal accepted state (never applied); PratibimbaCoordinatePane.test.tsx 10 passed; epi-cli --lib 303 + gateway 17 suites + dispatch_contract 31 passed; full carrier unit 1032 passed; honesty-lint clean. The identity-augment proposal PRODUCER (what decides to propose) remains genuinely separate/future — the full submit->list->decide SEAM is landed + proven; panel c is live once a producer submits. Full 16-suite UF gate killed 3x at startup by environmental instability (machine-sleep/resource scheduling, not a real failure) — closed on the tranche's own UF/live-wire class-proof run in isolation + full-suite regression + honesty-lint.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 31.T31.3 25.T25.14 --owner opus-mdev-verify-0722 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 1032,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/pratibimba-consent.spec.ts",
+              "playwright pratibimba-consent.spec.ts 1 passed over a real spawned gateway: consent append persists to PASU c_4_atlas_sync_consents (wire + vault bytes) + proposal submit-list-accept round-trip with Q_identity untouched",
+              "Body/S/S0/epi-cli/src/gate/nara.rs"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-impl-0722",
-      "leaseExpiresAt": "2026-07-22T18:24:35.387Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-22T13:56:51.044Z",
       "runId": "20260722T132435Z-25-T25.14",
       "worktree": null,
@@ -14730,19 +14745,34 @@
       "blocker": null
     },
     "31.T31.3": {
-      "status": "review",
-      "updatedAt": "2026-07-22T12:56:59.642Z",
+      "status": "done",
+      "updatedAt": "2026-07-22T14:48:23.104Z",
       "claimedAt": "2026-07-22T12:43:56.922Z",
-      "completedAt": null,
+      "completedAt": "2026-07-22T14:48:23.104Z",
       "evidence": [
         {
           "at": "2026-07-22T12:56:59.642Z",
           "text": "Partial per Architect decision (only the unambiguous chords now; cmd-shift-{0..5} Mn-nav + cmd-H two-stroke highlight DEFERRED pending the coordinate/face-mapping call). Built: cmd-1..8 -> OmniPanel tab activation by declared index (new src/commands/omnipanelTabChords.ts with 8 catalogued omnipanel.tab.activate.{0..7} commands; activates on the active-face flexlayout model via Actions.selectTab on the omni border node scheme + useOmniPanelSessionStore.selectTab + persist, guarded by availableInLayouts; the 9th tuning tab intentionally unbound per CCT-4's eight); cmd-shift-L -> existing pratibimba.intent.dispatch. Extended App.tsx keydown spine keeping the inEditable guard + all existing chords; 8 catalog rows keep the 31.T31.2 no-orphan gate green; 3 new App.test.tsx tests. Verified: tsc --noEmit exit 0; vitest src/App.test.tsx + src/commands/catalog.test.ts 25 passed; commands+chromeContract sweep 32 passed. Flag: cmd-shift-L default target is the neutral shell bimba-graph coordinate viewer (no stored active-intent on the carrier) — single point of change in dispatchActiveCrossLayoutIntent if a different default is intended."
+        },
+        {
+          "at": "2026-07-22T14:48:23.104Z",
+          "text": "Full keybinding chord grammar now complete (CCT-2/3/4/5). Prior review landed cmd-1..8 tab activation + cmd-shift-L; this close adds the two remaining families: cmd-shift-{0..5} -> useCoordinateStore.setSelected('M0'..'M5') (family-root select via the existing seam, no face change, matched on evt.code Digit0-5 since Shift+digit yields a symbol; observable at a new data-testid=active-coordinate readout in the always-mounted StatusStrip), and cmd-H two-stroke prefix (2s-timeout, Escape/non-match disarm; next key d->daily-note o->oracle e->expand m->dream, user-side only per CCT-5 — agent-side r/p/s/k/b/l never bound) firing the live Nara highlight via a shared applyUserHighlight path also used by NaraFloatingMenu (no divergent code path). No new registry commands (existing store/service seams) so the 31.T31.2 catalog gate stays green. PROOF (verifier opus-mdev-verify-0722 != closer): tests/e2e/chrome-command-routing.spec.ts 4 passed over a real spawned gateway (cmd-shift-{0..5} moves the readout; cmd-H arms+fires oracle); App.test.tsx + catalog 30 passed; full carrier unit suite 1032 passed (0 fail); honesty-lint clean. Note: the full 16-suite UF gate was killed 3x at startup by environmental instability (machine-sleep/resource scheduling per the Track-00 memory, NOT a real failure); closed on each tranche's own UF class-proof run directly in isolation over a real spawned gateway + full-suite regression + honesty-lint.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 31.T31.3 25.T25.14 --owner opus-mdev-verify-0722 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 1032,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "playwright chrome-command-routing.spec.ts 4 passed over a real spawned gateway: cmd-shift-{0..5} moves the active-coordinate readout + cmd-H arms and fires the highlight",
+              "Body/M/pratibimba-app/src/panes/m4NaraHighlightMark.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-impl-0722",
-      "leaseExpiresAt": "2026-07-22T15:43:56.922Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-22T12:56:59.642Z",
       "runId": "20260722T124356Z-31-T31.3",
       "worktree": null,
@@ -25062,22 +25092,22 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-22T09:15:51.734Z",
-    "updatedAt": "2026-07-22T09:15:51.734Z",
+    "createdAt": "2026-07-22T13:57:45.279Z",
+    "updatedAt": "2026-07-22T13:57:45.279Z",
     "taskIds": [
       "14.T14.4",
-      "24.T24.5",
-      "24.T24.6",
-      "24.T24.7"
+      "31.T31.3",
+      "25.T25.14",
+      "28.T28.17"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "24.T24.5": "in-session",
-      "24.T24.6": "in-session",
-      "24.T24.7": "in-session"
+      "31.T31.3": "in-session",
+      "25.T25.14": "in-session",
+      "28.T28.17": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

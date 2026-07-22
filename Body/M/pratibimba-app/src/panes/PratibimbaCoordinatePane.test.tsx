@@ -23,7 +23,7 @@ import {
     validateConsentRecord,
     type ConsentRecord
 } from './pratibimbaConsent';
-import { PratibimbaCoordinatePane } from './PratibimbaCoordinatePane';
+import { PratibimbaCoordinateClient, PratibimbaCoordinatePane } from './PratibimbaCoordinatePane';
 
 // A profile payload carrying the six handle strings AND raw q-body decoys that
 // MUST NOT leak. The opaque handle tokens and the raw body numbers are chosen so
@@ -252,5 +252,101 @@ describe('panel (c) — identity-augment proposals (read-only + M5 gate write)',
                 verdict: 'reject'
             })
         );
+    });
+});
+
+describe('identity-augment lifecycle — submit → list → decide round-trip', () => {
+    // A stateful store standing in for the substrate's persisted review ledger:
+    // submit records a Proposed proposal, list projects the pending (non-terminal)
+    // views, decide moves a proposal to a terminal state. This proves the whole
+    // loop through the ONE gateway `invoke` seam, and that accept never 'applies'
+    // (Q_identity untouched — the terminal state is 'accepted', never 'applied').
+    interface StoreRecord {
+        proposalHandle: string;
+        state: 'proposed' | 'reviewed' | 'accepted' | 'rejected' | 'applied';
+        summary: string;
+        sourceAdapterHandle: string;
+        createdAt: string;
+        reviewedAt: string | null;
+    }
+
+    function statefulInvoke(store: StoreRecord[]): void {
+        invoke.mockImplementation((method: string, params: Record<string, unknown>) => {
+            switch (method) {
+                case 'nara.identity.proposals.submit': {
+                    // The SEAM: create a Proposed proposal only (never applies).
+                    const record: StoreRecord = {
+                        proposalHandle: String(params.proposal_handle),
+                        state: 'proposed',
+                        summary: String(params.summary),
+                        sourceAdapterHandle: String(params.source_adapter_handle),
+                        createdAt: '2026-07-22T10:00:00.000Z',
+                        reviewedAt: null
+                    };
+                    store.push(record);
+                    return Promise.resolve({ artifact: record });
+                }
+                case 'nara.identity.proposals.list':
+                    return Promise.resolve({
+                        artifact: {
+                            proposals: store.filter(r => r.state === 'proposed' || r.state === 'reviewed')
+                        }
+                    });
+                case 'nara.identity.proposals.decide': {
+                    const target = store.find(r => r.proposalHandle === params.proposal_handle);
+                    if (target) {
+                        // The governed review write: accept|reject only — NEVER 'applied'.
+                        target.state = params.verdict === 'accept' ? 'accepted' : 'rejected';
+                        target.reviewedAt = '2026-07-22T10:05:00.000Z';
+                    }
+                    return Promise.resolve({ artifact: target ?? {} });
+                }
+                case 'nara.pasu.show':
+                    return Promise.resolve({ artifact: { c_4_atlas_sync_consents: [] } });
+                default:
+                    return Promise.resolve({ artifact: {} });
+            }
+        });
+    }
+
+    it('a producer submits → pane lists the pending proposal → accept transitions it (no apply)', async () => {
+        const store: StoreRecord[] = [];
+        statefulInvoke(store);
+
+        // 1) The PRODUCER seam: submit a NEW proposal via the client. The pane
+        //    itself never submits from render — this is the upstream producer.
+        const created = await new PratibimbaCoordinateClient({ invoke }).submitProposal({
+            proposalHandle: 'id://augment-1',
+            summary: 'Birthdate encoding layer ready for M5 review.',
+            sourceAdapterHandle: 'adapter://m4/identity-augment'
+        });
+        expect(invoke).toHaveBeenCalledWith('nara.identity.proposals.submit', {
+            proposal_handle: 'id://augment-1',
+            summary: 'Birthdate encoding layer ready for M5 review.',
+            source_adapter_handle: 'adapter://m4/identity-augment'
+        });
+        // Submit creates a Proposed proposal ONLY (never applies).
+        expect(created?.state).toBe('proposed');
+        expect(store).toHaveLength(1);
+
+        // 2) The pane (consumer) lists the freshly-submitted pending proposal.
+        connect();
+        render(<PratibimbaCoordinatePane />);
+        const row = await screen.findByTestId('proposal-row-id://augment-1');
+        expect(within(row).getByText('proposed')).toBeTruthy();
+
+        // 3) The user accepts through the M5' gate → the proposal transitions to
+        //    a terminal 'accepted' state and drops out of the pending list.
+        fireEvent.click(within(row).getByTestId('proposal-accept-id://augment-1'));
+        await waitFor(() =>
+            expect(invoke).toHaveBeenCalledWith('nara.identity.proposals.decide', {
+                proposal_handle: 'id://augment-1',
+                verdict: 'accept'
+            })
+        );
+        await screen.findByTestId('proposals-empty');
+        // Q_identity untouched: the terminal state is 'accepted', NEVER 'applied'.
+        expect(store[0].state).toBe('accepted');
+        expect(store.some(r => r.state === 'applied')).toBe(false);
     });
 });

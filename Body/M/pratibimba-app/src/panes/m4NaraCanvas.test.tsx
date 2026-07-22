@@ -15,6 +15,7 @@ import { NaraCanvasEditor } from './NaraCanvasEditor';
 import { NaraFloatingMenu } from './NaraFloatingMenu';
 import { HighlightService } from './m4NaraHighlightService';
 import {
+    applyUserHighlight,
     buildHighlightAttributes,
     createHighlightEditor,
     extractHighlights,
@@ -153,5 +154,50 @@ describe('M4 Nara canvas', () => {
         });
         expect(Object.keys(HIGHLIGHT_VISUAL_REGISTERS)).toHaveLength(10);
         expect(editor.textContent).toBe(before);
+    });
+
+    it('applyUserHighlight marks the selection with the given user category (the cmd-H chord path)', () => {
+        // The cmd-H two-stroke chord and the floating-menu buttons both route
+        // through this ONE shared path — proving it here proves both surfaces.
+        const editor = createHighlightEditor('# Today\n\nA **live** sentence.');
+        const service = new HighlightService();
+        editor.commands.setTextSelection({ from: 10, to: 14 });
+
+        applyUserHighlight(editor, service, 'oracle', 'live');
+
+        const highlights = extractHighlights(editor.state.doc);
+        expect(highlights).toHaveLength(1);
+        expect(highlights[0]).toMatchObject({
+            category: 'oracle',
+            originalText: 'live',
+            privacyClass: 'protected_local'
+        });
+        expect(service.getHighlights()).toHaveLength(1);
+        editor.destroy();
+    });
+
+    it('the mounted canvas wires the m4.nara.user-highlight window event and guards an empty selection (CCT-5)', async () => {
+        const service = new HighlightService();
+        render(
+            <NaraCanvasEditor
+                path="Empty/Present/16-07-2026/daily-note.md"
+                highlightService={service}
+            />
+        );
+        const editor = await screen.findByTestId('m4-nara-editor');
+        await waitFor(() => expect(editor.textContent).toContain('A live sentence.'));
+
+        // No active selection → the chord path is a no-op (does not mark).
+        act(() => {
+            window.dispatchEvent(new CustomEvent('m4.nara.user-highlight', { detail: { category: 'oracle' } }));
+        });
+        expect(service.getHighlights()).toHaveLength(0);
+        expect(editor.querySelector('mark[data-category="oracle"]')).toBeNull();
+
+        // An unknown category is rejected even with a selection present.
+        act(() => {
+            window.dispatchEvent(new CustomEvent('m4.nara.user-highlight', { detail: { category: 'recognition' } }));
+        });
+        expect(service.getHighlights()).toHaveLength(0);
     });
 });
