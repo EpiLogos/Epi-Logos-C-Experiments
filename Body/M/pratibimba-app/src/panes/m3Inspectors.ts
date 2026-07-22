@@ -57,7 +57,12 @@ export const SUIT_INTEGRAL_CITATION = Object.freeze({
 interface MahamayaSlice {
     readonly codonId: number;
     readonly codon: string | null;
+    /** Fu-Xi binary address (0..63, `upper<<3|lower`) — the raw bus ordering. */
     readonly hexagramId: number;
+    /** King Wen ordinal (1..64) of `hexagramId`, translated by the kernel-owned
+     *  `KING_WEN_FROM_ADDRESS64` LUT. Nullable so a legacy gateway that predates
+     *  the dual-ordering bus does not void the whole (shared) M3 slice. */
+    readonly kingWen: number | null;
     readonly upperTrigram: number;
     readonly lowerTrigram: number;
     readonly nucleotideBits: readonly number[];
@@ -144,6 +149,7 @@ function mahamayaFromPayload(root: Record<string, unknown>): MahamayaSlice | nul
         codonId,
         codon: typeof m.codon === 'string' ? m.codon : null,
         hexagramId,
+        kingWen: num(m.kingWen),
         upperTrigram,
         lowerTrigram,
         nucleotideBits: bits,

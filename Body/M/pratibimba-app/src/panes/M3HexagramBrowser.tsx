@@ -1,20 +1,28 @@
 /**
- * Coordinate: M' M3' (64-hexagram King Wen browser — Track 24.T24.5)
+ * Coordinate: M' M3' (64-hexagram dual Fu-Xi ↔ King Wen browser — Track 24.T24.5)
  * Residency: Body/M/pratibimba-app/src/panes
- * Actualises: `M3HexagramBrowser` — the 8×8 King Wen grid keyed on the active
- *   `hexagramId` bussed at `mahamaya.hexagramId`. The 64 King Wen numbers
- *   (1..64) lay out in reading order (King Wen ordering IS the sequential
- *   label 1..64 — no local table needed to place them). The ACTIVE hexagram's
- *   6-line glyph renders from the bussed `upperTrigram`/`lowerTrigram` (pure
- *   bit decomposition, bottom-to-top); a per-line changing-line toggle flips
- *   the visual line state and shows the resulting 6-bit pattern. LAW: no local
- *   King Wen line-pattern table — the non-active cells render as numbered
- *   slots (their per-hexagram line pattern is kernel-owned, not bussed), and
- *   the line-change DERIVED hexagramId (the 384-graph resolution) is
- *   honest-pending, never fabricated locally.
+ * Actualises: `M3HexagramBrowser` — the 8×8 grid laid out and labelled in King
+ *   Wen order (cells 1..64). The live gateway busses BOTH orderings on the M3
+ *   mahamaya slice: `hexagramId` = the Fu-Xi `address64` (0..63,
+ *   `upper<<3|lower`) AND `kingWen` = its King Wen ordinal (1..64). King Wen
+ *   ordering is a DISTINCT permutation of the binary Fu-Xi order, so the
+ *   translation is a kernel-owned LUT (`KING_WEN_FROM_ADDRESS64` in portal-core
+ *   `src/luts/mahamaya.rs`) — the pane NEVER re-derives it. The active cell
+ *   lights on the bussed `kingWen` (honestly King-Wen-keyed), fixing the prior
+ *   bug that lit `kingWen === hexagramId` (Fu-Xi address) and so left address64
+ *   0 lighting nothing while King Wen cell 64 stayed dead. The active hexagram's
+ *   6-line glyph renders from the bussed `upperTrigram`/`lowerTrigram` (pure bit
+ *   decomposition, bottom-to-top); a per-line changing-line toggle flips the
+ *   visual line state and shows the resulting 6-bit pattern.
+ *   LAW: the King Wen↔address64 NUMBER mapping is kernel-LUT-backed (bussed as
+ *   `kingWen`), never a local table; the per-hexagram LINE pattern of the 63
+ *   non-active cells stays kernel-owned (rendered as numbered slots); and the
+ *   line-change DERIVED hexagram (the 384-graph resolution) is honest-pending,
+ *   never fabricated locally.
  * Does NOT own: the King Wen→line-pattern table (kernel epi-lib m3 LUTs), the
- *   384 line-change graph resolution, gateway I/O, the mahamaya view law
- *   (m3Inspectors.ts), the profile cache.
+ *   King Wen↔address64 number LUT (portal-core mahamaya.rs — bussed as `kingWen`,
+ *   not local), the 384 line-change graph resolution, gateway I/O, the mahamaya
+ *   view law (m3Inspectors.ts), the profile cache.
  */
 
 import { useMemo, useState } from 'react';
@@ -45,7 +53,11 @@ export function M3HexagramBrowser() {
     }, [tick.payload, tick.generation]);
 
     const m = view?.mahamaya ?? null;
+    // Fu-Xi binary address (0..63) — the raw bus value; drives the glyph and is
+    // the pane's readiness gate. `activeKingWen` is its kernel-LUT King Wen
+    // ordinal (1..64) — what the grid is laid out and lit on.
     const activeHexagramId = m?.hexagramId ?? null;
+    const activeKingWen = m?.kingWen ?? null;
 
     // Changing-line set is keyed to the active hexagram; reset when it changes.
     const [changing, setChanging] = useState<ReadonlySet<number>>(new Set());
@@ -66,7 +78,8 @@ export function M3HexagramBrowser() {
                     <p className="mext-widget-empty" data-testid="m3-hexagram-browser-pending">
                         <ProvenanceBadge state="pending" reason="pending-mahamaya" />
                         pending-mahamaya — the King Wen grid activates when the bus carries
-                        the M3 mahamaya projection (hexagramId); no local hexagram table here.
+                        the M3 mahamaya projection (Fu-Xi hexagramId + its kernel-LUT kingWen);
+                        no local hexagram table here.
                     </p>
                 </section>
             </M3ReadinessBoundary>
@@ -94,7 +107,9 @@ export function M3HexagramBrowser() {
     const cells = [];
     for (let idx = 0; idx < KING_WEN_COUNT; idx++) {
         const kingWen = idx + 1;
-        const active = kingWen === activeHexagramId;
+        // King-Wen honest: light the cell whose King Wen ordinal equals the
+        // bussed `kingWen` (kernel LUT), NOT the Fu-Xi address64 (`hexagramId`).
+        const active = kingWen === activeKingWen;
         cells.push(
             <div
                 key={kingWen}
@@ -120,8 +135,14 @@ export function M3HexagramBrowser() {
             bindingKey="m3.hexagram-browser"
             fallback={{ state: 'ready', reason: 'profile-current' }}
         >
-        <section className="mext-widget-detail" data-testid="m3-hexagram-browser" data-state="ready" data-active-hexagram={activeHexagramId}>
-            <h3>64-hexagram browser · King Wen</h3>
+        <section
+            className="mext-widget-detail"
+            data-testid="m3-hexagram-browser"
+            data-state="ready"
+            data-active-king-wen={activeKingWen ?? ''}
+            data-active-address64={activeHexagramId}
+        >
+            <h3>64-hexagram browser · King Wen ↔ Fu-Xi</h3>
 
             <div
                 className="m3-hexagram-grid"
@@ -140,7 +161,10 @@ export function M3HexagramBrowser() {
             {/* Active hexagram glyph — 6 clickable lines, bottom-to-top, from
                 the bussed upper/lower trigrams. Clicking marks a changing line. */}
             <div className="m3-hexagram-active" data-testid="m3-hexagram-active">
-                <h4>Hexagram {activeHexagramId} · upper {m.upperTrigram} / lower {m.lowerTrigram}</h4>
+                <h4>
+                    King Wen {activeKingWen ?? '—'} · Fu-Xi #{activeHexagramId} ·
+                    upper {m.upperTrigram} / lower {m.lowerTrigram}
+                </h4>
                 <div className="m3-hexagram-lines" data-testid="m3-hexagram-lines">
                     {[5, 4, 3, 2, 1, 0].map(i => {
                         const solid = renderedLines[i] === 1;

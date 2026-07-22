@@ -12,6 +12,7 @@ import { CROSS_LAYOUT_INTENT_COMMAND, CROSS_LAYOUT_INTENT_TARGETS } from './comm
 import type { KernelBridgeCachedProfile } from './bridge/types';
 import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
 import { useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
+import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
 
 class InertSocket {
     readyState = 0;
@@ -416,5 +417,87 @@ describe('App shell', () => {
             dayNow: '07-16-2026',
             privacyClass: 'protected'
         });
+    });
+
+    it('cmd-1 and cmd-8 activate the declared OmniPanel folds (CCT-4) on the visible face', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        const executeSpy = vi.spyOn(commands, 'execute');
+
+        // start on a non-default fold so cmd-1 (index 0 → pi-chat) is a real switch
+        act(() => {
+            useOmniPanelSessionStore.getState().selectTab('review');
+        });
+
+        act(() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: '1', metaKey: true }));
+        });
+        expect(executeSpy).toHaveBeenCalledWith('omnipanel.tab.activate.0');
+        expect(useOmniPanelSessionStore.getState().session.activeTab).toBe('pi-chat');
+        await waitFor(() => expect(shell.dataset.omnipanelActiveTab).toBe('pi-chat'));
+
+        act(() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: '8', metaKey: true }));
+        });
+        expect(executeSpy).toHaveBeenCalledWith('omnipanel.tab.activate.7');
+        expect(useOmniPanelSessionStore.getState().session.activeTab).toBe('diagnostics');
+        await waitFor(() => expect(shell.dataset.omnipanelActiveTab).toBe('diagnostics'));
+
+        // the tab chords are DISTINCT from cmd-period — the face never toggled
+        expect(shell.dataset.face).toBe('1');
+        executeSpy.mockRestore();
+    });
+
+    it('cmd-shift-L dispatches the active cross-layout intent envelope (CCT-4)', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        const executeSpy = vi.spyOn(commands, 'execute');
+
+        act(() => {
+            useCoordinateStore.getState().setSelected('M2-3');
+        });
+
+        await act(async () => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'L', shiftKey: true, metaKey: true }));
+        });
+
+        expect(executeSpy).toHaveBeenCalledWith(
+            CROSS_LAYOUT_INTENT_COMMAND,
+            expect.objectContaining({
+                coordinate: 'M2-3',
+                requestedExtensionId: 'ide-shell-m0-m5',
+                requestedContributionId: 'bimba-graph'
+            })
+        );
+        // it really routed — the neutral shell Bimba-graph target lives on face 0 / ide-deep
+        await waitFor(() => expect(shell.dataset.face).toBe('0'));
+        expect(shell.dataset.activeLayout).toBe('ide-deep');
+        executeSpy.mockRestore();
+    });
+
+    it('the eight tab chords map to eight distinct folds; the 9th tab stays unbound (CCT-4)', async () => {
+        render(<App />);
+        await screen.findByTestId('shell');
+
+        const activated: string[] = [];
+        for (let digit = 1; digit <= 8; digit += 1) {
+            act(() => {
+                window.dispatchEvent(new KeyboardEvent('keydown', { key: String(digit), metaKey: true }));
+            });
+            activated.push(useOmniPanelSessionStore.getState().session.activeTab);
+        }
+
+        // cmd-N → declared index N-1 across the manifest's first eight folds
+        expect(activated).toEqual(OMNIPANEL_TABS.slice(0, 8).map(tab => tab.id));
+        // injective — no two chords collide onto the same fold
+        expect(new Set(activated).size).toBe(8);
+
+        // the 9th tab ('tuning', index 8) is intentionally UNBOUND — cmd-9 no-ops
+        expect(OMNIPANEL_TABS[8].id).toBe('tuning');
+        const before = useOmniPanelSessionStore.getState().session.activeTab;
+        act(() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: '9', metaKey: true }));
+        });
+        expect(useOmniPanelSessionStore.getState().session.activeTab).toBe(before);
     });
 });

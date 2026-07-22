@@ -13,6 +13,8 @@ const MAHAMAYA = {
     codonId: 0x27,
     codon: 'GCT',
     hexagramId: 39,
+    // Fu-Xi address64 39 → King Wen 26 (portal-core KING_WEN_FROM_ADDRESS64).
+    kingWen: 26,
     upperTrigram: 4,
     lowerTrigram: 7,
     nucleotideBits: [2, 1, 3],
@@ -55,6 +57,8 @@ describe('m3 inspectors view model (04.T4.2)', () => {
         expect(view.state).toBe('ready');
         expect(view.mahamaya?.codonId).toBe(0x27);
         expect(view.mahamaya?.hexagramId).toBe(39);
+        // Both orderings surface: Fu-Xi address64 AND its kernel-LUT King Wen.
+        expect(view.mahamaya?.kingWen).toBe(26);
         expect(view.mahamaya?.nucleotideBits).toEqual([2, 1, 3]);
         expect(view.mahamaya?.dnaRnaPhase).toBe('dna');
         expect(view.mahamaya?.lineChangeOperatorAddress).toBe(251);

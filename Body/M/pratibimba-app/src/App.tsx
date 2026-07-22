@@ -29,6 +29,7 @@ import {
     parseCrossLayoutIntent,
     registerCrossLayoutIntentCommand
 } from './commands/crossLayoutIntent';
+import { registerOmnipanelTabActivationCommands } from './commands/omnipanelTabChords';
 import { useEventsStore } from './state/eventsStore';
 import { useReadinessStore } from './state/readinessStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
@@ -914,7 +915,22 @@ export function App() {
                     }
                 }
             }),
-            ...registerEngineCommands(commands)
+            ...registerEngineCommands(commands),
+            // 31.T31.3 (CCT-4): cmd-1..cmd-8 → omnipanel.tab.activate.{0..7}.
+            // Activation switches the visible fold on the active face AND the
+            // shared session store, so both agree; the 9th tab ('tuning') is
+            // intentionally unbound (CCT-4 names exactly eight chords).
+            ...registerOmnipanelTabActivationCommands({
+                activeModel: () => {
+                    const current = modelsRef.current;
+                    if (!current) {
+                        return null;
+                    }
+                    return faceRef.current === 0 ? current.cosmic : current.personal;
+                },
+                activeLayout: () => activeLayoutRef.current,
+                persist
+            })
         ];
         return () => disposers.forEach(dispose => dispose());
     }, []);
@@ -928,6 +944,26 @@ export function App() {
             evt.target.closest(
                 'input, textarea, select, button, a[href], [contenteditable], .cm-editor'
             ) !== null;
+        // 31.T31.3 (CCT-4): the active CrossLayoutIntent envelope, assembled
+        // from live shell state and routed to the neutral shell Bimba-graph
+        // coordinate viewer (a stable, always-resolvable cross-layout target).
+        const dispatchActiveCrossLayoutIntent = () => {
+            const privacyClass = useSessionStore.getState().privacyClass;
+            return commands.execute(CROSS_LAYOUT_INTENT_COMMAND, {
+                coordinate: useCoordinateStore.getState().selected,
+                artifactUri: null,
+                reviewId: null,
+                dayNow: useSessionStore.getState().dayNow,
+                sessionKey: useSessionStore.getState().sessionKey,
+                profileGeneration: useTickStore.getState().generation,
+                privacyClass:
+                    privacyClass === 'public' || privacyClass === 'protected' || privacyClass === 'private'
+                        ? privacyClass
+                        : null,
+                requestedExtensionId: 'ide-shell-m0-m5',
+                requestedContributionId: 'bimba-graph'
+            });
+        };
         const onKeyDown = (evt: KeyboardEvent) => {
             const meta = evt.metaKey || evt.ctrlKey;
             if (meta && evt.key === '.') {
@@ -939,6 +975,19 @@ export function App() {
             } else if (meta && evt.shiftKey && evt.key.toLowerCase() === 'o') {
                 evt.preventDefault();
                 void commands.execute('omnipanel.toggle');
+            } else if (meta && evt.shiftKey && evt.key.toLowerCase() === 'l') {
+                // CCT-4 cross-layout-intent shortcut — dispatch the active envelope.
+                evt.preventDefault();
+                void dispatchActiveCrossLayoutIntent();
+            } else if (meta && !evt.shiftKey && !evt.altKey && /^[1-8]$/.test(evt.key)) {
+                // CCT-4 cmd-1..cmd-8 → OmniPanel tab activation by declared index
+                // (cmd-1 → index 0 … cmd-8 → index 7). The 9th tab ('tuning',
+                // index 8) is intentionally UNBOUND — CCT-4 names exactly eight.
+                // DEFERRED (Architect, pending a coordinate/face-mapping
+                // decision): cmd-shift-{0..5} Mn navigation (CCT-3) and the
+                // cmd-H canvas-highlight two-stroke chord (CCT-5) are NOT bound.
+                evt.preventDefault();
+                void commands.execute(`omnipanel.tab.activate.${Number(evt.key) - 1}`);
             } else if (evt.key === ' ' && !meta && !evt.altKey && !inEditable(evt)) {
                 evt.preventDefault();
                 void commands.execute('engine.pauseToggle');

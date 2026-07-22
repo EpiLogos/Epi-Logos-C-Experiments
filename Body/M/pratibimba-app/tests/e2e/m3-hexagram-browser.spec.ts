@@ -4,23 +4,28 @@
  * Position (#n): #0 cosmic face, ide-deep M3 inspectors area.
  * Actualises: real Chromium proof over the spawned gateway (:18933) that the
  *   `M3HexagramBrowser` renders all 64 King Wen cells, lights the cell keyed to
- *   the LIVE bussed `mahamaya.hexagramId`, renders the active hexagram's 6-line
- *   glyph from the LIVE bussed `upperTrigram`/`lowerTrigram` (pure bit
- *   decomposition), and holds the 384-graph line-change DERIVED hexagram as
- *   HONEST-PENDING — never a fabricated local number.
+ *   the LIVE bussed King Wen ordinal `mahamaya.kingWen` (NOT the Fu-Xi
+ *   `hexagramId`), renders the active hexagram's 6-line glyph from the LIVE
+ *   bussed `upperTrigram`/`lowerTrigram` (pure bit decomposition), and holds the
+ *   384-graph line-change DERIVED hexagram as HONEST-PENDING — never a
+ *   fabricated local number.
  * Public surface: Playwright test over the spawned gateway.
  * Does NOT own: profile production, the King Wen→line-pattern table (kernel
- *   epi-lib m3 LUTs), the 384 line-change graph resolution, gateway I/O.
+ *   epi-lib m3 LUTs), the King Wen↔address64 number LUT (portal-core mahamaya.rs),
+ *   the 384 line-change graph resolution, gateway I/O.
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.5.
  *
  * GROUND TRUTH (portal-core src/luts/mahamaya.rs): the live mahamaya slice
- *   busses hexagram_id = address64 = floor((degree360 % 360) * 64 / 360), so
- *   the bussed `hexagramId` domain is [0,63] (m3.h "hexagram 0-63"), with
- *   upper = address64>>3, lower = address64&7 → hexagramId === upper*8 + lower.
- *   The pane numbers its grid cells 1..64 and lights `kingWen === hexagramId`;
- *   therefore a cell lights only when hexagramId ∈ [1,63] (hexagramId 0 lights
- *   nothing; cell 64 is never lit). This test reads the LIVE value and asserts
- *   the honest domain + consistency — it hardcodes NO active hexagram.
+ *   busses BOTH orderings — `hexagramId` = address64 = floor((degree360 % 360) *
+ *   64 / 360) ∈ [0,63] (Fu-Xi, upper = address64>>3, lower = address64&7 →
+ *   hexagramId === upper*8 + lower), AND `kingWen` = its King Wen ordinal ∈
+ *   [1,64] via the kernel-owned KING_WEN_FROM_ADDRESS64 LUT (King Wen order is a
+ *   DISTINCT permutation of the binary Fu-Xi order). The pane numbers its grid
+ *   cells 1..64 (King Wen) and lights the cell whose ordinal === the bussed
+ *   `kingWen`, so ANY tick lights exactly one cell in [1,64] (fixing the prior
+ *   `kingWen === hexagramId` bug where address64 0 lit nothing and cell 64 was
+ *   dead). This test reads the LIVE values and asserts the lit cell === kingWen +
+ *   the glyph === address64 decomposition — it hardcodes NO active hexagram.
  */
 
 import { expect, Page, test } from '@playwright/test';
@@ -56,7 +61,8 @@ async function dispatchM3Wheel(page: Page): Promise<void> {
 interface BrowserSnapshot {
     present: boolean;
     state: string | null;
-    activeHexRaw: string | null;
+    activeKingWenRaw: string | null;
+    activeAddress64Raw: string | null;
     litKingWen: number[];
     cellCount: number;
     headerText: string;
@@ -71,7 +77,8 @@ async function readSnapshot(page: Page): Promise<BrowserSnapshot> {
         const empty = {
             present: false,
             state: null as string | null,
-            activeHexRaw: null as string | null,
+            activeKingWenRaw: null as string | null,
+            activeAddress64Raw: null as string | null,
             litKingWen: [] as number[],
             cellCount: 0,
             headerText: '',
@@ -106,7 +113,8 @@ async function readSnapshot(page: Page): Promise<BrowserSnapshot> {
         return {
             present: true,
             state: browser.getAttribute('data-state'),
-            activeHexRaw: browser.getAttribute('data-active-hexagram'),
+            activeKingWenRaw: browser.getAttribute('data-active-king-wen'),
+            activeAddress64Raw: browser.getAttribute('data-active-address64'),
             litKingWen,
             cellCount: cells.length,
             headerText: header?.textContent ?? '',
@@ -150,21 +158,27 @@ test('24.T24.5: 64-hexagram browser lights the live King Wen cell, renders the b
     await expect(async () => {
         snap = await readSnapshot(page);
         expect(snap.present).toBe(true);
-        // Prefer the READY branch (the gateway busses hexagramId live). If the
-        // harness ever booted without a mahamaya projection the pane would show
-        // data-state="pending-mahamaya"; requiring ready here fails loud rather
-        // than silently passing a pending UI.
+        // Prefer the READY branch (the gateway busses the mahamaya slice live).
+        // If the harness ever booted without a mahamaya projection the pane would
+        // show data-state="pending-mahamaya"; requiring ready here fails loud
+        // rather than silently passing a pending UI.
         expect(snap.state).toBe('ready');
-        const activeHex = Number(snap.activeHexRaw);
-        // Honest live domain is [0,63] (address64); gate on a CELL-representable
-        // value [1,63] so we observe REAL cell lighting. We never assert a
-        // specific hexagram — only whatever the live bus carries this tick.
-        expect(Number.isInteger(activeHex)).toBe(true);
-        expect(activeHex).toBeGreaterThanOrEqual(1);
-        expect(activeHex).toBeLessThanOrEqual(63);
+        const kingWen = Number(snap.activeKingWenRaw);
+        const address64 = Number(snap.activeAddress64Raw);
+        // The King Wen ordinal is a cell-representable value in [1,64] EVERY
+        // tick (King Wen order has no 0 slot). We never assert a specific
+        // hexagram — only whatever the live bus carries this tick.
+        expect(Number.isInteger(kingWen)).toBe(true);
+        expect(kingWen).toBeGreaterThanOrEqual(1);
+        expect(kingWen).toBeLessThanOrEqual(64);
+        // The Fu-Xi address64 co-carried on the same slice is in [0,63].
+        expect(Number.isInteger(address64)).toBe(true);
+        expect(address64).toBeGreaterThanOrEqual(0);
+        expect(address64).toBeLessThanOrEqual(63);
     }).toPass({ timeout: 30_000 });
 
-    const activeHex = Number(snap.activeHexRaw);
+    const kingWen = Number(snap.activeKingWenRaw);
+    const address64 = Number(snap.activeAddress64Raw);
 
     // (a.1) All 64 King Wen cells render.
     expect(snap.cellCount).toBe(64);
@@ -172,33 +186,37 @@ test('24.T24.5: 64-hexagram browser lights the live King Wen cell, renders the b
     await expect(browser.getByTestId('m3-hexagram-cell-1')).toBeVisible();
     await expect(browser.getByTestId('m3-hexagram-cell-64')).toBeVisible();
 
-    // (a.2) Exactly the live active hexagram's cell is lit — one cell, and it is
-    //        cell `activeHex`. No fabricated / hardcoded guess: activeHex is
-    //        whatever the live gateway bussed this tick.
-    expect(snap.litKingWen).toEqual([activeHex]);
+    // (a.2) Exactly ONE cell is lit and it is the KING WEN cell — cell `kingWen`
+    //        (not the Fu-Xi address64). No fabricated / hardcoded guess: kingWen
+    //        is whatever the live gateway bussed this tick. This is the fix: the
+    //        lit cell is King-Wen-keyed, so cell 64 is reachable and no tick
+    //        lights nothing.
+    expect(snap.litKingWen).toEqual([kingWen]);
 
-    // (a.3) The honest domain contract: bussed hexagramId is in [0,63]
-    //        (m3.h "hexagram 0-63" — address64), NOT King Wen 1..64. We assert
-    //        the full domain bound so a producer regression outside it fails.
-    expect(activeHex).toBeGreaterThanOrEqual(0);
-    expect(activeHex).toBeLessThanOrEqual(63);
+    // (a.3) The honest dual-ordering contract: the lit cell tracks kingWen
+    //        (1..64), while the co-bussed Fu-Xi address64 is (0..63). When the
+    //        two differ this tick, the lit cell must follow King Wen, never the
+    //        address — a producer/pane regression back to address-keying fails.
+    if (kingWen !== address64) {
+        expect(snap.litKingWen).not.toEqual([address64]);
+    }
 
     // ── (b) The active glyph's 6 lines render EXACTLY the bit decomposition of
     //        the live bussed upper/lower trigrams. Producer law:
-    //        upper = hexagramId>>3, lower = hexagramId&7; glyph is
+    //        upper = address64>>3, lower = address64&7; glyph is
     //        [lower bit0,1,2 | upper bit0,1,2] bottom-to-top (line index 0..5),
     //        solid iff bit === 1. We parse the header's own upper/lower and
-    //        cross-check both against hexagramId and against the rendered lines.
+    //        cross-check both against the Fu-Xi address64 and the rendered lines.
     const headerMatch = snap.headerText.match(/upper\s+(\d+)\s*\/\s*lower\s+(\d+)/);
     expect(headerMatch).not.toBeNull();
     const upper = Number(headerMatch![1]);
     const lower = Number(headerMatch![2]);
-    // Trigram values are 0..7 and recompose the hexagram address exactly.
+    // Trigram values are 0..7 and recompose the Fu-Xi hexagram address exactly.
     expect(upper).toBeGreaterThanOrEqual(0);
     expect(upper).toBeLessThanOrEqual(7);
     expect(lower).toBeGreaterThanOrEqual(0);
     expect(lower).toBeLessThanOrEqual(7);
-    expect(upper * 8 + lower).toBe(activeHex);
+    expect(upper * 8 + lower).toBe(address64);
 
     // Six line elements, each solid/broken matching the live bit pattern.
     const expectedSolids = [

@@ -10,6 +10,11 @@ pub struct MathemeBinaryProjection {
     pub hexagram: Option<String>,
     pub line_change_operator: Option<String>,
     pub hexagram_id: u8,
+    /// King Wen ordinal (1..=64) of `hexagram_id` (Fu-Xi address64). King Wen
+    /// ordering is a distinct permutation, translated by the kernel-owned
+    /// `KING_WEN_FROM_ADDRESS64` LUT — the bus carries BOTH orderings so a
+    /// carrier can label/light either honestly.
+    pub king_wen: u8,
     pub upper_trigram: u8,
     pub lower_trigram: u8,
     pub codon_id: u8,
@@ -48,6 +53,7 @@ impl MathemeBinaryProjection {
                 codec.line_index + 1
             )),
             hexagram_id: codec.hexagram_id,
+            king_wen: codec.king_wen,
             upper_trigram: codec.upper_trigram,
             lower_trigram: codec.lower_trigram,
             codon_id: codec.codon_id,

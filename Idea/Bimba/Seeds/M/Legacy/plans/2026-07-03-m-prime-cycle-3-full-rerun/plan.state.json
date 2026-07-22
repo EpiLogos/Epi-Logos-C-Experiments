@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T10:56:39.438Z",
+  "updatedAt": "2026-07-22T13:22:55.416Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11844,20 +11844,35 @@
       "blocker": null
     },
     "24.T24.5": {
-      "status": "review",
-      "updatedAt": "2026-07-22T01:41:42.841Z",
+      "status": "done",
+      "updatedAt": "2026-07-22T13:22:55.391Z",
       "claimedAt": "2026-07-22T01:30:49.554Z",
-      "completedAt": null,
+      "completedAt": "2026-07-22T13:22:55.391Z",
       "evidence": [
         {
           "at": "2026-07-22T01:41:42.841Z",
           "text": "UF gap closed with a real-gateway e2e (tests/e2e/m3-hexagram-browser.spec.ts, 3/3 stable, no flake): browser reaches data-state=ready with a live-bussed hexagramId, renders 64 cells + lights the active cell, derives the 6-line glyph from the bussed trigrams (upper*8+lower===hexagramId), and holds the 384-graph line-change derivation honest-pending (pending-line-change-graph, anti-fabrication guard asserts NO local derived number). HELD AT REVIEW (not done) by a real correctness finding the UF proof exposed that the jsdom unit test had masked: live mahamaya.hexagramId domain is 0..63 (portal-core mahamaya.rs hexagram_id=address64=upper<<3|lower), but the pane labels cells King Wen 1..64 and lights kingWen===hexagramId — so hexagramId=0 lights NO cell (while state=ready) and cell 64 is never lit. Deeper: address64 is binary/Fu-Xi ordering, not King Wen (which needs a lookup table), contradicting the pane header LAW 'King Wen ordering IS 1..64, no local table'. Needs an Architect interface decision (map address64->King Wen via LUT, or restate header to 0..63 address + fix off-by-one); not landed unilaterally per taste-at-boundaries."
+        },
+        {
+          "at": "2026-07-22T13:22:55.391Z",
+          "text": "Fixed the M3 hexagram-browser King-Wen bug per Architect decision (unified dual Fu-Xi<->King-Wen LUT, both orderings). Kernel: added canonical KING_WEN_FROM_ADDRESS64 + inverse LUT + king_wen field on MahamayaCodecProjection (kept address64/hexagramId) in portal-core mahamaya.rs, threaded king_wen through MathemeBinaryProjection->profile->serde camelCase->bridge MahamayaSlice.kingWen; LUT cribbed from the frozen reference and VERIFIED by kernel tests (bijection with clean inverse; anchors all-yang addr63->KW1 Qian, all-yin addr0->KW2 Kun reasoned from the kernel trigram encoding). Carrier: M3HexagramBrowser lights the cell on the bussed kingWen (was the bug: kingWen===hexagramId Fu-Xi address, so addr0 lit nothing and cell 64 was dead), shows both orderings, corrected header. Proofs (verifier opus-mdev-verify-0722 != closer): portal-core cargo 119 passed incl the 2 new King-Wen tests; carrier tsc 0 + M3HexagramBrowser.test.tsx + m3Inspectors.test.ts 13 passed; the tranche UF e2e tests/e2e/m3-hexagram-browser.spec.ts:129 PASSES over a real spawned gateway (1 passed) asserting the lit cell === live kingWen and the glyph === address64 decomposition. NOTE: the first UF gate run REFUSED because the e2e spawns the pre-built target/debug/epi which the UF scope does not rebuild for a kernel change (stale binary emitted no kingWen); rebuilding epi-cli (cargo build) made the live gateway current and the e2e green — the threading was correct, the binary was stale. The full UF gate showed no other app-ui-flow regression; the only other red was the known-flaky visual-regression:265 lemniscate baseline (unrelated, isolation-green). honesty-lint clean. gitnexus_impact(MahamayaCodecProjection) = LOW, 0 callers. Flag for canon: S0-SPEC/M3-prime-SPEC (mahamaya projection now buses King-Wen alongside Fu-Xi); harness gap noted (UF scope should rebuild epi-cli for kernel changes).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 24.T24.5 --owner opus-mdev-verify-0722 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 133,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/luts/mahamaya.rs",
+              "playwright m3-hexagram-browser.spec.ts:129 PASS over a real spawned gateway (fresh epi binary): lights the live King-Wen cell",
+              "Body/M/pratibimba-app/src/panes/M3HexagramBrowser.tsx"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-impl-0722",
-      "leaseExpiresAt": "2026-07-22T03:30:49.554Z",
-      "heartbeatAt": "2026-07-22T01:41:42.841Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-22T12:46:00.075Z",
       "runId": "20260722T013049Z-24-T24.5",
       "worktree": null,
       "blocker": null
@@ -14710,16 +14725,21 @@
       "blocker": null
     },
     "31.T31.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-22T12:56:59.642Z",
+      "claimedAt": "2026-07-22T12:43:56.922Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-22T12:56:59.642Z",
+          "text": "Partial per Architect decision (only the unambiguous chords now; cmd-shift-{0..5} Mn-nav + cmd-H two-stroke highlight DEFERRED pending the coordinate/face-mapping call). Built: cmd-1..8 -> OmniPanel tab activation by declared index (new src/commands/omnipanelTabChords.ts with 8 catalogued omnipanel.tab.activate.{0..7} commands; activates on the active-face flexlayout model via Actions.selectTab on the omni border node scheme + useOmniPanelSessionStore.selectTab + persist, guarded by availableInLayouts; the 9th tuning tab intentionally unbound per CCT-4's eight); cmd-shift-L -> existing pratibimba.intent.dispatch. Extended App.tsx keydown spine keeping the inEditable guard + all existing chords; 8 catalog rows keep the 31.T31.2 no-orphan gate green; 3 new App.test.tsx tests. Verified: tsc --noEmit exit 0; vitest src/App.test.tsx + src/commands/catalog.test.ts 25 passed; commands+chromeContract sweep 32 passed. Flag: cmd-shift-L default target is the neutral shell bimba-graph coordinate viewer (no stored active-intent on the carrier) — single point of change in dispatchActiveCrossLayoutIntent if a different default is intended."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T15:43:56.922Z",
+      "heartbeatAt": "2026-07-22T12:56:59.642Z",
+      "runId": "20260722T124356Z-31-T31.3",
       "worktree": null,
       "blocker": null
     },
@@ -25013,6 +25033,16 @@
       "leaseExpiresAt": "2026-07-22T12:43:50.202Z",
       "worktree": null,
       "completedAt": "2026-07-22T10:56:39.414Z"
+    },
+    {
+      "runId": "20260722T124356Z-31-T31.3",
+      "taskId": "31.T31.3",
+      "status": "review",
+      "startedAt": "2026-07-22T12:43:56.922Z",
+      "owner": "opus-mdev-impl-0722",
+      "leaseExpiresAt": "2026-07-22T15:43:56.922Z",
+      "worktree": null,
+      "completedAt": "2026-07-22T12:56:59.642Z"
     }
   ],
   "activeRoute": {

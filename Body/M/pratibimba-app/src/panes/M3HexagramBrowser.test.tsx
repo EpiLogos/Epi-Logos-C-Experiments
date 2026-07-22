@@ -6,9 +6,15 @@ import { KernelBridgeCachedProfile } from '../bridge/types';
 import { M3ProfileTickProvider } from './m3SurfaceContext';
 
 // A real-shaped bridge profile carrying the mahamaya window that
-// buildM3InspectorsView reads: hexagramId (King Wen), upper/lower trigrams,
-// nucleotide bits, dna/rna phase, line index + line-change operator.
-function profileFixture(hexagramId: number, generation: number): KernelBridgeCachedProfile {
+// buildM3InspectorsView reads. The bus carries BOTH orderings: `hexagramId` is
+// the Fu-Xi address64 (0..63, upper<<3|lower) and `kingWen` is its kernel-LUT
+// King Wen ordinal (1..64). The two are a DISTINCT permutation, so the fixture
+// passes both independently — the pane must light on `kingWen`, not `hexagramId`.
+function profileFixture(
+    hexagramId: number,
+    kingWen: number,
+    generation: number
+): KernelBridgeCachedProfile {
     return {
         generation,
         cachedAtMs: 0,
@@ -23,6 +29,7 @@ function profileFixture(hexagramId: number, generation: number): KernelBridgeCac
                 codonId: 21,
                 codon: 'CAG',
                 hexagramId,
+                kingWen,
                 upperTrigram: 5,
                 lowerTrigram: 2,
                 nucleotideBits: [1, 0, 1],
@@ -35,6 +42,12 @@ function profileFixture(hexagramId: number, generation: number): KernelBridgeCac
         }
     } as unknown as KernelBridgeCachedProfile;
 }
+
+// Fu-Xi address64 = upper(5)<<3 | lower(2) = 42; per portal-core
+// KING_WEN_FROM_ADDRESS64, address 42 → King Wen 64 (a distinct value, so the
+// test proves King-Wen keying rather than a coincidental hexagramId === kingWen).
+const FUXI_ADDRESS_42 = 42;
+const KING_WEN_OF_42 = 64;
 
 function renderBrowser() {
     return render(
@@ -55,20 +68,50 @@ describe('M3HexagramBrowser', () => {
         expect(screen.getByTestId('m3-hexagram-browser-pending').textContent).toContain('pending-mahamaya');
     });
 
-    it('renders all 64 King Wen cells and lights the active hexagramId', () => {
-        useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
+    it('renders all 64 cells and lights the KING WEN cell, not the Fu-Xi address64', () => {
+        useTickStore.setState({
+            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
+            generation: 7
+        });
         renderBrowser();
 
         for (let kw = 1; kw <= 64; kw++) {
             expect(screen.getByTestId(`m3-hexagram-cell-${kw}`)).toBeTruthy();
         }
-        expect(screen.getByTestId('m3-hexagram-cell-11').getAttribute('data-active')).toBe('true');
-        expect(screen.getByTestId('m3-hexagram-cell-12').getAttribute('data-active')).toBe('false');
-        expect(screen.getByTestId('m3-hexagram-browser').getAttribute('data-active-hexagram')).toBe('11');
+        // The King Wen cell (64) lights — including cell 64, which the old
+        // `kingWen === hexagramId` bug could never light.
+        expect(screen.getByTestId(`m3-hexagram-cell-${KING_WEN_OF_42}`).getAttribute('data-active')).toBe('true');
+        // The Fu-Xi address64 cell (42) does NOT light — proves King-Wen keying.
+        expect(screen.getByTestId(`m3-hexagram-cell-${FUXI_ADDRESS_42}`).getAttribute('data-active')).toBe('false');
+        // Exactly one cell is lit.
+        expect(
+            screen.getAllByTestId(/^m3-hexagram-cell-\d+$/).filter(
+                c => c.getAttribute('data-active') === 'true'
+            )
+        ).toHaveLength(1);
+    });
+
+    it('surfaces BOTH orderings — King Wen ordinal and Fu-Xi address64', () => {
+        useTickStore.setState({
+            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
+            generation: 7
+        });
+        renderBrowser();
+
+        const browser = screen.getByTestId('m3-hexagram-browser');
+        expect(browser.getAttribute('data-active-king-wen')).toBe(String(KING_WEN_OF_42));
+        expect(browser.getAttribute('data-active-address64')).toBe(String(FUXI_ADDRESS_42));
+        // The active-hexagram header shows both King Wen and Fu-Xi identities.
+        const header = screen.getByTestId('m3-hexagram-active').querySelector('h4');
+        expect(header?.textContent).toContain(`King Wen ${KING_WEN_OF_42}`);
+        expect(header?.textContent).toContain(`Fu-Xi #${FUXI_ADDRESS_42}`);
     });
 
     it('renders the active glyph 6 lines from the bussed trigrams and keeps non-active glyphs pending', () => {
-        useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
+        useTickStore.setState({
+            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
+            generation: 7
+        });
         renderBrowser();
         for (let i = 0; i < 6; i++) {
             expect(screen.getByTestId(`m3-hexagram-line-${i}`)).toBeTruthy();
@@ -82,7 +125,10 @@ describe('M3HexagramBrowser', () => {
     });
 
     it('toggles a changing line and renders the derived-hexagram resolution as honest-pending', () => {
-        useTickStore.setState({ profile: profileFixture(11, 7), generation: 7 });
+        useTickStore.setState({
+            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
+            generation: 7
+        });
         renderBrowser();
 
         // No changing line → no derived-pending panel yet.

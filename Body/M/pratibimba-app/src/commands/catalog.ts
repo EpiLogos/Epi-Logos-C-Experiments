@@ -37,6 +37,7 @@ export interface CatalogCommand {
  *   - src/commands/atelier.ts (3)   — `registerAtelierCommands` (16.T16.19)
  *   - src/engine/modulation (5)     — `registerEngineCommands` (E3)
  *   - src/commands/crossLayoutIntent (1) — `registerCrossLayoutIntentCommand` (31.T31.10)
+ *   - src/commands/omnipanelTabChords (8) — `registerOmnipanelTabActivationCommands` (31.T31.3, CCT-4)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
  * `src/ui/leftSidebarModes.ts` also *declares* a register site, but its factory
  * (`registerLeftSidebarModeCommands`) has no caller — it is dead code, so its
@@ -139,6 +140,16 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         owner: 'cross-layout',
         tranche: '31.T31.10'
     },
+
+    // --- src/commands/omnipanelTabChords.ts (registerOmnipanelTabActivationCommands, CCT-4) ---
+    { id: 'omnipanel.tab.activate.0', title: 'OmniPanel: Activate the Pi tab (⌘1)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.1', title: 'OmniPanel: Activate the Sessions tab (⌘2)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.2', title: 'OmniPanel: Activate the Dispatch tab (⌘3)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.3', title: 'OmniPanel: Activate the Tools tab (⌘4)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.4', title: 'OmniPanel: Activate the Evidence tab (⌘5)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.5', title: 'OmniPanel: Activate the Review tab (⌘6)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.6', title: 'OmniPanel: Activate the Gateway tab (⌘7)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+    { id: 'omnipanel.tab.activate.7', title: 'OmniPanel: Activate the Diagnostics tab (⌘8)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
 
     // --- src/panes/M0LayerRail.tsx (data-driven over M0_LAYER_ROUTES local layers) ---
     { id: 'm0.layer.lang', title: "M0': Pre-math node language layer", owner: 'm0-anuttara-rail', tranche: '01.T1.1' },
