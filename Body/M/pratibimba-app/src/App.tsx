@@ -61,6 +61,7 @@ import { M4LogosCyclePane } from './panes/M4LogosCyclePane';
 import { PiAxiomTranslationInspector } from './panes/PiAxiomTranslationInspector';
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
 import { DispatchTracePanel } from './panes/omni/DispatchTracePanel';
+import { ToolStreamPanel } from './panes/omni/ToolStreamPanel';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -416,8 +417,21 @@ function factory(node: TabNode) {
             return <ChatPane />;
         case 'omniSessions':
             return <SessionsPane />;
+        // 27.T27.4 — the Tool Stream fold IS the temporal fold of the same
+        // Pi → subagent genealogy the Dispatch tab folds structurally (15.11).
+        // The raw gateway-event ring stays reachable as a subordinate <details>
+        // (mirrors 27.3's composition-observability fold), so promoting the fold
+        // never drops the unfiltered log truth — no regression.
         case 'omniLogs':
-            return <LogsPane />;
+            return (
+                <div className="tool-stream-fold" data-testid="tool-stream-fold">
+                    <ToolStreamPanel />
+                    <details open className="tool-stream-raw-logs" data-testid="tool-stream-raw-logs">
+                        <summary>Raw gateway logs</summary>
+                        <LogsPane />
+                    </details>
+                </div>
+            );
         // 44.T44.3 — the Review fold renders the first real data through the
         // block standard (27.6 extends with the live review reads + submit).
         case 'omniReview':

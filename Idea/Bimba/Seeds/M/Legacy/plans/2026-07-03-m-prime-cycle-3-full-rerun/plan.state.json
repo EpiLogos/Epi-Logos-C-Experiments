@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T23:09:17.770Z",
+  "updatedAt": "2026-07-23T23:16:32.369Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13385,14 +13385,30 @@
       "blocker": null
     },
     "27.T27.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T23:04:28.917Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T23:16:32.347Z",
       "claimedAt": "2026-07-23T23:04:28.917Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T23:16:32.347Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T23:16:32.347Z",
+          "text": "27.4 Tool Stream mounted: omniLogs now renders ToolStreamPanel (temporal Pi->subagent genealogy fold via DispatchGenealogyStream, live/paused + actor/kind/time/tool filters) with raw LogsPane preserved as a subordinate <details open> (no regression, mirrors 27.3); tool-stream + dispatch-stream CSS added; CHROME-CONTRACT omniLogs body row updated. UF proof: e2e omnipanel-tab-traversal 27.T27.13 green in real Chromium opening Tools+Evidence; full app-test 1129 green; UF-scoped verify-tranche green on every suite except known-flaky pratibimba-consent:274 (confirmed PASS in isolation 7.2s, unrelated session-close spec).",
+          "receipt": {
+            "command": "npx playwright test omnipanel-tab-traversal dispatch-trace-genealogy composition-dispatch-trace (UF app-ui-flow, real Chromium+gateway)",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-274-impl",
-      "leaseExpiresAt": "2026-07-24T01:04:28.917Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T23:04:28.917Z",
       "runId": "20260723T230428Z-27-T27.4",
       "worktree": null,
@@ -25533,11 +25549,12 @@
     {
       "runId": "20260723T230428Z-27-T27.4",
       "taskId": "27.T27.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T23:04:28.917Z",
       "owner": "opus-mdev-274-impl",
       "leaseExpiresAt": "2026-07-24T01:04:28.917Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-23T23:16:32.347Z"
     },
     {
       "runId": "20260723T230434Z-28-T28.2",

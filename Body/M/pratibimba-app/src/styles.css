@@ -5872,3 +5872,203 @@ textarea {
     font-size: var(--type-caption);
     opacity: 0.7;
 }
+
+/* ===================== Tool Stream fold (27.T27.4) =====================
+   The temporal fold of the Pi → subagent genealogy. Mirrors the dispatch-trace
+   design system; the raw gateway-event ring rides beneath as a subordinate
+   <details> so the fold never regresses the unfiltered log truth. */
+.tool-stream-fold {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    height: 100%;
+    overflow: auto;
+}
+.tool-stream-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    flex: 1 1 auto;
+    min-height: 4rem;
+}
+.tool-stream-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.tool-stream-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.tool-stream-subtitle {
+    font-size: var(--type-caption);
+    opacity: 0.7;
+}
+.tool-stream-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin-left: auto;
+}
+.tool-stream-live {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.tool-stream-live.active {
+    opacity: 1;
+    border-color: var(--ready);
+    color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.tool-stream-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.tool-stream-filters,
+.tool-stream-kinds,
+span.tool-stream-timerange {
+    display: inline-flex;
+    gap: 0.25rem;
+}
+.tool-stream-actor-filter,
+.tool-stream-kind-filter,
+button.tool-stream-timerange {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.tool-stream-actor-filter.active,
+.tool-stream-kind-filter.active,
+button.tool-stream-timerange.active {
+    opacity: 1;
+    border-color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 18%, transparent);
+}
+.tool-stream-toolname {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.tool-stream-detail {
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    font-size: var(--type-body-small);
+    flex-shrink: 0;
+}
+.tool-stream-detail h4 {
+    margin: 0 0 0.3rem;
+    font-size: var(--type-heading-4);
+}
+.tool-stream-detail dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1rem 0.6rem;
+    margin: 0;
+}
+.tool-stream-detail dt {
+    opacity: 0.55;
+}
+/* The stream face (DispatchGenealogyStream) — shared by the Tools fold. */
+.dispatch-genealogy-stream {
+    font-size: var(--type-body-small);
+    overflow: auto;
+    flex: 1 1 auto;
+    min-height: 2.75rem;
+}
+.dispatch-stream-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.dispatch-stream-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.12rem 0.3rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+}
+.dispatch-stream-row:hover {
+    background: color-mix(in srgb, var(--hairline) 40%, transparent);
+}
+.dispatch-stream-row.selected {
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.dispatch-stream-time {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.6;
+}
+.dispatch-stream-kind {
+    font-size: var(--type-micro);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.75;
+}
+.dispatch-stream-kind.kind-settled {
+    color: var(--ready);
+}
+.dispatch-stream-actor {
+    font-weight: 600;
+}
+.dispatch-stream-channel {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.8;
+}
+.dispatch-stream-status {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+    margin-left: auto;
+}
+.dispatch-stream-status.status-failed,
+.dispatch-stream-status.status-refused {
+    color: var(--danger);
+}
+.dispatch-stream-status.status-succeeded {
+    color: var(--ready);
+}
+.dispatch-stream-link {
+    font-size: var(--type-micro);
+    padding: 0 0.3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+/* Subordinate raw-log ring: reachable, never dominant (regression guard). */
+.tool-stream-raw-logs {
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.3rem;
+    opacity: 0.85;
+    flex-shrink: 0;
+}
+.tool-stream-raw-logs > summary {
+    cursor: pointer;
+    font-size: var(--type-caption);
+    opacity: 0.7;
+}

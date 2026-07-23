@@ -62,7 +62,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `codon` | legacy saved-layout redirect | M0' chrome | legacy | `App.tsx::factory` redirect message (surface is now a Cosmic Engine layer) | — |
 | `omniChat` | `/` omni border, both faces, tab "Pi" | M5' chrome | live | `ChatPane` (27.1; Pi voice = agentic dispatch entry) | — |
 | `omniSessions` | `/` omni border, both faces, tab "Sessions" | M5' chrome | live | `SessionsPane` (27.2) | — |
-| `omniLogs` | `/` omni border, both faces, tab "Tools" | M5' chrome | live | `LogsPane` (27.4; tool-stream temporal fold) | — |
+| `omniLogs` | `/` omni border, both faces, tab "Tools" | M5' chrome | live | `ToolStreamPanel` (27.4 — temporal fold of the Pi→subagent genealogy via `DispatchGenealogyStream`, live/paused + actor/kind/time/tool filters; the raw gateway-event ring rides beneath as a subordinate `<details>` `LogsPane`, no regression) | — |
 | `omniDispatchTrace` | `/` omni border, both faces, tab "Dispatch" | M5' chrome | live | `CompositionDispatchTracePane` (29.T29.11; bounded existing observability ring, no fifth store) | `agentic-control-room` (abbreviated) |
 | `omniEvidence` | `/` omni border, both faces, tab "Evidence" | M5' chrome | pending-fold | 27.5 owns the body | `evidence-pane` |
 | `omniReview` | `/` omni border, both faces, tab "Review" | M5' chrome | live | `ReviewBlocksPane` (44.T44.3 — first real data through the Track-44 block standard: genealogy fixture → review-item/evidence/dispatch-genealogy blocks via `BlockHost`; 27.6 extends with live `s5'.review.*` reads + verdict submit under `m5ReviewGate.ts`, which is already live per 08.T8.3) | `review-pane` |
