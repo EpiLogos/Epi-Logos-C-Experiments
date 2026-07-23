@@ -66,6 +66,29 @@ describe('cross-layout intent targets (31.T31.10)', () => {
         expect(CROSS_LAYOUT_INTENT_TARGETS.every(target => target.component.length > 0)).toBe(true);
     });
 
+    it('exposes the 31.T31.5 launcher COMPOSE group: both engines reach their live compose faces', () => {
+        // The discoverable grouped launcher (31.5) reaches the two compose
+        // engines — cosmic 1-2-3 and personal 4-5-0 — through the single intent
+        // dispatch; each resolves to its mounted factory component on the right
+        // face and layout. This is the one launcher group (alongside cosmic /
+        // personal / diagnostics) that lacked its own catalogue assertion.
+        const cosmic = intentTarget({
+            requestedExtensionId: 'plugin-integrated-1-2-3',
+            requestedContributionId: 'cosmic-composition'
+        });
+        expect(cosmic?.component).toBe('cosmic');
+        expect(cosmic?.face).toBe(0);
+        expect(cosmic?.preferredLayout).toBe('daily-0-1');
+
+        const personal = intentTarget({
+            requestedExtensionId: 'plugin-integrated-4-5-0',
+            requestedContributionId: 'personal-composition'
+        });
+        expect(personal?.component).toBe('personalHome');
+        expect(personal?.face).toBe(1);
+        expect(personal?.preferredLayout).toBe('daily-0-1');
+    });
+
     it('promotes deep M-family contributions while OmniPanel receivers preserve the current layout', () => {
         expect(intentTarget({
             requestedExtensionId: 'm3-mahamaya',

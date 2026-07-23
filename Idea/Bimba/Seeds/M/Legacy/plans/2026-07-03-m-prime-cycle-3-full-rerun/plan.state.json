@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T05:15:29.301Z",
+  "updatedAt": "2026-07-23T09:55:08.766Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14017,14 +14017,29 @@
       "blocker": null
     },
     "28.T28.18": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T05:07:49.686Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T09:55:08.249Z",
       "claimedAt": "2026-07-23T05:07:49.686Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T09:55:08.249Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T09:55:08.249Z",
+          "text": "28.T28.18 Fate-A close (DR-FACE-7): the six shared status fields are consumed from the ONE shared projection (state/stores.ts) by StatusStrip + 35+ panes with zero own-state; added consumption-mirror test M0CoordinateSummaryCard.test.tsx (coordinate+generation mirror the store, re-render on advance); UF status-strip-discipline.spec.ts green (live strip = six spine threads + advancing tick off the real wire). No construction.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/status-strip-discipline.spec.ts (UF, exit 0) + npx vitest run src/panes/M0CoordinateSummaryCard.test.tsx",
+            "exitCode": 0,
+            "testsPassed": 5,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M0CoordinateSummaryCard.test.tsx",
+              "Body/M/pratibimba-app/src/components/StatusStrip.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-fateA-build",
-      "leaseExpiresAt": "2026-07-23T08:07:49.686Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T05:07:49.686Z",
       "runId": "20260723T050749Z-28-T28.18",
       "worktree": null,
@@ -14471,15 +14486,20 @@
       "blocker": null
     },
     "30.T30.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T05:07:49.897Z",
+      "status": "review",
+      "updatedAt": "2026-07-23T09:52:32.614Z",
       "claimedAt": "2026-07-23T05:07:49.897Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T09:52:32.614Z",
+          "text": "Fate-A carried slice CONFIRMED + UF-proven, full palette DR-gated -> review not done. CARRIED: the coordinate-derived colour token-source discipline lives on the carrier — src/ui/tokens.ts:57 FAMILY_HUES (6 family hues, raw-hex-only) consumed live by graph nodes (primitives.tsx:68, GraphExplorerPane.tsx:119); styles.css :root carries highlight-category (10), readiness (--ready/--danger), and the --type-* scale; raw-hex discipline machine-enforced by lint-carrier-tokens (green) and the :root vocabulary proven live on the real gateway by type-voice.spec.ts (passed 2026-07-23). HELD at review: 30.2's full acceptance is the 11-namespace / ~95-token / 36-grade family-x-archetype chromatic SYSTEM with per-token light/dark + WCAG-contrast + derivation-citation proofs; that expansion is an OPEN Architect palette decision (DR-WC-DL-1 family palette, DR-WC-DL-2 psyche-facet) and the DR-FACE-7 fate law forbids constructing it unilaterally. Surfaced to Architect; built nothing."
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:49.897Z",
-      "heartbeatAt": "2026-07-23T05:07:49.897Z",
+      "heartbeatAt": "2026-07-23T09:52:32.614Z",
       "runId": "20260723T050749Z-30-T30.2",
       "worktree": null,
       "blocker": null
@@ -14891,14 +14911,29 @@
       "blocker": null
     },
     "31.T31.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T05:07:50.109Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T09:55:08.497Z",
       "claimedAt": "2026-07-23T05:07:50.109Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T09:55:08.497Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T09:55:08.497Z",
+          "text": "31.T31.5 Fate-A close (DR-FACE-7): Theia menu nouns dead; the discoverable grouped launcher is carried by crossLayoutIntent 55-target catalog + CommandPalette + pratibimba.intent.dispatch; added the missing COMPOSE-group assertion (1-2-3 to cosmic/face0, 4-5-0 to personalHome/face1); UF chrome-command-routing.spec.ts green (palette lists only catalogued commands, live face-toggle + coordinate moves). Diagnostics fold bodies remain owned by 27.3/.5/.7/.8.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/chrome-command-routing.spec.ts (UF, exit 0) + npx vitest run src/commands/crossLayoutIntent.test.ts",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.test.ts",
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-fateA-build",
-      "leaseExpiresAt": "2026-07-23T08:07:50.109Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T05:07:50.109Z",
       "runId": "20260723T050750Z-31-T31.5",
       "worktree": null,
@@ -15404,14 +15439,29 @@
       "blocker": null
     },
     "32.T32.14": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T05:07:50.327Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T09:55:08.741Z",
       "claimedAt": "2026-07-23T05:07:50.327Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T09:55:08.741Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T09:55:08.741Z",
+          "text": "32.T32.14 Fate-A close (DR-FACE-7): dead @pratibimba/acceptance-harness noun; onboarding cold-start acceptance carried by firstSessionOrchestration.test.ts + kairosEnablement.test.ts + onboardingCompletionLedger.test.ts + boot/kairos-enablement e2e; UF boot.spec.ts + kairos-enablement.spec.ts green (real gateway boot + probe-before-opt-in). Optional dedicated cold-start playwright spec + visual baselines noted honest-pending, not blockers.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/kairos-enablement.spec.ts tests/e2e/boot.spec.ts (UF, exit 0) + npx vitest run src/onboarding/firstSessionOrchestration.test.ts",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/onboarding/firstSessionOrchestration.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/boot.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-fateA-build",
-      "leaseExpiresAt": "2026-07-23T08:07:50.327Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T05:07:50.327Z",
       "runId": "20260723T050750Z-32-T32.14",
       "worktree": null,
@@ -25262,38 +25312,42 @@
     {
       "runId": "20260723T050749Z-28-T28.18",
       "taskId": "28.T28.18",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T05:07:49.686Z",
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:49.686Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-23T09:55:08.249Z"
     },
     {
       "runId": "20260723T050749Z-30-T30.2",
       "taskId": "30.T30.2",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-23T05:07:49.897Z",
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:49.897Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-23T09:52:32.614Z"
     },
     {
       "runId": "20260723T050750Z-31-T31.5",
       "taskId": "31.T31.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T05:07:50.109Z",
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:50.109Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-23T09:55:08.497Z"
     },
     {
       "runId": "20260723T050750Z-32-T32.14",
       "taskId": "32.T32.14",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T05:07:50.327Z",
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:50.327Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-23T09:55:08.741Z"
     }
   ],
   "activeRoute": {
