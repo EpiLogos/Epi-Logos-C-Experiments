@@ -62,6 +62,7 @@ import { PiAxiomTranslationInspector } from './panes/PiAxiomTranslationInspector
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
 import { DispatchTracePanel } from './panes/omni/DispatchTracePanel';
 import { ToolStreamPanel } from './panes/omni/ToolStreamPanel';
+import { EvidencePanel } from './panes/omni/EvidencePanel';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -446,9 +447,13 @@ function factory(node: TabNode) {
             return <TuningPane />;
         case 'omniDispatchTrace':
             return <DispatchTracePanel />;
-        // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
-        // own the bodies) mount the honest pending pane.
+        // 27.T27.5 — the Evidence fold IS the MediatedRunEvidencePacket landing
+        // surface (15.2 "the tab is the surface"; no modal). Honest-empty until a
+        // real deposit feed lands (s5.epii.deposit — feed-gated, 27.5 tail).
         case 'omniEvidence':
+            return <EvidencePanel />;
+        // 27.T27.0: folds whose panels have not landed (27.7/.8 own the
+        // bodies) mount the honest pending pane.
         case 'omniGateway':
         case 'omniDiagnostics':
             return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;

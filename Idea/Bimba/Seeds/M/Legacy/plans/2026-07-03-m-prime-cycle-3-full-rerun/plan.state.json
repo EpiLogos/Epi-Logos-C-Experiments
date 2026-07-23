@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T23:16:32.369Z",
+  "updatedAt": "2026-07-23T23:26:19.356Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13415,16 +13415,33 @@
       "blocker": null
     },
     "27.T27.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-23T23:26:19.333Z",
+      "claimedAt": "2026-07-23T23:17:27.698Z",
+      "completedAt": "2026-07-23T23:26:19.333Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T23:26:19.333Z",
+          "text": "27.5 Evidence mounted: omniEvidence now renders EvidencePanel (MediatedRunEvidencePacket deposition fold via EvidencePacketList/EvidencePacketView, mediator+privacy-class filters, cross-fold deep-links, embedded DispatchTraceMiniGraph), honest-empty until a real s5.epii.deposit feed lands; manifest evidence landed:false->true; omnipanelRuntime.test pending-set -> [gateway,diagnostics]; CHROME-CONTRACT omniEvidence pending-fold->live (landed<->status agreement holds); evidence + privacy-class + mini-graph CSS added. UF proof: e2e omnipanel-tab-traversal 27.T27.13 green in real Chromium opening Evidence->EvidencePanel; full app-test 1129 green; UF-scoped gate green on every suite except known-flaky pratibimba-consent:274 (confirmed PASS in isolation 7.2s, unrelated session-close spec).",
+          "receipt": {
+            "command": "npx playwright test omnipanel-tab-traversal (UF app-ui-flow, real Chromium+gateway) + UF-scoped verify-all",
+            "exitCode": 0,
+            "testsPassed": 1129,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-275-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-23T23:17:27.698Z",
+      "runId": "20260723T231727Z-27-T27.5",
       "worktree": null,
       "blocker": null
     },
@@ -15337,14 +15354,18 @@
       "blocker": null
     },
     "32.T32.2": {
-      "status": "blocked",
-      "updatedAt": "2026-07-23T22:57:18.559Z",
+      "status": "pending",
+      "updatedAt": "2026-07-23T23:20:05.791Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-23T22:57:18.559Z",
           "text": "Fate C spine-gap (DR-FACE-7): the routing target — the PASU identity wizard (25.T25.4) — is pending/unlanded in the carrier (no wizard face exists; the M4 dialogical arena is a different surface), and the enforced write path nara.pasu.set is unimplemented per gateway-method-audit. nara.pasu.show exists so absence-detection could fire, but the orchestration would route to a non-existent wizard (dead code, no observable behaviour, UF unprovable). Build after 25.T25.4 lands the wizard face and nara.pasu.set is implemented."
+        },
+        {
+          "at": "2026-07-23T23:20:05.791Z",
+          "text": "Unblock: re-examined — the orchestration decision (coldStartPasuBranch, mirroring coldStartKairosBranch) is a real testable deliverable; nara.pasu.show exists. Building it (+ 25.T25.4 wizard for the routing target)."
         }
       ],
       "notes": null,
@@ -15353,10 +15374,7 @@
       "heartbeatAt": null,
       "runId": null,
       "worktree": null,
-      "blocker": {
-        "kind": "environment",
-        "dependency": "25.T25.4"
-      }
+      "blocker": null
     },
     "32.T32.3": {
       "status": "pending",
@@ -25565,6 +25583,16 @@
       "leaseExpiresAt": "2026-07-24T00:34:34.620Z",
       "worktree": null,
       "completedAt": "2026-07-23T23:09:17.748Z"
+    },
+    {
+      "runId": "20260723T231727Z-27-T27.5",
+      "taskId": "27.T27.5",
+      "status": "done",
+      "startedAt": "2026-07-23T23:17:27.698Z",
+      "owner": "opus-mdev-275-impl",
+      "leaseExpiresAt": "2026-07-24T01:17:27.698Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T23:26:19.333Z"
     }
   ],
   "activeRoute": {

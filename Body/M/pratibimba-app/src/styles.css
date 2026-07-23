@@ -6072,3 +6072,262 @@ button.tool-stream-timerange.active {
     font-size: var(--type-caption);
     opacity: 0.7;
 }
+
+/* ===================== Evidence fold (27.T27.5) =====================
+   The MediatedRunEvidencePacket landing surface. Mirrors the dispatch-trace
+   design system; honest-empty until a real deposit feed lands. */
+.evidence-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    overflow: auto;
+}
+.evidence-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.evidence-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.evidence-subtitle {
+    font-size: var(--type-caption);
+    opacity: 0.7;
+}
+.evidence-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin-left: auto;
+}
+.evidence-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.evidence-filters {
+    display: inline-flex;
+    gap: 0.25rem;
+}
+.evidence-mediator-filter,
+.evidence-privacy-filter {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+    text-transform: capitalize;
+}
+.evidence-mediator-filter.active,
+.evidence-privacy-filter.active {
+    opacity: 1;
+    border-color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 18%, transparent);
+}
+.evidence-packet-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex-shrink: 0;
+}
+.evidence-packet-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.35rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+}
+.evidence-packet-row:hover {
+    background: color-mix(in srgb, var(--hairline) 40%, transparent);
+}
+.evidence-packet-row.selected {
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.evidence-row-title {
+    font-weight: 600;
+}
+.evidence-row-mediator {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+}
+.evidence-row-coordinate {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.6;
+    margin-left: auto;
+}
+.evidence-packet-view {
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    font-size: var(--type-body-small);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+.evidence-packet-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 0.3rem;
+}
+.evidence-packet-title {
+    font-size: var(--type-heading-4);
+}
+.evidence-packet-id {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.55;
+}
+.evidence-packet-mediator {
+    font-size: var(--type-micro);
+    opacity: 0.75;
+}
+.evidence-packet-coordinate {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.7;
+    margin-left: auto;
+}
+.evidence-packet-fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1rem 0.6rem;
+    margin: 0;
+}
+.evidence-packet-fields dt {
+    opacity: 0.55;
+}
+.evidence-opaque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--type-micro);
+    opacity: 0.7;
+    font-style: italic;
+}
+.evidence-opaque-label {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.evidence-opaque-keys {
+    font-family: monospace;
+    font-size: var(--type-mono);
+}
+.evidence-semantic,
+.evidence-s5refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.evidence-list-label {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.evidence-gate-landings,
+.evidence-axiom-steps {
+    list-style: none;
+    margin: 0;
+    padding-left: 0.6rem;
+    font-size: var(--type-micro);
+    opacity: 0.8;
+}
+.evidence-cross-fold {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.35rem;
+}
+.evidence-open-tools,
+.evidence-open-dispatch {
+    align-self: flex-start;
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+/* Privacy-class badge — the non-bypassable privacy discipline made visible. */
+.privacy-class-badge {
+    font-size: var(--type-micro);
+    padding: 0 0.35rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--hairline);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.privacy-public {
+    color: var(--ready);
+    border-color: color-mix(in srgb, var(--ready) 60%, transparent);
+}
+.privacy-protected,
+.privacy-protected-local {
+    color: var(--warn, var(--facet-mythos));
+    border-color: color-mix(in srgb, var(--warn, var(--facet-mythos)) 60%, transparent);
+}
+.privacy-private {
+    color: var(--danger);
+    border-color: color-mix(in srgb, var(--danger) 60%, transparent);
+}
+/* Embedded Dispatch-trace mini-graph (packet genealogy at a glance, 26.10). */
+.dispatch-mini-graph {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: var(--type-micro);
+}
+.dispatch-mini-open {
+    align-self: flex-start;
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.dispatch-mini-roots,
+.dispatch-mini-children {
+    list-style: none;
+    margin: 0;
+    padding-left: 0.7rem;
+}
+.dispatch-mini-roots {
+    padding-left: 0;
+}
+.dispatch-mini-node {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+.dispatch-mini-actor {
+    font-weight: 600;
+}
+.dispatch-mini-method {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.75;
+}
