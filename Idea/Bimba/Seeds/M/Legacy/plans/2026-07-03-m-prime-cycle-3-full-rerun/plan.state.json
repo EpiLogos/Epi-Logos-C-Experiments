@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T22:52:41.422Z",
+  "updatedAt": "2026-07-23T23:09:17.770Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13385,16 +13385,16 @@
       "blocker": null
     },
     "27.T27.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T23:04:28.917Z",
+      "claimedAt": "2026-07-23T23:04:28.917Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-274-impl",
+      "leaseExpiresAt": "2026-07-24T01:04:28.917Z",
+      "heartbeatAt": "2026-07-23T23:04:28.917Z",
+      "runId": "20260723T230428Z-27-T27.4",
       "worktree": null,
       "blocker": null
     },
@@ -13682,16 +13682,32 @@
       "blocker": null
     },
     "28.T28.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-23T23:09:17.748Z",
+      "claimedAt": "2026-07-23T23:04:34.620Z",
+      "completedAt": "2026-07-23T23:09:17.748Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T23:09:17.748Z",
+          "text": "Fate A carried-by-integration (DR-FACE-7): the left-sidebar activity-bar SYSTEM is fully realised by 15.T15.3's src/ui/leftSidebarModes.ts — mode inventory (exactly 3 daily-0-1 / 5 ide-deep via modesForLayout), per-layout filter, cross-layout mode preservation (resolveModeForLayout/switchLayout), the mode-switch singleton surviving the 0/1 toggle (useLeftSidebarModeStore = 15.7 activityBarMode), and the command spine (registerLeftSidebarModeCommands, one per mode with per-layout enablement). Comprehensively tested by leftSidebarModes.test.ts (214 lines); activityBarMode cross-layout preservation UF-proven by cross-layout-state-identity.spec.ts + the 28.T28.19 identity guard. Theia ActivityBar framing dead; visible bar over switchable bodies awaits 28.6/28.12/28.13 (pending). No construction. Scoped Track-00 gate GREEN incl app-test + app-smoke (verifier opus-mdev-c3-verify).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.2 --owner opus-mdev-c3-verify --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1122,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/28.T28.2.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-c3-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-23T23:04:34.620Z",
+      "runId": "20260723T230434Z-28-T28.2",
       "worktree": null,
       "blocker": null
     },
@@ -15305,18 +15321,26 @@
       "blocker": null
     },
     "32.T32.2": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-23T22:57:18.559Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T22:57:18.559Z",
+          "text": "Fate C spine-gap (DR-FACE-7): the routing target — the PASU identity wizard (25.T25.4) — is pending/unlanded in the carrier (no wizard face exists; the M4 dialogical arena is a different surface), and the enforced write path nara.pasu.set is unimplemented per gateway-method-audit. nara.pasu.show exists so absence-detection could fire, but the orchestration would route to a non-existent wizard (dead code, no observable behaviour, UF unprovable). Build after 25.T25.4 lands the wizard face and nara.pasu.set is implemented."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "environment",
+        "dependency": "25.T25.4"
+      }
     },
     "32.T32.3": {
       "status": "pending",
@@ -25505,26 +25529,45 @@
       "leaseExpiresAt": "2026-07-23T23:53:12.806Z",
       "worktree": null,
       "completedAt": "2026-07-23T22:03:23.481Z"
+    },
+    {
+      "runId": "20260723T230428Z-27-T27.4",
+      "taskId": "27.T27.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T23:04:28.917Z",
+      "owner": "opus-mdev-274-impl",
+      "leaseExpiresAt": "2026-07-24T01:04:28.917Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260723T230434Z-28-T28.2",
+      "taskId": "28.T28.2",
+      "status": "done",
+      "startedAt": "2026-07-23T23:04:34.620Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T00:34:34.620Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T23:09:17.748Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-23T20:10:50.913Z",
-    "updatedAt": "2026-07-23T20:10:50.913Z",
+    "createdAt": "2026-07-23T22:55:35.877Z",
+    "updatedAt": "2026-07-23T22:55:35.877Z",
     "taskIds": [
       "14.T14.4",
-      "30.T30.2",
-      "27.T27.3",
-      "24.T24.7"
+      "31.T31.7",
+      "24.T24.7",
+      "24.T24.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "30.T30.2": "in-session",
-      "27.T27.3": "in-session",
-      "24.T24.7": "in-session"
+      "31.T31.7": "in-session",
+      "24.T24.7": "in-session",
+      "24.T24.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
