@@ -360,6 +360,102 @@ textarea {
   min-width: 0;
 }
 
+/* 31.T31.6 — top coordinate-path breadcrumb (family → archetype → position).
+   A thin chrome bar at the top of the shell; the per-segment tint is applied
+   inline from coordinateFamilyGrade (30.T30.2), never a raw literal here. */
+.coordinate-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0.3rem 1rem;
+  background: var(--ground-raised);
+  border-bottom: 1px solid #2e2247;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: var(--type-caption);
+  user-select: none;
+}
+
+.coordinate-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.coordinate-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.coordinate-breadcrumb-sep {
+  color: var(--ink-dim);
+  opacity: 0.6;
+}
+
+.coordinate-breadcrumb-segment {
+  padding: 0.05rem 0.3rem;
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  font: inherit;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+
+.coordinate-breadcrumb-segment:hover {
+  text-decoration: underline;
+}
+
+/* 25.T25.17 — personal-pole time-axis switcher toolbar above the recognition
+   engine. natal | real-time | kairotic chooses the foregrounded reading. */
+.personal-pole {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.personal-pole-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.time-axis-switcher {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--ground-raised);
+  border-bottom: 1px solid #2e2247;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: var(--type-micro);
+  user-select: none;
+}
+
+.time-axis-switcher-mode {
+  padding: 0.1rem 0.5rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font: inherit;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+
+.time-axis-switcher-mode:hover {
+  color: var(--ink);
+}
+
+.time-axis-switcher-mode[data-active='true'] {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
 .m3-cosmic-wheel {
   margin: 0;
 }

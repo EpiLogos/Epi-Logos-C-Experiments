@@ -38,7 +38,9 @@ import {
     CrossLayoutIdentityReceipt,
     readCrossLayoutIdentity
 } from './state/crossLayoutIdentity';
+import { CoordinateBreadcrumb } from './components/CoordinateBreadcrumb';
 import { StatusStrip } from './components/StatusStrip';
+import { TimeAxisSwitcher } from './components/TimeAxisSwitcher';
 import { FaceToggleChrome } from './components/FaceToggleChrome';
 import { M3DailyWheelMiniView } from './components/M3CompactViews';
 import { CosmicEngine } from './engine/CosmicEngine';
@@ -347,7 +349,14 @@ function factory(node: TabNode) {
         case 'm5Ebm':
             return <M5EbmObservatoryPane />;
         case 'personalHome':
-            return <PersonalRecognitionEngine />;
+            return (
+                <div className="personal-pole">
+                    <TimeAxisSwitcher />
+                    <div className="personal-pole-body">
+                        <PersonalRecognitionEngine />
+                    </div>
+                </div>
+            );
         // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
         case 'm4DialogicalArena':
             return <M4DialogicalArenaPane />;
@@ -1117,6 +1126,7 @@ export function App() {
                     : undefined
             }
         >
+            <CoordinateBreadcrumb />
             <FaceToggleChrome face={face} onToggle={() => void commands.execute('face.toggle')}>
                 <div
                     className={`face-slot ${face === 0 ? 'face-active' : 'face-hidden'}`}

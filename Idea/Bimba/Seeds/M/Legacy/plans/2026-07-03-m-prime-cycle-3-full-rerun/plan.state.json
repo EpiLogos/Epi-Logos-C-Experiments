@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T21:07:06.311Z",
+  "updatedAt": "2026-07-23T21:45:06.578Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12731,15 +12731,20 @@
       "blocker": null
     },
     "25.T25.17": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-23T21:45:06.552Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T21:45:06.552Z",
+          "text": "Fate B face-gap (DR-FACE-7): built the three-mode time-axis switcher src/components/TimeAxisSwitcher.tsx + src/composition/timeAxis.ts over the LANDED composition timeAxisMode field — segmented control natal|real-time|kairotic that persists via the composition save channel + emits composition.time-axis.switch, cmd-shift-T cycles, default real-time, reads back on mount; distinct from the 11.12 senseOverride (DR-WC-M4-1). Added exported emptyCompositionState + e2e sidecar composition_state_load/save handlers (deterministic-boot mirror of ui_state). Dead Theia RPC nara.session.set_time_axis unused; handle foregrounding stays 25.6's deliverable. Mounted on personal pole above the recognition engine. GREEN: typecheck 0, full vitest 1122, build 0, carrier-tokens + import-boundary GREEN; unit TimeAxisSwitcher.test.tsx (default/persist/cycle/event/read-back); UF e2e tests/e2e/time-axis-switcher.spec.ts PASSED (live gateway: click selects, cmd-shift-T cycles, survives face crossing); visual-regression 6/6 PASSED. Held at review pending shared honesty-lint gate (parallel 26.T26.3)."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-07-23T21:45:06.552Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -14969,16 +14974,21 @@
       "blocker": null
     },
     "31.T31.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-23T21:44:55.053Z",
+      "claimedAt": "2026-07-23T21:08:25.276Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T21:44:55.053Z",
+          "text": "Fate B face-gap (DR-FACE-7): built the top coordinate-path breadcrumb src/components/CoordinateBreadcrumb.tsx + src/ui/coordinateNames.ts — a stateless projection of useCoordinateStore.selected rendering the family->archetype->position triad, per-segment tint from coordinateFamilyGrade (30.T30.2), each segment click retargets the reduced coordinate over CROSS_LAYOUT_INTENT_COMMAND (highlight-coordinate alias); mounted at top of shell. NO Theia BreadcrumbsContribution/inversify; 72-fold/decan breadcrumbs stay widget-internal. GREEN: typecheck 0, full vitest 1122, build 0, carrier-tokens + import-boundary GREEN; unit coordinateNames.test.ts + CoordinateBreadcrumb.test.tsx; UF e2e tests/e2e/coordinate-breadcrumb.spec.ts PASSED (live gateway: breadcrumb tracks Meta+Shift+Digit coordinate moves + segment-click retarget); visual-regression 6/6 PASSED (no baseline drift). Held at review pending shared honesty-lint gate (parallel 26.T26.3)."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T00:08:25.276Z",
+      "heartbeatAt": "2026-07-23T21:44:55.053Z",
+      "runId": "20260723T210825Z-31-T31.6",
       "worktree": null,
       "blocker": null
     },
@@ -25397,6 +25407,16 @@
       "leaseExpiresAt": "2026-07-24T00:03:41.488Z",
       "worktree": null,
       "completedAt": "2026-07-23T21:07:06.289Z"
+    },
+    {
+      "runId": "20260723T210825Z-31-T31.6",
+      "taskId": "31.T31.6",
+      "status": "review",
+      "startedAt": "2026-07-23T21:08:25.276Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T00:08:25.276Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T21:44:55.053Z"
     }
   ],
   "activeRoute": {

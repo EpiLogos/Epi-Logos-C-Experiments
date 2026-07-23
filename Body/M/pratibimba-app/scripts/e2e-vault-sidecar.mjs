@@ -165,6 +165,13 @@ const commands = {
     },
     ui_state_load: () => null, // deterministic boots: every page load starts from defaults
     ui_state_save: () => null,
+    // integrated composition state (29.T29.10) — same deterministic-boot posture
+    // as ui_state: every page load starts from defaults so tests never leak a
+    // persisted mode across the shared per-run vault. save is accepted (so the
+    // provider commits its React state), never written to disk; the real
+    // src-tauri/src/composition_state.rs persists under the Tauri host.
+    composition_state_load: () => null,
+    composition_state_save: () => null,
     natal_sky: () => null, // no natal chart configured in the e2e vault
     // Mirrors src-tauri/src/oracle.rs oracle_cast: runs the REAL consent-gated
     // `epi nara oracle cast` (real entropy, real hygiene ledger — under the

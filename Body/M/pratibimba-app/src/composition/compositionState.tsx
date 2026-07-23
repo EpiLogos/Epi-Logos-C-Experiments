@@ -4,9 +4,9 @@
  * Position (#n): #5 — integration of the M0'..M5' composition state
  * Actualises: one strict, durable state extension shared by the cosmic and
  *   personal compositions across face/layout replacement and app restart.
- * Public surface: IntegratedCompositionPersistedState,
- *   persistCompositionState, readCompositionState, CompositionStateProvider,
- *   useCompositionState.
+ * Public surface: IntegratedCompositionPersistedState, emptyCompositionState,
+ *   parseCompositionState, persistCompositionState, readCompositionState,
+ *   CompositionStateProvider, useCompositionState.
  * Does NOT own: the four shell stores, domain calculations, raw quaternion
  *   bodies, or filesystem paths (the Tauri host owns those).
  * Contract: [[M'-SYSTEM-SPEC]] / [[29-integrated-plugins-composition-deep]] T29.10
@@ -200,6 +200,35 @@ export function parseCompositionState(value: unknown): IntegratedCompositionPers
         ),
         anuttaraGroundingExpanded: raw.anuttaraGroundingExpanded,
         miniInspectorActiveIds: Object.freeze(inspectorIds)
+    });
+}
+
+/** The neutral 18-key baseline for a composition — every optional field null,
+ *  booleans false, arrays empty. A face that patches a single field (e.g. the
+ *  time-axis switcher writing timeAxisMode) saves `{...current ?? empty, field}`
+ *  so the strict 18-key `parseCompositionState` always accepts the write. */
+export function emptyCompositionState(
+    compositionId: IntegratedCompositionId
+): IntegratedCompositionPersistedState {
+    return Object.freeze({
+        compositionId,
+        coordinate: null,
+        lens: null,
+        mode: null,
+        profileGeneration: null,
+        sessionKey: null,
+        dayNow: null,
+        pinnedMatrixFamily: null,
+        selectedLensCell: null,
+        activeCodonCell: null,
+        k2OrientationQ: null,
+        mathemeProofModeEnabled: false,
+        timeAxisMode: null,
+        senseOverride: null,
+        qComposedSnapshotId: null,
+        recognitionLayerView: null,
+        anuttaraGroundingExpanded: false,
+        miniInspectorActiveIds: Object.freeze([])
     });
 }
 
