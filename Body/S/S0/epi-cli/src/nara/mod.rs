@@ -16,6 +16,7 @@
 //! # Does NOT own
 //! * Nara domain computation, private journal bodies, or cloud model routing.
 
+pub mod activity_trajectory;
 pub mod arena;
 pub mod clock;
 pub mod identity;

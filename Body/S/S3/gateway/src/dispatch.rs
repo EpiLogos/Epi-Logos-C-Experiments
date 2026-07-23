@@ -196,6 +196,17 @@ pub const NARA_IDENTITY_PROPOSAL_RPC_METHODS: [&str; 4] = [
     "nara.identity.proposals.decide",
 ];
 
+/// M4 persisted per-user Q_activity accumulator read surface (25.T25.14
+/// auto-trigger). The accumulator is fed AUTOMATICALLY at `nara.session_close`
+/// (the S0 gate folds each close's real activity packet through
+/// `apply_pattern_packet_chain` into a protected-local ledger, then runs the
+/// identity-augment drift detector on it); this loopback-gated read surfaces the
+/// persisted `{ qActivity, turnCount, packetRefs, updatedAt }` for observability
+/// + the personal-coordinate pane. Like the other nara.* surfaces it resolves
+/// through the existing `nara.*` extension route → `S4S5DomainAdapter`; declared
+/// here so gateway audits can assert the concrete read surface.
+pub const NARA_ACTIVITY_SHOW_METHOD: &str = "nara.activity.show";
+
 /// Headless close-of-session contemplation RPC. It remains a Nara extension
 /// route, so the gateway can expose the surface without expanding the product
 /// method table before the upstream S0/S4/S5 executors land their live adapters.

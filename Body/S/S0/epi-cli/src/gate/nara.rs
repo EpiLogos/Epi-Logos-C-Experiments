@@ -8,8 +8,10 @@ use std::path::{Path, PathBuf};
 use chrono::Utc;
 use portal_core::personal_identity::{
     detect_identity_augment_from_activity, IdentityAugmentProposal, IdentityAugmentProposalState,
-    IdentityAugmentReviewVerdict, PersonalIdentityProfile, IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+    IdentityAugmentProposalView, IdentityAugmentReviewVerdict, PersonalIdentityProfile,
+    IDENTITY_AUGMENT_DRIFT_THRESHOLD,
 };
+use portal_core::{CpfState, CsDirection, CsField, NaraPatternPacketStamp, VakAddress, VamaShaktiClass};
 use epi_s3_gateway::dispatch::{
     contemplate_session_close, route_nara_session_close, route_nara_session_open,
     ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
@@ -713,6 +715,7 @@ pub fn dispatch_nara_with_state_root(
         "nara.identity.proposals.decide" => {
             decide_identity_proposal(state_root, peer_is_loopback, params)
         }
+        "nara.activity.show" => show_activity_trajectory(state_root, peer_is_loopback),
         _ => dispatch_nara(method, params),
     }
 }
@@ -721,6 +724,223 @@ pub fn dispatch_nara_with_state_root(
 /// under the gateway state root (loopback-gated like the close bundle).
 fn identity_proposal_store_path(state_root: &Path) -> PathBuf {
     state_root.join("nara").join("identity-proposals.json")
+}
+
+/// Store path for the persisted per-user Q_activity accumulator — protected-local
+/// under the gateway state root, parallel to the identity-proposal ledger. This
+/// is the real driver the `detect` producer reads and the session-close
+/// auto-trigger accumulates into.
+fn activity_trajectory_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("activity-trajectory.json")
+}
+
+/// The Vama Shakti perturbation class used for personal session-close activity.
+/// A session-close activity packet is a transient, kairos-delta-sensitive
+/// perturbation of the personal Q_activity accumulator, so it uses the Sprite
+/// law: the elapsed-kairos gap between session closes is the dominant drift
+/// driver (longer gaps nudge the accumulator harder), which is the semantically
+/// right behaviour for accumulated personal activity. Documented, not derived —
+/// the exact class is a product/taste decision at the M4' boundary.
+const SESSION_ACTIVITY_VAMA_CLASS: VamaShaktiClass = VamaShaktiClass::Sprite;
+
+/// The kairos window (ms) one unit of `kairos_delta` spans — a 30-minute window,
+/// so an inter-session gap of a few hours yields a bounded delta near the
+/// perturbation law's internal clamp (8.0).
+const KAIROS_WINDOW_MS: f64 = 1_800_000.0;
+
+/// `nara.activity.show`: the persisted per-user Q_activity accumulator, for
+/// observability + panel rendering. Protected-local — loopback peer required.
+fn show_activity_trajectory(
+    state_root: &Path,
+    peer_is_loopback: bool,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.activity.show requires a loopback peer".to_owned(),
+        ));
+    }
+    let trajectory =
+        crate::nara::activity_trajectory::current(&activity_trajectory_store_path(state_root));
+    Ok(json!({
+        "qActivity": trajectory.q_activity,
+        "turnCount": trajectory.turn_count,
+        "packetRefs": trajectory.packet_refs,
+        "updatedAt": trajectory.updated_at,
+    }))
+}
+
+/// Derive a bounded `kairos_delta` for a session-close activity packet: the
+/// elapsed kairos between this close and the accumulator's last turn, expressed
+/// in [`KAIROS_WINDOW_MS`] units and clamped to `[0, 8]`. The first turn (no
+/// prior close) yields `0.0`.
+fn bounded_kairos_delta(kairos_close: u64, last_kairos_close: Option<u64>) -> f32 {
+    match last_kairos_close {
+        Some(prev) if kairos_close > prev => {
+            let elapsed_ms = (kairos_close - prev) as f64;
+            ((elapsed_ms / KAIROS_WINDOW_MS) as f32).clamp(0.0, 8.0)
+        }
+        _ => 0.0,
+    }
+}
+
+/// Construct ONE real activity packet from the session-close signal.
+///
+/// * `packet_ref` names the REAL sealed protein + session
+///   (`activity://session/{session_id}/{protein_handle}`).
+/// * `vak_address.cp` carries the REAL engaged session coordinate discovered on
+///   the `ContemplationObject` (`engaged_coordinates[0].coordinate`), and `ct`
+///   carries the REAL session codon-trace. When no engaged coordinate is
+///   present the address degrades HONESTLY to the documented `#4.0` personal
+///   baseline (the returned `bool` flags the degrade); the remaining reflective
+///   coordinates are the personal-substrate frame constants `(4.0/1-4.4/5)`.
+/// * `kairos_delta` is derived from `kairos_close` vs the accumulator's last
+///   turn ([`bounded_kairos_delta`]).
+fn session_activity_packet(
+    session_id: &str,
+    protein_handle: &str,
+    kairos_close: u64,
+    session_coordinate: Option<&str>,
+    session_codons: &[String],
+    last_kairos_close: Option<u64>,
+) -> (NaraPatternPacketStamp, bool) {
+    let (cp, degraded) = match session_coordinate {
+        Some(coordinate) if !coordinate.trim().is_empty() => (coordinate.to_owned(), false),
+        _ => ("4.0".to_owned(), true),
+    };
+    let vak_address = VakAddress {
+        cpf: CpfState::Mechanistic,
+        ct: session_codons.to_vec(),
+        cp,
+        cf: "(4.0/1-4.4/5)".to_owned(),
+        cfp: "4.4".to_owned(),
+        cs: CsField {
+            code: "M4".to_owned(),
+            direction: CsDirection::Day,
+            recognized: false,
+        },
+    };
+    let kairos_delta = bounded_kairos_delta(kairos_close, last_kairos_close);
+    (
+        NaraPatternPacketStamp {
+            packet_ref: format!("activity://session/{session_id}/{protein_handle}"),
+            vak_address,
+            kairos_delta,
+        },
+        degraded,
+    )
+}
+
+/// Persist a detected/produced proposal into the review store at `Proposed` and
+/// return its handle-only view. Shared by the `detect` RPC and the session-close
+/// auto-trigger. NEVER applies — Q_identity stays untouched.
+fn persist_detected_proposal(
+    store_path: &Path,
+    proposal: &IdentityAugmentProposal,
+) -> Result<IdentityAugmentProposalView, String> {
+    let view = proposal.view();
+    let persisted = crate::nara::identity_proposals::PersistedProposal {
+        proposal_handle: proposal.proposal_handle.clone(),
+        state: IdentityAugmentProposalState::Proposed,
+        summary: proposal.summary.clone(),
+        source_adapter_handle: proposal.source_adapter_handle.clone(),
+        created_at: proposal.created_at.clone(),
+        reviewed_at: None,
+        decided_at: None,
+        applied_at: None,
+        q_identity_candidate: proposal.q_identity_candidate(),
+    };
+    crate::nara::identity_proposals::submit_proposal(store_path, persisted)?;
+    Ok(view)
+}
+
+/// Run the drift detector on an accumulated `q_activity` against the natal
+/// `profile` and, on drift below the alignment floor, SUBMIT a `Proposed`
+/// identity-augment proposal into the review store. Returns the produced view
+/// (or `None` when still aligned / on a swallowed submit error). Identity
+/// transit (no live transit is threaded at session-close) and the schema drift
+/// floor are used. NEVER mutates Q_identity — the detector holds `&profile`.
+fn auto_detect_and_submit(
+    proposal_store: &Path,
+    profile: &PersonalIdentityProfile,
+    q_activity: [f32; 4],
+    now: &str,
+) -> Option<IdentityAugmentProposalView> {
+    let handle = format!(
+        "identity-proposal://activity-auto/{}",
+        Utc::now().timestamp_millis()
+    );
+    let proposal = detect_identity_augment_from_activity(
+        profile,
+        q_activity,
+        [1.0, 0.0, 0.0, 0.0],
+        IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+        handle,
+        "adapter://m4/session-close-activity-drift",
+        now.to_owned(),
+    )?;
+    persist_detected_proposal(proposal_store, &proposal).ok()
+}
+
+/// The session-close AUTO-TRIGGER (side-effect; best-effort — never fails the
+/// close). Build the real activity packet, accumulate it into the persisted
+/// per-user Q_activity, then run the drift detector on the accumulated
+/// trajectory vs the loaded natal profile and auto-submit a proposal on drift.
+/// Inserts the additive response fields (`activityTrajectory`,
+/// `identityAugmentProposed`, and `identityAugmentProposalHandle` when produced)
+/// into `object`. On any internal IO error the close still succeeds, only the
+/// additive fields are omitted.
+fn apply_activity_autotrigger(
+    state_root: &Path,
+    session_id: &str,
+    protein_handle: &str,
+    kairos_close: u64,
+    session_coordinate: Option<&str>,
+    session_codons: &[String],
+    object: &mut serde_json::Map<String, Value>,
+) {
+    let activity_store = activity_trajectory_store_path(state_root);
+    let previous = crate::nara::activity_trajectory::current(&activity_store);
+    let (packet, _degraded) = session_activity_packet(
+        session_id,
+        protein_handle,
+        kairos_close,
+        session_coordinate,
+        session_codons,
+        previous.last_kairos_close,
+    );
+    let now = Utc::now().to_rfc3339();
+    let Ok(trajectory) = crate::nara::activity_trajectory::accumulate(
+        &activity_store,
+        std::slice::from_ref(&packet),
+        SESSION_ACTIVITY_VAMA_CLASS,
+        &now,
+        Some(kairos_close),
+    ) else {
+        return;
+    };
+    object.insert(
+        "activityTrajectory".to_owned(),
+        json!({ "qActivity": trajectory.q_activity, "turnCount": trajectory.turn_count }),
+    );
+
+    // Auto-detect: measure the freshly-accumulated Q_activity drift vs the natal
+    // identity. Honest degradation — no natal/PASU baseline means we accumulate
+    // (still useful) but propose nothing.
+    let mut proposed = false;
+    if let Ok(Some(profile)) = load_personal_identity_profile() {
+        let proposal_store = identity_proposal_store_path(state_root);
+        if let Some(view) =
+            auto_detect_and_submit(&proposal_store, &profile, trajectory.q_activity, &now)
+        {
+            proposed = true;
+            object.insert(
+                "identityAugmentProposalHandle".to_owned(),
+                json!(view.proposal_handle),
+            );
+        }
+    }
+    object.insert("identityAugmentProposed".to_owned(), json!(proposed));
 }
 
 /// `nara.pasu.show`: the handle-only PASU record (birth handles, natal-chart
@@ -909,26 +1129,30 @@ fn load_personal_identity_profile() -> Result<Option<PersonalIdentityProfile>, S
 }
 
 /// `nara.identity.proposals.detect` (25.T25.14): the REAL identity-augment
-/// PRODUCER seam that makes panel (c) live in a live system. Given accumulated
-/// Q_activity (the honest driver = the `apply_pattern_packet_chain` /
-/// vama-shakti `QActivityAccumulator` output, supplied as a param because no
-/// per-user Q_activity is persisted for the personal profile), it loads the natal
-/// identity baseline, measures drift via `PersonalResonance`, and — ONLY when the
-/// accumulated activity has drifted below the tunable alignment floor — SUBMITS a
-/// `Proposed` identity-augment proposal into the SAME review store that
-/// `list`/`decide` read. It NEVER mutates Q_identity (the detector holds a shared
-/// profile ref; only the governed `applied` verdict mutates identity, downstream
-/// of a human accept). Aligned activity produces nothing (`produced:false`).
+/// PRODUCER seam that makes panel (c) live in a live system. It loads the natal
+/// identity baseline, measures the accumulated-Q_activity drift via
+/// `PersonalResonance`, and — ONLY when the accumulated activity has drifted
+/// below the tunable alignment floor — SUBMITS a `Proposed` identity-augment
+/// proposal into the SAME review store that `list`/`decide` read. It NEVER
+/// mutates Q_identity (the detector holds a shared profile ref; only the governed
+/// `applied` verdict mutates identity, downstream of a human accept). Aligned
+/// activity produces nothing (`produced:false`).
 ///
-/// AUTO-TRIGGER (flagged for the Architect): the intended AUTOMATIC firing point
-/// is the personal activity checkpoint — when `apply_pattern_packet_chain` yields
-/// a fresh accumulated Q_activity at session-activity close. That hook is NOT
-/// wired here on purpose: no existing per-user Q_activity accumulator is threaded
-/// through `nara.session_close` today (session-close carries the protein/codon
-/// PatternPacket, not the personal q_activity trajectory), and fabricating one
-/// would invent drift signal. This RPC is the genuine producer; wiring the
-/// auto-trigger is a separate, Architect-owned contract change on the
-/// session-close seam.
+/// DRIVER: the accumulated Q_activity is read from the PERSISTED per-user
+/// accumulator (`activity_trajectory.rs`) — the real driver. An explicit
+/// `q_activity` param still OVERRIDES the persisted value (for tests / explicit
+/// calls). The persisted accumulator is fed AUTOMATICALLY at the personal
+/// activity checkpoint (`nara.session_close` → [`apply_activity_autotrigger`]),
+/// so this producer now fires on real accumulated activity without any param.
+///
+/// AUTO-TRIGGER (now WIRED): the automatic firing point is the session-close
+/// checkpoint. `close_with_persisted_bundle` builds a real
+/// [`NaraPatternPacketStamp`] from the close signal, folds it through
+/// `apply_pattern_packet_chain` into the persisted accumulator, and runs the SAME
+/// drift detector on the accumulated trajectory — auto-submitting a proposal on
+/// drift. This RPC and the auto-trigger share one submit seam
+/// ([`persist_detected_proposal`]); the accumulate→detect flow is the genuine
+/// producer path, no longer a flagged-but-unwired hook.
 fn detect_identity_proposal(
     state_root: &Path,
     peer_is_loopback: bool,
@@ -950,26 +1174,34 @@ fn detect_identity_proposal(
         }
         Err(err) => return Err(("nara-error".to_owned(), err)),
     };
-    detect_identity_proposal_core(&identity_proposal_store_path(state_root), &profile, params)
+    // The real driver: the PERSISTED accumulated Q_activity. An explicit
+    // `q_activity` param overrides it inside the core.
+    let persisted =
+        crate::nara::activity_trajectory::current(&activity_trajectory_store_path(state_root));
+    detect_identity_proposal_core(
+        &identity_proposal_store_path(state_root),
+        &profile,
+        params,
+        persisted.q_activity,
+    )
 }
 
-/// The env-free core of [`detect_identity_proposal`]: given a loaded profile +
-/// review store, measure drift and submit a `Proposed` proposal on drift. Split
-/// out so the produces/submits/lists/identity-untouched invariants are unit
-/// testable without seeding process-global env (`EPI_NARA_HOME`, natal.json).
+/// The env-free core of [`detect_identity_proposal`]: given a loaded profile,
+/// review store, and the PERSISTED accumulated Q_activity fallback, measure drift
+/// and submit a `Proposed` proposal on drift. Split out so the
+/// produces/submits/lists/identity-untouched invariants (and the persisted-vs-
+/// override read) are unit testable without seeding process-global env
+/// (`EPI_NARA_HOME`, natal.json, the accumulator ledger).
 fn detect_identity_proposal_core(
     store_path: &Path,
     profile: &PersonalIdentityProfile,
     params: &Value,
+    persisted_q_activity: [f32; 4],
 ) -> Result<Value, (String, String)> {
-    // Accumulated Q_activity is REQUIRED — without it there is no drift to
-    // measure and the producer degrades honestly.
-    let Some(q_activity) = parse_quaternion_param(params, &["q_activity", "qActivity"]) else {
-        return Ok(json!({
-            "produced": false,
-            "reason": "no accumulated q_activity supplied (expected [w,x,y,z]); nothing to measure drift against"
-        }));
-    };
+    // Accumulated Q_activity: an explicit param OVERRIDES; otherwise the
+    // persisted per-user accumulator is the real driver.
+    let q_activity =
+        parse_quaternion_param(params, &["q_activity", "qActivity"]).unwrap_or(persisted_q_activity);
     // q_transit is optional — default identity (no transit perturbation).
     let q_transit =
         parse_quaternion_param(params, &["q_transit", "qTransit"]).unwrap_or([1.0, 0.0, 0.0, 0.0]);
@@ -1009,22 +1241,10 @@ fn detect_identity_proposal_core(
         }));
     };
 
-    let view = proposal.view();
     // Persist into the SAME review store `list`/`decide` read, so the produced
     // proposal surfaces in panel (c). Candidate = the activity-composed
     // quaternion (never a q_identity write).
-    let persisted = crate::nara::identity_proposals::PersistedProposal {
-        proposal_handle: proposal.proposal_handle.clone(),
-        state: IdentityAugmentProposalState::Proposed,
-        summary: proposal.summary.clone(),
-        source_adapter_handle: proposal.source_adapter_handle.clone(),
-        created_at: proposal.created_at.clone(),
-        reviewed_at: None,
-        decided_at: None,
-        applied_at: None,
-        q_identity_candidate: proposal.q_identity_candidate(),
-    };
-    crate::nara::identity_proposals::submit_proposal(store_path, persisted)
+    let view = persist_detected_proposal(store_path, &proposal)
         .map_err(|err| ("nara-error".to_owned(), err))?;
 
     let view_value =
@@ -1117,6 +1337,18 @@ fn close_with_persisted_bundle(
             "contemplation_object.session_id must exactly match session_id".to_owned(),
         ));
     }
+    // Extract the REAL session-activity signal for the accumulator BEFORE the
+    // contemplation object is consumed by `contemplate_session_close`: the first
+    // engaged coordinate (the session's coordinate) and the codon-trace.
+    let session_coordinate = contemplation_object
+        .engaged_coordinates
+        .first()
+        .map(|engaged| engaged.coordinate.clone());
+    let session_codons: Vec<String> = contemplation_object
+        .trajectory
+        .iter()
+        .filter_map(|tick| tick.codon.clone())
+        .collect();
     let m1_evidence =
         required_object_param(params, &["m1_closure", "m1Closure"]).and_then(|value| {
             serde_json::from_value::<M1SessionClosureEvidence>(value).map_err(|err| {
@@ -1146,7 +1378,7 @@ fn close_with_persisted_bundle(
         .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
     let response = route_nara_session_close(NaraSessionCloseRequest {
         session_id: session_id.clone(),
-        protein_handle,
+        protein_handle: protein_handle.clone(),
         kairos_close,
         config: nara_session_config_from_params(params),
     })
@@ -1167,6 +1399,18 @@ fn close_with_persisted_bundle(
         serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
     if let Some(object) = value.as_object_mut() {
         object.insert("close_ref".to_owned(), json!(bundle.close_ref));
+        // AUTO-TRIGGER (side-effect): fold this close's real activity packet into
+        // the persisted per-user Q_activity accumulator and auto-detect identity
+        // drift. Best-effort — the close never fails on the accumulator.
+        apply_activity_autotrigger(
+            state_root,
+            &session_id,
+            &protein_handle,
+            kairos_close,
+            session_coordinate.as_deref(),
+            &session_codons,
+            object,
+        );
     }
     Ok(value)
 }
@@ -1288,6 +1532,21 @@ mod identity_augment_detect_tests {
         ))
     }
 
+    // The identity quaternion — the aligned persisted fallback for tests that
+    // exercise the explicit-param path (the fallback is unused when a param is
+    // present).
+    const ALIGNED_FALLBACK: [f32; 4] = [1.0, 0.0, 0.0, 0.0];
+
+    fn temp_activity_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-activity-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
     #[test]
     fn detect_produces_submits_on_drift_and_appears_in_list_without_touching_identity() {
         let profile = fixture_profile();
@@ -1298,7 +1557,8 @@ mod identity_augment_detect_tests {
             "proposal_handle": "identity-proposal://drift-test"
         });
 
-        let out = detect_identity_proposal_core(&store, &profile, &params).expect("detect ok");
+        let out = detect_identity_proposal_core(&store, &profile, &params, ALIGNED_FALLBACK)
+            .expect("detect ok");
         assert_eq!(out["produced"], json!(true));
         assert_eq!(
             out["proposal"]["proposalHandle"],
@@ -1323,7 +1583,8 @@ mod identity_augment_detect_tests {
         let store = temp_store();
         let params = json!({ "q_activity": [1.0, 0.0, 0.0, 0.0] });
 
-        let out = detect_identity_proposal_core(&store, &profile, &params).expect("detect ok");
+        let out = detect_identity_proposal_core(&store, &profile, &params, ALIGNED_FALLBACK)
+            .expect("detect ok");
         assert_eq!(out["produced"], json!(false));
         assert!(crate::nara::identity_proposals::list_pending(&store)
             .unwrap_or_default()
@@ -1332,12 +1593,142 @@ mod identity_augment_detect_tests {
     }
 
     #[test]
-    fn detect_degrades_honestly_when_no_activity_supplied() {
+    fn detect_with_no_param_reads_persisted_activity() {
         let profile = fixture_profile();
         let store = temp_store();
-        let out = detect_identity_proposal_core(&store, &profile, &json!({})).expect("detect ok");
+
+        // A DRIFTED persisted accumulator (no q_activity param) drives a
+        // proposal — this is the real accumulate→detect driver path.
+        let out = detect_identity_proposal_core(
+            &store,
+            &profile,
+            &json!({ "proposal_handle": "identity-proposal://persisted-drift" }),
+            [0.0, 1.0, 0.0, 0.0],
+        )
+        .expect("detect ok");
+        assert_eq!(out["produced"], json!(true));
+        assert_eq!(
+            out["proposal"]["proposalHandle"],
+            json!("identity-proposal://persisted-drift")
+        );
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_no_param_with_aligned_persisted_produces_nothing() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        // An un-accumulated persisted accumulator is the identity quaternion —
+        // aligned, so no drift proposal.
+        let out = detect_identity_proposal_core(&store, &profile, &json!({}), ALIGNED_FALLBACK)
+            .expect("detect ok");
         assert_eq!(out["produced"], json!(false));
         assert!(out["reason"].is_string());
         std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_param_overrides_persisted_activity() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        // The persisted accumulator has DRIFTED, but an explicit aligned
+        // q_activity param OVERRIDES it → no proposal.
+        let out = detect_identity_proposal_core(
+            &store,
+            &profile,
+            &json!({ "q_activity": [1.0, 0.0, 0.0, 0.0] }),
+            [0.0, 1.0, 0.0, 0.0],
+        )
+        .expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn session_close_activity_sequence_accumulates_and_auto_submits_a_proposal() {
+        // The AUTO-TRIGGER core: a drifting sequence of session-close activity
+        // packets accumulates the persisted per-user Q_activity away from
+        // identity and, once drifted below the alignment floor, auto-submits a
+        // proposal that surfaces in `nara.identity.proposals.list` — WITHOUT any
+        // q_activity param. Q_identity is NEVER mutated.
+        let profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        let activity_store = temp_activity_store();
+        let proposal_store = temp_store();
+
+        let mut produced_handle: Option<String> = None;
+        let mut last_kairos: Option<u64> = None;
+        for turn in 0..15u64 {
+            // Spaced ~6h apart so the bounded kairos_delta saturates the
+            // perturbation clamp — a constant coordinate + saturated delta gives
+            // linear drift.
+            let kairos_close = 1_700_000_000_000 + turn * 21_600_000;
+            let (packet, _degraded) = session_activity_packet(
+                "sess-auto",
+                "protein://sealed/auto",
+                kairos_close,
+                Some("M4.session-activity"),
+                &["I".to_owned()],
+                last_kairos,
+            );
+            last_kairos = Some(kairos_close);
+            let now = format!("2026-07-22T09:{:02}:00.000Z", turn);
+            let trajectory = crate::nara::activity_trajectory::accumulate(
+                &activity_store,
+                std::slice::from_ref(&packet),
+                SESSION_ACTIVITY_VAMA_CLASS,
+                &now,
+                Some(kairos_close),
+            )
+            .expect("accumulate ok");
+            assert_eq!(trajectory.turn_count, turn + 1);
+
+            if let Some(view) =
+                auto_detect_and_submit(&proposal_store, &profile, trajectory.q_activity, &now)
+            {
+                produced_handle = Some(view.proposal_handle);
+                break;
+            }
+        }
+
+        let handle = produced_handle
+            .expect("a drifting session-close sequence must auto-submit a proposal within 15 turns");
+        // It surfaces in the SAME list panel (c) reads.
+        let pending =
+            crate::nara::identity_proposals::list_pending(&proposal_store).expect("list pending");
+        assert!(pending.iter().any(|view| view.proposal_handle == handle));
+        // Identity NEVER mutated by the accumulate/auto-detect path.
+        assert_eq!(profile.q_identity, before_identity);
+
+        std::fs::remove_file(&activity_store).ok();
+        std::fs::remove_file(&proposal_store).ok();
+    }
+
+    #[test]
+    fn session_activity_packet_degrades_honestly_without_a_coordinate() {
+        let (packet, degraded) = session_activity_packet(
+            "sess-x",
+            "protein://sealed/x",
+            2_000,
+            None,
+            &[],
+            Some(1_000),
+        );
+        assert!(degraded, "absent engaged coordinate must flag the degrade");
+        assert_eq!(packet.vak_address.cp, "4.0");
+        assert_eq!(packet.packet_ref, "activity://session/sess-x/protein://sealed/x");
+
+        let (packet, degraded) = session_activity_packet(
+            "sess-y",
+            "protein://sealed/y",
+            2_000,
+            Some("M3.COMP"),
+            &["II".to_owned()],
+            None,
+        );
+        assert!(!degraded, "a real coordinate must not degrade");
+        assert_eq!(packet.vak_address.cp, "M3.COMP");
+        // First turn (no prior kairos) → zero delta.
+        assert_eq!(packet.kairos_delta, 0.0);
     }
 }
