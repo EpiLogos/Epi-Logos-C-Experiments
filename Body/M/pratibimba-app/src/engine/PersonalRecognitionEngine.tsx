@@ -199,7 +199,10 @@ export function PersonalRecognitionEngine() {
                         </span>
                     </p>
                     <M5RecognitionLayer />
-                    <M5EbmObservatoryPane />
+                    {/* Personal scale: the EBM scoring face composes here, but the
+                        canonical-scale operational-capacity lanes (26.2) stay in the
+                        standalone observatory only (surface-composition §1). */}
+                    <M5EbmObservatoryPane hostCapacityLanes={false} />
                 </div>
             </div>
 

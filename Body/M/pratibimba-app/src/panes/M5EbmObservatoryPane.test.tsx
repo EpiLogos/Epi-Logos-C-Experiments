@@ -88,4 +88,12 @@ describe('M5EbmObservatoryPane', () => {
             'not projected'
         );
     });
+
+    it('suppresses the canonical-scale capacity lanes when hosted at personal scale', () => {
+        render(<M5EbmObservatoryPane hostCapacityLanes={false} />);
+        // The scoring face still renders; the canonical lanes do not leak to the
+        // personal composition (surface-composition §1 canonical vs personal).
+        expect(screen.getByTestId('m5-ebm-observatory')).toBeTruthy();
+        expect(screen.queryByTestId('m5-capacity-lanes')).toBeNull();
+    });
 });

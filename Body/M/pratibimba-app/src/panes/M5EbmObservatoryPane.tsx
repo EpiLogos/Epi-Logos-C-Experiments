@@ -9,7 +9,9 @@
  *   energy + gradient + Möbius-descent readouts — every value from the
  *   view model's bus windows (m5Ebm.ts). No checkpoint on the bus →
  *   narrative + pending banner only; grid/energy/gradient suppressed. Hosts
- *   the six operational-capacity affordance (26.2) below the scoring face.
+ *   the six operational-capacity affordance (26.2) below the scoring face at
+ *   canonical scale (hostCapacityLanes, default true); the personal-scale
+ *   composition passes false so the canonical lanes never leak to that face.
  * Does NOT own: EBM law (m5Ebm.ts view model + kernel/S5 substrate), the
  *   profile cache, the operational-capacity lane law (m5CapacityLanes.ts +
  *   M5OperationalCapacityLanes.tsx — hosted here per 26.2, owned there).
@@ -43,7 +45,18 @@ const GAP = 4;
 const LEFT = 30;
 const TOP = 18;
 
-export function M5EbmObservatoryPane() {
+export interface M5EbmObservatoryPaneProps {
+    /**
+     * Host the six operational-capacity affordance (26.2). Default true — the
+     * standalone canonical-scale observatory (ide-deep 'M5 EBM' tab). The
+     * personal-scale composition (PersonalRecognitionEngine) passes false: the
+     * capacity lanes are a canonical-scale runtime read, never a personal-face
+     * datum (m5-prime-surface-composition.md §1 canonical vs personal scale).
+     */
+    readonly hostCapacityLanes?: boolean;
+}
+
+export function M5EbmObservatoryPane({ hostCapacityLanes = true }: M5EbmObservatoryPaneProps = {}) {
     const cached = useTickStore(s => s.profile);
 
     const surface = useMemo(
@@ -173,7 +186,7 @@ export function M5EbmObservatoryPane() {
                 </>
             )}
 
-            <M5OperationalCapacityLanes />
+            {hostCapacityLanes ? <M5OperationalCapacityLanes /> : null}
         </section>
     );
 }
