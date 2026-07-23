@@ -1,5 +1,5 @@
 /**
- * Coordinate: M' M5' (EBM observatory pane — Track 26.T26.1)
+ * Coordinate: M' M5' (EBM observatory pane — Track 26.T26.1 + 26.T26.2)
  * Residency: Body/M/pratibimba-app/src/panes
  * Actualises: the M5'-as-EBM observatory surface — identity narrative
  *   ("M5' does not talk. It scores." — the observatory is the mental
@@ -8,9 +8,11 @@
  *   Klein-V₄ tritone-square overlays (A indigo / B amber / C emerald),
  *   energy + gradient + Möbius-descent readouts — every value from the
  *   view model's bus windows (m5Ebm.ts). No checkpoint on the bus →
- *   narrative + pending banner only; grid/energy/gradient suppressed.
+ *   narrative + pending banner only; grid/energy/gradient suppressed. Hosts
+ *   the six operational-capacity affordance (26.2) below the scoring face.
  * Does NOT own: EBM law (m5Ebm.ts view model + kernel/S5 substrate), the
- *   profile cache, the six operational-capacity views (26.2's lane).
+ *   profile cache, the operational-capacity lane law (m5CapacityLanes.ts +
+ *   M5OperationalCapacityLanes.tsx — hosted here per 26.2, owned there).
  * Composition role: Surface 1 (standalone EBM observatory) of the three M5'
  *   surfaces — see contracts/m5-prime-surface-composition.md §1/§3 (why the
  *   scoring face is never conflated with the OmniPanel M4' Pi voice).
@@ -28,6 +30,7 @@ import {
     wheelUnlit
 } from '../ui/tokens';
 import { buildResonanceEbmSurface, TritoneSquareLabel } from './m5Ebm';
+import { M5OperationalCapacityLanes } from './M5OperationalCapacityLanes';
 
 const SQUARE_TOKENS: Record<TritoneSquareLabel, string> = {
     'A:(0,5)': tritoneSquareA,
@@ -169,6 +172,8 @@ export function M5EbmObservatoryPane() {
                     </dl>
                 </>
             )}
+
+            <M5OperationalCapacityLanes />
         </section>
     );
 }

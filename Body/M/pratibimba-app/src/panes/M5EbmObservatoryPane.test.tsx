@@ -76,4 +76,16 @@ describe('M5EbmObservatoryPane', () => {
         expect(screen.getByTestId('m5-ebm-coherence').textContent).toContain('A:(0,5) 0.900');
         expect(screen.queryByTestId('m5-ebm-pending')).toBeNull();
     });
+
+    it('hosts the six operational-capacity affordance (26.2) even with no checkpoint or gateway', () => {
+        render(<M5EbmObservatoryPane />);
+        // The scoring face is pending, but the operational-capacity lanes are a
+        // separate signal (s5'.improve.history) — all six render regardless.
+        expect(screen.getByTestId('m5-capacity-lanes')).toBeTruthy();
+        expect(screen.getAllByTestId(/^m5-capacity-lane-/)).toHaveLength(6);
+        // The absent per-capacity harmonic producer is disclosed, never faked.
+        expect(screen.getByTestId('m5-capacity-harmonic-pending').textContent?.toLowerCase()).toContain(
+            'not projected'
+        );
+    });
 });
