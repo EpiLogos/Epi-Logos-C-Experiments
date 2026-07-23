@@ -51,6 +51,7 @@ import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
+import { M4MercuriusRelayChip } from './panes/M4MercuriusRelayPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
 import { TransformContainersPane } from './panes/TransformContainersPane';
 import { PratibimbaCoordinatePane } from './panes/PratibimbaCoordinatePane';
@@ -1147,6 +1148,9 @@ export function App() {
                 </div>
                 {face === 0 && activeLayout === 'daily-0-1' ? (
                     <M3DailyWheelMiniView />
+                ) : null}
+                {face === 0 && activeLayout === 'daily-0-1' ? (
+                    <M4MercuriusRelayChip />
                 ) : null}
                 {face === 0 && activeLayout === 'daily-0-1' ? (
                     <M0CoordinateSummaryCard

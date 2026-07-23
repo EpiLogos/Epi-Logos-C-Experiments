@@ -4502,6 +4502,80 @@ textarea {
   color: var(--ink);
 }
 
+/* ── Mercurius signal-relay chip (25.T25.16) ───────────────────── */
+/* Compact chrome variant of the relay indicator: a live kairos-signal chip
+   over the profile-tick spine. FR-3 grey when disabled; pulses once per genuine
+   planet-degree change (keyed on data-pulse-seq via the re-mounted pulse dot). */
+
+.mercurius-relay-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: none;
+  padding: 0.2rem 0.5rem;
+  font-size: var(--type-caption);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.mercurius-relay-chip--disabled {
+  color: var(--ink-dim);
+  border-left-color: var(--hairline);
+  opacity: 0.7;
+}
+
+.mercurius-relay-chip--pending {
+  color: var(--ink-dim);
+  border-left-color: var(--hairline);
+}
+
+.mercurius-relay-chip--live {
+  color: var(--ink);
+  border-left-color: var(--ring);
+}
+
+.mercurius-relay-pulse {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--hairline);
+}
+
+.mercurius-relay-chip--live .mercurius-relay-pulse {
+  background: var(--ring);
+  animation: mercurius-relay-pulse 0.9s ease-out 1;
+}
+
+@keyframes mercurius-relay-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 var(--ring);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.35);
+    box-shadow: 0 0 0 0.35rem transparent;
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mercurius-relay-chip--live .mercurius-relay-pulse {
+    animation: none;
+  }
+}
+
+.mercurius-relay-stamp {
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
 .kairos-enablement-actions {
   flex-wrap: wrap;
 }

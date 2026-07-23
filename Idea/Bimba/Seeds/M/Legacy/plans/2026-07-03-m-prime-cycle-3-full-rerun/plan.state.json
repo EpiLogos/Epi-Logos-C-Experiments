@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T04:00:39.033Z",
+  "updatedAt": "2026-07-23T04:04:41.511Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12700,14 +12700,31 @@
       "blocker": null
     },
     "25.T25.16": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T03:32:40.214Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T04:04:41.490Z",
       "claimedAt": "2026-07-23T03:32:40.214Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T04:04:41.490Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T04:04:41.490Z",
+          "text": "Built M4MercuriusRelayChip (25.16 Mercurius signal-relay) carrier-native per DR-FACE-7: dead mercurius.kairos.delta transport retargeted to the profile-tick spine (planetDegrees change IS the signal); pure reducer (FR-3 gating, honest-pending, mount-local delta/pulse, cache-stamped refresh via cachedAtMs) + live chip mounted in daily-0-1; 9 model + 4 render tests + new UF e2e mercurius-relay.spec.ts all green; typecheck/import-lint(0 forbidden)/carrier-tokens/app-test(1064)/app-smoke green. Verify record PASS (verifier opus-mdev-t25-verify != closer). The sole full-app-ui-flow red pratibimba-consent.spec.ts:274 (AUTOMATIC session-close drift, unrelated to this chip) is a confirmed parallel-load flake: passes clean in isolation (7.1s).",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/mercurius-relay.spec.ts (UF, exit 0) + npx vitest run src/panes/mercuriusRelay.test.ts src/panes/M4MercuriusRelayPane.test.tsx",
+            "exitCode": 0,
+            "testsPassed": 14,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M4MercuriusRelayPane.tsx",
+              "Body/M/pratibimba-app/src/panes/mercuriusRelay.ts",
+              "Body/M/pratibimba-app/tests/e2e/mercurius-relay.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/25.T25.16.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t25-build",
-      "leaseExpiresAt": "2026-07-23T05:32:40.214Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T03:32:40.214Z",
       "runId": "20260723T033240Z-25-T25.16",
       "worktree": null,
@@ -12874,16 +12891,16 @@
       "blocker": null
     },
     "26.T26.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T04:02:53.204Z",
+      "claimedAt": "2026-07-23T04:02:53.204Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-t26-m5epii",
+      "leaseExpiresAt": "2026-07-23T06:02:53.204Z",
+      "heartbeatAt": "2026-07-23T04:02:53.204Z",
+      "runId": "20260723T040253Z-26-T26.3",
       "worktree": null,
       "blocker": null
     },
@@ -25220,20 +25237,30 @@
     {
       "runId": "20260723T033240Z-25-T25.16",
       "taskId": "25.T25.16",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T03:32:40.214Z",
       "owner": "opus-mdev-t25-build",
       "leaseExpiresAt": "2026-07-23T05:32:40.214Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T04:04:41.490Z"
+    },
+    {
+      "runId": "20260723T040253Z-26-T26.3",
+      "taskId": "26.T26.3",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T04:02:53.204Z",
+      "owner": "opus-t26-m5epii",
+      "leaseExpiresAt": "2026-07-23T06:02:53.204Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-23T03:10:05.286Z",
-    "updatedAt": "2026-07-23T03:10:05.286Z",
+    "createdAt": "2026-07-23T04:02:29.585Z",
+    "updatedAt": "2026-07-23T04:02:29.585Z",
     "taskIds": [
       "14.T14.4",
-      "24.T24.6",
+      "25.T25.16",
       "24.T24.7",
       "24.T24.8"
     ],
@@ -25242,7 +25269,7 @@
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "24.T24.6": "in-session",
+      "25.T25.16": "in-session",
       "24.T24.7": "in-session",
       "24.T24.8": "in-session"
     },
