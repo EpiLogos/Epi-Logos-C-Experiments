@@ -681,8 +681,9 @@ export function App() {
 
     // command registration
     useEffect(() => {
-        // 16.T16.19 (CCT-19): Atelier activation — commands over the file
-        // the user is already in; scent-follow stages a Hen candidate.
+        // 16.T16.19 (CCT-19) + 26.T26.3: Atelier scent-following activation —
+        // commands over the file/coordinate the user is already in; scent-follow
+        // stages a Hen candidate, the root stage traces the active coordinate.
         const atelierDisposers = registerAtelierCommands({
             activeMarkdownPath: () => {
                 const current = modelsRef.current;
@@ -702,6 +703,9 @@ export function App() {
                 return path;
             },
             dayId: () => useSessionStore.getState().dayNow ?? null,
+            // 26.T26.3: the root/etymology stage rides s5'.gnostic.etymology, which
+            // takes the active bimba coordinate (not a path).
+            activeCoordinate: () => useCoordinateStore.getState().selected ?? null,
             invoke: (method, params) => gateway().invoke(method, params),
             ready: () => gatewayReady()
         });

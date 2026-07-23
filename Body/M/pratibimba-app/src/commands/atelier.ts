@@ -12,20 +12,19 @@
  * Does NOT own: the entity lifecycle law (Hen), the gateway socket (App owns it;
  *   the holder carries it), canon writes (never), Aletheia dispatch (emergent).
  *
- * 26.3 RETARGET (REVIEW proposal — awaiting Architect ratification).
- * The design-recon spec wires the stages to `aletheia_gnosis_query`,
- * `aletheia_thought_route`, `aletheia_crystallise` as **gateway methods** invoked
- * via `KERNEL_BRIDGE_API.invokeCapability`. That premise is FALSE: those names are
- * not dispatchable — they are Aletheia SUBAGENT tools, and per the S5 preflight
- * "all Aletheia invocation routes through Anima dispatch — Aletheia is emergent,
- * not routed independently." A pane cannot invoke them. The honest retarget rides
- * the REAL landed substrate: `s5'.gnostic.etymology` + `s5'.gnostic.query_with_layers`
- * (Tranche 6.1 — LANDED, dispatchable) plus the 16.T16.19 `s1'`/`s0'` routes.
- * Aletheia subagents surface as EVIDENCE LINEAGE (ALETHEIA_LINEAGE), never live
- * invocation. Ratification items: (1) the corrected aletheia_*→gnostic premise
- * (flag design-recon §26.3 + owning M5'-SPEC); (2) `pros-hen` is a LOCAL synthesis
- * stage (no substrate call — Klein-V4 pull realised client-side); (3) the App.tsx
- * `activeCoordinate` wiring for the root stage is deferred to the done-close.
+ * 26.3 WIRING (ratified 2026-07-23).
+ * Agents use capabilities — they don't duplicate them. The `aletheia_gnosis_query`
+ * / `aletheia_thought_route` / `aletheia_crystallise` names in the design-recon
+ * spec are Aletheia/Sophia AGENT TOOLS routed through `s4'.mediation.route` under
+ * entitlement (12-agentic-layer-s4-s5.md §"gnostic/Aletheia/GraphRAG tools"), NOT
+ * bespoke gateway methods a pane calls. A pane simply uses the same underlying
+ * CAPABILITY directly: root=`s5'.gnostic.etymology`, drift=`s5'.gnostic.query_with_layers`
+ * (Tranche 6.1 — LANDED), cognate=`s1'.semantic.suggest_links`, psychoid=
+ * `s0'.anuttara.trace`, Möbius=`s1'.entity.capture`. `pros-hen` is a LOCAL synthesis
+ * stage (no substrate call — Klein-V4 pull realised client-side). The Aletheia
+ * subagents surface as EVIDENCE LINEAGE (ALETHEIA_LINEAGE) in the scent-trail
+ * provenance — the agents that use these capabilities, shown as lineage, never a
+ * pane invocation.
  */
 
 import { AppCommand, commands } from './registry';
