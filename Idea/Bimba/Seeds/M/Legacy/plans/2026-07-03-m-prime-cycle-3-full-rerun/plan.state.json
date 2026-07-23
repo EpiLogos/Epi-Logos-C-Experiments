@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T20:24:52.660Z",
+  "updatedAt": "2026-07-23T21:07:06.311Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14066,16 +14066,21 @@
       "blocker": null
     },
     "28.T28.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-23T21:07:06.289Z",
+      "claimedAt": "2026-07-23T21:03:41.488Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T21:07:06.289Z",
+          "text": "Fate A carried-by-integration (DR-FACE-7): the seven-field cross-layout identity tuple is realised live by src/state/crossLayoutIdentity.ts (readCrossLayoutIdentity + fail-closed createCrossLayoutIdentityReceipt) and projected to the shell dataset by the App.tsx navigate handler; sibling 11.T11.6 acceptance crossLayoutStateIdentity.test.tsx drives the real daily-0-1<->ide-deep routing receipt. Added 28.19-attributed consolidating acceptance src/crossLayoutStateIdentity.28-19.test.ts pinning the retargeted content-law: identity tuple is EXACTLY the seven shared fields (per-view selections reset, not identity) and the guard fails closed on all seven fields (sibling covered only 2). Green: vitest 6/6 (3 new + 3 carried), typecheck exit 0, lint:imports GREEN 439 files. Held at review pending the shared honesty-lint gate (parallel 26.T26.3)."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T00:03:41.488Z",
+      "heartbeatAt": "2026-07-23T21:07:06.289Z",
+      "runId": "20260723T210341Z-28-T28.19",
       "worktree": null,
       "blocker": null
     },
@@ -25382,6 +25387,16 @@
       "leaseExpiresAt": "2026-07-23T22:24:52.179Z",
       "worktree": null,
       "completedAt": "2026-07-23T20:24:52.639Z"
+    },
+    {
+      "runId": "20260723T210341Z-28-T28.19",
+      "taskId": "28.T28.19",
+      "status": "review",
+      "startedAt": "2026-07-23T21:03:41.488Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T00:03:41.488Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T21:07:06.289Z"
     }
   ],
   "activeRoute": {
