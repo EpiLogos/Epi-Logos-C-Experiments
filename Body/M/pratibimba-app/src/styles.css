@@ -12,6 +12,13 @@
   --hairline: #3a2c5c;
   --ready: #9fd0a8;
   --danger: #e08a8a;
+  --facet-sophia: #d4af37; /* gold */
+  --facet-anima: #7c6bd4; /* indigo */
+  --facet-logos: #d99a2b; /* amber */
+  --facet-eros: #d6708b; /* rose */
+  --facet-mythos: #4fae7a; /* emerald */
+  --facet-psyche: #b8bcc4; /* silver */
+  --facet-nous: #7a8290; /* slate */
   --nara-highlight-daily-note: #fbbf24;
   --nara-highlight-oracle: #a78bfa;
   --nara-highlight-dream: #60a5fa;
@@ -5503,4 +5510,263 @@ textarea {
     .transform-controls {
         grid-template-columns: minmax(0, 1fr);
     }
+}
+
+/* ===== Dispatch Trace (Pi → subagent genealogy) — Track 27.T27.3 ===== */
+.dispatch-trace-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    overflow: auto;
+}
+.dispatch-trace-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.dispatch-trace-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.dispatch-trace-subtitle {
+    font-size: var(--type-caption);
+    opacity: 0.7;
+}
+.dispatch-trace-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin-left: auto;
+}
+.dispatch-trace-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.dispatch-trace-filters,
+.dispatch-trace-timerange {
+    display: inline-flex;
+    gap: 0.25rem;
+}
+.dispatch-actor-filter,
+.dispatch-timerange {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.dispatch-actor-filter.active,
+.dispatch-timerange.active {
+    opacity: 1;
+    border-color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 18%, transparent);
+}
+.dispatch-psyche-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--type-micro);
+    opacity: 0.8;
+}
+.psyche-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+.facet-sophia { --facet-color: var(--facet-sophia); }
+.facet-anima { --facet-color: var(--facet-anima); }
+.facet-logos { --facet-color: var(--facet-logos); }
+.facet-eros { --facet-color: var(--facet-eros); }
+.facet-mythos { --facet-color: var(--facet-mythos); }
+.facet-psyche { --facet-color: var(--facet-psyche); }
+.facet-nous { --facet-color: var(--facet-nous); }
+.psyche-legend-swatch {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--facet-color, var(--hairline));
+    display: inline-block;
+}
+.dispatch-genealogy-tree {
+    font-size: var(--type-body-small);
+    overflow: auto;
+}
+.dispatch-tree-roots,
+.dispatch-tree-children,
+.crystallisation-children {
+    list-style: none;
+    margin: 0;
+    padding-left: 0.9rem;
+}
+.dispatch-tree-roots {
+    padding-left: 0;
+}
+.dispatch-node-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.12rem 0.3rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+}
+.dispatch-node-row:hover {
+    background: color-mix(in srgb, var(--hairline) 40%, transparent);
+}
+.dispatch-node-row.selected {
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.dispatch-node-fold {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 0.2rem;
+    font-size: var(--type-micro);
+}
+.dispatch-node-actor {
+    font-weight: 600;
+}
+.dispatch-node-role {
+    opacity: 0.55;
+    font-weight: 400;
+}
+.dispatch-node-method {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.8;
+}
+.dispatch-node-gate {
+    font-size: var(--type-micro);
+}
+.dispatch-node-gate.gate-refused {
+    color: var(--danger);
+}
+.dispatch-node-status {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+}
+.dispatch-node-status.status-failed,
+.dispatch-node-status.status-refused {
+    color: var(--danger);
+}
+.dispatch-node-status.status-succeeded {
+    color: var(--ready);
+}
+.dispatch-node-duration {
+    font-size: var(--type-micro);
+    opacity: 0.5;
+}
+.dispatch-node-link {
+    font-size: var(--type-micro);
+    padding: 0 0.3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.dispatch-psyche-badge,
+.dispatch-aletheia-badge,
+.aletheia-subagent-badge {
+    font-size: var(--type-micro);
+    padding: 0 0.3rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--facet-color, var(--hairline));
+}
+.dispatch-psyche-badge {
+    color: var(--facet-color);
+    border-color: var(--facet-color);
+}
+.dispatch-aletheia-badge,
+.aletheia-subagent-badge {
+    background: color-mix(in srgb, var(--hairline) 50%, transparent);
+    opacity: 0.85;
+}
+.aletheia-crystallisation-group {
+    list-style: none;
+    margin: 0.2rem 0;
+    border-left: 2px solid color-mix(in srgb, var(--facet-anima) 60%, transparent);
+    padding-left: 0.4rem;
+}
+.crystallisation-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--type-micro);
+    opacity: 0.85;
+    flex-wrap: wrap;
+}
+.crystallisation-intent {
+    opacity: 0.7;
+    font-style: italic;
+}
+.crystallisation-badges {
+    display: inline-flex;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+}
+.aletheia-veto-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin: 0.15rem 0 0.15rem 0.9rem;
+    padding: 0.2rem 0.4rem;
+    font-size: var(--type-micro);
+    border: 1px solid var(--danger);
+    border-radius: 0.4rem;
+    background: color-mix(in srgb, var(--danger) 14%, transparent);
+    color: var(--danger);
+}
+.aletheia-veto-banner .veto-label {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.aletheia-veto-banner .veto-nonblocking {
+    opacity: 0.7;
+    font-style: italic;
+}
+.dispatch-node-detail {
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    font-size: var(--type-body-small);
+}
+.dispatch-node-detail h4 {
+    margin: 0 0 0.3rem;
+    font-size: var(--type-heading-4);
+}
+.dispatch-node-detail dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1rem 0.6rem;
+    margin: 0;
+}
+.dispatch-node-detail dt {
+    opacity: 0.55;
+}
+.dispatch-detail-veto {
+    color: var(--danger);
+    margin: 0.3rem 0 0;
+}
+.dispatch-composition-observability {
+    margin-top: 0.4rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.3rem;
+    opacity: 0.85;
+}
+.dispatch-composition-observability > summary {
+    cursor: pointer;
+    font-size: var(--type-caption);
+    opacity: 0.7;
 }

@@ -28,11 +28,13 @@
 
 import type {
     ActorIdentity,
+    AletheiaFacetReturn,
     DispatchRoute,
     RunStatus,
     RunTreeNode,
     ToolStreamEvent
 } from './omnipanelRuntime';
+import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 
 /** Outcome of the capability gate the dispatch rode (parity via
  *  `isMediationCapabilityAllowed` against the 12.10 matrix — the PRODUCER
@@ -60,6 +62,13 @@ export interface DispatchGenealogyRecord {
     readonly evidenceRef: string | null;
     /** Source anchor (Backend Studio deep-link, ide-deep only per 27.3). */
     readonly sourceRef: string | null;
+
+    // 27.3 additions (optional — populated only from real feed data):
+    readonly psycheFacet?: PsycheFacet;
+    readonly aletheiaSubagent?: AletheiaSubagentId;
+    readonly aletheiaCrystallisationIntent?: string;
+    readonly aletheiaFacetReturn?: AletheiaFacetReturn;
+    readonly tickAtInvoke?: number;
 }
 
 /** By-id lookup for the components (gate/source fields RunTreeNode omits). */
@@ -87,7 +96,13 @@ function toRunTreeNode(
         durationMs:
             record.endedAtMs === null ? null : Math.max(0, record.endedAtMs - record.startedAtMs),
         evidenceRef: record.evidenceRef,
-        children
+        children,
+        psycheFacet: record.psycheFacet,
+        aletheiaSubagent: record.aletheiaSubagent,
+        aletheiaCrystallisationIntent: record.aletheiaCrystallisationIntent,
+        aletheiaFacetReturn: record.aletheiaFacetReturn,
+        sessionKey: record.id,
+        tickAtInvoke: record.tickAtInvoke
     };
 }
 

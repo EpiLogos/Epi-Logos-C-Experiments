@@ -18,8 +18,10 @@
  */
 
 import type { SessionRecord } from '../../bridge/sessionClient';
-import type { ActorIdentity, ActorRole, RunStatus } from './omnipanelRuntime';
+import type { ActorIdentity, ActorRole, AletheiaFacetReturn, RunStatus } from './omnipanelRuntime';
+import type { AletheiaSubagentId } from './evidenceShapes';
 import type { DispatchGenealogyRecord } from './dispatchGenealogy';
+import { psycheFacetForAgent } from './psycheFacet';
 
 const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
     'pending',
@@ -31,6 +33,16 @@ const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
 
 /** The canonical s4'.mediation.route method — the ONLY allowed dispatch path. */
 const MEDIATION_ROUTE = "s4'.mediation.route";
+
+/** The six Aletheia techne-guardian subagents (S4-5'). */
+const ALETHEIA_SUBAGENTS: ReadonlySet<string> = new Set([
+    'anansi',
+    'janus',
+    'moirai',
+    'mercurius',
+    'agora',
+    'zeithoven'
+]);
 
 function readString(record: SessionRecord, keys: readonly string[]): string | null {
     for (const key of keys) {
@@ -75,6 +87,19 @@ function readStatus(record: SessionRecord, endedAtMs: number | null): RunStatus 
     return endedAtMs === null ? 'running' : 'succeeded';
 }
 
+/** An Aletheia veto (12.19), read ONLY from real record fields — never faked. */
+function readFacetReturn(record: SessionRecord): AletheiaFacetReturn | undefined {
+    const reason = readString(record, ['vetoReason', 'veto_reason']);
+    if (reason) {
+        return {
+            kind: 'veto',
+            reason,
+            whatIsMissed: readString(record, ['vetoMissed', 'veto_missed']) ?? ''
+        };
+    }
+    return undefined;
+}
+
 /**
  * Fold real `sessions.list` records into the Pi -> subagent dispatch genealogy.
  * A subagent session (`spawnedBy` present, or an `:subagent:` key) nests under
@@ -92,6 +117,10 @@ export function dispatchGenealogyFromSessions(
         const startedAtMs =
             readNumber(record, ['startedAtMs', 'createdAtMs', 'created_at_ms', 'openedAtMs']) ?? 0;
         const endedAtMs = readNumber(record, ['endedAtMs', 'closedAtMs', 'closed_at_ms']);
+        const aletheiaSubagent =
+            subagentId && ALETHEIA_SUBAGENTS.has(subagentId)
+                ? (subagentId as AletheiaSubagentId)
+                : undefined;
         return {
             id: record.sessionKey,
             parentId,
@@ -108,8 +137,15 @@ export function dispatchGenealogyFromSessions(
             // The session exists => its spawn passed the gate (subagents.rs
             // validates spawnedBy before the session materialises).
             gate: { capability, allowed: true },
-            evidenceRef: null,
-            sourceRef: null
+            evidenceRef: readString(record, ['evidenceRef', 'evidence_ref']),
+            sourceRef: readString(record, ['sourceRef', 'source_ref']),
+            // 27.3 enrichment from real fields only:
+            psycheFacet: psycheFacetForAgent(actor.actor),
+            aletheiaSubagent,
+            aletheiaCrystallisationIntent:
+                readString(record, ['crystallisationIntent', 'crystallisation_intent']) ?? undefined,
+            aletheiaFacetReturn: readFacetReturn(record),
+            tickAtInvoke: readNumber(record, ['tickAtInvoke', 'tick_at_invoke']) ?? undefined
         };
     });
 }

@@ -18,6 +18,7 @@
  */
 
 import { GatewayEventEntry } from '../../state/eventsStore';
+import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 
 export type OmniPanelTabId =
     | 'pi-chat'
@@ -101,6 +102,15 @@ export interface DispatchRoute {
     readonly capability: string | null;
 }
 
+/**
+ * An Aletheia facet return (12.T12.19). A `disclosure` carries the angle the
+ * subagent surfaced; a `veto` blocks the synthesis and names what was missed —
+ * it fires a non-blocking red banner, it does NOT block the human gate.
+ */
+export type AletheiaFacetReturn =
+    | { readonly kind: 'disclosure'; readonly angle: string; readonly evidenceRefs: readonly string[] }
+    | { readonly kind: 'veto'; readonly reason: string; readonly whatIsMissed: string };
+
 /** One node of the Pi → Anima → subagent invocation tree (Dispatch Trace
  *  fold; per-node fields per the Per-Tab role table — 27.3 extends). */
 export interface RunTreeNode {
@@ -112,6 +122,22 @@ export interface RunTreeNode {
     readonly durationMs: number | null;
     readonly evidenceRef: string | null;
     readonly children: readonly RunTreeNode[];
+
+    // 27.3 additions (all optional — the fold populates what the real feed
+    // carries; nothing is synthesised when the datum is absent):
+    /** The constitutional register this dispatch speaks in (Anima's authorial
+     *  choice per DR-M5-1) — never a separate dispatch authority. */
+    readonly psycheFacet?: PsycheFacet;
+    /** The Aletheia subagent identity when `actor.role === 'subagent'`. */
+    readonly aletheiaSubagent?: AletheiaSubagentId;
+    /** Present only when Anima dispatches this fan-out in crystallisation-mode. */
+    readonly aletheiaCrystallisationIntent?: string;
+    /** A subagent's disclosure or veto (12.19). */
+    readonly aletheiaFacetReturn?: AletheiaFacetReturn;
+    /** The session key the dispatch ran under. */
+    readonly sessionKey?: string;
+    /** The profile tick at invocation (per 26.10 DispatchTraceNode contract). */
+    readonly tickAtInvoke?: number;
 }
 
 /** One row of the time-ordered fold (Tool Stream; 27.4 extends). */

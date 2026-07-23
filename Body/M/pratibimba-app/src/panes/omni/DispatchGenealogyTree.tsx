@@ -1,16 +1,18 @@
 /**
- * Coordinate: M' `/` membrane (dispatch genealogy — structural folding, 15.T15.11)
+ * Coordinate: M' `/` membrane (dispatch genealogy — structural folding, 15.T15.11 + 27.T27.3)
  * Residency: Body/M/pratibimba-app/src/panes/omni
  * Actualises: the TREE folding of the dispatch-genealogy primitive — the
  *   Pi → Anima → subagent invocation tree with per-node actor, route,
  *   capability-gate outcome, timing, status, and deep-link affordances.
+ *   27.3 enriches each node with its psyche-facet register, Aletheia subagent
+ *   identity, a non-blocking veto banner (12.19), and — when Anima dispatches
+ *   in crystallisation-mode — wraps the subagent fan-out in an
+ *   AletheiaCrystallisationGroup (DR-B-3: subagents stay nested under Anima).
  *   Collapsible nodes (view-local fold state only); selectable nodes emit the
  *   consistent node id; deep-link buttons emit `DispatchDeepLink` descriptors.
- *   This is the reusable face the `omniDispatchTrace` tab body composes when
- *   27.3 lands — it is NOT the tab body itself.
+ *   This is the reusable face the `omniDispatchTrace` tab body composes.
  * Does NOT own: the dataset or the folds (dispatchGenealogy.ts), the tab
- *   mount (App.tsx factory keeps the honest pending pane until 27.3),
- *   intent routing (the mounting pane wires onDeepLink into the command spine).
+ *   mount (App.tsx), intent routing (the mounting pane wires onDeepLink).
  */
 
 import { useMemo, useState } from 'react';
@@ -22,12 +24,19 @@ import {
     DispatchDeepLink,
     DispatchGenealogyRecord
 } from './dispatchGenealogy';
+import type { AletheiaSubagentId } from './evidenceShapes';
+import { PSYCHE_FACET_LABEL, psycheFacetClass } from './psycheFacet';
+import { AletheiaCrystallisationGroup } from './AletheiaCrystallisationGroup';
+import { VetoBanner } from './VetoBanner';
 
 export interface DispatchGenealogyTreeProps {
     readonly records: readonly DispatchGenealogyRecord[];
     readonly selectedId?: string | null;
     readonly onSelect?: (nodeId: string) => void;
     readonly onDeepLink?: (link: DispatchDeepLink) => void;
+    /** Controlled fold state (persisted by the tab). Omit for local fold. */
+    readonly collapsedIds?: readonly string[];
+    readonly onToggleCollapse?: (nodeId: string) => void;
 }
 
 function formatDuration(durationMs: number | null): string {
@@ -45,6 +54,25 @@ function TreeNode(props: {
     const record = index.get(node.id);
     const isCollapsed = collapsed.has(node.id);
     const links = record ? deepLinksFor(record) : [];
+
+    // DR-B-3: subagents dispatched in crystallisation-mode are grouped under
+    // Anima, never promoted to peers. Non-subagent children render inline.
+    const aletheiaChildren = node.children.filter(child => child.aletheiaSubagent);
+    const normalChildren = node.children.filter(child => !child.aletheiaSubagent);
+    const dispatchedSubagents = aletheiaChildren
+        .map(child => child.aletheiaSubagent)
+        .filter((id): id is AletheiaSubagentId => Boolean(id));
+
+    const renderChild = (child: RunTreeNode) => (
+        <TreeNode
+            key={child.id}
+            node={child}
+            index={index}
+            collapsed={collapsed}
+            toggle={toggle}
+            tree={tree}
+        />
+    );
 
     return (
         <li
@@ -77,6 +105,24 @@ function TreeNode(props: {
                     {node.actor.actor}
                     <span className="dispatch-node-role"> ({node.actor.role})</span>
                 </span>
+                {node.psycheFacet && (
+                    <span
+                        className={`dispatch-psyche-badge ${psycheFacetClass(node.psycheFacet)}`}
+                        data-testid="dispatch-psyche-badge"
+                        title="psyche-facet register"
+                    >
+                        {PSYCHE_FACET_LABEL[node.psycheFacet]}
+                    </span>
+                )}
+                {node.aletheiaSubagent && (
+                    <span
+                        className={`dispatch-aletheia-badge subagent-${node.aletheiaSubagent}`}
+                        data-testid="dispatch-aletheia-badge"
+                        title="Aletheia subagent"
+                    >
+                        {node.aletheiaSubagent}
+                    </span>
+                )}
                 <span className="dispatch-node-method">{node.route.method}</span>
                 {record && record.gate.capability !== null && (
                     <span
@@ -103,18 +149,18 @@ function TreeNode(props: {
                     </button>
                 ))}
             </div>
+            {node.aletheiaFacetReturn && <VetoBanner facetReturn={node.aletheiaFacetReturn} />}
             {node.children.length > 0 && !isCollapsed && (
                 <ul className="dispatch-tree-children">
-                    {node.children.map(child => (
-                        <TreeNode
-                            key={child.id}
-                            node={child}
-                            index={index}
-                            collapsed={collapsed}
-                            toggle={toggle}
-                            tree={tree}
-                        />
-                    ))}
+                    {normalChildren.map(renderChild)}
+                    {aletheiaChildren.length > 0 && (
+                        <AletheiaCrystallisationGroup
+                            intent={node.aletheiaCrystallisationIntent}
+                            subagents={dispatchedSubagents}
+                        >
+                            {aletheiaChildren.map(renderChild)}
+                        </AletheiaCrystallisationGroup>
+                    )}
                 </ul>
             )}
         </li>
@@ -125,10 +171,18 @@ function TreeNode(props: {
 export function DispatchGenealogyTree(props: DispatchGenealogyTreeProps) {
     const trees = useMemo(() => foldGenealogyTree(props.records), [props.records]);
     const index = useMemo(() => genealogyIndex(props.records), [props.records]);
-    const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set());
+    const [localCollapsed, setLocalCollapsed] = useState<ReadonlySet<string>>(new Set());
 
-    const toggle = (nodeId: string) =>
-        setCollapsed(previous => {
+    // Controlled fold when the tab persists it; otherwise view-local.
+    const controlled = props.collapsedIds !== undefined && props.onToggleCollapse !== undefined;
+    const collapsed = controlled ? new Set(props.collapsedIds) : localCollapsed;
+
+    const toggle = (nodeId: string) => {
+        if (controlled) {
+            props.onToggleCollapse!(nodeId);
+            return;
+        }
+        setLocalCollapsed(previous => {
             const next = new Set(previous);
             if (next.has(nodeId)) {
                 next.delete(nodeId);
@@ -137,6 +191,7 @@ export function DispatchGenealogyTree(props: DispatchGenealogyTreeProps) {
             }
             return next;
         });
+    };
 
     return (
         <div className="dispatch-genealogy-tree" data-testid="dispatch-genealogy-tree">

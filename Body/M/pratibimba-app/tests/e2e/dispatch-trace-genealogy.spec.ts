@@ -29,6 +29,13 @@ test('27.T27.3: the Dispatch tab renders the Pi → subagent genealogy, not a co
     await expect(page.getByTestId('dispatch-trace-header')).toContainText('Pi → Anima → subagent');
     await expect(page.getByTestId('dispatch-genealogy-tree')).toBeVisible();
 
+    // The full 27.3 surface is live: actor + time-range filters and the
+    // 7-facet psyche legend all render in the real app.
+    await expect(page.getByTestId('dispatch-actor-filter-all')).toBeVisible();
+    await expect(page.getByTestId('dispatch-timerange-full-session')).toBeVisible();
+    await expect(page.getByTestId('dispatch-psyche-legend')).toBeVisible();
+    await expect(page.getByTestId('psyche-legend-sophia')).toBeVisible();
+
     // Composition observability is retained but strictly subordinate — a
     // collapsed <details>, never the dispatch trace itself.
     const subordinate = page.getByTestId('dispatch-composition-observability');
