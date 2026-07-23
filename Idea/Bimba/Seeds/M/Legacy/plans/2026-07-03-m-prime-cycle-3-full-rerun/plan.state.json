@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T03:22:23.003Z",
+  "updatedAt": "2026-07-23T04:00:39.033Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12700,16 +12700,16 @@
       "blocker": null
     },
     "25.T25.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T03:32:40.214Z",
+      "claimedAt": "2026-07-23T03:32:40.214Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t25-build",
+      "leaseExpiresAt": "2026-07-23T05:32:40.214Z",
+      "heartbeatAt": "2026-07-23T03:32:40.214Z",
+      "runId": "20260723T033240Z-25-T25.16",
       "worktree": null,
       "blocker": null
     },
@@ -12843,14 +12843,31 @@
       "blocker": null
     },
     "26.T26.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T03:13:39.734Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T04:00:39.010Z",
       "claimedAt": "2026-07-23T03:13:39.734Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-23T04:00:39.010Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T04:00:39.010Z",
+          "text": "26.2 face-gap: six operational-capacity lanes hosted in the M5' EBM observatory (canonical scale; gated off the personal face via hostCapacityLanes=false so the VR baseline holds) — honest per-capacity dispatch/human-gate/last-activity read from s5'.improve.history, harmonic-boundary explicitly marked substrate-pending (no per-capacity producer: s5'.epii.runtimeContext + MathemeHarmonicProfileBoundary never wired), Pi-monitor/ACR (agentic-control-room -> omniDispatchTrace) click-through with subsystem vak coordinate. Proof: 15 vitest + 2 real-gateway e2e (m5-capacity-lanes 2/2, incl click-through nav) + app-typecheck + app-test(1064) + app-build + app-smoke + honesty-lint all GREEN in the full UF gate; the gate's only reds are sibling Track-25 WIP/flake this tranche does not touch (carrier-tokens = codex uncommitted .mercurius-relay-chip raw font-size; pratibimba-consent + VR (b) tick-choreography = codex active App.tsx WIP + known VR-determinism flake). Adversarial spec/honesty review: no defects.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/m5-capacity-lanes.spec.ts --project=chromium (UF, real spawned gateway)",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m5CapacityLanes.ts",
+              "Body/M/pratibimba-app/src/panes/M5OperationalCapacityLanes.tsx",
+              "Body/M/pratibimba-app/src/panes/M5EbmObservatoryPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m5-capacity-lanes.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-t26-m5epii",
-      "leaseExpiresAt": "2026-07-23T05:13:39.734Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T03:13:39.734Z",
       "runId": "20260723T031339Z-26-T26.2",
       "worktree": null,
@@ -25193,10 +25210,20 @@
     {
       "runId": "20260723T031339Z-26-T26.2",
       "taskId": "26.T26.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-23T03:13:39.734Z",
       "owner": "opus-t26-m5epii",
       "leaseExpiresAt": "2026-07-23T05:13:39.734Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T04:00:39.010Z"
+    },
+    {
+      "runId": "20260723T033240Z-25-T25.16",
+      "taskId": "25.T25.16",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T03:32:40.214Z",
+      "owner": "opus-mdev-t25-build",
+      "leaseExpiresAt": "2026-07-23T05:32:40.214Z",
       "worktree": null
     }
   ],
