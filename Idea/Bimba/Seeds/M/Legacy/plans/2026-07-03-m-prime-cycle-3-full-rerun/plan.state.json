@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T00:00:55.284Z",
+  "updatedAt": "2026-07-23T03:22:23.003Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11878,18 +11878,26 @@
       "blocker": null
     },
     "24.T24.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-23T03:22:22.981Z",
+      "claimedAt": "2026-07-23T03:11:06.999Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T03:22:22.981Z",
+          "text": "Fate C spine-gap (DR-FACE-7, re-verified 2026-07-23, NOT inherited): M3TarotWheel needs 3 substrate threads ALL absent — (1) mahamaya.tarotMajorArcanaCardId (WC-M3-SA-2) produced nowhere in Body/S; (2) tarotMinorId producer stubs tarot_minor_id:None at portal-core/src/kernel/projections/binary.rs:67; (3) gateway method s2.codon.scalar_ref.read (card-turn + 24.7/24.8 dep) absent. Kernel util m3_major_arcana_from_codon IS landed (epi-lib/src/m3.c:791) but NO tranche authors the bridge mirror or minor-id compute. Carrier M3CosmicWheelRenderService renders cosmic wheel + 22 arcana slots honest-pending; no 56-minor ring/suit-colour/card-turn carried. Building the face is forbidden per DR-FACE-7 Fate C. Whole 24.6-24.7-24.8-24.9-24.T60 chain gated."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t24-build",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-23T03:11:13.793Z",
+      "runId": "20260723T031106Z-24-T24.6",
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "environment",
+        "dependency": "WC-M3-SA-2 + tarotMinorId-producer + gateway s2.codon.scalar_ref.read (orphaned Wave-B kernel-bridge substrate; no owning tranche)"
+      }
     },
     "24.T24.7": {
       "status": "pending",
@@ -12835,16 +12843,16 @@
       "blocker": null
     },
     "26.T26.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T03:13:39.734Z",
+      "claimedAt": "2026-07-23T03:13:39.734Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-t26-m5epii",
+      "leaseExpiresAt": "2026-07-23T05:13:39.734Z",
+      "heartbeatAt": "2026-07-23T03:13:39.734Z",
+      "runId": "20260723T031339Z-26-T26.2",
       "worktree": null,
       "blocker": null
     },
@@ -25170,26 +25178,46 @@
       "leaseExpiresAt": "2026-07-23T01:42:20.347Z",
       "worktree": null,
       "completedAt": "2026-07-23T00:00:55.262Z"
+    },
+    {
+      "runId": "20260723T031106Z-24-T24.6",
+      "taskId": "24.T24.6",
+      "status": "blocked",
+      "startedAt": "2026-07-23T03:11:06.999Z",
+      "owner": "opus-mdev-t24-build",
+      "leaseExpiresAt": "2026-07-23T05:11:13.793Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-23T03:11:13.793Z",
+      "completedAt": "2026-07-23T03:22:22.981Z"
+    },
+    {
+      "runId": "20260723T031339Z-26-T26.2",
+      "taskId": "26.T26.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T03:13:39.734Z",
+      "owner": "opus-t26-m5epii",
+      "leaseExpiresAt": "2026-07-23T05:13:39.734Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-22T13:57:45.279Z",
-    "updatedAt": "2026-07-22T13:57:45.279Z",
+    "createdAt": "2026-07-23T03:10:05.286Z",
+    "updatedAt": "2026-07-23T03:10:05.286Z",
     "taskIds": [
       "14.T14.4",
-      "31.T31.3",
-      "25.T25.14",
-      "28.T28.17"
+      "24.T24.6",
+      "24.T24.7",
+      "24.T24.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "31.T31.3": "in-session",
-      "25.T25.14": "in-session",
-      "28.T28.17": "in-session"
+      "24.T24.6": "in-session",
+      "24.T24.7": "in-session",
+      "24.T24.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
