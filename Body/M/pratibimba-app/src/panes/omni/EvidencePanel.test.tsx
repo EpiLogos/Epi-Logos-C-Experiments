@@ -106,7 +106,10 @@ describe('EvidencePanel', () => {
     it('cross-folds to the Dispatch Trace tab at the packet genealogy node (15.11)', () => {
         hydrateOmniPanelSessionState({ perTabState: { evidence: { selectedPacketId: 'packet-1' } } } as never);
         render(<EvidencePanel packets={[fixture()]} />);
-        fireEvent.click(screen.getByTestId('evidence-open-dispatch'));
+        // the packet's genealogy renders as an embedded mini-graph
+        expect(screen.getByTestId('dispatch-mini-graph')).toBeTruthy();
+        expect(screen.getByTestId('dispatch-mini-node').getAttribute('data-node-id')).toBe('node-1');
+        fireEvent.click(screen.getByTestId('dispatch-mini-open'));
         expect(readOmniPanelSessionState().activeTab).toBe('dispatch-trace');
         expect(readOmniPanelSessionState().perTabState['dispatch-trace'].selectedNodeId).toBe('node-1');
     });

@@ -16,6 +16,7 @@
 
 import type { ActorMediator, MediatedRunEvidencePacket } from './evidenceShapes';
 import { PrivacyClassBadge } from './PrivacyClassBadge';
+import { DispatchTraceMiniGraph } from './DispatchTraceMiniGraph';
 
 export function mediatorLabel(mediator: ActorMediator): string {
     if (mediator.kind === 'aletheia') {
@@ -127,14 +128,7 @@ export function EvidencePacketView({
             )}
 
             <div className="evidence-cross-fold">
-                <button
-                    type="button"
-                    className="evidence-open-dispatch"
-                    data-testid="evidence-open-dispatch"
-                    onClick={() => onOpenDispatchTrace?.(packet.dispatchTrace.id)}
-                >
-                    Dispatch trace →
-                </button>
+                <DispatchTraceMiniGraph root={packet.dispatchTrace} onOpen={onOpenDispatchTrace} />
                 <button
                     type="button"
                     className="evidence-open-tools"
