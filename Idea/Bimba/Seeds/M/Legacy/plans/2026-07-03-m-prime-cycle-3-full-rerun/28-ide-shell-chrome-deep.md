@@ -2,7 +2,7 @@
 
 Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 28). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
 
-**⚑ Carrier (track 28) — build/verify HERE, never epi-theia:** CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> aletheia_crystallise -> Canon Studio); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28.
+**⚑ Carrier (track 28) — build/verify HERE, never epi-theia:** CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> s1'.entity.capture Hen candidate -> Canon Studio; aletheia_* = agent tools via s4'.mediation.route, NOT a pane gateway method — see 28.7 CORRECTION); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28.
 
 1. **T28.1 — Chrome contract doc-ahead-landing + M0/M5 ownership partition**
 
