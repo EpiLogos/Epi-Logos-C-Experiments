@@ -58,7 +58,7 @@ import { PratibimbaCoordinatePane } from './panes/PratibimbaCoordinatePane';
 import { M4LogosCyclePane } from './panes/M4LogosCyclePane';
 import { PiAxiomTranslationInspector } from './panes/PiAxiomTranslationInspector';
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
-import { CompositionDispatchTracePane } from './panes/omni/CompositionDispatchTracePane';
+import { DispatchTracePanel } from './panes/omni/DispatchTracePanel';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -422,7 +422,7 @@ function factory(node: TabNode) {
         case 'omniTuning':
             return <TuningPane />;
         case 'omniDispatchTrace':
-            return <CompositionDispatchTracePane />;
+            return <DispatchTracePanel />;
         // 27.T27.0: folds whose panels have not landed (27.3/.5/.7/.8
         // own the bodies) mount the honest pending pane.
         case 'omniEvidence':

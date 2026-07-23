@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T13:38:06.178Z",
+  "updatedAt": "2026-07-23T20:24:52.660Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13328,16 +13328,21 @@
       "blocker": null
     },
     "27.T27.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-23T20:24:52.639Z",
+      "claimedAt": "2026-07-23T19:54:52.179Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T20:24:52.639Z",
+          "text": "Core pi->subagent alignment landed + UF-proven. The Dispatch tab body is now the real Pi->Anima->subagent genealogy tree (DispatchTracePanel mounts DispatchGenealogyTree), folded from live sessions.list lineage (dispatchGenealogyFromSessions: subagents nest UNDER their dispatcher via spawnedBy, routed through s4'.mediation.route per gateway subagents.rs), REPLACING the genealogy-blind CompositionDispatchTracePane (29.T29.11) which now survives only as a subordinate <details>. Manifest owningTranche 29.T29.11->27.3. Verified: dispatchGenealogyFromSessions.test.ts(6)+DispatchTracePanel.test.tsx(3) green; 71/71 related suites green (no regressions); tsc + lint:imports green; UF e2e dispatch-trace-genealogy.spec.ts 1/1 PASS vs real spawned gateway. PARTIAL (review not done): AletheiaCrystallisationGroup, VetoBanner(12.19), psyche-facet legend/badges, RunTreeNode field extension, live onRunEvent subscription, deep-link routing(27.9), per-tab state persistence remain."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-273-impl",
+      "leaseExpiresAt": "2026-07-23T22:24:52.179Z",
+      "heartbeatAt": "2026-07-23T20:24:52.639Z",
+      "runId": "20260723T195452Z-27-T27.3",
       "worktree": null,
       "blocker": null
     },
@@ -25367,17 +25372,27 @@
       "leaseExpiresAt": "2026-07-23T08:07:50.327Z",
       "worktree": null,
       "completedAt": "2026-07-23T09:55:08.741Z"
+    },
+    {
+      "runId": "20260723T195452Z-27-T27.3",
+      "taskId": "27.T27.3",
+      "status": "review",
+      "startedAt": "2026-07-23T19:54:52.179Z",
+      "owner": "opus-mdev-273-impl",
+      "leaseExpiresAt": "2026-07-23T22:24:52.179Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T20:24:52.639Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-23T13:22:52.141Z",
-    "updatedAt": "2026-07-23T13:22:52.141Z",
+    "createdAt": "2026-07-23T20:10:50.913Z",
+    "updatedAt": "2026-07-23T20:10:50.913Z",
     "taskIds": [
       "14.T14.4",
       "30.T30.2",
-      "24.T24.7",
-      "24.T24.8"
+      "27.T27.3",
+      "24.T24.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -25385,8 +25400,8 @@
     "modeHints": {
       "14.T14.4": "in-session",
       "30.T30.2": "in-session",
-      "24.T24.7": "in-session",
-      "24.T24.8": "in-session"
+      "27.T27.3": "in-session",
+      "24.T24.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
