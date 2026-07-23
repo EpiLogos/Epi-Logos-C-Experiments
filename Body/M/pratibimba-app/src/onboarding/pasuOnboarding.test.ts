@@ -47,24 +47,31 @@ describe('32.T32.2 cold-start PASU-absence branch', () => {
 });
 
 describe('32.T32.2 PASU presence detection (nara.pasu.show)', () => {
-    it('classifies a real show record as present', async () => {
+    it('classifies a record with exists:true (PASU.md file present) as present', async () => {
         const calls: string[] = [];
         const invoke = async (method: string) => {
             calls.push(method);
-            return { coordinate: 'PASU', c_0_birth_date: '1990-01-01' };
+            return { coordinate: 'PASU', c_0_birth_date: '', exists: true };
         };
+        // present even when the fields are blank — a present-but-blank PASU is
+        // not re-prompted at boot (opens from settings 32.4)
         expect(await detectPasuPresence(invoke)).toBe(true);
         expect(calls).toEqual([PASU_SHOW_RPC]);
     });
 
-    it('classifies a gateway error (no PASU.md) as absent, without throwing', async () => {
+    it('classifies exists:false (no PASU.md file, first-run) as absent', async () => {
+        const invoke = async () => ({ c_0_birth_date: '', exists: false });
+        expect(await detectPasuPresence(invoke)).toBe(false);
+    });
+
+    it('classifies a gateway error as absent, without throwing', async () => {
         const invoke = async () => {
-            throw new Error('PASU.md not found');
+            throw new Error('gateway unavailable');
         };
         expect(await detectPasuPresence(invoke)).toBe(false);
     });
 
-    it('classifies a null/empty receipt as absent', async () => {
+    it('classifies a null/non-object receipt as absent', async () => {
         expect(await detectPasuPresence(async () => null)).toBe(false);
         expect(await detectPasuPresence(async () => '')).toBe(false);
     });

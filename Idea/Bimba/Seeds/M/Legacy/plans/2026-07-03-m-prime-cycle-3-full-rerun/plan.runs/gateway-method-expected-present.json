@@ -292,6 +292,10 @@
   {
    "method": "khora.session_start",
    "claimedBy": "32.T32.11"
+  },
+  {
+   "method": "nara.pasu.set",
+   "claimedBy": "25.T25.4 (PASU identity wizard write path, DR-WC-M4-3)"
   }
  ]
 }

@@ -456,6 +456,79 @@ textarea {
   border-color: var(--accent);
 }
 
+/* 25.T25.4 / 32.T32.2 — first-run PASU identity wizard, mounted on PASU-absence
+   (pre-kairos). A centred card overlay; protected-local handle-only chrome. */
+.pasu-wizard-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 16, 34, 0.72);
+}
+
+.pasu-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 320px;
+  max-width: 420px;
+  padding: 1.25rem;
+  background: var(--ground-raised);
+  border: 1px solid #2e2247;
+  border-left: 3px solid #6b7588;
+  border-radius: 8px;
+  font-size: var(--type-body);
+  color: var(--ink);
+}
+
+.pasu-wizard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.pasu-wizard-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pasu-wizard-field input {
+  padding: 0.4rem 0.5rem;
+  background: #241a38;
+  border: 1px solid #2e2247;
+  border-radius: 4px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.pasu-wizard-error {
+  margin: 0;
+  color: var(--ring);
+  font-size: var(--type-caption);
+}
+
+.pasu-wizard-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.pasu-wizard-footer button,
+.pasu-wizard-header button {
+  padding: 0.3rem 0.7rem;
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
 .m3-cosmic-wheel {
   margin: 0;
 }

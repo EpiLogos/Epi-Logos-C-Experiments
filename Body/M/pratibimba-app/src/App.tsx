@@ -57,6 +57,7 @@ import { M4MercuriusRelayChip } from './panes/M4MercuriusRelayPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
 import { TransformContainersPane } from './panes/TransformContainersPane';
 import { PratibimbaCoordinatePane } from './panes/PratibimbaCoordinatePane';
+import { PasuWizardPane } from './panes/PasuWizardPane';
 import { M4LogosCyclePane } from './panes/M4LogosCyclePane';
 import { PiAxiomTranslationInspector } from './panes/PiAxiomTranslationInspector';
 import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
@@ -111,7 +112,13 @@ import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
 import { resolveLayoutClaims } from './ui/layoutClaims';
 import { startFirstSession } from './onboarding/firstSessionOrchestration';
-import { browserKairosPreferences } from './panes/kairosEnablement';
+import {
+    coldStartPasuBranch,
+    detectPasuPresence,
+    PASU_SKIPPED_PREFERENCE,
+    recordPasuWizardSkip
+} from './onboarding/pasuOnboarding';
+import { browserKairosPreferences, ONBOARDING_COMPLETED_STEPS_PREFERENCE } from './panes/kairosEnablement';
 
 assertDailyReceiverBindings({
     'pratibimba.daily.journal': 'journalTimeline',
@@ -505,6 +512,34 @@ export function App() {
         readonly extensionId: string;
         readonly contributionId: string;
     } | null>(null);
+    const [pasuWizardOpen, setPasuWizardOpen] = useState(false);
+
+    // 32.T32.2: on the first profile-tick, detect PASU absence and mount the
+    // 25.T25.4 identity wizard (pre-kairos). Fires once; a completed or skipped
+    // wizard proceeds. Subscribes to the tick store directly so App does not
+    // re-render on every tick.
+    useEffect(() => {
+        let fired = false;
+        const check = (generation: number | null) => {
+            if (fired || generation === null) {
+                return;
+            }
+            fired = true;
+            void (async () => {
+                const present = await detectPasuPresence((method, params) =>
+                    gateway()
+                        .invoke(method, params)
+                        .then(receipt => (receipt as { artifact?: unknown }).artifact ?? receipt)
+                );
+                const preferences = browserKairosPreferences(window.localStorage);
+                if (coldStartPasuBranch(present, preferences.get(PASU_SKIPPED_PREFERENCE)) === 'mount-wizard') {
+                    setPasuWizardOpen(true);
+                }
+            })();
+        };
+        check(useTickStore.getState().generation);
+        return useTickStore.subscribe(state => check(state.generation));
+    }, []);
     const activeLayoutRef = useRef<OmniPanelLayoutId>('daily-0-1');
     activeLayoutRef.current = activeLayout;
     const crossLayoutIdentityReceiptRef = useRef<CrossLayoutIdentityReceipt | null>(null);
@@ -813,6 +848,11 @@ export function App() {
                     setFace(current => (current === 0 ? 1 : 0));
                     persist();
                 }
+            }),
+            commands.register({
+                id: 'identity.openWizard',
+                title: 'Identity: Open PASU setup wizard',
+                run: () => setPasuWizardOpen(true)
             }),
             commands.register({
                 id: 'palette.toggle',
@@ -1207,6 +1247,31 @@ export function App() {
                     />
                 ) : null}
             </FaceToggleChrome>
+                {pasuWizardOpen ? (
+                    <div className="pasu-wizard-overlay" data-testid="pasu-wizard-overlay">
+                        <PasuWizardPane
+                            gateway={{
+                                invoke: (method, params) =>
+                                    gateway()
+                                        .invoke(method, params)
+                                        .then(receipt => (receipt as { artifact?: unknown }).artifact ?? receipt)
+                            }}
+                            onStepComplete={step => {
+                                const preferences = browserKairosPreferences(window.localStorage);
+                                const completed = preferences.get(ONBOARDING_COMPLETED_STEPS_PREFERENCE);
+                                const prior = Array.isArray(completed)
+                                    ? completed.filter((entry): entry is string => typeof entry === 'string')
+                                    : [];
+                                preferences.set(ONBOARDING_COMPLETED_STEPS_PREFERENCE, [...new Set([...prior, step])]);
+                            }}
+                            onComplete={() => setPasuWizardOpen(false)}
+                            onSkipWizard={() => {
+                                recordPasuWizardSkip(browserKairosPreferences(window.localStorage));
+                                setPasuWizardOpen(false);
+                            }}
+                        />
+                    </div>
+                ) : null}
                 <StatusStrip />
                 <CommandPalette />
             </div>

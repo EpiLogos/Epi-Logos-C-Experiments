@@ -33,7 +33,7 @@ export interface CatalogCommand {
 /**
  * The complete command catalog. Every row corresponds to a command that is
  * really registered by a real register site:
- *   - App.tsx shell chrome (9)      — `commands.register({...})` on App mount
+ *   - App.tsx shell chrome (10)     — `commands.register({...})` on App mount
  *   - src/commands/atelier.ts (6)   — `registerAtelierCommands` (16.T16.19 + 26.T26.3)
  *   - src/engine/modulation (5)     — `registerEngineCommands` (E3)
  *   - src/commands/crossLayoutIntent (1) — `registerCrossLayoutIntentCommand` (31.T31.10)
@@ -72,6 +72,12 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         title: 'Journal: Start first session',
         owner: 'journal',
         tranche: 'phase-1'
+    },
+    {
+        id: 'identity.openWizard',
+        title: 'Identity: Open PASU setup wizard',
+        owner: 'identity',
+        tranche: '25.T25.4'
     },
     {
         id: 'omnipanel.toggle',

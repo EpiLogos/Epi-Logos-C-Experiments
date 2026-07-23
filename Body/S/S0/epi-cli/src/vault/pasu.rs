@@ -4,6 +4,13 @@ use std::path::{Path, PathBuf};
 
 const PASU_RELATIVE: &str = "Pratibimba/Self/PASU.md";
 
+/// Minimal handle-only PASU.md scaffold written when the identity wizard (25.4)
+/// establishes a PASU from an empty vault. Mirrors the canonical frontmatter
+/// shape (coordinate `PASU`, CT0 seed, empty editable scalars + arrays); the
+/// wizard fills each scalar via `pasu_set_key`. No derived/quintessence keys —
+/// those are computed downstream, never authored here.
+const PASU_SCAFFOLD: &str = "---\ncoordinate: \"PASU\"\nc_4_artifact_role: \"pasu\"\nc_1_ct_type: \"CT0\"\nc_0_birth_date: \"\"\nc_0_birth_location: \"\"\nc_0_natal_chart_path: \"\"\nc_0_source_coordinates: []\nc_4_atlas_sync_consents: []\nc_3_session_history: []\n---\n\n# PASU — Non-Dual Agent-User Field\n\n> The non-dual space where agent and user are not two.\n";
+
 /// Frontmatter keys the Tranche 25.4 PASU identity wizard is allowed to write,
 /// in step order (birth-date → birth-location → natal-chart-path → jungian →
 /// gene-keys → human-design). These are the ONLY keys `nara.pasu.set` may mutate
@@ -285,10 +292,18 @@ pub fn pasu_set_key(vault_root: &Path, key: &str, value: &str) -> Result<String,
         ));
     }
     let path = pasu_path(vault_root);
-    if !path.exists() {
-        return Err(format!("PASU.md not found at {}", path.display()));
-    }
-    let content = fs::read_to_string(&path).map_err(|e| format!("failed to read PASU.md: {e}"))?;
+    // First-run: scaffold a minimal handle-only PASU.md so the identity wizard
+    // (25.4) can establish a new PASU from an empty vault; otherwise read the
+    // existing record and patch the one key.
+    let content = if path.exists() {
+        fs::read_to_string(&path).map_err(|e| format!("failed to read PASU.md: {e}"))?
+    } else {
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|e| format!("failed to create PASU directory: {e}"))?;
+        }
+        PASU_SCAFFOLD.to_string()
+    };
     let updated = set_frontmatter_value(&content, key, value);
     fs::write(&path, &updated).map_err(|e| format!("failed to write PASU.md: {e}"))?;
     Ok(format!("set {key} = \"{value}\""))
@@ -521,6 +536,27 @@ mod tests {
         assert!(pasu_set_key(&tmp, "c_5_quintessence_hash", "deadbeef").is_err());
         // Unknown keys are rejected.
         assert!(pasu_set_key(&tmp, "c_9_made_up", "x").is_err());
+
+        fs::remove_dir_all(&tmp).ok();
+    }
+
+    #[test]
+    fn pasu_set_key_scaffolds_pasu_from_an_empty_vault_and_round_trips() {
+        let tmp = std::env::temp_dir().join(format!("pasu-scaffold-{}", std::process::id()));
+        // A truly empty vault — no PASU.md, no Self directory (first-run wizard).
+        assert!(!pasu_path(&tmp).exists());
+
+        // The wizard sets each editable scalar via nara.pasu.set → pasu_set_key.
+        assert!(pasu_set_key(&tmp, "c_0_birth_date", "1991-02-03").is_ok());
+        assert!(pasu_path(&tmp).exists()); // scaffolded on the first write
+        assert!(pasu_set_key(&tmp, "c_2_jungian", "INTP").is_ok());
+        assert!(pasu_set_key(&tmp, "c_4_human_design", "Projector 1/3").is_ok());
+
+        // …and every value reads back through the handle-only record.
+        let record = pasu_record(&tmp);
+        assert_eq!(record.c_0_birth_date, "1991-02-03");
+        assert_eq!(record.c_2_jungian, "INTP");
+        assert_eq!(record.c_4_human_design, "Projector 1/3");
 
         fs::remove_dir_all(&tmp).ok();
     }

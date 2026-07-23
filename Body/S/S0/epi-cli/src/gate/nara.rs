@@ -966,8 +966,17 @@ fn show_pasu_record(peer_is_loopback: bool) -> Result<Value, (String, String)> {
         ));
     }
     let vault_root = crate::vault::resolve_vault_root();
+    // `exists` is the file-level presence signal (spec: absence = no PASU.md).
+    // pasu_record resolves a missing file to an all-empty record, so cold-start
+    // (32.T32.2) needs this flag to tell "no PASU.md" from "present but blank".
+    let exists = crate::vault::pasu::pasu_path(&vault_root).exists();
     let record = crate::vault::pasu::pasu_record(&vault_root);
-    serde_json::to_value(record).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+    let mut value =
+        serde_json::to_value(record).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("exists".to_owned(), Value::Bool(exists));
+    }
+    Ok(value)
 }
 
 /// `nara.pasu.consents.append` (DR-WC-M4-4): append a typed ConsentRecord to the

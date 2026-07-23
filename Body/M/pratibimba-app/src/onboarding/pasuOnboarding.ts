@@ -36,18 +36,24 @@ export function readPasuSkipped(value: unknown): boolean {
 }
 
 /**
- * Fire `nara.pasu.show` and classify PASU presence. The gateway's `pasu_show`
- * (S0 pasu.rs) errors when `Idea/Pratibimba/Self/PASU.md` is absent, so a
- * rejection — or a null/empty receipt — reads as ABSENT; any real record reads
- * as PRESENT. Never throws: a detection failure degrades to "absent" so
- * cold-start offers the wizard rather than silently skipping identity setup.
+ * Fire `nara.pasu.show` and classify PASU presence by the FILE-level `exists`
+ * flag (the spec's "no PASU.md" absence signal). The gateway's `pasu_record`
+ * (S0 pasu.rs) resolves a missing — or blank — `Idea/Pratibimba/Self/PASU.md` to
+ * an all-empty record and never errors, so the `nara.pasu.show` handler carries
+ * an explicit `exists` boolean: present when the file exists, ABSENT when it does
+ * not (a truly first-run vault) so cold-start offers the wizard. A present-but-
+ * blank PASU.md is NOT re-prompted at boot (it opens from settings, 32.4).
+ * `invoke` returns the record artifact; never throws — a failure degrades to absent.
  */
 export async function detectPasuPresence(
     invoke: (method: string, params: Record<string, unknown>) => Promise<unknown>
 ): Promise<boolean> {
     try {
-        const receipt = await invoke(PASU_SHOW_RPC, {});
-        return receipt != null && receipt !== '';
+        const record = await invoke(PASU_SHOW_RPC, {});
+        if (!record || typeof record !== 'object') {
+            return false;
+        }
+        return (record as Record<string, unknown>).exists === true;
     } catch {
         return false;
     }
