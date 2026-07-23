@@ -151,7 +151,11 @@ export function ToolStreamPanel() {
         patchTab('tool-stream', { filters: { ...tab.filters, eventKind: [...next] } });
     };
     const toggleLive = () => patchTab('tool-stream', { live: !tab.live });
-    const onSelect = (nodeId: string) => patchTab('tool-stream', { selectedEventId: nodeId });
+    const onSelect = (nodeId: string) => {
+        patchTab('tool-stream', { selectedEventId: nodeId });
+        // 15.11 same-data linking: highlight the same node in the Dispatch Trace fold.
+        patchTab('dispatch-trace', { selectedNodeId: nodeId });
+    };
     const onDeepLink = (link: DispatchDeepLink) => {
         if (link.target === 'omniEvidence') {
             selectTab('evidence');

@@ -89,6 +89,15 @@ describe('ToolStreamPanel — temporal fold of the pi→subagent genealogy', () 
         expect(readOmniPanelSessionState().activeTab).toBe('evidence');
     });
 
+    it('cross-highlights the Dispatch Trace node when a stream event is selected (15.11)', async () => {
+        mockSessions([{ sessionKey: 'agent:pi:main', startedAtMs: 1000 }]);
+        connect(true);
+        render(<ToolStreamPanel />);
+        const rows = await screen.findAllByTestId('dispatch-stream-row');
+        fireEvent.click(rows[0]);
+        expect(readOmniPanelSessionState().perTabState['dispatch-trace'].selectedNodeId).toBe('agent:pi:main');
+    });
+
     it('is honest when disconnected — no stream to fold', () => {
         connect(false);
         render(<ToolStreamPanel />);

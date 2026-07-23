@@ -107,7 +107,11 @@ export function DispatchTracePanel() {
     const setActor = (role: ActorRole | 'all') =>
         patchTab('dispatch-trace', { actorFilter: role === 'all' ? [] : [role] });
     const setTimeRange = (range: TimeRange) => patchTab('dispatch-trace', { timeRangeFilter: range });
-    const onSelect = (nodeId: string) => patchTab('dispatch-trace', { selectedNodeId: nodeId });
+    const onSelect = (nodeId: string) => {
+        patchTab('dispatch-trace', { selectedNodeId: nodeId });
+        // 15.11 same-data linking: highlight the same dispatch in the Tool Stream fold.
+        patchTab('tool-stream', { selectedEventId: nodeId });
+    };
     const onToggleCollapse = (nodeId: string) => {
         // Persist fold state: expandedNodeIds carries the ids diverged from the
         // default-expanded tree (i.e. the collapsed set).

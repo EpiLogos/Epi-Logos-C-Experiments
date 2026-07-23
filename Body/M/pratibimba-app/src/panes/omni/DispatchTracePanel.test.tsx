@@ -141,4 +141,13 @@ describe('DispatchTracePanel — full 27.3 surface', () => {
         fireEvent.click(screen.getByTestId('dispatch-timerange-last-5m'));
         expect(readOmniPanelSessionState().perTabState['dispatch-trace'].timeRangeFilter).toBe('last-5m');
     });
+
+    it('cross-highlights the Tool Stream event when a tree node is selected (15.11)', async () => {
+        mockSessions([{ sessionKey: 'agent:pi:main' }]);
+        connect(true);
+        render(<DispatchTracePanel />);
+        const row = (await screen.findAllByTestId('dispatch-tree-node-row'))[0];
+        fireEvent.click(row);
+        expect(readOmniPanelSessionState().perTabState['tool-stream'].selectedEventId).toBe('agent:pi:main');
+    });
 });
