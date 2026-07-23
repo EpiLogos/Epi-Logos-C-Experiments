@@ -249,7 +249,7 @@ export function DispatchTracePanel() {
                 </aside>
             )}
 
-            <details className="dispatch-composition-observability" data-testid="dispatch-composition-observability">
+            <details open className="dispatch-composition-observability" data-testid="dispatch-composition-observability">
                 <summary>Composition observability</summary>
                 <CompositionDispatchTracePane />
             </details>

@@ -37,7 +37,8 @@ test('27.T27.3: the Dispatch tab renders the Pi → subagent genealogy, not a co
     await expect(page.getByTestId('psyche-legend-sophia')).toBeVisible();
 
     // Composition observability is retained but strictly subordinate — a
-    // collapsed <details>, never the dispatch trace itself.
+    // <details> below the genealogy tree (visible for 29.11, but never the
+    // dispatch trace itself, and never squeezing the tree to zero).
     const subordinate = page.getByTestId('dispatch-composition-observability');
     await expect(subordinate).toBeVisible();
     expect(await subordinate.evaluate(el => el.tagName.toLowerCase())).toBe('details');

@@ -5695,6 +5695,10 @@ textarea {
 .dispatch-genealogy-tree {
     font-size: var(--type-body-small);
     overflow: auto;
+    /* Stay the prominent primary body and never collapse to zero — even when
+       empty and the composition observability section below is expanded. */
+    flex: 1 1 auto;
+    min-height: 2.75rem;
 }
 .dispatch-tree-roots,
 .dispatch-tree-children,
@@ -5860,6 +5864,8 @@ textarea {
     border-top: 1px solid var(--hairline);
     padding-top: 0.3rem;
     opacity: 0.85;
+    /* Subordinate: visible (29.11) but never grows to squeeze the genealogy tree. */
+    flex-shrink: 0;
 }
 .dispatch-composition-observability > summary {
     cursor: pointer;
