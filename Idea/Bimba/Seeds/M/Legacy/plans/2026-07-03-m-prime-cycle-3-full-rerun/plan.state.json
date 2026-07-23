@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T09:55:08.766Z",
+  "updatedAt": "2026-07-23T09:56:03.082Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12891,19 +12891,34 @@
       "blocker": null
     },
     "26.T26.3": {
-      "status": "review",
-      "updatedAt": "2026-07-23T05:15:29.280Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T09:56:03.059Z",
       "claimedAt": "2026-07-23T04:02:53.204Z",
-      "completedAt": null,
+      "completedAt": "2026-07-23T09:56:03.059Z",
       "evidence": [
         {
           "at": "2026-07-23T05:15:29.280Z",
           "text": "26.3 retrofit PROPOSAL (awaiting Architect ratification). Extended the landed 16.T16.19 Atelier command-trio to the full six scent-following stages (root/cognate/drift/psychoid/pros-hen/mobius-write-back). KEY FINDING: the design-recon spec wires to aletheia_gnosis_query/thought_route/crystallise as GATEWAY methods invoked via KERNEL_BRIDGE_API.invokeCapability, but those are NOT dispatchable - they are Aletheia SUBAGENT tools and Aletheia is emergent via Anima dispatch (S5 track-09 preflight), never invocable from a pane. Honest retarget rides the REAL landed substrate: root=s5'.gnostic.etymology, drift=s5'.gnostic.query_with_layers (6.1 LANDED - so the spec's 'pending-gateway until 6.1' premise is also stale), keeping cognate=s1'.semantic.suggest_links, psychoid=s0'.anuttara.trace, mobius=s1'.entity.capture. pros-hen = LOCAL synthesis stage (no substrate call, fabricates nothing). Aletheia subagents surface as ALETHEIA_LINEAGE evidence display, NOT invocation. etymology:// provenance scheme. Proof: 20 vitest + catalog AST-lockstep + typecheck + import-boundaries all GREEN (commit 166e9f22). RATIFICATION ITEMS: (1) flag design-recon 26.3 + M5'-SPEC to correct the aletheia_* gateway premise; (2) pros-hen local realization/sink; (3) App.tsx activeCoordinate wiring for the root stage (deferred to done-close to avoid shared-tree App.tsx contention with the sibling Track-25 Mercurius WIP)."
+        },
+        {
+          "at": "2026-07-23T09:56:03.059Z",
+          "text": "26.3 done (Architect-ratified). Atelier six-stage scent-following (root/cognate/drift/psychoid/pros-hen/mobius-write-back) wired to REAL capability routes - agents USE capabilities, they don't duplicate them: aletheia_* are agent tools via s4'.mediation.route (per 12-agentic-layer), not pane gateway methods; the pane uses root=s5'.gnostic.etymology, drift=s5'.gnostic.query_with_layers (6.1 landed), cognate=s1'.semantic.suggest_links, psychoid=s0'.anuttara.trace, mobius=s1'.entity.capture; pros-hen local. Corrections landed: design-recon 26.3 CORRECTION note + atelier.ts header reframe + App.tsx activeCoordinate wiring. UF proof: atelier-scent-following.spec.ts 1/1 (six commands live in the real command palette) + 20 vitest + catalog AST-lockstep + app-typecheck/test(1073)/build/smoke + carrier-tokens + all W-suites GREEN. The 2 app-ui-flow reds are non-defects: chrome-command-routing 31.T31.2 (no-orphan) CONFIRMED FLAKE (passes 1/1 in isolation, failed only under 74-test parallel load), pratibimba-consent:274 = sibling Track-25 M4 domain not touched here. Commits 166e9f22 + 5318974c.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/atelier-scent-following.spec.ts --project=chromium (UF: six commands live in real palette)",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "Body/M/pratibimba-app/src/commands/catalog.ts",
+              "Body/M/pratibimba-app/tests/e2e/atelier-scent-following.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-t26-m5epii",
-      "leaseExpiresAt": "2026-07-23T06:02:53.204Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-23T05:15:29.280Z",
       "runId": "20260723T040253Z-26-T26.3",
       "worktree": null,
