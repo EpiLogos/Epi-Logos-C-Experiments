@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T04:04:41.511Z",
+  "updatedAt": "2026-07-23T05:15:29.301Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12891,15 +12891,20 @@
       "blocker": null
     },
     "26.T26.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-23T04:02:53.204Z",
+      "status": "review",
+      "updatedAt": "2026-07-23T05:15:29.280Z",
       "claimedAt": "2026-07-23T04:02:53.204Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T05:15:29.280Z",
+          "text": "26.3 retrofit PROPOSAL (awaiting Architect ratification). Extended the landed 16.T16.19 Atelier command-trio to the full six scent-following stages (root/cognate/drift/psychoid/pros-hen/mobius-write-back). KEY FINDING: the design-recon spec wires to aletheia_gnosis_query/thought_route/crystallise as GATEWAY methods invoked via KERNEL_BRIDGE_API.invokeCapability, but those are NOT dispatchable - they are Aletheia SUBAGENT tools and Aletheia is emergent via Anima dispatch (S5 track-09 preflight), never invocable from a pane. Honest retarget rides the REAL landed substrate: root=s5'.gnostic.etymology, drift=s5'.gnostic.query_with_layers (6.1 LANDED - so the spec's 'pending-gateway until 6.1' premise is also stale), keeping cognate=s1'.semantic.suggest_links, psychoid=s0'.anuttara.trace, mobius=s1'.entity.capture. pros-hen = LOCAL synthesis stage (no substrate call, fabricates nothing). Aletheia subagents surface as ALETHEIA_LINEAGE evidence display, NOT invocation. etymology:// provenance scheme. Proof: 20 vitest + catalog AST-lockstep + typecheck + import-boundaries all GREEN (commit 166e9f22). RATIFICATION ITEMS: (1) flag design-recon 26.3 + M5'-SPEC to correct the aletheia_* gateway premise; (2) pros-hen local realization/sink; (3) App.tsx activeCoordinate wiring for the root stage (deferred to done-close to avoid shared-tree App.tsx contention with the sibling Track-25 Mercurius WIP)."
+        }
+      ],
       "notes": null,
       "owner": "opus-t26-m5epii",
       "leaseExpiresAt": "2026-07-23T06:02:53.204Z",
-      "heartbeatAt": "2026-07-23T04:02:53.204Z",
+      "heartbeatAt": "2026-07-23T05:15:29.280Z",
       "runId": "20260723T040253Z-26-T26.3",
       "worktree": null,
       "blocker": null
@@ -14012,16 +14017,16 @@
       "blocker": null
     },
     "28.T28.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T05:07:49.686Z",
+      "claimedAt": "2026-07-23T05:07:49.686Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:49.686Z",
+      "heartbeatAt": "2026-07-23T05:07:49.686Z",
+      "runId": "20260723T050749Z-28-T28.18",
       "worktree": null,
       "blocker": null
     },
@@ -14466,16 +14471,16 @@
       "blocker": null
     },
     "30.T30.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T05:07:49.897Z",
+      "claimedAt": "2026-07-23T05:07:49.897Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:49.897Z",
+      "heartbeatAt": "2026-07-23T05:07:49.897Z",
+      "runId": "20260723T050749Z-30-T30.2",
       "worktree": null,
       "blocker": null
     },
@@ -14886,16 +14891,16 @@
       "blocker": null
     },
     "31.T31.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T05:07:50.109Z",
+      "claimedAt": "2026-07-23T05:07:50.109Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:50.109Z",
+      "heartbeatAt": "2026-07-23T05:07:50.109Z",
+      "runId": "20260723T050750Z-31-T31.5",
       "worktree": null,
       "blocker": null
     },
@@ -15399,16 +15404,16 @@
       "blocker": null
     },
     "32.T32.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-23T05:07:50.327Z",
+      "claimedAt": "2026-07-23T05:07:50.327Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:50.327Z",
+      "heartbeatAt": "2026-07-23T05:07:50.327Z",
+      "runId": "20260723T050750Z-32-T32.14",
       "worktree": null,
       "blocker": null
     },
@@ -25247,10 +25252,47 @@
     {
       "runId": "20260723T040253Z-26-T26.3",
       "taskId": "26.T26.3",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-23T04:02:53.204Z",
       "owner": "opus-t26-m5epii",
       "leaseExpiresAt": "2026-07-23T06:02:53.204Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T05:15:29.280Z"
+    },
+    {
+      "runId": "20260723T050749Z-28-T28.18",
+      "taskId": "28.T28.18",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T05:07:49.686Z",
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:49.686Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260723T050749Z-30-T30.2",
+      "taskId": "30.T30.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T05:07:49.897Z",
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:49.897Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260723T050750Z-31-T31.5",
+      "taskId": "31.T31.5",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T05:07:50.109Z",
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:50.109Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260723T050750Z-32-T32.14",
+      "taskId": "32.T32.14",
+      "status": "in_progress",
+      "startedAt": "2026-07-23T05:07:50.327Z",
+      "owner": "opus-mdev-fateA-build",
+      "leaseExpiresAt": "2026-07-23T08:07:50.327Z",
       "worktree": null
     }
   ],
