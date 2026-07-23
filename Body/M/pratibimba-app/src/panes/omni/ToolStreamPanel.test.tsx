@@ -89,6 +89,20 @@ describe('ToolStreamPanel — temporal fold of the pi→subagent genealogy', () 
         expect(readOmniPanelSessionState().activeTab).toBe('evidence');
     });
 
+    it('filters + persists by an OBSERVED tool name (no invented capabilities feed)', async () => {
+        mockSessions([
+            { sessionKey: 'agent:pi:main', startedAtMs: 1000 },
+            { sessionKey: 'agent:anima:subagent:moirai', spawnedBy: 'agent:anima:main', startedAtMs: 1100 }
+        ]);
+        connect(true);
+        render(<ToolStreamPanel />);
+        await screen.findByTestId('dispatch-genealogy-stream');
+        fireEvent.change(screen.getByTestId('tool-stream-toolname'), {
+            target: { value: "s4'.mediation.route" }
+        });
+        expect(toolState().filters.toolName).toBe("s4'.mediation.route");
+    });
+
     it('cross-highlights the Dispatch Trace node when a stream event is selected (15.11)', async () => {
         mockSessions([{ sessionKey: 'agent:pi:main', startedAtMs: 1000 }]);
         connect(true);

@@ -101,7 +101,15 @@ export function ToolStreamPanel() {
     const actorFilter = tab.filters.actor;
     const timeRange = normaliseTimeRange(tab.filters.timeRange);
     const eventKinds = tab.filters.eventKind ?? [];
+    const toolName = tab.filters.toolName;
     const activeActor: ActorRole | 'all' = actorFilter ? (actorFilter as ActorRole) : 'all';
+
+    // Tool-name options come from the methods actually OBSERVED in the stream —
+    // no s4'.mediation.capabilities.list feed is invented.
+    const toolNames = useMemo(
+        () => [...new Set(records.map(record => record.route.method))].sort(),
+        [records]
+    );
 
     const latestAtMs = useMemo(
         () => records.reduce((max, record) => Math.max(max, record.startedAtMs), 0),
@@ -112,9 +120,10 @@ export function ToolStreamPanel() {
         return records.filter(record => {
             const roleOk = activeActor === 'all' || record.actor.role === activeActor;
             const timeOk = window === Number.POSITIVE_INFINITY || record.startedAtMs >= latestAtMs - window;
-            return roleOk && timeOk;
+            const toolOk = !toolName || record.route.method === toolName;
+            return roleOk && timeOk && toolOk;
         });
-    }, [records, activeActor, timeRange, latestAtMs]);
+    }, [records, activeActor, timeRange, latestAtMs, toolName]);
 
     // Event-kind filter operates over the folded stream (invoked/settled rows).
     const streamCount = useMemo(() => {
@@ -141,6 +150,8 @@ export function ToolStreamPanel() {
         patchTab('tool-stream', { filters: { ...tab.filters, actor: role === 'all' ? undefined : role } });
     const setTimeRange = (range: TimeRange) =>
         patchTab('tool-stream', { filters: { ...tab.filters, timeRange: range } });
+    const setToolName = (name: string) =>
+        patchTab('tool-stream', { filters: { ...tab.filters, toolName: name || undefined } });
     const toggleKind = (kind: string) => {
         const next = new Set(eventKinds);
         if (next.has(kind)) {
@@ -222,6 +233,20 @@ export function ToolStreamPanel() {
                             </button>
                         ))}
                     </span>
+                    <select
+                        className="tool-stream-toolname"
+                        data-testid="tool-stream-toolname"
+                        aria-label="tool filter"
+                        value={toolName ?? ''}
+                        onChange={event => setToolName(event.target.value)}
+                    >
+                        <option value="">all tools</option>
+                        {toolNames.map(name => (
+                            <option key={name} value={name}>
+                                {name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </header>
 
