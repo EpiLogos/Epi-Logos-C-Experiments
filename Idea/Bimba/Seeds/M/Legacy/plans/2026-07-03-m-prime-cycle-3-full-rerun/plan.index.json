@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-23T09:56:03.078Z",
+  "generatedAt": "2026-07-23T13:38:06.174Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -211,7 +211,7 @@
       "file": "28-ide-shell-chrome-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
       "title": "Track 28 — `ide-shell-m0-m5` Chrome Deep UX (RERUN — target: pratibimba-app + substrate)",
-      "checksum": "f7d89ec8fdcd4fefdcb4f94e1668c03f27a3abfbbd9312cfec88e205c83b5cc1"
+      "checksum": "71631b81411f360024ff892b3a24780d42dc2e77a500aeae3f4c7fae5f40f4e8"
     },
     {
       "id": "29",

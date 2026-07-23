@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T09:56:03.082Z",
+  "updatedAt": "2026-07-23T13:38:06.178Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14502,19 +14502,23 @@
     },
     "30.T30.2": {
       "status": "review",
-      "updatedAt": "2026-07-23T09:52:32.614Z",
+      "updatedAt": "2026-07-23T13:38:06.147Z",
       "claimedAt": "2026-07-23T05:07:49.897Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-23T09:52:32.614Z",
           "text": "Fate-A carried slice CONFIRMED + UF-proven, full palette DR-gated -> review not done. CARRIED: the coordinate-derived colour token-source discipline lives on the carrier — src/ui/tokens.ts:57 FAMILY_HUES (6 family hues, raw-hex-only) consumed live by graph nodes (primitives.tsx:68, GraphExplorerPane.tsx:119); styles.css :root carries highlight-category (10), readiness (--ready/--danger), and the --type-* scale; raw-hex discipline machine-enforced by lint-carrier-tokens (green) and the :root vocabulary proven live on the real gateway by type-voice.spec.ts (passed 2026-07-23). HELD at review: 30.2's full acceptance is the 11-namespace / ~95-token / 36-grade family-x-archetype chromatic SYSTEM with per-token light/dark + WCAG-contrast + derivation-citation proofs; that expansion is an OPEN Architect palette decision (DR-WC-DL-1 family palette, DR-WC-DL-2 psyche-facet) and the DR-FACE-7 fate law forbids constructing it unilaterally. Surfaced to Architect; built nothing."
+        },
+        {
+          "at": "2026-07-23T13:38:06.147Z",
+          "text": "DELIVERABLE LANDED + DR-WC-DL-1 RATIFIED (now VALIDATED 2026-07-23 in 13-decision-register.md with the Architect's canonical M-tier subsystem colour-worlds). Built the 36-token FAMILY_PALETTE family-tier x archetype-grade matrix + SIGNATURE/FLOW coordinate-derived tokens + familyGrade/coordinateFamilyGrade resolvers in src/ui/tokens.ts (M-tier = ratified canon M0..M5; non-M tiers = spec derivation); property-tested in familyPalette.test.ts (6/6: 36-entry integrity, canon hue-families, coordinate tint, Cl(4,2) polarity, M-tier WCAG large-text contrast). Green: typecheck + carrier-tokens + type-voice UF + app-test. DONE mark BLOCKED (not this tranche's defect): the shared lint-test-honesty gate is RED on PARALLEL task 26.T26.3 evidence (banned class /deferred/i, owner opus-t26-m5epii) — repo-wide scan blocks ALL closes. Close-ready the instant 26.T26.3 evidence is reworded."
         }
       ],
       "notes": null,
       "owner": "opus-mdev-fateA-build",
       "leaseExpiresAt": "2026-07-23T08:07:49.897Z",
-      "heartbeatAt": "2026-07-23T09:52:32.614Z",
+      "heartbeatAt": "2026-07-23T13:38:06.147Z",
       "runId": "20260723T050749Z-30-T30.2",
       "worktree": null,
       "blocker": null
@@ -25367,11 +25371,11 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-23T04:02:29.585Z",
-    "updatedAt": "2026-07-23T04:02:29.585Z",
+    "createdAt": "2026-07-23T13:22:52.141Z",
+    "updatedAt": "2026-07-23T13:22:52.141Z",
     "taskIds": [
       "14.T14.4",
-      "25.T25.16",
+      "30.T30.2",
       "24.T24.7",
       "24.T24.8"
     ],
@@ -25380,7 +25384,7 @@
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
-      "25.T25.16": "in-session",
+      "30.T30.2": "in-session",
       "24.T24.7": "in-session",
       "24.T24.8": "in-session"
     },
