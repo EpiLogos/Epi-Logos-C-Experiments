@@ -715,6 +715,9 @@ pub fn dispatch_nara_with_state_root(
         "nara.identity.proposals.decide" => {
             decide_identity_proposal(state_root, peer_is_loopback, params)
         }
+        "nara.identity.proposals.apply" => {
+            apply_identity_proposal(state_root, peer_is_loopback, params)
+        }
         "nara.activity.show" => show_activity_trajectory(state_root, peer_is_loopback),
         _ => dispatch_nara(method, params),
     }
@@ -732,6 +735,14 @@ fn identity_proposal_store_path(state_root: &Path) -> PathBuf {
 /// auto-trigger accumulates into.
 fn activity_trajectory_store_path(state_root: &Path) -> PathBuf {
     state_root.join("nara").join("activity-trajectory.json")
+}
+
+/// Store path for the CURRENT applied identity augment — protected-local under
+/// the gateway state root. When present, `load_personal_identity_profile` layers
+/// it over the natal baseline so the EFFECTIVE identity is the augmented one. The
+/// raw `q_identity` bytes live only in this state-root-local file (DR-M4-3).
+fn applied_identity_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("applied-identity.json")
 }
 
 /// The Vama Shakti perturbation class used for personal session-close activity.
@@ -928,7 +939,7 @@ fn apply_activity_autotrigger(
     // identity. Honest degradation — no natal/PASU baseline means we accumulate
     // (still useful) but propose nothing.
     let mut proposed = false;
-    if let Ok(Some(profile)) = load_personal_identity_profile() {
+    if let Ok(Some(profile)) = load_personal_identity_profile(state_root) {
         let proposal_store = identity_proposal_store_path(state_root);
         if let Some(view) =
             auto_detect_and_submit(&proposal_store, &profile, trajectory.q_activity, &now)
@@ -1108,7 +1119,17 @@ fn submit_identity_proposal(
 /// degradation: `Ok(None)` when either the persisted natal chart or the local
 /// PASU identity is absent — the producer then emits nothing rather than
 /// fabricating a baseline.
-fn load_personal_identity_profile() -> Result<Option<PersonalIdentityProfile>, String> {
+///
+/// AUGMENT LAYERING (the SINGLE layering point): after the natal profile is
+/// built, if a persisted applied identity exists (a governed `applied` verdict
+/// landed one), it is layered via `profile.apply_identity_augment(q_identity)` so
+/// the EFFECTIVE identity — used by both the drift detector and the pane — is the
+/// augmented one. This is what makes an applied augment DURABLE and absorbs the
+/// drift: subsequent detect measures accumulated activity against the augmented
+/// baseline, so the same drift no longer re-proposes.
+fn load_personal_identity_profile(
+    state_root: &Path,
+) -> Result<Option<PersonalIdentityProfile>, String> {
     let Some(natal) = crate::nara::kairos::load_natal()? else {
         return Ok(None);
     };
@@ -1119,13 +1140,20 @@ fn load_personal_identity_profile() -> Result<Option<PersonalIdentityProfile>, S
     let identity_hash: String = hash.iter().map(|byte| format!("{byte:02x}")).collect();
     let natal_json =
         serde_json::to_string(&natal).map_err(|err| format!("re-serialize natal chart: {err}"))?;
-    PersonalIdentityProfile::from_kerykeion_json(
+    let mut profile = PersonalIdentityProfile::from_kerykeion_json(
         "protected://nara/kairos/natal/identity-augment-detect",
         identity_hash,
         &natal_json,
     )
-    .map(Some)
-    .map_err(|err| err.to_string())
+    .map_err(|err| err.to_string())?;
+
+    // Layer the current applied augment over the natal baseline (if any).
+    if let Some(applied) =
+        crate::nara::applied_identity::current(&applied_identity_store_path(state_root))
+    {
+        profile.apply_identity_augment(applied.q_identity);
+    }
+    Ok(Some(profile))
 }
 
 /// `nara.identity.proposals.detect` (25.T25.14): the REAL identity-augment
@@ -1164,7 +1192,7 @@ fn detect_identity_proposal(
             "protected-local nara.identity.proposals.detect requires a loopback peer".to_owned(),
         ));
     }
-    let profile = match load_personal_identity_profile() {
+    let profile = match load_personal_identity_profile(state_root) {
         Ok(Some(profile)) => profile,
         Ok(None) => {
             return Ok(json!({
@@ -1305,6 +1333,120 @@ fn decide_identity_proposal(
     )
     .map_err(|err| ("nara-error".to_owned(), err))?;
     serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+/// `nara.identity.proposals.apply` (25.T25.14): the GOVERNED final step of the
+/// identity-augment lifecycle (`proposed -> reviewed -> accepted|rejected ->
+/// applied`). This is the ONLY nara.* surface that MUTATES the user's core
+/// Q_identity, so it is strictly gated: it applies ONLY an ACCEPTED proposal
+/// (the human accept through the M5' gate is the authorisation), it is
+/// loopback-gated like every protected-local personal surface, and it is
+/// handle-only over the wire (the raw q_identity quaternion is NEVER returned —
+/// DR-M4-3).
+///
+/// The governed sequence:
+///   (a) load the CURRENT profile (natal baseline + any prior applied augment —
+///       the single layering point), refusing when no protected-local baseline
+///       exists (nothing to mutate);
+///   (b) `apply_proposal` on the identity-proposals store — REQUIRES the persisted
+///       state to be `Accepted` (else refuses and mutates NOTHING), drives the
+///       canonical Accepted→Applied transition + `apply_identity_augment`
+///       (replaces q_identity with the candidate, recomputes q_personal), and
+///       persists the proposal's terminal `Applied` state;
+///   (c) persist the profile's NEW q_identity to the applied-identity store so the
+///       augment is DURABLE (a later load layers it back in);
+///   (d) RESET the activity accumulator — the drift is now ABSORBED into identity,
+///       so it must not re-propose;
+///   (e) return the `Applied` view (handle-only) + `appliedAt` + `accumulatorReset`.
+fn apply_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.apply requires a loopback peer".to_owned(),
+        ));
+    }
+    let handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let now = Utc::now().to_rfc3339();
+
+    // (a) The current EFFECTIVE profile (natal + any prior applied augment). apply
+    // mutates core identity, so a baseline is required — refuse the governed
+    // mutation when there is nothing to mutate.
+    let mut profile = match load_personal_identity_profile(state_root) {
+        Ok(Some(profile)) => profile,
+        Ok(None) => {
+            return Err((
+                "nara-error".to_owned(),
+                "nara.identity.proposals.apply requires a protected-local identity baseline (natal chart + PASU identity)".to_owned(),
+            ))
+        }
+        Err(err) => return Err(("nara-error".to_owned(), err)),
+    };
+
+    // (b)–(e) run the env-free governed core against the state-root stores.
+    apply_identity_proposal_core(
+        &identity_proposal_store_path(state_root),
+        &applied_identity_store_path(state_root),
+        &activity_trajectory_store_path(state_root),
+        &mut profile,
+        &handle,
+        &now,
+    )
+}
+
+/// The env-free core of [`apply_identity_proposal`]: given the three state-root
+/// stores and the LOADED current profile, run the governed apply. Split out so
+/// the governed-gate, applied-persistence, accumulator-reset, layering, and
+/// handle-only invariants are unit testable without seeding process-global env
+/// (`EPI_NARA_HOME`, natal.json, PASU).
+///
+/// (b) `apply_proposal` REQUIRES the persisted state be `Accepted` — it refuses
+/// and mutates NOTHING otherwise (the governed gate). On success it mutates
+/// `profile.q_identity` and persists the proposal's `Applied` state. (c) the new
+/// q_identity is persisted to the applied-identity store (durable). (d) the
+/// activity accumulator is RESET (drift absorbed). (e) the Applied view is
+/// returned handle-only — the raw q_identity quaternion is NEVER serialised.
+fn apply_identity_proposal_core(
+    proposal_store: &Path,
+    applied_store: &Path,
+    activity_store: &Path,
+    profile: &mut PersonalIdentityProfile,
+    handle: &str,
+    now: &str,
+) -> Result<Value, (String, String)> {
+    // (b) GOVERNED GATE: apply the ACCEPTED proposal (mutates q_identity).
+    let view = crate::nara::identity_proposals::apply_proposal(proposal_store, handle, now, profile)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (c) Persist the NEW q_identity as the current applied identity — durable,
+    // state-root local, never bused raw.
+    crate::nara::applied_identity::store(
+        applied_store,
+        &crate::nara::applied_identity::AppliedIdentity {
+            q_identity: profile.q_identity,
+            applied_proposal_handle: handle.to_owned(),
+            applied_at: now.to_owned(),
+        },
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (d) RESET the activity accumulator — the drift is now absorbed into
+    // identity and must not re-propose.
+    crate::nara::activity_trajectory::reset(activity_store, now)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (e) Handle-only response — the Applied view (never the raw q_identity).
+    let view_value =
+        serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    Ok(json!({
+        "applied": view_value,
+        "appliedAt": now,
+        "accumulatorReset": true,
+    }))
 }
 
 fn close_with_persisted_bundle(
@@ -1547,6 +1689,16 @@ mod identity_augment_detect_tests {
         ))
     }
 
+    fn temp_applied_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-applied-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
     #[test]
     fn detect_produces_submits_on_drift_and_appears_in_list_without_touching_identity() {
         let profile = fixture_profile();
@@ -1702,6 +1854,162 @@ mod identity_augment_detect_tests {
 
         std::fs::remove_file(&activity_store).ok();
         std::fs::remove_file(&proposal_store).ok();
+    }
+
+    #[test]
+    fn apply_core_governs_full_lifecycle_resets_accumulator_and_stays_handle_only() {
+        // ── Producer: a drifted activity submits a Proposed proposal ──────────
+        let mut profile = fixture_profile();
+        let natal_identity = profile.q_identity;
+        let proposal_store = temp_store();
+        let applied_store = temp_applied_store();
+        let activity_store = temp_activity_store();
+
+        // Pre-accumulate real drift so the post-apply reset is observable.
+        let (packet, _degraded) = session_activity_packet(
+            "sess-apply",
+            "protein://sealed/apply",
+            2_000,
+            Some("M4.session-activity"),
+            &["I".to_owned()],
+            Some(1_000),
+        );
+        crate::nara::activity_trajectory::accumulate(
+            &activity_store,
+            std::slice::from_ref(&packet),
+            SESSION_ACTIVITY_VAMA_CLASS,
+            "2026-07-23T09:00:00.000Z",
+            Some(2_000),
+        )
+        .unwrap();
+        assert_eq!(
+            crate::nara::activity_trajectory::current(&activity_store).turn_count,
+            1
+        );
+
+        // detect (the real producer) submits a Proposed proposal on drift.
+        let produced = detect_identity_proposal_core(
+            &proposal_store,
+            &profile,
+            &json!({ "q_activity": [0.0, 1.0, 0.0, 0.0], "proposal_handle": "id://apply-drift" }),
+            ALIGNED_FALLBACK,
+        )
+        .expect("detect ok");
+        assert_eq!(produced["produced"], json!(true));
+
+        // ── Human accept through the M5' gate (decide) ───────────────────────
+        crate::nara::identity_proposals::decide(
+            &proposal_store,
+            "id://apply-drift",
+            IdentityAugmentReviewVerdict::Accept,
+            "2026-07-23T09:05:00.000Z",
+        )
+        .expect("accept ok");
+
+        // ── Governed APPLY ───────────────────────────────────────────────────
+        let out = apply_identity_proposal_core(
+            &proposal_store,
+            &applied_store,
+            &activity_store,
+            &mut profile,
+            "id://apply-drift",
+            "2026-07-23T09:06:00.000Z",
+        )
+        .expect("accepted proposal applies");
+
+        // Applied view (terminal), accumulator-reset flag.
+        assert_eq!(out["applied"]["state"], json!("applied"));
+        assert_eq!(out["accumulatorReset"], json!(true));
+
+        // q_identity MUTATED away from the natal baseline.
+        assert_ne!(profile.q_identity, natal_identity);
+
+        // (c) applied-identity store round-trips the NEW q_identity.
+        let applied = crate::nara::applied_identity::current(&applied_store)
+            .expect("applied identity persisted");
+        assert_eq!(applied.q_identity, profile.q_identity);
+        assert_eq!(applied.applied_proposal_handle, "id://apply-drift");
+
+        // (d) the accumulator is RESET to identity (drift absorbed).
+        let reset = crate::nara::activity_trajectory::current(&activity_store);
+        assert_eq!(reset.q_activity, [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(reset.turn_count, 0);
+
+        // LAYERING: a fresh natal profile layered with the applied augment (the
+        // exact operation `load_personal_identity_profile` performs) reflects the
+        // AUGMENTED q_identity — durable across a reload.
+        let mut reloaded = fixture_profile();
+        reloaded.apply_identity_augment(applied.q_identity);
+        assert_eq!(reloaded.q_identity, profile.q_identity);
+        assert_ne!(reloaded.q_identity, natal_identity);
+
+        // ABSORBED: with the accumulator reset, detect against the augmented
+        // baseline no longer proposes (the drift was absorbed into identity).
+        let absorbed = detect_identity_proposal_core(
+            &temp_store(),
+            &reloaded,
+            &json!({}),
+            reset.q_activity,
+        )
+        .expect("detect ok");
+        assert_eq!(absorbed["produced"], json!(false));
+
+        // HANDLE-ONLY: the RPC response never surfaces the raw q_identity.
+        let json_text = serde_json::to_string(&out).unwrap();
+        assert!(!json_text.contains("qIdentity"));
+        assert!(!json_text.contains("q_identity"));
+        assert!(!json_text.contains("candidate"));
+
+        std::fs::remove_file(&proposal_store).ok();
+        std::fs::remove_file(&applied_store).ok();
+        std::fs::remove_file(&activity_store).ok();
+    }
+
+    #[test]
+    fn apply_core_refuses_a_proposed_proposal_and_mutates_nothing() {
+        let mut profile = fixture_profile();
+        let natal_identity = profile.q_identity;
+        let proposal_store = temp_store();
+        let applied_store = temp_applied_store();
+        let activity_store = temp_activity_store();
+
+        // A Proposed (never accepted) proposal.
+        detect_identity_proposal_core(
+            &proposal_store,
+            &profile,
+            &json!({ "q_activity": [0.0, 1.0, 0.0, 0.0], "proposal_handle": "id://never-accepted" }),
+            ALIGNED_FALLBACK,
+        )
+        .expect("detect ok");
+
+        // GOVERNED GATE: apply refuses a non-Accepted proposal and mutates nothing.
+        let err = apply_identity_proposal_core(
+            &proposal_store,
+            &applied_store,
+            &activity_store,
+            &mut profile,
+            "id://never-accepted",
+            "2026-07-23T09:06:00.000Z",
+        )
+        .expect_err("a Proposed proposal cannot be applied");
+        assert!(err.1.contains("cannot be applied"));
+
+        // Nothing mutated: identity unchanged, no applied store, no accumulator write.
+        assert_eq!(profile.q_identity, natal_identity);
+        assert!(crate::nara::applied_identity::current(&applied_store).is_none());
+        assert_eq!(
+            crate::nara::activity_trajectory::current(&activity_store).turn_count,
+            0
+        );
+        // The proposal is still Proposed (pending), not Applied.
+        let pending = crate::nara::identity_proposals::list_pending(&proposal_store).unwrap();
+        assert!(pending
+            .iter()
+            .any(|view| view.proposal_handle == "id://never-accepted"));
+
+        std::fs::remove_file(&proposal_store).ok();
+        std::fs::remove_file(&applied_store).ok();
+        std::fs::remove_file(&activity_store).ok();
     }
 
     #[test]

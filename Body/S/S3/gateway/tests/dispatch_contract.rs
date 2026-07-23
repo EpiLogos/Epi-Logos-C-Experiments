@@ -104,7 +104,8 @@ fn nara_personal_coordinate_write_surface_routes_as_m4_extension_methods() {
             "nara.identity.proposals.detect",
             "nara.identity.proposals.submit",
             "nara.identity.proposals.list",
-            "nara.identity.proposals.decide"
+            "nara.identity.proposals.decide",
+            "nara.identity.proposals.apply"
         ]
     );
 

@@ -52,6 +52,23 @@ interface SessionCloseResult {
     identityAugmentProposalHandle?: string;
 }
 
+interface ApplyResult {
+    applied?: ProposalView;
+    appliedAt?: string;
+    accumulatorReset?: boolean;
+}
+
+interface AppliedIdentityFile {
+    q_identity: number[];
+    applied_proposal_handle: string;
+    applied_at: string;
+}
+
+interface ActivityShowResult {
+    qActivity: number[];
+    turnCount: number;
+}
+
 function runState(): E2eRunState {
     return JSON.parse(readFileSync(RUN_STATE_FILE, 'utf8')) as E2eRunState;
 }
@@ -322,4 +339,99 @@ test('AUTOMATIC path: accumulated session-close activity auto-produces a drift p
     const autoRecord = persisted.find(p => p.proposal_handle === autoHandle);
     expect(autoRecord?.state, 'auto proposal must be Proposed (never applied)').toBe('proposed');
     expect(persisted.some(p => p.state === 'applied')).toBe(false);
+});
+
+test('GOVERNED lifecycle: accumulate → auto-propose → accept → APPLY mutates identity, resets the accumulator, and absorbs the drift', async ({
+    page
+}) => {
+    const state = runState();
+
+    // ── (1) Accumulate drift via real session-closes → AUTO-produce a proposal ─
+    // No q_activity is ever passed: the persisted per-user accumulator + the
+    // session-close auto-detect are the sole driver (identical to the AUTOMATIC
+    // path above). Drive drifting closes until the accumulator crosses the floor.
+    let autoHandle: string | undefined;
+    let lastTurnCount = 0;
+    for (let index = 1; index <= 20 && !autoHandle; index += 1) {
+        const closed = await driveDriftingSessionClose(index);
+        expect(closed.close_ref, 'session close must persist a bundle').toMatch(/^close-/);
+        lastTurnCount = closed.activityTrajectory?.turnCount ?? lastTurnCount;
+        if (closed.identityAugmentProposed) {
+            autoHandle = closed.identityAugmentProposalHandle;
+        }
+    }
+    expect(autoHandle, 'accumulated drifting activity must AUTO-produce a proposal').toBeTruthy();
+
+    // ── (2) The auto-proposal surfaces in panel (c) ──────────────────────────
+    await page.goto('/');
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+
+    const activeFace = page.locator('.face-active');
+    await activeFace.locator('.flexlayout__tab_button', { hasText: 'Coordinate' }).click();
+
+    const pane = activeFace.getByTestId('pratibimba-coordinate-pane');
+    await expect(pane).toBeVisible();
+
+    const proposalsPanel = pane.getByTestId('identity-proposals-panel');
+    const row = proposalsPanel.getByTestId(`proposal-row-${autoHandle}`);
+    await expect(row, 'the auto-produced proposal did not surface in panel (c)').toBeVisible({
+        timeout: 15_000
+    });
+    await expect(row).toHaveAttribute('data-state', 'proposed');
+
+    // ── (3) Accept through the M5' gate (the human authorisation) ────────────
+    await row.getByTestId(`proposal-accept-${autoHandle}`).click();
+    await expect(row).toBeHidden({ timeout: 15_000 });
+    await expect(proposalsPanel.getByTestId('proposals-notice')).toContainText(`accepted ${autoHandle}`);
+
+    // ── (4) APPLY — the GOVERNED final step (mutates core Q_identity) ─────────
+    // Apply is a separate governed mutation (not owned by the read/consent pane
+    // surface), driven over the wire exactly like the producer-side RPCs above.
+    // It applies ONLY the ACCEPTED proposal (the accept was the human gate).
+    const applied = (await gatewayRpc('nara.identity.proposals.apply', {
+        proposal_handle: autoHandle
+    })) as ApplyResult;
+    expect(applied.applied?.state, 'apply must reach terminal applied').toBe('applied');
+    expect(applied.applied?.proposalHandle, 'apply view must carry the handle').toBe(autoHandle);
+    expect(applied.accumulatorReset, 'apply must reset the accumulator').toBe(true);
+
+    // HANDLE-ONLY over the wire: the apply response NEVER surfaces the raw
+    // q_identity quaternion (DR-M4-3) — only handles and state.
+    const appliedWire = JSON.stringify(applied);
+    expect(appliedWire).not.toContain('qIdentity');
+    expect(appliedWire).not.toContain('q_identity');
+    expect(appliedWire).not.toContain('candidate');
+
+    // ── (5) The proposal reaches terminal 'applied' in the persisted ledger ──
+    const storePath = join(state.gatewayStateRoot, 'nara', 'identity-proposals.json');
+    const persisted = JSON.parse(readFileSync(storePath, 'utf8')) as PersistedProposal[];
+    const record = persisted.find(p => p.proposal_handle === autoHandle);
+    expect(record?.state, 'the applied proposal must be terminal-applied').toBe('applied');
+    expect(record?.applied_at, 'applied_at must be stamped').not.toBeNull();
+
+    // ── (6) The applied identity is DURABLE (state-root-local applied store) ──
+    // The raw q_identity lives only in this protected-local file, never on the
+    // wire — reading the local bytes proves the augment persisted.
+    const appliedIdentityPath = join(state.gatewayStateRoot, 'nara', 'applied-identity.json');
+    const appliedIdentity = JSON.parse(
+        readFileSync(appliedIdentityPath, 'utf8')
+    ) as AppliedIdentityFile;
+    expect(appliedIdentity.applied_proposal_handle).toBe(autoHandle);
+    expect(appliedIdentity.q_identity.length).toBe(4);
+
+    // ── (7) The accumulator is RESET (the drift is absorbed into identity) ───
+    const activity = (await gatewayRpc('nara.activity.show', {})) as ActivityShowResult;
+    expect(activity.turnCount, 'apply must reset the accumulator turn count').toBe(0);
+    expect(activity.qActivity, 'apply must reset q_activity to identity').toEqual([1, 0, 0, 0]);
+
+    // ── (8) A subsequent same-activity close does NOT re-propose (absorbed) ───
+    // After the reset, one further drifting close accumulates a single packet
+    // from the identity baseline — nowhere near the drift floor — so the
+    // auto-detect (now measuring against the AUGMENTED baseline) proposes nothing.
+    const afterApply = await driveDriftingSessionClose(1);
+    expect(afterApply.activityTrajectory?.turnCount, 'accumulator restarts from the reset').toBe(1);
+    expect(
+        afterApply.identityAugmentProposed,
+        'a single post-apply close must not re-propose the absorbed drift'
+    ).toBe(false);
 });

@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 
 use portal_core::personal_identity::{
     IdentityAugmentProposal, IdentityAugmentProposalAdapter, IdentityAugmentProposalState,
-    IdentityAugmentProposalView, IdentityAugmentReviewVerdict,
+    IdentityAugmentProposalView, IdentityAugmentReviewVerdict, PersonalIdentityProfile,
 };
 
 /// The persisted mirror of a `portal_core` proposal. The adapter's own proposal
@@ -81,9 +81,15 @@ pub fn submit_proposal(store_path: &Path, proposal: PersistedProposal) -> Result
     save(store_path, &proposals)
 }
 
-/// Rebuild an adapter proposal at Proposed, then replay to Reviewed if needed.
-/// The reconstructed proposal is always born Proposed; `review` moves it forward
-/// exactly as the canonical state machine dictates.
+/// Rebuild an adapter proposal at Proposed, then replay the canonical
+/// transitions up to the persisted state. The reconstructed proposal is always
+/// born Proposed; `review` / `decide` move it forward exactly as the canonical
+/// state machine dictates, so every persisted state is reconstructed by REPLAY
+/// (never by fiat) — an invalid persisted state could not be replayed and fails
+/// closed. `Applied` cannot be replayed here (it needs a `&mut profile`); it
+/// replays as far as `Accepted`, which is all `apply_proposal` needs (it reaches
+/// `Accepted`, then drives `adapter.apply` with the profile separately). List
+/// only ever reconstructs Proposed|Reviewed records.
 fn reconstruct_into(
     adapter: &mut IdentityAugmentProposalAdapter,
     persisted: &PersistedProposal,
@@ -97,14 +103,49 @@ fn reconstruct_into(
     )
     .map_err(|e| e.to_string())?;
     adapter.submit(proposal).map_err(|e| e.to_string())?;
-    if persisted.state == IdentityAugmentProposalState::Reviewed {
-        let reviewed_at = persisted
-            .reviewed_at
-            .clone()
-            .unwrap_or_else(|| persisted.created_at.clone());
-        adapter
-            .review(&persisted.proposal_handle, reviewed_at)
-            .map_err(|e| e.to_string())?;
+
+    let reviewed_at = persisted
+        .reviewed_at
+        .clone()
+        .unwrap_or_else(|| persisted.created_at.clone());
+    let decided_at = persisted
+        .decided_at
+        .clone()
+        .unwrap_or_else(|| reviewed_at.clone());
+
+    match persisted.state {
+        IdentityAugmentProposalState::Proposed => {}
+        IdentityAugmentProposalState::Reviewed => {
+            adapter
+                .review(&persisted.proposal_handle, reviewed_at)
+                .map_err(|e| e.to_string())?;
+        }
+        // Accepted / Applied replay to Accepted (apply drives the final
+        // transition with the profile). Rejected replays to Rejected.
+        IdentityAugmentProposalState::Accepted | IdentityAugmentProposalState::Applied => {
+            adapter
+                .review(&persisted.proposal_handle, reviewed_at)
+                .map_err(|e| e.to_string())?;
+            adapter
+                .decide(
+                    &persisted.proposal_handle,
+                    IdentityAugmentReviewVerdict::Accept,
+                    decided_at,
+                )
+                .map_err(|e| e.to_string())?;
+        }
+        IdentityAugmentProposalState::Rejected => {
+            adapter
+                .review(&persisted.proposal_handle, reviewed_at)
+                .map_err(|e| e.to_string())?;
+            adapter
+                .decide(
+                    &persisted.proposal_handle,
+                    IdentityAugmentReviewVerdict::Reject,
+                    decided_at,
+                )
+                .map_err(|e| e.to_string())?;
+        }
     }
     Ok(())
 }
@@ -176,6 +217,59 @@ pub fn decide(
     };
     persisted[index].reviewed_at = Some(now.to_owned());
     persisted[index].decided_at = Some(now.to_owned());
+    save(store_path, &persisted)?;
+
+    Ok(view)
+}
+
+/// The GOVERNED final step of the identity-augment lifecycle
+/// (`proposed -> reviewed -> accepted|rejected -> applied`): apply an ACCEPTED
+/// proposal, mutating `profile.q_identity` (via the canonical
+/// `IdentityAugmentProposalAdapter::apply`) and persisting the proposal's new
+/// `Applied` state.
+///
+/// GOVERNED GATE: this is the ONLY store path that mutates Q_identity, and it
+/// requires the persisted state to be `Accepted`. A Proposed / Reviewed /
+/// Rejected / already-Applied proposal is REFUSED with a clear error and NOTHING
+/// is mutated — the human accept is the gate. The adapter is reconstructed by
+/// REPLAY to `Accepted` (so the canonical state machine validates the whole
+/// history), then `adapter.apply` performs the single Accepted→Applied
+/// transition and the `profile.apply_identity_augment(candidate)` mutation
+/// (REPLACES q_identity with the candidate; recomputes q_personal). The caller
+/// owns persisting the new `profile.q_identity` to the applied-identity store and
+/// resetting the activity accumulator — this store only records the proposal's
+/// terminal `Applied` state.
+pub fn apply_proposal(
+    store_path: &Path,
+    proposal_handle: &str,
+    applied_at: &str,
+    profile: &mut PersonalIdentityProfile,
+) -> Result<IdentityAugmentProposalView, String> {
+    let mut persisted = load(store_path);
+    let index = persisted
+        .iter()
+        .position(|record| record.proposal_handle == proposal_handle)
+        .ok_or_else(|| format!("unknown identity augment proposal: {proposal_handle}"))?;
+
+    // GOVERNED GATE: only an Accepted proposal can apply. Refuse everything else
+    // BEFORE any mutation so a non-accepted apply mutates nothing.
+    if persisted[index].state != IdentityAugmentProposalState::Accepted {
+        return Err(format!(
+            "identity augment proposal `{proposal_handle}` is {:?} and cannot be applied (only an Accepted proposal can apply)",
+            persisted[index].state
+        ));
+    }
+
+    // Reconstruct the adapter to Accepted by REPLAY, then drive the canonical
+    // Accepted→Applied transition + q_identity mutation.
+    let mut adapter = IdentityAugmentProposalAdapter::new();
+    reconstruct_into(&mut adapter, &persisted[index])?;
+    let view = adapter
+        .apply(proposal_handle, profile, applied_at.to_owned())
+        .map_err(|e| e.to_string())?;
+
+    persisted[index].state = IdentityAugmentProposalState::Applied;
+    persisted[index].applied_at = Some(applied_at.to_owned());
     save(store_path, &persisted)?;
 
     Ok(view)
@@ -293,6 +387,182 @@ mod tests {
             "2026-07-22T09:08:00.000Z",
         )
         .is_err());
+        std::fs::remove_file(&path).ok();
+    }
+
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+
+    fn fixture_profile() -> PersonalIdentityProfile {
+        let planets: Vec<String> = (0..10)
+            .map(|id| {
+                format!(
+                    r#"{{"planet_id":{id},"name":"P{id}","degree":{deg},"retrograde":false}}"#,
+                    deg = (15.0 + id as f32 * 31.5) % 360.0
+                )
+            })
+            .collect();
+        let natal_json = format!(r#"{{"planets":[{}]}}"#, planets.join(","));
+        PersonalIdentityProfile::from_kerykeion_json(
+            "protected://nara/kairos/natal/apply-test",
+            IDENTITY_HASH,
+            &natal_json,
+        )
+        .expect("fixture natal derives a protected identity")
+    }
+
+    fn accepted(handle: &str) -> PersistedProposal {
+        // The candidate the augment will REPLACE q_identity with — a pure axis
+        // quaternion, distinct from any natal identity.
+        PersistedProposal {
+            proposal_handle: handle.to_owned(),
+            state: IdentityAugmentProposalState::Accepted,
+            summary: "Accepted augment ready to apply.".to_owned(),
+            source_adapter_handle: "adapter://m4/identity-augment".to_owned(),
+            created_at: "2026-07-23T09:00:00.000Z".to_owned(),
+            reviewed_at: Some("2026-07-23T09:01:00.000Z".to_owned()),
+            decided_at: Some("2026-07-23T09:02:00.000Z".to_owned()),
+            applied_at: None,
+            q_identity_candidate: [0.0, 1.0, 0.0, 0.0],
+        }
+    }
+
+    #[test]
+    fn full_lifecycle_submit_accept_apply_mutates_identity_and_is_terminal() {
+        let path = store();
+        let mut profile = fixture_profile();
+        let before_identity = profile.q_identity;
+
+        // submit → decide(accept) → apply, over the store.
+        submit_proposal(&path, proposed("id://apply")).unwrap();
+        let accepted_view = decide(
+            &path,
+            "id://apply",
+            IdentityAugmentReviewVerdict::Accept,
+            "2026-07-23T09:05:00.000Z",
+        )
+        .unwrap();
+        assert_eq!(accepted_view.state, IdentityAugmentProposalState::Accepted);
+
+        let applied = apply_proposal(&path, "id://apply", "2026-07-23T09:06:00.000Z", &mut profile)
+            .expect("accepted proposal applies");
+        assert_eq!(applied.state, IdentityAugmentProposalState::Applied);
+
+        // q_identity is now the candidate (REPLACED), no longer the natal baseline.
+        assert_ne!(profile.q_identity, before_identity);
+        // The persisted record is terminal-Applied with applied_at set.
+        let record = load(&path)
+            .into_iter()
+            .find(|r| r.proposal_handle == "id://apply")
+            .unwrap();
+        assert_eq!(record.state, IdentityAugmentProposalState::Applied);
+        assert_eq!(record.applied_at.as_deref(), Some("2026-07-23T09:06:00.000Z"));
+        // An Applied proposal never surfaces as pending.
+        assert!(list_pending(&path).unwrap().is_empty());
+        // Re-applying a terminal Applied proposal fails closed (identity unchanged).
+        let after_identity = profile.q_identity;
+        assert!(apply_proposal(&path, "id://apply", "2026-07-23T09:07:00.000Z", &mut profile).is_err());
+        assert_eq!(profile.q_identity, after_identity);
+        std::fs::remove_file(&path).ok();
+    }
+
+    #[test]
+    fn apply_refuses_a_proposed_proposal_and_mutates_nothing() {
+        let path = store();
+        let mut profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        submit_proposal(&path, proposed("id://still-proposed")).unwrap();
+
+        let err = apply_proposal(
+            &path,
+            "id://still-proposed",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile,
+        )
+        .expect_err("a Proposed proposal cannot be applied");
+        assert!(err.contains("cannot be applied"));
+        // Identity untouched and the record is NOT Applied.
+        assert_eq!(profile.q_identity, before_identity);
+        let record = load(&path)
+            .into_iter()
+            .find(|r| r.proposal_handle == "id://still-proposed")
+            .unwrap();
+        assert_eq!(record.state, IdentityAugmentProposalState::Proposed);
+        assert!(record.applied_at.is_none());
+        std::fs::remove_file(&path).ok();
+    }
+
+    #[test]
+    fn apply_refuses_a_reviewed_proposal() {
+        let path = store();
+        let mut profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        let mut reviewed = proposed("id://reviewed-only");
+        reviewed.state = IdentityAugmentProposalState::Reviewed;
+        reviewed.reviewed_at = Some("2026-07-23T09:01:00.000Z".to_owned());
+        submit_proposal(&path, reviewed).unwrap();
+
+        assert!(apply_proposal(
+            &path,
+            "id://reviewed-only",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile,
+        )
+        .is_err());
+        assert_eq!(profile.q_identity, before_identity);
+        std::fs::remove_file(&path).ok();
+    }
+
+    #[test]
+    fn apply_refuses_a_rejected_proposal() {
+        let path = store();
+        let mut profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        submit_proposal(&path, proposed("id://rejected")).unwrap();
+        decide(
+            &path,
+            "id://rejected",
+            IdentityAugmentReviewVerdict::Reject,
+            "2026-07-23T09:05:00.000Z",
+        )
+        .unwrap();
+
+        assert!(apply_proposal(
+            &path,
+            "id://rejected",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile,
+        )
+        .is_err());
+        assert_eq!(profile.q_identity, before_identity);
+        std::fs::remove_file(&path).ok();
+    }
+
+    #[test]
+    fn apply_from_a_persisted_accepted_record_replays_and_applies() {
+        // A persisted Accepted record (e.g. survived a restart) reconstructs by
+        // replay to Accepted and applies.
+        let path = store();
+        let mut profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        submit_proposal(&path, accepted("id://persisted-accepted")).unwrap();
+
+        let applied = apply_proposal(
+            &path,
+            "id://persisted-accepted",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile,
+        )
+        .expect("persisted Accepted applies");
+        assert_eq!(applied.state, IdentityAugmentProposalState::Applied);
+        assert_ne!(profile.q_identity, before_identity);
+        std::fs::remove_file(&path).ok();
+    }
+
+    #[test]
+    fn apply_unknown_handle_fails() {
+        let path = store();
+        let mut profile = fixture_profile();
+        assert!(apply_proposal(&path, "id://missing", "2026-07-23T09:06:00.000Z", &mut profile).is_err());
         std::fs::remove_file(&path).ok();
     }
 }
