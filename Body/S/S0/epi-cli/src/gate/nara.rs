@@ -704,6 +704,7 @@ pub fn dispatch_nara_with_state_root(
         // session-close bundle above. `nara.pasu.show` is the handle-only read
         // (the natal-chart raw body never transits — only its path string).
         "nara.pasu.show" => show_pasu_record(peer_is_loopback),
+        "nara.pasu.set" => set_pasu_field(peer_is_loopback, params),
         "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
         "nara.identity.proposals.detect" => {
             detect_identity_proposal(state_root, peer_is_loopback, params)
@@ -995,6 +996,27 @@ fn append_pasu_consent(
         .map_err(|err| ("nara-error".to_owned(), err))?;
     let count = consents.len();
     Ok(json!({ "consents": consents, "count": count }))
+}
+
+/// `nara.pasu.set` (DR-WC-M4-3): set one of the six editable PASU identity
+/// scalars by its full frontmatter key (e.g. `c_2_jungian`) via the canonical
+/// `pasu_set_key` write path — the identity wizard (25.T25.4) routes every write
+/// here, never the `epi vault pasu set` CLI. Derived/unknown keys are rejected
+/// by `pasu_set_key`. Protected-local — loopback peer required. Returns the key
+/// plus the write receipt.
+fn set_pasu_field(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.set requires a loopback peer".to_owned(),
+        ));
+    }
+    let key = required_param(params, "key")?;
+    let value = required_param(params, "value")?;
+    let vault_root = crate::vault::resolve_vault_root();
+    let receipt = crate::vault::pasu::pasu_set_key(&vault_root, &key, &value)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    Ok(json!({ "key": key, "receipt": receipt }))
 }
 
 /// Parse an optional `q_identity_candidate` (a `[f32; 4]`) from params, falling
