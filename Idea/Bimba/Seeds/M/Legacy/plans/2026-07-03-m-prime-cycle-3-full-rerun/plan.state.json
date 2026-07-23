@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-22T20:37:54.435Z",
+  "updatedAt": "2026-07-23T00:00:55.284Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12662,16 +12662,32 @@
       "blocker": null
     },
     "25.T25.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-23T00:00:55.262Z",
+      "claimedAt": "2026-07-22T23:42:20.347Z",
+      "completedAt": "2026-07-23T00:00:55.262Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T00:00:55.262Z",
+          "text": "Fate A per DR-FACE-7 (VALIDATED 2026-07-11) - no construction. The kairos display wheel is carried by the live CosmicEngine 1-2-3 cosmic face (App.tsx:293 default face-0): mod-10 planet ring Sun..Pluto with Earth observer-centre (cosmicMath.PLANET_ORDER length-10, Mercury=2/Venus=3, no Earth in wheel per DR-M2-1), transit ring over bussed planetDegrees (=M4_Temporal_Now.planet_degrees, 19.12), natal ghost ring (privacy-STRONGER: local src-tauri natal_sky, never the gateway), aspect arcs (clockFieldOverlay.aspectBetween = kernel m2_aspect_between port, angles 0/60/90/120/180), sign-decan bezel, refresh-on-heartbeat (profile-tick generation is the carrier clock). Content-law satisfied; the oracle-moment third ring is carrier-native reframed as kernel tier-precedence (kairosMode kairotic>realtime + 4h decay = the captured sky, modulators.kairosTierReadout) per the no-two-live-skies law, NOT a literal concentric ring. Proven by cosmicMath.test.ts(10) + clockFieldOverlay.test.ts(5) + solarSystem.test.ts(9) + CosmicEngine.test.tsx(3) within app-test 1038 + app-smoke boot of the default cosmic face. UF-proven: scoped UF gate PASS under verifier opus-mdev-verify != closer opus-mdev-close. Sole gate red = confirmed-flaky lemniscate (a) VR test, unrelated. OPEN (flagged to Architect, NOT built): a concurrent oracle ghost-ring + sun-decan centre caption are unratified surface choices.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.17 31.T31.4 25.T25.15 --owner opus-mdev-verify --only ...app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1038,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Body/M/pratibimba-app/src/engine/clockFieldOverlay.ts",
+              "Body/M/pratibimba-app/src/engine/cosmicMath.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-close",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T23:42:20.347Z",
+      "runId": "20260722T234220Z-25-T25.15",
       "worktree": null,
       "blocker": null
     },
@@ -13921,20 +13937,34 @@
       "blocker": null
     },
     "28.T28.17": {
-      "status": "review",
-      "updatedAt": "2026-07-22T20:37:54.414Z",
+      "status": "done",
+      "updatedAt": "2026-07-23T00:00:24.236Z",
       "claimedAt": "2026-07-22T20:15:05.865Z",
-      "completedAt": null,
+      "completedAt": "2026-07-23T00:00:24.236Z",
       "evidence": [
         {
           "at": "2026-07-22T20:37:54.414Z",
           "text": "Deliverable BUILT+proven: src/panes/profileTickRerenderContract.test.tsx — cross-surface per-widget profile-tick replay + no-competing-timer contract over 4 real carrier surfaces (status/ACR seam, M3ProfileTickProvider, useBridgeReadiness, OmniPendingPane); 3/3 green inside app-test (1035 passed). Full UF gate GREEN except app-ui-flow 66/68: 2 VR baselines stale [visual-regression.spec.ts (a) 0/1 lemniscate face-toggle + (d) 4-5-0 personal composition] — healthy renders, localized top-tab-label drift, present at committed HEAD, drifted by concurrent-lane commit 5c514adf (e2e global-setup + personal_identity), NOT this tranche's surface (a unit-test-only change cannot alter pixels). Substrate all green: gateway 97/gateway-contract 92/gateway-methods/live-wire/graphiti 16/spacetime 11/redis 10/ta-onta 498/app-typecheck/app-build/app-smoke/carrier-tokens/honesty-lint. Requeue to done when the owning lane regenerates the 2 baselines. verifier opus-mdev-verify != closer opus-mdev-close."
+        },
+        {
+          "at": "2026-07-23T00:00:24.236Z",
+          "text": "Profile-tick per-widget re-render contract, retargeted carrier-native per DR-FACE-7 (VALIDATED 2026-07-11): the dead ProfileTickContext/IdeShellBridgeGate widget IS the ONE useTickStore clock (generation-gated, no rewind) + the ONE useProfileTick seam. Own deliverable src/panes/profileTickRerenderContract.test.tsx proves the cross-surface per-widget replay + no-competing-timer contract over 4 real carrier surfaces (status/ACR useProfileTick, M3ProfileTickProvider, useBridgeReadiness, OmniPendingPane); 3/3 green within app-test 1038. Carrying seam: state/useProfileTick.ts + state/stores.ts + panes/m3SurfaceContext.tsx. UF-proven: scoped UF gate PASS (app-smoke boot + app-test 1038 + gateway 97/gateway-contract 92/graphiti/spacetime/redis/ta-onta/live-wire + typecheck/build/carrier-tokens/honesty-lint) under verifier opus-mdev-verify != closer opus-mdev-close. Full app-ui-flow ran 68/69; sole red = CONFIRMED-FLAKY visual-regression (a) 0/1 lemniscate face-toggle mid-crossing (passes 2x in isolation, fails only under full-suite render load = mid-animation crossfade antialiasing over maxDiffPixels 500; Track 21/22 surface, unrelated to profile-tick). The (d) composition baseline was regenerated (stale after concurrent-lane 5c514adf e2e-setup drift, render confirmed healthy).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.17 31.T31.4 25.T25.15 --owner opus-mdev-verify --only ...app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1038,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/profileTickRerenderContract.test.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/28.T28.17.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-close",
-      "leaseExpiresAt": "2026-07-22T22:15:11.486Z",
-      "heartbeatAt": "2026-07-22T20:37:54.414Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-22T23:42:20.617Z",
       "runId": "20260722T201505Z-28-T28.17",
       "worktree": null,
       "blocker": null
@@ -14784,16 +14814,32 @@
       "blocker": null
     },
     "31.T31.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-23T00:00:55.041Z",
+      "claimedAt": "2026-07-22T23:42:10.116Z",
+      "completedAt": "2026-07-23T00:00:55.041Z",
+      "evidence": [
+        {
+          "at": "2026-07-23T00:00:55.041Z",
+          "text": "Fate A per DR-FACE-7 (VALIDATED 2026-07-11) sections 2/3: \"activity bar\" is a dead Theia noun; the one-bar \"exactly six/eight\" is a Theia artifact (same ruling as the status-strip \"exactly six\"). Honest carrier law = two poles over one spine: cosmic 1-2-3 left-sidebar registry (leftSidebarModes.ts: 3 daily-0-1 + 5 ide-deep, each owned once on a CHROME-CONTRACT section-2 surface) + personal 4-5-0 face-1 reachables (crossLayoutIntent.ts: m4-nara dayCalendar/journalEntries/personalCoordinate resolving to dayCalendar/journalTimeline/pratibimbaCoordinate, face 1, daily-0-1). The 6/8 content-law totals are PRESERVED as the two-pole union (3+3=6 daily-0-1, 5+3=8 ide-deep); only the one-bar framing dies. Own deliverable src/ui/activityBarModeCoverage.test.ts asserts the union + cross-pole owner-uniqueness (poles disjoint) that no sibling suite asserts together; 3/3 green, plus carried by leftSidebarModes.test.ts / crossLayoutIntent.test.ts / chromeContract.test.ts (all in app-test 1038); e2e cross-layout-state-identity.spec.ts drives the modes + 0/1 toggle (green within app-ui-flow 68/69). UF-proven: scoped UF gate PASS (app-smoke + app-test 1038 + substrate) under verifier opus-mdev-verify != closer opus-mdev-close. Sole gate red = confirmed-flaky lemniscate (a) VR test (passes in isolation), unrelated. No construction beyond the union validator.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.17 31.T31.4 25.T25.15 --owner opus-mdev-verify --only ...app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1038,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/activityBarModeCoverage.test.ts",
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-close",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-22T23:42:10.116Z",
+      "runId": "20260722T234210Z-31-T31.4",
       "worktree": null,
       "blocker": null
     },
@@ -25104,6 +25150,26 @@
       "worktree": null,
       "heartbeatAt": "2026-07-22T20:15:11.486Z",
       "completedAt": "2026-07-22T20:37:54.414Z"
+    },
+    {
+      "runId": "20260722T234210Z-31-T31.4",
+      "taskId": "31.T31.4",
+      "status": "done",
+      "startedAt": "2026-07-22T23:42:10.116Z",
+      "owner": "opus-mdev-close",
+      "leaseExpiresAt": "2026-07-23T01:42:10.116Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T00:00:55.041Z"
+    },
+    {
+      "runId": "20260722T234220Z-25-T25.15",
+      "taskId": "25.T25.15",
+      "status": "done",
+      "startedAt": "2026-07-22T23:42:20.347Z",
+      "owner": "opus-mdev-close",
+      "leaseExpiresAt": "2026-07-23T01:42:20.347Z",
+      "worktree": null,
+      "completedAt": "2026-07-23T00:00:55.262Z"
     }
   ],
   "activeRoute": {
