@@ -34,7 +34,7 @@ export interface CatalogCommand {
  * The complete command catalog. Every row corresponds to a command that is
  * really registered by a real register site:
  *   - App.tsx shell chrome (9)      — `commands.register({...})` on App mount
- *   - src/commands/atelier.ts (3)   — `registerAtelierCommands` (16.T16.19)
+ *   - src/commands/atelier.ts (6)   — `registerAtelierCommands` (16.T16.19 + 26.T26.3)
  *   - src/engine/modulation (5)     — `registerEngineCommands` (E3)
  *   - src/commands/crossLayoutIntent (1) — `registerCrossLayoutIntentCommand` (31.T31.10)
  *   - src/commands/omnipanelTabChords (8) — `registerOmnipanelTabActivationCommands` (31.T31.3, CCT-4)
@@ -88,6 +88,12 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
 
     // --- src/commands/atelier.ts (registerAtelierCommands) ---
     {
+        id: 'atelier.etymologyRoot',
+        title: 'Atelier: Etymology root — trace this coordinate to its gnostic root',
+        owner: 'atelier',
+        tranche: '26.T26.3'
+    },
+    {
         id: 'atelier.scentFollow',
         title: 'Atelier: Scent-follow — stage this note as a Hen candidate',
         owner: 'atelier',
@@ -100,10 +106,22 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         tranche: '16.T16.19'
     },
     {
+        id: 'atelier.semanticDrift',
+        title: 'Atelier: Semantic drift — layered gnostic retrieval of sense drift',
+        owner: 'atelier',
+        tranche: '26.T26.3'
+    },
+    {
         id: 'atelier.psychoidTrace',
         title: 'Atelier: Psychoid trace — Anuttara grammatical tracing',
         owner: 'atelier',
         tranche: '16.T16.19'
+    },
+    {
+        id: 'atelier.prosHen',
+        title: 'Atelier: Pros-hen synthesis — toward-the-One Klein-V4 pull',
+        owner: 'atelier',
+        tranche: '26.T26.3'
     },
 
     // --- src/engine/modulation/engine.ts (registerEngineCommands, E3) ---
