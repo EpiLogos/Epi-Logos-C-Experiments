@@ -50,7 +50,6 @@ describe('OMNIPANEL_TABS manifest', () => {
     it('names the owning tranche for every unlanded fold — pending, never hidden', () => {
         const pending = OMNIPANEL_TABS.filter(tab => !tab.landed);
         expect(pending.map(tab => tab.id)).toEqual([
-            'gateway',
             'diagnostics'
         ]);
         for (const tab of pending) {

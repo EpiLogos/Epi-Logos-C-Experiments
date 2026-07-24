@@ -6516,3 +6516,198 @@ button.tool-stream-timerange.active {
     color: var(--danger);
     margin: 0;
 }
+
+/* ===================== Gateway fold (27.T27.7) ===================== */
+.gateway-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    overflow: auto;
+}
+.gateway-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.gateway-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.gateway-subtitle {
+    font-size: var(--type-caption);
+    opacity: 0.7;
+}
+.gateway-connection {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+}
+.gateway-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin-left: auto;
+}
+.gateway-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.gateway-refresh {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.8;
+}
+.gateway-subview-switcher {
+    display: inline-flex;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+}
+.gateway-subview {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+    text-transform: capitalize;
+}
+.gateway-subview.active {
+    opacity: 1;
+    border-color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 18%, transparent);
+}
+.capability-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--type-body-small);
+}
+.capability-list-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+}
+.capability-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+}
+.capability-row:hover {
+    background: color-mix(in srgb, var(--hairline) 40%, transparent);
+}
+.capability-row.selected {
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.capability-name {
+    font-family: monospace;
+    font-size: var(--type-mono);
+}
+.capability-entitlement {
+    font-size: var(--type-micro);
+    padding: 0 0.3rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--hairline);
+    opacity: 0.75;
+}
+.capability-entitlement-aletheia-mode-internal {
+    border-color: color-mix(in srgb, var(--facet-anima) 60%, transparent);
+    color: var(--facet-anima);
+}
+.capability-check-cell {
+    font-size: var(--type-micro);
+}
+.capability-check-cell-ok {
+    color: var(--ready);
+}
+.capability-check-cell-missing {
+    color: var(--danger);
+}
+.try-it-affordance {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-left: auto;
+}
+.try-it-toggle,
+.try-it-run {
+    font-size: var(--type-micro);
+    padding: 0 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.try-it-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.4rem;
+}
+.try-it-params {
+    font: inherit;
+    font-family: monospace;
+    font-size: var(--type-mono);
+    min-height: 3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.3rem;
+    background: transparent;
+    color: inherit;
+    padding: 0.2rem;
+}
+.try-it-result {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    white-space: pre-wrap;
+    opacity: 0.85;
+}
+.try-it-error {
+    font-size: var(--type-micro);
+    color: var(--danger);
+}
+.kernel-bridge-readiness-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--type-micro);
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.kernel-bridge-readiness-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--hairline);
+}
+.kernel-bridge-readiness-chip-green .kernel-bridge-readiness-dot {
+    background: var(--ready);
+}
+.kernel-bridge-readiness-chip-amber .kernel-bridge-readiness-dot {
+    background: var(--facet-mythos, #d0a000);
+}
+.kernel-bridge-readiness-chip-red .kernel-bridge-readiness-dot {
+    background: var(--danger);
+}

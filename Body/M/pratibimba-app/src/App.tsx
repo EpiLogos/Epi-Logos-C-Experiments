@@ -64,6 +64,7 @@ import { SemanticConnectionsPane } from './panes/SemanticConnectionsPane';
 import { DispatchTracePanel } from './panes/omni/DispatchTracePanel';
 import { ToolStreamPanel } from './panes/omni/ToolStreamPanel';
 import { EvidencePanel } from './panes/omni/EvidencePanel';
+import { GatewayPanel } from './panes/omni/GatewayPanel';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -459,9 +460,13 @@ function factory(node: TabNode) {
         // real deposit feed lands (s5.epii.deposit — feed-gated, 27.5 tail).
         case 'omniEvidence':
             return <EvidencePanel />;
-        // 27.T27.0: folds whose panels have not landed (27.7/.8 own the
-        // bodies) mount the honest pending pane.
+        // 27.T27.7 — the Gateway fold IS capability-list + parity + readiness +
+        // try-it, folded from the live s4'.mediation.capabilities.list snapshot;
+        // un-ported facets + disconnect render honest ReadinessBanners.
         case 'omniGateway':
+            return <GatewayPanel />;
+        // 27.T27.0: the Diagnostics fold has not landed (27.8 owns the body);
+        // mount the honest pending pane until then.
         case 'omniDiagnostics':
             return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;
             default:

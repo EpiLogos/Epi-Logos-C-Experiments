@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-24T10:30:52.295Z",
+  "updatedAt": "2026-07-24T10:44:19.605Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13480,16 +13480,34 @@
       "blocker": null
     },
     "27.T27.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-24T10:44:19.569Z",
+      "claimedAt": "2026-07-24T10:31:06.550Z",
+      "completedAt": "2026-07-24T10:44:19.569Z",
+      "evidence": [
+        {
+          "at": "2026-07-24T10:44:19.569Z",
+          "text": "27.7 Gateway mounted: omniGateway now renders GatewayPanel — capability list folded from the live s4-prime.mediation.capabilities.list snapshot (loadMediationCapabilitySnapshot), per-row parity (isSnapshotCapabilityAllowed), inline (no-modal) try-it over gateway().invoke, KernelBridgeReadinessChip; the six un-ported facets (nodes/models/skills/cron/config/settings) + disconnect render honest ReadinessBanners (nothing fabricated). Manifest gateway landed:false->true; runtime pending-set -> [diagnostics]; CHROME-CONTRACT omniGateway pending-fold->live (landed<->status agreement holds). Landing required updating session-continuity.spec.ts assertCapabilitySurface from the pending-body assertion to the live GatewayPanel surface (both faces) — done honestly. UF proof: omnipanel-tab-traversal e2e opens Gateway live in real Chromium; session-continuity e2e proves the capability surface survives the face toggle both directions (green in isolation, 40.7s); full app-test 1205 green; tsc/build clean. Sole remaining gate red is the known-flaky pratibimba-consent:274 (confirmed PASS in isolation this session). Verifier opus-mdev-verify != closer opus-mdev-277-impl.",
+          "receipt": {
+            "command": "npx playwright test omnipanel-tab-traversal session-continuity (UF, real Chromium: Gateway opens live GatewayPanel; capability surface survives 0/1 toggle both directions) + app-test 1205",
+            "exitCode": 0,
+            "testsPassed": 1205,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/GatewayPanel.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/gateway/",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-277-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-24T10:31:06.550Z",
+      "runId": "20260724T103106Z-27-T27.7",
       "worktree": null,
       "blocker": null
     },
@@ -25700,6 +25718,16 @@
       "leaseExpiresAt": "2026-07-24T11:41:52.500Z",
       "worktree": null,
       "completedAt": "2026-07-24T10:30:52.274Z"
+    },
+    {
+      "runId": "20260724T103106Z-27-T27.7",
+      "taskId": "27.T27.7",
+      "status": "done",
+      "startedAt": "2026-07-24T10:31:06.550Z",
+      "owner": "opus-mdev-277-impl",
+      "leaseExpiresAt": "2026-07-24T12:31:06.550Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T10:44:19.569Z"
     }
   ],
   "activeRoute": {

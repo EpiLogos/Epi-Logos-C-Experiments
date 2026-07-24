@@ -14,21 +14,22 @@
  *   the module-scope zustand session store + the shared OMNI_BORDER manifest,
  *   App.tsx; the observation here is the rendered DOM).
  *
- * CAPABILITY SURFACE — honest reading (named gap, never fabricated):
+ * CAPABILITY SURFACE — honest reading (never fabricated):
  *   15.2's verification asks that "session id and capability list survive"
- *   the transitions. The capability LIST has no real UI surface yet: the
- *   Gateway fold (the designated surface for `s4'.mediation.capabilities.list`
- *   + the parity check) is `landed: false` in OMNIPANEL_TABS — its body is
- *   27.7's lane, and the pi-permitted capability matrix itself is 12.10's
- *   (`isMediationCapabilityAllowed` in omnipanelRuntime.ts takes a
- *   caller-supplied permit list precisely because no hidden registry exists).
+ *   the transitions. The Gateway fold (the designated surface for
+ *   `s4'.mediation.capabilities.list` + the parity check) is now `landed: true`
+ *   in OMNIPANEL_TABS: 27.T27.7 landed the live GatewayPanel, which folds the
+ *   real capability snapshot (`loadMediationCapabilitySnapshot`) and parity
+ *   (`isSnapshotCapabilityAllowed`) — the pi-permitted matrix stays 12.10's, so
+ *   when the method is unavailable GatewayPanel renders its own
+ *   bridge_unavailable ReadinessBanner rather than a fabricated list.
  *   So this spec asserts what IS real on both faces and both directions:
  *     (a) the bound session identity (status strip + per-face SessionsPane
  *         bound marker), and
- *     (b) the real capability surface skeleton — the 8-fold `/` membrane
- *         manifest rendered as border tabs on BOTH faces (15.2 law landed by
- *         27.T27.0), and the Gateway fold's honest pending body
- *         (`pending-tranche-27.7`) reading identically on both faces.
+ *     (b) the real capability surface — the 8-fold `/` membrane manifest
+ *         rendered as border tabs on BOTH faces (15.2 law landed by 27.T27.0),
+ *         and the Gateway fold's live GatewayPanel (27.7) reading identically on
+ *         both faces (never the pending pane).
  *   It never asserts a fabricated capability list.
  *
  * SUITE-ORDER DETERMINISM (15.T15.12 law, applied): the e2e harness shares
@@ -98,8 +99,9 @@ async function ensureBorderTabSelected(page: Page, name: string): Promise<Locato
 
 /** The real capability surface, read on the ACTIVE face: all eight folds of
  *  the `/` membrane present as border tabs, and the Gateway fold (the
- *  designated capability-list surface) rendering its honest pending body
- *  naming its owning tranche — identical on both faces by 15.2 law. */
+ *  designated capability-list surface) rendering the live GatewayPanel (27.7 —
+ *  folded from s4'.mediation.capabilities.list; never the pending pane, never a
+ *  fabricated list) — identical on both faces by 15.2 law. */
 async function assertCapabilitySurface(page: Page): Promise<void> {
     for (const label of OMNI_FOLD_LABELS) {
         await expect(
@@ -112,17 +114,21 @@ async function assertCapabilitySurface(page: Page): Promise<void> {
         ).toBeVisible();
     }
     await ensureBorderTabSelected(page, 'Gateway');
-    const gatewayFold = page.locator(
-        '.face-active [data-testid="omni-pending-pane"][data-tab="gateway"]'
-    );
+    // 27.T27.7 landed: the Gateway fold now renders the LIVE GatewayPanel — the
+    // capability surface folded from s4'.mediation.capabilities.list — and no
+    // longer the honest pending body. It reads identically on both faces (15.2).
+    // The live capability list itself is never fabricated: when the method is
+    // unavailable GatewayPanel renders its own bridge_unavailable ReadinessBanner
+    // (still the gateway-panel surface, never the pending pane).
+    const gatewayFold = page.locator('.face-active [data-testid="gateway-panel"]');
     await expect(
         gatewayFold,
-        'the Gateway fold renders its honest pending body (capability list is 27.7/12.10 — never fabricated)'
+        'the Gateway fold renders the live GatewayPanel capability surface (27.7)'
     ).toBeVisible();
-    await expect(gatewayFold.getByTestId('provenance-pending')).toHaveAttribute(
-        'title',
-        'pending-tranche-27.7'
-    );
+    await expect(
+        page.locator('.face-active [data-testid="omni-pending-pane"][data-tab="gateway"]'),
+        'the Gateway fold no longer renders the pending pane now that 27.7 has landed'
+    ).toHaveCount(0);
 }
 
 /** The bound-session reading at the real surface of the ACTIVE face: this
