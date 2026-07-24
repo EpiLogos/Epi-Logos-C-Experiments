@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-23T23:26:19.356Z",
+  "updatedAt": "2026-07-24T00:02:10.426Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12389,15 +12389,20 @@
       "blocker": null
     },
     "25.T25.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-23T23:59:21.807Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-23T23:59:21.807Z",
+          "text": "Deliverable fully landed + verified (build complete; ledger close is chain-gated): the 6-step PASU identity wizard (src/panes/PasuWizardPane.tsx) reads via nara.pasu.show + writes each editable scalar via the newly-wired nara.pasu.set gateway RPC (gate/nara.rs -> pasu_set_key, DR-WC-M4-3 canonical key write; pasu_set_key now scaffolds PASU.md from an empty vault for genuine first-run). GREEN: pasu Rust tests 10 (incl first-run round-trip), typecheck 0, full vitest 1146 (wizard 6 + orchestration 11), build 0, carrier-tokens + import-boundary GREEN; UF e2e tests/e2e/pasu-wizard.spec.ts PASSED (wizard opens via identity.openWizard command + writes birth-date through the LIVE nara.pasu.set). nara.pasu.set added to the expected-present ratchet. Formal done-close waits on the rerun float-parse chain (numeric predecessor 25.T25.3 + intervening 25.x pending) — a ledger-mechanics ordering, not a defect; the deliverable is complete."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-07-23T23:59:21.807Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -15354,10 +15359,10 @@
       "blocker": null
     },
     "32.T32.2": {
-      "status": "pending",
-      "updatedAt": "2026-07-23T23:20:05.791Z",
-      "claimedAt": null,
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-24T00:02:10.405Z",
+      "claimedAt": "2026-07-23T23:57:02.157Z",
+      "completedAt": "2026-07-24T00:02:10.405Z",
       "evidence": [
         {
           "at": "2026-07-23T22:57:18.559Z",
@@ -15366,13 +15371,28 @@
         {
           "at": "2026-07-23T23:20:05.791Z",
           "text": "Unblock: re-examined — the orchestration decision (coldStartPasuBranch, mirroring coldStartKairosBranch) is a real testable deliverable; nara.pasu.show exists. Building it (+ 25.T25.4 wizard for the routing target)."
+        },
+        {
+          "at": "2026-07-24T00:02:10.405Z",
+          "text": "Cold-start PASU-absence orchestration: src/onboarding/pasuOnboarding.ts coldStartPasuBranch (mirrors coldStartKairosBranch) + detectPasuPresence (file-level exists flag from nara.pasu.show) + recordPasuWizardSkip; wired into App.tsx first-tick detection that mounts the 25.4 identity wizard on PASU-absence (pre-kairos), plus the identity.openWizard command re-entry (DR-WC-OB-2, DR-WC-M4-3). GREEN: orchestration unit tests 11, typecheck 0, full vitest 1146, build 0, carrier-tokens + import-boundary GREEN; UF e2e tests/e2e/pasu-wizard.spec.ts PASSED (wizard opens + writes via the LIVE nara.pasu.set) + scoped Track-00 gate GREEN incl app-smoke + gateway-methods (nara.pasu.set present) (verifier opus-mdev-c3-verify).",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/pasu-wizard.spec.ts (UF PASS) ; node .codex/scripts/verify-tranche.mjs 32.T32.2 --owner opus-mdev-c3-verify --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1146,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/onboarding/pasuOnboarding.ts",
+              "Body/M/pratibimba-app/tests/e2e/pasu-wizard.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/32.T32.2.md"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-c3-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-23T23:57:02.157Z",
+      "runId": "20260723T235702Z-32-T32.2",
       "worktree": null,
       "blocker": null
     },
@@ -25593,26 +25613,36 @@
       "leaseExpiresAt": "2026-07-24T01:17:27.698Z",
       "worktree": null,
       "completedAt": "2026-07-23T23:26:19.333Z"
+    },
+    {
+      "runId": "20260723T235702Z-32-T32.2",
+      "taskId": "32.T32.2",
+      "status": "done",
+      "startedAt": "2026-07-23T23:57:02.157Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T01:57:02.157Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T00:02:10.405Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-23T22:55:35.877Z",
-    "updatedAt": "2026-07-23T22:55:35.877Z",
+    "createdAt": "2026-07-23T23:28:06.525Z",
+    "updatedAt": "2026-07-23T23:28:06.525Z",
     "taskIds": [
       "14.T14.4",
+      "28.T28.20",
       "31.T31.7",
-      "24.T24.7",
-      "24.T24.8"
+      "24.T24.7"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "14.T14.4": "in-session",
+      "28.T28.20": "in-session",
       "31.T31.7": "in-session",
-      "24.T24.7": "in-session",
-      "24.T24.8": "in-session"
+      "24.T24.7": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
