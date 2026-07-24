@@ -17,6 +17,9 @@
 import type { ActorMediator, MediatedRunEvidencePacket } from './evidenceShapes';
 import { PrivacyClassBadge } from './PrivacyClassBadge';
 import { DispatchTraceMiniGraph } from './DispatchTraceMiniGraph';
+import { DepositionAnchorDisplay } from './evidence/DepositionAnchorDisplay';
+import { DecisionRegisterEntries } from './evidence/DecisionRegisterEntries';
+import { VerifierRVirtueWitnessVector } from './evidence/VerifierRVirtueWitnessVector';
 
 export function mediatorLabel(mediator: ActorMediator): string {
     if (mediator.kind === 'aletheia') {
@@ -126,6 +129,14 @@ export function EvidencePacketView({
                     ))}
                 </ul>
             )}
+
+            {/* 27.T27.5 tails — the deposition anchor, decision-register readout,
+                and verifier-R virtue-witness vector. Their fields/feeds are
+                26.10/26.13/12.x deliverables not yet on the carrier wire, so they
+                render the spec's honest ReadinessBanner until those land. */}
+            <DepositionAnchorDisplay />
+            <DecisionRegisterEntries packetId={packet.id} />
+            <VerifierRVirtueWitnessVector />
 
             <div className="evidence-cross-fold">
                 <DispatchTraceMiniGraph root={packet.dispatchTrace} onOpen={onOpenDispatchTrace} />

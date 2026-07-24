@@ -14,10 +14,11 @@
  *   decision register, virtue-witness — feed-gated, land later); intent routing (27.9).
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { MediatedRunEvidencePacket } from './evidenceShapes';
 import { EvidencePacketList } from './EvidencePacketList';
 import { EvidencePacketView } from './EvidencePacketView';
+import { EvidenceDepositForm } from './evidence/EvidenceDepositForm';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 
@@ -33,6 +34,9 @@ export function EvidencePanel({
     const tab = useOmniPanelTabState('evidence');
     const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const selectTab = useOmniPanelSessionStore(s => s.selectTab);
+    // 27.T27.5 — the deposit affordance is inline (NOT a modal; 15.2 "the tab
+    // IS the surface"). Open state is local to the fold.
+    const [depositOpen, setDepositOpen] = useState(false);
 
     const mediatorFilter = tab.filters.mediator ?? 'all';
     const privacyFilter = (tab.filters.privacyClass ?? 'all') as PrivacyClassKind | 'all';
@@ -71,6 +75,16 @@ export function EvidencePanel({
                     <strong>Evidence</strong>
                     <span className="evidence-subtitle">MediatedRunEvidencePacket deposition fold</span>
                     <span className="evidence-count">{packets.length} packets</span>
+                    <button
+                        type="button"
+                        className={`evidence-deposit-new${depositOpen ? ' active' : ''}`}
+                        data-testid="evidence-deposit-new"
+                        aria-pressed={depositOpen}
+                        aria-expanded={depositOpen}
+                        onClick={() => setDepositOpen(open => !open)}
+                    >
+                        {depositOpen ? 'close deposit' : 'deposit new'}
+                    </button>
                 </div>
                 <div className="evidence-controls">
                     <span className="evidence-filters" role="group" aria-label="mediator filter">
@@ -103,6 +117,10 @@ export function EvidencePanel({
                     </span>
                 </div>
             </header>
+
+            {depositOpen && (
+                <EvidenceDepositForm onDeposited={() => setDepositOpen(false)} />
+            )}
 
             <EvidencePacketList packets={visible} selectedId={tab.selectedPacketId} onSelect={onSelect} />
 

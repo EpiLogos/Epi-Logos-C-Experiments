@@ -6404,3 +6404,115 @@ button.tool-stream-timerange.active {
     font-size: var(--type-mono);
     opacity: 0.75;
 }
+
+/* ===================== Evidence tails (27.T27.5) ===================== */
+.evidence-decision-register,
+.evidence-virtue-witness,
+.evidence-deposition-anchor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.3rem;
+}
+.evidence-deposition-anchor-ref {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.85;
+}
+.evidence-deposition-anchor-path {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+}
+.virtue-witness-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.virtue-witness-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.virtue-witness-register {
+    font-size: var(--type-micro);
+    opacity: 0.6;
+    min-width: 5.5rem;
+}
+.virtue-witness-bit {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 0.15rem;
+    border: 1px solid var(--hairline);
+    display: inline-block;
+    background: transparent;
+}
+.virtue-witness-bit.set {
+    background: var(--ready);
+    border-color: var(--ready);
+}
+/* Deposit form — inline (15.2), never a modal. */
+.evidence-deposit-new {
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.6rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.75;
+    margin-left: 0.5rem;
+}
+.evidence-deposit-new.active {
+    opacity: 1;
+    border-color: var(--ready);
+    background: color-mix(in srgb, var(--ready) 16%, transparent);
+}
+.evidence-deposit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: var(--type-body-small);
+}
+.evidence-deposit-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.35rem;
+}
+.evidence-deposit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    font-size: var(--type-micro);
+}
+.evidence-deposit-field input {
+    font: inherit;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.3rem;
+    background: transparent;
+    color: inherit;
+}
+.evidence-deposit-server-note {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin: 0;
+}
+.evidence-deposit-missing {
+    font-size: var(--type-micro);
+    color: var(--facet-mythos, var(--danger));
+    margin: 0;
+}
+.evidence-deposit-ok {
+    font-size: var(--type-micro);
+    color: var(--ready);
+    margin: 0;
+}
+.evidence-deposit-refused {
+    font-size: var(--type-micro);
+    color: var(--danger);
+    margin: 0;
+}
