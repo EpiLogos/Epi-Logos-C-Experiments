@@ -65,6 +65,7 @@ import { DispatchTracePanel } from './panes/omni/DispatchTracePanel';
 import { ToolStreamPanel } from './panes/omni/ToolStreamPanel';
 import { EvidencePanel } from './panes/omni/EvidencePanel';
 import { GatewayPanel } from './panes/omni/GatewayPanel';
+import { DiagnosticsPanel } from './panes/omni/DiagnosticsPanel';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -98,7 +99,6 @@ import { OraclePane } from './panes/OraclePane';
 import { DayCalendarPane } from './panes/DayCalendarPane';
 import { M2CorrespondencePane } from './panes/M2CorrespondencePane';
 import { SessionsPane } from './panes/SessionsPane';
-import { OmniPendingPane } from './panes/omni/OmniPendingPane';
 import {
     filterOmniPanelTabsForLayout,
     OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY,
@@ -293,7 +293,7 @@ function syncOmniPanelSelection(model: Model): void {
     }
 }
 
-function factory(node: TabNode) {
+function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
     const pane = (() => {
         switch (node.getComponent()) {
         case 'fileTree':
@@ -465,10 +465,12 @@ function factory(node: TabNode) {
         // un-ported facets + disconnect render honest ReadinessBanners.
         case 'omniGateway':
             return <GatewayPanel />;
-        // 27.T27.0: the Diagnostics fold has not landed (27.8 owns the body);
-        // mount the honest pending pane until then.
+        // 27.T27.8 — the Diagnostics fold IS kernel-bridge telemetry + intent
+        // log: readiness ledger, profile-tick generation, gateway WS state,
+        // active layout, and the CrossLayoutIntent log — all from live stores;
+        // absent feeds (subscriber count, s2 ping) render honest ReadinessBanners.
         case 'omniDiagnostics':
-            return <OmniPendingPane componentKey={node.getComponent() ?? ''} />;
+            return <DiagnosticsPanel activeLayout={activeLayout} />;
             default:
                 return <div className="pane-message">unknown pane: {node.getComponent()}</div>;
         }
@@ -1201,7 +1203,7 @@ export function App() {
                     <Layout
                         key={`cosmic-${routingRevision}`}
                         model={models.cosmic}
-                        factory={factory}
+                        factory={node => factory(node, activeLayout)}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
                             persist();
@@ -1217,7 +1219,7 @@ export function App() {
                     <Layout
                         key={`personal-${routingRevision}`}
                         model={models.personal}
-                        factory={factory}
+                        factory={node => factory(node, activeLayout)}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
                             persist();

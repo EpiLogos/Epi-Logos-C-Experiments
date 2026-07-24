@@ -11,6 +11,7 @@
  */
 
 import { commands } from './registry';
+import { useCrossLayoutIntentLogStore } from '../state/crossLayoutIntentLog';
 
 export const CROSS_LAYOUT_INTENT_COMMAND = 'pratibimba.intent.dispatch';
 
@@ -193,13 +194,26 @@ export async function dispatchCrossLayoutIntent(
     dependencies: CrossLayoutIntentDependencies
 ): Promise<CrossLayoutIntentTarget> {
     const intent = parseCrossLayoutIntent(input);
+    // 27.T27.8 telemetry: every dispatched intent is recorded to the
+    // CrossLayoutIntent log the Diagnostics fold reads (last 32). The store never
+    // reads a clock; the dispatch seam stamps `at` here (a one-shot timestamp,
+    // not a re-render clock).
+    const record = (outcome: 'ok' | 'error') =>
+        useCrossLayoutIntentLogStore.getState().record({ at: Date.now(), intent, outcome });
     const resolved = intentTarget(intent);
     if (!resolved) {
+        record('error');
         throw new Error(`unregistered intent target: ${intent.requestedExtensionId}/${intent.requestedContributionId}`);
     }
     if (intent.coordinate) dependencies.setCoordinate(intent.coordinate);
     dependencies.applySession(intent);
-    await dependencies.navigate(resolved, intent);
+    try {
+        await dependencies.navigate(resolved, intent);
+    } catch (err) {
+        record('error');
+        throw err;
+    }
+    record('ok');
     return resolved;
 }
 

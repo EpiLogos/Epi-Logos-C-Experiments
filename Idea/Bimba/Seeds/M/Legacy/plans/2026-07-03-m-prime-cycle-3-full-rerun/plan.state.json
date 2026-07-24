@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-24T10:44:19.605Z",
+  "updatedAt": "2026-07-24T10:58:08.038Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13512,16 +13512,34 @@
       "blocker": null
     },
     "27.T27.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-24T10:58:08.014Z",
+      "claimedAt": "2026-07-24T10:44:59.856Z",
+      "completedAt": "2026-07-24T10:58:08.014Z",
+      "evidence": [
+        {
+          "at": "2026-07-24T10:58:08.014Z",
+          "text": "27.8 Diagnostics mounted: omniDiagnostics now renders DiagnosticsPanel — kernel-bridge readiness ledger (07-t0 taxonomy), matheme profile-generation + tick history, gateway WS state, active-layout (live activeLayout threaded through the App factory), and the last-32 CrossLayoutIntent log fed from a new crossLayoutIntentLog store wired at the dispatchCrossLayoutIntent seam; subscriber-count + s2.graph_services.ping absent -> honest ReadinessBanners (s3_subscription_blocked / s2_graph_blocked), nothing fabricated. Renders always (provenance-always-visible), never blanks on disconnect. Manifest diagnostics landed:false->true (ALL 8 folds now landed; removed the now-dead OmniPendingPane import); runtime pending-set -> []; CHROME-CONTRACT omniDiagnostics pending-fold->live. UF proof: full UF-scoped gate green on every suite EXCEPT the known-flaky pratibimba-consent:274 (confirmed PASS in isolation this session); omnipanel-tab-traversal opens Diagnostics live + session-continuity green (the shared crossLayoutIntent.ts record() side-effect broke no e2e). Verifier opus-mdev-verify != closer opus-mdev-278-impl.",
+          "receipt": {
+            "command": "npx playwright test omnipanel-tab-traversal session-continuity (UF app-ui-flow, real Chromium: Diagnostics opens live DiagnosticsPanel); UF-scoped verify-tranche green (gateway 98, gateway-contract 92, app-test 1205, app-typecheck, app-build, app-smoke, live-wire, honesty-lint)",
+            "exitCode": 0,
+            "testsPassed": 1205,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/DiagnosticsPanel.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/diagnostics/",
+              "Body/M/pratibimba-app/src/state/crossLayoutIntentLog.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-278-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-24T10:44:59.856Z",
+      "runId": "20260724T104459Z-27-T27.8",
       "worktree": null,
       "blocker": null
     },
@@ -25728,6 +25746,16 @@
       "leaseExpiresAt": "2026-07-24T12:31:06.550Z",
       "worktree": null,
       "completedAt": "2026-07-24T10:44:19.569Z"
+    },
+    {
+      "runId": "20260724T104459Z-27-T27.8",
+      "taskId": "27.T27.8",
+      "status": "done",
+      "startedAt": "2026-07-24T10:44:59.856Z",
+      "owner": "opus-mdev-278-impl",
+      "leaseExpiresAt": "2026-07-24T12:44:59.856Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T10:58:08.014Z"
     }
   ],
   "activeRoute": {

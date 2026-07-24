@@ -65,7 +65,7 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'evidence', label: 'Evidence', component: 'omniEvidence', owningTranche: '27.5', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: false, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'tuning', label: 'Tuning', component: 'omniTuning', owningTranche: '38.T06.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] }
 ] as const);
 

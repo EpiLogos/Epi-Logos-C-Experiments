@@ -6711,3 +6711,169 @@ button.tool-stream-timerange.active {
 .kernel-bridge-readiness-chip-red .kernel-bridge-readiness-dot {
     background: var(--danger);
 }
+
+/* ===================== Diagnostics fold (27.T27.8) ===================== */
+.diagnostics-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    overflow: auto;
+}
+.diagnostics-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.diagnostics-health {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+.diagnostics-health-light {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--hairline);
+}
+.diagnostics-health-light[data-light='green'] {
+    background: var(--ready);
+}
+.diagnostics-health-light[data-light='amber'] {
+    background: var(--facet-mythos, #d0a000);
+}
+.diagnostics-health-light[data-light='red'] {
+    background: var(--danger);
+}
+.diagnostics-health-phrase {
+    font-size: var(--type-body-small);
+}
+.diagnostics-last-tick,
+.diagnostics-tick-at {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    margin-left: auto;
+}
+.diagnostics-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.diagnostics-section-title,
+.diagnostics-tick-label {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.diagnostics-empty {
+    font-size: var(--type-micro);
+    opacity: 0.6;
+}
+.kernel-bridge-readiness-summary,
+.matheme-profile-generation,
+.profile-tick-subscription-state,
+.gateway-ws-state,
+.active-layout-display,
+.s2-graph-reachability,
+.cross-layout-intent-log {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: var(--type-body-small);
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.3rem;
+}
+.kernel-bridge-readiness-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.readiness-class-id {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.85;
+}
+.readiness-class-count {
+    font-size: var(--type-micro);
+    opacity: 0.6;
+    margin-left: 0.4rem;
+}
+.readiness-class-keys {
+    font-size: var(--type-micro);
+    opacity: 0.5;
+}
+.matheme-generation-value,
+.matheme-generation-current {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    font-weight: 600;
+}
+.matheme-generation-history {
+    display: inline-flex;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+}
+.matheme-generation-history-item {
+    font-family: monospace;
+    font-size: var(--type-micro);
+    opacity: 0.6;
+}
+.gateway-ws-fields,
+.active-layout-fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1rem 0.5rem;
+    font-size: var(--type-micro);
+}
+.cross-layout-intent-log-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+.cross-layout-intent-count {
+    font-size: var(--type-micro);
+    opacity: 0.55;
+}
+.cross-layout-intent-entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+}
+.cross-layout-intent-item,
+.intent-log-entry {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: var(--type-micro);
+}
+.intent-log-at {
+    font-family: monospace;
+    opacity: 0.55;
+}
+.intent-log-target {
+    font-family: monospace;
+    opacity: 0.85;
+}
+.intent-log-summary {
+    opacity: 0.7;
+}
+.intent-log-detail {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    white-space: pre-wrap;
+    opacity: 0.8;
+}

@@ -47,13 +47,13 @@ describe('OMNIPANEL_TABS manifest', () => {
         expect(omniPanelTabForComponent('omniTuning')?.landed).toBe(true);
     });
 
-    it('names the owning tranche for every unlanded fold — pending, never hidden', () => {
+    it('every OmniPanel fold has landed — no pending body remains (27.5/.7/.8 closed)', () => {
         const pending = OMNIPANEL_TABS.filter(tab => !tab.landed);
-        expect(pending.map(tab => tab.id)).toEqual([
-            'diagnostics'
-        ]);
+        expect(pending.map(tab => tab.id)).toEqual([]);
+        // Invariant retained for the next unlanded fold: any pending fold must
+        // name a real owning tranche (pending, never hidden).
         for (const tab of pending) {
-            expect(tab.owningTranche).toMatch(/^27\.\d+$/);
+            expect(tab.owningTranche).toMatch(/^\d+\./);
         }
     });
 
