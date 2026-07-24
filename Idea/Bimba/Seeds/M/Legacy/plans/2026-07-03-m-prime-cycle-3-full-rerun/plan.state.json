@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-24T00:10:27.959Z",
+  "updatedAt": "2026-07-24T10:30:52.295Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13451,16 +13451,31 @@
       "blocker": null
     },
     "27.T27.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-24T10:30:52.274Z",
+      "claimedAt": "2026-07-24T10:11:52.500Z",
+      "completedAt": "2026-07-24T10:30:52.274Z",
+      "evidence": [
+        {
+          "at": "2026-07-24T10:30:52.274Z",
+          "text": "27.6 Review closed CARRIED per DR-FACE-7 (VALIDATED 2026-07-11): the human-required gate landing surface is delivered live by ReviewBlocksPane (mounted at omniReview, contract live) — Track-44 block-standard review items, the m5ReviewGate human gate (agent-blocked, only-human-commits), verdict strip (approve/reject/defer) routing to s4-prime.psyche.update, plus live session-close/contemplation/context-xray reads with honest pending states. UF proof: omnipanel-tab-traversal e2e opens the Review tab live in real Chromium (1 green); m5ReviewGate law 6/6. Spec richer readouts (IOD-17 per-item parity, s5-prime.review.history list, revise/annotate verdicts) are face-gap/feed-gated (spec itself gives them ReadinessBanner fallback), not spine — the intent is carried.",
+          "receipt": {
+            "command": "npx playwright test omnipanel-tab-traversal (UF, real Chromium: Review tab renders live ReviewBlocksPane) + npx vitest run m5ReviewGate",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Body/M/pratibimba-app/src/panes/m5ReviewGate.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-276-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-24T10:11:52.500Z",
+      "runId": "20260724T101152Z-27-T27.6",
       "worktree": null,
       "blocker": null
     },
@@ -25675,6 +25690,16 @@
       "leaseExpiresAt": "2026-07-24T02:08:15.940Z",
       "worktree": null,
       "completedAt": "2026-07-24T00:10:27.938Z"
+    },
+    {
+      "runId": "20260724T101152Z-27-T27.6",
+      "taskId": "27.T27.6",
+      "status": "done",
+      "startedAt": "2026-07-24T10:11:52.500Z",
+      "owner": "opus-mdev-276-impl",
+      "leaseExpiresAt": "2026-07-24T11:41:52.500Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T10:30:52.274Z"
     }
   ],
   "activeRoute": {
