@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-24T00:02:10.426Z",
+  "updatedAt": "2026-07-24T00:10:27.959Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14656,16 +14656,32 @@
       "blocker": null
     },
     "30.T30.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-24T00:10:27.676Z",
+      "claimedAt": "2026-07-24T00:08:15.726Z",
+      "completedAt": "2026-07-24T00:10:27.676Z",
+      "evidence": [
+        {
+          "at": "2026-07-24T00:10:27.676Z",
+          "text": "Motion-token source consolidated (30.3): src/ui/motionTokens.ts names the motion grammar as one source — the DR-UI-4 transition tier single-sourced from primitives.tsx TRANSITIONS (400 cubic-out / 240 linear / 320 smoothstep; the design-recon 600ms draft is superseded by DR-UI-4), plus the precise clock (linear profile-tick via the single useProfileTick seam, no requestAnimationFrame/setInterval), slerp (30deg step / tick-5 Klein boundary), flow-streamline, klein-flip, and flow-watcher values. Live lemniscate transition rides FaceToggleChrome + styles.css. GREEN: motionTokens.test 6 + primitives.test DR-UI-4-exact, typecheck 0, full vitest 1156, build 0, carrier-tokens + import-boundary GREEN; motion timing proven by tests/e2e/visual-regression.spec.ts (400ms face-toggle lemniscate baseline) + scoped gate GREEN incl app-smoke (verifier opus-mdev-c3-verify).",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/visual-regression.spec.ts (UF PASS) ; node .codex/scripts/verify-tranche.mjs 30.T30.3 --owner opus-mdev-c3-verify --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1156,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/motionTokens.ts",
+              "Body/M/pratibimba-app/src/ui/motionTokens.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/30.T30.3.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-c3-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-24T00:08:15.726Z",
+      "runId": "20260724T000815Z-30-T30.3",
       "worktree": null,
       "blocker": null
     },
@@ -15125,16 +15141,32 @@
       "blocker": null
     },
     "31.T31.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-24T00:10:27.938Z",
+      "claimedAt": "2026-07-24T00:08:15.940Z",
+      "completedAt": "2026-07-24T00:10:27.938Z",
+      "evidence": [
+        {
+          "at": "2026-07-24T00:10:27.938Z",
+          "text": "Shell-slot policy landed (31.7): src/ui/shellSlotPolicy.ts declares the six application-shell slots (top=coordinate-breadcrumb exclusive / main=flexlayout-faces composition / right=omnipanel exclusive / left=activity-bar-switched / bottom=per-layout / status-bar=six-thread discipline) with a validator holding the carrier shell in lockstep — it renders the real StatusStrip (exactly 6 state threads) + CoordinateBreadcrumb (top owner). Closes CC-07 / CCT-7 (15-foundation principles 5/6/7). GREEN: shellSlotPolicy.test 5, typecheck 0, full vitest 1156, build 0, carrier-tokens + import-boundary GREEN; shell surfaces proven by tests/e2e/status-strip-discipline.spec.ts + coordinate-breadcrumb.spec.ts + scoped gate GREEN incl app-smoke (verifier opus-mdev-c3-verify).",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/status-strip-discipline.spec.ts tests/e2e/coordinate-breadcrumb.spec.ts (UF PASS) ; node .codex/scripts/verify-tranche.mjs 31.T31.7 --owner opus-mdev-c3-verify --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1156,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/shellSlotPolicy.ts",
+              "Body/M/pratibimba-app/src/ui/shellSlotPolicy.test.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/31.T31.7.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-c3-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-24T00:08:15.940Z",
+      "runId": "20260724T000815Z-31-T31.7",
       "worktree": null,
       "blocker": null
     },
@@ -25623,6 +25655,26 @@
       "leaseExpiresAt": "2026-07-24T01:57:02.157Z",
       "worktree": null,
       "completedAt": "2026-07-24T00:02:10.405Z"
+    },
+    {
+      "runId": "20260724T000815Z-30-T30.3",
+      "taskId": "30.T30.3",
+      "status": "done",
+      "startedAt": "2026-07-24T00:08:15.726Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T02:08:15.726Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T00:10:27.676Z"
+    },
+    {
+      "runId": "20260724T000815Z-31-T31.7",
+      "taskId": "31.T31.7",
+      "status": "done",
+      "startedAt": "2026-07-24T00:08:15.940Z",
+      "owner": "opus-mdev-c3-impl",
+      "leaseExpiresAt": "2026-07-24T02:08:15.940Z",
+      "worktree": null,
+      "completedAt": "2026-07-24T00:10:27.938Z"
     }
   ],
   "activeRoute": {
