@@ -21,9 +21,6 @@ import { EvidencePacketView } from './EvidencePacketView';
 import { EvidenceDepositForm } from './evidence/EvidenceDepositForm';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
-import { CROSS_LAYOUT_INTENT_COMMAND } from '../../commands/crossLayoutIntent';
-import { commands } from '../../commands/registry';
-import { useSessionStore, useTickStore } from '../../state/stores';
 
 const MEDIATOR_FILTERS = ['all', 'pi', 'anima', 'aletheia'] as const;
 const PRIVACY_FILTERS: readonly (PrivacyClassKind | 'all')[] = ['all', 'public', 'protected', 'private'];
@@ -86,30 +83,6 @@ export function EvidencePanel({
         }
         selectTab('review');
     };
-    /** 26.14 lives on a face pane, not in this membrane, so it routes over the
-     *  cross-layout intent spine rather than by activating a sibling fold. */
-    const onOpenAxiomTranslation = () => {
-        if (!selected) {
-            return;
-        }
-        const session = useSessionStore.getState();
-        const privacyClass = session.privacyClass;
-        void commands.execute(CROSS_LAYOUT_INTENT_COMMAND, {
-            coordinate: selected.coordinate,
-            artifactUri: null,
-            reviewId: selected.reviewId,
-            dayNow: session.dayNow,
-            sessionKey: session.sessionKey,
-            profileGeneration: useTickStore.getState().generation,
-            privacyClass:
-                privacyClass === 'public' || privacyClass === 'protected' || privacyClass === 'private'
-                    ? privacyClass
-                    : null,
-            requestedExtensionId: 'm5-epii',
-            requestedContributionId: 'axiomTranslation'
-        });
-    };
-
     return (
         <section className="evidence-panel" data-testid="evidence-panel">
             <header className="evidence-header" data-testid="evidence-header">
@@ -171,7 +144,6 @@ export function EvidencePanel({
                     packet={selected}
                     onOpenDispatchTrace={onOpenDispatchTrace}
                     onOpenToolStream={onOpenToolStream}
-                    onOpenAxiomTranslation={onOpenAxiomTranslation}
                     onOpenContemplation={onOpenContemplation}
                 />
             )}

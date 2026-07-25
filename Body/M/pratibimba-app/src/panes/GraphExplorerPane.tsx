@@ -23,7 +23,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import ForceGraph from 'force-graph';
 import { gateway } from '../bridge/gatewayHolder';
 import { useCoordinateStore, useProvenanceStore } from '../state/stores';
-import { coerceLinks, coerceNodes, etymologicalClusterIds, ExplorerNode, FAMILY_HUES } from './graphData';
+import { coerceLinks, coerceNodes, etymologicalClusterIds, ExplorerLink, ExplorerNode, FAMILY_HUES } from './graphData';
 import { M0LayerRail } from './M0LayerRail';
 import { M0InspectorLayer } from './m0Layers';
 import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
@@ -42,8 +42,26 @@ import { ATELIER_CLUSTER_HUES, inkDim, ringLit } from '../ui/tokens';
 
 const NODES_CYPHER =
     'MATCH (n:Bimba) RETURN n.coordinate AS coordinate, n.label AS label LIMIT 900';
+/** 28.T28.3 (c) / DR-IG-1: the three options the brief names. */
+export const RELATION_FAMILY_FILTERS = ['all', 'structural', 'correspondential'] as const;
+export type RelationFamilyFilterValue = (typeof RELATION_FAMILY_FILTERS)[number];
+
+/** Does this edge survive the active filter? `all` keeps everything, including
+ *  `unclassified` — a filter must narrow to a family, never quietly drop the
+ *  edges the graph left unclassified. */
+export function edgePassesRelationFamily(
+    link: Pick<ExplorerLink, 'family'>,
+    filter: RelationFamilyFilterValue
+): boolean {
+    return filter === 'all' || link.family === filter;
+}
+
 const LINKS_CYPHER =
-    'MATCH (a:Bimba)-[r]->(b:Bimba) RETURN a.coordinate AS source, type(r) AS type, b.coordinate AS target LIMIT 2500';
+        'MATCH (a:Bimba)-[r]->(b:Bimba) RETURN a.coordinate AS source, type(r) AS type, ' +
+    // 28.T28.3 / DR-IG-1: the edge family must come FROM the graph — selecting
+    // it here is what makes the relation-family filter honest rather than a
+    // locally-guessed partition of relation types.
+    'r.c_1_relation_family AS c_1_relation_family, b.coordinate AS target LIMIT 2500';
 export interface GraphExplorerPaneProps {
     requestedM0Contribution?: string | null;
     requestedAtelierTerm?: string | null;
@@ -66,6 +84,10 @@ export function GraphExplorerPane({
     const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error'>('loading');
     const [detail, setDetail] = useState('');
     const [atelierClusterCount, setAtelierClusterCount] = useState<number | null>(null);
+    // 28.T28.3 (c) / DR-IG-1: the three-option edge partition. `all` shows every
+    // edge INCLUDING unclassified ones — filtering to a family must never
+    // silently hide edges the graph simply never classified.
+    const [relationFamilyFilter, setRelationFamilyFilter] = useState<RelationFamilyFilterValue>('all');
     const [selectedSymbolicQuestion, setSelectedSymbolicQuestion] = useState<string | null>(null);
     const [languageSubtab, setLanguageSubtab] = useState<'reader' | 'browser'>('reader');
     const selectedCoordinate = useCoordinateStore(state => state.selected);
@@ -92,8 +114,9 @@ export function GraphExplorerPane({
                 }
                 const nodes = coerceNodes(nodesReceipt.artifact);
                 const ids = new Set(nodes.map(n => n.id));
-                const links = coerceLinks(linksReceipt.artifact, ids);
-                const atelierClusters = etymologicalClusterIds(links);
+                const allLinks = coerceLinks(linksReceipt.artifact, ids);
+                const links = allLinks.filter(link => edgePassesRelationFamily(link, relationFamilyFilter));
+                const atelierClusters = etymologicalClusterIds(allLinks);
                 setAtelierClusterCount(new Set(atelierClusters.values()).size);
                 if (nodes.length === 0) {
                     setStatus('empty');
@@ -101,7 +124,11 @@ export function GraphExplorerPane({
                     return;
                 }
                 setStatus('ready');
-                setDetail(`${nodes.length} nodes · ${links.length} relations`);
+                setDetail(
+                    relationFamilyFilter === 'all'
+                        ? `${nodes.length} nodes · ${links.length} relations`
+                        : `${nodes.length} nodes · ${links.length} of ${allLinks.length} relations (${relationFamilyFilter})`
+                );
                 const graph = new ForceGraph(host)
                     .graphData({ nodes, links })
                     .nodeId('id')
@@ -121,6 +148,11 @@ export function GraphExplorerPane({
                     })
                     .nodeRelSize(4)
                     .linkColor((link: unknown) => /etymolog|cognate/i.test((link as { type?: string }).type ?? '') ? 'rgba(199, 132, 255, 0.75)' : 'rgba(154, 143, 184, 0.25)')
+                    // DR-IG-1: structural reads solid, correspondential dashed —
+                    // the family is legible without opening the filter.
+                    .linkLineDash((link: unknown) =>
+                        (link as ExplorerLink).family === 'correspondential' ? [4, 3] : null
+                    )
                     .backgroundColor('rgba(0,0,0,0)')
                     .onNodeClick((node: unknown) => {
                         useCoordinateStore.getState().setSelected((node as ExplorerNode).id);
@@ -148,7 +180,7 @@ export function GraphExplorerPane({
             graphRef.current?._destructor?.();
             graphRef.current = null;
         };
-    }, [connected, requestedAtelierTerm]);
+    }, [connected, requestedAtelierTerm, relationFamilyFilter]);
 
     if (!connected) {
         return <div className="pane-message">Gateway disconnected — the map needs S2.</div>;
@@ -160,7 +192,22 @@ export function GraphExplorerPane({
             data-projection-lens="pratibimba.daily.atelier-cluster-lens"
             data-atelier-clusters={atelierClusterCount ?? undefined}
             data-atelier-term={requestedAtelierTerm ?? undefined}
+            data-relation-family-filter={relationFamilyFilter}
         >
+            <div className="graph-relation-family-filter" data-testid="relation-family-filter">
+                <span className="graph-filter-label">Relations</span>
+                {RELATION_FAMILY_FILTERS.map(value => (
+                    <button
+                        key={value}
+                        type="button"
+                        data-testid={`relation-family-${value}`}
+                        aria-pressed={relationFamilyFilter === value}
+                        onClick={() => setRelationFamilyFilter(value)}
+                    >
+                        {value}
+                    </button>
+                ))}
+            </div>
             <M0LayerRail
                 activeLayer={m0Surface.activeLayer}
                 requestedLayer={requestedM0Contribution ? M0_INTENT_LAYERS[requestedM0Contribution] : null}
@@ -241,7 +288,15 @@ export function GraphExplorerPane({
                 <div className="chat-error" data-testid="graph-error">
                     {detail}
                 </div>
-            ) : null}
+            ) : (
+                // 28.T28.3: the surface reports what it is actually showing —
+                // with a family filter active it names the narrowed count AND
+                // the whole, so a narrowed graph can never be mistaken for a
+                // smaller graph.
+                <div className="graph-explorer-detail" data-testid="graph-explorer-detail">
+                    {detail}
+                </div>
+            )}
             <div ref={hostRef} className="graph-host" />
             <M0ContemplationPromptFooter />
         </div>

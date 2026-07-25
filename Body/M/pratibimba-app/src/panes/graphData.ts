@@ -5,6 +5,11 @@
  *   Family hue discipline per THEIA-UI-PATTERNS §1.3 (carrier-independent).
  */
 
+import {
+    classifyRelationFamily,
+    M0_RELATION_FAMILY_PROPERTY,
+    type M0RelationFamilyKey
+} from './m0RelationFamily';
 import { FAMILY_HUES } from '../ui/tokens';
 
 export interface ExplorerNode {
@@ -17,6 +22,11 @@ export interface ExplorerLink {
     source: string;
     target: string;
     type: string;
+    /** 28.T28.3 / DR-IG-1: the edge's `c_1_relation_family`, READ from the
+     *  graph. `unclassified` when the property is absent — the carrier never
+     *  derives a family from the relation type (m0RelationFamily.ts law). */
+    family: M0RelationFamilyKey;
+    familyProvenance: 'graph' | 'absent';
 }
 
 // Hue values live in the JS token source (Track 30); re-exported so graph
@@ -65,13 +75,18 @@ export function coerceLinks(artifact: unknown, nodeIds: ReadonlySet<string>): Ex
         if (!source || !target || !nodeIds.has(source) || !nodeIds.has(target)) {
             continue;
         }
-        links.push({ source, target, type: typeof row.type === 'string' ? row.type : 'RELATES' });
+        links.push({
+            source,
+            target,
+            type: typeof row.type === 'string' ? row.type : 'RELATES',
+            ...classifyRelationFamily(row[M0_RELATION_FAMILY_PROPERTY])
+        });
     }
     return links;
 }
 
 /** Read-only Atelier lens: components joined by declared etymological relations. */
-export function etymologicalClusterIds(links: readonly ExplorerLink[]): ReadonlyMap<string, number> {
+export function etymologicalClusterIds(links: readonly Pick<ExplorerLink, 'source' | 'target' | 'type'>[]): ReadonlyMap<string, number> {
     const neighbours = new Map<string, Set<string>>();
     for (const link of links) {
         if (!/(etymolog|cognate)/i.test(link.type)) continue;

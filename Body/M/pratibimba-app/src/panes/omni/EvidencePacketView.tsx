@@ -54,14 +54,11 @@ export function EvidencePacketView({
     packet,
     onOpenDispatchTrace,
     onOpenToolStream,
-    onOpenAxiomTranslation,
     onOpenContemplation
 }: {
     readonly packet: MediatedRunEvidencePacket;
     readonly onOpenDispatchTrace?: (dispatchNodeId: string) => void;
     readonly onOpenToolStream?: (packetId: string) => void;
-    /** 26.14 inspector, offered only when the run actually translated axioms. */
-    readonly onOpenAxiomTranslation?: (packetId: string) => void;
     /** 19.7 close-path: the contemplation object this run landed into. */
     readonly onOpenContemplation?: (contemplationObjectRef: string) => void;
 }) {
@@ -159,20 +156,6 @@ export function EvidencePacketView({
                 >
                     View {packet.toolStream.length} tool events →
                 </button>
-
-                {packet.axiomTranslationSteps.length > 0 ? (
-                    <button
-                        type="button"
-                        className="evidence-open-axiom"
-                        data-testid="evidence-open-axiom"
-                        data-cross-link="m5-epii.axiomTranslation"
-                        data-evidence-id={packet.id}
-                        onClick={() => onOpenAxiomTranslation?.(packet.id)}
-                    >
-                        Axiom translation — {packet.axiomTranslationSteps.length} step
-                        {packet.axiomTranslationSteps.length === 1 ? '' : 's'} →
-                    </button>
-                ) : null}
 
                 {packet.contemplationObjectRef ? (
                     <button

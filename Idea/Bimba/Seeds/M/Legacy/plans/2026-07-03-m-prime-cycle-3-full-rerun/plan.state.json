@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T12:42:29.977Z",
+  "updatedAt": "2026-07-25T12:52:36.855Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12990,19 +12990,23 @@
     },
     "26.T26.4": {
       "status": "review",
-      "updatedAt": "2026-07-25T12:42:29.955Z",
+      "updatedAt": "2026-07-25T12:52:14.851Z",
       "claimedAt": "2026-07-25T12:36:47.240Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-25T12:42:29.955Z",
           "text": "AUDIT-EXTEND done; held at review because the UF class cannot be honestly satisfied yet, NOT because the deliverable is incomplete. AUDIT first: most of the 26.4 list was already CARRIED by 27.T27.5 — MediatedRunEvidencePacket is the imported shape (evidenceShapes.ts, no generic EvidenceRecord anywhere), mediatorLabel renders the Pi/Anima/Aletheia-subagent badge, DispatchTraceMiniGraph is inline in the packet view, the privacy-class gate holds, and no-modal is now lint-enforced by 31.T31.8. THREE genuine gaps remained, all of them registered-but-unfired seams, and all three are now closed: (1) contemplationObjectRef existed in the 26.10 shape and was read by NOTHING — the 19.7 close-path now renders 'Contemplation: open viewer →' and routes to the Review fold, which is where ContemplationObjectViewer actually lives (15.2, the tab IS the landing surface); (2) no axiom-translation link existed although PiAxiomTranslationInspector is a live pane — it now appears ONLY when axiomTranslationSteps.length > 0 and routes over the cross-layout intent spine via a new m5-epii/axiomTranslation target (the pane is on a face, not in this membrane, so a fold-activation would have been wrong); (3) the tool-stream link opened the fold but carried nothing — it now emits the brief's verbatim data-cross-link='omnipanel.tool-stream' + data-evidence-id and selects that packet's first tool event, so the same record highlights in both surfaces per the 15.2 cross-link law. GREEN: 11 EvidencePanel tests (5 new, each mounting the real component and asserting the real OmniPanel store — conditional rendering both ways, the review-id and tool-event-id actually carried, non-modal), evidenceShapes 16, catalog AST gate, onboarding ledger; lint-no-modal, lint-import-boundaries, carrier-tokens, honesty-lint all GREEN. WHY REVIEW AND NOT DONE: track 26 is UF class, so the receipt must cite real app-flow proof — and the Evidence fold has NO live packet feed. App.tsx:468 renders <EvidencePanel /> with no packets prop, and the read method does not exist: s5'.epii.deposit.list probes unimplemented and the gateway dispatches only the WRITE path (epi-cli/src/gate/server/dispatch.rs:1662 has s5'.epii.deposit and no list/read sibling). The fold therefore always renders its honest empty state in the running app, so an e2e could only exercise these close-paths by fabricating a packet — the exact banned evidence class this plan set exists to stop. Unblocks the moment a real deposit-read lands (26.10/the deposit path); at that point the e2e is small: deposit a packet, open the Evidence fold, click each close-path, assert the destination fold selected the same record. UNRELATED RED, named per the shared-tree rule: whole-tree app-typecheck is currently failing in six files that are the concurrent Track-24 worker's uncommitted element-register WIP (src/engine/cosmicMath.ts + elementRegisters.ts and their consumers CymaticSpheresSurface, M3DecanChainBreadcrumb, CosmicEngine, solarSystem — Mahabhuta/Alchemical typing). None of this tranche's files appear in that error list."
+        },
+        {
+          "at": "2026-07-25T12:52:14.851Z",
+          "text": "CORRECTION to the prior 26.T26.4 entry — the axiom-translation link claimed there SHIPPED BROKEN and has been reverted. My mistake: I committed after running only a subset of the suite (EvidencePanel/evidenceShapes/catalog/ledger + lints) instead of the full app-test, so I missed two gates that the whole suite runs. They caught a real runtime defect: App.test.tsx proves EVERY cross-layout intent target must resolve to a component actually mounted in a default layout, and PiAxiomTranslationInspector is registered in the App factory switch but is NOT mounted in any default layout — so clicking my 'Axiom translation →' link would have thrown 'cross-layout intent: component piAxiomTranslation is not mounted' (App.tsx:826). A button that throws is worse than no button, so the link, its m5-epii/axiomTranslation target row and its test are removed. The axiom close-path stays a genuine open gap: it needs the inspector mounted in a layout (a shell composition decision, not this tranche's to make). The second gate, crossLayoutIntent.test.ts, pins the target count and would also have caught the row. WHAT REMAINS LANDED AND CORRECT — the two close-paths whose destinations really are mounted OmniPanel folds: (1) 19.7 contemplation — contemplationObjectRef was in the 26.10 shape and read by NOTHING; it now renders 'Contemplation: open viewer →' and routes to the Review fold where ContemplationObjectViewer actually lives, carrying THIS packet's reviewId; (2) the tool-stream link previously opened the fold carrying nothing and now emits the brief's verbatim data-cross-link='omnipanel.tool-stream' + data-evidence-id and selects that packet's own first tool event, so the same record highlights in both surfaces (15.2 cross-link law). The audit half stands: MediatedRunEvidencePacket, the mediator badge, the inline dispatch-trace graph and the privacy gate were all already CARRIED by 27.T27.5. GREEN after the revert: full app vitest 1363 pass / 0 fail (was 2 failing on my defect), app-typecheck clean for these files, lint-no-modal, lint-import-boundaries, carrier-tokens, honesty-lint all GREEN. STILL REVIEW, unchanged reason: track 26 is UF class and the Evidence fold has no live packet feed — App.tsx:468 renders <EvidencePanel /> with no packets and the gateway dispatches only the WRITE path (dispatch.rs:1662; s5'.epii.deposit.list is unimplemented), so the fold always shows its honest empty state and an e2e could only exercise these paths by fabricating a packet. Unblocks when a deposit-read lands."
         }
       ],
       "notes": "claimed with --allow-dirty over 53 dirty files.",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T14:36:47.240Z",
-      "heartbeatAt": "2026-07-25T12:42:29.955Z",
+      "heartbeatAt": "2026-07-25T12:52:14.851Z",
       "runId": "20260725T123647Z-26-T26.4",
       "worktree": null,
       "blocker": null
@@ -13856,16 +13860,21 @@
       "blocker": null
     },
     "28.T28.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-25T12:52:36.831Z",
+      "claimedAt": "2026-07-25T12:42:52.041Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-25T12:52:36.831Z",
+          "text": "AUDIT-EXTEND, partial by design — deliverable (c) landed and proven; (a)/(b)/(d)/(e) recorded as still open. AUDIT against the carrier: the widget shell, the s2.graph.query subgraph fetch, family hues, force-graph rendering (the full-lattice equivalent) and node-click publishing to the shared coordinate store are all CARRIED. The relation-family vocabulary also already existed as real substrate (src/panes/m0RelationFamily.ts) carrying the important law — family is READ from c_1_relation_family or it is 'unclassified', never derived from relation type. THE GAP (c) WAS A BROKEN CHAIN, now closed end to end: LINKS_CYPHER did not even SELECT c_1_relation_family, ExplorerLink had no family field, and coerceLinks dropped it — so the graph could not have filtered by family however the UI was written. The query now selects it, the edge shape carries family + familyProvenance, coerceLinks classifies through a new shared classifyRelationFamily() so the graph and the relations reader obey ONE law rather than two copies, and a three-option filter (all/structural/correspondential per DR-IG-1) narrows the rendered edges. Per DR-IG-1 correspondential edges also render dashed and structural solid, so the family is legible without opening the filter; the surface reports 'N of M relations (family)' when narrowed so a filtered graph can never be misread as a smaller graph. GREEN: full app vitest 1363 pass / 0 fail, incl. 3 new coerceLinks tests (reads the family with graph provenance; does NOT infer one for HAS_INTERNAL_COMPONENT when the property is absent; an out-of-enum value becomes unclassified rather than passing through) and 3 new filter-predicate tests (the three options; 'all' keeps unclassified edges too; each family excludes the others); lint-no-modal, lint-import-boundaries, carrier-tokens, honesty-lint GREEN. UF proof tests/e2e/relation-family-filter.spec.ts PASSES against the REAL spawned gateway: the control is on the live Bimba surface with the brief's three options, pressing one drives data-relation-family-filter + aria-pressed and re-queries, and returning to 'all' restores the reported count. HONEST LIMIT STATED IN THE SPEC ITSELF: this environment's S2 returns 900 :Bimba nodes and ZERO Bimba->Bimba edges — I confirmed that against the ORIGINAL query too, so it predates this tranche and is not caused by selecting the family property. With no live edges there is nothing to narrow, so the spec does NOT claim a non-trivial partition (asserting filtered<=total over 0 edges would pass while proving nothing); the partition law is proven over real inputs in the unit suite and the WIRING is what the e2e proves. The spec title was corrected to say exactly that. WHY REVIEW: only 1 of the brief's 5 deliverables is landed. Still open — (a) RenderingMode solar-anchor/full-lattice switched by the layout preference (needs a new compact SVG neighbour renderer), (b) the extracted GraphCanvas sub-component, (d) the node-click publish already works via the coordinate store but was not re-audited against the 28.6 Coordinate-Tree subscriber, (e) per-binding bridge-gate readiness + the privacyDropped counter (28.11/28.16). Also worth an Architect look: a 900-node graph with zero returned relations is itself a finding about the live S2 data, outside this tranche's scope."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 18 dirty files.",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:42:52.041Z",
+      "heartbeatAt": "2026-07-25T12:52:36.831Z",
+      "runId": "20260725T124252Z-28-T28.3",
       "worktree": null,
       "blocker": null
     },
@@ -26395,6 +26404,16 @@
       "leaseExpiresAt": "2026-07-25T14:36:47.240Z",
       "worktree": null,
       "completedAt": "2026-07-25T12:42:29.955Z"
+    },
+    {
+      "runId": "20260725T124252Z-28-T28.3",
+      "taskId": "28.T28.3",
+      "status": "review",
+      "startedAt": "2026-07-25T12:42:52.041Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:42:52.041Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T12:52:36.831Z"
     }
   ],
   "activeRoute": {

@@ -10,7 +10,7 @@
  *   from the `c_1_relation_family` property. An edge without it (or with an
  *   out-of-enum value) is `unclassified` with `absent` provenance — surfaced,
  *   never guessed from the relation type or shape.
- * Public surface: M0_RELATION_FAMILY_PROPERTY, M0_RELATION_FAMILIES,
+ * Public surface: classifyRelationFamily, M0_RELATION_FAMILY_PROPERTY, M0_RELATION_FAMILIES,
  *   M0RelationFamily, M0RelationEdge, M0RelationFamilyProjection,
  *   buildM0RelationFamilyProjection.
  * Does NOT own: the schema enum authority (Body/S/S2/graph-schema
@@ -66,6 +66,24 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 function asString(value: unknown): string | null {
     return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+/**
+ * Classify ONE raw family value against the schema enum. The single point where
+ * `c_1_relation_family` becomes a typed family, shared by the relations reader
+ * and the graph explorer (28.T28.3) so both obey the same law: a family is READ
+ * or it is `unclassified` — relationType is never used to guess one.
+ */
+export function classifyRelationFamily(familyRaw: unknown): {
+    readonly family: M0RelationFamilyKey;
+    readonly familyProvenance: 'graph' | 'absent';
+} {
+    const value = asString(familyRaw);
+    const classified = value !== null && FAMILY_SET.has(value);
+    return {
+        family: (classified ? (value as M0RelationFamily) : 'unclassified') as M0RelationFamilyKey,
+        familyProvenance: classified ? 'graph' : 'absent'
+    };
 }
 
 /**

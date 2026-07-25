@@ -45,3 +45,37 @@ describe('graph data coercion', () => {
         expect(clusters.has('M3')).toBe(false);
     });
 });
+
+describe('28.T28.3 — relation family rides the graph edge (DR-IG-1)', () => {
+    const ids = new Set(['M0', 'M1']);
+    const row = (family?: unknown) => ({
+        artifact: {
+            rows: [
+                {
+                    source: 'M0',
+                    target: 'M1',
+                    type: 'HAS_INTERNAL_COMPONENT',
+                    ...(family === undefined ? {} : { c_1_relation_family: family })
+                }
+            ]
+        }
+    });
+
+    it('READS the family from c_1_relation_family, with graph provenance', () => {
+        const [link] = coerceLinks(row('structural').artifact, ids);
+        expect(link.family).toBe('structural');
+        expect(link.familyProvenance).toBe('graph');
+    });
+
+    it('never INFERS a family from the relation type — absent stays unclassified', () => {
+        const [link] = coerceLinks(row().artifact, ids);
+        expect(link.family, 'HAS_INTERNAL_COMPONENT must not be guessed structural').toBe('unclassified');
+        expect(link.familyProvenance).toBe('absent');
+    });
+
+    it('treats an out-of-enum family as unclassified rather than passing it through', () => {
+        const [link] = coerceLinks(row('made-up-family').artifact, ids);
+        expect(link.family).toBe('unclassified');
+        expect(link.familyProvenance).toBe('absent');
+    });
+});
