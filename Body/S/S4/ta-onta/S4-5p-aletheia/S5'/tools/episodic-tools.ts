@@ -13,8 +13,8 @@
  *
  * @contract     Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md
  */
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 
 function defaultVaultRoot() {
@@ -53,6 +53,8 @@ export function registerEpisodicTools(api: ExtensionAPI) {
       );
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `moirai_arena_distill failed: ${result.stderr || result.stdout || "non-zero exit"}`,
@@ -65,6 +67,8 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         receipt = JSON.parse(result.stdout);
       } catch {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `moirai_arena_distill returned non-JSON: ${result.stdout}` }],
           isError: true,
         };
@@ -103,11 +107,15 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         });
         const body = await resp.json() as { status: string; name?: string };
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: body.status === "ok" ? `episode recorded: ${body.name ?? ""}` : JSON.stringify(body) }],
           isError: body.status !== "ok",
         };
       } catch (e) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `graphiti sidecar unreachable: ${e}. Start with: epi gate graphiti start` }],
           isError: true,
         };
@@ -147,10 +155,14 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         const resp = await fetch(`${graphitiBase}/search?${urlParams}`, { signal: AbortSignal.timeout(15_000) });
         const body = await resp.json() as { results: unknown[]; cache?: string };
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: JSON.stringify(body.results, null, 2) }],
         };
       } catch (e) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `graphiti search failed: ${e}` }],
           isError: true,
         };
@@ -189,11 +201,15 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         });
         const body = await resp.json() as { status: string; arc_id?: string };
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: body.status === "ok" ? `arc opened: ${body.arc_id}` : JSON.stringify(body) }],
           isError: body.status !== "ok",
         };
       } catch (e) {
-        return { content: [{ type: "text", text: `arc open failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `arc open failed: ${e}` }], isError: true };
       }
     },
   });
@@ -218,11 +234,15 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         });
         const body = await resp.json() as { status: string; arc_id?: string };
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: body.status === "ok" ? `arc closed: ${body.arc_id}` : JSON.stringify(body) }],
           isError: body.status !== "ok",
         };
       } catch (e) {
-        return { content: [{ type: "text", text: `arc close failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `arc close failed: ${e}` }], isError: true };
       }
     },
   });
@@ -239,9 +259,13 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         const urlParams = params.group_id ? `?group_id=${params.group_id}` : "";
         const resp = await fetch(`http://localhost:37778/stats${urlParams}`, { signal: AbortSignal.timeout(10_000) });
         const body = await resp.json();
-        return { content: [{ type: "text", text: JSON.stringify(body, null, 2) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(body, null, 2) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `arc status failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `arc status failed: ${e}` }], isError: true };
       }
     },
   });
@@ -311,9 +335,13 @@ export function registerEpisodicTools(api: ExtensionAPI) {
           signal: AbortSignal.timeout(8000),
         });
 
-        return { content: [{ type: "text", text: `oracle arc recorded: ${arcId}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `oracle arc recorded: ${arcId}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `oracle arc failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `oracle arc failed: ${e}` }], isError: true };
       }
     },
   });
@@ -378,9 +406,13 @@ export function registerEpisodicTools(api: ExtensionAPI) {
           });
         }
 
-        return { content: [{ type: "text", text: `logos stage ${params.stage} (${stageNames[params.stage]}) recorded in ${arcId}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `logos stage ${params.stage} (${stageNames[params.stage]}) recorded in ${arcId}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `logos stage failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `logos stage failed: ${e}` }], isError: true };
       }
     },
   });
@@ -411,7 +443,9 @@ export function registerEpisodicTools(api: ExtensionAPI) {
             signal: AbortSignal.timeout(8000),
           });
           const body = await resp.json() as { status: string };
-          return { content: [{ type: "text", text: body.status === "ok" ? `möbius arc opened: ${arcId}` : JSON.stringify(body) }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: body.status === "ok" ? `möbius arc opened: ${arcId}` : JSON.stringify(body) }] };
         } else {
           const resp = await fetch(`${graphitiBase}/arc/close`, {
             method: "POST",
@@ -420,10 +454,14 @@ export function registerEpisodicTools(api: ExtensionAPI) {
             signal: AbortSignal.timeout(8000),
           });
           const body = await resp.json() as { status: string };
-          return { content: [{ type: "text", text: body.status === "ok" ? `möbius arc closed: ${arcId}` : JSON.stringify(body) }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: body.status === "ok" ? `möbius arc closed: ${arcId}` : JSON.stringify(body) }] };
         }
       } catch (e) {
-        return { content: [{ type: "text", text: `möbius arc failed: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `möbius arc failed: ${e}` }], isError: true };
       }
     },
   });
@@ -513,7 +551,9 @@ export function registerEpisodicTools(api: ExtensionAPI) {
         buckets.includes("T5") ? `T5 insights: ${t5Count} - Möbius readiness: ${mobiusReady ? "READY" : "not yet (need >=3 T5 insights)"}` : "",
       ].filter(Boolean).join("\n");
 
-      return { content: [{ type: "text", text: summary }], isError: ingested.length === 0 && failed.length > 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: summary }], isError: ingested.length === 0 && failed.length > 0 };
     },
   });
 }

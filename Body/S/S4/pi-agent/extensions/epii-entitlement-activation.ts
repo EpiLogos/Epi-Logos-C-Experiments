@@ -352,7 +352,9 @@ async function installSkillLookupPrimitive(input: {
 					const max_results =
 						typeof params?.max_results === "number" ? params.max_results : undefined;
 					const results = await skillLookup.skill_lookup(query, max_results);
-					return { content: [{ type: "text", text: JSON.stringify(results) }] };
+					return {
+						// pi requires a details payload; this tool returns none.
+						details: undefined, content: [{ type: "text", text: JSON.stringify(results) }] };
 				},
 			});
 		}

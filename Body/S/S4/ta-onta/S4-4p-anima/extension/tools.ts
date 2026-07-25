@@ -5,8 +5,8 @@
 // (with nous_disclose registered between arena-orchestrate and the
 // parallel-dispatch family, exactly as before the split).
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { runEpi } from "./dispatch.ts";
 import { registerAnimaDispatchTools } from "./dispatch-tools.ts";
 import { registerNousDiscloseTool } from "./nous-disclose.ts";
@@ -27,7 +27,9 @@ export function registerAnimaTools(api: ExtensionAPI) {
         args.push("--json");
       }
       const result = runEpi(args);
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -51,6 +53,8 @@ export function registerAnimaTools(api: ExtensionAPI) {
       if (params.day_id) args.push("--day-id", params.day_id);
       const result = runEpi(args, 30_000);
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
         isError: result.status !== 0,
       };

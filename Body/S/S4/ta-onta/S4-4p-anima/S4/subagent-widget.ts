@@ -12,14 +12,14 @@
  *   /subclear                              — clear all subagent widgets
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { DynamicBorder } from "@mariozechner/pi-coding-agent";
-import { Container, Text } from "@mariozechner/pi-tui";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { DynamicBorder } from "@earendil-works/pi-coding-agent";
+import { Container, Text } from "@earendil-works/pi-tui";
+import { Type } from "typebox";
 const { spawn, spawnSync } = require("child_process") as any;
 import * as fs from "fs";
 import * as path from "path";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
 
 interface SubState {
 	id: number;
@@ -167,7 +167,7 @@ export default function (pi: ExtensionAPI) {
 				stderr += chunk;
 			});
 
-			proc.on("close", (code) => {
+			proc.on("close", (code: number | null) => {
 				clearInterval(timer);
 				let payload: any = null;
 				try {
@@ -197,7 +197,7 @@ export default function (pi: ExtensionAPI) {
 				resolve();
 			});
 
-			proc.on("error", (err) => {
+			proc.on("error", (err: Error) => {
 				clearInterval(timer);
 				state.status = "error";
 				state.proc = undefined;
@@ -212,6 +212,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerTool({
 		name: "subagent_create",
+		label: "Subagent Create",
 		description: "Spawn a background subagent to perform a task. Returns the subagent ID immediately while it runs in the background. Results will be delivered as a follow-up message when finished.",
 		parameters: Type.Object({
 			task: Type.String({ description: "The complete task description for the subagent to perform" }),
@@ -236,6 +237,8 @@ export default function (pi: ExtensionAPI) {
 			spawnAgent(state, args.task, ctx);
 
 			return {
+				// pi requires a details payload; this tool returns none.
+				details: undefined,
 				content: [{ type: "text", text: `Subagent #${id} spawned and running in background.` }],
 			};
 		},
@@ -243,6 +246,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerTool({
 		name: "subagent_continue",
+		label: "Subagent Continue",
 		description: "Continue an existing subagent's conversation. Use this to give further instructions to a finished subagent. Returns immediately while it runs in the background.",
 		parameters: Type.Object({
 			id: Type.Number({ description: "The ID of the subagent to continue" }),
@@ -252,10 +256,14 @@ export default function (pi: ExtensionAPI) {
 			widgetCtx = ctx;
 			const state = agents.get(args.id);
 			if (!state) {
-				return { content: [{ type: "text", text: `Error: No subagent #${args.id} found.` }] };
+				return {
+					// pi requires a details payload; this tool returns none.
+					details: undefined, content: [{ type: "text", text: `Error: No subagent #${args.id} found.` }] };
 			}
 			if (state.status === "running") {
-				return { content: [{ type: "text", text: `Error: Subagent #${args.id} is still running.` }] };
+				return {
+					// pi requires a details payload; this tool returns none.
+					details: undefined, content: [{ type: "text", text: `Error: Subagent #${args.id} is still running.` }] };
 			}
 
 			state.status = "running";
@@ -269,6 +277,8 @@ export default function (pi: ExtensionAPI) {
 			spawnAgent(state, args.prompt, ctx);
 
 			return {
+				// pi requires a details payload; this tool returns none.
+				details: undefined,
 				content: [{ type: "text", text: `Subagent #${args.id} continuing conversation in background.` }],
 			};
 		},
@@ -276,6 +286,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerTool({
 		name: "subagent_remove",
+		label: "Subagent Remove",
 		description: "Remove a specific subagent. Kills it if it's currently running.",
 		parameters: Type.Object({
 			id: Type.Number({ description: "The ID of the subagent to remove" }),
@@ -284,7 +295,9 @@ export default function (pi: ExtensionAPI) {
 			widgetCtx = ctx;
 			const state = agents.get(args.id);
 			if (!state) {
-				return { content: [{ type: "text", text: `Error: No subagent #${args.id} found.` }] };
+				return {
+					// pi requires a details payload; this tool returns none.
+					details: undefined, content: [{ type: "text", text: `Error: No subagent #${args.id} found.` }] };
 			}
 
 			if (state.proc && state.status === "running") {
@@ -300,6 +313,8 @@ export default function (pi: ExtensionAPI) {
 			agents.delete(args.id);
 
 			return {
+				// pi requires a details payload; this tool returns none.
+				details: undefined,
 				content: [{ type: "text", text: `Subagent #${args.id} removed successfully.` }],
 			};
 		},
@@ -307,6 +322,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerTool({
 		name: "subagent_list",
+		label: "Subagent List",
 		description: "List all active and finished subagents, showing their IDs, tasks, and status.",
 		parameters: Type.Object({}),
 		execute: async (_callId, _args, _signal, _onUpdate, ctx) => {
@@ -315,20 +331,26 @@ export default function (pi: ExtensionAPI) {
 				cwd: process.env.EPI_REPO_ROOT || ctx.cwd || process.cwd(),
 			});
 			if (result.status !== 0) {
-				return { content: [{ type: "text", text: result.stderr || result.stdout || "subagent list failed" }] };
+				return {
+					// pi requires a details payload; this tool returns none.
+					details: undefined, content: [{ type: "text", text: result.stderr || result.stdout || "subagent list failed" }] };
 			}
 			let sessions: any[] = [];
 			try {
 				sessions = JSON.parse(result.stdout).sessions || [];
 			} catch {}
 			if (sessions.length === 0) {
-				return { content: [{ type: "text", text: "No active subagents." }] };
+				return {
+					// pi requires a details payload; this tool returns none.
+					details: undefined, content: [{ type: "text", text: "No active subagents." }] };
 			}
 			const list = sessions.map((s) =>
 				`${s.sessionKey} [${String(s.status || "tracked").toUpperCase()}] ${s.agentId || "vak"}`
 			).join("\n");
 
 			return {
+				// pi requires a details payload; this tool returns none.
+				details: undefined,
 				content: [{ type: "text", text: `Subagents:\n${list}` }],
 			};
 		},
@@ -471,7 +493,7 @@ export default function (pi: ExtensionAPI) {
 			const msg = total === 0
 				? "No subagents to clear."
 				: `Cleared ${total} subagent${total !== 1 ? "s" : ""}${killed > 0 ? ` (${killed} killed)` : ""}.`;
-			ctx.ui.notify(msg, total === 0 ? "info" : "success");
+			ctx.ui.notify(msg, "info");
 		},
 	});
 

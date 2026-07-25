@@ -15,7 +15,7 @@
  *   Runtime validation policy for Anima, ACR, or e2e harness consumers.
  */
 
-import { Type, type Static } from "@sinclair/typebox";
+import { Type, type Static } from "typebox";
 
 const StringArraySchema = Type.Array(Type.String());
 const UnknownRecordSchema = Type.Record(Type.String(), Type.Unknown());

@@ -13,8 +13,8 @@
  *
  * @contract     Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md
  */
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
@@ -46,11 +46,15 @@ export function registerGnosisTools(api: ExtensionAPI) {
       const result = spawnSync("epi", args, { encoding: "utf8", timeout: 120_000 });
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `gnosis ingest failed: ${result.stderr || result.stdout}` }],
           isError: true,
         };
       }
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
       };
     },
@@ -74,11 +78,15 @@ export function registerGnosisTools(api: ExtensionAPI) {
       const result = spawnSync("epi", args, { encoding: "utf8", timeout: 30_000 });
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `gnosis query failed: ${result.stderr || result.stdout}` }],
           isError: true,
         };
       }
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
       };
     },
@@ -99,6 +107,8 @@ export function registerGnosisTools(api: ExtensionAPI) {
       const args = ["techne", "gnosis", "notebook", "create", notebookName];
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || `notebook create: ${notebookName}` }],
         isError: result.status !== 0,
       };
@@ -120,6 +130,8 @@ export function registerGnosisTools(api: ExtensionAPI) {
       if (params.family) args.push("--family", params.family);
       const result = spawnSync("epi", args, { encoding: "utf8", timeout: 30_000 });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "enriched" }],
         isError: result.status !== 0,
       };
@@ -134,6 +146,8 @@ export function registerGnosisTools(api: ExtensionAPI) {
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["techne", "gnosis", "status"], { encoding: "utf8", timeout: 15_000 });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "status unavailable" }],
         isError: result.status !== 0,
       };

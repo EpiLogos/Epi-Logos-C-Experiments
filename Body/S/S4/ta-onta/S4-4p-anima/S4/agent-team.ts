@@ -17,13 +17,13 @@
  * Usage: pi -e extensions/agent-team.ts
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { Text, type AutocompleteItem, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { Text, type AutocompleteItem, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { readdirSync, readFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "node:url";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
 import {
 	validateDispatchParams,
 	dispatchGuardrails,
@@ -820,7 +820,7 @@ ${agentCatalog}`,
 			render(width: number): string[] {
 				const model = _ctx.model?.id || "no-model";
 				const usage = _ctx.getContextUsage();
-				const pct = usage ? usage.percent : 0;
+				const pct = usage?.percent ?? 0;
 				const filled = Math.round(pct / 10);
 				const bar = "#".repeat(filled) + "-".repeat(10 - filled);
 

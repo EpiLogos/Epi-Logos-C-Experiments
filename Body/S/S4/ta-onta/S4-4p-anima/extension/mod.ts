@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import registerAgentTeam from "../S4/agent-team.ts";
 import registerAgentChain from "../S4/agent-chain.ts";
 import registerSubagentWidget from "../S4/subagent-widget.ts";

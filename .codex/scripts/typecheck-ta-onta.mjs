@@ -15,17 +15,15 @@
  * Both were invisible to the existing gate. This closes that hole.
  *
  * ── What it checks ────────────────────────────────────────────────────────
- * Every `.ts` under `Body/S/S4` whose transitive import closure is node
- * builtins and relative paths only — the dependency-free logic layer, which is
- * where the invariants actually live (entitlement, VakAddress, the orchestration
- * surface, dispatch, the score store, the completion gate).
+ * Every `.ts` under `Body/S/S4` whose transitive import closure RESOLVES —
+ * node builtins, relative paths, and any package actually installed in
+ * `Body/S/S4/node_modules`. Since the pi runtime packages are now devDeps there,
+ * that includes the extension entry points, not just the pure logic layer.
  *
- * Files that import the pi runtime packages are EXCLUDED and listed by name on
- * every run. They cannot be checked here: the tree imports `@mariozechner/pi-*`
- * while the installed harness is the renamed `@earendil-works/pi-*`, so those
- * specifiers do not resolve to types at all. The exclusion is printed rather
- * than silent — a shrinking gate should be visible, and if a pure module gains
- * a pi import it drops out of coverage and this run says so.
+ * Coverage therefore grows by installing a package rather than by editing a
+ * list here. Anything still unresolvable is EXCLUDED and printed by name with
+ * the package that excluded it — never silently dropped, so a shrinking gate is
+ * visible in the run output.
  *
  * Carrier directories are reached ONLY by their canonical `S4-<n>p-<name>`
  * path; `ta-onta/{khora,hen,pleroma,chronos,anima,aletheia}` are symlinks to
@@ -57,6 +55,29 @@ const NODE_BUILTINS = new Set([
 
 const isBuiltin = (spec) => spec.startsWith("node:") || NODE_BUILTINS.has(spec);
 const isRelative = (spec) => spec.startsWith(".") || spec.startsWith("/");
+
+const NODE_MODULES = join(REPO_ROOT, "Body", "S", "S4", "node_modules");
+
+/** The package a bare specifier belongs to (`typebox/value` -> `typebox`). */
+function packageOf(spec) {
+	const parts = spec.split("/");
+	return spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0];
+}
+
+/**
+ * Is this package installed for the gate?
+ *
+ * Resolvability — not a hand-kept allow-list — is what decides coverage, so
+ * `pnpm add -D <pkg>` is the whole procedure for bringing more files in.
+ */
+const resolvableCache = new Map();
+function isResolvable(spec) {
+	const pkg = packageOf(spec);
+	if (!resolvableCache.has(pkg)) {
+		resolvableCache.set(pkg, existsSync(join(NODE_MODULES, ...pkg.split("/"))));
+	}
+	return resolvableCache.get(pkg);
+}
 
 /** Collect `.ts` files, never descending into a symlinked directory. */
 function collect(dir, out = []) {
@@ -102,26 +123,29 @@ function resolveRelative(from, spec) {
 	return null;
 }
 
-/** External packages a file depends on, transitively through relative imports. */
+/**
+ * Packages a file needs that are NOT resolvable, transitively through relative
+ * imports. Empty means the file can be type-checked.
+ */
 const closureCache = new Map();
-function externalClosure(file, seen = new Set()) {
+function unresolvableClosure(file, seen = new Set()) {
 	if (closureCache.has(file)) return closureCache.get(file);
 	if (seen.has(file)) return new Set();
 	seen.add(file);
 
-	const external = new Set();
+	const missing = new Set();
 	for (const spec of importsOf(file)) {
 		if (isBuiltin(spec)) continue;
 		if (!isRelative(spec)) {
-			external.add(spec);
+			if (!isResolvable(spec)) missing.add(packageOf(spec));
 			continue;
 		}
 		const target = resolveRelative(file, spec);
-		if (target) for (const pkg of externalClosure(target, seen)) external.add(pkg);
+		if (target) for (const pkg of unresolvableClosure(target, seen)) missing.add(pkg);
 	}
 
-	if (seen.size === 1) closureCache.set(file, external);
-	return external;
+	if (seen.size === 1) closureCache.set(file, missing);
+	return missing;
 }
 
 // ── Partition ─────────────────────────────────────────────────────────────
@@ -130,22 +154,26 @@ const files = collect(SCAN_ROOT).sort();
 const checked = [];
 const excluded = [];
 for (const file of files) {
-	const external = externalClosure(file);
-	if (external.size === 0) checked.push(file);
-	else excluded.push({ file, external: [...external].sort() });
+	const missing = unresolvableClosure(file);
+	if (missing.size === 0) checked.push(file);
+	else excluded.push({ file, external: [...missing].sort() });
 }
 
 const rel = (p) => relative(REPO_ROOT, p);
 
 console.log(`[typecheck-ta-onta] ${files.length} .ts under Body/S/S4 (symlinked carrier aliases skipped)`);
-console.log(`[typecheck-ta-onta] type-checking ${checked.length} dependency-free file(s)`);
+console.log(`[typecheck-ta-onta] type-checking ${checked.length} file(s) with resolvable imports`);
 
 // No silent caps: say exactly what is not covered, and why.
 const byPackage = new Map();
 for (const { external } of excluded) {
 	for (const pkg of external) byPackage.set(pkg, (byPackage.get(pkg) ?? 0) + 1);
 }
-console.log(`[typecheck-ta-onta] NOT covered: ${excluded.length} pi-facing file(s), excluded by:`);
+if (excluded.length === 0) {
+	console.log("[typecheck-ta-onta] NOT covered: none — every file's imports resolve");
+} else {
+	console.log(`[typecheck-ta-onta] NOT covered: ${excluded.length} file(s), excluded by unresolvable package:`);
+}
 for (const [pkg, count] of [...byPackage].sort((a, b) => b[1] - a[1])) {
 	console.log(`[typecheck-ta-onta]   ${String(count).padStart(3)}  ${pkg}`);
 }
@@ -206,7 +234,7 @@ const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
 const errorLines = output.split("\n").filter((line) => /error TS\d+/.test(line));
 
 if (errorLines.length === 0 && result.status === 0) {
-	console.log(`[typecheck-ta-onta] GREEN — ${checked.length} file(s), 0 type errors`);
+	console.log(`[typecheck-ta-onta] GREEN — ${checked.length}/${files.length} file(s), 0 type errors`);
 	process.exit(0);
 }
 

@@ -13,8 +13,8 @@
  *
  * @contract     Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md
  */
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { buildQProposalGraphitiEpisode } from "../../modules/q-proposal-candidate.ts";
 import {
@@ -242,6 +242,8 @@ export function registerThoughtTools(api: ExtensionAPI) {
       }
 
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: `Promoted ${promoted.length} observations from ${params.session_ids.length} sessions.\n` +
@@ -293,9 +295,13 @@ export function registerThoughtTools(api: ExtensionAPI) {
       }
       const result = spawnSync("epi", args, { encoding: "utf8" });
       if (result.status !== 0) {
-        return { content: [{ type: "text", text: `thought-route failed: ${result.stderr}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `thought-route failed: ${result.stderr}` }], isError: true };
       }
-      return { content: [{ type: "text", text: result.stdout }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout }] };
     },
   });
 }

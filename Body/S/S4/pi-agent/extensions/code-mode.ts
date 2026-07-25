@@ -17,8 +17,8 @@
 
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import {
 	BRIDGE_IMPORT_LINE,
 	callableToolNames,
@@ -184,6 +184,8 @@ export async function main(api: ExtensionAPI) {
 				.join("\n");
 
 			return {
+				// pi requires a details payload; this tool returns none.
+				details: undefined,
 				content: [{ type: "text" as const, text }],
 				isError: !run.ok,
 			};

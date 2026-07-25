@@ -4,8 +4,8 @@
 // anima tool that owns a Gnosis-ingest seam, so it lives apart from the
 // dispatch family.
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { runEpi } from "./dispatch.ts";
 
@@ -88,6 +88,8 @@ export function registerNousDiscloseTool(api: ExtensionAPI) {
       const createNotebook = runEpi(["techne", "gnosis", "notebook", "create", notebookName], 30_000);
       if (createNotebook.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: createNotebook.stderr || createNotebook.stdout || "notebook creation failed" }],
           isError: true,
         };
@@ -99,6 +101,8 @@ export function registerNousDiscloseTool(api: ExtensionAPI) {
       );
 
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [
           {
             type: "text",

@@ -1,5 +1,5 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { createHash } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -48,6 +48,8 @@ export async function henExtension(api: ExtensionAPI) {
               body: params.body,
             });
             return {
+              // pi requires a details payload; this tool returns none.
+              details: undefined,
               content: [{ type: "text", text }],
               isError: false,
             };
@@ -62,6 +64,8 @@ export async function henExtension(api: ExtensionAPI) {
       if (params.now_override) args.push("--now", params.now_override);
       const render = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: render.stdout || render.stderr }],
         isError: render.status !== 0,
       };
@@ -81,7 +85,9 @@ export async function henExtension(api: ExtensionAPI) {
       const args = ["vault", "frontmatter-validate", params.note];
       if (params.vault) args.push("--vault", params.vault);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -100,6 +106,8 @@ export async function henExtension(api: ExtensionAPI) {
         "vault", "frontmatter-set", params.file, params.key, params.value,
       ], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || `set ${params.key}=${params.value}` }],
         isError: result.status !== 0,
       };
@@ -125,6 +133,8 @@ export async function henExtension(api: ExtensionAPI) {
         const pathResult = spawnSync("epi", ["vault", "now-path", "--session-id", params.session_id], { encoding: "utf8" });
         if (pathResult.status !== 0) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{ type: "text", text: pathResult.stderr || "now-path resolution failed" }],
             isError: true,
           };
@@ -137,7 +147,9 @@ export async function henExtension(api: ExtensionAPI) {
         args = ["tasks", "daily"];
       }
       const result = spawnSync("obsidian-cli", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no tasks found)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no tasks found)" }] };
     },
   });
 
@@ -157,6 +169,8 @@ export async function henExtension(api: ExtensionAPI) {
         "task", `file="${params.file}"`, `line=${params.line}`, action,
       ], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || `task line ${params.line} ${action}d` }],
         isError: result.status !== 0,
       };
@@ -177,7 +191,9 @@ export async function henExtension(api: ExtensionAPI) {
       const args = ["search", `query="${params.query}"`, `limit=${params.limit ?? 20}`];
       if (params.path) args.push(`path="${params.path}"`);
       const result = spawnSync("obsidian-cli", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no results)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no results)" }] };
     },
   });
 
@@ -207,6 +223,8 @@ export async function henExtension(api: ExtensionAPI) {
       }
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "link candidate lookup unavailable" }],
         isError: result.status !== 0,
       };
@@ -241,11 +259,15 @@ export async function henExtension(api: ExtensionAPI) {
         }
 
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: JSON.stringify(receipt, null, 2) }],
           isError: false,
         };
       } catch (error) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `arena-promotion intake refused: ${error}` }],
           isError: true,
         };
@@ -263,7 +285,9 @@ export async function henExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("obsidian-cli", ["backlinks", `file="${params.file}"`], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no backlinks)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no backlinks)" }] };
     },
   });
 
@@ -283,7 +307,9 @@ export async function henExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       if (!params.query && !params.path) {
-        return { content: [{ type: "text", text: "hen_hybrid_retrieve requires query or path" }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: "hen_hybrid_retrieve requires query or path" }], isError: true };
       }
       const vaultHits = params.query
         ? spawnSync("obsidian-cli", ["search", `query="${params.query}"`, `limit=${params.limit ?? 10}`], { encoding: "utf8" }).stdout?.trim() || "(no vault results)"
@@ -304,6 +330,8 @@ export async function henExtension(api: ExtensionAPI) {
         : null;
 
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: [vaultHits ? "=== Vault (obsidian search) ===" : "", vaultHits,
@@ -326,6 +354,8 @@ export async function henExtension(api: ExtensionAPI) {
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["--json", "agent", "extensions", "status", "--agent", "main"], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "extension status unavailable" }],
         isError: result.status !== 0,
       };
@@ -344,6 +374,8 @@ export async function henExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: `graph_query unavailable: epi does not expose arbitrary Cypher execution.\nRequested query: ${params.cypher}`,
@@ -382,7 +414,9 @@ export async function henExtension(api: ExtensionAPI) {
         const snippets = [...html.matchAll(snippetRe)];
 
         if (titles.length === 0) {
-          return { content: [{ type: "text", text: "No results found (DDG may have changed markup or rate-limited)" }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: "No results found (DDG may have changed markup or rate-limited)" }] };
         }
 
         const results: string[] = [];
@@ -404,9 +438,13 @@ export async function henExtension(api: ExtensionAPI) {
           results.push(`${i + 1}. **${title}**\n   ${realUrl}\n   ${snippet}`);
         }
 
-        return { content: [{ type: "text", text: results.join("\n\n") }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: results.join("\n\n") }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `web_search error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `web_search error: ${e}` }], isError: true };
       }
     },
   });
@@ -427,13 +465,19 @@ export async function henExtension(api: ExtensionAPI) {
           headers: { "Accept": "text/plain", "X-No-Cache": "true" },
         });
         if (!res.ok) {
-          return { content: [{ type: "text", text: `web_fetch: HTTP ${res.status} for ${params.url}` }], isError: true };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: `web_fetch: HTTP ${res.status} for ${params.url}` }], isError: true };
         }
         const text = await res.text();
         const out = text.length > limit ? text.slice(0, limit) + `\n\n... [truncated at ${limit} chars]` : text;
-        return { content: [{ type: "text", text: out }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: out }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `web_fetch error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `web_fetch error: ${e}` }], isError: true };
       }
     },
   });

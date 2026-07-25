@@ -4,8 +4,8 @@
 // anima_self_invoke, plus the arena runtime/Mercurius helpers they own.
 // Registration order is preserved; tools.ts remains the aggregator.
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import {
@@ -79,7 +79,7 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       // the dispatch plan. Validated structurally; opaque to TypeBox.
       vak_address: Type.Optional(Type.Any()),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       // Resolve suggested_skills via matrix query when a full VAK is provided.
       // Falls back to undefined when vak_address is absent / malformed / matrix
       // is unavailable — orchestration is matrix-advisory, never matrix-gated.
@@ -110,6 +110,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       const agent = agentForCf(params.cf_code);
       if (!agent) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [
             {
               type: "text",
@@ -140,10 +142,12 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       intent: Type.Optional(Type.String({ description: "Optional turn intent passed into the speaker dispatch plan" })),
       user_input_pending: Type.Optional(Type.Boolean({ default: false })),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       const adapter = resolveArenaRuntimeAdapter(ctx);
       if (!adapter) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text:
@@ -203,7 +207,7 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
         risk: Type.Optional(Type.Number()),
       })),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       // Validate every task carries CFP1 + valid VAK before any subprocess fires.
       // One bad address aborts the whole CFP1 fan-out (refusing partial-state writes
       // upholds the address-causality invariant; A6 binds CFP1 across every task).
@@ -217,6 +221,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       });
       if (!parallel.ok) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `dispatch_parallel_agents refused: ${parallel.error}` }],
           isError: true,
         };
@@ -235,6 +241,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
         );
         if (!guardrails.allowed) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{
               type: "text",
               text: `dispatch_parallel_agents refused: dispatch blocked by gates on task for ${t.agent_name}: ${guardrails.gates_fired.join(", ")}`,
@@ -254,7 +262,9 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       const header = informationalFires.length > 0
         ? `[gates fired (informational): ${informationalFires.join("; ")}]\n\n`
         : "";
-      return { content: [{ type: "text", text: `${header}${results.join("\n\n")}` }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: `${header}${results.join("\n\n")}` }] };
     },
   });
 
@@ -277,7 +287,7 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       // the dispatch_agent / dispatch_parallel_agents schema for symmetry.
       risk: Type.Optional(Type.Number()),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       const vakAddress = params.vak_address as VakAddress | undefined;
       const agents = params.agents as string[];
       const dispatches = agents.map((agent_name) => ({ agent_name, vak_address: vakAddress }));
@@ -287,6 +297,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       });
       if (!validation.ok) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `dispatch refused: ${validation.error}` }],
           isError: true,
         };
@@ -307,6 +319,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
         );
         if (!guardrails.allowed) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{
               type: "text",
               text: `Fusion dispatch blocked by gates on entry for '${entry.agent_name}': ${guardrails.gates_fired.join(", ")}`,
@@ -327,6 +341,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
         ? `[gates fired (informational): ${informationalFires.join("; ")}]\n\n`
         : "";
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: `${header}Agora CFP3 aggregation\n\n${outputs.join("\n\n")}` }],
       };
     },
@@ -345,7 +361,7 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
           "Optional consent-gated Z-to-Aeon graduation payload. Carries AeonGraduationInput plus optional world_form_path; writes the accrued block only after the Moirai Night' pass fully succeeds.",
       })),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       const plan = planMoiraiNightPass({
         session_id: params.session_id,
         disclosure_path: params.disclosure_path,
@@ -374,6 +390,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       });
       if (!fusionValidation.ok) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `dispatch_moirai_night_pass refused: ${fusionValidation.error}` }],
           isError: true,
         };
@@ -488,7 +506,7 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       // session VAK is the right thing to carry.
       vak_address: Type.Optional(Type.Any()),
     }),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       // Resolve vak_address: param > env (C1 propagation) > compose-default.
       let vak: VakAddress | undefined;
       if (params.vak_address) {
@@ -514,6 +532,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
       }
       if (!isValidVakAddress(vak)) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `anima_self_invoke refused: vak_address failed canonical validation` }],
           isError: true,
         };
@@ -536,6 +556,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
 
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `gateway anima-invoke failed: ${result.stderr || "non-zero exit"}`,
@@ -549,6 +571,8 @@ export function registerAnimaDispatchTools(api: ExtensionAPI) {
         parsedResponse = JSON.parse(result.stdout);
       } catch {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `gateway returned non-JSON: ${result.stdout}`,

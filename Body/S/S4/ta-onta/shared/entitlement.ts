@@ -15,8 +15,8 @@
  *   - Enforcement is a HARD-GATE: a skill/tool that is not entitled is not
  *     exposed/invokable. Entitlement that does not gate is theater.
  *
- * This module is intentionally dependency-free (no @sinclair/typebox, no
- * @mariozechner/pi-coding-agent) so it can be imported directly by headless
+ * This module is intentionally dependency-free (no typebox, no
+ * @earendil-works/pi-coding-agent) so it can be imported directly by headless
  * `node --test` suites and reused for BOTH skills and tools (and for any
  * persona, e.g. the `epii` agent, namespace-agnostically).
  *

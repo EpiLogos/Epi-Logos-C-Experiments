@@ -1,5 +1,5 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { existsSync, writeFileSync, appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
@@ -228,9 +228,13 @@ export async function khoraExtension(api: ExtensionAPI) {
           if (line.startsWith("EPI_DAY_ID=")) _dayId = line.split("=")[1];
           if (line.startsWith("EPI_NOW_PATH=")) _nowPath = line.split("=")[1];
         }
-        return { content: [{ type: "text", text: result.stdout }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: result.stdout }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_session_init error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_session_init error: ${e}` }], isError: true };
       }
     },
   });
@@ -243,7 +247,9 @@ export async function khoraExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["agent", "session", "status"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -269,7 +275,9 @@ export async function khoraExtension(api: ExtensionAPI) {
           if (workspace.harness) {
             writeSessionWorkspaceAtomically(params.path, workspace, "khora_write");
             await enqueueKhoraSyncEvent({ path: params.path, coordinate: params.coordinate, action: "write" });
-            return { content: [{ type: "text", text: `wrote ${params.path}` }] };
+            return {
+              // pi requires a details payload; this tool returns none.
+              details: undefined, content: [{ type: "text", text: `wrote ${params.path}` }] };
           }
         }
         writeFileSync(params.path, params.content, "utf8");
@@ -279,9 +287,13 @@ export async function khoraExtension(api: ExtensionAPI) {
         if (params.path.endsWith("PASU.md")) {
           spawnSync("epi", ["nara", "wind", "--profile"], { encoding: "utf8" });
         }
-        return { content: [{ type: "text", text: `wrote ${params.path}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `wrote ${params.path}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_write error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_write error: ${e}` }], isError: true };
       }
     },
   });
@@ -309,9 +321,13 @@ export async function khoraExtension(api: ExtensionAPI) {
     async execute(_id: string, params: KhoraHighlightedInscriptionInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = await khora_write_highlighted_inscription(params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_write_highlighted_inscription error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_write_highlighted_inscription error: ${e}` }], isError: true };
       }
     },
   });
@@ -328,7 +344,9 @@ export async function khoraExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       await enqueueKhoraSyncEvent(params);
-      return { content: [{ type: "text", text: "queued" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: "queued" }] };
     },
   });
 
@@ -358,7 +376,9 @@ export async function khoraExtension(api: ExtensionAPI) {
       if (report.staleWarning) {
         lines.push(report.staleWarning);
       }
-      return { content: [{ type: "text", text: lines.join("\n") }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: lines.join("\n") }] };
     },
   });
 
@@ -374,7 +394,9 @@ export async function khoraExtension(api: ExtensionAPI) {
       const args = ["agent", "session", "continuation"];
       if (params.summary) args.push("--summary", params.summary);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -411,7 +433,9 @@ export async function khoraExtension(api: ExtensionAPI) {
       try {
         const session_id = getSessionId();
         if (!session_id) {
-          return { content: [{ type: "text", text: "khora_session_close skipped: no session_id (session not initialised)" }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: "khora_session_close skipped: no session_id (session not initialised)" }] };
         }
         recordPendingSophia(
           session_id,
@@ -423,9 +447,13 @@ export async function khoraExtension(api: ExtensionAPI) {
         const suffix = closed
           ? `; m4 protein sealed (${String(closed.protein_handle ?? "protected handle")})`
           : "";
-        return { content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)${suffix}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)${suffix}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
       }
     },
   });

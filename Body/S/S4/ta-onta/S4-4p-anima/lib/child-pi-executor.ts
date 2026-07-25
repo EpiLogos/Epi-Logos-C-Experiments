@@ -36,7 +36,7 @@
  */
 
 import { spawn } from "node:child_process";
-import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
+import { childPiRuntimeArgs } from "../../S4-0p-khora/S0'/child-extension-propagation.ts";
 import { resolveEntitlement, type EntitlementLayer } from "../../shared/entitlement.ts";
 import type { VakAddress } from "../../shared/vak_address.ts";
 import {

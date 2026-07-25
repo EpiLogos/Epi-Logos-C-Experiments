@@ -2,4 +2,4 @@ export {
   childExtensionsFromEnv,
   childPiRuntimeArgs,
   childSkillRootsFromEnv,
-} from "../../khora/S0'/child-extension-propagation.ts";
+} from "../../S4-0p-khora/S0'/child-extension-propagation.ts";

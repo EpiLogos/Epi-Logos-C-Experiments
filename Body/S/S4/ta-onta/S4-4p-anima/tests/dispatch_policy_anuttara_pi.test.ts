@@ -141,7 +141,10 @@ describe("Anima dispatch policy Anuttara-PI verification gate", () => {
     assert.equal(decision.trace.anuttara_verification?.typed_query_surface, "full-7-laws");
     assert.deepEqual(decision.trace.anuttara_verification?.coordinate_language_laws, ANUTTARA_FULL_LANGUAGE_LAWS);
     assert.ok(decision.trace.anuttara_verification?.gateway_methods.includes("s0'.verifier.emit_query"));
-    assert.ok(!decision.trace.anuttara_verification?.coordinate_language_laws.includes("law-6-minimal-only"));
+    // The full surface carries all seven laws; a minimal-only variant is not
+    // one of them, so assert the real law-6 IS present rather than naming an
+    // id the union does not contain.
+    assert.ok(decision.trace.anuttara_verification?.coordinate_language_laws.includes("law-6-siva-shakti-operator-surface"));
     assert.match(decision.trace.selection_rationale, /Anuttara-PI/i);
   });
 });

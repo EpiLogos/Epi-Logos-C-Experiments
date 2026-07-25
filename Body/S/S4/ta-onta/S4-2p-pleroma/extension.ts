@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { spawnSync } from "node:child_process";
 import { PRIMITIVE_REGISTRY, type PrimitiveDef } from "./S2/pleroma-primitives.ts";
 import {
@@ -41,6 +41,15 @@ export type VamaShaktiSummonRequest = {
   lifecycle_mode?: "ephemeral" | "warm" | "promoted";
   requesting_actor: "anima_scene_setup" | "warm_shakti_admin";
   capability_profile?: unknown;
+};
+
+/**
+ * The context a summon actually receives: pi's own context plus the gateway
+ * handle this deployment injects. Declared here because pi's `ExtensionContext`
+ * knows nothing about `gateway`.
+ */
+export type TechneSummonContext = ExtensionContext & {
+  gateway?: { resolve?: (method: string, params: unknown) => Promise<unknown> };
 };
 
 export type GatewayContext = {
@@ -255,7 +264,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
       const args = ["gate", "start"];
       if (params.config_path) args.push("--config", params.config_path);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -266,7 +277,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["gate", "stop"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -277,7 +290,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["gate", "status", "--json"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -294,7 +309,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
         "--active-minutes", String(params.active_minutes ?? 60)];
       if (params.include_global) args.push("--include-global");
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -318,7 +335,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
       if (params.label) args.push("--label", params.label);
       if (params.thinking_level) args.push("--thinking-level", params.thinking_level);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -331,7 +350,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["gate", "logs", "--tail", String(params.limit ?? 100)], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -342,7 +363,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["gate", "debug", "status", "--json"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -357,23 +380,36 @@ export async function pleromaExtension(api: ExtensionAPI) {
     registerTerminalTool(api, tool);
   }
 
+  // This registration carries refusal-law metadata beyond pi's ToolDefinition
+  // (schema / operatorRole / refusalLaw, read by the capability matrix), so the
+  // extra surface is asserted once here rather than dropped.
   api.registerTool({
     name: "techne_vama_summon",
     label: "Techne Vama Summon",
     description: "Summon a Vama Shakti — the active animating descent of a /World entity into dialogue — under one of four canonical classifiers (egregore/sprite/daemon/mantra). Operator-only; Anima-dispatched during arena scene-setup OR user-direct via warm-shakti admin path.",
     parameters: vamaShaktiSummonRequestSchema,
+    // schema / operatorRole / refusalLaw are refusal-law metadata read by the
+    // Pleroma capability matrix. pi's ToolDefinition does not declare them, and
+    // dropping them would silently un-gate the summon, so the extra surface is
+    // asserted here rather than removed.
+    // @ts-expect-error — deliberate metadata beyond pi's ToolDefinition
     schema: vamaShaktiSummonRequestSchema,
     operatorRole: "psyche-template",
     refusalLaw: vamaShaktiRefusalLaw,
-    async execute(_id: string, params: VamaShaktiSummonRequest, _signal?: unknown, _onUpdate?: unknown, ctx?: GatewayContext) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async execute(_id: string, params: VamaShaktiSummonRequest, _signal?: unknown, _onUpdate?: unknown, ctx?: TechneSummonContext): Promise<{ content: { type: "text"; text: string }[]; details: unknown; isError?: boolean }> {
       const refusal = vamaShaktiRefusalLaw(params);
       if (refusal) {
-        return { content: [{ type: "text", text: refusal }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: refusal }], isError: true };
       }
       if (ctx?.gateway?.resolve) {
         const resolved = await ctx.gateway.resolve("s5'.gnostic.resolve", { coordinate: params.entity_coordinate });
         if (!isWorldResolution(resolved)) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{
               type: "text",
               text: "Refused per DR-VAMA-3 + DR-WORLD-1: s5'.gnostic.resolve did not return a :World entity. Promote or propose it through hen_entity_candidate_propose first.",
@@ -383,6 +419,8 @@ export async function pleromaExtension(api: ExtensionAPI) {
         }
       }
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: "techne_vama_summon preflight accepted; VamaShaktiHandle construction is gated by Tranche 41.3 identity derivation and Tranche 41.4 ad-hoc PI registration.",
@@ -400,7 +438,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["techne", "cmux", "list-workspaces", "--projected"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -412,7 +452,9 @@ export async function pleromaExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["techne", "cmux", "identify", "--projected"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 
@@ -461,15 +503,21 @@ export async function pleromaExtension(api: ExtensionAPI) {
 
       const normalized = normalizeTopologyDecision(envelope);
       if (typeof normalized === "string") {
-        return { content: [{ type: "text", text: normalized }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: normalized }], isError: true };
       }
       try {
         const command = topologyCommandArgs(normalized, params.open_visible_projection === true);
         const result = spawnSync(epiBinary(), command, { encoding: "utf8" });
         const text = result.stdout || result.stderr || "epi agent tmux topology returned no output";
-        return { content: [{ type: "text", text }], isError: result.status !== 0 };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text }], isError: result.status !== 0 };
       } catch (error) {
-        return { content: [{ type: "text", text: error instanceof Error ? error.message : String(error) }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: error instanceof Error ? error.message : String(error) }], isError: true };
       }
     },
   });
@@ -529,10 +577,14 @@ function registerTerminalTool(api: ExtensionAPI, tool: TerminalToolDef) {
         // ever emit `agent tmux …` — never a raw tmux/cmux/send-keys command.
         argv = buildTerminalArgv(tool.name, params);
       } catch (err: any) {
-        return { content: [{ type: "text", text: String(err?.message ?? err) }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: String(err?.message ?? err) }], isError: true };
       }
       const result = spawnSync("epi", argv, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
 }
@@ -584,6 +636,8 @@ function registerPrimitiveTool(api: ExtensionAPI, p: PrimitiveDef) {
       // Interactive primitives cannot be invoked via PI tool — require tmux/cmux pane
       if (p.executionMode === "interactive") {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `${p.name} is INTERACTIVE mode — cannot be invoked as a bounded tool. Use tmux/cmux pane directly.`,
@@ -601,17 +655,23 @@ function registerPrimitiveTool(api: ExtensionAPI, p: PrimitiveDef) {
 
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `[${p.name}] FAILED (exit ${result.status})\n${result.stderr || result.stdout}` }],
           isError: true,
         };
       }
       if (!result.stdout && !result.stderr) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `[${p.name}] exited 0 but produced no output` }],
           isError: true,
         };
       }
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: `[${p.name}] OK\n${result.stdout || result.stderr}` }],
       };
     },

@@ -13,7 +13,7 @@
  *
  * @contract     Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md
  */
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
 import { validateHenSync } from "./modules/hen-integration.ts";

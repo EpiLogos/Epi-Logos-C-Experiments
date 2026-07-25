@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export async function main(api: ExtensionAPI) {
   // ── 50.T50.01: code-mode (single-script tool execution) for every pi agent ──

@@ -15,12 +15,12 @@
  * Usage: pi -e extensions/pi-pi.ts
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { Text, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { Text, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { readdirSync, readFileSync, existsSync, mkdirSync } from "fs";
 import { join, resolve } from "path";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
 import { dispatchChildPi, ChildPiDispatchRefused } from "../lib/child-pi-executor.ts";
 import { parseCommaList } from "../../shared/entitlement.ts";
 
@@ -584,7 +584,7 @@ Ask specific questions about what you need to BUILD. Each expert will return doc
 			render(width: number): string[] {
 				const model = _ctx.model?.id || "no-model";
 				const usage = _ctx.getContextUsage();
-				const pct = usage ? usage.percent : 0;
+				const pct = usage?.percent ?? 0;
 				const filled = Math.round(pct / 10);
 				const bar = "#".repeat(filled) + "-".repeat(10 - filled);
 

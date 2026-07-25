@@ -20,11 +20,11 @@
  * Usage: pi -e extensions/tilldone.ts
  */
 
-import { StringEnum } from "@mariozechner/pi-ai";
-import type { ExtensionAPI, ExtensionContext, Theme } from "@mariozechner/pi-coding-agent";
-import { DynamicBorder } from "@mariozechner/pi-coding-agent";
-import { Container, matchesKey, Text, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
-import { Type } from "@sinclair/typebox";
+import { StringEnum } from "@earendil-works/pi-ai";
+import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
+import { DynamicBorder } from "@earendil-works/pi-coding-agent";
+import { Container, matchesKey, Text, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { Type } from "typebox";
 import { applyExtensionDefaults } from "./themeMap.ts";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -286,11 +286,11 @@ export default function (pi: ExtensionAPI) {
 
 	const refreshUI = (ctx: ExtensionContext) => {
 		if (tasks.length === 0) {
-			ctx.ui.setStatus("📋 TillDone: no tasks", "tilldone");
+			ctx.ui.setStatus("tilldone", "📋 TillDone: no tasks");
 		} else {
 			const remaining = tasks.filter((t) => t.status !== "done").length;
 			const label = listTitle ? `📋 ${listTitle}` : "📋 TillDone";
-			ctx.ui.setStatus(`${label}: ${tasks.length} tasks (${remaining} remaining)`, "tilldone");
+			ctx.ui.setStatus("tilldone", `${label}: ${tasks.length} tasks (${remaining} remaining)`);
 		}
 
 		refreshWidget(ctx);
@@ -326,8 +326,11 @@ export default function (pi: ExtensionAPI) {
 		applyExtensionDefaults(import.meta.url, ctx);
 		reconstructState(ctx);
 	});
-	pi.on("session_switch", async (_event, ctx) => reconstructState(ctx));
-	pi.on("session_fork", async (_event, ctx) => reconstructState(ctx));
+	// `session_switch` and `session_fork` are NOT pi events — the handlers
+	// registered under those names never fired, so a switched or forked session
+	// silently kept the previous branch's task list. `session_info_changed` is
+	// the post-change event that actually covers both.
+	pi.on("session_info_changed", async (_event, ctx) => reconstructState(ctx));
 	pi.on("session_tree", async (_event, ctx) => reconstructState(ctx));
 
 	// ── Blocking gate ──────────────────────────────────────────────────

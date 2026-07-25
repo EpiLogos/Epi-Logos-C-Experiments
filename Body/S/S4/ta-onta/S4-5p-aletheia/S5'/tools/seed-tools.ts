@@ -13,8 +13,8 @@
  *
  * @contract     Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md
  */
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { buildTemplateInvocation, refreshTopology, validateHenSync } from "../../modules/hen-integration.ts";
 import { aletheiaIngestSophia } from "../../modules/sophia-ingest.ts";
@@ -46,11 +46,15 @@ export function registerSeedTools(api: ExtensionAPI) {
       const syncState = validateHenSync();
       if (!syncState.ok) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `crystallise blocked by Hen sync state: ${syncState.output}` }],
           isError: true,
         };
       }
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: `crystallise unavailable: the current epi CLI does not expose a crystallise command.\nUse aletheia_gnosis_query for retrieval and a constitutional agent run for synthesis from ${params.source_bucket}${params.target_coordinate ? ` into ${params.target_coordinate}` : ""}${params.day_id ? ` on ${params.day_id}` : ""}.`,
@@ -101,6 +105,8 @@ ${questions || "<!-- No questions carried forward -->"}
       spawnSync("epi", contArgs, { encoding: "utf8" });
 
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: `SEED.md written for ${params.day_id}\nInsights: ${params.insights?.length || 0}, Questions: ${params.questions?.length || 0}`,
@@ -134,6 +140,8 @@ ${questions || "<!-- No questions carried forward -->"}
       });
       if (!result.ok) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `aletheia_ingest failed: ${result.reason}` }],
           isError: true,
         };
@@ -146,6 +154,8 @@ ${questions || "<!-- No questions carried forward -->"}
         path: result.path,
       };
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: JSON.stringify(compact) }],
       };
     },
@@ -189,6 +199,8 @@ ${questions || "<!-- No questions carried forward -->"}
       }
       if (!isValidVakAddress(vak)) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{ type: "text", text: `epii_invoke_anima refused: vak_address failed canonical validation` }],
           isError: true,
         };
@@ -208,6 +220,8 @@ ${questions || "<!-- No questions carried forward -->"}
 
       if (result.status !== 0) {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `gateway anima-invoke failed: ${result.stderr || "non-zero exit"}`,
@@ -221,6 +235,8 @@ ${questions || "<!-- No questions carried forward -->"}
         parsedResponse = JSON.parse(result.stdout);
       } catch {
         return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
           content: [{
             type: "text",
             text: `gateway returned non-JSON: ${result.stdout}`,

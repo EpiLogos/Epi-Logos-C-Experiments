@@ -1,5 +1,5 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { computeDayId } from "./modules/temporal-frame.ts";
@@ -88,7 +88,9 @@ export async function chronosExtension(api: ExtensionAPI) {
       if (params.now_override) args.push("--now", params.now_override);
       const result = spawnSync("epi", args, { encoding: "utf8" });
       if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: result.stderr }], isError: true };
       }
 
       // Step 2: Open/create today's daily note via the supported vault CLI surface.
@@ -104,6 +106,8 @@ export async function chronosExtension(api: ExtensionAPI) {
           writeFileSync(dailyPath, injectSeedIntoQuestion(dailyContent, seedResult.stdout));
         } catch (error) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{ type: "text", text: `day-init: seed injection failed: ${String(error)}` }],
             isError: true,
           };
@@ -117,14 +121,18 @@ export async function chronosExtension(api: ExtensionAPI) {
       const flowArgs = ["vault", "flow-init", ...(params.now_override ? ["--now", params.now_override] : [])];
       const flowResult = spawnSync("epi", flowArgs, { encoding: "utf8" });
       if (flowResult.status !== 0) {
-        return { content: [{ type: "text", text: `day-init: flow-init failed: ${flowResult.stderr}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `day-init: flow-init failed: ${flowResult.stderr}` }], isError: true };
       }
 
       // Step 5: Open Graphiti day arc (non-fatal)
       const dayId = computeDayId();
       void dayArc({ action: "open", dayId, timeoutMs: 4000 });
 
-      return { content: [{ type: "text", text: result.stdout || "day-init complete" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "day-init complete" }] };
     },
   });
 
@@ -142,6 +150,8 @@ export async function chronosExtension(api: ExtensionAPI) {
       if (params.now_override) args.push("--now", params.now_override);
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
         isError: result.status !== 0,
       };
@@ -163,12 +173,16 @@ export async function chronosExtension(api: ExtensionAPI) {
       if (params.force) checkArgs.push("--force");
       const plan = spawnSync("epi", checkArgs, { encoding: "utf8" });
       if (plan.status !== 0) {
-        return { content: [{ type: "text", text: plan.stderr }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: plan.stderr }], isError: true };
       }
       // --plan output: "SOURCE_PATH → DEST_PATH"
       const [sourcePath, , destPath] = plan.stdout.trim().split(" ");
       if (!sourcePath || !destPath) {
-        return { content: [{ type: "text", text: `unexpected plan output: ${plan.stdout}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `unexpected plan output: ${plan.stdout}` }], isError: true };
       }
       // Step 2: Move via obsidian CLI — wikilink-preserving (never raw fs rename)
       const move = spawnSync("obsidian-cli", [
@@ -179,6 +193,8 @@ export async function chronosExtension(api: ExtensionAPI) {
       void dayArc({ action: "close", dayId, timeoutMs: 4000 });
 
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: move.stdout || move.stderr || `archived: ${sourcePath} → ${destPath}` }],
         isError: move.status !== 0,
       };
@@ -214,6 +230,8 @@ export async function chronosExtension(api: ExtensionAPI) {
       ];
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
         isError: result.status !== 0,
       };
@@ -231,9 +249,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: { aeon: AeonInvocationForm }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = registerAeonCronWithGateway(params.aeon);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_aeon_register error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_aeon_register error: ${e}` }], isError: true };
       }
     },
   });
@@ -254,9 +276,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: AeonFireInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = await chronos_aeon_fire(params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_aeon_fire error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_aeon_fire error: ${e}` }], isError: true };
       }
     },
   });
@@ -273,9 +299,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: { aeon: AeonInvocationForm; event: any }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = await chronos_aeon_on_event_fire(params.aeon, params.event);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_aeon_on_event_fire error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_aeon_on_event_fire error: ${e}` }], isError: true };
       }
     },
   });
@@ -302,9 +332,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: ChronosCronFireInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = await chronos_cron_fire(params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_cron_fire error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_cron_fire error: ${e}` }], isError: true };
       }
     },
   });
@@ -317,7 +351,9 @@ export async function chronosExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["gate", "cron", "list"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -339,9 +375,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: ChronosOrbitInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = chronos_response_orbit(params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_response_orbit error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_response_orbit error: ${e}` }], isError: true };
       }
     },
   });
@@ -378,9 +418,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: { session_id: string; path: string; response_token?: string; since?: string }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const result = await chronos_reentry(params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_reentry error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_reentry error: ${e}` }], isError: true };
       }
     },
   });
@@ -429,6 +473,8 @@ export async function chronosExtension(api: ExtensionAPI) {
       if (params.force_refresh) args.push("--force");
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr }],
         isError: result.status !== 0,
       };
@@ -443,7 +489,9 @@ export async function chronosExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["vault", "kairos", "status"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -456,9 +504,13 @@ export async function chronosExtension(api: ExtensionAPI) {
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["agent", "session", "status"], { encoding: "utf8" });
       if (result.status !== 0) {
-        return { content: [{ type: "text", text: result.stderr || "session status check failed" }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: result.stderr || "session status check failed" }], isError: true };
       }
-      return { content: [{ type: "text", text: result.stdout }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout }] };
     },
   });
 
@@ -480,7 +532,9 @@ export async function chronosExtension(api: ExtensionAPI) {
           ? (params.kairos_snapshot ?? {})
           : { crystallisation: params.crystallisation ?? "" };
       const result = await dayArc({ action: params.action, dayId, metadata });
-      return { content: [{ type: "text", text: formatDayArcResult(params.action, dayId, result) }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: formatDayArcResult(params.action, dayId, result) }] };
     },
   });
 
@@ -495,20 +549,26 @@ export async function chronosExtension(api: ExtensionAPI) {
       // Fetch current kairos state from epi CLI
       const kairosResult = spawnSync("epi", ["vault", "kairos", "status", "--json"], { encoding: "utf8" });
       if (kairosResult.status !== 0) {
-        return { content: [{ type: "text", text: `chronos_decan_check: kairos unavailable — ${kairosResult.stderr}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_decan_check: kairos unavailable — ${kairosResult.stderr}` }] };
       }
 
       let kairosState: Record<string, unknown> = {};
       try {
         kairosState = JSON.parse(kairosResult.stdout);
       } catch {
-        return { content: [{ type: "text", text: `chronos_decan_check: kairos JSON parse failed` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_decan_check: kairos JSON parse failed` }] };
       }
 
       const sunDecan = kairosState["sun_decan"] as string | undefined;
       const moonDecan = kairosState["moon_decan"] as string | undefined;
       if (!sunDecan) {
-        return { content: [{ type: "text", text: "chronos_decan_check: no sun_decan in kairos state — skipped" }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: "chronos_decan_check: no sun_decan in kairos state — skipped" }] };
       }
 
       const messages: string[] = [];
@@ -561,10 +621,14 @@ export async function chronosExtension(api: ExtensionAPI) {
           messages.push(`no decan transitions (sun: ${sunDecan}, moon: ${moonDecan ?? "n/a"})`);
         }
       } catch (e) {
-        return { content: [{ type: "text", text: `chronos_decan_check: graphiti not reachable (${e}) — skipped` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `chronos_decan_check: graphiti not reachable (${e}) — skipped` }] };
       }
 
-      return { content: [{ type: "text", text: messages.join("\n") }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: messages.join("\n") }] };
     },
   });
 
