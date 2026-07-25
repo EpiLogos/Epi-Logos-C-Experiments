@@ -8,7 +8,7 @@ import {
 
 const SOURCE_VAK = {
   cpf: "(4.0/1-4.4/5)" as const,
-  ct: ["CT5"] as const,
+  ct: ["CT5" as const],
   cp: "CP4.5" as const,
   cf: "(5/0)" as const,
   cfp: "CFP3" as const,

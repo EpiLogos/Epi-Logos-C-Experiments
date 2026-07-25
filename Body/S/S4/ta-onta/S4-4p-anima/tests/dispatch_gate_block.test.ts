@@ -79,7 +79,7 @@ describe("dispatch_fusion_agents guardrails (per-entry, D5 symmetry)", () => {
   });
 
   it("blocks fusion dispatch on rupa-gate (CT3 pattern bucket)", () => {
-    const vak = { ...buildMoiraiVak("(0/1/2/3)"), ct: ["CT3"] };
+    const vak = { ...buildMoiraiVak("(0/1/2/3)"), ct: ["CT3" as const] };
     const out = dispatchGuardrails(
       { prev_vak: { ct: ["CT2"] } as any, next_vak: vak, risk: 0.1 },
       CANONICAL_TRIGGERS,

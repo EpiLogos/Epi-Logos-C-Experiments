@@ -12,8 +12,9 @@ describe("05.T5.21 — anuttara symbolic parse round trip", () => {
 	it("parses a Verifier-Anuttara symbolic-coordinate string and routes an interrogative back through Anima", () => {
 		const parsed = parseVerifierSymbolicCoordinate("#R0-0/1/A-T7-pending?");
 
-		assert.equal(parsed.ok, true);
-		if (!parsed.ok) throw new Error(parsed.diagnostic);
+		// The guard IS the assertion: it narrows the ParseResult union and reports
+		// the parser's own diagnostic on failure, which a bare equality cannot.
+		if (!parsed.ok) assert.fail(`expected a parse, got ${parsed.diagnostic}`);
 		assert.equal(parsed.value.relationIndex, 0);
 		assert.deepEqual(parsed.value.polarPair, [0, 1]);
 		assert.equal(parsed.value.domainTag, "A-T7");

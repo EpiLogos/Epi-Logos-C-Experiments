@@ -61,12 +61,12 @@ const CLASS_SUITES = {
   W: [
     "harness-selftest", "honesty-lint",
     "gateway", "gateway-contract", "gateway-methods", "live-wire",
-    "ta-onta", "redis-context", "spacetime", "graphiti-runtime",
+    "ta-onta", "ta-onta-types", "redis-context", "spacetime", "graphiti-runtime",
   ],
   UF: [
     "harness-selftest", "honesty-lint",
     "gateway", "gateway-contract", "gateway-methods", "live-wire",
-    "ta-onta", "redis-context", "spacetime", "graphiti-runtime",
+    "ta-onta", "ta-onta-types", "redis-context", "spacetime", "graphiti-runtime",
     "app-typecheck", "app-test", "app-build", "app-smoke", "app-ui-flow",
     "carrier-tokens",
   ],

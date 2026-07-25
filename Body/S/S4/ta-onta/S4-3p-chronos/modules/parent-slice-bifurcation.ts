@@ -84,8 +84,12 @@ export function parseParentSliceCompletion(payload: Record<string, unknown>): Pa
     c,
     evidence: payload.evidence,
     task_spec: payload.task_spec,
-    vak_frame: vakFrame as VakAddress,
-    parent_slice: parentSlice as ConversationSliceHandle,
+    // `record()` narrows only to Record<string, unknown>, which shares no
+    // declared members with these shapes, so the widening step is required
+    // rather than cosmetic. Both values crossed a process boundary as JSON;
+    // the guards above are what make the assertion safe.
+    vak_frame: vakFrame as unknown as VakAddress,
+    parent_slice: parentSlice as unknown as ConversationSliceHandle,
   };
 }
 

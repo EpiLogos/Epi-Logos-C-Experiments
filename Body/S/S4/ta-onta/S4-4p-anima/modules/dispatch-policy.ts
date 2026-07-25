@@ -443,7 +443,9 @@ export function parseDispatchPolicyConfigToml(text: string): DispatchPolicyConfi
   ) as DispatchPolicyConfig["aletheia"]["elo"];
   const drift_detection = Object.fromEntries(
     REQUIRED_ALETHEIA_DRIFT_KEYS.map((key) => [key, requiredNumber(parsed, "aletheia.drift_detection", key)]),
-  ) as DispatchPolicyConfig["aletheia"]["drift_detection"];
+    // `Object.fromEntries` types to an index signature; REQUIRED_*_KEYS is
+    // what guarantees every declared member is present.
+  ) as unknown as DispatchPolicyConfig["aletheia"]["drift_detection"];
   drift_detection.trial_class_thresholds = collectNestedNumbers(parsed, "aletheia.drift_detection.trial_class_thresholds");
   const dispatch_policy = Object.fromEntries(
     REQUIRED_ANIMA_POLICY_KEYS.map((key) => [key, requiredNumber(parsed, "anima.dispatch_policy", key)]),
@@ -698,7 +700,10 @@ function buildTmuxTopologyDecisions(
   selected: CandidateScore[],
   harness_dispatch?: HarnessDispatch,
 ): TmuxTopologyDecisionEvent[] {
-  if (!isCmuxTopologyLayout(input.vak_frame.cfp)) return [];
+  // Hoisted: a type predicate on a property access does not survive into the
+  // `.map()` closure below, so narrow once into a const and use that.
+  const cfp_layout = input.vak_frame.cfp;
+  if (!isCmuxTopologyLayout(cfp_layout)) return [];
 
   const day = new Date(input.now_ms).toISOString().slice(0, 10);
   return selected.map((candidate) => {
@@ -710,7 +715,7 @@ function buildTmuxTopologyDecisions(
         day_session: `epi-${day}`,
         anima_dispatch_window: `w-${role}`,
         child_task_pane: `p-${role}-${task_id}`,
-        cfp_layout: input.vak_frame.cfp,
+        cfp_layout,
         vak_address: input.vak_frame,
       },
       session_key: harness_dispatch?.parent_session_key,

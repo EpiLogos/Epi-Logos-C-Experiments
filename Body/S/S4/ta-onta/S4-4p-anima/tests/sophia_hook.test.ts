@@ -13,7 +13,7 @@ describe("Sophia post-execution hook", () => {
     // fixture was canonically valid but did not match the system's output.
     const final_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT5"] as const,
+      ct: ["CT5" as const],
       cp: "CP4.5" as const,
       cf: "(5/0)" as const,
       cfp: "CFP3" as const,
@@ -43,7 +43,7 @@ describe("Sophia post-execution hook", () => {
   it("preserves an empty improvement_vectors array (sessions can end clean)", () => {
     const final_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT5"] as const,
+      ct: ["CT5" as const],
       cp: "CP4.5" as const,
       cf: "(5/0)" as const,
       cfp: "CFP0" as const,
@@ -66,7 +66,7 @@ describe("Sophia post-execution hook", () => {
     // session was killed while still executing (cf=(0/1/2) Trika, not Möbius).
     const mid_perform_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT2"] as const,
+      ct: ["CT2" as const],
       cp: "CP4.3" as const,
       cf: "(0/1/2)" as const,
       cfp: "CFP1" as const,
@@ -89,7 +89,7 @@ describe("Sophia post-execution hook", () => {
   it("buildSophiaDisclosure q_proposals preserves witness provenance and opening questions", () => {
     const final_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT5"] as const,
+      ct: ["CT5" as const],
       cp: "CP4.5" as const,
       cf: "(5/0)" as const,
       cfp: "CFP3" as const,
@@ -129,7 +129,7 @@ describe("Sophia post-execution hook", () => {
   it("refuses malformed q_proposal keys and private q_personal mentions", () => {
     const final_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT5"] as const,
+      ct: ["CT5" as const],
       cp: "CP4.5" as const,
       cf: "(5/0)" as const,
       cfp: "CFP3" as const,
@@ -171,7 +171,7 @@ describe("Sophia post-execution hook", () => {
   it("q_proposal routes through Janus/Anansi by VAK position", () => {
     const anansiVak = {
       cpf: "(4.0/1-4.4/5)" as const,
-      ct: ["CT0"] as const,
+      ct: ["CT0" as const],
       cp: "CP4.0" as const,
       cf: "(00/00)" as const,
       cfp: "CFP0" as const,
@@ -179,7 +179,7 @@ describe("Sophia post-execution hook", () => {
     };
     const janusVak = {
       ...anansiVak,
-      ct: ["CT1"] as const,
+      ct: ["CT1" as const],
       cp: "CP4.1" as const,
       cf: "(0/1)" as const,
     };

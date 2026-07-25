@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T12:01:55.260Z",
+  "updatedAt": "2026-07-25T12:10:43.595Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15581,16 +15581,16 @@
       "blocker": null
     },
     "32.T32.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T12:03:17.463Z",
+      "claimedAt": "2026-07-25T12:03:17.463Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:03:17.463Z",
+      "heartbeatAt": "2026-07-25T12:03:17.463Z",
+      "runId": "20260725T120317Z-32-T32.3",
       "worktree": null,
       "blocker": null
     },
@@ -20339,19 +20339,37 @@
       "blocker": null
     },
     "50.T50.07": {
-      "status": "review",
-      "updatedAt": "2026-07-25T11:41:08.929Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T12:10:43.571Z",
       "claimedAt": "2026-07-25T11:26:23.092Z",
-      "completedAt": null,
+      "completedAt": "2026-07-25T12:10:43.571Z",
       "evidence": [
         {
           "at": "2026-07-25T11:41:08.929Z",
           "text": "Deliverable COMPLETE and independently proven; ledger close held ONLY on a repo-wide gate red that is provably another worker's. What landed: a score is what a repeatable orchestration expression becomes. Hen owns persistence (S4-1p-hen/modules/score-store.ts) because a stored artifact with a content type is Hen's coordinate - and it treats the program as OPAQUE JSON, so it imports nothing from Anima and the dependency runs one way only. Scores land in .epi/scores/ beside .epi/gate, never the vault: a score is runtime machinery, not canon. Faithfulness is enforced rather than assumed - every document carries a SHA-256 over its canonical form (keys sorted, array order preserved, so pretty-printing is not tampering) and loadScore REFUSES a drifted document, because a score that changed would not reproduce the run it claims to be; run history is append-only jsonl so a later run can never erase the evidence an earlier one left. Anima owns the lifecycle (extension/dispatch.ts): CSState gained an origination polarity defaulted on BOTH read and write, so every session starts (00/00) dialogical and the existing before_agent_start reset in subscriptions.ts lands there without naming it; persistScore REFUSES a session that is no longer originating (a score comes from dialogue, not from the flow you were already mechanically running); assertScoredOrchestration validates the shape on the way OUT of storage because a score is loaded in order to be EXECUTED; rerunScore sets the session mechanistic then restores the prior polarity in a finally, so a re-run neither re-originates nor ends the dialogue it ran inside. Its runner is INJECTED, not imported, because vak-orchestration-surface already imports dispatch for the CFP->tool map and importing back would close a cycle. TWO REAL DEFECTS found by running tsc over the new suites (nothing typechecks ta-onta today, so both were invisible to the existing gate): getCSState('') returned the empty STRING rather than a state - '' is falsy but not nullish so the && form passed it straight through ?? - which made .origination undefined and a session read as no longer originating purely because its id was empty; and l_thread from 50.T50.06 was declared on Anima's move-result type but read off ZThreadSnapshot.outputs, typed by the shared cross-carrier mirror, so the field was invisible to the type contract - fixed with zThreadMoveResults() as the single reconciling seam rather than widening the mirror with an Anima-only field. Both now regression-tested; tsc --strict over all three new suites exits 0. GREEN: 41 new tests, S4 ta-onta 687 pass 0 fail (was 645); verify-all class-W scope GREEN including live-wire spawned gateway, gateway 98, gateway-contract 92, redis-context, graphiti-runtime, spacetime, harness-selftest 107. LIVE PROOF fresh 14/14 with real child pi's at every stage: the session starts (00/00) unprompted; logos really reads two files and answers beta.txt, and THAT answer decides what the script says; the developed orchestration runs a real child per step in CS order (Day read-chosen before Night-prime verify, despite reverse declaration); it persists to a real file with hash 17286109...; re-running loads it FROM DISK and dispatches the same agents, tasks and order from a byte-identical program while the session reads mechanistic and returns to (00/00) after; then a rewritten score is refused with ScoreIntegrityError and no child is dispatched for it. HOLD REASON, precisely: the shared honesty-lint rejects Body/M/pratibimba-app/src/ui/privacyChrome.test.ts ('the status strip source carries no privacy entry' - source-grep-only assertion), which is untracked in-flight WIP of the concurrent 25.T25.18 worker (owner opus-mdev-frontend-uf, lease live). It is not this tranche's file, not in its write scope, and NOT a flake - it is a deterministic real defect that their own close is equally gated on. Closing around it via the unrelated-flake path would be gate-gaming, so this stays in review until that lint is clean; everything else this tranche needs is already green and recorded above."
+        },
+        {
+          "at": "2026-07-25T12:10:43.571Z",
+          "text": "Score lifecycle landed and the review hold is cleared. A score is what a repeatable orchestration expression becomes: Hen owns persistence (S4-1p-hen/modules/score-store.ts) because a stored artifact with a content type is Hen's coordinate, and it treats the program as OPAQUE JSON so it imports nothing from Anima - the dependency runs S4-4' -> S4-1' only. Scores land in .epi/scores/ beside .epi/gate, never the vault. Faithfulness is enforced: SHA-256 over canonical form (keys sorted, array order preserved, so pretty-printing is not tampering) and loadScore REFUSES a drifted document, because a score that changed would not reproduce the run it claims to be; run history is append-only jsonl. Anima owns the lifecycle: CSState gained an origination polarity defaulted on BOTH read and write so every session starts (00/00) and the existing before_agent_start reset lands there without naming it; persistScore REFUSES a non-originating session; assertScoredOrchestration validates shape on the way OUT of storage because a score is loaded in order to be EXECUTED; rerunScore runs mechanistic then restores the prior polarity in a finally, so a re-run neither re-originates nor ends the dialogue it ran inside; its runner is injected, not imported, because vak-orchestration-surface already imports dispatch and importing back would close a cycle. LIVE PROOF 14/14 with real child pi's: logos really reads two files and answers beta.txt, and THAT answer decides what the script says; the orchestration runs a real child per step in CS order (Day read-chosen before Night-prime verify, despite reverse declaration); persists to a real file (hash 17286109...); re-runs FROM DISK dispatching the same agents/tasks/order from a byte-identical program while the session reads mechanistic and returns to (00/00); a rewritten score is then refused with ScoreIntegrityError and no child is dispatched. THE TYPECHECK HOLE IS NOW CLOSED, which is the substantive addition: node --test STRIPS types rather than checking them, so the ta-onta suite was green whether or not the type contracts held. New ta-onta-types gate (.codex/scripts/typecheck-ta-onta.mjs) runs strict tsc over the 176 dependency-free files under Body/S/S4, skips the symlinked carrier aliases (ta-onta/anima -> S4-4p-anima) that would otherwise double-check every file, and PRINTS the 38 pi-facing files it cannot cover with the package that excluded each - no silent cap. It is wired into verify-all and travels with ta-onta in the W and UF class scopes. Bringing it to zero fixed 42 real type errors across all six carriers, including four genuine defects invisible to the old gate: getCSState('') returned the empty STRING not a state ('' is falsy but not nullish, so && then ?? passed it through) making a session read as non-originating; l_thread was declared on Anima's move-result type but read off ZThreadSnapshot.outputs, typed by the shared cross-carrier mirror (reconciled via one zThreadMoveResults seam rather than widening the mirror); a cfp_layout type-predicate guard did not survive into its .map() closure; and chronos_reentry returned a Promise unawaited once the return was destructured, caught immediately by the behavioural suite. GREEN: ta-onta 687 pass 0 fail, ta-onta-types 176 files 0 errors, verify-all class-W scope GREEN incl live-wire spawned gateway, honesty-lint clean, epi-cli cargo check clean. CFP4/CFP5 RESOLVED against canon rather than left flagged: thread identities were never in dispute (CFP4 = L-Thread Long, CFP5 = B-Thread Big, consistent across vak-coordinate-frame, vak-evaluate, anima-orchestration, CONTRACT.md and the crystallised S4 Form). The drift was reading the old single Primitive column as if it named the Z-thread tool; it names the dispatch SUBSTRATE. An L-Thread is Long because it will not stop until its condition says it may, which needs both the resumable background child session (S4-3-SPEC writes 'CFP4 / CFP5 as applicable', pinning neither) and the self-validation the constitutional definition demands - tilldone, whose agent_end hook refuses to let it stop. So CFP4 -> tilldone and CFP5 -> subagent_create are both canon-conforming. CONTRACT.md and Idea/Bimba/World/Types/Coordinates/S/S4/S4.md now carry Z-thread-tool and dispatch-substrate as separate columns with the reasoning inline, and the stale 'L-Thread: background subagent' comment in epi-cli/src/agent/vak.rs is corrected.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 50.T50.07 --owner opus-mdev-t50-verify",
+            "exitCode": 0,
+            "testsPassed": 687,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/score_lifecycle.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/score-lifecycle-live.mjs",
+              ".codex/scripts/typecheck-ta-onta.mjs",
+              "live-wire + ta-onta-types PASS in plan.runs/verifications/50.T50.07.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-t50-impl",
-      "leaseExpiresAt": "2026-07-25T13:26:23.092Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T11:41:08.929Z",
       "runId": "20260725T112623Z-50-T50.07",
       "worktree": null,
@@ -26335,6 +26353,15 @@
       "leaseExpiresAt": "2026-07-25T13:26:23.092Z",
       "worktree": null,
       "completedAt": "2026-07-25T11:41:08.929Z"
+    },
+    {
+      "runId": "20260725T120317Z-32-T32.3",
+      "taskId": "32.T32.3",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T12:03:17.463Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:03:17.463Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

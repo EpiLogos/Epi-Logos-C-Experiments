@@ -12,6 +12,12 @@ import {
   type GatewaySessionProjection,
 } from "../modules/session-workspace.ts";
 
+/** A canonical key the test genuinely expects to exist. */
+function requireKey(key: string | undefined): string {
+  if (!key) assert.fail("session projection carried no canonical key");
+  return key;
+}
+
 describe("Khora session-workspace harness binding", () => {
   let gateRoot: string;
 
@@ -93,7 +99,7 @@ describe("Khora session-workspace harness binding", () => {
     assert.equal(childWorkspace.result_drop?.parent_now_path, "/vault/Present/19-06-2026/pi-parent/now.md");
     assert.deepEqual(childWorkspace.result_drop?.purposes, ["implement", "review", "explore", "search", "converse"]);
 
-    const childPath = sessionWorkspacePath(gateRoot, child.canonicalKey);
+    const childPath = sessionWorkspacePath(gateRoot, requireKey(child.canonicalKey));
     const content = JSON.parse(readFileSync(childPath, "utf8"));
     assert.equal(content.harness.harness_id, "codex-native");
     assert.equal(content.harness.permission_profile, "khora-write-authority");
@@ -152,7 +158,7 @@ describe("Khora session-workspace harness binding", () => {
 
     const bootstrap = readSessionWorkspaceForBootstrap({
       gateStateRoot: gateRoot,
-      sessionKey: session.canonicalKey,
+      sessionKey: requireKey(session.canonicalKey),
       isTmuxLeaseLive: (lease) => lease.lease_id === "lease-parent",
     });
 

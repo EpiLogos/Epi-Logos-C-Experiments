@@ -34,6 +34,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         },
         artifacts: ["/path/to/note.md"],
         improvement_vectors: ["v1"],
+        q_proposals: [],
         handoff_target: "aletheia_ingest",
         closure_kind: "rehear",
       },
@@ -69,6 +70,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         },
         artifacts: [],
         improvement_vectors: [],
+        q_proposals: [],
         handoff_target: "aletheia_ingest",
         closure_kind: "force_closed",
       },
@@ -88,7 +90,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
       day_id: "22-05-2026",
       final_vak: {
         cpf: "(4.0/1-4.4/5)" as const,
-        ct: ["CT5"] as const,
+        ct: ["CT5" as const],
         cp: "CP4.5" as const,
         cf: "(5/0)" as const,
         cfp: "CFP0" as const,
@@ -96,6 +98,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
       },
       artifacts: [],
       improvement_vectors: [],
+      q_proposals: [],
       handoff_target: "aletheia_ingest" as const,
     };
     // Cast: legacy literal lacks closure_kind — that's the point of this test.
@@ -126,6 +129,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         },
         artifacts: [],
         improvement_vectors: [],
+        q_proposals: [],
         handoff_target: "aletheia_ingest",
         closure_kind: "rehear",
       },
@@ -155,6 +159,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         },
         artifacts: [],
         improvement_vectors: [],
+        q_proposals: [],
         handoff_target: "aletheia_ingest",
         closure_kind: "rehear",
       },
@@ -250,6 +255,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       },
       artifacts: extra?.artifacts ?? ["/vault/Idea/seed.md"],
       improvement_vectors: extra?.improvement_vectors ?? ["v-alpha"],
+      q_proposals: [],
       handoff_target: "aletheia_ingest",
     };
     writeFileSync(
@@ -336,6 +342,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       },
       artifacts: ["/earlier.md"],
       improvement_vectors: ["v-earlier"],
+      q_proposals: [],
       handoff_target: "aletheia_ingest",
     };
     const latest = {
@@ -450,6 +457,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       },
       artifacts: [],
       improvement_vectors: [],
+      q_proposals: [],
       handoff_target: "aletheia_ingest",
     };
     writeFileSync(

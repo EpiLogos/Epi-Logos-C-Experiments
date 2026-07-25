@@ -228,7 +228,9 @@ export function parseAletheiaConfigToml(text: string): AletheiaEloConfig {
   ) as AletheiaEloConfig["elo"];
   const drift_detection = Object.fromEntries(
     REQUIRED_DRIFT_KEYS.map((key) => [key, requiredNumber(parsed, "aletheia.drift_detection", key)]),
-  ) as AletheiaEloConfig["drift_detection"];
+    // Index-signature -> declared shape: REQUIRED_DRIFT_KEYS is what makes
+    // this sound, and TS cannot see that.
+  ) as unknown as AletheiaEloConfig["drift_detection"];
   drift_detection.trial_class_thresholds = collectNestedNumbers(parsed, "aletheia.drift_detection.trial_class_thresholds");
   return { elo, drift_detection };
 }

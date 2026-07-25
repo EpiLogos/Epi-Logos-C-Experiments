@@ -226,7 +226,7 @@ describe("ta-onta shared VakAddress mirror", () => {
   it("vakAddressFromObject returns input by reference (no copy)", () => {
     const input = {
       cpf: "(00/00)" as const,
-      ct: ["CT0"] as const,
+      ct: ["CT0" as const],
       cp: "CP4.0" as const,
       cf: "(00/00)" as const,
       cfp: "CFP0" as const,

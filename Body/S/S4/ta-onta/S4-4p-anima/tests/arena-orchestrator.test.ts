@@ -15,6 +15,7 @@ import {
   turnBudgetForSpeaker,
   type ArenaClassifierConfig,
   type ArenaRoutingInput,
+  type ArenaSpeaker,
   type ArenaVamaShaktiSpeaker,
 } from "../lib/arena-orchestrator.ts";
 
@@ -29,6 +30,22 @@ function vama(
     vama_shakti_class,
     capability_profile: DIALOGUE_ONLY_CAPABILITY_PROFILE,
   };
+}
+
+/**
+ * The handle of the vama-shakti a decision chose.
+ *
+ * `ArenaSpeaker` is a union — a decision may legitimately return the user or a
+ * constitutional agent — so `.handle` is only reachable once the union is
+ * narrowed. Narrowing through `assert.fail` (which returns `never`) makes the
+ * wrong-kind case a real test failure with a useful message rather than a cast
+ * that would read `undefined` and silently pass a comparison.
+ */
+function chosenHandle(speaker: ArenaSpeaker): string {
+	if (speaker.kind !== "vama_shakti") {
+		assert.fail(`expected a vama-shakti speaker, got '${speaker.kind}'`);
+	}
+	return speaker.handle;
 }
 
 const egregore = vama("egregore-1", "egregore");
@@ -60,7 +77,7 @@ describe("arena classifier-aware turn routing policy", () => {
   it("prioritizes pending user input as Trika-0", () => {
     const decision = decideArenaNextSpeaker(input({
       user_input_pending: true,
-      turns: [{ turn_index: 0, speaker: { kind: "vama_shakti", handle: egregore.handle } }],
+      turns: [{ turn_index: 0, speaker: egregore }],
     }));
 
     assert.equal(decision.reason, "trika-user-input-pending");
@@ -74,7 +91,7 @@ describe("arena classifier-aware turn routing policy", () => {
 
     assert.equal(decision.reason, "daemon-maieutic-post-user");
     assert.equal(decision.speaker.kind, "vama_shakti");
-    assert.equal(decision.speaker.handle, daemon.handle);
+    assert.equal(chosenHandle(decision.speaker), daemon.handle);
     assert.equal(decision.question_form_bias, 0.75);
   });
 
@@ -86,7 +103,7 @@ describe("arena classifier-aware turn routing policy", () => {
 
     assert.equal(decision.reason, "sprite-kairos-burst");
     assert.equal(decision.speaker.kind, "vama_shakti");
-    assert.equal(decision.speaker.handle, sprite.handle);
+    assert.equal(chosenHandle(decision.speaker), sprite.handle);
   });
 
   it("routes mantra-class when kairos anchor crosses threshold", () => {
@@ -97,7 +114,7 @@ describe("arena classifier-aware turn routing policy", () => {
 
     assert.equal(decision.reason, "mantra-kairotic-threshold");
     assert.equal(decision.speaker.kind, "vama_shakti");
-    assert.equal(decision.speaker.handle, mantra.handle);
+    assert.equal(chosenHandle(decision.speaker), mantra.handle);
   });
 
   it("routes to an admitted Vama Shakti cited by the previous turn if not yet spoken", () => {
@@ -106,14 +123,14 @@ describe("arena classifier-aware turn routing policy", () => {
       admitted_vama_shaktis: [egregore, cited],
       turns: [{
         turn_index: 0,
-        speaker: { kind: "vama_shakti", handle: egregore.handle },
-        cited_coordinates: [cited.coordinate],
+        speaker: egregore,
+        cited_coordinates: [cited.coordinate ?? cited.handle],
       }],
     }));
 
     assert.equal(decision.reason, "response-to-citation");
     assert.equal(decision.speaker.kind, "vama_shakti");
-    assert.equal(decision.speaker.handle, cited.handle);
+    assert.equal(chosenHandle(decision.speaker), cited.handle);
   });
 
   it("routes Sophia for synthesis after the scene close threshold", () => {
@@ -126,8 +143,8 @@ describe("arena classifier-aware turn routing policy", () => {
         scene_close_threshold: 2,
       },
       turns: [
-        { turn_index: 0, speaker: { kind: "vama_shakti", handle: egregore.handle } },
-        { turn_index: 1, speaker: { kind: "vama_shakti", handle: egregore.handle } },
+        { turn_index: 0, speaker: egregore },
+        { turn_index: 1, speaker: egregore },
       ],
     }));
 
@@ -138,12 +155,12 @@ describe("arena classifier-aware turn routing policy", () => {
   it("falls back to round-robin among admitted Vama Shaktis", () => {
     const decision = decideArenaNextSpeaker(input({
       admitted_vama_shaktis: [egregore, sprite],
-      turns: [{ turn_index: 0, speaker: { kind: "vama_shakti", handle: egregore.handle } }],
+      turns: [{ turn_index: 0, speaker: egregore }],
     }));
 
     assert.equal(decision.reason, "vama-round-robin");
     assert.equal(decision.speaker.kind, "vama_shakti");
-    assert.equal(decision.speaker.handle, sprite.handle);
+    assert.equal(chosenHandle(decision.speaker), sprite.handle);
   });
 });
 
@@ -162,16 +179,16 @@ describe("arena classifier-specific behavior", () => {
       config,
       turns: [{ turn_index: 0, speaker: { kind: "user" } }],
     })).question_form_bias, 0.6);
-    assert.equal(decideArenaNextSpeaker(input({
+    assert.equal(chosenHandle(decideArenaNextSpeaker(input({
       config,
       admitted_vama_shaktis: [sprite],
       kairos: { delta: 0.91, anchor_previous: 0, anchor_current: 0.1 },
-    })).speaker.handle, sprite.handle);
-    assert.equal(decideArenaNextSpeaker(input({
+    })).speaker), sprite.handle);
+    assert.equal(chosenHandle(decideArenaNextSpeaker(input({
       config,
       admitted_vama_shaktis: [mantra],
       kairos: { delta: 0.01, anchor_previous: 0.79, anchor_current: 0.8 },
-    })).speaker.handle, mantra.handle);
+    })).speaker), mantra.handle);
   });
 });
 

@@ -195,9 +195,15 @@ export async function fetchKairosData(params: KairosNatalRef): Promise<KairosRes
     );
   }
 
+  // `data` is whatever the Kerykeion process emitted, so it stays `unknown`
+  // until read. Sun/moon are optional conveniences over the canonical array —
+  // absent or malformed, the canonical degrees below are the source of truth.
+  const payload: { sun_degree?: unknown; moon_degree?: unknown } =
+    data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+
   return {
-    sun_degree: normalizeM4Degree(data.sun_degree ?? canonical.planet_degrees[0]),
-    moon_degree: normalizeM4Degree(data.moon_degree ?? canonical.planet_degrees[1]),
+    sun_degree: normalizeM4Degree(payload.sun_degree ?? canonical.planet_degrees[0]),
+    moon_degree: normalizeM4Degree(payload.moon_degree ?? canonical.planet_degrees[1]),
     planet_degrees: canonical.planet_degrees,
     planet_valid: canonical.planet_valid,
     chart_path: params.chart_output_path,

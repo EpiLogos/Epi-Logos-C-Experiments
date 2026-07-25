@@ -134,3 +134,6 @@ continuation.md
 !/CLAUDE.md
 !/Body/**/AGENTS.md
 !/Idea/**/AGENTS.md
+
+# Generated tsconfig for the S4 strict type gate (.codex/scripts/typecheck-ta-onta.mjs)
+Body/S/S4/.typecheck/

@@ -172,7 +172,7 @@ export function projectResultDropBinding(session: GatewaySessionProjection): Res
   const dayDir = field(session, "resultDayDir", "result_day_dir")
     ?? dayDirForNowPath(parentNowPath ?? join(nowDir, "now.md"));
 
-  return stripUndefined({
+  return stripUndefined<ResultDropBinding>({
     now_dir: nowDir,
     day_dir: dayDir,
     parent_now_path: parentNowPath,

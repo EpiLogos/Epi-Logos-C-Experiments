@@ -217,11 +217,19 @@ export async function chronos_reentry(input: {
     `> what kairos has activated: ${kairos.summary}`,
   ].join("\n");
 
-  return khora_write_highlighted_inscription({
+  // The writer's return type carries every inscription category; a re-entry
+  // only ever writes this one, so the literal is restated rather than widening
+  // the declared return.
+  const written = await khora_write_highlighted_inscription({
     path: input.path,
     category: "retrospective-surfacing",
     position: "top",
     content: block,
     response_token: token,
   });
+  return {
+    path: written.path,
+    response_token: written.response_token,
+    category: "retrospective-surfacing",
+  };
 }

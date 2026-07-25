@@ -139,6 +139,7 @@ export function runQReviewNightPass(
       const entries = queue.entries;
       if (
         queue.day_id !== request.params.day_id ||
+        typeof graphRevision !== "number" ||
         !Number.isSafeInteger(graphRevision) ||
         !Array.isArray(entries)
       ) {

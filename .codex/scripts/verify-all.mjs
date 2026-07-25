@@ -151,6 +151,17 @@ export const SUITES = [
       ["node", "--test", "Body/S/S4/**/*.test.ts", "Body/S/S4/**/*.test.mjs"],
     ],
   },
+  // `node --test` STRIPS types rather than checking them, so the suite above is
+  // green whether or not the type contracts hold. That hole shipped two live
+  // defects (a `&&`-vs-`??` lookup returning "" where a state was promised, and
+  // a field read off a type it was never declared on). This runs a real strict
+  // tsc over the dependency-free layer and prints what it does NOT cover.
+  {
+    id: "ta-onta-types",
+    label: "S4 ta-onta strict tsc",
+    cwd: REPO_ROOT,
+    commands: [["node", ".codex/scripts/typecheck-ta-onta.mjs"]],
+  },
   {
     id: "epii-agent-core",
     label: "S5 epii-agent-core cargo test",
