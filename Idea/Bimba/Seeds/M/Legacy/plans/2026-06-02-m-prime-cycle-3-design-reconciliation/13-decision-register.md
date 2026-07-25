@@ -2126,7 +2126,7 @@ The wave-C decisions routed to user final-validation join the register here (sou
 
 ## DR-L2-ASPECT-1 — an aspect carries an elemental *relation*, not an element; the relation is computed as Δ mod 4
 
-**Status:** PROPOSED · **Raised:** 2026-07-25 · **By:** m-dev (24.T24.7 ARCHITECT-REVIEW follow-up) · **Domain:** L2' / M2-3 / M3'
+**Status:** VALIDATED · **Raised:** 2026-07-25 · **Validated:** 2026-07-25 · **By:** user (direct instruction) · **Domain:** L2' / M2-3 / M3'
 
 **Context.** `TarotDecanService.elementForAspect` (landed 24.T24.7) shipped with an explicit `ARCHITECT-REVIEW` flag: it returns one element per aspect kind (`trine→Fire, square→Earth, opposition→Air, aspect→Water`) from an invented table, in the **legacy** m2.h `Element_Id` ordering. Two defects, one of them structural:
 
@@ -2141,4 +2141,11 @@ The wave-C decisions routed to user final-validation join the register here (sou
 
 **Consequence.** `elementForAspect(aspect) → number` is unimplementable from canon — its return type asserts something an aspect does not carry — and must be replaced by a relation-shaped surface taking both positions. The shipped mapping is **not** canonical and must not be cited as precedent. Nothing in production consumes it yet (only its own unit test), so the surface change is free.
 
-**Open for the Architect.** (a) Ratify or amend the aspect law itself; (b) fix the replacement surface shape — the interface is Architect-owned per the Code Navigability Rules, so no surface change lands until this row reads VALIDATED.
+**Actions taken (2026-07-25).** Ratified by the Architect and landed:
+
+- **`Body/M/pratibimba-app/src/engine/canonicalElement.ts`** — the TS counterpart of `m_canonical.h`: the six canonical element IDs (Salt included), `isOperativeElement`, the legacy conversions (`canonicalFromM2ElementId` / `m2ElementIdFromCanonical` / `canonicalFromM2_3Branch`, refusing with `CANONICAL_ELEMENT_INVALID` where an ordering has no counterpart — m2.h has no Salt), the triplicity identity (`signOfDegree` / `elementOfSign` / `elementOfDegree`), and the aspect law (`elementalRelationOfAspect`, `elementalRelationBetweenDegrees`).
+- **`elementForAspect` WITHDRAWN** from `TarotDecanService`, along with its invented local `AspectKind = 'aspect' | …`. A tarot-decan service owned neither the element law nor the aspect vocabulary. The real five-member `AspectKind` already existed at `src/engine/clockFieldOverlay.ts`, which ports `m2_aspect_between` verbatim from the C kernel.
+- **Wired where aspects actually live:** `AspectEdge` now carries `elements: { elementA, elementB, relation } | null`, computed from the bussed degrees. This is the consumption the 24.7 comment promised ("consumed by the cosmic-clock aspect-edge layer to colour chords by element") and never delivered — and it is now element-correct, since the elements come from the positions rather than from the aspect kind.
+- **Proof:** 16 new tests in `canonicalElement.test.ts` + 1 wiring test in `clockFieldOverlay.test.ts`. The load-bearing one cross-checks `elementalRelationOfAspect(kind)` against `elementalRelationBetweenDegrees` at every exact major aspect around the whole circle, with the kernel-ported `aspectBetween` confirming each pair really is that aspect — one law, not two tables that happen to agree.
+
+**Not changed (deliberate).** `cosmicMath.ELEMENT_COLOURS` stays keyed by the LEGACY m2.h ordering, because its inputs are `elementId` values the kernel bridge emits in that ordering. Re-keying it would be a silent semantic change to live rendering; the conversion helpers exist for when a caller needs to cross the boundary explicitly.

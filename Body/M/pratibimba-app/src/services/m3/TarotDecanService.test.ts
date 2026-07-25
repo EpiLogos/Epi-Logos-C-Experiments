@@ -100,23 +100,13 @@ describe('TarotDecanService.resolveChain', () => {
     });
 });
 
-describe('TarotDecanService.elementForAspect', () => {
-    const service = new TarotDecanService(bridgeThrowing());
-
-    it('maps every aspect kind to a valid m2.h Element_Id (0..4)', () => {
-        for (const aspect of ['aspect', 'opposition', 'trine', 'square'] as const) {
-            const element = service.elementForAspect(aspect);
-            expect(Number.isInteger(element)).toBe(true);
-            expect(element).toBeGreaterThanOrEqual(0);
-            expect(element).toBeLessThanOrEqual(4);
-        }
-    });
-
-    it('follows the standard aspect→element correspondence (trine=fire, square=earth, opposition=air, aspect=water)', () => {
-        expect(service.elementForAspect('trine')).toBe(2); // AGNI / Fire
-        expect(service.elementForAspect('square')).toBe(4); // PRITHVI / Earth
-        expect(service.elementForAspect('opposition')).toBe(1); // VAYU / Air
-        expect(service.elementForAspect('aspect')).toBe(3); // APAS / Water
+describe('elementForAspect is withdrawn (DR-L2-ASPECT-1)', () => {
+    it('no longer exposes an aspect→element assignment', () => {
+        // An aspect carries an elemental RELATION, not an element, and the
+        // element ordering is L2' canon — neither belongs to a tarot-decan
+        // service. Both now live in `src/engine/canonicalElement.ts`.
+        const service = new TarotDecanService(bridgeThrowing()) as unknown as Record<string, unknown>;
+        expect(service.elementForAspect).toBeUndefined();
     });
 });
 

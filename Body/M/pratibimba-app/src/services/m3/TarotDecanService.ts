@@ -10,6 +10,8 @@
  * Does NOT own: correspondence LUTs, body data, gateway transport, or persistence.
  *   The chain body (codon/decan/planet/element/chakra/bodyZones/decanBodyPart/
  *   decanHerbs) is protected S2 authority read over the bridge — never a renderer LUT.
+ *   Also does NOT own the element law or the aspect relation: those are [[L2']]
+ *   canon, carried by `src/engine/canonicalElement.ts` (see DR-L2-ASPECT-1).
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.16 + 24.7.
  */
 
@@ -64,51 +66,27 @@ export function isResolvedChain(
 }
 
 // ============================================================================
-// Aspect → element — NOT CANONICAL. Do not cite as precedent. See DR-L2-ASPECT-1.
+// WITHDRAWN (DR-L2-ASPECT-1, VALIDATED 2026-07-25): `elementForAspect`.
 //
-// The 24.7 landing shipped the table below as "the standard astrological reading"
-// pending Architect review. That review happened (2026-07-25) and found the
-// surface wrong in two ways:
+// The 24.7 landing shipped an aspect→element table plus a local
+// `AspectKind = 'aspect' | 'opposition' | 'trine' | 'square'`, flagged
+// ARCHITECT-REVIEW. The review found both wrong:
 //
-//   1. WRONG ORDERING. The values are legacy m2.h `Element_Id` (AKASHA=0, Air=1,
-//      Fire=2, Water=3, Earth=4). L2' is THE element-bearing lens and its six
-//      inner positions are the one authoritative ordering (0=Aether, 1=Earth,
-//      2=Water, 3=Air, 4=Fire, 5=Salt). Runtime code MUST convert through
-//      `Body/S/S0/epi-lib/include/m_canonical.h`, never an ad-hoc integer map.
-//      A five-element convention is incomplete — it drops Salt.
+//   1. WRONG ORDERING — it returned legacy m2.h `Element_Id` (AKASHA=0, Air=1,
+//      Fire=2, Water=3, Earth=4) where L2', THE element-bearing lens, fixes the
+//      one authoritative ordering (0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire,
+//      5=Salt). A five-element convention is incomplete: it drops Salt.
+//   2. WRONG SHAPE — an aspect does not HAVE an element. An aspect is an angular
+//      relation between two zodiacal positions, so it carries an elemental
+//      RELATION. That category error is exactly why the landing had to invent a
+//      table, and why the type had to invent an 'aspect' aspect-kind.
 //
-//   2. WRONG SHAPE. An aspect does not HAVE an element; an aspect IS an elemental
-//      relation between two zodiacal positions. Per L2' §"Elemental Relation of
-//      Aspects", sign→element is the triplicity identity `sign mod 4` (already
-//      carried by M2-3's decans[4][3][3][2] first index), so an aspect spanning Δ
-//      signs fixes the relation by `Δ mod 4`: 0 → same element (conjunction,
-//      trine); 2 → complementary pair, Fire↔Air / Earth↔Water (sextile,
-//      opposition); 3 → cross-pair (square). The relation ranges over the
-//      operative quartet only — Aether and Salt frame the wheel, and can never be
-//      an aspect's element. `elementForAspect(aspect) → number` therefore asserts
-//      something canon does not carry, which is why it needed an invented table.
-//
-// The replacement is relation-shaped and takes BOTH positions. It is not landed
-// here: public-surface shape is Architect-owned (CLAUDE.md Code Navigability Rule
-// 5) and DR-L2-ASPECT-1 reads PROPOSED. Nothing in production consumes this yet —
-// only its own unit test — so the swap stays free until the DR is ratified.
+// Both now live at their proper owners: the element law and the aspect relation
+// in `src/engine/canonicalElement.ts` (the TS counterpart of m_canonical.h), and
+// the real five-member `AspectKind` in `src/engine/clockFieldOverlay.ts`, which
+// ports `m2_aspect_between` verbatim from the C kernel. A tarot-decan service was
+// never the owner of either. Nothing consumed the withdrawn surface.
 // ============================================================================
-
-// m2.h Element_Id (lens.rs) — LEGACY ordering, retained only so the frozen 24.7
-// behaviour is unchanged while DR-L2-ASPECT-1 is open. Not the canonical IDs.
-const ELEMENT_AIR = 1;
-const ELEMENT_FIRE = 2;
-const ELEMENT_WATER = 3;
-const ELEMENT_EARTH = 4;
-
-export type AspectKind = 'aspect' | 'opposition' | 'trine' | 'square';
-
-const ELEMENT_FOR_ASPECT: Readonly<Record<AspectKind, number>> = Object.freeze({
-    aspect: ELEMENT_WATER,
-    opposition: ELEMENT_AIR,
-    trine: ELEMENT_FIRE,
-    square: ELEMENT_EARTH
-});
 
 // ============================================================================
 // Card-key parsing — the locally-knowable head of the chain (card + suit).
@@ -194,16 +172,6 @@ export class TarotDecanService {
         return parseChain(key, receipt.artifact) ?? TAROT_DECAN_CHAIN_PENDING;
     }
 
-    /**
-     * @deprecated NOT CANONICAL — see DR-L2-ASPECT-1 and the note above
-     * {@link ELEMENT_FOR_ASPECT}. Returns a legacy m2.h `Element_Id` from an
-     * invented table, and an aspect carries an elemental *relation* rather than an
-     * element at all. Frozen at the 24.7 behaviour until the DR is ratified; do
-     * not add consumers.
-     */
-    elementForAspect(aspect: AspectKind): number {
-        return ELEMENT_FOR_ASPECT[aspect];
-    }
 }
 
 // ============================================================================

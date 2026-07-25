@@ -44,6 +44,28 @@ describe('clock-field overlay (04.T4.3)', () => {
         expect(state.aspectEdges.every(e => e.kind === 'trine')).toBe(true);
     });
 
+    it('carries each edge its L2 elemental reading, read from the degrees (DR-L2-ASPECT-1)', () => {
+        // 0° Aries (Fire), 120° Leo (Fire), 240° Sagittarius (Fire) — the fire trigon.
+        const trigon = buildClockFieldOverlayState({ planetDegrees: [0, 120, 240] });
+        for (const edge of trigon.aspectEdges) {
+            expect(edge.elements).not.toBeNull();
+            // 4 = FIRE in the canonical L2' ordering (NOT 2, which is legacy m2.h).
+            expect(edge.elements?.elementA).toBe(4);
+            expect(edge.elements?.elementB).toBe(4);
+            expect(edge.elements?.relation).toBe('same-element');
+        }
+
+        // 15° Aries (Fire) square 105° Cancer (Water) — cross-pair, distinct elements.
+        const square = buildClockFieldOverlayState({ planetDegrees: [15, 105] });
+        expect(square.aspectEdges).toHaveLength(1);
+        expect(square.aspectEdges[0].kind).toBe('square');
+        expect(square.aspectEdges[0].elements).toEqual({
+            elementA: 4, // Fire
+            elementB: 2, // Water
+            relation: 'cross-pair'
+        });
+    });
+
     it('hop edge is the line-change involution on bussed hexagram/line (⊕ law, involutive)', () => {
         const payload = {
             mahamaya: { hexagramId: 0b101101, lineIndex: 2, lineChangeOperatorAddress: 272 }

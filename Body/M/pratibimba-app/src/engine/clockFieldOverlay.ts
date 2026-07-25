@@ -13,10 +13,14 @@
  *   → empty overlay (pending), never fabricated edges. The codon wheel
  *   perturbation IS the per-generation update (tick advance = new state).
  * Does NOT own: the aspect LUTs (epi-lib m2), the line-change graph substrate
- *   (m3_clock_lut.c), the wheel geometry (CosmicEngine).
+ *   (m3_clock_lut.c), the wheel geometry (CosmicEngine), or the element law —
+ *   each edge's elemental reading comes from `canonicalElement.ts` ([[L2']]
+ *   canon, DR-L2-ASPECT-1), computed from the bussed degrees, never a per-aspect
+ *   element table.
  */
 
 import * as THREE from 'three';
+import { elementalRelationBetweenDegrees, type AspectElements } from './canonicalElement';
 
 /** Verbatim port of the C aspect law (m2.h:572-577 / m2.c:17-19). */
 export const ASPECT_KINDS = ['conjunction', 'sextile', 'square', 'trine', 'opposition'] as const;
@@ -31,6 +35,14 @@ export interface AspectEdge {
     readonly degreeB: number;
     readonly kind: AspectKind;
     readonly orb: number;
+    /**
+     * The edge's elemental reading — the canonical [[L2']] element at each end and
+     * the relation between them, per DR-L2-ASPECT-1. The elements come from the
+     * actual bussed degrees through the M2-3 triplicity identity, never from a
+     * per-aspect-kind table: an aspect carries a relation, not an element.
+     * Null only when a degree is not a finite position.
+     */
+    readonly elements: AspectElements | null;
 }
 
 export interface HopEdge {
@@ -100,7 +112,8 @@ export function buildClockFieldOverlayState(
                         degreeA: degrees[a],
                         degreeB: degrees[b],
                         kind: aspect.kind,
-                        orb: aspect.orb
+                        orb: aspect.orb,
+                        elements: elementalRelationBetweenDegrees(degrees[a], degrees[b])
                     });
                 }
             }
