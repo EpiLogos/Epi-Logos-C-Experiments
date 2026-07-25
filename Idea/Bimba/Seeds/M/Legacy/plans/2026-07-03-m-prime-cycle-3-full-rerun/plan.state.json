@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T10:19:21.385Z",
+  "updatedAt": "2026-07-25T10:23:52.942Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20239,16 +20239,34 @@
       "blocker": null
     },
     "50.T50.05": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-25T10:23:52.920Z",
+      "claimedAt": "2026-07-25T10:19:38.288Z",
+      "completedAt": "2026-07-25T10:23:52.920Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T10:23:52.920Z",
+          "text": "Anima now holds the top-level run and its context: lib/orchestration-run.ts owns immutable run state, opened on session_start and cleared on session_shutdown by extension/mod.ts, so the script lives in the PARENT while children (teams/chains/modes) are the subagents and hold no run state. Context isolation is the load-bearing property and it is enforced, not merely intended: childInputFor() passes ONLY a step's declared imports (a step declaring nothing receives nothing - isolation is the default), an import nobody exported is refused with the available set named rather than silently arriving empty, completeStep() refuses both an undeclared export and a declared-but-missing one, and a child's raw output is MEASURED THEN DROPPED instead of accumulated so the parent's context stays flat in the number of children. LIVE PROOF fresh 12/12 with two real child pi agents in sequence through the T50.02 gated executor: logos read a deliberately chatty manifest and returned replicas=7; the parent retained 9 chars in 1 variable while discarding 19739 chars of that child's output; sophia then received the rendered 21-char preamble, computed 14, and the DECISIVE assertion inspected the exact argv sophia was handed (280 chars total) - the extracted variable was present, NONE of five distinctive upstream-transcript words leaked, and the parent's private deliberation string did not reach the child either. Both steps recorded with their own VAK addresses so the run is scorable per step. This is the second half of the token win: 50.T50.01 removed the per-hop re-send inside one agent's work, this removes transcript-passing between agents. 18 new behavioural tests; full S4 suite 622 pass 0 fail; verify-all W scope GREEN incl live-wire spawned gateway; honesty-lint clean.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 622,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/lib/orchestration-run.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/mod.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/orchestration_run.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/orchestration-run-live.mjs",
+              "live-wire PASS + gateway suites GREEN in verifications/50.T50.05.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T10:19:38.288Z",
+      "runId": "20260725T101938Z-50-T50.05",
       "worktree": null,
       "blocker": null
     },
@@ -26217,6 +26235,16 @@
       "leaseExpiresAt": "2026-07-25T12:15:40.306Z",
       "worktree": null,
       "completedAt": "2026-07-25T10:19:21.363Z"
+    },
+    {
+      "runId": "20260725T101938Z-50-T50.05",
+      "taskId": "50.T50.05",
+      "status": "done",
+      "startedAt": "2026-07-25T10:19:38.288Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T12:19:38.288Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T10:23:52.920Z"
     }
   ],
   "activeRoute": {
