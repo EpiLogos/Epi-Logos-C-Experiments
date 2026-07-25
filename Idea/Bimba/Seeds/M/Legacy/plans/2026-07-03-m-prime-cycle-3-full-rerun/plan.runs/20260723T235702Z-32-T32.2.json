@@ -1,0 +1,47 @@
+{
+  "runId": "20260723T235702Z-32-T32.2",
+  "taskId": "32.T32.2",
+  "startedAt": "2026-07-23T23:57:02.157Z",
+  "owner": "opus-mdev-c3-impl",
+  "leaseExpiresAt": "2026-07-24T01:57:02.157Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.2",
+    "trackId": "32",
+    "tranche": "T32.2",
+    "title": "First-run identity wizard invocation orchestration",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.14"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-23T22:57:18.559Z",
+        "text": "Fate C spine-gap (DR-FACE-7): the routing target — the PASU identity wizard (25.T25.4) — is pending/unlanded in the carrier (no wizard face exists; the M4 dialogical arena is a different surface), and the enforced write path nara.pasu.set is unimplemented per gateway-method-audit. nara.pasu.show exists so absence-detection could fire, but the orchestration would route to a non-existent wizard (dead code, no observable behaviour, UF unprovable). Build after 25.T25.4 lands the wizard face and nara.pasu.set is implemented."
+      },
+      {
+        "at": "2026-07-23T23:20:05.791Z",
+        "text": "Unblock: re-examined — the orchestration decision (coldStartPasuBranch, mirroring coldStartKairosBranch) is a real testable deliverable; nara.pasu.show exists. Building it (+ 25.T25.4 wizard for the routing target)."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: onboarding/settings/empty-states — six-stage cold-start (non-modal splash 'Profile-tick 1 — system alive'), 9-id+5-flavour readiness via flavourOf(), per-Mn empty copy, typed-confirmation reset, per-artifact privacy opt-in. §2 track 32."
+  }
+}

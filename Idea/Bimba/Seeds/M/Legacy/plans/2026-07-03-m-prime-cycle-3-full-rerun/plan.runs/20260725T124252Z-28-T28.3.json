@@ -1,0 +1,38 @@
+{
+  "runId": "20260725T124252Z-28-T28.3",
+  "taskId": "28.T28.3",
+  "startedAt": "2026-07-25T12:42:52.041Z",
+  "owner": "opus-mdev-frontend-uf",
+  "leaseExpiresAt": "2026-07-25T14:42:52.041Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.3",
+    "trackId": "28",
+    "tranche": "T28.3",
+    "title": "Bimba Graph Viewer: two-rendering audit + neighbor graph + relation-family filter",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.20"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> s1'.entity.capture Hen candidate -> Canon Studio; aletheia_* = agent tools via s4'.mediation.route, NOT a pane gateway method — see 28.7 CORRECTION); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28."
+  }
+}

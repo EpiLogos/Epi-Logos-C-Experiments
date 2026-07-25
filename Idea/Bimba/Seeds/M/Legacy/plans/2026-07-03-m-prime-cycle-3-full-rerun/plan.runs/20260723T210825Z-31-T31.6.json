@@ -1,0 +1,38 @@
+{
+  "runId": "20260723T210825Z-31-T31.6",
+  "taskId": "31.T31.6",
+  "startedAt": "2026-07-23T21:08:25.276Z",
+  "owner": "opus-mdev-c3-impl",
+  "leaseExpiresAt": "2026-07-24T00:08:25.276Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.6",
+    "trackId": "31",
+    "tranche": "T31.6",
+    "title": "Breadcrumbs: coordinate path visible",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.5"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: chrome contributions — six-entry strip ids, chord grammar (cmd-period face toggle, cmd-shift-{0..5} Mn, cmd-1..8 tabs), slot policy (no three-pane main), family->archetype->position breadcrumbs, no-modal. §2 track 31."
+  }
+}

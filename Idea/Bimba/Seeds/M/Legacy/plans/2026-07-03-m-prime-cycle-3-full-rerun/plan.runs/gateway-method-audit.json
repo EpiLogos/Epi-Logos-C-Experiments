@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-23T22:24:50.854Z",
+ "generatedAt": "2026-07-25T14:31:18.303Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,8 +7,8 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 277,
-  "present": 99,
+  "probed": 278,
+  "present": 100,
   "absent": 178,
   "unknown": 0
  },
@@ -427,6 +427,13 @@
    "errorClass": "unimplemented"
   },
   {
+   "method": "m3.h's",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented"
+  },
+  {
    "method": "m3.lensCodonBinary",
    "advertised": false,
    "exists": false,
@@ -688,9 +695,9 @@
   {
    "method": "nara.pasu.set",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: missing required param 'key'"
   },
   {
    "method": "nara.pasu.show",

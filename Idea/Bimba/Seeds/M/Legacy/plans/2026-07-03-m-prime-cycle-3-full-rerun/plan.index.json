@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-25T09:00:24.363Z",
+  "generatedAt": "2026-07-25T15:40:47.757Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -373,6 +373,13 @@
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
       "title": "Track 50 — Code-Mode Orchestration: VAK Script Execution (JSON→TS Program Synthesis)",
       "checksum": "319294c938d4c71c10fb0212e73abea7716898ba6d4103b2d0febb7a7d3c8644"
+    },
+    {
+      "id": "51",
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "title": "Track 51 — Specced-Surface Gap Closure: M′ sub-node surfaces with no tranche",
+      "checksum": "1a083b6f0d5506f83737a6bd3919e58c6ba9ce3bf5f4b573efbc6b46c1ab991e"
     }
   ],
   "tasks": [
@@ -7800,7 +7807,7 @@
       "file": "29-integrated-plugins-composition-deep.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
       "dependsOn": [
-        "29.T29.16"
+        "29.T29.15"
       ],
       "writeScopes": [
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md"
@@ -10762,6 +10769,115 @@
         "Idea/Bimba/Seeds/S/S4/S4-SPEC.md"
       ],
       "body": "16. **T50.16 — Canon write-back: S4-SPEC + `vak-coordinate-frame` + `anima-orchestration` skills updated to the script paradigm**\n\n    Brief: Harmonise the owning canon so the JSON→TS orchestration paradigm is the documented operative shape, per SEED-HARMONISATION-PROTOCOL: `[[S4-SPEC]]` names the orchestration-run surface and the two tiers; the `vak-coordinate-frame` skill documents the six-coordinate scripting language and CP-nesting; the `anima-orchestration` skill documents script authoring, the `(00/00)`→score lifecycle, and the reconciled CF notation; the S4-4p-anima DOX is updated.\n    Build: `Idea/Bimba/Seeds/S/S4/S4-SPEC.md` + `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md`, `.claude/skills/vak-coordinate-frame/SKILL.md`, `.claude/skills/anima-orchestration/SKILL.md`, `Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md`.\n    Verify: the SEED-HARMONISATION adversarial gate passes; the skills and S4-SPEC match the landed code (cite the T50.15 acceptance run). verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.1",
+      "trackId": "51",
+      "tranche": "T51.1",
+      "title": "`s4'.context.assemble`: make context-pack assembly a real surface, and make the spine injection visible",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3"
+      ],
+      "writeScopes": [
+        "Body/M/pratibimba-app",
+        "Body/S/S3/gateway-contract/src/protocol.rs",
+        "Body/S/S3/gateway/src/dispatch.rs",
+        "Body/S/S4/pi-agent/lib/capability-parity.ts",
+        "Body/S/S4/plugins/pleroma/capability-matrix.json",
+        "Body/S/S4/ta-onta/composite-entry.ts",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md"
+      ],
+      "body": "1. **T51.1 — `s4'.context.assemble`: make context-pack assembly a real surface, and make the spine injection visible**\n\n   Brief: `s4'.context.assemble` is named as an implementation hook in `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md` (\"API / Envelope / Implementation Hooks\") and listed in that same file's `Open Gaps` — \"`s4'.context.assemble`, richer `s4'.goal.*`, and persisted Psyche goal state remain open\" — and again in `S4-4-SPEC.md` (\"`nous_disclose` still uses a helper path for context; target `s4'.context.assemble` must route through explicit S1/S2/S3/S5 contracts\"). Nothing in the cycle-3 plan mentions it. The concrete consequence landed during Track 50: `Body/S/S4/ta-onta/composite-entry.ts` assembles the six ta-onta carriers' spine contributions into a system-prompt injection on every session, and **nothing anywhere can see what it injects** — not the user, not the agent, not a test. It was in fact returning that injection from a `session_start` handler, which pi types with no result, so it was silently discarded entirely until 2026-07-25; a surface that had been dead for an unknown period, with no way to notice. That is precisely the class of silent behaviour the whole architecture exists to make visible.\n   Build: implement `s4'.context.assemble` as a first-class gateway method (`Body/S/S3/gateway-contract/src/protocol.rs` `METHOD_NAMES` + handler in `Body/S/S3/gateway/src/dispatch.rs`), returning the assembled context pack with per-carrier provenance: which carrier contributed each block, its byte size, and its freshness. Route `composite-entry.ts`'s assembly through it so the injected pack and the reported pack are the same object, not two code paths that can diverge. Register the capability in `Body/S/S4/plugins/pleroma/capability-matrix.json` and keep `Body/S/S4/pi-agent/lib/capability-parity.ts` green.\n   Then surface it: a context-pack view in the M5-4′ Agentic Control Room (`Body/M/pratibimba-app`) rendering the live pack per-carrier. The gateway method makes the injection visible to the AGENT; the ACR view makes it visible to the USER, and the surface exists to serve both. This tranche therefore spans S4′ and M5-4′ — which is ordinary, not a scope problem.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral/live-wire proof per Track 00 — dispatch the new method over a spawned `epi gate start`, strict-Zod parse, and assert the returned pack is byte-identical to what a live session actually injects (not a re-assembly); capability-parity and no-tool-bypass pass; plus a UF e2e opening the ACR view and asserting it renders the same per-carrier pack the method returns. verify-all green, honesty-lint clean; verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.2",
+      "trackId": "51",
+      "tranche": "T51.2",
+      "title": "M5-3′ Frontend Studio: the one studio of the sixfold with no tranche",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3",
+        "51.T51.1"
+      ],
+      "writeScopes": [
+        "Body/M/pratibimba-app/src/panes/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "tests/e2e/**"
+      ],
+      "body": "2. **T51.2 — M5-3′ Frontend Studio: the one studio of the sixfold with no tranche**\n\n   Brief: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md` \"Sixfold IDE Surface\" names six M5′ studios. Five are covered somewhere in the plan — M5-0′ Library, M5-1′ Canon Studio, M5-2′ Backend Studio, M5-4′ Agentic Control Room (Track 26), M5-5′ Logos Atelier (26.T26.3). **M5-3′ Frontend Studio appears in no track** except a passing mention in Track 38's `omniTuning` fold. Per the spec it \"Shapes one Theia shell whose 0/1 daily layout, deep IDE layout, M-extensions, and integrated plugins are one thing\" — i.e. the surface through which the app's own layout, extension set, and plugin composition are inspectable and editable. Retarget note: the spec's Theia framing is CONTRACT (what the surface must expose); the Theia plumbing is dead — build it carrier-native in pratibimba-app.\n   Build: an M5-3′ Frontend Studio pane in `Body/M/pratibimba-app/src/panes/` exposing the live layout/extension/plugin composition as data (not a screenshot of it): which panes are registered, which composition slots are filled and by what, which integrated plugins are active. It must read the real registries the app boots from, so it cannot drift from what actually rendered.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — a UF e2e (`tests/e2e/`) opens the studio and asserts the rendered inventory matches the app's actual registered panes and composition slots, including after a slot is added. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.3",
+      "trackId": "51",
+      "tranche": "T51.3",
+      "title": "M1′ traversal timeline: the walk's tick/position6/helix-face/degree720 in motion",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3",
+        "51.T51.2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+      ],
+      "body": "3. **T51.3 — M1′ traversal timeline: the walk's tick/position6/helix-face/degree720 in motion**\n\n   Brief: `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md` §2 User-Facing Surface specs a \"**Traversal timeline** showing the active tick, position6, helix face, degree720, and relation movement of the walk in progress.\" Zero plan coverage. `WalkPane` and `m1SurfaceDispatch` land the walk itself, but the timeline — the surface that makes a traversal legible *as motion over time* rather than as a current-state readout — has no tranche. Without it the walk is a position; with it the walk is a path.\n   Build: a traversal-timeline carrier in pratibimba-app reading the live walk state (tick, `position6`, helix face, `degree720`, relation movement) from the same source `WalkPane` uses, rendering the trajectory rather than the latest sample. Möbius-return (P5 → P0′) must be visible as the enharmonic flip the spec describes, not smoothed over.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — a UF e2e walks ≥2 relation steps and asserts the timeline records each tick with its position6/helix-face/degree720, and that a P5 → P0′ crossing is marked. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.4",
+      "trackId": "51",
+      "tranche": "T51.4",
+      "title": "M2′ meaning-packet inspector: `M2PrimeMeaningPacket` as an inspectable object",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3",
+        "51.T51.3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+      ],
+      "body": "4. **T51.4 — M2′ meaning-packet inspector: `M2PrimeMeaningPacket` as an inspectable object**\n\n   Brief: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md` §2 User-Facing Surface specs a \"**Meaning-packet inspector** exposing the active [[M2PrimeMeaningPacket]]: 72-address views, [[MEF]] semantic frame, elemental-medium frame\". Zero plan coverage — `M2CorrespondencePane` renders correspondence, but the packet itself (the typed object the rest of the stack passes around) is not inspectable. This is the M2′ instance of the same problem as T51.1: a load-bearing structure that everything consumes and nothing can see.\n   Build: a meaning-packet inspector carrier in pratibimba-app rendering the ACTIVE `M2PrimeMeaningPacket` — its 72-address views, MEF semantic frame, and elemental-medium frame — read from the live packet, not reconstructed. Elemental values must route through the L2′ element law (`m_canonical.h` ordering: 0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt); never an ad-hoc map.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — a UF e2e asserts the inspector's rendered packet matches the packet the app is actually holding, and that elemental rendering matches the L2′ ordering. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.5",
+      "trackId": "51",
+      "tranche": "T51.5",
+      "title": "M3-5′ co-foliated double-torus world-clock view",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3",
+        "51.T51.4"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md"
+      ],
+      "body": "5. **T51.5 — M3-5′ co-foliated double-torus world-clock view**\n\n   Brief: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md` §1 User-Facing Surface specs an \"**M3-5 double-torus world-clock view**: a depth mode showing the co-foliation of [[K²]] audio-genesis substrate with [[T²_Mahāmāyā]] inscription\", and §8.13 gives it its own surface law (\"M3-5 Surface Law: Co-Foliated Double-Torus and 0-Side Dual Rendering\"). Zero plan coverage — a surface with its own §-numbered law in canon and not one tranche. `PlayedTorusPane` and `M3WalkNavigator` exist but neither renders the co-foliation.\n   Build: an M3-5′ depth mode in pratibimba-app rendering both foliations together per §8.13, including the 0-side dual rendering the law requires. Reads the live M3 profile/clock state; the two tori must be visibly co-foliated rather than drawn side by side.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — a UF e2e enters the depth mode and asserts both foliations render from live clock state and that the 0-side dual rendering is present per §8.13. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "51.T51.6",
+      "trackId": "51",
+      "tranche": "T51.6",
+      "title": "M4′ Dream Journal surface",
+      "effort": null,
+      "file": "51-specced-surface-gap-closure.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+      "dependsOn": [
+        "00.T3",
+        "51.T51.5"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+      ],
+      "body": "6. **T51.6 — M4′ Dream Journal surface**\n\n   Brief: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md` User-Facing Surface specs \"Daily Note, **Dream Journal**, Oracle, and Highlight surfaces over one protected local flow substrate.\" Daily Note (`DayCalendarPane`, `NowPane`), Oracle (`OraclePane`), and Highlight all have coverage; **Dream Journal has zero mentions anywhere in the plan**. It is named in the same breath as three surfaces that were built, which is how it went missing.\n   Build: a Dream Journal surface in pratibimba-app over the same protected local flow substrate as the other three — same privacy boundary, same `c_n_*` frontmatter law, same protected-handle discipline. Per the M4′ privacy law, dream content is private local flow: it must not reach public graph surfaces, and playback may replay only safe profile handles.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — a UF e2e writes and reads a dream entry through the protected substrate and asserts the content does NOT appear on any public graph surface or in any emitted envelope. verifier ≠ closer; evidence = fresh command output.\n\n---\n\n## Provenance of this track\n\nGap list established 2026-07-25 by mechanical check: every surface named in the `User-Facing Surface` / `Sixfold IDE Surface` section of `M0'-SPEC.md` … `M5'-SPEC.md`, and every `Open Gaps` entry in the `S4'` shard specs, was grepped (name plus variants) against all 50 existing track files in this plan folder. The six above returned **zero matches**. Surfaces that matched — Library, Canon Studio, Backend Studio, Agentic Control Room, Logos Atelier, Cymatic, and the rest of the M0′–M4′ inventories — are already carried by tracks 21–26, 29, 38 and are NOT duplicated here.\n\nThis track does not claim the audit is exhaustive for every sub-clause of every spec; it claims these six are specced, unplanned, and now scheduled. Track 43 (end-of-cycle-3 audit protocol) remains the place to run the full sweep."
     }
   ]
 }
