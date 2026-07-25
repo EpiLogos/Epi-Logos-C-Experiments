@@ -1,6 +1,6 @@
 # 14.T14.4 — Cycle-Close No-Orphan Re-Audit
 
-Re-audited: 2026-07-20 against the live rerun ledger. This is a fresh pass over every original §Open Orphans row plus the Closed-Canonical pentadic row. `CLOSED` means every listed tranche is done; `ROUTED` retains an unfinished named tranche; `REVIEW` records a real, owned review surface; `RESOLVED` is a decision-register disposition with no implementation to land.
+Re-audited: 2026-07-20 against the live rerun ledger; refreshed 2026-07-25 (one row moved review→CLOSED; G3/G5 mechanised — see the dated section below). This is a fresh pass over every original §Open Orphans row plus the Closed-Canonical pentadic row. `CLOSED` means every listed tranche is done; `ROUTED` retains an unfinished named tranche; `REVIEW` records a real, owned review surface; `RESOLVED` is a decision-register disposition with no implementation to land.
 
 | Historical orphan | Current route (live status) | Verdict |
 |---|---|---|
@@ -19,7 +19,7 @@ Re-audited: 2026-07-20 against the live rerun ledger. This is a fresh pass over 
 | ACR extension repurpose (Pi-runtime monitor or deprecate) | 12.T12.07:done · 27.T27.10:done · 26.T26.7:pending | ROUTED — `12.T12.14` is retired; its current reframe route includes unclaimed `26.T26.7`. |
 | K2 played-torus 3D extension (DR-M1-2) | 02.T2.6:done | CLOSED |
 | Earth observer handle (DR-KB-1) | 03.T3.5:done · 03.T3.9:done · 10.T10.3:done | CLOSED |
-| Hen vault-instance carrier (DR-M1-4) | 02.T2.10:review | REVIEW — owned by `codex-mdev-0210-cpt`; real teacher-invocation/consent and smoothness-filter work remains. |
+| Hen vault-instance carrier (DR-M1-4) | 02.T2.10:done | CLOSED — closed 2026-07-21 (teacher-invocation rides the `pi` slot selector; the "deferred cloud call" framing was retracted as fabricated). |
 | Hen entity-candidate lifecycle (CCT-14) | 16.T16.1:done | CLOSED |
 | C-layer semantic typology (CCT-15) | 16.T16.1:done | CLOSED |
 | K2SurfaceHandle ownership (composition mount-point) | 02.T2.6:done · 07.T7.1:done | CLOSED |
@@ -29,4 +29,22 @@ Re-audited: 2026-07-20 against the live rerun ledger. This is a fresh pass over 
 | Techne profile (DR-S4-TECHNE, not an agent) | -- | RESOLVED |
 | anuttara_pentadic_trace closure (Closed-Canonical row; final seal 36.7) | 36.T36.1:done · 36.T36.2:done · 36.T36.3:done · 36.T36.7:done | CLOSED |
 
-**Result:** 21 CLOSED · 1 ROUTED · 1 REVIEW · 1 RESOLVED. Every historical row has a current route or an explicit decision disposition, so there is no unclassified `STILL-ORPHAN` row. The cycle-close criterion is nevertheless **not met**: `26.T26.7` is pending and unclaimed, `02.T2.10` remains in review, and `release-gates.mjs` reports G3 and G5 OPEN because their load-bearing UX and `CODE-PENDING` audits are not mechanised. Do not mark 14.T14.4 done until those conditions clear and an independent verifier reruns the full gate.
+**Result:** 22 CLOSED · 1 ROUTED · 1 RESOLVED. Every historical row has a current route or an explicit decision disposition, so there is no unclassified `STILL-ORPHAN` row.
+
+## 2026-07-25 — G3/G5 mechanisation (the gates are live now)
+
+The 2026-07-20 pass recorded G3/G5 as OPEN "because their load-bearing UX and `CODE-PENDING` audits are not mechanised." That was the honest reading of a defect: `release-gates.mjs` handed both gates a literal `null` status and closed on `status === 'done'`, so **both read unconditionally OPEN and could never close** — the cycle seal was structurally unreachable at 10/12 regardless of the work.
+
+Resolution: both laws are mechanical accounting statements, not human sign-off, so both are now live-computed from the corpus + ledger.
+
+- **G3 — CLOSED.** "Per-subsystem matrix files account for every claim in each UX doc; orphan rows above route to a tranche" now walks every claim row of all 22 wave-a/b/c matrices and requires a classification token in the row's own Status column, plus zero `STILL-ORPHAN` rows in this file. Live: **534/534 claim rows classified, 0 STILL-ORPHAN.**
+- **G5 — OPEN, with a named route.** "Every CODE-PENDING has a closing tranche … No silent pending markers" now maps each matrix to its absorbing track and requires that track to carry no unrouted tranche (every task `done`, or `blocked` with a *classified* blocker — loud, not silent). Live: **96 CODE-PENDING markers; 13 absorbing tracks closing, 4 still unrouted — tracks 26, 28, 29, 32.**
+
+G3 joins the corpus-integrity class (G1/G2/G3/G4/G6) that drives the runner's exit code — an unclassified claim row is now a hard failure, verified by injection. G5 stays in the progress class (G5/G7-G12): an OPEN row there is honest cycle state, not a defect.
+
+**Cycle-close criterion: still not met, but no longer stuck.** Release gates read **11/12**. Two conditions remain, both ordinary implementation work rather than gate mechanics:
+
+1. `26.T26.7` (ACR T8 contents + DR-M5-1 roster collapse + 12.14 Pi-monitor reframe) is pending behind `26.T26.6` — this is the one `ROUTED` row above.
+2. G5's four absorbing tracks (26, 28, 29, 32) must finish; the gate then flips CLOSED on its own.
+
+Do not mark 14.T14.4 done until release-gates reads 12/12 and an independent verifier reruns the full gate.

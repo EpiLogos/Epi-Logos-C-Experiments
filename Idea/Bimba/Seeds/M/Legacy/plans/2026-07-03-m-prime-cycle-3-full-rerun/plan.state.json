@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T09:00:24.367Z",
+  "updatedAt": "2026-07-25T09:24:16.245Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14786,16 +14786,16 @@
       "blocker": null
     },
     "30.T30.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T09:10:29.677Z",
+      "claimedAt": "2026-07-25T09:10:29.677Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T11:10:29.677Z",
+      "heartbeatAt": "2026-07-25T09:10:29.677Z",
+      "runId": "20260725T091029Z-30-T30.4",
       "worktree": null,
       "blocker": null
     },
@@ -19475,7 +19475,7 @@
     },
     "14.T14.4": {
       "status": "review",
-      "updatedAt": "2026-07-21T13:12:17.029Z",
+      "updatedAt": "2026-07-25T09:24:16.210Z",
       "claimedAt": "2026-07-20T17:04:04.021Z",
       "completedAt": "2026-07-21T12:52:05.567Z",
       "evidence": [
@@ -19508,12 +19508,16 @@
         {
           "at": "2026-07-21T13:12:17.029Z",
           "text": "Reopened false close: cycle-close SEAL closes only at 0 open release gates, but release-gates.mjs reports 10/12 CLOSED with G3 (UX-claim classification) + G5 (CODE-PENDING closing tranches) still OPEN. The prior done mark cited the shared UF gate, not the seal's own 0-open acceptance. Returns to review until 12/12."
+        },
+        {
+          "at": "2026-07-25T09:24:16.210Z",
+          "text": "G3/G5 cycle-seal gate RESOLVED as live-compute (the blocker was a runner defect, not missing work): release-gates.mjs handed G3/G5 a literal null and closed on status==='done', so both read unconditionally OPEN and the seal was structurally unreachable at 10/12. Both laws are mechanical accounting, not human sign-off, so both are now computed. G3 CLOSED — walks every claim row of all 22 wave-a/b/c matrices (proper markdown cell splitter: pipes inside code spans and escaped pipes are content) requiring a classification token in the row's own Status column, plus zero STILL-ORPHAN rows: 534/534 classified. G5 OPEN with a named route — 96 CODE-PENDING markers mapped to absorbing tracks, 13 closing, 4 unrouted (tracks 26/28/29/32); it now flips CLOSED on its own when they finish. G3 joins the corpus-integrity exit-code class (G1/G2/G3/G4/G6), verified by injection: one unclassified row -> OPEN + exit 1, restored -> CLOSED + exit 0, matrix file restored clean. Gates now read 11/12. Re-audit refreshed: 02.T2.10 review->done so 22 CLOSED/1 ROUTED/1 RESOLVED. Stays in review: the seal needs 12/12, which needs 26.T26.7 (the one ROUTED row, pending behind 26.T26.6) and G5's four tracks."
         }
       ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
       "owner": "codex-mdev-144-cycle-audit",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-21T13:12:17.029Z",
+      "heartbeatAt": "2026-07-25T09:24:16.210Z",
       "runId": "20260720T170404Z-14-T14.4",
       "worktree": null,
       "blocker": null
@@ -20085,16 +20089,16 @@
       "blocker": null
     },
     "50.T50.01": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T09:09:10.212Z",
+      "claimedAt": "2026-07-25T09:09:10.212Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T11:09:10.212Z",
+      "heartbeatAt": "2026-07-25T09:09:10.212Z",
+      "runId": "20260725T090910Z-50-T50.01",
       "worktree": null,
       "blocker": null
     },
@@ -26060,17 +26064,35 @@
       "leaseExpiresAt": "2026-07-25T10:49:13.920Z",
       "worktree": null,
       "completedAt": "2026-07-25T09:00:24.345Z"
+    },
+    {
+      "runId": "20260725T090910Z-50-T50.01",
+      "taskId": "50.T50.01",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T09:09:10.212Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T11:09:10.212Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260725T091029Z-30-T30.4",
+      "taskId": "30.T30.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T09:10:29.677Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T11:10:29.677Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T08:57:10.142Z",
-    "updatedAt": "2026-07-25T08:57:10.142Z",
+    "createdAt": "2026-07-25T09:14:55.871Z",
+    "updatedAt": "2026-07-25T09:14:55.871Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "24.T24.7",
-      "24.T24.8"
+      "50.T50.01",
+      "30.T30.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -26078,8 +26100,8 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "24.T24.7": "in-session",
-      "24.T24.8": "in-session"
+      "50.T50.01": "in-session",
+      "30.T30.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
