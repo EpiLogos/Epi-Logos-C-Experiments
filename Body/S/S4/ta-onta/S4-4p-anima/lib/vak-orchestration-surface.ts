@@ -359,3 +359,226 @@ export async function runOrchestration(
 	}
 	return results;
 }
+
+// ── CP nesting: context-frame recursion (50.T50.04) ───────────────────────
+//
+// CP is the composability engine. A position inside a context frame is EITHER a
+// terminal dispatch (a leaf) OR it expands into a full nested context frame. That
+// is the `.`-nesting operator surfaced through CP, and it is what lets the
+// language scale: `(0/1/2)` position 0 can open `(00/00)`, and a
+// `(4.0/1-4.4/5)` parent can nest a whole frame at each of its internal
+// positions.
+//
+// In TypeScript this needs no new abstraction — a frame is a node whose children
+// are nodes, and evaluation is plain recursion. What this section adds is the
+// *law*: which slots a frame has, and that a child's CP must agree with the slot
+// it occupies.
+
+/**
+ * The internal position slots of a context frame, in order.
+ *
+ * Derived from the frame's own notation rather than a hand-kept table, so the
+ * notation IS the slot list. `(4.0/1-4.4/5)` is the one range form: it denotes
+ * the fractal doubling across `4.0..4.5`, which is exactly the canonical
+ * `CP4.0..CP4.5` literal set.
+ */
+export function frameSlots(frame: CfLiteral): string[] {
+	if (frame === "(4.0/1-4.4/5)") {
+		return ["4.0", "4.1", "4.2", "4.3", "4.4", "4.5"];
+	}
+	return frame.slice(1, -1).split("/");
+}
+
+/** A terminal position: this slot dispatches. */
+export interface FrameLeaf {
+	readonly kind: "leaf";
+	readonly id: string;
+	readonly address: VakAddress;
+	readonly task: string;
+	readonly agent?: string;
+}
+
+/** A position that opens a whole nested context frame. */
+export interface FrameNest {
+	readonly kind: "frame";
+	readonly id: string;
+	readonly address: VakAddress;
+	/** Slot-aligned children: `children[i]` occupies slot `i` of this frame. */
+	readonly children: readonly FrameNode[];
+}
+
+/** Either a leaf dispatch or a nested frame — the recursion. */
+export type FrameNode = FrameLeaf | FrameNest;
+
+/** Raised when a nested structure violates the CP nesting law. */
+export class FrameNestingError extends Error {
+	readonly violations: string[];
+
+	constructor(violations: string[]) {
+		super(`invalid CP nesting: ${violations.join("; ")}`);
+		this.name = "FrameNestingError";
+		this.violations = violations;
+	}
+}
+
+/** Nesting depth of a node: a leaf is 0, a frame is 1 + its deepest child. */
+export function nestingDepth(node: FrameNode): number {
+	if (node.kind === "leaf") return 0;
+	if (node.children.length === 0) return 1;
+	return 1 + Math.max(...node.children.map(nestingDepth));
+}
+
+/** Every leaf in a nested structure, in slot order (depth-first). */
+export function frameLeaves(node: FrameNode): FrameLeaf[] {
+	if (node.kind === "leaf") return [node];
+	return node.children.flatMap(frameLeaves);
+}
+
+/**
+ * The CP a child must carry to occupy slot `index` of `frame`.
+ *
+ * Only the `(4.0/1-4.4/5)` parent pins its children's CP, because its slots ARE
+ * the canonical `CP4.x` positions. Other frames position their children within
+ * their own notation and do not constrain the CP literal, so this returns null
+ * for them rather than inventing a mapping.
+ */
+export function expectedCpForSlot(frame: CfLiteral, index: number): CpLiteral | null {
+	if (frame !== "(4.0/1-4.4/5)") return null;
+	const slots = frameSlots(frame);
+	if (index < 0 || index >= slots.length) return null;
+	return `CP4.${index}` as CpLiteral;
+}
+
+/**
+ * Validate a nested structure.
+ *
+ * Checks, recursively: every address is envelope-complete; no frame carries more
+ * children than it has slots; and a child of the `4.x` parent carries the CP of
+ * the slot it sits in — so CP genuinely *places* the step rather than decorating
+ * it.
+ */
+export function assertFrameNesting(node: FrameNode, path: string[] = []): void {
+	const violations: string[] = [];
+	const here = [...path, node.id];
+	const label = here.join(" > ");
+
+	try {
+		assertFullEnvelope(node.address);
+	} catch (err) {
+		const inner = err instanceof VakEnvelopeError ? err.violations : [String(err)];
+		violations.push(...inner.map((v) => `${label}: ${v}`));
+	}
+
+	if (node.kind === "frame") {
+		const slots = frameSlots(node.address.cf);
+		if (node.children.length > slots.length) {
+			violations.push(
+				`${label}: frame ${node.address.cf} has ${slots.length} slot(s) but ${node.children.length} child(ren)`,
+			);
+		}
+		node.children.forEach((child, index) => {
+			const expected = expectedCpForSlot(node.address.cf, index);
+			if (expected && child.address.cp !== expected) {
+				violations.push(
+					`${label} > ${child.id}: slot ${index} of ${node.address.cf} requires cp ${expected}, got ${child.address.cp}`,
+				);
+			}
+		});
+	}
+
+	if (violations.length > 0) throw new FrameNestingError(violations);
+	if (node.kind === "frame") {
+		for (const child of node.children) assertFrameNesting(child, here);
+	}
+}
+
+/** One entry of the nesting trace: what ran, how deep, and where. */
+export interface FrameTraceEntry {
+	readonly nodeId: string;
+	readonly kind: "leaf" | "frame";
+	/** 0 for the root; +1 per nesting level. */
+	readonly depth: number;
+	/** The chain of context frames enclosing this node, outermost first. */
+	readonly framePath: readonly CfLiteral[];
+	/** The slot indices taken to reach this node from the root. */
+	readonly slotPath: readonly number[];
+	readonly address: VakAddress;
+	/** Present for leaves (and for dialogical halts); frames do not dispatch. */
+	readonly emission?: VakEmission<{ output: string; primitive: ZThreadToolName | null }>;
+	readonly haltedForHuman?: boolean;
+}
+
+/** Executes one leaf, told where in the nesting it sits. */
+export type LeafExecutor = (
+	leaf: FrameLeaf,
+	context: { primitive: ZThreadToolName | null; depth: number; framePath: readonly CfLiteral[] },
+) => Promise<string> | string;
+
+/**
+ * Evaluate a nested frame structure.
+ *
+ * Plain recursion, as the design says it should be: a frame descends into its
+ * slots; a leaf dispatches. Frames themselves never dispatch — only leaves do —
+ * so a frame contributes structure to the trace and nothing else.
+ *
+ * The returned trace records the nesting explicitly (`depth`, `framePath`,
+ * `slotPath`), which is what makes a run replayable and scorable later.
+ */
+export async function runNestedFrame(
+	root: FrameNode,
+	options: {
+		execute: LeafExecutor;
+		respondToHuman?: (leaf: FrameLeaf) => Promise<string> | string;
+	},
+): Promise<FrameTraceEntry[]> {
+	assertFrameNesting(root);
+	const trace: FrameTraceEntry[] = [];
+
+	const walk = async (
+		node: FrameNode,
+		depth: number,
+		framePath: CfLiteral[],
+		slotPath: number[],
+	): Promise<void> => {
+		if (node.kind === "frame") {
+			trace.push({
+				nodeId: node.id,
+				kind: "frame",
+				depth,
+				framePath: [...framePath],
+				slotPath: [...slotPath],
+				address: node.address,
+			});
+			const nextPath = [...framePath, node.address.cf];
+			for (let index = 0; index < node.children.length; index += 1) {
+				await walk(node.children[index], depth + 1, nextPath, [...slotPath, index]);
+			}
+			return;
+		}
+
+		const primitive = primitiveFor(node.address);
+		let output: string;
+		let haltedForHuman = false;
+		if (haltsForHuman(node.address)) {
+			if (!options.respondToHuman) throw new DialogicalHaltRequired(node.id);
+			haltedForHuman = true;
+			output = await options.respondToHuman(node);
+		} else {
+			output = await options.execute(node, { primitive, depth, framePath: [...framePath] });
+		}
+
+		trace.push({
+			nodeId: node.id,
+			kind: "leaf",
+			depth,
+			framePath: [...framePath],
+			slotPath: [...slotPath],
+			address: node.address,
+			emission: emit(node.address, { output, primitive }),
+			haltedForHuman,
+		});
+	};
+
+	await walk(root, 0, [], []);
+	return trace;
+}

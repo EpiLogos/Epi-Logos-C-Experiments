@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T10:14:43.751Z",
+  "updatedAt": "2026-07-25T10:19:21.385Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20208,16 +20208,33 @@
       "blocker": null
     },
     "50.T50.04": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-25T10:19:21.363Z",
+      "claimedAt": "2026-07-25T10:15:40.306Z",
+      "completedAt": "2026-07-25T10:19:21.363Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T10:19:21.363Z",
+          "text": "CP nesting landed as plain recursion in the orchestration surface, no new abstraction: a position inside a context frame is either a terminal FrameLeaf dispatch or a FrameNest opening a whole nested frame. frameSlots() derives a frame's internal positions from its OWN notation rather than a hand-kept table - the inner frames split on / and (4.0/1-4.4/5) is the single range form, expanding to exactly the canonical CP4.0..CP4.5 literal set. The law that makes CP load-bearing rather than decorative: expectedCpForSlot() + assertFrameNesting() require a child of the 4.x parent to carry the CP of the slot it occupies (slot 1 demands CP4.1), refuse a frame carrying more children than it has slots, and name the full path of a nested violation; other frames position within their own notation and are deliberately NOT given an invented CP mapping. runNestedFrame() recurses, dispatching at leaves ONLY - frames contribute structure and never a dispatch - and returns a trace recording depth, framePath and slotPath. LIVE PROOF fresh 12/12: the exact shape from the brief (outer (0/1/2) whose slot 0 opens (00/00) and slot 1 opens the 4.x parent) validated at depth 2 and executed with a REAL child pi at every leaf through the T50.02 gated executor - three children spawned as the agents their CF binds (logos, sophia, psyche), each returning its real file contents (ALPHA, BETA, GAMMA), each reaching the primitive its CFP names (dispatch_agent, run_chain, dispatch_parallel_agents); the captured trace showed the nesting exactly (root depth 0 empty framePath; nested frame depth 1 framePath [(0/1/2)] slotPath [1]; the 2-deep leaf framePath [(0/1/2),(4.0/1-4.4/5)] slotPath [1,1]); frames emitted nothing and every leaf emission was envelope-complete. A dialogical leaf nested two levels in still halts for a human rather than dispatching. 22 new behavioural tests; full S4 suite 604 pass 0 fail; verify-all W scope GREEN incl live-wire spawned gateway; honesty-lint clean.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 604,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/cp_frame_nesting.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/cp-nesting-live.mjs",
+              "live-wire PASS + gateway suites GREEN in verifications/50.T50.04.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T10:15:40.306Z",
+      "runId": "20260725T101540Z-50-T50.04",
       "worktree": null,
       "blocker": null
     },
@@ -26190,6 +26207,16 @@
       "leaseExpiresAt": "2026-07-25T11:59:04.661Z",
       "worktree": null,
       "completedAt": "2026-07-25T10:14:43.729Z"
+    },
+    {
+      "runId": "20260725T101540Z-50-T50.04",
+      "taskId": "50.T50.04",
+      "status": "done",
+      "startedAt": "2026-07-25T10:15:40.306Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T12:15:40.306Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T10:19:21.363Z"
     }
   ],
   "activeRoute": {
