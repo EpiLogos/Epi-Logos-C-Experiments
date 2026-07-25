@@ -14,6 +14,7 @@
  *   composition.
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useState } from 'react';
 import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { useTickStore } from '../state/stores';
@@ -150,7 +151,8 @@ export function NaraDayResonanceStrip({ dayNow }: { dayNow: string }) {
     const summary = summarizeDayResonance(artifacts);
     return (
         <div
-            className="nara-resonance-strip"
+            className={`nara-resonance-strip ${privacyChrome('protected_local_handle_only').className}`}
+            title={privacyChrome('protected_local_handle_only').title}
             data-testid="nara-day-resonance"
             data-state={summary.state}
         >

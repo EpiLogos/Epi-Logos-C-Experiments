@@ -16,6 +16,7 @@
  * Contract: [[M'-SYSTEM-SPEC]] + rerun tranche [[25.T25.17]] (DR-WC-M4-1).
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useEffect, useRef } from 'react';
 import { useCompositionState } from '../composition/compositionState';
 import {
@@ -71,7 +72,8 @@ export function TimeAxisSwitcher() {
 
     return (
         <div
-            className="time-axis-switcher"
+            className={`time-axis-switcher ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
             data-testid="time-axis-switcher"
             data-mode={mode}
             role="radiogroup"

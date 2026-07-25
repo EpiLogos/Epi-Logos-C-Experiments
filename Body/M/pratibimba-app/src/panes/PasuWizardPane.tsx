@@ -16,6 +16,7 @@
  * Contract: [[M4'-SPEC]] + rerun tranche [[25.T25.4]] (DR-WC-M4-3).
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export const PASU_SHOW_RPC = 'nara.pasu.show';
@@ -137,7 +138,8 @@ export function PasuWizardPane({ gateway, onStepComplete, onComplete, onSkipWiza
 
     return (
         <section
-            className="pasu-wizard mext-privacy-protected-local-handle-only"
+            className={`pasu-wizard ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
             data-testid="pasu-wizard"
             data-step-key={step.key}
             data-step-index={index}

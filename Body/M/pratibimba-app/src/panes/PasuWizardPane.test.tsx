@@ -109,11 +109,20 @@ describe('25.T25.4 PasuWizardPane', () => {
         expect(onSkipWizard).toHaveBeenCalledOnce();
     });
 
-    it('carries the protected-local handle-only privacy chrome', async () => {
+    // 25.T25.18 correction: this asserted `…-handle-only`, which contradicted
+    // the class the brief ASSIGNS this widget — 25-m4-nara-frontend-deep.md:91,
+    // "View id: `m4.nara.pasuWizard` (new). Privacy chrome:
+    // `mext-privacy-protected-local`". The pane had hand-written the wrong
+    // class and the test encoded it. Both now read the spec.
+    it('carries the protected-local privacy chrome the brief assigns it (25.4)', async () => {
         const { gateway } = gatewayWithRecord();
         render(<PasuWizardPane gateway={gateway} />);
         await waitFor(() =>
-            expect(screen.getByTestId('pasu-wizard').className).toContain('mext-privacy-protected-local-handle-only')
+            expect(screen.getByTestId('pasu-wizard').className).toContain('mext-privacy-protected-local')
         );
+        expect(screen.getByTestId('pasu-wizard').className).not.toContain(
+            'mext-privacy-protected-local-handle-only'
+        );
+        expect(screen.getByTestId('pasu-wizard').title).toMatch(/^protected_local — /);
     });
 });

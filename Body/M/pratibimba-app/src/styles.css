@@ -7012,3 +7012,44 @@ button.tool-stream-timerange.active {
 .inline-confirm button:hover {
     background: var(--ground);
 }
+
+/* ── T25.18 — privacy-class chrome (DR-WC-M4-5, ROUTED not ratified) ────────
+   Three border tints, one per M4 privacy class. Every Wave-C M4' surface
+   declares WHICH KIND of material it renders and wears the matching tint on
+   its outer container, with a title carrying the full PRIVACY_CLASS string
+   (src/ui/privacyChrome.ts is the register; privacyChrome.test.ts holds these
+   rules and the JS PRIVACY_COLOURS tokens in lockstep).
+
+   The indicator lives HERE, on the surface's own chrome, and never in the
+   status bar: 15.10 pins that bar to exactly six entries and a privacy
+   indicator is not one of them. The status-bar discipline test proves it.
+
+   DR-WC-M4-5 asks border-colour vs glyph vs both and is still ROUTED — this
+   is the border-colour option the 25.18 brief specifies, not a settled
+   decision. The hexes are the brief's, verbatim. */
+:root {
+  --privacy-protected-local: #8a7355; /* warm earth */
+  --privacy-protected-local-handle-only: #6b7588; /* slate */
+  --privacy-shared-archetype-opt-in: #d4a574; /* gold */
+}
+
+/* Light-polarity themes darken each tint for contrast on a pale ground while
+   keeping its hue — the 30.4 polarity law applied to the privacy register. */
+:root[data-theme='light'],
+:root[data-theme='nara-light'] {
+  --privacy-protected-local: #6a583f;
+  --privacy-protected-local-handle-only: #4e5665;
+  --privacy-shared-archetype-opt-in: #9c7444;
+}
+
+.mext-privacy-protected-local {
+  border-left: 3px solid var(--privacy-protected-local);
+}
+
+.mext-privacy-protected-local-handle-only {
+  border-left: 3px solid var(--privacy-protected-local-handle-only);
+}
+
+.mext-privacy-shared-archetype-opt-in {
+  border-left: 3px solid var(--privacy-shared-archetype-opt-in);
+}

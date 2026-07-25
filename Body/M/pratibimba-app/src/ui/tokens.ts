@@ -10,7 +10,8 @@
  *   values — the palette itself stays an OPEN Architect decision
  *   (DR-WC-DL-1); changing a value here is a design decision, not a refactor.
  * Public surface: inkBright, inkDim, ringLit, accent, accentShadow,
- *   wheelUnlit, FAMILY_HUES, ATELIER_CLUSTER_HUES.
+ *   wheelUnlit, FAMILY_HUES, ATELIER_CLUSTER_HUES, PRIVACY_COLOURS,
+ *   NARA_EARTH_ANCHOR, NARA_WARM_BIAS.
  * Does NOT own: the CSS custom-property vocabulary (src/styles.css); the
  *   kernel element scene colours (numeric ELEMENT_COLOURS in
  *   engine/cosmicMath.ts — kernel M2 identity, not a UI token). Values
@@ -162,6 +163,24 @@ export const SIGNATURE_COLOURS: Record<'cool' | 'warm', ThemedHue> = {
 export const FLOW_COLOURS: Record<'mahamayaGold' | 'parashaktiEmerald', ThemedHue> = {
     mahamayaGold: { light: '#d4a574', dark: '#e0b67e' },
     parashaktiEmerald: { light: '#4a8b6f', dark: '#5fa886' }
+};
+
+// ── Privacy-class chrome (25.T25.18) ────────────────────────────────────────
+/** The three M4 privacy-class tints (25.18 / 30.2 `colour.privacy.*`). The
+ *  dark values ARE the hexes the 25.18 brief specifies; the light values keep
+ *  each hue and darken it for contrast on a pale ground (the 30.4 polarity
+ *  law — a theme switch never crosses a token's polarity). These duplicate the
+ *  `--privacy-*` custom properties in styles.css; privacyChrome.test.ts holds
+ *  the two languages in lockstep so the duplication cannot silently drift.
+ *  The alignment with psyche-facet (psyche/logos/sophia) is structural per the
+ *  30.2 derivation, not coincidence. */
+export const PRIVACY_COLOURS: Record<
+    'protected_local' | 'protected_local_handle_only' | 'shared_archetype_opt_in',
+    ThemedHue
+> = {
+    protected_local: { light: '#6a583f', dark: '#8a7355' }, // warm earth
+    protected_local_handle_only: { light: '#4e5665', dark: '#6b7588' }, // slate
+    shared_archetype_opt_in: { light: '#9c7444', dark: '#d4a574' } // gold
 };
 
 // ── Nara-domain warm bias (30.T30.4) ────────────────────────────────────────

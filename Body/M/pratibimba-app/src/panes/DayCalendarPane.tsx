@@ -16,6 +16,7 @@
  *   vault read (Tauri `vault_list`), the markdown editor the open routes into.
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { commands } from '../commands/registry';
@@ -154,7 +155,8 @@ export function DayCalendarPane() {
         return <div className="pane-message">calendar unavailable: {error}</div>;
     }
     return (
-        <div className="day-calendar" data-testid="day-calendar">
+        <div className={`day-calendar ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title} data-testid="day-calendar">
             <div className="pane-toolbar day-calendar-nav">
                 <button type="button" data-testid="cal-prev" onClick={() => step(-1)} title="previous month">
                     ‹

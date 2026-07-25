@@ -13,9 +13,9 @@
  *     2. Cl(4,2) POLARITY PRESERVATION — theme switch maps WITHIN polarity,
  *        never across. Cool tokens stay cool, warm stay warm, because a theme
  *        only ever picks between a token's own two same-polarity resolutions.
- *     3. The nara-domain remap touches ONLY the namespaces the brief names
- *        (`family.m.*` today; `privacy.*` joins at 25.T25.18) and is a bounded
- *        lean toward the earth anchor, not a second palette.
+ *     3. The nara-domain remap touches ONLY the two namespaces the brief names
+ *        — `family.m.*` and `privacy.*` (the latter landed with 25.T25.18) —
+ *        and is a bounded lean toward the earth anchor, not a second palette.
  * Public surface: CanonicalTheme, ThemeSelection, ThemePolarity, DomainId,
  *   CANONICAL_THEMES, THEME_SELECTIONS, THEME_POLARITY, NARA_REMAPPED_NAMESPACES,
  *   canonicalTheme, resolveThemeForDomain, resolveSelection, themePolarity,
@@ -34,6 +34,7 @@ import {
     FLOW_COLOURS,
     NARA_EARTH_ANCHOR,
     NARA_WARM_BIAS,
+    PRIVACY_COLOURS,
     SIGNATURE_COLOURS,
     type ArchetypeGrade,
     type FamilyLetter,
@@ -120,11 +121,11 @@ export const THEME_POLARITY: Readonly<Record<CanonicalTheme, ThemePolarity>> = O
     'nara-glass': 'dark'
 });
 
-/** The token namespaces the nara-domain remap tunes. `family.m` is live now;
- *  `privacy` joins when 25.T25.18 lands the privacy-class tokens (the 30.4
- *  brief names both). Kept as data so adding one is a one-line change here,
- *  never a second remap path. */
-export const NARA_REMAPPED_NAMESPACES: readonly string[] = Object.freeze(['family.m']);
+/** The token namespaces the nara-domain remap tunes — exactly the two the 30.4
+ *  brief names: "M-tier tokens (`family.m.*`) and privacy-class tokens
+ *  (`privacy.*`) tune slightly warmer". `privacy` joined when 25.T25.18 landed
+ *  the privacy tokens. Kept as data so the remap has ONE path, never two. */
+export const NARA_REMAPPED_NAMESPACES: readonly string[] = Object.freeze(['family.m', 'privacy']);
 
 /** Collapse any selection string to canon. Unknown input falls back to `dark`
  *  (the frozen contract's behaviour). `system` is NOT resolved here — it has
@@ -235,6 +236,8 @@ function applyNaraBias(value: string, namespace: string, theme: CanonicalTheme, 
  *   - `family.{p|s|t|m|l|c}.{0..5}` — family tier × archetype grade
  *   - `signature.{cool|warm}`       — the Cl(4,2) polarity axis
  *   - `flow.{mahamayaGold|parashaktiEmerald}` — the DR ring streamlines
+ *   - `privacy.{protected_local|protected_local_handle_only|shared_archetype_opt_in}`
+ *     — the 25.18 privacy-class register (nara-remapped, per the 30.4 brief)
  *
  * Throws on an unknown id: a token that does not exist must not resolve to a
  * plausible colour, because a silently-wrong hue is invisible in review.
@@ -262,6 +265,13 @@ export function resolveToken(tokenId: string, theme: CanonicalTheme, domainId: D
         const hue = FLOW_COLOURS[parts[1] as 'mahamayaGold' | 'parashaktiEmerald'];
         if (hue) {
             return resolveHue(hue, theme);
+        }
+    }
+
+    if (parts[0] === 'privacy' && parts.length === 2) {
+        const hue = PRIVACY_COLOURS[parts[1] as keyof typeof PRIVACY_COLOURS];
+        if (hue) {
+            return applyNaraBias(resolveHue(hue, theme), 'privacy', theme, domainId);
         }
     }
 

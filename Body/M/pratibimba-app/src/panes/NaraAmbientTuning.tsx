@@ -10,6 +10,7 @@
  * Contract: [[M4'-SPEC]]; [[2026-06-04-prospective-retrospective-canvas-spec]] §2.4–2.5.
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { parseDocument } from 'yaml';
 import { invokeCommand } from '../bridge/tauri';
@@ -179,7 +180,8 @@ export function NaraTuningBar({ dayNow }: { readonly dayNow: string }) {
     }, [disabled, persist, tuning]);
 
     return (
-        <section className="nara-tuning-bar" data-testid="nara-tuning-bar" data-status={status}>
+        <section className={`nara-tuning-bar ${privacyChrome('protected_local_handle_only').className}`}
+            title={privacyChrome('protected_local_handle_only').title} data-testid="nara-tuning-bar" data-status={status}>
             <div className="nara-tuning-segmented" aria-label="Tranche mode">
                 {(['explicit', 'quiet:90m', 'rhythm'] as const).map(mode => (
                     <button key={mode} type="button" disabled={disabled} aria-pressed={tuning.trancheMode === mode}

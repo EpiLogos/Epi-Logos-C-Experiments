@@ -12,6 +12,7 @@
  * Contract: [[M4'-SPEC]] / [[CHROME-CONTRACT]].
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useProvenanceStore } from '../state/stores';
@@ -114,7 +115,8 @@ export function M4LogosCyclePane({ readStatus, advanceStage, regressStage }: M4L
 
     return (
         <section
-            className="logos-cycle-pane"
+            className={`logos-cycle-pane ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
             data-testid="m4-logos-cycle"
             data-view-id="m4.nara.logosCycle"
             data-privacy-class="protected-local"

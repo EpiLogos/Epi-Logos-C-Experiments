@@ -9,6 +9,7 @@
  */
 
 // Ported from frozen Body/M/epi-theia/extensions/m4-nara/src/browser/canvas-editor.tsx; active-carrier write-back added.
+import { privacyChrome } from '../ui/privacyChrome';
 import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -150,7 +151,8 @@ export function NaraCanvasEditor({
 
     return (
         <section
-            className="m4-nara-canvas"
+            className={`m4-nara-canvas ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
             data-testid="m4-nara-canvas"
             data-privacy-class={NARA_PRIVACY_CLASS}
             data-highlight-count={highlightCount}

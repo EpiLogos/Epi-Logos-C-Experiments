@@ -8,6 +8,7 @@
  * Contract: [[M4'-SPEC]] / [[CHROME-CONTRACT]].
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useState } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import {
@@ -88,7 +89,8 @@ export function TransformContainersPane({
 
     return (
         <section
-            className="transform-pane"
+            className={`transform-pane ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
             data-testid="transform-containers-pane"
             data-view-id="m4.nara.transformContainers"
             data-privacy-class="protected-local"

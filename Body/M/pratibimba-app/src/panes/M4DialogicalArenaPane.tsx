@@ -12,6 +12,7 @@
  *   while the family answers `unimplemented`).
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useProvenanceStore } from '../state/stores';
@@ -226,7 +227,8 @@ export function M4DialogicalArenaPane({ fixture }: M4DialogicalArenaPaneProps) {
 
     return (
         <div
-            className="m4-arena-root"
+            className={`m4-arena-root ${privacyChrome('protected_local_handle_only').className}`}
+            title={privacyChrome('protected_local_handle_only').title}
             data-testid="m4-arena-root"
             data-view-id={DIALOGICAL_ARENA_VIEW_ID}
             data-privacy-class={ARENA_PRIVACY_MANIFEST.privacyClass}

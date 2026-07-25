@@ -17,6 +17,7 @@
  * Contract: [[CHROME-CONTRACT]] §2 (`pratibimbaCoordinate`); [[M'-SYSTEM-SPEC]].
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import type { GatewayClient } from '../bridge/gatewayClient';
@@ -433,7 +434,8 @@ export function PratibimbaCoordinatePane() {
 
     return (
         <div
-            className="pratibimba-coordinate-pane"
+            className={`pratibimba-coordinate-pane ${privacyChrome('protected_local_handle_only').className}`}
+            title={privacyChrome('protected_local_handle_only').title}
             data-testid="pratibimba-coordinate-pane"
             data-privacy="protected-local"
         >

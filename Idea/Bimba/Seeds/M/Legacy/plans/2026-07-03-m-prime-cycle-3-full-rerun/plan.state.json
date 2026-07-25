@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T11:25:23.136Z",
+  "updatedAt": "2026-07-25T12:01:55.260Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12791,14 +12791,32 @@
       "blocker": null
     },
     "25.T25.18": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T11:21:30.462Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T12:01:55.237Z",
       "claimedAt": "2026-07-25T11:21:30.462Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T12:01:55.237Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T12:01:55.237Z",
+          "text": "Privacy-class chrome landed carrier-native and RENDERING. styles.css contributes the three border-tint rules carrying the brief hexes verbatim (protected-local #8a7355 earth, handle-only #6b7588 slate, opt-in #d4a574 gold) via --privacy-* tokens, with a light-polarity override that keeps each hue (the 30.4 polarity law); ui/privacyChrome.ts is the register and ui/tokens.ts PRIVACY_COLOURS the JS side, held in lockstep by test. Ten surfaces now declare their class at mount and carry a title with the full PRIVACY_CLASS string. DECISION STATUS STATED, NOT CLAIMED: DR-WC-M4-5 is ROUTED, user final-validation still pending (13-decision-register.md:2084) - this builds the border-colour option the 25.18 brief specifies and is NOT cited as validating that DR; the module header, styles.css and AGENTS.md all record the ROUTED status, because the prior close of this tranche was reset as fraudulent for claiming otherwise. GREEN: full app vitest 1326 (incl. privacyChrome contract gate 11 + rendered status-bar discipline 2), app-typecheck, app-build, app-smoke, carrier-tokens, lint-boundaries, honesty-lint, ta-onta 687, gateway 98, gateway-contract 92, live-wire, gateway-methods; UF proof tests/e2e/privacy-chrome.spec.ts against the REAL spawned gateway reads COMPUTED style off live panes - 3px solid rgb(138,115,85) on the protected-local transform pane, rgb(107,117,136) on the handle-only Coordinate fold (the two provably differ), both titles carrying their class string, and zero privacy tints inside the live status strip (15.10 six-thread discipline, which is the whole reason the indicator sits on surface chrome). Adversarial review (2 lenses, 14 findings, 9 refuted) confirmed 5 real defects, ALL FIXED, and the root cause was mine: I inferred privacy classes from pane headers instead of reading the brief, which ASSIGNS a chrome per widget on its own line. Rebuilt the register from those spec lines (each row now quotes its assigning line + line number), which corrected TWO wrong classifications (25.4 PasuWizard was handle-only, brief:91 assigns protected-local; the Arena was protected-local, brief:62 assigns handle-only) and added THREE silently-skipped spec-assigned surfaces (25.1 DayCalendar, 25.14 PratibimbaCoordinate, 25.17 TimeAxisSwitcher). Also: the reverse-direction gate scanned only src/panes so 25.17 in src/components was structurally invisible - now scans both; the e2e handle-only assertion sat behind an if(count>0) that trace-analysis proved never executed - now unconditional against the opened Coordinate fold; and the honesty lint rightly REJECTED my status-bar test as a source-grep, so it was rewritten to mount the real StatusStrip. Carrier surfaces the brief never classified are kept in a separate CARRIER_EXTENSION group with their own-header warrant, flagged for the Architect rather than presented as spec law; shared_archetype_opt_in has a defined rule but no surface, since forcing a personal surface into the shareable class is the one misclassification with real consequences. Full UF gate RED only on tests/e2e/pratibimba-consent.spec.ts:274 - the known order-dependent flake, confirmed unrelated by isolation runs this session (PASS 9.1s and again 6.9s).",
+          "receipt": {
+            "command": "npx playwright test privacy-chrome pratibimba-consent day-calendar time-axis-switcher --reporter=list   [cwd Body/M/pratibimba-app; also green inside the full UF gate: app-ui-flow 84 e2e, sole red = unrelated consent:274 flake]",
+            "exitCode": 0,
+            "testsPassed": 7,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/privacyChrome.ts",
+              "Body/M/pratibimba-app/src/ui/privacyChrome.test.ts",
+              "Body/M/pratibimba-app/src/ui/privacyChromeStatusBar.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/privacy-chrome.spec.ts",
+              "Body/M/pratibimba-app/src/styles.css"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T13:21:30.462Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T11:21:30.462Z",
       "runId": "20260725T112130Z-25-T25.18",
       "worktree": null,
@@ -20321,16 +20339,21 @@
       "blocker": null
     },
     "50.T50.07": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-25T11:41:08.929Z",
+      "claimedAt": "2026-07-25T11:26:23.092Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-25T11:41:08.929Z",
+          "text": "Deliverable COMPLETE and independently proven; ledger close held ONLY on a repo-wide gate red that is provably another worker's. What landed: a score is what a repeatable orchestration expression becomes. Hen owns persistence (S4-1p-hen/modules/score-store.ts) because a stored artifact with a content type is Hen's coordinate - and it treats the program as OPAQUE JSON, so it imports nothing from Anima and the dependency runs one way only. Scores land in .epi/scores/ beside .epi/gate, never the vault: a score is runtime machinery, not canon. Faithfulness is enforced rather than assumed - every document carries a SHA-256 over its canonical form (keys sorted, array order preserved, so pretty-printing is not tampering) and loadScore REFUSES a drifted document, because a score that changed would not reproduce the run it claims to be; run history is append-only jsonl so a later run can never erase the evidence an earlier one left. Anima owns the lifecycle (extension/dispatch.ts): CSState gained an origination polarity defaulted on BOTH read and write, so every session starts (00/00) dialogical and the existing before_agent_start reset in subscriptions.ts lands there without naming it; persistScore REFUSES a session that is no longer originating (a score comes from dialogue, not from the flow you were already mechanically running); assertScoredOrchestration validates the shape on the way OUT of storage because a score is loaded in order to be EXECUTED; rerunScore sets the session mechanistic then restores the prior polarity in a finally, so a re-run neither re-originates nor ends the dialogue it ran inside. Its runner is INJECTED, not imported, because vak-orchestration-surface already imports dispatch for the CFP->tool map and importing back would close a cycle. TWO REAL DEFECTS found by running tsc over the new suites (nothing typechecks ta-onta today, so both were invisible to the existing gate): getCSState('') returned the empty STRING rather than a state - '' is falsy but not nullish so the && form passed it straight through ?? - which made .origination undefined and a session read as no longer originating purely because its id was empty; and l_thread from 50.T50.06 was declared on Anima's move-result type but read off ZThreadSnapshot.outputs, typed by the shared cross-carrier mirror, so the field was invisible to the type contract - fixed with zThreadMoveResults() as the single reconciling seam rather than widening the mirror with an Anima-only field. Both now regression-tested; tsc --strict over all three new suites exits 0. GREEN: 41 new tests, S4 ta-onta 687 pass 0 fail (was 645); verify-all class-W scope GREEN including live-wire spawned gateway, gateway 98, gateway-contract 92, redis-context, graphiti-runtime, spacetime, harness-selftest 107. LIVE PROOF fresh 14/14 with real child pi's at every stage: the session starts (00/00) unprompted; logos really reads two files and answers beta.txt, and THAT answer decides what the script says; the developed orchestration runs a real child per step in CS order (Day read-chosen before Night-prime verify, despite reverse declaration); it persists to a real file with hash 17286109...; re-running loads it FROM DISK and dispatches the same agents, tasks and order from a byte-identical program while the session reads mechanistic and returns to (00/00) after; then a rewritten score is refused with ScoreIntegrityError and no child is dispatched for it. HOLD REASON, precisely: the shared honesty-lint rejects Body/M/pratibimba-app/src/ui/privacyChrome.test.ts ('the status strip source carries no privacy entry' - source-grep-only assertion), which is untracked in-flight WIP of the concurrent 25.T25.18 worker (owner opus-mdev-frontend-uf, lease live). It is not this tranche's file, not in its write scope, and NOT a flake - it is a deterministic real defect that their own close is equally gated on. Closing around it via the unrelated-flake path would be gate-gaming, so this stays in review until that lint is clean; everything else this tranche needs is already green and recorded above."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T13:26:23.092Z",
+      "heartbeatAt": "2026-07-25T11:41:08.929Z",
+      "runId": "20260725T112623Z-50-T50.07",
       "worktree": null,
       "blocker": null
     },
@@ -26296,37 +26319,47 @@
     {
       "runId": "20260725T112130Z-25-T25.18",
       "taskId": "25.T25.18",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T11:21:30.462Z",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T13:21:30.462Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T12:01:55.237Z"
+    },
+    {
+      "runId": "20260725T112623Z-50-T50.07",
+      "taskId": "50.T50.07",
+      "status": "review",
+      "startedAt": "2026-07-25T11:26:23.092Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T13:26:23.092Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T11:41:08.929Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T11:08:43.351Z",
-    "updatedAt": "2026-07-25T11:08:43.351Z",
+    "createdAt": "2026-07-25T11:26:02.685Z",
+    "updatedAt": "2026-07-25T11:26:02.685Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "31.T31.8",
-      "50.T50.06"
+      "25.T25.18",
+      "30.T30.5"
     ],
-    "totalWeight": 9,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "31.T31.8": "in-session",
-      "50.T50.06": "consider-subagents-if-approved"
+      "25.T25.18": "in-session",
+      "30.T30.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 9/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
-      "Marked heavier tasks for optional subagents or split-before-execution review; default execution remains in-session."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }
