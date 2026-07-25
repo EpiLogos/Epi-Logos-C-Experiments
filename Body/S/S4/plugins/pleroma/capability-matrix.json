@@ -410,6 +410,21 @@
       }
     }
   },
+  "context_assembly": {
+    "method": "s4'.context.assemble",
+    "coordinate_owner": "S4'",
+    "tranche": "51.T51.1",
+    "assembler": "Body/S/S4/ta-onta/spine/compositor.ts::SpineCompositor.assembleContextPack",
+    "published_to": "<gate-state-root>/s4/context-pack/<session-slug>.json",
+    "served_by": "Body/S/S0/epi-cli/src/gate/anima.rs::context_assemble",
+    "single_assembler_law": "The S4' spine compositor assembles ONCE per session: it injects pack.injection as the session system prompt and publishes that same object. The gateway adapter READS the published pack and never re-assembles - two code paths that both assemble the pack is how the injection drifted into being dead with nothing able to notice.",
+    "returns": ["owner", "sessionKey", "present", "assembler", "packPath", "pack"],
+    "pack_fields": ["version", "sessionKey", "assembledAtMs", "budget", "blocks", "injection"],
+    "block_fields": ["coordinate", "cost", "status", "bytes", "charEstimate", "producedAtMs", "rendered", "vakToken", "error"],
+    "entitlement_class": "standard",
+    "is_dispatch_tool": false,
+    "dispatch_tool_note": "A gateway METHOD, not a vak-dispatch tool: it is deliberately absent from dispatch_tools so capability-parity's local and gateway tool sets stay identical."
+  },
   "typed_delegation": {
     "delegate_lens": {
       "method": "s4'.pleroma.delegate_lens",

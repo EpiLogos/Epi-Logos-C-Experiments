@@ -339,7 +339,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s4'.*",
         owner: "S4'",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.mediation.route / s4'.mediation.capabilities.list / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / skills.* / exec.approval.*"),
+        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.mediation.route / s4'.mediation.capabilities.list / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / s4'.context.assemble / skills.* / exec.approval.*"),
         cli_mirror: Some("epi agent vak"),
         body_path: "Body/S/S4/ta-onta/S4-4p-anima",
         test_evidence: &[
@@ -664,6 +664,10 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "kernelBridge.m2.cymaticMonoPolyState(address72)"
         | "kernelBridge.m2.planetaryElementalWeights()"
         | "kernelBridge.m3.lensCodonBinary(lensId)"
+        | "kernelBridge.m3.lensField(lensId)"
+        // 30.T30.13 — C-backed codon LUT read (gate::codon over portal_core);
+        // the `s2.` prefix names the consumer surface, the authority is S0.
+        | "s2.codon.aa_lookup"
         // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
         | "m1.spanda.hold"
         | "m1.spanda.release"
@@ -684,7 +688,8 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s2.graph.core65.audit"
         | "s2.graph.promotion.dry_run"
         | "s2.graph.promotion.commit"
-        | "s2.graph.relation_family.list" => Some("s2.graph.*"),
+        | "s2.graph.relation_family.list"
+        | "s2.graph.list_by_filter" => Some("s2.graph.*"),
         "s2.graph.kernel_resonance.record" | "s2.parashaktiCorrespondences" => Some("s2.graph.*"),
         "s2'.coordinate.resolve"
         | "s2'.coordinate.cypher"
@@ -716,7 +721,18 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s1'.entity.capture"
         | "s1'.entity.classify"
         | "s1'.entity.list"
-        | "s1'.world.list_entities" => Some("s1'.*"),
+        | "s1'.world.list_entities"
+        // `vault.day.ensure` is the S1 day-scaffold surface (dispatch plan:
+        // S1HenAdapter, extraction target Body/S/S1/hen-compiler-core). It
+        // landed in METHOD_NAMES without a coordinate mapping, which reds
+        // `every_product_gateway_method_has_coordinate_mapping`; it belongs to
+        // the same S1' family as the rest of the vault write surface.
+        | "vault.day.ensure" => Some("s1'.*"),
+        // 25.T25.11 / oracle cast — the S0 nara adapter family whose parity
+        // record already advertises `nara.*` (canonical_method "s5.m.*").
+        "nara.transform.start" | "nara.transform.advance" | "s5.oracle.iching.cast" => {
+            Some("s5.m.*")
+        }
         "s5.trajectory.verify" | "s5.ebm.train" | "s5.ebm.export_state" => Some("s5'.improve.*"),
         "s5'.anuttara.diagnose" => Some("s5'.ql.*"),
         "channels.status"
@@ -781,7 +797,11 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s4'.mediation.capabilities.list"
         | "s4'.psyche.state"
         | "s4'.psyche.update"
-        | "s4'.permission.get" => Some("s4'.*"),
+        | "s4'.permission.get"
+        | "s4'.context.assemble"
+        // 32.T32.11 — the Khora (S4-0') session-start carrier lifecycle;
+        // dispatch classifies it S4OrchestrationAdapter like the rest of s4'.
+        | "khora.session_start" => Some("s4'.*"),
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }

@@ -191,6 +191,23 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'gateway.s4-prime-context-assemble',
+        required: true,
+        covers: [],
+        describe:
+            "51.T51.1: the live gateway advertises the S4' context-pack surface, so what the ta-onta spine injects into a session is reachable rather than silent",
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return methods.includes("s4'.context.assemble")
+                ? []
+                : ["live gateway does not advertise s4'.context.assemble"];
+        }
+    },
+    {
         name: 'gateway.s2-codon-aa-lookup',
         required: true,
         covers: [],

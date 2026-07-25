@@ -53,7 +53,7 @@ Context assembly is a coordinator, not a retriever. [[S4.4]] may ask [[S1]]/[[He
 ## Open Gaps
 
 - A full persisted Psyche state store exists as a specified gateway surface, but richer goal state and context-pack assembly remain open in [[S4-SPEC]].
-- `nous_disclose` still uses a helper path for context; target `s4'.context.assemble` must route through explicit S1/S2/S3/S5 contracts.
+- `nous_disclose` still uses a helper path for context. `s4'.context.assemble` now EXISTS (51.T51.1) and serves the live ta-onta spine pack with per-carrier provenance, but two things remain open: it does not yet carry source handles / coordinate anchors / privacy posture (the return contract above), and `nous_disclose` has not been routed through it.
 
 ## Boundaries
 

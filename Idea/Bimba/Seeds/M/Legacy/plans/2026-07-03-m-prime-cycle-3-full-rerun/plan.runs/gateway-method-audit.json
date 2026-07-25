@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-25T14:31:18.303Z",
+ "generatedAt": "2026-07-25T21:36:04.630Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 278,
-  "present": 100,
-  "absent": 178,
+  "present": 101,
+  "absent": 177,
   "unknown": 0
  },
  "methods": [
@@ -1373,10 +1373,10 @@
   },
   {
    "method": "s4'.context.assemble",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": null
   },
   {
    "method": "s4'.mediation.capabilities.list",

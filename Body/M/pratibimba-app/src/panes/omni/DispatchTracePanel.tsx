@@ -22,6 +22,7 @@ import { SessionClient, SessionRecord } from '../../bridge/sessionClient';
 import { useProvenanceStore } from '../../state/stores';
 import { useProfileTick } from '../../state/useProfileTick';
 import { CompositionDispatchTracePane } from './CompositionDispatchTracePane';
+import { ContextPackSection } from './ContextPackSection';
 import { DispatchGenealogyTree } from './DispatchGenealogyTree';
 import { dispatchGenealogyFromSessions } from './dispatchGenealogyFromSessions';
 import { genealogyIndex, type DispatchDeepLink } from './dispatchGenealogy';
@@ -259,6 +260,13 @@ export function DispatchTracePanel() {
             <details open className="dispatch-composition-observability" data-testid="dispatch-composition-observability">
                 <summary>Composition observability</summary>
                 <CompositionDispatchTracePane />
+            </details>
+
+            {/* 51.T51.1 — what the session was GIVEN, above what it then did.
+                The ta-onta spine's injection had no surface at all; this is it. */}
+            <details className="dispatch-composition-observability" data-testid="dispatch-context-pack">
+                <summary>Session context pack</summary>
+                <ContextPackSection />
             </details>
         </section>
     );

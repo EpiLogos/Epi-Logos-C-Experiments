@@ -296,6 +296,10 @@
   {
    "method": "nara.pasu.set",
    "claimedBy": "25.T25.4 (PASU identity wizard write path, DR-WC-M4-3)"
+  },
+  {
+   "method": "s4'.context.assemble",
+   "claimedBy": "51.T51.1"
   }
  ]
 }

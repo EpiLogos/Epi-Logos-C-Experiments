@@ -156,6 +156,8 @@ pub const METHOD_NAMES: &[&str] = &[
     "s4'.psyche.state",
     "s4'.psyche.update",
     "s4'.permission.get",
+    // 51.T51.1 — the assembled session-context pack the ta-onta spine injects.
+    "s4'.context.assemble",
     "s3'.temporal.context",
     "s3'.temporal.subscribe",
     "s3'.spacetime.subscribe",

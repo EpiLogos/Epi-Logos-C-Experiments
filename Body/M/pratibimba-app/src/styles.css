@@ -6045,6 +6045,63 @@ textarea {
     opacity: 0.7;
 }
 
+/* ===================== Session context pack (51.T51.1) =====================
+   The M5-4' ACR view of what the ta-onta spine actually injected. Subordinate
+   to the genealogy tree like the composition fold: it reports what the session
+   was GIVEN, above what it then did. */
+.context-pack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: var(--type-caption);
+}
+.context-pack-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    opacity: 0.85;
+}
+.context-pack-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.context-pack-table th,
+.context-pack-table td {
+    text-align: left;
+    padding: 0.15rem 0.4rem 0.15rem 0;
+    border-bottom: 1px solid var(--hairline);
+    font-weight: 400;
+}
+.context-pack-table thead th {
+    opacity: 0.6;
+}
+.context-pack-block-failed td,
+.context-pack-block-failed th {
+    color: var(--danger);
+}
+.context-pack-block-overflowed td,
+.context-pack-block-overflowed th {
+    opacity: 0.7;
+}
+.context-pack-vak-token,
+.context-pack-fresh {
+    opacity: 0.7;
+}
+.context-pack-injection > summary {
+    cursor: pointer;
+    opacity: 0.7;
+}
+.context-pack-injection pre {
+    max-height: 18rem;
+    overflow: auto;
+    white-space: pre-wrap;
+    border: 1px solid var(--hairline);
+    padding: 0.4rem;
+}
+.context-pack-provenance {
+    opacity: 0.6;
+}
+
 /* ===================== Tool Stream fold (27.T27.4) =====================
    The temporal fold of the Pi → subagent genealogy. Mirrors the dispatch-trace
    design system; the raw gateway-event ring rides beneath as a subordinate

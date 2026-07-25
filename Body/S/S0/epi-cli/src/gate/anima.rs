@@ -498,6 +498,70 @@ pub fn psyche_update(state_root: impl AsRef<Path>, params: &Value) -> Result<Val
     }))
 }
 
+/// 51.T51.1 — `s4'.context.assemble`: serve the session-context pack the
+/// ta-onta spine actually injected.
+///
+/// The S4' compositor (`Body/S/S4/ta-onta/spine/compositor.ts`) is the ONE
+/// assembler. On `before_agent_start` it assembles a [`ContextPack`], injects
+/// `pack.injection` as the session system prompt, and publishes that same
+/// object to `<state-root>/s4/context-pack/<slug>.json`. This adapter READS
+/// that file. It deliberately does not re-assemble: two code paths that both
+/// "assemble the pack" is exactly how the injection drifted into being dead
+/// with nothing able to notice.
+///
+/// When a session has not assembled a pack, the response says so
+/// (`present: false`) rather than fabricating one — an unassembled session and
+/// a session with an empty context must not read alike.
+pub fn context_assemble(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
+    let session_key = optional_str(params, "sessionKey").unwrap_or_else(|| "main".to_owned());
+    let path = context_pack_path(state_root.as_ref(), &session_key);
+
+    if !path.exists() {
+        return Ok(json!({
+            "owner": "S4'",
+            "sessionKey": session_key,
+            "present": false,
+            "reason": "no context pack has been published for this session",
+            "assembler": CONTEXT_PACK_ASSEMBLER,
+            "packPath": path.display().to_string(),
+            "pack": Value::Null,
+        }));
+    }
+
+    let body = fs::read_to_string(&path).map_err(|err| err.to_string())?;
+    let pack: Value = serde_json::from_str(&body).map_err(|err| err.to_string())?;
+
+    // Fail closed on a pack missing its load-bearing field: an operator being
+    // shown "the context" that has no injection is worse than an honest error.
+    if !pack.get("injection").map(Value::is_string).unwrap_or(false) {
+        return Err(format!(
+            "published context pack at {} carries no injection string",
+            path.display()
+        ));
+    }
+
+    Ok(json!({
+        "owner": "S4'",
+        "sessionKey": session_key,
+        "present": true,
+        "assembler": CONTEXT_PACK_ASSEMBLER,
+        "packPath": path.display().to_string(),
+        "pack": pack,
+    }))
+}
+
+/// The S4' authority that assembles and publishes the pack this adapter serves.
+const CONTEXT_PACK_ASSEMBLER: &str =
+    "Body/S/S4/ta-onta/spine/compositor.ts::SpineCompositor.assembleContextPack";
+
+/// Twin of `Body/S/S4/ta-onta/spine/context-pack-store.ts::contextPackPath`.
+fn context_pack_path(state_root: &Path, session_key: &str) -> PathBuf {
+    state_root
+        .join("s4")
+        .join("context-pack")
+        .join(format!("{}.json", slug(session_key)))
+}
+
 pub fn permission_get(_state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
     let agent_id = optional_str(params, "agentId").unwrap_or_else(|| "anima".to_owned());
     let session_key = optional_str(params, "sessionKey").unwrap_or_else(|| "main".to_owned());

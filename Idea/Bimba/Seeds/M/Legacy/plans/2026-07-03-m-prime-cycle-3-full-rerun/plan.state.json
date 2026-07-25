@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T15:40:47.760Z",
+  "updatedAt": "2026-07-25T22:21:37.193Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20419,16 +20419,33 @@
       "blocker": null
     },
     "50.T50.08": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-25T21:36:41.942Z",
+      "claimedAt": "2026-07-25T21:04:12.885Z",
+      "completedAt": "2026-07-25T21:36:41.942Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T21:36:41.942Z",
+          "text": "CT now binds to real Hen artifacts. Hen owns the table: S4-1p-hen/modules/ct-template-registry.ts carries the ONE authored CT->template map (canon: FLOW-2026-04-24-PI-AGENT-API-v0.1.md:253 + CONTRACT.md Archetype Table + the Forms' own frontmatter — World/FLOW.md declares CT0, World/NOW.md declares CT4b), and TEMPLATE_CT is DERIVED by inverting it so the two directions cannot drift (it throws at import if a template is unclaimed or double-claimed). The orchestration surface gained resolvedArtifactTemplates() which CONSUMES that registry rather than copying it, so a script declares outputs by content-type (ct:[\"CT2\"]) and the right artifact (task-spec) materialises without naming a template. Building the table exposed three real gaps, all closed: (1) bare CT4 has NO archetype — canon calls CT4 the context LAYER whose phases are CT4a/CT4b (S4-4-SPEC:18), so resolution REFUSES it with a reason naming both phases instead of defaulting to CT4b, and dispatch-validate now refuses a MECHANISTIC dispatch whose CT resolves to nothing (it would run unattended and silently produce no artifact); dialogical (00/00) is exempt because its CT is still being determined. (2) CT4a=integration-preview was canon AND rendered on disk by templates.rs yet absent from hen_template_invoke's parameter union — a dead archetype, now invocable. (3) A LIVE DEFECT: templates.rs::profile_ct_mapping let integration-preview fall through to unwrap_or(\"CT0\"), so CT4a artifacts were stamped ctx_type CT0; now mapped to CT4a (flow=>CT0 made explicit — same value the fallback already gave, so no behaviour change there). A cross-language parity test pins templates.rs against the TS table and was proven non-vacuous by injecting CT0 for integration-preview and watching it go red. GREEN: 11 registry tests + 7 binding tests, full S4 suite 725 pass/0 fail, strict tsc 221/221 0 errors. LIVE PROOF (the Verify line): ct-artifact-binding-live.mjs, 37 checks all PASS — a script declaring only CT2/CT4b/CT4a resolves and renders through Hen's REAL renderTemplateWithVak into a temp vault producing exactly task-spec+daily-note+now+integration-preview, each carrying its template_id, its declaring CT and the full six-field envelope; bare CT4 is refused and writes nothing; and the REAL target/debug/epi binary runs 'epi vault template-invoke integration-preview' and stamps ctx_type CT4a. Independent gate (verifier opus-mdev-t50-verify != closer opus-mdev-t50-ct-hen): live-wire PASS, ta-onta 725, ta-onta-types PASS, gateway 98, gateway-contract 92, harness-selftest 107, honesty-lint PASS.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 50.T50.08 --owner opus-mdev-t50-verify",
+            "exitCode": 0,
+            "testsPassed": 725,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-1p-hen/modules/ct-template-registry.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/ct-artifact-binding-live.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.08.md",
+              "live-wire+ta-onta(725)+ta-onta-types+gateway(98)+honesty-lint GREEN"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 30 dirty files.",
+      "owner": "opus-mdev-t50-ct-hen",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T21:04:12.885Z",
+      "runId": "20260725T210412Z-50-T50.08",
       "worktree": null,
       "blocker": null
     },
@@ -20545,16 +20562,34 @@
       "blocker": null
     },
     "51.T51.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-25T22:21:37.172Z",
+      "claimedAt": "2026-07-25T20:27:28.328Z",
+      "completedAt": "2026-07-25T22:21:37.172Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T22:21:37.172Z",
+          "text": "s4'.context.assemble landed end-to-end with ONE assembler. SpineCompositor.assembleContextPack is now the only assembly path: it returns a structured ContextPack (per-carrier coordinate/cost/status/bytes/producedAtMs/rendered/vakToken/error) whose injection string IS what before_agent_start hands the model; assembleInjection() is a thin read of it. composite-entry publishes that same object atomically to <gate-state-root>/s4/context-pack/<slug>.json and injects pack.injection. Gateway: METHOD_NAMES + METHOD_DISPATCH_PLAN row (S3 route law) + dispatch arm and anima::context_assemble handler (S0 membrane, per the module's own 'S0 hosts the process, S3 owns route law' boundary — the brief's gateway/src/dispatch.rs pointer names a file that holds no handlers). Absence returns present:false with a reason; a pack missing its injection fails closed. Registered in capability-matrix (context_assembly block, deliberately NOT a dispatch_tool so capability-parity stays identical on both sides) + the gateway-method ratchet + a live-wire PROJECTION_MANIFEST entry. UI: ContextPackSection in the omniDispatchTrace fold (what agentic-control-room resolves to in CROSS_LAYOUT_INTENT_TARGETS), strict-parsing the envelope and REJECTING any included block whose rendered text is absent from the injection — the drift alarm a re-assembly would trip. Byte-identity proven across the real seam: ta-onta test drives the exported before_agent_start handler and asserts injected==published (all six carriers); e2e publishes through the REAL compositor into the spawned gateway's state root, asserts the served injection equals it byte-for-byte, then asserts the ACR renders the same carriers/budget/injection. Also fixed 7 PRE-EXISTING unmapped gateway methods that reddened gate_parity_manifest on clean HEAD (vault.day.ensure, khora.session_start, s2.codon.aa_lookup, s2.graph.list_by_filter, kernelBridge.m3.lensField(lensId), nara.transform.start/advance, s5.oracle.iching.cast) and made that test report the whole gap set instead of one name per run. Live-wire replay fixture refreshed from today's real capture. Residual shared-gate reds are NOT this tranche: coordinate-render-live.spec and m0-layer-rail-provenance.spec fail IDENTICALLY on clean HEAD with this work stashed and epi rebuilt at HEAD (verified) — live-graph content assertions, likely from a8cb2862; pratibimba-consent:274 is the known order-dependent flake. omnipanel-tab-traversal/m0-virtue-witness/time-axis-switcher failed only under full-gate load and pass in isolation.",
+          "receipt": {
+            "command": "pnpm test:e2e (playwright, tests/e2e/context-pack.spec.ts PASSED vs REAL spawned gateway + REAL S4 assembler); node --test Body/S/S4/**/*.test.ts (725 passed); cargo test --test gate_s4_context_assemble (4) --test gate_parity_manifest (12); node scripts/live-wire.mjs PASS; pnpm test (1375); pnpm typecheck; pnpm build",
+            "exitCode": 0,
+            "testsPassed": 725,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/spine/compositor.ts",
+              "Body/S/S4/ta-onta/spine/context-pack-store.ts",
+              "Body/S/S0/epi-cli/src/gate/anima.rs",
+              "Body/M/pratibimba-app/src/panes/omni/ContextPackSection.tsx",
+              "Body/M/pratibimba-app/tests/e2e/context-pack.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t51-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T20:27:28.328Z",
+      "runId": "20260725T202728Z-51-T51.1",
       "worktree": null,
       "blocker": null
     },
@@ -26520,30 +26555,52 @@
       "leaseExpiresAt": "2026-07-25T13:54:11.198Z",
       "worktree": null,
       "completedAt": "2026-07-25T12:55:11.609Z"
+    },
+    {
+      "runId": "20260725T202728Z-51-T51.1",
+      "taskId": "51.T51.1",
+      "status": "done",
+      "startedAt": "2026-07-25T20:27:28.328Z",
+      "owner": "opus-mdev-t51-impl",
+      "leaseExpiresAt": "2026-07-25T23:27:28.328Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T22:21:37.172Z"
+    },
+    {
+      "runId": "20260725T210412Z-50-T50.08",
+      "taskId": "50.T50.08",
+      "status": "done",
+      "startedAt": "2026-07-25T21:04:12.885Z",
+      "owner": "opus-mdev-t50-ct-hen",
+      "leaseExpiresAt": "2026-07-25T23:04:12.885Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T21:36:41.942Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T15:40:47.734Z",
-    "updatedAt": "2026-07-25T15:40:47.734Z",
+    "createdAt": "2026-07-25T21:02:16.583Z",
+    "updatedAt": "2026-07-25T21:02:16.583Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
-      "28.T28.3"
+      "28.T28.3",
+      "51.T51.1"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
-      "28.T28.3": "in-session"
+      "28.T28.3": "in-session",
+      "51.T51.1": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

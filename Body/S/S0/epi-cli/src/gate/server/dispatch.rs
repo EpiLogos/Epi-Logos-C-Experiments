@@ -1416,6 +1416,9 @@ pub(super) async fn dispatch_rpc(
         "s4'.permission.get" => anima::permission_get(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s4'.context.assemble" => anima::context_assemble(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s3'.temporal.context" => {
             let session_key = frame
                 .params

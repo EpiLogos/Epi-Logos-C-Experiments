@@ -65,13 +65,23 @@ fn canon_update_family_registers_in_the_parity_manifest() {
 
 #[test]
 fn every_product_gateway_method_has_coordinate_mapping() {
-    for method in epi_logos::gate::parity::method_names() {
-        let mapped = epi_logos::gate::parity::coordinate_family_for_gateway_method(method);
-        assert!(
-            mapped.is_some(),
-            "product gateway method must have coordinate parity mapping: {method}"
-        );
-    }
+    // Collect every unmapped method rather than asserting inside the loop: a
+    // first-failure assert reports one name per run, so closing a batch of
+    // missing mappings costs one full rebuild each. The gap set is the finding.
+    let unmapped: Vec<&str> = epi_logos::gate::parity::method_names()
+        .iter()
+        .copied()
+        .filter(|method| {
+            epi_logos::gate::parity::coordinate_family_for_gateway_method(method).is_none()
+        })
+        .collect();
+
+    assert!(
+        unmapped.is_empty(),
+        "product gateway methods without a coordinate parity mapping ({}): {}",
+        unmapped.len(),
+        unmapped.join(", ")
+    );
 }
 
 #[test]

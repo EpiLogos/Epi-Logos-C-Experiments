@@ -675,6 +675,17 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S4/plugins/pleroma/capability-matrix.json",
         needs_extraction_to: None,
     },
+    // 51.T51.1 — context-pack visibility. The S4' spine compositor is the ONE
+    // assembler; it publishes the pack it injects to the gate state root and
+    // this method serves that same object. The adapter deliberately does not
+    // re-assemble: a second assembly path is exactly how the injection drifted
+    // into being dead with nothing able to notice.
+    MethodDispatchPlanEntry {
+        method: "s4'.context.assemble",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/spine/compositor.ts",
+        needs_extraction_to: None,
+    },
     // ----- S5 governance adapters -----
     MethodDispatchPlanEntry {
         method: "s5.trajectory.verify",

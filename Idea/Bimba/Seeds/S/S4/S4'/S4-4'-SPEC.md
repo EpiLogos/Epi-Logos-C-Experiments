@@ -53,7 +53,8 @@ The first `/goal` pass belongs here as [[GoalPrelude]]. It writes a NOW-bound ar
 
 ## Open Gaps
 
-- `s4'.context.assemble`, richer `s4'.goal.*`, and persisted Psyche goal state remain open.
+- `s4'.context.assemble` **landed (51.T51.1)** as the ta-onta spine's session-context surface: `SpineCompositor.assembleContextPack` is the one assembler, it publishes the pack it injects to `<gate-state-root>/s4/context-pack/<session>.json`, and the gateway serves that same object with per-carrier provenance (coordinate, cost, budget outcome, byte size, freshness, and the carrier failures the old flat injection string could not carry). Still open on this method: the S4-4-SPEC requirement that it also return **source handles, coordinate anchors, and privacy posture**, and routing `nous_disclose` through it instead of its helper path.
+- Richer `s4'.goal.*` and persisted Psyche goal state remain open.
 - Rust `epi agent vak evaluate` is a heuristic fallback; semantic/canonical evaluation lives in the skill-mediated path.
 - Sophia post-execution review is guarded but not yet a full coordinate-native crystallisation lifecycle.
 
