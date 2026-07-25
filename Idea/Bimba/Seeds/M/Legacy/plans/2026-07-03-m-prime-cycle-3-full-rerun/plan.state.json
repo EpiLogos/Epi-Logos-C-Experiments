@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T11:20:45.126Z",
+  "updatedAt": "2026-07-25T11:25:23.136Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12791,16 +12791,16 @@
       "blocker": null
     },
     "25.T25.18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T11:21:30.462Z",
+      "claimedAt": "2026-07-25T11:21:30.462Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T13:21:30.462Z",
+      "heartbeatAt": "2026-07-25T11:21:30.462Z",
+      "runId": "20260725T112130Z-25-T25.18",
       "worktree": null,
       "blocker": null
     },
@@ -20288,14 +20288,33 @@
       "blocker": null
     },
     "50.T50.06": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T11:05:28.565Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T11:25:23.114Z",
       "claimedAt": "2026-07-25T11:05:28.565Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T11:25:23.114Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T11:25:23.114Z",
+          "text": "CFP4 is an L-Thread again, and the tool was never the missing piece. The brief assumed no tilldone tool was registered; it IS registered - at the Pleroma residency 12.T12.11 ratified (S4-2p-pleroma/S2/tilldone.ts, registered by that carrier extension.ts, scoped to Anima via the execution_backbone matrix) - so no copy was made into Anima, which would have given one law two sources. What was actually dangling was Anima's side of the binding, and it was dangling twice over: zThreadToolForMove returned a bare STRING nothing checked, and a CFP4 step ran ONCE like every other move, which is CFP0 wearing a different label. Both are closed. (1) dispatch.ts now carries ZTHREAD_TOOL_REGISTRY - every Z-thread tool records its body + registrar (+ executor for CFP4), zThreadToolForMove resolves THROUGH it, and the test walks all six and asserts each recorded path EXISTS on disk plus that the registrar really contains the registerTilldone call, so a dangling name cannot return quietly. (2) new S4/tilldone.ts holds no task state and registers no tool - it owns the one question that is genuinely Anima's, when may an L-Thread close: tillDoneGate() mirrors the tool's own tool_call gate (:335) and agent_end nudge (:365) as four codes, and runLThread()'s load-bearing property is that closed:true is returned ONLY on tilldone/complete - exhausting the cycle bound reports itself as exhaustion, never completion. A gated CFP4 move in dispatchZThread now runs under it (opt-in via adapter.readTaskList; without it CFP4 keeps its old single-pass behaviour), carrying the previous verdict's reason into the next pass - the tool's interactive nudge, in orchestration form. LIVE PROOF fresh 12/12 with real child pi's loaded from the path the REGISTRY names: 8 genuine tilldone tool_execution_end frames; the thread did NOT close on cycle 1 because work really remained, closed on cycle 2 when the children really finished (max 4, so not a bound artefact), and a second run carrying a task no child was ever assigned refused to close across both its cycles. 23 new behavioural tests; ta-onta 645 pass 0 fail (was 622); S0 contract test agent_extensions_ta_onta 14/14; verify-all W scope GREEN incl live-wire spawned gateway; honesty-lint clean. FLAGGED, not landed: CONTRACT.md's CFP-primitive table reads CFP4 -> subagent-widget.ts / CFP5 -> meta-nested while the runtime reads CFP4 -> tilldone / CFP5 -> subagent_create. The runtime reading is what this tranche bound; the table is an Architect surface with no owning tranche (T50.11 is CF-agent, not CFP-primitive), so it is recorded as OPEN in S4-4p-anima/AGENTS.md rather than silently reconciled.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 979,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/tilldone_l_thread.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/tilldone-l-thread-live.mjs",
+              "live-wire PASS + gate GREEN in plan.runs/verifications/50.T50.06.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t50-impl",
-      "leaseExpiresAt": "2026-07-25T13:05:28.565Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T11:05:28.565Z",
       "runId": "20260725T110528Z-50-T50.06",
       "worktree": null,
@@ -26267,10 +26286,20 @@
     {
       "runId": "20260725T110528Z-50-T50.06",
       "taskId": "50.T50.06",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T11:05:28.565Z",
       "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": "2026-07-25T13:05:28.565Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T11:25:23.114Z"
+    },
+    {
+      "runId": "20260725T112130Z-25-T25.18",
+      "taskId": "25.T25.18",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T11:21:30.462Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T13:21:30.462Z",
       "worktree": null
     }
   ],

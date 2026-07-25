@@ -191,9 +191,11 @@ export function executionShape(address: VakAddress): CfpLiteral {
  * and the Z-thread runtime cannot disagree about what a CFP move executes. A `Z`
  * shape composes moves rather than being one, so it has no single primitive.
  *
- * NOTE: `CFP4` maps to `tilldone`, which is not yet a registered tool — a known
- * dangling name closed by 50.T50.06. This surface reports the mapping honestly
- * rather than hiding the gap.
+ * `CFP4` maps to `tilldone`, the completion gate. That name was dangling until
+ * 50.T50.06 bound it: `zThreadToolForMove` now resolves through
+ * `ZTHREAD_TOOL_REGISTRY`, so every primitive this reports names a tool with a
+ * recorded body and registrar. CFP4's body is the Pleroma-resident tool
+ * (12.T12.11); its Anima-side executor is `../S4/tilldone.ts`.
  */
 export function primitiveFor(address: VakAddress): ZThreadToolName | null {
 	if (address.cfp === "Z") return null;
