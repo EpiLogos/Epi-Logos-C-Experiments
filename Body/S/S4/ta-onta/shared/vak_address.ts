@@ -16,7 +16,7 @@
 //   S4.0' | [[C0]] Bimba      | [[CPF]] | Context Packing Frame — polarity gate
 //   S4.1' | [[C1]] Form       | [[CT]]  | Context Template — semantic phase-type
 //   S4.2' | [[C2]] Entity     | [[CP]]  | Context Parameters — incubation coordinate
-//   S4.3' | [[C3]] Process    | [[CF]]  | Context Fill — archetypal operator
+//   S4.3' | [[C3]] Process    | [[CF]]  | Context Frame — archetypal form
 //   S4.4' | [[C4]] Type       | [[CFP]] | Context Frame Pattern — nesting algebra
 //   S4.5' | [[C5]] Pratibimba | [[CS]]  | Context State — path operator
 //
@@ -26,9 +26,16 @@
 //   CT  — artifact/content type
 //   CP  — the active QL position set; authority for cardinality (single point,
 //         compressed triad, sixfold traverse, inverse pass, 4/5 depth pass)
-//   CF  — the constitutional handling mode (which agent speaks)
-//   CFP — thread/spread topology, INCLUDING nested/meta sub-readings
+//   CF  — the archetypal form / constitutional handling mode (which agent speaks)
+//   CFP — thread/spread topology, INCLUDING nested/meta sub-readings —
+//         i.e. how CF frames nest within one another
 //   CS  — Context Sequence and Day/Night' traversal direction
+//
+// CF and CFP both mention nesting; they are NOT the same claim. VAK as a whole
+// is a nesting operator system, and every context frame sits within the psychoid
+// #4. CF names the frames themselves — the archetypal form a step is spoken
+// through. CFP names how those frames nest WITHIN ONE ANOTHER: the pattern, the
+// orchestration score. CF is what nests; CFP is the algebra of the nesting.
 //
 // Owning specs — go here for meaning, not to a SKILL.md:
 //   umbrella          Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md          [[S4'-SPEC]]
@@ -61,12 +68,10 @@
 // validates against the same canonical sets.
 //
 // The cross-language peer is `Body/S/S0/portal-core/src/vak_address.rs`, pinned
-// by the shared fixture `vak_address.parity.json` (neither side greps the
+// by the shared fixture `vak_address.parity.json` — neither side greps the
 // other's source; both must accept the canonical cases and refuse the rejected
-// ones). A legacy pre-migration source also exists OUTSIDE this repo at
-// `/Users/admin/Documents/Epi-Logos/.pi/extensions/s_i/modules/ql_types/`
-// (commit d38b32ca) — it is genealogy, NOT the authority, and following it
-// leaves the canonical vault. Meaning lives in the specs listed above.
+// ones. Those two files and the specs above are the whole authority. Nothing
+// outside this repo is.
 //
 // ── Drift prevention ────────────────────────────────────────────────────────
 //   1. CANONICAL_CF_POSITIONS and CF_SET derive structurally from each other.
@@ -75,9 +80,8 @@
 //   3. The JSON-shape contract test pins the wire format (nested cs, primed Night').
 //   4. A frozen-fixture comparison pins the exact stringify output (key order + values).
 //
-// Intentional divergence from the legacy source: `vakAddressFromObject` takes
-// `unknown` (not `Partial<VakAddress>`) because real callers at cross-extension
-// boundaries always have arbitrary input.
+// `vakAddressFromObject` takes `unknown` (not `Partial<VakAddress>`) because
+// real callers at cross-extension boundaries always have arbitrary input.
 
 const CT_LITERALS = ["CT0", "CT1", "CT2", "CT3", "CT4", "CT4a", "CT4b", "CT5"] as const;
 export type CtLiteral = (typeof CT_LITERALS)[number];

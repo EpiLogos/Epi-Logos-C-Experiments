@@ -258,7 +258,7 @@ describe("VAK coordinate canon binding", () => {
 		["CPF", "Context Packing Frame"],
 		["CT", "Context Template"],
 		["CP", "Context Parameters"],
-		["CF", "Context Fill"],
+		["CF", "Context Frame"],
 		["CFP", "Context Frame Pattern"],
 		["CS", "Context State"],
 	];

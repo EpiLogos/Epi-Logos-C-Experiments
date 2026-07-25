@@ -200,8 +200,8 @@ Each family manifests the #0-#5 archetypes:
 | **cpf** | **C**ategory-**P**osition-**F**rame | Cross-coordinate context mapping; bridges C and P families | `(0/1)` — Non-dual binary |
 | **ct** | **C**ontent-**T**ype | Temporal frame of operations, frozen process; manages processual flow in artifacts | `(0/1/2)` — The Trika |
 | **cp** | **C**ontext-**P**osition | Positional frame instantiation; locates in semantic space | `(4.0/1-4.4/5)` — Fractal doubling |
-| **cf** | **C**ontext-**F**rame | **The #4 Lemniscate anchor**; primary nesting operator | `(5/0)` — Möbius return |
-| **cfp** | **C**ontext-**F**rame-**P**osition | Nested frame operations; compositional weaving | Custom frames |
+| **cf** | **C**ontext-**F**rame | The archetypal form a step is spoken through; every frame sits within the **#4** Lemniscate | `(5/0)` — Möbius return |
+| **cfp** | **C**ontext-**F**rame-**P**attern | **The nesting algebra** — how context frames nest within one another; the orchestration score | Custom frames |
 | **cs** | **C**ontext-**S**ystem | System-wide contextual state; total environment | Custom frames |
 
 **The () Operator as Execution Matrix:**
@@ -360,8 +360,8 @@ struct Coordinate {
     Coordinate* cpf;  // Category-Position-Frame
     Coordinate* ct;   // Context-Time
     Coordinate* cp;   // Context-Position
-    Coordinate* cf;   // Context-Frame (#4 Lemniscate anchor)
-    Coordinate* cfp;  // Context-Frame-Position
+    Coordinate* cf;   // Context-Frame — the archetypal form, within #4
+    Coordinate* cfp;  // Context-Frame-Pattern — the nesting algebra over cf
     Coordinate* cs;   // Context-System
 
     // Self-reference for recursive closure
@@ -471,7 +471,7 @@ Möbius return (#5 → #0) is the garbage collector.
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (57050 symbols, 122911 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (35990 symbols, 71637 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

@@ -88,9 +88,10 @@ fn cpf_polarity_serialises_as_canonical_literal() {
 
 #[test]
 fn vak_address_json_shape_matches_typescript_contract() {
-    // Cross-repo contract: TS VakAddress at /Users/admin/Documents/Epi-Logos/
-    // .pi/extensions/s_i/modules/ql_types/index.ts (commit d38b32ca) serialises
-    // with nested cs: { code, direction }. Rust mirror MUST emit identical shape.
+    // Wire contract with the TS mirror `Body/S/S4/ta-onta/shared/vak_address.ts`:
+    // the envelope serialises with nested cs: { code, direction }. Both sides are
+    // pinned by the shared fixture `vak_address.parity.json`; this Rust mirror
+    // MUST emit an identical shape.
     let addr = VakAddress {
         cpf: CpfState::Dialogical,
         ct: vec!["CT0".into()],

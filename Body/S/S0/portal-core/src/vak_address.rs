@@ -14,15 +14,21 @@
 //! | S4.0' | C0 Bimba     | CPF   | Context Packing Frame — polarity gate      | `[[S4-0'-SPEC]]` |
 //! | S4.1' | C1 Form      | CT    | Context Template — semantic phase-type     | `[[S4-1'-SPEC]]` |
 //! | S4.2' | C2 Entity    | CP    | Context Parameters — incubation coordinate | `[[S4-2'-SPEC]]` |
-//! | S4.3' | C3 Process   | CF    | Context Fill — archetypal operator         | `[[S4-3'-SPEC]]` |
+//! | S4.3' | C3 Process   | CF    | Context Frame — archetypal form            | `[[S4-3'-SPEC]]` |
 //! | S4.4' | C4 Type      | CFP   | Context Frame Pattern — nesting algebra    | `[[S4-4'-SPEC]]` |
 //! | S4.5' | C5 Pratibimba| CS    | Context State — path operator              | `[[S4-5'-SPEC]]` |
 //!
 //! What each field DECLARES (`[[S4'-SPEC]]` Reading-Frame Law): CPF — dialogical
 //! vs autonomous; CT — artifact/content type; CP — the active QL position set,
 //! and the authority for its cardinality; CF — the constitutional handling mode;
-//! CFP — thread/spread topology, including nested/meta sub-readings; CS —
+//! CFP — thread/spread topology: how CF frames nest within one another; CS —
 //! Context Sequence and Day/Night' traversal direction.
+//!
+//! CF and CFP both mention nesting; they are NOT the same claim. VAK as a whole
+//! is a nesting operator system, and every context frame sits within the psychoid
+//! #4. CF names the frames themselves — the archetypal form a step is spoken
+//! through. CFP names how those frames nest WITHIN ONE ANOTHER: the pattern, the
+//! orchestration score. CF is what nests; CFP is the algebra of the nesting.
 //!
 //! CFP declares topology and does NOT name a tool. `[[S4-4'-SPEC]]` lists PI
 //! tools as one flat registered set with no pairing to any coordinate; the
