@@ -64,21 +64,38 @@ export function isResolvedChain(
 }
 
 // ============================================================================
-// Aspect → element (Golden Dawn elemental temperament of the four aspect kinds).
+// Aspect → element — NOT CANONICAL. Do not cite as precedent. See DR-L2-ASPECT-1.
 //
-// Returned in the canonical m2.h Element_Id convention (lens.rs: AKASHA=0,
-// VAYU/Air=1, AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4) so it composes with the
-// `elementId` the bridge supplies on the chain. Consumed by the cosmic-clock
-// aspect-edge layer (24.x) to colour chords by element.
+// The 24.7 landing shipped the table below as "the standard astrological reading"
+// pending Architect review. That review happened (2026-07-25) and found the
+// surface wrong in two ways:
 //
-// ARCHITECT-REVIEW (24.7): the aspect→element correspondence below is the standard
-// astrological reading (trine=fire, square=earth, opposition=air, generic aspect=
-// water); the exact Golden Dawn temperament is domain law the Architect owns —
-// confirm or adjust. `elementForAspect` is a pure total function either way.
+//   1. WRONG ORDERING. The values are legacy m2.h `Element_Id` (AKASHA=0, Air=1,
+//      Fire=2, Water=3, Earth=4). L2' is THE element-bearing lens and its six
+//      inner positions are the one authoritative ordering (0=Aether, 1=Earth,
+//      2=Water, 3=Air, 4=Fire, 5=Salt). Runtime code MUST convert through
+//      `Body/S/S0/epi-lib/include/m_canonical.h`, never an ad-hoc integer map.
+//      A five-element convention is incomplete — it drops Salt.
+//
+//   2. WRONG SHAPE. An aspect does not HAVE an element; an aspect IS an elemental
+//      relation between two zodiacal positions. Per L2' §"Elemental Relation of
+//      Aspects", sign→element is the triplicity identity `sign mod 4` (already
+//      carried by M2-3's decans[4][3][3][2] first index), so an aspect spanning Δ
+//      signs fixes the relation by `Δ mod 4`: 0 → same element (conjunction,
+//      trine); 2 → complementary pair, Fire↔Air / Earth↔Water (sextile,
+//      opposition); 3 → cross-pair (square). The relation ranges over the
+//      operative quartet only — Aether and Salt frame the wheel, and can never be
+//      an aspect's element. `elementForAspect(aspect) → number` therefore asserts
+//      something canon does not carry, which is why it needed an invented table.
+//
+// The replacement is relation-shaped and takes BOTH positions. It is not landed
+// here: public-surface shape is Architect-owned (CLAUDE.md Code Navigability Rule
+// 5) and DR-L2-ASPECT-1 reads PROPOSED. Nothing in production consumes this yet —
+// only its own unit test — so the swap stays free until the DR is ratified.
 // ============================================================================
 
-// m2.h Element_Id (lens.rs): AKASHA=0 (pre-elemental, not an aspect temperament),
-// VAYU/Air=1, AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4.
+// m2.h Element_Id (lens.rs) — LEGACY ordering, retained only so the frozen 24.7
+// behaviour is unchanged while DR-L2-ASPECT-1 is open. Not the canonical IDs.
 const ELEMENT_AIR = 1;
 const ELEMENT_FIRE = 2;
 const ELEMENT_WATER = 3;
@@ -178,8 +195,11 @@ export class TarotDecanService {
     }
 
     /**
-     * The element (m2.h `Element_Id`) of a cross-clock aspect edge, per Golden Dawn
-     * elemental temperament — consumed by the aspect-edge layer to colour chords.
+     * @deprecated NOT CANONICAL — see DR-L2-ASPECT-1 and the note above
+     * {@link ELEMENT_FOR_ASPECT}. Returns a legacy m2.h `Element_Id` from an
+     * invented table, and an aspect carries an elemental *relation* rather than an
+     * element at all. Frozen at the 24.7 behaviour until the DR is ratified; do
+     * not add consumers.
      */
     elementForAspect(aspect: AspectKind): number {
         return ELEMENT_FOR_ASPECT[aspect];

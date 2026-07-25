@@ -2121,3 +2121,24 @@ The wave-C decisions routed to user final-validation join the register here (sou
 - **Live canon/specs de-laned:** `CLAUDE.md`, `[[S4]]` + `[[S4']]` World canon, `[[S4-SPEC]]` (harness-alternatives table, command table, invariants), `[[S4-ARCHITECTURE]]` frontmatter, `[[S4-0-SPEC]]`, `[[S4-TRACEABILITY-INDEX]]` future-work.
 - **Legacy archive kept** (per cycle-3 KEEP-list): the dated migration plan, operator protocol, and authority matrix are retained as historical records with a `SUPERSEDED — see [[DR-S4-CLAW-1]]` banner; their `claw-rust` content is not rewritten (also preserves the `agent_docs.rs` archive-integrity assertions).
 - The vendored `vendors/claw-code-parity/` submodule is left declared (KEEP-list protects declared `.gitmodules` vendors); only the CLI lane that referenced it was removed.
+
+---
+
+## DR-L2-ASPECT-1 — an aspect carries an elemental *relation*, not an element; the relation is computed as Δ mod 4
+
+**Status:** PROPOSED · **Raised:** 2026-07-25 · **By:** m-dev (24.T24.7 ARCHITECT-REVIEW follow-up) · **Domain:** L2' / M2-3 / M3'
+
+**Context.** `TarotDecanService.elementForAspect` (landed 24.T24.7) shipped with an explicit `ARCHITECT-REVIEW` flag: it returns one element per aspect kind (`trine→Fire, square→Earth, opposition→Air, aspect→Water`) from an invented table, in the **legacy** m2.h `Element_Id` ordering. Two defects, one of them structural:
+
+1. **Wrong ordering.** [[L2']] is THE element-bearing lens and its six inner positions are the one authoritative ordering (`0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt`). `Body/S/S0/epi-lib/include/m_canonical.h` (05.T5.16) is the single point of truth for converting every legacy ordering to it, and the [[M2-3]] branch canon states plainly that runtime code "MUST use the helpers … never ad-hoc integer maps." The shipped function returns raw m2.h `Element_Id` values.
+2. **Wrong shape.** No aspect→element assignment exists in canon because none can: an aspect is an angular relation between two zodiacal positions, so it carries an elemental *relation*, not an element. A five-element convention (Aether + the quartet) hides this by also dropping [[Salt]]; the true frame is the operative quartet held between the 0/5 poles.
+
+**Decision (proposed).** Adopt the aspect law authored at [[L2']] §"Elemental Relation of Aspects":
+
+- Sign→element is the triplicity identity `element_of(sign) = sign mod 4`, already carried by [[M2-3]]'s `decans[4][3][3][2]` first index (Fire = Aries·Leo·Sagittarius = `{0,4,8}`, etc.). The `#2-3-{1..4}` branch order *is* the zodiac's element cycle.
+- An aspect spanning `Δ` signs fixes the elemental relation by `Δ mod 4`: `0` → same element (conjunction, trine); `2` → complementary pair, Fire↔Air / Earth↔Water (sextile, opposition); `3` → cross-pair (square).
+- The relation ranges over the operative quartet only. [[Aether]] and [[Salt]] are never an aspect's element; they frame the wheel.
+
+**Consequence.** `elementForAspect(aspect) → number` is unimplementable from canon — its return type asserts something an aspect does not carry — and must be replaced by a relation-shaped surface taking both positions. The shipped mapping is **not** canonical and must not be cited as precedent. Nothing in production consumes it yet (only its own unit test), so the surface change is free.
+
+**Open for the Architect.** (a) Ratify or amend the aspect law itself; (b) fix the replacement surface shape — the interface is Architect-owned per the Code Navigability Rules, so no surface change lands until this row reads VALIDATED.
