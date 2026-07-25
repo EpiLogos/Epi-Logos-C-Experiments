@@ -107,7 +107,17 @@ pub fn position_transit_quaternion(kairos: &crate::types::KairosState) -> [f32; 
     [1.0, 0.0, 0.0, 0.0]
 }
 
-/// Canonical lowercase element name for an `Element_Id` (mirrors the C enum order).
+/// Lowercase element name for an m2.h tattva `Element_Id` — **scheme A**
+/// (AKASHA=0, VAYU/air=1, AGNI/fire=2, APAS/water=3, PRITHVI/earth=4), mirroring
+/// the C enum order. Its inputs are kernel LUT mirrors (`PLANET_ELEMENT_ID`).
+///
+/// NOT the L2' canonical ordering, despite the name: `nara::medicine_frame`
+/// exports a DIFFERENT `element_name` keyed by canonical-B ids (0=Aether,
+/// 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt). Two live schemes, two same-named
+/// helpers — convert with `canonical_from_m2_tattva` before crossing between
+/// them. (This doc comment previously claimed "canonical", which it is not; same
+/// honesty correction DR-37-10 applied to the `canonical_from_medicine_rs_legacy`
+/// alias.)
 pub fn element_name(element_id: u8) -> &'static str {
     match element_id {
         0 => "aether",

@@ -43,9 +43,9 @@ const COMPLETE_ARTIFACT = {
     suit: 'wands',
     codonId: 31,
     decanIndex: 12,
-    zodiacSign: 9,
+    zodiacSign: 9, // Capricorn
     rulingPlanet: 3,
-    elementId: 2,
+    elementId: 1, // Earth — the triplicity element of Capricorn, canonical-B
     chakraId: 4,
     bodyZones: ['throat', 'thyroid, neck'],
     decanBodyPart: 'neck',
@@ -64,7 +64,7 @@ describe('TarotDecanService.resolveChain', () => {
         expect(resolved.decanIndex).toBe(12);
         expect(resolved.zodiacSign).toBe(9);
         expect(resolved.rulingPlanet).toBe(3);
-        expect(resolved.elementId).toBe(2);
+        expect(resolved.elementId).toBe(1); // Earth (canonical-B), matching Capricorn
         expect(resolved.chakraId).toBe(4);
         expect(resolved.bodyZones).toEqual(['throat', 'thyroid, neck']);
         expect(resolved.decanBodyPart).toBe('neck');
@@ -97,6 +97,36 @@ describe('TarotDecanService.resolveChain', () => {
     it('rejects an empty card key', async () => {
         const service = new TarotDecanService(bridgeReturning(COMPLETE_ARTIFACT));
         await expect(service.resolveChain('  ')).rejects.toThrow('card key');
+    });
+
+    it('refuses a chain whose element is not the triplicity element of its sign', async () => {
+        // Capricorn (9) is Earth = 1 in canonical-B. Anything else is either a
+        // wrong value or a scheme-A id that slipped across the boundary — the
+        // exact failure a bare `elementId` cannot show. Honest-pending, not a
+        // confidently wrong element.
+        for (const wrong of [0, 2, 3, 4, 5]) {
+            const service = new TarotDecanService(
+                bridgeReturning({ ...COMPLETE_ARTIFACT, elementId: wrong })
+            );
+            expect(await service.resolveChain('wands:ace')).toEqual({ pending: 's2-decan-chain' });
+        }
+    });
+
+    it('accepts the triplicity element for every sign, across all four triplicities', async () => {
+        // 4 = Fire (Aries), 1 = Earth (Taurus), 3 = Air (Gemini), 2 = Water (Cancer) …
+        const expected = [4, 1, 3, 2];
+        for (let zodiacSign = 0; zodiacSign < 12; zodiacSign++) {
+            const service = new TarotDecanService(
+                bridgeReturning({
+                    ...COMPLETE_ARTIFACT,
+                    zodiacSign,
+                    elementId: expected[zodiacSign % 4]
+                })
+            );
+            const chain = await service.resolveChain('wands:ace');
+            expect(isResolvedChain(chain)).toBe(true);
+            expect((chain as TarotDecanChain).elementId).toBe(expected[zodiacSign % 4]);
+        }
     });
 });
 

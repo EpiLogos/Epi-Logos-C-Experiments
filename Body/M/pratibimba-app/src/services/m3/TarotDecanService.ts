@@ -16,6 +16,7 @@
  */
 
 import type { KernelBridgeCapabilityReceipt } from '../../bridge/types';
+import { elementOfSign } from '../../engine/canonicalElement';
 import { requireNonEmpty, type M3GatewayPort } from './m3GatewayPort';
 
 export const M3_TAROT_DECAN_METHOD = 's2.codon.scalar_ref.read' as const;
@@ -29,8 +30,13 @@ export type TarotSuit = 'wands' | 'cups' | 'swords' | 'pentacles';
 /**
  * The resolved decan-tarot chain. Every numeric field is a protected S2 authority
  * value read over `s2.codon.scalar_ref.read`; the renderer never re-derives any of
- * it. `elementId` follows the canonical m2.h `Element_Id` convention (nara/lens.rs:
- * akasha=0, air=1, fire=2, water=3, earth=4). Body data (`bodyZones`,
+ * it. `elementId` is a CANONICAL-B [[L2']] element id (0=Aether, 1=Earth, 2=Water,
+ * 3=Air, 4=Fire, 5=Salt) — the chain crosses the M2↔M3 boundary, and the substrate
+ * law is that no raw element integer crosses it (DR-37-3/DR-37-10; the converters
+ * live in `nara/medicine_frame.rs` and `m_canonical.h`). The 24.7 landing declared
+ * this field "canonical m2.h Element_Id", which is a contradiction in terms — m2.h
+ * carries the tattva ordering (scheme A), not the canonical one. Body data
+ * (`bodyZones`,
  * `decanBodyPart`, `decanHerbs`) is resolved in the substrate medicine-frame tables
  * (chakra-body-zone / decan-body-part / decan-herb) and arrives already-materialised
  * — never held as a renderer-local table (24.7 forbidden-import + no-renderer-LUT law).
@@ -42,7 +48,7 @@ export interface TarotDecanChain {
     readonly decanIndex: number; // 0..35; the substrate decan index
     readonly zodiacSign: number; // 0..11
     readonly rulingPlanet: number; // 0..9 (mod-10 planet model)
-    readonly elementId: number; // 0..4 (m2.h Element_Id: akasha/air/fire/water/earth)
+    readonly elementId: number; // canonical-B L2' id; always the triplicity element of `zodiacSign`
     readonly chakraId: number; // 0..7
     readonly bodyZones: readonly string[]; // substrate chakra-body-zone for this chakra
     readonly decanBodyPart: string; // substrate decan-body-part for this decan
@@ -190,7 +196,7 @@ function parseChain(card: TarotCardKey, artifact: unknown): TarotDecanChain | nu
     const decanIndex = readInt(record.decanIndex, 0, 35);
     const zodiacSign = readInt(record.zodiacSign, 0, 11);
     const rulingPlanet = readInt(record.rulingPlanet, 0, 9);
-    const elementId = readInt(record.elementId, 0, 4);
+    const elementId = readInt(record.elementId, 0, 5);
     const chakraId = readInt(record.chakraId, 0, 7);
     const bodyZones = readStringArray(record.bodyZones);
     const decanBodyPart = readString(record.decanBodyPart);
@@ -207,6 +213,15 @@ function parseChain(card: TarotCardKey, artifact: unknown): TarotDecanChain | nu
         decanBodyPart === null ||
         decanHerbs === null
     ) {
+        return null;
+    }
+    // The chain carries BOTH the sign and its element, so the pair is checkable:
+    // a decan's element is the triplicity element of its sign ([[L2']] §"Elemental
+    // Relation of Aspects"). Two live element schemes cross this boundary, and a
+    // scheme mismatch is otherwise invisible — a scheme-A id would simply render
+    // as the wrong element. Refuse the chain instead, so the surface shows its
+    // honest-pending marker rather than a confident wrong answer.
+    if (elementId !== elementOfSign(zodiacSign)) {
         return null;
     }
     return Object.freeze({

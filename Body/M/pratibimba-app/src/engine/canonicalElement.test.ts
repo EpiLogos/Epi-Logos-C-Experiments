@@ -11,10 +11,12 @@
 
 import { describe, expect, it } from 'vitest';
 import { aspectBetween, ASPECT_KINDS } from './clockFieldOverlay';
+import { ELEMENT_COLOURS } from './cosmicMath';
 import {
     CANONICAL_ELEMENT_INVALID,
     CANONICAL_ELEMENT_NAMES,
     CanonicalElement,
+    canonicalElementName,
     canonicalFromM2_3Branch,
     canonicalFromM2ElementId,
     elementalRelationBetweenDegrees,
@@ -23,7 +25,8 @@ import {
     elementOfSign,
     isOperativeElement,
     m2ElementIdFromCanonical,
-    signOfDegree
+    signOfDegree,
+    TATTVA_ELEMENT_NAMES
 } from './canonicalElement';
 
 /** Sign indices of the four classical triplicities (Aries = 0 … Pisces = 11). */
@@ -88,6 +91,30 @@ describe('legacy ordering conversions', () => {
         expect(canonicalFromM2_3Branch(5)).toBe(CanonicalElement.SALT);
         const mapped = [0, 1, 2, 3, 4, 5].map(canonicalFromM2_3Branch);
         expect(new Set(mapped).size).toBe(6);
+    });
+});
+
+describe('the two live schemes stay distinguishable', () => {
+    it('names the tattva ordering separately from the canonical one', () => {
+        expect(TATTVA_ELEMENT_NAMES).toEqual(['Akasha', 'Vayu', 'Agni', 'Apas', 'Prithvi']);
+        expect(canonicalElementName(CanonicalElement.WATER)).toBe('Water');
+        // The collision that makes an unmarked id dangerous: id 2 is Water
+        // canonically and Agni/Fire in the tattva ordering.
+        expect(TATTVA_ELEMENT_NAMES[2]).toBe('Agni');
+        expect(canonicalElementName(2)).toBe('Water');
+    });
+
+    it('keeps ELEMENT_COLOURS keyed by scheme A — converting first is required', () => {
+        // Fire is canonical 4 but tattva 2. Looking a canonical id up in the
+        // scene table directly would paint Fire with Prithvi/umber.
+        expect(m2ElementIdFromCanonical(CanonicalElement.FIRE)).toBe(2);
+        expect(ELEMENT_COLOURS[m2ElementIdFromCanonical(CanonicalElement.FIRE)]).toBe(0xd8613c);
+        expect(ELEMENT_COLOURS[CanonicalElement.FIRE]).toBe(0x9b7a4b); // the wrong colour
+    });
+
+    it('names an unknown canonical id as null rather than guessing', () => {
+        expect(canonicalElementName(6)).toBeNull();
+        expect(canonicalElementName(CANONICAL_ELEMENT_INVALID)).toBeNull();
     });
 });
 

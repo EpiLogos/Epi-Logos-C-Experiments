@@ -15,6 +15,7 @@
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.7.
  */
 
+import { canonicalElementName } from '../engine/canonicalElement';
 import {
     cardLabelFromCardKey,
     isResolvedChain,
@@ -148,7 +149,10 @@ function chipsFromChain(chain: TarotDecanChain): ChipModel[] {
         chip('decan', `#${String(chain.decanIndex).padStart(2, '0')}`),
         chip('sign', String(chain.zodiacSign)),
         chip('planet', String(chain.rulingPlanet)),
-        chip('element', String(chain.elementId)),
+        // The element is a canonical-B id; render its NAME. A bare integer is
+        // unreadable AND scheme-ambiguous — "2" is Water canonically and Fire in
+        // the tattva ordering, and the chip gave the reader no way to tell.
+        chip('element', canonicalElementName(chain.elementId) ?? String(chain.elementId)),
         chip('chakra', String(chain.chakraId)),
         chip('body-zones', chain.bodyZones.join(', '))
     ];

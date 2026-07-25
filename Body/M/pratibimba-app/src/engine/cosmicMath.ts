@@ -200,11 +200,19 @@ export interface LivePlanet {
 }
 
 /**
- * Element_Id → colour-binary hue (Akasha=violet · Vayu=cyan · Agni=vermilion ·
- * Apas=aquamarine · Prithvi=umber, per M2-ARCHITECTURE §5.3.4). The hue values
- * are renderer choreography; the element id underneath is kernel data
- * (`PLANET_ELEMENT_ID`, the M2_PLANET_LUT mirror) — never a local table of
+ * SCHEME A (m2.h tattva `Element_Id`) → colour-binary hue (Akasha=violet ·
+ * Vayu=cyan · Agni=vermilion · Apas=aquamarine · Prithvi=umber, per
+ * M2-ARCHITECTURE §5.3.4). The hue values are renderer choreography; the element
+ * id underneath is kernel data (`PLANET_ELEMENT_ID`, the M2_PLANET_LUT mirror, and
+ * `CHAKRA_ELEMENT_IDS`, the M2_CHAKRA_LUT mirror) — never a local table of
  * planet→element correspondences.
+ *
+ * KEYED BY SCHEME A ON PURPOSE — its inputs are kernel LUT mirrors, which carry
+ * the tattva ordering. It is NOT the canonical [[L2']] ordering, and it must not
+ * be re-keyed in place: that would silently repaint every live surface. A
+ * canonical-B id (e.g. `dominantElementId` off the medicine route) must be
+ * converted with `m2ElementIdFromCanonical` before it is looked up here.
+ * See `engine/canonicalElement.ts` and DR-L2-ASPECT-1.
  */
 export const ELEMENT_COLOURS: Readonly<Record<number, number>> = {
     0: 0x8f6fd8, // AKASHA — violet

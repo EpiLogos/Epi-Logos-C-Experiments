@@ -59,6 +59,37 @@ export const CANONICAL_ELEMENT_NAMES: Readonly<Record<CanonicalElementId, string
 export const CANONICAL_ELEMENT_INVALID = 0xff;
 
 /**
+ * Names for the m2.h tattva ordering (scheme A) — NOT the canonical ordering.
+ * Kept here, beside its converter, so any surface rendering a scheme-A id names
+ * the scheme it is in rather than leaving a bare integer for the next reader to
+ * guess at. Guessing is what produced the withdrawn `elementForAspect`.
+ *
+ * Two element schemes are live in this app BY DESIGN, and both are correct for
+ * their own inputs:
+ *   - scheme A (tattva) — kernel M2 LUT mirrors: `PLANET_ELEMENT_ID`
+ *     (M2_PLANET_LUT) and `CHAKRA_ELEMENT_IDS` (M2_CHAKRA_LUT). Consumed by
+ *     `cosmicMath.ELEMENT_COLOURS` and `solarSystem.ELEMENT_NAMES`.
+ *   - canonical-B (L2') — everything crossing the M2↔M3 boundary, which the
+ *     substrate normalises (`canonical_from_m2_tattva`,
+ *     `canonical_from_m3_decan_element`); e.g. `dominantElementId` on the
+ *     medicine route, consumed by `MedicineViewPane`.
+ * Cross between them ONLY through the converters below — never by re-keying a
+ * table in place, which would silently change what a live surface renders.
+ */
+export const TATTVA_ELEMENT_NAMES: readonly string[] = Object.freeze([
+    'Akasha', // 0 — AKASHA (aether)
+    'Vayu', // 1 — VAYU (air)
+    'Agni', // 2 — AGNI (fire)
+    'Apas', // 3 — APAS (water)
+    'Prithvi' // 4 — PRITHVI (earth)
+]);
+
+/** Name of a canonical element id, or `null` when it is not one. */
+export function canonicalElementName(element: number): string | null {
+    return CANONICAL_ELEMENT_NAMES[element as CanonicalElementId] ?? null;
+}
+
+/**
  * The operative quartet — EARTH, WATER, AIR, FIRE (ids 1-4), the four classical
  * elements that participate in elemental balance and the nucleotide throughline.
  * AETHER (0) is the pre-elemental ground and SALT (5) the crystallised return;

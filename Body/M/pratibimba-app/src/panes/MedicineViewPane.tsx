@@ -8,6 +8,7 @@
  * Contract: [[M4'-SPEC]] / [[CHROME-CONTRACT]].
  */
 
+import { privacyChrome } from '../ui/privacyChrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { commands } from '../commands/registry';
@@ -22,6 +23,11 @@ import {
     parseMedicineSnapshot
 } from './medicineView';
 
+// CANONICAL-B ([[L2']]) ids — `dominantElementId` crosses the M2↔M3 boundary and
+// the substrate normalises it (`canonical_from_m2_tattva`), so these are the
+// canonical names, NOT the tattva ones used on the planet/chakra scene path.
+// Only the operative quartet appears: a chakra's dominant element is never Aether
+// or Salt. See `engine/canonicalElement.ts` + DR-L2-ASPECT-1.
 const ELEMENT_NAMES: Record<number, string> = { 1: 'Earth', 2: 'Water', 3: 'Air', 4: 'Fire' };
 
 export interface MedicineViewPaneProps {
@@ -109,7 +115,8 @@ export function MedicineViewPane({ fixture, loadSnapshot, pinMateria, onOpenKair
 
     const active = snapshot?.activeDecan ?? null;
     return (
-        <section className="medicine-pane" data-testid="medicine-pane">
+        <section className={`medicine-pane ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title} data-testid="medicine-pane">
             <header className="medicine-header">
                 <div>
                     <strong>Medicine correspondences</strong>
