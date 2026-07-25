@@ -21,7 +21,7 @@ import { spawn } from "node:child_process";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runLThread, tillDoneGate } from "../S4/tilldone.ts";
-import { zThreadToolRegistration } from "../extension/dispatch.ts";
+import { TOOL_CAPABILITIES, capabilitiesFor, conventionalToolFor, shapeOf } from "../extension/dispatch.ts";
 
 const MODEL = process.env.LIVE_MODEL || "google/gemini-3.1-flash-lite";
 // fileURLToPath, not URL.pathname: the repo path contains spaces, which
@@ -42,7 +42,7 @@ function check(label, condition, detail = "") {
  * Returns the raw JSON-mode stdout.
  */
 function runChild(prompt) {
-	const registration = zThreadToolRegistration("CFP4");
+	const registration = TOOL_CAPABILITIES.tilldone;
 	const args = [
 		"--mode",
 		"json",
@@ -104,13 +104,20 @@ function taskListFrom(stdout) {
 console.log(`\nCFP4 L-Thread completion-gate live proof — model=${MODEL}`);
 
 // ── 0. The name resolves to a tool the harness can actually load ──────────
-console.log("\n─── 0. CFP4 resolves to a registered tool ───");
-const registration = zThreadToolRegistration("CFP4");
-console.log(`  CFP4 -> ${registration.tool}`);
+console.log("\n─── 0. threads are shapes; tools are capabilities ───");
+const registration = TOOL_CAPABILITIES.tilldone;
+const lThread = shapeOf("CFP4");
+console.log(`  CFP4 shape: ${lThread.thread} — autonomy=${lThread.autonomy} completion=${lThread.completion}`);
+console.log(`  CFP4 conventional tool: ${conventionalToolFor("CFP4")}  (Long is a duration property, not a primitive)`);
+console.log(`  capabilities offered to that shape: ${capabilitiesFor(lThread).map((c) => c.tool).join(", ")}`);
 console.log(`  body:      ${registration.body}`);
 console.log(`  registrar: ${registration.registrar}`);
 console.log(`  executor:  ${registration.executor}`);
-check("CFP4 resolves to tilldone", registration.tool === "tilldone");
+check("CFP4 names no tool — the old bijection is gone", conventionalToolFor("CFP4") === null);
+check(
+	"the completion gate is offered to the shape that declares it",
+	capabilitiesFor(lThread).some((c) => c.tool === "tilldone"),
+);
 check("the tool resides in Pleroma, not Anima (12.T12.11)", /S4-2p-pleroma/.test(registration.body));
 
 /**

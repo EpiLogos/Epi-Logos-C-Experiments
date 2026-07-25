@@ -146,118 +146,37 @@ export function isOriginating(sessionId?: string): boolean {
   return getCSState(sessionId).origination === ORIGINATION_DIALOGICAL;
 }
 
-export type ZThreadToolName =
-  | "dispatch_agent"
-  | "dispatch_parallel_agents"
-  | "run_chain"
-  | "dispatch_fusion_agents"
-  | "tilldone"
-  | "subagent_create";
+import {
+  conventionalToolFor,
+  requiresCompletionGate,
+  shapeOf,
+  type ZThreadToolName,
+} from "../lib/thread-shape.ts";
 
-/**
- * Where a Z-thread tool name actually resolves (50.T50.06).
- *
- * The CFP→tool map used to return a bare string, so `"tilldone"` could name a
- * tool nothing registered and no test would notice. A name is now only sayable
- * if this registry says where its body lives and who registers it, and
- * `tests/tilldone_l_thread.test.ts` asserts every recorded path exists on disk.
- */
-export interface ZThreadToolRegistration {
-  /** The tool name a CFP move dispatches. */
-  readonly tool: ZThreadToolName;
-  /** Repo path of the module holding the tool body. */
-  readonly body: string;
-  /** Repo path of the module that calls `pi.registerTool` for it. */
-  readonly registrar: string;
-  /**
-   * Anima-side executor for moves whose semantics are more than one dispatch.
-   * Only CFP4 has one: the completion gate that makes an L-Thread an L-Thread.
-   */
-  readonly executor?: string;
-}
-
-const ANIMA_DISPATCH_TOOLS = "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch-tools.ts";
-const ANIMA_SUBAGENT_WIDGET = "Body/S/S4/ta-onta/S4-4p-anima/S4/subagent-widget.ts";
-
-export const ZTHREAD_TOOL_REGISTRY: Readonly<Record<ZThreadToolName, ZThreadToolRegistration>> =
-  Object.freeze({
-    dispatch_agent: {
-      tool: "dispatch_agent",
-      body: "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-team.ts",
-      registrar: ANIMA_DISPATCH_TOOLS,
-    },
-    dispatch_parallel_agents: {
-      tool: "dispatch_parallel_agents",
-      body: ANIMA_DISPATCH_TOOLS,
-      registrar: ANIMA_DISPATCH_TOOLS,
-    },
-    run_chain: {
-      tool: "run_chain",
-      body: "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts",
-      registrar: "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts",
-    },
-    dispatch_fusion_agents: {
-      tool: "dispatch_fusion_agents",
-      body: ANIMA_DISPATCH_TOOLS,
-      registrar: ANIMA_DISPATCH_TOOLS,
-    },
-    // CFP4 resolves OUT of Anima on purpose: 12.T12.11 confirmed TillDone's
-    // residency in Pleroma (bounded execution primitives), so Anima binds the
-    // registered tool rather than keeping a second copy of it.
-    tilldone: {
-      tool: TILLDONE_TOOL_NAME as ZThreadToolName,
-      body: TILLDONE_TOOL_BODY,
-      registrar: TILLDONE_TOOL_REGISTRAR,
-      executor: "Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts",
-    },
-    subagent_create: {
-      tool: "subagent_create",
-      body: ANIMA_SUBAGENT_WIDGET,
-      registrar: ANIMA_SUBAGENT_WIDGET,
-    },
-  });
-
-/** Raised when a CFP move names a tool with no registration. */
-export class UnregisteredZThreadTool extends Error {
-  readonly cfp: CfpMoveLiteral;
-  readonly tool: string;
-
-  constructor(cfp: CfpMoveLiteral, tool: string) {
-    super(`CFP move '${cfp}' names tool '${tool}', which has no registration`);
-    this.name = "UnregisteredZThreadTool";
-    this.cfp = cfp;
-    this.tool = tool;
-  }
-}
-
-const CFP_TOOL_NAMES: Readonly<Record<CfpMoveLiteral, ZThreadToolName>> = Object.freeze({
-  CFP0: "dispatch_agent",
-  CFP1: "dispatch_parallel_agents",
-  CFP2: "run_chain",
-  CFP3: "dispatch_fusion_agents",
-  CFP4: TILLDONE_TOOL_NAME as ZThreadToolName,
-  CFP5: "subagent_create",
-});
-
-/** Resolve a CFP move to its full registration. Throws if the name dangles. */
-export function zThreadToolRegistration(cfp: CfpMoveLiteral): ZThreadToolRegistration {
-  const tool = CFP_TOOL_NAMES[cfp];
-  if (!tool) {
-    throw new Error(`No Z-thread tool mapping for CFP move '${cfp}'`);
-  }
-  const registration = ZTHREAD_TOOL_REGISTRY[tool];
-  if (!registration) {
-    throw new UnregisteredZThreadTool(cfp, tool);
-  }
-  return registration;
-}
+// Threads are shapes; tools are capabilities (`../lib/thread-shape.ts`).
+// This module re-exports that surface so existing importers keep one entry
+// point, but the model itself lives there — CFP no longer names a tool.
+export {
+  TOOL_CAPABILITIES,
+  allThreadShapes,
+  capabilitiesFor,
+  capabilityKindsFor,
+  conventionalToolFor,
+  requiresCompletionGate,
+  shapeOf,
+  type CapabilityKind,
+  type ThreadShape,
+  type ToolCapability,
+} from "../lib/thread-shape.ts";
+export type { ZThreadToolName } from "../lib/thread-shape.ts";
 
 export interface ZThreadMoveResult {
   move_id: string;
   cfp: CfpMoveLiteral;
-  tool: ZThreadToolName;
+  /** The tool this move conventionally started from; `null` when none carries it. */
+  tool: ZThreadToolName | null;
   output: string;
-  /** Present only for a CFP4 move that ran under the completion gate. */
+  /** Present only for a move that ran under the completion gate. */
   l_thread?: LThreadResult;
 }
 
@@ -267,16 +186,18 @@ export interface ZThreadRuntimeAdapter {
   rehear?(thread: ZThreadSnapshot): Promise<string | void>;
   recompose?(thread: ZThreadSnapshot): Promise<string | void>;
   /**
-   * Read the CURRENT `tilldone` task list for a CFP4 move (50.T50.06).
+   * Read the CURRENT `tilldone` task list for a move whose SHAPE closes only
+   * when its declared work is done (`shape.completion === "till-done"`).
    *
-   * Supplying this turns CFP4 into the L-Thread its name promises: the move is
-   * performed repeatedly until the completion gate says the list is done, and
-   * each pass receives the previous verdict so the gate's reason reaches the
-   * agent. Omit it and CFP4 keeps the old single-pass behaviour — the gate is
-   * opt-in per adapter, never silently assumed.
+   * Keyed on the shape, not on CFP4: the completion gate is a discipline any
+   * thread may declare, so a future shape that wants run-till-done gets it
+   * without this module learning a new CFP. Supplying the reader turns such a
+   * move into a real completion guarantee — performed repeatedly, each pass
+   * receiving the previous verdict so the gate's reason reaches the agent.
+   * Omit it and the move stays single-pass; the gate is opt-in, never assumed.
    */
   readTaskList?(move: ZThreadMove, thread: ZThreadSnapshot): Promise<TillDoneList | undefined> | (TillDoneList | undefined);
-  /** Pass bound for a gated CFP4 move. Defaults to `DEFAULT_L_THREAD_MAX_CYCLES`. */
+  /** Pass bound for a gated move. Defaults to `DEFAULT_L_THREAD_MAX_CYCLES`. */
   lThreadMaxCycles?: number;
 }
 
@@ -293,13 +214,15 @@ export interface DispatchZThreadInput extends RegisterZThreadShapeInput {
 }
 
 /**
- * The CFP→tool map, now routed through the registry (50.T50.06).
- *
- * Same signature and same answers as the switch it replaces, but a name can no
- * longer be returned unless `ZTHREAD_TOOL_REGISTRY` says where it is registered.
+ * @deprecated The CFP→tool map was a category error: canon maps a CFP to a
+ * SKILL or PATTERN, never to a tool, and writes CFP3 as a *mode* of CFP1's
+ * skill. Read `shapeOf(cfp)` for what a thread IS and `capabilitiesFor(shape)`
+ * for what could realise it. Retained as a thin alias because a conventional
+ * starting tool is still a useful thing to ask for — note it returns `null` for
+ * CFP4, which is the honest answer rather than a gap.
  */
-export function zThreadToolForMove(cfp: CfpMoveLiteral): ZThreadToolName {
-  return zThreadToolRegistration(cfp).tool;
+export function zThreadToolForMove(cfp: CfpMoveLiteral): ZThreadToolName | null {
+  return conventionalToolFor(cfp);
 }
 
 export function registerZThreadShape(input: RegisterZThreadShapeInput): ZThreadShape {
@@ -427,20 +350,23 @@ async function rehearAndRecompose(adapter: ZThreadRuntimeAdapter, snapshot: ZThr
 }
 
 /**
- * Perform one Z-thread move (50.T50.06).
+ * Perform one Z-thread move.
  *
- * Every move except CFP4 is one pass, exactly as before. CFP4 is the L-Thread:
- * when the adapter can read the `tilldone` task list, the move runs under the
- * completion gate — repeating until the list is done, refusing to report a
- * close it did not earn — and the resulting `LThreadResult` is attached to the
- * move result so the trace records how many passes it actually took.
+ * A move runs once unless its SHAPE says it closes only when its declared work
+ * is done AND the adapter can read that work's state. Then it runs under the
+ * completion gate — repeating until the list is done, refusing to report a close
+ * it did not earn — and the resulting `LThreadResult` is attached so the trace
+ * records how many passes it actually took.
+ *
+ * The condition is `requiresCompletionGate(shapeOf(move.cfp))`, not
+ * `move.cfp === "CFP4"`: the gate belongs to the discipline, not the coordinate.
  */
 async function performZThreadMove(
   adapter: ZThreadRuntimeAdapter,
   move: ZThreadMove,
   snapshot: ZThreadSnapshot,
 ): Promise<ZThreadMoveResult> {
-  if (move.cfp !== "CFP4" || !adapter.readTaskList) {
+  if (!requiresCompletionGate(shapeOf(move.cfp)) || !adapter.readTaskList) {
     return normalizeZThreadMoveResult(move, await adapter.perform(move, snapshot));
   }
 
@@ -463,7 +389,9 @@ async function performZThreadMove(
   return {
     move_id: move.id,
     cfp: move.cfp,
-    tool: zThreadToolForMove(move.cfp),
+    // A gated move has no single tool — the gate wraps whatever the perform
+    // callback dispatched. `null` says that honestly.
+    tool: conventionalToolFor(move.cfp),
     output: describeLThreadResult(result),
     l_thread: result,
   };
@@ -477,7 +405,7 @@ function normalizeZThreadMoveResult(
   return {
     move_id: move.id,
     cfp: move.cfp,
-    tool: zThreadToolForMove(move.cfp),
+    tool: conventionalToolFor(move.cfp),
     output: result,
   };
 }

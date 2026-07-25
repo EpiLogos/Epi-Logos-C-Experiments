@@ -122,38 +122,38 @@ CF code → constitutional agent mapping:
 
 ## CFP Thread Types → pi-vs-claude-code Primitives
 
-Constitutional definitions are `S4'/skills/vak-coordinate-frame/SKILL.md` (CFP =
-Thread Types, "how to structure execution — nesting and parallelism"). The
-`Z-thread tool` column is what `zThreadToolForMove` (`extension/dispatch.ts`)
-actually resolves a CFP move to; `ZTHREAD_TOOL_REGISTRY` records where each of
-those tools is registered, and a test asserts every recorded path exists.
+Canon maps a CFP to a **skill or pattern**, never to a tool — and writes CFP3
+as a *mode* of CFP1's skill, i.e. many-to-one, in the constitutional table
+itself (`S4'/skills/vak-coordinate-frame/SKILL.md`). So this table records what
+each thread IS (its shape) and, separately, which tools could realise it.
 
-| CFP | Thread Type | Z-thread tool | Dispatch substrate | Description |
-|-----|------------|---------------|--------------------|-------------|
-| CFP0 | Base Thread | `dispatch_agent` | `agent-team.ts` | Direct single-agent execution |
-| CFP1 | P-Thread | `dispatch_parallel_agents` | `agent-team.ts` | N different tasks → N agents |
-| CFP2 | C-Thread | `run_chain` | `agent-chain.ts` | Sequential pipeline (A → B → C) |
-| CFP3 | F-Thread | `dispatch_fusion_agents` | `agent-team.ts` fusion mode | Same task → N agents → aggregate |
-| CFP4 | L-Thread (Long) | `tilldone` | `subagent-widget.ts` (resumable child session) | High-autonomy, long-duration **with self-validation** |
-| CFP5 | B-Thread (Big) | `subagent_create` | `subagent-widget.ts` | Primary orchestrates sub-agents internally; meta-nested |
+**Threads are shapes. Tools are capabilities.** A tool does not belong to a
+thread type: several shapes may use one tool, one shape may use several, and an
+agent may hold a tool and never use that shape. `capabilitiesFor(shape)` answers
+"which entitled tools could realise this", never "which tool IS this thread".
 
-**On CFP4's two columns.** An L-Thread is "Long" because it does not stop until
-its own condition says it may. That takes two things, and this table used to name
-only one. The *substrate* is the resumable background child session
-(`subagent-widget.ts`; `S4-3-SPEC` deliberately writes "background subagent:
-resumable child session, CFP4 / CFP5 as applicable" rather than pinning either).
-The *self-validation* — the half that actually makes the thread long — is
-`tilldone`: a completion gate whose `agent_end` hook refuses to let the thread
-stop while its task list is incomplete. That is what `anima-orchestration/SKILL.md`
-means by "long-duration with stop hooks", and it is why `zThreadToolForMove`
-resolves CFP4 to `tilldone` (50.T50.06, per that tranche's brief) rather than to
-the spawn primitive. `subagent_create` sits at CFP5, where "primary orchestrates
-sub-agents internally" is precisely what it does.
+| CFP | Thread | Shape (fan-out / aggregation / nesting / autonomy / completion) | Canon "Maps To" | Conventional starting tool |
+|-----|--------|----------------------------------------------------------------|-----------------|-----------------------------|
+| CFP0 | Base | one · none · flat · checkpointed · review | Direct execution | `dispatch_agent` |
+| CFP1 | P-Thread (Parallel) | many · none · flat · checkpointed · review | `dispatching-parallel-agents` | `dispatch_parallel_agents` |
+| CFP2 | C-Thread (Chained) | many · sequential · flat · checkpointed · review | `subagent-driven-development` | `run_chain` |
+| CFP3 | F-Thread (Fusion) | many · fused · flat · checkpointed · review | **Mode of** `dispatching-parallel-agents` | `dispatch_fusion_agents` |
+| CFP4 | L-Thread (Long) | one · none · flat · **long-running · till-done** | `executing-plans` | **none** |
+| CFP5 | B-Thread (Big) | many · none · **recursive** · long-running · review | Meta-nested dispatch | `subagent_create` |
 
-Residency: the `tilldone` tool body and its `pi.registerTool` call live in
-Pleroma (`S4-2p-pleroma/S2/tilldone.ts`, confirmed by 12.T12.11); Anima owns only
-the completion-gate executor (`S4/tilldone.ts`) that decides when an L-Thread may
-close.
+**Why CFP4's tool column is empty.** "Long" is a duration and completion
+property, not a topology — there is no "long" dispatch primitive to point at.
+The old 1:1 map named `tilldone` here, and that name dangled precisely because
+the model was wrong, not because a registration was missing. `tilldone` is a
+completion DISCIPLINE: it is offered to any shape declaring
+`completion: "till-done"`, which is why it is also entitled to `anuttara`, an
+agent with no CFP4 relationship. Likewise `subagent_create` is one member of a
+lifecycle family (`create`/`continue`/`list`/`remove`) that no CFP owns.
+
+Implementation: `lib/thread-shape.ts` (`shapeOf`, `capabilitiesFor`,
+`TOOL_CAPABILITIES` keyed by TOOL). Tool residency for `tilldone` is Pleroma
+(`S4-2p-pleroma/S2/tilldone.ts`, 12.T12.11); Anima owns only the executor
+(`S4/tilldone.ts`) that decides when a run-till-done thread may close.
 
 ---
 

@@ -29,11 +29,13 @@ import {
 	type TillDoneTask,
 } from "../S4/tilldone.ts";
 import {
-	ZTHREAD_TOOL_REGISTRY,
+	TOOL_CAPABILITIES,
+	capabilitiesFor,
+	conventionalToolFor,
 	dispatchZThread,
+	requiresCompletionGate,
+	shapeOf,
 	zThreadMoveResults,
-	zThreadToolForMove,
-	zThreadToolRegistration,
 	type ZThreadRuntimeAdapter,
 } from "../extension/dispatch.ts";
 import type { VakAddress, ZThreadMove, ZThreadSnapshot } from "../../shared/vak_address.ts";
@@ -51,63 +53,89 @@ const list = (...tasks: TillDoneTask[]): TillDoneList => ({ tasks, listTitle: "f
 
 // ── 1. The name resolves ──────────────────────────────────────────────────
 
-describe("CFP4 resolves to a genuinely registered tool", () => {
-	it("maps CFP4 to tilldone", () => {
-		assert.equal(zThreadToolForMove("CFP4"), TILLDONE_TOOL_NAME);
-		assert.equal(TILLDONE_TOOL_NAME, "tilldone");
+describe("threads are shapes, tools are capabilities", () => {
+	it("CFP4 names NO tool — Long is a duration property, not a dispatch primitive", () => {
+		// The old map returned "tilldone" here, which is what made the name dangle:
+		// there is no "long" primitive to point at. `null` is the honest answer.
+		assert.equal(conventionalToolFor("CFP4"), null);
 	});
 
-	it("records where the tilldone tool actually lives, outside Anima", () => {
-		const registration = zThreadToolRegistration("CFP4");
-		assert.equal(registration.tool, "tilldone");
-		assert.equal(registration.body, TILLDONE_TOOL_BODY);
-		assert.equal(registration.registrar, TILLDONE_TOOL_REGISTRAR);
-		// 12.T12.11: residency is Pleroma. Anima binds it; Anima does not own it.
-		assert.match(registration.body, /S4-2p-pleroma/);
-		assert.match(registration.registrar, /S4-2p-pleroma/);
-		// What Anima DOES own is the completion-gate executor.
-		assert.equal(registration.executor, "Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts");
+	it("describes CFP4 as a shape instead", () => {
+		const shape = shapeOf("CFP4");
+		assert.equal(shape.thread, "L-Thread (Long)");
+		assert.equal(shape.autonomy, "long-running");
+		assert.equal(shape.completion, "till-done");
+		// Canon's own "Maps To" column is a SKILL, never a tool.
+		assert.equal(shape.mapsTo, "executing-plans");
 	});
 
-	it("every registered Z-thread tool has a body and registrar that exist on disk", () => {
-		// This is the assertion that makes a dangling name impossible to
-		// reintroduce quietly: the registry is checked against the filesystem.
-		for (const [name, registration] of Object.entries(ZTHREAD_TOOL_REGISTRY)) {
-			assert.equal(registration.tool, name);
-			assert.ok(
-				existsSync(join(REPO_ROOT, registration.body)),
-				`${name}: body missing at ${registration.body}`,
-			);
-			assert.ok(
-				existsSync(join(REPO_ROOT, registration.registrar)),
-				`${name}: registrar missing at ${registration.registrar}`,
-			);
-			if (registration.executor) {
-				assert.ok(
-					existsSync(join(REPO_ROOT, registration.executor)),
-					`${name}: executor missing at ${registration.executor}`,
-				);
+	it("records canon's many-to-one relation: F-Thread is a MODE of P-Thread's skill", () => {
+		assert.equal(shapeOf("CFP1").mapsTo, "dispatching-parallel-agents");
+		assert.match(shapeOf("CFP3").mapsTo, /Mode of dispatching-parallel-agents/);
+		// Same fan-out, different aggregation — a shape difference, not a tool one.
+		assert.equal(shapeOf("CFP1").fanOut, shapeOf("CFP3").fanOut);
+		assert.notEqual(shapeOf("CFP1").aggregation, shapeOf("CFP3").aggregation);
+	});
+
+	it("offers tilldone to ANY shape that closes only when its work is done", () => {
+		const gated = capabilitiesFor(shapeOf("CFP4")).map((c) => c.tool);
+		assert.ok(gated.includes("tilldone"));
+		// And withholds it from shapes that close on review — availability follows
+		// the discipline, not the coordinate.
+		assert.ok(!capabilitiesFor(shapeOf("CFP1")).map((c) => c.tool).includes("tilldone"));
+		assert.equal(requiresCompletionGate(shapeOf("CFP4")), true);
+		assert.equal(requiresCompletionGate(shapeOf("CFP1")), false);
+	});
+
+	it("treats tilldone as a completion discipline, not a dispatch primitive", () => {
+		assert.deepEqual(TOOL_CAPABILITIES.tilldone.realizes, ["completion-gate"]);
+		// Residency is Pleroma; Anima owns only the executor (12.T12.11).
+		assert.match(TOOL_CAPABILITIES.tilldone.body, /S4-2p-pleroma/);
+		assert.equal(
+			TOOL_CAPABILITIES.tilldone.executor,
+			"Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts",
+		);
+	});
+
+	it("lets one tool serve several shapes — the relation is many-to-many", () => {
+		const forChain = capabilitiesFor(shapeOf("CFP2")).map((c) => c.tool);
+		const forFusion = capabilitiesFor(shapeOf("CFP3")).map((c) => c.tool);
+		const shared = forChain.filter((t) => forFusion.includes(t));
+		assert.ok(shared.length > 0, "a tool must be able to serve more than one shape");
+	});
+
+	it("narrows suggestions to what the agent is actually entitled to", () => {
+		const entitled = capabilitiesFor(shapeOf("CFP4"), ["dispatch_agent"]).map((c) => c.tool);
+		assert.deepEqual(entitled, ["dispatch_agent"]);
+	});
+
+	it("every capability's body and registrar exist on disk", () => {
+		// The anti-dangling check, kept — but now a fact about TOOLS, checked
+		// against the filesystem, rather than a claim about threads.
+		for (const [name, capability] of Object.entries(TOOL_CAPABILITIES)) {
+			assert.equal(capability.tool, name);
+			assert.ok(existsSync(join(REPO_ROOT, capability.body)), `${name}: body missing`);
+			assert.ok(existsSync(join(REPO_ROOT, capability.registrar)), `${name}: registrar missing`);
+			if (capability.executor) {
+				assert.ok(existsSync(join(REPO_ROOT, capability.executor)), `${name}: executor missing`);
 			}
+			assert.ok(capability.realizes.length > 0, `${name}: declares no capability`);
 		}
 	});
 
-	it("the registrar really registers the tool under that name", () => {
-		// Not a path check — the registration CALL has to be there.
-		const registrar = join(REPO_ROOT, TILLDONE_TOOL_REGISTRAR);
-		const body = join(REPO_ROOT, TILLDONE_TOOL_BODY);
-		assert.ok(existsSync(registrar) && existsSync(body));
-		const registrarSource = readFileSync(registrar, "utf8");
-		const bodySource = readFileSync(body, "utf8");
-		assert.match(registrarSource, /registerTilldone\(api\)/);
-		assert.match(bodySource, /name:\s*"tilldone"/);
+	it("the registrar really registers tilldone under that name", () => {
+		const registrar = join(REPO_ROOT, TOOL_CAPABILITIES.tilldone.registrar);
+		const body = join(REPO_ROOT, TOOL_CAPABILITIES.tilldone.body);
+		assert.match(readFileSync(registrar, "utf8"), /registerTilldone\(api\)/);
+		assert.match(readFileSync(body, "utf8"), /name:\s*"tilldone"/);
 	});
 
-	it("keeps every other CFP move mapped exactly as before", () => {
-		assert.equal(zThreadToolForMove("CFP0"), "dispatch_agent");
-		assert.equal(zThreadToolForMove("CFP1"), "dispatch_parallel_agents");
-		assert.equal(zThreadToolForMove("CFP2"), "run_chain");
-		assert.equal(zThreadToolForMove("CFP3"), "dispatch_fusion_agents");
-		assert.equal(zThreadToolForMove("CFP5"), "subagent_create");
+	it("keeps a conventional starting tool for the shapes that have one", () => {
+		assert.equal(conventionalToolFor("CFP0"), "dispatch_agent");
+		assert.equal(conventionalToolFor("CFP1"), "dispatch_parallel_agents");
+		assert.equal(conventionalToolFor("CFP2"), "run_chain");
+		assert.equal(conventionalToolFor("CFP3"), "dispatch_fusion_agents");
+		assert.equal(conventionalToolFor("CFP5"), "subagent_create");
 	});
 });
 
@@ -352,8 +380,9 @@ describe("dispatchZThread routes a CFP4 move through the completion gate", () =>
 		});
 
 		const lThread = zThreadMoveResults(snapshot).find((o) => o.cfp === "CFP4");
-		assert.ok(lThread, "the CFP4 move should be recorded");
-		assert.equal(lThread.tool, "tilldone");
+		assert.ok(lThread, "the gated move should be recorded");
+		// No single tool: the gate wraps whatever the perform callback dispatched.
+		assert.equal(lThread.tool, null);
 		assert.equal(lThread.l_thread?.closed, true);
 		// CFP1 ran once; CFP4 ran three times because the gate kept it running.
 		assert.equal(lThread.l_thread?.cycles.length, 3);
@@ -399,7 +428,7 @@ describe("dispatchZThread routes a CFP4 move through the completion gate", () =>
 
 		assert.equal(performs, 2);
 		const lThread = zThreadMoveResults(snapshot).find((o) => o.cfp === "CFP4");
-		assert.equal(lThread?.tool, "tilldone");
+		assert.equal(lThread?.tool, null);
 		assert.equal(lThread?.l_thread, undefined);
 	});
 });

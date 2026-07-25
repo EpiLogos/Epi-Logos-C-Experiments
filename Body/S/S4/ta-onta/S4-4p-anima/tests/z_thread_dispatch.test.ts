@@ -5,7 +5,7 @@ import {
   getZThreadSnapshot,
   listZThreadSnapshots,
   registerZThreadShape,
-  zThreadToolForMove,
+  conventionalToolFor,
   type ZThreadRuntimeAdapter,
 } from "../extension/dispatch.ts";
 import type {
@@ -117,7 +117,7 @@ describe("46.1 Z-thread runtime primitive", () => {
     ]);
     assert.equal(snapshot.history.at(-1), "done");
     assert.equal(snapshot.outputs.length, 3);
-    assert.equal(snapshot.outputs[0]?.tool, zThreadToolForMove("CFP1"));
+    assert.equal(snapshot.outputs[0]?.tool, conventionalToolFor("CFP1"));
   });
 
   it("does not rehear before clearance: loops through revision, then fails to human escalation", async () => {

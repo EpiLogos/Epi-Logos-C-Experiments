@@ -46,7 +46,7 @@ import {
 	type VakAddress,
 } from "../../shared/vak_address.ts";
 import { AGENT_CF, agentForCf } from "../modules/dispatch-validate.ts";
-import { zThreadToolForMove, type ZThreadToolName } from "../extension/dispatch.ts";
+import { conventionalToolFor, type ZThreadToolName } from "./thread-shape.ts";
 import type { CfpMoveLiteral } from "../../shared/vak_address.ts";
 
 /** The six reflective coordinates, as an enumerable axis set. */
@@ -185,21 +185,20 @@ export function executionShape(address: VakAddress): CfpLiteral {
 }
 
 /**
- * CFP — the dispatch primitive a step resolves to.
+ * CFP — the dispatch primitive a step CONVENTIONALLY starts from.
  *
- * Delegates to the existing `zThreadToolForMove`, so the orchestration language
- * and the Z-thread runtime cannot disagree about what a CFP move executes. A `Z`
- * shape composes moves rather than being one, so it has no single primitive.
+ * `null` for two distinct reasons, both honest: a `Z` shape composes moves
+ * rather than being one, and `CFP4` is a duration/completion property laid over
+ * whatever dispatch it wraps rather than a topology with a primitive of its own.
  *
- * `CFP4` maps to `tilldone`, the completion gate. That name was dangling until
- * 50.T50.06 bound it: `zThreadToolForMove` now resolves through
- * `ZTHREAD_TOOL_REGISTRY`, so every primitive this reports names a tool with a
- * recorded body and registrar. CFP4's body is the Pleroma-resident tool
- * (12.T12.11); its Anima-side executor is `../S4/tilldone.ts`.
+ * This is a convention, not an identity. A CFP does not name a tool — canon maps
+ * a CFP to a SKILL or PATTERN and writes CFP3 as a *mode* of CFP1's skill. For
+ * what a thread IS, read `shapeOf(cfp)`; for what could realise it, read
+ * `capabilitiesFor(shape)` (`./thread-shape.ts`).
  */
 export function primitiveFor(address: VakAddress): ZThreadToolName | null {
 	if (address.cfp === "Z") return null;
-	return zThreadToolForMove(address.cfp as CfpMoveLiteral);
+	return conventionalToolFor(address.cfp as CfpMoveLiteral);
 }
 
 /** CS — the sequence field. */

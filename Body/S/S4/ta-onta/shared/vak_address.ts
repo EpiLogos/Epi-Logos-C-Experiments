@@ -123,7 +123,16 @@ export interface ZThreadSnapshot {
   outputs: Array<{
     move_id: string;
     cfp: CfpMoveLiteral;
-    tool: string;
+    /**
+     * The tool the move started from, or `null` when no single tool carries it.
+     *
+     * Nullable because a CFP does not name a tool: a thread type is a SHAPE and
+     * tools are capabilities, so a move whose shape is a duration/completion
+     * property (an L-Thread) wraps whatever dispatch it was given rather than
+     * being one tool. `ZThreadSnapshot` is TS-only — no Rust parity fixture
+     * covers `outputs` — so this widening crosses no cross-language contract.
+     */
+    tool: string | null;
     output: string;
   }>;
   verify_gate?: {

@@ -22,15 +22,17 @@ import { animaExtension } from "./extension/mod.ts";
  * api.on("session_start"
  * api.setActiveTools(animaDefaultTools)
  *
- * "tilldone" is the CFP4 (L-Thread) entry in that contract, and it is the one
- * entry Anima does NOT register (50.T50.06). The tool body and its
+ * "tilldone" is in that contract as a CAPABILITY, not as any CFP's tool. Threads
+ * are shapes and tools are capabilities (./lib/thread-shape.ts): a CFP does not
+ * name a tool, which is why `conventionalToolFor("CFP4")` is `null` — "Long" is
+ * a duration/completion property, not a dispatch primitive. `tilldone` is a
+ * completion DISCIPLINE offered to any shape declaring `completion: "till-done"`.
+ *
+ * It is also the one entry Anima does NOT register. The tool body and its
  * `pi.registerTool` call reside in Pleroma — bounded execution primitives are
- * Pleroma's coordinate, confirmed by 12.T12.11 — and it reaches an Anima
- * session through the Pleroma `execution_backbone` capability matrix. Copying
- * it here would give one law two sources. What Anima owns is the binding:
- * ./S4/tilldone.ts is the CFP4 completion-gate EXECUTOR (when may an L-Thread
- * close), and ./extension/dispatch.ts `ZTHREAD_TOOL_REGISTRY` records where the
- * registered tool actually lives so the CFP4 name can never dangle again.
+ * Pleroma's coordinate, confirmed by 12.T12.11 — reaching an Anima session
+ * through the Pleroma `execution_backbone` capability matrix. What Anima owns is
+ * ./S4/tilldone.ts, the executor deciding when a run-till-done thread may close.
  *
  * Runtime symbols preserved in modules:
  * type CSState

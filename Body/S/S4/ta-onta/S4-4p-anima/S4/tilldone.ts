@@ -1,13 +1,17 @@
 /**
- * tilldone.ts — the CFP4 (L-Thread) completion gate, Anima side (50.T50.06).
+ * tilldone.ts — the run-till-done completion gate, Anima side (50.T50.06).
  *
- * ── The gap this closes ───────────────────────────────────────────────────
- * `zThreadToolForMove` maps CFP4 → `"tilldone"` (`../extension/dispatch.ts`).
- * Before this module that was a bare STRING: nothing bound the name to a real
- * tool, nothing failed if the name were wrong, and — more importantly — nothing
- * gave CFP4 the behaviour its name promises. A CFP4 step ran its work exactly
- * once, like every other move. An L-Thread that closes after one pass is not a
- * completion gate; it is CFP0 wearing a different label.
+ * ── What this is, and what it is NOT ──────────────────────────────────────
+ * This is the executor for a thread whose SHAPE declares
+ * `completion: "till-done"` (`../lib/thread-shape.ts`) — today that is the
+ * L-Thread, CFP4. It is NOT "CFP4's tool". A CFP does not name a tool: threads
+ * are shapes, tools are capabilities, and the relation between them is
+ * many-to-many. `tilldone` is a completion DISCIPLINE that any thread declaring
+ * that discipline may hold, which is why it is also entitled to `anuttara`, an
+ * agent with no CFP4 relationship at all.
+ *
+ * The gap this closes is behavioural, not nominal: a long thread that closes
+ * after one pass is not autonomous, it is CFP0 wearing a different label.
  *
  * ── Residency: the TOOL is NOT ported here (12.T12.11, confirmed) ─────────
  * The `tilldone` TOOL already lives, registered, at
@@ -45,17 +49,24 @@
  */
 
 import type { CfpMoveLiteral, VakAddress } from "../../shared/vak_address.ts";
+import { requiresCompletionGate, shapeOf } from "../lib/thread-shape.ts";
 
-/** The CFP move an L-Thread occupies. CFP4 is the L-Thread; nothing else is. */
+/**
+ * The CFP whose shape declares `completion: "till-done"` today.
+ *
+ * Kept as a convenience, NOT as a definition: what makes a thread eligible for
+ * this gate is its shape's completion discipline, not its coordinate. A future
+ * shape that declares run-till-done gets the gate without this constant moving.
+ */
 export const L_THREAD_CFP: CfpMoveLiteral = "CFP4";
 
-/** The registered tool CFP4 resolves to. */
+/** The registered tool this gate drives. Residency: Pleroma (12.T12.11). */
 export const TILLDONE_TOOL_NAME = "tilldone";
 
 /**
- * Where that tool actually lives. Kept as data (not a comment) so the registry
- * in `../extension/dispatch.ts` can point at it and a test can assert the path
- * exists on disk — a dangling name cannot come back silently.
+ * Where that tool actually lives. Kept as data (not a comment) so the capability
+ * registry in `../lib/thread-shape.ts` can point at it and a test can assert the
+ * path exists on disk — a dangling name cannot come back silently.
  */
 export const TILLDONE_TOOL_BODY = "Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts";
 /** The module that calls `pi.registerTool({ name: "tilldone", … })`. */
@@ -109,7 +120,7 @@ export interface TillDoneGateVerdict {
  *
  * Pure and total: every list shape maps to exactly one verdict, and `complete`
  * is true only for `tilldone/complete`. Everything downstream — the L-Thread
- * loop, the Z-thread CFP4 route, any future score replay — reads its answer
+ * loop, the Z-thread gated route, any future score replay — reads its answer
  * here rather than re-deriving "done" from task fields.
  */
 export function tillDoneGate(list: TillDoneList | undefined): TillDoneGateVerdict {
@@ -161,13 +172,14 @@ export function tillDoneGate(list: TillDoneList | undefined): TillDoneGateVerdic
 
 // ── The L-Thread ──────────────────────────────────────────────────────────
 
-/** Raised when a CFP4 executor is handed something that is not an L-Thread. */
+/** Raised when the completion gate is bound to a shape that does not declare it. */
 export class LThreadAddressError extends Error {
 	readonly cfp: string;
 
 	constructor(cfp: string) {
 		super(
-			`the tilldone completion gate is the CFP4 (L-Thread) executor; refused an address carrying cfp='${cfp}'`,
+			`the tilldone completion gate belongs to a thread whose shape declares completion: "till-done"; ` +
+				`refused an address carrying cfp='${cfp}', whose shape closes on review`,
 		);
 		this.name = "LThreadAddressError";
 		this.cfp = cfp;
@@ -175,12 +187,19 @@ export class LThreadAddressError extends Error {
 }
 
 /**
- * Refuse a non-CFP4 address. Thrown, not returned: binding the completion gate
- * to the wrong move is a composition error in the script, not a runtime outcome
- * to be reported and shrugged at.
+ * Refuse an address whose SHAPE does not run till done.
+ *
+ * Checked against `shapeOf(cfp).completion`, not against CFP4 by name: the gate
+ * is a discipline, and any thread type declaring that discipline may hold it.
+ * Thrown, not returned — binding a completion guarantee to a thread that closes
+ * on review is a composition error in the script, not a runtime outcome to be
+ * reported and shrugged at.
  */
 export function assertLThreadAddress(address: Pick<VakAddress, "cfp">): void {
-	if (address.cfp !== L_THREAD_CFP) throw new LThreadAddressError(String(address.cfp));
+	const cfp = address.cfp;
+	if (cfp === "Z" || !requiresCompletionGate(shapeOf(cfp as CfpMoveLiteral))) {
+		throw new LThreadAddressError(String(cfp));
+	}
 }
 
 /** One pass of the thread: work was attempted, then the gate ruled. */
