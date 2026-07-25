@@ -1,29 +1,83 @@
-// Thin local mirror of the canonical TS VakAddress that lives at:
-//   /Users/admin/Documents/Epi-Logos/.pi/extensions/s_i/modules/ql_types/index.ts (lines 115-207)
-//   /Users/admin/Documents/Epi-Logos/.pi/extensions/s_i/modules/ql_types/modules/type_definitions.ts (CTLevel/CPCode/CFPCode/CSCode/CSDirection)
-//   (canonical commit: d38b32ca on main of /Users/admin/Documents/Epi-Logos/)
+// vak_address.ts — the VAK C'-branch coordinate envelope, canonical TS mirror.
 //
-// ta-onta extensions in this repo cannot do cross-repo relative imports cleanly,
-// so we maintain a structural mirror that:
-//   - keeps identical field names and string-literal unions
-//   - serialises with the same JSON shape (nested cs: { code, direction })
-//   - validates against the same canonical sets
+// ─────────────────────────────────────────────────────────────────────────────
+// THE SIX REFLECTIVE COORDINATES — read this before reasoning about any of them
+// ─────────────────────────────────────────────────────────────────────────────
 //
-// Drift prevention strategy:
-//   1. The CANONICAL_CF_POSITIONS map and CF_SET derive structurally from each other.
-//   2. All other literal unions use the `const arr as const` -> `type = arr[number]` ->
-//      `Set(arr)` pattern, so type-vs-set drift is compile-time impossible.
-//   3. The JSON-shape contract test pins the wire-format invariant (nested cs, primed Night').
-//   4. A frozen-fixture comparison test pins the exact stringify output (key order + values).
+// VAK is ONE grammar of six co-equal fields. No field is a special case, and no
+// field means anything on its own: per [[S4'-SPEC]], "the VAK fields CPF, CT,
+// CP, CF, CFP, and CS are the vertical dispatch grammar operating through those
+// carriers, not a replacement naming scheme for them."
 //
-// If the canonical source-of-truth ql_types module changes any literal set, update the
-// corresponding arrays here in lock-step. The contract tests in vak_address.test.ts
-// catch silent drift before downstream consumers (A3 Hen, C1 Khora, A5/A6 Anima,
-// D3 self-invoke, D4 gate-trigger) ship against a stale mirror.
+// Each field is owned by one ta-onta carrier and specced in that carrier's own
+// shard. This is the S4'Cx Orthogonal Projection, quoted from the World
+// authority `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md`:
 //
-// Intentional improvement over canonical: vakAddressFromObject takes `unknown` (not
-// `Partial<VakAddress>`) because real callers at cross-extension boundaries always
-// have arbitrary input.
+//   S4.0' | [[C0]] Bimba      | [[CPF]] | Context Packing Frame — polarity gate
+//   S4.1' | [[C1]] Form       | [[CT]]  | Context Template — semantic phase-type
+//   S4.2' | [[C2]] Entity     | [[CP]]  | Context Parameters — incubation coordinate
+//   S4.3' | [[C3]] Process    | [[CF]]  | Context Fill — archetypal operator
+//   S4.4' | [[C4]] Type       | [[CFP]] | Context Frame Pattern — nesting algebra
+//   S4.5' | [[C5]] Pratibimba | [[CS]]  | Context State — path operator
+//
+// What each field DECLARES, quoted from [[S4'-SPEC]]'s Reading-Frame Law:
+//
+//   CPF — whether the work is dialogical/user-engaged or autonomous/mechanistic
+//   CT  — artifact/content type
+//   CP  — the active QL position set; authority for cardinality (single point,
+//         compressed triad, sixfold traverse, inverse pass, 4/5 depth pass)
+//   CF  — the constitutional handling mode (which agent speaks)
+//   CFP — thread/spread topology, INCLUDING nested/meta sub-readings
+//   CS  — Context Sequence and Day/Night' traversal direction
+//
+// Owning specs — go here for meaning, not to a SKILL.md:
+//   umbrella          Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md          [[S4'-SPEC]]
+//   CPF               Idea/Bimba/Seeds/S/S4/S4'/S4-0'-SPEC.md        [[S4-0'-SPEC]]
+//   CT                Idea/Bimba/Seeds/S/S4/S4'/S4-1'-SPEC.md        [[S4-1'-SPEC]]
+//   CP                Idea/Bimba/Seeds/S/S4/S4'/S4-2'-SPEC.md        [[S4-2'-SPEC]]
+//   CF                Idea/Bimba/Seeds/S/S4/S4'/S4-3'-SPEC.md        [[S4-3'-SPEC]]
+//   CFP               Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md        [[S4-4'-SPEC]]
+//   CS                Idea/Bimba/Seeds/S/S4/S4'/S4-5'-SPEC.md        [[S4-5'-SPEC]]
+//   World authority   Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md  [[S4']]
+//
+// A `SKILL.md` under `S4-4p-anima/S4'/skills/` is AGENT TOOLING — text written
+// to be injected into a prompt. It is not canon and it uses its own teaching
+// vocabulary. Reading one as though it were the spec is how a CFP came to be
+// mistaken for a tool name; see the CFP note below.
+//
+// ── CFP is a field, not a tool table ────────────────────────────────────────
+// CFP declares thread/spread topology. It does NOT name a tool. Canon's own
+// per-CFP column maps to a SKILL or PATTERN, and [[S4-4'-SPEC]] lists PI tools
+// as one FLAT registered set (`vak_evaluate` … `run_chain`, `subagent_*`,
+// `tilldone`) with no pairing to any coordinate. Tools are capabilities the
+// agent is entitled to; topology is what the address declares. The mapping
+// between them lives in `S4-4p-anima/lib/thread-shape.ts` and is advisory and
+// many-to-many, never an identity.
+//
+// ── Why this file exists, and what it is a mirror OF ────────────────────────
+// This repo's ta-onta extensions cannot cleanly cross-repo import, so this is a
+// structural mirror that keeps identical field names and string-literal unions,
+// serialises to the same JSON shape (nested `cs: { code, direction }`), and
+// validates against the same canonical sets.
+//
+// The cross-language peer is `Body/S/S0/portal-core/src/vak_address.rs`, pinned
+// by the shared fixture `vak_address.parity.json` (neither side greps the
+// other's source; both must accept the canonical cases and refuse the rejected
+// ones). A legacy pre-migration source also exists OUTSIDE this repo at
+// `/Users/admin/Documents/Epi-Logos/.pi/extensions/s_i/modules/ql_types/`
+// (commit d38b32ca) — it is genealogy, NOT the authority, and following it
+// leaves the canonical vault. Meaning lives in the specs listed above.
+//
+// ── Drift prevention ────────────────────────────────────────────────────────
+//   1. CANONICAL_CF_POSITIONS and CF_SET derive structurally from each other.
+//   2. Every other literal union uses `const arr as const` -> `type = arr[number]`
+//      -> `Set(arr)`, so type-vs-set drift is compile-time impossible.
+//   3. The JSON-shape contract test pins the wire format (nested cs, primed Night').
+//   4. A frozen-fixture comparison pins the exact stringify output (key order + values).
+//
+// Intentional divergence from the legacy source: `vakAddressFromObject` takes
+// `unknown` (not `Partial<VakAddress>`) because real callers at cross-extension
+// boundaries always have arbitrary input.
 
 const CT_LITERALS = ["CT0", "CT1", "CT2", "CT3", "CT4", "CT4a", "CT4b", "CT5"] as const;
 export type CtLiteral = (typeof CT_LITERALS)[number];

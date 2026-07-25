@@ -1,5 +1,8 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   isValidVakAddress,
   vakAddressFromObject,
@@ -235,4 +238,69 @@ describe("ta-onta shared VakAddress mirror", () => {
     const result = vakAddressFromObject(input);
     assert.equal(result, input); // same reference, not a copy
   });
+});
+
+// ── The six coordinates stay bound to their canonical source ────────────────
+//
+// The reason a CFP was once mistaken for a tool name is that the module DEFINING
+// these types said nothing about what they mean and pointed at a legacy repo for
+// authority, so agents reached for a SKILL.md — agent tooling — instead of the
+// spec. The header now carries the S4'Cx Orthogonal Projection verbatim. This
+// test binds it to the World authority so it cannot quietly rot back.
+
+describe("VAK coordinate canon binding", () => {
+	const REPO_ROOT = fileURLToPath(new URL("../../../../../", import.meta.url));
+	const header = readFileSync(fileURLToPath(new URL("./vak_address.ts", import.meta.url)), "utf8");
+	const WORLD_AUTHORITY = "Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md";
+
+	/** field -> the operational manifestation the World Form gives it. */
+	const PROJECTION: Array<[string, string]> = [
+		["CPF", "Context Packing Frame"],
+		["CT", "Context Template"],
+		["CP", "Context Parameters"],
+		["CF", "Context Fill"],
+		["CFP", "Context Frame Pattern"],
+		["CS", "Context State"],
+	];
+
+	it("the World authority still says what this header quotes", () => {
+		const world = readFileSync(join(REPO_ROOT, WORLD_AUTHORITY), "utf8");
+		for (const [field, manifestation] of PROJECTION) {
+			assert.ok(
+				world.includes(manifestation),
+				`${field}: World Form no longer says "${manifestation}" — reconcile ${WORLD_AUTHORITY} and this header together`,
+			);
+		}
+	});
+
+	it("this module's header carries all six, symmetrically", () => {
+		for (const [field, manifestation] of PROJECTION) {
+			assert.ok(header.includes(manifestation), `${field}: header lost "${manifestation}"`);
+		}
+	});
+
+	it("names an owning spec for every field — no coordinate left unanchored", () => {
+		for (const n of [0, 1, 2, 3, 4, 5]) {
+			const spec = `S4-${n}'-SPEC.md`;
+			assert.ok(header.includes(spec), `header does not route to ${spec}`);
+			assert.ok(
+				existsSync(join(REPO_ROOT, "Idea/Bimba/Seeds/S/S4/S4'", spec)),
+				`${spec} is cited but does not exist`,
+			);
+		}
+	});
+
+	it("every literal union the header describes is actually declared here", () => {
+		// Symmetry check: the six fields are co-equal, so all six must be typed.
+		for (const key of ["cpf", "ct", "cp", "cf", "cfp", "cs"]) {
+			assert.ok(
+				new RegExp(`^\\s*${key}[?]?:`, "m").test(header),
+				`VakAddress does not declare '${key}'`,
+			);
+		}
+	});
+
+	it("warns off SKILL.md as an authority", () => {
+		assert.match(header, /SKILL\.md[\s\S]{0,200}not canon/);
+	});
 });

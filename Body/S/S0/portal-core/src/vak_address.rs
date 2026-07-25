@@ -1,6 +1,37 @@
 //! VAK C'-branch coordinate-language envelope — the canonical address every
 //! emission in the system carries.
 //!
+//! # The six reflective coordinates
+//!
+//! VAK is ONE grammar of six co-equal fields. No field is a special case; per
+//! `[[S4'-SPEC]]`, "the VAK fields CPF, CT, CP, CF, CFP, and CS are the vertical
+//! dispatch grammar operating through those carriers, not a replacement naming
+//! scheme for them." The S4'Cx Orthogonal Projection, quoted from the World
+//! authority `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md`:
+//!
+//! | S4.Y' | C-Level      | Field | Operational manifestation                  | Spec            |
+//! |-------|--------------|-------|--------------------------------------------|-----------------|
+//! | S4.0' | C0 Bimba     | CPF   | Context Packing Frame — polarity gate      | `[[S4-0'-SPEC]]` |
+//! | S4.1' | C1 Form      | CT    | Context Template — semantic phase-type     | `[[S4-1'-SPEC]]` |
+//! | S4.2' | C2 Entity    | CP    | Context Parameters — incubation coordinate | `[[S4-2'-SPEC]]` |
+//! | S4.3' | C3 Process   | CF    | Context Fill — archetypal operator         | `[[S4-3'-SPEC]]` |
+//! | S4.4' | C4 Type      | CFP   | Context Frame Pattern — nesting algebra    | `[[S4-4'-SPEC]]` |
+//! | S4.5' | C5 Pratibimba| CS    | Context State — path operator              | `[[S4-5'-SPEC]]` |
+//!
+//! What each field DECLARES (`[[S4'-SPEC]]` Reading-Frame Law): CPF — dialogical
+//! vs autonomous; CT — artifact/content type; CP — the active QL position set,
+//! and the authority for its cardinality; CF — the constitutional handling mode;
+//! CFP — thread/spread topology, including nested/meta sub-readings; CS —
+//! Context Sequence and Day/Night' traversal direction.
+//!
+//! CFP declares topology and does NOT name a tool. `[[S4-4'-SPEC]]` lists PI
+//! tools as one flat registered set with no pairing to any coordinate; the
+//! advisory, many-to-many mapping lives in
+//! `Body/S/S4/ta-onta/S4-4p-anima/lib/thread-shape.ts`.
+//!
+//! Go to those specs for meaning. A `SKILL.md` under `S4-4p-anima/S4'/skills/`
+//! is agent tooling written for prompt injection, not canon.
+//!
 //! # Coordinate-tagging IS compression (DR-VAK-7, DR-COMP-1)
 //!
 //! There is no five-stage VAK compression-cycle orchestrator and no symbolic

@@ -4,12 +4,23 @@
  * ── The category error this replaces ──────────────────────────────────────
  * `zThreadToolForMove` used to be a total function `CfpMoveLiteral -> tool`,
  * asserting a bijection between thread types and tools. That is not what the
- * language says. Canon's own table (`S4'/skills/vak-coordinate-frame/SKILL.md`)
- * maps a CFP to a SKILL or PATTERN, not a tool —
+ * language says.
+ *
+ * CANON (`[[S4-4'-SPEC]]`, `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md`) lists the
+ * PI tools as ONE FLAT registered set — `vak_evaluate`, `goal_prelude`,
+ * `anima_orchestrate`, `nous_disclose`, `dispatch_*`, `run_chain`,
+ * `subagent_*`, `tilldone` — with no pairing to any coordinate, and states the
+ * VAK envelope as six fields. `[[S4'-SPEC]]`'s Reading-Frame Law says only that
+ * "CFP declares thread/spread topology, including nested/meta sub-readings".
+ * Nothing in canon binds a coordinate to a tool.
+ *
+ * The teaching table in `S4'/skills/vak-coordinate-frame/SKILL.md` — agent
+ * tooling, not canon — likewise maps a CFP to a SKILL or PATTERN, not a tool:
  *   CFP1 -> `dispatching-parallel-agents`, CFP2 -> `subagent-driven-development`,
  *   CFP4 -> `executing-plans`, CFP5 -> "Meta-nested dispatch"
- * — and writes CFP3 as "**Mode of `dispatching-parallel-agents`**", i.e. a
- * many-to-one relation, in canon, in the constitutional table.
+ * — and writes CFP3 as "**Mode of `dispatching-parallel-agents`**", i.e. an
+ * explicitly many-to-one relation. Even the teaching material never claimed the
+ * bijection the code asserted.
  *
  * The bijection also failed on its own terms: CFP4 dangled, naming a tool
  * nothing registered. Not because a registration was missing, but because
@@ -34,8 +45,12 @@
  * answers "which entitled tools could realise this shape", never "which tool IS
  * this thread".
  *
- * Canon: [[S4-SPEC]]; `S4'/skills/vak-coordinate-frame/SKILL.md` (CFP = Thread
- * Types); DR-VAK-3 (VAK is the operational language, not metadata over labels).
+ * Canon: [[S4'-SPEC]] (the six-field dispatch grammar + Reading-Frame Law) ->
+ * [[S4-4'-SPEC]] (S4.4' VAK and Psyche Law, the CFP owner). World authority for
+ * the S4'Cx projection: `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md`,
+ * where CFP is "Context Frame Pattern — nesting algebra". The full six are
+ * documented at the type definition, `ta-onta/shared/vak_address.ts`.
+ * DR-VAK-3 (VAK is the operational language, not metadata over labels).
  */
 
 import type { CfpMoveLiteral } from "../../shared/vak_address.ts";
@@ -62,14 +77,14 @@ export type ThreadCompletion = "review" | "till-done";
 
 export interface ThreadShape {
 	readonly cfp: CfpMoveLiteral;
-	/** The canonical thread name, verbatim from the constitutional table. */
+	/** The thread name, as `[[S4'-SPEC]]` and the teaching table both give it. */
 	readonly thread: string;
 	readonly fanOut: ThreadFanOut;
 	readonly aggregation: ThreadAggregation;
 	readonly nesting: ThreadNesting;
 	readonly autonomy: ThreadAutonomy;
 	readonly completion: ThreadCompletion;
-	/** The skill/pattern canon maps this CFP to — canon's own "Maps To" column. */
+	/** The skill/pattern this CFP is taught against — the "Maps To" column. */
 	readonly mapsTo: string;
 }
 
