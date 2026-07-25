@@ -8,26 +8,24 @@
  *   pressing an option re-queries the graph, and that the surface reports what
  *   it is actually showing.
  *
- *   WHY THIS PROVES WIRING AND NOT NARROWING — the cause is an S2 API defect,
- *   NOT missing data. The Bimba graph is rich: 2098 :Bimba nodes and 11295
- *   Bimba→Bimba edges (verified directly against Neo4j), and replaying this
- *   pane's own two queries over that graph yields 1732 renderable edges. The
- *   pane still shows ZERO because `s2.graph.query` discards the caller's RETURN
- *   projection: `GraphApi::query` (Body/S/S2/graph-services/src/graph_api.rs:585)
- *   runs the supplied Cypher and then maps every row through `known_row_json`
- *   (:987), which reads a FIXED node column set (coordinate/uuid/name/family/
- *   layer/ql_position/depth) and drops everything else via `unwrap_or_default`.
- *   So `source`, `target`, `type` — and `c_1_relation_family` — never survive
- *   the gateway, and `coerceLinks` correctly finds nothing to build. Confirmed
- *   by probing the live gateway: the links query returns rowCount 2500, and
- *   every row is a node-shaped stub with `coordinate: ""`.
+ *   HISTORY, kept because it is the reason this spec is shaped as it is. The
+ *   pane rendered ZERO edges from the day it was written — not for want of
+ *   data (the graph holds 2098 :Bimba nodes and 11295 Bimba→Bimba edges) but
+ *   because `s2.graph.query` discarded the caller's RETURN projection: it ran
+ *   the supplied Cypher and mapped every row through a FIXED node-column
+ *   projector, so `source`/`target`/`type`/`c_1_relation_family` never
+ *   survived the gateway and `coerceLinks` correctly found nothing to build.
+ *   Fixed in `graph-services/src/row_projection.rs` — the caller owns the
+ *   Cypher, so the caller owns the projection. This pane now renders 2307
+ *   relations.
  *
- *   Consequence: the Bimba Graph Viewer has never rendered an edge, and this
- *   filter is wired but structurally starved until that projection is fixed.
- *   So this spec proves the WIRING only, and says so rather than asserting
- *   `filtered <= total` over 0 edges — which would pass while proving nothing.
- *   The partition law itself is proven over real inputs in
- *   graphExplorerFilter.test.ts and graphData.test.ts.
+ *   WHAT THIS STILL DOES NOT CLAIM: a non-trivial family PARTITION. The
+ *   filter narrows correctly, but `c_1_relation_family` is populated on only
+ *   43 of 12263 edges (0.35%) and its stored values are not the ratified
+ *   DR-IG-1 enum — so both families legitimately report `0 of N` until the
+ *   family canon lands. Asserting a non-empty partition would be asserting
+ *   against data that does not exist yet. The partition LAW is proven over
+ *   real inputs in graphExplorerFilter.test.ts and graphData.test.ts.
  * Does NOT own: S2 graph law, the edge classification (m0RelationFamily.ts),
  *   or the force-graph canvas.
  * Contract: [[M0'-SPEC]] + rerun tranche [[28.T28.3]] (DR-IG-1).
@@ -86,9 +84,8 @@ test('28.T28.3: the relation-family filter is wired to the live Bimba surface', 
     } else {
         // eslint-disable-next-line no-console
         console.log(
-            '[28.T28.3] 0 edges reached the pane: s2.graph.query drops the RETURN ' +
-                'projection (graph_api.rs known_row_json), not a data gap — the graph ' +
-                'holds 11295 Bimba→Bimba edges. Narrowing is proven in the unit suite.'
+            '[28.T28.3] the pane reported 0 relations — unexpected since the ' +
+                'projection fix; check s2.graph.query before trusting this pass.'
         );
     }
 

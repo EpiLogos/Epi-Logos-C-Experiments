@@ -26,6 +26,7 @@ pub mod link_enforcement;
 pub mod meta;
 pub mod ontology;
 pub mod pointers;
+pub mod row_projection;
 pub mod q_articulation;
 pub mod relationship_manager;
 pub mod retrieval;

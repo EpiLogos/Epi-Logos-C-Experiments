@@ -6,6 +6,7 @@ use serde_json::{json, Value};
 
 use crate::core65_audit::{core_65_audit_payload, core_65_audit_plan, Core65AuditSummary};
 use crate::ontology::anuttara_property_mappings;
+use crate::row_projection::{row_columns, row_to_json};
 use crate::{
     canonical_harmonic_bimba_relations, kernel_coordinate_anchor_from_parts, CoordinateArrayParser,
     CoordinateReferenceProjection, HarmonicBimbaRelation, KernelCoordinateAnchor, Neo4jClient,
@@ -582,6 +583,12 @@ impl<'a> GraphMethodService<'a> {
         })
     }
 
+    /// Raw Cypher, projected as the CALLER asked for it (`S2-SPEC.md:159-185`).
+    ///
+    /// This method is the one place where the caller owns the statement, so it
+    /// is the one place that must not own the projection. Every RETURN alias
+    /// survives under its own name with its own type; `columns` echoes the
+    /// driver's real result keys. See `row_projection.rs` for why.
     pub async fn query(&self, request: GraphQueryRequest) -> Result<Value, String> {
         request.validate()?;
         let rows = self
@@ -589,10 +596,14 @@ impl<'a> GraphMethodService<'a> {
             .run_query(request.params.apply_to_query(query(&request.cypher)))
             .await
             .map_err(|err| format!("s2.graph.query failed: {err}"))?;
+        // Columns come from the first row the driver produced. An empty result
+        // has no columns to report — `[]`, never a fabricated list.
+        let columns = rows.first().map(row_columns).unwrap_or_default();
         Ok(json!({
             "contract": graph_contract("s2.graph.query", None),
+            "columns": columns,
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(row_to_json).collect::<Vec<_>>(),
         }))
     }
 
@@ -614,7 +625,8 @@ impl<'a> GraphMethodService<'a> {
                     collect(DISTINCT {
                       type: type(r),
                       direction: CASE WHEN startNode(r) = n THEN 'outbound' ELSE 'inbound' END,
-                      coordinate: m.coordinate
+                      coordinate: m.coordinate,
+                      properties: properties(r)
                     }) AS relations",
         )
         .param("canonical", resolved.canonical.clone())
@@ -634,7 +646,7 @@ impl<'a> GraphMethodService<'a> {
         };
         Ok(json!({
             "contract": graph_contract("s2.graph.node", Some(&resolved)),
-            "node": known_row_json(row),
+            "node": bimba_node_row(row),
             "relations": row.get::<Vec<BTreeMap<String, String>>>("relations").unwrap_or_default(),
             "resolution": resolved,
         }))
@@ -733,7 +745,7 @@ impl<'a> GraphMethodService<'a> {
             "from": resolved,
             "depth": depth,
             "direction": request.direction,
-            "nodes": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "nodes": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
 
@@ -761,7 +773,7 @@ impl<'a> GraphMethodService<'a> {
                 "coordinate_anchor": plan.coordinate_anchor,
             },
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
 
@@ -785,7 +797,7 @@ impl<'a> GraphMethodService<'a> {
                 "notice": plan.deprecation_notice
             },
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
 
@@ -805,7 +817,12 @@ impl<'a> GraphMethodService<'a> {
             "relationCount": plan.relation_count,
             "relations": plan.relations,
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            // This query RETURNs `count(rel) AS relation_count`, not a node.
+            // It used to be forced through the node projector, so every row
+            // came back an empty stub and `relationCount` above was reported
+            // from the compiled-in plan rather than from the database. The
+            // caller-honest projector reports what the write actually did.
+            "rows": rows.iter().map(row_to_json).collect::<Vec<_>>(),
         }))
     }
 
@@ -984,7 +1001,7 @@ fn coordinate_fragment(value: &str) -> String {
     }
 }
 
-fn known_row_json(row: &neo4rs::Row) -> Value {
+fn bimba_node_row(row: &neo4rs::Row) -> Value {
     let coordinate = row.get::<String>("coordinate").unwrap_or_default();
     json!({
         "coordinate": coordinate,
