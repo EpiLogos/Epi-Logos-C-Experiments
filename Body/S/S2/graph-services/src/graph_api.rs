@@ -1001,6 +1001,24 @@ fn coordinate_fragment(value: &str) -> String {
     }
 }
 
+/// Read a property that is a STRING on most nodes but an INTEGER on some, and
+/// render it as a string either way.
+///
+/// `c_4_layer` is the live case: it is a controlled node-kind vocabulary
+/// (`COORDINATE`, `PSYCHOID`, `VAK`, `WEAVE`, `CONTEXT_FRAME`, `FAMILY_META`)
+/// on 1956 nodes, but the 84 `:Coordinate:Stack` nodes written by the S/S'
+/// lattice migration carry the S-layer index `0`-`5` instead. Those 84 stay
+/// mixed by decision (2026-07-25: the integer is a second semantic, not a bad
+/// cast, so readers tolerate both rather than the data being flattened).
+/// A bare `row.get::<String>()` returns `Err` for them, and `unwrap_or_default()`
+/// silently turned that into `""` — so every S-stack coordinate served an empty
+/// layer. Same silent-empty-string failure mode the RETURN projector had.
+fn string_or_int_field(row: &neo4rs::Row, key: &str) -> String {
+    row.get::<String>(key)
+        .or_else(|_| row.get::<i64>(key).map(|n| n.to_string()))
+        .unwrap_or_default()
+}
+
 fn bimba_node_row(row: &neo4rs::Row) -> Value {
     let coordinate = row.get::<String>("coordinate").unwrap_or_default();
     json!({
@@ -1008,7 +1026,7 @@ fn bimba_node_row(row: &neo4rs::Row) -> Value {
         "uuid": row.get::<String>("uuid").unwrap_or_default(),
         "name": row.get::<String>("name").unwrap_or_default(),
         "family": row.get::<String>("family").unwrap_or_default(),
-        "layer": row.get::<String>("layer").unwrap_or_default(),
+        "layer": string_or_int_field(row, "layer"),
         "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
         "depth": row.get::<i64>("depth").ok(),
         "anchors": source_traceability_anchors(&coordinate),

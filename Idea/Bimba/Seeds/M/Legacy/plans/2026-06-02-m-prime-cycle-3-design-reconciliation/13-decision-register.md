@@ -2194,3 +2194,45 @@ The defect was that **the boundary was unmarked**: a bare `elementId` gave no re
 3. **The two body ontologies are named apart.** The medicine surface had fused M2-2's yogic body (chakra → tattva → mahābhūta → zone) with M2-3's Hermetic medical body (decan → sign → body part → herb) into one undifferentiated "medicine". Each panel now carries `data-body-ontology` and its owning coordinate, and `activeChakraId` — the one place the two meet, reached decan → element → chakra via `chakra_for_element` — renders as a **correspondence between two body ontologies**, not a fact of one body.
 
 **Verification:** typecheck 0, build 0, carrier-tokens GREEN, honesty-lint clean, `make test` all suites passed, 1362 carrier tests pass.
+
+## DR-S2-ALIAS-1 — `property_mapping.rs` is the canonical-name authority; measured-identical alias keys retire to it
+
+**Status:** VALIDATED · **Raised:** 2026-07-25 · **Validated:** 2026-07-25 · **By:** user (direct instruction — "retire the migration-artefact aliases in favour of the better names") · **Domain:** S2 graph data · **Record:** [[graph-data-normalisation]]
+
+**The problem.** The Bimba corpus carried the same semantic under multiple `{family}_{n}_` keys — `c_1_context_frame` beside `c_3_context_frame`, `t_3_last_updated` beside `c_3_updated_at`, `key_principles` spread across five position digits. Read-time tolerance (`ROLE_RULES` in `property-roles.ts`, the Open-Schema Doctrine) papered over it, so nothing forced a resolution.
+
+**Decision.**
+1. **The canonical name is the one `dataset_import/property_mapping.rs` maps to.** That table (115 targets) is the authority; it is what the importer would write today. Not the higher-volume key, not the lower position digit.
+2. **An alias retires only when measured 100% identical**, with zero conflicting and zero canonical-absent rows. Name similarity is a candidate, never a warrant.
+3. **The candidate set is derived, not enumerated.** Group every prefixed key by semantic suffix; any suffix served by ≥2 keys is a candidate pair. This found 40 real pairs where five had been reported.
+4. **The write re-asserts identity in its own predicate**, so it cannot drop a non-duplicate even if the measurement went stale between measuring and writing.
+
+**Landed.** 40 alias keys retired, 2,955 property instances, zero code readers and zero vault producers among them. Two candidates **excluded** after measurement proved them distinct properties, not aliases: `t_3_updated_at` (378 of 397 co-present rows hold a *different* timestamp) and `s_4_description` (16 conflicting, 6 canonical-absent). Also landed: `c_4_subsystem` cast to its majority INTEGER (39 nodes — 38 numeric strings and one `["4","4"]` double-write), leaving that key single-typed.
+
+**Verification.** Dry run reproduced the measurements exactly before writing. After: all 40 aliases at 0 remaining; every canonical twin's count unchanged; both excluded keys untouched; `:Bimba` node count 2,098 and edge count 11,295 unchanged. Verified through a different client than the one that wrote it. Reversal snapshots committed at `Seeds/S/S2/normalisation-snapshots/`.
+
+## DR-S2-LAYER-1 — `c_4_layer` is two semantics sharing one key; the data stays mixed and readers tolerate both
+
+**Status:** VALIDATED · **Raised:** 2026-07-25 · **Validated:** 2026-07-25 · **By:** user (chose "leave the 84 alone") · **Domain:** S2 graph data / `graph_api.rs` · **Record:** [[graph-data-normalisation]]
+
+**The finding.** `c_4_layer` was reported as a type collision to be normalised to its STRING majority. It is not a collision. STRING (1,956) is a **controlled node-kind vocabulary** — `COORDINATE`, `CONTEXT_FRAME`, `PSYCHOID`, `FAMILY_META`, `LENS`, `VAK`, `WEAVE`, `FAMILY_ROOT` — exactly what `seed.rs::merge_node(layer: &str)` writes. INTEGER (84) is the **S-stack layer index** `0`–`5`, 14 nodes per layer, every one `:Coordinate:Stack` and stamped `sync_version: m5-s-lattice-migration-…`. Casting `0` → `"0"` would have written a non-vocabulary value into a closed column.
+
+**Decision.** Leave the 84 as they are. The integer is a second semantic, not a bad cast, and no new key is invented to hold it (a `c_4_layer` value and an S-layer index are different questions). **Readers tolerate both types.**
+
+**Landed.** `bimba_node_row` read `row.get::<String>("layer").unwrap_or_default()`, which returned `Err` for all 84 and silently yielded `""` — so **every S-stack coordinate served an empty layer** through `s2.graph.node`. This is a second instance of the silent-empty-string failure mode that `a8cb2862` fixed on the RETURN projector. Repaired with `string_or_int_field`, which renders the integer as its decimal string so the JSON wire type stays `string` and no consumer shape changes.
+
+**Verification.** `tests/mixed_type_layer_projection_live.rs` pins both branches against the real corpus — `S3` → `"3"`, `M3` → `"COORDINATE"` — and was confirmed to fail before the fix (`left: ""`, `right: "3"`), so it is not vacuous. graph-services 253 tests pass.
+
+**Recorded, not patched.** `seed.rs::seed_node_group_counts` counts `c_4_layer = 'COORDINATE'`; the 12 S-family roots are seeded with that string but were later overwritten to INTEGER by the lattice migration, so `family_coordinates` reads 12 low. It is a diagnostic snapshot, not an assertion. Teaching the seeder that "INTEGER layer also means COORDINATE" would encode the drift as semantics, which is a canon question and is left open.
+
+## DR-S2-TIME-1 — `c_3_updated_at` normalises to its producer's type, not to its majority
+
+**Status:** VALIDATED · **Raised:** 2026-07-25 · **Validated:** 2026-07-25 · **By:** user (chose "to ZONED DATETIME — follow the writer") · **Domain:** S2 graph data · **Record:** [[graph-data-normalisation]] · **Amends for this key:** [[DR-S2-ALIAS-1]]'s "collision keys to majority" rule
+
+**The finding.** `c_3_updated_at` split STRING 1,108 / ZONED DATETIME 6, so "to majority" meant STRING. But the **only live writer** is `sync/coordinator.rs:350` — `SET … n.c_3_updated_at = datetime()` — which emits ZONED DATETIME. The 1,108 strings are the legacy dataset-import corpus (`property_mapping.rs:330`). Normalising to the majority would have obeyed the instruction and re-split the column on the very next vault sync: a treadmill, not a normalisation.
+
+**Decision.** Normalise **toward the producer**, i.e. to the minority type. Where a column's majority disagrees with its only writer, the writer wins — otherwise the data is corrected against the thing that keeps re-creating it.
+
+**Landed.** 1,108 STRING → ZONED DATETIME, lossless. All 1,108 matched strict ISO-8601 with an explicit `Z`; the pre-flight gate required 1108/1108 seconds **and** nanoseconds preserved or it refused to write; post-verify read back out of the graph confirmed 1108/1108 equal to `datetime(original)`. The only change is that redundant zero-padding stops being stored (`.979000000Z` → `.979Z`, identical `epochMillis` and `nanosecond`) — the strings had been carrying **fake** nanosecond precision, since three were second-precision and one millisecond-precision, all padded to nine digits.
+
+**Result.** `c_3_updated_at` is single-typed `ZONED DATETIME × 1114` and matches its producer, so it stays that way.

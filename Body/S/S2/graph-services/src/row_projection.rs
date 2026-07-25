@@ -14,7 +14,7 @@
 //!   `source`/`target`/`type` never survived the gateway — against a graph
 //!   holding 11,295 Bimba→Bimba edges. The rule the split enforces:
 //!
-//!     Whoever owns the Cypher owns the projection.
+//!   > Whoever owns the Cypher owns the projection.
 //!
 //!   Service-owned RETURNs (`node`, `traverse`, `list`, …) keep their typed
 //!   projectors, because the service wrote those queries and knows their shape.
