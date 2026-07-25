@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T09:44:04.441Z",
+  "updatedAt": "2026-07-25T09:57:55.650Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20123,16 +20123,37 @@
       "blocker": null
     },
     "50.T50.02": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-25T09:57:55.627Z",
+      "claimedAt": "2026-07-25T09:44:49.570Z",
+      "completedAt": "2026-07-25T09:57:55.627Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T09:57:55.627Z",
+          "text": "All three spawn(pi) seams unified into one gated executor: lib/child-pi-executor.ts dispatchChildPi() is now the only path from a dispatch decision to a child process, and NO raw spawn(\"pi\") remains in S4/*.ts (agent-team dispatchAgent, agent-chain runAgent, pi-pi queryExpert all delegate; each seam keeps only its prompt assembly, stream parsing and widget state). Invariants applied once: Pi-to-subagent only (CHILD_PI_BINARY constant, not injectable), --tools resolved through resolveEntitlement (agent-chain and pi-pi previously passed raw frontmatter tool strings with NO gate at all), guardVamaShaktiDispatch dialogue-only, enforceReviewGate recursive-self-review; a violation throws ChildPiDispatchRefused before any process exists. LIVE PROOF fresh 11/11: a real child pi dispatched through the executor read a real file (--tools read, exit 0, 1.6s); on the agent-chain seam a team ceiling plus agent deny reduced [read,glob] to [glob] and the real child answered NO_READ_TOOL, so the newly-applied gate demonstrably binds live; a dialogue-only Vama Shakti dispatch refused in under 1s with no model call and no process. 23 new behavioural unit tests; full S4 suite 552 pass 0 fail; Rust cross-language contract agent_extensions_ta_onta 14/14 after updating the two assertions whose pinned source text legitimately moved into the executor; verify-all W scope GREEN incl live-wire spawned gateway; honesty-lint clean. One real bug caught by the tests, not by inspection: dispatchChildPi threw synchronously while returning a Promise, so the seams' .catch() would have missed a Vama Shakti refusal and raised an unhandled exception - now async so the refusal surfaces as a rejection. Test-design correction worth recording: an early live assertion claimed a denied read tool made contents unreachable, but the child legitimately used bash/cat - entitlement gates the NAMED TOOL SURFACE and granting bash grants file access; the assertion now isolates the denied capability with glob.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 552,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-team.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/child_pi_executor.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/child-pi-executor-live.mjs",
+              "Body/S/S0/epi-cli/tests/agent_extensions_ta_onta.rs",
+              "live-wire PASS + gateway suites GREEN in verifications/50.T50.02.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T09:44:49.570Z",
+      "runId": "20260725T094449Z-50-T50.02",
       "worktree": null,
       "blocker": null
     },
@@ -26103,6 +26124,16 @@
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T11:10:29.677Z",
       "worktree": null
+    },
+    {
+      "runId": "20260725T094449Z-50-T50.02",
+      "taskId": "50.T50.02",
+      "status": "done",
+      "startedAt": "2026-07-25T09:44:49.570Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T11:44:49.570Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T09:57:55.627Z"
     }
   ],
   "activeRoute": {

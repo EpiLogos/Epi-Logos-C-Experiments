@@ -188,11 +188,30 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_team.contains("pi.registerTool({"));
     assert!(agent_team.contains("name: \"dispatch_agent\""));
     assert!(agent_team.contains("pi.registerCommand(\"agents-team\""));
-    assert!(agent_team.contains("childPiRuntimeArgs"));
-    // Child spawn-arg construction moved into the pi-pi dispatch seam.
+    // 50.T50.02: child spawn-arg construction and the raw `spawn("pi", ...)` moved
+    // OUT of the three seams into the one gated executor. Each seam now routes
+    // through `dispatchChildPi`; the executor owns childPiRuntimeArgs(), the
+    // `--tools` allow-list (now entitlement-resolved on all three seams), and the
+    // pi binary constant. Assert the seams delegate, and that the executor holds
+    // the invariants.
+    assert!(agent_team.contains("dispatchChildPi({"));
+    assert!(agent_team.contains("seam: \"agent-team\""));
+    assert!(!agent_team.contains("spawn(\"pi\""));
+
+    let executor = fs::read_to_string(
+        root.join("Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"),
+    )
+    .unwrap();
+    assert!(executor.contains("childPiRuntimeArgs()"));
+    assert!(executor.contains("spawn(CHILD_PI_BINARY"));
+    assert!(executor.contains("guardVamaShaktiDispatch"));
+    assert!(executor.contains("enforceReviewGate"));
+    assert!(executor.contains("resolveEntitlement"));
+
     let pi_pi = fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts")).unwrap();
-    assert!(pi_pi.contains("\"--tools\", state.def.tools"));
-    assert!(pi_pi.contains("spawn(\"pi\""));
+    assert!(pi_pi.contains("dispatchChildPi({"));
+    assert!(pi_pi.contains("seam: \"pi-pi\""));
+    assert!(!pi_pi.contains("spawn(\"pi\""));
 
     let agent_chain =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts")).unwrap();
@@ -204,9 +223,9 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_chain.contains("name: \"run_chain\""));
     assert!(agent_chain.contains("pi.registerCommand(\"chain\""));
     assert!(agent_chain.contains("pi.registerCommand(\"chain-list\""));
-    assert!(agent_chain.contains("childPiRuntimeArgs()"));
-    assert!(agent_chain.contains("\"--tools\", agentDef.tools"));
-    assert!(agent_chain.contains("spawn(\"pi\""));
+    assert!(agent_chain.contains("dispatchChildPi({"));
+    assert!(agent_chain.contains("seam: \"agent-chain\""));
+    assert!(!agent_chain.contains("spawn(\"pi\""));
 
     let subagent_widget =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/subagent-widget.ts"))
@@ -467,7 +486,9 @@ fn anima_ports_pi_pi_meta_agent_and_team_manifest() {
     assert!(pi_pi.contains("name: \"query_experts\""));
     assert!(pi_pi.contains("pi.registerCommand(\"experts\""));
     assert!(pi_pi.contains("pi-orchestrator.md"));
-    assert!(pi_pi.contains("childPiRuntimeArgs"));
+    // 50.T50.02: childPiRuntimeArgs() moved into the one gated child-pi executor;
+    // this seam now delegates to it instead of building child argv itself.
+    assert!(pi_pi.contains("dispatchChildPi({"));
 
     let anima =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/extension.ts")).unwrap();

@@ -20,12 +20,10 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { Text, type AutocompleteItem, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
-import { spawn } from "child_process";
 import { readdirSync, readFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "node:url";
 import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
-import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
 import {
 	validateDispatchParams,
 	dispatchGuardrails,
@@ -34,6 +32,7 @@ import {
 } from "../modules/dispatch-validate.ts";
 import type { VakAddress } from "../../shared/vak_address.ts";
 import { computeAgentEntitlement, enumerateSkillUniverse, parseCommaList } from "../../shared/entitlement.ts";
+import { dispatchChildPi, ChildPiDispatchRefused } from "../lib/child-pi-executor.ts";
 import { parseTeamEntitlements, type TeamEntitlement } from "../../shared/entitlement-loader.ts";
 
 // ── Types ────────────────────────────────────────
@@ -448,80 +447,55 @@ export default function (pi: ExtensionAPI) {
 			}
 		}
 
-		const args = [
-			"--mode", "json",
-			"-p",
-			"--no-session",
-			...childPiRuntimeArgs(),
-			...(eff.tools.effective.length > 0 ? ["--tools", eff.tools.effective.join(",")] : []),
-			...(model ? ["--model", model] : []),
-			"--thinking", "off",
-			"--append-system-prompt", fullSystemPrompt,
+		// 50.T50.02: routed through the ONE gated child-pi executor. The
+		// entitlement resolution above already narrowed the tool set, so it is
+		// handed over as this dispatch's universe with no further layers — the
+		// resulting `--tools` is byte-identical to what this seam passed before.
+		return dispatchChildPi({
+			seam: "agent-team",
+			agentName: state.def.name,
 			task,
-		];
-
-		const childEnv: NodeJS.ProcessEnv = { ...process.env };
-		if (vakAddress) {
-			childEnv.EPI_SESSION_VAK_ADDRESS = JSON.stringify(vakAddress);
-		}
-
-		return new Promise((resolve) => {
-			const proc = spawn("pi", args, {
-				stdio: ["ignore", "pipe", "pipe"],
-				env: childEnv,
-				cwd: process.env.EPI_REPO_ROOT || (ctx as any).cwd || process.cwd(),
-			});
-
-			let stdout = "";
-			let stderr = "";
-
-			proc.stdout!.setEncoding("utf-8");
-			proc.stdout!.on("data", (chunk: string) => {
-				stdout += chunk;
+			systemPrompt: fullSystemPrompt,
+			model,
+			toolUniverse: eff.tools.effective,
+			vakAddress,
+			cwd: (ctx as any).cwd,
+			onStdout: (chunk: string) => {
 				const lines = chunk.split("\n").filter((l: string) => l.trim());
 				if (lines.length) {
 					state.lastWork = lines[lines.length - 1];
 					updateWidget();
 				}
-			});
+			},
+		}).then((result) => {
+			clearInterval(state.timer);
+			state.elapsed = result.elapsed;
+			state.status = result.exitCode === 0 ? "done" : "error";
+			state.contextPct = 0;
+			updateWidget();
 
-			proc.stderr!.setEncoding("utf-8");
-			proc.stderr!.on("data", (chunk: string) => {
-				stderr += chunk;
-			});
+			ctx.ui.notify(
+				`${displayName(state.def.name)} ${state.status} in ${Math.round(result.elapsed / 1000)}s`,
+				state.status === "done" ? "success" : "error"
+			);
 
-			proc.on("close", (code) => {
-				clearInterval(state.timer);
-				const elapsed = Date.now() - startTime;
-				state.elapsed = elapsed;
-				state.status = code === 0 ? "done" : "error";
-				state.contextPct = 0;
-				const full = stdout || stderr;
-				updateWidget();
-
-				ctx.ui.notify(
-					`${displayName(state.def.name)} ${state.status} in ${Math.round(elapsed / 1000)}s`,
-					state.status === "done" ? "success" : "error"
-				);
-
-				resolve({
-					output: full,
-					exitCode: code ?? 1,
-					elapsed,
-				});
-			});
-
-			proc.on("error", (err) => {
-				clearInterval(state.timer);
-				state.status = "error";
-				state.lastWork = `Error: ${err.message}`;
-				updateWidget();
-				resolve({
-					output: `Error spawning agent: ${err.message}`,
-					exitCode: 1,
-					elapsed: Date.now() - startTime,
-				});
-			});
+			return {
+				output: result.output,
+				exitCode: result.exitCode,
+				elapsed: result.elapsed,
+			};
+		}).catch((err: unknown) => {
+			clearInterval(state.timer);
+			state.status = "error";
+			const message = err instanceof Error ? err.message : String(err);
+			const refused = err instanceof ChildPiDispatchRefused;
+			state.lastWork = `${refused ? "Refused" : "Error"}: ${message}`;
+			updateWidget();
+			return {
+				output: `${refused ? `Dispatch refused (${err.code})` : "Error spawning agent"}: ${message}`,
+				exitCode: 1,
+				elapsed: Date.now() - startTime,
+			};
 		});
 	}
 
