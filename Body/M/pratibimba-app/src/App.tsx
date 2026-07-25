@@ -108,6 +108,12 @@ import {
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
 import { readOmniPanelSessionState, useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
+import {
+    applyOmniPanelRouting,
+    omniPanelIntentRouter,
+    OMNIPANEL_INTENT_ROUTE_COMMAND
+} from './panes/omni/omnipanelIntentRouter';
+import { useCrossLayoutIntentLogStore } from './state/crossLayoutIntentLog';
 import { VaultEntry } from './panes/FileTreePane';
 import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
@@ -846,6 +852,41 @@ export function App() {
                     // the selected host consumes its newly delivered node config.
                     setRoutingRevision(revision => revision + 1);
                     persist();
+                }
+            }),
+            // 27.T27.9 — OmniPanelIntentRouter seam: a CrossLayoutIntent whose
+            // requestedContributionId names an OmniPanel-internal route (e.g.
+            // `evidence-pane.select-packet`) activates the target fold, applies
+            // the per-tab payload (preserving unrelated fold state), reveals the
+            // membrane, and opens the FlexLayout border tab on the active face.
+            commands.register({
+                id: OMNIPANEL_INTENT_ROUTE_COMMAND,
+                title: 'OmniPanel: Route cross-layout intent to a fold',
+                run: input => {
+                    const intent = parseCrossLayoutIntent(input);
+                    const result = omniPanelIntentRouter.route(intent);
+                    useCrossLayoutIntentLogStore
+                        .getState()
+                        .record({ at: Date.now(), intent, outcome: result ? 'ok' : 'error' });
+                    if (!result) {
+                        throw new Error(
+                            `no OmniPanel route for ${intent.requestedExtensionId}/${intent.requestedContributionId}`
+                        );
+                    }
+                    applyOmniPanelRouting(result, {
+                        revealBorderTab: tab => {
+                            const current = modelsRef.current;
+                            if (!current) {
+                                return;
+                            }
+                            const model = faceRef.current === 0 ? current.cosmic : current.personal;
+                            const nodeId = tab === 'pi-chat' ? 'omni-tab' : `omni-${tab}`;
+                            if (model.getNodeById(nodeId)) {
+                                model.doAction(Actions.selectTab(nodeId));
+                            }
+                            persist();
+                        }
+                    });
                 }
             }),
             commands.register({

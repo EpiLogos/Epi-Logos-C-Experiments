@@ -27,6 +27,7 @@ import { dispatchGenealogyFromSessions } from './dispatchGenealogyFromSessions';
 import { genealogyIndex, type DispatchDeepLink } from './dispatchGenealogy';
 import { PSYCHE_FACETS, PSYCHE_FACET_LABEL, psycheFacetClass } from './psycheFacet';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
+import { fireOmniPanelRoute } from './omnipanelIntentRouter';
 import type { ActorRole } from './omnipanelRuntime';
 
 const ACTOR_FILTERS: readonly { readonly role: ActorRole | 'all'; readonly label: string }[] = [
@@ -59,7 +60,6 @@ export function DispatchTracePanel() {
     const connected = useProvenanceStore(s => s.connection.connected);
     const tab = useOmniPanelTabState('dispatch-trace');
     const patchTab = useOmniPanelSessionStore(s => s.patchTab);
-    const selectTab = useOmniPanelSessionStore(s => s.selectTab);
     const tick = useProfileTick();
     const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -124,12 +124,19 @@ export function DispatchTracePanel() {
         patchTab('dispatch-trace', { expandedNodeIds: [...collapsed] });
     };
     const onDeepLink = (link: DispatchDeepLink) => {
-        // 15.11 same-data linking: an evidence chip activates the Evidence tab.
+        // 15.11 same-data linking: an evidence chip routes to the Evidence fold
+        // through the 27.9 OmniPanel intent router (activate tab + apply the
+        // selected-packet payload + reveal the border), via the command spine —
+        // not a bare selectTab that would drop the packet id and never reveal.
         if (link.target === 'omniEvidence') {
-            selectTab('evidence');
+            fireOmniPanelRoute({
+                requestedExtensionId: 'omnipanel-shell',
+                requestedContributionId: 'dispatch-trace.open-evidence',
+                artifactUri: link.evidenceRef
+            });
         }
         // backendStudio deep-links resolve in ide-deep (Backend Studio, 28.13) —
-        // carried as data here, routed through the command spine by 27.9.
+        // carried as data here until that fold lands.
     };
 
     return (

@@ -165,6 +165,14 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         tranche: '31.T31.10'
     },
 
+    // --- src/panes/omni/omnipanelIntentRouter.ts (OMNIPANEL_INTENT_ROUTE_COMMAND) ---
+    {
+        id: 'omnipanel.intent.route',
+        title: 'OmniPanel: Route cross-layout intent to a fold',
+        owner: 'omnipanel-shell',
+        tranche: '27.T27.9'
+    },
+
     // --- src/commands/omnipanelTabChords.ts (registerOmnipanelTabActivationCommands, CCT-4) ---
     { id: 'omnipanel.tab.activate.0', title: 'OmniPanel: Activate the Pi tab (⌘1)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
     { id: 'omnipanel.tab.activate.1', title: 'OmniPanel: Activate the Sessions tab (⌘2)', owner: 'omnipanel-shell', tranche: '31.T31.3' },

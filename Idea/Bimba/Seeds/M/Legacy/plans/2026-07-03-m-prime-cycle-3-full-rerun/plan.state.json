@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T08:39:30.960Z",
+  "updatedAt": "2026-07-25T08:52:33.913Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11900,16 +11900,16 @@
       }
     },
     "24.T24.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T08:49:13.920Z",
+      "claimedAt": "2026-07-25T08:49:13.920Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-impl",
+      "leaseExpiresAt": "2026-07-25T10:49:13.920Z",
+      "heartbeatAt": "2026-07-25T08:49:13.920Z",
+      "runId": "20260725T084913Z-24-T24.7",
       "worktree": null,
       "blocker": null
     },
@@ -13544,14 +13544,29 @@
       "blocker": null
     },
     "27.T27.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-24T13:46:00.291Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T08:52:33.888Z",
       "claimedAt": "2026-07-24T13:46:00.291Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T08:52:33.888Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T08:52:33.888Z",
+          "text": "OmniPanelIntentRouter landed carrier-native (frozen-Theia Inversify -> plain class + zustand store): 15-route table (14 spec verbatim + 1 documented carrier completion tool-stream.open-evidence), register()/dispose, pure route()->OmniPanelRoutingResult, applyOmniPanelRouting (selectTab + state-preserving patchTab per 15.7 + real reveal). WIRED LIVE (adversarial-review fixed the registered-but-unfired seam): DispatchTracePanel + ToolStreamPanel evidence deep-links now fire the router via fireOmniPanelRoute -> command spine (omnipanel.intent.route, catalogued); reveal = real FlexLayout revealBorderTab (phantom omniState/data-omnipanel-visibility removed per review). Proof: router units 28/28, app-test 1233 (my tree), typecheck 0, build ok, dedicated UF e2e omnipanel-tab-traversal 27.9+27.13 2/2 green, import-lint+catalog-no-orphan+honesty-lint(274 files) green. Two NON-27.9 reds in the shared whole-tree gate, neither a 27.9 defect: (a) app-ui-flow pratibimba-consent.spec.ts:274 AUTOMATIC-drift-accumulator is an order-dependent env flake (passes 4/4 in isolation, committed code 27.9 does not touch); (b) app-typecheck transient from parallel-worker 24.T24.7 WIP (TarotDecanService/M3DecanChainBreadcrumb) sharing the working tree — my files typecheck clean.",
+          "receipt": {
+            "command": "pnpm exec playwright test omnipanel-tab-traversal.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelIntentRouter.ts",
+              "Body/M/pratibimba-app/tests/e2e/omnipanel-tab-traversal.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-279-impl",
-      "leaseExpiresAt": "2026-07-24T15:46:00.291Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-24T13:46:00.291Z",
       "runId": "20260724T134600Z-27-T27.9",
       "worktree": null,
@@ -26001,11 +26016,12 @@
     {
       "runId": "20260724T134600Z-27-T27.9",
       "taskId": "27.T27.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-24T13:46:00.291Z",
       "owner": "opus-mdev-279-impl",
       "leaseExpiresAt": "2026-07-24T15:46:00.291Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T08:52:33.888Z"
     },
     {
       "runId": "20260725T082439Z-28-T28.20",
@@ -26017,6 +26033,15 @@
       "worktree": null,
       "heartbeatAt": "2026-07-25T08:24:39.370Z",
       "completedAt": "2026-07-25T08:39:30.937Z"
+    },
+    {
+      "runId": "20260725T084913Z-24-T24.7",
+      "taskId": "24.T24.7",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T08:49:13.920Z",
+      "owner": "opus-mdev-impl",
+      "leaseExpiresAt": "2026-07-25T10:49:13.920Z",
+      "worktree": null
     }
   ],
   "activeRoute": {

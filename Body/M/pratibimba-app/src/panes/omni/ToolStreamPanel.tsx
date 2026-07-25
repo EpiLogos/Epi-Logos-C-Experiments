@@ -31,6 +31,7 @@ import {
     type DispatchDeepLink
 } from './dispatchGenealogy';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
+import { fireOmniPanelRoute } from './omnipanelIntentRouter';
 import type { ActorRole } from './omnipanelRuntime';
 
 const ACTOR_FILTERS: readonly { readonly role: ActorRole | 'all'; readonly label: string }[] = [
@@ -67,7 +68,6 @@ export function ToolStreamPanel() {
     const connected = useProvenanceStore(s => s.connection.connected);
     const tab = useOmniPanelTabState('tool-stream');
     const patchTab = useOmniPanelSessionStore(s => s.patchTab);
-    const selectTab = useOmniPanelSessionStore(s => s.selectTab);
     const tick = useProfileTick();
     const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -168,8 +168,15 @@ export function ToolStreamPanel() {
         patchTab('dispatch-trace', { selectedNodeId: nodeId });
     };
     const onDeepLink = (link: DispatchDeepLink) => {
+        // 15.11 same-data linking: an evidence chip routes to the Evidence fold
+        // through the 27.9 router (carrier route `tool-stream.open-evidence`,
+        // registered in App.tsx), carrying the selected-packet payload + reveal.
         if (link.target === 'omniEvidence') {
-            selectTab('evidence');
+            fireOmniPanelRoute({
+                requestedExtensionId: 'omnipanel-shell',
+                requestedContributionId: 'tool-stream.open-evidence',
+                artifactUri: link.evidenceRef
+            });
         }
     };
 
