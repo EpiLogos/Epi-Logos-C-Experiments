@@ -8,16 +8,26 @@
  *   pressing an option re-queries the graph, and that the surface reports what
  *   it is actually showing.
  *
- *   HONEST LIMIT, stated rather than papered over: this environment's S2 graph
- *   returns 900 :Bimba nodes and ZERO `(a:Bimba)-[r]->(b:Bimba)` edges — I
- *   confirmed that against the ORIGINAL query too, so it predates this tranche
- *   and is not caused by selecting `c_1_relation_family`. With no live edges
- *   there is nothing to narrow, so this spec does NOT claim to prove a
- *   non-trivial partition; asserting `filtered <= total` over 0 edges would
- *   pass while proving nothing. The partition law itself is proven over real
- *   inputs in graphExplorerFilter.test.ts and graphData.test.ts. What is proven
- *   HERE is the wiring: the control is on the live surface, it drives the
- *   pane's state, and the pane re-reports itself.
+ *   WHY THIS PROVES WIRING AND NOT NARROWING — the cause is an S2 API defect,
+ *   NOT missing data. The Bimba graph is rich: 2098 :Bimba nodes and 11295
+ *   Bimba→Bimba edges (verified directly against Neo4j), and replaying this
+ *   pane's own two queries over that graph yields 1732 renderable edges. The
+ *   pane still shows ZERO because `s2.graph.query` discards the caller's RETURN
+ *   projection: `GraphApi::query` (Body/S/S2/graph-services/src/graph_api.rs:585)
+ *   runs the supplied Cypher and then maps every row through `known_row_json`
+ *   (:987), which reads a FIXED node column set (coordinate/uuid/name/family/
+ *   layer/ql_position/depth) and drops everything else via `unwrap_or_default`.
+ *   So `source`, `target`, `type` — and `c_1_relation_family` — never survive
+ *   the gateway, and `coerceLinks` correctly finds nothing to build. Confirmed
+ *   by probing the live gateway: the links query returns rowCount 2500, and
+ *   every row is a node-shaped stub with `coordinate: ""`.
+ *
+ *   Consequence: the Bimba Graph Viewer has never rendered an edge, and this
+ *   filter is wired but structurally starved until that projection is fixed.
+ *   So this spec proves the WIRING only, and says so rather than asserting
+ *   `filtered <= total` over 0 edges — which would pass while proving nothing.
+ *   The partition law itself is proven over real inputs in
+ *   graphExplorerFilter.test.ts and graphData.test.ts.
  * Does NOT own: S2 graph law, the edge classification (m0RelationFamily.ts),
  *   or the force-graph canvas.
  * Contract: [[M0'-SPEC]] + rerun tranche [[28.T28.3]] (DR-IG-1).
@@ -76,8 +86,9 @@ test('28.T28.3: the relation-family filter is wired to the live Bimba surface', 
     } else {
         // eslint-disable-next-line no-console
         console.log(
-            '[28.T28.3] S2 returned 0 Bimba→Bimba edges in this environment; ' +
-                'narrowing is proven in the unit suite, wiring is proven here.'
+            '[28.T28.3] 0 edges reached the pane: s2.graph.query drops the RETURN ' +
+                'projection (graph_api.rs known_row_json), not a data gap — the graph ' +
+                'holds 11295 Bimba→Bimba edges. Narrowing is proven in the unit suite.'
         );
     }
 
