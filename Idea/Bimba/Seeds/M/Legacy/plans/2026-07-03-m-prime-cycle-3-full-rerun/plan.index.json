@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-24T00:10:27.956Z",
+  "generatedAt": "2026-07-25T08:39:30.957Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -366,6 +366,13 @@
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md",
       "title": "Modal Resonator Bell Kernel Implementation Plan (RERUN — target: pratibimba-app + substrate)",
       "checksum": "37599b8b4dc05549f59ed7329ac3baba8989fd053d907ce10274728f28411a89"
+    },
+    {
+      "id": "50",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "title": "Track 50 — Code-Mode Orchestration: VAK Script Execution (JSON→TS Program Synthesis)",
+      "checksum": "319294c938d4c71c10fb0212e73abea7716898ba6d4103b2d0febb7a7d3c8644"
     }
   ],
   "tasks": [
@@ -10462,6 +10469,299 @@
         "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md"
       ],
       "body": "8. **T49.8 — Canon Updates And Release Gate**\n\n   Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md` — Tranche 49.8 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).\n   Original ledger status: pending — verify or rebuild; never build on it unverified.\n   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.01",
+      "trackId": "50",
+      "tranche": "T50.01",
+      "title": "Base tool-scripting substrate: single-script tool execution for all pi agents (JSON→TS default)",
+      "effort": "JSON→TS default",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "00.T3"
+      ],
+      "writeScopes": [
+        "Body/S/S4/pi-agent/extensions/**",
+        "Body/S/S4/pi-agent/lib/**",
+        "Body/S/S4/ta-onta/shared/entitlement.ts"
+      ],
+      "body": "1. **T50.01 — Base tool-scripting substrate: single-script tool execution for all pi agents (JSON→TS default)**\n\n   Brief: Give every pi agent the code-mode path — compose a multi-tool task as one TypeScript program executed once, instead of N sequential JSON tool calls. Pi (`@earendil-works/pi-coding-agent`) already ships the execution substrate (`core/bash-executor.js` + `read/write/edit/ripgrep/glob`); this tranche wires an orchestration-program run mode where the program's function calls resolve to the agent's entitled tool set. JSON tool-mode stays as the substrate and fallback; the script path becomes the default for any task using ≥2 tools. The security boundary is unchanged — the `--tools` allow-list at spawn plus `isEntitled()` at dispatch — no new VM.\n   Build: new script-run capability in `Body/S/S4/pi-agent/lib/` + `Body/S/S4/pi-agent/extensions/`, consuming pi's bash/exec surface; tool-function resolution restricted to `Body/S/S4/ta-onta/shared/entitlement.ts` `isEntitled()`; token accounting on the run.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral/live-wire proof per Track 00 — spawn a pi agent on a multi-tool task, assert it emits and runs ONE script whose tool calls resolve through the entitlement allow-list, and record the token delta vs the equivalent staircase. verify-all green, honesty-lint clean; verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.02",
+      "trackId": "50",
+      "tranche": "T50.02",
+      "title": "Unify the three `spawn(\"pi\")` dispatch seams into one gated executor",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.01"
+      ],
+      "writeScopes": [
+        "Body/S/S4/khora/S0'/child-extension-propagation.ts",
+        "Body/S/S4/pi-agent/lib/dispatch-guard.ts",
+        "Body/S/S4/pi-agent/lib/review-gate.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/S4/agent-team.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"
+      ],
+      "body": "2. **T50.02 — Unify the three `spawn(\"pi\")` dispatch seams into one gated executor**\n\n   Brief: Today a dispatch decision becomes execution at three independently-gated copies of `spawn(\"pi\", …)` — `Body/S/S4/ta-onta/S4-4p-anima/S4/agent-team.ts` (`dispatchAgent`), `Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts`, and `Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts`. There is no single choke-point. Refactor them to one executor that applies every invariant once: Pi→subagent is the only agentic path (the child is always another pi harness, never a bespoke client), the `--tools` entitlement allow-list, `guardVamaShaktiDispatch` (`Body/S/S4/pi-agent/lib/dispatch-guard.ts`, DR-VAMA-5 dialogue-only), and the recursive-self-review gate (`Body/S/S4/pi-agent/lib/review-gate.ts`).\n   Build: new `Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts`; `agent-team.ts` / `agent-chain.ts` / `pi-pi.ts` call it; `Body/S/S4/khora/S0'/child-extension-propagation.ts` `childPiRuntimeArgs()` remains the runtime-arg source.\n   Verify: real behavioral/live-wire proof per Track 00 — dispatch via all three former call sites now routes through the one executor; entitlement, Vama-Shakti, and review-gate tests all pass live. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.03",
+      "trackId": "50",
+      "tranche": "T50.03",
+      "title": "VAK orchestration language: the six C′ coordinates as the typed scripting surface",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.02"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-lib/include/vak.h",
+        "Body/S/S0/portal-core/src/vak_address.rs",
+        "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch-tools.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts"
+      ],
+      "body": "3. **T50.03 — VAK orchestration language: the six C′ coordinates as the typed scripting surface**\n\n   Brief: Expose the FULL VAK reflective coordinate system — CPF/CT/CP/CF/CFP/CS — as the typed TS vocabulary Anima writes orchestration scripts against, reusing the already-typed `VakAddress` carried across C (`Body/S/S0/epi-lib/include/vak.h`), Rust (`Body/S/S0/portal-core/src/vak_address.rs`), and the TS spine. This is not the CFP dispatch tools alone (that is one coordinate). Each coordinate is a composable axis of the script: CPF plans it and sets human-review polarity (`Dialogical (00/00)` vs `Mechanistic (4.0/1-4.4/5)`); CF binds the agent/mode (`AGENT_CF`, `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts`); CFP shapes the execution flow (parallel/chain/fusion/nested/Z); CT carries the Hen artifact templates; CP places the step; CS sequences it (Day/Night′). Every emission carries the full `VakAddress` envelope (the existing emission lint at `cargo test -p epi-s2-graph-services --test vak_envelope_required_on_emissions`).\n   Build: new `Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts` (the typed six-coordinate function library); a TS mirror of `Body/S/S0/portal-core/src/vak_address.rs` kept parity-checked; wire the existing `Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch-tools.ts` + `extension/dispatch.ts` primitives as its callable surface.\n   Verify: real behavioral/live-wire proof per Track 00 — an Anima script composing across ≥4 of the six coordinates executes; every emission is asserted to carry the full six-field `VakAddress`. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.04",
+      "trackId": "50",
+      "tranche": "T50.04",
+      "title": "CP nesting: context-frame recursion (each position a leaf or a nested frame)",
+      "effort": "each position a leaf or a nested frame",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.03"
+      ],
+      "writeScopes": [
+        "Body/S/S0/portal-core/src/vak_address.rs",
+        "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts"
+      ],
+      "body": "4. **T50.04 — CP nesting: context-frame recursion (each position a leaf or a nested frame)**\n\n   Brief: CP is the composability engine. A position within a context frame is EITHER a terminal dispatch (leaf) OR expands into a full nested context frame. Example: in `0/1/2`, position `0` can expand to `(00/00)`, position `1` to `(0/1)` or `1/0`; a parent like `(4.0/1-4.4/5)` can nest a full frame at each internal position. This is the `.`-nesting operator surfaced through CP, and it is what lets the language scale. In TS it is plain recursion — a frame is a function, each position resolves to a `dispatch(…)` leaf or a call into another frame — so no new abstraction is required. `CfPosition` (`Body/S/S0/portal-core/src/vak_address.rs`) already carries the frame identities (`Outer4Parent` = `(4.0/1-4.4/5)`, etc.).\n   Build: a nesting evaluator in `Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts`; CP-address resolution so a nested frame spawns the correct child pi at each leaf; trace records the nesting depth.\n   Verify: real behavioral/live-wire proof per Track 00 — a ≥2-deep nested orchestration executes correctly, spawning the right child pi's at each leaf, and the captured trace reflects the nesting structure. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.05",
+      "trackId": "50",
+      "tranche": "T50.05",
+      "title": "Anima top-level ownership: the script holds the run; children are the teams/chains",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.04"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-4p-anima/extension/mod.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"
+      ],
+      "body": "5. **T50.05 — Anima top-level ownership: the script holds the run; children are the teams/chains**\n\n   Brief: Anima owns and holds the top-level orchestration script and its context — this is Anima's role: managing sub-process runs. The script instantiates child pi's because agent teams/chains/modes ARE subagents; nothing else is agentic. Context isolation: only the variables a downstream child needs are passed from an upstream result, never the full conversation history — the code environment moves data between agents, which is the second half of the token win.\n   Build: the executor (`Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts`) holds run state in Anima; `Body/S/S4/ta-onta/S4-4p-anima/extension/mod.ts` owns the top-level script lifecycle; result→next-input passing extracts only declared variables.\n   Verify: real behavioral/live-wire proof per Track 00 — Anima runs a multi-agent script; children spawn per dispatch; the parent holds run state across them; a child's input is asserted to be the extracted variables only, not the parent transcript. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.06",
+      "trackId": "50",
+      "tranche": "T50.06",
+      "title": "`tilldone` completion-gate: port from vendor and register as the CFP4 L-Thread executor",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.05"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/extension.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts"
+      ],
+      "body": "6. **T50.06 — `tilldone` completion-gate: port from vendor and register as the CFP4 L-Thread executor**\n\n   Brief: `zThreadToolForMove` maps CFP4 (L-Thread) → `\"tilldone\"`, but no such tool is registered — a dangling name (`Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts`). `tilldone` is a real, useful tool in the vendored claude/pi tooling: a completion gate that keeps a long autonomous workflow running until its stated done-condition actually holds. Port it and register it so CFP4 resolves, so a script can wrap an autonomous thread in a real completion guarantee. Confirm residency against T12.11 (TillDone substrate residency).\n   Build: new `Body/S/S4/ta-onta/S4-4p-anima/S4/tilldone.ts`; register in the active-tool contract (`Body/S/S4/ta-onta/S4-4p-anima/extension.ts`); repoint `extension/dispatch.ts` CFP4 to the registered tool.\n   Verify: real behavioral/live-wire proof per Track 00 — a CFP4 L-Thread dispatch resolves to `tilldone`; a workflow it gates closes only when the completion condition is met, and keeps running otherwise. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.07",
+      "trackId": "50",
+      "tranche": "T50.07",
+      "title": "`(00/00)` origination → score lifecycle: dialogue develops the script; a repeatable run becomes a score",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.06"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-1p-hen",
+        "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts"
+      ],
+      "body": "7. **T50.07 — `(00/00)` origination → score lifecycle: dialogue develops the script; a repeatable run becomes a score**\n\n   Brief: Every Anima session starts in `(00/00)` — user as source, dialogical — and that dialogue is where the agent develops the orchestration script (as opposed to running a ready-made flow). A task gets a specific expression in the language; one execution is a bounded song; a repeatable expression is persisted as a **score** (a reusable orchestration program); ELO/ML refine scores across runs. Persist scores as first-class artifacts and make a persisted score re-runnable without re-originating.\n   Build: score persistence (a `scores/` store written via `Body/S/S4/ta-onta/S4-1p-hen` or `state/`); origination state in `Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts` `CSState` (default `(00/00)`); a re-run entry that loads a score and executes it deterministically.\n   Verify: real behavioral/live-wire proof per Track 00 — a `(00/00)`-originated dialogue yields a runnable script; it persists as a score; re-running the score reproduces the run. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.08",
+      "trackId": "50",
+      "tranche": "T50.08",
+      "title": "CT / Hen artifact-template binding in the orchestration language",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.07"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-1p-hen",
+        "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts"
+      ],
+      "body": "8. **T50.08 — CT / Hen artifact-template binding in the orchestration language**\n\n   Brief: The CT coordinate (`ct: Vec<String>` in `VakAddress`) carries which Hen (S1′) artifact templates a workflow produces or consumes. Wire CT content-types to Hen template resolution so a script can declare artifact outputs by content-type and have them materialise as the correct Hen candidates/artifacts.\n   Build: CT→template resolution against `Body/S/S4/ta-onta/S4-1p-hen`; the orchestration surface (`Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts`) accepts CT declarations; validation in `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts`.\n   Verify: real behavioral/live-wire proof per Track 00 — a script with CT-declared artifact templates produces the correct Hen artifact/candidate. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.09",
+      "trackId": "50",
+      "tranche": "T50.09",
+      "title": "CPF review-gate composition: agent-decided human-in-loop checkpoints",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.08"
+      ],
+      "writeScopes": [
+        "Body/S/S4/pi-agent/lib/review-gate.ts",
+        "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts"
+      ],
+      "body": "9. **T50.09 — CPF review-gate composition: agent-decided human-in-loop checkpoints**\n\n   Brief: The agent decides review gates — the whole review/scoring apparatus exists to judge whether runs were done well. A `(00/00)` human checkpoint is inserted when it is implied by the task, explicitly requested during origination, or learned after the fact as genuinely useful (a review outcome that says \"this class of run wanted a checkpoint\" becomes part of future scores). There is no auto-insertion policy; the checkpoints are agent-authored via CPF (`Dialogical (00/00)` halts for input; `Mechanistic (4.0/1-4.4/5)` runs autonomously).\n   Build: CPF-driven checkpoint handling in the executor; `CpfState` gating in `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts`; relate to the recursive-self-review gate (`Body/S/S4/pi-agent/lib/review-gate.ts`, T12.4).\n   Verify: real behavioral/live-wire proof per Track 00 — a script with an agent-declared `(00/00)` checkpoint halts for input; a mechanistic script runs to completion autonomously. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.10",
+      "trackId": "50",
+      "tranche": "T50.10",
+      "title": "Gateway method + contract: register the orchestration-run surface (METHOD_NAMES + capability-matrix + S4-SPEC)",
+      "effort": "METHOD_NAMES + capability-matrix + S4-SPEC",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.09"
+      ],
+      "writeScopes": [
+        "Body/S/S3/gateway-contract/src/protocol.rs",
+        "Body/S/S3/gateway/src/dispatch.rs",
+        "Body/S/S4/pi-agent/lib/capability-parity.ts",
+        "Body/S/S4/plugins/pleroma/capability-matrix.json",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S4/S4-SPEC.md"
+      ],
+      "body": "10. **T50.10 — Gateway method + contract: register the orchestration-run surface (METHOD_NAMES + capability-matrix + S4-SPEC)**\n\n    Brief: Add the gateway method for script orchestration as a first-class contract surface (Architect-authorized). It must be a real member of the canonical protocol, never a side-door — otherwise the no-tool-bypass and capability-parity gates fail by design.\n    Build: add the method to `Body/S/S3/gateway-contract/src/protocol.rs` `METHOD_NAMES` and its `GatewayProtocolContract` handler in `Body/S/S3/gateway/src/dispatch.rs`; register the capability in `Body/S/S4/plugins/pleroma/capability-matrix.json`; name the surface in `Idea/Bimba/Seeds/S/S4/S4-SPEC.md` (and the anima seam `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md`). Keep the capability-parity assertion (`Body/S/S4/pi-agent/lib/capability-parity.ts`) green.\n    Verify: real behavioral/live-wire proof per Track 00 — the new method dispatches over a spawned `epi gate start`, strict-Zod parses, capability-parity assertion passes, no-tool-bypass test passes. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.11",
+      "trackId": "50",
+      "tranche": "T50.11",
+      "title": "CF↔agent table parity and notation reconciliation (decide and land)",
+      "effort": "decide and land",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.10"
+      ],
+      "writeScopes": [
+        ".claude/skills/anima-orchestration/SKILL.md",
+        ".claude/skills/vak-coordinate-frame/SKILL.md",
+        "Body/S/S0/epi-cli/src/agent/vak.rs",
+        "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts"
+      ],
+      "body": "11. **T50.11 — CF↔agent table parity and notation reconciliation (decide and land)**\n\n    Brief: Two independent CF→agent tables exist — TS `AGENT_CF` (`Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts`) and Rust `cf_to_agent` (`Body/S/S0/epi-cli/src/agent/vak.rs`) — and they can drift. Add a cross-language parity test binding them, and reconcile the two live notation divergences by deciding and landing (not carrying both): Nous is canonically `(00/00)` (code wins over the skills' `(0000)`); Lachesis host-CF is reconciled to a single canonical value across the anima-orchestration skill and `MOIRAI_HOST_CF`. Fix the wrong side in code and skill together.\n    Build: a parity test over `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` and `Body/S/S0/epi-cli/src/agent/vak.rs`; corrected notation in `.claude/skills/anima-orchestration/SKILL.md` + `.claude/skills/vak-coordinate-frame/SKILL.md` to match.\n    Verify: real behavioral/live-wire proof per Track 00 — the parity test passes across TS+Rust; both tables and the skills agree on every CF→agent binding. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.12",
+      "trackId": "50",
+      "tranche": "T50.12",
+      "title": "Mercurius ELO trial on run completion: close the production-caller gap",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.11"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-elo.ts",
+        "Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-fair-comparison.ts"
+      ],
+      "body": "12. **T50.12 — Mercurius ELO trial on run completion: close the production-caller gap**\n\n    Brief: The ELO system is landed but has no production caller — `mercurius_update_elo` is exercised only by tests. The script + its VAK-instruction trace is exactly the fair-comparable unit the ELO engine assumes: the `EloContextTuple {vak_cp_position, mef_lens, content_class, kairos_window, cfp_thread_type, r_factor_slot}` derives mechanically from the trace, so Moirai fair-comparison (`Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-fair-comparison.ts`) has a principled \"same matchup\" key and Janus (`janus-threshold.ts`) can threshold the delta. Wire run-completion → log a Mercurius trial and update ELO through the guardian split.\n    Build: completion hook in the executor → `Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-elo.ts` `updateRating` + `anansi-elo-index.ts` context key; persist to the `mercurius_elo_ratings` / `mercurius_trial_log` / `moirai_comparison_cache` tables (`elo-runtime.sql`).\n    Verify: real behavioral/live-wire proof per Track 00 — completing an orchestration logs a trial; a second comparable run updates ELO; the fair-comparison and Janus gates are honored. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.13",
+      "trackId": "50",
+      "tranche": "T50.13",
+      "title": "`portal.vak_eval` score event: render and evaluate the run against the derived music (implement DR-VAK-6)",
+      "effort": "implement DR-VAK-6",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.12"
+      ],
+      "writeScopes": [
+        "Body/S/S0/portal-core/src/kernel/projections/diatonic.rs",
+        "Idea/Bimba/Seeds/M/M5'/ql-musical-derivation-v3.md"
+      ],
+      "body": "13. **T50.13 — `portal.vak_eval` score event: render and evaluate the run against the derived music (implement DR-VAK-6)**\n\n    Brief: Implement the `portal.vak_eval` event (DR-VAK-6, proposed by the Architect for exactly this). It lifts the run's VAK-instruction trace and its `MathemeDiatonicContext` reading into an evaluable score event — the run rendered *against* the already-derived v3 musical structure, not a re-derivation. The music is the whole system, not a single tonic: `mef_lens` is the scale-beneath, the CF-at-tonic is the mode (the 12×7 = 84 mode-tonic landscape), on the 720° double-cover topology that QL/MEF and therefore the music inhabit. This tranche renders and evaluates; the derivation in `Idea/Bimba/Seeds/M/M5'/ql-musical-derivation-v3.md` is reference law, untouched.\n    Build: extend `Body/S/S0/portal-core/src/kernel/projections/diatonic.rs` to read a trace into a tonal reading; emit `portal.vak_eval` via the portal event surface; expose the gateway route; unblock Track 36 (`vakLevel`/`m0Address` consumers) and Track 38's DR-VAK-6 dependency.\n    Verify: real behavioral/live-wire proof per Track 00 — running a score emits `vak_eval` carrying the trace's diatonic/tonal reading, evaluable over the gateway. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.14",
+      "trackId": "50",
+      "tranche": "T50.14",
+      "title": "Execution-trace capture as the ELO/ML training substrate (epii-on-#3 program-synthesis feed)",
+      "effort": "epii-on-#3 program-synthesis feed",
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.13"
+      ],
+      "writeScopes": [
+        "Body/S/S3",
+        "Body/S/S3/gateway/src/transcripts.rs",
+        "Body/S/S5/epii-autoresearch-core",
+        "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation"
+      ],
+      "body": "14. **T50.14 — Execution-trace capture as the ELO/ML training substrate (epii-on-#3 program-synthesis feed)**\n\n    Brief: The deterministic script + VAK trace replaces the compounding JSON `ToolCallObserved` staircase as the unit fed to learning. It is replayable and dense (the operation over a fixed vocabulary, not accreted stdout), which is what the Mahamaya on-#3 capacity already prescribes: a typed program-synthesis space scored by a deterministic reward. Capture the trace in that form and route it to the existing distillation surfaces.\n    Build: emit the deterministic trace from the executor into `Body/S/S3/gateway/src/transcripts.rs`; feed `Body/S/S5/epii-autoresearch-core` `aeon_eval.rs` → `AeonEvalMetrics`; deposit to Graphiti episodic via `aletheia_session_promote` (`Body/S/S3` graphiti-runtime `session_memory_deposit`); emit a distillation JSONL row for `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation` (DPO pairs come from the ELO trials of T50.12).\n    Verify: real behavioral/live-wire proof per Track 00 — a completed orchestration produces a deterministic trace that feeds `aeon_eval` and a distillation JSONL row; replay reproduces the metrics. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.15",
+      "trackId": "50",
+      "tranche": "T50.15",
+      "title": "End-to-end acceptance: JSON→TS orchestration, nested, gated, scored, ELO-updated",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.14"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/S4-4p-anima/tests/**"
+      ],
+      "body": "15. **T50.15 — End-to-end acceptance: JSON→TS orchestration, nested, gated, scored, ELO-updated**\n\n    Brief: One live-wire acceptance run exercising the whole path: an Anima orchestration originated in `(00/00)`, composed across the six coordinates with CP-nesting, executed through the unified seam spawning child pi's, gated by `tilldone`, producing a persisted score, a `portal.vak_eval` event, a Mercurius ELO trial, and a deterministic training trace — with the token cost measured against the equivalent JSON staircase.\n    Build: acceptance harness under `Body/S/S4/ta-onta/S4-4p-anima/tests/`, driving a spawned gateway and capturing frames.\n    Verify: real behavioral/live-wire proof per Track 00 — the full path is green end-to-end in one run, with the captured score, `vak_eval`, ELO trial, trace, and token delta all present in fresh output. verifier ≠ closer; evidence = fresh command output."
+    },
+    {
+      "id": "50.T50.16",
+      "trackId": "50",
+      "tranche": "T50.16",
+      "title": "Canon write-back: S4-SPEC + `vak-coordinate-frame` + `anima-orchestration` skills updated to the script paradigm",
+      "effort": null,
+      "file": "50-code-mode-orchestration.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+      "dependsOn": [
+        "50.T50.15"
+      ],
+      "writeScopes": [
+        ".claude/skills/anima-orchestration/SKILL.md",
+        ".claude/skills/vak-coordinate-frame/SKILL.md",
+        "Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S4/S4-SPEC.md"
+      ],
+      "body": "16. **T50.16 — Canon write-back: S4-SPEC + `vak-coordinate-frame` + `anima-orchestration` skills updated to the script paradigm**\n\n    Brief: Harmonise the owning canon so the JSON→TS orchestration paradigm is the documented operative shape, per SEED-HARMONISATION-PROTOCOL: `[[S4-SPEC]]` names the orchestration-run surface and the two tiers; the `vak-coordinate-frame` skill documents the six-coordinate scripting language and CP-nesting; the `anima-orchestration` skill documents script authoring, the `(00/00)`→score lifecycle, and the reconciled CF notation; the S4-4p-anima DOX is updated.\n    Build: `Idea/Bimba/Seeds/S/S4/S4-SPEC.md` + `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md`, `.claude/skills/vak-coordinate-frame/SKILL.md`, `.claude/skills/anima-orchestration/SKILL.md`, `Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md`.\n    Verify: the SEED-HARMONISATION adversarial gate passes; the skills and S4-SPEC match the landed code (cite the T50.15 acceptance run). verifier ≠ closer; evidence = fresh command output."
     }
   ]
 }
