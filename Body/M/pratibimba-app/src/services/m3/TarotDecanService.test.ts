@@ -45,7 +45,7 @@ const COMPLETE_ARTIFACT = {
     decanIndex: 12,
     zodiacSign: 9, // Capricorn
     rulingPlanet: 3,
-    elementId: 1, // Earth — the triplicity element of Capricorn, canonical-B
+    elementId: 1, // Earth — Capricorn's triplicity element, alchemical register
     chakraId: 4,
     bodyZones: ['throat', 'thyroid, neck'],
     decanBodyPart: 'neck',
@@ -64,7 +64,7 @@ describe('TarotDecanService.resolveChain', () => {
         expect(resolved.decanIndex).toBe(12);
         expect(resolved.zodiacSign).toBe(9);
         expect(resolved.rulingPlanet).toBe(3);
-        expect(resolved.elementId).toBe(1); // Earth (canonical-B), matching Capricorn
+        expect(resolved.elementId).toBe(1); // Earth, matching Capricorn's triplicity
         expect(resolved.chakraId).toBe(4);
         expect(resolved.bodyZones).toEqual(['throat', 'thyroid, neck']);
         expect(resolved.decanBodyPart).toBe('neck');
@@ -100,10 +100,10 @@ describe('TarotDecanService.resolveChain', () => {
     });
 
     it('refuses a chain whose element is not the triplicity element of its sign', async () => {
-        // Capricorn (9) is Earth = 1 in canonical-B. Anything else is either a
-        // wrong value or a scheme-A id that slipped across the boundary — the
-        // exact failure a bare `elementId` cannot show. Honest-pending, not a
-        // confidently wrong element.
+        // Capricorn (9) is Earth = 1 in the alchemical register. Anything else
+        // is either a wrong value or a Mahābhūta-register id that slipped across
+        // the boundary — the exact failure a bare `elementId` cannot show.
+        // Honest-pending, not a confidently wrong element.
         for (const wrong of [0, 2, 3, 4, 5]) {
             const service = new TarotDecanService(
                 bridgeReturning({ ...COMPLETE_ARTIFACT, elementId: wrong })
@@ -133,8 +133,8 @@ describe('TarotDecanService.resolveChain', () => {
 describe('elementForAspect is withdrawn (DR-L2-ASPECT-1)', () => {
     it('no longer exposes an aspect→element assignment', () => {
         // An aspect carries an elemental RELATION, not an element, and the
-        // element ordering is L2' canon — neither belongs to a tarot-decan
-        // service. Both now live in `src/engine/canonicalElement.ts`.
+        // element registers belong to their M2 sub-coordinates — neither belongs
+        // to a tarot-decan service. Both live in `src/engine/elementRegisters.ts`.
         const service = new TarotDecanService(bridgeThrowing()) as unknown as Record<string, unknown>;
         expect(service.elementForAspect).toBeUndefined();
     });

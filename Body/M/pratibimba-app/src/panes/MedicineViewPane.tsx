@@ -27,7 +27,7 @@ import {
 // the substrate normalises it (`canonical_from_m2_tattva`), so these are the
 // canonical names, NOT the tattva ones used on the planet/chakra scene path.
 // Only the operative quartet appears: a chakra's dominant element is never Aether
-// or Salt. See `engine/canonicalElement.ts` + DR-L2-ASPECT-1.
+// or Salt. See `engine/elementRegisters.ts` + DR-L2-ASPECT-1.
 const ELEMENT_NAMES: Record<number, string> = { 1: 'Earth', 2: 'Water', 3: 'Air', 4: 'Fire' };
 
 export interface MedicineViewPaneProps {

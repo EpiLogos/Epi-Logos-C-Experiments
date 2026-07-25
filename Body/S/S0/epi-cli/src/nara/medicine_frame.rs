@@ -757,16 +757,31 @@ pub static SIGN_ELEMENT: [u8; 12] = [
     2, // 11: Pisces      = Water
 ];
 
-// ─── L2' Canonical Element-ID conversion (Rust mirror of m_canonical.h) ──────
+// ─── M2 element REGISTERS and their correspondences (mirror of m_canonical.h) ─
 //
-// THE bridge canonical is the L2' ordering ("canonical-B"):
-//   0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt.
+// There is no single "element id". Several M2 sub-coordinates carry something
+// called an element and they are DIFFERENT ONTOLOGIES sharing a word, each
+// complete within its owning coordinate:
+//   M2-2 (36 Tattvas) owns the Mahabhuta series (tattvas 31..35, scheme A below)
+//     and the chakra<->tattva yogic body;
+//   M2-1 (MEF) / L2' owns the alchemical sixfold (scheme B), where Salt is a
+//     Tria Prima principle belonging to no other system;
+//   M2-3 (Decans) owns the zodiacal triplicity and the decan<->body-part
+//     Hermetic medical body — a DIFFERENT body ontology from M2-2's.
+// The converters below are therefore CORRESPONDENCES (tradition-bridging claims
+// with content), not casts, and are partial by nature.
+//
+// ON THE WIRE the M-stack serialises in the ALCHEMICAL register (scheme B).
+// That is a serialisation choice — one shape is needed when an element crosses
+// a coordinate boundary — NOT a claim that M2-1's lens governs M2-2 or M2-3.
+// Reframed by DR-L2-ELEM-2 (2026-07-25); `canonical`/`canonical-B` in the names
+// below is historical and means "the alchemical register / the wire encoding".
 //
 // Five distinct element-ID schemes are live across the M-stack (DR-37-3):
 //   (A) m2.h tattva `Element_Id`        — AKASHA=0, VAYU/Air=1, AGNI/Fire=2,
 //                                         APAS/Water=3, PRITHVI/Earth=4
-//   (B) L2' canonical                   — Aether=0, Earth=1, Water=2, Air=3,
-//                                         Fire=4, Salt=5  ← THE bridge target
+//   (B) M2-1/L2' alchemical             — Aether=0, Earth=1, Water=2, Air=3,
+//                                         Fire=4, Salt=5  ← the WIRE encoding
 //   (C) m3.h nucleotide name-binding    — A=Water, T=Fire, C=Earth, G=Air
 //                                         (nucleotide 2-bit: A=0,T=1,C=2,G=3)
 //   (D) m3.h `Clock_Degree_Entry.decan_element`
@@ -775,9 +790,11 @@ pub static SIGN_ELEMENT: [u8; 12] = [
 //   (E) **stale** clock-spec §15.3 A=Fire/T=Earth/C=Air/G=Water — superseded
 //       by the Golden-Dawn/Thoth code binding (scheme C); see DR-37-5.
 //
-// Every element crossing the M2↔M3 boundary MUST be normalized to canonical-B
-// through one of the converters below — no raw element integer crosses the
-// boundary. (DR-37-3 / DR-37-5, Track 37.6 / 37.10.)
+// Every element crossing the M2↔M3 boundary MUST be serialised in the alchemical
+// register through one of the converters below — no register-ambiguous element
+// integer crosses the boundary, because the receiving side cannot tell which
+// register an unlabelled id came from. (DR-37-3 / DR-37-5, Track 37.6 / 37.10;
+// reframed by DR-L2-ELEM-2.)
 
 /// Convert an m2.h `Element_Id` tattva enum (scheme A — AKASHA=0, VAYU/Air=1,
 /// AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4) into the L2' canonical-B ID
@@ -800,8 +817,10 @@ pub const fn canonical_from_m2_tattva(tattva: u8) -> u8 {
 }
 
 /// Honest-name alias retained for back-compat: scheme A was historically — and
-/// inaccurately — called the "medicine.rs legacy" ordering, but it IS the m2.h
-/// tattva `Element_Id` enum. Prefer [`canonical_from_m2_tattva`]. (DR-37-10.)
+/// inaccurately — called the "medicine.rs legacy" ordering. It IS the m2.h
+/// tattva `Element_Id` enum, which is M2-2's Mahabhuta series (tattvas 31..35,
+/// per m2.c "Mahabhutas — the 5 elements") — a coordinate-owned register, not a
+/// legacy accident. Prefer [`canonical_from_m2_tattva`]. (DR-37-10, DR-L2-ELEM-2.)
 #[inline]
 pub const fn canonical_from_medicine_rs_legacy(legacy: u8) -> u8 {
     canonical_from_m2_tattva(legacy)

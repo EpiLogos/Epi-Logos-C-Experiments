@@ -12,7 +12,7 @@
  *   element identity, Keplerian data — all profile-only inputs.
  */
 
-import { TATTVA_ELEMENT_NAMES } from './canonicalElement';
+import { MAHABHUTA_NAMES } from './elementRegisters';
 import { ELEMENT_COLOURS, LivePlanet, PLANET_ORDER } from './cosmicMath';
 import { inkDim } from '../ui/tokens';
 
@@ -31,14 +31,15 @@ export const ZODIAC_NAMES: readonly string[] = [
 ];
 
 /**
- * SCHEME A (m2.h tattva `Element_Id`) element-id → name — the kernel
- * M2_PLANET_LUT colour-binary identity, which carries the tattva ordering.
- * Deliberately NOT the canonical [[L2']] names (Aether/Earth/Water/Air/Fire/Salt);
- * a canonical-B id must be converted with `m2ElementIdFromCanonical` before it is
- * indexed here. Sourced from `canonicalElement.TATTVA_ELEMENT_NAMES` so the two
- * schemes are named in one place. See DR-L2-ASPECT-1.
+ * [[M2-2]] MAHĀBHŪTA REGISTER element-id → name — the kernel
+ * M2_PLANET_LUT colour-binary identity, carrying the tattva series (31..35).
+ * Deliberately NOT the alchemical names (Aether/Earth/Water/Air/Fire/Salt); a
+ * value in the alchemical register must be converted with
+ * `mahabhutaFromAlchemical` before it is indexed here. Sourced from
+ * `elementRegisters.MAHABHUTA_NAMES` so every register is named in one place.
+ * See DR-L2-ELEM-2.
  */
-export const ELEMENT_NAMES: readonly string[] = TATTVA_ELEMENT_NAMES;
+export const ELEMENT_NAMES: readonly string[] = MAHABHUTA_NAMES;
 
 const DECAN_ROMAN = ['I', 'II', 'III'] as const;
 
@@ -81,7 +82,7 @@ export function planetTooltip(live: LivePlanet): string {
     return parts.join(' — ');
 }
 
-/** CSS colour for a SCHEME-A kernel element id (mirrors the scene's ELEMENT_COLOURS). */
+/** CSS colour for a Mahābhūta-register element id (mirrors the scene's ELEMENT_COLOURS). */
 export function elementCssColour(elementId: number | undefined): string {
     const hex = ELEMENT_COLOURS[elementId ?? -1];
     return typeof hex === 'number' ? `#${hex.toString(16).padStart(6, '0')}` : inkDim;

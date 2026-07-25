@@ -1,35 +1,47 @@
 /**
- * m_canonical.h — L2' Canonical Element-ID Harmonisation (cross-M-stack)
+ * m_canonical.h — M2 element REGISTERS and the correspondences between them
  *
- * THE element-bearing lens is L2' (Idea/Bimba/World/L2'.md). Its six inner
- * positions define the ONE authoritative element ordering for the entire
- * Epi-Logos system:
+ * ─────────────────────────────────────────────────────────────────────────────
+ * THERE IS NO SINGLE "ELEMENT ID". Several M2 sub-coordinates carry something
+ * called an element, and they are DIFFERENT ONTOLOGIES sharing an English word —
+ * not one thing in several encodings. Each register is complete and correct
+ * within its owning coordinate:
  *
- *   0 = AETHER  (L2-0' — Quintessence / Prima Materia)
- *   1 = EARTH   (L2-1' — Nigredo / Fixed Principle)
- *   2 = WATER   (L2-2' — Solutio / Dissolving)
- *   3 = AIR     (L2-3' — Sublimatio / Volatile)
- *   4 = FIRE    (L2-4' — Calcinatio / Transformative Heat)
- *   5 = SALT    (L2-5' — Sal / Diamond Body)  [Tria Prima body-principle]
+ *   M2-2 (36 Tattvas)  — the MAHABHUTA series, tattvas 31..35 (see m2.c:
+ *                        "Mahabhutas — the 5 elements"): AKASHA=0, VAYU=1,
+ *                        AGNI=2, APAS=3, PRITHVI=4. Its order is Saiva
+ *                        emanation — space densifying to earth. This register
+ *                        is `tattva_index - 31`; it is NOT a legacy ordering.
+ *                        Also owns the chakra<->tattva (yogic) body.
+ *   M2-1 (MEF) / L2'   — the ALCHEMICAL sixfold: AETHER=0, EARTH=1, WATER=2,
+ *                        AIR=3, FIRE=4, SALT=5. Its order is the opus
+ *                        (nigredo/solutio/sublimatio/calcinatio), and SALT is a
+ *                        Tria Prima principle belonging to no other system.
+ *                        L2' is ONE lens-family inside M2-1's mef_lenses[12][6].
+ *   M2-3 (Decans)      — the zodiacal TRIPLICITY, four operative elements over
+ *                        twelve signs, Quintessence as the #2-3-5/0 sentinel.
+ *                        Also owns the decan<->body-part (Hermetic medical)
+ *                        body — a DIFFERENT body ontology from M2-2's.
+ *   m3.h clock         — `Clock_Degree_Entry.decan_element`, the M3 clock's own.
+ *   m4.h nucleotide    — A/T/C/G reaching element via the throughline.
  *
- * Indices 1-4 (EARTH, WATER, AIR, FIRE) are the operative quartet — the four
- * classical elements that participate in elemental balance / nucleotide work.
- * AETHER (0) is the pre-elemental ground; SALT (5) is the crystallised return.
+ * So the mappings below are CORRESPONDENCES — tradition-bridging claims with
+ * content — not casts. AKASHA <-> AETHER asserts something. SALT has no
+ * mahabhuta counterpart not because a mapping is "lossy" but because SALT is
+ * not a mahabhuta at all; the Mahabhuta series is not missing a member, it is a
+ * different system. Every converter here is therefore partial by nature and
+ * returns M_CANONICAL_ELEMENT_INVALID where no counterpart exists.
  *
- * Historically four distinct legacy orderings accreted across the stack:
+ * ON THE WIRE. The M-stack serialises elements in the ALCHEMICAL register when
+ * they cross a coordinate boundary. That is a SERIALISATION CHOICE — one shape
+ * is needed on the wire and this is the one that landed — and NOT a claim that
+ * M2-1's lens governs M2-2's tattvas or M2-3's triplicities. The `Canonical_*`
+ * symbol names below are historical: read them as "the alchemical register /
+ * the wire encoding", never as "the canonical element".
  *
- *   - m4.h legacy:        WATER=0, FIRE=1, EARTH=2, AIR=3        (nucleotide order)
- *   - medicine.rs legacy: AKASHA=0, AIR=1, FIRE=2, WATER=3, EARTH=4
- *                         (== m2.h Element_Id; emitted by the kairos python adapter)
- *   - m2-3 Bimba branch:  0=Aether, 1=Fire, 2=Earth, 3=Air, 4=Water, 5=Salt
- *                         (the #2-3-{1..4} triplicity coordinate convention)
- *   - nucleotide:         A, T, C, G  (M3_NUC_*) → element via the throughline
- *
- * This header is the single point of truth that reconciles every one of them
- * to the L2' canonical ordering. Conversions are pure, total mappings; values
- * with no counterpart in a target ordering return M_CANONICAL_ELEMENT_INVALID.
- *
- * Task: 05.T5.16 — L2' canonical element-ID harmonisation across M-stack.
+ * Task: 05.T5.16 (harmonisation) — reframed by DR-L2-ELEM-2 (2026-07-25), which
+ * retired the global-primacy reading. See Idea/Bimba/World/L2'.md.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 
 #ifndef M_CANONICAL_H
@@ -39,7 +51,8 @@
 #include <stdbool.h>
 
 /* ===================================================================
- * THE CANONICAL ELEMENT IDS — L2' inner-position ordering
+ * THE ALCHEMICAL REGISTER (M2-1 / L2' inner-position ordering).
+ * Also the wire encoding — a serialisation choice, not a primacy claim.
  * =================================================================== */
 
 typedef enum {
@@ -67,7 +80,7 @@ static inline bool m_canonical_is_operative(uint8_t elem) {
 }
 
 /* ===================================================================
- * NUCLEOTIDE → CANONICAL ELEMENT (the Elemental Throughline)
+ * NUCLEOTIDE → ALCHEMICAL REGISTER (the Elemental Throughline)
  *
  * A=Water, T=Fire, C=Earth, G=Air. Nucleotide arg uses M3_NUC_* values
  * (A=0, T=1, C=2, G=3). Implemented as a function-like macro so it yields
@@ -82,7 +95,7 @@ static inline bool m_canonical_is_operative(uint8_t elem) {
                    (uint8_t)M_CANONICAL_ELEMENT_INVALID)
 
 /* ===================================================================
- * m4.h LEGACY ORDERING  ⇄  CANONICAL
+ * m4.h NUCLEOTIDE-ORDER REGISTER  ⇄  ALCHEMICAL
  *   legacy: WATER=0, FIRE=1, EARTH=2, AIR=3
  * =================================================================== */
 
@@ -107,9 +120,11 @@ static inline uint8_t m_canonical_to_m4_h_legacy(uint8_t canonical) {
 }
 
 /* ===================================================================
- * medicine.rs LEGACY ORDERING  ⇄  CANONICAL
- *   legacy (== m2.h Element_Id): AKASHA=0, AIR=1, FIRE=2, WATER=3, EARTH=4
- *   (this is the ordering the kairos python adapter emits)
+ * M2-2 MAHABHUTA REGISTER  ⇄  ALCHEMICAL (a correspondence, not a cast)
+ *   mahabhuta (== m2.h Element_Id, tattvas 31..35):
+ *     AKASHA=0, VAYU/AIR=1, AGNI/FIRE=2, APAS/WATER=3, PRITHVI/EARTH=4
+ *   (also the ordering the kairos python adapter emits)
+ *   The `medicine_rs_legacy` names are historical — this is M2-2's own series.
  * =================================================================== */
 
 static inline uint8_t m_canonical_from_medicine_rs_legacy(uint8_t legacy) {
@@ -135,7 +150,7 @@ static inline uint8_t m_canonical_to_medicine_rs_legacy(uint8_t canonical) {
 }
 
 /* ===================================================================
- * M2-3 BIMBA BRANCH ORDERING  ⇄  CANONICAL
+ * M2-3 BIMBA BRANCH ORDERING  ⇄  ALCHEMICAL
  *   branch: 0=Aether, 1=Fire, 2=Earth, 3=Air, 4=Water, 5=Salt
  *   (the #2-3-{1..4} triplicity coordinate convention — full bijection)
  *

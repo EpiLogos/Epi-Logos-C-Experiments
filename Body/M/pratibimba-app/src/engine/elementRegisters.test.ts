@@ -13,108 +13,108 @@ import { describe, expect, it } from 'vitest';
 import { aspectBetween, ASPECT_KINDS } from './clockFieldOverlay';
 import { ELEMENT_COLOURS } from './cosmicMath';
 import {
-    CANONICAL_ELEMENT_INVALID,
-    CANONICAL_ELEMENT_NAMES,
-    CanonicalElement,
-    canonicalElementName,
-    canonicalFromM2_3Branch,
-    canonicalFromM2ElementId,
+    ELEMENT_REGISTER_INVALID,
+    ALCHEMICAL_ELEMENT_NAMES,
+    AlchemicalElement,
+    alchemicalElementName,
+    alchemicalFromTriplicityBranch,
+    alchemicalFromMahabhuta,
     elementalRelationBetweenDegrees,
     elementalRelationOfAspect,
-    elementOfDegree,
-    elementOfSign,
+    triplicityOfDegree,
+    triplicityOfSign,
     isOperativeElement,
-    m2ElementIdFromCanonical,
+    mahabhutaFromAlchemical,
     signOfDegree,
-    TATTVA_ELEMENT_NAMES
-} from './canonicalElement';
+    MAHABHUTA_NAMES
+} from './elementRegisters';
 
 /** Sign indices of the four classical triplicities (Aries = 0 … Pisces = 11). */
 const TRIPLICITIES = [
-    { element: CanonicalElement.FIRE, signs: [0, 4, 8] }, // Aries, Leo, Sagittarius
-    { element: CanonicalElement.EARTH, signs: [1, 5, 9] }, // Taurus, Virgo, Capricorn
-    { element: CanonicalElement.AIR, signs: [2, 6, 10] }, // Gemini, Libra, Aquarius
-    { element: CanonicalElement.WATER, signs: [3, 7, 11] } // Cancer, Scorpio, Pisces
+    { element: AlchemicalElement.FIRE, signs: [0, 4, 8] }, // Aries, Leo, Sagittarius
+    { element: AlchemicalElement.EARTH, signs: [1, 5, 9] }, // Taurus, Virgo, Capricorn
+    { element: AlchemicalElement.AIR, signs: [2, 6, 10] }, // Gemini, Libra, Aquarius
+    { element: AlchemicalElement.WATER, signs: [3, 7, 11] } // Cancer, Scorpio, Pisces
 ] as const;
 
-describe('L2 canonical element ordering', () => {
-    it('is the six-position L2 ordering, and it carries Salt', () => {
-        expect(CanonicalElement.AETHER).toBe(0);
-        expect(CanonicalElement.EARTH).toBe(1);
-        expect(CanonicalElement.WATER).toBe(2);
-        expect(CanonicalElement.AIR).toBe(3);
-        expect(CanonicalElement.FIRE).toBe(4);
-        expect(CanonicalElement.SALT).toBe(5);
-        expect(Object.keys(CANONICAL_ELEMENT_NAMES)).toHaveLength(6);
-        expect(CANONICAL_ELEMENT_NAMES[CanonicalElement.SALT]).toBe('Salt');
+describe('the [[M2-1]]/L2 alchemical register', () => {
+    it('is the six-position alchemical ordering, and it carries Salt', () => {
+        expect(AlchemicalElement.AETHER).toBe(0);
+        expect(AlchemicalElement.EARTH).toBe(1);
+        expect(AlchemicalElement.WATER).toBe(2);
+        expect(AlchemicalElement.AIR).toBe(3);
+        expect(AlchemicalElement.FIRE).toBe(4);
+        expect(AlchemicalElement.SALT).toBe(5);
+        expect(Object.keys(ALCHEMICAL_ELEMENT_NAMES)).toHaveLength(6);
+        expect(ALCHEMICAL_ELEMENT_NAMES[AlchemicalElement.SALT]).toBe('Salt');
     });
 
     it('treats only the quartet 1-4 as operative — Aether and Salt frame it', () => {
-        expect(isOperativeElement(CanonicalElement.AETHER)).toBe(false);
-        expect(isOperativeElement(CanonicalElement.SALT)).toBe(false);
+        expect(isOperativeElement(AlchemicalElement.AETHER)).toBe(false);
+        expect(isOperativeElement(AlchemicalElement.SALT)).toBe(false);
         for (const element of [
-            CanonicalElement.EARTH,
-            CanonicalElement.WATER,
-            CanonicalElement.AIR,
-            CanonicalElement.FIRE
+            AlchemicalElement.EARTH,
+            AlchemicalElement.WATER,
+            AlchemicalElement.AIR,
+            AlchemicalElement.FIRE
         ]) {
             expect(isOperativeElement(element)).toBe(true);
         }
     });
 });
 
-describe('legacy ordering conversions', () => {
-    it('maps m2.h Element_Id to canonical and back for every value it carries', () => {
+describe('correspondences between registers (claims, not casts)', () => {
+    it('maps Mahabhuta to alchemical and back for every member it carries', () => {
         // AKASHA=0, VAYU/Air=1, AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4
-        expect(canonicalFromM2ElementId(0)).toBe(CanonicalElement.AETHER);
-        expect(canonicalFromM2ElementId(1)).toBe(CanonicalElement.AIR);
-        expect(canonicalFromM2ElementId(2)).toBe(CanonicalElement.FIRE);
-        expect(canonicalFromM2ElementId(3)).toBe(CanonicalElement.WATER);
-        expect(canonicalFromM2ElementId(4)).toBe(CanonicalElement.EARTH);
+        expect(alchemicalFromMahabhuta(0)).toBe(AlchemicalElement.AETHER);
+        expect(alchemicalFromMahabhuta(1)).toBe(AlchemicalElement.AIR);
+        expect(alchemicalFromMahabhuta(2)).toBe(AlchemicalElement.FIRE);
+        expect(alchemicalFromMahabhuta(3)).toBe(AlchemicalElement.WATER);
+        expect(alchemicalFromMahabhuta(4)).toBe(AlchemicalElement.EARTH);
         for (let legacy = 0; legacy <= 4; legacy++) {
-            expect(m2ElementIdFromCanonical(canonicalFromM2ElementId(legacy))).toBe(legacy);
+            expect(mahabhutaFromAlchemical(alchemicalFromMahabhuta(legacy))).toBe(legacy);
         }
     });
 
-    it('refuses rather than inventing: m2.h has no Salt, so the mapping is lossy', () => {
-        expect(m2ElementIdFromCanonical(CanonicalElement.SALT)).toBe(CANONICAL_ELEMENT_INVALID);
-        expect(canonicalFromM2ElementId(5)).toBe(CANONICAL_ELEMENT_INVALID);
-        expect(canonicalFromM2ElementId(-1)).toBe(CANONICAL_ELEMENT_INVALID);
+    it('refuses rather than inventing: Salt is no Mahabhuta, so it has no counterpart', () => {
+        expect(mahabhutaFromAlchemical(AlchemicalElement.SALT)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(alchemicalFromMahabhuta(5)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(alchemicalFromMahabhuta(-1)).toBe(ELEMENT_REGISTER_INVALID);
     });
 
     it('maps the M2-3 branch ordering as a full bijection (it does carry Salt)', () => {
-        expect(canonicalFromM2_3Branch(1)).toBe(CanonicalElement.FIRE);
-        expect(canonicalFromM2_3Branch(2)).toBe(CanonicalElement.EARTH);
-        expect(canonicalFromM2_3Branch(3)).toBe(CanonicalElement.AIR);
-        expect(canonicalFromM2_3Branch(4)).toBe(CanonicalElement.WATER);
-        expect(canonicalFromM2_3Branch(0)).toBe(CanonicalElement.AETHER);
-        expect(canonicalFromM2_3Branch(5)).toBe(CanonicalElement.SALT);
-        const mapped = [0, 1, 2, 3, 4, 5].map(canonicalFromM2_3Branch);
+        expect(alchemicalFromTriplicityBranch(1)).toBe(AlchemicalElement.FIRE);
+        expect(alchemicalFromTriplicityBranch(2)).toBe(AlchemicalElement.EARTH);
+        expect(alchemicalFromTriplicityBranch(3)).toBe(AlchemicalElement.AIR);
+        expect(alchemicalFromTriplicityBranch(4)).toBe(AlchemicalElement.WATER);
+        expect(alchemicalFromTriplicityBranch(0)).toBe(AlchemicalElement.AETHER);
+        expect(alchemicalFromTriplicityBranch(5)).toBe(AlchemicalElement.SALT);
+        const mapped = [0, 1, 2, 3, 4, 5].map(alchemicalFromTriplicityBranch);
         expect(new Set(mapped).size).toBe(6);
     });
 });
 
-describe('the two live schemes stay distinguishable', () => {
-    it('names the tattva ordering separately from the canonical one', () => {
-        expect(TATTVA_ELEMENT_NAMES).toEqual(['Akasha', 'Vayu', 'Agni', 'Apas', 'Prithvi']);
-        expect(canonicalElementName(CanonicalElement.WATER)).toBe('Water');
-        // The collision that makes an unmarked id dangerous: id 2 is Water
-        // canonically and Agni/Fire in the tattva ordering.
-        expect(TATTVA_ELEMENT_NAMES[2]).toBe('Agni');
-        expect(canonicalElementName(2)).toBe('Water');
+describe('the registers stay distinguishable', () => {
+    it('names the Mahabhuta register separately from the alchemical one', () => {
+        expect(MAHABHUTA_NAMES).toEqual(['Akasha', 'Vayu', 'Agni', 'Apas', 'Prithvi']);
+        expect(alchemicalElementName(AlchemicalElement.WATER)).toBe('Water');
+        // The collision that makes an unmarked id dangerous: id 2 is Water in
+        // the alchemical register and Agni/Fire in the Mahabhuta register.
+        expect(MAHABHUTA_NAMES[2]).toBe('Agni');
+        expect(alchemicalElementName(2)).toBe('Water');
     });
 
-    it('keeps ELEMENT_COLOURS keyed by scheme A — converting first is required', () => {
-        // Fire is canonical 4 but tattva 2. Looking a canonical id up in the
-        // scene table directly would paint Fire with Prithvi/umber.
-        expect(m2ElementIdFromCanonical(CanonicalElement.FIRE)).toBe(2);
-        expect(ELEMENT_COLOURS[m2ElementIdFromCanonical(CanonicalElement.FIRE)]).toBe(0xd8613c);
-        expect(ELEMENT_COLOURS[CanonicalElement.FIRE]).toBe(0x9b7a4b); // the wrong colour
+    it('keeps ELEMENT_COLOURS keyed by the Mahābhūta register — convert first', () => {
+        // Fire is 4 in the alchemical register but 2 as a Mahabhuta. Looking an
+        // alchemical id up in the scene table paints Fire with Prithvi/umber.
+        expect(mahabhutaFromAlchemical(AlchemicalElement.FIRE)).toBe(2);
+        expect(ELEMENT_COLOURS[mahabhutaFromAlchemical(AlchemicalElement.FIRE)]).toBe(0xd8613c);
+        expect(ELEMENT_COLOURS[AlchemicalElement.FIRE]).toBe(0x9b7a4b); // the wrong colour
     });
 
-    it('names an unknown canonical id as null rather than guessing', () => {
-        expect(canonicalElementName(6)).toBeNull();
-        expect(canonicalElementName(CANONICAL_ELEMENT_INVALID)).toBeNull();
+    it('names an unknown alchemical id as null rather than guessing', () => {
+        expect(alchemicalElementName(6)).toBeNull();
+        expect(alchemicalElementName(ELEMENT_REGISTER_INVALID)).toBeNull();
     });
 });
 
@@ -122,21 +122,21 @@ describe('the triplicity identity — element_of(sign) = sign mod 4', () => {
     it('reproduces the four classical triplicities exactly', () => {
         for (const { element, signs } of TRIPLICITIES) {
             for (const sign of signs) {
-                expect(elementOfSign(sign)).toBe(element);
+                expect(triplicityOfSign(sign)).toBe(element);
             }
         }
     });
 
     it('assigns every sign an operative element and nothing else', () => {
         for (let sign = 0; sign < 12; sign++) {
-            expect(isOperativeElement(elementOfSign(sign))).toBe(true);
+            expect(isOperativeElement(triplicityOfSign(sign))).toBe(true);
         }
     });
 
     it('refuses out-of-range signs instead of wrapping silently', () => {
-        expect(elementOfSign(12)).toBe(CANONICAL_ELEMENT_INVALID);
-        expect(elementOfSign(-1)).toBe(CANONICAL_ELEMENT_INVALID);
-        expect(elementOfSign(1.5)).toBe(CANONICAL_ELEMENT_INVALID);
+        expect(triplicityOfSign(12)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(triplicityOfSign(-1)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(triplicityOfSign(1.5)).toBe(ELEMENT_REGISTER_INVALID);
     });
 
     it('reads a degree through its sign, normalising the circle', () => {
@@ -145,8 +145,8 @@ describe('the triplicity identity — element_of(sign) = sign mod 4', () => {
         expect(signOfDegree(359.9)).toBe(11); // late Pisces
         expect(signOfDegree(-30)).toBe(11); // wraps backwards
         expect(signOfDegree(390)).toBe(1); // wraps forwards
-        expect(elementOfDegree(0)).toBe(CanonicalElement.FIRE);
-        expect(elementOfDegree(95)).toBe(CanonicalElement.WATER);
+        expect(triplicityOfDegree(0)).toBe(AlchemicalElement.FIRE);
+        expect(triplicityOfDegree(95)).toBe(AlchemicalElement.WATER);
     });
 });
 
@@ -170,20 +170,20 @@ describe('the aspect law — an aspect carries a relation, not an element', () =
     it('reads both elements plus the relation from two degrees', () => {
         // 15° Aries (Fire) trine 15° Leo (Fire) — same triplicity.
         expect(elementalRelationBetweenDegrees(15, 135)).toEqual({
-            elementA: CanonicalElement.FIRE,
-            elementB: CanonicalElement.FIRE,
+            elementA: AlchemicalElement.FIRE,
+            elementB: AlchemicalElement.FIRE,
             relation: 'same-element'
         });
         // 15° Aries (Fire) opposite 15° Libra (Air) — polar complement.
         expect(elementalRelationBetweenDegrees(15, 195)).toEqual({
-            elementA: CanonicalElement.FIRE,
-            elementB: CanonicalElement.AIR,
+            elementA: AlchemicalElement.FIRE,
+            elementB: AlchemicalElement.AIR,
             relation: 'complementary-pair'
         });
         // 15° Aries (Fire) square 15° Cancer (Water) — cross-pair tension.
         expect(elementalRelationBetweenDegrees(15, 105)).toEqual({
-            elementA: CanonicalElement.FIRE,
-            elementB: CanonicalElement.WATER,
+            elementA: AlchemicalElement.FIRE,
+            elementB: AlchemicalElement.WATER,
             relation: 'cross-pair'
         });
     });

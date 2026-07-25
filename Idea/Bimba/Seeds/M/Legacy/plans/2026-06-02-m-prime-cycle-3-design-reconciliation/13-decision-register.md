@@ -2162,3 +2162,29 @@ The defect was that **the boundary was unmarked**: a bare `elementId` gave no re
 - **Rust doc lie fixed:** `portal-core/src/aspect.rs::element_name` was documented "Canonical lowercase element name" but returns scheme A, while `nara::medicine_frame::element_name` — same name, different module — is genuinely canonical-B. Same honesty correction DR-37-10 applied to the `canonical_from_medicine_rs_legacy` alias.
 
 **Still deliberately unchanged.** `ELEMENT_COLOURS` and `solarSystem.ELEMENT_NAMES` remain keyed by scheme A. Re-keying them in place would silently repaint and relabel every live scene surface; the correct crossing is `m2ElementIdFromCanonical` at the call site, and a test now pins that (looking a canonical Fire up directly returns Prithvi/umber — the wrong colour).
+
+---
+
+## DR-L2-ELEM-2 — element registers are coordinate-owned; a common wire encoding is not ontological primacy
+
+**Status:** VALIDATED · **Raised:** 2026-07-25 · **Validated:** 2026-07-25 · **By:** user (direct instruction) · **Domain:** M2-1 / M2-2 / M2-3 · **Supersedes the global-primacy reading in:** 05.T5.16, DR-37-3, [[L2']] §"Canonical Element IDs"
+
+**The objection (Architect).** Why is there a *single* element canon at all, when the Bimba map already structures this precisely? [[L2']] is an MEF lens — and the MEF is [[M2-1]]. The medical body associations have their own specific relations and locations in the M2 branch. Treating one lens inside M2-1 as authority over its siblings inverts the structure.
+
+**Confirmed by the data.** `m2.c` labels the tattva block outright — `/* Mahabhutas — the 5 elements (throughline anchor) */`, tattvas 31–35. So the ordering called "m2.h `Element_Id`", "medicine.rs legacy", or "scheme A" across the stack **is [[M2-2]]'s Mahābhūta series** (`tattva_index − 31`), a coordinate-owned register with its own principle (Śaiva emanation, space densifying to earth) — not a legacy accident. And [[M2-1]] is the MEF itself (`mef_lenses[12][6]`), so L2' is one lens-family inside it. Two *distinct body ontologies* were also being fused as "medicine": the chakra↔tattva yogic body (M2-2) and the decan↔body-part Hermetic medical-astrology body (M2-3).
+
+**Decision.**
+1. **There is no "the" element id.** Each register belongs to its coordinate and is complete there: [[M2-2]] Mahābhūta, [[M2-1]]/L2' alchemical, [[M2-3]] triplicity, plus m3.h's clock register and m4.h's nucleotide order. "Legacy" is retired as a description of any of them.
+2. **Mappings between registers are correspondences — claims with content — not casts.** Ākāśa ↔ Aether asserts something. Salt has no Mahābhūta counterpart because Salt is a Tria Prima principle and not a mahābhūta; the series is not missing a member, it is a different system. Partiality is the correct behaviour, not a shortfall.
+3. **A common wire encoding is retained and is not a primacy claim.** The M-stack keeps serialising in the alchemical register when an element crosses a coordinate boundary, so a receiver can know which register it is reading. That is a serialisation choice. The `Canonical_*` symbols are historical names for it.
+4. **A lens confers a reading, not ownership.** L2' remains THE element-bearing lens — the aperture for reading any coordinate alchemically. It does not own M2-2's mahābhūtas or M2-3's triplicities.
+
+**Landed.**
+- `pratibimba-app/src/engine/canonicalElement.ts` → **`elementRegisters.ts`**, with every export named by owning register: `AlchemicalElement`/`ALCHEMICAL_ELEMENT_NAMES`, `MAHABHUTA_NAMES`/`MAHABHUTA_TATTVA_BASE`, `alchemicalFromMahabhuta`/`mahabhutaFromAlchemical` (documented as correspondences), `alchemicalFromTriplicityBranch`, `triplicityOfSign`/`triplicityOfDegree`, `ELEMENT_REGISTER_INVALID`.
+- Every carrier touchpoint renamed from "scheme A / canonical-B / legacy" to its owning coordinate ([[M2-2]] Mahābhūta register / alchemical register), including the user-visible `M3TranscriptionEngine` label that read `canonical-B:`.
+- `m_canonical.h` and `nara/medicine_frame.rs` reframed: registers named by coordinate, correspondences described as claims, wire encoding distinguished from primacy. Symbols unchanged (no churn); their historical names are annotated.
+- `[[L2']]` canon amended — the "one authoritative element ordering for the entire Epi-Logos system" claim withdrawn in place, with a sibling-registers table and the lens-confers-a-reading distinction.
+
+**Verification.** carrier 1337 unit tests pass / typecheck 0 / build 0; `make test` 60/60 on `m_canonical`; `cargo check` clean for `portal-core` and `epi-cli`.
+
+**Open.** The full version of this — a distinct *type* per register so the compiler refuses a cross-register use, and correspondences held as typed Bimba relations with tradition/provenance rather than as switch statements — is deferred. Also open: whether the medicine pipeline should split its two body ontologies (M2-2 yogic vs M2-3 Hermetic) into separate surfaces rather than one fused "medicine" view.

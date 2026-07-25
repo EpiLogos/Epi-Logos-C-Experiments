@@ -179,7 +179,7 @@ export function M3TranscriptionEngine({
                                     <td data-testid={`m3-transcription-quaternion-${index}`}>
                                         [{degree.quaternion.join(', ')}]
                                     </td>
-                                    <td>canonical-B:{degree.elementCanonical}</td>
+                                    <td>alchemical:{degree.elementCanonical}</td>
                                     <td data-testid={`m3-transcription-class-${index}`}>
                                         {degree.codonClassLabel}
                                     </td>

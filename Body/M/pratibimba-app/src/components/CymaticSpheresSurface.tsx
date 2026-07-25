@@ -60,7 +60,7 @@ function parsePlanet(value: unknown): CymaticPlanetAnchor | null {
         row.degree < 0 ||
         row.degree >= 360 ||
         typeof row.retrograde !== 'boolean' ||
-        !integerIn(row.elementId, 0, 4) || // SCHEME A (M2_PLANET_LUT mirror), not canonical-B
+        !integerIn(row.elementId, 0, 4) || // [[M2-2]] Mahābhūta register (M2_PLANET_LUT mirror)
         row.provenance !== EXPECTED_PLANET_PROVENANCE
     ) {
         return null;
@@ -106,7 +106,8 @@ export function parseCymaticSpheresProjection(
             row.chakraId !== index ||
             typeof row.name !== 'string' ||
             row.name.length === 0 ||
-            // SCHEME A (M2_CHAKRA_LUT mirror; null = 0xff for Ajna/Sahasrara).
+            // [[M2-2]] Mahābhūta register — the chakra↔tattva body
+            // (M2_CHAKRA_LUT mirror; null = 0xff for Ajna/Sahasrara).
             !(row.elementId === null || integerIn(row.elementId, 0, 4)) ||
             !(row.tattvaIndex === null || integerIn(row.tattvaIndex, 0, 35)) ||
             row.meaningId !== 0x0380 + index ||

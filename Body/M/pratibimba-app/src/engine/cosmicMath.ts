@@ -200,19 +200,21 @@ export interface LivePlanet {
 }
 
 /**
- * SCHEME A (m2.h tattva `Element_Id`) → colour-binary hue (Akasha=violet ·
+ * [[M2-2]] MAHĀBHŪTA REGISTER → colour-binary hue (Akasha=violet ·
  * Vayu=cyan · Agni=vermilion · Apas=aquamarine · Prithvi=umber, per
  * M2-ARCHITECTURE §5.3.4). The hue values are renderer choreography; the element
  * id underneath is kernel data (`PLANET_ELEMENT_ID`, the M2_PLANET_LUT mirror, and
  * `CHAKRA_ELEMENT_IDS`, the M2_CHAKRA_LUT mirror) — never a local table of
  * planet→element correspondences.
  *
- * KEYED BY SCHEME A ON PURPOSE — its inputs are kernel LUT mirrors, which carry
- * the tattva ordering. It is NOT the canonical [[L2']] ordering, and it must not
- * be re-keyed in place: that would silently repaint every live surface. A
- * canonical-B id (e.g. `dominantElementId` off the medicine route) must be
- * converted with `m2ElementIdFromCanonical` before it is looked up here.
- * See `engine/canonicalElement.ts` and DR-L2-ASPECT-1.
+ * KEYED BY THE MAHĀBHŪTA REGISTER ON PURPOSE — its inputs are kernel M2 LUT
+ * mirrors, which carry [[M2-2]]'s tattva series (m2.c: "Mahabhutas — the 5
+ * elements", tattvas 31..35). A coordinate-owned register, not a legacy ordering.
+ * It is NOT the alchemical register, and it must not be re-keyed in place: that
+ * would silently repaint every live surface. A value in the alchemical register
+ * (e.g. `dominantElementId` off the medicine route, which the substrate
+ * serialises that way) must be converted with `mahabhutaFromAlchemical` before it
+ * is looked up here. See `engine/elementRegisters.ts` and DR-L2-ELEM-2.
  */
 export const ELEMENT_COLOURS: Readonly<Record<number, number>> = {
     0: 0x8f6fd8, // AKASHA — violet

@@ -11,7 +11,7 @@ function chain(overrides: Partial<TarotDecanChain> = {}): TarotDecanChain {
         decanIndex: 12,
         zodiacSign: 9, // Capricorn
         rulingPlanet: 3,
-        elementId: 1, // Earth — triplicity element of Capricorn, canonical-B
+        elementId: 1, // Earth — Capricorn's triplicity element, alchemical register
         chakraId: 4,
         bodyZones: ['throat', 'neck'],
         decanBodyPart: 'neck',

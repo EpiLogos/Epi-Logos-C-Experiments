@@ -11,12 +11,12 @@
  *   The chain body (codon/decan/planet/element/chakra/bodyZones/decanBodyPart/
  *   decanHerbs) is protected S2 authority read over the bridge — never a renderer LUT.
  *   Also does NOT own the element law or the aspect relation: those are [[L2']]
- *   canon, carried by `src/engine/canonicalElement.ts` (see DR-L2-ASPECT-1).
+ *   canon, carried by `src/engine/elementRegisters.ts` (see DR-L2-ASPECT-1).
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.16 + 24.7.
  */
 
 import type { KernelBridgeCapabilityReceipt } from '../../bridge/types';
-import { elementOfSign } from '../../engine/canonicalElement';
+import { triplicityOfSign } from '../../engine/elementRegisters';
 import { requireNonEmpty, type M3GatewayPort } from './m3GatewayPort';
 
 export const M3_TAROT_DECAN_METHOD = 's2.codon.scalar_ref.read' as const;
@@ -30,13 +30,15 @@ export type TarotSuit = 'wands' | 'cups' | 'swords' | 'pentacles';
 /**
  * The resolved decan-tarot chain. Every numeric field is a protected S2 authority
  * value read over `s2.codon.scalar_ref.read`; the renderer never re-derives any of
- * it. `elementId` is a CANONICAL-B [[L2']] element id (0=Aether, 1=Earth, 2=Water,
- * 3=Air, 4=Fire, 5=Salt) — the chain crosses the M2↔M3 boundary, and the substrate
- * law is that no raw element integer crosses it (DR-37-3/DR-37-10; the converters
- * live in `nara/medicine_frame.rs` and `m_canonical.h`). The 24.7 landing declared
- * this field "canonical m2.h Element_Id", which is a contradiction in terms — m2.h
- * carries the tattva ordering (scheme A), not the canonical one. Body data
- * (`bodyZones`,
+ * it. `elementId` is in the ALCHEMICAL REGISTER ([[M2-1]]/L2': 0=Aether, 1=Earth,
+ * 2=Water, 3=Air, 4=Fire, 5=Salt) — the register the substrate serialises with
+ * when an element crosses the M2↔M3 boundary (DR-37-3/DR-37-10; converters in
+ * `nara/medicine_frame.rs`). That is a WIRE encoding, not a claim that M2-1's lens
+ * governs the decan system: the value itself is [[M2-3]]'s own triplicity element
+ * for `zodiacSign`, which is why the two are cross-checked on parse. The 24.7
+ * landing called this field "canonical m2.h Element_Id" — a contradiction in
+ * terms, since m2.h carries [[M2-2]]'s Mahābhūta series, a different register.
+ * Body data (`bodyZones`,
  * `decanBodyPart`, `decanHerbs`) is resolved in the substrate medicine-frame tables
  * (chakra-body-zone / decan-body-part / decan-herb) and arrives already-materialised
  * — never held as a renderer-local table (24.7 forbidden-import + no-renderer-LUT law).
@@ -48,7 +50,7 @@ export interface TarotDecanChain {
     readonly decanIndex: number; // 0..35; the substrate decan index
     readonly zodiacSign: number; // 0..11
     readonly rulingPlanet: number; // 0..9 (mod-10 planet model)
-    readonly elementId: number; // canonical-B L2' id; always the triplicity element of `zodiacSign`
+    readonly elementId: number; // alchemical register; always `zodiacSign`'s triplicity element
     readonly chakraId: number; // 0..7
     readonly bodyZones: readonly string[]; // substrate chakra-body-zone for this chakra
     readonly decanBodyPart: string; // substrate decan-body-part for this decan
@@ -88,7 +90,7 @@ export function isResolvedChain(
 //      table, and why the type had to invent an 'aspect' aspect-kind.
 //
 // Both now live at their proper owners: the element law and the aspect relation
-// in `src/engine/canonicalElement.ts` (the TS counterpart of m_canonical.h), and
+// in `src/engine/elementRegisters.ts` (the TS counterpart of m_canonical.h), and
 // the real five-member `AspectKind` in `src/engine/clockFieldOverlay.ts`, which
 // ports `m2_aspect_between` verbatim from the C kernel. A tarot-decan service was
 // never the owner of either. Nothing consumed the withdrawn surface.
@@ -221,7 +223,7 @@ function parseChain(card: TarotCardKey, artifact: unknown): TarotDecanChain | nu
     // scheme mismatch is otherwise invisible — a scheme-A id would simply render
     // as the wrong element. Refuse the chain instead, so the surface shows its
     // honest-pending marker rather than a confident wrong answer.
-    if (elementId !== elementOfSign(zodiacSign)) {
+    if (elementId !== triplicityOfSign(zodiacSign)) {
         return null;
     }
     return Object.freeze({

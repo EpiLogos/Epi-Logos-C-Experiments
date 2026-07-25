@@ -15,7 +15,7 @@
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.7.
  */
 
-import { canonicalElementName } from '../engine/canonicalElement';
+import { alchemicalElementName } from '../engine/elementRegisters';
 import {
     cardLabelFromCardKey,
     isResolvedChain,
@@ -149,10 +149,11 @@ function chipsFromChain(chain: TarotDecanChain): ChipModel[] {
         chip('decan', `#${String(chain.decanIndex).padStart(2, '0')}`),
         chip('sign', String(chain.zodiacSign)),
         chip('planet', String(chain.rulingPlanet)),
-        // The element is a canonical-B id; render its NAME. A bare integer is
-        // unreadable AND scheme-ambiguous — "2" is Water canonically and Fire in
-        // the tattva ordering, and the chip gave the reader no way to tell.
-        chip('element', canonicalElementName(chain.elementId) ?? String(chain.elementId)),
+        // Render the element's NAME. A bare integer is unreadable AND
+        // register-ambiguous — "2" is Water in the alchemical register and Agni
+        // (fire) in [[M2-2]]'s Mahābhūta register, and the chip gave the reader
+        // no way to tell which one it was looking at.
+        chip('element', alchemicalElementName(chain.elementId) ?? String(chain.elementId)),
         chip('chakra', String(chain.chakraId)),
         chip('body-zones', chain.bodyZones.join(', '))
     ];
