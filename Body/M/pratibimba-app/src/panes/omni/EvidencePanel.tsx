@@ -21,6 +21,9 @@ import { EvidencePacketView } from './EvidencePacketView';
 import { EvidenceDepositForm } from './evidence/EvidenceDepositForm';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
+import { CROSS_LAYOUT_INTENT_COMMAND } from '../../commands/crossLayoutIntent';
+import { commands } from '../../commands/registry';
+import { useSessionStore, useTickStore } from '../../state/stores';
 
 const MEDIATOR_FILTERS = ['all', 'pi', 'anima', 'aletheia'] as const;
 const PRIVACY_FILTERS: readonly (PrivacyClassKind | 'all')[] = ['all', 'public', 'protected', 'private'];
@@ -66,7 +69,46 @@ export function EvidencePanel({
         patchTab('dispatch-trace', { selectedNodeId: dispatchNodeId });
         selectTab('dispatch-trace');
     };
-    const onOpenToolStream = () => selectTab('tool-stream');
+    // 26.4 cross-link law (15.2): the same record selected in either surface
+    // highlights BOTH. Activating a fold without carrying the record would
+    // strand the user in an unrelated list — so each of these carries it.
+    const onOpenToolStream = (packetId: string) => {
+        const packet = packets.find(entry => entry.id === packetId) ?? null;
+        const firstEvent = packet?.toolStream[0]?.id ?? null;
+        patchTab('tool-stream', { selectedEventId: firstEvent });
+        selectTab('tool-stream');
+    };
+    /** 19.7 close-path: the Review fold IS the contemplation landing surface
+     *  (15.2 — no modal), and it reads the object for the selected review. */
+    const onOpenContemplation = () => {
+        if (selected) {
+            patchTab('review', { selectedReviewId: selected.reviewId });
+        }
+        selectTab('review');
+    };
+    /** 26.14 lives on a face pane, not in this membrane, so it routes over the
+     *  cross-layout intent spine rather than by activating a sibling fold. */
+    const onOpenAxiomTranslation = () => {
+        if (!selected) {
+            return;
+        }
+        const session = useSessionStore.getState();
+        const privacyClass = session.privacyClass;
+        void commands.execute(CROSS_LAYOUT_INTENT_COMMAND, {
+            coordinate: selected.coordinate,
+            artifactUri: null,
+            reviewId: selected.reviewId,
+            dayNow: session.dayNow,
+            sessionKey: session.sessionKey,
+            profileGeneration: useTickStore.getState().generation,
+            privacyClass:
+                privacyClass === 'public' || privacyClass === 'protected' || privacyClass === 'private'
+                    ? privacyClass
+                    : null,
+            requestedExtensionId: 'm5-epii',
+            requestedContributionId: 'axiomTranslation'
+        });
+    };
 
     return (
         <section className="evidence-panel" data-testid="evidence-panel">
@@ -129,6 +171,8 @@ export function EvidencePanel({
                     packet={selected}
                     onOpenDispatchTrace={onOpenDispatchTrace}
                     onOpenToolStream={onOpenToolStream}
+                    onOpenAxiomTranslation={onOpenAxiomTranslation}
+                    onOpenContemplation={onOpenContemplation}
                 />
             )}
         </section>

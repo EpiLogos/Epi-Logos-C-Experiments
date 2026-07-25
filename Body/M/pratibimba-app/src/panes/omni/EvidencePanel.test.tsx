@@ -114,3 +114,94 @@ describe('EvidencePanel', () => {
         expect(readOmniPanelSessionState().perTabState['dispatch-trace'].selectedNodeId).toBe('node-1');
     });
 });
+
+describe('26.T26.4 — the evidence fold lands its close-paths', () => {
+    /** Select the only packet so the full view renders. */
+    function renderWithSelection(packet: MediatedRunEvidencePacket) {
+        render(<EvidencePanel packets={[packet]} />);
+        fireEvent.click(screen.getByTestId('evidence-packet-row'));
+    }
+
+    it('offers the axiom-translation inspector ONLY when the run translated axioms', () => {
+        renderWithSelection(fixture());
+        expect(screen.queryByTestId('evidence-open-axiom')).toBeNull();
+        cleanup();
+
+        renderWithSelection(
+            fixture({
+                axiomTranslationSteps: [
+                    {
+                        id: 'ax-1',
+                        fromForm: 'natural',
+                        toForm: 'formal',
+                        inputText: 'in',
+                        outputText: 'out',
+                        reasoningTrace: 'why'
+                    }
+                ]
+            })
+        );
+        const link = screen.getByTestId('evidence-open-axiom');
+        expect(link.textContent).toContain('1 step');
+        expect(link.getAttribute('data-cross-link')).toBe('m5-epii.axiomTranslation');
+        expect(link.getAttribute('data-evidence-id')).toBe('packet-1');
+    });
+
+    it('offers the contemplation close-path ONLY when the run landed one (19.7)', () => {
+        renderWithSelection(fixture());
+        expect(screen.queryByTestId('evidence-open-contemplation')).toBeNull();
+        cleanup();
+
+        renderWithSelection(fixture({ contemplationObjectRef: 'contemplation://run-1' }));
+        const link = screen.getByTestId('evidence-open-contemplation');
+        expect(link.textContent).toContain('Contemplation');
+        expect(link.getAttribute('data-contemplation-ref')).toBe('contemplation://run-1');
+    });
+
+    it('routes the contemplation close-path to the Review fold at THIS packet’s review', () => {
+        renderWithSelection(fixture({ contemplationObjectRef: 'contemplation://run-1' }));
+        fireEvent.click(screen.getByTestId('evidence-open-contemplation'));
+
+        const state = readOmniPanelSessionState();
+        expect(state.activeTab, 'the Review fold IS the contemplation landing surface (15.2)').toBe(
+            'review'
+        );
+        expect(
+            state.perTabState.review.selectedReviewId,
+            'opening a fold without carrying the record strands the user'
+        ).toBe('rev-1');
+    });
+
+    it('carries the record into the Tool Stream fold, not merely opening it', () => {
+        renderWithSelection(
+            fixture({
+                toolStream: [
+                    {
+                        id: 'tool-9',
+                        dispatchNodeId: 'node-1',
+                        toolName: 'graph_query',
+                        inputDigest: 'in',
+                        outputDigest: 'out'
+                    }
+                ]
+            })
+        );
+        const link = screen.getByTestId('evidence-open-tools');
+        expect(link.getAttribute('data-cross-link')).toBe('omnipanel.tool-stream');
+        expect(link.getAttribute('data-evidence-id')).toBe('packet-1');
+
+        fireEvent.click(link);
+        const state = readOmniPanelSessionState();
+        expect(state.activeTab).toBe('tool-stream');
+        expect(state.perTabState['tool-stream'].selectedEventId).toBe('tool-9');
+    });
+
+    it('keeps the fold non-modal — the close-paths are links, never dialogs (15.2/CCT-8)', () => {
+        const { container } = render(
+            <EvidencePanel packets={[fixture({ contemplationObjectRef: 'contemplation://run-1' })]} />
+        );
+        fireEvent.click(screen.getByTestId('evidence-packet-row'));
+        expect(container.querySelectorAll('[aria-modal="true"]').length).toBe(0);
+        expect(container.querySelectorAll('dialog').length).toBe(0);
+    });
+});

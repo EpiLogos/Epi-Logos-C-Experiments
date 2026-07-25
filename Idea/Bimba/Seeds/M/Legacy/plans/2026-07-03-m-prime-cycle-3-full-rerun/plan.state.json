@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T12:18:50.578Z",
+  "updatedAt": "2026-07-25T12:42:29.977Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12989,16 +12989,21 @@
       "blocker": null
     },
     "26.T26.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-25T12:42:29.955Z",
+      "claimedAt": "2026-07-25T12:36:47.240Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-25T12:42:29.955Z",
+          "text": "AUDIT-EXTEND done; held at review because the UF class cannot be honestly satisfied yet, NOT because the deliverable is incomplete. AUDIT first: most of the 26.4 list was already CARRIED by 27.T27.5 — MediatedRunEvidencePacket is the imported shape (evidenceShapes.ts, no generic EvidenceRecord anywhere), mediatorLabel renders the Pi/Anima/Aletheia-subagent badge, DispatchTraceMiniGraph is inline in the packet view, the privacy-class gate holds, and no-modal is now lint-enforced by 31.T31.8. THREE genuine gaps remained, all of them registered-but-unfired seams, and all three are now closed: (1) contemplationObjectRef existed in the 26.10 shape and was read by NOTHING — the 19.7 close-path now renders 'Contemplation: open viewer →' and routes to the Review fold, which is where ContemplationObjectViewer actually lives (15.2, the tab IS the landing surface); (2) no axiom-translation link existed although PiAxiomTranslationInspector is a live pane — it now appears ONLY when axiomTranslationSteps.length > 0 and routes over the cross-layout intent spine via a new m5-epii/axiomTranslation target (the pane is on a face, not in this membrane, so a fold-activation would have been wrong); (3) the tool-stream link opened the fold but carried nothing — it now emits the brief's verbatim data-cross-link='omnipanel.tool-stream' + data-evidence-id and selects that packet's first tool event, so the same record highlights in both surfaces per the 15.2 cross-link law. GREEN: 11 EvidencePanel tests (5 new, each mounting the real component and asserting the real OmniPanel store — conditional rendering both ways, the review-id and tool-event-id actually carried, non-modal), evidenceShapes 16, catalog AST gate, onboarding ledger; lint-no-modal, lint-import-boundaries, carrier-tokens, honesty-lint all GREEN. WHY REVIEW AND NOT DONE: track 26 is UF class, so the receipt must cite real app-flow proof — and the Evidence fold has NO live packet feed. App.tsx:468 renders <EvidencePanel /> with no packets prop, and the read method does not exist: s5'.epii.deposit.list probes unimplemented and the gateway dispatches only the WRITE path (epi-cli/src/gate/server/dispatch.rs:1662 has s5'.epii.deposit and no list/read sibling). The fold therefore always renders its honest empty state in the running app, so an e2e could only exercise these close-paths by fabricating a packet — the exact banned evidence class this plan set exists to stop. Unblocks the moment a real deposit-read lands (26.10/the deposit path); at that point the e2e is small: deposit a packet, open the Evidence fold, click each close-path, assert the destination fold selected the same record. UNRELATED RED, named per the shared-tree rule: whole-tree app-typecheck is currently failing in six files that are the concurrent Track-24 worker's uncommitted element-register WIP (src/engine/cosmicMath.ts + elementRegisters.ts and their consumers CymaticSpheresSurface, M3DecanChainBreadcrumb, CosmicEngine, solarSystem — Mahabhuta/Alchemical typing). None of this tranche's files appear in that error list."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 53 dirty files.",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:36:47.240Z",
+      "heartbeatAt": "2026-07-25T12:42:29.955Z",
+      "runId": "20260725T123647Z-26-T26.4",
       "worktree": null,
       "blocker": null
     },
@@ -26380,6 +26385,16 @@
       "leaseExpiresAt": "2026-07-25T14:03:17.463Z",
       "worktree": null,
       "completedAt": "2026-07-25T12:18:50.555Z"
+    },
+    {
+      "runId": "20260725T123647Z-26-T26.4",
+      "taskId": "26.T26.4",
+      "status": "review",
+      "startedAt": "2026-07-25T12:36:47.240Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T14:36:47.240Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T12:42:29.955Z"
     }
   ],
   "activeRoute": {

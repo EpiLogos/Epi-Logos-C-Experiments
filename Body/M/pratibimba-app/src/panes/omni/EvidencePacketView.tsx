@@ -53,11 +53,17 @@ function OpaqueKeys({ label, record }: { readonly label: string; readonly record
 export function EvidencePacketView({
     packet,
     onOpenDispatchTrace,
-    onOpenToolStream
+    onOpenToolStream,
+    onOpenAxiomTranslation,
+    onOpenContemplation
 }: {
     readonly packet: MediatedRunEvidencePacket;
     readonly onOpenDispatchTrace?: (dispatchNodeId: string) => void;
     readonly onOpenToolStream?: (packetId: string) => void;
+    /** 26.14 inspector, offered only when the run actually translated axioms. */
+    readonly onOpenAxiomTranslation?: (packetId: string) => void;
+    /** 19.7 close-path: the contemplation object this run landed into. */
+    readonly onOpenContemplation?: (contemplationObjectRef: string) => void;
 }) {
     return (
         <article className="evidence-packet-view" data-testid="evidence-packet-view" data-packet-id={packet.id}>
@@ -144,10 +150,42 @@ export function EvidencePacketView({
                     type="button"
                     className="evidence-open-tools"
                     data-testid="evidence-open-tools"
+                    // 26.4 verbatim: the cross-link names its destination fold
+                    // and carries the record id, so the Tool Stream tab can
+                    // select the SAME record rather than merely opening.
+                    data-cross-link="omnipanel.tool-stream"
+                    data-evidence-id={packet.id}
                     onClick={() => onOpenToolStream?.(packet.id)}
                 >
                     View {packet.toolStream.length} tool events →
                 </button>
+
+                {packet.axiomTranslationSteps.length > 0 ? (
+                    <button
+                        type="button"
+                        className="evidence-open-axiom"
+                        data-testid="evidence-open-axiom"
+                        data-cross-link="m5-epii.axiomTranslation"
+                        data-evidence-id={packet.id}
+                        onClick={() => onOpenAxiomTranslation?.(packet.id)}
+                    >
+                        Axiom translation — {packet.axiomTranslationSteps.length} step
+                        {packet.axiomTranslationSteps.length === 1 ? '' : 's'} →
+                    </button>
+                ) : null}
+
+                {packet.contemplationObjectRef ? (
+                    <button
+                        type="button"
+                        className="evidence-open-contemplation"
+                        data-testid="evidence-open-contemplation"
+                        data-cross-link="m5-epii.contemplationObject"
+                        data-contemplation-ref={packet.contemplationObjectRef}
+                        onClick={() => onOpenContemplation?.(packet.contemplationObjectRef!)}
+                    >
+                        Contemplation: open viewer →
+                    </button>
+                ) : null}
             </div>
         </article>
     );

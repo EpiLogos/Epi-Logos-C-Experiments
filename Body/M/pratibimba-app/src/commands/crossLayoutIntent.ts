@@ -124,6 +124,7 @@ export const CROSS_LAYOUT_INTENT_TARGETS: readonly CrossLayoutIntentTarget[] = O
     target('m5-epii', 'recognitionLayer', 'M5 recognition layer', 1, 'personalHome', 'daily-0-1'),
     target('m5-epii', 'mobiusPassRibbon', 'M5 Mobius pass ribbon', 1, 'autoresearch'),
     target('m5-epii', 'contemplationObject', 'M5 contemplation object', 1, 'omniReview', null),
+    target('m5-epii', 'axiomTranslation', 'M5 axiom translation inspector', 1, 'piAxiomTranslation'),
     target('m5-epii', 'jointComposition', 'M5 joint composition', 0, 'm5Ebm')
 ]);
 
