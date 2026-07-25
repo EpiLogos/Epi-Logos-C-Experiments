@@ -1,6 +1,36 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 export async function main(api: ExtensionAPI) {
+  // ── 50.T50.01: code-mode (single-script tool execution) for every pi agent ──
+  // Registers `run_tool_script` so a multi-tool task can be composed as ONE
+  // TypeScript program instead of a JSON call staircase that re-sends the whole
+  // conversation per hop. JSON tool-mode remains the substrate and the fallback;
+  // this makes the script path the default *usage* for tasks touching >= 2 tools.
+  // The security boundary is unchanged: the `--tools` allow-list at spawn plus
+  // `isEntitled()` at dispatch, both applied by `lib/code-mode.ts`.
+  //
+  // Registered FIRST and self-contained (node builtins + the entitlement core
+  // only), so the base tool-scripting path never depends on a carrier's
+  // dependency surface.
+  //
+  // KNOWN PRE-EXISTING BLOCKER (not introduced here, and not fixed here): the
+  // unguarded `../ta-onta/composite-entry.ts` import below currently THROWS in
+  // both the Body source tree and the managed `~/.epi/agents/*/agent` tree —
+  // `S4-2p-pleroma/S2/damage-control.ts` requires `yaml`, which resolves in
+  // neither. Because that throw escapes `main()`, pi aborts the whole extension
+  // load, so ordering alone does NOT rescue code-mode here. Until that carrier
+  // dependency is resolved, load code-mode directly:
+  //   pi --extension Body/S/S4/pi-agent/extensions/code-mode.ts
+  // Making a carrier load failure non-fatal would change composite-entry's
+  // startup semantics — a contract decision for the Architect, not a side effect
+  // of this tranche.
+  try {
+    const { default: codeModeExtension } = await import("./extensions/code-mode.ts");
+    await codeModeExtension(api);
+  } catch {
+    /* code-mode unavailable => agents fall back to JSON tool-mode (no-op) */
+  }
+
   const { default: taOntaCompositeEntry } = await import("../ta-onta/composite-entry.ts");
   await taOntaCompositeEntry(api);
 

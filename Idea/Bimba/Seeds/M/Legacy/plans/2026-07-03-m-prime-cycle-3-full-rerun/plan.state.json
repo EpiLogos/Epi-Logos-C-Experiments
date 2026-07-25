@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T09:24:16.245Z",
+  "updatedAt": "2026-07-25T09:44:04.441Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20089,14 +20089,34 @@
       "blocker": null
     },
     "50.T50.01": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T09:09:10.212Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T09:44:04.417Z",
       "claimedAt": "2026-07-25T09:09:10.212Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T09:44:04.417Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T09:44:04.417Z",
+          "text": "Code-mode base substrate landed: run_tool_script executes ONE TypeScript program per multi-tool task over pi's own node execution substrate (no new VM). resolveToolFunction is the single dispatch choke point, applying the spawn --tools allow-list THEN isEntitled(); epi-tools.mjs bridges the child program back over a unix socket so a refused call throws inside the program. LIVE PI PROOF (fresh, 11/11 PASS): a real pi agent (google/gemini-3.1-flash-lite, --tools run_tool_script,read,write) collapsed a 3-file sum task into ONE program making 4 gated calls, wrote the real side effect sum.txt=41, grep correctly absent from the callable surface, measured token delta 26468 staircase vs 6680 script = 19788 saved (ratio 0.25). 31 behavioural unit tests (real node child processes, real files, real refusals) inside the gate's ta-onta suite; verify-all W scope GREEN 214.8s incl live-wire spawned gateway; honesty-lint clean. Two real defects found and fixed by live running, not by inspection: the bridge socket kept the child event loop alive (unref-while-idle), and tool returns were metadata wrappers so the model wrote content.trim() on an object and burned 3 retry programs (returns are now payload-direct and TOOL_SIGNATURES declares every return shape to the model). FLAGGED NOT ABSORBED: composite-entry.ts cannot load in either the Body tree or ~/.epi/agents/*/agent because its unguarded ta-onta import hits S4-2p-pleroma/S2/damage-control.ts requiring yaml, which resolves nowhere - pre-existing (git HEAD + Body residency baseline), so code-mode is registered there first but reached today via --extension; making a carrier load failure non-fatal is an Architect contract call.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 524,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/pi-agent/lib/code-mode.ts",
+              "Body/S/S4/pi-agent/lib/code-mode-tools.ts",
+              "Body/S/S4/pi-agent/lib/epi-tools.mjs",
+              "Body/S/S4/pi-agent/extensions/code-mode.ts",
+              "Body/S/S4/pi-agent/tests/code-mode.test.ts",
+              "Body/S/S4/pi-agent/tests/code-mode-live-pi.mjs",
+              "live-wire PASS + gateway suites GREEN in verifications/50.T50.01.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t50-impl",
-      "leaseExpiresAt": "2026-07-25T11:09:10.212Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T09:09:10.212Z",
       "runId": "20260725T090910Z-50-T50.01",
       "worktree": null,
@@ -26068,11 +26088,12 @@
     {
       "runId": "20260725T090910Z-50-T50.01",
       "taskId": "50.T50.01",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T09:09:10.212Z",
       "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": "2026-07-25T11:09:10.212Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T09:44:04.417Z"
     },
     {
       "runId": "20260725T091029Z-30-T30.4",
