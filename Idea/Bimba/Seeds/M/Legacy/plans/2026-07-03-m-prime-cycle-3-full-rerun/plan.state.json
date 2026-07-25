@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T12:52:36.855Z",
+  "updatedAt": "2026-07-25T12:55:11.631Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14706,18 +14706,26 @@
       "blocker": null
     },
     "29.T29.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-07-25T12:55:11.609Z",
+      "claimedAt": "2026-07-25T12:54:11.198Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "evidence": [
+        {
+          "at": "2026-07-25T12:55:11.609Z",
+          "text": "BLOCKED on a real missing service — CCT-21's producer stream is unimplemented; established by live probe, not assumption. 29.16's brief states the split verbatim: 'CCT-21 owns the S3 producer stream; this tranche owns composition subscription, rendering, privacy enforcement, and readiness over that stream.' That stream does not exist. All four CCT-21 methods answer unimplemented against a REAL spawned gateway (plan.runs/gateway-method-audit.json, 278 methods probed): s3'.being_pattern.observe, .project, .subscribe, .review_candidate — each exists=false, responds=true, errorClass=unimplemented. Source confirms the probe: epi-cli/src/gate/server/dispatch.rs contains NO being_pattern entry; the only gateway-side occurrence is epi-cli/src/gate/parity.rs:702-705, which merely CLASSIFIES those four names into the s3'.* namespace for parity accounting and dispatches nothing. Partial substrate DOES exist and is worth knowing when CCT-21 is picked up: Body/S/S3/epi-spacetime-module/tests/being_pattern_projection.rs (SpacetimeDB table tests), Body/S/S3/redis-context/src/redis_cache.rs (being_pattern_presence / being_pattern_state / being_pattern_stream_delta keys), and being_pattern_acceptance_replay + being_pattern_bridge_handle_payload in epi-cli/src/gate/spacetimedb_bridge.rs:46 — tables and cache keys landed, nothing surfaced to the carrier; Body/M/pratibimba-app/src has zero occurrences of being_pattern or BeingPattern. NOT STARTED, deliberately: every deliverable here (composition subscription, InhabitedBimbaEntityState rendering across the cosmic and personal compositions, the four composition.being_pattern.* events, the four readiness blockers, the graphiti-source-guard) consumes live entities off that subscription, and the brief's own verification demands a CCT-21 replay fixture asserting the nine-event chain EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted. Implementing subscription and rendering against a method that answers unimplemented would mean synthesising the entity feed to make it look alive — the exact fraud pattern this rerun exists to stop, and doubly wrong here because the tranche's whole point is that live state must NEVER be made canonical. Unblocks the moment s3'.being_pattern.subscribe (plus observe/project/review_candidate) is dispatched: the carrier work is then subscribe -> drop stale generations per 18.10 -> render, and it becomes genuinely UF-provable."
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 11 dirty files.",
+      "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T12:54:11.198Z",
+      "runId": "20260725T125411Z-29-T29.16",
       "worktree": null,
-      "blocker": null
+      "blocker": {
+        "kind": "environment",
+        "dependency": "CCT-21 gateway producer stream: s3'.being_pattern.subscribe/.observe/.project/.review_candidate are unimplemented (no dispatch.rs entry; live probe errorClass=unimplemented)"
+      }
     },
     "30.T30.1": {
       "status": "done",
@@ -26414,6 +26422,16 @@
       "leaseExpiresAt": "2026-07-25T14:42:52.041Z",
       "worktree": null,
       "completedAt": "2026-07-25T12:52:36.831Z"
+    },
+    {
+      "runId": "20260725T125411Z-29-T29.16",
+      "taskId": "29.T29.16",
+      "status": "blocked",
+      "startedAt": "2026-07-25T12:54:11.198Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T13:54:11.198Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T12:55:11.609Z"
     }
   ],
   "activeRoute": {
