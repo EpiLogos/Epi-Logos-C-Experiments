@@ -24,6 +24,10 @@ export async function henExtension(api: ExtensionAPI) {
         Type.Literal("now"),
         Type.Literal("thought"),
         Type.Literal("flow"),
+        // CT4a's archetype. `templates.rs` has rendered Integration-Preview.md
+        // all along; it was missing from this union, so the CT4a template was
+        // canon and on disk yet unreachable through the tool.
+        Type.Literal("integration-preview"),
       ]),
       coordinate: Type.Optional(Type.String({ description: "Coordinate of the artifact" })),
       session_id: Type.Optional(Type.String()),

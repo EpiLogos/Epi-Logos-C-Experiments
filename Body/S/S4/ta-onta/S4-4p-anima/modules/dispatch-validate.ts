@@ -2,6 +2,7 @@ import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } 
 import { phasePreservationQuery, type PhasePreservationQuery } from "../../shared/coordinate_phase.ts";
 import { matchGateTrigger, type GateTrigger, type GateName } from "../../S4-5p-aletheia/modules/gate-trigger.ts";
 import type { MoiraiAgent } from "./moirai-dispatch.ts";
+import { resolveArtifactTemplates } from "../../S4-1p-hen/modules/ct-template-registry.ts";
 
 /**
  * Canonical CF assignments for the constitutional 7-fold roster:
@@ -186,6 +187,23 @@ export function validateDispatchParams(params: DispatchParams): ValidationResult
     return {
       ok: false,
       error: `cf does not match agent ${params.agent_name} (expected ${expected}, got ${params.vak_address!.cf})`,
+    };
+  }
+  // CT must name an artifact archetype Hen can actually materialise. A
+  // mechanistic step runs unattended, so a CT that resolves to no template
+  // would silently produce nothing — the failure would surface as a missing
+  // artifact long after the run. Bare `CT4` is the live case: it names the
+  // context layer, not one of its CT4a/CT4b phases. Refused with the reason
+  // rather than defaulted to a phase, because picking one fabricates a
+  // coordinate. (Dialogical steps skip this: their CT is still being determined.)
+  const ctResolution = resolveArtifactTemplates(params.vak_address!.ct);
+  if (ctResolution.unresolved.length > 0) {
+    const detail = ctResolution.unresolved
+      .map(({ ct, reason }) => `${ct}: ${reason}`)
+      .join("; ");
+    return {
+      ok: false,
+      error: `ct declares no materialisable Hen template — ${detail}`,
     };
   }
   if (params.coordinate_emission) {

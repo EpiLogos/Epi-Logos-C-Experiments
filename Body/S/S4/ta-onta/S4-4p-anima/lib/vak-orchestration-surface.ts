@@ -48,6 +48,10 @@ import {
 import { AGENT_CF, agentForCf } from "../modules/dispatch-validate.ts";
 import { conventionalToolFor, type ZThreadToolName } from "./thread-shape.ts";
 import type { CfpMoveLiteral } from "../../shared/vak_address.ts";
+import {
+	resolveArtifactTemplates,
+	type ArtifactTemplateResolution,
+} from "../../S4-1p-hen/modules/ct-template-registry.ts";
 
 /** The six reflective coordinates, as an enumerable axis set. */
 export const VAK_COORDINATES = ["cpf", "ct", "cp", "cf", "cfp", "cs"] as const;
@@ -158,9 +162,31 @@ export function haltsForHuman(address: VakAddress): boolean {
 	return reviewPolarity(address) === "dialogical";
 }
 
-/** CT — the artifact templates this step declares. */
+/** CT — the artifact templates this step declares, as CT phase-types. */
 export function artifactTemplates(address: VakAddress): CtLiteral[] {
 	return [...address.ct];
+}
+
+/**
+ * CT — the CT declaration RESOLVED to the Hen (S1′) templates it materialises.
+ *
+ * `artifactTemplates` answers in CT coordinates; this answers in the template
+ * types `hen_template_invoke` actually accepts, so a script can declare its
+ * outputs by content-type (`ct: ["CT2"]`) and have the correct Hen artifact
+ * materialise (`task-spec`) without naming a template by hand.
+ *
+ * The table is NOT duplicated here. Hen owns the CT template system, so this
+ * consumes `S4-1p-hen/modules/ct-template-registry.ts` — the same
+ * consume-one-mirror discipline this surface already applies to `vak_address.ts`.
+ *
+ * Unresolvable CT literals come back in `unresolved` with a reason rather than
+ * being dropped: bare `CT4` names the context layer, not one of its CT4a/CT4b
+ * phases, and silently choosing a phase would fabricate a coordinate.
+ */
+export function resolvedArtifactTemplates(
+	address: VakAddress,
+): ArtifactTemplateResolution {
+	return resolveArtifactTemplates(address.ct);
 }
 
 /** CP — where the step sits in its context frame. */

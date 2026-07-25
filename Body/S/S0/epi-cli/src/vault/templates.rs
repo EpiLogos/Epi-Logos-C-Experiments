@@ -423,12 +423,28 @@ fn ct_definition(template_type: &str) -> Option<CTDefinition> {
     }
 }
 
+/// Which CT phase-type a template belongs to.
+///
+/// Pinned against the TS authored table in
+/// `Body/S/S4/ta-onta/S4-1p-hen/modules/ct-template-registry.ts`
+/// (`CT_TEMPLATE_ARCHETYPES`) by a cross-language parity test, so the two
+/// mirrors cannot drift.
+///
+/// `flow` and `integration-preview` used to fall through to `None` even though
+/// both render a real Form whose own frontmatter declares its CT
+/// (`Idea/Bimba/World/FLOW.md` → `CT0`; `Integration-Preview.md` is canon's CT4a
+/// per `Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md:253`). They are
+/// mapped here so every renderable template answers the question.
+///
+/// Bare `CT4` is deliberately absent from the value set: it is the context
+/// LAYER, whose phases are CT4a and CT4b, so no template belongs to it.
 fn profile_ct_mapping(template_type: &str) -> Option<&'static str> {
     match template_type {
-        "seed" => Some("CT0"),
+        "seed" | "flow" => Some("CT0"),
         "prompt" => Some("CT1"),
         "task-spec" => Some("CT2"),
         "pattern-note" => Some("CT3"),
+        "integration-preview" => Some("CT4a"),
         "daily-note" | "now" => Some("CT4b"),
         "thought" => Some("CT5"),
         _ => None,
