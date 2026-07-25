@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T08:52:33.913Z",
+  "updatedAt": "2026-07-25T09:00:24.367Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -11900,14 +11900,31 @@
       }
     },
     "24.T24.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T08:49:13.920Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T09:00:24.345Z",
       "claimedAt": "2026-07-25T08:49:13.920Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T09:00:24.345Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T09:00:24.345Z",
+          "text": "24.7 doc-ahead-landing on the pratibimba-app carrier: TarotDecanService extended with resolveChain(card)->flat Wave-C TarotDecanChain|{pending: s2-decan-chain} over s2.codon.scalar_ref.read + elementForAspect (24.16 resolve preserved); new presentational M3DecanChainBreadcrumb (card->suit->codon->decan->sign->planet->element->chakra->body-zones, per-chip honest-pending, clickable). 15 new tests, typecheck + build + carrier-tokens + forbidden-import + no-renderer-LUT GREEN; UF gate green except one isolation-confirmed sibling consent flake (unrelated to this frontend-only change). elementForAspect correspondence flagged ARCHITECT-REVIEW.",
+          "receipt": {
+            "command": "pnpm exec vitest run src/services/m3/TarotDecanService.test.ts src/components/M3DecanChainBreadcrumb.test.tsx",
+            "exitCode": 0,
+            "testsPassed": 15,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/services/m3/TarotDecanService.ts (resolveChain + elementForAspect + flat TarotDecanChain; 24.16 resolve preserved)",
+              "Body/M/pratibimba-app/src/components/M3DecanChainBreadcrumb.tsx (presentational chip chain, per-chip honest-pending, clickable)",
+              "UF gate: app-typecheck + app-test 1248 (incl 15 new) + app-build + app-smoke + carrier-tokens GREEN; app-ui-flow 79/80 — sole red = sibling flake pratibimba-consent:274 (turnCount state-leak id 69845aeb) that PASSES 4/4 in isolation on this tree + failed identically pre-24.7",
+              "plan.runs/verifications/24.T24.7.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-impl",
-      "leaseExpiresAt": "2026-07-25T10:49:13.920Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T08:49:13.920Z",
       "runId": "20260725T084913Z-24-T24.7",
       "worktree": null,
@@ -26037,22 +26054,23 @@
     {
       "runId": "20260725T084913Z-24-T24.7",
       "taskId": "24.T24.7",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T08:49:13.920Z",
       "owner": "opus-mdev-impl",
       "leaseExpiresAt": "2026-07-25T10:49:13.920Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T09:00:24.345Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-24T13:37:36.881Z",
-    "updatedAt": "2026-07-24T13:37:36.881Z",
+    "createdAt": "2026-07-25T08:57:10.142Z",
+    "updatedAt": "2026-07-25T08:57:10.142Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "28.T28.20",
-      "24.T24.7"
+      "24.T24.7",
+      "24.T24.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -26060,8 +26078,8 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "28.T28.20": "in-session",
-      "24.T24.7": "in-session"
+      "24.T24.7": "in-session",
+      "24.T24.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
