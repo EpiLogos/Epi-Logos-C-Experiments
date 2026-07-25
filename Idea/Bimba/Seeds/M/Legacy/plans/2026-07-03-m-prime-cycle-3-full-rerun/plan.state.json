@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T09:58:12.170Z",
+  "updatedAt": "2026-07-25T10:14:43.751Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15288,16 +15288,16 @@
       "blocker": null
     },
     "31.T31.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T09:58:44.249Z",
+      "claimedAt": "2026-07-25T09:58:44.249Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T11:58:44.249Z",
+      "heartbeatAt": "2026-07-25T09:58:44.249Z",
+      "runId": "20260725T095844Z-31-T31.8",
       "worktree": null,
       "blocker": null
     },
@@ -20175,16 +20175,35 @@
       "blocker": null
     },
     "50.T50.03": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-25T10:14:43.729Z",
+      "claimedAt": "2026-07-25T09:59:04.661Z",
+      "completedAt": "2026-07-25T10:14:43.729Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T10:14:43.729Z",
+          "text": "Six-coordinate VAK scripting surface landed: lib/vak-orchestration-surface.ts exposes CPF/CT/CP/CF/CFP/CS each as a composable AXIS with its own reader (reviewPolarity/haltsForHuman, artifactTemplates, framePosition+Index, boundAgent via AGENT_CF, executionShape/primitiveFor delegating to zThreadToolForMove so the language and the Z-thread runtime cannot disagree, sequence/isNightPass with the Klein sense binary winning over the legacy direction), plus defineOrchestration/runOrchestration where CS actually orders the run (Day before Night-prime, then CP position). Load-bearing invariant: emit() is the ONLY emission constructor and assertFullEnvelope/describeEnvelopeViolations refuse a partial or non-canonical address NAMING the offending coordinate, so an emission cannot exist untagged rather than merely being tagged by convention. Types deliberately NOT redefined - the surface consumes ta-onta/shared/vak_address.ts, which is already the one literal-union TS mirror with its own wire-shape and frozen-fixture tests. Parity is now genuinely cross-language via ONE shared fixture (shared/vak_address.parity.json) read by BOTH the TS test and the new Rust test portal-core/tests/vak_address_ts_parity.rs: neither side greps the other's source, both must accept the 4 canonical cases (serde round-trip field-for-field, primed Night-prime preserved, both CPF polarities bound) and both must refuse the 3 rejected ones. LIVE PROOF fresh, all PASS: a real orchestration composed across 6/6 coordinates and executed through the T50.02 gated executor - the CPF Dialogical step HALTED for a human spawning nothing, while the two mechanistic steps dispatched REAL child pi agents as their CF-bound agents (psyche and anima) which returned the real file contents 13 and 29, execution ordered originate then read-alpha then Night-prime read-beta last, and every emission verified envelope-complete. 30 new TS tests + 5 new Rust parity tests; full S4 suite 582 pass 0 fail; portal-core all green; the emission lint named in the brief (vak_envelope_required_on_emissions) 3/3; verify-all W scope GREEN incl live-wire spawned gateway; honesty-lint clean. REAL DIVERGENCE FOUND AND PINNED, not silently coerced: epi agent vak evaluate (Body/S/S0/epi-cli/src/agent/vak.rs) emits a separate loose VakCoordinates shape - cpf C2 is a C-family label not a review polarity, cp CP4 lacks its 4.x position, ct is scalar not an array, cs is flat not a code+direction field - so it does NOT satisfy the canonical envelope. Both languages now refuse it by fixture, because guessing which CP4.x a bare CP4 meant would fabricate a coordinate; reconciling that producer belongs to the CF/notation tranche 50.T50.11, flagged not absorbed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 582,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts",
+              "Body/S/S4/ta-onta/shared/vak_address.parity.json",
+              "Body/S/S0/portal-core/tests/vak_address_ts_parity.rs",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/vak_orchestration_surface.test.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/vak-orchestration-live.mjs",
+              "live-wire PASS + gateway suites GREEN in verifications/50.T50.03.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-25T09:59:04.661Z",
+      "runId": "20260725T095904Z-50-T50.03",
       "worktree": null,
       "blocker": null
     },
@@ -26152,6 +26171,25 @@
       "leaseExpiresAt": "2026-07-25T11:44:49.570Z",
       "worktree": null,
       "completedAt": "2026-07-25T09:57:55.627Z"
+    },
+    {
+      "runId": "20260725T095844Z-31-T31.8",
+      "taskId": "31.T31.8",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T09:58:44.249Z",
+      "owner": "opus-mdev-frontend-uf",
+      "leaseExpiresAt": "2026-07-25T11:58:44.249Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260725T095904Z-50-T50.03",
+      "taskId": "50.T50.03",
+      "status": "done",
+      "startedAt": "2026-07-25T09:59:04.661Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T11:59:04.661Z",
+      "worktree": null,
+      "completedAt": "2026-07-25T10:14:43.729Z"
     }
   ],
   "activeRoute": {
