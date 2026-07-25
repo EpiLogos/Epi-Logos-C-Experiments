@@ -14,6 +14,8 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { registerThemeCommands } from './commands/theme';
 import { CompositionStateProvider } from './composition/compositionState';
+import { WalkthroughOverlay } from './onboarding/WalkthroughOverlay';
+import { registerWalkthroughCommand } from './commands/walkthrough';
 import { installThemeApplier } from './state/themeStore';
 import 'flexlayout-react/style/dark.css';
 import './styles.css';
@@ -30,6 +32,9 @@ async function bootstrap(): Promise<void> {
     // lifetime of the page; the disposers exist for tests, not for the app.
     registerThemeCommands();
     installThemeApplier();
+    // 32.T32.3 — the walkthrough is a sibling of <App/>, not a child: it is a
+    // guide OVER the shell and owns no shell state.
+    registerWalkthroughCommand();
 
     // e2e-only seam (Track-00 real-UI gate): in browser mode there is no Tauri
     // host, so the drivable-loop harness installs a mockIPC shim that forwards
@@ -43,6 +48,7 @@ async function bootstrap(): Promise<void> {
         <React.StrictMode>
             <CompositionStateProvider>
                 <App />
+                <WalkthroughOverlay />
             </CompositionStateProvider>
         </React.StrictMode>
     );

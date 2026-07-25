@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T12:10:43.595Z",
+  "updatedAt": "2026-07-25T12:18:50.578Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15581,14 +15581,31 @@
       "blocker": null
     },
     "32.T32.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T12:03:17.463Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T12:18:50.555Z",
       "claimedAt": "2026-07-25T12:03:17.463Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T12:18:50.555Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T12:18:50.555Z",
+          "text": "The six-step post-identity walkthrough (WC-OB-19) is live and drivable. Its six step ids and skip-preference path are NOT invented - they are the walkthrough.* rows contracts/onboarding-completion-ledger.json (32.T32.13) already declares, so the ledger contract and the implementation now agree. The step COPY IS GENERATED from the live inventories (OMNIPANEL_TABS, LEFT_SIDEBAR_MODES, the six status threads), so adding a tab cannot leave the walkthrough describing an app that no longer exists; a test asserts each step names the real inventory. NON-MODAL by construction per the brief and CCT-8: backdrop pointer-events:none, card role=group not dialog, no aria-modal. Anchors are ordered CSS candidates resolved against the real DOM - four point at chrome that exists (face-toggle, status-strip, status-daynow, status-coordinate), step 2 at the flexlayout border that IS the OmniPanel here, and step 3's Theia activity-bar has NO carrier equivalent (registerLeftSidebarModeCommands is proven dead code by catalog.test.ts) so it falls back to a centred card - recorded as an honest gap for whichever tranche lands the activity bar, not papered over. Escape dismisses and writes NEITHER array (dismissing is not a decision about any step); re-entry is the catalogued palette command epi-logos.help.openWalkthrough, which the 32.4 Settings Replay action will reuse. Mounted as a sibling of <App/> in main.tsx - it is a guide OVER the shell and owns no shell state. GREEN: full app vitest 1337 (11 walkthrough unit tests: six-step structure, inventory-generated copy, completed-array growth, skip flag, no double-write on back/forward, all-six walk, Escape writes nothing, non-modal), app-typecheck, app-build, app-smoke, carrier-tokens, lint-boundaries, honesty-lint, catalog AST gate, ta-onta 687, gateway 98, live-wire, gateway-methods. UF proof tests/e2e/walkthrough.spec.ts against the REAL spawned gateway opens it from the real command palette and proves non-modality OPERATIONALLY - reads computed pointer-events:none on a backdrop that spans the viewport, then flips the 0/1 face by keyboard and clicks the status bar WHILE the walkthrough stands (a modal would have swallowed both), and measures the spotlight against its live target box. THE E2E CAUGHT TWO REAL DEFECTS, both fixed and now guarded: (a) the card was placed at anchor.bottom+8, which for a full-height anchor (the OmniPanel border) put the Next button BELOW the viewport - a walkthrough that traps the user on step 2; placement is now clamped into the viewport and every one of the six steps is asserted on-screen with a visible Next; (b) the spotlight declared the new step while still painted on the PREVIOUS step's element for a frame, so it mispointed silently - position and declared step now travel together in one anchor record, and the spotlight renders only once measured for the step showing. Full UF gate RED only on tests/e2e/pratibimba-consent.spec.ts:274 - the known order-dependent flake, in a spec this tranche does not touch, confirmed unrelated by isolation runs this session (PASS 9.1s, 6.9s).",
+          "receipt": {
+            "command": "npx playwright test walkthrough --reporter=list   [cwd Body/M/pratibimba-app; also green inside the full UF gate: app-ui-flow 85 e2e, sole red = unrelated consent:274 flake]",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/onboarding/walkthrough.ts",
+              "Body/M/pratibimba-app/src/onboarding/WalkthroughOverlay.tsx",
+              "Body/M/pratibimba-app/src/onboarding/walkthrough.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/walkthrough.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T14:03:17.463Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T12:03:17.463Z",
       "runId": "20260725T120317Z-32-T32.3",
       "worktree": null,
@@ -26357,11 +26374,12 @@
     {
       "runId": "20260725T120317Z-32-T32.3",
       "taskId": "32.T32.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T12:03:17.463Z",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T14:03:17.463Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T12:18:50.555Z"
     }
   ],
   "activeRoute": {

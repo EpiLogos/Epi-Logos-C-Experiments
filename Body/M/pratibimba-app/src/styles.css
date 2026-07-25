@@ -7053,3 +7053,93 @@ button.tool-stream-timerange.active {
 .mext-privacy-shared-archetype-opt-in {
   border-left: 3px solid var(--privacy-shared-archetype-opt-in);
 }
+
+/* ── T32.3 — onboarding walkthrough (non-modal by construction) ─────────────
+   The backdrop covers the viewport but takes NO pointer events, so the shell
+   underneath stays fully usable while the walkthrough is open — that is the
+   brief's requirement and CCT-8's law in one rule. Only the card re-enables
+   pointer events. There is no scrim colour: dimming the app would say "this is
+   blocked" when it is not. */
+.walkthrough-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.walkthrough-spotlight {
+    position: fixed;
+    border: 2px solid var(--ring);
+    border-radius: 4px;
+    pointer-events: none;
+    box-shadow: 0 0 0 3px rgba(235, 220, 160, 0.18);
+}
+
+.walkthrough-card {
+    position: fixed;
+    max-width: 22rem;
+    padding: 12px 14px;
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ring);
+    border-radius: 5px;
+    background: var(--ground-raised);
+    color: var(--ink);
+    pointer-events: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.walkthrough-card-centred {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.walkthrough-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.walkthrough-card-head strong {
+    font-size: var(--type-heading-4);
+}
+
+.walkthrough-progress {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+    font-variant-numeric: tabular-nums;
+}
+
+.walkthrough-card p {
+    margin: 0 0 10px;
+    font-size: var(--type-body-small);
+    line-height: 1.45;
+}
+
+.walkthrough-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.walkthrough-controls button {
+    padding: 4px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--ink);
+    font-size: var(--type-caption);
+    cursor: pointer;
+}
+
+.walkthrough-controls button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+[data-testid='walkthrough-next'] {
+    border-color: var(--ring);
+    color: var(--ring);
+}
