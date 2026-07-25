@@ -12,7 +12,7 @@
  *   element identity, Keplerian data — all profile-only inputs.
  */
 
-import { MAHABHUTA_NAMES } from './elementRegisters';
+import { asMahabhuta, MAHABHUTA_NAMES } from './elementRegisters';
 import { ELEMENT_COLOURS, LivePlanet, PLANET_ORDER } from './cosmicMath';
 import { inkDim } from '../ui/tokens';
 
@@ -82,9 +82,15 @@ export function planetTooltip(live: LivePlanet): string {
     return parts.join(' — ');
 }
 
-/** CSS colour for a Mahābhūta-register element id (mirrors the scene's ELEMENT_COLOURS). */
+/**
+ * CSS colour for a Mahābhūta-register element id (mirrors the scene's
+ * ELEMENT_COLOURS). The bus hands us a bare number, so the crossing into the
+ * register is explicit and validated — an id from any other register, or none
+ * at all, falls back rather than borrowing a colour that is not its own.
+ */
 export function elementCssColour(elementId: number | undefined): string {
-    const hex = ELEMENT_COLOURS[elementId ?? -1];
+    const mahabhuta = asMahabhuta(elementId);
+    const hex = mahabhuta === null ? undefined : ELEMENT_COLOURS[mahabhuta];
     return typeof hex === 'number' ? `#${hex.toString(16).padStart(6, '0')}` : inkDim;
 }
 

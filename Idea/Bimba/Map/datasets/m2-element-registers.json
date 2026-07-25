@@ -1,0 +1,148 @@
+{
+  "id": "m2-element-registers",
+  "coordinate": "#2",
+  "title": "M2 element registers and the correspondences between them",
+  "decision": "DR-L2-ELEM-2",
+  "validated": "2026-07-25",
+  "summary": "Several M2 sub-coordinates carry something called an 'element'. They are different ontologies sharing an English word, not one thing in several encodings. Each register below is complete and correct within its owning coordinate. Mappings between them are correspondences — tradition-bridging claims with content — not casts, and are partial wherever the ontologies genuinely differ.",
+  "wireEncoding": {
+    "register": "m2-1-alchemical",
+    "note": "When an element crosses a coordinate boundary the M-stack serialises it in the alchemical register, so a receiver can know which register it is reading. This is a SERIALISATION CHOICE, not a claim that M2-1's lens governs its siblings. The `Canonical_*` symbol names in m_canonical.h are historical names for this wire encoding.",
+    "carriers": [
+      "Body/S/S0/epi-lib/include/m_canonical.h",
+      "Body/S/S0/epi-cli/src/nara/medicine_frame.rs",
+      "Body/M/pratibimba-app/src/engine/elementRegisters.ts"
+    ]
+  },
+  "registers": [
+    {
+      "id": "m2-2-mahabhuta",
+      "coordinate": "#2-2",
+      "owner": "[[M2-2]] 36 Tattvas System",
+      "name": "Mahābhūta",
+      "orderingPrinciple": "Śaiva emanation — space densifying to earth. Ākāśa is genuinely first.",
+      "derivation": "tattva_index - 31",
+      "cardinality": 5,
+      "alsoOwns": "the chakra↔tattva correspondence — the yogic body",
+      "provenance": [
+        "Body/S/S0/epi-lib/src/m2.c — `/* Mahabhutas — the 5 elements (throughline anchor) */`, tattvas 31..35",
+        "Body/S/S0/portal-core/src/aspect.rs — PLANET_ELEMENT_ID (M2_PLANET_LUT mirror)",
+        "Body/S/S0/portal-core/src/kernel/projections/cymatic_spheres.rs — CHAKRA_ELEMENT_IDS (M2_CHAKRA_LUT mirror)"
+      ],
+      "members": [
+        { "id": 0, "name": "Akasha", "tattva": 31, "gloss": "Space" },
+        { "id": 1, "name": "Vayu", "tattva": 32, "gloss": "Air" },
+        { "id": 2, "name": "Agni", "tattva": 33, "gloss": "Fire" },
+        { "id": 3, "name": "Apas", "tattva": 34, "gloss": "Water" },
+        { "id": 4, "name": "Prithvi", "tattva": 35, "gloss": "Earth" }
+      ]
+    },
+    {
+      "id": "m2-1-alchemical",
+      "coordinate": "#2-1",
+      "owner": "[[M2-1]] MEF — Meta-Logikon; the [[L2']] lens-family within it",
+      "name": "Alchemical",
+      "orderingPrinciple": "The opus — nigredo, solutio, sublimatio, calcinatio — closing in Sal. Salt is a Tria Prima principle belonging to no other system.",
+      "cardinality": 6,
+      "operativeQuartet": [1, 2, 3, 4],
+      "note": "L2' is ONE lens-family inside M2-1's mef_lenses[12][6]. Being the element-bearing lens confers a READING of any coordinate, not ownership of its siblings' registers.",
+      "provenance": [
+        "Idea/Bimba/World/L2'.md §The Alchemical Element Register",
+        "Body/S/S0/epi-lib/include/m_canonical.h — Canonical_Element enum"
+      ],
+      "members": [
+        { "id": 0, "name": "Aether", "position": "L2-0'", "stage": "Prima Materia", "operative": false },
+        { "id": 1, "name": "Earth", "position": "L2-1'", "stage": "Nigredo", "operative": true },
+        { "id": 2, "name": "Water", "position": "L2-2'", "stage": "Solutio", "operative": true },
+        { "id": 3, "name": "Air", "position": "L2-3'", "stage": "Sublimatio", "operative": true },
+        { "id": 4, "name": "Fire", "position": "L2-4'", "stage": "Calcinatio", "operative": true },
+        { "id": 5, "name": "Salt", "position": "L2-5'", "stage": "Sal", "operative": false }
+      ]
+    },
+    {
+      "id": "m2-3-triplicity-branch",
+      "coordinate": "#2-3",
+      "owner": "[[M2-3]] Decans System",
+      "name": "Triplicity (branch coordinates)",
+      "orderingPrinciple": "The zodiac's own element cycle — the branch order IS the cycle, so element_of(sign) = sign mod 4 and the branch coordinate is 1 + (sign mod 4).",
+      "cardinality": 6,
+      "alsoOwns": "the decan↔body-part correspondence — the Hermetic medical-astrology body, a DIFFERENT body ontology from M2-2's yogic body",
+      "note": "These are GRAPH ADDRESSES (#2-3-N), never element ids. The coordinate strings are never rewritten by element migration.",
+      "provenance": [
+        "Idea/Bimba/Map/M2/M2-3/M2-3.md §Graph-branch naming convention (element IDs)",
+        "Body/S/S0/epi-lib/include/m2.h — decans[4][3][3][2], element as the first index",
+        "Body/S/S0/epi-cli/src/nara/medicine_frame.rs — ZODIAC_DECAN_TABLE body_part / herb"
+      ],
+      "members": [
+        { "id": 0, "name": "Quintessence", "address": "#2-3-5/0", "signs": [] },
+        { "id": 1, "name": "Fire", "address": "#2-3-1", "signs": [0, 4, 8] },
+        { "id": 2, "name": "Earth", "address": "#2-3-2", "signs": [1, 5, 9] },
+        { "id": 3, "name": "Air", "address": "#2-3-3", "signs": [2, 6, 10] },
+        { "id": 4, "name": "Water", "address": "#2-3-4", "signs": [3, 7, 11] },
+        { "id": 5, "name": "Salt", "address": "#2-3-5", "signs": [] }
+      ]
+    }
+  ],
+  "correspondences": [
+    {
+      "id": "mahabhuta-to-alchemical",
+      "from": "m2-2-mahabhuta",
+      "to": "m2-1-alchemical",
+      "relation": "corresponds_to",
+      "tradition": "Śaiva mahābhūta read against the Western classical elements; Ākāśa against Aether/Quintessence.",
+      "claim": "This is an assertion, not an identity. The two series order themselves by different principles — emanation versus opus — so the pairing carries content and can be argued with.",
+      "provenance": [
+        "Body/S/S0/epi-lib/include/m_canonical.h — m_canonical_from_medicine_rs_legacy",
+        "Body/S/S0/epi-cli/src/nara/medicine_frame.rs — canonical_from_m2_tattva (Track 05.T5.16, DR-37-3)"
+      ],
+      "pairs": [
+        { "from": 0, "to": 0, "note": "Ākāśa ↔ Aether" },
+        { "from": 1, "to": 3, "note": "Vāyu ↔ Air" },
+        { "from": 2, "to": 4, "note": "Agni ↔ Fire" },
+        { "from": 3, "to": 2, "note": "Āpas ↔ Water" },
+        { "from": 4, "to": 1, "note": "Pṛthvī ↔ Earth" }
+      ],
+      "partial": {
+        "unmapped": [{ "register": "m2-1-alchemical", "id": 5, "name": "Salt" }],
+        "why": "Salt is a Tria Prima body-principle, not a mahābhūta. The Mahābhūta series is not missing a member; it is a different system. Refusing is the correct answer, not a shortfall."
+      }
+    },
+    {
+      "id": "triplicity-branch-to-alchemical",
+      "from": "m2-3-triplicity-branch",
+      "to": "m2-1-alchemical",
+      "relation": "corresponds_to",
+      "tradition": "The zodiacal triplicities named with the classical element names they share.",
+      "claim": "Total in both directions — the two sixfolds happen to have the same cardinality — but still a correspondence: an M2-3 value is a branch ADDRESS and an M2-1 value is a lens position.",
+      "provenance": [
+        "Body/S/S0/epi-lib/include/m_canonical.h — m_canonical_from_m2_3_branch",
+        "Idea/Bimba/Map/M2/M2-3/M2-3.md §Graph-branch naming convention"
+      ],
+      "pairs": [
+        { "from": 0, "to": 0, "note": "Quintessence ↔ Aether" },
+        { "from": 1, "to": 4, "note": "#2-3-1 Fire ↔ Fire" },
+        { "from": 2, "to": 1, "note": "#2-3-2 Earth ↔ Earth" },
+        { "from": 3, "to": 3, "note": "#2-3-3 Air ↔ Air" },
+        { "from": 4, "to": 2, "note": "#2-3-4 Water ↔ Water" },
+        { "from": 5, "to": 5, "note": "Salt ↔ Salt" }
+      ],
+      "partial": null
+    }
+  ],
+  "bodyOntologies": [
+    {
+      "id": "yogic-body",
+      "owner": "[[M2-2]] 36 Tattvas",
+      "shape": "chakra → tattva → mahābhūta → body zone",
+      "note": "Muladhara↔Pṛthvī, Svadhisthana↔Āpas, Manipura↔Agni, Anahata↔Vāyu, Vishuddha↔Ākāśa; Ajna and Sahasrara carry no mahābhūta (0xff).",
+      "provenance": "Body/S/S0/portal-core/src/kernel/projections/cymatic_spheres.rs — CHAKRA_ELEMENT_IDS + CHAKRA_TATTVA_INDICES"
+    },
+    {
+      "id": "hermetic-body",
+      "owner": "[[M2-3]] Decans",
+      "shape": "decan → zodiac sign → body part → herb",
+      "note": "Medical astrology: Aries the head, Taurus the neck, and so on around the wheel. A DIFFERENT body from the yogic one — same organism, two ontologies, and they must not be fused into a single undifferentiated 'medicine' surface.",
+      "provenance": "Body/S/S0/epi-cli/src/nara/medicine_frame.rs — ZODIAC_DECAN_TABLE.body_part; Idea/Bimba/Map/datasets/parashakti-deep"
+    }
+  ]
+}

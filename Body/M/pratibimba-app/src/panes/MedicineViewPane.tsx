@@ -128,14 +128,34 @@ export function MedicineViewPane({ fixture, loadSnapshot, pinMateria, onOpenKair
             {error ? <p className="medicine-error" data-testid="medicine-error">{error}</p> : null}
 
             <div className="medicine-panels">
-                <section className="medicine-panel medicine-chakras" aria-label="Chakra ladder">
+                <section
+                    className="medicine-panel medicine-chakras"
+                    aria-label="Chakra ladder — the yogic body"
+                    data-body-ontology="yogic"
+                    data-owner-coordinate="M2-2"
+                >
                     <h2>Chakra ladder</h2>
+                    <p className="medicine-ontology-note">
+                        Yogic body · tattva ladder (M2-2)
+                    </p>
                     <ol>
                         {snapshot?.chakras.map(chakra => {
                             const isActive = chakra.id === active?.activeChakraId;
                             const isExpanded = expanded.has(chakra.id);
                             return (
-                                <li key={chakra.id} data-active={isActive}>
+                                // `isActive` is the decan→element→chakra
+                                // CORRESPONDENCE reaching across from the
+                                // Hermetic body, not a fact of the yogic one.
+                                <li
+                                    key={chakra.id}
+                                    data-active={isActive}
+                                    data-corresponded-from={isActive ? 'm2-3-decan' : undefined}
+                                    title={
+                                        isActive
+                                            ? 'Corresponded from the active decan through the shared element — a claim between two body ontologies, not an identity'
+                                            : undefined
+                                    }
+                                >
                                     <button
                                         type="button"
                                         className="medicine-chakra-toggle"
@@ -157,8 +177,16 @@ export function MedicineViewPane({ fixture, loadSnapshot, pinMateria, onOpenKair
                     </ol>
                 </section>
 
-                <section className="medicine-panel medicine-decan" aria-label="Active decan">
+                <section
+                    className="medicine-panel medicine-decan"
+                    aria-label="Active decan — the Hermetic body"
+                    data-body-ontology="hermetic"
+                    data-owner-coordinate="M2-3"
+                >
                     <h2>Active decan</h2>
+                    <p className="medicine-ontology-note">
+                        Hermetic body · decan/zodiac (M2-3) — a different body from the ladder
+                    </p>
                     {active ? (
                         <div className="medicine-decan-reading" data-testid="medicine-active-decan">
                             <span className="medicine-decan-index">Decan {active.decanIdx + 1} · {active.sunDegree.toFixed(2)}°</span>

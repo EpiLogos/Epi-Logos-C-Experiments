@@ -22,6 +22,7 @@ import { useInstrumentStore } from '../audio/instrument';
 import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { buildM3WheelSurface } from '../components/M3CosmicWheelRenderService';
+import { asMahabhuta } from './elementRegisters';
 import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3CodonRotationProjectionForLensRing';
 import { useCoordinateStore, useTickStore } from '../state/stores';
 import {
@@ -862,7 +863,10 @@ export function CosmicEngine() {
                     }
                     if (live) {
                         const material = marker.material as THREE.MeshStandardMaterial;
-                        const hue = ELEMENT_COLOURS[live.elementId ?? -1];
+                        // explicit crossing into the [[M2-2]] Mahābhūta register
+                        const mahabhuta = asMahabhuta(live.elementId);
+                        const hue =
+                            mahabhuta === null ? undefined : ELEMENT_COLOURS[mahabhuta];
                         if (typeof hue === 'number') {
                             material.color.setHex(hue);
                             material.emissive.setHex(hue);

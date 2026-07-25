@@ -11,6 +11,8 @@
  * Does NOT own: any pitch/codon/correspondence table (profile-only inputs).
  */
 
+import type { Mahabhuta } from './elementRegisters';
+
 export interface NodalMN {
     m: number;
     n: number;
@@ -216,13 +218,13 @@ export interface LivePlanet {
  * serialises that way) must be converted with `mahabhutaFromAlchemical` before it
  * is looked up here. See `engine/elementRegisters.ts` and DR-L2-ELEM-2.
  */
-export const ELEMENT_COLOURS: Readonly<Record<number, number>> = {
+export const ELEMENT_COLOURS: Readonly<Record<Mahabhuta, number>> = {
     0: 0x8f6fd8, // AKASHA — violet
     1: 0x59c2cf, // VAYU — cyan
     2: 0xd8613c, // AGNI — vermilion
     3: 0x63c9a9, // APAS — aquamarine
     4: 0x9b7a4b // PRITHVI — umber
-};
+} as Readonly<Record<Mahabhuta, number>>;
 
 const KEP_LOG_MIN = Math.log(14); // Pluto, slowest (M2_PLANET_LUT keplerian_vel)
 const KEP_LOG_MAX = Math.log(47270); // Moon, fastest

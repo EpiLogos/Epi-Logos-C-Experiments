@@ -1,33 +1,55 @@
 /**
- * Coordinate: M' M3' (L2' canonical element law — DR-L2-ASPECT-1)
- * Actualises: behavioural proof of the element law — the L2' ordering carries
- *   SALT, the legacy conversions round-trip exactly where m_canonical.h says they
- *   do (and refuse where they cannot), the triplicity identity reproduces the
- *   classical triplicities from `sign mod 4`, and — the load-bearing test — the
- *   per-aspect relation AGREES with the relation computed from real degree pairs
- *   at that aspect. That agreement is what makes it one law rather than two
- *   tables that happen to match.
+ * Coordinate: M' M2' (element registers — DR-L2-ELEM-2 / DR-L2-ASPECT-1)
+ * Actualises: behavioural proof that the M2 element registers stay separate —
+ *   each register admits only its own values, correspondences between them are
+ *   partial where the ontologies genuinely differ (Salt is no mahābhūta), M2-3's
+ *   triplicity identity reproduces the classical triplicities from `sign mod 4`,
+ *   and — the load-bearing test — the per-aspect relation AGREES with the
+ *   relation computed from real degree pairs at that aspect. That agreement is
+ *   what makes it one law rather than two tables that happen to match.
+ *   The cross-register REFUSALS are compile-time (`@ts-expect-error` below):
+ *   `npx tsc --noEmit` fails if any of them ever starts type-checking.
  */
 
 import { describe, expect, it } from 'vitest';
 import { aspectBetween, ASPECT_KINDS } from './clockFieldOverlay';
 import { ELEMENT_COLOURS } from './cosmicMath';
 import {
-    ELEMENT_REGISTER_INVALID,
     ALCHEMICAL_ELEMENT_NAMES,
     AlchemicalElement,
     alchemicalElementName,
-    alchemicalFromTriplicityBranch,
     alchemicalFromMahabhuta,
+    alchemicalFromTriplicityBranch,
+    asAlchemical,
+    asMahabhuta,
+    asTriplicityBranch,
     elementalRelationBetweenDegrees,
     elementalRelationOfAspect,
+    isOperativeElement,
+    MAHABHUTA_NAMES,
+    MAHABHUTA_TATTVA_BASE,
+    mahabhutaFromAlchemical,
+    mahabhutaName,
+    signOfDegree,
+    triplicityBranchFromAlchemical,
+    triplicityBranchOfSign,
     triplicityOfDegree,
     triplicityOfSign,
-    isOperativeElement,
-    mahabhutaFromAlchemical,
-    signOfDegree,
-    MAHABHUTA_NAMES
+    type Alchemical,
+    type Mahabhuta
 } from './elementRegisters';
+
+/** Non-null branded constructors for test data. */
+function mahabhuta(value: number): Mahabhuta {
+    const branded = asMahabhuta(value);
+    if (branded === null) throw new Error(`not a mahabhuta: ${value}`);
+    return branded;
+}
+function alchemical(value: number): Alchemical {
+    const branded = asAlchemical(value);
+    if (branded === null) throw new Error(`not an alchemical element: ${value}`);
+    return branded;
+}
 
 /** Sign indices of the four classical triplicities (Aries = 0 … Pisces = 11). */
 const TRIPLICITIES = [
@@ -37,6 +59,41 @@ const TRIPLICITIES = [
     { element: AlchemicalElement.WATER, signs: [3, 7, 11] } // Cancer, Scorpio, Pisces
 ] as const;
 
+describe('registers admit only their own values', () => {
+    it('bounds each register at its own cardinality', () => {
+        expect(asMahabhuta(4)).toBe(4); // Prithvi, the last mahabhuta
+        expect(asMahabhuta(5)).toBeNull(); // there is no sixth mahabhuta
+        expect(asAlchemical(5)).toBe(5); // Salt
+        expect(asAlchemical(6)).toBeNull();
+        expect(asTriplicityBranch(5)).toBe(5); // #2-3-5/0 Quintessence
+        expect(asTriplicityBranch(6)).toBeNull();
+    });
+
+    it('refuses non-integers, negatives and non-numbers rather than coercing', () => {
+        for (const bad of [-1, 1.5, Number.NaN, '2', null, undefined, {}]) {
+            expect(asMahabhuta(bad)).toBeNull();
+            expect(asAlchemical(bad)).toBeNull();
+        }
+    });
+
+    it('REFUSES CROSS-REGISTER USE AT COMPILE TIME', () => {
+        // Each line below is a real defect the type system now catches. If any
+        // stops erroring, `@ts-expect-error` itself becomes the error and
+        // `tsc --noEmit` fails — so these assertions cannot silently rot.
+        // @ts-expect-error a bare number belongs to no register at all
+        alchemicalFromMahabhuta(2);
+        // @ts-expect-error an alchemical value is not a mahabhuta
+        alchemicalFromMahabhuta(AlchemicalElement.WATER);
+        // @ts-expect-error a mahabhuta is not an alchemical value
+        mahabhutaFromAlchemical(mahabhuta(2));
+        // @ts-expect-error ELEMENT_COLOURS is keyed by the Mahabhuta register
+        ELEMENT_COLOURS[AlchemicalElement.FIRE];
+        // @ts-expect-error a triplicity branch coordinate is not an alchemical value
+        alchemicalFromTriplicityBranch(AlchemicalElement.FIRE);
+        expect(true).toBe(true); // the proof is the compile, not the runtime
+    });
+});
+
 describe('the [[M2-1]]/L2 alchemical register', () => {
     it('is the six-position alchemical ordering, and it carries Salt', () => {
         expect(AlchemicalElement.AETHER).toBe(0);
@@ -45,8 +102,8 @@ describe('the [[M2-1]]/L2 alchemical register', () => {
         expect(AlchemicalElement.AIR).toBe(3);
         expect(AlchemicalElement.FIRE).toBe(4);
         expect(AlchemicalElement.SALT).toBe(5);
-        expect(Object.keys(ALCHEMICAL_ELEMENT_NAMES)).toHaveLength(6);
-        expect(ALCHEMICAL_ELEMENT_NAMES[AlchemicalElement.SALT]).toBe('Salt');
+        expect(ALCHEMICAL_ELEMENT_NAMES).toHaveLength(6);
+        expect(alchemicalElementName(AlchemicalElement.SALT)).toBe('Salt');
     });
 
     it('treats only the quartet 1-4 as operative — Aether and Salt frame it', () => {
@@ -63,62 +120,70 @@ describe('the [[M2-1]]/L2 alchemical register', () => {
     });
 });
 
+describe('the [[M2-2]] Mahabhuta register', () => {
+    it('is the mahabhuta run of the tattva series, tattvas 31..35', () => {
+        expect(MAHABHUTA_TATTVA_BASE).toBe(31);
+        expect(MAHABHUTA_NAMES).toEqual(['Akasha', 'Vayu', 'Agni', 'Apas', 'Prithvi']);
+        expect(mahabhutaName(mahabhuta(0))).toBe('Akasha'); // tattva 31
+        expect(mahabhutaName(mahabhuta(4))).toBe('Prithvi'); // tattva 35
+    });
+
+    it('is a different series from the alchemical one — same integer, other element', () => {
+        // The collision that makes an unmarked id dangerous: 2 is Water in the
+        // alchemical register and Agni (fire) as a mahabhuta.
+        expect(alchemicalElementName(alchemical(2))).toBe('Water');
+        expect(mahabhutaName(mahabhuta(2))).toBe('Agni');
+    });
+});
+
 describe('correspondences between registers (claims, not casts)', () => {
     it('maps Mahabhuta to alchemical and back for every member it carries', () => {
-        // AKASHA=0, VAYU/Air=1, AGNI/Fire=2, APAS/Water=3, PRITHVI/Earth=4
-        expect(alchemicalFromMahabhuta(0)).toBe(AlchemicalElement.AETHER);
-        expect(alchemicalFromMahabhuta(1)).toBe(AlchemicalElement.AIR);
-        expect(alchemicalFromMahabhuta(2)).toBe(AlchemicalElement.FIRE);
-        expect(alchemicalFromMahabhuta(3)).toBe(AlchemicalElement.WATER);
-        expect(alchemicalFromMahabhuta(4)).toBe(AlchemicalElement.EARTH);
-        for (let legacy = 0; legacy <= 4; legacy++) {
-            expect(mahabhutaFromAlchemical(alchemicalFromMahabhuta(legacy))).toBe(legacy);
+        expect(alchemicalFromMahabhuta(mahabhuta(0))).toBe(AlchemicalElement.AETHER);
+        expect(alchemicalFromMahabhuta(mahabhuta(1))).toBe(AlchemicalElement.AIR);
+        expect(alchemicalFromMahabhuta(mahabhuta(2))).toBe(AlchemicalElement.FIRE);
+        expect(alchemicalFromMahabhuta(mahabhuta(3))).toBe(AlchemicalElement.WATER);
+        expect(alchemicalFromMahabhuta(mahabhuta(4))).toBe(AlchemicalElement.EARTH);
+        for (let value = 0; value <= 4; value++) {
+            const across = alchemicalFromMahabhuta(mahabhuta(value));
+            expect(across).not.toBeNull();
+            expect(mahabhutaFromAlchemical(across as Alchemical)).toBe(value);
         }
     });
 
     it('refuses rather than inventing: Salt is no Mahabhuta, so it has no counterpart', () => {
-        expect(mahabhutaFromAlchemical(AlchemicalElement.SALT)).toBe(ELEMENT_REGISTER_INVALID);
-        expect(alchemicalFromMahabhuta(5)).toBe(ELEMENT_REGISTER_INVALID);
-        expect(alchemicalFromMahabhuta(-1)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(mahabhutaFromAlchemical(AlchemicalElement.SALT)).toBeNull();
     });
 
     it('maps the M2-3 branch ordering as a full bijection (it does carry Salt)', () => {
-        expect(alchemicalFromTriplicityBranch(1)).toBe(AlchemicalElement.FIRE);
-        expect(alchemicalFromTriplicityBranch(2)).toBe(AlchemicalElement.EARTH);
-        expect(alchemicalFromTriplicityBranch(3)).toBe(AlchemicalElement.AIR);
-        expect(alchemicalFromTriplicityBranch(4)).toBe(AlchemicalElement.WATER);
-        expect(alchemicalFromTriplicityBranch(0)).toBe(AlchemicalElement.AETHER);
-        expect(alchemicalFromTriplicityBranch(5)).toBe(AlchemicalElement.SALT);
-        const mapped = [0, 1, 2, 3, 4, 5].map(alchemicalFromTriplicityBranch);
-        expect(new Set(mapped).size).toBe(6);
+        const branch = (value: number) => asTriplicityBranch(value)!;
+        expect(alchemicalFromTriplicityBranch(branch(1))).toBe(AlchemicalElement.FIRE);
+        expect(alchemicalFromTriplicityBranch(branch(2))).toBe(AlchemicalElement.EARTH);
+        expect(alchemicalFromTriplicityBranch(branch(3))).toBe(AlchemicalElement.AIR);
+        expect(alchemicalFromTriplicityBranch(branch(4))).toBe(AlchemicalElement.WATER);
+        expect(alchemicalFromTriplicityBranch(branch(0))).toBe(AlchemicalElement.AETHER);
+        expect(alchemicalFromTriplicityBranch(branch(5))).toBe(AlchemicalElement.SALT);
+        for (let value = 0; value <= 5; value++) {
+            const across = alchemicalFromTriplicityBranch(branch(value));
+            expect(triplicityBranchFromAlchemical(across as Alchemical)).toBe(value);
+        }
+    });
+
+    it('keeps ELEMENT_COLOURS keyed by the Mahabhuta register — convert first', () => {
+        // Fire is 4 in the alchemical register but 2 as a mahabhuta. Crossing is
+        // required; skipping it would paint Fire with Prithvi/umber.
+        const fireAsMahabhuta = mahabhutaFromAlchemical(AlchemicalElement.FIRE);
+        expect(fireAsMahabhuta).toBe(2);
+        expect(ELEMENT_COLOURS[fireAsMahabhuta as Mahabhuta]).toBe(0xd8613c); // vermilion
+        expect(ELEMENT_COLOURS[mahabhuta(4)]).toBe(0x9b7a4b); // umber — what skipping gives
+    });
+
+    it('names an unknown value as null rather than guessing', () => {
+        expect(alchemicalElementName(null)).toBeNull();
+        expect(mahabhutaName(null)).toBeNull();
     });
 });
 
-describe('the registers stay distinguishable', () => {
-    it('names the Mahabhuta register separately from the alchemical one', () => {
-        expect(MAHABHUTA_NAMES).toEqual(['Akasha', 'Vayu', 'Agni', 'Apas', 'Prithvi']);
-        expect(alchemicalElementName(AlchemicalElement.WATER)).toBe('Water');
-        // The collision that makes an unmarked id dangerous: id 2 is Water in
-        // the alchemical register and Agni/Fire in the Mahabhuta register.
-        expect(MAHABHUTA_NAMES[2]).toBe('Agni');
-        expect(alchemicalElementName(2)).toBe('Water');
-    });
-
-    it('keeps ELEMENT_COLOURS keyed by the Mahābhūta register — convert first', () => {
-        // Fire is 4 in the alchemical register but 2 as a Mahabhuta. Looking an
-        // alchemical id up in the scene table paints Fire with Prithvi/umber.
-        expect(mahabhutaFromAlchemical(AlchemicalElement.FIRE)).toBe(2);
-        expect(ELEMENT_COLOURS[mahabhutaFromAlchemical(AlchemicalElement.FIRE)]).toBe(0xd8613c);
-        expect(ELEMENT_COLOURS[AlchemicalElement.FIRE]).toBe(0x9b7a4b); // the wrong colour
-    });
-
-    it('names an unknown alchemical id as null rather than guessing', () => {
-        expect(alchemicalElementName(6)).toBeNull();
-        expect(alchemicalElementName(ELEMENT_REGISTER_INVALID)).toBeNull();
-    });
-});
-
-describe('the triplicity identity — element_of(sign) = sign mod 4', () => {
+describe('the [[M2-3]] triplicity identity — element_of(sign) = sign mod 4', () => {
     it('reproduces the four classical triplicities exactly', () => {
         for (const { element, signs } of TRIPLICITIES) {
             for (const sign of signs) {
@@ -127,16 +192,24 @@ describe('the triplicity identity — element_of(sign) = sign mod 4', () => {
         }
     });
 
+    it('answers first in M2-3 own branch coordinates — #2-3-N = 1 + sign mod 4', () => {
+        expect(triplicityBranchOfSign(0)).toBe(1); // Aries → #2-3-1 Fire
+        expect(triplicityBranchOfSign(1)).toBe(2); // Taurus → #2-3-2 Earth
+        expect(triplicityBranchOfSign(2)).toBe(3); // Gemini → #2-3-3 Air
+        expect(triplicityBranchOfSign(3)).toBe(4); // Cancer → #2-3-4 Water
+        expect(triplicityBranchOfSign(12)).toBeNull();
+    });
+
     it('assigns every sign an operative element and nothing else', () => {
         for (let sign = 0; sign < 12; sign++) {
-            expect(isOperativeElement(triplicityOfSign(sign))).toBe(true);
+            expect(isOperativeElement(triplicityOfSign(sign) as Alchemical)).toBe(true);
         }
     });
 
     it('refuses out-of-range signs instead of wrapping silently', () => {
-        expect(triplicityOfSign(12)).toBe(ELEMENT_REGISTER_INVALID);
-        expect(triplicityOfSign(-1)).toBe(ELEMENT_REGISTER_INVALID);
-        expect(triplicityOfSign(1.5)).toBe(ELEMENT_REGISTER_INVALID);
+        expect(triplicityOfSign(12)).toBeNull();
+        expect(triplicityOfSign(-1)).toBeNull();
+        expect(triplicityOfSign(1.5)).toBeNull();
     });
 
     it('reads a degree through its sign, normalising the circle', () => {
@@ -201,11 +274,14 @@ describe('the aspect law — an aspect carries a relation, not an element', () =
         for (const kind of ASPECT_KINDS) {
             const expected = elementalRelationOfAspect(kind);
             for (let degreeA = 0; degreeA < 360; degreeA += 30) {
-                // Place B at the exact aspect angle, mid-sign so orb never straddles.
-                const angle = { conjunction: 0, sextile: 60, square: 90, trine: 120, opposition: 180 }[
-                    kind
-                ];
-                const a = degreeA + 15;
+                const angle = {
+                    conjunction: 0,
+                    sextile: 60,
+                    square: 90,
+                    trine: 120,
+                    opposition: 180
+                }[kind];
+                const a = degreeA + 15; // mid-sign so orb never straddles
                 const b = a + angle;
                 // The engine's own kernel-ported law must agree this IS that aspect.
                 expect(aspectBetween(a, b)?.kind).toBe(kind);

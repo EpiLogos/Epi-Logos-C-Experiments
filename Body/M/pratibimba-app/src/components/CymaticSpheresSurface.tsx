@@ -20,6 +20,18 @@ import type {
     CymaticSpheresProjectionBoundary
 } from '../bridge/types';
 import { ELEMENT_COLOURS } from '../engine/cosmicMath';
+import { asMahabhuta } from '../engine/elementRegisters';
+
+/**
+ * Scene colour for a bussed element id. Both the chakra and planet anchors carry
+ * [[M2-2]] Mahābhūta ids (M2_CHAKRA_LUT / M2_PLANET_LUT mirrors); the crossing
+ * into the register is explicit so an id from another register cannot silently
+ * borrow a colour.
+ */
+function mahabhutaColour(elementId: number): number | undefined {
+    const mahabhuta = asMahabhuta(elementId);
+    return mahabhuta === null ? undefined : ELEMENT_COLOURS[mahabhuta];
+}
 
 export type CymaticSphereHarmonic = CymaticSphereHarmonicBoundary;
 export type CymaticSphereChakra = CymaticSphereChakraBoundary;
@@ -263,7 +275,7 @@ export function buildCymaticSpheresScene(
                 ? index === 0
                     ? 0xe6e2d8
                     : 0xd4af67
-                : (ELEMENT_COLOURS[chakra.elementId] ?? 0xb8bec9);
+                : (mahabhutaColour(chakra.elementId) ?? 0xb8bec9);
         const mesh = new THREE.Mesh(
             deformedSphere(0.52 + index * 0.24, chakra.harmonic),
             new THREE.MeshPhysicalMaterial({
@@ -296,8 +308,7 @@ export function buildCymaticSpheresScene(
     );
     scene.add(anchorBody(0.13, 0x89a8bd, earthPosition, 'earth-observer-centre'));
     scene.add(anchorBody(0.1, 0xffcf66, sunPosition, 'sun-anchor'));
-    const activeColor =
-        ELEMENT_COLOURS[projection.activePlanet.elementId] ?? 0xf2f0ea;
+    const activeColor = mahabhutaColour(projection.activePlanet.elementId) ?? 0xf2f0ea;
     const activeBody = anchorBody(
         0.12,
         activeColor,

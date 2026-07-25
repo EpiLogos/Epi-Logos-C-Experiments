@@ -40,6 +40,28 @@ describe('MedicineViewPane', () => {
         expect(screen.getByText('zone 1')).toBeTruthy();
     });
 
+    it('attributes the two body ontologies separately and marks the bridge as a correspondence', () => {
+        // The chakra ladder is M2-2's yogic body; the decan reading is M2-3's
+        // Hermetic medical-astrology body. One organism, two ontologies — the
+        // surface must not present them as one undifferentiated "medicine".
+        render(<MedicineViewPane fixture={fixture} />);
+        const yogic = document.querySelector('[data-body-ontology="yogic"]');
+        const hermetic = document.querySelector('[data-body-ontology="hermetic"]');
+        expect(yogic?.getAttribute('data-owner-coordinate')).toBe('M2-2');
+        expect(hermetic?.getAttribute('data-owner-coordinate')).toBe('M2-3');
+        expect(yogic).not.toBe(hermetic);
+        // Each body's parts stay inside its own panel: zones are yogic,
+        // the decan body part is Hermetic.
+        expect(yogic?.textContent).toContain('chakra-7');
+        expect(hermetic?.textContent).toContain('Eyes and sinuses');
+        expect(yogic?.textContent).not.toContain('Eyes and sinuses');
+        // The active chakra is reached ACROSS from the decan through the shared
+        // element, so it is labelled a claim rather than a fact of this body.
+        const bridged = document.querySelector('[data-active="true"]');
+        expect(bridged?.getAttribute('data-corresponded-from')).toBe('m2-3-decan');
+        expect(bridged?.getAttribute('title')).toContain('not an identity');
+    });
+
     it('does not claim a pin until persistence succeeds', async () => {
         let resolve!: () => void;
         const pinMateria = vi.fn(() => new Promise<void>(done => { resolve = done; }));

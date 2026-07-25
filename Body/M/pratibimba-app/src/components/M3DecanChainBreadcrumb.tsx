@@ -15,7 +15,7 @@
  * Contract: [[M3'-SPEC]] + rerun [[24-m3-mahamaya-frontend-deep]] 24.7.
  */
 
-import { alchemicalElementName } from '../engine/elementRegisters';
+import { alchemicalElementName, asAlchemical } from '../engine/elementRegisters';
 import {
     cardLabelFromCardKey,
     isResolvedChain,
@@ -153,7 +153,7 @@ function chipsFromChain(chain: TarotDecanChain): ChipModel[] {
         // register-ambiguous — "2" is Water in the alchemical register and Agni
         // (fire) in [[M2-2]]'s Mahābhūta register, and the chip gave the reader
         // no way to tell which one it was looking at.
-        chip('element', alchemicalElementName(chain.elementId) ?? String(chain.elementId)),
+        chip('element', alchemicalElementName(asAlchemical(chain.elementId)) ?? String(chain.elementId)),
         chip('chakra', String(chain.chakraId)),
         chip('body-zones', chain.bodyZones.join(', '))
     ];

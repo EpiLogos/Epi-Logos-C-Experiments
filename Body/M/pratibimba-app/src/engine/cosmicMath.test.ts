@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { asMahabhuta } from './elementRegisters';
 import {
     BELL_DECAY_S,
     BELL_STRIKE_WEIGHTS,
@@ -103,12 +104,17 @@ describe('cosmic engine math', () => {
         expect(PLANET_ORDER).toHaveLength(10);
     });
 
-    it('element colour-binary covers exactly the five kernel element ids', () => {
-        // AKASHA=0 VAYU=1 AGNI=2 APAS=3 PRITHVI=4 (portal-core PLANET_ELEMENT_ID)
+    it('element colour-binary covers exactly the five [[M2-2]] Mahabhuta ids', () => {
+        // AKASHA=0 VAYU=1 AGNI=2 APAS=3 PRITHVI=4 (portal-core PLANET_ELEMENT_ID,
+        // the M2_PLANET_LUT mirror — tattvas 31..35, NOT the alchemical register)
         for (const id of [0, 1, 2, 3, 4]) {
-            expect(typeof ELEMENT_COLOURS[id]).toBe('number');
+            const mahabhuta = asMahabhuta(id);
+            expect(mahabhuta).not.toBeNull();
+            expect(typeof ELEMENT_COLOURS[mahabhuta!]).toBe('number');
         }
-        expect(ELEMENT_COLOURS[5]).toBeUndefined(); // no invented sixth element
+        // There is no sixth mahabhuta — the register itself refuses the id, so
+        // Salt (alchemical 5) can never reach this table at all.
+        expect(asMahabhuta(5)).toBeNull();
     });
 
     it('body radius is monotonic in the Keplerian datum and bounded', () => {

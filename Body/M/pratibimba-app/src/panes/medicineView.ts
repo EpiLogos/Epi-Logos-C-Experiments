@@ -13,6 +13,13 @@ import { harmonicSnapshot } from '../engine/modulation/modulators';
 export const MEDICINE_SNAPSHOT_METHOD = 'nara.medicine.snapshot';
 export const MEDICINE_PIN_METHOD = 'nara.medicine.pin';
 
+/**
+ * THE YOGIC BODY — [[M2-2]]'s own body ontology: chakra → tattva → mahābhūta →
+ * body zone. `dominantElementId` arrives in the alchemical register (the wire
+ * encoding); `bodyZones` are this body's zones and are NOT interchangeable with
+ * the Hermetic body's `bodyPart` below. Two ontologies of one organism.
+ * See [[DR-L2-ELEM-2]] + `Idea/Bimba/Map/datasets/m2-element-registers.json`.
+ */
 export interface MedicineChakra {
     readonly id: number;
     readonly name: string;
@@ -25,6 +32,17 @@ export interface MedicineHerb {
     readonly botanical: string;
 }
 
+/**
+ * THE HERMETIC BODY — [[M2-3]]'s own body ontology: decan → sign → body part →
+ * herb, the medical-astrology reading (Aries the head, Taurus the neck, round
+ * the wheel). A DIFFERENT body from the yogic one above.
+ *
+ * `activeChakraId` is the one place the two meet, and it is a CORRESPONDENCE,
+ * not an identity: the substrate reaches it decan → element → chakra
+ * (`medicine_frame::chakra_for_element`), bridging the Hermetic reading to the
+ * yogic one through the shared element. Render it as a claim the two ontologies
+ * make about each other — never as though one body simply had the other's part.
+ */
 export interface MedicineActiveDecan {
     readonly sunDegree: number;
     readonly signIdx: number;

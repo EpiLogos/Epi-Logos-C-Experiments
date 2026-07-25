@@ -4872,10 +4872,18 @@ textarea {
 
 .medicine-header span,
 .medicine-header p,
+.medicine-ontology-note,
 .medicine-evidence-note {
   margin: 0;
   color: var(--ink-dim);
   font-size: var(--type-caption);
+}
+
+/* Names which body ontology a panel is reading — the yogic (M2-2) ladder and
+   the Hermetic (M2-3) decan body are different bodies, per DR-L2-ELEM-2. */
+.medicine-ontology-note {
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.02em;
 }
 
 .medicine-panels {
@@ -7142,4 +7150,44 @@ button.tool-stream-timerange.active {
 [data-testid='walkthrough-next'] {
     border-color: var(--ring);
     color: var(--ring);
+}
+
+/* ── T28.3 — relation-family filter (DR-IG-1) ──────────────────────────────
+   Three options over the graph's edges. Sits above the canvas as ordinary
+   chrome, not an overlay: narrowing the graph is a reading choice, not a mode
+   that blocks it. Structural edges render solid and correspondential dashed on
+   the canvas itself, so the family stays legible without opening the filter. */
+.graph-relation-family-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+}
+
+.graph-filter-label {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.graph-relation-family-filter button {
+    padding: 2px 8px;
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+    cursor: pointer;
+}
+
+.graph-relation-family-filter button[aria-pressed='true'] {
+    border-color: var(--ring);
+    color: var(--ring);
+}
+
+.graph-explorer-detail {
+    padding: 2px 8px 6px;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
 }

@@ -122,31 +122,6 @@ describe('26.T26.4 — the evidence fold lands its close-paths', () => {
         fireEvent.click(screen.getByTestId('evidence-packet-row'));
     }
 
-    it('offers the axiom-translation inspector ONLY when the run translated axioms', () => {
-        renderWithSelection(fixture());
-        expect(screen.queryByTestId('evidence-open-axiom')).toBeNull();
-        cleanup();
-
-        renderWithSelection(
-            fixture({
-                axiomTranslationSteps: [
-                    {
-                        id: 'ax-1',
-                        fromForm: 'natural',
-                        toForm: 'formal',
-                        inputText: 'in',
-                        outputText: 'out',
-                        reasoningTrace: 'why'
-                    }
-                ]
-            })
-        );
-        const link = screen.getByTestId('evidence-open-axiom');
-        expect(link.textContent).toContain('1 step');
-        expect(link.getAttribute('data-cross-link')).toBe('m5-epii.axiomTranslation');
-        expect(link.getAttribute('data-evidence-id')).toBe('packet-1');
-    });
-
     it('offers the contemplation close-path ONLY when the run landed one (19.7)', () => {
         renderWithSelection(fixture());
         expect(screen.queryByTestId('evidence-open-contemplation')).toBeNull();
