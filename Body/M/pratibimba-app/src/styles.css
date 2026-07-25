@@ -6968,3 +6968,47 @@ button.tool-stream-timerange.active {
     white-space: pre-wrap;
     opacity: 0.8;
 }
+
+/* ── T31.8 — inline confirmation (CCT-8: the tab IS the landing surface) ────
+   The sanctioned replacement for a blocking dialog. It renders in normal flow
+   inside the pane that armed it — no `position: fixed`, no overlay, no
+   backdrop — so the rest of the shell stays visible and interactive while the
+   question stands. Deliberately NOT centred or elevated: an inline question
+   should read as part of its surface, not as a layer over the app. */
+.inline-confirm {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 8px 10px;
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ring);
+    border-radius: 4px;
+    background: var(--ground-raised);
+}
+
+.inline-confirm-prompt {
+    flex: 1 1 auto;
+    color: var(--ink);
+    font-size: var(--type-body-small);
+}
+
+.inline-confirm button {
+    padding: 4px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--ink);
+    font-size: var(--type-caption);
+    cursor: pointer;
+}
+
+.inline-confirm-accept {
+    border-color: var(--ring);
+    color: var(--ring);
+}
+
+.inline-confirm button:hover {
+    background: var(--ground);
+}

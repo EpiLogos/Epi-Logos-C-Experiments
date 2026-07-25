@@ -20,11 +20,11 @@ import {
     type TransformContainerMode,
     type TransformLifecycleReceipt
 } from './transformContainers';
+import { InlineConfirm } from '../ui/InlineConfirm';
 
 export interface TransformContainersPaneProps {
     readonly startTransform?: (container: TransformContainerMode) => Promise<TransformLifecycleReceipt>;
     readonly advanceTransform?: (request: TransformAdvanceRequest) => Promise<TransformLifecycleReceipt>;
-    readonly confirmBackstep?: () => boolean;
 }
 
 export function M4TransformBadge({ operation }: { readonly operation: AlchemicalOperation }) {
@@ -37,13 +37,15 @@ export function M4TransformBadge({ operation }: { readonly operation: Alchemical
 
 export function TransformContainersPane({
     startTransform,
-    advanceTransform,
-    confirmBackstep = () => window.confirm('Return to the previous transform stage?')
+    advanceTransform
 }: TransformContainersPaneProps) {
     const [selected, setSelected] = useState<TransformContainerMode>('bohm-dialogue');
     const [receipt, setReceipt] = useState<TransformLifecycleReceipt | null>(null);
     const [writing, setWriting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    // 31.T31.8: the backstep question is asked INLINE (CCT-8), in this pane's
+    // own controls — never in a blocking dialog that seizes the shell.
+    const [backstepArmed, setBackstepArmed] = useState(false);
     const selectedOption =
         TRANSFORM_CONTAINER_OPTIONS.find(option => option.id === selected) ??
         TRANSFORM_CONTAINER_OPTIONS[0];
@@ -74,7 +76,6 @@ export function TransformContainersPane({
     const start = () => run(() => invokeStart(selected));
     const move = (direction: 'advance' | 'regress') => {
         if (!receipt) return;
-        if (direction === 'regress' && !confirmBackstep()) return;
         run(() =>
             invokeAdvance({
                 container: receipt.container,
@@ -145,7 +146,8 @@ export function TransformContainersPane({
                     <footer className="transform-controls">
                         <button
                             type="button"
-                            onClick={() => move('regress')}
+                            onClick={() => setBackstepArmed(true)}
+                            aria-expanded={backstepArmed}
                             disabled={writing || receipt.stageIndex === 0}
                         >
                             Back
@@ -161,6 +163,18 @@ export function TransformContainersPane({
                             Advance
                         </button>
                     </footer>
+                    {backstepArmed ? (
+                        <InlineConfirm
+                            testId="transform-backstep-confirm"
+                            prompt="Return to the previous transform stage?"
+                            confirmLabel="Go back"
+                            onConfirm={() => {
+                                setBackstepArmed(false);
+                                move('regress');
+                            }}
+                            onCancel={() => setBackstepArmed(false)}
+                        />
+                    ) : null}
                 </>
             )}
 

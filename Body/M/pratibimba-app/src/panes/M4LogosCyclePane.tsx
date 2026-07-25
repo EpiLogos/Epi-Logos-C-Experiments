@@ -15,6 +15,7 @@
 import { useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useProvenanceStore } from '../state/stores';
+import { InlineConfirm } from '../ui/InlineConfirm';
 import {
     LOGOS_ADVANCE_METHOD,
     LOGOS_REGRESS_METHOD,
@@ -28,7 +29,6 @@ export interface M4LogosCyclePaneProps {
     readonly readStatus?: () => Promise<LogosCycleReceipt>;
     readonly advanceStage?: () => Promise<LogosCycleReceipt>;
     readonly regressStage?: () => Promise<LogosCycleReceipt>;
-    readonly confirmRegress?: () => boolean;
 }
 
 type StageState = 'completed' | 'active' | 'pending';
@@ -54,16 +54,14 @@ export function M4LogosChip({ receipt }: { readonly receipt: LogosCycleReceipt |
     );
 }
 
-export function M4LogosCyclePane({
-    readStatus,
-    advanceStage,
-    regressStage,
-    confirmRegress = () => window.confirm('Regress to the previous logos stage?')
-}: M4LogosCyclePaneProps) {
+export function M4LogosCyclePane({ readStatus, advanceStage, regressStage }: M4LogosCyclePaneProps) {
     const connected = useProvenanceStore(s => s.connection.connected);
     const [receipt, setReceipt] = useState<LogosCycleReceipt | null>(null);
     const [writing, setWriting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    // 31.T31.8: regress is confirmed INLINE (CCT-8) — arming renders the
+    // question in this pane's own footer; nothing blocks the shell.
+    const [regressArmed, setRegressArmed] = useState(false);
 
     const invokeStatus = async (): Promise<LogosCycleReceipt> => {
         if (readStatus) return readStatus();
@@ -151,9 +149,10 @@ export function M4LogosCyclePane({
                     type="button"
                     data-testid="m4-logos-regress"
                     onClick={() => {
-                        if (nothingCompleted || !confirmRegress()) return;
-                        run(invokeRegress);
+                        if (nothingCompleted) return;
+                        setRegressArmed(true);
                     }}
+                    aria-expanded={regressArmed}
                     disabled={writing || nothingCompleted}
                 >
                     Regress
@@ -171,6 +170,19 @@ export function M4LogosCyclePane({
                     Advance
                 </button>
             </footer>
+
+            {regressArmed ? (
+                <InlineConfirm
+                    testId="m4-logos-regress-confirm"
+                    prompt="Regress to the previous logos stage?"
+                    confirmLabel="Regress"
+                    onConfirm={() => {
+                        setRegressArmed(false);
+                        run(invokeRegress);
+                    }}
+                    onCancel={() => setRegressArmed(false)}
+                />
+            ) : null}
 
             {lastRegressed ? (
                 <p className="logos-regression" data-testid="m4-logos-regression" role="status">

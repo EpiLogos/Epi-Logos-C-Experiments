@@ -5,7 +5,8 @@
  * Actualises: real Chromium proof that the Logos pane drives the landed
  *   nara.logos.status/advance/regress RPCs over a spawned gateway with an
  *   isolated EPI_NARA_HOME: the six-stage ring starts empty, Advance writes a
- *   forward stage and moves the cursor, and Regress (after confirmation) steps
+ *   forward stage and moves the cursor, and Regress (after INLINE confirmation,
+ *   31.T31.8) steps
  *   the cursor back and surfaces the explicit c_4_regression marker.
  * Public surface: Playwright test over the spawned gateway.
  * Does NOT own: the cycle law (epi-cli nara::logos), artifact persistence, or
@@ -18,8 +19,14 @@ import { expect, test } from '@playwright/test';
 test('25.T25.13: the logos cycle advances forward and regresses with an explicit marker', async ({
     page
 }) => {
-    // Regress is guarded by window.confirm; accept it deterministically.
-    page.on('dialog', dialog => void dialog.accept());
+    // 31.T31.8: regress is guarded by an INLINE confirmation (CCT-8), not by
+    // window.confirm — this used to need `page.on('dialog', d => d.accept())`.
+    // Assert no native dialog can fire at all.
+    const dialogs: string[] = [];
+    page.on('dialog', dialog => {
+        dialogs.push(dialog.type());
+        void dialog.dismiss();
+    });
 
     await page.goto('/');
     await expect(page.getByTestId('shell')).toBeVisible();
@@ -51,8 +58,11 @@ test('25.T25.13: the logos cycle advances forward and regresses with an explicit
     // Regress: the highest completed stage is undone, the cursor steps back, and
     // the backward move is marked explicitly (never read as forward integration).
     await page.getByTestId('m4-logos-regress').click();
+    await page.getByTestId('m4-logos-regress-confirm-confirm').click();
     await expect(page.getByTestId('m4-logos-regression')).toBeVisible();
     await expect(page.getByTestId('m4-logos-stage-1')).toHaveAttribute('data-state', 'active');
     await expect(page.getByTestId('m4-logos-stage-0')).toHaveAttribute('data-state', 'completed');
     await expect(position).toContainText('1 / 6');
+
+    expect(dialogs, 'a native dialog fired — CCT-8 forbids blocking modals').toEqual([]);
 });

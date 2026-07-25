@@ -63,27 +63,30 @@ describe('M4LogosCyclePane (25.T25.13)', () => {
             <M4LogosCyclePane
                 readStatus={() => Promise.resolve(status([0, 1, 2], 3))}
                 regressStage={regressStage}
-                confirmRegress={() => true}
             />
         );
         await waitFor(() => expect(state(2)).toBe('completed'));
+        // 31.T31.8: arming shows the question INLINE — no blocking dialog.
         fireEvent.click(screen.getByTestId('m4-logos-regress'));
+        expect(regressStage).not.toHaveBeenCalled();
+        fireEvent.click(screen.getByTestId('m4-logos-regress-confirm-confirm'));
         await waitFor(() => expect(regressStage).toHaveBeenCalledTimes(1));
         await screen.findByTestId('m4-logos-regression');
         expect(screen.getByTestId('m4-logos-position').textContent).toContain('2 / 6');
     });
 
-    it('does not regress when confirmation is declined', async () => {
+    it('does not regress when the inline confirmation is cancelled', async () => {
         const regressStage = vi.fn();
         render(
             <M4LogosCyclePane
                 readStatus={() => Promise.resolve(status([0, 1, 2], 3))}
                 regressStage={regressStage}
-                confirmRegress={() => false}
             />
         );
         await waitFor(() => expect(state(2)).toBe('completed'));
         fireEvent.click(screen.getByTestId('m4-logos-regress'));
+        fireEvent.click(screen.getByTestId('m4-logos-regress-confirm-cancel'));
+        expect(screen.queryByTestId('m4-logos-regress-confirm')).toBeNull();
         expect(regressStage).not.toHaveBeenCalled();
     });
 

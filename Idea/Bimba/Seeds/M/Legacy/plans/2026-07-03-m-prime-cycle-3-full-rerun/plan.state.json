@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T10:23:52.942Z",
+  "updatedAt": "2026-07-25T11:20:45.126Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15288,14 +15288,31 @@
       "blocker": null
     },
     "31.T31.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T09:58:44.249Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T11:20:45.104Z",
       "claimedAt": "2026-07-25T09:58:44.249Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T11:20:45.104Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T11:20:45.104Z",
+          "text": "No-modal discipline is now ENFORCED and the carrier actually obeys it. scripts/lint-no-modal-discipline.mjs walks the TypeScript AST (the catalog.test.ts 'never a regex grep of prose' discipline) and fails on blocking native calls (alert/confirm/prompt/showModal, matched receiver-agnostically so window.confirm, globalThis.confirm and a bare confirm are one rule) plus the four Theia modal APIs CCT-8 names verbatim; wired as pnpm lint:no-modal and run by pnpm test before vitest, so it sits inside the app-test gate. SCOPE, stated not assumed: the frozen validator scoped by review|evidence|gate-landing PATH, which matches 5 of this tree's 503 files and NEITHER of the two real violations found here, so the blocking tier is carrier-wide on the structural warrant that SHELL_SLOT_POLICY (31.T31.7) has six slots and none is a modal slot; the widening is documented in the script header and AGENTS.md and flagged for the Architect. The lint went green by FIXING, not exempting: the two live window.confirm calls (M4LogosCyclePane regress, TransformContainersPane backstep) were replaced with src/ui/InlineConfirm.tsx, the sanctioned non-blocking replacement that ships with the rule. That these were real production modals is evidenced by the e2e that had to handle them - tests/e2e/transform-containers.spec.ts and m4-logos-cycle.spec.ts both carried page.once('dialog', d => d.accept()); both now click the inline confirm and assert ZERO native dialogs fire. GREEN: full app vitest 1292 (incl. 12 lint fixture/regression tests + the real-tree scan), app-typecheck, app-build, app-smoke, carrier-tokens, lint-boundaries, ta-onta 622, gateway 98, gateway-contract 92, live-wire, gateway-methods; UF proof tests/e2e/no-modal-discipline.spec.ts against the REAL spawned gateway - records Chromium's dialog event (zero fired), asserts the confirmation renders in normal flow (computed position static/relative, <25% viewport, no aria-modal/dialog[open]/backdrop), and proves NON-BLOCKING operationally by opening the command palette while the question stands. Adversarial review (3 lenses, 11 findings, 10 refuted) confirmed 1 real defect, FIXED: the first cut hand-rolled a comment stripper whose quote state desynced on a regex literal or a JSX apostrophe, blanking real code (a modal on landed line m1CoordinateTreeContribution.ts:125 was INVISIBLE) and leaving real comments unstripped (a comment about the rule became a violation in 4 landed files). Rewriting over the AST removed the failure mode entirely; both directions are proven fixed against those exact landed lines and pinned as regression tests. Full UF gate RED only on tests/e2e/pratibimba-consent.spec.ts:274 - the known order-dependent flake, in a spec this tranche does not touch, confirmed unrelated by a targeted isolation run (PASS 9.1s) earlier this session.",
+          "receipt": {
+            "command": "npx playwright test no-modal-discipline transform-containers m4-logos-cycle --reporter=list   [cwd Body/M/pratibimba-app; also green inside the full UF gate: app-ui-flow 83 e2e, sole red = unrelated consent:274 flake]",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/scripts/lint-no-modal-discipline.mjs",
+              "Body/M/pratibimba-app/scripts/no-modal-discipline.test.mjs",
+              "Body/M/pratibimba-app/src/ui/InlineConfirm.tsx",
+              "Body/M/pratibimba-app/tests/e2e/no-modal-discipline.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T11:58:44.249Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T09:58:44.249Z",
       "runId": "20260725T095844Z-31-T31.8",
       "worktree": null,
@@ -20271,16 +20288,16 @@
       "blocker": null
     },
     "50.T50.06": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-25T11:05:28.565Z",
+      "claimedAt": "2026-07-25T11:05:28.565Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T13:05:28.565Z",
+      "heartbeatAt": "2026-07-25T11:05:28.565Z",
+      "runId": "20260725T110528Z-50-T50.06",
       "worktree": null,
       "blocker": null
     },
@@ -26210,11 +26227,12 @@
     {
       "runId": "20260725T095844Z-31-T31.8",
       "taskId": "31.T31.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T09:58:44.249Z",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T11:58:44.249Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T11:20:45.104Z"
     },
     {
       "runId": "20260725T095904Z-50-T50.03",
@@ -26245,31 +26263,41 @@
       "leaseExpiresAt": "2026-07-25T12:19:38.288Z",
       "worktree": null,
       "completedAt": "2026-07-25T10:23:52.920Z"
+    },
+    {
+      "runId": "20260725T110528Z-50-T50.06",
+      "taskId": "50.T50.06",
+      "status": "in_progress",
+      "startedAt": "2026-07-25T11:05:28.565Z",
+      "owner": "opus-mdev-t50-impl",
+      "leaseExpiresAt": "2026-07-25T13:05:28.565Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T09:14:55.871Z",
-    "updatedAt": "2026-07-25T09:14:55.871Z",
+    "createdAt": "2026-07-25T11:08:43.351Z",
+    "updatedAt": "2026-07-25T11:08:43.351Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "50.T50.01",
-      "30.T30.4"
+      "31.T31.8",
+      "50.T50.06"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 9,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "50.T50.01": "in-session",
-      "30.T30.4": "in-session"
+      "31.T31.8": "in-session",
+      "50.T50.06": "consider-subagents-if-approved"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 9/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.",
+      "Marked heavier tasks for optional subagents or split-before-execution review; default execution remains in-session."
     ]
   }
 }

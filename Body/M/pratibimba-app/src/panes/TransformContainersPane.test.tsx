@@ -66,13 +66,10 @@ describe('TransformContainersPane', () => {
             .fn()
             .mockResolvedValueOnce(advanced)
             .mockResolvedValueOnce({ ...started, direction: 'regress' });
-        const confirmBackstep = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(true);
-
         render(
             <TransformContainersPane
                 startTransform={startTransform}
                 advanceTransform={advanceTransform}
-                confirmBackstep={confirmBackstep}
             />
         );
 
@@ -84,11 +81,14 @@ describe('TransformContainersPane', () => {
         await waitFor(() => expect(screen.getByTestId('transform-position').textContent).toBe('2 / 2'));
         expect(screen.getByTestId('m4-transform-badge').textContent).toBe('separatio');
 
+        // 31.T31.8: the backstep question is inline; cancelling leaves the
+        // stage untouched and the shell was never blocked.
         fireEvent.click(screen.getByRole('button', { name: 'Back' }));
-        expect(confirmBackstep).toHaveBeenCalledTimes(1);
+        fireEvent.click(screen.getByTestId('transform-backstep-confirm-cancel'));
         expect(advanceTransform).toHaveBeenCalledTimes(1);
 
         fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+        fireEvent.click(screen.getByTestId('transform-backstep-confirm-confirm'));
         await waitFor(() => expect(advanceTransform).toHaveBeenCalledTimes(2));
         expect(advanceTransform).toHaveBeenLastCalledWith({
             container: 'bohm-dialogue',

@@ -33,8 +33,11 @@ test('transform container follows the governed gateway lifecycle', async ({ page
     await expect(pane.getByTestId('transform-position')).toHaveText('2 / 5');
     await expect(pane.getByTestId('m4-transform-badge')).toHaveText('separatio');
 
-    page.once('dialog', dialog => dialog.accept());
+    // 31.T31.8: the backstep is confirmed INLINE now. This used to need
+    // `page.once('dialog', d => d.accept())` — that line was the proof a
+    // blocking native dialog really fired here in production (CCT-8).
     await pane.getByRole('button', { name: 'Back' }).click();
+    await pane.getByTestId('transform-backstep-confirm-confirm').click();
     await expect(pane.getByTestId('transform-position')).toHaveText('1 / 5');
     await expect(pane.getByTestId('m4-transform-badge')).toHaveText('nigredo');
 });
