@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T22:21:37.193Z",
+  "updatedAt": "2026-07-25T22:25:12.564Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20662,6 +20662,90 @@
       "runId": null,
       "worktree": null,
       "blocker": null
+    },
+    "52.T1": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "52.T2": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "52.T3": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "52.T4": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "52.T5": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "52.T6": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
     }
   },
   "runs": [
@@ -26579,28 +26663,26 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T21:02:16.583Z",
-    "updatedAt": "2026-07-25T21:02:16.583Z",
+    "createdAt": "2026-07-25T22:25:12.544Z",
+    "updatedAt": "2026-07-25T22:25:12.544Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
-      "28.T28.3",
-      "51.T51.1"
+      "28.T28.3"
     ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
-      "28.T28.3": "in-session",
-      "51.T51.1": "in-session"
+      "28.T28.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

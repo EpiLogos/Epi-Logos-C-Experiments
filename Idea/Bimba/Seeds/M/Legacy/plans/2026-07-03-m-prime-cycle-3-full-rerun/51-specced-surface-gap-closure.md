@@ -18,7 +18,8 @@
 
    Brief: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md` "Sixfold IDE Surface" names six M5′ studios. Five are covered somewhere in the plan — M5-0′ Library, M5-1′ Canon Studio, M5-2′ Backend Studio, M5-4′ Agentic Control Room (Track 26), M5-5′ Logos Atelier (26.T26.3). **M5-3′ Frontend Studio appears in no track** except a passing mention in Track 38's `omniTuning` fold. Per the spec it "Shapes one Theia shell whose 0/1 daily layout, deep IDE layout, M-extensions, and integrated plugins are one thing" — i.e. the surface through which the app's own layout, extension set, and plugin composition are inspectable and editable. Retarget note: the spec's Theia framing is CONTRACT (what the surface must expose); the Theia plumbing is dead — build it carrier-native in pratibimba-app.
    Build: an M5-3′ Frontend Studio pane in `Body/M/pratibimba-app/src/panes/` exposing the live layout/extension/plugin composition as data (not a screenshot of it): which panes are registered, which composition slots are filled and by what, which integrated plugins are active. It must read the real registries the app boots from, so it cannot drift from what actually rendered.
-   Depends on Track 00 Tranche 3.
+   **Ordering (Architect ruling 2026-07-25):** this studio reports on the layout system, so it must report on the REAL one. It is gated behind the 4+2 layout layer; building it first would freeze an inventory of a layer that is about to change shape. Note also that there is no data-driven pane registry today — the pane "registry" is the hand-written `switch` in `App.tsx:302` — so "reads the real registries" requires introducing one, which is the only reading that satisfies "cannot drift from what actually rendered".
+   Depends on Track 00 Tranche 3, and requires Track 52 Tranches 5 and 6.
    Verify: real behavioral proof per Track 00 — a UF e2e (`tests/e2e/`) opens the studio and asserts the rendered inventory matches the app's actual registered panes and composition slots, including after a slot is added. verifier ≠ closer; evidence = fresh command output.
 
 3. **T51.3 — M1′ traversal timeline: the walk's tick/position6/helix-face/degree720 in motion**
@@ -32,14 +33,16 @@
 
    Brief: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md` §2 User-Facing Surface specs a "**Meaning-packet inspector** exposing the active [[M2PrimeMeaningPacket]]: 72-address views, [[MEF]] semantic frame, elemental-medium frame". Zero plan coverage — `M2CorrespondencePane` renders correspondence, but the packet itself (the typed object the rest of the stack passes around) is not inspectable. This is the M2′ instance of the same problem as T51.1: a load-bearing structure that everything consumes and nothing can see.
    Build: a meaning-packet inspector carrier in pratibimba-app rendering the ACTIVE `M2PrimeMeaningPacket` — its 72-address views, MEF semantic frame, and elemental-medium frame — read from the live packet, not reconstructed. Elemental values must route through the L2′ element law (`m_canonical.h` ordering: 0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt); never an ad-hoc map.
-   Depends on Track 00 Tranche 3.
+   **Layout placement (Architect ruling 2026-07-25):** an inspector is 4+2 depth, not shell preview — it lands in the deep layout, so it requires that layer.
+   Depends on Track 00 Tranche 3, and requires Track 52 Tranche 5.
    Verify: real behavioral proof per Track 00 — a UF e2e asserts the inspector's rendered packet matches the packet the app is actually holding, and that elemental rendering matches the L2′ ordering. verifier ≠ closer; evidence = fresh command output.
 
 5. **T51.5 — M3-5′ co-foliated double-torus world-clock view**
 
    Brief: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md` §1 User-Facing Surface specs an "**M3-5 double-torus world-clock view**: a depth mode showing the co-foliation of [[K²]] audio-genesis substrate with [[T²_Mahāmāyā]] inscription", and §8.13 gives it its own surface law ("M3-5 Surface Law: Co-Foliated Double-Torus and 0-Side Dual Rendering"). Zero plan coverage — a surface with its own §-numbered law in canon and not one tranche. `PlayedTorusPane` and `M3WalkNavigator` exist but neither renders the co-foliation.
    Build: an M3-5′ depth mode in pratibimba-app rendering both foliations together per §8.13, including the 0-side dual rendering the law requires. Reads the live M3 profile/clock state; the two tori must be visibly co-foliated rather than drawn side by side.
-   Depends on Track 00 Tranche 3.
+   **Layout placement (Architect ruling 2026-07-25):** canon calls this "a depth mode" in its own words, so it lands in the deep layout and requires that layer to exist first.
+   Depends on Track 00 Tranche 3, and requires Track 52 Tranche 5.
    Verify: real behavioral proof per Track 00 — a UF e2e enters the depth mode and asserts both foliations render from live clock state and that the 0-side dual rendering is present per §8.13. verifier ≠ closer; evidence = fresh command output.
 
 6. **T51.6 — M4′ Dream Journal surface**
