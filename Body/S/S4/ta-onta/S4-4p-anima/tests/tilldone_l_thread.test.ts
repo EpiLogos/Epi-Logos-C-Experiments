@@ -31,6 +31,7 @@ import {
 import {
 	ZTHREAD_TOOL_REGISTRY,
 	dispatchZThread,
+	zThreadMoveResults,
 	zThreadToolForMove,
 	zThreadToolRegistration,
 	type ZThreadRuntimeAdapter,
@@ -350,7 +351,7 @@ describe("dispatchZThread routes a CFP4 move through the completion gate", () =>
 			adapter,
 		});
 
-		const lThread = snapshot.outputs.find((o) => o.cfp === "CFP4");
+		const lThread = zThreadMoveResults(snapshot).find((o) => o.cfp === "CFP4");
 		assert.ok(lThread, "the CFP4 move should be recorded");
 		assert.equal(lThread.tool, "tilldone");
 		assert.equal(lThread.l_thread?.closed, true);
@@ -369,7 +370,7 @@ describe("dispatchZThread routes a CFP4 move through the completion gate", () =>
 			adapter,
 		});
 
-		const lThread = snapshot.outputs.find((o) => o.cfp === "CFP4");
+		const lThread = zThreadMoveResults(snapshot).find((o) => o.cfp === "CFP4");
 		assert.equal(lThread?.l_thread?.closed, false);
 		assert.equal(lThread?.l_thread?.cycles.length, 6);
 		assert.match(lThread?.output ?? "", /DID NOT CLOSE/);
@@ -397,7 +398,7 @@ describe("dispatchZThread routes a CFP4 move through the completion gate", () =>
 		});
 
 		assert.equal(performs, 2);
-		const lThread = snapshot.outputs.find((o) => o.cfp === "CFP4");
+		const lThread = zThreadMoveResults(snapshot).find((o) => o.cfp === "CFP4");
 		assert.equal(lThread?.tool, "tilldone");
 		assert.equal(lThread?.l_thread, undefined);
 	});

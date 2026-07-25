@@ -35,6 +35,15 @@ import {
   type LThreadResult,
   type TillDoneList,
 } from "../S4/tilldone.ts";
+// Score persistence is Hen's — artifacts with a content type are S4-1' (CT).
+// The dependency runs one way: Anima composes and runs, Hen stores and types.
+import {
+  loadScore,
+  recordScoreRun,
+  saveScore,
+  type ScoreDocument,
+  type ScoreRunRecord,
+} from "../../S4-1p-hen/modules/score-store.ts";
 
 export type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 export type CSDirectionality = "day" | "night_prime";
@@ -58,29 +67,83 @@ export function configureParentSliceCompletionEmitter(emitter: ParentSliceComple
   parentSliceCompletionEmitter = emitter;
 }
 
+/**
+ * Origination polarity (50.T50.07).
+ *
+ * `(00/00)` — Dialogical. User as source. This is where an orchestration script
+ * gets DEVELOPED: a task is given its specific expression in the language
+ * through dialogue. Every Anima session starts here; that is the law, not a
+ * default anyone may choose otherwise.
+ *
+ * `(4.0/1-4.4/5)` — Mechanistic. Running a ready-made flow. Re-running a
+ * persisted score lands here, because a re-run does not re-originate: the
+ * dialogue that produced the score already happened, once.
+ */
+export const ORIGINATION_DIALOGICAL: CpfPolarity = "(00/00)";
+export const ORIGINATION_MECHANISTIC: CpfPolarity = "(4.0/1-4.4/5)";
+
 export type CSState = {
   value: CS;
   directionality: CSDirectionality;
   cpPosition: "4.0" | "4.1" | "4.2" | "4.3" | "4.4" | "4.5";
+  /**
+   * CPF origination polarity. Optional on the way IN so existing callers keep
+   * compiling, always present on the way OUT — `setCSState` normalises and
+   * `getCSState` defaults, so no reader ever sees a session with no origination.
+   */
+  origination?: CpfPolarity;
 };
 
-const sessionCSState = new Map<string, CSState>();
+/** A CS state as it is READ: origination is guaranteed. */
+export type OriginatedCSState = CSState & { origination: CpfPolarity };
+
+const sessionCSState = new Map<string, OriginatedCSState>();
 const zThreadShapes = new Map<string, ZThreadShape>();
 const zThreadSnapshots = new Map<string, ZThreadSnapshot>();
 
-export function setCSState(sessionId: string | undefined, nextState: CSState) {
+export function setCSState(
+  sessionId: string | undefined,
+  nextState: CSState,
+): OriginatedCSState {
+  // Absent origination means "starting": a session begins dialogical. The reset
+  // in `subscriptions.ts` on `before_agent_start` therefore returns every
+  // session to `(00/00)` without having to say so.
+  const normalized: OriginatedCSState = {
+    ...nextState,
+    origination: nextState.origination ?? ORIGINATION_DIALOGICAL,
+  };
   if (sessionId) {
-    sessionCSState.set(sessionId, nextState);
+    sessionCSState.set(sessionId, normalized);
   }
-  return nextState;
+  return normalized;
 }
 
-export function getCSState(sessionId?: string): CSState {
-  return (sessionId && sessionCSState.get(sessionId)) ?? {
+export function getCSState(sessionId?: string): OriginatedCSState {
+  // `sessionId ? … : undefined`, not `sessionId && …`: an empty-string session
+  // id is falsy but NOT nullish, so the `&&` form returned `""` straight through
+  // `??` and a caller got a string where a state was promised. That made
+  // `getCSState("").origination` undefined — a session reading as no longer
+  // originating purely because its id was empty.
+  const existing = sessionId ? sessionCSState.get(sessionId) : undefined;
+  return existing ?? {
     value: "CS0",
     directionality: "day",
     cpPosition: "4.0",
+    origination: ORIGINATION_DIALOGICAL,
   };
+}
+
+/** Move a session's origination polarity, leaving the rest of CS untouched. */
+export function setOrigination(
+  sessionId: string | undefined,
+  origination: CpfPolarity,
+): OriginatedCSState {
+  return setCSState(sessionId, { ...getCSState(sessionId), origination });
+}
+
+/** Is this session still in the dialogue where scripts get developed? */
+export function isOriginating(sessionId?: string): boolean {
+  return getCSState(sessionId).origination === ORIGINATION_DIALOGICAL;
 }
 
 export type ZThreadToolName =
@@ -274,6 +337,22 @@ export function listZThreadSnapshots(): ZThreadSnapshot[] {
   return [...zThreadSnapshots.values()];
 }
 
+/**
+ * A snapshot's move results, read at Anima's richer type.
+ *
+ * `ZThreadSnapshot` lives in the shared TS mirror (`ta-onta/shared/vak_address.ts`),
+ * where `outputs` carries the MINIMAL record every carrier can rely on — a move
+ * id, its CFP, the tool name, the output. The CFP4 `l_thread` record is Anima's
+ * alone, because the completion gate is Anima's coordinate, so it is read
+ * through here instead of being widened into a shape other carriers share.
+ *
+ * This is the one place the two views are reconciled; call sites read
+ * `ZThreadMoveResult` and never restate the narrowing themselves.
+ */
+export function zThreadMoveResults(snapshot: ZThreadSnapshot): ZThreadMoveResult[] {
+  return snapshot.outputs as ZThreadMoveResult[];
+}
+
 export async function dispatchZThread(input: DispatchZThreadInput): Promise<ZThreadSnapshot> {
   const shape = registerZThreadShape(input);
   const snapshot = initialZThreadSnapshot(shape);
@@ -401,6 +480,178 @@ function normalizeZThreadMoveResult(
     tool: zThreadToolForMove(move.cfp),
     output: result,
   };
+}
+
+// ── (00/00) origination → score lifecycle (50.T50.07) ─────────────────────
+//
+// A task gets a specific expression in the orchestration language through
+// dialogue. ONE execution of that expression is a bounded song. When the
+// expression turns out to be repeatable, it is persisted as a SCORE and can be
+// re-run without re-originating. Hen stores the artifact; the meaning of the
+// stored program — that it is an orchestration, with valid addresses, ordered
+// the way `runOrchestration` orders it — is Anima's, and lives here.
+
+/** The orchestration shape a score persists. Structural, so no runtime import. */
+export interface ScoredOrchestration {
+  readonly id: string;
+  readonly address: VakAddress;
+  readonly steps: ReadonlyArray<{
+    readonly id: string;
+    readonly address: VakAddress;
+    readonly task: string;
+    readonly agent?: string;
+    readonly agents?: string[];
+    readonly chain?: string;
+  }>;
+}
+
+/** Raised when a score is asked for from a session that is not originating. */
+export class ScoreOriginationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ScoreOriginationError";
+  }
+}
+
+/** Raised when a stored program is not a runnable orchestration. */
+export class ScoreProgramError extends Error {
+  readonly violations: string[];
+
+  constructor(scoreId: string, violations: string[]) {
+    super(`score '${scoreId}' does not carry a runnable orchestration: ${violations.join("; ")}`);
+    this.name = "ScoreProgramError";
+    this.violations = violations;
+  }
+}
+
+/**
+ * Validate that an opaque stored program really is an orchestration.
+ *
+ * Hen stores the program verbatim and never reads into it, so this is the only
+ * place the shape is checked — and it has to be checked on the way OUT, not
+ * trusted, because a score is loaded in order to be executed.
+ */
+export function assertScoredOrchestration(scoreId: string, program: unknown): ScoredOrchestration {
+  const violations: string[] = [];
+  const candidate = program as ScoredOrchestration | undefined;
+
+  if (!candidate || typeof candidate !== "object") {
+    throw new ScoreProgramError(scoreId, ["program is not an object"]);
+  }
+  if (typeof candidate.id !== "string" || candidate.id.length === 0) {
+    violations.push("missing orchestration id");
+  }
+  if (!isValidVakAddress(candidate.address)) {
+    violations.push("orchestration address is not a canonical VAK address");
+  }
+  if (!Array.isArray(candidate.steps) || candidate.steps.length === 0) {
+    violations.push("orchestration declares no steps");
+  } else {
+    candidate.steps.forEach((step, index) => {
+      if (!step || typeof step.id !== "string" || step.id.length === 0) {
+        violations.push(`step ${index}: missing id`);
+      }
+      if (typeof step?.task !== "string" || step.task.length === 0) {
+        violations.push(`step ${step?.id ?? index}: missing task`);
+      }
+      if (!isValidVakAddress(step?.address)) {
+        violations.push(`step ${step?.id ?? index}: address is not a canonical VAK address`);
+      }
+    });
+  }
+
+  if (violations.length > 0) throw new ScoreProgramError(scoreId, violations);
+  return candidate;
+}
+
+/**
+ * Persist a developed orchestration as a re-runnable score.
+ *
+ * REFUSES a session that is no longer originating. Origination is dialogue —
+ * a score has to come from somewhere, and "the flow I was already mechanically
+ * running" is not an origination. That refusal is the whole reason `CSState`
+ * carries the polarity.
+ */
+export function persistScore(input: {
+  scoreId: string;
+  orchestration: ScoredOrchestration;
+  sessionId?: string;
+  title?: string;
+  task?: string;
+  /** ISO-8601; supplied by the caller so this stays deterministic under test. */
+  originatedAt?: string;
+}): ScoreDocument {
+  const state = getCSState(input.sessionId);
+  if (state.origination !== ORIGINATION_DIALOGICAL) {
+    throw new ScoreOriginationError(
+      `cannot originate score '${input.scoreId}': session is ${state.origination}, ` +
+        `and a score originates only from ${ORIGINATION_DIALOGICAL} dialogue`,
+    );
+  }
+  assertScoredOrchestration(input.scoreId, input.orchestration);
+
+  return saveScore({
+    id: input.scoreId,
+    title: input.title,
+    program: input.orchestration,
+    provenance: {
+      origination: ORIGINATION_DIALOGICAL,
+      originatedAt: input.originatedAt,
+      sessionId: input.sessionId,
+      task: input.task,
+    },
+  });
+}
+
+/** Load a score and the validated orchestration it carries. */
+export function loadScoredOrchestration(scoreId: string): {
+  score: ScoreDocument;
+  orchestration: ScoredOrchestration;
+} {
+  const score = loadScore(scoreId);
+  return { score, orchestration: assertScoredOrchestration(scoreId, score.program) };
+}
+
+/**
+ * Re-run a persisted score.
+ *
+ * The runner is injected rather than imported: `lib/vak-orchestration-surface.ts`
+ * already imports this module for the CFP→tool map, so importing it back would
+ * close a cycle. Injection also keeps this honest — a re-run executes whatever
+ * the caller's executor does, and this function's job is only to guarantee the
+ * PROGRAM is byte-identical to the one that was persisted.
+ *
+ * Sets the session mechanistic for the duration: a re-run is a ready-made flow,
+ * not a new dialogue. The prior polarity is restored afterwards, so re-running a
+ * score in the middle of an originating session does not end the origination.
+ */
+export async function rerunScore<T>(input: {
+  scoreId: string;
+  run: (orchestration: ScoredOrchestration, score: ScoreDocument) => Promise<T> | T;
+  sessionId?: string;
+  /** ISO-8601 for the run record; caller-supplied. */
+  at?: string;
+  outcome?: string;
+  detail?: Record<string, unknown>;
+}): Promise<{ result: T; score: ScoreDocument; run: ScoreRunRecord }> {
+  const { score, orchestration } = loadScoredOrchestration(input.scoreId);
+  const previous = getCSState(input.sessionId);
+
+  setOrigination(input.sessionId, ORIGINATION_MECHANISTIC);
+  try {
+    const result = await input.run(orchestration, score);
+    const run = recordScoreRun({
+      scoreId: score.id,
+      hash: score.hash,
+      at: input.at,
+      origination: ORIGINATION_MECHANISTIC,
+      outcome: input.outcome,
+      detail: input.detail,
+    });
+    return { result, score, run };
+  } finally {
+    setOrigination(input.sessionId, previous.origination);
+  }
 }
 
 export function runEpi(args: string[], timeout = 120_000) {
