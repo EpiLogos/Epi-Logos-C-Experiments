@@ -12,7 +12,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { registerThemeCommands } from './commands/theme';
 import { CompositionStateProvider } from './composition/compositionState';
+import { installThemeApplier } from './state/themeStore';
 import 'flexlayout-react/style/dark.css';
 import './styles.css';
 
@@ -22,6 +24,13 @@ if (!container) {
 }
 
 async function bootstrap(): Promise<void> {
+    // 30.T30.4 — the theme signal, installed before first paint so the root
+    // carries `data-theme` on the very first frame (no dark-to-light flash) and
+    // the appearance picker is in the palette from boot. Both live for the
+    // lifetime of the page; the disposers exist for tests, not for the app.
+    registerThemeCommands();
+    installThemeApplier();
+
     // e2e-only seam (Track-00 real-UI gate): in browser mode there is no Tauri
     // host, so the drivable-loop harness installs a mockIPC shim that forwards
     // vault commands to a real-filesystem sidecar. Dynamic import behind the

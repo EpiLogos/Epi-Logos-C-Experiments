@@ -7,30 +7,44 @@
  *   the reduced coordinate (family only / family+archetype / full). A STATELESS
  *   projection of the coordinate store — no local coordinate state, no clock.
  *   Per-segment tint = the coordinate's family-tier × archetype-grade colour
- *   identity (coordinateFamilyGrade, 30.T30.2). The per-Mn 72-fold (23.7) and
+ *   identity (coordinateFamilyGrade, 30.T30.2), resolved for the LIVE theme and
+ *   the coordinate's own domain (30.T30.4 — so an M4 coordinate under a nara
+ *   theme carries the nara warm bias). The per-Mn 72-fold (23.7) and
  *   decan-chain (24.7) breadcrumbs stay widget-internal and are NOT this bar.
  * Public surface: CoordinateBreadcrumb.
  * Does NOT own: coordinate selection (state/stores.ts), the cross-layout intent
  *   target ledger (commands/crossLayoutIntent.ts), colour tokens (ui/tokens.ts),
+ *   theme resolution (ui/themeMapping.ts) or theme state (state/themeStore.ts),
  *   or graph node names (bridge/graphClient.ts).
  * Contract: [[CHROME-CONTRACT]] + rerun tranche [[31.T31.6]] (consumes
- *   [[30.T30.2]] coordinateFamilyGrade + [[31.T31.10]] cross-layout intent spine).
+ *   [[30.T30.2]] coordinateFamilyGrade, [[30.T30.4]] theme resolution, and
+ *   [[31.T31.10]] cross-layout intent spine).
  */
 
 import { CROSS_LAYOUT_INTENT_COMMAND } from '../commands/crossLayoutIntent';
 import { commands } from '../commands/registry';
 import { useCoordinateStore, useSessionStore, useTickStore } from '../state/stores';
+import { useThemeStore } from '../state/themeStore';
 import { decomposeCoordinate } from '../ui/coordinateNames';
-import { coordinateFamilyGrade, type ThemedHue } from '../ui/tokens';
+import { domainIdForCoordinate, resolveToken, type CanonicalTheme } from '../ui/themeMapping';
+import { coordinateFamilyGrade } from '../ui/tokens';
 
-/** Resolve a themed hue to the active theme. The carrier renders a single dark
- *  theme today; the light resolution activates when the theme signal lands
- *  (Track 30.4) — a `data-theme="light"` on the document root wins when present. */
-function themed(hue: ThemedHue): string {
-    if (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') {
-        return hue.light;
+/** Resolve the segment tint for the LIVE theme (30.T30.4). `applied` comes from
+ *  the theme store — the reactive path — so a theme switch re-renders this
+ *  component; reading `document.dataset.theme` here would leave the tint stale
+ *  because nothing this component subscribes to would have moved. The domain
+ *  comes from the coordinate being rendered, so an M4 coordinate under a nara
+ *  theme takes the nara warm bias — exactly the pair the remap keys off. */
+function segmentTint(coordinate: string, applied: CanonicalTheme): string | undefined {
+    const grade = coordinateFamilyGrade(coordinate);
+    if (!grade) {
+        return undefined;
     }
-    return hue.dark;
+    return resolveToken(
+        `family.${grade.family.toLowerCase()}.${grade.grade}`,
+        applied,
+        domainIdForCoordinate(coordinate)
+    );
 }
 
 interface BreadcrumbSegment {
@@ -66,13 +80,13 @@ function retargetCoordinate(coordinate: string): void {
 
 export function CoordinateBreadcrumb() {
     const selected = useCoordinateStore(s => s.selected);
+    const applied = useThemeStore(s => s.applied);
     const decomposition = selected ? decomposeCoordinate(selected) : null;
     if (!selected || !decomposition) {
         return null;
     }
 
-    const hue = coordinateFamilyGrade(selected)?.hue;
-    const tint = hue ? themed(hue) : undefined;
+    const tint = segmentTint(selected, applied);
 
     const segments: BreadcrumbSegment[] = [
         {

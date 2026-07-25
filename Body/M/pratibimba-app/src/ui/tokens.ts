@@ -164,6 +164,24 @@ export const FLOW_COLOURS: Record<'mahamayaGold' | 'parashaktiEmerald', ThemedHu
     parashaktiEmerald: { light: '#4a8b6f', dark: '#5fa886' }
 };
 
+// ── Nara-domain warm bias (30.T30.4) ────────────────────────────────────────
+// The 30.4 nara-domain remap: under a `nara-*` theme on the M4 domain, M-tier
+// and privacy-class tokens "tune slightly warmer (earth-toned bias) per UX
+// intent". That is a BOUNDED LEAN toward the earth anchor, never a second
+// palette — DR-WC-DL-1's ratified M0–M5 colour-worlds stay the base, and the
+// remap is a derivation off them (see ui/themeMapping.ts `mixHex`).
+
+/** Earth anchor for the nara warm bias. The same hue the 30.2 derivation gives
+ *  `colour.element.earth` / `psyche-facet.psyche` / `privacy.protected_local` —
+ *  the nara domain leans toward its own earth tone, not an invented one. */
+export const NARA_EARTH_ANCHOR = '#8a7355';
+
+/** How far a remapped hue leans toward {@link NARA_EARTH_ANCHOR}: "slightly"
+ *  named as a value (Track-30 law — the magnitude is a design decision, so it
+ *  lives in the token source where a change to it is visible as such). Small
+ *  enough that every M-tier subsystem stays recognisably itself. */
+export const NARA_WARM_BIAS = 0.18;
+
 /** Resolve one family-tier × archetype-grade token. */
 export function familyGrade(family: FamilyLetter, grade: ArchetypeGrade): ThemedHue {
     return FAMILY_PALETTE[family][grade];

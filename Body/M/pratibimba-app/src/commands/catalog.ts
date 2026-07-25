@@ -38,6 +38,7 @@ export interface CatalogCommand {
  *   - src/engine/modulation (5)     — `registerEngineCommands` (E3)
  *   - src/commands/crossLayoutIntent (1) — `registerCrossLayoutIntentCommand` (31.T31.10)
  *   - src/commands/omnipanelTabChords (8) — `registerOmnipanelTabActivationCommands` (31.T31.3, CCT-4)
+ *   - src/commands/theme.ts (8)     — `registerThemeCommands` (30.T30.4)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
  * `src/ui/leftSidebarModes.ts` also *declares* a register site, but its factory
  * (`registerLeftSidebarModeCommands`) has no caller — it is dead code, so its
@@ -182,6 +183,18 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     { id: 'omnipanel.tab.activate.5', title: 'OmniPanel: Activate the Review tab (⌘6)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
     { id: 'omnipanel.tab.activate.6', title: 'OmniPanel: Activate the Gateway tab (⌘7)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
     { id: 'omnipanel.tab.activate.7', title: 'OmniPanel: Activate the Diagnostics tab (⌘8)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+
+    // --- src/commands/theme.ts (registerThemeCommands, 30.T30.4) ---
+    // One command per selection the theme contract admits: the palette runs
+    // commands with no argument, so this IS the picker (see theme.ts header).
+    { id: 'theme.dark', title: 'Appearance: Dark', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.light', title: 'Appearance: Light', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.glass', title: 'Appearance: Glass', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.discause', title: 'Appearance: Discause', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.naraDark', title: 'Appearance: Nara Dark (M4)', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.naraLight', title: 'Appearance: Nara Light (M4)', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.naraGlass', title: 'Appearance: Nara Glass (M4)', owner: 'appearance', tranche: '30.T30.4' },
+    { id: 'theme.system', title: 'Appearance: Follow system', owner: 'appearance', tranche: '30.T30.4' },
 
     // --- src/panes/M0LayerRail.tsx (data-driven over M0_LAYER_ROUTES local layers) ---
     { id: 'm0.layer.lang', title: "M0': Pre-math node language layer", owner: 'm0-anuttara-rail', tranche: '01.T1.1' },

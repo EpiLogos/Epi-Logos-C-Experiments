@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T09:57:55.650Z",
+  "updatedAt": "2026-07-25T09:58:12.170Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14786,14 +14786,31 @@
       "blocker": null
     },
     "30.T30.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-25T09:10:29.677Z",
+      "status": "done",
+      "updatedAt": "2026-07-25T09:58:12.147Z",
       "claimedAt": "2026-07-25T09:10:29.677Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-25T09:58:12.147Z",
+      "evidence": [
+        {
+          "at": "2026-07-25T09:58:12.147Z",
+          "text": "Light/dark theme mapping landed carrier-native and LIVE. ui/themeMapping.ts resolves all 7 canonical themes over the 30.2 palette (resolveToken(tokenId,theme,domainId)), carries the frozen resolveTheme.ts contract verbatim (3 legacy aliases + nara-degradation off m4 + system via prefers-color-scheme), preserves Cl(4,2) polarity structurally (a theme picks only between a token's own two same-polarity resolutions), and applies the nara M-tier warm bias (mixHex toward NARA_EARTH_ANCHOR by NARA_WARM_BIAS, tokens.ts) only when theme is nara-* AND domain is m4. state/themeStore.ts publishes the resolved theme as reactive 'applied' state + writes data-theme to the root, subscribing all three inputs (selection, coordinate-domain, prefers-color-scheme); 8 palette commands (catalogued, AST gate green) are the picker. GREEN: themeMapping.test.ts 22 + themeStore.test.ts 10 + full app vitest 1280, app-typecheck/app-build/app-smoke/carrier-tokens/lint-boundaries all PASS; UF proof tests/e2e/theme-mapping.spec.ts 2/2 against the REAL spawned gateway (drives the real command palette, asserts body repaint + luminance inversion + cool/warm poles hold + FlexLayout selected-tab contrast >=4.5:1 + nara degradation reacting live to Meta+Shift+Digit4 coordinate moves). Adversarial spec-vs-built review (3 lenses, 14 findings, 12 refuted) confirmed 2 real defects, BOTH FIXED and now guarded: (a) breadcrumb read data-theme imperatively at render so a theme switch never re-rendered it (tint went stale) - fixed by making 'applied' reactive store state, regression test added; (b) light themes left the vendored FlexLayout ramp dark so the selected tab label rendered at 1.33:1 - fixed with a light-scoped --color-1..6 override (dark ramp untouched, so no visual baselines move), and the e2e contrast assertion PROVEN non-vacuous by disabling the fix and observing rgb(32,25,54) on rgb(51,51,51). Also removed a dead nextThemeSelection export the review caught. Full UF gate RED only on tests/e2e/pratibimba-consent.spec.ts:274 (AUTOMATIC drift accumulator) - the known order-dependent flake, in a spec this tranche does not touch; confirmed unrelated by one targeted isolation run (PASS 9.1s). Per the unrelated-flake rule the PASS record rests on the tranche's own class-proof.",
+          "receipt": {
+            "command": "npx playwright test theme-mapping --reporter=list   [cwd Body/M/pratibimba-app; also green inside the full UF gate: verify-all --only ...app-ui-flow = 82 e2e, sole red = unrelated consent:274 flake]",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/theme-mapping.spec.ts",
+              "Body/M/pratibimba-app/src/ui/themeMapping.ts",
+              "Body/M/pratibimba-app/src/state/themeStore.ts",
+              "Body/M/pratibimba-app/src/styles.css"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T11:10:29.677Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T09:10:29.677Z",
       "runId": "20260725T091029Z-30-T30.4",
       "worktree": null,
@@ -26119,11 +26136,12 @@
     {
       "runId": "20260725T091029Z-30-T30.4",
       "taskId": "30.T30.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-25T09:10:29.677Z",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": "2026-07-25T11:10:29.677Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-25T09:58:12.147Z"
     },
     {
       "runId": "20260725T094449Z-50-T50.02",

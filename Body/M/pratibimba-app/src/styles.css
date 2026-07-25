@@ -59,6 +59,63 @@
   font-family: -apple-system, 'SF Pro Text', 'Segoe UI', sans-serif;
 }
 
+/* ── T30.4 — light/dark theme mapping (the surface half) ───────────────────
+   `state/themeStore.ts` writes the resolved CANONICAL theme to
+   `:root[data-theme]`; these blocks are what that signal moves. The JS half
+   (`ui/themeMapping.ts`) resolves the coordinate-derived palette; this half
+   resolves the surface vocabulary. Both obey the same two laws:
+
+   POLARITY PRESERVATION (Cl(4,2), 30.2/30.4): a theme switch maps WITHIN a
+   token's polarity, never across. `--accent` is the cool pole (violet) and
+   `--ring` the warm pole (gold) — under light they DARKEN for contrast on a
+   pale ground, they do not swap sides. Read the two blocks in parallel: the
+   cool value stays cool, the warm value stays warm.
+
+   SCOPE (30.2 line "nara-{dark,light,glass} variants tune M-tier and
+   privacy-chrome only"): the nara themes get NO surface palette of their own.
+   `nara-light` takes the light surface, `nara-dark` the dark, `nara-glass` the
+   glass — and their nara-ness lives entirely in the M-tier warm bias
+   (`ui/themeMapping.ts` naraRemapActive) plus the privacy chrome hook below.
+
+   `dark` needs no block: `:root` above IS the dark ground, and every visual
+   baseline was authored against it. `discause` is a canonical theme NAME in
+   the contract for which the 30.x corpus supplies no distinguishing token
+   content — it therefore resolves at the dark ground rather than being given
+   an invented character. Flagged for the Architect, not silently designed. */
+
+:root[data-theme='light'],
+:root[data-theme='nara-light'] {
+  color-scheme: light;
+  --ground: #f5f2fb;
+  --ground-raised: #e8e2f4;
+  --ink: #201936;
+  --ink-dim: #574c72;
+  --hairline: #cec5e2;
+  /* warm pole, darkened — still gold */
+  --ring: #8a6c17;
+  /* cool pole, darkened — still violet */
+  --accent: #55409c;
+  --ready: #2c7346;
+  --danger: #a53c3c;
+}
+
+/* Glass: the dark ground with translucent raised surfaces — a treatment, not
+   a second palette. The 8-digit hex carries the alpha. */
+:root[data-theme='glass'],
+:root[data-theme='nara-glass'] {
+  --ground-raised: #221737b3;
+  --hairline: #3a2c5c99;
+}
+
+/* Privacy-chrome hook: the nara themes' second tuned namespace per 30.2. The
+   value is the earth anchor the M-tier bias leans toward, so chrome and tier
+   warm together. 25.T25.18 owns what consumes it. */
+:root[data-theme='nara-dark'],
+:root[data-theme='nara-light'],
+:root[data-theme='nara-glass'] {
+  --privacy-chrome-bias: #8a7355;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1005,6 +1062,40 @@ textarea {
   --color-background: var(--ground);
   font-family: inherit;
   font-size: var(--type-body);
+}
+
+/* ── T30.4 — the FlexLayout bridge follows the theme ────────────────────────
+   The vendor sheet (flexlayout-react/style/dark.css, imported in main.tsx)
+   derives ALL of its chrome from a six-step greyscale ramp `--color-1..6`,
+   and the bridge above rebinds only text + background. Under a light theme
+   that left the dominant surface — the 0/1 face tabsets — on a near-black
+   strip while `--color-tab-selected` followed `--ink` into the dark: the
+   selected tab label rendered at 1.33:1, unreadable. Foreground followed the
+   theme and its background did not.
+
+   So the ramp is overridden for the LIGHT-polarity themes only. The dark
+   themes deliberately keep the vendor ramp untouched: it is what every
+   visual-regression baseline was captured against, and re-tinting the dark
+   chrome is a design change this tranche has no mandate for.
+
+   The light ramp ascends from the light ground through the same violet-
+   neutral family, so the chrome reads as one surface with the app rather
+   than as a grey box sitting on it. `--color-4` carries the selected tab,
+   which is the pairing that failed: `--ink` (#201936) on #c6bcdd is 9.3:1. */
+:root[data-theme='light'] .flexlayout__layout,
+:root[data-theme='nara-light'] .flexlayout__layout {
+  --color-base: var(--ground);
+  --color-1: #e9e4f4;
+  --color-2: #ded7ee;
+  --color-3: #d3cae6;
+  --color-4: #c6bcdd;
+  --color-5: #b7abd2;
+  --color-6: #a99bc8;
+  /* the vendor's bare `gray` literals, which read as mud on a pale ground */
+  --color-tab-unselected: var(--ink-dim);
+  --color-border-tab-unselected: var(--ink-dim);
+  --color-icon: var(--ink-dim);
+  --color-overflow: var(--ink-dim);
 }
 
 .instrument-strip {
