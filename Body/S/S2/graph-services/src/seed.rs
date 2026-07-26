@@ -155,6 +155,16 @@ pub fn seed_relationship_types() -> &'static [&'static str] {
     SEED_REL_TYPES
 }
 
+/// Baseline snapshots compared before/after a seed run.
+///
+/// `family_coordinates` accepts BOTH representations of `c_4_layer` on purpose.
+/// The seeder writes the kind tag `'COORDINATE'`, but the 84 `:Coordinate:Stack`
+/// nodes carry the S-layer index `0`-`5` as an INTEGER instead — a second
+/// semantic on the same key, left in place by DR-S2-LAYER-1 because the integer
+/// is not a bad cast. Counting only the string silently under-reported the 12
+/// S-family roots, which looks like seed loss and is not. An INTEGER `c_4_layer`
+/// occurs only on those Stack coordinates, so admitting it is exact, not a
+/// widening.
 pub fn seed_baseline_snapshot_queries() -> Vec<SeedBaselineQuery> {
     vec![
         SeedBaselineQuery {
@@ -167,7 +177,9 @@ pub fn seed_baseline_snapshot_queries() -> Vec<SeedBaselineQuery> {
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Weave_' THEN n END) AS weaves,
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'CF_' THEN n END) AS context_frames,
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Family_' THEN n END) AS family_meta_nodes,
-                            count(DISTINCT CASE WHEN n.c_4_layer = 'COORDINATE' THEN n END) AS family_coordinates,
+                            count(DISTINCT CASE WHEN n.c_4_layer = 'COORDINATE'
+                                                  OR valueType(n.c_4_layer) STARTS WITH 'INTEGER'
+                                             THEN n END) AS family_coordinates,
                             count(DISTINCT CASE WHEN n.c_4_layer = 'VAK' THEN n END) AS vak_nodes",
         },
         SeedBaselineQuery {

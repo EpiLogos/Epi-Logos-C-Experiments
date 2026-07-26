@@ -185,12 +185,31 @@ Snapshots are committed beside this document in `normalisation-snapshots/`.
 
 ---
 
-## 6. Open for the Architect
+## 6. The four follow-ups — all resolved (2026-07-26)
 
-1. **m-family key drift — importer vs graph.** `property_mapping.rs` declares 3-part m-keys (`m_3_quadrant`, `m_2_abjad_value`, `m_0_consciousness_operation`) but the graph carries 4-part forms (`m_3_5_quadrant` 384, `m_2_4_abjad_value` 99, `m_0_3_consciousness_operation` 26) and **only** those. Because just one form exists per semantic these are not alias pairs and nothing was touched — but the importer and the corpus disagree about the key name for ~20 keys. Either the mapping table is stale or the corpus predates it.
-2. **`t_3_updated_at`'s 378 differing values.** Now the only remaining `updated_at`-ish duplication. It is a *different* timestamp, not an alias — what does it mean, and should it be renamed to something that says so?
-3. **`ROLE_RULES` mis-declaration** (§4.2) — remove `t_3_updated_at` from the `updated_at` fallback chain before a node appears that lacks `c_3_updated_at`.
-4. **The S-lattice bespoke vocabulary** (§2) — 11 unprefixed keys on the 84 nodes (`coordinate_axis`, `coordinate_kind`, `sync_version`, …) duplicate information the canonical `c_*`/`s_*` keys carry. Retiring them is a larger pass than this one and needs the same measure-first treatment; `coordinate` itself is of course the one exempt canonical key.
+### 6.1 m-family key shape — RETRACTED, there was no drift
+
+**The earlier finding here was wrong.** It claimed `property_mapping.rs` declared 3-part m-keys (`m_3_quadrant`) while the graph carried only 4-part ones (`m_3_5_quadrant`), and called that importer-vs-corpus drift. It is not drift; it is the mapping working as designed.
+
+The 3-part entry is a **template, not a stored name**. `canonicalize_prime_surface_property` (`property_mapping.rs:229`) takes the table's target, keeps only the semantic tail, and rebuilds the key with `m_prime_property_prefix(node)` — computed from the node's *own* coordinate: `#3-5` → `M3-5` → root `3`, slot `5` → prefix `m_3_5`. So `"quadrant" => "m_3_quadrant"` writes `m_3_5_quadrant` on an M3-5 node and `m_3_quadrant` on a bare M3 node. Pinned by `m_prime_properties_use_coordinate_slot_prefixes`, which asserts `#3-5-8` + `degree: 248` → `n.m_3_5_degree = 248` — a real world-clock degree.
+
+**M3-5 is the correct, more precise coordinate mapping and its full structure is honoured**: the world clock's `degree` / `quadrant` / `rotational_phase` / `yin_yang_balance` / `elemental_affinity` register lives under `m_3_5_*`, on the 360-degree + 24-hour base architecture.
+
+The corpus proves why the 4-part form is required rather than merely tolerated: the same semantic is legitimately owned by *different* sub-coordinates — `amino_acid_code` under M3-2, M3-3 **and** M3-4; `topological_significance` under M1-3, M1-4, M1-5; `tarot_card` under M2-3 and M3-4. Flattening those to `m_3_amino_acid_code` would collapse three coordinate-owned registers into one — precisely the category error [[DR-L2-ELEM-2]] names. No change made; none was needed.
+
+### 6.2 `t_3_updated_at` — retired as redundant
+
+Removed, 397 instances, all values snapshotted (`normalisation-snapshots/t3-updated-at-2026-07-26.json`) because — unlike the §4 aliases — these were *not* duplicates and are not recoverable from a twin. Every one of the 397 nodes carries `c_3_updated_at`, so no node lost its timestamp. Verified: `t_3_updated_at` 0 remaining, `c_3_updated_at` intact at 1114, node count 2098 unchanged.
+
+`ROLE_RULES.updated_at` in `property-roles.ts` no longer lists it. That entry was a real mis-declaration — the key disagreed with `c_3_updated_at` on 378 of 397 co-present nodes, so serving it as `updated_at` would have answered with the wrong time. `t_3_last_updated` stays in the chain: it measured 1101/1101 identical, so it is a true alias.
+
+### 6.3 Unprefixed keys — accepted, not a defect
+
+The S-lattice's bespoke vocabulary (`coordinate_axis`, `coordinate_kind`, `sync_version`, …) stays. Unprefixed keys are legitimate; `coordinate` itself is the exempt canonical key. They are, however, often a tell that an agent took the lazy path when a prefixed coordinate-owned key existed — worth reading as a smell when reviewing new writes, not worth a migration here.
+
+### 6.4 The seed-counter drift spot — closed
+
+`seed_node_group_counts` counted only `c_4_layer = 'COORDINATE'`, so the 12 S-family roots (seeded with that tag, later overwritten to the INTEGER layer index) went uncounted and a fresh-graph comparison would read like seed loss. The counter now admits both representations. This is exact rather than a widening: `integer_but_not_stack` measures **0** — an INTEGER `c_4_layer` occurs only on `:Coordinate:Stack` nodes. Graph-wide the counter moves 1917 → 2001; within the seed's own coordinate list the delta is the 12 roots. The reason is documented on `seed_baseline_snapshot_queries` so the mixed key cannot confuse a future fresh-graph or psychoid-chain reseed.
 
 ---
 

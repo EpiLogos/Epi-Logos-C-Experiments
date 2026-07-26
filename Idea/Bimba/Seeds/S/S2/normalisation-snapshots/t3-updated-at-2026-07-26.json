@@ -1,0 +1,2388 @@
+{
+ "key": "t_3_updated_at",
+ "count": 397,
+ "rows": [
+  {
+   "coordinate": "M1-0",
+   "value": "2025-05-23T13:35:50.299000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-14T20:03:51.205Z"
+  },
+  {
+   "coordinate": "M1-1",
+   "value": "2025-05-23T13:35:50.326000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-14T20:03:51.534Z"
+  },
+  {
+   "coordinate": "M1-2",
+   "value": "2025-05-23T13:35:50.382000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:58.825Z"
+  },
+  {
+   "coordinate": "M1-2-0",
+   "value": "2025-05-23T13:35:50.182000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:57.575Z"
+  },
+  {
+   "coordinate": "M1-2-1",
+   "value": "2025-05-23T13:35:50.198000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:57.773Z"
+  },
+  {
+   "coordinate": "M1-2-2",
+   "value": "2025-05-23T13:35:50.249000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:58.095Z"
+  },
+  {
+   "coordinate": "M1-2-3",
+   "value": "2025-05-23T13:35:50.279000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:58.432Z"
+  },
+  {
+   "coordinate": "M1-2-4",
+   "value": "2025-05-23T13:35:50.341000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:58.659Z"
+  },
+  {
+   "coordinate": "M1-2-5",
+   "value": "2025-05-23T13:35:50.355000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-15T08:26:58.879Z"
+  },
+  {
+   "coordinate": "M1-3",
+   "value": "2025-05-23T13:35:50.431000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:20:47.165Z"
+  },
+  {
+   "coordinate": "M1-3-0",
+   "value": "2025-05-23T13:35:50.368000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:45.564Z"
+  },
+  {
+   "coordinate": "M1-3-1",
+   "value": "2025-05-23T13:35:50.394000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:46.064Z"
+  },
+  {
+   "coordinate": "M1-3-2",
+   "value": "2025-05-23T13:35:50.407000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:46.608Z"
+  },
+  {
+   "coordinate": "M1-3-3",
+   "value": "2025-05-23T13:35:50.419000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:47.179Z"
+  },
+  {
+   "coordinate": "M1-3-4",
+   "value": "2025-05-23T13:35:50.446000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:53.993Z"
+  },
+  {
+   "coordinate": "M1-3-4.(0/1)",
+   "value": "2025-05-23T13:35:50.605000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:20:13.131Z"
+  },
+  {
+   "coordinate": "M1-3-4.(0/1/2)",
+   "value": "2025-05-23T13:35:50.627000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:51.036Z"
+  },
+  {
+   "coordinate": "M1-3-4.(0/1/2/3)",
+   "value": "2025-05-23T13:35:50.638000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:51.493Z"
+  },
+  {
+   "coordinate": "M1-3-4.0000",
+   "value": "2025-05-23T13:35:50.569000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:48.334Z"
+  },
+  {
+   "coordinate": "M1-3-4.(4.0/1-4.4/5)",
+   "value": "2025-05-23T13:35:50.650000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:52.76Z"
+  },
+  {
+   "coordinate": "M1-3-4.(5/0)",
+   "value": "2025-05-23T13:35:50.661000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-16T11:33:03.367Z"
+  },
+  {
+   "coordinate": "M1-3-5",
+   "value": "2025-05-23T13:35:50.456000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:20:13.594Z"
+  },
+  {
+   "coordinate": "M1-4",
+   "value": "2025-05-23T13:35:50.519000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T13:36:22.007Z"
+  },
+  {
+   "coordinate": "M1-4.0",
+   "value": "2025-05-23T13:35:50.099000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:55.717Z"
+  },
+  {
+   "coordinate": "M1-4.1",
+   "value": "2025-05-23T13:35:50.114000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:49.514Z"
+  },
+  {
+   "coordinate": "M1-4.2",
+   "value": "2025-05-23T13:35:50.126000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:49.969Z"
+  },
+  {
+   "coordinate": "M1-4.3",
+   "value": "2025-05-23T13:35:50.141000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:52.094Z"
+  },
+  {
+   "coordinate": "M1-4.4",
+   "value": "2025-05-23T13:35:50.156000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:56.542Z"
+  },
+  {
+   "coordinate": "M1-4.5",
+   "value": "2025-05-23T13:35:50.168000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:20:14.419Z"
+  },
+  {
+   "coordinate": "M1-5",
+   "value": "2026-03-05T10:23:50.679000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T21:19:59.344Z"
+  },
+  {
+   "coordinate": "M1-5-0",
+   "value": "2026-03-05T10:23:51.487000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:56:58.58Z"
+  },
+  {
+   "coordinate": "M1-5-1",
+   "value": "2026-03-05T10:23:51.826000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:56:58.841Z"
+  },
+  {
+   "coordinate": "M1-5-2",
+   "value": "2026-03-05T10:23:52.070000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:56:59.255Z"
+  },
+  {
+   "coordinate": "M1-5-3",
+   "value": "2026-03-05T10:23:52.515000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:57:00.032Z"
+  },
+  {
+   "coordinate": "M1-5-4",
+   "value": "2026-03-05T10:23:52.796000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:57:00.357Z"
+  },
+  {
+   "coordinate": "M1-5-5",
+   "value": "2026-03-05T10:23:53.026000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-18T10:57:00.617Z"
+  },
+  {
+   "coordinate": "M2-0",
+   "value": "2025-05-23T13:35:49.456000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-22T09:14:43.041Z"
+  },
+  {
+   "coordinate": "M2-1",
+   "value": "2025-05-23T13:35:49.468000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T12:57:34.569Z"
+  },
+  {
+   "coordinate": "L0'",
+   "value": "2025-05-23T13:35:49.553000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:01.425Z"
+  },
+  {
+   "coordinate": "L0-0'",
+   "value": "2025-05-23T13:35:49.622000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:03.039Z"
+  },
+  {
+   "coordinate": "L0-1'",
+   "value": "2025-05-23T13:35:49.633000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:04.952Z"
+  },
+  {
+   "coordinate": "L0-2'",
+   "value": "2025-05-23T13:35:49.642000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:05.027Z"
+  },
+  {
+   "coordinate": "L0-3'",
+   "value": "2025-05-23T13:35:49.658000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:05.519Z"
+  },
+  {
+   "coordinate": "L0-4'",
+   "value": "2025-05-23T13:35:49.673000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:05.798Z"
+  },
+  {
+   "coordinate": "L0-5'",
+   "value": "2025-05-23T13:35:49.684000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:06.079Z"
+  },
+  {
+   "coordinate": "L1",
+   "value": "2025-05-23T13:35:49.564000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:06.369Z"
+  },
+  {
+   "coordinate": "L1-0",
+   "value": "2025-05-23T13:35:49.699000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:06.926Z"
+  },
+  {
+   "coordinate": "L1-1",
+   "value": "2025-05-23T13:35:49.711000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:07.383Z"
+  },
+  {
+   "coordinate": "L1-2",
+   "value": "2025-05-23T13:35:49.726000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:08.623Z"
+  },
+  {
+   "coordinate": "L1-3",
+   "value": "2025-05-23T13:35:49.738000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:08.925Z"
+  },
+  {
+   "coordinate": "L1-4",
+   "value": "2025-05-23T13:35:49.750000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:09.231Z"
+  },
+  {
+   "coordinate": "L1-5",
+   "value": "2025-05-23T13:35:49.761000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:10.234Z"
+  },
+  {
+   "coordinate": "L2",
+   "value": "2025-05-23T13:35:49.576000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:10.637Z"
+  },
+  {
+   "coordinate": "L2-0",
+   "value": "2025-05-23T13:35:49.774000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:11.345Z"
+  },
+  {
+   "coordinate": "L2-1",
+   "value": "2025-05-23T13:35:49.786000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:11.696Z"
+  },
+  {
+   "coordinate": "L2-2",
+   "value": "2025-05-23T13:35:49.798000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:12.025Z"
+  },
+  {
+   "coordinate": "L2-3",
+   "value": "2025-05-23T13:35:49.809000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:12.376Z"
+  },
+  {
+   "coordinate": "L2-4",
+   "value": "2025-05-23T13:35:49.820000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:12.7Z"
+  },
+  {
+   "coordinate": "L2-5",
+   "value": "2025-05-23T13:35:49.831000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:13.01Z"
+  },
+  {
+   "coordinate": "L3",
+   "value": "2025-05-23T13:35:49.588000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:13.359Z"
+  },
+  {
+   "coordinate": "L3-0",
+   "value": "2025-05-23T13:35:49.843000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:13.68Z"
+  },
+  {
+   "coordinate": "L3-1",
+   "value": "2025-05-23T13:35:49.855000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:13.996Z"
+  },
+  {
+   "coordinate": "L3-2",
+   "value": "2025-05-23T13:35:49.866000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:14.321Z"
+  },
+  {
+   "coordinate": "L3-3",
+   "value": "2025-05-23T13:35:49.878000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:14.64Z"
+  },
+  {
+   "coordinate": "L3-4",
+   "value": "2025-05-23T13:35:49.890000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:15.167Z"
+  },
+  {
+   "coordinate": "L3-5",
+   "value": "2025-05-23T13:35:49.903000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:16.155Z"
+  },
+  {
+   "coordinate": "L4",
+   "value": "2025-05-23T13:35:49.599000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:16.285Z"
+  },
+  {
+   "coordinate": "L4-0",
+   "value": "2025-05-23T13:35:49.915000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:16.42Z"
+  },
+  {
+   "coordinate": "L4-1",
+   "value": "2025-05-23T13:35:49.926000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:16.826Z"
+  },
+  {
+   "coordinate": "L4-2",
+   "value": "2025-05-23T13:35:49.939000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:17.265Z"
+  },
+  {
+   "coordinate": "L4-3",
+   "value": "2025-05-23T13:35:49.956000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:17.584Z"
+  },
+  {
+   "coordinate": "L4-4",
+   "value": "2025-05-23T13:35:49.971000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:17.691Z"
+  },
+  {
+   "coordinate": "L4-5",
+   "value": "2025-05-23T13:35:49.986000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-27T13:02:17.851Z"
+  },
+  {
+   "coordinate": "L5",
+   "value": "2025-05-23T13:35:49.611000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:56:15.958Z"
+  },
+  {
+   "coordinate": "L5-0",
+   "value": "2025-05-23T13:35:49.998000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T14:59:52.094Z"
+  },
+  {
+   "coordinate": "L5-1",
+   "value": "2025-05-23T13:35:50.010000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T15:00:04.982Z"
+  },
+  {
+   "coordinate": "L5-2",
+   "value": "2025-05-23T13:35:50.024000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T14:40:30.291Z"
+  },
+  {
+   "coordinate": "L5-3",
+   "value": "2025-05-23T13:35:50.035000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T14:40:54.526Z"
+  },
+  {
+   "coordinate": "L5-4",
+   "value": "2025-05-23T13:35:50.046000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T15:00:16.445Z"
+  },
+  {
+   "coordinate": "L5-5",
+   "value": "2025-05-23T13:35:50.062000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T15:00:27.634Z"
+  },
+  {
+   "coordinate": "M2-2",
+   "value": "2025-05-23T13:35:49.480000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:28.648Z"
+  },
+  {
+   "coordinate": "M2-2-0",
+   "value": "2025-05-23T13:35:52.522000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:28.91Z"
+  },
+  {
+   "coordinate": "M2-2-0-(0/1)",
+   "value": "2025-05-23T13:35:53.093000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:29.983Z"
+  },
+  {
+   "coordinate": "M0-4",
+   "value": "2025-05-23T13:35:50.723000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-14T09:58:16.923Z"
+  },
+  {
+   "coordinate": "M0-5",
+   "value": "2025-05-23T13:35:50.735000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-11T11:12:36.143Z"
+  },
+  {
+   "coordinate": "M0",
+   "value": "2025-05-23T13:35:48.927000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-05T21:35:10.981Z"
+  },
+  {
+   "coordinate": "M1",
+   "value": "2025-05-23T13:35:48.955000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-05T21:39:31.856Z"
+  },
+  {
+   "coordinate": "M2",
+   "value": "2025-05-23T13:35:48.970000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-05T21:35:15.288Z"
+  },
+  {
+   "coordinate": "M3",
+   "value": "2025-05-23T13:35:48.982000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-03T23:43:19.922Z"
+  },
+  {
+   "coordinate": "M4",
+   "value": "2025-05-23T13:35:48.996000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-03T23:43:52.889Z"
+  },
+  {
+   "coordinate": "M5",
+   "value": "2025-05-23T13:35:49.017000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-05T21:39:26.366Z"
+  },
+  {
+   "coordinate": "M0-0",
+   "value": "2025-05-23T13:35:50.673000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-08T18:30:00Z"
+  },
+  {
+   "coordinate": "M0-1",
+   "value": "2025-05-23T13:35:50.685000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-08T10:18:09.203Z"
+  },
+  {
+   "coordinate": "M0-2",
+   "value": "2025-05-23T13:35:50.700000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-08T11:48:25.476Z"
+  },
+  {
+   "coordinate": "M0-3",
+   "value": "2025-05-23T13:35:50.712000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-10T09:52:10.851Z"
+  },
+  {
+   "coordinate": "M2-2-0-2",
+   "value": "2025-05-23T13:35:53.105000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:30.384Z"
+  },
+  {
+   "coordinate": "M2-2-0-3",
+   "value": "2025-05-23T13:35:52.620000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:30.782Z"
+  },
+  {
+   "coordinate": "M2-2-0-4",
+   "value": "2025-05-23T13:35:52.636000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:31.498Z"
+  },
+  {
+   "coordinate": "M2-2-0-5",
+   "value": "2025-05-23T13:35:52.650000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:31.861Z"
+  },
+  {
+   "coordinate": "M2-2-1",
+   "value": "2025-05-23T13:35:52.533000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:29.265Z"
+  },
+  {
+   "coordinate": "M2-2-1-(0/1)",
+   "value": "2025-05-23T13:35:52.661000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:32.285Z"
+  },
+  {
+   "coordinate": "M2-2-1-2",
+   "value": "2025-05-23T13:35:52.673000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:33.042Z"
+  },
+  {
+   "coordinate": "M2-2-1-4",
+   "value": "2025-05-23T13:35:52.698000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:33.81Z"
+  },
+  {
+   "coordinate": "M2-2-1-5",
+   "value": "2025-05-23T13:35:52.710000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:34.537Z"
+  },
+  {
+   "coordinate": "M2-2-1-6",
+   "value": "2025-05-23T13:35:52.723000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:35.002Z"
+  },
+  {
+   "coordinate": "M2-2-1-7",
+   "value": "2025-05-23T13:35:52.753000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:35.521Z"
+  },
+  {
+   "coordinate": "M2-2-2",
+   "value": "2025-05-23T13:35:52.545000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:29.628Z"
+  },
+  {
+   "coordinate": "M2-2-2-0",
+   "value": "2025-05-23T13:35:52.772000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:35.935Z"
+  },
+  {
+   "coordinate": "M2-2-2-1",
+   "value": "2025-05-23T13:35:52.556000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:36.344Z"
+  },
+  {
+   "coordinate": "M2-2-2-1-0",
+   "value": "2025-05-23T13:35:52.788000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:36.723Z"
+  },
+  {
+   "coordinate": "M2-2-2-1-1",
+   "value": "2025-05-23T13:35:52.802000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:37.105Z"
+  },
+  {
+   "coordinate": "M2-2-2-1-2",
+   "value": "2025-05-23T13:35:52.814000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:37.518Z"
+  },
+  {
+   "coordinate": "M2-2-2-2",
+   "value": "2025-05-23T13:35:52.570000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:38.962Z"
+  },
+  {
+   "coordinate": "M2-2-2-2-2",
+   "value": "2025-05-23T13:35:52.846000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:39.804Z"
+  },
+  {
+   "coordinate": "M2-2-2-2-3",
+   "value": "2025-05-23T13:35:52.858000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:40.178Z"
+  },
+  {
+   "coordinate": "M2-2-2-2-4",
+   "value": "2025-05-23T13:35:52.869000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:40.547Z"
+  },
+  {
+   "coordinate": "M2-2-2-2-5",
+   "value": "2025-05-23T13:35:52.881000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:41.07Z"
+  },
+  {
+   "coordinate": "M2-2-2-3",
+   "value": "2025-05-23T13:35:52.581000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:41.755Z"
+  },
+  {
+   "coordinate": "M2-2-2-3-(0/1)",
+   "value": "2025-05-23T13:35:52.891000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:42.406Z"
+  },
+  {
+   "coordinate": "M2-2-2-3-2",
+   "value": "2025-05-23T13:35:52.906000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:43.365Z"
+  },
+  {
+   "coordinate": "M2-2-2-3-3",
+   "value": "2025-05-23T13:35:52.918000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:43.879Z"
+  },
+  {
+   "coordinate": "M2-2-2-3-4",
+   "value": "2025-05-23T13:35:52.930000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:44.214Z"
+  },
+  {
+   "coordinate": "M2-2-2-3-5",
+   "value": "2025-05-23T13:35:52.938000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:44.601Z"
+  },
+  {
+   "coordinate": "M2-2-2-4",
+   "value": "2025-05-23T13:35:52.593000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:44.909Z"
+  },
+  {
+   "coordinate": "M2-2-2-4-(0/1)",
+   "value": "2025-05-23T13:35:52.953000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:45.249Z"
+  },
+  {
+   "coordinate": "M2-2-2-4-2",
+   "value": "2025-05-23T13:35:52.963000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:45.556Z"
+  },
+  {
+   "coordinate": "M2-2-2-4-3",
+   "value": "2025-05-23T13:35:52.979000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:45.862Z"
+  },
+  {
+   "coordinate": "M2-2-2-4-4",
+   "value": "2025-05-23T13:35:52.991000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:46.168Z"
+  },
+  {
+   "coordinate": "M2-2-2-4-5",
+   "value": "2025-05-23T13:35:53.003000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:46.474Z"
+  },
+  {
+   "coordinate": "M2-2-2-5",
+   "value": "2025-05-23T13:35:52.608000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:46.781Z"
+  },
+  {
+   "coordinate": "M2-2-2-5-(0/1)",
+   "value": "2025-05-23T13:35:53.015000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:47.501Z"
+  },
+  {
+   "coordinate": "M2-2-2-5-2",
+   "value": "2025-05-23T13:35:53.026000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:47.862Z"
+  },
+  {
+   "coordinate": "M2-2-2-5-3",
+   "value": "2025-05-23T13:35:53.036000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:48.238Z"
+  },
+  {
+   "coordinate": "M2-2-2-5-4",
+   "value": "2025-05-23T13:35:53.048000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:48.603Z"
+  },
+  {
+   "coordinate": "M2-2-2-5-5",
+   "value": "2025-05-23T13:35:53.059000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T10:14:49.134Z"
+  },
+  {
+   "coordinate": "M2-3",
+   "value": "2025-05-23T13:35:49.492000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:48.123Z"
+  },
+  {
+   "coordinate": "M2-3-1",
+   "value": "2025-05-23T13:35:50.882000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:50.156Z"
+  },
+  {
+   "coordinate": "M2-3-1-0",
+   "value": "2025-05-23T13:35:50.925000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:55.423Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-0",
+   "value": "2025-05-23T13:35:51.178000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:03.348Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-0-0",
+   "value": "2025-05-23T13:35:51.189000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:44.955Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-0-1",
+   "value": "2025-05-23T13:35:51.200000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:45.264Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-1",
+   "value": "2025-05-23T13:35:51.214000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:03.798Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-1-0",
+   "value": "2025-05-23T13:35:51.223000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:46.207Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-1-1",
+   "value": "2025-05-23T13:35:51.234000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:47.088Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-2",
+   "value": "2025-05-23T13:35:51.244000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:04.121Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-2-0",
+   "value": "2025-05-23T13:35:51.255000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:47.377Z"
+  },
+  {
+   "coordinate": "M2-3-1-0-2-1",
+   "value": "2025-05-23T13:35:51.267000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:47.689Z"
+  },
+  {
+   "coordinate": "M2-3-1-1",
+   "value": "2025-05-23T13:35:50.936000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:55.831Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-0",
+   "value": "2025-05-23T13:35:51.607000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:11.202Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-0-0",
+   "value": "2025-05-23T13:35:51.620000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:10.23Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-0-1",
+   "value": "2025-05-23T13:35:51.631000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:10.547Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-1",
+   "value": "2025-05-23T13:35:51.642000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:11.805Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-1-0",
+   "value": "2025-05-23T13:35:51.655000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:11.368Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-1-1",
+   "value": "2025-05-23T13:35:51.666000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:12.006Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-2",
+   "value": "2025-05-23T13:35:51.678000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:12.147Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-2-0",
+   "value": "2025-05-23T13:35:51.693000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:12.653Z"
+  },
+  {
+   "coordinate": "M2-3-1-1-2-1",
+   "value": "2025-05-23T13:35:51.705000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:12.971Z"
+  },
+  {
+   "coordinate": "M2-3-1-2",
+   "value": "2025-05-23T13:35:50.950000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:56.176Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-0",
+   "value": "2025-05-23T13:35:52.060000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:18.366Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-0-0",
+   "value": "2025-05-23T13:35:52.074000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:37.667Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-0-1",
+   "value": "2025-05-23T13:35:52.088000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:37.973Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-1",
+   "value": "2025-05-23T13:35:52.098000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:18.801Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-1-0",
+   "value": "2025-05-23T13:35:52.110000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:38.545Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-1-1",
+   "value": "2025-05-23T13:35:52.122000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:39.256Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-2",
+   "value": "2025-05-23T13:35:52.133000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:19.225Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-2-0",
+   "value": "2025-05-23T13:35:52.145000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:39.816Z"
+  },
+  {
+   "coordinate": "M2-3-1-2-2-1",
+   "value": "2025-05-23T13:35:52.160000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:40.871Z"
+  },
+  {
+   "coordinate": "M2-3-2",
+   "value": "2025-05-23T13:35:50.894000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:52.089Z"
+  },
+  {
+   "coordinate": "M2-3-2-0",
+   "value": "2025-05-23T13:35:50.963000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:56.529Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-0",
+   "value": "2025-05-23T13:35:51.280000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:05.418Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-0-0",
+   "value": "2025-05-23T13:35:51.292000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:47.98Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-0-1",
+   "value": "2025-05-23T13:35:51.303000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:49.935Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-1",
+   "value": "2025-05-23T13:35:51.314000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:05.748Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-1-0",
+   "value": "2025-05-23T13:35:51.324000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:51.447Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-1-1",
+   "value": "2025-05-23T13:35:51.335000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:51.751Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-2",
+   "value": "2025-05-23T13:35:51.344000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:06.068Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-2-0",
+   "value": "2025-05-23T13:35:51.357000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:52.346Z"
+  },
+  {
+   "coordinate": "M2-3-2-0-2-1",
+   "value": "2025-05-23T13:35:51.368000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:52.623Z"
+  },
+  {
+   "coordinate": "M2-3-2-1",
+   "value": "2025-05-23T13:35:50.974000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:56.995Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-0",
+   "value": "2025-05-23T13:35:51.719000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:12.865Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-0-0",
+   "value": "2025-05-23T13:35:51.731000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:13.49Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-0-1",
+   "value": "2025-05-23T13:35:51.743000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:13.81Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-1",
+   "value": "2025-05-23T13:35:51.755000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:13.833Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-1-0",
+   "value": "2025-05-23T13:35:51.766000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:14.272Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-1-1",
+   "value": "2025-05-23T13:35:51.777000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:14.568Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-2",
+   "value": "2025-05-23T13:35:51.789000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:14.237Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-2-0",
+   "value": "2025-05-23T13:35:51.801000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:55.866Z"
+  },
+  {
+   "coordinate": "M2-3-2-1-2-1",
+   "value": "2025-05-23T13:35:51.811000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:57.144Z"
+  },
+  {
+   "coordinate": "M2-3-2-2",
+   "value": "2025-05-23T13:35:50.987000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:57.716Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-0",
+   "value": "2025-05-23T13:35:52.180000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:19.587Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-0-0",
+   "value": "2025-05-23T13:35:52.192000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:41.207Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-0-1",
+   "value": "2025-05-23T13:35:52.217000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:41.506Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-1",
+   "value": "2025-05-23T13:35:52.236000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:19.962Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-1-0",
+   "value": "2025-05-23T13:35:52.247000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:41.784Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-1-1",
+   "value": "2025-05-23T13:35:52.259000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:42.239Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-2",
+   "value": "2025-05-23T13:35:52.270000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:20.338Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-2-0",
+   "value": "2025-05-23T13:35:52.284000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:42.524Z"
+  },
+  {
+   "coordinate": "M2-3-2-2-2-1",
+   "value": "2025-05-23T13:35:52.295000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:43.141Z"
+  },
+  {
+   "coordinate": "M2-3-3",
+   "value": "2025-05-23T13:35:50.905000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:53.634Z"
+  },
+  {
+   "coordinate": "M2-3-3-0",
+   "value": "2025-05-23T13:35:50.998000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:59.972Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-0",
+   "value": "2025-05-23T13:35:51.379000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:06.42Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-0-0",
+   "value": "2025-05-23T13:35:51.389000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:52.919Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-0-1",
+   "value": "2025-05-23T13:35:51.401000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:53.832Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-1",
+   "value": "2025-05-23T13:35:51.412000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:07.018Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-1-0",
+   "value": "2025-05-23T13:35:51.423000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:54.118Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-1-1",
+   "value": "2025-05-23T13:35:51.432000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:54.979Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-2",
+   "value": "2025-05-23T13:35:51.446000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:08.192Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-2-0",
+   "value": "2025-05-23T13:35:51.457000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:55.389Z"
+  },
+  {
+   "coordinate": "M2-3-3-0-2-1",
+   "value": "2025-05-23T13:35:51.469000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:55.814Z"
+  },
+  {
+   "coordinate": "M2-3-3-1",
+   "value": "2025-05-23T13:35:51.010000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:00.386Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-0",
+   "value": "2025-05-23T13:35:51.825000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:14.619Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-0-0",
+   "value": "2025-05-23T13:35:51.840000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:57.828Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-0-1",
+   "value": "2025-05-23T13:35:51.852000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:58.131Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-1",
+   "value": "2025-05-23T13:35:51.863000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:15.037Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-1-0",
+   "value": "2025-05-23T13:35:51.874000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:59.026Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-1-1",
+   "value": "2025-05-23T13:35:51.886000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:59.31Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-2",
+   "value": "2025-05-23T13:35:51.899000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:15.384Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-2-0",
+   "value": "2025-05-23T13:35:51.913000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:30.469Z"
+  },
+  {
+   "coordinate": "M2-3-3-1-2-1",
+   "value": "2025-05-23T13:35:51.924000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:31.721Z"
+  },
+  {
+   "coordinate": "M2-3-3-2",
+   "value": "2025-05-23T13:35:51.021000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:01.208Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-0",
+   "value": "2025-05-23T13:35:52.308000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:20.73Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-0-0",
+   "value": "2025-05-23T13:35:52.319000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:43.427Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-0-1",
+   "value": "2025-05-23T13:35:52.332000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:43.948Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-1",
+   "value": "2025-05-23T13:35:52.344000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:21.852Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-1-0",
+   "value": "2025-05-23T13:35:52.356000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:44.395Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-1-1",
+   "value": "2025-05-23T13:35:52.367000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:39.881Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-2",
+   "value": "2025-05-23T13:35:52.383000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:41.719Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-2-0",
+   "value": "2025-05-23T13:35:52.394000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:41.031Z"
+  },
+  {
+   "coordinate": "M2-3-3-2-2-1",
+   "value": "2025-05-23T13:35:52.406000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:42.128Z"
+  },
+  {
+   "coordinate": "M2-3-4",
+   "value": "2025-05-23T13:35:50.913000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:54.522Z"
+  },
+  {
+   "coordinate": "M2-3-4-0",
+   "value": "2025-05-23T13:35:51.032000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:01.545Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-0",
+   "value": "2025-05-23T13:35:51.480000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:08.527Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-0-0",
+   "value": "2025-05-23T13:35:51.491000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:05.991Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-0-1",
+   "value": "2025-05-23T13:35:51.502000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:07.415Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-1",
+   "value": "2025-05-23T13:35:51.516000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:10.488Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-1-0",
+   "value": "2025-05-23T13:35:51.527000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:08.663Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-1-1",
+   "value": "2025-05-23T13:35:51.541000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:08.97Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-2",
+   "value": "2025-05-23T13:35:51.552000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:10.84Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-2-0",
+   "value": "2025-05-23T13:35:51.564000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:09.601Z"
+  },
+  {
+   "coordinate": "M2-3-4-0-2-1",
+   "value": "2025-05-23T13:35:51.584000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:36:09.917Z"
+  },
+  {
+   "coordinate": "M2-3-4-1",
+   "value": "2025-05-23T13:35:51.049000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:01.865Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-0",
+   "value": "2025-05-23T13:35:51.935000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:15.97Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-0-0",
+   "value": "2025-05-23T13:35:51.947000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:32.869Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-0-1",
+   "value": "2025-05-23T13:35:51.961000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:33.012Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-1",
+   "value": "2025-05-23T13:35:51.980000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:16.584Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-1-0",
+   "value": "2025-05-23T13:35:51.992000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:34.147Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-1-1",
+   "value": "2025-05-23T13:35:52.010000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:35.472Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-2",
+   "value": "2025-05-23T13:35:52.024000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:17.632Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-2-0",
+   "value": "2025-05-23T13:35:52.036000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:36.88Z"
+  },
+  {
+   "coordinate": "M2-3-4-1-2-1",
+   "value": "2025-05-23T13:35:52.049000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:39:37.378Z"
+  },
+  {
+   "coordinate": "M2-3-4-2",
+   "value": "2025-05-23T13:35:51.167000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:31:02.735Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-0",
+   "value": "2025-05-23T13:35:52.418000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:43.237Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-0-0",
+   "value": "2025-05-23T13:35:52.430000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:42.195Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-0-1",
+   "value": "2025-05-23T13:35:52.442000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:42.474Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-1",
+   "value": "2025-05-23T13:35:52.453000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:44.409Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-1-0",
+   "value": "2025-05-23T13:35:52.463000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:42.765Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-1-1",
+   "value": "2025-05-23T13:35:52.476000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:43.147Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-2",
+   "value": "2025-05-23T13:35:52.488000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:33:44.62Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-2-0",
+   "value": "2025-05-23T13:35:52.499000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:43.461Z"
+  },
+  {
+   "coordinate": "M2-3-4-2-2-1",
+   "value": "2025-05-23T13:35:52.511000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:40:43.773Z"
+  },
+  {
+   "coordinate": "M2-3-(5/0)",
+   "value": "2025-05-23T13:35:53.069000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-07-29T12:30:55.061Z"
+  },
+  {
+   "coordinate": "M2-4",
+   "value": "2025-05-23T13:35:49.507000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-04T03:28:39.236Z"
+  },
+  {
+   "coordinate": "M2-4.3",
+   "value": "2025-05-23T13:35:49.540000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:25:52.622Z"
+  },
+  {
+   "coordinate": "M2-4.3-0",
+   "value": "2025-05-23T13:35:54.251000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-03T11:47:30.201Z"
+  },
+  {
+   "coordinate": "M2-4.3-1",
+   "value": "2025-05-23T13:35:54.225000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:00.405Z"
+  },
+  {
+   "coordinate": "M2-4.3-2",
+   "value": "2025-05-23T13:35:54.156000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:00.657Z"
+  },
+  {
+   "coordinate": "M2-4.3-3",
+   "value": "2025-05-23T13:35:54.239000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:01.772Z"
+  },
+  {
+   "coordinate": "M2-4.3-4",
+   "value": "2025-05-23T13:35:54.168000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:02.271Z"
+  },
+  {
+   "coordinate": "M2-4.3-5",
+   "value": "2025-05-23T13:35:54.200000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:02.711Z"
+  },
+  {
+   "coordinate": "M2-4.3-6",
+   "value": "2025-05-23T13:35:54.142000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:03.142Z"
+  },
+  {
+   "coordinate": "M2-4.3-7",
+   "value": "2025-05-23T13:35:54.182000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T23:22:03.759Z"
+  },
+  {
+   "coordinate": "M2-4.3-9",
+   "value": "2025-05-23T13:35:54.212000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-03T11:25:06.646Z"
+  },
+  {
+   "coordinate": "M2-4.5-0",
+   "value": "2025-05-23T13:35:53.082000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:53.755Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-(0/1)",
+   "value": "2025-05-23T13:35:53.198000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.119Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-2",
+   "value": "2025-05-23T13:35:53.210000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.407Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-3",
+   "value": "2025-05-23T13:35:53.242000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.606Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-4",
+   "value": "2025-05-23T13:35:53.263000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.719Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-5",
+   "value": "2025-05-23T13:35:53.284000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.862Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-6",
+   "value": "2025-05-23T13:35:53.316000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:57.99Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-7",
+   "value": "2025-05-23T13:35:53.325000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.122Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-8",
+   "value": "2025-05-23T13:35:53.337000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.246Z"
+  },
+  {
+   "coordinate": "M2-4.5-0-9",
+   "value": "2025-05-23T13:35:53.348000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.34Z"
+  },
+  {
+   "coordinate": "M2-4.5-1",
+   "value": "2025-05-23T13:35:53.117000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:53.857Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-(0/1)",
+   "value": "2025-05-23T13:35:53.357000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.441Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-2",
+   "value": "2025-05-23T13:35:53.368000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.795Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-3",
+   "value": "2025-05-23T13:35:53.379000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:58.9Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-4",
+   "value": "2025-05-23T13:35:53.394000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:59.241Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-5",
+   "value": "2025-05-23T13:35:53.408000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:59.337Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-6",
+   "value": "2025-05-23T13:35:53.419000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:59.443Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-7",
+   "value": "2025-05-23T13:35:53.432000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:59.531Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-8",
+   "value": "2025-05-23T13:35:53.443000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-05T17:34:18.312Z"
+  },
+  {
+   "coordinate": "M2-4.5-1-9",
+   "value": "2025-05-23T13:35:53.457000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.015Z"
+  },
+  {
+   "coordinate": "M2-4.5-2",
+   "value": "2025-05-23T13:35:53.127000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:53.951Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-(0/1)",
+   "value": "2025-05-23T13:35:53.466000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.114Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-2",
+   "value": "2025-05-23T13:35:53.481000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.435Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-3",
+   "value": "2025-05-23T13:35:53.492000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.544Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-4",
+   "value": "2025-05-23T13:35:53.504000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.689Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-5",
+   "value": "2025-05-23T13:35:53.518000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.855Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-6",
+   "value": "2025-05-23T13:35:53.531000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:00.952Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-7",
+   "value": "2025-05-23T13:35:53.542000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.044Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-8",
+   "value": "2025-05-23T13:35:53.559000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.172Z"
+  },
+  {
+   "coordinate": "M2-4.5-2-9",
+   "value": "2025-05-23T13:35:53.569000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.362Z"
+  },
+  {
+   "coordinate": "M2-4.5-3",
+   "value": "2025-05-23T13:35:53.138000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:54.047Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-(0/1)",
+   "value": "2025-05-23T13:35:53.583000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.471Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-2",
+   "value": "2025-05-23T13:35:53.593000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.609Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-3",
+   "value": "2025-05-23T13:35:53.604000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.702Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-4",
+   "value": "2025-05-23T13:35:53.615000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.797Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-5",
+   "value": "2025-05-23T13:35:53.627000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.894Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-6",
+   "value": "2025-05-23T13:35:53.640000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:01.989Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-7",
+   "value": "2025-05-23T13:35:53.655000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.08Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-8",
+   "value": "2025-05-23T13:35:53.667000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.341Z"
+  },
+  {
+   "coordinate": "M2-4.5-3-9",
+   "value": "2025-05-23T13:35:53.679000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.445Z"
+  },
+  {
+   "coordinate": "M2-4.5-4",
+   "value": "2025-05-23T13:35:53.153000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:54.153Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-(0/1)",
+   "value": "2025-05-23T13:35:53.691000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.589Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-2",
+   "value": "2025-05-23T13:35:53.705000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.683Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-3",
+   "value": "2025-05-23T13:35:53.717000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.777Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-4",
+   "value": "2025-05-23T13:35:53.728000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.869Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-5",
+   "value": "2025-05-23T13:35:53.741000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:02.975Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-6",
+   "value": "2025-05-23T13:35:53.752000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:03.065Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-7",
+   "value": "2025-05-23T13:35:53.763000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:03.385Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-8",
+   "value": "2025-05-23T13:35:53.775000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:03.49Z"
+  },
+  {
+   "coordinate": "M2-4.5-4-9",
+   "value": "2025-05-23T13:35:53.787000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:03.815Z"
+  },
+  {
+   "coordinate": "M2-4.5-5",
+   "value": "2025-05-23T13:35:53.161000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:54.414Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-(0/1)",
+   "value": "2025-05-23T13:35:53.798000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:03.942Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-2",
+   "value": "2025-05-23T13:35:53.810000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.108Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-3",
+   "value": "2025-05-23T13:35:53.820000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.201Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-4",
+   "value": "2025-05-23T13:35:53.837000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.294Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-5",
+   "value": "2025-05-23T13:35:53.849000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.387Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-6",
+   "value": "2025-05-23T13:35:53.865000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.651Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-7",
+   "value": "2025-05-23T13:35:53.883000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.763Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-8",
+   "value": "2025-05-23T13:35:53.894000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.906Z"
+  },
+  {
+   "coordinate": "M2-4.5-5-9",
+   "value": "2025-05-23T13:35:53.914000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:04.997Z"
+  },
+  {
+   "coordinate": "M2-4.5-6",
+   "value": "2025-05-23T13:35:53.174000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:54.549Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-(0/1)",
+   "value": "2025-05-23T13:35:53.929000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.093Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-2",
+   "value": "2025-05-23T13:35:53.942000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.185Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-3",
+   "value": "2025-05-23T13:35:53.957000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.29Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-4",
+   "value": "2025-05-23T13:35:53.968000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.412Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-5",
+   "value": "2025-05-23T13:35:53.977000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.658Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-6",
+   "value": "2025-05-23T13:35:53.990000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.784Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-7",
+   "value": "2025-05-23T13:35:54.002000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.905Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-8",
+   "value": "2025-05-23T13:35:54.011000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:05.995Z"
+  },
+  {
+   "coordinate": "M2-4.5-6-9",
+   "value": "2025-05-23T13:35:54.023000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.087Z"
+  },
+  {
+   "coordinate": "M2-4.5-7",
+   "value": "2025-05-23T13:35:53.185000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:34:54.705Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-(0/1)",
+   "value": "2025-05-23T13:35:54.035000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.178Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-2",
+   "value": "2025-05-23T13:35:54.048000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.275Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-3",
+   "value": "2025-05-23T13:35:54.058000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.37Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-4",
+   "value": "2025-05-23T13:35:54.074000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.628Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-5",
+   "value": "2025-05-23T13:35:54.085000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.736Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-6",
+   "value": "2025-05-23T13:35:54.098000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.879Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-7",
+   "value": "2025-05-23T13:35:54.108000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:06.971Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-8",
+   "value": "2025-05-23T13:35:54.118000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:07.062Z"
+  },
+  {
+   "coordinate": "M2-4.5-7-9",
+   "value": "2025-05-23T13:35:54.130000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-02T01:35:07.159Z"
+  },
+  {
+   "coordinate": "M2-5",
+   "value": "2025-05-23T13:35:49.516000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-04T03:24:16.775Z"
+  },
+  {
+   "coordinate": "M3-0",
+   "value": "2025-05-23T13:35:50.748000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-10T01:00:56.996Z"
+  },
+  {
+   "coordinate": "M3-1",
+   "value": "2025-05-23T13:35:50.771000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-09T18:53:10.907Z"
+  },
+  {
+   "coordinate": "M3-2",
+   "value": "2025-05-23T13:35:50.786000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-08T21:22:41.728Z"
+  },
+  {
+   "coordinate": "M3-3",
+   "value": "2025-05-23T13:35:50.759000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-09T08:14:27.331Z"
+  },
+  {
+   "coordinate": "M3-4",
+   "value": "2025-05-23T13:35:50.809000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-09T23:46:18.088Z"
+  },
+  {
+   "coordinate": "M3-5",
+   "value": "2025-05-23T13:35:50.797000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-08-10T18:03:44.634Z"
+  },
+  {
+   "coordinate": "M4.0",
+   "value": "2025-05-23T13:35:49.281000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:28.222Z"
+  },
+  {
+   "coordinate": "M4.0-1",
+   "value": "2025-06-06T12:16:40.655Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-06-06T12:16:40.655Z"
+  },
+  {
+   "coordinate": "M4.1",
+   "value": "2025-05-23T13:35:49.296000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:29.121Z"
+  },
+  {
+   "coordinate": "M4.2",
+   "value": "2025-05-23T13:35:49.311000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:29.507Z"
+  },
+  {
+   "coordinate": "M4.3",
+   "value": "2025-05-23T13:35:49.324000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:29.964Z"
+  },
+  {
+   "coordinate": "M4.4",
+   "value": "2025-05-23T13:35:49.336000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:30.554Z"
+  },
+  {
+   "coordinate": "M4.4.3",
+   "value": "2025-05-23T13:35:49.444000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-10T12:29:24.277Z"
+  },
+  {
+   "coordinate": "M4.4.3-0",
+   "value": "2025-05-23T13:35:49.363000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:32.308Z"
+  },
+  {
+   "coordinate": "M4.4.3-1",
+   "value": "2025-05-23T13:35:49.376000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:32.583Z"
+  },
+  {
+   "coordinate": "M4.4.3-2",
+   "value": "2025-05-23T13:35:49.388000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:32.707Z"
+  },
+  {
+   "coordinate": "M4.4.3-3",
+   "value": "2025-05-23T13:35:49.399000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:32.974Z"
+  },
+  {
+   "coordinate": "M4.4.3-4",
+   "value": "2025-05-23T13:35:49.415000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:33.129Z"
+  },
+  {
+   "coordinate": "M4.4.3-5",
+   "value": "2025-05-23T13:35:49.430000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-09T21:03:33.28Z"
+  },
+  {
+   "coordinate": "M4.4.4.0",
+   "value": "2025-10-07T23:27:33.254000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-07T23:27:33.254Z"
+  },
+  {
+   "coordinate": "M4.4.4.1",
+   "value": "2025-10-07T23:27:33.254000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:56:56.788Z"
+  },
+  {
+   "coordinate": "M4.4.4.2",
+   "value": "2025-10-07T23:27:33.254000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:56:35.591Z"
+  },
+  {
+   "coordinate": "M4.4.4.3",
+   "value": "2025-10-07T23:27:55.776000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:57:19.156Z"
+  },
+  {
+   "coordinate": "M4.4.4.4",
+   "value": "2025-10-07T23:27:49.889000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:26:54.228Z"
+  },
+  {
+   "coordinate": "M4.4.4.5",
+   "value": "2025-10-07T23:27:55.776000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-07T23:27:55.776Z"
+  },
+  {
+   "coordinate": "M4.5",
+   "value": "2025-05-23T13:35:49.351000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-09-06T18:23:30.964Z"
+  },
+  {
+   "coordinate": "M5-0",
+   "value": "2025-05-23T13:35:49.205000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-05-23T13:35:49.205Z"
+  },
+  {
+   "coordinate": "M5-1",
+   "value": "2025-05-23T13:35:49.216000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-05-23T13:35:49.216Z"
+  },
+  {
+   "coordinate": "M5-2",
+   "value": "2025-05-23T13:35:49.227000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-05-23T13:35:49.227Z"
+  },
+  {
+   "coordinate": "M5-3",
+   "value": "2025-05-23T13:35:49.239000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-05-23T13:35:49.239Z"
+  },
+  {
+   "coordinate": "M5-4",
+   "value": "2025-05-23T13:35:49.253000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-24T22:58:08.065Z"
+  },
+  {
+   "coordinate": "M5-4.0",
+   "value": "2025-10-24T22:59:15.671000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-24T22:59:15.671Z"
+  },
+  {
+   "coordinate": "M5-4.1",
+   "value": "2025-10-24T22:59:20.242000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-24T22:59:20.242Z"
+  },
+  {
+   "coordinate": "M5-4.2",
+   "value": "2025-10-30T00:26:59.795000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-30T00:26:59.795Z"
+  },
+  {
+   "coordinate": "M5-4.3",
+   "value": "2025-10-24T22:59:27.241000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-24T22:59:27.241Z"
+  },
+  {
+   "coordinate": "M5-4.4",
+   "value": "2025-10-24T22:58:55.574000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-24T22:58:55.574Z"
+  },
+  {
+   "coordinate": "M5-4.5",
+   "value": "2025-10-28T22:20:17.970000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-28T22:20:17.97Z"
+  },
+  {
+   "coordinate": "M5-5",
+   "value": "2025-05-23T13:35:49.267000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:55:53.028Z"
+  },
+  {
+   "coordinate": "M5-5-0",
+   "value": "2025-10-02T21:00:53.321000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-02T21:00:53.321Z"
+  },
+  {
+   "coordinate": "M5-5-1",
+   "value": "2025-10-02T21:03:55.104000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-02T21:03:55.104Z"
+  },
+  {
+   "coordinate": "M5-5-2",
+   "value": "2025-10-02T21:04:14.105000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-02T21:04:14.105Z"
+  },
+  {
+   "coordinate": "M5-5-3",
+   "value": "2025-10-19T22:57:44.033000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-19T22:57:44.033Z"
+  },
+  {
+   "coordinate": "M5-5-4",
+   "value": "2025-10-02T21:07:00.271000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-02T21:07:00.271Z"
+  },
+  {
+   "coordinate": "M5-5-5",
+   "value": "2025-10-02T21:11:47.225000000Z",
+   "type": "STRING NOT NULL",
+   "canonicalCounterpart": "2025-10-02T21:11:47.225Z"
+  }
+ ]
+}

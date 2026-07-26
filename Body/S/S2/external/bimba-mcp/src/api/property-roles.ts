@@ -38,7 +38,14 @@ export const ROLE_RULES: Record<SemanticRole, RoleRule> = {
   },
   content: { exact: ['c_5_content', 'content', 'raw_content'], suffixes: [/_content$/, /_body$/], truncatable: true },
   updated_at: {
-    exact: ['c_3_updated_at', 't_3_last_updated', 't_3_updated_at'],
+    // `t_3_updated_at` was listed here as a third fallback and did NOT belong:
+    // measured over the live corpus it disagreed with `c_3_updated_at` on 378 of
+    // 397 co-present nodes — a different timestamp, not an alias, so serving it
+    // as `updated_at` would have answered with the wrong time. It was retired
+    // from the corpus as redundant (2026-07-26) and is removed from the chain so
+    // it cannot come back as a silent wrong answer. `t_3_last_updated` stays: it
+    // measured 1101/1101 identical, so it is a true alias.
+    exact: ['c_3_updated_at', 't_3_last_updated'],
     suffixes: [/_updated_at$/, /_last_updated$/],
   },
 };
