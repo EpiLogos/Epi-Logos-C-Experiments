@@ -1507,7 +1507,7 @@ For Lens 0 reference (the C-anchored diatonic-content), the 7 modes are 7 distin
 | **Lydian** | F | CF4 `(0/1/2/3)` | Name-Name-Name-Name-Power-Power-Power | Major 3rd, raised 4th, perfect 5th, major 6th |
 | **Mixolydian** | G | CF5 `(4.0/1-4.4/5)` | Name-Name-Name-Power-Power-Power-Name | Major 3rd, perfect 5th, major 6th, minor 7th |
 | **Aeolian (minor)** | A | CF6 `(4.5/0)` | Name-Name-Power-Power-Power-Name-Name | Minor 3rd, perfect 5th, minor 6th, minor 7th |
-| **Locrian** | B | CF7 `(5/0)` | Name-Power-Power-Name-Power-Name-Name | Flat 2nd, minor 3rd, diminished 5th, minor 6th, minor 7th |
+| **Locrian** | B | CF7 `(5/0)` | Name-Power-Power-Power-Name-Name-Name | Flat 2nd, minor 3rd, diminished 5th, minor 6th, minor 7th |
 
 The structural-explanations of the modal-characters:
 
@@ -1953,7 +1953,7 @@ The diatonic picks 5 inner-fours (D, E, F, G, A) + 2 outer-twos (C, B) = 7 scale
 | **Lydian** | F | CF4 | Name-Name-Name-Name-Power-Power-Power | M3, ♯4, P5, M6, M7 |
 | **Mixolydian** | G | CF5 | Name-Name-Name-Power-Power-Power-Name | M3, P5, M6, m7 |
 | **Aeolian (minor)** | A | CF6 | Name-Name-Power-Power-Power-Name-Name | m3, P5, m6, m7 |
-| **Locrian** | B | CF7 | Name-Power-Power-Name-Power-Name-Name | ♭2, m3, ♭5, m6, m7 |
+| **Locrian** | B | CF7 | Name-Power-Power-Power-Name-Name-Name | ♭2, m3, ♭5, m6, m7 |
 
 ### Reference Table 12: Major/Minor Differentiation as Conjugate-Form-Selection at Scale-Degrees 3, 6, 7
 

@@ -37,23 +37,12 @@
  */
 
 import type { VakAddress } from "../../shared/vak_address.ts";
+// One gateway-call implementation for every S4 carrier: the socket dance,
+// the handshake and the id-matched response live there, not here.
+import { callGateway, type GatewayCallOptions } from "../../shared/gateway-call.ts";
 
 /** The gateway method that reads a trace and broadcasts the event. */
 export const VAK_EVALUATE_METHOD = "s4'.vak.evaluate";
-
-const CONNECT_METHOD = "connect";
-const CONNECT_REQUEST_ID = 1;
-const EVALUATE_REQUEST_ID = 2;
-const DEFAULT_GATEWAY_URL = "ws://127.0.0.1:18794";
-const DEFAULT_TIMEOUT_MS = 30_000;
-
-interface GatewaySocket {
-	send(data: string): void;
-	close(): void;
-	addEventListener(type: "open", listener: () => void): void;
-	addEventListener(type: "message", listener: (event: { data: unknown }) => void): void;
-	addEventListener(type: "error", listener: () => void): void;
-}
 
 /** One step of the run, as the gateway expects to receive it. */
 export interface VakEvalTraceStep {
@@ -76,11 +65,7 @@ export interface VakEvalDeclaration {
 	readonly sessionKey?: string;
 }
 
-export interface VakEvalOptions {
-	gatewayUrl?: string;
-	timeoutMs?: number;
-	createSocket?: (url: string) => GatewaySocket;
-}
+export type VakEvalOptions = GatewayCallOptions;
 
 /** Raised when a run is asked to sound without a scale to sound in. */
 export class VakEvalDeclarationError extends Error {
@@ -126,8 +111,6 @@ export function vakEvalRequest(input: {
 		throw new VakEvalDeclarationError("trace (an empty run has no line to read)");
 	}
 	return {
-		type: "req" as const,
-		id: EVALUATE_REQUEST_ID,
 		method: VAK_EVALUATE_METHOD,
 		params: {
 			task: input.task,
@@ -160,7 +143,7 @@ export interface VakEvalReceipt {
  * The broadcast is the point; the returned receipt is the same reading the
  * subscribers saw, handed back so the run record can carry it too.
  */
-export function emitVakEval(
+export async function emitVakEval(
 	input: {
 		task: string;
 		declaration: VakEvalDeclaration;
@@ -169,99 +152,21 @@ export function emitVakEval(
 	options: VakEvalOptions = {},
 ): Promise<VakEvalReceipt> {
 	const request = vakEvalRequest(input);
-	const gatewayUrl = options.gatewayUrl ?? process.env.EPI_GATEWAY_URL ?? DEFAULT_GATEWAY_URL;
-	const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-	const createSocket =
-		options.createSocket ?? ((url: string) => new WebSocket(url) as unknown as GatewaySocket);
+	const response = await callGateway(
+		{ method: request.method, params: request.params },
+		options,
+	);
 
-	return new Promise((resolve, reject) => {
-		let settled = false;
-		let socket: GatewaySocket | null = null;
-		const finish = (result: VakEvalReceipt | Error) => {
-			if (settled) return;
-			settled = true;
-			clearTimeout(timeout);
-			try {
-				socket?.close();
-			} catch {
-				// The receipt/error is authoritative; close is best-effort cleanup.
-			}
-			if (result instanceof Error) reject(result);
-			else resolve(result);
-		};
-		const timeout = setTimeout(
-			() => finish(new Error(`portal.vak_eval emission timed out after ${timeoutMs}ms`)),
-			timeoutMs,
-		);
-
-		try {
-			socket = createSocket(gatewayUrl);
-		} catch (error) {
-			finish(error instanceof Error ? error : new Error(String(error)));
-			return;
-		}
-		const activeSocket = socket;
-
-		activeSocket.addEventListener("open", () => {
-			activeSocket.send(
-				JSON.stringify({
-					type: "req",
-					id: CONNECT_REQUEST_ID,
-					method: CONNECT_METHOD,
-					params: {},
-				}),
-			);
-		});
-		activeSocket.addEventListener("error", () => {
-			finish(new Error(`portal.vak_eval could not reach the gateway at ${gatewayUrl}`));
-		});
-		activeSocket.addEventListener("message", (event) => {
-			let frame: Record<string, unknown>;
-			try {
-				frame = JSON.parse(String(event.data)) as Record<string, unknown>;
-			} catch {
-				return;
-			}
-			if (frame.type !== "res") return;
-			if (frame.id === CONNECT_REQUEST_ID) {
-				if (frame.error) {
-					finish(new Error(`portal.vak_eval handshake failed: ${errorMessage(frame.error)}`));
-					return;
-				}
-				activeSocket.send(JSON.stringify(request));
-				return;
-			}
-			if (frame.id !== EVALUATE_REQUEST_ID) return;
-			if (frame.error) {
-				finish(new Error(`portal.vak_eval refused: ${errorMessage(frame.error)}`));
-				return;
-			}
-			const result = frame.result;
-			if (!result || typeof result !== "object" || Array.isArray(result)) {
-				finish(new Error("s4'.vak.evaluate returned no reading"));
-				return;
-			}
-			const response = result as Record<string, unknown>;
-			const reading = response.tonalReading;
-			if (!reading || typeof reading !== "object" || Array.isArray(reading)) {
-				// A trace was sent, so a reading must have come back. Anything else
-				// means the gateway did not read the run, and saying the run was
-				// scored would be a claim nobody made.
-				finish(new Error("s4'.vak.evaluate accepted the trace but returned no tonalReading"));
-				return;
-			}
-			finish({
-				diatonicDegree: Number(response.diatonicDegree ?? 0),
-				modeTonicCf: String(response.modeTonicCf ?? ""),
-				tonalReading: reading as Record<string, unknown>,
-			});
-		});
-	});
-}
-
-function errorMessage(error: unknown): string {
-	if (error && typeof error === "object" && "message" in error) {
-		return String((error as { message: unknown }).message);
+	const reading = response.tonalReading;
+	if (!reading || typeof reading !== "object" || Array.isArray(reading)) {
+		// A trace was sent, so a reading must have come back. Anything else
+		// means the gateway did not read the run, and reporting success would
+		// claim the run was scored when nothing scored it.
+		throw new Error("s4'.vak.evaluate accepted the trace but returned no tonalReading");
 	}
-	return String(error);
+	return {
+		diatonicDegree: Number(response.diatonicDegree ?? 0),
+		modeTonicCf: String(response.modeTonicCf ?? ""),
+		tonalReading: reading as Record<string, unknown>,
+	};
 }

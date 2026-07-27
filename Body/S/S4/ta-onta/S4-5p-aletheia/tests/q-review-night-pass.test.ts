@@ -8,9 +8,13 @@ import {
 
 describe("Aletheia Q-review night-pass request", () => {
   it("carries temporal context only, never a caller-authored corpus", () => {
+    // The frame envelope (`type`/`id`) is no longer asserted here: id
+    // assignment moved into `shared/gateway-call.ts` when the three copies of
+    // the socket dance were collapsed into one. What this test is actually
+    // about — that the request carries the temporal context and NOTHING a
+    // caller could smuggle a corpus through — is unchanged and is what the
+    // exact-params assertion holds.
     assert.deepEqual(qReviewNightPassRequest("15-07-2026", 17), {
-      type: "req",
-      id: 2,
       method: Q_REVIEW_NIGHT_PASS_METHOD,
       params: {
         day_id: "15-07-2026",

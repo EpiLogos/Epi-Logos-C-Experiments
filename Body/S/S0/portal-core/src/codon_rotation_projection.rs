@@ -195,7 +195,11 @@ fn nucleotide_iching_value(nucleotide: u8) -> f32 {
     }
 }
 
-fn mode_name(mode: u8) -> &'static str {
+/// The seven CF-modes (`ql-musical-derivation-v3.md` §II-4.5).
+///
+/// Public because it is the ONE mode-name table: the diatonic trace reading
+/// consumes it rather than keeping a second copy free to drift.
+pub fn mode_name(mode: u8) -> &'static str {
     match mode % MODE_COUNT {
         0 => "Ionian",
         1 => "Dorian",

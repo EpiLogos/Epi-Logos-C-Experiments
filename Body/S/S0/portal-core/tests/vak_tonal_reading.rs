@@ -170,17 +170,19 @@ fn face_pattern(tonic_cf: &str) -> Vec<ConjugateFace> {
 }
 
 #[test]
-fn six_modes_reproduce_the_derivation_conjugate_patterns_verbatim() {
+fn all_seven_modes_reproduce_the_derivation_conjugate_patterns_verbatim() {
     use ConjugateFace::{Name as N, Power as P};
-    // v3 §II-4.5, "Conjugate-form-selection-pattern across the 7 degrees".
-    // Locrian is asserted separately — see the test below.
-    let table: [(&str, &str, [ConjugateFace; 7]); 6] = [
+    // v3 §II-4.5 and Reference Table 11, "Conjugate-form-selection-pattern
+    // across the 7 degrees". One law — the parity of the interval to the mode's
+    // tonic — reproduces every row.
+    let table: [(&str, &str, [ConjugateFace; 7]); 7] = [
         ("Ionian", "(00/00)", [N, N, N, P, P, P, P]),
         ("Dorian", "(0/1)", [N, N, P, P, P, P, N]),
         ("Phrygian", "(0/1/2)", [N, P, P, P, P, N, N]),
         ("Lydian", "(0/1/2/3)", [N, N, N, N, P, P, P]),
         ("Mixolydian", "(4.0/1-4.4/5)", [N, N, N, P, P, P, N]),
         ("Aeolian", "(4.5/0)", [N, N, P, P, P, N, N]),
+        ("Locrian", "(5/0)", [N, P, P, P, N, N, N]),
     ];
     for (mode_name, tonic_cf, expected) in table {
         assert_eq!(
@@ -192,17 +194,25 @@ fn six_modes_reproduce_the_derivation_conjugate_patterns_verbatim() {
 }
 
 #[test]
-fn locrian_follows_its_own_stated_intervals_where_the_table_row_disagrees() {
+fn locrian_is_flipped_to_name_at_the_fifth_as_the_derivation_states() {
     use ConjugateFace::{Name as N, Power as P};
-    // §II-4.5's Locrian row is internally inconsistent: its pattern cell reads
-    // Name-Power-Power-NAME-POWER-Name-Name, but the same row's own
-    // "characteristic intervals" cell requires a PERFECT 4th and a DIMINISHED
-    // 5th — and §II-4.4's rule (Power at the 4th = perfect, Name = raised;
-    // Power at the 5th = perfect, Name = diminished) makes those two cells
-    // contradict each other at degrees 4 and 5. The parity law reproduces the
-    // other six rows exactly, and it agrees with Locrian's interval cell, so
-    // the two divergent cells read as a transposition in the table.
-    // Flagged for Architect ruling; the derivation file is NOT edited here.
+    // Locrian was the one row whose pattern CELL disagreed with the law, in
+    // both §II-4.5 and Reference Table 11 (the two tables share the error, so
+    // one was copied from the other): both read
+    // Name-Power-Power-NAME-POWER-Name-Name, transposing degrees 4 and 5.
+    //
+    // The derivation's own prose settles it — §II-4.5, "Why Locrian is
+    // almost-not-stable": "the 5th degree has been conjugate-flipped to
+    // Name-side at position #3 (which gives a tritone from the
+    // new-tonic-Locrian)". Name at the 5th, exactly as the parity law derives.
+    // Both interval cells agree (a PERFECT 4th and a DIMINISHED 5th, `♭5` in
+    // Table 11), the other six rows agree, and the Bimba map agrees
+    // independently: M1-5-3 `q_2_pi_shift_as_semitone_crossing` names the
+    // semitone as "the minimal D-act (n, n')… exists only across the slash" —
+    // which IS this parity — and `q_3` gives the two Klein-twists per cycle.
+    //
+    // Five witnesses to one mis-transposed cell. The two table cells are now
+    // corrected in the derivation; this test pins the law they must state.
     assert_eq!(face_pattern("(5/0)"), vec![N, P, P, P, N, N, N]);
 
     // Grounded on CF7 the degrees run CF7,CF1,CF2,CF3,CF4,CF5,CF6 — so the 4th
@@ -423,4 +433,48 @@ fn the_reading_serialises_camel_case_for_the_wire() {
         assert!(first.get(key).is_some(), "step carries {key}");
     }
     assert_eq!(first["conjugateFace"], "name");
+}
+
+// ── the three CF enumerations must not drift apart ───────────────────────
+
+#[test]
+fn the_cf_progression_agrees_with_every_other_cf_enumeration_in_the_crate() {
+    // The seven context-frames are enumerated in three places for three
+    // different reasons: `CF_PROGRESSION` here (ORDERED — the ordinal IS the
+    // parent scale-degree), `canonical_cf_position` in `vak_address.rs`
+    // (literal -> CfPosition, declaration order differs deliberately), and
+    // `M0_CF_ADDRESS` in `profile.rs` (DR-VAK-4 addresses). None can be derived
+    // from another without losing what makes it distinct, so this binds them
+    // instead: a literal added or respelled in one place and not the others is
+    // a test failure, not a silent divergence.
+    use portal_core::{canonical_cf_position, M0_CF_ADDRESS};
+
+    assert_eq!(CF_PROGRESSION.len(), 7);
+    assert_eq!(M0_CF_ADDRESS.len(), 7);
+
+    for cf in CF_PROGRESSION {
+        assert!(
+            canonical_cf_position(cf).is_some(),
+            "{cf} is in the progression but not a canonical CF position"
+        );
+        assert!(
+            M0_CF_ADDRESS.iter().any(|(literal, _)| *literal == cf),
+            "{cf} is in the progression but carries no M0 address"
+        );
+    }
+    for (literal, _) in M0_CF_ADDRESS {
+        assert!(
+            cf_ordinal(literal).is_some(),
+            "{literal} has an M0 address but no place in the progression"
+        );
+    }
+
+    // And the ordinals are exactly 1..7, once each — the progression is a
+    // permutation of the seven, not a list that happens to be seven long.
+    let mut ordinals: Vec<u8> = CF_PROGRESSION
+        .iter()
+        .map(|cf| cf_ordinal(cf).expect("progression member"))
+        .collect();
+    ordinals.sort_unstable();
+    assert_eq!(ordinals, (1u8..=7).collect::<Vec<u8>>());
 }

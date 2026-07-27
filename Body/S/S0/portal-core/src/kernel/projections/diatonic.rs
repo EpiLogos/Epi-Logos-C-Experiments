@@ -28,11 +28,12 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::codon_rotation_projection::mode_name;
 use crate::hopf::hopf_fiber;
 use crate::parashakti::vimarsha_reading::MODE_INTERVALS;
 use crate::vak_address::VakAddress;
 
-use super::super::{note_name, pitch_class_for_tick, M0_CF_ADDRESS};
+use super::super::{note_name, pitch_class_for_tick, tick_for_pitch_class, M0_CF_ADDRESS};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -118,20 +119,6 @@ pub fn lens_index_for_label(label: &str) -> Option<u8> {
 /// Lens index → its chromatic anchor (§II-3.1). The lens IS the tonic-as-such.
 pub fn lens_anchor_pitch_class(lens: u8) -> u8 {
     pitch_class_for_tick(lens % 12)
-}
-
-/// Mode name for a mode index, matching `codon_rotation_projection::mode_name`
-/// and §II-4.5's table.
-fn mode_name_for(mode: u8) -> &'static str {
-    match mode % 7 {
-        0 => "Ionian",
-        1 => "Dorian",
-        2 => "Phrygian",
-        3 => "Lydian",
-        4 => "Mixolydian",
-        5 => "Aeolian",
-        _ => "Locrian",
-    }
 }
 
 /// M0 sub-coordinate address for a CF literal (DR-VAK-4, status PROPOSED).
@@ -322,7 +309,9 @@ impl VakTonalReading {
             // Rotation is what a mode IS: the same pitch, a different ground.
             let interval_from_tonic = (parent_offset + 12 - tonic_offset) % 12;
             let degree = ((ordinal - 1 + 7 - mode) % 7) + 1;
-            let degree720 = u16::from(tick_for_interval(interval_from_tonic)) * 60;
+            // The interval read as a helix tick — the SAME inverse the mirror law
+            // uses (`kernel.rs::tick_for_pitch_class`), not a second copy of it.
+            let degree720 = u16::from(tick_for_pitch_class(interval_from_tonic)) * 60;
             read_steps.push(VakTonalStep {
                 step_id: step.step_id.clone(),
                 cf: cf.to_owned(),
@@ -374,7 +363,7 @@ impl VakTonalReading {
             lens_anchor_pitch_class: anchor,
             lens_anchor_note: note_name(anchor).to_owned(),
             mode,
-            mode_name: mode_name_for(mode).to_owned(),
+            mode_name: mode_name(mode).to_owned(),
             tonic_cf: tonic_cf.to_owned(),
             tonic_pitch_class,
             tonic_note: note_name(tonic_pitch_class).to_owned(),
@@ -397,19 +386,6 @@ impl VakTonalReading {
                 "hopf.hopf_fiber".to_owned(),
             ],
         })
-    }
-}
-
-/// Semitone interval → whole-tone-helix tick, the inverse of
-/// `pitch_class_for_tick`. Even intervals are the bimba helix (ticks 0-5),
-/// odd the pratibimba helix (ticks 6-11) — which is what puts an odd interval
-/// past 360° on the double cover.
-fn tick_for_interval(interval: u8) -> u8 {
-    let interval = interval % 12;
-    if interval % 2 == 0 {
-        interval / 2
-    } else {
-        6 + (interval - 1) / 2
     }
 }
 
@@ -479,9 +455,9 @@ mod tests {
     }
 
     #[test]
-    fn tick_for_interval_inverts_pitch_class_for_tick() {
+    fn tick_for_pitch_class_inverts_pitch_class_for_tick() {
         for tick in 0u8..12 {
-            assert_eq!(tick_for_interval(pitch_class_for_tick(tick)), tick);
+            assert_eq!(tick_for_pitch_class(pitch_class_for_tick(tick)), tick);
         }
     }
 }

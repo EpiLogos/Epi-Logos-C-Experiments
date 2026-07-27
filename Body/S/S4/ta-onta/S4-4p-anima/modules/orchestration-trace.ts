@@ -41,23 +41,11 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import type { VakAddress } from "../../shared/vak_address.ts";
-
-const CONNECT_METHOD = "connect";
-const CONNECT_REQUEST_ID = 1;
-const INJECT_REQUEST_ID = 2;
-const DEFAULT_GATEWAY_URL = "ws://127.0.0.1:18794";
-const DEFAULT_TIMEOUT_MS = 30_000;
+// One gateway-call implementation for every S4 carrier.
+import { callGateway, type GatewayCallOptions } from "../../shared/gateway-call.ts";
 
 /** The transcript-write method the trace rides. */
 export const TRACE_INJECT_METHOD = "chat.inject";
-
-interface GatewaySocket {
-	send(data: string): void;
-	close(): void;
-	addEventListener(type: "open", listener: () => void): void;
-	addEventListener(type: "message", listener: (event: { data: unknown }) => void): void;
-	addEventListener(type: "error", listener: () => void): void;
-}
 
 /** One operation a code-mode script performed. Mirrors the Rust contract. */
 export interface OrchestrationTraceOp {
@@ -86,11 +74,7 @@ export interface OrchestrationTrace {
 	readonly usage: OrchestrationTraceUsage;
 }
 
-export interface TraceEmitOptions {
-	gatewayUrl?: string;
-	timeoutMs?: number;
-	createSocket?: (url: string) => GatewaySocket;
-}
+export type TraceEmitOptions = GatewayCallOptions;
 
 /** Raised when a trace cannot honestly describe the run it claims to be. */
 export class OrchestrationTraceError extends Error {
@@ -120,8 +104,6 @@ export function traceInjectRequest(input: {
 		);
 	}
 	return {
-		type: "req" as const,
-		id: INJECT_REQUEST_ID,
 		method: TRACE_INJECT_METHOD,
 		params: {
 			sessionKey: input.sessionKey,
@@ -139,86 +121,20 @@ export interface TraceEmitReceipt {
 }
 
 /** Deposit a completed run's deterministic trace into the session transcript. */
-export function emitOrchestrationTrace(
+export async function emitOrchestrationTrace(
 	input: { sessionKey: string; trace: OrchestrationTrace; vakAddress?: VakAddress },
 	options: TraceEmitOptions = {},
 ): Promise<TraceEmitReceipt> {
 	const request = traceInjectRequest(input);
-	const gatewayUrl = options.gatewayUrl ?? process.env.EPI_GATEWAY_URL ?? DEFAULT_GATEWAY_URL;
-	const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-	const createSocket =
-		options.createSocket ?? ((url: string) => new WebSocket(url) as unknown as GatewaySocket);
-
-	return new Promise((resolve, reject) => {
-		let settled = false;
-		let socket: GatewaySocket | null = null;
-		const finish = (result: TraceEmitReceipt | Error) => {
-			if (settled) return;
-			settled = true;
-			clearTimeout(timer);
-			try {
-				socket?.close();
-			} catch {
-				// The receipt/error is authoritative; close is best-effort.
-			}
-			if (result instanceof Error) reject(result);
-			else resolve(result);
-		};
-		const timer = setTimeout(
-			() => finish(new Error(`orchestration trace emission timed out after ${timeoutMs}ms`)),
-			timeoutMs,
-		);
-
-		try {
-			socket = createSocket(gatewayUrl);
-		} catch (error) {
-			finish(error instanceof Error ? error : new Error(String(error)));
-			return;
-		}
-		const activeSocket = socket;
-
-		activeSocket.addEventListener("open", () => {
-			activeSocket.send(
-				JSON.stringify({
-					type: "req",
-					id: CONNECT_REQUEST_ID,
-					method: CONNECT_METHOD,
-					params: {},
-				}),
-			);
-		});
-		activeSocket.addEventListener("error", () => {
-			finish(new Error(`orchestration trace could not reach the gateway at ${gatewayUrl}`));
-		});
-		activeSocket.addEventListener("message", (event) => {
-			let frame: Record<string, unknown>;
-			try {
-				frame = JSON.parse(String(event.data)) as Record<string, unknown>;
-			} catch {
-				return;
-			}
-			if (frame.type !== "res") return;
-			if (frame.id === CONNECT_REQUEST_ID) {
-				if (frame.error) {
-					finish(new Error(`orchestration trace handshake failed: ${errorMessage(frame.error)}`));
-					return;
-				}
-				activeSocket.send(JSON.stringify(request));
-				return;
-			}
-			if (frame.id !== INJECT_REQUEST_ID) return;
-			if (frame.error) {
-				finish(new Error(`orchestration trace refused: ${errorMessage(frame.error)}`));
-				return;
-			}
-			const result = (frame.result ?? {}) as Record<string, unknown>;
-			finish({
-				canonicalKey: String(result.canonicalKey ?? ""),
-				runId: String(result.runId ?? ""),
-				ops: Number(result.ops ?? 0),
-			});
-		});
-	});
+	const result = await callGateway(
+		{ method: request.method, params: request.params },
+		options,
+	);
+	return {
+		canonicalKey: String(result.canonicalKey ?? ""),
+		runId: String(result.runId ?? ""),
+		ops: Number(result.ops ?? 0),
+	};
 }
 
 // ── the distillation row ──────────────────────────────────────────────────
@@ -340,11 +256,4 @@ export function appendDistillationRow(row: DistillationRow, path?: string): stri
 	// key by the TOP-level names and silently drop the annotation channels.
 	appendFileSync(target, `${JSON.stringify(row)}\n`, "utf8");
 	return target;
-}
-
-function errorMessage(error: unknown): string {
-	if (error && typeof error === "object" && "message" in error) {
-		return String((error as { message: unknown }).message);
-	}
-	return String(error);
 }

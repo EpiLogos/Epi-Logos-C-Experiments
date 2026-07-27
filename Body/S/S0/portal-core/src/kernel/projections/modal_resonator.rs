@@ -14,7 +14,7 @@ use crate::parashakti::vimarsha_reading::{
     INNER_FOUR_OFFSETS, MODE_INTERVALS, NODAL_ANCHOR_OFFSETS,
 };
 
-use super::super::{note_name, pitch_class_for_tick, MathemeNodalConstraint};
+use super::super::{note_name, pitch_class_for_tick, tick_for_pitch_class, MathemeNodalConstraint};
 use super::diatonic::MathemeDiatonicContext;
 use super::resonance72::MathemeResonance72Projection;
 
@@ -202,11 +202,7 @@ fn ladder_pitch_class(lens_anchor: u8, mode: u8, offset: u8) -> u8 {
 /// Within-helix X+Y=5 mirror at the pitch-class register: invert
 /// `pitch_class_for_tick`, mirror the position, re-project (chromatic.rs law).
 fn mirror_pitch_class(pitch_class: u8) -> u8 {
-    let tick = if pitch_class % 2 == 0 {
-        pitch_class / 2
-    } else {
-        6 + (pitch_class - 1) / 2
-    };
+    let tick = tick_for_pitch_class(pitch_class);
     let position = tick % 6;
     let mirror_position = 5 - position;
     let mirror_tick = if tick < 6 {

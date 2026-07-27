@@ -1460,6 +1460,20 @@ fn pitch_class_for_tick(tick12: u8) -> u8 {
     }
 }
 
+/// Inverse of [`pitch_class_for_tick`]: chromatic class -> whole-tone-helix tick.
+///
+/// Even classes are the bimba helix (ticks 0-5), odd the pratibimba helix
+/// (6-11). One inverse, used by the mirror law and by the diatonic trace
+/// reading — two copies of these four lines is how the two helices drift apart.
+fn tick_for_pitch_class(pitch_class: u8) -> u8 {
+    let pitch_class = pitch_class % 12;
+    if pitch_class % 2 == 0 {
+        pitch_class / 2
+    } else {
+        6 + (pitch_class - 1) / 2
+    }
+}
+
 fn bimba_pitch_class_for_position(position: u8) -> u8 {
     (2 * (position % 6)) % 12
 }
