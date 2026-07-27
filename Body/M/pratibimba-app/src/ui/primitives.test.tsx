@@ -75,7 +75,12 @@ describe('shared ui primitives (CCT-10)', () => {
             </>
         );
         expect(within(view.container).getByTestId('coordinate-string').textContent).toBe('S2-3');
-        expect(within(view.container).getByTestId('coordinate-string').getAttribute('aria-label')).toContain('family S');
+        // 30.T30.5 screen-reader contract: the text equivalent names the family
+        // TIER and the archetype it manifests, not the bare letter — and speaks
+        // the separators a reader would otherwise run together.
+        expect(within(view.container).getByTestId('coordinate-string').getAttribute('aria-label')).toBe(
+            'S2 dash 3, stack family, graphdb'
+        );
         expect(within(view.container).getByTestId('hexagram-string').getAttribute('aria-label')).toContain(
             'changing lines 1, 6'
         );

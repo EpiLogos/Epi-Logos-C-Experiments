@@ -18,6 +18,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { FAMILY_HUES } from './tokens';
+import { coordinateAriaLabel } from './accessibility';
 
 export { ProvenanceBadge } from './ProvenanceBadge';
 export type { ProvenanceState } from './ProvenanceBadge';
@@ -71,7 +72,7 @@ export function CoordinateString({ value }: { readonly value: string }) {
             className="coordinate-string"
             data-family={family || 'unknown'}
             data-testid="coordinate-string"
-            aria-label={`Coordinate ${coordinate}, family ${family || 'unknown'}`}
+            aria-label={coordinateAriaLabel(coordinate)}
             style={{ color: colour }}
         >
             <span className="coordinate-family" aria-hidden="true">{family || '?'}</span>

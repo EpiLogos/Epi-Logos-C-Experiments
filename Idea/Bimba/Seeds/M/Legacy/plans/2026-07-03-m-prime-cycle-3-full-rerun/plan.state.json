@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T17:48:22.456Z",
+  "updatedAt": "2026-07-27T18:19:18.712Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13968,16 +13968,21 @@
       "blocker": null
     },
     "28.T28.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-27T17:53:38.234Z",
+      "claimedAt": "2026-07-27T17:49:45.088Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-27T17:53:38.234Z",
+          "text": "RECON COMPLETE, BUILD GATED ON 52.T4 — recorded so the next agent inherits the inventory instead of re-deriving it. Fate sorting against the live carrier (authority: src/panes/omni/ACR-MIGRATION-MAP.md, the 27.T27.10 retarget map): (a) T8 contents are ALREADY CARRIED as omni fold modules — RunTree = DispatchGenealogyTree/DispatchGenealogyStream + dispatchGenealogy.ts, ToolStream = ToolStreamPanel, EvidenceDepositForm = src/panes/omni/evidence/EvidenceDepositForm.tsx over the LIVE s5'.epii.deposit, ReviewDecisionControls = ReviewBlocksPane + m5ReviewGate over the LIVE s5'.review.submit. (b) DR-M5-1 roster collapse is ALREADY LANDED in omnipanelCapabilities.ts: ANIMA_DISPATCH_TARGETS = Pi + Anima + six Aletheia techne guardians, with PSYCHE_ASPECT_REGISTERS (nous/logos/eros/mythos/psyche/sophia) held separate and explicitly non-executable. (e) Aletheia subagent trace is ALREADY CARRIED by AletheiaCrystallisationGroup.tsx + VetoBanner.tsx + psycheFacet.ts. TWO METHOD CORRECTIONS the spec needs (same class as 28.T28.4's s1'.semantic.suggest): the spec's s5'.review.transition is unimplemented in the live probe — the live method is s5'.review.submit, already consumed via m5ReviewGate; and s5'.epii.runtime_control (the abort/retry/continue backing) is ALSO unimplemented, so AbortRetryContinueControls can only be an honest pending-wire surface, not a real control. REMAINING GAP = (c) the Pi-monitor reframe banner and (d) the governance-primary DEEP PANE itself — and (d) is gated: M5'-SPEC.md:91 places the agentic control room INSIDE the ide-deep pane set, 52.T4 (ideDeepDefault: the deep layout becomes a real pane set) is PENDING, and today ide-deep only SUBTRACTS three daily widgets from face 0 (App.tsx). The CHROME-CONTRACT validator enforces the sequencing mechanically: src/chromeContract.test.ts 'doc-ahead pending surfaces are NOT yet in the factory' fails if the agenticControlRoom id appears in the factory while its row reads pending, so landing the pane REQUIRES flipping the row to live — which asserts real mounting in a pane set that does not exist yet. Track 28 is class UF, so an unmounted component could not carry UF proof either. Resume once 52.T4 lands the deep pane set; the build is then (c) + (d) composing the already-live folds in deep rendering, plus honest pending-wire for runtime_control."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t28-acr",
+      "leaseExpiresAt": "2026-07-27T20:49:45.088Z",
+      "heartbeatAt": "2026-07-27T17:53:38.234Z",
+      "runId": "20260727T174945Z-28-T28.5",
       "worktree": null,
       "blocker": null
     },
@@ -14932,16 +14937,35 @@
       "blocker": null
     },
     "30.T30.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T18:19:18.673Z",
+      "claimedAt": "2026-07-27T17:53:56.640Z",
+      "completedAt": "2026-07-27T18:19:18.673Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T18:19:18.673Z",
+          "text": "Accessibility contract REBUILT from spec (original ledger status was quarantine — nothing inherited from that claim) and landed as EXECUTABLE law, not prose: src/ui/accessibility.ts + ACCESSIBILITY-CONTRACT.md, the carrier retarget of the frozen extensions/contracts/ui-accessibility.{ts,md}. FOCUS RING: FOCUS_RING_MIN_PX=2, with a real gap DISCLOSED not restyled — .face-toggle-button / .m0-coordinate-summary-card-open / .m4-nara-floating-menu button express focus as a 1px border-color swap with outline:none, below the minimum; those surfaces belong to 15.10/21.T21.17/25.x so the sweep is their owners' visual change. REDUCED MOTION (DR-WC-DL-4): MOTION_KIND classifies each channel and reducedMotionDurationMs() resolves it — continuous stops at 0ms, discrete is PRESERVED as a 100ms snap because removing it removes the state-change semantics, layout switch instantaneous per canon. SCREEN READER: coordinateAriaLabel speaks coordinate + family tier + archetype (M4-3 -> 'M4 dash 3, subsystem family, nara') reusing ui/coordinateNames.ts as the naming authority and now wired into the CoordinateString primitive; cl42SignatureAriaLabel; createTickAnnouncer rate-limits the aria-live region to one announcement/second against the 1Hz heartbeat; CodonString already conformed (it reads the real gateway lookup). BOUNDED NOT INVENTED, same discipline as 28.T28.4's frontmatter key-shape law: HexagramString's name component needs I-Ching hexagram NAMES (M3 kernel law) and SymbolicCoordinateString's decomposition needs the verifier-authored M0/Anuttara grammar — neither has a carrier-reachable surface, and a 64-entry name table in src/ui/ would put kernel law in M'; each primitive announces what it can verify rather than a name it guessed, and the fix shape is a read method as CodonString demonstrates. CONTRAST: WCAG_AA (4.5/3/3) + a real sRGB contrastRatio() proven against WCAG's published extremes (black-on-white 21:1, symmetry, luminance anchors) and asserted green over BOTH shipped themes' ink/ground pairs; an unparseable colour (a var(--...) reference) returns null and meetsContrast fails it, so a pair that cannot be asserted never reads as one that passed; the every-pair lint stays 30.11's. KEYBINDINGS: A11Y_KEYBINDINGS declares space/shift-left/shift-right; registration + scrub transport belong to the tick-choreography owner. Independent verify-tranche PASS on the FIRST run (verifier opus-verify-t30-a11y-20260727 != closer opus-mdev-t30-a11y): full UF-class gate GREEN in 839.6s — app-ui-flow 95, app-test 1505 (28 new a11y tests), gateway 101, ta-onta 800, harness-selftest 107, plus typecheck/build/smoke/live-wire/gateway-methods/carrier-tokens/honesty-lint. One pre-existing test updated, not deleted: primitives.test.tsx asserted the old 'family S' aria text this tranche deliberately replaces.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 30.T30.5 --owner opus-verify-t30-a11y-20260727",
+            "exitCode": 0,
+            "testsPassed": 95,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow gate GREEN: 95 playwright specs incl. tests/e2e/accessibility-contract.spec.ts 2/2 (real Chromium, prefers-reduced-motion emulated both ways); app-smoke + live-wire + gateway(101) GREEN",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/30.T30.5.md",
+              "Body/M/pratibimba-app/src/ui/accessibility.ts",
+              "Body/M/pratibimba-app/src/ui/accessibility.test.ts",
+              "Body/M/pratibimba-app/ACCESSIBILITY-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/accessibility-contract.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t30-a11y",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T17:53:56.640Z",
+      "runId": "20260727T175356Z-30-T30.5",
       "worktree": null,
       "blocker": null
     },
@@ -20690,9 +20714,9 @@
       "blocker": null
     },
     "50.T50.14": {
-      "status": "pending",
-      "updatedAt": "2026-07-27T17:41:40.096Z",
-      "claimedAt": "2026-07-27T17:39:01.487Z",
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T17:52:26.997Z",
+      "claimedAt": "2026-07-27T17:52:26.997Z",
       "completedAt": null,
       "evidence": [
         {
@@ -20702,9 +20726,9 @@
       ],
       "notes": null,
       "owner": "claude-opus5-t50-vakeval-20260727",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-27T17:39:01.487Z",
-      "runId": "20260727T173901Z-50-T50.14",
+      "leaseExpiresAt": "2026-07-27T20:52:26.997Z",
+      "heartbeatAt": "2026-07-27T17:52:26.997Z",
+      "runId": "20260727T175226Z-50-T50.14",
       "worktree": null,
       "blocker": null
     },
@@ -26968,18 +26992,47 @@
       "leaseExpiresAt": "2026-07-27T19:39:01.487Z",
       "worktree": null,
       "completedAt": "2026-07-27T17:41:40.096Z"
+    },
+    {
+      "runId": "20260727T174945Z-28-T28.5",
+      "taskId": "28.T28.5",
+      "status": "review",
+      "startedAt": "2026-07-27T17:49:45.088Z",
+      "owner": "opus-mdev-t28-acr",
+      "leaseExpiresAt": "2026-07-27T20:49:45.088Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T17:53:38.234Z"
+    },
+    {
+      "runId": "20260727T175226Z-50-T50.14",
+      "taskId": "50.T50.14",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T17:52:26.997Z",
+      "owner": "claude-opus5-t50-vakeval-20260727",
+      "leaseExpiresAt": "2026-07-27T20:52:26.997Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260727T175356Z-30-T30.5",
+      "taskId": "30.T30.5",
+      "status": "done",
+      "startedAt": "2026-07-27T17:53:56.640Z",
+      "owner": "opus-mdev-t30-a11y",
+      "leaseExpiresAt": "2026-07-27T20:53:56.640Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T18:19:18.673Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T17:41:40.667Z",
-    "updatedAt": "2026-07-27T17:41:40.667Z",
+    "createdAt": "2026-07-27T17:52:27.305Z",
+    "updatedAt": "2026-07-27T17:52:27.305Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
       "52.T1",
-      "28.T28.4"
+      "28.T28.5"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -26989,7 +27042,7 @@
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
       "52.T1": "in-session",
-      "28.T28.4": "in-session"
+      "28.T28.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
