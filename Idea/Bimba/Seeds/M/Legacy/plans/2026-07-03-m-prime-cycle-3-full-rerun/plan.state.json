@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T17:12:06.274Z",
+  "updatedAt": "2026-07-27T17:37:57.720Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20637,14 +20637,34 @@
       "blocker": null
     },
     "50.T50.13": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-27T16:21:24.631Z",
+      "status": "done",
+      "updatedAt": "2026-07-27T17:37:47.488Z",
       "claimedAt": "2026-07-27T16:21:24.631Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-27T17:37:47.488Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T17:37:47.488Z",
+          "text": "portal.vak_eval had no emitter and now has one; the run has a reading. THE GAP, verified not assumed: `git grep portal.vak_eval HEAD~1` over every runtime path (epi-cli/src, gateway/src, pratibimba-app/src) returns NOTHING — before this tranche the name existed only in PORTAL_EVENT_NAMES, the Pleroma capability-matrix (which lists it under pre_tool_call.must_emit), hooks.json, and specs. A contract naming an event no consumer could ever receive; the same shape 50.T50.12 found one layer down in the Elo engine. LANDED (1) portal-core diatonic.rs gains VakTonalReading, which reads a RUN where MathemeDiatonicContext reads a TICK — the per-tick struct is untouched because four downstream schemas mirror it. Each step CF is a scale-degree role (v3 II-4.2), so in order a run is a melodic line; lens x mode is the 84 landscape addressed as lens_mode_index. NO law restated: lens anchors ARE pitch_class_for_tick (already II-3.1 table), degrees index MODE_INTERVALS, M0 addresses read M0_CF_ADDRESS, the sheet is hopf_fiber over the kernel tick*60 degree720 — and the sheet a step sits on turns out to BE its conjugate face. (2) gateway-contract portal.vak_eval payload gains diatonicDegree (DR-VAK-6 item 1, always present), modeTonicCf (item 3, absent=Ionian), optional resonance72Index/halfDecanIndex (item 2), tonalReading. (3) s4-prime.vak.evaluate carries the reading (the DR own action line) and the dispatch arm BROADCASTS — additive only, no new method, no ratchet change, existing callers untouched. (4) rerunScore is the production caller, so this is not another surface exercised only by tests. HONEST GAPS DECLARED, NOT INVENTED: mef_lens (the scale-beneath) has no producer in a trace — the same gap elo-trial-hook.ts declares — so the lens is REQUIRED and refused BY NAME; a guessed lens does not mislabel a run, it reads it in an epistemic mode the run never spoke from and every pitch comes out wrong. vak_level is deliberately NOT carried per step: it needs bias_weights_empty which a run has no producer for, and the per-tick VakLanguificationTrace already serves that field. TRACK-36 UNBLOCK, corrected premise: vakLevel/m0Address were ALREADY landed (36.T36.8 VakLanguificationTrace on the profile bus, gate/server/mod.rs:259) — what was missing was the RUN-level reading and the event; m0Address is now also per-step, vakLevel is not, for the reason above. FINDING FOR ARCHITECT RULING, derivation NOT edited (it is reference law): v3 II-4.5 Locrian row is internally inconsistent — its conjugate-pattern cell reads N-P-P-N-P-N-N while the same row characteristic-intervals cell requires a perfect 4th and a diminished 5th, which under II-4.4 demands N-P-P-P-N-N-N. One derived law (conjugate face = parity of the interval to the MODE tonic, the two whole-tone helices re-grounded) reproduces the other SIX rows verbatim and agrees with Locrian own interval cell, so the two cells read as transposed at degrees 4-5. The test locrian_follows_its_own_stated_intervals_where_the_table_row_disagrees pins the resolution and states the reasoning. DR STATUS, stated exactly: DR-VAK-6 and DR-VAK-4 are PROPOSED in the register, not VALIDATED; track 50 header says DR-VAK-6 is ratified by building it here per Architect proposal, and that is the only basis claimed. DEVIATION FROM THE DR VERIFICATION STRING: its action line spells diatonic_degree/resonance72_index snake_case; every payload on this bus serialises camelCase, so the WIRE keys are camelCase and the snake_case spellings appear nowhere — its grep expression will not match, by design. GREEN: portal-core 446/0 (15 new integration + 3 new unit, each quoting the derivation table it holds the code to); gateway-contract 93/0; S4 ta-onta 790/0; ta-onta-types 229/229 strict tsc — which earned its keep again, catching 13 type errors node --test had stripped past, including a VakAddress.ct widened to string[]; 7 targeted epi-cli gate binaries 43/0. LIVE-WIRE: node tests/vak-eval-live.mjs 31/31 against a REAL spawned epi gate start — a real rerunScore, a real second websocket registered as a listener (which is what epi portal and the OmniPanel are), the subscriber witnessing the broadcast, modal rotation re-grounding the same run without transposing a single pitch, and a lens-less run refused with nothing reaching the bus. NON-VACUOUS BY INJECTION: disabling the broadcast reddens exactly the 3 gateway tests that assert it (timed out waiting for broadcast of portal.vak_eval) and leaves the 2 refusal tests green; restored to 5/5. INDEPENDENT VERIFICATION opus-verifier-t50-13-20260727 (verifier != closer): PASS record, W-class gate GREEN — gateway 101, gateway-contract 93, ta-onta 790, ta-onta-types, live-wire, gateway-methods, redis-context 10, spacetime 11, graphiti-runtime 16, harness-selftest 107, honesty-lint. SCOPE NOTE, stated rather than glossed: the W scope excludes portal-core (K scope) and epi-cli (260s+, its documented flake family), so those two are implementer runs above, not in the independent record; two attempts to widen the record to include them deadlocked on the gate-lane mutex behind a concurrent Track-28 verifier and were killed rather than left to overwrite a valid PASS with a flake-driven REFUSED. DOX pass done: portal-core, gateway-contract and S4-4p-anima AGENTS.md updated with the surfaces, the Locrian divergence and the new Verification lines. Canon flags raised for S0-ARCHITECTURE/S0-SPEC/M5-prime-SPEC/S3-SPEC/S4-SPEC/M0-prime-SPEC; deep canon write-back is 50.T50.16 own tranche.",
+          "receipt": {
+            "command": "node Body/S/S4/ta-onta/S4-4p-anima/tests/vak-eval-live.mjs  # real spawned epi gate start + live subscriber witnessing portal.vak_eval",
+            "exitCode": 0,
+            "testsPassed": 31,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/projections/diatonic.rs",
+              "Body/S/S0/portal-core/tests/vak_tonal_reading.rs",
+              "Body/S/S3/gateway-contract/src/portal_events.rs",
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs",
+              "Body/S/S0/epi-cli/tests/gate_portal_vak_eval.rs",
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/vak-eval-emit.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.13.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "claude-opus5-t50-vakeval-20260727",
-      "leaseExpiresAt": "2026-07-27T18:21:24.631Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-27T16:21:24.631Z",
       "runId": "20260727T162124Z-50-T50.13",
       "worktree": null,
@@ -26898,11 +26918,12 @@
     {
       "runId": "20260727T162124Z-50-T50.13",
       "taskId": "50.T50.13",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-27T16:21:24.631Z",
       "owner": "claude-opus5-t50-vakeval-20260727",
       "leaseExpiresAt": "2026-07-27T18:21:24.631Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-27T17:37:47.488Z"
     },
     {
       "runId": "20260727T162306Z-28-T28.4",
@@ -26916,26 +26937,28 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T16:21:04.009Z",
-    "updatedAt": "2026-07-27T16:21:04.009Z",
+    "createdAt": "2026-07-27T17:37:57.720Z",
+    "updatedAt": "2026-07-27T17:37:57.720Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
-      "52.T1"
+      "52.T1",
+      "28.T28.4"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
-      "52.T1": "in-session"
+      "52.T1": "in-session",
+      "28.T28.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
