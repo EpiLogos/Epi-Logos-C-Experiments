@@ -46,6 +46,23 @@ describe('CosmicEngine component (jsdom mount)', () => {
         expect(screen.getByTestId('engine-integrated-readiness').dataset.state).toBe('ready');
         expect(screen.getByTestId('engine-integrated-readiness').textContent).toBe('Wave A ready');
     });
+    // 29.T29.2 — the slot-ownership law had NO production caller: the only file
+    // referencing `geometricSlotEnforcement` was its own test. This is the
+    // behavioural proof that the render now reaches it. Ownership is a property
+    // of the declaration, not of a GPU surface, so it reports even here where
+    // WebGL is unavailable.
+    it('reports one named owner per cosmic geometric slot', () => {
+        render(<CosmicEngine />);
+        // Ownership rides data attributes on the surface root, matching the
+        // file's existing idiom (data-m3-lens-ring-contract) so the readout
+        // adds no rendered text to a screenshot-baselined face.
+        const root = screen.getByTestId('cosmic-engine-fallback');
+        expect(root.getAttribute('data-composition-mounted')).toBe('true');
+        expect(root.getAttribute('data-surface-owner')).toBe('m1-paramasiva-played-torus');
+        expect(root.getAttribute('data-texture-owner')).toBe('m2-parashakti');
+        expect(root.getAttribute('data-cell-state-owner')).toBe('m3-mahamaya');
+        expect(root.getAttribute('data-composition-rejection')).toBe('');
+    });
 });
 
 describe('planet chip (E5 interaction surface)', () => {

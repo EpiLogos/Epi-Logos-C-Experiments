@@ -163,6 +163,7 @@ export interface CompositionContributor {
  *  contract from the load side"). */
 export type JuxtapositionRejectionReason =
     | 'contribution-declares-side-by-side-slot'
+    | 'contested-geometric-slot'
     | 'contribution-has-no-mini-mode-fallback-and-no-geometric-claim'
     | 'contribution-declares-raw-body-on-geometric-slot'
     | 'contribution-declares-write-back-on-reads-only-slot'
@@ -198,11 +199,17 @@ export type CompositionLoadResult =
  *     no mini-mode fallback (a bare widget with no composition contract);
  *   - the contributor's geometric claim fails the protected-local boundary
  *     (raw body on a geometric slot, write-back on a reads-only slot, or an
- *     unknown slot).
+ *     unknown slot);
+ *   - a slot is claimed TWICE. Two owners on one geometric slot is exactly the
+ *     three-stack overlay this composition exists to replace: whichever drew
+ *     last would win silently, which is juxtaposition wearing a composition's
+ *     name. The second claimant is the one named, because the first is the
+ *     incumbent.
  * A clean load returns the granted geometric claims keyed by slot.
  */
 export function compositionLoad(contributors: readonly CompositionContributor[]): CompositionLoadResult {
     const granted: ResolvedGeometricClaim[] = [];
+    const claimedSlots = new Set<string>();
     for (const contributor of contributors) {
         if (contributor.compactViewSlot === 'side-by-side') {
             return {
@@ -231,6 +238,16 @@ export function compositionLoad(contributors: readonly CompositionContributor[])
                     rejection: { reason: verdict.reason, contributorId: contributor.extensionId }
                 };
             }
+            if (claimedSlots.has(contributor.geometricClaim.geometricSlot)) {
+                return {
+                    mounted: false,
+                    rejection: {
+                        reason: 'contested-geometric-slot',
+                        contributorId: contributor.extensionId
+                    }
+                };
+            }
+            claimedSlots.add(contributor.geometricClaim.geometricSlot);
             granted.push(
                 Object.freeze({
                     geometricSlot: contributor.geometricClaim.geometricSlot,

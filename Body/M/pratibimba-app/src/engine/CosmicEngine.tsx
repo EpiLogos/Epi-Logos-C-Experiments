@@ -24,6 +24,11 @@ import { commands } from '../commands/registry';
 import { buildM3WheelSurface } from '../components/M3CosmicWheelRenderService';
 import { asMahabhuta } from './elementRegisters';
 import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3CodonRotationProjectionForLensRing';
+// 29.T29.2 — the composition declares WHO owns each geometric slot and runs
+// that through the real load-time law. Before this the law had no production
+// caller at all: only its own test referenced it, so the surface rendered its
+// three mounts without any of them claiming a slot.
+import { loadCosmicComposition, ownerOfSlot } from '../composition/cosmicComposition';
 import { useCoordinateStore, useTickStore } from '../state/stores';
 import {
     CLOCK_LENSES,
@@ -342,6 +347,9 @@ export function CosmicEngine() {
         () => buildCouplingFlowOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
         [cached]
     );
+    // Slot ownership is a property of the DECLARATION, not of any frame, so it
+    // is resolved once rather than per tick.
+    const compositionLoadResult = useMemo(() => loadCosmicComposition(), []);
     const integratedReadiness = useMemo(
         () => evaluateCachedProfileIntegratedReadiness(cached),
         [cached]
@@ -1026,7 +1034,17 @@ export function CosmicEngine() {
 
     if (!webgl) {
         return (
-            <div className="pane-message" data-testid="cosmic-engine-fallback">
+            <div
+                className="pane-message"
+                data-testid="cosmic-engine-fallback"
+                data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
+                data-surface-owner={ownerOfSlot(compositionLoadResult, 'surface')}
+                data-texture-owner={ownerOfSlot(compositionLoadResult, 'texture')}
+                data-cell-state-owner={ownerOfSlot(compositionLoadResult, 'cell-state')}
+                data-composition-rejection={
+                    compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+                }
+            >
                 WebGL unavailable — the cosmic clock needs a GPU surface.
                 <span
                     data-testid="engine-integrated-readiness"
@@ -1049,6 +1067,13 @@ export function CosmicEngine() {
             data-m3-lens-ring-cell={m3LensRingProjection?.cells[0]?.cellIndex ?? 'pending'}
             data-torus-knot-phase-p={torusKnotPhase?.p ?? 'pending-m1-topology'}
             data-torus-knot-phase-q={torusKnotPhase?.q ?? 'pending-m1-topology'}
+            data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
+            data-surface-owner={ownerOfSlot(compositionLoadResult, 'surface')}
+            data-texture-owner={ownerOfSlot(compositionLoadResult, 'texture')}
+            data-cell-state-owner={ownerOfSlot(compositionLoadResult, 'cell-state')}
+            data-composition-rejection={
+                compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+            }
         >
             <div ref={hostRef} className="cosmic-engine-canvas" />
             {selectedPlanet ? (
