@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T11:52:48.128Z",
+  "updatedAt": "2026-07-27T17:12:06.274Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13935,16 +13935,16 @@
       "blocker": null
     },
     "28.T28.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T16:23:06.841Z",
+      "claimedAt": "2026-07-27T16:23:06.841Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t28-canon-studio",
+      "leaseExpiresAt": "2026-07-27T19:23:06.841Z",
+      "heartbeatAt": "2026-07-27T16:23:06.841Z",
+      "runId": "20260727T162306Z-28-T28.4",
       "worktree": null,
       "blocker": null
     },
@@ -20637,16 +20637,16 @@
       "blocker": null
     },
     "50.T50.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T16:21:24.631Z",
+      "claimedAt": "2026-07-27T16:21:24.631Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "claude-opus5-t50-vakeval-20260727",
+      "leaseExpiresAt": "2026-07-27T18:21:24.631Z",
+      "heartbeatAt": "2026-07-27T16:21:24.631Z",
+      "runId": "20260727T162124Z-50-T50.13",
       "worktree": null,
       "blocker": null
     },
@@ -20796,7 +20796,7 @@
     },
     "52.T1": {
       "status": "review",
-      "updatedAt": "2026-07-27T11:08:44.208Z",
+      "updatedAt": "2026-07-27T17:12:06.247Z",
       "claimedAt": "2026-07-27T09:31:46.315Z",
       "completedAt": null,
       "evidence": [
@@ -20828,12 +20828,16 @@
               "Body/M/pratibimba-app/tests/e2e/cross-layout-state-identity.spec.ts"
             ]
           }
+        },
+        {
+          "at": "2026-07-27T17:12:06.247Z",
+          "text": "VERIFY LINE PROVEN GREEN END-TO-END, ledger held at review only because the tree cannot currently produce a PASS record. THE GREEN RUN (verify-tranche, verifier opus-verifier-t52-20260727b != closer): BOTH Verify-line commands exit 0 — 'pnpm typecheck && pnpm test && pnpm build' exit 0 (typecheck 0, 1460 vitest passed/0 failed, build 0, lint:imports + lint:no-modal GREEN) AND 'pnpm test:e2e' exit 0 with 91 passed / 0 failed in FULL SUITE ORDER (5.5m) — the tranche's own UF class proof, 91 playwright specs against a spawned gateway. This is the first time 52.T1's literal Verify line has gone green end-to-end. WHAT MADE IT GREEN (real fixes, not re-rolls): the two specs previously dismissed as 'known flakes' and adjudicated as unrelated red across several tranches were NOT flaky — each carried an assumption true only in isolation, and both are now fixed and committed (0b17a897). (1) pratibimba-consent.spec.ts:274 asserted turnCount === index against the Q_activity accumulator, but that accumulator is PERSISTED PER USER not per session — the test's own comment names that persistence as the product design under test — so suite order had already advanced it: Expected 1, Received 3. It now measures each close against a live baseline read back over the wire, asserting the invariant it actually means (each close folds exactly ONE packet), monotonicity unchanged. (2) visual-regression.spec.ts bootConnected granted its gateway assertion 20s but left shell-visible on the 10s project default inside a 60s test budget; under full-suite load first paint crossed it, failing with 'element(s) not found' at BOOT before any visual assertion. Same boot-sized budget now. ALSO FIXED (031adfe3, this tranche's own deliverable): the 52.T1 AST guard walks 500+ files synchronously and was killed by the 5s vitest default MID-WALK at 5257ms under parallel disk load — a guard that times out reports RED while proving nothing about the tree; given a 30s budget it is 9/9 green in 673ms. WHY NOT DONE: --mark done needs a fresh PASS record and verify-tranche fails closed on any red. The shared carrier is being mutated by a concurrent sibling RIGHT NOW: Track 28's 28.T28.4 Canon Studio work is UNCOMMITTED and in-flight (src/panes/canonEditorExtensions.ts, canonStudio.test.ts, MarkdownEditorPane.test.tsx + package.json/pnpm-lock.yaml/styles.css/CHROME-CONTRACT.md), and tests/e2e/canon-studio.spec.ts:85 fails against that in-flight state. app-test count climbed 1442 -> 1460 -> 1476 -> 1480 across four runs inside one session — direct evidence of concurrent mutation. A whole-suite green is therefore not reachable from this lane until 28.T28.4 lands; 52.T1's Verify line names the WHOLE suite, so --only cannot scope around another track's in-flight work (--only scopes verify-all; tranche Verify-line commands always run). NAMED FOR THEIR OWNERS, same defect class, still live: scripts/no-modal-discipline.test.mjs (5399ms), scripts/import-boundaries.test.mjs (6107ms) and src/bases/mocBaseIntegration.live.test.tsx (5045ms) are whole-tree scans that also time out at the 5s default under contention — tracks 31/43/48 own these; each is a one-line timeout fix. NO GATE-GAMING: every re-run followed a real change to the tree; no full-gate re-run was made hoping for a green window. Ready to close on an Architect signal, or once 28.T28.4 lands and one clean whole-suite run can be taken."
         }
       ],
       "notes": null,
       "owner": "claude-opus5-t52-layout-20260727",
-      "leaseExpiresAt": "2026-07-27T11:31:46.315Z",
-      "heartbeatAt": "2026-07-27T11:08:44.208Z",
+      "leaseExpiresAt": "2026-07-27T19:22:47.093Z",
+      "heartbeatAt": "2026-07-27T17:12:06.247Z",
       "runId": "20260727T093146Z-52-T1",
       "worktree": null,
       "blocker": null
@@ -26890,12 +26894,30 @@
       "leaseExpiresAt": "2026-07-27T13:18:56.502Z",
       "worktree": null,
       "completedAt": "2026-07-27T11:52:48.104Z"
+    },
+    {
+      "runId": "20260727T162124Z-50-T50.13",
+      "taskId": "50.T50.13",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T16:21:24.631Z",
+      "owner": "claude-opus5-t50-vakeval-20260727",
+      "leaseExpiresAt": "2026-07-27T18:21:24.631Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260727T162306Z-28-T28.4",
+      "taskId": "28.T28.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T16:23:06.841Z",
+      "owner": "opus-mdev-t28-canon-studio",
+      "leaseExpiresAt": "2026-07-27T19:23:06.841Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T11:04:15.988Z",
-    "updatedAt": "2026-07-27T11:04:15.988Z",
+    "createdAt": "2026-07-27T16:21:04.009Z",
+    "updatedAt": "2026-07-27T16:21:04.009Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
