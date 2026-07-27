@@ -26,6 +26,35 @@ VAK is the typed transition calculus that annotates any agent task with a 6-laye
 
 ---
 
+## The Six Layers Are a Scripting Language
+
+These six are not only labels attached to a dispatch after the fact. They are the typed
+vocabulary an Anima orchestration is **written against** (`S4-4p-anima/lib/vak-orchestration-surface.ts`) —
+DR-VAK-3's point that VAK is the operational language of the system, not metadata over labels.
+Each layer is a composable AXIS of the program:
+
+| Axis | What it decides in a script | Reader |
+|------|-----------------------------|--------|
+| CPF | plans the run; dialogical halts for a human, mechanistic runs autonomously | `reviewPolarity` / `haltsForHuman` |
+| CT | which Hen artifact templates the step produces or consumes | `artifactTemplates` |
+| CP | where the step sits — **and** whether it opens a nested frame | `framePosition` / `runNestedFrame` |
+| CF | binds the constitutional agent | `boundAgent` (via `AGENT_CF`) |
+| CFP | the execution-flow shape (parallel / chain / fusion / nested / Z) | `executionShape` |
+| CS | sequences it: Day before Night' | `sequence` / `isNightPass` |
+
+Two things follow that matter when you author or review a script:
+
+- **Every emission carries the full six-field envelope.** `emit()` is the only emission
+  constructor, and a partial or non-canonical address is refused *naming the offending
+  coordinate* rather than coerced into something plausible. A bare `CP4` is refused because
+  guessing which `CP4.x` it meant would fabricate a coordinate.
+- **"Composing across six coordinates" is measurable, not rhetorical.** `composedCoordinates()`
+  reports the axes on which the steps genuinely DIFFER. A run that varies only CF is one axis
+  with five decorations; only a run whose steps differ on all six is composing in six
+  dimensions. Quote that number, not the count of fields present.
+
+---
+
 ## S4-0': Context Frame Polarity (CPF)
 
 **Constitutional**: "Autonomous or user-engaged?"
@@ -96,6 +125,35 @@ CP 4.3 --------+-------------+-------------+-- Pattern
 CP 4.4 --------+-------------+-------------+-- Context
 CP 4.5 --------+-------------+-------------+-- Integration
 ```
+
+**CP is also the nesting operator.** A position inside a context frame is EITHER a terminal
+dispatch (a leaf) OR it expands into a whole nested context frame. That is the `.`-nesting
+operator surfaced through CP, and it is what lets the language scale: in `(0/1/2)`, position
+`0` can open `(00/00)`; a `(4.0/1-4.4/5)` parent can nest a full frame at each of its internal
+positions.
+
+In a script this needs no new abstraction — it is plain recursion. A frame is a node whose
+children are either leaves or frames:
+
+```ts
+const root = {
+  kind: "frame", id: "outer", address: { ...addr, cf: "(4.0/1-4.4/5)", cp: "CP4.2" },
+  children: [
+    { kind: "frame", id: "inner", address: { ...addr, cf: "(0/1)", cp: "CP4.0" },
+      children: [ { kind: "leaf", id: "survey", address: {...}, task: "…", agent: "logos" } ] },
+    { kind: "leaf", id: "land", address: { ...addr, cp: "CP4.1" }, task: "…", agent: "logos" },
+  ],
+};
+await runNestedFrame(root, { execute: (leaf) => dispatchChildPi({ ... }) });
+```
+
+Two rules the evaluator enforces, so read them before authoring:
+
+- A child of the `(4.0/1-4.4/5)` parent **must carry the CP of the slot it occupies**
+  (`children[i]` -> `CP4.i`). CP genuinely *places* the step; a mismatch is refused by name.
+- **Frames never dispatch — only leaves do.** A frame contributes structure to the trace
+  (`depth`, `framePath`, `slotPath`) and nothing else. That trace is what makes a run
+  replayable and scorable later.
 
 ---
 

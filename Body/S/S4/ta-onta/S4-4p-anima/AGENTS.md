@@ -2,6 +2,7 @@
 
 ## Purpose
 The Anima ta-onta carrier (S4-4' class): the agent-orchestration & meta-dispatch extension — VAK evaluation, CF dispatch, CFP thread execution, and CS-phase management for the PI agent runtime.
+Since Track 50 the operative shape of that dispatch is a **program, not a staircase**: a multi-tool composition is emitted as ONE TypeScript script instead of one JSON tool call per model round-trip, written against the six C' coordinates with [[CP]] as the nesting operator and a child pi at each leaf. Anima holds the top-level script and its run state; a repeatable expression persists as a hashed **score**. JSON tool-mode remains the substrate and fallback. Canon for that law: [[S4-SPEC]] (the two tiers) and [[S4-4'-SPEC]] (origination, score lifecycle, authored checkpoints).
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] / [[S4-ARCHITECTURE]] (see also [[S-SYSTEM-INDEX]]).
 
 ## Ownership

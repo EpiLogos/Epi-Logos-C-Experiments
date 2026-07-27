@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T21:22:11.688Z",
+  "updatedAt": "2026-07-27T21:31:17.302Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14448,16 +14448,16 @@
       "blocker": null
     },
     "29.T29.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T21:31:17.062Z",
+      "claimedAt": "2026-07-27T21:31:17.062Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "claude-opus5-t29-cosmic-20260727",
+      "leaseExpiresAt": "2026-07-28T00:31:17.062Z",
+      "heartbeatAt": "2026-07-27T21:31:17.062Z",
+      "runId": "20260727T213117Z-29-T29.2",
       "worktree": null,
       "blocker": null
     },
@@ -20841,15 +20841,20 @@
       "blocker": null
     },
     "50.T50.16": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-27T21:11:18.838Z",
+      "status": "review",
+      "updatedAt": "2026-07-27T21:30:32.564Z",
       "claimedAt": "2026-07-27T21:11:18.838Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-27T21:30:32.564Z",
+          "text": "Canon write-back landed across all five write-scope files; held at REVIEW for one named Verify criterion I am structurally barred from satisfying myself (below), NOT because the deliverable is partial. WHAT LANDED. (1) S4-SPEC.md gains \"Tool Composition: JSON Tool-Mode and Code-Mode\" in section A — names the staircase (harness.rs ToolCallObserved re-inlining full arguments+result per hop) and the two tiers the brief asks for: BASE (any pi agent collapses a multi-tool task into ONE program; the security boundary is unchanged and ORDERED — spawn-time --tools allow-list first, then isEntitled(), so a tool switched off at spawn is refused code-mode/not-active without consulting entitlement at all; explicitly NO new VM, the gate governs the named tool surface and not the process, stated so no reader mistakes it for a sandbox) and VAK (the same mechanism across the six C' coordinates with CP as nesting operator, spawning child pi's). It carries the measurement rather than an adjective: 657 tok vs 2199 staircase, delta 1542, ratio 0.299, estimator chars/4 named as crude by design, both sides computed from the SAME recorded trace. (2) S4-SPEC section B now states that the six coordinates are the typed vocabulary an orchestration is WRITTEN AGAINST (DR-VAK-3), that emit() is the sole emission constructor refusing a partial address by name rather than coercing it, that composedCoordinates() makes \"composed across six\" measurable rather than rhetorical, and the CP nesting law (a child of the 4.x parent carries the CP of its slot; frames never dispatch, only leaves do). (3) S4-4'-SPEC.md gains the lib/ surfaces in Current Body Reality plus four Build Contract laws in the shard's own voice: an orchestration is a program and Anima holds it (context isolation — only DECLARED variables cross to a child, never the parent transcript); origination is dialogue and a repeatable expression is a hashed score (persistScore REFUSES a non-originating session; a re-run restores the prior polarity so re-running mid-dialogue does not end the dialogue); checkpoints are AUTHORED never inserted (closed set of three reasons, a fourth refused as free text, an agent answering its own gate is not an answer); a CFP4 thread closes only when its list says done and exhaustion never reads as completion. Test Obligations now pin the acceptance harness and why it is not named *.test.mjs. (4) vak-coordinate-frame SKILL.md gains \"The Six Layers Are a Scripting Language\" (per-axis reader table) and a CP-nesting subsection with a real authored example plus the two enforced rules. (5) anima-orchestration SKILL.md gains \"Authoring the Orchestration as a Script\" and \"Origination and the Score Lifecycle\" (the four-step originate/run/persist/refine cycle and the three checkpoint reasons). (6) The S4-4p-anima DOX Purpose now states the operative shape is a program, not a staircase, and routes to both specs for the law. VERIFICATION, per protocol Law 5 (only grep-verifiable presence counts, never a ledger string): every symbol and behaviour I asserted into canon was mechanically checked to exist in the landed code — 13/13 OK, including that the allow-list check genuinely PRECEDES isEntitled in code-mode.ts (asserted by line order, not by reading the prose), that CHECKPOINT_REASONS has exactly 3 members (imported and counted, not eyeballed), and that s4'.orchestration.score really carries its reader-not-runner discipline. agent_cf_parity.test.ts 10/10 GREEN — this suite reads the two SKILL.md files as prose and fails on a superseded CF spelling, so it is the real guard on skill edits, and my edits did not regress it. Frontmatter: c_3_updated_at 2026-07-27 added to both specs (an established vault key, 213 uses; the C3=Process timestamp law) satisfying protocol step 5 without inventing a key. SURFACED, NOT SILENTLY FIXED (protocol Law 3): S4-SPEC.md already fails `epi vault frontmatter-validate` with \"Invalid coordinate: 'S4/S4''\" — a PRE-EXISTING error, present before my edits and unchanged by them (baseline captured before and after). A coordinate designator is canon shape, so per CLAUDE.md rule 5 an agent does not repoint it; it needs Architect ratification. S4-4'-SPEC.md validates clean. WHY REVIEW AND NOT DONE: the Verify line requires \"the SEED-HARMONISATION adversarial gate passes\". That gate is not a test — the protocol defines it as a SECOND agent, given ONLY the updated spec and five orchestrator-sampled commitments, answering what the coordinate's surface is, what it consumes and does not own, and what is implemented vs pending vs open; and it states plainly that \"the harmoniser may not verify its own pass\". I ran every mechanical half of the Verify line (claims-vs-code, the prose-reading parity suite, frontmatter validation, and the class-scoped gate under an independent verifier owner) and I cite the 50.T50.15 acceptance run the line asks for, but a comprehension read performed by me would be exactly the self-verification the protocol forbids. Marking done on an unmet named criterion is the ledger pattern this plan set exists to stop, so this stays in review for that one read."
+        }
+      ],
       "notes": null,
       "owner": "claude-opus5-t50-canon-20260727",
       "leaseExpiresAt": "2026-07-27T23:11:18.838Z",
-      "heartbeatAt": "2026-07-27T21:11:18.838Z",
+      "heartbeatAt": "2026-07-27T21:30:32.564Z",
       "runId": "20260727T211118Z-50-T50.16",
       "worktree": null,
       "blocker": null
@@ -27150,11 +27155,12 @@
     {
       "runId": "20260727T211118Z-50-T50.16",
       "taskId": "50.T50.16",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-27T21:11:18.838Z",
       "owner": "claude-opus5-t50-canon-20260727",
       "leaseExpiresAt": "2026-07-27T23:11:18.838Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-27T21:30:32.564Z"
     },
     {
       "runId": "20260727T211216Z-30-T30.7",
@@ -27165,12 +27171,21 @@
       "leaseExpiresAt": "2026-07-27T23:42:16.343Z",
       "worktree": null,
       "completedAt": "2026-07-27T21:22:11.664Z"
+    },
+    {
+      "runId": "20260727T213117Z-29-T29.2",
+      "taskId": "29.T29.2",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T21:31:17.062Z",
+      "owner": "claude-opus5-t29-cosmic-20260727",
+      "leaseExpiresAt": "2026-07-28T00:31:17.062Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T20:15:33.430Z",
-    "updatedAt": "2026-07-27T20:15:33.430Z",
+    "createdAt": "2026-07-27T21:31:17.302Z",
+    "updatedAt": "2026-07-27T21:31:17.302Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

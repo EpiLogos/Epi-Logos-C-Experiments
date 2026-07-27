@@ -3,6 +3,7 @@ coordinate: "S4/S4'"
 c_4_artifact_role: "spec"
 c_1_ct_type: "CT1"
 c_3_created_at: "2026-04-25T00:00:00Z"
+c_3_updated_at: "2026-07-27T00:00:00Z"
 c_0_source_coordinates:
   - "[[PROTOCOL S COORDINATE MODULE SPEC BUILD]]"
   - "[[S0-SPEC]]"
@@ -197,6 +198,48 @@ Current canonical S4 base technology:
 - Durable team records and subagent sessions coordinated through the gateway state root.
 - PI-native extension package `.pi/extensions/ta-onta/`.
 - Local [[Codex]] / OMX runtime lane as a harness alternative.
+- Code-mode tool scripting (`Body/S/S4/pi-agent/lib/code-mode.ts`): one generated TypeScript program per multi-tool task, in place of one model round-trip per tool call.
+
+### Tool Composition: JSON Tool-Mode and Code-Mode
+
+Agents naturally run tools in JSON tool-mode: one call per model round-trip, where every hop
+re-sends the whole prior history inline (`Body/S/S3/gateway-contract/src/harness.rs`
+`ToolCallObserved` re-inlines the full `arguments` + `result` per step). That shape is the
+**staircase**. The canonical composition shape is now a single generated TypeScript program
+executed once. JSON tool-mode remains the substrate and the fallback; scripting is the default
+*usage* for any task touching two or more tools.
+
+Two tiers, one mechanism:
+
+- **Base tier — any pi agent.** A multi-tool task collapses into ONE program. The program's
+  function calls resolve to the agent's entitled tool set through a single choke point
+  (`resolveToolFunction`), which applies the unchanged security boundary in a fixed order: the
+  spawn-time `--tools` allow-list first, then `isEntitled()` — so a tool switched off at spawn
+  is refused `code-mode/not-active` without consulting the entitlement layers at all. There is
+  **no new VM**: the program is ordinary TypeScript run by a real `node` child process over
+  pi's own execution substrate, holding exactly the OS authority the agent already held. What
+  is gated is the *named tool surface*, not the process, and this spec does not claim otherwise.
+- **VAK tier — [[Anima]].** The same mechanism composed across the full six reflective C'
+  coordinates (section B), with [[CP]] as the nesting operator, spawning child pi's for teams
+  and chains. This is the tier that makes an orchestration a coordinate-addressed object rather
+  than a convenient script.
+
+Measured, not asserted. Over identical recorded work the program costs 657 tokens where the
+equivalent JSON staircase costs 2199 — delta 1542, ratio 0.299, estimator `chars/4`. The
+estimator is crude by design and is named so no reader mistakes it for a tokenizer; the SHAPE
+of the comparison is the result, not the absolute count. Both sides are computed from the SAME
+recorded trace, so this measures two protocols over one body of work rather than guessing what
+an agent might have done.
+
+Build implications:
+
+- The gate governs the tool surface. Do not describe code-mode as a sandbox.
+- A second route from a program to a tool implementation is a defect: `resolveToolFunction` is
+  the only one, and the ordering of its two checks is part of the contract.
+- One entitlement configuration governs both protocols — an agent denied `write` cannot write
+  in either mode.
+
+*(absorbed from `Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md`, 2026-07-27; end-to-end proof `Body/S/S4/ta-onta/S4-4p-anima/tests/acceptance-live.mjs`, 52/52 green against a spawned gateway, 50.T50.15)*
 
 ### Services, Binaries, Processes
 
@@ -379,6 +422,29 @@ S4' is [[Anima]] as agentic inhabitation law. It gives the runtime its constitut
 - [[Psyche]] as the session subject that inhabits the task-world.
 - [[Sophia]] as return/review force.
 - [[Nous]], [[Logos]], [[Eros]], [[Mythos]] as differentiated functions of the one operational language.
+
+These six are not only the grammar that *labels* a dispatch. They are the typed vocabulary an
+[[Anima]] orchestration is **written against** (`S4-4p-anima/lib/vak-orchestration-surface.ts`),
+which is what DR-VAK-3 means by VAK being the operational language rather than metadata over
+labels. Each coordinate is a composable AXIS of the program: [[CPF]] plans the run and sets
+review polarity, [[CT]] declares the [[Hen]] artifact templates it produces or consumes, [[CP]]
+places the step *and* opens nested frames, [[CF]] binds the agent, [[CFP]] shapes the execution
+flow, [[CS]] sequences it Day before Night'. Two consequences are load-bearing:
+
+- `emit()` is the ONLY emission constructor, and a partial or non-canonical address is refused
+  by name rather than coerced into something plausible — guessing which `CP4.x` a bare `CP4`
+  meant would fabricate a coordinate.
+- Composing *across* the six is a measurable property, not a claim. A run that varies only
+  [[CF]] is one axis with five decorations; `composedCoordinates()` reports the axes on which
+  steps genuinely differ, and that is the number an acceptance may quote.
+
+[[CP]] is the composability engine: a position inside a context frame is EITHER a terminal
+dispatch or it expands into a whole nested context frame — the `.`-nesting operator surfaced
+through CP, as plain recursion. A child of the `(4.0/1-4.4/5)` parent carries the CP of the slot
+it occupies, so CP genuinely *places* the step. Frames contribute structure and never dispatch;
+only leaves do.
+
+*(absorbed from `Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md`, 2026-07-27; 50.T50.03 / 50.T50.04)*
 
 ### Ta-Onta Module
 

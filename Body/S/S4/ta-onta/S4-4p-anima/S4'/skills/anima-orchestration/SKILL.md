@@ -135,6 +135,73 @@ The six aletheia agents -- **anansi, janus, moirai, mercurius, agora, zeithoven*
 
 ---
 
+## Authoring the Orchestration as a Script
+
+The default way to compose a multi-tool task is **one generated TypeScript program**, not one
+JSON tool call per model round-trip. JSON tool-mode stays the substrate and the fallback;
+scripting is the default usage from two tools upward. Two tiers, one mechanism: any pi agent
+can collapse a multi-tool task into a single program; Anima additionally composes across the
+full six C' coordinates, with CP opening nested frames and each leaf spawning a child pi.
+
+Why it is the default: in JSON tool-mode every hop re-sends the whole prior history inline, so
+cost compounds with the number of calls. Over identical recorded work the program measured 657
+tokens against the staircase's 2199 — ratio 0.299. Ordinary local computation (loops, string
+work, control flow) belongs in the program directly; do not spend a tool call on something the
+program can compute.
+
+**Shape of a script**:
+
+```ts
+const orchestration = defineOrchestration({
+  id: "nightly-sweep",
+  address: ADDRESS,                       // the score's own six-field address
+  steps: [
+    { id: "originate", address: dialogical, task: "agree what this is for", agent: "nous",
+      checkpoint: { reason: "requested-at-origination", note: "…" } },
+    { id: "survey",    address: mechanistic, task: "…", agent: "logos" },
+    { id: "close",     address: gated,       task: "…", agent: "anima" },  // cfp CFP4 -> tilldone
+  ],
+});
+await runOrchestration(orchestration, { execute, respondToHuman });
+```
+
+Steps run in CS order — Day before Night' — then by CP position. Pass only the variables a
+downstream child needs; never hand a child the parent transcript. That context isolation is
+half the token win, and it is enforced: a step declaring nothing receives nothing.
+
+---
+
+## Origination and the Score Lifecycle
+
+**Every session starts `(00/00)`.** That dialogue is where the script is developed, as opposed
+to running a ready-made flow. The lifecycle:
+
+1. **Originate** — dialogical `(00/00)`. The task gets a specific expression in the language.
+2. **Run** — one execution of that expression is a bounded song.
+3. **Persist** — a repeatable expression becomes a **score**: the program plus a content hash,
+   re-runnable without re-originating. Persistence is Hen's; the meaning of the program is
+   Anima's and is re-validated on load, because a score is loaded in order to be executed.
+4. **Refine** — ELO/ML sharpen scores across runs; `s4'.orchestration.score` serves a score
+   and its accumulated run history as observable data (it READS, it never runs).
+
+**`persistScore()` refuses a session that is no longer originating.** "The flow I was already
+mechanically running" is not an origination. A re-run sets the session mechanistic for its
+duration and restores the prior polarity afterwards, so re-running mid-dialogue does not end
+the dialogue.
+
+**Human checkpoints are authored, never inserted.** A `(00/00)` checkpoint exists only because
+you wrote one onto a step, grounded in exactly one of three reasons — `implied-by-task`,
+`requested-at-origination`, `learned-from-review`. A fourth reason is refused rather than
+accepted as free text, because free text makes "the policy said so" indistinguishable from a
+decision. There is no auto-insertion policy. A past review's "this class of run wanted a
+checkpoint" is *evidence you may adopt by hand*, not something the gate applies for you. A
+checkpoint holds until a **human** answers it; an agent answering its own gate is not an answer.
+
+**A CFP4 thread closes only when its task list says done.** Exhausting the cycle bound reports
+itself as exhaustion, never as completion — read the verdict, not the fact that the loop ended.
+
+---
+
 ## Standard Orchestration Flow
 
 **Input**: VAK coordinate block from `vak-evaluate`
