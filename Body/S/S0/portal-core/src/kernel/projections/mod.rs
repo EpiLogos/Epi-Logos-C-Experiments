@@ -27,7 +27,11 @@ pub use cymatic_spheres::{
     cymatic_spheres_from_routing, CymaticChakraProjection, CymaticPlanetAnchorProjection,
     CymaticSpheresProjection, EarthObserverCentreProjection, SphericalHarmonicProjection,
 };
-pub use diatonic::MathemeDiatonicContext;
+pub use diatonic::{
+    cf_ordinal, lens_anchor_pitch_class, lens_index_for_label, ConjugateFace,
+    MathemeDiatonicContext, VakTonalError, VakTonalReading, VakTonalStep, VakTraceStep,
+    CF_PROGRESSION,
+};
 pub use elemental::MathemeElementalProjection;
 pub use harmonic_grammar::{MathemeHarmonicFamilyProjection, MathemeHarmonicGrammarProjection};
 pub use m0_void_structure::{m0_void_structure_ring, M0VoidLensProjection, M0VoidLensState};

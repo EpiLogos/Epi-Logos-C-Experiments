@@ -1395,9 +1395,24 @@ pub(super) async fn dispatch_rpc(
         "s4.agent.status" => anima::agent_status(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
-        "s4'.vak.evaluate" => anima::vak_evaluate(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
+        // 50.T50.13 / DR-VAK-6 — `portal.vak_eval` has been a declared contract
+        // with no emitter since it was named (the Pleroma capability matrix
+        // lists it under `pre_tool_call.must_emit`). This is the emitter: every
+        // VAK evaluation now publishes the degree it was read at, and the tonal
+        // reading of the run when the caller supplied a trace and its lens.
+        "s4'.vak.evaluate" => {
+            let response = anima::vak_evaluate(&frame.params).map_err(internal_error)?;
+            if let Some(payload) = anima::vak_eval_event(&frame.params, &response) {
+                runtime.broadcast(epi_s3_gateway_contract::GatewayEvent::new(
+                    "portal.vak_eval",
+                    None,
+                    None,
+                    None,
+                    payload,
+                ));
+            }
+            Ok(DispatchResult::immediate(response))
+        }
         "s4'.orchestrate" => anima::orchestrate(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),

@@ -118,15 +118,158 @@ pub fn vak_evaluate(params: &Value) -> Result<Value, String> {
     let task = required_str(params, "task")?;
     let coordinates = vak::evaluate_vak(task);
     let agent = vak::cf_to_agent(coordinates.cf.as_deref().unwrap_or(""));
+
+    // Read the audible half BEFORE touching the filesystem: a malformed
+    // coordinate should be named as a malformed coordinate, not masked by a
+    // skill-path error from an unrelated lookup.
+    let audible = audible_reading(params, coordinates.cf.as_deref().unwrap_or(""))?;
     let skill_path = pleroma_skill_path(VAK_EVALUATE_SKILL)?;
 
-    Ok(json!({
+    let mut response = json!({
         "owner": "S4'",
         "agent": agent,
         "coordinates": coordinates,
         "capability": capability(VAK_EVALUATE_SKILL, &skill_path),
         "authority": authority(),
-    }))
+    });
+    if let (Some(object), Some(fields)) = (response.as_object_mut(), audible.as_object()) {
+        for (key, value) in fields {
+            object.insert(key.clone(), value.clone());
+        }
+    }
+    Ok(response)
+}
+
+// ── DR-VAK-6 / 50.T50.13: the audible reading on `s4'.vak.evaluate` ───────
+//
+// The kernel has read the diatonic degree of a CF since DR-VAK-3, but only on
+// the profile bus — at the dispatch layer a VAK evaluation was an opaque
+// coordinate string. DR-VAK-6's action line is "plumb the diatonic computation
+// through `s4'.vak.evaluate`", which is what this does, plus the run-level
+// reading 50.T50.13 adds: a run is a SEQUENCE of CF-addressed steps, and read
+// in order that sequence is a line in one mode-tonic frame.
+//
+// Division of labour is deliberate: the DEGREE depends only on which CF sits at
+// tonic (rotation), so it is always computable and always present. The PITCH
+// additionally needs the lens — the scale-beneath — which no trace carries, so
+// `tonalReading` appears only when a caller declares `lens`. Refusing there
+// rather than defaulting to L0 is the same discipline `elo-trial-hook.ts`
+// applies to `mef_lens`: a guessed lens reads the run in an epistemic mode it
+// never claimed.
+
+/// The Ionian default (DR-VAK-6 item 3: "absent the field, defaults to Ionian").
+const DEFAULT_TONIC_CF: &str = "(00/00)";
+
+/// Build the audible half of a VAK evaluation response.
+fn audible_reading(params: &Value, evaluated_cf: &str) -> Result<Value, String> {
+    let tonic_cf = optional_str(params, "modeTonicCf").unwrap_or_else(|| DEFAULT_TONIC_CF.to_owned());
+    let tonic_ordinal = portal_core::cf_ordinal(&tonic_cf)
+        .ok_or_else(|| format!("modeTonicCf '{tonic_cf}' is not one of the seven context-frames"))?;
+    let mode = tonic_ordinal - 1;
+
+    // The degree is the CF's parent ordinal rotated onto the mode's ground.
+    let diatonic_degree = portal_core::cf_ordinal(evaluated_cf)
+        .map(|ordinal| ((ordinal - 1 + 7 - mode) % 7) + 1)
+        .unwrap_or(0);
+
+    let mut reading = json!({
+        "diatonicDegree": diatonic_degree,
+        "modeTonicCf": tonic_cf,
+    });
+    let object = reading.as_object_mut().expect("literal object");
+
+    // DR-VAK-6 item 2 — carried only when the caller has an active M2
+    // resonance72 binding. There is no producer on this path, so it is supplied
+    // or absent; the half-decan is the DR's own `index / 2`.
+    if let Some(index) = params.get("resonance72Index").and_then(Value::as_u64) {
+        if index > 71 {
+            return Err(format!(
+                "resonance72Index {index} is outside the 72-fold domain (0..71)"
+            ));
+        }
+        object.insert("resonance72Index".to_owned(), json!(index));
+        object.insert("halfDecanIndex".to_owned(), json!(index / 2));
+    }
+
+    if let Some(steps) = parse_trace(params)? {
+        let lens = optional_str(params, "lens").ok_or_else(|| {
+            "a trace cannot be read without `lens`: the scale-beneath has no producer in a run, \
+             and defaulting it would assert an epistemic mode the run never claimed"
+                .to_owned()
+        })?;
+        let tonal = portal_core::VakTonalReading::from_trace(&lens, Some(&tonic_cf), &steps)
+            .map_err(|err| err.to_string())?;
+        object.insert(
+            "tonalReading".to_owned(),
+            serde_json::to_value(&tonal).map_err(|err| err.to_string())?,
+        );
+    }
+
+    Ok(reading)
+}
+
+/// Parse the optional run trace. `None` when no trace was supplied; an error
+/// when one was supplied but is not a readable sequence of VAK-addressed steps.
+fn parse_trace(params: &Value) -> Result<Option<Vec<portal_core::VakTraceStep>>, String> {
+    let Some(raw) = params.get("trace") else {
+        return Ok(None);
+    };
+    let entries = raw
+        .as_array()
+        .ok_or_else(|| "trace must be an array of steps".to_owned())?;
+    if entries.is_empty() {
+        return Err("trace was supplied but is empty — there is no line to read".to_owned());
+    }
+
+    let mut steps = Vec::with_capacity(entries.len());
+    for (index, entry) in entries.iter().enumerate() {
+        let step_id = optional_str(entry, "stepId").unwrap_or_else(|| format!("step-{index}"));
+        let address_value = entry
+            .get("address")
+            .ok_or_else(|| format!("trace step '{step_id}' carries no VAK address"))?;
+        let address: VakAddress = serde_json::from_value(address_value.clone()).map_err(|err| {
+            format!("trace step '{step_id}' has an unreadable VAK address: {err}")
+        })?;
+        steps.push(portal_core::VakTraceStep {
+            step_id,
+            address,
+            agent: optional_str(entry, "agent"),
+        });
+    }
+    Ok(Some(steps))
+}
+
+/// The `portal.vak_eval` payload for an evaluation, or `None` when the response
+/// carries no audible reading to broadcast.
+///
+/// Assembled here rather than in the dispatch arm so the payload law lives with
+/// the rest of the S4' adapter contract, and the arm stays a broadcast.
+pub fn vak_eval_event(params: &Value, response: &Value) -> Option<Value> {
+    let coordinates = response.get("coordinates")?;
+    let degree = response.get("diatonicDegree")?.clone();
+
+    let mut payload = json!({
+        "sessionKey": optional_str(params, "sessionKey"),
+        "cpf": coordinates.get("cpf").cloned().unwrap_or(Value::Null),
+        "ct": coordinates.get("ct").cloned().unwrap_or(Value::Null),
+        "cp": coordinates.get("cp").cloned().unwrap_or(Value::Null),
+        "cf": coordinates.get("cf").cloned().unwrap_or(Value::Null),
+        "cfp": coordinates.get("cfp").cloned().unwrap_or(Value::Null),
+        "cs": coordinates.get("cs").cloned().unwrap_or(Value::Null),
+        "diatonicDegree": degree,
+    });
+    let object = payload.as_object_mut().expect("literal object");
+    for key in [
+        "modeTonicCf",
+        "resonance72Index",
+        "halfDecanIndex",
+        "tonalReading",
+    ] {
+        if let Some(value) = response.get(key) {
+            object.insert(key.to_owned(), value.clone());
+        }
+    }
+    Some(payload)
 }
 
 pub fn orchestrate(params: &Value) -> Result<Value, String> {

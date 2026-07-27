@@ -53,6 +53,17 @@ import {
   recordDurableRunTrial,
   type EloRunDeclaration,
 } from "../modules/elo-trial-hook.ts";
+// 50.T50.13 — run completion also becomes an AUDIBLE event. The trace goes to
+// the gateway, the S0 kernel reads it against the derived music, and
+// `portal.vak_eval` reaches every listener. Anima carries the run's context;
+// it never computes the reading itself.
+import {
+  emitVakEval,
+  traceFromSteps,
+  type VakEvalDeclaration,
+  type VakEvalOptions,
+  type VakEvalReceipt,
+} from "../modules/vak-eval-emit.ts";
 import type {
   AletheiaEloConfig,
   MercuriusTrialOutcomes,
@@ -591,11 +602,27 @@ export async function rerunScore<T>(input: {
     tournament?: "agent" | "canon";
     databasePath?: string;
   };
+  /**
+   * Emit `portal.vak_eval` for this run (50.T50.13).
+   *
+   * Opt-in for the same reason `elo` is: the reading needs a LENS — the
+   * scale-beneath — and a trace has no producer for one. A run that has not
+   * been told its lens is refused rather than read in a guessed epistemic mode.
+   *
+   * When the run is already being ELO-scored, `lens` may be omitted and the
+   * `elo.declaration.mef_lens` it must already carry is used, so the two hooks
+   * share one declaration instead of asking for the same coordinate twice.
+   */
+  vakEval?: {
+    declaration?: Partial<VakEvalDeclaration>;
+    options?: VakEvalOptions;
+  };
 }): Promise<{
   result: T;
   score: ScoreDocument;
   run: ScoreRunRecord;
   trial?: MercuriusUpdateResult;
+  vakEval?: VakEvalReceipt;
 }> {
   const { score, orchestration } = loadScoredOrchestration(input.scoreId);
   const previous = getCSState(input.sessionId);
@@ -612,7 +639,26 @@ export async function rerunScore<T>(input: {
       detail: input.detail,
     });
 
-    if (!input.elo) return { result, score, run };
+    // The audible half. Emitted before the ELO trial because the reading is of
+    // the run as it was performed, and the trial is a judgement made about it.
+    let vakEval: VakEvalReceipt | undefined;
+    if (input.vakEval) {
+      const lens = input.vakEval.declaration?.lens ?? input.elo?.declaration.mef_lens;
+      vakEval = await emitVakEval(
+        {
+          task: score.provenance.task ?? score.id,
+          declaration: {
+            ...input.vakEval.declaration,
+            lens: lens as string,
+            sessionKey: input.vakEval.declaration?.sessionKey ?? input.sessionId,
+          },
+          trace: traceFromSteps(orchestration.steps),
+        },
+        input.vakEval.options ?? {},
+      );
+    }
+
+    if (!input.elo) return { result, score, run, ...(vakEval ? { vakEval } : {}) };
 
     // The run has completed and the program identity is in hand. The trial id is
     // the score hash plus the run's own timestamp: a byte-identical program run
@@ -633,7 +679,7 @@ export async function rerunScore<T>(input: {
       ...(input.elo.databasePath === undefined ? {} : { databasePath: input.elo.databasePath }),
       computedAt: at,
     });
-    return { result, score, run, trial };
+    return { result, score, run, trial, ...(vakEval ? { vakEval } : {}) };
   } finally {
     setOrigination(input.sessionId, previous.origination);
   }
