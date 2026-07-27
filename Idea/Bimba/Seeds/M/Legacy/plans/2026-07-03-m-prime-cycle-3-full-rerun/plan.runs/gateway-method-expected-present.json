@@ -1,309 +1,317 @@
 {
- "law": "T11 expected-present ratchet: a method a track marks done is registered here and may NEVER be absent from the live gateway again. The gate (gateway-method-gate.mjs) fails on any missing entry. Only grow this list; each entry carries claimedBy.",
- "expectedPresent": [
-  {
-   "method": "chat.send",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "kernelBridge.m2.epogdoonProjection(address72)",
-   "claimedBy": "23.T23.18"
-  },
-  {
-   "method": "kernelBridge.m2.cymaticMonoPolyState(address72)",
-   "claimedBy": "23.T23.20"
-  },
-  {
-   "method": "kernelBridge.m2.planetaryElementalWeights()",
-   "claimedBy": "23.T23.19"
-  },
-  {
-   "method": "kernelBridge.m3.lensCodonBinary(lensId)",
-   "claimedBy": "37.T37.8"
-  },
-  {
-   "method": "nara.kairos.probe_kerykeion",
-   "claimedBy": "32.T32.10"
-  },
-  {
-   "method": "nara.medicine.pin",
-   "claimedBy": "25.T25.10"
-  },
-  {
-   "method": "nara.medicine.snapshot",
-   "claimedBy": "25.T25.10"
-  },
-  {
-   "method": "nara.lens.apply",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.lens.list",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.lens.synthesize",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.oracle.cast",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.oracle.hygiene",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.session_close",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "nara.session_close.read",
-   "claimedBy": "22.T22.5"
-  },
-  {
-   "method": "nara.session_close.contemplation.read",
-   "claimedBy": "26.T26.12"
-  },
-  {
-   "method": "nara.session_open",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s0'.verifier.respond_question",
-   "claimedBy": "21.T21.11"
-  },
-  {
-   "method": "s1'.base.ensure",
-   "claimedBy": "48.T48.5"
-  },
-  {
-   "method": "s1'.vault.read_file",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2'.coordinate.resolve",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2'.retrieve",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.core65.audit",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.gds.tangent_overlay",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.node",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.list",
-   "claimedBy": "21.T21.14"
-  },
-  {
-   "method": "s2.graph.ontology.reload",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.promotion.commit",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.promotion.dry_run",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.query",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.relation_family.list",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.graph.seed.snapshot",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s2.parashaktiCorrespondences",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s3'.temporal.context",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s3'.temporal.subscribe",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s4'.mediation.capabilities.list",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s4'.mediation.route",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s4'.psyche.state",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s4'.psyche.update",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s4'.vak.evaluate",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.epii.deposit",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.gnostic.ingest",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.gnostic.notebook",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.gnostic.query",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.gnostic.status",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.improve.history",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.improve.q_review.latest",
-   "claimedBy": "06.T6.12"
-  },
-  {
-   "method": "s5'.improve.q_review.night_pass",
-   "claimedBy": "06.T6.12"
-  },
-  {
-   "method": "s5'.improve.q_review.run",
-   "claimedBy": "06.T6.12"
-  },
-  {
-   "method": "s5'.improve.propose",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.improve.status",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.review.history",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.review.inbox",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.review.submit",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5'.tune.registry.list",
-   "claimedBy": "38.T06.8"
-  },
-  {
-   "method": "s5'.tune.registry.get",
-   "claimedBy": "38.T06.8"
-  },
-  {
-   "method": "s5'.tune.registry.set",
-   "claimedBy": "38.T06.8"
-  },
-  {
-   "method": "s5'.tune.audit.read",
-   "claimedBy": "38.T06.8"
-  },
-  {
-   "method": "s5'.tune.lock.toggle",
-   "claimedBy": "38.T06.8"
-  },
-  {
-   "method": "s5'.tune.propose",
-   "claimedBy": "38.T06.9"
-  },
-  {
-   "method": "s5'.tune.proposals.list",
-   "claimedBy": "38.T06.9"
-  },
-  {
-   "method": "s5'.tune.proposals.resolve",
-   "claimedBy": "38.T06.9"
-  },
-  {
-   "method": "sessions.fork",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "sessions.list",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "sessions.patch",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "sessions.resolve",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "sessions.resume",
-   "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
-  },
-  {
-   "method": "s5.oracle.iching.cast",
-   "claimedBy": "24.T24.14"
-  },
-  {
-   "method": "nara.transform.start",
-   "claimedBy": "25.T25.11"
-  },
-  {
-   "method": "nara.transform.advance",
-   "claimedBy": "25.T25.11"
-  },
-  {
-   "method": "s2.codon.aa_lookup",
-   "claimedBy": "30.T30.13"
-  },
-  {
-   "method": "vault.day.ensure",
-   "claimedBy": "32.T32.11"
-  },
-  {
-   "method": "khora.session_start",
-   "claimedBy": "32.T32.11"
-  },
-  {
-   "method": "nara.pasu.set",
-   "claimedBy": "25.T25.4 (PASU identity wizard write path, DR-WC-M4-3)"
-  },
-  {
-   "method": "s4'.context.assemble",
-   "claimedBy": "51.T51.1"
-  },
-  {
-   "method": "s4'.orchestration.score",
-   "claimedBy": "50.T50.10 (orchestration-run surface: persisted score + run history)"
-  }
- ]
+  "law": "T11 expected-present ratchet: a method a track marks done is registered here and may NEVER be absent from the live gateway again. The gate (gateway-method-gate.mjs) fails on any missing entry. Only grow this list; each entry carries claimedBy.",
+  "expectedPresent": [
+    {
+      "method": "chat.send",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "kernelBridge.m2.epogdoonProjection(address72)",
+      "claimedBy": "23.T23.18"
+    },
+    {
+      "method": "kernelBridge.m2.cymaticMonoPolyState(address72)",
+      "claimedBy": "23.T23.20"
+    },
+    {
+      "method": "kernelBridge.m2.planetaryElementalWeights()",
+      "claimedBy": "23.T23.19"
+    },
+    {
+      "method": "kernelBridge.m3.lensCodonBinary(lensId)",
+      "claimedBy": "37.T37.8"
+    },
+    {
+      "method": "nara.kairos.probe_kerykeion",
+      "claimedBy": "32.T32.10"
+    },
+    {
+      "method": "nara.medicine.pin",
+      "claimedBy": "25.T25.10"
+    },
+    {
+      "method": "nara.medicine.snapshot",
+      "claimedBy": "25.T25.10"
+    },
+    {
+      "method": "nara.lens.apply",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.lens.list",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.lens.synthesize",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.oracle.cast",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.oracle.hygiene",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.session_close",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.session_close.read",
+      "claimedBy": "22.T22.5"
+    },
+    {
+      "method": "nara.session_close.contemplation.read",
+      "claimedBy": "26.T26.12"
+    },
+    {
+      "method": "nara.session_open",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s0'.verifier.respond_question",
+      "claimedBy": "21.T21.11"
+    },
+    {
+      "method": "s1'.base.ensure",
+      "claimedBy": "48.T48.5"
+    },
+    {
+      "method": "s1'.vault.read_file",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2'.coordinate.resolve",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2'.retrieve",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.core65.audit",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.gds.tangent_overlay",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.node",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.list",
+      "claimedBy": "21.T21.14"
+    },
+    {
+      "method": "s2.graph.ontology.reload",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.promotion.commit",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.promotion.dry_run",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.query",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.relation_family.list",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.graph.seed.snapshot",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s2.parashaktiCorrespondences",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s3'.temporal.context",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s3'.temporal.subscribe",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s4'.mediation.capabilities.list",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s4'.mediation.route",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s4'.psyche.state",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s4'.psyche.update",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s4'.vak.evaluate",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.epii.deposit",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.gnostic.ingest",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.gnostic.notebook",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.gnostic.query",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.gnostic.status",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.improve.history",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.improve.q_review.latest",
+      "claimedBy": "06.T6.12"
+    },
+    {
+      "method": "s5'.improve.q_review.night_pass",
+      "claimedBy": "06.T6.12"
+    },
+    {
+      "method": "s5'.improve.q_review.run",
+      "claimedBy": "06.T6.12"
+    },
+    {
+      "method": "s5'.improve.propose",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.improve.status",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.review.history",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.review.inbox",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.review.submit",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5'.tune.registry.list",
+      "claimedBy": "38.T06.8"
+    },
+    {
+      "method": "s5'.tune.registry.get",
+      "claimedBy": "38.T06.8"
+    },
+    {
+      "method": "s5'.tune.registry.set",
+      "claimedBy": "38.T06.8"
+    },
+    {
+      "method": "s5'.tune.audit.read",
+      "claimedBy": "38.T06.8"
+    },
+    {
+      "method": "s5'.tune.lock.toggle",
+      "claimedBy": "38.T06.8"
+    },
+    {
+      "method": "s5'.tune.propose",
+      "claimedBy": "38.T06.9"
+    },
+    {
+      "method": "s5'.tune.proposals.list",
+      "claimedBy": "38.T06.9"
+    },
+    {
+      "method": "s5'.tune.proposals.resolve",
+      "claimedBy": "38.T06.9"
+    },
+    {
+      "method": "sessions.fork",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "sessions.list",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "sessions.patch",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "sessions.resolve",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "sessions.resume",
+      "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "s5.oracle.iching.cast",
+      "claimedBy": "24.T24.14"
+    },
+    {
+      "method": "nara.transform.start",
+      "claimedBy": "25.T25.11"
+    },
+    {
+      "method": "nara.transform.advance",
+      "claimedBy": "25.T25.11"
+    },
+    {
+      "method": "s2.codon.aa_lookup",
+      "claimedBy": "30.T30.13"
+    },
+    {
+      "method": "vault.day.ensure",
+      "claimedBy": "32.T32.11"
+    },
+    {
+      "method": "khora.session_start",
+      "claimedBy": "32.T32.11"
+    },
+    {
+      "method": "nara.pasu.set",
+      "claimedBy": "25.T25.4 (PASU identity wizard write path, DR-WC-M4-3)"
+    },
+    {
+      "method": "s4'.context.assemble",
+      "claimedBy": "51.T51.1"
+    },
+    {
+      "method": "s4'.orchestration.score",
+      "claimedBy": "50.T50.10 (orchestration-run surface: persisted score + run history)"
+    },
+    {
+      "method": "s1'.semantic.suggest_links",
+      "claimedBy": "28.T28.4 (Canon Studio `[[` completion rides it live; 28.T28.12 sidebar shares it)"
+    },
+    {
+      "method": "s1'.type.classify_c_layer",
+      "claimedBy": "28.T28.4 (Canon Studio frontmatter fold reads the DR-S1-5 C-layer typology receipt)"
+    }
+  ]
 }

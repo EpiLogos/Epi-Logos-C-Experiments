@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T17:41:40.667Z",
+  "updatedAt": "2026-07-27T17:48:22.456Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13935,14 +13935,33 @@
       "blocker": null
     },
     "28.T28.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-27T16:23:06.841Z",
+      "status": "done",
+      "updatedAt": "2026-07-27T17:48:22.429Z",
       "claimedAt": "2026-07-27T16:23:06.841Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-27T17:48:22.429Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T17:48:22.429Z",
+          "text": "Canon Studio read half landed carrier-native in pratibimba-app (CHROME-CONTRACT §2 editor / §4 governance), five deliverables sorted by DR-FACE-7 fate. (a) CARRIED: the carrier editor was already real CodeMirror 6, so Monaco's IModelDeltaDecoration/CompletionItemProvider land as Decoration.mark/CompletionSource rather than porting the frozen Theia widget. (b) BUILT: inline ql-coordinate/bimba-wikilink marks over the whole document, validity delegated to ui/tokens.ts coordinateFamilyGrade, wikilinks winning over nested coordinates so RangeSetBuilder never sees an overlap. (c) BUILT against the LIVE method: the spec's s1'.semantic.suggest is unimplemented in the live probe, so [[ completion rides the note-scoped s1'.semantic.suggest_links, privacy-gated via isPrivacySafe, ordered by S1's score, refusing honestly on disconnect/error. (d) BOUNDED: C-layer typology reads the live DR-S1-5 authority s1'.type.classify_c_layer; frontmatter KEY-SHAPE law (hen-compiler-core::validate_frontmatter) has no gateway seam, so the fold discloses the gap instead of duplicating S1 law in the carrier or minting a public surface unilaterally — proposed seam recorded in the tranche body, not landed; PASU routes to the live identity.openWizard rather than a second identity editor. (e) BUILT: governed write leaves as a logos-atelier CrossLayoutIntent carrying artifactUri; mutatesGraphCanon false holds. Independent verify-tranche PASS (verifier opus-verify-t28-canon-20260727 != closer opus-mdev-t28-canon-studio): full UF-class gate GREEN in 620.6s — app-ui-flow 93, app-test 1477, gateway 101, gateway-contract 93, ta-onta 790, harness-selftest 107, plus app-typecheck/app-build/app-smoke/live-wire/gateway-methods/carrier-tokens/honesty-lint. Two real defects found and fixed during the run: a typology fetch keyed on the 1s profile heartbeat (one classification RPC per second per open tab) and my own e2e's non-unique editor-save-state locator plus order-dependent note pick — the first gate run REFUSED on that spec and the fix made it green in full-suite order.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.4 --owner opus-verify-t28-canon-20260727",
+            "exitCode": 0,
+            "testsPassed": 93,
+            "testsFailed": 0,
+            "keyPaths": [
+              "app-ui-flow gate GREEN: 93 playwright specs incl. tests/e2e/canon-studio.spec.ts 2/2 (real Chromium + spawned gateway + real temp vault); app-smoke + live-wire + gateway(101) + gateway-methods also GREEN",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/28.T28.4.md",
+              "Body/M/pratibimba-app/tests/e2e/canon-studio.spec.ts",
+              "Body/M/pratibimba-app/src/panes/canonEditorExtensions.ts",
+              "Body/M/pratibimba-app/src/panes/canonStudio.ts",
+              "Body/M/pratibimba-app/src/panes/MarkdownEditorPane.tsx"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t28-canon-studio",
-      "leaseExpiresAt": "2026-07-27T19:23:06.841Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-27T16:23:06.841Z",
       "runId": "20260727T162306Z-28-T28.4",
       "worktree": null,
@@ -26933,11 +26952,12 @@
     {
       "runId": "20260727T162306Z-28-T28.4",
       "taskId": "28.T28.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-27T16:23:06.841Z",
       "owner": "opus-mdev-t28-canon-studio",
       "leaseExpiresAt": "2026-07-27T19:23:06.841Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-27T17:48:22.429Z"
     },
     {
       "runId": "20260727T173901Z-50-T50.14",

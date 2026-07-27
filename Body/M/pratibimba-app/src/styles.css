@@ -29,6 +29,11 @@
   --nara-highlight-kairos: #b8c0cc;
   --nara-highlight-somatic: #8a7355;
   --nara-highlight-live-spread: #5b3a7e;
+  /* 28.T28.4 — Canon Studio inline marks. Two things a canonical note says
+     structurally: where it sits (coordinate, the soft amber the design-recon
+     names) and what it reaches (wikilink, the cool anchor). */
+  --canon-coordinate: #d4a574;
+  --canon-wikilink: #77b8c8;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* ── T30.1 — the organism's one type voice (DR-FACE-7: spine law) ─────────
@@ -97,6 +102,9 @@
   --accent: #55409c;
   --ready: #2c7346;
   --danger: #a53c3c;
+  /* Canon marks, darkened for the light ground — same two identities. */
+  --canon-coordinate: #8a5b23;
+  --canon-wikilink: #1f6b7d;
 }
 
 /* Glass: the dark ground with translucent raised surfaces — a treatment, not
@@ -3041,6 +3049,91 @@ textarea {
   background: var(--ground-raised);
   max-height: 30vh;
   overflow: auto;
+}
+
+/* ── 28.T28.4 Canon Studio: inline marks, governance handoff, S1 typology ── */
+
+/* A coordinate wears its family warmth; a wikilink wears the reach it makes.
+   Both are readings of the text, so neither takes it out of the type flow. */
+.editor-host .cm-content .ql-coordinate {
+  color: var(--canon-coordinate);
+  background: color-mix(in srgb, var(--canon-coordinate) 14%, transparent);
+  border-radius: 2px;
+}
+
+.editor-host .cm-content .bimba-wikilink {
+  color: var(--canon-wikilink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.editor-governance {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+  font-size: var(--type-caption);
+}
+
+.editor-governance button {
+  background: none;
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  color: var(--ink);
+  padding: 2px 8px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.editor-governance button:hover {
+  border-color: var(--accent);
+}
+
+.editor-governance-note {
+  color: var(--ink-dim);
+  margin-left: auto;
+}
+
+.editor-typology {
+  padding: 0.4rem 1rem;
+  background: var(--ground-raised);
+  color: var(--ink-dim);
+}
+
+.editor-typology dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1rem;
+  margin: 0 0 0.35rem;
+}
+
+.editor-typology dl > div {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.editor-typology dt {
+  color: var(--ink-dim);
+}
+
+.editor-typology dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+
+.editor-typology-scope {
+  margin: 0;
+  font-size: var(--type-micro);
+  color: var(--ink-dim);
+}
+
+.editor-completion-state {
+  padding: 0.2rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
 }
 
 /* ── E5: the celestial atlas — engraved ephemeris labels ─────────────────── */
