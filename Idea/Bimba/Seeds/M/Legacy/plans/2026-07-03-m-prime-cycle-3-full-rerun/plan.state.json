@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T17:37:57.720Z",
+  "updatedAt": "2026-07-27T17:41:40.667Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20672,15 +20672,20 @@
     },
     "50.T50.14": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-27T17:41:40.096Z",
+      "claimedAt": "2026-07-27T17:39:01.487Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-27T17:41:40.096Z",
+          "text": "RECON ONLY — no code written; claim released back to pending so the next worker starts from these findings rather than re-deriving them. Two BRIEF CORRECTIONS and one substantive design finding, all verified against the tree, none of them fixed here. (1) RESIDENCY ERROR in the Build line, the same class 50.T50.10 recorded: aeon_eval.rs / AeonEvalMetrics is NOT in Body/S/S5/epii-autoresearch-core (that crate has no such file; `grep -rn AeonEval` over the repo returns nothing under S5). The real surface is Body/S/S3/redis-context/src/aeon_eval.rs — `aeon_eval_ledger_from_transcript(transcript_path, AeonEvalContext) -> AeonEvalLedger`, plus `AeonEvalLedger::redis_records()` and `AeonEvalLedger::graphiti_episode()`, exercised by Body/S/S3/redis-context/tests/aeon_eval_ledger.rs. Build against redis-context, not epii-autoresearch-core. (2) THE LOAD-BEARING GAP, which is the actual work of this tranche: `aeon_eval_ledger_from_transcript` derives EVERY behavioural metric by counting `toolCallObserved` events in the JSONL transcript (read_tool_observations, edit_tool_observations, test_tool_observations, reads_before_first_edit, tests_after_first_edit, and both ratios; turns and tokens come from `turnComplete`). That is precisely the compounding JSON staircase this track exists to REPLACE. So a code-mode orchestration — one script instead of N JSON tool calls — currently reads as all-zeros: the learning substrate goes blind exactly when the orchestration works as designed. Making the deterministic trace produce those metrics IS the deliverable; feeding the existing reader unchanged would produce an honest-looking ledger of nothing. (3) EMISSION SEAM already exists and needs no contract-surface widening: `TranscriptEntry` (Body/S/S3/gateway/src/transcripts.rs) is a String-`kind` record that ALREADY carries `vak_address: Option<VakAddress>` and `event: Option<HarnessTurnEvent>`, with append_message / append_harness_turn_event / append_abort as the writers. A new additive `kind` for the orchestration trace is the light-touch option; adding a HarnessTurnEvent variant would be a gateway-contract surface change and wants Architect sign-off first. (4) GRAPHITI DEPOSIT is landed and already shaped for this: `session_memory_deposit` (Body/S/S3/graphiti-runtime/src/native_gateway.rs) takes content/sourceAgent/sessionKey/namespaceRef/dayId/qlPosition/cp/cpf, and the existing `AeonEvalGraphitiEpisode` struct already carries exactly that field set. (5) DISTILLATION ROW CONTRACT is strict and enforced at Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/distill_dataset_gen.py: a row REQUIRES non-empty `prompt` and `teacher_output`, and `annotations` carrying all three of lens_coherence / verifier_pass / user_articulation_simulation (missing one raises). Expect the 50.T50.12 pattern again — `verifier_pass` is plausibly the run outcome and `lens_coherence` plausibly the declared mef_lens or the 50.T50.13 tonal reading, but `user_articulation_simulation` has NO producer in an orchestration run and should be declared/refused by name rather than invented. DEPENDENCY 50.T50.13 verified real by this same worker (built and closed it): portal.vak_eval now emits and VakTonalReading is on the wire, so the trace already has a reading to carry."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t50-vakeval-20260727",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T17:39:01.487Z",
+      "runId": "20260727T173901Z-50-T50.14",
       "worktree": null,
       "blocker": null
     },
@@ -26933,12 +26938,22 @@
       "owner": "opus-mdev-t28-canon-studio",
       "leaseExpiresAt": "2026-07-27T19:23:06.841Z",
       "worktree": null
+    },
+    {
+      "runId": "20260727T173901Z-50-T50.14",
+      "taskId": "50.T50.14",
+      "status": "pending",
+      "startedAt": "2026-07-27T17:39:01.487Z",
+      "owner": "claude-opus5-t50-vakeval-20260727",
+      "leaseExpiresAt": "2026-07-27T19:39:01.487Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T17:41:40.096Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T17:37:57.720Z",
-    "updatedAt": "2026-07-27T17:37:57.720Z",
+    "createdAt": "2026-07-27T17:41:40.667Z",
+    "updatedAt": "2026-07-27T17:41:40.667Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
