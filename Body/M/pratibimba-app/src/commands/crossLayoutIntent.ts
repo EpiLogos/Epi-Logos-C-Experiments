@@ -12,11 +12,13 @@
 
 import { commands } from './registry';
 import { useCrossLayoutIntentLogStore } from '../state/crossLayoutIntentLog';
+import type { LayoutId } from '../ui/layoutId';
 
 export const CROSS_LAYOUT_INTENT_COMMAND = 'pratibimba.intent.dispatch';
 
 export type IntentPrivacyClass = 'public' | 'protected' | 'private';
-export type CrossLayoutId = 'daily-0-1' | 'ide-deep';
+/** Alias of the one layout-id authority (`ui/layoutId.ts`, 52.T1). */
+export type CrossLayoutId = LayoutId;
 
 export interface CrossLayoutIntent {
     readonly coordinate: string | null;

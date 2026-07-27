@@ -28,10 +28,13 @@
 
 import { create } from 'zustand';
 
+import type { LayoutId } from './layoutId';
+
 /** The two shell layouts the activity-bar serves. `daily-0-1` is the live 0/1
  *  faces (cosmic 0 / personal 1); `ide-deep` is the 4+2 depth layout that adds
- *  the two developer surfaces. */
-export type LeftSidebarLayoutId = 'daily-0-1' | 'ide-deep';
+ *  the two developer surfaces. Alias of the one layout-id authority
+ *  (`ui/layoutId.ts`, 52.T1). */
+export type LeftSidebarLayoutId = LayoutId;
 
 export type LeftSidebarModeId =
     | 'coordinate-tree'

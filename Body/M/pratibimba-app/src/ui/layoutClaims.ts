@@ -13,7 +13,10 @@
  *   Body/M/epi-theia/extensions/MIGRATION-SOURCES.md.
  */
 
-export type ActiveLayoutId = 'daily-0-1' | 'ide-deep';
+import type { LayoutId } from './layoutId';
+
+/** Alias of the one layout-id authority (`ui/layoutId.ts`, 52.T1). */
+export type ActiveLayoutId = LayoutId;
 
 interface LayoutClaimBase {
     readonly id: string;

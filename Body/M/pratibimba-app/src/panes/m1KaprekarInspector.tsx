@@ -16,6 +16,7 @@
 import { commands } from '../commands/registry';
 import type { KernelBridgeCachedProfile } from '../bridge/types';
 import { useTickStore } from '../state/stores';
+import type { LayoutId } from '../ui/layoutId';
 
 export const KAPREKAR_PEDAGOGY_SEED_PATH =
     "Idea/Bimba/Seeds/M/M1'/m1-prime-kaprekar-pedagogy.md" as const;
@@ -65,7 +66,7 @@ export function isKaprekarPedagogyHit(value: unknown): boolean {
 }
 
 export function M1KaprekarInspector(props: {
-    readonly layoutId: 'daily-0-1' | 'ide-deep';
+    readonly layoutId: LayoutId;
 }) {
     const cached = useTickStore(state => state.profile);
     const input = readKaprekarInspectorInput(cached);

@@ -12,9 +12,10 @@
  */
 
 import { useOmniPanelSessionStore } from '../omnipanelSessionState';
+import type { LayoutId } from '../../../ui/layoutId';
 
 export interface ActiveLayoutDisplayProps {
-    readonly activeLayout?: 'daily-0-1' | 'ide-deep';
+    readonly activeLayout?: LayoutId;
 }
 
 export function ActiveLayoutDisplay({ activeLayout }: ActiveLayoutDisplayProps) {

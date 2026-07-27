@@ -64,6 +64,7 @@ import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
 import { M1KaprekarInspector } from './m1KaprekarInspector';
 import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
 import { M1AudioBusInspector } from './m1AudioBusInspector';
+import type { LayoutId } from '../ui/layoutId';
 
 // ---- The typed contract (frozen surface-dispatch.ts shape — LAW) ----
 
@@ -77,7 +78,7 @@ export type M1SurfaceMode = (typeof M1_SURFACE_MODES)[number];
 
 export interface M1SurfaceContext {
     readonly mode: M1SurfaceMode;
-    readonly layoutId: 'daily-0-1' | 'ide-deep';
+    readonly layoutId: LayoutId;
     readonly compositionPluginId?: 'plugin-integrated-1-2-3' | 'plugin-integrated-4-5-0';
     readonly activityBarMode?:
         | 'coordinate-tree'

@@ -18,6 +18,8 @@
  */
 
 import { GatewayEventEntry } from '../../state/eventsStore';
+import { parseLayoutId } from '../../ui/layoutId';
+import type { LayoutId } from '../../ui/layoutId';
 import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 
 export type OmniPanelTabId =
@@ -31,7 +33,8 @@ export type OmniPanelTabId =
     | 'diagnostics'
     | 'tuning';
 
-export type OmniPanelLayoutId = 'daily-0-1' | 'ide-deep';
+/** Alias of the one layout-id authority (`ui/layoutId.ts`, 52.T1). */
+export type OmniPanelLayoutId = LayoutId;
 
 export const OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY = 'epi-logos.layout.active';
 
@@ -69,8 +72,11 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'tuning', label: 'Tuning', component: 'omniTuning', owningTranche: '38.T06.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] }
 ] as const);
 
+/** The persisted `epi-logos.layout.active` preference read. Behaviour is the
+ *  authority's total parse — unknown resolves to the daily fallback, exactly as
+ *  this function has always done (52.T1 re-homed the law, not the result). */
 export function parseOmniPanelLayoutPreference(value: unknown): OmniPanelLayoutId {
-    return value === 'ide-deep' ? 'ide-deep' : 'daily-0-1';
+    return parseLayoutId(value);
 }
 
 export function filterOmniPanelTabsForLayout(

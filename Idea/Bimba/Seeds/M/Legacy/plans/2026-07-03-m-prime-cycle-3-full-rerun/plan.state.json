@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-25T22:25:12.564Z",
+  "updatedAt": "2026-07-27T10:03:21.209Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -20450,16 +20450,16 @@
       "blocker": null
     },
     "50.T50.09": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T09:30:37.106Z",
+      "claimedAt": "2026-07-27T09:30:37.106Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T11:30:37.106Z",
+      "heartbeatAt": "2026-07-27T09:30:37.106Z",
+      "runId": "20260727T093037Z-50-T50.09",
       "worktree": null,
       "blocker": null
     },
@@ -20664,16 +20664,32 @@
       "blocker": null
     },
     "52.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-27T10:03:21.166Z",
+      "claimedAt": "2026-07-27T09:31:46.315Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-27T10:03:21.166Z",
+          "text": "Deliverable COMPLETE; status review because the tranche's literal Verify line (whole-suite 'pnpm test:e2e' green) is unobtainable in this shared tree today for reasons proven external to 52.T1. LANDED: src/ui/layoutId.ts is the one layout-id authority (LAYOUT_IDS tuple, LayoutId, isLayoutId, parseLayoutId); all EIGHT declaration sites now alias it — the four named (OmniPanelLayoutId, ActiveLayoutId, LeftSidebarLayoutId, CrossLayoutId) plus four inline property unions. The brief named three inline sites; a fourth (panes/omni/diagnostics/ActiveLayoutDisplay.tsx:17) was found by AST scan and included — the track states its audit is not exhaustive. parseOmniPanelLayoutPreference delegates to parseLayoutId; OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY untouched and the daily fallback returns the same value for every input, pinned by a table over 'ide-deep'/'daily-0-1'/unknown/''/null/undefined/7/{}/array. GUARD (src/ui/layoutId.test.ts) AST-walks src and fails on a layout id in TYPE position outside the authority while value uses stay legal; proven BOTH directions on the REAL tree — injecting the union into ActiveLayoutDisplay.tsx made it report 'ActiveLayoutDisplay.tsx:18 daily-0-1 + ide-deep', removing it returned 9/9 green. A mutual-assignability assertion pins the four aliases: widening CrossLayoutId to string (invisible to the AST walk) fails typecheck at layoutId.test.ts(141,15) TS2322. INDEPENDENT VERIFIER opus-verifier-t52-20260727 (plan.runs/verifications/52.T1.md): 'pnpm typecheck && pnpm test && pnpm build' exit 0. Implementer run: 1384 vitest passed / 0 failed, lint:imports GREEN over 519 files, lint:no-modal GREEN, build exit 0. UF proof: playwright cross-layout-state-identity + omnipanel-tab-traversal + pending-layout-claim + m3-renderer-modes + chrome-command-routing = 9/9 passed against the spawned gateway — the specs exercising both layouts and the seven-field identity receipt. WHY NOT DONE: (a) coordinate-render-live.spec.ts (45.T45.3) and m0-layer-rail-provenance.spec.ts fail IDENTICALLY with my eleven files reverted to HEAD, and Body/S/S2, WalkPane and src/bridge are all clean at HEAD — a committed pre-existing regression: Neo4j holds (M0-4)-[:HAS_INTERNAL_COMPONENT]->(M0-4.(0/1)) but the Walk pane renders 'NEIGHBOR -> M0-4.(0/1)', the forward guard catching a real S2 read-path regression owned by the S2/45 lane, not by a layout tranche; (b) pratibimba-consent.spec.ts:274 and visual-regression.spec.ts:376 PASS in isolation (order/load flakes; :274 is the known one); (c) the verifier's later run additionally shows a parallel Track-28 worker churning the shared tree (its own new bimba-graph-rendering-mode.spec.ts failing plus boot-level 3ms/129ms failures absent from my run). Also wired track 52 into plan.runs/verification-classes.json as UF — the track declares itself UF but the enforcement map stopped at 51, so the class gate was silently unenforced for T1-T6; this makes the close stricter, not laxer.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build",
+            "exitCode": 0,
+            "testsPassed": 1384,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/layoutId.ts",
+              "Body/M/pratibimba-app/src/ui/layoutId.test.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/52.T1.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "claude-opus5-t52-layout-20260727",
+      "leaseExpiresAt": "2026-07-27T11:31:46.315Z",
+      "heartbeatAt": "2026-07-27T10:03:21.166Z",
+      "runId": "20260727T093146Z-52-T1",
       "worktree": null,
       "blocker": null
     },
@@ -26659,12 +26675,31 @@
       "leaseExpiresAt": "2026-07-25T23:04:12.885Z",
       "worktree": null,
       "completedAt": "2026-07-25T21:36:41.942Z"
+    },
+    {
+      "runId": "20260727T093037Z-50-T50.09",
+      "taskId": "50.T50.09",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T09:30:37.106Z",
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T11:30:37.106Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260727T093146Z-52-T1",
+      "taskId": "52.T1",
+      "status": "review",
+      "startedAt": "2026-07-27T09:31:46.315Z",
+      "owner": "claude-opus5-t52-layout-20260727",
+      "leaseExpiresAt": "2026-07-27T11:31:46.315Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T10:03:21.166Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-25T22:25:12.544Z",
-    "updatedAt": "2026-07-25T22:25:12.544Z",
+    "createdAt": "2026-07-27T09:30:36.694Z",
+    "updatedAt": "2026-07-27T09:30:36.694Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

@@ -27,6 +27,7 @@ import { GatewayWebSocketState } from './diagnostics/GatewayWebSocketState';
 import { ActiveLayoutDisplay } from './diagnostics/ActiveLayoutDisplay';
 import { S2GraphReachability } from './diagnostics/S2GraphReachability';
 import { CrossLayoutIntentLog } from './diagnostics/CrossLayoutIntentLog';
+import type { LayoutId } from '../../ui/layoutId';
 
 type DiagnosticsSubSection =
     | 'overview'
@@ -47,7 +48,7 @@ const SUB_SECTIONS: readonly { readonly id: DiagnosticsSubSection; readonly labe
 
 export interface DiagnosticsPanelProps {
     /** The active shell layout the controller passes in; unbound → "(unbound)". */
-    readonly activeLayout?: 'daily-0-1' | 'ide-deep';
+    readonly activeLayout?: LayoutId;
 }
 
 export function DiagnosticsPanel({ activeLayout }: DiagnosticsPanelProps = {}) {
