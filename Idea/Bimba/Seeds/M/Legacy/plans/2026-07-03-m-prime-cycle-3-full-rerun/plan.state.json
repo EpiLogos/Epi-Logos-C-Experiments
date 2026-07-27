@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T21:11:04.547Z",
+  "updatedAt": "2026-07-27T21:22:11.688Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15026,16 +15026,33 @@
       "blocker": null
     },
     "30.T30.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T21:22:11.664Z",
+      "claimedAt": "2026-07-27T21:12:16.343Z",
+      "completedAt": "2026-07-27T21:22:11.664Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T21:22:11.664Z",
+          "text": "Canonical HighlightCategoryRegistry landed at src/ui/highlightCategoryRegistry.ts (commit 31261440 — contents re-verified with git show --stat: exactly the 4 intended files, no sibling bleed). AUDIT FIRST: the ten ids and the --nara-highlight-* CSS values were already carried; the real gap was that the vocabulary was DECLARED THREE TIMES — panes/m4NaraHighlightMark.ts (USER_/AGENT_HIGHLIGHT_CATEGORIES + HIGHLIGHT_VISUAL_REGISTERS), S4-0p-khora/modules/highlighted-inscription.ts (its own AGENT_HIGHLIGHT_CATEGORIES), and the Chronos orbit constant. Each entry now carries side, colourToken (epilogos.colour.highlight-category.<id>) + cssVariable, a real semanticMeaning, allowedSourceExtensions (user-side m4-nara ONLY; agent-side the S4 triple), floatingMenuEligible (user-side only), the 11.11 visualRegister, and the 19.11 responseOrbit. THE ORBIT LIVES IN THE ROW because the alignment is structural, not incidental — the orbit IS the inscription: immediate->recognition, next-morning->retrospective-surfacing, saturnine->prospective-surfacing; kairos-touch/somatic-mark/live-spread carry NO fixed orbit and say undefined rather than defaulting to one, and a test asserts no orbit is claimed twice. DESIGN CALL: the user/agent split is a COMPILE-TIME union split (UserHighlightCategoryId / AgentHighlightCategoryId) rather than only a runtime side field, so a user-only surface refuses an agent category in its types — collapsing both aliases to the flat union broke NaraFloatingMenu's label map immediately, which is exactly the protection worth keeping; a test asserts the runtime side never disagrees with the compile-time partition. m4NaraHighlightMark now DERIVES its lists + visual registers from the register: nine ids are no longer spelled there at all and daily-note survives only as a parse fallback (asserted line-by-line, not by a bare count). CROSS-STACK SHAPE — the brief asks the S4 consumers to IMPORT the register, but M->S is a forbidden cross-stack edge (same law behind ui/bridgeReadiness mirroring 07-t0), so a literally-shared module is unavailable; the honest equivalent landed instead: the register is canonical in the carrier, the carrier consumers really collapse onto it, and the test READS the Khora + Chronos sources and fails on divergence. INJECTION-PROVEN: renaming somatic-mark -> somatic-marker in Khora fails the parity test naming the exact divergence; restoring goes green (S4 file confirmed unmodified afterwards via git diff --stat, zero output). No file under Body/S was edited — deliberate, since a concurrent Track-50 agent is live in that crate. HONESTY-LINT CAUGHT TWO OF MY OWN TESTS as source-grep-only and I rewrote them as behaviour rather than weakening the lint: the FloatingMenu case now RENDERS the real component and reads the offered [data-highlight-category] buttons (asserting the rendered set equals the user list and contains no agent id), and the CSS case now applies the real stylesheet to the live document and resolves each custom property through getComputedStyle (asserting a real hex, so an undefined property fails). A third behavioural test drives the real Tiptap mark per category and asserts data-visual-register/data-category/class actually reach the DOM. GREEN: independent verify-tranche PASS (verifier claude-opus5-t30-verify != closer claude-opus5-t30-highlight-20260727) — app-test 1581, app-typecheck, app-build, app-smoke (boot-smoke = the UF-class proof for a tranche that adds no new app surface), carrier-tokens, honesty-lint 308 files/0 dishonest blocks. 16 registry tests. NOTE: app-typecheck legitimately went RED on my first verify attempt (an unused import in the new test file) — fixed and re-verified rather than adjudicated away; that was my defect, not a flake.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 30.T30.7 --owner claude-opus5-t30-verify --only honesty-lint,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1581,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/highlightCategoryRegistry.ts",
+              "Body/M/pratibimba-app/src/ui/highlightCategoryRegistry.test.ts",
+              "Body/M/pratibimba-app/src/panes/m4NaraHighlightMark.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/30.T30.7.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t30-highlight-20260727",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T21:12:16.343Z",
+      "runId": "20260727T211216Z-30-T30.7",
       "worktree": null,
       "blocker": null
     },
@@ -20824,16 +20841,16 @@
       "blocker": null
     },
     "50.T50.16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T21:11:18.838Z",
+      "claimedAt": "2026-07-27T21:11:18.838Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "claude-opus5-t50-canon-20260727",
+      "leaseExpiresAt": "2026-07-27T23:11:18.838Z",
+      "heartbeatAt": "2026-07-27T21:11:18.838Z",
+      "runId": "20260727T211118Z-50-T50.16",
       "worktree": null,
       "blocker": null
     },
@@ -27129,6 +27146,25 @@
       "leaseExpiresAt": "2026-07-27T23:17:29.831Z",
       "worktree": null,
       "completedAt": "2026-07-27T21:09:00.884Z"
+    },
+    {
+      "runId": "20260727T211118Z-50-T50.16",
+      "taskId": "50.T50.16",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T21:11:18.838Z",
+      "owner": "claude-opus5-t50-canon-20260727",
+      "leaseExpiresAt": "2026-07-27T23:11:18.838Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260727T211216Z-30-T30.7",
+      "taskId": "30.T30.7",
+      "status": "done",
+      "startedAt": "2026-07-27T21:12:16.343Z",
+      "owner": "claude-opus5-t30-highlight-20260727",
+      "leaseExpiresAt": "2026-07-27T23:42:16.343Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T21:22:11.664Z"
     }
   ],
   "activeRoute": {
