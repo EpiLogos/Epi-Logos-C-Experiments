@@ -1,0 +1,38 @@
+{
+  "runId": "20260727T102453Z-25-T25.19",
+  "taskId": "25.T25.19",
+  "startedAt": "2026-07-27T10:24:53.512Z",
+  "owner": "opus-mdev-t25-nara",
+  "leaseExpiresAt": "2026-07-27T13:24:53.512Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.19",
+    "trackId": "25",
+    "tranche": "T25.19",
+    "title": "Session-close wisdom-delta + quintessence-XOR ceremony pane *(spec-ahead-integration; consumes 19.6 + 19.7)",
+    "effort": "spec-ahead-integration; consumes 19.6 + 19.7",
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.18"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M4' 23 widget contracts in pratibimba-app (PASU wizard derived-only quintessence, oracle aliveness 4h decay, R-factor fretboard 7x6, session-close ceremony XOR+seeds+lamps, time-axis switcher). AR=14, least-real. §2 track 25."
+  }
+}

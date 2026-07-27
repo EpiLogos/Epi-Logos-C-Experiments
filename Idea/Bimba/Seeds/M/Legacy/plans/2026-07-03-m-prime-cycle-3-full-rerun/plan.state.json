@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T18:21:51.741Z",
+  "updatedAt": "2026-07-27T21:09:00.908Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14970,10 +14970,10 @@
       "blocker": null
     },
     "30.T30.6": {
-      "status": "pending",
-      "updatedAt": "2026-07-27T18:21:51.715Z",
-      "claimedAt": "2026-07-27T18:20:11.614Z",
-      "completedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-27T21:09:00.884Z",
+      "claimedAt": "2026-07-27T20:17:29.831Z",
+      "completedAt": "2026-07-27T21:09:00.884Z",
       "evidence": [
         {
           "at": "2026-07-27T18:21:27.078Z",
@@ -14982,13 +14982,32 @@
         {
           "at": "2026-07-27T18:21:51.715Z",
           "text": "CORRECTION to the previous entry: one phrase was eaten by shell backtick substitution and read \"PendingBadge takes  not BridgeReadinessId\". It should read: PendingBadge takes a plain (id: string) parameter, NOT the typed BridgeReadinessId from src/ui/bridgeReadiness.ts. Everything else in that entry stands."
+        },
+        {
+          "at": "2026-07-27T21:09:00.884Z",
+          "text": "State grammar landed as five taxonomy-typed primitives (commit 3494d3de). EmptyState + LoadingPulse are new; PendingBadge/BlockedOverlay/ReadinessIndicator retyped from loose strings/3-state onto BridgeReadinessId. All five surface ownerTrack in title AND aria-label, and colour from epilogos.colour.readiness.id.<id> — nine distinct hues (per-id, never one generic amber), each naming the axis it reports on. ownerTrack+meaning MIRRORED into ui/bridgeReadiness.ts from the frozen 07-t0 readinessTaxonomy (M->epi-theia is a forbidden edge); severity/tier stay COMPUTED so one severity law survives (07-t0 spells ready_public_current 'ready', the S0 axis 'ok' — S0 wins, it is locked to Rust). Token joins the 30.2 seam as readiness.id.<id> (NOT nara-remapped: a domain must not tint how broken the bridge looks). BlockedOverlay CTA derives per id and routes through the ONE command registry — s5_review_blocked really executes omnipanel.openReview; a test asserts every non-null commandId exists in COMMAND_CATALOG, and privacy_blocked/degraded_but_readable/ready_public_current render NO button (privacy is a governed act, not one-click consent; the gateway auto-reconnects so bridge_unavailable opens Diagnostics rather than faking a Reconnect). LoadingPulse keeps Foundation principle 2 — opacity is a pure function of tick12, NO local clock — and the bridge_unavailable fallback is a 200ms CSS animation, not a JS timer, so 30.11's no-setInterval/rAF law needs no exception; it is CONTINUOUS motion per 30.T30.5 so reduced motion stops it dead (verified on the real shell). GREEN: app-test 1565, app-typecheck, app-build, app-smoke, carrier-tokens, honesty-lint, lint:imports, lint:no-modal — independent verify-tranche PASS, verifier claude-opus5-t30-verify != closer. UF class-proof: tests/e2e/design-primitives.spec.ts 5/5 PASSED vs a real spawned gateway (nine custom properties resolve live on the running shell; a real readiness surface reports its owning track; the pulse stops under prefers-reduced-motion). Acceptance matrix per the brief: 9 ids x 5 primitives = 45 cases, plus ownerTrack reason-routing, the deep-link proof, styles.css<->tokens.ts parity (CSS and JS cannot drift) and WCAG-AA >=4.5:1 in BOTH polarities for all nine. Consume-not-fork lint is INJECTION-PROVEN: a planted BlockedOverlay fork fails it by name, removal restores green. UNRELATED-FLAKE ADJUDICATION: the 17-suite gate run went RED only on app-ui-flow, and it was a different test each run under CPU contention with the concurrent Track-50 agent — gate run failed visual-regression.spec.ts:460 (20.6s; PASSES in isolation at 6.1s), my own full re-run failed m5-capacity-lanes.spec.ts:37 instead with the shell never mounting (10.5s; PASSES in isolation at 2.6s), 98/99 green both times. Non-deterministic and not this tranche's: the composition-1-2-3-cosmic baseline is captured on the Cosmic Engine tab and flexlayout mounts only the selected tab, so the BridgeReadinessBadge consumers (Graph Explorer / Correspondence / Walk) are not in that capture. HONEST GAP: EmptyState ships as shelf with no live consumer — migrating the ad-hoc pane-message empties in the Dispatch panes is 30.10/30.11's lane and would touch Track 27/28 tests; and the consume-not-fork lint catches component redefinition, not inline ad-hoc empties. BEHAVIOUR CHANGE worth review: m3SurfaceContext widens its coarse 3-state to bridge_unavailable for anything the bridge has not classified (what classifyReadiness already calls an unreported binding) rather than guessing a dimensional id, so unreported M3 bindings now read red — consistent with the rest of the carrier, but visible on Track-24 surfaces.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/design-primitives.spec.ts  # cwd Body/M/pratibimba-app, UF class-proof vs real spawned gateway; plus node .codex/scripts/verify-tranche.mjs 30.T30.6 --owner claude-opus5-t30-verify --only honesty-lint,app-typecheck,app-test,app-build,app-smoke,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 1570,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/stateGrammar.ts",
+              "Body/M/pratibimba-app/src/ui/primitives.tsx",
+              "Body/M/pratibimba-app/src/ui/bridgeReadiness.ts",
+              "Body/M/pratibimba-app/src/ui/tokens.ts",
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/tests/e2e/design-primitives.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/30.T30.6.md"
+            ]
+          }
         }
       ],
       "notes": null,
-      "owner": "opus-mdev-t30-states",
+      "owner": "claude-opus5-t30-states-20260727",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-27T18:20:11.614Z",
-      "runId": "20260727T182011Z-30-T30.6",
+      "heartbeatAt": "2026-07-27T20:17:29.831Z",
+      "runId": "20260727T201729Z-30-T30.6",
       "worktree": null,
       "blocker": null
     },
@@ -20761,16 +20780,32 @@
       "blocker": null
     },
     "50.T50.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T21:08:01.551Z",
+      "claimedAt": "2026-07-27T20:16:24.379Z",
+      "completedAt": "2026-07-27T21:08:01.551Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T21:08:01.551Z",
+          "text": "The whole track proven in ONE live run, nothing stubbed: tests/acceptance-live.mjs, 52/52 checks green on three consecutive runs against a real spawned \"epi gate start\". The path, inside one rerunScore: a score ORIGINATES in (00/00) and a mechanistic session is REFUSED (ScoreOriginationError), so the polarity is load-bearing; composedCoordinates returns 6/6 — the axes the steps genuinely DIFFER on, not six fields being present; the agent-authored (00/00) checkpoint HALTS for a human and the step records haltedForHuman; one step is a real code-mode PROGRAM executed as a node child process whose read/grep/write cross the gated bridge, while epi_graph_query — entitled in U but switched off at spawn — is refused code-mode/not-active and returns 0 result chars to the program; one step is a >=2-deep CP-nested frame (nestingDepth 2, slotPath [0,0], framePath 2 frames) dispatching a REAL child pi at every leaf, each carrying its entitlement-resolved --tools and each argv a pi harness invocation, the deep leaf returning the real file contents; one step is a tilldone L-Thread whose done-condition is a REAL \"node --test\" run — it stays OPEN on cycle 1 while work remains and closes on cycle 2 with tilldone/complete. Completion then emitted portal.vak_eval to a REAL second websocket subscriber (the returned receipt equals what the subscriber saw; six-field envelope present), wrote the deterministic trace into the REAL transcript on disk carrying the exact scoreHash and every op in ONE turn (read AND write AND a node --test command, so the ops are classifiable rather than the all-zeros a code-mode run would otherwise produce), plus a distillation row the REAL distill_dataset_gen.py accepted; the Mercurius trial was honestly REFUSED as uncalibrated on the first run and a second comparable run updated the rating with Janus ruling the delta, both rows landing in mercurius_trial_log with the six context columns and both decisions in moirai_comparison_cache. Finally the score and BOTH accumulated runs were read back OVER THE GATEWAY via s4'.orchestration.score — same hash, owner S4'. THE HEADLINE MEASUREMENT, both sides computed from the SAME recorded trace over identical work: script 657 tok vs JSON staircase 2199 tok — delta 1542, ratio 0.299 (estimator chars/4, crude by design; the SHAPE of the comparison is the result, not the absolute count). THREE NOTES. (1) This tranche's Verify line carries no machine-runnable commands, so the independent record's tranche-check is gate-only — the W-class proof IS this harness, which is why it spawns a real gateway rather than asserting a manifest. (2) Dependency 50.T50.14 was not taken on faith: its own trace-live.mjs was re-run fresh (21/21 green) before anything was built on it. (3) The harness is deliberately NOT named *.test.mjs, so it stays out of the shared ta-onta gate like the 12 sibling live harnesses; verified against the gate's own glob. Independent verify-tranche PASS (verifier claude-opus5-t50-verify, not the closer): class-scoped W gate GREEN in 409s — ta-onta 800, gateway 101, gateway-contract 93, harness-selftest 107, redis-context 15, graphiti-runtime 16, spacetime 11, live-wire, gateway-methods, ta-onta-types, honesty-lint (307 test files, 0 dishonest blocks). The W scope excludes the frontend app-* suites, where sibling parallel workers held uncommitted WIP that this tranche does not touch.",
+          "receipt": {
+            "command": "node Body/S/S4/ta-onta/S4-4p-anima/tests/acceptance-live.mjs --port 18993   # live-wire: real spawned epi gate start, real child pi processes, real subscriber",
+            "exitCode": 0,
+            "testsPassed": 52,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/acceptance-live.mjs",
+              "Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.15.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t50-e2e-20260727",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T20:16:24.379Z",
+      "runId": "20260727T201624Z-50-T50.15",
       "worktree": null,
       "blocker": null
     },
@@ -27060,12 +27095,32 @@
       "leaseExpiresAt": "2026-07-27T21:20:11.614Z",
       "worktree": null,
       "completedAt": "2026-07-27T18:21:27.078Z"
+    },
+    {
+      "runId": "20260727T201624Z-50-T50.15",
+      "taskId": "50.T50.15",
+      "status": "done",
+      "startedAt": "2026-07-27T20:16:24.379Z",
+      "owner": "claude-opus5-t50-e2e-20260727",
+      "leaseExpiresAt": "2026-07-27T22:16:24.379Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T21:08:01.551Z"
+    },
+    {
+      "runId": "20260727T201729Z-30-T30.6",
+      "taskId": "30.T30.6",
+      "status": "done",
+      "startedAt": "2026-07-27T20:17:29.831Z",
+      "owner": "claude-opus5-t30-states-20260727",
+      "leaseExpiresAt": "2026-07-27T23:17:29.831Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T21:09:00.884Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T18:21:25.124Z",
-    "updatedAt": "2026-07-27T18:21:25.124Z",
+    "createdAt": "2026-07-27T20:15:33.430Z",
+    "updatedAt": "2026-07-27T20:15:33.430Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
