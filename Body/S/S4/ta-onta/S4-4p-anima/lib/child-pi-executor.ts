@@ -48,6 +48,7 @@ import {
 	enforceReviewGate,
 	type PiReviewGateInput,
 } from "../../../pi-agent/lib/review-gate.ts";
+import { checkpointGate, type CpfCheckpoint } from "../modules/dispatch-validate.ts";
 
 /**
  * The child harness. A constant, not a parameter — Pi->subagent is the only
@@ -61,6 +62,7 @@ export type ChildPiSeam = "agent-team" | "agent-chain" | "pi-pi";
 /** Why a dispatch was refused before any process existed. */
 export type ChildPiRefusalCode =
 	| "child-pi/vama-shakti-dialogue-only"
+	| "child-pi/cpf-checkpoint-unsatisfied"
 	| "child-pi/review-gate"
 	| "child-pi/no-entitled-tools";
 
@@ -98,6 +100,12 @@ export interface ChildPiDispatchRequest {
 	cwd?: string;
 	/** Present only when this dispatch is a summoned Vama Shakti (DR-VAMA-5). */
 	vamaShakti?: VamaShaktiDispatchRequest;
+	/**
+	 * Present only when the agent AUTHORED a `(00/00)` human checkpoint on this
+	 * dispatch (50.T50.09). Absent means no checkpoint — the executor never adds
+	 * one, and dialogical alone is open conversation, not a gate.
+	 */
+	checkpoint?: CpfCheckpoint;
 	/** Present only when this dispatch carries review context (12.T12.4). */
 	review?: PiReviewGateInput;
 	/** Seam-specific progress hooks (widgets, tickers). */
@@ -156,8 +164,41 @@ export function assertChildPiInvariants(request: ChildPiDispatchRequest): void {
 		}
 	}
 
+	// The CPF checkpoint (50.T50.09). The orchestration surface halts a dialogical
+	// STEP, but a dispatch can also arrive here through agent-team / agent-chain /
+	// pi-pi without ever passing through a script. Gating at the choke point is
+	// what makes an authored checkpoint unbypassable by choosing another seam.
+	if (request.checkpoint) {
+		const gate = checkpointGate({
+			vak_address: request.vakAddress,
+			checkpoint: request.checkpoint,
+		});
+		if (!gate.ok) {
+			throw new ChildPiDispatchRefused(
+				"child-pi/cpf-checkpoint-unsatisfied",
+				request.seam,
+				`${request.agentName}: ${gate.error}${pendingReviewDetail(request)}`,
+			);
+		}
+	}
+
 	if (request.review) {
-		const verdict = enforceReviewGate(request.review);
+		// A review-scoped checkpoint the human has answered IS the user
+		// final-validation this gate asks for, so the two laws take one human act
+		// between them. A checkpoint scoped to the DISPATCH does not: "a human let
+		// this step run" is weaker than "the user final-validated this verdict",
+		// and collapsing them would let an unrelated answer discharge the gate.
+		const verdict = enforceReviewGate({
+			...request.review,
+			checkpoint:
+				request.checkpoint?.validates === "review"
+					? {
+							satisfied: request.checkpoint.respondedBy !== undefined,
+							respondedBy: request.checkpoint.respondedBy,
+							validates: request.checkpoint.validates,
+						}
+					: request.review.checkpoint,
+		});
 		if (!verdict.ok) {
 			throw new ChildPiDispatchRefused(
 				"child-pi/review-gate",
@@ -166,6 +207,23 @@ export function assertChildPiInvariants(request: ChildPiDispatchRequest): void {
 			);
 		}
 	}
+}
+
+/**
+ * What a halting checkpoint should tell the human about a review it also gates.
+ *
+ * A human cannot final-validate a verdict they were never shown, so when a
+ * dispatch carries both an unanswered checkpoint and a review, the refusal names
+ * the decision and the actor rather than leaving the human to approve something
+ * invisible. Empty when there is no review to disclose.
+ */
+function pendingReviewDetail(request: ChildPiDispatchRequest): string {
+	const review = request.review;
+	if (!review) return "";
+	const decision = String(review.decision ?? "approve");
+	const actor = review.actor ? String(review.actor) : "an agent";
+	const kind = review.recursiveSelfReview === true ? "recursive self-review" : "review";
+	return ` — pending ${kind} verdict "${decision}" by ${actor}`;
 }
 
 /**

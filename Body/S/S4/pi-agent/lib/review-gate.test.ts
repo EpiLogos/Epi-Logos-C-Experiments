@@ -80,4 +80,49 @@ describe("12.T12.4 - Pi recursive-self-review gate", () => {
     assert.equal(result.ok, true);
     assert.equal(result.userFinalValidationRequired, true);
   });
+
+  // 50.T50.09 — a CPF (00/00) checkpoint as one admissible FORM of
+  // final-validation, and only when the human was answering about the review.
+  it("accepts a review-scoped human checkpoint as final-validation", () => {
+    const result = enforceReviewGate({
+      decision: "approve",
+      actor: "anima",
+      recursiveSelfReview: true,
+      checkpoint: { satisfied: true, respondedBy: "human", validates: "review" },
+    });
+
+    assert.equal(result.ok, true);
+    assert.equal(result.userFinalValidationRequired, true);
+  });
+
+  it("refuses a human checkpoint that validated the dispatch, not the review", () => {
+    // "A human let this step run" is strictly weaker than "the user
+    // final-validated this verdict". Without the scope check, answering an
+    // unrelated question on the same dispatch would discharge this gate.
+    const result = enforceReviewGate({
+      decision: "approve",
+      actor: "anima",
+      recursiveSelfReview: true,
+      checkpoint: { satisfied: true, respondedBy: "human" },
+    });
+
+    assert.equal(result.ok, false);
+    assert.equal(result.userFinalValidationRequired, true);
+  });
+
+  it("refuses an unanswered or agent-answered review-scoped checkpoint", () => {
+    for (const checkpoint of [
+      { satisfied: false, respondedBy: "human", validates: "review" },
+      { satisfied: true, respondedBy: "anima", validates: "review" },
+    ]) {
+      const result = enforceReviewGate({
+        decision: "approve",
+        actor: "anima",
+        recursiveSelfReview: true,
+        checkpoint,
+      });
+
+      assert.equal(result.ok, false, JSON.stringify(checkpoint));
+    }
+  });
 });

@@ -45,6 +45,51 @@ export const RECURSIVE_SELF_REVIEW_FINAL_VALIDATION_ACTORS:
     "zeithoven",
   ]);
 
+/**
+ * A CPF `(00/00)` human checkpoint, as this gate reads it (50.T50.09).
+ *
+ * Structural on purpose. Anima owns what a checkpoint IS
+ * (`ta-onta/S4-4p-anima/modules/dispatch-validate.ts` `CpfCheckpoint`); this
+ * module stays dependency-free, so it declares only the two fields the review
+ * law actually turns on and never imports the carrier that authors them. The
+ * dependency runs S4-4' -> pi-agent, never back.
+ */
+export interface CpfCheckpointValidation {
+  /** Has the checkpoint been answered at all? */
+  readonly satisfied?: boolean;
+  /** Who answered it. Only a human satisfies final-validation. */
+  readonly respondedBy?: string | null;
+  /** `"review"` when the human was shown the VERDICT itself, not just the step. */
+  readonly validates?: string | null;
+}
+
+/**
+ * Does a checkpoint constitute the user final-validation this gate requires?
+ *
+ * The two gates do NOT ask the same question. A checkpoint asks "has a human
+ * seen this dispatch and let it run"; this gate asks "has the user
+ * final-validated this review VERDICT". The second is strictly stronger, so a
+ * human-answered checkpoint is only ONE ADMISSIBLE FORM of final-validation —
+ * the form where the human was answering about the review.
+ *
+ * Hence three conditions, each load-bearing:
+ *   - `satisfied` — an unanswered checkpoint is a pending question, not a pass;
+ *   - `respondedBy: "human"` — otherwise the recursive-self-review gate would be
+ *     satisfiable by the very actor it exists to hold;
+ *   - `validates: "review"` — otherwise answering an unrelated question on the
+ *     same dispatch ("which branch?" -> "main") would silently discharge a
+ *     verdict the human was never shown.
+ *
+ * Anima owns the authoring of that scope (`CpfCheckpoint.validates`).
+ */
+export function checkpointSatisfiesFinalValidation(
+  checkpoint: CpfCheckpointValidation | undefined,
+): boolean {
+  if (!checkpoint || checkpoint.satisfied !== true) return false;
+  if (String(checkpoint.validates ?? "").trim().toLowerCase() !== "review") return false;
+  return normalizeReviewActor(checkpoint.respondedBy) === "human";
+}
+
 export interface PiReviewGateInput {
   /**
    * Defaults to a committal verdict (`approve`) so
@@ -61,6 +106,12 @@ export interface PiReviewGateInput {
   readonly userFinalValidation?: boolean;
   /** Alias for callers that name the passed token rather than the requirement. */
   readonly finalValidationPassed?: boolean;
+  /**
+   * The CPF `(00/00)` checkpoint this dispatch carries, when it carries one
+   * (50.T50.09). A human-answered checkpoint passes final-validation; an
+   * unanswered or agent-answered one does not.
+   */
+  readonly checkpoint?: CpfCheckpointValidation;
 }
 
 export type PiReviewGateResult =
@@ -120,13 +171,15 @@ export function enforceReviewGate(input: PiReviewGateInput): PiReviewGateResult 
 
 export const pi = Object.freeze({
   enforceReviewGate,
+  checkpointSatisfiesFinalValidation,
 });
 
 function hasUserFinalValidationPass(input: PiReviewGateInput): boolean {
   return (
     input.userFinalValidation === true ||
     input.finalValidationPassed === true ||
-    input.actorIsHuman === true
+    input.actorIsHuman === true ||
+    checkpointSatisfiesFinalValidation(input.checkpoint)
   );
 }
 

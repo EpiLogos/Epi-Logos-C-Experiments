@@ -45,7 +45,12 @@ import {
 	type CtLiteral,
 	type VakAddress,
 } from "../../shared/vak_address.ts";
-import { AGENT_CF, agentForCf } from "../modules/dispatch-validate.ts";
+import {
+	AGENT_CF,
+	agentForCf,
+	checkpointAuthoringGate,
+	type CpfCheckpoint,
+} from "../modules/dispatch-validate.ts";
 import { conventionalToolFor, type ZThreadToolName } from "./thread-shape.ts";
 import type { CfpMoveLiteral } from "../../shared/vak_address.ts";
 import {
@@ -249,6 +254,15 @@ export interface OrchestrationStep {
 	readonly agent?: string;
 	readonly agents?: string[];
 	readonly chain?: string;
+	/**
+	 * The agent-authored `(00/00)` human checkpoint on this step (50.T50.09).
+	 *
+	 * Optional, and its absence is not a default: a dialogical step still halts
+	 * (that is what `(00/00)` means in a script), but declaring the checkpoint
+	 * records WHY the author put a human there. Only a step that can say why is
+	 * distinguishable from one an auto-insertion policy would have produced.
+	 */
+	readonly checkpoint?: CpfCheckpoint;
 }
 
 /** A composed orchestration: the script's own address plus its steps. */
@@ -274,6 +288,7 @@ export function defineOrchestration(input: {
 		agent?: string;
 		agents?: string[];
 		chain?: string;
+		checkpoint?: CpfCheckpoint;
 	}>;
 }): Orchestration {
 	assertFullEnvelope(input.address);
@@ -287,6 +302,7 @@ export function defineOrchestration(input: {
 			const violations = err instanceof VakEnvelopeError ? err.violations : [String(err)];
 			throw new VakEnvelopeError(violations.map((v) => `step "${step.id}": ${v}`));
 		}
+		assertAuthoredCheckpoint(step.id, step.address, step.checkpoint);
 		return Object.freeze({
 			id: step.id,
 			address: step.address,
@@ -294,6 +310,7 @@ export function defineOrchestration(input: {
 			agent: step.agent ?? boundAgent(step.address),
 			agents: step.agents,
 			chain: step.chain,
+			checkpoint: step.checkpoint,
 		}) as OrchestrationStep;
 	});
 	return Object.freeze({ id: input.id, address: input.address, steps: Object.freeze(steps) });
@@ -324,14 +341,42 @@ export type StepExecutor = (
 	primitive: ZThreadToolName | null,
 ) => Promise<string> | string;
 
-/** Raised when a dialogical step needs a human and no responder was supplied. */
+/**
+ * Assert a step's authored checkpoint at DECLARATION time.
+ *
+ * Authoring only — a checkpoint has of course not been answered yet when the
+ * script that declares it is being written. What is checkable here is that the
+ * author gave a reason from the closed set and put the checkpoint on a step
+ * whose polarity actually halts.
+ */
+function assertAuthoredCheckpoint(
+	stepId: string,
+	address: VakAddress,
+	checkpoint: CpfCheckpoint | undefined,
+): void {
+	if (!checkpoint) return;
+	const gate = checkpointAuthoringGate({ vak_address: address, checkpoint });
+	if (!gate.ok) throw new VakEnvelopeError([`step "${stepId}": ${gate.error}`]);
+}
+
+/**
+ * Raised when a dialogical step needs a human and no responder was supplied.
+ *
+ * Carries the authored REASON when the step declared one, so the halt explains
+ * why a human is standing here rather than only that one is (50.T50.09).
+ */
 export class DialogicalHaltRequired extends Error {
 	readonly stepId: string;
+	readonly reason?: CpfCheckpoint["reason"];
 
-	constructor(stepId: string) {
-		super(`step "${stepId}" is CPF Dialogical (00/00) and halts for human input`);
+	constructor(stepId: string, checkpoint?: CpfCheckpoint) {
+		const because = checkpoint
+			? ` — checkpoint (${checkpoint.reason})${checkpoint.note ? `: ${checkpoint.note}` : ""}`
+			: "";
+		super(`step "${stepId}" is CPF Dialogical (00/00) and halts for human input${because}`);
 		this.name = "DialogicalHaltRequired";
 		this.stepId = stepId;
+		this.reason = checkpoint?.reason;
 	}
 }
 
@@ -371,7 +416,7 @@ export async function runOrchestration(
 		let haltedForHuman = false;
 
 		if (haltsForHuman(step.address)) {
-			if (!options.respondToHuman) throw new DialogicalHaltRequired(step.id);
+			if (!options.respondToHuman) throw new DialogicalHaltRequired(step.id, step.checkpoint);
 			haltedForHuman = true;
 			output = await options.respondToHuman(step);
 		} else {
@@ -423,6 +468,8 @@ export interface FrameLeaf {
 	readonly address: VakAddress;
 	readonly task: string;
 	readonly agent?: string;
+	/** The agent-authored `(00/00)` checkpoint on this leaf (50.T50.09). */
+	readonly checkpoint?: CpfCheckpoint;
 }
 
 /** A position that opens a whole nested context frame. */
@@ -494,6 +541,14 @@ export function assertFrameNesting(node: FrameNode, path: string[] = []): void {
 	} catch (err) {
 		const inner = err instanceof VakEnvelopeError ? err.violations : [String(err)];
 		violations.push(...inner.map((v) => `${label}: ${v}`));
+	}
+
+	if (node.kind === "leaf" && node.checkpoint) {
+		const gate = checkpointAuthoringGate({
+			vak_address: node.address,
+			checkpoint: node.checkpoint,
+		});
+		if (!gate.ok) violations.push(`${label}: ${gate.error}`);
 	}
 
 	if (node.kind === "frame") {
@@ -587,7 +642,7 @@ export async function runNestedFrame(
 		let output: string;
 		let haltedForHuman = false;
 		if (haltsForHuman(node.address)) {
-			if (!options.respondToHuman) throw new DialogicalHaltRequired(node.id);
+			if (!options.respondToHuman) throw new DialogicalHaltRequired(node.id, node.checkpoint);
 			haltedForHuman = true;
 			output = await options.respondToHuman(node);
 		} else {

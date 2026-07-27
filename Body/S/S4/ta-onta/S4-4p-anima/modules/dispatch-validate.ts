@@ -91,11 +91,81 @@ export const MOIRAI_HOST_CF: Record<MoiraiAgent, CfLiteral> = {
  */
 export const CPF_DIALOGICAL: CpfPolarity = "(00/00)" as const;
 
+/** The complementary polarity: a step that runs autonomously, unattended. */
+export const CPF_MECHANISTIC: CpfPolarity = "(4.0/1-4.4/5)" as const;
+
+/**
+ * Why a human checkpoint exists (50.T50.09).
+ *
+ * The agent DECIDES review gates; the system never inserts one. A checkpoint is
+ * therefore always an authored act, and this is the closed set of things that
+ * authorship can be grounded in:
+ *
+ *   - `implied-by-task`           the task itself asks to be seen (a canon write,
+ *                                 an outward-facing action, a destructive step);
+ *   - `requested-at-origination`  the user asked for it during the `(00/00)`
+ *                                 dialogue that developed the script;
+ *   - `learned-from-review`       a past review of this class of run concluded it
+ *                                 wanted one (`learnedCheckpointProposals`,
+ *                                 `extension/dispatch.ts`) and the author adopted
+ *                                 that conclusion.
+ *
+ * A fourth reason is REFUSED rather than accepted as free text. Free text would
+ * make "because the policy said so" indistinguishable from an authored decision,
+ * and the absence of an auto-insertion policy is precisely what this tranche is
+ * asked to keep true.
+ */
+export const CHECKPOINT_REASONS = [
+  "implied-by-task",
+  "requested-at-origination",
+  "learned-from-review",
+] as const;
+
+export type CheckpointReason = (typeof CHECKPOINT_REASONS)[number];
+
+/**
+ * An agent-authored `(00/00)` human checkpoint.
+ *
+ * Carrying a checkpoint is what distinguishes a HALT from ordinary dialogical
+ * openness. `(00/00)` on its own remains the Ouroboros / open-conversation
+ * register described above — this record is the deliberate act laid on top of it.
+ */
+export interface CpfCheckpoint {
+  readonly reason: CheckpointReason;
+  /** What the human is being asked to look at. Free text; carried, never parsed. */
+  readonly note?: string;
+  /**
+   * What the human's answer VALIDATES.
+   *
+   * Absent (the default, and the common case): the checkpoint gates THIS
+   * DISPATCH — a human saw the step and let it run.
+   *
+   * `"review"`: the checkpoint was authored onto the REVIEW VERDICT itself, so
+   * the human is being shown the decision and the actor, and their answer is the
+   * user final-validation the recursive-self-review gate requires (12.T12.4).
+   *
+   * The distinction is load-bearing and not a formality. "A human saw this
+   * dispatch and let it run" is strictly weaker than "the user final-validated
+   * this verdict" — without the scope, answering an unrelated question ("which
+   * branch?" -> "main") would silently discharge a review gate the human was
+   * never shown.
+   */
+  readonly validates?: "review";
+  /**
+   * Who answered. Only `"human"` satisfies the checkpoint — an agent answering
+   * its own gate is the bypass the whole construct exists to foreclose.
+   */
+  readonly respondedBy?: "human" | "agent";
+  readonly response?: string;
+}
+
 export interface DispatchParams {
   agent_name: string;
   task: string;
   vak_address?: VakAddress;
   coordinate_emission?: CoordinateEmission;
+  /** Present only when this dispatch is an authored human checkpoint (50.T50.09). */
+  checkpoint?: CpfCheckpoint;
 }
 
 export interface CoordinateEmission {
@@ -121,10 +191,96 @@ export interface ValidationResult {
  * cpf string — we err on the side of strict validation rather than open new
  * bypass paths.
  */
-function isDialogical(params: DispatchParams): boolean {
+function isDialogical(params: { vak_address?: Partial<VakAddress> }): boolean {
   if (!params.vak_address) return true;
   const cpf = (params.vak_address as { cpf?: unknown }).cpf;
   return cpf === CPF_DIALOGICAL;
+}
+
+/**
+ * The CPF checkpoint gate (50.T50.09).
+ *
+ * Reads the CPF polarity as what it is — a REVIEW polarity — and holds an
+ * authored checkpoint until a human has actually answered it.
+ *
+ * Four rules, and the first one is the one that matters most:
+ *
+ *   1. **No checkpoint => nothing happens here.** Dialogical without an authored
+ *      checkpoint is open conversation and stays exactly as permissive as it was.
+ *      The system does not insert a gate because a polarity looked like one.
+ *   2. A reason outside `CHECKPOINT_REASONS` is refused, naming the three.
+ *   3. A checkpoint on a MECHANISTIC dispatch is a contradiction — the record
+ *      says "halt for a human", the polarity says "run autonomously" — so it is
+ *      refused rather than silently resolved in either direction.
+ *   4. An authored checkpoint HALTS until `respondedBy: "human"`. An agent
+ *      answering its own checkpoint is not an answer.
+ *
+ * Refusal is the halt. The caller turns it into "ask the human, then dispatch
+ * again with the answer attached", which is why the message says what is being
+ * waited on and why.
+ */
+export function checkpointGate(input: {
+  vak_address?: Partial<VakAddress>;
+  checkpoint?: CpfCheckpoint;
+}): ValidationResult {
+  const authoring = checkpointAuthoringGate(input);
+  if (!authoring.ok) return authoring;
+
+  const checkpoint = input.checkpoint;
+  if (!checkpoint) return { ok: true };
+
+  if (checkpoint.respondedBy !== "human") {
+    const answered =
+      checkpoint.respondedBy === "agent" ? " (an agent answered; only a human can)" : "";
+    const detail = checkpoint.note ? `: ${checkpoint.note}` : "";
+    return {
+      ok: false,
+      error: `checkpoint (${checkpoint.reason}) halts for human input${answered}${detail}`,
+    };
+  }
+
+  return { ok: true };
+}
+
+/**
+ * The AUTHORING half of the checkpoint law — rules 1-3 of `checkpointGate`,
+ * without rule 4.
+ *
+ * Separated because the two halves are checked at different moments. A script
+ * declares its checkpoints long before any of them could have been answered, so
+ * `defineOrchestration` must be able to reject a badly-authored checkpoint
+ * without rejecting every checkpoint for the crime of not yet having a human
+ * response. Answering is checked at dispatch, where it belongs.
+ */
+export function checkpointAuthoringGate(input: {
+  vak_address?: Partial<VakAddress>;
+  checkpoint?: CpfCheckpoint;
+}): ValidationResult {
+  const checkpoint = input.checkpoint;
+  if (!checkpoint) return { ok: true };
+
+  if (!CHECKPOINT_REASONS.includes(checkpoint.reason)) {
+    return {
+      ok: false,
+      error:
+        `checkpoint reason ${JSON.stringify(checkpoint.reason)} is not authored — ` +
+        `a checkpoint is decided for one of ${CHECKPOINT_REASONS.join(", ")}, ` +
+        `never inserted by policy`,
+    };
+  }
+
+  if (!isDialogical(input)) {
+    const cpf = (input.vak_address as { cpf?: unknown } | undefined)?.cpf;
+    return {
+      ok: false,
+      error:
+        `checkpoint (${checkpoint.reason}) declared on a ${String(cpf)} step: ` +
+        `${CPF_MECHANISTIC} runs autonomously, so a step cannot both halt for a ` +
+        `human and be unattended — author it at ${CPF_DIALOGICAL} or drop it`,
+    };
+  }
+
+  return { ok: true };
 }
 
 /**
@@ -170,6 +326,12 @@ function isDialogical(params: DispatchParams): boolean {
  * with a human-readable message suitable for surfacing to the caller.
  */
 export function validateDispatchParams(params: DispatchParams): ValidationResult {
+  // The checkpoint gate runs BEFORE the dialogical early-return, because an
+  // authored checkpoint is dialogical BY CONSTRUCTION — gating after the return
+  // would put the gate on the one path it can never reach (50.T50.09).
+  const checkpoint = checkpointGate(params);
+  if (!checkpoint.ok) return checkpoint;
+
   if (isDialogical(params)) {
     // Dialogical: no required scaffolding. Whatever partial VAK fields the
     // caller chose to send are tolerated; we don't pry. Open conversation.

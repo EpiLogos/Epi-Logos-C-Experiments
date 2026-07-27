@@ -39,11 +39,13 @@ import {
 // The dependency runs one way: Anima composes and runs, Hen stores and types.
 import {
   loadScore,
+  readScoreRuns,
   recordScoreRun,
   saveScore,
   type ScoreDocument,
   type ScoreRunRecord,
 } from "../../S4-1p-hen/modules/score-store.ts";
+import type { CheckpointReason } from "../modules/dispatch-validate.ts";
 
 export type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 export type CSDirectionality = "day" | "night_prime";
@@ -580,6 +582,95 @@ export async function rerunScore<T>(input: {
   } finally {
     setOrigination(input.sessionId, previous.origination);
   }
+}
+
+// ── learned-from-review checkpoints (50.T50.09) ───────────────────────────
+//
+// The third way a checkpoint comes to exist: a review of a past run concluded
+// that this class of run WANTED one. That conclusion has to survive the run it
+// was made in, or "learned after the fact" is just a phrase. It survives as a
+// run record against the score, which is the same append-only history the ELO
+// work reads (50.T50.12).
+//
+// What this deliberately does NOT do is insert anything. `learnedCheckpointProposals`
+// returns evidence a script author may adopt — and adopting it means authoring a
+// checkpoint with `reason: "learned-from-review"` onto a step by hand. Nothing in
+// `checkpointGate` reads this store. That gap is the no-auto-insertion policy,
+// made structural rather than promised.
+
+/** The detail key a checkpoint review writes under, inside a `ScoreRunRecord`. */
+export const CHECKPOINT_REVIEW_DETAIL_KEY = "checkpoint_review";
+
+/** A past review's verdict on whether a run wanted a human checkpoint. */
+export interface CheckpointReviewOutcome {
+  /** The step the reviewer was looking at, when they named one. */
+  readonly stepId?: string;
+  /** Did this run want a human checkpoint it did not have? */
+  readonly wantedCheckpoint: boolean;
+  readonly note?: string;
+}
+
+/** A checkpoint a later author MAY adopt. Evidence, not an instruction. */
+export interface LearnedCheckpointProposal {
+  readonly stepId?: string;
+  /** Always `learned-from-review` — that is what makes this proposal citable. */
+  readonly reason: CheckpointReason;
+  readonly note?: string;
+  /** When the review that produced it was recorded. */
+  readonly at?: string;
+}
+
+/**
+ * Record a review's verdict about checkpoints against a score's run history.
+ *
+ * Appended through the score store's own run log, so it lands in the same
+ * append-only history everything else judges a score by — a later run can never
+ * overwrite an earlier review's conclusion.
+ */
+export function recordCheckpointReview(input: {
+  scoreId: string;
+  hash: string;
+  at?: string;
+  stepId?: string;
+  wantedCheckpoint: boolean;
+  note?: string;
+}): ScoreRunRecord {
+  const outcome: CheckpointReviewOutcome = {
+    ...(input.stepId === undefined ? {} : { stepId: input.stepId }),
+    wantedCheckpoint: input.wantedCheckpoint,
+    ...(input.note === undefined ? {} : { note: input.note }),
+  };
+  return recordScoreRun({
+    scoreId: input.scoreId,
+    hash: input.hash,
+    at: input.at,
+    outcome: "checkpoint-review",
+    detail: { [CHECKPOINT_REVIEW_DETAIL_KEY]: outcome },
+  });
+}
+
+/**
+ * The checkpoints a score's own review history says it wanted.
+ *
+ * Only the affirmative verdicts come back: a review that concluded a step did
+ * NOT want a checkpoint is still recorded (it is evidence too, and the ELO work
+ * reads the same log) but it is not a proposal, so it is not returned as one.
+ */
+export function learnedCheckpointProposals(scoreId: string): LearnedCheckpointProposal[] {
+  const proposals: LearnedCheckpointProposal[] = [];
+  for (const run of readScoreRuns(scoreId)) {
+    const outcome = run.detail?.[CHECKPOINT_REVIEW_DETAIL_KEY] as
+      | CheckpointReviewOutcome
+      | undefined;
+    if (!outcome || outcome.wantedCheckpoint !== true) continue;
+    proposals.push({
+      ...(outcome.stepId === undefined ? {} : { stepId: outcome.stepId }),
+      reason: "learned-from-review",
+      ...(outcome.note === undefined ? {} : { note: outcome.note }),
+      ...(run.at === undefined ? {} : { at: run.at }),
+    });
+  }
+  return proposals;
 }
 
 export function runEpi(args: string[], timeout = 120_000) {
