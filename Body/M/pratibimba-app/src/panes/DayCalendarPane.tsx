@@ -12,8 +12,17 @@
  *   give — highlighting the day-now anchor and marking the days that have a
  *   folder. Sibling of JournalTimelinePane / NowPane; opens a day's canonical
  *   daily-note via the existing `vault.open` command.
+ *
+ *   25.T25.2 adds the DAYCONTAINER DETAIL beneath the grid: selecting a lived
+ *   day reads that day's real Present tree and lays out its sessions — each
+ *   with the chips its own NOW frontmatter declares (Klein weighting, briefing
+ *   emitted, tranche mode, response orbit) and its artifact rows, each row
+ *   opening through the same `vault.open` the grid uses. The brief extends a
+ *   frozen `M4NaraWidget` over a `daySummary.nowLineage` object; the carrier's
+ *   lineage IS the tree, so it is read from there (m4DayContainer.ts).
  * Does NOT own: the day-now thread (session store, written by App.tsx), the
- *   vault read (Tauri `vault_list`), the markdown editor the open routes into.
+ *   vault read (Tauri `vault_list`), the markdown editor the open routes into,
+ *   or the DayContainer projection law (m4DayContainer.ts).
  */
 
 import { privacyChrome } from '../ui/privacyChrome';
@@ -22,6 +31,13 @@ import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore } from '../state/stores';
 import { VaultEntry } from './FileTreePane';
+import {
+    buildDayContainer,
+    type DayTreeEntry,
+    type M4DayArtifact,
+    type M4DayContainer,
+    type M4DaySession
+} from './m4DayContainer';
 
 const PRESENT = 'Empty/Present';
 const MONTH_NAMES = [
@@ -99,11 +115,156 @@ function initialView(dayNow: string | null): { year: number; month: number } {
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
 }
 
+/** 25.T25.2: bound the per-day frontmatter reads. A day with more artifacts
+ *  than this still lists every row — only the frontmatter chips stop being read,
+ *  and the surface says so rather than quietly showing fewer chips. */
+export const DAY_CONTAINER_FRONTMATTER_READ_CAP = 40;
+
+/**
+ * Read one lived day's real Present tree into a DayContainer: the session dirs,
+ * each session's now.md (the chip source), and the artifact frontmatter up to
+ * the read cap. Exported so the projection can be proven against a fake vault
+ * without mounting the calendar.
+ */
+export async function loadDayContainer(
+    dayId: string,
+    list: (path: string) => Promise<VaultEntry[]>,
+    read: (path: string) => Promise<{ content: string }>,
+    cap: number = DAY_CONTAINER_FRONTMATTER_READ_CAP
+): Promise<{ container: M4DayContainer; capped: boolean }> {
+    const dayPath = `${PRESENT}/${dayId}`;
+    const dayEntries = await list(dayPath);
+    let budget = cap;
+    const readIfBudget = async (path: string): Promise<unknown> => {
+        if (budget <= 0) {
+            return null;
+        }
+        budget -= 1;
+        try {
+            return (await read(path)).content;
+        } catch {
+            // An unreadable artifact is a row without chips, never a missing row.
+            return null;
+        }
+    };
+
+    const sessions = [];
+    for (const entry of dayEntries.filter(e => e.isDir)) {
+        const sessionEntries = (await list(entry.path)) as DayTreeEntry[];
+        const now = sessionEntries.find(child => child.name === 'now.md');
+        const contentByPath: Record<string, unknown> = {};
+        for (const child of sessionEntries.filter(c => !c.isDir && c.name !== 'now.md')) {
+            contentByPath[child.path] = await readIfBudget(child.path);
+        }
+        sessions.push({
+            sessionKey: entry.name,
+            nowPath: now?.path ?? `${entry.path}/now.md`,
+            nowContent: now ? await readIfBudget(now.path) : null,
+            entries: sessionEntries,
+            contentByPath
+        });
+    }
+
+    const dayContentByPath: Record<string, unknown> = {};
+    for (const entry of dayEntries.filter(e => !e.isDir)) {
+        dayContentByPath[entry.path] = await readIfBudget(entry.path);
+    }
+
+    return {
+        container: buildDayContainer(dayId, sessions, dayEntries as DayTreeEntry[], dayContentByPath),
+        capped: budget <= 0
+    };
+}
+
+function ArtifactRow({ artifact }: { readonly artifact: M4DayArtifact }) {
+    return (
+        <li className="day-container-artifact">
+            <button
+                type="button"
+                data-testid={`day-artifact-${artifact.name}`}
+                data-kind={artifact.kind}
+                data-provenance={artifact.provenanceHandle}
+                title={artifact.path}
+                onClick={() => void commands.execute('vault.open', artifact.path)}
+            >
+                <span className="day-container-artifact-kind">{artifact.kind}</span>
+                <span className="day-container-artifact-name">{artifact.name}</span>
+                {artifact.role ? (
+                    <span className="day-container-chip" data-testid={`day-artifact-role-${artifact.name}`}>
+                        {artifact.role}
+                    </span>
+                ) : null}
+                {artifact.kairosContext ? (
+                    <span className="day-container-chip" data-testid={`day-artifact-kairos-${artifact.name}`}>
+                        {artifact.kairosContext}
+                    </span>
+                ) : null}
+            </button>
+        </li>
+    );
+}
+
+function SessionBlock({ session }: { readonly session: M4DaySession }) {
+    const { chips } = session;
+    return (
+        <li className="day-container-session" data-testid={`day-session-${session.sessionKey}`}>
+            <div className="day-container-session-header">
+                <span className="day-container-session-key">{session.sessionKey}</span>
+                {/* Every chip renders ONLY when its own key was declared. */}
+                {chips.kleinWeighting.state === 'resolved' ? (
+                    <span
+                        className="day-container-klein"
+                        data-testid={`day-klein-${session.sessionKey}`}
+                        title={chips.kleinWeighting.label}
+                    >
+                        <span
+                            className="day-container-klein-prospective"
+                            style={{ flexGrow: chips.kleinWeighting.prospective ?? 0 }}
+                        />
+                        <span
+                            className="day-container-klein-retrospective"
+                            style={{ flexGrow: chips.kleinWeighting.retrospective ?? 0 }}
+                        />
+                    </span>
+                ) : null}
+                {chips.briefingEmitted ? (
+                    <span className="day-container-chip" data-testid={`day-briefing-${session.sessionKey}`}>
+                        {chips.briefingEmitted}
+                    </span>
+                ) : null}
+                {chips.trancheMode ? (
+                    <span className="day-container-chip" data-testid={`day-tranche-${session.sessionKey}`}>
+                        {chips.trancheMode}
+                    </span>
+                ) : null}
+                {chips.responseOrbit ? (
+                    <span className="day-container-chip" data-testid={`day-orbit-${session.sessionKey}`}>
+                        {chips.responseOrbit}
+                    </span>
+                ) : null}
+            </div>
+            {session.artifacts.length > 0 ? (
+                <ul className="day-container-artifacts">
+                    {session.artifacts.map(artifact => (
+                        <ArtifactRow key={artifact.path} artifact={artifact} />
+                    ))}
+                </ul>
+            ) : (
+                <p className="pane-message">no artifacts in this session</p>
+            )}
+        </li>
+    );
+}
+
 export function DayCalendarPane() {
     const dayNow = useSessionStore(s => s.dayNow);
     const [folders, setFolders] = useState<ParsedDayId[] | null>(null);
     const [view, setView] = useState(() => initialView(dayNow));
     const [error, setError] = useState<string | null>(null);
+    const [selectedDay, setSelectedDay] = useState<string | null>(null);
+    const [container, setContainer] = useState<M4DayContainer | null>(null);
+    const [containerCapped, setContainerCapped] = useState(false);
+    const [containerError, setContainerError] = useState<string | null>(null);
 
     const load = useCallback(() => {
         invokeCommand<VaultEntry[]>('vault_list', { path: PRESENT })
@@ -143,6 +304,37 @@ export function DayCalendarPane() {
     }, [folders, view.year, view.month]);
 
     const weeks = useMemo(() => monthGrid(view.year, view.month), [view.year, view.month]);
+
+    // 25.T25.2 — the selected day's own container. Selecting is a LOCAL read;
+    // it never writes the day-now thread (25.1's standing law).
+    useEffect(() => {
+        if (!selectedDay) {
+            return;
+        }
+        let disposed = false;
+        setContainerError(null);
+        loadDayContainer(
+            selectedDay,
+            path => invokeCommand<VaultEntry[]>('vault_list', { path }),
+            path => invokeCommand<{ content: string }>('vault_read', { path })
+        )
+            .then(({ container: loaded, capped }) => {
+                if (disposed) {
+                    return;
+                }
+                setContainer(loaded);
+                setContainerCapped(capped);
+            })
+            .catch(err => {
+                if (!disposed) {
+                    setContainer(null);
+                    setContainerError(err instanceof Error ? err.message : String(err));
+                }
+            });
+        return () => {
+            disposed = true;
+        };
+    }, [selectedDay]);
 
     const step = (delta: number) => {
         setView(prev => {
@@ -205,9 +397,14 @@ export function DayCalendarPane() {
                                     data-has-folder="true"
                                     data-day-now={isNow ? 'true' : 'false'}
                                     title={isNow ? `${folderId} · day-now` : folderId}
-                                    onClick={() =>
-                                        void commands.execute('vault.open', `${PRESENT}/${folderId}/daily-note.md`)
-                                    }
+                                    aria-pressed={selectedDay === folderId}
+                                    onClick={() => {
+                                        // 25.T25.2: opening a day both shows its
+                                        // container and opens its daily note —
+                                        // one gesture, the day as a whole.
+                                        setSelectedDay(folderId);
+                                        void commands.execute('vault.open', `${PRESENT}/${folderId}/daily-note.md`);
+                                    }}
                                 >
                                     {d}
                                     <span className="day-calendar-mark" aria-hidden="true">
@@ -223,6 +420,47 @@ export function DayCalendarPane() {
                 <div className="pane-message" data-testid="cal-empty-note">
                     no lived days yet — begin today from the Now surface
                 </div>
+            ) : null}
+            {/* 25.T25.2 — the DayContainer detail: the sessions the day actually
+                held, each with the chips its own NOW declared. Handles and roles
+                only; no body, and per UX §6.5 no quaternion. */}
+            {selectedDay ? (
+                <section
+                    className="day-container"
+                    data-testid="day-container"
+                    data-day={selectedDay}
+                    data-session-count={container?.sessions.length ?? 0}
+                    data-protected-bodies-rendered="false"
+                >
+                    <header className="day-container-header">{`${selectedDay} — sessions`}</header>
+                    {containerError ? (
+                        <p className="pane-message" data-testid="day-container-error">
+                            {containerError}
+                        </p>
+                    ) : container && container.sessions.length > 0 ? (
+                        <ul className="day-container-sessions">
+                            {container.sessions.map(session => (
+                                <SessionBlock key={session.sessionKey} session={session} />
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="pane-message" data-testid="day-container-empty">
+                            no sessions were opened on this day
+                        </p>
+                    )}
+                    {container && container.dayArtifacts.length > 0 ? (
+                        <ul className="day-container-artifacts" data-testid="day-container-day-artifacts">
+                            {container.dayArtifacts.map(artifact => (
+                                <ArtifactRow key={artifact.path} artifact={artifact} />
+                            ))}
+                        </ul>
+                    ) : null}
+                    {containerCapped ? (
+                        <p className="pane-message" data-testid="day-container-capped">
+                            {`frontmatter chips read for the first ${DAY_CONTAINER_FRONTMATTER_READ_CAP} artifacts — the rest are listed without chips`}
+                        </p>
+                    ) : null}
+                </section>
             ) : null}
         </div>
     );

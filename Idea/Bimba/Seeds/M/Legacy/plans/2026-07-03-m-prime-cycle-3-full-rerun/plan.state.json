@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T11:08:44.233Z",
+  "updatedAt": "2026-07-27T11:52:48.128Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12378,16 +12378,32 @@
       "blocker": null
     },
     "25.T25.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T11:52:40.411Z",
+      "claimedAt": "2026-07-27T11:13:31.218Z",
+      "completedAt": "2026-07-27T11:52:40.411Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T11:52:40.411Z",
+          "text": "The DayContainer detail landed on the calendar face: selecting a lived day reads that day's REAL Present tree (Empty/Present/{day}/{session}/now.md + artifacts, DR-M4-1) and lays it out as one block per session. CARRIER TRANSLATION, stated in both headers: the brief extends a frozen M4NaraWidget over naraSurface.daySummary.nowLineage — the carrier has no such summary object, so the lineage is read off the tree that IS the day. CHIP LAW, exactly as the brief states it: each chip renders ONLY when its own key is declared in that session's NOW. c_3_klein_weighting is delegated to the existing Track-05 reader (m4NaraKleinWeighting — one law, never a second parser) and renders as the brief's small horizontal split bar; c_3_briefing_emitted, c_3_tranche_mode and c_3_response_orbit are read here; an undeclared chip is ABSENT, never a default and never a zero (proven both ways: a rich session wears four chips, a bare session wears none). ARTIFACT ROWS carry c_4_artifact_role and the t_4_kairos_context chip read from each artifact's own frontmatter, and the kind is NEVER guessed from a filename — a file called dream-of-the-sea.md that declares nothing is unclassified, because a guess here would be a claim about the artifact's role. Clicking a row opens that artifact through the same vault.open the grid already uses (the carrier's canvas-editor equivalent), and the editor mounts at that exact path. PRIVACY, per UX §6.5 'lean identity sidebar only — no quaternion-dump': the projection carries names, roles and paths only. No body reaches the DOM (asserted in both jsdom and real Chromium against a real file whose body is in the vault), no q_composed_at_now and no resonance vector, and the surface declares data-protected-bodies-rendered=false. The brief's bodySha256 provenance handle came from a frozen artifact-meta RPC the carrier has no equivalent of; rather than hash a body this surface must not read, the artifact's vault path IS its handle and provenanceHandle names which it is. BOUNDED IO: frontmatter reads are capped (DAY_CONTAINER_FRONTMATTER_READ_CAP=40) so a heavy day degrades by dropping CHIPS with a visible note, never by dropping rows — pinned by a test that runs 45 artifacts through the loader and asserts all 45 rows survive with the tail unclassified. GREEN: app vitest 1442 pass / 0 fail (18 new — 11 projection-law, 7 pane-behaviour incl. the body-absence and cap cases), app-typecheck, app-build, lint-import-boundaries, lint-no-modal, carrier-tokens, honesty-lint, and the UF class gate (harness-selftest, gateway, gateway-contract, gateway-methods, live-wire, ta-onta, ta-onta-types, redis-context, spacetime, graphiti-runtime, app-smoke). UF PROOF over a real vault: tests/e2e/day-container-detail.spec.ts seeds a REAL session folder through the same sidecar the app writes with (now.md declaring all four chip keys + a journal.md with a role, a kairos context and a body), anchors the day, opens the Calendar face, clicks the day, and asserts the rendered detail carries that session, those four chips, the artifact row with data-kind=journal and its [[Kairos]] chip, that the body marker is ABSENT from the container, and that clicking the row mounts the editor at that artifact's path. The existing 25.1 day-calendar spec passes unchanged alongside it. UNRELATED RED NAMED per the shared-tree rule: the only failure of 90 app-ui-flow specs is pratibimba-consent.spec.ts:274, the documented order-dependent flake — same failure before this tranche, passes in isolation on this tree.",
+          "receipt": {
+            "command": "npx playwright test day-container-detail day-calendar",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4DayContainer.ts",
+              "Body/M/pratibimba-app/src/panes/DayCalendarPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/day-container-detail.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t25-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T11:13:31.218Z",
+      "runId": "20260727T111331Z-25-T25.2",
       "worktree": null,
       "blocker": null
     },
@@ -20555,30 +20571,68 @@
       "blocker": null
     },
     "50.T50.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T11:18:15.957Z",
+      "claimedAt": "2026-07-27T11:10:39.611Z",
+      "completedAt": "2026-07-27T11:18:15.957Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T11:18:15.957Z",
+          "text": "The CF-to-agent binding stops being three independent restatements. shared/agent_cf.parity.json is now the ONE fixture, read by BOTH the TS test and the Rust test — neither greps the other source, the same discipline vak_address.parity.json established in 50.T50.03. FINDING: the two tables did NOT actually disagree. TS AGENT_CF and Rust cf_to_agent already matched on all seven constitutional bindings; they agreed by luck, with nothing to catch a one-sided edit. The real drift was entirely in the PROSE, and the tests proved it — on first run the 8 code-side assertions passed and both skill assertions failed. BOTH DIVERGENCES DECIDED AGAINST CANON, NOT AGAINST A SKILL (a SKILL.md is not canon). (1) Nous: code's (00/00) wins over the skills' legacy (0000) — the S2 coordinate syntax already lists (0000) in LEGACY_CONTEXT_FRAME_ALIASES, so carrying two spellings of one frame teaches a reader the notation is approximate. Corrected in 4 files (anima-orchestration, vak-coordinate-frame, day-night-pass, and the pleroma duplicate of anima-orchestration — leaving a known-wrong sibling copy would be recording drift rather than closing it). (2) Lachesis host-CF: ratified as (4.0/1-4.4/5) Anima, NOT (4.5/0) Psyche, on S4-ARCHITECTURE.md:178 ('klotho->Eros, lachesis->Anima, atropos->Sophia') plus the originating spec (2026-05-22-vak-as-operational-substrate.md:1480: 'CF (4.0/1-4.4/5) Anima for Lachesis ... per spec'). Code was already right. It was a THREE-way divergence, not two: anima-orchestration said (4.5/0) Psyche (wrong CF and wrong host), while day-night-pass carried the RIGHT CF (4.0/1-4.4/5) but mislabelled it 'Psyche' — a half-correct line that reads as agreement until you check it. Both fixed. The reasoning is recorded in the fixture: Lachesis measures at P4', P4' IS the 4.x lemniscate frame, and (4.5/0) is a different position rather than another name for the same one. A REAL DIVERGENCE FOUND AND PINNED RATHER THAN PAPERED OVER: Rust cf_to_agent returns &'static str and answers an unknown CF with a fabricated 'psyche'; TS agentForCf returns undefined. Narrowing the Rust signature is a public-surface change beyond this tranche, so both behaviours are recorded in the fixture and asserted by both sides, with an extra assertion that psyche is reachable by its own CF and not only through the fallback. Flagged for the owning S4-SPEC rather than changed unilaterally. The tests go beyond table equality: forward/inverse agreement (agentForCf inverts AGENT_CF), no two agents sharing a CF, every Moirai host CF resolving to the constitutional agent the fixture names (so 'inherits its host CF' is a binding rather than a story), each Moirai night position matching planMoiraiNightPass, and the SKILL.md prose machine-checked so a corrected notation cannot drift back silently — a Lachesis line naming any frame must name Anima's, and a superseded spelling anywhere in the four files is a failure, not a variant. NON-VACUOUS by double injection: repointing Rust's (00/00) arm to logos reddened 2 Rust tests; reverting one skill line reddened 2 TS tests; both restored to 5/5 and 10/10. The ta-onta-types gate also earned its keep — strict tsc caught a genuine defect in my own new test (planMoiraiNightPass called without its required session_id), which node --test had stripped and passed. GREEN: TS 10, Rust 5, S4 suite 764 pass 0 fail (was 754), strict tsc 223/223 0 errors. Independent gate PASS (verifier opus-mdev-t50-cf-verify != closer opus-mdev-t50-codemode): ta-onta 764, ta-onta-types, gateway 98, live-wire, harness-selftest 107, honesty-lint. NOTE the W-class scope SKIPS epi-cli, so the 5 Rust parity tests were run directly and are cited in the receipt rather than resting on the shared gate. DOX updated in ta-onta/AGENTS.md and S4-4p-anima/AGENTS.md.",
+          "receipt": {
+            "command": "cargo test --offline --test agent_cf_parity (epi-cli, 5) + node --test tests/agent_cf_parity.test.ts (10) + node .codex/scripts/verify-tranche.mjs 50.T50.11 --owner opus-mdev-t50-cf-verify",
+            "exitCode": 0,
+            "testsPassed": 769,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/shared/agent_cf.parity.json",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/agent_cf_parity.test.ts",
+              "Body/S/S0/epi-cli/tests/agent_cf_parity.rs",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4-prime/skills/anima-orchestration/SKILL.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.11.md",
+              "ta-onta(764)+ta-onta-types+gateway(98)+live-wire+harness-selftest(107)+honesty-lint GREEN"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-codemode",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T11:10:39.611Z",
+      "runId": "20260727T111039Z-50-T50.11",
       "worktree": null,
       "blocker": null
     },
     "50.T50.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T11:52:48.104Z",
+      "claimedAt": "2026-07-27T11:18:56.502Z",
+      "completedAt": "2026-07-27T11:52:48.104Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T11:52:48.104Z",
+          "text": "The ELO engine has a production caller and a durable store. TWO PREMISES IN THE BRIEF WERE FALSE, both corrected rather than worked around. (1) The brief says the EloContextTuple derives mechanically from the trace. It does NOT: only 2 of 6 fields do (vak_cp_position from VakAddress.cp, cfp_thread_type from .cfp). mef_lens has no field on any VAK structure; content_class is a scalar with no projection from the ct ARRAY (the ELO fixture own value implementation is not even in the CT vocabulary); kairos_window has no timestamp to bucket and Chronos mercurius_kairos_snapshot speaks a different vocabulary; r_factor_slot lives Rust-side in portal-core/src/rfactor.rs with no reader on this path. Identity is the same — agent is on the step, model/harness/skill are absent (mercurius_query_ratings already fakes them with the literal config-unresolved, which is that module admitting the gap). So elo-trial-hook.ts DECLARES the gap: it derives the two, requires the other seven, and REFUSES BY NAME when one is missing — the same 2-derived/4-supplied split dispatch-policy.ts:854 already uses. Guessing here is worse than a gap because these are matchup-key fields: a fabricated coordinate makes Moirai call two runs comparable on something neither carried. An empty string is not a declaration either. (2) The brief says persist to the mercurius_elo_ratings / mercurius_trial_log / moirai_comparison_cache tables. Those tables had NEVER existed — zero .ts and zero .rs referenced them, no runner applied the DDL, no SQL client existed anywhere in S4, and MercuriusEloStore was a Map that died with the process, so a second comparable run could only ever be found inside one session. ARCHITECT RULING (2026-07-27): build the SQL layer for real. elo-persistence.ts does, and it READS Body/S/S3/spacetime-context/schemas/elo-runtime.sql and executes it rather than restating the DDL — S3 owns the persistence shape and a hand-copied CREATE TABLE would be a second declaration free to drift. It applies idempotently (a runner that only works on a fresh file is not a migration, and the second process is the whole point). Engine is node:sqlite, built into Node 24 — no new dependency, and SQLite type affinity accepts the schema TIMESTAMPTZ/BIGINT/DOUBLE PRECISION/BOOLEAN names verbatim, so one DDL text serves both it and the SpacetimeDB runtime it is named for. All FOUR declared tables are used (the brief names three; anansi_rating_index is the fourth). Design calls worth naming: a Moirai REFUSAL is persisted alongside the accepted updates, because keeping only what succeeded would make the history read as better-calibrated than it was; the Anansi index is REDERIVED on load rather than read back, so a stale index cannot outlive the rows it points at; ratings upsert on (identity, context, channel) so a re-run updates a row instead of growing the table; and config never enters the persistence module, arriving only as a parameter per the no-hardcoding law. Residency respects Aletheia CONTRACT invariants 1-2 (Aletheia is emergent, never self-routing; agent dispatch routing is Anima): the hook lives in Anima and calls INTO Aletheia, and it calls the module functions directly rather than registering a tool because an aletheia-mode-internal tool would additionally demand an aletheia.mode.active session state a background completion hook has no business asserting. Wired at the rerunScore seam in extension/dispatch.ts — opt-in, because a run that has not been told its declaration cannot honestly become a trial. TWO REAL DEFECTS FOUND AND FIXED DURING THE RUN: a percent-encoded path from new URL(import.meta.url).pathname broke every test (this repo path has spaces) — fixed to import.meta.dirname; and the moirai_comparison_cache FOREIGN KEY correctly refused a comparison whose trials were not yet persisted, which was my test ordering being wrong, not the schema — the ordering IS the schema guarantee and the test now says so. GREEN: 7 persistence + 9 hook tests, S4 suite 780 pass 0 fail (was 764), strict tsc 227/227 0 errors. LIVE PROOF (the Verify line): elo-trial-live.mjs 25/25 with 2 REAL child pi dispatches — a persisted score re-run twice through the production rerunScore seam; the first trial is logged and honestly REFUSED as uncalibrated with no rating invented from one trial; the second is found comparable against the first LOADED BACK OUT OF SQL, Janus rules on the delta, and a rating updates; all four tables are populated in a database that did not exist before the run, with effective_rating stored under the config in force and BOTH comparison decisions kept; a run at other coordinates is not comparable and updates nothing; and an undeclared kairos_window is refused by name and writes NO trial row. Independent gate PASS (verifier opus-mdev-t50-elo-verify != closer opus-mdev-t50-codemode): ta-onta 780, ta-onta-types, gateway 98, live-wire, harness-selftest 107, honesty-lint. DOX updated in S4-5p-aletheia/AGENTS.md (the Elo guardian family was entirely absent from its ownership block), S4-4p-anima/AGENTS.md, and S3 spacetime-context/AGENTS.md (its schema now has its first real consumer).",
+          "receipt": {
+            "command": "node --test Body/S/S4/**/*.test.ts (780) + node Body/S/S4/ta-onta/S4-4p-anima/tests/elo-trial-live.mjs (25/25 live) + node .codex/scripts/verify-tranche.mjs 50.T50.12 --owner opus-mdev-t50-elo-verify",
+            "exitCode": 0,
+            "testsPassed": 780,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-5p-aletheia/modules/elo-persistence.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/elo-trial-hook.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/elo-trial-live.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.12.md",
+              "ta-onta(780)+ta-onta-types+gateway(98)+live-wire+harness-selftest(107)+honesty-lint GREEN"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t50-codemode",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T11:18:56.502Z",
+      "runId": "20260727T111856Z-50-T50.12",
       "worktree": null,
       "blocker": null
     },
@@ -26806,6 +26860,36 @@
       "leaseExpiresAt": "2026-07-27T13:24:53.512Z",
       "worktree": null,
       "completedAt": "2026-07-27T11:03:12.890Z"
+    },
+    {
+      "runId": "20260727T111039Z-50-T50.11",
+      "taskId": "50.T50.11",
+      "status": "done",
+      "startedAt": "2026-07-27T11:10:39.611Z",
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T13:10:39.611Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T11:18:15.957Z"
+    },
+    {
+      "runId": "20260727T111331Z-25-T25.2",
+      "taskId": "25.T25.2",
+      "status": "done",
+      "startedAt": "2026-07-27T11:13:31.218Z",
+      "owner": "opus-mdev-t25-nara",
+      "leaseExpiresAt": "2026-07-27T14:13:31.218Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T11:52:40.411Z"
+    },
+    {
+      "runId": "20260727T111856Z-50-T50.12",
+      "taskId": "50.T50.12",
+      "status": "done",
+      "startedAt": "2026-07-27T11:18:56.502Z",
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T13:18:56.502Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T11:52:48.104Z"
     }
   ],
   "activeRoute": {

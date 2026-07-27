@@ -7409,3 +7409,87 @@ button.tool-stream-timerange.active {
     border-color: var(--ring);
     color: var(--ring);
 }
+
+/* 25.T25.2 — the DayContainer detail beneath the calendar grid: the sessions a
+   day actually held. Handles and roles only — never a body. */
+.day-container {
+    border-top: 1px solid var(--hairline);
+    padding: 6px 8px;
+    overflow-y: auto;
+}
+
+.day-container-header {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+    padding-bottom: 4px;
+}
+
+.day-container-sessions,
+.day-container-artifacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.day-container-session {
+    padding: 4px 0;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.day-container-session-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.day-container-session-key {
+    font-family: var(--font-mono);
+    font-size: var(--type-micro);
+}
+
+.day-container-chip {
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 0 6px;
+    font-size: var(--type-micro);
+    color: var(--ink-dim);
+}
+
+/* The Klein weighting as a split bar: prospective before retrospective, sized
+   by the weights the session's own NOW declared. */
+.day-container-klein {
+    display: inline-flex;
+    width: 48px;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.day-container-klein-prospective {
+    background: var(--ring);
+}
+
+.day-container-klein-retrospective {
+    background: var(--ink-dim);
+}
+
+.day-container-artifact button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 2px 0;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font-size: var(--type-body-small);
+}
+
+.day-container-artifact-kind {
+    color: var(--ink-dim);
+    font-size: var(--type-micro);
+    min-width: 72px;
+}
