@@ -156,7 +156,12 @@ const HIDE_VOLATILE_CSS = fileURLToPath(
 
 async function bootConnected(page: Page): Promise<void> {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    // SUITE-ORDER STATE: first paint competes with the rest of the suite for the
+    // shared gateway/sidecar, so the shell gets the same boot-sized budget this
+    // helper already grants the gateway assertion below. The 10s project-default
+    // expect timeout is a load-sensitive boundary, not a real boot budget, and
+    // the enclosing test budget is 60s — so this costs nothing when boot is fast.
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', {
         timeout: 20_000
     });

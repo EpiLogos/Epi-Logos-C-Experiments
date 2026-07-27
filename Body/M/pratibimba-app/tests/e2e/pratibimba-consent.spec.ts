@@ -284,14 +284,29 @@ test('AUTOMATIC path: accumulated session-close activity auto-produces a drift p
     // once the accumulated activity drifts below the alignment floor. This is the
     // completed auto-trigger: real accumulated activity, not a param.
     let autoHandle: string | undefined;
-    let lastTurnCount = 0;
+    // SUITE-ORDER STATE: the Q_activity accumulator is PERSISTED PER USER, not
+    // per session (see the comment above — that persistence IS the product
+    // design under test). So in suite order an earlier spec's session closes
+    // have already advanced it, and only an isolated run starts at zero. The
+    // invariant this test actually asserts is that each close folds exactly ONE
+    // packet — the accumulator advances by one FROM WHATEVER IT ALREADY HOLDS —
+    // so it is measured against the live baseline instead of an assumed zero.
+    const baselineTurnCount = await (async () => {
+        try {
+            const shown = (await gatewayRpc('nara.activity.show', {})) as { turnCount?: number };
+            return typeof shown?.turnCount === 'number' ? shown.turnCount : 0;
+        } catch {
+            return 0; // no accumulator persisted yet — this user starts at zero
+        }
+    })();
+    let lastTurnCount = baselineTurnCount;
     for (let index = 1; index <= 15 && !autoHandle; index += 1) {
         const closed = await driveDriftingSessionClose(index);
         expect(closed.close_ref, 'session close must persist a bundle').toMatch(/^close-/);
         // The additive response field reports the accumulator advancing turn by
         // turn — the persisted trajectory is real and monotonic.
         expect(closed.activityTrajectory?.turnCount, 'accumulator turnCount must advance').toBe(
-            index
+            baselineTurnCount + index
         );
         expect(closed.activityTrajectory!.turnCount).toBeGreaterThan(lastTurnCount);
         lastTurnCount = closed.activityTrajectory!.turnCount;
