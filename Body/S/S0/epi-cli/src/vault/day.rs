@@ -1,4 +1,8 @@
-// S0 ADAPTER: Body/S/S1 (vault day/NOW law — Hen authority) — day scaffolding adapter; DR-PRANA-1 flat-Present rider pending (this file still nests Present under W/year/month for History).
+// S0 ADAPTER: Body/S/S1 (vault day/NOW law — Hen authority) — day scaffolding
+// adapter. Day-path construction is NOT owned here: it belongs to
+// `vault::paths`, the one authority (DR-PRANA-1, flat Present). This file used
+// to carry a second constructor that nested Present under {YYYY}/{MM}/W{week}/{DD};
+// that copy is gone and `tests/vault_present_day_path_authority.rs` keeps it gone.
 use crate::vault::templates::{render_template, TemplateRenderContext};
 use chrono::{DateTime, Datelike, NaiveDate, TimeZone, Utc};
 use serde::{Deserialize, Serialize};
@@ -18,29 +22,21 @@ pub struct DayEnsureReceipt {
     pub created_daily_note: bool,
 }
 
-pub fn day_folder_for_date(vault_root: &Path, day: NaiveDate) -> PathBuf {
-    vault_root
-        .join("Empty")
-        .join("Present")
-        .join(day.format("%Y").to_string())
-        .join(day.format("%m").to_string())
-        .join(format!("W{:02}", day.iso_week().week()))
-        .join(day.format("%d").to_string())
-}
+/// Re-exported from the one authority so existing callers keep working while
+/// there remains exactly ONE definition of a Present day path.
+pub use crate::vault::paths::day_folder_for_date;
 
 pub fn day_folder_for_now(vault_root: &Path, now: DateTime<Utc>) -> PathBuf {
-    day_folder_for_date(vault_root, now.date_naive())
+    crate::vault::paths::day_folder(vault_root, now)
 }
 
 pub fn day_note_path_for_date(vault_root: &Path, day: NaiveDate) -> PathBuf {
     day_folder_for_date(vault_root, day).join("daily-note.md")
 }
 
-pub fn parse_day_id(day_id: &str) -> Result<NaiveDate, String> {
-    NaiveDate::parse_from_str(day_id, "%d-%m-%Y")
-        .or_else(|_| NaiveDate::parse_from_str(day_id, "%Y-%m-%d"))
-        .map_err(|err| format!("invalid dayId {day_id:?}: {err}"))
-}
+/// Re-exported from the one authority: month-first is canonical (CHARTER),
+/// with ISO and legacy day-first accepted so existing folders still resolve.
+pub use crate::vault::paths::parse_day_id;
 
 pub fn ensure_day_folder(
     vault_root: &Path,
@@ -83,7 +79,7 @@ pub fn ensure_day_folder_for_now(
 
     Ok(DayEnsureReceipt {
         rpc: VAULT_DAY_ENSURE_RPC,
-        day_id: now.format("%d-%m-%Y").to_string(),
+        day_id: crate::vault::paths::format_day_id(now),
         day_path,
         daily_note_path,
         created_day_folder,
@@ -115,7 +111,10 @@ mod tests {
 
         let receipt = ensure_day_folder(&vault, &repo, &home, "2026-03-10").unwrap();
         assert_eq!(receipt.rpc, VAULT_DAY_ENSURE_RPC);
-        assert_eq!(receipt.day_path, vault.join("Empty/Present/2026/03/W11/10"));
+        // Present is FLAT and month-first. This assertion previously read
+        // `Empty/Present/2026/03/W11/10` and so PINNED the nesting bug: the
+        // archive shape under the Present root. Only History nests.
+        assert_eq!(receipt.day_path, vault.join("Empty/Present/03-10-2026"));
         assert!(receipt.created_day_folder);
         assert!(receipt.created_daily_note);
         assert!(receipt.daily_note_path.exists());
@@ -126,7 +125,9 @@ mod tests {
             "ensure must write a real daily-note template, got:\n{body}"
         );
 
-        let second = ensure_day_folder(&vault, &repo, &home, "10-03-2026").unwrap();
+        // the canonical month-first spelling of the same day resolves to the
+        // same folder (day-first "10-03-2026" now means 3 October, correctly)
+        let second = ensure_day_folder(&vault, &repo, &home, "03-10-2026").unwrap();
         assert!(!second.created_day_folder);
         assert!(!second.created_daily_note);
         assert_eq!(second.day_path, receipt.day_path);

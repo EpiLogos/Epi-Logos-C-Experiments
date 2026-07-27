@@ -471,11 +471,21 @@ struct CivilDay {
     day: u32,
 }
 
+/// Parse a canonical day id. MONTH-FIRST `MM-DD-YYYY` per CHARTER:28
+/// (Architect-ratified 2026-07-02) — the same order epi-cli's
+/// `vault::paths::DAY_ID_FORMAT` and the pratibimba-app carrier use.
+///
+/// This read day-first, so a month-first id put 27 into `month` and
+/// `day_of_year` indexed a 12-element table with it — a panic, not an error.
+/// Out-of-range fields are now rejected here, so no caller can index on them.
 fn chrono_like_day(day_id: &str) -> Option<CivilDay> {
     let mut parts = day_id.split('-');
-    let day = parts.next()?.parse().ok()?;
-    let month = parts.next()?.parse().ok()?;
-    let year = parts.next()?.parse().ok()?;
+    let month: u32 = parts.next()?.parse().ok()?;
+    let day: u32 = parts.next()?.parse().ok()?;
+    let year: i32 = parts.next()?.parse().ok()?;
+    if !(1..=12).contains(&month) || !(1..=31).contains(&day) {
+        return None;
+    }
     Some(CivilDay { year, month, day })
 }
 
@@ -495,4 +505,43 @@ fn day_of_year(year: i32, month: u32, day: u32) -> u32 {
 
 fn is_leap_year(year: i32) -> bool {
     (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
+}
+
+#[cfg(test)]
+mod day_id_tests {
+    use super::*;
+
+    /// The day id is MONTH-FIRST (CHARTER:28, Architect-ratified 2026-07-02),
+    /// the same order epi-cli's `vault::paths::DAY_ID_FORMAT` and the
+    /// pratibimba-app carrier use. This parser read day-first, so it put 27 into
+    /// `month` and `day_of_year` indexed a 12-element table with it.
+    #[test]
+    fn parses_month_first() {
+        let day = chrono_like_day("07-27-2026").expect("a canonical day id parses");
+        assert_eq!((day.year, day.month, day.day), (2026, 7, 27));
+    }
+
+    /// Out-of-range fields must be rejected, not indexed on. `07-27-2026` read
+    /// day-first panicked with "range end index 26 out of range for slice of
+    /// length 12" — a malformed day id is an error, never a crash.
+    #[test]
+    fn rejects_out_of_range_fields_instead_of_panicking() {
+        assert!(chrono_like_day("27-07-2026").is_none(), "month 27 is not a month");
+        assert!(chrono_like_day("13-40-2026").is_none());
+        assert!(chrono_like_day("00-01-2026").is_none());
+        assert!(chrono_like_day("nonsense").is_none());
+        assert!(chrono_like_day("07-27").is_none());
+    }
+
+    /// Every accepted day id must be safe to place in the archive.
+    #[test]
+    fn accepted_day_ids_place_in_the_archive_without_panicking() {
+        for month in 1..=12u32 {
+            for day in 1..=28u32 {
+                let id = format!("{month:02}-{day:02}-2026");
+                let civil = chrono_like_day(&id).expect("valid id");
+                let _ = iso_week_number(civil.year, civil.month, civil.day);
+            }
+        }
+    }
 }

@@ -106,7 +106,7 @@ fn load_template_override(
 }
 
 fn substitute_template_vars(mut body: String, context: &TemplateRenderContext) -> String {
-    let day_id = context.now.format("%d-%m-%Y").to_string();
+    let day_id = crate::vault::paths::format_day_id(context.now);
     let created_at = context.now.to_rfc3339();
     let session_id = context.session_id.as_deref().unwrap_or("");
 
@@ -165,7 +165,7 @@ fn render_builtin_template(
     }
 
     if normalized == "flow" {
-        let day_id = context.now.format("%d-%m-%Y").to_string();
+        let day_id = crate::vault::paths::format_day_id(context.now);
         let created_at = context.now.to_rfc3339();
         return format!(
             "---\ncoordinate: \"\"\nc_4_artifact_role: \"flow\"\nc_1_ctx_type: \"CT0\"\nc_3_ctx_frame: \"00/00\"\nc_4_invocation_profile: \"daily_flow\"\nc_4_invocation_kind: \"cron\"\nm_4_nara_domain: \"journal\"\nc_3_day_id: \"{day_id}\"\nc_0_source_coordinates: []\nc_3_created_at: \"{created_at}\"\n---\n\n# Flow — {day_id}\n\n*Free-flow writing space. No structure required.*\n"
@@ -173,7 +173,7 @@ fn render_builtin_template(
     }
 
     let artifact_role = normalized.as_str();
-    let day_id = context.now.format("%d-%m-%Y").to_string();
+    let day_id = crate::vault::paths::format_day_id(context.now);
     let timestamp = context.now.to_rfc3339();
     let family = context
         .coordinate

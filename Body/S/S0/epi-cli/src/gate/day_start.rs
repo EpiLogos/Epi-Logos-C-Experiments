@@ -65,7 +65,7 @@ fn existing_now(day_path: &Path) -> Result<Option<PathBuf>, String> {
 }
 
 fn session_id_for(day_id: &str) -> Result<String, String> {
-    let day = NaiveDate::parse_from_str(day_id, "%d-%m-%Y")
+    let day = crate::vault::paths::parse_day_id(day_id)
         .map_err(|err| format!("invalid canonical day id {day_id:?}: {err}"))?;
     let instant = Utc
         .with_ymd_and_hms(

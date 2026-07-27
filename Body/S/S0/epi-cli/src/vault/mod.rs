@@ -825,7 +825,7 @@ fn flow_init(now_override: Option<&str>) -> Result<String, String> {
 /// replace the `fs::rename(&source, &target)` call with a recursive Hen
 /// dispatch so per-file wikilink integrity is preserved across the archive.
 fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
-    let day = NaiveDate::parse_from_str(date, "%d-%m-%Y")
+    let day = crate::vault::paths::parse_day_id(date)
         .map_err(|err| format!("invalid archive date {date:?}: {err}"))?;
     let vr = vault_root();
     let source = day_folder_for_date(&vr, day);

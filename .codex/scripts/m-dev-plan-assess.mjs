@@ -1335,10 +1335,15 @@ export function claimGuardViolations({ dirtyFiles, allowDirty = false, env = pro
   return violations;
 }
 
+/** The canonical day id: MONTH-FIRST `MM-DD-YYYY` (CHARTER:28, Architect-ratified
+ *  2026-07-02). Must stay in lockstep with epi-cli's `vault::paths::DAY_ID_FORMAT`
+ *  and the pratibimba-app carrier — this spelled it day-first, so the freshness
+ *  check compared a month-first NOW against a day-first "today" and declared a
+ *  same-day NOW stale. */
 export function presentDayId(date = new Date()) {
   const dd = String(date.getDate()).padStart(2, "0");
   const mm = String(date.getMonth() + 1).padStart(2, "0");
-  return `${dd}-${mm}-${date.getFullYear()}`;
+  return `${mm}-${dd}-${date.getFullYear()}`;
 }
 
 export function nowIsStale(dayId, date = new Date()) {
