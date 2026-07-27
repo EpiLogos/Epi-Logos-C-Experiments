@@ -28,7 +28,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 
 | Surface id | Mount | Partition | Status | Renderer / owner | Carries (frozen lineage) |
 | --- | --- | --- | --- | --- | --- |
-| `bimbaGraph` | face 0 `cosmic-main` tab "Bimba" | M0' chrome | live | `GraphExplorerPane` + `M0LayerRail` (01.T1.1 / 09.T9.1) | `bimba-graph-viewer` |
+| `bimbaGraph` | face 0 `cosmic-main` tab "Bimba" | M0' chrome | live | `GraphExplorerPane` + `M0LayerRail` (01.T1.1 / 09.T9.1) + `bimbaGraph/GraphCanvas` — solar-anchor in `daily-0-1`, full-lattice in `ide-deep` (28.T28.3 a/b) | `bimba-graph-viewer` |
 | `walk` | face 0 `cosmic-main` tab "Walk" | M0' chrome | live | `WalkPane` (M1' walk-as-melody) | — |
 | `spandaNavigator` | face 0 `cosmic-main` tab "Spanda" | M0' chrome | live | `SpandaNavigatorPane` (22.T22.1) | — |
 | `cosmic` | face 0 `cosmic-main` tab "Cosmic Engine" | M0' chrome | live | `CosmicEngine` (modulation-graph host) | — |

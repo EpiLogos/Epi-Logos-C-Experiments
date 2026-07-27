@@ -13,17 +13,42 @@
  *   verifier-response console (21.T21.11). The M0-0' Language layer carries
  *   reader/browser sub-tabs; the browser pages the live S2 residual set
  *   (21.T21.14).
- * Public surface: GraphExplorerPane, GraphExplorerPaneProps.
+ *
+ *   28.T28.3 folds three more laws in. (a) The RENDERING MODE follows the
+ *   active layout — the daily 0/1 shell previews the anchored coordinate as a
+ *   solar anchor, the deep layout renders the full lattice (renderingMode.ts).
+ *   (b) Both renderings live in ONE sub-component (bimbaGraph/GraphCanvas.tsx);
+ *   this pane owns the read, the state and the status line, never the drawing.
+ *   (e) The gateway receipt crosses the CHROME-CONTRACT §7 privacy gate before
+ *   anything is rendered: a refused class renders a refusal instead of the map
+ *   and is counted in the federated PrivacyDropFeed (28.16), so a drop is
+ *   visible rather than silently swallowed.
+ * Public surface: GraphExplorerPane, GraphExplorerPaneProps,
+ *   BIMBA_GRAPH_SURFACE_ID, RELATION_FAMILY_FILTERS, RelationFamilyFilterValue,
+ *   edgePassesRelationFamily (the last three re-exported from
+ *   bimbaGraph/relationFamilyFilter.ts, their authority since 28.3b).
  * Does NOT own: S2 graph law, world-clock computation, canon mutation, or
- *   protected Graphiti episode bodies.
- * Contract: [[M0'-SPEC]] + [[09-integrated-bimba-graph-reconciliation]].
+ *   protected Graphiti episode bodies; the drawing (bimbaGraph/GraphCanvas.tsx),
+ *   the mode law (bimbaGraph/renderingMode.ts), the privacy vocabulary
+ *   (ui/privacyGate.ts), or the drop sink (services/privacyDropFeed.ts).
+ * Contract: [[M0'-SPEC]] + [[09-integrated-bimba-graph-reconciliation]] +
+ *   rerun tranche [[28.T28.3]].
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ForceGraph from 'force-graph';
+import { useCallback, useEffect, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useCoordinateStore, useProvenanceStore } from '../state/stores';
-import { coerceLinks, coerceNodes, etymologicalClusterIds, ExplorerLink, ExplorerNode, FAMILY_HUES } from './graphData';
+import { coerceLinks, coerceNodes, etymologicalClusterIds, ExplorerLink, ExplorerNode } from './graphData';
+import { GraphCanvas } from './bimbaGraph/GraphCanvas';
+import { renderingModeForLayout } from './bimbaGraph/renderingMode';
+import {
+    RELATION_FAMILY_FILTERS,
+    edgePassesRelationFamily,
+    type RelationFamilyFilterValue
+} from './bimbaGraph/relationFamilyFilter';
+import type { OmniPanelLayoutId } from './omni/omnipanelRuntime';
+import { isPrivacySafe, privacyRefusalReason } from '../ui/privacyGate';
+import { privacyDropFeed as sharedPrivacyDropFeed, type PrivacyDropFeed } from '../services/privacyDropFeed';
 import { M0LayerRail } from './M0LayerRail';
 import { M0InspectorLayer } from './m0Layers';
 import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
@@ -38,23 +63,19 @@ import { M0ContemplationPromptFooter } from './M0ContemplationPromptFooter';
 import { M0SymbolicQuestionConsole } from './M0SymbolicQuestionConsole';
 import { useM0Surface } from './M0SurfaceContext';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
-import { ATELIER_CLUSTER_HUES, inkDim, ringLit } from '../ui/tokens';
 
 const NODES_CYPHER =
     'MATCH (n:Bimba) RETURN n.coordinate AS coordinate, n.label AS label LIMIT 900';
-/** 28.T28.3 (c) / DR-IG-1: the three options the brief names. */
-export const RELATION_FAMILY_FILTERS = ['all', 'structural', 'correspondential'] as const;
-export type RelationFamilyFilterValue = (typeof RELATION_FAMILY_FILTERS)[number];
 
-/** Does this edge survive the active filter? `all` keeps everything, including
- *  `unclassified` — a filter must narrow to a family, never quietly drop the
- *  edges the graph left unclassified. */
-export function edgePassesRelationFamily(
-    link: Pick<ExplorerLink, 'family'>,
-    filter: RelationFamilyFilterValue
-): boolean {
-    return filter === 'all' || link.family === filter;
-}
+/** The surface id the CHROME-CONTRACT §2 row carries as this pane's frozen
+ *  lineage — and therefore the key its privacy drops are counted under. */
+export const BIMBA_GRAPH_SURFACE_ID = 'bimba-graph-viewer';
+
+// 28.T28.3(b): the filter vocabulary moved to bimbaGraph/relationFamilyFilter.ts
+// so the canvas and the pane obey one law; re-exported here because it is this
+// pane's published surface and its consumers (and tests) address it here.
+export { RELATION_FAMILY_FILTERS, edgePassesRelationFamily };
+export type { RelationFamilyFilterValue };
 
 const LINKS_CYPHER =
         'MATCH (a:Bimba)-[r]->(b:Bimba) RETURN a.coordinate AS source, type(r) AS type, ' +
@@ -65,6 +86,11 @@ const LINKS_CYPHER =
 export interface GraphExplorerPaneProps {
     requestedM0Contribution?: string | null;
     requestedAtelierTerm?: string | null;
+    /** 28.T28.3(a): the shell's active layout decides the rendering mode. The
+     *  shell owns the value (App.tsx `activeLayout`); the pane only reads it. */
+    activeLayout?: OmniPanelLayoutId;
+    /** Injected in tests; production uses the shared federated sink (28.16). */
+    privacyDropFeed?: PrivacyDropFeed;
 }
 
 const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.freeze({
@@ -76,13 +102,23 @@ const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.free
 
 export function GraphExplorerPane({
     requestedM0Contribution = null,
-    requestedAtelierTerm = null
+    requestedAtelierTerm = null,
+    activeLayout = 'daily-0-1',
+    privacyDropFeed = sharedPrivacyDropFeed
 }: GraphExplorerPaneProps = {}) {
-    const hostRef = useRef<HTMLDivElement | null>(null);
-    const graphRef = useRef<ForceGraph | null>(null);
     const connected = useProvenanceStore(s => s.connection.connected);
-    const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error'>('loading');
+    const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error' | 'privacy-refused'>(
+        'loading'
+    );
     const [detail, setDetail] = useState('');
+    const [subgraph, setSubgraph] = useState<{ nodes: ExplorerNode[]; links: ExplorerLink[] }>({
+        nodes: [],
+        links: []
+    });
+    const [atelierClusters, setAtelierClusters] = useState<ReadonlyMap<string, number>>(new Map());
+    const [privacyDropped, setPrivacyDropped] = useState(
+        () => privacyDropFeed.aggregate.byWidget[BIMBA_GRAPH_SURFACE_ID] ?? 0
+    );
     const [atelierClusterCount, setAtelierClusterCount] = useState<number | null>(null);
     // 28.T28.3 (c) / DR-IG-1: the three-option edge partition. `all` shows every
     // edge INCLUDING unclassified ones — filtering to a family must never
@@ -90,6 +126,10 @@ export function GraphExplorerPane({
     const [relationFamilyFilter, setRelationFamilyFilter] = useState<RelationFamilyFilterValue>('all');
     const [selectedSymbolicQuestion, setSelectedSymbolicQuestion] = useState<string | null>(null);
     const [languageSubtab, setLanguageSubtab] = useState<'reader' | 'browser'>('reader');
+    /** The last edge the reader pointed at — the canvas' `onEdgeHover` lands
+     *  here and is READ below, so the relation and its family are legible
+     *  without inspecting the drawing. */
+    const [hoveredEdge, setHoveredEdge] = useState<ExplorerLink | null>(null);
     const selectedCoordinate = useCoordinateStore(state => state.selected);
     const { state: m0Surface, update: updateM0Surface } = useM0Surface();
     const handleLayerChange = useCallback(
@@ -98,11 +138,10 @@ export function GraphExplorerPane({
     );
 
     useEffect(() => {
-        if (!connected || !hostRef.current) {
+        if (!connected) {
             return;
         }
         let disposed = false;
-        const host = hostRef.current;
 
         Promise.all([
             gateway().invoke('s2.graph.query', { cypher: NODES_CYPHER, params: {} }),
@@ -112,12 +151,30 @@ export function GraphExplorerPane({
                 if (disposed) {
                     return;
                 }
+                // 28.T28.3(e) / CHROME-CONTRACT §7: the privacy gate runs BEFORE
+                // the payload reaches any render tree. A refused receipt is
+                // counted in the federated feed and never drawn.
+                const refused = [nodesReceipt, linksReceipt].find(
+                    receipt => !isPrivacySafe(receipt.privacyClass)
+                );
+                if (refused) {
+                    privacyDropFeed.record(BIMBA_GRAPH_SURFACE_ID, refused.privacyClass);
+                    setPrivacyDropped(privacyDropFeed.aggregate.byWidget[BIMBA_GRAPH_SURFACE_ID] ?? 0);
+                    setSubgraph({ nodes: [], links: [] });
+                    setAtelierClusters(new Map());
+                    setAtelierClusterCount(null);
+                    setStatus('privacy-refused');
+                    setDetail(privacyRefusalReason(refused.privacyClass, 'M0′ chrome'));
+                    return;
+                }
                 const nodes = coerceNodes(nodesReceipt.artifact);
                 const ids = new Set(nodes.map(n => n.id));
                 const allLinks = coerceLinks(linksReceipt.artifact, ids);
                 const links = allLinks.filter(link => edgePassesRelationFamily(link, relationFamilyFilter));
-                const atelierClusters = etymologicalClusterIds(allLinks);
-                setAtelierClusterCount(new Set(atelierClusters.values()).size);
+                const clusters = etymologicalClusterIds(allLinks);
+                setAtelierClusters(clusters);
+                setAtelierClusterCount(new Set(clusters.values()).size);
+                setSubgraph({ nodes, links: allLinks });
                 if (nodes.length === 0) {
                     setStatus('empty');
                     setDetail('the canonical graph returned no :Bimba nodes');
@@ -129,44 +186,6 @@ export function GraphExplorerPane({
                         ? `${nodes.length} nodes · ${links.length} relations`
                         : `${nodes.length} nodes · ${links.length} of ${allLinks.length} relations (${relationFamilyFilter})`
                 );
-                const graph = new ForceGraph(host)
-                    .graphData({ nodes, links })
-                    .nodeId('id')
-                    .nodeLabel((node: unknown) => {
-                        const n = node as ExplorerNode;
-                        return n.label ? `${n.id} — ${n.label}` : n.id;
-                    })
-                    .nodeColor((node: unknown) => {
-                        const n = node as ExplorerNode;
-                        const selected = useCoordinateStore.getState().selected;
-                        const cluster = atelierClusters.get(n.id);
-                        return n.id === selected
-                            ? ringLit
-                            : cluster === undefined
-                                ? (FAMILY_HUES[n.family] ?? inkDim)
-                                : ATELIER_CLUSTER_HUES[cluster % ATELIER_CLUSTER_HUES.length];
-                    })
-                    .nodeRelSize(4)
-                    .linkColor((link: unknown) => /etymolog|cognate/i.test((link as { type?: string }).type ?? '') ? 'rgba(199, 132, 255, 0.75)' : 'rgba(154, 143, 184, 0.25)')
-                    // DR-IG-1: structural reads solid, correspondential dashed —
-                    // the family is legible without opening the filter.
-                    .linkLineDash((link: unknown) =>
-                        (link as ExplorerLink).family === 'correspondential' ? [4, 3] : null
-                    )
-                    .backgroundColor('rgba(0,0,0,0)')
-                    .onNodeClick((node: unknown) => {
-                        useCoordinateStore.getState().setSelected((node as ExplorerNode).id);
-                        graph.nodeColor(graph.nodeColor());
-                    });
-                if (requestedAtelierTerm) {
-                    const needle = requestedAtelierTerm.trim().toLocaleLowerCase();
-                    graph.nodeVisibility((node: unknown) => {
-                        const candidate = node as ExplorerNode;
-                        return candidate.id.toLocaleLowerCase().includes(needle)
-                            || (candidate.label ?? '').toLocaleLowerCase().includes(needle);
-                    });
-                }
-                graphRef.current = graph;
             })
             .catch(err => {
                 if (!disposed) {
@@ -177,10 +196,17 @@ export function GraphExplorerPane({
 
         return () => {
             disposed = true;
-            graphRef.current?._destructor?.();
-            graphRef.current = null;
         };
-    }, [connected, requestedAtelierTerm, relationFamilyFilter]);
+    }, [connected, relationFamilyFilter, privacyDropFeed]);
+
+    // 28.T28.3(d): a node click publishes the coordinate to the ONE shared
+    // store — the same publication the Coordinate Tree (28.6), breadcrumb,
+    // status strip and every M0' panel subscribe to.
+    const handleNodeClick = useCallback((coordinate: string) => {
+        useCoordinateStore.getState().setSelected(coordinate);
+    }, []);
+    const handleEdgeHover = useCallback((edge: ExplorerLink) => setHoveredEdge(edge), []);
+    const renderingMode = renderingModeForLayout(activeLayout);
 
     if (!connected) {
         return <div className="pane-message">Gateway disconnected — the map needs S2.</div>;
@@ -193,6 +219,9 @@ export function GraphExplorerPane({
             data-atelier-clusters={atelierClusterCount ?? undefined}
             data-atelier-term={requestedAtelierTerm ?? undefined}
             data-relation-family-filter={relationFamilyFilter}
+            data-rendering-mode={renderingMode}
+            data-active-layout={activeLayout}
+            data-privacy-dropped={privacyDropped}
         >
             <div className="graph-relation-family-filter" data-testid="relation-family-filter">
                 <span className="graph-filter-label">Relations</span>
@@ -283,9 +312,20 @@ export function GraphExplorerPane({
                 {status === 'ready' && atelierClusterCount !== null
                     ? ` · ${atelierClusterCount} etymology clusters`
                     : null}
+                {/* 28.T28.3(e): the drop count is chrome, not a log line — a
+                    refusal the reader cannot see is a refusal they cannot audit. */}
+                {privacyDropped > 0 ? (
+                    <span data-testid="graph-privacy-dropped">
+                        {` · ${privacyDropped} privacy-dropped`}
+                    </span>
+                ) : null}
             </div>
             {status === 'error' ? (
                 <div className="chat-error" data-testid="graph-error">
+                    {detail}
+                </div>
+            ) : status === 'privacy-refused' ? (
+                <div className="chat-error" data-testid="graph-privacy-refused">
                     {detail}
                 </div>
             ) : (
@@ -297,7 +337,24 @@ export function GraphExplorerPane({
                     {detail}
                 </div>
             )}
-            <div ref={hostRef} className="graph-host" />
+            {hoveredEdge ? (
+                <div className="graph-explorer-detail" data-testid="graph-hovered-edge">
+                    {`${hoveredEdge.type} (${hoveredEdge.family})`}
+                </div>
+            ) : null}
+            {status === 'privacy-refused' ? null : (
+                // 28.T28.3(a)+(b): one canvas, the mode chosen by the layout.
+                <GraphCanvas
+                    subgraph={subgraph}
+                    renderingMode={renderingMode}
+                    activeCoordinate={selectedCoordinate}
+                    relationFamilyFilter={relationFamilyFilter}
+                    onNodeClick={handleNodeClick}
+                    onEdgeHover={handleEdgeHover}
+                    atelierClusters={atelierClusters}
+                    highlightTerm={requestedAtelierTerm}
+                />
+            )}
             <M0ContemplationPromptFooter />
         </div>
     );

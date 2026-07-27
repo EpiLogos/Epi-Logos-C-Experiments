@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T10:03:21.209Z",
+  "updatedAt": "2026-07-27T10:23:22.357Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13860,10 +13860,10 @@
       "blocker": null
     },
     "28.T28.3": {
-      "status": "review",
-      "updatedAt": "2026-07-25T14:36:13.340Z",
+      "status": "done",
+      "updatedAt": "2026-07-27T10:23:22.335Z",
       "claimedAt": "2026-07-25T12:42:52.041Z",
-      "completedAt": null,
+      "completedAt": "2026-07-27T10:23:22.335Z",
       "evidence": [
         {
           "at": "2026-07-25T12:52:36.831Z",
@@ -13872,11 +13872,29 @@
         {
           "at": "2026-07-25T14:36:13.340Z",
           "text": "CORRECTION to my previous 28.T28.3 entry — the claim that 'S2 returns 900 nodes and zero Bimba->Bimba edges' was WRONG, and the real cause is a live S2 API defect that entry misattributed to missing data. I had inferred a property of the graph from a UI-rendered count inside the e2e harness; that is not evidence about the graph. Queried directly against Neo4j: the Bimba graph holds 2098 nodes and 11295 Bimba->Bimba edges across 1411 relationship types, and replaying THIS PANE'S OWN two queries over it (nodes LIMIT 900, links LIMIT 2500, keep edges whose endpoints are both in the node set) yields 1732 renderable edges. The '900 nodes' I reported was simply the pane's own LIMIT 900, not a graph size. ROOT CAUSE, verified by probing the live gateway: s2.graph.query DISCARDS the caller's RETURN projection. GraphApi::query (Body/S/S2/graph-services/src/graph_api.rs:585) runs the supplied Cypher and then maps every row through known_row_json (:987), which reads a FIXED node column set — coordinate/uuid/name/family/layer/ql_position/depth — and drops every other column via unwrap_or_default(). Probe result: the links query returns rowCount 2500 and every row is a node-shaped stub carrying coordinate:'' with no source/target/type field at all. So coerceLinks correctly finds nothing to build, and c_1_relation_family is discarded on the same path. CONSEQUENCES, both real and neither this tranche's doing: (1) the Bimba Graph Viewer has NEVER rendered a single edge — a live, user-visible dead surface on M0', not an environment artifact; (2) the relation-family filter landed here is correctly wired but structurally STARVED until that projection is fixed, which is why its e2e proves wiring only and now states this cause verbatim rather than implying a data gap. THE TRANCHE'S OWN WORK IS UNCHANGED AND STILL CORRECT: the Cypher now selects c_1_relation_family, ExplorerLink carries family + familyProvenance, coerceLinks classifies through the shared classifyRelationFamily() so graph and relations-reader obey one never-infer law, the three-option filter narrows rendered edges, correspondential renders dashed per DR-IG-1, and a narrowed graph reports 'N of M'. GREEN: full app vitest 1363 pass / 0 fail; 6 new unit tests; lint-no-modal, lint-import-boundaries, carrier-tokens, honesty-lint GREEN; UF e2e passes against the real spawned gateway. STILL REVIEW: only deliverable (c) of five is landed — (a) RenderingMode solar-anchor/full-lattice, (b) the extracted GraphCanvas, (d) the 28.6 subscriber re-audit, (e) bridge-gate readiness + privacyDropped remain open — AND the filter cannot be end-to-end proven until s2.graph.query returns the caller's actual columns. RECOMMENDED FIX for that, additive and low-risk: give query() its own generic row projector that emits the row's REAL columns (neo4rs Row::keys() is available in 0.9.0-rc.9) as a SUPERSET of the current known fields, leaving known_row_json untouched for its five other call sites (node/list/traverse/…) so no existing consumer changes shape. Needs an Architect call because s2.graph.query is shared substrate with 5 carrier consumers (basesDataSource, coordinateRender, graphData/GraphExplorerPane, S2GraphReachability, KernelBridgeReadinessSummary)."
+        },
+        {
+          "at": "2026-07-27T10:23:22.335Z",
+          "text": "All five 28.3 deliverables are now landed; the four that were open are closed here, and a live substrate regression they exposed is fixed. (a) RENDERING MODE follows the shell layout — renderingMode.ts is the law (deep => full-lattice, every other/unset layout => solar-anchor, mirroring the frozen widget verbatim); App.tsx passes the shell's real activeLayout into the pane. (b) BOTH renderings now live in ONE sub-component, src/panes/bimbaGraph/GraphCanvas.tsx, with the brief's prop shape (subgraph/renderingMode/activeCoordinate/relationFamilyFilter/onNodeClick/onEdgeHover) carrier-translated: the payload is the carrier's {nodes,links} lattice because the carrier reads the lattice ONCE and projects both modes from it instead of issuing a second per-coordinate read. Solar anchor = real SVG sun-and-planets (anchor at centre, immediate neighbours capped at 6 with the honest 'N of M' total, family hues, correspondential dashed / structural solid per DR-IG-1, every node a real button on click AND Enter/Space). Full lattice = the force-graph, now handed COPIES because force-graph mutates link endpoints in place and was rewriting the pane's own link set. Three DISTINCT empty states (nothing anchored / anchor outside the LIMIT-900 window / no relations under the active filter) — collapsing them would hide a window limit behind an apparent fact about the graph. (c) The filter vocabulary moved to bimbaGraph/relationFamilyFilter.ts so canvas and pane obey ONE predicate; the pane re-exports it so existing consumers and tests are unbroken. (d) A node click publishes into the ONE shared coordinate store, proven end to end: the e2e clicks a rendered neighbour and the store, the m0-surface-state readout and the canvas anchor all follow. The 28.6 Coordinate-Tree subscriber re-audit is DONE and its finding is that the tree host does not exist yet — CHROME-CONTRACT.md:58 already records coordinateTree as pending with navigation 'currently carried by bimbaGraph click-selection', so the publish is consumed today by the live subscribers (breadcrumb, status strip, M0 panels), not by a tree. (e) Gateway receipts cross a CHROME-CONTRACT §7 privacy gate BEFORE render (new src/ui/privacyGate.ts, the frozen class lists verbatim including the unset-is-public rule, since the gateway is the privacy authority): a forbidden class renders a refusal, the map never reaches the DOM, the drop is recorded in the federated PrivacyDropFeed (28.16) under the surface id, and the count renders as chrome; the s2.graph.node per-binding readiness badge stays at the datum. SUBSTRATE REGRESSION FOUND AND FIXED — this is why the UF gate was red before this close: commit a8cb2862 (2026-07-25) added 'properties: properties(r)' to the s2.graph.node Cypher but left the reader as row.get::<Vec<BTreeMap<String,String>>>('relations').unwrap_or_default(); a map-valued entry cannot deserialize into a string map, so the WHOLE column failed and the unwrap turned that failure into []. Measured live, not inferred: s2.graph.node returned 0 relations for M1, a node carrying 13 real edges (probed the spawned gateway over its own websocket, then the graph directly). Consequence: the M0' layer rail reported canonical_absent for its relation layer and app-ui-flow spec m0-layer-rail-provenance failed, while the Walk pane silently fell back to traverse. graph_api.rs now projects that column through row_projection::bolt_to_json and FAILS LOUD if it is unreadable, per that module's own 'whoever owns the Cypher owns the projection' law; the live contract test now asserts the created edge appears with its type, direction and c_1_relation_family. The rail spec passes again. GREEN: app vitest 1409 pass / 0 fail (24 new — renderingMode 10, GraphCanvas 9, pane 6 including the privacy refusal and the readiness binding), app-typecheck, app-build, lint-import-boundaries, lint-no-modal, carrier-tokens, honesty-lint, graph-services cargo test 124 pass / 0 fail, plus the full UF class gate (harness-selftest 107, gateway 98, gateway-contract 92, gateway-methods, live-wire, ta-onta 749, ta-onta-types, redis-context, spacetime, graphiti-runtime, app-smoke). UF proof against a REAL spawned gateway and live S2: tests/e2e/bimba-graph-rendering-mode.spec.ts drives daily => solar-anchor (live reading: 6 of 18 immediate relations on M0), re-anchors through a neighbour click, enters ide-deep through the existing cross-layout intent, and asserts the same pane renders the full lattice with node-count AND edge-count > 0; relation-family-filter and m0-layer-rail-provenance pass in the same run. UNRELATED RED NAMED per the shared-tree rule: the only remaining app-ui-flow failure is pratibimba-consent.spec.ts:274, the known order-dependent flake — all four consent specs pass in isolation on this same tree, it failed identically before and after my change, and it exercises session-close drift, not the graph. NOT CLAIMED: the two Empty/Pratibimba namespace hues the brief names beside the six family colours — this pane reads MATCH (n:Bimba) only, so no such node can reach the canvas, and inventing palette entries would pre-empt the still-open DR-WC-DL-1.",
+          "receipt": {
+            "command": "npx playwright test bimba-graph-rendering-mode relation-family-filter m0-layer-rail-provenance",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/bimbaGraph/GraphCanvas.tsx",
+              "Body/M/pratibimba-app/src/panes/bimbaGraph/renderingMode.ts",
+              "Body/M/pratibimba-app/src/panes/GraphExplorerPane.tsx",
+              "Body/M/pratibimba-app/src/ui/privacyGate.ts",
+              "Body/S/S2/graph-services/src/graph_api.rs",
+              "Body/M/pratibimba-app/tests/e2e/bimba-graph-rendering-mode.spec.ts"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 18 dirty files.",
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T14:42:52.041Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-25T14:36:13.340Z",
       "runId": "20260725T124252Z-28-T28.3",
       "worktree": null,
@@ -20450,30 +20468,49 @@
       "blocker": null
     },
     "50.T50.09": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-27T09:30:37.106Z",
+      "status": "done",
+      "updatedAt": "2026-07-27T10:05:31.495Z",
       "claimedAt": "2026-07-27T09:30:37.106Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-27T10:05:31.495Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T10:05:31.495Z",
+          "text": "CPF is now read as a REVIEW polarity with teeth, and the no-auto-insertion law is structural rather than promised. dispatch-validate.ts gained CHECKPOINT_REASONS — the CLOSED set of three the brief names (implied-by-task / requested-at-origination / learned-from-review) — plus checkpointGate/checkpointAuthoringGate. Four rules: (1) NO checkpoint => nothing happens, so dialogical without an authored checkpoint stays exactly the open-conversation register the CPF_DIALOGICAL docblock quotes the Architect on (pinned by a regression test); (2) a fourth reason is REFUSED, never accepted as free text; (3) a checkpoint on a MECHANISTIC step is refused as contradictory (it says halt and run-unattended at once); (4) it halts until respondedBy:'human' — an agent answering its own gate is not an answer. The gate runs BEFORE validateDispatchParams' dialogical early-return, since an authored checkpoint is dialogical by construction and gating after it would sit on the one path it can never reach. The two halves are split because they become answerable at different moments: authoring is checkable when a script is written, answering only at dispatch. child-pi-executor.ts — THE choke point — refuses an unanswered checkpoint with child-pi/cpf-checkpoint-unsatisfied BEFORE any process exists, so a checkpoint cannot be walked around by choosing agent-team/agent-chain/pi-pi instead of a script. The orchestration surface carries the authored checkpoint on OrchestrationStep/FrameLeaf (validated at declaration) and DialogicalHaltRequired now names the reason. Score lifecycle gained recordCheckpointReview/learnedCheckpointProposals so 'learned after the fact becomes part of future scores' is reachable; both directions are deliberately inert — checkpointGate never reads the store, and that gap IS the no-auto-insertion policy. AN ADVERSARIAL REVIEW CAUGHT A REAL DEFECT I INTRODUCED AND IT IS FIXED, NOT SHIPPED: the first cut let ANY human-answered checkpoint discharge the 12.T12.4 recursive-self-review gate, so a checkpoint asking 'which branch?' answered 'main' would have silently validated an approve verdict by anima that was previously refused. The two gates ask different questions, so the relation is now SCOPED — checkpointSatisfiesFinalValidation requires satisfied + respondedBy:'human' + validates:'review', a dispatch-scoped answer discharges nothing, and when a halting checkpoint also gates a review the refusal discloses the pending decision and actor (a human cannot final-validate a verdict they were never shown). 11 further review findings were raised and refuted. GREEN: S4 754 pass/0 fail (was 725; +24 cpf_review_gate + 5 review-gate), strict tsc 222/222 0 errors. NON-VACUOUS: removing the halt turned 5 tests red, restoring returned 24/24. LIVE PROOF (the Verify line, real child pi's): cpf-review-gate-live.mjs 32/32 — a real script runs its mechanistic step as a real child pi, HALTS at the authored checkpoint naming implied-by-task and its note, then completes on a human answer while the checkpoint step spawns NOTHING (dispatch count +1, not +2); a wholly mechanistic script runs to completion with NO responder supplied at all; all three seams refuse the unanswered checkpoint in ~0ms while the identical dispatch with the human answer really spawns (elapsed >200ms), so the only difference between no-process and process is the human; and a dispatch-scoped human answer is still refused by the review gate. NEW PUBLIC SURFACE for T50.16 canon write-back: CpfCheckpoint{reason,note,validates,respondedBy,response}, CHECKPOINT_REASONS, checkpointGate/checkpointAuthoringGate, checkpointSatisfiesFinalValidation, ChildPiDispatchRequest.checkpoint, child-pi/cpf-checkpoint-unsatisfied, OrchestrationStep/FrameLeaf.checkpoint. DOX updated in both AGENTS.md.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 50.T50.09 --owner opus-mdev-t50-cpf-verify",
+            "exitCode": 0,
+            "testsPassed": 754,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts",
+              "Body/S/S4/pi-agent/lib/review-gate.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts",
+              "Body/S/S4/ta-onta/S4-4p-anima/tests/cpf-review-gate-live.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.09.md",
+              "live-wire+gateway-methods+ta-onta(754)+ta-onta-types+gateway(98)+gateway-contract(92)+honesty-lint GREEN"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t50-codemode",
-      "leaseExpiresAt": "2026-07-27T11:30:37.106Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-27T09:30:37.106Z",
       "runId": "20260727T093037Z-50-T50.09",
       "worktree": null,
       "blocker": null
     },
     "50.T50.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-27T10:06:48.265Z",
+      "claimedAt": "2026-07-27T10:06:48.265Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T12:06:48.265Z",
+      "heartbeatAt": "2026-07-27T10:06:48.265Z",
+      "runId": "20260727T100648Z-50-T50.10",
       "worktree": null,
       "blocker": null
     },
@@ -26679,11 +26716,12 @@
     {
       "runId": "20260727T093037Z-50-T50.09",
       "taskId": "50.T50.09",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-27T09:30:37.106Z",
       "owner": "opus-mdev-t50-codemode",
       "leaseExpiresAt": "2026-07-27T11:30:37.106Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-27T10:05:31.495Z"
     },
     {
       "runId": "20260727T093146Z-52-T1",
@@ -26694,30 +26732,41 @@
       "leaseExpiresAt": "2026-07-27T11:31:46.315Z",
       "worktree": null,
       "completedAt": "2026-07-27T10:03:21.166Z"
+    },
+    {
+      "runId": "20260727T100648Z-50-T50.10",
+      "taskId": "50.T50.10",
+      "status": "in_progress",
+      "startedAt": "2026-07-27T10:06:48.265Z",
+      "owner": "opus-mdev-t50-codemode",
+      "leaseExpiresAt": "2026-07-27T12:06:48.265Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T09:30:36.694Z",
-    "updatedAt": "2026-07-27T09:30:36.694Z",
+    "createdAt": "2026-07-27T10:04:23.230Z",
+    "updatedAt": "2026-07-27T10:04:23.230Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
-      "28.T28.3"
+      "28.T28.3",
+      "50.T50.09"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
-      "28.T28.3": "in-session"
+      "28.T28.3": "in-session",
+      "50.T50.09": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

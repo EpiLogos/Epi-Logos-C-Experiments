@@ -7248,3 +7248,72 @@ button.tool-stream-timerange.active {
     color: var(--ink-dim);
     font-size: var(--type-caption);
 }
+
+/* 28.T28.3(a)(b) — the solar-anchor card. The full lattice keeps .graph-host;
+   the anchor card sizes itself to its SVG so the preview never eats the pane. */
+/* The card keeps its own box: `flex: 0 0 auto` so the pane's taller stack can
+   never shrink the preview to nothing, and an explicit aspect-ratio so the SVG
+   has a real height even before layout settles. */
+.bimba-graph-canvas-host {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px 8px;
+    width: 100%;
+}
+
+.bimba-graph-canvas-solar-anchor {
+    width: min(100%, 520px);
+    height: auto;
+    aspect-ratio: 13 / 8;
+}
+
+.bimba-graph-canvas-empty {
+    padding: 8px;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.bimba-graph-canvas-caption {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: var(--type-micro);
+}
+
+.bimba-graph-node {
+    cursor: pointer;
+}
+
+.bimba-graph-node circle {
+    stroke-width: 2;
+}
+
+.bimba-graph-node-anchor circle {
+    stroke-width: 2.5;
+}
+
+.bimba-graph-node:focus-visible circle {
+    stroke: var(--ring);
+    stroke-width: 3;
+}
+
+.bimba-graph-label {
+    font-size: var(--type-micro);
+    fill: var(--ink-dim);
+}
+
+.bimba-graph-label-anchor {
+    font-size: var(--type-caption);
+    fill: var(--ink-bright);
+}
+
+.bimba-graph-edge {
+    stroke-width: 2;
+    opacity: 0.7;
+}
+
+.bimba-graph-edge-correspondential {
+    stroke-width: 1.75;
+}

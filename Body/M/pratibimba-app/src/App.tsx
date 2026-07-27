@@ -342,6 +342,9 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
                             : null
                     }
                     requestedAtelierTerm={atelierTerm}
+                    // 28.T28.3(a): the layout chooses the rendering mode —
+                    // daily previews the solar anchor, deep renders the lattice.
+                    activeLayout={activeLayout}
                 />
             );
             }

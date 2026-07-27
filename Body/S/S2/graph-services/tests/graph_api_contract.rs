@@ -521,6 +521,20 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         .await
         .expect("node method");
     assert_eq!(node["node"]["coordinate"], source);
+    // The relation collection must SURVIVE the projection. It once did not:
+    // `properties: properties(r)` made the column a map-of-map, the reader
+    // asked for `Vec<BTreeMap<String, String>>`, and `unwrap_or_default()`
+    // turned the failure into `[]` — so a node with live edges reported none.
+    let relations = node["relations"]
+        .as_array()
+        .expect("relations must project as an array");
+    let edge = relations
+        .iter()
+        .find(|rel| rel["coordinate"] == target.as_str())
+        .unwrap_or_else(|| panic!("the created edge must appear in relations: {relations:?}"));
+    assert_eq!(edge["type"], "POS5_INTEGRATES_INTO");
+    assert_eq!(edge["direction"], "outbound");
+    assert_eq!(edge["properties"]["c_1_relation_family"], "position");
 
     let refreshed = service
         .refresh_pointer_web(PointerWebRefreshRequest {

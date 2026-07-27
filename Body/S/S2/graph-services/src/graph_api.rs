@@ -647,7 +647,7 @@ impl<'a> GraphMethodService<'a> {
         Ok(json!({
             "contract": graph_contract("s2.graph.node", Some(&resolved)),
             "node": bimba_node_row(row),
-            "relations": row.get::<Vec<BTreeMap<String, String>>>("relations").unwrap_or_default(),
+            "relations": relations_json(row)?,
             "resolution": resolved,
         }))
     }
@@ -1017,6 +1017,29 @@ fn string_or_int_field(row: &neo4rs::Row, key: &str) -> String {
     row.get::<String>(key)
         .or_else(|_| row.get::<i64>(key).map(|n| n.to_string()))
         .unwrap_or_default()
+}
+
+/// Project `s2.graph.node`'s `relations` collection.
+///
+/// WHY THIS IS NOT A `row.get::<Vec<BTreeMap<String, String>>>`. The query
+/// collects `{type, direction, coordinate, properties: properties(r)}` — the
+/// `properties` value is itself a MAP, so the whole column fails to deserialize
+/// into a string map, and the `unwrap_or_default()` that used to guard it turned
+/// that failure into `[]`. Measured consequence (2026-07-27): `s2.graph.node`
+/// reported ZERO relations for `M1`, a node carrying 13 live edges, so the M0'
+/// layer rail read `canonical_absent` for its relation layer and the Walk pane
+/// silently fell back to `traverse`. The relation properties were added the same
+/// day the RETURN projector was fixed — one dead read closed, another opened, by
+/// the same silent-swallow pattern.
+///
+/// So the same law applies here as in `row_projection.rs`: project the driver's
+/// real value, and let a genuinely unreadable column FAIL rather than read as
+/// "this node has no relations".
+fn relations_json(row: &neo4rs::Row) -> Result<Value, String> {
+    let bolt = row
+        .get::<neo4rs::BoltType>("relations")
+        .map_err(|err| format!("s2.graph.node: relations column unreadable: {err}"))?;
+    Ok(crate::row_projection::bolt_to_json(&bolt))
 }
 
 fn bimba_node_row(row: &neo4rs::Row) -> Value {
