@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T10:23:22.357Z",
+  "updatedAt": "2026-07-27T11:03:12.948Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12823,16 +12823,34 @@
       "blocker": null
     },
     "25.T25.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-27T11:03:12.890Z",
+      "claimedAt": "2026-07-27T10:24:53.512Z",
+      "completedAt": "2026-07-27T11:03:12.890Z",
+      "evidence": [
+        {
+          "at": "2026-07-27T11:03:12.890Z",
+          "text": "The M4' session-close ceremony landed as a real reading surface over the REAL persisted close, with the brief's two unbuildable facets named on the surface instead of faked. WHAT LANDED: src/panes/m4SessionCloseCeremony.ts (pure law) + src/panes/M4SessionCloseCeremonyPane.tsx (the surface, personal-face left border \"Session close\"), reading three protected-local loopback RPCs for the shell's active session — nara.session_close.read (parsed by the EXISTING readM1SessionCloseBundle, deliberately NOT a second parser), nara.session_close.contemplation.read (its own deny-unknown parser) and nara.pasu.show. Four sections: (a) the delta's handle plus the real 4'-5'-0' triplet readings; (b) the Möbius section — M1 orbit closure, octave return, and an 8-character quintessence handle; (c) the four Arch 3/5/7/9 seeds read from the live 12-slot contemplationPromptLut with the 19.9 registers speech/relationship/action/completion; (d) nine virtue lamps over the canonical M0_VIRTUE_LABELS order, lit from the verifier's own 9-bit vector. The pane never writes and never closes a session. TWO RETARGETS, both stated in the pane header rather than smuggled: it is NOT a modal (the brief says 'modal-class, mounts over current view'; the carrier's lint-enforced no-modal discipline makes the surface the tab), and it is NOT event-mounted (the brief mounts it on m5.session.contemplation.complete; EVENT_NAMES in gateway-contract protocol.rs carries agent/chat/tick/health/heartbeat and no such event exists, so subscribing would render a ceremony that never fires — it reads the latest persisted close and offers an explicit Re-read). TWO HONEST GAPS, named on the surface: the composed wisdom-delta TEXT is dropped by the persisted projection on purpose (NaraContemplationObjectProjection reduces bodies to counts — loaded_agents becomes a count, matched codons become a count), and the kernel's own 8-byte M4_Epii_Integration.wisdom_delta (epi-lib/include/m4.h:709) is projected onto NO gateway surface, so the brief's 'byte trail as hex strip' and its XOR animation have no source. A hex strip rendered from a prose sentence would be a fabrication, so neither is drawn; the section says why. Widening the persisted projection to carry the delta text would widen a privacy boundary — flagged for the Architect, not landed. PRIVACY: the full quintessence hash is truncated to 8 characters INSIDE the projection, so it cannot reach a DOM node, a title, or a screenshot; a unit test asserts the full hash is absent from the rendered HTML. Registered in the 25.18 privacy register (mext-privacy-protected-local-handle-only) with its own spec line quoted, in CHROME-CONTRACT §2 + §3, and in the app DOX. A REGRESSION I CAUSED AND FIXED BEFORE CLOSING, worth recording because it was invisible to unit tests: mounting the ceremony as an ELEVENTH personal-main tab made the whole tab strip stop responding at 1280x800 — clicking 'Transform' no longer selected it (measured in real Chromium: tab present, visible, click accepted, selection unchanged), which turned privacy-chrome.spec.ts red. The ceremony moved to the personal left border, where the reading surfaces live; privacy-chrome is green again and the main strip works. LAYOUT_VERSION bumped 22 -> 23 for the changed default model, and the (d) personal-composition visual baseline was regenerated deliberately for the new border entry (the only pixel change is the border strip). GREEN: app vitest 1425 pass / 0 fail (16 new — 10 projection-law, 6 pane-behaviour), app-typecheck, app-build, lint-import-boundaries, lint-no-modal, carrier-tokens, honesty-lint, and the UF class gate (harness-selftest, gateway, gateway-contract, gateway-methods, live-wire, ta-onta, ta-onta-types, redis-context, spacetime, graphiti-runtime, app-smoke). UF PROOF over a REAL close: tests/e2e/m4-session-close-ceremony.spec.ts imports a session, opens it (nara.session_open), closes it (nara.session_close with a real contemplation object) against the spawned gateway, adopts that session in the shell, opens the ceremony and asserts THAT closure — its contemplation handle, '4 agents', 'coherence 0.82', a closed M1 orbit, the four Arch registers, and nine lamps lit exactly 6-of-9 where the verifier witnessed; the quintessence readout is asserted to be a handle of at most 8 characters or an honest absence. UNRELATED RED NAMED per the shared-tree rule: the only remaining app-ui-flow failure of 89 is pratibimba-consent.spec.ts:274, the documented order-dependent flake — all four consent specs pass in isolation on this same tree and it failed identically before my change. One earlier gate run was also refused by a stray Body/S/S2/graph-services/tests/dbg_dump_live.rs (blanket #[ignore]) that a sibling worker created and deleted mid-run; the file no longer exists and honesty-lint is clean.",
+          "receipt": {
+            "command": "npx playwright test m4-session-close-ceremony privacy-chrome visual-regression",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M4SessionCloseCeremonyPane.tsx",
+              "Body/M/pratibimba-app/src/panes/m4SessionCloseCeremony.ts",
+              "Body/M/pratibimba-app/tests/e2e/m4-session-close-ceremony.spec.ts",
+              "Body/M/pratibimba-app/src/ui/privacyChrome.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t25-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T10:24:53.512Z",
+      "runId": "20260727T102453Z-25-T25.19",
       "worktree": null,
       "blocker": null
     },
@@ -26741,18 +26759,28 @@
       "owner": "opus-mdev-t50-codemode",
       "leaseExpiresAt": "2026-07-27T12:06:48.265Z",
       "worktree": null
+    },
+    {
+      "runId": "20260727T102453Z-25-T25.19",
+      "taskId": "25.T25.19",
+      "status": "done",
+      "startedAt": "2026-07-27T10:24:53.512Z",
+      "owner": "opus-mdev-t25-nara",
+      "leaseExpiresAt": "2026-07-27T13:24:53.512Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T11:03:12.890Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T10:04:23.230Z",
-    "updatedAt": "2026-07-27T10:04:23.230Z",
+    "createdAt": "2026-07-27T10:24:23.829Z",
+    "updatedAt": "2026-07-27T10:24:23.829Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
       "26.T26.4",
-      "28.T28.3",
-      "50.T50.09"
+      "52.T1",
+      "50.T50.10"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -26761,8 +26789,8 @@
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
       "26.T26.4": "in-session",
-      "28.T28.3": "in-session",
-      "50.T50.09": "in-session"
+      "52.T1": "in-session",
+      "50.T50.10": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

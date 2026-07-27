@@ -50,6 +50,7 @@ import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
+import { M4SessionCloseCeremonyPane } from './panes/M4SessionCloseCeremonyPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
@@ -196,7 +197,12 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                 },
                 { type: 'tab', name: 'Calendar', component: 'dayCalendar', enableClose: false },
                 { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false },
-                { type: 'tab', name: 'Connections', component: 'semanticConnections', enableClose: false }
+                { type: 'tab', name: 'Connections', component: 'semanticConnections', enableClose: false },
+                // 25.T25.19 — a ceremony READS, so it lives with the reading
+                // surfaces on the border rather than as an 11th main tab: at
+                // 1280x800 an eleventh `personal-main` tab makes the strip
+                // un-clickable (measured — the click stops selecting).
+                { type: 'tab', name: 'Session close', component: 'sessionCloseCeremony', enableClose: false }
             ]
         },
         omniBorder(activeLayout)
@@ -268,7 +274,7 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 22;
+const LAYOUT_VERSION = 23;
 
 interface PersistedUiState {
     layoutVersion?: number;
@@ -348,6 +354,8 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
                 />
             );
             }
+        case 'sessionCloseCeremony':
+            return <M4SessionCloseCeremonyPane />;
         case 'mocBases':
             return <MocBaseReflectionPane />;
         case 'm2Correspondence':

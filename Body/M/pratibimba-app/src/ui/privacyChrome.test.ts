@@ -131,6 +131,7 @@ describe('25.T25.18 — every Wave-C surface declares its tint at mount', () => 
             'panes/DayCalendarPane.tsx',
             'panes/M4DialogicalArenaPane.tsx',
             'panes/M4LogosCyclePane.tsx',
+            'panes/M4SessionCloseCeremonyPane.tsx',
             'panes/MedicineViewPane.tsx',
             'panes/PasuWizardPane.tsx',
             'panes/PratibimbaCoordinatePane.tsx',

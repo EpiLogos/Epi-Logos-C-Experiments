@@ -121,6 +121,12 @@ export const SPEC_ASSIGNED_SURFACES: readonly PrivacySurface[] = Object.freeze([
         warrant: `${SPEC}:69 — "Privacy chrome: \`mext-privacy-protected-local\` border-tint (25.18)"`
     },
     {
+        file: 'panes/M4SessionCloseCeremonyPane.tsx',
+        privacyClass: 'protected_local_handle_only',
+        tranche: '25.19',
+        warrant: `${SPEC}:245 — "View id: \`m4.nara.sessionCloseCeremony\` (new — modal-class, mounts over current view). Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`
+    },
+    {
         file: 'panes/PasuWizardPane.tsx',
         privacyClass: 'protected_local',
         tranche: '25.4',

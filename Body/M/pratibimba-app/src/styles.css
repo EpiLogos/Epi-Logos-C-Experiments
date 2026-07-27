@@ -7317,3 +7317,95 @@ button.tool-stream-timerange.active {
 .bimba-graph-edge-correspondential {
     stroke-width: 1.75;
 }
+
+/* 25.T25.19 — the session-close ceremony. A ceremony reads; it never acts, so
+   the surface is a quiet column of sections rather than a dialog with buttons. */
+.m4-session-close-ceremony {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.ceremony-section {
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+.ceremony-section h3 {
+    margin: 0 0 4px;
+    font-size: var(--type-heading-4);
+    color: var(--ink-bright);
+}
+
+.ceremony-handle {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    color: var(--ring);
+}
+
+.ceremony-note {
+    margin: 4px 0 0;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.ceremony-triplet {
+    margin: 4px 0 0;
+    font-size: var(--type-body-small);
+}
+
+.ceremony-triplet dt {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.ceremony-triplet dd {
+    margin: 0 0 4px;
+}
+
+.ceremony-seed-list,
+.ceremony-lamps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ceremony-seed {
+    display: flex;
+    flex-direction: column;
+    padding: 3px 0;
+}
+
+.ceremony-seed-register {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.ceremony-seed-prompt {
+    font-size: var(--type-body-small);
+}
+
+.ceremony-lamps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.ceremony-lamp {
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-size: var(--type-micro);
+    color: var(--ink-dim);
+}
+
+/* A lit lamp is a witnessed virtue — the only emphasis this surface carries. */
+.ceremony-lamp[data-lit='true'] {
+    border-color: var(--ring);
+    color: var(--ring);
+}
