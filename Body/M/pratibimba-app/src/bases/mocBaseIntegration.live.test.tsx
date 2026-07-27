@@ -55,7 +55,11 @@ describe('MOC/Base production integration over the real vault', () => {
         expect(reflections[0].rows.length).toBeGreaterThan(10);
     });
 
-    it('executes the Map aggregate Base over projected map-index records', async () => {
+    // Real-vault I/O: this reads and projects actual vault files, so it is
+    // I/O-bound by design and the 5s vitest default is a load-sensitive
+    // boundary rather than a real budget — under parallel disk contention it
+    // has been killed mid-read, reporting RED while proving nothing.
+    it('executes the Map aggregate Base over projected map-index records', { timeout: 30_000 }, async () => {
         const sections = await loadMocBaseSections('Bimba/Map/AGENTS.md', realVault);
         const membership = sections.find(section => section.heading === 'What Belongs Here');
 
@@ -65,7 +69,11 @@ describe('MOC/Base production integration over the real vault', () => {
         expect(membership?.rows.every(row => row.c_4_artifact_role === 'map-index')).toBe(true);
     });
 
-    it('renders the evaluated rows in the active carrier pane', async () => {
+    // Same real-vault I/O as above, reached through the pane: the pane holds
+    // `moc-base-loading` until the actual vault read resolves, so findBy's 1s
+    // default is what expires under contention — not the render. Both the wait
+    // and the test budget are sized to the read, not to a quiet machine.
+    it('renders the evaluated rows in the active carrier pane', { timeout: 30_000 }, async () => {
         render(
             <MocBaseReflectionPane
                 mocPath="Bimba/World/Types/Coordinates/S/S1/S1.md"
@@ -73,7 +81,7 @@ describe('MOC/Base production integration over the real vault', () => {
             />
         );
 
-        expect(await screen.findByTestId('moc-base-ready')).toBeTruthy();
+        expect(await screen.findByTestId('moc-base-ready', undefined, { timeout: 20_000 })).toBeTruthy();
         expect(screen.getByText('S1')).toBeTruthy();
         expect(screen.getByTestId('moc-base-section-open-gaps').textContent).toContain('0 rows');
     });

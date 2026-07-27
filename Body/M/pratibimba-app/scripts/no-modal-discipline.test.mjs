@@ -155,7 +155,11 @@ describe('31.T31.8 — the lint does not cry wolf', () => {
 });
 
 describe('31.T31.8 — the landed carrier is clean', () => {
-    it('scans the REAL src tree and finds no blocking modal', () => {
+    // Whole-tree scan: I/O-bound by design, and the 5s vitest default is a
+    // load-sensitive boundary for it rather than a real budget — under parallel
+    // disk contention this has been killed MID-SCAN, reporting RED while
+    // proving nothing about the tree. Give the scan room to finish and be true.
+    it('scans the REAL src tree and finds no blocking modal', { timeout: 30_000 }, () => {
         const report = scanTree(CARRIER_SRC);
         // guard against a vacuous pass from a mis-resolved root
         expect(report.scannedFiles).toBeGreaterThan(200);

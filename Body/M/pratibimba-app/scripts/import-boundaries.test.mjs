@@ -131,7 +131,11 @@ describe('07-t0 active-carrier import boundary', () => {
         ]);
     });
 
-    it('keeps the current active carrier free of direct forbidden imports', () => {
+    // Whole-tree scan: I/O-bound by design, and the 5s vitest default is a
+    // load-sensitive boundary for it rather than a real budget — under parallel
+    // disk contention this has been killed MID-SCAN, reporting RED while
+    // proving nothing about the tree. Give the scan room to finish and be true.
+    it('keeps the current active carrier free of direct forbidden imports', { timeout: 30_000 }, () => {
         const report = scanCarrierImports();
 
         expect(report.scannedFiles).toBeGreaterThan(100);
