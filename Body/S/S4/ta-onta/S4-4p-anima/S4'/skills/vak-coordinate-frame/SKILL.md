@@ -105,7 +105,7 @@ CP 4.5 --------+-------------+-------------+-- Integration
 
 | CF Code | Agent | QL Level | Constitutional Description | Functional Role |
 |---------|-------|----------|---------------------------|-----------------|
-| `(0000)` | **Nous** | L0 | Fourfold Zero -- pre-differentiation | **Impartial Perspective**: fresh context invocation to surface assumptions, clear epistemic contamination. Operates at P0'/P1'. Active, not passive. |
+| `(00/00)` | **Nous** | L0 | Fourfold Zero -- pre-differentiation | **Impartial Perspective**: fresh context invocation to surface assumptions, clear epistemic contamination. Operates at P0'/P1'. Active, not passive. |
 | `(0/1)` | **Logos** | L1 | Non-Dual Anchor -- simplest distinction | **Architect/Scoper**: scope definition, structure creation, boundary-setting. CP 4.1 tasks. |
 | `(0/1/2)` | **Eros** | L2 | Dual-Non-Dual -- first triad | **Refiner/Verifier**: quality refinement, verification, desire-completion. CP 4.2 tasks (TDD/validation). |
 | `(0/1/2/3)` | **Mythos** | L3 | Trinitarian -- quaternary pattern base | **Pattern Recognizer**: archetypal recognition, symbolic mapping, debugging. CP 4.3 tasks. |
@@ -113,7 +113,7 @@ CP 4.5 --------+-------------+-------------+-- Integration
 | `(4.0/1-4.4/5)` | **Anima** | -- | Fractal Doubling -- full 4.x lattice | **VAK Orchestrator**: the dispatch function itself. Holds the full fractal doubling CF. Not dispatched to -- IS the dispatch. |
 | `(5/0)` | **Sophia** | L5 | Total Synthesis -- return to source | **Synthesizer**: integration, Mobius return, P5' crystallization. CP 4.5 tasks. |
 
-**Nous special behaviour**: CF `(0000)` does NOT dispatch a task executor. It invokes a fresh perspective agent (minimal prior context) that asks: "What assumptions are embedded here? What evidence actually exists? What don't we know?" Output goes to Patient (Psyche), who re-runs `vak-evaluate` with findings before dispatching the actual CF executor.
+**Nous special behaviour**: CF `(00/00)` does NOT dispatch a task executor. It invokes a fresh perspective agent (minimal prior context) that asks: "What assumptions are embedded here? What evidence actually exists? What don't we know?" Output goes to Patient (Psyche), who re-runs `vak-evaluate` with findings before dispatching the actual CF executor.
 
 **Anima**: The VAK orchestrator. Anima's CF `(4.0/1-4.4/5)` encompasses the entire fractal doubling lattice -- from non-dual ground (4.0/1) through fractal completion (4.4/5). All other constitutional agents have bounded CF codes representing specific positions; Anima spans the whole lattice as the execution language itself.
 
