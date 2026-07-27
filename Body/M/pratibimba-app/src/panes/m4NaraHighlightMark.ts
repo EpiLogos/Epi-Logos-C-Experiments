@@ -3,9 +3,11 @@
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): M4-0' canvas input
  * Actualises: the protected-local Tiptap highlight contract and Markdown round-trip.
- * Public surface: HighlightMark, four user categories, extraction/build helpers,
+ * Public surface: HighlightMark, the register-derived category lists, extraction/build helpers,
  *   applyUserHighlight (the shared FloatingMenu + cmd-H chord apply path).
- * Does NOT own: agent-category semantics, vault persistence, or public/S2 projection.
+ * Does NOT own: the category vocabulary itself (ui/highlightCategoryRegistry —
+ *   30.T30.7 promoted it out of this file), vault persistence, or public/S2
+ *   projection.
  * Contract: [[M4'-SPEC]]; [[2026-06-04-prospective-retrospective-canvas-spec]] §2.2.
  */
 
@@ -13,42 +15,43 @@
 import { Editor, Mark, mergeAttributes } from '@tiptap/core';
 import { Markdown } from '@tiptap/markdown';
 import StarterKit from '@tiptap/starter-kit';
+import {
+    HIGHLIGHT_CATEGORY_IDS,
+    HIGHLIGHT_CATEGORY_REGISTRY,
+    agentHighlightCategories,
+    userHighlightCategories,
+    type AgentHighlightCategoryId,
+    type HighlightCategoryId,
+    type UserHighlightCategoryId
+} from '../ui/highlightCategoryRegistry';
 
 export const NARA_PRIVACY_CLASS = 'protected_local' as const;
-export const USER_HIGHLIGHT_CATEGORIES = Object.freeze([
-    'daily-note',
-    'oracle',
-    'dream',
-    'expand'
-] as const);
-export const AGENT_HIGHLIGHT_CATEGORIES = Object.freeze([
-    'recognition',
-    'prospective-surfacing',
-    'retrospective-surfacing',
-    'kairos-touch',
-    'somatic-mark',
-    'live-spread'
-] as const);
 
-export type UserHighlightCategory = (typeof USER_HIGHLIGHT_CATEGORIES)[number];
-export type AgentHighlightCategory = (typeof AGENT_HIGHLIGHT_CATEGORIES)[number];
-export type HighlightCategory = UserHighlightCategory | string;
+// 30.T30.7: the category vocabulary is no longer declared here. This file had
+// held one of three private copies of the same ten ids; the canonical register
+// is `ui/highlightCategoryRegistry`, and everything below is DERIVED from it,
+// so a category cannot exist for the mark without existing in the register.
+export const USER_HIGHLIGHT_CATEGORIES = userHighlightCategories;
+export const AGENT_HIGHLIGHT_CATEGORIES = agentHighlightCategories;
 
-export const HIGHLIGHT_VISUAL_REGISTERS = Object.freeze({
-    'daily-note': { cssVariable: '--nara-highlight-daily-note', register: 'user-reflection' },
-    oracle: { cssVariable: '--nara-highlight-oracle', register: 'user-symbolic' },
-    dream: { cssVariable: '--nara-highlight-dream', register: 'user-dream' },
-    expand: { cssVariable: '--nara-highlight-expand', register: 'user-expansion' },
-    recognition: { cssVariable: '--nara-highlight-recognition', register: 'warm-recognition' },
-    'prospective-surfacing': { cssVariable: '--nara-highlight-prospective', register: 'warm-forward' },
-    'retrospective-surfacing': { cssVariable: '--nara-highlight-retrospective', register: 'cool-back' },
-    'kairos-touch': { cssVariable: '--nara-highlight-kairos', register: 'mercurial' },
-    'somatic-mark': { cssVariable: '--nara-highlight-somatic', register: 'grounded' },
-    'live-spread': { cssVariable: '--nara-highlight-live-spread', register: 'oracle-anchored' }
-} as const satisfies Record<UserHighlightCategory | AgentHighlightCategory, {
-    readonly cssVariable: string;
-    readonly register: string;
-}>);
+export type UserHighlightCategory = UserHighlightCategoryId;
+export type AgentHighlightCategory = AgentHighlightCategoryId;
+export type HighlightCategory = HighlightCategoryId | string;
+
+/** The 11.11 visual registers, projected from the canonical register. */
+export const HIGHLIGHT_VISUAL_REGISTERS: Readonly<
+    Record<HighlightCategoryId, { readonly cssVariable: string; readonly register: string }>
+> = Object.freeze(
+    Object.fromEntries(
+        HIGHLIGHT_CATEGORY_IDS.map(id => [
+            id,
+            Object.freeze({
+                cssVariable: HIGHLIGHT_CATEGORY_REGISTRY[id].cssVariable,
+                register: HIGHLIGHT_CATEGORY_REGISTRY[id].visualRegister
+            })
+        ])
+    ) as Record<HighlightCategoryId, { readonly cssVariable: string; readonly register: string }>
+);
 
 export interface HighlightAttributes {
     readonly id: string;
