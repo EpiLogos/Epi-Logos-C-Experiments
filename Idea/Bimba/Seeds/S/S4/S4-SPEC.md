@@ -151,8 +151,8 @@ The live S4 implementation is broad and uneven:
 
 Current implementation state and gaps:
 
-- The first coordinate-native S4/S4' gateway surfaces are now live: `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.vak.evaluate`, `s4'.orchestrate`, `s4'.psyche.state`, `s4'.psyche.update`, and `s4'.permission.get`. They are tested by `gate_s4_coordinate_surfaces.rs` and `gate_anima_pleroma_access.rs`.
-- Remaining coordinate-native API gaps include `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, `s4'.context.assemble`, and richer `s4'.goal.*` semantics.
+- The first coordinate-native S4/S4' gateway surfaces are now live: `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.vak.evaluate`, `s4'.orchestrate`, `s4'.psyche.state`, `s4'.psyche.update`, `s4'.permission.get`, `s4'.context.assemble` (51.T51.1), and `s4'.orchestration.score` (50.T50.10). They are tested by `gate_s4_coordinate_surfaces.rs`, `gate_anima_pleroma_access.rs`, `gate_s4_context_assemble.rs`, and `gate_s4_orchestration_score.rs`.
+- Remaining coordinate-native API gaps include `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, and richer `s4'.goal.*` semantics. (`s4'.context.assemble` landed in 51.T51.1 and is no longer a gap.)
 - [[Psyche]] now has first persisted gateway state for operative notebook, current task, subtasks, artifacts, visibility stance, and run-local continuity. The next Psyche gap is richer goal-state, context-pack assembly, and integration with team/VAK state.
 - `s_4_permission_boundary` now has first explicit API exposure through `s4'.permission.get`; the next gap is making every S0 exec, Pleroma primitive, file write, subagent spawn, and external API call enforce the same boundary rather than merely report it.
 - `s4'.vak.evaluate` must expand beyond the live heuristic response to return primary family, primary coordinate, CPF, prime targets, intent class, and agent sequence position.
@@ -466,6 +466,29 @@ Build implications:
 - Must use `s4'.vak.evaluate` output, not ad hoc route strings.
 - Must produce an async ack and observable result channel through S3.
 - Must include [[Sophia]] review when the configured evaluation gate requires it.
+
+#### `s4'.orchestration.score`
+
+Serve a persisted orchestration SCORE and the runs recorded against it (50.T50.10).
+
+Track 50 makes a generated TypeScript program the way [[Anima]] composes tool calls. One
+execution of such a program is a bounded song; a repeatable one is persisted as a **score**
+and runs accumulate against it. This method is how that becomes observable: with a
+`scoreId` it returns the score document (`schema`, `id`, `title`, `provenance`, `program`,
+`hash`) and its append-only run history; without one it lists the ids in the store.
+
+Build implications:
+
+- **Reader, never runner.** Pi->subagent is the only agentic path, so a gateway that
+  executed orchestrations would be a second one. Run state belongs to the parent [[Anima]]
+  session that holds it (`S4-4p-anima/lib/orchestration-run.ts`), not to a stateless RPC.
+  The [[S0]] adapter serves what the S4' authority produced — the same reader discipline as
+  `s4'.context.assemble`.
+- Persistence authority is [[Hen]] (`S4-1p-hen/modules/score-store.ts`); the adapter's path
+  resolution is a twin of its `scoresDir()`, not an independent layout.
+- Must fail closed on a score carrying no `hash`: a caller reading a program without the
+  hash it was scored under cannot tell whether it is the program that ran.
+- A score id is never a path segment.
 
 #### `s4'.context.assemble`
 

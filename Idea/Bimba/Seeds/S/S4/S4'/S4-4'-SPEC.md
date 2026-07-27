@@ -38,7 +38,7 @@ The first `/goal` pass belongs here as [[GoalPrelude]]. It writes a NOW-bound ar
 
 ## API / Envelope / Implementation Hooks
 
-- `s4'.vak.evaluate`, `s4'.cs.*`, `s4'.context.assemble`, `s4'.psyche.*`, `s4'.goal.*`.
+- `s4'.vak.evaluate`, `s4'.cs.*`, `s4'.context.assemble`, `s4'.orchestration.score`, `s4'.psyche.*`, `s4'.goal.*`.
 - PI tools: `vak_evaluate`, `goal_prelude`, `anima_orchestrate`, `nous_disclose`, `dispatch_agent`, `dispatch_parallel_agents`, `dispatch_fusion_agents`, `dispatch_moirai_night_pass`, `anima_self_invoke`, `run_chain`, `subagent_*`, `tilldone`.
 - Full VAK envelope: `cpf`, `ct[]`, `cp`, `cf`, `cfp`, `cs.code`, `cs.direction`.
 - Capability suggestions come from Pleroma matrix lookup when VAK address is valid.

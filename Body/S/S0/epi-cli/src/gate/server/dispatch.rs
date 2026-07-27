@@ -1419,6 +1419,9 @@ pub(super) async fn dispatch_rpc(
         "s4'.context.assemble" => anima::context_assemble(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s4'.orchestration.score" => anima::orchestration_score(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s3'.temporal.context" => {
             let session_key = frame
                 .params

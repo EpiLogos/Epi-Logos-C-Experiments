@@ -158,6 +158,9 @@ pub const METHOD_NAMES: &[&str] = &[
     "s4'.permission.get",
     // 51.T51.1 — the assembled session-context pack the ta-onta spine injects.
     "s4'.context.assemble",
+    // 50.T50.10 — the orchestration-run surface: the persisted score Anima
+    // developed and the runs recorded against it, served as observable data.
+    "s4'.orchestration.score",
     "s3'.temporal.context",
     "s3'.temporal.subscribe",
     "s3'.spacetime.subscribe",

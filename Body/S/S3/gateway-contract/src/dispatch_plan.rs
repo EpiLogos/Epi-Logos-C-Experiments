@@ -686,6 +686,16 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S4/ta-onta/spine/compositor.ts",
         needs_extraction_to: None,
     },
+    // 50.T50.10 — the orchestration-run surface. Anima develops a score and
+    // runs it; Hen persists it; this method SERVES it. The adapter is a reader
+    // of `.epi/scores/`, never a runner: Pi->subagent is the only agentic path,
+    // so a gateway that executed orchestrations would be a second one.
+    MethodDispatchPlanEntry {
+        method: "s4'.orchestration.score",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts",
+        needs_extraction_to: None,
+    },
     // ----- S5 governance adapters -----
     MethodDispatchPlanEntry {
         method: "s5.trajectory.verify",

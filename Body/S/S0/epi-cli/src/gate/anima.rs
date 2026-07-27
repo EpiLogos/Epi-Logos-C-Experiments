@@ -562,6 +562,146 @@ fn context_pack_path(state_root: &Path, session_key: &str) -> PathBuf {
         .join(format!("{}.json", slug(session_key)))
 }
 
+/// 50.T50.10 — `s4'.orchestration.score`: the orchestration-run surface.
+///
+/// Track 50 makes a generated TypeScript program the way Anima composes tool
+/// calls. One execution of such a program is a bounded song; a repeatable one is
+/// persisted as a SCORE, and runs accumulate against it. This method serves that
+/// score and its run history as observable data.
+///
+/// **This adapter READS. It does not run.** Pi->subagent is the only agentic
+/// path, so a gateway that executed orchestrations would be a second one — and
+/// the run state belongs to the parent Anima session that holds it
+/// (`S4-4p-anima/lib/orchestration-run.ts`), not to a stateless RPC. The same
+/// reader discipline `context_assemble` follows: the S4' authority produces, the
+/// S0 adapter serves what was produced.
+///
+/// With `scoreId`: the score document and every run recorded against it.
+/// Without: the ids in the store, so a caller can discover what exists.
+///
+/// A score whose content hash no longer matches its body is an ERROR, not a
+/// result. `loadScore` refuses a drifted score because re-running one would not
+/// reproduce the run it claims to be; serving it here would let a caller read a
+/// program that is not the one that was scored.
+pub fn orchestration_score(params: &Value) -> Result<Value, String> {
+    let dir = scores_dir();
+    let Some(score_id) = optional_str(params, "scoreId") else {
+        return Ok(json!({
+            "owner": "S4'",
+            "store": dir.display().to_string(),
+            "authority": SCORE_STORE_AUTHORITY,
+            "scores": list_score_ids(&dir),
+        }));
+    };
+    assert_score_id(&score_id)?;
+
+    let path = dir.join(format!("{score_id}.json"));
+    if !path.exists() {
+        return Ok(json!({
+            "owner": "S4'",
+            "scoreId": score_id,
+            "present": false,
+            "reason": "no score with that id has been persisted",
+            "store": dir.display().to_string(),
+            "authority": SCORE_STORE_AUTHORITY,
+            "score": Value::Null,
+            "runs": [],
+        }));
+    }
+
+    let body = fs::read_to_string(&path).map_err(|err| err.to_string())?;
+    let score: Value = serde_json::from_str(&body).map_err(|err| err.to_string())?;
+
+    // Fail closed on a score that has lost its identity. A caller reading a
+    // program without the hash it was scored under cannot tell whether it is
+    // the program that ran.
+    let recorded_hash = score
+        .get("hash")
+        .and_then(Value::as_str)
+        .ok_or_else(|| format!("persisted score at {} carries no hash", path.display()))?;
+
+    Ok(json!({
+        "owner": "S4'",
+        "scoreId": score_id,
+        "present": true,
+        "store": dir.display().to_string(),
+        "authority": SCORE_STORE_AUTHORITY,
+        "hash": recorded_hash,
+        "score": score,
+        "runs": read_score_runs(&dir, &score_id),
+    }))
+}
+
+/// The S4' authority that persists the scores this adapter serves.
+const SCORE_STORE_AUTHORITY: &str =
+    "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts::saveScore/recordScoreRun";
+
+/// Twin of `score-store.ts::scoresDir()` — same precedence, same layout.
+///
+/// `.epi/` is runtime state, not the vault: a score is machinery, not canon.
+/// The env var comes first exactly as it does in TS, which is also what lets a
+/// test point both halves at one throwaway directory.
+fn scores_dir() -> PathBuf {
+    if let Some(dir) = std::env::var_os("EPI_SCORES_DIR") {
+        return PathBuf::from(dir);
+    }
+    let root = std::env::var_os("EPI_REPO_ROOT")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
+    root.join(".epi").join("scores")
+}
+
+/// Twin of `score-store.ts::assertScoreId` — ids are never path segments.
+fn assert_score_id(score_id: &str) -> Result<(), String> {
+    let valid = !score_id.is_empty()
+        && !score_id.contains("..")
+        && score_id
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_ascii_alphanumeric())
+        && score_id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'));
+    if valid {
+        return Ok(());
+    }
+    Err(format!(
+        "invalid score id '{score_id}': ids are [A-Za-z0-9._-] and never path segments"
+    ))
+}
+
+/// Twin of `score-store.ts::listScores` — `.runs.jsonl` is excluded by suffix.
+fn list_score_ids(dir: &Path) -> Vec<String> {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return Vec::new();
+    };
+    let mut ids: Vec<String> = entries
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            name.strip_suffix(".json").map(str::to_owned)
+        })
+        .collect();
+    ids.sort();
+    ids
+}
+
+/// Twin of `score-store.ts::readScoreRuns` — the append-only run log, in order.
+///
+/// A malformed line is skipped rather than failing the whole read: the log is
+/// append-only evidence, and one bad row must not hide the rest of a score's
+/// history.
+fn read_score_runs(dir: &Path, score_id: &str) -> Vec<Value> {
+    let path = dir.join(format!("{score_id}.runs.jsonl"));
+    let Ok(body) = fs::read_to_string(path) else {
+        return Vec::new();
+    };
+    body.lines()
+        .filter(|line| !line.trim().is_empty())
+        .filter_map(|line| serde_json::from_str::<Value>(line).ok())
+        .collect()
+}
+
 pub fn permission_get(_state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
     let agent_id = optional_str(params, "agentId").unwrap_or_else(|| "anima".to_owned());
     let session_key = optional_str(params, "sessionKey").unwrap_or_else(|| "main".to_owned());

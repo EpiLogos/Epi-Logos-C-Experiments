@@ -425,6 +425,24 @@
     "is_dispatch_tool": false,
     "dispatch_tool_note": "A gateway METHOD, not a vak-dispatch tool: it is deliberately absent from dispatch_tools so capability-parity's local and gateway tool sets stay identical."
   },
+  "orchestration_run": {
+    "method": "s4'.orchestration.score",
+    "coordinate_owner": "S4'",
+    "tranche": "50.T50.10",
+    "composer": "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts::defineOrchestration/runOrchestration",
+    "persisted_by": "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts::saveScore/recordScoreRun",
+    "published_to": "<EPI_SCORES_DIR or repo-root>/.epi/scores/<scoreId>.json + <scoreId>.runs.jsonl",
+    "served_by": "Body/S/S0/epi-cli/src/gate/anima.rs::orchestration_score",
+    "reader_not_runner_law": "The adapter SERVES a persisted score and its run history; it never executes one. Pi->subagent is the only agentic path, so a gateway that ran orchestrations would be a second one, and run state belongs to the parent Anima session that holds it (S4-4p-anima/lib/orchestration-run.ts), not to a stateless RPC. Same reader discipline as s4'.context.assemble: the S4' authority produces, the S0 adapter serves what was produced.",
+    "returns": ["owner", "scoreId", "present", "store", "authority", "hash", "score", "runs"],
+    "returns_without_score_id": ["owner", "store", "authority", "scores"],
+    "score_fields": ["schema", "id", "title", "provenance", "program", "hash"],
+    "run_fields": ["scoreId", "hash", "at", "origination", "outcome", "detail"],
+    "fails_closed_on": "a persisted score carrying no hash — a caller reading a program without the hash it was scored under cannot tell whether it is the program that ran",
+    "entitlement_class": "standard",
+    "is_dispatch_tool": false,
+    "dispatch_tool_note": "A gateway METHOD, not a vak-dispatch tool: it is deliberately absent from dispatch_tools so capability-parity's local and gateway tool sets stay identical."
+  },
   "typed_delegation": {
     "delegate_lens": {
       "method": "s4'.pleroma.delegate_lens",

@@ -300,6 +300,10 @@
   {
    "method": "s4'.context.assemble",
    "claimedBy": "51.T51.1"
+  },
+  {
+   "method": "s4'.orchestration.score",
+   "claimedBy": "50.T50.10 (orchestration-run surface: persisted score + run history)"
   }
  ]
 }

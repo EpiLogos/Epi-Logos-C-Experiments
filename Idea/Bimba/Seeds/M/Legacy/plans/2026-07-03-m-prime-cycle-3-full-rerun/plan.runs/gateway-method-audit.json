@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-25T21:36:04.630Z",
+ "generatedAt": "2026-07-27T11:02:29.047Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,8 +7,8 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 278,
-  "present": 101,
+  "probed": 280,
+  "present": 103,
   "absent": 177,
   "unknown": 0
  },
@@ -1005,7 +1005,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: notePath is required"
+   "errorClass": "domain-error: vault root missing: provide `vaultRoot` param or set EPILOGOS_VAULT"
   },
   {
    "method": "s1'.type.classify_c_layer",
@@ -1391,6 +1391,20 @@
    "exists": true,
    "responds": true,
    "errorClass": "domain-error: taskText must be a non-empty string"
+  },
+  {
+   "method": "s4'.orchestrate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: cf or task is required"
+  },
+  {
+   "method": "s4'.orchestration.score",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
   },
   {
    "method": "s4'.psyche.state",

@@ -11,7 +11,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 
 ## Local Contracts
 - Plugin manifest: `pleroma/.claude-plugin/plugin.json`; plugin index: `registry.jsonl`.
-- Capability membrane: `pleroma/capability-matrix.json` (coordinate `S4/S4'`, owner_agent `anima`, including `m5_4_governance.mediated_run_evidence_bridge.packet_required_fields`).
+- Capability membrane: `pleroma/capability-matrix.json` (coordinate `S4/S4'`, owner_agent `anima`, including `m5_4_governance.mediated_run_evidence_bridge.packet_required_fields`). Gateway METHODS that are not vak-dispatch tools live under their own top-level key with `is_dispatch_tool: false` — `context_assembly` (`s4'.context.assemble`, 51.T51.1) and `orchestration_run` (`s4'.orchestration.score`, 50.T50.10). Keep them OUT of `dispatch_tools`: `Body/S/S4/pi-agent/lib/capability-parity.ts` builds the local capability set from `dispatch_tools[*].name` + `aletheia_mode_internal.tools[*].name` and throws at Pi startup on any drift from what `s4'.mediation.capabilities.list` emits, so a method added there without a matching gateway emission is a startup failure.
 - Source carrier contract (delegated): `Body/S/S4/ta-onta/S4-2p-pleroma/CONTRACT.md`.
 - Owning specs: [[S4-SPEC]], [[S4-ARCHITECTURE]]; stack index [[S-SYSTEM-INDEX]].
 
