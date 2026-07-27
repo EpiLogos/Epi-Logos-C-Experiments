@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T21:09:00.908Z",
+  "updatedAt": "2026-07-27T21:11:04.547Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14971,9 +14971,9 @@
     },
     "30.T30.6": {
       "status": "done",
-      "updatedAt": "2026-07-27T21:09:00.884Z",
+      "updatedAt": "2026-07-27T21:11:04.524Z",
       "claimedAt": "2026-07-27T20:17:29.831Z",
-      "completedAt": "2026-07-27T21:09:00.884Z",
+      "completedAt": "2026-07-27T21:11:04.524Z",
       "evidence": [
         {
           "at": "2026-07-27T18:21:27.078Z",
@@ -14999,6 +14999,20 @@
               "Body/M/pratibimba-app/src/styles.css",
               "Body/M/pratibimba-app/tests/e2e/design-primitives.spec.ts",
               "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/30.T30.6.md"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-27T21:11:04.524Z",
+          "text": "COMMIT-HASH CORRECTION to the previous entry. It cites 'commit 3494d3de' — that is WRONG and the record must not stand on it. Two m-dev agents share one .git/index, so a sibling Track-50 'git add' landed between my 'git add' and 'git commit': 3494d3de carries the 30.T30.6 message but contains ONLY Track-50 substrate (portal-core, ta-onta, Seeds/M5'), and at that moment the 30.T30.6 deliverable was NOT in the tree at all while the ledger said done — exactly the shape this repo refuses. Caught by auditing 'git show --stat' after the sibling's b5f33437 provenance note appeared. The real deliverable is now commit 5dcb82a8 (all 17 pratibimba-app files; presence of stateGrammar.ts/primitives.tsx/bridgeReadiness.ts/styles.css/design-primitives.spec.ts re-verified with 'git cat-file -e HEAD:<path>' and the EmptyState/LoadingPulse/ownerTrack symbols confirmed inside the committed blobs, not just on disk). 5dcb82a8 also swept in Track-50's S4-4p-anima/tests/acceptance-live.mjs by the same race; recorded in aa4171d5 rather than rewritten, since nothing is lost either way and rewriting shared history under a concurrently-committing agent is the more dangerous move. Track 50 owns that file; this tranche claims no authorship of it. Everything else in the previous entry stands unchanged — the verification it rests on (independent verify-tranche PASS, verifier claude-opus5-t30-verify != closer; 1565 app-test; 5/5 design-primitives e2e vs a real gateway) was run against these same file contents.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/design-primitives.spec.ts  # cwd Body/M/pratibimba-app, UF class-proof vs real spawned gateway",
+            "exitCode": 0,
+            "testsPassed": 1570,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/stateGrammar.ts",
+              "Body/M/pratibimba-app/src/ui/primitives.tsx"
             ]
           }
         }
