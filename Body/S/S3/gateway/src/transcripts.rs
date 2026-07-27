@@ -4,7 +4,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Deserialize, Serialize};
 
-use epi_s3_gateway_contract::{HarnessTurnEvent, VakAddress};
+use epi_s3_gateway_contract::{
+    HarnessTurnEvent, OrchestrationTrace, VakAddress, ORCHESTRATION_TRACE_KIND,
+};
 
 use super::session_store::slug;
 
@@ -21,6 +23,13 @@ pub struct TranscriptEntry {
     pub vak_address: Option<VakAddress>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub event: Option<HarnessTurnEvent>,
+    /// The deterministic unit a code-mode orchestration produces (50.T50.14).
+    ///
+    /// Additive and defaulted, so every transcript written before this field
+    /// existed still parses — `read_entries` fails the whole file on one bad
+    /// line, so a non-defaulted field here would orphan live sessions.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub orchestration_trace: Option<OrchestrationTrace>,
     pub timestamp_ms: u128,
 }
 
@@ -57,6 +66,7 @@ pub fn append_message(
             harness_id: None,
             vak_address: None,
             event: None,
+            orchestration_trace: None,
             timestamp_ms: now_ms()?,
         },
     )
@@ -78,6 +88,7 @@ pub fn append_harness_turn_event(
             harness_id: Some(record.harness_id),
             vak_address: Some(record.vak_address),
             event: Some(record.event),
+            orchestration_trace: None,
             timestamp_ms: now_ms()?,
         },
     )
@@ -99,6 +110,43 @@ pub fn append_abort(
             harness_id: None,
             vak_address: None,
             event: None,
+            orchestration_trace: None,
+            timestamp_ms: now_ms()?,
+        },
+    )
+}
+
+/// Append a completed orchestration's deterministic trace (50.T50.14).
+///
+/// Written into the SAME session transcript everything else scores from, under
+/// its own `kind`, because the point is that the replacement unit lands where
+/// the staircase used to — `aeon_eval` reads one file, not two.
+pub fn append_orchestration_trace(
+    gate_root: impl AsRef<Path>,
+    session_key: &str,
+    trace: OrchestrationTrace,
+    vak_address: Option<VakAddress>,
+) -> Result<(), String> {
+    let run_id = trace.run_id.clone();
+    append_entry(
+        gate_root,
+        session_key,
+        TranscriptEntry {
+            kind: ORCHESTRATION_TRACE_KIND.to_owned(),
+            role: "orchestration".to_owned(),
+            // Human-legible summary only; every reader takes the structured
+            // field, never this string.
+            message: format!(
+                "{} ops over score {} ({})",
+                trace.ops.len(),
+                trace.score_id,
+                &trace.score_hash[..trace.score_hash.len().min(12)]
+            ),
+            run_id: Some(run_id),
+            harness_id: None,
+            vak_address,
+            event: None,
+            orchestration_trace: Some(trace),
             timestamp_ms: now_ms()?,
         },
     )

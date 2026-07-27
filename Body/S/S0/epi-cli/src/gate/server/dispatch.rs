@@ -729,13 +729,60 @@ pub(super) async fn dispatch_rpc(
         "chat.send" => start_chat_run(state_root, runtime, &store, &frame.params).await,
         "chat.inject" => {
             let session_key = required_str(&frame.params, "sessionKey")?;
+            let record = store.ensure(&session_key).map_err(internal_error)?;
+
+            // 50.T50.14 — a completed orchestration deposits its deterministic
+            // trace into the session transcript. Additive on the EXISTING
+            // transcript-write method rather than a new one: `chat.inject` is
+            // already "put a record in this session's transcript", the trace is
+            // a transcript record, and a dedicated method is a contract-surface
+            // decision that belongs to the Architect, not to this tranche.
+            // When `orchestrationTrace` is present it is the payload and
+            // `message` is not required; the two shapes never mix.
+            if let Some(raw) = frame.params.get("orchestrationTrace") {
+                let trace: epi_s3_gateway_contract::OrchestrationTrace =
+                    serde_json::from_value(raw.clone()).map_err(|err| {
+                        invalid_params_error(format!("orchestrationTrace is unreadable: {err}"))
+                    })?;
+                if trace.score_hash.trim().is_empty() {
+                    // Replay is checkable only because the program identity
+                    // rides along; a trace without it cannot be compared to
+                    // the run it claims to repeat.
+                    return Err(invalid_params_error(
+                        "orchestrationTrace.scoreHash is required — a trace with no program \
+                         identity cannot be replayed against the run it claims to be"
+                            .to_owned(),
+                    ));
+                }
+                let vak_address = frame
+                    .params
+                    .get("vakAddress")
+                    .and_then(|value| serde_json::from_value(value.clone()).ok());
+                let op_count = trace.ops.len();
+                let run_id = trace.run_id.clone();
+                epi_s3_gateway::transcripts::append_orchestration_trace(
+                    state_root,
+                    &record.canonical_key,
+                    trace,
+                    vak_address,
+                )
+                .map_err(internal_error)?;
+                publish_session_surface(state_root, &record)?;
+                return Ok(DispatchResult::immediate(json!({
+                    "ok": true,
+                    "canonicalKey": record.canonical_key,
+                    "kind": epi_s3_gateway_contract::ORCHESTRATION_TRACE_KIND,
+                    "runId": run_id,
+                    "ops": op_count,
+                })));
+            }
+
             let message = required_str(&frame.params, "message")?;
             let role = frame
                 .params
                 .get("role")
                 .and_then(|value| value.as_str())
                 .unwrap_or("assistant");
-            let record = store.ensure(&session_key).map_err(internal_error)?;
             chat::inject_message(state_root, &record.canonical_key, role, &message)
                 .map_err(internal_error)?;
             publish_session_surface(state_root, &record)?;

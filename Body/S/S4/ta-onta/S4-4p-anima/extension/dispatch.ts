@@ -64,6 +64,20 @@ import {
   type VakEvalOptions,
   type VakEvalReceipt,
 } from "../modules/vak-eval-emit.ts";
+// 50.T50.14 — the run captured as the deterministic unit fed to learning. The
+// ops go to the transcript; the Rust reader derives the metrics. Nothing here
+// computes one: the classification vocabulary lives in exactly one place.
+import {
+  appendDistillationRow,
+  distillationRowForRun,
+  emitOrchestrationTrace,
+  type DistillationDeclaration,
+  type DistillationRow,
+  type OrchestrationTraceOp,
+  type OrchestrationTraceUsage,
+  type TraceEmitOptions,
+  type TraceEmitReceipt,
+} from "../modules/orchestration-trace.ts";
 import type {
   AletheiaEloConfig,
   MercuriusTrialOutcomes,
@@ -617,12 +631,37 @@ export async function rerunScore<T>(input: {
     declaration?: Partial<VakEvalDeclaration>;
     options?: VakEvalOptions;
   };
+  /**
+   * Capture this run as the deterministic learning unit (50.T50.14).
+   *
+   * `ops` is what the script actually did — the operations a code-mode run
+   * performs inside one turn, which the `toolCallObserved` staircase would
+   * otherwise never record. The trace lands in the session transcript, where
+   * `aeon_eval` derives the behavioural metrics from it.
+   *
+   * `distillation` is opt-in on top: a training row needs three annotation
+   * channels, and `user_articulation_simulation` has no producer in a run at
+   * all, so an undeclared channel is refused rather than invented.
+   */
+  trace?: {
+    sessionKey: string;
+    ops: readonly OrchestrationTraceOp[];
+    usage?: Partial<OrchestrationTraceUsage>;
+    options?: TraceEmitOptions;
+    distillation?: {
+      teacherOutput: string;
+      declaration: DistillationDeclaration;
+      path?: string;
+    };
+  };
 }): Promise<{
   result: T;
   score: ScoreDocument;
   run: ScoreRunRecord;
   trial?: MercuriusUpdateResult;
   vakEval?: VakEvalReceipt;
+  trace?: TraceEmitReceipt;
+  distillationRow?: DistillationRow;
 }> {
   const { score, orchestration } = loadScoredOrchestration(input.scoreId);
   const previous = getCSState(input.sessionId);
@@ -658,7 +697,50 @@ export async function rerunScore<T>(input: {
       );
     }
 
-    if (!input.elo) return { result, score, run, ...(vakEval ? { vakEval } : {}) };
+    // The deterministic trace: what the run DID, in the vocabulary the metrics
+    // are derived from. Emitted before the trial for the same reason vak_eval
+    // is — the trace records the run, the trial judges it.
+    let trace: TraceEmitReceipt | undefined;
+    let distillationRow: DistillationRow | undefined;
+    if (input.trace) {
+      const deterministicTrace = {
+        scoreId: score.id,
+        scoreHash: score.hash,
+        runId: run.scoreId === score.id ? `${score.id}:${input.at ?? ""}` : score.id,
+        ops: input.trace.ops,
+        usage: {
+          turns: input.trace.usage?.turns ?? 1,
+          inputTokens: input.trace.usage?.inputTokens ?? 0,
+          outputTokens: input.trace.usage?.outputTokens ?? 0,
+          totalTokens: input.trace.usage?.totalTokens ?? 0,
+        },
+      };
+      trace = await emitOrchestrationTrace(
+        {
+          sessionKey: input.trace.sessionKey,
+          trace: deterministicTrace,
+          vakAddress: orchestration.address,
+        },
+        input.trace.options ?? {},
+      );
+      if (input.trace.distillation) {
+        distillationRow = distillationRowForRun({
+          task: score.provenance.task ?? score.id,
+          teacherOutput: input.trace.distillation.teacherOutput,
+          trace: deterministicTrace,
+          declaration: input.trace.distillation.declaration,
+        });
+        appendDistillationRow(distillationRow, input.trace.distillation.path);
+      }
+    }
+
+    const extras = {
+      ...(vakEval ? { vakEval } : {}),
+      ...(trace ? { trace } : {}),
+      ...(distillationRow ? { distillationRow } : {}),
+    };
+
+    if (!input.elo) return { result, score, run, ...extras };
 
     // The run has completed and the program identity is in hand. The trial id is
     // the score hash plus the run's own timestamp: a byte-identical program run
@@ -679,7 +761,7 @@ export async function rerunScore<T>(input: {
       ...(input.elo.databasePath === undefined ? {} : { databasePath: input.elo.databasePath }),
       computedAt: at,
     });
-    return { result, score, run, trial, ...(vakEval ? { vakEval } : {}) };
+    return { result, score, run, trial, ...extras };
   } finally {
     setOrigination(input.sessionId, previous.origination);
   }

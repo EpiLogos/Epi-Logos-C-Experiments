@@ -107,6 +107,66 @@ pub fn aeon_eval_ledger_from_transcript(
 
         collect_rubric_scores(&entry, &mut rubric_accumulator);
 
+        // 50.T50.14 — the deterministic orchestration trace.
+        //
+        // Everything below this branch derives its metrics by counting
+        // `toolCallObserved` events, which is exactly the compounding JSON
+        // staircase Track 50 replaces with a single generated script. One
+        // script emits one turn, so a code-mode run that did fifty reads and
+        // ten edits would otherwise read as ZERO of each — the measurement
+        // going blind precisely when the orchestration works as designed.
+        //
+        // The ops are classified by the SAME `classify_tool` the staircase
+        // path uses, and they share `saw_edit` with it, so a transcript
+        // carrying both units accumulates one coherent ordering rather than
+        // two independent tallies.
+        if let Some(trace) = entry
+            .get("orchestration_trace")
+            .or_else(|| entry.get("orchestrationTrace"))
+        {
+            if let Some(ops) = trace.get("ops").and_then(Value::as_array) {
+                for op in ops {
+                    let name = op
+                        .get("operation")
+                        .and_then(Value::as_str)
+                        .unwrap_or_default();
+                    match classify_tool(name, op) {
+                        Some(ToolClass::Read) => {
+                            metrics.read_tool_observations += 1;
+                            if !saw_edit {
+                                metrics.reads_before_first_edit += 1;
+                            }
+                        }
+                        Some(ToolClass::Edit) => {
+                            metrics.edit_tool_observations += 1;
+                            saw_edit = true;
+                        }
+                        Some(ToolClass::Test) => {
+                            metrics.test_tool_observations += 1;
+                            if saw_edit {
+                                metrics.tests_after_first_edit += 1;
+                            }
+                        }
+                        None => {}
+                    }
+                }
+            }
+            if let Some(usage) = trace.get("usage") {
+                // A code-mode run reports the turns it ACTUALLY took, which is
+                // the number the staircase inflated. Counting it here is what
+                // makes the token delta between the two units measurable.
+                metrics.turns += integer_field(usage, &["turns"]);
+                metrics.input_tokens += integer_field(usage, &["inputTokens", "input_tokens"]);
+                metrics.output_tokens += integer_field(usage, &["outputTokens", "output_tokens"]);
+                metrics.total_tokens += integer_field(usage, &["totalTokens", "total_tokens"]);
+                if let Some(cost) = numeric_field(usage, &["costUsd", "cost_usd", "cost", "usd"]) {
+                    total_cost += cost;
+                    saw_cost = true;
+                }
+            }
+            continue;
+        }
+
         let Some(event) = entry.get("event") else {
             continue;
         };
