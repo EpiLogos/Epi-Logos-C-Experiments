@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T18:19:18.712Z",
+  "updatedAt": "2026-07-27T18:21:27.102Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14971,15 +14971,20 @@
     },
     "30.T30.6": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-27T18:21:27.078Z",
+      "claimedAt": "2026-07-27T18:20:11.614Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-27T18:21:27.078Z",
+          "text": "RECON ONLY — claim released with a clean tree, no code written. Recorded so the next agent starts from the inventory rather than re-deriving it. CARRIED ALREADY (src/ui/primitives.tsx): PendingBadge, ReadinessIndicator, BlockedOverlay all exist; ProvenanceBorder too. The nine-id readiness LAW is landed and typed in src/ui/bridgeReadiness.ts (BridgeReadinessId, BRIDGE_READINESS_IDS, readinessSeverity, readinessTier, needsWrappingShell, classifyReadiness) and re-declared verbatim as CHROME-CONTRACT §6, machine-checked by src/chromeContract.test.ts. REAL GAPS: (1) EmptyState — absent entirely; (2) LoadingPulse — absent entirely, and it carries a real law worth honouring, Foundation Principle 2: when the bridge is available the pulse advances with the profile tick and there is NO local timer, falling back to a local 200ms timer ONLY under bridge_unavailable (note the heartbeat pulses at 1Hz — see the 28.T28.4 finding about per-tick work); (3) the three existing primitives are UNTYPED against the taxonomy — PendingBadge takes  not BridgeReadinessId, ReadinessIndicator takes a loose three-value state, BlockedOverlay takes a bare reason string, and NONE of them surface ownerTrack, which the spec makes the point of the tooltip ('the user can identify which track owns the missing field'); (4) per-id semantic colour (readiness.id.<id>) is not tokenised — the spec is explicit that it must be per-id, not generic amber. AUTHORITIES FOR THE BUILD, both located: ownerTrack + per-id meaning live in the readinessTaxonomy array of Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json (frozen tree — do NOT import across the boundary; the carrier already owns a verbatim re-declaration of this taxonomy by design in CHROME-CONTRACT §6, so extending src/ui/bridgeReadiness.ts with ownerTrack/meaning continues that established pattern rather than inventing law), and src/engine/integratedReadiness.ts already carries per-FIELD ownerTrack strings as a precedent for the shape. VERIFY LINE demands 9 ids x 5 primitives = 45 cases plus a reason-routing test for ownerTrack, a deep-link test (s5_review_blocked opens the OmniPanel Review fold — that fold is live as ReviewBlocksPane), and a consume-not-fork lint; track 30 is class UF so it also needs real-surface proof. Depends on 30.T30.5 (done, 5a8ff33f) whose accessibility contract the new primitives must satisfy — EmptyState/LoadingPulse need aria text equivalents and LoadingPulse is CONTINUOUS motion, so under prefers-reduced-motion it must stop entirely per reducedMotionDurationMs()."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-t30-states",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-27T18:20:11.614Z",
+      "runId": "20260727T182011Z-30-T30.6",
       "worktree": null,
       "blocker": null
     },
@@ -20714,19 +20719,38 @@
       "blocker": null
     },
     "50.T50.14": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-27T17:52:26.997Z",
+      "status": "done",
+      "updatedAt": "2026-07-27T18:21:24.844Z",
       "claimedAt": "2026-07-27T17:52:26.997Z",
-      "completedAt": null,
+      "completedAt": "2026-07-27T18:21:24.844Z",
       "evidence": [
         {
           "at": "2026-07-27T17:41:40.096Z",
           "text": "RECON ONLY — no code written; claim released back to pending so the next worker starts from these findings rather than re-deriving them. Two BRIEF CORRECTIONS and one substantive design finding, all verified against the tree, none of them fixed here. (1) RESIDENCY ERROR in the Build line, the same class 50.T50.10 recorded: aeon_eval.rs / AeonEvalMetrics is NOT in Body/S/S5/epii-autoresearch-core (that crate has no such file; `grep -rn AeonEval` over the repo returns nothing under S5). The real surface is Body/S/S3/redis-context/src/aeon_eval.rs — `aeon_eval_ledger_from_transcript(transcript_path, AeonEvalContext) -> AeonEvalLedger`, plus `AeonEvalLedger::redis_records()` and `AeonEvalLedger::graphiti_episode()`, exercised by Body/S/S3/redis-context/tests/aeon_eval_ledger.rs. Build against redis-context, not epii-autoresearch-core. (2) THE LOAD-BEARING GAP, which is the actual work of this tranche: `aeon_eval_ledger_from_transcript` derives EVERY behavioural metric by counting `toolCallObserved` events in the JSONL transcript (read_tool_observations, edit_tool_observations, test_tool_observations, reads_before_first_edit, tests_after_first_edit, and both ratios; turns and tokens come from `turnComplete`). That is precisely the compounding JSON staircase this track exists to REPLACE. So a code-mode orchestration — one script instead of N JSON tool calls — currently reads as all-zeros: the learning substrate goes blind exactly when the orchestration works as designed. Making the deterministic trace produce those metrics IS the deliverable; feeding the existing reader unchanged would produce an honest-looking ledger of nothing. (3) EMISSION SEAM already exists and needs no contract-surface widening: `TranscriptEntry` (Body/S/S3/gateway/src/transcripts.rs) is a String-`kind` record that ALREADY carries `vak_address: Option<VakAddress>` and `event: Option<HarnessTurnEvent>`, with append_message / append_harness_turn_event / append_abort as the writers. A new additive `kind` for the orchestration trace is the light-touch option; adding a HarnessTurnEvent variant would be a gateway-contract surface change and wants Architect sign-off first. (4) GRAPHITI DEPOSIT is landed and already shaped for this: `session_memory_deposit` (Body/S/S3/graphiti-runtime/src/native_gateway.rs) takes content/sourceAgent/sessionKey/namespaceRef/dayId/qlPosition/cp/cpf, and the existing `AeonEvalGraphitiEpisode` struct already carries exactly that field set. (5) DISTILLATION ROW CONTRACT is strict and enforced at Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/distill_dataset_gen.py: a row REQUIRES non-empty `prompt` and `teacher_output`, and `annotations` carrying all three of lens_coherence / verifier_pass / user_articulation_simulation (missing one raises). Expect the 50.T50.12 pattern again — `verifier_pass` is plausibly the run outcome and `lens_coherence` plausibly the declared mef_lens or the 50.T50.13 tonal reading, but `user_articulation_simulation` has NO producer in an orchestration run and should be declared/refused by name rather than invented. DEPENDENCY 50.T50.13 verified real by this same worker (built and closed it): portal.vak_eval now emits and VakTonalReading is on the wire, so the trace already has a reading to carry."
+        },
+        {
+          "at": "2026-07-27T18:21:24.844Z",
+          "text": "The run becomes the unit learning can actually read. TWO BRIEF CORRECTIONS, verified not assumed. (1) RESIDENCY, third instance of this class in the track (after 50.T50.10's handler and 50.T50.12's three tables that never existed): aeon_eval.rs / AeonEvalMetrics is NOT in Body/S/S5/epii-autoresearch-core — that crate has no such file — it is Body/S/S3/redis-context/src/aeon_eval.rs. Built against the real one. (2) THE GAP IS BIGGER THAN THE BRIEF SAYS, and this is the actual deliverable: `aeon_eval_ledger_from_transcript` derives EVERY behavioural metric (read/edit/test observations, reads_before_first_edit, tests_after_first_edit, both ratios) by counting `toolCallObserved` — the exact compounding JSON staircase this track exists to replace. A code-mode run emits ONE script and therefore one turn, so a run that did fifty reads and ten edits read as ZERO of each: the measurement went blind precisely when the orchestration worked as designed, and feeding the existing reader unchanged would have produced an honest-looking ledger of nothing. LANDED: (a) gateway-contract gains src/orchestration_trace.rs — OrchestrationTrace {scoreId, scoreHash, runId, ops, usage} + ORCHESTRATION_TRACE_KIND, with `operation`/`command` named to match what classify_tool ALREADY reads so the classification law stays in exactly one place, and carrying NO transcripts/results/child output because the compounding-history problem is the thing being escaped. (b) gateway transcripts.rs gains append_orchestration_trace + an additive TranscriptEntry.orchestration_trace; serde(default) is a necessity not a style choice, since read_entries fails the WHOLE file on one unparseable line and a non-defaulted field would have orphaned every live session's transcript. (c) aeon_eval reads the second unit from the same file, classified by the SAME classify_tool and sharing its saw_edit ordering, so a mixed transcript accumulates ONE coherent tally rather than two; usage.turns is the turns the run actually took, which is what makes the two units comparable. (d) chat.inject carries it — the EXISTING transcript-write method, extended additively, no new method and no ratchet change; a dedicated method is a contract-surface decision that belongs to the Architect and is flagged, not taken. (e) scoreHash is REQUIRED and refused when blank: replay is checkable only because program identity rides along, and a trace that cannot say which program it ran is not a trace of anything. (f) rerunScore is the production caller. HONEST GAP DECLARED, NOT INVENTED: distill_dataset_gen.py requires all three annotation channels, and `user_articulation_simulation` has NO producer in any orchestration — nothing in a run simulates how a user would articulate the work. All three are declared and refused BY NAME (the refusal names every missing channel at once). A corpus scored on an invented channel trains the student on a fiction, which is worse than no row. GREEN: redis-context 15/0, gateway-contract 93/0, gateway 101/0, S4 ta-onta 800/0, ta-onta-types 230/230 strict tsc, all 0 fail. THE BLINDNESS IS PINNED, NOT MERELY FIXED: `a_code_mode_run_is_invisible_without_its_trace` holds the defect in place — six real operations, zero observed, no ratio denominator — so it cannot silently return. WHOLE CHAIN IN ONE TEST, no fixture standing in for any link: gate_orchestration_trace deposits through the REAL gateway, the gateway writes the REAL session transcript, and aeon_eval reads that file off disk — read 4 / edit 1 / test 1 (the `cargo test` COMMAND text is what makes a bare `bash` a test), reads_before_first_edit 3, ratio 0.75, turns 1. Plus replay determinism (two sessions, one program, identical metrics) and the additive proof that chat.history still returns exactly its one message while the trace stays invisible to chat and visible to the scorer. LIVE-WIRE: node tests/trace-live.mjs 21/21 against a REAL spawned epi gate start — a real rerunScore, the trace read back out of the real transcript on disk with ops in order and the step coordinate riding along, the distillation row handed to the REAL distill_dataset_gen.py which ACCEPTS it and preserves all three channels into the dataset, replay proven byte-identical, and an undeclared channel refused with nothing fabricated reaching the corpus. INDEPENDENT VERIFICATION opus-verifier-t50-14-20260727 (verifier != closer): PASS record, W-class gate GREEN in 121.3s — and this tranche's core change is INSIDE the W scope, unlike 50.T50.13's: redis-context 15, gateway 101, gateway-contract 93, ta-onta 800, ta-onta-types, live-wire, gateway-methods, spacetime, graphiti-runtime, harness-selftest 107, honesty-lint. The gate-lane mutex serialized it behind a concurrent Track-30 verifier, as designed. NOT IN SCOPE OF THIS TRANCHE, stated rather than glossed: the Build line also names a Graphiti episodic deposit via session_memory_deposit. That surface is landed (Body/S/S3/graphiti-runtime/src/native_gateway.rs) and AeonEvalGraphitiEpisode already carries exactly its field set (content/qlPosition/cpf/cp/source/dayId/tick12), so the wiring is small — but it is not built here and the Verify line does not ask for it (it names aeon_eval and the distillation row). Left for 50.T50.15's end-to-end acceptance, flagged so it is not mistaken for done. DOX pass done across gateway-contract, gateway, redis-context and S4-4p-anima AGENTS.md, including the residency correction so the next reader does not re-derive it.",
+          "receipt": {
+            "command": "node Body/S/S4/ta-onta/S4-4p-anima/tests/trace-live.mjs  # real spawned epi gate start; trace read back from the real transcript; row accepted by the real distill_dataset_gen.py",
+            "exitCode": 0,
+            "testsPassed": 21,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway-contract/src/orchestration_trace.rs",
+              "Body/S/S3/gateway/src/transcripts.rs",
+              "Body/S/S3/redis-context/src/aeon_eval.rs",
+              "Body/S/S3/redis-context/tests/aeon_eval_ledger.rs",
+              "Body/S/S0/epi-cli/tests/gate_orchestration_trace.rs",
+              "Body/S/S4/ta-onta/S4-4p-anima/modules/orchestration-trace.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.14.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "claude-opus5-t50-vakeval-20260727",
-      "leaseExpiresAt": "2026-07-27T20:52:26.997Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-27T17:52:26.997Z",
       "runId": "20260727T175226Z-50-T50.14",
       "worktree": null,
@@ -27006,11 +27030,12 @@
     {
       "runId": "20260727T175226Z-50-T50.14",
       "taskId": "50.T50.14",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-27T17:52:26.997Z",
       "owner": "claude-opus5-t50-vakeval-20260727",
       "leaseExpiresAt": "2026-07-27T20:52:26.997Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-27T18:21:24.844Z"
     },
     {
       "runId": "20260727T175356Z-30-T30.5",
@@ -27021,12 +27046,22 @@
       "leaseExpiresAt": "2026-07-27T20:53:56.640Z",
       "worktree": null,
       "completedAt": "2026-07-27T18:19:18.673Z"
+    },
+    {
+      "runId": "20260727T182011Z-30-T30.6",
+      "taskId": "30.T30.6",
+      "status": "pending",
+      "startedAt": "2026-07-27T18:20:11.614Z",
+      "owner": "opus-mdev-t30-states",
+      "leaseExpiresAt": "2026-07-27T21:20:11.614Z",
+      "worktree": null,
+      "completedAt": "2026-07-27T18:21:27.078Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T17:52:27.305Z",
-    "updatedAt": "2026-07-27T17:52:27.305Z",
+    "createdAt": "2026-07-27T18:21:25.124Z",
+    "updatedAt": "2026-07-27T18:21:25.124Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
