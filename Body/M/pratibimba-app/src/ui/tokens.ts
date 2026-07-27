@@ -11,13 +11,15 @@
  *   (DR-WC-DL-1); changing a value here is a design decision, not a refactor.
  * Public surface: inkBright, inkDim, ringLit, accent, accentShadow,
  *   wheelUnlit, FAMILY_HUES, ATELIER_CLUSTER_HUES, PRIVACY_COLOURS,
- *   NARA_EARTH_ANCHOR, NARA_WARM_BIAS.
+ *   READINESS_ID_COLOURS, NARA_EARTH_ANCHOR, NARA_WARM_BIAS.
  * Does NOT own: the CSS custom-property vocabulary (src/styles.css); the
  *   kernel element scene colours (numeric ELEMENT_COLOURS in
  *   engine/cosmicMath.ts — kernel M2 identity, not a UI token). Values
  *   marked "duplicates" below also exist in styles.css; cross-language
  *   dedupe is a later Track-30 step, never silent.
  */
+
+import type { BridgeReadinessId } from './bridgeReadiness';
 
 // ── Ink — text/glyph tones ──────────────────────────────────────────────────
 /** Bright ink: wheel centre numerals. Duplicates styles.css `--ink`. */
@@ -200,6 +202,42 @@ export const NARA_EARTH_ANCHOR = '#8a7355';
  *  lives in the token source where a change to it is visible as such). Small
  *  enough that every M-tier subsystem stays recognisably itself. */
 export const NARA_WARM_BIAS = 0.18;
+
+// ── Readiness per-id semantic colour (30.T30.6) ─────────────────────────────
+// `epilogos.colour.readiness.id.<id>` — the 30.6 brief is explicit that the
+// state grammar colours PER ID, not with one generic amber: a reader should be
+// able to tell *which axis is down* from the chip alone.
+//
+// Derivation (never decoration): hue names the axis the id reports on, and it
+// is taken from an identity the carrier already owns rather than invented —
+//   bridge_unavailable        → `--danger` (the hard refusal red)
+//   profile_missing_field     → M-tier gold-orange (the profile is M0' matheme)
+//   s2_graph_blocked          → S-tier substrate violet (the graph layer)
+//   s3_subscription_blocked   → `--epi-zodiacal-anchor` cyan (the stream layer)
+//   s5_review_blocked         → `--facet-sophia` gold (governance)
+//   authority_payload_missing → `--facet-psyche` silver (a degraded read)
+//   privacy_blocked           → the privacy `protected_local` earth, lightened
+//                               to clear AA on the dark ground
+//   degraded_but_readable     → muted green (readable, annotated)
+//   ready_public_current      → `--ready`
+//
+// This axis is FINER than `readinessTier` and does not replace it: the tier
+// still drives the inline border (green/amber/red), the per-id token drives the
+// chip, badge and overlay tint. Both resolutions of every id meet WCAG 2.1 AA
+// body-text contrast (4.5:1) against their polarity's `--ground`, asserted in
+// `primitives.test.tsx` with the 30.T30.5 `meetsContrast` — a token that cannot
+// be read is not a token.
+export const READINESS_ID_COLOURS: Record<BridgeReadinessId, ThemedHue> = {
+    bridge_unavailable: { light: '#a53c3c', dark: '#e08a8a' },
+    profile_missing_field: { light: '#8a4f0a', dark: '#e0a35f' },
+    s2_graph_blocked: { light: '#5b3a7e', dark: '#c9a0e8' },
+    s3_subscription_blocked: { light: '#1d5f70', dark: '#77b8c8' },
+    s5_review_blocked: { light: '#6f5210', dark: '#d4af37' },
+    authority_payload_missing: { light: '#4e5665', dark: '#b8bcc4' },
+    privacy_blocked: { light: '#6a583f', dark: '#a08a68' },
+    degraded_but_readable: { light: '#3d5f4c', dark: '#9fb0a8' },
+    ready_public_current: { light: '#2c7346', dark: '#9fd0a8' }
+};
 
 /** Resolve one family-tier × archetype-grade token. */
 export function familyGrade(family: FamilyLetter, grade: ArchetypeGrade): ThemedHue {

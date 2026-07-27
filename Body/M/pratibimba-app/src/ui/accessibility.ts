@@ -116,6 +116,10 @@ export const MOTION_KIND = Object.freeze({
     flowStreamline: 'continuous',
     /** Ambient cosmic drift. */
     ambientDrift: 'continuous',
+    /** `<LoadingPulse>` (30.6) — "still waiting", a duration, not an event. It
+     *  therefore STOPS entirely under reduced motion; the wait is still legible
+     *  because the primitive keeps its text equivalent either way. */
+    loadingPulse: 'continuous',
     /** The lemniscate face inversion — a state change. */
     lemniscateToggle: 'discrete',
     /** Layout switch (daily-0-1 <-> ide-deep) — a state change. */

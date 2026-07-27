@@ -14,7 +14,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { BlockedOverlay, PendingBadge, ReadinessIndicator } from './primitives';
+import { BlockedOverlay, LoadingPulse, PendingBadge, ReadinessIndicator } from './primitives';
 import {
     needsWrappingShell,
     readinessSeverity,
@@ -22,9 +22,6 @@ import {
     type BridgeReadinessBinding
 } from './bridgeReadiness';
 import { useBridgeReadiness } from './useBridgeReadiness';
-
-/** Amber/red tiers map onto the 3-state ReadinessIndicator; green stays quiet. */
-const TIER_TO_INDICATOR = { amber: 'pending', red: 'blocked' } as const;
 
 /**
  * Pure renderer over an already-resolved binding — no store, so it is trivially
@@ -47,7 +44,14 @@ export function BridgeReadinessBadgeView({
                 data-readiness={binding.readinessId}
                 data-tick={binding.lastTickObserved}
             >
-                <PendingBadge id={binding.bindingKey} />
+                <PendingBadge
+                    id={binding.bindingKey}
+                    readinessId={binding.readinessId}
+                    reason={binding.blockers[0]}
+                />
+                {/* No tick is coming while the bridge is down, so this is the
+                    one place the 30.6 pulse runs on its local CSS cycle. */}
+                <LoadingPulse readinessId={binding.readinessId} label={binding.bindingKey} />
                 {children}
             </div>
         );
@@ -67,14 +71,16 @@ export function BridgeReadinessBadgeView({
             data-tick={binding.lastTickObserved}
         >
             {tier !== 'green' ? (
-                <ReadinessIndicator state={TIER_TO_INDICATOR[tier]} detail={binding.readinessId} />
+                <ReadinessIndicator readinessId={binding.readinessId} reason={binding.blockers[0]} />
             ) : null}
             {binding.blockers.length > 0 ? (
                 <span className="bridge-readiness-blockers" data-testid="bridge-readiness-blockers">
                     {binding.blockers.join('; ')}
                 </span>
             ) : null}
-            {tier === 'red' ? <BlockedOverlay reason={binding.blockers[0] ?? binding.readinessId} /> : null}
+            {tier === 'red' ? (
+                <BlockedOverlay readinessId={binding.readinessId} reason={binding.blockers[0]} />
+            ) : null}
             {children}
         </div>
     );

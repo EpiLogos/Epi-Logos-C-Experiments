@@ -11,14 +11,38 @@
  *   Track-30 coordinate/provenance/readiness shelf, and the canonical Cl(4,2)
  *   colour-binary palette (single source; the played-torus consumes it,
  *   never a local copy).
- * Does NOT own: the taxonomy law (DR-UI-3), the shader implementation
- *   (Track 15 baselines), bedrock chain genesis (portal-core CCT-6).
+ *   Carries the 30.T30.6 state grammar — <EmptyState> · <LoadingPulse> ·
+ *   <PendingBadge> · <BlockedOverlay> · <ReadinessIndicator> — all five typed
+ *   on the nine-id taxonomy, all five surfacing ownerTrack, coloured per id
+ *   (never a generic amber).
+ * Does NOT own: the taxonomy law (DR-UI-3), the nine-id readiness law
+ *   (ui/bridgeReadiness), the state-grammar pure law (ui/stateGrammar), the
+ *   per-id colour values (ui/tokens READINESS_ID_COLOURS + styles.css), the
+ *   shader implementation (Track 15 baselines), bedrock chain genesis
+ *   (portal-core CCT-6).
  */
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
+import { commands } from '../commands/registry';
+import { useProfileTick } from '../state/useProfileTick';
 import { FAMILY_HUES } from './tokens';
 import { coordinateAriaLabel } from './accessibility';
+import {
+    readinessMeaning,
+    readinessOwnerTrack,
+    readinessRecovery,
+    readinessSeverity,
+    type BridgeReadinessId
+} from './bridgeReadiness';
+import {
+    emptyStateAriaLabel,
+    loadingPulseOpacity,
+    loadingPulsePhase,
+    readinessAriaLabel,
+    readinessIdColour,
+    readinessTooltip
+} from './stateGrammar';
 
 export { ProvenanceBadge } from './ProvenanceBadge';
 export type { ProvenanceState } from './ProvenanceBadge';
@@ -232,45 +256,204 @@ export function ProvenanceBorder(props: {
     );
 }
 
-/** Inline pending identifier for an absent but named producer or dataset. */
-export function PendingBadge({ id }: { readonly id: string }) {
-    return (
-        <span className="pending-badge" data-testid="pending-badge" title={id}>
-            pending: {id}
-        </span>
-    );
-}
+// ── The 30.6 state grammar: empty · loading · pending · blocked ─────────────
+// Four states a binding can be in when it has no datum to show, plus the chip
+// that annotates one that does. All five are typed on the nine-id taxonomy and
+// all five surface `ownerTrack`, so a reader can always tell WHICH axis is down
+// and WHO owns it. Per-id colour comes from `readiness.id.<id>` — never a
+// generic amber — and every one of them keeps a text equivalent, because the
+// colour is an aid to the reading and not the reading itself.
 
-export type ReadinessState = 'ready' | 'pending' | 'blocked';
-
-/** Compact readiness state for a binding that has no separate error panel. */
-export function ReadinessIndicator(props: {
-    readonly state: ReadinessState;
-    readonly detail?: string;
-}) {
-    return (
-        <span
-            className={`readiness-indicator readiness-${props.state}`}
-            data-readiness={props.state}
-            data-testid="readiness-indicator"
-        >
-            {props.detail ?? props.state}
-        </span>
-    );
-}
-
-/** Full-surface refusal state with an optional concrete recovery action. */
-export function BlockedOverlay(props: {
-    readonly reason: string;
+/**
+ * A binding with no data and NO readiness blocker — the bridge is fine, there
+ * is simply nothing here yet. Distinct from pending (waiting) and from blocked
+ * (refused): conflating them is what makes an interface feel broken when it is
+ * merely empty.
+ */
+export function EmptyState(props: {
+    /** The consumer's coordinate-family letter; tints the mark to its tier. */
+    readonly family?: string;
+    /** Onboarding hint — the consumer's words, never invented here. */
+    readonly hint: string;
     readonly actionLabel?: string;
     readonly onAction?: () => void;
 }) {
+    const family = (props.family ?? '').charAt(0).toUpperCase();
+    const tint = FAMILY_HUES[family] ?? 'var(--ink-dim)';
     return (
-        <div className="blocked-overlay" data-testid="blocked-overlay" role="alert">
-            <p>{props.reason}</p>
+        <div
+            className="empty-state"
+            data-testid="empty-state"
+            data-family={family || 'unknown'}
+            aria-label={emptyStateAriaLabel(props.hint)}
+            style={{ ['--empty-state-tint' as string]: tint }}
+        >
+            <span className="empty-state-mark" aria-hidden="true" style={{ color: tint }}>
+                ○
+            </span>
+            <p className="empty-state-hint">{props.hint}</p>
             {props.actionLabel && props.onAction ? (
-                <button type="button" onClick={props.onAction}>
+                <button type="button" className="empty-state-action" onClick={props.onAction}>
                     {props.actionLabel}
+                </button>
+            ) : null}
+        </div>
+    );
+}
+
+/**
+ * A binding awaiting data. Foundation principle 2: when the bridge is available
+ * the pulse advances with the profile tick and NO local clock runs — the
+ * opacity is a pure function of `tick12`. Only `bridge_unavailable` (no tick is
+ * coming) falls back to a local 200ms cycle, and that fallback is a CSS
+ * animation rather than a JS timer, so the "no setInterval/rAF in src" law of
+ * 30.11 holds without exception.
+ *
+ * `loadingPulse` is CONTINUOUS motion (30.T30.5): under
+ * `prefers-reduced-motion: reduce` styles.css stops it dead and pins opacity —
+ * the wait stays legible through the text equivalent, which never animates.
+ */
+export function LoadingPulse(props: {
+    readonly family?: string;
+    /** Which axis we are waiting on; `bridge_unavailable` takes the fallback. */
+    readonly readinessId?: BridgeReadinessId;
+    /** What is being awaited, in the consumer's words. */
+    readonly label?: string;
+}) {
+    const readinessId = props.readinessId ?? 'ready_public_current';
+    const bridgeless = readinessId === 'bridge_unavailable';
+    const tick = useProfileTick();
+    const family = (props.family ?? '').charAt(0).toUpperCase();
+    const tint = FAMILY_HUES[family] ?? 'var(--ink-dim)';
+    const label = props.label ?? 'Loading';
+    // Tick-driven: opacity IS the tick, so the pulse cannot drift from the
+    // clock the rest of the shell renders on. Bridgeless: leave opacity to CSS.
+    const opacity = bridgeless ? undefined : loadingPulseOpacity(loadingPulsePhase(tick.tick12));
+
+    return (
+        <span
+            className={`loading-pulse ${bridgeless ? 'loading-pulse-local' : 'loading-pulse-tick'}`}
+            data-testid="loading-pulse"
+            data-family={family || 'unknown'}
+            data-readiness={readinessId}
+            data-clock={bridgeless ? 'local' : 'profile-tick'}
+            data-tick={tick.tick12 ?? 'none'}
+            role="status"
+            aria-live="polite"
+            aria-label={`${label}, waiting`}
+        >
+            <span className="loading-pulse-mark" aria-hidden="true" style={{ color: tint, opacity }} />
+            <span className="loading-pulse-label">{label}</span>
+        </span>
+    );
+}
+
+/**
+ * Inline pending identifier for an absent but named producer or dataset.
+ *
+ * `id` is the SUBJECT — the binding key or missing field the user is waiting on
+ * (`pending: klein_flip_state`). `readinessId` is the taxonomy axis that says
+ * why, and it drives the colour and the tooltip. They are different things: one
+ * names the datum, the other names the failure.
+ */
+export function PendingBadge(props: {
+    readonly id: string;
+    readonly readinessId: BridgeReadinessId;
+    readonly reason?: string;
+}) {
+    return (
+        <span
+            className="pending-badge"
+            data-testid="pending-badge"
+            data-readiness={props.readinessId}
+            data-owner-track={readinessOwnerTrack(props.readinessId)}
+            style={{ ['--readiness-id-colour' as string]: readinessIdColour(props.readinessId) }}
+            title={readinessTooltip(props.readinessId, props.reason)}
+            aria-label={readinessAriaLabel(props.readinessId, props.reason)}
+        >
+            pending: {props.id}
+        </span>
+    );
+}
+
+/** The coarse three-state axis kept for surfaces that resolve readiness before
+ *  the nine-id taxonomy reaches them. It is a VIEW of the taxonomy, never a
+ *  second one — CHROME-CONTRACT §6 forbids a parallel readiness enum. */
+export type ReadinessState = 'ready' | 'pending' | 'blocked';
+
+/**
+ * Small status chip alongside or within a binding — a dot by default, an icon
+ * where the consumer has room. Carries per-id colour and the id + reason +
+ * ownerTrack tooltip, so a binding can surface its state without a full badge.
+ */
+export function ReadinessIndicator(props: {
+    readonly readinessId: BridgeReadinessId;
+    readonly reason?: string;
+    readonly mode?: 'dot' | 'icon';
+}) {
+    const mode = props.mode ?? 'dot';
+    const severity = readinessSeverity(props.readinessId);
+    return (
+        <span
+            className={`readiness-indicator readiness-indicator-${mode} readiness-${severity}`}
+            data-testid="readiness-indicator"
+            data-readiness={props.readinessId}
+            data-severity={severity}
+            data-mode={mode}
+            data-owner-track={readinessOwnerTrack(props.readinessId)}
+            style={{ ['--readiness-id-colour' as string]: readinessIdColour(props.readinessId) }}
+            title={readinessTooltip(props.readinessId, props.reason)}
+            aria-label={readinessAriaLabel(props.readinessId, props.reason)}
+            role="img"
+        >
+            {mode === 'icon' ? <span className="readiness-indicator-glyph" aria-hidden="true">◑</span> : null}
+        </span>
+    );
+}
+
+/**
+ * Full-surface refusal, covering the consumer surface with the reason and a
+ * concrete way out. The call-to-action is derived from the id
+ * (`readinessRecovery`) and routes through the ONE command registry — so
+ * `s5_review_blocked` really opens the OmniPanel Review fold rather than
+ * describing it. Ids with no honest recovery render no button at all.
+ */
+export function BlockedOverlay(props: {
+    readonly readinessId: BridgeReadinessId;
+    readonly reason?: string;
+    /** Override the derived action — used where a consumer owns a better one. */
+    readonly actionLabel?: string;
+    readonly onAction?: () => void;
+}) {
+    const recovery = readinessRecovery(props.readinessId);
+    const reason = props.reason ?? readinessMeaning(props.readinessId);
+    const ownerTrack = readinessOwnerTrack(props.readinessId);
+    const overridden = props.actionLabel !== undefined && props.onAction !== undefined;
+    const actionLabel = overridden ? props.actionLabel : recovery.commandId ? recovery.label : null;
+    const runAction = overridden
+        ? props.onAction
+        : recovery.commandId
+          ? () => {
+                void commands.execute(recovery.commandId as string);
+            }
+          : undefined;
+
+    return (
+        <div
+            className="blocked-overlay"
+            data-testid="blocked-overlay"
+            data-readiness={props.readinessId}
+            data-owner-track={ownerTrack}
+            data-command={recovery.commandId ?? 'none'}
+            style={{ ['--readiness-id-colour' as string]: readinessIdColour(props.readinessId) }}
+            role="alert"
+            aria-label={readinessAriaLabel(props.readinessId, props.reason)}
+        >
+            <p className="blocked-overlay-reason">{reason}</p>
+            <p className="blocked-overlay-owner">owner: track {ownerTrack}</p>
+            {actionLabel && runAction ? (
+                <button type="button" className="blocked-overlay-action" onClick={runAction}>
+                    {actionLabel}
                 </button>
             ) : null}
         </div>

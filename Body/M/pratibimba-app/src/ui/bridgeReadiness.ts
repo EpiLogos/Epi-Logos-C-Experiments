@@ -18,7 +18,9 @@
  *   from the S0 severity axis.
  * Public surface: BridgeReadinessId, BRIDGE_READINESS_IDS, readinessSeverity,
  *   readinessTier, needsWrappingShell, BridgeReadinessBinding,
- *   MExtensionReadinessSnapshot, EMPTY_READINESS_SNAPSHOT, classifyReadiness.
+ *   MExtensionReadinessSnapshot, EMPTY_READINESS_SNAPSHOT, classifyReadiness,
+ *   ReadinessTaxonomyEntry, READINESS_TAXONOMY, readinessOwnerTrack,
+ *   readinessMeaning, ReadinessRecovery, readinessRecovery.
  * Does NOT own: the readiness transport (gatewayClient 'readiness' event), the
  *   S0 taxonomy law itself, the profile clock (state/useProfileTick), the
  *   integrated 1-2-3 field gate (engine/integratedReadiness — a single-id
@@ -109,6 +111,156 @@ export function readinessTier(id: BridgeReadinessId): BridgeReadinessTier {
  */
 export function needsWrappingShell(id: BridgeReadinessId): boolean {
     return id === 'bridge_unavailable';
+}
+
+/**
+ * A taxonomy row: the id, its two classification axes, the track that owns the
+ * axis, and what the id actually means.
+ *
+ * `ownerTrack` and `meaning` are MIRRORED verbatim (never imported — M→the
+ * frozen epi-theia tree is a forbidden edge) from the declared canon
+ * `contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy`,
+ * continuing the same mirror the nine ids themselves already are.
+ *
+ * `severity` and `tier` are COMPUTED from the functions above rather than
+ * re-declared, so the carrier keeps exactly one severity law. Note the
+ * authority JSON spells `ready_public_current` severity `ready` where the S0
+ * axis this file mirrors spells it `ok`; the S0 spelling wins here because
+ * `readinessSeverity` is locked to Rust `BridgeReadinessState::severity`.
+ */
+export interface ReadinessTaxonomyEntry {
+    readonly id: BridgeReadinessId;
+    readonly severity: BridgeReadinessSeverity;
+    readonly tier: BridgeReadinessTier;
+    /** The cycle-3 track that owns the axis this id reports on. */
+    readonly ownerTrack: string;
+    readonly meaning: string;
+}
+
+/** ownerTrack + meaning, mirrored from the 07-t0 authority in canonical order. */
+const TAXONOMY_PROSE: Readonly<Record<BridgeReadinessId, { ownerTrack: string; meaning: string }>> =
+    Object.freeze({
+        bridge_unavailable: {
+            ownerTrack: '01',
+            meaning:
+                'The shared bridge instance is absent, disconnected, or unreadable; extensions render no derived state.'
+        },
+        profile_missing_field: {
+            ownerTrack: '01',
+            meaning:
+                'The current MathemeHarmonicProfile lacks a field the extension needs and must name the missing field explicitly.'
+        },
+        s2_graph_blocked: {
+            ownerTrack: '02',
+            meaning:
+                'Coordinate-native graph law, provenance, or graph-service readiness is missing for the requested surface.'
+        },
+        s3_subscription_blocked: {
+            ownerTrack: '03',
+            meaning:
+                'The shared stream/session/DAY-NOW path cannot provide ordered live state to the extension.'
+        },
+        s5_review_blocked: {
+            ownerTrack: '04',
+            meaning:
+                'Review/evidence/governance state is not available for deep action or deposit surfaces.'
+        },
+        authority_payload_missing: {
+            ownerTrack: '02',
+            meaning:
+                'The authoritative graph/profile/review payload for this display is not available, so the extension must show exactly which owner is missing instead of inferring defaults.'
+        },
+        privacy_blocked: {
+            ownerTrack: '03/04',
+            meaning: 'Protected-local or consent-gated data cannot cross into the current surface.'
+        },
+        degraded_but_readable: {
+            ownerTrack: '01/02/03/04',
+            meaning:
+                'A read-only or lower-fidelity view is safe to show, but write/deposit/deep interaction remains blocked.'
+        },
+        ready_public_current: {
+            ownerTrack: '01/02/03/04',
+            meaning:
+                'The surface has all current public-safe data and capabilities needed for its first slice.'
+        }
+    });
+
+/** LAW: the nine rows, in canonical S0 order, each fully classified. */
+export const READINESS_TAXONOMY: readonly ReadinessTaxonomyEntry[] = Object.freeze(
+    BRIDGE_READINESS_IDS.map(id =>
+        Object.freeze({
+            id,
+            severity: readinessSeverity(id),
+            tier: readinessTier(id),
+            ownerTrack: TAXONOMY_PROSE[id].ownerTrack,
+            meaning: TAXONOMY_PROSE[id].meaning
+        })
+    )
+);
+
+/** The track that owns the axis this id reports on — the thing a reader needs
+ *  in order to know who to chase, which is the whole point of surfacing it. */
+export function readinessOwnerTrack(id: BridgeReadinessId): string {
+    return TAXONOMY_PROSE[id].ownerTrack;
+}
+
+/** What the id means, in the authority's own words. */
+export function readinessMeaning(id: BridgeReadinessId): string {
+    return TAXONOMY_PROSE[id].meaning;
+}
+
+/**
+ * The recovery a blocked surface can honestly offer.
+ *
+ * `commandId` is a REAL id from `commands/catalog.ts` or it is null — a button
+ * that routes nowhere is worse than no button, so a null renders none. Three
+ * ids deliberately carry no action: `ready_public_current` and
+ * `degraded_but_readable` have nothing to recover (the datum renders), and
+ * `privacy_blocked` must not become one-click consent — crossing a privacy
+ * boundary is a governed act, not a call-to-action.
+ *
+ * `bridge_unavailable` routes to Diagnostics rather than a "Reconnect" button
+ * because the carrier reconnects on its own (`gatewayClient` exponential
+ * backoff); Diagnostics is where the WS state and readiness ledger actually are.
+ */
+export interface ReadinessRecovery {
+    readonly label: string;
+    readonly commandId: string | null;
+}
+
+const RECOVERY: Readonly<Record<BridgeReadinessId, ReadinessRecovery>> = Object.freeze({
+    bridge_unavailable: Object.freeze({
+        label: 'Open Diagnostics',
+        commandId: 'omnipanel.tab.activate.7'
+    }),
+    profile_missing_field: Object.freeze({
+        label: 'Open Diagnostics',
+        commandId: 'omnipanel.tab.activate.7'
+    }),
+    s2_graph_blocked: Object.freeze({
+        label: 'Open Diagnostics',
+        commandId: 'omnipanel.tab.activate.7'
+    }),
+    s3_subscription_blocked: Object.freeze({
+        label: 'Open Gateway',
+        commandId: 'omnipanel.tab.activate.6'
+    }),
+    s5_review_blocked: Object.freeze({
+        label: 'Open Review tab',
+        commandId: 'omnipanel.openReview'
+    }),
+    authority_payload_missing: Object.freeze({
+        label: 'Open Evidence tab',
+        commandId: 'omnipanel.tab.activate.4'
+    }),
+    privacy_blocked: Object.freeze({ label: 'Protected — consent required', commandId: null }),
+    degraded_but_readable: Object.freeze({ label: 'Readable, write blocked', commandId: null }),
+    ready_public_current: Object.freeze({ label: 'Ready', commandId: null })
+});
+
+export function readinessRecovery(id: BridgeReadinessId): ReadinessRecovery {
+    return RECOVERY[id];
 }
 
 /** A single binding's resolved readiness (retarget of the frozen contract). */

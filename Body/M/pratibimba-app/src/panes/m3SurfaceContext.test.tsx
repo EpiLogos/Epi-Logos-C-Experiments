@@ -73,7 +73,14 @@ describe('M3 profile-tick and readiness contexts', () => {
         );
 
         expect(screen.getByTestId('m3-readiness-boundary').dataset.readiness).toBe('pending');
-        expect(screen.getByTestId('readiness-indicator').textContent).toContain('awaiting-profile');
+        // 30.T30.6: the indicator became a chip, so the live reason rides its
+        // text equivalents (and now carries the owning track alongside).
+        expect(screen.getByTestId('readiness-indicator').getAttribute('title')).toContain(
+            'awaiting-profile'
+        );
+        expect(screen.getByTestId('readiness-indicator').getAttribute('aria-label')).toContain(
+            'awaiting-profile'
+        );
 
         rerender(
             <M3ProfileTickProvider>

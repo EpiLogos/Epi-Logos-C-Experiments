@@ -22,6 +22,7 @@ import type { KernelBridgeCachedProfile } from '../bridge/types';
 import { useTickStore } from '../state/stores';
 import { useProfileTick, type ProfileTickView } from '../state/useProfileTick';
 import { BlockedOverlay, PendingBadge, ReadinessIndicator, type ReadinessState } from '../ui/primitives';
+import type { BridgeReadinessId } from '../ui/bridgeReadiness';
 import './m3SurfaceContext.css';
 
 export interface M3ProfileTickValue extends ProfileTickView {
@@ -32,6 +33,26 @@ export interface M3ProfileTickValue extends ProfileTickView {
 export interface M3ReadinessBinding {
     readonly state: ReadinessState;
     readonly reason: string;
+    /** The nine-id taxonomy state, when the producer knows it. The 30.6 state
+     *  grammar is typed on the taxonomy, so supplying this is what gets a
+     *  binding its per-id colour, its ownerTrack and its recovery action. */
+    readonly readinessId?: BridgeReadinessId;
+}
+
+/**
+ * Widen the coarse three-state to the nine-id taxonomy WITHOUT inventing
+ * precision. `ready` is unambiguous. Anything else with no explicit id means
+ * the bridge has not classified this binding — which is exactly what
+ * `classifyReadiness` already calls `bridge_unavailable` for an unreported
+ * binding, and is never the same as claiming a specific dimensional block. The
+ * reason string is carried through verbatim, so nothing the producer said is
+ * lost in the widening.
+ */
+function coarseReadinessId(binding: M3ReadinessBinding): BridgeReadinessId {
+    if (binding.readinessId !== undefined) {
+        return binding.readinessId;
+    }
+    return binding.state === 'ready' ? 'ready_public_current' : 'bridge_unavailable';
 }
 
 export type M3ReadinessBindings = Readonly<Record<string, M3ReadinessBinding>>;
@@ -99,6 +120,7 @@ export function M3ReadinessBoundary({
 }) {
     const tick = useM3ProfileTick();
     const readiness = useM3Readiness(bindingKey, fallback);
+    const readinessId = coarseReadinessId(readiness);
 
     return (
         <div
@@ -109,9 +131,13 @@ export function M3ReadinessBoundary({
             data-generation={tick.generation ?? 'none'}
             title={readiness.reason}
         >
-            <ReadinessIndicator state={readiness.state} detail={readiness.reason} />
-            {readiness.state === 'pending' ? <PendingBadge id={bindingKey} /> : null}
-            {readiness.state === 'blocked' ? <BlockedOverlay reason={readiness.reason} /> : null}
+            <ReadinessIndicator readinessId={readinessId} reason={readiness.reason} />
+            {readiness.state === 'pending' ? (
+                <PendingBadge id={bindingKey} readinessId={readinessId} reason={readiness.reason} />
+            ) : null}
+            {readiness.state === 'blocked' ? (
+                <BlockedOverlay readinessId={readinessId} reason={readiness.reason} />
+            ) : null}
             {children}
         </div>
     );

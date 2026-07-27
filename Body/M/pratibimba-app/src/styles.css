@@ -34,6 +34,21 @@
      names) and what it reaches (wikilink, the cool anchor). */
   --canon-coordinate: #d4a574;
   --canon-wikilink: #77b8c8;
+  /* 30.T30.6 — `epilogos.colour.readiness.id.<id>`: per-id semantic colour for
+     the state grammar, NOT one generic amber. Hue names the axis that is down
+     (see ui/tokens.ts READINESS_ID_COLOURS for the derivation); these are the
+     DARK-polarity resolutions and the light block below carries the other nine.
+     Both sets are asserted against ui/tokens.ts in primitives.test.tsx, so CSS
+     and JS cannot drift, and both meet WCAG AA body text on their ground. */
+  --readiness-bridge-unavailable: #e08a8a;
+  --readiness-profile-missing-field: #e0a35f;
+  --readiness-s2-graph-blocked: #c9a0e8;
+  --readiness-s3-subscription-blocked: #77b8c8;
+  --readiness-s5-review-blocked: #d4af37;
+  --readiness-authority-payload-missing: #b8bcc4;
+  --readiness-privacy-blocked: #a08a68;
+  --readiness-degraded-but-readable: #9fb0a8;
+  --readiness-ready-public-current: #9fd0a8;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* ── T30.1 — the organism's one type voice (DR-FACE-7: spine law) ─────────
@@ -105,6 +120,18 @@
   /* Canon marks, darkened for the light ground — same two identities. */
   --canon-coordinate: #8a5b23;
   --canon-wikilink: #1f6b7d;
+  /* 30.T30.6 readiness ids, light polarity — same nine identities, darkened
+     for the light ground. Polarity is preserved per id (30.4): a warm id stays
+     warm, a cool id stays cool; only the lightness crosses. */
+  --readiness-bridge-unavailable: #a53c3c;
+  --readiness-profile-missing-field: #8a4f0a;
+  --readiness-s2-graph-blocked: #5b3a7e;
+  --readiness-s3-subscription-blocked: #1d5f70;
+  --readiness-s5-review-blocked: #6f5210;
+  --readiness-authority-payload-missing: #4e5665;
+  --readiness-privacy-blocked: #6a583f;
+  --readiness-degraded-but-readable: #3d5f4c;
+  --readiness-ready-public-current: #2c7346;
 }
 
 /* Glass: the dark ground with translucent raised surfaces — a treatment, not
@@ -1941,26 +1968,124 @@ textarea {
   border-left-color: var(--danger);
 }
 
-.pending-badge,
-.readiness-indicator {
+/* ── 30.T30.6 state grammar: empty · loading · pending · blocked ────────────
+   Each of the four states LOOKS different, because the point of the grammar is
+   that "nothing here yet", "still waiting", "a named field is missing" and
+   "refused" are four different things to a reader. Colour comes from the per-id
+   custom property the primitive sets inline (--readiness-id-colour); the shapes
+   below never hardcode a readiness hue. */
+
+.pending-badge {
   display: inline-block;
   padding: 0.1rem 0.35rem;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--readiness-id-colour, var(--hairline));
+  color: var(--readiness-id-colour, var(--ink));
   font-size: var(--type-caption);
 }
 
-.readiness-ready { color: var(--ready); }
-.readiness-pending { color: var(--accent); }
-.readiness-blocked { color: var(--danger); }
+.readiness-indicator {
+  display: inline-block;
+  vertical-align: middle;
+  background: var(--readiness-id-colour, var(--ink-dim));
+  color: var(--readiness-id-colour, var(--ink));
+}
+
+/* The two consumer modes of the brief: an 8x8 dot, or a 16x16 glyph. */
+.readiness-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.readiness-indicator-icon {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--readiness-id-colour, var(--hairline));
+}
+
+.readiness-indicator-glyph {
+  font-size: var(--type-caption);
+}
 
 .blocked-overlay {
   padding: 0.75rem;
-  border: 1px solid var(--danger);
+  border: 1px solid var(--readiness-id-colour, var(--danger));
+  border-left-width: 3px;
   color: var(--ink);
 }
 
 .blocked-overlay p {
   margin: 0 0 0.5rem;
+}
+
+.blocked-overlay-owner {
+  font-size: var(--type-caption);
+  color: var(--ink-dim);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1rem;
+  color: var(--ink-dim);
+  text-align: center;
+}
+
+.empty-state-mark {
+  font-size: var(--type-heading-2);
+}
+
+.empty-state-hint {
+  margin: 0;
+  font-size: var(--type-small);
+}
+
+.loading-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--type-caption);
+  color: var(--ink-dim);
+}
+
+.loading-pulse-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Bridge available: opacity is an inline style computed from tick12 — the
+   profile tick IS the clock, and nothing local runs (Foundation principle 2).
+   Bridge unavailable: no tick is coming, so the fallback cycle runs in CSS —
+   a local clock, but never a JS timer, so the 30.11 no-setInterval/rAF law in
+   src/ holds with no exception carved out for it. */
+.loading-pulse-local .loading-pulse-mark {
+  animation: loading-pulse-fade 200ms ease-in-out infinite alternate;
+}
+
+@keyframes loading-pulse-fade {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+/* `loadingPulse` is CONTINUOUS motion (DR-WC-DL-4 / 30.T30.5): under reduced
+   motion it stops ENTIRELY rather than slowing. The `!important` is load-
+   bearing — it must beat the tick-driven inline opacity, which is the whole
+   point of stopping. The wait stays legible: the text equivalent never moved. */
+@media (prefers-reduced-motion: reduce) {
+  .loading-pulse-local .loading-pulse-mark {
+    animation: none;
+  }
+  .loading-pulse .loading-pulse-mark {
+    opacity: 1 !important;
+  }
 }
 
 .provenance-derived { color: #9fd0a8; }

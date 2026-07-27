@@ -13,7 +13,7 @@
  *   are milliseconds as plain numbers (never `Nms` literals) so they stay a
  *   named source, not a raw duration a consumer copies.
  * Public surface: TRANSITIONS (re-export), PROFILE_TICK_EASING, SLERP,
- *   FLOW_STREAMLINE, KLEIN_FLIP, FLOW_WATCHER_DEBOUNCE_MS.
+ *   FLOW_STREAMLINE, KLEIN_FLIP, FLOW_WATCHER_DEBOUNCE_MS, LOADING_PULSE.
  * Does NOT own: the transition configs themselves (primitives.tsx TRANSITIONS is
  *   the single source), the tick clock (state/useProfileTick), or the CSS
  *   animation keyframes (styles.css).
@@ -46,3 +46,15 @@ export const KLEIN_FLIP = Object.freeze({ flagMs: 300, crossfadeMs: 500 });
 
 /** Khora flow-watcher debounce (19.11) before `chronos.tranche.complete.quiet`. */
 export const FLOW_WATCHER_DEBOUNCE_MS = 2000;
+
+/** `<LoadingPulse>` (30.6): a 200ms-period opacity fade between 0.5 and 1.0
+ *  while a binding awaits data. The period is named here rather than in the
+ *  component so the "200ms" of the brief is a token, not a literal a consumer
+ *  copies. Foundation principle 2 still rules the CLOCK: when the bridge is
+ *  available the phase comes from the profile tick and nothing local runs; the
+ *  period only governs the local fallback that `bridge_unavailable` allows. */
+export const LOADING_PULSE = Object.freeze({
+    periodMs: 200,
+    minOpacity: 0.5,
+    maxOpacity: 1
+});

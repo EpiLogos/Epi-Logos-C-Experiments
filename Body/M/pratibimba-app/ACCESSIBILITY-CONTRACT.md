@@ -31,8 +31,10 @@ make deliberately.
 the distinction is the point:
 
 - **Continuous** motion communicates temporal *flow* — the profile-tick slerp,
-  DR flow streamlines, ambient drift. Under `reduce` it stops entirely (0ms);
-  streamlines freeze at their last tick.
+  DR flow streamlines, ambient drift, and the 30.6 `loadingPulse`. Under
+  `reduce` it stops entirely (0ms); streamlines freeze at their last tick and
+  the loading pulse pins at full opacity. Stopping the pulse costs the reader
+  nothing, because its text equivalent ("<label>, waiting") never animated.
 - **Discrete** motion communicates a state *change* — the lemniscate face
   inversion, the Klein flip, the layout switch. Under `reduce` it is
   **preserved**, collapsed to a `REDUCED_MOTION_SNAP_MS` (100ms) snap. Removing
@@ -52,6 +54,9 @@ Every visually-encoded datum carries a text equivalent.
 | `CodonString` | codon + amino acid + start/stop (`AUG` → "Codon AUG, amino acid methionine, start") | **live**; identity comes from the real gateway codon lookup, never a browser LUT |
 | Cl(4,2) signature cue | "signature minus one, cool indigo" / "signature plus one, warm amber" | **live** via `cl42SignatureAriaLabel` |
 | Profile tick | `aria-live="polite"`, "tick N of 11", rate-limited to one per second | **live** via `createTickAnnouncer` |
+| `EmptyState` | "Nothing here yet. &lt;consumer hint&gt;" — empty is a RESULT, and the reader is told so rather than meeting silence | **live** via `emptyStateAriaLabel` |
+| `LoadingPulse` | `role="status"` + `aria-live="polite"`, "&lt;label&gt;, waiting" | **live**; unaffected by reduced motion |
+| `PendingBadge` / `BlockedOverlay` / `ReadinessIndicator` | readiness id + live reason (or the id's canonical meaning) + **owning track** | **live** via `readinessAriaLabel`; the chip is 8x8/16x16, so its whole content is the text equivalent |
 | `HexagramString` | number + **name** + lines ("Hexagram 1, the Creative, six solid lines") | **partial — bounded** |
 | `SymbolicCoordinateString` | decomposed reading of the verifier-authored address | **partial — bounded** |
 

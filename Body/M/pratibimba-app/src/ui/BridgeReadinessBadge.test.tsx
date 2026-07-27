@@ -82,7 +82,13 @@ describe('BridgeReadinessBadgeView — pure per-binding rendering across the nin
     it('amber states render an inline readiness indicator with the readinessId', () => {
         render(<BridgeReadinessBadgeView binding={binding('s2_graph_blocked')} />);
         const indicator = screen.getByTestId('readiness-indicator');
-        expect(indicator.textContent).toContain('s2_graph_blocked');
+        // 30.T30.6: the indicator is a CHIP (8x8 dot / 16x16 icon), so the id
+        // rides the data attribute and the text equivalents rather than visible
+        // text — and it now carries the owning track with it.
+        expect(indicator.getAttribute('data-readiness')).toBe('s2_graph_blocked');
+        expect(indicator.getAttribute('data-owner-track')).toBe('02');
+        expect(indicator.getAttribute('title')).toContain('s2_graph_blocked');
+        expect(indicator.getAttribute('aria-label')).toContain('s2_graph_blocked');
     });
 
     it('renders human-readable blockers inline when present', () => {

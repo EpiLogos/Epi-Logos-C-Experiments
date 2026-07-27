@@ -35,11 +35,13 @@ import {
     NARA_EARTH_ANCHOR,
     NARA_WARM_BIAS,
     PRIVACY_COLOURS,
+    READINESS_ID_COLOURS,
     SIGNATURE_COLOURS,
     type ArchetypeGrade,
     type FamilyLetter,
     type ThemedHue
 } from './tokens';
+import type { BridgeReadinessId } from './bridgeReadiness';
 
 /** The seven canonical themes a surface can actually resolve at. */
 export type CanonicalTheme =
@@ -238,6 +240,7 @@ function applyNaraBias(value: string, namespace: string, theme: CanonicalTheme, 
  *   - `flow.{mahamayaGold|parashaktiEmerald}` — the DR ring streamlines
  *   - `privacy.{protected_local|protected_local_handle_only|shared_archetype_opt_in}`
  *     — the 25.18 privacy-class register (nara-remapped, per the 30.4 brief)
+ *   - `readiness.id.{nine-id}` — the 30.6 per-id state-grammar colour
  *
  * Throws on an unknown id: a token that does not exist must not resolve to a
  * plausible colour, because a silently-wrong hue is invisible in review.
@@ -272,6 +275,16 @@ export function resolveToken(tokenId: string, theme: CanonicalTheme, domainId: D
         const hue = PRIVACY_COLOURS[parts[1] as keyof typeof PRIVACY_COLOURS];
         if (hue) {
             return applyNaraBias(resolveHue(hue, theme), 'privacy', theme, domainId);
+        }
+    }
+
+    // `readiness.id.<nine-id>` (30.6). NOT nara-remapped: readiness is a
+    // truth signal about the bridge, and a domain must not tint how broken
+    // it looks.
+    if (parts[0] === 'readiness' && parts[1] === 'id' && parts.length === 3) {
+        const hue = READINESS_ID_COLOURS[parts[2] as BridgeReadinessId];
+        if (hue) {
+            return resolveHue(hue, theme);
         }
     }
 
