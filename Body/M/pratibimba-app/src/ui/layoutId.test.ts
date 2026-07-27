@@ -182,7 +182,13 @@ describe('no-redeclaration guard — AST walk (52.T1)', () => {
         expect(findLayoutIdTypeLiterals(values, join(SRC_ROOT, 'values.ts'))).toEqual([]);
     });
 
-    it('no source unit outside the authority declares a layout id in type position', () => {
+    // This guard AST-walks the ENTIRE carrier source tree (500+ files), so it is
+    // I/O-bound by design and runs for seconds even on a quiet machine. The 5s
+    // vitest default is a load-sensitive boundary for that walk, not a real
+    // budget: under parallel disk contention it has timed out mid-walk, which
+    // reports as a guard failure while proving nothing about the tree. The walk
+    // gets room to finish and say something true.
+    it('no source unit outside the authority declares a layout id in type position', { timeout: 30_000 }, () => {
         const { scanned, findings } = scanTree();
         // an empty walk must not be able to fake a pass
         expect(scanned).toBeGreaterThanOrEqual(100);
