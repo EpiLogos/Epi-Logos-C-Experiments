@@ -46,6 +46,18 @@ import {
   type ScoreRunRecord,
 } from "../../S4-1p-hen/modules/score-store.ts";
 import type { CheckpointReason } from "../modules/dispatch-validate.ts";
+// 50.T50.12 — run completion becomes a Mercurius trial. Anima calls INTO
+// Aletheia (its CONTRACT forbids Aletheia routing itself); the hook owns the
+// honest tuple derivation and the refusal when a field has no source.
+import {
+  recordDurableRunTrial,
+  type EloRunDeclaration,
+} from "../modules/elo-trial-hook.ts";
+import type {
+  AletheiaEloConfig,
+  MercuriusTrialOutcomes,
+  MercuriusUpdateResult,
+} from "../../S4-5p-aletheia/modules/mercurius-elo.ts";
 
 export type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 export type CSDirectionality = "day" | "night_prime";
@@ -563,7 +575,28 @@ export async function rerunScore<T>(input: {
   at?: string;
   outcome?: string;
   detail?: Record<string, unknown>;
-}): Promise<{ result: T; score: ScoreDocument; run: ScoreRunRecord }> {
+  /**
+   * Log this completed run as a Mercurius ELO trial (50.T50.12).
+   *
+   * Opt-in, and deliberately so. A trial needs four context fields and three
+   * identity fields the run cannot derive (`modules/elo-trial-hook.ts`), so a
+   * run that has not been told them cannot honestly become a trial — and the
+   * hook refuses rather than inventing them. Omitting this is the honest
+   * default for a run nobody is scoring.
+   */
+  elo?: {
+    declaration: EloRunDeclaration;
+    outcomes: MercuriusTrialOutcomes;
+    config: AletheiaEloConfig;
+    tournament?: "agent" | "canon";
+    databasePath?: string;
+  };
+}): Promise<{
+  result: T;
+  score: ScoreDocument;
+  run: ScoreRunRecord;
+  trial?: MercuriusUpdateResult;
+}> {
   const { score, orchestration } = loadScoredOrchestration(input.scoreId);
   const previous = getCSState(input.sessionId);
 
@@ -578,7 +611,29 @@ export async function rerunScore<T>(input: {
       outcome: input.outcome,
       detail: input.detail,
     });
-    return { result, score, run };
+
+    if (!input.elo) return { result, score, run };
+
+    // The run has completed and the program identity is in hand. The trial id is
+    // the score hash plus the run's own timestamp: a byte-identical program run
+    // twice is exactly the "same matchup" the ELO engine assumes, and the hash
+    // states that more strongly than the context tuple can.
+    const at = input.at ?? new Date().toISOString();
+    const trial = await recordDurableRunTrial({
+      trial: {
+        trialId: `${score.id}:${score.hash.slice(0, 12)}:${at}`,
+        address: orchestration.address,
+        agent: orchestration.steps[0]?.agent ?? "anima",
+        declaration: input.elo.declaration,
+        outcomes: input.elo.outcomes,
+        ...(input.elo.tournament === undefined ? {} : { tournament: input.elo.tournament }),
+        completedAt: at,
+      },
+      config: input.elo.config,
+      ...(input.elo.databasePath === undefined ? {} : { databasePath: input.elo.databasePath }),
+      computedAt: at,
+    });
+    return { result, score, run, trial };
   } finally {
     setOrigination(input.sessionId, previous.origination);
   }

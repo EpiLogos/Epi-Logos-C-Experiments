@@ -5,7 +5,7 @@ SpacetimeDB schema artifacts for S3/S3' runtime persistence surfaces that are no
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]])
 
 ## Ownership
-- `schemas/` — SQL schema artifacts for S3/S3' persistence surfaces, including Aletheia Elo runtime tables.
+- `schemas/` — SQL schema artifacts for S3/S3' persistence surfaces, including Aletheia Elo runtime tables. `elo-runtime.sql` gained its first real consumer in 50.T50.12: `Body/S/S4/ta-onta/S4-5p-aletheia/modules/elo-persistence.ts` READS this file and executes it (idempotently) rather than restating the DDL, which is the consumer-side migration/application check this document asks for. Editing a column here changes what that module persists — the schema is still the single declaration.
 - Does NOT own reducer implementation, gateway routing, or coordinate semantics; those remain in `epi-spacetime-module`, `gateway`, and the owning S4/S5 specs.
 
 ## Local Contracts
