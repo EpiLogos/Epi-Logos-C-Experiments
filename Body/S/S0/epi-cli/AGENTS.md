@@ -21,6 +21,21 @@ measured rather than promised:
 - `tests/s0_membrane_guardrails.rs` asks the categorical question per file: is this module
   inventoried, or does it carry an `// S0 ADAPTER: Body/S/<…>` header naming its real authority?
 
+### Known residency debt (measured 2026-07-28)
+
+`epi graph …` constructing a `Neo4jClient` is the membrane doing its job — a passthrough must
+reach the module it exposes. Composing Cypher is a different thing, and there is one site doing it:
+
+- **`src/core/quintessential_view.rs:1042`** (`load_graph_subbranch`) builds a Cypher string with
+  interpolated child clauses and runs it directly (`:1114`, `:1223`). That is S2 graph law resident
+  in the `epi know` surface, not an argv-and-print wrapper. It should become a call into an
+  `epi-s2-graph-services` retrieval function. Counted by the residency ratchet
+  (`contracts/s0-membrane-residency.json`, whose roots now cover the whole crate), so it cannot grow.
+
+The distinction to hold: **reaching a coordinate is passthrough; composing that coordinate's
+queries is law.** The 10 other `Neo4jClient::connect` sites are all in `src/graph/mod.rs`, the
+clap command tree, and are legitimate.
+
 ### To add a gateway method
 
 **Implement the handler in the owning coordinate's crate and register it. Never in `epi-cli`.**
