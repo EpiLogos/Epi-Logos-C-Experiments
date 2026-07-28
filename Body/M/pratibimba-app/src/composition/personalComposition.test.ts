@@ -17,10 +17,10 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { ownerOfMountedSlot } from './compositionLoad';
 import {
     FORBIDDEN_HANDLE_CLASSES_ON_GEOMETRIC,
     PERSONAL_GEOMETRIC_SLOTS,
-    ownerOfSlot,
     type CompositionContributor,
     type GeometricHandleClass,
     type IntegratedGeometricSlot
@@ -47,13 +47,13 @@ const ALL_PERSONAL_SLOTS: readonly PersonalGeometricSlotName[] = [
 describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
     it('mounts with one named owner per personal slot', () => {
         const result = loadPersonalComposition();
-        expect(result.mounted).toBe(true);
-        expect(ownerOfSlot(result, 'left-composition')).toBe('m4-nara');
-        expect(ownerOfSlot(result, 'center-composition')).toBe('m4-nara');
-        expect(ownerOfSlot(result, 'right-composition')).toBe('m5-epii');
-        expect(ownerOfSlot(result, 'grounding')).toBe('m0-anuttara');
-        expect(ownerOfSlot(result, 'composition-ambient')).toBe('m4-nara');
-        expect(ownerOfSlot(result, 'composition-status')).toBe('m4-nara');
+        expect(result.ok).toBe(true);
+        expect(ownerOfMountedSlot(result, 'left-composition')).toBe('m4-nara');
+        expect(ownerOfMountedSlot(result, 'center-composition')).toBe('m4-nara');
+        expect(ownerOfMountedSlot(result, 'right-composition')).toBe('m5-epii');
+        expect(ownerOfMountedSlot(result, 'grounding')).toBe('m0-anuttara');
+        expect(ownerOfMountedSlot(result, 'composition-ambient')).toBe('m4-nara');
+        expect(ownerOfMountedSlot(result, 'composition-status')).toBe('m4-nara');
     });
 
     it('claims every registered personal slot, and only personal slots', () => {
@@ -95,14 +95,14 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
                 };
                 const result = loadPersonalComposition([leak]);
                 expect(
-                    result.mounted,
+                    result.ok,
                     `${handleClass} was granted on '${geometricSlot}'`
                 ).toBe(false);
-                if (!result.mounted) {
-                    expect(result.rejection.reason).toBe(
+                if (!result.ok) {
+                    expect(result.rejection.rejections[0].reason).toBe(
                         'contribution-declares-raw-body-on-geometric-slot'
                     );
-                    expect(result.rejection.contributorId).toBe('m4-nara-leak');
+                    expect(result.rejection.rejections[0].extensionId).toBe('m4-nara-leak');
                 }
             }
         }
@@ -125,13 +125,13 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
                 : contributor
         );
         const result = loadPersonalComposition(withLeak);
-        expect(result.mounted).toBe(false);
+        expect(result.ok).toBe(false);
         const text = describePersonalCompositionLoad(result);
         expect(text).toContain('composition refused');
         expect(text).toContain('contribution-declares-raw-body-on-geometric-slot');
         expect(text).toContain('m4-nara');
         // A refused composition must be distinguishable from an unclaimed slot.
-        expect(ownerOfSlot(result, 'right-composition')).toBe('unmounted');
+        expect(ownerOfMountedSlot(result, 'right-composition')).toBe('unmounted');
     });
 
     it('declares only non-forbidden handle classes itself', () => {
@@ -155,11 +155,11 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
             }
         };
         const result = loadPersonalComposition([...PERSONAL_COMPOSITION_CONTRIBUTORS, intruder]);
-        expect(result.mounted).toBe(false);
-        if (!result.mounted) {
-            expect(result.rejection.reason).toBe('contested-geometric-slot');
+        expect(result.ok).toBe(false);
+        if (!result.ok) {
+            expect(result.rejection.rejections[0].reason).toBe('contested-geometric-slot');
             // The SECOND claimant is named; the first is the incumbent.
-            expect(result.rejection.contributorId).toBe('m5-epii-overlay');
+            expect(result.rejection.rejections[0].extensionId).toBe('m5-epii-overlay');
         }
     });
 

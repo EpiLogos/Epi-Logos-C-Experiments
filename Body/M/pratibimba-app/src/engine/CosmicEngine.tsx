@@ -30,7 +30,7 @@ import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3Codo
 // three mounts without any of them claiming a slot.
 import { loadCosmicComposition } from '../composition/cosmicComposition';
 import { useCompositionProfile } from '../composition/compositionProfileContext';
-import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
+import { ownerOfMountedSlot } from '../composition/compositionLoad';
 import { useCoordinateStore } from '../state/stores';
 import {
     CLOCK_LENSES,
@@ -1041,12 +1041,12 @@ export function CosmicEngine() {
             <div
                 className="pane-message"
                 data-testid="cosmic-engine-fallback"
-                data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
-                data-surface-owner={ownerOfSlot(compositionLoadResult, 'surface')}
-                data-texture-owner={ownerOfSlot(compositionLoadResult, 'texture')}
-                data-cell-state-owner={ownerOfSlot(compositionLoadResult, 'cell-state')}
+                data-composition-mounted={compositionLoadResult.ok ? 'true' : 'false'}
+                data-surface-owner={ownerOfMountedSlot(compositionLoadResult, 'surface')}
+                data-texture-owner={ownerOfMountedSlot(compositionLoadResult, 'texture')}
+                data-cell-state-owner={ownerOfMountedSlot(compositionLoadResult, 'cell-state')}
                 data-composition-rejection={
-                    compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+                    compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
                 }
             >
                 WebGL unavailable — the cosmic clock needs a GPU surface.
@@ -1071,12 +1071,12 @@ export function CosmicEngine() {
             data-m3-lens-ring-cell={m3LensRingProjection?.cells[0]?.cellIndex ?? 'pending'}
             data-torus-knot-phase-p={torusKnotPhase?.p ?? 'pending-m1-topology'}
             data-torus-knot-phase-q={torusKnotPhase?.q ?? 'pending-m1-topology'}
-            data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
-            data-surface-owner={ownerOfSlot(compositionLoadResult, 'surface')}
-            data-texture-owner={ownerOfSlot(compositionLoadResult, 'texture')}
-            data-cell-state-owner={ownerOfSlot(compositionLoadResult, 'cell-state')}
+            data-composition-mounted={compositionLoadResult.ok ? 'true' : 'false'}
+            data-surface-owner={ownerOfMountedSlot(compositionLoadResult, 'surface')}
+            data-texture-owner={ownerOfMountedSlot(compositionLoadResult, 'texture')}
+            data-cell-state-owner={ownerOfMountedSlot(compositionLoadResult, 'cell-state')}
             data-composition-rejection={
-                compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+                compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
             }
         >
             <div ref={hostRef} className="cosmic-engine-canvas" />

@@ -21,7 +21,7 @@ import {
 } from '../composition/compositionEvents';
 import { buildIntegratedPentadicTraceOverlay } from '../composition/integratedPentadicTrace';
 import { useCompositionProfile } from '../composition/compositionProfileContext';
-import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
+import { ownerOfMountedSlot } from '../composition/compositionLoad';
 // 29.T29.3 — the personal composition declares WHO owns each geometric slot
 // and runs that through the real load-time law. The five forbidden handle
 // classes that law guards are all personal material, so until this call
@@ -142,16 +142,16 @@ export function PersonalRecognitionEngine() {
             // surface sits inside the `composition-4-5-0-personal.png` baseline,
             // and `visibility: hidden` preserves its layout box, so any added
             // text would still move the capture. Same idiom as CosmicEngine.
-            data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
-            data-left-composition-owner={ownerOfSlot(compositionLoadResult, 'left-composition')}
-            data-center-composition-owner={ownerOfSlot(compositionLoadResult, 'center-composition')}
-            data-right-composition-owner={ownerOfSlot(compositionLoadResult, 'right-composition')}
-            data-grounding-owner={ownerOfSlot(compositionLoadResult, 'grounding')}
-            data-composition-ambient-owner={ownerOfSlot(compositionLoadResult, 'composition-ambient')}
-            data-composition-status-owner={ownerOfSlot(compositionLoadResult, 'composition-status')}
+            data-composition-mounted={compositionLoadResult.ok ? 'true' : 'false'}
+            data-left-composition-owner={ownerOfMountedSlot(compositionLoadResult, 'left-composition')}
+            data-center-composition-owner={ownerOfMountedSlot(compositionLoadResult, 'center-composition')}
+            data-right-composition-owner={ownerOfMountedSlot(compositionLoadResult, 'right-composition')}
+            data-grounding-owner={ownerOfMountedSlot(compositionLoadResult, 'grounding')}
+            data-composition-ambient-owner={ownerOfMountedSlot(compositionLoadResult, 'composition-ambient')}
+            data-composition-status-owner={ownerOfMountedSlot(compositionLoadResult, 'composition-status')}
             data-composition-blocked-slots={blockedPersonalSlots().join(',')}
             data-composition-rejection={
-                compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+                compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
             }
         >
             <header className="personal-recognition-header">

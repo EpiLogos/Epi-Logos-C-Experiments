@@ -45,7 +45,16 @@ describe('live-wire projection manifest', () => {
 
     it('validates the real captured fixture green with full coverage', async () => {
         const report = await validateCapture(loadFixture());
-        expect(report.failures).toEqual([]);
+        // Twice on 2026-07-28 a tranche added a REQUIRED projection to the
+        // manifest and to the live gateway without refreshing this capture, so
+        // the live bus carried it, the replay did not, and app-test went red
+        // for every lane. The fix is mechanical, so the message says it.
+        expect(
+            report.failures,
+            'stale replay fixture — a required projection is on the live bus but not in the capture. ' +
+                'Re-run `node scripts/live-wire.mjs` against a spawned gateway and copy its capture over ' +
+                'scripts/__fixtures__/live-wire-capture.json. A new required projection lands WITH its fixture.'
+        ).toEqual([]);
         expect(report.ok).toBe(true);
         const satisfied = report.coverage.filter(c => c.satisfied).map(c => c.name);
         for (const entry of PROJECTION_MANIFEST) {

@@ -7,8 +7,8 @@
  * Public surface: COSMIC_SLOT_CARRIER_IDS, COSMIC_COMPOSITION_CONTRIBUTORS,
  *   loadCosmicComposition, describeCosmicCompositionLoad.
  * Does NOT own: the geometric-slot law (`geometricSlotEnforcement.ts` — which
- *   also owns `ownerOfSlot`, since it reads that module's own result type and
- *   the personal declaration reports through it too), the render
+ *   owns the per-contributor verdict), the one loader (`compositionLoad.ts`,
+ *   29.6), the render
  *   (`engine/CosmicEngine.tsx`), or any contributor's own geometry.
  *
  * # Why this file exists
@@ -44,11 +44,9 @@
  * not on screen.
  */
 
-import {
-    compositionLoad,
-    type CompositionContributor,
-    type CompositionLoadResult
-} from './geometricSlotEnforcement';
+import { loadComposition, type LoadCompositionResult } from './compositionLoad';
+import type { CompositionContributor } from './geometricSlotEnforcement';
+import type { KernelBridgeCachedProfile } from '../bridge/types';
 
 /** The modulation-carrier id each geometric slot is rendered by. */
 export const COSMIC_SLOT_CARRIER_IDS = Object.freeze({
@@ -110,9 +108,10 @@ export const COSMIC_COMPOSITION_CONTRIBUTORS: readonly CompositionContributor[] 
  * through exactly the same path the app uses.
  */
 export function loadCosmicComposition(
-    contributors: readonly CompositionContributor[] = COSMIC_COMPOSITION_CONTRIBUTORS
-): CompositionLoadResult {
-    return compositionLoad(contributors);
+    contributors: readonly CompositionContributor[] = COSMIC_COMPOSITION_CONTRIBUTORS,
+    profile: KernelBridgeCachedProfile | null = null
+): LoadCompositionResult {
+    return loadComposition('cosmic-engine.integrated', contributors, profile);
 }
 
 /**
@@ -120,11 +119,12 @@ export function loadCosmicComposition(
  * chrome. A rejection NAMES the contributor and the reason — a composition that
  * failed to mount must never read as an empty one.
  */
-export function describeCosmicCompositionLoad(result: CompositionLoadResult): string {
-    if (!result.mounted) {
-        return `composition refused: ${result.rejection.reason} (${result.rejection.contributorId})`;
+export function describeCosmicCompositionLoad(result: LoadCompositionResult): string {
+    if (!result.ok) {
+        const first = result.rejection.rejections[0];
+        return `composition refused: ${first.reason} (${first.extensionId})`;
     }
-    const owners = result.composition.grantedGeometricClaims
+    const owners = result.mounted.grantedGeometricClaims
         .map(granted => `${granted.geometricSlot}=${granted.extensionId}`)
         .join(' ');
     return `composed: ${owners}`;

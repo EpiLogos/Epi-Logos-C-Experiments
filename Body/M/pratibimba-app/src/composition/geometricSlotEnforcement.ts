@@ -17,7 +17,8 @@
  *   IntegratedGeometricSlot, GeometricHandleClass, IntegratedGeometricClaim,
  *   GeometricClaimVerdict, enforceGeometricPrivacyBoundary,
  *   CompositionContributor, JuxtapositionRejection, MountedComposition,
- *   CompositionLoadResult, compositionLoad, ownerOfSlot.
+ *   CompositionLoadResult, compositionLoad, rejectionFor, REJECTION_REASONS,
+ *   ownerOfSlot.
  * Does NOT own: claim ARBITRATION priority resolution across contributors
  *   (the GeometricCompositionCoordinator conflict order — 29.1), the render
  *   bodies, the readiness envelope (29.10 buildIntegratedReadiness), or the
@@ -207,6 +208,53 @@ export type CompositionLoadResult =
  *     incumbent.
  * A clean load returns the granted geometric claims keyed by slot.
  */
+/** Why each hard-fail is a hard-fail, in one sentence a contributor author can
+ *  act on. Composition-over-juxtaposition is not negotiable, so the message
+ *  says what to change rather than only what was refused. */
+export const REJECTION_REASONS: Readonly<Record<JuxtapositionRejectionReason, string>> =
+    Object.freeze({
+        'contribution-declares-side-by-side-slot':
+            'declares a side-by-side compact view; a composition has slots, not columns — claim a geometric slot or offer a mini-inspector',
+        'contested-geometric-slot':
+            'claims a slot another contributor already owns; two owners on one slot is the overlay this composition replaces, whichever drew last winning silently',
+        'contribution-has-no-mini-mode-fallback-and-no-geometric-claim':
+            'brings no geometric claim, no widget-region claim and no mini-mode fallback, so the composition has nowhere to put it',
+        'contribution-declares-raw-body-on-geometric-slot':
+            'declares a raw personal body on a geometric slot; slots carry handles, summaries and visual state — never the body itself',
+        'contribution-declares-write-back-on-reads-only-slot':
+            'declares a write-back handle on a reads-only slot; texture and cell-state parameterise the surface, they never mutate it',
+        'unknown-geometric-slot': 'names a slot that is not in the geometric registry'
+    });
+
+/**
+ * The verdict for ONE contributor, given the slots already taken.
+ *
+ * Extracted so the composition-level loader (29.6) can collect EVERY rejection
+ * instead of stopping at the first — an author fixing one refusal at a time,
+ * re-running to find the next, is the slow path this avoids — without the two
+ * loaders drifting apart on what the law actually is.
+ */
+export function rejectionFor(
+    contributor: CompositionContributor,
+    claimedSlots: ReadonlySet<string>
+): JuxtapositionRejectionReason | null {
+    if (contributor.compactViewSlot === 'side-by-side') {
+        return 'contribution-declares-side-by-side-slot';
+    }
+    const hasClaim = contributor.geometricClaim != null;
+    if (!hasClaim && !contributor.widgetRegionClaim && !contributor.miniModeFallback) {
+        return 'contribution-has-no-mini-mode-fallback-and-no-geometric-claim';
+    }
+    if (contributor.geometricClaim) {
+        const verdict = enforceGeometricPrivacyBoundary(contributor.geometricClaim);
+        if (!verdict.allowed) return verdict.reason;
+        if (claimedSlots.has(contributor.geometricClaim.geometricSlot)) {
+            return 'contested-geometric-slot';
+        }
+    }
+    return null;
+}
+
 export function compositionLoad(contributors: readonly CompositionContributor[]): CompositionLoadResult {
     const granted: ResolvedGeometricClaim[] = [];
     const claimedSlots = new Set<string>();

@@ -66,11 +66,9 @@
  * ratifies it, and that is the only basis claimed here.
  */
 
-import {
-    compositionLoad,
-    type CompositionContributor,
-    type CompositionLoadResult
-} from './geometricSlotEnforcement';
+import { loadComposition, type LoadCompositionResult } from './compositionLoad';
+import type { CompositionContributor } from './geometricSlotEnforcement';
+import type { KernelBridgeCachedProfile } from '../bridge/types';
 
 /** The six personal slots, in the order the composition reads left→under→chrome. */
 export type PersonalGeometricSlotName =
@@ -243,9 +241,10 @@ export const PERSONAL_COMPOSITION_CONTRIBUTORS: readonly CompositionContributor[
  * through exactly the same path the app uses.
  */
 export function loadPersonalComposition(
-    contributors: readonly CompositionContributor[] = PERSONAL_COMPOSITION_CONTRIBUTORS
-): CompositionLoadResult {
-    return compositionLoad(contributors);
+    contributors: readonly CompositionContributor[] = PERSONAL_COMPOSITION_CONTRIBUTORS,
+    profile: KernelBridgeCachedProfile | null = null
+): LoadCompositionResult {
+    return loadComposition('jiva-siva.integrated', contributors, profile);
 }
 
 /** The owned-but-unrenderable slots, as `slot:blocker-id` pairs. */
@@ -260,11 +259,12 @@ export function blockedPersonalSlots(): readonly string[] {
  * chrome. A rejection NAMES the contributor and the reason — a composition that
  * failed to mount must never read as an empty one.
  */
-export function describePersonalCompositionLoad(result: CompositionLoadResult): string {
-    if (!result.mounted) {
-        return `composition refused: ${result.rejection.reason} (${result.rejection.contributorId})`;
+export function describePersonalCompositionLoad(result: LoadCompositionResult): string {
+    if (!result.ok) {
+        const first = result.rejection.rejections[0];
+        return `composition refused: ${first.reason} (${first.extensionId})`;
     }
-    const owners = result.composition.grantedGeometricClaims
+    const owners = result.mounted.grantedGeometricClaims
         .map(granted => `${granted.geometricSlot}=${granted.extensionId}`)
         .join(' ');
     const blocked = blockedPersonalSlots();

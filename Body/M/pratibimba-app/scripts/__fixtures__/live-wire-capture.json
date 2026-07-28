@@ -1,8 +1,8 @@
 {
- "capturedAt": "2026-07-28T11:10:34.405Z",
+ "capturedAt": "2026-07-28T11:46:21.104Z",
  "port": 18922,
  "epiBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
- "frameCount": 64,
+ "frameCount": 65,
  "frames": [
   {
    "type": "hello-ok",
@@ -48,6 +48,7 @@
      "s2.graph.list",
      "s2.codon.aa_lookup",
      "s2.codon.scalar_ref.read",
+     "s5'.epii.deposit.list",
      "s2.graph.list_by_filter",
      "s2.graph.traverse",
      "s2.graph.ananda_position",
@@ -255,7 +256,7 @@
   {
    "event": "connect.challenge",
    "payload": {
-    "nonce": "4fb6c067-a06f-4edf-b5a1-b667920b866f"
+    "nonce": "320b0a3f-5f80-4e47-acfd-a40302d3c06d"
    },
    "type": "event"
   },
@@ -310,6 +311,7 @@
       "s2.graph.list",
       "s2.codon.aa_lookup",
       "s2.codon.scalar_ref.read",
+      "s5'.epii.deposit.list",
       "s2.graph.list_by_filter",
       "s2.graph.traverse",
       "s2.graph.ananda_position",
@@ -533,11 +535,11 @@
      "parentSessionKey": null,
      "provider": null,
      "reasoningLevel": null,
-     "recordSessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "recordSessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "resourceLoaderId": null,
      "retrySettlementState": null,
      "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-     "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "sessionKey": "agent:live-wire:main",
      "sourceSessionKey": "live-wire:profile-bus",
      "sourceSessionKind": "import",
@@ -548,7 +550,7 @@
      "terminalBinding": null,
      "thinkingLevel": null,
      "threadId": null,
-     "updatedAt": 1785237029708,
+     "updatedAt": 1785239176256,
      "vaultNowPath": null,
      "vaultRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
      "verboseLevel": null
@@ -557,7 +559,7 @@
     "record": {
      "activeAgentId": "agent:live-wire:main",
      "aliases": [],
-     "bootstrapScope": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-Rr69mA/bootstrap/agent_live_wire_main/main",
+     "bootstrapScope": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-dM8fgf/bootstrap/agent_live_wire_main/main",
      "canonicalKey": "agent:live-wire:main",
      "channel": null,
      "cliSessionIds": [],
@@ -579,7 +581,7 @@
      "resourceLoaderId": null,
      "retrySettlementState": null,
      "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-     "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "sourceSessionKey": "live-wire:profile-bus",
      "sourceSessionKind": "import",
      "spawnedBy": null,
@@ -589,20 +591,29 @@
      "terminalBinding": null,
      "thinkingLevel": null,
      "threadId": null,
-     "updatedAtMs": 1785237029708,
+     "updatedAtMs": 1785239176256,
      "vakAddress": null,
      "vaultNowPath": null,
      "vaultRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
      "verboseLevel": null,
-     "workspaceRoot": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-Rr69mA/workspaces/agent_live_wire_main/main"
+     "workspaceRoot": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-dM8fgf/workspaces/agent_live_wire_main/main"
     }
    }
   },
   {
    "event": "tick",
    "payload": {
+    "seq": 3,
+    "ts": 1785239176448
+   },
+   "seq": 3,
+   "type": "event"
+  },
+  {
+   "event": "tick",
+   "payload": {
     "seq": 4,
-    "ts": 1785237029847
+    "ts": 1785239176513
    },
    "seq": 4,
    "type": "event"
@@ -612,7 +623,7 @@
    "payload": {
     "seq": 5,
     "status": "idle",
-    "ts": 1785237029888
+    "ts": 1785239176612
    },
    "seq": 5,
    "type": "event"
@@ -621,7 +632,7 @@
    "event": "tick",
    "payload": {
     "seq": 6,
-    "ts": 1785237029938
+    "ts": 1785239176662
    },
    "seq": 6,
    "type": "event"
@@ -630,7 +641,7 @@
    "event": "tick",
    "payload": {
     "seq": 7,
-    "ts": 1785237030089
+    "ts": 1785239176812
    },
    "seq": 7,
    "type": "event"
@@ -656,11 +667,11 @@
      "parentSessionKey": null,
      "provider": null,
      "reasoningLevel": null,
-     "recordSessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "recordSessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "resourceLoaderId": null,
      "retrySettlementState": null,
      "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-     "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "sessionKey": "agent:live-wire:main",
      "sourceSessionKey": "live-wire:profile-bus",
      "sourceSessionKind": "import",
@@ -671,7 +682,7 @@
      "terminalBinding": null,
      "thinkingLevel": null,
      "threadId": null,
-     "updatedAt": 1785237029710,
+     "updatedAt": 1785239176257,
      "vaultNowPath": null,
      "vaultRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
      "verboseLevel": null
@@ -681,7 +692,7 @@
     "record": {
      "activeAgentId": "agent:live-wire:main",
      "aliases": [],
-     "bootstrapScope": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-Rr69mA/bootstrap/agent_live_wire_main/main",
+     "bootstrapScope": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-dM8fgf/bootstrap/agent_live_wire_main/main",
      "canonicalKey": "agent:live-wire:main",
      "channel": null,
      "cliSessionIds": [],
@@ -703,7 +714,7 @@
      "resourceLoaderId": null,
      "retrySettlementState": null,
      "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-     "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+     "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
      "sourceSessionKey": "live-wire:profile-bus",
      "sourceSessionKind": "import",
      "spawnedBy": null,
@@ -713,7 +724,7 @@
      "terminalBinding": null,
      "thinkingLevel": null,
      "threadId": null,
-     "updatedAtMs": 1785237029710,
+     "updatedAtMs": 1785239176257,
      "vakAddress": {
       "cf": "(5/0)",
       "cfp": "CFP5",
@@ -731,7 +742,7 @@
      "vaultNowPath": null,
      "vaultRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
      "verboseLevel": null,
-     "workspaceRoot": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-Rr69mA/workspaces/agent_live_wire_main/main"
+     "workspaceRoot": "/var/folders/q0/g_91z7355tb58425qwg3xcy80000gn/T/live-wire-gate-dM8fgf/workspaces/agent_live_wire_main/main"
     }
    }
   },
@@ -739,7 +750,7 @@
    "event": "tick",
    "payload": {
     "seq": 8,
-    "ts": 1785237030238
+    "ts": 1785239176962
    },
    "seq": 8,
    "type": "event"
@@ -16372,7 +16383,7 @@
     "seq": 2,
     "spanda": {
      "direction": "forward",
-     "epochMs": 1785237029336,
+     "epochMs": 1785239176061,
      "mode": "flowing",
      "phase0": 0,
      "rateHz": 2.5,
@@ -16841,7 +16852,7 @@
    "event": "tick",
    "payload": {
     "seq": 9,
-    "ts": 1785237030388
+    "ts": 1785239177117
    },
    "seq": 9,
    "type": "event"
@@ -16851,7 +16862,7 @@
    "payload": {
     "seq": 10,
     "status": "idle",
-    "ts": 1785237030438
+    "ts": 1785239177163
    },
    "seq": 10,
    "type": "event"
@@ -16860,7 +16871,7 @@
    "event": "tick",
    "payload": {
     "seq": 11,
-    "ts": 1785237030538
+    "ts": 1785239177262
    },
    "seq": 11,
    "type": "event"
@@ -16869,7 +16880,7 @@
    "event": "tick",
    "payload": {
     "seq": 12,
-    "ts": 1785237030688
+    "ts": 1785239177411
    },
    "seq": 12,
    "type": "event"
@@ -16878,7 +16889,7 @@
    "event": "tick",
    "payload": {
     "seq": 13,
-    "ts": 1785237030837
+    "ts": 1785239177562
    },
    "seq": 13,
    "type": "event"
@@ -16887,7 +16898,7 @@
    "event": "tick",
    "payload": {
     "seq": 14,
-    "ts": 1785237030988
+    "ts": 1785239177711
    },
    "seq": 14,
    "type": "event"
@@ -16897,7 +16908,7 @@
    "payload": {
     "seq": 15,
     "status": "idle",
-    "ts": 1785237030988
+    "ts": 1785239177711
    },
    "seq": 15,
    "type": "event"
@@ -16906,7 +16917,7 @@
    "event": "tick",
    "payload": {
     "seq": 16,
-    "ts": 1785237031137
+    "ts": 1785239177861
    },
    "seq": 16,
    "type": "event"
@@ -16915,9 +16926,133 @@
    "event": "tick",
    "payload": {
     "seq": 17,
-    "ts": 1785237031287
+    "ts": 1785239178011
    },
    "seq": 17,
+   "type": "event"
+  },
+  {
+   "event": "health",
+   "payload": {
+    "checks": {
+     "gatewaySession": {
+      "error": "no gateway sessions available",
+      "ok": false
+     },
+     "graph": {
+      "cachedAtMs": 1785239178067,
+      "ok": false,
+      "report": {
+       "ok": false,
+       "reason": "graph health probe exceeded 2s (graph substrate under load); reported degraded so the gateway health clock keeps emitting",
+       "source": "probe-timeout"
+      },
+      "source": "fresh"
+     },
+     "heartbeats": {
+      "count": 0,
+      "ok": true
+     },
+     "session": {
+      "error": "failed to read /Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app/.epi/session.json: No such file or directory (os error 2)",
+      "ok": false,
+      "workspaceRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app"
+     },
+     "spacetimedb": {
+      "agentAccess": "not registered",
+      "capabilityFacts": {
+       "fullProjectionRequested": false,
+       "httpSqlFallbackAvailable": true,
+       "kernelTraceProjectionIncluded": true,
+       "liteProjectionSubscribable": true,
+       "nativeWebsocketPreferred": false,
+       "nativeWebsocketSubscribable": false,
+       "observabilityEventsIncluded": false,
+       "presenceProjectionIncluded": false,
+       "privacySafePublicProjection": true,
+       "rawServiceConfigured": false,
+       "resyncStates": [
+        "connection-lost",
+        "reconnecting",
+        "stale-profile",
+        "resynced-profile-generation",
+        "degraded-but-subscribable"
+       ],
+       "sharedEventProjectionIncluded": false,
+       "temporalContextProjectionIncluded": true
+      },
+      "configured": false,
+      "fallbackPolicy": "disabled",
+      "fullProjectionTables": [
+       "session_surface",
+       "kairos_surface",
+       "global_temporal_surface",
+       "gateway_instance",
+       "agent_instance",
+       "client_registration",
+       "temporal_event",
+       "world_clock",
+       "world_clock_tick",
+       "pratibimba_presence",
+       "shared_archetype_event",
+       "coincidence",
+       "coincidence_tick",
+       "module_version",
+       "aletheia_veto_log",
+       "being_pattern_presence",
+       "being_pattern_relation_edge",
+       "being_pattern_review_candidate"
+      ],
+      "liteProjectionTables": [
+       "session_surface",
+       "kairos_surface",
+       "global_temporal_surface"
+      ],
+      "ok": false,
+      "projectionTables": [
+       "gateway_instance",
+       "agent_instance",
+       "client_registration",
+       "session_surface",
+       "kairos_surface",
+       "global_temporal_surface",
+       "temporal_event",
+       "world_clock",
+       "world_clock_tick",
+       "pratibimba_presence",
+       "shared_archetype_event",
+       "coincidence",
+       "coincidence_tick",
+       "module_version",
+       "aletheia_veto_log",
+       "being_pattern_presence",
+       "being_pattern_relation_edge",
+       "being_pattern_review_candidate"
+      ],
+      "rawServiceHealth": "not configured",
+      "reason": "set SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL to enable live projection",
+      "registrationMode": "disabled",
+      "silentFallbackForbiddenSentinel": "silent-http-fallback-forbidden",
+      "subscriptionReadiness": "disabled until SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL is set"
+     },
+     "tts": {
+      "enabled": false,
+      "ok": true,
+      "provider": ""
+     },
+     "vault": {
+      "error": "no active session now path",
+      "ok": false
+     },
+     "voicewake": {
+      "enabled": false,
+      "ok": true
+     }
+    },
+    "ok": false,
+    "seq": 18
+   },
+   "seq": 18,
    "type": "event"
   },
   {
@@ -32535,7 +32670,7 @@
     "seq": 3,
     "spanda": {
      "direction": "forward",
-     "epochMs": 1785237029336,
+     "epochMs": 1785239176061,
      "mode": "flowing",
      "phase0": 0,
      "rateHz": 2.5,
@@ -33001,134 +33136,10 @@
    "type": "event"
   },
   {
-   "event": "health",
-   "payload": {
-    "checks": {
-     "gatewaySession": {
-      "error": "no gateway sessions available",
-      "ok": false
-     },
-     "graph": {
-      "cachedAtMs": 1785237031350,
-      "ok": false,
-      "report": {
-       "ok": false,
-       "reason": "graph health probe exceeded 2s (graph substrate under load); reported degraded so the gateway health clock keeps emitting",
-       "source": "probe-timeout"
-      },
-      "source": "fresh"
-     },
-     "heartbeats": {
-      "count": 0,
-      "ok": true
-     },
-     "session": {
-      "error": "failed to read /Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app/.epi/session.json: No such file or directory (os error 2)",
-      "ok": false,
-      "workspaceRoot": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app"
-     },
-     "spacetimedb": {
-      "agentAccess": "not registered",
-      "capabilityFacts": {
-       "fullProjectionRequested": false,
-       "httpSqlFallbackAvailable": true,
-       "kernelTraceProjectionIncluded": true,
-       "liteProjectionSubscribable": true,
-       "nativeWebsocketPreferred": false,
-       "nativeWebsocketSubscribable": false,
-       "observabilityEventsIncluded": false,
-       "presenceProjectionIncluded": false,
-       "privacySafePublicProjection": true,
-       "rawServiceConfigured": false,
-       "resyncStates": [
-        "connection-lost",
-        "reconnecting",
-        "stale-profile",
-        "resynced-profile-generation",
-        "degraded-but-subscribable"
-       ],
-       "sharedEventProjectionIncluded": false,
-       "temporalContextProjectionIncluded": true
-      },
-      "configured": false,
-      "fallbackPolicy": "disabled",
-      "fullProjectionTables": [
-       "session_surface",
-       "kairos_surface",
-       "global_temporal_surface",
-       "gateway_instance",
-       "agent_instance",
-       "client_registration",
-       "temporal_event",
-       "world_clock",
-       "world_clock_tick",
-       "pratibimba_presence",
-       "shared_archetype_event",
-       "coincidence",
-       "coincidence_tick",
-       "module_version",
-       "aletheia_veto_log",
-       "being_pattern_presence",
-       "being_pattern_relation_edge",
-       "being_pattern_review_candidate"
-      ],
-      "liteProjectionTables": [
-       "session_surface",
-       "kairos_surface",
-       "global_temporal_surface"
-      ],
-      "ok": false,
-      "projectionTables": [
-       "gateway_instance",
-       "agent_instance",
-       "client_registration",
-       "session_surface",
-       "kairos_surface",
-       "global_temporal_surface",
-       "temporal_event",
-       "world_clock",
-       "world_clock_tick",
-       "pratibimba_presence",
-       "shared_archetype_event",
-       "coincidence",
-       "coincidence_tick",
-       "module_version",
-       "aletheia_veto_log",
-       "being_pattern_presence",
-       "being_pattern_relation_edge",
-       "being_pattern_review_candidate"
-      ],
-      "rawServiceHealth": "not configured",
-      "reason": "set SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL to enable live projection",
-      "registrationMode": "disabled",
-      "silentFallbackForbiddenSentinel": "silent-http-fallback-forbidden",
-      "subscriptionReadiness": "disabled until SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL is set"
-     },
-     "tts": {
-      "enabled": false,
-      "ok": true,
-      "provider": ""
-     },
-     "vault": {
-      "error": "no active session now path",
-      "ok": false
-     },
-     "voicewake": {
-      "enabled": false,
-      "ok": true
-     }
-    },
-    "ok": false,
-    "seq": 18
-   },
-   "seq": 18,
-   "type": "event"
-  },
-  {
    "event": "tick",
    "payload": {
     "seq": 19,
-    "ts": 1785237031438
+    "ts": 1785239178162
    },
    "seq": 19,
    "type": "event"
@@ -33144,17 +33155,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -33274,7 +33285,7 @@
    "payload": {
     "seq": 21,
     "status": "idle",
-    "ts": 1785237031538
+    "ts": 1785239178262
    },
    "seq": 21,
    "type": "event"
@@ -33283,7 +33294,7 @@
    "event": "tick",
    "payload": {
     "seq": 22,
-    "ts": 1785237031589
+    "ts": 1785239178312
    },
    "seq": 22,
    "type": "event"
@@ -33292,7 +33303,7 @@
    "event": "tick",
    "payload": {
     "seq": 23,
-    "ts": 1785237031738
+    "ts": 1785239178462
    },
    "seq": 23,
    "type": "event"
@@ -33308,17 +33319,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -33437,7 +33448,7 @@
    "event": "tick",
    "payload": {
     "seq": 25,
-    "ts": 1785237031888
+    "ts": 1785239178612
    },
    "seq": 25,
    "type": "event"
@@ -33446,7 +33457,7 @@
    "event": "tick",
    "payload": {
     "seq": 26,
-    "ts": 1785237032039
+    "ts": 1785239178762
    },
    "seq": 26,
    "type": "event"
@@ -33456,7 +33467,7 @@
    "payload": {
     "seq": 27,
     "status": "idle",
-    "ts": 1785237032088
+    "ts": 1785239178812
    },
    "seq": 27,
    "type": "event"
@@ -33472,17 +33483,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -33601,7 +33612,7 @@
    "event": "tick",
    "payload": {
     "seq": 29,
-    "ts": 1785237032189
+    "ts": 1785239178912
    },
    "seq": 29,
    "type": "event"
@@ -33610,7 +33621,7 @@
    "event": "tick",
    "payload": {
     "seq": 30,
-    "ts": 1785237032339
+    "ts": 1785239179063
    },
    "seq": 30,
    "type": "event"
@@ -49232,7 +49243,7 @@
     "seq": 4,
     "spanda": {
      "direction": "forward",
-     "epochMs": 1785237029336,
+     "epochMs": 1785239176061,
      "mode": "flowing",
      "phase0": 0,
      "rateHz": 2.5,
@@ -49701,7 +49712,7 @@
    "event": "tick",
    "payload": {
     "seq": 31,
-    "ts": 1785237032489
+    "ts": 1785239179212
    },
    "seq": 31,
    "type": "event"
@@ -49717,17 +49728,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -49846,7 +49857,7 @@
    "event": "tick",
    "payload": {
     "seq": 33,
-    "ts": 1785237032638
+    "ts": 1785239179362
    },
    "seq": 33,
    "type": "event"
@@ -49856,7 +49867,7 @@
    "payload": {
     "seq": 34,
     "status": "idle",
-    "ts": 1785237032638
+    "ts": 1785239179362
    },
    "seq": 34,
    "type": "event"
@@ -49865,7 +49876,7 @@
    "event": "tick",
    "payload": {
     "seq": 35,
-    "ts": 1785237032789
+    "ts": 1785239179512
    },
    "seq": 35,
    "type": "event"
@@ -49881,17 +49892,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -50010,7 +50021,7 @@
    "event": "tick",
    "payload": {
     "seq": 37,
-    "ts": 1785237032939
+    "ts": 1785239179662
    },
    "seq": 37,
    "type": "event"
@@ -50019,7 +50030,7 @@
    "event": "tick",
    "payload": {
     "seq": 38,
-    "ts": 1785237033089
+    "ts": 1785239179812
    },
    "seq": 38,
    "type": "event"
@@ -50029,7 +50040,7 @@
    "payload": {
     "seq": 39,
     "status": "idle",
-    "ts": 1785237033189
+    "ts": 1785239179913
    },
    "seq": 39,
    "type": "event"
@@ -50045,17 +50056,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -50174,7 +50185,7 @@
    "event": "tick",
    "payload": {
     "seq": 41,
-    "ts": 1785237033238
+    "ts": 1785239179962
    },
    "seq": 41,
    "type": "event"
@@ -65799,7 +65810,7 @@
     "seq": 5,
     "spanda": {
      "direction": "forward",
-     "epochMs": 1785237029336,
+     "epochMs": 1785239176061,
      "mode": "flowing",
      "phase0": 0,
      "rateHz": 2.5,
@@ -66268,7 +66279,7 @@
    "event": "tick",
    "payload": {
     "seq": 42,
-    "ts": 1785237033419
+    "ts": 1785239180112
    },
    "seq": 42,
    "type": "event"
@@ -66277,7 +66288,7 @@
    "event": "tick",
    "payload": {
     "seq": 43,
-    "ts": 1785237033539
+    "ts": 1785239180263
    },
    "seq": 43,
    "type": "event"
@@ -66293,17 +66304,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -66422,7 +66433,7 @@
    "event": "tick",
    "payload": {
     "seq": 45,
-    "ts": 1785237033688
+    "ts": 1785239180412
    },
    "seq": 45,
    "type": "event"
@@ -66432,7 +66443,7 @@
    "payload": {
     "seq": 46,
     "status": "idle",
-    "ts": 1785237033738
+    "ts": 1785239180462
    },
    "seq": 46,
    "type": "event"
@@ -66441,7 +66452,7 @@
    "event": "tick",
    "payload": {
     "seq": 47,
-    "ts": 1785237033839
+    "ts": 1785239180563
    },
    "seq": 47,
    "type": "event"
@@ -66457,17 +66468,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -66586,7 +66597,7 @@
    "event": "tick",
    "payload": {
     "seq": 49,
-    "ts": 1785237033989
+    "ts": 1785239180712
    },
    "seq": 49,
    "type": "event"
@@ -66595,7 +66606,7 @@
    "event": "tick",
    "payload": {
     "seq": 50,
-    "ts": 1785237034138
+    "ts": 1785239180862
    },
    "seq": 50,
    "type": "event"
@@ -66611,17 +66622,17 @@
       "nowPath": null,
       "ok": true,
       "projection": {
-       "graphitiSessionArcId": "day:unknown-day:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5",
+       "graphitiSessionArcId": "day:unknown-day:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14",
        "kairosSurfaceTable": "kairos_surface",
-       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:bb6b8ebe-9b9b-4446-80aa-ae541b894bb5:now:md",
+       "redisSessionNowKey": "cache:hot:s3:gateway:temporal:session:3df7e073-f01e-42ce-b7f4-f50fdcc70a14:now:md",
        "sessionSurfaceTable": "session_surface"
       },
       "resourceLoaderId": null,
       "runtimeCwd": "/Users/admin/Documents/Epi-Logos C Experiments/Body/M/pratibimba-app",
-      "sessionId": "bb6b8ebe-9b9b-4446-80aa-ae541b894bb5"
+      "sessionId": "3df7e073-f01e-42ce-b7f4-f50fdcc70a14"
      },
      "graph": {
-      "cachedAtMs": 1785237031350,
+      "cachedAtMs": 1785239178067,
       "ok": false,
       "report": {
        "ok": false,
@@ -66741,7 +66752,7 @@
    "payload": {
     "seq": 52,
     "status": "idle",
-    "ts": 1785237034288
+    "ts": 1785239181012
    },
    "seq": 52,
    "type": "event"
@@ -66750,7 +66761,7 @@
    "event": "tick",
    "payload": {
     "seq": 53,
-    "ts": 1785237034288
+    "ts": 1785239181012
    },
    "seq": 53,
    "type": "event"
@@ -82383,7 +82394,7 @@
     "seq": 6,
     "spanda": {
      "direction": "forward",
-     "epochMs": 1785237029336,
+     "epochMs": 1785239176061,
      "mode": "flowing",
      "phase0": 0,
      "rateHz": 2.5,
@@ -82420,6 +82431,11 @@
     "name": "gateway.s2-codon-aa-lookup",
     "satisfied": true,
     "describe": "30.T30.13: the live gateway advertises the C-backed codon label method"
+   },
+   {
+    "name": "gateway.s5-epii-deposit-list",
+    "satisfied": true,
+    "describe": "26.T26.10: the live gateway advertises the READ sibling of s5'.epii.deposit — the Evidence fold's feed"
    },
    {
     "name": "gateway.s2-codon-scalar-ref-read",

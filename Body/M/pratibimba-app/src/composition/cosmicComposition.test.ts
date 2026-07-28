@@ -21,20 +21,20 @@ import {
     describeCosmicCompositionLoad,
     loadCosmicComposition
 } from './cosmicComposition';
+import { ownerOfMountedSlot } from './compositionLoad';
 import {
     COSMIC_GEOMETRIC_SLOTS,
     READS_ONLY_GEOMETRIC_SLOTS,
-    ownerOfSlot,
     type CompositionContributor
 } from './geometricSlotEnforcement';
 
 describe('cosmic composition slot ownership (29.T29.2 / DR-WC-IP-2)', () => {
     it('mounts with one named owner per cosmic slot', () => {
         const result = loadCosmicComposition();
-        expect(result.mounted).toBe(true);
-        expect(ownerOfSlot(result, 'surface')).toBe('m1-paramasiva-played-torus');
-        expect(ownerOfSlot(result, 'texture')).toBe('m2-parashakti');
-        expect(ownerOfSlot(result, 'cell-state')).toBe('m3-mahamaya');
+        expect(result.ok).toBe(true);
+        expect(ownerOfMountedSlot(result, 'surface')).toBe('m1-paramasiva-played-torus');
+        expect(ownerOfMountedSlot(result, 'texture')).toBe('m2-parashakti');
+        expect(ownerOfMountedSlot(result, 'cell-state')).toBe('m3-mahamaya');
     });
 
     it('claims only registered cosmic slots, never a personal one', () => {
@@ -79,11 +79,11 @@ describe('cosmic composition slot ownership (29.T29.2 / DR-WC-IP-2)', () => {
             }
         };
         const result = loadCosmicComposition([...COSMIC_COMPOSITION_CONTRIBUTORS, intruder]);
-        expect(result.mounted).toBe(false);
-        if (!result.mounted) {
-            expect(result.rejection.reason).toBe('contested-geometric-slot');
+        expect(result.ok).toBe(false);
+        if (!result.ok) {
+            expect(result.rejection.rejections[0].reason).toBe('contested-geometric-slot');
             // The SECOND claimant is named; the first is the incumbent.
-            expect(result.rejection.contributorId).toBe('m5-epii-overlay');
+            expect(result.rejection.rejections[0].extensionId).toBe('m5-epii-overlay');
         }
     });
 
@@ -103,7 +103,7 @@ describe('cosmic composition slot ownership (29.T29.2 / DR-WC-IP-2)', () => {
         expect(text).toContain('contested-geometric-slot');
         expect(text).toContain('m5-epii-overlay');
         // A refused composition must be distinguishable from an unclaimed slot.
-        expect(ownerOfSlot(result, 'surface')).toBe('unmounted');
+        expect(ownerOfMountedSlot(result, 'surface')).toBe('unmounted');
     });
 
     it('still refuses a write-back on a reads-only slot through this path', () => {
@@ -119,9 +119,9 @@ describe('cosmic composition slot ownership (29.T29.2 / DR-WC-IP-2)', () => {
             }
         };
         const result = loadCosmicComposition([writeBack]);
-        expect(result.mounted).toBe(false);
-        if (!result.mounted) {
-            expect(result.rejection.reason).toBe('contribution-declares-write-back-on-reads-only-slot');
+        expect(result.ok).toBe(false);
+        if (!result.ok) {
+            expect(result.rejection.rejections[0].reason).toBe('contribution-declares-write-back-on-reads-only-slot');
         }
     });
 
