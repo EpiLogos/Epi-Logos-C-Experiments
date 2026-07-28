@@ -362,12 +362,12 @@ describe('the parser holds the response to its own shape', () => {
     });
 });
 
-describe('the hover states the reading and its limits together', () => {
+describe('the reading summary states what landed and what this wire cannot carry', () => {
     it('names what the wire does not carry alongside what it does', () => {
-        const hover = formatContemplationReading(readyDirective());
-        expect(hover).toContain("4' recognition-state integrates close-of-session contour");
-        expect(hover).toContain("0' 7/9 virtues witnessed");
-        expect(hover).toContain('not on this wire: wisdom-delta-byte-tape');
+        const reading = formatContemplationReading(readyDirective());
+        expect(reading).toContain("4' recognition-state integrates close-of-session contour");
+        expect(reading).toContain("0' 7/9 virtues witnessed");
+        expect(reading).toContain('not on this wire: wisdom-delta-byte-tape');
     });
 
     it('says plainly when nothing has been contemplated', () => {

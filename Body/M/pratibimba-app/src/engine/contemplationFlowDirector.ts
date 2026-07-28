@@ -808,7 +808,13 @@ export function useContemplationFlowDirective(
     return directive;
 }
 
-/** Hover text for the composition's contemplation chip. */
+/**
+ * The composition's contemplation reading, as one summary string.
+ *
+ * Rides `data-contemplation-reading` on the engine root, NOT a `title` — a
+ * title there would name the whole `<section>` landmark with a sentence that
+ * changes at runtime.
+ */
 export function formatContemplationReading(directive: ContemplationFlowDirective): string {
     if (directive.state !== 'ready') {
         return directive.reason ?? 'no session close has been contemplated yet';
