@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T21:40:10.685Z",
+  "updatedAt": "2026-07-28T22:09:24.544Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -16043,14 +16043,31 @@
       "blocker": null
     },
     "32.T32.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T21:22:15.554Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T22:09:24.519Z",
       "claimedAt": "2026-07-28T21:22:15.554Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T22:09:24.519Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T22:09:24.519Z",
+          "text": "PER-READINESS-STATE GRAMMAR LANDED (DR-WC-OB-1 closed structurally, not by assertion). Original ledger status was quarantine, so this was verified-then-built: the nine-id taxonomy was ALREADY landed in the carrier (src/ui/bridgeReadiness.ts — ids, severity, tier, recovery, classifyReadiness, MExtensionReadinessSnapshot), and what was genuinely absent was the flavour layer, which is what this tranche adds. WHAT LANDED: (1) src/ui/readinessGrammar.ts — the five UX flavours (pending_first_tick, s3_gateway_unreachable, s5_atelier_blocked, pending_dataset, ready_protected_local), each DECLARING a parentState among the nine, so a flavour cannot be free-standing; that is DR-WC-OB-1's resolution made structural rather than promised, and the validator refuses a parent outside the taxonomy. (2) contracts/readiness-state-grammar.{json,md}, retargeted to the carrier beside the sibling 32.13 onboarding-completion-ledger.json rather than written into frozen epi-theia. The contract does NOT re-declare landed law: shell/tier/severity/recovery are COMPUTED from needsWrappingShell/readinessTier/readinessSeverity/readinessRecovery, so the JSON is a machine-checked SNAPSHOT (the test fails if file and code disagree) and the grammar's own contribution is the per-state copy plus the flavour layer. (3) BridgeReadinessBadgeView carries bridge-readiness-state-{id} on every render and layers bridge-readiness-flavour-{flavour} only when one fires; useReadinessFlavour derives it live. The two ALIAS flavours deliberately get no CSS — an alias renames a state for the reader and must not make one condition render two ways. TWO RECORDED DIVERGENCES from the 2026-06-02 prose, both because later landed law wins and both written into the contract rather than silently taken: the prose calls s2_graph_blocked/s3_subscription_blocked 'overlay', but 28.11(a) keeps the wrapping shell for bridge_unavailable alone and renders finer states inline at the datum (15.6); and bridge_unavailable opens Diagnostics rather than a Reconnect button, which readinessRecovery already decided and reasoned. INTERFACE NOTE FLAGGED FOR THE ARCHITECT: flavourOf takes a third context argument beyond the spec's flavourOf(state, snapshot), because the snapshot genuinely cannot answer two of the five — it cannot separate 'bridge down' from 'bridge up, no tick yet' (both read as an absent binding at tick -1) and carries no privacy class. Inferring either would render a variant the substrate never reported, so the caller supplies them and a flavour with no context returns null. GREEN: readinessGrammar.test.tsx 16 (grammar covers the nine in canonical order, no orphan flavour, each flavour on its parent row and no other, JSON-vs-code snapshot parity, flavourOf positive AND negative cases for all five, renderer distinctness across 9 states + 5 flavours), full app vitest 1771/0 (was 1755), app-typecheck 0, app-build, lint:imports, lint:no-modal, lint:single-clock, lint:e2e-graph, carrier-tokens. UF CLASS PROOF (track 32 is UF): tests/e2e/readiness-state-grammar.spec.ts passes on real Chromium + real spawned gateway — it rides badges the app really renders (the M3 navigator's cosmicClock.walks binding resolves bridge_unavailable for real), sweeps every readiness node the live face paints asserting each carries its state class and any flavour names that state as parent, refuses to be vacuous (asserts the sweep found nodes), and carries the negative that matters: ticks are flowing, so pending_first_tick must NOT fire on that shell. REGRESSION CHECK on the whole UF suite, since this tranche edits a badge several panes mount: full app-ui-flow re-run is 112 passed / 1 failed, the single red being the same m2-correspondence.spec.ts:33 live-graph data condition already named in 26.T26.4 (0 of 10 PlanetaryHarmonic nodes carry l_2_vedic_mantra or c_0_modal_signature; it passed at 2026-07-28T00:55Z and fails since, concurrent with a sibling's uncommitted graph seed/delete work). An earlier run of the same suite also showed autoresearch.spec.ts:12 and type-voice.spec.ts:31 red; both were boot-under-load timeouts (type-voice died at expect(shell).toBeVisible() line 33, before any type assertion) and both pass in isolation AND in the clean full re-run — named here rather than omitted. No visual-regression baseline moved. DOX: carrier AGENTS.md updated with the owning entry.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app test:e2e readiness-state-grammar",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/readinessGrammar.ts",
+              "Body/M/pratibimba-app/contracts/readiness-state-grammar.json",
+              "Body/M/pratibimba-app/contracts/readiness-state-grammar.md",
+              "Body/M/pratibimba-app/tests/e2e/readiness-state-grammar.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-t32-grammar",
-      "leaseExpiresAt": "2026-07-28T23:22:15.554Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T21:22:15.554Z",
       "runId": "20260728T212215Z-32-T32.5",
       "worktree": null,
@@ -28162,11 +28179,12 @@
     {
       "runId": "20260728T212215Z-32-T32.5",
       "taskId": "32.T32.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-28T21:22:15.554Z",
       "owner": "opus-mdev-t32-grammar",
       "leaseExpiresAt": "2026-07-28T23:22:15.554Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T22:09:24.519Z"
     }
   ],
   "activeRoute": {

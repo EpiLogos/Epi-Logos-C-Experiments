@@ -21,27 +21,39 @@ import {
     readinessTier,
     type BridgeReadinessBinding
 } from './bridgeReadiness';
-import { useBridgeReadiness } from './useBridgeReadiness';
+import type { MExtensionReadinessFlavour } from './readinessGrammar';
+import { useBridgeReadiness, useReadinessFlavour } from './useBridgeReadiness';
 
 /**
  * Pure renderer over an already-resolved binding — no store, so it is trivially
  * testable and reusable wherever a binding is resolved ahead of render.
+ *
+ * 32.5: the per-state class rides EVERY render and the flavour sub-class layers
+ * over it only when a flavour actually fires. A null flavour emits no class and
+ * no `data-flavour`, because "no flavour" is a real state — the surface renders
+ * plainly rather than in a variant nothing reported.
  */
 export function BridgeReadinessBadgeView({
     binding,
+    flavour = null,
     children
 }: {
     readonly binding: BridgeReadinessBinding;
+    readonly flavour?: MExtensionReadinessFlavour | null;
     readonly children?: ReactNode;
 }) {
+    const grammarClasses = `bridge-readiness-state-${binding.readinessId}${
+        flavour ? ` bridge-readiness-flavour-${flavour}` : ''
+    }`;
     // 28.11(a): only bridge_unavailable keeps the wrapping pending shell.
     if (needsWrappingShell(binding.readinessId)) {
         return (
             <div
-                className="bridge-readiness-shell bridge-readiness-tier-red"
+                className={`bridge-readiness-shell bridge-readiness-tier-red ${grammarClasses}`}
                 data-testid="bridge-readiness-shell"
                 data-binding={binding.bindingKey}
                 data-readiness={binding.readinessId}
+                data-flavour={flavour ?? undefined}
                 data-tick={binding.lastTickObserved}
             >
                 <PendingBadge
@@ -62,10 +74,11 @@ export function BridgeReadinessBadgeView({
 
     return (
         <div
-            className={`bridge-readiness-border bridge-readiness-tier-${tier}`}
+            className={`bridge-readiness-border bridge-readiness-tier-${tier} ${grammarClasses}`}
             data-testid="bridge-readiness-border"
             data-binding={binding.bindingKey}
             data-readiness={binding.readinessId}
+            data-flavour={flavour ?? undefined}
             data-tier={tier}
             data-severity={severity}
             data-tick={binding.lastTickObserved}
@@ -99,5 +112,10 @@ export function BridgeReadinessBadge({
     readonly children?: ReactNode;
 }) {
     const binding = useBridgeReadiness(bindingKey);
-    return <BridgeReadinessBadgeView binding={binding}>{children}</BridgeReadinessBadgeView>;
+    const flavour = useReadinessFlavour(binding);
+    return (
+        <BridgeReadinessBadgeView binding={binding} flavour={flavour}>
+            {children}
+        </BridgeReadinessBadgeView>
+    );
 }

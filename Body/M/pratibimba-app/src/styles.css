@@ -2131,6 +2131,41 @@ textarea {
   color: var(--danger);
 }
 
+/* 32.5: the per-readiness-state UX grammar
+   (contracts/readiness-state-grammar.json). The state class
+   `bridge-readiness-state-{id}` rides EVERY render; the flavour sub-class
+   layers over it only when a flavour actually fires.
+
+   The two ALIAS flavours (s3_gateway_unreachable, s5_atelier_blocked) carry no
+   visual of their own on purpose — an alias renames a state for the reader, it
+   does not restyle it, and giving them a look would make the same condition
+   render two ways depending on which name reached the DOM. Only the three
+   render-CHANGING flavours style here. */
+.bridge-readiness-flavour-pending_first_tick {
+  animation: loading-pulse-fade 900ms ease-in-out infinite alternate;
+}
+/* The named payload owner becomes a chip — the point of the flavour is that
+   the dataset is NAMED, so the name is what gets the affordance. */
+.bridge-readiness-flavour-pending_dataset .bridge-readiness-blockers {
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 0 0.4rem;
+  color: var(--accent);
+}
+/* 25.18 border-tint: ready, but protected-local — readable and marked as such,
+   which is why it tints rather than degrading the tier. */
+.bridge-readiness-flavour-ready_protected_local {
+  border-left-color: var(--accent);
+}
+
+/* Continuous motion stops entirely under reduced motion (DR-WC-DL-4 / 30.T30.5),
+   the same law the loading pulse follows — the state stays legible without it. */
+@media (prefers-reduced-motion: reduce) {
+  .bridge-readiness-flavour-pending_first_tick {
+    animation: none !important;
+  }
+}
+
 .walk-pane {
   display: flex;
   flex-direction: column;
