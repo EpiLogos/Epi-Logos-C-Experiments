@@ -29,8 +29,9 @@ import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3Codo
 // caller at all: only its own test referenced it, so the surface rendered its
 // three mounts without any of them claiming a slot.
 import { loadCosmicComposition } from '../composition/cosmicComposition';
+import { useCompositionProfile } from '../composition/compositionProfileContext';
 import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
-import { useCoordinateStore, useTickStore } from '../state/stores';
+import { useCoordinateStore } from '../state/stores';
 import {
     CLOCK_LENSES,
     clockAngle,
@@ -292,9 +293,11 @@ export function buildPlanetChip(planetId: number, onSelect: () => void): PlanetC
 
 export function CosmicEngine() {
     const hostRef = useRef<HTMLDivElement | null>(null);
-    const generation = useTickStore(s => s.generation);
+    // 29.T29.4 — ONE profile subscription per composition (DR-WC-IP-4). Both
+    // composition roots read the shared snapshot here; contributors below read
+    // it from this call, never by opening their own.
+    const { profile: cached, generation } = useCompositionProfile();
     useCompositionLifecycleEvents('cosmic-engine.integrated', generation);
-    const cached = useTickStore(s => s.profile);
     const muted = useInstrumentStore(s => s.muted);
     const divisionIndex = useEngineStore(s => s.divisionIndex);
     const paused = useEngineStore(s => s.paused);

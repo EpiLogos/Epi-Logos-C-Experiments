@@ -2,8 +2,9 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { KleinTopologyPane } from './KleinTopologyPane';
 import { topologyFromPayload } from './m1KleinTopology';
-import { useTickStore } from '../state/stores';
+
 import { KernelBridgeCachedProfile } from '../bridge/types';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 // A real-shaped bridge profile: the payload mirrors portal-core
 // `MathemeHarmonicProfile` serialised as JSON, carrying the `m1Topology`
@@ -40,12 +41,12 @@ const M1_TRITONE_CROSSING = { kind: 'm1TritoneCrossing', tick12: 6, lensPair: [0
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('KleinTopologyPane', () => {
     it('renders the M1-5 single-torus invariants doubleCoverDeg=720 torusGenus=1 from the bridge', () => {
-        useTickStore.setState({ profile: profileFixture(null, 41), generation: 41 });
+        publishProfileTick(profileFixture(null, 41));
         render(<KleinTopologyPane />);
 
         const invariants = screen.getByTestId('m1-klein-double-cover');
@@ -64,7 +65,7 @@ describe('KleinTopologyPane', () => {
 
     it('fires an m1.klein_flip.source observability event when the profile carries klein_flip=Some(..)', () => {
         const emit = vi.fn();
-        useTickStore.setState({ profile: profileFixture(M1_TRITONE_CROSSING, 42), generation: 42 });
+        publishProfileTick(profileFixture(M1_TRITONE_CROSSING, 42));
         render(<KleinTopologyPane onObservabilityEvent={emit} />);
 
         expect(emit).toHaveBeenCalledTimes(1);
@@ -80,7 +81,7 @@ describe('KleinTopologyPane', () => {
 
     it('does NOT fire the observability event when klein_flip is None', () => {
         const emit = vi.fn();
-        useTickStore.setState({ profile: profileFixture(null, 43), generation: 43 });
+        publishProfileTick(profileFixture(null, 43));
         render(<KleinTopologyPane onObservabilityEvent={emit} />);
 
         expect(emit).not.toHaveBeenCalled();

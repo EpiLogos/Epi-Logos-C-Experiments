@@ -8,8 +8,9 @@
 
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { M4MercuriusRelayChip } from './M4MercuriusRelayPane';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function cachedProfile(
     generation: number,
@@ -32,7 +33,7 @@ const degs = (base: number): number[] => Array.from({ length: 10 }, (_, i) => (b
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M4MercuriusRelayChip', () => {
@@ -54,7 +55,7 @@ describe('M4MercuriusRelayChip', () => {
     it('goes live, counts a delta, pulses and shows the cache-stamped refresh', () => {
         render(<M4MercuriusRelayChip kairosEnabled />);
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(1, degs(0), 1_700_000_000_000));
+            publishProfileTick(cachedProfile(1, degs(0), 1_700_000_000_000));
         });
         const chip = screen.getByTestId('m4-mercurius-relay');
         expect(chip.getAttribute('data-state')).toBe('live');
@@ -67,15 +68,15 @@ describe('M4MercuriusRelayChip', () => {
     it('counts a second delta only when the vector genuinely changes', () => {
         render(<M4MercuriusRelayChip kairosEnabled />);
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(1, degs(0)));
+            publishProfileTick(cachedProfile(1, degs(0)));
         });
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(2, degs(0)));
+            publishProfileTick(cachedProfile(2, degs(0)));
         });
         expect(screen.getByTestId('m4-mercurius-relay').getAttribute('data-delta-count')).toBe('1');
 
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(3, degs(30)));
+            publishProfileTick(cachedProfile(3, degs(30)));
         });
         const chip = screen.getByTestId('m4-mercurius-relay');
         expect(chip.getAttribute('data-delta-count')).toBe('2');

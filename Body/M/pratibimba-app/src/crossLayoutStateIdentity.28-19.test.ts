@@ -27,8 +27,9 @@ import {
     readCrossLayoutIdentity,
     type BimbaPratibimbaUiState
 } from './state/crossLayoutIdentity';
-import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
+import { useCoordinateStore, useSessionStore } from './state/stores';
 import { useLeftSidebarModeStore } from './ui/leftSidebarModes';
+import { publishProfileTick, resetProfileTicks } from './composition/profileTickSubscription';
 
 /** The seven shared fields that ARE the cross-layout identity (crossLayoutIdentity.ts). */
 const SHARED_IDENTITY_FIELDS = [
@@ -56,7 +57,7 @@ const EXCLUDED_PER_VIEW_KEYS = [
 ];
 
 function seedProfile(generation: number, lens: number, mode: number): void {
-    useTickStore.getState().setProfile({
+    publishProfileTick({
         generation,
         cachedAtMs: 1,
         stale: false,
@@ -72,14 +73,14 @@ function seedProfile(generation: number, lens: number, mode: number): void {
 
 describe('28.T28.19 cross-layout state-identity acceptance (retargeted content-law)', () => {
     beforeEach(() => {
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
         useLeftSidebarModeStore.setState({ activeModeId: 'coordinate-tree', layout: 'daily-0-1' });
     });
 
     afterEach(() => {
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
     });
 
     it('the identity tuple is EXACTLY the seven shared fields — per-view selections are not identity', () => {

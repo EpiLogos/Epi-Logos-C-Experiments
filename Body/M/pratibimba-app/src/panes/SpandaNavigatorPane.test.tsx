@@ -6,23 +6,27 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import { SpandaNavigatorPane } from './SpandaNavigatorPane';
-import { useProvenanceStore, useTickStore } from '../state/stores';
+import { useProvenanceStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
+// Each prime is a NEW frame off the wire, so it carries a new generation —
+// the store refuses a repeat, and this test primes twice in one case.
+let primedGeneration = 6;
 function primeStores(spanda: Record<string, unknown> | null) {
+    primedGeneration += 1;
     useProvenanceStore.setState({
         connection: { ...useProvenanceStore.getState().connection, connected: true }
     });
-    useTickStore.setState({
-        generation: 7,
-        profile: {
-            generation: 7,
+    publishProfileTick({
+            generation: primedGeneration,
             cachedAtMs: 1,
             stale: false,
             stalenessMs: 0,
             privacyClass: 'safe-public-current-kernel-tick',
-            profile: spanda ? { generation: 7, spanda } : { generation: 7 }
-        }
-    });
+            profile: spanda
+                ? { generation: primedGeneration, spanda }
+                : { generation: primedGeneration }
+        });
 }
 
 const FLOWING = {
@@ -35,7 +39,12 @@ const FLOWING = {
 };
 
 describe('SpandaNavigatorPane', () => {
-    beforeEach(() => cleanup());
+    // The clock is reset per test: publishing goes through the real
+    // stale-generation gate, so a repeated generation would be refused.
+    beforeEach(() => {
+        cleanup();
+        resetProfileTicks();
+    });
 
     it('renders honest absence when the anchor is not on the bus', () => {
         primeStores(null);

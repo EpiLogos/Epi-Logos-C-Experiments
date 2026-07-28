@@ -12,8 +12,9 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { KernelBridgeCachedProfile } from '../bridge/types';
-import { useTickStore } from '../state/stores';
+
 import { M0VirtueWitnessPanel } from './M0VirtueWitnessPanel';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function profile(
     generation: number,
@@ -53,16 +54,13 @@ function profile(
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M0VirtueWitnessPanel', () => {
     it('unpacks the real 9-bit wire vector LSB-first and bands coherence (21.T21.10)', () => {
         const onQuestionSelect = vi.fn();
-        useTickStore.setState({
-            profile: profile(7, 0b110_110_111, 0.72, ['Law-6:R2@Shakti:turn?']),
-            generation: 7
-        });
+        publishProfileTick(profile(7, 0b110_110_111, 0.72, ['Law-6:R2@Shakti:turn?']));
 
         render(<M0VirtueWitnessPanel onQuestionSelect={onQuestionSelect} />);
 
@@ -105,7 +103,7 @@ describe('M0VirtueWitnessPanel', () => {
         );
 
         act(() => {
-            useTickStore.getState().setProfile(profile(8, 0b1, 0.9, []));
+            publishProfileTick(profile(8, 0b1, 0.9, []));
         });
         rerender(<M0VirtueWitnessPanel />);
 

@@ -1,13 +1,14 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { KernelBridgeCachedProfile } from '../bridge/types';
-import { useTickStore } from '../state/stores';
+
 import {
     M3ProfileTickProvider,
     M3ReadinessBoundary,
     M3ReadinessProvider,
     useM3ProfileTick
 } from './m3SurfaceContext';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function profile(generation: number, tick12: number): KernelBridgeCachedProfile {
     return {
@@ -33,7 +34,7 @@ function Probe() {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M3 profile-tick and readiness contexts', () => {
@@ -53,7 +54,7 @@ describe('M3 profile-tick and readiness contexts', () => {
         expect(screen.getByTestId('m3-context-tick').textContent).toBe('none:none:none');
         expect(screen.getByTestId('m3-readiness-boundary').dataset.readiness).toBe('ready');
 
-        act(() => useTickStore.getState().setProfile(profile(7, 3)));
+        act(() => publishProfileTick(profile(7, 3)));
 
         expect(screen.getByTestId('m3-context-tick').textContent).toBe('7:3:90');
         expect(screen.getByTestId('m3-readiness-boundary').dataset.generation).toBe('7');

@@ -1,12 +1,14 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { buildPlanetChip, CosmicEngine } from './CosmicEngine';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
+import { CompositionProfileProvider } from '../composition/compositionProfileContext';
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('CosmicEngine component (jsdom mount)', () => {
@@ -14,7 +16,11 @@ describe('CosmicEngine component (jsdom mount)', () => {
         // jsdom has no WebGL context — THREE.WebGLRenderer throws and the
         // component must degrade to the fallback message, never a blank pane
         // or a crash.
-        render(<CosmicEngine />);
+        render(
+            <CompositionProfileProvider>
+                <CosmicEngine />
+            </CompositionProfileProvider>
+        );
         expect(screen.getByTestId('cosmic-engine-fallback').textContent).toMatch(
             /WebGL unavailable/
         );
@@ -22,9 +28,7 @@ describe('CosmicEngine component (jsdom mount)', () => {
     });
 
     it('renders the Wave-A status from a real cached gateway profile even while WebGL is unavailable', () => {
-        useTickStore.setState({
-            generation: 23,
-            profile: {
+        publishProfileTick({
                 generation: 23,
                 cachedAtMs: 23_000,
                 stale: false,
@@ -38,10 +42,13 @@ describe('CosmicEngine component (jsdom mount)', () => {
                         nodalQuartet: [{ qlPosition: 1, helix: 'b', m: 2, n: 3 }]
                     }
                 }
-            } as never
-        });
+            } as never);
 
-        render(<CosmicEngine />);
+        render(
+            <CompositionProfileProvider>
+                <CosmicEngine />
+            </CompositionProfileProvider>
+        );
 
         expect(screen.getByTestId('engine-integrated-readiness').dataset.state).toBe('ready');
         expect(screen.getByTestId('engine-integrated-readiness').textContent).toBe('Wave A ready');
@@ -52,7 +59,11 @@ describe('CosmicEngine component (jsdom mount)', () => {
     // of the declaration, not of a GPU surface, so it reports even here where
     // WebGL is unavailable.
     it('reports one named owner per cosmic geometric slot', () => {
-        render(<CosmicEngine />);
+        render(
+            <CompositionProfileProvider>
+                <CosmicEngine />
+            </CompositionProfileProvider>
+        );
         // Ownership rides data attributes on the surface root, matching the
         // file's existing idiom (data-m3-lens-ring-contract) so the readout
         // adds no rendered text to a screenshot-baselined face.

@@ -5,7 +5,8 @@ import { buildPentadicOverlay } from '../engine/cosmicPentadicOverlay';
 import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
-import { useProvenanceStore, useTickStore } from '../state/stores';
+import { useProvenanceStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 vi.mock('../engine/cosmicPentadicOverlay', () => ({
     buildPentadicOverlay: vi.fn()
@@ -81,17 +82,14 @@ describe('ModalDigestStrip (49.4 — modal labels + cymatic digest, visual only)
         useProvenanceStore.setState({
             connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
         });
-        useTickStore.setState({
-            profile: { generation: 4, profile: { harmonicProfile: HARMONIC_PROFILE } } as never,
-            generation: 4
-        });
+        publishProfileTick({ generation: 4, profile: { harmonicProfile: HARMONIC_PROFILE } } as never);
     });
 
     afterEach(() => {
         cleanup();
         setGateway(null);
         useProvenanceStore.setState({ connection: { ...DEFAULT_CONNECTION_STATUS } });
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
     });
 
     it('renders the exact 8-carrier audio bus from the profile — visual only, no audio output', () => {
@@ -134,7 +132,7 @@ describe('ModalDigestStrip (49.4 — modal labels + cymatic digest, visual only)
     });
 
     it('shows honest pending (—) and calls no gateway when no profile bus rides the tick', () => {
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         render(<ModalDigestStrip />);
         const strip = screen.getByTestId('modal-digest-strip');
         expect(strip.getAttribute('data-state')).toBe('pending');

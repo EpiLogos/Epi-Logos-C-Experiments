@@ -7,9 +7,10 @@ import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
 import { useReadinessStore } from '../state/readinessStore';
-import { useProvenanceStore, useTickStore } from '../state/stores';
+import { useProvenanceStore } from '../state/stores';
 import { M2SurfaceProvider } from './M2SurfaceContext';
 import { DEFAULT_M2_SURFACE_STATE, type M2SurfaceState } from './m2SurfaceState';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 vi.mock('../engine/cosmicPentadicOverlay', () => ({
     buildPentadicOverlay: vi.fn()
@@ -268,10 +269,10 @@ describe('M2CorrespondencePane', () => {
         useProvenanceStore.setState({
             connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
         });
-        useTickStore.setState({
-            profile: { generation: 1, profile: { harmonicProfile: HARMONIC_PROFILE } } as never,
-            generation: 1
-        });
+        // Clear the clock first: a case that advanced to a later generation
+        // would otherwise leave the store refusing this frame as stale.
+        resetProfileTicks();
+        publishProfileTick({ generation: 1, profile: { harmonicProfile: HARMONIC_PROFILE } } as never);
         useReadinessStore.setState({
             bindings: {
                 's2.parashaktiCorrespondences': { state: 'ready_public_current' }
@@ -469,13 +470,10 @@ describe('M2CorrespondencePane', () => {
         expect(await screen.findByTestId('cymatic-spheres')).toBeTruthy();
 
         act(() => {
-            useTickStore.setState({
-                profile: {
+            publishProfileTick({
                     generation: 2,
                     profile: { harmonicProfile: HARMONIC_PROFILE }
-                } as never,
-                generation: 2
-            });
+                } as never);
         });
         await waitFor(() =>
             expect(screen.getByTestId('cymatic-spheres').getAttribute('data-generation')).toBe('2')
@@ -483,18 +481,17 @@ describe('M2CorrespondencePane', () => {
     });
 
     it('renders a provenance-aware blocked state for a missing spheres projection', async () => {
-        useTickStore.setState({
-            profile: {
-                generation: 1,
+        // A later frame than the beforeEach seed — same generation would be
+        // refused as stale and this case would silently read the seed instead.
+        publishProfileTick({
+                generation: 2,
                 profile: {
                     harmonicProfile: {
                         ...HARMONIC_PROFILE,
                         cymaticSpheres: undefined
                     }
                 }
-            } as never,
-            generation: 1
-        });
+            } as never);
 
         function BlockedSpheresPaneHarness() {
             const [state, setState] = useState<M2SurfaceState>({
@@ -546,10 +543,7 @@ describe('M2CorrespondencePane', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
         act(() => {
-            useTickStore.setState({
-                profile: { generation: 2, profile: { harmonicProfile: HARMONIC_PROFILE } } as never,
-                generation: 2
-            });
+            publishProfileTick({ generation: 2, profile: { harmonicProfile: HARMONIC_PROFILE } } as never);
         });
 
         expect(screen.getByTestId('cymatic-paused-tick').textContent).toContain('1');

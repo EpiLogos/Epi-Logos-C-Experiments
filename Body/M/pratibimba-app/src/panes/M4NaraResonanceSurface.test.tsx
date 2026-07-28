@@ -6,7 +6,7 @@ import {
     NaraResonanceChip
 } from './M4NaraResonanceSurface';
 import { normalizeResonanceIndicator } from './m4NaraResonance';
-import { useTickStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const invokeCommand = vi.fn();
 vi.mock('../bridge/tauri', () => ({
@@ -14,20 +14,22 @@ vi.mock('../bridge/tauri', () => ({
     listenEvent: vi.fn(async () => () => undefined)
 }));
 
+// Each seed is a new frame off the wire, so it carries a new generation: the
+// store refuses a repeat, and these cases seed more than once.
+let seededGeneration = 2;
 function seedProfile(harmonicProfile: Record<string, unknown> | null) {
-    useTickStore.setState({
-        generation: 3,
-        profile:
-            harmonicProfile === null
-                ? null
-                : ({
-                      generation: 3,
-                      cachedAtMs: 0,
-                      stale: false,
-                      stalenessMs: 0,
-                      privacyClass: 'safe-public-current-kernel-tick',
-                      profile: { harmonicProfile }
-                  } as never)
+    if (harmonicProfile === null) {
+        resetProfileTicks();
+        return;
+    }
+    seededGeneration += 1;
+    publishProfileTick({
+        generation: seededGeneration,
+        cachedAtMs: 0,
+        stale: false,
+        stalenessMs: 0,
+        privacyClass: 'safe-public-current-kernel-tick',
+        profile: { harmonicProfile }
     } as never);
 }
 
@@ -62,7 +64,7 @@ describe('NaraResonanceChip (05.T5.1 §6.5 render law)', () => {
 describe('NaraDayResonanceStrip (day summary on the day surface)', () => {
     beforeEach(() => {
         invokeCommand.mockReset();
-        useTickStore.setState({ generation: null, profile: null } as never);
+        resetProfileTicks();
     });
     afterEach(cleanup);
 

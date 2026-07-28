@@ -8,12 +8,13 @@
 
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { M5EbmObservatoryPane } from './M5EbmObservatoryPane';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function setProfile(profile: Record<string, unknown>, generation: number) {
     act(() => {
-        useTickStore.getState().setProfile({
+        publishProfileTick({
             generation,
             cachedAtMs: generation * 1000,
             stale: false,
@@ -26,7 +27,7 @@ function setProfile(profile: Record<string, unknown>, generation: number) {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M5EbmObservatoryPane', () => {

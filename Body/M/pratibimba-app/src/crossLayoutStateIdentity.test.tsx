@@ -20,8 +20,9 @@ import {
     createCrossLayoutIdentityReceipt,
     type BimbaPratibimbaUiState
 } from './state/crossLayoutIdentity';
-import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
+import { useCoordinateStore, useSessionStore } from './state/stores';
 import { useLeftSidebarModeStore } from './ui/leftSidebarModes';
+import { publishProfileTick, resetProfileTicks } from './composition/profileTickSubscription';
 
 class InertSocket {
     readyState = 0;
@@ -48,7 +49,7 @@ describe('cross-layout state identity', () => {
             dayNow: '07-15-2026',
             privacyClass: null
         });
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         useLeftSidebarModeStore.setState({
             activeModeId: 'bimba-graph',
             layout: 'daily-0-1'
@@ -75,7 +76,7 @@ describe('cross-layout state identity', () => {
                 }
             }
         } as unknown as KernelBridgeCachedProfile;
-        act(() => useTickStore.getState().setProfile(profile));
+        act(() => publishProfileTick(profile));
 
         const expectedIdentity = {
             coordinate: 'M3-3',

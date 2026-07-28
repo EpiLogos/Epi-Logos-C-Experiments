@@ -10,19 +10,18 @@
 
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { M5RecognitionLayer } from './M5RecognitionLayer';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M5RecognitionLayer', () => {
     it('renders the safe canonical-recognition slot from a live profile payload', () => {
-        useTickStore.setState({
-            generation: 31,
-            profile: {
+        publishProfileTick({
                 generation: 31,
                 cachedAtMs: 31_000,
                 stale: false,
@@ -54,8 +53,7 @@ describe('M5RecognitionLayer', () => {
                         qComposed: [0.1234, 0.5678, 0.9012, 0.3456]
                     }
                 }
-            } as never
-        });
+            } as never);
 
         render(<M5RecognitionLayer />);
 

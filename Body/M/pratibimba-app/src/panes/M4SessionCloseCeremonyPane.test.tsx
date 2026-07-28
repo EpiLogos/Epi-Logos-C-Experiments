@@ -14,8 +14,9 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setGateway } from '../bridge/gatewayHolder';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
-import { useProvenanceStore, useSessionStore, useTickStore } from '../state/stores';
+import { useProvenanceStore, useSessionStore } from '../state/stores';
 import { M4SessionCloseCeremonyPane, M4_SESSION_CLOSE_CEREMONY_RPCS } from './M4SessionCloseCeremonyPane';
+import { publishProfileTick } from '../composition/profileTickSubscription';
 
 const FULL_HASH = '0123456789abcdef0123456789abcdef';
 const WITNESS = [true, true, false, true, false, true, true, false, true];
@@ -74,6 +75,8 @@ function contemplationObject(sessionId: string) {
     };
 }
 
+// Each ceremony seed is a new frame; the store refuses a repeated generation.
+let ceremonyGeneration = 0;
 function connectCeremonyGateway(sessionId: string, fail = false) {
     const invoke = vi.fn(async (method: string) => {
         if (fail) {
@@ -94,13 +97,17 @@ function connectCeremonyGateway(sessionId: string, fail = false) {
         connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
     });
     useSessionStore.setState({ sessionKey: sessionId });
-    useTickStore.setState({
+    ceremonyGeneration += 1;
+    publishProfileTick({
+        generation: ceremonyGeneration,
+        cachedAtMs: 0,
+        stale: false,
+        stalenessMs: 0,
+        privacyClass: 'safe-public-current-kernel-tick',
         profile: {
-            profile: {
-                harmonicProfile: {
-                    tick12: 3,
-                    contemplationPromptLut: Array.from({ length: 12 }, (_, i) => `prompt ${i}`)
-                }
+            harmonicProfile: {
+                tick12: 3,
+                contemplationPromptLut: Array.from({ length: 12 }, (_, i) => `prompt ${i}`)
             }
         }
     } as never);

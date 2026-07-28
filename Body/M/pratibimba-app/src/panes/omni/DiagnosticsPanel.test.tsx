@@ -11,10 +11,11 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
-import { useProvenanceStore, useTickStore } from '../../state/stores';
+import { useProvenanceStore } from '../../state/stores';
 import { useReadinessStore } from '../../state/readinessStore';
 import type { ReportedBinding } from '../../ui/bridgeReadiness';
 import { hydrateOmniPanelSessionState, readOmniPanelSessionState } from './omnipanelSessionState';
+import { publishProfileTick, resetProfileTicks } from '../../composition/profileTickSubscription';
 
 function connect(connected: boolean, state: 'connected' | 'disconnected' = connected ? 'connected' : 'disconnected') {
     const prev = useProvenanceStore.getState().connection;
@@ -26,17 +27,14 @@ function seedReadiness(bindings: Record<string, ReportedBinding>) {
 }
 
 function seedTick(generation: number) {
-    useTickStore.setState({
-        generation,
-        profile: {
+    publishProfileTick({
             generation,
             cachedAtMs: generation * 1000,
             stale: false,
             stalenessMs: 0,
             privacyClass: 'public',
             profile: { harmonicProfile: { tick12: generation % 12, degree720: 0 } }
-        }
-    });
+        });
 }
 
 const diagState = () => readOmniPanelSessionState().perTabState.diagnostics;
@@ -44,7 +42,7 @@ const diagState = () => readOmniPanelSessionState().perTabState.diagnostics;
 beforeEach(() => {
     hydrateOmniPanelSessionState(null);
     seedReadiness({});
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     connect(false);
 });
 afterEach(() => cleanup());

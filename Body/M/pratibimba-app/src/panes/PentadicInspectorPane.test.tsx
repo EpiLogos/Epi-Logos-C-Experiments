@@ -10,23 +10,21 @@
 
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { PentadicInspectorPane } from './PentadicInspectorPane';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 beforeEach(() => {
-    useTickStore.setState({
-        profile: {
+    publishProfileTick({
             generation: 41,
             profile: { anuttaraPentadicTrace: PENTADIC_TRACE_FIXTURE }
-        } as never,
-        generation: 41
-    });
+        } as never);
 });
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('PentadicInspectorPane 24.T24.18 composition', () => {
@@ -48,7 +46,7 @@ describe('PentadicInspectorPane 24.T24.18 composition', () => {
     });
 
     it('keeps missing trace and coupling-flow lanes visibly pending', () => {
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         render(<PentadicInspectorPane />);
 
         expect(screen.getByTestId('m3-pentadic-relation-inspector').getAttribute('data-trace-state'))

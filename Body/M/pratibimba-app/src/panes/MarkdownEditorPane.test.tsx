@@ -16,6 +16,7 @@ import { commands } from '../commands/registry';
 import { CROSS_LAYOUT_INTENT_COMMAND } from '../commands/crossLayoutIntent';
 import { CLAYER_TYPOLOGY_METHOD, PASU_NOTE_PATH } from './canonStudio';
 import { useTickStore } from '../state/stores';
+import { publishProfileTick } from '../composition/profileTickSubscription';
 
 const NOTE = 'Bimba/World/Types/Coordinates/S/S1/S1.md';
 const CONTENT = '---\ncoordinate: "S1"\n---\nS1 is served by [[Hen]].\n';
@@ -132,9 +133,7 @@ describe('MarkdownEditorPane — Canon Studio read half (28.T28.4)', () => {
         // Three heartbeats, as the live gateway pulses them (once a second).
         act(() => {
             for (const generation of [2, 3, 4]) {
-                useTickStore
-                    .getState()
-                    .setProfile({ generation } as Parameters<
+                publishProfileTick({ generation } as Parameters<
                         ReturnType<typeof useTickStore.getState>['setProfile']
                     >[0]);
             }

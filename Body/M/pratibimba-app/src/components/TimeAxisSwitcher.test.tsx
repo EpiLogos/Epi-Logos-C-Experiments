@@ -18,8 +18,9 @@ import {
 } from '../composition/compositionState';
 import { PERSONAL_COMPOSITION_ID } from '../composition/timeAxis';
 import { useEventsStore } from '../state/eventsStore';
-import { useTickStore } from '../state/stores';
+
 import { TimeAxisSwitcher } from './TimeAxisSwitcher';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function memoryPort() {
     const store = new Map<string, string>();
@@ -49,7 +50,8 @@ function switchEventModes() {
 describe('25.T25.17 TimeAxisSwitcher', () => {
     beforeEach(() => {
         useEventsStore.getState().clear();
-        useTickStore.setState({ profile: null, generation: 51 });
+        resetProfileTicks();
+        publishProfileTick({ generation: 51, cachedAtMs: 51, stale: false, stalenessMs: 0, privacyClass: 'public-current-context', profile: { generation: 51 } } as never);
     });
 
     afterEach(() => {

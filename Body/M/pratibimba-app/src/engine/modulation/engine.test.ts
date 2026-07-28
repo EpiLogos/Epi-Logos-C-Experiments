@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { KernelBridgeCachedProfile } from '../../bridge/types';
-import { useTickStore } from '../../state/stores';
+
 import { codonAngle } from '../cosmicMath';
 import { ModulationEngine, registerEngineCommands, useEngineStore } from './engine';
 import { ModulationCarrier, ModulationFrame, ModulationInputKey } from './types';
+import { publishProfileTick, resetProfileTicks } from '../../composition/profileTickSubscription';
 
 function cached(generation: number, hp: Record<string, unknown>): KernelBridgeCachedProfile {
     return {
@@ -66,7 +67,7 @@ function makeEngine() {
 }
 
 beforeEach(() => {
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     useEngineStore.setState({
         divisionIndex: 6,
         paused: false,
@@ -273,11 +274,11 @@ describe('modulation engine — carriers plug into ONE graph', () => {
         const probe = new Probe('p', ['oscillator']);
         engine.register(probe);
         engine.start();
-        useTickStore.getState().setProfile(cached(1, {}));
-        useTickStore.getState().setProfile(cached(2, {}));
+        publishProfileTick(cached(1, {}));
+        publishProfileTick(cached(2, {}));
         expect(probe.ticks.map(f => f.oscillator.generation)).toEqual([1, 2]);
         engine.stop();
-        useTickStore.getState().setProfile(cached(3, {}));
+        publishProfileTick(cached(3, {}));
         expect(probe.ticks).toHaveLength(2); // stopped — subscription released
     });
 });

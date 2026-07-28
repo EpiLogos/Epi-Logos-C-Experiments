@@ -16,7 +16,7 @@ vi.mock('../bridge/gatewayHolder', () => ({
     gatewayReady: () => true
 }));
 
-import { useProvenanceStore, useTickStore } from '../state/stores';
+import { useProvenanceStore } from '../state/stores';
 import {
     extractPersonalHandles,
     evaluateVoiceCorpusAdmission,
@@ -24,6 +24,7 @@ import {
     type ConsentRecord
 } from './pratibimbaConsent';
 import { PratibimbaCoordinateClient, PratibimbaCoordinatePane } from './PratibimbaCoordinatePane';
+import { publishProfileTick } from '../composition/profileTickSubscription';
 
 // A profile payload carrying the six handle strings AND raw q-body decoys that
 // MUST NOT leak. The opaque handle tokens and the raw body numbers are chosen so
@@ -65,11 +66,7 @@ function connect(): void {
 }
 
 function setProfile(payload: unknown): void {
-    useTickStore.setState({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        profile: { generation: 1, cachedAtMs: 0, stale: false, stalenessMs: 0, privacyClass: 'public', profile: payload } as any,
-        generation: 1
-    });
+    publishProfileTick({ generation: 1, cachedAtMs: 0, stale: false, stalenessMs: 0, privacyClass: 'public', profile: payload } as any);
 }
 
 /** Default: show returns one existing consent; append returns the grown ledger;

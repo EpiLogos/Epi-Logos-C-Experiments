@@ -15,6 +15,7 @@ import {
     selectM1Body
 } from './m1SurfaceDispatch';
 import { useProvenanceStore, useTickStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 /** The T2.6 CSV skeleton cell — reused so the strict vortex reader accepts. */
 const CELL_7X1_P5 = {
@@ -60,17 +61,14 @@ const MID_TICK_PAYLOAD = {
 };
 
 function primeStore(generation = 41, payload: Record<string, unknown> = MID_TICK_PAYLOAD) {
-    useTickStore.setState({
-        generation,
-        profile: {
+    publishProfileTick({
             generation,
             cachedAtMs: 1,
             stale: false,
             stalenessMs: 0,
             privacyClass: 'safe-public-current-kernel-tick',
             profile: payload
-        }
-    });
+        });
 }
 
 function stripDataset(): Record<string, string | undefined> {
@@ -95,7 +93,7 @@ const EXPECTED_TUPLE = {
 describe('m1 surface-dispatch contract (22.T22.10)', () => {
     beforeEach(() => {
         cleanup();
-        useTickStore.setState({ generation: null, profile: null });
+        resetProfileTicks();
         useProvenanceStore.setState({
             connection: { ...useProvenanceStore.getState().connection, connected: false }
         });
@@ -189,7 +187,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
         cleanup();
         // …and a STALE generation arriving mid-switch is refused by the store
         // law, so the switch cannot regress the clock
-        useTickStore.getState().setProfile({
+        publishProfileTick({
             generation: 40,
             cachedAtMs: 2,
             stale: false,

@@ -44,6 +44,8 @@ import { TimeAxisSwitcher } from './components/TimeAxisSwitcher';
 import { FaceToggleChrome } from './components/FaceToggleChrome';
 import { M3DailyWheelMiniView } from './components/M3CompactViews';
 import { CosmicEngine } from './engine/CosmicEngine';
+import { CompositionProfileProvider } from './composition/compositionProfileContext';
+import { publishProfileTick } from './composition/profileTickSubscription';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
 import { PersonalRecognitionEngine } from './engine/PersonalRecognitionEngine';
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
@@ -315,7 +317,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         case 'editor':
             return <MarkdownEditorPane path={(node.getConfig() as { path: string }).path} />;
         case 'cosmic':
-            return <CosmicEngine />;
+            return (
+                <CompositionProfileProvider>
+                    <CosmicEngine />
+                </CompositionProfileProvider>
+            );
         // legacy tab components from saved layouts — never a second engine instance
         case 'cymatic':
         case 'codon':
@@ -377,12 +383,14 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             return <M5EbmObservatoryPane />;
         case 'personalHome':
             return (
-                <div className="personal-pole">
-                    <TimeAxisSwitcher />
-                    <div className="personal-pole-body">
-                        <PersonalRecognitionEngine />
+                <CompositionProfileProvider>
+                    <div className="personal-pole">
+                        <TimeAxisSwitcher />
+                        <div className="personal-pole-body">
+                            <PersonalRecognitionEngine />
+                        </div>
                     </div>
-                </div>
+                </CompositionProfileProvider>
             );
         // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
         case 'm4DialogicalArena':
@@ -697,7 +705,8 @@ export function App() {
             onProfile: profile => {
                 lastProfileAt = Date.now();
                 useProvenanceStore.getState().setStale(false);
-                useTickStore.getState().setProfile(profile);
+                // 29.T29.4 — the one seam a profile frame enters through.
+                publishProfileTick(profile);
                 // the instrument follows the kernel's Vimarśa reading — bus
                 // tracked always, audible only when unmuted
                 const hp = (

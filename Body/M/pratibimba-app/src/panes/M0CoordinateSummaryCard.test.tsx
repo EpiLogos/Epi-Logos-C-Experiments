@@ -10,8 +10,9 @@
 
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useCoordinateStore, useTickStore } from '../state/stores';
+import { useCoordinateStore } from '../state/stores';
 import { M0CoordinateSummaryCard } from './M0CoordinateSummaryCard';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function cachedProfile(generation: number) {
     return {
@@ -35,14 +36,14 @@ function coordinateText(card: HTMLElement): string | null | undefined {
 afterEach(() => {
     cleanup();
     useCoordinateStore.setState({ selected: null });
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M0CoordinateSummaryCard consumes the shared projection (28.T28.18)', () => {
     it('mirrors the coordinate + generation from the single shared store, not own-state', () => {
         act(() => {
             useCoordinateStore.getState().setSelected('M3-1');
-            useTickStore.getState().setProfile(cachedProfile(7));
+            publishProfileTick(cachedProfile(7));
         });
         render(<M0CoordinateSummaryCard onOpenFullView={() => {}} />);
 
@@ -65,7 +66,7 @@ describe('M0CoordinateSummaryCard consumes the shared projection (28.T28.18)', (
 
         act(() => {
             useCoordinateStore.getState().setSelected('M4-4');
-            useTickStore.getState().setProfile(cachedProfile(12));
+            publishProfileTick(cachedProfile(12));
         });
         expect(card.getAttribute('data-coordinate')).toBe('M4-4');
         expect(coordinateText(card)).toBe('M4-4');
@@ -75,7 +76,7 @@ describe('M0CoordinateSummaryCard consumes the shared projection (28.T28.18)', (
         // it does not latch a stale own-copy.
         act(() => {
             useCoordinateStore.getState().setSelected('M5-3');
-            useTickStore.getState().setProfile(cachedProfile(20));
+            publishProfileTick(cachedProfile(20));
         });
         expect(card.getAttribute('data-coordinate')).toBe('M5-3');
         expect(generationText(card)).toBe('generation 20');

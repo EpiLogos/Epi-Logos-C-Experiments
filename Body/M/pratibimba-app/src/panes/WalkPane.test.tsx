@@ -5,7 +5,8 @@ import { modulationEngine, useEngineStore } from '../engine/modulation/engine';
 import { setGateway } from '../bridge/gatewayHolder';
 import { instrument } from '../audio/instrument';
 import { DEFAULT_CONNECTION_STATUS } from '../bridge/types';
-import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
+import { useCoordinateStore, useProvenanceStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 // REAL gateway envelope shapes (verifier live probe 2026-07-02)
 const GRAPH: Record<string, { label: string; rels: { type: string; direction: string; coordinate: string }[] }> = {
@@ -36,7 +37,7 @@ describe('WalkPane', () => {
             connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
         });
         useCoordinateStore.setState({ selected: null });
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
     });
 
     afterEach(() => {
@@ -83,9 +84,7 @@ describe('WalkPane', () => {
     it('surfaces the single session-held # operator and round-trips the invert (X → X′ → X) without walking', async () => {
         // The profile bus carries the ONE session-held # (Inversion_Operator),
         // identical at every coordinate (M1'-SPEC §14). Seed the real shape.
-        useTickStore.setState({
-            generation: 1,
-            profile: {
+        publishProfileTick({
                 generation: 1,
                 cachedAtMs: 0,
                 stale: false,
@@ -104,8 +103,7 @@ describe('WalkPane', () => {
                         }
                     }
                 }
-            }
-        } as never);
+            });
 
         render(<WalkPane />);
         expect((await screen.findByTestId('walk-node')).textContent).toContain('M1');

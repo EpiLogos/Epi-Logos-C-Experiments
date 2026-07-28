@@ -20,6 +20,7 @@ import {
     useCompositionPentadicTraceEvents
 } from '../composition/compositionEvents';
 import { buildIntegratedPentadicTraceOverlay } from '../composition/integratedPentadicTrace';
+import { useCompositionProfile } from '../composition/compositionProfileContext';
 import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
 // 29.T29.3 — the personal composition declares WHO owns each geometric slot
 // and runs that through the real load-time law. The five forbidden handle
@@ -32,7 +33,6 @@ import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
 import { NowPane } from '../panes/NowPane';
-import { useTickStore } from '../state/stores';
 import {
     evaluateCachedProfileIntegratedReadiness,
     formatIntegratedReadiness
@@ -106,8 +106,11 @@ export function readPersonalRecognition(payload: unknown): PersonalRecognitionRe
 }
 
 export function PersonalRecognitionEngine() {
-    const cached = useTickStore(state => state.profile);
-    useCompositionLifecycleEvents('jiva-siva.integrated', cached?.generation ?? null);
+    // 29.T29.4 — ONE profile subscription per composition (DR-WC-IP-4). This
+    // root previously took its generation off the cached profile while the
+    // cosmic root took it from the store; both now read the same snapshot.
+    const { profile: cached, generation } = useCompositionProfile();
+    useCompositionLifecycleEvents('jiva-siva.integrated', generation);
     // 29.15: the 4-5-0 slot of the shared pentadic-trace envelope, built off the
     // same single profile subscription; its advance event fires on trace-tick
     // change just as the cosmic slot's does.
@@ -118,7 +121,7 @@ export function PersonalRecognitionEngine() {
     useCompositionPentadicTraceEvents(
         'jiva-siva.integrated',
         pentadicTraceOverlay,
-        cached?.generation ?? null
+        generation
     );
     const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
     // Slot ownership is a property of the DECLARATION, not of any frame, so it
@@ -134,7 +137,7 @@ export function PersonalRecognitionEngine() {
             className="personal-recognition-engine"
             data-testid="personal-recognition-engine"
             data-state={reading.state}
-            data-generation={cached?.generation ?? 'none'}
+            data-generation={generation ?? 'none'}
             // Ownership rides data attributes rather than rendered chrome: this
             // surface sits inside the `composition-4-5-0-personal.png` baseline,
             // and `visibility: hidden` preserves its layout box, so any added

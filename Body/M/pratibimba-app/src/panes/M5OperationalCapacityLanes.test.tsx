@@ -21,7 +21,8 @@ vi.mock('../bridge/gatewayHolder', () => ({
 import { commands } from '../commands/registry';
 import { parseImproveHistory } from './autoresearchModel';
 import { M5OperationalCapacityLanes } from './M5OperationalCapacityLanes';
-import { useTickStore } from '../state/stores';
+
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const HISTORY_WIRE = {
     runs: [
@@ -63,7 +64,7 @@ const CANDIDATES = parseImproveHistory(HISTORY_WIRE);
 afterEach(() => {
     cleanup();
     invoke.mockReset();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M5OperationalCapacityLanes', () => {
@@ -126,7 +127,7 @@ describe('M5OperationalCapacityLanes', () => {
         const first = invoke.mock.calls.filter(call => call[0] === "s5'.improve.history").length;
         expect(first).toBeGreaterThanOrEqual(1);
         act(() => {
-            useTickStore.getState().setProfile({
+            publishProfileTick({
                 generation: 5,
                 cachedAtMs: 5000,
                 stale: false,

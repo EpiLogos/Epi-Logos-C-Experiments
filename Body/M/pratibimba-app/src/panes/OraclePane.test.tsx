@@ -2,7 +2,8 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { OraclePane } from './OraclePane';
 import { commands } from '../commands/registry';
-import { useSessionStore, useTickStore } from '../state/stores';
+import { useSessionStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const invokeCommand = vi.fn();
 vi.mock('../bridge/tauri', () => ({
@@ -14,7 +15,7 @@ describe('OraclePane', () => {
     beforeEach(() => {
         invokeCommand.mockReset();
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
-        useTickStore.setState({ generation: null, profile: null } as never);
+        resetProfileTicks();
     });
     afterEach(cleanup);
 
@@ -88,9 +89,7 @@ describe('OraclePane', () => {
 
     it('falls back to the at-now kernel resonance for an unstamped deposit when the profile carries one (05.T5.1)', async () => {
         useSessionStore.setState({ dayNow: '02-07-2026' });
-        useTickStore.setState({
-            generation: 2,
-            profile: {
+        publishProfileTick({
                 generation: 2,
                 cachedAtMs: 0,
                 stale: false,
@@ -103,8 +102,7 @@ describe('OraclePane', () => {
                         }
                     }
                 }
-            } as never
-        } as never);
+            } as never);
         invokeCommand.mockResolvedValue({
             artifactPath: 'Empty/Present/02-07-2026/oracle-120000-tarot.md',
             output: 'The Star',

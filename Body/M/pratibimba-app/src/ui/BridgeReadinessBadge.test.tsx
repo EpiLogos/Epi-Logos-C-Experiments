@@ -5,18 +5,20 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { BRIDGE_READINESS_IDS, type BridgeReadinessBinding, type BridgeReadinessId } from './bridgeReadiness';
 import { BridgeReadinessBadge, BridgeReadinessBadgeView } from './BridgeReadinessBadge';
 import { useReadinessStore } from '../state/readinessStore';
-import { useTickStore } from '../state/stores';
+
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function binding(readinessId: BridgeReadinessId, over: Partial<BridgeReadinessBinding> = {}): BridgeReadinessBinding {
     return { bindingKey: 's2.graph.node', readinessId, blockers: [], lastTickObserved: 0, ...over };
 }
 
+// Every frame off the wire carries a NEW generation; the store refuses a
+// repeat, so a fixed generation here would silently drop the second tick.
+let tickGeneration = 0;
 function setTick(tick12: number): void {
+    tickGeneration += 1;
     act(() => {
-        useTickStore.setState({
-            generation: 1,
-            profile: { generation: 1, profile: { tick12, degree720: tick12 * 60 }, graphRevision: 0 } as never
-        });
+        publishProfileTick({ generation: tickGeneration, profile: { tick12, degree720: tick12 * 60 }, graphRevision: 0 } as never);
     });
 }
 
@@ -24,7 +26,8 @@ afterEach(() => {
     cleanup();
     act(() => {
         useReadinessStore.getState().clear();
-        useTickStore.setState({ generation: null, profile: null });
+        resetProfileTicks();
+        tickGeneration = 0;
     });
 });
 

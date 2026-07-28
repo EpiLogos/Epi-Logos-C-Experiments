@@ -26,12 +26,12 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { KernelBridgeCachedProfile } from '../bridge/types';
-import { useTickStore } from '../state/stores';
 import { useReadinessStore } from '../state/readinessStore';
 import { useProfileTick } from '../state/useProfileTick';
 import { useBridgeReadiness } from '../ui/useBridgeReadiness';
 import { M3ProfileTickProvider, useM3ProfileTick } from './m3SurfaceContext';
 import { OmniPendingPane } from './omni/OmniPendingPane';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 /** The one clock's payload — mirrors the shape the bridge busses. */
 function cachedProfile(generation: number, tick12: number): KernelBridgeCachedProfile {
@@ -109,7 +109,7 @@ beforeEach(() => {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     useReadinessStore.getState().clear();
 });
 
@@ -127,7 +127,7 @@ describe('28.17 — profile-tick re-render contract per widget', () => {
         expect(screen.getByTestId('w-readiness').getAttribute('data-observed')).toBe('-1');
 
         // ONE clock advance — no user input, no per-surface prop change.
-        act(() => useTickStore.getState().setProfile(cachedProfile(7, 4)));
+        act(() => publishProfileTick(cachedProfile(7, 4)));
 
         // Every surface reflects the advanced generation.
         expect(screen.getByTestId('w-status').getAttribute('data-generation')).toBe('7');
@@ -143,13 +143,13 @@ describe('28.17 — profile-tick re-render contract per widget', () => {
 
     it('no surface rewinds on a stale generation — one clock, no rewind', () => {
         render(<Shell />);
-        act(() => useTickStore.getState().setProfile(cachedProfile(9, 6)));
+        act(() => publishProfileTick(cachedProfile(9, 6)));
 
         expect(screen.getByTestId('w-status').getAttribute('data-generation')).toBe('9');
         const rendersAfterAdvance = { ...renders };
 
         // A stale (lesser) generation arrives — the store refuses it.
-        act(() => useTickStore.getState().setProfile(cachedProfile(3, 1)));
+        act(() => publishProfileTick(cachedProfile(3, 1)));
 
         // Held, not rewound, on every surface.
         expect(screen.getByTestId('w-status').getAttribute('data-generation')).toBe('9');
@@ -167,9 +167,9 @@ describe('28.17 — profile-tick re-render contract per widget', () => {
         const raf = vi.spyOn(globalThis, 'requestAnimationFrame');
         try {
             render(<Shell />);
-            act(() => useTickStore.getState().setProfile(cachedProfile(11, 2)));
-            act(() => useTickStore.getState().setProfile(cachedProfile(12, 3)));
-            act(() => useTickStore.getState().setProfile(cachedProfile(13, 4)));
+            act(() => publishProfileTick(cachedProfile(11, 2)));
+            act(() => publishProfileTick(cachedProfile(12, 3)));
+            act(() => publishProfileTick(cachedProfile(13, 4)));
 
             // None of the four surfaces spun a widget-local render loop: the
             // re-render came from the store subscription, not a timer.

@@ -11,7 +11,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useEngineStore } from '../engine/modulation/engine';
-import { useTickStore } from '../state/stores';
+
 import { PENTADIC_TRACE_FIXTURE } from '../test/pentadicTraceFixture';
 import { buildM3WheelSurface } from './M3CosmicWheelRenderService';
 import {
@@ -20,6 +20,7 @@ import {
     M3DailyWheelMiniView,
     M3WheelMiniView
 } from './M3CompactViews';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const profilePayload = (codonId: number) => ({
     harmonicProfile: {
@@ -54,13 +55,13 @@ const surface = buildM3WheelSurface({
 });
 
 beforeEach(() => {
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     useEngineStore.setState({ paused: false, scrubGeneration: null });
 });
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     useEngineStore.setState({ paused: false, scrubGeneration: null });
 });
 
@@ -80,19 +81,13 @@ describe('M3 compact renderer wrappers', () => {
     });
 
     it('holds the received compact surface while choreography is paused and rejoins on resume', () => {
-        useTickStore.setState({
-            profile: { generation: 73, profile: profilePayload(38) } as never,
-            generation: 73
-        });
+        publishProfileTick({ generation: 73, profile: profilePayload(38) } as never);
         render(<M3ContextCodonChip />);
         expect(screen.getByTestId('m3-cosmic-wheel').getAttribute('data-codon-id')).toBe('38');
 
         act(() => useEngineStore.setState({ paused: true }));
         act(() =>
-            useTickStore.setState({
-                profile: { generation: 74, profile: profilePayload(39) } as never,
-                generation: 74
-            })
+            publishProfileTick({ generation: 74, profile: profilePayload(39) } as never)
         );
         expect(screen.getByTestId('m3-cosmic-wheel').getAttribute('data-codon-id')).toBe('38');
 
@@ -101,10 +96,7 @@ describe('M3 compact renderer wrappers', () => {
     });
 
     it('mounts the pentadic hinge badge from the same held mini-view generation', () => {
-        useTickStore.setState({
-            profile: { generation: 73, profile: profilePayload(38) } as never,
-            generation: 73
-        });
+        publishProfileTick({ generation: 73, profile: profilePayload(38) } as never);
         render(<M3DailyWheelMiniView />);
 
         const badge = screen.getByTestId('m3-pentadic-hinge-badge');
@@ -114,10 +106,7 @@ describe('M3 compact renderer wrappers', () => {
 
         act(() => useEngineStore.setState({ paused: true }));
         act(() =>
-            useTickStore.setState({
-                profile: { generation: 74, profile: profilePayload(39) } as never,
-                generation: 74
-            })
+            publishProfileTick({ generation: 74, profile: profilePayload(39) } as never)
         );
         expect(badge.getAttribute('data-generation')).toBe('73');
 

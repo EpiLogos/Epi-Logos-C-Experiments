@@ -6,16 +6,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { commands } from '../commands/registry';
-import { useTickStore } from '../state/stores';
+
 import {
     KAPREKAR_PEDAGOGY_SEED_PATH,
     M1KaprekarInspector
 } from './m1KaprekarInspector';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function primeProfile(position6: number, skeletonEvent: unknown = null): void {
-    useTickStore.setState({
-        generation: 41,
-        profile: {
+    publishProfileTick({
             generation: 41,
             cachedAtMs: 1,
             stale: false,
@@ -27,14 +26,13 @@ function primeProfile(position6: number, skeletonEvent: unknown = null): void {
                     anandaVortex: { activeCellValue: { skeletonEvent } }
                 }
             }
-        }
-    });
+        });
 }
 
 describe('M1KaprekarInspector (22.T22.7)', () => {
     beforeEach(() => {
         cleanup();
-        useTickStore.setState({ generation: null, profile: null });
+        resetProfileTicks();
     });
 
     afterEach(() => cleanup());

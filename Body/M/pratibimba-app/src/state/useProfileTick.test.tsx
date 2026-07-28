@@ -8,9 +8,10 @@
 
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from './stores';
+
 import { useProfileTick } from './useProfileTick';
 import { crossSurfacePropagation } from '../composition/compositionContract';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 function cachedProfile(
     generation: number,
@@ -47,7 +48,7 @@ function TickProbe() {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
     renderCount = 0;
 });
 
@@ -57,7 +58,7 @@ describe('useProfileTick', () => {
         expect(screen.getByTestId('tick-probe').getAttribute('data-generation')).toBe('none');
 
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(7, 4, 415));
+            publishProfileTick(cachedProfile(7, 4, 415));
         });
         const probe = screen.getByTestId('tick-probe');
         expect(probe.getAttribute('data-generation')).toBe('7');
@@ -65,7 +66,7 @@ describe('useProfileTick', () => {
         expect(probe.getAttribute('data-degree720')).toBe('415');
 
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(8, 5, 445));
+            publishProfileTick(cachedProfile(8, 5, 445));
         });
         expect(probe.getAttribute('data-generation')).toBe('8');
         expect(probe.getAttribute('data-tick12')).toBe('5');
@@ -74,12 +75,12 @@ describe('useProfileTick', () => {
     it('holds the current view when a stale generation arrives — one clock, no rewind', () => {
         render(<TickProbe />);
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(9, 6, 475));
+            publishProfileTick(cachedProfile(9, 6, 475));
         });
         const rendersAfterAdvance = renderCount;
 
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(3, 1, 30));
+            publishProfileTick(cachedProfile(3, 1, 30));
         });
         const probe = screen.getByTestId('tick-probe');
         expect(probe.getAttribute('data-generation')).toBe('9');
@@ -90,7 +91,7 @@ describe('useProfileTick', () => {
     it('B-12: surfaces the graph revision so a governed edit is visible on the next tick', () => {
         render(<TickProbe />);
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(10, 4, 415, 7));
+            publishProfileTick(cachedProfile(10, 4, 415, 7));
         });
         const probe = screen.getByTestId('tick-probe');
         expect(probe.getAttribute('data-graph-revision')).toBe('7');
@@ -98,7 +99,7 @@ describe('useProfileTick', () => {
         // a governed Bimba write lands: generation advances AND revision bumps —
         // crossSurfacePropagation reports the edit crossed to every rendering.
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(11, 5, 445, 8));
+            publishProfileTick(cachedProfile(11, 5, 445, 8));
         });
         expect(probe.getAttribute('data-graph-revision')).toBe('8');
         const decision = crossSurfacePropagation(
@@ -110,7 +111,7 @@ describe('useProfileTick', () => {
 
         // a bare clock tick (revision unchanged) re-reads but carries no edit.
         act(() => {
-            useTickStore.getState().setProfile(cachedProfile(12, 6, 475, 8));
+            publishProfileTick(cachedProfile(12, 6, 475, 8));
         });
         expect(probe.getAttribute('data-graph-revision')).toBe('8');
         expect(

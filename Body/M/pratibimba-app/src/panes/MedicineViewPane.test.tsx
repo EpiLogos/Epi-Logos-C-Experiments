@@ -1,8 +1,9 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { MedicineViewPane } from './MedicineViewPane';
 import type { MedicineSnapshot } from './medicineView';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const fixture: MedicineSnapshot = {
     chakras: Array.from({ length: 8 }, (_, id) => ({
@@ -26,7 +27,7 @@ const fixture: MedicineSnapshot = {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('MedicineViewPane', () => {
@@ -74,7 +75,7 @@ describe('MedicineViewPane', () => {
     });
 
     it('refreshes the active decan when the shared Kairos Sun degree advances', async () => {
-        useTickStore.getState().setProfile({
+        publishProfileTick({
             generation: 1,
             cachedAtMs: 1,
             stale: false,
@@ -89,7 +90,7 @@ describe('MedicineViewPane', () => {
         render(<MedicineViewPane loadSnapshot={loadSnapshot} />);
         await waitFor(() => expect(loadSnapshot).toHaveBeenCalledWith(15));
 
-        act(() => useTickStore.getState().setProfile({
+        act(() => publishProfileTick({
             generation: 2,
             cachedAtMs: 2,
             stale: false,

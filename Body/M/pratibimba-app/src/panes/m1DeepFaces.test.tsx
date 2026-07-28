@@ -7,11 +7,12 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { useTickStore } from '../state/stores';
+
 import { M1Cl42SignatureInspector } from './m1Cl42SignatureInspector';
 import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
 import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
 import { M1AudioBusInspector } from './m1AudioBusInspector';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 /** The T2.6 CSV skeleton cell — accepted by the strict vortex reader. */
 const CELL_7X5 = {
@@ -118,21 +119,18 @@ const M1_TRITONE_FLIP = {
 };
 
 function prime(harmonicProfile: Record<string, unknown>, generation = 41) {
-    useTickStore.setState({
-        generation,
-        profile: {
+    publishProfileTick({
             generation,
             cachedAtMs: 1,
             stale: false,
             stalenessMs: 0,
             privacyClass: 'safe-public-current-kernel-tick',
             profile: { generation, harmonicProfile }
-        }
-    });
+        });
 }
 
 function clear() {
-    useTickStore.setState({ generation: null, profile: null });
+    resetProfileTicks();
 }
 
 describe('22.T22.3 Cl(4,2) signature inspector', () => {

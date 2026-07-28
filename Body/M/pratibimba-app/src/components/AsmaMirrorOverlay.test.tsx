@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AsmaMirrorOverlay, AsmaOverlayRecord } from './AsmaMirrorOverlay';
-import { useTickStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 const MIRRORED: AsmaOverlayRecord = {
     nameIdx: 2,
@@ -21,9 +21,7 @@ const UNMIRRORED: AsmaOverlayRecord = {
 };
 
 function seedProfile(kleinFlip: { kind: string } | null) {
-    useTickStore.setState({
-        generation: 7,
-        profile: {
+    publishProfileTick({
             generation: 7,
             cachedAtMs: 0,
             stale: false,
@@ -35,13 +33,12 @@ function seedProfile(kleinFlip: { kind: string } | null) {
                     kleinFlip
                 }
             }
-        } as never
-    });
+        } as never);
 }
 
 describe('AsmaMirrorOverlay (Tranche 03.T3.10 — double-cover discipline)', () => {
     beforeEach(() => {
-        useTickStore.setState({ generation: null, profile: null } as never);
+        resetProfileTicks();
     });
     afterEach(cleanup);
 

@@ -13,6 +13,7 @@ import type { KernelBridgeCachedProfile } from './bridge/types';
 import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
 import { useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
+import { publishProfileTick, resetProfileTicks } from './composition/profileTickSubscription';
 
 class InertSocket {
     readyState = 0;
@@ -44,7 +45,7 @@ describe('App shell', () => {
         }
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         useOmniPanelSessionStore.getState().hydrate(null);
     });
 
@@ -92,7 +93,7 @@ describe('App shell', () => {
 
         act(() => {
             useCoordinateStore.getState().setSelected('M3-2');
-            useTickStore.getState().setProfile(profile);
+            publishProfileTick(profile);
             useSessionStore.getState().setSession({ sessionKey: 'session-six', dayNow: '07-16-2026' });
         });
 
@@ -179,7 +180,7 @@ describe('App shell', () => {
         render(<App />);
         await screen.findByTestId('shell');
         act(() => {
-            useTickStore.getState().setProfile({
+            publishProfileTick({
                 generation: 73,
                 cachedAtMs: 1,
                 stale: false,
@@ -380,7 +381,7 @@ describe('App shell', () => {
 
         act(() => {
             useCoordinateStore.getState().setSelected('M3-3');
-            useTickStore.getState().setProfile(profile);
+            publishProfileTick(profile);
             useSessionStore.getState().setSession({
                 sessionKey: 'session-m3-codon',
                 dayNow: '07-16-2026',

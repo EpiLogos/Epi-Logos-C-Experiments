@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T08:26:12.997Z",
+  "updatedAt": "2026-07-28T08:28:45.287Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14524,14 +14524,32 @@
       "blocker": null
     },
     "29.T29.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T07:31:34.197Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T08:28:45.263Z",
       "claimedAt": "2026-07-28T07:31:34.197Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T08:28:45.263Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T08:28:45.263Z",
+          "text": "One subscription per composition, one way in - the tranche as specified, not a wrapper. openCompositionProfileSubscription() opens ONE subscription and fans it out; CompositionProfileProvider holds exactly one per composition (App.tsx cosmic + personalHome cases) and disposes it on unmount; useCompositionProfile() reads that context and THROWS outside a provider, because an unwrapped contributor is a composition that never declared its subscription. publishProfileTick() is the one way a frame enters the clock: the gateway onProfile callback calls it and so does every test, since a test driving the clock IS the wire for that test. That removed the need for a test carve-out rather than arguing for one - 57 sites across 42 test files migrated off useTickStore.setState/setProfile, after an AST scan proved 0 of them seeded a generation the wire could not produce. The lint is UNIFORM (no test exclusion): new GatewayClient only in App.tsx plus the client's own tests; clock writes only in state/stores.ts, its own test, and the seam. It judges setProfile by RECEIVER not by name, since several suites define a local helper of that name that already delegates. A FIRST CUT WAS WRONG AND THE BROWSER CAUGHT IT: the provider created its subscription in useState and disposed it in an effect, so React StrictMode's mount-cleanup-mount left it disposed and never reopened - the live surface would have sat at its pre-tick snapshot forever while jsdom stayed green. The subscription is now opened BY the effect that closes it, and a StrictMode regression test is pinned (proven non-vacuous: it reddens against the old form and nothing else). Migrating to the seam also put these tests through the store's stale-generation gate for the first time, catching five that seeded wire-impossible state (fixed generation with varying tick12; repeated generations across cases; two bare-generation-with-null-profile seeds my own earlier scan had mis-classified). GATE SCOPE, STATED PLAINLY: app-ui-flow is RED repo-wide and it is not this tranche's - sibling commit e48b0fc4 (30.T30.9, HEAD) made src/ui/primitives.tsx import src/ui/iconography.ts, whose top-level import.meta.glob is a Vite build-time API Playwright cannot transform, so 'npx playwright test --list' reports 'Total: 0 tests in 0 files' and NO UF tranche in ANY lane can currently close on the whole suite. This is deterministic, not a flake, and is left for Track 30 to decide (guard the glob, move the icon-URL map behind a runtime boundary, or keep Playwright specs off ui/primitives). This tranche's own UF proof is carried by its two specs run directly against a spawned gateway (2 passed). Independent verify-tranche PASS (verifier opus-verifier-t29-4-20260728 != closer opus-mdev-29t294) over the class gate minus app-ui-flow: app-test 1647, app-typecheck, app-build, app-smoke, live-wire, gateway 101, gateway-contract 93, ta-onta 800, carrier-tokens, honesty-lint all GREEN. DR-WC-IP-4 stays ROUTED; nothing here changes its recorded status.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/single-clock.spec.ts tests/e2e/personal-composition-ownership.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/profileTickSubscription.ts",
+              "Body/M/pratibimba-app/src/composition/compositionProfileContext.tsx",
+              "Body/M/pratibimba-app/scripts/lint-single-clock.mjs",
+              "Body/M/pratibimba-app/tests/e2e/single-clock.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.4.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-29t294",
-      "leaseExpiresAt": "2026-07-28T10:31:34.197Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T07:31:34.197Z",
       "runId": "20260728T073134Z-29-T29.4",
       "worktree": null,
@@ -27317,11 +27335,12 @@
     {
       "runId": "20260728T073134Z-29-T29.4",
       "taskId": "29.T29.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-28T07:31:34.197Z",
       "owner": "opus-mdev-29t294",
       "leaseExpiresAt": "2026-07-28T10:31:34.197Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T08:28:45.263Z"
     },
     {
       "runId": "20260728T075315Z-30-T30.9",

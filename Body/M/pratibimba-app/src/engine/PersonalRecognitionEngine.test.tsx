@@ -9,19 +9,19 @@
 
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { PersonalRecognitionEngine } from './PersonalRecognitionEngine';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
+import { CompositionProfileProvider } from '../composition/compositionProfileContext';
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('PersonalRecognitionEngine', () => {
     it('composes the live M0/M4/M5 recognition handoff without exposing protected bodies', () => {
-        useTickStore.setState({
-            generation: 17,
-            profile: {
+        publishProfileTick({
                 generation: 17,
                 cachedAtMs: 17_000,
                 stale: false,
@@ -77,10 +77,13 @@ describe('PersonalRecognitionEngine', () => {
                         }
                     }
                 }
-            } as never
-        });
+            } as never);
 
-        render(<PersonalRecognitionEngine />);
+        render(
+            <CompositionProfileProvider>
+                <PersonalRecognitionEngine />
+            </CompositionProfileProvider>
+        );
 
         const surface = screen.getByTestId('personal-recognition-engine');
         expect(surface.dataset.state).toBe('ready');
@@ -112,7 +115,11 @@ describe('PersonalRecognitionEngine', () => {
     // personal path, which is the only path its five forbidden handle classes
     // describe. This is the behavioural proof that the render now reaches it.
     it('reports one named owner per personal geometric slot', () => {
-        render(<PersonalRecognitionEngine />);
+        render(
+            <CompositionProfileProvider>
+                <PersonalRecognitionEngine />
+            </CompositionProfileProvider>
+        );
         const root = screen.getByTestId('personal-recognition-engine');
         expect(root.getAttribute('data-composition-mounted')).toBe('true');
         expect(root.getAttribute('data-left-composition-owner')).toBe('m4-nara');
@@ -128,7 +135,11 @@ describe('PersonalRecognitionEngine', () => {
         // 25.T25.6 (personal cymatic field body) is pending: the slot has an
         // owner and no renderer, and the surface says so instead of reading as
         // if the composition had five slots.
-        render(<PersonalRecognitionEngine />);
+        render(
+            <CompositionProfileProvider>
+                <PersonalRecognitionEngine />
+            </CompositionProfileProvider>
+        );
         const root = screen.getByTestId('personal-recognition-engine');
         expect(root.getAttribute('data-composition-blocked-slots')).toBe(
             'center-composition:pending-psychoid-cymatic-renderer'

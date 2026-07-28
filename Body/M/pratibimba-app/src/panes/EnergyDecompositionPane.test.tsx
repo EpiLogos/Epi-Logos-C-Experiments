@@ -11,14 +11,15 @@
 
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { useTickStore } from '../state/stores';
+
 import { EnergyDecompositionPane } from './EnergyDecompositionPane';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 /** Bus a profile the way the gateway does — the kernel projection is
  *  `cached.profile.profile`, with `energy` a sibling of `harmonicProfile`. */
 function busEnergy(energy: Record<string, string> | null, generation: number) {
     act(() => {
-        useTickStore.getState().setProfile({
+        publishProfileTick({
             generation,
             cachedAtMs: generation * 1000,
             stale: false,
@@ -34,7 +35,7 @@ function busEnergy(energy: Record<string, string> | null, generation: number) {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('EnergyDecompositionPane', () => {

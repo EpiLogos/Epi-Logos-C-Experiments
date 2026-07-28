@@ -10,6 +10,7 @@ import {
     crossSurfacePropagation,
     ownedBinding
 } from './compositionContract';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 describe('plugin-integrated-1-2-3 composition contract (09.T9.5)', () => {
     it('explicitly names and owns B-8, B-9, B-12', () => {
@@ -83,8 +84,8 @@ describe('plugin-integrated-1-2-3 composition contract (09.T9.5)', () => {
             const profileAt = (generation: number, graphRevision: string): KernelBridgeCachedProfile =>
                 ({ generation, profile: { graphRevision } } as unknown as KernelBridgeCachedProfile);
 
-            useTickStore.setState({ profile: null, generation: null });
-            useTickStore.getState().setProfile(profileAt(5, 'rev-a'));
+            resetProfileTicks();
+            publishProfileTick(profileAt(5, 'rev-a'));
             expect(useTickStore.getState().generation).toBe(5);
 
             // stale governed write — rejected by the gate exactly as the law says
@@ -92,7 +93,7 @@ describe('plugin-integrated-1-2-3 composition contract (09.T9.5)', () => {
                 { generation: 5, graphRevision: 'rev-a' },
                 { generation: 5, graphRevision: 'rev-b' }
             );
-            useTickStore.getState().setProfile(profileAt(5, 'rev-b'));
+            publishProfileTick(profileAt(5, 'rev-b'));
             expect(staleDecision.reRead).toBe(false);
             expect(useTickStore.getState().generation).toBe(5);
 
@@ -101,7 +102,7 @@ describe('plugin-integrated-1-2-3 composition contract (09.T9.5)', () => {
                 { generation: 5, graphRevision: 'rev-a' },
                 { generation: 6, graphRevision: 'rev-b' }
             );
-            useTickStore.getState().setProfile(profileAt(6, 'rev-b'));
+            publishProfileTick(profileAt(6, 'rev-b'));
             expect(liveDecision.reRead).toBe(true);
             expect(liveDecision.carriesEdit).toBe(true);
             expect(useTickStore.getState().generation).toBe(6);

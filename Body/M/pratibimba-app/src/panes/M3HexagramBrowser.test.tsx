@@ -1,9 +1,10 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
-import { useTickStore } from '../state/stores';
+
 import { KernelBridgeCachedProfile } from '../bridge/types';
 import { M3ProfileTickProvider } from './m3SurfaceContext';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 // A real-shaped bridge profile carrying the mahamaya window that
 // buildM3InspectorsView reads. The bus carries BOTH orderings: `hexagramId` is
@@ -59,7 +60,7 @@ function renderBrowser() {
 
 afterEach(() => {
     cleanup();
-    useTickStore.setState({ profile: null, generation: null });
+    resetProfileTicks();
 });
 
 describe('M3HexagramBrowser', () => {
@@ -69,10 +70,7 @@ describe('M3HexagramBrowser', () => {
     });
 
     it('renders all 64 cells and lights the KING WEN cell, not the Fu-Xi address64', () => {
-        useTickStore.setState({
-            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
-            generation: 7
-        });
+        publishProfileTick(profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7));
         renderBrowser();
 
         for (let kw = 1; kw <= 64; kw++) {
@@ -92,10 +90,7 @@ describe('M3HexagramBrowser', () => {
     });
 
     it('surfaces BOTH orderings — King Wen ordinal and Fu-Xi address64', () => {
-        useTickStore.setState({
-            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
-            generation: 7
-        });
+        publishProfileTick(profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7));
         renderBrowser();
 
         const browser = screen.getByTestId('m3-hexagram-browser');
@@ -108,10 +103,7 @@ describe('M3HexagramBrowser', () => {
     });
 
     it('renders the active glyph 6 lines from the bussed trigrams and keeps non-active glyphs pending', () => {
-        useTickStore.setState({
-            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
-            generation: 7
-        });
+        publishProfileTick(profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7));
         renderBrowser();
         for (let i = 0; i < 6; i++) {
             expect(screen.getByTestId(`m3-hexagram-line-${i}`)).toBeTruthy();
@@ -125,10 +117,7 @@ describe('M3HexagramBrowser', () => {
     });
 
     it('toggles a changing line and renders the derived-hexagram resolution as honest-pending', () => {
-        useTickStore.setState({
-            profile: profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7),
-            generation: 7
-        });
+        publishProfileTick(profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7));
         renderBrowser();
 
         // No changing line → no derived-pending panel yet.

@@ -2,7 +2,8 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NowPane } from './NowPane';
 import { commands } from '../commands/registry';
-import { useSessionStore, useTickStore } from '../state/stores';
+import { useSessionStore } from '../state/stores';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 vi.mock('../bridge/tauri', () => ({
     invokeCommand: vi.fn(async (command: string) => {
@@ -23,7 +24,7 @@ vi.mock('../bridge/tauri', () => ({
 describe('NowPane', () => {
     beforeEach(() => {
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
-        useTickStore.setState({ generation: null, profile: null } as never);
+        resetProfileTicks();
     });
     afterEach(cleanup);
 
@@ -63,9 +64,7 @@ describe('NowPane', () => {
 
     it('the day strip resolves the at-now indicator from the kernel personal pole (05.T5.1)', async () => {
         useSessionStore.setState({ dayNow: '02-07-2026' });
-        useTickStore.setState({
-            generation: 5,
-            profile: {
+        publishProfileTick({
                 generation: 5,
                 cachedAtMs: 0,
                 stale: false,
@@ -78,8 +77,7 @@ describe('NowPane', () => {
                         }
                     }
                 }
-            } as never
-        } as never);
+            } as never);
         render(<NowPane />);
         const now = await screen.findByTestId('nara-resonance-now');
         expect(now.textContent).toBe('0.812 Major');

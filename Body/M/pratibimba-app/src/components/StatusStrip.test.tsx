@@ -1,7 +1,8 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { StatusStrip } from './StatusStrip';
-import { useProvenanceStore, useSessionStore, useTickStore } from '../state/stores';
+import { useProvenanceStore, useSessionStore } from '../state/stores';
+import { publishProfileTick } from '../composition/profileTickSubscription';
 
 describe('StatusStrip', () => {
     afterEach(cleanup);
@@ -13,7 +14,7 @@ describe('StatusStrip', () => {
         expect(screen.getByTestId('status-tick').textContent).toContain('—');
 
         act(() => {
-            useTickStore.getState().setProfile({
+            publishProfileTick({
                 generation: 42,
                 cachedAtMs: 1,
                 stale: false,

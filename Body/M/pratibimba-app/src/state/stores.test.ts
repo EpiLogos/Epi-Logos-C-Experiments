@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './stores';
+import { resetProfileTicks } from '../composition/profileTickSubscription';
 
 function profileWithGeneration(generation: number) {
     return {
@@ -14,7 +15,7 @@ function profileWithGeneration(generation: number) {
 
 describe('stores', () => {
     beforeEach(() => {
-        useTickStore.setState({ profile: null, generation: null });
+        resetProfileTicks();
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
     });

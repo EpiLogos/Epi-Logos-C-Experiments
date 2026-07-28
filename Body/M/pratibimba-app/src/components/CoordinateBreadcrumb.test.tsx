@@ -12,8 +12,9 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CROSS_LAYOUT_INTENT_COMMAND } from '../commands/crossLayoutIntent';
 import { commands } from '../commands/registry';
-import { useCoordinateStore, useSessionStore, useTickStore } from '../state/stores';
+import { useCoordinateStore, useSessionStore } from '../state/stores';
 import { CoordinateBreadcrumb } from './CoordinateBreadcrumb';
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 describe('31.T31.6 CoordinateBreadcrumb', () => {
     let dispatched: Array<Record<string, unknown>>;
@@ -30,7 +31,11 @@ describe('31.T31.6 CoordinateBreadcrumb', () => {
         });
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: 'sess-1', dayNow: '07-16-2026', privacyClass: 'protected' });
-        useTickStore.setState({ profile: null, generation: 88 });
+        // Generation rides a real frame: the wire stamps the store's
+        // generation from the profile it delivered, so a bare generation is a
+        // state no tick could produce.
+        resetProfileTicks();
+        publishProfileTick({ generation: 88, cachedAtMs: 88, stale: false, stalenessMs: 0, privacyClass: 'public-current-context', profile: { generation: 88 } } as never);
     });
 
     afterEach(() => {
