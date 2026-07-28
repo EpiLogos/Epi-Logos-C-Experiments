@@ -305,7 +305,7 @@ impl SessionContext {
 }
 
 pub fn generate_session_id_with_suffix(now: DateTime<Utc>, suffix: &str) -> String {
-    format!("{}-{suffix}", now.format("%Y%m%d-%H%M%S"))
+    format!("{}-{suffix}", crate::vault::paths::local_stamp(now))
 }
 
 pub fn bootstrap_sequence(repo_root: &Path, now_path: &Path) -> Vec<BootstrapArtifact> {

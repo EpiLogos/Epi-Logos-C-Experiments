@@ -8,7 +8,7 @@
 
 use crate::sesh::session::{load_env_file, repo_root_from_env, resolve_vault_root_for_repo};
 use crate::vault::day::{ensure_day_folder, DayEnsureReceipt};
-use chrono::{Datelike, NaiveDate, TimeZone, Utc};
+use chrono::{Datelike, TimeZone, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::fs;
@@ -78,9 +78,15 @@ fn session_id_for(day_id: &str) -> Result<String, String> {
         )
         .single()
         .ok_or_else(|| format!("invalid canonical day id {day_id:?}"))?;
+    // DELIBERATELY NOT `vault::paths::local_stamp`. Every other stamp in the
+    // vault names a real moment and must therefore be local (see `local_stamp`),
+    // but `instant` here is SYNTHETIC — midnight built out of the canonical day
+    // id purely to carry the format. Converting it to local time would move it
+    // across midnight in any zone west of UTC and stamp the PREVIOUS day, so
+    // this one stays UTC to keep the stamp equal to the day it was derived from.
     Ok(format!(
         "{}-{}",
-        instant.format("%Y%m%d-%H%M%S"),
+        instant.format(crate::vault::paths::STAMP_FORMAT),
         &Uuid::new_v4().simple().to_string()[..6]
     ))
 }

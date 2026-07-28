@@ -133,7 +133,10 @@ fn write_goal_prelude(request: GoalPreludeRequest<'_>) -> Result<GoalPreludeOutp
     fs::create_dir_all(&goals_dir)
         .map_err(|err| format!("failed to create {}: {err}", goals_dir.display()))?;
 
-    let filename = format!("goal-prelude-{}.md", created_at.format("%Y%m%d-%H%M%S"));
+    let filename = format!(
+        "goal-prelude-{}.md",
+        crate::vault::paths::local_stamp(created_at)
+    );
     let goal_path = goals_dir.join(filename);
     let body = render_goal_prelude(goal, &session_id, &day_id, created_at);
     let mut file = OpenOptions::new()

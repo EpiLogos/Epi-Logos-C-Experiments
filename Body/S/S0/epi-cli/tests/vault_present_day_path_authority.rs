@@ -4,11 +4,18 @@
 //! stated for a long time; both broke anyway, so this file makes breaking either
 //! a build failure rather than a thing someone notices weeks later.
 //!
-//! Two separate drifts, one disease — a duplicated authority nobody kept equal:
+//! Three separate drifts, one disease — a duplicated authority nobody kept equal:
 //!   * SHAPE: `vault/day.rs` grew a second day-path constructor (below).
 //!   * FORMAT: epi-cli spelled the day id `%d-%m-%Y` at TEN sites while the
 //!     pratibimba-app carrier used CHARTER's `%m-%d-%Y`, so the CLI and the app
 //!     wrote different day folders on every day whose day-of-month ≠ month.
+//!   * INSTANT: with shape and format both cured, the two still disagreed about
+//!     WHICH DAY IT IS — epi-cli reduced a `DateTime<Utc>` to the UTC calendar
+//!     date while the carrier and the m-dev tooling read the LOCAL one, so every
+//!     instant between local midnight and UTC midnight named a different day.
+//!     Caught live 2026-07-28 at 00:56 BST, when `epi agent session init` wrote
+//!     into the previous day and `--require-now` then hard-stopped the session
+//!     as STALE against the NOW it had just created.
 //!
 //! How it broke: `vault/day.rs` grew a SECOND day-path constructor that applied
 //! the archive's year/month/week/day shape to the Present root. Nothing kept the
@@ -22,10 +29,10 @@
 //! of the authority, the archive's nesting kept intact so nobody "repairs" the
 //! wrong side, and a source scan that fails when a second constructor appears.
 
-use chrono::{NaiveDate, TimeZone, Utc};
+use chrono::{DateTime, Local, NaiveDate, TimeZone, Utc};
 use epi_logos::vault::paths::{
-    archive_day_path, day_folder, day_folder_for_date, day_note_path, format_day_id_for_date,
-    parse_day_id, DAY_ID_FORMAT,
+    archive_day_path, day_folder, day_folder_for_date, day_note_path, format_day_id,
+    format_day_id_for_date, parse_day_id, DAY_ID_FORMAT,
 };
 use std::path::{Path, PathBuf};
 
@@ -36,6 +43,48 @@ const AUTHORITY: &str = "src/vault/paths.rs";
 /// two different day folders — which they did: the app used month-first per
 /// CHARTER while epi-cli spelled day-first at ten separate sites.
 const CARRIER_VAULT_RS: &str = "../../../M/pratibimba-app/src-tauri/src/vault.rs";
+
+/// THE THIRD DRIFT — INSTANT. Shape and format were both fixed while the two
+/// authorities still disagreed about *which day it is*.
+///
+/// The vault day is a LIVED day: the carrier mints it from `chrono::Local::now()`
+/// (`pratibimba-app/src-tauri/src/vault.rs`), and the m-dev tooling
+/// (`.codex/scripts/m-dev-plan-assess.mjs` `presentDayId`) reads the LOCAL
+/// calendar date too. epi-cli instead took `.date_naive()` off a `DateTime<Utc>`,
+/// which is the UTC calendar date — so for every instant between local midnight
+/// and UTC midnight the CLI named YESTERDAY while the app and the tooling named
+/// today. Observed live 2026-07-28 at 00:56 BST: `epi agent session init` wrote
+/// into the previous day while `--require-now` hard-stopped the session as STALE
+/// against its own freshly-created NOW.
+///
+/// Both cases below are required to make this portable: the 00:30 case fails
+/// under UTC-derived code in any zone EAST of UTC, the 23:30 case in any zone
+/// WEST of it. Together they pin the law wherever the test runs.
+#[test]
+fn day_id_follows_the_local_calendar_day_never_utc() {
+    let day = NaiveDate::from_ymd_opt(2026, 7, 28).unwrap();
+    for (hour, minute) in [(0, 30), (23, 30)] {
+        let wall_clock = day.and_hms_opt(hour, minute, 0).unwrap();
+        let local_dt = Local
+            .from_local_datetime(&wall_clock)
+            .single()
+            .expect("2026-07-28 carries no DST transition in any zone");
+        let instant: DateTime<Utc> = local_dt.with_timezone(&Utc);
+
+        assert_eq!(
+            format_day_id(instant),
+            "07-28-2026",
+            "at {hour:02}:{minute:02} local the vault day is the LOCAL day, \
+             not the UTC day ({} UTC)",
+            instant.date_naive()
+        );
+        assert_eq!(
+            day_folder(Path::new("/vault"), instant),
+            Path::new("/vault/Empty/Present/07-28-2026"),
+            "the day FOLDER follows the same local day as the day id"
+        );
+    }
+}
 
 #[test]
 fn day_id_is_month_first_per_charter() {
@@ -123,6 +172,18 @@ fn cli_and_carrier_agree_on_the_day_id_format() {
         !body.contains("\"%d-%m-%Y\""),
         "the carrier still carries a day-first format literal — the two crates \
          would build different day folders"
+    );
+
+    // Agreeing on the FORMAT is not enough if the two disagree about which
+    // INSTANT the day is taken from — that is the third drift (see
+    // `day_id_follows_the_local_calendar_day_never_utc`). The carrier reduces
+    // `chrono::Local::now()`; epi-cli must reduce through `day_of`, which does
+    // the same. A carrier that switched to `Utc::now()` would silently re-open
+    // the split for everyone east or west of UTC.
+    assert!(
+        body.contains("Local::now()"),
+        "the carrier must take its day from the LOCAL clock; epi-cli's `day_of` \
+         reduces to the local calendar day and the two write the same folder"
     );
 }
 
