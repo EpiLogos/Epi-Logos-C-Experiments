@@ -33,6 +33,29 @@
 export const DEPOSIT_METHOD = "s5'.epii.deposit";
 export const DEPOSIT_LIST_METHOD = "s5'.epii.deposit.list";
 
+/**
+ * `source_agent` is not free text — S5 maps it onto a `ReviewSource`
+ * (epii-agent-core `review_source`) and REFUSES anything else. These are the
+ * accepted spellings; a deposit naming any other agent is rejected by the
+ * domain even though it parses.
+ */
+export const DEPOSIT_SOURCE_AGENTS = Object.freeze([
+    'anima',
+    'aletheia',
+    'autoresearch',
+    'epii-autoresearch',
+    'human',
+    'human_gate'
+] as const);
+
+/**
+ * A deposit authored in this fold's form is made BY the person reading it, so
+ * it enters as the human gate rather than as an agent that did not act. The
+ * first draft of this defaulted to `epii`, which parses fine and is then
+ * refused by `review_source` — the e2e caught it, the jsdom mock could not.
+ */
+const AUTHORED_BY_HUMAN = 'human';
+
 /** The author-supplied draft the inline form collects. */
 export interface DepositDraft {
     readonly title: string;
@@ -86,7 +109,7 @@ export function depositRequestFromDraft(
         `privacy class: ${draft.privacyClass}`
     ].join('\n');
     return {
-        source_agent: context.sourceAgent ?? 'epii',
+        source_agent: context.sourceAgent ?? AUTHORED_BY_HUMAN,
         source_coordinate: draft.coordinate,
         // The one DepositType this fold deposits: an evidence deposition is a
         // review item, which is exactly what the review store holds.

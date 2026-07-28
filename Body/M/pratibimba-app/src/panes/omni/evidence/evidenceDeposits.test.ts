@@ -10,7 +10,11 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { depositRequestFromDraft, readEvidenceDeposits } from './evidenceDeposits';
+import {
+    DEPOSIT_SOURCE_AGENTS,
+    depositRequestFromDraft,
+    readEvidenceDeposits
+} from './evidenceDeposits';
 
 const DRAFT = {
     title: 'a deposition',
@@ -54,6 +58,16 @@ describe('26.T26.4 — the authored draft as a real DepositRequest', () => {
         for (const anchor of [DRAFT.candidateId, DRAFT.graphAnchor, DRAFT.reviewId, DRAFT.testAnchor, DRAFT.privacyClass]) {
             expect(body).toContain(anchor);
         }
+    });
+
+    it('names a source_agent S5 will actually accept', () => {
+        // `source_agent` is mapped onto a ReviewSource and REFUSED otherwise
+        // (epii-agent-core `review_source`). A request can parse cleanly and
+        // still be rejected by the domain — the first draft defaulted to
+        // 'epii' and was refused live with "unsupported Epii deposit
+        // source_agent: epii". A deposit authored in the fold IS the human gate.
+        expect(DEPOSIT_SOURCE_AGENTS).toContain(depositRequestFromDraft(DRAFT).source_agent);
+        expect(depositRequestFromDraft(DRAFT).source_agent).toBe('human');
     });
 
     it('omits session_key entirely rather than sending a null the contract has no field for', () => {

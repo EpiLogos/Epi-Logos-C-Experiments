@@ -64,9 +64,15 @@ test('26.T26.4: a deposit made through the Evidence fold comes back out of it', 
 
     await page.getByTestId('deposit-submit').click();
 
-    // The gateway ACCEPTED it. Before the write fix this was `deposit-refused`
-    // carrying a serde error about missing DepositRequest fields.
-    await expect(page.getByTestId('deposit-ok')).toBeVisible({ timeout: 20_000 });
+    // The gateway ACCEPTED it. A refusal keeps the form open carrying its
+    // reason, so the form CLOSING is the acceptance signal — the fold closes it
+    // from `onDeposited`, which only fires on a resolved deposit. (Asserting on
+    // the inline `deposit-ok` receipt cannot work here: it unmounts with the
+    // form in the same commit.) Both earlier defects surfaced exactly here —
+    // first a serde refusal for the packet-shaped draft, then "unsupported Epii
+    // deposit source_agent: epii" once it parsed.
+    await expect(page.getByTestId('deposit-refused')).toHaveCount(0, { timeout: 20_000 });
+    await expect(form).toHaveCount(0, { timeout: 20_000 });
 
     // ...and the read sibling now shows the very row the write just created.
     const deposits = page.getByTestId('evidence-deposits');
