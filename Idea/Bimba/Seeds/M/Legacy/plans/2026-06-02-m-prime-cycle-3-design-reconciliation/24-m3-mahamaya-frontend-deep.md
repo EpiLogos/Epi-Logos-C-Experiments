@@ -311,7 +311,7 @@ Land the per-hexagram chakra-IDs + body-zones viewer. Per MEMORY: "HEXAGRAM_BODY
   }
   ```
 - **Visual contract:** sub-panel attached to 24.5 hexagram browser. Top zone: human-body silhouette with chakra-points lit by `primaryChakraId` + `secondaryChakraIds`; bottom zone: body-zones list + dynamic descriptor. Suit-element halo around the silhouette derived from the active hexagram's coupling to the codon-cell colour.
-- **Substrate canonical reference:** `Body/S/S0/epi-cli/src/nara/oracle.rs::HEXAGRAM_BODY_DYNAMICS[64]` + `hexagram_body_lookup`. Renderer NEVER imports; service routes through `bridge.invokeGatewayRpc('s2.codon.scalar_ref.read', { refKind: 'i-ching', scalarRef: hexagramId })`.
+- **Substrate canonical reference:** `Body/S/S0/epi-cli/src/nara/oracle_identity.rs::HEXAGRAM_BODY_DYNAMICS[64]` + `hexagram_body_lookup` (corrected 2026-07-28 — the path formerly read `oracle.rs`, which does not exist). The substrate was ALWAYS landed; only the gateway seam was missing, and it landed 2026-07-28 as `s2.codon.scalar_ref.read` (24.T24.7). Note the dataset carries ONE `secondary_chakra`, emitted as a single-element `secondaryChakraIds` list — the plural in the TS signature below is the consuming shape, not a claim that the dataset holds several. Renderer NEVER imports; service routes through `bridge.invokeGatewayRpc('s2.codon.scalar_ref.read', { refKind: 'i-ching', scalarRef: hexagramId })`.
 - **Wave-B handoff:** bridge method-family return-shape extension named under 24.7 / WC-M3-SA-6.
 - **Verification:**
   - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBodyDynamicsViewer.tsx`

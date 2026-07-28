@@ -8,8 +8,9 @@
  *   gateway, and writes the machine-readable existence table to
  *   plan.runs/gateway-method-audit.json. Rerun tranches consult this table
  *   instead of trusting any plan's claims about what the gateway has.
- * Public surface: extractMethodNames, classifyResponse, CYCLE3_FAMILY_PREFIXES,
- *   probeMethods, main; CLI: node scripts/gateway-method-audit.mjs [--port N] [--out F]
+ * Public surface: extractMethodNames, classifyResponse, annotateFamilyLiveness,
+ *   CYCLE3_FAMILY_PREFIXES, probeMethods, main;
+ *   CLI: node scripts/gateway-method-audit.mjs [--port N] [--out F]
  * Does NOT own: the method inventory law (gateway-contract METHOD_NAMES);
  *   dispatch behavior (epi-cli gate/ + S3 gateway crate).
  * Contract: re-runs are idempotent — same corpus + same gateway ⇒ same table
@@ -85,6 +86,53 @@ export function classifyResponse(frame) {
         };
     }
     return { exists: true, responds: true, errorClass: null };
+}
+
+/**
+ * THE TRAP THIS CLOSES. The corpus is plan PROSE, so a scanned token may never
+ * have been a real method name — and a gateway that prefix-routes a family
+ * (`method.starts_with("nara.")` -> `gate::nara::dispatch_nara_with_state_root`)
+ * answers `unimplemented` for an unknown member of a very-much-live family.
+ * The row then reads identically to a genuinely dark method, and a reader
+ * concludes the CAPABILITY is missing when only the NAME is wrong.
+ *
+ * That misreading really happened: `nara.session.psyche_anchor` and
+ * `contemplate.fetch_object` were both reported absent and both taken for
+ * unbuilt subsystems, while ~50 live `nara.*` methods — including the
+ * persisted contemplation read that actually serves that data — sat behind the
+ * prefix router.
+ *
+ * So every absent row now says whether its FAMILY is served, and names live
+ * siblings. "Absent, family dark" and "absent, family live" are different
+ * findings and must not look the same.
+ */
+export function annotateFamilyLiveness(rows) {
+    const familyOf = method => {
+        const trimmed = method.replace(/\(.*$/, '');
+        const dot = trimmed.indexOf('.');
+        return dot === -1 ? trimmed : trimmed.slice(0, dot);
+    };
+    const servedByFamily = new Map();
+    for (const row of rows) {
+        if (row.exists !== true) continue;
+        const family = familyOf(row.method);
+        if (!servedByFamily.has(family)) servedByFamily.set(family, []);
+        servedByFamily.get(family).push(row.method);
+    }
+    return rows.map(row => {
+        if (row.exists !== false) return row;
+        const siblings = servedByFamily.get(familyOf(row.method)) ?? [];
+        return {
+            ...row,
+            familyServed: siblings.length,
+            ...(siblings.length > 0
+                ? {
+                      hint: 'family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt',
+                      servedSiblings: siblings.slice(0, 8),
+                  }
+                : {}),
+        };
+    });
 }
 
 function scanCorpus(folders = PLAN_FOLDERS) {
@@ -195,7 +243,7 @@ async function main() {
     const opts = parseArgs(process.argv.slice(2));
     const methods = scanCorpus();
     console.log(`[gateway-method-audit] ${methods.length} methods named across the cycle-3 corpus`);
-    const rows = await probeMethods(methods, { port: opts.port });
+    const rows = annotateFamilyLiveness(await probeMethods(methods, { port: opts.port }));
     const present = rows.filter(r => r.exists === true).length;
     const absent = rows.filter(r => r.exists === false).length;
     const unknown = rows.filter(r => r.exists === null).length;
@@ -204,12 +252,26 @@ async function main() {
         gatewayBin: EPI_BIN,
         port: opts.port,
         corpus: PLAN_FOLDERS.map(f => f.replace(`${repoRoot}/`, '')),
-        summary: { probed: rows.length, present, absent, unknown },
+        summary: {
+            probed: rows.length,
+            present,
+            absent,
+            // The only two numbers worth acting on. `absentFamilyLive` is
+            // overwhelmingly plan prose against a live family; `absentFamilyDark`
+            // is the real candidate list for producer work.
+            absentFamilyLive: rows.filter(r => r.exists === false && r.familyServed > 0).length,
+            absentFamilyDark: rows.filter(r => r.exists === false && !r.familyServed).length,
+            unknown,
+        },
         methods: rows,
     };
     mkdirSync(join(opts.out, '..'), { recursive: true });
     writeFileSync(opts.out, JSON.stringify(table, null, 1));
-    console.log(`[gateway-method-audit] present=${present} absent=${absent} timeout=${unknown}`);
+    console.log(
+        `[gateway-method-audit] present=${present} absent=${absent}`
+            + ` (family-live=${table.summary.absentFamilyLive}, family-dark=${table.summary.absentFamilyDark})`
+            + ` timeout=${unknown}`
+    );
     console.log(`[gateway-method-audit] table written: ${opts.out}`);
 }
 

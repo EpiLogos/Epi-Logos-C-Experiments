@@ -6,7 +6,12 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { extractMethodNames, classifyResponse, CYCLE3_FAMILY_PREFIXES } from './gateway-method-audit.mjs';
+import {
+    extractMethodNames,
+    classifyResponse,
+    annotateFamilyLiveness,
+    CYCLE3_FAMILY_PREFIXES
+} from './gateway-method-audit.mjs';
 
 describe('extractMethodNames', () => {
     it('collects cycle-3 method tokens from plan prose and code fences', () => {
@@ -111,5 +116,55 @@ describe('classifyResponse', () => {
         expect(row.exists).toBe(null);
         expect(row.responds).toBe(false);
         expect(row.errorClass).toBe('timeout');
+    });
+});
+
+describe('annotateFamilyLiveness', () => {
+    // The real misreading this closes: `nara.session.psyche_anchor` is plan
+    // prose, the gateway prefix-routes `nara.*`, and the unknown member comes
+    // back `unimplemented` — identical on the page to a family nothing serves.
+    const rows = [
+        { method: 'nara.session_close.contemplation.read', exists: true },
+        { method: 'nara.oracle.cast', exists: true },
+        { method: 'nara.session.psyche_anchor', exists: false },
+        { method: 'wibble.nothing.here', exists: false },
+        { method: 'some.timeout', exists: null }
+    ];
+
+    it('tells an absent name in a LIVE family apart from a genuinely dark one', () => {
+        const annotated = annotateFamilyLiveness(rows);
+        const prose = annotated.find(r => r.method === 'nara.session.psyche_anchor');
+        const dark = annotated.find(r => r.method === 'wibble.nothing.here');
+
+        expect(prose.familyServed).toBe(2);
+        expect(prose.hint).toMatch(/family is LIVE/);
+        expect(prose.servedSiblings).toContain('nara.session_close.contemplation.read');
+
+        // a dark family gets NO hint — that is the row that deserves attention
+        expect(dark.familyServed).toBe(0);
+        expect(dark.hint).toBeUndefined();
+        expect(dark.servedSiblings).toBeUndefined();
+    });
+
+    it('leaves present and timed-out rows untouched', () => {
+        const annotated = annotateFamilyLiveness(rows);
+        expect(annotated.find(r => r.method === 'nara.oracle.cast')).toEqual({
+            method: 'nara.oracle.cast',
+            exists: true
+        });
+        expect(annotated.find(r => r.method === 'some.timeout')).toEqual({
+            method: 'some.timeout',
+            exists: null
+        });
+    });
+
+    it('strips an argument list before deriving the family', () => {
+        const annotated = annotateFamilyLiveness([
+            { method: 's2.graph.node', exists: true },
+            { method: 's2.graph.node(coord)', exists: false }
+        ]);
+        // the parenthesised form is prose for a method that IS served
+        expect(annotated[1].familyServed).toBe(1);
+        expect(annotated[1].servedSiblings).toEqual(['s2.graph.node']);
     });
 });

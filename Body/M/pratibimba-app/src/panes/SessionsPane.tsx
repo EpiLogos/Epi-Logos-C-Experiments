@@ -182,8 +182,18 @@ function KairosAtOpenStrip({ record }: { readonly record: SessionRecord | null }
     );
 }
 
-/** Tarot/psyche anchor, or a pending ReadinessBanner. Producer 19.6
- *  `contemplate.fetch_object` is not landed — spec-designed degrade. */
+/** Tarot/psyche anchor, or a pending ReadinessBanner.
+ *
+ *  CORRECTED 2026-07-28: this used to tell the user that "producer 19.6
+ *  `contemplate.fetch_object` is not landed". That method never existed and the
+ *  capability IS live — the contemplation close path computes
+ *  `psyche_anchor_coherent` and `nara.session_close.contemplation.read` serves
+ *  the persisted projection. The banner was naming a phantom producer, which is
+ *  worse than saying nothing: it sent readers looking for an unbuilt subsystem.
+ *
+ *  The degrade itself is still right — this strip reads the anchor off the
+ *  SESSION record, and a session that has not been closed through the
+ *  contemplation path carries none. */
 function TarotPsycheAnchorStrip({ record }: { readonly record: SessionRecord | null }) {
     const anchor = record ? tarotPsycheAnchor(record) : null;
     return (
@@ -200,7 +210,7 @@ function TarotPsycheAnchorStrip({ record }: { readonly record: SessionRecord | n
             ) : (
                 <ReadinessBanner
                     state="pending-tarot-psyche"
-                    reason="tarot/psyche anchor absent — producer 19.6 contemplate.fetch_object is not landed (spec-designed degrade)"
+                    reason="tarot/psyche anchor absent on this session record — it is written by the contemplation close path; read a closed session through nara.session_close.contemplation.read"
                 />
             )}
         </div>
