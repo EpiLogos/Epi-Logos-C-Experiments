@@ -90,8 +90,14 @@ chrono = { version = "0.4", features = ["serde"] }
 [build-dependencies]
 cc = "1"
 
-[dev-dependencies]
-epi-s5-epii-autoresearch-core = { path = "../../S5/epii-autoresearch-core", features = ["resonance_ebm"] }
+# NO [dev-dependencies] S-stack edges. This block used to re-declare
+# `epi-s5-epii-autoresearch-core` with `features = ["resonance_ebm"]` purely so
+# ONE test could link the Candle ML stack and execute the model. That is a
+# forbidden S0→S5 import (`rustSStackBoundary`) and, unlike the `[dependencies]`
+# re-export edges above, it was never a ratcheted migration gap — it was a new
+# violation, and `lint-boundaries` failed on it. The assertion it enabled is
+# owned one layer down by `exported_checkpoint_round_trips_into_resonance_ebm_runtime`
+# in `Body/S/S5/epii-autoresearch-core`; see the note in `tests/pi_ebm_commands.rs`.
 
 [patch.crates-io]
 # quantette 0.5.1 currently declares rust-version = 1.90, but the epi-cli
