@@ -379,6 +379,17 @@ pub struct EbmContemplationReading {
     pub coherence_scores: TritoneSquareCoherence,
 }
 
+/// One anchor card read against the session trajectory. The coherence VERDICT
+/// answers "did every anchor codon appear?"; this answers the per-card question
+/// the verdict collapses — WHICH card's codon appeared, and which did not.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct PsycheAnchorCardReading {
+    pub card: Option<String>,
+    pub codon: Option<String>,
+    pub matched: bool,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct LlmContemplationReading {
@@ -388,6 +399,8 @@ pub struct LlmContemplationReading {
     pub recognition_state: String,
     pub psyche_anchor_coherent: bool,
     pub matched_anchor_codons: Vec<String>,
+    #[serde(default)]
+    pub anchor_card_readings: Vec<PsycheAnchorCardReading>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -528,7 +541,33 @@ fn evaluate_llm_position(object: &ContemplationObject) -> LlmContemplationReadin
         recognition_state: object.pi_instance.recognition_state.clone(),
         psyche_anchor_coherent,
         matched_anchor_codons,
+        anchor_card_readings: anchor_card_readings(&object.psyche_anchor, &trajectory_codons),
     }
+}
+
+/// The anchor's `cards` and `codons` are one draw the caller supplies together:
+/// `cards[i]` is the card whose codon is `codons[i]`. Pairing them by index
+/// carries the producer's own pairing forward instead of inventing a second
+/// card<->codon law here — the codon-to-arcana reverse lookup belongs to M3, and
+/// a position that re-derived it could disagree with the draw it was handed.
+/// A ragged draw is reported as it stands rather than truncated: a card with no
+/// codon cannot match, and a codon with no card still says whether it appeared.
+fn anchor_card_readings(
+    anchor: &PsycheAnchor,
+    trajectory_codons: &BTreeSet<&str>,
+) -> Vec<PsycheAnchorCardReading> {
+    (0..anchor.cards.len().max(anchor.codons.len()))
+        .map(|index| {
+            let codon = anchor.codons.get(index).cloned();
+            PsycheAnchorCardReading {
+                card: anchor.cards.get(index).cloned(),
+                matched: codon
+                    .as_deref()
+                    .is_some_and(|codon| trajectory_codons.contains(codon)),
+                codon,
+            }
+        })
+        .collect()
 }
 
 fn evaluate_verifier_position(report: &M0VerifierReport) -> VerifierContemplationReading {

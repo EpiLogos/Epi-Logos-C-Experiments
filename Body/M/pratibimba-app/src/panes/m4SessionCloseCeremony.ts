@@ -109,8 +109,14 @@ const LLM_KEYS = new Set([
     'position',
     'loaded_agent_count',
     'psyche_anchor_coherent',
-    'matched_anchor_codon_count'
+    'matched_anchor_codon_count',
+    // 25.20 substrate widening. Note this is NOT a relaxation of the
+    // `matched_anchor_codons` refusal below: that key is the RAW gateway
+    // reading, and seeing it still means the payload was never projected. This
+    // one is a projected field the substrate now persists per card.
+    'anchor_cards'
 ]);
+const ANCHOR_CARD_KEYS = new Set(['card', 'codon', 'matched']);
 const EBM_KEYS = new Set(['position', 'gradient_magnitude', 'gauge_trio_coherent', 'coherence_scores']);
 const COHERENCE_KEYS = new Set(['square_0_5', 'square_1_4', 'square_2_3']);
 const VERIFIER_KEYS = new Set([
@@ -144,6 +150,17 @@ const FORBIDDEN_KEYS = new Set([
     'unsatisfied_constraints'
 ]);
 
+/**
+ * One psyche-anchor card as the close persisted it. `card` and `codon` are
+ * independently nullable because the substrate reports a ragged draw rather
+ * than truncating it — a card with no codon had nothing to match against.
+ */
+export interface M4PsycheAnchorCard {
+    readonly card: string | null;
+    readonly codon: string | null;
+    readonly matched: boolean;
+}
+
 export type M4ContemplationRead =
     | {
           readonly state: 'ready';
@@ -155,6 +172,10 @@ export type M4ContemplationRead =
               readonly loadedAgentCount: number;
               readonly psycheAnchorCoherent: boolean;
               readonly matchedAnchorCodonCount: number;
+              /** 25.20: the per-card reading the verdict above collapses. Empty
+               *  for a bundle closed before the substrate widening — absent is
+               *  not the same as none, and the panel says so. */
+              readonly anchorCards: readonly M4PsycheAnchorCard[];
           };
           readonly ebm: {
               readonly position: string;
@@ -196,6 +217,47 @@ function unknownKey(
         }
     }
     return null;
+}
+
+/**
+ * The per-card anchor reading, or a refusal string. A bundle closed before the
+ * 25.20 widening simply has no `anchor_cards` key, and that reads as an empty
+ * list — the panel distinguishes "this close predates the reading" from "this
+ * close drew no cards" by its own emptiness copy, not by guessing here.
+ */
+function readAnchorCards(raw: unknown): M4PsycheAnchorCard[] | string {
+    if (raw === undefined) {
+        return [];
+    }
+    if (!Array.isArray(raw)) {
+        return 'triplet.llm.anchor_cards must be an array';
+    }
+    const cards: M4PsycheAnchorCard[] = [];
+    for (const entry of raw) {
+        const card = record(entry);
+        if (!card) {
+            return 'triplet.llm.anchor_cards entries must be objects';
+        }
+        const stray = unknownKey(card, ANCHOR_CARD_KEYS, 'anchor card');
+        if (stray) {
+            return stray;
+        }
+        if (card.card !== null && typeof card.card !== 'string') {
+            return 'anchor card name must be a string or null';
+        }
+        if (card.codon !== null && typeof card.codon !== 'string') {
+            return 'anchor card codon must be a string or null';
+        }
+        if (typeof card.matched !== 'boolean') {
+            return 'anchor card match state must be boolean';
+        }
+        cards.push({
+            card: (card.card as string | null) ?? null,
+            codon: (card.codon as string | null) ?? null,
+            matched: card.matched
+        });
+    }
+    return cards;
 }
 
 function unitScore(value: unknown): number | null {
@@ -262,6 +324,10 @@ export function readNaraContemplationObject(raw: unknown): M4ContemplationRead {
         (llm.matched_anchor_codon_count as number) < 0
     ) {
         return blocked('triplet.llm.matched_anchor_codon_count must be a non-negative integer');
+    }
+    const anchorCards = readAnchorCards(llm.anchor_cards);
+    if (typeof anchorCards === 'string') {
+        return blocked(anchorCards);
     }
 
     const ebm = record(triplet.ebm);
@@ -350,7 +416,8 @@ export function readNaraContemplationObject(raw: unknown): M4ContemplationRead {
             position: llm.position,
             loadedAgentCount: llm.loaded_agent_count as number,
             psycheAnchorCoherent: llm.psyche_anchor_coherent,
-            matchedAnchorCodonCount: llm.matched_anchor_codon_count as number
+            matchedAnchorCodonCount: llm.matched_anchor_codon_count as number,
+            anchorCards
         },
         ebm: {
             position: ebm.position,

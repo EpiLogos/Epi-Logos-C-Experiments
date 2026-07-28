@@ -68,7 +68,13 @@ fn contemplation_object(session_id: &str) -> serde_json::Value {
             { "tick_id": "t1", "gauge": "MOVE", "actual_resonance": [0.1, 0.3, 0.5], "codon": "II" },
             { "tick_id": "t2", "gauge": "RES", "actual_resonance": [0.9, 0.7, 0.5], "codon": "III" }
         ],
-        "psyche_anchor": { "cards": ["The Magician"], "codons": ["I"] },
+        // Two cards drawn, one whose codon ("IX") the trajectory above never
+        // reaches -- so the live readback has to distinguish them, not just
+        // report a verdict.
+        "psyche_anchor": {
+            "cards": ["The Magician", "The Hermit"],
+            "codons": ["I", "IX"]
+        },
         "verifier_report": {
             "virtue_witness_vector": [true, true, false, true, false, true, true, false, true],
             "unsatisfied_constraints": ["#R0-0/1/A-T7-pending?"],
@@ -179,6 +185,28 @@ async fn nara_session_close_persists_aggregate_bundle_and_reads_it_back() {
         contemplation["triplet"]["verifier"]["arch9_wholeness"],
         true
     );
+
+    // 25.20 substrate: the per-card anchor reading has to survive the close
+    // and come back over the same live method that serves the verdict.
+    let anchor_cards = contemplation["triplet"]["llm"]["anchor_cards"]
+        .as_array()
+        .expect("the live projection must carry the per-card anchor reading");
+    assert_eq!(anchor_cards.len(), 2, "both drawn cards read back");
+    assert_eq!(anchor_cards[0]["card"], "The Magician");
+    assert_eq!(anchor_cards[0]["codon"], "I");
+    assert_eq!(anchor_cards[0]["matched"], true);
+    assert_eq!(anchor_cards[1]["card"], "The Hermit");
+    assert_eq!(anchor_cards[1]["codon"], "IX");
+    assert_eq!(
+        anchor_cards[1]["matched"], false,
+        "the card that broke coherence must be nameable from the readback"
+    );
+    assert_eq!(
+        contemplation["triplet"]["llm"]["psyche_anchor_coherent"], false,
+        "one unmatched anchor codon refuses the verdict"
+    );
+    assert_eq!(contemplation["triplet"]["llm"]["matched_anchor_codon_count"], 1);
+
     for forbidden in [
         "q_nara",
         "trajectory",

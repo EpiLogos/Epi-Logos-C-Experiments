@@ -81,6 +81,17 @@ pub struct NaraSessionCloseBundle {
     pub provenance: NaraSessionCloseBundleProvenance,
 }
 
+/// One anchor card as persisted beside the verdict. Protected-local like the
+/// rest of the projection: the card name and its codon are the reading, never
+/// the session body they were drawn over.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub struct NaraPsycheAnchorCardProjection {
+    pub card: Option<String>,
+    pub codon: Option<String>,
+    pub matched: bool,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub struct NaraContemplationLlmProjection {
@@ -88,6 +99,15 @@ pub struct NaraContemplationLlmProjection {
     pub loaded_agent_count: u16,
     pub psyche_anchor_coherent: bool,
     pub matched_anchor_codon_count: u16,
+    /// The per-card reading the count above collapses. `serde(default)` is
+    /// load-bearing, not decoration: records persisted before this widening
+    /// carry no `anchor_cards` key, and `deny_unknown_fields` rejects UNKNOWN
+    /// fields, not MISSING ones — so an older `Current` record still reads back
+    /// as `Current` with an empty list. Without the default it would fail the
+    /// `Current` arm of the untagged `NaraSessionCloseStoredRecord`, fall
+    /// through to `Legacy`, and silently lose the whole projection it had.
+    #[serde(default)]
+    pub anchor_cards: Vec<NaraPsycheAnchorCardProjection>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -503,6 +523,15 @@ fn contemplation_projection(
                 psyche_anchor_coherent: llm.psyche_anchor_coherent,
                 matched_anchor_codon_count: u16::try_from(llm.matched_anchor_codons.len())
                     .map_err(|_| "contemplation anchor codon count exceeds u16".to_owned())?,
+                anchor_cards: llm
+                    .anchor_card_readings
+                    .iter()
+                    .map(|reading| NaraPsycheAnchorCardProjection {
+                        card: reading.card.clone(),
+                        codon: reading.codon.clone(),
+                        matched: reading.matched,
+                    })
+                    .collect(),
             },
             ebm: NaraContemplationEbmProjection {
                 position: ebm.position.clone(),
@@ -675,14 +704,14 @@ fn read_string(params: &Value, keys: &[&str]) -> Result<Option<String>, String> 
 mod tests {
     use super::{
         aggregate_audio_octet, aggregate_m1_closure, persist_close_bundle, read_close_bundle,
-        AudioOctetTraversalAggregate, AudioOctetTraversalEvidence, ContemplateSessionCloseResponse,
-        M1SessionClosureAggregate, M1SessionClosureEvidence, NaraSessionCloseReadRequest,
-        NaraSessionCloseReadRequest as ReadRequest,
+        read_contemplation_object, AudioOctetTraversalAggregate, AudioOctetTraversalEvidence,
+        ContemplateSessionCloseResponse, M1SessionClosureAggregate, M1SessionClosureEvidence,
+        NaraSessionCloseReadRequest, NaraSessionCloseReadRequest as ReadRequest,
     };
     use epi_s3_gateway::dispatch::{
         ContemplationTripletOutput, EbmContemplationReading, LlmContemplationReading,
-        ParsedAnuttaraSymbolicQuestion, SymbolicRoundTrip, TritoneSquareCoherence,
-        VerifierContemplationReading,
+        ParsedAnuttaraSymbolicQuestion, PsycheAnchorCardReading, SymbolicRoundTrip,
+        TritoneSquareCoherence, VerifierContemplationReading,
     };
     use std::fs;
     use std::path::{Path, PathBuf};
@@ -708,6 +737,18 @@ mod tests {
                     recognition_state: "state".to_owned(),
                     psyche_anchor_coherent: true,
                     matched_anchor_codons: vec!["I".to_owned()],
+                    anchor_card_readings: vec![
+                        PsycheAnchorCardReading {
+                            card: Some("The Magician".to_owned()),
+                            codon: Some("I".to_owned()),
+                            matched: true,
+                        },
+                        PsycheAnchorCardReading {
+                            card: Some("The Hierophant".to_owned()),
+                            codon: Some("V".to_owned()),
+                            matched: false,
+                        },
+                    ],
                 },
                 ebm: EbmContemplationReading {
                     position: "5'".to_owned(),
@@ -857,6 +898,105 @@ mod tests {
                 0o700
             );
         }
+    }
+
+    fn persist_fixture(state_root: &Path, session_id: &str) -> super::NaraSessionCloseBundle {
+        persist_close_bundle(
+            state_root,
+            "deadbeef",
+            session_id,
+            &M1SessionClosureAggregate {
+                positions_traversed: [true; 12],
+                generator_step: 7,
+                closed: true,
+            },
+            &AudioOctetTraversalAggregate {
+                traversed: [true; 8],
+                octave_returned: true,
+            },
+            &contemplation_response(session_id),
+        )
+        .expect("persist close bundle")
+    }
+
+    // The widening the 25.20 brief names: the verdict alone cannot answer WHICH
+    // card's codon appeared, so the per-card reading has to survive persistence.
+    #[test]
+    fn the_persisted_projection_keeps_the_per_card_anchor_reading() {
+        let state_root = temp_root("anchor-cards");
+        let bundle = persist_fixture(&state_root, "session:one");
+
+        let projection = read_contemplation_object(
+            &state_root,
+            "deadbeef",
+            &ReadRequest {
+                session_id: "session:one".to_owned(),
+                close_ref: Some(bundle.close_ref.clone()),
+                latest: false,
+            },
+        )
+        .expect("read contemplation projection");
+
+        let cards = &projection.triplet.llm.anchor_cards;
+        assert_eq!(cards.len(), 2, "both drawn cards must survive the close");
+        assert_eq!(cards[0].card.as_deref(), Some("The Magician"));
+        assert_eq!(cards[0].codon.as_deref(), Some("I"));
+        assert!(cards[0].matched, "The Magician's codon rode the trajectory");
+        assert_eq!(cards[1].card.as_deref(), Some("The Hierophant"));
+        assert!(
+            !cards[1].matched,
+            "the per-card reading must be able to say NO — a list where every \
+             card matches would carry no more than the verdict it replaces"
+        );
+        // The verdict is unchanged by the widening; it is now explainable.
+        assert!(projection.triplet.llm.psyche_anchor_coherent);
+    }
+
+    // The stored record is an untagged enum, so a missing key does not fail
+    // loudly — it falls to `Legacy` and takes the whole projection with it.
+    // This pins the `serde(default)` that stops that.
+    #[test]
+    fn a_record_written_before_the_widening_still_reads_as_a_projection() {
+        let state_root = temp_root("anchor-legacy");
+        let bundle = persist_fixture(&state_root, "session:one");
+
+        let mut store_root = state_root.clone();
+        store_root.push("nara");
+        store_root.push("session-close");
+        store_root.push("protected-local");
+        let file = walk_files(&store_root).remove(0);
+        let mut raw: serde_json::Value =
+            serde_json::from_slice(&fs::read(&file).expect("read bundle file"))
+                .expect("parse bundle json");
+        // Exactly what a record persisted before this change looks like.
+        raw["contemplation_object"]["triplet"]["llm"]
+            .as_object_mut()
+            .expect("llm projection object")
+            .remove("anchor_cards")
+            .expect("fixture must carry the new key before it is removed");
+        fs::write(&file, serde_json::to_vec(&raw).expect("serialize")).expect("rewrite bundle");
+
+        let request = ReadRequest {
+            session_id: "session:one".to_owned(),
+            close_ref: Some(bundle.close_ref.clone()),
+            latest: false,
+        };
+        let projection = read_contemplation_object(&state_root, "deadbeef", &request)
+            .expect("a pre-widening record must still read back as Current, not Legacy");
+        assert!(
+            projection.triplet.llm.anchor_cards.is_empty(),
+            "an older record has no per-card reading and must not invent one"
+        );
+        assert!(
+            projection.triplet.llm.psyche_anchor_coherent,
+            "the verdict it DID persist must survive"
+        );
+        assert_eq!(
+            read_close_bundle(&state_root, "deadbeef", &request)
+                .expect("bundle still readable")
+                .close_ref,
+            bundle.close_ref
+        );
     }
 
     #[cfg(unix)]

@@ -52,6 +52,7 @@ import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
 import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
+import { M4PsycheAnchorCoherencePane } from './panes/M4PsycheAnchorCoherencePane';
 import { M4SessionCloseCeremonyPane } from './panes/M4SessionCloseCeremonyPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
@@ -205,7 +206,10 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                 // surfaces on the border rather than as an 11th main tab: at
                 // 1280x800 an eleventh `personal-main` tab makes the strip
                 // un-clickable (measured — the click stops selecting).
-                { type: 'tab', name: 'Session close', component: 'sessionCloseCeremony', enableClose: false }
+                { type: 'tab', name: 'Session close', component: 'sessionCloseCeremony', enableClose: false },
+                // 25.T25.20 — same law as the ceremony above: a reading surface,
+                // so it joins the border rather than the main strip.
+                { type: 'tab', name: 'Anchor', component: 'psycheAnchorCoherence', enableClose: false }
             ]
         },
         omniBorder(activeLayout)
@@ -363,6 +367,8 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             }
         case 'sessionCloseCeremony':
             return <M4SessionCloseCeremonyPane />;
+        case 'psycheAnchorCoherence':
+            return <M4PsycheAnchorCoherencePane />;
         case 'mocBases':
             return <MocBaseReflectionPane />;
         case 'm2Correspondence':

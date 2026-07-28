@@ -115,6 +115,68 @@ fn contemplation_session_close_composes_non_empty_wisdom_delta() {
     assert!(response.triplet.llm.psyche_anchor_coherent);
 }
 
+// The verdict collapses the draw to one bool. 25.20 asks the finer question --
+// WHICH card's codon rode the trajectory -- so the reading has to name cards,
+// not just count them.
+#[test]
+fn the_anchor_reading_names_each_card_and_whether_its_codon_appeared() {
+    let mut object = synthetic_contemplation_object();
+    // "The Hermit" is drawn on codon IX, which this trajectory (I, V, X) never
+    // reaches -- so the anchor is no longer wholly coherent, and the reading
+    // must be able to say which card broke it.
+    object.psyche_anchor.cards.push("The Hermit".to_owned());
+    object.psyche_anchor.codons.push("IX".to_owned());
+
+    let reading = contemplate_session_close(object)
+        .expect("synthetic contemplation object should close")
+        .triplet
+        .llm;
+
+    assert!(
+        !reading.psyche_anchor_coherent,
+        "one unmatched anchor codon breaks the verdict"
+    );
+    let readings = &reading.anchor_card_readings;
+    assert_eq!(readings.len(), 3, "every drawn card is reported, matched or not");
+    assert_eq!(readings[0].card.as_deref(), Some("The Fool"));
+    assert_eq!(readings[0].codon.as_deref(), Some("I"));
+    assert!(readings[0].matched);
+    assert_eq!(readings[1].card.as_deref(), Some("The Hierophant"));
+    assert!(readings[1].matched);
+    assert_eq!(readings[2].card.as_deref(), Some("The Hermit"));
+    assert!(
+        !readings[2].matched,
+        "the card the verdict was refused for must be nameable"
+    );
+    assert_eq!(
+        reading.matched_anchor_codons,
+        vec!["I".to_owned(), "V".to_owned()],
+        "the pre-existing codon list is unchanged by the widening"
+    );
+}
+
+// A ragged draw is a producer bug, but dropping half of it would hide which
+// half. The reading reports what it was handed.
+#[test]
+fn a_ragged_anchor_draw_is_reported_rather_than_truncated() {
+    let mut object = synthetic_contemplation_object();
+    object.psyche_anchor.cards.push("The Star".to_owned()); // 3 cards, 2 codons
+
+    let readings = contemplate_session_close(object)
+        .expect("synthetic contemplation object should close")
+        .triplet
+        .llm
+        .anchor_card_readings;
+
+    assert_eq!(readings.len(), 3);
+    assert_eq!(readings[2].card.as_deref(), Some("The Star"));
+    assert_eq!(readings[2].codon, None);
+    assert!(
+        !readings[2].matched,
+        "a card with no codon has nothing to match against"
+    );
+}
+
 // Pure-helper unit test (see module header). Live counterpart:
 // `Body/S/S0/epi-cli/tests/gate_contemplation_live.rs`.
 #[test]
