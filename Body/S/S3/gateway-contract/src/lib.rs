@@ -104,6 +104,9 @@ pub const NARA_TRANSFORM_ADVANCE_METHOD: &str = "nara.transform.advance";
 pub const NARA_TRANSFORM_METHODS: &[&str] =
     &[NARA_TRANSFORM_START_METHOD, NARA_TRANSFORM_ADVANCE_METHOD];
 pub const S2_CODON_AA_LOOKUP_METHOD: &str = "s2.codon.aa_lookup";
+/// 24.T24.7 — scalar M3 reference resolution. Scalar BY CONSTRUCTION: the
+/// resolved facts are public identity, never a protected interpretation body.
+pub const S2_CODON_SCALAR_REF_READ_METHOD: &str = "s2.codon.scalar_ref.read";
 pub const VAULT_DAY_ENSURE_METHOD: &str = "vault.day.ensure";
 pub const KHORA_SESSION_START_METHOD: &str = "khora.session_start";
 pub const KERNEL_BRIDGE_M2_EPOGDOON_PROJECTION_METHOD: &str =

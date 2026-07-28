@@ -668,6 +668,8 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         // 30.T30.13 — C-backed codon LUT read (gate::codon over portal_core);
         // the `s2.` prefix names the consumer surface, the authority is S0.
         | "s2.codon.aa_lookup"
+        // 24.T24.7 scalar-ref resolution — same S0 authority, same surface
+        | "s2.codon.scalar_ref.read"
         // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
         | "m1.spanda.hold"
         | "m1.spanda.release"

@@ -1536,6 +1536,12 @@ pub(super) async fn dispatch_rpc(
         "s2.codon.aa_lookup" => crate::gate::codon::aa_lookup(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(invalid_params_error),
+        // 24.T24.7 — scalar M3 reference resolution (i-ching / decan / m3-codon
+        // resolve off landed datasets; the remaining declared kinds answer an
+        // honest `resolved: false` naming their owner).
+        "s2.codon.scalar_ref.read" => crate::gate::codon::scalar_ref_read(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         // CCT-15: C-layer semantic typology classification.
         "s1'.type.classify_c_layer" => crate::gate::s1_hen::type_classify_c_layer(&frame.params)
             .map(DispatchResult::immediate)

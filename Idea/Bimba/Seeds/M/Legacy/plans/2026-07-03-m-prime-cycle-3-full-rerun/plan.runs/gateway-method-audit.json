@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-27T20:59:21.788Z",
+ "generatedAt": "2026-07-28T11:05:41.721Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,8 +8,8 @@
  ],
  "summary": {
   "probed": 281,
-  "present": 103,
-  "absent": 178,
+  "present": 104,
+  "absent": 177,
   "unknown": 0
  },
  "methods": [
@@ -1114,10 +1114,10 @@
   },
   {
    "method": "s2.codon.scalar_ref.read",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented"
+   "errorClass": "domain-error: refKind is required"
   },
   {
    "method": "s2.decanFace",

@@ -224,6 +224,23 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'gateway.s2-codon-scalar-ref-read',
+        required: true,
+        covers: [],
+        describe:
+            '24.T24.7: the live gateway advertises scalar M3 reference resolution — the producer 24.8 reads hexagram body dynamics through',
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return methods.includes('s2.codon.scalar_ref.read')
+                ? []
+                : ['live gateway does not advertise s2.codon.scalar_ref.read'];
+        }
+    },
+    {
         name: 'gateway.s2-graph-list',
         required: true,
         covers: [],

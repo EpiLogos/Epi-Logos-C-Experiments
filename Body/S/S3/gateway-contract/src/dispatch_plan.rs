@@ -12,7 +12,8 @@ use crate::{
     S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD, S1_BASE_ENSURE_METHOD, S1_ENTITY_CAPTURE_METHOD,
     S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
     S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
-    S1_WORLD_LIST_ENTITIES_METHOD, S2_CODON_AA_LOOKUP_METHOD, S2_GRAPH_ANANDA_POSITION_METHOD,
+    S1_WORLD_LIST_ENTITIES_METHOD, S2_CODON_AA_LOOKUP_METHOD, S2_CODON_SCALAR_REF_READ_METHOD,
+    S2_GRAPH_ANANDA_POSITION_METHOD,
     S2_GRAPH_CORE65_AUDIT_METHOD, S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
     S2_GRAPH_LIST_BY_FILTER_METHOD, S2_GRAPH_LIST_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -1198,6 +1199,16 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: S2_CODON_AA_LOOKUP_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/portal-core::transcription via Body/S/S0/epi-cli::gate::codon",
+        needs_extraction_to: None,
+    },
+    // 24.T24.7 — scalar-ref resolution over the landed M3 datasets. The `s2.`
+    // prefix names the CONSUMER surface; the authority is S0, which is why this
+    // is an S0 product adapter and not an S2 graph read.
+    MethodDispatchPlanEntry {
+        method: S2_CODON_SCALAR_REF_READ_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path:
+            "Body/S/S0/epi-cli::nara::oracle_identity + ::nara::medicine_frame via ::gate::codon",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
