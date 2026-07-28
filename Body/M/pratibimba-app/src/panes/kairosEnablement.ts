@@ -12,8 +12,11 @@
  *   onboarding/kairos-enablement-step.tsx (corrected to probe before opt-in).
  */
 
-export const KAIROS_ENABLED_PREFERENCE = 'epi-logos.privacy.kairos-enabled';
-export const ONBOARDING_COMPLETED_STEPS_PREFERENCE = 'epi-logos.onboarding.completed-steps';
+import { PREFERENCE_KEYS } from '../ui/preferences';
+
+/** Both alias the one preference-key authority (`ui/preferences.ts`, 31.T31.9). */
+export const KAIROS_ENABLED_PREFERENCE = PREFERENCE_KEYS.privacyKairosEnabled;
+export const ONBOARDING_COMPLETED_STEPS_PREFERENCE = PREFERENCE_KEYS.onboardingCompletedSteps;
 export const KAIROS_ENABLE_STEP = 'kairos.enable';
 export const KAIROS_SKIP_STEP = 'kairos.skip';
 export const KAIROS_PROBE_RPC = 'nara.kairos.probe_kerykeion';

@@ -27,11 +27,13 @@ import {
     type CanonicalTheme,
     type ThemeSelection
 } from '../ui/themeMapping';
+import { PREFERENCE_KEYS } from '../ui/preferences';
 import { useCoordinateStore } from './stores';
 
-/** localStorage key for the persisted selection. Follows the established
- *  `epi-logos.<area>.<setting>` preference convention (kairosEnablement.ts). */
-export const THEME_PREFERENCE_KEY = 'epi-logos.appearance.theme';
+/** localStorage key for the persisted selection. Aliases the one preference-key
+ *  authority (`ui/preferences.ts`, 31.T31.9) — the `epi-logos.<area>.<setting>`
+ *  convention this module used to spell inline is declared there now. */
+export const THEME_PREFERENCE_KEY = PREFERENCE_KEYS.appearanceTheme;
 
 /** The carrier's shipped default. `dark` — the ground every existing surface
  *  and every visual-regression baseline was authored against. */

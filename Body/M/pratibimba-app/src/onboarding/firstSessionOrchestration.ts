@@ -10,6 +10,7 @@
  */
 
 import { KAIROS_ENABLED_PREFERENCE, ONBOARDING_COMPLETED_STEPS_PREFERENCE } from '../panes/kairosEnablement';
+import { PASU_SKIPPED_PREFERENCE } from './pasuOnboarding';
 
 export const VAULT_DAY_ENSURE_RPC = 'vault.day.ensure';
 export const KHORA_SESSION_START_RPC = 'khora.session_start';
@@ -64,7 +65,7 @@ export function firstSessionEligible(preferences: FirstSessionPreferences): bool
         'identity.pasu-gene-keys',
         'identity.pasu-human-design'
     ].every(step => completed.includes(step));
-    const pasuSkipped = preferences.get('epi-logos.onboarding.pasu-skipped');
+    const pasuSkipped = preferences.get(PASU_SKIPPED_PREFERENCE);
     return walkthroughComplete
         && (identityComplete || (Array.isArray(pasuSkipped) && pasuSkipped.includes('wizard')));
 }

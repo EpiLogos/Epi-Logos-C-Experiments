@@ -19,6 +19,7 @@
 
 import { GatewayEventEntry } from '../../state/eventsStore';
 import { parseLayoutId } from '../../ui/layoutId';
+import { PREFERENCE_KEYS } from '../../ui/preferences';
 import type { LayoutId } from '../../ui/layoutId';
 import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 
@@ -36,7 +37,8 @@ export type OmniPanelTabId =
 /** Alias of the one layout-id authority (`ui/layoutId.ts`, 52.T1). */
 export type OmniPanelLayoutId = LayoutId;
 
-export const OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY = 'epi-logos.layout.active';
+/** Aliases the one preference-key authority (`ui/preferences.ts`, 31.T31.9). */
+export const OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY = PREFERENCE_KEYS.layoutActive;
 
 export interface OmniPanelTab {
     readonly id: OmniPanelTabId;

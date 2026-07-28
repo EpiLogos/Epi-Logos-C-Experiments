@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T08:15:01.321Z",
+  "updatedAt": "2026-07-28T08:26:12.997Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15598,15 +15598,20 @@
       "blocker": null
     },
     "31.T31.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T08:08:13.597Z",
+      "status": "review",
+      "updatedAt": "2026-07-28T08:26:12.972Z",
       "claimedAt": "2026-07-28T08:08:13.597Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-28T08:26:12.972Z",
+          "text": "Deliverable COMPLETE and proven; held at review because the shared UF gate is red from a committed regression in another lane, identified precisely below. WHAT LANDED: src/ui/preferences.ts is the ONE preference-key authority (retarget of the frozen epi-theia m-extension-runtime/.../epi-logos-preferences.ts per CHARTER rule 2 — Theia PreferenceContribution + Inversify is dead plumbing, the LAW it carried is live). PREFERENCE_KEYS holds every epi-logos.{area}.{setting} literal the carrier uses and all six declaration sites now ALIAS it: state/themeStore.ts, panes/omni/omnipanelRuntime.ts, panes/kairosEnablement.ts (two keys), onboarding/pasuOnboarding.ts, onboarding/walkthrough.ts. THIS WAS A REAL DEFECT, not tidiness: epi-logos.onboarding.pasu-skipped was a named constant in onboarding/pasuOnboarding.ts AND an inline literal at onboarding/firstSessionOrchestration.ts:67, so renaming either would have left the other reading a key nothing writes — the user's PASU skip would silently stop being remembered, with no error and no crash. The register describes the app AS IT IS: six live keys, each with its real default, its owning tranche and the module that reads it. The 31.9 spec designs nine; the other keys are recorded in SPECIFIED_PREFERENCES as pending/superseded/declined rather than declared as live keys nothing reads, which would be the registered-but-unfired seam this plan set exists to stop. Two carry corrections worth keeping: epi-logos.kairos.enabled is SUPERSEDED by the landed epi-logos.privacy.kairos-enabled (32.T32.10 — the opt-in is a privacy decision, and the landed name is the better one), and epi-logos.motion.reduced is DECLINED because reduced motion is read from the OS prefers-reduced-motion query per DR-WC-DL-4; a carrier preference there could contradict the platform accessibility setting, which would be a regression rather than a feature. ENFORCEMENT: src/ui/preferences.test.ts walks the real src tree for preference-shaped literals and fails on any the authority does not declare, subtracting command ids against the real COMMAND_CATALOG rather than by pattern (commands share the epi-logos. prefix — epi-logos.help.openWalkthrough is a command, not a preference — so neither register can hide behind the other). Proven in BOTH directions against the real tree: injecting a stray literal in a throwaway module made it report 'ui/guardProbe.ts: epi-logos.layout.active' and removing it returned 7/7 green. It also asserts it scanned more than 100 files, so a green scan cannot mean the walk looked nowhere. The layout and theme vocabularies are CONSUMED from ui/layoutId.ts and ui/themeMapping.ts by reference identity, never restated, so a preference can never offer a layout the app cannot mount. GREEN, all fresh this session: pnpm typecheck exit 0; lint-import-boundaries GREEN over 554 source files; lint-no-modal-discipline GREEN; lint-single-clock GREEN; full carrier vitest 1646 passed / 0 failed / 3 skipped; pnpm build exit 0. The class-scoped gate is GREEN on every stage EXCEPT app-ui-flow: harness-selftest 107, gateway 101, gateway-contract 93, redis-context 15, graphiti-runtime 16, spacetime 11, ta-onta 800, ta-onta-types, app-typecheck, app-test 1646, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint — all PASS. WHY UF CANNOT GO GREEN, owned by another lane and NOT by this tranche: the entire app-ui-flow suite now fails to COLLECT, in 4.8s, before a single spec runs. Root cause traced to the exact chain rather than guessed — tests/e2e/design-primitives.spec.ts imports src/ui/stateGrammar.ts, which imports src/ui/motionTokens.ts, which at line 25 re-exports TRANSITIONS from src/ui/primitives.tsx, which imports src/ui/iconography.ts, whose line 201 calls import.meta.glob. That is a Vite-only build-time API and playwright collects specs in Node, so the module throws TypeError: (intermediate value).glob is not a function and playwright aborts the run. Isolated per-spec: design-primitives.spec.ts FAILS TO LOAD while accessibility-contract, chrome-command-routing and iconography.spec.ts all load fine. Regression window pinned by the ledger's own records: app-ui-flow was GREEN at 100/100 specs in the 30.T30.8 gate at 00:40Z and in the 29.T29.3 gate at 00:23Z; commit e48b0fc4 (30.T30.9, the iconography system) landed at 09:17:06 local and introduced the glob call. NOT REPAIRED HERE ON PURPOSE: the obvious guard (only call glob when import.meta.glob is a function) is wrong — Vite REPLACES the call expression at build time and does not define import.meta.glob as a runtime property, so that test would read undefined in the built bundle too and ship an icon register with zero entries. Choosing between guarding differently and breaking the token-to-component edge at motionTokens.ts:25 (a token module re-exporting a React component module is what drags Vite-only code into every Node consumer) is a surface decision for the owning lane, per the standing rule that an agent conforms to declared seams rather than redesigning them. One collision was also ruled out along the way: an earlier run of this gate failed on port 14621 held by a sibling's concurrent playwright run of single-clock.spec.ts; that run was allowed to drain rather than killed, and the failure reproduced identically on a verified-clear lane, which is how the port was excluded as the cause. Closable as soon as the iconography module loads under Node again; nothing in this tranche needs to change."
+        }
+      ],
       "notes": "claimed with --allow-dirty over 63 dirty files.",
       "owner": "claude-opus5-t31-prefs-20260728",
       "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
-      "heartbeatAt": "2026-07-28T08:08:13.597Z",
+      "heartbeatAt": "2026-07-28T08:26:12.972Z",
       "runId": "20260728T080813Z-31-T31.9",
       "worktree": null,
       "blocker": null
@@ -27331,17 +27336,18 @@
     {
       "runId": "20260728T080813Z-31-T31.9",
       "taskId": "31.T31.9",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-28T08:08:13.597Z",
       "owner": "claude-opus5-t31-prefs-20260728",
       "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T08:26:12.972Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-28T07:57:47.625Z",
-    "updatedAt": "2026-07-28T07:57:47.625Z",
+    "createdAt": "2026-07-28T08:17:52.004Z",
+    "updatedAt": "2026-07-28T08:17:52.004Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

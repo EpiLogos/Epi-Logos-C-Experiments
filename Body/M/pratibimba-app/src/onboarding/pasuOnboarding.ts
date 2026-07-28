@@ -16,10 +16,13 @@
  * Contract: [[M4'-SPEC]] + rerun tranche [[32.T32.2]] (DR-WC-OB-2, DR-WC-M4-3).
  */
 
+import { PREFERENCE_KEYS } from '../ui/preferences';
+
 export const PASU_SHOW_RPC = 'nara.pasu.show';
 
-/** Preference array; `'wizard'` present means the full wizard was skipped. */
-export const PASU_SKIPPED_PREFERENCE = 'epi-logos.onboarding.pasu-skipped';
+/** Preference array; `'wizard'` present means the full wizard was skipped.
+ *  Aliases the one preference-key authority (`ui/preferences.ts`, 31.T31.9). */
+export const PASU_SKIPPED_PREFERENCE = PREFERENCE_KEYS.onboardingPasuSkipped;
 
 /** The six PASU identity completion steps (32.13 ledger keys; DR-WC-M4-3). */
 export const PASU_IDENTITY_STEPS = [

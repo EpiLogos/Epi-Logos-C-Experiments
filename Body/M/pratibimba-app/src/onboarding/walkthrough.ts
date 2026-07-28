@@ -35,6 +35,7 @@
 
 import { OMNIPANEL_TABS } from '../panes/omni/omnipanelRuntime';
 import { LEFT_SIDEBAR_MODES } from '../ui/leftSidebarModes';
+import { PREFERENCE_KEYS } from '../ui/preferences';
 import { STATE_THREAD_COUNT } from '../ui/shellSlotPolicy';
 import { ONBOARDING_COMPLETED_STEPS_PREFERENCE, type KairosPreferenceAccess } from '../panes/kairosEnablement';
 
@@ -59,7 +60,7 @@ export const WALKTHROUGH_STEP_IDS: readonly WalkthroughStepId[] = Object.freeze(
 /** Completion goes to the ledger's own preference key (shared with the other
  *  onboarding domains); skips go to the key the ledger's skipPath names. */
 export const COMPLETED_STEPS_PREFERENCE = ONBOARDING_COMPLETED_STEPS_PREFERENCE;
-export const SKIPPED_STEPS_PREFERENCE = 'epi-logos.onboarding.skipped-steps';
+export const SKIPPED_STEPS_PREFERENCE = PREFERENCE_KEYS.onboardingSkippedSteps;
 
 export interface WalkthroughStep {
     readonly id: WalkthroughStepId;
