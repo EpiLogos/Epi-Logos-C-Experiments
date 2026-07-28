@@ -5,24 +5,31 @@
  *   values named as ONE source (the carrier equivalent of the Theia
  *   `ui-motion-tokens.ts`). The transition tier is DR-UI-4 (VALIDATED
  *   2026-06-03): 0/1 toggle 400 cubic-out · Klein-flip 240 linear · Möbius-return
- *   320 smoothstep — its single source is `primitives.tsx` TRANSITIONS, live on
+ *   320 smoothstep — defined HERE as the single source, live on
  *   FaceToggleChrome + styles.css `--face-transition-duration`; DR-UI-4 SUPERSEDES
  *   the design-recon draft's 600ms. The clock tier is the profile-tick itself
  *   (Foundation principle 2): linear, subscribed through the ONE seam
  *   `state/useProfileTick` — never requestAnimationFrame / setInterval. Values
  *   are milliseconds as plain numbers (never `Nms` literals) so they stay a
  *   named source, not a raw duration a consumer copies.
- * Public surface: TRANSITIONS (re-export), PROFILE_TICK_EASING, SLERP,
+ * Public surface: TRANSITIONS, PROFILE_TICK_EASING, SLERP,
  *   FLOW_STREAMLINE, KLEIN_FLIP, FLOW_WATCHER_DEBOUNCE_MS, LOADING_PULSE.
- * Does NOT own: the transition configs themselves (primitives.tsx TRANSITIONS is
- *   the single source), the tick clock (state/useProfileTick), or the CSS
- *   animation keyframes (styles.css).
+ * Does NOT own: the tick clock (state/useProfileTick) or the CSS animation
+ *   keyframes (styles.css). This module holds NO React import by design: it is
+ *   imported by pure-law modules, and a component edge here puts Vite-only
+ *   build APIs into their graph.
  * Contract: [[CHROME-CONTRACT]] + rerun tranche [[30.T30.3]] (DR-UI-4).
  */
 
-/** The lemniscate transition configs (DR-UI-4) — single source is primitives.tsx;
- *  re-exported here as the motion grammar's transition tier. */
-export { TRANSITIONS } from './primitives';
+/** The lemniscate transition configs (DR-UI-4, VALIDATED 2026-06-03) — THE
+ *  single source, as the motion grammar's transition tier. Values unchanged:
+ *  0/1 toggle 400 cubic-out · Klein-flip 240 linear · Möbius-return 320
+ *  smoothstep. `primitives.tsx` re-exports this for its components. */
+export const TRANSITIONS = Object.freeze({
+    lemniscate01: Object.freeze({ ms: 400, easing: 'cubic-out' as const }),
+    kleinFlip: Object.freeze({ ms: 240, easing: 'linear' as const }),
+    mobiusReturn: Object.freeze({ ms: 320, easing: 'smoothstep' as const })
+});
 
 /** The profile-tick IS the clock (Foundation principle 2): linear, no easing
  *  adds meaning; every tick-driven surface subscribes through state/useProfileTick. */

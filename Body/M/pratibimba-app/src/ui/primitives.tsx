@@ -49,11 +49,12 @@ export { ProvenanceBadge } from './ProvenanceBadge';
 export type { ProvenanceState } from './ProvenanceBadge';
 
 /** DR-UI-4 ratified transition configs — the three, exactly. */
-export const TRANSITIONS = Object.freeze({
-    lemniscate01: Object.freeze({ ms: 400, easing: 'cubic-out' as const }),
-    kleinFlip: Object.freeze({ ms: 240, easing: 'linear' as const }),
-    mobiusReturn: Object.freeze({ ms: 320, easing: 'smoothstep' as const })
-});
+// DR-UI-4's transition tier is a MOTION TOKEN, so it is defined in the motion-
+// token source and re-exported here for the components that consume it. It used
+// to be defined here and re-exported by `motionTokens.ts`, which made a pure
+// token module import this React module — and through it the icon asset glob.
+// Every consumer of a motion token then dragged in Vite-only build APIs.
+export { TRANSITIONS } from './motionTokens';
 
 /** The lemniscate mask law the shader implements (DR-UI-4). */
 export const LEMNISCATE_MASK_LAW = 'r² = a² · cos(2θ)' as const;

@@ -23,7 +23,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useSyncExter
 import type { ReactNode } from 'react';
 
 import {
-    EMPTY_PROFILE_SNAPSHOT,
+    currentProfileSnapshot,
     openCompositionProfileSubscription,
     type CompositionProfileSnapshot,
     type CompositionProfileTickSubscription
@@ -52,8 +52,11 @@ export function CompositionProfileProvider({
         };
     }, []);
 
+    // Before the effect opens the subscription, report the clock as it stands
+    // rather than the pre-tick snapshot: the first render of a composition must
+    // see the profile the store already holds.
     const getSnapshot = useCallback(
-        () => live.current?.current ?? EMPTY_PROFILE_SNAPSHOT,
+        () => live.current?.current ?? currentProfileSnapshot(),
         []
     );
 

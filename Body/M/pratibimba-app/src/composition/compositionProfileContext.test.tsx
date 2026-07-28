@@ -213,6 +213,28 @@ describe('the provider fans one subscription out to the composition', () => {
         expect(screen.getByTestId('strict').textContent).toBe('22');
     });
 
+    it('reports a profile the store ALREADY holds on the very first render', () => {
+        // REGRESSION: the provider's snapshot fell back to the pre-tick value
+        // until its effect ran, so a composition mounting onto a live clock
+        // painted its pending branch once and any mount effect keyed on the
+        // profile built against nothing — something the direct store read this
+        // seam replaced never did.
+        act(() => publishProfileTick(frame(31)));
+        const seen: (number | null)[] = [];
+        function Consumer() {
+            const { generation } = useCompositionProfile();
+            seen.push(generation);
+            return <span data-testid="first">{generation ?? 'none'}</span>;
+        }
+        render(
+            <CompositionProfileProvider>
+                <Consumer />
+            </CompositionProfileProvider>
+        );
+        expect(seen[0]).toBe(31);
+        expect(screen.getByTestId('first').textContent).toBe('31');
+    });
+
     it('refuses a contributor mounted outside any provider', () => {
         // An unwrapped contributor is a composition that never declared its
         // subscription — the defect this tranche exists to prevent.

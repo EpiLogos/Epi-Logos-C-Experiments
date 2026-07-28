@@ -7,7 +7,8 @@
  *   `scripts/lint-single-clock.mjs` refuses every other writer carrier-wide,
  *   tests included.
  * Public surface: CompositionProfileSnapshot, CompositionProfileTickSubscription,
- *   openCompositionProfileSubscription, publishProfileTick, resetProfileTicks.
+ *   openCompositionProfileSubscription, currentProfileSnapshot,
+ *   publishProfileTick, resetProfileTicks.
  * Does NOT own: the generation gate (`state/stores.ts` refuses stale frames),
  *   the socket (`bridge/gatewayClient.ts`), or the React seam
  *   (`compositionProfileContext.tsx`).
@@ -43,10 +44,30 @@ export const EMPTY_PROFILE_SNAPSHOT: CompositionProfileSnapshot = Object.freeze(
 
 const EMPTY = EMPTY_PROFILE_SNAPSHOT;
 
+/** One cached snapshot per distinct (profile, generation). Identity has to be
+ *  stable: `useSyncExternalStore` re-renders forever if `getSnapshot` returns a
+ *  fresh object each call, and a contributor memoising on the snapshot would
+ *  recompute every render. */
+let cached: CompositionProfileSnapshot = EMPTY;
+
 function snapshotOf(profile: KernelBridgeCachedProfile | null, generation: number | null) {
-    return profile === null && generation === null
-        ? EMPTY
-        : Object.freeze({ profile, generation });
+    if (cached.profile === profile && cached.generation === generation) return cached;
+    cached = profile === null && generation === null ? EMPTY : Object.freeze({ profile, generation });
+    return cached;
+}
+
+/**
+ * The clock as it stands RIGHT NOW, without opening a subscription.
+ *
+ * A composition's first render happens before its provider's effect runs. If
+ * that render reported the pre-tick snapshot while the store already held a
+ * profile, every contributor would paint its pending branch once and any mount
+ * effect keyed on the profile would build against nothing — which is exactly
+ * what the direct `useTickStore` read this seam replaced never did.
+ */
+export function currentProfileSnapshot(): CompositionProfileSnapshot {
+    const state = useTickStore.getState();
+    return snapshotOf(state.profile, state.generation);
 }
 
 /**
@@ -60,8 +81,7 @@ export function openCompositionProfileSubscription(): CompositionProfileTickSubs
     const listeners = new Set<(snapshot: CompositionProfileSnapshot) => void>();
     let disposed = false;
 
-    const initial = useTickStore.getState();
-    let current = snapshotOf(initial.profile, initial.generation);
+    let current = currentProfileSnapshot();
 
     const detach = useTickStore.subscribe(state => {
         const next = snapshotOf(state.profile, state.generation);
