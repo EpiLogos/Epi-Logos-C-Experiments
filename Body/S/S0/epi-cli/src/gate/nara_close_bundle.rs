@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S3 (gateway session + transcript authority) — protected-local persistence of a Nara session-close bundle. The close semantics and session record are S3's; this file only assembles and writes the local artefact.
 //! Coordinate: S0 -> S0'
 //! Residency: Body/S/S0/epi-cli/src/gate/nara_close_bundle.rs
 //! Position (#n): #0' -- protected-local Nara session-close persistence adapter.

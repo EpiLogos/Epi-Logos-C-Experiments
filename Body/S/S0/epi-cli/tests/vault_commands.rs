@@ -1,8 +1,29 @@
 mod common;
 
+use chrono::{DateTime, Utc};
 use common::{read_to_string, run_epi, write_executable, write_file, TestEnv};
+use epi_logos::vault::paths::{
+    archive_day_path, day_folder, day_note_path, day_of, format_day_id, thought_note_path,
+};
 use std::fs;
 use std::path::{Path, PathBuf};
+
+/// Re-read a `--now` literal as the SAME instant the CLI will parse, so every
+/// day id, day folder and stamp asserted below is DERIVED through the
+/// production authority (`vault::paths`) instead of frozen as a string.
+///
+/// `paths::day_of` reduces an instant to the LOCAL calendar day and
+/// `paths::local_stamp` renders LOCAL wall clock (a vault day is a LIVED day,
+/// not a UTC accounting period), so any hardcoded expectation is only true in
+/// the offset it was written in: `2026-05-22T09:08:07Z` stamps `20260522-090807`
+/// under GMT and `20260522-100807` under BST, and `2026-03-10T09:08:07Z` lands
+/// on 09 March west of UTC-9. Deriving keeps these tests true in every timezone
+/// and every season.
+fn at(rfc3339: &str) -> DateTime<Utc> {
+    DateTime::parse_from_rfc3339(rfc3339)
+        .unwrap_or_else(|err| panic!("test `--now` literal {rfc3339:?} must be RFC3339: {err}"))
+        .with_timezone(&Utc)
+}
 
 fn fixture_repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -124,14 +145,26 @@ fn template_and_day_now_commands_write_real_files() {
         "---\nartifact_role: prompt\n---\n\n# Prompt Override\n",
     );
 
+    // The Present day folder is FLAT and month-first — `Empty/Present/{MM-DD-YYYY}`
+    // (CHARTER:28, ratified 2026-07-02); only the History archive nests under
+    // `{YYYY}/{MM}/W{week}/{DD}`. This test asserted the ARCHIVE shape against the
+    // Present root, which is exactly the drift `vault/day.rs` shipped and
+    // `paths.rs` cured — so it is derived from the authority now.
+    let instant = at("2026-03-10T09:08:07Z");
+    let day_id = format_day_id(instant);
+
     let day = run_epi(
         ["vault", "day-init", "--now", "2026-03-10T09:08:07Z"].as_slice(),
         &env,
     );
     assert!(day.stdout.contains("daily-note.md"));
-    assert!(vault_root
-        .join("Empty/Present/2026/03/W11/10/daily-note.md")
-        .exists());
+    let daily_note = day_note_path(&vault_root, instant);
+    assert!(
+        daily_note.exists(),
+        "day-init must write the flat Present day note at {}, stdout: {}",
+        daily_note.display(),
+        day.stdout
+    );
 
     let now = run_epi(
         [
@@ -146,9 +179,15 @@ fn template_and_day_now_commands_write_real_files() {
         &env,
     );
     assert!(now.stdout.contains("20260310-090807-abc123/now.md"));
-    assert!(vault_root
-        .join("Empty/Present/10-03-2026/20260310-090807-abc123/now.md")
-        .exists());
+    let now_note = day_folder(&vault_root, instant)
+        .join("20260310-090807-abc123")
+        .join("now.md");
+    assert!(
+        now_note.exists(),
+        "now-init must write {}, stdout: {}",
+        now_note.display(),
+        now.stdout
+    );
 
     let prompt = run_epi(
         [
@@ -181,13 +220,21 @@ fn template_and_day_now_commands_write_real_files() {
         .as_slice(),
         &env,
     );
-    assert!(thought.stdout.contains("T4-20260310-090807.md"));
-    assert!(vault_root
-        .join("Pratibimba/Self/Thought/T/T4/T4-20260310-090807.md")
-        .exists());
+    let thought_path = thought_note_path(&vault_root, instant, 4);
+    let thought_file = thought_path.file_name().unwrap().to_string_lossy();
+    assert!(
+        thought.stdout.contains(thought_file.as_ref()),
+        "thought-route must report {thought_file}, stdout: {}",
+        thought.stdout
+    );
+    assert!(
+        thought_path.exists(),
+        "thought must be persisted at {}",
+        thought_path.display()
+    );
 
     // archive-day without reflection guard should fail
-    let archive_no_reflect = run_epi(["vault", "archive-day", "10-03-2026"].as_slice(), &env);
+    let archive_no_reflect = run_epi(["vault", "archive-day", day_id.as_str()].as_slice(), &env);
     assert!(
         !archive_no_reflect.status.success(),
         "archive-day must fail without c_5_reflection_complete"
@@ -201,7 +248,6 @@ fn template_and_day_now_commands_write_real_files() {
     );
 
     // archive-day --plan prints paths without moving
-    let daily_note = vault_root.join("Empty/Present/2026/03/W11/10/daily-note.md");
     let mut content = fs::read_to_string(&daily_note).unwrap();
     content = content.replace("---\n", "---\nc_5_reflection_complete: true\n");
     // Only replace the first occurrence (the closing ---)
@@ -209,7 +255,7 @@ fn template_and_day_now_commands_write_real_files() {
     fs::write(&daily_note, &content).unwrap();
 
     let plan_out = run_epi(
-        ["vault", "archive-day", "10-03-2026", "--plan"].as_slice(),
+        ["vault", "archive-day", day_id.as_str(), "--plan"].as_slice(),
         &env,
     );
     assert!(
@@ -222,9 +268,16 @@ fn template_and_day_now_commands_write_real_files() {
         "--plan must print SOURCE → DEST, got: {}",
         plan_out.stdout
     );
+    // History DOES nest (`{YYYY}/{MM}/W{week}/{DD}`) — asserting the whole
+    // derived destination keeps that nesting pinned (it is what the old
+    // `contains("W11")` was reaching for) without freezing one week number.
+    let expected_archive = archive_day_path(&vault_root, day_of(instant));
     assert!(
-        plan_out.stdout.contains("W11"),
-        "--plan output must contain W11: {}",
+        plan_out
+            .stdout
+            .contains(&expected_archive.display().to_string()),
+        "--plan must print the nested History destination {}: {}",
+        expected_archive.display(),
         plan_out.stdout
     );
     // File must still exist (--plan does not move)
@@ -238,7 +291,7 @@ fn template_and_day_now_commands_write_real_files() {
     fs::write(&daily_note, &content_no_reflect).unwrap();
 
     let force_plan = run_epi(
-        ["vault", "archive-day", "10-03-2026", "--plan", "--force"].as_slice(),
+        ["vault", "archive-day", day_id.as_str(), "--plan", "--force"].as_slice(),
         &env,
     );
     assert!(
@@ -298,7 +351,7 @@ fn thought_route_with_vak_inlines_keys_in_single_frontmatter_block() {
         output.stderr
     );
 
-    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T3/T3-20260310-090807.md");
+    let persisted_path = thought_note_path(&vault_root, at("2026-03-10T09:08:07Z"), 3);
     assert!(
         persisted_path.exists(),
         "thought file must be written: {}",
@@ -425,7 +478,7 @@ fn thought_route_summary_lands_in_frontmatter_block() {
         output.stderr
     );
 
-    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T3/T3-20260522-090807.md");
+    let persisted_path = thought_note_path(&vault_root, at("2026-05-22T09:08:07Z"), 3);
     assert!(
         persisted_path.exists(),
         "thought file must be written: {}",
@@ -498,7 +551,7 @@ fn thought_route_summary_yaml_quotes_special_characters() {
     );
     assert!(output.status.success(), "{}", output.stderr);
 
-    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T0/T0-20260522-090807.md");
+    let persisted_path = thought_note_path(&vault_root, at("2026-05-22T09:08:07Z"), 0);
     let body = fs::read_to_string(&persisted_path).unwrap();
     let after_first_marker = &body[4..];
     let close_offset = after_first_marker.find("\n---\n").unwrap();
@@ -539,7 +592,7 @@ fn thought_route_without_summary_omits_summary_key() {
     );
     assert!(output.status.success(), "{}", output.stderr);
 
-    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T2/T2-20260522-090807.md");
+    let persisted_path = thought_note_path(&vault_root, at("2026-05-22T09:08:07Z"), 2);
     let body = fs::read_to_string(&persisted_path).unwrap();
     let after_first_marker = &body[4..];
     let close_offset = after_first_marker.find("\n---\n").unwrap();
@@ -618,7 +671,7 @@ fn thought_route_without_vak_omits_vak_keys() {
     );
     assert!(output.status.success(), "{}", output.stderr);
 
-    let path = vault_root.join("Pratibimba/Self/Thought/T/T1/T1-20260310-090807.md");
+    let path = thought_note_path(&vault_root, at("2026-03-10T09:08:07Z"), 1);
     let body = fs::read_to_string(&path).unwrap();
     for key in &["cpf:", "cs_code:", "cs_direction:", "cfp:"] {
         assert!(
@@ -679,7 +732,8 @@ fn flow_init_creates_flow_md_in_day_folder() {
         result.stdout
     );
 
-    let flow = vault_root.join("Empty/Present/10-03-2026/FLOW.md");
+    // Flat, month-first Present day folder (CHARTER:28) — derived, never spelled.
+    let flow = day_folder(&vault_root, at("2026-03-10T09:08:07Z")).join("FLOW.md");
     assert!(flow.exists(), "FLOW.md not created at {}", flow.display());
     let content = fs::read_to_string(&flow).unwrap();
     assert!(
@@ -734,7 +788,8 @@ fn now_init_creates_thinking_and_thoughts_dirs() {
         now_result.stdout
     );
 
-    let now_dir = vault_root.join("Empty/Present/10-03-2026/20260310-090807-abc123");
+    let now_dir =
+        day_folder(&vault_root, at("2026-03-10T09:08:07Z")).join("20260310-090807-abc123");
     assert!(now_dir.join("thinking").exists(), "thinking/ must exist");
     assert!(now_dir.join("thoughts").exists(), "thoughts/ must exist");
     assert!(now_dir.join("tasks").exists(), "tasks/ must exist");
@@ -902,11 +957,11 @@ fn vault_root_autodetects_idea_in_repo_root() {
         "day-init failed: {}",
         result.stderr
     );
+    let expected_note = day_note_path(&idea_dir, at("2026-04-04T10:00:00Z"));
     assert!(
-        idea_dir
-            .join("Empty/Present/2026/04/W14/04/daily-note.md")
-            .exists(),
-        "daily-note must be in repo_root/Idea, got stdout: {}",
+        expected_note.exists(),
+        "daily-note must be in repo_root/Idea at {}, got stdout: {}",
+        expected_note.display(),
         result.stdout
     );
 }

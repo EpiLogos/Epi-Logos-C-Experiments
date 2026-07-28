@@ -92,6 +92,11 @@ fn router() -> &'static Router<GatewayCallContext> {
     static ROUTER: OnceLock<Router<GatewayCallContext>> = OnceLock::new();
     ROUTER.get_or_init(|| {
         let mut registry = MethodRegistry::new();
+        // T53.04: S1 owns its `s1'.*` methods and registers them itself. Exact
+        // names outrank the fallback namespace below, so these leave the legacy
+        // dispatcher by subtraction.
+        epi_s1_hen_compiler_core::s1_handlers::register_s1_handlers(&mut registry)
+            .expect("s1' handlers register exactly once");
         registry
             .register_namespace(LEGACY_S0_FALLBACK_NAMESPACE, Arc::new(LegacyS0Dispatcher))
             .expect("the legacy fallback is registered exactly once");
@@ -1672,29 +1677,12 @@ async fn legacy_dispatch_rpc(
             }
             Ok(DispatchResult::immediate(value))
         }
-        "s1'.vault.read_file" => crate::gate::s1_hen::read_file(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.vault.write_file" => crate::gate::s1_hen::write_file(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.base.ensure" => crate::gate::s1_hen::base_ensure(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         "s1'.q_articulation.accept" => {
             crate::gate::s1_hen::q_articulation_accept(state_root, &frame.params)
                 .await
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }
-        "s1'.vault.rename_file" | "s1'.vault.move_file" => {
-            crate::gate::s1_hen::rename_or_move_file(&frame.params)
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
-        }
-        "s1'.semantic.suggest_links" => crate::gate::s1_hen::suggest_links(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         "s2.codon.aa_lookup" => crate::gate::codon::aa_lookup(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(invalid_params_error),
@@ -1705,28 +1693,7 @@ async fn legacy_dispatch_rpc(
             .map(DispatchResult::immediate)
             .map_err(invalid_params_error),
         // CCT-15: C-layer semantic typology classification.
-        "s1'.type.classify_c_layer" => crate::gate::s1_hen::type_classify_c_layer(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         // CCT-14 (+14b): entity-candidate lifecycle + review surfaces.
-        "s1'.entity.capture" => crate::gate::s1_hen::entity_capture(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.entity.classify" => crate::gate::s1_hen::entity_classify(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.entity.promote_to_type" => crate::gate::s1_hen::entity_promote_to_type(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.world.graduate" => crate::gate::s1_hen::world_graduate(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.entity.list" => crate::gate::s1_hen::entity_list(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s1'.world.list_entities" => crate::gate::s1_hen::world_list_entities(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         "s3'.temporal.subscribe" => super::subscription::dispatch_temporal_subscribe(
             state_root,
             runtime,

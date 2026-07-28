@@ -10,6 +10,10 @@ name = "epi_s3_gateway_contract"
 path = "src/lib.rs"
 
 [dependencies]
+# S3 -> S1 is DOWNWARD and legal (the S3 row forbids only S4/S5). Track 53
+# T53.04 moved the `s1'.*` contract shapes to their owning coordinate; this
+# crate re-exports them so every existing import path still resolves.
+epi-s1-hen-compiler-core = { path = "../../S1/hen-compiler-core" }
 epi-kernel-contract = { path = "../../epi-kernel-contract" }
 portal-core = { path = "../../S0/portal-core" }
 serde = { version = "1.0", features = ["derive"] }

@@ -15,8 +15,16 @@ pub mod ledger;
 pub mod property_intelligence;
 pub mod relation_inference;
 pub mod residency;
+/// The `s1'.*` gateway method contracts — S1's OWN receipt and request shapes.
+/// They lived in `epi-s3-gateway-contract` until Track 53 T53.04; a coordinate's
+/// contract belongs to that coordinate, and S1 may not import S3 to reach it.
+/// `gateway-contract` now re-exports these, so no consumer import path changed.
+pub mod s1_handlers;
+pub mod s1_vault;
 mod smart_env;
 pub mod wikilinks;
+
+pub use s1_vault::*;
 
 pub use artifact_evidence::{
     c_layer_evidence_kind, classify_c_layer, CLayerClassification, CLayerEvidence,

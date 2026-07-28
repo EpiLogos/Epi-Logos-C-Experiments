@@ -22,6 +22,40 @@ use support::{temp_env, TestGatewayClient};
 use futures_util::{SinkExt, StreamExt};
 use tokio_tungstenite::{accept_hdr_async, tungstenite::Message};
 
+/// Where the fixture day `07-03-2026` archives.
+///
+/// History IS legitimately nested (`{YYYY}/{MM}/W{week}/{DD}`) — only Present
+/// is flat. What changed is how the day id READS: it is MONTH-FIRST
+/// (`vault::paths::DAY_ID_FORMAT` = "%m-%d-%Y", CHARTER:28, ratified
+/// 2026-07-02, and `temporal_context::chrono_like_day` parses month-first to
+/// match), so `07-03-2026` is 3 July 2026 → `2026/07/W27/03`. These tests
+/// previously expected `2026/03/W10/07`, the same id read day-first as
+/// 7 March 2026 — the pre-consolidation law.
+///
+/// W27: `temporal_context::iso_week_number` = ((ordinal + 6) / 7).max(1), and
+/// 3 July 2026 is ordinal 184 (2026 is not a leap year) → 190 / 7 = 27.
+const HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026: &str =
+    "Pratibimba/Self/Action/History/2026/07/W27/03";
+
+/// A terminal lease that is LIVE at the moment the patch is applied.
+///
+/// `session_store::validate_terminal_capture_policy` refuses any capture
+/// policy beyond metadata-only whose lease has already expired — real
+/// production law, and a real caller (`agent/tmux.rs::lease_expires_at`)
+/// mints `created_at + ttl`. A hardcoded absolute millisecond stamp is a
+/// lease with a calendar death date: the previous literal
+/// `1_785_000_000_000` was 2026-07-25T09:20:00Z, so this test began failing
+/// once the wall clock passed it. Deriving from `SystemTime::now()` mirrors
+/// the real caller and never rots.
+fn live_lease_expires_at_ms() -> u128 {
+    const LEASE_TTL_MS: u128 = 12 * 60 * 60 * 1000; // agent::tmux::DEFAULT_LEASE_TTL_SECONDS
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock is after the unix epoch")
+        .as_millis()
+        + LEASE_TTL_MS
+}
+
 #[test]
 fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     let env = temp_env()
@@ -31,6 +65,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     let gate_root = env.home.join(".epi").join("gate");
     let store = SessionStore::new(&gate_root).unwrap();
     let session = store.create("agent:main:main").unwrap();
+    let lease_expires_at_ms = live_lease_expires_at_ms();
     store
         .patch(
             &session.canonical_key,
@@ -65,7 +100,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
                     lease: Some(TerminalLease {
                         lease_owner: Some("pi.anima".to_owned()),
                         lease_purpose: Some("interactive-session".to_owned()),
-                        lease_expires_at_ms: Some(1_785_000_000_000),
+                        lease_expires_at_ms: Some(lease_expires_at_ms),
                     }),
                     capture_policy: Some(TerminalCapturePolicy {
                         mode: TerminalCaptureMode::Transcript,
@@ -119,6 +154,8 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     bridge.publish_m_clock_placeholder("M0").unwrap();
 
     let events = bridge.drain_test_events().unwrap();
+    let lease_expires_at_ms_json =
+        u64::try_from(lease_expires_at_ms).expect("lease expiry fits in u64");
     assert!(events.iter().any(|event| {
         event.kind == "gateway_registration"
             && event.table == "gateway_instance"
@@ -162,7 +199,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["terminalBinding"]["terminalStatus"] == "attached"
             && event.payload["terminalBinding"]["tmuxPaneId"] == "%terminal-main"
             && event.payload["terminalBinding"]["leaseExpiresAtMs"].as_u64()
-                == Some(1_785_000_000_000)
+                == Some(lease_expires_at_ms_json)
             && event.payload["terminalBinding"]["capturePolicy"]["mode"] == "transcript"
             && event.payload["terminalBinding"]["capturePolicy"]["redactionPolicy"] == "configured"
             && event.payload["terminalBinding"]["rawPaneBodyIncluded"] == false
@@ -189,7 +226,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["history"]["archivePath"]
                 .as_str()
                 .unwrap()
-                .contains("Pratibimba/Self/Action/History/2026/03/W10/07")
+                .contains(HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026)
             && event.payload["aliases"]
                 .as_array()
                 .unwrap()
@@ -217,7 +254,8 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
                 .is_some()
             && event.payload["terminal"]["provider"] == "tmux"
             && event.payload["terminal"]["status"] == "attached"
-            && event.payload["terminal"]["leaseExpiresAtMs"].as_u64() == Some(1_785_000_000_000)
+            && event.payload["terminal"]["leaseExpiresAtMs"].as_u64()
+                == Some(lease_expires_at_ms_json)
             && event.payload["terminal"]["capturePolicy"]["mode"] == "transcript"
             && event.payload["terminal"]["rawPaneBodyIncluded"] == false
             && event.payload["terminal"].get("tmuxPaneId").is_none()
@@ -1425,7 +1463,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "07-03-2026",
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
-            "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
+            format!("/vault/{HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026}"),
             "cache:hot:s3:gateway:temporal:session:main:now:md",
             "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "day:07-03-2026:session:main",
@@ -1484,7 +1522,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
             "agent:main:main",
-            "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
+            format!("/vault/{HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026}"),
             "cache:hot:s3:gateway:temporal:session:main:now:md",
             "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-live-test:gateway-live-test:day:07-03-2026",

@@ -10,7 +10,9 @@
 use clap::Subcommand;
 use serde_json::{json, Value};
 
-use crate::gate::s1_hen;
+// T53.04: the CLI surface reaches S1 law at its coordinate. This is the
+// membrane doing its job — a passthrough, not a second implementation.
+use epi_s1_hen_compiler_core::s1_handlers as s1_hen;
 
 #[derive(Subcommand)]
 pub enum EntityCmd {

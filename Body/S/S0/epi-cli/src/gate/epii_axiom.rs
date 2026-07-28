@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S5 (epii axiom-translation authority) — physically S0, conceptually S5'. The producer and its persisted store answer to Epii; this file is the gateway membrane over them.
 //! Coordinate: S0 gateway membrane for M5' (26.T26.14 axiom-translation producer)
 //! Residency: Body/S/S0/epi-cli/src/gate — physical S0, conceptual S5' (epii).
 //! Position (#n): the Pi axiom-translation producer + its persisted store.

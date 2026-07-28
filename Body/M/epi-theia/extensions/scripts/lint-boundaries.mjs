@@ -308,19 +308,35 @@ function lintS0MembraneResidency(options, errors, counts) {
   const upward = /\bepi_s1_[a-z0-9_]+|\bepi_s2_[a-z0-9_]+|\bepi_s3_[a-z0-9_]+|\bepi_s5_[a-z0-9_]+/;
 
   const lawBearing = [];
+  let lawBearingLines = 0;
   for (const root of contract.roots) {
     const absolute = join(options.repoRoot, root);
     if (!existsSync(absolute)) continue;
     for (const file of walkFiles(absolute)) {
       if (!file.endsWith(".rs")) continue;
-      if (upward.test(readFileSync(file, "utf8"))) {
+      const text = readFileSync(file, "utf8");
+      if (upward.test(text)) {
         lawBearing.push(relativeRepoPath(options.repoRoot, file));
+        // CODE lines only. Counting raw lines made the ratchet measure text
+        // rather than law: adding the `// S0 ADAPTER:` ownership annotation
+        // that `s0_membrane_guardrails.rs` REQUIRES pushed the count up by
+        // three and turned the gate red for documenting residency correctly.
+        // A metric that punishes the thing the architecture asks for will be
+        // raised rather than obeyed.
+        lawBearingLines += text
+          .split("\n")
+          .filter((line) => {
+            const t = line.trim();
+            return t.length > 0 && !t.startsWith("//");
+          }).length;
       }
     }
   }
 
   counts.s0MembraneLawBearingFiles = lawBearing.length;
   counts.s0MembraneCeiling = contract.lawBearingFileCeiling;
+  counts.s0MembraneLawBearingLines = lawBearingLines;
+  counts.s0MembraneLineCeiling = contract.lawBearingLineCeiling;
   const ceiling = contract.lawBearingFileCeiling;
   if (lawBearing.length > ceiling) {
     lawBearing.sort();
@@ -330,6 +346,15 @@ function lintS0MembraneResidency(options, errors, counts) {
         `every layer, but it may not accumulate their law. Move the handler to its coordinate ` +
         `and register it (Track 53); do NOT raise the ceiling to pass. Files: ` +
         lawBearing.join(", ")
+    );
+  }
+
+  const lineCeiling = contract.lawBearingLineCeiling;
+  if (typeof lineCeiling === "number" && lawBearingLines > lineCeiling) {
+    errors.push(
+      `S0 membrane residency ratchet: ${lawBearingLines} law-bearing line(s) under ` +
+        `${contract.roots.join(" + ")} exceeds the ceiling of ${lineCeiling}. Law may leave the ` +
+        `membrane, never accumulate in it. Move it to its coordinate; do NOT raise the ceiling.`
     );
   }
 }
@@ -474,7 +499,7 @@ try {
     }
     if (typeof result.counts.s0MembraneLawBearingFiles === "number") {
       legacyGapSummary.push(
-        `S0 membrane law-bearing files ${result.counts.s0MembraneLawBearingFiles}/${result.counts.s0MembraneCeiling}`
+        `S0 membrane law-bearing ${result.counts.s0MembraneLawBearingFiles}/${result.counts.s0MembraneCeiling} files, ${result.counts.s0MembraneLawBearingLines}/${result.counts.s0MembraneLineCeiling} lines`
       );
     }
     if (result.counts.legacyHeaderGaps > 0) {

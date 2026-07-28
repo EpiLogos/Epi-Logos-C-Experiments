@@ -959,6 +959,7 @@ name = "epi-s1-hen-compiler-core"
 version = "0.1.0"
 dependencies = [
  "blake3",
+ "epi-kernel-contract",
  "portal-core",
  "serde",
  "serde_json",
@@ -1018,6 +1019,7 @@ name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
  "epi-kernel-contract",
+ "epi-s1-hen-compiler-core",
  "portal-core",
  "serde",
  "serde_json",

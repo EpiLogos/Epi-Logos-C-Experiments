@@ -53,6 +53,25 @@ fn temp_env_placeholder_vault_marker() -> &'static str {
     "__set_after_repo_root_exists__"
 }
 
+/// A terminal lease that is LIVE at the moment the patch is applied.
+///
+/// `session_store::validate_terminal_capture_policy` refuses any capture
+/// policy beyond metadata-only whose lease has already expired — real
+/// production law, and a real caller (`agent/tmux.rs::lease_expires_at`)
+/// mints `created_at + ttl`. A hardcoded absolute millisecond stamp is a
+/// lease with a calendar death date: the previous literal
+/// `1_785_000_000_000` was 2026-07-25T09:20:00Z, so this test began failing
+/// once the wall clock passed it. Deriving from `SystemTime::now()` mirrors
+/// the real caller and never rots.
+fn live_lease_expires_at_ms() -> u128 {
+    const LEASE_TTL_MS: u128 = 12 * 60 * 60 * 1000; // agent::tmux::DEFAULT_LEASE_TTL_SECONDS
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock is after the unix epoch")
+        .as_millis()
+        + LEASE_TTL_MS
+}
+
 #[test]
 fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     let (env, day_id, session_id) = env_with_now_file();
@@ -139,10 +158,31 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     assert!(value["now"]["wikilink"].as_str().unwrap().contains(
         "[[Empty/Present/07-05-2026/session-temporal-main/now|NOW session-temporal-main]]"
     ));
-    assert!(value["history"]["archivePath"]
-        .as_str()
-        .unwrap()
-        .contains("Pratibimba/Self/Action/History/2026/05/W19/07"));
+    // History IS legitimately nested (`{YYYY}/{MM}/W{week}/{DD}`) — only Present
+    // is flat. What changed is how the day id READS: it is MONTH-FIRST
+    // (`vault::paths::DAY_ID_FORMAT` = "%m-%d-%Y", CHARTER:28, ratified
+    // 2026-07-02), so the fixture day `07-05-2026` is 5 July 2026 and archives
+    // under `2026/07/W27/05`. The old expectation `2026/05/W19/07` is the same
+    // id read day-first as 7 May 2026 — the pre-consolidation law.
+    // W27: `temporal_context::iso_week_number` = ((ordinal + 6) / 7).max(1),
+    // and 5 July 2026 is ordinal 186 (2026 is not a leap year) → 192 / 7 = 27.
+    let expected_archive_segment = {
+        let day = epi_logos::vault::paths::parse_day_id(&day_id).expect("canonical day id parses");
+        assert_eq!(
+            day,
+            chrono::NaiveDate::from_ymd_opt(2026, 7, 5).unwrap(),
+            "the canonical parser must read the fixture day id month-first"
+        );
+        "Pratibimba/Self/Action/History/2026/07/W27/05"
+    };
+    assert!(
+        value["history"]["archivePath"]
+            .as_str()
+            .unwrap()
+            .contains(expected_archive_segment),
+        "archivePath {} must nest the month-first day under History",
+        value["history"]["archivePath"]
+    );
     assert!(value["now"]["content"]
         .as_str()
         .unwrap()
@@ -228,6 +268,7 @@ fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_bod
     let _guard = env.apply_to_process();
     let gate_root = env.home.join(".epi").join("gate");
     let store = SessionStore::new(&gate_root).unwrap();
+    let lease_expires_at_ms = live_lease_expires_at_ms();
     store
         .patch(
             "agent:main:main",
@@ -241,7 +282,7 @@ fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_bod
                     lease: Some(TerminalLease {
                         lease_owner: Some("pi.anima".to_owned()),
                         lease_purpose: Some("interactive-session".to_owned()),
-                        lease_expires_at_ms: Some(1_785_000_000_000),
+                        lease_expires_at_ms: Some(lease_expires_at_ms),
                     }),
                     capture_policy: Some(TerminalCapturePolicy {
                         mode: TerminalCaptureMode::Stream,
@@ -282,7 +323,7 @@ fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_bod
     assert_eq!(redis_payload["status"], "attached");
     assert_eq!(
         redis_payload["leaseExpiresAtMs"].as_u64(),
-        Some(1_785_000_000_000)
+        Some(u64::try_from(lease_expires_at_ms).expect("lease expiry fits in u64"))
     );
     assert_eq!(redis_payload["captureHandleRef"], capture_handle);
     assert_eq!(redis_payload["rawPaneBodyStored"], false);

@@ -38,6 +38,16 @@ pub fn day_note_path_for_date(vault_root: &Path, day: NaiveDate) -> PathBuf {
 /// with ISO and legacy day-first accepted so existing folders still resolve.
 pub use crate::vault::paths::parse_day_id;
 
+/// Ensure the folder for a day the CALLER named.
+///
+/// The day id is already a calendar date, so it goes straight to the path
+/// constructor. It must NOT be widened into an instant and reduced back: an
+/// instant reduces via [`crate::vault::paths::day_of`] to the *local* day, and
+/// UTC midnight of 20 July IS 19 July everywhere west of UTC — so
+/// `vault.day.ensure {"dayId":"2026-07-20"}` created the 19th's folder in
+/// `America/New_York`. `gate/day_start.rs:81` warns about exactly this hazard
+/// for session ids; this function sat one call below it and did the thing the
+/// warning describes.
 pub fn ensure_day_folder(
     vault_root: &Path,
     repo_root: &Path,
@@ -45,11 +55,15 @@ pub fn ensure_day_folder(
     day_id: &str,
 ) -> Result<DayEnsureReceipt, String> {
     let day = parse_day_id(day_id)?;
-    let now = Utc
-        .with_ymd_and_hms(day.year(), day.month(), day.day(), 0, 0, 0)
+    // Display-only instant for the daily-note template. Noon, not midnight, so
+    // a template that renders it in local time still names the right date over
+    // the usual offsets. Nothing about the folder or the receipt id derives
+    // from it — those come from `day` directly, which is the whole fix.
+    let template_now = Utc
+        .with_ymd_and_hms(day.year(), day.month(), day.day(), 12, 0, 0)
         .single()
         .ok_or_else(|| format!("invalid dayId {day_id:?}"))?;
-    ensure_day_folder_for_now(vault_root, repo_root, home_root, now)
+    ensure_day_folder_for_date(vault_root, repo_root, home_root, day, template_now)
 }
 
 pub fn ensure_day_folder_for_now(
@@ -58,7 +72,25 @@ pub fn ensure_day_folder_for_now(
     home_root: &Path,
     now: DateTime<Utc>,
 ) -> Result<DayEnsureReceipt, String> {
-    let day_path = day_folder_for_now(vault_root, now);
+    ensure_day_folder_for_date(
+        vault_root,
+        repo_root,
+        home_root,
+        crate::vault::paths::day_of(now),
+        now,
+    )
+}
+
+/// The one body both entry points share: the day is a `NaiveDate` by the time
+/// it gets here, so there is no second place a date can be re-derived.
+fn ensure_day_folder_for_date(
+    vault_root: &Path,
+    repo_root: &Path,
+    home_root: &Path,
+    day: chrono::NaiveDate,
+    now: DateTime<Utc>,
+) -> Result<DayEnsureReceipt, String> {
+    let day_path = crate::vault::paths::day_folder_for_date(vault_root, day);
     let created_day_folder = !day_path.exists();
     fs::create_dir_all(&day_path)
         .map_err(|err| format!("failed to create {}: {err}", day_path.display()))?;
@@ -79,7 +111,7 @@ pub fn ensure_day_folder_for_now(
 
     Ok(DayEnsureReceipt {
         rpc: VAULT_DAY_ENSURE_RPC,
-        day_id: crate::vault::paths::format_day_id(now),
+        day_id: crate::vault::paths::format_day_id_for_date(day),
         day_path,
         daily_note_path,
         created_day_folder,
@@ -131,6 +163,44 @@ mod tests {
         assert!(!second.created_day_folder);
         assert!(!second.created_daily_note);
         assert_eq!(second.day_path, receipt.day_path);
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    /// A day the caller NAMED must come back as that day, in every timezone.
+    ///
+    /// This is the regression pin for the round-trip defect: `ensure_day_folder`
+    /// used to widen the parsed date into UTC midnight and hand it to
+    /// `day_of()`, which reduces an instant to the LOCAL day — so UTC midnight
+    /// of 20 July became 19 July everywhere west of UTC and the wrong folder was
+    /// created. Nothing here derives from an instant any more, so the assertion
+    /// holds under TZ=America/New_York and TZ=Pacific/Midway as well as UTC.
+    #[test]
+    fn a_named_day_round_trips_to_itself_independent_of_timezone() {
+        let root = unique_root("epi-day-roundtrip");
+        let vault = root.join("Idea");
+        let repo = root.join("repo");
+        let home = root.join("home");
+        fs::create_dir_all(&repo).unwrap();
+        fs::create_dir_all(&home).unwrap();
+
+        for (input, expected) in [
+            ("2026-07-20", "07-20-2026"),
+            ("07-20-2026", "07-20-2026"),
+            ("2026-01-01", "01-01-2026"),
+            ("2026-12-31", "12-31-2026"),
+        ] {
+            let receipt = ensure_day_folder(&vault, &repo, &home, input).unwrap();
+            assert_eq!(
+                receipt.day_id, expected,
+                "dayId {input} must round-trip to {expected}, not shift a day"
+            );
+            assert_eq!(
+                receipt.day_path,
+                vault.join("Empty/Present").join(expected),
+                "the folder must be the named day's"
+            );
+        }
 
         let _ = fs::remove_dir_all(root);
     }

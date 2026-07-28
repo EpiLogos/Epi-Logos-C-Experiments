@@ -492,7 +492,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.epii.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.runtime.context / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context"),
+        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.deposit.list / s5'.epii.runtime.context / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context / s5'.epii.axiom_translate / s5'.epii.axiom_translation_history"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-agent-core",
         test_evidence: &[
@@ -830,6 +830,12 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.improve.q_review.night_pass" => Some("s5'.improve.*"),
         "s5'.epii.status"
         | "s5'.epii.deposit"
+        // 26.T26.10 — the READ sibling of `s5'.epii.deposit` (dispatch.rs
+        // routes it to the same `epii` adapter over epii-agent-core). It
+        // landed in METHOD_NAMES without a parity row, which reds
+        // `every_product_gateway_method_has_coordinate_mapping`; it belongs to
+        // the same family as the write path it projects.
+        | "s5'.epii.deposit.list"
         | "s5'.epii.runtime.context"
         | "s5'.epii.user.orientation"
         | "s5'.epii.pratibimba.status"

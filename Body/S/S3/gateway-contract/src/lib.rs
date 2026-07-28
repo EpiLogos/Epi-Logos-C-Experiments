@@ -48,7 +48,6 @@ mod portal_events;
 mod privacy;
 mod protocol;
 mod release;
-mod s1_vault;
 mod session;
 mod settings;
 mod spacetime;
@@ -68,7 +67,10 @@ pub use portal_events::*;
 pub use privacy::*;
 pub use protocol::*;
 pub use release::*;
-pub use s1_vault::*;
+// T53.04: the `s1'.*` contract shapes now live at their own coordinate,
+// `epi-s1-hen-compiler-core::s1_vault`. Re-exported here so consumers that
+// reach them through the gateway contract keep working unchanged.
+pub use epi_s1_hen_compiler_core::s1_vault::*;
 pub use session::*;
 pub use settings::*;
 pub use spacetime::*;

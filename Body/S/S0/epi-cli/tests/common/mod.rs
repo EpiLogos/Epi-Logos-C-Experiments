@@ -333,7 +333,34 @@ pub fn run_epi(args: &[&str], env: &TestEnv) -> TestOutput {
 }
 
 pub fn read_to_string(path: impl AsRef<Path>) -> String {
-    fs::read_to_string(path).unwrap()
+    let path = path.as_ref();
+    fs::read_to_string(path).unwrap_or_else(|err| {
+        // A bare `Os { code: 2, kind: NotFound }` names nothing, and this helper
+        // is where every day-path / stamp regression in this crate lands first:
+        // the 2026-07-27 day-path consolidation (`src/vault/paths.rs`) moved day
+        // folders to flat month-first `{MM-DD-YYYY}` and moved stamps onto LOCAL
+        // wall clock, and each stale expectation surfaced here as an anonymous
+        // NotFound. Name the file that was missing and show what the directory
+        // actually holds, so the next drift is one line of output away from
+        // diagnosed instead of a bisect.
+        let listing = path
+            .parent()
+            .and_then(|parent| fs::read_dir(parent).ok())
+            .map(|entries| {
+                let mut names: Vec<String> = entries
+                    .filter_map(|entry| {
+                        Some(entry.ok()?.file_name().to_string_lossy().into_owned())
+                    })
+                    .collect();
+                names.sort();
+                format!("[{}]", names.join(", "))
+            })
+            .unwrap_or_else(|| "<parent directory does not exist>".to_owned());
+        panic!(
+            "failed to read {}: {err}\n  parent directory holds: {listing}",
+            path.display()
+        )
+    })
 }
 
 pub fn write_file(path: impl AsRef<Path>, contents: &str) -> PathBuf {

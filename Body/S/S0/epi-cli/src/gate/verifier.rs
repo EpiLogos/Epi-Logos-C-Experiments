@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/epi-kernel-contract (constraint + VerifierReport law) over Body/S/S0/epi-lib (the compiled Anuttara verifier) — this file builds JSON-RPC results from those shapes; the verification law is not here.
 //! Coordinate: S0 -> S0'
 //! Residency: Body/S/S0/epi-cli/src/gate/verifier.rs
 //! Position (#n): #0' -- live gateway adapter for the compiled Anuttara verifier.

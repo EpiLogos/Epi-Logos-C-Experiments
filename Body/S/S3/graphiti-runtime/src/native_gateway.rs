@@ -47,6 +47,10 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
         "requiresEpiiReviewForPromotion": true,
     }));
     envelope["method"] = Value::String("s5.episodic.search".to_owned());
+    // Echo the query back. The HTTP sidecar this native path replaced did
+    // (`lib.rs:745`) and callers read it to correlate a response with the
+    // request that produced it; the 2026-07-18 port dropped it silently.
+    envelope["query"] = Value::String(query.to_owned());
     envelope["sessionKey"] = Value::String(session_key.to_owned());
     envelope["namespaceRef"] = Value::String(namespace_ref.to_owned());
     envelope["dayId"] = Value::String(day_id.to_owned());

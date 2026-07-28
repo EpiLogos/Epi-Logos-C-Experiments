@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/portal-core (M3 codon law) — gateway membrane for design-language consumers; the codon algebra lives in portal-core.
 //! Coordinate: S0 adapter over the M3 codon law.
 //! Residency: Body/S/S0/epi-cli/src/gate
 //! Position (#n): gateway membrane for design-language consumers

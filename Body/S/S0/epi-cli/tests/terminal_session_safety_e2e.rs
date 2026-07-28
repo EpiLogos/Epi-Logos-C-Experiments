@@ -18,6 +18,25 @@ use std::time::{Duration, Instant};
 
 const RAW_TERMINAL_BODY_SENTINEL: &str = "RAW_TERMINAL_BODY_DO_NOT_PROJECT_12_T12_08";
 
+/// A terminal lease that is LIVE at the moment the patch is applied.
+///
+/// `session_store::validate_terminal_capture_policy` refuses any capture
+/// policy beyond metadata-only whose lease has already expired — real
+/// production law, and a real caller (`agent/tmux.rs::lease_expires_at`)
+/// mints `created_at + ttl`. A hardcoded absolute millisecond stamp is a
+/// lease with a calendar death date: the previous literal
+/// `1_785_000_000_000` was 2026-07-25T09:20:00Z, so this test began failing
+/// once the wall clock passed it. Deriving from `SystemTime::now()` mirrors
+/// the real caller and never rots.
+fn live_lease_expires_at_ms() -> u128 {
+    const LEASE_TTL_MS: u128 = 12 * 60 * 60 * 1000; // agent::tmux::DEFAULT_LEASE_TTL_SECONDS
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock is after the unix epoch")
+        .as_millis()
+        + LEASE_TTL_MS
+}
+
 #[test]
 fn terminal_session_safety_command_contract_uses_session_scoped_tmux_surfaces() {
     let base_env = TestEnv::with_fake_pi();
@@ -134,7 +153,7 @@ fn redaction_contract_keeps_terminal_body_out_of_global_projection_and_redis_pay
                     lease: Some(TerminalLease {
                         lease_owner: Some("pi.anima".to_owned()),
                         lease_purpose: Some("interactive-session".to_owned()),
-                        lease_expires_at_ms: Some(1_785_000_000_000),
+                        lease_expires_at_ms: Some(live_lease_expires_at_ms()),
                     }),
                     capture_policy: Some(TerminalCapturePolicy {
                         mode: TerminalCaptureMode::Stream,

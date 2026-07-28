@@ -21,7 +21,8 @@
 use std::fs;
 use std::path::PathBuf;
 
-use epi_logos::gate::s1_hen;
+// T53.04: the s1'.* handlers live at their coordinate now.
+use epi_s1_hen_compiler_core::s1_handlers as s1_hen;
 use serde_json::json;
 
 fn fixture_vault() -> PathBuf {

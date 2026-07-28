@@ -459,9 +459,12 @@ async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
             json!({
                 "sourceAgent": "anima",
                 "sessionKey": "agent:main:main",
-                "dayId": "19-05-2026",
+                // Month-first per `vault::paths::DAY_ID_FORMAT` (CHARTER:28) —
+                // this fixture spelled 19 May day-first, contradicting its own
+                // `20260519` NOW stamp on the very next line.
+                "dayId": "05-19-2026",
                 "namespaceRef": "pratibimba-test",
-                "vaultNowPath": "Idea/Empty/Present/19-05-2026/20260519-120000-main/now.md",
+                "vaultNowPath": "Idea/Empty/Present/05-19-2026/20260519-120000-main/now.md",
                 "sourceCoordinate": "M2",
                 "tick12": 10,
                 "degree720": 600,

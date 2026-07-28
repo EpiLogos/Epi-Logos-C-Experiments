@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S1 (vault day scaffolding, Hen authority) + S4 Khora session start — this file opens a day and starts a session over those authorities; it holds no day-path or identity law of its own (paths come from `vault::paths`, the single constructor).
 //! Coordinate: S0 adapter for [[S1]] day scaffolding and [[S4]] Khora start.
 //! Residency: Body/S/S0/epi-cli/src/gate
 //! Position (#n): first-day gateway membrane (32.T32.11)

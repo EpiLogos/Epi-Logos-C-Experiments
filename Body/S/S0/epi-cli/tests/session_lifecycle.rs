@@ -1,4 +1,4 @@
-use chrono::{TimeZone, Utc};
+use chrono::{DateTime, Local, TimeZone, Utc};
 use epi_logos::agent::session_propagation::{
     default_agent_gateway_session_key, propagate_agent_session_runtime, GatewaySessionPropagation,
     GatewaySessionPropagationOperation,
@@ -16,6 +16,26 @@ use std::env;
 use std::ffi::OsString;
 use std::fs;
 use std::path::PathBuf;
+
+/// The day-id half of the ratified path law (`src/vault/paths.rs`): a vault day
+/// is the LOCAL calendar day, spelled MONTH-FIRST (`%m-%d-%Y`, CHARTER:28).
+///
+/// Restated here rather than borrowed from `paths::format_day_id` so the
+/// assertion still says something, and derived from the test's own instant so it
+/// is true in every timezone — a hardcoded `10-03-2026` encoded both the old
+/// day-first spelling and the author's UTC-offset.
+fn expected_day_id(now: DateTime<Utc>) -> String {
+    now.with_timezone(&Local).format("%m-%d-%Y").to_string()
+}
+
+/// The stamp half of the same law: anything NAMED after the moment it was made
+/// (session ids, NOW dirs) carries the LOCAL wall-clock stamp `%Y%m%d-%H%M%S`,
+/// so it can never disagree with the local day folder that contains it.
+fn expected_stamp(now: DateTime<Utc>) -> String {
+    now.with_timezone(&Local)
+        .format("%Y%m%d-%H%M%S")
+        .to_string()
+}
 
 /// The developer shell exports EPILOGOS_VAULT globally (points at the real
 /// vault); these cwd-bound-resolution tests must see a clean process env or
@@ -52,7 +72,7 @@ impl Drop for VaultEnvGuard {
 fn session_id_matches_required_format() {
     let now = Utc.with_ymd_and_hms(2026, 3, 10, 9, 8, 7).unwrap();
     let session_id = generate_session_id_with_suffix(now, "abc123");
-    assert_eq!(session_id, "20260310-090807-abc123");
+    assert_eq!(session_id, format!("{}-abc123", expected_stamp(now)));
 }
 
 #[test]
@@ -60,12 +80,15 @@ fn session_context_derives_day_id_and_now_path() {
     let now = Utc.with_ymd_and_hms(2026, 3, 10, 9, 8, 7).unwrap();
     let vault_root = PathBuf::from("/tmp/vault");
     let context = SessionContext::new_for_tests(now, "abc123", &vault_root);
+    let day_id = expected_day_id(now);
+    let session_id = format!("{}-abc123", expected_stamp(now));
 
-    assert_eq!(context.session_id, "20260310-090807-abc123");
-    assert_eq!(context.day_id, "10-03-2026");
+    assert_eq!(context.session_id, session_id);
+    assert_eq!(context.day_id, day_id);
+    // Present is FLAT: Empty/Present/{MM-DD-YYYY}/{stamp-suffix}/now.md
     assert_eq!(
         context.now_path,
-        vault_root.join("Empty/Present/10-03-2026/20260310-090807-abc123/now.md")
+        vault_root.join(format!("Empty/Present/{day_id}/{session_id}/now.md"))
     );
 }
 
@@ -128,13 +151,14 @@ fn session_id_follows_datetime_prefix_format() {
     let now = Utc.with_ymd_and_hms(2026, 3, 10, 14, 30, 0).unwrap();
     let vault = PathBuf::from("/tmp/vault");
     let ctx = SessionContext::new(now, Some("tst01"), &vault);
-    // Format: {YYYYMMDD-HHmmss-randomId}
+    // Format: {YYYYMMDD-HHmmss-randomId}, stamped in local wall-clock time.
+    let prefix = format!("{}-", expected_stamp(now));
     assert!(
-        ctx.session_id.starts_with("20260310-143000-"),
-        "got: {}",
+        ctx.session_id.starts_with(&prefix),
+        "expected prefix {prefix}, got: {}",
         ctx.session_id
     );
-    assert_eq!(ctx.day_id, "10-03-2026");
+    assert_eq!(ctx.day_id, expected_day_id(now));
 }
 
 #[test]
@@ -142,7 +166,12 @@ fn now_path_nested_under_day_folder() {
     let now = Utc.with_ymd_and_hms(2026, 3, 10, 14, 30, 0).unwrap();
     let vault = PathBuf::from("/tmp/vault");
     let ctx = SessionContext::new(now, Some("tst01"), &vault);
-    let expected = vault.join("Empty/Present/10-03-2026/20260310-143000-tst01/now.md");
+    // FLAT day folder, month-first, local day; NOW dir named by the local stamp.
+    let expected = vault.join(format!(
+        "Empty/Present/{}/{}-tst01/now.md",
+        expected_day_id(now),
+        expected_stamp(now)
+    ));
     assert_eq!(ctx.now_path, expected);
 }
 
@@ -233,7 +262,10 @@ fn agent_session_runtime_factory_recreates_cwd_bound_runtime_idempotently() {
         })
         .unwrap();
 
-    assert_eq!(first.context.session_id, "20260507-120000-root01");
+    assert_eq!(
+        first.context.session_id,
+        format!("{}-root01", expected_stamp(now))
+    );
     assert_eq!(first.now_write, "created");
     assert_eq!(
         second.context.session_id, first.context.session_id,
@@ -272,7 +304,7 @@ fn agent_session_runtime_factory_recreates_cwd_bound_runtime_idempotently() {
         .iter()
         .any(|diagnostic| diagnostic.message.contains("reused existing NOW")));
 
-    let day_dir = vault_a.join("Empty/Present/07-05-2026");
+    let day_dir = vault_a.join(format!("Empty/Present/{}", expected_day_id(now)));
     let now_files: Vec<_> = fs::read_dir(day_dir)
         .unwrap()
         .filter_map(Result::ok)
@@ -409,10 +441,13 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
     )
     .unwrap();
 
+    let now = Utc.with_ymd_and_hms(2026, 5, 8, 8, 30, 0).unwrap();
+    let day_id = expected_day_id(now);
+
     let runtime = AgentSessionRuntimeFactory::new()
         .create(AgentSessionRuntimeRequest {
             effective_cwd: repo.clone(),
-            now: Utc.with_ymd_and_hms(2026, 5, 8, 8, 30, 0).unwrap(),
+            now,
             random_suffix: Some("prop01".to_owned()),
             force_new: true,
             agent_id: Some("anima".to_owned()),
@@ -458,12 +493,12 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
         second
             .aliases
             .iter()
-            .filter(|alias| alias.as_str() == "DAY-08-05-2026")
+            .filter(|alias| alias.as_str() == format!("DAY-{day_id}"))
             .count(),
         1
     );
     assert_eq!(second.session_id, runtime.context.session_id);
-    assert_eq!(second.day_id.as_deref(), Some("08-05-2026"));
+    assert_eq!(second.day_id.as_deref(), Some(day_id.as_str()));
     assert_eq!(second.active_agent_id, "anima");
     assert_eq!(second.runtime_cwd.as_deref(), Some(repo.to_str().unwrap()));
     assert_eq!(second.vault_root.as_deref(), Some(vault.to_str().unwrap()));
@@ -499,7 +534,7 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
                 && event.payload["sessionId"] == runtime.context.session_id
         })
         .expect("PI propagation should publish a session_surface event");
-    assert_eq!(session_surface_event.payload["dayId"], "08-05-2026");
+    assert_eq!(session_surface_event.payload["dayId"], day_id.as_str());
     assert_eq!(
         session_surface_event.payload["vaultNowPath"],
         runtime.context.now_path.to_str().unwrap()

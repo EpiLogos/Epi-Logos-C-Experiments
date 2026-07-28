@@ -1,3 +1,4 @@
+// S0 ADAPTER: Body/S/S0/portal-core (tunable registry) with Body/S/S5 (autoresearch + review) as the tuning authorities — a live gateway membrane over the registry, holding no tuning law itself.
 //! Coordinate: S0/M5-3' (tunability gateway adapter — 38.T06.8).
 //! Residency: Body/S/S0/epi-cli/src/gate.
 //! Position (#n): live gateway membrane over the portal-core tunable registry.

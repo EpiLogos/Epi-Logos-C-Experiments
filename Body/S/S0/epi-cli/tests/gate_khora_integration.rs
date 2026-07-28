@@ -1,5 +1,6 @@
 mod support;
 
+use chrono::{DateTime, Local, Utc};
 use epi_logos::{
     gate::{sessions::SessionStore, system},
     sesh::session::read_session_state,
@@ -11,6 +12,17 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
     let base_env = temp_env();
     let vault_root = base_env.repo_root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+
+    // `--now` is a real instant, so the ratified law applies twice
+    // (`src/vault/paths.rs`): the day folder is the LOCAL calendar day spelled
+    // MONTH-FIRST, and the NOW dir carries the LOCAL wall-clock stamp. Both are
+    // derived from that same instant here so the assertions hold in every
+    // timezone — the old literals `11-03-2026` / `20260311-091011` encoded both
+    // the pre-CHARTER day-first spelling and the author's UTC offset.
+    let now: DateTime<Utc> = "2026-03-11T09:10:11Z".parse().unwrap();
+    let local = now.with_timezone(&Local);
+    let day_id = local.format("%m-%d-%Y").to_string();
+    let session_id = format!("{}-kh0ra1", local.format("%Y%m%d-%H%M%S"));
 
     let init = run_epi(
         &[
@@ -32,14 +44,16 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
     );
 
     let khora = read_session_state(&env.repo_root).expect("session state should exist");
-    assert_eq!(khora.context.day_id, "11-03-2026");
+    assert_eq!(khora.context.session_id, session_id);
+    assert_eq!(khora.context.day_id, day_id);
+    // Present is FLAT: Empty/Present/{MM-DD-YYYY}/{session-id}/now.md
     assert_eq!(
         khora.context.now_path,
         vault_root
             .join("Empty")
             .join("Present")
-            .join("11-03-2026")
-            .join("20260311-091011-kh0ra1")
+            .join(&day_id)
+            .join(&session_id)
             .join("now.md")
     );
 

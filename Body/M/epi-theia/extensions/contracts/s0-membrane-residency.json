@@ -28,20 +28,34 @@
     "NOTE 2026-07-28: s0_does_not_introduce_new_downstream_service_law is currently RED with 6",
     "unannotated modules (gate/day_start.rs, gate/nara_close_bundle.rs, gate/epii_axiom.rs,",
     "gate/verifier.rs, gate/tuning.rs, gate/codon.rs). That predates Track 53 and is part of what",
-    "the drain resolves -- do not silence it by adding baseline entries."
+    "the drain resolves -- do not silence it by adding baseline entries.",
+    "",
+    "LINE CEILING added 2026-07-28 during T53.04. The file count alone is too coarse to",
+    "see a drain in progress: s1_hen.rs went from 978 lines to 110 when the s1'.* handlers",
+    "moved to hen-compiler-core, but it still names an S2 crate for the one composite that",
+    "legitimately stays, so the file count did not move at all. A ratchet that cannot see",
+    "real progress will not be trusted, and a ratchet that is not trusted gets raised.",
+    "Both numbers may only fall."
   ],
-  "roots": ["Body/S/S0/epi-cli/src/gate", "Body/S/S0/epi-cli/src/graph"],
+  "roots": [
+    "Body/S/S0/epi-cli/src/gate",
+    "Body/S/S0/epi-cli/src/graph"
+  ],
   "lawBearingFileCeiling": 59,
   "baseline": {
     "recordedAt": "2026-07-28",
     "tranche": "53.T53.02",
     "gate": 30,
     "graph": 29,
-    "note": "Residency baseline 2026-05-06 (c3f39763) was 41 files under gate/ alone; it had grown to 59 across gate+graph by the time this ratchet landed. That growth is the failure this file exists to make impossible."
+    "note": "Residency baseline 2026-05-06 (c3f39763) was 41 files under gate/ alone; it had grown to 59 files / 15,720 law-bearing code lines across gate+graph by the time this ratchet landed. That growth is the failure this file exists to make impossible. T53.04 took it to 14,940.",
+    "lawBearingLines": 15720,
+    "metric": "CODE lines only \u2014 blank lines and `//` comments excluded. Raw-line counting made the ratchet measure text rather than law: adding the `// S0 ADAPTER:` ownership annotation that s0_membrane_guardrails.rs requires raised the count by 3 and turned the gate red for documenting residency correctly. A gate that punishes the thing the architecture asks for gets raised rather than obeyed, so the metric was fixed instead of the ceiling."
   },
   "target": {
     "lawBearingFileCeiling": 0,
     "enforcedBy": "53.T53.11",
-    "note": "At zero the ceiling is redundant and the structural guard replaces it: gate/ holds only CLI wrappers, graph/ only argv-and-print."
-  }
+    "note": "At zero the ceiling is redundant and the structural guard replaces it: gate/ holds only CLI wrappers, graph/ only argv-and-print.",
+    "lawBearingLineCeiling": 0
+  },
+  "lawBearingLineCeiling": 14940
 }

@@ -550,6 +550,26 @@ mod t9_route_ownership_cross_walk {
             .to_path_buf()
     }
 
+    /// Source files that, between them, constitute the SERVED method surface.
+    ///
+    /// Track 53 changed what this means. It used to be "S0's dispatch match
+    /// arms" and nothing else. Now a method may instead be served by the
+    /// coordinate that owns it, registered into the S-root `MethodRegistry`
+    /// (T53.01) and routed by S3 (T53.03) — so a method's literal lives in that
+    /// coordinate's registration table rather than in an S0 arm.
+    ///
+    /// Both are legitimate; neither is a gap. What would be a gap is a method in
+    /// METHOD_NAMES that appears in NEITHER, which is still caught below.
+    ///
+    /// As T53.05–T53.08 drain the remaining coordinates, each adds its handler
+    /// table here. When the list is complete the S0 entry drops out entirely.
+    fn coordinate_handler_tables() -> &'static [&'static str] {
+        &[
+            // T53.04 — the `s1'.*` vault-governance methods.
+            "Body/S/S1/hen-compiler-core/src/s1_handlers.rs",
+        ]
+    }
+
     fn s0_server_source() -> String {
         // 17.T17.2 split gate/server.rs into gate/server/{mod, dispatch,
         // websocket, method_envelope, subscription, observability}.rs — the
@@ -591,6 +611,47 @@ mod t9_route_ownership_cross_walk {
     /// over-match — internal enum-tag matches (e.g. `"pending"` in retry
     /// state machines) appear too — so the cross-walk filters with a
     /// well-known internal-tag exempt list.
+    /// Methods a coordinate registers into the `MethodRegistry`.
+    ///
+    /// A registration table spells its methods as `("name", handler)` tuples,
+    /// not as `"name" =>` match arms, so it needs its own reader rather than a
+    /// loosened one — relaxing `extract_s0_dispatched_methods` to accept a
+    /// trailing comma would make every unrelated string literal in S0's server
+    /// look like a dispatched method.
+    fn coordinate_registered_methods() -> Vec<String> {
+        let mut out = Vec::new();
+        for rel in coordinate_handler_tables() {
+            let path = workspace_root().join(rel);
+            let src = fs::read_to_string(&path).unwrap_or_else(|e| {
+                panic!(
+                    "T9 cross-walk requires the coordinate handler table {} to be readable: {e}",
+                    path.display()
+                )
+            });
+            let mut found = 0usize;
+            for line in src.lines() {
+                let trimmed = line.trim_start();
+                let Some(rest) = trimmed.strip_prefix("(\"") else {
+                    continue;
+                };
+                let Some(end) = rest.find('"') else { continue };
+                // `("s1'.vault.read_file", read_file),`
+                if rest[end + 1..].trim_start().starts_with(',') {
+                    out.push(rest[..end].to_owned());
+                    found += 1;
+                }
+            }
+            assert!(
+                found > 0,
+                "T9 cross-walk read {} but found no (\"method\", handler) rows — the table \
+                 moved or changed shape, and silently finding nothing would let every method \
+                 it owns look undispatched",
+                path.display()
+            );
+        }
+        out
+    }
+
     fn extract_s0_dispatched_methods(src: &str) -> Vec<String> {
         // Crude tokenizer: find every quoted string, check if it's
         // followed (skipping whitespace) by `=>` or `|`.
@@ -757,7 +818,10 @@ mod t9_route_ownership_cross_walk {
     fn route_ownership_cross_walk_method_names_vs_s3_dispatch_vs_s0_dispatch() {
         let method_names: std::collections::BTreeSet<&str> = METHOD_NAMES.iter().copied().collect();
         let server_src = s0_server_source();
-        let raw_s0 = extract_s0_dispatched_methods(&server_src);
+        let mut raw_s0 = extract_s0_dispatched_methods(&server_src);
+        // A method served by its owning coordinate's registry table is served,
+        // exactly as one served by an S0 arm is (Track 53).
+        raw_s0.extend(coordinate_registered_methods());
         let internal: std::collections::BTreeSet<&str> =
             internal_state_tags().iter().copied().collect();
         let s3_only: std::collections::BTreeSet<&str> = s3_only_methods().iter().copied().collect();
