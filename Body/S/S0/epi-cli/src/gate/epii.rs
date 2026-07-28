@@ -82,6 +82,10 @@ fn deposit_view(item: &ReviewInboxItem, kind: &str) -> Value {
         "nowPath": field("now_path"),
         "sessionKey": field("session_key"),
         "inboxPath": field("inbox_path"),
+        // The claim half of a MediatedRunEvidencePacket. Null for a deposit
+        // filed without it — the Evidence fold then has no packet to compose,
+        // which is a different thing from a packet with empty anchors.
+        "evidenceAnchors": field("evidence_anchors"),
         "proposedAction": item.proposed_action
     })
 }

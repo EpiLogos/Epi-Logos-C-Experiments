@@ -112,6 +112,7 @@ fn anima_review_deposit_creates_inbox_item_without_resolution_authority() {
             now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
             session_key: Some("agent:anima:12-05-2026".to_owned()),
             vault_root: Some("Idea".to_owned()),
+            evidence_anchors: None,
             requires_human: true,
         })
         .expect("Anima deposit should create review item");
@@ -157,6 +158,7 @@ fn aletheia_improvement_deposit_creates_review_item_and_improvement_run() {
             now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
             session_key: Some("agent:aletheia:12-05-2026".to_owned()),
             vault_root: Some("Idea".to_owned()),
+            evidence_anchors: None,
             requires_human: false,
         })
         .expect("Aletheia improvement deposit should create linked run");

@@ -68,6 +68,19 @@ export interface DepositDraft {
     readonly privacyClass: string;
 }
 
+/**
+ * The claim half of an evidence packet, as the deposit carried it. Absent when
+ * the deposit is not evidence for a run — which is a different state from
+ * "present but empty", and the producer treats it as such.
+ */
+export interface EvidenceAnchors {
+    readonly candidateId: string;
+    readonly graphAnchor: string;
+    readonly reviewId: string;
+    readonly testAnchor: string;
+    readonly privacyClass: string;
+}
+
 /** One deposit as `s5'.epii.deposit.list` projects it back out. */
 export interface EvidenceDeposit {
     readonly itemId: string;
@@ -76,15 +89,39 @@ export interface EvidenceDeposit {
     readonly body: string;
     readonly status: string;
     readonly requiresHuman: boolean;
-    readonly createdAt: string;
+    /** Epoch millis. The review store stamps `created_at` as a `u128`
+     *  (`now_ms()`), and serde emits that as a JSON NUMBER — reading it as a
+     *  string yields empty for every live row while unit fixtures that use an
+     *  ISO string pass, because the emitter never produces one. Null only when
+     *  the wire genuinely carried no timestamp. */
+    readonly createdAtMs: number | null;
     readonly sourceAgent: string | null;
     readonly sourceCoordinate: string | null;
     readonly sessionKey: string | null;
     readonly artifactPath: string | null;
+    readonly evidenceAnchors: EvidenceAnchors | null;
 }
 
 function str(value: unknown): string | null {
     return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
+/** Epoch millis off the wire. The store stamps these as a Rust `u128`, so they
+ *  arrive as JSON numbers; a string is accepted too rather than dropped, since
+ *  either spelling names the same instant. */
+function epochMs(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return value;
+    }
+    if (typeof value === 'string' && value.trim().length > 0) {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) {
+            return parsed;
+        }
+        const dated = Date.parse(value);
+        return Number.isNaN(dated) ? null : dated;
+    }
+    return null;
 }
 
 /**
@@ -122,8 +159,64 @@ export function depositRequestFromDraft(
             kind: 'mediated_run_evidence'
         },
         ...(context.sessionKey ? { session_key: context.sessionKey } : {}),
+        // The claim half, carried STRUCTURALLY so the Evidence fold can compose
+        // a packet from it on the way back. The body copy above stays for a
+        // human reader; a producer must not have to parse prose.
+        evidence_anchors: {
+            candidate_id: draft.candidateId,
+            graph_anchor: draft.graphAnchor,
+            review_id: draft.reviewId,
+            test_anchor: draft.testAnchor,
+            privacy_class: draft.privacyClass
+        },
         requires_human: true
     };
+}
+
+/**
+ * The review-item id out of a `DepositReceipt`, or null.
+ *
+ * The id is NESTED: `DepositReceipt { review_item: Option<ReviewItemReceipt>,
+ * improvement_run, inbox_surface }` and `ReviewItemReceipt.item_id`
+ * (epii-agent-core/src/deposits.rs). Neither struct carries a serde rename, so
+ * those are the literal wire keys and there is no top-level `item_id` to read.
+ * A probe at the top level silently returns undefined on every real response,
+ * which is how a caller ends up reporting the author's own draft value back as
+ * the store's id.
+ */
+export function depositReceiptItemId(artifact: unknown): string | null {
+    if (typeof artifact !== 'object' || artifact === null) {
+        return null;
+    }
+    const receipt = (artifact as Record<string, unknown>).review_item;
+    if (typeof receipt !== 'object' || receipt === null) {
+        return null; // a deposit that created no review item has no id to report
+    }
+    return str((receipt as Record<string, unknown>).item_id);
+}
+
+/**
+ * The anchors, or null. PARTIAL anchors read as ABSENT rather than as anchors
+ * with blank fields: the packet validator requires every one of them to be a
+ * non-empty string, so a half-filled set would compose a packet that fails
+ * validation downstream instead of simply not being evidence here. S5 carries
+ * these snake_case (they are its own `EvidenceAnchors`), unlike the camelCase
+ * projection around them.
+ */
+function readAnchors(raw: unknown): EvidenceAnchors | null {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        return null;
+    }
+    const row = raw as Record<string, unknown>;
+    const candidateId = str(row.candidate_id);
+    const graphAnchor = str(row.graph_anchor);
+    const reviewId = str(row.review_id);
+    const testAnchor = str(row.test_anchor);
+    const privacyClass = str(row.privacy_class);
+    if (!candidateId || !graphAnchor || !reviewId || !testAnchor || !privacyClass) {
+        return null;
+    }
+    return { candidateId, graphAnchor, reviewId, testAnchor, privacyClass };
 }
 
 /**
@@ -161,11 +254,12 @@ export function readEvidenceDeposits(raw: unknown): readonly EvidenceDeposit[] {
             body: str(row.body) ?? '',
             status: str(row.status) ?? 'open',
             requiresHuman: row.requiresHuman === true,
-            createdAt: str(row.createdAt) ?? '',
+            createdAtMs: epochMs(row.createdAt),
             sourceAgent: str(row.sourceAgent),
             sourceCoordinate: str(row.sourceCoordinate),
             sessionKey: str(row.sessionKey),
-            artifactPath: artifact ? str(artifact.path) : null
+            artifactPath: artifact ? str(artifact.path) : null,
+            evidenceAnchors: readAnchors(row.evidenceAnchors)
         });
     }
     return read;

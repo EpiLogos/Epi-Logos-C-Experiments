@@ -267,6 +267,9 @@ impl EpiiAgentAccess {
                 "now_path": request.now_path,
                 "session_key": request.session_key,
                 "inbox_path": day_inbox_path(&request),
+                // The claim half of an evidence packet. Absent for a deposit
+                // that is not evidence for a run.
+                "evidence_anchors": request.evidence_anchors,
             }),
             proposed_action: Some(ReviewProposedAction {
                 kind: proposed_action_kind(&request.deposit_type).to_owned(),

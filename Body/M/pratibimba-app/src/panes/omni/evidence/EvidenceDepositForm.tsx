@@ -18,7 +18,11 @@ import { useState } from 'react';
 import { gateway } from '../../../bridge/gatewayHolder';
 import { useProvenanceStore, useSessionStore } from '../../../state/stores';
 import { MEDIATED_RUN_EVIDENCE_PACKET_REQUIRED_FIELDS } from '../evidenceShapes';
-import { DEPOSIT_METHOD, depositRequestFromDraft } from './evidenceDeposits';
+import {
+    DEPOSIT_METHOD,
+    depositReceiptItemId,
+    depositRequestFromDraft
+} from './evidenceDeposits';
 
 /** The author-supplied subset of the required-field contract. The rest
  *  (currentProfile / graphContext / sessionRuntime / semanticCandidates /
@@ -96,15 +100,22 @@ export function EvidenceDepositForm({
         gateway()
             .invoke(DEPOSIT_METHOD, depositRequestFromDraft(draft, { sessionKey }))
             .then(receipt => {
-                const ref =
-                    (receipt.artifact && typeof receipt.artifact === 'object'
-                        ? ((receipt.artifact as Record<string, unknown>).item_id ??
-                          (receipt.artifact as Record<string, unknown>).itemId ??
-                          (receipt.artifact as Record<string, unknown>).id ??
-                          (receipt.artifact as Record<string, unknown>).ref)
-                        : undefined) ?? draft.candidateId;
-                setSubmit({ kind: 'deposited', ref: String(ref) });
-                onDeposited?.(String(ref));
+                // The id is nested under `review_item` — see
+                // `depositReceiptItemId`. Reading it at the top level (as this
+                // did) always missed, so the fallback reported the author's own
+                // candidateId back as if it were the store's id.
+                const ref = depositReceiptItemId(receipt.artifact);
+                if (!ref) {
+                    // No review item means nothing to link to. Reporting the
+                    // draft's own value here would fabricate a receipt.
+                    setSubmit({
+                        kind: 'refused',
+                        reason: 'deposit returned no review item to reference'
+                    });
+                    return;
+                }
+                setSubmit({ kind: 'deposited', ref });
+                onDeposited?.(ref);
             })
             .catch(err => setSubmit({ kind: 'refused', reason: err instanceof Error ? err.message : String(err) }));
     };

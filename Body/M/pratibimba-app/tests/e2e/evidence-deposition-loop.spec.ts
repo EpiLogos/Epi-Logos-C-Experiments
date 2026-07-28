@@ -84,3 +84,76 @@ test('26.T26.4: a deposit made through the Evidence fold comes back out of it', 
     await expect(row).toContainText('M5-4');
     await expect(row).toContainText('Idea/Empty/Present/e2e-deposit.md');
 });
+
+test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands', async ({
+    page
+}) => {
+    // The packet PRODUCER end-to-end. Before it, the fold had no packet at all,
+    // so its close-paths could only have been exercised by fabricating one —
+    // the exact banned evidence class. Now the claim half (the deposit's
+    // anchors) and the run half (the live session genealogy) compose one.
+    const sessionId = `e2e-packet-${Date.now().toString(36)}`;
+    await page.goto('/');
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+
+    // A packet is anchored to a session AND a day. Without both, the producer
+    // composes nothing rather than inventing an anchor — so establish both for
+    // real: begin today (the day-now anchor), then adopt a session.
+    await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Now' }).first().click();
+    const beginToday = page.getByTestId('now-begin-today');
+    const nowPane = page.getByTestId('now-pane');
+    await expect(nowPane.or(beginToday).first()).toBeVisible({ timeout: 20_000 });
+    if (await beginToday.isVisible().catch(() => false)) {
+        await beginToday.click().catch(() => undefined);
+    }
+    await expect(nowPane).toBeVisible({ timeout: 20_000 });
+
+    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Sessions' }).click();
+    const existing = page.locator('.face-active [data-testid^="session-"]').first();
+    await expect(existing).toBeVisible({ timeout: 20_000 });
+    await existing.click();
+    await expect(page.getByTestId('status-session')).not.toHaveText('', { timeout: 10_000 });
+
+    await page
+        .locator('.face-active .flexlayout__border_button', { hasText: 'Evidence' })
+        .first()
+        .click();
+    await expect(page.getByTestId('evidence-panel')).toBeVisible();
+
+    await page.getByTestId('evidence-deposit-new').click();
+    const title = `e2e-packet-${sessionId}`;
+    for (const [field, value] of Object.entries({
+        title,
+        candidateId: 'cand-packet-1',
+        coordinate: 'M5-4',
+        sourceAnchor: 'Idea/Empty/Present/e2e-packet.md',
+        graphAnchor: 'bimba://M5-4/evidence',
+        reviewId: 'rev-packet-1',
+        testAnchor: 'tests/e2e/evidence-deposition-loop.spec.ts'
+    })) {
+        await page.getByTestId(`deposit-field-${field}`).fill(value);
+    }
+    await page.getByTestId('deposit-submit').click();
+    await expect(page.getByTestId('evidence-deposit-form')).toHaveCount(0, { timeout: 20_000 });
+
+    // THE PACKET. Anchored deposits compose one; un-anchored ones do not.
+    const packetRow = page.locator('[data-testid="evidence-packet-row"]', { hasText: title }).first();
+    await expect(packetRow).toBeVisible({ timeout: 20_000 });
+    await packetRow.click();
+
+    const view = page.getByTestId('evidence-packet-view');
+    await expect(view).toBeVisible();
+    // The review item id IS the packet id and its own S5 ref — a real reference,
+    // not a synthesised one.
+    await expect(page.getByTestId('evidence-s5-refs')).not.toHaveText('');
+    // The deposit is a real human-required gate landing, pending until resolved.
+    await expect(page.getByTestId('evidence-gate-landings')).toContainText('human-required');
+
+    // A CLOSE-PATH, exercised against a real packet for the first time: the
+    // tool-stream link carries THIS packet's id and activates that fold.
+    await page.getByTestId('evidence-open-tools').click();
+    await expect(page.getByTestId('shell')).toHaveAttribute(
+        'data-omnipanel-active-tab',
+        'tool-stream'
+    );
+});

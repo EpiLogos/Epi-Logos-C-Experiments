@@ -170,3 +170,60 @@ async fn an_unknown_status_is_refused_rather_than_silently_ignored() {
             .unwrap_or_else(|error| panic!("status {status} should be accepted: {error:?}"));
     }
 }
+
+// 26.T26.4 producer substrate: a MediatedRunEvidencePacket needs deposition
+// anchors that a dispatch run cannot know. They ride the deposit and have to
+// survive the review-store round trip, or the packet cannot be composed on the
+// far side.
+#[tokio::test]
+async fn evidence_anchors_survive_the_deposit_round_trip() {
+    let mut client = TestGatewayClient::connected_with_temp_store(19003).await;
+
+    let mut request = deposit("session-a", "review_item", "anchored-deposit");
+    request["evidence_anchors"] = json!({
+        "candidate_id": "cand-7",
+        "graph_anchor": "bimba://M5-4/evidence",
+        "review_id": "rev-7",
+        "test_anchor": "tests/e2e/evidence-deposition-loop.spec.ts",
+        "privacy_class": "safe-public-current-kernel-tick"
+    });
+    deposit_all(&mut client, &[request]).await;
+
+    let listed = client
+        .request("s5'.epii.deposit.list", json!({}))
+        .await
+        .expect("s5'.epii.deposit.list should be gateway-callable");
+
+    let anchors = &listed["deposits"][0]["evidenceAnchors"];
+    assert_eq!(anchors["candidate_id"], "cand-7");
+    assert_eq!(anchors["graph_anchor"], "bimba://M5-4/evidence");
+    assert_eq!(anchors["review_id"], "rev-7");
+    assert_eq!(
+        anchors["test_anchor"],
+        "tests/e2e/evidence-deposition-loop.spec.ts"
+    );
+    assert_eq!(anchors["privacy_class"], "safe-public-current-kernel-tick");
+}
+
+// A deposit that is not evidence for a run carries no anchors, and that has to
+// read as ABSENT rather than as a packet with empty ones.
+#[tokio::test]
+async fn a_deposit_without_anchors_reports_them_absent_rather_than_empty() {
+    let mut client = TestGatewayClient::connected_with_temp_store(19004).await;
+
+    deposit_all(
+        &mut client,
+        &[deposit("session-a", "review_item", "plain-deposit")],
+    )
+    .await;
+
+    let listed = client
+        .request("s5'.epii.deposit.list", json!({}))
+        .await
+        .expect("s5'.epii.deposit.list should be gateway-callable");
+
+    assert!(
+        listed["deposits"][0]["evidenceAnchors"].is_null(),
+        "an un-anchored deposit must not present as an anchored one"
+    );
+}

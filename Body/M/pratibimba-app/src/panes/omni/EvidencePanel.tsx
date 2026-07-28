@@ -16,7 +16,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
-import { useProvenanceStore } from '../../state/stores';
+import { SessionClient, type SessionRecord } from '../../bridge/sessionClient';
+import { useProvenanceStore, useSessionStore, useTickStore } from '../../state/stores';
+import { useProfileTick } from '../../state/useProfileTick';
+import { dispatchGenealogyFromSessions } from './dispatchGenealogyFromSessions';
 import type { MediatedRunEvidencePacket } from './evidenceShapes';
 import { EvidencePacketList } from './EvidencePacketList';
 import { EvidencePacketView } from './EvidencePacketView';
@@ -26,6 +29,11 @@ import {
     readEvidenceDeposits,
     type EvidenceDeposit
 } from './evidence/evidenceDeposits';
+import {
+    evidencePacketsFromDeposits,
+    type EvidencePacketContext
+} from './evidence/evidencePacketProducer';
+import type { DispatchGenealogyRecord } from './dispatchGenealogy';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 
@@ -33,11 +41,19 @@ const MEDIATOR_FILTERS = ['all', 'pi', 'anima', 'aletheia'] as const;
 const PRIVACY_FILTERS: readonly (PrivacyClassKind | 'all')[] = ['all', 'public', 'protected', 'private'];
 
 export function EvidencePanel({
-    packets = []
+    packets: injectedPackets,
+    genealogy = [],
+    packetContext
 }: {
-    /** The deposited packets. Empty until a real feed lands (honest empty). */
+    /** Overrides the live feed. Left undefined in the app; tests pass fixtures. */
     readonly packets?: readonly MediatedRunEvidencePacket[];
-}) {
+    /** Live run genealogy — the SAME records the Dispatch fold folds. */
+    readonly genealogy?: readonly DispatchGenealogyRecord[];
+    /** The live shell context a packet is anchored to. Without it no packet can
+     *  be composed, because a packet that invented its own session or profile
+     *  generation would anchor evidence to a moment that never happened. */
+    readonly packetContext?: EvidencePacketContext;
+} = {}) {
     const tab = useOmniPanelTabState('evidence');
     const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const selectTab = useOmniPanelSessionStore(s => s.selectTab);
@@ -50,6 +66,10 @@ export function EvidencePanel({
     // carries no dispatch trace, tool stream or gate landing, and inventing them
     // to fill a packet view is the fabrication this plan set exists to stop.
     const connected = useProvenanceStore(state => state.connection.connected);
+    const sessionKey = useSessionStore(state => state.sessionKey);
+    const dayNow = useSessionStore(state => state.dayNow);
+    const tick = useProfileTick();
+    const cachedProfile = useTickStore(state => state.profile);
     const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
     const [depositError, setDepositError] = useState('');
     const [reloads, setReloads] = useState(0);
@@ -81,6 +101,76 @@ export function EvidencePanel({
     }, [connected, reloads]);
 
     const refreshDeposits = useCallback(() => setReloads(count => count + 1), []);
+
+    // The run half. Read from the SAME session lineage the Dispatch fold folds
+    // (SessionClient -> dispatchGenealogyFromSessions), never a second source
+    // that could disagree with the tree the reader sees one tab away.
+    const [sessions, setSessions] = useState<SessionRecord[]>([]);
+    useEffect(() => {
+        if (!connected || genealogy.length > 0) {
+            return;
+        }
+        let disposed = false;
+        new SessionClient(gateway())
+            .list()
+            .then(records => {
+                if (!disposed) {
+                    setSessions(records);
+                }
+            })
+            // A session list this fold cannot read means no genealogy, which
+            // means packets without a recorded dispatch — not a broken fold.
+            .catch(() => undefined);
+        return () => {
+            disposed = true;
+        };
+    }, [connected, genealogy.length, reloads]);
+
+    const liveGenealogy = useMemo(
+        () => (genealogy.length > 0 ? genealogy : dispatchGenealogyFromSessions(sessions)),
+        [genealogy, sessions]
+    );
+
+    const liveContext = useMemo<EvidencePacketContext | undefined>(() => {
+        if (packetContext) {
+            return packetContext;
+        }
+        if (!sessionKey || !dayNow) {
+            // No session or no day anchor: a packet composed now would be
+            // anchored to a moment the shell cannot name.
+            return undefined;
+        }
+        return {
+            sessionKey,
+            dayNowContext: dayNow,
+            profileGeneration: tick.generation ?? 0,
+            // Two of the nine canonical readiness ids: a stale cached profile is
+            // still readable, it is just not current, and the packet says which.
+            bridgeReadinessHandle: cachedProfile?.stale
+                ? 'degraded_but_readable'
+                : 'ready_public_current',
+            currentProfile: (cachedProfile?.profile ?? {}) as Readonly<Record<string, unknown>>,
+            sessionRuntime: { sessionCount: sessions.length, graphRevision: tick.graphRevision }
+        };
+    }, [
+        packetContext,
+        sessionKey,
+        dayNow,
+        tick.generation,
+        tick.graphRevision,
+        cachedProfile,
+        sessions.length
+    ]);
+
+    // 26.T26.4 — the packet feed. Composed from the anchored deposits and the
+    // live run genealogy; a deposit without anchors yields no packet, and
+    // without shell context no packet can be anchored at all.
+    const packets = useMemo(
+        () =>
+            injectedPackets ??
+            (liveContext ? evidencePacketsFromDeposits(deposits, liveGenealogy, liveContext) : []),
+        [injectedPackets, deposits, liveGenealogy, liveContext]
+    );
 
     const mediatorFilter = tab.filters.mediator ?? 'all';
     const privacyFilter = (tab.filters.privacyClass ?? 'all') as PrivacyClassKind | 'all';

@@ -106,12 +106,27 @@ describe('EvidenceDepositForm — real deposit write, honest refusal', () => {
         // source_agent/source_coordinate/deposit_type/body/artifact — so every
         // real submit was refused by serde. The mock proved the form talks to a
         // mock. It now asserts the CONTRACT.
-        const invoke = vi.fn().mockResolvedValue({ artifact: { item_id: 'evd-42' } });
+        // The REAL DepositReceipt shape — the id is nested under `review_item`
+        // (epii-agent-core/src/deposits.rs). The previous mock returned a flat
+        // `{item_id}` the method cannot emit, so it certified a wire shape that
+        // does not exist and hid the fact that the form read the wrong level.
+        const invoke = vi.fn().mockResolvedValue({
+            artifact: {
+                review_item: {
+                    item_id: 'itm-42',
+                    source: 'human_gate',
+                    status: 'open',
+                    requires_human: true
+                },
+                improvement_run: null,
+                inbox_surface: { coordinate: "S5/S5'" }
+            }
+        });
         setGateway({ invoke } as never);
         connect(true);
         render(<EvidenceDepositForm initialDraft={fullDraft} />);
         fireEvent.click(screen.getByTestId('deposit-submit'));
-        await waitFor(() => expect(screen.getByTestId('deposit-ok').textContent).toContain('evd-42'));
+        await waitFor(() => expect(screen.getByTestId('deposit-ok').textContent).toContain('itm-42'));
 
         const [method, params] = invoke.mock.calls[0] as [string, Record<string, unknown>];
         expect(method).toBe("s5'.epii.deposit");

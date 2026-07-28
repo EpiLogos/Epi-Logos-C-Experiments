@@ -26,6 +26,25 @@ pub struct DepositArtifact {
     pub kind: Option<String>,
 }
 
+/// The deposition anchors a `MediatedRunEvidencePacket` requires and a dispatch
+/// run cannot know.
+///
+/// A run produces its own genealogy — who dispatched what, which tools were
+/// invoked, how the gates landed. It does NOT produce the claim being filed:
+/// which candidate this is evidence FOR, which review adjudicates it, which
+/// test pins it, where it sits in the graph. Those come from whoever files the
+/// evidence, so they arrive with the deposit and are carried on its
+/// `coordinate_context` — the run half and the claim half meet in the packet,
+/// and neither one invents the other.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EvidenceAnchors {
+    pub candidate_id: String,
+    pub graph_anchor: String,
+    pub review_id: String,
+    pub test_anchor: String,
+    pub privacy_class: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DepositRequest {
     pub source_agent: String,
@@ -34,6 +53,10 @@ pub struct DepositRequest {
     pub title: String,
     pub body: String,
     pub artifact: DepositArtifact,
+    /// Optional: a deposit that is not evidence for a run carries none, and the
+    /// Evidence fold simply has no packet to compose for it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub evidence_anchors: Option<EvidenceAnchors>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub day_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
