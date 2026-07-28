@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-28T11:16:09.354Z",
+  "generatedAt": "2026-07-28T11:19:53.222Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -393,7 +393,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "title": "Track 53 — S-Stack Residency Restoration: every method at its coordinate",
-      "checksum": "16cf4d51452f12cfe2ef41dcde8d9043de95b9866fe7d87b627dbb8e02c590eb"
+      "checksum": "d80a4d34b27412825499efeaaed61e6957a31839714ef25d09f5661fb33a5790"
     }
   ],
   "tasks": [
@@ -11026,7 +11026,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T53.08"
+        "53.T53.01"
       ],
       "writeScopes": [
         "Body/S/S0/epi-cli",
@@ -11042,13 +11042,12 @@
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
-      "dependsOn": [
-        "53.T53.01"
-      ],
+      "dependsOn": [],
       "writeScopes": [
+        ".codex/scripts/m-dev-plan-assess.mjs:341",
         "Body/S/S3/gateway/src/**"
       ],
-      "body": "3. **T53.03 — S3 takes its own control plane: protocol, routing, session, subscription**\n\n   Brief: `epi-cli/src/gate/server/{dispatch,subscription,websocket,mod}.rs` plus `session_store.rs` and `verifier.rs` are the gateway control plane — S3's by name and by canon. `dispatch.rs` alone is 2,019 lines and already borrows `epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry}` and `transcripts::append_orchestration_trace`, which is the seam this tranche completes. After it, S3 owns routing end to end and resolves handlers through the T53.1 registry, importing no implementation.\n   Build: move the control-plane modules into `Body/S/S3/gateway/src/`, replacing the per-method match arms with registry lookup by method name. The method→coordinate classification already lives in S3 (`classify_method`, `METHOD_DISPATCH_PLAN`) and becomes the routing authority. epi-cli retains only `epi gate …` CLI wrappers that spawn/talk to the gateway.\n   Depends on `53.T53.01`.\n   Verify: real behavioral/live-wire proof per Track 00 — the live-wire harness spawns the gateway and every currently-served method still answers identically (no wire change, gotcha 7); `plan.runs/gateway-method-audit.json` shows no method regressing from present to absent. verifier ≠ closer; evidence = fresh command output."
+      "body": "3. **T53.03 — S3 takes its own control plane: protocol, routing, session, subscription**\n\n   Brief: `epi-cli/src/gate/server/{dispatch,subscription,websocket,mod}.rs` plus `session_store.rs` and `verifier.rs` are the gateway control plane — S3's by name and by canon. `dispatch.rs` alone is 2,019 lines and already borrows `epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry}` and `transcripts::append_orchestration_trace`, which is the seam this tranche completes. After it, S3 owns routing end to end and resolves handlers through the T53.1 registry, importing no implementation.\n   Build: move the control-plane modules into `Body/S/S3/gateway/src/`, replacing the per-method match arms with registry lookup by method name. The method→coordinate classification already lives in S3 (`classify_method`, `METHOD_DISPATCH_PLAN`) and becomes the routing authority. epi-cli retains only `epi gate …` CLI wrappers that spawn/talk to the gateway.\n   Depends on `53.T53.01`.\n   Scheduling: independent — this tranche opens the drain and must not re-acquire `53.T53.02` as a mechanical predecessor. `addSequentialDependencies` (`.codex/scripts/m-dev-plan-assess.mjs:341`) chains every tranche onto its *numeric* predecessor on top of the authored `dependsOn`, so without this marker the re-sequencing above is silently undone by tranche numbering. The authored dependency on `53.T53.01` still holds; only the mechanical 02→03 edge is suppressed.\n   Verify: real behavioral/live-wire proof per Track 00 — the live-wire harness spawns the gateway and every currently-served method still answers identically (no wire change, gotcha 7); `plan.runs/gateway-method-audit.json` shows no method regressing from present to absent. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.04",
@@ -11141,7 +11140,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T53.02"
+        "53.T53.08"
       ],
       "writeScopes": [
         "scripts/lint-boundaries.mjs"
