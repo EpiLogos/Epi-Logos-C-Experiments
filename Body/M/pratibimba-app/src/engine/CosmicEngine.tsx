@@ -30,6 +30,7 @@ import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3Codo
 // three mounts without any of them claiming a slot.
 import { loadCosmicComposition } from '../composition/cosmicComposition';
 import { useCompositionProfile } from '../composition/compositionProfileContext';
+import { createKleinFlipChoreographyCarrier } from '../composition/kleinFlipChoreography';
 import { ownerOfMountedSlot } from '../composition/compositionLoad';
 import { useCoordinateStore } from '../state/stores';
 import {
@@ -981,6 +982,13 @@ export function CosmicEngine() {
             modulationEngine.register(clockCarrier),
             modulationEngine.register(planetsCarrier),
             modulationEngine.register(quintessenceCarrier),
+            // 29.T29.7 — the fold is already atomic across the three poles;
+            // this is the composition SAYING so. The two event types were
+            // declared in 29.11 and emitted by nothing, so the Dispatch Trace
+            // showed no fold at all.
+            modulationEngine.register(
+                createKleinFlipChoreographyCarrier('cosmic-engine.integrated')
+            ),
             modulationEngine.addRenderHook(() => {
                 // 4.3: redraw the clock-field overlay only when a new
                 // generation's state arrives (tick advance = perturbation)

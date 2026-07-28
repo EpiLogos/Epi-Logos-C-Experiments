@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T14:57:13.836Z",
+  "updatedAt": "2026-07-28T16:45:42.499Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14647,16 +14647,33 @@
       "blocker": null
     },
     "29.T29.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T16:45:42.457Z",
+      "claimedAt": "2026-07-28T16:28:45.414Z",
+      "completedAt": "2026-07-28T16:45:42.457Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T16:45:42.457Z",
+          "text": "The Klein-flip three-pole choreography, and what was genuinely missing from it. AUDIT FIRST per DR-FACE-7: the fold is ALREADY atomic and ALREADY timer-free - the modulation graph parses the Klein flip off the profile, flips valence and rotation axis together, stamps flipAtMs, dispatches ONE frame to every carrier, and deriveKlein turns that stamp into klein.foldProgress (0..1 folding, >1 settled) on the rAF loop. The spec's director-with-three-handles is carried by that one graph; rebuilding it would have been duplication. WHAT DID NOT EXIST: 29.11 declared composition.kleinflip.choreography.start and .end in the event vocabulary and NOTHING in the repository emitted either - the Dispatch Trace showed no fold, so no observer could tell whether the three poles moved together or at all. Same declared-and-never-emitted shape as portal.vak_eval and the slot law before 29.2. An observability carrier registered on the cosmic graph now emits at the two boundaries only, naming the poles the fold moved. It is a CARRIER and not a timer: .end fires on the frame where foldProgress first crosses 1, because 15.9's no-parallel-animation-timer law would be absurd to honour in the fold and break in the reporting - a fake-timer test asserts that constructing it and advancing 5s emits nothing. The phase rule is pure, so emission is testable with no clock. Boundary-only rule proven non-vacuous by injection: removing the guard reddens exactly the once-each and repeat-fold sequencing tests. A REAL REGRESSION I INTRODUCED AND THE E2E CAUGHT: the first cut declared layer 'observability' on the carrier, and the composition contract refused it (strata are L{n}-{name}), which took the entire cosmic WebGL surface down. jsdom never mounts WebGL so the 1742-test vitest gate stayed green, and app-smoke boots the default PERSONAL face so it never touched the cosmic surface - the first verification record PASSED on broken code. layer and surface declare which stratum a carrier RENDERS and this one renders nothing, so it declares neither; a test now pins that. Re-verified against the fix (verifier opus-verifier-t29-7b-20260728 != closer opus-mdev-29t297): app-test 1742, harness-selftest, gateway, gateway-contract, ta-onta, live-wire, app-smoke, app-build, app-typecheck, gateway-methods, carrier-tokens, honesty-lint all GREEN. UF proof: visual-panes (the cosmic surface this registers on) + single-clock, 8 passed laned against a spawned gateway. Claim used --allow-dirty: 48 tracked files were dirty from sibling lanes (evidence deposition, graph-services, gateway), none of them mine.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/visual-panes.spec.ts tests/e2e/single-clock.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 8,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/kleinFlipChoreography.ts",
+              "Body/M/pratibimba-app/src/composition/kleinFlipChoreography.test.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.7.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 77 dirty files.",
+      "owner": "opus-mdev-29t297",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T16:28:45.414Z",
+      "runId": "20260728T162845Z-29-T29.7",
       "worktree": null,
       "blocker": null
     },
@@ -27884,6 +27901,16 @@
       "leaseExpiresAt": "2026-07-28T17:35:19.090Z",
       "worktree": null,
       "completedAt": "2026-07-28T14:57:13.811Z"
+    },
+    {
+      "runId": "20260728T162845Z-29-T29.7",
+      "taskId": "29.T29.7",
+      "status": "done",
+      "startedAt": "2026-07-28T16:28:45.414Z",
+      "owner": "opus-mdev-29t297",
+      "leaseExpiresAt": "2026-07-28T19:28:45.414Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T16:45:42.457Z"
     }
   ],
   "activeRoute": {
