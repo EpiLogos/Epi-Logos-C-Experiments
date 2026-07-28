@@ -360,7 +360,7 @@ textarea {
   width: 20px;
   height: 20px;
   background: currentColor;
-  mask: url('./assets/coin-flip.svg') center / contain no-repeat;
+  mask: url('./assets/icons/coin-flip.svg') center / contain no-repeat;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1899,6 +1899,25 @@ textarea {
 
 .coordinate-family {
   font-weight: 700;
+}
+
+/* 30.9 family glyph: sized in `em` so it tracks the coordinate text at any
+   scale, painted as a mask over currentColor so it carries the same family
+   hue the text already resolved. Asset URL arrives as an inline mask-image. */
+.coordinate-family-glyph {
+  display: inline-block;
+  flex: none;
+  align-self: center;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.25em;
+  background: currentColor;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
 }
 
 .codon-string,

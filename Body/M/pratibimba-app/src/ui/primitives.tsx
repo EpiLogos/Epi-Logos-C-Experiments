@@ -27,6 +27,7 @@ import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { commands } from '../commands/registry';
 import { useProfileTick } from '../state/useProfileTick';
 import { FAMILY_HUES } from './tokens';
+import { familyLetterIcon, iconMaskStyle } from './iconography';
 import { coordinateAriaLabel } from './accessibility';
 import {
     readinessMeaning,
@@ -86,11 +87,15 @@ function unwrapWikilink(value: string): string {
         : trimmed;
 }
 
-/** Renders a coordinate with the shared family-tier tint, never a local hue. */
+/** Renders a coordinate with the shared family-tier tint, never a local hue.
+ *  The 30.9 family glyph precedes the text as a decorative mask that inherits
+ *  the same tint — one hue, two carriers. An unrecognised family letter renders
+ *  no glyph rather than borrowing another family's mark. */
 export function CoordinateString({ value }: { readonly value: string }) {
     const coordinate = unwrapWikilink(value);
     const family = coordinate.charAt(0).toUpperCase();
     const colour = FAMILY_HUES[family] ?? 'var(--ink-dim)';
+    const glyph = familyLetterIcon(family);
     return (
         <span
             className="coordinate-string"
@@ -99,6 +104,15 @@ export function CoordinateString({ value }: { readonly value: string }) {
             aria-label={coordinateAriaLabel(coordinate)}
             style={{ color: colour }}
         >
+            {glyph ? (
+                <span
+                    className="coordinate-family-glyph"
+                    data-testid="coordinate-family-glyph"
+                    data-icon={glyph}
+                    aria-hidden="true"
+                    style={iconMaskStyle(glyph)}
+                />
+            ) : null}
             <span className="coordinate-family" aria-hidden="true">{family || '?'}</span>
             {coordinate.slice(family ? 1 : 0)}
         </span>

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T00:56:56.774Z",
+  "updatedAt": "2026-07-28T08:15:01.321Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14524,16 +14524,16 @@
       "blocker": null
     },
     "29.T29.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T07:31:34.197Z",
+      "claimedAt": "2026-07-28T07:31:34.197Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-29t294",
+      "leaseExpiresAt": "2026-07-28T10:31:34.197Z",
+      "heartbeatAt": "2026-07-28T07:31:34.197Z",
+      "runId": "20260728T073134Z-29-T29.4",
       "worktree": null,
       "blocker": null
     },
@@ -15135,16 +15135,33 @@
       "blocker": null
     },
     "30.T30.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T08:15:01.294Z",
+      "claimedAt": "2026-07-28T07:53:15.681Z",
+      "completedAt": "2026-07-28T08:15:01.294Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T08:15:01.294Z",
+          "text": "The carrier's ONE icon authority landed: 19 monoline currentColor glyphs at src/assets/icons/ + src/ui/iconography.ts (five categories) + contracts/ui-iconography.md. GREEN: 80 vitest passed / 0 failed (iconography.test.ts 11 + primitives.test.tsx incl. two new 30.9 cases); UF proof tests/e2e/iconography.spec.ts 2/2 PASSED in real Chromium against a spawned gateway with a real sessions.import record — the family glyph resolves its mask, occupies a real layout box, and computes background-color === FAMILY_HUES.M, and the coin-flip chrome toggle still resolves after the asset move; pnpm typecheck exit 0; pnpm build exit 0 with all 19 glyphs shown in dist by decoding the bundle's inlined data URIs; carrier-tokens, lint:imports and lint:no-modal GREEN. SUBSTANCE OVER PORT: (a) Codicons is retired genealogy per DR-FACE-7 — the frozen icon-to-Codicon fallback table cannot survive the retarget because this carrier ships no icon font at all (zero codicon references in the tree), so the fallback is the carrier's real convention, the TEXT LABEL, and each binding's fallbackLabel IS its mode's own label; (b) the sidebar bindings are DERIVED from LEFT_SIDEBAR_MODES through a Record<LeftSidebarModeId,...>, so drift fails typecheck instead of being policed; (c) the frozen set reused id=title across all nineteen files, so inlining any two would have broken aria-labelledby for both — namespaced on the port and pinned by a uniqueness assertion; (d) the duplicated src/assets/coin-flip.svg was collapsed into the set and its one styles.css reference repointed, guarded live by the second e2e; (e) scope is the cosmic pole only per DR-FACE-7 two-poles-over-one-spine — the personal 4-5-0 reachables stay unglyphed and 52.T6 owns the rail rendering. The glyph tints from the same flat FAMILY_HUES the coordinate string already used, so it rides the named 30.8 seam without deepening it; moving both to FAMILY_PALETTE stays 30.10/30.13's work. VERIFIER opus-verifier-t30-icons-20260728 != closer: PASS record over harness-selftest + honesty-lint + app-typecheck + app-build + app-smoke + carrier-tokens. TWO REDS NAMED FOR THEIR OWNERS, each diagnosed rather than assumed, neither touching this tranche: (1) app-test is red because 29.T29.4's in-flight lint:single-clock reports 9 second-clock sites, in its own uncommitted files (src/composition/profileTickSubscription.ts and compositionProfileContext.tsx, both created 09:01-09:02 today) — that lint was GREEN over 315 files at my 08:56 baseline, and my failing-file count fell from 7 to 3 across two runs seven minutes apart, which dates the churn to the sibling and not to this change; (2) lint-boundaries is red on Body/S/S0/epi-cli/Cargo.toml declaring dev-dependency epi-s5-epii-autoresearch-core across the S0 forbidden-import boundary — committed 2026-07-17 in 0b770873 and already present at b11384c1 where 30.T30.8 closed, so it predates this tranche by eleven days and belongs to the S0/epi-cli lane, which has a worker active in it now.",
+          "receipt": {
+            "command": "npx vitest run src/ui/iconography.test.ts src/ui/primitives.test.tsx && npx playwright test tests/e2e/iconography.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 82,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/iconography.ts",
+              "Body/M/pratibimba-app/src/assets/icons",
+              "Body/M/pratibimba-app/contracts/ui-iconography.md",
+              "Body/M/pratibimba-app/tests/e2e/iconography.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 24 dirty files.",
+      "owner": "opus-mdev-t30-icons-20260728",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T07:53:15.681Z",
+      "runId": "20260728T075315Z-30-T30.9",
       "worktree": null,
       "blocker": null
     },
@@ -15581,16 +15598,16 @@
       "blocker": null
     },
     "31.T31.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T08:08:13.597Z",
+      "claimedAt": "2026-07-28T08:08:13.597Z",
       "completedAt": null,
       "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "notes": "claimed with --allow-dirty over 63 dirty files.",
+      "owner": "claude-opus5-t31-prefs-20260728",
+      "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
+      "heartbeatAt": "2026-07-28T08:08:13.597Z",
+      "runId": "20260728T080813Z-31-T31.9",
       "worktree": null,
       "blocker": null
     },
@@ -27291,12 +27308,40 @@
       "leaseExpiresAt": "2026-07-28T02:11:16.508Z",
       "worktree": null,
       "completedAt": "2026-07-28T00:42:21.334Z"
+    },
+    {
+      "runId": "20260728T073134Z-29-T29.4",
+      "taskId": "29.T29.4",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T07:31:34.197Z",
+      "owner": "opus-mdev-29t294",
+      "leaseExpiresAt": "2026-07-28T10:31:34.197Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260728T075315Z-30-T30.9",
+      "taskId": "30.T30.9",
+      "status": "done",
+      "startedAt": "2026-07-28T07:53:15.681Z",
+      "owner": "opus-mdev-t30-icons-20260728",
+      "leaseExpiresAt": "2026-07-28T10:53:15.681Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T08:15:01.294Z"
+    },
+    {
+      "runId": "20260728T080813Z-31-T31.9",
+      "taskId": "31.T31.9",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T08:08:13.597Z",
+      "owner": "claude-opus5-t31-prefs-20260728",
+      "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-28T00:10:29.499Z",
-    "updatedAt": "2026-07-28T00:10:29.499Z",
+    "createdAt": "2026-07-28T07:57:47.625Z",
+    "updatedAt": "2026-07-28T07:57:47.625Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

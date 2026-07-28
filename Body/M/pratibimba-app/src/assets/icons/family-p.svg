@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="family-p-title">
+  <title id="family-p-title">P family</title>
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 27V5h8a6 6 0 0 1 0 12h-8" />
+  </g>
+</svg>

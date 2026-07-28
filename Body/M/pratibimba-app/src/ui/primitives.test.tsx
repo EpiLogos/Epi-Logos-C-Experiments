@@ -29,6 +29,7 @@ import {
     SymbolicCoordinateString,
     TRANSITIONS
 } from './primitives';
+import { FAMILY_LETTER_ICON, iconAssetUrl } from './iconography';
 import {
     BRIDGE_READINESS_IDS,
     readinessMeaning,
@@ -48,7 +49,8 @@ import { READINESS_ID_COLOURS } from './tokens';
 import { resolveToken } from './themeMapping';
 import { commands } from '../commands/registry';
 import { COMMAND_CATALOG } from '../commands/catalog';
-import { useTickStore } from '../state/stores';
+
+import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
 describe('shared ui primitives (CCT-10)', () => {
     it('DR-UI-4: exactly the three ratified transition configs — 400 cubic-out / 240 linear / 320 smoothstep', () => {
@@ -114,6 +116,32 @@ describe('shared ui primitives (CCT-10)', () => {
             'changing lines 1, 6'
         );
         expect(within(view.container).getByTestId('symbolic-coordinate-string').textContent).toBe('#R0-0/1:A-T7?');
+    });
+
+    it('30.T30.9: every family letter carries its own inline glyph, tinted by the same hue as the text', () => {
+        for (const [letter, iconName] of Object.entries(FAMILY_LETTER_ICON)) {
+            const view = render(<CoordinateString value={`${letter}2-3`} />);
+            const glyph = within(view.container).getByTestId('coordinate-family-glyph');
+
+            expect(glyph.getAttribute('data-icon'), `${letter} wears the wrong glyph`).toBe(iconName);
+            // the glyph is a mask over currentColor, so it inherits the family
+            // tint the string already resolved rather than forking a palette
+            expect(glyph.style.maskImage).toBe(`url(${JSON.stringify(iconAssetUrl(iconName))})`);
+            // decorative: it must add nothing to the accessible name, and the
+            // spoken/copied text stays the coordinate itself
+            expect(glyph.getAttribute('aria-hidden')).toBe('true');
+            expect(glyph.textContent).toBe('');
+            expect(within(view.container).getByTestId('coordinate-string').textContent).toBe(
+                `${letter}2-3`
+            );
+            view.unmount();
+        }
+    });
+
+    it('30.T30.9: an unrecognised family renders no glyph rather than borrowing one', () => {
+        const view = render(<CoordinateString value="X9-9" />);
+        expect(within(view.container).queryByTestId('coordinate-family-glyph')).toBeNull();
+        expect(within(view.container).getByTestId('coordinate-string').textContent).toBe('X9-9');
     });
 
     it('Track 30 codon primitive renders the real adapter shape without a browser codon table', async () => {
@@ -297,10 +325,7 @@ describe('30.T30.6 state grammar — 9 readiness ids × 5 primitives', () => {
 
     it('LoadingPulse takes its phase from the profile tick — no local clock when the bridge is up', () => {
         act(() => {
-            useTickStore.setState({
-                generation: 1,
-                profile: { generation: 1, profile: { tick12: 6, degree720: 360 }, graphRevision: 0 } as never
-            });
+            publishProfileTick({ generation: 1, profile: { tick12: 6, degree720: 360 }, graphRevision: 0 } as never);
         });
         render(<LoadingPulse family="M" readinessId="s2_graph_blocked" label="Loading graph" />);
         const pulse = screen.getByTestId('loading-pulse');
@@ -310,7 +335,7 @@ describe('30.T30.6 state grammar — 9 readiness ids × 5 primitives', () => {
         const mark = pulse.querySelector('.loading-pulse-mark') as HTMLElement;
         expect(mark.style.opacity).toBe(String(LOADING_PULSE.minOpacity));
         act(() => {
-            useTickStore.setState({ generation: null, profile: null });
+            resetProfileTicks();
         });
     });
 

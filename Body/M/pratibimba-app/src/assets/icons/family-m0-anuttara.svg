@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="family-m0-anuttara-title">
+  <title id="family-m0-anuttara-title">M0 Anuttara family</title>
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="16" cy="16" r="10" />
+    <circle cx="16" cy="16" r="3" />
+    <path d="M16 6v4M16 22v4M6 16h4M22 16h4" />
+  </g>
+</svg>
