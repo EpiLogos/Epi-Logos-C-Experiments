@@ -7,7 +7,7 @@
 //! (Body/S/S2/graph-services/src/coordinate.rs). The deep coordinate corpus these
 //! cases are drawn from lives under Idea/Bimba/Map/datasets/*-deep/.
 
-use epi_s1_hen_compiler_core::is_valid_coordinate;
+use epi_s1_hen_compiler_core::{is_valid_coordinate, is_valid_umbrella_designator};
 
 #[test]
 fn accepts_multi_level_dash_coordinates() {
@@ -96,5 +96,55 @@ fn still_rejects_malformed_segments() {
     .filter(|c| *c != "#")
     {
         assert!(!is_valid_coordinate(coord), "{coord} must be rejected");
+    }
+}
+
+// ── umbrella designators (`Sn/Sn'`) ───────────────────────────────────────
+//
+// Every umbrella spec in `Seeds/S/**` carries `coordinate: "Sn/Sn'"` — one
+// document owning both a coordinate and its inversion. All six failed
+// `epi vault frontmatter-validate` because the grammar knew no such form.
+//
+// It is deliberately NOT folded into `is_valid_coordinate`: an umbrella names
+// TWO coordinates and is not itself a node, so widening the coordinate grammar
+// would make it eligible for graph promotion/sync and would break the
+// five-parser parity note with `graph-services::coordinate`.
+
+#[test]
+fn accepts_the_umbrella_pair_every_s_spec_carries() {
+    for coord in ["S0/S0'", "S1/S1'", "S2/S2'", "S3/S3'", "S4/S4'", "S5/S5'", "M2/M2'"] {
+        assert!(
+            is_valid_umbrella_designator(coord),
+            "{coord} is the umbrella form an owning spec carries"
+        );
+    }
+}
+
+#[test]
+fn an_umbrella_is_not_itself_a_coordinate() {
+    // The whole point of the split: the graph grammar must still reject it.
+    for coord in ["S0/S0'", "S4/S4'"] {
+        assert!(
+            !is_valid_coordinate(coord),
+            "{coord} must stay out of the coordinate grammar (promotion/sync read it)"
+        );
+    }
+}
+
+#[test]
+fn rejects_a_pair_that_is_not_a_coordinate_and_its_own_inversion() {
+    for coord in [
+        "S4/S4",    // right side is not primed
+        "S4/M2'",   // right side is a different coordinate
+        "S4/S4''",  // double prime
+        "M6/M6'",   // base is out of QL range
+        "S4/",      // empty right
+        "/S4'",     // empty left
+        "S4",       // not a pair at all
+    ] {
+        assert!(
+            !is_valid_umbrella_designator(coord),
+            "{coord} must be rejected as an umbrella designator"
+        );
     }
 }

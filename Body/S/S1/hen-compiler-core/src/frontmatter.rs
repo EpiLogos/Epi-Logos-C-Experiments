@@ -2,7 +2,8 @@ use serde_yaml::{Mapping, Value};
 
 use crate::compile_plan::CompilerInvocation;
 use crate::coordinate::{
-    is_coordinate_key, is_valid_coordinate, validate_coordinate_key, FAMILIES,
+    is_coordinate_key, is_valid_coordinate, is_valid_umbrella_designator, validate_coordinate_key,
+    FAMILIES,
 };
 use crate::l_alignments::validate_l_alignments;
 use crate::residency::CompilerResidencyPlan;
@@ -184,7 +185,12 @@ pub fn validate_compile_artifact_frontmatter(
 fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
     if let Some(value) = map.get(Value::String("coordinate".to_owned())) {
         match value.as_str() {
-            Some(coord) if is_valid_coordinate(coord) => {}
+            // An owning/umbrella spec designates a coordinate AND its inversion
+            // (`S4/S4'`). That form is valid identity but is NOT a node, so it is
+            // accepted here and still refused by the coordinate grammar the graph
+            // promotion/sync path reads. `bimbaCoordinate` below stays strict for
+            // exactly that reason: it points at one node.
+            Some(coord) if is_valid_coordinate(coord) || is_valid_umbrella_designator(coord) => {}
             Some(coord) => result.errors.push(format!("Invalid coordinate: '{coord}'")),
             None => result.errors.push("coordinate must be a string".to_owned()),
         }

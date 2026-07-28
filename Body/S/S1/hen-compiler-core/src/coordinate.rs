@@ -70,6 +70,30 @@ pub fn is_valid_coordinate(coord: &str) -> bool {
     is_valid_family_coordinate_base(base)
 }
 
+/// Validate an UMBRELLA designator — the `Sn/Sn'` form an owning spec carries when
+/// one document designates both a coordinate and its inversion (`S4-SPEC.md` holds
+/// `coordinate: "S4/S4'"`, and every umbrella spec under `Seeds/S/**` does the same).
+///
+/// This is deliberately **not** folded into [`is_valid_coordinate`]. An umbrella
+/// designator names TWO coordinates and is not itself a node, so widening the
+/// coordinate grammar would make it eligible for graph promotion and sync
+/// (`graph_promotion::is_promotion_coordinate`, `graph_sync::graph_sync_intent`
+/// both read that predicate) and would break the five-implementation parity note
+/// with `graph-services::coordinate::CoordinateArrayParser`. Frontmatter identity
+/// accepts the umbrella; the graph grammar continues to reject it.
+///
+/// Accepted only when the right side is exactly the left side's inversion and the
+/// left side is a real coordinate — `S4/M2'` and `S4/S4` are not umbrellas.
+pub fn is_valid_umbrella_designator(coord: &str) -> bool {
+    let Some((base, inverted)) = coord.split_once('/') else {
+        return false;
+    };
+    if base.is_empty() {
+        return false;
+    }
+    inverted.strip_suffix('\'') == Some(base) && is_valid_coordinate(base)
+}
+
 /// Validate a family coordinate base (trailing prime already stripped): a family
 /// letter, an optional QL position (0-5), and an optional multi-level sub-path.
 fn is_valid_family_coordinate_base(base: &str) -> bool {

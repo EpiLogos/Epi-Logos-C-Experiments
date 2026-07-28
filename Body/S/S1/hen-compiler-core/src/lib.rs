@@ -29,7 +29,7 @@ pub use compile_plan::{
     compiler_invocation, plan_compile, CompilePlanRequest, CompilePlanResponse, CompilerInvocation,
     ExecutorKind, TargetAgent,
 };
-pub use coordinate::is_valid_coordinate;
+pub use coordinate::{is_valid_coordinate, is_valid_umbrella_designator};
 pub use entity_lifecycle::{
     c_layer_segment, entity_list_entry, entity_state_for_path, plan_entity_capture,
     plan_entity_classify, plan_entity_promote_to_type, plan_world_graduate, EntityCapturePlan,
