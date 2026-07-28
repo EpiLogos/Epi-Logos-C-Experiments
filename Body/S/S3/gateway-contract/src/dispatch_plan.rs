@@ -13,7 +13,7 @@ use crate::{
     S1_ENTITY_CLASSIFY_METHOD, S1_ENTITY_LIST_METHOD, S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
     S1_Q_ARTICULATION_ACCEPT_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
     S1_WORLD_LIST_ENTITIES_METHOD, S2_CODON_AA_LOOKUP_METHOD, S2_CODON_SCALAR_REF_READ_METHOD,
-    S2_GRAPH_ANANDA_POSITION_METHOD,
+    S2_GRAPH_ANANDA_POSITION_METHOD, S5_EPII_DEPOSIT_LIST_METHOD,
     S2_GRAPH_CORE65_AUDIT_METHOD, S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
     S2_GRAPH_LIST_BY_FILTER_METHOD, S2_GRAPH_LIST_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -695,6 +695,15 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s4'.orchestration.score",
         kind: MethodDispatchKind::S4OrchestrationAdapter,
         authority_path: "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts",
+        needs_extraction_to: None,
+    },
+    // 26.T26.10 — deposits read back. The write path already submits into the
+    // review store; this projects that store rather than keeping a second
+    // deposit ledger in S0, which is precisely how the two would drift.
+    MethodDispatchPlanEntry {
+        method: S5_EPII_DEPOSIT_LIST_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-agent-core::EpiiAgentAccess::review_inbox",
         needs_extraction_to: None,
     },
     // ----- S5 governance adapters -----

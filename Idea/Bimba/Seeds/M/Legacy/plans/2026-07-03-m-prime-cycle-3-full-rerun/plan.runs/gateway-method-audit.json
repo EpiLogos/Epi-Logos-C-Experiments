@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-28T11:38:33.333Z",
+ "generatedAt": "2026-07-28T11:46:24.568Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,9 +8,9 @@
  ],
  "summary": {
   "probed": 282,
-  "present": 105,
-  "absent": 177,
-  "absentFamilyLive": 116,
+  "present": 106,
+  "absent": 176,
+  "absentFamilyLive": 115,
   "absentFamilyDark": 61,
   "unknown": 0
  },
@@ -337,7 +337,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": null
+   "errorClass": "domain-error: live Kairos state unavailable: run 'epi nara kairos sync' first"
   },
   {
    "method": "kernelBridge.m2m3.lensOrbiterRelations()",
@@ -2414,17 +2414,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2433,17 +2433,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2452,17 +2452,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2471,17 +2471,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2490,17 +2490,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2509,17 +2509,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2528,17 +2528,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2547,17 +2547,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2576,22 +2576,10 @@
   },
   {
    "method": "s5'.epii.deposit.list",
-   "advertised": false,
-   "exists": false,
+   "advertised": true,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 30,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "s5'.epii.axiom_translation_history",
-    "s5'.epii.deposit",
-    "s5'.gnostic.candidates",
-    "s5'.gnostic.episode_search",
-    "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
-   ]
+   "errorClass": null
   },
   {
    "method": "s5'.epii.runtimeContext",
@@ -2599,17 +2587,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2618,17 +2606,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2637,17 +2625,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2663,17 +2651,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2682,17 +2670,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2715,17 +2703,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2734,17 +2722,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2767,17 +2755,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2786,17 +2774,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2840,17 +2828,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2859,17 +2847,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2885,17 +2873,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2946,17 +2934,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -2986,17 +2974,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -3005,17 +2993,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -3031,17 +3019,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {
@@ -3057,17 +3045,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 30,
+   "familyServed": 31,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
     "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks",
-    "s5'.gnostic.musical_transcript"
+    "s5'.gnostic.list_notebooks"
    ]
   },
   {

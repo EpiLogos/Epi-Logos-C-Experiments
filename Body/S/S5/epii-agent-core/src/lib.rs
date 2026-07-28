@@ -5,11 +5,17 @@ use epi_s5_epii_autoresearch_core::{
     ImprovementVector, OrchestrationRecord, PromoteRequest, PromotionPlan, ProposeRequest,
     RouteRecord, SurfacedCandidateReceipt, TargetSubsystem,
 };
-use epi_s5_epii_review_core::{
+// Re-exported, not merely imported: `review_inbox`, `submit_review`,
+// `resolve_review` and `review_history` are PUBLIC methods whose signatures name
+// these types, so a caller that could not name them could not call them. The
+// review store itself stays internal — only the vocabulary its public surface
+// speaks in crosses out.
+pub use epi_s5_epii_review_core::{
     GovernanceLevel, ReviewCategory, ReviewHistory, ReviewInbox, ReviewInboxFilter,
     ReviewInboxItem, ReviewPriority, ReviewProposedAction, ReviewResolution, ReviewResolveRequest,
-    ReviewSource, ReviewStatus, ReviewStore, ReviewSubmission,
+    ReviewSource, ReviewStatus, ReviewSubmission,
 };
+use epi_s5_epii_review_core::ReviewStore;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 

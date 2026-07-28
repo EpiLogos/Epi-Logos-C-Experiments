@@ -1895,6 +1895,11 @@ async fn legacy_dispatch_rpc(
         "s5'.gnostic.query_with_layers" => gnostic::query_with_layers(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        // 26.T26.10 — the read sibling; a projection of the review store the
+        // write path already submits into.
+        "s5'.epii.deposit.list" => epii::deposit_list(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(invalid_params_error),
         "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),

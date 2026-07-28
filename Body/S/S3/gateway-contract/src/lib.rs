@@ -103,6 +103,9 @@ pub const NARA_TRANSFORM_START_METHOD: &str = "nara.transform.start";
 pub const NARA_TRANSFORM_ADVANCE_METHOD: &str = "nara.transform.advance";
 pub const NARA_TRANSFORM_METHODS: &[&str] =
     &[NARA_TRANSFORM_START_METHOD, NARA_TRANSFORM_ADVANCE_METHOD];
+/// 26.T26.10 — the READ sibling of `s5'.epii.deposit`. Deposits land as review
+/// items, so this is a projection of the review store, never a second ledger.
+pub const S5_EPII_DEPOSIT_LIST_METHOD: &str = "s5'.epii.deposit.list";
 pub const S2_CODON_AA_LOOKUP_METHOD: &str = "s2.codon.aa_lookup";
 /// 24.T24.7 — scalar M3 reference resolution. Scalar BY CONSTRUCTION: the
 /// resolved facts are public identity, never a protected interpretation body.

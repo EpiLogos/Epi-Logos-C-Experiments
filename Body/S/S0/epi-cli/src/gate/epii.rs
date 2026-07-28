@@ -30,7 +30,9 @@
 use std::path::Path;
 
 use epi_s3_gateway_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY};
-use epi_s5_epii_agent_core::{DepositRequest, EpiiAgentAccess};
+use epi_s5_epii_agent_core::{
+    DepositRequest, EpiiAgentAccess, ReviewInboxFilter, ReviewInboxItem, ReviewStatus,
+};
 use serde_json::{json, Value};
 
 use crate::nara::kairos;
@@ -51,6 +53,106 @@ pub fn deposit(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, St
     let request: DepositRequest =
         serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
     serde_json::to_value(access(state_root).deposit(request)?).map_err(|err| err.to_string())
+}
+
+/// The read sibling of `deposit`. A deposit lands as a review item (see
+/// `EpiiAgentAccess::deposit`, which submits into the review store), so listing
+/// deposits is a PROJECTION of that store — S0 does not keep a second deposit
+/// ledger beside it, which is exactly how the two would drift.
+///
+/// A review item is a deposit iff its `coordinate_context` carries a
+/// `deposit_type`; items submitted through the plain review path have none and
+/// are not deposits, so they are skipped rather than relabelled.
+fn deposit_view(item: &ReviewInboxItem, kind: &str) -> Value {
+    let context = &item.coordinate_context;
+    let field = |key: &str| context.get(key).cloned().unwrap_or(Value::Null);
+    json!({
+        "itemId": item.item_id,
+        "depositType": kind,
+        "title": item.title,
+        "body": item.body,
+        "status": item.status,
+        "priority": item.priority,
+        "requiresHuman": item.requires_human,
+        "createdAt": item.created_at,
+        "sourceAgent": field("source_agent"),
+        "sourceCoordinate": field("source_coordinate"),
+        "artifact": field("artifact"),
+        "dayId": field("day_id"),
+        "nowPath": field("now_path"),
+        "sessionKey": field("session_key"),
+        "inboxPath": field("inbox_path"),
+        "proposedAction": item.proposed_action
+    })
+}
+
+fn parse_review_status(raw: &str) -> Result<ReviewStatus, String> {
+    match raw {
+        "open" => Ok(ReviewStatus::Open),
+        "resolved" => Ok(ReviewStatus::Resolved),
+        "deferred" => Ok(ReviewStatus::Deferred),
+        other => Err(format!(
+            "unknown status '{other}' — expected open, resolved or deferred"
+        )),
+    }
+}
+
+/// `s5'.epii.deposit.list` — 26.T26.10. Read-only.
+pub fn deposit_list(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
+    let status = optional_str(params, "status").map(parse_review_status).transpose()?;
+    let wanted_type = optional_str(params, "depositType");
+    let wanted_session = optional_str(params, "sessionKey");
+    let limit = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .map(|value| value as usize);
+
+    let inbox = access(state_root).review_inbox(ReviewInboxFilter {
+        status,
+        source: None,
+        // Deliberately NOT the store's limit. It truncates before the deposit
+        // filter below, so passing it through would answer a request for N
+        // deposits with fewer than N while still reporting success.
+        limit: None,
+    })?;
+
+    let mut deposits: Vec<Value> = Vec::new();
+    for item in &inbox.items {
+        let Some(kind) = item
+            .coordinate_context
+            .get("deposit_type")
+            .and_then(Value::as_str)
+        else {
+            continue; // a plain review item, not a deposit
+        };
+        if wanted_type.is_some_and(|want| want != kind) {
+            continue;
+        }
+        if let Some(want) = wanted_session {
+            let session = item
+                .coordinate_context
+                .get("session_key")
+                .and_then(Value::as_str);
+            if session != Some(want) {
+                continue;
+            }
+        }
+        deposits.push(deposit_view(item, kind));
+    }
+
+    // `matched` is the honest total BEFORE truncation, so a caller can tell a
+    // page from the whole set.
+    let matched = deposits.len();
+    if let Some(limit) = limit {
+        deposits.truncate(limit);
+    }
+    Ok(json!({
+        "deposits": deposits,
+        "matched": matched,
+        "returned": deposits.len(),
+        "governance_owner": "S5'",
+        "storage_substrate": "S2"
+    }))
 }
 
 pub fn runtime_context(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {

@@ -224,6 +224,23 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'gateway.s5-epii-deposit-list',
+        required: true,
+        covers: [],
+        describe:
+            "26.T26.10: the live gateway advertises the READ sibling of s5'.epii.deposit — the Evidence fold's feed",
+        assert(capture) {
+            const hello = capture.frames.find(frame => frame.type === 'hello-ok');
+            const methods = hello?.features?.methods;
+            if (!Array.isArray(methods)) {
+                return ['connect hello did not carry the live gateway method surface'];
+            }
+            return methods.includes("s5'.epii.deposit.list")
+                ? []
+                : ["live gateway does not advertise s5'.epii.deposit.list"];
+        }
+    },
+    {
         name: 'gateway.s2-codon-scalar-ref-read',
         required: true,
         covers: [],
