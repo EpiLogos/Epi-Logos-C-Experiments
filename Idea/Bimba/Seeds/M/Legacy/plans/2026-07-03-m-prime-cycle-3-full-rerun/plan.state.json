@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T10:25:11.747Z",
+  "updatedAt": "2026-07-28T11:11:22.330Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21381,16 +21381,32 @@
       "blocker": null
     },
     "53.T53.01": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-28T11:11:22.306Z",
+      "claimedAt": "2026-07-28T10:51:28.203Z",
+      "completedAt": "2026-07-28T11:11:22.306Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T11:11:22.306Z",
+          "text": "S-root method-handler port landed at Body/S/epi-kernel-contract/src/method_handler.rs: MethodHandler<C> trait (dyn-compatible via BoxFuture; context is a type parameter so no layer type is named at S-root), MethodRegistry with exact + namespace registration, and the MethodRequest/MethodOutcome/FollowUp/MethodError envelope carrying the frozen wire codes (invalid-params/not-found/internal). cargo test --manifest-path Body/S/epi-kernel-contract/Cargo.toml: 48 passed 0 failed (11 new), proving duplicate-registration refusal is non-displacing, dispatch-by-name round trip over two fake handlers, exact-beats-namespace and longest-prefix-wins, and unregistered-method returning None so S3 keeps ownership of the fallback wire error. Class-W live proof in the same record: verify-all --only ... live-wire,gateway-methods spawned a real gateway GREEN in 37.1s, so the port import did not disturb the frozen wire. Namespace registration was added after the first PASS because dispatch.rs:1763 delegates the whole nara.* namespace (gate/nara.rs, 2073 LOC) through a starts_with guard that an exact-name-only registry would have 404d. Zero new runtime deps (tokio is dev-only); lint-boundaries green with the allowlist unchanged at 13 entries, none added.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,ta-onta-types,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1150,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/epi-kernel-contract/src/method_handler.rs",
+              "Body/S/epi-kernel-contract/src/lib.rs",
+              "Body/S/epi-kernel-contract/Cargo.toml"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t53-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T10:51:28.203Z",
+      "runId": "20260728T105128Z-53-T53.01",
       "worktree": null,
       "blocker": null
     },
@@ -27668,12 +27684,22 @@
       "leaseExpiresAt": "2026-07-28T12:39:52.689Z",
       "worktree": null,
       "completedAt": "2026-07-28T10:16:53.557Z"
+    },
+    {
+      "runId": "20260728T105128Z-53-T53.01",
+      "taskId": "53.T53.01",
+      "status": "done",
+      "startedAt": "2026-07-28T10:51:28.203Z",
+      "owner": "claude-opus5-t53-impl",
+      "leaseExpiresAt": "2026-07-28T13:51:28.203Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T11:11:22.306Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-28T10:25:11.717Z",
-    "updatedAt": "2026-07-28T10:25:11.717Z",
+    "createdAt": "2026-07-28T10:40:56.714Z",
+    "updatedAt": "2026-07-28T10:40:56.714Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

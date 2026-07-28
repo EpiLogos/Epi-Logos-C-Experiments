@@ -56,6 +56,7 @@ pub mod deposit;
 pub mod diagnostic;
 pub mod envelope;
 pub mod ingestion;
+pub mod method_handler;
 pub mod poles;
 
 pub use analysis::{DominantPosition, PrehensiveExtractions, ResonanceAnalysis};
@@ -66,6 +67,10 @@ pub use deposit::{TrajectoryDeposit, TrajectoryDepositRef, TrajectoryElement};
 pub use diagnostic::{AnuttaraDiagnostic, AnuttaraExpression, AnuttaraParseError};
 pub use envelope::{KernelTickEnvelope, ENVELOPE_COORDINATE_OWNER, ENVELOPE_PRIVACY_CLASS};
 pub use ingestion::{IngestionSession, IngestionStatus};
+pub use method_handler::{
+    BoxFuture, DuplicateMethod, FollowUp, MethodError, MethodHandler, MethodOutcome,
+    MethodRegistry, MethodRequest, MethodResult,
+};
 pub use poles::{
     ChakralActivation, CodonClockCell, LensWeights12, MentalPoleState, NaraArticulation,
     PhysicalPoleState, TorusPoint, VerifierOutcome, WindingNumber, CHAKRAL_COUNT, LENS_WEIGHT_DIM,

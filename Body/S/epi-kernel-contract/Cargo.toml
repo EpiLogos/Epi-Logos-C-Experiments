@@ -17,3 +17,7 @@ uuid = { version = "1.18", features = ["v4"] }
 
 [dev-dependencies]
 serde_json = "1"
+# Test-only executor for the async `MethodHandler` port (T53.01). The crate
+# itself stays runtime-free — it declares the port, it does not run it — so
+# tokio is deliberately a dev-dependency and never a [dependencies] edge.
+tokio = { version = "1", features = ["macros", "rt"] }
