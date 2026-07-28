@@ -218,7 +218,15 @@ export function EvidencePanel({
         selectTab('review');
     };
     return (
-        <section className="evidence-panel" data-testid="evidence-panel">
+        <section
+            className="evidence-panel"
+            data-testid="evidence-panel"
+            // Why the packet list is empty is otherwise unknowable from the
+            // surface: no anchored deposit, or no shell context to anchor one to.
+            data-packet-context={liveContext ? 'ready' : 'absent'}
+            data-packet-count={packets.length}
+            data-anchored-deposits={deposits.filter(d => d.evidenceAnchors).length}
+        >
             <header className="evidence-header" data-testid="evidence-header">
                 <div className="evidence-title">
                     <strong>Evidence</strong>

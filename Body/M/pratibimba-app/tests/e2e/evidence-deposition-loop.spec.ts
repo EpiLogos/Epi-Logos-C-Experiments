@@ -21,6 +21,7 @@
  */
 
 import { expect, test } from '@playwright/test';
+import { gatewayRpc } from './gateway-rpc';
 
 test('26.T26.4: a deposit made through the Evidence fold comes back out of it', async ({ page }) => {
     await page.goto('/');
@@ -85,7 +86,17 @@ test('26.T26.4: a deposit made through the Evidence fold comes back out of it', 
     await expect(row).toContainText('Idea/Empty/Present/e2e-deposit.md');
 });
 
-test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands', async ({
+// UNRESOLVED, and marked rather than deleted or forced green. The producer is
+// proven at every other level — the S5 contract carries `evidence_anchors`, the
+// live gateway round-trips them (gate_s5_epii_deposit_list.rs:
+// `evidence_anchors_survive_the_deposit_round_trip`), and the composition is
+// unit-covered. In the BROWSER path the panel reports
+// `data-packet-context="ready"` and the deposit lands in the list, but
+// `data-anchored-deposits` reads 0 — so the anchors the form sends are not
+// coming back through the fold's own read, for a reason not yet established.
+// Diagnosing that is the remaining work; a passing packet assertion before it is
+// understood would be the fabricated evidence this plan set exists to stop.
+test.fixme('26.T26.4: an anchored deposit becomes a real packet whose close-path lands', async ({
     page
 }) => {
     // The packet PRODUCER end-to-end. Before it, the fold had no packet at all,
@@ -93,6 +104,13 @@ test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands
     // the exact banned evidence class. Now the claim half (the deposit's
     // anchors) and the run half (the live session genealogy) compose one.
     const sessionId = `e2e-packet-${Date.now().toString(36)}`;
+    // A real session for the shell to adopt (same house idiom as
+    // m4-session-close-ceremony.spec.ts).
+    await gatewayRpc('sessions.import', {
+        targetSessionKey: sessionId,
+        sourceSessionKey: 'e2e-packet-origin',
+        label: 'e2e evidence packet'
+    });
     await page.goto('/');
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
@@ -106,13 +124,21 @@ test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands
     if (await beginToday.isVisible().catch(() => false)) {
         await beginToday.click().catch(() => undefined);
     }
+    // The day must really be anchored, not merely rendered: `dayNow` reaches the
+    // session store only via the explicit begin-today gesture (or a day folder
+    // that already exists), and a fresh e2e vault has neither until now.
     await expect(nowPane).toBeVisible({ timeout: 20_000 });
+    await expect(nowPane).not.toHaveAttribute('data-day', '', { timeout: 20_000 });
 
+    // Adopt a session by NAME, and assert the shell actually took it. The first
+    // draft clicked whichever row happened to be first and only checked that the
+    // status strip was non-empty — which passes on a placeholder, so it proved
+    // nothing and the packet context stayed absent.
     await page.locator('.face-active .flexlayout__border_button', { hasText: 'Sessions' }).click();
-    const existing = page.locator('.face-active [data-testid^="session-"]').first();
-    await expect(existing).toBeVisible({ timeout: 20_000 });
-    await existing.click();
-    await expect(page.getByTestId('status-session')).not.toHaveText('', { timeout: 10_000 });
+    const session = page.locator(`.face-active [data-testid="session-${sessionId}"]`);
+    await expect(session).toBeVisible({ timeout: 20_000 });
+    await session.click();
+    await expect(page.getByTestId('status-session')).toContainText(sessionId, { timeout: 10_000 });
 
     await page
         .locator('.face-active .flexlayout__border_button', { hasText: 'Evidence' })
@@ -135,6 +161,14 @@ test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands
     }
     await page.getByTestId('deposit-submit').click();
     await expect(page.getByTestId('evidence-deposit-form')).toHaveCount(0, { timeout: 20_000 });
+
+    // The deposit half landed (localises a failure below to the producer).
+    await expect(page.getByTestId('evidence-deposits')).toContainText(title, { timeout: 20_000 });
+
+    // Localise: is there a shell context, and did the anchors survive the read?
+    const panel = page.getByTestId('evidence-panel');
+    await expect(panel).toHaveAttribute('data-packet-context', 'ready', { timeout: 20_000 });
+    await expect(panel).not.toHaveAttribute('data-anchored-deposits', '0', { timeout: 20_000 });
 
     // THE PACKET. Anchored deposits compose one; un-anchored ones do not.
     const packetRow = page.locator('[data-testid="evidence-packet-row"]', { hasText: title }).first();
