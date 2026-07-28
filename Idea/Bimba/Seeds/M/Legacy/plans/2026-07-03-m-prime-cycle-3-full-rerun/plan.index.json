@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-28T10:24:03.455Z",
+  "generatedAt": "2026-07-28T10:25:11.744Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -393,7 +393,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "title": "Track 53 — S-Stack Residency Restoration: every method at its coordinate",
-      "checksum": "f84d12d2f06b632d082a17b1ea1094fbcf5e172f893765dd984ab56b04b6bb21"
+      "checksum": "16cf4d51452f12cfe2ef41dcde8d9043de95b9866fe7d87b627dbb8e02c590eb"
     }
   ],
   "tasks": [
@@ -11001,9 +11001,9 @@
       "body": "6. **T6 — Wire the activity-bar mode registry and reconcile its contradictions.**\n\n   Brief: `LEFT_SIDEBAR_MODES` (`leftSidebarModes.ts:66`) declares five modes with per-layout availability, and `resolveModeForLayout` (`:135`) already implements the honest fallback for a mode that cannot survive into daily. None of it runs: `registerLeftSidebarModeCommands` (`:192`) has zero production callers and the rendered sidebar is hardcoded FlexLayout JSON (`App.tsx:180`). Two declared contradictions sit inside this: `smart-connections` declares `availableInLayouts: ['ide-deep']` while `CHROME-CONTRACT.md` lists `semanticConnections` as a live face-1 left-border tab reachable in daily; and the one `ACTIVE_LAYOUT_CLAIMS` row (`layoutClaims.ts:43`) is `code-pending` with a null receiver.\n   Build: make the left slot read the registry, so the two `ide-deep`-only modes become genuinely reachable in the deep layout and genuinely absent in daily. Resolve the `smart-connections` contradiction in whichever direction is correct and update the losing declaration in the same change. Register the mode commands in `COMMAND_CATALOG`. `shellSlotPolicy.ts:23` names `left` as `activity-bar-switched` — this tranche is what makes that policy true.\n   Depends on Track 00 Tranche 3 and Track 52 Tranche 4.\n   Verify: real behavioral proof per Track 00 — a UF e2e asserts the deep layout offers the deep-only modes and the daily layout does not, that switching layouts while on a deep-only mode falls back per `resolveModeForLayout` rather than rendering an empty slot, and that `activityBarMode` (a cross-layout identity field) is handled coherently by that fallback. verifier ≠ closer; evidence = fresh command output.\n\n---\n\n## Provenance of this track\n\nWritten 2026-07-25 from a source-level audit of `Body/M/pratibimba-app/src` against `M5'-SPEC.md`, `M'-SYSTEM-SPEC.md`, `M'-PORTAL-SPEC.md`, `M'-TAURI-PORT-SPEC.md` and the M1-4 QL reading of 4+2. Every divergence above carries its `file:line`; none is inferred from a coordinate's name.\n\nThe audit was triggered while closing the first tranche of the specced-surface gap-closure track: three of its remaining surfaces are canon-named as deep/4+2 surfaces, and there was no deep layer to land them in. The Architect ruled the layer gets built first.\n\nThis track claims the six divergences above are real and now scheduled. It does NOT claim the layout audit is exhaustive — `resolveM1SurfaceContext` was found by grepping for face/layout conflation, and T2 explicitly requires auditing for further sites before assuming it is the only one."
     },
     {
-      "id": "53.T53.1",
+      "id": "53.T53.01",
       "trackId": "53",
-      "tranche": "T53.1",
+      "tranche": "T53.01",
       "title": "The method-handler port at S-root, and the inversion that makes residency possible",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
@@ -11015,71 +11015,67 @@
         "Body/S/epi-kernel-contract",
         "Body/S/epi-kernel-contract/src/**"
       ],
-      "body": "1. **T53.1 — The method-handler port at S-root, and the inversion that makes residency possible**\n\n   Brief: A gateway that serves `s1'.*`, `s2.*`, `s3'.*`, `s4'.*`, `s5'.*` must reach every layer, and the boundary rule forbids any layer from reaching upward. The only structure that satisfies both is dependency inversion against a port that sits *below* everyone. `Body/S/epi-kernel-contract` is already ratified as the S-stack root contract crate (\"parent of all S layers, not an S0 sibling\", DR-S0-1) and is the correct home. This tranche defines the port only; no handler moves yet.\n   Build: in `Body/S/epi-kernel-contract/src/`, a `method_handler` module declaring the `MethodHandler` trait (method name → params → result/error), the `MethodRegistry` (name → handler, refusing duplicate registration by name), and the shared request/response/error envelope types the handlers exchange. It depends on nothing above S-root. Registration is by explicit call, never by inventory scan, so a handler that is not wired is absent rather than silently defaulted.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — `cargo test --manifest-path Body/S/epi-kernel-contract/Cargo.toml` green, including a duplicate-registration refusal and a dispatch-by-name round trip over two fake handlers; `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` still green. verifier ≠ closer; evidence = fresh command output."
+      "body": "1. **T53.01 — The method-handler port at S-root, and the inversion that makes residency possible**\n\n   Brief: A gateway that serves `s1'.*`, `s2.*`, `s3'.*`, `s4'.*`, `s5'.*` must reach every layer, and the boundary rule forbids any layer from reaching upward. The only structure that satisfies both is dependency inversion against a port that sits *below* everyone. `Body/S/epi-kernel-contract` is already ratified as the S-stack root contract crate (\"parent of all S layers, not an S0 sibling\", DR-S0-1) and is the correct home. This tranche defines the port only; no handler moves yet.\n   Build: in `Body/S/epi-kernel-contract/src/`, a `method_handler` module declaring the `MethodHandler` trait (method name → params → result/error), the `MethodRegistry` (name → handler, refusing duplicate registration by name), and the shared request/response/error envelope types the handlers exchange. It depends on nothing above S-root. Registration is by explicit call, never by inventory scan, so a handler that is not wired is absent rather than silently defaulted.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — `cargo test --manifest-path Body/S/epi-kernel-contract/Cargo.toml` green, including a duplicate-registration refusal and a dispatch-by-name round trip over two fake handlers; `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` still green. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.2",
+      "id": "53.T53.02",
       "trackId": "53",
-      "tranche": "T53.2",
+      "tranche": "T53.02",
       "title": "Split `epi-logos` into a composition-root binary and a clean S0 library",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T1",
-        "53.T53.11"
+        "53.T53.01"
       ],
       "writeScopes": [
         "Body/S/S0/epi-cli",
         "src/lib.rs"
       ],
-      "body": "2. **T53.2 — Split `epi-logos` into a composition-root binary and a clean S0 library**\n\n   Brief: The keystone. `epi-logos` is both the `epi` binary and the S0 library, and the library carries every upward edge — `src/lib.rs` re-exports `epi_s5_epii_agent_core`, `epi_s5_epii_autoresearch_core`, `epi_s5_epii_review_core` wholesale. Until the composition root is its own crate, the S0 library cannot satisfy the boundary rule regardless of how much code moves. After this tranche the binary may depend on every layer (it composes them; it is not a layer), and the S0 library's forbidden-import row must be satisfiable.\n   Build: separate the `[[bin]] epi` target into its own crate (`Body/S/S0/epi-cli` keeps the binary + command tree; the S0 library law moves to a sibling crate, or the binary crate takes the upward deps and the library keeps none — the split line is: anything that *decides* stays in a layer, anything that *wires* goes in the binary). Declare the binary crate in `rustSStackBoundary` explicitly as the composition root with an empty `forbiddenImports`, so its licence to depend downward on everything is stated in the contract rather than assumed. Delete the `pub use epi_s5_*::*` re-export blocks from the S0 library; consumers import from the owning crate.\n   Depends on Track 53 Tranche 1.\n   Verify: real behavioral/live-wire proof per Track 00 — `cargo build` + `cargo test` green from `Body/S/S0/epi-cli`; the boundary lint reports the S0 *library* row with zero forbidden edges (its allowlist entries removed, not re-pointed); `epi --help` and one live gateway call still work. verifier ≠ closer; evidence = fresh command output."
+      "body": "2. **T53.02 — Split `epi-logos` into a composition-root binary and a clean S0 library**\n\n   Brief: The keystone. `epi-logos` is both the `epi` binary and the S0 library, and the library carries every upward edge — `src/lib.rs` re-exports `epi_s5_epii_agent_core`, `epi_s5_epii_autoresearch_core`, `epi_s5_epii_review_core` wholesale. Until the composition root is its own crate, the S0 library cannot satisfy the boundary rule regardless of how much code moves. After this tranche the binary may depend on every layer (it composes them; it is not a layer), and the S0 library's forbidden-import row must be satisfiable.\n   Build: separate the `[[bin]] epi` target into its own crate (`Body/S/S0/epi-cli` keeps the binary + command tree; the S0 library law moves to a sibling crate, or the binary crate takes the upward deps and the library keeps none — the split line is: anything that *decides* stays in a layer, anything that *wires* goes in the binary). Declare the binary crate in `rustSStackBoundary` explicitly as the composition root with an empty `forbiddenImports`, so its licence to depend downward on everything is stated in the contract rather than assumed. Delete the `pub use epi_s5_*::*` re-export blocks from the S0 library; consumers import from the owning crate.\n   Depends on `53.T53.01`.\n   Verify: real behavioral/live-wire proof per Track 00 — `cargo build` + `cargo test` green from `Body/S/S0/epi-cli`; the boundary lint reports the S0 *library* row with zero forbidden edges (its allowlist entries removed, not re-pointed); `epi --help` and one live gateway call still work. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.3",
+      "id": "53.T53.03",
       "trackId": "53",
-      "tranche": "T53.3",
+      "tranche": "T53.03",
       "title": "S3 takes its own control plane: protocol, routing, session, subscription",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T2",
-        "53.T53.2"
+        "53.T53.02"
       ],
       "writeScopes": [
         "Body/S/S3/gateway/src/**"
       ],
-      "body": "3. **T53.3 — S3 takes its own control plane: protocol, routing, session, subscription**\n\n   Brief: `epi-cli/src/gate/server/{dispatch,subscription,websocket,mod}.rs` plus `session_store.rs` and `verifier.rs` are the gateway control plane — S3's by name and by canon. `dispatch.rs` alone is 2,019 lines and already borrows `epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry}` and `transcripts::append_orchestration_trace`, which is the seam this tranche completes. After it, S3 owns routing end to end and resolves handlers through the T53.1 registry, importing no implementation.\n   Build: move the control-plane modules into `Body/S/S3/gateway/src/`, replacing the per-method match arms with registry lookup by method name. The method→coordinate classification already lives in S3 (`classify_method`, `METHOD_DISPATCH_PLAN`) and becomes the routing authority. epi-cli retains only `epi gate …` CLI wrappers that spawn/talk to the gateway.\n   Depends on Track 53 Tranche 2.\n   Verify: real behavioral/live-wire proof per Track 00 — the live-wire harness spawns the gateway and every currently-served method still answers identically (no wire change, gotcha 7); `plan.runs/gateway-method-audit.json` shows no method regressing from present to absent. verifier ≠ closer; evidence = fresh command output."
+      "body": "3. **T53.03 — S3 takes its own control plane: protocol, routing, session, subscription**\n\n   Brief: `epi-cli/src/gate/server/{dispatch,subscription,websocket,mod}.rs` plus `session_store.rs` and `verifier.rs` are the gateway control plane — S3's by name and by canon. `dispatch.rs` alone is 2,019 lines and already borrows `epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry}` and `transcripts::append_orchestration_trace`, which is the seam this tranche completes. After it, S3 owns routing end to end and resolves handlers through the T53.1 registry, importing no implementation.\n   Build: move the control-plane modules into `Body/S/S3/gateway/src/`, replacing the per-method match arms with registry lookup by method name. The method→coordinate classification already lives in S3 (`classify_method`, `METHOD_DISPATCH_PLAN`) and becomes the routing authority. epi-cli retains only `epi gate …` CLI wrappers that spawn/talk to the gateway.\n   Depends on `53.T53.02`.\n   Verify: real behavioral/live-wire proof per Track 00 — the live-wire harness spawns the gateway and every currently-served method still answers identically (no wire change, gotcha 7); `plan.runs/gateway-method-audit.json` shows no method regressing from present to absent. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.4",
+      "id": "53.T53.04",
       "trackId": "53",
-      "tranche": "T53.4",
+      "tranche": "T53.04",
       "title": "S1 handlers return to S1",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T3",
-        "53.T53.3"
+        "53.T53.03"
       ],
       "writeScopes": [
         "Body/S/S1/hen-compiler-core"
       ],
-      "body": "4. **T53.4 — S1 handlers return to S1**\n\n   Brief: `epi-cli/src/gate/s1_hen.rs` implements `s1'.*` — governed vault reads/writes/moves, `s1'.base.ensure`, `s1'.q_articulation.accept`. Its own AGENTS.md line already calls it \"a thin gateway adapter\" whose law is Hen's; the adapter is the part that must live with Hen. Also drains the `epi_s1_hen_compiler_core` uses in `vault/frontmatter.rs`, `vault/mod.rs`, `nara/medicine_route.rs`, `nara/transform/lifecycle.rs`.\n   Build: an `s1_handlers` module in `Body/S/S1/hen-compiler-core` implementing the T53.1 port for the `s1'.*` methods; epi-cli's copy deleted. `vault/frontmatter.rs` becomes a mirror/compatibility reader over Hen's schema authority rather than a second one.\n   Depends on Track 53 Tranche 3.\n   Verify: real behavioral/live-wire proof per Track 00 — live gateway `s1'.*` round trips unchanged; `cargo test` green in `Body/S/S1/hen-compiler-core`; the epi-cli→`epi-s1-hen-compiler-core` edge is gone from the manifest. verifier ≠ closer; evidence = fresh command output."
+      "body": "4. **T53.04 — S1 handlers return to S1**\n\n   Brief: `epi-cli/src/gate/s1_hen.rs` implements `s1'.*` — governed vault reads/writes/moves, `s1'.base.ensure`, `s1'.q_articulation.accept`. Its own AGENTS.md line already calls it \"a thin gateway adapter\" whose law is Hen's; the adapter is the part that must live with Hen. Also drains the `epi_s1_hen_compiler_core` uses in `vault/frontmatter.rs`, `vault/mod.rs`, `nara/medicine_route.rs`, `nara/transform/lifecycle.rs`.\n   Build: an `s1_handlers` module in `Body/S/S1/hen-compiler-core` implementing the T53.1 port for the `s1'.*` methods; epi-cli's copy deleted. `vault/frontmatter.rs` becomes a mirror/compatibility reader over Hen's schema authority rather than a second one.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live gateway `s1'.*` round trips unchanged; `cargo test` green in `Body/S/S1/hen-compiler-core`; the epi-cli→`epi-s1-hen-compiler-core` edge is gone from the manifest. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.5",
+      "id": "53.T53.05",
       "trackId": "53",
-      "tranche": "T53.5",
+      "tranche": "T53.05",
       "title": "S2 takes the graph: 28 files of substrate plus its handlers",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T3",
-        "53.T53.4"
+        "53.T53.04"
       ],
       "writeScopes": [
         "Body/S/S2/graph-schema",
@@ -11087,19 +11083,18 @@
         "src/graph/**",
         "src/graph/schema.rs"
       ],
-      "body": "5. **T53.5 — S2 takes the graph: 28 files of substrate plus its handlers**\n\n   Brief: The largest single relocation. `epi-cli/src/graph/**` is 28 files and ~31 of the `epi_s2_graph_services` references — client, schema, cypher, sync orchestration, retrieval, embeddings, alignment, doctor. This is Parashakti/GraphRAG law resident in the CLI. `gate/graph.rs` is its gateway face. The Seeds audit already flags the schema drift here (`src/graph/schema.rs` creating an old 768-dim index against a 3072-dim canon) — moving it to the S2 authority is what lets that stop being two schemas.\n   Build: move `src/graph/**` law into `Body/S/S2/graph-services/src/` (consolidating schema under `Body/S/S2/graph-schema` per the S2 locked target); `gate/graph.rs` becomes an `s2_handlers` module in graph-services implementing the port; epi-cli keeps `epi graph …` argv-and-print wrappers only. Drains `epi_s2_graph_schema` (`graph/mod.rs`, `graph/meta.rs`) and the `core/knowing` graph uses.\n   Depends on Track 53 Tranche 3.\n   Verify: real behavioral/live-wire proof per Track 00 — `graph-live` suite green against real Neo4j; live `s2.*` methods unchanged; `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml` green; both epi-cli→S2 edges gone. verifier ≠ closer; evidence = fresh command output."
+      "body": "5. **T53.05 — S2 takes the graph: 28 files of substrate plus its handlers**\n\n   Brief: The largest single relocation. `epi-cli/src/graph/**` is 28 files and ~31 of the `epi_s2_graph_services` references — client, schema, cypher, sync orchestration, retrieval, embeddings, alignment, doctor. This is Parashakti/GraphRAG law resident in the CLI. `gate/graph.rs` is its gateway face. The Seeds audit already flags the schema drift here (`src/graph/schema.rs` creating an old 768-dim index against a 3072-dim canon) — moving it to the S2 authority is what lets that stop being two schemas.\n   Build: move `src/graph/**` law into `Body/S/S2/graph-services/src/` (consolidating schema under `Body/S/S2/graph-schema` per the S2 locked target); `gate/graph.rs` becomes an `s2_handlers` module in graph-services implementing the port; epi-cli keeps `epi graph …` argv-and-print wrappers only. Drains `epi_s2_graph_schema` (`graph/mod.rs`, `graph/meta.rs`) and the `core/knowing` graph uses.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — `graph-live` suite green against real Neo4j; live `s2.*` methods unchanged; `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml` green; both epi-cli→S2 edges gone. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.6",
+      "id": "53.T53.06",
       "trackId": "53",
-      "tranche": "T53.6",
+      "tranche": "T53.06",
       "title": "S3′ temporal, Redis and Graphiti handlers return to S3",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T5",
-        "53.T53.5"
+        "53.T53.05"
       ],
       "writeScopes": [
         "Body/S/S2/graph-services/Cargo.toml",
@@ -11107,54 +11102,51 @@
         "Body/S/S3/graphiti-runtime",
         "Body/S/S3/redis-context"
       ],
-      "body": "6. **T53.6 — S3′ temporal, Redis and Graphiti handlers return to S3**\n\n   Brief: `gate/temporal.rs`, `gate/graphiti.rs`, and the `epi_s3_redis_context` consumers in `graph/redis_cache.rs` + `graph/dev.rs` are S3′ living-context law. Canon is explicit that Redis-backed live context is S3′ (session, NOW, Day, kairos, arc) and that Graphiti's target is the S3 runtime library rather than the `epi gate graphiti` HTTP compatibility wrapper. Also closes the two S2→S3 edges (`graph-services/src/sync/graphiti_episode.rs` → gateway-contract, and `lib.rs`/`doctor.rs` → redis-context), which are 6 references total.\n   Build: `s3_handlers` in `Body/S/S3/gateway` for the temporal/graphiti methods; Redis consumers move to `Body/S/S3/redis-context`; the graph-services→S3 uses are inverted to the port or removed. The Graphiti HTTP wrapper is retired in favour of `Body/S/S3/graphiti-runtime`.\n   Depends on Track 53 Tranche 5.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s3'.temporal.*` and Graphiti round trips unchanged; the two `Body/S/S2/graph-services/Cargo.toml` allowlist entries deleted, not re-pointed. verifier ≠ closer; evidence = fresh command output."
+      "body": "6. **T53.06 — S3′ temporal, Redis and Graphiti handlers return to S3**\n\n   Brief: `gate/temporal.rs`, `gate/graphiti.rs`, and the `epi_s3_redis_context` consumers in `graph/redis_cache.rs` + `graph/dev.rs` are S3′ living-context law. Canon is explicit that Redis-backed live context is S3′ (session, NOW, Day, kairos, arc) and that Graphiti's target is the S3 runtime library rather than the `epi gate graphiti` HTTP compatibility wrapper. Also closes the two S2→S3 edges (`graph-services/src/sync/graphiti_episode.rs` → gateway-contract, and `lib.rs`/`doctor.rs` → redis-context), which are 6 references total.\n   Build: `s3_handlers` in `Body/S/S3/gateway` for the temporal/graphiti methods; Redis consumers move to `Body/S/S3/redis-context`; the graph-services→S3 uses are inverted to the port or removed. The Graphiti HTTP wrapper is retired in favour of `Body/S/S3/graphiti-runtime`.\n   Depends on `53.T53.05`.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s3'.temporal.*` and Graphiti round trips unchanged; the two `Body/S/S2/graph-services/Cargo.toml` allowlist entries deleted, not re-pointed. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.7",
+      "id": "53.T53.07",
       "trackId": "53",
-      "tranche": "T53.7",
+      "tranche": "T53.07",
       "title": "S5 handlers return to S5",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T3",
-        "53.T53.6"
+        "53.T53.06"
       ],
       "writeScopes": [],
-      "body": "7. **T53.7 — S5 handlers return to S5**\n\n   Brief: `gate/{improve,review,tuning,epii}.rs` implement `s5'.improve.*`, `s5'.review.*`, `s5'.tune.*` and the Epii deposit path; `core/knowing/{kbase,types,vimarsa}.rs` and `vimarsa/mod.rs` consume `epi_s5_kbase_core`; `portal/plugins/m5.rs` consumes autoresearch. Every one of these AGENTS.md lines already says the law is S5-owned and the module is \"a thin membrane\" — this tranche makes the membrane live where its law does. This is the tranche that would be *impossible* without T53.1, since S3 may not import S5 (gotcha 1).\n   Build: `s5_handlers` modules in `epii-autoresearch-core`, `epii-review-core`, `epii-agent-core` and `epi-kbase-core` implementing the port for their own methods; epi-cli copies deleted; `core/knowing` + `vimarsa` call the S5 crates through the binary's composition or move outright.\n   Depends on Track 53 Tranche 3.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s5'.*` round trips unchanged; `cargo test` green in each S5 crate; all four epi-cli→S5 edges gone from the manifest. verifier ≠ closer; evidence = fresh command output."
+      "body": "7. **T53.07 — S5 handlers return to S5**\n\n   Brief: `gate/{improve,review,tuning,epii}.rs` implement `s5'.improve.*`, `s5'.review.*`, `s5'.tune.*` and the Epii deposit path; `core/knowing/{kbase,types,vimarsa}.rs` and `vimarsa/mod.rs` consume `epi_s5_kbase_core`; `portal/plugins/m5.rs` consumes autoresearch. Every one of these AGENTS.md lines already says the law is S5-owned and the module is \"a thin membrane\" — this tranche makes the membrane live where its law does. This is the tranche that would be *impossible* without T53.1, since S3 may not import S5 (gotcha 1).\n   Build: `s5_handlers` modules in `epii-autoresearch-core`, `epii-review-core`, `epii-agent-core` and `epi-kbase-core` implementing the port for their own methods; epi-cli copies deleted; `core/knowing` + `vimarsa` call the S5 crates through the binary's composition or move outright.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s5'.*` round trips unchanged; `cargo test` green in each S5 crate; all four epi-cli→S5 edges gone from the manifest. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.8",
+      "id": "53.T53.08",
       "trackId": "53",
-      "tranche": "T53.8",
+      "tranche": "T53.08",
       "title": "The remaining tail: agent, bimba, portal, nara, tui",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T53.7",
-        "53.T7"
+        "53.T53.07"
       ],
       "writeScopes": [],
-      "body": "8. **T53.8 — The remaining tail: agent, bimba, portal, nara, tui**\n\n   Brief: What is left after the two clusters — `agent/{team,chain,tmux,subagents}.rs` and `bimba.rs`, `nara/arena.rs`, `portal/surfaces.rs` on `epi_s3_gateway_contract`/`epi_s3_gateway`, and `tui/knowing.rs` on graph-services. Roughly 24 references. Most are type-only uses of the gateway *contract* (envelopes, event kinds), which is the one case where the honest fix may be to move the shared type into `epi-kernel-contract` rather than to move the caller.\n   Build: per site, either (a) the type moves down to `epi-kernel-contract` where both sides may see it, or (b) the caller moves to its coordinate, or (c) the call goes through the registry. Record which of the three each site took and why — a one-line note per site in the tranche evidence, because this is the tail where \"it was easier\" silently becomes the next allowlist.\n   Depends on Track 53 Tranche 7.\n   Verify: real behavioral/live-wire proof per Track 00 — `cargo test` green across the workspace; `epi` CLI surfaces (agent, bimba, nara arena, portal, tui) still function live; zero remaining epi-cli→S1/S2/S3/S5 edges. verifier ≠ closer; evidence = fresh command output."
+      "body": "8. **T53.08 — The remaining tail: agent, bimba, portal, nara, tui**\n\n   Brief: What is left after the two clusters — `agent/{team,chain,tmux,subagents}.rs` and `bimba.rs`, `nara/arena.rs`, `portal/surfaces.rs` on `epi_s3_gateway_contract`/`epi_s3_gateway`, and `tui/knowing.rs` on graph-services. Roughly 24 references. Most are type-only uses of the gateway *contract* (envelopes, event kinds), which is the one case where the honest fix may be to move the shared type into `epi-kernel-contract` rather than to move the caller.\n   Build: per site, either (a) the type moves down to `epi-kernel-contract` where both sides may see it, or (b) the caller moves to its coordinate, or (c) the call goes through the registry. Record which of the three each site took and why — a one-line note per site in the tranche evidence, because this is the tail where \"it was easier\" silently becomes the next allowlist.\n   Depends on `53.T53.07`.\n   Verify: real behavioral/live-wire proof per Track 00 — `cargo test` green across the workspace; `epi` CLI surfaces (agent, bimba, nara arena, portal, tui) still function live; zero remaining epi-cli→S1/S2/S3/S5 edges. verifier ≠ closer; evidence = fresh command output."
     },
     {
-      "id": "53.T53.9",
+      "id": "53.T53.09",
       "trackId": "53",
-      "tranche": "T53.9",
+      "tranche": "T53.09",
       "title": "Delete the allowlist and the escape hatch",
       "effort": null,
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T53.8",
-        "53.T8"
+        "53.T53.08"
       ],
       "writeScopes": [
         "scripts/lint-boundaries.mjs"
       ],
-      "body": "9. **T53.9 — Delete the allowlist and the escape hatch**\n\n   Brief: The acceptance criterion for the whole track. `legacyForbiddenImportAllowlist` (13 entries) and the `--no-legacy-allowlist` flag are removed from `scripts/lint-boundaries.mjs` entirely, so `lint-boundaries` fails on **any** forbidden edge with no way to record an exception. A mechanism that can hold a permit is a mechanism that will hold one again.\n   Build: delete the `Set`, the `options.allowLegacyGaps` branch, the CLI flag and its usage text; the forbidden-import check becomes unconditional. Update the lint's own header comment to state that exceptions are not representable by design.\n   Depends on Track 53 Tranche 8.\n   Verify: real behavioral proof per Track 00 — `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` green with zero allowlisted forbidden-import gaps reported; injection-proven — re-adding one upward dependency to any layer manifest turns it red and naming the edge, then removing it returns green. verifier ≠ closer; evidence = fresh command output."
+      "body": "9. **T53.09 — Delete the allowlist and the escape hatch**\n\n   Brief: The acceptance criterion for the whole track. `legacyForbiddenImportAllowlist` (13 entries) and the `--no-legacy-allowlist` flag are removed from `scripts/lint-boundaries.mjs` entirely, so `lint-boundaries` fails on **any** forbidden edge with no way to record an exception. A mechanism that can hold a permit is a mechanism that will hold one again.\n   Build: delete the `Set`, the `options.allowLegacyGaps` branch, the CLI flag and its usage text; the forbidden-import check becomes unconditional. Update the lint's own header comment to state that exceptions are not representable by design.\n   Depends on `53.T53.08`.\n   Verify: real behavioral proof per Track 00 — `node Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs` green with zero allowlisted forbidden-import gaps reported; injection-proven — re-adding one upward dependency to any layer manifest turns it red and naming the edge, then removing it returns green. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.10",
@@ -11165,14 +11157,13 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T53.1",
-        "53.T9"
+        "53.T53.09"
       ],
       "writeScopes": [
         "Body/S/S0/epi-cli/AGENTS.md",
         "Idea/Bimba/Seeds/S/S-CODE-RESIDENCY-PLAN.md"
       ],
-      "body": "10. **T53.10 — Make the confusion unrepeatable: canon, DOX, and the runbook**\n\n    Brief: The architecture was not lost to a bad decision; it was lost to three documents that permitted deferral and one track that mistook splitting for placing. Fix the documents so no future agent can cite them the way this one was cited.\n    Build: (a) in `Idea/Bimba/Seeds/S/S-CODE-RESIDENCY-PLAN.md` and `S-CODE-RESIDENCY-AUDIT.md`, strike the \"may remain inside epi-cli\"/\"should later thin\" language and record that it was agent-authored, never ratified, and is superseded by this track — the docs keep their history but lose their permission. (b) In `Body/S/S0/epi-cli/AGENTS.md`, replace the module inventory's implication that `gate/` and `graph/` live here with the CLI-wrapper law and a pointer to the owning crates. (c) Add the runbook line agents actually need: **to add a gateway method, implement the handler in the owning coordinate's crate and register it — never in `epi-cli`** (this replaces the current \"adding a method touches ~9 places in `epi-cli/src/gate/server/dispatch.rs`\" folk knowledge). (d) Note in `CHARTER.md` that Track 17 was scoped as facade-splitting and did not perform residency, so its 28 done marks are not evidence of relocation.\n    Depends on Track 53 Tranche 9.\n    Verify: real behavioral proof per Track 00 — a grep-proven check that neither Seeds doc still carries the deferral phrasing as live guidance; `epi-cli/AGENTS.md` names the owning crates; verify-all green, honesty-lint clean. verifier ≠ closer; evidence = fresh command output."
+      "body": "10. **T53.10 — Make the confusion unrepeatable: canon, DOX, and the runbook**\n\n    Brief: The architecture was not lost to a bad decision; it was lost to three documents that permitted deferral and one track that mistook splitting for placing. Fix the documents so no future agent can cite them the way this one was cited.\n    Build: (a) in `Idea/Bimba/Seeds/S/S-CODE-RESIDENCY-PLAN.md` and `S-CODE-RESIDENCY-AUDIT.md`, strike the \"may remain inside epi-cli\"/\"should later thin\" language and record that it was agent-authored, never ratified, and is superseded by this track — the docs keep their history but lose their permission. (b) In `Body/S/S0/epi-cli/AGENTS.md`, replace the module inventory's implication that `gate/` and `graph/` live here with the CLI-wrapper law and a pointer to the owning crates. (c) Add the runbook line agents actually need: **to add a gateway method, implement the handler in the owning coordinate's crate and register it — never in `epi-cli`** (this replaces the current \"adding a method touches ~9 places in `epi-cli/src/gate/server/dispatch.rs`\" folk knowledge). (d) Note in `CHARTER.md` that Track 17 was scoped as facade-splitting and did not perform residency, so its 28 done marks are not evidence of relocation.\n    Depends on `53.T53.09`.\n    Verify: real behavioral proof per Track 00 — a grep-proven check that neither Seeds doc still carries the deferral phrasing as live guidance; `epi-cli/AGENTS.md` names the owning crates; verify-all green, honesty-lint clean. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.11",
@@ -11183,7 +11174,6 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "dependsOn": [
-        "53.T10",
         "53.T53.10"
       ],
       "writeScopes": [
@@ -11191,7 +11181,7 @@
         "src/graph/**",
         "src/ui/layoutId.test.ts"
       ],
-      "body": "11. **T53.11 — The structural guard that replaces vigilance**\n\n    Brief: Documents do not enforce. After the move, nothing but a test stops the next agent from adding `gate/handlers_for_something.rs` to epi-cli, because that is still the shortest path from a task to a working method. This tranche makes the shortest path the correct one and the wrong one fail loudly.\n    Build: a test in the epi-cli crate asserting that `src/gate/` contains only CLI wrappers and `src/graph/` only argv-and-print surfaces — concretely, that no file under them imports an S1/S2/S3/S5 crate, and that neither directory declares a gateway method handler. Pair it with the boundary lint (now hatch-free) so the two fail independently: the lint catches the manifest edge, the test catches a handler that sneaks in through the composition root. Prove it RED on an injected handler and GREEN on removal, per the house pattern (`src/ui/layoutId.test.ts`).\n    Depends on Track 53 Tranche 10.\n    Verify: real behavioral proof per Track 00 — the guard proven in both directions against the real tree; verify-all green including `lint-boundaries`; verifier ≠ closer; evidence = fresh command output."
+      "body": "11. **T53.11 — The structural guard that replaces vigilance**\n\n    Brief: Documents do not enforce. After the move, nothing but a test stops the next agent from adding `gate/handlers_for_something.rs` to epi-cli, because that is still the shortest path from a task to a working method. This tranche makes the shortest path the correct one and the wrong one fail loudly.\n    Build: a test in the epi-cli crate asserting that `src/gate/` contains only CLI wrappers and `src/graph/` only argv-and-print surfaces — concretely, that no file under them imports an S1/S2/S3/S5 crate, and that neither directory declares a gateway method handler. Pair it with the boundary lint (now hatch-free) so the two fail independently: the lint catches the manifest edge, the test catches a handler that sneaks in through the composition root. Prove it RED on an injected handler and GREEN on removal, per the house pattern (`src/ui/layoutId.test.ts`).\n    Depends on `53.T53.10`.\n    Verify: real behavioral proof per Track 00 — the guard proven in both directions against the real tree; verify-all green including `lint-boundaries`; verifier ≠ closer; evidence = fresh command output."
     }
   ]
 }
