@@ -42,6 +42,22 @@ async fn live_promotion_upsert_writes_coordinate_node_and_registered_relationshi
     let cleanup = |coord: &str| {
         query("MATCH (n {coordinate: $coordinate}) DETACH DELETE n").param("coordinate", coord)
     };
+    // Self-healing sweep: the coordinate suffix is derived from the clock, so
+    // per-run cleanup cannot reach a PREVIOUS run's node. If this test panics
+    // between promote_intent and its closing cleanup, the fixture is orphaned
+    // under a suffix nobody will ever compute again — that is how
+    // `M2-3-1-51000` (labels Psychoid/Coordinate/VaultArtifact, vault_path
+    // pointing at a file that does not exist) ended up loose in the live graph
+    // and looking like Hen was promoting vault artifacts in production.
+    //
+    // Scoped by the fixture's own marker hash, which only these fixtures carry,
+    // so it can never reach real data.
+    let _ = client
+        .run_query(
+            query("MATCH (n {content_hash: $hash}) DETACH DELETE n")
+                .param("hash", FIXTURE_CONTENT_HASH),
+        )
+        .await;
     let _ = client.run_query(cleanup(&source)).await;
     let _ = client.run_query(cleanup(&target)).await;
 
@@ -98,6 +114,8 @@ async fn live_promotion_upsert_writes_coordinate_node_and_registered_relationshi
     client.run_query(cleanup(&source)).await.unwrap();
     client.run_query(cleanup(&target)).await.unwrap();
 }
+
+const FIXTURE_CONTENT_HASH: &str = "sha256:live-contract";
 
 fn promotion_intent(
     coordinate: &str,

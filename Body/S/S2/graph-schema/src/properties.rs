@@ -121,27 +121,19 @@ pub const REQUIRED_RELATIONSHIP_EVIDENCE_PROPERTIES: &[&str] =
     &[REL_EVIDENCE_KIND_PROPERTY, REL_EVIDENCE_TEXT_PROPERTY];
 
 pub const COMPAT_COORDINATE_PROPERTIES: &[&str] = &[];
-pub const COMPAT_NODE_PROPERTIES: &[&str] = &[
-    "name",
-    "description",
-    "family",
-    "ql_position",
-    "layer",
-    "topo_mode",
-    "vault_path",
-    "essence",
-    "core_nature",
-    "formulation",
-    "structure",
-    "weave_state",
-    "inversion_state",
-    "flags",
-    "uuid",
-    "semantic_embedding",
-    "source_dataset",
-    "dataset_branch",
-    "dataset_branch_label",
-];
+// COMPAT_NODE_PROPERTIES is GONE. It listed the pre-2026-05-17 unprefixed keys
+// (`name`, `ql_position`, `layer`, `uuid`, …) as "grandfathered", but nothing
+// ever consumed it: `node_property_spec` searches only NODE_PROPERTY_SPECS
+// (see below), and the sole compat list wired into graph-services is the EMPTY
+// `COMPAT_COORDINATE_PROPERTIES` (`graph-services/src/lib.rs:174`).
+//
+// So a surviving legacy `ql_position` reported as unregistered anyway, and the
+// list was a promise the code did not keep. Deleted rather than wired up,
+// because the intent it encoded — tolerate the old keys forever — is not the
+// intent anyone holds now: step 4 of the 2026-05-17 migration
+// (`Idea/Bimba/Map/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher:96`)
+// is still commented out and human-gated, so the honest resolution is to finish
+// that sweep, not to grandfather the keys in perpetuity.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GraphPropertyOwner {

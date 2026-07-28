@@ -50,19 +50,44 @@ pub const DEFAULT_MODEL_ENV: &str = "GEMINI_EMBEDDING_MODEL";
 // the user never wrote.
 // ---------------------------------------------------------------------------
 
-/// Default `[gemini_embedding].canonical_context_limit_bytes` — 1 MiB.
+/// The canonical context limit is a property of the MODEL, not a constant.
 ///
-/// Chosen because it is the value every existing `[gemini_embedding]` config in
-/// this repository already carries
-/// (`Body/S/S2/graph-services/src/embeddings.rs:206`,
-/// `Body/S/S0/gemini-embedding/tests/accessor_contract.rs:165`), so adopting it
-/// as the fallback changes the chunking behaviour — and therefore the cached
-/// vectors — of exactly zero existing callers.
+/// It is the chunking threshold: how much text may go into one embedding call.
+/// That ceiling is whatever the model accepts, so hardcoding a single number is
+/// wrong in both directions — too low needlessly fragments a document into more
+/// vectors than the model required, too high gets the request rejected.
 ///
-/// It is a chunking threshold only: set too high, an over-long document is
-/// rejected by the Gemini API with an explicit error; it can never yield a
-/// silently wrong vector. That is what makes a default safe here.
-pub const DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES: usize = 1_048_576;
+/// Gemini embedding models take **2048 input tokens**. At the ~4 bytes/token
+/// rule of thumb for English prose that is ~8 KiB, which is what the TypeScript
+/// surface already used (`bimba-mcp/src/embeddings/gemini.ts:129`). The Rust
+/// side previously defaulted to 1 MiB — a 128x divergence on the SAME key in the
+/// SAME config section, meaning the two surfaces chunked the same document
+/// differently and produced different averaged vectors for it.
+///
+/// Resolved here in favour of the model's real limit. An explicit
+/// `canonical_context_limit_bytes` in config still wins, so anyone who has
+/// deliberately tuned it is unaffected.
+fn model_context_limit_bytes(model_version: &str) -> usize {
+    const TOKENS_TO_BYTES: usize = 4;
+    let model = model_version.to_ascii_lowercase();
+    // Known Gemini embedding families, by input-token ceiling.
+    let input_tokens = if model.contains("gemini-embedding") {
+        2_048
+    } else if model.contains("text-embedding-004") || model.contains("text-embedding-003") {
+        2_048
+    } else if model.contains("text-embedding") {
+        2_048
+    } else {
+        // Unknown model: stay at the smallest known ceiling rather than guess
+        // upward. Over-chunking costs extra calls; under-chunking costs a
+        // rejected request mid-corpus.
+        2_048
+    };
+    input_tokens * TOKENS_TO_BYTES
+}
+
+/// Fallback used only when the model is unknown AND config is silent.
+pub const DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES: usize = 8_192;
 
 /// Default `[gemini_embedding].max_rpm`. Conservative: too low only costs time.
 pub const DEFAULT_MAX_RPM: u32 = 60;
@@ -153,17 +178,18 @@ impl EmbeddingConfig {
                 ))
             })?;
 
+        // Config wins if set; otherwise derive from the model, because the
+        // ceiling belongs to the model rather than to this crate.
         let canonical_context_limit_bytes = gemini
             .canonical_context_limit_bytes
-            .unwrap_or(DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES);
+            .unwrap_or_else(|| model_context_limit_bytes(&model_version));
         // Validate at load rather than at first chunk: an explicitly wrong value
         // should fail before the caller starts doing side-effecting work, not
         // deep inside `embed_document`.
         if canonical_context_limit_bytes == 0 {
             return Err(invalid_config(format!(
                 "[gemini_embedding].canonical_context_limit_bytes must be greater than zero in {} \
-                 (omit the key entirely to accept the default of \
-                 {DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES})",
+                 (omit the key entirely to derive it from the model)",
                 path.display()
             )));
         }

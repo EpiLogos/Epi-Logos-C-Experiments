@@ -45,7 +45,7 @@ model_version = "gemini-embedding-2-preview"
 # vectors averaged. Chunk only beyond the model's canonical context limit — do
 # not lower this to "be safe", since extra chunking changes the resulting
 # vector.
-# canonical_context_limit_bytes = 1048576
+# canonical_context_limit_bytes = 8192
 
 # Requests per rolling 60s window, enforced client-side before dispatch.
 # Conservative by default; raise it to match your account's actual quota.
