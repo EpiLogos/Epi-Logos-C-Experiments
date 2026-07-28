@@ -44,6 +44,7 @@ import {
 } from './cosmicMath';
 import { modulationEngine, useEngineStore } from './modulation/engine';
 import { buildPentadicOverlay } from './cosmicPentadicOverlay';
+import { buildMatheme137Overlay, formatMatheme137Hover } from './matheme137Overlay';
 import { buildCouplingFlowOverlay } from './couplingFlowOverlay';
 import {
     evaluateCachedProfileIntegratedReadiness,
@@ -334,6 +335,10 @@ export function CosmicEngine() {
     }, [cached]);
     // 36.4: the pentadic 1-2-3 overlay reads the SAME single cached profile
     // subscription — one ProfileTick source for all three slots.
+    // 29.T29.8 — the Third Spanda annotation directive, off the same one
+    // cached profile. It states WHAT the annotation says and WHERE it belongs;
+    // the mesh is played-torus's (22.2), per the tranche's own division.
+    const matheme137 = useMemo(() => buildMatheme137Overlay(cached ?? null), [cached]);
     const pentadic = useMemo(
         () => buildPentadicOverlay((cached?.profile as Record<string, unknown> | null) ?? {}),
         [cached]
@@ -1133,6 +1138,17 @@ export function CosmicEngine() {
             ) : null}
             <div className="cosmic-engine-strip">
                 <span data-testid="engine-generation">⟳ {generation ?? '—'}</span>
+                <span
+                    data-testid="engine-matheme-137"
+                    data-parent-attribution={matheme137.parentAttribution}
+                    data-bridge={matheme137.bridge.label}
+                    data-spine-active={matheme137.spineActive ? 'true' : 'false'}
+                    data-mersenne-visible={matheme137.mersenne.visible ? 'true' : 'false'}
+                    data-kaprekar-chip={matheme137.kaprekarChip ? 'true' : 'false'}
+                    title={formatMatheme137Hover(matheme137)}
+                >
+                    {matheme137.sixtyFour.label} · {matheme137.seventyTwo.label}
+                </span>
                 <span
                     data-testid="engine-integrated-readiness"
                     data-state={integratedReadiness.state}

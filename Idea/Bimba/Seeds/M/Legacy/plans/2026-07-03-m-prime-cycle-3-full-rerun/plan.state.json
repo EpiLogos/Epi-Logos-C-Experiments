@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T17:38:00.198Z",
+  "updatedAt": "2026-07-28T18:36:15.017Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14682,16 +14682,33 @@
       "blocker": null
     },
     "29.T29.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T18:36:14.979Z",
+      "claimedAt": "2026-07-28T18:27:32.462Z",
+      "completedAt": "2026-07-28T18:36:14.979Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T18:36:14.979Z",
+          "text": "The 137 = 64 + 72 + 1 Third Spanda spine as an annotation DIRECTIVE on the cosmic composition: 64-side on the M3 lens-ring, 72-side on the M2 cymatic surface, the +1 bridge at the K2 equatorial seam carrying the translation rule, the 7-8-9 crown orbits, the Mersenne proof-mode label and the Kaprekar chip. All six of the tranche's acceptance points are covered by tests (a) canonical forms on hover (b) parentAttribution M1-5 (c) the 9_M2 = 8_M3 + 1_M1 bridge label (d) the 7-8-9 orbits activating on Additive137 (e) Mersenne hidden by default and visible in proof mode (f) the KaprekarPedagogyHit consumer. DIRECTIVE, NOT RENDER - the tranche says it outright, composition issues the directive and played-torus renders, so this states WHAT the annotation says and WHERE it belongs and draws no mesh; a test asserts the directive carries no coordinates or geometry, because a second renderer here would fork the surface that 22.2 owns. COMPOSED FROM THE LAW, NEVER RESTATED: every string and number comes from compositionMatheme.ts (Track 07.T7.2) - the five canonical forms, the QCD octet/singlet form, the translation-rule symbol, the 7-8-9 roles, and assertParentAttribution which THROWS on the forbidden M0-Anuttara-witness rather than rendering it. A second copy of 137 = 128 + 8 + 1 living in the overlay would be a place for the two to drift, and the whole point of that module is that the contract is checked by arithmetic rather than string match. NO FORKED PARSER: the skeleton-event read reuses m1KaprekarInspector's existing path. Additive137 is accepted by declared NAME only - 19.8 states a wire ordinal for KaprekarPedagogyHit alone, and guessing one for Additive137 would invent a wire contract; a test pins that an ordinal does not fire it. AUDIT FIRST per DR-FACE-7: the matheme law and its standalone panels (M3ThirdSpandaPanel, M1KaprekarInspector) were already carried and are not rebuilt; what was missing was the annotation on the composed surface. Rendered in the cosmic strip with the canonical forms as its hover. HAVING BROKEN THE COSMIC SURFACE IN 29.T29.7 WITH A CARRIER THE CONTRACT REFUSED, both real-surface checks were run this time rather than trusting jsdom: visual-panes proves the WebGL surface still mounts, and visual-regression proves the added strip span shifted no pixels (the strip is hidden at capture) - 13 passed laned. Independent verify-tranche PASS (verifier opus-verifier-t29-8-20260728 != closer opus-mdev-29t298) over the class gate minus app-ui-flow: app-test 1755, harness-selftest, gateway, gateway-contract, ta-onta, live-wire, app-smoke, app-build, app-typecheck, gateway-methods, carrier-tokens, honesty-lint all GREEN. Claim used --allow-dirty: the dirty files are sibling lanes, none mine.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/visual-panes.spec.ts tests/e2e/visual-regression.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/matheme137Overlay.ts",
+              "Body/M/pratibimba-app/src/engine/matheme137Overlay.test.ts",
+              "Body/M/pratibimba-app/src/engine/CosmicEngine.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.8.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 34 dirty files.",
+      "owner": "opus-mdev-29t298",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T18:27:32.462Z",
+      "runId": "20260728T182732Z-29-T29.8",
       "worktree": null,
       "blocker": null
     },
@@ -28037,6 +28054,16 @@
       "leaseExpiresAt": "2026-07-28T19:28:45.414Z",
       "worktree": null,
       "completedAt": "2026-07-28T16:45:42.457Z"
+    },
+    {
+      "runId": "20260728T182732Z-29-T29.8",
+      "taskId": "29.T29.8",
+      "status": "done",
+      "startedAt": "2026-07-28T18:27:32.462Z",
+      "owner": "opus-mdev-29t298",
+      "leaseExpiresAt": "2026-07-28T21:27:32.462Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T18:36:14.979Z"
     }
   ],
   "activeRoute": {
