@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T18:36:15.017Z",
+  "updatedAt": "2026-07-28T21:40:10.685Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13044,10 +13044,10 @@
       "blocker": null
     },
     "26.T26.4": {
-      "status": "review",
-      "updatedAt": "2026-07-28T16:49:16.952Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T21:40:10.658Z",
       "claimedAt": "2026-07-25T12:36:47.240Z",
-      "completedAt": null,
+      "completedAt": "2026-07-28T21:40:10.658Z",
       "evidence": [
         {
           "at": "2026-07-25T12:42:29.955Z",
@@ -13068,11 +13068,26 @@
         {
           "at": "2026-07-28T16:49:16.952Z",
           "text": "PRODUCER LANDED; one browser-path gap remains and is marked, not papered over. THE PRODUCER (evidencePacketProducer.ts): a packet has two halves and neither invents the other — the RUN half folds from the SAME live session lineage the Dispatch/Tool Stream folds read (dispatchGenealogyFromSessions), never a second source that could disagree one tab away; the CLAIM half (which candidate this is evidence FOR, which review adjudicates it, which test pins it) cannot be known by a dispatch, so it rides the deposit. SUBSTRATE: DepositRequest gains optional evidence_anchors, carried on coordinate_context (epii-agent-core) and projected back by deposit.list (gate/epii.rs). A deposit without anchors composes NO packet — a filed deposit is not evidence for a run, and blank anchors would assert a claim nobody made. Deliberately empty and visibly so: toolStream (no per-invocation feed exists on any wire — dispatchGenealogyFromSessions says so in its own header), axiomTranslationSteps, semanticCandidates. Real: gateLandings (each dispatch's capability outcome + the deposit's own human-required gate) and s5Refs (the review item it resolves against). REVIEW RAN (adversarial spec-vs-built, 17 agents, findings refuted by default) and confirmed TWO defects, both mine, both the SAME class I had just written a commit congratulating myself for finding: (a) DepositReceipt carries the id at review_item.item_id — my 'fix' probed item_id/itemId/id/ref at the TOP level, missed on every real response, so the fallback returned the author's own typed candidateId as the store's id; its mock returned a flat {item_id} the method cannot emit. (b) ReviewInboxItem.created_at is a u128 → JSON number; my string read yielded '' for every live row while an ISO-string fixture passed — a spelling the emitter never sends. Both fixed, fixtures rebuilt from the real structs, and the wrong reads pinned by NEGATIVE assertions. GREEN: epii-agent-core 9, live gate_s5_epii_deposit_list 7/7 (incl. evidence_anchors_survive_the_deposit_round_trip and the anchors-absent case), app-typecheck 0, full app vitest 1734/0, 4 carrier lints, app-build, and e2e evidence-deposition-loop test 1 PASSES on real Chromium + real spawned gateway. NAMED GAP: the packet e2e is test.fixme. New panel diagnostics (data-packet-context / data-anchored-deposits) localise it precisely — context reads 'ready' and the deposit lands in the list, but anchors read back 0 through the fold's own browser read, for a reason not yet established, while the identical round trip passes against the same gateway from Rust. Asserting a packet before knowing why it appears would be the fabricated evidence this plan set exists to stop, so the assertion is marked and the gap is visible. ALSO CORRECTED: my commit swept four staged deletions from Track 53 T53.08 (a bare git commit takes the whole index); reset --soft + --only restored them to the index unchanged."
+        },
+        {
+          "at": "2026-07-28T21:40:10.658Z",
+          "text": "PACKET E2E CLOSED — the gap was never in this tranche. The fixme claimed anchors did not survive the fold browser read for a reason not established. Root cause now established, not guessed: global-setup.ts REBUILDS epi-cli from current source before spawning the e2e gateway (the 24.T24.5 stale-binary law), so an e2e compiles whatever sits in the shared tree at that instant — and at that instant Track 53's relocation of the epii handler family was mid-flight and UNCOMMITTED with the projection line dropped from deposit_view. The projection's own header records it verbatim: 'T53.07: this line was dropped in the relocation and the live deposit round-trip caught it'. The browser really did receive rows without anchors; it was reading a sibling's half-landed refactor, while the Rust round trip disagreed because it ran against a whole tree. DIAGNOSIS METHOD: killed the payload, privacy-default, stale-binary and transport hypotheses by reading each path (coerceReceipt passes artifact through verbatim; GatewayClient.invoke sends params unreshaped), then drove the EXACT depositRequestFromDraft payload at a real spawned gateway over the same WebSocket frame the app sends — the wire returned evidenceAnchors complete and correctly spelled — then re-measured through real Chromium. On the committed tree the fold reads data-packet-context=ready, data-anchored-deposits=1, data-packet-count=1, and a packet row renders. test.fixme removed; the assertion asserts. GREEN: own e2e 2/2 on real Chromium + real spawned gateway (the deposit-through-the-form loop AND the packet close-path that activates tool-stream), app-test 1755/0, app-typecheck, app-build, app-smoke, carrier-tokens, honesty-lint, gateway 118, gateway-contract 93, gateway-methods, live-wire, ta-onta 800, redis-context 15, graphiti-runtime 16, spacetime 11, harness-selftest 114. UNRELATED RED, named precisely and not mine: verify-all app-ui-flow is red on exactly one test, m2-correspondence.spec.ts:33 (live-graph gate #2), and it reproduces in ISOLATION so it is not a parallel-lane collision. It is a live DATABASE DATA condition: the shared dev Neo4j holds 10 PlanetaryHarmonic nodes of which 0 carry l_2_vedic_mantra and 0 carry c_0_modal_signature, so the spec's 'Om ' and 'octave' assertions cannot pass; DivineName still carries 99/174 m_2_4_arabic_text, which is exactly why gate #1 passes and gate #2 fails. The same test PASSED at 2026-07-28T00:55Z in the 52.T1 verification record and fails at 21:32Z, so the properties were lost today, concurrent with a sibling's uncommitted graph seed/delete work in this tree. Track 26 touches no graph seeding, and a comment plus a fixme removal cannot alter Neo4j properties. Flagged for the graph lane rather than repaired under an active worker.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app test:e2e evidence-deposition-loop",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/evidence-deposition-loop.spec.ts",
+              "Body/M/pratibimba-app/src/panes/omni/evidence/evidencePacketProducer.ts",
+              "Body/S/S5/epii-agent-core/src/s5_handlers/epii.rs"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 53 dirty files.",
       "owner": "opus-mdev-frontend-uf",
-      "leaseExpiresAt": "2026-07-25T14:36:47.240Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T16:49:16.952Z",
       "runId": "20260725T123647Z-26-T26.4",
       "worktree": null,
@@ -14713,16 +14728,16 @@
       "blocker": null
     },
     "29.T29.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T21:11:58.134Z",
+      "claimedAt": "2026-07-28T21:11:58.134Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-29t9",
+      "leaseExpiresAt": "2026-07-29T00:11:58.134Z",
+      "heartbeatAt": "2026-07-28T21:11:58.134Z",
+      "runId": "20260728T211158Z-29-T29.9",
       "worktree": null,
       "blocker": null
     },
@@ -16028,16 +16043,16 @@
       "blocker": null
     },
     "32.T32.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T21:22:15.554Z",
+      "claimedAt": "2026-07-28T21:22:15.554Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-t32-grammar",
+      "leaseExpiresAt": "2026-07-28T23:22:15.554Z",
+      "heartbeatAt": "2026-07-28T21:22:15.554Z",
+      "runId": "20260728T212215Z-32-T32.5",
       "worktree": null,
       "blocker": null
     },
@@ -21794,6 +21809,76 @@
           }
         }
       ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "54.T54.01": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "54.T54.02": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "54.T54.03": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "54.T54.04": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null,
+      "blocker": null
+    },
+    "54.T54.05": {
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -28064,12 +28149,30 @@
       "leaseExpiresAt": "2026-07-28T21:27:32.462Z",
       "worktree": null,
       "completedAt": "2026-07-28T18:36:14.979Z"
+    },
+    {
+      "runId": "20260728T211158Z-29-T29.9",
+      "taskId": "29.T29.9",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T21:11:58.134Z",
+      "owner": "opus-mdev-29t9",
+      "leaseExpiresAt": "2026-07-29T00:11:58.134Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260728T212215Z-32-T32.5",
+      "taskId": "32.T32.5",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T21:22:15.554Z",
+      "owner": "opus-mdev-t32-grammar",
+      "leaseExpiresAt": "2026-07-28T23:22:15.554Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-28T13:16:01.647Z",
-    "updatedAt": "2026-07-28T13:16:01.647Z",
+    "createdAt": "2026-07-28T21:12:12.463Z",
+    "updatedAt": "2026-07-28T21:12:12.463Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
