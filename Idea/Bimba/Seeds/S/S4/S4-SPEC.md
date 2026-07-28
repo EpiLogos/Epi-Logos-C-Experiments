@@ -3,7 +3,7 @@ coordinate: "S4/S4'"
 c_4_artifact_role: "spec"
 c_1_ct_type: "CT1"
 c_3_created_at: "2026-04-25T00:00:00Z"
-c_3_updated_at: "2026-07-27T00:00:00Z"
+c_3_updated_at: "2026-07-28T00:00:00Z"
 c_0_source_coordinates:
   - "[[PROTOCOL S COORDINATE MODULE SPEC BUILD]]"
   - "[[S0-SPEC]]"
@@ -62,7 +62,7 @@ Within this S4' body, [[Pleroma]] must be treated as [[Anima]]'s executive capab
 
 ## M' Consumer Surfaces
 
-S4/S4' is consumed most directly by [[M5'-SPEC]] and the cross-cutting agent membrane in [[M'-SYSTEM-SPEC]]. The operative anchors for that surface are [[Body/S/S4/plugins/registry.jsonl]] and [[Body/S/S4/plugins/pleroma/capability-matrix.json]].
+S4/S4' is consumed most directly by [[M5'-SPEC]] and the cross-cutting agent membrane in [[M'-SYSTEM-SPEC]]. The operative anchors for that surface are `Body/S/S4/plugins/registry.jsonl` and `Body/S/S4/plugins/pleroma/capability-matrix.json` (filesystem paths, so backticks — they are not vault notes and a wikilink to them resolves to nothing).
 
 ### M' Shell Consumed Contract Closure - DR-M5-1 Rerun
 
@@ -140,20 +140,20 @@ The older files over-bind S4 to a particular harness: first [[Claude Code]], the
 
 The live S4 implementation is broad and uneven:
 
-- `epi-cli/src/agent/` implements managed agent install/doctor/spawn/attach/run/chat/verify-runtime, extension sync, agent registry, model registry, auth profiles, plugin/skill/subagent validation, hooks, team dispatch, chain runs, session lifecycle, [[Codex]] runtime install/doctor, and deterministic `epi agent vak evaluate`.
-- `.pi/extensions/ta-onta/composite-entry.ts` registers all six spine contributions and loads [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], and [[Aletheia]] extension tools into PI.
-- `.pi/extensions/ta-onta/anima/extension.ts` registers `vak_evaluate`, `anima_orchestrate`, `nous_disclose`, parallel/fusion dispatch tools, and injects the VAK skill stack at `before_agent_start`.
-- `.pi/extensions/ta-onta/anima/S4/` contains `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, and related execution primitives.
-- `.pi/extensions/ta-onta/anima/S4'/agents/` contains constitutional agent prompts for [[Anima]], [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], [[Sophia]] (the 6 constitutional CT roles: Nous=CT0, Logos=CT1, Eros=CT2, Mythos=CT3, Psyche=CT4a+CT4b, Sophia=CT5; Anima governs dispatch across all). [[Techne]] is NOT a constitutional agent — it is Pleroma's second face (atomic-skills substrate), invoked through the 6 CF-coded Aletheia techne-guardians (Anansi=CF0, Moirai=CF2, Janus=CF1, Mercurius=CF3, Agora=CF4, Zeithoven=CF5) at constitutional team-composition gates.
+- `Body/S/S0/epi-cli/src/agent/` implements managed agent install/doctor/spawn/attach/run/chat/verify-runtime, extension sync, agent registry, model registry, auth profiles, plugin/skill/subagent validation, hooks, team dispatch, chain runs, session lifecycle, [[Codex]] runtime install/doctor, and deterministic `epi agent vak evaluate`.
+- `Body/S/S4/ta-onta/composite-entry.ts` registers all six spine contributions and loads [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], and [[Aletheia]] extension tools into PI.
+- `Body/S/S4/ta-onta/anima/extension.ts` registers `vak_evaluate`, `anima_orchestrate`, `nous_disclose`, parallel/fusion dispatch tools, and injects the VAK skill stack at `before_agent_start`.
+- `Body/S/S4/ta-onta/anima/S4/` contains `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, and related execution primitives.
+- `Body/S/S4/ta-onta/anima/S4'/agents/` contains constitutional agent prompts for [[Anima]], [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], [[Sophia]] (the 6 constitutional CT roles: Nous=CT0, Logos=CT1, Eros=CT2, Mythos=CT3, Psyche=CT4a+CT4b, Sophia=CT5; Anima governs dispatch across all). [[Techne]] is NOT a constitutional agent — it is Pleroma's second face (atomic-skills substrate), invoked through the 6 CF-coded Aletheia techne-guardians (Anansi=CF0, Moirai=CF2, Janus=CF1, Mercurius=CF3, Agora=CF4, Zeithoven=CF5) at constitutional team-composition gates.
 - The Rust VAK evaluator is explicitly heuristic. Canonical VAK evaluation is the LLM/skill-mediated path in `anima/S4'/skills/vak-evaluate/`.
-- `Body/S/S4/plugins/registry.jsonl` is the canonical source package registry for S4 plugins. `plugins/registry.jsonl` may be read only as a compatibility registry while older root paths are retired.
+- `Body/S/S4/plugins/registry.jsonl` is the canonical source package registry for S4 plugins. The root `plugins/registry.jsonl` compatibility path is still READ — `Body/S/S0/epi-cli/src/agent/plugins.rs` lists it last in `REPO_PLUGIN_REGISTRY_RELATIVE_PATHS` (and `plugins` last in `REPO_PLUGIN_ROOT_RELATIVE_PATHS`), both iterated live — but the file it points at no longer exists, so the reader is INERT rather than removed. State it that way: retiring the path means deleting those two entries, and until that happens a root registry dropped into the repo would be picked up again.
 - `Body/S/S4/plugins/pleroma` is Anima's executable capability membrane package. It carries constitutional ANIMA definitions, critical VAK skills, hooks, settings, and a tested capability matrix. It is distinct from the ta-onta `S4-2p-pleroma` module, which is the internal S4' extension/module expression of Pleroma law.
 - `epi agent` source-to-runtime projection distinguishes source package, managed runtime sync target, and installed state: source lives under `Body/S/S4/...`; managed PI runtime lives under `.epi/agents/<id>/agent`; Codex/OMX projection lives under `.codex/` / `.omx/`.
 
 Current implementation state and gaps:
 
-- The first coordinate-native S4/S4' gateway surfaces are now live: `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.vak.evaluate`, `s4'.orchestrate`, `s4'.psyche.state`, `s4'.psyche.update`, `s4'.permission.get`, `s4'.context.assemble` (51.T51.1), and `s4'.orchestration.score` (50.T50.10). They are tested by `gate_s4_coordinate_surfaces.rs`, `gate_anima_pleroma_access.rs`, `gate_s4_context_assemble.rs`, and `gate_s4_orchestration_score.rs`.
-- Remaining coordinate-native API gaps include `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, and richer `s4'.goal.*` semantics. (`s4'.context.assemble` landed in 51.T51.1 and is no longer a gap.)
+- The first coordinate-native S4/S4' gateway surfaces are now live: `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.vak.evaluate`, `s4'.orchestrate`, `s4'.psyche.state`, `s4'.psyche.update`, `s4'.permission.get`, `s4'.context.assemble` (51.T51.1), `s4'.orchestration.score` (50.T50.10), and `s4'.mediation.route` / `s4'.mediation.capabilities.list` (the M5-4 OmniPanel-consumed pair, added to this roster 2026-07-28 — they dispatched live but were absent from every state list the spec keeps). Their coverage is not uniform and the evidence is named per surface rather than as one blanket claim: `gate_s4_coordinate_surfaces.rs`, `gate_anima_pleroma_access.rs`, `gate_s4_context_assemble.rs`, `gate_s4_orchestration_score.rs` and `gate_mediation_route.rs` are the Rust-side gates, while `s4'.mediation.capabilities.list` is covered TS-side only (`Body/M/pratibimba-app/src/panes/omni/omnipanelCapabilities.test.ts` and its `.live.test.ts`, plus `Body/S/S4/pi-agent/tests/capability-parity.test.ts`) — which is what the M' consumer table above already attributes to it, and a Rust gate for it is an open gap rather than an existing one.
+- Remaining coordinate-native API gaps include `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, and `s4'.goal.*`, which does not exist at all rather than existing thinly (no `s4'.goal` dispatch arm anywhere) — the landed goal surface today is the `epi agent goal` CLI prelude, not a gateway method. (`s4'.context.assemble` landed in 51.T51.1 and is no longer a gap.)
 - [[Psyche]] now has first persisted gateway state for operative notebook, current task, subtasks, artifacts, visibility stance, and run-local continuity. The next Psyche gap is richer goal-state, context-pack assembly, and integration with team/VAK state.
 - `s_4_permission_boundary` now has first explicit API exposure through `s4'.permission.get`; the next gap is making every S0 exec, Pleroma primitive, file write, subagent spawn, and external API call enforce the same boundary rather than merely report it.
 - `s4'.vak.evaluate` must expand beyond the live heuristic response to return primary family, primary coordinate, CPF, prime targets, intent class, and agent sequence position.
@@ -191,12 +191,12 @@ Current canonical S4 base technology:
 - Managed PI agent directories under `.epi/agents/<id>/agent`.
 - `epi agent` Rust CLI command family.
 - Runtime launch planning and environment propagation.
-- Extension sync from repo `.pi/extensions/` into managed agent directories.
-- Body-native plugin package discovery from `Body/S/S4/plugins/registry.jsonl`, with root `plugins/registry.jsonl` retained only for compatibility.
+- Extension sync into managed agent directories from BOTH repo sources: `Body/S/S4/pi-agent` (the `repo_pi_root` layout root) and `Body/S/S4/ta-onta` (`Body/S/S0/epi-cli/src/agent/extensions.rs`). Naming only one of the two understates what sync copies.
+- Body-native plugin package discovery from `Body/S/S4/plugins/registry.jsonl`, with the root `plugins/registry.jsonl` fallback still present in the reader but inert (see the plugin-registry note above).
 - Provider/model/auth registries.
 - Skill, plugin, hook, and subagent validation.
 - Durable team records and subagent sessions coordinated through the gateway state root.
-- PI-native extension package `.pi/extensions/ta-onta/`.
+- PI-native extension package `Body/S/S4/ta-onta/`.
 - Local [[Codex]] / OMX runtime lane as a harness alternative.
 - Code-mode tool scripting (`Body/S/S4/pi-agent/lib/code-mode.ts`): one generated TypeScript program per multi-tool task, in place of one model round-trip per tool call.
 
@@ -231,6 +231,21 @@ of the comparison is the result, not the absolute count. Both sides are computed
 recorded trace, so this measures two protocols over one body of work rather than guessing what
 an agent might have done.
 
+**The run is what LEARNING reads.** Collapsing the staircase breaks the measurement that fed
+learning, and the fix is part of this law rather than an afterthought. Every behavioural metric
+was derived by COUNTING `toolCallObserved` events; a code-mode run emits one script and
+therefore one turn, so a run that performed fifty reads and ten edits read as ZERO of each —
+the measurement went blind exactly where the orchestration worked as designed. A completed run
+therefore emits a **deterministic execution trace**: the operations performed, over a fixed
+vocabulary, carrying the `scoreHash` so a replay is checkable. It lands in the session
+transcript under its own `orchestration_trace` kind, `aeon_eval`
+(`Body/S/S3/redis-context/src/aeon_eval.rs`) derives the behavioural metrics from it, and a
+distillation JSONL row is emitted for the epii-distillation corpus
+(`Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation`, whose `distill_dataset_gen.py`
+is the consumer that defines the row contract). The trace is replayable and
+dense — the operation, not accreted stdout — which is what makes it a training substrate rather
+than a log.
+
 Build implications:
 
 - The gate governs the tool surface. Do not describe code-mode as a sandbox.
@@ -238,6 +253,13 @@ Build implications:
   the only one, and the ordering of its two checks is part of the contract.
 - One entitlement configuration governs both protocols — an agent denied `write` cannot write
   in either mode.
+- A trace without its `scoreHash` must be refused: replay is checkable only when the program
+  identity rides along.
+- A distillation row must be refused BY NAME per missing annotation channel.
+  `user_articulation_simulation` has no producer in any orchestration, so a corpus scored on an
+  invented number trains the student on a fiction.
+- The classification vocabulary lives ONCE, Rust-side. [[S4']] carries the trace and computes no
+  metric; mirroring the classifier into the agent runtime is a defect.
 
 *(absorbed from `Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md`, 2026-07-27; end-to-end proof `Body/S/S4/ta-onta/S4-4p-anima/tests/acceptance-live.mjs`, 52/52 green against a spawned gateway, 50.T50.15)*
 
@@ -247,7 +269,7 @@ Build implications:
 |---|---:|---|---|---|
 | `epi agent` | [[S4]] via [[S0]] | Rust | Local CLI | Managed agent lifecycle, validation, runtime launch, team/subagent operations |
 | Managed PI runtime | [[S4.0]] / [[S4.1]] | PI agent | Local process | Primary harness for agent sessions |
-| `.pi/extensions/ta-onta/` | [[S4]] / [[S4']] | TypeScript + Markdown | PI extension package | Agent operational body: six extension classes, skills, agents, hooks |
+| `Body/S/S4/ta-onta/` | [[S4]] / [[S4']] | TypeScript + Markdown | PI extension package | Agent operational body: six extension classes, skills, agents, hooks |
 | `Body/S/S4/plugins/pleroma` | [[S4.2]] / [[S4.2']] | Markdown + JSON | PI/Codex plugin package | Anima capability membrane: constitutional ANIMA definitions, VAK skills, hooks, capability matrix |
 | Agent layout | [[S4.0]] | Filesystem | `.epi/agents/<id>/agent` | Managed agent directory, prompts, plugin runtime, skill roots |
 | Team/subagent runtime | [[S4.3]] / [[S4.5]] | Rust + PI process | Gateway state root | Durable teams, worker sessions, lineage, transcripts, cmux coordinates |
@@ -354,7 +376,7 @@ S4 contributes primarily to Lived-Environs and Execution fields:
 Fields enforced by S4 but specified elsewhere:
 
 - `s_3_session_key`, `s_3_agent_id`, `s_3_day_id`, `s_3_now_path`: S3/S3' session and temporal identity consumed by S4.
-- `s_4_permission_boundary`: currently missing a proper S4' API; S0 `exec` and S4 tool use must obey it.
+- `s_4_permission_boundary`: served by `s4'.permission.get` (live since 51.T51.1; corrected here 2026-07-28 — this line previously read "currently missing a proper S4' API", which the dispatch table refutes). What is still open is ENFORCEMENT: S0 `exec` and S4 tool use must obey the boundary, and today they are only reported against it.
 - `t_3_episode_id`, `t_3_arc_id`, `s_3_graphiti_node_ids`: S3'/Graphiti episodic runtime facts, populated through S5 usage/invocation paths.
 
 ### CLI Commands
@@ -365,7 +387,7 @@ S4 is surfaced through `epi agent`:
 |---|---:|---|
 | `epi agent install` | [[S4.0]] | Prepare managed PI agent directory layout |
 | `epi agent doctor` | [[S4.0]] | Inspect repo-native PI foundation state |
-| `epi agent extensions sync/status/list` | [[S4.0]] / [[S4']] | Copy and inspect repo `.pi` assets in managed agent dir |
+| `epi agent extensions sync/status/list` | [[S4.0]] / [[S4']] | Copy and inspect the repo extension sources (`Body/S/S4/pi-agent` + `Body/S/S4/ta-onta`) in the managed agent dir |
 | `epi agent agents init/add/list/inspect` | [[S4.1]] | Manage local agent registry |
 | `epi agent models init/add-provider/set-default/status` | [[S4.1]] | Provider/model registry |
 | `epi agent auth set/status` | [[S4.1]] | Credential profile state |
@@ -384,17 +406,17 @@ CLI parity law: `epi agent` commands are real execution evidence, but the canoni
 
 Implementation files:
 
-- `epi-cli/src/agent/mod.rs` - command topology.
-- `epi-cli/src/agent/runtime.rs` - PI launch plans, layout prep, plugin runtime prep, skill roots.
-- `epi-cli/src/agent/launch.rs` - process environment propagation and PI launch.
-- `epi-cli/src/agent/agents.rs`, `models.rs`, `auth.rs` - identity/provider/auth registries.
-- `epi-cli/src/agent/plugins.rs`, `plugin_manifest.rs`, `skills.rs`, `subagents.rs`, `hooks.rs` - validation and runtime contracts.
-- `epi-cli/src/agent/team.rs`, `chain.rs`, `subagents.rs` - team/chain/subagent execution.
-- `epi-cli/src/agent/vak.rs` - deterministic VAK baseline and CF-to-agent mapping.
-- `.pi/extensions/ta-onta/composite-entry.ts` - ta-onta spine and extension loader.
-- `.pi/extensions/ta-onta/anima/extension.ts` - Anima tools and VAK skill injection.
+- `Body/S/S0/epi-cli/src/agent/mod.rs` - command topology.
+- `Body/S/S0/epi-cli/src/agent/runtime.rs` - PI launch plans, layout prep, plugin runtime prep, skill roots.
+- `Body/S/S0/epi-cli/src/agent/launch.rs` - process environment propagation and PI launch.
+- `Body/S/S0/epi-cli/src/agent/agents.rs`, `models.rs`, `auth.rs` - identity/provider/auth registries.
+- `Body/S/S0/epi-cli/src/agent/plugins.rs`, `plugin_manifest.rs`, `skills.rs`, `subagents.rs`, `hooks.rs` - validation and runtime contracts.
+- `Body/S/S0/epi-cli/src/agent/team.rs`, `chain.rs`, `subagents.rs` - team/chain/subagent execution.
+- `Body/S/S0/epi-cli/src/agent/vak.rs` - deterministic VAK baseline and CF-to-agent mapping.
+- `Body/S/S4/ta-onta/composite-entry.ts` - ta-onta spine and extension loader.
+- `Body/S/S4/ta-onta/anima/extension.ts` - Anima tools and VAK skill injection.
 
-The implementation is production-oriented in several places: runtime verification launches a real isolated PI process, source-to-runtime sync is tested, plugin runtime indexing discovers Body-native S4 plugins, agent-scoped plugin loading keeps Anima/Pleroma and Epii/epi-logos surfaces separate, direct `epi agent anima` / `epi agent aletheia` launches make the S4 embodiments testable, subagent execution appends real transcripts, gateway agent RPC is exercised through the server, and team dispatch creates durable records. The main gap is not "fake code"; it is API unification, PI extension-level VAK/orchestration invocation proof, and Psyche-state residency.
+The implementation is production-oriented in several places: runtime verification launches a real isolated PI process, source-to-runtime sync is tested, plugin runtime indexing discovers Body-native S4 plugins, agent-scoped plugin loading keeps Anima/Pleroma and Epii/epi-logos surfaces separate, direct `epi agent anima` / `epi agent aletheia` launches make the S4 embodiments testable, subagent execution appends real transcripts, gateway agent RPC is exercised through the server, and team dispatch creates durable records. The main gap is not "fake code"; it is API unification, PI extension-level VAK/orchestration invocation proof, and Psyche-state RESIDENCY in the narrow sense that survives 51.T51.1: the store itself is landed and file-backed under the gateway state root, while `PsycheRuntimeHandle` (`Body/S/S3/gateway-contract/src/session.rs`) still advertises a `redis_state_key` that `psyche_handles()` serves, so the open question is which tier owns the durable copy — not whether one exists.
 
 ### Internal 0-5 Breakdown
 
@@ -424,7 +446,7 @@ S4' is [[Anima]] as agentic inhabitation law. It gives the runtime its constitut
 - [[Nous]], [[Logos]], [[Eros]], [[Mythos]] as differentiated functions of the one operational language.
 
 These six are not only the grammar that *labels* a dispatch. They are the typed vocabulary an
-[[Anima]] orchestration is **written against** (`S4-4p-anima/lib/vak-orchestration-surface.ts`),
+[[Anima]] orchestration is **written against** (`Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts`),
 which is what DR-VAK-3 means by VAK being the operational language rather than metadata over
 labels. Each coordinate is a composable AXIS of the program: [[CPF]] plans the run and sets
 review polarity, [[CT]] declares the [[Hen]] artifact templates it produces or consumes, [[CP]]
@@ -547,14 +569,31 @@ Build implications:
 
 - **Reader, never runner.** Pi->subagent is the only agentic path, so a gateway that
   executed orchestrations would be a second one. Run state belongs to the parent [[Anima]]
-  session that holds it (`S4-4p-anima/lib/orchestration-run.ts`), not to a stateless RPC.
+  session that holds it (`Body/S/S4/ta-onta/S4-4p-anima/lib/orchestration-run.ts`), not to a stateless RPC.
   The [[S0]] adapter serves what the S4' authority produced — the same reader discipline as
   `s4'.context.assemble`.
-- Persistence authority is [[Hen]] (`S4-1p-hen/modules/score-store.ts`); the adapter's path
+- Persistence authority is [[Hen]] (`Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts`); the adapter's path
   resolution is a twin of its `scoresDir()`, not an independent layout.
 - Must fail closed on a score carrying no `hash`: a caller reading a program without the
   hash it was scored under cannot tell whether it is the program that ran.
 - A score id is never a path segment.
+
+#### `s4'.mediation.route` / `s4'.mediation.capabilities.list`
+
+Route a mediated request to the agent/capability that should answer it, and enumerate the
+capabilities available to mediate with.
+
+These are the M5-4 OmniPanel-consumed surfaces named in the M' Consumer Surfaces section above.
+They were live in dispatch (`Body/S/S0/epi-cli/src/gate/server/dispatch.rs`) but absent from this
+catalogue until 2026-07-28 — a spec naming a consumed surface it never homed. Homed here so the
+consumer contract has an owning statement.
+
+Build implications:
+
+- Mediation ROUTES; it does not execute. Pi→subagent remains the only agentic path.
+- The capability list is derived from the [[Pleroma]] capability matrix, not from a second
+  hand-maintained roster.
+- [[Anima]] mediates; it must not resolve [[Epii]] review or improvement decisions itself.
 
 #### `s4'.context.assemble`
 
@@ -586,7 +625,7 @@ interface PsycheState {
 
 Build implications:
 
-- This is the largest missing S4/S4' surface.
+- Both the METHODS and their per-session STORE are live: `Body/S/S0/epi-cli/src/gate/server/dispatch.rs` dispatches them, and `Body/S/S0/epi-cli/src/gate/anima.rs` implements a real file-backed store (`read_psyche_state` / `merge_psyche_patch` / `write_psyche_state`, writing `<state-root>/s4/psyche/<session>.json`), proven write-then-read-back over a live gateway by `gate_s4_coordinate_surfaces.rs`. The open gap is the one already named above: richer goal-state, context-pack assembly, and team/VAK integration — NOT the store. (Corrected twice, 2026-07-28: this line first read "This is the largest missing S4/S4' surface", then wrongly relocated the gap to the store; both readings are refuted by the code cited here.)
 - It must update per turn, not only at session end.
 - It is the place where [[NOW]] becomes a real inhabited environment rather than a path.
 
@@ -681,20 +720,20 @@ This projection should be treated as real coordinate law, not decorative prompt 
 
 Live:
 
-- `vak_evaluate` and `anima_orchestrate` tools in `.pi/extensions/ta-onta/anima/extension.ts`.
+- `vak_evaluate` and `anima_orchestrate` tools in `Body/S/S4/ta-onta/anima/extension.ts`.
 - VAK skill injection at `before_agent_start`.
-- Constitutional agents in `.pi/extensions/ta-onta/anima/S4'/agents/`.
-- VAK/orchestration skills in `.pi/extensions/ta-onta/anima/S4'/skills/`.
+- Constitutional agents in `Body/S/S4/ta-onta/anima/S4'/agents/`.
+- VAK/orchestration skills in `Body/S/S4/ta-onta/anima/S4'/skills/`.
 - Body-native Pleroma plugin package with critical VAK skills: `vak-evaluate`, `anima-orchestration`, `vak-coordinate-frame`, and `day-night-pass`.
 - Agent-scoped PI runtime loading: `anima`, `aletheia`, and `main` receive ta-onta/Pleroma skill and subagent roots by default; `epii` receives its S5 epi-logos plugin body instead. This proves the shared PI substrate can host peer embodiments without ambient capability bleed. Role-scoped launches such as `epi agent anima --role logos` and `epi agent aletheia --role anansi` export `EPI_AGENT_ROLE` / `EPI_AGENT_SCOPED_SURFACE` for direct testing without turning constitutional roles into separate top-level PI embodiments.
 - Team, chain, subagent runtime via `epi agent team`, `epi agent chain`, `epi agent subagent`.
-- Rust deterministic VAK baseline in `epi-cli/src/agent/vak.rs`.
+- Rust deterministic VAK baseline in `Body/S/S0/epi-cli/src/agent/vak.rs`.
 
 Partial / missing:
 
 - Unified coordinate-native API/gateway bridge for all S4' methods.
-- Proper `s4'.psyche.state/update`.
-- Proper `s4'.permission.get`.
+- Richer Psyche GOAL-state, context-pack assembly, and team/VAK integration (the methods and the per-session store are both live; this is the layer above them).
+- ENFORCEMENT of the boundary `s4'.permission.get` serves (the METHOD is live; the boundary is reported, never enforced).
 - Expanded `s4'.vak.evaluate` response.
 - Reliable lifecycle proof that [[Sophia]] review, thought routing, Night' pass, and S5'/Epii delegation occur end-to-end.
 - Tests for true VAK/Anima behavior across the PI extension and Rust CLI together, not just isolated parsers.
@@ -751,8 +790,9 @@ S4/S4' serves:
 | Gap | Coordinate | Consequence |
 |---|---:|---|
 | No unified S4/S4' API bridge | [[S4]] / [[S4']] | Live CLI/tools exist, but API parity is incomplete |
-| Psyche API missing | [[S4.4]] / [[S4.4']] | Lived-environs hot fields are uncovered |
-| Permission API missing | [[S4.2']] | Tool/file/exec/subagent authority is implicit |
+| Richer Psyche goal-state / team-VAK integration | [[S4.4]] / [[S4.4']] | Methods and per-session store are live and durable; the layer above them is not |
+| No Rust gate for `s4'.mediation.capabilities.list` | [[S4.2']] / [[S4.4']] | The method is live and TS-covered, but no `epi-cli` test exercises it over a spawned gateway |
+| Permission boundary not ENFORCED | [[S4.2']] | `s4'.permission.get` serves the boundary, but S0 exec / tool use only report against it |
 | VAK response too thin in current CLI | [[S4.4']] | Hot coordinate fields not reliably populated |
 | Sophia/Night' lifecycle not proven end-to-end | [[S4.5']] / [[S5']] | Crystallisation remains partly hook/tool mediated |
 | Context assembly overuses helper workflows | [[S4.4']] | Need explicit S1/S2/S3/S5 source contracts |
