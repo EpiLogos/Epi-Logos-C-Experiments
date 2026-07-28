@@ -182,7 +182,8 @@ Current roots to migrate:
 
 - `bimba-mcp/` has moved to `Body/S/S2/external/bimba-mcp/`.
 - S2 graph schema is currently scattered in `Body/S/S0/epi-cli/src/graph`, `Body/S/S5/epi-gnostic/cypher`, and `Body/S/S2/external/bimba-mcp`; consolidate authority under `Body/S/S2/graph-schema/`.
-- `Body/S/S0/epi-cli/src/graph/` may remain inside `epi-cli` physically during the first move, but its code must conform to the S2 graph authority and should later thin into CLI wrappers over S2 graph-service modules.
+- ~~`Body/S/S0/epi-cli/src/graph/` may remain inside `epi-cli` physically during the first move, but its code must conform to the S2 graph authority and should later thin into CLI wrappers over S2 graph-service modules.~~
+  **SUPERSEDED 2026-07-28 by Track 53.** This line was agent-authored, carries no Architect ratification marker, and "should later thin" became indefinite permission: `src/gate/` went from 41 files to 59 *after* the extraction crates existed, and no gate ever went red. It is history, not guidance — do not cite it as licence to defer a move. The `src/graph/` case did in fact thin (29 of its 32 files are now re-export shims over `epi-s2-graph-services`); `src/gate/` did not, which is what Track 53 exists to finish. Current law: [[53-s-stack-residency-restoration]].
 
 Redis rule:
 
@@ -208,7 +209,8 @@ Current roots to migrate:
 
 - `epi-spacetime-module/` has moved to `Body/S/S3/epi-spacetime-module/`.
 - `epi-app/` has moved to `Body/S/S3/epi-app/` unless later split.
-- `Body/S/S0/epi-cli/src/gate/` remains inside `epi-cli` at first but is coordinate-owned by S3 and should later thin into CLI wrappers over S3 gateway modules.
+- ~~`Body/S/S0/epi-cli/src/gate/` remains inside `epi-cli` at first but is coordinate-owned by S3 and should later thin into CLI wrappers over S3 gateway modules.~~
+  **SUPERSEDED 2026-07-28 by Track 53.** Same status as the `src/graph/` line above: agent-authored, never ratified, and read as permission rather than as a deferred obligation. The coordinate ownership it asserts is correct; the open-ended "at first" is what failed. Residency is now measured, not promised — `contracts/s0-membrane-residency.json` records how much law `src/gate/` + `src/graph/` hold and `lint-boundaries` fails when it rises.
 - Redis context code should move conceptually and then physically toward `Body/S/S3/redis-context/`.
 - Graphiti target integration belongs under `Body/S/S3/graphiti-runtime/`; current HTTP wrapper and `epi gate graphiti` controls are compatibility adapters, not target architecture.
 

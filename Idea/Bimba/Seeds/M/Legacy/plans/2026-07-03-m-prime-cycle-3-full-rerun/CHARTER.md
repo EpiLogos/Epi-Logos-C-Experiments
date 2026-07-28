@@ -31,6 +31,23 @@
 - **Charge names:** `pp/nn/np/pn` only at every exposed surface (DR-37-2); element IDs cross M2↔M3 as canonical-B only (DR-37-3).
 - **Tick primitive (M1-3 spanda) — ratified in-session 2026-07-04:** the tick is the (0/1)/(1/0) dual counter-phase oscillation — a continuous Haken–Kelso–Bunz relative-phase field (bistable in-phase φ=0 / antiphase φ=π = bimba/pratibimba fused vs opposed), **authored in `epi-lib` C and propagating into `portal-core/spanda.rs`** (C ground → Rust surface, as everywhere). Its **twelvefold is intrinsic to spanda's flowering (M1-3), prior to and generative of QL** — not a ring sampled from above. Frequency-anchored to the conserved-delta band **~2.5 Hz** (cited, never fake-2.0). Rooting: M1-0 (0/1) / M1-1 (1/0) / M1-3 (Trika); Ananda's six DR matrices are a separate structure off the same seed. The **discrete `tick12` integer is a readout, not the grounding** — nothing re-grounds on it; the active codon advances on the real quaternionic-rotational state + clock + **epogdoon (9:8)**, never on `tick12`. The **epogdoon is structurally essential** — preserved in `kernel_tick_from_epogdoon`, the 12-epogdoon cycle, the 16/9 gap, and the M2 `resonance72` (=8×9) → M3 64 transduction; never removed or simplified. Builds as **Track 02 T2.11** — substrate work, execute as written. The biological/physics grounding (M3 physics + codon, cross-M') is async research that informs the anchor, never a gate.
 
+## Done marks that are not evidence of what their track was named for
+
+**Track 17 ("S-Stack Modularisation Campaign") closed 28/28 and performed no residency.**
+It read "modularisation" as file size: every tranche split a large file into smaller ones
+(`T17.2 — Split epi-cli/src/gate/server.rs (3,235 LOC)`), and not one crossed a crate boundary.
+Splitting `gate/server.rs` into `gate/server/*.rs` is part of why the file count under `src/gate/`
+rose from 41 to 59 *after* the S-stack extraction crates already existed. Its own header calls it
+"S-stack facade-split discipline" and "Worst-audited infra track."
+
+So: **28 green marks there are not evidence that anything moved to its coordinate.** Track 53 is
+the track that actually performs the relocation. When auditing residency, read the ratchet
+(`contracts/s0-membrane-residency.json`) and the boundary lint, never a track's closure count.
+
+The general rule this is an instance of: a done mark attests to the tranche's Verify line, not to
+its title. If a track's name claims more than its Verify line checked, the gap is real and the
+marks do not cover it.
+
 ## Verification law (Track 00 gates everything)
 
 1. **Track 00 lands first.** No non-00 tranche is marked `done` until `verify-all` exists and runs green on the current basis.

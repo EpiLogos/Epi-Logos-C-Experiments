@@ -4,8 +4,58 @@
 Rust crate `epi-logos` (lib `epi_logos`, bin `epi`): "The Master CLI for the Epi-Logos coordinate system — ontology-is-code" — the master command surface + TUI that drives every S-layer over FFI and the gateway.
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0-ARCHITECTURE]]
 
+## Residency law — read before adding anything to `src/gate/` or `src/graph/`
+
+**This crate is the S0 *membrane*, not a layer.** `epi graph`, `epi vault`, `epi gate` exist so
+every module can be touched from the terminal, so reaching every layer is this crate's *function*.
+The contract states that explicitly: `epi-logos` sits in the `S0-membrane` row of
+`rustSStackBoundary` as a licensed composition root with empty `forbiddenImports`, while `S0`
+proper (`epi-lib`, `portal-core`, `epi-s0-settings`) stays strictly bound.
+
+What the membrane may NOT do is hold other layers' **law**. That is the constraint, and it is
+measured rather than promised:
+
+- `Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json` records how many files and
+  code lines under `src/gate/` + `src/graph/` name an S1/S2/S3/S5 crate. `lint-boundaries` fails
+  when either number **rises**. Never raise a ceiling to make a change pass.
+- `tests/s0_membrane_guardrails.rs` asks the categorical question per file: is this module
+  inventoried, or does it carry an `// S0 ADAPTER: Body/S/<…>` header naming its real authority?
+
+### To add a gateway method
+
+**Implement the handler in the owning coordinate's crate and register it. Never in `epi-cli`.**
+
+1. Write the handler in the crate that owns the coordinate (`hen-compiler-core` for `s1'.*`,
+   `graph-services` for `s2.*`, `gateway` for `s3'.*`, the S5 crates for `s5'.*`).
+2. Implement `epi_kernel_contract::MethodHandler<C>` — generic over `C`, so your coordinate names
+   no gateway type — and add the method to that crate's registration table. See
+   `Body/S/S1/hen-compiler-core/src/s1_handlers.rs` for the reference shape.
+3. Register it into the router in `src/gate/server/dispatch.rs`. Exact names outrank the legacy
+   fallback namespace, so nothing else has to change.
+4. Add the crate's table path to `coordinate_handler_tables()` in
+   `Body/S/S3/gateway/tests/dispatch_contract.rs` so the T9 route-ownership cross-walk can see it.
+
+This replaces the older folk knowledge that "adding a method touches ~9 places in
+`epi-cli/src/gate/server/dispatch.rs`". It does not, and it should not.
+
+**A cross-coordinate composite is the one exception.** A method that genuinely spans layers —
+`s1'.q_articulation.accept` needs human approval (S5), graph verification (S2), then a vault write
+(S1); `s2.parashaktiCorrespondences` needs S2 graph plus M4 Nara plus the S0 kernel bridge — has no
+legal single-crate home and composes *here*, at the composition root, which is the one place
+licensed to depend on all of them. Do not push a composite into whichever layer happens to have a
+legal edge; that relocates one coordinate's law into another to dodge a wiring problem.
+
 ## Ownership
-- `Cargo.toml` / `src/lib.rs` — crate root: re-exports command modules and bridges sibling crates (`hen` <- `epi-s1-hen-compiler-core`, `epii_*` <- `epi-s5-*-core`)
+- `Cargo.toml` / `src/lib.rs` — crate root: declares the command modules. The blanket
+  `pub use epi_s5_*::*` / `epi_s1_*::*` re-export blocks that used to live here are GONE (T53.02):
+  they let this crate restate four other crates' entire public surfaces as its own, which made
+  "which layer owns this type?" unanswerable from an import line. Consumers name the owning crate.
+- `src/gate/` — **CLI wrappers and cross-coordinate composites only.** The handler bodies live at
+  their coordinates: `s1'.*` in `epi-s1-hen-compiler-core::s1_handlers`, and the rest arriving as
+  Track 53 drains. Routing itself is S3's (`epi_s3_gateway::router`); this crate builds the
+  registry and hands over.
+- `src/graph/` — `epi graph …` argv-and-print only. The graph law is `epi-s2-graph-services`;
+  29 of the 32 files here are thin re-export shims over it.
 - `src/main.rs` — `clap` entrypoint for the `epi` binary
 - `src/agent/tmux.rs` — gateway-governed terminal lease authority, including `epi agent tmux topology`: isolated-socket tmux day-session/window/pane allocation from Anima decisions. [[cmux]] is an optional visible attachment to the same tmux session, never a second process lifecycle. Canon update flag: [[S0-SPEC]] / [[S4-2-SPEC]].
 - `build.rs` — compiles `../epi-lib` C sources via `cc` (the C FFI bridge); links BLAKE3 from `../vendor/blake3`
