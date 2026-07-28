@@ -86,17 +86,27 @@ test('26.T26.4: a deposit made through the Evidence fold comes back out of it', 
     await expect(row).toContainText('Idea/Empty/Present/e2e-deposit.md');
 });
 
-// UNRESOLVED, and marked rather than deleted or forced green. The producer is
-// proven at every other level — the S5 contract carries `evidence_anchors`, the
-// live gateway round-trips them (gate_s5_epii_deposit_list.rs:
-// `evidence_anchors_survive_the_deposit_round_trip`), and the composition is
-// unit-covered. In the BROWSER path the panel reports
-// `data-packet-context="ready"` and the deposit lands in the list, but
-// `data-anchored-deposits` reads 0 — so the anchors the form sends are not
-// coming back through the fold's own read, for a reason not yet established.
-// Diagnosing that is the remaining work; a passing packet assertion before it is
-// understood would be the fabricated evidence this plan set exists to stop.
-test.fixme('26.T26.4: an anchored deposit becomes a real packet whose close-path lands', async ({
+// Previously `test.fixme`: the browser path reported `data-anchored-deposits=0`
+// while the identical round trip passed from Rust, and the assertion was marked
+// rather than forced green because the discrepancy was not understood.
+//
+// It is now understood, and it was never in this spec or in the fold. The e2e
+// REBUILDS epi-cli from current source before spawning its gateway
+// (global-setup.ts — the 24.T24.5 stale-binary law), so it compiles whatever is
+// in the shared tree at that instant. At that instant Track 53's relocation of
+// the epii handler family was mid-flight and UNCOMMITTED, and it had dropped
+// `"evidenceAnchors": field("evidence_anchors")` from `deposit_view` — the
+// projection's own header at s5_handlers/epii.rs now records exactly that
+// ("T53.07: this line was dropped in the relocation and the live deposit
+// round-trip caught it"). So the browser genuinely received rows without
+// anchors: the run measured a sibling's half-landed refactor, not this code.
+// The Rust round trip disagreed because it was captured against a whole tree.
+//
+// Re-measured on the committed tree (ac70529b restores the line): the fold
+// reads `data-packet-context=ready`, `data-anchored-deposits=1`,
+// `data-packet-count=1`, and a real packet row renders. The assertion is
+// therefore un-marked and asserts for real.
+test('26.T26.4: an anchored deposit becomes a real packet whose close-path lands', async ({
     page
 }) => {
     // The packet PRODUCER end-to-end. Before it, the fold had no packet at all,
