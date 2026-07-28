@@ -16,10 +16,9 @@
 
 import { useState } from 'react';
 import { gateway } from '../../../bridge/gatewayHolder';
-import { useProvenanceStore } from '../../../state/stores';
+import { useProvenanceStore, useSessionStore } from '../../../state/stores';
 import { MEDIATED_RUN_EVIDENCE_PACKET_REQUIRED_FIELDS } from '../evidenceShapes';
-
-const DEPOSIT_METHOD = "s5'.epii.deposit";
+import { DEPOSIT_METHOD, depositRequestFromDraft } from './evidenceDeposits';
 
 /** The author-supplied subset of the required-field contract. The rest
  *  (currentProfile / graphContext / sessionRuntime / semanticCandidates /
@@ -75,6 +74,7 @@ export function EvidenceDepositForm({
     readonly onDeposited?: (ref: string) => void;
 }) {
     const connected = useProvenanceStore(s => s.connection.connected);
+    const sessionKey = useSessionStore(s => s.sessionKey);
     const [draft, setDraft] = useState<DepositDraft>({ ...EMPTY_DRAFT, ...initialDraft });
     const [submit, setSubmit] = useState<SubmitState>({ kind: 'idle' });
 
@@ -89,12 +89,18 @@ export function EvidenceDepositForm({
             return;
         }
         setSubmit({ kind: 'submitting' });
+        // The draft is packet-shaped; the METHOD takes a DepositRequest. Posting
+        // the draft verbatim (as this form used to) is refused by serde before
+        // it reaches the review store — every field but `title` is unknown to
+        // it, and every required field is absent.
         gateway()
-            .invoke(DEPOSIT_METHOD, { ...draft })
+            .invoke(DEPOSIT_METHOD, depositRequestFromDraft(draft, { sessionKey }))
             .then(receipt => {
                 const ref =
                     (receipt.artifact && typeof receipt.artifact === 'object'
-                        ? ((receipt.artifact as Record<string, unknown>).id ??
+                        ? ((receipt.artifact as Record<string, unknown>).item_id ??
+                          (receipt.artifact as Record<string, unknown>).itemId ??
+                          (receipt.artifact as Record<string, unknown>).id ??
                           (receipt.artifact as Record<string, unknown>).ref)
                         : undefined) ?? draft.candidateId;
                 setSubmit({ kind: 'deposited', ref: String(ref) });

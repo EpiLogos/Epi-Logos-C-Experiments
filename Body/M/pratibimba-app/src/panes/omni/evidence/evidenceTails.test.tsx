@@ -98,14 +98,41 @@ describe('EvidenceDepositForm — real deposit write, honest refusal', () => {
         expect(screen.getByTestId('deposit-missing')).toBeTruthy();
     });
 
-    it('dispatches the real s5-prime.epii.deposit method and surfaces the returned ref', async () => {
-        const invoke = vi.fn().mockResolvedValue({ artifact: { id: 'evd-42' } });
+    it('posts a real DepositRequest, not the packet-shaped draft the method refuses', async () => {
+        // This assertion used to read `objectContaining({candidateId: 'c'})` —
+        // the draft posted verbatim. It passed only because the gateway was a
+        // permissive mock: S0 deserialises these params straight into
+        // `DepositRequest`, which has no `candidateId` and requires
+        // source_agent/source_coordinate/deposit_type/body/artifact — so every
+        // real submit was refused by serde. The mock proved the form talks to a
+        // mock. It now asserts the CONTRACT.
+        const invoke = vi.fn().mockResolvedValue({ artifact: { item_id: 'evd-42' } });
         setGateway({ invoke } as never);
         connect(true);
         render(<EvidenceDepositForm initialDraft={fullDraft} />);
         fireEvent.click(screen.getByTestId('deposit-submit'));
         await waitFor(() => expect(screen.getByTestId('deposit-ok').textContent).toContain('evd-42'));
-        expect(invoke).toHaveBeenCalledWith("s5'.epii.deposit", expect.objectContaining({ candidateId: 'c' }));
+
+        const [method, params] = invoke.mock.calls[0] as [string, Record<string, unknown>];
+        expect(method).toBe("s5'.epii.deposit");
+        for (const required of [
+            'source_agent',
+            'source_coordinate',
+            'deposit_type',
+            'title',
+            'body',
+            'artifact',
+            'requires_human'
+        ]) {
+            expect(params, `DepositRequest requires ${required}`).toHaveProperty(required);
+        }
+        expect(params.deposit_type).toBe('review_item');
+        expect(params.artifact).toMatchObject({ path: fullDraft.sourceAnchor });
+        // The authored anchors are carried into the reviewable body, not dropped.
+        expect(String(params.body)).toContain(fullDraft.candidateId);
+        expect(String(params.body)).toContain(fullDraft.reviewId);
+        // and the shape the method cannot parse is NOT sent as a top-level field
+        expect(params).not.toHaveProperty('candidateId');
     });
 
     it('surfaces the gateway refusal honestly — success is never fabricated', async () => {

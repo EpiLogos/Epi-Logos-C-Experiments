@@ -14,11 +14,18 @@
  *   decision register, virtue-witness — feed-gated, land later); intent routing (27.9).
  */
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { gateway } from '../../bridge/gatewayHolder';
+import { useProvenanceStore } from '../../state/stores';
 import type { MediatedRunEvidencePacket } from './evidenceShapes';
 import { EvidencePacketList } from './EvidencePacketList';
 import { EvidencePacketView } from './EvidencePacketView';
 import { EvidenceDepositForm } from './evidence/EvidenceDepositForm';
+import {
+    DEPOSIT_LIST_METHOD,
+    readEvidenceDeposits,
+    type EvidenceDeposit
+} from './evidence/evidenceDeposits';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 
@@ -37,6 +44,43 @@ export function EvidencePanel({
     // 27.T27.5 — the deposit affordance is inline (NOT a modal; 15.2 "the tab
     // IS the surface"). Open state is local to the fold.
     const [depositOpen, setDepositOpen] = useState(false);
+
+    // 26.T26.4 — the fold's real feed, over the read method 27:52 names for this
+    // surface. Deposits are rendered as DEPOSITS, not cast to packets: a deposit
+    // carries no dispatch trace, tool stream or gate landing, and inventing them
+    // to fill a packet view is the fabrication this plan set exists to stop.
+    const connected = useProvenanceStore(state => state.connection.connected);
+    const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
+    const [depositError, setDepositError] = useState('');
+    const [reloads, setReloads] = useState(0);
+
+    useEffect(() => {
+        if (!connected) {
+            return;
+        }
+        let disposed = false;
+        gateway()
+            .invoke(DEPOSIT_LIST_METHOD, {})
+            .then(receipt => {
+                if (disposed) {
+                    return;
+                }
+                setDeposits(readEvidenceDeposits(receipt.artifact));
+                setDepositError('');
+            })
+            .catch(err => {
+                if (disposed) {
+                    return;
+                }
+                setDeposits([]);
+                setDepositError(err instanceof Error ? err.message : String(err));
+            });
+        return () => {
+            disposed = true;
+        };
+    }, [connected, reloads]);
+
+    const refreshDeposits = useCallback(() => setReloads(count => count + 1), []);
 
     const mediatorFilter = tab.filters.mediator ?? 'all';
     const privacyFilter = (tab.filters.privacyClass ?? 'all') as PrivacyClassKind | 'all';
@@ -134,8 +178,73 @@ export function EvidencePanel({
             </header>
 
             {depositOpen && (
-                <EvidenceDepositForm onDeposited={() => setDepositOpen(false)} />
+                <EvidenceDepositForm
+                    onDeposited={() => {
+                        setDepositOpen(false);
+                        // The deposit just landed in the review store; re-read so
+                        // the fold shows it rather than waiting for a remount.
+                        refreshDeposits();
+                    }}
+                />
             )}
+
+            {/* The deposition list — real rows from the live read method. */}
+            <section className="evidence-deposits" data-testid="evidence-deposits">
+                <header className="evidence-deposits-header">
+                    <strong>Deposits</strong>
+                    <span className="evidence-deposit-count" data-testid="evidence-deposit-count">
+                        {deposits.length}
+                    </span>
+                    <button
+                        type="button"
+                        data-testid="evidence-deposits-refresh"
+                        onClick={refreshDeposits}
+                    >
+                        re-read
+                    </button>
+                </header>
+                {depositError ? (
+                    <p className="pane-message" data-testid="evidence-deposits-error">
+                        {`deposit list unavailable — ${depositError}`}
+                    </p>
+                ) : deposits.length === 0 ? (
+                    <p className="pane-message" data-testid="evidence-deposits-empty">
+                        nothing deposited yet
+                    </p>
+                ) : (
+                    <ul className="evidence-deposit-list">
+                        {deposits.map(deposit => (
+                            <li
+                                key={deposit.itemId}
+                                className="evidence-deposit-row"
+                                data-testid={`evidence-deposit-${deposit.itemId}`}
+                                data-deposit-type={deposit.depositType}
+                                data-status={deposit.status}
+                            >
+                                <span className="evidence-deposit-title">{deposit.title}</span>
+                                <span className="evidence-deposit-source">
+                                    {deposit.sourceCoordinate ?? '—'}
+                                </span>
+                                {deposit.artifactPath ? (
+                                    <span className="evidence-deposit-artifact">
+                                        {deposit.artifactPath}
+                                    </span>
+                                ) : null}
+                                {deposit.requiresHuman ? (
+                                    <span className="evidence-deposit-gate">needs human</span>
+                                ) : null}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                {/* A deposit is a review item, not a run-evidence packet. Saying
+                    so keeps the two counts above from reading as one number. */}
+                <p className="evidence-deposits-note" data-testid="evidence-deposits-note">
+                    A deposit records that evidence was filed. The full
+                    MediatedRunEvidencePacket view below needs a packet producer — no
+                    gateway method emits dispatch traces or tool streams yet.
+                </p>
+            </section>
 
             <EvidencePacketList packets={visible} selectedId={tab.selectedPacketId} onSelect={onSelect} />
 
