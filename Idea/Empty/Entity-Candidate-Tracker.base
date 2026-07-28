@@ -1,20 +1,23 @@
-coordinate: "Empty/Entity-Candidates"
-c_4_artifact_role: "base-view"
+coordinate: Empty/Entity-Candidates
+c_4_artifact_role: base-view
 c_5_reflects: "[[World-Ontology]]"
-c_3_projected_from: "Idea/Empty"
-c_3_projected_at: "2026-06-25"
-c_0_source_coordinates: ["[[World-Ontology]]", "[[C2]]", "[[C5]]", "[[48-bases-cs-reflection-layer]]"]
+c_3_projected_from: Idea/Empty
+c_3_projected_at: 2026-06-25
+c_0_source_coordinates:
+  - "[[World-Ontology]]"
+  - "[[C2]]"
+  - "[[C5]]"
+  - "[[48-bases-cs-reflection-layer]]"
 filters:
   or:
-    - 'c_4_artifact_role == "entity-candidate"'
-    - 'c_5_crystallisation_state == "candidate"'
-    - 'c_5_crystallisation_state == "review-ready"'
-    - 'c_5_crystallisation_state == "promoted-to-type"'
-    - 'c_5_crystallisation_state == "crystallised_world_form"'
+    - c_4_artifact_role == "entity-candidate"
+    - c_5_crystallisation_state == "candidate"
+    - c_5_crystallisation_state == "review-ready"
+    - c_5_crystallisation_state == "promoted-to-type"
+    - c_5_crystallisation_state == "crystallised_world_form"
 views:
   - type: table
-    name: "Entity-candidate lifecycle"
-    group_by: c_5_crystallisation_state
+    name: Entity-candidate lifecycle
     order:
       - coordinate
       - title
@@ -24,11 +27,13 @@ views:
       - c_5_reflects
       - c_3_created_at
     sort:
-      - { property: c_5_crystallisation_state, direction: ASC }
-      - { property: coordinate, direction: ASC }
+      - property: c_5_crystallisation_state
+        direction: ASC
+      - property: coordinate
+        direction: ASC
+    group_by: c_5_crystallisation_state
   - type: table
-    name: "Candidate source ledger"
-    group_by: c_0_source_coordinates
+    name: Candidate source ledger
     order:
       - coordinate
       - title
@@ -36,3 +41,4 @@ views:
       - c_5_crystallisation_state
       - c_0_source_coordinates
       - c_5_reflects
+    group_by: c_0_source_coordinates

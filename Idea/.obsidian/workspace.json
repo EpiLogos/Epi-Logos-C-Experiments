@@ -11,13 +11,10 @@
             "id": "57f5f9043269d59f",
             "type": "leaf",
             "state": {
-              "type": "bases",
-              "state": {
-                "file": "Empty/Entity-Candidate-Tracker.base",
-                "viewName": "Entity-candidate lifecycle"
-              },
-              "icon": "lucide-table",
-              "title": "Entity-Candidate-Tracker"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ],
@@ -212,8 +209,12 @@
       "smart-connections:Smart Connections: Open random connection": false
     }
   },
-  "active": "71804f64b4afeacf",
+  "active": "57f5f9043269d59f",
   "lastOpenFiles": [
+    "Bimba/Map/M3/M3-5/M3-5.md",
+    "Bimba/Map/M3/M3-5/M3-5-(5∕0)/M3-5-(5∕0).md",
+    "Bimba/World/Types/Coordinates/S/S2/S2.md",
+    "Empty/Entity-Candidate-Tracker.base",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/42.T42.3.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/wire-captures/2026-07-10T19-45-36-727Z-live-wire.json",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20260710T194502Z-42-T42.3.json",
@@ -227,7 +228,6 @@
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20260710T154312Z-16-T16.12.json",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/16.T16.11.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/wire-captures/2026-07-10T15-42-55-021Z-live-wire.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/20260710T154105Z-16-T16.11.json",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/16.T16.10.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/16.T16.1.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/15.T15.1.md",
@@ -247,9 +247,6 @@
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/08.T8.2.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/03.T3.9.md",
     "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/03.T3.8.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/04.T4.9.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/04.T4.8.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/04.T4.7.md",
     "Bimba/World/Types/Coordinates/C/C4/Types-Contexts-MOCs/Language-Objects/PatternPacket.canvas",
     "Bimba/World/Types/Coordinates/C/C4/Types-Contexts-MOCs/Language-Objects/NaraDeckContext.canvas",
     "Bimba/World/Types/Coordinates/C/C4/Types-Contexts-MOCs/Language-Objects/SymbolicProtein.canvas",
