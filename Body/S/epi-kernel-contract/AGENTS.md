@@ -11,7 +11,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]]
 - `src/diagnostic.rs` — `AnuttaraDiagnostic`, `AnuttaraExpression`, `AnuttaraParseError`
 - `src/poles.rs` — `PhysicalPoleState` (1-2-3 engine), `MentalPoleState` (4-5-0 intelligence), activation/clock/weights types
 - `src/analysis.rs`, `src/constraint.rs`, `src/ingestion.rs` — resonance analysis, verifier/constraint registry, ingestion session shapes
-- `Cargo.toml`, `Cargo.lock` — crate manifest; depends on `portal-core` (S0)
+- `src/method_handler.rs` — the S-root method-handler port (Track 53 T53.01): `MethodHandler<C>`, `MethodRegistry<C>`, `MethodRequest`/`MethodOutcome`/`MethodError` (the frozen wire error vocabulary), `FollowUp`, `DuplicateMethod`
+- `src/redis_residency.rs` — **Track 53 T53.06**: the S2↔S3 Redis substrate declaration, resident here because it is a statement *about* the boundary and neither side owns it. `RedisRuntimeRole`, `CacheTier`, `RedisConfig`, the `s2:graph:semantic` / `s3:gateway:temporal` namespace constants, and the RedisVL bridge script path (`REDISVL_*` + `redisvl_service_script`/`redisvl_setup_script`). It holds **no client**: connecting, `PING`, `SETEX` are runtime and this crate stays runtime-free (`tokio` is a dev-dependency only). `epi-s3-redis-context` keeps `RedisCache` and `RedisKey` and re-exports all of the above, so no S3 import path changed.
+- `src/graphiti_residency.rs` — **Track 53 T53.06**: the Graphiti adapter authority declaration (`GRAPHITI_RUNTIME_AUTHORITY`, `GRAPHITI_INVOCATION_OWNER`, `GraphitiAdapterMode`, `GraphitiAdapterContract`). "S3 runs the runtime, S5 owns invocation" is a sentence about three layers, and [[S2-SPEC]]'s promotion planner has to quote it; `epi-s3-gateway-contract` re-exports it unchanged.
+- `Cargo.toml`, `Cargo.lock` — crate manifest; depends on `portal-core` (S0). It must acquire no runtime dependency: `tokio` is deliberately dev-only, and `redis`/`neo4rs`/`reqwest` belong to the layers that run them.
 - Does NOT own algorithms: math lives in `portal-core`; kernel evaluation/deposit/verification live in the per-S subsystem crates (lib.rs doc-header). This crate holds **shapes plus invariant constructors** only.
 
 ## Local Contracts

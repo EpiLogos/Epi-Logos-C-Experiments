@@ -239,32 +239,6 @@
       "current_los_loc": 390
     },
     {
-      "id": "gate.review",
-      "path": "Body/S/S0/epi-cli/src/gate/review.rs",
-      "classification": "cli-adapter",
-      "parity_status": "Adapter",
-      "authority_path": "Body/S/S5/epii-review-core::ReviewStore",
-      "adapter_path": "Body/S/S0/epi-cli/src/gate/review.rs",
-      "extraction_task": "13.T7 (path convention into S5)",
-      "allowed_s0_responsibilities": [
-        "thin S5 adapter with gate state-root path convention"
-      ],
-      "current_los_loc": 44
-    },
-    {
-      "id": "gate.improve",
-      "path": "Body/S/S0/epi-cli/src/gate/improve.rs",
-      "classification": "duplicated-service-law",
-      "parity_status": "Adapter",
-      "authority_path": "Body/S/S5/epii-autoresearch-core",
-      "adapter_path": "Body/S/S0/epi-cli/src/gate/improve.rs",
-      "extraction_task": "13.T7 (move ensure_approved_review into S5 autoresearch core)",
-      "allowed_s0_responsibilities": [
-        "pass-through dispatch only \u2014 cross-store guard is S5 law"
-      ],
-      "current_los_loc": 67
-    },
-    {
       "id": "gate.epii",
       "path": "Body/S/S0/epi-cli/src/gate/epii.rs",
       "classification": "gateway-adapter",
@@ -562,7 +536,7 @@
     }
   ],
   "counts": {
-    "modules": 30,
+    "modules": 28,
     "kernel_owner": 2,
     "cli_adapter": 17,
     "gateway_adapter": 8,

@@ -24,6 +24,11 @@ pub const M5_WORKBENCH_SCHEMA_VERSION: u16 = 1;
 mod deposits;
 mod m5_workbench;
 
+/// The `s5'.epii.*` gateway surface, resident at its owning coordinate
+/// (Track 53 T53.08). Relocated from `epi-cli/src/gate/{epii,epii_axiom}.rs`;
+/// the module header names the four composites that could not move.
+pub mod s5_handlers;
+
 pub use deposits::*;
 pub use m5_workbench::*;
 #[derive(Debug, Clone)]

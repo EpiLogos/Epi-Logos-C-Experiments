@@ -32,7 +32,9 @@ priority_order = ["articulation_gap", "promotion_candidate", "contradiction_cand
 /// another gate-root subtree fail loudly.
 #[test]
 fn gate_improve_store_subpath_is_stable_at_s0_s5_boundary() {
-    use epi_logos::gate::{improve, review};
+    // T53.07: both families live at their coordinate now.
+    use epi_s5_epii_autoresearch_core::s5_handlers::improve;
+    use epi_s5_epii_review_core::s5_handlers as review;
     use std::path::PathBuf;
 
     assert_eq!(improve::STORE_SUBPATH, ["s5", "epii-autoresearch"]);

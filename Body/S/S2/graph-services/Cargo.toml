@@ -10,14 +10,20 @@ name = "epi_s2_graph_services"
 path = "src/lib.rs"
 
 [dependencies]
+# Track 53 T53.06: the last two S2→S3 edges are gone. `epi-s3-gateway-contract`
+# and `epi-s3-redis-context` were carried here only to quote declarations about
+# the S2/S3 boundary — the Redis residency role, the tier vocabulary, the
+# connection descriptor, the RedisVL bridge path, the Graphiti authority. Those
+# now live at `epi-kernel-contract`, below both layers, and S3 re-exports them.
+# The doctor's Redis probe uses `redis` directly, because raw Redis is S2's own
+# shared infrastructure.
 epi-s2-graph-schema = { path = "../graph-schema" }
-epi-s3-gateway-contract = { path = "../../S3/gateway-contract" }
-epi-s3-redis-context = { path = "../../S3/redis-context" }
 epi-kernel-contract = { path = "../../epi-kernel-contract" }
 gemini-embedding = { path = "../../S0/gemini-embedding" }
 portal-core = { path = "../../S0/portal-core" }
 neo4rs = "0.9.0-rc.9"
 chrono = "0.4"
+redis = { version = "0.25", features = ["tokio-comp"] }
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

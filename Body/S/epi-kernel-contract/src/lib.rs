@@ -55,9 +55,11 @@ pub mod constraint;
 pub mod deposit;
 pub mod diagnostic;
 pub mod envelope;
+pub mod graphiti_residency;
 pub mod ingestion;
 pub mod method_handler;
 pub mod poles;
+pub mod redis_residency;
 
 pub use analysis::{DominantPosition, PrehensiveExtractions, ResonanceAnalysis};
 pub use constraint::{
@@ -66,6 +68,10 @@ pub use constraint::{
 pub use deposit::{TrajectoryDeposit, TrajectoryDepositRef, TrajectoryElement};
 pub use diagnostic::{AnuttaraDiagnostic, AnuttaraExpression, AnuttaraParseError};
 pub use envelope::{KernelTickEnvelope, ENVELOPE_COORDINATE_OWNER, ENVELOPE_PRIVACY_CLASS};
+pub use graphiti_residency::{
+    GraphitiAdapterContract, GraphitiAdapterMode, GRAPHITI_INVOCATION_OWNER,
+    GRAPHITI_RUNTIME_AUTHORITY,
+};
 pub use ingestion::{IngestionSession, IngestionStatus};
 pub use method_handler::{
     BoxFuture, DuplicateMethod, FollowUp, MethodError, MethodHandler, MethodOutcome,
@@ -74,4 +80,9 @@ pub use method_handler::{
 pub use poles::{
     ChakralActivation, CodonClockCell, LensWeights12, MentalPoleState, NaraArticulation,
     PhysicalPoleState, TorusPoint, VerifierOutcome, WindingNumber, CHAKRAL_COUNT, LENS_WEIGHT_DIM,
+};
+pub use redis_residency::{
+    redisvl_service_script, redisvl_setup_script, CacheTier, RedisConfig, RedisRuntimeRole,
+    REDISVL_BRIDGE_OWNER, REDISVL_SERVICE_RELATIVE_PATH, REDISVL_SETUP_RELATIVE_PATH,
+    REDIS_RUNTIME_OWNER, S2_GRAPH_SEMANTIC_NAMESPACE, S3_TEMPORAL_NAMESPACE,
 };

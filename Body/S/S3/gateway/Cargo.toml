@@ -13,10 +13,16 @@ path = "src/lib.rs"
 epi-s3-gateway-contract = { path = "../gateway-contract" }
 epi-kernel-contract = { path = "../../epi-kernel-contract" }
 epi-s3-redis-context = { path = "../redis-context" }
+# S3 -> S2 is DOWNWARD and legal (the S3 row forbids only S4/S5). Track 53
+# T53.06 brought the S3' temporal law home from epi-cli; its best-effort graph
+# revision stamp reads S2's graph meta, which is S2's to answer.
+epi-s2-graph-services = { path = "../../S2/graph-services" }
 portal-core = { path = "../../S0/portal-core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tokio = { version = "1", features = ["process", "sync"] }
+# `rt` + `time`: the relocated hydration bridge builds a current-thread runtime
+# when it is called from blocking code, and bounds the graph-meta read at 750ms.
+tokio = { version = "1", features = ["process", "rt", "sync", "time"] }
 uuid = { version = "1", features = ["v4"] }
 
 # 13.T4: SpaceTimeDB native subscription / HTTP reducer client / fallback policy

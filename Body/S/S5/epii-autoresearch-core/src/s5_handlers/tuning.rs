@@ -1,23 +1,40 @@
-// S0 ADAPTER: Body/S/S0/portal-core (tunable registry) with Body/S/S5 (autoresearch + review) as the tuning authorities — a live gateway membrane over the registry, holding no tuning law itself.
-//! Coordinate: S0/M5-3' (tunability gateway adapter — 38.T06.8).
-//! Residency: Body/S/S0/epi-cli/src/gate.
-//! Position (#n): live gateway membrane over the portal-core tunable registry.
-//! Actualises: registry reads, validated developer writes, append-only audit
-//!   reads, and local lock state for `s5'.tune.*`.
-//! Public surface: `list`, `get`, `set`, `audit_read`, `lock_toggle`, `propose`,
-//! `proposals_list`, `proposals_resolve`.
-//! Does NOT own: tunable schema metadata, range validation, or Tier-2 proposal
-//!   lifecycle; those belong to portal-core and [[S5]] respectively.
-//! Contract: [[S0-SPEC]] / [[S3-SPEC]] / [[M5'-SPEC]] / [[DR-TUNE-1]].
+//! The `s5'.tune.*` adapter, resident at the coordinate that owns it.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | [[S5]] / M5-3' — tunability authority |
+//! | Residency  | `Body/S/S5/epii-autoresearch-core/src/s5_handlers/tuning.rs` |
+//! | Position (#n) | #5 — governed mutation of the portal-core tunable registry |
+//! | Actualises | registry reads, validated developer writes, append-only audit reads, and local lock state for `s5'.tune.*` |
+//! | Public surface | [`list`], [`get`], [`set`], [`audit_read`], [`lock_toggle`], [`propose`], [`proposals_list`], [`proposals_resolve`] |
+//! | Does NOT own | Tunable schema metadata or range validation (S0 `portal-core`); the Tier-2 proposal lifecycle itself (`crate::tuning_review`) |
+//! | Contract | [[S0-SPEC]] / [[S3-SPEC]] / [[M5'-SPEC]] / [[DR-TUNE-1]] |
+//!
+//! # Relocation note (Track 53)
+//!
+//! Relocated verbatim from `Body/S/S0/epi-cli/src/gate/tuning.rs`, whose own
+//! header already recorded that it held no tuning law and that the Tier-2
+//! proposal lifecycle "belongs to [[S5]]". The move makes that reading
+//! structural: the membrane now sits beside `crate::tuning_review`, the
+//! lifecycle it was already delegating to, and reads the S0 registry downward
+//! rather than being hosted by it.
+//!
+//! **One line had to change to keep behaviour identical.** `schema_dir()`'s
+//! fallback is built from `CARGO_MANIFEST_DIR`, which is now this crate's
+//! directory rather than `epi-cli`'s. The relative segments are re-based from
+//! `../portal-core/tunable-schema` to `../../S0/portal-core/tunable-schema` so
+//! the *resolved* path is byte-identical to before
+//! (`Body/S/S0/portal-core/tunable-schema`). The `EPI_TUNABLE_SCHEMA_DIR`
+//! override is untouched.
 
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use epi_s5_epii_autoresearch_core::tuning_review::{
-    submit_tuning_proposal, TuningProposalDisposition, TuningProposalRequest,
-};
+use epi_s5_epii_review_core::s5_handlers::review_store_path;
 use epi_s5_epii_review_core::{
     ReviewDecision, ReviewInboxFilter, ReviewInboxItem, ReviewResolveRequest, ReviewStore,
 };
@@ -26,6 +43,10 @@ use portal_core::tunable::{
     Actor, AuditEntry, AuditWriter, TripletVerdict, Tunable, TunableRegistry, TunableValue,
 };
 use serde_json::{json, Value};
+
+use crate::tuning_review::{
+    submit_tuning_proposal, TuningProposalDisposition, TuningProposalRequest,
+};
 
 const LOCKS_SUBPATH: [&str; 3] = ["s5", "tunable", "locks.json"];
 
@@ -255,7 +276,7 @@ fn registry() -> Result<TunableRegistry, String> {
 }
 
 fn review_store(state_root: impl AsRef<Path>) -> ReviewStore {
-    ReviewStore::new(super::review::review_store_path(state_root))
+    ReviewStore::new(review_store_path(state_root))
 }
 
 fn is_tuning_proposal(item: &ReviewInboxItem) -> bool {
@@ -560,12 +581,22 @@ fn required_key(params: &Value) -> Result<&str, String> {
         .ok_or_else(|| "key must be a non-empty string".to_owned())
 }
 
+/// The schema directory. `EPI_TUNABLE_SCHEMA_DIR` wins; otherwise the fallback
+/// is the in-repo `portal-core/tunable-schema`.
+///
+/// Relocation note: the relative segments are re-based for this crate's
+/// `CARGO_MANIFEST_DIR` (`Body/S/S5/epii-autoresearch-core`) so they resolve to
+/// the SAME directory the S0 adapter resolved to
+/// (`Body/S/S0/portal-core/tunable-schema`). Nothing else about the lookup
+/// changed.
 fn schema_dir() -> PathBuf {
     std::env::var_os("EPI_TUNABLE_SCHEMA_DIR")
         .map(PathBuf::from)
         .unwrap_or_else(|| {
             PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("..")
+                .join("..")
+                .join("S0")
                 .join("portal-core")
                 .join("tunable-schema")
         })
@@ -622,4 +653,44 @@ fn unix_timestamp() -> String {
         .unwrap_or_default()
         .as_secs()
         .to_string()
+}
+
+#[cfg(test)]
+mod relocation_tests {
+    use super::*;
+
+    /// The one line the relocation had to touch must still resolve to the S0
+    /// schema directory — the *path*, not the crate, is what the registry load
+    /// depends on.
+    #[test]
+    fn the_schema_dir_fallback_still_resolves_to_portal_core() {
+        let previous = std::env::var_os("EPI_TUNABLE_SCHEMA_DIR");
+        std::env::remove_var("EPI_TUNABLE_SCHEMA_DIR");
+        let resolved = schema_dir();
+        if let Some(previous) = previous {
+            std::env::set_var("EPI_TUNABLE_SCHEMA_DIR", previous);
+        }
+
+        let canonical = resolved
+            .canonicalize()
+            .unwrap_or_else(|error| panic!("{} does not exist: {error}", resolved.display()));
+        assert!(
+            canonical.ends_with("Body/S/S0/portal-core/tunable-schema"),
+            "fallback resolved to {} — the relocation must not move the schema root",
+            canonical.display()
+        );
+        assert!(
+            canonical.join("cross.tunable.toml").is_file(),
+            "the resolved schema dir must actually contain the schema"
+        );
+    }
+
+    #[test]
+    fn the_locks_root_is_unchanged_by_the_relocation() {
+        assert_eq!(LOCKS_SUBPATH, ["s5", "tunable", "locks.json"]);
+        assert_eq!(
+            locks_path(Path::new("/tmp/state-root")),
+            PathBuf::from("/tmp/state-root/s5/tunable/locks.json")
+        );
+    }
 }

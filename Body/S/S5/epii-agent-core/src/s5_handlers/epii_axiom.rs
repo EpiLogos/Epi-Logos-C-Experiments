@@ -1,21 +1,26 @@
-// S0 ADAPTER: Body/S/S5 (epii axiom-translation authority) — physically S0, conceptually S5'. The producer and its persisted store answer to Epii; this file is the gateway membrane over them.
-//! Coordinate: S0 gateway membrane for M5' (26.T26.14 axiom-translation producer)
-//! Residency: Body/S/S0/epi-cli/src/gate — physical S0, conceptual S5' (epii).
-//! Position (#n): the Pi axiom-translation producer + its persisted store.
-//! Actualises: `s5'.epii.axiom_translate` runs a candidate canonical
-//!   articulation through the DR-B-2 chain — Philosophical English → Formal
-//!   Notation → OWL → SHACL — one model invocation per step over the PI harness
-//!   (the provider-agnostic selector; never a bespoke provider client, per the
-//!   epi-gnostic anti-pattern the M1' spec forbids), persists the session, and
-//!   returns it; `s5'.epii.axiom_translation_history` reads the persisted
-//!   sessions. Each step is verified `pi`; the session stays `pending` until a
-//!   human final-validates (CLAUDE.md ur-process: Human = Vision + Final
-//!   Validation).
-//! Public surface: AxiomForm, AxiomTranslationStep, AxiomTranslationSession,
-//!   translate, pi_harness_invoke, persist, history.
-//! Does NOT own: model choice (the slot CLI resolves it, DR-MODEL-1) or the
-//!   carrier inspector (`PiAxiomTranslationInspector`, a strict read consumer).
-//! Contract: [[M5'-SPEC]], [[S0-SPEC]], [[S3-SPEC]].
+//! The Epii axiom-translation producer and its persisted store.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | [[S5]] / S5' — Epii (M5' axiom-translation producer, 26.T26.14) |
+//! | Residency  | `Body/S/S5/epii-agent-core/src/s5_handlers/epii_axiom.rs` |
+//! | Position (#n) | #5 — the DR-B-2 translation chain and its session store |
+//! | Actualises | `s5'.epii.axiom_translate` runs a candidate canonical articulation through the DR-B-2 chain — Philosophical English → Formal Notation → OWL → SHACL — one model invocation per step over the PI harness (the provider-agnostic selector; never a bespoke provider client, per the epi-gnostic anti-pattern the M1' spec forbids), persists the session, and returns it; `s5'.epii.axiom_translation_history` reads the persisted sessions. Each step is verified `pi`; the session stays `pending` until a human final-validates (CLAUDE.md ur-process: Human = Vision + Final Validation). |
+//! | Public surface | [`AxiomForm`], [`AxiomTranslationStep`], [`AxiomTranslationSession`], [`translate`], [`pi_harness_invoke`], [`persist`], [`history`], [`history_value`], [`translate_and_persist`] |
+//! | Does NOT own | Model choice (the slot CLI resolves it, DR-MODEL-1) or the carrier inspector (`PiAxiomTranslationInspector`, a strict read consumer) |
+//! | Contract | [[M5'-SPEC]] / [[S5-SPEC]] / [[S3-SPEC]] |
+//!
+//! # Relocation note (Track 53)
+//!
+//! Relocated verbatim from `Body/S/S0/epi-cli/src/gate/epii_axiom.rs`, whose
+//! own header already read "physically S0, conceptually S5' (epii)". The move
+//! closes that gap: the producer, its store, and its tests now sit at the
+//! coordinate they always answered to. Nothing in the chain, the prompt text,
+//! the store layout, or the persisted JSON contract changed — the module
+//! depended on nothing but `serde`, `serde_json`, and `std`, which is why it
+//! could move whole.
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};

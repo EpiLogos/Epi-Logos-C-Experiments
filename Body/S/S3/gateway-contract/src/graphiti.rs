@@ -1,10 +1,18 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+// Track 53 T53.06: "S3 runs the runtime, S5 owns invocation" is a statement
+// about three layers, and S2's Graphiti promotion planner has to quote it. It
+// moved down to `epi_kernel_contract::graphiti_residency`, where S2 may see it
+// without an upward S2→S3 edge; re-exported here so every import path in the
+// tree still resolves through the gateway contract.
+pub use epi_kernel_contract::graphiti_residency::{
+    GraphitiAdapterContract, GraphitiAdapterMode, GRAPHITI_INVOCATION_OWNER,
+    GRAPHITI_RUNTIME_AUTHORITY,
+};
+
 pub const GRAPHITI_PORT: u16 = 37778;
 pub const GRAPHITI_BASE_URL: &str = "http://127.0.0.1:37778";
-pub const GRAPHITI_RUNTIME_AUTHORITY: &str = "S3 graphiti runtime adapter";
-pub const GRAPHITI_INVOCATION_OWNER: &str = "S5 episodic invocation and arc governance";
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GraphitiRuntimeStatus {
@@ -75,39 +83,5 @@ pub fn assert_no_graphiti_body_in_row(row: &Value) -> Result<(), String> {
     Ok(())
 }
 
-/// Privacy classification — applied at the gateway boundary before a row
-/// crosses to the kernel-bridge. Downstream consumers may further restrict
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum GraphitiAdapterMode {
-    NativeLibrary,
-    HttpCompatibility,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-pub struct GraphitiAdapterContract {
-    pub coordinate_owner: &'static str,
-    pub invocation_owner: &'static str,
-    pub mode: GraphitiAdapterMode,
-    pub compatibility_mode: Option<GraphitiAdapterMode>,
-    pub required_capabilities: &'static [&'static str],
-    pub description: &'static str,
-}
-
-impl GraphitiAdapterContract {
-    pub fn native_library() -> Self {
-        Self {
-            coordinate_owner: "S3",
-            invocation_owner: "S5",
-            mode: GraphitiAdapterMode::NativeLibrary,
-            compatibility_mode: Some(GraphitiAdapterMode::HttpCompatibility),
-            required_capabilities: &[
-                "add_episode",
-                "search",
-                "build_indices_and_constraints",
-                "provenance_event",
-            ],
-            description: "Graphiti runtime adapter loaded as a native/library-backed S3 service; S5 owns invocation, search policy, and arc governance",
-        }
-    }
-}
+// `GraphitiAdapterMode` and `GraphitiAdapterContract` are re-exported from
+// `epi_kernel_contract::graphiti_residency` at the top of this module.

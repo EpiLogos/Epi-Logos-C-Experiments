@@ -32,13 +32,33 @@ fn redisvl_bridge_paths_resolve_from_repo_root_without_s2_residency() {
     assert!(!REDISVL_SERVICE_RELATIVE_PATH.contains("Body/S/S2/"));
 }
 
+/// The live Redis client is S3 runtime property and stays here. Track 53
+/// T53.06 split the *descriptor* off from the *client*: `RedisConfig` (which
+/// server) and `CacheTier` (which TTL) are facts S2's semantic cache and S3′'s
+/// temporal context must agree on, so they now sit at S-root where S2 can read
+/// them without an upward S2→S3 dependency; `RedisCache` — connecting, PING,
+/// SETEX — is runtime and the root contract is deliberately runtime-free.
+///
+/// Both halves are asserted here, so neither can drift back: the client must
+/// stay at S3, the descriptor must sit below S3, and NEITHER may land in S2.
 #[test]
 fn raw_redis_cache_client_and_tiers_are_s3_runtime_owned() {
     let cache_type = std::any::type_name::<RedisCache>();
     let config_type = std::any::type_name::<RedisConfig>();
+    let tier_type = std::any::type_name::<CacheTier>();
 
     assert!(cache_type.contains("epi_s3_redis_context"));
-    assert!(config_type.contains("epi_s3_redis_context"));
+    assert!(config_type.contains("epi_kernel_contract"));
+    assert!(tier_type.contains("epi_kernel_contract"));
+    assert!(!cache_type.contains("epi_s2_"));
+    assert!(!config_type.contains("epi_s2_"));
+    assert!(!tier_type.contains("epi_s2_"));
+    // The descriptor is re-exported here unchanged, so every S3 import path
+    // still resolves and the S3 surface is unaltered by the move.
+    assert_eq!(
+        config_type,
+        std::any::type_name::<epi_s3_redis_context::RedisConfig>()
+    );
     assert_eq!(CacheTier::Hot.ttl_seconds(), 300);
     assert_eq!(CacheTier::Warm.ttl_seconds(), 3600);
     assert_eq!(CacheTier::Cold.ttl_seconds(), 86400);

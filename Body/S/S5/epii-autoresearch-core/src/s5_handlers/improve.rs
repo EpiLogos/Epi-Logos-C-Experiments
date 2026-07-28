@@ -1,49 +1,67 @@
-//! S0 gate adapter for the S5 autoresearch (improvement) surface.
+//! The `s5'.improve.*` adapter, resident at the coordinate that owns it.
 //!
-//! 13.T7 audit (2026-06-02): `status`, `propose`, `evaluate`, `promote`,
-//! `history`, and `q_review.{run,latest}` are **thin adapters** over
-//! `epi_s5_epii_autoresearch_core`. No improvement DTOs or detector policy is
-//! constructed in S0; gateway JSON is deserialised directly into S5 request
-//! structs and Q-review policy is loaded by S5 from `[autoresearch]` config.
+//! # Coordinate
 //!
-//! Governance ownership:
-//! - The S5 core's `ImprovementStore::promote` already calls
-//!   `validate_approved_review`, which is the authoritative S5 governance
-//!   check (matches `ReviewCategory` to `PromotionDestination`, enforces
-//!   `governance_level` and `gate_kind`, etc.).
-//! - The local `ensure_approved_review` helper below performs a single
-//!   pre-check (resolution exists + decision == Approve) so the gate can
-//!   surface a friendlier "approved Epii review resolution is required"
-//!   error before invoking the S5 promote pipeline. It is **not** the
-//!   governance authority — it is a UX guard. The
-//!   `tranche-13.T7 follow-up` (in anima's lane: `Body/S/S5/**`) is to
-//!   expose `ImprovementStore::ensure_approved_review` (or surface
-//!   `validate_approved_review` as `pub`) so S0 can drop this duplicate
-//!   guard and call the S5 helper directly. Do not move code into S5 during
-//!   anima's active edit on 09.T7.
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | [[S5]] / S5' — Epii autoresearch (improvement) authority |
+//! | Residency  | `Body/S/S5/epii-autoresearch-core/src/s5_handlers/improve.rs` |
+//! | Position (#n) | #5 — improvement proposal → evaluation → promotion |
+//! | Actualises | [[S5-SPEC]] autoresearch governance, Track 53 T53.08 |
+//! | Public surface | [`STORE_SUBPATH`], [`improvement_store_path`], [`status`], [`propose`], [`evaluate`], [`promote`], [`history`], [`q_review_run`], [`q_review_latest`], [`q_review_night_pass`] |
+//! | Does NOT own | Method routing, transport, or the review store's own law (that is `epi-s5-epii-review-core`) |
+//! | Contract | [[S5-SPEC]] / [[S3-SPEC]] |
+//!
+//! # Relocation note (Track 53)
+//!
+//! Relocated verbatim from `Body/S/S0/epi-cli/src/gate/improve.rs`. Its 13.T7
+//! audit note stands, and the part of it that named a follow-up is now
+//! *answerable in place* rather than across a layer boundary:
+//!
+//! > 13.T7 audit (2026-06-02): `status`, `propose`, `evaluate`, `promote`,
+//! > `history`, and `q_review.{run,latest}` are **thin adapters** over the
+//! > improvement store. No improvement DTOs or detector policy is constructed
+//! > in the adapter; gateway JSON is deserialised directly into request structs
+//! > and Q-review policy is loaded from `[autoresearch]` config.
+//! >
+//! > Governance ownership: `ImprovementStore::promote` already calls
+//! > `validate_approved_review`, which is the authoritative governance check.
+//! > The local `ensure_approved_review` helper below performs a single
+//! > pre-check (resolution exists + decision == Approve) so the gate can
+//! > surface a friendlier "approved Epii review resolution is required" error
+//! > before invoking the promote pipeline. It is **not** the governance
+//! > authority — it is a UX guard.
+//!
+//! The original recorded a follow-up to expose
+//! `ImprovementStore::ensure_approved_review` so S0 could drop the duplicate
+//! guard. That follow-up is deliberately **not** taken here: this is a
+//! relocation, not a rewrite, and collapsing the guard would change which error
+//! text a failed promotion returns. The duplication is now intra-S5, which is
+//! where it can be resolved by a later track without touching the wire.
 //!
 //! Store root: `state_root/s5/epii-autoresearch`. Review store root:
-//! `state_root/s5/epii-review` (read-only here, the review/promote linkage
-//! is enforced inside S5 `validate_approved_review`).
+//! `state_root/s5/epii-review` (read-only here; the review/promote linkage is
+//! enforced inside `validate_approved_review`).
 
 use std::path::{Path, PathBuf};
 
 use epi_s2_graph_services::{Neo4jClient, Neo4jConfig};
-use epi_s5_epii_autoresearch_core::{
-    CorpusSnapshot, EvaluationEvidence, ImprovementStore, PromoteRequest, ProposeRequest,
-    QDetectorConfig, QReviewStore,
-};
+use epi_s5_epii_review_core::s5_handlers::review_store_path;
 use epi_s5_epii_review_core::{ReviewDecision, ReviewStore};
 use serde::Deserialize;
 use serde_json::{json, Value};
+
+use crate::{
+    CorpusSnapshot, EvaluationEvidence, ImprovementStore, PromoteRequest, ProposeRequest,
+    QDetectorConfig, QReviewStore,
+};
 
 /// Canonical subpath under `state_root` where the S5 autoresearch
 /// (improvement) store persists. Exposed for store-location tests.
 pub const STORE_SUBPATH: [&str; 2] = ["s5", "epii-autoresearch"];
 
 /// Resolve the S5 autoresearch store root under the given gate `state_root`.
-/// Sole source of truth for the autoresearch store location at the S0/S5
-/// boundary.
+/// Sole source of truth for the autoresearch store location.
 pub fn improvement_store_path(state_root: impl AsRef<Path>) -> PathBuf {
     let mut path = state_root.as_ref().to_path_buf();
     for segment in STORE_SUBPATH {
@@ -156,7 +174,7 @@ fn q_review_store(state_root: impl AsRef<Path>) -> QReviewStore {
 }
 
 fn review_store(state_root: impl AsRef<Path>) -> ReviewStore {
-    ReviewStore::new(super::review::review_store_path(state_root))
+    ReviewStore::new(review_store_path(state_root))
 }
 
 fn ensure_approved_review(state_root: &Path, review_item_id: &str) -> Result<(), String> {

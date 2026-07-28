@@ -1,5 +1,11 @@
 use redis::{aio::MultiplexedConnection, AsyncCommands, Client};
 
+// Track 53 T53.06: the tier vocabulary and the connection descriptor are the
+// shared S2↔S3 substrate facts and now live at `epi_kernel_contract::
+// redis_residency`. `RedisKey` and `RedisCache` — the S3′ key semantics and
+// the live client — stay here.
+pub use epi_kernel_contract::redis_residency::{CacheTier, RedisConfig};
+
 /// 12.T12.2 (d), DR-S5-ONE-1: the mandated hierarchical layout for
 /// gnostic-substrate keys. `{day}:{session}:{turn}:{coordinate}` LEADS the
 /// key segments so session-start cache warming (`{day}:{session}:*`),
@@ -7,37 +13,6 @@ use redis::{aio::MultiplexedConnection, AsyncCommands, Client};
 /// coordinate-conditional dispatch reads all stay prefix SCANs. No
 /// gnostic-substrate key may be flat-namespaced.
 pub const GNOSTIC_SUBSTRATE_HIERARCHY: &str = "{day}:{session}:{turn}:{coordinate}";
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CacheTier {
-    Live,   // TTL 30s — process liveness and heartbeat facts
-    Active, // TTL 1800s — active session lifecycle state
-    Hot,    // TTL 300s — NOW and agent-orientation facts
-    Warm,   // TTL 3600s — recent day/source/retrieval context
-    Cold,   // TTL 86400s — coordinate and manifest snapshots
-}
-
-impl CacheTier {
-    pub fn ttl_seconds(&self) -> u64 {
-        match self {
-            CacheTier::Live => 30,
-            CacheTier::Active => 1800,
-            CacheTier::Hot => 300,
-            CacheTier::Warm => 3600,
-            CacheTier::Cold => 86400,
-        }
-    }
-
-    pub fn prefix(&self) -> &'static str {
-        match self {
-            CacheTier::Live => "cache:live",
-            CacheTier::Active => "cache:active",
-            CacheTier::Hot => "cache:hot",
-            CacheTier::Warm => "cache:warm",
-            CacheTier::Cold => "cache:cold",
-        }
-    }
-}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RedisKey {
@@ -241,19 +216,6 @@ impl RedisKey {
             logical_key.push_str(segment);
         }
         Self::from_logical(tier, logical_key)
-    }
-}
-
-pub struct RedisConfig {
-    pub uri: String,
-}
-
-impl RedisConfig {
-    pub fn from_env() -> Self {
-        Self {
-            uri: std::env::var("EPILOGOS_REDIS_URI")
-                .unwrap_or_else(|_| "redis://localhost:6379".into()),
-        }
     }
 }
 

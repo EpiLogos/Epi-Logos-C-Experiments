@@ -10,7 +10,12 @@ use crate::seed::{
 use crate::semantic;
 use crate::{Neo4jClient, Neo4jConfig};
 use crate::{SemanticCacheClient, SemanticCacheConfig, SemanticCacheHealth};
-use epi_s3_redis_context::{RedisCache, RedisConfig};
+// Track 53 T53.06: the doctor reports the health of the substrate S2 owns —
+// per canon S2 is "raw Neo4j + Redis as shared infrastructure" — so it probes
+// Redis with its own connection instead of borrowing S3′'s temporal-context
+// client. `RedisConfig` still comes from S-root, so the server address and its
+// `EPILOGOS_REDIS_URI` default stay a single authority shared with S3.
+use epi_kernel_contract::RedisConfig;
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -624,8 +629,35 @@ async fn neo4j_status(config: &Neo4jConfig) -> (ServiceStatus, Option<Neo4jClien
     }
 }
 
+/// The doctor's own Redis connection.
+///
+/// Two commands, nothing else: `PING` for liveness and `FT._LIST` for the
+/// RediSearch module the semantic cache needs. It carries no key vocabulary —
+/// S3′'s `RedisKey` semantics stay at S3 — so this is a probe of the shared
+/// substrate, not a second cache client.
+struct RedisProbe {
+    conn: redis::aio::MultiplexedConnection,
+}
+
+impl RedisProbe {
+    async fn connect(config: &RedisConfig) -> Result<Self, redis::RedisError> {
+        let client = redis::Client::open(config.uri.as_str())?;
+        let conn = client.get_multiplexed_async_connection().await?;
+        Ok(Self { conn })
+    }
+
+    async fn health_check(&mut self) -> Result<bool, redis::RedisError> {
+        let pong: String = redis::cmd("PING").query_async(&mut self.conn).await?;
+        Ok(pong == "PONG")
+    }
+
+    async fn search_indexes(&mut self) -> Result<Vec<String>, redis::RedisError> {
+        redis::cmd("FT._LIST").query_async(&mut self.conn).await
+    }
+}
+
 async fn redis_status(config: &RedisConfig) -> (ServiceStatus, RedisStackStatus) {
-    match RedisCache::connect(config).await {
+    match RedisProbe::connect(config).await {
         Ok(mut cache) => match cache.health_check().await {
             Ok(true) => {
                 let stack = match cache.search_indexes().await {

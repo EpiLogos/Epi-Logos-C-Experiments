@@ -4,7 +4,7 @@ use epi_s2_graph_services::{
     LinkValidationResult, LiveGraphBackedEvidence, RelationshipManager, SemanticCacheConfig,
     SemanticDocument, SyncCoordinator, SyncResult,
 };
-use epi_s3_redis_context::CacheTier;
+use epi_kernel_contract::CacheTier;
 
 #[test]
 fn graph_cache_semantics_are_s2_owned_over_s3_redis_runtime() {

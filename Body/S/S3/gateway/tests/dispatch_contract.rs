@@ -567,6 +567,17 @@ mod t9_route_ownership_cross_walk {
         &[
             // T53.04 — the `s1'.*` vault-governance methods.
             "Body/S/S1/hen-compiler-core/src/s1_handlers.rs",
+            // T53.05 — the s2 graph methods (parashaktiCorrespondences stays a
+            // composition-root composite and is deliberately absent).
+            "Body/S/S2/graph-services/src/s2_handlers.rs",
+            // T53.06 — s3'.temporal.context. The two *.subscribe methods stay
+            // composites: they need epi-cli's SessionStore, whose `ensure`
+            // injects the CLI's create-context.
+            "Body/S/S3/gateway/src/s3_handlers.rs",
+            // T53.07 — the s5' families, one table per owning crate.
+            "Body/S/S5/epii-review-core/src/s5_handlers.rs",
+            "Body/S/S5/epii-autoresearch-core/src/s5_handlers/mod.rs",
+            "Body/S/S5/epii-agent-core/src/s5_handlers/mod.rs",
         ]
     }
 
@@ -619,6 +630,11 @@ mod t9_route_ownership_cross_walk {
     /// trailing comma would make every unrelated string literal in S0's server
     /// look like a dispatched method.
     fn coordinate_registered_methods() -> Vec<String> {
+        // Registration tables do not all have one shape: most are
+        // `("name", handler)` tuple rows, S3's is a bare `&[&str]`, and rows
+        // wrap. Rather than pin a syntax, read the `*_METHODS` const blocks and
+        // take the method literals inside them — targeted enough to be honest,
+        // loose enough to survive a table growing a different row shape.
         let mut out = Vec::new();
         for rel in coordinate_handler_tables() {
             let path = workspace_root().join(rel);
@@ -629,23 +645,33 @@ mod t9_route_ownership_cross_walk {
                 )
             });
             let mut found = 0usize;
+            let mut in_table = false;
             for line in src.lines() {
-                let trimmed = line.trim_start();
-                let Some(rest) = trimmed.strip_prefix("(\"") else {
-                    continue;
-                };
-                let Some(end) = rest.find('"') else { continue };
-                // `("s1'.vault.read_file", read_file),`
-                if rest[end + 1..].trim_start().starts_with(',') {
-                    out.push(rest[..end].to_owned());
-                    found += 1;
+                if !in_table {
+                    // Both shapes count: a `*_METHODS: &[...]` table and a lone
+                    // `*_METHOD: &str` const (S5's async night-pass is one).
+                    if line.contains("_METHOD") && line.contains(": &") {
+                        in_table = true;
+                    } else {
+                        continue;
+                    }
+                }
+                for literal in line.split('"').skip(1).step_by(2) {
+                    // A method name, not prose: dotted, and no whitespace.
+                    if literal.contains('.') && !literal.contains(' ') {
+                        out.push(literal.to_owned());
+                        found += 1;
+                    }
+                }
+                if line.contains("];") || line.trim_end().ends_with("\";") {
+                    in_table = false;
                 }
             }
             assert!(
                 found > 0,
-                "T9 cross-walk read {} but found no (\"method\", handler) rows — the table \
-                 moved or changed shape, and silently finding nothing would let every method \
-                 it owns look undispatched",
+                "T9 cross-walk read {} but found no method literals in a *_METHODS block — the \
+                 table moved or changed shape, and silently finding nothing would let every \
+                 method it owns look undispatched",
                 path.display()
             );
         }

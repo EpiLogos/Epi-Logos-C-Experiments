@@ -26,10 +26,9 @@ use crate::gate::runs::{RunContext, RunSnapshot};
 use crate::gate::runtime::GatewayRuntimeState;
 use crate::gate::sessions::{SessionPatch, SessionStore};
 use crate::gate::{
-    anima, approvals, browser, channels, chat, config, cron, devices, epii, epii_axiom, gnostic,
-    graph,
-    graphiti, improve, logs, models, nodes, review, sessions, skills, subagents, system,
-    transcripts, tuning, update, verifier, wizard,
+    anima, approvals, browser, channels, chat, config, cron, devices, epii, gnostic, graph,
+    graphiti, logs, models, nodes, sessions, skills, subagents, system, transcripts, update,
+    verifier, wizard,
 };
 
 use super::method_envelope::{DispatchResult, PostResponseAction};
@@ -50,6 +49,40 @@ use super::{
 pub(crate) struct GatewayCallContext {
     pub(crate) state_root: PathBuf,
     pub(crate) runtime: GatewayRuntimeState,
+    /// S3's session store, owned so the S3 handler port can borrow it.
+    pub(crate) session_store: epi_s3_gateway::session_store::SessionStore,
+}
+
+// The composition root is where the coordinates meet. Each layer stated what it
+// needs as a trait rather than importing a gateway type, so the wiring is these
+// three impls and nothing else — S1, S2, S3 and S5 named none of each other.
+
+impl epi_s5_epii_review_core::s5_handlers::StateRootContext for GatewayCallContext {
+    fn state_root(&self) -> &std::path::Path {
+        &self.state_root
+    }
+}
+
+impl epi_s3_gateway::temporal_session::TemporalSurfaces for GatewayCallContext {
+    // Kairos and Pratibimba are M4 identity law resident in this crate, so S3
+    // takes them as an injected surface rather than importing upward.
+    fn kairos_surface(&self, day_id: &str) -> Value {
+        crate::gate::temporal::kairos_surface_value(day_id)
+    }
+
+    fn pratibimba_surface(&self) -> Value {
+        crate::gate::temporal::pratibimba_surface_value()
+    }
+}
+
+impl epi_s3_gateway::s3_handlers::TemporalContextEnv for GatewayCallContext {
+    fn state_root(&self) -> &std::path::Path {
+        &self.state_root
+    }
+
+    fn session_store(&self) -> &epi_s3_gateway::session_store::SessionStore {
+        &self.session_store
+    }
 }
 
 /// The not-yet-relocated S0 dispatcher, wrapped as a handler so it can be
@@ -97,6 +130,16 @@ fn router() -> &'static Router<GatewayCallContext> {
         // dispatcher by subtraction.
         epi_s1_hen_compiler_core::s1_handlers::register_s1_handlers(&mut registry)
             .expect("s1' handlers register exactly once");
+        epi_s2_graph_services::register_s2_handlers(&mut registry)
+            .expect("s2 handlers register exactly once");
+        epi_s3_gateway::register_s3_handlers(&mut registry)
+            .expect("s3' handlers register exactly once");
+        epi_s5_epii_review_core::s5_handlers::register_s5_review_handlers(&mut registry)
+            .expect("s5' review handlers register exactly once");
+        epi_s5_epii_autoresearch_core::s5_handlers::register_s5_autoresearch_handlers(&mut registry)
+            .expect("s5' improve/tune handlers register exactly once");
+        epi_s5_epii_agent_core::s5_handlers::register_s5_epii_handlers(&mut registry)
+            .expect("s5' epii handlers register exactly once");
         registry
             .register_namespace(LEGACY_S0_FALLBACK_NAMESPACE, Arc::new(LegacyS0Dispatcher))
             .expect("the legacy fallback is registered exactly once");
@@ -194,6 +237,8 @@ pub(super) async fn dispatch_rpc(
     let ctx = GatewayCallContext {
         state_root: state_root.clone(),
         runtime: runtime.clone(),
+        session_store: epi_s3_gateway::session_store::SessionStore::new(state_root)
+            .map_err(internal_error)?,
     };
     let request = request_from_frame(frame, peer_is_loopback);
     match router().route(&ctx, &request).await {
@@ -740,7 +785,7 @@ async fn legacy_dispatch_rpc(
                 "graphiti": graphiti_evidence,
                 "gnosis": gnosis_evidence,
             });
-            let review = review::submit(
+            let review = epi_s5_epii_review_core::s5_handlers::submit(
                 state_root,
                 &json!({
                     "source": "aletheia",
@@ -1403,27 +1448,11 @@ async fn legacy_dispatch_rpc(
                 )),
             }
         }
-        "s2.graph.query"
-        | "s2.graph.node"
-        | "s2.graph.list"
-        | "s2.graph.list_by_filter"
-        | "s2.graph.traverse"
-        | "s2.graph.harmonic_relations.materialize"
-        | "s2.graph.pointer_web.compute"
-        | "s2.graph.pointer_web.refresh"
-        | "s2.graph.kernel_resonance.record"
-        | "s2.graph.gds.tangent_overlay"
-        | "s2.graph.ontology.reload"
-        | "s2.graph.seed.snapshot"
-        | "s2.graph.core65.audit"
-        | "s2.graph.promotion.dry_run"
-        | "s2.graph.promotion.commit"
-        | "s2.graph.relation_family.list"
-        | "s2.parashaktiCorrespondences"
-        | "s2'.coordinate.resolve"
-        | "s2'.retrieve"
-        | "s2'.rerank"
-        | "s2'.enrich" => graph::dispatch_graph_method(&frame.method, &frame.params)
+        // T53.05: the other 20 s2* methods are registered by
+        // epi_s2_graph_services::register_s2_handlers. Only the composite stays:
+        // parashaktiCorrespondences needs S2 graph + M4 Nara medicine/oracle +
+        // the S0 kernel bridge, and no single crate may hold all three.
+        "s2.parashaktiCorrespondences" => graph::dispatch_graph_method(&frame.method, &frame.params)
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
@@ -1651,32 +1680,6 @@ async fn legacy_dispatch_rpc(
         "s4'.orchestration.score" => anima::orchestration_score(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
-        "s3'.temporal.context" => {
-            let session_key = frame
-                .params
-                .get("sessionKey")
-                .and_then(|value| value.as_str())
-                .unwrap_or("agent:main:main");
-            let agent_id = frame
-                .params
-                .get("agentId")
-                .and_then(|value| value.as_str())
-                .unwrap_or("operator");
-            let mut value =
-                crate::gate::temporal::context_value(state_root, &store, session_key, agent_id)
-                    .map_err(internal_error)?;
-            if frame
-                .params
-                .get("hydrateRedis")
-                .and_then(|value| value.as_bool())
-                .unwrap_or(false)
-            {
-                crate::gate::temporal::hydrate_redis_from_context(&mut value)
-                    .await
-                    .map_err(internal_error)?;
-            }
-            Ok(DispatchResult::immediate(value))
-        }
         "s1'.q_articulation.accept" => {
             crate::gate::s1_hen::q_articulation_accept(state_root, &frame.params)
                 .await
@@ -1712,92 +1715,6 @@ async fn legacy_dispatch_rpc(
         .await
         .map(DispatchResult::immediate)
         .map_err(internal_error),
-        "s5'.review.submit" => review::submit(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.review.inbox" => {
-            let status = optional_parse_param(&frame.params, "status")?;
-            let source = optional_parse_param(&frame.params, "source")?;
-            let limit = frame
-                .params
-                .get("limit")
-                .and_then(|value| value.as_u64())
-                .map(|value| value as usize);
-            review::inbox(state_root, status, source, limit)
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
-        }
-        "s5'.review.resolve" => review::resolve(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.review.history" => {
-            let limit = frame
-                .params
-                .get("limit")
-                .and_then(|value| value.as_u64())
-                .map(|value| value as usize);
-            review::history(state_root, limit)
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
-        }
-        "s5'.tune.registry.list" => tuning::list(state_root)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.tune.registry.get" => tuning::get(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.tune.registry.set" => tuning::set(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.tune.audit.read" => tuning::audit_read(&frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.tune.lock.toggle" => tuning::lock_toggle(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.tune.propose" => tuning::propose(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.tune.proposals.list" => tuning::proposals_list(state_root)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.tune.proposals.resolve" => tuning::proposals_resolve(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.improve.status" => improve::status(state_root)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.propose" => improve::propose(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.evaluate" => improve::evaluate(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.promote" => improve::promote(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.history" => {
-            let limit = frame
-                .params
-                .get("limit")
-                .and_then(|value| value.as_u64())
-                .map(|value| value as usize);
-            improve::history(state_root, limit)
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
-        }
-        "s5'.improve.q_review.run" => improve::q_review_run(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.q_review.latest" => improve::q_review_latest(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.improve.q_review.night_pass" => {
-            improve::q_review_night_pass(state_root, &frame.params)
-                .await
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
-        }
         "s5'.epii.status" => epii::status(state_root)
             .await
             .map(DispatchResult::immediate)
@@ -1864,21 +1781,9 @@ async fn legacy_dispatch_rpc(
             .map_err(internal_error),
         // 26.T26.10 — the read sibling; a projection of the review store the
         // write path already submits into.
-        "s5'.epii.deposit.list" => epii::deposit_list(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(invalid_params_error),
-        "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {
             Ok(DispatchResult::immediate(epii::user_orientation()))
         }
-        "s5'.epii.axiom_translation_history" => epii_axiom::history_value(state_root)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
-        "s5'.epii.axiom_translate" => epii_axiom::translate_and_persist(state_root, &frame.params)
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
         // 25.T25.11 — nara.transform.* are first-class METHOD_NAMES entries
         // (unlike the other nara.* route extensions, which are intentionally
         // absent from METHOD_NAMES), so the S3 T9 cross-walk requires them to

@@ -981,11 +981,10 @@ dependencies = [
  "chrono",
  "epi-kernel-contract",
  "epi-s2-graph-schema",
- "epi-s3-gateway-contract",
- "epi-s3-redis-context",
  "gemini-embedding",
  "neo4rs",
  "portal-core",
+ "redis",
  "reqwest",
  "serde",
  "serde_json",
@@ -1000,6 +999,7 @@ version = "0.1.0"
 dependencies = [
  "blake3",
  "epi-kernel-contract",
+ "epi-s2-graph-services",
  "epi-s3-gateway-contract",
  "epi-s3-redis-context",
  "futures-util",
@@ -1042,6 +1042,7 @@ dependencies = [
 name = "epi-s3-redis-context"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "redis",
  "serde",
  "serde_json",
@@ -1051,6 +1052,7 @@ dependencies = [
 name = "epi-s5-epii-agent-core"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "epi-s5-epii-autoresearch-core",
  "epi-s5-epii-review-core",
  "serde",
@@ -1061,6 +1063,7 @@ dependencies = [
 name = "epi-s5-epii-autoresearch-core"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "epi-s1-hen-compiler-core",
  "epi-s2-graph-services",
  "epi-s5-epii-review-core",
@@ -1075,6 +1078,7 @@ dependencies = [
 name = "epi-s5-epii-review-core"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "serde",
  "serde_json",
  "uuid",

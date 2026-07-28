@@ -1,4 +1,7 @@
-use epi_s3_gateway_contract::{
+// Track 53 T53.06: the Graphiti authority declaration is a statement about S3
+// (runtime), S5 (invocation) and S2 (planning), so it lives at S-root rather
+// than in the S3 gateway contract — S2 must not depend on S3.
+use epi_kernel_contract::{
     GraphitiAdapterContract, GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY,
 };
 use serde::{Deserialize, Serialize};

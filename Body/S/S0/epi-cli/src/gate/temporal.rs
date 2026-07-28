@@ -358,7 +358,7 @@ fn terminal_capture_handle_ref(session_id: &str) -> String {
     format!("s3:gateway:temporal:session:{session_id}:terminal:capture-handle")
 }
 
-fn kairos_surface_value(day_id: &str) -> Value {
+pub fn kairos_surface_value(day_id: &str) -> Value {
     let fresh = kairos::is_current_fresh();
     match kairos::load_current() {
         Ok(Some(snapshot)) => json!({

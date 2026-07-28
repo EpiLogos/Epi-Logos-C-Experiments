@@ -1,6 +1,10 @@
 use serde::de::{Error as DeError, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Value;
+
+/// The `s5'.review.*` gateway surface, resident at its owning coordinate
+/// (Track 53 T53.08). Relocated verbatim from `epi-cli/src/gate/review.rs`.
+pub mod s5_handlers;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};

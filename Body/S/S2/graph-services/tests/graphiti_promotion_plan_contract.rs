@@ -1,5 +1,5 @@
 use epi_s2_graph_services::{GraphitiEpisodePlan, PromotionClass, SyncCoordinator};
-use epi_s3_gateway_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY};
+use epi_kernel_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY};
 
 #[test]
 fn day_now_paths_plan_graphiti_episode_not_neo4j_node() {

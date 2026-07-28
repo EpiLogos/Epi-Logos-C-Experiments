@@ -31,6 +31,10 @@ pub mod q_articulation;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
+/// The `s2.*` / `s2'.*` gateway handlers, resident at their own coordinate
+/// (Track 53). Registered into an `epi_kernel_contract::MethodRegistry` by the
+/// composition root; S3 routes to them without importing this crate.
+pub mod s2_handlers;
 pub mod schema;
 pub mod seed;
 pub mod semantic;
@@ -116,6 +120,7 @@ pub use retrieval_query::{
     tokenize_query, CoordinateSearchScope, DisclosureLevel, GraphRetrievalQuery,
     HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
 };
+pub use s2_handlers::{register_s2_handlers, S2_COMPOSITE_AT_ROOT, S2_METHODS};
 pub use semantic::SemanticDocument;
 pub use sync::{
     plan_frontmatter_properties, resolve_frontmatter_key, CodeProvenanceEvidence,
@@ -274,7 +279,7 @@ impl SemanticCacheConfig {
     }
 
     pub fn for_local_dev(repo_root: &Path) -> Self {
-        Self::from_script_path(epi_s3_redis_context::redisvl_service_script(repo_root))
+        Self::from_script_path(epi_kernel_contract::redisvl_service_script(repo_root))
     }
 
     pub fn from_script_path(script_path: PathBuf) -> Self {
@@ -575,21 +580,21 @@ fn default_script_path() -> PathBuf {
         .parent()
         .and_then(Path::parent)
         .and_then(Path::parent)
-        .map(epi_s3_redis_context::redisvl_service_script);
+        .map(epi_kernel_contract::redisvl_service_script);
     if let Some(candidate) = repo_candidate {
         if candidate.exists() {
             return candidate;
         }
     }
 
-    let manifest_candidate = epi_s3_redis_context::redisvl_service_script(&manifest_root);
+    let manifest_candidate = epi_kernel_contract::redisvl_service_script(&manifest_root);
     if manifest_candidate.exists() {
         return manifest_candidate;
     }
 
     if let Ok(exe) = std::env::current_exe() {
         if let Some(root) = exe.parent().and_then(Path::parent) {
-            let candidate = epi_s3_redis_context::redisvl_service_script(root);
+            let candidate = epi_kernel_contract::redisvl_service_script(root);
             if candidate.exists() {
                 return candidate;
             }

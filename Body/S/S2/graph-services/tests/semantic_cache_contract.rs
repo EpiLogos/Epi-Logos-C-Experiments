@@ -5,7 +5,7 @@ use epi_s2_graph_services::{
     GraphRedisRole, SearchPayload, SemanticCacheConfig, SemanticCacheHealth,
     SemanticCacheMatchStrategy, SemanticDocument, StorePayload,
 };
-use epi_s3_redis_context::{RedisRuntimeRole, REDISVL_SERVICE_RELATIVE_PATH};
+use epi_kernel_contract::{RedisRuntimeRole, REDISVL_SERVICE_RELATIVE_PATH};
 
 #[test]
 fn semantic_cache_contract_is_s2_graph_cache_not_gateway_temporal_context() {

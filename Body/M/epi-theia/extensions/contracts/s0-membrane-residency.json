@@ -41,7 +41,7 @@
     "Body/S/S0/epi-cli/src/gate",
     "Body/S/S0/epi-cli/src/graph"
   ],
-  "lawBearingFileCeiling": 59,
+  "lawBearingFileCeiling": 56,
   "baseline": {
     "recordedAt": "2026-07-28",
     "tranche": "53.T53.02",
@@ -49,7 +49,10 @@
     "graph": 29,
     "note": "Residency baseline 2026-05-06 (c3f39763) was 41 files under gate/ alone; it had grown to 59 files / 15,720 law-bearing code lines across gate+graph by the time this ratchet landed. That growth is the failure this file exists to make impossible. T53.04 took it to 14,940.",
     "lawBearingLines": 15720,
-    "metric": "CODE lines only \u2014 blank lines and `//` comments excluded. Raw-line counting made the ratchet measure text rather than law: adding the `// S0 ADAPTER:` ownership annotation that s0_membrane_guardrails.rs requires raised the count by 3 and turned the gate red for documenting residency correctly. A gate that punishes the thing the architecture asks for gets raised rather than obeyed, so the metric was fixed instead of the ceiling."
+    "metric": "CODE lines only — blank lines and `//` comments excluded. Raw-line counting made the ratchet measure text rather than law: adding the `// S0 ADAPTER:` ownership annotation that s0_membrane_guardrails.rs requires raised the count by 3 and turned the gate red for documenting residency correctly. A gate that punishes the thing the architecture asks for gets raised rather than obeyed, so the metric was fixed instead of the ceiling.",
+    "progress": [
+      "T53.05/06/07 (2026-07-28): 59 files / 14,940 lines -> 56 files / 14077 lines. The s2 graph family, s3-prime temporal context and the s5-prime improve/review/tune/epii families reached their coordinates; gate/{improve,review,tuning,epii_axiom}.rs are deleted outright."
+    ]
   },
   "target": {
     "lawBearingFileCeiling": 0,
@@ -57,5 +60,5 @@
     "note": "At zero the ceiling is redundant and the structural guard replaces it: gate/ holds only CLI wrappers, graph/ only argv-and-print.",
     "lawBearingLineCeiling": 0
   },
-  "lawBearingLineCeiling": 14940
+  "lawBearingLineCeiling": 14077
 }
