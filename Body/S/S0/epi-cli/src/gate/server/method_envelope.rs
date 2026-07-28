@@ -1,5 +1,6 @@
 use serde_json::Value;
 
+#[derive(Debug)]
 pub(super) struct DispatchResult {
     pub(super) result: Value,
     pub(super) post_response: Option<PostResponseAction>,

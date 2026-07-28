@@ -1,8 +1,14 @@
 use std::fs;
 use std::path::PathBuf;
+use std::sync::{Arc, OnceLock};
 use std::time::Duration;
 
+use epi_kernel_contract::{
+    BoxFuture, FollowUp, MethodError, MethodHandler, MethodOutcome, MethodRegistry, MethodRequest,
+    MethodResult,
+};
 use epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry};
+use epi_s3_gateway::router::{request_from_frame, Router, LEGACY_S0_FALLBACK_NAMESPACE};
 use epi_s3_gateway_contract::TerminalBinding;
 use portal_core::{
     ananda_projection, kernel_tick_from_epogdoon, m3_transcription_projection, PortalClockState,
@@ -27,6 +33,7 @@ use crate::gate::{
 };
 
 use super::method_envelope::{DispatchResult, PostResponseAction};
+
 use super::{
     agent_id_from_session_key, branch_session, inherit_nullable_string_field,
     inherit_nullable_value_field, internal_error, invalid_params_error, is_stop_command_text,
@@ -35,7 +42,162 @@ use super::{
     required_str_alias, session_identifier, session_tree, session_value_with_run_state,
 };
 
+/// The context every registered handler receives.
+///
+/// Both fields are cheap to clone — `GatewayRuntimeState` is an `Arc` handle —
+/// so the router can hold a registry that outlives any single request instead
+/// of being rebuilt per call.
+pub(crate) struct GatewayCallContext {
+    pub(crate) state_root: PathBuf,
+    pub(crate) runtime: GatewayRuntimeState,
+}
+
+/// The not-yet-relocated S0 dispatcher, wrapped as a handler so it can be
+/// parked on the registry's lowest-priority namespace while Track 53 drains
+/// handlers to their coordinates (`53.T53.04`–`53.T53.08`).
+///
+/// Nothing about the 179 method arms below changed: they are reached through
+/// the registry now rather than called directly, which is what moves the
+/// routing decision to S3 without moving a single handler body yet.
+struct LegacyS0Dispatcher;
+
+impl MethodHandler<GatewayCallContext> for LegacyS0Dispatcher {
+    fn handle<'a>(
+        &'a self,
+        ctx: &'a GatewayCallContext,
+        request: &'a MethodRequest,
+    ) -> BoxFuture<'a, MethodResult> {
+        Box::pin(async move {
+            let frame = RequestFrame {
+                kind: "rpc".to_owned(),
+                id: request.id,
+                method: request.method.clone(),
+                params: request.params.clone(),
+            };
+            legacy_dispatch_rpc(
+                &ctx.state_root,
+                &ctx.runtime,
+                &frame,
+                request.peer_is_loopback,
+            )
+            .await
+            .map(outcome_from_dispatch_result)
+            .map_err(MethodError::from)
+        })
+    }
+}
+
+/// The process-wide router. Built once; S3 owns the resolution rule.
+fn router() -> &'static Router<GatewayCallContext> {
+    static ROUTER: OnceLock<Router<GatewayCallContext>> = OnceLock::new();
+    ROUTER.get_or_init(|| {
+        let mut registry = MethodRegistry::new();
+        registry
+            .register_namespace(LEGACY_S0_FALLBACK_NAMESPACE, Arc::new(LegacyS0Dispatcher))
+            .expect("the legacy fallback is registered exactly once");
+        Router::new(registry)
+    })
+}
+
+/// `startAgentRun` / `startChatRun` follow-up discriminators.
+///
+/// The S-root port models a post-response action as an opaque `kind` +
+/// `payload` so that S4 semantics stay out of the root contract; these two
+/// constants are where S0 re-attaches the meaning.
+const FOLLOW_UP_START_AGENT_RUN: &str = "startAgentRun";
+const FOLLOW_UP_START_CHAT_RUN: &str = "startChatRun";
+
+fn outcome_from_dispatch_result(result: DispatchResult) -> MethodOutcome {
+    match result.post_response {
+        None => MethodOutcome::immediate(result.result),
+        Some(action) => {
+            let (kind, run_id, session_key, message) = match action {
+                PostResponseAction::StartAgentRun {
+                    run_id,
+                    session_key,
+                    message,
+                } => (FOLLOW_UP_START_AGENT_RUN, run_id, session_key, message),
+                PostResponseAction::StartChatRun {
+                    run_id,
+                    session_key,
+                    message,
+                } => (FOLLOW_UP_START_CHAT_RUN, run_id, session_key, message),
+            };
+            MethodOutcome::with_follow_up(
+                result.result,
+                FollowUp::new(
+                    kind,
+                    json!({
+                        "runId": run_id,
+                        "sessionKey": session_key,
+                        "message": message,
+                    }),
+                ),
+            )
+        }
+    }
+}
+
+fn dispatch_result_from_outcome(outcome: MethodOutcome) -> Result<DispatchResult, (String, String)> {
+    let Some(follow_up) = outcome.follow_up else {
+        return Ok(DispatchResult::immediate(outcome.result));
+    };
+    let field = |name: &str| -> Result<String, (String, String)> {
+        follow_up
+            .payload
+            .get(name)
+            .and_then(Value::as_str)
+            .map(str::to_owned)
+            .ok_or_else(|| {
+                internal_error(format!(
+                    "follow-up '{}' is missing string field '{}'",
+                    follow_up.kind, name
+                ))
+            })
+    };
+    let run_id = field("runId")?;
+    let session_key = field("sessionKey")?;
+    let message = field("message")?;
+    let action = match follow_up.kind.as_str() {
+        FOLLOW_UP_START_AGENT_RUN => PostResponseAction::StartAgentRun {
+            run_id,
+            session_key,
+            message,
+        },
+        FOLLOW_UP_START_CHAT_RUN => PostResponseAction::StartChatRun {
+            run_id,
+            session_key,
+            message,
+        },
+        other => {
+            return Err(internal_error(format!(
+                "unknown post-response follow-up kind '{other}'"
+            )))
+        }
+    };
+    Ok(DispatchResult::with_post_response(outcome.result, action))
+}
+
+/// Entry point from the websocket loop. Unchanged in signature and in wire
+/// behaviour; routing now resolves through S3.
 pub(super) async fn dispatch_rpc(
+    state_root: &PathBuf,
+    runtime: &GatewayRuntimeState,
+    frame: &RequestFrame,
+    peer_is_loopback: bool,
+) -> Result<DispatchResult, (String, String)> {
+    let ctx = GatewayCallContext {
+        state_root: state_root.clone(),
+        runtime: runtime.clone(),
+    };
+    let request = request_from_frame(frame, peer_is_loopback);
+    match router().route(&ctx, &request).await {
+        Ok(outcome) => dispatch_result_from_outcome(outcome),
+        Err(error) => Err(error.into()),
+    }
+}
+
+async fn legacy_dispatch_rpc(
     state_root: &PathBuf,
     runtime: &GatewayRuntimeState,
     frame: &RequestFrame,
@@ -2021,5 +2183,127 @@ async fn wait_for_run(
         }
 
         tokio::time::sleep(Duration::from_millis(10)).await;
+    }
+}
+
+#[cfg(test)]
+mod routing_seam_tests {
+    use super::*;
+
+    /// The post-response action survives the trip through the S-root port.
+    ///
+    /// This is the one lossy-looking hop introduced by routing through the
+    /// registry: `PostResponseAction` is an S0/S4 concern, the port carries an
+    /// opaque `FollowUp`, and S0 re-attaches the meaning on the way back. If
+    /// this round trip drifts, agent and chat runs stop starting after their
+    /// response is written — a failure the wire itself would not show.
+    #[test]
+    fn start_agent_run_round_trips_through_the_opaque_follow_up() {
+        let original = DispatchResult::with_post_response(
+            json!({ "ok": true }),
+            PostResponseAction::StartAgentRun {
+                run_id: "run-7".to_owned(),
+                session_key: "sess-1".to_owned(),
+                message: "hello".to_owned(),
+            },
+        );
+
+        let outcome = outcome_from_dispatch_result(original);
+        assert_eq!(
+            outcome.follow_up.as_ref().map(|f| f.kind.as_str()),
+            Some(FOLLOW_UP_START_AGENT_RUN)
+        );
+
+        let restored = dispatch_result_from_outcome(outcome).expect("round trip");
+        assert_eq!(restored.result, json!({ "ok": true }));
+        match restored.post_response {
+            Some(PostResponseAction::StartAgentRun {
+                run_id,
+                session_key,
+                message,
+            }) => {
+                assert_eq!(run_id, "run-7");
+                assert_eq!(session_key, "sess-1");
+                assert_eq!(message, "hello");
+            }
+            other => panic!("expected StartAgentRun, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn start_chat_run_round_trips_and_stays_distinct_from_agent_run() {
+        let outcome = outcome_from_dispatch_result(DispatchResult::with_post_response(
+            Value::Null,
+            PostResponseAction::StartChatRun {
+                run_id: "run-8".to_owned(),
+                session_key: "sess-2".to_owned(),
+                message: "chat".to_owned(),
+            },
+        ));
+        assert_eq!(
+            outcome.follow_up.as_ref().map(|f| f.kind.as_str()),
+            Some(FOLLOW_UP_START_CHAT_RUN)
+        );
+
+        match dispatch_result_from_outcome(outcome)
+            .expect("round trip")
+            .post_response
+        {
+            Some(PostResponseAction::StartChatRun { run_id, .. }) => assert_eq!(run_id, "run-8"),
+            other => panic!("expected StartChatRun, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn an_immediate_result_carries_no_follow_up() {
+        let outcome = outcome_from_dispatch_result(DispatchResult::immediate(json!({ "a": 1 })));
+        assert!(outcome.follow_up.is_none());
+        let restored = dispatch_result_from_outcome(outcome).expect("round trip");
+        assert_eq!(restored.result, json!({ "a": 1 }));
+        assert!(restored.post_response.is_none());
+    }
+
+    /// A follow-up S0 does not recognise is refused rather than dropped —
+    /// silently discarding it would swallow an agent run.
+    #[test]
+    fn an_unknown_follow_up_kind_is_refused() {
+        let outcome = MethodOutcome::with_follow_up(
+            Value::Null,
+            FollowUp::new("somethingElse", json!({"runId":"r","sessionKey":"s","message":"m"})),
+        );
+        let (code, message) = dispatch_result_from_outcome(outcome).expect_err("must refuse");
+        assert_eq!(code, "internal");
+        assert!(message.contains("somethingElse"), "got: {message}");
+    }
+
+    #[test]
+    fn a_malformed_follow_up_payload_is_refused() {
+        let outcome = MethodOutcome::with_follow_up(
+            Value::Null,
+            FollowUp::new(FOLLOW_UP_START_AGENT_RUN, json!({ "runId": "r" })),
+        );
+        let (code, message) = dispatch_result_from_outcome(outcome).expect_err("must refuse");
+        assert_eq!(code, "internal");
+        assert!(message.contains("sessionKey"), "got: {message}");
+    }
+
+    /// The router S0 hands every request to resolves the legacy dispatcher for
+    /// a method no coordinate has claimed yet — which is what keeps the wire
+    /// unchanged while `53.T53.04`–`08` drain handlers out from under it.
+    #[test]
+    fn the_process_router_parks_the_legacy_dispatcher_on_the_fallback_namespace() {
+        let registry = router().registry();
+        assert_eq!(
+            registry.namespace_prefixes(),
+            vec![LEGACY_S0_FALLBACK_NAMESPACE],
+            "the drain scaffold must be the only namespace registration"
+        );
+        // Every still-unmoved method resolves through it.
+        for method in ["sessions.list", "cron.add", "s5'.improve.propose", "nara.pasu.show"] {
+            assert!(
+                registry.contains(method),
+                "{method} must still resolve while the drain is in progress"
+            );
+        }
     }
 }

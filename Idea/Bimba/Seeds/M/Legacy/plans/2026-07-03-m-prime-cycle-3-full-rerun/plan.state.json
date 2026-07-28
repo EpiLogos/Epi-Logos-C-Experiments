@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T11:11:22.330Z",
+  "updatedAt": "2026-07-28T11:36:43.378Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14556,16 +14556,16 @@
       "blocker": null
     },
     "29.T29.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T11:16:09.333Z",
+      "claimedAt": "2026-07-28T11:16:09.333Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-29t295",
+      "leaseExpiresAt": "2026-07-28T14:16:09.333Z",
+      "heartbeatAt": "2026-07-28T11:16:09.333Z",
+      "runId": "20260728T111609Z-29-T29.5",
       "worktree": null,
       "blocker": null
     },
@@ -21425,16 +21425,34 @@
       "blocker": null
     },
     "53.T53.03": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-28T11:36:43.316Z",
+      "claimedAt": "2026-07-28T11:19:53.202Z",
+      "completedAt": "2026-07-28T11:36:43.316Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T11:36:43.316Z",
+          "text": "S3 now owns routing execution, not just the route table. New Body/S/S3/gateway/src/router.rs holds Router<C> resolving through the T53.01 MethodRegistry plus unregistered_method_error(), which rebuilds the frozen unimplemented wire text from S3s own classify_method/dispatch_plan_entry — the reason S-root deliberately returns None instead of inventing that error. epi-cli/src/gate/server/dispatch.rs keeps dispatch_rpc byte-identical in signature (websocket.rs untouched) but now builds a GatewayCallContext and routes through S3; the 179 match arms moved verbatim into legacy_dispatch_rpc and are reached as a handler parked on LEGACY_S0_FALLBACK_NAMESPACE (the empty prefix, so it is strictly lowest priority and shrinks by subtraction as T53.04-08 register real owners). CLASS-W LIVE PROOF: verify-all --only ...,live-wire,gateway-methods GREEN in 32.4s against a real spawned gateway; gateway suite 101->106 (the 5 new router tests). WIRE FROZEN, PROVEN BY DIFF: plan.runs/gateway-method-audit.json regenerated during the run differs from HEAD by exactly one line, generatedAt — all 281 probed methods (104 present / 177 absent) retain identical state, so nothing regressed present->absent. Also green: epi-kernel-contract 48, S3 gateway --lib router 5/5 (incl. the frozen error asserted against a real shipped route-table method), epi-cli --lib 332 passed 0 failed with 6 new routing_seam tests proving the PostResponseAction<->FollowUp round trip both ways and refusing an unknown or malformed follow-up rather than dropping it (a silent drop would stop agent runs after the response is written, which the wire itself would not show). UNRELATED RED, named per the shared-tree rule: cargo test on epi-cli also runs tests/agent_extensions_ta_onta.rs, where 2 assertions fail — pleroma child-extension-propagation and the tilldone vendor-fidelity port. Both are pre-existing and proven so at HEAD without my change: git show HEAD of the pleroma file contains 0 occurrences of the expected propagation path, and HEAD tilldone.ts already differs from vendors/pi-vs-claude-code/extensions/tilldone.ts. Those files are clean in git and untouched by this tranche, which only writes Body/S/S3/gateway and Body/S/S0/epi-cli/src/gate/server. Scope note recorded for T53.02: session_store.rs was NOT moved, because gate/sessions.rs:9-11 states its law is S0 (it injects vault root and day id via crate::sesh::session, and epi_s3_gateway::CreateSessionContext is already the inversion seam).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,ta-onta-types,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1155,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/router.rs",
+              "Body/S/S3/gateway/src/lib.rs",
+              "Body/S/S3/gateway/Cargo.toml",
+              "Body/S/S0/epi-cli/src/gate/server/dispatch.rs",
+              "Body/S/S0/epi-cli/src/gate/server/method_envelope.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t53-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T11:19:53.202Z",
+      "runId": "20260728T111953Z-53-T53.03",
       "worktree": null,
       "blocker": null
     },
@@ -27694,6 +27712,25 @@
       "leaseExpiresAt": "2026-07-28T13:51:28.203Z",
       "worktree": null,
       "completedAt": "2026-07-28T11:11:22.306Z"
+    },
+    {
+      "runId": "20260728T111609Z-29-T29.5",
+      "taskId": "29.T29.5",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T11:16:09.333Z",
+      "owner": "opus-mdev-29t295",
+      "leaseExpiresAt": "2026-07-28T14:16:09.333Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260728T111953Z-53-T53.03",
+      "taskId": "53.T53.03",
+      "status": "done",
+      "startedAt": "2026-07-28T11:19:53.202Z",
+      "owner": "claude-opus5-t53-impl",
+      "leaseExpiresAt": "2026-07-28T14:19:53.202Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T11:36:43.316Z"
     }
   ],
   "activeRoute": {

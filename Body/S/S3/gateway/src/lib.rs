@@ -4,6 +4,7 @@ pub mod chat;
 pub mod dispatch;
 pub mod m4_arena;
 pub mod protocol;
+pub mod router;
 pub mod runtime;
 pub mod session_store;
 pub mod sessions;
