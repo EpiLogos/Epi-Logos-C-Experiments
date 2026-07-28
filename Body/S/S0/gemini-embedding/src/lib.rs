@@ -22,6 +22,66 @@ pub const DEFAULT_SETTINGS_PATH_ENV: &str = "EPI_LOGOS_CONFIG_PATH";
 pub const DEFAULT_API_KEY_ENV: &str = "GEMINI_API_KEY";
 pub const DEFAULT_MODEL_ENV: &str = "GEMINI_EMBEDDING_MODEL";
 
+// ---------------------------------------------------------------------------
+// Defaults for the OPTIONAL keys of `[gemini_embedding]`.
+//
+// Why these exist at all: on 2026-07-28 a missing
+// `canonical_context_limit_bytes` made `EmbeddingConfig::from_default_file`
+// hard-error on a machine that had a perfectly valid API key. The failure
+// surfaced in `Body/S/S0/epi-cli/tests/graph_seed.rs`, which loads the config
+// only AFTER it has already cleared and re-seeded a graph — so a missing
+// *tuning* key aborted the run with the database half-written. A tuning key
+// must never be able to do that.
+//
+// The line this module draws:
+//   - IDENTITY / CREDENTIAL keys stay REQUIRED. `model_version` and the API key
+//     decide what a vector *means*; a guessed model silently produces vectors
+//     that cannot be compared with the canonical ones, which is unrecoverable
+//     without knowing which rows were written when. See
+//     `EmbeddingConfig::from_file` and `LiveGeminiEmbeddingBackend::new`.
+//   - TUNING keys get a DEFAULT. A wrong value here can make the accessor slow
+//     or make it retry more than the user wanted; it can never make it write a
+//     wrong vector.
+//
+// The rate-limit values below are deliberately identical to what the sibling
+// TypeScript reader of this SAME config section already falls back to
+// (`Body/S/S2/external/bimba-mcp/src/embeddings/gemini.ts:148-156`), so the two
+// readers of one `[gemini_embedding]` section cannot disagree about a config
+// the user never wrote.
+// ---------------------------------------------------------------------------
+
+/// Default `[gemini_embedding].canonical_context_limit_bytes` — 1 MiB.
+///
+/// Chosen because it is the value every existing `[gemini_embedding]` config in
+/// this repository already carries
+/// (`Body/S/S2/graph-services/src/embeddings.rs:206`,
+/// `Body/S/S0/gemini-embedding/tests/accessor_contract.rs:165`), so adopting it
+/// as the fallback changes the chunking behaviour — and therefore the cached
+/// vectors — of exactly zero existing callers.
+///
+/// It is a chunking threshold only: set too high, an over-long document is
+/// rejected by the Gemini API with an explicit error; it can never yield a
+/// silently wrong vector. That is what makes a default safe here.
+pub const DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES: usize = 1_048_576;
+
+/// Default `[gemini_embedding].max_rpm`. Conservative: too low only costs time.
+pub const DEFAULT_MAX_RPM: u32 = 60;
+
+/// Default `[gemini_embedding].max_concurrent`.
+pub const DEFAULT_MAX_CONCURRENT: usize = 4;
+
+/// Default `[gemini_embedding].backoff_initial_ms`.
+pub const DEFAULT_BACKOFF_INITIAL_MS: u64 = 500;
+
+/// Default `[gemini_embedding].backoff_factor` (plain exponential doubling).
+pub const DEFAULT_BACKOFF_FACTOR: f64 = 2.0;
+
+/// Default `[gemini_embedding].jitter_ratio` (±10% spread on each back-off).
+pub const DEFAULT_JITTER_RATIO: f64 = 0.1;
+
+/// Default `[gemini_embedding].max_retries`.
+pub const DEFAULT_MAX_RETRIES: u32 = 3;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TaskType {
     RetrievalQuery,
@@ -66,27 +126,54 @@ impl EmbeddingConfig {
         Self::from_file(default_config_path())
     }
 
+    /// Load the accessor config from a `config.toml`.
+    ///
+    /// A missing file is treated exactly like an empty one, so every key below
+    /// resolves the same way whether the file is absent or merely incomplete.
+    ///
+    /// Only `model_version` is required — it is identity, not tuning (see the
+    /// `DEFAULT_*` consts above). Everything else falls back to a documented
+    /// default, so an incomplete config can no longer abort a caller midway
+    /// through a side-effecting run.
     pub fn from_file(path: impl AsRef<Path>) -> Result<Self, EmbeddingError> {
         let path = path.as_ref();
         let config = read_config_file(path)?;
         let gemini = config.gemini_embedding.clone().unwrap_or_default();
         let model_version = env::var(DEFAULT_MODEL_ENV)
             .ok()
+            .filter(|value| !value.trim().is_empty())
             .or_else(|| gemini.model_version.clone())
-            .ok_or_else(|| EmbeddingError::Config {
-                message: "missing [gemini_embedding].model_version".to_owned(),
+            .ok_or_else(|| {
+                invalid_config(format!(
+                    "missing [gemini_embedding].model_version (and ${DEFAULT_MODEL_ENV} is unset).\n\
+                     The embedding model identity has no safe default: it decides vector \
+                     compatibility, so a guessed model would silently write vectors that cannot be \
+                     compared with the canonical ones.\n\n{}",
+                    config_block_hint(path)
+                ))
             })?;
+
+        let canonical_context_limit_bytes = gemini
+            .canonical_context_limit_bytes
+            .unwrap_or(DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES);
+        // Validate at load rather than at first chunk: an explicitly wrong value
+        // should fail before the caller starts doing side-effecting work, not
+        // deep inside `embed_document`.
+        if canonical_context_limit_bytes == 0 {
+            return Err(invalid_config(format!(
+                "[gemini_embedding].canonical_context_limit_bytes must be greater than zero in {} \
+                 (omit the key entirely to accept the default of \
+                 {DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES})",
+                path.display()
+            )));
+        }
 
         Ok(Self {
             api_key: env::var(DEFAULT_API_KEY_ENV).ok(),
             model_version,
             cache_root: gemini.cache_root.clone().unwrap_or_else(default_cache_root),
-            canonical_context_limit_bytes: gemini.canonical_context_limit_bytes.ok_or_else(
-                || EmbeddingError::Config {
-                    message: "missing [gemini_embedding].canonical_context_limit_bytes".to_owned(),
-                },
-            )?,
-            rate_limit: RateLimitConfig::from_section(gemini)?,
+            canonical_context_limit_bytes,
+            rate_limit: RateLimitConfig::from_section(gemini, path)?,
             policy: CloudOptInPolicy::from_config(config),
         })
     }
@@ -113,36 +200,58 @@ pub struct RateLimitConfig {
     pub max_retries: u32,
 }
 
+impl Default for RateLimitConfig {
+    /// The documented `DEFAULT_*` tuning values, as applied when
+    /// `[gemini_embedding]` omits them.
+    fn default() -> Self {
+        Self {
+            max_rpm: DEFAULT_MAX_RPM,
+            max_concurrent: DEFAULT_MAX_CONCURRENT,
+            backoff_initial_ms: DEFAULT_BACKOFF_INITIAL_MS,
+            backoff_factor: DEFAULT_BACKOFF_FACTOR,
+            jitter_ratio: DEFAULT_JITTER_RATIO,
+            max_retries: DEFAULT_MAX_RETRIES,
+        }
+    }
+}
+
 impl RateLimitConfig {
-    fn from_section(section: GeminiEmbeddingSection) -> Result<Self, EmbeddingError> {
-        let max_rpm = section.max_rpm.ok_or_else(|| missing_config("max_rpm"))?;
-        let max_concurrent = section
-            .max_concurrent
-            .ok_or_else(|| missing_config("max_concurrent"))?;
+    /// Every key here is tuning, so every key defaults. Values the user *did*
+    /// write are still validated as strictly as before — a default is a
+    /// fallback for silence, never a repair for a wrong value.
+    fn from_section(
+        section: GeminiEmbeddingSection,
+        path: &Path,
+    ) -> Result<Self, EmbeddingError> {
+        let max_rpm = section.max_rpm.unwrap_or(DEFAULT_MAX_RPM);
+        let max_concurrent = section.max_concurrent.unwrap_or(DEFAULT_MAX_CONCURRENT);
         let backoff_initial_ms = section
             .backoff_initial_ms
-            .ok_or_else(|| missing_config("backoff_initial_ms"))?;
-        let backoff_factor = section
-            .backoff_factor
-            .ok_or_else(|| missing_config("backoff_factor"))?;
-        let jitter_ratio = section
-            .jitter_ratio
-            .ok_or_else(|| missing_config("jitter_ratio"))?;
-        let max_retries = section
-            .max_retries
-            .ok_or_else(|| missing_config("max_retries"))?;
+            .unwrap_or(DEFAULT_BACKOFF_INITIAL_MS);
+        let backoff_factor = section.backoff_factor.unwrap_or(DEFAULT_BACKOFF_FACTOR);
+        let jitter_ratio = section.jitter_ratio.unwrap_or(DEFAULT_JITTER_RATIO);
+        let max_retries = section.max_retries.unwrap_or(DEFAULT_MAX_RETRIES);
 
         if max_rpm == 0 {
-            return Err(invalid_config("max_rpm must be greater than zero"));
+            return Err(invalid_tuning_value(path, "max_rpm must be greater than zero"));
         }
         if max_concurrent == 0 {
-            return Err(invalid_config("max_concurrent must be greater than zero"));
+            return Err(invalid_tuning_value(
+                path,
+                "max_concurrent must be greater than zero",
+            ));
         }
         if backoff_factor < 1.0 {
-            return Err(invalid_config("backoff_factor must be at least 1.0"));
+            return Err(invalid_tuning_value(
+                path,
+                "backoff_factor must be at least 1.0",
+            ));
         }
         if !(0.0..=1.0).contains(&jitter_ratio) {
-            return Err(invalid_config("jitter_ratio must be between 0.0 and 1.0"));
+            return Err(invalid_tuning_value(
+                path,
+                "jitter_ratio must be between 0.0 and 1.0",
+            ));
         }
 
         Ok(Self {
@@ -376,13 +485,26 @@ pub struct LiveGeminiEmbeddingBackend {
 }
 
 impl LiveGeminiEmbeddingBackend {
+    /// The API key stays REQUIRED and deliberately has no config-file fallback:
+    /// a credential must not be guessable, and must never be written into a
+    /// file that gets committed. It is read from the process environment only
+    /// (canonically exported from the user's `~/.zshenv`).
+    ///
+    /// Note this check lives here, at *live-backend construction*, not in
+    /// [`EmbeddingConfig::from_file`] — loading config must stay infallible for
+    /// mock/offline callers who never issue a cloud call.
     pub fn new(config: &EmbeddingConfig) -> Result<Self, EmbeddingError> {
         let api_key = config
             .api_key
             .clone()
+            .filter(|key| !key.trim().is_empty())
             .ok_or_else(|| EmbeddingError::Config {
                 message: format!(
-                    "{DEFAULT_API_KEY_ENV} is required for live Gemini embedding calls"
+                    "${DEFAULT_API_KEY_ENV} is required for live Gemini embedding calls but is \
+                     unset or empty.\nExport it in your shell profile (canonically \
+                     `~/.zshenv`):\n\n    export {DEFAULT_API_KEY_ENV}=\"…\"\n\nThen open a new \
+                     shell, or `source ~/.zshenv`. Check what the process can see with \
+                     `epi settings status`."
                 ),
             })?;
         Ok(Self {
@@ -705,8 +827,43 @@ fn default_epi_logos_home() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from(".epi-logos"))
 }
 
-fn missing_config(key: &str) -> EmbeddingError {
-    invalid_config(format!("missing [gemini_embedding].{key}"))
+/// The exact TOML the user should paste, naming the file it belongs in.
+///
+/// Every optional key is shown commented-out at its real default, so the block
+/// doubles as documentation: the user can see what the accessor will do before
+/// deciding whether to override anything.
+fn config_block_hint(path: &Path) -> String {
+    format!(
+        "Add this block to {} (create the file if it does not exist):\n\n\
+         [gemini_embedding]\n\
+         # Required. The model identity — it decides vector compatibility, so it has\n\
+         # no default. Override per-process with ${DEFAULT_MODEL_ENV}.\n\
+         model_version = \"gemini-embedding-2-preview\"\n\
+         \n\
+         # Optional tuning. Shown at their built-in defaults; uncomment to change.\n\
+         # canonical_context_limit_bytes = {DEFAULT_CANONICAL_CONTEXT_LIMIT_BYTES}\n\
+         # max_rpm = {DEFAULT_MAX_RPM}\n\
+         # max_concurrent = {DEFAULT_MAX_CONCURRENT}\n\
+         # backoff_initial_ms = {DEFAULT_BACKOFF_INITIAL_MS}\n\
+         # backoff_factor = {DEFAULT_BACKOFF_FACTOR}\n\
+         # jitter_ratio = {DEFAULT_JITTER_RATIO}\n\
+         # max_retries = {DEFAULT_MAX_RETRIES}\n\
+         \n\
+         # Required before any cloud call; recorded by `epi settings opt-in gemini_embedding`.\n\
+         [cloud_opt_in.gemini_embedding]\n\
+         recorded = true\n\
+         scopes = [\"*\"]\n\n\
+         A full annotated template lives at \
+         `Body/S/S0/gemini-embedding/config.example.toml`.",
+        path.display()
+    )
+}
+
+/// A value the user explicitly wrote is out of range. Names the file so the
+/// user knows which config to edit — there may be several on a machine
+/// (`$EPI_LOGOS_CONFIG_PATH` overrides `~/.epi-logos/config.toml`).
+fn invalid_tuning_value(path: &Path, message: &str) -> EmbeddingError {
+    invalid_config(format!("[gemini_embedding].{message} in {}", path.display()))
 }
 
 fn invalid_config(message: impl Into<String>) -> EmbeddingError {

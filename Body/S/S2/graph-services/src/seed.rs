@@ -224,8 +224,24 @@ async fn merge_node(
 ) -> Result<(), String> {
     let uuid = coord_uuid(coordinate);
     let cypher = format!(
+        // ON CREATE SET, never a bare SET.
+        //
+        // This is a BOOTSTRAP fixture: its job is to bring the root coordinate
+        // nodes into existence on a NEW graph instance. It is not an upgrade
+        // path and it has no business editing a coordinate that already exists.
+        //
+        // With a bare `SET` this MERGE was silently destructive without any
+        // DELETE involved: run against a populated graph it MATCHED the real
+        // ontology's root coordinates and overwrote nine properties on each.
+        // The documented casualty is `c_4_layer` on the `:Coordinate:Stack`
+        // nodes (S0-S5, S0'-S5'), which carry the S-layer index as an INTEGER
+        // per DR-S2-LAYER-1 (see `seed_baseline_snapshot_queries` below) and
+        // had it replaced by the string 'COORDINATE' on every seeder run.
+        //
+        // The label is applied unconditionally because adding a label is
+        // additive and idempotent; only the PROPERTY writes are create-only.
         "MERGE (n:Bimba {{coordinate: $coord}}) \
-         SET n:{}, \
+         ON CREATE SET \
              n.c_2_uuid = $uuid, \
              n.c_1_name = $name, \
              n.c_4_family = $family, \
@@ -234,7 +250,8 @@ async fn merge_node(
              n.c_4_topo_mode = $topo, \
              n.c_4_weave_state = $weave, \
              n.c_4_inversion_state = $inv, \
-             n.c_4_flags = $flags",
+             n.c_4_flags = $flags \
+         SET n:{}",
         type_label
     );
     let q = query(&cypher)
@@ -266,8 +283,10 @@ async fn merge_family_node(
 ) -> Result<(), String> {
     let uuid = coord_uuid(coordinate);
     let q = query(
+        // Create-only, for the same reason as the coordinate seeder above: a
+        // bootstrap fixture must never edit a node that already exists.
         "MERGE (n:Bimba {coordinate: $coord}) \
-         SET n:Family, \
+         ON CREATE SET \
              n.c_2_uuid = $uuid, \
              n.c_1_name = $name, \
              n.c_1_description = $domain, \
@@ -277,7 +296,8 @@ async fn merge_family_node(
              n.c_4_topo_mode = 'NONE', \
              n.c_4_weave_state = 0.0, \
              n.c_4_inversion_state = 0, \
-             n.c_4_flags = 0",
+             n.c_4_flags = 0 \
+         SET n:Family",
     )
     .param("coord", coordinate)
     .param("uuid", uuid.as_str())

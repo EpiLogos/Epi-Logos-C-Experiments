@@ -53,3 +53,56 @@ fn q_register_open_shape_law() {
 
     assert_eq!(Q_SCHEMA_VERSION, "q-prefix-v3");
 }
+
+// Canon's hybrid cardinality — "A node may carry one or many facets at each position"
+// (Idea/Bimba/Seeds/M/q-vocabulary-canon.md:41) — is written with a facet-variant
+// letter directly after the position digit: the first facet bare (implicitly `a`), a
+// second as `b`. Attested in canon at Idea/Bimba/Map/M2/M2-3/M2-3.md:42
+// (`q_2b_ethical_interiorisation`, alongside that node's bare `q_2_…`), and in the live
+// graph as `q_4b_…` / `q_5b_…`. Rejecting these is what failed
+// graph-services/tests/dataset_import_live_contract.rs with "unregistered node
+// properties".
+#[test]
+fn q_register_accepts_the_canonical_facet_variant_letter() {
+    for key in [
+        // Real forms carried by canon / the live graph.
+        "q_2b_ethical_interiorisation",
+        "q_4b_lemniscate_anchor_and_fractal_doubling",
+        "q_5b_epogdoon_and_the_supermind_opening",
+        // The first variant written explicitly, and composition with the existing
+        // prime marker and interior numeric slot.
+        "q_0a_implicate_ground",
+        "q_3b'_dialectical_movement",
+        "q_5b_3_integration_template",
+        "qm_2b_instantiation_mode",
+    ] {
+        assert!(
+            validate_coordinate_prefix_property(key).is_ok(),
+            "canonical q facet-variant key rejected: {key}"
+        );
+    }
+}
+
+#[test]
+fn q_register_rejects_non_canonical_letters_after_the_position() {
+    for key in [
+        // Only `a` and `b` are attested; a third variant needs a canon ruling first.
+        "q_2c_ethical_interiorisation",
+        "q_2z_ethical_interiorisation",
+        // The letter is exactly one character, and the `_` separator is still required.
+        "q_2bb_ethical_interiorisation",
+        "q_2ab_ethical_interiorisation",
+        "q_2b",
+        "q_2b_",
+        // The digit still leads, and the position bound still holds.
+        "q_b2_ethical_interiorisation",
+        "q_9b_ethical_interiorisation",
+        // The suffix stays lower_snake_case.
+        "q_2b_EthicalInteriorisation",
+    ] {
+        assert!(
+            validate_coordinate_prefix_property(key).is_err(),
+            "malformed q facet-variant key accepted: {key}"
+        );
+    }
+}

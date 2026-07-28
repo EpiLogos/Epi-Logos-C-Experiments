@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T22:09:24.544Z",
+  "updatedAt": "2026-07-28T22:10:53.200Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -16044,9 +16044,9 @@
     },
     "32.T32.5": {
       "status": "done",
-      "updatedAt": "2026-07-28T22:09:24.519Z",
+      "updatedAt": "2026-07-28T22:10:53.159Z",
       "claimedAt": "2026-07-28T21:22:15.554Z",
-      "completedAt": "2026-07-28T22:09:24.519Z",
+      "completedAt": "2026-07-28T22:10:53.159Z",
       "evidence": [
         {
           "at": "2026-07-28T22:09:24.519Z",
@@ -16060,6 +16060,20 @@
               "Body/M/pratibimba-app/src/ui/readinessGrammar.ts",
               "Body/M/pratibimba-app/contracts/readiness-state-grammar.json",
               "Body/M/pratibimba-app/contracts/readiness-state-grammar.md",
+              "Body/M/pratibimba-app/tests/e2e/readiness-state-grammar.spec.ts"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-28T22:10:53.159Z",
+          "text": "PROVENANCE CORRECTION (content correct, attribution split across two commits). The deliverable is commit a4fee6c7 — 10 files: readinessGrammar.ts, readinessGrammar.test.tsx, contracts/readiness-state-grammar.{json,md}, tests/e2e/readiness-state-grammar.spec.ts, BridgeReadinessBadge.tsx, useBridgeReadiness.ts, styles.css, the verification record and plan.state.json. The DOX entry in Body/M/pratibimba-app/AGENTS.md is NOT in that commit: the shared git index handed it to sibling commit 8ed9e8cd (29.T29.9), which was committing in the same window. Verified rather than assumed — 'git show HEAD:Body/M/pratibimba-app/AGENTS.md' contains the readinessGrammar entry, and 'git log -S readinessGrammar.ts -- <that file>' names 8ed9e8cd as the commit that added it. Nothing is lost and the tree is correct; only the attribution is split. Recorded rather than repaired, per the standing rule that amend/reset is the more dangerous move while a sibling is actively committing.",
+          "receipt": {
+            "command": "pnpm -C Body/M/pratibimba-app test:e2e readiness-state-grammar",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/readinessGrammar.ts",
               "Body/M/pratibimba-app/tests/e2e/readiness-state-grammar.spec.ts"
             ]
           }

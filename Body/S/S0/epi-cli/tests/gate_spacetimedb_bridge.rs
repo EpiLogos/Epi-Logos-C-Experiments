@@ -1840,15 +1840,31 @@ fn decode_kairos_row(row: &serde_json::Value) -> LiveKairosColumns {
     }
 }
 
-/// Live SpaceTimeDB round-trip — gated by EPI_SPACETIME_LIVE_HOST=http://host:port.
-/// Set EPI_SPACETIME_LIVE_HOST + EPI_SPACETIME_LIVE_DATABASE (defaults to
-/// epi-logos-runtime) and `cargo test --test gate_spacetimedb_bridge
-/// spacetimedb_live_kairos_round_trip -- --nocapture --ignored` to exercise
-/// the full client path against a real running SpaceTimeDB host that has the
-/// epi-logos-runtime module published. Skipped by default so CI without a
-/// live host stays green.
+/// Live SpaceTimeDB round-trip.
+///
+/// **SpaceTimeDB runs NATIVELY — it is not a Docker service.** There is no
+/// `spacetimedb` entry in `docker-compose.epi-s2.yml` (Neo4j, Redis, and
+/// Graphiti only), and `epi up` does not start it either. The operator runs
+/// the host directly, per `docs/operations/track-03-runbook.md` §1:
+///
+/// ```bash
+/// spacetime start --listen-addr 127.0.0.1:3000
+/// cd Body/S/S3/epi-spacetime-module
+/// spacetime build
+/// spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y
+/// ```
+///
+/// With the host up, run
+/// `cargo test --test gate_spacetimedb_bridge spacetimedb_live_kairos_round_trip
+/// -- --nocapture --ignored`. Override the target with
+/// `EPI_SPACETIME_LIVE_HOST=http://host:port` and `EPI_SPACETIME_LIVE_DATABASE`
+/// (defaults `http://127.0.0.1:3000` / `epi-logos-runtime`).
+///
+/// `#[ignore]`d rather than probe-and-skipped: with no host this FAILS at
+/// `subscribe_projection` with `spacetimedb websocket connect failed:
+/// Connection refused (os error 61)`, which means the host was never started.
 #[tokio::test]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000`, then `cd Body/S/S3/epi-spacetime-module && spacetime build && spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y`. NOT a Docker service — docker-compose.epi-s2.yml has no spacetimedb entry, and `epi up` does not start it."]
 async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::SpacetimeTableDelta;
@@ -1991,7 +2007,7 @@ async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
 /// harness named in the verification rider — that scale belongs to Track 10
 /// integration milestones, see 10.T*).
 #[tokio::test(flavor = "multi_thread", worker_threads = 6)]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_30ms() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::SpacetimeTableDelta;
@@ -2152,7 +2168,7 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
 /// 03.T4 live verification — opt-in archetype event + coincidence detection
 /// across multiple publishers. Gated by EPI_SPACETIME_LIVE_HOST.
 #[tokio::test]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_same_grid_cell() {
     use epi_logos::gate::spacetimedb_bridge::{
         identity_handle_blake3, quintessence_hash_blake3, SpacetimePresence, SpacetimeRegistration,
@@ -2344,7 +2360,7 @@ fn shared_archetype_event_refuses_opt_in_consent_false_at_client_boundary() {
 /// the subscription, re-subscribes, and asserts the latest cached state
 /// is recovered FROM LIVE DELTAS (not from any local stale polling cache).
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconnect() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::{
@@ -2571,7 +2587,7 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 /// arc carry ONLY the namespace_ref/session_arc_id references (no episode
 /// body fields).
 #[tokio::test]
-#[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778"]
+#[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778. Graphiti — unlike SpaceTimeDB — IS a compose service: `docker compose -f docker-compose.epi-s2.yml up -d graphiti` (needs GEMINI_API_KEY; pulls neo4j + redis via depends_on)."]
 async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb() {
     use epi_logos::gate::graphiti;
     use epi_s3_gateway_contract::assert_no_graphiti_body_in_row;

@@ -21,13 +21,15 @@ fn workspace_root() -> String {
         .to_string()
 }
 
-async fn teardown(client: &Neo4jClient) {
-    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
-    client
-        .run("MATCH (m:GraphMeta) DETACH DELETE m")
-        .await
-        .unwrap();
-}
+// There is no `teardown` helper any more, and no setup wipe.
+//
+// It used to be `MATCH (n:Bimba) DETACH DELETE n` plus the same for
+// `:GraphMeta`. On 2026-07-28 that pair ran against the live development Neo4j
+// and destroyed the Bimba ontology. It cannot be rescued by narrowing its WHERE
+// clause either: everything `graph bootstrap` writes is either an ontology ROOT
+// coordinate (MERGEd onto whatever is already there, not created) or the
+// singleton `:GraphMeta` bootstrap record. A test may delete only what it
+// uniquely created, and this suite uniquely creates nothing.
 
 /// Track 13 T5 — assert the S0 graph compatibility re-exports resolve
 /// to `epi_s2_graph_services`. The named six graph-law surface families
@@ -363,8 +365,13 @@ async fn live_graph_commands_suite() {
     let _lock = live_lock();
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).expect("connect failed");
-    teardown(&client).await;
 
+    // NOTE — this next line still requires a graph with zero `:Bimba` nodes:
+    // `GraphCmd::Bootstrap` refuses a non-empty graph (`meta::is_bootstrapped`
+    // is `count(:Bimba) > 0`, Body/S/S2/graph-services/src/meta.rs:126). The
+    // wipe that used to precede it is gone and is not coming back. Point this
+    // suite at its own throwaway Neo4j instance; do NOT re-add a delete to make
+    // it pass against a database that holds real coordinates.
     let bootstrap = graph::dispatch(&GraphCmd::Bootstrap).await.unwrap();
     assert!(bootstrap.contains("bootstrapped") || bootstrap.contains("Bootstrap"));
 
@@ -426,8 +433,6 @@ async fn live_graph_commands_suite() {
     .unwrap();
     assert!(!hybrid.contains("Hybrid query:"));
     assert!(hybrid.contains("score") || hybrid.contains("#5"));
-
-    teardown(&client).await;
 }
 
 #[test]

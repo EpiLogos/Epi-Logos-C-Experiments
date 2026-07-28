@@ -112,10 +112,21 @@ pub fn validate_coordinate_prefix_property(key: &str) -> Result<(), String> {
 }
 
 /// The q-register family is OPEN: only the key *shape* is fixed — position 0-5, an
-/// optional inverted-phase prime `'`, an optional interior numeric slot, then a
-/// lower_snake_case facet suffix. The facet slug itself is free; there is no closed
-/// vocabulary. The long-standing quickview slots remain registered in
-/// `NODE_PROPERTY_SPECS` for typing/disclosure, but any well-formed q_/qm_ key is valid.
+/// optional facet-variant letter `a`/`b`, an optional inverted-phase prime `'`, an
+/// optional interior numeric slot, then a lower_snake_case facet suffix. The facet
+/// slug itself is free; there is no closed vocabulary. The long-standing quickview
+/// slots remain registered in `NODE_PROPERTY_SPECS` for typing/disclosure, but any
+/// well-formed q_/qm_ key is valid.
+///
+/// The variant letter carries canon's *hybrid cardinality*: "A node may carry one or
+/// many facets at each position … a single facet where the position is light, several
+/// named facets where it is load-bearing" (`Idea/Bimba/Seeds/M/q-vocabulary-canon.md:41`).
+/// The first facet at a position is written bare (implicitly `a`), a second one takes
+/// `b` — e.g. `M2-3` carries both `q_2_planetary_rulership_animates` and
+/// `q_2b_ethical_interiorisation`, whose prose opens "A second relation is load-bearing
+/// for M2-3" (`Idea/Bimba/Map/M2/M2-3/M2-3.md:42`). Only `a` and `b` are attested in
+/// canon or in the live graph; a third variant is NOT accepted until canon rules on it,
+/// so `q_2c_…` stays an error rather than a silently-admitted typo.
 fn validate_q_register_property(rest: &str, key: &str) -> Result<(), String> {
     let position = rest
         .chars()
@@ -125,6 +136,9 @@ fn validate_q_register_property(rest: &str, key: &str) -> Result<(), String> {
         return Err(format!("q-register property has invalid position: {key}"));
     }
     let mut offset = position.len_utf8();
+    if matches!(rest[offset..].chars().next(), Some('a' | 'b')) {
+        offset += 1; // facet-variant letter (hybrid cardinality at one position)
+    }
     if rest[offset..].starts_with('\'') {
         offset += 1; // inverted-phase prime marker
     }
