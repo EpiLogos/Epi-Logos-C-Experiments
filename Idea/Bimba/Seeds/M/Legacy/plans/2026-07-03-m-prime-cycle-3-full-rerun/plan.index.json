@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-28T14:57:13.832Z",
+  "generatedAt": "2026-07-28T17:18:04.767Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -393,7 +393,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "title": "Track 53 — S-Stack Residency Restoration: every method at its coordinate",
-      "checksum": "eebc6177e2e6c9f5126f2c2f4a652996322202a309549c52dcae465cf8ee2096"
+      "checksum": "dec8d08af7162cef14ad062f0bf75e8440422ea87232aa87161ffb98bace0c30"
     }
   ],
   "tasks": [
@@ -11084,7 +11084,7 @@
         "src/graph/**",
         "src/graph/schema.rs"
       ],
-      "body": "5. **T53.05 — S2 takes the graph: 28 files of substrate plus its handlers**\n\n   Brief: The largest single relocation. `epi-cli/src/graph/**` is 28 files and ~31 of the `epi_s2_graph_services` references — client, schema, cypher, sync orchestration, retrieval, embeddings, alignment, doctor. This is Parashakti/GraphRAG law resident in the CLI. `gate/graph.rs` is its gateway face. The Seeds audit already flags the schema drift here (`src/graph/schema.rs` creating an old 768-dim index against a 3072-dim canon) — moving it to the S2 authority is what lets that stop being two schemas.\n   Build: move `src/graph/**` law into `Body/S/S2/graph-services/src/` (consolidating schema under `Body/S/S2/graph-schema` per the S2 locked target); `gate/graph.rs` becomes an `s2_handlers` module in graph-services implementing the port; epi-cli keeps `epi graph …` argv-and-print wrappers only. Drains `epi_s2_graph_schema` (`graph/mod.rs`, `graph/meta.rs`) and the `core/knowing` graph uses.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — `graph-live` suite green against real Neo4j; live `s2.*` methods unchanged; `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml` green; both epi-cli→S2 edges gone. verifier ≠ closer; evidence = fresh command output."
+      "body": "5. **T53.05 — S2 takes the graph: 28 files of substrate plus its handlers**\n\n   Brief: The largest single relocation. `epi-cli/src/graph/**` is 28 files and ~31 of the `epi_s2_graph_services` references — client, schema, cypher, sync orchestration, retrieval, embeddings, alignment, doctor. This is Parashakti/GraphRAG law resident in the CLI. `gate/graph.rs` is its gateway face. The Seeds audit already flags the schema drift here (`src/graph/schema.rs` creating an old 768-dim index against a 3072-dim canon) — moving it to the S2 authority is what lets that stop being two schemas.\n   Build: move `src/graph/**` law into `Body/S/S2/graph-services/src/` (consolidating schema under `Body/S/S2/graph-schema` per the S2 locked target); `gate/graph.rs` becomes an `s2_handlers` module in graph-services implementing the port; epi-cli keeps `epi graph …` argv-and-print wrappers only. Drains `epi_s2_graph_schema` (`graph/mod.rs`, `graph/meta.rs`) and the `core/knowing` graph uses.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s2.*` methods unchanged (`live-wire` + `gateway-methods` against a spawned gateway, and `plan.runs/gateway-method-audit.json` showing no method regressing present→absent); `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml` green; the residency ratchet falls. *Amended 2026-07-28:* \"both epi-cli→S2 edges gone\" is obsolete under the `S0-membrane` licence — `epi graph …` is the CLI reaching S2, which is its function. What must leave is the law, and it did: 20 of 21 methods now register from `graph-services`. `graph-live` needs a real Neo4j and is not part of the class-W gate; run it separately when the service is up. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.06",
@@ -11117,7 +11117,7 @@
         "53.T53.06"
       ],
       "writeScopes": [],
-      "body": "7. **T53.07 — S5 handlers return to S5**\n\n   Brief: `gate/{improve,review,tuning,epii}.rs` implement `s5'.improve.*`, `s5'.review.*`, `s5'.tune.*` and the Epii deposit path; `core/knowing/{kbase,types,vimarsa}.rs` and `vimarsa/mod.rs` consume `epi_s5_kbase_core`; `portal/plugins/m5.rs` consumes autoresearch. Every one of these AGENTS.md lines already says the law is S5-owned and the module is \"a thin membrane\" — this tranche makes the membrane live where its law does. This is the tranche that would be *impossible* without T53.1, since S3 may not import S5 (gotcha 1).\n   Build: `s5_handlers` modules in `epii-autoresearch-core`, `epii-review-core`, `epii-agent-core` and `epi-kbase-core` implementing the port for their own methods; epi-cli copies deleted; `core/knowing` + `vimarsa` call the S5 crates through the binary's composition or move outright.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s5'.*` round trips unchanged; `cargo test` green in each S5 crate; all four epi-cli→S5 edges gone from the manifest. verifier ≠ closer; evidence = fresh command output."
+      "body": "7. **T53.07 — S5 handlers return to S5**\n\n   Brief: `gate/{improve,review,tuning,epii}.rs` implement `s5'.improve.*`, `s5'.review.*`, `s5'.tune.*` and the Epii deposit path; `core/knowing/{kbase,types,vimarsa}.rs` and `vimarsa/mod.rs` consume `epi_s5_kbase_core`; `portal/plugins/m5.rs` consumes autoresearch. Every one of these AGENTS.md lines already says the law is S5-owned and the module is \"a thin membrane\" — this tranche makes the membrane live where its law does. This is the tranche that would be *impossible* without T53.1, since S3 may not import S5 (gotcha 1).\n   Build: `s5_handlers` modules in `epii-autoresearch-core`, `epii-review-core`, `epii-agent-core` and `epi-kbase-core` implementing the port for their own methods; epi-cli copies deleted; `core/knowing` + `vimarsa` call the S5 crates through the binary's composition or move outright.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live `s5'.*` round trips unchanged (`live-wire` + `gateway-methods`, audit unchanged); `cargo test` green in each S5 crate; the residency ratchet falls and `gate/{improve,review,tuning,epii_axiom}.rs` are deleted. *Amended 2026-07-28:* \"all four epi-cli→S5 edges gone\" is obsolete under the `S0-membrane` licence — the CLI composes the S5 crates for the six genuine composites and for `epi` command surfaces. Law leaving, not edges vanishing, is the measure. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.08",
