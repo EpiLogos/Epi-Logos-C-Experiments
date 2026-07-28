@@ -18,6 +18,7 @@
  */
 
 import { execFileSync, spawn } from "node:child_process";
+import { acquireGateLane, releaseGateLane } from "./gate-lane.mjs";
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -503,6 +504,18 @@ async function main() {
   } catch (err) {
     console.error(`[verify-all] ${err.message}`);
     process.exit(2);
+  }
+  // The gate lane, machine-wide: these suites bind fixed ports (gateway,
+  // sidecar, vite), so two concurrent runs kill each other's daemons and each
+  // reads a demolished environment as a code failure. Re-entrant — when
+  // verify-tranche already holds the lane this passes straight through.
+  await acquireGateLane("verify-all");
+  process.on("exit", releaseGateLane);
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => {
+      releaseGateLane();
+      process.exit(130);
+    });
   }
   sweepOrphanGateways();
   const startedAt = Date.now();

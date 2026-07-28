@@ -14,8 +14,9 @@
     "lint:e2e-graph": "node scripts/lint-e2e-import-graph.mjs",
     "test": "pnpm lint:imports && pnpm lint:no-modal && pnpm lint:single-clock && pnpm lint:e2e-graph && vitest run",
     "test:watch": "vitest",
-    "smoke": "node scripts/boot-smoke.mjs && EPI_LIVE_SMOKE=1 vitest run src/bridge/gatewayClient.live.test.ts",
-    "test:e2e": "playwright test",
+    "smoke": "node ../../../.codex/scripts/gate-lane.mjs --owner pratibimba-smoke -- sh -c 'node scripts/boot-smoke.mjs && EPI_LIVE_SMOKE=1 vitest run src/bridge/gatewayClient.live.test.ts'",
+    "test:e2e": "node ../../../.codex/scripts/gate-lane.mjs --owner pratibimba-e2e -- playwright test",
+    "test:e2e:unlaned": "playwright test",
     "tauri": "tauri"
   },
   "dependencies": {

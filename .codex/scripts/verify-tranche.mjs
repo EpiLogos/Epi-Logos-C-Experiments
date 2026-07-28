@@ -28,7 +28,8 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, statSync } from "node:fs";
+import { acquireGateLane, releaseGateLane } from "./gate-lane.mjs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -155,57 +156,13 @@ export function resolveTaskVerify(taskId, planPath = DEFAULT_PLAN) {
   return { taskId, verifyText: section, commands: extractVerifyCommands(section), file: planPath };
 }
 
-/* Gate-lane lock: the verify gate spawns real gateways on fixed ports and
- * real tmux sessions, so exactly one verify run may execute machine-wide.
- * mkdir is the atomic acquire; a lock whose recorded pid is dead is stale
- * and stolen. Concurrent sessions queue here instead of colliding. */
-const GATE_LOCK_DIR = join(REPO_ROOT, ".codex", "verify.lock");
-
-function pidAlive(pid) {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export async function acquireGateLock(owner) {
-  for (;;) {
-    try {
-      mkdirSync(GATE_LOCK_DIR);
-      writeFileSync(
-        join(GATE_LOCK_DIR, "holder.json"),
-        JSON.stringify({ pid: process.pid, owner, at: new Date().toISOString() }),
-      );
-      return;
-    } catch {
-      let holder = null;
-      try {
-        holder = JSON.parse(readFileSync(join(GATE_LOCK_DIR, "holder.json"), "utf8"));
-      } catch {
-        // holder file not written yet or unreadable — treat as live briefly
-      }
-      if (holder && !pidAlive(holder.pid)) {
-        try {
-          rmSync(GATE_LOCK_DIR, { recursive: true, force: true });
-          console.log(`[verify-tranche] stole stale gate lock (dead pid ${holder.pid})`);
-          continue;
-        } catch { /* another process stole it first */ }
-      }
-      console.log(
-        `[verify-tranche] gate lane held by ${holder?.owner ?? "unknown"} (pid ${holder?.pid ?? "?"}) — waiting`,
-      );
-      await new Promise((r) => setTimeout(r, 10_000));
-    }
-  }
-}
-
-export function releaseGateLock() {
-  try {
-    rmSync(GATE_LOCK_DIR, { recursive: true, force: true });
-  } catch { /* already gone */ }
-}
+/* Gate-lane lock: ONE authority now lives in `.codex/scripts/gate-lane.mjs`,
+ * because this lock previously protected only verify-tranche — `verify-all`
+ * run directly and `pnpm test:e2e` took none, so two agents doing UF work
+ * killed each other's daemons mid-suite. The shared module is re-entrant, so
+ * the suites this run spawns beneath itself pass through instead of
+ * deadlocking against their own parent. */
+export { acquireGateLane as acquireGateLock, releaseGateLane as releaseGateLock };
 
 function runShell(command, cwd) {
   return new Promise((resolveRun) => {
@@ -314,11 +271,11 @@ async function main() {
     process.exit(2);
   }
 
-  await acquireGateLock(owner);
-  process.on("exit", releaseGateLock);
+  await acquireGateLane(owner);
+  process.on("exit", releaseGateLane);
   for (const signal of ["SIGINT", "SIGTERM"]) {
     process.on(signal, () => {
-      releaseGateLock();
+      releaseGateLane();
       process.exit(130);
     });
   }
