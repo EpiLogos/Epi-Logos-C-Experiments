@@ -1,0 +1,43 @@
+{
+  "runId": "20260728T133519Z-53-T53.04",
+  "taskId": "53.T53.04",
+  "startedAt": "2026-07-28T13:35:19.090Z",
+  "owner": "claude-opus5-t53-impl",
+  "leaseExpiresAt": "2026-07-28T17:35:19.090Z",
+  "worktree": null,
+  "task": {
+    "id": "53.T53.04",
+    "trackId": "53",
+    "tranche": "T53.04",
+    "title": "S1 handlers return to S1",
+    "effort": null,
+    "file": "53-s-stack-residency-restoration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
+    "dependsOn": [
+      "53.T53.03"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler-core"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-28T11:39:26.858Z",
+        "text": "Unclaimed after diagnostic pass — no code written, tree clean. Recon confirmed a blocker the tranche did not name, now recorded as gotcha 8 with resolutions: gate/s1_hen.rs imports 20 S1* DTOs from epi_s3_gateway_contract (s1_hen.rs:47-53) and makes six epi_s2_graph_services calls (s1_hen.rs:319-360), both of which S1 forbids, so relocating it as authored trades S0->S1 violations for S1->S2 and S1->S3 ones. Resolutions verified against the contract: the DTOs are a single 313-line file (gateway-contract/src/s1_vault.rs) that moves to hen-compiler-core with a gateway-contract re-export, legal because the S3 row forbids only S4/S5 and hen-compiler-core has no S3 edge today; s1'.q_articulation.accept spans S1+S2+S5 in one function and composes at the composition root rather than moving. Tranche brief amended to build in that order."
+      }
+    ],
+    "claimedAt": "2026-07-28T11:37:18.925Z",
+    "completedAt": null,
+    "owner": "claude-opus5-t53-impl",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-28T11:37:18.925Z",
+    "runId": "20260728T113718Z-53-T53.04",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER = Body/M/pratibimba-app (panes/engine/design); SUBSTRATE crates carry unchanged. epi-theia = FROZEN. See recapture register §2 for this track's exact CARRIER line."
+  }
+}
