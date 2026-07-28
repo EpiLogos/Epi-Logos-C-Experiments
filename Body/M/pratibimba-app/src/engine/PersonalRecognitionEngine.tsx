@@ -29,6 +29,15 @@ import { ownerOfMountedSlot } from '../composition/compositionLoad';
 // was written for: `PERSONAL_GEOMETRIC_SLOTS` was referenced by its own test
 // and by nothing else in the repository.
 import { blockedPersonalSlots, loadPersonalComposition } from '../composition/personalComposition';
+// 29.T29.9 — the 4'-5'-0' contemplation read across the three carried slots.
+// Demand-driven rather than event-mounted: the brief's
+// `m5.session.contemplation.complete` is on no gateway wire (EVENT_NAMES carries
+// agent/chat/tick/health/heartbeat), and 25.T25.19 already ruled that reading
+// the close beats subscribing to a ceremony that never fires.
+import {
+    formatContemplationFlowHover,
+    useContemplationFlowDirective
+} from './contemplationFlowDirector';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
@@ -131,6 +140,9 @@ export function PersonalRecognitionEngine() {
         () => evaluateCachedProfileIntegratedReadiness(cached),
         [cached]
     );
+    // 29.9: reads the latest persisted close and emits
+    // `composition.contemplation.complete` once its three slots land.
+    const contemplation = useContemplationFlowDirective('jiva-siva.integrated', generation);
 
     return (
         <section
@@ -150,6 +162,22 @@ export function PersonalRecognitionEngine() {
             data-composition-ambient-owner={ownerOfMountedSlot(compositionLoadResult, 'composition-ambient')}
             data-composition-status-owner={ownerOfMountedSlot(compositionLoadResult, 'composition-status')}
             data-composition-blocked-slots={blockedPersonalSlots().join(',')}
+            // 29.9 rides data attributes for the same reason ownership does:
+            // this surface is inside the `composition-4-5-0-personal.png`
+            // baseline, so the contemplation reading must add no rendered box.
+            data-contemplation-state={contemplation.state}
+            data-contemplation-source={contemplation.source}
+            data-contemplation-slots={[
+                contemplation.left.landed ? contemplation.left.position : '',
+                contemplation.right.landed ? contemplation.right.position : '',
+                contemplation.under.landed ? contemplation.under.position : ''
+            ]
+                .filter(position => position.length > 0)
+                .join(',')}
+            data-contemplation-lamps={contemplation.under.lamps.filter(lamp => lamp.lit).length}
+            data-contemplation-live-only={contemplation.liveOnlyPending.join(',')}
+            data-contemplation-unavailable={contemplation.unavailable.join(',')}
+            title={formatContemplationFlowHover(contemplation)}
             data-composition-rejection={
                 compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
             }

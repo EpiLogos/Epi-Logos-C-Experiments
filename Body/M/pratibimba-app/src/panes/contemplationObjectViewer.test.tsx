@@ -58,6 +58,31 @@ describe('T26.12 contemplation object viewer', () => {
         expect(screen.getByTestId('contemplation-object-gauge').textContent).toContain('coherent');
     });
 
+    it('reads a close persisted after the 25.20 anchor_cards widening', () => {
+        // Regression (29.T29.9): the substrate persists `anchor_cards` on the
+        // llm projection and the sibling reader `m4SessionCloseCeremony.ts`
+        // accepts it, but this reader did not — so it blocked on every close
+        // stored after that widening while the other read it fine. Two strict
+        // readers of `nara.session_close.contemplation.read` cannot disagree
+        // about the payload the method really returns.
+        const parsed = readContemplationObjectProjection({
+            ...projection,
+            triplet: {
+                ...projection.triplet,
+                llm: {
+                    ...projection.triplet.llm,
+                    anchor_cards: [{ card: 'The Fool', codon: 'I', matched: true }]
+                }
+            }
+        });
+
+        expect(parsed.state).toBe('ready');
+        if (parsed.state !== 'ready') throw new Error('expected the widened projection to read');
+        // Still aggregate-only: the viewer reports the count, not the cards.
+        expect(parsed.llm.matchedAnchorCodonCount).toBe(1);
+        expect(parsed.llm).not.toHaveProperty('anchorCards');
+    });
+
     it('fails closed when a raw contemplation body field appears in the viewer payload', () => {
         const parsed = readContemplationObjectProjection({
             ...projection,

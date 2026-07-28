@@ -22,7 +22,17 @@ const LLM_KEYS = new Set([
     'position',
     'loaded_agent_count',
     'psyche_anchor_coherent',
-    'matched_anchor_codon_count'
+    'matched_anchor_codon_count',
+    // 25.20 widened the substrate projection with the per-card anchor reading
+    // (`NaraContemplationLlmProjection.anchor_cards`), and the sibling reader of
+    // this same method took it (`m4SessionCloseCeremony.ts`). This one did not,
+    // so it refused every close persisted after that widening with
+    // `unexpected triplet.llm field anchor_cards` — two strict readers of one
+    // RPC disagreeing about the payload it really returns. Accepting the key
+    // does NOT relax the aggregate-only law: the projected field is a per-card
+    // {card, codon, matched} triple, and the raw `matched_anchor_codons` body
+    // stays out of TRIPLET/LLM_KEYS entirely.
+    'anchor_cards'
 ]);
 const EBM_KEYS = new Set(['position', 'gradient_magnitude', 'gauge_trio_coherent', 'coherence_scores']);
 const COHERENCE_KEYS = new Set(['square_0_5', 'square_1_4', 'square_2_3']);

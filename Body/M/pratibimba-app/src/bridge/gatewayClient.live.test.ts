@@ -23,6 +23,12 @@ import { WebSocket as WsWebSocket } from 'ws';
 import { GatewayClient, WebSocketLike } from './gatewayClient';
 import { KernelBridgeCachedProfile, KernelBridgeConnectionStatus } from './types';
 import { deriveDivision, deriveFrame, harmonicSnapshot } from '../engine/modulation/modulators';
+import {
+    buildContemplationFlowDirective,
+    contemplationSlotsLanded,
+    readContemplateSessionCloseResponse,
+    CONTEMPLATION_FLOW_RPCS
+} from '../engine/contemplationFlowDirector';
 
 const LIVE = process.env.EPI_LIVE_SMOKE === '1';
 const PORT = 18798;
@@ -157,4 +163,95 @@ function waitForPort(port: number, timeoutMs: number): Promise<void> {
             client.dispose();
         }
     }, 30000);
+
+    // 29.T29.9 — the contemplation flow's whole claim is that the 4'-5'-0'
+    // triplet crosses a real wire into the carrier's parser. A jsdom fixture
+    // can only prove the parser against a literal I wrote; this proves it
+    // against what the gateway actually composes and serialises.
+    it("composes the 4'-5'-0' contemplation triplet over the real wire", async () => {
+        const client = new GatewayClient(
+            `ws://127.0.0.1:${PORT}`,
+            { onProfile: () => {}, onStatus: () => {} },
+            url => new WsWebSocket(url) as unknown as WebSocketLike
+        );
+        client.start('lite');
+
+        try {
+            await new Promise<void>((resolveDone, rejectDone) => {
+                const timeout = setTimeout(() => rejectDone(new Error('no connect within 20s')), 20000);
+                const poll = setInterval(async () => {
+                    try {
+                        await client.invoke('health', {});
+                        clearInterval(poll);
+                        clearTimeout(timeout);
+                        resolveDone();
+                    } catch {
+                        /* not connected yet */
+                    }
+                }, 300);
+            });
+
+            // The canonical synthetic object from the gateway's own dispatch
+            // test (Body/S/S3/gateway/tests/contemplation_rpc_dispatches.rs).
+            const receipt = await client.invoke(CONTEMPLATION_FLOW_RPCS.live, {
+                session_id: 'live-smoke-29-t29-9',
+                q_nara: 'q_Nara',
+                pi_instance: {
+                    id: 'deterministic-pi-4p',
+                    deterministic_mock: true,
+                    loaded_agents: ['Nous', 'Moirai', 'Sophia', 'Psyche'],
+                    recognition_state: 'recognition-state integrates close-of-session contour'
+                },
+                engaged_coordinates: [
+                    { coordinate: 'M3.COMP', target_resonance_vector: [0.4, 0.2, 0.1] },
+                    { coordinate: 'M3.MOVE', target_resonance_vector: [0.3, 0.5, 0.2] },
+                    { coordinate: 'M3.RES', target_resonance_vector: [0.1, 0.3, 0.6] }
+                ],
+                trajectory: [
+                    { tick_id: 't0', gauge: 'COMP', actual_resonance: [0.38, 0.22, 0.12], codon: 'I' },
+                    { tick_id: 't1', gauge: 'MOVE', actual_resonance: [0.31, 0.47, 0.19], codon: 'V' },
+                    { tick_id: 't2', gauge: 'RES', actual_resonance: [0.09, 0.33, 0.58], codon: 'X' }
+                ],
+                psyche_anchor: { cards: ['The Fool', 'The Hierophant'], codons: ['I', 'V'] },
+                verifier_report: {
+                    virtue_witness_vector: [true, true, true, true, true, false, true, false, true],
+                    unsatisfied_constraints: ['#R0-0/1/A-T7-pending?'],
+                    coherence_score: 0.82
+                }
+            });
+
+            // The carrier's own parser, against the gateway's own bytes.
+            const read = readContemplateSessionCloseResponse(receipt.artifact);
+            expect(read.state, `parser refused the live response: ${JSON.stringify(receipt.artifact)}`).toBe(
+                'ready'
+            );
+            if (read.state !== 'ready') throw new Error('expected a live contemplation');
+
+            expect(read.sessionId).toBe('live-smoke-29-t29-9');
+            expect(read.wisdomDelta.length).toBeGreaterThan(0);
+            expect(read.llm.position).toBe("4'");
+            expect(read.ebm.position).toBe("5'");
+            expect(read.verifier.position).toBe("0'");
+            // The gateway saw all three gauges, so its trio verdict is coherent.
+            expect(read.ebm.gaugeTrioCoherent).toBe(true);
+            expect(read.verifier.witnessBits).toHaveLength(9);
+            // Bit 8 (Reality — Completion) is set, so arch-9 wholeness holds.
+            expect(read.verifier.arch9Wholeness).toBe(true);
+            // The symbolic round trip was made server-side; the chips read it.
+            expect(read.symbolicRoundTrips).toHaveLength(1);
+            expect(read.symbolicRoundTrips[0].parserSkill).toBe('anuttara-symbolic-parse');
+
+            const directive = buildContemplationFlowDirective(read);
+            expect(directive.state).toBe('ready');
+            expect(directive.source).toBe('live');
+            expect(contemplationSlotsLanded(directive)).toBe(true);
+            expect(directive.left.ribbon.length).toBeGreaterThan(0);
+            console.log(
+                `[contemplation-wire] ${directive.sessionId} squares=${directive.right.squareCoherence.join('/')} ` +
+                    `lamps=${directive.under.lamps.filter(l => l.lit).length}/9 questions=${directive.under.questions.length}`
+            );
+        } finally {
+            client.dispose();
+        }
+    }, 40000);
 });
