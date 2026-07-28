@@ -11,6 +11,25 @@
 
 import { defineConfig } from '@playwright/test';
 import { E2E_APP_PORT, GATEWAY_URL, SIDECAR_URL } from './tests/e2e/e2e-env';
+import { sweepPort } from './tests/e2e/port-sweep.mjs';
+
+// ORPHAN SWEEP — this has to happen at config load, and nowhere later.
+//
+// Playwright PROBES the web-server port and, with `reuseExistingServer: false`,
+// aborts before it ever runs the web-server command. So a sweep inside the
+// launcher cannot help, and neither can `globalSetup`: the web server is a
+// plugin whose setup runs ahead of it. Config evaluation is the only hook that
+// precedes the probe.
+//
+// A leftover listener here is not hypothetical — it aborted an `app-ui-flow`
+// stage in under a second and read as a whole-suite RED that no spec caused.
+//
+// Guarded to the RUNNER process: worker processes re-evaluate this file, and a
+// sweep running there would kill the very server the run is using. The sweep
+// itself refuses to kill anything it does not recognise as ours.
+if (process.env.TEST_WORKER_INDEX === undefined) {
+    sweepPort(E2E_APP_PORT, { label: 'e2e-config' });
+}
 
 export default defineConfig({
     testDir: './tests/e2e',
@@ -52,11 +71,19 @@ export default defineConfig({
     },
     projects: [{ name: 'chromium', use: { browserName: 'chromium' } }],
     webServer: {
-        command: `pnpm exec vite --host 127.0.0.1 --port ${E2E_APP_PORT} --strictPort`,
+        // `tests/e2e/app-server.mjs` sweeps a leftover listener off the app
+        // port BEFORE binding (Playwright starts the web server ahead of
+        // globalSetup, so global-setup's sweep is too late for this one) and
+        // keeps vite as a directly-signalable child rather than a grandchild
+        // behind `pnpm exec`.
+        command: 'node tests/e2e/app-server.mjs',
         port: E2E_APP_PORT,
         reuseExistingServer: false,
         timeout: 60_000,
         env: {
+            // the launcher runs outside the TS transform, so the one port
+            // authority reaches it through the environment
+            E2E_APP_PORT: String(E2E_APP_PORT),
             // browser-mode seams — production paths never see these
             VITE_E2E_TAURI_SHIM: '1',
             VITE_E2E_SIDECAR_URL: SIDECAR_URL,

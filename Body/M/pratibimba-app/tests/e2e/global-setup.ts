@@ -27,6 +27,7 @@ import {
     RUN_STATE_FILE,
     type E2eRunState
 } from './e2e-env';
+import { sweepPort, waitForPortToClose } from './port-sweep.mjs';
 
 function waitForPort(port: number, timeoutMs: number): Promise<void> {
     const deadline = Date.now() + timeoutMs;
@@ -49,61 +50,6 @@ function waitForPort(port: number, timeoutMs: number): Promise<void> {
     });
 }
 
-function waitForPortToClose(port: number, timeoutMs: number): Promise<void> {
-    const deadline = Date.now() + timeoutMs;
-    return new Promise((resolveClose, rejectClose) => {
-        const attempt = () => {
-            const socket = connect({ port, host: '127.0.0.1' }, () => {
-                socket.destroy();
-                if (Date.now() > deadline) {
-                    rejectClose(new Error(`port ${port} did not close within ${timeoutMs}ms`));
-                } else {
-                    setTimeout(attempt, 100);
-                }
-            });
-            socket.on('error', () => {
-                socket.destroy();
-                resolveClose();
-            });
-        };
-        attempt();
-    });
-}
-
-/** Kill leftover listeners on the dedicated e2e ports — but only processes
- *  that are recognisably ours (epi gateway / node sidecar / vite). */
-function sweepPort(port: number): void {
-    let pids: string[] = [];
-    try {
-        pids = execFileSync('lsof', ['-tiTCP:' + port, '-sTCP:LISTEN'], {
-            encoding: 'utf8'
-        })
-            .split('\n')
-            .filter(Boolean);
-    } catch {
-        return; // nothing listening
-    }
-    for (const pid of pids) {
-        let command = '';
-        try {
-            command = execFileSync('ps', ['-o', 'command=', '-p', pid], { encoding: 'utf8' }).trim();
-        } catch {
-            continue;
-        }
-        if (/epi .*gate .*start|e2e-vault-sidecar|vite/.test(command)) {
-            console.log(`[e2e-setup] clearing orphan on port ${port}: pid ${pid} (${command})`);
-            try {
-                process.kill(Number(pid), 'SIGTERM');
-            } catch {
-                /* already gone */
-            }
-        } else {
-            throw new Error(
-                `[e2e-setup] port ${port} is held by an unrecognised process (pid ${pid}: ${command}) — refusing to kill it`
-            );
-        }
-    }
-}
 
 function ensureChromium(): void {
     try {
@@ -154,6 +100,8 @@ export default async function globalSetup(): Promise<void> {
         throw new Error(`[e2e-setup] real epi-gnostic executable missing at ${epiGnosticBin}`);
     }
     ensureChromium();
+    // The app port is swept by tests/e2e/app-server.mjs, which is the only
+    // hook early enough — Playwright binds the web server before this runs.
     sweepPort(E2E_GATEWAY_PORT);
     sweepPort(E2E_SIDECAR_PORT);
     await waitForPortToClose(E2E_GATEWAY_PORT, 5_000);
