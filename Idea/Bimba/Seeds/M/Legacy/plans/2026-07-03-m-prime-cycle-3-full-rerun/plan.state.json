@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T17:18:04.771Z",
+  "updatedAt": "2026-07-28T17:38:00.198Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21437,11 +21437,28 @@
       "blocker": null
     },
     "53.T53.10": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T17:37:59.937Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T17:37:59.937Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T17:37:59.937Z",
+          "text": "The three documents that permitted the deferral lose their permission, keeping their history. (a) S-CODE-RESIDENCY-PLAN.md:185 and :211 — the may-remain-inside-epi-cli / should-later-thin lines — are struck through rather than deleted, each with a SUPERSEDED note recording that they were agent-authored, carry no ratification marker, and became indefinite permission (src/gate/ grew 41 to 59 files AFTER the extraction crates existed). The note also records the honest split outcome: the graph line actually came true (29 of 32 files are re-export shims now) and the gate line did not, which is what Track 53 finished. (b) epi-cli/AGENTS.md gains a Residency law section stating the membrane law and both guards that measure it, plus corrected Ownership entries for src/gate (CLI wrappers and composites only), src/graph (argv-and-print) and lib.rs (the blanket re-exports are gone). (c) The runbook line agents actually need: TO ADD A GATEWAY METHOD, IMPLEMENT THE HANDLER IN THE OWNING COORDINATE CRATE AND REGISTER IT, NEVER IN EPI-CLI — four concrete steps ending with adding the table to the T9 cross-walk so the guard can see it. That replaces the folk knowledge that adding a method touches ~9 places in dispatch.rs. It also states the composite exception honestly, because the exception is real and recurring, and warns against pushing a composite into whichever layer happens to have a legal edge. (d) CHARTER.md records that Track 17 closed 28/28 and performed no residency — its tranches split large files, and splitting gate/server.rs into gate/server/*.rs is part of why the count rose — so those green marks are not evidence of relocation, with the general rule written beside them: a done mark attests to the Verify line, not to the track title. verify-all GREEN, honesty-lint clean.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only epi-cli,graphiti-runtime,hen-compiler-core,graph-services,graph-schema,gateway,gateway-contract,kernel-contract,redis-context,spacetime,epii-agent-core,epii-review-core,epii-autoresearch-core,live-wire,gateway-methods,lint-boundaries,honesty-lint,harness-selftest",
+            "exitCode": 0,
+            "testsPassed": 1918,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+              "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json",
+              "Body/S/S0/epi-cli/tests/s0_no_new_coordinate_handlers.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/53.T53.08-tail-residency-audit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -21451,11 +21468,28 @@
       "blocker": null
     },
     "53.T53.11": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T17:38:00.173Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T17:38:00.173Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T17:38:00.173Z",
+          "text": "The structural guard landed at Body/S/S0/epi-cli/tests/s0_no_new_coordinate_handlers.rs. epi-cli must now DECLARE every coordinate-prefixed method it dispatches directly, each with one of exactly four reasons — composite, S0-own, needs-CLI-state, not-yet-drained — and a fourth test rejects any entry whose reason does not start with one of those four or is too thin to audit, so an unclassified exception cannot be written. 48 entries today, every one classified. THE CHECK IS BIDIRECTIONAL, which is what stops the list rotting: an undeclared arm fails (the case it exists for) AND a declared entry with no matching arm fails, so entries must be deleted as methods finish moving rather than accumulating as fiction. A fifth assertion pins the eleven families Track 53 relocated as absent, catching a handler that returns to the membrane inside a file that already names an S-crate — which the file-count ratchet alone could miss. The extractor is deliberately syntactic (an 8-space-indented line whose first token is a string literal, optionally after a pipe) so the guard sees a handler the moment it is typed, without the crate needing to compile, and it asserts it found a non-empty set so a moved or reshaped dispatch.rs fails loudly instead of passing forever on nothing. PROVEN IN BOTH DIRECTIONS against the real tree per the house pattern: injecting an undeclared s5-prime.sneaky.new_handler arm fails with the offending name and the runbook in the message; removing it returns 4/4 green. It fails INDEPENDENTLY of lint-boundaries by design — the lint sees a manifest edge, this sees a handler that arrived through the composition root, which no manifest edge can reveal because epi-logos is a licensed membrane entitled to depend on every layer. Ratchet note: lawBearingFileCeiling is 77 across the whole crate rather than 0; zero is not reachable while the composites and S0-own law legitimately name S-crates, so the categorical declaration above is what carries the zero-new-handlers law that the original brief expressed as a count.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only epi-cli,graphiti-runtime,hen-compiler-core,graph-services,graph-schema,gateway,gateway-contract,kernel-contract,redis-context,spacetime,epii-agent-core,epii-review-core,epii-autoresearch-core,live-wire,gateway-methods,lint-boundaries,honesty-lint,harness-selftest",
+            "exitCode": 0,
+            "testsPassed": 1918,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+              "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json",
+              "Body/S/S0/epi-cli/tests/s0_no_new_coordinate_handlers.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/53.T53.08-tail-residency-audit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -21690,11 +21724,28 @@
       "blocker": null
     },
     "53.T53.08": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T17:37:59.463Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T17:37:59.463Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T17:37:59.463Z",
+          "text": "All 22 remaining epi-cli-to-S-crate sites audited one by one, recorded in plan.runs/53.T53.08-tail-residency-audit.md (the deliverable IS the document). NONE took resolution (b) or (c): no tail site holds a coordinate law, and every gateway method the tail touched had already moved in T53.03-07. vault/frontmatter.rs — which T53.04 flagged as possibly a second schema authority — turns out to be a 5-line pure re-export over hen-compiler-core, i.e. exactly the mirror reader the brief asked for; that worry was unfounded and is now closed on evidence. Everything else is resolution (d), CLI passthrough under the S0-membrane licence: agent/{team,tmux,subagents,chain}.rs name TerminalBinding/TerminalLease/TerminalStatus but the lease LAW is S3 and enforced at session_store.rs:781; nara/medicine_route.rs and transform/lifecycle.rs call Hen frontmatter writers rather than writing YAML themselves; bimba.rs, nara/arena.rs, portal/surfaces.rs, tui/knowing.rs, core/knowing/*, vimarsa/mod.rs are argv-and-print over a lower authority. BUT (d) IS NOT AN ESCAPE HATCH AND IS NOW CHECKABLE, which is the substance of this tranche: the residency ratchet roots widened from gate/+graph/ to the WHOLE crate. agent/, nara/, portal/, tui/ and bimba.rs were measured by nothing before — the categorical guard s0_membrane_guardrails.rs does not reach them either since its law zones are gate/graph/vault/core — so a handler added under agent/ would have raised no alarm anywhere, which is precisely the it-was-easier-becomes-the-next-allowlist risk the tranche names. The ratchet was chosen over widening the categorical zones because it counts ONLY files naming an S-crate: widening zones would have flagged dozens of files referencing nothing. New ceiling 77 files / 22,287 code lines, may only fall; proven by injecting a law-bearing file under src/agent/ (exit 1 naming it) and removing it (exit 0).",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only epi-cli,graphiti-runtime,hen-compiler-core,graph-services,graph-schema,gateway,gateway-contract,kernel-contract,redis-context,spacetime,epii-agent-core,epii-review-core,epii-autoresearch-core,live-wire,gateway-methods,lint-boundaries,honesty-lint,harness-selftest",
+            "exitCode": 0,
+            "testsPassed": 1918,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+              "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json",
+              "Body/S/S0/epi-cli/tests/s0_no_new_coordinate_handlers.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/53.T53.08-tail-residency-audit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -21704,11 +21755,28 @@
       "blocker": null
     },
     "53.T53.09": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T17:37:59.704Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T17:37:59.704Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T17:37:59.704Z",
+          "text": "legacyForbiddenImportAllowlist is DELETED, not emptied — the Set, the options.allowLegacyGaps branch, the edgeKey computation and the legacyForbiddenImportGaps counter are all gone (grep for legacyForbiddenImport in lint-boundaries.mjs returns 0). The forbidden-import check is unconditional and no flag can grant an exception; the header comment states that exceptions are not representable by design AND draws the distinction the S0-membrane ruling requires — a licence is not an exception: it is a declared structural fact checked by residency magnitude rather than by counting edges. INJECTION-PROVEN in both directions against the real tree: adding epi-s3-gateway-contract to Body/S/S1/hen-compiler-core/Cargo.toml turns the lint red with the exact edge named (dependencies.epi-s3-gateway-contract violates S1 forbidden-imports via Body/S/S3), exit 1; removing it returns exit 0. The --no-legacy-allowlist FLAG survives deliberately and this is not a residual hatch: it governs two OTHER allowlists that still carry entries (6 Cargo descriptions, 39 Coordinate Headers) and cannot reach forbidden imports at all — its help text now says so explicitly. Note on ordering: by the time this ran the allowlist held 0 entries, not 13 — T53.02 replaced the 11 epi-cli entries with the membrane licence (they were never violations) and T53.06 dissolved the last 2 by moving redis/graphiti residency down to epi-kernel-contract. So deleting the mechanism was the last step of the track rather than its acceptance criterion, as the amended brief records.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only epi-cli,graphiti-runtime,hen-compiler-core,graph-services,graph-schema,gateway,gateway-contract,kernel-contract,redis-context,spacetime,epii-agent-core,epii-review-core,epii-autoresearch-core,live-wire,gateway-methods,lint-boundaries,honesty-lint,harness-selftest",
+            "exitCode": 0,
+            "testsPassed": 1918,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+              "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json",
+              "Body/S/S0/epi-cli/tests/s0_no_new_coordinate_handlers.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/53.T53.08-tail-residency-audit.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
