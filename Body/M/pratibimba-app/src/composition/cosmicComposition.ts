@@ -4,10 +4,12 @@
  * Position (#n): #2 — the composed cosmic surface
  * Actualises: 29.T29.2 (cosmic 1-2-3 composition geometry), DR-WC-IP-2
  *   (composition-over-juxtaposition; status ROUTED, ratified by building).
- * Public surface: COSMIC_COMPOSITION_CONTRIBUTORS, loadCosmicComposition,
- *   describeCosmicCompositionLoad.
- * Does NOT own: the geometric-slot law (`geometricSlotEnforcement.ts`), the
- *   render (`engine/CosmicEngine.tsx`), or any contributor's own geometry.
+ * Public surface: COSMIC_SLOT_CARRIER_IDS, COSMIC_COMPOSITION_CONTRIBUTORS,
+ *   loadCosmicComposition, describeCosmicCompositionLoad.
+ * Does NOT own: the geometric-slot law (`geometricSlotEnforcement.ts` — which
+ *   also owns `ownerOfSlot`, since it reads that module's own result type and
+ *   the personal declaration reports through it too), the render
+ *   (`engine/CosmicEngine.tsx`), or any contributor's own geometry.
  *
  * # Why this file exists
  *
@@ -111,22 +113,6 @@ export function loadCosmicComposition(
     contributors: readonly CompositionContributor[] = COSMIC_COMPOSITION_CONTRIBUTORS
 ): CompositionLoadResult {
     return compositionLoad(contributors);
-}
-
-/**
- * Which contributor owns a slot in a loaded composition.
- *
- * Returns the honest marker `'unmounted'` when the load was refused and
- * `'unclaimed'` when it mounted with nobody on that slot — never an empty
- * string, because an absent owner and a refused composition are different
- * facts and the chrome must be able to tell them apart.
- */
-export function ownerOfSlot(result: CompositionLoadResult, slot: string): string {
-    if (!result.mounted) return 'unmounted';
-    const granted = result.composition.grantedGeometricClaims.find(
-        claim => claim.geometricSlot === slot
-    );
-    return granted?.extensionId ?? 'unclaimed';
 }
 
 /**

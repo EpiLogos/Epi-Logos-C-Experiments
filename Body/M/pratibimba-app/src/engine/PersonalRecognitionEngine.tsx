@@ -3,10 +3,15 @@
  * Residency: Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.tsx
  * Position (#n): #4 — one personal-face composition across M0 grounding,
  * M4 recognition, and M5 scoring.
- * Actualises: Track 36.T36.5's public-safe recognition handoff.
+ * Actualises: Track 36.T36.5's public-safe recognition handoff, and 29.T29.3's
+ * personal 4-5-0 slot-ownership declaration — the root that runs
+ * `loadPersonalComposition()` through the real load-time law and reports each
+ * slot's owner on this surface.
  * Public surface: PersonalRecognitionEngine, readPersonalRecognition.
  * Does NOT own: virtue-witness computation, quaternion composition, EBM
- * scoring, profile transport, or the daily-note editor.
+ * scoring, profile transport, the daily-note editor, or the slot-ownership
+ * declaration itself (`composition/personalComposition.ts`) and the boundary
+ * law it runs through (`composition/geometricSlotEnforcement.ts`).
  */
 
 import { useMemo } from 'react';
@@ -15,6 +20,14 @@ import {
     useCompositionPentadicTraceEvents
 } from '../composition/compositionEvents';
 import { buildIntegratedPentadicTraceOverlay } from '../composition/integratedPentadicTrace';
+import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
+// 29.T29.3 — the personal composition declares WHO owns each geometric slot
+// and runs that through the real load-time law. The five forbidden handle
+// classes that law guards are all personal material, so until this call
+// existed the M4 protected-local boundary was unreachable on the only path it
+// was written for: `PERSONAL_GEOMETRIC_SLOTS` was referenced by its own test
+// and by nothing else in the repository.
+import { blockedPersonalSlots, loadPersonalComposition } from '../composition/personalComposition';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
@@ -108,6 +121,9 @@ export function PersonalRecognitionEngine() {
         cached?.generation ?? null
     );
     const reading = useMemo(() => readPersonalRecognition(cached?.profile ?? null), [cached]);
+    // Slot ownership is a property of the DECLARATION, not of any frame, so it
+    // is resolved once rather than per tick.
+    const compositionLoadResult = useMemo(() => loadPersonalComposition(), []);
     const integratedReadiness = useMemo(
         () => evaluateCachedProfileIntegratedReadiness(cached),
         [cached]
@@ -119,6 +135,21 @@ export function PersonalRecognitionEngine() {
             data-testid="personal-recognition-engine"
             data-state={reading.state}
             data-generation={cached?.generation ?? 'none'}
+            // Ownership rides data attributes rather than rendered chrome: this
+            // surface sits inside the `composition-4-5-0-personal.png` baseline,
+            // and `visibility: hidden` preserves its layout box, so any added
+            // text would still move the capture. Same idiom as CosmicEngine.
+            data-composition-mounted={compositionLoadResult.mounted ? 'true' : 'false'}
+            data-left-composition-owner={ownerOfSlot(compositionLoadResult, 'left-composition')}
+            data-center-composition-owner={ownerOfSlot(compositionLoadResult, 'center-composition')}
+            data-right-composition-owner={ownerOfSlot(compositionLoadResult, 'right-composition')}
+            data-grounding-owner={ownerOfSlot(compositionLoadResult, 'grounding')}
+            data-composition-ambient-owner={ownerOfSlot(compositionLoadResult, 'composition-ambient')}
+            data-composition-status-owner={ownerOfSlot(compositionLoadResult, 'composition-status')}
+            data-composition-blocked-slots={blockedPersonalSlots().join(',')}
+            data-composition-rejection={
+                compositionLoadResult.mounted ? '' : compositionLoadResult.rejection.reason
+            }
         >
             <header className="personal-recognition-header">
                 <div>

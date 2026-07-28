@@ -19,12 +19,12 @@ import {
     COSMIC_COMPOSITION_CONTRIBUTORS,
     COSMIC_SLOT_CARRIER_IDS,
     describeCosmicCompositionLoad,
-    loadCosmicComposition,
-    ownerOfSlot
+    loadCosmicComposition
 } from './cosmicComposition';
 import {
     COSMIC_GEOMETRIC_SLOTS,
     READS_ONLY_GEOMETRIC_SLOTS,
+    ownerOfSlot,
     type CompositionContributor
 } from './geometricSlotEnforcement';
 

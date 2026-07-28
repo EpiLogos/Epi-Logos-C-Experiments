@@ -28,7 +28,8 @@ import { buildM3CodonRotationProjectionForLensRing } from '../composition/M3Codo
 // that through the real load-time law. Before this the law had no production
 // caller at all: only its own test referenced it, so the surface rendered its
 // three mounts without any of them claiming a slot.
-import { loadCosmicComposition, ownerOfSlot } from '../composition/cosmicComposition';
+import { loadCosmicComposition } from '../composition/cosmicComposition';
+import { ownerOfSlot } from '../composition/geometricSlotEnforcement';
 import { useCoordinateStore, useTickStore } from '../state/stores';
 import {
     CLOCK_LENSES,

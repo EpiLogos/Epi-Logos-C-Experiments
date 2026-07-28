@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-27T21:53:29.503Z",
+  "updatedAt": "2026-07-28T00:25:16.386Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14493,16 +14493,33 @@
       "blocker": null
     },
     "29.T29.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-28T00:25:16.318Z",
+      "claimedAt": "2026-07-28T00:00:06.727Z",
+      "completedAt": "2026-07-28T00:25:16.318Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T00:25:16.318Z",
+          "text": "The personal 4-5-0 composition declares who owns each geometric slot, and the M4 protected-local boundary finally runs on the path it was written for. 29.13 declared the six PERSONAL slots and the five forbidden raw-body handle classes (raw-quaternion, raw-audio-octet, plaintext-journal, graphiti-episode-body, raw-natal-chart) - all PERSONAL material - but PERSONAL_GEOMETRIC_SLOTS was referenced by exactly one file in the repo: its own test. 29.2's cosmic caller could never exercise it (no cosmic contributor declares a journal body or a natal chart), so the guard was unreachable on its only real path. personalComposition.ts now declares left/center/ambient/status=m4-nara, right=m5-epii, grounding=m0-anuttara through the real compositionLoad() at the PersonalRecognitionEngine root, reported as data attributes (the surface rides composition-4-5-0-personal.png and visibility:hidden preserves its layout box, so rendered text would still move the capture - the CosmicEngine idiom). Handle classes are the substance: left is opaque-handle because the composition carries the vault PATH and NaraCanvasEditor reads the body from S1 itself, NOT plaintext-journal. center-composition is declared OWNED-and-BLOCKED rather than omitted: 25.T25.6 is pending and engine/dipyramidGeometry.ts (the DR-IG-6 fixture every M4-5 psychoid renderer must consume) has zero consumers; a test asserts each slot is either carried or blocked, never quietly absent. Parity map is file+symbol because the personal chrome legitimately spans files (TimeAxisSwitcher mounts in App.tsx personalHome around the engine; the privacy tint is worn by the leaf surfaces). ownerOfSlot moved to geometricSlotEnforcement.ts, which owns the result type it reads. UF class-proof: new tests/e2e/personal-composition-ownership.spec.ts reads the ownership attributes in the REAL browser against a spawned gateway (run from Body/M/pratibimba-app, 1 passed) and rides app-ui-flow 100 in the independent gate - a jsdom mount alone never opens the app. Boundary proven non-vacuous by injection: disabling the FORBIDDEN_SET check reddens exactly 4 tests (2 pre-existing + the 2 new personal guards) and leaves 20 green. honesty-lint earned its keep again - it rejected a first cut whose absence-claim was a source grep, and that test was removed rather than allowlisted. DR-WC-IP-3 stays ROUTED in the register; nothing in this tranche changes its recorded status and no register claim is made. Independent verify-tranche PASS (verifier opus-verifier-t29-3-20260728 != closer opus-mdev-29t293): whole class-scoped UF gate GREEN in 512s - app-ui-flow 100, app-test 1602, gateway 101, gateway-contract 93, ta-onta 800, live-wire, app-smoke, app-build, app-typecheck, carrier-tokens, honesty-lint.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/personal-composition-ownership.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/personalComposition.ts",
+              "Body/M/pratibimba-app/src/engine/PersonalRecognitionEngine.tsx",
+              "Body/M/pratibimba-app/tests/e2e/personal-composition-ownership.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.3.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus-mdev-29t293",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T00:00:06.727Z",
+      "runId": "20260728T000006Z-29-T29.3",
       "worktree": null,
       "blocker": null
     },
@@ -15088,16 +15105,16 @@
       "blocker": null
     },
     "30.T30.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T00:11:16.508Z",
+      "claimedAt": "2026-07-28T00:11:16.508Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "claude-opus5-t30-palette-20260728",
+      "leaseExpiresAt": "2026-07-28T02:11:16.508Z",
+      "heartbeatAt": "2026-07-28T00:11:16.508Z",
+      "runId": "20260728T001116Z-30-T30.8",
       "worktree": null,
       "blocker": null
     },
@@ -20994,7 +21011,7 @@
     },
     "52.T1": {
       "status": "review",
-      "updatedAt": "2026-07-27T17:12:06.247Z",
+      "updatedAt": "2026-07-28T00:10:19.348Z",
       "claimedAt": "2026-07-27T09:31:46.315Z",
       "completedAt": null,
       "evidence": [
@@ -21030,12 +21047,16 @@
         {
           "at": "2026-07-27T17:12:06.247Z",
           "text": "VERIFY LINE PROVEN GREEN END-TO-END, ledger held at review only because the tree cannot currently produce a PASS record. THE GREEN RUN (verify-tranche, verifier opus-verifier-t52-20260727b != closer): BOTH Verify-line commands exit 0 — 'pnpm typecheck && pnpm test && pnpm build' exit 0 (typecheck 0, 1460 vitest passed/0 failed, build 0, lint:imports + lint:no-modal GREEN) AND 'pnpm test:e2e' exit 0 with 91 passed / 0 failed in FULL SUITE ORDER (5.5m) — the tranche's own UF class proof, 91 playwright specs against a spawned gateway. This is the first time 52.T1's literal Verify line has gone green end-to-end. WHAT MADE IT GREEN (real fixes, not re-rolls): the two specs previously dismissed as 'known flakes' and adjudicated as unrelated red across several tranches were NOT flaky — each carried an assumption true only in isolation, and both are now fixed and committed (0b17a897). (1) pratibimba-consent.spec.ts:274 asserted turnCount === index against the Q_activity accumulator, but that accumulator is PERSISTED PER USER not per session — the test's own comment names that persistence as the product design under test — so suite order had already advanced it: Expected 1, Received 3. It now measures each close against a live baseline read back over the wire, asserting the invariant it actually means (each close folds exactly ONE packet), monotonicity unchanged. (2) visual-regression.spec.ts bootConnected granted its gateway assertion 20s but left shell-visible on the 10s project default inside a 60s test budget; under full-suite load first paint crossed it, failing with 'element(s) not found' at BOOT before any visual assertion. Same boot-sized budget now. ALSO FIXED (031adfe3, this tranche's own deliverable): the 52.T1 AST guard walks 500+ files synchronously and was killed by the 5s vitest default MID-WALK at 5257ms under parallel disk load — a guard that times out reports RED while proving nothing about the tree; given a 30s budget it is 9/9 green in 673ms. WHY NOT DONE: --mark done needs a fresh PASS record and verify-tranche fails closed on any red. The shared carrier is being mutated by a concurrent sibling RIGHT NOW: Track 28's 28.T28.4 Canon Studio work is UNCOMMITTED and in-flight (src/panes/canonEditorExtensions.ts, canonStudio.test.ts, MarkdownEditorPane.test.tsx + package.json/pnpm-lock.yaml/styles.css/CHROME-CONTRACT.md), and tests/e2e/canon-studio.spec.ts:85 fails against that in-flight state. app-test count climbed 1442 -> 1460 -> 1476 -> 1480 across four runs inside one session — direct evidence of concurrent mutation. A whole-suite green is therefore not reachable from this lane until 28.T28.4 lands; 52.T1's Verify line names the WHOLE suite, so --only cannot scope around another track's in-flight work (--only scopes verify-all; tranche Verify-line commands always run). NAMED FOR THEIR OWNERS, same defect class, still live: scripts/no-modal-discipline.test.mjs (5399ms), scripts/import-boundaries.test.mjs (6107ms) and src/bases/mocBaseIntegration.live.test.tsx (5045ms) are whole-tree scans that also time out at the 5s default under contention — tracks 31/43/48 own these; each is a one-line timeout fix. NO GATE-GAMING: every re-run followed a real change to the tree; no full-gate re-run was made hoping for a green window. Ready to close on an Architect signal, or once 28.T28.4 lands and one clean whole-suite run can be taken."
+        },
+        {
+          "at": "2026-07-28T00:10:19.348Z",
+          "text": "Fresh independent verification (verifier opus-verifier-t52-20260728, cwd Body/M/pratibimba-app) — Verify command 1 GREEN in this run: 'pnpm typecheck && pnpm test && pnpm build' exit 0 (tsc clean, lint:imports + lint:no-modal GREEN, full vitest incl. the 52.T1 AST guard, build 0). The 28.T28.4 blocker named in the 17:12 entry is GONE (landed as 7167e3b5). Verify command 2 'pnpm test:e2e' exit 1 with 6 failed, and the record names the cause verbatim: '[vite] SyntaxError: The requested module /src/composition/cosmicComposition.ts does not provide an export named ownerOfSlot' at 01:05, MID-RUN. Cause identified, not guessed: a concurrent sibling holds 8 uncommitted carrier files (src/composition/cosmicComposition.ts + .test.ts, personalComposition.ts + .test.ts NEW, geometricSlotEnforcement.ts, engine/CosmicEngine.tsx, engine/PersonalRecognitionEngine.tsx + .test.tsx, all mtime > 00:55) building 29.T29.2's personal-face successor; ownerOfSlot (added by commit 4b5e5798) is absent from the file as it stands while consumers still import it, so the app fails to boot. 5 of the 6 failures are exactly that boot failure — getByTestId('shell') and getByTestId('status-gateway') 'element(s) not found' in canon-studio, m0-m5-library-seam-map, m0-symbolic-question-console, spanda-navigator; visual-panes:304 and visual-regression:381 follow from the same dead page. NONE of the six touches a layout id or this tranche's surface. Typecheck and build passed EARLIER IN THE SAME RUN, which dates the sibling write to after 01:05 and rules out a defect in the committed tree. NO RE-RUN TAKEN: the sibling is mid-edit, so re-running the whole suite now would be retry-until-green, which is forbidden; this entry supersedes the 17:12 hold with a NEW and different cause. 52.T1's own deliverable remains fully proven. Closable on one clean whole-suite run once the composition lane commits."
         }
       ],
       "notes": null,
       "owner": "claude-opus5-t52-layout-20260727",
       "leaseExpiresAt": "2026-07-27T19:22:47.093Z",
-      "heartbeatAt": "2026-07-27T17:12:06.247Z",
+      "heartbeatAt": "2026-07-28T00:10:19.348Z",
       "runId": "20260727T093146Z-52-T1",
       "worktree": null,
       "blocker": null
@@ -27212,12 +27233,31 @@
       "leaseExpiresAt": "2026-07-28T00:31:17.062Z",
       "worktree": null,
       "completedAt": "2026-07-27T21:51:24.576Z"
+    },
+    {
+      "runId": "20260728T000006Z-29-T29.3",
+      "taskId": "29.T29.3",
+      "status": "done",
+      "startedAt": "2026-07-28T00:00:06.727Z",
+      "owner": "opus-mdev-29t293",
+      "leaseExpiresAt": "2026-07-28T03:00:06.727Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T00:25:16.318Z"
+    },
+    {
+      "runId": "20260728T001116Z-30-T30.8",
+      "taskId": "30.T30.8",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T00:11:16.508Z",
+      "owner": "claude-opus5-t30-palette-20260728",
+      "leaseExpiresAt": "2026-07-28T02:11:16.508Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-27T21:53:29.503Z",
-    "updatedAt": "2026-07-27T21:53:29.503Z",
+    "createdAt": "2026-07-28T00:10:29.499Z",
+    "updatedAt": "2026-07-28T00:10:29.499Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

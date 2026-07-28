@@ -107,4 +107,33 @@ describe('PersonalRecognitionEngine', () => {
         expect(surface.textContent).not.toContain('0.1111');
         expect(surface.textContent).not.toContain('0.9999');
     });
+
+    // 29.T29.3 — the slot-ownership law had no production caller on the
+    // personal path, which is the only path its five forbidden handle classes
+    // describe. This is the behavioural proof that the render now reaches it.
+    it('reports one named owner per personal geometric slot', () => {
+        render(<PersonalRecognitionEngine />);
+        const root = screen.getByTestId('personal-recognition-engine');
+        expect(root.getAttribute('data-composition-mounted')).toBe('true');
+        expect(root.getAttribute('data-left-composition-owner')).toBe('m4-nara');
+        expect(root.getAttribute('data-center-composition-owner')).toBe('m4-nara');
+        expect(root.getAttribute('data-right-composition-owner')).toBe('m5-epii');
+        expect(root.getAttribute('data-grounding-owner')).toBe('m0-anuttara');
+        expect(root.getAttribute('data-composition-ambient-owner')).toBe('m4-nara');
+        expect(root.getAttribute('data-composition-status-owner')).toBe('m4-nara');
+        expect(root.getAttribute('data-composition-rejection')).toBe('');
+    });
+
+    it('reports the owned-but-unbuilt center slot as blocked rather than absent', () => {
+        // 25.T25.6 (personal cymatic field body) is pending: the slot has an
+        // owner and no renderer, and the surface says so instead of reading as
+        // if the composition had five slots.
+        render(<PersonalRecognitionEngine />);
+        const root = screen.getByTestId('personal-recognition-engine');
+        expect(root.getAttribute('data-composition-blocked-slots')).toBe(
+            'center-composition:pending-psychoid-cymatic-renderer'
+        );
+        // Blocked is not unclaimed — the owner is still named.
+        expect(root.getAttribute('data-center-composition-owner')).not.toBe('unclaimed');
+    });
 });

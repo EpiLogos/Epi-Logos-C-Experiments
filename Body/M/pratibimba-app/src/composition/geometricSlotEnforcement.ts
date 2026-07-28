@@ -17,7 +17,7 @@
  *   IntegratedGeometricSlot, GeometricHandleClass, IntegratedGeometricClaim,
  *   GeometricClaimVerdict, enforceGeometricPrivacyBoundary,
  *   CompositionContributor, JuxtapositionRejection, MountedComposition,
- *   CompositionLoadResult, compositionLoad.
+ *   CompositionLoadResult, compositionLoad, ownerOfSlot.
  * Does NOT own: claim ARBITRATION priority resolution across contributors
  *   (the GeometricCompositionCoordinator conflict order — 29.1), the render
  *   bodies, the readiness envelope (29.10 buildIntegratedReadiness), or the
@@ -258,4 +258,24 @@ export function compositionLoad(contributors: readonly CompositionContributor[])
         }
     }
     return { mounted: true, composition: Object.freeze({ grantedGeometricClaims: Object.freeze(granted) }) };
+}
+
+/**
+ * Which contributor owns a slot in a loaded composition.
+ *
+ * Returns the honest marker `'unmounted'` when the load was refused and
+ * `'unclaimed'` when it mounted with nobody on that slot — never an empty
+ * string, because an absent owner and a refused composition are different
+ * facts and the chrome must be able to tell them apart.
+ *
+ * Lives with the law rather than with either composition: it reads
+ * `CompositionLoadResult`, which this module owns, and both the cosmic (29.2)
+ * and personal (29.3) declarations report through it.
+ */
+export function ownerOfSlot(result: CompositionLoadResult, slot: string): string {
+    if (!result.mounted) return 'unmounted';
+    const granted = result.composition.grantedGeometricClaims.find(
+        claim => claim.geometricSlot === slot
+    );
+    return granted?.extensionId ?? 'unclaimed';
 }
