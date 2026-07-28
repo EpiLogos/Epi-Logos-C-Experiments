@@ -64,21 +64,23 @@ const legacyMissingHeaderAllowlist = new Set([
   "Body/S/epi-kernel-contract/src/lib.rs"
 ]);
 
-const legacyForbiddenImportAllowlist = new Set([
-  // The 11 epi-cli entries that stood here were never rot: they were the CLI
-  // membrane doing its job. `epi graph`, `epi vault`, `epi gate` exist to let
-  // every module be touched from the terminal, which means reaching every
-  // layer. That is now stated as a licence in the contract (`S0-membrane`,
-  // Architect ruling 2026-07-28) instead of accumulating here as debt, and
-  // epi-cli is constrained by residency — it may hold no domain law — rather
-  // than by counting edges. Track 53 T53.02.
-  //
-  // What remains below is a genuine violation with no such defence: S2 must
-  // not depend on S3. Track 53 T53.06 removes it, and T53.09 removes this
-  // mechanism entirely.
-  "Body/S/S2/graph-services/Cargo.toml#dependencies.epi-s3-gateway-contract",
-  "Body/S/S2/graph-services/Cargo.toml#dependencies.epi-s3-redis-context"
-]);
+// There is no forbidden-import allowlist, and the absence is the point.
+//
+// One stood here holding 13 entries. Eleven were never violations at all — the
+// S0 CLI membrane reaching the modules it exists to expose — and are now stated
+// as a licence in the contract (`S0-membrane`) instead of accumulating as debt.
+// The other two were real, and Track 53 T53.06 dissolved them by moving the
+// shared types down to `epi-kernel-contract` where both layers may see them.
+//
+// The mechanism is gone rather than merely empty. A permit that can be written
+// is a permit that will be written: this one was a boolean with no magnitude,
+// owner or expiry, so `src/gate/` grew from 41 files to 59 without a gate ever
+// turning red. An exception is deliberately not representable here.
+//
+// A licence is NOT an exception. `S0-membrane` is a declared structural fact —
+// the CLI reaches every layer because that is its function — and it is checked
+// by residency (`contracts/s0-membrane-residency.json`, which fails when the
+// membrane's law-bearing footprint RISES) rather than by counting edges.
 
 const ignoredDirectoryNames = new Set([
   ".git",
@@ -128,7 +130,9 @@ function printHelp() {
 Options:
   --repo-root <path>          Repository or fixture root to lint.
   --contract <path>           Contract JSON carrying rustSStackBoundary.
-  --no-legacy-allowlist       Fail current migration gaps instead of ratcheting them.
+  --no-legacy-allowlist       Fail current Cargo-description / Coordinate-Header migration
+                              gaps instead of ratcheting them. It does NOT govern forbidden
+                              imports: those have no allowlist and no flag can grant one.
   --json                      Emit machine-readable summary.
 `);
 }
@@ -266,11 +270,6 @@ function lintRustForbiddenImports(options, contract, errors, counts) {
     }
     const manifest = parseCargoManifest(manifestPath);
     for (const dependency of manifest.dependencies) {
-      const edgeKey = `${crate.manifestPath}#${dependency.section}.${dependency.key}`;
-      if (options.allowLegacyGaps && legacyForbiddenImportAllowlist.has(edgeKey)) {
-        counts.legacyForbiddenImportGaps += 1;
-        continue;
-      }
       for (const forbidden of layer.forbiddenImports ?? []) {
         if (forbiddenFragmentMatchesDependency(options.repoRoot, manifestPath, dependency, forbidden)) {
           errors.push(
@@ -465,7 +464,6 @@ function run(options) {
     cHeaderPairs: 0,
     cHeadersWithoutSibling: 0,
     legacyCargoDescriptionGaps: 0,
-    legacyForbiddenImportGaps: 0,
     legacyHeaderGaps: 0
   };
 
@@ -493,9 +491,6 @@ try {
     const legacyGapSummary = [];
     if (result.counts.legacyCargoDescriptionGaps > 0) {
       legacyGapSummary.push(`${result.counts.legacyCargoDescriptionGaps} Cargo description migration gaps allowlisted`);
-    }
-    if (result.counts.legacyForbiddenImportGaps > 0) {
-      legacyGapSummary.push(`${result.counts.legacyForbiddenImportGaps} forbidden-import migration gaps allowlisted`);
     }
     if (typeof result.counts.s0MembraneLawBearingFiles === "number") {
       legacyGapSummary.push(
