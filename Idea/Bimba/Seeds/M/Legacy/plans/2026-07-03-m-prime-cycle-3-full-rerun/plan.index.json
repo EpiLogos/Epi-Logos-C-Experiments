@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-28T11:19:53.222Z",
+  "generatedAt": "2026-07-28T11:39:26.991Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -393,7 +393,7 @@
       "file": "53-s-stack-residency-restoration.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
       "title": "Track 53 — S-Stack Residency Restoration: every method at its coordinate",
-      "checksum": "d80a4d34b27412825499efeaaed61e6957a31839714ef25d09f5661fb33a5790"
+      "checksum": "603b8d754ff57ac29bb911981fbc96ebaef72c371a8d86cce7c711d957b2fe13"
     }
   ],
   "tasks": [
@@ -11063,7 +11063,7 @@
       "writeScopes": [
         "Body/S/S1/hen-compiler-core"
       ],
-      "body": "4. **T53.04 — S1 handlers return to S1**\n\n   Brief: `epi-cli/src/gate/s1_hen.rs` implements `s1'.*` — governed vault reads/writes/moves, `s1'.base.ensure`, `s1'.q_articulation.accept`. Its own AGENTS.md line already calls it \"a thin gateway adapter\" whose law is Hen's; the adapter is the part that must live with Hen. Also drains the `epi_s1_hen_compiler_core` uses in `vault/frontmatter.rs`, `vault/mod.rs`, `nara/medicine_route.rs`, `nara/transform/lifecycle.rs`.\n   Build: an `s1_handlers` module in `Body/S/S1/hen-compiler-core` implementing the T53.1 port for the `s1'.*` methods; epi-cli's copy deleted. `vault/frontmatter.rs` becomes a mirror/compatibility reader over Hen's schema authority rather than a second one.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live gateway `s1'.*` round trips unchanged; `cargo test` green in `Body/S/S1/hen-compiler-core`; the epi-cli→`epi-s1-hen-compiler-core` edge is gone from the manifest. verifier ≠ closer; evidence = fresh command output."
+      "body": "4. **T53.04 — S1 handlers return to S1**\n\n   Brief: `epi-cli/src/gate/s1_hen.rs` implements `s1'.*` — governed vault reads/writes/moves, `s1'.base.ensure`, `s1'.q_articulation.accept`. Its own AGENTS.md line already calls it \"a thin gateway adapter\" whose law is Hen's; the adapter is the part that must live with Hen. Also drains the `epi_s1_hen_compiler_core` uses in `vault/frontmatter.rs`, `vault/mod.rs`, `nara/medicine_route.rs`, `nara/transform/lifecycle.rs`.\n   Build: **read gotcha 8 first — two of these moves are illegal as stated and have named resolutions.** In order: (a) move `gateway-contract/src/s1_vault.rs` into `hen-compiler-core`, re-exported from `gateway-contract`, so the 20 `S1*` DTOs sit at their own coordinate and `s1_hen.rs` stops needing an S3 import; (b) an `s1_handlers` module in `Body/S/S1/hen-compiler-core` implementing the T53.1 port for the `s1'.*` methods that are S1-only, registered under their exact method names so they outrank the `53.T53.03` fallback namespace; (c) `s1'.q_articulation.accept` composed at the composition root rather than moved, since it spans S1, S2 and S5; (d) epi-cli's copy deleted. `vault/frontmatter.rs` becomes a mirror/compatibility reader over Hen's schema authority rather than a second one.\n   Depends on `53.T53.03`.\n   Verify: real behavioral/live-wire proof per Track 00 — live gateway `s1'.*` round trips unchanged; `cargo test` green in `Body/S/S1/hen-compiler-core`; the epi-cli→`epi-s1-hen-compiler-core` edge is gone from the manifest. verifier ≠ closer; evidence = fresh command output."
     },
     {
       "id": "53.T53.05",

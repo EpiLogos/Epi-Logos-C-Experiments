@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T11:36:43.378Z",
+  "updatedAt": "2026-07-28T11:39:27.013Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21458,15 +21458,20 @@
     },
     "53.T53.04": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-07-28T11:39:26.858Z",
+      "claimedAt": "2026-07-28T11:37:18.925Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-07-28T11:39:26.858Z",
+          "text": "Unclaimed after diagnostic pass — no code written, tree clean. Recon confirmed a blocker the tranche did not name, now recorded as gotcha 8 with resolutions: gate/s1_hen.rs imports 20 S1* DTOs from epi_s3_gateway_contract (s1_hen.rs:47-53) and makes six epi_s2_graph_services calls (s1_hen.rs:319-360), both of which S1 forbids, so relocating it as authored trades S0->S1 violations for S1->S2 and S1->S3 ones. Resolutions verified against the contract: the DTOs are a single 313-line file (gateway-contract/src/s1_vault.rs) that moves to hen-compiler-core with a gateway-contract re-export, legal because the S3 row forbids only S4/S5 and hen-compiler-core has no S3 edge today; s1'.q_articulation.accept spans S1+S2+S5 in one function and composes at the composition root rather than moving. Tranche brief amended to build in that order."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t53-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T11:37:18.925Z",
+      "runId": "20260728T113718Z-53-T53.04",
       "worktree": null,
       "blocker": null
     },
@@ -27731,6 +27736,16 @@
       "leaseExpiresAt": "2026-07-28T14:19:53.202Z",
       "worktree": null,
       "completedAt": "2026-07-28T11:36:43.316Z"
+    },
+    {
+      "runId": "20260728T113718Z-53-T53.04",
+      "taskId": "53.T53.04",
+      "status": "pending",
+      "startedAt": "2026-07-28T11:37:18.925Z",
+      "owner": "claude-opus5-t53-impl",
+      "leaseExpiresAt": "2026-07-28T14:37:18.925Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T11:39:26.858Z"
     }
   ],
   "activeRoute": {
