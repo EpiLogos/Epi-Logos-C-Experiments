@@ -3,19 +3,20 @@
  * Residency: Body/M/pratibimba-app/src/panes/omni
  * Position (#n): `/` state-persistence boundary
  * Actualises: one typed, serialisable OmniPanel state record shared by both
- *   FlexLayout faces: active tab, nine fold-local state records, and the
+ *   FlexLayout faces: active tab, ten fold-local state records, and the
  *   membrane presentation state.
  * Public surface: OmniPanelSessionState, tab-state types,
  *   createOmniPanelSessionState, readOmniPanelSessionState,
  *   hydrateOmniPanelSessionState, useOmniPanelSessionStore,
  *   useOmniPanelTabState.
  * Does NOT own: FlexLayout model persistence, gateway transport, or the
- *   semantics/rendering of the nine fold bodies.
+ *   semantics/rendering of the ten fold bodies.
  * Contract: [[M'-SYSTEM-SPEC]] + [[27-omnipanel-tabs-deep]] 27.11.
  */
 
 import { create } from 'zustand';
 import type { OmniPanelTabId } from './omnipanelRuntime';
+import { SETTINGS_SECTIONS, type SettingsSectionId } from '../../ui/settingsSections';
 
 export type OmniPanelVisibility = 'hidden' | 'minimal' | 'fullscreen';
 
@@ -92,6 +93,13 @@ export interface TuningTabState {
     readonly subsystemFilter: string | null;
 }
 
+/** 32.T32.4 — which of the six settings sections is being read alone. `null`
+ *  is the default view (all six), the same "null persists as default"
+ *  convention `DiagnosticsTabState.activeSubSection` uses. */
+export interface SettingsTabState {
+    readonly activeSection: SettingsSectionId | null;
+}
+
 export interface OmniPanelPerTabState {
     readonly 'pi-chat': PiChatTabState;
     readonly sessions: SessionsTabState;
@@ -102,6 +110,7 @@ export interface OmniPanelPerTabState {
     readonly gateway: GatewayTabState;
     readonly diagnostics: DiagnosticsTabState;
     readonly tuning: TuningTabState;
+    readonly settings: SettingsTabState;
 }
 
 export interface OmniPanelSessionState {
@@ -119,7 +128,8 @@ const TAB_IDS: readonly OmniPanelTabId[] = Object.freeze([
     'review',
     'gateway',
     'diagnostics',
-    'tuning'
+    'tuning',
+    'settings'
 ]);
 
 function record(value: unknown): Readonly<Record<string, unknown>> {
@@ -163,6 +173,7 @@ function createPerTabState(candidate: unknown): OmniPanelPerTabState {
     const gateway = record(source.gateway);
     const diagnostics = record(source.diagnostics);
     const tuning = record(source.tuning);
+    const settings = record(source.settings);
     const toolFilters = record(tools.filters);
     const evidenceFilters = record(evidence.filters);
     const reviewFilters = record(review.filters);
@@ -237,6 +248,13 @@ function createPerTabState(candidate: unknown): OmniPanelPerTabState {
         tuning: Object.freeze({
             selectedKnobKey: stringOrNull(tuning.selectedKnobKey),
             subsystemFilter: stringOrNull(tuning.subsystemFilter)
+        }),
+        settings: Object.freeze({
+            activeSection:
+                typeof settings.activeSection === 'string'
+                && SETTINGS_SECTIONS.some(section => section.id === settings.activeSection)
+                    ? (settings.activeSection as SettingsSectionId)
+                    : null
         })
     });
 }

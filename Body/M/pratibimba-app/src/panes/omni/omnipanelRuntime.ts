@@ -1,8 +1,8 @@
 /**
  * Coordinate: M' `/` membrane (omnipanel runtime foundation — Track 27.T27.0)
  * Residency: Body/M/pratibimba-app/src/panes/omni
- * Actualises: the canonical OmniPanel runtime type-graph — the EIGHT-tab
- *   manifest (one substrate folded nine ways, DR-WC-OP-1 collapse map),
+ * Actualises: the canonical OmniPanel runtime type-graph — the TEN-fold
+ *   manifest (one substrate folded ten ways, DR-WC-OP-1 collapse map),
  *   the run-model types the fold panels share (`ActorIdentity`,
  *   `DispatchRoute`, `RunStatus`, `RunTreeNode`, `ToolStreamEvent`,
  *   `ReviewDecision`, `ReviewTransition`), the mediation-capability
@@ -32,7 +32,8 @@ export type OmniPanelTabId =
     | 'review'
     | 'gateway'
     | 'diagnostics'
-    | 'tuning';
+    | 'tuning'
+    | 'settings';
 
 /** Alias of the one layout-id authority (`ui/layoutId.ts`, 52.T1). */
 export type OmniPanelLayoutId = LayoutId;
@@ -54,8 +55,9 @@ export interface OmniPanelTab {
 }
 
 /**
- * The canonical 9-tab manifest (DR-WC-OP-1 collapse map, Tranche 27.0
- * type-level rewrite, extended by 38.T06.8). One substrate folded nine ways; all nine visible
+ * The canonical 10-fold manifest (DR-WC-OP-1 collapse map, Tranche 27.0
+ * type-level rewrite, extended by 38.T06.8 with `tuning` and by 32.T32.4 with
+ * `settings`). One substrate folded ten ways; all ten visible
  * in BOTH faces per 15.2 (the OmniPanel border is shared by the personal
  * and cosmic layouts). Legacy carrier tabs collapse as: `/ chat` →
  * `pi-chat`, `sessions` → `sessions`, `logs` → `tool-stream` (the logs
@@ -71,7 +73,12 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
     { id: 'review', label: 'Review', component: 'omniReview', owningTranche: '27.6', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'gateway', label: 'Gateway', component: 'omniGateway', owningTranche: '27.7', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
     { id: 'diagnostics', label: 'Diagnostics', component: 'omniDiagnostics', owningTranche: '27.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'tuning', label: 'Tuning', component: 'omniTuning', owningTranche: '38.T06.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] }
+    { id: 'tuning', label: 'Tuning', component: 'omniTuning', owningTranche: '38.T06.8', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] },
+    // 32.T32.4 — Settings is a FOLD, not a dialog: "Preferences → Open Settings
+    // (UI)" is dead Theia plumbing, and a settings modal would be exactly the
+    // blocking layer CCT-8 lints against. It inhabits both layouts because a
+    // preference is not a property of the layout you happen to be in.
+    { id: 'settings', label: 'Settings', component: 'omniSettings', owningTranche: '32.T32.4', landed: true, availableInLayouts: ['daily-0-1', 'ide-deep'] }
 ] as const);
 
 /** The persisted `epi-logos.layout.active` preference read. Behaviour is the

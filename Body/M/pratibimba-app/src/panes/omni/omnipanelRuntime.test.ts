@@ -27,13 +27,14 @@ const CANONICAL_IDS = [
     'review',
     'gateway',
     'diagnostics',
-    'tuning'
+    'tuning',
+    'settings'
 ] as const;
 
 describe('OMNIPANEL_TABS manifest', () => {
-    it('carries exactly the 9 canonical distinct tab ids in order', () => {
+    it('carries exactly the 10 canonical distinct tab ids in order', () => {
         expect(OMNIPANEL_TABS.map(tab => tab.id)).toEqual([...CANONICAL_IDS]);
-        expect(new Set(OMNIPANEL_TABS.map(tab => tab.id)).size).toBe(9);
+        expect(new Set(OMNIPANEL_TABS.map(tab => tab.id)).size).toBe(CANONICAL_IDS.length);
     });
 
     it('collapses the legacy carrier folds onto their landed panels (DR-WC-OP-1)', () => {

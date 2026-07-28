@@ -16,6 +16,7 @@ import {
     readOmniPanelSessionState,
     useOmniPanelSessionStore
 } from './omnipanelSessionState';
+import { OMNIPANEL_TABS } from './omnipanelRuntime';
 
 afterEach(() => {
     useOmniPanelSessionStore.getState().hydrate(null);
@@ -78,6 +79,10 @@ describe('OmniPanelSessionState', () => {
         expect(hydrated.omniState).toBe('minimal');
         expect(hydrated.perTabState['pi-chat'].draftMessage).toBe('');
         expect(hydrated.perTabState.review.selectedReviewId).toBe('review-9');
-        expect(Object.keys(hydrated.perTabState)).toHaveLength(9);
+        // one record per fold in the canonical manifest — derived, not a magic
+        // number, so adding a fold cannot leave its state record behind
+        expect(Object.keys(hydrated.perTabState).sort()).toEqual(
+            OMNIPANEL_TABS.map(tab => tab.id).sort()
+        );
     });
 });

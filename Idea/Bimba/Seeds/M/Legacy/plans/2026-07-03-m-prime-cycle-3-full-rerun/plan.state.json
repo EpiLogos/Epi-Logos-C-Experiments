@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T08:28:45.287Z",
+  "updatedAt": "2026-07-28T10:16:53.583Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15896,16 +15896,33 @@
       "blocker": null
     },
     "32.T32.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-28T10:16:53.557Z",
+      "claimedAt": "2026-07-28T09:39:52.689Z",
+      "completedAt": "2026-07-28T10:16:53.557Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T10:16:53.557Z",
+          "text": "The Settings UX surface landed as a FOLD, not a dialog: src/ui/settingsSections.ts (six sections, WC-OB-21 scope each) + src/panes/omni/SettingsPane.tsx + CHROME-CONTRACT §2 row omniSettings. GREEN: 44 vitest passed / 0 failed across the six suites this touches (settingsSections 8, SettingsPane 11, omnipanelRuntime, omnipanelSessionState, preferences, chromeContract); UF proof tests/e2e/settings.spec.ts 5/5 PASSED in real Chromium against a spawned gateway — the fold really materialises in the live FlexLayout border, the theme control really moves document.documentElement[data-theme] and persists under the one preference key, the narrowed section really survives the 0/1 face fold, every disclosure reaches the user as text with zero clickable children, and the Diagnostics action really puts the walkthrough on screen; pnpm typecheck 0; pnpm build 0; full app suite 1671 passed / 0 failed; carrier-tokens, lint:imports and lint:no-modal GREEN. SUBSTANCE OVER PORT: (a) Theia's PreferenceContribution + PreferenceProxy + Inversify DI is dead plumbing and 'Preferences -> Open Settings (UI)' is a dead menu path, so the surface joins the OmniPanel manifest (9 -> 10, both layouts) per 15.2 'the tab IS the landing surface' + CCT-8 — a settings modal is precisely the blocking layer lint:no-modal exists to refuse; the fold is recorded as the contract-surface move it is (§2 row + the SettingsTabState per-fold record, which the type system REFUSED the fold without). (b) THE HONEST SHAPE inherited from 31.T31.9: the 32.4 spec lists about twenty preferences and six exist, so a section renders its live keys as working controls and every other key the spec names as a pending/superseded/declined row carrying the register's OWN note — never a switch that moves nothing, since a settings page whose controls do nothing is worse than none: it misdescribes the app. All three verdicts are really in use, asserted. (c) NO PREFERENCE KEY IS SPELLED in the new module: the first cut hand-listed the eight disclosures and 31.T31.9's own guard correctly rejected it, and the repair made the documented rule EXECUTABLE — a DISCLOSURE_AREA_SECTION map over the key's area segment, so disclosures are derived from SPECIFIED_PREFERENCES and cannot drift. (d) Every write rides the seam that already owned it: theme through useThemeStore.setSelection, kairos through the probe-gated runKairosEnable/runKairosSkip and NEVER a raw write of the enabled key — the load-bearing case, pinned by a test, is that enabling while kerykeion is absent leaves the preference false and says why, because a direct write would report the temporal ingress as live with no dependency behind it. Two live keys stay read-only here (the layout switch is 52.T3's, the onboarding arrays are the ledger's) and each read-only row NAMES its real writer so an uneditable value does not read as broken; reduced motion is reported from the OS prefers-reduced-motion query rather than overridden, per the register's own decision. VERIFIER opus-verifier-t32-settings-20260728 != closer. UNRELATED RED NAMED FOR ITS OWNER: the full class-scoped gate put 16 of 17 suites at PASS (harness-selftest, gateway, gateway-contract, gateway-methods, live-wire, ta-onta, ta-onta-types, redis-context, spacetime, graphiti-runtime, app-typecheck, app-test 1671, app-build, app-smoke, carrier-tokens, honesty-lint); only whole-suite app-ui-flow was red, as a mid-run cascade — specs 1 to 47 pass, then every spec from 48 onward fails, most in about 100ms, the signature of the page ceasing to boot rather than of an assertion. Classified by targeted isolation rather than by assertion: tests/e2e/omnipanel-tab-traversal.spec.ts is the one spec a tenth fold could genuinely break, and both its cases PASS alone (4.9s and 2.8s) together with the three m2-correspondence cases that begin the cascade, 5/5 green. The same stage was red for sibling 31.T31.9 an hour earlier and both 31.T31.9 and 30.T30.9 closed with it scoped out, so it is an unstable shared stage on this tree, not this tranche's defect. Two environmental causes were found and fixed rather than worked around: a leaked playwright webServer squatting port 14621 made an earlier run abort in 0.8s (reuseExistingServer is false), and it was reaped before each subsequent run.",
+          "receipt": {
+            "command": "npx vitest run src/ui/settingsSections.test.ts src/panes/omni/SettingsPane.test.tsx src/panes/omni/omnipanelRuntime.test.ts src/panes/omni/omnipanelSessionState.test.ts src/ui/preferences.test.ts src/chromeContract.test.ts && npx playwright test tests/e2e/settings.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 49,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/settingsSections.ts",
+              "Body/M/pratibimba-app/src/panes/omni/SettingsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/settings.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 9 dirty files.",
+      "owner": "opus-mdev-t32-settings-20260728",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T09:39:52.689Z",
+      "runId": "20260728T093952Z-32-T32.4",
       "worktree": null,
       "blocker": null
     },
@@ -27361,6 +27378,16 @@
       "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
       "worktree": null,
       "completedAt": "2026-07-28T08:26:12.972Z"
+    },
+    {
+      "runId": "20260728T093952Z-32-T32.4",
+      "taskId": "32.T32.4",
+      "status": "done",
+      "startedAt": "2026-07-28T09:39:52.689Z",
+      "owner": "opus-mdev-t32-settings-20260728",
+      "leaseExpiresAt": "2026-07-28T12:39:52.689Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T10:16:53.557Z"
     }
   ],
   "activeRoute": {

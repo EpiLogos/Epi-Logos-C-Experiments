@@ -69,6 +69,7 @@ import { ToolStreamPanel } from './panes/omni/ToolStreamPanel';
 import { EvidencePanel } from './panes/omni/EvidencePanel';
 import { GatewayPanel } from './panes/omni/GatewayPanel';
 import { DiagnosticsPanel } from './panes/omni/DiagnosticsPanel';
+import { SettingsPane } from './panes/omni/SettingsPane';
 import { M0CoordinateSummaryCard } from './panes/M0CoordinateSummaryCard';
 import { M0SurfaceProvider } from './panes/M0SurfaceContext';
 import { M2SurfaceProvider } from './panes/M2SurfaceContext';
@@ -496,6 +497,12 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // absent feeds (subscriber count, s2 ping) render honest ReadinessBanners.
         case 'omniDiagnostics':
             return <DiagnosticsPanel activeLayout={activeLayout} />;
+        // 32.T32.4 — the Settings fold IS the preference surface: six sections
+        // over the one register (31.T31.9), live keys as working controls and
+        // the rest as honest pending/superseded/declined disclosures. A fold,
+        // not a dialog, per 15.2 + CCT-8.
+        case 'omniSettings':
+            return <SettingsPane />;
             default:
                 return <div className="pane-message">unknown pane: {node.getComponent()}</div>;
         }

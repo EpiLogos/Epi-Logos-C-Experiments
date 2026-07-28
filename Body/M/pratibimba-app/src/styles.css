@@ -7730,3 +7730,93 @@ button.tool-stream-timerange.active {
     font-size: var(--type-micro);
     min-width: 72px;
 }
+
+/* ── 32.T32.4 Settings fold ──────────────────────────────────────────────── */
+.settings-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    overflow: auto;
+}
+.settings-pane-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.settings-pane-header span {
+    color: var(--ink-dim);
+}
+.settings-section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+.settings-section-nav button[aria-pressed='true'] {
+    border-color: var(--ring);
+    color: var(--ring);
+}
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--hairline);
+}
+.settings-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+/* the scope is part of the meaning of a setting, not decoration: a workspace
+   preference and a user preference answer to different owners */
+.settings-scope-chip {
+    color: var(--ink-dim);
+    border: 1px solid var(--hairline);
+    border-radius: 0.2rem;
+    padding: 0 0.25rem;
+}
+.settings-purpose,
+.settings-os-report {
+    color: var(--ink-dim);
+    margin: 0;
+}
+.settings-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.settings-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.settings-row-key {
+    font-family: var(--font-mono);
+}
+.settings-row-note,
+.settings-row-writer {
+    color: var(--ink-dim);
+}
+/* a disclosure is dimmed because it is not actionable — the status word, not
+   the styling, carries why */
+.settings-row-disclosed {
+    opacity: 0.75;
+}
+.settings-row-status {
+    text-transform: lowercase;
+}
+.settings-row-default {
+    color: var(--ink-dim);
+}
+.settings-section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
