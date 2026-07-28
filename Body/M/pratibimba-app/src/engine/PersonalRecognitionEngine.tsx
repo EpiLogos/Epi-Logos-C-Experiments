@@ -35,7 +35,7 @@ import { blockedPersonalSlots, loadPersonalComposition } from '../composition/pe
 // agent/chat/tick/health/heartbeat), and 25.T25.19 already ruled that reading
 // the close beats subscribing to a ceremony that never fires.
 import {
-    formatContemplationFlowHover,
+    formatContemplationReading,
     useContemplationFlowDirective
 } from './contemplationFlowDirector';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
@@ -177,7 +177,12 @@ export function PersonalRecognitionEngine() {
             data-contemplation-lamps={contemplation.under.lamps.filter(lamp => lamp.lit).length}
             data-contemplation-live-only={contemplation.liveOnlyPending.join(',')}
             data-contemplation-unavailable={contemplation.unavailable.join(',')}
-            title={formatContemplationFlowHover(contemplation)}
+            // NOT `title`: a title here would give this <section> an accessible
+            // name — turning the engine into a landmark named by a gateway-state
+            // sentence that changes at runtime, over its own <h2>Recognition</h2>
+            // — and would hang a native tooltip over the whole surface. The
+            // reading rides a data attribute like every other fact on this root.
+            data-contemplation-reading={formatContemplationReading(contemplation)}
             data-composition-rejection={
                 compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
             }

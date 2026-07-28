@@ -14,7 +14,7 @@ import {
     buildContemplationFlowDirective,
     contemplationSlotsLanded,
     emitContemplationComplete,
-    formatContemplationFlowHover,
+    formatContemplationReading,
     readContemplateSessionCloseResponse,
     CONTEMPLATION_FLOW_RPCS,
     CONTEMPLATION_SLOT_POSITIONS,
@@ -364,14 +364,14 @@ describe('the parser holds the response to its own shape', () => {
 
 describe('the hover states the reading and its limits together', () => {
     it('names what the wire does not carry alongside what it does', () => {
-        const hover = formatContemplationFlowHover(readyDirective());
+        const hover = formatContemplationReading(readyDirective());
         expect(hover).toContain("4' recognition-state integrates close-of-session contour");
         expect(hover).toContain("0' 7/9 virtues witnessed");
         expect(hover).toContain('not on this wire: wisdom-delta-byte-tape');
     });
 
     it('says plainly when nothing has been contemplated', () => {
-        expect(formatContemplationFlowHover(buildContemplationFlowDirective(null))).toBe(
+        expect(formatContemplationReading(buildContemplationFlowDirective(null))).toBe(
             'no session close has been contemplated yet'
         );
     });

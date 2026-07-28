@@ -13,7 +13,7 @@
  *   ContemplationFlowDirective, readContemplateSessionCloseResponse,
  *   buildContemplationFlowDirective,
  *   buildContemplationFlowDirectiveFromProjection, contemplationSlotsLanded,
- *   emitContemplationComplete, formatContemplationFlowHover.
+ *   emitContemplationComplete, formatContemplationReading.
  * Does NOT own: the contemplation COMPOSITION (S3 `dispatch.rs` composes the
  *   triplet, scores the squares and routes the symbolic questions — all of it
  *   is read verbatim here, never recomputed), the virtue vocabulary
@@ -39,6 +39,21 @@
  * This follows that ruling — the directive is built from a contemplation
  * RESPONSE, and `composition.contemplation.complete` is what this composition
  * EMITS once its three slots land, not what it waits on.
+ *
+ * # Which half of this module production actually calls
+ *
+ * Stated plainly because the file does not make it obvious: production imports
+ * `useContemplationFlowDirective` and `formatContemplationReading` only. The
+ * LIVE-response half — `readContemplateSessionCloseResponse`,
+ * `buildContemplationFlowDirective`, `CONTEMPLATION_FLOW_RPCS.live` — has no
+ * production caller, because the carrier has no producer of a
+ * `ContemplationObject` to call it with; the loopback close path owns that, and
+ * inventing a trajectory app-side to reach the method would be fabricating the
+ * session it claims to contemplate. It is not dead code: it is the parser for
+ * the response 19.6 actually returns, proven against a REAL spawned gateway in
+ * `bridge/gatewayClient.live.test.ts`, and it is what a carrier-side close path
+ * would consume the day one exists. Anything else would leave 19.6's own wire
+ * unread by the tranche that closes its composition path.
  *
  * # Read verbatim, never re-scored
  *
@@ -794,7 +809,7 @@ export function useContemplationFlowDirective(
 }
 
 /** Hover text for the composition's contemplation chip. */
-export function formatContemplationFlowHover(directive: ContemplationFlowDirective): string {
+export function formatContemplationReading(directive: ContemplationFlowDirective): string {
     if (directive.state !== 'ready') {
         return directive.reason ?? 'no session close has been contemplated yet';
     }
