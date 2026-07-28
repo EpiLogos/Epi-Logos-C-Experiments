@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T22:10:53.200Z",
+  "updatedAt": "2026-07-28T22:49:52.207Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14728,14 +14728,32 @@
       "blocker": null
     },
     "29.T29.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T21:11:58.134Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T22:49:52.180Z",
       "claimedAt": "2026-07-28T21:11:58.134Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T22:49:52.180Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T22:49:52.180Z",
+          "text": "The 4'-5'-0' contemplation reaches the three carried slots, and composition.contemplation.complete finally fires. NOT EVENT-MOUNTED, because the event does not exist: the brief subscribes to m5.session.contemplation.complete \"fired by gateway per Track 19.7\", but EVENT_NAMES (S3 protocol.rs) is agent/chat/tick/health/heartbeat, PORTAL_EVENT_NAMES carries no contemplation channel, the C m5_execute_mobius_return named as its trigger emits nothing and is reachable only from two C unit tests, and every occurrence of that literal sits inside FROZEN epi-theia. 25.T25.19 already ruled on this exact gap (read the close; do not subscribe to a ceremony that never fires) and this follows that precedent — carried as a SPEC-VS-BUILT DIVERGENCE, not silently absorbed. WHAT LANDED: a deny-unknown-keys parser for the LIVE nara.contemplate_session_close response (deliberately not an extension of the 26.12 projection reader, whose FORBIDDEN_KEYS hold exactly the fields this response carries), the tri-slot directive (LLM reading + per-card tarot psyche-anchor ribbon on 4'; per-tick energy, gradient magnitude, gauge-trio verdict and the three Klein-V4 tritone squares on 5'; nine R-virtue lamps, coherence score, arch9/syntax-layer witness and the symbolic-coordinate questions on 0'), and the emitter for composition.contemplation.complete — declared in COMPOSITION_EVENT_TYPES since 29.11 and emitted by NOTHING until now, the same declared-and-never-emitted shape 29.T29.7 closed for the klein-flip pair. READ VERBATIM, NEVER RE-SCORED (26.1 law): arch9_wholeness is taken from the wire rather than re-derived, because the frozen epi-theia director read the Paramesvara witness off virtueBits[0] (Love/Peace) where the gateway reads bit 8 (Reality/Completion, VIRTUE_LUT index 8, r_factor 5). NO SECOND RPC for the chips: anuttara-symbolic-parse is a PI agent skill with no gateway registration, and S3 already computes the round trip server-side and returns llm_response with each parsed question. SIX spec-ahead asks have NO source on any wire and are NAMED rather than drawn, each with its reason, with tests asserting none is fabricated: the 16-byte wisdom-delta XOR tape (the wire's wisdom_delta is composed PROSE; the kernel uint64 reaches no gateway surface), the three gauge-coverage bars (the wire carries one BOOLEAN), the 4-charge balance (M5_ArchNineChargeState is C-only, never serialised), the 72-dim predicted/target overlay (that is 26.1's surface off the profile bus), the Mobius quaternion arrow (a scalar gradient_magnitude, not a quaternion), and the canvas inscription WRITE (khora_write_highlighted_inscription is a PI extension tool, not a gateway method). ASYMMETRY NAMED, NOT HIDDEN: production imports only useContemplationFlowDirective and formatContemplationReading; the live-response half has no production caller because the carrier has no producer of a ContemplationObject and inventing a trajectory app-side would fabricate the session it claims to contemplate — so \"two sources, one directive\" is one source in production plus one proven against a real gateway. DRIVE-BY DEFECT FIXED on this tranche's own read path: 25.20 widened the substrate with per-card anchor_cards and the sibling reader m4SessionCloseCeremony.ts took the key, but the 26.12 contemplationObjectViewer.tsx did not, so it hard-blocked on every close persisted since (ReviewBlocksPane feeds it live); fixed, and the regression test was proven red-green. GATE STATE, STATED PLAINLY: the FULL UF gate is REFUSED — exit 1, [verify-all] RED in 396.7s, app-ui-flow 111 passed / 2 failed of 113 collected. Neither red belongs to this tranche. (1) m2-correspondence.spec.ts:33 is deterministic Track-54 graph data loss (PlanetaryHarmonic: 10 nodes, 0 carrying l_2_vedic_mantra; the destruction is documented in f69528e1 with a five-tranche recovery plan; it is the same red 26.T26.4 closed against in ad55b137, also a class-UF tranche). (2) medicine-view.spec.ts:15 is an environmental flake — a blank-page boot failure where status-gateway is not found, retries:0, it passes in isolation in 5.5s, and under workers:1 it runs BEFORE this tranche's spec so it cannot be caused by it; an orphaned vite on strict port 14621 is the visible mechanism. This close therefore rests on the tranche's OWN proof and not on a passing whole-repo gate; no claim of a green verify-all is made anywhere. UF CLASS-PROOF (the surviving verification record was written with --only honesty-lint and proves only the lint, so the UF evidence is here): personal-contemplation-flow.spec.ts, 1 passed, real Chromium against a real spawned gateway, opening a session and closing it through live nara.session_close before asserting. It has teeth, verified by MUTATION rather than by re-passing: the independent verifier changed the closure's witness vector from 7-of-9 to 4-of-9 and the spec went red, with data-contemplation-lamps tracking 7 to 4 all the way through ContemplationObject to S3 composition to S0 protected-local persistence to nara.session_close.contemplation.read to readNaraContemplationObject to the real DOM. An earlier draft of that spec asserted only the empty reading and was replaced, because awaiting-close is exactly what a BROKEN persisted read also produces and it could not tell working from broken. ALSO GREEN on the same tree: app-smoke 2 (a REAL spawned-gateway round-trip of nara.contemplate_session_close fed through the carrier's own parser; gateway-composed square coherences 0.998768/0.968805/0.938842), vitest 33 (director 25 + hook 5 + viewer 3), app-typecheck, app-build, app-test 1802, live-wire, gateway 118, gateway-contract 93, ta-onta 800, ta-onta-types, redis-context 15, spacetime 11, graphiti-runtime 16, gateway-methods, carrier-tokens, harness-selftest 114, and honesty-lint clean (337 test files, 0 dishonest blocks; 942 polyglot files, 0). Independent verifier opus-29t9-verifier (not the closer opus-mdev-29t9) ran three adversarial rounds and found two real defects that were fixed before close: an e2e that could not fail, and a title on the engine root that gave the section an accessible name changing at runtime.",
+          "receipt": {
+            "command": "node ../../../.codex/scripts/gate-lane.mjs --owner opus-29t9-verifier-e2e -- npx playwright test personal-contemplation-flow.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 1,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/engine/contemplationFlowDirector.ts",
+              "Body/M/pratibimba-app/tests/e2e/personal-contemplation-flow.spec.ts",
+              "Body/M/pratibimba-app/src/bridge/gatewayClient.live.test.ts",
+              "Body/M/pratibimba-app/src/panes/contemplationObjectViewer.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.9.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-29t9",
-      "leaseExpiresAt": "2026-07-29T00:11:58.134Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T21:11:58.134Z",
       "runId": "20260728T211158Z-29-T29.9",
       "worktree": null,
@@ -28184,11 +28202,12 @@
     {
       "runId": "20260728T211158Z-29-T29.9",
       "taskId": "29.T29.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-28T21:11:58.134Z",
       "owner": "opus-mdev-29t9",
       "leaseExpiresAt": "2026-07-29T00:11:58.134Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T22:49:52.180Z"
     },
     {
       "runId": "20260728T212215Z-32-T32.5",
