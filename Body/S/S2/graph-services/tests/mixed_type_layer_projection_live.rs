@@ -1,8 +1,18 @@
-//! `c_4_layer` is mixed-type in the live graph BY DECISION (2026-07-25): it is a
-//! controlled node-kind vocabulary (`COORDINATE`, `PSYCHOID`, `VAK`, …) on 1956
-//! nodes, while the 84 `:Coordinate:Stack` nodes written by the S/S' lattice
-//! migration carry the S-layer index `0`-`5`. The integer is a second semantic,
-//! not a bad cast, so the data stays mixed and READERS must tolerate both.
+//! `c_4_layer` is mixed-type in the live graph: it is a node-kind vocabulary
+//! (`PSYCHOID`, `VAK`, `WEAVE`, `CONTEXT_FRAME`, `FAMILY_META`, `LENS`,
+//! `FAMILY_ROOT`) on the scaffold nodes, while the `:Coordinate:Stack` nodes
+//! written by the S/S' lattice migration carry the S-layer index `0`-`5` as an
+//! INTEGER. The integer is a second semantic, not a bad cast, so READERS must
+//! tolerate both.
+//!
+//! AMENDED 2026-07-28: the vocabulary no longer includes `COORDINATE`. That
+//! value was written onto every ordinary coordinate — 1,940 of 1,978 nodes —
+//! and said nothing: "COORDINATE" on a node in the coordinate graph is a
+//! tautology, and it landed on nodes labelled Hexagram, Maqam, DivineName,
+//! Degree/ClockPosition, Codon and GenerationEvent, none of which are
+//! coordinates. The labels already carry the typology. An ordinary coordinate
+//! now has NO `c_4_layer`, and the seeder and dataset importer no longer write
+//! one. The property is kept only where it discriminates.
 //!
 //! `bimba_node_row` did not: `row.get::<String>("layer").unwrap_or_default()`
 //! returned `Err` for the integers and silently yielded `""`, so every S-stack
@@ -40,10 +50,20 @@ async fn live_mixed_type_layer_survives_both_branches() {
          render as its decimal string, never as an empty string"
     );
 
-    // STRING branch — a family coordinate keeps its kind tag unchanged.
-    let coordinate_layer = layer_of(&service, "M3").await;
+    // STRING branch — a node whose kind genuinely discriminates keeps its tag.
+    let weave_layer = layer_of(&service, "Weave_5_5").await;
     assert_eq!(
-        coordinate_layer, "COORDINATE",
-        "a family coordinate must still project its c_4_layer kind tag verbatim"
+        weave_layer, "WEAVE",
+        "a scaffold node whose kind discriminates must still project its \
+         c_4_layer tag verbatim"
+    );
+
+    // ABSENT branch — an ordinary coordinate carries no kind tag at all, and
+    // the projector must render that as empty rather than failing.
+    let ordinary = layer_of(&service, "M3").await;
+    assert_eq!(
+        ordinary, "",
+        "an ordinary coordinate has no c_4_layer: 'COORDINATE' was a tautology \
+         stamped on 1,940 nodes and was removed"
     );
 }

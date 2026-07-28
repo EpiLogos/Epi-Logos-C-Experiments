@@ -21,15 +21,21 @@ pub(super) const STRING_LIST_TARGETS: &[&str] = &[
     "s_5_tool_affinity",
 ];
 
-pub(super) fn layer_string(layer: &CoordLayer) -> &'static str {
+/// The node-kind tag, or `None` where the kind adds nothing.
+///
+/// `CoordLayer::Family` — an ordinary coordinate — returns `None`. Saying
+/// "COORDINATE" about a node in the coordinate graph is a tautology, and the
+/// labels already carry the real typology. Every other variant genuinely
+/// discriminates a scaffold node kind, so those are still written.
+pub(super) fn layer_string(layer: &CoordLayer) -> Option<&'static str> {
     match layer {
-        CoordLayer::Psychoid => "PSYCHOID",
-        CoordLayer::Family => "COORDINATE",
-        CoordLayer::FamilyRoot => "FAMILY_ROOT",
-        CoordLayer::Lens => "LENS",
-        CoordLayer::ContextFrame => "CONTEXT_FRAME",
-        CoordLayer::Vak => "VAK",
-        CoordLayer::Weave => "WEAVE",
+        CoordLayer::Psychoid => Some("PSYCHOID"),
+        CoordLayer::Family => None,
+        CoordLayer::FamilyRoot => Some("FAMILY_ROOT"),
+        CoordLayer::Lens => Some("LENS"),
+        CoordLayer::ContextFrame => Some("CONTEXT_FRAME"),
+        CoordLayer::Vak => Some("VAK"),
+        CoordLayer::Weave => Some("WEAVE"),
     }
 }
 
@@ -755,9 +761,9 @@ mod tests {
 
     #[test]
     fn layer_string_covers_all_variants() {
-        assert_eq!(layer_string(&CoordLayer::Psychoid), "PSYCHOID");
-        assert_eq!(layer_string(&CoordLayer::Family), "COORDINATE");
-        assert_eq!(layer_string(&CoordLayer::FamilyRoot), "FAMILY_ROOT");
-        assert_eq!(layer_string(&CoordLayer::Lens), "LENS");
+        assert_eq!(layer_string(&CoordLayer::Psychoid), Some("PSYCHOID"));
+        assert_eq!(layer_string(&CoordLayer::Family), None, "an ordinary coordinate gets no kind tag");
+        assert_eq!(layer_string(&CoordLayer::FamilyRoot), Some("FAMILY_ROOT"));
+        assert_eq!(layer_string(&CoordLayer::Lens), Some("LENS"));
     }
 }

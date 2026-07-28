@@ -127,11 +127,20 @@ impl<'a> DatasetImporter<'a> {
                         pos
                     ));
                 }
-                let layer_str = layer_string(&parsed.layer);
-                set_parts.push(format!(
-                    "n.c_4_layer = COALESCE(n.c_4_layer, '{}')",
-                    layer_str
-                ));
+                // `c_4_layer` is written ONLY where it discriminates. The
+                // `Family` case used to stamp the literal 'COORDINATE' onto
+                // every imported node — a tautology on a coordinate graph, and
+                // worse than useless in practice: it landed on nodes labelled
+                // Hexagram, Maqam, DivineName, Degree/ClockPosition, Codon and
+                // GenerationEvent, none of which are coordinates. 1,940 of
+                // 1,978 nodes carried it. The labels already carry the real
+                // typology, so the flat default only misinformed.
+                if let Some(layer_str) = layer_string(&parsed.layer) {
+                    set_parts.push(format!(
+                        "n.c_4_layer = COALESCE(n.c_4_layer, '{}')",
+                        layer_str
+                    ));
+                }
                 if parsed.inverted {
                     set_parts.push(
                         "n.c_4_inversion_state = COALESCE(n.c_4_inversion_state, 1)".to_string(),
