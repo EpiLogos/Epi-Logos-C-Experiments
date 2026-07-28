@@ -55,8 +55,13 @@ export const cymaticActiveCell = '#f1d06f';
 export const cymaticActiveCellFlip = '#ffffff';
 
 // ── Family hues — graph surfaces ────────────────────────────────────────────
-/** Coordinate-family hues for graph nodes (THEIA-UI-PATTERNS §1.3 discipline;
- *  the palette is an OPEN Architect decision, DR-WC-DL-1 — named as-is). */
+/** Coordinate-family hues for graph nodes (THEIA-UI-PATTERNS §1.3 discipline).
+ *  LEGACY flat map: one hue per family, no archetype grade. DR-WC-DL-1 is no
+ *  longer open — it was VALIDATED 2026-07-23 (the Architect) and landed as the
+ *  36-token `FAMILY_PALETTE` matrix below, whose derivation is written up in
+ *  `contracts/ui-family-palette-derivation.md` (30.T30.8 §4). These two palettes
+ *  disagree; migrating the coordinate-string/mark renderers off this map onto
+ *  `coordinateFamilyGrade` is the 30.10/30.13 primitive work, not a token edit. */
 export const FAMILY_HUES: Record<string, string> = {
     P: '#67d4d1', // Position — teal
     S: '#9a7fd4', // Stack — violet

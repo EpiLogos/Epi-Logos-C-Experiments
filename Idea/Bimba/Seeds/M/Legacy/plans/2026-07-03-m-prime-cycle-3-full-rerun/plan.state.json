@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T00:25:16.386Z",
+  "updatedAt": "2026-07-28T00:43:11.348Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -15105,14 +15105,30 @@
       "blocker": null
     },
     "30.T30.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T00:11:16.508Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T00:42:21.334Z",
       "claimedAt": "2026-07-28T00:11:16.508Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T00:42:21.334Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T00:42:21.334Z",
+          "text": "Deliverable landed and independently verified. The 30.8 Verify line carries four criteria; THREE were already landed by 30.T30.2 and I verified them against the tree rather than rebuilding them: the 36-token FAMILY_PALETTE matrix (src/ui/tokens.ts:92) with familyGrade (:243) and coordinateFamilyGrade (:252); the coordinate-string derivation test asserting M3-2 resolves to M-tier grade 3 at gold/orange hue (src/ui/familyPalette.test.ts:116); and the decision-register entry DR-WC-DL-1 (13-decision-register.md:2099, VALIDATED 2026-07-23 by the Architect). The ONE genuine gap was the derivation document itself, now authored at Body/M/pratibimba-app/contracts/ui-family-palette-derivation.md — the retarget of the frozen epi-theia extensions/contracts target per CHARTER rule 2, carrying a conformant 43.2 coordinate header (6/6 required fields) and citing M'-SYSTEM-SPEC:34 for the governing law that colour in M' descends from a coordinate concept rather than from decoration. THE DOC RECORDS A SUPERSESSION THE SPEC TEXT HIDES: DR-WC-DL-1's ratified M-tier colour-worlds (M0 achromatic ground, M1 deep blue, M2 red/pink, M3 gold/orange, M4 green/teal, M5 purple) REPLACE the 2026-06-02 spec prose (M0 indigo, M1 amber, M2 violet-tattva, M3 gold, M4 earth-slate-gold, M5 amber-EBM). The landed hexes follow the DR; the doc follows the DR and says so explicitly, so no later reader blends the two readings. TWO OF MY OWN CLAIMS FAILED MEASUREMENT AND WERE CORRECTED BEFORE LANDING rather than shipped as plausible prose: (a) the spec's P-tier cool-grey-to-warm-grey reading is NOT what landed — measured hue is 255 degrees at P0 and 257 degrees at P5, so the grade is a luminance ramp (lightness 68 percent to 29 percent) at essentially constant violet-neutral hue, and the doc now carries that as an explicit measured divergence; (b) the C-tier is the one tier whose grade is a hue ARC rather than a luminance ramp (263, 276, 292, 305, 297, 276 degrees at near-flat lightness), so C0 Bimba and C5 Pratibimba sit at the cool endpoints, C3 Process is the magenta turn, and the return lands at 276 rather than back on C0's 263 — a Mobius return, not a closed circle. The L-versus-S lower-saturation claim was checked at every grade before being asserted (L 15-22 percent versus S 17-28 percent, L paler at all six grades). DRIFT CLOSED IN THE SAME PASS: src/ui/tokens.ts:60 and the carrier AGENTS.md token-discipline entry both still described DR-WC-DL-1 as an OPEN Architect decision; both now state it is settled and route to the derivation doc. OPEN SEAM NAMED RATHER THAN SILENTLY REPAIRED: the legacy flat FAMILY_HUES map (tokens.ts:60, one hue per family, no grade axis) still tints the ln coordinate-string and mark primitives (primitives.tsx:93, :282, :327), so a rendered coordinate today carries its family tier but not its archetype grade; migrating those renderers moves visual-regression baselines and belongs to the 30.10/30.13 coordinate-rendering primitive tranches, not to a derivation-prose tranche. GREEN: independent verify-tranche PASS record, verifier opus-verifier-t30-20260728 distinct from closer claude-opus5-t30-palette-20260728; class-scoped UF gate GREEN in 518.3s with 2846 tests and 0 failures across 17 suites, including the Track-30 UF class proof app-ui-flow at 100/100 playwright specs against a spawned gateway, plus app-test 1602, app-typecheck, app-build, carrier-tokens and honesty-lint all clean. Local pre-gate proof: tsc --noEmit clean and 94/94 vitest across familyPalette, themeMapping and primitives. DOX pass done: the carrier AGENTS.md now indexes the new contract doc with both the supersession and the open seam.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,ta-onta-types,redis-context,spacetime,graphiti-runtime,app-typecheck,app-test,app-build,app-smoke,app-ui-flow,carrier-tokens",
+            "exitCode": 0,
+            "testsPassed": 2846,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/contracts/ui-family-palette-derivation.md",
+              "Body/M/pratibimba-app/src/ui/tokens.ts",
+              "Body/M/pratibimba-app/AGENTS.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "claude-opus5-t30-palette-20260728",
-      "leaseExpiresAt": "2026-07-28T02:11:16.508Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T00:11:16.508Z",
       "runId": "20260728T001116Z-30-T30.8",
       "worktree": null,
@@ -20889,19 +20905,37 @@
       "blocker": null
     },
     "50.T50.16": {
-      "status": "review",
-      "updatedAt": "2026-07-27T21:30:32.564Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T00:43:11.312Z",
       "claimedAt": "2026-07-27T21:11:18.838Z",
-      "completedAt": null,
+      "completedAt": "2026-07-28T00:43:11.312Z",
       "evidence": [
         {
           "at": "2026-07-27T21:30:32.564Z",
           "text": "Canon write-back landed across all five write-scope files; held at REVIEW for one named Verify criterion I am structurally barred from satisfying myself (below), NOT because the deliverable is partial. WHAT LANDED. (1) S4-SPEC.md gains \"Tool Composition: JSON Tool-Mode and Code-Mode\" in section A — names the staircase (harness.rs ToolCallObserved re-inlining full arguments+result per hop) and the two tiers the brief asks for: BASE (any pi agent collapses a multi-tool task into ONE program; the security boundary is unchanged and ORDERED — spawn-time --tools allow-list first, then isEntitled(), so a tool switched off at spawn is refused code-mode/not-active without consulting entitlement at all; explicitly NO new VM, the gate governs the named tool surface and not the process, stated so no reader mistakes it for a sandbox) and VAK (the same mechanism across the six C' coordinates with CP as nesting operator, spawning child pi's). It carries the measurement rather than an adjective: 657 tok vs 2199 staircase, delta 1542, ratio 0.299, estimator chars/4 named as crude by design, both sides computed from the SAME recorded trace. (2) S4-SPEC section B now states that the six coordinates are the typed vocabulary an orchestration is WRITTEN AGAINST (DR-VAK-3), that emit() is the sole emission constructor refusing a partial address by name rather than coercing it, that composedCoordinates() makes \"composed across six\" measurable rather than rhetorical, and the CP nesting law (a child of the 4.x parent carries the CP of its slot; frames never dispatch, only leaves do). (3) S4-4'-SPEC.md gains the lib/ surfaces in Current Body Reality plus four Build Contract laws in the shard's own voice: an orchestration is a program and Anima holds it (context isolation — only DECLARED variables cross to a child, never the parent transcript); origination is dialogue and a repeatable expression is a hashed score (persistScore REFUSES a non-originating session; a re-run restores the prior polarity so re-running mid-dialogue does not end the dialogue); checkpoints are AUTHORED never inserted (closed set of three reasons, a fourth refused as free text, an agent answering its own gate is not an answer); a CFP4 thread closes only when its list says done and exhaustion never reads as completion. Test Obligations now pin the acceptance harness and why it is not named *.test.mjs. (4) vak-coordinate-frame SKILL.md gains \"The Six Layers Are a Scripting Language\" (per-axis reader table) and a CP-nesting subsection with a real authored example plus the two enforced rules. (5) anima-orchestration SKILL.md gains \"Authoring the Orchestration as a Script\" and \"Origination and the Score Lifecycle\" (the four-step originate/run/persist/refine cycle and the three checkpoint reasons). (6) The S4-4p-anima DOX Purpose now states the operative shape is a program, not a staircase, and routes to both specs for the law. VERIFICATION, per protocol Law 5 (only grep-verifiable presence counts, never a ledger string): every symbol and behaviour I asserted into canon was mechanically checked to exist in the landed code — 13/13 OK, including that the allow-list check genuinely PRECEDES isEntitled in code-mode.ts (asserted by line order, not by reading the prose), that CHECKPOINT_REASONS has exactly 3 members (imported and counted, not eyeballed), and that s4'.orchestration.score really carries its reader-not-runner discipline. agent_cf_parity.test.ts 10/10 GREEN — this suite reads the two SKILL.md files as prose and fails on a superseded CF spelling, so it is the real guard on skill edits, and my edits did not regress it. Frontmatter: c_3_updated_at 2026-07-27 added to both specs (an established vault key, 213 uses; the C3=Process timestamp law) satisfying protocol step 5 without inventing a key. SURFACED, NOT SILENTLY FIXED (protocol Law 3): S4-SPEC.md already fails `epi vault frontmatter-validate` with \"Invalid coordinate: 'S4/S4''\" — a PRE-EXISTING error, present before my edits and unchanged by them (baseline captured before and after). A coordinate designator is canon shape, so per CLAUDE.md rule 5 an agent does not repoint it; it needs Architect ratification. S4-4'-SPEC.md validates clean. WHY REVIEW AND NOT DONE: the Verify line requires \"the SEED-HARMONISATION adversarial gate passes\". That gate is not a test — the protocol defines it as a SECOND agent, given ONLY the updated spec and five orchestrator-sampled commitments, answering what the coordinate's surface is, what it consumes and does not own, and what is implemented vs pending vs open; and it states plainly that \"the harmoniser may not verify its own pass\". I ran every mechanical half of the Verify line (claims-vs-code, the prose-reading parity suite, frontmatter validation, and the class-scoped gate under an independent verifier owner) and I cite the 50.T50.15 acceptance run the line asks for, but a comprehension read performed by me would be exactly the self-verification the protocol forbids. Marking done on an unmet named criterion is the ledger pattern this plan set exists to stop, so this stays in review for that one read."
+        },
+        {
+          "at": "2026-07-28T00:43:11.312Z",
+          "text": "CLOSED after the SEED-HARMONISATION adversarial gate passed on both owning specs — five rounds, each one INCOMPLETE until this one, and the gate caught real defects every round including several of mine. The write-back itself: S4-SPEC gains the two tiers (base code-mode + VAK), the ORDERED security boundary with its refusal code, the measured token result (657 tok vs 2199 staircase, ratio 0.299, both sides from the SAME recorded trace), the six coordinates as the vocabulary an orchestration is WRITTEN AGAINST with composedCoordinates making that measurable, the CP nesting law, and the trace to aeon_eval + distillation commitment; S4-4'-SPEC gains Anima's four laws (program held by the parent with only DECLARED variables crossing; origination is dialogue and a repeatable expression is a hashed score; checkpoints authored from a closed set of three named reasons with no auto-insertion; exhaustion never reported as completion) plus the learning-substrate law and a Boundaries section that now carries the negative space instead of leaving it to be recovered from prose; both skills gain the authoring surface; the DOX Purpose says program-not-staircase. WHAT THE GATE ACTUALLY CAUGHT, recorded because the value is in the misses not the hits. Round 1: commitment (e) — the deterministic trace feeding aeon_eval and the distillation corpus — was wholly absent from both specs, which I knew before dispatching (0 grep hits) and seeded deliberately so a rubber-stamp would be detectable; both readers independently returned NOT PRESENT, so the gate is real. It also found Boundaries omitted that Hen owns score PERSISTENCE and that the tilldone TOOL is Pleroma-resident, so a Boundaries-only reader would have concluded this carrier owns the score store. Round 2: my fix was both incomplete and self-harming — it closed the Gaps table but left \"This is the largest missing S4/S4' surface\" inside the psyche method's own block, and my new citation was a DEAD PATH (epi-cli/src/gate/server/dispatch.rs, missing the Body/S/S0 root). It also caught a logic bug I wrote: the learning paragraph said a distillation row IS EMITTED and then that a row IS REFUSED because user_articulation_simulation has no producer — which as written means every row is refused and nothing ever reaches the corpus. Fixed by naming the subject: the UNDECLARED row is refused; a run declaring all three channels emits normally. Round 3: I had \"corrected\" a stale line by relocating the gap to the Psyche STORE without checking, and the store exists — gate/anima.rs read_psyche_state/merge_psyche_patch/write_psyche_state, proven write-then-read-back by gate_s4_coordinate_surfaces.rs — so I had asserted a fresh falsehood at three sites while line 157 already said the opposite. Also caught: I widened the live roster without widening its evidence, over-claiming Rust-gate coverage for s4'.mediation.capabilities.list, which is TS-covered only. On the shard: I wrote that portal.vak_eval and the ELO trial are \"both broadcast rather than returned\" — the trial is neither, it is returned and written to SQLite and there is no aletheia.elo.* portal event; I invented a landing date (2026-07-22 vs the actual 2026-07-25); and I mis-rooted mercurius-elo.ts to a carrier it does not live in. It further caught a CANON error I introduced: I wrote \"CFP4 runs under tilldone\", but conventionalToolFor(\"CFP4\") returns null on purpose because threads are SHAPES and tools are CAPABILITIES — the completion gate now binds on the shape, with CFP4 named as the move that carries it. Round 4: my registry \"fix\" claimed the root plugins/registry.jsonl path was retired with \"do not reintroduce a reader for it\" — the FILE is gone but the READER is not (plugins.rs REPO_PLUGIN_REGISTRY_RELATIVE_PATHS, iterated live), so a root registry dropped back in would still be picked up; worse, my only evidence was a file-existence check, which this protocol explicitly names as BANNED evidence. It also caught that my bulk .pi/extensions repair was too mechanical — it fixed backticked paths but missed prose, leaving one line naming a tree the same file had just declared gone — and that it NARROWED a true statement, since extension sync copies from two roots (Body/S/S4/pi-agent and Body/S/S4/ta-onta), not one. And it traced git history to show my provenance clause credited the \"threads are shapes\" correction to 50.T50.06, the very tranche that asserted the opposite bijection (d0ff8cda 12:25); the correction was 149e9dd7 at 15:31 the same day. Round 5: PASS on both. WHAT ELSE LANDED ALONG THE WAY, all verified against code rather than prose: 21 dead or rootless citations repaired (12 pointing into .pi/extensions, a tree with zero tracked files, three of them inside the spec's own \"Live:\" evidence list; 9 rootless epi-cli/src refs); the retired-registry claim restated as reader-still-present-but-inert with the constant and iteration site cited; s4'.goal.* corrected from \"needs richer semantics\" to does-not-exist-at-all (the landed surface is the epi agent goal CLI prelude); s4'.cs.* marked unimplemented and registered as a gap instead of being listed as a live API; the mediation pair homed in the API catalogue AND added to the live roster with per-surface evidence rather than one blanket claim; filesystem paths converted from wikilinks to backticks; the Psyche residency question stated precisely (file-backed store landed, PsycheRuntimeHandle still advertises redis_state_key, so the open question is which tier owns the durable copy). Frontmatter c_3_updated_at bumped on both, and both validate. agent_cf_parity 10/10 GREEN throughout — that suite reads both SKILL.md files as prose and fails on a superseded CF spelling, so it is the real guard on the skill edits. Independent verify-tranche PASS (verifier claude-opus5-t50-canon-verify2, not the closer). TWO ADVISORIES FOR THE ARCHITECT, neither gating and neither mine to decide: the S4-SPEC CLI table omits `epi agent goal`, which is pre-existing partiality (Tmux/Roster/Session are absent too) but is newly load-bearing now that the goal line leans on it; and sibling shard S4-4-SPEC.md:43 calls `s4'.goal.prelude` \"the live mirror\" of the goal-prelude spec when no such gateway method exists in code — the master spec is now correct, that shard needs its own harmonisation pass.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 50.T50.16 --owner claude-opus5-t50-canon-verify2   # class-scoped W gate; SEED-HARMONISATION adversarial gate PASS on both owning specs (5 rounds, independent readers)",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/S/S4/S4-SPEC.md",
+              "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/anima-orchestration/SKILL.md",
+              "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/vak-coordinate-frame/SKILL.md",
+              "Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/50.T50.16.md"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "claude-opus5-t50-canon-20260727",
-      "leaseExpiresAt": "2026-07-27T23:11:18.838Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-27T21:30:32.564Z",
       "runId": "20260727T211118Z-50-T50.16",
       "worktree": null,
@@ -27247,11 +27281,12 @@
     {
       "runId": "20260728T001116Z-30-T30.8",
       "taskId": "30.T30.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-28T00:11:16.508Z",
       "owner": "claude-opus5-t30-palette-20260728",
       "leaseExpiresAt": "2026-07-28T02:11:16.508Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T00:42:21.334Z"
     }
   ],
   "activeRoute": {
