@@ -240,7 +240,7 @@ fn s1_prime_manifest_points_at_rust_hen_compiler_contract() {
         .contains(&"hen-compiler-core/tests/frontmatter.rs"));
     assert!(record.test_evidence.contains(&"vault_frontmatter.rs"));
 
-    let _timestamp = epi_logos::hen::HenTimestamp::new(2026, 4, 25, 0, 0, 0);
+    let _timestamp = epi_s1_hen_compiler_core::HenTimestamp::new(2026, 4, 25, 0, 0, 0);
 }
 
 #[test]

@@ -65,17 +65,17 @@ const legacyMissingHeaderAllowlist = new Set([
 ]);
 
 const legacyForbiddenImportAllowlist = new Set([
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s1-hen-compiler-core",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s2-graph-schema",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s2-graph-services",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s3-gateway",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s3-gateway-contract",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s3-graphiti-runtime",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s3-redis-context",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s5-epii-agent-core",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s5-epii-autoresearch-core",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s5-epii-review-core",
-  "Body/S/S0/epi-cli/Cargo.toml#dependencies.epi-s5-kbase-core",
+  // The 11 epi-cli entries that stood here were never rot: they were the CLI
+  // membrane doing its job. `epi graph`, `epi vault`, `epi gate` exist to let
+  // every module be touched from the terminal, which means reaching every
+  // layer. That is now stated as a licence in the contract (`S0-membrane`,
+  // Architect ruling 2026-07-28) instead of accumulating here as debt, and
+  // epi-cli is constrained by residency — it may hold no domain law — rather
+  // than by counting edges. Track 53 T53.02.
+  //
+  // What remains below is a genuine violation with no such defence: S2 must
+  // not depend on S3. Track 53 T53.06 removes it, and T53.09 removes this
+  // mechanism entirely.
   "Body/S/S2/graph-services/Cargo.toml#dependencies.epi-s3-gateway-contract",
   "Body/S/S2/graph-services/Cargo.toml#dependencies.epi-s3-redis-context"
 ]);
@@ -283,6 +283,57 @@ function lintRustForbiddenImports(options, contract, errors, counts) {
   }
 }
 
+/**
+ * The magnitude ratchet for the S0 CLI membrane.
+ *
+ * `epi-logos` is licensed to reach every layer — passthrough access is what a
+ * CLI is for — so counting its import edges says nothing. What must not grow is
+ * the amount of *law* it holds. This walks `src/gate/` and `src/graph/`, counts
+ * the files that name an S1/S2/S3/S5 crate, and fails when that count rises
+ * above the recorded ceiling.
+ *
+ * This is the check the old allowlist could not perform: a boolean permit let
+ * 41 files become 59 without ever turning red.
+ */
+function lintS0MembraneResidency(options, errors, counts) {
+  const contractPath = join(
+    options.repoRoot,
+    "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json"
+  );
+  if (!existsSync(contractPath)) {
+    errors.push("Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json is missing");
+    return;
+  }
+  const contract = JSON.parse(readFileSync(contractPath, "utf8"));
+  const upward = /\bepi_s1_[a-z0-9_]+|\bepi_s2_[a-z0-9_]+|\bepi_s3_[a-z0-9_]+|\bepi_s5_[a-z0-9_]+/;
+
+  const lawBearing = [];
+  for (const root of contract.roots) {
+    const absolute = join(options.repoRoot, root);
+    if (!existsSync(absolute)) continue;
+    for (const file of walkFiles(absolute)) {
+      if (!file.endsWith(".rs")) continue;
+      if (upward.test(readFileSync(file, "utf8"))) {
+        lawBearing.push(relativeRepoPath(options.repoRoot, file));
+      }
+    }
+  }
+
+  counts.s0MembraneLawBearingFiles = lawBearing.length;
+  counts.s0MembraneCeiling = contract.lawBearingFileCeiling;
+  const ceiling = contract.lawBearingFileCeiling;
+  if (lawBearing.length > ceiling) {
+    lawBearing.sort();
+    errors.push(
+      `S0 membrane residency ratchet: ${lawBearing.length} law-bearing file(s) under ` +
+        `${contract.roots.join(" + ")} exceeds the ceiling of ${ceiling}. The epi CLI may reach ` +
+        `every layer, but it may not accumulate their law. Move the handler to its coordinate ` +
+        `and register it (Track 53); do NOT raise the ceiling to pass. Files: ` +
+        lawBearing.join(", ")
+    );
+  }
+}
+
 function lintCargoDescriptions(options, errors, counts) {
   const cargoManifests = walkFiles(join(options.repoRoot, "Body/S"))
     .filter((path) => path.endsWith(`${sep}Cargo.toml`))
@@ -400,6 +451,7 @@ function run(options) {
     lintRustForbiddenImports(options, contract, errors, counts);
   }
   lintCargoDescriptions(options, errors, counts);
+  lintS0MembraneResidency(options, errors, counts);
   lintCoordinateHeaders(options, errors, counts);
   lintCHeaderInvariant(options, errors, counts);
 
@@ -419,6 +471,11 @@ try {
     }
     if (result.counts.legacyForbiddenImportGaps > 0) {
       legacyGapSummary.push(`${result.counts.legacyForbiddenImportGaps} forbidden-import migration gaps allowlisted`);
+    }
+    if (typeof result.counts.s0MembraneLawBearingFiles === "number") {
+      legacyGapSummary.push(
+        `S0 membrane law-bearing files ${result.counts.s0MembraneLawBearingFiles}/${result.counts.s0MembraneCeiling}`
+      );
     }
     if (result.counts.legacyHeaderGaps > 0) {
       legacyGapSummary.push(`${result.counts.legacyHeaderGaps} Coordinate Header migration gaps allowlisted`);

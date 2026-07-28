@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use epi_logos::epii_autoresearch::resonance_corpus::{
+use epi_s5_epii_autoresearch_core::resonance_corpus::{
     EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 use epi_logos::{

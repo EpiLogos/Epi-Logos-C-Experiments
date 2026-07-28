@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T11:53:04.358Z",
+  "updatedAt": "2026-07-28T12:34:58.723Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21445,16 +21445,33 @@
       "blocker": null
     },
     "53.T53.02": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-28T12:34:58.698Z",
+      "claimedAt": "2026-07-28T12:29:06.984Z",
+      "completedAt": "2026-07-28T12:34:58.698Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T12:34:58.698Z",
+          "text": "S0 split into ground and membrane per Architect ruling 2026-07-28. The contract now carries an S0 row (epi-lib, portal-core, gemini-embedding, epi-s0-settings, strictly bound) and an S0-membrane row (epi-logos, empty forbiddenImports, licensed because passthrough access to every module IS what a CLI is for), with boundary.crates repointed. That let 11 of 13 allowlist entries be deleted as never-violations: epi graph / epi vault / epi gate exist to expose every module from the terminal, so those edges were the CLI doing its job, filed as debt only because the contract modelled S0 as the floor while the system uses it as the membrane. Two entries remain and are genuine — graph-services (S2) must not import S3 — and T53.06 removes them. BECAUSE A LICENCE IS ALSO A BOOLEAN, which is the exact blindness that let 41 files become 59, the licence ships with a magnitude ratchet: contracts/s0-membrane-residency.json records 59 law-bearing files under src/gate + src/graph, and lint-boundaries now counts files naming an S1/S2/S3/S5 crate and fails when that count rises. Proven both directions against the real tree — injecting one law-bearing file under src/gate gives exit 1 naming the offending path, removing it gives exit 0. Also deleted the four blanket pub-use re-export blocks from src/lib.rs and repointed their three consumers (main.rs, tests/pi_ebm_commands.rs, tests/gate_parity_manifest.rs) at the owning crates. CLASS-W LIVE PROOF: verify-all --only ...,live-wire,gateway-methods GREEN in 25.5s against a real spawned gateway, so the lib.rs surgery did not disturb the wire. lint-boundaries green with allowlist 2 and ratchet 59/59; cargo check --manifest-path Body/S/S0/epi-cli/Cargo.toml --lib --bins exit 0. PRE-EXISTING RED, MEASURED NOT ASSUMED: the epi-cli suite is already red on main. A path-scoped stash of this tranches four files gives 910 passed / 32 failed at HEAD versus 911 / 31 with the work applied, so this tranche fixes one test and breaks none; verify-all --only epi-cli is RED independent of Track 53. Two known components are s0_does_not_introduce_new_downstream_service_law (6 unannotated modules, none touched here, classified per-file from inputs I did not modify) and agent_extensions_ta_onta (2 vendor-fidelity assertions failing at HEAD). HARNESS GAP FIXED: the Verify line previously read cargo build + cargo test green from Body/S/S0/epi-cli, but verify-tranche runs Verify-line commands from the repo root where they resolve to the ROOT workspace and pass without ever compiling epi-cli — a green that proved nothing. The line now names --manifest-path and records the 32-failure baseline as an explicit no-regression criterion. DISCOVERY recorded for T53.11: a categorical S0 membrane guard already exists at tests/s0_membrane_guardrails.rs with its own inventory; it asks whether a file is accounted for, this ratchet asks whether there is more law than yesterday. Cross-referenced in both directions so the next agent does not build a third mechanism.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-all.mjs --quiet --only harness-selftest,honesty-lint,gateway,gateway-contract,gateway-methods,live-wire,ta-onta,ta-onta-types,redis-context,spacetime,graphiti-runtime",
+            "exitCode": 0,
+            "testsPassed": 1155,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json",
+              "Body/M/epi-theia/extensions/contracts/s0-membrane-residency.json",
+              "Body/M/epi-theia/extensions/scripts/lint-boundaries.mjs",
+              "Body/S/S0/epi-cli/src/lib.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus5-t53-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-28T12:29:06.984Z",
+      "runId": "20260728T122906Z-53-T53.02",
       "worktree": null,
       "blocker": null
     },
@@ -27791,6 +27808,16 @@
       "leaseExpiresAt": "2026-07-28T14:41:12.920Z",
       "worktree": null,
       "completedAt": "2026-07-28T11:53:04.333Z"
+    },
+    {
+      "runId": "20260728T122906Z-53-T53.02",
+      "taskId": "53.T53.02",
+      "status": "done",
+      "startedAt": "2026-07-28T12:29:06.984Z",
+      "owner": "claude-opus5-t53-impl",
+      "leaseExpiresAt": "2026-07-28T14:29:06.984Z",
+      "worktree": null,
+      "completedAt": "2026-07-28T12:34:58.698Z"
     }
   ],
   "activeRoute": {

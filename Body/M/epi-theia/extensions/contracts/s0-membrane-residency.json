@@ -1,0 +1,47 @@
+{
+  "$comment": [
+    "The magnitude ratchet for the S0 CLI membrane (Track 53 T53.02).",
+    "",
+    "Track 53's own diagnosis of how the architecture was lost: 'legacyForbiddenImportAllowlist",
+    "is a boolean permit with no magnitude, so 41 -> 59 files never once turned a gate red.'",
+    "Licensing epi-logos as a composition root (Architect ruling 2026-07-28) removes the",
+    "false signal but would leave the same blind spot, because a licence is also a boolean.",
+    "",
+    "So the constraint on the membrane is not WHETHER it reaches other layers -- reaching them",
+    "is its function -- but HOW MUCH LAW it holds while doing so. This file records that",
+    "magnitude. The gate fails when the count RISES. Each drain tranche (T53.04-T53.08) lowers",
+    "the number as it moves handlers to their coordinate, and the ratchet makes the reduction",
+    "irreversible. T53.11 replaces the count with zero and the structural guard.",
+    "",
+    "A file counts as law-bearing when it names an S1/S2/S3/S5 crate. A CLI wrapper that only",
+    "parses argv and prints does not; a handler body does.",
+    "",
+    "RELATED, NOT RIVAL -- read before adding a third mechanism. A categorical guard already",
+    "exists at Body/S/S0/epi-cli/tests/s0_membrane_guardrails.rs, with its own inventory at",
+    "contract-inventory/s0-membrane-inventory.json: it asks, per file, whether a downstream-law",
+    "module is inventoried, carries an `// S0 ADAPTER: Body/S/<...>` annotation, or sits in a",
+    "baseline CLI-glue list. That guard answers 'is this file accounted for?'. This ratchet",
+    "answers 'is there more law than yesterday?' -- the question a per-file permit cannot ask,",
+    "and the one whose absence let 41 files become 59. Keep both; T53.11 folds them together",
+    "when the count reaches zero.",
+    "",
+    "NOTE 2026-07-28: s0_does_not_introduce_new_downstream_service_law is currently RED with 6",
+    "unannotated modules (gate/day_start.rs, gate/nara_close_bundle.rs, gate/epii_axiom.rs,",
+    "gate/verifier.rs, gate/tuning.rs, gate/codon.rs). That predates Track 53 and is part of what",
+    "the drain resolves -- do not silence it by adding baseline entries."
+  ],
+  "roots": ["Body/S/S0/epi-cli/src/gate", "Body/S/S0/epi-cli/src/graph"],
+  "lawBearingFileCeiling": 59,
+  "baseline": {
+    "recordedAt": "2026-07-28",
+    "tranche": "53.T53.02",
+    "gate": 30,
+    "graph": 29,
+    "note": "Residency baseline 2026-05-06 (c3f39763) was 41 files under gate/ alone; it had grown to 59 across gate+graph by the time this ratchet landed. That growth is the failure this file exists to make impossible."
+  },
+  "target": {
+    "lawBearingFileCeiling": 0,
+    "enforcedBy": "53.T53.11",
+    "note": "At zero the ceiling is redundant and the structural guard replaces it: gate/ holds only CLI wrappers, graph/ only argv-and-print."
+  }
+}

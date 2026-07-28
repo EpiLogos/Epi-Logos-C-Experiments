@@ -1,7 +1,7 @@
 mod common;
 
 use common::{run_epi, TestEnv};
-use epi_logos::epii_autoresearch::resonance_corpus::{ResonanceCorpusStore, TrainingPairInput};
+use epi_s5_epii_autoresearch_core::resonance_corpus::{ResonanceCorpusStore, TrainingPairInput};
 
 // WHAT THIS SUITE PROVES, AND WHAT IT DELIBERATELY DOES NOT.
 //

@@ -10,18 +10,11 @@ pub mod ffi;
 pub mod gate;
 pub mod graph;
 pub mod know;
-pub mod hen {
-    pub use epi_s1_hen_compiler_core::*;
-}
-pub mod epii_review {
-    pub use epi_s5_epii_review_core::*;
-}
-pub mod epii_autoresearch {
-    pub use epi_s5_epii_autoresearch_core::*;
-}
-pub mod epii_agent {
-    pub use epi_s5_epii_agent_core::*;
-}
+// T53.02: the `pub use epi_s5_*::*` / `epi_s1_*::*` blanket re-exports that
+// stood here are gone. They let the S0 CLI restate four other crates' entire
+// public surfaces as its own, which is the shape that made "which layer owns
+// this type?" unanswerable from an import line. Consumers now name the owning
+// crate directly.
 pub mod nara;
 pub mod notebook;
 pub mod portal;
