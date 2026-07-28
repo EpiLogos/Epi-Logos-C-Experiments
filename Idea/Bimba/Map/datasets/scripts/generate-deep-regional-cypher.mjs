@@ -58,7 +58,24 @@ export const registeredTargets = new Set([
   "m_3_degree",
   "m_4_two_stroke_doctrine",
   "m_5_lacanian_interface",
+  // 2026-07-29 recovery registration — read by the live gateway, previously
+  // unregistered, therefore unrecoverable after the unscoped delete.
+  "c_0_modal_signature",
+  "l_2_vedic_mantra",
+  "l_3_spiritual_function",
+  "s_4_english_translation",
 ]);
+
+// NAMED STALENESS, not fixed here because it is a canon decision.
+// `mappings.m_prime` emits the LOOSE global form (`arabicText -> m_2_arabic_text`,
+// `abjadValue -> m_2_abjad_value`), but deep-property-map.md's M/M-prime rule and
+// the live graph both use the sub-coordinate form for the M2-4 name matrix
+// (`m_2_4_arabic_text`, `m_2_4_abjad_value`, `m_2_4_hebrew_text`). That is why
+// this generator's output never contained the properties the gateway reads.
+// Making m_prime coordinate-aware changes a canon serialization rule, so it is
+// flagged for the Architect rather than taken unilaterally. Until then,
+// `m_2_4_hebrew_text` is restored by the recovery script beside this file and is
+// deliberately absent from the mapping table above.
 
 export const stringListTargets = new Set([
   "c_4_ql_operator_types",
@@ -73,6 +90,8 @@ export const mappings = {
     description: "c_1_description",
     coreNature: "c_0_core_nature",
     operationalEssence: "c_0_essence",
+    modalSignature: "c_0_modal_signature", // 2026-07-29 recovery registration
+
     internalStructure: "c_1_structure",
     lastUpdated: "c_3_updated_at",
     updatedAt: "c_3_updated_at",
@@ -103,6 +122,15 @@ export const mappings = {
     healingSpecialty: "l_2_healing_specialty",
     chakraCorrespondence: "l_2_chakra_correspondence",
     breathPattern: "l_2_breath_pattern",
+    // 2026-07-29 recovery registration. These were read by the LIVE gateway
+    // (Body/S/S0/epi-cli/src/gate/graph.rs) but were never registered here, so
+    // when the 2026-07-28 unscoped `MATCH (n:Bimba) DETACH DELETE n` wiped the
+    // graph, replaying the generated regional cypher restored everything on the
+    // allowlist and silently left these behind — the M2 correspondence face
+    // stayed dark for a day with no repo-side source to recover from.
+    // Registering them makes the standard restore chain cover them.
+    vedicMantra: "l_2_vedic_mantra",
+    spiritualFunction: "l_3_spiritual_function",
     mefCondition: "l_4_mef_condition",
     interpretiveRole: "l_4_interpretive_role",
     elementalNature: "l_2_elemental_nature",
@@ -123,6 +151,7 @@ export const mappings = {
     f_capabilities: "s_5_capabilities",
     safetyClass: "s_4_safety_class",
     eligibleFormats: "s_4_eligible_formats",
+    englishTranslation: "s_4_english_translation", // 2026-07-29 recovery registration
   },
   t: {
     epistemicFunction: "t_1_epistemic_function",
