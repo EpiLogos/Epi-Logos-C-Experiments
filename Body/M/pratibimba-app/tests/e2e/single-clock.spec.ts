@@ -10,8 +10,9 @@
  *   is UF class — a jsdom mount never opens the app.
  * Public surface: Playwright test over status-tick / personal-recognition-engine
  *   data-generation / engine-generation.
- * Does NOT own: the tick store law (src/state/stores.ts), the composition
- *   reader (src/composition/compositionProfile.ts), or either composition.
+ * Does NOT own: the tick store law (src/state/stores.ts), the subscription
+ *   seam (src/composition/profileTickSubscription.ts), the React fan-out
+ *   (src/composition/compositionProfileContext.tsx), or either composition.
  * Contract: [[M'-SYSTEM-SPEC]] + rerun [[29-integrated-plugins-composition-deep]]
  *   T29.4 (DR-WC-IP-4, ROUTED).
  */
@@ -57,13 +58,22 @@ test('one profile subscription drives both compositions in the live app (29.T29.
     // Wait for a real tick to land rather than asserting against 'none'.
     await expect(personal).toHaveAttribute('data-generation', /^\d+$/, { timeout: 30_000 });
 
-    // The surface's generation is the shell's generation. Read the surface
-    // first, then the strip: if they were two clocks, a tick landing between
-    // the two reads could only make them DISagree, so this ordering cannot
-    // manufacture a pass.
+    // The surface's generation IS the shell's generation. Asserting a numeric
+    // tolerance between two non-atomic reads of a live clock is a guess about
+    // how fast the machine is — the first cut used ±1 and saw 2 under
+    // full-suite load. Poll for AGREEMENT instead: two readings of one clock
+    // must coincide on some observation, and two independent clocks never
+    // would. Load only changes how many observations it takes.
+    await expect
+        .poll(
+            async () => {
+                const surface = Number(await personal.getAttribute('data-generation'));
+                return surface === (await statusTick(page));
+            },
+            { timeout: 20_000 }
+        )
+        .toBe(true);
     const personalGeneration = Number(await personal.getAttribute('data-generation'));
-    const stripAtPersonal = await statusTick(page);
-    expect(Math.abs(personalGeneration - stripAtPersonal)).toBeLessThanOrEqual(1);
 
     // …and it ADVANCES with the clock rather than holding a first frame.
     await expect
@@ -78,9 +88,16 @@ test('one profile subscription drives both compositions in the live app (29.T29.
     await expect(cosmicGenerationEl).toBeVisible({ timeout: 20_000 });
     await expect(cosmicGenerationEl).toHaveText(/\d+/, { timeout: 30_000 });
 
+    await expect
+        .poll(
+            async () => {
+                const shown = Number(((await cosmicGenerationEl.textContent()) ?? '').replace(/[^0-9]/g, ''));
+                return shown === (await statusTick(page));
+            },
+            { timeout: 20_000 }
+        )
+        .toBe(true);
     const cosmicGeneration = Number(((await cosmicGenerationEl.textContent()) ?? '').replace(/[^0-9]/g, ''));
-    const stripAtCosmic = await statusTick(page);
-    expect(Math.abs(cosmicGeneration - stripAtCosmic)).toBeLessThanOrEqual(1);
 
     // Both compositions passed the same test against the same strip, and the
     // cosmic generation is at or beyond where the personal face had reached —
