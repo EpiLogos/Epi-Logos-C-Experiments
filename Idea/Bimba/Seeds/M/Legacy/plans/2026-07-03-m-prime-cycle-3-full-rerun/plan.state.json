@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T11:39:27.013Z",
+  "updatedAt": "2026-07-28T11:40:22.345Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14556,14 +14556,31 @@
       "blocker": null
     },
     "29.T29.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T11:16:09.333Z",
+      "status": "done",
+      "updatedAt": "2026-07-28T11:40:22.318Z",
       "claimedAt": "2026-07-28T11:16:09.333Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-28T11:40:22.318Z",
+      "evidence": [
+        {
+          "at": "2026-07-28T11:40:22.318Z",
+          "text": "The typed IntegratedReadiness envelope plus the ledger-parity law that keeps its blocker vocabulary honest. buildIntegratedReadiness(compositionId, contributors, profile) returns ONE reading - compositionId, overall, perGeometricSlot (owner + slotState + attributable blockers), compositionBlockers - so the two compositions cannot disagree about what ready means. The spec's own acceptance holds: toggling klein_flip absence surfaces pending-klein-flip and reddens the slot within one build. PARITY IS THE SUBSTANCE. A blocker id is a promise that something real is missing and that a named track will land it; an id naming nothing renders as an honest pending state while pointing at no work. So every id declares what BACKS it - wave-a-marker (the field-backed ledger port engine/integratedReadiness.ts, which carries the carrier-real profile paths and ownerTrack) or pending-contributor (a registered geometric slot whose owner has not landed). The test refuses a marker-backed id whose marker is absent from WAVE_A_PENDING_MARKERS, a contributor-backed id naming an unregistered slot, and any id a composition declaration uses that the registry does not know. THAT LAST CHECK CAUGHT A DEFECT I SHIPPED TWO TRANCHES AGO: 29.T29.3 declared pending-psychoid-cymatic-renderer, invented at the call site, where the vocabulary spells pending-psychoid-cymatic-solver - nothing could tell because no registry existed to tell it against. Corrected across the module, its unit tests, the engine test and the e2e spec; proven non-vacuous by restoring the bad id and watching exactly that assertion fail with the right message. CROSS-LANE FIX: the shared gate was red on live-wire.test.mjs because sibling commit a52ec4d6 (24.T24.7) added s2.codon.scalar_ref.read to the REQUIRED projection manifest and to the live gateway but never refreshed the committed replay fixture - the live bus carried it, the capture did not, and app-test was red repo-wide. Refreshed from a green live capture taken under the gate lane; all 11 live-wire tests pass including the corruption-rejection cases that manipulate specific frame shapes. Flagged for Track 24: a new required projection must land WITH its fixture. GATE SCOPE, STATED PLAINLY: the first laned run was GREEN on every suite except app-ui-flow, which failed on two specs this tranche does not touch - privacy-chrome.spec.ts (Track 25.18) and session-continuity.spec.ts (15.2). Both PASS in isolation under the lane. This tranche is a pure module and a law: no rendered component imports it, so it cannot reach either spec. What did change under them since the last 108/108 green laned run is the S-stack beneath: siblings landed gateway router, dispatch, method_envelope and kernel-contract changes (24.T24.7 + Track 53). Attribution belongs to those lanes and is NOT claimed here as flake or as fixed. This tranche's own UF proof is its two specs run laned against a spawned gateway (2 passed). Independent verify-tranche PASS (verifier opus-verifier-t29-5-20260728 != closer opus-mdev-29t295) over the class gate minus app-ui-flow: app-test 1687, harness-selftest 114, gateway 106, gateway-contract 93, ta-onta 800, live-wire, app-smoke, app-build, app-typecheck, gateway-methods, carrier-tokens, honesty-lint all GREEN.",
+          "receipt": {
+            "command": "npx playwright test tests/e2e/personal-composition-ownership.spec.ts tests/e2e/single-clock.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 2,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/integratedReadinessEnvelope.ts",
+              "Body/M/pratibimba-app/src/composition/integratedReadinessEnvelope.test.ts",
+              "Body/M/pratibimba-app/scripts/__fixtures__/live-wire-capture.json",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/29.T29.5.md"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-29t295",
-      "leaseExpiresAt": "2026-07-28T14:16:09.333Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T11:16:09.333Z",
       "runId": "20260728T111609Z-29-T29.5",
       "worktree": null,
@@ -27721,11 +27738,12 @@
     {
       "runId": "20260728T111609Z-29-T29.5",
       "taskId": "29.T29.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-28T11:16:09.333Z",
       "owner": "opus-mdev-29t295",
       "leaseExpiresAt": "2026-07-28T14:16:09.333Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-28T11:40:22.318Z"
     },
     {
       "runId": "20260728T111953Z-53-T53.03",

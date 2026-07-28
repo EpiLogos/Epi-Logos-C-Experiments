@@ -128,14 +128,17 @@ export const PERSONAL_SLOT_CARRIERS: Readonly<
 } as const);
 
 /**
- * Slots that are owned but cannot render yet, and the tranche that unblocks
- * each. A blocker id here is a claim about the repository, and the test that
- * guards it asserts the slot has no carrier — so this cannot silently outlive
- * the gap it describes.
+ * Slots that are owned but cannot render yet. The id must be a REGISTERED
+ * composition blocker (`integratedReadinessEnvelope.ts`), which carries its
+ * owning track and human reason; `personalComposition.test.ts` refuses an id
+ * that is not in that registry.
  */
 export const PERSONAL_SLOT_BLOCKERS: Readonly<Partial<Record<PersonalGeometricSlotName, string>>> =
     Object.freeze({
-        'center-composition': 'pending-psychoid-cymatic-renderer'
+        // The id comes from the 29.5 registry, not from here. This shipped as
+        // `pending-psychoid-cymatic-renderer` — an id invented at the call site
+        // that named nothing; the ledger-parity law is what caught it.
+        'center-composition': 'pending-psychoid-cymatic-solver'
     });
 
 /**

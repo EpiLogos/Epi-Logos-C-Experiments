@@ -57,7 +57,7 @@ test('the personal composition names an owner for every geometric slot in the li
     // reading as if the composition had five slots.
     await expect(engine).toHaveAttribute(
         'data-composition-blocked-slots',
-        'center-composition:pending-psychoid-cymatic-renderer'
+        'center-composition:pending-psychoid-cymatic-solver'
     );
 
     // Each slot whose owner is declared is mounted by a surface that is really

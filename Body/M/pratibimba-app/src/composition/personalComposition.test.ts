@@ -72,7 +72,7 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
         expect(text).toContain('left-composition=m4-nara');
         expect(text).toContain('right-composition=m5-epii');
         expect(text).toContain('grounding=m0-anuttara');
-        expect(text).toContain('blocked: center-composition:pending-psychoid-cymatic-renderer');
+        expect(text).toContain('blocked: center-composition:pending-psychoid-cymatic-solver');
     });
 
     // ── the protected-local boundary, now reachable in production ─────────
@@ -202,7 +202,7 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
             ).toBe(true);
         }
         expect(blockedPersonalSlots()).toEqual([
-            'center-composition:pending-psychoid-cymatic-renderer'
+            'center-composition:pending-psychoid-cymatic-solver'
         ]);
     });
 });

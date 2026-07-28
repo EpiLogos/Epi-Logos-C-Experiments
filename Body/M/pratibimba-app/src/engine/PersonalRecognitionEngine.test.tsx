@@ -142,7 +142,7 @@ describe('PersonalRecognitionEngine', () => {
         );
         const root = screen.getByTestId('personal-recognition-engine');
         expect(root.getAttribute('data-composition-blocked-slots')).toBe(
-            'center-composition:pending-psychoid-cymatic-renderer'
+            'center-composition:pending-psychoid-cymatic-solver'
         );
         // Blocked is not unclaimed — the owner is still named.
         expect(root.getAttribute('data-center-composition-owner')).not.toBe('unclaimed');
