@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-29T11:08:12.871Z",
+  "updatedAt": "2026-07-29T13:27:10.300Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12906,15 +12906,63 @@
       "blocker": null
     },
     "25.T25.21": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-28T22:50:47.218Z",
+      "status": "done",
+      "updatedAt": "2026-07-29T12:45:57.660Z",
       "claimedAt": "2026-07-28T22:50:47.218Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-29T12:45:57.660Z",
+      "evidence": [
+        {
+          "at": "2026-07-29T12:19:22.881Z",
+          "text": "Wave-C contribution register landed carrier-native at src/composition/waveCContributions.ts: 22 rows (every m4.nara view id the Track-25 brief assigns), each read back off real source. SPEC:288 closed with per-row currentStateSelector/selectionHandler/evidenceSerializer, non-null exactly on the 15 rows that render — selector names the store hook or RPC the carrier really calls, handler names a registered CROSS_LAYOUT_INTENT_TARGETS entry whose component must equal the row's own mount, serializer carries the row's OWN privacy class (the frozen barrel used one extension-wide PRIVACY_CLASS, violating SPEC:288 on all nine handle-only surfaces). SPEC:290 closed with INTEGRATED_450_CONSUMER_LAYOUT: all six personal geometric slots reconciled against the LIVE loadPersonalComposition() via ownerOfMountedSlot, centre blocked on the registered pending-psychoid-cymatic-solver (25.T25.6 pending), left+right recorded as DR-FACE-7 fate-A carries naming where the function does reach the user. UF proof drives every enrolled mount, reads every data-<slot>-owner off the mounted composition in Chromium, and dispatches every routed handler through the live intent spine. Two defects fixed in-pass: JournalTimelinePane (SPEC:83) and OraclePane (SPEC:133) were spec-assigned surfaces wearing NO privacy tint; the day container inherited its host's weaker tint while rendering per-artifact handles (SPEC:75 assigns handle-only). Two findings recorded not repaired (other tracks own them): m4-nara/transform and m4-nara/logos intents resolve to personalHome not their own tabs (Track 31 spine); SPEC:290's left/right occupants differ from 29.T29.3's landed slot grants (Track 29 composition).",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 1963,
+            "testsFailed": 0,
+            "detail": {
+              "vitest": "1842 passed / 4 skipped across 257 files (pnpm test, includes lint:imports+lint:no-modal+lint:single-clock+lint:e2e-graph, all GREEN)",
+              "playwright": "121 passed (pnpm test:e2e, LANED via .codex/verify.lock; suite was 118 before this tranche, +3 new)",
+              "typecheck": "tsc --noEmit clean",
+              "build": "vite build clean",
+              "mutationProof": "8 injected lies each proven RED: 4 on the source gate (prior pass) + 4 new (serializer privacyClass != row chrome; intent target component != mount component; consumer-slot owner != live loadPersonalComposition grant; state reader not called in the carrier file)"
+            },
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/m4-contribution-registry.spec.ts",
+              "Body/M/pratibimba-app/src/ui/privacyChrome.ts",
+              "Body/M/pratibimba-app/src/panes/DayCalendarPane.tsx",
+              "Body/M/pratibimba-app/src/panes/JournalTimelinePane.tsx",
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/AGENTS.md"
+            ],
+            "commit": "9f29df04",
+            "tokenUsage": {
+              "input": 412000,
+              "output": 31000
+            }
+          }
+        },
+        {
+          "at": "2026-07-29T12:45:57.660Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260729, distinct from this closer): every stage of the class-scoped gate green — app-ui-flow 121 playwright specs, app-test 1842, ta-onta 800, gateway 118, gateway-contract 93, app-smoke 2, app-typecheck, app-build, live-wire, gateway-methods, carrier-tokens, honesty-lint. The Wave-C 4-5-0 contribution register landed at src/composition/waveCContributions.ts: per-row currentStateSelector, selectionHandler and evidenceSerializer are non-null on exactly the 15 rows that actually render (SPEC:288), and INTEGRATED_450_CONSUMER_LAYOUT reconciles all six slots against the live loadPersonalComposition() rather than a copy of the 29.3 table (SPEC:290). Both gates were proven to go red on four fresh injected falsehoods. Also fixed two panes that rendered journal inscriptions and oracle casts wearing no privacy tint at all, and replaced a day-container body marker that the handle-only chrome copy could satisfy by accident. Committed 9f29df04.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.21 52.T1 31.T31.9 --owner opus5-mdev-verify-20260729",
+            "exitCode": 0,
+            "testsPassed": 1842,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/M/pratibimba-app/tests/e2e/m4-contribution-registry.spec.ts",
+              "app-ui-flow 121 playwright specs PASS"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus-mdev-25t21",
-      "leaseExpiresAt": "2026-07-29T01:50:47.218Z",
-      "heartbeatAt": "2026-07-28T22:50:47.218Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-29T12:19:22.881Z",
       "runId": "20260728T225047Z-25-T25.21",
       "worktree": null,
       "blocker": null
@@ -15750,19 +15798,34 @@
       "blocker": null
     },
     "31.T31.9": {
-      "status": "review",
-      "updatedAt": "2026-07-28T08:26:12.972Z",
+      "status": "done",
+      "updatedAt": "2026-07-29T12:46:16.774Z",
       "claimedAt": "2026-07-28T08:08:13.597Z",
-      "completedAt": null,
+      "completedAt": "2026-07-29T12:46:16.774Z",
       "evidence": [
         {
           "at": "2026-07-28T08:26:12.972Z",
           "text": "Deliverable COMPLETE and proven; held at review because the shared UF gate is red from a committed regression in another lane, identified precisely below. WHAT LANDED: src/ui/preferences.ts is the ONE preference-key authority (retarget of the frozen epi-theia m-extension-runtime/.../epi-logos-preferences.ts per CHARTER rule 2 — Theia PreferenceContribution + Inversify is dead plumbing, the LAW it carried is live). PREFERENCE_KEYS holds every epi-logos.{area}.{setting} literal the carrier uses and all six declaration sites now ALIAS it: state/themeStore.ts, panes/omni/omnipanelRuntime.ts, panes/kairosEnablement.ts (two keys), onboarding/pasuOnboarding.ts, onboarding/walkthrough.ts. THIS WAS A REAL DEFECT, not tidiness: epi-logos.onboarding.pasu-skipped was a named constant in onboarding/pasuOnboarding.ts AND an inline literal at onboarding/firstSessionOrchestration.ts:67, so renaming either would have left the other reading a key nothing writes — the user's PASU skip would silently stop being remembered, with no error and no crash. The register describes the app AS IT IS: six live keys, each with its real default, its owning tranche and the module that reads it. The 31.9 spec designs nine; the other keys are recorded in SPECIFIED_PREFERENCES as pending/superseded/declined rather than declared as live keys nothing reads, which would be the registered-but-unfired seam this plan set exists to stop. Two carry corrections worth keeping: epi-logos.kairos.enabled is SUPERSEDED by the landed epi-logos.privacy.kairos-enabled (32.T32.10 — the opt-in is a privacy decision, and the landed name is the better one), and epi-logos.motion.reduced is DECLINED because reduced motion is read from the OS prefers-reduced-motion query per DR-WC-DL-4; a carrier preference there could contradict the platform accessibility setting, which would be a regression rather than a feature. ENFORCEMENT: src/ui/preferences.test.ts walks the real src tree for preference-shaped literals and fails on any the authority does not declare, subtracting command ids against the real COMMAND_CATALOG rather than by pattern (commands share the epi-logos. prefix — epi-logos.help.openWalkthrough is a command, not a preference — so neither register can hide behind the other). Proven in BOTH directions against the real tree: injecting a stray literal in a throwaway module made it report 'ui/guardProbe.ts: epi-logos.layout.active' and removing it returned 7/7 green. It also asserts it scanned more than 100 files, so a green scan cannot mean the walk looked nowhere. The layout and theme vocabularies are CONSUMED from ui/layoutId.ts and ui/themeMapping.ts by reference identity, never restated, so a preference can never offer a layout the app cannot mount. GREEN, all fresh this session: pnpm typecheck exit 0; lint-import-boundaries GREEN over 554 source files; lint-no-modal-discipline GREEN; lint-single-clock GREEN; full carrier vitest 1646 passed / 0 failed / 3 skipped; pnpm build exit 0. The class-scoped gate is GREEN on every stage EXCEPT app-ui-flow: harness-selftest 107, gateway 101, gateway-contract 93, redis-context 15, graphiti-runtime 16, spacetime 11, ta-onta 800, ta-onta-types, app-typecheck, app-test 1646, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint — all PASS. WHY UF CANNOT GO GREEN, owned by another lane and NOT by this tranche: the entire app-ui-flow suite now fails to COLLECT, in 4.8s, before a single spec runs. Root cause traced to the exact chain rather than guessed — tests/e2e/design-primitives.spec.ts imports src/ui/stateGrammar.ts, which imports src/ui/motionTokens.ts, which at line 25 re-exports TRANSITIONS from src/ui/primitives.tsx, which imports src/ui/iconography.ts, whose line 201 calls import.meta.glob. That is a Vite-only build-time API and playwright collects specs in Node, so the module throws TypeError: (intermediate value).glob is not a function and playwright aborts the run. Isolated per-spec: design-primitives.spec.ts FAILS TO LOAD while accessibility-contract, chrome-command-routing and iconography.spec.ts all load fine. Regression window pinned by the ledger's own records: app-ui-flow was GREEN at 100/100 specs in the 30.T30.8 gate at 00:40Z and in the 29.T29.3 gate at 00:23Z; commit e48b0fc4 (30.T30.9, the iconography system) landed at 09:17:06 local and introduced the glob call. NOT REPAIRED HERE ON PURPOSE: the obvious guard (only call glob when import.meta.glob is a function) is wrong — Vite REPLACES the call expression at build time and does not define import.meta.glob as a runtime property, so that test would read undefined in the built bundle too and ship an icon register with zero entries. Choosing between guarding differently and breaking the token-to-component edge at motionTokens.ts:25 (a token module re-exporting a React component module is what drags Vite-only code into every Node consumer) is a surface decision for the owning lane, per the standing rule that an agent conforms to declared seams rather than redesigning them. One collision was also ruled out along the way: an earlier run of this gate failed on port 14621 held by a sibling's concurrent playwright run of single-clock.spec.ts; that run was allowed to drain rather than killed, and the failure reproduced identically on a verified-clear lane, which is how the port was excluded as the cause. Closable as soon as the iconography module loads under Node again; nothing in this tranche needs to change."
+        },
+        {
+          "at": "2026-07-29T12:46:16.774Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260729, distinct from this closer). The single reason this tranche sat at review is GONE and was verified gone, not assumed: the 2026-07-28 hold recorded that the whole app-ui-flow suite aborted during collection because ui/motionTokens.ts re-exported through ui/primitives.tsx, dragging the Vite-only asset glob in ui/iconography.ts into a Node consumer. motionTokens.ts now DEFINES its transition tier and primitives.tsx re-exports from it, so the edge is inverted and the chain is broken; the suite collects 73 files and runs 121 specs green. Full class gate PASS: app-typecheck, app-test 1842, app-build, app-smoke 2, app-ui-flow 121, ta-onta 800, gateway 118, gateway-contract 93, live-wire, gateway-methods, carrier-tokens, honesty-lint. The deliverable stands as recorded: src/ui/preferences.ts is the one preference-key authority with all six declaration sites aliasing PREFERENCE_KEYS, and its walk over the real src tree was proven to report an injected stray literal and return green when removed.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.21 52.T1 31.T31.9 --owner opus5-mdev-verify-20260729",
+            "exitCode": 0,
+            "testsPassed": 1842,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/preferences.ts",
+              "Body/M/pratibimba-app/src/ui/preferences.test.ts",
+              "app-ui-flow 121 playwright specs PASS"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 63 dirty files.",
       "owner": "claude-opus5-t31-prefs-20260728",
-      "leaseExpiresAt": "2026-07-28T10:08:13.597Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T08:26:12.972Z",
       "runId": "20260728T080813Z-31-T31.9",
       "worktree": null,
@@ -21266,10 +21329,10 @@
       "blocker": null
     },
     "52.T1": {
-      "status": "review",
-      "updatedAt": "2026-07-28T00:56:56.750Z",
+      "status": "done",
+      "updatedAt": "2026-07-29T13:26:52.417Z",
       "claimedAt": "2026-07-27T09:31:46.315Z",
-      "completedAt": null,
+      "completedAt": "2026-07-29T13:26:52.417Z",
       "evidence": [
         {
           "at": "2026-07-27T10:03:21.166Z",
@@ -21311,11 +21374,26 @@
         {
           "at": "2026-07-28T00:56:56.750Z",
           "text": "STRONGEST POSITION YET, still held at review — and the reason is now purely structural, not a defect and not a missing deliverable. THE HEADLINE: at 00:47Z a fresh independent run (verifier opus-verifier-t52-20260728b, distinct from the closer, cwd Body/M/pratibimba-app) put BOTH Verify-line commands at exit 0 SIMULTANEOUSLY — pnpm typecheck and pnpm test and pnpm build exit 0, AND pnpm test:e2e exit 0 in full-suite order. The 28.T28.4 blocker named in the 2026-07-27 17:12 entry landed as 7167e3b5 and the 29.T29.3 personal-composition work landed as 0cc19bac, which is what finally quieted the carrier. That run was refused for ONE reason having nothing to do with this tranche: lint-test-honesty rejected a ledger evidence string on 50.T50.16, closed minutes earlier by a sibling, whose phrasing named a banned evidence class in order to disown it — a self-referential match that refuses every lane repo-wide, not just this one. Per the documented remedy the wording was corrected in place in plan.state.json, preserving the fact and changing no claim; lint-test-honesty then reported 0 banned strings across 311 test files and 925 polyglot files, which unblocked the shared gate for every agent. THE LICENSED RE-RUN (that lint fix is a real change to the tree, so re-running is not a re-roll) came back with two reds, BOTH outside this tranche and both in specs it does not touch: (1) src/panes/M4NaraResonanceSurface.test.tsx — 1 failed of 1605, an M4 Nara day-summary assertion (expected the strip to contain pending 2). Classified by ONE targeted isolation run rather than by assertion: it PASSES 7/7 alone in 705ms, and no commit since 01:35 local touches that surface, so it is order-dependent shared-suite state, the same class as the consent-spec accumulator, owned by the M4 lane. (2) tests/e2e/m5-capacity-lanes.spec.ts:66, a capacity-lane cross-layout-intent spec owned by the M5/ACR lane. Neither red involves a layout id, the layout-id authority module, or any of the eight declaration sites. WHY THIS STAYS REVIEW RATHER THAN CLOSING ON JUDGMENT: the tranche's literal Verify line names the WHOLE suite, and --only scopes verify-all while the Verify-line commands always run, so there is no honest mechanism to scope around another track's red — the unrelated-flake path that closes a tranche on its own deliverable proof cannot reach a Verify line written this way. THIS TRANCHE'S OWN DELIVERABLE REMAINS FULLY PROVEN in the same runs: tsc clean, lint:imports GREEN, lint:no-modal GREEN, build exit 0, 1601 vitest passing with the single unrelated exception above, the AST guard proven RED-on-injection and GREEN-on-removal against the real tree, and alias drift proven to fail typecheck. NO GATE-GAMING: exactly two runs were taken this session, the second only after a real fix landed; a third run hoping a sibling had repaired their own suite would be a re-roll and was not taken. Closable on an Architect close signal, or on one clean whole-suite run once the M4 order-dependent assertion and the m5-capacity-lanes spec are green in their owning lanes."
+        },
+        {
+          "at": "2026-07-29T13:26:52.417Z",
+          "text": "CLOSED on a clean whole-suite run — the condition every prior entry named as the one thing missing. Independent verification (verifier opus5-mdev-verify-20260729, distinct from this closer) put BOTH Verify-line commands at exit 0 from the carrier directory: pnpm typecheck and pnpm test and pnpm build exit 0 with 1842 vitest passing, and pnpm test:e2e exit 0 with 121 playwright specs passing in full-suite order (6.6m). The whole-repo gate ran green alongside it: epi-lib 9031, portal-core 453, epi-cli 950, graph-services 261, hen-compiler-core 119, gateway 118, gateway-contract 93, ta-onta 800, epii-agent-core 22, epii-review-core 21, app-test 1842, app-ui-flow 121, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. Two things had to be repaired first, neither of them this tranche: the shared honesty-lint gate was red from a blanket ignore attribute carrying no reason string in an untracked track-54 test, which was refusing three tranches at once and is now fixed in place; and the earlier run of this same verification was itself invalid because the pnpm commands were executed from the repo root, which has no package.json, so they could only ever fail. The deliverable is unchanged from what was already proven: src/ui/layoutId.ts is the one LayoutId authority with all seven declaration sites aliasing it, and its guard was shown to go red on an injected duplicate union and green on removal.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 52.T1 54.T54.04 --owner opus5-mdev-verify-20260729 --cwd Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 1842,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/layoutId.ts",
+              "Body/M/pratibimba-app/src/ui/layoutId.test.ts",
+              "pnpm test:e2e 121 passed playwright"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "claude-opus5-t52-layout-20260727",
-      "leaseExpiresAt": "2026-07-27T19:22:47.093Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-28T00:56:56.750Z",
       "runId": "20260727T093146Z-52-T1",
       "worktree": null,
@@ -21898,16 +21976,16 @@
       "blocker": null
     },
     "54.T54.02": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-29T11:44:51.703Z",
+      "claimedAt": "2026-07-29T11:44:51.703Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus5-t5402-impl",
+      "leaseExpiresAt": "2026-07-29T15:44:51.703Z",
+      "heartbeatAt": "2026-07-29T11:44:51.703Z",
+      "runId": "20260729T114451Z-54-T54.02",
       "worktree": null,
       "blocker": null
     },
@@ -21926,16 +22004,53 @@
       "blocker": null
     },
     "54.T54.04": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-29T13:27:10.276Z",
+      "claimedAt": "2026-07-29T11:52:58.129Z",
+      "completedAt": "2026-07-29T13:27:10.276Z",
+      "evidence": [
+        {
+          "at": "2026-07-29T12:25:39.559Z",
+          "text": "Transcript cross-validation extractor landed at .codex/scripts/txlog-transcript-crossvalidate.mjs (S0 forensic-tooling residency alongside graph-live/canon-parity-probe/kernel-truth; S2 was unavailable, opus5-t5402-impl holds graph-services). Harvests both harnesses (1549 Claude jsonl + 1584 Codex jsonl + 50 spilled tool-results/24MB) via tool_use_id-correlated bimba-mcp calls (graph_cypher 359, set_property 62, query 24, schema 9, upsert_node 1) and their tool_result read-backs. Recovered 339 coordinates / 8820 properties / 442 q-registers, beating the 74/855/316 first-pass floor on all three axes. 29 new tests, 143/143 across the whole harness suite; the three named data-loss bugs each have a dedicated regression test that FAILS on the defective pipeline: stringify-before-unescape proven lossy, escaped and doubly-escaped anchors recovered via bare-word gating, and pre-anchor properties recovered by whole-frame collection. Four defects were caught by those tests during the build and fixed: doubly-escaped payloads were being dropped, spill paths absorbed a trailing period, scalar arrays (5 percent of the surface, including c_0_source_coordinates) were being skipped, and process.exit truncated the --json report. Independent validation on top of the T54.02 diff: 49 of 77 coordinates match the live graph EXACTLY on q-count and total byte length with ZERO inflation, M2-3.q_3_four_three_three_two_nesting matches byte-for-byte at 908 chars head and tail, and 0 of 339 coordinates are unexplained against the 996-coordinate Map projection. The no-lowercase coordinate rule was added after a Redis session key was found entering the dataset as a fabricated coordinate. T54.02 diff WAS reachable and ran against its in-flight artifact (audit sha256/16 7f759eb398bac75b, mtime 2026-07-29T11:57:20Z): 26016 pairs enumerated, per-family agreement rates reported, and the headline finding is that 174 of 216 value-disagreements are cases where the reconstruction carries the property key but an EMPTY value while the transcripts hold real content, against 1002 empty-string values in that reconstruction overall, consistent with unresolved DynamicRecord chains. Each disagreement row names its transcript source file so T54.02 can adjudicate. Also surfaced for T54.03: coordinates C (14 substantive q-registers) and M5-4 prime have no live node at all.",
+          "receipt": {
+            "command": "node --test .codex/scripts/__tests__/*.test.mjs && node .codex/scripts/txlog-transcript-crossvalidate.mjs --json",
+            "exitCode": 0,
+            "testsPassed": 143,
+            "testsFailed": 0,
+            "keyPaths": [
+              ".codex/scripts/txlog-transcript-crossvalidate.mjs",
+              ".codex/scripts/__tests__/txlog-transcript-crossvalidate.test.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/54.T54.04-recovered-properties.json",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/54.T54.04-crossvalidation-disagreements.md"
+            ],
+            "tokenUsage": {
+              "input": 438000,
+              "output": 36000
+            }
+          }
+        },
+        {
+          "at": "2026-07-29T13:27:10.276Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260729, distinct from this closer) on the whole-repo gate, all stages green including live-wire and graph-live. The second source is built and it does not share the log parser failure modes: a hardened extractor over both harnesses (1,549 Claude jsonl + 1,584 Codex jsonl + 50 spilled tool-results text files totalling 24 MB, an undocumented seam that carries most of the recovery) rebuilt 8,820 properties over 339 coordinates including 442 q-registers, against the 855/74/316 first-pass floor. Per family: c 7150, t 455, q 442, s 228, m 217, l 205, p 123. Each of the three named data-loss traps has a regression test that goes red on the defective pipeline, and those tests caught four real defects during the build. The T54.02 diff WAS reachable: 26,016 pairs enumerated one row at a time with per-family agreement rates and each row naming its transcript source. THE LOAD-BEARING FINDING: of 216 value disagreements, 174 are cases where the reconstruction holds the property key but an EMPTY value while transcripts hold real content. Confirmed directly against the live graph rather than inferred — 1,002 empty-string properties across 484 Bimba nodes (c 793, t 82, q 56, l 49, p 11, s 11), with M0-0-0.c_0_void_relationship empty on live against a real 342-char transcript value. Because the recovery is emitted as an additive delta that leaves alone whatever is already present, an empty write makes the key present and every later pass skips it, so this must be repaired at source in T54.02/T54.03 rather than left. Independent validation: 49 of 77 coordinates match live exactly on q-count and byte length with zero inflation, M2-3.q_3_four_three_three_two_nesting matches byte-for-byte at 908 chars, and 0 unexplained coordinates against the 996-coordinate Map.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 52.T1 54.T54.04 --owner opus5-mdev-verify-20260729 --cwd Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 143,
+            "testsFailed": 0,
+            "keyPaths": [
+              ".codex/scripts/txlog-transcript-crossvalidate.mjs",
+              ".codex/scripts/__tests__/txlog-transcript-crossvalidate.test.mjs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/54.T54.04-crossvalidation-disagreements.md",
+              "live-wire + graph-live PASS in the same whole-repo gate"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus5-t5404-crossval",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-29T12:25:39.559Z",
+      "runId": "20260729T115258Z-54-T54.04",
       "worktree": null,
       "blocker": null
     },
@@ -28239,11 +28354,13 @@
     {
       "runId": "20260728T225047Z-25-T25.21",
       "taskId": "25.T25.21",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-07-28T22:50:47.218Z",
       "owner": "opus-mdev-25t21",
-      "leaseExpiresAt": "2026-07-29T01:50:47.218Z",
-      "worktree": null
+      "leaseExpiresAt": "2026-07-29T14:53:31.771Z",
+      "worktree": null,
+      "heartbeatAt": "2026-07-29T11:53:31.771Z",
+      "completedAt": "2026-07-29T12:19:22.881Z"
     },
     {
       "runId": "20260729T095734Z-54-T54.01",
@@ -28254,12 +28371,31 @@
       "leaseExpiresAt": "2026-07-29T12:57:34.809Z",
       "worktree": null,
       "completedAt": "2026-07-29T11:08:12.846Z"
+    },
+    {
+      "runId": "20260729T114451Z-54-T54.02",
+      "taskId": "54.T54.02",
+      "status": "in_progress",
+      "startedAt": "2026-07-29T11:44:51.703Z",
+      "owner": "opus5-t5402-impl",
+      "leaseExpiresAt": "2026-07-29T15:44:51.703Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260729T115258Z-54-T54.04",
+      "taskId": "54.T54.04",
+      "status": "review",
+      "startedAt": "2026-07-29T11:52:58.129Z",
+      "owner": "opus5-t5404-crossval",
+      "leaseExpiresAt": "2026-07-29T14:52:58.129Z",
+      "worktree": null,
+      "completedAt": "2026-07-29T12:25:39.559Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-29T09:55:49.848Z",
-    "updatedAt": "2026-07-29T09:55:49.848Z",
+    "createdAt": "2026-07-29T11:46:52.787Z",
+    "updatedAt": "2026-07-29T11:46:52.787Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",

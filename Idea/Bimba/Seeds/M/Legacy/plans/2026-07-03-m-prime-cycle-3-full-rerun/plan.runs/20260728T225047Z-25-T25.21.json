@@ -1,0 +1,38 @@
+{
+  "runId": "20260728T225047Z-25-T25.21",
+  "taskId": "25.T25.21",
+  "startedAt": "2026-07-28T22:50:47.218Z",
+  "owner": "opus-mdev-25t21",
+  "leaseExpiresAt": "2026-07-29T01:50:47.218Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.21",
+    "trackId": "25",
+    "tranche": "T25.21",
+    "title": "Integrated `4-5-0` composition mini-mode contributions registry *(spec-ahead-integration; consolidates Wave-C composition surface)",
+    "effort": "spec-ahead-integration; consolidates Wave-C composition surface",
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.20"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M4' 23 widget contracts in pratibimba-app (PASU wizard derived-only quintessence, oracle aliveness 4h decay, R-factor fretboard 7x6, session-close ceremony XOR+seeds+lamps, time-axis switcher). AR=14, least-real. §2 track 25."
+  }
+}
