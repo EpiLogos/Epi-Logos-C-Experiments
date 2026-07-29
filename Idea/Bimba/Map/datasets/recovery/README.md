@@ -25,6 +25,9 @@ recovery reaches what the dataset join structurally cannot.
   nothing live is overwritten by a log value.
 - `recovered-bimba-properties.audit.json` — one entry per assignment, carrying
   the coordinate, the property, and the transaction id it was recovered from.
+- `recovered-empty-property-values.cypher` / `.audit.json` — the **empty-value
+  repair** over the above (see below). Guarded `SET n.<prop>` per row, never
+  `SET n +=`.
 
 ## Applied
 
@@ -43,9 +46,62 @@ Proven on a throwaway restored from that backup before touching live: the same
 apply took `cli_canon_coord_depth_ladder` from 3 failed to 6 passed, which is
 the regression the wipe caused.
 
+## The empty-value repair (2026-07-29, Architect-authorised)
+
+The replay above decoded most property values, but **long text lives in Neo4j as
+`DynamicRecord` chains, and the decoder emitted `''` for those instead of
+refusing.** That empty delta went to live: **1,002 empty-string properties over
+484 `:Bimba` nodes** (`c_*` 793, `t_*` 82, `q_*` 56, `l_*` 49, `p_*` 11,
+`s_*` 11). `M0-0-0.c_0_void_relationship` was `''` against 342 real characters.
+
+This is not cosmetic. Recovery is emitted as a delta that leaves alone every
+property already **present** — and an empty write makes the key present. Left
+there, every future recovery pass skips those 1,002 keys permanently.
+
+Repaired from a **different source of truth**: `54.T54.04-recovered-properties.json`,
+an independent reconstruction from Claude/Codex session transcripts (graph
+read-backs recorded verbatim in `tool_result` blocks), not from the transaction
+log. Prose: `54.T54.04-crossvalidation-disagreements.md`.
+
+Derivation is the intersection — a live empty repaired only where the transcript
+holds a non-empty value. Every statement is shaped and guarded:
+
+```cypher
+MATCH (n:Bimba {coordinate: $coord}) WHERE n.<prop> = '' SET n.<prop> = $value
+```
+
+The `WHERE … = ''` guard makes the write idempotent and makes it structurally
+impossible to overwrite real content. Values were passed as **parameters**, never
+interpolated — they carry quotes, newlines and unicode (`∞`, `→`, `R#/##`).
+
+Applied in one transaction on 2026-07-29 behind
+`~/epi-backups/neo4j/epi-neo4j-data-20260729T173217Z.tar.gz`
+(sha256 `5eb45c06…ccd34e4`), rehearsed against live and rolled back first:
+
+| measure | before | after |
+|---|---|---|
+| empty-string properties on `:Bimba` | 1,002 | 828 |
+| nodes carrying one | 484 | 393 |
+| `:Bimba` nodes | 1,978 | 1,978 (unchanged) |
+| relationships | 12,368 | 12,368 (unchanged) |
+
+174 statements, 174 matched, 0 no-ops — the drop equals the repair count exactly.
+
+> A concurrent writer (the `54.T54.02` sibling restoring the 163 missing
+> coordinate nodes) committed moments later, taking the live graph to 2,141
+> `:Bimba` nodes / 12,722 relationships and adding 33 empty properties on 22
+> new coordinates. That is separable and not attributable to this repair, whose
+> own before/after was measured atomically inside its own transaction.
+
 ## Known gaps
 
 - 94 values were **skipped, not guessed** — `TEMPORAL` and `GEOMETRY` are
   carried losslessly by the decoder but not interpreted into datetimes/points.
 - 163 recovered coordinates have no live node. They are reported rather than
   created: restoring structure is not this tranche's job.
+- **828 of the 1,002 empties remain**, because no transcript ever recorded a
+  read-back of them (`c_*` 656, `t_*` 75, `l_*` 43, `q_*` 39, `p_*` 10,
+  `s_*` 5). They are enumerated in the `residual` array of
+  `recovered-empty-property-values.audit.json`. **They are not recoverable from
+  transcripts — they need `54.T54.02`'s `DynamicRecord` decoding fixed at
+  source and the log re-decoded.** That is open work, not a closed gap.
