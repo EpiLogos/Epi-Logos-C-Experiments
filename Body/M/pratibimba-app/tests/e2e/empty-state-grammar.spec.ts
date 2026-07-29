@@ -10,22 +10,46 @@
  *   registry against the live readiness store.
  *
  *   The positive rides a condition the app reaches on its own rather than one
- *   this spec induces: on boot no coordinate is selected, so the M0 language
- *   reader is genuinely idle and its registered empty state is what the reader
- *   sees. Nothing is stubbed to make that true.
+ *   this spec induces: the e2e sidecar pins `ui_state_load → null` (deterministic
+ *   boots), so no coordinate is selected at boot, the M0 language reader is
+ *   genuinely idle, and its registered empty state is what the reader sees.
+ *   Nothing is stubbed to make that true.
  *
  *   It also carries the REAL negative that makes the positive mean something:
  *   after the walk publishes a live coordinate to the shared store, the S2 read
  *   lands and the empty state must be GONE. An empty state that rendered
  *   unconditionally would pass a positive-only test and would be wrong.
- * Public surface: Playwright test over the spawned gateway.
+ *
+ * BOOT/ROUTING BUDGET (added after the independent gate refused the first
+ *   close): this file passed 2/2 in isolation and under a standalone
+ *   `pnpm test:e2e`, and reported a 1.0m TEST TIMEOUT under the full repo gate,
+ *   where app-ui-flow competes with the other suites for the machine. Three
+ *   causes, all in the spec rather than in the registry:
+ *   (a) the boot assertions ran on the 10s project default while the gateway
+ *       check beside them got 20s — the same defect already fixed at
+ *       `visual-regression.spec.ts:164` and `chrome-command-routing.spec.ts`
+ *       (25.T25.21 flagged 28 further specs carrying it);
+ *   (b) `⌘.` was pressed as a TOGGLE and face 0 asserted as an absolute, which
+ *       holds only while boot face is 1 — an assumption, not a measurement. It
+ *       is now read back and driven to the wanted face, then verified;
+ *   (c) each of the six routed dispatches was followed by a flat 750ms sleep,
+ *       which is simultaneously dead time and no guarantee. It now waits on the
+ *       REAL routing signal (`cross-layout-intent-receiver` carrying the
+ *       requested extension/contribution) and on the face the target ledger
+ *       DECLARES — which is also what proves the sweep is looking at the right
+ *       face rather than assuming it.
+ *   The sweep and the negative are untouched: they are the acceptance.
+ * Public surface: Playwright empty-state registry acceptance tests.
  * Does NOT own: the registry (src/ui/emptyStateRegistry.ts), the copy
  *   (src/ui/emptyStateGrammar.ts), the lint
- *   (scripts/lint-empty-state-registry.mjs), the M0 reader.
+ *   (scripts/lint-empty-state-registry.mjs), the M0 reader, face/layout law.
  * Contract: rerun tranche [[32.T32.6]].
  */
 
 import { expect, test, type Page } from '@playwright/test';
+
+/** Boot-sized budget — see BOOT/ROUTING BUDGET in the header. */
+const BOOT_TIMEOUT = 20_000;
 
 interface CopyBlock {
     readonly extensionId: string;
@@ -34,16 +58,20 @@ interface CopyBlock {
     readonly summary: string;
     readonly hint: string;
     readonly contributors: readonly { readonly bindingKey: string; readonly label: string }[];
+    /** The face the target ledger DECLARES for this contribution. */
+    readonly face: number | null;
 }
 
-/** The nine-id taxonomy and the six copy blocks, read from the RUNNING app's
- *  own modules rather than restated here — a second copy could drift. */
+/** The nine-id taxonomy, the six copy blocks, and each block's declared face —
+ *  read from the RUNNING app's own modules rather than restated here, since a
+ *  second copy could drift from the registry this spec exists to check. */
 async function readAuthority(
     page: Page
 ): Promise<{ readonly states: readonly string[]; readonly grammar: readonly CopyBlock[] }> {
     return page.evaluate(async () => {
         const readiness = await import('/src/ui/bridgeReadiness.ts');
         const grammar = await import('/src/ui/emptyStateGrammar.ts');
+        const crossLayout = await import('/src/commands/crossLayoutIntent.ts');
         return {
             states: [...readiness.BRIDGE_READINESS_IDS],
             grammar: grammar.M_EMPTY_STATE_GRAMMAR.map(entry => ({
@@ -55,10 +83,36 @@ async function readAuthority(
                 contributors: entry.contributors.map(contributor => ({
                     bindingKey: contributor.bindingKey,
                     label: contributor.label
-                }))
+                })),
+                face:
+                    crossLayout.CROSS_LAYOUT_INTENT_TARGETS.find(
+                        target =>
+                            target.extensionId === entry.extensionId &&
+                            target.contributionId === entry.viewId
+                    )?.face ?? null
             }))
         };
     });
+}
+
+async function bootConnected(page: Page): Promise<void> {
+    await page.goto('/');
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: BOOT_TIMEOUT });
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', {
+        timeout: BOOT_TIMEOUT
+    });
+}
+
+/** Drive the shell to a known face and VERIFY it. `⌘.` is the # inversion
+ *  toggle, so pressing it unconditionally asserts an outcome that only holds
+ *  from an assumed starting face; the live attribute is read back first. */
+async function ensureFace(page: Page, face: '0' | '1'): Promise<void> {
+    const shell = page.getByTestId('shell');
+    await expect(shell).toBeVisible({ timeout: BOOT_TIMEOUT });
+    if ((await shell.getAttribute('data-face')) !== face) {
+        await page.keyboard.press('Meta+.');
+    }
+    await expect(shell).toHaveAttribute('data-face', face, { timeout: BOOT_TIMEOUT });
 }
 
 /** Route to a declared M-family contribution through the real cross-layout
@@ -93,29 +147,52 @@ async function dispatchIntent(
     );
 }
 
+/**
+ * Dispatch, then wait on the REAL routing signal rather than a sleep: the
+ * receiving host publishes the requested extension/contribution, and the ledger
+ * says which face owns it. Asserting that face is what makes the `.face-active`
+ * sweep below a measurement instead of an assumption.
+ */
+async function routeTo(page: Page, entry: CopyBlock): Promise<void> {
+    await dispatchIntent(page, entry.extensionId, entry.viewId);
+    if (entry.face !== null) {
+        await expect(page.getByTestId('shell')).toHaveAttribute('data-face', String(entry.face), {
+            timeout: BOOT_TIMEOUT
+        });
+    }
+    // House idiom (medicine-view.spec.ts:38): the receiving FACE SLOT carries
+    // the testid, and only one slot carries it at a time.
+    const receiver = page.getByTestId('cross-layout-intent-receiver');
+    await expect(receiver).toHaveAttribute('data-requested-extension-id', entry.extensionId, {
+        timeout: BOOT_TIMEOUT
+    });
+    await expect(receiver).toHaveAttribute('data-requested-contribution-id', entry.viewId, {
+        timeout: BOOT_TIMEOUT
+    });
+    // The routed host IS the active face — read back, not assumed. This is what
+    // makes the `.face-active` sweep below a measurement of the right surface.
+    await expect(receiver).toHaveClass(/face-active/, { timeout: BOOT_TIMEOUT });
+}
+
 test('32.T32.6: an empty M-family surface renders its REGISTERED empty state in the running app', async ({
     page
 }) => {
-    await page.goto('/');
-    const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
-    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+    await bootConnected(page);
 
     const { states, grammar } = await readAuthority(page);
     expect(grammar).toHaveLength(6);
     const m0 = grammar.find(entry => entry.extensionId === 'm0-anuttara');
     expect(m0).toBeTruthy();
 
-    await page.keyboard.press('Meta+.');
-    await expect(shell).toHaveAttribute('data-face', '0');
-    await dispatchIntent(page, 'm0-anuttara', 'language');
+    await ensureFace(page, '0');
+    await routeTo(page, m0!);
 
     // No coordinate is selected yet, so the M0 language reader is genuinely
     // idle — the empty state is the reader's real state, not an induced one.
     const empty = page
         .locator('.face-active [data-testid="mext-empty-state"][data-extension="m0-anuttara"]')
         .first();
-    await expect(empty).toBeVisible({ timeout: 20_000 });
+    await expect(empty).toBeVisible({ timeout: BOOT_TIMEOUT });
     await expect(empty).toHaveAttribute('data-view', 'language');
 
     // The 32.6 shape: header + summary + missing-contributors + reasons table.
@@ -146,25 +223,27 @@ test('32.T32.6: an empty M-family surface renders its REGISTERED empty state in 
     // go. The walk publishes a live node from the spawned gateway to the shared
     // coordinate store, and the S2 read that follows is real data.
     await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Walk' }).click();
-    await expect(page.getByTestId('walk-node')).toContainText('M1', { timeout: 20_000 });
-    await dispatchIntent(page, 'm0-anuttara', 'language');
+    await expect(page.getByTestId('walk-node')).toContainText('M1', { timeout: BOOT_TIMEOUT });
+    await routeTo(page, m0!);
     await expect(
         page.locator('.face-active [data-testid="mext-empty-state"][data-extension="m0-anuttara"]')
-    ).toHaveCount(0, { timeout: 20_000 });
+    ).toHaveCount(0, { timeout: BOOT_TIMEOUT });
 });
 
 test('32.T32.6: every empty state the live face renders is a registered one, in the one shape', async ({
     page
 }) => {
-    await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
-    await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
+    // Six routed dispatches, each a real face/layout transition against the
+    // shared gateway. That is legitimately more work than the 60s per-test
+    // default assumes under full-gate load; precedent m2-correspondence.spec.ts:171.
+    test.setTimeout(120_000);
+
+    await bootConnected(page);
 
     const { states, grammar } = await readAuthority(page);
     const registered = new Map(grammar.map(entry => [`${entry.extensionId} ${entry.viewId}`, entry]));
 
-    await page.keyboard.press('Meta+.');
-    await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '0');
+    await ensureFace(page, '0');
 
     /** Hold every empty state currently on the active face to the registry. */
     const sweep = async (): Promise<number> => {
@@ -198,22 +277,20 @@ test('32.T32.6: every empty state the live face renders is a registered one, in 
     // Anchor on a surface that is EMPTY for real: no coordinate is selected on
     // boot, so the M0 language reader is idle. Waiting for it makes the sweep
     // non-vacuous by construction rather than by luck.
-    await dispatchIntent(page, 'm0-anuttara', 'language');
+    const m0 = grammar.find(entry => entry.extensionId === 'm0-anuttara')!;
+    await routeTo(page, m0);
     await expect(
         page.locator('.face-active [data-testid="mext-empty-state"][data-extension="m0-anuttara"]')
-    ).toBeVisible({ timeout: 20_000 });
+    ).toBeVisible({ timeout: BOOT_TIMEOUT });
     let seen = await sweep();
     expect(seen).toBeGreaterThan(0);
 
     // Then walk the other declared M-family contributions the empty states key
     // to. A healthy carrier with live data legitimately renders none of them —
     // that is the point of an empty state — but any that DO render obey the
-    // same law.
+    // same law, on the face the ledger says owns them.
     for (const entry of grammar.filter(block => block.extensionId !== 'm0-anuttara')) {
-        await dispatchIntent(page, entry.extensionId, entry.viewId);
-        // Give the routed surface a commit; whatever is mounted at that point
-        // is what a reader arriving at the contribution would see.
-        await page.waitForTimeout(750);
+        await routeTo(page, entry);
         seen += await sweep();
     }
     expect(seen).toBeGreaterThan(0);
