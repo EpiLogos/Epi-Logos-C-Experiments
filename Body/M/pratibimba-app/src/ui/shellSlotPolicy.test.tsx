@@ -14,6 +14,7 @@ import { CoordinateBreadcrumb } from '../components/CoordinateBreadcrumb';
 import { StatusStrip } from '../components/StatusStrip';
 import { useCoordinateStore } from '../state/stores';
 import { SHELL_SLOT_POLICY, shellSlot, STATE_THREAD_COUNT } from './shellSlotPolicy';
+import { deepLayoutJson, deepPaneMounts } from './deepPaneSet';
 
 const POLICIES = ['exclusive', 'composition', 'activity-bar-switched', 'per-layout', 'discipline'];
 
@@ -26,11 +27,12 @@ describe('31.T31.7 shell slot policy — well-formed contract', () => {
         expect(new Set(ids)).toEqual(new Set(['top', 'main', 'right', 'left', 'bottom', 'status-bar']));
     });
 
-    it('every slot carries a valid policy, an owner, and a rationale', () => {
+    it('every slot carries a valid policy, an owner, a rationale, and a layout verdict', () => {
         for (const slot of SHELL_SLOT_POLICY) {
             expect(POLICIES, `slot ${slot.id}`).toContain(slot.policy);
             expect(slot.owner.length).toBeGreaterThan(0);
             expect(slot.rationale.length).toBeGreaterThan(0);
+            expect(typeof slot.layoutVaried, `slot ${slot.id} layoutVaried`).toBe('boolean');
         }
     });
 
@@ -42,6 +44,44 @@ describe('31.T31.7 shell slot policy — well-formed contract', () => {
         }
         expect(shellSlot('right').owner).toBe('omnipanel');
         expect(shellSlot('top').owner).toBe('coordinate-breadcrumb');
+    });
+});
+
+describe('52.T4 shell slot policy — the per-layout declaration matches the shell', () => {
+    it('names exactly the slots the deep pane set really varies', () => {
+        const varied = SHELL_SLOT_POLICY.filter(slot => slot.layoutVaried).map(slot => slot.id);
+        expect(varied.sort()).toEqual(['left', 'main']);
+    });
+
+    it('the `bottom` row no longer claims a per-layout composition nobody builds', () => {
+        const bottom = shellSlot('bottom');
+        // The policy (the LAW for the slot) survives; the false claim that the
+        // shell inhabits it does not. Neither deep model composes a bottom.
+        expect(bottom.layoutVaried).toBe(false);
+        for (const model of ['cosmic', 'personal'] as const) {
+            const borders = deepLayoutJson(model, { type: 'border', location: 'right', children: [] })
+                .borders as ReadonlyArray<{ location?: string }>;
+            expect(borders.some(border => border.location === 'bottom')).toBe(false);
+        }
+    });
+
+    it('the `left` slot really differs per layout — the deep rail is its own', () => {
+        // The daily face-1 rail is the lived-reading surfaces and face 0 has no
+        // left border at all; the deep rail is the IDE explorer on BOTH faces.
+        for (const model of ['cosmic', 'personal'] as const) {
+            const deepLeft = deepPaneMounts(model, 'left').map(mount => mount.surfaceId);
+            expect(deepLeft).toEqual(['fileTree', 'semanticConnections']);
+        }
+    });
+
+    it('the `main` slot stays ONE editor area per face — composition, not juxtaposition', () => {
+        expect(shellSlot('main').policy).toBe('composition');
+        for (const model of ['cosmic', 'personal'] as const) {
+            const row = deepLayoutJson(model, { type: 'border', location: 'right', children: [] }).layout;
+            expect(row.type).toBe('row');
+            expect(row.children).toHaveLength(1);
+            expect(row.children[0].type).toBe('tabset');
+        }
     });
 });
 

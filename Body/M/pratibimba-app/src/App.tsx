@@ -2,11 +2,15 @@
  * Coordinate: M' (one shell, two faces — now over a real pane system)
  * Residency: Body/M/pratibimba-app/src
  * Position (#n): active-carrier 0/1 shell composition root.
- * Actualises: the (0/1) shell as two flexlayout root layouts over one state
- *   tree, with the application foundations underneath: command registry,
- *   palette, vault panes, session binding, layout persistence, gateway
- *   liveness, and the persisted M0/M2 surface records. cmd-period IS the #
- *   inversion; the four stores are singletons so the faces cannot desynchronise.
+ * Actualises: the (0/1) shell as flexlayout root layouts over one state tree,
+ *   with the application foundations underneath: command registry, palette,
+ *   vault panes, session binding, layout persistence, gateway liveness, and the
+ *   persisted M0/M2 surface records. cmd-period IS the # inversion; the four
+ *   stores are singletons so the faces cannot desynchronise.
+ *   52.T4: FOUR models, not two — the (face × layout) cells. `personalDefault`
+ *   / `cosmicDefault` are the daily 0/1 preview; `ideDeepDefault` is the deep
+ *   4+2 pane set, per face ([[DR-DEEP-LAYOUT-1]]), declared in
+ *   `ui/deepPaneSet.ts`. Two `<Layout>` slots render the active layout's cell.
  * Public surface: <App/>.
  * Does NOT own: gateway I/O (bridge/), vault law (src-tauri/vault.rs),
  *   command semantics (owners register them).
@@ -114,6 +118,7 @@ import {
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
 import { parseLayoutId, type LayoutId } from './ui/layoutId';
+import { deepLayoutJson, deepMainTabsetId, type DeepPaneModelId } from './ui/deepPaneSet';
 import { readStoredLayout, writeStoredLayout } from './ui/layoutPreference';
 import { registerLayoutCommands } from './commands/layout';
 import { OmniPanelLayoutSwitch } from './components/OmniPanelLayoutSwitch';
@@ -284,15 +289,62 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
     };
 }
 
+/**
+ * 52.T4 — the third default model: the deep 4+2 pane set, one per face.
+ *
+ * [[M5'-SPEC]] :91 specifies `ide-deep` as "the full 4+2 surface with M0/M5 IDE
+ * chrome, six M-extensions, two integrated plugins, agentic control room".
+ * Until this tranche selecting it only WITHDREW three face-0 daily widgets, so
+ * the deep layout had no pane set of its own and 52.T3's switch had nothing to
+ * switch to.
+ *
+ * PER-FACE, per [[DR-DEEP-LAYOUT-1]] — `ideDeepDefault` takes the model id, so
+ * there are four models in play (cosmic/personal × daily/deep). Face is the `#`
+ * inversion of the user's context and layout is the `.` nesting the shell opens
+ * ([[M'-SYSTEM-SPEC]] :168); collapsing either into the other is the DCC-07
+ * error 52.T2 just repaired on the M1 surface.
+ *
+ * The composition itself is DECLARED, not written here: `ui/deepPaneSet.ts`
+ * carries what is mounted, what is deliberately withdrawn, and the reserved
+ * seams for the doc-ahead `pending` surfaces (28.5 / 28.6 / 28.13). The `/`
+ * membrane is handed in so `omniBorder` stays the one builder of the right slot.
+ */
+function ideDeepDefault(model: DeepPaneModelId, activeLayout: OmniPanelLayoutId) {
+    return deepLayoutJson(model, omniBorder(activeLayout));
+}
+
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
- *  fall back to defaults (face/session/coordinate still restore). */
-const LAYOUT_VERSION = 23;
+ *  fall back to defaults (face/session/coordinate still restore).
+ *  24: 52.T4 added the two `ide-deep` models and their persistence keys. */
+const LAYOUT_VERSION = 24;
+
+/** The four flexlayout models the shell holds: one per (layout, face) cell.
+ *  52.T4 — before this tranche there was one pair, shared by both layouts. */
+type FaceModels = { readonly cosmic: Model; readonly personal: Model };
+type ShellModels = Readonly<Record<LayoutId, FaceModels>>;
+
+/** The model for a (face, layout) cell. The two axes are orthogonal, so this
+ *  is a lookup, never a derivation (DCC-07 / [[DR-DEEP-LAYOUT-1]]). */
+function modelOf(models: ShellModels, face: Face, layout: LayoutId): Model {
+    const pair = models[layout];
+    return face === 0 ? pair.cosmic : pair.personal;
+}
+
+/** Where `vault.open` docks a new Canon Studio editor when no tabset is
+ *  active — the main tabset of the layout the user is actually in. */
+function mainTabsetIdFor(layout: LayoutId): string {
+    return layout === 'ide-deep' ? deepMainTabsetId('personal') : 'personal-main';
+}
 
 interface PersistedUiState {
     layoutVersion?: number;
     face?: Face;
     personal?: unknown;
     cosmic?: unknown;
+    /** 52.T4 — the deep models persist beside the daily ones; a layout switch
+     *  must not discard the tab the user left open in the other layout. */
+    personalDeep?: unknown;
+    cosmicDeep?: unknown;
     sessionKey?: string | null;
     coordinate?: string | null;
     m0Surface?: unknown;
@@ -613,7 +665,7 @@ export function App() {
     const activeLayoutRef = useRef<OmniPanelLayoutId>('daily-0-1');
     activeLayoutRef.current = activeLayout;
     const crossLayoutIdentityReceiptRef = useRef<CrossLayoutIdentityReceipt | null>(null);
-    const [models, setModels] = useState<{ personal: Model; cosmic: Model } | null>(null);
+    const [models, setModels] = useState<ShellModels | null>(null);
     const faceRef = useRef<Face>(1);
     faceRef.current = face;
     const modelsRef = useRef<typeof models>(null);
@@ -641,18 +693,27 @@ export function App() {
                 useOmniPanelSessionStore.getState().hydrate(state.omniPanel);
                 activeLayoutRef.current = restoredLayout;
                 setActiveLayout(restoredLayout);
-                const personalFallback = personalDefault(restoredLayout);
-                const cosmicFallback = cosmicDefault(restoredLayout);
+                // 52.T4: each layout's models are built with THEIR OWN layout
+                // id, not with whichever layout the shell restored into — the
+                // `/` membrane's per-layout tab filter belongs to the model it
+                // is part of, so a daily model can no longer be born carrying
+                // the deep layout's fold set (or the reverse).
+                const personalFallback = personalDefault('daily-0-1');
+                const cosmicFallback = cosmicDefault('daily-0-1');
+                const personalDeepFallback = ideDeepDefault('personal', 'ide-deep');
+                const cosmicDeepFallback = ideDeepDefault('cosmic', 'ide-deep');
                 const layoutsCurrent = state.layoutVersion === LAYOUT_VERSION;
+                const restore = (saved: unknown, fallback: object) =>
+                    safeModel(layoutsCurrent ? (saved ?? fallback) : fallback, fallback);
                 setModels({
-                    personal: safeModel(
-                        layoutsCurrent ? (state.personal ?? personalFallback) : personalFallback,
-                        personalFallback
-                    ),
-                    cosmic: safeModel(
-                        layoutsCurrent ? (state.cosmic ?? cosmicFallback) : cosmicFallback,
-                        cosmicFallback
-                    )
+                    'daily-0-1': {
+                        personal: restore(state.personal, personalFallback),
+                        cosmic: restore(state.cosmic, cosmicFallback)
+                    },
+                    'ide-deep': {
+                        personal: restore(state.personalDeep, personalDeepFallback),
+                        cosmic: restore(state.cosmicDeep, cosmicDeepFallback)
+                    }
                 });
                 if (state.face === 0 || state.face === 1) {
                     setFace(state.face);
@@ -696,8 +757,10 @@ export function App() {
             const state: PersistedUiState = {
                 layoutVersion: LAYOUT_VERSION,
                 face: faceRef.current,
-                personal: current.personal.toJson(),
-                cosmic: current.cosmic.toJson(),
+                personal: current['daily-0-1'].personal.toJson(),
+                cosmic: current['daily-0-1'].cosmic.toJson(),
+                personalDeep: current['ide-deep'].personal.toJson(),
+                cosmicDeep: current['ide-deep'].cosmic.toJson(),
                 sessionKey: useSessionStore.getState().sessionKey,
                 coordinate: useCoordinateStore.getState().selected,
                 m0Surface: serializeM0SurfaceState(m0SurfaceRef.current),
@@ -745,10 +808,17 @@ export function App() {
                 identityBefore,
                 readCrossLayoutIdentity()
             );
-            // FlexLayout caches factory output, so the per-layout surfaces
-            // (bimbaGraph's rendering mode, m1SurfaceDeep's mode) would keep
-            // rendering the old layout's answer. Same remount the cross-layout
-            // intent seam already uses.
+            // 52.T4 — this is the seam 52.T3 flagged for the tranche that
+            // builds models per layout. It STAYS, with a changed reason. The
+            // two `<Layout>` slots are now fed a DIFFERENT Model object per
+            // layout, so the stale-factory-output problem 52.T3 was solving is
+            // gone by construction (a different model means different TabNodes
+            // and a fresh factory call). What the remount still buys is the
+            // discard: a surface that exists in BOTH cells — `bimbaGraph`,
+            // `m1SurfaceDeep`, every omni fold — would otherwise keep the
+            // previous layout's mounted subtree alive under a swapped model
+            // prop, and answer for it. Same remount the cross-layout intent
+            // seam uses, for the same reason.
             setRoutingRevision(revision => revision + 1);
         },
         [applyLayout]
@@ -875,7 +945,7 @@ export function App() {
                     return null;
                 }
                 let path: string | null = null;
-                current.personal.visitNodes(node => {
+                modelOf(current, 1, activeLayoutRef.current).visitNodes(node => {
                     if (
                         node.getType() === 'tab' &&
                         (node as TabNode).getComponent() === 'editor' &&
@@ -918,10 +988,15 @@ export function App() {
                     const fromLayout = activeLayoutRef.current;
                     const toLayout = target.preferredLayout ?? fromLayout;
                     const identityBefore = readCrossLayoutIdentity();
-                    const model = target.face === 0 ? current.cosmic : current.personal;
+                    // 52.T4: the receiver is looked up in the model of the
+                    // layout the intent is carrying the user INTO, not the one
+                    // they are leaving — the layout is applied first so the
+                    // "component is not mounted" refusal below judges the
+                    // destination cell.
                     if (target.preferredLayout && target.preferredLayout !== activeLayoutRef.current) {
                         applyLayout(target.preferredLayout);
                     }
+                    const model = modelOf(current, target.face, toLayout);
                     if (faceRef.current !== target.face) {
                         setFace(target.face);
                     }
@@ -993,7 +1068,7 @@ export function App() {
                             if (!current) {
                                 return;
                             }
-                            const model = faceRef.current === 0 ? current.cosmic : current.personal;
+                            const model = modelOf(current, faceRef.current, activeLayoutRef.current);
                             const nodeId = tab === 'pi-chat' ? 'omni-tab' : `omni-${tab}`;
                             if (model.getNodeById(nodeId)) {
                                 model.doAction(Actions.selectTab(nodeId));
@@ -1033,8 +1108,13 @@ export function App() {
                     if (faceRef.current !== 1) {
                         setFace(1);
                     }
+                    // 52.T4: Canon Studio opens in the layout the user is in —
+                    // the daily personal model or the deep one. In `ide-deep`
+                    // this IS the "Canon Studio" half of the M0/M5 IDE chrome
+                    // ([[M5'-SPEC]] :161), docked in `personal-deep-main`.
+                    const personal = modelOf(current, 1, activeLayoutRef.current);
                     let existing: string | null = null;
-                    current.personal.visitNodes(node => {
+                    personal.visitNodes(node => {
                         if (
                             node.getType() === 'tab' &&
                             (node as TabNode).getComponent() === 'editor' &&
@@ -1044,9 +1124,9 @@ export function App() {
                         }
                     });
                     if (existing) {
-                        current.personal.doAction(Actions.selectTab(existing));
+                        personal.doAction(Actions.selectTab(existing));
                     } else {
-                        current.personal.doAction(
+                        personal.doAction(
                             Actions.addNode(
                                 {
                                     type: 'tab',
@@ -1054,7 +1134,8 @@ export function App() {
                                     component: 'editor',
                                     config: { path }
                                 },
-                                current.personal.getActiveTabset()?.getId() ?? 'personal-main',
+                                personal.getActiveTabset()?.getId()
+                                    ?? mainTabsetIdFor(activeLayoutRef.current),
                                 DockLocation.CENTER,
                                 -1,
                                 true
@@ -1125,7 +1206,7 @@ export function App() {
                     if (!current) {
                         return;
                     }
-                    const model = faceRef.current === 0 ? current.cosmic : current.personal;
+                    const model = modelOf(current, faceRef.current, activeLayoutRef.current);
                     if (model.getNodeById('omni-tab')) {
                         model.doAction(Actions.selectTab('omni-tab'));
                         persist();
@@ -1143,15 +1224,16 @@ export function App() {
                     if (faceRef.current !== 1) {
                         setFace(1);
                     }
-                    if (current.personal.getNodeById('omni-review')) {
+                    const personal = modelOf(current, 1, activeLayoutRef.current);
+                    if (personal.getNodeById('omni-review')) {
                         const requestedReviewId =
                             arg && typeof arg === 'object' && 'reviewId' in arg && typeof arg.reviewId === 'string'
                                 ? arg.reviewId
                                 : null;
-                        current.personal.doAction(
+                        personal.doAction(
                             Actions.updateNodeAttributes('omni-review', { config: { requestedReviewId } })
                         );
-                        current.personal.doAction(Actions.selectTab('omni-review'));
+                        personal.doAction(Actions.selectTab('omni-review'));
                         persist();
                     }
                 }
@@ -1167,7 +1249,7 @@ export function App() {
                     if (!current) {
                         return null;
                     }
-                    return faceRef.current === 0 ? current.cosmic : current.personal;
+                    return modelOf(current, faceRef.current, activeLayoutRef.current);
                 },
                 activeLayout: () => activeLayoutRef.current,
                 persist
@@ -1329,17 +1411,27 @@ export function App() {
         }
     };
 
-    const layoutClaims = resolveLayoutClaims(activeLayout, component => {
-        let receiverFound = false;
-        for (const model of [models.personal, models.cosmic]) {
-            model.visitNodes(node => {
-                if (node.getType() === 'tab' && (node as TabNode).getComponent() === component) {
-                    receiverFound = true;
+    // 52.T4 — what the ACTIVE layout actually mounts, read off the live models
+    // rather than restated. Two consumers: the layout-claim receiver check
+    // (which is layout-scoped by declaration, `ui/layoutClaims.ts`) and the
+    // `data-layout-pane-set` readout, which is how a running browser can assert
+    // that the deep layout really is a different pane set — and that the
+    // reserved `pending` seams (28.5 / 28.6 / 28.13) are genuinely NOT in it.
+    const activeCell = models[activeLayout];
+    const activePaneSet = new Set<string>();
+    for (const model of [activeCell.cosmic, activeCell.personal]) {
+        model.visitNodes(node => {
+            if (node.getType() === 'tab') {
+                const component = (node as TabNode).getComponent();
+                if (component) {
+                    activePaneSet.add(component);
                 }
-            });
-        }
-        return receiverFound;
-    });
+            }
+        });
+    }
+    const layoutClaims = resolveLayoutClaims(activeLayout, component =>
+        activePaneSet.has(component)
+    );
     const codePendingLayoutClaims = layoutClaims
         .filter(claim => claim.status === 'code-pending')
         .map(claim => claim.id)
@@ -1356,6 +1448,7 @@ export function App() {
             data-m0-surface-state={JSON.stringify(m0Surface)}
             data-m2-surface-state={JSON.stringify(m2Surface)}
             data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
+            data-layout-pane-set={[...activePaneSet].sort().join(' ')}
             data-omnipanel-active-tab={activeOmniTab}
             data-cross-layout-identity-receipt={
                 crossLayoutIdentityReceiptRef.current
@@ -1372,8 +1465,8 @@ export function App() {
                     data-requested-contribution-id={routedHost?.face === 0 ? routedHost.contributionId : undefined}
                 >
                     <Layout
-                        key={`cosmic-${routingRevision}`}
-                        model={models.cosmic}
+                        key={`cosmic-${activeLayout}-${routingRevision}`}
+                        model={activeCell.cosmic}
                         factory={node => factory(node, activeLayout)}
                         onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {
@@ -1389,8 +1482,8 @@ export function App() {
                     data-requested-contribution-id={routedHost?.face === 1 ? routedHost.contributionId : undefined}
                 >
                     <Layout
-                        key={`personal-${routingRevision}`}
-                        model={models.personal}
+                        key={`personal-${activeLayout}-${routingRevision}`}
+                        model={activeCell.personal}
                         factory={node => factory(node, activeLayout)}
                         onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {

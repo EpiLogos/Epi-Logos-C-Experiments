@@ -8,11 +8,17 @@
  *   retarget (no Theia ApplicationShell, no `frontend-module.ts` extensions);
  *   what survives is the CONTENT-LAW — which surface owns each slot and under
  *   what discipline — mapped onto the carrier's real regions:
- *     top → coordinate breadcrumb (31.6)   · main → the 0/1 FlexLayout faces
+ *     top → coordinate breadcrumb (31.6)   · main → the FlexLayout faces
  *     right → OmniPanel `/` membrane        · left → activity-bar mode registry
- *     bottom → per-layout composition        · status-bar → six state threads
+ *     bottom → uninhabited                  · status-bar → six state threads
  *   The sibling validator (shellSlotPolicy.test.tsx) holds the carrier shell in
  *   lockstep with this contract — an over-stacked or mis-owned slot fails it.
+ *
+ *   52.T4 added `layoutVaried` and reconciled it against the shell the deep
+ *   pane set actually builds: `left` and `main` differ between `daily-0-1` and
+ *   `ide-deep`; `bottom` — previously the ONLY slot declared per-layout — is
+ *   composed by neither layout. Per-layout-ness is a property of the slot's
+ *   CONTENT and is therefore declared beside `policy`, not inside it.
  * Public surface: ShellSlotId, SlotPolicy, ShellSlot, SHELL_SLOT_POLICY,
  *   shellSlot, STATE_THREAD_COUNT.
  * Does NOT own: the surfaces themselves (StatusStrip, CoordinateBreadcrumb,
@@ -37,6 +43,16 @@ export interface ShellSlot {
     readonly owner: string;
     /** The 15-foundation principle / surface contract behind the policy. */
     readonly rationale: string;
+    /**
+     * 52.T4 — does the slot's CONTENT actually differ between `daily-0-1` and
+     * `ide-deep` in the shell as built? Orthogonal to `policy`: a slot can be
+     * activity-bar-switched AND per-layout, and a slot whose POLICY says
+     * per-layout can still be inhabited by neither layout. Declaring this
+     * separately is what stops the two claims from being confused — which is
+     * exactly what happened before this tranche, when `bottom` was the only
+     * slot marked per-layout and was the one slot no layout composed at all.
+     */
+    readonly layoutVaried: boolean;
     /** `discipline` slots pin an exact contributor count (status-bar = six). */
     readonly exactCount?: number;
 }
@@ -49,37 +65,43 @@ export const SHELL_SLOT_POLICY: readonly ShellSlot[] = Object.freeze([
         id: 'top',
         policy: 'exclusive',
         owner: 'coordinate-breadcrumb',
-        rationale: 'CCT-11: the coordinate breadcrumb (31.6) owns the top of the editor area; nothing else stacks there.'
+        rationale: 'CCT-11: the coordinate breadcrumb (31.6) owns the top of the editor area; nothing else stacks there.',
+        layoutVaried: false
     },
     {
         id: 'main',
         policy: 'composition',
         owner: 'flexlayout-faces',
-        rationale: '15.4 composition-over-juxtaposition: the 0/1 faces compose ONE editor area, never side-by-side panes.'
+        rationale: '15.4 composition-over-juxtaposition: the 0/1 faces compose ONE editor area, never side-by-side panes. 52.T4: the editor area is still ONE tabset per face — the deep layout does NOT split it — but WHICH tabset differs per layout (`cosmic-main`/`personal-main` vs `cosmic-deep-main`/`personal-deep-main`, `ui/deepPaneSet.ts`).',
+        layoutVaried: true
     },
     {
         id: 'right',
         policy: 'exclusive',
         owner: 'omnipanel',
-        rationale: '15-foundation principle 5: the OmniPanel IS the right membrane (the `/` operator overlay).'
+        rationale: '15-foundation principle 5: the OmniPanel IS the right membrane (the `/` operator overlay). All ten folds declare `availableInLayouts` for BOTH layouts, so the membrane is layout-invariant by manifest (`panes/omni/omnipanelRuntime.ts`).',
+        layoutVaried: false
     },
     {
         id: 'left',
         policy: 'activity-bar-switched',
         owner: 'left-sidebar-modes',
-        rationale: '15-foundation principle 7: activity-bar discipline — modes switch within the slot; widgets are NOT stacked.'
+        rationale: '15-foundation principle 7: activity-bar discipline — modes switch within the slot; widgets are NOT stacked. 52.T4 made the slot per-layout for the first time: `daily-0-1` carries the face-1 lived-reading rail and gives face 0 no left border at all, while `ide-deep` carries the IDE explorer rail (Vault + Connections) on BOTH faces. The POLICY stays activity-bar-switched — 52.T6 is what makes the switching itself real, and `LEFT_SIDEBAR_MODES` already declares two `ide-deep`-only modes that this rail is the home for.',
+        layoutVaried: true
     },
     {
         id: 'bottom',
         policy: 'per-layout',
-        owner: 'daily-0-1 | ide-deep',
-        rationale: '15 Surface Contracts: bottom-area composition differs per layout.'
+        owner: 'unclaimed',
+        rationale: '15 Surface Contracts: IF a bottom area is composed it is composed per layout. 52.T4 reconciliation: NEITHER carrier layout composes one, so this row states the law for an uninhabited slot — it was the only slot flagged per-layout while being the one slot no layout inhabits, which read as a per-layout shell that did not exist. What actually varies per layout is `left` and `main`.',
+        layoutVaried: false
     },
     {
         id: 'status-bar',
         policy: 'discipline',
         owner: 'status-strip',
         rationale: '15.10 status-bar discipline: exactly six state-thread entries; navigation chips only on the right.',
+        layoutVaried: false,
         exactCount: STATE_THREAD_COUNT
     }
 ]);
