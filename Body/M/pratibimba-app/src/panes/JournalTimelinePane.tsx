@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore } from '../state/stores';
+import { privacyChrome } from '../ui/privacyChrome';
 import { VaultEntry } from './FileTreePane';
 
 const PRESENT = 'Empty/Present';
@@ -71,7 +72,11 @@ export function JournalTimelinePane() {
         return <div className="pane-message">timeline unavailable: {error}</div>;
     }
     return (
-        <div className="timeline-pane" data-testid="journal-timeline">
+        <div
+            className={`timeline-pane ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
+            data-testid="journal-timeline"
+        >
             <div className="pane-toolbar">
                 <button
                     type="button"

@@ -16,6 +16,7 @@ import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore, useTickStore } from '../state/stores';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge';
+import { privacyChrome } from '../ui/privacyChrome';
 import { NaraResonanceChip } from './M4NaraResonanceSurface';
 import { artifactResonanceIndicator } from './m4NaraResonance';
 import {
@@ -128,7 +129,11 @@ export function OraclePane() {
     };
 
     return (
-        <div className="oracle-pane" data-testid="oracle-pane">
+        <div
+            className={`oracle-pane ${privacyChrome('protected_local').className}`}
+            title={privacyChrome('protected_local').title}
+            data-testid="oracle-pane"
+        >
             <div className="pane-toolbar">
                 <select data-testid="oracle-system" value={system} onChange={evt => setSystem(evt.target.value)}>
                     <option value="rws">tarot · rws</option>

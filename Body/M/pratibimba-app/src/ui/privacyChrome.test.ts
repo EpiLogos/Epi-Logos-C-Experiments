@@ -129,11 +129,13 @@ describe('25.T25.18 — every Wave-C surface declares its tint at mount', () => 
         expect(SPEC_ASSIGNED_SURFACES.map(s => s.file).sort()).toEqual([
             'components/TimeAxisSwitcher.tsx',
             'panes/DayCalendarPane.tsx',
+            'panes/JournalTimelinePane.tsx',
             'panes/M4DialogicalArenaPane.tsx',
             'panes/M4LogosCyclePane.tsx',
             'panes/M4PsycheAnchorCoherencePane.tsx',
             'panes/M4SessionCloseCeremonyPane.tsx',
             'panes/MedicineViewPane.tsx',
+            'panes/OraclePane.tsx',
             'panes/PasuWizardPane.tsx',
             'panes/PratibimbaCoordinatePane.tsx',
             'panes/TransformContainersPane.tsx'

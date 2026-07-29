@@ -67,7 +67,12 @@ const FILES: Record<string, string> = {
     [`Empty/Present/${DAY}/${RICH}/now.md`]: NOW_RICH,
     [`Empty/Present/${DAY}/${BARE}/now.md`]: NOW_BARE,
     [`Empty/Present/${DAY}/${RICH}/journal.md`]:
-        '---\nc_4_artifact_role: journal\nt_4_kairos_context: "[[Kairos]]"\n---\n\nprotected body\n',
+        // A SENTINEL, not prose. The marker used to be the words "protected
+        // body", which the handle-only privacy gloss legitimately contains
+        // ("…never the protected body") — so the assertion below could fail on
+        // correct chrome while a real body leak of different wording passed.
+        // A marker that chrome copy can satisfy by accident is not a marker.
+        '---\nc_4_artifact_role: journal\nt_4_kairos_context: "[[Kairos]]"\n---\n\nPROTECTED-BODY-SENTINEL-8f21\n',
     [`Empty/Present/${DAY}/HANDOFF.md`]: '---\nc_4_artifact_role: handoff\n---\n'
 };
 
@@ -151,8 +156,14 @@ describe('25.T25.2 — the DayContainer detail', () => {
         const { container } = render(<DayCalendarPane />);
         fireEvent.click(await screen.findByTestId(`cal-day-${DAY}`));
         await screen.findByTestId('day-artifact-journal.md');
-        expect(container.innerHTML).not.toContain('protected body');
+        expect(container.innerHTML).not.toContain('PROTECTED-BODY-SENTINEL-8f21');
         expect(container.innerHTML).not.toContain('Body stays in the vault');
+        // The container wears its own, stricter tint (25.21): handle-only
+        // inside a protected-local pane. Pinned here so the two cannot be
+        // silently collapsed back to one class.
+        expect(screen.getByTestId('day-container').getAttribute('class')).toContain(
+            'mext-privacy-protected-local-handle-only'
+        );
         expect(screen.getByTestId('day-container').getAttribute('data-protected-bodies-rendered')).toBe(
             'false'
         );

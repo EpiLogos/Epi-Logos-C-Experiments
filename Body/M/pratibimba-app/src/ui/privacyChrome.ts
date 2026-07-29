@@ -139,6 +139,24 @@ export const SPEC_ASSIGNED_SURFACES: readonly PrivacySurface[] = Object.freeze([
         warrant: `${SPEC}:91 — "View id: \`m4.nara.pasuWizard\` (new). Privacy chrome: \`mext-privacy-protected-local\`"`
     },
     {
+        // Found by the 25.21 contribution register: the brief assigns this
+        // surface a class, the surface exists and renders a user's NOW
+        // inscriptions, and it was wearing no tint at all. An unclassified
+        // surface is not a neutral one — it tells the user nothing about what
+        // it is showing them.
+        file: 'panes/JournalTimelinePane.tsx',
+        privacyClass: 'protected_local',
+        tranche: '25.3',
+        warrant: `${SPEC}:83 — "Privacy chrome: \`mext-privacy-protected-local\`"`
+    },
+    {
+        // Same finding, same pass: the oracle cast surface was unclassified.
+        file: 'panes/OraclePane.tsx',
+        privacyClass: 'protected_local',
+        tranche: '25.8',
+        warrant: `${SPEC}:133 — "Privacy chrome: \`mext-privacy-protected-local\`"`
+    },
+    {
         file: 'panes/MedicineViewPane.tsx',
         privacyClass: 'protected_local',
         tranche: '25.10',

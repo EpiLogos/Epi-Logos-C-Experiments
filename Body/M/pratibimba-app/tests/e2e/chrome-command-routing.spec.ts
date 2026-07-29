@@ -9,6 +9,15 @@
  *   remaining 31.T31.3 chord families — cmd-shift-{0..5} Mn family-root nav
  *   (CCT-3) and the cmd-H two-stroke user-highlight prefix (CCT-5).
  * Public surface: Playwright chrome-command routing + catalog acceptance tests.
+ * BOOT BUDGET (added while closing 25.T25.21): every test here asserts the
+ *   shell is visible before it asserts anything about commands. That assertion
+ *   ran on the 10s project default while the gateway check beside it got 20s,
+ *   so under full-suite load first paint crossed it and this file reported RED
+ *   at BOOT, having tested nothing — while passing 4/4 in isolation. Same
+ *   remedy already applied at `visual-regression.spec.ts:164`. NOTE: 28 further
+ *   specs carry the identical bare `getByTestId('shell')).toBeVisible()`; that
+ *   repo-wide sweep is a gate-timing change for Track 00 to make deliberately,
+ *   not a side effect of another lane's tranche.
  * Does NOT own: command semantics, command registration, or face state.
  * Contract: [[CHROME-CONTRACT]] sections 2, 10, and 11.
  */
@@ -21,7 +30,7 @@ const CATALOG_IDS = new Set(COMMAND_CATALOG.map(command => command.id));
 test('31.T31.13: palette and shortcut execute the live face-toggle command', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     const initialFace = await shell.getAttribute('data-face');
@@ -45,7 +54,7 @@ test('31.T31.2: the live command palette lists only catalogued commands (no orph
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     await page.keyboard.press('Meta+Shift+P');
@@ -73,7 +82,7 @@ test('31.T31.3 (CCT-3): cmd-shift-{0..5} moves the observable active-coordinate 
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // keep focus off any editable so the chords route to the shell spine
@@ -97,7 +106,7 @@ test('31.T31.3 (CCT-5): cmd-H arms and the next user-side letter fires that high
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // capture the user-highlight intents the live shell dispatches

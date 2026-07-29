@@ -426,7 +426,14 @@ export function DayCalendarPane() {
                 only; no body, and per UX §6.5 no quaternion. */}
             {selectedDay ? (
                 <section
-                    className="day-container"
+                    // The container is STRICTER than the pane around it: the
+                    // calendar is protected-local (25.1, SPEC:69) but this
+                    // section carries per-artifact handles and roles, which
+                    // SPEC:75 assigns handle-only. Inheriting the pane's weaker
+                    // tint would tell the user something untrue about what is
+                    // on screen, so the section wears its own.
+                    className={`day-container ${privacyChrome('protected_local_handle_only').className}`}
+                    title={privacyChrome('protected_local_handle_only').title}
                     data-testid="day-container"
                     data-day={selectedDay}
                     data-session-count={container?.sessions.length ?? 0}
