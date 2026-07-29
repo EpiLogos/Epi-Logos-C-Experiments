@@ -20,6 +20,7 @@ use std::path::PathBuf;
 use epi_s2_graph_services::txlog_forensics::replay::{
     cypher_literal, find_mass_delete, replay_until,
 };
+use epi_s2_graph_services::txlog_forensics::value::PropertyValue;
 use epi_s2_graph_services::txlog_forensics::TxLogDecoder;
 
 fn log_path() -> PathBuf {
@@ -93,6 +94,8 @@ fn emit_missing_coordinate_nodes_and_edges() {
     let mut without_bimba: Vec<String> = Vec::new();
     let mut unlabelled: Vec<String> = Vec::new();
     let mut node_props = 0usize;
+    let mut uuid_deferred = 0usize;
+    let mut uuid_stmts: Vec<String> = Vec::new();
 
     for node in &missing {
         let Some(coord) = node.coordinate() else { continue };
@@ -123,37 +126,42 @@ fn emit_missing_coordinate_nodes_and_edges() {
             if name == "coordinate" {
                 continue;
             }
+            // The recovered `c_2_uuid` can collide with a node already live
+            // under a DIFFERENT coordinate, and a uniqueness constraint then
+            // rejects the whole MERGE — which would block creating a
+            // coordinate that genuinely is not in the graph. Identity here is
+            // the coordinate; the uuid is arbitrary and regenerable. So the
+            // recovered uuid is offered, and a fresh one is minted only if it
+            // is already taken. `randomUUID()` is Neo4j's own generator.
+            if name == "c_2_uuid" {
+                uuid_deferred += 1;
+                continue;
+            }
             if let Some(lit) = cypher_literal(value) {
                 assignments.push(format!("  `{name}`: {lit}"));
                 node_props += 1;
             }
         }
-        // MERGE on the node's OWN primary label. The L sub-lattice never
-        // carried `:Bimba` — it is `Coordinate`/`MEFLens`/`MEFSubLens` — and
-        // stamping `:Bimba` onto it would inject 43 nodes into the canonical
-        // namespace that were never in it, and that the wipe's own
-        // `MATCH (n:Bimba)` would then sweep.
-        let primary = if node.labels.iter().any(|l| l == "Bimba") {
-            "Bimba".to_string()
-        } else {
-            match labels.iter().find(|l| safe_label(l)) {
-                Some(l) => (*l).clone(),
-                None => {
-                    unlabelled.push(coord.to_string());
-                    continue;
-                }
-            }
-        };
+        if let Some((PropertyValue::Text(u), _)) = node.properties.get("c_2_uuid") {
+            uuid_stmts.push(format!(
+                "MATCH (n:Bimba {{coordinate: {}}}) WHERE n.c_2_uuid IS NULL\n                   SET n.c_2_uuid = CASE WHEN EXISTS {{ MATCH (o:Bimba {{c_2_uuid: {}}}) }}\n                     THEN toString(randomUUID()) ELSE {} END;",
+                quote(coord),
+                quote(u),
+                quote(u)
+            ));
+        }
+        // Architect ruling (2026-07-29): the S/S' and L/L' lattices are
+        // :Coordinate node types and are :Bimba — they attach to the Bimba
+        // graph. So both labels are asserted on every restored node,
+        // regardless of what the log's label field happened to carry.
         let extra: String = labels
             .iter()
-            .filter(|l| safe_label(l) && l.as_str() != primary.as_str())
+            .filter(|l| safe_label(l) && l.as_str() != "Coordinate")
             .map(|l| format!(":{l}"))
             .collect::<Vec<_>>()
             .join("");
-        writeln!(cypher, "MERGE (n:{primary} {{coordinate: {}}})", quote(coord)).unwrap();
-        if !extra.is_empty() {
-            writeln!(cypher, "  SET n{extra}").unwrap();
-        }
+        writeln!(cypher, "MERGE (n:Bimba {{coordinate: {}}})", quote(coord)).unwrap();
+        writeln!(cypher, "  SET n:Coordinate{extra}").unwrap();
         if assignments.is_empty() {
             writeln!(cypher, ";").unwrap();
         } else {
@@ -222,12 +230,28 @@ fn emit_missing_coordinate_nodes_and_edges() {
         std::env::temp_dir().join("epi-recovery").to_string_lossy().into_owned()
     }));
     std::fs::create_dir_all(&out_dir).expect("mkdir");
+    let mut cypher_uuid = String::from("// c_2_uuid assignment, run AFTER the node MERGE file.\n// Keeps the recovered uuid when free; mints a fresh one when taken.\n\n");
     let node_path = out_dir.join("recovered-missing-coordinate-nodes.cypher");
     let edge_path = out_dir.join("recovered-missing-coordinate-edges.cypher");
     std::fs::write(&node_path, cypher).expect("write nodes");
     std::fs::write(&edge_path, edge_cypher).expect("write edges");
 
+    // uuid assignment runs AFTER the nodes exist.
+    for stmt in &uuid_stmts {
+        cypher_uuid.push_str(stmt);
+        cypher_uuid.push('\n');
+    }
+    // Nodes the log carried no uuid for still get one. Identity is the
+    // coordinate; leaving them without a uuid is just a different incomplete.
+    // Scoped to NULL so it can never touch a node that already has one.
+    cypher_uuid.push_str(
+        "\n// Any restored node the log carried no uuid for.\n\
+         MATCH (n:Bimba) WHERE n.c_2_uuid IS NULL SET n.c_2_uuid = toString(randomUUID());\n",
+    );
+    std::fs::write(out_dir.join("recovered-missing-coordinate-uuids.cypher"), &cypher_uuid)
+        .expect("write uuids");
     println!("wrote {} ({} nodes, {node_props} properties)", node_path.display(), missing_coords.len());
+    println!("uuid statements deferred to a second pass: {uuid_deferred} (collisions get a fresh randomUUID)");
     println!("wrote {} ({edges_emitted} edges)", edge_path.display());
     println!("edges with an unresolvable endpoint or unsafe type (reported, not invented): {edges_unresolvable}");
     println!("labels on restored nodes: {label_counts:?}");

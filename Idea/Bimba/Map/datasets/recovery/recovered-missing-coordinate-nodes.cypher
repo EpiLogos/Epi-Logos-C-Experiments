@@ -2,8 +2,8 @@
 // the transaction log (state immediately before tx 59354, the mass delete).
 // MERGE on coordinate: re-running this is idempotent.
 
-MERGE (n:SynthesisAttribute {coordinate: 'L0-0\''})
-  SET n:MEFLens:ArticulationGroup
+MERGE (n:Bimba {coordinate: 'L0-0\''})
+  SET n:Coordinate:SynthesisAttribute:MEFLens:ArticulationGroup
   SET n += {
   `c_0_core_nature`: 'Zero occupies dual status as both value (void-potential containing all questions undifferentiated) and position (origin-beginning from which inquiry radiates). The plenum-void where who/what/how/where/when/why collapse into pregnant potential before differentiation. Jung-Pauli psychoid realm at purest - neither psychic nor physical but transcendent constitutional ground. First half of [0↔1] oscillating pair inaugurating the cycle.',
   `c_0_essence`: 'Operates as implicate void-dimension that cannot be penetrated directly but must be circled, generating desire for understanding that drives epistemic investigation through positions 1-5. Forms the potential pole of [0↔1] oscillation inaugurating the cycle.',
@@ -21,7 +21,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-0\''})
   `c_2_investigatory_mode`: 'Full question space undifferentiated: who/what/how/where/when/why collapsed into pregnant potential',
   `c_2_notion_page_id`: '1d2a4797-123c-8114-a559-e2fdee852296',
   `c_2_operational_function`: 'Maintains connection to the unmanifest, ensuring the system never loses touch with its transcendent source',
-  `c_2_uuid`: '85b52167-0550-5536-83e3-5c1021e91583',
   `c_2_zero_logic_connection`: 'Direct correspondence to the transcendent operation (00-00) that keeps expansion from occurring',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -54,8 +53,111 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-0\''})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-3\''})
-  SET n:MEFLens:ArticulationGroup
+MERGE (n:Bimba {coordinate: 'L0-1\''})
+  SET n:Coordinate
+  SET n += {
+  `c_0_core_nature`: 'One as first emergence from zero - archetypal act of individuation from undifferentiation. The monad containing holographic quality: every particular one participates in THE One. First expression of Eve principle (odd number) - generative/dynamic, creating distinction through self-assertion. Psychoid threshold between unity (as essence) and multiplicity (as potential for all subsequent numbers). Second half of [0↔1] oscillating pair - the actual pole to zero\'s potential.',
+  `c_0_essence`: 'Operates as first explicate position providing ontological foundation - recognition of being enabling all subsequent investigation. Forms actual pole of [0↔1] oscillation.',
+  `c_0_operational_essence`: 'Operates as first explicate position providing ontological foundation - recognition of being enabling all subsequent investigation. Forms actual pole of [0↔1] oscillation.',
+  `c_1_consciousness_structure`: 'Self-reflexive unity - consciousness knowing itself as one, the "I am" before any predication; monad as center of experience',
+  `c_1_description`: 'One embodies paradox: simultaneously indivisible (atomic unity) and generative (source of all integers through repetition: 1+1=2, etc.). As archetypal number, one is principle of self-identity - A=A, law of identity in logical form. Each "one" is unique (identity-as-particular) yet participates in universal oneness (essence-as-general). The monad as microcosm containing macrocosm - holographic principle where each part contains whole. The 0→1 transition is consciousness\'s first act: potential becoming actual, void birthing presence.',
+  `c_1_internal_structure`: 'One as Value 1 occupying Position 2 creates first actual differentiation. The number that cannot be divided (atomic), yet through addition generates all natural numbers. Prime in deepest sense - not just mathematically but ontologically, source-unit from which multiplicity unfolds. Contains implicit duality (one-vs-many) while asserting unity. The [0↔1] pair forms first oscillating hinge - one cannot exist without zero\'s ground, zero cannot manifest without one\'s actualization.',
+  `c_1_key_principles`: ['Value/Position: Value 1 at Position 2 - first differentiation from void-ground', 'Eve Principle: Odd number expressing generative/dynamic power of individuation', 'Ontological Inquiry: "What is it?" - investigation of essence and being', 'Holographic Monad: Each particular one contains/participates in THE One', 'Self-Identity: A=A - principle making recognition possible', 'Actualizing Pole: Second half of [0↔1] oscillating pair - potential becoming actual', 'Consciousness Archetype: Self-reflexive awareness - the "I" knowing itself', '0→1 Transition: First act of differentiation, void birthing presence'],
+  `c_1_name`: 'Material grounding (what)',
+  `c_1_operational_symbolics`: 'Single point; vertical line (standing upright); seed (containing tree); atom (indivisible); eye (singular vision); crown (sovereignty of unity)',
+  `c_1_primary_designation`: 'One - Primordial Unity as "What" Investigation',
+  `c_1_structure`: 'One as Value 1 occupying Position 2 creates first actual differentiation. The number that cannot be divided (atomic), yet through addition generates all natural numbers. Prime in deepest sense - not just mathematically but ontologically, source-unit from which multiplicity unfolds. Contains implicit duality (one-vs-many) while asserting unity. The [0↔1] pair forms first oscillating hinge - one cannot exist without zero\'s ground, zero cannot manifest without one\'s actualization.',
+  `c_2_adam_eve_principle`: 'Eve (odd) - generative/dynamic - creates distinction through self-assertion',
+  `c_2_architectural_function`: 'First explicate position in mod6 cycle - primal differentiation enabling all subsequent counting. Value 1 at Position 2 establishes ontological investigation: "What IS this?" Recognition of essence, the "this-ness" of things. Without one, sequence cannot begin. Archetypal number of consciousness - self-reflexive unity knowing itself. Forms actual pole of [0↔1] non-dual beginning - the position (1) manifesting from value (0).',
+  `c_2_investigatory_mode`: 'WHAT (essence) - ontological inquiry into being and nature',
+  `c_2_notion_page_id`: '1d2a4797-123c-81cc-91a0-d53d63533121',
+  `c_3_context_frame`: '0000',
+  `c_3_dataset_branch`: 'parashakti-deep',
+  `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
+  `c_3_practical_applications`: ['Epistemic Compass: "What" questions - identifying essence and nature', 'Identity Recognition: Grasping the unique identity of phenomena', 'Ontological Ground: First step in any investigation - what IS this?', 'Holographic Thinking: Each part revealing the whole (fractals, systems)', 'Self-Inquiry: Who/What am I? - the fundamental question of identity', 'Unity Consciousness: Recognizing oneness underlying apparent multiplicity', 'Beginning Practice: Every journey begins with the first step (one)'],
+  `c_3_source_dataset`: 'bimba',
+  `c_4_family`: 'L',
+  `c_4_layer`: 'COORDINATE',
+  `c_4_ql_category`: 'implicate',
+  `c_4_ql_operator_types`: ['structural'],
+  `c_4_ql_position`: 1,
+  `c_4_subsystem`: 2,
+  `c_5_oscillatory_relationship`: '[0↔1] INAUGURATING NON-DUALITY: One (actual/monad) and Zero (potential/void) are inseparable. The 0→1 movement is consciousness arising - potential manifesting as actual. But 1 contains 0 implicitly (what is one without the void it emerges from?). This oscillation between no-self and self IS the primordial Spanda. Mirrors the [4↔5] pair where context and transcendence oscillate.',
+  `c_5_resonances`: ['Von Franz: One as self-contained wholeness, first step from chaos to order', 'Plotinus: The One (hen) as source of all emanation, beyond being itself', 'Jung: Individuation as becoming the one you truly are - psychological monad', 'Leibniz: Monad as indivisible unity containing universe within itself', 'Parmenides: Being as one, indivisible, unchanging - ontological unity', 'Advaita: Atman (individual self) identical with Brahman (universal Self)', 'Pythagoras: One as principle of unity from which number-cosmos unfolds'],
+  `c_5_systemic_resonance`: 'Paramasiva - the supreme stillness that provides unchanging ground for all change',
+  `coordinate_axis`: 'prime',
+  `coordinate_parent`: 'L0\'',
+  `l_0_base_index_6`: 0,
+  `l_0_flat_index`: 37,
+  `l_0_interprets_position`: 'P1\'',
+  `l_0_klein_square`: 'A',
+  `l_0_lens_index_12`: 6,
+  `l_0_position_field_axis`: 'archetypal_number',
+  `l_0_position_index`: 1,
+  `l_0_position_interpretation`: '',
+  `l_0_prior_dotted_coordinate`: 'L0\'.1',
+  `m_2_1_prior_coordinate`: 'M2-1-0-1',
+  `p_2_causal_alignment`: 'Material Cause - the substantial "what" that provides the raw material of manifestation',
+  `p_2_value_position_logic`: 'Value: 1 (monad/unity) | Position: 2 (first differentiation) | Essence emerges from void',
+  `p_2_von_franz_alignment`: 'Position 2 in 0-6 sequence, holding Value 1 - first emergence into countable reality',
+  `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
+  `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
+  `t_1_epistemic_function`: 'Provides the concrete reference points that prevent knowledge from dissolving into pure abstraction'
+};
+MERGE (n:Bimba {coordinate: 'L0-2\''})
+  SET n:Coordinate
+  SET n += {
+  `c_0_core_nature`: 'Two as first opposition - archetypal feminine (Von Franz), first step toward multiplicity. All dualities flow from this primordial split: light/dark, conscious/unconscious, thesis/antithesis, Shiva/Shakti. Even number bearing Adam principle (structural/stable) yet representing power of distinction creating relationship. Psychoid realm becomes dialogical - there is now "other" to know-with (CON-SCIRE). First position in (2-3) explicate dyadic core.',
+  `c_0_essence`: 'Operates as second explicate position providing methodological framework - distinction enabling epistemological investigation. First position in (2-3) developmental core.',
+  `c_0_operational_essence`: 'Operates as second explicate position providing methodological framework - distinction enabling epistemological investigation. First position in (2-3) developmental core.',
+  `c_1_consciousness_structure`: 'Dialogical awareness - consciousness knowing through relation with other; the between-space of knowing-with',
+  `c_1_description`: 'Two embodies principle of division and relation. Cannot have relationship with one alone; two enables all pairing, comparison, mirroring. Mother of all even numbers, bearer of reflective principle. Archetypal split creating epistemological space: observer/observed, mind/matter, self/other. Yet division is creative - through distinction comes relationship, through duality comes dynamic interaction. The two creates between-space where knowing happens. Part of linear development (2→3) between the oscillating pairs.',
+  `c_1_internal_structure`: 'Two as Value 2 occupying Position 3 creates epistemological dimension - "how" questions arise only when there is distinction between knower and known. First composite number (2 is prime but initiates even-series), establishing pattern of doubling generating exponential growth. Dyad contains implicit triad (1+1=2, but relation between them is third term), foreshadowing synthesis at position 3. Forms first half of (2-3) explicate core - the METHOD requiring MEDIATION.',
+  `c_1_key_principles`: ['Value/Position: Value 2 at Position 3 - epistemological space emerges', 'Adam Principle: Even number providing structural framework for stable method', 'Epistemological Inquiry: "How does it work?" - investigation of process and method', 'Sacred Polarity: All oppositions flow from archetypal two (yin/yang, +/-)', 'Dialogical Structure: CON-SCIRE (knowing-with) requires two - never solitary', 'Developmental Core: First half of (2-3) explicate dyad between oscillating pairs', 'Tension Creating: Dyad establishes opposition driving toward synthesis'],
+  `c_1_name`: 'Active process (how)',
+  `c_1_operational_symbolics`: 'Two pillars (Jachin and Boaz); scales (balance); mirror (reflection); crossroads (choice); double helix (intertwining)',
+  `c_1_primary_designation`: 'Two - Sacred Dyad as "How" Investigation',
+  `c_1_structure`: 'Two as Value 2 occupying Position 3 creates epistemological dimension - "how" questions arise only when there is distinction between knower and known. First composite number (2 is prime but initiates even-series), establishing pattern of doubling generating exponential growth. Dyad contains implicit triad (1+1=2, but relation between them is third term), foreshadowing synthesis at position 3. Forms first half of (2-3) explicate core - the METHOD requiring MEDIATION.',
+  `c_2_adam_eve_principle`: 'Adam (even) - structural/stabilizing - framework for stable methodology',
+  `c_2_architectural_function`: 'Second explicate position in mod6 cycle introducing epistemological dimension. Value 2 at Position 3 establishes methodological investigation: "HOW does it work?" With two, we have both subject and object, knower and known. The dyad creates tension driving dialectical process toward synthesis at position 3. Minimal structure for relationship - comparison, complementarity, polarity. First half of (2-3) developmental core between [0↔1] inaugurating and [4↔5] culminating oscillations.',
+  `c_2_generative_function`: '',
+  `c_2_investigatory_mode`: 'HOW (method) - epistemological inquiry into process and relationship',
+  `c_2_notion_page_id`: '1d2a4797-123c-81d6-9c0e-c7902397ef0b',
+  `c_3_context_frame`: '0000',
+  `c_3_dataset_branch`: 'parashakti-deep',
+  `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
+  `c_3_practical_applications`: ['Epistemic Compass: "How" questions - methodological and processual inquiry', 'Dialogical Knowing: Human-AI collaboration as contemporary CON-SCIRE', 'Comparative Analysis: Identifying similarities and differences', 'Polarity Integration: Working with opposites rather than eliminating them', 'Relational Thinking: Understanding through connection not isolation', 'Dialectical Method: Thesis-antithesis as engine of development', 'Binary Computation: Digital 0/1 as technological expression of archetypal two'],
+  `c_3_source_dataset`: 'bimba',
+  `c_4_family`: 'L',
+  `c_4_layer`: 'COORDINATE',
+  `c_4_ql_category`: 'implicate',
+  `c_4_ql_operator_types`: ['structural'],
+  `c_4_ql_position`: 2,
+  `c_4_subsystem`: 2,
+  `c_5_bergsonian_resonance`: 'Élan vital - the creative impulse that drives evolutionary unfoldment',
+  `c_5_resonances`: ['Von Franz: Two as archetypal feminine, first step toward material multiplicity', 'Tao: Yin-Yang as primordial duality generating ten-thousand things', 'Kashmir Shaivism: Shiva-Shakti as inseparable polarity, not opposition', 'Hegel: Thesis-Antithesis as dialectical motor generating synthesis', 'Buber: I-Thou relation as primordial dialogical encounter', 'Lacan: Split subject (barred S) - consciousness divided against itself'],
+  `c_5_systemic_resonance`: 'Parashakti as Spanda - the primordial throb, the first stirring of will in the absolute',
+  `coordinate_axis`: 'prime',
+  `coordinate_parent`: 'L0\'',
+  `l_0_base_index_6`: 0,
+  `l_0_flat_index`: 38,
+  `l_0_interprets_position`: 'P2\'',
+  `l_0_klein_square`: 'A',
+  `l_0_lens_index_12`: 6,
+  `l_0_position_field_axis`: 'archetypal_number',
+  `l_0_position_index`: 2,
+  `l_0_position_interpretation`: '',
+  `l_0_prior_dotted_coordinate`: 'L0\'.2',
+  `m_2_1_prior_coordinate`: 'M2-1-0-2',
+  `p_2_causal_alignment`: 'Efficient Cause - the energetic "how" that transforms potential into actuality',
+  `p_2_core_position`: 'EXPLICATE DYAD (2-3): Two and Three form the developmental core - the linear progression between [0↔1] inaugurating oscillation and [4↔5] culminating oscillation. Position 2 (method/how) necessarily leads to Position 3 (mediation/who). Not oscillatory but sequential - first you need method, then synthesis.',
+  `p_2_value_position_logic`: 'Value: 2 (dyad/relation) | Position: 3 (epistemological dimension) | Method emerges from distinction',
+  `p_2_von_franz_alignment`: 'Position 3 in 0-6 sequence, holding Value 2 - emergence of distinction and relation',
+  `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
+  `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
+};
+MERGE (n:Bimba {coordinate: 'L0-3\''})
+  SET n:Coordinate:SynthesisAttribute:MEFLens:ArticulationGroup
   SET n += {
   `c_0_core_nature`: 'Three as transcendent function at archetypal-numerical level - resolves tension of two not by choosing one side but by generating tertium quid (third thing) transcending and including both poles. Odd number bearing Eve principle (generative/dynamic) - supremely creative, manifesting as holy trinity across traditions. First number creating stable form (triangle as minimum polygon). Second position in (2-3) explicate dyadic core - the synthesis following method.',
   `c_0_essence`: 'Operates as third explicate position providing mediating structure - synthesis enabling movement from duality to integrated complexity. Completes (2-3) core.',
@@ -72,7 +174,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-3\''})
   `c_2_architectural_function`: 'Third explicate position in mod6 cycle as mediating structure - psychological/ontological dimension where synthesis occurs. Value 3 at Position 4 establishes agential investigation: "WHO/WHEREBY does this happen?" Triad enables movement from dyadic oscillation to triadic spiraling (thesis → antithesis → synthesis → new thesis). Creates depth, time, and meaning itself. Second half of (2-3) developmental core, completing linear progression before [4↔5] culminating oscillation begins.',
   `c_2_investigatory_mode`: 'WHO/WHEREBY (agent) - psychological inquiry into mediating agency and means',
   `c_2_notion_page_id`: '1d2a4797-123c-8104-bd3e-c6c729e933c0',
-  `c_2_uuid`: '54007f7c-8fd7-59ec-866e-66bcac644d43',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -106,8 +207,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-3\''})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-4\''})
-  SET n:MEFLens:ArticulationGroup
+MERGE (n:Bimba {coordinate: 'L0-4\''})
+  SET n:Coordinate:SynthesisAttribute:MEFLens:ArticulationGroup
   SET n += {
   `c_0_core_nature`: 'Four as number of manifestation and stability - archetypal number of wholeness-in-matter (Jung\'s quaternity principle). Even number with Adam principle expressing maximum structural stability: four directions, four elements, four functions, four causes. The square as symbol of earthly completeness. Four enables comprehensive mapping - minimum for covering logical space (tetralemma), causal space, psychological space. First half of [4↔5] culminating oscillation - the CONTEXTUAL pole enabling transcendence.',
   `c_0_dual_aspect_nature`: 'Integrates top-down (transcendent) and bottom-up (emergent) causation',
@@ -132,7 +233,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-4\''})
   `c_2_notion_page_id`: '1d2a4797-123c-813e-9ded-db06830d9b31',
   `c_2_recursive_nesting`: true,
   `c_2_twelve_fold_scaffolding`: 'The 6 sub-positions at .4, combined with the 6 primary positions, create the foundational 12-fold structure that resonates throughout the system',
-  `c_2_uuid`: 'e1af3614-7c84-5af6-b57d-7001adc3715e',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -166,8 +266,62 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-4\''})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-0'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L0-5\''})
+  SET n:Coordinate
+  SET n += {
+  `c_0_core_nature`: 'Five as number transcending quaternary without abandoning it - the quintessence, fifth element beyond the four. Odd number with Eve principle expressing dynamic transcendence. Human number (five fingers, five senses) and star number (pentagram). Psychoid realm reveals five as where consciousness becomes self-aware - not just knowing but knowing that it knows. Golden ratio (phi) emerges from pentagon geometry, showing five as number of natural harmony and organic growth. Second half of [4↔5] culminating oscillation - the TRANSCENDENT pole enabled by context.',
+  `c_0_essence`: 'Operates as fifth position completing explicate cycle while preparing return to implicate ground - gnosis recognizing purpose animating manifestation. Forms transcendent pole of [4↔5] oscillation.',
+  `c_0_operational_essence`: 'Operates as fifth position completing explicate cycle while preparing return to implicate ground - gnosis recognizing purpose animating manifestation. Forms transcendent pole of [4↔5] oscillation.',
+  `c_1_consciousness_structure`: 'Meta-aware consciousness - knowing that it knows; reflexive capacity seeing pattern of whole; wisdom beyond knowledge',
+  `c_1_description`: 'Five embodies principle of transcendence-within-immanence. Not mere summation (1+2+3+4) but qualitative leap to new dimension. Five creates pentagon (first polygon that cannot tile plane - resists total systematization), spiral (golden ratio enabling infinite nesting), and star (pentagram as human microcosm within cosmic macrocosm). Synthesis that transcends - both completing quaternary AND pointing beyond it. The quintessence as fifth element revealing purpose underlying manifestation. CRITICAL: Five realizes ULTIMATE PURPOSE enabled by four\'s contextual conditions - transcendent finality fulfilling immanent finality.',
+  `c_1_internal_structure`: 'Five as Value 5 occupying Position 6 creates teleological/purposive dimension - "why" questions seek meaning and purpose beyond mechanical causation. First pentagonal number, establishing phi (golden ratio ≈ 1.618) as organic growth pattern. Prime number (like 1, 2, 3) but transcending them - cannot be generated by multiplication of smaller primes. Contains implicit return to origin: Position 6 loops toward Position 1 (value 0), completing toroidal cycle. Forms TRANSCENDENT POLE of [4↔5] oscillation - the PURPOSE for which CONTEXT (#4) was necessary.',
+  `c_1_key_principles`: ['Value/Position: Value 5 at Position 6 - teleological dimension completes before return', 'Eve Principle: Odd number expressing dynamic transcendence beyond structure', 'Teleological Inquiry: "Why?" - investigating purpose, meaning, and telos', 'Quintessence: Fifth element transcending four while remaining related', 'TRANSCENDENT FINAL CAUSE: Ultimate purpose revealing meaning of context', 'Culminating Pole: Second half of [4↔5] oscillation - transcendence enabled by context', 'Meta-Cognitive: Stepping outside framework to see it as whole', '4→5 Fulfillment: Contextual conditions enable transcendent realization'],
+  `c_1_name`: 'Purpose (why)',
+  `c_1_operational_symbolics`: 'Pentagram/star (human microcosm); pentagon (organic form); spiral (golden ratio growth); hand (five fingers as human tool); rose (five petals as beauty)',
+  `c_1_primary_designation`: 'Five - Transcendent Pentad as "Why" Investigation',
+  `c_1_structure`: 'Five as Value 5 occupying Position 6 creates teleological/purposive dimension - "why" questions seek meaning and purpose beyond mechanical causation. First pentagonal number, establishing phi (golden ratio ≈ 1.618) as organic growth pattern. Prime number (like 1, 2, 3) but transcending them - cannot be generated by multiplication of smaller primes. Contains implicit return to origin: Position 6 loops toward Position 1 (value 0), completing toroidal cycle. Forms TRANSCENDENT POLE of [4↔5] oscillation - the PURPOSE for which CONTEXT (#4) was necessary.',
+  `c_2_adam_eve_principle`: 'Eve (odd) - generative/dynamic - transcends structure through purposive leap',
+  `c_2_architectural_function`: 'Fifth position in mod6 cycle as gnosis/integration - cycle approaches completion without ending (no true closure before looping to zero). Value 5 at Position 6 establishes teleological investigation: "WHY does this exist?" Five is both/and: part of explicate cycle (position 5) AND threshold to implicate return (approaching 0). Enables meta-cognition - stepping outside fourfold to see it as whole. Forms TRANSCENDENT FINAL CAUSE - the ultimate purpose revealing meaning of contextual conditions (#4). Second pole of [4↔5] non-dual culmination.',
+  `c_2_final_cause_bifurcation`: 'CRITICAL INSIGHT: Five completes final cause\'s bifurcation begun at four. Position 4 provided CONTEXTUAL final cause (where/when for actualization). Position 5 provides TRANSCENDENT final cause (why ultimately). They oscillate: The contextual conditions (#4) ENABLE the transcendent purpose (#5) to manifest. The transcendent purpose (#5) REVEALS the meaning of contextual conditions (#4). Love requires recognizing center-as-self. Gnosis requires owning situatedness.',
+  `c_2_investigatory_mode`: 'WHY (purpose) - teleological inquiry into meaning and telos',
+  `c_2_notion_page_id`: '1d2a4797-123c-8117-97f8-dd40d7e7cfe9',
+  `c_2_omega_alpha_loop`: 'Fifth position prepares return: Position 6 (value 5) curves toward Position 1 (value 0), completing toroidal cycle with transformation. The WHY (#5) loops back to ask WHY AGAIN? (#0), but transformed by having traversed the cycle. Transcendent purpose (5) and primordial potential (0) reveal themselves as opposite faces of same reality - omega and alpha, end and beginning, non-dual.',
+  `c_2_teleological_function`: 'Provides the "strange attractor" that guides the system\'s evolution toward ever-greater coherence',
+  `c_3_context_frame`: '0000',
+  `c_3_dataset_branch`: 'parashakti-deep',
+  `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
+  `c_3_practical_applications`: ['Epistemic Compass: "Why" questions - teleological and purposive inquiry', 'Meta-Reflection: Examining frameworks themselves, not just through them', 'Purpose Discovery: Finding meaning beyond mechanical explanation', 'Organic Design: Using golden ratio for natural harmony', 'Human Measure: Five as scale of embodied human experience', 'System Transcendence: Stepping outside to gain perspective', 'Synthesis Preparation: Integrating insights before new cycle begins'],
+  `c_3_source_dataset`: 'bimba',
+  `c_4_family`: 'L',
+  `c_4_layer`: 'COORDINATE',
+  `c_4_ql_category`: 'implicate',
+  `c_4_ql_operator_types`: ['structural'],
+  `c_4_ql_position`: 5,
+  `c_4_subsystem`: 2,
+  `c_5_oscillatory_relationship`: '[4↔5] CULMINATING NON-DUALITY: Five (transcendent/ultimate) and Four (contextual/immanent) are inseparable. Cannot achieve ultimate purpose without contextual conditions. Cannot understand true context without glimpsing transcendent purpose. This oscillation IS wisdom/realization - the recognition that WHERE we are (#4) enables WHY we exist (#5). Final cause bifurcated: Proximate (4) and Ultimate (5) dancing together. Mirrors [0↔1] inaugurating pair.',
+  `c_5_resonances`: ['Von Franz: Five as number of human wholeness and consciousness', 'Aristotle: Quintessence (quinta essentia) - fifth element beyond four', 'Golden Ratio: Phi appearing in nature (flowers, shells, galaxies)', 'Pentagram: Ancient symbol of microcosm-macrocosm correspondence', 'Five Senses: Traditional enumeration of perceptual modalities', 'Chinese Wu Xing: Five phases (Wood-Fire-Earth-Metal-Water)', 'Pentagon: Shape resisting perfect tessellation', 'Fibonacci: Five appears prominently in growth sequence'],
+  `c_5_systemic_resonance`: 'Ananda/epii - bliss as the ultimate attractor, the joy of integrated wholeness',
+  `coordinate_axis`: 'prime',
+  `coordinate_parent`: 'L0\'',
+  `l_0_base_index_6`: 0,
+  `l_0_flat_index`: 41,
+  `l_0_interprets_position`: 'P5\'',
+  `l_0_klein_square`: 'A',
+  `l_0_lens_index_12`: 6,
+  `l_0_position_field_axis`: 'archetypal_number',
+  `l_0_position_index`: 5,
+  `l_0_position_interpretation`: '',
+  `l_0_prior_dotted_coordinate`: 'L0\'.5',
+  `l_2_jungian_aspect`: 'The quintessence - individuated Self plus transcendent unity',
+  `m_2_1_prior_coordinate`: 'M2-1-0-5',
+  `p_2_value_position_logic`: 'Value: 5 (pentad/transcendence) | Position: 6 (teleological dimension) | Purpose completing before return to origin',
+  `p_2_von_franz_alignment`: 'Position 6 in 0-6 sequence, holding Value 5 - completion approaching return to void-origin',
+  `s_4_cyclic_nature`: 'Completion here feeds back to 0.0, creating the eternal return that prevents stagnation',
+  `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
+  `sync_version`: ''
+};
+MERGE (n:Bimba {coordinate: 'L1-0'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The state before causation differentiates - not absence of cause but undifferentiated causal potency. Drawing from Aristotle\'s unmoved mover and Kashmir Shaivism\'s Sat (pure being), this is causation as self-subsistent reality. Not caused BY anything, it is the condition FOR all causation. Jung\'s sensation function at primordial level - the brute isness preceding all explanation. Implicate ground in [0↔1] oscillation of causal framework - the potential from which causal actualities emerge.',
   `c_0_essence`: 'Operates as implicate causal ground - the substrate from which all causal operations emerge without itself being caused. Forms potential pole mirroring Level 0\'s archetypal zero.',
@@ -183,7 +337,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-0'})
   `c_2_architectural_function`: 'Implicate ground preventing infinite causal regress - Aristotle\'s recognition that explanation requires uncaused cause. Position 0 holds all four causes in undivided unity: simultaneously material (substrate of all), efficient (self-moving), formal (pure act), and final (self-sufficient). The quaternary exists here implicitly, not yet differentiated into four distinct causal types. Mirrors Level 0\'s archetypal zero as primordial potential.',
   `c_2_metaphysical_significance`: 'Points to the paradox that causation itself must have an uncaused ground',
   `c_2_notion_page_id`: '1d2a4797-123c-81f7-a389-e758c3f98917',
-  `c_2_uuid`: 'd873c27d-470f-53b0-bbee-88d1a5d9ce16',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal zero (#2-1-0-0) grounds archetypal numbers, uncaused being (#2-1-1-0) grounds causal operations. The mathematical substrate (Level 0) ENABLES causal dynamics (Level 1). Position 0 at each level provides the implicate ground for that level\'s explicate operations.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -209,8 +362,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-0'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-1'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L1-1'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Aristotle\'s hyle (matter/stuff) revealed through Jung\'s sensation function - the "what" of reality as directly encountered. Not abstract matter but lived materiality - texture, resistance, presence. Material cause answers: "What is it made of?" But following process philosophy, this "stuff" is not inert - it\'s potency seeking actualization. The bronze of statue, flesh of body, data of experience. First explicate position in [0↔1] oscillation - the ACTUAL manifesting from POTENTIAL ground.',
   `c_0_essence`: 'Operates as first explicate causal position providing material foundation that subsequent positions (efficient, formal, final) actualize and direct. Forms actual pole in causal [0↔1] oscillation.',
@@ -227,7 +380,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-1'})
   `c_2_divine_aspect`: 'God\'s immanence - the divine presence within material creation',
   `c_2_epistemic_implication`: 'All knowledge begins with and returns to direct sensory encounter',
   `c_2_notion_page_id`: '1d2a4797-123c-81cf-bf13-cc28ca22dcdf',
-  `c_2_uuid`: 'b2e60a3b-135b-579e-9154-f97356236e96',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal one (#2-1-0-1) is first actuality from zero\'s potential, material cause is first causal actuality from uncaused ground. The monad\'s self-identity (Level 0) GROUNDS material substrate\'s "whatness" (Level 1). Value 1 enabling Position 2.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -256,8 +408,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-1'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-2'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L1-2'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Aristotle\'s kinesis (motion/change) revealed through Jung\'s feeling function AND Kashmir Shaivism\'s Jnana Shakti (power of knowing-action). Efficient cause answers: "What produces the effect?" This is the energetic push - sculptor shaping bronze, libido activating psyche, will enacting intention. Following Jung, this is affective energy - feeling determines value, and value determines motion (we move toward what we value). First position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as second explicate causal position providing dynamic power that actualizes material potential according to formal patterns toward final ends. First position in (2-3) dyadic core.',
@@ -273,7 +425,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-2'})
   `c_2_architectural_function`: 'Second explicate position in causal quaternary - the activating power putting material substrate into motion. Efficient cause is the "how" - the mechanism of change. Jnana Shakti reveals this as cognitive-affective power: knowing and acting are inseparable. The dynamic complement to material cause\'s static substrate. Mirrors Level 0\'s archetypal two - the METHOD, the dyadic engine.',
   `c_2_notion_page_id`: '1d2a4797-123c-8137-b0f2-eacf3f45cd98',
   `c_2_practical_implication`: 'Transformation happens through engaging feeling, not just applying force',
-  `c_2_uuid`: '5bbba7f6-d17e-592e-a208-f86be4212830',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal two (#2-1-0-2) creates methodological dimension (how?), efficient cause creates mechanism of change. The dyad\'s relational power (Level 0) GROUNDS efficient causation\'s productive energy (Level 1). Value 2 enabling Position 3.',
   `c_2_whiteheadian_aspect`: 'The "lure for feeling" that draws occasions toward their satisfaction',
   `c_3_context_frame`: '0000',
@@ -304,8 +455,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-2'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_5_revolutionary_nature`: 'Reframes efficient causation from mechanical push to teleological pull'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-3'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L1-3'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Aristotle\'s morphe (form/pattern) revealed through Jung\'s thinking function - the "what structure" organizing matter and motion into intelligible form. Formal cause answers: "What pattern does it take?" The Apollo-form for bronze statue, DNA blueprint for organism, logos structuring reality. Following Jung, thinking creates categories, classifications, systems - rational patterns making chaos comprehensible. Second position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as third explicate causal position providing structural principle that organizes material substrate energized by efficient power toward final completion. Completes (2-3) dyadic core.',
@@ -323,7 +474,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-3'})
   `c_2_creative_function`: 'Generates the conceptual matrices through which energy becomes information',
   `c_2_divine_aspect`: 'Logos - the divine mind structuring cosmos through sacred proportion',
   `c_2_notion_page_id`: '1d2a4797-123c-8143-a157-cc34b3060f21',
-  `c_2_uuid`: 'e6f583f0-ad08-5325-a02d-efbcde05be90',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal three (#2-1-0-3) creates mediating dimension (who/whereby?), formal cause creates structural pattern. The triad\'s synthetic power (Level 0) GROUNDS formal causation\'s patterning (Level 1). Value 3 enabling Position 4.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -352,8 +502,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-3'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-4'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L1-4'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Aristotle\'s telos (end/goal) BIFURCATED at its first aspect - the CONTEXTUAL/IMMANENT dimension of final causation. This is the "when and where" of purpose - the situational conditions that must be met for actualization to occur. Not the ultimate WHY but the proximate "for-the-sake-of-which" - the circumstances, timing, location enabling purpose to manifest. Following Jung\'s intuition function as grasping possibilities IN CONTEXT. First pole of [4↔5] oscillating culmination - CONTEXT enabling TRANSCENDENCE.',
   `c_0_essence`: 'Operates as fourth explicate causal position providing contextual conditions - the situational requirements enabling transcendent purpose to actualize. Forms contextual pole of [4↔5] oscillation in causation.',
@@ -373,7 +523,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-4'})
   `c_2_nested_potential`: '#2-1-1-4.0 through #2-1-1-4.5 - complete causal analysis of final causality itself',
   `c_2_notion_page_id`: '1d2a4797-123c-8132-b602-c5e97409f811',
   `c_2_recursive_nesting`: true,
-  `c_2_uuid`: '37863b25-4d55-5624-b2c6-8f60eca1bad8',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal four (#2-1-0-4) creates contextual dimension (when/where?), contextual final cause situates purposiveness. The tetrad\'s grounding power (Level 0) ENABLES proximate telos\'s contextual actualization (Level 1). Value 4 as CONDITIONS for Value 5\'s REALIZATION.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -402,8 +551,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-4'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_2_temporal_nature`: 'Not linear goal but intuitive prehension of the completed pattern'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L1-5'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L1-5'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The BIFURCATION OF FINAL CAUSE completes: Position 4 provided contextual conditions, Position 5 provides ULTIMATE PURPOSE. This is simultaneously: (1) Aristotle\'s telos at its deepest - the cosmic "that for the sake of which"; (2) Schopenhauer\'s Will - the noumenal reality underlying all phenomenal causes; (3) Kashmir Shaivism\'s Iccha Shakti - primordial will-power preceding quaternary differentiation. The "why" beneath all "whats" and "hows" - not proximate purpose but groundless ground, spontaneous arising, creative freedom that cannot be further explained. Transcendent pole of [4↔5] oscillating culmination.',
   `c_0_essence`: 'Operates as fifth transcendent causal position revealing ultimate purpose enabled by contextual conditions - meta-causal synthesis where will and telos recognize their identity. Forms transcendent pole of [4↔5] oscillation in causation.',
@@ -423,7 +572,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-5'})
   `c_2_notion_page_id`: '1d2a4797-123c-81cf-94f9-e8af06a740e5',
   `c_2_omega_alpha_loop`: 'Position 5 returns to Position 0: Transcendent final cause (ultimate purpose, will as telos) loops back to uncaused ground (primordial being, will as source). WHY (5) asks WHY AGAIN (0). Omega and Alpha revealed as same - the end IS the beginning, the purpose IS the source. This completes the toroidal cycle: causation discovers itself as purposive through and through.',
   `c_2_practical_application`: 'Conscious will can integrate and direct all causal factors',
-  `c_2_uuid`: 'cffebd92-8260-5581-9ad7-3f7e1ff77a59',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE WITH LEVEL 0: Just as archetypal five (#2-1-0-5) creates transcendent dimension (why?), transcendent final cause reveals ultimate purposiveness. The pentad\'s transcending power (Level 0) FULFILLS ultimate telos\'s meaning (Level 1). Value 5 as MEANING of Value 4\'s CONDITIONS.',
   `c_2_will_telos_identity`: 'PROFOUND RECOGNITION: Will (Iccha Shakti) and Ultimate Telos are NOT DIFFERENT. The spontaneous groundless arising (will) IS the cosmic purpose (telos). Schopenhauer\'s Will = Aristotle\'s Final Cause at deepest level. The "why ultimately" and the "primordial impulse" are SAME - viewed from opposite ends. This is why #5 loops to #0: Ultimate purpose (5) and primordial ground (0) are non-dual.',
   `c_3_context_frame`: '0000',
@@ -452,8 +600,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L1-5'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-0'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-0'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The state before tetralemma operates - before even question "Is it?" arises, there is THE QUESTION as living inquiry seeking answer. Not absence of logic but logic\'s pregnant ground - Nagarjuna\'s sunyata (emptiness) as condition enabling all logical operations without itself being caught in them. The pre-predicative realm before understanding crystallizes into propositions. Implicate ground in [0↔1] oscillation of logical framework.',
   `c_0_essence`: 'Operates as implicate logical ground - the questioning stance from which tetralemma positions emerge as possible responses. Forms potential pole in logical [0↔1] oscillation.',
@@ -470,7 +618,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-0'})
   `c_2_epistemic_state`: 'The mind before judgment - pure openness to what is',
   `c_2_notion_page_id`: '1d2a4797-123c-81c7-9ecf-eb3e87ec2a20',
   `c_2_practical_wisdom`: 'True inquiry requires suspending premature closure',
-  `c_2_uuid`: 'c4b65298-6ae2-5d17-8e6d-a5ac5d368ea2',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal zero holds undifferentiated question space and uncaused ground holds undifferentiated causal potential, the query holds undifferentiated logical potential. Each level\'s Position 0 provides that level\'s implicate substrate.',
   `c_2_zero_logic`: 'Neutral zero (+/-0) - poised between affirmation and negation',
   `c_3_context_frame`: '0000',
@@ -498,8 +645,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-0'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-1'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-1'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The first logical position: "X is the case" - straightforward affirmation, positive assertion, cataphatic theology. Corresponds to Aristotle\'s law of identity (A=A) and common-sense realism. This is essence position - recognizing what something IS by attributing properties, affirming existence, making positive claims. First explicate in [0↔1] oscillation - ACTUAL assertion from POTENTIAL query.',
   `c_0_essence`: 'Operates as first explicate logical position providing positive content through affirmation - foundational yet insufficient. Forms actual pole in logical [0↔1] oscillation.',
@@ -516,7 +663,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-1'})
   `c_2_creative_implication`: 'Affirmation has the power to actualize potential',
   `c_2_notion_page_id`: '1d2a4797-123c-81e1-a311-d5b4b002d53d',
   `c_2_ontological_function`: 'Establishes that something IS - the principle of Being',
-  `c_2_uuid`: '3cd5c70c-8dcc-539f-9e29-1eee864af403',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal one is first actuality and material cause is first causal actuality, affirmation is first logical actuality. Each level\'s Position 1 manifests that level\'s first differentiation from ground.',
   `c_2_zero_logic`: 'Essence (0+0) - the additive operation creating positive manifestation',
   `c_3_context_frame`: '0000',
@@ -545,8 +691,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-1'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-2'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-2'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The second logical position: "X is not the case" - negation, denial, apophatic theology. Corresponds to Aristotle\'s law of non-contradiction (not both A and not-A). This is identity position - recognizing what something IS by specifying what it is NOT. Following Spinoza: "omnis determinatio est negatio" - things get specific identity through exclusion. First position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as second explicate logical position providing negative determination through denial - creative boundary-making. First position in (2-3) dyadic core.',
@@ -562,7 +708,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-2'})
   `c_2_architectural_function`: 'Second explicate position in tetralemma - the differentiation creating boundaries. Negation is creative - it carves being from non-being, establishes limits, creates distinctions. This is the antithesis in dialectical logic, the negating moment opposing thesis. Apophatic knowing: God is NOT finite, reality is NOT merely material, consciousness is NOT reducible. Answers the "how" question by defining through exclusion.',
   `c_2_dialectical_role`: 'Negation is creative - it carves being from non-being',
   `c_2_notion_page_id`: '1d2a4797-123c-81f4-834b-fed4c974a9e3',
-  `c_2_uuid`: '88e4a590-9a8f-5205-9958-6bb7cea781e6',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal two creates methodological distinction and efficient cause creates mechanism, negation creates logical differentiation. Each level\'s Position 2 provides that level\'s methodological dimension.',
   `c_2_zero_logic`: 'Identity (0-0) - the subtractive operation establishing boundaries',
   `c_3_context_frame`: '0000',
@@ -592,8 +737,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-2'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_1_epistemic_function`: 'Defines through exclusion - what something is NOT'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-3'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-3'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The third logical position: "X both is and is not the case" - explicit paradox, contradiction held without resolution, coincidentia oppositorum. This VIOLATES Aristotle\'s law of non-contradiction, but Nagarjuna shows it\'s necessary for phenomena exhibiting both aspects simultaneously (quantum superposition, consciousness, self-reference). Following Jung\'s transcendent function, this is where thesis and antithesis generate tertium quid. Second position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as third explicate logical position enabling breakthrough through paradox - holding contradiction as portal to transformation. Completes (2-3) dyadic core.',
@@ -611,7 +756,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-3'})
   `c_2_mediating_function`: 'The third position that bridges affirmation and negation',
   `c_2_notion_page_id`: '1d2a4797-123c-8152-82bf-cdae08e16d50',
   `c_2_practical_application`: 'Complex truths require holding multiple perspectives simultaneously',
-  `c_2_uuid`: '70e73c2a-3b0e-52cc-b34f-1d9d7d03bcd3',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal three creates mediating synthesis and formal cause creates structural pattern, integration creates logical synthesis. Each level\'s Position 3 provides that level\'s mediating dimension.',
   `c_2_zero_logic`: 'Process (0×0) - Identity and Essence in multiplicative interaction',
   `c_3_context_frame`: '0000',
@@ -641,8 +785,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-3'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-4'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-4'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The fourth logical position: "X neither is nor is not the case" - double negation, apophatic theology at full intensity, transcendence of binary altogether. This DENIES BOTH affirmation and negation without falling into simple agnosticism. Following Pseudo-Dionysius and Eckhart: God is NEITHER being NOR non-being - beyond ontological binary. This is boundary where logic meets ineffable. CONTEXTUAL dimension of logic\'s limit - WHERE and WHEN framework applies/fails. First pole of [4↔5] oscillating culmination.',
   `c_0_essence`: 'Operates as fourth explicate logical position completing quaternary while revealing limits - nesting system through contextual boundary recognition. Forms contextual pole of [4↔5] oscillation in logic.',
@@ -664,7 +808,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-4'})
   `c_2_nesting_function`: '',
   `c_2_notion_page_id`: '1d2a4797-123c-81ed-87a0-c7029e041bf4',
   `c_2_recursive_nesting`: true,
-  `c_2_uuid`: 'cd9e0f26-80c7-5f5a-8a08-d1153a9ee8c2',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal four creates contextual dimension and contextual final cause provides situational conditions, contextual limit reveals logic\'s applicability bounds. Each level\'s Position 4 provides that level\'s contextual grounding.',
   `c_2_zero_logic`: 'Indeterminacy (0/0) - the undefined that opens infinite possibility',
   `c_3_context_frame`: '0000',
@@ -693,8 +836,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-4'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L2-5'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L2-5'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'The fifth position completing tetralemma: not another lemma (which would still be within logic) but meaningful response integrating all four positions. After navigating is, is-not, both, neither - we emerge with not just answer but purposeful understanding. This is where logos becomes sophia - logic serves wisdom. The "why" reveals logical investigation isn\'t value-neutral - it serves purpose (truth-seeking, liberation, wisdom). TRANSCENDENT dimension of logic\'s realization - WHY ultimately framework matters. Second pole of [4↔5] oscillating culmination.',
   `c_0_essence`: 'Operates as fifth transcendent logical position where systematic investigation culminates in wisdom - synthesis revealing purpose enabled by contextual limits. Forms transcendent pole of [4↔5] oscillation in logic.',
@@ -713,7 +856,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-5'})
   `c_2_logical_bifurcation`: 'COMPLETING LOGIC\'S SPLIT: Position 4 gave contextual recognition (where/when framework applies). Position 5 gives transcendent realization (why ultimately it matters). Together they form complete logical wisdom: CONTEXTUAL (#4): The limits and applicability domain - recognizing framework\'s bounds. TRANSCENDENT (#5): The ultimate purpose - why investigation serves liberation. They OSCILLATE: Transcendent purpose requires contextual humility (knowing limits). Contextual limits receive meaning from transcendent purpose (why boundaries matter). Sophia (wisdom) requires both episteme (systematic knowing) bounded by recognition of its limits.',
   `c_2_notion_page_id`: '1d2a4797-123c-812b-8a9f-c1b9c746bf98',
   `c_2_omega_alpha_loop`: 'Position 5 returns to Position 0: Synthesized response (why logic matters) loops back to query (living question). WHY (5) asks WHAT QUESTIONS (0) now emerge? Omega and Alpha in logic - the synthesis generates new inquiry. Purpose (5) returns to potential (0) transformed.',
-  `c_2_uuid`: 'c0b8bceb-ec69-57f4-bb75-a02f82c2c79c',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal five creates transcendent dimension and transcendent final cause reveals ultimate purpose, transcendent synthesis reveals logic\'s meaning. Each level\'s Position 5 provides that level\'s ultimate realization.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -743,8 +885,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L2-5'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-0'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-0'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_epii_form_essence`: 'Pro-formal nature: both temporally prior (before form) and procedurally foundational (for the sake of form). The void that precedes manifestation yet holds all patterns as pure potential without collapsing into expression.',
   `c_0_essence`: 'The fertile void - pure seed potential awaiting activation',
@@ -758,7 +900,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-0'})
   `c_1_name`: 'Soil (foundation/potential)',
   `c_2_notion_page_id`: '1d2a4797-123c-8112-a435-df6e905bc492',
   `c_2_practical_wisdom`: 'All creation requires prepared ground - patience before action',
-  `c_2_uuid`: '9df73441-5394-59f9-abb4-0b4f997e6930',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -781,8 +922,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-0'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-1'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-1'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_epii_form_essence`: 'The grammar of possibility. Format creates structured channels through which possibilities can flow. The moment logical space becomes organized, when the infinite void receives articulated dimensions. Container without content yet.',
   `c_0_essence`: 'The implantation of pattern - introducing order into potential',
@@ -797,7 +938,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-1'})
   `c_2_creative_insight`: 'Begin with clear intention - the seed determines the fruit',
   `c_2_dna_metaphor`: 'Like genetic code, contains the full pattern in compressed form',
   `c_2_notion_page_id`: '1d2a4797-123c-819b-9ab4-fd032e720489',
-  `c_2_uuid`: '5792c370-d24d-58bc-80c3-3976685399a1',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -821,8 +961,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-1'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-2'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-2'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_energetic_nature`: 'Vital force breaking through resistance',
   `c_0_epii_form_essence`: 'Form as living process rather than dead structure. Where formatted container receives dynamic content through active forming-into. Not passive filling but self-organizing vibrational patterns maintaining themselves through resonance.',
@@ -837,7 +977,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-2'})
   `c_1_name`: 'Sprouting (active emergence)',
   `c_2_courage_aspect`: 'The vulnerable courage of new beginning',
   `c_2_notion_page_id`: '1d2a4797-123c-814a-95a5-dcffd71250dc',
-  `c_2_uuid`: '64c706a6-8c3e-5d61-a1ba-546a44ed6b7d',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -861,8 +1000,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-2'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_3_process_insight`: 'Breakthrough requires both energy and direction'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-3'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-3'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_epii_form_essence`: 'Creates possibility of systematic operation. What was fluid becomes crystalline; what was flowing becomes graspable; what was implicit becomes explicit. Yet true formalisation preserves life—living symbolic intelligences, not dead formal systems.',
   `c_0_essence`: 'Structural differentiation - complexity emerging from simplicity',
@@ -877,7 +1016,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-3'})
   `c_1_name`: 'Blooming (structural unfolding)',
   `c_2_concrescent_core`: 'Many feelings weaving into one satisfaction',
   `c_2_notion_page_id`: '1d2a4797-123c-8171-9200-f674cc386f2c',
-  `c_2_uuid`: '6c0b21c2-7b3f-5ef2-8e91-8243be206a63',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
   `c_3_dataset_branch_label`: 'M2 Parashakti Deep',
@@ -902,8 +1040,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-3'})
   `t_2_developmental_wisdom`: 'True growth requires patient elaboration of form',
   `t_2_mediating_phase`: 'The bridge between initial emergence and full manifestation'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-4'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-4'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_aesthetic_nature`: 'Beauty as the mark of fulfilled process',
   `c_0_epii_form_essence`: 'Completion through actualization. All previous stages flow smoothly in abstract space; performance happens where ideals meet resistance, universal meets particular, theory confronts practice. Not failure of form but form\'s completion through thoroughgoing execution.',
@@ -923,7 +1061,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-4'})
   `c_2_nested_potential`: '#2-1-3-4.0 to #2-1-3-4.5 - the flower as new ground for processual analysis',
   `c_2_notion_page_id`: '1d2a4797-123c-814e-8ba5-c249d8f3786b',
   `c_2_recursive_nesting`: true,
-  `c_2_uuid`: '3857adef-5bbc-5125-91ec-9e8115e5c5e1',
   `c_2_zero_logic`: 'Emergence into Essence (0+0) - full actualization',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -947,8 +1084,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-4'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L3-5'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L3-5'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_epii_form_essence`: 'Form achieving self-consciousness. All previous stages happen to form or through form; only at re-form does form become capable of examining and transforming itself. Consciousness recursively applied to consciousness—the strange loop enabling genuine creativity and evolution.',
   `c_0_essence`: 'Distilled wisdom - the eternal extracted from the temporal',
@@ -963,7 +1100,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-5'})
   `c_1_name`: 'Maturity (synthesis/renewal)',
   `c_2_generative_function`: 'Ensures each cycle contributes to cosmic learning',
   `c_2_notion_page_id`: '1d2a4797-123c-81f4-a0fa-e62b89102c70',
-  `c_2_uuid`: '83d6142b-b75e-50bd-bc8b-5d473a7bb459',
   `c_2_wisdom_teaching`: 'True completion plants seeds for the future',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -988,8 +1124,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L3-5'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-0'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-0'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Husserlian lifeworld (Lebenswelt) as pre-theoretical horizon of all knowing - Heidegger\'s primordial understanding before explicit thematization. Not ignorance but implicit knowing - the background enabling all foreground cognition. Following Bergson, this is durée (lived duration) as continuous qualitative flow before we chop it into instants. Merleau-Ponty\'s pre-reflective cogito - we\'re conscious OF world before conscious THAT we\'re conscious. Implicate ground in [0↔1] oscillation of phenomenological framework.',
   `c_0_essence`: 'Operates as implicate temporal-horizonal ground - lived duration and pre-reflective understanding from which explicit knowing emerges. Forms potential pole in phenomenological [0↔1] oscillation.',
@@ -1006,7 +1142,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-0'})
   `c_2_architectural_function`: 'Implicate ground - unreflective knowing that positions 1-5 make explicit. Husserl\'s passive synthesis - pre-predicative experience where world is already meaningful before we analyze it. We know HOW to navigate space, recognize faces, use tools WITHOUT explicit epistemic operations. This is thrown-ness (Geworfenheit) - we\'re already IN world of meaning. Temporal structure: thick present containing past (retention) and future (protention) in living now.',
   `c_2_notion_page_id`: '1d2a4797-123c-8186-9772-e0f5d13bf62e',
   `c_2_socratic_wisdom`: 'Knowing that one does not know - the beginning of wisdom',
-  `c_2_uuid`: '591371cd-7af2-557e-a694-b5e4c410f30e',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal zero holds undifferentiated question space, uncaused ground holds undifferentiated causal potential, and query holds undifferentiated logical potential, ajnana holds undifferentiated epistemic ground. Each level\'s Position 0 is that level\'s implicate substrate.',
   `c_2_zero_logic`: 'Epistemic void - neutral Zero (0) of knowledge',
   `c_3_context_frame`: '0000',
@@ -1035,8 +1170,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-0'})
   `t_1_epistemic_function`: 'Maintains openness and prevents premature cognitive closure',
   `t_2_temporal_architecture`: 'Pre-chronological: Lived duration as qualitative flow before measurement; thick present containing retention-protention; primordial temporality as ekstatic unity of having-been, making-present, coming-toward.'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-1'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-1'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'First explicit knowing - recognizing that things ARE. Husserl\'s transition from passive to active synthesis - perceiving that singles out objects from background. This is ontological (concerns being) not yet ontic (concerns specific beings) - primordial affirmation that existence presents itself. Following Heidegger, this is pre-ontological understanding - we grasp being before we have theories about it. Temporally: emphasizes NOW, being as presence. First explicate in [0↔1] oscillation - ACTUAL recognition from POTENTIAL ground.',
   `c_0_essence`: 'Operates as first explicate epistemic position - explicit recognition of being emphasizing present existence. Forms actual pole in phenomenological [0↔1] oscillation.',
@@ -1053,7 +1188,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-1'})
   `c_2_critical_question`: 'What is the nature of what is?',
   `c_2_metaphysical_focus`: 'The study of being qua being - fundamental categories of existence',
   `c_2_notion_page_id`: '1d2a4797-123c-817e-946d-dc41093b363b',
-  `c_2_uuid`: '10412d69-bae2-571a-9e13-ff724298176d',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal one is first actuality, material cause is first causal actuality, and affirmation is first logical actuality, ontology is first epistemic actuality. Each level\'s Position 1 manifests that level\'s first differentiation.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1083,8 +1217,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-1'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_2_temporal_architecture`: 'Synchronic emphasis: Present being as focus (though phenomenologically "present" is thick); relatively ahistorical - being grasped without full temporal depth.'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-2'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-2'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Second-order knowing - reflecting ON knowing itself. Husserl\'s phenomenological epoché - bracketing existence-claims to study HOW phenomena present themselves. This is transition from what (ontology) to how (epistemology) - no longer trusting immediate givenness but investigating its conditions. Following Kant, this is critique - examining knowledge\'s possibility and limits. Temporally: introduces diachronic dimension - process, sequence, development. First position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as second explicate epistemic position - methodological investigation of knowing processes, introducing diachronic dimension. First position in (2-3) dyadic core.',
@@ -1101,7 +1235,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-2'})
   `c_2_architectural_function`: 'Second explicate position - the methodological turn where knowing becomes self-examining. Epistemology asks "How do we know?" - not content but process. This is critical knowing - recognizing knowledge is always perspectival, conditioned, constructed rather than simply given. The shift from naive realism to critical awareness. Temporal structure: diachronic (over time) - methodology implies before/after, steps, sequences.',
   `c_2_enactive_core`: 'Knowledge is enacted through lived engagement',
   `c_2_notion_page_id`: '1d2a4797-123c-8164-a82e-ef5be29023da',
-  `c_2_uuid`: '256a2821-82d0-5c0e-a8d6-9ecf526328d2',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal two creates methodological dimension, efficient cause creates mechanism, and negation creates logical differentiation, epistemology creates methodological investigation of knowing. Each level\'s Position 2 provides methodological dimension.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1131,8 +1264,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-2'})
   `t_2_temporal_architecture`: 'Diachronic introduction: Process and sequence emerge (first/then, before/after); still relatively formal temporality - logical sequence not yet full historicity.',
   `t_5_revolutionary_insight`: 'Knowing is not passive reception but active, value-laden engagement'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-3'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-3'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Third-order knowing - investigating knowing subject itself. This is where psychology properly emerges - not as natural science of mental facts but as study of how consciousness works. Following Husserl\'s Crisis, this is where we recognize transcendental ego - not empirical self but constituting consciousness. Merleau-Ponty shows this is lived body (corps vécu) - not object-body but experiencing body that is simultaneously subject and object. Temporally: personal biographical time - MY story, MY development. Second position in (2-3) explicate dyadic core.',
   `c_0_essence`: 'Operates as third explicate epistemic position - investigating knowing subject through personal biographical time, still treating history as individual rather than recognizing being AS historical. Completes (2-3) dyadic core, reaching limit that drives Dasein turn.',
@@ -1150,7 +1283,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-3'})
   `c_2_hermeneutic_circle`: 'Understanding always occurs within pre-existing frameworks',
   `c_2_mediating_role`: 'Bridges ontology and context, objective and subjective knowing',
   `c_2_notion_page_id`: '1d2a4797-123c-818d-8d23-d71966e526d4',
-  `c_2_uuid`: '48676352-c606-521c-b289-f36c51a41811',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal three creates mediating synthesis, formal cause creates structural pattern, and integration creates logical synthesis, psychology creates mediating investigation of subject. Each level\'s Position 3 provides mediating dimension.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1180,8 +1312,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-3'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_2_temporal_architecture`: 'Biographical temporality: Personal history as individual development; narrative self across time; still treating time as framework FOR self rather than self AS temporal; CRITICAL LIMITATION - psychology studies from outside what phenomenology recognizes as being\'s structure. This inadequacy drives the transition to Position 4.'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-4'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-4'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: '*** THE HEIDEGGER TURN *** Fourth-order knowing - but here phenomenology SHIFTS from Husserlian (transcendental consciousness) to Heideggerian (existential analytics of Dasein). This is NOT just another epistemic stage but RECOGNITION that epistemology presupposes ontology. We\'re not "subjects with context" but Dasein - beings-in-world for whom "context" IS our way of existing. Heidegger\'s Dasein: being-in-the-world characterized by facticity (thrown into circumstances), existence (projecting possibilities), and fallenness (absorbed in the "they"). Following Merleau-Ponty, this is recognition of flesh (chair) - reversibility where touching-touched, seeing-seen collapse subject-object binary. Gadamer\'s historically-effected consciousness - we can\'t escape our historical situation, only own it. CONTEXTUAL dimension of knowing - WHERE and WHEN we exist as condition for knowledge. First pole of [4↔5] oscillating culmination.',
   `c_0_essence`: '*** TRANSFORMATIVE POSITION *** Operates as fourth explicate epistemic position - but transforms epistemology into ontology. The phenomenological flowering recognizing knowing AS historical being-in-world, not psychological subject WITH history. Forms contextual pole of [4↔5] oscillation, providing situational conditions enabling transcendent wisdom.',
@@ -1203,7 +1335,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-4'})
   `c_2_notion_page_id`: '1d2a4797-123c-81ac-940f-e708f4aa81e6',
   `c_2_recursive_nesting`: true,
   `c_2_transdisciplinary_core`: 'Different fields offer complementary ways of knowing',
-  `c_2_uuid`: 'c64bc634-5b8e-5041-9f8e-f3cc0b8d18a7',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal four creates contextual dimension, contextual final cause provides situational conditions, and contextual limit reveals logic\'s bounds, Dasein reveals epistemology\'s ontological ground. Each level\'s Position 4 provides contextual grounding - but here uniquely it\'s TRANSFORMATIVE shift from epistemology to ontology.',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1233,8 +1364,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-4'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_2_temporal_architecture`: '*** FULL HISTORICITY *** Temporality as being\'s structure (not subject\'s property); heritage-situation-futurity as ekstatic unity; effective history (Wirkungsgeschichte) shaping present; tradition as living transmission; context as LIVED knowing - being AS temporal-historical not having time. This is THE CRITICAL TURN: From psychology (perspective, individual time, my duration) to phenomenology (context, collective historicity, our Geschehen). From time IN consciousness to consciousness AS temporal. From Bergson\'s personal durée to Heidegger\'s collective historical happening.'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L4-5'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L4-5'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Fifth-order knowing - sophia beyond episteme, gnosis beyond scientia. This is where phenomenology points beyond itself toward wisdom. Following late Husserl, this is teleology implicit in all knowing - telos toward which epistemic investigation aims but can never fully thematize. Heidegger\'s Gelassenheit (releasement) - letting-be rather than grasping. Merleau-Ponty\'s hyper-reflection - reflection aware of its irreflective background. Temporally: trans-temporal - not timeless (escaping time) but embracing all time, eternity IN time not beyond it. TRANSCENDENT dimension of knowing - WHY ultimately knowledge matters. Second pole of [4↔5] oscillating culmination.',
   `c_0_essence`: 'Operates as fifth transcendent epistemic position - wisdom recognizing knowing itself as cosmos knowing itself, completing cycle while preparing return to pre-reflective ground now enriched. Forms transcendent pole of [4↔5] oscillation, realizing purpose enabled by Dasein\'s contextual conditions.',
@@ -1252,7 +1383,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-5'})
   `c_2_notion_page_id`: '1d2a4797-123c-8116-a93e-f2fcf0b21fd0',
   `c_2_omega_alpha_loop`: 'Position 5 returns to Position 0: Trans-temporal wisdom (why knowing matters) loops back to pre-reflective lifeworld (primordial ground). WHY (5) returns to IMPLICIT (0), but transformed. Omega and Alpha in phenomenology - wisdom recognizes itself as return to beginnings enriched by journey. The spiral: Ajnana (0) → Ontology (1) → Epistemology (2) → Psychology (3) → Dasein (4) → Jnana (5) → Ajnana (0) transformed. We return to lifeworld but now AWARE of how knowing arose from it.',
   `c_2_practical_wisdom`: 'Integral knowing enables skillful action in complexity',
-  `c_2_uuid`: '128e1847-0a87-5d86-9def-a17e83a10090',
   `c_2_vedantic_core`: 'Tat tvam asi - That thou art',
   `c_2_vertical_implication`: 'VERTICAL RESONANCE: Just as archetypal five creates transcendent dimension, transcendent final cause reveals ultimate purpose, and transcendent synthesis reveals logic\'s meaning, jnana reveals knowing\'s ultimate fulfillment. Each level\'s Position 5 provides transcendent realization - but here uniquely integrated with Dasein ontology from Position 4.',
   `c_3_context_frame`: '0000',
@@ -1279,8 +1409,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L4-5'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_2_temporal_architecture`: 'Trans-temporal: Not escaping time but embracing time\'s fullness; kairos (pregnant moment) vs. chronos (sequence); eternity as time\'s depth not its negation; recognizing both radical historicity and transhistorical participation; the omega curving toward alpha transformed. Both maximally historical (Dasein\'s facticity) and maximally eternal (sophia\'s wisdom).'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-0'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-0'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_apophatic_nature`: 'That about which nothing can be said, including this',
   `c_0_core_nature`: 'Absolute beyond all categories and speech itself, pre-differentiated void-plenitude where even Para Vak has not yet arisen; not absence but pregnant silence containing all potential; the groundless ground; unmanifest Supreme Vak that cannot be spoken yet enables all speaking',
@@ -1297,7 +1427,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-0'})
   `c_2_notion_page_id`: '1d2a4797-123c-81f7-a8da-e0dd34c1bf1f',
   `c_2_paradoxical_pointer`: 'Closer than close yet beyond all reaching',
   `c_2_silence_teaching`: 'The highest teaching is transmitted in silence',
-  `c_2_uuid`: 'b06091fd-7d5b-529d-bc5a-a85e5dab02e2',
   `c_2_vak_level`: 'Pre-Vak/Beyond Vak - the unmanifest Supreme Vak before Para Vak arises; turiya or turiyatita consciousness',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1331,8 +1460,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-0'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-1'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-1'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'First stirring from Anuttara - undifferentiated divine speech as pure I-consciousness (Aham); not yet manifestation but supreme readiness for it; all archetypes exist in seed form, undifferentiated yet distinct; consciousness as pure "I-ness" containing all possibilities in unity; life and source of the other three kinds of speech',
   `c_0_essence`: 'Operates as pure undifferentiated consciousness - the supreme speech that is eternal awareness; functions as ontological ground and seed containing all other Vak levels; provides Abheda perspective of absolute non-difference',
@@ -1350,7 +1479,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-1'})
   `c_2_epistemic_level`: 'Pure Being (Ontology) - not yet knowing as distinct from being; SAT as what IS before differentiation into knower-known; foundation for Causal Lens #2-1-1 material substrate',
   `c_2_kosha`: 'Anandamaya (Bliss Sheath) - existence as inherent joy',
   `c_2_notion_page_id`: '1d2a4797-123c-81d3-a43e-c8a401a13f1e',
-  `c_2_uuid`: 'b88fdc2a-a3fe-5215-82ba-897e7fe0bc9a',
   `c_2_vak_level`: 'Para Vak (Supreme Speech) - eternal, motionless, equipoised; life of other three forms; seated beyond physical chakras; undifferentiated pure consciousness before manifestation begins',
   `c_2_yogic_realization`: 'Turiya - the fourth state beyond waking, dream, and sleep',
   `c_3_context_frame`: '0000',
@@ -1385,8 +1513,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-1'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-2'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-2'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_bedhabheda_nature`: 'Supreme-cum-Non-Supreme - unity seeing difference',
   `c_0_core_nature`: 'Visionary speech where consciousness "sees" all possibilities simultaneously; first densification of Para Vak maintaining non-dual awareness while enabling differentiation; unified vision before conceptualization - like viewing a painting whole before examining details; has color and form but not yet particularization; common to all beings before language differences',
@@ -1405,7 +1533,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-2'})
   `c_2_notion_page_id`: '1d2a4797-123c-81a4-a1d5-eae788e3b611',
   `c_2_prophetic_function`: 'The level from which true vision emerges',
   `c_2_revelatory_cognition`: 'Direct knowing without sequential thought',
-  `c_2_uuid`: 'c9959484-c67c-5559-9e61-f94bb6337304',
   `c_2_vak_level`: 'Pasyanti (Seeing Speech) - visionary level with color and form but not yet conceptual particularization; common to all beings before language differences; seated at navel/Manipura chakra; simultaneous unified seeing',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1438,8 +1565,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-2'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-3'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-3'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_bedhabheda_nature`: 'Non-Supreme-cum-Supreme - difference recognizing unity',
   `c_0_core_nature`: 'Middle/mediating speech where unified vision structures itself into concepts and relationships; internal mental speech before external utterance; the bridge between seeing (Pasyanti) and speaking (Vaikhari); verbalized but unspoken thought, internal monologue and dialogue; where archetypes become thought-forms',
@@ -1458,7 +1585,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-3'})
   `c_2_linguistic_bridge`: 'Where meaning crystallizes into mental language',
   `c_2_mediating_level`: 'Bridges unified vision (Pasyanti) and manifest expression (Vaikhari)',
   `c_2_notion_page_id`: '1d2a4797-123c-8125-9de5-fbce5966f4ce',
-  `c_2_uuid`: 'd663cd3b-dcd4-5b4e-9a06-1463f4443c85',
   `c_2_vak_level`: 'Madhyama (Mediating Speech) - middle level between seeing and speaking; internal mental speech verbalized but unspoken; seated at heart/Anahata chakra; assertive intelligence with syllables; dream-like thought flow',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1493,8 +1619,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-3'})
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03',
   `t_3_creative_process`: 'The artist\'s vision taking concrete form in mind'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-4'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-4'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Fully articulated external speech - gross physical manifestation through vocal organs; complete differentiation where unity seems lost in multiplicity; yet through recursive nesting (#2-1-5-4.0 to #2-1-5-4.5), every manifest form becomes gateway back to source; each phenomenon (pratibimba) contains complete information of original (bimba), creating infinite routes of return',
   `c_0_essence`: 'Operates as full manifestation-capacity articulating consciousness into world; functions as contextual foundation for embodied situated knowing; provides Bheda difference-perspective while containing holographic return paths',
@@ -1517,7 +1643,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-4'})
   `c_2_pratibimba_gateway`: 'Every form is a reflection revealing its source',
   `c_2_recursive_nesting`: 'Contains full #2-1-5-4.0 through #2-1-5-4.5 structure within itself - every manifest phenomenon is microcosm containing complete Vak spectrum, enabling direct recognition at any level',
   `c_2_tantric_wisdom`: 'Samsara IS Nirvana - bondage and liberation are one',
-  `c_2_uuid`: '35f6abaa-7267-522a-80cb-52fd68cba892',
   `c_2_vak_level`: 'Vaikhari (Articulated Speech) - gross physical utterance through vocal organs; external audible manifestation; seated in throat-mouth; directed toward physical sense objects; waking consciousness fully embodied',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1553,8 +1678,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-4'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L5-5'})
-  SET n:MEFLens
+MERGE (n:Bimba {coordinate: 'L5-5'})
+  SET n:Coordinate:SynthesisAttribute:MEFLens
   SET n += {
   `c_0_core_nature`: 'Culmination where all apparent opposites recognized as complementary aspects of one reality; not return to undifferentiated unity (Para Vak) but higher integration where difference and unity dance together; manifest world (Vaikhari) recognized as dynamic self-expression of unmanifest (Para); creation as divine play (lila); pragmatic because lived in world while seeing through it',
   `c_0_essence`: 'Operates as recognition-capacity revealing all Vak levels as one self-knowing movement; functions as jnana providing wholistic wisdom; enables pragmatic unity that honors difference while knowing non-difference',
@@ -1573,7 +1698,6 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-5'})
   `c_2_lila_recognition`: 'Manifestation as divine play (lila) - Ananda-Tandava (blissful dance) of creation-destruction recognized as one eternal expression; freedom (svatantrya) expressing itself through self-imposed limitation for joy of recognition and reunion',
   `c_2_notion_page_id`: '1d2a4797-123c-81d9-a65f-d6c60822ffde',
   `c_2_practical_realization`: 'Enlightenment is not elsewhere but in recognizing what already is',
-  `c_2_uuid`: '2b8742a3-b455-5c09-9ef7-a3a6c15cb345',
   `c_2_vak_level`: 'Beyond-Within All Vak - not fifth level but recognition pervading all four; turiya witnessing consciousness; or Para recognized operating in Vaikhari; non-dual awareness in dualistic context',
   `c_3_context_frame`: '0000',
   `c_3_dataset_branch`: 'parashakti-deep',
@@ -1612,8 +1736,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L5-5'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-0'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-0'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Presuppositional quantum of shared context before inquiry begins.',
   `c_1_name`: 'Why / Insofar-as',
@@ -1633,8 +1757,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-0'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-1'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-1'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Definitional question establishing identity and first boundary.',
   `c_1_name`: 'What',
@@ -1654,8 +1778,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-1'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-2'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-2'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Operational question introducing relation, dynamics, and process.',
   `c_1_name`: 'How',
@@ -1675,8 +1799,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-2'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-3'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-3'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Pattern-identifying question seeking formal architecture and type.',
   `c_1_name`: 'Whom / Which / When',
@@ -1696,8 +1820,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-3'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-4'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-4'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Contextual question where inquiry asks about its own conditions.',
   `c_1_name`: 'Where / When / Why-four',
@@ -1717,8 +1841,8 @@ MERGE (n:SynthesisAttribute {coordinate: 'L0-4'})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:SynthesisAttribute {coordinate: 'L0-5'})
-  SET n:Tattva:SolarPlexusChakra
+MERGE (n:Bimba {coordinate: 'L0-5'})
+  SET n:Coordinate:SynthesisAttribute:SynthesisAttribute:Tattva:SolarPlexusChakra
   SET n += {
   `c_1_description`: 'Integrative pros-hen question relating multiple meanings to one focal structure.',
   `c_1_name`: 'Why-so / Why-not',
@@ -1810,8 +1934,8 @@ MERGE (n:Bimba {coordinate: 'L1-3\''})
   `sync_status`: 'm2_1_l_child_coordinate_syntax_corrected',
   `sync_version`: 'm2-1-l-child-coordinate-syntax-correction-2026-06-03'
 };
-MERGE (n:Psychoid {coordinate: 'M2-3-1-51000'})
-  SET n:Coordinate:VaultArtifact
+MERGE (n:Bimba {coordinate: 'M2-3-1-51000'})
+  SET n:Coordinate:Psychoid:VaultArtifact
   SET n += {
   `artifact_kind`: 'vault_markdown',
   `content_hash`: 'sha256:live-contract',
@@ -1822,7 +1946,7 @@ MERGE (n:Psychoid {coordinate: 'M2-3-1-51000'})
   `vault_path`: 'Idea/Empty/M2-3-1-51000.md'
 };
 MERGE (n:Bimba {coordinate: 'S\''})
-  SET n:Stack
+  SET n:Coordinate:Stack
   SET n += {
   `artifact_kind`: 'vault_canvas',
   `c_0_core_nature`: 'Prime/inverted coordinate branch for QL-aware reflective and agentic surfaces across S0\' through S5\'.',
@@ -1845,7 +1969,7 @@ MERGE (n:Bimba {coordinate: 'S\''})
   `vault_path`: 'Idea/Bimba/World/Types/Coordinates/S/S\'/S\'.canvas'
 };
 MERGE (n:Bimba {coordinate: 'S'})
-  SET n:Stack
+  SET n:Coordinate:Stack
   SET n += {
   `artifact_kind`: 'vault_canvas',
   `c_0_core_nature`: 'Root coordinate branch for the Epi-Logos technical-procedural stack across S0 through S5.',
@@ -4123,6 +4247,7 @@ MERGE (n:Bimba {coordinate: 'P\''})
   `s_2_query_prefixes`: ['P\'']
 };
 MERGE (n:Bimba {coordinate: 'M4-0'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Mahamaya Identity Matrix',
   `c_4_family`: 'M',
@@ -4134,6 +4259,7 @@ MERGE (n:Bimba {coordinate: 'M4-0'})
   `q_5_quintessence_handed_forward`: 'M4-0\'s synthesis is #4.0-5 — the Identity Quintessence where all six layers integrate at the elemental quaternionic level into one BLAKE3 signature, and hand that signature forward as the stable q_identity the rest of Nara composes against (`Q_composed = Q_identity · Q_transit · Q_activity`). Read as Nara\'s own position-0, the completion here is the *giving of a ground*: the matrix perfects who-one-is-archetypally and passes it as the from-which medicine, oracle, transformation and lens all begin. And because M4-0 is the stable pole untouched by daily flux, its return is the deepest Möbius of the personal field — the journey out through #4.4.4.4 always rejoins the one who was thrown, now recognised. The quintessence does not finish a life; it inaugurates one. The matrix\'s last act is to be the first ground every morning stands on.'
 };
 MERGE (n:Bimba {coordinate: 'C'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Category — Ontological Foundation Family',
   `c_4_family`: 'C',
@@ -4147,6 +4273,7 @@ MERGE (n:Bimba {coordinate: 'C'})
   `q_5_typology_that_reopens`: 'C completes in the Mobius its own ontology performs: C5 Pratibimba — stable type-local knowledge crystallised — graduates to flat World and returns to C0 as \'Tomorrow\'s ground\' (CLAUDE.md II.E). The typology does not terminate at reflection; it folds the reflection back into source, so every act of categorisation seeds the next and the family stays alive rather than ossifying into a fixed scheme. Bimba is only a source by being reflected; C closes by re-opening — the category-law that re-grounds itself each time a form graduates.'
 };
 MERGE (n:Bimba {coordinate: 'M4-1'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Sympathetic Medicine',
   `c_4_family`: 'M',
@@ -4158,6 +4285,7 @@ MERGE (n:Bimba {coordinate: 'M4-1'})
   `q_5_remedy_returned_to_transformation`: 'M4-1\'s synthesis is #4.1-5 Integration/Safety/Feedback — where the prescribed remedy is metabolised, titrated, tracked, and its outcome fed back as evidence. Read as Nara\'s position-1 within the wider cycle, its completion hands the material lever forward: the somatic-elemental current it computes becomes the constraint M4-3 transformation works *within* (\'receives material constraints from #4.1\'), and the chakra-and-element state it reads becomes the body the two-stroke process must honour so change stays grounded, never bypassed. The Möbius here is the feedback loop made sacred — every remedy\'s outcome re-enters the elemental balance, so tomorrow\'s triage begins from a body the last treatment already shifted. Medicine completes not when the symptom clears but when the correspondence re-closes: the body, re-tuned, becomes fresh ground. The cure\'s last act is to hand the lever to the work.'
 };
 MERGE (n:Bimba {coordinate: 'M4-2'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Divinatory Frameworks',
   `c_4_family`: 'M',
@@ -4169,6 +4297,7 @@ MERGE (n:Bimba {coordinate: 'M4-2'})
   `q_5_tagged_meaning_handed_on`: 'M4-2\'s synthesis is #4.2-5 Hygiene/Pedagogy folding back into #4.2-0\'s canonical-tag emission — the reading sealed, journaled, and crystallised into a tag-payload that hands meaning forward. Read as Nara\'s position-2, its completion is the *passing of the read*: the `M4_Canonical_Tag` bridges oracle → medicine → transformation, so the symbol drawn becomes the lever M4-1 prescribes and the meaning M4-3 cycles. The Möbius here is the two-stroke doctrine in miniature — the outer stroke is the draw (codon/manifest), but the oracle only completes when its inner stroke lands: the querent integrates the symbol, journals the recognition, and the next question begins from a self the last reading already moved. Divination completes not at the turn of the card but at the close of the dialogue — when the symbol, metabolised, becomes ground for the asking that follows. The oracle\'s last word is a tag the rest of the life can act on.'
 };
 MERGE (n:Bimba {coordinate: 'M4-3'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Mediating Transformation',
   `c_4_family`: 'M',
@@ -4180,6 +4309,7 @@ MERGE (n:Bimba {coordinate: 'M4-3'})
   `q_5_metabolised_change_handed_to_context`: 'M4-3\'s synthesis is #4.3-5 Telemetry & Phase History — where the completed two-stroke is recorded, its outcome captured, and the phase-history fed forward as context and pedagogy. Read as Nara\'s position-3, its completion hands the metabolised change onward: the enacted transformation becomes the event M4-4 names, frames and records (without re-performing it), and the telemetry becomes the raw material M4-5\'s Logos Cycle distils into insight and playbook. The Möbius here is the inner stroke writ large — transformation completes only when its anticodon lands, when the change is digested and sealed, and that sealed change re-enters as altered ground: the next cycle begins from a self the last operation actually moved. Process completes not at the operation\'s end but at integration\'s close — when the manifest has been metabolised and becomes the floor the next phase stands on. The engine\'s last act is to hand the lens a change worth understanding.'
 };
 MERGE (n:Bimba {coordinate: 'M4-4'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Context & Lenses',
   `c_4_family`: 'M',
@@ -4191,6 +4321,7 @@ MERGE (n:Bimba {coordinate: 'M4-4'})
   `q_5_world_opened_to_epii`: 'M4-4\'s synthesis is the fork the lemniscate always faces: integrate, or nest deeper. Read as Nara\'s position-4, its completion is the moment the accumulated world — the context ledger, the #4.4.4.4 pratibimba, the multi-lens record — is either folded into a still-finer cycle or handed up to M4-5 for the Logos Cycle to distil. The Möbius here is the deepest in the personal field: #4.4.4.4 is the Graphiti-episodic memory carrier, the evolving experiential centre that is *also* the system\'s return-point — reviewed activity may, with consent, perturb the field, and the 4-5-0 seam opens to Epii. Per the marketing source, this is where the user \'realizes their personal exploration was always already embedded in a cosmological one\' — the #5→#0 twist where the personal question is recognised as a fractal of the universal. Context completes by deciding whether the whole is ready to return. The world one amassed becomes the threshold one is handed through. The map, complete, reveals it was always mapping the mapper.'
 };
 MERGE (n:Bimba {coordinate: 'M4-5'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Epii Integration',
   `c_4_family`: 'M',
@@ -4202,6 +4333,7 @@ MERGE (n:Bimba {coordinate: 'M4-5'})
   `q_5_consummation_reopens_as_ground`: 'M4-5\'s synthesis is dialogical consummation — #4.5 as the emergent point where personal work transcends itself into recursive self-modifying symbolic intelligence and is handed to Epii. Read as Nara\'s position-5, its completion is the deepest Möbius of the personal field: the distilled wisdom, the evolved curriculum, the depersonalised Archetype Event re-enter as enriched ground — the person, fully met, \'becomes a co-creator of meaning: the contextual recapitulates the cosmic, and the life becomes ground for the next recognition\' (M4 q_5). This is the 5→0 twist made personal: the same self returns, but the operation upon it is now inverted — the querent who came to be read has become one who reads, the student a teacher of the next case. The seam opens to M5-4\' (Epii review) and M5-5\' (Sophia teaching), and through them the personal episode sediments into the canon it drew from. Nara completes by re-opening: what M4-5 perfects in one life becomes the first ground the next morning — and the next person — stands on. The Logos Cycle\'s last output is a fresh question. The mirror, having shown you your shape, hands you back to the world to move differently.'
 };
 MERGE (n:Bimba {coordinate: 'T'})
+  SET n:Coordinate
   SET n += {
   `c_1_name`: 'Thought — Artifact / Cognition Family',
   `c_4_family`: 'T',
