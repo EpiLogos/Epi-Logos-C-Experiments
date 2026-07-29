@@ -30,9 +30,11 @@ import {
     presentWaveCContributions,
     speccedConsumerSlots,
     waveCContribution,
+    type SourceCitation,
     type WaveCStateSource,
     type WaveCSubsystemId
 } from './waveCContributions';
+import { DEEP_PANE_RESERVATIONS, DEEP_PANE_SET, DEEP_PANE_WITHDRAWALS } from '../ui/deepPaneSet';
 import { PRIVACY_CHROME_SURFACES } from '../ui/privacyChrome';
 import { MN_FAMILY_ICON, type MnSubsystemId } from '../ui/iconography';
 import { CROSS_LAYOUT_INTENT_TARGETS } from '../commands/crossLayoutIntent';
@@ -46,6 +48,74 @@ const ENGINE = readFileSync(join(SRC, 'engine/PersonalRecognitionEngine.tsx'), '
 
 function readSurface(relFile: string): string {
     return readFileSync(join(SRC, relFile), 'utf8');
+}
+
+/** Repo root, four levels up from `src/` (`Body/M/pratibimba-app/src`). */
+const REPO = resolve(SRC, '..', '..', '..', '..');
+
+/**
+ * The files a `warrant` is allowed to cite by LINE, and where they really live.
+ * Both are outside the app: the design brief that assigns each view id, and the
+ * frozen barrel whose pre-existing ids predate that brief. Citing outside the
+ * carrier is the point — the warrant's job is to be checkable against the
+ * document it quotes, and a copy inside `src/` could drift from it silently.
+ */
+const CITABLE_FILES: Readonly<Record<string, string>> = Object.freeze({
+    '25-m4-nara-frontend-deep.md': join(
+        REPO,
+        'Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation',
+        '25-m4-nara-frontend-deep.md'
+    ),
+    'index.ts': join(REPO, 'Body/M/epi-theia/extensions/m4-nara/src/common/index.ts')
+});
+
+/** `file:line — "quote"`, the one citation form a warrant may take. */
+const CITATION_RE = /([\w.-]+\.(?:md|ts)):(\d+) — "([^"]+)"/g;
+
+const citedFileCache = new Map<string, readonly string[]>();
+
+/** The cited line's text, or null if the file has no such line. */
+function citedSourceLine(file: string, line: number): string | null {
+    const abs = CITABLE_FILES[file];
+    if (abs === undefined) {
+        throw new Error(
+            `a warrant cites '${file}', which is not in CITABLE_FILES — add it with its real path, ` +
+                'or the citation cannot be verified and must not be made'
+        );
+    }
+    let lines = citedFileCache.get(file);
+    if (!lines) {
+        lines = readFileSync(abs, 'utf8').split('\n');
+        citedFileCache.set(file, lines);
+    }
+    return line >= 1 && line <= lines.length ? lines[line - 1] : null;
+}
+
+/**
+ * Compare quotes on CONTENT, not on typography. A warrant is hand-transcribed
+ * from a markdown line, so backtick placement, curly vs straight quotes and run
+ * of whitespace differ harmlessly; the words and identifiers are the claim.
+ */
+function normalise(text: string): string {
+    return text
+        // JSDoc continuation markers: a quoted sentence in a source comment
+        // wraps as `\n * `, which is typography, not content.
+        .replace(/\n\s*\*\s?/g, ' ')
+        .replace(/[`*]/g, '')
+        .replace(/[‘’]/g, "'")
+        .replace(/[“”]/g, '"')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/** Every `SourceCitation` on a row, with the field it came from. */
+function sourceCitationsOf(row: (typeof M4_WAVE_C_CONTRIBUTIONS)[number]): [string, SourceCitation][] {
+    const out: [string, SourceCitation][] = [];
+    if (row.gap) for (const c of row.gap.citations) out.push([`${row.viewId}.gap`, c]);
+    if (row.mount.kind === 'direct-jsx') out.push([`${row.viewId}.mount.site`, row.mount.site]);
+    if (row.mount.kind === 'cross-coordinate')
+        out.push([`${row.viewId}.mount.rulingCitation`, row.mount.rulingCitation]);
+    return out;
 }
 
 /** Every rendering surface, as `dir/file` keys. `.tsx` only: this sweep is
@@ -144,6 +214,83 @@ describe('25.T25.21 — the register carries the whole Wave-C set', () => {
             expect(row.warrant, `${row.viewId}'s warrant must name the id it warrants`).toContain(row.viewId);
         }
     });
+
+    // THE CHECK THIS FILE WAS MISSING.
+    //
+    // Until now the warrant was only format-checked: a row could cite
+    // `25-m4-nara-frontend-deep.md:99999 — "the medicine wheel SHALL be rendered
+    // in interpretive dance"` and pass green. An independent verifier proved
+    // exactly that. The whole point of a warrant is that a reader can trust the
+    // quotation without opening the spec, so the quotation is worthless unless
+    // something opens the spec. This does.
+    it('every quoted warrant really appears at the line it cites', () => {
+        const seen: string[] = [];
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            const citations = [...row.warrant.matchAll(CITATION_RE)];
+            expect(
+                citations.length,
+                `${row.viewId}: warrant carries no verifiable "file:line — \\"quote\\"" citation`
+            ).toBeGreaterThan(0);
+            for (const [, file, line, quote] of citations) {
+                const text = citedSourceLine(file, Number(line));
+                expect(
+                    text,
+                    `${row.viewId}: ${file}:${line} does not exist (the file has fewer lines)`
+                ).not.toBeNull();
+                expect(
+                    normalise(text as string).includes(normalise(quote)),
+                    `${row.viewId}: ${file}:${line} does not contain the quoted text.\n` +
+                        `  quoted:  ${quote}\n` +
+                        `  line is: ${(text as string).slice(0, 400)}`
+                ).toBe(true);
+                seen.push(`${file}:${line}`);
+            }
+        }
+        // Guard the guard: if the spec files stopped resolving, every assertion
+        // above would vacuously pass on an empty read. A healthy run checks the
+        // real spec many times over.
+        expect(seen.length, 'no warrant citations were checked at all').toBeGreaterThan(20);
+    });
+
+    it('quotes are verbatim, not paraphrases wearing quotation marks', () => {
+        // One warrant shipped as a paraphrase inside quotation marks and read as
+        // a citation. A paraphrase may be accurate and still mislead, because
+        // the marks are the promise. Every quoted fragment must be findable.
+        const paraphrases: string[] = [];
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            for (const [, file, line, quote] of row.warrant.matchAll(CITATION_RE)) {
+                const text = citedSourceLine(file, Number(line));
+                if (!text || !normalise(text).includes(normalise(quote))) {
+                    paraphrases.push(`${row.viewId} → ${file}:${line}`);
+                }
+            }
+        }
+        expect(paraphrases, 'a warrant quotes text that is not in the cited line').toEqual([]);
+    });
+
+    it('no prose field cites a SOURCE line number, because source moves', () => {
+        // The register's most-cited target moved twice before anyone first
+        // checked it (`crossLayoutIntent.ts` :86 → :115 → :143), and each stale
+        // number read as a fact. Spec citations stay line-exact — the design
+        // documents are stable and the quote is the claim — but a `.ts`/`.tsx`
+        // line number in prose is unverifiable by construction, so it is banned
+        // and `SourceCitation` is the checkable channel instead.
+        const offenders: string[] = [];
+        const SOURCE_LINE_REF = /[\w/.-]+\.tsx?:\d+/g;
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            const prose: [string, string | undefined][] = [
+                ['gap.evidence', row.gap?.evidence],
+                ['mount.note', 'note' in row.mount ? row.mount.note : undefined],
+                ['landedBy', row.landedBy ?? undefined]
+            ];
+            for (const [field, value] of prose) {
+                for (const hit of (value ?? '').match(SOURCE_LINE_REF) ?? []) {
+                    offenders.push(`${row.viewId}.${field} cites ${hit}`);
+                }
+            }
+        }
+        expect(offenders, 'prose cites a source line number instead of a SourceCitation anchor').toEqual([]);
+    });
 });
 
 describe('25.T25.21 — every present row is real, read off the source', () => {
@@ -154,6 +301,105 @@ describe('25.T25.21 — every present row is real, read off the source', () => {
             expect(
                 source.includes(row.carrier.symbol),
                 `${row.viewId} claims '${row.carrier.symbol}' in ${row.carrier.file}, which that file does not contain`
+            ).toBe(true);
+        }
+    });
+
+    it('names a symbol that is DECLARED there, not just any substring of the file', () => {
+        // A bare `includes` was satisfiable by a single letter — an independent
+        // verifier reduced a symbol to `'e'` and the gate stayed green. So the
+        // symbol must appear in a position that means something: a declaration,
+        // a component, or — for the two rows whose "symbol" is a DOM region
+        // rather than an export — the test handle that names that region.
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            if (!row.carrier) continue;
+            const { file, symbol } = row.carrier;
+            const source = readSurface(file);
+            const s = symbol.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const declared = new RegExp(
+                [
+                    `export\\s+(?:default\\s+)?(?:async\\s+)?function\\s+${s}\\b`,
+                    `export\\s+(?:const|let|class|type|interface)\\s+${s}\\b`,
+                    `function\\s+${s}\\s*\\(`,
+                    `const\\s+${s}\\s*[:=]`,
+                    `<${s}[\\s/>]`,
+                    `data-testid="${s}"`
+                ].join('|')
+            );
+            expect(
+                declared.test(source),
+                `${row.viewId}: '${symbol}' occurs in ${file} but is not declared, rendered, ` +
+                    'or emitted as a test handle there — a substring is not a symbol'
+            ).toBe(true);
+        }
+    });
+
+    it('every source citation resolves — anchors present, absences really absent', () => {
+        // The checkable half of every prose claim. `mustBeAbsent` inverts it,
+        // which is the only honest way to cite an ABSENCE: name the place the
+        // surface would be registered, and prove it is not there.
+        let checked = 0;
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            for (const [where, citation] of sourceCitationsOf(row)) {
+                const source = readSurface(citation.file);
+                if (citation.mustBeAbsent) {
+                    expect(
+                        source.includes(citation.anchor),
+                        `${where}: cites '${citation.anchor}' as ABSENT from ${citation.file}, but it is present`
+                    ).toBe(false);
+                } else {
+                    expect(
+                        source.includes(citation.anchor),
+                        `${where}: cites '${citation.anchor}' in ${citation.file}, which does not contain it`
+                    ).toBe(true);
+                }
+                checked += 1;
+            }
+        }
+        expect(checked, 'no source citations were checked at all').toBeGreaterThan(10);
+    });
+
+    it('every flexlayout row names the face whose model really carries it', () => {
+        // `face` was read by neither gate: a row could claim the cosmic face for
+        // a personal tab and nothing noticed. The models are two named builders,
+        // so the claim is checkable — the key must appear inside the body of the
+        // one this row names.
+        const bodyOf = (fn: string): string => {
+            const start = APP.indexOf(`function ${fn}(`);
+            expect(start, `App.tsx has no ${fn}()`).toBeGreaterThan(-1);
+            // Up to the start of the next top-level function declaration.
+            const next = APP.indexOf('\nfunction ', start + 1);
+            return APP.slice(start, next === -1 ? undefined : next);
+        };
+        const models: Record<0 | 1, string> = { 0: bodyOf('cosmicDefault'), 1: bodyOf('personalDefault') };
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            if (row.mount.kind !== 'flexlayout-tab') continue;
+            const { face, component } = row.mount;
+            expect(
+                models[face].includes(`component: '${component}'`),
+                `${row.viewId} claims face ${face}, but ${face === 1 ? 'personalDefault' : 'cosmicDefault'}() ` +
+                    `does not declare '${component}'`
+            ).toBe(true);
+        }
+    });
+
+    it('a landedBy claim is backed by the carrier file that made it', () => {
+        // `landedBy` is how the register refuses to launder a pending tranche as
+        // delivered, so a fabricated one is worse than none. The tranche it names
+        // must be traceable in the surface's own header.
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            if (row.landedBy === null) continue;
+            expect(row.carrier, `${row.viewId} claims landedBy but names no carrier`).not.toBeNull();
+            const header = readSurface(row.carrier!.file).slice(0, 2500);
+            // Accept either the full rerun id (25.T25.19) or the plan short form
+            // (T3.2, 05.T5.1) — panes were authored under both conventions.
+            const tokens = row.landedBy.match(/\d+\.T\d+\.\d+|T\d+\.\d+/g) ?? [];
+            expect(tokens.length, `${row.viewId}: landedBy names no tranche id`).toBeGreaterThan(0);
+            const found = tokens.some(t => header.includes(t) || header.includes(t.replace(/^0/, '')));
+            expect(
+                found,
+                `${row.viewId}: landedBy claims ${tokens.join('/')}, but ${row.carrier!.file}'s header ` +
+                    'names none of them'
             ).toBe(true);
         }
     });
@@ -226,11 +472,18 @@ describe('25.T25.21 — every present row is real, read off the source', () => {
     it('every direct-jsx mount points at a site that really renders the symbol', () => {
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
             if (row.mount.kind !== 'direct-jsx') continue;
-            const [file] = row.mount.site.split(':');
+            const { file, anchor } = row.mount.site;
             const host = readSurface(file);
+            // Both halves: the cited anchor is really there, and it really
+            // mounts this row's symbol. The anchor used to be a line number,
+            // which no test read and which had silently gone stale twice.
+            expect(
+                host.includes(anchor),
+                `${row.viewId} cites '${anchor}' in ${file}, which does not contain it`
+            ).toBe(true);
             expect(
                 host.includes(`<${row.carrier!.symbol}`),
-                `${row.viewId} claims to render at ${row.mount.site}, but ${file} contains no <${row.carrier!.symbol}`
+                `${row.viewId} claims to render in ${file}, which contains no <${row.carrier!.symbol}`
             ).toBe(true);
         }
     });
@@ -250,7 +503,18 @@ describe('25.T25.21 — every present row is real, read off the source', () => {
             if (row.mount.kind !== 'cross-coordinate') continue;
             // A surface recorded as landed elsewhere must cite where that was
             // decided; otherwise "absorbed" is indistinguishable from "missing".
-            expect(row.mount.ruling).toMatch(/\.ts:\d+/);
+            const { ruling, rulingCitation } = row.mount;
+            const decided = readSurface(rulingCitation.file);
+            expect(
+                decided.includes(rulingCitation.anchor),
+                `${row.viewId}: the ruling cites '${rulingCitation.anchor}' in ${rulingCitation.file}, ` +
+                    'which does not contain it'
+            ).toBe(true);
+            expect(
+                normalise(decided).includes(normalise(ruling)),
+                `${row.viewId}: the quoted ruling does not appear in ${rulingCitation.file} — ` +
+                    'a ruling that cannot be read back is a paraphrase, and this row rests on it'
+            ).toBe(true);
             expect(row.carrier, `${row.viewId} is cross-coordinate and must not claim an m4-owned carrier`).toBeNull();
         }
     });
@@ -581,24 +845,228 @@ describe('25.T25.21 — the integrated 4-5-0 consumer layout (SPEC:290)', () => 
     });
 });
 
-describe('25.T25.21 — the layout law is derived from the real gate', () => {
-    it('the one daily-only row really is gated on the layout, in App.tsx', () => {
-        const dailyOnly = M4_WAVE_C_CONTRIBUTIONS.filter(row => row.layoutLaw === 'daily-only');
-        expect(dailyOnly.map(row => row.viewId)).toEqual(['m4.nara.mercuriusRelay']);
+describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () => {
+    /**
+     * The first cut of this block claimed derivation and delivered it for the 12
+     * tab/nested rows only; the other ten were hard-coded a second time in
+     * `expect(law('x')).toBe(...)` assertions sitting beside the rows they were
+     * supposed to check. That is the same claim written twice, and it could not
+     * fail loudly: if the deep layout later CARRIED `personalHome` or `cosmic`,
+     * row and test would have agreed with each other while both disagreed with
+     * the shell. So every mount kind now resolves to the HOST SURFACE it really
+     * renders in, and the law is read off the pane set the shell really builds.
+     */
+
+    /** Where a row's law comes from once its mount is resolved. */
+    type LayoutHost =
+        | { kind: 'surface'; component: string; via: string }
+        | { kind: 'layout-gated'; layout: string; via: string }
+        | { kind: 'command-overlay'; commandId: string }
+        | { kind: 'unrendered' };
+
+    const carried = new Set(DEEP_PANE_SET.map(mount => mount.surfaceId));
+    const withdrawn = new Set(DEEP_PANE_WITHDRAWALS.map(entry => entry.surfaceId));
+    const reserved = new Set(DEEP_PANE_RESERVATIONS.map(entry => entry.surfaceId));
+
+    /**
+     * The DAILY component registry. The deep models are built from
+     * `ui/deepPaneSet.ts`, so every string-literal `component:` key in `App.tsx`
+     * is a daily-model key (plus the dynamic `editor` tab). This is what makes
+     * `deep-only` derivable rather than merely representable: carried into depth
+     * AND absent here.
+     */
+    const dailyComponents = new Set(
+        [...APP.matchAll(/component: '([^']+)'/g)].map(match => match[1])
+    );
+
+    /** The factory is declared ahead of `App`, so an anchor's side of that
+     *  boundary tells us whether it is a pane body or a shell-level overlay. */
+    const FACTORY_AT = APP.indexOf('function factory(');
+    const APP_AT = APP.indexOf('export function App(');
+
+    /** The `case 'x':` arm an offset sits inside, or null outside the factory. */
+    function enclosingFactoryCase(body: string, at: number): string | null {
+        if (body !== APP || at < FACTORY_AT || at > APP_AT) {
+            return null;
+        }
+        const cases = [...body.slice(0, at).matchAll(/case '([^']+)':/g)];
+        return cases.length > 0 ? cases[cases.length - 1][1] : null;
+    }
+
+    /** `component:` key whose factory arm renders `<Symbol`. */
+    function componentRenderedBy(symbol: string): string | null {
+        const arms = [...APP.matchAll(/case '([^']+)':/g)];
+        for (let i = 0; i < arms.length; i++) {
+            const from = arms[i].index! + arms[i][0].length;
+            const to = i + 1 < arms.length ? arms[i + 1].index! : APP_AT;
+            if (APP.slice(from, to).includes(`<${symbol}`)) {
+                return arms[i][1];
+            }
+        }
+        return null;
+    }
+
+    function resolveHost(row: (typeof M4_WAVE_C_CONTRIBUTIONS)[number]): LayoutHost {
+        const mount = row.mount;
+        if (mount.kind === 'flexlayout-tab') {
+            return { kind: 'surface', component: mount.component, via: 'its own tab' };
+        }
+        if (mount.kind === 'nested-section') {
+            return { kind: 'surface', component: mount.hostComponent, via: 'the pane it nests in' };
+        }
+        if (mount.kind === 'overlay-command') {
+            return { kind: 'command-overlay', commandId: mount.commandId };
+        }
+        if (mount.kind === 'model-only' || mount.kind === 'absent') {
+            return { kind: 'unrendered' };
+        }
+        if (mount.kind === 'composition-slot') {
+            // BRIDGE, read out of the sources rather than assumed: the personal
+            // composition is loaded by the root the `personalHome` factory arm
+            // renders, so a geometric slot is hosted by `personalHome`.
+            const arm = componentRenderedBy('PersonalRecognitionEngine');
+            expect(arm, 'the personal composition root is not rendered by any factory arm').toBe(
+                'personalHome'
+            );
+            expect(
+                ENGINE.includes('loadPersonalComposition'),
+                'the composition root no longer loads the personal composition'
+            ).toBe(true);
+            return { kind: 'surface', component: 'personalHome', via: 'the personal composition' };
+        }
+        if (mount.kind === 'cross-coordinate') {
+            // The host is a MODULE path; resolve it to a component key through
+            // App.tsx's own import + factory arm.
+            const specifier = `./${mount.host.replace(/\.tsx?$/, '')}`;
+            const imported = new RegExp(
+                `import \\{([^}]+)\\} from '${specifier.replace(/[.\/]/g, m => `\\${m}`)}'`
+            ).exec(APP);
+            expect(imported, `App.tsx imports nothing from ${specifier}`).not.toBeNull();
+            const symbol = imported![1].split(',')[0].trim();
+            const component = componentRenderedBy(symbol);
+            expect(component, `no factory arm renders <${symbol}>`).not.toBeNull();
+            return { kind: 'surface', component: component!, via: `<${symbol}> in ${mount.host}` };
+        }
+        // direct-jsx: the anchor's own position decides. Inside the factory it is
+        // a pane body and inherits that pane's law; outside it is a shell-level
+        // overlay and the `activeLayout === …` gate wrapping it IS the law.
+        const body = readSurface(mount.site.file);
+        const at = body.indexOf(mount.site.anchor);
+        expect(at, `${mount.site.file} no longer contains ${mount.site.anchor}`).toBeGreaterThan(-1);
+        const arm = enclosingFactoryCase(body, at);
+        if (arm !== null) {
+            return { kind: 'surface', component: arm, via: `inside the \`${arm}\` factory arm` };
+        }
+        // bounded window: the gate must WRAP the anchor, not merely exist somewhere
+        const gates = [...body.slice(Math.max(0, at - 200), at).matchAll(/activeLayout === '([^']+)'/g)];
         expect(
-            APP.includes("activeLayout === 'daily-0-1'"),
-            'the daily-only claim rests on a layout gate that App.tsx no longer has'
+            gates.length,
+            `${mount.site.anchor} is a shell-level overlay with no layout gate wrapping it — the daily-only claim would rest on nothing`
+        ).toBeGreaterThan(0);
+        return {
+            kind: 'layout-gated',
+            layout: gates[gates.length - 1][1],
+            via: `the overlay gate wrapping ${mount.site.anchor}`
+        };
+    }
+
+    function expectedLaw(host: LayoutHost, viewId: string): string | null {
+        if (host.kind === 'unrendered') {
+            return null;
+        }
+        if (host.kind === 'command-overlay') {
+            expect(
+                CATALOG.includes(`'${host.commandId}'`),
+                `${viewId} mounts as command ${host.commandId}, which is not catalogued`
+            ).toBe(true);
+            return 'both';
+        }
+        if (host.kind === 'layout-gated') {
+            return host.layout === 'ide-deep' ? 'deep-only' : 'daily-only';
+        }
+        const component = host.component;
+        // A host still RESERVED for its 28.x tranche is in NEITHER layout, so no
+        // layout law can be true of it yet. Nothing hits this today; the branch
+        // exists so the tranche that lands one is not forced to lie.
+        if (reserved.has(component)) {
+            return null;
+        }
+        expect(
+            carried.has(component) || withdrawn.has(component),
+            `${viewId} hosts in \`${component}\` (${host.via}), which has no deep disposition at all`
         ).toBe(true);
+        if (carried.has(component)) {
+            return dailyComponents.has(component) ? 'both' : 'deep-only';
+        }
+        return 'daily-only';
+    }
+
+    it('resolves EVERY row to a real host — no mount kind is left out', () => {
+        const kinds = new Set(M4_WAVE_C_CONTRIBUTIONS.map(row => row.mount.kind));
+        // if a new mount kind appears, the derivation must grow to meet it
+        expect([...kinds].sort()).toEqual([
+            'absent',
+            'composition-slot',
+            'cross-coordinate',
+            'direct-jsx',
+            'flexlayout-tab',
+            'model-only',
+            'nested-section',
+            'overlay-command'
+        ]);
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            expect(resolveHost(row).kind, `${row.viewId}`).toBeTruthy();
+        }
     });
 
-    it('no row claims deep-only, because no deep pane set exists yet', () => {
-        // `ideDeepDefault()` is unbuilt (Track 52 T4 pending) and the two models
-        // are constructed once at boot and never rebuilt on a layout change, so
-        // a deep-only claim could not be true. The type forbids it; this pins
-        // the reason so a later widening is a deliberate act.
-        expect(APP.includes('ideDeepDefault')).toBe(false);
+    it('every row reads its layout law off the real deep pane set', () => {
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
-            expect(['both', 'daily-only']).toContain(row.layoutLaw);
+            const host = resolveHost(row);
+            expect(
+                row.layoutLaw,
+                `${row.viewId} is resolved through ${host.kind === 'surface' ? `\`${host.component}\` (${host.via})` : host.kind}`
+            ).toBe(expectedLaw(host, row.viewId));
+        }
+    });
+
+    it('the derivation really exercises the verdicts it can produce', () => {
+        // A gate that only ever produced one answer would pass while checking
+        // nothing, so each live verdict must have at least one row behind it.
+        // Deliberately NOT exact counts: a later tranche adding a row would then
+        // fail here for a reason having nothing to do with what this checks, and
+        // the derivation above is what actually holds each row to the shell.
+        // `deep-only` is derivable and unclaimed — checked separately below.
+        const laws = M4_WAVE_C_CONTRIBUTIONS.map(row => row.layoutLaw);
+        expect(laws.filter(law => law === 'daily-only').length).toBeGreaterThan(0);
+        expect(laws.filter(law => law === 'both').length).toBeGreaterThan(0);
+        expect(laws.filter(law => law === null).length).toBeGreaterThan(0);
+        expect(laws.length).toBe(M4_WAVE_C_CONTRIBUTIONS.length);
+    });
+
+    it('a host reserved for an unlanded 28.x tranche is honestly unreached today', () => {
+        // The `null`-for-reserved branch above is not decoration: assert that no
+        // row currently hosts in one, so the branch is a real future case rather
+        // than dead code nobody has read.
+        const hostedInReserved = M4_WAVE_C_CONTRIBUTIONS.filter(row => {
+            const host = resolveHost(row);
+            return host.kind === 'surface' && reserved.has(host.component);
+        }).map(row => row.viewId);
+        expect(hostedInReserved).toEqual([]);
+        expect([...reserved].sort()).toEqual([
+            'agenticControlRoom',
+            'backendStudio',
+            'coordinateTree'
+        ]);
+    });
+
+    it('no M4 row claims deep-only — the derivation allows it, the carrier does not', () => {
+        // `deep-only` became representable at 52.T4 AND derivable: a host carried
+        // into depth but absent from the daily registry produces it. Nothing here
+        // does, because every M4 surface reaching depth is mounted in daily too,
+        // so the first honest claimant will be 28.T28.5's control room.
+        expect(APP.includes('ideDeepDefault'), 'the deep pane set this law derives from').toBe(true);
+        for (const row of M4_WAVE_C_CONTRIBUTIONS) {
+            expect(row.layoutLaw, `${row.viewId}`).not.toBe('deep-only');
         }
     });
 

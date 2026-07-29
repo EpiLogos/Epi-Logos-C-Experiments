@@ -107,13 +107,21 @@ const IDENTITY_FIELDS = [
     'sessionKey'
 ] as const;
 
-/** The house boot idiom, with the boot-sized budget the gateway check uses. */
+/**
+ * The house boot idiom, with the boot-sized budget the gateway check uses. The
+ * TICK wait is not decoration: `profileGeneration` is one of the seven identity
+ * fields and this spec asserts it carries a real integer, so the shell has to
+ * have received its first profile tick before the first crossing. Without it the
+ * assertion is a race that loses on a cold run — which is exactly how it failed
+ * once, in full-suite position, having passed every time in isolation.
+ */
 async function boot(page: Page): Promise<void> {
     await page.goto('/');
     await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', {
         timeout: 20_000
     });
+    await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 }
 
 async function ensureFace(page: Page, face: '0' | '1'): Promise<void> {

@@ -436,6 +436,15 @@ function tabNode(mount: DeepPaneMount) {
  * `composition` — "the 0/1 faces compose ONE editor area, never side-by-side
  * panes" — so the deep workspace does not split its editor area, and no carrier
  * layout composes a `bottom`.
+ *
+ * THE RAIL OPENS CLOSED, and that is THE OPENING-TAB LAW applied to the left
+ * slot rather than an oversight. `selected` is omitted, so flexlayout's own
+ * default (-1, collapsed) holds: the rail's tab BUTTONS are the affordance and a
+ * pane mounts when the user picks one. Opening it would mount `fileTree` on BOTH
+ * faces the instant the layout is entered — two unprompted vault reads for a
+ * surface nobody asked for, on top of the main tabsets already mounting. It also
+ * happens to be the honest pre-52.T6 state of an `activity-bar-switched` slot:
+ * until the mode registry actually runs, no mode IS the current one.
  */
 export function deepLayoutJson(model: DeepPaneModelId, omniBorder: unknown) {
     return {
@@ -445,7 +454,6 @@ export function deepLayoutJson(model: DeepPaneModelId, omniBorder: unknown) {
                 type: 'border',
                 location: 'left',
                 size: 260,
-                selected: 0,
                 children: deepPaneMounts(model, 'left').map(tabNode)
             },
             omniBorder

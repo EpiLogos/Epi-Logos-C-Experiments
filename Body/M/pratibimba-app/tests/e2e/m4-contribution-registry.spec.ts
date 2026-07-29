@@ -96,10 +96,34 @@ test('25.T25.21: every enrolled tab surface is reachable by the label the regist
     for (const row of tabRows) {
         if (row.mount.kind !== 'flexlayout-tab') continue;
         await openTab(page, row.mount.tabLabel, row.mount.region);
+        const surface = page.getByTestId(row.testid as string);
         await expect(
-            page.getByTestId(row.testid as string),
+            surface,
             `${row.viewId}: clicking '${row.mount.tabLabel}' did not paint data-testid="${row.testid}"`
         ).toBeVisible({ timeout: 20_000 });
+
+        // AND IT MUST BE THE SURFACE ROOT, not something inside it.
+        //
+        // Every source-level assertion passes for a testid that names a CHILD
+        // element — the file really does emit it — so the register could claim
+        // a refresh button as a whole surface and no gate noticed. An
+        // independent verifier proved that: swapping one row's testid for a
+        // button inside it left vitest AND this suite fully green. Rootness is
+        // a DOM fact, so it is checked here: inside its own tab panel, the
+        // named element must have no ancestor that also carries a testid.
+        const isRoot = await surface.evaluate(el => {
+            const panel = el.closest('.flexlayout__tab');
+            if (!panel) return false;
+            for (let p = el.parentElement; p && p !== panel; p = p.parentElement) {
+                if (p.hasAttribute('data-testid')) return false;
+            }
+            return true;
+        });
+        expect(
+            isRoot,
+            `${row.viewId}: data-testid="${row.testid}" is nested inside another handled element, ` +
+                'so it names a part of the surface rather than the surface'
+        ).toBe(true);
     }
 });
 
@@ -157,37 +181,42 @@ test('25.T25.21: the daily-only surface obeys the layout gate the register recor
     await expect(shell).toBeVisible();
     await expect(shell).toHaveAttribute('data-active-layout', 'daily-0-1');
 
+    // DERIVED, not hardcoded. This assertion used to name one view id, and
+    // 52.T4 made twelve rows daily-only when the deep layout began withdrawing
+    // the shell previews — so a hardcoded list turned into a stale claim that
+    // failed for a reason having nothing to do with what it tested. The register
+    // is the source; the browser's job is to hold it to its word.
     const dailyOnly = M4_WAVE_C_CONTRIBUTIONS.filter(row => row.layoutLaw === 'daily-only');
-    expect(dailyOnly.map(row => row.viewId)).toEqual(['m4.nara.mercuriusRelay']);
+    expect(dailyOnly.length, 'the register claims no daily-only surfaces at all').toBeGreaterThan(0);
+    const withdrawn = dailyOnly.filter(row => row.testid !== null);
 
-    // The chip's gate is `face === 0 && activeLayout === 'daily-0-1'`, so the
-    // cosmic face in the daily layout is exactly where it must appear.
+    // The Mercurius chip's gate is `face === 0 && activeLayout === 'daily-0-1'`,
+    // so the cosmic face in the daily layout is exactly where it must appear.
     if ((await shell.getAttribute('data-face')) !== '0') {
         await page.getByTestId('face-toggle').click();
     }
     await expect(shell).toHaveAttribute('data-face', '0');
     await expect(page.getByTestId('m4-mercurius-relay')).toBeVisible({ timeout: 20_000 });
 
-    // Cross into the deep layout through a real cross-layout intent — today the
-    // only way in, since the deliberate switch is Track 52 T3 and still pending.
+    // Cross into the deep layout through the REAL switch. 52.T3 landed
+    // `layout.switch.ide-deep` and deliberately removed the cross-layout-intent
+    // side channel this test used to ride ("the side channel that stood in for
+    // it is gone"), so driving the intent would now prove nothing.
     await page.evaluate(async () => {
         const registry = await import('/src/commands/registry.ts');
-        const crossLayout = await import('/src/commands/crossLayoutIntent.ts');
-        await registry.commands.execute(crossLayout.CROSS_LAYOUT_INTENT_COMMAND, {
-            coordinate: 'M3-3',
-            artifactUri: null,
-            reviewId: null,
-            dayNow: null,
-            sessionKey: null,
-            profileGeneration: 0,
-            privacyClass: null,
-            requestedExtensionId: 'm3-mahamaya',
-            requestedContributionId: 'codon'
-        });
+        await registry.commands.execute('layout.switch.ide-deep');
     });
     await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep', { timeout: 20_000 });
-    // The claim under test: this is the ONE surface the layout removes.
-    await expect(page.getByTestId('m4-mercurius-relay')).toHaveCount(0);
+
+    // The claim under test: every surface the register calls daily-only really
+    // is gone from the deep layout. A row that survives here is a row whose
+    // layout law is a guess.
+    for (const row of withdrawn) {
+        await expect(
+            page.getByTestId(row.testid as string),
+            `${row.viewId} is declared daily-only but still renders under ide-deep`
+        ).toHaveCount(0);
+    }
 });
 
 /** Drive whatever mechanism a row declares, and wait for its handle to paint. */

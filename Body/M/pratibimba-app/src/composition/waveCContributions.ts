@@ -16,9 +16,9 @@
  *   out the personal editor area from it. That is false in the tree it was
  *   written against: `setContributors` is defined at
  *   `epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx:87`
- *   and called nowhere, `contributorRecords` initialises `[]` and is never
- *   assigned, so `TRACK_08_CONTRIBUTION` has zero runtime consumers in any of
- *   the six barrels. The carrier's live composition path
+ *   and called nowhere — so its one assignment to `contributorRecords` is dead
+ *   code, and the field never leaves the `[]` it initialises to. So
+ *   `TRACK_08_CONTRIBUTION` has zero runtime consumers in any of the six barrels. The carrier's live composition path
  *   (`personalComposition.ts:167` → `compositionLoad.ts:84`) keys on
  *   `CompositionContributor`, which shares NO field with the TRACK_08 row
  *   shape. So there is no wiring to port. What the frozen table was actually
@@ -44,16 +44,53 @@
  *   to select and no evidence to serialise, and declaring the seams anyway is
  *   the registered-but-unfired shape this register exists to refuse.
  *
- *   WHY THERE IS NO `layout` COLUMN BUT THERE IS A `layoutLaw`. `ide-deep`
- *   selects no distinct pane set — `ideDeepDefault()` does not exist and Track
- *   52 T4/T5 are pending — and the two FlexLayout models are built once at boot
- *   (`App.tsx:612-624`) and never rebuilt by `setActiveLayout` (`:842`). So
- *   every M4 surface renders identically in both layouts today, and a per-row
- *   "which layout" column would be vacuously `both` on all but one row. The
- *   one genuine differential is real and is recorded: the Mercurius chip is
- *   gated on `face === 0 && activeLayout === 'daily-0-1'` (`App.tsx:1306-1308`).
- *   `deep-only` is deliberately unrepresentable — nothing can honestly claim it
- *   until T4 lands, and the gate refuses it.
+ *   WHY THERE IS NO `layout` COLUMN BUT THERE IS A `layoutLaw`. Updated by
+ *   [[52.T4]], which landed the thing this paragraph was written against.
+ *   `ideDeepDefault()` now exists and the shell holds four models — one per
+ *   (face, layout) cell — so `ide-deep` really does select a distinct pane set
+ *   (`ui/deepPaneSet.ts`) and `layoutLaw` stops being vacuous.
+ *
+ *   IT IS DERIVED FOR EVERY ROW, AND THE DERIVATION IS TOTAL. The first cut of
+ *   this paragraph claimed derivation and the gate only delivered it for the 12
+ *   tab/nested rows; the other ten were hard-coded twice — once in the row, once
+ *   in an `expect(law('x')).toBe(...)` beside it — which is the same assertion
+ *   written in two places, not a check. Worse, those duplicates could not go
+ *   stale loudly: had the deep layout later CARRIED `personalHome` or `cosmic`,
+ *   row and test would have agreed with each other and disagreed with the shell.
+ *   So the gate now resolves every mount kind to the HOST SURFACE it really
+ *   renders in and reads the law off the pane set:
+ *     `flexlayout-tab`    → its own `component`
+ *     `nested-section`    → `hostComponent`
+ *     `composition-slot`  → `personalHome`, bridged through the `personalHome`
+ *                           factory arm rendering the root that runs
+ *                           `loadPersonalComposition()` (the bridge is read out
+ *                           of `App.tsx` + the engine, not assumed)
+ *     `direct-jsx`        → the factory `case` its anchor SITS INSIDE, or, when
+ *                           the anchor is a shell-level overlay outside the
+ *                           factory, the `activeLayout === …` gate that wraps it
+ *     `cross-coordinate`  → its host MODULE resolved to a component key through
+ *                           `App.tsx`'s own import + factory arm
+ *     `overlay-command`   → no pane host: a command overlay is outside both
+ *                           `<Layout>`s, so `both`, and the id must be catalogued
+ *     `model-only`/`absent` → no host at all, so `null` (see `layoutLaw`)
+ *   Carried ⇒ `both` (every carried surface is in a daily model too), withdrawn
+ *   ⇒ `daily-only`, carried-but-absent-from-the-daily-registry ⇒ `deep-only`,
+ *   and a host still RESERVED for its 28.x tranche ⇒ `null`, because a surface
+ *   in neither layout cannot have a layout law. So a row genuinely cannot claim
+ *   a layout the shell does not give it.
+ *
+ *   Twelve rows are `daily-only` and five are `null` after 52.T4. The
+ *   `daily-only` ones share one canon reason —
+ *   [[M'-TAURI-PORT-SPEC]] :65, "Shell surfaces preview; subsystem pages
+ *   deliver depth. Do not merge them." The deep layout withdraws the two
+ *   integrated shell previews (`cosmic`, `personalHome`) and the daily
+ *   lived-flow reading surfaces (journal, calendar, oracle, the close ceremony
+ *   and its anchor, the personal-coordinate surface). Every M4 row whose host
+ *   is one of those follows it into `daily-only`; the M4 DEPTH surfaces
+ *   (arena, medicine, transform, logos cycle) are carried and stay `both`.
+ *   `deep-only` is now representable — the deep layout is real — and no M4 row
+ *   claims it, because every M4 surface that reaches depth is also mounted in
+ *   the daily shell. The first honest claimant will be 28.T28.5's control room.
  *
  *   WHY `disposition` IS NULL ON EVERY ROW. Track 52 T5's acceptance
  *   (`52-four-plus-two-layout-layer.md:61`) is that the disposition record must
@@ -145,6 +182,33 @@ export const KNOWN_PERSONAL_SLOT_NAMES: readonly PersonalGeometricSlotName[] = O
  */
 export type WaveCSubsystemId = 'M0' | 'M1' | 'M2' | 'M3' | 'M4' | 'M5';
 
+/**
+ * A citation into carrier SOURCE, anchored by content rather than by line.
+ *
+ * The distinction this type enforces: a SPEC citation is line-exact and quoted,
+ * because the design documents are stable and the quote is the claim. A SOURCE
+ * citation cannot be, because source moves — the one target this register cites
+ * most had moved twice before anyone first checked it. So source is cited by a
+ * substring the gate reads back out of the named file. An anchor that stops
+ * being true fails the gate; a line number that stops being true fails nobody.
+ */
+export interface SourceCitation {
+    /** Path relative to `src/`. */
+    readonly file: string;
+    /** A substring the gate looks for in that file. */
+    readonly anchor: string;
+    /**
+     * Invert the check: the anchor must NOT appear in the file.
+     *
+     * A gap is a claim of ABSENCE, and absence cannot be cited by pointing at a
+     * file that contains the thing. The honest citation names the place the
+     * surface WOULD be registered if it existed — the shell's component factory,
+     * the cross-layout routing table — and proves it is not there. Without this,
+     * three gap rows had nothing checkable to cite and fell back to prose.
+     */
+    readonly mustBeAbsent?: boolean;
+}
+
 /** The design source every `warrant` quotes. */
 const SPEC = '25-m4-nara-frontend-deep.md';
 /** The frozen barrel, cited only where an id predates the Track-25 brief. */
@@ -162,9 +226,12 @@ export type MiniMode = 'badge' | 'compact-card' | 'inspector';
 /**
  * HOW the surface is reached. A discriminated union because the carrier's
  * reachability mechanisms are genuinely different machines: a FlexLayout tab
- * (`App.tsx:180-239`) is not a command overlay (`:934`) is not direct JSX in a
- * factory arm (`:1303-1329`) is not a geometric composition slot
- * (`personalComposition.ts:99-125`).
+ * (`App.tsx::personalDefault`, and since 52.T4 also `::ideDeepDefault` over
+ * `ui/deepPaneSet.ts`) is not a command overlay (`App.tsx`'s
+ * `identity.openWizard` registration) is not direct JSX in the shell's face
+ * slot (the `activeLayout === 'daily-0-1'` overlays) is not a geometric
+ * composition slot (`personalComposition.ts`'s `PERSONAL_SLOT_CARRIERS`). Cited by SYMBOL, not by
+ * line: 52.T4 moved every one of these line numbers.
  */
 export type WaveCMount =
     | {
@@ -190,8 +257,14 @@ export type WaveCMount =
       }
     | {
           readonly kind: 'direct-jsx';
-          /** `file:line` of the JSX site. */
-          readonly site: string;
+          /**
+           * The JSX site, SYMBOL-ANCHORED rather than line-numbered. An earlier
+           * cut carried `'App.tsx:1306-1308'`; by the time it was first verified
+           * the same target had moved twice. A line number in prose is a claim
+           * nothing can check and everything can invalidate, so the citation is
+           * `{file, anchor}` and the gate reads the file for the anchor.
+           */
+          readonly site: SourceCitation;
       }
     | {
           readonly kind: 'overlay-command';
@@ -203,10 +276,16 @@ export type WaveCMount =
           readonly slot: PersonalGeometricSlotName;
       }
     | {
-          /** Landed, but on another coordinate's face. Quoted ruling required. */
+          /**
+           * Landed, but on another coordinate's face. A quoted ruling is
+           * required — otherwise "absorbed elsewhere" is indistinguishable from
+           * "missing" — and the quote is backed by a `SourceCitation` so the
+           * gate can read it out of the file that decided it.
+           */
           readonly kind: 'cross-coordinate';
           readonly host: string;
           readonly ruling: string;
+          readonly rulingCitation: SourceCitation;
       }
     | {
           /** The model landed; nothing renders it. */
@@ -216,11 +295,14 @@ export type WaveCMount =
     | { readonly kind: 'absent' };
 
 /**
- * Layout law, DERIVED FROM A REAL GATE rather than asserted. `deep-only` is
- * absent from this union on purpose: `ideDeepDefault()` does not exist, so
- * nothing in this carrier can truthfully claim it yet.
+ * Layout law, DERIVED FROM A REAL GATE rather than asserted — see the header's
+ * mount-kind → host table for how each row is resolved. 52.T4 landed
+ * `ideDeepDefault()` and `ui/deepPaneSet.ts`, so `deep-only` is representable
+ * for the first time AND derivable (carried into depth, absent from the daily
+ * registry); nothing claims it yet. The gate holds every row's claim against the
+ * pane set the shell really builds rather than against a promise.
  */
-export type LayoutLaw = 'both' | 'daily-only';
+export type LayoutLaw = 'both' | 'daily-only' | 'deep-only';
 
 /** Filled by Track 52 T5 when the 4+2 subsystem pages land. Null until then. */
 export type WaveCDisposition = 'moves' | 'mirrored' | 'stays-preview';
@@ -241,8 +323,22 @@ export interface WaveCGap {
      * blocker at all, so `null` is the honest value for a gap with no slot.
      */
     readonly compositionBlocker: CompositionBlockerId | null;
-    /** `file:line` proving the absence, or naming the dark producer. */
+    /**
+     * The ARGUMENT for the absence, in prose. Prose alone is unfalsifiable, so
+     * it may not carry source line numbers (the gate rejects `file.ts:NN` here)
+     * and it does not stand alone — `citations` is the checkable half.
+     */
     readonly evidence: string;
+    /**
+     * The checkable half of the evidence: each cited file must exist and must
+     * contain its anchor. Required non-empty.
+     *
+     * This field exists because the first cut let three of six gap rows carry
+     * pure prose while the field's own doc promised `file:line`, and the gate
+     * only measured the string's LENGTH — so a fabricated paragraph passed. An
+     * anchor is a substring a reader can grep and a test can prove.
+     */
+    readonly citations: readonly SourceCitation[];
 }
 
 /**
@@ -377,8 +473,14 @@ export interface WaveCContribution {
     /** The stable handle a browser receipt drives. Required on every real row. */
     readonly testid: string | null;
     readonly mount: WaveCMount;
-    readonly layoutLaw: LayoutLaw;
-    /** Null ONLY for a spec-exempt surface (`privacyChrome.ts:183-189`). */
+    /**
+     * NULL when the row renders NOWHERE. A surface with no host has no layout
+     * reach, so `both` would be a claim about two layouts it does not appear in
+     * — the registered-but-unfired shape this register refuses. The sibling gate
+     * derives this field for every row and requires `null` exactly here.
+     */
+    readonly layoutLaw: LayoutLaw | null;
+    /** Null ONLY for a surface in `privacyChrome.ts`'s `SPEC_EXEMPT_SURFACES`. */
     readonly privacyClass: PrivacyClass | null;
     readonly miniModes: readonly MiniMode[];
     /** Required iff `miniModes` is non-empty: the line DEFINING the modes. */
@@ -427,11 +529,11 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/DayCalendarPane.tsx', symbol: 'DayCalendarPane' },
         testid: 'day-calendar',
         mount: { kind: 'flexlayout-tab', component: 'dayCalendar', tabLabel: 'Calendar', face: 1, region: 'personal-left-border' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: ['badge', 'compact-card', 'inspector'],
         miniModeWarrant: `${SPEC}:69 — "badge mode: month-day chip; compact-card: week-strip; inspector: full month"`,
-        warrant: `${SPEC}:69 — "View id: \`m4.nara.dayCalendar\` (new — extend \`ALL_VIEW_IDS\`)"`,
+        warrant: `${SPEC}:69 — "View id: \`m4.nara.dayCalendar\` (new — extend \`ALL_VIEW_IDS\` in \`src/common/index.ts:11\`)"`,
         currentStateSelector: selector('m4.nara.dayCalendar', 'session-store', 'useSessionStore', ['dayNow']),
         selectionHandler: routed('m4.nara.dayCalendar', 'm4-nara', 'dayCalendar'),
         evidenceSerializer: evidence('m4.nara.dayCalendar', 'protected_local', 'data-provenance'),
@@ -449,13 +551,13 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         mount: {
             kind: 'nested-section',
             hostComponent: 'dayCalendar',
-            note: 'The 25.2 brief assigns no view id; it extends the widget whose view is the pre-existing day container, and the carrier renders it as a section of the calendar pane (DayCalendarPane.tsx:427-460), revealed by selecting a day.'
+            note: 'The 25.2 brief assigns no view id; it extends the widget whose view is the pre-existing day container, and the carrier renders it as the `day-container` section of the calendar pane, revealed by selecting a day.'
         },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
-        warrant: `${BARREL}:19 — the pre-existing \`m4.nara.dayContainer\` view id; class from ${SPEC}:75 — "Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`,
+        warrant: `${BARREL}:17 — the pre-existing \`m4.nara.dayContainer\` view id; class from ${SPEC}:75 — "Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`,
         currentStateSelector: selector('m4.nara.dayContainer', 'session-store', 'useSessionStore', ['dayNow']),
         selectionHandler: unrouted(
             'm4.nara.dayContainer',
@@ -478,7 +580,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/JournalTimelinePane.tsx', symbol: 'JournalTimelinePane' },
         testid: 'journal-timeline',
         mount: { kind: 'flexlayout-tab', component: 'journalTimeline', tabLabel: 'Journal', face: 1, region: 'personal-left-border' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -526,9 +628,9 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         mount: {
             kind: 'nested-section',
             hostComponent: 'sessionCloseCeremony',
-            note: 'The quintessence reaches the user as a handle line inside the ceremony (M4SessionCloseCeremonyPane.tsx:204-217), not as a standalone chip. Handle-form only: the hash and clock, never the reflection body.'
+            note: 'The quintessence reaches the user as the `ceremony-quintessence-handle` line inside the ceremony, not as a standalone chip. Handle-form only: the hash and clock, never the reflection body.'
         },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -555,7 +657,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: null,
         testid: null,
         mount: { kind: 'composition-slot', slot: 'center-composition' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -568,7 +670,11 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.6',
             compositionBlocker: 'pending-psychoid-cymatic-solver',
             evidence:
-                'personalComposition.ts:47-53 + :134-140 — the center-composition slot is owned by m4-nara and has no renderer; the blocker is already registered against the slot.'
+                'personalComposition.ts — the center-composition slot is owned by m4-nara and has no renderer; the blocker is already registered against the slot.',
+            citations: [
+                { file: 'composition/personalComposition.ts', anchor: "'center-composition': 'pending-psychoid-cymatic-solver'" },
+                { file: 'panes/M2CorrespondencePane.tsx', anchor: 'CymaticField' }
+            ],
         },
         disposition: null
     },
@@ -581,7 +687,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: null,
         testid: null,
         mount: { kind: 'absent' },
-        layoutLaw: 'both',
+        layoutLaw: null,
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -594,7 +700,12 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.7',
             compositionBlocker: null,
             evidence:
-                'crossLayoutIntent.ts:86 routes the m4-nara/personalCoordinate INTENT to the pratibimbaCoordinate component, but that pane renders the handle panel, consent editor and proposals list (PratibimbaCoordinatePane.tsx:155, :234) — none of the four items 25.7 assigns (resonance score, ConjugateFormCharacter, four L2-ordered element glyphs, dominant chakra + sun-decan planet). The intent is real; the face is not. Enrolling this under the 25.14 row would close a pending tranche by adjacency.'
+                'crossLayoutIntent.ts routes the m4-nara/personalCoordinate INTENT to the pratibimbaCoordinate component, but that pane renders the handle panel, the consent editor and the proposals list — none of the four items 25.7 assigns (resonance score, ConjugateFormCharacter, four L2-ordered element glyphs, dominant chakra + sun-decan planet). The intent is real; the face is not. Enrolling this under the 25.14 row would close a pending tranche by adjacency.',
+            citations: [
+                { file: 'commands/crossLayoutIntent.ts', anchor: "target('m4-nara', 'personalCoordinate'" },
+                { file: 'panes/PratibimbaCoordinatePane.tsx', anchor: 'data-testid="consent-editor"' },
+                { file: 'panes/PratibimbaCoordinatePane.tsx', anchor: 'data-testid="personal-handle-panel"' }
+            ],
         },
         disposition: null
     },
@@ -607,7 +718,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/OraclePane.tsx', symbol: 'OraclePane' },
         testid: 'oracle-pane',
         mount: { kind: 'flexlayout-tab', component: 'oracle', tabLabel: 'Oracle', face: 1, region: 'personal-left-border' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -627,7 +738,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: null,
         testid: null,
         mount: { kind: 'absent' },
-        layoutLaw: 'both',
+        layoutLaw: null,
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -640,7 +751,12 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.9',
             compositionBlocker: null,
             evidence:
-                'No oracleHistory symbol, view id or pane exists anywhere under src/. The OraclePane renders the current cast only.'
+                'No oracleHistory symbol, view id or pane exists anywhere under src/. The OraclePane renders the current cast only.',
+            citations: [
+                { file: 'panes/OraclePane.tsx', anchor: 'data-testid="oracle-pane"' },
+                { file: 'App.tsx', anchor: 'oracleHistory', mustBeAbsent: true },
+                { file: 'panes/OraclePane.tsx', anchor: 'castHistory', mustBeAbsent: true }
+            ],
         },
         disposition: null
     },
@@ -705,7 +821,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             kind: 'model-only',
             note: 'The lens-application model landed with its own unit test and nothing else. Its only importer in the whole carrier is its sibling test file.'
         },
-        layoutLaw: 'both',
+        layoutLaw: null,
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -718,7 +834,12 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.12',
             compositionBlocker: null,
             evidence:
-                'panes/m4LensApplication.ts has zero non-test importers, and crossLayoutIntent.ts:119 routes m4-nara/lens to the personalHome composition rather than to a lens surface. The model also mints a fourth privacy spelling of its own (LENS_READING_PRIVACY_CLASS at :36), which is further evidence it was never wired to the register.'
+                'panes/m4LensApplication.ts has zero non-test importers, and crossLayoutIntent.ts routes m4-nara/lens to the personalHome composition rather than to a lens surface. The model also mints a fourth privacy spelling of its own (`LENS_READING_PRIVACY_CLASS`), which is further evidence it was never wired to the register.',
+            citations: [
+                { file: 'panes/m4LensApplication.ts', anchor: 'buildLensReadingCard' },
+                { file: 'panes/m4LensApplication.ts', anchor: 'LENS_READING_PRIVACY_CLASS' },
+                { file: 'commands/crossLayoutIntent.ts', anchor: "target('m4-nara', 'lens'" }
+            ],
         },
         disposition: null
     },
@@ -756,7 +877,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/PratibimbaCoordinatePane.tsx', symbol: 'PratibimbaCoordinatePane' },
         testid: 'pratibimba-coordinate-pane',
         mount: { kind: 'flexlayout-tab', component: 'pratibimbaCoordinate', tabLabel: 'Coordinate', face: 1, region: 'personal-main' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -785,9 +906,13 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             kind: 'cross-coordinate',
             host: 'engine/CosmicEngine.tsx',
             ruling:
-                'personalComposition.ts:145-149 — "25.15\'s kairos wheel was absorbed by the cosmic face and 25.16\'s Mercurius chip by the daily face (both DR-FACE-7 fate-A carries), and neither renders on the personal pole."'
+                "25.15's kairos wheel was absorbed by the cosmic face and 25.16's Mercurius chip by the daily face (both DR-FACE-7 fate-A carries), and neither renders on the personal pole.",
+            rulingCitation: {
+                file: 'composition/personalComposition.ts',
+                anchor: "25.15's kairos wheel was absorbed by"
+            }
         },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -806,7 +931,10 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         landedBy: null,
         carrier: { file: 'panes/M4MercuriusRelayPane.tsx', symbol: 'M4MercuriusRelayChip' },
         testid: 'm4-mercurius-relay',
-        mount: { kind: 'direct-jsx', site: 'App.tsx:1306-1308' },
+        mount: {
+            kind: 'direct-jsx',
+            site: { file: 'App.tsx', anchor: '<M4MercuriusRelayChip />' }
+        },
         layoutLaw: 'daily-only',
         privacyClass: null,
         miniModes: [],
@@ -829,8 +957,11 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         landedBy: null,
         carrier: { file: 'components/TimeAxisSwitcher.tsx', symbol: 'TimeAxisSwitcher' },
         testid: 'time-axis-switcher',
-        mount: { kind: 'direct-jsx', site: 'App.tsx:395' },
-        layoutLaw: 'both',
+        mount: {
+            kind: 'direct-jsx',
+            site: { file: 'App.tsx', anchor: '<TimeAxisSwitcher />' }
+        },
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -855,7 +986,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/M4SessionCloseCeremonyPane.tsx', symbol: 'M4SessionCloseCeremonyPane' },
         testid: 'session-close-ceremony',
         mount: { kind: 'flexlayout-tab', component: 'sessionCloseCeremony', tabLabel: 'Session close', face: 1, region: 'personal-left-border' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -884,7 +1015,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: { file: 'panes/M4PsycheAnchorCoherencePane.tsx', symbol: 'M4PsycheAnchorCoherencePane' },
         testid: 'psyche-anchor-coherence',
         mount: { kind: 'flexlayout-tab', component: 'psycheAnchorCoherence', tabLabel: 'Anchor', face: 1, region: 'personal-left-border' },
-        layoutLaw: 'both',
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -913,7 +1044,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: null,
         testid: null,
         mount: { kind: 'absent' },
-        layoutLaw: 'both',
+        layoutLaw: null,
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
@@ -926,7 +1057,11 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.22',
             compositionBlocker: null,
             evidence:
-                'The being-pattern gateway methods are declared but answer absent, so there is no projection to read even if a pane existed. Building a face over a dark producer would render defaults and call them a reading.'
+                'The being-pattern gateway methods are declared but answer absent, so there is no projection to read even if a pane existed. Building a face over a dark producer would render defaults and call them a reading.',
+            citations: [
+                { file: 'App.tsx', anchor: 'beingPatternPerspective', mustBeAbsent: true },
+                { file: 'commands/crossLayoutIntent.ts', anchor: 'beingPattern', mustBeAbsent: true }
+            ],
         },
         disposition: null
     },
@@ -939,7 +1074,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         carrier: null,
         testid: null,
         mount: { kind: 'absent' },
-        layoutLaw: 'both',
+        layoutLaw: null,
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
@@ -952,7 +1087,11 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             ownerTranche: '25.T25.23',
             compositionBlocker: null,
             evidence:
-                'Enrolled although 25.21\'s own export list (SPEC:262-285) omits it: SPEC:335 declares it a TRACK_08 contribution in its own words, and 25.21\'s acceptance is that EVERY Wave-C view id maps to its owner. A register that silently drops a specced id fails its own contract.'
+                'Enrolled although 25.21\'s own export list (SPEC:262-285) omits it: SPEC:335 declares it a TRACK_08 contribution in its own words, and 25.21\'s acceptance is that EVERY Wave-C view id maps to its owner. A register that silently drops a specced id fails its own contract.',
+            citations: [
+                { file: 'App.tsx', anchor: 'rfactorFretboard', mustBeAbsent: true },
+                { file: 'commands/crossLayoutIntent.ts', anchor: 'fretboard', mustBeAbsent: true }
+            ],
         },
         disposition: null
     },
@@ -969,7 +1108,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
-        warrant: `${SPEC}:62 — "Track 25 reserves the surface contract; 41.7 owns \`m4.nara.dialogicalArena\`"`,
+        warrant: `${SPEC}:62 — "owns the \`m4.nara.dialogicalArena\` view id"; same line: "Track 25\u2019s role for this widget is the surface-contract reservation only"`,
         currentStateSelector: selector('m4.nara.dialogicalArena', 'provenance-store', 'useProvenanceStore', [
             'connection'
         ]),
@@ -1071,7 +1210,7 @@ export const INTEGRATED_450_CONSUMER_LAYOUT: readonly WaveCConsumerSlot[] = Obje
         fate: 'carried-elsewhere',
         carriedAt: 'm4.nara.journalEntries',
         evidence:
-            'SPEC:290 puts M4JournalTimelineCard left; 29.T29.3 gave the left slot to the day canvas (11.10) under its ambient strip and tuning bar (11.12) — which SPEC:290 itself also places there, so the two readings collide inside one sentence. The carrier resolved it by keeping the canvas in the slot and giving the journal timeline its own left-border tab (personalComposition.ts:99-104).'
+            'SPEC:290 puts M4JournalTimelineCard left; 29.T29.3 gave the left slot to the day canvas (11.10) under its ambient strip and tuning bar (11.12) — which SPEC:290 itself also places there, so the two readings collide inside one sentence. The carrier resolved it by keeping the canvas in the slot and giving the journal timeline its own left-border tab, as PERSONAL_SLOT_CARRIERS records.'
     },
     {
         slot: 'center-composition',
@@ -1083,7 +1222,7 @@ export const INTEGRATED_450_CONSUMER_LAYOUT: readonly WaveCConsumerSlot[] = Obje
         fate: 'blocked',
         carriedAt: null,
         evidence:
-            'The one slot SPEC:290 and the carrier agree on, and it has no renderer: 25.T25.6 is pending and the slot carries the registered blocker `pending-psychoid-cymatic-solver` (personalComposition.ts:134-140). Owned and unbuilt, which is a different fact from unowned.'
+            'The one slot SPEC:290 and the carrier agree on, and it has no renderer: 25.T25.6 is pending and the slot carries the registered blocker `pending-psychoid-cymatic-solver` (personalComposition.ts). Owned and unbuilt, which is a different fact from unowned.'
     },
     {
         slot: 'right-composition',
