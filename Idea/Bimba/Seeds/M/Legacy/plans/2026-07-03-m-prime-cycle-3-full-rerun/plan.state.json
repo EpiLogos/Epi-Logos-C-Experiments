@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-28T22:49:52.207Z",
+  "updatedAt": "2026-07-29T11:08:12.871Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12906,16 +12906,16 @@
       "blocker": null
     },
     "25.T25.21": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-07-28T22:50:47.218Z",
+      "claimedAt": "2026-07-28T22:50:47.218Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "opus-mdev-25t21",
+      "leaseExpiresAt": "2026-07-29T01:50:47.218Z",
+      "heartbeatAt": "2026-07-28T22:50:47.218Z",
+      "runId": "20260728T225047Z-25-T25.21",
       "worktree": null,
       "blocker": null
     },
@@ -21867,16 +21867,33 @@
       "blocker": null
     },
     "54.T54.01": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-29T11:08:12.846Z",
+      "claimedAt": "2026-07-29T09:57:34.809Z",
+      "completedAt": "2026-07-29T11:08:12.846Z",
+      "evidence": [
+        {
+          "at": "2026-07-29T11:08:12.846Z",
+          "text": "Rust tx-log decoder landed at Body/S/S2/graph-services/src/txlog_forensics/ behind feature txlog-forensics (off by default). Walks the real 118MB neostore.transaction.db.0 and emits a typed command stream with BOTH record images. Wire formats transcribed from Neo4j 5.26.21's own LogCommandSerializationV5_0/V4_2/V4_3_D3/V5_11 bytecode read from the shipped jar; SHORT_STRING codec tables extracted from org.neo4j.internal.codec.ShortStringCodec by reflection rather than remembered. GREEN, all against Neo4j's own decoders as oracle, never this decoder's own output: (1) census over the real log matches Neo4j LogEntryReader EXACTLY - 854078 entries, 60190 tx starts/commits, txId 2..60191, last commit 1785264269094, and all 11 per-command-type counts (NodeCommand 75228, PropertyCommand 311295, RelationshipCommand 101699, RelationshipCountsCommand 213367, NodeCountsCommand 19930, PropertyKeyTokenCommand 5930, RelationshipGroupCommand 2699, RelationshipTypeTokenCommand 1421, GroupDegreeCommand 1206, LabelTokenCommand 463, SchemaRuleCommand 460); (2) round-trip - M2-3.q_2b_ethical_interiorisation recovered VERBATIM from tx 58512 before-images, 959 bytes, contains both Picatrix and Ficino, and 17541 coordinate values decoded through the inline short-string path (gotcha 4 defeated); (3) last TX_COMMIT identified, decode stops at the zero-filled tail not a parse error, 0 refused trailing commands with refusal logic pinned. Golden suites in tests/fixtures (all vendor-produced): 469 scalar blocks incl 400 SHORT_STRING + 35 LONG covering both inlined-35-bit and spilled encodings; 210 array goldens vs DynamicArrayStore.getRightArray/ShortArray.decode; 284 inline labelField values vs InlineNodeLabels. Decoder is strict by design - unknown command/property/encoding is an ERROR not a skipped record. Corrected the plan's asset table: token counts there were strings-derived and wrong both ways; real figures 5930 property keys (788 q_/qm_), 463 labels, 1421 rel types, and the log (not the post-wipe store) is the decoder ring. NAMED GAP carried to T54.02 (gotcha 8): TEMPORAL/GEOMETRY are preserved losslessly as raw blocks but not interpreted. verify-all is red ONLY in epi-cli cli_canon_coord_depth_ladder (3 tests) - that is pre-existing wipe damage this track exists to repair, proven by live query: S3 has 0 q_ registers of 10 keys, graph-wide only 66 nodes retain q registers; graph-services itself PASSED 261, and every other suite incl app-ui-flow/graph-live/live-wire PASSED.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --features txlog-forensics --test txlog_forensics_real_log -- --ignored --test-threads=1",
+            "exitCode": 0,
+            "testsPassed": 4,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/txlog_forensics/mod.rs",
+              "Body/S/S2/graph-services/src/txlog_forensics/value.rs",
+              "Body/S/S2/graph-services/src/txlog_forensics/record.rs",
+              "Body/S/S2/graph-services/tests/txlog_forensics_real_log.rs"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus5-t5401-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-29T09:57:34.809Z",
+      "runId": "20260729T095734Z-54-T54.01",
       "worktree": null,
       "blocker": null
     },
@@ -28218,18 +28235,37 @@
       "leaseExpiresAt": "2026-07-28T23:22:15.554Z",
       "worktree": null,
       "completedAt": "2026-07-28T22:09:24.519Z"
+    },
+    {
+      "runId": "20260728T225047Z-25-T25.21",
+      "taskId": "25.T25.21",
+      "status": "in_progress",
+      "startedAt": "2026-07-28T22:50:47.218Z",
+      "owner": "opus-mdev-25t21",
+      "leaseExpiresAt": "2026-07-29T01:50:47.218Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260729T095734Z-54-T54.01",
+      "taskId": "54.T54.01",
+      "status": "done",
+      "startedAt": "2026-07-29T09:57:34.809Z",
+      "owner": "opus5-t5401-impl",
+      "leaseExpiresAt": "2026-07-29T12:57:34.809Z",
+      "worktree": null,
+      "completedAt": "2026-07-29T11:08:12.846Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-28T21:12:12.463Z",
-    "updatedAt": "2026-07-28T21:12:12.463Z",
+    "createdAt": "2026-07-29T09:55:49.848Z",
+    "updatedAt": "2026-07-29T09:55:49.848Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "26.T26.4",
       "52.T1",
-      "28.T28.5"
+      "28.T28.5",
+      "31.T31.9"
     ],
     "totalWeight": 10,
     "taxingLevel": "heavy",
@@ -28237,9 +28273,9 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "26.T26.4": "in-session",
       "52.T1": "in-session",
-      "28.T28.5": "in-session"
+      "28.T28.5": "in-session",
+      "31.T31.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

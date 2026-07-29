@@ -9,6 +9,12 @@ license = "MIT OR Apache-2.0"
 name = "epi_s2_graph_services"
 path = "src/lib.rs"
 
+[features]
+# Track 54: Neo4j transaction-log forensics. Recovery tooling over a stopped
+# store, never a serving path — off by default so it never links into the
+# gateway build.
+txlog-forensics = []
+
 [dependencies]
 # Track 53 T53.06: the last two S2→S3 edges are gone. `epi-s3-gateway-contract`
 # and `epi-s3-redis-context` were carried here only to quote declarations about

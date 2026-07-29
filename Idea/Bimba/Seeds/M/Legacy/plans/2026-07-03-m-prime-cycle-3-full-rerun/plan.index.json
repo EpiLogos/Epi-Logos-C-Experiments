@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-28T22:10:53.196Z",
+  "generatedAt": "2026-07-29T11:08:12.868Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
   "tracks": [
     {
@@ -400,7 +400,7 @@
       "file": "54-bimba-graph-enrichment-recovery.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/54-bimba-graph-enrichment-recovery.md",
       "title": "Track 54 — Bimba graph enrichment recovery from the transaction log",
-      "checksum": "4a8f0515b7681fbafeca759a3622ee8b9c7668921fe09c1ab514a2e63e97ed70"
+      "checksum": "72318796f905f7aed87e674630261bea5233399d229d8eb66ae0410663838341"
     }
   ],
   "tasks": [
@@ -11205,7 +11205,7 @@
       "writeScopes": [
         "Body/S/S2/graph-services"
       ],
-      "body": "1. **T54.01 — Decode the transaction log into a typed command stream**\n\n   Brief: The log is Neo4j **5.26.21**, `record-aligned` format, log header version 9. Entries are `[version byte][type byte][payload]` with types `TX_START`, `COMMAND`, `TX_COMMIT`, `CHUNK_START`/`CHUNK_END`. Commands carry **both before- and after-images**, which is the entire basis of recovery: the mass-delete transaction's commands contain the full before-image of every destroyed node, property and relationship.\n   Build: a decoder (Rust, in a dev-only crate or `Body/S/S2/graph-services` behind a feature) that walks `neostore.transaction.db.0` and emits a typed stream of `NodeCommand` / `PropertyCommand` / `RelationshipCommand` / `RelationshipGroupCommand` / token commands, each with its transaction id and both record images. Resolve numeric ids through the surviving token stores. Decode inline short-string and packed-array encodings, and follow `DynamicRecord` chains for long values.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — the decoder reports a transaction count and a per-command-type census over the real 118 MB log; a round-trip test asserts a known destroyed value is decoded verbatim (`M2-3.q_2b_ethical_interiorisation` must contain both \"Picatrix\" and \"Ficino\"); the last `TX_COMMIT` is identified and any incomplete trailing transaction is refused rather than half-applied. verifier ≠ closer; evidence = fresh command output."
+      "body": "1. **T54.01 — Decode the transaction log into a typed command stream**\n\n   Brief: The log is Neo4j **5.26.21**, `record-aligned` format, log header version 9. Entries are `[version byte][type byte][payload]` with types `TX_START`, `COMMAND`, `TX_COMMIT`, `CHUNK_START`/`CHUNK_END`. Commands carry **both before- and after-images**, which is the entire basis of recovery: the mass-delete transaction's commands contain the full before-image of every destroyed node, property and relationship.\n   Build: a decoder (Rust, in a dev-only crate or `Body/S/S2/graph-services` behind a feature) that walks `neostore.transaction.db.0` and emits a typed stream of `NodeCommand` / `PropertyCommand` / `RelationshipCommand` / `RelationshipGroupCommand` / token commands, each with its transaction id and both record images. Resolve numeric ids through the surviving token stores. Decode inline short-string and packed-array encodings, and follow `DynamicRecord` chains for long values.\n   Depends on Track 00 Tranche 3.\n   Verify: real behavioral proof per Track 00 — the decoder reports a transaction count and a per-command-type census over the real 118 MB log; a round-trip test asserts a known destroyed value is decoded verbatim (`M2-3.q_2b_ethical_interiorisation` must contain both \"Picatrix\" and \"Ficino\"); the last `TX_COMMIT` is identified and any incomplete trailing transaction is refused rather than half-applied. verifier ≠ closer; evidence = fresh command output.\n   Verify: `cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --features txlog-forensics` (unit tests plus the golden suites: array decoding and inline node-label unpacking, both asserted against fixtures produced by Neo4j's own decoders) and `cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --features txlog-forensics --test txlog_forensics_real_log -- --ignored --test-threads=1`. The second needs the forensic archive extracted to `~/bimba-forensic/work` (`tar xzf ~/bimba-forensic/neo4j-data-forensic-20260728.tar.gz -C ~/bimba-forensic/work ./transactions/neo4j/neostore.transaction.db.0`); it is `--ignored` because the 60 MB archive is evidence and is deliberately not in the repo. Always name the single `--test` target, as above. Never satisfy this by sweeping a whole crate's ignored tests — an unscoped ignored-test sweep is the command shape that caused this incident, and `verify-tranche` executes every backticked command-shaped fragment on a Verify line, so such a fragment must never be written here even as a warning."
     },
     {
       "id": "54.T54.02",

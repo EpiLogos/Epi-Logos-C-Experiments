@@ -40,6 +40,11 @@ pub mod seed;
 pub mod semantic;
 pub mod sync;
 pub mod sync_coordinator;
+/// Track 54 transaction-log forensics: decodes Neo4j's own transaction log
+/// into a typed command stream carrying before- and after-images. Feature-gated
+/// (`txlog-forensics`) — recovery tooling, not a serving surface.
+#[cfg(feature = "txlog-forensics")]
+pub mod txlog_forensics;
 pub mod types;
 pub mod vault;
 
