@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-29T19:24:23.362Z",
+  "updatedAt": "2026-07-29T23:26:23.318Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21614,16 +21614,81 @@
       "blocker": null
     },
     "52.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-29T23:26:23.293Z",
+      "claimedAt": "2026-07-29T19:24:36.158Z",
+      "completedAt": "2026-07-29T23:26:23.293Z",
+      "evidence": [
+        {
+          "at": "2026-07-29T22:49:27.327Z",
+          "text": "ideDeepDefault() lands as a real pane set: four flexlayout models, one per (face, layout) cell, PER-FACE per DR-DEEP-LAYOUT-1 (written into 13-decision-register.md this change; dr-gate-audit 32/32). Composition is a declaration in src/ui/deepPaneSet.ts — DEEP_PANE_SET 22 mounts, DEEP_PANE_WITHDRAWALS 8 with canon reasons, DEEP_PANE_RESERVATIONS 3 — held against CHROME-CONTRACT §2 in both directions plus an AST walk of App.tsx and CROSS_LAYOUT_INTENT_TARGETS; §2 gained deep withdrawn/reserved markers on exactly those rows. The three 28.x pending seams (agenticControlRoom/coordinateTree/backendStudio) stay OUT of the factory and out of both models. shellSlotPolicy gained layoutVaried: left+main vary per layout, bottom is composed by neither. LAYOUT_VERSION 23->24 with personalDeep/cosmicDeep persistence. Found and fixed a real regression the first cut caused: opening personal-deep-main on m1SurfaceDeep mounted its embedded WalkPane, which auto-publishes seed M1 into the shared coordinate store on mount, so entering depth broke error-ux-grammar.spec.ts:160 — canonUpdateLedger opens instead and DeepPaneMount.mountPublishes makes the opening-tab law machine-enforced. Commit 16326000. Verified: pnpm typecheck exit 0, pnpm test 1961 passed/4 skipped, pnpm build exit 0, laned pnpm test:e2e 129 passed/0 failed (baseline 128, +1 = tests/e2e/deep-pane-set.spec.ts). New gates proven RED first: the §2 marker gate on a stripped marker, the opening-tab gate on a reorder, the anchor gate on a drifted anchor, and the e2e against an injected pre-52.T4 ideDeepDefault. No visual baselines refreshed — visual-regression passed unchanged.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2090,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.test.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/ui/shellSlotPolicy.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/deep-pane-set.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 790000,
+              "output": 39000
+            }
+          }
+        },
+        {
+          "at": "2026-07-29T23:14:29.394Z",
+          "text": "Supersedes the earlier 52.T4 receipt. Commits 16326000 + 0f50c66e. The deep pane set lands PER-FACE per DR-DEEP-LAYOUT-1 (four (face, layout) models; DEEP_PANE_SET 22 mounts / WITHDRAWALS 8 / RESERVATIONS 3; CHROME-CONTRACT §2 deep markers machine-held both directions; the three 28.x pending seams stay out of the factory and both models; dr-gate-audit 32/32). Follow-through closed an unearned claim the first pass left in the tree: 25.T25.21's updated prose said layoutLaw was DERIVED from DEEP_PANE_SET/DEEP_PANE_WITHDRAWALS, but the gate covered only the 12 tab/nested rows and the other ten were hard-coded a second time in expect(law(x)) assertions — which could not fail loudly, since a shell that later carried personalHome or cosmic would have left row and test agreeing with each other and disagreeing with the shell. The derivation is now total: every mount kind resolves to its real host (composition-slot to personalHome through a bridge read out of App.tsx plus the engine; direct-jsx to the factory case its anchor sits inside, or the activeLayout gate that wraps it within a bounded window; cross-coordinate to a component key via App.tsx's own import plus factory arm; overlay-command to both with a catalogue check; model-only/absent to null). Carried=both, withdrawn=daily-only, carried-but-absent-from-the-daily-registry=deep-only (now derivable, unclaimed), reserved 28.x host=null. Contract surface: layoutLaw widened to LayoutLaw|null and five unrendered rows moved from both to null — flagged for the Architect. Two further defects found by the full gate and fixed: the deep left rail now opens CLOSED (it was mounting fileTree unprompted on BOTH faces at layout entry — the opening-tab law applied to the left slot), and deep-pane-set.spec.ts now waits for the first profile tick before asserting profileGeneration. Verified: pnpm typecheck exit 0, pnpm test 1962 passed/4 skipped, pnpm build exit 0, laned pnpm test:e2e 129 passed/0 failed exit 0. RED-proven: timeAxisSwitcher daily-only->both, oracleHistory null->both, and — the case the old hardcoding could not catch — moving personalHome from WITHDRAWALS into DEEP_PANE_SET with every register row untouched fails on personalField. No visual baselines refreshed; all five visual-regression specs green.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2091,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.test.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/deep-pane-set.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/m4-contribution-registry.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 1180000,
+              "output": 58000
+            }
+          }
+        },
+        {
+          "at": "2026-07-29T23:26:23.293Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260729, distinct from this closer): class-scoped gate green — app-ui-flow 129 playwright specs, app-test 1962, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. ide-deep is a real pane set: four FlexLayout models, one per (face, layout) cell, with 22 mounts — an IDE explorer rail on both faces, 12 structural M0-prime to M3-prime tabs in cosmic-deep-main, 8 lived and governance tabs in personal-deep-main — plus 8 withdrawals each carrying its canon reason and 3 reservations. DR-DEEP-LAYOUT-1 recorded in the design-reconciliation register (dr-gate-audit still 32/32) argues PER-FACE on real grounds rather than taste: face-independence would make face.toggle a no-op in depth, which is exactly the DCC-07 collapse 52.T2 had just repaired, and one deep tabset would deepen the flat-tabset defect this track exists to fix. shellSlotPolicy reconciled so left is per-layout for the first time. THE 28.x SEAM IS RESERVED, NOT TAKEN: agenticControlRoom, coordinateTree and backendStudio remain pending, absent from the factory and from both deep models, confirmed by test and by the live browser's data-layout-pane-set; deepPaneSet.test.ts enforces the handoff in both directions. THREE REAL DEFECTS FOUND AND FIXED IN-TRANCHE, none of them cosmetic: entering depth mounted m1SurfaceDeep's embedded WalkPane, which auto-publishes seed M1 into the ONE shared coordinate store on mount, so opening the deep layout seized the coordinate on the hidden face and deterministically broke 32.T32.7's error-UX spec — canonUpdateLedger opens instead and a source-anchored mountPublishes law makes the opening-tab rule fail closed; the deep left rail mounted fileTree unprompted on both faces at layout entry and now opens closed; and the new spec asserted profileGeneration without waiting for the first tick. A CLAIM WAS ALSO REPAIRED BEFORE CLOSE: the Wave-C register's layoutLaw was derived for only 12 of 22 rows and hard-coded twice for the other ten, so a row and its test could agree with each other while both disagreed with the shell. Every mount kind now resolves to its real host and the derivation was proven red three ways, decisively by moving personalHome between the carried and withdrawn sets with no register row touched, which correctly fails m4.nara.personalField. Contract surface widened: layoutLaw is now LayoutLaw or null, and five rows that render nowhere moved from a false both to null. Commits 16326000 and 0f50c66e.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 52.T4 --owner opus5-mdev-verify-20260729",
+            "exitCode": 0,
+            "testsPassed": 1962,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/deep-pane-set.spec.ts",
+              "app-ui-flow 129 playwright specs PASS"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus5-t52t4-idedeep",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-29T23:14:29.394Z",
+      "runId": "20260729T192436Z-52-T4",
       "worktree": null,
       "blocker": null
     },
@@ -28663,6 +28728,16 @@
       "leaseExpiresAt": "2026-07-29T21:31:52.694Z",
       "worktree": null,
       "completedAt": "2026-07-29T19:13:24.926Z"
+    },
+    {
+      "runId": "20260729T192436Z-52-T4",
+      "taskId": "52.T4",
+      "status": "review",
+      "startedAt": "2026-07-29T19:24:36.158Z",
+      "owner": "opus5-t52t4-idedeep",
+      "leaseExpiresAt": "2026-07-29T23:24:36.158Z",
+      "worktree": null,
+      "completedAt": "2026-07-29T22:49:27.327Z"
     }
   ],
   "activeRoute": {
