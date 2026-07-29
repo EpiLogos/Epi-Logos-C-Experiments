@@ -23,6 +23,13 @@
  *     assert a block that was never reported.
  *   - The recovery deep-link is the readiness taxonomy's own
  *     (`readinessRecovery`), never a locally invented route.
+ *
+ *   32.T32.7 adds ONE thing here: error UX path 4 (spec :230). When kairos is
+ *   enabled and PASU carries no identity at all, the M4 empty state warns in
+ *   the grammar's own words and routes to the 25.4 wizard. It replaces the
+ *   softer "incomplete" notice rather than stacking on it — two notices about
+ *   the same absence would say the same thing twice.
+ * Contract cross-link: ui/errorUxGrammar (the four-path table).
  * Public surface: MExtensionEmptyState, registerMExtensionEmptyStates,
  *   M_EMPTY_STATE_REGISTRATIONS.
  * Does NOT own: the registry contract (ui/emptyStateRegistry), the copy
@@ -35,7 +42,11 @@
 
 import { useMemo, type ReactNode } from 'react';
 import { commands } from '../commands/registry';
-import { browserKairosPreferences } from '../panes/kairosEnablement';
+import {
+    browserKairosPreferences,
+    readKairosEnabled,
+    KAIROS_ENABLED_PREFERENCE
+} from '../panes/kairosEnablement';
 import {
     PASU_IDENTITY_STEPS,
     PASU_SKIPPED_PREFERENCE,
@@ -45,6 +56,7 @@ import { useReadinessStore } from '../state/readinessStore';
 import { useProfileTick } from '../state/useProfileTick';
 import { readinessRecovery, type MExtensionReadinessSnapshot } from './bridgeReadiness';
 import { M_EMPTY_STATE_GRAMMAR, type MExtensionEmptyStateCopy } from './emptyStateGrammar';
+import { PASU_ABSENT_KAIROS_WARNING, PASU_WIZARD_DEEP_LINK } from './errorUxGrammar';
 import {
     contributorsActivation,
     emptyStateReasonRows,
@@ -91,6 +103,12 @@ function onboardingPreference(key: string): unknown {
 interface EmptyStateNotice {
     readonly id: string;
     readonly text: string;
+    /** 32.T32.7: a notice may carry its own route out. Command ids are real
+     *  catalogued ids or the affordance is not rendered. */
+    readonly deepLink?: {
+        readonly label: string;
+        readonly commandId: string;
+    };
 }
 
 interface EmptyStateAction {
@@ -149,6 +167,17 @@ function MExtensionEmptyStateShell({
                     role="status"
                 >
                     {notice.text}
+                    {notice.deepLink ? (
+                        <button
+                            type="button"
+                            className="mext-empty-state-notice-link"
+                            data-testid={`mext-empty-state-notice-${notice.id}-link`}
+                            data-command={notice.deepLink.commandId}
+                            onClick={() => void commands.execute(notice.deepLink!.commandId)}
+                        >
+                            {notice.deepLink.label}
+                        </button>
+                    ) : null}
                 </p>
             ))}
             {rows.length > 0 ? (
@@ -269,20 +298,33 @@ function M4NaraEmpty(props: EmptyStateProps): ReactNode {
     const skipped = readPasuSkipped(onboardingPreference(PASU_SKIPPED_PREFERENCE));
     const pasuIncomplete =
         !skipped && PASU_IDENTITY_STEPS.some(step => !completed.includes(step));
+    // 32.T32.7 path 4 (spec :230). ABSENT is stricter than incomplete: not one
+    // identity step recorded. And it only warns while kairos is ENABLED —
+    // FR-3's default-off is not a misconfiguration, it is the default, so
+    // warning there would be noise on every fresh install.
+    const pasuAbsent = PASU_IDENTITY_STEPS.every(step => !completed.includes(step));
+    const kairosEnabled = readKairosEnabled(onboardingPreference(KAIROS_ENABLED_PREFERENCE));
+    const notices: EmptyStateNotice[] = [];
+    if (kairosEnabled && pasuAbsent) {
+        notices.push({
+            id: 'pasu-absent-kairos',
+            text: PASU_ABSENT_KAIROS_WARNING,
+            deepLink: {
+                label: PASU_WIZARD_DEEP_LINK.label,
+                commandId: PASU_WIZARD_DEEP_LINK.commandId as string
+            }
+        });
+    } else if (pasuIncomplete) {
+        notices.push({
+            id: 'pasu-incomplete',
+            text: 'PASU identity is incomplete — the day opens, but the personal field stays thin.'
+        });
+    }
     return (
         <MExtensionEmptyStateShell
             registration={props.registration}
             snapshot={props.snapshot}
-            notices={
-                pasuIncomplete
-                    ? [
-                          {
-                              id: 'pasu-incomplete',
-                              text: 'PASU identity is incomplete — the day opens, but the personal field stays thin.'
-                          }
-                      ]
-                    : []
-            }
+            notices={notices}
             action={{
                 label: 'Start session',
                 testId: 'start-first-session',

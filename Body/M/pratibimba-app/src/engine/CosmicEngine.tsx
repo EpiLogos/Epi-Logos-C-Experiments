@@ -80,6 +80,7 @@ import {
     ZODIAC_NAMES
 } from './solarSystem';
 import { PLANET_ORDER } from './cosmicMath';
+import { DiagnosticsDeepLink } from '../ui/InlineErrorSurface';
 import { accent } from '../ui/tokens';
 import {
     useCompositionLifecycleEvents,
@@ -1071,6 +1072,12 @@ export function CosmicEngine() {
                 >
                     {formatIntegratedReadiness(integratedReadiness)}
                 </span>
+                {integratedReadiness.state === 'profile_missing_field' ? (
+                    <DiagnosticsDeepLink
+                        testId="engine-integrated-readiness-diagnostics"
+                        pathId="integrated-readiness-blocked"
+                    />
+                ) : null}
             </div>
         );
     }
@@ -1158,6 +1165,17 @@ export function CosmicEngine() {
                 >
                     {formatIntegratedReadiness(integratedReadiness)}
                 </span>
+                {/* 32.T32.7 spec :229 — the blocked integrated readiness is 11.8
+                    substrate; what it lacked was the route out. The blocked id
+                    IS the nine-id `profile_missing_field`, whose taxonomy
+                    recovery is this same Diagnostics route (asserted in
+                    ui/errorUxGrammar.test.ts), so nothing is minted here. */}
+                {integratedReadiness.state === 'profile_missing_field' ? (
+                    <DiagnosticsDeepLink
+                        testId="engine-integrated-readiness-diagnostics"
+                        pathId="integrated-readiness-blocked"
+                    />
+                ) : null}
                 <span>
                     {snapshot.chromatic?.note ?? '—'} · {snapshot.chromatic?.xPrimeNote ?? '—'} ·{' '}
                     {snapshot.chromatic?.mirrorNote ?? '—'}

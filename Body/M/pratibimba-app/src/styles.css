@@ -2147,6 +2147,38 @@ textarea {
   align-self: flex-start;
 }
 
+.mext-empty-state-notice-link {
+  margin-left: 0.4rem;
+}
+
+/* 32.T32.7 error UX grammar. Inline by construction — no position, no z-index,
+   no backdrop: the surface that failed keeps the error inside itself, and the
+   rest of the shell stays live (CCT-8, principle 5). */
+.inline-error-surface {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--danger);
+  border-left-width: 3px;
+  color: var(--ink);
+}
+
+.inline-error-message {
+  margin: 0;
+}
+
+.inline-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.readiness-banner-retry,
+.readiness-banner-recovery {
+  margin-left: 0.4rem;
+}
+
 /* The M1 empty state overlays the WebGL host, so it needs its own stacking
    context and pointer events — the chrome layer above it is pointer-events:none. */
 .played-torus-empty {

@@ -8,6 +8,13 @@
  *   the live S1 semantic surface, the DR-S1-5 C-layer typology receipt over the
  *   frontmatter fold, the PASU identity route, and the governed-write handoff to
  *   the Logos Atelier (CHROME-CONTRACT §4 — this surface never mutates canon).
+ *   32.T32.7 routes the `vault_read` refusal through the shared inline error
+ *   surface: a failed read is a runtime substrate call failure like any other,
+ *   and it is the one this carrier can reach deterministically (open a path the
+ *   vault does not hold). The `editor-error` test id and the verbatim
+ *   "cannot open <path>: <reason>" message are unchanged; retry re-issues the
+ *   read against a nonce, so a file that appears later opens on the retry
+ *   rather than needing the tab closed and reopened.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -20,6 +27,7 @@ import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { commands } from '../commands/registry';
 import { CROSS_LAYOUT_INTENT_COMMAND, type IntentPrivacyClass } from '../commands/crossLayoutIntent';
 import { useSessionStore, useTickStore } from '../state/stores';
+import { InlineErrorSurface } from '../ui/InlineErrorSurface';
 import { createDebouncedSaver, DebouncedSaver } from './debouncedSaver';
 import {
     canonCompletionExtension,
@@ -61,6 +69,9 @@ export function MarkdownEditorPane({ path }: { path: string }) {
     const [typology, setTypology] = useState<CLayerTypology | null>(null);
     const [typologyRefusal, setTypologyRefusal] = useState<string | null>(null);
     const [completion, setCompletion] = useState<SemanticCompletionState | null>(null);
+    /** Bumped by the 32.7 retry affordance; the read effect keys on it so a
+     *  retry re-issues the REAL `vault_read`, never a cached refusal. */
+    const [readAttempt, setReadAttempt] = useState(0);
 
     const sessionKey = useSessionStore(state => state.sessionKey);
     const dayNow = useSessionStore(state => state.dayNow);
@@ -126,7 +137,7 @@ export function MarkdownEditorPane({ path }: { path: string }) {
             saver?.dispose();
             view?.destroy();
         };
-    }, [path]);
+    }, [path, readAttempt]);
 
     // The C-family typology authority is S1's (DR-S1-5, `s1'.type.classify_c_layer`).
     // The fold reads it; it never re-derives the classification locally.
@@ -183,9 +194,15 @@ export function MarkdownEditorPane({ path }: { path: string }) {
 
     if (error) {
         return (
-            <div className="pane-message" data-testid="editor-error">
-                cannot open {path}: {error}
-            </div>
+            <InlineErrorSurface
+                testId="editor-error"
+                surfaceId={`vault.editor:${path}`}
+                message={`cannot open ${path}: ${error}`}
+                onRetry={() => {
+                    setError(null);
+                    setReadAttempt(attempt => attempt + 1);
+                }}
+            />
         );
     }
     return (

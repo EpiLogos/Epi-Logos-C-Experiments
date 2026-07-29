@@ -9,14 +9,21 @@
  *   failures the old flat injection string could not carry at all. The pack is
  *   read from the live gateway; nothing here re-assembles or re-renders it, so
  *   what is shown is what the session was given.
+ *
+ *   32.T32.7: the `s4'.context.assemble` read is a runtime kernel-bridge call,
+ *   so its refusal renders the 32.7 inline error surface (spec :227) with the
+ *   retry this section already had the closure for — `refresh` — plus the
+ *   Diagnostics deep-link and dismiss.
  * Public surface: ContextPackSection.
  * Does NOT own: assembly (Body/S/S4/ta-onta/spine/compositor.ts), the envelope
- *   parse (contextPack.ts), or session authority (S3).
+ *   parse (contextPack.ts), session authority (S3), or the error grammar
+ *   (ui/errorUxGrammar + ui/InlineErrorSurface).
  */
 
 import { useCallback, useEffect, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
 import { useProvenanceStore } from '../../state/stores';
+import { InlineErrorSurface } from '../../ui/InlineErrorSurface';
 import { ReadinessBanner } from '../../ui/ReadinessBanner';
 import {
     contextPackTotals,
@@ -95,9 +102,13 @@ export function ContextPackSection() {
     if (error !== null) {
         return (
             <div className="context-pack" data-testid="context-pack">
-                <p className="pane-message" data-testid="context-pack-error">
-                    {error}
-                </p>
+                <InlineErrorSurface
+                    testId="context-pack-error"
+                    surfaceId="omni.context-pack"
+                    message={error}
+                    onRetry={refresh}
+                    onDismiss={() => setError(null)}
+                />
             </div>
         );
     }

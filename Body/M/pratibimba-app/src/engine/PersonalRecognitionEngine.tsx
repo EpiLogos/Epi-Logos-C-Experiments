@@ -42,6 +42,7 @@ import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
 import { NowPane } from '../panes/NowPane';
+import { DiagnosticsDeepLink } from '../ui/InlineErrorSurface';
 import {
     evaluateCachedProfileIntegratedReadiness,
     formatIntegratedReadiness
@@ -204,6 +205,16 @@ export function PersonalRecognitionEngine() {
                 >
                     {formatIntegratedReadiness(integratedReadiness)}
                 </span>
+                {/* 32.T32.7 spec :229 — the route out of a blocked integrated
+                    readiness. The blocked id IS the nine-id
+                    `profile_missing_field`, whose taxonomy recovery is this same
+                    Diagnostics route; `ready` is not failing, so it gets none. */}
+                {integratedReadiness.state === 'profile_missing_field' ? (
+                    <DiagnosticsDeepLink
+                        testId="personal-recognition-integrated-readiness-diagnostics"
+                        pathId="integrated-readiness-blocked"
+                    />
+                ) : null}
             </header>
 
             <div className="personal-recognition-legs">
