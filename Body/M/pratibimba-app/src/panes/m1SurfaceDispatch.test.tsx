@@ -1,9 +1,15 @@
 /**
  * 22.T22.10 — surface-dispatch contract tests (jsdom, store/unit level).
  * Pins the LAW: the three-mode inventory, the total typed dispatch, the
- * face→context resolution, and — the acceptance — a mid-tick surface switch
- * preserving (tick12, position6, active_matrix_op, k2_orientation_q) because
- * the tick-store singleton outlives every mounted body (DR-WC-M1-1).
+ * (face, layout)→context resolution, and — the acceptance — a mid-tick surface
+ * switch preserving (tick12, position6, active_matrix_op, k2_orientation_q)
+ * because the tick-store singleton outlives every mounted body (DR-WC-M1-1).
+ *
+ * 52.T2 (DR-M1-FACE-LAYOUT-1) adds the four-cell (face × layout) matrix. The
+ * pre-52.T2 resolver took `face` alone, so `(1, daily-0-1)` and `(0, ide-deep)`
+ * were not expressible: the personal face always answered ide-deep and the
+ * cosmic face always answered daily-0-1. Those two cells are the repair, and
+ * they are red against the old implementation.
  */
 import { beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
@@ -14,6 +20,7 @@ import {
     resolveM1SurfaceContext,
     selectM1Body
 } from './m1SurfaceDispatch';
+import { DEFAULT_LAYOUT_ID, LAYOUT_IDS } from '../ui/layoutId';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
@@ -113,20 +120,83 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
         expect(new Set(bodies).size).toBe(3);
     });
 
-    it('resolves carrier faces to the contract contexts', () => {
-        expect(resolveM1SurfaceContext({ face: 1 })).toEqual({
-            mode: 'standalone-ide-deep',
-            layoutId: 'ide-deep'
-        });
-        expect(resolveM1SurfaceContext({ face: 0 })).toEqual({
+    // ── 52.T2 / DR-M1-FACE-LAYOUT-1: face × layout are ORTHOGONAL ──────────
+    //
+    // Before this tranche the resolver took only `face` and derived the layout
+    // from it (face 1 ⇒ ide-deep), so two of the four cells below did not
+    // exist as distinct outcomes. These four cases ARE the tranche.
+
+    it('52.T2: (face 0, daily-0-1) → the cosmic 1-2-3 composition in the daily layout', () => {
+        expect(resolveM1SurfaceContext({ face: 0, activeLayout: 'daily-0-1' })).toEqual({
             mode: 'composed-cosmic-1-2-3',
             layoutId: 'daily-0-1',
             compositionPluginId: 'plugin-integrated-1-2-3'
         });
-        expect(resolveM1SurfaceContext({ face: 0, cosmicComposition: false })).toEqual({
+    });
+
+    it('52.T2: (face 0, ide-deep) → still the cosmic composition, but reporting the REAL layout', () => {
+        // the cosmic mount is a composition role, not a depth role: entering
+        // the deep layout does not turn it into the M1' workbench. What DOES
+        // change is `layoutId` — which the old face-derived code got wrong.
+        expect(resolveM1SurfaceContext({ face: 0, activeLayout: 'ide-deep' })).toEqual({
+            mode: 'composed-cosmic-1-2-3',
+            layoutId: 'ide-deep',
+            compositionPluginId: 'plugin-integrated-1-2-3'
+        });
+    });
+
+    it('52.T2: (face 1, daily-0-1) → the PREVIEW strip, not the deep workbench (DCC-07)', () => {
+        // The case the pre-52.T2 code got wrong in both fields: it answered
+        // standalone-ide-deep / 'ide-deep' for the personal face in the daily
+        // layout, compressing the full M1' workbench into the daily shell —
+        // exactly what M5'-SPEC :161 forbids.
+        expect(resolveM1SurfaceContext({ face: 1, activeLayout: 'daily-0-1' })).toEqual({
             mode: 'compact-track-08',
             layoutId: 'daily-0-1'
         });
+    });
+
+    it('52.T2: (face 1, ide-deep) → the standalone deep page; BOTH gates open', () => {
+        expect(resolveM1SurfaceContext({ face: 1, activeLayout: 'ide-deep' })).toEqual({
+            mode: 'standalone-ide-deep',
+            layoutId: 'ide-deep'
+        });
+    });
+
+    it('52.T2: the standalone mode is reachable through NO other (face, layout) cell', () => {
+        const cells = ([0, 1] as const).flatMap(face =>
+            LAYOUT_IDS.map(activeLayout => ({
+                face,
+                activeLayout,
+                mode: resolveM1SurfaceContext({ face, activeLayout }).mode
+            }))
+        );
+        expect(cells).toHaveLength(4);
+        expect(cells.filter(cell => cell.mode === 'standalone-ide-deep')).toEqual([
+            { face: 1, activeLayout: 'ide-deep', mode: 'standalone-ide-deep' }
+        ]);
+        // and the layout axis is never invented: every cell reports its input
+        for (const face of [0, 1] as const) {
+            for (const activeLayout of LAYOUT_IDS) {
+                expect(resolveM1SurfaceContext({ face, activeLayout }).layoutId).toBe(activeLayout);
+            }
+        }
+    });
+
+    it('52.T2: cosmicComposition:false still opts a face-0 mount out of the cross-pole, in either layout', () => {
+        for (const activeLayout of LAYOUT_IDS) {
+            expect(
+                resolveM1SurfaceContext({ face: 0, activeLayout, cosmicComposition: false })
+            ).toEqual({ mode: 'compact-track-08', layoutId: activeLayout });
+        }
+    });
+
+    it('52.T2: a context-less mount falls back to the DAILY ground state, never to depth', () => {
+        primeStore();
+        render(<M1SurfaceDispatchPane />);
+        const body = screen.getByTestId('m1-body-compact-track-08');
+        expect(body.getAttribute('data-layout-id')).toBe(DEFAULT_LAYOUT_ID);
+        expect(screen.queryByTestId('m1-body-standalone-ide-deep')).toBeNull();
     });
 
     it('reads the DR-WC-M1-1 tuple as a pure window — absence is null, never a fallback', () => {
@@ -164,9 +234,10 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
             cleanup();
             const context =
                 mode === 'standalone-ide-deep'
-                    ? resolveM1SurfaceContext({ face: 1 })
+                    ? resolveM1SurfaceContext({ face: 1, activeLayout: 'ide-deep' })
                     : resolveM1SurfaceContext({
                           face: 0,
+                          activeLayout: 'daily-0-1',
                           cosmicComposition: mode === 'composed-cosmic-1-2-3'
                       });
             render(<M1SurfaceDispatchPane context={context} />);
@@ -179,7 +250,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
         primeStore();
         const profileBefore = useTickStore.getState().profile;
 
-        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0 })} />);
+        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0, activeLayout: 'daily-0-1' })} />);
         const composedTuple = stripDataset();
         expect(composedTuple).toEqual(EXPECTED_TUPLE);
 
@@ -196,7 +267,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
             profile: { harmonicProfile: { tick12: 6, position6: 0 } }
         });
 
-        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1 })} />);
+        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1, activeLayout: 'ide-deep' })} />);
         const standaloneTuple = stripDataset();
 
         expect(standaloneTuple).toEqual(composedTuple);
@@ -208,7 +279,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
 
     it('standalone-ide-deep composes the landed deep faces incl. the four inspector faces', () => {
         primeStore();
-        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1 })} />);
+        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1, activeLayout: 'ide-deep' })} />);
         expect(screen.getByTestId('m1-slot-spanda-navigator')).toBeTruthy();
         expect(screen.getByTestId('m1-slot-walk')).toBeTruthy();
         expect(screen.getByTestId('m1-slot-klein-topology')).toBeTruthy();
@@ -229,7 +300,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
 
     it('composed-cosmic-1-2-3 renders compact exports + crosspole contribution, NOT the played-torus (15.4 mount-point law)', () => {
         primeStore();
-        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0 })} />);
+        render(<M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0, activeLayout: 'daily-0-1' })} />);
         expect(screen.getByTestId('m1-walk-strip')).toBeTruthy();
         expect(
             screen.getByTestId('m1-walk-strip-cell-7').getAttribute('data-active')
@@ -244,7 +315,7 @@ describe('m1 surface-dispatch contract (22.T22.10)', () => {
         primeStore();
         render(
             <M1SurfaceDispatchPane
-                context={resolveM1SurfaceContext({ face: 0, cosmicComposition: false })}
+                context={resolveM1SurfaceContext({ face: 0, activeLayout: 'daily-0-1', cosmicComposition: false })}
             />
         );
         expect(screen.getByTestId('m1-walk-strip')).toBeTruthy();

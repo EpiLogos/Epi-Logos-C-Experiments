@@ -112,6 +112,7 @@ import {
     omniPanelTabForComponent,
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
+import { parseLayoutId } from './ui/layoutId';
 import { readOmniPanelSessionState, useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import {
     applyOmniPanelRouting,
@@ -377,11 +378,28 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             return <KleinTopologyPane />;
         case 'm1PlayedTorus':
             return <PlayedTorusPane />;
-        // 22.T22.10 — M1 surface dispatch (DR-WC-M1-1: one singleton, pure views)
+        // 22.T22.10 — M1 surface dispatch (DR-WC-M1-1: one singleton, pure views).
+        // 52.T2 (DR-M1-FACE-LAYOUT-1): the mount hands over BOTH orthogonal
+        // axes — its own face AND the shell's real active layout. The dispatch
+        // no longer derives one from the other.
         case 'm1SurfaceComposed':
-            return <M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 0 })} />;
+            return (
+                <M1SurfaceDispatchPane
+                    context={resolveM1SurfaceContext({
+                        face: 0,
+                        activeLayout: parseLayoutId(activeLayout)
+                    })}
+                />
+            );
         case 'm1SurfaceDeep':
-            return <M1SurfaceDispatchPane context={resolveM1SurfaceContext({ face: 1 })} />;
+            return (
+                <M1SurfaceDispatchPane
+                    context={resolveM1SurfaceContext({
+                        face: 1,
+                        activeLayout: parseLayoutId(activeLayout)
+                    })}
+                />
+            );
         case 'm3PentadicInspector':
             return <PentadicInspectorPane />;
         case 'm3Inspectors':

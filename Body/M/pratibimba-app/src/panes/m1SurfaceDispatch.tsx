@@ -30,7 +30,9 @@
  * Actualises: the typed standalone-vs-composed dispatch contract — the frozen
  *   `surface-dispatch.ts` type shape (M1SurfaceMode three-mode inventory,
  *   M1SurfaceContext discriminator, selectM1Body dispatch) as carrier faces
- *   per DR-FACE-7: `standalone-ide-deep` composes the landed M1' deep faces
+ *   per DR-FACE-7 — and, since 52.T2 (DR-M1-FACE-LAYOUT-1), gated on the two
+ *   ORTHOGONAL shell axes (face 0/1 × layout daily-0-1/ide-deep) rather than
+ *   on face alone: `standalone-ide-deep` composes the landed M1' deep faces
  *   (SpandaNavigatorPane 22.1, WalkPane + # invert T2.5, KleinTopologyPane
  *   T2.3) plus the landed deep inspector faces (22.3 Cl(4,2) signature
  *   inspector / 22.4 Klein-flip event-strip / 22.8 vortex matrices browser /
@@ -45,7 +47,9 @@
  * Public surface: M1_SURFACE_MODES, M1SurfaceMode, M1SurfaceContext,
  *   M1ExtensionBodyProps, selectM1Body, resolveM1SurfaceContext,
  *   readM1SharedState, useM1SharedSurfaceState, M1SurfaceDispatchPane.
- * Does NOT own: the store law (state/stores.ts), profile parsing beyond the
+ * Does NOT own: the layout DOMAIN (ui/layoutId.ts is the one `LayoutId`
+ *   authority, 52.T1) nor layout SELECTION/persistence (App.tsx holds
+ *   `activeLayout`); the store law (state/stores.ts), profile parsing beyond the
  *   tuple window (bridge/types.ts + m1PlayedTorus.ts vortexFromPayload — one
  *   parser ontology, never a second), the played-torus visual (15.4/15.8
  *   composition mount-point), gateway I/O, flexlayout face law (App.tsx).
@@ -64,7 +68,7 @@ import { M1KleinFlipEventStrip } from './m1KleinFlipEventStrip';
 import { M1KaprekarInspector } from './m1KaprekarInspector';
 import { M1VortexMatricesBrowser } from './m1VortexMatricesBrowser';
 import { M1AudioBusInspector } from './m1AudioBusInspector';
-import type { LayoutId } from '../ui/layoutId';
+import { DEFAULT_LAYOUT_ID, type LayoutId } from '../ui/layoutId';
 
 // ---- The typed contract (frozen surface-dispatch.ts shape — LAW) ----
 
@@ -92,23 +96,56 @@ export interface M1ExtensionBodyProps {
     readonly surfaceContext: M1SurfaceContext;
 }
 
-/** Resolve the carrier surface context from the mounting face (App.tsx
- *  flexlayout 0/1). Face 0 (cosmic) is the composed `daily-0-1` layout —
- *  the 1-2-3 composition unless the mount is a non-cosmic compact strip;
- *  face 1 (personal) hosts the standalone `ide-deep` deep page. */
+/**
+ * Resolve the carrier surface context from the TWO orthogonal shell axes:
+ * the mounting face (App.tsx flexlayout 0/1) and the shell's real
+ * `activeLayout`. Before 52.T2 this function received only the face and
+ * derived the layout from it — face 1 ⇒ `ide-deep` — which made "the user is
+ * on the personal face" MEAN "the user is in the 4+2 depth layout". DCC-07
+ * ([[M5'-SPEC]] :107, :161) holds shell `1` and full `4+2` depth as distinct
+ * authority classes, and the shell itself has always treated them as
+ * independent state (`App.tsx` carries `face` and `activeLayout` separately).
+ *
+ * DR-M1-FACE-LAYOUT-1 — the standalone deep page is BOTH-gated:
+ *
+ * | face | layout      | mode                    |
+ * |------|-------------|-------------------------|
+ * | 0    | `daily-0-1` | `composed-cosmic-1-2-3` |
+ * | 0    | `ide-deep`  | `composed-cosmic-1-2-3` |
+ * | 1    | `daily-0-1` | `compact-track-08`      |
+ * | 1    | `ide-deep`  | `standalone-ide-deep`   |
+ *
+ * LAYOUT gate: the eight-slot M1' workbench is depth, and canon is explicit
+ * that depth "belongs to the deep 4+2 subsystem layer… should not be
+ * compressed into the daily shell. Shell `1` may PREVIEW" ([[M5'-SPEC]] :161).
+ * In the daily layout the personal face therefore gets the preview strip.
+ * FACE gate: the cosmic face's mount is the 1-2-3 composition contribution —
+ * a composition role, not a depth role — so entering the deep layout does not
+ * turn the cosmic composition tab into the M1' workbench. `cosmicComposition:
+ * false` opts a face-0 mount out of the cross-pole contribution.
+ *
+ * The `layoutId` field is now always the shell's real layout, on every branch.
+ */
 export function resolveM1SurfaceContext(input: {
     readonly face: 0 | 1;
+    /** The shell's real `activeLayout` — never derived from `face`. */
+    readonly activeLayout: LayoutId;
     readonly cosmicComposition?: boolean;
 }): M1SurfaceContext {
+    const layoutId = input.activeLayout;
     if (input.face === 1) {
-        return Object.freeze({ mode: 'standalone-ide-deep' as const, layoutId: 'ide-deep' as const });
+        return Object.freeze(
+            layoutId === 'ide-deep'
+                ? { mode: 'standalone-ide-deep' as const, layoutId }
+                : { mode: 'compact-track-08' as const, layoutId }
+        );
     }
     if (input.cosmicComposition === false) {
-        return Object.freeze({ mode: 'compact-track-08' as const, layoutId: 'daily-0-1' as const });
+        return Object.freeze({ mode: 'compact-track-08' as const, layoutId });
     }
     return Object.freeze({
         mode: 'composed-cosmic-1-2-3' as const,
-        layoutId: 'daily-0-1' as const,
+        layoutId,
         compositionPluginId: 'plugin-integrated-1-2-3' as const
     });
 }
@@ -261,6 +298,7 @@ function M1StandaloneIdeDeepBody(props: M1ExtensionBodyProps) {
             className="m1-surface-body"
             data-testid="m1-body-standalone-ide-deep"
             data-m1-surface-mode="standalone-ide-deep"
+            data-layout-id={props.surfaceContext.layoutId}
         >
             <M1SharedStateStrip />
             <section data-testid="m1-slot-spanda-navigator">
@@ -291,12 +329,13 @@ function M1StandaloneIdeDeepBody(props: M1ExtensionBodyProps) {
     );
 }
 
-function M1ComposedCosmic123Body(_props: M1ExtensionBodyProps) {
+function M1ComposedCosmic123Body(props: M1ExtensionBodyProps) {
     return (
         <div
             className="m1-surface-body"
             data-testid="m1-body-composed-cosmic-1-2-3"
             data-m1-surface-mode="composed-cosmic-1-2-3"
+            data-layout-id={props.surfaceContext.layoutId}
         >
             <M1SharedStateStrip />
             <M1WalkStrip />
@@ -306,12 +345,13 @@ function M1ComposedCosmic123Body(_props: M1ExtensionBodyProps) {
     );
 }
 
-function M1CompactTrack08Body(_props: M1ExtensionBodyProps) {
+function M1CompactTrack08Body(props: M1ExtensionBodyProps) {
     return (
         <div
             className="m1-surface-body"
             data-testid="m1-body-compact-track-08"
             data-m1-surface-mode="compact-track-08"
+            data-layout-id={props.surfaceContext.layoutId}
         >
             <M1SharedStateStrip />
             <M1WalkStrip />
@@ -333,10 +373,13 @@ export function selectM1Body(mode: M1SurfaceMode): ComponentType<M1ExtensionBody
 }
 
 /** The mountable face: resolves (or receives) the surface context and routes
- *  through `selectM1Body`. Default context is the standalone deep page —
- *  App.tsx passes the face-resolved context at its mount sites. */
+ *  through `selectM1Body`. App.tsx passes the (face, layout)-resolved context
+ *  at its mount sites; a caller with no layout knowledge falls back to
+ *  `DEFAULT_LAYOUT_ID`, the daily ground state (52.T1's fallback law) — never
+ *  to depth. */
 export function M1SurfaceDispatchPane(props: { readonly context?: M1SurfaceContext }) {
-    const context = props.context ?? resolveM1SurfaceContext({ face: 1 });
+    const context =
+        props.context ?? resolveM1SurfaceContext({ face: 1, activeLayout: DEFAULT_LAYOUT_ID });
     const Body = selectM1Body(context.mode);
     return <Body surfaceContext={context} />;
 }

@@ -35,8 +35,8 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `m2Correspondence` | face 0 `cosmic-main` tab "Correspondence" | M0' chrome | live | `M2CorrespondencePane` | — |
 | `kleinTopology` | face 0 `cosmic-main` tab "Klein" | M0' chrome | live | `KleinTopologyPane` (02.T2.3) | `m1.paramasiva.kleinTopology` |
 | `m1PlayedTorus` | face 0 `cosmic-main` tab "Played Torus" | M0' chrome | live | `PlayedTorusPane` | — |
-| `m1SurfaceComposed` | face 0 `cosmic-main` tab "M1 Surface" | M0' chrome | live | `M1SurfaceDispatchPane` (22.T22.10 — `composed-cosmic-1-2-3` mode, DR-WC-M1-1) | — |
-| `m1SurfaceDeep` | face 1 `personal-main` tab "M1 Deep" | M0' chrome | live | `M1SurfaceDispatchPane` (22.T22.10 — `standalone-ide-deep` mode, DR-WC-M1-1) | — |
+| `m1SurfaceComposed` | face 0 `cosmic-main` tab "M1 Surface" | M0' chrome | live | `M1SurfaceDispatchPane` (22.T22.10 — `composed-cosmic-1-2-3` mode in BOTH layouts, DR-WC-M1-1; layout reported, never derived, per DR-M1-FACE-LAYOUT-1 / 52.T2) | — |
+| `m1SurfaceDeep` | face 1 `personal-main` tab "M1 Deep" | M0' chrome | live | `M1SurfaceDispatchPane` (22.T22.10, DR-WC-M1-1) — `standalone-ide-deep` mode in `ide-deep`, `compact-track-08` PREVIEW in `daily-0-1` (DR-M1-FACE-LAYOUT-1 / 52.T2: depth is not compressed into the daily shell) | — |
 | `m3PentadicInspector` | face 0 `cosmic-main` tab "Pentadic" | M0' chrome | live | `PentadicInspectorPane` | — |
 | `m3Inspectors` | face 0 `cosmic-main` tab "M3 Inspectors" | M0' chrome | live | `M3InspectorsPane` (hosts `M3CosmicWheelRenderService`, 24.T24.1) | — |
 | `mocBases` | face 0 `cosmic-main` tab "Bases" | M0' chrome | live | `MocBaseReflectionPane` (evaluated MOC membership + canvas-linked external Obsidian Base views, 48.T48.4) | — |
