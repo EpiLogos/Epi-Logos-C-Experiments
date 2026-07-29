@@ -39,6 +39,7 @@ export interface CatalogCommand {
  *   - src/commands/crossLayoutIntent (1) — `registerCrossLayoutIntentCommand` (31.T31.10)
  *   - src/commands/omnipanelTabChords (8) — `registerOmnipanelTabActivationCommands` (31.T31.3, CCT-4)
  *   - src/commands/theme.ts (8)     — `registerThemeCommands` (30.T30.4)
+ *   - src/commands/layout.ts (3)    — `registerLayoutCommands` (52.T3)
  *   - src/commands/walkthrough.ts (1) — `registerWalkthroughCommand` (32.T32.3)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
  * `src/ui/leftSidebarModes.ts` also *declares* a register site, but its factory
@@ -184,6 +185,30 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     { id: 'omnipanel.tab.activate.5', title: 'OmniPanel: Activate the Review tab (⌘6)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
     { id: 'omnipanel.tab.activate.6', title: 'OmniPanel: Activate the Gateway tab (⌘7)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
     { id: 'omnipanel.tab.activate.7', title: 'OmniPanel: Activate the Diagnostics tab (⌘8)', owner: 'omnipanel-shell', tranche: '31.T31.3' },
+
+    // --- src/commands/layout.ts (registerLayoutCommands, 52.T3) ---
+    // The switch canon names the omni panel as. One addressed command per
+    // layout (the palette runs commands with no argument, so the pair IS the
+    // picker — the 30.T30.4 theme precedent) plus the no-argument toggle the
+    // OmniPanel control fires.
+    {
+        id: 'layout.switch.daily-0-1',
+        title: 'Layout: Daily 0/1 preview',
+        owner: 'shell-layout',
+        tranche: '52.T3'
+    },
+    {
+        id: 'layout.switch.ide-deep',
+        title: 'Layout: IDE deep (4+2 workspace)',
+        owner: 'shell-layout',
+        tranche: '52.T3'
+    },
+    {
+        id: 'layout.toggle',
+        title: 'Layout: Toggle daily 0/1 and IDE deep',
+        owner: 'shell-layout',
+        tranche: '52.T3'
+    },
 
     // --- src/commands/walkthrough.ts (registerWalkthroughCommand, 32.T32.3) ---
     {

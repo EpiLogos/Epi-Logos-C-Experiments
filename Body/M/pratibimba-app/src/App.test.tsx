@@ -13,6 +13,7 @@ import type { KernelBridgeCachedProfile } from './bridge/types';
 import { useCoordinateStore, useSessionStore, useTickStore } from './state/stores';
 import { useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
+import { PREFERENCE_KEYS } from './ui/preferences';
 import { publishProfileTick, resetProfileTicks } from './composition/profileTickSubscription';
 
 class InertSocket {
@@ -47,6 +48,11 @@ describe('App shell', () => {
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
         resetProfileTicks();
         useOmniPanelSessionStore.getState().hydrate(null);
+        // 52.T3: the layout switch persists `epi-logos.layout.active` to
+        // localStorage, which jsdom shares across every test in this file. A
+        // spec that ends in `ide-deep` must not decide the next spec's boot
+        // layout — the browser's persistence is the feature, the leak is not.
+        localStorage.clear();
     });
 
     afterEach(() => {
@@ -418,6 +424,95 @@ describe('App shell', () => {
             dayNow: '07-16-2026',
             privacyClass: 'protected'
         });
+    });
+
+    // 52.T3 — the deliberate switch. The UF proof (real control in a real
+    // browser, reload persistence) is tests/e2e/layout-switch.spec.ts; this
+    // pins the shell-side law: the transition seam persists the preference and
+    // mints the seven-field receipt, and a same-layout switch is not a
+    // transition and therefore mints nothing.
+    it('the layout switch moves the shell, persists the preference, and receipts identity', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        act(() => {
+            useCoordinateStore.getState().setSelected('M1-4');
+            publishProfileTick({
+                generation: 51,
+                cachedAtMs: 1,
+                stale: false,
+                stalenessMs: 0,
+                privacyClass: 'safe-public-current-kernel-tick',
+                profile: {
+                    harmonicProfile: { modalResonator: { lensMode: { lens: 5, mode: 2 } } }
+                }
+            } as unknown as KernelBridgeCachedProfile);
+            useSessionStore.getState().setSession({
+                sessionKey: 'session-layout-switch',
+                dayNow: '07-29-2026'
+            });
+        });
+        expect(shell.dataset.activeLayout).toBe('daily-0-1');
+        // a switch to the layout already active is not a transition
+        await act(async () => {
+            await commands.execute('layout.switch.daily-0-1');
+        });
+        expect(shell.dataset.crossLayoutIdentityReceipt).toBeUndefined();
+
+        await act(async () => {
+            await commands.execute('layout.toggle');
+        });
+        expect(shell.dataset.activeLayout).toBe('ide-deep');
+        expect(localStorage.getItem(PREFERENCE_KEYS.layoutActive)).toContain('ide-deep');
+
+        const receipt = JSON.parse(shell.dataset.crossLayoutIdentityReceipt as string);
+        expect(receipt.fromLayout).toBe('daily-0-1');
+        expect(receipt.toLayout).toBe('ide-deep');
+        expect(Object.keys(receipt.before).sort()).toEqual([
+            'activityBarMode',
+            'coordinate',
+            'dayNow',
+            'lens',
+            'mode',
+            'profileGeneration',
+            'sessionKey'
+        ]);
+        expect(receipt.after).toEqual(receipt.before);
+        expect(receipt.after).toMatchObject({
+            coordinate: 'M1-4',
+            lens: 5,
+            mode: 2,
+            profileGeneration: 51,
+            sessionKey: 'session-layout-switch',
+            dayNow: '07-29-2026'
+        });
+
+        await act(async () => {
+            await commands.execute('layout.switch.daily-0-1');
+        });
+        expect(shell.dataset.activeLayout).toBe('daily-0-1');
+        expect(localStorage.getItem(PREFERENCE_KEYS.layoutActive)).toContain('daily-0-1');
+    });
+
+    it('boot resumes the persisted layout, and migrates the legacy ui_state value once', async () => {
+        // legacy: the pre-52.T3 home of the preference, read exactly once
+        invokeCommand.mockImplementation(async (command: string) => {
+            if (command === 'ui_state_load') {
+                return JSON.stringify({
+                    layoutVersion: 21,
+                    'epi-logos.layout.active': 'ide-deep'
+                });
+            }
+            if (command === 'vault_list') {
+                return [];
+            }
+            return undefined;
+        });
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+        await waitFor(() => expect(shell.dataset.activeLayout).toBe('ide-deep'));
+        // …and it is now owned by the preference store, so the legacy blob is
+        // no longer consulted on the next boot
+        expect(localStorage.getItem(PREFERENCE_KEYS.layoutActive)).toContain('ide-deep');
     });
 
     it('cmd-1 and cmd-8 activate the declared OmniPanel folds (CCT-4) on the visible face', async () => {

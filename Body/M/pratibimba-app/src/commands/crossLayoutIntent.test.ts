@@ -3,10 +3,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
     CROSS_LAYOUT_INTENT_TARGETS,
+    DEPTH_DIFFERENTIATED_COMPONENTS,
     dispatchCrossLayoutIntent,
     intentTarget,
     parseCrossLayoutIntent
 } from './crossLayoutIntent';
+import type { LayoutId } from '../ui/layoutId';
 
 const INTENT = {
     coordinate: 'M5-4',
@@ -87,6 +89,56 @@ describe('cross-layout intent targets (31.T31.10)', () => {
         expect(personal?.component).toBe('personalHome');
         expect(personal?.face).toBe(1);
         expect(personal?.preferredLayout).toBe('daily-0-1');
+    });
+
+    // 52.T3 — the layout audit. Before this tranche `preferredLayout` defaulted
+    // to 'ide-deep' and 32 of the 55 rows inherited it, so an intent could carry
+    // a person across the DCC-07 authority boundary without any row deciding it.
+    // The default is gone; these assertions are what keeps it gone.
+    describe('layout audit (52.T3): no target promotes to depth by accident', () => {
+        it('promotes ONLY into components whose render actually differs by layout', () => {
+            const illegitimate = CROSS_LAYOUT_INTENT_TARGETS.filter(
+                t =>
+                    t.preferredLayout === 'ide-deep'
+                    && !DEPTH_DIFFERENTIATED_COMPONENTS.includes(t.component)
+            ).map(t => `${t.extensionId}/${t.contributionId} → ${t.component}`);
+            expect(
+                illegitimate,
+                'a target may promote to ide-deep only when the deep layout gives it a different render'
+            ).toEqual([]);
+        });
+
+        it('every row states its layout — the ledger holds no inherited answer', () => {
+            // 18 promote to depth, 16 pull back to the daily preview, 21 keep
+            // whatever layout the user chose. The counts are asserted so a bulk
+            // edit that re-widens deep carriage has to say so here first.
+            const count = (value: LayoutId | null) =>
+                CROSS_LAYOUT_INTENT_TARGETS.filter(t => t.preferredLayout === value).length;
+            expect(count('ide-deep')).toBe(18);
+            expect(count('daily-0-1')).toBe(16);
+            expect(count(null)).toBe(21);
+            expect(count('ide-deep') + count('daily-0-1') + count(null)).toBe(
+                CROSS_LAYOUT_INTENT_TARGETS.length
+            );
+        });
+
+        it('the surfaces that render identically in both layouts preserve the current one', () => {
+            for (const [extensionId, contributionId] of [
+                ['m1-paramasiva', 'kleinTopology'],
+                ['m2-parashakti', 'correspondenceTree'],
+                ['m4-nara', 'kairos'],
+                ['m4-nara', 'medicine'],
+                ['m5-epii', 'jointComposition']
+            ] as const) {
+                expect(
+                    intentTarget({
+                        requestedExtensionId: extensionId,
+                        requestedContributionId: contributionId
+                    })?.preferredLayout,
+                    `${extensionId}/${contributionId} must not move the user's layout`
+                ).toBeNull();
+            }
+        });
     });
 
     it('promotes deep M-family contributions while OmniPanel receivers preserve the current layout', () => {

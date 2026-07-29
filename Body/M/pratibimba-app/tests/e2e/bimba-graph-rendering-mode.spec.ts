@@ -9,13 +9,13 @@
  *   turns the same pane into the full lattice over live S2 edges, and that
  *   clicking a neighbour re-anchors through the one shared coordinate store.
  *
- *   The deep layout is entered the only way the carrier currently allows: a
- *   cross-layout intent (Medicine → "Open Kairos"), the same path
- *   pending-layout-claim.spec.ts drives. Track 52.T3 is landing a deliberate
- *   layout switch; when it lands this spec should drive THAT instead — the
- *   assertion (mode follows layout) does not change, only the way in.
- * Does NOT own: the layout switch (Track 52), S2 graph law, or the force-graph
- *   canvas internals.
+ *   The deep layout is entered through 52.T3's DELIBERATE SWITCH — the
+ *   OmniPanel control canon names. This spec used to enter it by side effect (a
+ *   cross-layout intent, Medicine → "Open Kairos", whose target had inherited
+ *   `preferredLayout: 'ide-deep'` from a parameter default that 52.T3 removed);
+ *   the assertion (mode follows layout) is unchanged, only the way in.
+ * Does NOT own: the layout switch itself (52.T3 — `layout-switch.spec.ts`
+ *   proves it), S2 graph law, or the force-graph canvas internals.
  * Contract: [[M0'-SPEC]] + [[M5'-SPEC]] §layout + rerun tranche [[28.T28.3]].
  */
 
@@ -94,11 +94,10 @@ test('28.T28.3: the active layout drives the Bimba rendering mode, both ways', a
     }
 
     // ── deep: the same pane becomes the full lattice over live S2 edges ─────
-    await ensureFace('1');
-    await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Medicine' }).click();
-    const openKairos = page.getByRole('button', { name: 'Open Kairos' });
-    await expect(openKairos).toBeVisible({ timeout: 20_000 });
-    await openKairos.click();
+    // entered through 52.T3's real OmniPanel switch (present on both faces)
+    const layoutControl = page.locator('.face-active [data-testid="omnipanel-layout-switch"]');
+    await expect(layoutControl).toBeVisible({ timeout: 15_000 });
+    await layoutControl.getByTestId('omnipanel-layout-option-ide-deep').click();
     await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep', { timeout: 20_000 });
 
     await openBimba();

@@ -34,7 +34,13 @@ test('Medicine renders canonical evidence and crosses to Kairos on the real wire
 
     await page.getByRole('button', { name: 'Open Kairos' }).click();
     await expect(page.getByTestId('kairos-enablement-pane')).toBeVisible();
-    await expect(page.getByTestId('shell')).toHaveAttribute('data-active-layout', 'ide-deep');
+    // 52.T3: this route no longer MOVES the layout. `m4-nara/kairos` had
+    // inherited `preferredLayout: 'ide-deep'` from a parameter default, so
+    // asking for Kairos setup silently carried the user across the DCC-07
+    // boundary. The Kairos pane renders identically in both layouts, so the
+    // target now preserves whatever layout the user chose — the deliberate
+    // OmniPanel switch (`layout-switch.spec.ts`) is the only thing that moves it.
+    await expect(page.getByTestId('shell')).toHaveAttribute('data-active-layout', 'daily-0-1');
     const receiver = page.getByTestId('cross-layout-intent-receiver');
     await expect(receiver).toHaveAttribute('data-requested-extension-id', 'm4-nara');
     await expect(receiver).toHaveAttribute('data-requested-contribution-id', 'kairos');

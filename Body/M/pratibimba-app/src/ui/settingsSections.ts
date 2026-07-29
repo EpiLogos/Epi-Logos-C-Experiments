@@ -180,11 +180,22 @@ export const SETTINGS_SECTIONS: readonly SettingsSection[] = Object.freeze([
         label: 'Layout',
         scope: 'user',
         purpose:
-            'Which workspace layout the shell resumes into. The switch itself belongs to the layout surface (52.T3); this section shows what is persisted.',
+            'Which workspace layout the shell resumes into. The switch itself is the OmniPanel control canon names (52.T3); this section shows what is persisted and offers the same command.',
         live: [
-            live(PREFERENCE_KEYS.layoutActive, 'read-only', 'the shell layout switch (52.T3) writes it')
+            live(
+                PREFERENCE_KEYS.layoutActive,
+                'read-only',
+                'the OmniPanel layout switch (52.T3) → commands/layout.ts writes it'
+            )
         ],
-        actions: []
+        actions: [
+            {
+                commandId: 'layout.toggle',
+                label: 'Toggle daily 0/1 and IDE deep',
+                description:
+                    'Fires the same command the OmniPanel control fires. The switch — not this surface — applies the layout, persists it, and mints the cross-layout identity receipt.'
+            }
+        ]
     }),
     section({
         id: 'privacy',

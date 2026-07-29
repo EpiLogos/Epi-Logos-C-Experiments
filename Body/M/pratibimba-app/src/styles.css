@@ -266,6 +266,45 @@ textarea {
   outline: none;
 }
 
+/* 52.T3 — the layout switch, inside the OmniPanel's own border strip. Canon
+   names the omni panel as the switch mechanism (M5'-SPEC :159), so this is
+   membrane chrome, not a shell overlay. Stacked because the right border's tab
+   strip is a vertical rail; the two options stay side by side within it so the
+   pair reads as one segmented control. */
+.omnipanel-layout-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px 2px;
+}
+
+.omnipanel-layout-switch-option {
+  min-width: 24px;
+  padding: 1px 3px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.omnipanel-layout-switch-option[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--ground-raised);
+  color: var(--ink);
+}
+
+.omnipanel-layout-switch-option:hover,
+.omnipanel-layout-switch-option:focus-visible {
+  border-color: var(--ring);
+  color: var(--ink);
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
 .m0-coordinate-summary-card {
   /* Compact daily-0-1 slot (21.T21.17): a bottom-right HUD on the cosmic
      face. It must NOT sit over the flexlayout tab strip at the top — the

@@ -13,7 +13,8 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Actions, DockLocation, Layout, Model, TabNode } from 'flexlayout-react';
+import { Actions, BorderNode, DockLocation, Layout, Model, TabNode } from 'flexlayout-react';
+import type { ITabSetRenderValues, TabSetNode } from 'flexlayout-react';
 import { createStrikeRouter, instrument, useInstrumentStore } from './audio/instrument';
 import { GatewayClient } from './bridge/gatewayClient';
 import { extractBellRoles, isChimeCoherent, ModalResonatorBoundary } from './bridge/types';
@@ -112,7 +113,10 @@ import {
     omniPanelTabForComponent,
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
-import { parseLayoutId } from './ui/layoutId';
+import { parseLayoutId, type LayoutId } from './ui/layoutId';
+import { readStoredLayout, writeStoredLayout } from './ui/layoutPreference';
+import { registerLayoutCommands } from './commands/layout';
+import { OmniPanelLayoutSwitch } from './components/OmniPanelLayoutSwitch';
 import { readOmniPanelSessionState, useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import {
     applyOmniPanelRouting,
@@ -294,6 +298,9 @@ interface PersistedUiState {
     m0Surface?: unknown;
     m2Surface?: unknown;
     omniPanel?: unknown;
+    /** LEGACY (pre-52.T3) home of the layout preference. Read once at boot so
+     *  an existing install does not forget the layout it was left in; nothing
+     *  writes it any more — `ui/layoutPreference.ts` owns the storage now. */
     [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]?: OmniPanelLayoutId;
 }
 
@@ -621,9 +628,16 @@ export function App() {
             .then(raw => (raw ? (JSON.parse(raw) as PersistedUiState) : {}))
             .catch(() => ({}) as PersistedUiState)
             .then(state => {
-                const restoredLayout = parseOmniPanelLayoutPreference(
-                    state[OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]
-                );
+                // 52.T3: the switch's own store first; the pre-52.T3 `ui_state`
+                // value is the legacy fallback so an existing install resumes
+                // into the layout it was left in exactly once, then migrates.
+                const stored = readStoredLayout();
+                const restoredLayout =
+                    stored
+                    ?? parseOmniPanelLayoutPreference(state[OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]);
+                if (!stored) {
+                    writeStoredLayout(restoredLayout);
+                }
                 useOmniPanelSessionStore.getState().hydrate(state.omniPanel);
                 activeLayoutRef.current = restoredLayout;
                 setActiveLayout(restoredLayout);
@@ -688,14 +702,57 @@ export function App() {
                 coordinate: useCoordinateStore.getState().selected,
                 m0Surface: serializeM0SurfaceState(m0SurfaceRef.current),
                 m2Surface: serializeM2SurfaceState(m2SurfaceRef.current),
-                omniPanel: readOmniPanelSessionState(),
-                [OMNIPANEL_ACTIVE_LAYOUT_PREFERENCE_KEY]: activeLayoutRef.current
+                omniPanel: readOmniPanelSessionState()
+                // 52.T3: the layout preference is NOT written here any more —
+                // `epi-logos.layout.active` has one writer (`applyLayout` →
+                // `ui/layoutPreference.ts`), so the Settings fold's register
+                // read and the shell's own read cannot disagree.
             };
             void Promise.resolve(
                 invokeCommand('ui_state_save', { json: JSON.stringify(state) })
             ).catch(() => undefined);
         }, 800);
     }, []);
+
+    // 52.T3 — THE layout transition seam. Both ways into a layout change go
+    // through here: the deliberate switch (below) and a cross-layout intent
+    // whose resolved target declares a `preferredLayout`. It applies the layout
+    // to the ref (read synchronously by everything else in this component), to
+    // React state (what renders), and to the persisted preference — one writer.
+    const applyLayout = useCallback((next: LayoutId) => {
+        activeLayoutRef.current = next;
+        setActiveLayout(next);
+        writeStoredLayout(next);
+    }, []);
+
+    // The deliberate switch: canon's omni-panel mechanism and the palette
+    // commands both land here. Every real transition mints the seven-field
+    // cross-layout identity receipt — this is the exact place that invariant
+    // earns its keep. The before/after reads are synchronous and adjacent, so
+    // nothing (not even a profile tick) can land between them; a receipt that
+    // throws means the shell really did drop identity across the transition.
+    const switchLayout = useCallback(
+        (next: LayoutId) => {
+            const fromLayout = activeLayoutRef.current;
+            if (next === fromLayout) {
+                return; // not a transition; there is nothing to receipt
+            }
+            const identityBefore = readCrossLayoutIdentity();
+            applyLayout(next);
+            crossLayoutIdentityReceiptRef.current = createCrossLayoutIdentityReceipt(
+                fromLayout,
+                next,
+                identityBefore,
+                readCrossLayoutIdentity()
+            );
+            // FlexLayout caches factory output, so the per-layout surfaces
+            // (bimbaGraph's rendering mode, m1SurfaceDeep's mode) would keep
+            // rendering the old layout's answer. Same remount the cross-layout
+            // intent seam already uses.
+            setRoutingRevision(revision => revision + 1);
+        },
+        [applyLayout]
+    );
 
     const updateM0Surface = useCallback((patch: Partial<M0SurfaceState>) => {
         const next = { ...m0SurfaceRef.current, ...patch };
@@ -838,6 +895,13 @@ export function App() {
         });
         const disposers = [
             ...atelierDisposers,
+            // 52.T3 — the layout switch canon names the omni panel as. Reads
+            // the live layout through the ref and hands every transition to the
+            // one `switchLayout` seam (which mints the identity receipt).
+            registerLayoutCommands({
+                activeLayout: () => activeLayoutRef.current,
+                switchTo: layout => switchLayout(layout)
+            }),
             registerCrossLayoutIntentCommand({
                 setCoordinate: coordinate => useCoordinateStore.getState().setSelected(coordinate),
                 applySession: context =>
@@ -856,8 +920,7 @@ export function App() {
                     const identityBefore = readCrossLayoutIdentity();
                     const model = target.face === 0 ? current.cosmic : current.personal;
                     if (target.preferredLayout && target.preferredLayout !== activeLayoutRef.current) {
-                        activeLayoutRef.current = target.preferredLayout;
-                        setActiveLayout(target.preferredLayout);
+                        applyLayout(target.preferredLayout);
                     }
                     if (faceRef.current !== target.face) {
                         setFace(target.face);
@@ -1250,6 +1313,22 @@ export function App() {
         return <div className="boot-splash">pratibimba…</div>;
     }
 
+    // 52.T3 — the switch rides the OmniPanel's OWN border strip (canon's named
+    // mechanism, `M5'-SPEC` :159), not a shell overlay: the `right` slot stays
+    // owned by the omnipanel exactly as `ui/shellSlotPolicy.ts` declares. Both
+    // faces carry the shared `/` membrane, so both get the control; the hidden
+    // face's copy is inert like every other surface on it.
+    const renderOmniBorderChrome = (
+        node: TabSetNode | BorderNode,
+        values: ITabSetRenderValues
+    ): void => {
+        if (node instanceof BorderNode && node.getLocation() === DockLocation.RIGHT) {
+            values.buttons.push(
+                <OmniPanelLayoutSwitch key="omnipanel-layout-switch" activeLayout={activeLayout} />
+            );
+        }
+    };
+
     const layoutClaims = resolveLayoutClaims(activeLayout, component => {
         let receiverFound = false;
         for (const model of [models.personal, models.cosmic]) {
@@ -1296,6 +1375,7 @@ export function App() {
                         key={`cosmic-${routingRevision}`}
                         model={models.cosmic}
                         factory={node => factory(node, activeLayout)}
+                        onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
                             persist();
@@ -1312,6 +1392,7 @@ export function App() {
                         key={`personal-${routingRevision}`}
                         model={models.personal}
                         factory={node => factory(node, activeLayout)}
+                        onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
                             persist();

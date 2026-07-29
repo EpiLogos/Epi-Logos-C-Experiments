@@ -63,7 +63,7 @@ that every snapshot name below appears in a `toHaveScreenshot(...)` call in the 
 - **Baseline:** `composition-1-2-3-cosmic-darwin.png`
 - **Snapshot name:** `composition-1-2-3-cosmic.png`
 - **Proving test:** `(c)` in `visual-regression.spec.ts`
-- **Owning surface:** the cosmic (face 0) 1-2-3 composition — `src/App.tsx` `COSMIC_DEFAULT` layout (eleven cosmic tabs + the shared OmniPanel border)
+- **Owning surface:** the cosmic (face 0) 1-2-3 composition — `src/App.tsx` `COSMIC_DEFAULT` layout (eleven cosmic tabs + the shared OmniPanel border, which since 52.T3 carries the `layout-switch` control at the foot of its strip)
 - **Captured state:** engine choreography frozen at a paused tick; all live-profile / wall-clock / lived-vault regions hidden via `visual-regression.hide.css`; the eleven-tab inventory and the OmniPanel border are asserted textually before capture
 - **Diff threshold:** per-pixel 0.2 (default), maxDiffPixels 400 (~0.04% of the fixed 1280×800 viewport)
 - **Update procedure:** re-run `pnpm test:e2e -g "1-2-3 cosmic" -- --update-snapshots` after an approved change to the cosmic composition chrome (`App.tsx` COSMIC_DEFAULT) or the hidden-region inventory; visually review the diff, then commit the new PNG.
@@ -72,10 +72,20 @@ that every snapshot name below appears in a `toHaveScreenshot(...)` call in the 
 - **Baseline:** `composition-4-5-0-personal-darwin.png`
 - **Snapshot name:** `composition-4-5-0-personal.png`
 - **Proving test:** `(d)` in `visual-regression.spec.ts`
-- **Owning surface:** the personal (face 1) 4-5-0 composition — `src/App.tsx` `PERSONAL_DEFAULT` layout (Vault/Journal/Calendar/Oracle border tabs + Now/M1 Deep/Arena/CU Ledger main tabs)
+- **Owning surface:** the personal (face 1) 4-5-0 composition — `src/App.tsx` `PERSONAL_DEFAULT` layout (Vault/Journal/Calendar/Oracle border tabs + Now/M1 Deep/Arena/CU Ledger main tabs + the shared OmniPanel border, which since 52.T3 carries the `layout-switch` control at the foot of its strip)
 - **Captured state:** day anchored to today (`begin_today`, idempotent) so the surface is identical in suite order and isolation; the now-pane body rides the hidden-region mask as lived-vault content; the M0 ground / M5 recognition pending states are asserted before capture
 - **Diff threshold:** per-pixel 0.2 (default), maxDiffPixels 400
 - **Update procedure:** re-run `pnpm test:e2e -g "4-5-0 personal" -- --update-snapshots` after an approved change to the personal composition chrome (`App.tsx` PERSONAL_DEFAULT) or the hidden-region inventory; visually review the diff, then commit the new PNG.
+
+> **Baseline refresh, 52.T3 (2026-07-29).** All four committed baselines were regenerated
+> (`--update-snapshots=all`) when the OmniPanel border strip gained the `layout-switch` control
+> (`CHROME-CONTRACT.md` §2 row `layout-switch`) — permanent chrome inside every captured frame.
+> Only `block-host-review-fold` FAILED the gate on its own (the 1 px content-area shift above);
+> the three page-level captures stayed within their documented tolerance, i.e. a ~1000 px chrome
+> unit did hide under `maxDiffPixels` 400. They were refreshed anyway so the committed pixels
+> carry the real chrome rather than a frame that silently omits it. Whether the threshold claim
+> above ("the smallest guarded chrome unit … cannot hide inside it") needs re-calibrating for
+> sub-1200 px units is a Track-15/30 question, deliberately not decided here.
 
 ### face-toggle-mid-crossing
 - **Baseline:** `face-toggle-mid-crossing-darwin.png`
@@ -91,6 +101,7 @@ that every snapshot name below appears in a `toHaveScreenshot(...)` call in the 
 - **Snapshot name:** `block-host-review-fold.png`
 - **Proving test:** `(e)` in `visual-regression.spec.ts`
 - **Owning surface:** the Track-44 surface standard — the OmniPanel Review fold hosting the synthetic-fixture blocks through `BlockHost` (`src/blocks/BlockHost.tsx`), feeding release gate G8 (44.T44.9)
+- **Last refresh:** 52.T3 — the OmniPanel border strip gained the `layout-switch` control, which widened the expanded fold's content area by 1 px (380 → 381); the block content itself is unchanged
 - **Captured state:** session cleared to the fixture block source (`data-block-source=fixture`, deterministic content by construction); the block-host element captured (not the whole page); live-tick chrome rides the hidden-region mask
 - **Diff threshold:** per-pixel 0.2 (default), maxDiffPixels 1000 (element capture over the deterministic fixture blocks)
 - **Update procedure:** re-run `pnpm test:e2e -g "block-host" -- --update-snapshots` after an approved change to `BlockHost.tsx`, the block registry, or the Surface-Standard fixture set; visually review the diff, then commit the new PNG.

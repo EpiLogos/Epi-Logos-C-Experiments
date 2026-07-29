@@ -12,14 +12,15 @@
  *   workbench into the daily shell, which [[M5'-SPEC]] :161 forbids and DCC-07
  *   ([[M5'-SPEC]] :107) holds as a distinct authority class.
  *
- *   The deep layout is entered the only way the carrier currently allows: a
- *   cross-layout intent (Medicine → "Open Kairos"), the same path
- *   `bimba-graph-rendering-mode.spec.ts` and `pending-layout-claim.spec.ts`
- *   drive. Track 52.T3 is landing a deliberate layout switch; when it lands this
- *   spec should drive THAT instead — the assertion (the M1 mode follows BOTH
- *   axes) does not change, only the way in.
- * Does NOT own: the layout switch (52.T3), the deep pane set (52.T4), the
- *   M1 bodies' own contents, or the tick-store law (DR-WC-M1-1).
+ *   The deep layout is entered through the DELIBERATE SWITCH — the OmniPanel
+ *   control 52.T3 landed. This spec used to enter it by side effect (a
+ *   cross-layout intent, Medicine → "Open Kairos", whose target had inherited
+ *   `preferredLayout: 'ide-deep'` from a parameter default); 52.T3 removed that
+ *   default, so the way in is now the control canon names. The assertion (the
+ *   M1 mode follows BOTH axes) is unchanged — only the way in.
+ * Does NOT own: the layout switch itself (52.T3 — `layout-switch.spec.ts`
+ *   proves it), the deep pane set (52.T4), the M1 bodies' own contents, or the
+ *   tick-store law (DR-WC-M1-1).
  * Contract: [[M5'-SPEC]] :107 (DCC-07) / :161 · [[DR-M1-FACE-LAYOUT-1]] ·
  *   rerun tranche [[52.T2]].
  */
@@ -59,6 +60,16 @@ function onActiveFace(page: Page, testId: string) {
     return page.locator(`.face-active [data-testid="${testId}"]`);
 }
 
+/** 52.T3: the deliberate switch — the OmniPanel control canon names. */
+async function switchLayout(page: Page, layout: 'daily-0-1' | 'ide-deep'): Promise<void> {
+    const control = page.locator('.face-active [data-testid="omnipanel-layout-switch"]');
+    await expect(control).toBeVisible({ timeout: 15_000 });
+    await control.getByTestId(`omnipanel-layout-option-${layout}`).click();
+    await expect(page.getByTestId('shell')).toHaveAttribute('data-active-layout', layout, {
+        timeout: 20_000
+    });
+}
+
 test('52.T2: the M1 surface reads the shell layout, not the mounted face', async ({ page }) => {
     await boot(page);
     const shell = page.getByTestId('shell');
@@ -84,12 +95,8 @@ test('52.T2: the M1 surface reads the shell layout, not the mounted face', async
     await expect(onActiveFace(page, 'm1-shared-state')).toBeVisible();
     await expect(onActiveFace(page, 'm1-walk-strip')).toBeVisible();
 
-    // ── enter the deep layout (52.T3 will replace this way in) ─────────────
-    await openTab(page, 'Medicine');
-    const openKairos = page.getByRole('button', { name: 'Open Kairos' });
-    await expect(openKairos).toBeVisible({ timeout: 20_000 });
-    await openKairos.click();
-    await expect(shell).toHaveAttribute('data-active-layout', 'ide-deep', { timeout: 20_000 });
+    // ── enter the deep layout through 52.T3's real switch ──────────────────
+    await switchLayout(page, 'ide-deep');
 
     // ── (face 1, ide-deep) — BOTH gates open: the workbench appears, and the
     //    face never moved. Only the layout axis changed.
