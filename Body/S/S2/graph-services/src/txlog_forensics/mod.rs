@@ -24,6 +24,7 @@
 pub mod codec_tables;
 pub mod cursor;
 pub mod record;
+pub mod replay;
 pub mod value;
 
 use std::collections::BTreeMap;
