@@ -34,6 +34,7 @@ import { enforceHumanGate } from '../m5ReviewGate';
 import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
 import { genealogyToReviewBlocks } from './reviewBlocks';
+import { MExtensionEmptyState } from '../../ui/mExtensionEmptyStates';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 import { M1SessionCloseReader, readM1SessionCloseBundle } from '../m1SessionCloseReader';
 import {
@@ -345,6 +346,13 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                         </span>
                     )}
                 </aside>
+            ) : null}
+            {/* 32.T32.6 — the Atelier with nothing to judge. Registered M5
+                empty state rather than a silent fold: the review queue and the
+                dispatch history are named, and the reasons table says which
+                producer is absent. */}
+            {reviewItems.length === 0 ? (
+                <MExtensionEmptyState extensionId="m5-epii" viewId="review" />
             ) : null}
             <BlockHost blocks={state.blocks} onBlockSelect={selectBlock} />
         </div>

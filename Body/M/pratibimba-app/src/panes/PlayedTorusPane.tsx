@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useTickStore } from '../state/stores';
+import { MExtensionEmptyState } from '../ui/mExtensionEmptyStates';
 import { buildPlayedTorusView, PlayedTorusViewModel } from './m1PlayedTorus';
 import { buildPlayedTorusScene, updatePlayedTorusScene } from './playedTorusScene';
 
@@ -147,6 +148,16 @@ export function PlayedTorusPane() {
                     <span data-testid="m1-played-torus-pending-klein"> · pending-klein-flip</span>
                 ) : null}
             </div>
+            {/* 32.T32.6 — no profile has reached the bus at all, so there is no
+                view model to apply: the registered M1 empty state carries the
+                copy, the named contributors and the recovery route. Its own
+                container, because the chrome above is pointer-events:none and an
+                affordance inside it could never be clicked. */}
+            {view === null ? (
+                <div className="played-torus-empty" data-testid="m1-played-torus-empty">
+                    <MExtensionEmptyState extensionId="m1-paramasiva" viewId="playedTorus" />
+                </div>
+            ) : null}
         </div>
     );
 }

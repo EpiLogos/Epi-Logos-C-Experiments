@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { GraphClient } from '../bridge/graphClient';
 import { ProvenanceBadge, ProvenanceState } from '../ui/ProvenanceBadge';
+import { MExtensionEmptyState } from '../ui/mExtensionEmptyStates';
 import { useCoordinateStore, useProvenanceStore, useTickStore } from '../state/stores';
 import { M0_LAYER_FIELDS } from './m0Layers';
 import type { M0Phase } from './m0SurfaceState';
@@ -179,13 +180,18 @@ export function M0LanguageReaderPanel({ phase = 'implicate' }: { readonly phase?
                     <h3>Pre-math node language</h3>
                     {read.status === 'blocked' ? <ProvenanceBadge state="blocked" reason={reason} /> : null}
                 </header>
-                <p style={{ color: inkDim }}>
-                    {read.status === 'idle'
-                        ? 'Select a coordinate to read its Anuttara language fields.'
-                        : read.status === 'blocked'
-                          ? `S2 read blocked: ${reason}`
-                          : 'Reading the canonical language fields…'}
-                </p>
+                {read.status === 'idle' ? (
+                    // 32.T32.6 — the M0 empty state comes from the registry, so
+                    // the copy, the named contributors and the reasons table are
+                    // the one registered grammar rather than a local sentence.
+                    <MExtensionEmptyState extensionId="m0-anuttara" viewId="language" />
+                ) : (
+                    <p style={{ color: inkDim }}>
+                        {read.status === 'blocked'
+                            ? `S2 read blocked: ${reason}`
+                            : 'Reading the canonical language fields…'}
+                    </p>
+                )}
             </section>
         );
     }

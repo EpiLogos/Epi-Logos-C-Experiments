@@ -2065,6 +2065,100 @@ textarea {
   font-size: var(--type-small);
 }
 
+/* 32.T32.6 — the per-Mn empty-state shape: header + summary +
+   missing-contributors + reasons table, wrapped around the shared 30.6
+   <EmptyState> primitive. `data-activated` distinguishes a readiness BLOCK
+   (contributors named, table drawn) from a surface that is merely empty. */
+.mext-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  max-width: 46rem;
+  color: var(--ink);
+}
+
+.mext-empty-state-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.mext-empty-state-title {
+  margin: 0;
+  font-size: var(--type-heading-3, var(--type-small));
+  font-weight: 600;
+}
+
+.mext-empty-state-summary {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--type-small);
+}
+
+.mext-empty-state-notice {
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  border-left: 2px solid var(--epi-cardinal-anchor);
+  color: var(--ink-dim);
+  font-size: var(--type-caption);
+}
+
+.mext-empty-state-missing {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--type-caption);
+}
+
+.mext-empty-state-reasons {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-caption);
+}
+
+.mext-empty-state-reasons caption {
+  text-align: left;
+  padding-bottom: 0.25rem;
+  color: var(--ink-dim);
+}
+
+.mext-empty-state-reasons th,
+.mext-empty-state-reasons td {
+  text-align: left;
+  padding: 0.2rem 0.5rem 0.2rem 0;
+  border-bottom: 1px solid var(--hairline);
+  font-weight: 400;
+}
+
+.mext-empty-state-reasons thead th {
+  color: var(--ink-dim);
+}
+
+/* Per-id colour, never a generic amber — the same law the badges obey. */
+.mext-empty-state-reasons tbody tr[data-readiness] td:nth-child(2) {
+  color: var(--ink);
+}
+
+.mext-empty-state-reasons tbody tr {
+  border-left: 2px solid var(--readiness-bridge-unavailable);
+}
+
+.mext-empty-state-recovery {
+  align-self: flex-start;
+}
+
+/* The M1 empty state overlays the WebGL host, so it needs its own stacking
+   context and pointer events — the chrome layer above it is pointer-events:none. */
+.played-torus-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  background: color-mix(in srgb, var(--ground) 70%, transparent);
+}
+
 .loading-pulse {
   display: inline-flex;
   align-items: center;

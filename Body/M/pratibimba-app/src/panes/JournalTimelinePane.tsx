@@ -11,6 +11,7 @@ import { invokeCommand, listenEvent } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore } from '../state/stores';
 import { privacyChrome } from '../ui/privacyChrome';
+import { MExtensionEmptyState } from '../ui/mExtensionEmptyStates';
 import { VaultEntry } from './FileTreePane';
 
 const PRESENT = 'Empty/Present';
@@ -119,15 +120,13 @@ export function JournalTimelinePane() {
                     </li>
                 ))}
                 {days && days.length === 0 ? (
+                    // 32.T32.6 — the 32.11 start-session affordance survives
+                    // verbatim (same `start-first-session` id, same command); it
+                    // now rides the ONE registered M4 empty state instead of a
+                    // bare span, so the day's absence names its contributors and
+                    // carries the PASU-incomplete warning when it applies.
                     <li className="pane-message">
-                        <span>Day not yet begun</span>
-                        <button
-                            type="button"
-                            data-testid="start-first-session"
-                            onClick={() => void commands.execute('journal.startFirstSession')}
-                        >
-                            Start session
-                        </button>
+                        <MExtensionEmptyState extensionId="m4-nara" viewId="journal" />
                     </li>
                 ) : null}
             </ul>

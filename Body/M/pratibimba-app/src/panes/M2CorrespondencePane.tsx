@@ -46,6 +46,7 @@ import { harmonicSnapshot } from '../engine/modulation/modulators';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge';
+import { MExtensionEmptyState } from '../ui/mExtensionEmptyStates';
 import { useM2Surface } from './M2SurfaceContext';
 import type { M2CorrespondenceFace } from './m2SurfaceState';
 
@@ -373,9 +374,10 @@ export function M2CorrespondencePane() {
     if (address72 === null) {
         return (
             <div className="m2-correspondence" data-testid="m2-correspondence" data-state="pending">
-                <div className="pane-message">
-                    awaiting the pentadic trace — no active 72-address on the bus yet
-                </div>
+                {/* 32.T32.6 — the cymatic surface is unmodulated: the registered
+                    M2 empty state names the M1 → audio_bus → cymatic_field chain
+                    and the dataset, instead of one undifferentiated sentence. */}
+                <MExtensionEmptyState extensionId="m2-parashakti" viewId="cymatic" />
             </div>
         );
     }

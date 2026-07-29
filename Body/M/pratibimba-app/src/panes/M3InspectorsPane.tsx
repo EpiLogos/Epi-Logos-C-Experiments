@@ -31,6 +31,7 @@ import { M3IChingCastRibbon, parseIChingCastRibbonReceipt, type IChingCastRibbon
 import { M3ThirdSpandaPanel } from './M3ThirdSpandaPanel';
 import { M3WalkNavigator } from './M3WalkNavigator';
 import { useProvenanceStore } from '../state/stores';
+import { MExtensionEmptyState } from '../ui/mExtensionEmptyStates';
 import {
     M3ProfileTickProvider,
     M3ReadinessBoundary,
@@ -400,10 +401,11 @@ function M3InspectorsSurface() {
                     </dd>
                 </dl>
             ) : (
-                <p className="mext-widget-empty" data-testid="m3-inspectors-pending">
-                    pending-mahamaya — the inspectors populate when the bus carries the
-                    M3 binary projection; no local codon/hexagram/tarot tables exist here.
-                </p>
+                // 32.T32.6 — pending-mahamaya, said through the registered M3
+                // empty state: the same refusal to invent local codon/hexagram/
+                // tarot tables, now naming which contributor is absent and who
+                // owns it.
+                <MExtensionEmptyState extensionId="m3-mahamaya" viewId="wheel" />
             )}
         </section>
         </M3ReadinessBoundary>

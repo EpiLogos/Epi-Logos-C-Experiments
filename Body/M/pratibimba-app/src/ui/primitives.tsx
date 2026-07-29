@@ -291,6 +291,10 @@ export function EmptyState(props: {
     /** Onboarding hint — the consumer's words, never invented here. */
     readonly hint: string;
     readonly actionLabel?: string;
+    /** Test id for the affordance, so a consumer that already had a named
+     *  button (32.11's `start-first-session`) keeps ONE button when it adopts
+     *  this primitive rather than growing a second beside it. */
+    readonly actionTestId?: string;
     readonly onAction?: () => void;
 }) {
     const family = (props.family ?? '').charAt(0).toUpperCase();
@@ -308,7 +312,12 @@ export function EmptyState(props: {
             </span>
             <p className="empty-state-hint">{props.hint}</p>
             {props.actionLabel && props.onAction ? (
-                <button type="button" className="empty-state-action" onClick={props.onAction}>
+                <button
+                    type="button"
+                    className="empty-state-action"
+                    data-testid={props.actionTestId}
+                    onClick={props.onAction}
+                >
                     {props.actionLabel}
                 </button>
             ) : null}
