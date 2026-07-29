@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-29T18:31:32.177Z",
+  "updatedAt": "2026-07-29T19:24:23.362Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -21560,16 +21560,56 @@
       "blocker": null
     },
     "52.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-29T19:24:23.332Z",
+      "claimedAt": "2026-07-29T18:31:52.694Z",
+      "completedAt": "2026-07-29T19:24:23.332Z",
+      "evidence": [
+        {
+          "at": "2026-07-29T19:13:24.926Z",
+          "text": "52.T3 landed at 41c3e781: layout.switch.daily-0-1 / layout.switch.ide-deep / layout.toggle catalogued in COMMAND_CATALOG per CHROME-CONTRACT §11, surfaced as a real OmniPanel control injected into the / border strip via FlexLayout onRenderTabSet (CHROME-CONTRACT §2 row layout-switch), persisting epi-logos.layout.active through the new ui/layoutPreference.ts (moved out of the Tauri ui_state blob, which had made the 32.T32.4 Settings Layout row always report the shipped default; legacy blob read once at boot as migration). One App.tsx transition seam (applyLayout/switchLayout) carries BOTH the switch and the cross-layout intent; every real transition mints the seven-field createCrossLayoutIdentityReceipt, a same-layout switch mints nothing. The 52.T2 side channel is closed: crossLayoutIntent target() lost its preferredLayout:ide-deep default (32 of 55 rows had inherited it); all 55 rows now state their layout and depth promotion is restricted to DEPTH_DIFFERENTIATED_COMPONENTS, audited by test (18 deep / 16 daily / 21 preserve). Scope held: ideDeepDefault() is 52.T4's; the e2e asserts the SWITCH (layout id, persistence across reload, receipt), not a deep pane set. app-test 1932 passed / 4 skipped, typecheck + build clean, laned pnpm test:e2e 128 passed (new tests/e2e/layout-switch.spec.ts x2). Four visual-regression baselines refreshed because the border strip gained permanent chrome; only block-host-review-fold failed the gate on its own (1px content-area shift), recorded in CATALOG.md.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2060,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/layout.ts",
+              "Body/M/pratibimba-app/src/components/OmniPanelLayoutSwitch.tsx",
+              "Body/M/pratibimba-app/src/ui/layoutPreference.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/src/commands/crossLayoutIntent.ts",
+              "Body/M/pratibimba-app/tests/e2e/layout-switch.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 412000,
+              "output": 39000
+            }
+          }
+        },
+        {
+          "at": "2026-07-29T19:24:23.332Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260729, distinct from this closer): class-scoped gate green — app-ui-flow 128 playwright specs, app-test 1932, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. Canon named the omni panel as the layout switch and no switch existed; it exists now. Three ids registered in COMMAND_CATALOG under owner shell-layout per CHROME-CONTRACT section 11 — layout.switch.daily-0-1, layout.switch.ide-deep, layout.toggle — one per layout because the palette runs commands with no argument, following the existing commands/theme.ts precedent. The control is components/OmniPanelLayoutSwitch.tsx injected into the OmniPanel's OWN border strip via FlexLayout onRenderTabSet, so the right slot stays owned by the omnipanel per shellSlotPolicy. THE SIDE CHANNEL IS CLOSED: target()'s preferredLayout default of ide-deep, which 52.T2 found silently applied to 32 of 55 rows, is DELETED — the parameter is now required, all 55 rows state their own answer (18 deep / 16 daily / 21 preserve, audited by a test rather than asserted in a comment), and a row may promote to depth only into the four receivers whose render actually differs by layout. Three specs that reached the deep layout by accidental Kairos carriage now drive the real control, and medicine-view asserts that route no longer moves the layout at all. Receipt invariant proven rather than described: App.tsx has ONE transition seam that both the switch and intent routing use, and layout-switch.spec.ts pins the receipt's key set to exactly the seven fields, asserts after equals before field by field, and asserts populated fields carry live values rather than placeholders. Persistence moved to ui/layoutPreference.ts, which fixed a live lie: the 32.T32.4 Settings Layout row had always reported the shipped default instead of the actual state. Scope held — ideDeepDefault still does not exist; 52.T4 builds it. Commit 41c3e781.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 52.T3 --owner opus5-mdev-verify-20260729",
+            "exitCode": 0,
+            "testsPassed": 1932,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/OmniPanelLayoutSwitch.tsx",
+              "Body/M/pratibimba-app/src/ui/layoutPreference.ts",
+              "Body/M/pratibimba-app/tests/e2e/layout-switch.spec.ts",
+              "app-ui-flow 128 playwright specs PASS"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus5-t52t3-switch",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-29T19:13:24.926Z",
+      "runId": "20260729T183152Z-52-T3",
       "worktree": null,
       "blocker": null
     },
@@ -28613,6 +28653,16 @@
       "leaseExpiresAt": "2026-07-29T20:52:19.505Z",
       "worktree": null,
       "completedAt": "2026-07-29T18:20:28.916Z"
+    },
+    {
+      "runId": "20260729T183152Z-52-T3",
+      "taskId": "52.T3",
+      "status": "review",
+      "startedAt": "2026-07-29T18:31:52.694Z",
+      "owner": "opus5-t52t3-switch",
+      "leaseExpiresAt": "2026-07-29T21:31:52.694Z",
+      "worktree": null,
+      "completedAt": "2026-07-29T19:13:24.926Z"
     }
   ],
   "activeRoute": {
