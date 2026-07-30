@@ -10,7 +10,7 @@ import { expect, test } from '@playwright/test';
 
 test('shell boots, connects to the real gateway, and the tick advances', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
 
     // six status entries render
     await expect(page.getByTestId('status-strip')).toBeVisible();

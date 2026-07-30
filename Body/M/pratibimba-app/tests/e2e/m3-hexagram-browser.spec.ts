@@ -131,7 +131,7 @@ test('24.T24.5: 64-hexagram browser lights the live King Wen cell, renders the b
 }, testInfo) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 

@@ -51,7 +51,7 @@ test('24.T24.3: the functional lens switcher defaults to Ground 16 and resolves 
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 

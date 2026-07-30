@@ -20,7 +20,7 @@ test('day calendar: today is marked the day-now anchor and month nav never owns 
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
 
     // anchor the day (idempotent: click begin if unanchored, else the app
     // already adopted today's folder from the real vault) — this creates a real

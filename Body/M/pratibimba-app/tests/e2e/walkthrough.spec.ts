@@ -34,7 +34,7 @@ async function openWalkthrough(page: import('@playwright/test').Page): Promise<v
 test('32.T32.3: the walkthrough guides over a shell that stays fully usable', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     await openWalkthrough(page);

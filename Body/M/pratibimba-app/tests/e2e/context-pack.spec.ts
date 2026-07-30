@@ -114,7 +114,7 @@ test('the gateway serves the exact pack the S4 spine published, and the ACR rend
     // ---- (3) the ACR fold renders that same pack ---------------------------
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
 
     const dispatchTab = page
         .locator('.face-active .flexlayout__border_button', { hasText: 'Dispatch' })

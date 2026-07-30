@@ -32,7 +32,7 @@ test('25.T25.18: privacy-class chrome renders on the surface, never in the statu
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     const activeFace = page.locator('.face-active');

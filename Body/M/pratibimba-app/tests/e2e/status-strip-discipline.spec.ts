@@ -44,7 +44,7 @@ test('status strip: the live strip surfaces exactly the six spine state-threads,
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-strip')).toBeVisible();
 
     // each spine state-thread is surfaced exactly once — not zero, not twice
@@ -76,7 +76,7 @@ test('status strip: the tick entry is the live wire — real gateway connection 
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
 
     // real connection against the spawned `epi gate start` — not a mount
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });

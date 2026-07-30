@@ -18,7 +18,7 @@ test('25.T25.17: the personal time-axis switcher selects a mode and cmd-shift-T 
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // the switcher lives on the personal (4-5-0) pole — reach face 1

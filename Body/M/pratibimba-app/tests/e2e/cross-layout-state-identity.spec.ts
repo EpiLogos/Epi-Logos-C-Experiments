@@ -79,7 +79,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
 
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 

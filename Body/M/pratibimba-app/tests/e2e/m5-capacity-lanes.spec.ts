@@ -16,7 +16,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 async function bootConnected(page: Page): Promise<void> {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 }
 

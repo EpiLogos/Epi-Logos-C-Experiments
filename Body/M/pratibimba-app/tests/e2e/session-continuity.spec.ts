@@ -62,7 +62,7 @@ const OMNI_FOLD_LABELS = [
 
 async function bootConnected(page: Page): Promise<void> {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', {
         timeout: 20_000
     });

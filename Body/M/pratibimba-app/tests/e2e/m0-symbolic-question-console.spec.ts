@@ -14,7 +14,7 @@ test('M0 symbolic console persists a response through the real verifier gateway'
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', {
         timeout: 20_000
     });

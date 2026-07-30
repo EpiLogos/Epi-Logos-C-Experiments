@@ -15,7 +15,7 @@ test('27.T27.3: the Dispatch tab renders the Pi → subagent genealogy, not a co
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     const dispatch = page

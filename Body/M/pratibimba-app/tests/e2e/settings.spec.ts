@@ -49,7 +49,7 @@ test('32.T32.4: Settings is a reachable fold carrying all six sections and their
     );
 
     // no blocking layer was opened to get here (CCT-8) — the fold IS the surface
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
 });
 
 test('32.T32.4: the theme control moves the real document, not just a store', async ({ page }) => {

@@ -18,7 +18,7 @@ test('31.T31.6: the top breadcrumb projects the live coordinate and each segment
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // keep focus off any editable so the CCT-3 chords route to the shell spine

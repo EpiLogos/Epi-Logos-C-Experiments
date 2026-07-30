@@ -67,7 +67,7 @@ test('30.T30.4: the theme mapping is live — the palette moves the rendered sur
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // (a) the signal exists on the real root, at the carrier's dark ground
@@ -158,7 +158,7 @@ test('30.T30.4: the nara-domain rule is live and reacts to the coordinate the us
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // keep focus off any editable so the coordinate chords reach the shell spine

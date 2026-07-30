@@ -68,7 +68,7 @@ test('32.T32.5: the readiness grammar renders in the running app — state class
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     // Ticks are flowing — which is what makes the pending_first_tick negative real.
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });

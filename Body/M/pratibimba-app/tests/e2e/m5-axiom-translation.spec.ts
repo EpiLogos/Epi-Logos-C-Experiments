@@ -25,7 +25,7 @@ test('26.T26.14: the axiom inspector renders the seeded English→Formal→OWL�
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     await switchToCosmicFace(page);

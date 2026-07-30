@@ -18,7 +18,7 @@ test('the Mercurius relay chip mounts live in daily-0-1 and reports an honest ka
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // The relay chip is daily-0-1 chrome on the cosmic face — toggle to face 0.

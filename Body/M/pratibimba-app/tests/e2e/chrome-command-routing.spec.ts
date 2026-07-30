@@ -14,10 +14,11 @@
  *   ran on the 10s project default while the gateway check beside it got 20s,
  *   so under full-suite load first paint crossed it and this file reported RED
  *   at BOOT, having tested nothing — while passing 4/4 in isolation. Same
- *   remedy already applied at `visual-regression.spec.ts:164`. NOTE: 28 further
- *   specs carry the identical bare `getByTestId('shell')).toBeVisible()`; that
- *   repo-wide sweep is a gate-timing change for Track 00 to make deliberately,
- *   not a side effect of another lane's tranche.
+ *   remedy already applied at `visual-regression.spec.ts:164`. The sweep has
+ *   since been completed on the Architect's instruction: all 41 specs carrying
+ *   the bare `toBeVisible()` on the boot element now use the same boot-sized
+ *   budget, so a slow first paint under load can no longer report RED from a
+ *   spec that has asserted nothing yet.
  * Does NOT own: command semantics, command registration, or face state.
  * Contract: [[CHROME-CONTRACT]] sections 2, 10, and 11.
  */

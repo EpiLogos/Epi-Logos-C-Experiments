@@ -23,7 +23,7 @@ import { expect, test } from '@playwright/test';
 /** The app boots on the personal face (1); the three.js surfaces live on the
  *  cosmic face (0). ⌘. (App.tsx keydown → face.toggle) is the switch. */
 async function switchToCosmicFace(page: import('@playwright/test').Page): Promise<void> {
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     // gateway must be live before the cosmic surfaces have anything to draw
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await page.keyboard.press('Meta+.');

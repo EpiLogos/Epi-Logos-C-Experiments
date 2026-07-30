@@ -56,7 +56,7 @@ test('25.T25.2: the DayContainer detail reads the real day tree', async ({ page,
     expect(artifactWrite.ok()).toBeTruthy();
 
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
 
     // anchor the day so the calendar opens on this month (same idiom as 25.1)
     const editor = page.locator('.face-active [data-testid="m4-nara-editor"]');

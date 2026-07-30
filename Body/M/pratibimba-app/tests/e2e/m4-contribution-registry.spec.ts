@@ -178,7 +178,7 @@ test('25.T25.21: the nested day container appears only under its host, on select
 test('25.T25.21: the daily-only surface obeys the layout gate the register records', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(shell).toHaveAttribute('data-active-layout', 'daily-0-1');
 
     // DERIVED, not hardcoded. This assertion used to name one view id, and

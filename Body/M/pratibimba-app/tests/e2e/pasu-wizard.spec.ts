@@ -19,7 +19,7 @@ test('25.T25.4 / 32.T32.2: the PASU wizard opens and writes a scalar via the liv
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // open the wizard through the catalogued command (settings-32.4 re-entry;

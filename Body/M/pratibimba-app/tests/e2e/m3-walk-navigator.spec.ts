@@ -46,7 +46,7 @@ test('24.T24.4: 9-walk navigator renders real kernel lanes, honest-pending live-
 }, testInfo) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 

@@ -30,7 +30,7 @@ const TYPE_VOCABULARY = [
 
 test('the organism speaks one type voice: the --type-* scale is live and nothing renders outside it', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     // (a) the whole vocabulary is defined on the live root

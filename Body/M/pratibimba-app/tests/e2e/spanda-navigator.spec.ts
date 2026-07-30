@@ -13,7 +13,7 @@ import { expect, test } from '@playwright/test';
 
 async function openNavigator(page: import('@playwright/test').Page): Promise<void> {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await page.keyboard.press('Meta+.');
     await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '0');

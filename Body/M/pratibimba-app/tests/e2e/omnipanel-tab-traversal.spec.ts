@@ -68,7 +68,7 @@ async function routeToIdeDeep(page: Page): Promise<void> {
 test('27.T27.13: every OmniPanel fold is traversable in both layouts and selection persists', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 
@@ -129,7 +129,7 @@ async function routeOmniIntent(
 test('27.T27.9: OmniPanel intent → tab activation → per-tab state applied → membrane revealed', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 20_000 });
 

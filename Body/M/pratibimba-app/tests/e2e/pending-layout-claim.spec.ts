@@ -20,7 +20,7 @@ test('ide-deep tolerates the Smart Connections code-pending claim without a rece
 }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', {
         timeout: 20_000
     });

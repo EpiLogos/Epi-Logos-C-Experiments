@@ -29,7 +29,7 @@ test('25.T25.13: the logos cycle advances forward and regresses with an explicit
     });
 
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Logos' }).click();

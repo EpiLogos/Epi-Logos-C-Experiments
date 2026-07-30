@@ -26,7 +26,7 @@ import { gatewayRpc } from './gateway-rpc';
 test('26.T26.4: a deposit made through the Evidence fold comes back out of it', async ({ page }) => {
     await page.goto('/');
     const shell = page.getByTestId('shell');
-    await expect(shell).toBeVisible();
+    await expect(shell).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     await page

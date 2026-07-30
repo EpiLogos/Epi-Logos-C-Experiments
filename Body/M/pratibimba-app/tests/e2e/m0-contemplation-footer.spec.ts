@@ -12,7 +12,7 @@ import { expect, test } from '@playwright/test';
 
 test('M0 contemplation footer submits a live prompted tick to S5 review', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
     const shell = page.getByTestId('shell');

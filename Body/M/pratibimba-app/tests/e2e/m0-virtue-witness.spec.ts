@@ -14,7 +14,7 @@ import { expect, test } from '@playwright/test';
 
 test('M0 Virtue Witness panel follows the real gateway profile (21.T21.10)', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     // Land on face 0 (where Bimba lives) deterministically — a single toggle
     // assumes a starting face that persisted layout can flip.
@@ -65,7 +65,7 @@ test('M0 reading/authoring mode toggle gates routed-write affordances in the liv
     page
 }) => {
     await page.goto('/');
-    await expect(page.getByTestId('shell')).toBeVisible();
+    await expect(page.getByTestId('shell')).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
     // Bimba lives on face 0; the toggle's starting face can vary with persisted
     // layout, so land on face 0 deterministically rather than assuming one press.
