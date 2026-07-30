@@ -356,69 +356,11 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                     Requested review: {requestedReviewId ?? reviewTab.selectedReviewId}
                 </p>
             ) : null}
-            {/* 28.T28.9 — the LIVE governance queue, abbreviated (DR-WC-IS-2).
-                Same producer and same component as the deep audit in the
-                Agentic Control Room; one row identity across both. */}
-            <section
-                className="review-inbox"
-                data-testid="review-inbox"
-                data-fold="abbreviated"
-                data-inbox-source={inbox === null ? (inboxError ? 'error' : 'pending') : 'live'}
-            >
-                <p className="pane-message review-inbox-note" data-testid="review-inbox-note">
-                    {`Governance queue — live on ${REVIEW_INBOX_METHOD}. This is the abbreviated `
-                        + 'folding (DR-WC-IS-2): inbox plus click-through. The full IOD-17 three-cell '
-                        + 'parity readout and the run-tree audit are the governance fold’s, in the '
-                        + 'Agentic Control Room (ide-deep).'}
-                </p>
-                {inboxError ? (
-                    <p className="pane-message" data-testid="review-inbox-error">
-                        {`${REVIEW_INBOX_METHOD} unavailable — ${inboxError}`}
-                    </p>
-                ) : inbox === null ? (
-                    <p className="pane-message" data-testid="review-inbox-pending">
-                        connect the gateway to read the open governance queue
-                    </p>
-                ) : deepReviewItems.length === 0 ? (
-                    <p className="pane-message" data-testid="review-inbox-empty">
-                        {`no open items on ${REVIEW_INBOX_METHOD}`}
-                    </p>
-                ) : (
-                    <ul className="review-inbox-list" role="list">
-                        {deepReviewItems.map(item => (
-                            <li key={item.itemId} role="listitem">
-                                <ReviewItemDeepView
-                                    item={item}
-                                    fold="abbreviated"
-                                    selected={reviewTab.selectedReviewId === item.itemId}
-                                    onSelect={itemId =>
-                                        patchTab('review', {
-                                            selectedReviewId:
-                                                reviewTab.selectedReviewId === itemId ? null : itemId
-                                        })
-                                    }
-                                    onOpenDispatchTree={nodeId =>
-                                        fireOmniPanelRoute({
-                                            ...REVIEW_DISPATCH_TREE_ROUTE,
-                                            artifactUri: nodeId
-                                        })
-                                    }
-                                    onOpenEvidence={packetId =>
-                                        fireOmniPanelRoute({
-                                            ...REVIEW_EVIDENCE_ROUTE,
-                                            artifactUri: packetId
-                                        })
-                                    }
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </section>
             <p className="pane-message review-blocks-seam" data-testid="review-blocks-seam-note">
                 Track-44 BLOCK rows below ride the synthetic acceptance fixture — the live wire→record
                 producer is track-12's seam; verdicts route to the s4-prime psyche.update seam under the
-                m5 human gate. The governance queue above is separate and live.
+                m5 human gate. The governance queue at the foot of this fold is a separate, live read of
+                the s5-prime review inbox.
             </p>
             <section className="review-session-close" data-testid="review-session-close">
                 {sessionClose.state === 'ready' ? (
@@ -510,6 +452,79 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                 <MExtensionEmptyState extensionId="m5-epii" viewId="review" />
             ) : null}
             <BlockHost blocks={state.blocks} onBlockSelect={selectBlock} />
+            {/* 28.T28.9 — the LIVE governance queue, abbreviated (DR-WC-IS-2).
+                Same producer and same component as the deep audit in the
+                Agentic Control Room; one row identity across both.
+
+                IT RENDERS BELOW THE BLOCK HOST, and that placement is a
+                decision, not an accident. `BlockHost` carries the Track-44
+                surface standard's own visual baseline (44.T44.9,
+                `tests/e2e/visual-regression.spec.ts`), captured on the element
+                itself; a section ABOVE it makes that baseline a function of how
+                many items the review backlog happens to hold, because a
+                fractional offset rounds the captured box by a pixel. Measured:
+                the queue above the host reddened the baseline in a full suite
+                run (where an earlier spec has submitted an item) while passing
+                in isolation (where the queue is empty) — a flake that depends on
+                how you invoke the suite. Below the host, the standard's geometry
+                is untouched in both states and this queue is still the fold's
+                own labelled section. */}
+            <section
+                className="review-inbox"
+                data-testid="review-inbox"
+                data-fold="abbreviated"
+                data-inbox-source={inbox === null ? (inboxError ? 'error' : 'pending') : 'live'}
+            >
+                <p className="pane-message review-inbox-note" data-testid="review-inbox-note">
+                    {`Governance queue — live on ${REVIEW_INBOX_METHOD}. This is the abbreviated `
+                        + 'folding (DR-WC-IS-2): inbox plus click-through. The full IOD-17 three-cell '
+                        + 'parity readout and the run-tree audit are the governance fold’s, in the '
+                        + 'Agentic Control Room (ide-deep).'}
+                </p>
+                {inboxError ? (
+                    <p className="pane-message" data-testid="review-inbox-error">
+                        {`${REVIEW_INBOX_METHOD} unavailable — ${inboxError}`}
+                    </p>
+                ) : inbox === null ? (
+                    <p className="pane-message" data-testid="review-inbox-pending">
+                        connect the gateway to read the open governance queue
+                    </p>
+                ) : deepReviewItems.length === 0 ? (
+                    <p className="pane-message" data-testid="review-inbox-empty">
+                        {`no open items on ${REVIEW_INBOX_METHOD}`}
+                    </p>
+                ) : (
+                    <ul className="review-inbox-list" role="list">
+                        {deepReviewItems.map(item => (
+                            <li key={item.itemId} role="listitem">
+                                <ReviewItemDeepView
+                                    item={item}
+                                    fold="abbreviated"
+                                    selected={reviewTab.selectedReviewId === item.itemId}
+                                    onSelect={itemId =>
+                                        patchTab('review', {
+                                            selectedReviewId:
+                                                reviewTab.selectedReviewId === itemId ? null : itemId
+                                        })
+                                    }
+                                    onOpenDispatchTree={nodeId =>
+                                        fireOmniPanelRoute({
+                                            ...REVIEW_DISPATCH_TREE_ROUTE,
+                                            artifactUri: nodeId
+                                        })
+                                    }
+                                    onOpenEvidence={packetId =>
+                                        fireOmniPanelRoute({
+                                            ...REVIEW_EVIDENCE_ROUTE,
+                                            artifactUri: packetId
+                                        })
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
         </div>
     );
 }

@@ -622,12 +622,13 @@ test('(e) block-host standard: the Review fold renders the fixture blocks to a s
         'data-block-source',
         'fixture'
     );
-    // 28.T28.9 — the fold now carries a LIVE `s5'.review.inbox` queue ABOVE the
-    // block host, and that read resizes the fold when it lands. Capturing
-    // before it settles races the layout (measured: the element screenshot came
-    // back with its top ~950px unpainted, and the stability loop oscillated
-    // between two heights). Wait on the fold's own source attribute — a real
-    // signal, not a sleep — so the baseline is a settled surface.
+    // 28.T28.9 — the fold now carries a LIVE `s5'.review.inbox` queue, and that
+    // read resizes the fold when it lands. The queue renders BELOW the block
+    // host precisely so this baseline is not a function of the review backlog
+    // (see `ReviewBlocksPane`), but the capture is still taken after the read
+    // settles: an element screenshot raced against a reflowing page came back
+    // with its top ~950px unpainted. Wait on the fold's own source attribute —
+    // a real signal, not a sleep.
     await expect
         .poll(
             async () =>
