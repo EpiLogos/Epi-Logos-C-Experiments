@@ -30,6 +30,15 @@
  *         lands it;
  *     (4) the review governance queue — `s5'.review.inbox` → the decision
  *         controls, carrying the IOD-17 three-cell parity readout;
+ *         28.T28.9 made this the DEEP half of DR-WC-IS-2 for the REVIEW
+ *         surface. The rows are `ReviewItemDeep` (28.9 (a)) off the same live
+ *         inbox, rendered by the same `ReviewItemDeepView` the `/` membrane's
+ *         Review fold renders abbreviated — one component, one producer, two
+ *         foldings. This side carries the two inputs the abbreviated side does
+ *         not (the live capability matrix and the folded genealogy), which is
+ *         why the three-cell parity matrix and the dispatch click-through are
+ *         HERE. ONE row identity: `perTabState.review.selectedReviewId`, so a
+ *         row chosen in either surface is the one the other renders;
  *     (5) the run-lifecycle controls as an UNWIRED surface (`s5'.epii.runtime_control`
  *         is registered nowhere), stating the reason rather than faking a button;
  *     (6) the full `MediatedRunEvidencePacket` deposit, through the already-live
@@ -99,6 +108,12 @@ import { PSYCHE_FACET_LABEL, psycheFacetClass } from '../omni/psycheFacet';
 import { AbortRetryContinueControls } from './AbortRetryContinueControls';
 import { PiRuntimeMonitorBanner } from './PiRuntimeMonitorBanner';
 import { ReviewDecisionControls } from './ReviewDecisionControls';
+import { ReviewItemDeepView } from '../omni/review/ReviewItemDeepView';
+import {
+    reviewItemDeepById,
+    reviewItemsDeep
+} from '../omni/review/reviewItemDeep';
+import { REVIEW_EVIDENCE_ROUTE } from '../omni/review/reviewPaneSeams';
 import { ACR_METHOD_BINDINGS, acrRoster } from './acrGovernance';
 import { REVIEW_INBOX_METHOD, parseReviewInbox, type AcrReviewItem } from './acrReviewInbox';
 
@@ -118,7 +133,6 @@ export function AgenticControlRoomPane() {
     const [reviewError, setReviewError] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
     const [collapsedIds, setCollapsedIds] = useState<readonly string[]>([]);
-    const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
     const [heldBackendLink, setHeldBackendLink] = useState<string | null>(null);
     // 28.T28.8 — the DEEP evidence render (DR-WC-IS-2). The `/` fold stays the
     // abbreviated always-on one; the full MediatedRunEvidencePacket audit is
@@ -126,6 +140,12 @@ export function AgenticControlRoomPane() {
     const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
     const [depositError, setDepositError] = useState<string | null>(null);
     const evidenceTab = useOmniPanelTabState('evidence');
+    // 28.T28.9 — the review row identity is SHARED with the `/` Review fold, the
+    // same way 28.T28.8 shared the packet identity: two foldings of one queue
+    // cannot disagree about which row is selected if there is only one place
+    // that answer lives. Read on render, written only on a click (the
+    // opening-tab law: this pane seizes no shared state on mount).
+    const reviewTab = useOmniPanelTabState('review');
     const patchTab = useOmniPanelSessionStore(s => s.patchTab);
     const selectTab = useOmniPanelSessionStore(s => s.selectTab);
     const sessionKey = useSessionStore(s => s.sessionKey);
@@ -176,7 +196,25 @@ export function AgenticControlRoomPane() {
     const records = useMemo(() => dispatchGenealogyFromSessions(sessions ?? []), [sessions]);
     const index = useMemo(() => genealogyIndex(records), [records]);
     const selectedRecord = selectedNodeId ? (index.get(selectedNodeId) ?? null) : null;
-    const selectedReview = (reviewItems ?? []).find(item => item.itemId === selectedReviewId) ?? null;
+
+    // 28.T28.9 — the DEEP folding of the governance queue. Same producer the `/`
+    // Review fold calls; this surface simply HAS the two inputs the abbreviated
+    // one does not (the live capability matrix and the folded genealogy), which
+    // is exactly what DR-WC-IS-2 gives the deep half.
+    const deepReviewItems = useMemo(
+        () =>
+            reviewItemsDeep({
+                items: reviewItems ?? [],
+                deposits,
+                genealogy: records,
+                snapshot,
+                sessionKey
+            }),
+        [reviewItems, deposits, records, snapshot, sessionKey]
+    );
+    const selectedReview = reviewItemDeepById(deepReviewItems, reviewTab.selectedReviewId);
+    const selectReview = (itemId: string | null) =>
+        patchTab('review', { selectedReviewId: itemId });
 
     // The deep evidence audit reads the SAME shell anchors the `/` fold does; a
     // packet composed without them would anchor evidence to a moment the shell
@@ -345,34 +383,58 @@ export function AgenticControlRoomPane() {
                 ) : null}
             </section>
 
-            {/* (4) The governance queue + decision controls. */}
+            {/* (4) The governance queue + decision controls.
+                28.T28.9 — DR-WC-IS-2's DEEP half for the REVIEW surface. The
+                rows are `ReviewItemDeep` off the live `s5'.review.inbox`, and
+                this fold renders them at `fold="deep"`: the IOD-17 three-cell
+                parity matrix the row carries (populated because this pane holds
+                the live capability matrix), the dispatch-genealogy click-through
+                on a REAL node id, and the evidence click-through on a packet
+                that was really composed. The `/` membrane's Review fold renders
+                the SAME rows abbreviated. One selection, shared through
+                `perTabState.review.selectedReviewId`. */}
             <section className="acr-review-queue" data-testid="acr-review-queue">
                 <h4>Review queue</h4>
                 {reviewError ? (
                     <p className="pane-message" data-testid="acr-review-error">
                         {reviewError}
                     </p>
-                ) : (reviewItems?.length ?? 0) === 0 ? (
+                ) : deepReviewItems.length === 0 ? (
                     <p className="pane-message" data-testid="acr-review-empty">
                         {`no open items on ${REVIEW_INBOX_METHOD}`}
                     </p>
                 ) : (
                     <ul className="acr-review-list" role="list">
-                        {(reviewItems ?? []).map(item => (
+                        {deepReviewItems.map(item => (
                             <li key={item.itemId} role="listitem">
-                                <button
-                                    type="button"
-                                    data-testid={`acr-review-item-${item.itemId}`}
-                                    data-human-required={item.requiresHuman ? 'true' : 'false'}
-                                    aria-pressed={selectedReviewId === item.itemId}
-                                    onClick={() =>
-                                        setSelectedReviewId(previous =>
-                                            previous === item.itemId ? null : item.itemId
+                                <ReviewItemDeepView
+                                    item={item}
+                                    fold="deep"
+                                    selected={reviewTab.selectedReviewId === item.itemId}
+                                    onSelect={itemId =>
+                                        selectReview(
+                                            reviewTab.selectedReviewId === itemId ? null : itemId
                                         )
                                     }
-                                >
-                                    {`${item.title} · ${item.priority}`}
-                                </button>
+                                    // Inside the governance pane the structural
+                                    // fold is RIGHT HERE — selecting the node
+                                    // beats throwing the reader into the `/`
+                                    // membrane mid-audit. The same identity
+                                    // either way (15.11).
+                                    onOpenDispatchTree={setSelectedNodeId}
+                                    // The evidence audit is also in this pane
+                                    // (28.T28.8, section 7) and reads the shared
+                                    // `evidence.selectedPacketId` — so selecting
+                                    // it lands the packet HERE and in the `/`
+                                    // Evidence fold at once.
+                                    onOpenEvidence={packetId => {
+                                        patchTab('evidence', { selectedPacketId: packetId });
+                                        fireOmniPanelRoute({
+                                            ...REVIEW_EVIDENCE_ROUTE,
+                                            artifactUri: packetId
+                                        });
+                                    }}
+                                />
                             </li>
                         ))}
                     </ul>
@@ -383,7 +445,7 @@ export function AgenticControlRoomPane() {
                         snapshot={snapshot}
                         connected={connected}
                         onResolved={() => {
-                            setSelectedReviewId(null);
+                            selectReview(null);
                             refresh();
                         }}
                     />

@@ -117,6 +117,10 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         useProvenanceStore.setState({
             connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
         });
+        // 28.T28.9 — the review row identity moved into the SHARED per-tab
+        // state (the `/` Review fold reads the same one), so a selection made
+        // in one test would otherwise survive into the next.
+        hydrateOmniPanelSessionState(null);
     });
 
     afterEach(() => {
@@ -191,12 +195,12 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         await waitFor(() =>
             expect(invoke).toHaveBeenCalledWith(REVIEW_INBOX_METHOD, { status: 'open' })
         );
-        expect(await screen.findByTestId('acr-review-item-rev-1')).toBeTruthy();
+        expect(await screen.findByTestId('review-item-select-rev-1')).toBeTruthy();
     });
 
     it('the human gate really gates: a human-required item refuses until the human of record signs', async () => {
         render(<AgenticControlRoomPane />);
-        fireEvent.click(await screen.findByTestId('acr-review-item-rev-1'));
+        fireEvent.click(await screen.findByTestId('review-item-select-rev-1'));
         const controls = await screen.findByTestId('review-decision-controls');
         expect(controls.getAttribute('data-human-required')).toBe('true');
         expect(controls.getAttribute('data-gate-ok')).toBe('false');
@@ -220,7 +224,7 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
 
     it("commits through the LIVE `s5'.review.resolve`, never the spec's absent `transition`", async () => {
         render(<AgenticControlRoomPane />);
-        fireEvent.click(await screen.findByTestId('acr-review-item-rev-1'));
+        fireEvent.click(await screen.findByTestId('review-item-select-rev-1'));
         fireEvent.change(await screen.findByTestId('acr-decision-rationale'), {
             target: { value: 'reviewed the evidence' }
         });
@@ -243,7 +247,7 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
 
     it('a human-gated item is IN parity across all three faces', async () => {
         render(<AgenticControlRoomPane />);
-        fireEvent.click(await screen.findByTestId('acr-review-item-rev-1'));
+        fireEvent.click(await screen.findByTestId('review-item-select-rev-1'));
         const matrix = await screen.findByTestId('iod17-parity-matrix');
         await waitFor(() => expect(matrix.getAttribute('data-in-parity')).toBe('true'));
         for (const face of ['capability-matrix', 'agent-contract', 'widget']) {
@@ -270,7 +274,7 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
             return Promise.reject(new Error(`unexpected method ${method}`));
         });
         render(<AgenticControlRoomPane />);
-        fireEvent.click(await screen.findByTestId('acr-review-item-rev-2'));
+        fireEvent.click(await screen.findByTestId('review-item-select-rev-2'));
         expect((await screen.findByTestId('iod17-violation')).textContent).toBe(
             'IOD-17 parity violated — gateway will reject any transition'
         );

@@ -8634,3 +8634,192 @@ button.tool-stream-timerange.active {
     cursor: not-allowed;
     opacity: 0.6;
 }
+
+/* ── 28.T28.9 — the review row, in both DR-WC-IS-2 foldings ─────────────────
+   ONE component, so ONE vocabulary: the deep fold adds the parity matrix, the
+   abbreviated fold adds the disabled crossing seam, and everything else reads
+   identically in the `/` membrane and in the governance pane. */
+.review-inbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.review-inbox-note {
+    font-size: var(--type-micro);
+    color: var(--ink-dim);
+}
+
+.review-inbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.review-item-deep {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.3rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+}
+
+.review-item-deep[data-selected='true'] {
+    border-color: var(--accent);
+}
+
+/* the human gate reads as a gate in BOTH foldings — the deep fold explains it
+   with the parity matrix, the abbreviated one with the status line */
+.review-item-deep[data-human-required='true'] {
+    border-left-width: 3px;
+    border-left-color: var(--ring);
+}
+
+.review-item-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+}
+
+.review-item-title {
+    font-weight: 600;
+}
+
+.review-item-priority,
+.review-item-source,
+.review-item-coordinate,
+.review-item-parity-status,
+.review-item-no-genealogy,
+.review-iod17-state,
+.review-iod17-face {
+    color: var(--ink-dim);
+    font-size: var(--type-micro);
+}
+
+.review-item-human-gate {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin: 0;
+    font-size: var(--type-micro);
+}
+
+.review-item-human-gate-headline {
+    font-weight: 600;
+}
+
+.review-item-no-genealogy {
+    margin: 0;
+}
+
+.review-item-cross-fold {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.35rem;
+}
+
+.review-open-dispatch,
+.review-open-evidence {
+    background: none;
+    border: 1px solid var(--ground-raised);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--type-caption);
+}
+
+.review-iod17 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: var(--type-micro);
+}
+
+.review-iod17-label {
+    font-weight: 600;
+}
+
+.review-iod17-cells {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.review-iod17-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+}
+
+.review-iod17-agrees {
+    border-color: var(--accent);
+}
+
+.review-iod17-disagrees {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.review-iod17-aggregate {
+    margin: 0;
+}
+
+.review-iod17-violation {
+    margin: 0;
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.review-unwired-seam {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--type-micro);
+    opacity: 0.85;
+}
+
+.review-unwired-seam button[disabled] {
+    align-self: flex-start;
+    cursor: not-allowed;
+    background: transparent;
+    color: inherit;
+    border: 1px dashed var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+}
+
+.review-unwired-target {
+    font-family: monospace;
+    font-size: var(--type-mono);
+}
+
+.review-unwired-reason,
+.acr-review-parity-status {
+    color: var(--ink-dim);
+}
+
+.acr-review-parity-status {
+    display: block;
+    font-size: var(--type-micro);
+}

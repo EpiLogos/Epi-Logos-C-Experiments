@@ -155,6 +155,20 @@ export function ReviewDecisionControls({
             {!gate.ok ? (
                 <p className="acr-review-gate-refusal" data-testid="acr-gate-refusal">
                     {gate.reason}
+                    {/* 28.9 (e) — the human-required banner extended with the
+                        PARITY STATUS LINE. The refusal says why this operator
+                        cannot commit; the line says whether the substrate would
+                        accept the transition at all once they could. Two
+                        different failures that a single sentence used to blur. */}
+                    <span
+                        className="acr-review-parity-status"
+                        data-testid="acr-gate-parity-status"
+                        data-in-parity={parity.inParity ? 'true' : 'false'}
+                    >
+                        {parity.inParity
+                            ? 'IOD-17 parity holds — the gateway will accept a human resolution.'
+                            : parity.violation}
+                    </span>
                 </p>
             ) : null}
 

@@ -1,5 +1,5 @@
 /**
- * Coordinate: M' M5' (Review fold body — Tranches 44.T44.3 + 44.T44.4, cross-link 27.6)
+ * Coordinate: M' M5' (Review fold body — Tranches 44.T44.3 + 44.T44.4 + 28.T28.9, cross-link 27.6)
  * Actualises: the OmniPanel Review fold rendering real data through the
  *   Track-44 block standard (genealogy → review-item/evidence/genealogy
  *   blocks via BlockHost) PLUS the 44.4 vertical slice: review-item
@@ -7,12 +7,27 @@
  *   under the live Human Gate (m5ReviewGate — agent committals blocked,
  *   only a human commits) into an `s4'.psyche.update` request whose patch
  *   carries the renderer session state.
+ *
+ *   28.T28.9 — DR-WC-IS-2's ABBREVIATED half for the REVIEW surface, and the
+ *   end of a real gap: until this tranche NO carrier surface but the deep ACR
+ *   read `s5'.review.inbox`, so the always-on Review fold's rows were genealogy
+ *   records projected into generic blocks — a dispatch history wearing the word
+ *   "review". The governance queue is now read LIVE here too, projected by the
+ *   ONE `reviewItemsDeep` producer the deep pane calls, and rendered by the ONE
+ *   `ReviewItemDeepView` at `fold="abbreviated"`: the inbox, the human-required
+ *   gate, and the click-throughs. The FULL three-cell parity readout stays the
+ *   governance fold's (§5), and this surface SAYS so rather than showing a
+ *   half-read matrix. The Track-44 BLOCK rows below are unchanged and still
+ *   ride the fixture until track-12's wire→record producer lands — the two
+ *   sources are labelled separately instead of one banner speaking for both.
  * Does NOT own: the gate law (m5ReviewGate.ts), the run-model types, the
  *   live wire→record producer (track-12 seam) or the `s4'.psyche.update`
- *   ws seam (dispatched honestly; refusals surface inline).
+ *   ws seam (dispatched honestly; refusals surface inline); the review-item
+ *   projection (`panes/omni/review/reviewItemDeep.ts`), its render
+ *   (`ReviewItemDeepView.tsx`), or the parity law (`panes/acr/acrGovernance.ts`).
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
 import { BlockHost } from '../../blocks/BlockHost';
 import { TEMPORAL_CONTEXT_RPC, normalizeTemporalBlocksProjection } from '../../blocks/temporalBlocks';
@@ -31,9 +46,19 @@ import {
     type BlockVerdictDecision
 } from '../../blocks/verdictLoop';
 import { enforceHumanGate } from '../m5ReviewGate';
+import { REVIEW_INBOX_METHOD, parseReviewInbox, type AcrReviewItem } from '../acr/acrReviewInbox';
 import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
+import {
+    DEPOSIT_LIST_METHOD,
+    readEvidenceDeposits,
+    type EvidenceDeposit
+} from './evidence/evidenceDeposits';
 import { genealogyToReviewBlocks } from './reviewBlocks';
+import { ReviewItemDeepView } from './review/ReviewItemDeepView';
+import { reviewItemsDeep } from './review/reviewItemDeep';
+import { REVIEW_DISPATCH_TREE_ROUTE, REVIEW_EVIDENCE_ROUTE } from './review/reviewPaneSeams';
+import { fireOmniPanelRoute } from './omnipanelIntentRouter';
 import { MExtensionEmptyState } from '../../ui/mExtensionEmptyStates';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 import { M1SessionCloseReader, readM1SessionCloseBundle } from '../m1SessionCloseReader';
@@ -86,12 +111,82 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
         state: 'pending',
         reason: 'exact session key required before contemplation aggregates can be read'
     });
+    // 28.T28.9 — the LIVE governance queue, in the abbreviated folding.
+    const [inbox, setInbox] = useState<readonly AcrReviewItem[] | null>(null);
+    const [inboxError, setInboxError] = useState<string | null>(null);
+    const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
 
     useEffect(() => {
         if (requestedReviewId) {
             patchTab('review', { selectedReviewId: requestedReviewId });
         }
     }, [patchTab, requestedReviewId]);
+
+    /**
+     * 28.T28.9 — the live read this fold never had. TWO methods, both real:
+     * `s5'.review.inbox` is the queue itself, `s5'.epii.deposit.list` supplies
+     * the evidence-packet identity a row's click-through carries (a deposit is
+     * filed AS a review item, so the ids coincide exactly when an anchored
+     * deposit backs the row).
+     *
+     * The dependency array is `[connected]` and nothing else — deliberately. A
+     * guard that excluded only some statuses would let every OTHER status feed
+     * back through its own state change and re-read the gateway in a tight loop
+     * (the 28.T28.6 defect). Nothing this effect writes can retrigger it.
+     */
+    useEffect(() => {
+        if (!connected) {
+            setInbox(null);
+            setInboxError(null);
+            setDeposits([]);
+            return;
+        }
+        let cancelled = false;
+        gateway()
+            .invoke(REVIEW_INBOX_METHOD, { status: 'open' })
+            .then(receipt => {
+                if (cancelled) return;
+                setInbox(parseReviewInbox(receipt.artifact));
+                setInboxError(null);
+            })
+            .catch(err => {
+                if (cancelled) return;
+                setInbox(null);
+                setInboxError(err instanceof Error ? err.message : String(err));
+            });
+        gateway()
+            .invoke(DEPOSIT_LIST_METHOD, {})
+            .then(receipt => {
+                if (!cancelled) setDeposits(readEvidenceDeposits(receipt.artifact));
+            })
+            .catch(() => {
+                // A row without its deposit still lists; it simply carries no
+                // evidence-packet id, which is the truth about that row.
+                if (!cancelled) setDeposits([]);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [connected]);
+
+    /**
+     * The ABBREVIATED folding: the SAME producer the deep governance pane calls,
+     * with the two inputs this fold does not hold left empty. `genealogy: []`
+     * because folding the run tree is the governance audit's job (DR-WC-IS-2),
+     * and `snapshot: null` because the IOD-17 readout is the deep fold's — so
+     * these rows carry no parity object at all rather than a half-read one.
+     */
+    const deepReviewItems = useMemo(
+        () =>
+            reviewItemsDeep({
+                items: inbox ?? [],
+                deposits,
+                genealogy: [],
+                snapshot: null,
+                sessionKey
+            }),
+        [inbox, deposits, sessionKey]
+    );
 
     // 44.6: block selection fires the context-xray seam and highlights back
     // through the shared coordinate store (the carrier's cross-pane law).
@@ -261,9 +356,69 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                     Requested review: {requestedReviewId ?? reviewTab.selectedReviewId}
                 </p>
             ) : null}
+            {/* 28.T28.9 — the LIVE governance queue, abbreviated (DR-WC-IS-2).
+                Same producer and same component as the deep audit in the
+                Agentic Control Room; one row identity across both. */}
+            <section
+                className="review-inbox"
+                data-testid="review-inbox"
+                data-fold="abbreviated"
+                data-inbox-source={inbox === null ? (inboxError ? 'error' : 'pending') : 'live'}
+            >
+                <p className="pane-message review-inbox-note" data-testid="review-inbox-note">
+                    {`Governance queue — live on ${REVIEW_INBOX_METHOD}. This is the abbreviated `
+                        + 'folding (DR-WC-IS-2): inbox plus click-through. The full IOD-17 three-cell '
+                        + 'parity readout and the run-tree audit are the governance fold’s, in the '
+                        + 'Agentic Control Room (ide-deep).'}
+                </p>
+                {inboxError ? (
+                    <p className="pane-message" data-testid="review-inbox-error">
+                        {`${REVIEW_INBOX_METHOD} unavailable — ${inboxError}`}
+                    </p>
+                ) : inbox === null ? (
+                    <p className="pane-message" data-testid="review-inbox-pending">
+                        connect the gateway to read the open governance queue
+                    </p>
+                ) : deepReviewItems.length === 0 ? (
+                    <p className="pane-message" data-testid="review-inbox-empty">
+                        {`no open items on ${REVIEW_INBOX_METHOD}`}
+                    </p>
+                ) : (
+                    <ul className="review-inbox-list" role="list">
+                        {deepReviewItems.map(item => (
+                            <li key={item.itemId} role="listitem">
+                                <ReviewItemDeepView
+                                    item={item}
+                                    fold="abbreviated"
+                                    selected={reviewTab.selectedReviewId === item.itemId}
+                                    onSelect={itemId =>
+                                        patchTab('review', {
+                                            selectedReviewId:
+                                                reviewTab.selectedReviewId === itemId ? null : itemId
+                                        })
+                                    }
+                                    onOpenDispatchTree={nodeId =>
+                                        fireOmniPanelRoute({
+                                            ...REVIEW_DISPATCH_TREE_ROUTE,
+                                            artifactUri: nodeId
+                                        })
+                                    }
+                                    onOpenEvidence={packetId =>
+                                        fireOmniPanelRoute({
+                                            ...REVIEW_EVIDENCE_ROUTE,
+                                            artifactUri: packetId
+                                        })
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
             <p className="pane-message review-blocks-seam" data-testid="review-blocks-seam-note">
-                Review rows ride the synthetic acceptance fixture — the live wire→record producer is
-                track-12's seam; verdicts route to the s4-prime psyche.update seam under the m5 human gate.
+                Track-44 BLOCK rows below ride the synthetic acceptance fixture — the live wire→record
+                producer is track-12's seam; verdicts route to the s4-prime psyche.update seam under the
+                m5 human gate. The governance queue above is separate and live.
             </p>
             <section className="review-session-close" data-testid="review-session-close">
                 {sessionClose.state === 'ready' ? (

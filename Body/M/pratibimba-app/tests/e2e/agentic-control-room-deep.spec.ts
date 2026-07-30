@@ -350,3 +350,130 @@ test('28.T28.8: the control room renders the FULL packet the `/` fold abbreviate
     await expect(axiom).toContainText('ide-shell-m0-m5/axiom-translation-inspector');
     await expect(view.locator('[data-testid="evidence-axiom-link-button"]')).toBeDisabled();
 });
+
+/**
+ * 28.T28.9 — DR-WC-IS-2's REVIEW split, driven end to end.
+ *
+ * The gap this closes is not cosmetic. Before this tranche NO carrier surface
+ * but the deep control room read `s5'.review.inbox`: the always-on Review fold
+ * projected genealogy records into generic blocks, so the `/` membrane's
+ * "review" was a dispatch history wearing the word. Proving the split therefore
+ * needs a REAL review item on the real wire, seen in BOTH surfaces — so this
+ * spec submits one through the live `s5'.review.submit` and then reads it twice.
+ *
+ * Four claims:
+ *   (1) the `/` Review fold renders the row LIVE (`data-inbox-source="live"`),
+ *       at `fold="abbreviated"`, and carries NO parity matrix — DR-WC-IS-2 gives
+ *       the readout to the governance fold, and the surface says so;
+ *   (2) crossing INTO the deep pane is DISABLED there and names the target the
+ *       ledger cannot promote (`agenticControlRoom`, 52.T3 / 28.T28.14) —
+ *       the same honesty 28.T28.8 landed from the evidence side;
+ *   (3) the SAME row in the control room renders at `fold="deep"` with the
+ *       three-cell IOD-17 matrix populated from that pane's live
+ *       `s4'.mediation.capabilities.list` — three `human-required` faces, in
+ *       parity, no violation banner;
+ *   (4) the human-required banner carries the parity status line (28.9 e).
+ *
+ * BUDGET: boot (20s) + a border-tab open + ONE real layout transition (a full
+ * FlexLayout remount of both faces, polled at 30s) + the control-room body
+ * behind a real tab click (20s). Worst case ~100s, hence 150s. Every wait is on
+ * a real signal; there is no `waitForTimeout` in this file.
+ */
+test('28.T28.9: one live review row, two foldings — abbreviated in `/`, full parity in depth', async ({
+    page
+}) => {
+    test.setTimeout(150_000);
+
+    // A REAL item on the REAL wire. `s5'.review.submit` is one of the four arms
+    // `Body/S/S5/epii-review-core/src/s5_handlers.rs::S5_REVIEW_METHODS` owns.
+    const title = `e2e review split ${Date.now().toString(36)}`;
+    const submitted = (await gatewayRpc("s5'.review.submit", {
+        source: 'human_gate',
+        title,
+        body: 'the row both foldings must render',
+        priority: 'blocking',
+        coordinate_context: { coordinate: 'M5-4' },
+        proposed_action: null,
+        requires_human: true
+    })) as { item?: { item_id?: string } };
+    const itemId = submitted?.item?.item_id;
+    expect(itemId, "s5'.review.submit must return the stored item id").toBeTruthy();
+
+    await boot(page);
+    await ensureFace(page, '1');
+
+    // ── (1) the ABBREVIATED folding, in the always-on `/` membrane ─────────
+    // The house idiom: clicking an ALREADY-selected border button collapses the
+    // border, so select only when it is not already the open fold.
+    const reviewButton = page
+        .locator('.face-active .flexlayout__border_button', { hasText: 'Review' })
+        .first();
+    await expect(reviewButton).toBeVisible({ timeout: 20_000 });
+    if (!/--selected/.test((await reviewButton.getAttribute('class')) ?? '')) {
+        await reviewButton.click();
+    }
+    await expect(reviewButton).toHaveClass(/--selected/);
+    const inbox = page.locator('.face-active [data-testid="review-inbox"]');
+    await expect(inbox).toBeVisible({ timeout: 20_000 });
+    await expect(inbox).toHaveAttribute('data-inbox-source', 'live', { timeout: 20_000 });
+
+    const abbreviated = inbox.locator(`[data-testid="review-item-${itemId}"]`);
+    await expect(abbreviated).toBeVisible({ timeout: 20_000 });
+    await expect(abbreviated).toHaveAttribute('data-fold', 'abbreviated');
+    await expect(abbreviated).toHaveAttribute('data-human-required', 'true');
+    await expect(
+        abbreviated.locator(`[data-testid="review-iod17-${itemId}"]`),
+        'the three-cell readout is the governance folding’s (DR-WC-IS-2)'
+    ).toHaveCount(0);
+    await expect(
+        abbreviated.locator(`[data-testid="review-item-parity-status-${itemId}"]`)
+    ).toContainText('governance fold');
+
+    // ── (2) the crossing the carrier cannot route, disabled and named ──────
+    const crossing = abbreviated.locator(
+        `[data-testid="review-open-governance-audit-${itemId}"]`
+    );
+    await expect(crossing).toHaveAttribute('data-wire-state', 'unwired');
+    await expect(crossing).toContainText('agenticControlRoom');
+    await expect(
+        crossing.locator(`[data-testid="review-open-governance-audit-${itemId}-button"]`)
+    ).toBeDisabled();
+
+    // ── into depth, onto the governance-primary pane ───────────────────────
+    await switchLayout(page, 'ide-deep');
+    await ensureFace(page, '1');
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: ACR_TAB_LABEL })
+        .first()
+        .click();
+    const room = page.locator('.face-active [data-testid="agentic-control-room"]');
+    await expect(room).toBeVisible({ timeout: 20_000 });
+
+    // ── (3) the SAME row, deep — the parity matrix over the live matrix ────
+    const deep = room.locator(`[data-testid="review-item-${itemId}"]`);
+    await expect(deep).toBeVisible({ timeout: 30_000 });
+    await expect(deep).toHaveAttribute('data-fold', 'deep');
+    const matrix = deep.locator(`[data-testid="review-iod17-${itemId}"]`);
+    await expect(matrix).toBeVisible({ timeout: 20_000 });
+    for (const face of ['capability-matrix', 'agent-contract', 'widget']) {
+        const cell = deep.locator(`[data-testid="review-iod17-cell-${face}"]`);
+        await expect(cell).toHaveAttribute('data-state', 'human-required');
+        await expect(cell).toHaveAttribute('data-agrees', 'true');
+    }
+    await expect(matrix).toHaveAttribute('data-in-parity', 'true');
+    await expect(
+        deep.locator(`[data-testid="review-iod17-violation-${itemId}"]`),
+        'three agreeing faces must not raise the violation banner'
+    ).toHaveCount(0);
+    await expect(
+        deep.locator(`[data-testid="review-open-governance-audit-${itemId}"]`),
+        'the deep fold does not offer a crossing to itself'
+    ).toHaveCount(0);
+
+    // ── (4) the human-required banner, extended with the parity status line ─
+    const gate = deep.locator(`[data-testid="review-item-human-gate-${itemId}"]`);
+    await expect(gate).toContainText('Human ratification required');
+    await expect(
+        deep.locator(`[data-testid="review-item-parity-status-${itemId}"]`)
+    ).toContainText('all three faces agree');
+});
