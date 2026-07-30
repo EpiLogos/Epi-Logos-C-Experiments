@@ -8657,6 +8657,14 @@ button.tool-stream-timerange.active {
     margin: 0;
     padding: 0;
     list-style: none;
+    /* The `/` membrane's Review fold is a BORDER fold, not a page: an open
+       governance queue is unbounded (S5 keeps every open item), so an
+       unconstrained list would push the Track-44 block host arbitrarily far
+       down and make the fold's geometry a function of the review backlog.
+       The abbreviated folding scrolls its own queue; the deep governance pane
+       is where a long queue is read in full. */
+    max-height: 16rem;
+    overflow-y: auto;
 }
 
 .review-item-deep {
