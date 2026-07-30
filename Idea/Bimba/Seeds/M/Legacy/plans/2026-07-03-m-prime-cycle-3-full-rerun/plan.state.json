@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T23:20:38.980Z",
+  "updatedAt": "2026-07-30T23:21:12.659Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14345,10 +14345,10 @@
       "blocker": null
     },
     "28.T28.9": {
-      "status": "review",
-      "updatedAt": "2026-07-30T23:06:45.163Z",
+      "status": "done",
+      "updatedAt": "2026-07-30T23:21:12.632Z",
       "claimedAt": "2026-07-30T22:01:22.725Z",
-      "completedAt": null,
+      "completedAt": "2026-07-30T23:21:12.632Z",
       "evidence": [
         {
           "at": "2026-07-30T23:06:45.163Z",
@@ -14374,11 +14374,26 @@
               "output": 52000
             }
           }
+        },
+        {
+          "at": "2026-07-30T23:21:12.632Z",
+          "text": "Independent verification (verifier opus5-mdev-verify-20260731, distinct from this closer). CLOSED ON THE DOCUMENTED UNRELATED-RED PATH, scoping named not hidden: every gate stage is green except app-ui-flow, whose only red is m1-session-close-reader, a spec owned by tranche 22.5 that this work does not touch, timing out on shell visibility at boot. THE CAUSE IS NOW MEASURED RATHER THAN GUESSED, and it corrects an earlier reading of mine: this is not the app degrading across a long run. It is CPU contention between two agent sessions gating at once. The same suite ran 356 seconds at machine load 2.4 earlier in the session and 539 seconds at load 12.3 now; the gate lane serialises the port-bound suites but not the other session's cargo and vitest work, which saturates the box while playwright is trying to meet a 20 second boot budget. Five different specs have failed this way across runs, each green in isolation, in a suite already configured workers 1, fullyParallel false, retries 0. THE TRANCHE'S OWN PROOF IS FULL: typecheck clean, build clean, app-test 2116 against a 2094 baseline, honesty-lint clean, and the laned UF suite at 133 passing with this tranche's own new spec and the block-host baseline both green. The review row type did not exist at all — neither ReviewItemDeep nor a base ReviewItem — so reviewItemDeep.ts now carries the type and the ONE producer both foldings call, with the base aliased to the ACR inbox item rather than re-declared. The queue is LIVE and says which parts are: ReviewBlocksPane reads the review inbox and the deposit list over the real wire, and its banner names the two sources separately so the track-44 block rows are not passed off as live governance state. The fold split reuses 28.8's pattern rather than inventing a second one, one view with a fold prop, one producer, identity through a single selected-review id. The parity matrix consumes the live computation, marks an unset face RED, and holds the parity object null rather than painting a red banner until the capability matrix has answered. Genealogy and evidence click-through are joins over real reads, asserted against real data rather than fixtures. Absent methods are disabled with the reason on the surface and guarded so they go red the day an arm lands: the review transition name corrected to resolve, the runtime control left to its owning tranche, and the control-room target which resolves to the dispatch-trace fold and cannot promote into the deep layout. A structural finding for other threads: the review fold's block host carries the 44.9 visual baseline, so any section rendered above it makes that baseline a function of the review backlog, green alone and red in a full suite; the queue therefore renders below it. Commits a23a99a9, be9408b7 and 164c7e1d.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.9 --owner opus5-mdev-verify-20260731 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 2116,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewItemDeep.ts",
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "laned pnpm test:e2e 133 passed playwright"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 48 dirty files.",
       "owner": "opus5-t28t9-review",
-      "leaseExpiresAt": "2026-07-31T02:01:22.725Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-30T23:06:45.163Z",
       "runId": "20260730T220122Z-28-T28.9",
       "worktree": null,
