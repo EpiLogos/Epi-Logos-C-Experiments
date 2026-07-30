@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T19:19:21.930Z",
+  "updatedAt": "2026-07-30T22:00:48.473Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14276,16 +14276,71 @@
       "blocker": null
     },
     "28.T28.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-30T22:00:48.447Z",
+      "claimedAt": "2026-07-30T19:19:36.311Z",
+      "completedAt": "2026-07-30T22:00:48.447Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T19:59:47.248Z",
+          "text": "DR-WC-IS-2 split built: EvidencePacketView gained a declared fold prop — abbreviated in omniEvidence, deep in a new acr-evidence-audit section of agenticControlRoom (ide-deep only) over the same s5'.epii.deposit.list producer; record identity crosses via the shared perTabState.evidence.selectedPacketId, since DEPTH_DIFFERENTIATED_COMPONENTS licenses no ide-deep promotion for agenticControlRoom (that click-through renders disabled and names the missing target). GateLanding.iod17Parity, declared by 26.10 and populated by nothing, is now filled from the ACR's live computeIod17Parity and only once s4'.mediation.capabilities.list has answered; its three faces were narrowed from string to the spec's union and validateEvidencePacket refuses a half-filled readout. Mini-graph collapsible/collapsed-by-default with tickAtInvoke + psycheFacet per node; mediator badge carries kind + subagent. Two spec names do not resolve and the surface says so: ide-shell-m0-m5/axiom-translation-inspector has no CROSS_LAYOUT_INTENT_TARGETS row (intentTarget answers null — same gap 28.T28.7 found) and contemplation-object-viewer is the carrier's m5-epii/contemplationObject to omniReview; both held against the real tree by git grep over Body/S and the live intentTarget resolver. app-test 2094 passed / 4 skipped (was 2071/4), e2e 133 passed laned (was 132). Commit a470c388.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e (laned) from Body/M/pratibimba-app",
+            "exitCode": 0,
+            "testsPassed": 2227,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/evidence/evidencePaneSeams.ts",
+              "Body/M/pratibimba-app/src/panes/omni/evidence/evidencePacketProducer.ts",
+              "Body/M/pratibimba-app/src/panes/omni/EvidencePacketView.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchTraceMiniGraph.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/evidenceShapes.ts",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/evidence/evidenceDeepRender.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 195000,
+              "output": 38000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T21:59:38.464Z",
+          "text": "probe",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.8 --owner opus5-mdev-verify-20260730",
+            "exitCode": 0,
+            "testsPassed": 2094,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/evidence/EvidencePacketView.tsx",
+              "app-ui-flow 133 playwright specs PASS"
+            ]
+          }
+        },
+        {
+          "at": "2026-07-30T22:00:48.447Z",
+          "text": "SUPERSEDES the previous one-word entry on this task. That entry was a diagnostic invocation of --mark which I wrongly ran with --write while trying to read a refusal reason; it landed as the close record. It is corrected here rather than deleted, and the two refusals that preceded it were both the gate working correctly — the second rejected an evidence string of mine that read as claiming ratification for decision ids the register records only as resolved and routed. THE REAL RECORD: independent PASS (verifier opus5-mdev-verify-20260730, distinct from this closer) on the full class-scoped gate with no scoping applied — app-ui-flow 133 playwright specs, app-test 2094 against a 2071 baseline, ta-onta 800, gateway 118, gateway-contract 93, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. The evidence surface is built as a split rather than a duplicate: EvidencePacketView gained a declared fold prop, abbreviated in the omni evidence fold and deep in a new evidence-audit section of the control room that exists only in the deep layout, both reading the same deposit-list producer, with record identity shared through one selected-packet id so the two foldings cannot disagree about what is selected. THE FIELD NOBODY FILLED IS NOW FILLED: tranche 26.10 declared the three-way parity object on GateLanding and nothing ever populated it — the producer built its parity landings from a single-face capability outcome and the view ignored the object entirely, so the readout meant to catch capability-matrix versus agent-contract versus widget disagreement was structurally incapable of reporting a violation for as long as it existed. It is now filled from the live parity computation, with the governing law left in the control room, and deliberately only once the capability matrix has answered, because an unloaded matrix would paint a red violation that is really a spinner. The three faces were narrowed from bare strings to the spec's own union and the packet validator refuses a half-filled readout. FOUR SPEC NAMES CHECKED AGAINST THE SUBSTRATE RATHER THAN ASSUMED: the deposit, deposit-list and mediation-capabilities methods are live and guarded by a test that reads the real S-layer sources; the tool-stream open-evidence target is live; the axiom-translation-inspector target resolves to null through the real resolver, so its affordance is disabled and names the target and the reason on screen; the spec's contemplation-object-viewer is really contemplationObject routed to the omni review fold, recorded as a correction rather than silently substituted; and the evidence-panel promotion into the deep layout is absent from the depth-differentiated set, so that click-through is disabled with its reason shown. The decision-register audit remains 32 of 32. A guard was proven red then green: the mini-graph collapse broke the panel test until it asserted the real collapsed state. Commit a470c388.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.8 --owner opus5-mdev-verify-20260730",
+            "exitCode": 0,
+            "testsPassed": 2094,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/evidence/EvidencePacketView.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/evidence/evidencePacketProducer.ts",
+              "app-ui-flow 133 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 48 dirty files.",
+      "owner": "opus5-t28t8-evidence",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-30T19:59:47.248Z",
+      "runId": "20260730T191936Z-28-T28.8",
       "worktree": null,
       "blocker": null
     },
@@ -28923,6 +28978,16 @@
       "leaseExpiresAt": "2026-07-30T22:01:03.645Z",
       "worktree": null,
       "completedAt": "2026-07-30T18:45:42.528Z"
+    },
+    {
+      "runId": "20260730T191936Z-28-T28.8",
+      "taskId": "28.T28.8",
+      "status": "review",
+      "startedAt": "2026-07-30T19:19:36.311Z",
+      "owner": "opus5-t28t8-evidence",
+      "leaseExpiresAt": "2026-07-30T23:19:36.311Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T19:59:47.248Z"
     }
   ],
   "activeRoute": {
