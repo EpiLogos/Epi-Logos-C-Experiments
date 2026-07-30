@@ -592,6 +592,10 @@ async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
         episodes["episodes"].to_string().contains(&token),
         "live Graphiti episode storage should preserve the exact proof token; episodes={episodes:#?}"
     );
+
+    // Delete exactly what this test created.
+    purge_graphiti_group(&session_key).await;
+
 }
 
 #[tokio::test]
@@ -740,4 +744,30 @@ async fn s5_gnostic_gateway_methods_call_production_epi_gnostic_surface() {
         .await
         .expect("gnostic notebook delete should update the production registry");
     assert_eq!(deleted["deleted"], true);
+}
+
+/// Delete exactly the Graphiti group this test created, and nothing else.
+///
+/// See the twin in `gate_spacetimedb_bridge.rs`. A test that mints a per-run
+/// `group_id` owns it, and owning it means removing it — otherwise the graph
+/// accumulates fixture residue no one is responsible for, which is what
+/// happened here until 2026-07-30. Scoped to this run's group id, and it can
+/// never touch a `:Bimba` node.
+async fn purge_graphiti_group(session_key: &str) {
+    let group_id = session_key.replace(':', "_");
+    let Ok(client) = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    ) else {
+        return; // no live graph here; nothing was written either
+    };
+    let _ = client
+        .graph()
+        .run(
+            neo4rs::query(
+                "MATCH (n) WHERE (n:Entity OR n:Episodic) AND NOT n:Bimba \
+                 AND n.group_id = $group_id DETACH DELETE n",
+            )
+            .param("group_id", group_id),
+        )
+        .await;
 }

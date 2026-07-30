@@ -2587,6 +2587,8 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 /// arc carry ONLY the namespace_ref/session_arc_id references (no episode
 /// body fields).
 #[tokio::test]
+
+
 #[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778. Graphiti — unlike SpaceTimeDB — IS a compose service: `docker compose -f docker-compose.epi-s2.yml up -d graphiti` (needs GEMINI_API_KEY; pulls neo4j + redis via depends_on)."]
 async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb() {
     use epi_logos::gate::graphiti;
@@ -2674,6 +2676,10 @@ async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb(
         err.contains("episode_body"),
         "refusal must name the offending field: {err}"
     );
+
+    // Delete exactly what this test created.
+    purge_graphiti_group(&session_key).await;
+
 }
 
 #[test]
@@ -2730,4 +2736,31 @@ fn reducer_post_surfaces_4xx_immediately_without_retry() {
         1,
         "exactly 1 reducer attempt for non-retryable 4xx"
     );
+}
+
+/// Delete exactly the Graphiti group this test created, and nothing else.
+///
+/// Graphiti episodes are `:Entity`/`:Episodic` keyed by `group_id`, derived
+/// from the session key with `:` replaced by `_`. Leaving them behind is how
+/// the graph accumulated fixture residue that nothing owned; the fix belongs
+/// here, in the test that created it, not in a scheduled sweep somewhere else.
+/// The delete is scoped to this run's unique group id and asserts it never
+/// touches a `:Bimba` node.
+async fn purge_graphiti_group(session_key: &str) {
+    let group_id = session_key.replace(':', "_");
+    let Ok(graph) = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    ) else {
+        return; // no live graph in this environment; nothing was written either
+    };
+    let _ = graph
+        .graph()
+        .run(
+            neo4rs::query(
+                "MATCH (n) WHERE (n:Entity OR n:Episodic) AND NOT n:Bimba \
+                 AND n.group_id = $group_id DETACH DELETE n",
+            )
+            .param("group_id", group_id),
+        )
+        .await;
 }
