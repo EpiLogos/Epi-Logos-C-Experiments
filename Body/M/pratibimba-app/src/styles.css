@@ -8369,3 +8369,132 @@ button.tool-stream-timerange.active {
     color: var(--ink-dim);
     font-size: var(--type-caption);
 }
+
+/* ── 28.T28.7 — Logos Atelier scent trail (M5' lens over the M0' graph host) ──
+   Type voice: every descendant is pinned to a named `--type-*` step so the
+   30.T30.1 sweep cannot find an ad-hoc size here (a bare <h3>/<code> would
+   otherwise inherit a UA default that is off-scale). */
+.atelier-scent-trail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0.4rem 0;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--ground-raised);
+    border-left: 3px solid var(--ink-dim);
+    border-radius: 4px;
+    font-size: var(--type-body-small);
+}
+
+.atelier-scent-trail * {
+    font-size: var(--type-caption);
+}
+
+.atelier-scent-trail h3 {
+    margin: 0;
+    font-size: var(--type-heading-4);
+}
+
+.atelier-scent-trail-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.atelier-governance-note,
+.atelier-subhead {
+    color: var(--ink-dim);
+}
+
+.atelier-stages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.atelier-stage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.atelier-stage-label {
+    font-weight: 600;
+}
+
+.atelier-stage-purpose,
+.atelier-stage-method {
+    color: var(--ink-dim);
+}
+
+.atelier-stage-blocked {
+    opacity: 0.75;
+}
+
+.atelier-stage-seam {
+    flex: 1 1 100%;
+    color: var(--ink-dim);
+}
+
+.atelier-provenance ul,
+.atelier-lineage {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: baseline;
+}
+
+.atelier-provenance-refused {
+    text-decoration: line-through var(--ink-dim);
+}
+
+.atelier-lineage-badge {
+    border: 1px solid var(--ground-raised);
+    border-radius: 999px;
+    padding: 0 0.4rem;
+    color: var(--ink-dim);
+}
+
+.atelier-veto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid #b4423a;
+    border-radius: 3px;
+    color: #d9736a;
+}
+
+.atelier-veto-note {
+    color: var(--ink-dim);
+}
+
+.atelier-writeback {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.atelier-writeback button {
+    background: none;
+    border: 1px solid var(--ground-raised);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--type-caption);
+}
+
+.atelier-writeback button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}

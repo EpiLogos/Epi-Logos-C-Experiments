@@ -10,10 +10,13 @@
  *   command disables without an open file / live gateway.
  */
 
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import {
     ALETHEIA_LINEAGE,
     atelierCommands,
+    ATELIER_MUTATES_GRAPH_CANON,
     etymologyProvenanceHandle,
     SCENT_FOLLOWING_STAGES
 } from './atelier';
@@ -77,17 +80,27 @@ describe('Atelier scent-following commands (16.T16.19 + 26.T26.3)', () => {
         expect(invoke.mock.calls[0]).toEqual(["s5'.gnostic.etymology", { coord: 'M5-5' }]);
     });
 
-    it('drift rides the layered gnostic retrieval; cognate + psychoid keep their landed routes', async () => {
+    it('drift rides the layered gnostic retrieval; cognate keeps its landed route', async () => {
         const { deps: d, invoke } = deps();
         const byId = new Map(atelierCommands(d).map(c => [c.id, c]));
         await byId.get('atelier.semanticDrift')!.run();
         await byId.get('atelier.cognateSearch')!.run();
-        await byId.get('atelier.psychoidTrace')!.run();
         expect(invoke.mock.calls.map(([method]) => method)).toEqual([
             "s5'.gnostic.query_with_layers",
-            "s1'.semantic.suggest_links",
-            "s0'.anuttara.trace"
+            "s1'.semantic.suggest_links"
         ]);
+    });
+
+    it('28.T28.7 (b): the psychoid stage is DISABLED and invokes nothing', async () => {
+        // `s0'.anuttara.trace` is contract-declared and advertised on the wire
+        // but has no dispatch arm in any S-layer table (see
+        // panes/atelier/atelierSeams.ts and its substrate-held sibling suite).
+        // Firing it would render a gateway error as though the stage had run.
+        const { deps: d, invoke } = deps();
+        const psychoid = atelierCommands(d).find(c => c.id === 'atelier.psychoidTrace')!;
+        expect(psychoid.enabled?.()).toBe(false);
+        await psychoid.run();
+        expect(invoke).not.toHaveBeenCalled();
     });
 
     it('pros-hen is a LOCAL synthesis stage — it invokes nothing, fabricating nothing', async () => {
@@ -110,6 +123,47 @@ describe('Atelier scent-following commands (16.T16.19 + 26.T26.3)', () => {
         });
         expect(method).not.toContain('vault.write');
         expect(method).not.toContain('promotion.commit');
+    });
+
+    it('28.T28.7 (d): the Möbius stage routes the staged candidate to Canon Studio', async () => {
+        const dispatchIntent = vi.fn();
+        const { deps: d, invoke } = deps({ dispatchIntent });
+        invoke.mockResolvedValue({
+            artifact: { candidatePath: 'Idea/Empty/Present/11-07-2026/entities/Idea Sketch.md' }
+        });
+        await atelierCommands(d).find(c => c.id === 'atelier.scentFollow')!.run();
+        // capture FIRST, then the governed route — never the other way round.
+        expect(invoke.mock.calls[0][0]).toBe("s1'.entity.capture");
+        expect(dispatchIntent).toHaveBeenCalledTimes(1);
+        const intent = dispatchIntent.mock.calls[0][0];
+        expect(intent.requestedExtensionId).toBe('ide-shell-m0-m5');
+        expect(intent.requestedContributionId).toBe('canon-studio');
+        // the envelope carries the CANDIDATE Hen just wrote, not the source note
+        expect(intent.artifactUri).toBe('Idea/Empty/Present/11-07-2026/entities/Idea Sketch.md');
+        expect(intent.coordinate).toBe('M5-5');
+        expect(intent.dayNow).toBe('11-07-2026');
+        expect(ATELIER_MUTATES_GRAPH_CANON).toBe(false);
+    });
+
+    it('the Möbius route falls back to the source note when the receipt names no candidate', async () => {
+        const dispatchIntent = vi.fn();
+        const { deps: d, invoke } = deps({ dispatchIntent });
+        invoke.mockResolvedValue({ artifact: {} });
+        await atelierCommands(d).find(c => c.id === 'atelier.scentFollow')!.run();
+        expect(dispatchIntent.mock.calls[0][0].artifactUri).toBe(
+            'Idea/Empty/Present/11-07-2026/notes/Idea Sketch.md'
+        );
+    });
+
+    it('an unwired shell still captures — the write-back degrades, it does not throw', async () => {
+        const { deps: d, invoke } = deps();
+        await atelierCommands(d).find(c => c.id === 'atelier.scentFollow')!.run();
+        expect(invoke).toHaveBeenCalledTimes(1);
+    });
+
+    it('App.tsx really wires the write-back transport (an optional dep left unwired is a dead route)', () => {
+        const app = readFileSync(resolve(__dirname, '../App.tsx'), 'utf8');
+        expect(app).toContain('dispatchIntent: intent => commands.execute(CROSS_LAYOUT_INTENT_COMMAND, intent)');
     });
 
     it('surfaces the six Aletheia subagents as evidence lineage, never as invocable actors', () => {

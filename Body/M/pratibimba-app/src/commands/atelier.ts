@@ -8,9 +8,25 @@
  *   drift → psychoid → pros-hen → Möbius write-back — wired to the REAL landed
  *   substrate. Dependencies are injected so the bindings are pure and testable.
  * Public surface: AtelierDeps, atelierCommands, registerAtelierCommands,
- *   SCENT_FOLLOWING_STAGES, ALETHEIA_LINEAGE, etymologyProvenanceHandle.
+ *   SCENT_FOLLOWING_STAGES, ALETHEIA_LINEAGE, etymologyProvenanceHandle,
+ *   AtelierScentStage.
  * Does NOT own: the entity lifecycle law (Hen), the gateway socket (App owns it;
- *   the holder carries it), canon writes (never), Aletheia dispatch (emergent).
+ *   the holder carries it), canon writes (never), Aletheia dispatch (emergent),
+ *   the surface law (`panes/atelier/atelierScentTrail.ts`), or the substrate
+ *   disclosure (`panes/atelier/atelierSeams.ts`).
+ *
+ * 28.T28.7 completes the tranche's remaining three deliverables ON THESE
+ * BINDINGS rather than on a rebuilt widget.
+ *   (b) THE PSYCHOID STAGE IS DISABLED, and says why. `s0'.anuttara.trace` is
+ *   contract-declared and advertised on the wire but has NO dispatch arm in any
+ *   S-layer table (`panes/atelier/atelierSeams.ts`, held against the real
+ *   sources). Invoking it would raise a gateway error the reader would read as
+ *   "the stage ran and failed", so it does not run at all.
+ *   (d) MÖBIUS WRITE-BACK ROUTES. `atelier.scentFollow` stages the Hen
+ *   candidate and then emits the governed `CrossLayoutIntent` to Canon Studio
+ *   carrying that candidate — the SC-2 governance flow, with
+ *   `mutatesGraphCanon: false` intact (capture writes a CANDIDATE under
+ *   `Empty/Present/{day}/entities/`; canon is Hen's).
  *
  * 26.3 WIRING (ratified 2026-07-23).
  * Agents use capabilities — they don't duplicate them. The `aletheia_gnosis_query`
@@ -28,6 +44,7 @@
  */
 
 import { AppCommand, commands } from './registry';
+import type { CrossLayoutIntent, IntentPrivacyClass } from './crossLayoutIntent';
 
 /** The etymology:// provenance namespace (UX §5.3 namespace integrity). */
 export const ETYMOLOGY_PROVENANCE_SCHEME = 'etymology://';
@@ -100,7 +117,12 @@ export const SCENT_FOLLOWING_STAGES: readonly AtelierScentStage[] = Object.freez
  * NOT peer review actors, NOT gateway-invocable (Aletheia is emergent via Anima
  * dispatch). Rendered from provenance, never called from a pane (DR-M5-1 + 12.1).
  */
-export const ALETHEIA_LINEAGE: readonly { readonly subagent: string; readonly role: string }[] =
+export interface AletheiaLineageEntry {
+    readonly subagent: string;
+    readonly role: string;
+}
+
+export const ALETHEIA_LINEAGE: readonly AletheiaLineageEntry[] =
     Object.freeze([
         { subagent: 'Anansi', role: 'citation trail — source-to-source provenance' },
         { subagent: 'Janus', role: 'prospective / retrospective weighting' },
@@ -109,6 +131,53 @@ export const ALETHEIA_LINEAGE: readonly { readonly subagent: string; readonly ro
         { subagent: 'Agora', role: 'deliberation log' },
         { subagent: 'Zeithoven', role: 'temporal-rhythm anchor' }
     ]);
+
+/**
+ * 28.7 (d) / DR-M0-1 / 21-m0 SC-2, as a type rather than a comment: no Atelier
+ * path mutates canon. The Möbius stage stages a CANDIDATE and routes it.
+ */
+export const ATELIER_MUTATES_GRAPH_CANON = false as const;
+
+/** The governed receiver of a crystallised candidate (CHROME-CONTRACT §5). */
+export const MOBIUS_WRITE_BACK_TARGET = Object.freeze({
+    requestedExtensionId: 'ide-shell-m0-m5',
+    requestedContributionId: 'canon-studio'
+});
+
+export interface MobiusWriteBackInput {
+    /** The Hen candidate the capture produced (falls back to the source note). */
+    readonly artifactUri: string;
+    readonly coordinate?: string | null;
+    readonly dayNow?: string | null;
+    readonly sessionKey?: string | null;
+    readonly profileGeneration?: number | null;
+    readonly privacyClass?: IntentPrivacyClass | null;
+}
+
+/**
+ * The nine-field envelope the Möbius stage hands to Canon Studio. One
+ * declaration, so the governance route (and the fact that it names
+ * `canon-studio` and nothing else) is something a test can hold.
+ */
+export function mobiusWriteBackIntent(input: MobiusWriteBackInput): CrossLayoutIntent {
+    return Object.freeze({
+        coordinate: input.coordinate ?? null,
+        artifactUri: input.artifactUri,
+        reviewId: null,
+        dayNow: input.dayNow ?? null,
+        sessionKey: input.sessionKey ?? null,
+        profileGeneration: input.profileGeneration ?? null,
+        privacyClass: input.privacyClass ?? null,
+        ...MOBIUS_WRITE_BACK_TARGET
+    });
+}
+
+/** Read the Hen candidate path out of an `s1'.entity.capture` receipt. */
+function candidatePathOf(receipt: unknown): string | null {
+    const artifact = (receipt as { artifact?: unknown } | null)?.artifact;
+    const path = (artifact as { candidatePath?: unknown } | null)?.candidatePath;
+    return typeof path === 'string' && path.length > 0 ? path : null;
+}
 
 export interface AtelierDeps {
     /** Vault-relative path of the currently-open markdown editor, if any. */
@@ -124,6 +193,15 @@ export interface AtelierDeps {
     readonly dayId: () => string | null;
     readonly invoke: (method: string, params: Record<string, unknown>) => Promise<unknown>;
     readonly ready: () => boolean;
+    /**
+     * 28.7 (d): the governed route out of the Möbius write-back stage. Injected
+     * (App.tsx hands it the one `pratibimba.intent.dispatch` command) so the
+     * write-back is testable and so the Atelier owns no transport of its own.
+     */
+    readonly dispatchIntent?: (intent: CrossLayoutIntent) => void | Promise<void>;
+    /** Session context stamped onto the write-back envelope, when the shell has it. */
+    readonly sessionKey?: () => string | null;
+    readonly privacyClass?: () => IntentPrivacyClass | null;
 }
 
 export function atelierCommands(deps: AtelierDeps): AppCommand[] {
@@ -172,17 +250,23 @@ export function atelierCommands(deps: AtelierDeps): AppCommand[] {
             })
         },
         {
-            // psychoid (16.T16.19)
+            // psychoid (16.T16.19) — DISABLED at 28.T28.7 and disclosed.
+            // `s0'.anuttara.trace` is declared in the gateway's METHOD_NAMES
+            // registry (so it rides the advertised capability list and the
+            // committed live-wire capture) but NO S-layer dispatch table carries
+            // an arm for it — `Body/S/S3/gateway/tests/dispatch_contract.rs`
+            // names it among the "contract rows but no S0 host match arm", and
+            // the live probe answers `unimplemented`. A stage that fires an
+            // unimplemented method reads to the user as "it ran and failed", so
+            // this one does not fire. `panes/atelier/atelierSeams.ts` carries the
+            // disclosure the surface prints, and its sibling suite turns RED the
+            // moment a dispatch arm lands — at which point this `false` comes off.
             id: 'atelier.psychoidTrace',
             title: 'Atelier: Psychoid trace — Anuttara grammatical tracing',
-            enabled: () => deps.ready() && deps.activeMarkdownPath() !== null,
-            run: withActiveFile(async path => {
-                await deps.invoke("s0'.anuttara.trace", {
-                    content: path,
-                    sensitivity: 'public',
-                    depth: 1
-                });
-            })
+            enabled: () => false,
+            run: async () => {
+                // Intentionally inert: the substrate has no arm to reach.
+            }
         },
         {
             // pros-hen — LOCAL synthesis stage (no substrate call). The toward-the-One
@@ -208,7 +292,20 @@ export function atelierCommands(deps: AtelierDeps): AppCommand[] {
                 if (!dayId) {
                     return;
                 }
-                await deps.invoke("s1'.entity.capture", { source: path, dayId });
+                const receipt = await deps.invoke("s1'.entity.capture", { source: path, dayId });
+                // 28.7 (d) — the Möbius turn. The candidate Hen just staged is
+                // routed to Canon Studio for the governed review; this command
+                // never writes canon (SC-2 / DR-M0-1). If the shell has not
+                // wired a transport the capture still stands on its own.
+                await deps.dispatchIntent?.(
+                    mobiusWriteBackIntent({
+                        artifactUri: candidatePathOf(receipt) ?? path,
+                        coordinate: activeCoordinate(),
+                        dayNow: dayId,
+                        sessionKey: deps.sessionKey?.() ?? null,
+                        privacyClass: deps.privacyClass?.() ?? null
+                    })
+                );
             })
         }
     ];

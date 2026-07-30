@@ -23,7 +23,12 @@
  *   anything is rendered: a refused class renders a refusal instead of the map
  *   and is counted in the federated PrivacyDropFeed (28.16), so a drop is
  *   visible rather than silently swallowed.
+ *   28.T28.7 mounts the M5' Logos Atelier scent trail here — the lens
+ *   `ui/dailySurfaceOwnership.ts` already declares this host carries ("M5-5'
+ *   Logos Atelier lens over M0'") — but ONLY when a `logos-atelier`
+ *   CrossLayoutIntent routed to it. The panel reads nothing on mount.
  * Public surface: GraphExplorerPane, GraphExplorerPaneProps,
+ *   AtelierIntentContext,
  *   BIMBA_GRAPH_SURFACE_ID, RELATION_FAMILY_FILTERS, RelationFamilyFilterValue,
  *   edgePassesRelationFamily (the last three re-exported from
  *   bimbaGraph/relationFamilyFilter.ts, their authority since 28.3b).
@@ -63,6 +68,7 @@ import { M0ContemplationPromptFooter } from './M0ContemplationPromptFooter';
 import { M0SymbolicQuestionConsole } from './M0SymbolicQuestionConsole';
 import { useM0Surface } from './M0SurfaceContext';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
+import { AtelierScentTrailPanel } from './atelier/AtelierScentTrailPanel';
 
 const NODES_CYPHER =
     'MATCH (n:Bimba) RETURN n.coordinate AS coordinate, n.label AS label LIMIT 900';
@@ -83,9 +89,23 @@ const LINKS_CYPHER =
     // it here is what makes the relation-family filter honest rather than a
     // locally-guessed partition of relation types.
     'r.c_1_relation_family AS c_1_relation_family, b.coordinate AS target LIMIT 2500';
+/**
+ * 28.T28.7: what a `logos-atelier` CrossLayoutIntent carried here. The Atelier
+ * is declared a LENS OVER this host (`ui/dailySurfaceOwnership.ts` —
+ * "M5-5' Logos Atelier lens over M0'"), so its scent trail renders here, and
+ * ONLY when an intent really routed to it. Absent this prop the pane is exactly
+ * what it was — which is what keeps the cosmic deep model's opening tab quiet.
+ */
+export interface AtelierIntentContext {
+    readonly contributionId: string;
+    readonly artifactUri: string | null;
+    readonly coordinate: string | null;
+}
+
 export interface GraphExplorerPaneProps {
     requestedM0Contribution?: string | null;
     requestedAtelierTerm?: string | null;
+    atelierIntent?: AtelierIntentContext | null;
     /** 28.T28.3(a): the shell's active layout decides the rendering mode. The
      *  shell owns the value (App.tsx `activeLayout`); the pane only reads it. */
     activeLayout?: OmniPanelLayoutId;
@@ -103,6 +123,7 @@ const M0_INTENT_LAYERS: Readonly<Record<string, M0InspectorLayer>> = Object.free
 export function GraphExplorerPane({
     requestedM0Contribution = null,
     requestedAtelierTerm = null,
+    atelierIntent = null,
     activeLayout = 'daily-0-1',
     privacyDropFeed = sharedPrivacyDropFeed
 }: GraphExplorerPaneProps = {}) {
@@ -306,6 +327,15 @@ export function GraphExplorerPane({
                 onSelectedQuestionChange={setSelectedSymbolicQuestion}
             />
             <M0ModeActionsPanel mode={m0Surface.mode} onModeChange={mode => updateM0Surface({ mode })} />
+            {/* 28.T28.7: the M5' crystallisation lens, mounted only when a
+                `logos-atelier` intent really routed here. It reads nothing and
+                publishes nothing on mount — see THE OPENING-TAB LAW. */}
+            {atelierIntent ? (
+                <AtelierScentTrailPanel
+                    artifactUri={atelierIntent.artifactUri}
+                    coordinate={atelierIntent.coordinate ?? selectedCoordinate}
+                />
+            ) : null}
             <div className="pane-toolbar" data-testid="graph-status">
                 <BridgeReadinessBadge bindingKey="s2.graph.node" />
                 {status === 'loading' ? 'reading the canonical map…' : detail}

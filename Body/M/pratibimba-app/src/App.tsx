@@ -419,11 +419,27 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         case 'bimbaGraph':
             {
                 const routed = (node.getConfig() as {
-                    crossLayoutIntent?: { requestedExtensionId?: string; requestedContributionId?: string };
+                    crossLayoutIntent?: {
+                        requestedExtensionId?: string;
+                        requestedContributionId?: string;
+                        artifactUri?: string | null;
+                        coordinate?: string | null;
+                    };
                 })?.crossLayoutIntent;
                 const atelierTerm = routed?.requestedExtensionId === 'ide-shell-m0-m5'
                     && routed.requestedContributionId?.startsWith('term:')
                     ? routed.requestedContributionId.slice('term:'.length)
+                    : null;
+                // 28.T28.7: the M5' Atelier lens mounts only on a real
+                // `logos-atelier` intent (or its `term:` alias, which
+                // `intentTarget` resolves to the same contribution).
+                const atelierIntent = routed?.requestedExtensionId === 'ide-shell-m0-m5'
+                    && (routed.requestedContributionId === 'logos-atelier' || atelierTerm !== null)
+                    ? {
+                        contributionId: routed.requestedContributionId ?? 'logos-atelier',
+                        artifactUri: routed.artifactUri ?? null,
+                        coordinate: routed.coordinate ?? null
+                    }
                     : null;
             return (
                 <GraphExplorerPane
@@ -435,6 +451,7 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
                             : null
                     }
                     requestedAtelierTerm={atelierTerm}
+                    atelierIntent={atelierIntent}
                     // 28.T28.3(a): the layout chooses the rendering mode —
                     // daily previews the solar anchor, deep renders the lattice.
                     activeLayout={activeLayout}
@@ -971,24 +988,47 @@ export function App() {
                 if (!current) {
                     return null;
                 }
-                let path: string | null = null;
-                modelOf(current, 1, activeLayoutRef.current).visitNodes(node => {
-                    if (
-                        node.getType() === 'tab' &&
-                        (node as TabNode).getComponent() === 'editor' &&
-                        (node as TabNode).isVisible()
-                    ) {
-                        path = ((node as TabNode).getConfig() as { path?: string })?.path ?? null;
-                    }
-                });
-                return path;
+                const openEditorIn = (layout: LayoutId): string | null => {
+                    let path: string | null = null;
+                    modelOf(current, 1, layout).visitNodes(node => {
+                        if (
+                            node.getType() === 'tab' &&
+                            (node as TabNode).getComponent() === 'editor' &&
+                            (node as TabNode).isVisible()
+                        ) {
+                            path = ((node as TabNode).getConfig() as { path?: string })?.path ?? null;
+                        }
+                    });
+                    return path;
+                };
+                // 28.T28.7: the open note is the open note. A layout switch does
+                // not close the user's file, and the Atelier acts on the file
+                // they are in — so the ACTIVE layout answers first and the other
+                // is the fallback. Without this, carrying a `logos-atelier`
+                // intent into `ide-deep` (whose personal model has no editor
+                // tabset at all) silently disabled the Möbius write-back stage
+                // of the very surface the intent had just opened.
+                const active = activeLayoutRef.current;
+                const other: LayoutId = active === 'ide-deep' ? 'daily-0-1' : 'ide-deep';
+                return openEditorIn(active) ?? openEditorIn(other);
             },
             dayId: () => useSessionStore.getState().dayNow ?? null,
             // 26.T26.3: the root/etymology stage rides s5'.gnostic.etymology, which
             // takes the active bimba coordinate (not a path).
             activeCoordinate: () => useCoordinateStore.getState().selected ?? null,
             invoke: (method, params) => gateway().invoke(method, params),
-            ready: () => gatewayReady()
+            ready: () => gatewayReady(),
+            // 28.T28.7 (d): the Möbius write-back's governed route. The Atelier
+            // owns no transport — it hands the envelope to the ONE cross-layout
+            // intent command, which carries the staged candidate to Canon Studio.
+            dispatchIntent: intent => commands.execute(CROSS_LAYOUT_INTENT_COMMAND, intent),
+            sessionKey: () => useSessionStore.getState().sessionKey ?? null,
+            privacyClass: () => {
+                const value = useSessionStore.getState().privacyClass;
+                return value === 'public' || value === 'protected' || value === 'private'
+                    ? value
+                    : null;
+            }
         });
         const disposers = [
             ...atelierDisposers,
