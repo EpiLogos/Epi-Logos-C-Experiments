@@ -26,7 +26,9 @@
  *   candidate and then emits the governed `CrossLayoutIntent` to Canon Studio
  *   carrying that candidate — the SC-2 governance flow, with
  *   `mutatesGraphCanon: false` intact (capture writes a CANDIDATE under
- *   `Empty/Present/{day}/entities/`; canon is Hen's).
+ *   `Empty/Present/{day}/entities/`; canon is Hen's). The transport is a
+ *   REQUIRED dep, so a shell that forgets to wire it fails to compile rather
+ *   than crystallising into nowhere.
  *
  * 26.3 WIRING (ratified 2026-07-23).
  * Agents use capabilities — they don't duplicate them. The `aletheia_gnosis_query`
@@ -197,8 +199,16 @@ export interface AtelierDeps {
      * 28.7 (d): the governed route out of the Möbius write-back stage. Injected
      * (App.tsx hands it the one `pratibimba.intent.dispatch` command) so the
      * write-back is testable and so the Atelier owns no transport of its own.
+     *
+     * REQUIRED, deliberately. An optional transport is a dead route waiting to
+     * happen — a shell that simply forgets it still compiles, still registers
+     * six commands, and silently stops crystallising. Making it required moves
+     * that failure from "a test might notice" to "the type system refuses":
+     * drop the property from App.tsx's `registerAtelierCommands(...)` call and
+     * `pnpm typecheck` fails naming it. The sibling suite then proves the wire
+     * CARRIES, by firing it through the real dispatcher.
      */
-    readonly dispatchIntent?: (intent: CrossLayoutIntent) => void | Promise<void>;
+    readonly dispatchIntent: (intent: CrossLayoutIntent) => void | Promise<void>;
     /** Session context stamped onto the write-back envelope, when the shell has it. */
     readonly sessionKey?: () => string | null;
     readonly privacyClass?: () => IntentPrivacyClass | null;
@@ -297,7 +307,7 @@ export function atelierCommands(deps: AtelierDeps): AppCommand[] {
                 // routed to Canon Studio for the governed review; this command
                 // never writes canon (SC-2 / DR-M0-1). If the shell has not
                 // wired a transport the capture still stands on its own.
-                await deps.dispatchIntent?.(
+                await deps.dispatchIntent(
                     mobiusWriteBackIntent({
                         artifactUri: candidatePathOf(receipt) ?? path,
                         coordinate: activeCoordinate(),

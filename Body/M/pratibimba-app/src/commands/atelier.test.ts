@@ -10,16 +10,20 @@
  *   command disables without an open file / live gateway.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import {
     ALETHEIA_LINEAGE,
     atelierCommands,
     ATELIER_MUTATES_GRAPH_CANON,
     etymologyProvenanceHandle,
+    registerAtelierCommands,
     SCENT_FOLLOWING_STAGES
 } from './atelier';
+import {
+    CROSS_LAYOUT_INTENT_COMMAND,
+    registerCrossLayoutIntentCommand
+} from './crossLayoutIntent';
+import { commands } from './registry';
 
 function deps(overrides: Partial<Parameters<typeof atelierCommands>[0]> = {}) {
     const invoke = vi.fn().mockResolvedValue({ ok: true });
@@ -30,6 +34,7 @@ function deps(overrides: Partial<Parameters<typeof atelierCommands>[0]> = {}) {
             dayId: () => '11-07-2026',
             invoke,
             ready: () => true,
+            dispatchIntent: vi.fn(),
             ...overrides
         },
         invoke
@@ -155,15 +160,59 @@ describe('Atelier scent-following commands (16.T16.19 + 26.T26.3)', () => {
         );
     });
 
-    it('an unwired shell still captures — the write-back degrades, it does not throw', async () => {
-        const { deps: d, invoke } = deps();
-        await atelierCommands(d).find(c => c.id === 'atelier.scentFollow')!.run();
-        expect(invoke).toHaveBeenCalledTimes(1);
-    });
+    it('28.T28.7 (d): the write-back FIRES through the real cross-layout dispatcher', async () => {
+        // The transport is proven by running it, not by reading App.tsx's source
+        // text: a string is present whether or not the call is reachable. Here
+        // the REAL `pratibimba.intent.dispatch` command is registered, the
+        // Atelier is wired to it exactly as the shell wires it (by command id,
+        // through the one registry), and `atelier.scentFollow` is executed
+        // through that registry. The only way `navigate` gets called is if a
+        // real envelope travelled the whole route and RESOLVED against the live
+        // target ledger — an unwired dep, a dead branch, or a target that stops
+        // resolving all land as zero calls.
+        const navigate = vi.fn();
+        const setCoordinate = vi.fn();
+        const applySession = vi.fn();
+        const disposeTransport = registerCrossLayoutIntentCommand({
+            setCoordinate,
+            applySession,
+            navigate
+        });
+        const invoke = vi.fn().mockResolvedValue({
+            artifact: { candidatePath: 'Idea/Empty/Present/11-07-2026/entities/Idea Sketch.md' }
+        });
+        const disposers = registerAtelierCommands({
+            activeMarkdownPath: () => 'Idea/Empty/Present/11-07-2026/notes/Idea Sketch.md',
+            activeCoordinate: () => 'M5-5',
+            dayId: () => '11-07-2026',
+            invoke,
+            ready: () => true,
+            // verbatim the shell's wiring — one transport, addressed by id
+            dispatchIntent: intent => commands.execute(CROSS_LAYOUT_INTENT_COMMAND, intent),
+            sessionKey: () => 'sess-1',
+            privacyClass: () => 'public'
+        });
+        try {
+            await commands.execute('atelier.scentFollow');
 
-    it('App.tsx really wires the write-back transport (an optional dep left unwired is a dead route)', () => {
-        const app = readFileSync(resolve(__dirname, '../App.tsx'), 'utf8');
-        expect(app).toContain('dispatchIntent: intent => commands.execute(CROSS_LAYOUT_INTENT_COMMAND, intent)');
+            expect(invoke.mock.calls[0][0]).toBe("s1'.entity.capture");
+            expect(navigate, 'the Möbius envelope never reached the dispatcher').toHaveBeenCalledTimes(1);
+            const [target, intent] = navigate.mock.calls[0];
+            // it resolved against the LIVE ledger, not a literal we asserted
+            expect(target.extensionId).toBe('ide-shell-m0-m5');
+            expect(target.contributionId).toBe('canon-studio');
+            expect(intent.artifactUri).toBe(
+                'Idea/Empty/Present/11-07-2026/entities/Idea Sketch.md'
+            );
+            // and the dispatcher applied the envelope's context on the way
+            expect(setCoordinate).toHaveBeenCalledWith('M5-5');
+            expect(applySession).toHaveBeenCalledWith(
+                expect.objectContaining({ dayNow: '11-07-2026', privacyClass: 'public' })
+            );
+        } finally {
+            for (const dispose of disposers) dispose();
+            disposeTransport();
+        }
     });
 
     it('surfaces the six Aletheia subagents as evidence lineage, never as invocable actors', () => {
