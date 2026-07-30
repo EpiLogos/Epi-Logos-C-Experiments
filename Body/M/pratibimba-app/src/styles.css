@@ -19,6 +19,16 @@
   --facet-mythos: #4fae7a; /* emerald */
   --facet-psyche: #b8bcc4; /* silver */
   --facet-nous: #7a8290; /* slate */
+  /* 28.T28.8 (b) — MEDIATOR identities. A distinct vocabulary from the psyche
+     facets above: a facet is the VOICE a dispatch speaks in, a mediator is WHO
+     mediated the run. The spec names two of the three colours outright
+     ("Pi (purple) / Anima (gold)"); Aletheia carries the family hue and its six
+     guardians are derived from it by mix below, so no seventh raw colour is
+     minted here — a per-subagent hue assignment is a 30-design-language
+     decision, not a pane's to take. */
+  --mediator-pi: #9d7be0; /* purple, per 28.8 (b) */
+  --mediator-anima: #d9a441; /* gold, per 28.8 (b) */
+  --mediator-aletheia: #4dc5c1; /* the crystallisation family */
   --nara-highlight-daily-note: #fbbf24;
   --nara-highlight-oracle: #a78bfa;
   --nara-highlight-dream: #60a5fa;
@@ -132,6 +142,10 @@
   --readiness-privacy-blocked: #6a583f;
   --readiness-degraded-but-readable: #3d5f4c;
   --readiness-ready-public-current: #2c7346;
+  /* 28.T28.8 mediators, light polarity — same three identities, darkened. */
+  --mediator-pi: #5a3f9e;
+  --mediator-anima: #8a6c17;
+  --mediator-aletheia: #17706d;
 }
 
 /* Glass: the dark ground with translucent raised surfaces — a treatment, not
@@ -7014,6 +7028,128 @@ button.tool-stream-timerange.active {
     font-family: monospace;
     font-size: var(--type-mono);
     opacity: 0.75;
+}
+/* 28.T28.8 (c) — the collapse toggle + the two fields 27.5's node lacked. */
+.dispatch-mini-expand {
+    align-self: flex-start;
+    font-size: var(--type-micro);
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.dispatch-mini-tick {
+    font-size: var(--type-micro);
+    opacity: 0.6;
+}
+.dispatch-mini-facet {
+    font-size: var(--type-micro);
+    padding: 0 0.3rem;
+    border-radius: 0.5rem;
+    color: var(--facet-color, var(--ink-dim));
+    border: 1px solid var(--facet-color, var(--hairline));
+}
+
+/* ============ Evidence mediator badge + IOD-17 readout (28.T28.8) ============ */
+.evidence-packet-mediator {
+    font-size: var(--type-micro);
+    padding: 0 0.35rem;
+    border-radius: 0.5rem;
+    color: var(--mediator-color, var(--ink-dim));
+    border: 1px solid var(--mediator-color, var(--hairline));
+}
+.mediator-pi { --mediator-color: var(--mediator-pi); }
+.mediator-anima { --mediator-color: var(--mediator-anima); }
+.mediator-aletheia { --mediator-color: var(--mediator-aletheia); }
+/* The six guardians are DERIVED from the family hue rather than minted: each
+   mixes the Aletheia colour with a token already in the palette, so they are
+   distinguishable without a seventh raw colour or a second vocabulary. */
+.mediator-aletheia-anansi {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-mythos));
+}
+.mediator-aletheia-janus {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-anima));
+}
+.mediator-aletheia-moirai {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-eros));
+}
+.mediator-aletheia-mercurius {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-logos));
+}
+.mediator-aletheia-agora {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-psyche));
+}
+.mediator-aletheia-zeithoven {
+    --mediator-color: color-mix(in srgb, var(--mediator-aletheia) 80%, var(--facet-nous));
+}
+.evidence-iod17 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: var(--type-micro);
+}
+.evidence-iod17-cells {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+}
+.evidence-iod17-cells li {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0 0.35rem;
+    border: 1px solid var(--hairline);
+    border-radius: 0.5rem;
+}
+.evidence-iod17-cells li[data-state='human-required'] {
+    border-color: color-mix(in srgb, var(--ready) 60%, transparent);
+}
+.evidence-iod17-cells li[data-state='agent-allowed'] {
+    border-color: color-mix(in srgb, var(--danger) 60%, transparent);
+}
+.evidence-iod17-face {
+    opacity: 0.7;
+}
+.evidence-iod17-violation {
+    color: var(--danger);
+    margin: 0;
+}
+.evidence-unwired-seam {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--type-micro);
+    opacity: 0.85;
+}
+.evidence-unwired-seam button[disabled] {
+    align-self: flex-start;
+    cursor: not-allowed;
+    background: transparent;
+    color: inherit;
+    border: 1px dashed var(--hairline);
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.45rem;
+}
+.evidence-unwired-target {
+    font-family: monospace;
+    font-size: var(--type-mono);
+}
+.evidence-unwired-reason {
+    opacity: 0.7;
+}
+.acr-evidence-audit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.acr-evidence-audit-note {
+    font-size: var(--type-micro);
+    opacity: 0.75;
+    margin: 0;
 }
 
 /* ===================== Evidence tails (27.T27.5) ===================== */

@@ -1,5 +1,5 @@
 /**
- * Coordinate: M' M5' chrome (drivable-loop spec: the ACR deep pane — 28.T28.5)
+ * Coordinate: M' M5' chrome (drivable-loop spec: the ACR deep pane — 28.T28.5 / 28.T28.8)
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): real Chromium / real spawned gateway carrier proof
  * Actualises: the UF half of 28.T28.5. The tranche's deliverable is not "an
@@ -39,6 +39,10 @@
  *   at 30s — plus the control-room body behind a real tab click (20s). Worst
  *   case ~75s, hence 90s. Every wait below is on a real SIGNAL (an attribute, a
  *   converged strip, a rendered pane); there is no `waitForTimeout` in this file.
+ *
+ *   THE SECOND TEST is 28.T28.8's UF half — DR-WC-IS-2's DEEP evidence render,
+ *   which lands in this same pane (§5 gives the full governance/evidence work to
+ *   the deep surfaces). Its own docblock carries its claims and its budget.
  * Does NOT own: the switch (52.T3 — `layout-switch.spec.ts`), WHICH panes exist
  *   per layout (52.T4 — `deep-pane-set.spec.ts`), the pure governance law
  *   (`src/panes/acr/acrGovernance.test.ts`), or the jsdom render
@@ -48,6 +52,7 @@
  */
 
 import { expect, test, type Page } from '@playwright/test';
+import { gatewayRpc } from './gateway-rpc';
 import {
     ACR_PANE_TITLE,
     ACR_TAB_LABEL,
@@ -223,4 +228,125 @@ test('28.T28.5: the Pi Runtime Monitor is the governance-primary pane of `person
         claimedMethods.map(text => text.trim()),
         "the surface must never claim to call a method that is registered nowhere"
     ).not.toContain("s5'.review.transition");
+});
+
+/**
+ * 28.T28.8 — DR-WC-IS-2's DEEP half, driven end to end.
+ *
+ * The frozen tree had two evidence widgets; this carrier has ONE evidence fold
+ * plus the governance-primary deep pane, so the FULL MediatedRunEvidencePacket
+ * render lands inside the control room and the `/` membrane keeps the
+ * abbreviated one. Proving that needs a REAL packet, and a packet needs an
+ * anchored deposit — so this spec files one through the control room's own live
+ * `s5'.epii.deposit` form and then audits it, rather than asserting an empty
+ * surface exists.
+ *
+ * Four claims: (1) the audit section is deep-only, like the pane hosting it;
+ * (2) a deposit filed here composes a packet the audit lists; (3) selecting it
+ * renders `fold="deep"` — the trace OPEN and the IOD-17 three-face readout the
+ * producer filled from this pane's live `s4'.mediation.capabilities.list`, the
+ * field 26.10 declared and nothing populated before this tranche; (4) the axiom
+ * seam is DISABLED on screen and names the target the ledger cannot resolve.
+ *
+ * BUDGET: the sibling above pays for boot + one layout transition + a tab click
+ * (~75s). This one adds the day + session anchoring a packet requires, a real
+ * gateway WRITE, and the re-read it triggers, so it takes 180s. Every wait is on
+ * a real signal; there is no `waitForTimeout` in this file.
+ */
+test('28.T28.8: the control room renders the FULL packet the `/` fold abbreviates', async ({
+    page
+}) => {
+    test.setTimeout(180_000);
+
+    // A packet is anchored to a SESSION and a DAY; without both the producer
+    // composes nothing rather than inventing an anchor. So both are established
+    // for real first, in the daily layout that owns those gestures — the same
+    // house idiom `evidence-deposition-loop.spec.ts` uses.
+    const sessionId = `acr-audit-${Date.now().toString(36)}`;
+    await gatewayRpc('sessions.import', {
+        targetSessionKey: sessionId,
+        sourceSessionKey: 'acr-audit-origin',
+        label: 'e2e acr evidence audit'
+    });
+    await boot(page);
+
+    // (1) the audit is deep-only, exactly like its host pane.
+    await expect(page.getByTestId('acr-evidence-audit')).toHaveCount(0);
+
+    await ensureFace(page, '1');
+    await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Now' }).first().click();
+    const beginToday = page.getByTestId('now-begin-today');
+    const nowPane = page.getByTestId('now-pane');
+    await expect(nowPane.or(beginToday).first()).toBeVisible({ timeout: 20_000 });
+    if (await beginToday.isVisible().catch(() => false)) {
+        await beginToday.click().catch(() => undefined);
+    }
+    await expect(nowPane).toBeVisible({ timeout: 20_000 });
+    await expect(nowPane).not.toHaveAttribute('data-day', '', { timeout: 20_000 });
+
+    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Sessions' }).click();
+    const session = page.locator(`.face-active [data-testid="session-${sessionId}"]`);
+    await expect(session).toBeVisible({ timeout: 20_000 });
+    await session.click();
+    await expect(page.getByTestId('status-session')).toContainText(sessionId, { timeout: 10_000 });
+
+    // ── into depth, onto the governance-primary pane ───────────────────────
+    await switchLayout(page, 'ide-deep');
+    await ensureFace(page, '1');
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: ACR_TAB_LABEL })
+        .first()
+        .click();
+    const room = page.locator('.face-active [data-testid="agentic-control-room"]');
+    await expect(room).toBeVisible({ timeout: 20_000 });
+    const audit = room.locator('[data-testid="acr-evidence-audit"]');
+    await expect(audit).toBeVisible({ timeout: 20_000 });
+
+    // (2) file a real anchored deposit through the live method this pane rides.
+    const title = `acr-packet-${sessionId}`;
+    for (const [field, value] of Object.entries({
+        title,
+        candidateId: 'cand-acr-1',
+        coordinate: 'M5-4',
+        sourceAnchor: 'Idea/Empty/Present/acr-audit.md',
+        graphAnchor: 'bimba://M5-4/evidence',
+        reviewId: 'rev-acr-1',
+        testAnchor: 'tests/e2e/agentic-control-room-deep.spec.ts'
+    })) {
+        await room.getByTestId(`deposit-field-${field}`).fill(value);
+    }
+    await room.getByTestId('deposit-submit').click();
+
+    const packetRow = audit.locator('[data-testid="evidence-packet-row"]', { hasText: title });
+    await expect(packetRow).toBeVisible({ timeout: 30_000 });
+
+    // (3) THE DEEP FOLD. Selecting the record renders the governance audit.
+    await packetRow.click();
+    const view = audit.locator('[data-testid="evidence-packet-view"]');
+    await expect(view).toHaveAttribute('data-fold', 'deep', { timeout: 20_000 });
+    // the dispatch trace is OPEN here — collapsed is the abbreviated folding
+    await expect(view.locator('[data-testid="dispatch-mini-graph"]')).toHaveAttribute(
+        'data-expanded',
+        'true'
+    );
+    // the IOD-17 three-face readout, populated from the LIVE capability matrix
+    const parity = view.locator('[data-testid="evidence-iod17-parity"]');
+    await expect(parity).toBeVisible({ timeout: 20_000 });
+    for (const face of ['capability-matrix', 'agent-contract', 'widget']) {
+        await expect(view.locator(`[data-testid="evidence-iod17-cell-${face}"]`)).toHaveAttribute(
+            'data-state',
+            'human-required'
+        );
+    }
+    await expect(parity).toHaveAttribute('data-in-parity', 'true');
+    await expect(
+        view.locator('[data-testid="evidence-iod17-violation"]'),
+        'three agreeing faces must not raise the violation banner'
+    ).toHaveCount(0);
+
+    // (4) the seam the substrate does not resolve, disabled and named on screen.
+    const axiom = view.locator('[data-testid="evidence-axiom-link"]');
+    await expect(axiom).toHaveAttribute('data-wire-state', 'unwired');
+    await expect(axiom).toContainText('ide-shell-m0-m5/axiom-translation-inspector');
+    await expect(view.locator('[data-testid="evidence-axiom-link-button"]')).toBeDisabled();
 });

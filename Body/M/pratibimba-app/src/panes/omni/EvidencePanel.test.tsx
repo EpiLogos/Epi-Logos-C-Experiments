@@ -106,8 +106,13 @@ describe('EvidencePanel', () => {
     it('cross-folds to the Dispatch Trace tab at the packet genealogy node (15.11)', () => {
         hydrateOmniPanelSessionState({ perTabState: { evidence: { selectedPacketId: 'packet-1' } } } as never);
         render(<EvidencePanel packets={[fixture()]} />);
-        // the packet's genealogy renders as an embedded mini-graph
-        expect(screen.getByTestId('dispatch-mini-graph')).toBeTruthy();
+        // the packet's genealogy renders as an embedded mini-graph, COLLAPSED —
+        // 28.8 (c), and it is also how the abbreviated `/` folding differs from
+        // the deep governance one (DR-WC-IS-2): the same component, opened.
+        const mini = screen.getByTestId('dispatch-mini-graph');
+        expect(mini.getAttribute('data-expanded')).toBe('false');
+        expect(screen.queryByTestId('dispatch-mini-node')).toBeNull();
+        fireEvent.click(screen.getByTestId('dispatch-mini-expand'));
         expect(screen.getByTestId('dispatch-mini-node').getAttribute('data-node-id')).toBe('node-1');
         fireEvent.click(screen.getByTestId('dispatch-mini-open'));
         expect(readOmniPanelSessionState().activeTab).toBe('dispatch-trace');

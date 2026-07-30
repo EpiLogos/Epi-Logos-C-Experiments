@@ -20,6 +20,12 @@ import {
     S4_MEDIATION_CAPABILITIES_LIST_METHOD,
     S4_MEDIATION_ROUTE_METHOD
 } from '../omni/omnipanelCapabilities';
+import { DEPOSIT_LIST_METHOD } from '../omni/evidence/evidenceDeposits';
+import {
+    hydrateOmniPanelSessionState,
+    readOmniPanelSessionState
+} from '../omni/omnipanelSessionState';
+import { useSessionStore } from '../../state/stores';
 import { AgenticControlRoomPane } from './AgenticControlRoomPane';
 import { REVIEW_INBOX_METHOD, REVIEW_RESOLVE_METHOD } from './acrReviewInbox';
 
@@ -55,6 +61,35 @@ const SESSIONS = [
     { sessionKey: 'agent:anima:subagent:moirai', spawnedBy: 'agent:anima', label: 'moirai' }
 ];
 
+/** One ANCHORED deposit, as `s5'.epii.deposit.list` projects it back out —
+ *  the claim half a MediatedRunEvidencePacket is composed from (28.T28.8). */
+const DEPOSIT_LIST = {
+    deposits: [
+        {
+            itemId: 'dep-1',
+            depositType: 'evidence',
+            title: 'Q articulation evidence',
+            status: 'open',
+            requiresHuman: true,
+            createdAt: 1700000000000,
+            sourceAgent: 'human',
+            sourceCoordinate: 'M5-4',
+            sessionKey: 'agent:pi',
+            artifact: { path: 'Idea/Empty/Present/x.md' },
+            // snake_case is how S5 really serialises the anchor block; the
+            // reader refuses a camelCase one, which is the point of using the
+            // wire shape here rather than a convenient fixture.
+            evidenceAnchors: {
+                candidate_id: 'cand-1',
+                graph_anchor: 'bimba://M5-4/evidence',
+                review_id: 'rev-1',
+                test_anchor: 'tests/e2e/x.spec.ts',
+                privacy_class: 'protected-local'
+            }
+        }
+    ]
+};
+
 describe('28.T28.5 — the Agentic Control Room deep pane', () => {
     const invoke = vi.fn();
 
@@ -72,6 +107,9 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
             }
             if (method === REVIEW_RESOLVE_METHOD) {
                 return Promise.resolve({ artifact: { resolution: { item_id: 'rev-1' } } });
+            }
+            if (method === DEPOSIT_LIST_METHOD) {
+                return Promise.resolve({ artifact: DEPOSIT_LIST });
             }
             return Promise.reject(new Error(`unexpected method ${method}`));
         });
@@ -281,5 +319,89 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         expect(screen.getByTestId('acr-disconnected')).toBeTruthy();
         expect(invoke).not.toHaveBeenCalled();
         expect(screen.getByTestId('acr-capability-source').textContent).toContain('not loaded');
+    });
+});
+
+/**
+ * 28.T28.8 — the DEEP evidence render DR-WC-IS-2 gives to this surface. The `/`
+ * membrane keeps the abbreviated folding; the full packet audit is here, and
+ * both read ONE record identity.
+ */
+describe('28.T28.8 — the deep evidence audit', () => {
+    const invoke = vi.fn();
+
+    beforeEach(() => {
+        invoke.mockReset();
+        invoke.mockImplementation((method: string) => {
+            if (method === S4_MEDIATION_CAPABILITIES_LIST_METHOD) {
+                return Promise.resolve({ artifact: CAPABILITY_SNAPSHOT });
+            }
+            if (method === 'sessions.list') {
+                return Promise.resolve({ artifact: SESSIONS });
+            }
+            if (method === REVIEW_INBOX_METHOD) {
+                return Promise.resolve({ artifact: { items: [GATED_ITEM] } });
+            }
+            if (method === DEPOSIT_LIST_METHOD) {
+                return Promise.resolve({ artifact: DEPOSIT_LIST });
+            }
+            return Promise.reject(new Error(`unexpected method ${method}`));
+        });
+        setGateway({ invoke } as never);
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        useSessionStore.setState({ sessionKey: 'agent:pi', dayNow: '30-07-2026' });
+        hydrateOmniPanelSessionState(null);
+    });
+
+    afterEach(() => {
+        cleanup();
+        setGateway(null);
+        useProvenanceStore.setState({ connection: { ...DEFAULT_CONNECTION_STATUS } });
+        useSessionStore.setState({ sessionKey: null, dayNow: null });
+    });
+
+    it('composes the anchored deposit into a packet and renders it in the DEEP folding', async () => {
+        render(<AgenticControlRoomPane />);
+        const row = await screen.findByTestId('evidence-packet-row');
+        expect(row.getAttribute('data-packet-id')).toBe('dep-1');
+        // nothing is selected on mount — the audit does not seize the shared
+        // evidence selection just because the pane opened
+        expect(screen.queryByTestId('evidence-packet-view')).toBeNull();
+        expect(readOmniPanelSessionState().perTabState.evidence.selectedPacketId ?? null).toBeNull();
+
+        fireEvent.click(row);
+        const view = await screen.findByTestId('evidence-packet-view');
+        expect(view.getAttribute('data-fold')).toBe('deep');
+        // the selection crossed into the ONE record identity the `/` fold reads
+        expect(readOmniPanelSessionState().perTabState.evidence.selectedPacketId).toBe('dep-1');
+        // …and the deep half really is the audit: the three-face readout the
+        // producer filled from THIS pane's live capability projection.
+        const matrix = screen.getByTestId('evidence-iod17-parity');
+        expect(matrix.getAttribute('data-in-parity')).toBe('true');
+        expect(
+            screen.getByTestId('evidence-iod17-cell-capability-matrix').getAttribute('data-state')
+        ).toBe('human-required');
+        // the dispatch trace opens in the deep folding
+        expect(screen.getByTestId('dispatch-mini-graph').getAttribute('data-expanded')).toBe('true');
+    });
+
+    it('renders the record the `/` fold already selected — bidirectional identity', async () => {
+        hydrateOmniPanelSessionState({
+            perTabState: { evidence: { selectedPacketId: 'dep-1' } }
+        } as never);
+        render(<AgenticControlRoomPane />);
+        const view = await screen.findByTestId('evidence-packet-view');
+        expect(view.getAttribute('data-packet-id')).toBe('dep-1');
+        expect(view.getAttribute('data-fold')).toBe('deep');
+    });
+
+    it('composes NO packet without a session/day anchor, and says why', async () => {
+        useSessionStore.setState({ sessionKey: null, dayNow: null });
+        render(<AgenticControlRoomPane />);
+        const note = await screen.findByTestId('acr-evidence-audit-note');
+        expect(note.textContent).toContain('cannot name');
+        expect(screen.queryByTestId('evidence-packet-row')).toBeNull();
     });
 });

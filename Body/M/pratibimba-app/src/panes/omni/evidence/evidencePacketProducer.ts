@@ -29,11 +29,25 @@
  *     - `semanticCandidates` — no S2 candidate feed for a run.
  *   Empty is a claim ("nothing was recorded"); fabricated content is a lie. The
  *   validator accepts empty arrays, so these stay empty and visibly so.
- * Public surface: EvidencePacketContext, evidencePacketsFromDeposits.
+ *
+ *   28.T28.8 CLOSED ONE OF THOSE EMPTIES. `GateLanding.iod17Parity` was declared
+ *   by 26.10 and never populated by anything: the producer built
+ *   `gateType: 'iod17-parity'` landings out of a SINGLE-face
+ *   `CapabilityGateOutcome` and never set the three-way object, so the deep
+ *   render had nothing to read. It is now filled from the ACR's live
+ *   `computeIod17Parity` — the capability matrix off the wire, `enforceHumanGate`
+ *   asked about an AGENT actor, and the governance surface's own declaration —
+ *   and ONLY when that matrix has actually answered. Per-dispatch capability
+ *   landings still carry no readout: one observed face plus two blanks would
+ *   render as a parity violation that nobody measured.
+ * Public surface: EvidencePacketContext, evidencePacketsFromDeposits,
+ *   iod17GateParityFrom.
  * Does NOT own: the packet schema (evidenceShapes.ts, 26.10), the genealogy
  *   dataset or its folds (dispatchGenealogy.ts), the wire→record producer
- *   (dispatchGenealogyFromSessions.ts), the deposit contract (S5'), or the fold.
- * Contract: [[M5'-SPEC]] + rerun tranche [[26.T26.4]].
+ *   (dispatchGenealogyFromSessions.ts), the deposit contract (S5'), the fold, or
+ *   the IOD-17 parity LAW — DR-WC-IS-1 makes `panes/acr/acrGovernance.ts` its
+ *   source of truth and this module only projects its readout onto the schema.
+ * Contract: [[M5'-SPEC]] + rerun tranches [[26.T26.4]] / [[28.T28.8]].
  */
 
 import type { DispatchGenealogyRecord } from '../dispatchGenealogy';
@@ -42,8 +56,17 @@ import type {
     AletheiaSubagentId,
     DispatchTraceNode,
     GateLanding,
+    GateLandingIod17Parity,
+    Iod17GateFaceState,
     MediatedRunEvidencePacket
 } from '../evidenceShapes';
+import type { MediationCapabilitySnapshot } from '../omnipanelCapabilities';
+import {
+    computeIod17Parity,
+    type Iod17Face,
+    type Iod17FaceState,
+    type Iod17ParityReadout
+} from '../../acr/acrGovernance';
 import type { EvidenceDeposit } from './evidenceDeposits';
 
 /** The live shell context a run rides. Every field is read, never defaulted:
@@ -58,6 +81,39 @@ export interface EvidencePacketContext {
     readonly sessionRuntime: Readonly<Record<string, unknown>>;
     /** Present only when the session actually closed (19.6/19.7). */
     readonly contemplationObjectRef?: string;
+    /**
+     * 28.T28.8 — the live `s4'.mediation.capabilities.list` projection, which is
+     * the FIRST of the IOD-17 gate's three faces. `null`/absent while it has not
+     * answered, and then NO parity landing is emitted: a readout built from an
+     * unloaded matrix reads `unknown` on one face and would render a red parity
+     * VIOLATION that is really a spinner.
+     */
+    readonly capabilitySnapshot?: MediationCapabilitySnapshot | null;
+}
+
+/**
+ * The ACR's three-face readout as the packet's wire-safe parity object
+ * (28.T28.8). DR-WC-IS-1 makes the ACR the IOD-17 source of truth, so the law
+ * is CONSUMED here, never restated; this function is only the projection from
+ * the readout's cells onto the 26.10 schema's flat field names.
+ */
+const GATE_FACE_STATE: Readonly<Record<Iod17FaceState, Iod17GateFaceState>> = Object.freeze({
+    'agent-permitted': 'agent-allowed',
+    'human-required': 'human-required',
+    unknown: 'unset'
+});
+
+export function iod17GateParityFrom(readout: Iod17ParityReadout): GateLandingIod17Parity {
+    const face = (id: Iod17Face): Iod17GateFaceState => {
+        const cell = readout.cells.find(entry => entry.face === id);
+        return cell ? GATE_FACE_STATE[cell.state] : 'unset';
+    };
+    return Object.freeze({
+        capabilityMatrixState: face('capability-matrix'),
+        agentContractState: face('agent-contract'),
+        widgetState: face('widget'),
+        inParity: readout.inParity
+    });
 }
 
 const ALETHEIA_SUBAGENTS: readonly string[] = [
@@ -127,15 +183,23 @@ function childIndex(
 }
 
 /**
- * The gates this run actually landed. Two real sources, no invention:
+ * The gates this run actually landed. Three real sources, no invention:
  *   - each dispatch carries a capability-gate OUTCOME (12.10 parity matrix),
- *     which is an `iod17-parity` landing that either transitioned or blocked;
+ *     which is an `iod17-parity` landing that either transitioned or blocked.
+ *     It carries ONE face, so it carries NO `iod17Parity` readout — publishing
+ *     two `unset` faces beside it would manufacture a violation;
  *   - the deposit itself is a `human-required` landing — pending while the
- *     review item is open, transitioned once a human resolved it.
+ *     review item is open, transitioned once a human resolved it;
+ *   - 28.T28.8: when the live capability projection has answered, the deposit
+ *     ALSO lands at the three-face IOD-17 gate. That is the one landing whose
+ *     three faces were genuinely read — the live matrix, `enforceHumanGate`
+ *     asked about an AGENT actor, and the governance surface's own standing
+ *     declaration — so it is the one that carries the readout.
  */
 function gateLandingsFor(
     deposit: EvidenceDeposit,
-    records: readonly DispatchGenealogyRecord[]
+    records: readonly DispatchGenealogyRecord[],
+    context: EvidencePacketContext
 ): readonly GateLanding[] {
     const landings: GateLanding[] = records
         .filter(record => record.gate.capability !== null)
@@ -151,6 +215,35 @@ function gateLandingsFor(
             gateType: 'human-required',
             state: deposit.status === 'open' ? 'pending' : 'transitioned',
             ...(deposit.status === 'open' ? {} : { transitionedBy: 'human' as const })
+        });
+    }
+    const snapshot = context.capabilitySnapshot ?? null;
+    if (snapshot !== null) {
+        // `approve` is the committal decision — the strictest form of the one
+        // question IOD-17 asks. `defer`/`summarize` commit nothing, so asking
+        // the gate about them would answer an easier question than the one the
+        // reader needs.
+        const parity = iod17GateParityFrom(
+            computeIod17Parity({
+                humanRequired: deposit.requiresHuman,
+                decision: 'approve',
+                snapshot
+            })
+        );
+        landings.push({
+            gateId: `${deposit.itemId}:iod17`,
+            gateType: 'iod17-parity',
+            // Out of parity the substrate would REFUSE any transition, so the
+            // landing is blocked whatever the review item's own status says.
+            state: !parity.inParity
+                ? 'blocked'
+                : deposit.status === 'open'
+                  ? 'pending'
+                  : 'transitioned',
+            ...(parity.inParity && deposit.status !== 'open'
+                ? { transitionedBy: 'human' as const }
+                : {}),
+            iod17Parity: parity
         });
     }
     return landings;
@@ -210,7 +303,7 @@ export function evidencePacketsFromDeposits(
             privacyClass: anchors.privacyClass,
             dispatchTrace,
             toolStream: [],
-            gateLandings: gateLandingsFor(deposit, records),
+            gateLandings: gateLandingsFor(deposit, records, context),
             axiomTranslationSteps: [],
             sessionKey,
             dayNowContext: context.dayNowContext,

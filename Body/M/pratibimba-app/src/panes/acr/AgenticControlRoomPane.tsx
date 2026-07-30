@@ -33,7 +33,21 @@
  *     (5) the run-lifecycle controls as an UNWIRED surface (`s5'.epii.runtime_control`
  *         is registered nowhere), stating the reason rather than faking a button;
  *     (6) the full `MediatedRunEvidencePacket` deposit, through the already-live
- *         `EvidenceDepositForm` over `s5'.epii.deposit`.
+ *         `EvidenceDepositForm` over `s5'.epii.deposit`;
+ *     (7) 28.T28.8 — the DEEP evidence render DR-WC-IS-2 asks for. The frozen
+ *         tree had two evidence widgets; this carrier has ONE evidence fold, so
+ *         the `/` membrane keeps the abbreviated always-on folding and the FULL
+ *         packet audit (IOD-17 three-face parity, the open dispatch-trace
+ *         mini-graph with tick + psyche-facet per node, the axiom-translation
+ *         seam) lands here, `ide-deep` only. Same producer, same deposits, ONE
+ *         record identity: this section reads and writes
+ *         `perTabState.evidence.selectedPacketId`, which is what the Evidence
+ *         fold selects and what (3)'s evidence click-through already sets — so
+ *         a packet chosen in either surface is the one the other renders.
+ *
+ *   Because this pane already holds the live capability projection, the packets
+ *   it composes carry a POPULATED `GateLanding.iod17Parity` (26.10 declared the
+ *   field; nothing filled it until 28.T28.8).
  *
  *   MOUNT DISCIPLINE (THE OPENING-TAB LAW, `ui/deepPaneSet.ts`): this pane
  *   writes NO shared singleton state on mount. Its three effects are gateway
@@ -55,12 +69,27 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
 import { SessionClient, type SessionRecord } from '../../bridge/sessionClient';
-import { useProvenanceStore } from '../../state/stores';
+import { useProvenanceStore, useSessionStore, useTickStore } from '../../state/stores';
 import { useProfileTick } from '../../state/useProfileTick';
 import { DispatchGenealogyTree } from '../omni/DispatchGenealogyTree';
 import { dispatchGenealogyFromSessions } from '../omni/dispatchGenealogyFromSessions';
 import { genealogyIndex, type DispatchDeepLink } from '../omni/dispatchGenealogy';
 import { EvidenceDepositForm } from '../omni/evidence/EvidenceDepositForm';
+import {
+    DEPOSIT_LIST_METHOD,
+    readEvidenceDeposits,
+    type EvidenceDeposit
+} from '../omni/evidence/evidenceDeposits';
+import {
+    evidencePacketsFromDeposits,
+    type EvidencePacketContext
+} from '../omni/evidence/evidencePacketProducer';
+import { EvidencePacketList } from '../omni/EvidencePacketList';
+import { EvidencePacketView } from '../omni/EvidencePacketView';
+import {
+    useOmniPanelSessionStore,
+    useOmniPanelTabState
+} from '../omni/omnipanelSessionState';
 import { fireOmniPanelRoute } from '../omni/omnipanelIntentRouter';
 import {
     loadMediationCapabilitySnapshot,
@@ -91,6 +120,17 @@ export function AgenticControlRoomPane() {
     const [collapsedIds, setCollapsedIds] = useState<readonly string[]>([]);
     const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
     const [heldBackendLink, setHeldBackendLink] = useState<string | null>(null);
+    // 28.T28.8 — the DEEP evidence render (DR-WC-IS-2). The `/` fold stays the
+    // abbreviated always-on one; the full MediatedRunEvidencePacket audit is
+    // here, in `ide-deep`, over the SAME producer and the SAME selection.
+    const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
+    const [depositError, setDepositError] = useState<string | null>(null);
+    const evidenceTab = useOmniPanelTabState('evidence');
+    const patchTab = useOmniPanelSessionStore(s => s.patchTab);
+    const selectTab = useOmniPanelSessionStore(s => s.selectTab);
+    const sessionKey = useSessionStore(s => s.sessionKey);
+    const dayNow = useSessionStore(s => s.dayNow);
+    const cachedProfile = useTickStore(s => s.profile);
 
     const refresh = useCallback(() => {
         if (!connected) {
@@ -116,6 +156,16 @@ export function AgenticControlRoomPane() {
                 setReviewError(null);
             })
             .catch(err => setReviewError(err instanceof Error ? err.message : String(err)));
+        gateway()
+            .invoke(DEPOSIT_LIST_METHOD, {})
+            .then(receipt => {
+                setDeposits(readEvidenceDeposits(receipt.artifact));
+                setDepositError(null);
+            })
+            .catch(err => {
+                setDeposits([]);
+                setDepositError(err instanceof Error ? err.message : String(err));
+            });
     }, [connected]);
 
     const refetchEpoch = Math.floor((tick.generation ?? 0) / REFETCH_TICKS);
@@ -127,6 +177,40 @@ export function AgenticControlRoomPane() {
     const index = useMemo(() => genealogyIndex(records), [records]);
     const selectedRecord = selectedNodeId ? (index.get(selectedNodeId) ?? null) : null;
     const selectedReview = (reviewItems ?? []).find(item => item.itemId === selectedReviewId) ?? null;
+
+    // The deep evidence audit reads the SAME shell anchors the `/` fold does; a
+    // packet composed without them would anchor evidence to a moment the shell
+    // cannot name, so without them there are no packets rather than fake ones.
+    const packetContext = useMemo<EvidencePacketContext | null>(() => {
+        if (!sessionKey || !dayNow) {
+            return null;
+        }
+        return {
+            sessionKey,
+            dayNowContext: dayNow,
+            profileGeneration: tick.generation ?? 0,
+            bridgeReadinessHandle: cachedProfile?.stale
+                ? 'degraded_but_readable'
+                : 'ready_public_current',
+            currentProfile: (cachedProfile?.profile ?? {}) as Readonly<Record<string, unknown>>,
+            sessionRuntime: {
+                sessionCount: (sessions ?? []).length,
+                graphRevision: tick.graphRevision
+            },
+            // DR-WC-IS-1 makes THIS surface the IOD-17 source of truth, and it
+            // already holds the live projection — so the packets it composes
+            // carry a three-face readout rather than an unread gate.
+            capabilitySnapshot: snapshot
+        };
+    }, [sessionKey, dayNow, tick.generation, tick.graphRevision, cachedProfile, sessions, snapshot]);
+
+    const packets = useMemo(
+        () =>
+            packetContext ? evidencePacketsFromDeposits(deposits, records, packetContext) : [],
+        [deposits, records, packetContext]
+    );
+    const selectedPacket =
+        packets.find(packet => packet.id === evidenceTab.selectedPacketId) ?? null;
 
     const onToggleCollapse = (nodeId: string) =>
         setCollapsedIds(previous =>
@@ -316,7 +400,60 @@ export function AgenticControlRoomPane() {
                     initialDraft={
                         selectedReview ? { reviewId: selectedReview.itemId } : undefined
                     }
+                    // 28.T28.8 — a deposit filed here is evidence this pane then
+                    // AUDITS, so re-read rather than leaving the audit stale
+                    // until the next refetch epoch.
+                    onDeposited={refresh}
                 />
+            </section>
+
+            {/* (7) 28.T28.8 — THE DEEP EVIDENCE RENDER (DR-WC-IS-2). The `/`
+                membrane keeps the always-on abbreviated fold; the FULL
+                MediatedRunEvidencePacket audit — IOD-17 three-face parity, the
+                open dispatch-trace mini-graph with tick + psyche-facet per node,
+                the axiom-translation seam — is `ide-deep` only, and it is here.
+                ONE record identity across both: this list writes, and reads,
+                `perTabState.evidence.selectedPacketId`, which is exactly what the
+                Evidence fold selects and what the RunTree's evidence
+                click-through above already sets. So a packet chosen in either
+                surface is the packet the other renders (bidirectional). */}
+            <section className="acr-evidence-audit" data-testid="acr-evidence-audit">
+                <h4>Evidence audit — full packet render</h4>
+                {depositError ? (
+                    <p className="pane-message" data-testid="acr-evidence-audit-error">
+                        {`${DEPOSIT_LIST_METHOD} unavailable — ${depositError}`}
+                    </p>
+                ) : null}
+                <p className="acr-evidence-audit-note" data-testid="acr-evidence-audit-note">
+                    {packetContext === null
+                        ? 'No session or day anchor yet — a packet composed now would be anchored to a moment the shell cannot name, so none is.'
+                        : `${packets.length} anchored packet${packets.length === 1 ? '' : 's'} · deep governance folding of the record selected in the Evidence fold (DR-WC-IS-2).`}
+                </p>
+                <EvidencePacketList
+                    packets={packets}
+                    selectedId={evidenceTab.selectedPacketId}
+                    onSelect={packetId => patchTab('evidence', { selectedPacketId: packetId })}
+                />
+                {selectedPacket ? (
+                    <EvidencePacketView
+                        packet={selectedPacket}
+                        fold="deep"
+                        // The structural fold is THIS pane's RunTree: a trace
+                        // click selects the node here rather than throwing the
+                        // reader into the `/` membrane mid-audit.
+                        onOpenDispatchTrace={nodeId => setSelectedNodeId(nodeId)}
+                        // The temporal fold is the `/` membrane's (DR-WC-IS-2),
+                        // reached on the SAME seam the Evidence fold uses — one
+                        // behaviour, not a second routing shape.
+                        onOpenToolStream={packetId => {
+                            const packet = packets.find(entry => entry.id === packetId) ?? null;
+                            patchTab('tool-stream', {
+                                selectedEventId: packet?.toolStream[0]?.id ?? null
+                            });
+                            selectTab('tool-stream');
+                        }}
+                    />
+                ) : null}
             </section>
 
             {/* The seam register — every method this surface rides, live or not. */}

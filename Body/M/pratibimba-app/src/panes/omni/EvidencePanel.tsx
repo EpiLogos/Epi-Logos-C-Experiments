@@ -34,6 +34,10 @@ import {
     type EvidencePacketContext
 } from './evidence/evidencePacketProducer';
 import type { DispatchGenealogyRecord } from './dispatchGenealogy';
+import {
+    loadMediationCapabilitySnapshot,
+    type MediationCapabilitySnapshot
+} from './omnipanelCapabilities';
 import { privacyClassKind, type PrivacyClassKind } from './PrivacyClassBadge';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 
@@ -73,6 +77,12 @@ export function EvidencePanel({
     const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
     const [depositError, setDepositError] = useState('');
     const [reloads, setReloads] = useState(0);
+    // 28.T28.8 — the capability-matrix face of the IOD-17 gate. Read in the SAME
+    // effect as the deposits (one guard, one dependency list): a second effect
+    // keyed on its own status is how 28.T28.6 span the gateway in a tight loop.
+    const [capabilitySnapshot, setCapabilitySnapshot] = useState<MediationCapabilitySnapshot | null>(
+        null
+    );
 
     useEffect(() => {
         if (!connected) {
@@ -95,6 +105,15 @@ export function EvidencePanel({
                 setDeposits([]);
                 setDepositError(err instanceof Error ? err.message : String(err));
             });
+        loadMediationCapabilitySnapshot(gateway())
+            .then(next => {
+                if (!disposed) {
+                    setCapabilitySnapshot(next);
+                }
+            })
+            // A matrix this fold cannot read means no IOD-17 readout on the
+            // packets it composes — an unanswered face, not a broken fold.
+            .catch(() => undefined);
         return () => {
             disposed = true;
         };
@@ -150,7 +169,8 @@ export function EvidencePanel({
                 ? 'degraded_but_readable'
                 : 'ready_public_current',
             currentProfile: (cachedProfile?.profile ?? {}) as Readonly<Record<string, unknown>>,
-            sessionRuntime: { sessionCount: sessions.length, graphRevision: tick.graphRevision }
+            sessionRuntime: { sessionCount: sessions.length, graphRevision: tick.graphRevision },
+            capabilitySnapshot
         };
     }, [
         packetContext,
@@ -159,7 +179,8 @@ export function EvidencePanel({
         tick.generation,
         tick.graphRevision,
         cachedProfile,
-        sessions.length
+        sessions.length,
+        capabilitySnapshot
     ]);
 
     // 26.T26.4 — the packet feed. Composed from the anchored deposits and the
@@ -349,6 +370,11 @@ export function EvidencePanel({
             {selected && (
                 <EvidencePacketView
                     packet={selected}
+                    // DR-WC-IS-2: the `/` membrane is the ABBREVIATED folding.
+                    // The full governance audit of this same record is the
+                    // `agenticControlRoom` pane of `ide-deep`, which reads the
+                    // selection made here.
+                    fold="abbreviated"
                     onOpenDispatchTrace={onOpenDispatchTrace}
                     onOpenToolStream={onOpenToolStream}
                     onOpenContemplation={onOpenContemplation}

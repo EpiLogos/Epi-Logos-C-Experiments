@@ -7,6 +7,10 @@
  *   is the primitive for BOTH the Trace tab (recursive tree) and the Stream
  *   tab (depth-first flat list) per 15.11 — `flattenDispatchTrace` is that
  *   law. Round-trip serialization is part of the contract (wire-safe).
+ *   28.T28.8 narrowed `GateLanding.iod17Parity`'s three faces from `string` to
+ *   the spec's own `Iod17GateFaceState` union and made the validator refuse a
+ *   half-filled readout — the packet is the wire contract for the deep render,
+ *   so an unrepresentable face is better than a rendered lie.
  * Drift note: the frozen integrated-composition `evidence-shapes.ts` carries
  *   a DIFFERENT, simpler verdict-ledger shape — the 26.10 spec block is the
  *   law and is landed here shape-exact; the frozen file is recorded as
@@ -49,17 +53,36 @@ export interface ToolInvocationRef {
 export type GateType = 'human-required' | 'iod17-parity' | 'autoresearch-dry-run' | 'canon-write';
 export type GateState = 'pending' | 'transitioned' | 'blocked';
 
+/**
+ * One IOD-17 face's answer to the ONE question the gate asks — "may an AGENT
+ * commit this decision?" — narrowed from `string` to the spec's own enumeration
+ * (28.9 (a) verbatim) by 28.T28.8. `unset` means the face did not answer; it is
+ * never a verdict, and the parity aggregate must not read it as agreement.
+ */
+export type Iod17GateFaceState = 'human-required' | 'agent-allowed' | 'unset';
+
+export const IOD17_GATE_FACE_STATES: readonly Iod17GateFaceState[] = Object.freeze([
+    'human-required',
+    'agent-allowed',
+    'unset'
+]);
+
+export interface GateLandingIod17Parity {
+    readonly capabilityMatrixState: Iod17GateFaceState;
+    readonly agentContractState: Iod17GateFaceState;
+    readonly widgetState: Iod17GateFaceState;
+    readonly inParity: boolean;
+}
+
 export interface GateLanding {
     readonly gateId: string;
     readonly gateType: GateType;
     readonly state: GateState;
     readonly transitionedBy?: 'human' | 'agent';
-    readonly iod17Parity?: {
-        readonly capabilityMatrixState: string;
-        readonly agentContractState: string;
-        readonly widgetState: string;
-        readonly inParity: boolean;
-    };
+    /** Present only on a landing whose three faces were really read (28.T28.8).
+     *  A capability-gate outcome carries ONE face and therefore no readout —
+     *  publishing two `unset` faces beside it would manufacture a violation. */
+    readonly iod17Parity?: GateLandingIod17Parity;
 }
 
 export type AxiomForm = 'philosophical-english' | 'formal-notation' | 'owl' | 'shacl';
@@ -203,6 +226,34 @@ export function validateEvidencePacket(value: unknown): string[] {
     for (const field of ['toolStream', 'gateLandings', 'axiomTranslationSteps']) {
         if (!Array.isArray(packet[field])) {
             errors.push(`${field} must be an array`);
+        }
+    }
+    // 28.T28.8 — a gate landing that carries an IOD-17 readout must carry a
+    // COMPLETE one. A packet arriving off the wire with a half-filled parity
+    // object would render a three-cell matrix from two real faces and one
+    // invented blank, which is exactly the fabrication the deep render exists
+    // to make impossible.
+    if (Array.isArray(packet.gateLandings)) {
+        for (const [i, landing] of (packet.gateLandings as unknown[]).entries()) {
+            const parity = (landing as Record<string, unknown> | null)?.iod17Parity;
+            if (parity === undefined) {
+                continue;
+            }
+            if (typeof parity !== 'object' || parity === null) {
+                errors.push(`gateLandings[${i}].iod17Parity must be an object`);
+                continue;
+            }
+            const faces = parity as Record<string, unknown>;
+            for (const face of ['capabilityMatrixState', 'agentContractState', 'widgetState']) {
+                if (!IOD17_GATE_FACE_STATES.includes(faces[face] as Iod17GateFaceState)) {
+                    errors.push(
+                        `gateLandings[${i}].iod17Parity.${face} must be one of ${IOD17_GATE_FACE_STATES.join(' | ')}`
+                    );
+                }
+            }
+            if (typeof faces.inParity !== 'boolean') {
+                errors.push(`gateLandings[${i}].iod17Parity.inParity must be a boolean`);
+            }
         }
     }
     return errors;
