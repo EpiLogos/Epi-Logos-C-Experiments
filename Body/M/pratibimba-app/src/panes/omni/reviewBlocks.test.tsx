@@ -254,3 +254,163 @@ describe('44.5 live transport hydration', () => {
         }
     });
 });
+
+/**
+ * 26.T26.5 — the dispatch-genealogy click-through on the M5 Epii Review fold.
+ *
+ * 28.T28.9 landed the row type, the producer, and both foldings, but the
+ * abbreviated fold passed `genealogy: []` unconditionally — so on the ONE
+ * always-on M5 review surface `dispatchGenealogyRef` was null for every row by
+ * construction, and the click-through 26.5 names as its headline deliverable
+ * could never render. The genealogy was not absent: three sibling folds of the
+ * SAME membrane (`DispatchTracePanel`, `EvidencePanel`, `ToolStreamPanel`) were
+ * already reading it live off `sessions.list` → `dispatchGenealogyFromSessions`.
+ * DR-WC-IS-2 withholds the three-cell PARITY READOUT from this fold — its own
+ * words give the abbreviated tab "inbox + click-through" — so the fold now reads
+ * that one live source and the click-through lands the node where the carrier
+ * can really route it: the membrane's own Dispatch Trace fold, on the same node
+ * identity the deep audit and the evidence packet use (15.11).
+ */
+describe('26.T26.5 — dispatch-genealogy click-through on the abbreviated Review fold', () => {
+    it('carries the LIVE genealogy root and routes that node into the membrane’s Dispatch Trace fold', async () => {
+        const { fireEvent, waitFor } = await import('@testing-library/react');
+        const { vi } = await import('vitest');
+        const { setGateway } = await import('../../bridge/gatewayHolder');
+        const { DEFAULT_CONNECTION_STATUS } = await import('../../bridge/types');
+        const { useProvenanceStore, useSessionStore } = await import('../../state/stores');
+        const { useOmniPanelSessionStore } = await import('./omnipanelSessionState');
+
+        const invoke = vi.fn().mockImplementation(async (method: string) => {
+            if (method === "s5'.review.inbox") {
+                return {
+                    artifact: {
+                        items: [
+                            {
+                                item_id: 'rev-1',
+                                title: 'promote the axiom candidate',
+                                source: 'aletheia',
+                                priority: 'high',
+                                status: 'open',
+                                requires_human: true,
+                                coordinate_context: { coordinate: 'M5-4' },
+                                created_at: 1_000
+                            }
+                        ]
+                    }
+                } as never;
+            }
+            if (method === "s5'.epii.deposit.list") {
+                return {
+                    artifact: {
+                        deposits: [
+                            {
+                                itemId: 'rev-1',
+                                depositType: 'review_item',
+                                title: 'promote the axiom candidate',
+                                body: 'anchored deposition',
+                                status: 'open',
+                                requiresHuman: true,
+                                createdAt: 1_000,
+                                sourceAgent: 'human',
+                                sourceCoordinate: 'M5-4',
+                                sessionKey: 'agent:pi',
+                                artifact: { path: 'Idea/Empty/Present/x.md' },
+                                evidenceAnchors: {
+                                    candidate_id: 'cand-1',
+                                    graph_anchor: 'bimba://M5-4/evidence',
+                                    review_id: 'rev-1',
+                                    test_anchor: 'src/panes/omni/reviewBlocks.test.tsx',
+                                    privacy_class: 'protected'
+                                }
+                            }
+                        ]
+                    }
+                } as never;
+            }
+            if (method === 'sessions.list') {
+                // The real `sessions.list` lineage the sibling folds already
+                // read: a Pi root plus the subagent it dispatched (one level).
+                return {
+                    artifact: [
+                        { sessionKey: 'agent:pi', createdAtMs: 10 },
+                        { sessionKey: 'agent:pi:subagent:moirai', spawnedBy: 'agent:pi', createdAtMs: 12 }
+                    ]
+                } as never;
+            }
+            return { artifact: { ok: true } } as never;
+        });
+
+        setGateway({ invoke } as never);
+        useSessionStore.setState({ sessionKey: 'agent:pi', dayNow: null, privacyClass: null });
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        useOmniPanelSessionStore.getState().hydrate(null);
+        try {
+            render(<ReviewBlocksPane />);
+            const button = await screen.findByTestId('review-open-dispatch-rev-1');
+            // The root of the session the deposit was filed under — the SAME node
+            // id the evidence packet folds as its dispatch trace, never the
+            // subagent leaf and never a guess.
+            expect(button.getAttribute('data-dispatch-ref')).toBe('agent:pi');
+            expect(screen.queryByTestId('review-no-dispatch-rev-1')).toBeNull();
+
+            fireEvent.click(button);
+
+            // The BEHAVIOUR, not a spy: the live 27.9 route commits the node into
+            // the shared per-tab state the Dispatch Trace fold reads.
+            await waitFor(() => {
+                const session = useOmniPanelSessionStore.getState().session;
+                expect(session.activeTab).toBe('dispatch-trace');
+                expect(session.perTabState['dispatch-trace'].selectedNodeId).toBe('agent:pi');
+            });
+        } finally {
+            setGateway(null);
+            useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+            useOmniPanelSessionStore.getState().hydrate(null);
+        }
+    });
+
+    it('a row whose session has no root run keeps the honest absence — no guessed node id', async () => {
+        const { vi } = await import('vitest');
+        const { setGateway } = await import('../../bridge/gatewayHolder');
+        const { DEFAULT_CONNECTION_STATUS } = await import('../../bridge/types');
+        const { useProvenanceStore, useSessionStore } = await import('../../state/stores');
+
+        const invoke = vi.fn().mockImplementation(async (method: string) => {
+            if (method === "s5'.review.inbox") {
+                return {
+                    artifact: {
+                        items: [
+                            {
+                                item_id: 'rev-9',
+                                title: 'orphan review row',
+                                requires_human: true,
+                                created_at: 1_000
+                            }
+                        ]
+                    }
+                } as never;
+            }
+            if (method === 'sessions.list') {
+                // A live lineage that belongs to a DIFFERENT session: never borrowed.
+                return { artifact: [{ sessionKey: 'agent:other', createdAtMs: 10 }] } as never;
+            }
+            return { artifact: { ok: true } } as never;
+        });
+
+        setGateway({ invoke } as never);
+        useSessionStore.setState({ sessionKey: 'agent:pi', dayNow: null, privacyClass: null });
+        useProvenanceStore.setState({
+            connection: { ...DEFAULT_CONNECTION_STATUS, connected: true, state: 'connected' }
+        });
+        try {
+            render(<ReviewBlocksPane />);
+            expect(await screen.findByTestId('review-no-dispatch-rev-9')).toBeTruthy();
+            expect(screen.queryByTestId('review-open-dispatch-rev-9')).toBeNull();
+        } finally {
+            setGateway(null);
+            useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+        }
+    });
+});

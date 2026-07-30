@@ -44,11 +44,13 @@
  *       guessed.
  *
  *   Both foldings call THIS function. The deep governance pane passes all four
- *   inputs (it already reads all four); the `/` membrane fold passes the inbox
- *   and the deposits and NOT the capability matrix — which is precisely
- *   DR-WC-IS-2: "OmniPanel-Review-tab = inbox + click-through; ide-shell
- *   review-pane = FULL parity readout + governance audit. Same data, two
- *   foldings."
+ *   inputs; the `/` membrane fold passes the inbox, the deposits and — since
+ *   26.T26.5 — the live session lineage, but NOT the capability matrix. That is
+ *   precisely DR-WC-IS-2: "OmniPanel-Review-tab = inbox + click-through;
+ *   ide-shell review-pane = FULL parity readout + governance audit. Same data,
+ *   two foldings." What the abbreviated fold is denied is the parity AUDIT, not
+ *   the run a row is about — so the genealogy travels and the click-through
+ *   26.5 names can actually render there.
  * Public surface: ReviewItem, ReviewItemDeep, ReviewItemDeepInput,
  *   REVIEW_PARITY_DECISION, reviewItemsDeep, reviewItemDeepById.
  * Does NOT own: the wire projection (`panes/acr/acrReviewInbox.ts`), the parity

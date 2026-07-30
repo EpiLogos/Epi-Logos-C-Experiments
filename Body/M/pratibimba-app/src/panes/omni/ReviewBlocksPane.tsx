@@ -29,6 +29,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { gateway } from '../../bridge/gatewayHolder';
+import { SessionClient, type SessionRecord } from '../../bridge/sessionClient';
 import { BlockHost } from '../../blocks/BlockHost';
 import { TEMPORAL_CONTEXT_RPC, normalizeTemporalBlocksProjection } from '../../blocks/temporalBlocks';
 import {
@@ -49,6 +50,7 @@ import { enforceHumanGate } from '../m5ReviewGate';
 import { REVIEW_INBOX_METHOD, parseReviewInbox, type AcrReviewItem } from '../acr/acrReviewInbox';
 import { useCoordinateStore, useProvenanceStore, useSessionStore } from '../../state/stores';
 import { syntheticPiAnimaMoiraiDispatch } from './dispatchGenealogy.fixture';
+import { dispatchGenealogyFromSessions } from './dispatchGenealogyFromSessions';
 import {
     DEPOSIT_LIST_METHOD,
     readEvidenceDeposits,
@@ -115,6 +117,10 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
     const [inbox, setInbox] = useState<readonly AcrReviewItem[] | null>(null);
     const [inboxError, setInboxError] = useState<string | null>(null);
     const [deposits, setDeposits] = useState<readonly EvidenceDeposit[]>([]);
+    // 26.T26.5 — the live session lineage a row's dispatch-genealogy ref joins
+    // against. Same source as the membrane's Dispatch Trace fold; never a second
+    // one that could disagree with the tree the click-through lands on.
+    const [sessions, setSessions] = useState<readonly SessionRecord[]>([]);
 
     useEffect(() => {
         if (requestedReviewId) {
@@ -139,6 +145,7 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
             setInbox(null);
             setInboxError(null);
             setDeposits([]);
+            setSessions([]);
             return;
         }
         let cancelled = false;
@@ -164,28 +171,57 @@ export function ReviewBlocksPane({ requestedReviewId = null }: { readonly reques
                 // evidence-packet id, which is the truth about that row.
                 if (!cancelled) setDeposits([]);
             });
+        new SessionClient(gateway())
+            .list()
+            .then(records => {
+                if (!cancelled) setSessions(records);
+            })
+            .catch(() => {
+                // A lineage this fold cannot read means rows without a dispatch
+                // ref — which the row then SAYS — not a broken fold.
+                if (!cancelled) setSessions([]);
+            });
         return () => {
             cancelled = true;
         };
     }, [connected]);
 
     /**
-     * The ABBREVIATED folding: the SAME producer the deep governance pane calls,
-     * with the two inputs this fold does not hold left empty. `genealogy: []`
-     * because folding the run tree is the governance audit's job (DR-WC-IS-2),
-     * and `snapshot: null` because the IOD-17 readout is the deep fold's — so
-     * these rows carry no parity object at all rather than a half-read one.
+     * 26.T26.5 — the genealogy this fold really holds. `dispatchGenealogyFromSessions`
+     * over the SAME `sessions.list` lineage the Dispatch Trace, Tool Stream and
+     * Evidence folds of this membrane already read, so a review row's
+     * `dispatchGenealogyRef` and the node the reader sees one fold away can never
+     * name different runs.
+     */
+    const genealogy = useMemo(() => dispatchGenealogyFromSessions(sessions), [sessions]);
+
+    /**
+     * The ABBREVIATED folding: the SAME producer the deep governance pane calls.
+     * `snapshot: null` because the IOD-17 three-cell readout is the governance
+     * fold's (DR-WC-IS-2) — these rows carry no parity object at all rather than
+     * a half-read one.
+     *
+     * 26.T26.5 — the genealogy is NOT withheld. DR-WC-IS-2 gives the abbreviated
+     * tab "inbox + click-through"; it withholds the parity AUDIT, not the run a
+     * row is about. Until this tranche this fold passed `genealogy: []`, so every
+     * row on the one always-on M5 review surface carried `dispatchGenealogyRef:
+     * null` by construction and 26.5's headline click-through could never render
+     * — while the same membrane was already folding that lineage live in three
+     * sibling folds. It now reads that one source, and the click-through lands
+     * the node where this carrier can really route it (the membrane's own
+     * Dispatch Trace fold, `REVIEW_DISPATCH_TREE_ROUTE`); a row whose session has
+     * no root run still gets null and says so.
      */
     const deepReviewItems = useMemo(
         () =>
             reviewItemsDeep({
                 items: inbox ?? [],
                 deposits,
-                genealogy: [],
+                genealogy,
                 snapshot: null,
                 sessionKey
             }),
-        [inbox, deposits, sessionKey]
+        [inbox, deposits, genealogy, sessionKey]
     );
 
     // 44.6: block selection fires the context-xray seam and highlights back
