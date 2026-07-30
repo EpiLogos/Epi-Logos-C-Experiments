@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T00:59:00.247Z",
+  "updatedAt": "2026-07-30T17:59:54.787Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14145,16 +14145,56 @@
       "blocker": null
     },
     "28.T28.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-07-30T17:59:54.762Z",
+      "claimedAt": "2026-07-30T00:59:14.456Z",
+      "completedAt": "2026-07-30T17:59:54.762Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T17:18:39.419Z",
+          "text": "Commit 8d7afbe1. Coordinate Tree closed with proofs: 38 new unit tests (family colouring incl. the 36-token matrix + namespace read from s_1_vault_path only; active-coordinate subscribe AND publish; publishes-nothing-on-mount driven to completion; DR-M0-1 no-write-path enforced by enumerating every invoke() call site = ['s2.graph.query']) plus a UF e2e entering ide-deep through the real OmniPanelLayoutSwitch and driving the tree in both deep left rails over the live graph. Unit suite 2039 passed / 4 skipped (was 1999); laned pnpm test:e2e 131 passed (was 130). Red-then-green proven twice against the real tree: routing a write through proposeEdit reddens the wire-seam + mutating-method guards; publishing from the mount effect reddens the AST guard, the single-writer guard and the jsdom mount law. Found and fixed a live defect: the mount effect excluded only ready/loading, so error/empty/privacy-refused fed back through their own status change and read S2 in a tight loop; guard is now status !== 'idle' with a reconnect-once retry. Corrected a false header claim: HAS_INTERNAL_COMPONENT is a deep-dataset CLASS relation (deep_bimba.rs::is_deep_dataset_relation_type), not an enumerated GraphRelationshipTypeSpec. backendStudio (28.13) and readiness-gate (28.11) left pending.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2170,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/coordinateTree/coordinateTreeModel.ts",
+              "Body/M/pratibimba-app/src/panes/coordinateTree/CoordinateTreePane.tsx",
+              "Body/M/pratibimba-app/src/panes/coordinateTree/coordinateTreeModel.test.ts",
+              "Body/M/pratibimba-app/src/panes/coordinateTree/CoordinateTreePane.test.tsx",
+              "Body/M/pratibimba-app/src/panes/coordinateTree/coordinateTreeSeams.test.ts",
+              "Body/M/pratibimba-app/tests/e2e/coordinate-tree-deep.spec.ts",
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 760000,
+              "output": 36000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T17:59:54.762Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260730, distinct from this closer): class-scoped gate green — app-ui-flow 131 playwright specs, app-test 2039 (baseline 1999), ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. coordinateTree moved out of the reserved seam into DEEP_PANE_SET with its contract row flipped, mounted last in the personal border strip on purpose so selected index 0 keeps fileTree open and a navigation backbone that publishes on click never mounts unasked. Each of the three named features is pinned by a test rather than described: family colouring holds every family and grade class against the real 36-token palette so a class cannot name a family the token source cannot paint, with the hash-4 and cpf coordinates left unfamilied rather than coerced; the active-coordinate highlight is proven in both directions, a coordinate published elsewhere highlights with no gesture and a click writes the one shared store; and the CRUD-versus-governance separation is ENFORCED rather than asserted — every invoke call site in the directory is enumerated and must equal exactly s2.graph.query, with the wire log checked across the whole authoring flow, so a write path cannot be added silently. The authoring intent is accepted by the real parseCrossLayoutIntent and routed by the real ledger. Guards proven red on the real tree then reverted: routing a write through proposeEdit reds 2, adding a shared-store write to the mount effect reds 3 including the jsdom mount law; 37 of 37 green on restore. A LIVE DEFECT was found and fixed: the mount effect excluded only ready and loading, so the error, empty and privacy-refused statuses each fed back through their own status change and re-read S2 in a tight loop; the guard is now status is not idle, with a reconnect-once retry. A false header claim was also corrected — HAS_INTERNAL_COMPONENT is a deep-dataset class relation, not an enumerated spec. On the record: the first gate refusal was an unrelated shared-lint blocker in another lane's forensic test, fixed in place; the second named readiness-state-grammar, which belongs to 32.T32.5 and which this tranche does not touch — it passes in 2.4 seconds in isolation and the full laned suite ran 131 of 131 green on this exact committed tree before the confirming gate, so it is recorded as a load-dependent flake in a sibling spec rather than absorbed into this close. Commit 8d7afbe1.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.6 --owner opus5-mdev-verify-20260730",
+            "exitCode": 0,
+            "testsPassed": 2039,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/coordinateTree/CoordinateTreePane.tsx",
+              "Body/M/pratibimba-app/src/panes/coordinateTree/coordinateTreeModel.ts",
+              "app-ui-flow 131 playwright specs PASS"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "opus5-t28t6-coordtree",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-30T17:18:39.419Z",
+      "runId": "20260730T005914Z-28-T28.6",
       "worktree": null,
       "blocker": null
     },
@@ -28800,6 +28840,16 @@
       "leaseExpiresAt": "2026-07-29T23:24:36.158Z",
       "worktree": null,
       "completedAt": "2026-07-29T22:49:27.327Z"
+    },
+    {
+      "runId": "20260730T005914Z-28-T28.6",
+      "taskId": "28.T28.6",
+      "status": "review",
+      "startedAt": "2026-07-30T00:59:14.456Z",
+      "owner": "opus5-t28t6-coordtree",
+      "leaseExpiresAt": "2026-07-30T04:59:14.456Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T17:18:39.419Z"
     }
   ],
   "activeRoute": {

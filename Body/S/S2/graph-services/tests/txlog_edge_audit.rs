@@ -6,7 +6,7 @@ use epi_s2_graph_services::txlog_forensics::replay::{find_mass_delete, replay_un
 use epi_s2_graph_services::txlog_forensics::TxLogDecoder;
 
 #[test]
-#[ignore]
+#[ignore = "needs the forensic archive extracted to ~/bimba-forensic/work; the 60 MB archive is evidence and is deliberately not in the repo"]
 fn audit() {
     let p = PathBuf::from(std::env::var("HOME").unwrap())
         .join("bimba-forensic/work/transactions/neo4j/neostore.transaction.db.0");
