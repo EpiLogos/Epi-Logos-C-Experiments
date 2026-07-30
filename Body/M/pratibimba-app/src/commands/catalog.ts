@@ -42,6 +42,8 @@ export interface CatalogCommand {
  *   - src/commands/layout.ts (3)    — `registerLayoutCommands` (52.T3)
  *   - src/commands/walkthrough.ts (1) — `registerWalkthroughCommand` (32.T32.3)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
+ *   - src/panes/coordinateTree/coordinateTreeCommands.ts (6) — data-driven over
+ *     COORDINATE_TREE_FAMILY_ROOTS × FAMILY_NAMES (28.T28.6)
  * `src/ui/leftSidebarModes.ts` also *declares* a register site, but its factory
  * (`registerLeftSidebarModeCommands`) has no caller — it is dead code, so its
  * commands are NOT registered and are deliberately absent here (the gate
@@ -239,5 +241,45 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         title: "M0': Time / community overlay layer",
         owner: 'm0-anuttara-rail',
         tranche: '01.T1.1'
+    },
+
+    // --- src/panes/coordinateTree/coordinateTreeCommands.ts (28.T28.6 (d)) ---
+    // Data-driven over COORDINATE_TREE_FAMILY_ROOTS × FAMILY_NAMES; the gate
+    // reconstructs these six from the SAME tables rather than trusting the rows.
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.P',
+        title: 'Coordinate Tree: Expand Position family (P)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
+    },
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.S',
+        title: 'Coordinate Tree: Expand Stack family (S)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
+    },
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.T',
+        title: 'Coordinate Tree: Expand Thought family (T)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
+    },
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.M',
+        title: 'Coordinate Tree: Expand Subsystem family (M)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
+    },
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.L',
+        title: 'Coordinate Tree: Expand Lens family (L)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
+    },
+    {
+        id: 'pratibimba.coordinate-tree.expand-family.C',
+        title: 'Coordinate Tree: Expand Category family (C)',
+        owner: 'coordinate-tree',
+        tranche: '28.T28.6'
     }
 ]);

@@ -70,7 +70,7 @@ describe('52.T4 shell slot policy — the per-layout declaration matches the she
         // left border at all; the deep rail is the IDE explorer on BOTH faces.
         for (const model of ['cosmic', 'personal'] as const) {
             const deepLeft = deepPaneMounts(model, 'left').map(mount => mount.surfaceId);
-            expect(deepLeft).toEqual(['fileTree', 'semanticConnections']);
+            expect(deepLeft).toEqual(['fileTree', 'semanticConnections', 'coordinateTree']);
         }
     });
 

@@ -90,9 +90,12 @@ describe('left-sidebar mode registry — inventory (15.T15.3)', () => {
     });
 
     it('pending modes carry the honest owner marker; live modes carry none', () => {
+        // `coordinate-tree` dropped its marker when 28.T28.6 landed the pane —
+        // the mode is now backed by a real surface in both layouts, so an owner
+        // marker would be a promise about work that is already done.
         const owners = Object.fromEntries(LEFT_SIDEBAR_MODES.map(m => [m.id, m.pendingOwner]));
         expect(owners).toEqual({
-            'coordinate-tree': '28.6',
+            'coordinate-tree': null,
             'bimba-graph': null,
             'canon-studio': null,
             'backend-studio': '28.13',

@@ -159,6 +159,13 @@ export const DEEP_PANE_SET: readonly DeepPaneMount[] = Object.freeze([
         model: 'both',
         why: "`ui/leftSidebarModes.ts` declares `smart-connections` as `availableInLayouts: ['ide-deep']`; the deep rail is where that declaration is finally true. Its DAILY residency is 52.T6's contradiction to settle, not this tranche's."
     }),
+    Object.freeze({
+        surfaceId: 'coordinateTree',
+        label: 'Coordinates',
+        slot: 'left',
+        model: 'both',
+        why: "M0' chrome and the navigation backbone: `LEFT_SIDEBAR_MODES` makes `coordinate-tree` the DEFAULT mode and the cross-layout fallback, available in BOTH layouts — so 28.T28.6 mounts it in the daily face-1 rail AND here, and that declaration is now true rather than aspirational. Deliberately THIRD: an opening rail tab mounts on the hidden face too, and a coordinate tree is precisely the surface that must not seize the shared coordinate on mount (it publishes only from a click — hence no `mountPublishes`, and the sibling suite proves the absence)."
+    }),
 
     // ── main / cosmic: M0'-M3' structural depth ────────────────────────────
     Object.freeze({
@@ -337,24 +344,17 @@ export const DEEP_PANE_SET: readonly DeepPaneMount[] = Object.freeze([
  * `pending` id found in the shell fails `chromeContract.test.ts` and would
  * steal another tranche's deliverable.
  *
- * The mechanism has now been exercised once end to end. 28.T28.5 landed
- * `agenticControlRoom` into exactly the position reserved for it — flipping the
- * §2 row to `live`, adding the factory case, and moving its entry into
- * `DEEP_PANE_SET` — so the reservation was consumed rather than re-litigated.
- * `coordinateTree` (28.6) and `backendStudio` (28.13) remain.
+ * The mechanism has now been exercised twice end to end. 28.T28.5 landed
+ * `agenticControlRoom` and 28.T28.6 landed `coordinateTree` into exactly the
+ * positions reserved for them — each flipping its §2 row to `live`, adding the
+ * factory case, and moving its entry into `DEEP_PANE_SET` — so both
+ * reservations were consumed rather than re-litigated. `backendStudio` (28.13)
+ * remains.
  *
  * `readiness-gate` (28.11) is NOT here on purpose — it is a per-binding inline
  * wrapper, not a slot occupant, so it has no pane-set position to reserve.
  */
 export const DEEP_PANE_RESERVATIONS: readonly DeepPaneReservation[] = Object.freeze([
-    Object.freeze({
-        surfaceId: 'coordinateTree',
-        slot: 'left',
-        model: 'both',
-        owner: '28.T28.6',
-        contractStatus: 'pending',
-        why: "§2 designates it 'face 1 left border'; `LEFT_SIDEBAR_MODES` makes `coordinate-tree` the navigation backbone available in BOTH layouts and the cross-layout fallback mode. It joins the deep explorer rail as its third tab on both faces."
-    }),
     Object.freeze({
         surfaceId: 'backendStudio',
         slot: 'left',

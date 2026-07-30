@@ -97,7 +97,13 @@ export const CROSS_LAYOUT_INTENT_TARGETS: readonly CrossLayoutIntentTarget[] = O
     target('ide-shell-m0-m5', 'bimba-graph', 'Bimba graph', 0, 'bimbaGraph', 'ide-deep'),
     target('ide-shell-m0-m5', 'agentic-control-room', 'Agentic control room', 1, 'omniDispatchTrace', null),
     target('ide-shell-m0-m5', 'evidence-panel', 'Evidence panel', 1, 'omniEvidence', null),
-    target('ide-shell-m0-m5', 'coordinate-tree', 'Coordinate tree', 0, 'bimbaGraph', 'ide-deep'),
+    // 28.T28.6 consumed the HOLD. This row pointed at `bimbaGraph` with an
+    // `ide-deep` promotion only because no coordinate tree existed to receive
+    // it. The tree now mounts on face 1 in BOTH layouts (daily left border +
+    // deep left rail), so the receiver is the real component and the layout is
+    // the user's — a target promotes to depth only where the render genuinely
+    // differs by layout (52.T3), and this one does not.
+    target('ide-shell-m0-m5', 'coordinate-tree', 'Coordinate tree', 1, 'coordinateTree', null),
     target('ide-shell-m0-m5', 'logos-atelier', 'Logos Atelier', 0, 'bimbaGraph', 'ide-deep'),
     target('ide-shell-m0-m5', 'review-pane', 'Review pane', 1, 'omniReview', null),
     target('ide-shell-m0-m5', 'autoresearch-pane', 'Autoresearch pane', 1, 'autoresearch', null),

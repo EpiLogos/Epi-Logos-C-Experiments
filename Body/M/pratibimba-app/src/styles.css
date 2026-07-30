@@ -8191,3 +8191,181 @@ button.tool-stream-timerange.active {
 .acr-method-register li[data-status='unwired'] .acr-seam-status {
     color: var(--danger);
 }
+
+/* ── 28.T28.6 — Coordinate Tree ─────────────────────────────────────────────
+   The per-row family tint arrives INLINE as `--coordinate-family-tint`, resolved
+   from `coordinateFamilyGrade` for the live theme (30.T30.2 / DR-WC-DL-1). No
+   hue literal belongs here: this file styles the geometry, the token source
+   styles the colour. `coordinate-family-*`, `coordinate-namespace-*` and
+   `coordinate-privacy-*` are the CLASSES tranche 28.6 (a)/(e) names — they carry
+   the classification whether or not this stylesheet paints each one, so a test
+   can read the classification off the DOM. */
+.coordinate-tree-pane {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: var(--type-body-small);
+}
+
+.coordinate-tree-header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--ground-raised);
+}
+
+.coordinate-tree-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.coordinate-tree-title > span {
+    color: var(--ink-dim);
+    font-family: 'SF Mono', ui-monospace, monospace;
+    font-size: var(--type-caption);
+}
+
+.coordinate-tree-title h3 {
+    margin: 0;
+    font-size: var(--type-body-small);
+    font-weight: 600;
+}
+
+.coordinate-tree-mode {
+    display: inline-flex;
+    gap: 0.15rem;
+}
+
+.coordinate-tree-mode-option {
+    background: none;
+    border: 1px solid var(--ground-raised);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    padding: 1px 6px;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--type-caption);
+}
+
+.coordinate-tree-mode-option[aria-pressed='true'] {
+    border-color: var(--accent);
+    color: var(--ink);
+}
+
+.coordinate-tree-governance {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.coordinate-tree {
+    flex: 1 1 auto;
+    overflow: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+.coordinate-tree-node {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 0;
+    border-left: 3px solid var(--coordinate-family-tint, transparent);
+}
+
+.coordinate-tree-node.active-coordinate {
+    background: var(--ground-raised);
+}
+
+.coordinate-tree-node[data-cyclic='true'] {
+    opacity: 0.7;
+}
+
+/* Namespace is repo-ontology residency read from `s_1_vault_path`; it changes
+   the row's WEIGHT rather than its hue, so it never fights the family tint. */
+.coordinate-tree-node.coordinate-namespace-bimba .coordinate-tree-coord { font-weight: 600; }
+.coordinate-tree-node.coordinate-namespace-empty .coordinate-tree-coord { font-style: italic; }
+.coordinate-tree-node.coordinate-namespace-pratibimba .coordinate-tree-coord { text-decoration: underline dotted; }
+
+.coordinate-tree-arrow {
+    flex: 0 0 auto;
+    width: 14px;
+    background: none;
+    border: none;
+    color: var(--ink-dim);
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    line-height: 1;
+}
+
+.coordinate-tree-arrow-leaf {
+    display: inline-block;
+    cursor: default;
+}
+
+.coordinate-tree-label {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: var(--ink);
+    text-align: left;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.coordinate-tree-coord {
+    font-family: 'SF Mono', ui-monospace, monospace;
+    color: var(--coordinate-family-tint, var(--ink));
+}
+
+.coordinate-tree-name {
+    color: var(--ink-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.coordinate-tree-cyclic {
+    color: var(--ink-dim);
+}
+
+.coordinate-tree-propose {
+    flex: 0 0 auto;
+    background: none;
+    border: 1px solid var(--ground-raised);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    padding: 0 5px;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--type-caption);
+}
+
+.coordinate-tree-footer {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.3rem 0.5rem;
+    border-top: 1px solid var(--ground-raised);
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}

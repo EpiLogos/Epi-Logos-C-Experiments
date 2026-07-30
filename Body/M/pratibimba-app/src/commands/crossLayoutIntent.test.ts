@@ -109,14 +109,21 @@ describe('cross-layout intent targets (31.T31.10)', () => {
         });
 
         it('every row states its layout — the ledger holds no inherited answer', () => {
-            // 18 promote to depth, 16 pull back to the daily preview, 21 keep
+            // 17 promote to depth, 16 pull back to the daily preview, 22 keep
             // whatever layout the user chose. The counts are asserted so a bulk
             // edit that re-widens deep carriage has to say so here first.
+            //
+            // 28.T28.6 moved ONE row out of the depth column: `coordinate-tree`
+            // pointed at `bimbaGraph` under `ide-deep` only because no
+            // coordinate tree existed to receive it. The tree now mounts on
+            // face 1 in BOTH layouts, so its render does not differ by layout
+            // and the rule above (a target promotes only where depth gives it a
+            // different render) forbids the promotion it used to take.
             const count = (value: LayoutId | null) =>
                 CROSS_LAYOUT_INTENT_TARGETS.filter(t => t.preferredLayout === value).length;
-            expect(count('ide-deep')).toBe(18);
+            expect(count('ide-deep')).toBe(17);
             expect(count('daily-0-1')).toBe(16);
-            expect(count(null)).toBe(21);
+            expect(count(null)).toBe(22);
             expect(count('ide-deep') + count('daily-0-1') + count(null)).toBe(
                 CROSS_LAYOUT_INTENT_TARGETS.length
             );

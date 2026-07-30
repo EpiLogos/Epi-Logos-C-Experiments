@@ -338,7 +338,7 @@ test('52.T4: the deep layout is its own rendered pane set, per face, and daily c
     // the IDE explorer rail replaced the daily lived-reading rail
     await expectLeftBorderLabels(
         page,
-        ['Vault', 'Connections'],
+        ['Vault', 'Connections', 'Coordinates'],
         'the deep left slot is the IDE explorer rail, not the daily reading rail'
     );
     // the strip is not scenery: a real click on a deep main tab yields depth the
@@ -375,7 +375,7 @@ test('52.T4: the deep layout is its own rendered pane set, per face, and daily c
     // this is the first-ever face-0 left border: [] in daily, the rail in deep
     await expectLeftBorderLabels(
         page,
-        ['Vault', 'Connections'],
+        ['Vault', 'Connections', 'Coordinates'],
         'face 0 gains an explorer rail in depth that it structurally lacks in daily'
     );
     // the two deep models are different pane sets (DR-DEEP-LAYOUT-1, per-face)

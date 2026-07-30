@@ -61,6 +61,9 @@ import { M4PsycheAnchorCoherencePane } from './panes/M4PsycheAnchorCoherencePane
 import { M4SessionCloseCeremonyPane } from './panes/M4SessionCloseCeremonyPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AgenticControlRoomPane } from './panes/acr/AgenticControlRoomPane';
+import { CoordinateTreePane } from './panes/coordinateTree/CoordinateTreePane';
+import { COORDINATE_TREE_TAB_LABEL } from './panes/coordinateTree/coordinateTreeModel';
+import { registerCoordinateTreeCommands } from './panes/coordinateTree/coordinateTreeCommands';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { M4MercuriusRelayChip } from './panes/M4MercuriusRelayPane';
@@ -220,7 +223,18 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                 { type: 'tab', name: 'Session close', component: 'sessionCloseCeremony', enableClose: false },
                 // 25.T25.20 — same law as the ceremony above: a reading surface,
                 // so it joins the border rather than the main strip.
-                { type: 'tab', name: 'Anchor', component: 'psycheAnchorCoherence', enableClose: false }
+                { type: 'tab', name: 'Anchor', component: 'psycheAnchorCoherence', enableClose: false },
+                // 28.T28.6 — CHROME-CONTRACT §2 designates the coordinate tree
+                // "face 1 left border", and `LEFT_SIDEBAR_MODES` makes it the
+                // default mode and cross-layout fallback in BOTH layouts. LAST
+                // on purpose: `selected: 0` opens `fileTree`, so a navigation
+                // backbone that publishes on click never mounts unasked.
+                {
+                    type: 'tab',
+                    name: COORDINATE_TREE_TAB_LABEL,
+                    component: 'coordinateTree',
+                    enableClose: false
+                }
             ]
         },
         omniBorder(activeLayout)
@@ -307,7 +321,8 @@ function cosmicDefault(activeLayout: OmniPanelLayoutId) {
  *
  * The composition itself is DECLARED, not written here: `ui/deepPaneSet.ts`
  * carries what is mounted, what is deliberately withdrawn, and the reserved
- * seams for the doc-ahead `pending` surfaces (28.5 / 28.6 / 28.13). The `/`
+ * seams for the doc-ahead `pending` surfaces (28.13 remains; 28.5 and 28.6
+ * consumed theirs). The `/`
  * membrane is handed in so `omniBorder` stays the one builder of the right slot.
  */
 function ideDeepDefault(model: DeepPaneModelId, activeLayout: OmniPanelLayoutId) {
@@ -317,7 +332,7 @@ function ideDeepDefault(model: DeepPaneModelId, activeLayout: OmniPanelLayoutId)
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore).
  *  24: 52.T4 added the two `ide-deep` models and their persistence keys. */
-const LAYOUT_VERSION = 24;
+const LAYOUT_VERSION = 25;
 
 /** The four flexlayout models the shell holds: one per (layout, face) cell.
  *  52.T4 — before this tranche there was one pair, shared by both layouts. */
@@ -488,6 +503,12 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // the OmniPanel folds carry the always-on abbreviated render (DR-WC-IS-2).
         case 'agenticControlRoom':
             return <AgenticControlRoomPane />;
+        // 28.T28.6 — the M0' navigation backbone. Mounted in the daily face-1
+        // rail AND in both deep rails, because `LEFT_SIDEBAR_MODES` declares
+        // `coordinate-tree` the cross-layout fallback mode; it publishes the
+        // shared coordinate on CLICK only, never on mount.
+        case 'coordinateTree':
+            return <CoordinateTreePane />;
         // 28.T28.10 - real S5 autoresearch disclosure over status/history.
         case 'autoresearch':
             {
@@ -1245,6 +1266,10 @@ export function App() {
                 }
             }),
             ...registerEngineCommands(commands),
+            // 28.T28.6 (d): six per-family bulk-expand commands over the tree's
+            // module-scope expand set — data-driven from the same frozen family
+            // table the pane renders, so the catalog cannot drift from them.
+            ...registerCoordinateTreeCommands(commands),
             // 31.T31.3 (CCT-4): cmd-1..cmd-8 → omnipanel.tab.activate.{0..7}.
             // Activation switches the visible fold on the active face AND the
             // shared session store, so both agree; the 9th tab ('tuning') is
@@ -1422,7 +1447,8 @@ export function App() {
     // (which is layout-scoped by declaration, `ui/layoutClaims.ts`) and the
     // `data-layout-pane-set` readout, which is how a running browser can assert
     // that the deep layout really is a different pane set — and that the
-    // reserved `pending` seams (28.5 / 28.6 / 28.13) are genuinely NOT in it.
+    // remaining reserved `pending` seam (28.13) is genuinely NOT in it. 28.5 and
+    // 28.6 consumed theirs and now appear in the readout by right.
     const activeCell = models[activeLayout];
     const activePaneSet = new Set<string>();
     for (const model of [activeCell.cosmic, activeCell.personal]) {

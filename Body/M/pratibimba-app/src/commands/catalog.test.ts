@@ -24,15 +24,22 @@ import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { COMMAND_CATALOG } from './catalog';
 import { M0_LAYER_ROUTES } from '../panes/m0Layers';
+import { COORDINATE_TREE_FAMILY_ROOTS } from '../panes/coordinateTree/coordinateTreeModel';
+import {
+    coordinateTreeExpandCommandId,
+    coordinateTreeExpandCommandTitle
+} from '../panes/coordinateTree/coordinateTreeCommands';
 
 const SRC_ROOT = resolve(__dirname, '..');
 
-/** The two register sites whose id/title cannot be resolved statically: one
- *  live data-driven family (M0LayerRail), one dead factory (leftSidebarModes).
- *  Any OTHER file with a dynamic AppCommand literal fails the gate — a new
- *  dynamic register idiom must be reconciled here on purpose, never silently. */
+/** The three register sites whose id/title cannot be resolved statically: two
+ *  live data-driven families (M0LayerRail, coordinateTreeCommands) and one dead
+ *  factory (leftSidebarModes). Any OTHER file with a dynamic AppCommand literal
+ *  fails the gate — a new dynamic register idiom must be reconciled here on
+ *  purpose, never silently. */
 const M0_RAIL_FILE = 'M0LayerRail.tsx';
 const LEFT_SIDEBAR_FILE = 'leftSidebarModes.ts';
+const COORDINATE_TREE_FILE = 'coordinateTreeCommands.ts';
 
 interface LiveCommand {
     id: string;
@@ -182,11 +189,23 @@ function m0LayerCommands(): LiveCommand[] {
     }));
 }
 
+/** The live per-family bulk-expand commands (28.T28.6 (d)), reconstructed from
+ *  the SAME frozen family table and title builder `coordinateTreeCommands.ts`
+ *  iterates — so the six catalog rows are checked against the source of truth,
+ *  never against a second hardcode. */
+function coordinateTreeCommands(): LiveCommand[] {
+    return COORDINATE_TREE_FAMILY_ROOTS.map(family => ({
+        id: coordinateTreeExpandCommandId(family),
+        title: coordinateTreeExpandCommandTitle(family)
+    }));
+}
+
 const files = sourceFiles(SRC_ROOT);
 const consts = buildConstTable(files);
 const scan = scanSources(files, consts);
 const m0Live = m0LayerCommands();
-const liveCommands: LiveCommand[] = [...scan.staticCommands, ...m0Live];
+const coordinateTreeLive = coordinateTreeCommands();
+const liveCommands: LiveCommand[] = [...scan.staticCommands, ...m0Live, ...coordinateTreeLive];
 
 const liveById = new Map(liveCommands.map(command => [command.id, command]));
 const catalogById = new Map(COMMAND_CATALOG.map(command => [command.id, command]));
@@ -210,9 +229,31 @@ describe('command catalog — AST walk finds the real registry (31.T31.2)', () =
         ]);
     });
 
+    it('resolves exactly the six data-driven coordinate-tree commands from the family table', () => {
+        expect(coordinateTreeLive.map(command => command.id)).toEqual([
+            'pratibimba.coordinate-tree.expand-family.P',
+            'pratibimba.coordinate-tree.expand-family.S',
+            'pratibimba.coordinate-tree.expand-family.T',
+            'pratibimba.coordinate-tree.expand-family.M',
+            'pratibimba.coordinate-tree.expand-family.L',
+            'pratibimba.coordinate-tree.expand-family.C'
+        ]);
+    });
+
+    it('the coordinate-tree family is still backed by a real dynamic register site', () => {
+        // Same tether as the M0 rail below: if the factory stops registering
+        // dynamically, coordinateTreeCommands() would silently invent rows.
+        expect(scan.dynamicFiles.has(COORDINATE_TREE_FILE)).toBe(true);
+        expect(
+            scan.calledFunctions.has('registerCoordinateTreeCommands'),
+            'registerCoordinateTreeCommands must have a live caller, or its six catalogued rows are fiction'
+        ).toBe(true);
+    });
+
     it('every dynamic register site is a KNOWN one (no unreconciled register idiom)', () => {
         const unexpected = [...scan.dynamicFiles].filter(
-            file => file !== M0_RAIL_FILE && file !== LEFT_SIDEBAR_FILE
+            file =>
+                file !== M0_RAIL_FILE && file !== LEFT_SIDEBAR_FILE && file !== COORDINATE_TREE_FILE
         );
         expect(
             unexpected,

@@ -18,8 +18,8 @@
  *   LEFT_SIDEBAR_MODES, DEFAULT_LEFT_SIDEBAR_MODE, modesForLayout,
  *   isModeAvailableInLayout, resolveModeForLayout, useLeftSidebarModeStore,
  *   registerLeftSidebarModeCommands.
- * Does NOT own: the pane bodies (28.6 coordinateTree / 28.13 backendStudio /
- *   28.12 smartConnections own them; `bimbaGraph` + `editor` are already live),
+ * Does NOT own: the pane bodies (28.13 backendStudio still owns its own;
+ *   `coordinateTree`, `semanticConnections`, `bimbaGraph` and `editor` are live),
  *   the CHROME-CONTRACT §2 surface table (this module must AGREE with it, not
  *   define it), the shell's face state or layout persistence (App.tsx), the
  *   four singleton stores (src/state/stores.ts).
@@ -62,9 +62,11 @@ export interface LeftSidebarMode {
  * The activity-bar mode inventory. Three modes belong to BOTH layouts (the
  * navigation backbone, the graph viewer, the canon editor); the two developer
  * surfaces belong to `ide-deep` only. Surface ids are CHROME-CONTRACT §2 keys:
- * `coordinateTree` (pending, 28.6), `bimbaGraph` (live), `editor` (live —
- * Canon Studio read half), `backendStudio` (pending, 28.13), `smartConnections`
- * (pending, 28.12).
+ * `coordinateTree` (live — 28.T28.6 landed it in the daily face-1 border AND
+ * both deep left rails, which is what makes this row's `availableInLayouts`
+ * true rather than aspirational), `bimbaGraph` (live), `editor` (live — Canon
+ * Studio read half), `backendStudio` (pending, 28.13), `semanticConnections`
+ * (live).
  */
 export const LEFT_SIDEBAR_MODES: readonly LeftSidebarMode[] = Object.freeze([
     {
@@ -72,7 +74,7 @@ export const LEFT_SIDEBAR_MODES: readonly LeftSidebarMode[] = Object.freeze([
         label: 'Coordinate Tree',
         surfaceId: 'coordinateTree',
         availableInLayouts: ['daily-0-1', 'ide-deep'],
-        pendingOwner: '28.6'
+        pendingOwner: null
     },
     {
         id: 'bimba-graph',

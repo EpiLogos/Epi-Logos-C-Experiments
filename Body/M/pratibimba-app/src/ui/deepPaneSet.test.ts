@@ -241,18 +241,40 @@ describe('52.T4 deep pane set ⇄ CHROME-CONTRACT §2 lockstep', () => {
     });
 
     it('the four designated pending surfaces are all accounted for', () => {
-        // 28.6 / 28.13 still hold a reserved position; 28.T28.5 CONSUMED its
-        // reservation — `agenticControlRoom` is now a `live` §2 row carried in
-        // `DEEP_PANE_SET`, which the two assertions below check from the other
-        // side so the move cannot be half-done. 28.11's `readiness-gate` is a
-        // per-binding inline wrapper, not a slot occupant, so it has no pane-set
-        // position to reserve — and must not acquire one by accident.
+        // Only 28.13 still holds a reserved position. 28.T28.5 and 28.T28.6
+        // CONSUMED theirs — `agenticControlRoom` and `coordinateTree` are now
+        // `live` §2 rows carried in `DEEP_PANE_SET`, which the assertions below
+        // check from the other side so neither move can be half-done. 28.11's
+        // `readiness-gate` is a per-binding inline wrapper, not a slot occupant,
+        // so it has no pane-set position to reserve — and must not acquire one
+        // by accident.
         const reserved = DEEP_PANE_RESERVATIONS.map(entry => entry.surfaceId).sort();
-        expect(reserved).toEqual(['backendStudio', 'coordinateTree']);
+        expect(reserved).toEqual(['backendStudio']);
         expect(rows.get('agenticControlRoom')?.status).toBe('live');
         expect(allDeepComponents.has('agenticControlRoom')).toBe(true);
+        expect(rows.get('coordinateTree')?.status).toBe('live');
+        expect(allDeepComponents.has('coordinateTree')).toBe(true);
         expect(rows.get('readiness-gate')?.status).toBe('pending');
         expect(allDeepComponents.has('readiness-gate')).toBe(false);
+    });
+
+    it('the coordinate tree is carried in BOTH layouts — daily rail and both deep rails', () => {
+        // The conjugate of the control room's DEEP-ONLY case. `LEFT_SIDEBAR_MODES`
+        // declares `coordinate-tree` available in both layouts AND makes it the
+        // cross-layout fallback mode; that is only true if the surface really
+        // mounts in the daily registry too. `componentKeys` IS the daily registry.
+        expect(componentKeys.has('coordinateTree')).toBe(true);
+        expect(factoryCases.has('coordinateTree')).toBe(true);
+        expect(deepModelComponents('personal').has('coordinateTree')).toBe(true);
+        expect(deepModelComponents('cosmic').has('coordinateTree')).toBe(true);
+        // …and it is not the opening tab of the rail it joins.
+        const leftRail = DEEP_PANE_SET.filter(mount => mount.slot === 'left');
+        expect(leftRail[0]?.surfaceId).not.toBe('coordinateTree');
+        // A tree that published on mount would need `mountPublishes`; this one
+        // publishes only from a click, so the absence is the claim.
+        expect(
+            DEEP_PANE_SET.find(mount => mount.surfaceId === 'coordinateTree')?.mountPublishes
+        ).toBeUndefined();
     });
 
     it('the control room is DEEP-ONLY — carried in depth, absent from every daily model', () => {
@@ -394,10 +416,14 @@ describe('52.T4 deep pane set — THE OPENING-TAB LAW', () => {
 
 describe('52.T4 deep pane set — slot shape', () => {
     it('gives BOTH faces the IDE explorer rail (the first per-layout left slot)', () => {
+        // 28.T28.6 added the third tab. Order is the claim, not just membership:
+        // the opening tab of a rail mounts on the HIDDEN face too, so the
+        // navigation backbone is deliberately last (`deepPaneSet.ts`).
         for (const model of MODELS) {
             expect(deepPaneMounts(model, 'left').map(mount => mount.surfaceId)).toEqual([
                 'fileTree',
-                'semanticConnections'
+                'semanticConnections',
+                'coordinateTree'
             ]);
         }
     });
