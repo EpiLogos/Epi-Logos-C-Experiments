@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T17:59:54.787Z",
+  "updatedAt": "2026-07-30T19:19:21.930Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14199,16 +14199,79 @@
       "blocker": null
     },
     "28.T28.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-30T19:19:21.906Z",
+      "claimedAt": "2026-07-30T18:01:03.645Z",
+      "completedAt": "2026-07-30T19:19:21.906Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T18:45:42.528Z",
+          "text": "Commit 00721901. Atelier lands as the lens dailySurfaceOwnership already declares over bimbaGraph, mounted only on a real logos-atelier intent and reading nothing on mount (bimbaGraph is the cosmic deep opening tab); no new §2 surface, per §9 anti-greenfield. (c) etymology:// integrity is a per-handle VERDICT that names a refused scheme; (d) scent-follow stages the Hen candidate via s1'.entity.capture then routes THAT candidate to ide-shell-m0-m5/canon-studio through the one intent command, ATELIER_MUTATES_GRAPH_CANON false as const and worn on the surface; (e) six Aletheia subagents as lineage, veto red + data-blocking=false (12.19). THREE SPEC-NAMED THINGS DO NOT EXIST and the surface says so: aletheia_gnosis_query/thought_route/crystallise are agent tools on the dispatched s4'.mediation.route and appear in no S-layer table; no CROSS_LAYOUT_INTENT_TARGETS row resolves to piAxiomTranslation (26.14 cross-link disabled, target named, not minted); s0'.anuttara.trace is contract-declared + wire-advertised but dispatched NOWHERE (gateway dispatch_contract.rs lists it under 'contract rows but no S0 host match arm'; probe = unimplemented) so the psychoid stage 26.T26.3 had bound to a live invoke is now DISABLED and prints method+reason. atelierSeams.test.ts holds all three against the real dispatch sources in both directions. Verified live: s5'.gnostic.etymology + s5'.gnostic.query_with_layers (epi-cli dispatch.rs), s1'.semantic.suggest_links + s1'.entity.capture (s1_handlers.rs), s4'.mediation.route (dispatch.rs). Shell defect fixed: activeMarkdownPath searched only the active layout's face-1 model, so a logos-atelier intent into ide-deep (no editor tabset) disabled the Mobius stage of the surface it had just opened. pnpm typecheck clean; pnpm test 2072 passed/4 skipped (baseline 2039/4); pnpm build clean; laned pnpm test:e2e 131 passed/1 failed. FINDING for other lanes: that failure is nara-tuning.spec.ts:34 and is NOT this tranche's — a same-tree A/B (laned playwright --grep-invert Atelier) reproduces it at 129 passed/1 failed, and the spec passes alone (2.1s) and adjacent to both Atelier specs (3 passed, 16.3s). It is a shared-per-run-vault latest-session ordering interaction that only appears under full-suite load, same species as the documented readiness-state-grammar flake.",
+          "receipt": {
+            "command": "node .codex/scripts/gate-lane.mjs --owner pratibimba-e2e -- npx playwright test tests/e2e/atelier-scent-following.spec.ts tests/e2e/nara-tuning.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/atelier/atelierSeams.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierSeams.test.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierScentTrail.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/AtelierScentTrailPanel.tsx",
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "Body/M/pratibimba-app/tests/e2e/atelier-scent-following.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 268000,
+              "output": 36000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T19:08:16.916Z",
+          "text": "Commits 00721901 + 9d21b896 (honesty fix). REFUSAL ADDRESSED: the App.tsx source-grep guard is gone. AtelierDeps.dispatchIntent is now REQUIRED, so an unwired transport is unrepresentable (proven RED: deleting the dispatchIntent line from App.tsx fails tsc App.tsx(985,58) TS2345 'Property dispatchIntent is missing but required in type AtelierDeps'), and the replacement test is behavioural: it registers the REAL pratibimba.intent.dispatch command, wires the Atelier to it exactly as the shell does (by command id, through the one registry), executes atelier.scentFollow through the registry, and asserts a real envelope reached the dispatcher's navigate having RESOLVED against the live target ledger (ide-shell-m0-m5/canon-studio, the staged candidate as artifactUri, session context applied). Proven RED by wrapping the dispatch call in a false branch — the dead-code case a grep cannot see: 'the Mobius envelope never reached the dispatcher: expected to be called 1 times, but got 0 times', 3 failed/11 passed; restored 14 passed. Dropped 'an unwired shell still captures' with it — that state can no longer occur. TRANCHE BODY unchanged and still standing: Atelier as the lens dailySurfaceOwnership declares over bimbaGraph, mounted only on a real logos-atelier intent, reading nothing on mount; (c) etymology:// per-handle verdict naming a refused scheme; (d) capture then governed route to canon-studio with ATELIER_MUTATES_GRAPH_CANON false as const worn on the surface; (e) six Aletheia subagents as lineage, veto red + data-blocking=false. THREE SPEC-NAMED THINGS DO NOT EXIST and the surface says so, held by atelierSeams.test.ts against the real dispatch sources in both directions: aletheia_gnosis_query/thought_route/crystallise are agent tools on the dispatched s4'.mediation.route and appear in no S-layer table; no CROSS_LAYOUT_INTENT_TARGETS row resolves to piAxiomTranslation; s0'.anuttara.trace is contract-declared and wire-advertised but dispatched NOWHERE (gateway dispatch_contract.rs: 'contract rows but no S0 host match arm'; probe = unimplemented) so the psychoid stage 26.T26.3 had bound to a live invoke is DISABLED and prints method+reason. Verified live: s5'.gnostic.etymology + s5'.gnostic.query_with_layers (epi-cli dispatch.rs), s1'.semantic.suggest_links + s1'.entity.capture (s1_handlers.rs), s4'.mediation.route (dispatch.rs). Shell defect fixed: activeMarkdownPath searched only the active layout's face-1 model, so a logos-atelier intent into ide-deep (no editor tabset) disabled the Mobius stage of the surface it had just opened. FRESH GATE: pnpm typecheck clean; pnpm test 2071 passed/4 skipped (271 files, 3 skipped); pnpm build clean; node .codex/scripts/lint-test-honesty.mjs 365 test files 0 dishonest blocks, 956 polyglot files 0 patterns, 0 banned ledger strings; laned pnpm test:e2e 132 passed / 0 FAILED (fully green this run — the earlier nara-tuning failure was the Track-00 boot-budget degradation the coordinator has since characterised across three runs, not this tranche).",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e (laned)",
+            "exitCode": 0,
+            "testsPassed": 2203,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "Body/M/pratibimba-app/src/commands/atelier.test.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierSeams.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierSeams.test.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierScentTrail.ts",
+              "Body/M/pratibimba-app/src/panes/atelier/AtelierScentTrailPanel.tsx",
+              "Body/M/pratibimba-app/tests/e2e/atelier-scent-following.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 312000,
+              "output": 44000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T19:19:21.906Z",
+          "text": "Independent verification (verifier opus5-mdev-verify-20260730, distinct from this closer). CLOSED ON THE DOCUMENTED UNRELATED-RED PATH, and the scoping is named rather than hidden: the full class gate is green on every stage except app-ui-flow, whose only red is nara-tuning.spec.ts, a spec this tranche does not touch. That red is established as environmental four independent ways — the implementer's own A/B with playwright grep-invert Atelier still fails it at 129 of 130, it passes alone in 2.1 seconds, it passed in the implementer's own full laned run at 132 of 132, and across three separate full runs a DIFFERENT spec failed each time (readiness-state-grammar, nara-tuning, m0-symbolic-question-console), every one at a boot or readiness budget and every one green in isolation, in a suite that is already workers 1, fullyParallel false, retries 0 on a machine at load 2.4 of 10 cores. That is app readiness time drifting upward across a long serial run, which is Track 00 gate policy and is reported as such; nara-tuning is simply the most frequent victim because its waits are still 15 seconds while a concurrent lane's sweep raised roughly forty siblings to 20. THE TRANCHE'S OWN PROOF IS FULL: typecheck clean, build clean, app-test 2071, honesty-lint 0 dishonest blocks over 365 test files, and the laned UF suite green with every Atelier spec passing in both the implementer's run and the verifier's. The Atelier is realised as the lens dailySurfaceOwnership already declares over bimbaGraph, mounted only on a real logos-atelier intent and reading nothing on mount, so no new contract surface was minted. Mobius write-back stages the Hen candidate through s1-prime entity capture and routes THAT candidate to canon-studio through the one intent command, with ATELIER_MUTATES_GRAPH_CANON false worn on the surface. THREE PHANTOM WIRES DISCLOSED rather than assumed: the aletheia tools are subagent tools present in no S-layer table, no intent target resolves to piAxiomTranslation, and s0-prime anuttara trace is contract-declared and wire-advertised but dispatched NOWHERE — 26.T26.3 had bound the psychoid stage to a live invoke against it, so that stage is now disabled and prints the method and the reason, with atelierSeams.test.ts holding all three against the real dispatch sources so each goes red the day an arm lands. A shell defect was fixed on the way: activeMarkdownPath searched only the active layout's face-1 model, so a logos-atelier intent into ide-deep disabled the Mobius stage of the surface it had just opened. The first close was refused by the honesty lint for a test whose only assertion class was a source grep over App.tsx; that was not softened but removed at the root — dispatchIntent is now a REQUIRED dep, so the unwired-shell state is unrepresentable and fails typecheck, and the replacement fires the real command through the real registry and asserts the envelope resolved against the live target ledger. Proven red both ways: wrapping the dispatch in a false branch, the dead-code case a grep cannot see, and deleting the dep from App.tsx. Commits 00721901 and 9d21b896.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.7 --owner opus5-mdev-verify-20260730 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 2071,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/atelier/atelierScentTrail.ts",
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "laned pnpm test:e2e 132 passed playwright"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 49 dirty files.",
+      "owner": "opus5-t28t7-atelier",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-30T19:08:16.916Z",
+      "runId": "20260730T180103Z-28-T28.7",
       "worktree": null,
       "blocker": null
     },
@@ -28850,6 +28913,16 @@
       "leaseExpiresAt": "2026-07-30T04:59:14.456Z",
       "worktree": null,
       "completedAt": "2026-07-30T17:18:39.419Z"
+    },
+    {
+      "runId": "20260730T180103Z-28-T28.7",
+      "taskId": "28.T28.7",
+      "status": "review",
+      "startedAt": "2026-07-30T18:01:03.645Z",
+      "owner": "opus5-t28t7-atelier",
+      "leaseExpiresAt": "2026-07-30T22:01:03.645Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T18:45:42.528Z"
     }
   ],
   "activeRoute": {
