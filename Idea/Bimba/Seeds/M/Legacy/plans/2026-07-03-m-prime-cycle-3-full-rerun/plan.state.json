@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T23:21:12.659Z",
+  "updatedAt": "2026-07-30T23:49:04.966Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -5958,8 +5958,8 @@
       "blocker": null
     },
     "12.T12.13": {
-      "status": "blocked",
-      "updatedAt": "2026-07-18T20:46:36.717Z",
+      "status": "pending",
+      "updatedAt": "2026-07-30T23:30:23.249Z",
       "claimedAt": "2026-07-07T22:39:12.079Z",
       "completedAt": null,
       "evidence": [
@@ -5970,6 +5970,14 @@
         {
           "at": "2026-07-18T20:46:36.717Z",
           "text": "Classified environment gate: offline substrate tests pass, but the live acceptance currently assumes unauthenticated localhost:7687 while the available canonical dev Neo4j is authenticated on 17687. Resume when the canonical integration target/config is selected; do not start a competing graph implicitly."
+        },
+        {
+          "at": "2026-07-30T23:28:16.189Z",
+          "text": "Blocker LIFTED — the named environment dependency is satisfied and re-verified live, not inherited. The 2026-07-18 classification said 'resume when the canonical integration target/config is selected'; it now is. Probed 2026-07-30: docker ps shows epi-neo4j publishing 0.0.0.0:7687, docker inspect shows NEO4J_AUTH=none, lsof shows ONLY 7687 listening (the competing auth'd 17687 instance is gone), and 'docker exec epi-neo4j cypher-shell \"RETURN 1\"' succeeds with no credentials — exactly the no-auth localhost:7687 that tests/test_enrichment.py:41,54 assumes via AsyncGraphDatabase.driver(NEO4J_URI, auth=None). The live acceptance itself is GREEN: 'pytest tests/test_enrichment.py -v' with SKIP_NEO4J_TESTS unset = 3 passed in 0.94s, including test_cross_namespace_edge_created (the MAPS_TO_COORDINATE edge onto the :Bimba '#0' node, which exists live as labels [Bimba, Psychoid]). Graph integrity held across the run: 3296 nodes / 2141 :Bimba / 13344 rels before AND after, with zero test_enrich_* residue labels — the test's DETACH DELETE is doubly scoped to a per-run workspace label plus a unique vector_id, so it cannot reach canonical nodes. Requeued to pending rather than closed: the tranche is a runtime AUDIT of the whole S4-to-S5 seam, and this proves only its blocking acceptance. NOTE for the cycle seal: track 12 was routed for G5 solely because this row was classified-blocked, so this correction opens G5 track 12 until the audit is actually done — recording the truth is worth more than a gate kept green by a blocker that no longer exists."
+        },
+        {
+          "at": "2026-07-30T23:30:23.249Z",
+          "text": "Audit progress on the three clauses of 12.13 (spec 12-agentic-layer-s4-s5.md:249-253). CLAUSE (b) RELATES_TO_COORDINATE cross-namespace edges — PROVEN GREEN today (see prior evidence entry), with one naming divergence to record rather than silently accept: the spec names RELATES_TO_COORDINATE, the landed test and enricher create MAPS_TO_COORDINATE (tests/test_enrichment.py::test_cross_namespace_edge_created, asserted at the edge type literal). Same seam, different spelling; the landed name is the one in graph-schema. CLAUSE (a) GEMINI_EMBED_DIMS=3072 end-to-end — the prior 2026-07-07 evidence on this row claims it is 'satisfied (single VALID value)'. THAT CLAIM IS FALSE and is corrected here: epi_gnostic/config.py:6 declares VALID_EMBEDDING_DIMS = {128,256,384,512,768,1024,1536,2048,3072} — NINE accepted values, not one — and tests/test_config.py:20-24 explicitly proves a GNOSTIC_EMBEDDING_DIM=768 env override is accepted and yields config.embedding_dim == 768. What IS single is the DEFAULT (config.py:32-34, GNOSTIC_EMBEDDING_DIM default '3072') and the error-message canon (config.py:52 'Canonical is 3072.'). So the spec's Verify line ('returns single value') is NOT literally met: an env override can silently stand up a Gnosis store whose dimensionality disagrees with the 3072-dim Bimba vector indexes, and nothing in the validator refuses it. Recorded as an open seam risk for the audit report, not patched here — narrowing the valid set is a contract decision for the Architect, not a unilateral edit. CLAUSE (c) MathemeHarmonicProfile.resonance72 consumed by Aletheia gnosis-RAG via Pi — NOT YET AUDITED; the resonance72 consumers found so far are Rust S5 autoresearch (epii-autoresearch-core/src/adapters.rs:663-673, resonance_ebm/anuttara_pentadic_feature.rs:63-86), which is the EBM path, not the gnosis-RAG-via-Pi path the clause names. Remains pending: clause (c) plus the audit-report deliverable."
         }
       ],
       "notes": "claimed with --allow-dirty over 215 dirty files.",
@@ -5978,10 +5986,7 @@
       "heartbeatAt": "2026-07-07T22:39:12.079Z",
       "runId": "20260707T223912Z-12-T12.13",
       "worktree": null,
-      "blocker": {
-        "kind": "environment",
-        "dependency": "Canonical Neo4j target/configuration for live S4-S5 cross-namespace acceptance"
-      }
+      "blocker": null
     },
     "12.T12.15": {
       "status": "done",
@@ -11878,14 +11883,18 @@
       "blocker": null
     },
     "24.T24.6": {
-      "status": "blocked",
-      "updatedAt": "2026-07-23T03:22:22.981Z",
+      "status": "pending",
+      "updatedAt": "2026-07-30T23:31:26.153Z",
       "claimedAt": "2026-07-23T03:11:06.999Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-23T03:22:22.981Z",
           "text": "Fate C spine-gap (DR-FACE-7, re-verified 2026-07-23, NOT inherited): M3TarotWheel needs 3 substrate threads ALL absent — (1) mahamaya.tarotMajorArcanaCardId (WC-M3-SA-2) produced nowhere in Body/S; (2) tarotMinorId producer stubs tarot_minor_id:None at portal-core/src/kernel/projections/binary.rs:67; (3) gateway method s2.codon.scalar_ref.read (card-turn + 24.7/24.8 dep) absent. Kernel util m3_major_arcana_from_codon IS landed (epi-lib/src/m3.c:791) but NO tranche authors the bridge mirror or minor-id compute. Carrier M3CosmicWheelRenderService renders cosmic wheel + 22 arcana slots honest-pending; no 56-minor ring/suit-colour/card-turn carried. Building the face is forbidden per DR-FACE-7 Fate C. Whole 24.6-24.7-24.8-24.9-24.T60 chain gated."
+        },
+        {
+          "at": "2026-07-30T23:31:26.153Z",
+          "text": "Blocker RE-SCOPED, not lifted-by-assertion: the recorded dependency was a three-legged 'environment' block, and one leg is now provably satisfied while the other two turn out to be IN-REPO wiring, not an external dependency — so 'environment' is the wrong classification and the row is workable. LEG 3 (gateway s2.codon.scalar_ref.read) IS LIVE: declared Body/S/S3/gateway-contract/src/lib.rs:114, dispatched Body/S/S0/epi-cli/src/gate/server/dispatch.rs:1695 ('s2.codon.scalar_ref.read' => crate::gate::codon::scalar_ref_read), implemented Body/S/S0/epi-cli/src/gate/codon.rs:105, covered by Body/S/S0/epi-cli/tests/gate_s2_codon_scalar_ref.rs; landed by 24.T24.7 (status done). Fresh live probe (plan.runs/gateway-method-audit.json, generatedAt 2026-07-30T23:08:18Z) records exists=true responds=true with only errorClass='domain-error: refKind is required' — i.e. the arm is real and validating params, not unimplemented. LEG 1 (WC-M3-SA-2 mahamaya.tarotMajorArcanaCardId) is NOT landed but is in-repo: the kernel util already exists (Body/S/S0/epi-lib/src/m3.c:791 m3_major_arcana_from_codon, include/m3.h:780; portal-core/src/m3_transcription_bridge.rs:575) and simply is never mirrored onto the kernel-bridge Mahamaya profile field — zero occurrences of tarotMajorArcanaCardId under Body/. The carrier already renders it honest-pending rather than faking it (pratibimba-app/src/components/M3CosmicWheelRenderService.tsx:561 'arcana ring: slots only'). LEG 2 (tarotMinorId producer) is PARTIAL and the old note overstated it: the producer function ALREADY EXISTS (portal-core/src/m3_transcription_bridge.rs:638 minor_arcana_id_from_codon, used at :427) and the 56-card LUT is kernel-owned (epi-lib/include/m3.h:565 M3_MINOR_ARCANA_COUNT 56); the real gap is a wiring gap in the clock projection, which still stubs (portal-core/src/kernel/projections/binary.rs:28,:67 tarot_minor_id: None; baseline-profile.json:15094,15123 null). Requeued to pending so the remaining work is visible as work rather than parked as an external wait. No G5 cost: track 24 carries no CODE-PENDING claim row and was already unrouted via 24.T24.8/.9/T60."
         }
       ],
       "notes": null,
@@ -11894,10 +11903,7 @@
       "heartbeatAt": "2026-07-23T03:11:13.793Z",
       "runId": "20260723T031106Z-24-T24.6",
       "worktree": null,
-      "blocker": {
-        "kind": "environment",
-        "dependency": "WC-M3-SA-2 + tarotMinorId-producer + gateway s2.codon.scalar_ref.read (orphaned Wave-B kernel-bridge substrate; no owning tranche)"
-      }
+      "blocker": null
     },
     "24.T24.7": {
       "status": "done",
@@ -13142,16 +13148,51 @@
       "blocker": null
     },
     "26.T26.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-30T23:49:04.940Z",
+      "claimedAt": "2026-07-30T23:21:46.477Z",
+      "completedAt": "2026-07-30T23:49:04.940Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T23:38:38.742Z",
+          "text": "Verified 26.5 lines 135-158 against the tree: the row type, the three-cell IOD-17 matrix with the verbatim violation banner, the evidence click-through and the human-required parity status line were already standing (reviewItemDeep.ts:94-98, ReviewItemDeepView.tsx:61-114/204-219, acrGovernance.ts:235-236, reviewDeepRender.test.tsx:288-353) and were not rebuilt. The one unfilled deliverable was the tranche title's own: the abbreviated M5 Review fold passed genealogy:[] unconditionally so every row carried dispatchGenealogyRef:null by construction and the dispatch-genealogy click-through could never render, while three sibling folds of the same membrane already folded that lineage live off sessions.list. ReviewBlocksPane now reads that one source (SessionClient.list -> dispatchGenealogyFromSessions) and passes it to the existing producer; snapshot stays null so the parity audit remains the governance fold's. Proved red-then-green: the new click-through test finds no review-open-dispatch button on the old fold and, on the new one, asserts the routed node lands in the shared per-tab dispatch-trace state through the live 27.9 route rather than against a spy. Absent methods stay disclosed on the surface via the 28.9 seam register (s5'.review.transition -> carrier s5'.review.resolve; the agenticControlRoom intent-target still cannot promote into ide-deep), both guarded by tests that read the real Body/S sources. app-test 2118 passed/4 skipped (+2), typecheck+build clean, laned e2e 134 passed. Commit 54bd652e.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2252,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/reviewBlocks.test.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewItemDeep.ts"
+            ],
+            "tokenUsage": {
+              "input": 178000,
+              "output": 15000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T23:49:04.940Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the full class-scoped gate with no scoping: app-ui-flow 134 playwright specs, app-test 2118, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. Most of this tranche was already standing after 28.T28.9 landed hours earlier, and that was VERIFIED against the tree rather than inherited, with file and line for each part: the deep review row type and its four parity fields at reviewItemDeep.ts 94 to 98 with the base aliased at 77 rather than re-declared; the three-cell matrix and the spec's verbatim parity-violated banner at ReviewItemDeepView 61 to 114 with the message held in acrGovernance 235 to 236; the evidence click-through and the parity line on the human-required banner at ReviewItemDeepView 204 to 219 and 263 to 274 plus ReviewDecisionControls 155 to 173; the parity-violation and parity-OK render tests at reviewDeepRender.test.tsx 288 to 353; and the no-modal law held by its own lint. THE REAL GAP WAS THE TRANCHE'S OWN TITLE DELIVERABLE: the abbreviated M5 review fold passed an empty genealogy array unconditionally at ReviewBlocksPane 184, so the genealogy ref was null on every row and the dispatch-genealogy click-through could NEVER render — while the dispatch-trace, tool-stream and evidence panels were already folding that same lineage live off the session list. The fold now reads that one source, and the snapshot stays null so the parity audit remains the governance fold's rather than being duplicated into the abbreviated one. Proven red then green on real state rather than a spy: the routed node is asserted in the shared per-tab store, and the click target did not exist before the change. Two absent methods are disclosed on the surface and guarded by tests that read the real S-layer sources so each reds the day an arm lands: the spec's review transition, whose carrier equivalent is resolve, and the control-room intent target that still cannot promote into the deep layout. Commit 54bd652e.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.5 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2118,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewPaneSeams.ts",
+              "app-ui-flow 134 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 49 dirty files.",
+      "owner": "opus5-t26t5-reviewdeep",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-30T23:38:38.742Z",
+      "runId": "20260730T232146Z-26-T26.5",
       "worktree": null,
       "blocker": null
     },
@@ -29079,6 +29120,16 @@
       "leaseExpiresAt": "2026-07-30T23:45:18.347Z",
       "worktree": null,
       "completedAt": "2026-07-30T23:20:38.952Z"
+    },
+    {
+      "runId": "20260730T232146Z-26-T26.5",
+      "taskId": "26.T26.5",
+      "status": "review",
+      "startedAt": "2026-07-30T23:21:46.477Z",
+      "owner": "opus5-t26t5-reviewdeep",
+      "leaseExpiresAt": "2026-07-31T03:21:46.477Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T23:38:38.742Z"
     }
   ],
   "activeRoute": {
