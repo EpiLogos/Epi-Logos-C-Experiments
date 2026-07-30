@@ -9,11 +9,15 @@
  */
 
 import { expect, test } from '@playwright/test';
-import { SIDECAR_URL, todayId } from './e2e-env';
+import { SIDECAR_URL, latestSessionId, todayId } from './e2e-env';
 
 test('Nara tuning writes canonical keys into the real latest session NOW', async ({ page, request }) => {
     const dayId = todayId();
-    const sessionPath = `Empty/Present/${dayId}/20260716-120000-e2e-tuning/now.md`;
+    // The seed must BE the latest session, because that is the one the tuning
+    // bar writes to. A fixed past-dated id only sorted last while nothing else
+    // in the run had written a today-dated session into the shared per-run
+    // vault — see latestSessionId.
+    const sessionPath = `Empty/Present/${dayId}/${latestSessionId('e2e-tuning')}/now.md`;
     const seeded = `---\ncoordinate: ""\nc_4_artifact_role: now\nc_3_tranche_mode: quiet:90m\nc_3_response_orbit: next-morning\nc_3_klein_weighting:\n  prospective: 0.4\n  retrospective: 0.6\n---\n# NOW\n\nReal tuning body.\n`;
 
     const begin = await request.post(`${SIDECAR_URL}/invoke`, { data: { cmd: 'begin_today', args: {} } });
