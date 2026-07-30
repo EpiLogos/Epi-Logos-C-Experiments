@@ -170,13 +170,31 @@ body,
    author bare <h2>/<h3>/<input> freely, and UA defaults (20.4px h2, 15.91px
    h3, 13.33px input) fall outside the scale. These element-specificity
    rules (0-0-1) put unclassed elements on the scale while every classed
-   `font-size: var(--type-*)` selector still overrides them. */
+   `font-size: var(--type-*)` selector still overrides them.
+
+   `button` JOINED THIS LIST at 28.T28.5, and its absence was the bug. A form
+   control does not inherit type from the cascade — Chromium's UA sheet gives
+   `button` the same `font: 400 13.3333px Arial` this comment already names for
+   `input` — yet only `input`/`select`/`textarea` were reset here. The carrier
+   compensated by hand instead: TWENTY-NINE separate button classes carry their
+   own `font: inherit`, which is the same repair written twenty-nine times, and
+   any button whose class was never given one renders at 13.33px the moment it
+   appears. `32.T32.7`'s standalone `DiagnosticsDeepLink` (class
+   `diagnostics-deep-link`, mounted in `CosmicEngine` ×2 and
+   `PersonalRecognitionEngine` ×1) was the first to miss the compensation, and
+   because those mounts are gated on `integratedReadiness.state ===
+   'profile_missing_field'` they render only inside the boot window before the
+   profile fills — so `type-voice.spec.ts` failed on roughly every other run
+   with `button.diagnostics-deep-link @ 13.33px` and passed on the rest. The
+   flake was the guard working; the hole was here. Resetting the ELEMENT closes
+   the class of defect instead of styling the one button that exposed it. */
 h1 { font-size: var(--type-heading-1); }
 h2 { font-size: var(--type-heading-2); }
 h3 { font-size: var(--type-heading-3); }
 h4 { font-size: var(--type-heading-4); }
 h5,
 h6 { font-size: var(--type-heading-4); }
+button,
 input,
 select,
 textarea {
