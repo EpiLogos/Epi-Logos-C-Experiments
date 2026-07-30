@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-29T23:26:23.318Z",
+  "updatedAt": "2026-07-30T00:59:00.247Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14064,20 +14064,82 @@
       "blocker": null
     },
     "28.T28.5": {
-      "status": "review",
-      "updatedAt": "2026-07-27T17:53:38.234Z",
+      "status": "done",
+      "updatedAt": "2026-07-30T00:59:00.221Z",
       "claimedAt": "2026-07-27T17:49:45.088Z",
-      "completedAt": null,
+      "completedAt": "2026-07-30T00:59:00.221Z",
       "evidence": [
         {
           "at": "2026-07-27T17:53:38.234Z",
           "text": "RECON COMPLETE, BUILD GATED ON 52.T4 — recorded so the next agent inherits the inventory instead of re-deriving it. Fate sorting against the live carrier (authority: src/panes/omni/ACR-MIGRATION-MAP.md, the 27.T27.10 retarget map): (a) T8 contents are ALREADY CARRIED as omni fold modules — RunTree = DispatchGenealogyTree/DispatchGenealogyStream + dispatchGenealogy.ts, ToolStream = ToolStreamPanel, EvidenceDepositForm = src/panes/omni/evidence/EvidenceDepositForm.tsx over the LIVE s5'.epii.deposit, ReviewDecisionControls = ReviewBlocksPane + m5ReviewGate over the LIVE s5'.review.submit. (b) DR-M5-1 roster collapse is ALREADY LANDED in omnipanelCapabilities.ts: ANIMA_DISPATCH_TARGETS = Pi + Anima + six Aletheia techne guardians, with PSYCHE_ASPECT_REGISTERS (nous/logos/eros/mythos/psyche/sophia) held separate and explicitly non-executable. (e) Aletheia subagent trace is ALREADY CARRIED by AletheiaCrystallisationGroup.tsx + VetoBanner.tsx + psycheFacet.ts. TWO METHOD CORRECTIONS the spec needs (same class as 28.T28.4's s1'.semantic.suggest): the spec's s5'.review.transition is unimplemented in the live probe — the live method is s5'.review.submit, already consumed via m5ReviewGate; and s5'.epii.runtime_control (the abort/retry/continue backing) is ALSO unimplemented, so AbortRetryContinueControls can only be an honest pending-wire surface, not a real control. REMAINING GAP = (c) the Pi-monitor reframe banner and (d) the governance-primary DEEP PANE itself — and (d) is gated: M5'-SPEC.md:91 places the agentic control room INSIDE the ide-deep pane set, 52.T4 (ideDeepDefault: the deep layout becomes a real pane set) is PENDING, and today ide-deep only SUBTRACTS three daily widgets from face 0 (App.tsx). The CHROME-CONTRACT validator enforces the sequencing mechanically: src/chromeContract.test.ts 'doc-ahead pending surfaces are NOT yet in the factory' fails if the agenticControlRoom id appears in the factory while its row reads pending, so landing the pane REQUIRES flipping the row to live — which asserts real mounting in a pane set that does not exist yet. Track 28 is class UF, so an unmounted component could not carry UF proof either. Resume once 52.T4 lands the deep pane set; the build is then (c) + (d) composing the already-live folds in deep rendering, plus honest pending-wire for runtime_control."
+        },
+        {
+          "at": "2026-07-30T00:02:58.637Z",
+          "text": "BUILT (c)+(d); (a)/(b)/(e) VERIFIED already-carried and composed, not rebuilt. Commit 3c9ed26a. UF proof: pnpm test:e2e (laned) 130 passed / 0 failed, was 129 — the new tests/e2e/agentic-control-room-deep.spec.ts boots, crosses into ide-deep through 52.T3's real OmniPanelLayoutSwitch, asserts the control room ABSENT from both daily faces and present in the deep pane set, asserts the personal-deep-main strip equals deepPaneMounts('personal','main') in declared order with the tab in it and NOT first (opening-tab law), asserts the cosmic deep strip does not carry it, then clicks the real tab and asserts the rendered body. Also app-test 1996 passed / 4 skipped (was 1962/4; +34 across src/panes/acr/acrGovernance.test.ts 19, AgenticControlRoomPane.test.tsx 14, deepPaneSet.test.ts +1), typecheck + build clean, all five lints GREEN. MOUNT (d): CHROME-CONTRACT §2 agenticControlRoom pending->live with its deep:reserved marker removed, App.tsx factory case added, entry moved from DEEP_PANE_RESERVATIONS into DEEP_PANE_SET as {slot:'main',model:'personal'} in fifth position; DEEP-ONLY (the carrier's first surface absent from every daily model, since DR-WC-IS-2 gives the abbreviated always-on render to the / membrane) and NO mountPublishes is declared because the three mount effects are gateway READS only — deepPaneSet.test.ts asserts both directions plus a new deep-only claim. coordinateTree (28.6), backendStudio (28.13) and readiness-gate (28.11) are UNTOUCHED and still pending. TWO SPEC METHODS DO NOT EXIST and the surface says so, recorded as DR-ACR-1 in 13-decision-register.md (dr-gate-audit 32/32 unchanged): s5'.review.transition is registered nowhere in Body/S, so the decision control rides the live s5'.review.inbox -> s5'.review.resolve under m5ReviewGate with the correction printed on the surface; s5'.epii.runtime_control does not exist either, so AbortRetryContinueControls is an honest pending-wire surface — three disabled affordances beside the method name and its reason, the 32.T32.7 precedent — never a control that cannot act. Both sit in ACR_METHOD_BINDINGS under the errorUxGrammar law (unwired states a reason, live does not excuse itself) and the CLAIM itself is tested: acrGovernance.test.ts git-greps Body/S/**/*.rs and goes RED if either absent method ever appears or if inbox/resolve/submit/deposit stops appearing. (c) PiRuntimeMonitorBanner carries the spec copy verbatim and the widget id pratibimba.ide-shell.agentic-control-room is preserved while the label reframes. (b) roster is PROJECTED from omnipanelCapabilities (Pi + Anima + six guardians executable, six Psyche registers non-executable, Sophia facet-only) not re-enumerated. IOD-17 is three INDEPENDENT faces (live capability projection / enforceHumanGate on an agent actor / this surface's standing declaration) with 28.9's verbatim violation banner and 'unknown' rather than an optimistic green on an unloaded snapshot. backendStudio deep-link is HELD with its reason (28.13 pending); the ToolStream is not duplicated — the canonical 27.9 agentic-control-room.select-run route carries the node to the / membrane's temporal fold.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 130,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/acr/acrGovernance.ts",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/ReviewDecisionControls.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/AbortRetryContinueControls.tsx",
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 560000,
+              "output": 52000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T00:35:08.361Z",
+          "text": "GATE RED DIAGNOSED AND FIXED AT ITS OWN LAYER — not this pane. Commits 3c9ed26a (tranche) + 4f339f69 (repair). The refusal was tests/e2e/type-voice.spec.ts, and the real assertion (reproduced, not guessed) is 'elements rendering outside the --type-* scale: button.diagnostics-deep-link @ 13.33px' twice. That button is NOT mine: it is 32.T32.7's standalone DiagnosticsDeepLink, mounted twice in CosmicEngine and once in PersonalRecognitionEngine, and the ACR pane is DEEP-ONLY so it never mounts in the daily layout that spec sweeps (its stylesheet block is scoped entirely under .acr-*, and its styles.css diff has zero removed lines). ROOT CAUSE: the base-voice 'font: inherit' reset in styles.css listed input/select/textarea and OMITTED button, while its own rationale comment names the UA 13.33px default as the reason the reset exists. A form control does not inherit type from the cascade, so the carrier had compensated by hand 29 times (one font:inherit per button class) and any class that never got one was one render away from red; those three mounts are gated on integratedReadiness.state === 'profile_missing_field', so they render ONLY inside the boot window before the profile fills — a coin flip that fired on whoever ran next. FIX: 'button' joins the element reset, closing the class of defect instead of styling the one button that exposed it. ATTRIBUTION IS MEASURED, NOT ARGUED: with button removed, type-voice --repeat-each=20 fails 2/20 on exactly that assertion; with it restored, 20/20 pass; and the full laned suite is 130 passed with all five visual-regression baselines unchanged, so nothing already on-scale moved. The e2e could never have been the deterministic guard (it catches an off-scale element only when that element happens to be on screen), so src/ui/typeVoiceBaseReset.test.ts now reads the reset out of the real stylesheet and asserts it covers every form-control tag the carrier renders in JSX — proven RED on removing button and GREEN on restoring it, with CSS comments stripped first because the first cut matched its own rationale. FRESH COUNTS: app-test 1999 passed / 4 skipped (was 1996; +3 from the new guard), e2e 130 passed / 0 failed (laned), typecheck + build clean, five lints GREEN, dr-gate 32/32. THE TRANCHE ITSELF IS UNCHANGED from the first mark: (c) Pi-monitor reframe banner with the widget id preserved and (d) the governance-primary DEEP PANE in personal-deep-main (§2 pending->live, factory case, entry moved out of DEEP_PANE_RESERVATIONS, not first per the opening-tab law, no mountPublishes because its mount effects are gateway reads only); (a)/(b)/(e) verified already-carried and composed rather than rebuilt; s5'.review.transition corrected to the live s5'.review.inbox -> s5'.review.resolve and s5'.epii.runtime_control rendered as an honest unwired surface, both recorded as DR-ACR-1 and both tested against Body/S by git-grep; coordinateTree, backendStudio and readiness-gate untouched and still pending.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 130,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/styles.css",
+              "Body/M/pratibimba-app/src/ui/typeVoiceBaseReset.test.ts",
+              "Body/M/pratibimba-app/src/panes/acr/acrGovernance.ts",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/ui/deepPaneSet.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 720000,
+              "output": 66000
+            }
+          }
+        },
+        {
+          "at": "2026-07-30T00:59:00.221Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260730, distinct from this closer): class-scoped gate green — app-ui-flow 130 playwright specs, app-test 1999, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. The 2026-07-27 recon was verified rather than inherited: T8 contents, the DR-M5-1 roster collapse and the Aletheia subagent trace really are already carried, so they are COMPOSED here, not rebuilt. The gap was built — the Pi-monitor reframe banner carrying the spec copy verbatim while preserving the widget id, and AgenticControlRoomPane mounted in personal-deep-main as the carrier's first DEEP-ONLY surface, absent from every daily model, which is what makes 52.T4's deep-only representability real rather than theoretical. It mounts fifth, not first, per the opening-tab law, and declares no mountPublishes because its three mount effects are gateway reads only. THE TWO ABSENT METHODS ARE SURFACED HONESTLY RATHER THAN FAKED: s5-prime review transition is registered nowhere, so the decision control rides the live inbox-to-resolve path under m5ReviewGate with the correction printed on the surface itself; s5-prime epii runtime_control does not exist, so AbortRetryContinueControls renders three DISABLED affordances beside the method name and the reason. Both are recorded in ACR_METHOD_BINDINGS, and acrGovernance.test.ts greps Body/S so each claim goes RED the moment it stops being true — a claim that maintains itself instead of a comment that rots. Recorded as DR-ACR-1; dr-gate 32/32. The other three reserved rows are untouched and still pending. One defect found and fixed at its real layer: the base type-voice reset listed input, select and textarea but omitted button, so the carrier had compensated by hand 29 times and 32.T32.7's DiagnosticsDeepLink never received it — visible only inside the pre-profile boot window, which made it a 2-in-20 race rather than a miss. button joins the reset, and a new source-level test reads the real stylesheet and asserts the reset covers every form-control tag rendered in JSX, because a DOM-sweeping e2e can only ever catch what happens to be on screen. Commits 3c9ed26a and 4f339f69.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 28.T28.5 --owner opus5-mdev-verify-20260730",
+            "exitCode": 0,
+            "testsPassed": 1999,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/acrGovernance.test.ts",
+              "app-ui-flow 130 playwright specs PASS"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-t28-acr",
-      "leaseExpiresAt": "2026-07-27T20:49:45.088Z",
-      "heartbeatAt": "2026-07-27T17:53:38.234Z",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-07-30T00:35:08.361Z",
       "runId": "20260727T174945Z-28-T28.5",
       "worktree": null,
       "blocker": null
