@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T22:00:48.473Z",
+  "updatedAt": "2026-07-30T23:20:38.980Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -14345,16 +14345,42 @@
       "blocker": null
     },
     "28.T28.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-07-30T23:06:45.163Z",
+      "claimedAt": "2026-07-30T22:01:22.725Z",
       "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "evidence": [
+        {
+          "at": "2026-07-30T23:06:45.163Z",
+          "text": "Two absences closed. There was NO review-item type in the carrier at all — neither ReviewItemDeep nor a base ReviewItem; the / Review fold projected genealogy records into generic Track-44 Blocks — and no carrier surface but the deep ACR read s5'.review.inbox. panes/omni/review/reviewItemDeep.ts is the type plus the ONE producer both foldings call, its base ALIASED to acrReviewInbox::AcrReviewItem rather than re-declared. The DR-WC-IS-2 split lands for review on 28.T28.8's shape: ONE ReviewItemDeepView with a declared fold prop — abbreviated in omniReview (which now reads s5'.review.inbox + s5'.epii.deposit.list LIVE) and deep in the agenticControlRoom review queue — with row identity shared through perTabState.review.selectedReviewId. iod17Parity is null until s4'.mediation.capabilities.list answers and dispatchGenealogyRef is null when the surface holds no run, because an all-unset readout still computes inParity:false (the red banner from a measurement nobody took) and ReviewInboxItem carries no genealogy field on the wire; the other two fields are joins over real reads and the suite asserts dispatchGenealogyRef equals packet.dispatchTrace.id on real data, so a row and its packet cannot name different runs. The matrix marks unset RED. Both click-throughs ride live 27.9 routes (agentic-control-room.select-run, evidence-pane.select-packet on the shared evidence packet id); crossing into the deep pane renders DISABLED and names the target because DEPTH_DIFFERENTIATED_COMPONENTS does not license agenticControlRoom, and the spec's requestedSessionKey/requestedEvidenceRecordId spellings are recorded as corrections to the carrier's nine-field envelope. s5'.review.transition is still registered nowhere; REVIEW_PANE_SEAMS is guarded by git grep over Body/S under the CARRIER name, by the live omniPanelIntentRouter for both routes, and by the live intentTarget for the unpromotable target. Track-44 block rows stay on the fixture and the fold labels the two sources separately; the queue renders BELOW the block host so the 44.T44.9 visual baseline is not a function of the review backlog. app-test 2116 passed / 4 skipped (was 2094/4); laned e2e 133 passed with the block-host baseline green and the new 28.T28.9 spec green, 1 unrelated red — visual-regression (c) cosmic composition timed out waiting for getByTestId('shell') at boot, the systemic boot-budget flake. Commits a23a99a9, be9408b7, 164c7e1d.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build (Body/M/pratibimba-app) — exit 0; then pnpm test:e2e (laned)",
+            "exitCode": 0,
+            "testsPassed": 2116,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewItemDeep.ts",
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewPaneSeams.ts",
+              "Body/M/pratibimba-app/src/panes/omni/review/ReviewItemDeepView.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewDeepRender.test.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/ReviewDecisionControls.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/ReviewBlocksPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md"
+            ],
+            "tokenUsage": {
+              "input": 520000,
+              "output": 52000
+            }
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 48 dirty files.",
+      "owner": "opus5-t28t9-review",
+      "leaseExpiresAt": "2026-07-31T02:01:22.725Z",
+      "heartbeatAt": "2026-07-30T23:06:45.163Z",
+      "runId": "20260730T220122Z-28-T28.9",
       "worktree": null,
       "blocker": null
     },
@@ -22447,30 +22473,59 @@
       "blocker": null
     },
     "54.T54.02": {
-      "status": "in_progress",
-      "updatedAt": "2026-07-29T11:44:51.703Z",
+      "status": "done",
+      "updatedAt": "2026-07-30T22:44:59.065Z",
       "claimedAt": "2026-07-29T11:44:51.703Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-07-30T22:44:59.065Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T22:44:59.065Z",
+          "text": "Pre-wipe state reconstructed from the log and emitted as reviewable deltas. SCOPE CORRECTED in the tranche body: structure was never lost for the M-branch, so this recovers PROPERTIES, plus the sub-lattice of coordinate nodes the dataset restore never reproduced. Replayed to tx 59354 (the mass delete, 2098 node deletions); 2099 coordinate-bearing nodes resolve 1:1 to 2099 distinct coordinates, matching the 2098 deleted. Attribution is by property-record OWNER not by walking node.next_prop - the chain walk reached only 8307 of 31008 owned records, produced no S3 node at all, and cross-attributed relationship source/target coordinates onto S3; owner attribution puts M2-3 on node 432, the same id Neo4j's own reader independently reported. Artifacts in Idea/Bimba/Map/datasets/recovery/ with a README recording what was applied: recovered-bimba-properties.cypher (20769 additive SET assignments, delta vs live so nothing live is overwritten), recovered-missing-coordinate-nodes/-uuids/-edges.cypher (163 nodes, 972 edges), plus a JSON audit carrying each value's originating tx id. Undecoded TEMPORAL/GEOMETRY are SKIPPED not guessed (94). Edge audit: of 12603 edges at the stop point, 11295 have both endpoints as coordinates, 1308 have NEITHER, and EXACTLY ZERO have one - so the both-endpoints filter lost nothing, and the 1308 are Graphiti (:Entity/:Episodic), a namespace proven disjoint from Bimba (no node carries both labels, no edge crosses, every :Bimba node has a coordinate). GREEN: replay suite 3/3, graph-services 261, honesty-lint 0. verify-all is red ONLY in app-ui-flow (5 pratibimba-app playwright specs, tracks 27/25/15/29) whose spec files are themselves uncommitted sibling WIP in the shared tree; my lane is fully committed and epi-cli 950 + graph-services 261 pass.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --features txlog-forensics --test txlog_forensics_replay -- --ignored --test-threads=1",
+            "exitCode": 0,
+            "testsPassed": 3,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/src/txlog_forensics/replay.rs",
+              "Idea/Bimba/Map/datasets/recovery/recovered-bimba-properties.cypher"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "opus5-t5402-impl",
-      "leaseExpiresAt": "2026-07-29T15:44:51.703Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-29T11:44:51.703Z",
       "runId": "20260729T114451Z-54-T54.02",
       "worktree": null,
       "blocker": null
     },
     "54.T54.03": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-30T23:20:38.952Z",
+      "claimedAt": "2026-07-30T22:45:18.347Z",
+      "completedAt": "2026-07-30T23:20:38.952Z",
+      "evidence": [
+        {
+          "at": "2026-07-30T23:20:38.952Z",
+          "text": "Applied to the live graph behind a fresh offline volume backup taken FIRST (~/bimba-forensic/backups/neo4j-data-20260729-pre-t5403.tar.gz), and proven on a throwaway restored from that same backup before live was touched. BEFORE 1978 :Bimba / 12208 rels / 30872 props / 374 q-qm registers over 66 nodes. AFTER 2141 :Bimba / 13340 rels / 51641 props / 721 q-qm over 108 nodes. S-family coordinates 12 -> 86, L-family 12 -> 86; all 2141 nodes carry a unique c_2_uuid (recovered uuid kept when free, fresh randomUUID minted on collision or absence - coordinate is identity, uuid is arbitrary, so a uuid clash must never block creating a genuinely-absent coordinate). Per Architect ruling the S/S-prime and L/L-prime lattices are :Coordinate AND :Bimba. test_gnostic_* labels dropped as test pollution rather than restored. LIVE-WIRE PROOF: node .codex/scripts/graph-live.mjs PASS (CLI -> graph-services -> live Neo4j, real property read of M2-3.q_3_four_three_three_two_nesting, a register that existed only in the transaction log); cli_canon_coord_depth_ladder 6 passed 0 failed - the exact regression the wipe caused, which was 3 failed with S3 carrying zero q_ registers; full epi-cli 950 passed 0 failed; graph-services 261 passed. Independent verification opus5-t54-verify-20260730 (distinct from this closer) PASS. verify-all is red ONLY in app-ui-flow (5 pratibimba-app playwright specs, tracks 27/25/15/29) whose spec files are themselves uncommitted sibling WIP in the shared tree; this lane is fully committed.",
+          "receipt": {
+            "command": "node .codex/scripts/graph-live.mjs && cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test cli_canon_coord_depth_ladder",
+            "exitCode": 0,
+            "testsPassed": 6,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Map/datasets/recovery/README.md"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 50 dirty files.",
+      "owner": "opus5-t5403-impl",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-30T22:45:18.347Z",
+      "runId": "20260730T224518Z-54-T54.03",
       "worktree": null,
       "blocker": null
     },
@@ -28883,11 +28938,12 @@
     {
       "runId": "20260729T114451Z-54-T54.02",
       "taskId": "54.T54.02",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-07-29T11:44:51.703Z",
       "owner": "opus5-t5402-impl",
       "leaseExpiresAt": "2026-07-29T15:44:51.703Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-07-30T22:44:59.065Z"
     },
     {
       "runId": "20260729T115258Z-54-T54.04",
@@ -28988,17 +29044,37 @@
       "leaseExpiresAt": "2026-07-30T23:19:36.311Z",
       "worktree": null,
       "completedAt": "2026-07-30T19:59:47.248Z"
+    },
+    {
+      "runId": "20260730T220122Z-28-T28.9",
+      "taskId": "28.T28.9",
+      "status": "review",
+      "startedAt": "2026-07-30T22:01:22.725Z",
+      "owner": "opus5-t28t9-review",
+      "leaseExpiresAt": "2026-07-31T02:01:22.725Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T23:06:45.163Z"
+    },
+    {
+      "runId": "20260730T224518Z-54-T54.03",
+      "taskId": "54.T54.03",
+      "status": "done",
+      "startedAt": "2026-07-30T22:45:18.347Z",
+      "owner": "opus5-t5403-impl",
+      "leaseExpiresAt": "2026-07-30T23:45:18.347Z",
+      "worktree": null,
+      "completedAt": "2026-07-30T23:20:38.952Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-29T17:24:47.469Z",
-    "updatedAt": "2026-07-29T17:24:47.469Z",
+    "createdAt": "2026-07-30T22:39:27.339Z",
+    "updatedAt": "2026-07-30T22:39:27.339Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "28.T28.5",
-      "54.T54.02"
+      "54.T54.02",
+      "28.T28.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -29006,8 +29082,8 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "28.T28.5": "in-session",
-      "54.T54.02": "in-session"
+      "54.T54.02": "in-session",
+      "28.T28.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

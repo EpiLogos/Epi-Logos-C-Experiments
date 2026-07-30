@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-29T13:19:44.442Z",
+ "generatedAt": "2026-07-30T23:19:58.056Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,8 +7,8 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 282,
-  "present": 106,
+  "probed": 283,
+  "present": 107,
   "absent": 176,
   "absentFamilyLive": 115,
   "absentFamilyDark": 61,
@@ -337,7 +337,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": null
+   "errorClass": "domain-error: live Kairos state unavailable: run 'epi nara kairos sync' first"
   },
   {
    "method": "kernelBridge.m2m3.lensOrbiterRelations()",
@@ -2414,7 +2414,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2433,7 +2433,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2452,7 +2452,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2471,7 +2471,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2490,7 +2490,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2509,7 +2509,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2528,7 +2528,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2547,7 +2547,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2587,7 +2587,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2606,7 +2606,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2625,7 +2625,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2651,7 +2651,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2670,7 +2670,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2703,7 +2703,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2722,7 +2722,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2755,7 +2755,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2774,7 +2774,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2828,7 +2828,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2847,7 +2847,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2873,7 +2873,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2934,7 +2934,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2962,6 +2962,13 @@
    "errorClass": null
   },
   {
+   "method": "s5'.review.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `item_id`"
+  },
+  {
    "method": "s5'.review.submit",
    "advertised": true,
    "exists": true,
@@ -2974,7 +2981,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -2993,7 +3000,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -3019,7 +3026,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
@@ -3045,7 +3052,7 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 31,
+   "familyServed": 32,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
