@@ -241,13 +241,30 @@ describe('52.T4 deep pane set ⇄ CHROME-CONTRACT §2 lockstep', () => {
     });
 
     it('the four designated pending surfaces are all accounted for', () => {
-        // 28.5 / 28.6 / 28.13 get a reserved position; 28.11's `readiness-gate`
-        // is a per-binding inline wrapper, not a slot occupant, so it has no
-        // pane-set position to reserve — and must not acquire one by accident.
+        // 28.6 / 28.13 still hold a reserved position; 28.T28.5 CONSUMED its
+        // reservation — `agenticControlRoom` is now a `live` §2 row carried in
+        // `DEEP_PANE_SET`, which the two assertions below check from the other
+        // side so the move cannot be half-done. 28.11's `readiness-gate` is a
+        // per-binding inline wrapper, not a slot occupant, so it has no pane-set
+        // position to reserve — and must not acquire one by accident.
         const reserved = DEEP_PANE_RESERVATIONS.map(entry => entry.surfaceId).sort();
-        expect(reserved).toEqual(['agenticControlRoom', 'backendStudio', 'coordinateTree']);
+        expect(reserved).toEqual(['backendStudio', 'coordinateTree']);
+        expect(rows.get('agenticControlRoom')?.status).toBe('live');
+        expect(allDeepComponents.has('agenticControlRoom')).toBe(true);
         expect(rows.get('readiness-gate')?.status).toBe('pending');
         expect(allDeepComponents.has('readiness-gate')).toBe(false);
+    });
+
+    it('the control room is DEEP-ONLY — carried in depth, absent from every daily model', () => {
+        // The first surface in this carrier with no daily residency at all
+        // (DR-WC-IS-1: the OmniPanel folds carry the always-on abbreviated
+        // render, so the governance-primary pane has no reason to exist in the
+        // preview layout). `componentKeys` is the DAILY registry, so its absence
+        // there is the whole claim.
+        expect(componentKeys.has('agenticControlRoom')).toBe(false);
+        expect(factoryCases.has('agenticControlRoom')).toBe(true);
+        expect(deepModelComponents('personal').has('agenticControlRoom')).toBe(true);
+        expect(deepModelComponents('cosmic').has('agenticControlRoom')).toBe(false);
     });
 });
 

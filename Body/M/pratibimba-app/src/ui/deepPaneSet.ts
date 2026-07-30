@@ -293,6 +293,13 @@ export const DEEP_PANE_SET: readonly DeepPaneMount[] = Object.freeze([
         why: "M5' GOVERNANCE: the S5 improvement-loop disclosure (28.T28.10)."
     }),
     Object.freeze({
+        surfaceId: 'agenticControlRoom',
+        label: 'Pi Monitor (ACR)',
+        slot: 'main',
+        model: 'personal',
+        why: "M5' GOVERNANCE, and the first DEEP-ONLY surface this carrier has: [[CHROME-CONTRACT]] §5 DR-WC-IS-1 makes the ACR governance primary — IOD-17 parity, RunTree audit, review decisions, full evidence deposit — while the OmniPanel folds keep the always-on abbreviated render (DR-WC-IS-2). It has no daily residency at all, so it is carried here and nowhere else (28.T28.5). Deliberately NOT the opening tab: it reads the capability matrix, the session lineage and the review inbox on mount, and an opening tab mounts on the hidden face too."
+    }),
+    Object.freeze({
         surfaceId: 'medicineView',
         label: 'Medicine',
         slot: 'main',
@@ -326,22 +333,20 @@ export const DEEP_PANE_SET: readonly DeepPaneMount[] = Object.freeze([
  * The seams. Each doc-ahead `pending` surface of [[CHROME-CONTRACT]] §2 that
  * belongs in the deep layout is declared here with the slot and model it lands
  * in, so its owning tranche mounts it into an ALREADY-DECIDED position instead
- * of re-deciding the layout. 52.T4 deliberately does not mount any of them: a
+ * of re-deciding the layout. 52.T4 deliberately did not mount any of them: a
  * `pending` id found in the shell fails `chromeContract.test.ts` and would
  * steal another tranche's deliverable.
+ *
+ * The mechanism has now been exercised once end to end. 28.T28.5 landed
+ * `agenticControlRoom` into exactly the position reserved for it — flipping the
+ * §2 row to `live`, adding the factory case, and moving its entry into
+ * `DEEP_PANE_SET` — so the reservation was consumed rather than re-litigated.
+ * `coordinateTree` (28.6) and `backendStudio` (28.13) remain.
  *
  * `readiness-gate` (28.11) is NOT here on purpose — it is a per-binding inline
  * wrapper, not a slot occupant, so it has no pane-set position to reserve.
  */
 export const DEEP_PANE_RESERVATIONS: readonly DeepPaneReservation[] = Object.freeze([
-    Object.freeze({
-        surfaceId: 'agenticControlRoom',
-        slot: 'main',
-        model: 'personal',
-        owner: '28.T28.5',
-        contractStatus: 'pending',
-        why: "[[CHROME-CONTRACT]] §5 DR-WC-IS-1 — GOVERNANCE PRIMARY deep render, and §2 places it in the 'main tabset (designated, deep render)'. The personal deep main tabset (`personal-deep-main`) is the governance half of the deep layout, beside CU Ledger and Autoresearch. 28.T28.5 flips the row to `live`, adds the factory case, and moves this entry into DEEP_PANE_SET."
-    }),
     Object.freeze({
         surfaceId: 'coordinateTree',
         slot: 'left',

@@ -8020,3 +8020,156 @@ button.tool-stream-timerange.active {
     flex-wrap: wrap;
     gap: 0.3rem;
 }
+
+/* ── 28.T28.5 · the Agentic Control Room (Pi Runtime Monitor) deep pane ─────
+   Governance chrome only: every colour rides an existing token, and the two
+   semantic states the pane really has (parity agrees / disagrees) are the only
+   colour decisions here. `--danger` already carries the carrier's refusal red
+   (the veto banner and the review-gate refusal use it), so a parity violation
+   reads the same as every other refusal rather than inventing a hue. */
+.acr-root {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+    overflow: auto;
+    padding: 0.6rem;
+    font-size: var(--type-body-small);
+    color: var(--ink);
+}
+.acr-monitor-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--hairline);
+}
+.acr-monitor-title {
+    margin: 0;
+}
+.acr-monitor-copy {
+    margin: 0;
+    color: var(--ink-dim);
+}
+.acr-root section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.acr-root h4 {
+    margin: 0;
+}
+.acr-roster-targets,
+.acr-roster-aspects,
+.acr-review-list,
+.acr-iod17-cells {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.acr-roster-targets li,
+.acr-roster-aspects li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+}
+/* an aspect register is NOT a dispatch target — it reads as a badge, never as
+   a row you could act on (DR-M5-1) */
+.acr-roster-aspects li {
+    opacity: 0.8;
+    border-style: dashed;
+}
+/* the aspect badge reuses the psyche-facet colour variable the `facet-<id>`
+   class already sets — no second palette for the same seven registers */
+.acr-aspect-swatch {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--facet-color, var(--hairline));
+}
+.acr-roster-mode,
+.acr-aspect-why,
+.acr-roster-note,
+.acr-capability-source,
+.acr-seam-purpose,
+.acr-seam-reason,
+.acr-seam-correction,
+.acr-review-method-note,
+.acr-iod17-source {
+    color: var(--ink-dim);
+}
+.acr-iod17-cells li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+}
+.acr-iod17-agrees {
+    border-color: var(--accent);
+}
+.acr-iod17-disagrees {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+.acr-iod17-violation {
+    margin: 0;
+    color: var(--danger);
+    font-weight: 600;
+}
+.acr-iod17-face {
+    font-weight: 600;
+}
+.acr-review-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.acr-review-human-of-record {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+.acr-review-gate-refusal,
+.acr-review-refused {
+    margin: 0;
+    color: var(--danger);
+}
+.acr-review-ok {
+    margin: 0;
+    color: var(--accent);
+}
+.acr-runtime-buttons {
+    display: flex;
+    gap: 0.3rem;
+}
+.acr-runtime-pending,
+.acr-runtime-human-gate {
+    margin: 0;
+    color: var(--ink-dim);
+    font-style: italic;
+}
+.acr-method-register ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.acr-method-register li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.acr-method-register li[data-status='unwired'] .acr-seam-status {
+    color: var(--danger);
+}

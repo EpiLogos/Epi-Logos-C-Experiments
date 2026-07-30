@@ -1052,18 +1052,18 @@ describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () =>
             return host.kind === 'surface' && reserved.has(host.component);
         }).map(row => row.viewId);
         expect(hostedInReserved).toEqual([]);
-        expect([...reserved].sort()).toEqual([
-            'agenticControlRoom',
-            'backendStudio',
-            'coordinateTree'
-        ]);
+        // 28.T28.5 consumed the `agenticControlRoom` reservation — it is now a
+        // carried DEEP-ONLY mount, not a seam. Two remain.
+        expect([...reserved].sort()).toEqual(['backendStudio', 'coordinateTree']);
     });
 
     it('no M4 row claims deep-only — the derivation allows it, the carrier does not', () => {
         // `deep-only` became representable at 52.T4 AND derivable: a host carried
-        // into depth but absent from the daily registry produces it. Nothing here
-        // does, because every M4 surface reaching depth is mounted in daily too,
-        // so the first honest claimant will be 28.T28.5's control room.
+        // into depth but absent from the daily registry produces it. 28.T28.5's
+        // control room is the first surface in the carrier that IS deep-only, but
+        // it is M5' chrome and hosts no M4 Wave-C row — so every row here is still
+        // mounted in daily too, and the derivation's `deep-only` branch stays a
+        // real future case for an M4 surface rather than a claim anything makes.
         expect(APP.includes('ideDeepDefault'), 'the deep pane set this law derives from').toBe(true);
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
             expect(row.layoutLaw, `${row.viewId}`).not.toBe('deep-only');

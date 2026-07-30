@@ -60,6 +60,7 @@ import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { M4PsycheAnchorCoherencePane } from './panes/M4PsycheAnchorCoherencePane';
 import { M4SessionCloseCeremonyPane } from './panes/M4SessionCloseCeremonyPane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
+import { AgenticControlRoomPane } from './panes/acr/AgenticControlRoomPane';
 import { AutoresearchPane } from './panes/AutoresearchPane';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { M4MercuriusRelayChip } from './panes/M4MercuriusRelayPane';
@@ -482,6 +483,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // 40.T40.5 — the Track-40 CU-ledger review surface (48 bases-view posture)
         case 'canonUpdateLedger':
             return <CanonUpdateLedgerPane />;
+        // 28.T28.5 — the GOVERNANCE PRIMARY deep control room (DR-WC-IS-1).
+        // DEEP-ONLY: it appears in `personal-deep-main` and in no daily model —
+        // the OmniPanel folds carry the always-on abbreviated render (DR-WC-IS-2).
+        case 'agenticControlRoom':
+            return <AgenticControlRoomPane />;
         // 28.T28.10 - real S5 autoresearch disclosure over status/history.
         case 'autoresearch':
             {
