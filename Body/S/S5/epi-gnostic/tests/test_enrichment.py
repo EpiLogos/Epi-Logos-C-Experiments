@@ -212,3 +212,44 @@ async def test_cross_namespace_edge_created(enricher):
         assert edge["rprops"].get("method") == "direct"
     finally:
         await _delete_gnostic_node(drv, ws, vid)
+
+
+@_skip_neo4j
+async def test_cli_enricher_binds_the_configured_workspace(driver):
+    """12.T12.13: the CLI's enricher must target `config.workspace`, not "gnostic".
+
+    The workspace IS the node label — `wrapper.py` writes entities under
+    `workspace=config.workspace`, and `assign_direct` matches on that label.
+    `cli.py` built `CoordinateEnricher(driver, config.neo4j_database)` without
+    it, so the enricher silently defaulted to `"gnostic"`: under a non-default
+    `GNOSTIC_WORKSPACE` the MATCH found nothing, no edge was written, and the
+    command still reported success. This asserts the built object is bound to
+    the configured label and that a real edge lands there.
+    """
+    from epi_gnostic.cli import _enricher_for
+    from epi_gnostic.config import GnosticConfig
+
+    ws = _unique_workspace()
+    config = GnosticConfig(
+        neo4j_uri=NEO4J_URI, neo4j_database=NEO4J_DB, workspace=ws
+    )
+    assert config.workspace == ws, "fixture must exercise a non-default workspace"
+
+    built = _enricher_for(driver, config)
+    assert built._workspace == ws, (
+        f"enricher bound to {built._workspace!r}, not the configured {ws!r} — "
+        "enrichment under a non-default GNOSTIC_WORKSPACE is a silent no-op"
+    )
+
+    vid = f"test-ws-{uuid.uuid4().hex[:8]}"
+    await _create_gnostic_node(driver, ws, vid)
+    try:
+        await built.assign_direct(entity_id=vid, coordinate="#0", family="#")
+
+        edges = await _fetch_edge(driver, ws, vid, "MAPS_TO_COORDINATE")
+        assert len(edges) == 1, (
+            f"expected the edge to land under workspace {ws!r}, got {len(edges)} edges"
+        )
+        assert edges[0]["coord"] == "#0"
+    finally:
+        await _delete_gnostic_node(driver, ws, vid)

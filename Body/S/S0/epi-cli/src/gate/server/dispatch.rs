@@ -1779,6 +1779,11 @@ async fn legacy_dispatch_rpc(
         "s5'.gnostic.query_with_layers" => gnostic::query_with_layers(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        // 12.T12.13 — the seam's only write arm: reaches the enricher that
+        // mints the cross-namespace MAPS_TO_COORDINATE edge.
+        "s5'.gnostic.enrich" => gnostic::enrich(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         // 26.T26.10 — the read sibling; a projection of the review store the
         // write path already submits into.
         "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {

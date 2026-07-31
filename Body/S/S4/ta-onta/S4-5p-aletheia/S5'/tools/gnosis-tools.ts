@@ -16,6 +16,30 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
+import {
+  parseResonance72,
+  conditionQuestionOnResonance72,
+  type Resonance72Projection,
+} from "../../modules/resonance72-retrieval.ts";
+
+/**
+ * 12.T12.13 clause (c): read the live 72-fold address off the kernel profile.
+ *
+ * `epi profile show` is the existing S0 surface for the current
+ * `MathemeHarmonicProfile`; this is the same `spawnSync("epi", ...)` idiom every
+ * tool in this file already uses. A failed spawn, non-zero exit, or unparseable
+ * payload yields `null` and the retrieval goes out unconditioned — the address
+ * is a kernel derivation, never something this layer may guess.
+ */
+function readLiveResonance72(): Resonance72Projection | null {
+  const probe = spawnSync("epi", ["profile", "show"], { encoding: "utf8", timeout: 10_000 });
+  if (probe.status !== 0 || !probe.stdout) return null;
+  try {
+    return parseResonance72(JSON.parse(probe.stdout));
+  } catch {
+    return null;
+  }
+}
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
   const parts: string[] = [];
@@ -72,11 +96,23 @@ export function registerGnosisTools(api: ExtensionAPI) {
       notebook: Type.Optional(Type.String({ description: "Notebook to query" })),
       top_k: Type.Optional(Type.Integer({ default: 5 })),
       coordinate: Type.Optional(Type.String({ description: "Filter by coordinate context" })),
+      // 12.T12.13 clause (c): condition retrieval on the live 72-fold harmonic
+      // address. Defaults ON so the seam is live rather than opt-in-and-unused,
+      // which is precisely how resonance72 came to have a producer and no
+      // consumer in the first place.
+      resonance72: Type.Optional(
+        Type.Boolean({
+          default: true,
+          description: "Condition retrieval on the live MathemeHarmonicProfile.resonance72 address",
+        }),
+      ),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const question = params.coordinate
+      const coordinateScoped = params.coordinate
         ? `${params.query} [coordinate context: ${params.coordinate}]`
         : params.query;
+      const projection = params.resonance72 === false ? null : readLiveResonance72();
+      const question = conditionQuestionOnResonance72(coordinateScoped, projection);
       const args = ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
       const result = spawnSync("epi", args, { encoding: "utf8", timeout: 30_000 });
       if (result.status !== 0) {
@@ -87,10 +123,15 @@ export function registerGnosisTools(api: ExtensionAPI) {
           isError: true,
         };
       }
+      // Say plainly whether the address reached the retrieval. An unconditioned
+      // run is honest; an unconditioned run reported as conditioned is not.
+      const provenance = projection
+        ? `[resonance72 applied: anchor ${projection.lensAnchorIndex}/72]`
+        : `[resonance72 not applied: no live address]`;
       return {
         // pi requires a details payload; this tool returns none.
         details: undefined,
-        content: [{ type: "text", text: result.stdout || result.stderr }],
+        content: [{ type: "text", text: `${result.stdout || result.stderr}\n${provenance}` }],
       };
     },
   });

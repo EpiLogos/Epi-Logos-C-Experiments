@@ -312,6 +312,10 @@
     {
       "method": "s1'.type.classify_c_layer",
       "claimedBy": "28.T28.4 (Canon Studio frontmatter fold reads the DR-S1-5 C-layer typology receipt)"
+    },
+    {
+      "method": "s5'.gnostic.enrich",
+      "claimedBy": "12.T12.13 (the seam write; live-wire proven — edge landed on :Bimba #0, graph counts held)"
     }
   ]
 }

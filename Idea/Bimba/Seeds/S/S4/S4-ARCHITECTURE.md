@@ -34,7 +34,7 @@ related_tranches:
   - "12.7 / 12.8 — Pi tool-surface and ACR-role decisions"
   - "12.9 — dispatch_moirai_night_pass gateway audit"
   - "12.11 — TillDone residency audit"
-  - "12.13 — S4↔S5 shared-intelligence seam (3072-dim, RELATES_TO_COORDINATE)"
+  - "12.13 — S4↔S5 shared-intelligence seam (3072-dim, MAPS_TO_COORDINATE)"
 ---
 
 # S4 Architecture — Ta-Onta, Pi, Pleroma, Aletheia

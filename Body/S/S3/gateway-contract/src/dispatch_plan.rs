@@ -887,6 +887,16 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S5/epi-gnostic",
         needs_extraction_to: None,
     },
+    // 12.T12.13: the cross-namespace MAPS_TO_COORDINATE edge is minted only by
+    // `CoordinateEnricher.assign_direct`, reachable only through the epi-gnostic
+    // `enrich` subcommand. Without this row no M' carrier could mint the edge —
+    // the S4↔S5 seam had a writer with no gateway door.
+    MethodDispatchPlanEntry {
+        method: "s5'.gnostic.enrich",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
     MethodDispatchPlanEntry {
         method: "s5.episodic.search",
         kind: MethodDispatchKind::S5GovernanceAdapter,

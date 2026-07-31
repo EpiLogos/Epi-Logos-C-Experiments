@@ -32,6 +32,23 @@ def _json_out(data: dict):
     print(json.dumps(data, ensure_ascii=False))
 
 
+def _enricher_for(driver, config):
+    """Build a ``CoordinateEnricher`` bound to the config's workspace.
+
+    The workspace IS the node label. ``wrapper.py`` hands LightRAG
+    ``workspace=config.workspace``, so entities are written under that label,
+    and ``CoordinateEnricher.assign_direct`` matches ``(n:`{workspace}`)``.
+    Constructing the enricher without the argument silently falls back to the
+    ``"gnostic"`` default, so under a non-default ``GNOSTIC_WORKSPACE`` every
+    enrichment matched zero nodes, wrote nothing, and still reported success.
+    ``_graph_read`` already reads through ``config.workspace``; this keeps the
+    write path on the same label as the read path.
+    """
+    from epi_gnostic.enrichment.coordinator import CoordinateEnricher
+
+    return CoordinateEnricher(driver, config.neo4j_database, config.workspace)
+
+
 async def _run(args: list[str]):
     load_dotenv()
 
@@ -110,7 +127,7 @@ async def _run(args: list[str]):
             # If direct coordinate supplied, run enrichment on ingested nodes
             if coordinate:
                 driver = AsyncGraphDatabase.driver(config.neo4j_uri)
-                enricher = CoordinateEnricher(driver, config.neo4j_database)
+                enricher = _enricher_for(driver, config)
                 async with driver.session(database=config.neo4j_database) as session:
                     res = await session.run(
                         "MATCH (n:gnostic) WHERE n.file_path CONTAINS $fp "
@@ -150,7 +167,7 @@ async def _run(args: list[str]):
             family = _flag(args, "--family") or "#"
 
             driver = AsyncGraphDatabase.driver(config.neo4j_uri)
-            enricher = CoordinateEnricher(driver, config.neo4j_database)
+            enricher = _enricher_for(driver, config)
 
             if coordinate:
                 await enricher.assign_direct(entity_id, coordinate, family)

@@ -248,9 +248,13 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
 13. **12.13 — S4 ↔ S5 shared-intelligence seam runtime audit** *(code-pending-closure; cross-link to Tranches 10.x, 09.x)*
 
-    Audit report: (a) `GEMINI_EMBED_DIMS=3072` end-to-end Bimba+Gnosis; (b) `RELATES_TO_COORDINATE` cross-namespace edges land per `test_enrichment`; (c) `MathemeHarmonicProfile.resonance72` consumed by Aletheia gnosis-RAG via Pi. Straddles Tranche 10.x (resonance72) and 09.x (cross-namespace edges).
+    Audit report: (a) `GEMINI_EMBED_DIMS=3072` end-to-end Bimba+Gnosis; (b) `MAPS_TO_COORDINATE` cross-namespace edges land per `test_enrichment`; (c) `MathemeHarmonicProfile.resonance72` consumed by Aletheia gnosis-RAG via Pi. Straddles Tranche 10.x (resonance72) and 09.x (cross-namespace edges).
 
-    Verification: `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py::test_cross_namespace_edge_created -q` passes; `grep -rn 'EMBED_DIMS\|embedding_dim' Body/S/S5/epi-gnostic/` returns single value.
+    > **12.T12.13 correction (2026-07-31).** This line originally named `RELATES_TO_COORDINATE`. Nothing in the repository has ever created that edge: the cross-namespace edge is minted by `CoordinateEnricher.assign_direct` (`enrichment/coordinator.py`) and is spelled `MAPS_TO_COORDINATE`, which is what the landed test, `bimba-mcp` and `epi-cli/tests/graph_client.rs` all use. `Body/S/S2/graph-schema/` declares NEITHER spelling — the edge type is in no schema at all, which is a separate open surface. The code was right and the prose was stale; the prose now follows the code.
+
+    Verification: `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py::test_cross_namespace_edge_created -q` passes; the embedding dimension is 3072 end-to-end — the live `s5'.gnostic.status`/`.models` both report `embedding_dim` 3072 and the live `coord_embedding` vector index is 3072/COSINE.
+
+    > **Stale acceptance clause, superseded above (2026-07-31).** The original second command read: `grep -rn 'EMBED_DIMS\|embedding_dim' Body/S/S5/epi-gnostic/` returns single value. It cannot: `Body/S/S5/epi-gnostic/` now vendors a `.venv`, so the grep returns 1060 hits of which 909 are third-party, spanning hundreds of numbers. Even scoped to first-party source it cannot return one value, because `config.py` deliberately carries a `VALID_EMBEDDING_DIMS` allowlist so validation can *reject* nonsense, and `test_config.py` deliberately proves a 768 override is honoured. Every production path defaults to and asserts 3072; the runtime proof above is what the clause was reaching for.
 
 14. **12.14 (NEW) — ACR extension repurpose decision and execution** *(no-orphan-fill / first-build allowed for repurposed Pi-monitor)*
 

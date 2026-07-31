@@ -3,6 +3,27 @@
 import type { SpineContribution, InjectionSlot, LedgerChannel, CompilerPass, SpineQuery, SessionContext } from "../spine/types.ts";
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import {
+  parseResonance72,
+  conditionQuestionOnResonance72,
+} from "./modules/resonance72-retrieval.ts";
+
+/**
+ * 12.T12.13 clause (c): the live 72-fold address, or nothing.
+ *
+ * The spine's own gnosis-RAG entry point is the second of the two the clause
+ * names; conditioning only the Pi tool would leave half the seam dark. Failure
+ * to read the profile leaves the question untouched — never guessed.
+ */
+function liveResonance72() {
+  const probe = spawnSync("epi", ["profile", "show"], { encoding: "utf8", timeout: 10_000 });
+  if (probe.status !== 0 || !probe.stdout) return null;
+  try {
+    return parseResonance72(JSON.parse(probe.stdout));
+  } catch {
+    return null;
+  }
+}
 
 export function aletheiaSpineContribution(): SpineContribution {
   return {
@@ -62,7 +83,8 @@ export function aletheiaSpineContribution(): SpineContribution {
       return {
         coordinate: "S5/S5'",
         async query(question): Promise<string> {
-          const args = ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
+          const conditioned = conditionQuestionOnResonance72(question, liveResonance72());
+          const args = ["techne", "gnosis", "query-gnostic", conditioned, "--mode", "hybrid"];
           const result = spawnSync("epi", args, { encoding: "utf8", timeout: 30_000 });
           return result.stdout || "(gnosis query unavailable)";
         },

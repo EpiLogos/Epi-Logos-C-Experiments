@@ -213,6 +213,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s5'.gnostic.episode_search",
     "s5'.gnostic.evidence_trace",
     "s5'.gnostic.query_with_layers",
+    "s5'.gnostic.enrich",
     "s5.episodic.search",
     "s5.episodic.deposit",
     "s5.episodic.kernel_resonance.deposit",

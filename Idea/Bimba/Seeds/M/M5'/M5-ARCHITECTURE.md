@@ -90,7 +90,7 @@ These are not seventh and eighth sub-coordinates — they are the chrome through
 | `epi_gnostic/cli.py` (137 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/cli.py` | CLI entry — `epi techne gnosis {ingest, query, notebook, status}` |
 | `epi_gnostic/graphiti_service.py` (534 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` | Graphiti+Neo4j integration; 3072-dim embedding pipeline; Gnosis namespace separate from Bimba |
 | `epi_gnostic/wrapper.py` (155 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/wrapper.py` | RAG-Anything/LightRAG adapter |
-| `epi_gnostic/enrichment/` | `Body/S/S5/epi-gnostic/epi_gnostic/enrichment/` | `_create_gnostic_node` / `_delete_gnostic_node`; cross-namespace `RELATES_TO_COORDINATE` edges |
+| `epi_gnostic/enrichment/` | `Body/S/S5/epi-gnostic/epi_gnostic/enrichment/` | `_create_gnostic_node` / `_delete_gnostic_node`; cross-namespace `MAPS_TO_COORDINATE` edges |
 | `epi_gnostic/storage/` | `Body/S/S5/epi-gnostic/epi_gnostic/storage/` | HOT/WARM/COLD retrieval tiers (Redis semantic cache + Neo4j + vector) |
 | `epi_gnostic/config.py` (54) + `graphiti_config.py` (44) | same | `GEMINI_EMBED_DIMS=3072` is the canonical embedding-dim choice (per Aletheia CONTRACT §"Gnosis RAG Pipeline") |
 | `Dockerfile.graphiti` + `uv.lock` | `Body/S/S5/epi-gnostic/` | Containerised graphiti runtime |
@@ -100,7 +100,7 @@ These are not seventh and eighth sub-coordinates — they are the chrome through
 | `graph-services retrieval` | `Body/S/S2/graph-services/src/retrieval/{graphrag.rs, hybrid.rs, coordinate.rs}` | Bimba-topology retrieval — the namespace-aware backbone |
 | `smart_env.rs` | `Body/S/S1/hen-compiler-core/src/smart_env.rs` | `suggest_link_candidates(LinkCandidateRequest) → LinkCandidateResponse` over `<vault>/.smart-env/multi/*.ajson` — Smart Connections semantic input |
 
-**Patterns landed:** 3072-dim unified embedding space across Bimba+Gnosis; `RELATES_TO_COORDINATE` cross-namespace edges; coordinate-tagged chunks (`bimba_coordinate` direct, `bimba_resonances` LLM-classified per `epii-ux-full-m5-branch.md §9`).
+**Patterns landed:** 3072-dim unified embedding space across Bimba+Gnosis; `MAPS_TO_COORDINATE` cross-namespace edges; coordinate-tagged chunks (`bimba_coordinate` direct, `bimba_resonances` LLM-classified per `epii-ux-full-m5-branch.md §9`).
 
 **The single load-bearing gateway gap:** `Body/S/S3/gateway-contract/src/lib.rs:209-225` registers `s5'.{improve.*, epii.*, review.*}` (eleven methods) but **`s5'.gnostic.*` is NOT registered** — verified by `grep -n "s5'\.gnostic" Body/S/S3/gateway-contract/src/lib.rs` returns zero hits. Tranche 06.1 is the unblock.
 
@@ -211,7 +211,7 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 |---|---|---|
 | Aletheia core | `Body/S/S4/ta-onta/aletheia/{extension.ts, spine-contribution.ts, modules/, S5'/agents/, S5'/janus-envelope.schema.json, CONTRACT.md}` | Tool-guardian for Gnosis ingest/query/notebook + thought-routing + crystallisation + seed-refresh |
 | Six PI-native subagents | `Body/S/S4/ta-onta/aletheia/S5'/agents/{anansi, moirai, janus, mercurius, agora, zeithoven, aletheia, README}.md` | Anansi (Darshana REPL/lineage), Moirai (GraphRAG/Möbius night pass), Janus (handoff/doorway), Mercurius (psychopomp routing), Agora (market/dialectics), Zeithoven (compositional sequencing) — all DISPATCHED through Anima (CONTRACT inv 1-2) |
-| Etymology namespace | `epi-gnostic` `cypher/` queries respect coordinate tagging; `RELATES_TO_COORDINATE` cross-namespace edges; etymology subgraph distinct from bimba and gnosis | `M5'-SPEC §"Graph Namespace Model"` |
+| Etymology namespace | `epi-gnostic` `cypher/` queries respect coordinate tagging; `MAPS_TO_COORDINATE` cross-namespace edges; etymology subgraph distinct from bimba and gnosis | `M5'-SPEC §"Graph Namespace Model"` |
 | Möbius pass | `Body/S/S4/ta-onta/aletheia/modules/{moirai-rehear.ts, chronos-integration.ts, gate-trigger.ts}` + `recompose.rs` at `Body/S/S5/epii-autoresearch-core/src/recompose.rs` | Night' phase (when `CS = night'`); `cron_evening` hook |
 | Janus envelope schema | `Body/S/S4/ta-onta/aletheia/S5'/janus-envelope.schema.json` | Required: `day_id, session_ids[], thought_count_by_bucket, archive_path, trigger_type` — the Chronos↔Aletheia handoff contract |
 | Sophia ingest module | `Body/S/S4/ta-onta/aletheia/modules/sophia-ingest.ts` | Sophia's session-end thought→T-bucket promotion |
@@ -239,7 +239,7 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 ### 3.2 Gnostic namespace dataset sources
 
 - `Body/S/S5/epi-gnostic/{cypher/, schema-context.md}` — Cypher templates + namespace schema docs
-- `Body/S/S5/epi-gnostic/tests/test_enrichment.py` — coordinate-tagging assertions, cross-namespace `RELATES_TO_COORDINATE` edge tests
+- `Body/S/S5/epi-gnostic/tests/test_enrichment.py` — coordinate-tagging assertions, cross-namespace `MAPS_TO_COORDINATE` edge tests
 - `Body/S/S5/epi-kbase/CONTRACT.md` + `Body/S/S5/epi-kbase/src/` — kbase corpus binding contract
 - `bkmr` CLI (external dependency on PATH) — the kbase bookmark search
 
@@ -751,7 +751,7 @@ These are the legitimate first-builds — each justified by an M' product-surfac
 - **Local pitch synthesis** — M2-1' Vimarśa-window contract; M5 reads `audio_octet[8]` via profile bus or NOT AT ALL
 - **Local clocks** — every M5 surface subscribes to kernel-bridge profile-tick; no `setInterval` / `requestAnimationFrame` counters
 - **Local LUT forks** — Mn.h constants NEVER duplicated into TS/wgsl tables in M5 extensions
-- **Local graph relation inference** — every graph read goes through `Body/S/S2/graph-services` via gateway; M5 does NOT compute `RELATES_TO_COORDINATE` edges locally
+- **Local graph relation inference** — every graph read goes through `Body/S/S2/graph-services` via gateway; M5 does NOT compute `MAPS_TO_COORDINATE` edges locally
 - **Composition by juxtaposition** — `15-ui-design-foundations.md §6`; the integrated 1-2-3 and 4-5-0 plugins compose geometrically, NEVER as three side-by-side widgets; M5-3 honors this contract
 - **Rebuilding the RAG** — `epi-gnostic` IS the RAG; Atelier consumes via Aletheia tools, never re-implements
 - **Treating Aletheia subagents as ACR-AgenticActor peers** — DR-B-3 ratified: Aletheia-internal only; surface as Anima-dispatch sub-traces under Aletheia

@@ -1778,6 +1778,10 @@ fn s5_prime_gnostic_methods_register_over_production_epi_gnostic() {
         "s5'.gnostic.episode_search",
         "s5'.gnostic.evidence_trace",
         "s5'.gnostic.query_with_layers",
+        // 12.T12.13: the seam's only WRITE. Every method above reads; this one
+        // mints the cross-namespace MAPS_TO_COORDINATE edge, and until it was
+        // registered no M' carrier could reach the enricher at all.
+        "s5'.gnostic.enrich",
     ];
 
     for method in required {
